@@ -15,7 +15,9 @@ Issue: [#515](https://github.com/haterade22/TAOM/issues/515). Feature doc:
 > `horsel/rlargecannon`, `horsetail1-3`, including the `_nub_notused` bones. Verified by string-scan
 > of both FBX. That makes the ram the first horse-skeleton reskin TAOM has shipped, so Phases 1-5 of
 > the authoring doc (clips, `quad_movement` tagging, action_types, action_sets, monster_usage_sets,
-> the rider partial) are **not needed at all**. No animation data is authored anywhere.
+> the rider partial) are **not needed at all**. No animation data is authored anywhere. **Superseded in
+> part on 2026-09-18:** one bespoke clip (the head-butt) now exists, with its own action, action sets and
+> a Monster attribute change; section 5 below.
 
 ## Backups
 
@@ -47,6 +49,9 @@ that is still blocked repo-side by the `MOUNTED_DWARF` validator rule, which now
 two ram item ids.
 
 ## 2. `ModuleData/Monsters/LOTR/lotr_monster_war_ram.xml`: new file
+
+> **Superseded in part 2026-09-18:** `action_set` is now `as_war_ram`, a three-line child of `as_horse`
+> that adds the head-butt (section 5). The element and table below record the file as it was created.
 
 The whole Monster is seven attributes, because it is the vanilla `horse_2` shape:
 
@@ -157,6 +162,16 @@ WITH a baked saddle, that is an argument for an `_HARNESSLESS_BY_DESIGN` entry i
 
 ### Eight bardings
 
+> **2026-09-18 (Mike): all eight bardings got `<Flags UseTeamColor="true" />`**, because their cloth is greyscale
+> and meant to take the rider's colours. It was added as a SECOND `<Flags>` element beside `<Flags Civilian="true" />`.
+> That works: `ItemObject.Deserialize` ORs every `<Flags>` child into `ItemFlags`, and `MountVisualCreator` tints the
+> harness mesh with the rider's clothing colours when the harness item `IsUsingTeamColor` (in missions and in the
+> preview tableau). Vanilla sets the flag on none of its 58 `HorseHarness` items, so the ram is the first harness to
+> use it. `Items.xsd` declares `Flags` with `maxOccurs="1"`, so the second element printed a schema error on every
+> load; the same afternoon each barding's two elements were folded into one,
+> `<Flags Civilian="true" UseTeamColor="true" />` (backup `LOTRAOM_horses.xml.bak-teamcolor-20260918-161512`).
+> **Confirmed in game the same evening (Mike): the barding cloth takes the team colours.**
+
 `family_type="1"`, inherited from the horse family through the Monster.
 
 | id | mesh | `body_armor` | material |
@@ -189,6 +204,28 @@ caparisons will fit the ram. That is the documented trade, not an oversight.
 rider-death, dismount and rider-fall surface, and that isolation belongs in C# rather than in the
 family number. The spider tried family 11 and simply had no rider-death surface at all. AI rosters
 assign the harness explicitly, so only the player can mix them.
+
+## 5. Head-butt binding (2026-09-18, #618)
+
+The bespoke head-butt (`Assets/creature/ram/animations/war_ram_butt_geo.tpac`, master `act_war_ram_butt`
+on `horse_skeleton`, 106 frames with a 2.5 s head-down hold; clip `war_ram_butt_anm.tpac`, Source 1..105)
+is bound as its own action rather than by re-pointing `act_horse_kick`, because the horse
+`monster_usage_set` the ram inherits fires `act_horse_kick` itself (`kick_action`) at whatever stands behind
+the mount. Backups: `*.bak-ram-bind-20260918-125440` beside each file. Repo side:
+`Main/Features/WarRam/WarRamConfig.AttackActionName = "act_war_ram_butt"` (was `act_horse_kick`),
+`WarRamConfigTests` pins it and keeps the 10 s cooldown above the 3.5 s clip.
+
+| File | Edit |
+|---|---|
+| `ModuleData/action_types.xml` | `<action name="act_war_ram_butt" type="actt_kick" />` after the warg block. `actt_kick` is the type the ram has always attacked with: outside Rear (refused by `Agent.Mount`) and outside the being-struck band |
+| `ModuleData/action_sets.xml` | `as_war_ram` (`skeleton="horse_skeleton" base_set="as_horse"`), `as_war_ram_town_and_village` (`base_set="as_horse_town_and_village"`), `as_war_ram_map` (`base_set="as_horse_map"`), each `<action type="act_war_ram_butt" animation="war_ram_butt" />`, after `as_warg_map`. The variants exist because the engine derives them by suffix from the Monster's set (`ActionSetCode + "_map"`, SandBox.View) |
+| `ModuleData/Monsters/LOTR/lotr_monster_war_ram.xml` | `action_set="as_horse"` to `"as_war_ram"` |
+| `Assets/creature/ram/animations/war_ram_butt_anm.tpac` | Source 1..105 (3.5 s) for the hold master, then priority 34 and blends 0.2 / 0.4, then flags `enforce_lowerbody` + `enforce_all` (the warg attack's and vanilla `horse_kick`'s recipe); written on disk with the Kit closed, backups `.bak-prewire` (the Kit's 12:36 file), `.bak-priority` (before the priority change) and `.bak-flags` (before the flags). The Kit re-cooks the clip's `.rdc` on its next load |
+| `AssetSources/creature/ram/animations/war_ram_butt.fbx` | the export from `tools/blender/transfer_clip_to_engine_rig.py` (engine frames, file-order hierarchy, rest frame 0, hold); the 2026-08-31 file is in `E:\LOTRAOMAssets\WarRam\_armory_source_backup_20260918\` |
+
+Redo: run `tools/blender/transfer_clip_to_engine_rig.py` (its docstring has the command), import in the Kit,
+read the master back, then re-apply the three XML edits above (they are small enough to type) and
+`python tools/audit_action_set_parity.py` (the ram sets report under root `as_horse`, 0 gaps).
 
 ## Verification actually run (2026-08-28)
 

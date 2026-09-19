@@ -2260,7 +2260,9 @@ ram briefly unmountable in combat, on the one TAOM mount deliberately built to b
 Caught by the API compatibility agent, the only pass that decompiled `Agent.Mount`. The replacement
 was `act_horse_strike_front`, typed `actt_mount_strike`, which is `ActionCodeType.MountStrike = 52`
 and sits inside the `StrikeBegin = 48 .. StrikeEnd = 52` band that `Agent.IsInBeingStruckAction`
-reads as BEING STRUCK; the clip is named `horse_hit_from_front`. Caught by Codex. What ships is
+reads as BEING STRUCK; the clip is named `horse_hit_from_front`. Caught by Codex. (Corrected 2026-09-18: the
+band is half-open, `MBMath.IsBetween(type, 48, 52)`, so 52 is outside it; the clip, a hit reaction, was the
+real reason.) What ships is
 `act_horse_kick` (`actt_kick`, `ActionCodeType.Kick = 28`).
 
 **The fact underneath both: vanilla horses have no attack animation at all.** They deal damage

@@ -22,8 +22,10 @@ public sealed class ElephantLikeCombatProfile
         string trampleAltActionName,
         string sideAttackLeftActionName,
         string sideAttackRightActionName,
-        Func<IElephantLikeAttackService> resolveService)
+        Func<IElephantLikeAttackService> resolveService,
+        bool singleTarget = false)
     {
+        SingleTarget = singleTarget;
         TrampleTriggerRange = trampleTriggerRange;
         TrampleRadius = trampleRadius;
         TrampleBlowMagnitude = trampleBlowMagnitude;
@@ -43,6 +45,11 @@ public sealed class ElephantLikeCombatProfile
 
     /// <summary>Blow magnitude passed to the damage primitive — knockback impulse, independent of inflicted HP.</summary>
     public float TrampleBlowMagnitude { get; }
+
+    /// <summary>True when an attack hits ONE enemy (the one faced most squarely inside <see cref="TrampleRadius"/>,
+    /// <see cref="SingleVictimPick"/>) instead of every enemy in the radius. The war ram's head-butt sets
+    /// it (#618); the elephant's and mumakil's tramples keep the default radial sweep.</summary>
+    public bool SingleTarget { get; }
 
     /// <summary>The trample (double-sweep thrash) animation.</summary>
     public ActionIndexCache Trample { get; }

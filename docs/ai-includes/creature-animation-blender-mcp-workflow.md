@@ -97,6 +97,11 @@ rider-animation system, and fixed the chariot's untagged gait clips. Companion t
    opens on a lowered or shifted pelvis floats or skates. `retarget_mannequin_to_human.py` keys rest at
    frame 0; port that here before authoring a clip whose first frame is far from rest
    ([bannerlord-skeleton-authoring.md](../reference/bannerlord-skeleton-authoring.md), fact 3).
+   **Order (fact 4):** the Kit stores tracks in FBX node order and the engine reads the skeleton's list
+   order. A skeleton the Kit compiled from your FBX (spider, elephant, warg) lists its bones depth-first by
+   construction, so this never bit here; on a VANILLA skeleton whose list is not depth-first (`horse_skeleton`)
+   it scrambles limbs, and `transfer_clip_to_engine_rig.py` handles it. `take = scene name` above is the
+   master's name in the Kit: keep it stable across reimports or the master gets a new GUID.
 7. **Hand off** → Kit-compile each FBX **with `quad_movement` + step points** (movement clips only),
    bind in the action set, in-game Custom-Battle test.
 8. **POST-DEPLOY GATE (mandatory, every tpac/FBX swap):** after replacing the deployed tpacs and
@@ -231,6 +236,14 @@ Each links its backing memory; the session's meta-lesson is last.
   the artifacts, not a fact. [[feedback-ported-data-upstream-bugs-vanilla-baseline]]
 - **Stale-tool watch** — `tools/blender/creature_anim_ops.py` still has `primary_bone_axis='X'`; audit a
   tool's defaults before reusing it.
+- **Never judge a direction from gameplay footage or a screenshot** (the Yotthani handoff (`docs/reviews/adopt-yotthani-animation-handoff-2026-09-18.md`)).
+  The camera sits behind and above the agent, so a part pointing forward moves up the screen exactly like one
+  pointing up. Check direction and grip orthographically in Blender, from the side and from behind, before a
+  clip goes to the Kit.
+- **Metrics may reject a clip, never confirm it.** Mike's eye in a battle is the oracle for "looks right". Two
+  measurement traps from the same handoff: a median swallows single-frame spikes, so for jerky motion report the
+  maximum and the spike count per clip; and a verified file is not a played file, so prove the engine plays it
+  before tuning it (the dual-wield thrusts were correct offline and played vanilla for months).
 
 ---
 

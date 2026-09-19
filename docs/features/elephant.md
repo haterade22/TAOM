@@ -167,13 +167,18 @@ come back to it later). The two disabled code paths are marked `DEFERRED` in sou
 
 | Source | Disabled where | Re-enable when |
 |--------|----------------|----------------|
-| Crew spawn | `ElephantMissionBehavior.TryInstantiateHowdah` — `TrySpawnHowdahCrew(...)` call commented | The crew↔elephant collision fix lands (e.g. give crew the elephant's `FaceGroupId` — the engine's own rider-vs-mount no-collision mechanism). `TrySpawnHowdahCrew` retained. |
+| Crew spawn | `ElephantMissionBehavior.TryInstantiateHowdah`: `TrySpawnHowdahCrew(...)` call commented | The crew stop overlapping the elephant's capsule (see the 2026-09-18 correction below). `TrySpawnHowdahCrew` retained. |
 | Bone-tracking | `TaomHowdahMachine.RepositionToElephant` — `TryRepositionToBone()` branch commented (fixed-offset only) | The floor-physics fix lands (drop the `bo_` floor's collision, or raise the bone frame so the floor clears the capsule). `TryRepositionToBone`/`ResolveBoneIndex` retained. |
 
 **Planned fix (when resumed):** both sources are one mechanism — a physics body inside the elephant's collision
 capsule. The likely unified fix: stop the howdah floor + crew from physically contacting the elephant. The
-candidate API is `Agent.SetAgentExcludeStateForFaceGroupId` / shared `FaceGroupId` (how a rider already avoids
-colliding with its own mount) for the crew, plus dropping or clearing the `bo_` floor's collision for the howdah.
+candidate API was `Agent.SetAgentExcludeStateForFaceGroupId`, **which is wrong (corrected 2026-09-18):** its one
+base-game callers (`CastleGate.SetGateNavMeshStateForEnemies` in TaleWorlds.MountAndBlade, which keeps attacking
+AI from pathing through a gate, and twelve SandBox call sites) all pass a navmesh face id, so it excludes an agent
+from navmesh faces, not from another agent's capsule (the callers read on the installed 1.5.3; the native body is
+not visible). No managed API excludes one agent's capsule from another's. The crew
+must instead stand clear of the elephant's capsule (whose top is now 2.7 m, under the 3.2 m howdah floor), plus
+dropping or clearing the `bo_` floor's collision for the howdah.
 Cavalry-reassignment + trample stay enabled (confirmed innocent). The TEMP `harad_militia` Horse-slot test entry in
 `troops_harad.xml` remains for testing and must NOT be committed.
 
@@ -273,7 +278,7 @@ main (Selector)
 |------------|------|---------------------|
 | `EnemyInTrampleRangeDecorator` | Engage gate: cheap already-attacking exit, then one radial scan for the best-facing live enemy within `TrampleTriggerRange`; writes the enemy's signed bearing to the blackboard. | `ShouldEngage` |
 | `AttackOffCooldownDecorator` | One class, two instances — gates the trample (10s) and side-attack (4s) branches off the blackboard stamps. | `IsOffCooldown` |
-| `ElephantAttackTaskBase` → `ElephantTrampleTask` / `ElephantSideAttackTask` | Shared template: play clip on channel 0, stamp cooldown, radial knockdown to all enemies in `TrampleRadius`. Side task picks left/right by bearing sign (positive = LEFT, Z-up right-handed cross product). | `ComputeInflictedDamage` |
+| `ElephantAttackTaskBase` → `ElephantTrampleTask` / `ElephantSideAttackTask` | Shared template: play clip on channel 0, stamp cooldown, radial knockdown to all enemies in `TrampleRadius` (or to ONE, the enemy faced most squarely, when the profile sets `singleTarget`; the war ram does since 2026-09-18, the elephant and mumakil do not). Damage bypasses armor (`CustomAttacksUtils.TakeDamage`). Side task picks left/right by bearing sign (positive = LEFT, Z-up right-handed cross product). | `ComputeInflictedDamage` |
 | `IBTElephantBlackboard` | Cooldown stamps + `TargetBearing`, reflection-copied onto every node by the tree builder. | — |
 
 **Clip-role mapping — VERIFIED numerically (2026-06-10, Blender trajectory analysis).** Nothing in the XML or
@@ -742,7 +747,62 @@ measured table + the authoring contract:
 [creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md) "The rein-attribute
 invariant".
 
+## Collision (2026-09-18): the body capsule fitted, the per-bone hit capsules measured
+
+Players reported the elephant's collision as too small. An elephant has two collision layers, and they answer
+different complaints:
+
+- **Body capsule** (`<Capsules><body_capsule>` in `lotr_monster_elephant.xml`): what other agents bump into and
+  path around. It was radius 0.9 from y -2.57 to +1.8 (0.6 to 2.4 m high), which left the head, trunk, tusks and
+  rump outside it. Measured from `adod_elephant.fbx`: body 2.05 m wide, tail at y -3.0, armour and tusks at y +2.38
+  (head at engine +y). **Now radius 1.05, `pos1="0, 1.33, 1.65"`, `pos2="0, -1.95, 1.65"`**: ends at +2.38 and
+  -3.0, 0.6 to 2.7 m high, about 1.4x the old footprint. Live Armory file backed up as
+  `lotr_monster_elephant.xml.bak-capsulefit-20260918-162601`; the repo reference copy matches.
+  **Keep the top under 3.2 m.** The howdah puts its physics floor at feet + 3.2 m every tick
+  (`ElephantConfig.HowdahHeightAboveGround`, `TaomHowdahMachine.RepositionToFixedOffset`), and a floor inside the
+  capsule is the leading, unconfirmed slide mechanism ("Slide root-cause isolation" above: the ladder confirmed two
+  sources, not the mechanism). Doubling the radius to 1.8, the first
+  request, would have put the top at 3.3 to 4.2 m and enclosed the floor, so it was reverted before any test.
+- **Per-bone hit capsules** (`elephant_skeleton` in `Assets/creature/elephant/mesh/adod_elephant_geo.tpac`): what
+  weapons and arrows hit (inferred: the bodies' `BodyType` zones match the engine's `BoneBodyPartType`, which a
+  blow reads for its armour zone; the collision smoke confirms). Each bone also has a separate *ragdoll* capsule,
+  by its name only the corpse's physics after death, so the "maybe ragdoll too" half of the request should change
+  nothing a player can hit. 41 of the 60 hit capsules
+  were the Kit's defaults (a rod along the bone, radius about a ninth of its length): the neck 0.03 to 0.05 m wide
+  inside 0.6 m of neck, 29 trunk bones at 0.01 to 0.02 m, and only 48% of the skin inside any hit capsule. **Refit to
+  the mesh and patched into the package 2026-09-18** (the Kit must load the module once to re-cook the package's
+  `.rdc`; owed, and whether the client reads the bodies from the tpac or the `.rdc` is unverified) with `tools/skeleton_hit_capsules.py` (method, fit rules and format:
+  `docs/reference/bannerlord-skeleton-authoring.md` "Hit capsules"): 32 capsules refit, 28 kept, 98.2% of the skin
+  inside a hit capsule, none standing more than 20 cm proud of it.
+
+  | Bone | Hit radius before | After |
+  |---|---|---|
+  | `Neck_06` / `Neck1_07` | 0.047 / 0.028 | 0.81 / 0.48 |
+  | `Pelvis_03` / `Spine_04` / `Spine1_05` | 0.46 / 0.93 / 0.69 | 0.45 / 0.97 / 0.79, each re-centred on its own skin (the old `Spine_04` stood 0.6 m above the back) |
+  | `Head_08` | 0.67 | 0.50, re-centred (its old capsule covered 27% of the head) |
+  | `R/L UpperArm`, `Forearm`, `Hand` (front legs) | 0.34 / 0.30, 0.25, 0.25 | 0.38 / 0.37, 0.32, 0.31 |
+  | `L/R Thigh`, `Calf`, `Foot` (hind legs) | 0.33 / 0.34, 0.25, 0.25 | 0.53, 0.31, 0.27 |
+  | ears, trunk, tail (14 bones refit) | 0.01 to 0.04 | 0.07 to 0.32 (the trunk's root bone is the 0.32) |
+
+  Per region, read back from the patched file: legs 99.9%, body and head 97.1%, trunk 93.1%, ears 99.5%, tail
+  100%. The 28 kept bodies own under 15 skin vertices each (nine bones of one trunk chain, all 14 of the duplicate
+  chain, both clavicles, three tail bones); no uncovered vertex is more than 5 cm from a capsule. Backup beside the package:
+  `adod_elephant_geo.tpac.bak-hitcapsules-20260918-170039`. The Mumakil shares this skeleton (scaled 3x), so it gets
+  the fit too.
+
 ## Open items
+
+- [ ] **Do the eight attack clips animate?** (2026-09-18) `elephant_attack_1..4` and `elephant_rider_attack_1..4`
+      (ADOD_Beasts-derived) are the only TAOM creature clips whose `UnknownUInt2` is 2, "play the clip's own motion
+      segment", and none carries one (`docs/reference/bannerlord-animation-clip-flags.md` "A clip can carry its own
+      motion"). In the next battle, watch whether the trample and tusk attacks and the rider's attacks visibly play.
+      If not, try the field at 0 so they play their masters, as an experiment with a backup: the 0/2 rule is the
+      handoff's 1.4.6 measurement on a field TpacTool calls unknown (a Kit re-save of the clip, or a same-size
+      metadata patch plus `tools/tpac_fix_item_checksums.py`).
+- [ ] **Collision smoke** (2026-09-18): load LOTRLOME_Armory in the Kit once (re-cooks the patched package's `.rdc`),
+      then a Custom Battle: swing at and shoot the neck, legs and haunches (hits should land where the skin is), and
+      walk infantry into the elephant (the body capsule). Both halves are applied but untested in game. The body
+      capsule's top must stay under the howdah floor (3.2 m).
 
 - [x] Fold in the exact recipe + ADOD_Beasts code/NativeHook verdict from the deep-dive workflow. *(done 2026-06-05)*
 - [x] Capture ADOD_Beasts's `elephant_skeleton` bone roster as the match reference (60 bones — see "Verified bone roster" above). *(done 2026-06-05)*
@@ -766,9 +826,10 @@ invariant".
 - [x] Author the Harad rider troop + recruitment — DONE (2026-06-10). `harad_elephant_rider` (level 51, `Culture.aserai`, `HorseArcher`) recruitable ONLY by `clan_aserai_1` (Ayerikkä) via `VolunteerRecruitmentService.InitializeHaradClans` (clan pool copies the levy/noble fallback + adds the rider at weight 1). The TEMP `harad_militia` Horse-slot test entry was replaced by this dedicated troop. Remaining rider polish: not yet in any party template (AI Ayerikkä lords field it only when recruited); rider skills left at pre-level-51 values; recruitment weight is a rarity knob. Update `factions.json` if the war elephant becomes a Harad identity element.
 - [x] Tune damage after in-game testing — DONE (2026-06-15): replaced ADOD_Beasts's fixed ~20 with TAOM per-kind randomized bands (trample 50-100, tusk 50-75, ×0.25 on shield block); gates unchanged. Also swapped the rider's primary spear (`eastern_spear_4_t4`) for a 2nd `bodkin_arrows_b` quiver so the mounted archer fires at ground targets instead of melee-swinging into air.
 - [ ] **DEFERRED — re-enable howdah crew (slide source #1).** Crew spawn is disabled (`TrySpawnHowdahCrew` call
-      commented in `ElephantMissionBehavior.TryInstantiateHowdah`). Re-enable with a crew↔elephant collision fix —
-      candidate: give the crew the elephant's `FaceGroupId` via `Agent.SetAgentExcludeStateForFaceGroupId` (the
-      engine's rider-vs-mount no-collision mechanism). See "Slide root-cause isolation".
+      commented in `ElephantMissionBehavior.TryInstantiateHowdah`). Re-enable once the crew stand clear of the
+      elephant's capsule. `Agent.SetAgentExcludeStateForFaceGroupId` is NOT that fix: it is a navmesh pathing
+      exclusion (corrected 2026-09-18, "Slide root-cause isolation"). The War Sails research of 2026-09-18
+      covers the redesign.
 - [ ] **DEFERRED — re-enable spine bone-tracking (slide source #2).** Disabled (`TryRepositionToBone` branch
       commented in `TaomHowdahMachine.RepositionToElephant`; fixed-offset only). Re-enable with a floor-physics fix —
       drop the `bo_empire_keep_a_door_top` collision (archers are teleported, don't need a physical floor) or raise

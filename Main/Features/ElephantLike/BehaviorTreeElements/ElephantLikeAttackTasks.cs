@@ -12,7 +12,8 @@ namespace TAOM.Features.ElephantLike.BehaviorTreeElements;
 /// <summary>
 /// Shared template for elephant-like attacks: plays the derived class's attack animation on channel 0, stamps the
 /// derived class's cooldown, and deals radial knockdown damage (`CustomAttacksUtils.TakeDamage`) to every live
-/// enemy within the profile's <see cref="ElephantLikeCombatProfile.TrampleRadius"/>. Damage amount from the pure
+/// enemy within the profile's <see cref="ElephantLikeCombatProfile.TrampleRadius"/>, or to ONE of them when the
+/// profile sets <see cref="ElephantLikeCombatProfile.SingleTarget"/> (the war ram). Damage amount from the pure
 /// <see cref="IElephantLikeAttackService.ComputeInflictedDamage"/> (ADOD_Beasts's formula,
 /// shield-block-aware). Boundary code, mirroring the warg's <c>WargAttackTask</c>.
 /// </summary>
@@ -56,17 +57,38 @@ public abstract class ElephantLikeAttackTaskBase : BTTask, IBTBannerlordBase, IB
 
         _service ??= Profile.ResolveService();
         Mission.Current.GetNearbyAgents(creature.Position.AsVec2, Profile.TrampleRadius, _scratch);
-        foreach (Agent victim in _scratch)
+        Agent single = null;
+        var pick = new SingleVictimPick();
+        Vec3 lookDir = creature.LookDirection;
+        foreach (Agent a in _scratch)
         {
-            if (victim == null || victim == creature || !victim.IsActive() || !victim.IsEnemyOf(rider)) continue;
-            // Upstream-pack parity: only a SHIELD block reduces the damage; weapon parries take full damage.
-            // (Fully-qualified — the `Agent` blackboard property shadows the Agent type.)
-            bool blocking = victim.GetCurrentActionType(1) == TaleWorlds.MountAndBlade.Agent.ActionCodeType.DefendShield;
-            // Roll per victim so each enemy caught in the radius takes an independent hit within the kind's band.
-            int damage = _service.ComputeInflictedDamage(AttackKind, blocking, MBRandom.RandomFloat);
-            CustomAttacksUtils.TakeDamage(victim, creature, damage, Profile.TrampleBlowMagnitude, knockDown: !blocking);
+            if (a == null || a == creature || !a.IsActive() || !a.IsEnemyOf(rider)) continue;
+            if (!Profile.SingleTarget)
+            {
+                // Roll per victim so each enemy caught in the radius takes an independent hit within the kind's band.
+                Hit(a, creature);
+                continue;
+            }
+            // One victim (the war ram's head-butt, #618): the enemy faced most squarely, nearer on a tie. A ridden
+            // mount is never it: the native enemy check may answer for a horse through its rider, and the horse sits
+            // lower and on the rider's line, so it would out-face him. The rider is in the scan himself.
+            if (a.IsMount && a.RiderAgent != null) continue;
+            Vec3 offset = a.Position - creature.Position;
+            float distance = offset.Length;
+            float dot = distance > 1e-4f ? Vec3.DotProduct(offset.NormalizedCopy(), lookDir) : 1f;
+            if (pick.Offer(dot, distance)) single = a;
         }
+        if (single != null) Hit(single, creature);
         return BTTaskStatus.FinishedWithTrue;
+    }
+
+    private void Hit(Agent victim, Agent creature)
+    {
+        // ADOD_Beasts parity: only a SHIELD block reduces the damage; weapon parries take full damage.
+        // (Fully-qualified — the `Agent` blackboard property shadows the Agent type.)
+        bool blocking = victim.GetCurrentActionType(1) == TaleWorlds.MountAndBlade.Agent.ActionCodeType.DefendShield;
+        int damage = _service.ComputeInflictedDamage(AttackKind, blocking, MBRandom.RandomFloat);
+        CustomAttacksUtils.TakeDamage(victim, creature, damage, Profile.TrampleBlowMagnitude, knockDown: !blocking);
     }
 }
 

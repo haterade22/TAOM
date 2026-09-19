@@ -46,7 +46,12 @@ Compared against a mesh FBX that skins to that same skeleton and animates correc
 | Bone axis | X along the bone | Blender imports it Y along the bone |
 | `_nub_notused` bones | none | 7, which the Kit drops on import |
 
-The mesh rig parents the neck to a **tail** bone. It skins fine anyway. It animates wrong.
+The mesh rig parents the neck to a **tail** bone. That is not an error: the engine lists `horse_skeleton`'s
+bones with the neck LAST (after the rear legs and tail), TaleWorlds' exporter writes FBX nodes depth-first,
+and the Kit stores a master's bone tracks in FBX node order without remapping. Hanging the neck off
+`horsetail3` is what keeps the node order equal to the engine's list order. Re-parent it to `horsespine3`
+and the neck's tracks land in the rear legs' slots. The mesh rig still animates wrong for the other reason
+on this page: its bone frames are not the engine's.
 
 ## Getting the real skeleton
 
@@ -253,6 +258,20 @@ A healthy creature skeleton has typed bodies and roughly one constraint per bone
 
 Zero constraints and every body typed `none` means the data was dropped. Setting it by hand in the
 Kit is real work: for a 58-bone creature that is 57 joints times roughly 12 fields each.
+
+### Hit capsules are what weapons strike, and the Kit's defaults are thin
+
+Each body carries two capsules. The **hit** capsule (`CollisionPosition1/2`, `CollisionRadius`) is what melee
+weapons and arrows strike. The **ragdoll** capsule only moves the corpse after death. Neither is the Monster's
+`body_capsule`, which is what other agents walk into. So a "collision is too small" report needs one question first:
+do units walk into it, or do blows pass through it?
+
+A skeleton nobody tuned keeps the Kit's default hit capsule on every bone: a thin rod along the bone whose radius is
+about a ninth of the capsule's length. TAOM's war elephant had 41 of 60 like that, and blows passed through its neck
+and legs: less than half of its skin sat inside any hit capsule. Widen them in the Kit's skeleton editor until each
+one just covers the mesh around its bone. TAOM fits them to the skinned mesh with a script
+(`tools/skeleton_hit_capsules.py` in the TAOM repository), which took the elephant to 98% of its skin covered with
+no capsule more than 20 cm proud of it.
 
 ## Next
 

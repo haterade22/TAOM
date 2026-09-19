@@ -212,6 +212,15 @@
 	<action name="act_warg_attack_running" type="actt_mount_strike" />
 	
 	<action name="act_warg_stand_for_movement_data"/>
+
+	<!-- ===== WAR RAM (2026-09-18) =====
+	     The head-butt, bespoke clip war_ram_butt on the vanilla horse_skeleton, bound only in as_war_ram
+	     (action_sets.xml). actt_kick is the type the ram has always attacked with (act_horse_kick before this):
+	     outside Rear, which Agent.Mount refuses, and outside the StrikeBegin..StrikeEnd being-struck band.
+	     A separate action rather than re-pointing act_horse_kick, because the horse monster_usage_set fires
+	     act_horse_kick itself (kick_action) at whatever stands behind the mount. Repo side:
+	     Main/Features/WarRam/WarRamConfig.AttackActionName; ledger docs/reference/lotrlome-war-ram-changes.md. -->
+	<action name="act_war_ram_butt" type="actt_kick" />
 	<action name="act_warg_stand_1"/>
 	<action name="act_warg_stand_2"/>
 	<action name="act_warg_idle_1" type="actt_idle" />
@@ -300,4 +309,41 @@
 	<action name="act_warg_fall_slow_left" type="actt_fall" />
 	<action name="act_warg_fall_slow_left_continue" type="actt_fall" />
 	<!-- ===== /WARG ===== -->
+
+	<!-- ==================== LOTR MISC ==================== -->
+	<!-- Folded in from Animations/action_types_lotr_misc.xml on 2026-08-28. That file was
+	     registered under a CUSTOM project.mbproj id (soln_lotr_misc_action_types), which
+	     GetMergedXmlForNative never requests, so it had NEVER loaded and all 20 names below
+	     stayed undeclared while action_sets.xml referenced them 221 times. Same class as the
+	     spider soln_spider_* incident recorded at the top of project.mbproj.
+	     They live HERE, in the single soln_action_types file, rather than in a second
+	     soln_action_types <file> row: soln_action_types.xsd EXISTS, so a second row would run
+	     MergeElements over the accumulated tree and risk the elephant Crash #3
+	     KeyNotFoundException. Untyped by design, matching the act_spider_idle rows above. -->
+	<!-- Character creation father animations (as_uruk_facegen, as_uruk_hai_facegen, ...). -->
+	<action name="act_character_creation_male_default_0" />
+	<action name="act_character_creation_male_default_1" />
+	<action name="act_character_creation_male_default_2" />
+	<action name="act_character_creation_male_default_3" />
+	<action name="act_character_creation_male_default_4" />
+	<action name="act_character_creation_male_default_5" />
+	<action name="act_character_creation_male_default_6" />
+	<!-- Character creation mother animations (same face-gen action_sets). -->
+	<action name="act_character_creation_female_default_0" />
+	<action name="act_character_creation_female_default_1" />
+	<action name="act_character_creation_female_default_2" />
+	<action name="act_character_creation_female_default_3" />
+	<action name="act_character_creation_female_default_4" />
+	<action name="act_character_creation_female_default_5" />
+	<action name="act_character_creation_female_default_6" />
+	<!-- Drunk village trio scene, second variant (villager/tavern action_sets). -->
+	<action name="act_drunk_trio_left_2" />
+	<action name="act_drunk_trio_middle_2" />
+	<action name="act_drunk_trio_right_2" />
+	<!-- Lancer mount idle variants (cavalry action_sets). -->
+	<action name="act_lancer_ride_0" />
+	<action name="act_lancer_ride_1" />
+	<!-- Polearm brace ready stance. -->
+	<action name="act_polearm_brace_ready" />
+	<!-- ===== /LOTR MISC ===== -->
 </action_types>

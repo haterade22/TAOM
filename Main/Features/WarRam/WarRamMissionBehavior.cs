@@ -26,8 +26,9 @@ namespace TAOM.Features.WarRam;
 /// problem (a Monster with no vanilla rider-death surface) does not apply here. A ridden-death in-game
 /// test is what would justify revisiting that decision, not a structural gap in this file.
 ///
-/// Agent.Tick auto-ticks attached agent components since v1.4.5; this behavior does NOT manually tick
-/// the BT component (the warg/spider double-tick regression class), matching the Mumakil wiring below.
+/// The trees tick from BehaviorTreeMissionLogic.OnMissionTick on the main thread; the component's own
+/// OnTick is a deliberate no-op since #592 (Agent.Tick runs on the async AI thread). This behavior does
+/// not tick the BT component itself (the warg/spider double-tick regression class).
 /// </summary>
 public class WarRamMissionBehavior : MissionLogic
 {
@@ -55,15 +56,29 @@ public class WarRamMissionBehavior : MissionLogic
         if (BTRegister.Logger == null)
             BTRegister.AddLogger(new TaomBTLogger());
 
-        // Drift guard: act_horse_kick is a VANILLA
-        // clips resolved out of the game's own Native/ModuleData, not LOTRLOME_Armory, but
-        // ActionIndexCache still resolves eagerly, so a future engine bump renaming/removing one of
-        // them would silently yield act_none and kill the ram's locomotion cycle on channel 0 (the
-        // elephant "slide" class). Detect at mission start.
+        // Drift guard: act_war_ram_butt is bound in LOTRLOME_Armory's action_sets.xml (as_war_ram) and
+        // typed in its action_types.xml, and the Armory is UNVERSIONED: a module reinstall drops both.
+        // ActionIndexCache resolves eagerly, so a missing action silently yields act_none and kills the
+        // ram's locomotion cycle on channel 0 (the elephant "slide" class). Detect at mission start.
+        // The type check alone misses a typed action whose binding or clip package is gone: that resolves
+        // to a valid index and plays nothing. So also look the set up by id (an invalid set for a missing id,
+        // as vanilla's MBGlobals.GetActionSet relies on) and ask the engine whether the action has a clip in it.
         if (WarRamCombat.Profile.AnyUnresolved())
             _logger.LogError(
-                "[WarRam] One or more attack actions resolved to act_none - vanilla as_horse action drift? " +
+                "[WarRam] One or more attack actions resolved to act_none - LOTRLOME_Armory as_war_ram / action_types drift? " +
                 $"Expected {WarRamConfig.AttackActionName}. Attacks will not animate correctly.");
+        else
+        {
+            MBActionSet ramSet = MBActionSet.GetActionSet(WarRamConfig.ActionSetId);
+            if (!ramSet.IsValid)
+                _logger.LogError(
+                    $"[WarRam] Action set {WarRamConfig.ActionSetId} not found - LOTRLOME_Armory action_sets drift? " +
+                    "The ram Monster names it, so rams will not animate correctly.");
+            else if (!MBActionSet.CheckActionAnimationClipExists(ramSet, WarRamCombat.Profile.Trample))
+                _logger.LogError(
+                    $"[WarRam] {WarRamConfig.AttackActionName} has no clip in {WarRamConfig.ActionSetId} - the binding or the " +
+                    "war_ram_butt clip package is missing. The head-butt will play nothing.");
+        }
 
         _logger.LogInfo("[WarRam] Initialized");
     }

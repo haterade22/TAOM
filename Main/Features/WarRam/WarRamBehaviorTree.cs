@@ -12,11 +12,11 @@ namespace TAOM.Features.WarRam;
 /// <summary>
 /// Behavior tree for the AI war ram, the warg/elephant/Mumakil per-agent BT pattern, built from the
 /// SHARED elephant-like nodes bound to <see cref="WarRamCombat.Profile"/>. Built per ram by
-/// <see cref="WarRamMissionBehavior"/> via a <c>BehaviorTreeAgentComponent</c>; the engine auto-ticks it
-/// each frame.
+/// <see cref="WarRamMissionBehavior"/> via a <c>BehaviorTreeAgentComponent</c>, ticked from
+/// <c>BehaviorTreeMissionLogic.OnMissionTick</c> on the main thread (#592).
 ///
 /// Attack model: ONLY the kick-attack branch is wired, deliberately (see <see cref="WarRamConfig"/>).
-/// When a live enemy is in front and the kick is off cooldown (6s), the ram fires it via
+/// When a live enemy is in front and the kick is off cooldown (10 s), the ram fires it via
 /// <see cref="ElephantLikeTrampleTask"/>; there is no side-attack fallback sequence like the war
 /// elephant/Mumakil's tusk swing, so the ram simply idles between kicks and the engine's regular mount
 /// AI (rider cavalry AI + native charge) continues underneath, same as the other elephant-like

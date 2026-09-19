@@ -178,10 +178,10 @@ set names it in a **verb slot or table** (which means the engine fires it too); 
      declares `rear_action="act_horse_rear"`, so the engine fires it on every damaged mount, and
      `Agent.Mount` refuses a mount whose channel-0 type is `Rear`. The mount would go unmountable
      mid-fight.
-  2. The replacement `act_horse_strike_front` is typed `actt_mount_strike`
-     (`ActionCodeType.MountStrike = 52`), which sits inside `StrikeBegin = 48 .. StrikeEnd = 52`, the
-     band `Agent.IsInBeingStruckAction` reads as BEING STRUCK. The clips are named
-     `horse_hit_from_front`/`_back`. The creature flinches as though hit while you emit damage.
+  2. The replacement `act_horse_strike_front` plays the horse's hit reactions (`horse_hit_from_front`/
+     `_back`): the creature flinches as though hit while you emit damage. **Corrected 2026-09-18:** its
+     type `actt_mount_strike` (`ActionCodeType.MountStrike = 52`) is NOT read as being struck;
+     `Agent.IsInBeingStruckAction` tests `MBMath.IsBetween(type, 48, 52)`, which is half-open, so it reads 48 to 51 (`StrikeLight` .. `StrikeKnockBack`) as being struck and NOT `MountStrike` (52).
 - **The fact underneath both:** **vanilla horses have no attack animation at all.** They deal damage by
   charge collision, so `monster_usage_strikes` is the mount's hit-REACTION table, not an attack table.
   The horse rig's only genuinely offensive action is `act_horse_kick` (`actt_kick`,
@@ -444,6 +444,7 @@ master's GUID (51 of 52), so GUID-linked clips survive and only `Source2` follow
 the Kit had also given a junk Skeleton item came back with no animation ("assigned skeleton animation not
 found" on the clip). `gen_troll_anim_clips.ps1 -Verify` is the gate after every reimport.
 
+
 **Rule.** The rig you author on must have the engine's bone frames (`matrix_local` == accumulated
 `RestFrame`, transposed), the armature node stays at identity, and a 180 degree world-Z turn goes into
 the pose. `tools/blender/retarget_mannequin_to_human.py --engine-skeleton` does all three and asserts the
@@ -456,6 +457,28 @@ to wrong frames deforms perfectly. The check that does catch it without the Kit 
 exported FBX and measure each bone's local rotation against the engine rest local (the tool reports it):
 vanilla masters sit at 0 to 12 degrees at their bind frame, the folded export averaged 75 with 13 bones
 over 60, the correct one 28 with three (bent thighs, forward head on a horizontal neck, the wrist).
+
+### The Kit stores bone tracks in FBX node order and the engine reads the skeleton's list order
+
+**Context (2026-09-18, the war ram).** The troll procedure, run on `horse_skeleton`, stood the ram on its head
+with its hind legs in the air while the pelvis and spine were right. Read-back of the compiled master against
+two vanilla horse masters (`anim_horse_stand_4`, `horse_dash_forward`) showed the cause: the Kit writes a
+master's bone tracks in FBX node order (Blender exports depth-first) and never remaps them by name; the engine
+reads slot i as bone i of the skeleton's own list; `horse_skeleton` lists the rear legs and tail before the
+neck. Slots 16 to 31 were scrambled: the neck played the tail, the hind legs the neck. `human_skeleton`'s
+list IS depth-first, which is why the troll measurement said "verbatim" and saw nothing.
+
+**Why it was invisible for a month.** TaleWorlds' own horse FBX hangs `horseneck1` off `horsetail3`; the
+August work read that as a rig error and "fixed" it, which moved the neck's tracks into other bones' slots.
+The one hierarchy that looked wrong was the one that kept the order right.
+
+**Rule.** A measurement made on one skeleton proves the rule for that skeleton's coincidences too. On EVERY
+new skeleton, read the compiled master back and check slot i against file-order bone i at frame 0 before
+trusting the viewer. When the list order is not a depth-first walk of the hierarchy, export from a hierarchy
+that makes it one, node locals kept engine-parent-relative (`transfer_clip_to_engine_rig.py`,
+`order_parents`). And keep the FBX take name stable: it is the master's name, and a reimport keeps the
+master's GUID only while the name matches (a Blender `.001` collision created `act_war_ram_butt.001`, a new
+GUID, an empty skeleton and an orphaned clip).
 
 ### Re-skinning a mesh: the Kit keeps 4 influences, and three QA setups that measured nothing
 
@@ -638,6 +661,22 @@ not colour. Set `colorspace_settings.name = 'Non-Color'` and the scene view tran
 with gamma 1.0 before saving, or Blender applies a filmic transform to the buffer and produces a
 creature with subtly wrong lighting that nobody can explain later.
 
+### A mount's clip needs a priority and `enforce_lowerbody`: the Kit's default clip plays in the viewer and not in battle
+
+**Context (2026-09-18, the war ram).** The head-butt played correctly in the Kit viewer and the TAOM log recorded it
+firing 1,300 times in a Custom Battle, yet Mike never saw the head drop. The clip carried the Kit's defaults, priority
+0 and no flags. At priority 34 it was still not visible (1,005 butts, next battle). Every vanilla horse clip read
+(`horse_kick` 34, `horse_rear` 74, even the hit reaction `horse_hit_from_front` at priority 2) carries
+`enforce_lowerbody`, and `horse_kick` and the warg's `warg_attack_stand` share priority 34 + `enforce_lowerbody` +
+`enforce_all` + blends 0.2 / 0.4; the ram now carries that recipe, in-game result pending.
+
+**Why missed.** The viewer plays a clip alone, with nothing competing for channel 0; a battle is the first place
+locomotion does. And the damage count proved nothing: the attack task plays the action and applies damage in the
+same tick, so damage lands whether or not the animation survives.
+
+**Rule.** Give a mount's action clip the recipe of the nearest vanilla clip of its kind, read from the tpac (table in
+`docs/reference/bannerlord-animation-clip-flags.md`), and judge it in battle, never in the viewer.
+
 ### A hand-built tpac package is invisible to the game until the Modding Kit has cooked its RuntimeDataCache entry
 
 **2026-09-17, spider skin variants (#616).** A tool cloned the proven split spider meshes under new
@@ -675,5 +714,25 @@ checksum, and every generated `_anm.tpac` in the Armory carries one (73 warg, 24
 entries and all load, so the entry is the load-bearing half and the hash is hygiene.
 `tools/tpac_fix_item_checksums.py` recomputes the field (proven on Kit output first) and
 `tools/check_rdc_entries.py` is the entry gate; 925 `_mtl` packages have no entry and render, so the gate
-checks `_geo` and `_anm` by default. A master the Kit imports without a module save has no entry either:
-the 52 troll masters imported today were as invisible as the hand-built clips beside them.
+checks `_geo` and `_anm` by default. **Corrected the same day:** the 52 troll masters without an entry were
+NOT invisible. The Kit never writes an entry for a skeletal-animation master, and masters play without one:
+warg 56 of 56, elephant 31 of 31, chariot 3 of 3 and spider 24 of 26 animation masters have no entry, every one of their clips has one, and all of those creatures animate in game. The gate now recognises a master by its item type (SkeletalAnimation, no Metamesh) and
+counts it separately; reading "masters lack entries" as a failure had put a Kit save that could never
+satisfy it on the owed list for a day. The same census habit that proved zero checksums harmless (count
+the shipping packages that work before calling a difference a defect) would have caught it at once.
+
+### A creature's hit capsules are the Kit's defaults until someone fits them to the mesh
+Players reported the war elephant's collision as too small (2026-09-18). A creature has three collision layers: the
+Monster's `body_capsule` (what agents bump into), a hit capsule per bone (what blows and missiles strike) and a ragdoll
+capsule per bone (the corpse). 41 of the elephant's 60 hit capsules were still the Kit's defaults, thin rods along each
+bone with a radius about a ninth of the capsule's length: the neck was 0.03 to 0.05 m wide inside 0.6 m of neck and
+only 48% of the skin sat inside any hit capsule. The chariot (57 of 60) and the spider (40 of 62) carry the same
+defaults. Fitted to the skinned mesh the elephant reaches 98%.
+- **Why missed:** the creature renders, animates and takes damage, so nothing looks broken; the Kit shows the capsules
+  only in its skeleton editor and no gate reads them. The first answer to "too small" went to the body capsule, a
+  different layer, and a doubled radius would have enclosed the howdah's physics floor, the known slide cause.
+- **Prevent:** once a creature's skeleton and mesh are final, run `python tools/skeleton_hit_capsules.py show --tpac
+  <geo.tpac>` and fit what is still default (`fit`, then `patch --apply`, then a Kit load). Before changing any
+  collision, name the layer the complaint is about: bumping is the body capsule, blows passing through are the hit
+  capsules, a corpse is the ragdoll.
+- **Source:** `docs/reference/bannerlord-skeleton-authoring.md` "Hit capsules", `docs/features/elephant.md` "Collision".

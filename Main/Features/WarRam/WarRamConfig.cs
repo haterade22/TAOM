@@ -3,11 +3,11 @@ namespace TAOM.Features.WarRam;
 /// <summary>
 /// Tuning for the Dwarven war ram, a ridden battering-charge mount for mid-tier dwarf cavalry. Unlike
 /// the war elephant / Mumakil (giant beasts with their own rig), the ram is authored in
-/// LOTRLOME_Armory as base_monster="horse" (action_set="as_horse"), inheriting family_type="1",
-/// monster_usage="horse" and all twelve rein attributes from the vanilla horse. It reuses VANILLA HORSE
-/// ANIMATION only, no new clip was authored: the ram's single attack plays act_horse_kick, bound
-/// within action_set id="as_horse" and typed actt_kick. See the clip-mapping block below for why the
-/// action TYPE matters and why both act_horse_rear and act_horse_strike_front were rejected.
+/// LOTRLOME_Armory as base_monster="horse" with its own thin action set as_war_ram (base_set as_horse),
+/// inheriting family_type="1", monster_usage="horse" and all twelve rein attributes from the vanilla
+/// horse. Locomotion is the vanilla horse's; the one bespoke clip is the head-butt act_war_ram_butt,
+/// typed actt_kick (2026-09-18; the vanilla act_horse_kick stood in before). See the clip-mapping block
+/// below for why the action TYPE matters and why act_horse_rear and act_horse_strike_front were rejected.
 ///
 /// The profile's alt/side slots exist only because <see cref="TAOM.Features.ElephantLike.BehaviorTreeElements.ElephantLikeCombatProfile"/>'s
 /// constructor requires four clip names. WarRamBehaviorTree wires ONLY the kick-attack branch (no
@@ -47,27 +47,30 @@ public static class WarRamConfig
     /// the stack rather than across one beast.</summary>
     public const double AttackCooldownSeconds = 10.0;
 
-    /// <summary>Radius around the ram inside which enemies take the kick (also the single scan radius).
-    ///
-    /// This is an AoE, not a reach: ElephantLikeAttackTasks sweeps EVERY enemy inside it and knocks
-    /// down each one that is not shield-blocking. It was 3.5f, near the base war elephant's 4f, which
-    /// made a single ram's kick a formation-wide sweep. 2f keeps the kick to what the ram is actually
-    /// standing on top of.</summary>
+    /// <summary>The head-butt's reach: the ram hits ONE enemy inside this radius (see
+    /// <see cref="AttackSingleTarget"/>), the one it faces most squarely. Until 2026-09-18 the attack was an
+    /// AoE that hit EVERY enemy inside this radius; the radius was 3.5f before that, near the war elephant's 4f,
+    /// which made one ram's attack a formation-wide sweep.</summary>
     public const float AttackRadius = 2f;
 
-    // --- Per-hit randomized damage ---
-    // A war ram is not a war elephant. The elephant's trample (50-100) represents a multi-ton beast
-    // flattening a formation; the ram carries ONE mid-tier dwarf rider and lands a single horned
-    // kick at whatever is directly in front of it, not a stomp. For scale: a mid-tier one-handed
-    // weapon swings roughly 25-35 raw before armor, and the warg's bite (a comparable predator-scale
-    // single-target hit) tops out around 60 (40 base + up to 20 from speed). The ram sits below both:
-    // a genuine bonus threat layered on top of the rider's own attacks, not a beast the rider is along
-    // for the ride on. 18-28 before block scaling.
-    /// <summary>Minimum kick damage before block scaling.</summary>
-    public const int AttackMinDamage = 18;
+    /// <summary>The head-butt hits one enemy, not everyone in <see cref="AttackRadius"/> (Mike, 2026-09-18,
+    /// #618: "only hit 1 person not AOE"). A test build logged 1,300 head-butt blows from 127 rams in two
+    /// Custom Battles, several victims per butt, on top of rams arriving fifteen at a time. The elephant and
+    /// mumakil tramples stay radial: they pass nothing, and the profile defaults to the sweep.</summary>
+    public const bool AttackSingleTarget = true;
 
-    /// <summary>Maximum kick damage before block scaling.</summary>
-    public const int AttackMaxDamage = 28;
+    // --- Per-hit randomized damage ---
+    // 40-50 before block scaling since 2026-09-18 (Mike, after the head-butt became single-target; it was 18-28,
+    // set when the attack still swept every enemy in the radius). For scale: a mid-tier one-handed weapon swings
+    // roughly 25-35 raw BEFORE armor, the warg's bite tops out around 60 (40 base + up to 20 from speed), the
+    // elephant's trample is 50-100. Note the butt IGNORES armor: CustomAttacksUtils.TakeDamage writes
+    // InflictedDamage directly with DamageCalculated set, so every point lands (measured on the 18-28 band: 976
+    // hits on Armored Trolls averaged 23.1, the raw roll). One enemy per butt, one butt per ram per 10 s.
+    /// <summary>Minimum head-butt damage before block scaling.</summary>
+    public const int AttackMinDamage = 40;
+
+    /// <summary>Maximum head-butt damage before block scaling.</summary>
+    public const int AttackMaxDamage = 50;
 
     /// <summary>Damage multiplier applied when the victim is shield-blocking (elephant-like parity
     /// quarter, kept identical since block-scaling is a shared combat-feel constant, not creature size).</summary>
@@ -78,37 +81,42 @@ public static class WarRamConfig
     /// stagger a target, not launch it.</summary>
     public const float AttackBlowMagnitude = 35f;
 
-    // --- Attack clip mapping: a REUSED vanilla horse clip, nothing was authored. The ram inherits
-    // as_horse (base_monster="horse"), so its attack must be one of that rig's own actions.
+    // --- Attack clip: the bespoke head-butt. Authored 2026-08-29 on the goat mesh rig, re-authored
+    // 2026-09-18 on the engine's own horse_skeleton (tools/blender/transfer_clip_to_engine_rig.py; the
+    // four Kit facts that took are in docs/reference/bannerlord-skeleton-authoring.md). Compiled master
+    // act_war_ram_butt (30 posed frames plus a 2.5 s hold with the head down, rest frame 0), clip
+    // war_ram_butt, bound as act_war_ram_butt in LOTRLOME_Armory action_sets.xml `as_war_ram`
+    // (base_set as_horse; the Monster names as_war_ram) and typed actt_kick in the Armory's
+    // action_types.xml. Ledger: docs/reference/lotrlome-war-ram-changes.md.
     //
-    // THE HORSE RIG HAS NO HEADBUTT, AND ONLY ONE GENUINELY OFFENSIVE ACTION. Vanilla horses do not
-    // have attack animations at all: they deal damage through charge collision, so monster_usage_strikes
-    // is the mount's hit-REACTION table, not an attack table. Two candidates were tried and rejected
-    // before this one, both caught in review, and the reasons are worth keeping:
+    // WHY A NEW ACTION RATHER THAN RE-POINTING act_horse_kick's animation. The "horse" monster_usage_set
+    // the ram inherits names act_horse_kick as its kick_action, so the ENGINE fires that action itself
+    // (a horse kicks what stands behind it). Re-pointing its animation would make the engine's rear kick
+    // play a forward head-butt. A separate action leaves the engine's kick alone.
     //
-    //   * act_horse_rear is typed actt_rear (ActionCodeType.Rear = 47). The "horse" usage set the ram
-    //     inherits declares rear_action="act_horse_rear", so the ENGINE fires it on a damaged mount,
-    //     and Agent.Mount refuses a mount whose channel-0 type is Rear. Forcing it every cooldown
-    //     would have made the ram briefly UNMOUNTABLE mid-fight, on the one TAOM mount that is
-    //     deliberately player-rideable (there is a shipping ram_rider career for it).
-    //   * act_horse_strike_front / _back are typed actt_mount_strike (ActionCodeType.MountStrike = 52).
-    //     That sits inside StrikeBegin = 48 .. StrikeEnd = 52, the band Agent.IsInBeingStruckAction
-    //     treats as BEING STRUCK. The clips are named horse_hit_from_front / _back accordingly. Playing
-    //     one makes the ram flinch as though hit while we emit damage.
+    // WHY actt_kick (ActionCodeType.Kick = 28). It is the type the ram has run on since #515, when the
+    // attack was the vanilla act_horse_kick: outside Rear (47), which Agent.Mount refuses on channel 0
+    // (the ram is the one TAOM mount that is deliberately player-rideable), and outside 48 .. 51, the types
+    // Agent.IsInBeingStruckAction reads as BEING STRUCK (MBMath.IsBetween(type, 48, 52) is half-open, so
+    // MountStrike = 52 is not in it; corrected 2026-09-18). Two earlier candidates were rejected in review
+    // (docs/reviews/rca-war-ram-2026-08-28.md): act_horse_rear for the Rear lock, and act_horse_strike_front /
+    // _back because their clips are the horse's hit reactions, not because of their type; the warg's own
+    // actt_mount_strike attacks play.
     //
-    // act_horse_kick is typed actt_kick (ActionCodeType.Kick = 28): outside the being-struck band and
-    // outside Rear, so it is the horse rig's only real offensive action. It reads as a buck or kick
-    // rather than a head strike, which is a deliberate accepted compromise: a correct kick would
-    // mean authoring a clip in Blender plus the Modding Kit and reopening the whole animation pipeline
-    // this reskin exists to avoid. Revisit if a bespoke clip is ever authored.
+    // The action now lives in the UNVERSIONED Armory, not in Native: a module reinstall drops it and
+    // ActionIndexCache resolves act_none. WarRamMissionBehavior's drift guard logs that at mission start.
     //
     // ALL FOUR profile slots hold this one action deliberately. The ram has exactly one attack, and
     // ElephantLikeCombatProfile.IsAttack ORs across all four to answer "am I mid-attack". Collapsing
     // them makes that question mean exactly "is the ram mid-kick". Parking spare slots on unrelated
     // engine-driven actions silently widens the busy-check: a previous revision pointed them at the
     // strike actions, so an engine-driven hit reaction suppressed the ram's own attack for that tick.
-    /// <summary>The kick animation: the ram's only attack. Typed actt_kick.</summary>
-    public const string AttackActionName = "act_horse_kick";
+    /// <summary>The head-butt: the ram's only attack. Typed actt_kick, bound in the Armory's as_war_ram.</summary>
+    public const string AttackActionName = "act_war_ram_butt";
+
+    /// <summary>The Armory action set the ram Monster names (action_set="as_war_ram" in
+    /// lotr_monster_war_ram.xml). The drift guard looks it up by id to prove the binding and clip exist.</summary>
+    public const string ActionSetId = "as_war_ram";
 
     /// <summary>Alt slot for ElephantLikeCombatProfile's 50/50 variety pick. The ram has one attack
     /// clip, so this repeats the primary: a same-clip "alternate" is an honest no-op rather than a

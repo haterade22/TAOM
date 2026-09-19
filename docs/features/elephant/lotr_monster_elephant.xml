@@ -65,11 +65,18 @@
 		bones_to_modify_on_sloping_ground_3=" L Thigh_035"
 		bones_to_modify_on_sloping_ground_4=" R Thigh_038"
 		body_rotation_reference_bone=" Spine_04">
+		<!-- Body capsule FITTED to the model 2026-09-18 (player reports: the collision was too small). The old
+		     capsule (radius 0.9, y -2.57 to +1.8, 0.6 to 2.4 m high) left the head, trunk and tusks and the rump
+		     uncovered. Measured from adod_elephant.fbx: body 2.05 m wide, tail at y -3.0, armour and tusks at
+		     y +2.38. Now radius 1.05, ends at y +2.38 and -3.0, 0.6 to 2.7 m high. KEEP THE TOP UNDER 3.2 m:
+		     the howdah places its physics floor at feet + 3.2 m (ElephantConfig.HowdahHeightAboveGround), and a
+		     floor inside this capsule is the leading (unconfirmed) cause of the elephant slide (docs/features/elephant.md).
+		     A doubled radius (1.8) was rejected for that reason. body_length="100" keeps AgentScale at 1.0. -->
 		<Capsules>
 			<body_capsule
-				radius="0.9"
-				pos1="0, 0.9, 1.5"
-				pos2="0, -1.67, 1.5" />
+				radius="1.05"
+				pos1="0, 1.33, 1.65"
+				pos2="0, -1.95, 1.65" />
 		</Capsules>
 		<Flags
 			Mountable="true"

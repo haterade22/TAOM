@@ -125,8 +125,15 @@ Two traps in the export settings themselves:
 ## Compiling in the Kit
 
 Import as a **Skeleton Animation**, set its **Owner Skeleton**, then create an **Animation Clip**
-from it: Source 1 = 0, Source 2 = the last frame, and check that Duration comes out greater than
-zero. Blend in around 0.1.
+from it: Source 1 = 1 and Source 2 = the last frame when frame 0 is the rest frame (point 3 below),
+and check that Duration comes out greater than zero.
+
+!!! warning "A new clip starts at priority 0 with no flags, and on a mount that means invisible"
+    The model viewer plays it, because nothing else competes for the action channel there. In
+    battle the mount's walk and gallop take the channel back at once. Every vanilla horse clip
+    carries `enforce_lowerbody`, and an attack uses priority 34 with `enforce_lowerbody` +
+    `enforce_all` and blends 0.2 / 0.4 (vanilla `horse_kick`, and TAOM's warg attack). Copy the
+    recipe of the nearest vanilla clip of the same kind, and check it in a battle, not in the viewer.
 
 !!! danger "Do not rename a clip inside the Modding Kit"
     Renaming corrupts it. The Kit keeps resolving the old name, the inspector reports
@@ -223,12 +230,24 @@ settled it, on a vanilla rig (`human_skeleton`) with 52 clips:
    rest at frame 0, poses from frame 1. Vanilla locomotion also carries one root track (the pelvis bob,
    no forward travel); a pack with root-bone travel plus pelvis motion has two, so drop the travel and
    hand it to the engine as the clip usage's loop displacement instead.
+4. **Bone tracks are stored in FBX node order, and the engine reads slot i as bone i of the skeleton's own
+   list.** The Kit never remaps by name. Blender writes nodes depth-first; `human_skeleton`'s list is
+   depth-first, `horse_skeleton`'s is not (neck last), so a horse clip exported from the true hierarchy
+   plays the tail on the neck and the neck on the hind legs. When the list is not a depth-first walk, export
+   from a hierarchy that makes it one (horse: `horseneck1` under `horsetail3`, as TaleWorlds' own horse FBX
+   has it) while keeping each node's local transform relative to its ENGINE parent. Measured on the war
+   ram against two vanilla horse masters, 2026-09-18.
+5. **The take is the master's name, and the name is the identity.** The Kit names the compiled
+   `SkeletalAnimation` after the FBX take (Blender: the action). A reimport under the same take keeps the
+   master's GUID, so clips linked to it survive; a different take (a `.001` collision suffix will do it) is
+   a new master with a new GUID and an empty skeleton, and the old clip loses its animation.
 
 A mesh rig that skins perfectly (skinning is roll-independent) can still have frames 90 to 180 degrees off
 the engine's, and rotations are not roll-independent: that is the whole mechanism behind clips that look
 right in Blender and fold in the Kit. TaleWorlds' TpacTool FBX exports of vanilla skeletons are such mesh
 rigs. Clips authored on bespoke rigs (spider, elephant, warg) never hit this because the Kit imported the
-skeleton from the same rig.
+skeleton from the same rig, and never hit point 4 either: a skeleton the Kit compiled from an FBX lists its
+bones in that FBX's depth-first order by construction.
 
 ## Next
 

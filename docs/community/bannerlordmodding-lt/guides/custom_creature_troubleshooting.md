@@ -23,13 +23,16 @@ involved, see [How to report a crash](/guides/how_to_report_a_crash/) and
 | Crash when the creature jumps, especially off terrain | [Incomplete jump table](#crash-when-the-creature-jumps) |
 | Rider spawns with **no mount**, no crash | [The skeleton was dropped from the mesh tpac](#the-rider-spawns-with-no-mount) |
 | Creature slides along the ground, legs frozen | [An action resolved to `act_none` on channel 0](#the-creature-slides-with-its-legs-frozen) |
+| Blows and arrows pass through parts of the creature, or players say its collision is too small | Its per-bone hit capsules are still the Kit's defaults: thin rods whose radius is about a ninth of each capsule's length. Widen them in the skeleton editor, or fit them to the mesh ([skeleton page](/guides/custom_creature_skeleton/), "Hit capsules"). Units walking into it is a different setting, the Monster's `body_capsule`; the ragdoll capsules only move the corpse |
 | Limbs animate correctly but the body floats or the feet skate | Frame 0 of the master is a posed frame, not rest; the root track is zeroed against it ([animation page](/guides/custom_creature_animation/), point 3) |
+| Some limbs play another limb's motion (a horse's neck swings like its tail, hind legs point at the sky) while the spine is right | Bone-track ORDER: the Kit stores tracks in FBX node order (Blender writes depth-first) and the engine reads them in the skeleton's file order. They agree on `human_skeleton`, not on `horse_skeleton`. Give the FBX a hierarchy whose depth-first walk is the file order (horse: `horseneck1` under `horsetail3`, as the vanilla goat FBX has) with engine-relative locals; `tools/blender/transfer_clip_to_engine_rig.py` does it |
+| After a reimport the master is called `<name>.001` and the clip lost its animation | The FBX take (Blender action) was renamed while another action held the name, so Blender appended `.001`; the Kit names the master after the take and treats a new name as a new item (new GUID, empty skeleton). Fix the action name in Blender, delete the `.001` master, reimport, relink the clip |
 | "Assigned skeleton animation not found" on a clip after you reimported its FBX | A reimport keeps the animation's GUID, so the clip normally survives; this package came back as Skeleton + Geometry with no animation (the Kit had created a junk `<armature>.001` skeleton from the same FBX on the first import). Delete that skeleton, import the FBX again as an animation, re-author the clip |
 | Creature invisible in battle, fine in a UI preview | [Materials lost on FBX re-import](#invisible-in-the-world-fine-in-a-preview) |
 | All colour variants render the same colour | Materials lost on FBX re-import (same cause) |
 | Rider floats at his own feet | `rider_sit_bone` name does not match, so it resolved to -1 |
 | Creature becomes unmountable mid-fight | An attack was bound to an `actt_rear` action |
-| Creature flinches while dealing damage | An attack was bound to an `actt_mount_strike` action |
+| Creature flinches while dealing damage | An attack was bound to a hit-reaction clip, such as the horse's `act_horse_strike_*` (clips `horse_hit_from_*`) |
 | Character renders in bind pose in UI tableaux | The action set is valid but binds no clip for that action |
 | Crash when a unit walks into water | A standalone action set is missing the dive actions |
 | Dedicated server dies at boot, client is fine | A root-level `<action>` element |
@@ -37,6 +40,8 @@ involved, see [How to report a crash](/guides/how_to_report_a_crash/) and
 | Enormous memory use for one creature | Texture dimensions not divisible by 4 |
 | Animation FBX exports at ~0.06 MB | [The bake found no keyframes](#the-animation-fbx-is-tiny) |
 | Kit says "Item with same name already exists" | [That is correct behaviour](#the-kit-refuses-a-duplicate-name) |
+| A mount's attack clip plays in the Kit viewer but never in battle, while its damage lands | The clip still has the Kit's priority 0 and no flags, so locomotion owns the action channel. Give it the vanilla recipe of its kind: an attack is priority 34 + `enforce_lowerbody` + `enforce_all`, blends 0.2 / 0.4 (vanilla `horse_kick`). Damage landing proves nothing about the animation when the code applies damage in the same tick it plays the action |
+| "Unable to find material X" on every LOD after a reimport, though it looked right before | The Kit binds each mesh to the material its FBX names and resets hand reassignments on every reimport. Rename the material in the FBX (TAOM: `tools/blender/fbx_remap_materials.py --map X=Y --apply`) or create a Kit material named X |
 | Kit clip reports `Size in KB = 0` and will not save | [The clip was renamed inside the Kit](#a-clip-reports-zero-size-and-will-not-save) |
 
 ## Crash in every mount context at once

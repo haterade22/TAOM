@@ -85,6 +85,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Ringbearer | `ringbearer` | UNKNOWN | redistributed | `Main/_Module/GUI/Fonts/ringbearer.{fnt,bfnt}` | uncleared |
 | Khuzdul vocabulary (J.R.R. Tolkien) | `Khuzdul` `Khazad` `Baruk` `khuzdul-lexicon` | UNKNOWN | verbatim-port | `docs/audio/khuzdul-lexicon.html` `docs/audio/vo-script-dwarves.html` | uncleared |
 | Cave Troll Lightweight (Fab) | `Cave Troll Lightweight` `cave_troll_lightweight` | Fab Standard License, tier and creator to be copied from the product page | data-port | `tools/oneoff/ue_export_cave_troll.py`; export staging `E:\LOTRAOMAssets\_export\cave_troll_lightweight\` (outside the repo); nothing ships yet | pending-license |
+| Yotthani DualWield handoff, MithrilForge | `MithrilForge` `DualWield` `Bannerlord_Animation_Handoff` `TpacTool-bannerlord` | MIT (MithrilForge); the handoff document was shared with the maintainer by its author, no licence stated | comparison-only | (none) | cleared |
 
 <!-- provenance-register-end -->
 
@@ -247,6 +248,16 @@ same LOTRAOM feature (`TAOM_RacePortraits`, also maintainer-commissioned) was co
 this one; its decompiled source was read while wiring up Patch72, so that patch is a
 behavioural port rather than clean-room. The module itself was not adopted. Its `cave_troll`
 avatar offsets were imported as data.
+
+### Yotthani DualWield handoff, MithrilForge
+
+Read in full on 2026-09-18 through `/adopt-external`: `Bannerlord_Animation_Handoff_EN.md` (the DualWield mod's
+animation work on Bannerlord 1.4.6, shared with the maintainer by its author, the same commissioned collaborator as
+the section above) and a snapshot of `MithrilForge` (MIT, (c) yotthani; its `vendor/TpacTool` submodule points at the
+private `TpacTool-bannerlord` fork and was empty). Nothing in TAOM derives from either: no code, data or asset was
+taken. Engine and file-format facts the handoff reports were checked against TAOM's own evidence where possible and
+restated in TAOM's words, each attributed to the review,
+[`docs/reviews/adopt-yotthani-animation-handoff-2026-09-18.md`](../reviews/adopt-yotthani-animation-handoff-2026-09-18.md).
 
 ### ADOD_Beasts, BehaviorTrees
 

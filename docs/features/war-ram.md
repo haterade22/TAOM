@@ -5,7 +5,8 @@
 A rideable war ram for the Dwarves: the first mount TAOM has ever given a dwarf, and the first
 creature mount built as a **reskin of the vanilla horse skeleton** rather than on a rig of its own.
 It carries an Ironpass cavalry branch, wears an eight-piece barding ladder, and headbutts on its own
-using a vanilla horse animation.
+with a bespoke clip: the vanilla horse kick stood in until 2026-09-18, when the head-butt authored on the
+engine's `horse_skeleton` went through the Kit and was bound as `act_war_ram_butt` in the ram's own action set.
 
 ## Why This Exists
 
@@ -42,10 +43,11 @@ Three problems, only one of which was the obvious one.
 ### Solution Approach
 
 **The ram is the vanilla `horse_2` shape.** Both ram bodies and all eight bardings are skinned to the
-stock vanilla horse skeleton bone for bone, so the Monster is seven attributes:
+stock vanilla horse skeleton bone for bone, so the Monster is seven attributes (`action_set` was
+`as_horse` until 2026-09-18; `as_war_ram` is a three-line child of it that adds the bespoke head-butt):
 
 ```xml
-<Monster id="taom_war_ram" base_monster="horse" action_set="as_horse"
+<Monster id="taom_war_ram" base_monster="horse" action_set="as_war_ram"
          weight="320" hit_points="160"
          jump_acceleration="7.5" relative_speed_limit_for_charge="4.0" />
 ```
@@ -59,8 +61,10 @@ value because the deserialiser guards its defaults behind `if (!flag)`. That buy
 Two consequences worth stating plainly:
 
 - **Phases 1 to 5 of [creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md) are
-  skipped entirely.** No clips, no `quad_movement` tagging, no `action_types`, no `action_sets`, no
-  `monster_usage_sets`, no rider partial. No animation data is authored anywhere in this feature.
+  skipped, with one exception since 2026-09-18.** No `quad_movement` tagging, no `monster_usage_sets`, no
+  rider partial: locomotion is the horse's. The exception is the head-butt: one clip, one `action_types.xml`
+  entry and three thin action sets over the vanilla horse sets (`as_war_ram`, `_town_and_village`, `_map`),
+  recorded in [lotrlome-war-ram-changes.md](../reference/lotrlome-war-ram-changes.md) section 5.
 - **The war ram is the only TAOM mount with vanilla's complete rein surface.** Gotcha #18 of that
   doc records that the spider and warg declare 5 of 12 rein attributes and the elephant and mumakil
   declare 0, and that v1.4.8 changed the native rein path that runs on mounted-agent death. The ram
@@ -87,15 +91,15 @@ troops_erebor.xml  ironpass_ram_rider (Cavalry, race="dwarf")
       v
 LOTRAOM_horses.xml  <Horse monster="Monster.taom_war_ram" body_length="100">
       v
-lotr_monster_war_ram.xml  base_monster="horse", action_set="as_horse"
+lotr_monster_war_ram.xml  base_monster="horse", action_set="as_war_ram" (child of as_horse)
       v
 engine: vanilla cavalry spawn. Movement, blows, deaths and rider seating are all
         the horse's. No spawn patch, no detached combatant.
       +
 WarRamMissionBehavior : MissionLogic
       -> attaches WarRamBehaviorTree per agent, keyed on Monster.StringId
-      -> kick attack plays act_horse_kick (a vanilla clip), damage via the shared
-         ElephantLike attack service
+      -> head-butt plays act_war_ram_butt (bespoke clip war_ram_butt, bound in
+         as_war_ram), damage via the shared ElephantLike attack service
 ```
 
 ## Configuration
@@ -138,12 +142,19 @@ markedly bigger animal relative to its rider than a horse does, which is the int
 
 | Constant | Value | Rationale |
 |---|---|---|
-| `AttackMinDamage` / `AttackMaxDamage` | 18 / 28 | Below both references: the elephant trample is 50-100 (a multi-ton beast flattening a formation) and the warg bite tops out near 60. The ram lands one headbutt as a bonus on top of its rider's own attacks |
+| `AttackMinDamage` / `AttackMaxDamage` | 40 / 50 | Since 2026-09-18 (Mike; was 18 / 28, set while the attack still swept every enemy in the radius). One enemy per butt, every 10 s. The butt IGNORES armor (`CustomAttacksUtils.TakeDamage` writes the inflicted damage directly), so 40-50 lands in full on an Armored Troll; for scale a mid-tier sword swings 25-35 before armor, the warg bite tops out near 60, the elephant trample is 50-100 |
 | `AttackCooldownSeconds` | 10.0 | Level with the elephant's trample. Was 6.0 and played as overpowered, see below |
 | `AttackBlowMagnitude` | 35f | Below the elephant's 50f: a horse-scale creature should stagger, not launch |
 | `AttackTriggerRange` / `AttackRadius` | 1.5f / 2f | Was 2.5f / 3.5f, near the unscaled elephant's 3f / 4f. See below |
+| `AttackSingleTarget` | true | The head-butt hits ONE enemy inside `AttackRadius`, the one the ram faces most squarely (nearer on a tie, `SingleVictimPick`). Radial until 2026-09-18; the elephant and mumakil tramples stay radial. A shield-blocker straight ahead takes the butt (12 damage at most, no knockdown) and nobody else is hit. A mounted enemy is picked as the rider, never the horse: in the area version the blow log shows the butt hitting mounted lords and never their horses |
 
-**The kick is an AoE with a knockdown, and that is what makes the per-hit numbers misleading.**
+**Since 2026-09-18 the head-butt hits one enemy** (#618, Mike: "only hit 1 person not AOE"). A Custom Battle
+test logged 1,300 head-butt blows from 127 rams across two battles, several victims per butt. The profile's
+`SingleTarget` switch makes the shared attack task collect the enemies inside `AttackRadius` and hit only the
+one faced most squarely, the same best-facing rule the engage gate commits on; the elephant and mumakil
+profiles pass nothing and keep the sweep. The history below is why the radius and cooldown are where they are.
+
+**The kick was an AoE with a knockdown, and that is what made the per-hit numbers misleading.**
 `ElephantLikeAttackTasks` scans `GetNearbyAgents(creature.Position, AttackRadius)` and sweeps **every**
 enemy inside it, rolling damage independently per victim and passing `knockDown: !blocking`, so
 everyone caught who is not actively shield-blocking goes prone. At the original 3.5f that was close to
@@ -161,26 +172,61 @@ results by `AttackTriggerRange`, so any trigger range above the radius is unreac
 constant would read as a number the ram never uses. It is held at 75% of the radius, the ratio the
 original 2.5/3.5 pair chose, and that margin matters more at 10s than it did at 6s: an attack
 committed against a target loitering on the rim now wastes a ten-second window.
-| `AttackActionName` | `act_horse_kick` | **A vanilla clip**, bound in `as_horse` and typed `actt_kick` (`ActionCodeType.Kick = 28`). All four profile slots hold this one action, so `IsAttack` means exactly "mid-kick" |
+| `AttackActionName` | `act_war_ram_butt` | **The bespoke head-butt** (master `act_war_ram_butt`, clip `war_ram_butt`, 30 posed frames plus a 2.5 s head-down hold), bound in the Armory's `as_war_ram` and typed `actt_kick` (`ActionCodeType.Kick = 28`) in the Armory's `action_types.xml`. All four profile slots hold this one action, so `IsAttack` means exactly "mid-butt". Was `act_horse_kick` until 2026-09-18 |
 
-**Two clips were rejected before this one, and the reasons are worth keeping.** The horse rig has no
-headbutt, because vanilla horses have no attack animation at all: they damage by charge collision, so
-`monster_usage_strikes` is the mount's hit-REACTION table rather than an attack table.
+**Why a separate action, and why `actt_kick`.** The horse `monster_usage_set` the ram inherits names
+`act_horse_kick` as its `kick_action`, so the engine fires that action itself at whatever stands behind the
+mount; re-pointing its animation would have made a rear kick play a forward head-butt. `actt_kick` is the
+type the ram attacked with from #515 on, and the two candidates rejected then explain why the type matters
+(vanilla horses have no attack animation at all: they damage by charge collision, so `monster_usage_strikes`
+is the mount's hit-REACTION table rather than an attack table):
 
 - **`act_horse_rear`** is typed `actt_rear` (`ActionCodeType.Rear = 47`). The inherited `horse` usage
   set declares `rear_action="act_horse_rear"`, so the engine fires it on a damaged mount, and
   `Agent.Mount` refuses a mount whose channel-0 action is `Rear`. Forcing it every cooldown would have
   made the ram briefly **unmountable mid-fight**, on the one mount built to be player-rideable.
-- **`act_horse_strike_front`/`_back`** are typed `actt_mount_strike` (`ActionCodeType.MountStrike = 52`),
-  inside the `StrikeBegin = 48 .. StrikeEnd = 52` band that `Agent.IsInBeingStruckAction` reads as
-  **being struck**. The clips are named `horse_hit_from_front`/`_back`. The ram would have flinched as
-  though hit while we emitted damage.
+- **`act_horse_strike_front`/`_back`** play the horse's hit reactions (`horse_hit_from_front`/`_back`), so
+  the ram would have flinched as though hit while we emitted damage. Their type, `actt_mount_strike`
+  (`ActionCodeType.MountStrike = 52`), is not the problem (corrected 2026-09-18): `Agent.IsInBeingStruckAction` tests `MBMath.IsBetween(type, 48, 52)`, which is half-open, so it reads 48 to 51 (`StrikeLight` .. `StrikeKnockBack`) as being struck and NOT `MountStrike` (52).
 
-`act_horse_kick` (`actt_kick`, `ActionCodeType.Kick = 28`) sits outside both bands and is the rig's
-only genuinely offensive action. It reads as a buck rather than a head strike: an accepted compromise,
-since a correct headbutt means authoring a clip and reopening the animation pipeline this reskin
-exists to avoid. Both rejections were caught in review; RCA in
-[rca-war-ram-2026-08-28.md](../reviews/rca-war-ram-2026-08-28.md).
+`act_horse_kick` (`actt_kick`, `ActionCodeType.Kick = 28`) sits outside both bands and was the rig's only
+offensive action, so it stood in as a buck until the bespoke clip existed. Both rejections were caught in
+review; RCA in [rca-war-ram-2026-08-28.md](../reviews/rca-war-ram-2026-08-28.md). The warg's own attacks are
+typed `actt_mount_strike` and play, which the half-open band explains: 52 is outside it.
+
+**The head-butt clip, 2026-09-18 (#618; plays correctly in the Kit since 12:36).** The clip authored on 2026-08-29 (`E:\LOTRAOMAssets\WarRam\clips\act_war_ram_butt.fbx`,
+39-bone goat mesh rig, `horseneck1` under `horsetail3`) was re-authored on the engine `horse_skeleton` with
+`tools/blender/transfer_clip_to_engine_rig.py` (rest-relative world-rotation transfer, Kit yaw baked, rest frame 0,
+Y/X export; 0.0 deg transfer error on all 32 bones). Its first Kit import stood the ram on its head: the Kit stores
+bone tracks in FBX node order and the engine reads them in `horse_skeleton`'s file order, which lists the neck
+last (skeleton-authoring fact 4); the export now carries `horseneck1` under `horsetail3` (TaleWorlds' own goat
+FBX does the same) so the two orders agree, with engine-relative locals. It replaced `AssetSources/creature/ram/animations/war_ram_butt.fbx`
+(old file backed up under `E:\LOTRAOMAssets\WarRam\_armory_source_backup_20260918\`) and is compiled as master
+`act_war_ram_butt` in `Assets/creature/ram/animations/war_ram_butt_geo.tpac` with the clip `war_ram_butt`
+(`war_ram_butt_anm.tpac`, Source1 = 1, Source2 = 105, 3.5 s since the hold export's reimport and the rewire at
+14:04; priority 34 and blends 0.2 / 0.4 since 15:26). A Kit reimport of the FBX keeps the master GUID while the take name matches; when it does not
+(the `.001` mishap) the master is re-created and `tools/wire_anim_master_clip.ps1` re-points the clip and
+sets `horse_skeleton` on the master. Bound the same day: `act_war_ram_butt` (`actt_kick`) in the Armory's
+`action_types.xml`, `as_war_ram` / `_town_and_village` / `_map` over the vanilla horse sets, the Monster on
+`as_war_ram`, `WarRamConfig.AttackActionName` switched, `WarRamConfigTests` pinning it. **Clip priority:** the
+first Custom Battle (15:16) logged the butt firing 1,300 times while Mike could not see the head drop; the clip
+still had the Kit's priority 0, so locomotion on channel 0 overrides it at once. It now carries vanilla
+`horse_kick`'s priority 34 and blends 0.2 / 0.4, the action it replaced and one the engine plays visibly on this
+rig. Priority alone did not show it in the second battle (15:47), so the clip now also carries the warg attack's
+flags, which are `horse_kick`'s too: `enforce_lowerbody` + `enforce_all` (every vanilla horse clip read carries
+`enforce_lowerbody`, even the priority-2 hit reaction). The clip is now `warg_attack_stand`'s recipe minus its
+`CombatParameterId`, which drives the engine's own hit detection; the ram's damage comes from the attack task. The
+legs follow the clip for the 3.5 s butt-and-hold, so watch for gliding while moving.
+
+**Verifying from the logs (2026-09-18).** The attack task plays the action and applies damage in the SAME tick, so a
+landed butt proves nothing about the animation. The butt has a unique fingerprint in the TAOM log
+(`bin\Win64_Shipping_Client\Logs\taom_debug_<start>.log`): a `[BlowDiag] blow` line with `dmgType=Pierce`,
+`mag=35` (`AttackBlowMagnitude`, no other constant is 35) and `missile=False`; grouping by `attackerIdx` and second
+gives victims per butt. `[WarRam] ... act_none` at mission start means the binding did not load; `[MissionDiag]
+ActionSet 'as_war_ram'` confirms the Monster's set. The engine log is `C:\ProgramData\Mount and Blade II
+Bannerlord\logs\rgl_log_<pid>.txt`. Before a test, confirm the deployed `TAOM.dll` holds the change and the game
+started after it was written, and that the Kit has loaded once after any on-disk tpac edit (it re-cooks the `.rdc`). Mike deleted the six experiment masters
+and the five `new_animation_clip*` clips in the Kit the same day.
 
 **No mount-lock.** `TaomAgentStatCalculateModel` gates the elephant, spider and mumakil with
 `CanAgentRideMount=false` and `MountDifficulty=999` so players cannot steal them. The war ram is a
@@ -198,7 +244,10 @@ Monsters lacked vanilla's rider-death surface. The ram inherits that surface who
 | `Main/Features/WarRam/WarRamConfig.cs` | Monster id and all tuning |
 | `Main/Features/WarRam/IWarRamAttackService.cs` | Marker sub-interface of `IElephantLikeAttackService` (the documented per-creature IoC pattern) |
 | `Main/Features/WarRam/WarRamAttackService.cs` | Ram-tuned damage bands over the shared service |
-| `Main/Features/WarRam/WarRamCombat.cs` | Static `ElephantLikeCombatProfile` wiring the vanilla horse clip names |
+| `Main/Features/WarRam/WarRamCombat.cs` | Static `ElephantLikeCombatProfile` wiring `act_war_ram_butt` into all four slots |
+| `TAOM.Tests/Features/WarRam/WarRamConfigTests.cs` | Pins the action name, the four equal slots and cooldown > clip length |
+| `tools/blender/transfer_clip_to_engine_rig.py` | Authors the head-butt FBX on the engine rig (frames, order, rest frame 0, hold) |
+| `tools/wire_anim_master_clip.ps1` | Re-points the clip and sets the master skeleton after a fresh reimport |
 | `Main/Features/WarRam/WarRamBehaviorTree.cs` | Mumakil shell with only the butt branch wired, no new node classes |
 | `Main/Features/WarRam/WarRamMissionBehavior.cs` | **`: MissionLogic`**, attaches keyed on `Monster.StringId` |
 | `Main/Features/WarRam/WarRamIoC.cs` | Registration helper |

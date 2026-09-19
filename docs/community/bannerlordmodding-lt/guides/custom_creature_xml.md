@@ -37,6 +37,12 @@ block, and all twelve rein attributes.
     A self-closing `<Monster ... />` does not have one, so the base's flags survive intact. This is
     what makes the one-liner safe.
 
+That is TAOM's war ram as it shipped on 2026-08-28. Since 2026-09-18 the ram carries one bespoke clip, a head-butt, so its Monster now names its own thin set,
+`action_set="as_war_ram"`: three lines over vanilla `as_horse` (`base_set="as_horse"`, one extra action).
+Everything else above is unchanged. A reskin with no clip of its own keeps `as_horse` and authors nothing.
+Give a thin set its `_map` and `_town_and_village` children too: the campaign map looks up
+`ActionSetCode + "_map"` for a mounted party leader and `MBGlobals.GetActionSet` throws on a missing set.
+
 ### The full form, for a bespoke creature
 
 TAOM's warg, which is the reference implementation for a rideable creature on its own skeleton:
@@ -339,10 +345,11 @@ Two concrete failures, both on the horse rig:
 **refuses a mount whose channel-0 action type is `Rear`**. Bind your creature's attack to it and the
 creature goes unmountable in the middle of a fight.
 
-**`act_horse_strike_front` and `_back` are typed `actt_mount_strike`,** which sits inside the band
-`Agent.IsInBeingStruckAction` reads as **being struck**. The underlying clips are literally named
+**`act_horse_strike_front` and `_back` play hit reactions.** The underlying clips are literally named
 `horse_hit_from_front` and `horse_hit_from_back`. Bind an attack to those and the creature flinches
-as though it has been hit, at the exact moment it deals damage.
+as though it has been hit, at the exact moment it deals damage. Their type, `actt_mount_strike`, is
+harmless on its own: `Agent.IsInBeingStruckAction` reads types 48 to 51 as being struck, and
+`actt_mount_strike` is 52.
 
 !!! note "The fact underneath both"
     **Vanilla horses have no attack animation at all.** They deal damage by charge collision. So

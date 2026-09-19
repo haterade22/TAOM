@@ -524,3 +524,25 @@ To decide which parties count toward the player's ally team, the doctrine used `
 - **Why missed:** the field and the setter both existed with the expected name and type; nobody read the engine's own consumer of the field or its own producer of the value. Third instance of the class in one day (#611: a property written where nothing reads it; #613: a value read where the engine reads a corrected copy, and a value written where the engine caps it).
 - **Prevent:** before keying on an engine value, find where the ENGINE reads it on that path and read that, and before writing an engine value, find how the ENGINE writes it for the same effect (a vanilla perk that does the same thing is the best map) and use that seam. A public helper vanilla uses for the rule (`IsCollisionBoneDifferentThanWeaponAttachBone`) beats a re-implementation.
 - **Source:** `docs/reviews/rca-career-perks-2026-09-17.md` findings 4 and 5, #613.
+
+### `CustomAttacksUtils.TakeDamage` bypasses armor: a creature's damage band is a post-armor number
+It sets `blow.InflictedDamage` directly with `DamageCalculated = true`, so the engine skips the armor step. Measured
+2026-09-18: 976 war ram head-butts on Armored Trolls averaged 23.1, exactly the raw 18-28 roll, and the goats floored
+level-51 trolls all battle.
+- **Why missed:** the band was set beside weapon swings quoted BEFORE armor (a mid-tier sword 25-35), which reads as
+  weaker than a sword while landing every point.
+- **Prevent:** compare a band routed through `TakeDamage` with weapon damage after armor, and say so next to the
+  constant. Applies to every caller: elephant and mumakil tramples, the war ram, warg and spider bites, signature strikes.
+- **Source:** #618, 2026-09-18 Custom Battle logs; `Main/Features/AdvancedCombat/CustomAttacksUtils.cs`.
+
+### Read a range check's body before quoting its bounds
+`Agent.IsInBeingStruckAction` tests `MBMath.IsBetween(type, StrikeBegin, StrikeEnd)` with 48 and 52, and a 2026-08-28
+review wrote that anything from 48 to 52 reads as being struck, so `actt_mount_strike` (52) "sits inside the band".
+`IsBetween` is half-open (`value >= min && value < max`): 52 is outside. The claim went into a lesson, two handbook
+pages, the creature authoring guide and a CLAUDE.md trap row before an engine review read the body (2026-09-18).
+- **Why missed:** the constants are named Begin and End, which reads as inclusive, and the reviewer reasoned from
+  the names; a finding that passed review then gained authority with every copy.
+- **Prevent:** before stating that a value falls inside or outside an engine range, open the comparison's body
+  (`MBMath.IsBetween`, `MathF.Clamp`, a hand-written `<`/`<=`) and quote the operator. Treat a band quoted in a
+  lesson as a claim to re-check, not a fact, when it decides a design.
+- **Source:** `docs/reviews/rca-creature-collision-review-2026-09-18.md` finding 3; `TaleWorlds.Library.MBMath.cs`.

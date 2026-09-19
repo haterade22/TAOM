@@ -2128,3 +2128,46 @@ the total. The tool's tests assert behaviour, so they stayed green.
 - **Why missed:** each pair had a genuinely shared symbol, and the sentence claiming agreement was written about that symbol. Neither test suite ran the two consumers on one fixture where the precedence or the routing around the shared symbol would give different answers, so nothing could fail.
 - **Prevent:** when a doc or docstring says two tools cannot disagree, write the test that would make them disagree: one fixture, both consumers, an input chosen so the logic AROUND the shared symbol (precedence, routing, scaling granularity) is what decides. If the second consumer needs data the first has and it lacks (the validator had no item folders), add the data rather than approximating (culture for folder).
 - **Source:** #583 deep review, 2026-09-13, `docs/reviews/rca-kingdom-cap-curve-2026-09-13.md` findings 1 and 2.
+
+### A docs sweep for a changed value greps the old VALUE, not the new symbol
+The war ram's Monster moved from `action_set="as_horse"` to `"as_war_ram"`. The "update all documentation" pass searched by the new names and by `act_horse_kick`, and reported done; seven docs still showed the ram on `as_horse` with nothing authored, two of them in `<!-- example file=... -->` blocks naming the live file.
+- **Why missed:** a search written in the vocabulary of the new state cannot find text written in the old one. `check_handbook_attributes.py` validates marker attribute NAMES against the engine dump, not VALUES against the file a marker names, so it printed 0 findings.
+- **Prevent:** before claiming a docs sweep is done, grep the literal old value (`attr="old"`, the old id, the old number) across `docs/`, `Main/` comments and the external modules' comments, and classify every hit as fixed, historical (marked superseded) or generic advice that is still true.
+- **Source:** #618 deep review, 2026-09-18, `docs/reviews/rca-war-ram-headbutt-2026-09-18.md` finding F1.
+
+### Verify a re-serialised binary against the original bytes, not the fields its own library reads back
+`wire_anim_master_clip.ps1` re-saves a Kit-written clip tpac through TpacTool and verified the result by reading its fields back through TpacTool. The file came back 48 bytes shorter: the item version word 6 became 5 and the Kit's dependency tail (the master's GUID) was gone. The field read-back showed only the two intended changes.
+- **Why missed:** a round trip through one parser cannot see what that parser does not model.
+- **Prevent:** after any re-serialisation of a file another tool wrote, compare size and a byte diff against the original, and explain every difference before trusting it. Here each was then measured closed against shipping data (68 clips at version 5 and 48 without the tail all play in game) and written into the tool's docstring.
+- **Source:** #618, 2026-09-18, `docs/reviews/rca-war-ram-headbutt-2026-09-18.md` finding F7.
+
+### Count a scripted attack by a unique blow fingerprint; a landed blow never proves its animation played
+`[BlowDiag]` lines carry only `attackerIdx`, and the war ram's attack task applies damage in the same tick it plays
+the action. The ram's `AttackBlowMagnitude` (35) is the only such constant in `Main/`, so `mag=35 missile=False` counted
+every head-butt (1,300 in one test, 1,005 in the next) and, grouped by attacker and second, the victims per butt.
+- **Why missed:** "it fired" and "it played" were read as the same fact; the head never dropped in 2,305 firings.
+- **Prevent:** before reading a count, grep the source for the constant to prove the fingerprint is unique. A log keeps
+  growing while the battle runs, so rerun every count on the same snapshot before comparing two of them. Attribute an
+  engine warning by its timestamp against the edit and import times: `rgl_log_<pid>.txt` accumulates a whole session.
+- **Source:** #618, 2026-09-18 (`docs/features/war-ram.md` "Verifying from the logs").
+
+### Before an in-game test, prove the running process loaded the change
+`dotnet test ... -p:DisableModuleCopy=true` builds without deploying, and a game started before the deploy keeps the
+old DLL. On 2026-09-18 the check was three facts: the deployed `TAOM.dll` contains the new string (a UTF-16 search for
+`act_war_ram_butt`), the game process started after the DLL's write time (15:06:44 against 15:06:35), and every
+on-disk tpac edit predates a Kit load (the Kit re-cooks a changed package's `.rdc` on load).
+- **Why missed:** nothing missed yet; without it the ram would have kept its old kick and read as a failed clip.
+- **Prevent:** run the three checks before asking for an in-game test, and say which build the test will run.
+- **Source:** #618, 2026-09-18.
+
+### `r.pos += r.take(...)` drops the advance that `take` itself makes
+A tpac header parser skipped each item's metadata with `r.pos += r.take("<Q")`. Python evaluates the attribute on the
+left of an augmented assignment before it calls the right side, so the stored position was the old one plus the
+length: the 8 bytes `take` had just consumed were lost and every later field read shifted. The unit tests over a
+synthetic package failed on their first run; the scratch prototype had used a local variable and never showed it.
+- **Why missed:** the line reads as "skip the length-prefixed block", and nothing about it looks order-dependent.
+- **Prevent:** read a length into a local first (`n = r.take(...)`, then `r.pos += n`); never put a call that moves
+  a cursor on the right of an augmented assignment to that same cursor. Better still, reuse the tested container code:
+  `tools/tpac_clone_metamesh.py`'s `parse` and `serialize` round-trip a real package byte for byte, and the new tool
+  moved onto them the same day instead of carrying another tpac parser in `tools/`.
+- **Source:** `tools/skeleton_hit_capsules.py`, `tools/tests/test_skeleton_hit_capsules.py` (2026-09-18).

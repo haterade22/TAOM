@@ -91,53 +91,52 @@ public class WarRamAttackServiceTests
 
     // ------------------------------------------------------------------ ComputeInflictedDamage
     // Per-hit randomized damage: the roll is a [0,1] float supplied by the BT node (MBRandom.RandomFloat)
-    // so the service stays pure. Kick (Trample kind) 18-28 before block scaling -- far softer than the
-    // elephant's 50-100, appropriate for a dwarf cavalry mount rather than a siege-beast (see
-    // WarRamConfig's damage-band comment for the full justification). WarRamAttackService binds the
-    // SideAttack band to the SAME 18-28, so those assertions double as proof the never-fired branch
-    // would not misbehave if it were ever reached.
+    // so the service stays pure. Head-butt (Trample kind) 40-50 before block scaling since 2026-09-18 (Mike;
+    // it was 18-28): below the elephant's 50-100 trample, one enemy per butt, and armor does not reduce it
+    // (CustomAttacksUtils writes InflictedDamage directly). WarRamAttackService binds the SideAttack band to the
+    // SAME 40-50, so those assertions double as proof the never-fired branch would not misbehave if reached.
 
     [TestMethod]
     public void ComputeInflictedDamage_ButtRollZero_ReturnsMin()
-        => Assert.AreEqual(18, _sut.ComputeInflictedDamage(ElephantLikeAttackKind.Trample, targetBlocking: false, roll: 0f));
+        => Assert.AreEqual(40, _sut.ComputeInflictedDamage(ElephantLikeAttackKind.Trample, targetBlocking: false, roll: 0f));
 
     [TestMethod]
     public void ComputeInflictedDamage_ButtRollMax_ReturnsMax()
-        => Assert.AreEqual(28, _sut.ComputeInflictedDamage(ElephantLikeAttackKind.Trample, targetBlocking: false, roll: 1f));
+        => Assert.AreEqual(50, _sut.ComputeInflictedDamage(ElephantLikeAttackKind.Trample, targetBlocking: false, roll: 1f));
 
     [TestMethod]
     public void ComputeInflictedDamage_ButtRollHalf_ReturnsMidpoint()
-        // 18 + round(0.5 * (28-18)) = 18 + 5 = 23.
-        => Assert.AreEqual(23, _sut.ComputeInflictedDamage(ElephantLikeAttackKind.Trample, targetBlocking: false, roll: 0.5f));
+        // 40 + round(0.5 * (50-40)) = 40 + 5 = 45.
+        => Assert.AreEqual(45, _sut.ComputeInflictedDamage(ElephantLikeAttackKind.Trample, targetBlocking: false, roll: 0.5f));
 
     [TestMethod]
     public void ComputeInflictedDamage_ButtBlockingMaxRoll_ScaledToQuarter()
-        // round(28 * 0.25) = 7.
-        => Assert.AreEqual(7, _sut.ComputeInflictedDamage(ElephantLikeAttackKind.Trample, targetBlocking: true, roll: 1f));
+        // round(50 * 0.25) = round(12.5) = 12 (Math.Round rounds half to even).
+        => Assert.AreEqual(12, _sut.ComputeInflictedDamage(ElephantLikeAttackKind.Trample, targetBlocking: true, roll: 1f));
 
     [TestMethod]
     public void ComputeInflictedDamage_SideAttackRollZero_ReturnsMin()
-        => Assert.AreEqual(18, _sut.ComputeInflictedDamage(ElephantLikeAttackKind.SideAttack, targetBlocking: false, roll: 0f));
+        => Assert.AreEqual(40, _sut.ComputeInflictedDamage(ElephantLikeAttackKind.SideAttack, targetBlocking: false, roll: 0f));
 
     [TestMethod]
     public void ComputeInflictedDamage_SideAttackRollMax_ReturnsMax()
-        => Assert.AreEqual(28, _sut.ComputeInflictedDamage(ElephantLikeAttackKind.SideAttack, targetBlocking: false, roll: 1f));
+        => Assert.AreEqual(50, _sut.ComputeInflictedDamage(ElephantLikeAttackKind.SideAttack, targetBlocking: false, roll: 1f));
 
     [TestMethod]
     public void ComputeInflictedDamage_SideAttackBlockingMaxRoll_ScaledToQuarter()
-        => Assert.AreEqual(7, _sut.ComputeInflictedDamage(ElephantLikeAttackKind.SideAttack, targetBlocking: true, roll: 1f));
+        => Assert.AreEqual(12, _sut.ComputeInflictedDamage(ElephantLikeAttackKind.SideAttack, targetBlocking: true, roll: 1f));
 
     [TestMethod]
     public void ComputeInflictedDamage_RollNaN_TreatedAsMin()
         // Defensive: a NaN roll must not slip past the band (NaN comparisons are always false). Clamp -> min.
-        => Assert.AreEqual(18, _sut.ComputeInflictedDamage(ElephantLikeAttackKind.Trample, targetBlocking: false, roll: float.NaN));
+        => Assert.AreEqual(40, _sut.ComputeInflictedDamage(ElephantLikeAttackKind.Trample, targetBlocking: false, roll: float.NaN));
 
     [TestMethod]
     public void ComputeInflictedDamage_RollAboveOne_ClampedToMax()
         // Defensive: an out-of-range roll clamps to [0,1] -> max, never above the band.
-        => Assert.AreEqual(28, _sut.ComputeInflictedDamage(ElephantLikeAttackKind.Trample, targetBlocking: false, roll: 5f));
+        => Assert.AreEqual(50, _sut.ComputeInflictedDamage(ElephantLikeAttackKind.Trample, targetBlocking: false, roll: 5f));
 
     [TestMethod]
     public void ComputeInflictedDamage_RollBelowZero_ClampedToMin()
-        => Assert.AreEqual(18, _sut.ComputeInflictedDamage(ElephantLikeAttackKind.Trample, targetBlocking: false, roll: -3f));
+        => Assert.AreEqual(40, _sut.ComputeInflictedDamage(ElephantLikeAttackKind.Trample, targetBlocking: false, roll: -3f));
 }

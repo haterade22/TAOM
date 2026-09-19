@@ -57,7 +57,7 @@ This works because `Monster.Deserialize` copies `Flags`, `ActionSetCode`, `Femal
 name keeps its inherited value. Its defaults are guarded behind a "has a base_monster" check, so
 naming a base turns the whole record into a diff.
 
-TAOM's war ram is this. Here is the entire Monster definition:
+TAOM's war ram shipped as exactly this (2026-08-28). Here is the entire Monster definition:
 
 ```xml
 <Monsters>
@@ -75,6 +75,12 @@ TAOM's war ram is this. Here is the entire Monster definition:
 That inherits `Mountable`, `CanRear`, `RunsAwayWhenHit`, `CanCharge`, `CanWander`,
 `family_type="1"`, `monster_usage="horse"`, `num_paces="6"`, every bone name, the ground-slope
 block, and all twelve rein attributes. For free, and correctly.
+
+Since 2026-09-18 the ram carries one bespoke clip, a head-butt, so its Monster now names its own thin set,
+`action_set="as_war_ram"`: three lines over vanilla `as_horse` (`base_set="as_horse"`, one extra action).
+Everything else above is unchanged. A reskin with no clip of its own keeps `as_horse` and authors nothing.
+Give a thin set its `_map` and `_town_and_village` children too: the campaign map looks up
+`ActionSetCode + "_map"` for a mounted party leader and `MBGlobals.GetActionSet` throws on a missing set.
 
 !!! warning "A reskin inherits the donor's behaviour, not just its animations"
     The property that makes it cheap is the same one that couples it. Your creature now shares an

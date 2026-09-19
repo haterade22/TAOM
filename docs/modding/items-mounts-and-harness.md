@@ -238,7 +238,7 @@ The war ram is the whole reskin path in one element, and its file opens by sayin
 	<Monster
 		id="taom_war_ram"
 		base_monster="horse"
-		action_set="as_horse"
+		action_set="as_war_ram"
 		weight="320"
 		hit_points="160"
 		jump_acceleration="7.5"
@@ -249,9 +249,13 @@ The war ram is the whole reskin path in one element, and its file opens by sayin
 1. **`base_monster="horse"`** brings in `Mountable`, `CanRear`, `RunsAwayWhenHit`, `CanCharge`,
    `CanWander`, `family_type="1"`, `monster_usage="horse"`, `num_paces="6"`, every bone name, the
    ground-slope block and all twelve rein attributes.
-2. **`action_set="as_horse"`** reuses vanilla's horse clips, so nothing is authored, and
-   `as_horse_map` and `as_horse_town_and_village` already exist (a missing `_map` or
-   `_town_and_village` child is the elephant's native access-violation class).
+2. **`action_set="as_war_ram"`** is a three-line child of vanilla `as_horse` (`base_set="as_horse"`)
+   that adds the ram's one bespoke clip, the head-butt `act_war_ram_butt` (2026-09-18). Every other
+   clip is the horse's. A reskin with no clip of its own names `as_horse` directly, as the ram did
+   until then, and gets `as_horse_map` and `as_horse_town_and_village` for free. A thin set needs its
+   own `_map` and `_town_and_village` children (the ram's are in the Armory's `action_sets.xml`): a
+   missing `_map` child throws on the campaign map, and a missing `_town_and_village` one is the
+   elephant's native access-violation class.
 3. **`hit_points`, `weight`, `jump_acceleration`, `relative_speed_limit_for_charge`** are the
    balance numbers. Change these, leave the rest inherited.
 
@@ -481,6 +485,11 @@ Code: No code changes needed unless a feature names the id. The war ram's is pin
   horses have no attack animation at all; their only offensive action is `act_horse_kick`
   ([custom_creature_xml](../community/bannerlordmodding-lt/guides/custom_creature_xml.md), lines
   326-366).
+- **A harness can take team colours.** `<Flags UseTeamColor="true" />` on a `HorseHarness` item makes the engine
+  tint the harness mesh with the rider's two clothing colours (`MountVisualCreator`, missions and the preview
+  tableau), which suits greyscale cloth. Vanilla uses it on none of its 58 harness items; TAOM's eight war ram
+  bardings do (2026-09-18, confirmed in game). Put it in the item's single `<Flags>` element: `Items.xsd` allows one, and a second
+  element still works (the deserializer ORs them) but prints a schema error on every load.
 - **A riderless mount is an asset failure, not a data failure.** A mesh re-export that ships without
   the creature's skeleton resource leaves agent creation with nothing to attach the rider to, and
   there is no crash and no log line (gotcha 17 of

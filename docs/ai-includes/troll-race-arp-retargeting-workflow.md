@@ -25,8 +25,11 @@ hand-authored quadrupeds; a humanoid race reuses the human library via retargeti
 > `rebuild_anim_from_json.py` and exported straight back. The proven path for the human skeleton is
 > `tools/blender/retarget_mannequin_to_human.py --engine-skeleton` (rig built from the engine frames, pose
 > turned 180 degrees about Z, armature node identity, a REST frame at frame 0 because the Kit zeroes the root
-> track against it); it took 52 Fab clips into the Kit correctly. The ARP
-> steps below stay valid for retargeting ONTO an ARP rig; use the FBX rig for its body meshes only.
+> track against it); it took 52 Fab clips into the Kit correctly. Two more facts from the ram, same day:
+> the Kit stores bone tracks in FBX node order and the engine reads the skeleton's list order (they agree
+> on `human_skeleton`, not on `horse_skeleton`), and the FBX take name IS the master's name (a `.001` on the
+> action makes a new master). The ARP steps below stay valid for retargeting ONTO an ARP rig; use the FBX
+> rig for its body meshes only.
 
 ## Hard boundaries (what is NOT scriptable / autonomous)
 

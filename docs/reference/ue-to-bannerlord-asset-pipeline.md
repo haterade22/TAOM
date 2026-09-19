@@ -250,8 +250,13 @@ and death codes first.
   `client_prediction` at priority 60.
 - `Source2 = master Duration - 1` (walk master 38 -> clip 1..37, run 26 -> 1..25); Duration in
   seconds is the playback length, span / 30 for these.
-- A Kit reimport of the FBX KEEPS the master's GUID (51 of 52 on 2026-09-18), so clips linked by GUID
-  survive it and only `Source2` has to follow the new Duration; `gen_troll_anim_clips.ps1 -Verify`
+- A Kit reimport of the FBX KEEPS the master's GUID (51 of 52 on 2026-09-18) WHILE THE TAKE NAME MATCHES:
+  the master is named after the FBX take (Blender: the action), and a reimport whose take is named
+  differently creates a NEW item with a new GUID and an EMPTY skeleton and orphans the clip (the ram, same day:
+  a `.001` Blender action suffix became `act_war_ram_butt.001`). With the name kept, clips linked by GUID
+  survive and only `Source2` has to follow the new Duration; when a master did come back fresh,
+  `tools/wire_anim_master_clip.ps1 -Master <geo> -Clip <anm> -Apply` re-points the clip and sets the skeleton on
+  disk (Kit closed), keeping the clip's GUIDs; `gen_troll_anim_clips.ps1 -Verify`
   lists every STALE or ORPHAN clip and exits 1. The 52nd package had also been given a junk Skeleton
   item (`human_skeleton_notused.001`, made from that FBX on the first import) and came back as
   Skeleton + Geometry with no animation at all: the Kit then says "assigned skeleton animation not
@@ -271,11 +276,19 @@ and death codes first.
   recomputes them (xxHash64 over the metadata, the #616 lesson) so every file matches Kit output.
   73 warg, 24 spider and 24 chariot clips ship with zeros and load, so this is hygiene, not a fix.
 
+- **Untested alternative, a lead (2026-09-18):** MithrilForge ships hand-written packages, with no Kit save, into
+  a module's `AssetPackages/` folder, and the game renders them (props and FaceLearner heads, Bannerlord 1.4.6;
+  the Yotthani handoff (`docs/reviews/adopt-yotthani-animation-handoff-2026-09-18.md`)). The rule below is about the loose `Assets/` tree. If `AssetPackages/`
+  loads a hand-built package on 1.5.3 too, a new clone could skip the Kit save; it cannot replace a package that
+  also exists under `Assets/`, because loose wins. Test with one new, uniquely named package before relying on it.
 - **A package written outside the Kit does not exist to the client until the Kit has saved the module**
   and `RuntimeDataCache/<package GUID>.rdc` exists for it (the #616 lesson, same day). Every working clip
-  package in the Armory has one (24 spider, 73 warg, 24 chariot, 6 ram, 33 elephant); the 52 troll
-  masters imported today and the 52 generated clips had none. `python tools/check_rdc_entries.py --under
-  creature/troll` is the gate; it ignores `_mtl` by default because 925 materials have no entry and render.
+  package in the Armory has one (24 spider, 73 warg, 24 chariot, 6 ram, 33 elephant); the 52 generated clips
+  had none until the Kit loaded them. **Skeletal-animation masters are the exception: the Kit never writes an
+  entry for one, and they play without it** (measured 2026-09-18: warg 56 of 56, elephant 31 of 31, chariot 3 of 3 and spider 24 of 26 animation masters have no entry, every one of their clips has one, and all of those creatures animate in game). A package
+  the Kit sees change on disk gets its entry re-cooked when the Kit next loads (the ram clip rewired at 14:04
+  had a fresh `.rdc` at 14:11:55). `python tools/check_rdc_entries.py --under creature/troll` is the gate; it
+  ignores `_mtl` by default (925 materials have no entry and render) and counts masters separately.
 
 ### What the Kit did with the FBX, measured over three imports (2026-09-17/18)
 
@@ -322,11 +335,16 @@ the knock-down-and-rise strikes, arrow/fire deaths, and every attack (melee is e
 
 Cave troll (2026-09-18): 52 masters + 52 clips live in the Armory, playing correctly in the Kit; 213
 `as_cave_troll_warrior` overrides bound; LOME meshes re-skinned and in the Armory sources. Open: Kit
-reimport of `LOME_troll.fbx` + import of `LOME_troll_armor.fbx`, a Kit save so the 52 masters get their
-RDC entries (`tools/check_rdc_entries.py --under creature/troll`), Custom Battle smoke, the junk
+reimport of `LOME_troll.fbx` + import of `LOME_troll_armor.fbx` (both done 2026-09-18 pm; the masters needed
+no RDC entry after all, `tools/check_rdc_entries.py --under creature/troll` prints 0), Custom Battle smoke, the junk
 `human_skeleton_notused.00x` skeletons to delete, the Fab licence tier for the provenance row, the hill
 troll decision (stay on `troll_skeleton` + bind the clips, or conform the mesh), and the Fab troll on its
-own proportions as a separate job.
+own proportions as a separate job. The cave trolls fought in a Custom Battle on 2026-09-18 (15:47) on
+`as_cave_troll_warrior`, 2,982 blows taken and 19 deaths, no clip or material warning; Mike confirmed the
+animations. Two Kit warnings stay open, both present in every Kit session that day and neither caused by this
+work: the hill troll's materials `mordor_hill_troll_head` and `t_hilltroll_mouth` do not exist, and an assertion
+`rglBuffer.cpp:899` ("Potential read/write miss match for rglVec3") fires 17 ms after the Kit starts loading
+`LOTRLOME_Armory/Assets`, in no game session; the log names no file.
 
 Rivendell modular kit + 204 materials + textures: done and imported-ready. Tents: meshes + 10 sets
 done; Wide/On_Sticks textures pending user re-download. Open: foliage material shader flags (need

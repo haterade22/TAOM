@@ -59,6 +59,28 @@ Two gotchas: a `StepPoints` entry on a clip with no `SoundCode` is a sound trigg
 "Sound points and/or sound id not valid"), so clear them together; and vanilla has no standalone melee attack
 clip at all (melee is engine pose-blend), so an attack clip for a race can only ever play from script.
 
+## Vanilla HORSE and mount recipes, read 2026-09-18
+
+Read with TpacTool from `Native/EmAssetPackages/animations/animations_horse_and_rider/animations_horse_and_rider.tpac`
+and the Armory's warg clips, while finding out why the war ram's head-butt fired 1,300 times in a Custom Battle and
+never visibly played:
+
+| Clip | Priority | Flags | Blend in / out | CombatParameterId |
+|---|---|---|---|---|
+| `horse_kick` | 34 | `enforce_lowerbody`, `enforce_all` | 0.2 / 0.4 | `horse_kick_params` |
+| `warg_attack_stand` (Armory) | 34 | `enforce_lowerbody`, `enforce_all` | 0.2 / 0.4 | `warg_attack_stand` |
+| `horse_rear` | 74 | `lock_movement`, `enforce_lowerbody`, `update_bounding_volume`, `ignore_slope` | 0.3 / 0.3 | none |
+| `horse_hit_from_front` | 2 | `enforce_lowerbody` | 0.2 / 0.4 | none |
+| `rider_kick` (the rider's half) | 34 | `client_prediction`, `enforce_lowerbody`, `allow_head_movement` | 0.1 / 0.3 | none |
+
+**Every horse clip read carries `enforce_lowerbody`, even the priority-2 hit reaction.** A new clip made in the Kit
+starts at **priority 0 with no flags**; that clip plays in the Kit's model viewer (nothing competes for channel 0
+there) and is overridden by locomotion in battle. The ram's head-butt was invisible at priority 0 and still
+invisible at priority 34 without flags (1,005 butts logged, 15:47); it now carries the `horse_kick` / warg recipe
+above, in-game result pending. For a mount's action clip: copy the nearest vanilla clip of its kind from this table,
+and verify it in battle, never in the viewer. The `CombatParameterId` feeds the engine's own hit detection for that
+strike; a clip whose damage comes from a TAOM attack task does not need it.
+
 ## Per-clip-type recipe
 
 **CONFIRMED** from the elephant clips in the Kit (2026-06-06 screenshots):
@@ -92,6 +114,10 @@ The spider's `an_spi_*` clips have **no flags set** → even once the render AV 
   `_anm` to exist AND the right flags on it.)
 
 ## Full `AnimFlags` reference — every flag, by category
+
+**In the Kit** the clip panel lists these same flags as checkboxes without the `anf_` prefix (43 of them,
+`disable_agent_agent_collisions` through `spawn_particle`, checked against this table 2026-09-18), and the
+priority is a separate numeric field, not a checkbox.
 
 Deep-dive (2026-06-06, 6-agent workflow grounded in the decompiled engine). **How flags work:** the 64-bit
 `AnimFlags` word = **low byte (`0xFF`) is a priority integer** + **high bits are independent behavior flags**.
@@ -186,6 +212,35 @@ Cat 2 `synch_with_movement` + Cat 3 `cyclic` on locomotion, Cat 2 `lock_movement
 attacks/death, Cat 4 `disable_hand_ik` (+ leave foot-IK on for grounded clips, `update_bounding_volume` on wide
 poses), Cat 5 `make_walk_sound`/`make_bodyfall_sound`. Everything else is humanoid/MP/cinematic and stays unset.
 **Source of truth = mirror the warg's per-clip flag set**, don't reconstruct from this table. The 2026-08-28 absorption note gave that source as `LOTRLOME_Armory/AssetPackages/warg.tpac`. **That path is dead as of 2026-09-01:** the module has no `AssetPackages` directory at all (0 cooked packs against 4,364 loose `Assets/**/*.tpac`). `Assets/creature/warg/` does exist, and so does the parked copy at `<game>/_taom_disabled/warg_loose_assets_20260828/` that [lotrlome-warg-changes.md](./lotrlome-warg-changes.md) describes as removed. Which of those now holds the authoritative per-clip flags is **unconfirmed**; establish it before relying on it, rather than trusting either this line or the absorption note.
+
+## A clip can carry its own motion: `UnknownUInt2` (2026-09-18)
+
+Source: the Yotthani handoff (`docs/reviews/adopt-yotthani-animation-handoff-2026-09-18.md`), measured on Bannerlord 1.4.6 human clips; the TAOM census below is ours.
+
+- An `AnimationClip` item may carry a compressed motion segment of its own (segment type `6c1e136f`). The
+  clip field TpacTool.Lib 0.4.0 calls `UnknownUInt2` picks the source: **0 plays the `SkeletalAnimation` the
+  clip's `Animation` GUID names; 2 plays the clip's own segment** (per the handoff's 1.4.6 measurement; the field
+  is one TpacTool calls unknown, and TAOM has not measured the rule itself). Vanilla slash clips are at 2 and thrusts at 0,
+  which is why a tool that re-points `Animation` can change nothing in game for a clip at 2.
+- **TAOM census, 243 creature clips (read with TpacTool.Lib and the shared tpac parser by a one-off script, not
+  committed, 2026-09-18):** 235 are at
+  0 with no data segment (all chariot, ram, spider, troll and warg clips, 61 elephant clips), so re-pointing
+  their master reaches the game; `tools/wire_anim_master_clip.ps1` is sound for them. **Eight are at 2 with NO
+  segment:** `elephant_attack_1..4` and `elephant_rider_attack_1..4`, the ADOD_Beasts-derived attack clips. What
+  the engine plays for a clip that asks for a segment it does not carry is UNVERIFIED; see `features/elephant.md`
+  Open items.
+- Per the handoff, citing TaleWorlds without a link: animation assets cannot be overridden by re-shipping the same
+  GUID (overriding is limited to materials, meshes, textures and physics shapes); a new clip under a new name does
+  register.
+- The handoff also reports that a NEW `SkeletalAnimation` written by TpacTool.Lib does not register (engine index
+  -1). TAOM's Kit-imported masters register and play (troll, ram, warg, elephant), so read that as a statement
+  about TpacTool-written masters, not about masters in mod packages.
+- **Hit timing lives outside the clip.** A clip's `CombatParameterId` names an entry in
+  `Native/ModuleData/combat_parameters.xml`, whose `collision_check_starting_percent` /
+  `collision_check_ending_percent` bound the part of the clip in which native weapon collision runs (130 entries
+  in the 1.5.3 file; 165 entries, 130 of them with an explicit window, and the file's header defaults the rest to
+  1.0 and 0.0). A clip retimed or re-posed without its window keeps the old window. TAOM's scripted creature
+  attacks apply damage in code and are not bound by these windows.
 
 ## TODO — a tpac clip-flag tool (not yet built)
 

@@ -30,10 +30,11 @@ following the phases literally will cost you weeks of unnecessary work.
 
 Worked example: the **Dwarven war ram** (issue #515, [war-ram.md](../features/war-ram.md)). Its meshes
 are skinned to the stock vanilla **`horse_skeleton`**, bone for bone, so its Monster is the vanilla
-`horse_2` shape:
+`horse_2` shape (`as_war_ram` is a three-line child of `as_horse` holding the one bespoke clip, the
+head-butt, since 2026-09-18; before that it named `as_horse` directly, which is all a pure reskin needs):
 
 ```xml
-<Monster id="taom_war_ram" base_monster="horse" action_set="as_horse"
+<Monster id="taom_war_ram" base_monster="horse" action_set="as_war_ram"
          weight="320" hit_points="160"
          jump_acceleration="7.5" relative_speed_limit_for_charge="4.0" />
 ```
@@ -63,13 +64,16 @@ The war ram got this wrong **twice**, the second time while fixing the first:
 | Action | Type | Why it was wrong |
 |---|---|---|
 | `act_horse_rear` | `actt_rear` (`ActionCodeType.Rear = 47`) | The inherited `horse` usage set declares `rear_action="act_horse_rear"`, so the engine fires it on every damaged mount. Worse, `Agent.Mount` reads `mountAgent.GetCurrentActionType(0) == ActionCodeType.Rear` and **refuses the mount while true**, so forcing it each cooldown made the ram briefly unmountable in combat |
-| `act_horse_strike_front` / `_back` | `actt_mount_strike` (`ActionCodeType.MountStrike = 52`) | Sits inside `StrikeBegin = 48 .. StrikeEnd = 52`, the band `Agent.IsInBeingStruckAction` treats as **being struck**. The clips are named `horse_hit_from_front` / `_back`. The creature flinches as though hit while you emit damage |
+| `act_horse_strike_front` / `_back` | `actt_mount_strike` (`ActionCodeType.MountStrike = 52`) | The clips are the horse's hit reactions, `horse_hit_from_front` / `_back`: the creature flinches as though hit while you emit damage. The TYPE is harmless: `Agent.IsInBeingStruckAction` tests `MBMath.IsBetween(type, 48, 52)`, which is half-open, so it reads 48 to 51 (`StrikeLight` .. `StrikeKnockBack`) as being struck and NOT `MountStrike` (52) (corrected 2026-09-18; the warg's `actt_mount_strike` attacks play) |
 
 **The fact underneath both: the vanilla horse rig has no attack animation at all.** Horses deal damage
 through charge collision, so `monster_usage_strikes` is the mount's hit-REACTION table, not an attack
 table. The rig's only genuinely offensive action is **`act_horse_kick`** (`actt_kick`,
-`ActionCodeType.Kick = 28`), which is what the ram ships with. If a horse-rig creature needs to attack
-with anything other than a kick, that clip does not exist and must be authored.
+`ActionCodeType.Kick = 28`), which the ram attacked with until 2026-09-18. If a horse-rig creature needs
+to attack with anything other than a kick, that clip does not exist and must be authored: the ram's
+head-butt was, on the engine `horse_skeleton` (`docs/reference/bannerlord-skeleton-authoring.md`), and is
+bound as its own action `act_war_ram_butt` (same `actt_kick` type) rather than by re-pointing
+`act_horse_kick`, which the inherited usage set fires itself as `kick_action`.
 
 **So before binding ANY action on a reskin, establish three things:** its type in `action_types.xml`;
 whether the inherited `monster_usage` set names it in a **verb slot or table** (which means the engine
@@ -220,6 +224,7 @@ actually drives before declaring a transfer complete.
 | Skeleton bone count | **≤ 63 bones** (engine cap is `Skeleton.MaxBoneCount = 64`; author ≤63 for a 1-bone safety margin) | import failure / corrupt rig |
 | ~~Per-mesh bone palette~~ | **NO per-mesh bone limit (corrected 2026-06-13).** A single mesh skins the whole skeleton — elephant 59 active bones / chariot 54, one mesh each, both render. Do NOT split a body for bone count. Split a mesh ONLY for a genuinely separate sub-mesh (the warg splits `warg_low_fur` so the FUR cloth-simulates independently — cloth-driven, not bone-driven). | — (the old ~40 cap was a misdiagnosis; see `feedback_no_40_bone_per_mesh_limit`) |
 | Physics | bodies + joints transplanted onto the final skeleton in the same tpac | ragdoll-less corpses, collision holes |
+| Hit capsules | fitted to the skinned mesh once skeleton and mesh are final: `tools/blender/export_skin_for_capsules.py`, then `tools/skeleton_hit_capsules.py fit` and `patch --apply`, then a Kit load (`docs/reference/bannerlord-skeleton-authoring.md` "Hit capsules") | blows and arrows pass through the creature: the Kit's default capsule is a rod a ninth as wide as it is long (elephant 2026-09-18: 48% of the skin hittable, the neck not at all) |
 | Movement clips | authored **IN-PLACE** (zero net root travel) — the engine translates the agent | double-speed slide if root motion baked (verified vs warg 2026-06-03) |
 
 ## Phase 1 — Animation clips (the Kit, or the byte-patch emergency path)
@@ -238,6 +243,11 @@ trip it — which is why the bug hides until the creature becomes a mount.
   `make_bodyfall_sound, client_prediction, do_not_keep_track_of_sound, enforce_all,
   update_bounding_volume`; rear: `lock_movement, enforce_lowerbody`) — full Kit field map in
   spider-skeleton-animation-pipeline.md §3c.
+- **A clip on a vanilla MOUNT rig (horse skeleton reskins) needs the vanilla horse recipe, or it never shows in
+  battle.** A Kit-made clip starts at priority 0 with no flags; the viewer plays it, locomotion overrides it in
+  battle. Every vanilla horse clip carries `enforce_lowerbody`; an attack is priority 34 + `enforce_lowerbody` +
+  `enforce_all`, blends 0.2 / 0.4 (`horse_kick` = the warg attack's recipe). Table in
+  [bannerlord-animation-clip-flags.md](../reference/bannerlord-animation-clip-flags.md) (the war ram, 2026-09-18).
 - **Durable path:** set these in the Modding Kit and recompile. **Emergency path:** the
   byte-patch template graft (spider.md "How-to") — structurally validated clean by
   `tools/_scratch`-class verifiers on 2026-06-12, but treat it as a stopgap; recompile when the
@@ -405,6 +415,8 @@ monster leaves null native entries → spawn AV.
 | `<C>MissionBehavior : MissionLogic` | elephant wiring verbatim: `BTRegister.RegisterClass` in lazy `Initialize()`, first-tick scan + `OnAgentBuild` late-attach keyed on **`Monster.StringId`** (NEVER character id — the mount agent's Character is the RIDER), dedup shadow list, dead pruning, error-dedup logging | custom-battle deployment spawns AFTER the first tick — late-attach is the main path |
 | `<C>BehaviorTree` | elephant shell (has-rider → ai-controlled → attack gate → task + SleepTask pacing; player-ridden and riderless branches sleep) + `On<C>Died` listener (warg parity); `base(10)` ctor (NOT a throttle — int division truncates <1000 to 0) | the BT layers attacks ON TOP of engine mount AI; it needs no Monster flags |
 | Attack service | pure, TaleWorlds-free (`ShouldEngage` / cooldowns / damage), boundary nodes hold the raw `Agent` | warg-pattern rider damage attribution |
+| **Damage bypasses armor** | `CustomAttacksUtils.TakeDamage` writes `InflictedDamage` directly with `DamageCalculated = true`, so the engine skips armor for every creature attack routed through it (trample, head-butt, bite, signature strikes) | Tune the band as a post-armor number: 976 ram head-butts on Armored Trolls averaged 23.1, exactly the raw 18-28 roll (2026-09-18) |
+| Single target vs radial | `ElephantLikeCombatProfile(..., singleTarget: true)` makes the shared attack task hit only the enemy faced most squarely inside the radius (`SingleVictimPick`, nearer on a tie; a ridden mount is never picked, its rider is); default is the radial sweep | The war ram sets it; elephant and mumakil do not (#618) |
 | Eager `ActionIndexCache` + `AnyUnresolved()` drift guard | resolve attack clips at mission start; log if any → `act_none` | Armory rename = silent `act_none` = the "slide" |
 | Mount-lock | `TaomAgentStatCalculateModel`: `CanAgentRideMount=false` + `MountDifficulty=999` for the monster id | players can't steal the mount; the assigned rider's cavalry spawn ignores it |
 | **Patch47 `Agent_Die_SpiderDismount_Patch`** | Prefix on `Agent.Die`: a rider dying on the creature is hard-dismounted via cached private `SetMountAgent(null)` → dies the proven on-foot death; a dying creature frees its rider first | the 1.4.6 native mounted-death path still AVs on (at least melee) deaths — Die-path read of float-bits-as-index from a corrupted action record (debugger-proven 2026-06-12). Patch47 routes around it and was wrongly indicted once (the charge crash fired without it too); it is REQUIRED |

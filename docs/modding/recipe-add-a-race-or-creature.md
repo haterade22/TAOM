@@ -48,7 +48,7 @@ Decide this first, because it changes everything downstream.
 | should attack with something other than a kick | **Bespoke**, or author one clip onto the existing rig. The vanilla horse rig has no attack animation | weeks, or one clip |
 | you are not sure | **Reskin first.** A working creature is a better place to iterate from than a half built rig | |
 
-Source: [custom_creatures](../community/bannerlordmodding-lt/guides/custom_creatures.md) "There are two paths"; the bespoke path owns nearly every entry in [custom_creature_troubleshooting](../community/bannerlordmodding-lt/guides/custom_creature_troubleshooting.md). **A reskin inherits the donor's behaviour, not just its animations.** Your creature now shares an action vocabulary with the engine, so "our code never fires this action" stops meaning "nothing fires it". The war ram bound `act_horse_rear` (the engine fires it on every damaged mount, and `Agent.Mount` refuses while it is current) and then `act_horse_strike_front` (inside the `StrikeBegin..StrikeEnd` band the engine reads as *being struck*). Both shipped. Details in [creature-mount-authoring](../ai-includes/creature-mount-authoring.md) "The price of a reskin".
+Source: [custom_creatures](../community/bannerlordmodding-lt/guides/custom_creatures.md) "There are two paths"; the bespoke path owns nearly every entry in [custom_creature_troubleshooting](../community/bannerlordmodding-lt/guides/custom_creature_troubleshooting.md). **A reskin inherits the donor's behaviour, not just its animations.** Your creature now shares an action vocabulary with the engine, so "our code never fires this action" stops meaning "nothing fires it". The war ram bound `act_horse_rear` (the engine fires it on every damaged mount, and `Agent.Mount` refuses while it is current) and then `act_horse_strike_front` (the horse's hit-reaction clip, so the creature flinched while it dealt damage). Both shipped. Details in [creature-mount-authoring](../ai-includes/creature-mount-authoring.md) "The price of a reskin".
 
 ## Worked example: the dwarf chain
 
@@ -135,14 +135,14 @@ TAOM's war ram is the whole reskin, seven attributes:
 	<Monster
 		id="taom_war_ram"
 		base_monster="horse"
-		action_set="as_horse"
+		action_set="as_war_ram"
 		weight="320"
 		hit_points="160"
 		jump_acceleration="7.5"
 		relative_speed_limit_for_charge="4.0" />
 ```
 
-That inherits `Mountable`, `CanRear`, `CanCharge`, `family_type="1"`, `monster_usage="horse"`, `num_paces="6"`, every bone name, the ground slope block and all twelve rein attributes. Reusing `as_horse` also means `as_horse_map` and `as_horse_town_and_village` already exist; a missing `_map` child is a native access violation on the campaign map.
+That inherits `Mountable`, `CanRear`, `CanCharge`, `family_type="1"`, `monster_usage="horse"`, `num_paces="6"`, every bone name, the ground slope block and all twelve rein attributes. A pure reskin names `as_horse` there and gets `as_horse_map` and `as_horse_town_and_village` for free. The ram names its own `as_war_ram` (a child of `as_horse` that adds one bespoke clip, the head-butt, since 2026-09-18), so it defines `as_war_ram_map` and `as_war_ram_town_and_village` as well; a missing `_map` child breaks the campaign map (`MBGlobals.GetActionSet` throws `Invalid action set code`).
 
 **Check:** `python tools/audit_action_set_parity.py`, then `python tools/validate_mesh_refs.py --no-rgl-log`.
 **Takes effect:** full game restart.
@@ -153,6 +153,7 @@ That inherits `Mountable`, `CanRear`, `CanCharge`, `family_type="1"`, `monster_u
 Do not start here from this chapter. Invoke `/new-creature-mount`, then follow [creature-mount-authoring](../ai-includes/creature-mount-authoring.md) phases 1 to 5 in order: skeleton tpac, clips with `quad_movement` tagged on every movement bound clip, `action_types.xml`, `action_sets.xml` plus its `_map` and `_town_and_village` children, `monster_usage_sets.xml`, then the rider partial. `LOTRLOME_Armory/ModuleData/Monsters/LOTR/` holds the seven creature Monsters TAOM ships and is the folder your file belongs in.
 
 **Check:** `python tools/verify_mount_assets.py spider` (substitute your creature once it is registered in that script's `CREATURES` table, which today holds `spider`, `elephant` and `mumakil`), then `python tools/audit_action_set_parity.py`.
+**Then fit the hit capsules:** `python tools/skeleton_hit_capsules.py show --tpac <geo.tpac>` lists them; a radius about a ninth of a capsule's length is the Kit's default, and weapons pass through it. Fit and patch them against the skinned mesh as [bannerlord-skeleton-authoring](../reference/bannerlord-skeleton-authoring.md) "Hit capsules" describes.
 **Takes effect:** full game restart.
 **Code:** Code changes required in `Main/Features/<Creature>/`: a behaviour tree, an attack service and an IoC registration, in the shape of `Main/Features/Spider/` or `Main/Features/Warg/`. A creature that only walks and carries a rider does not need them; one that attacks does.
 

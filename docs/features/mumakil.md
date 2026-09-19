@@ -75,6 +75,10 @@ mesh before colliding with the central capsule. Fixed by enlarging the **1× bas
 **+2.0 … −2.6**, length 4.6 → ~radius 3.3 / length 13.8 in-game) to match the Mûmakil's footprint. The ragdoll is the
 shared `elephant_skeleton` per-bone physics — it scales 3× automatically but cannot be enlarged *independently* of the
 elephant without forking the skeleton.
+The elephant's own body capsule was refitted on 2026-09-18 (radius 1.05, full body length), and the shared
+skeleton's per-bone hit capsules were refit to the mesh the same day (neck, legs and haunches had been thin Kit
+defaults), so the Mumakil's hit capsules grew with them at its 3x scale (`elephant.md`, "Collision"; in-game test
+owed).
 
 ### Charge, not horse-archer (2026-06-29)
 

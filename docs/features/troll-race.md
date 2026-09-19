@@ -151,13 +151,14 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
   (author on the engine's own `human_skeleton` frames) and the root yaw (turn the pose, not the node), see
   [bannerlord-skeleton-authoring.md](../reference/bannerlord-skeleton-authoring.md) 2026-09-18. `tools/bind_troll_action_set.py`
   wrote 213 overrides into `as_cave_troll_warrior` (walk/run/idle/strike/death codes; turns, strafes, attacks
-  inherit human), parity audit OK, snapshot refreshed. OWED: one more Kit save so the 52 masters get their
-  `RuntimeDataCache` entries (`tools/check_rdc_entries.py --under creature/troll` must print 0), then Custom
-  Battle with Mordor trolls; delete `human_skeleton_notused.001`/`.004` in the Kit; provenance row.
+  inherit human), parity audit OK, snapshot refreshed. OWED: Custom Battle with Mordor trolls; provenance row.
+  (The Kit save "for the 52 masters' RDC entries" owed here was a false target: the Kit never writes an entry
+  for an animation master and masters play without one; `check_rdc_entries.py` now counts them separately and
+  prints 0 for `creature/troll`. The junk `human_skeleton_notused.00x` skeletons are gone.)
   **2026-09-18 pm (Artem):** frame 0 of every export is now the REST frame (the Kit zeroes the root position
   track at frame 0; posed frame 0 sat the troll 9 cm too high, feet skating). The 52 FBX in the Armory sources
   are the frame-0 build: REIMPORT them, then regenerate the clips (`gen_troll_anim_clips.ps1`, masters are one
-  frame longer) and re-save for RDC.
+  frame longer); the Kit cooks the new clips' RDC entries when it next loads.
   **Reimport done 10:55 to 10:58:** 51 masters kept their GUIDs (Duration +1, so `-Verify` shows 51 STALE clips);
   `troll_danger_idle_hit_front_0_geo.tpac` came back as Skeleton (`human_skeleton_notused.001`) + Geometry with
   no animation, and the Kit reports "assigned skeleton animation not found" on `anim_troll_combat_hit_front1`.
@@ -175,7 +176,22 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
   `E:\LOTRAOMAssets\_troll_rig_backup_20260918\`). OWED: Kit reimport of `LOME_troll.fbx`, import of
   `LOME_troll_armor.fbx`, in-game look. Hill troll: 19.5 cm mean joint offset and 1.3 to 2.3x proportions vs the
   human rest, so it stays on `troll_skeleton` unless Mike accepts a conformed silhouette; Fab troll on its own
-  proportions is a separate job.
+  proportions is a separate job. The hill troll's head and mouth materials are missing in the Kit
+  (`mordor_hill_troll_head`, `t_hilltroll_mouth`, "Unable to find material" in every Kit session of 2026-09-18).
+  **In game (2026-09-18, 15:47):** cave trolls fought on `as_cave_troll_warrior`, 2,982 blows taken, 19 deaths, no
+  clip or material warning; Mike confirmed the Fab animations play.
+  **Materials (2026-09-18 pm):** the reimport of `LOME_troll.fbx` warned "Unable to find material lotr_troll_head"
+  on the six head meshes. The original FBX already named that material and the Kit never had it; the March import
+  had been reassigned to `base_body_olog` by hand, which a reimport resets. `tools/blender/fbx_remap_materials.py
+  --map lotr_troll_head=base_body_olog --apply` fixed it in the source (6 slots, weights and bones unchanged; old
+  file `LOME_troll.fbx.bak-matremap`), so every reimport now binds `base_body_olog`. **Armor textures:**
+  `LOME_troll_armor.fbx` names `lotr_troll_chains`, `lotr_troll_helmet`, `lotr_troll_pants`,
+  `lotr_troll_plate_armour`, none of which the live Armory had. The source PNGs were found in an older Armory
+  copy, `E:\Safee\LOTRLOME_Armory\AssetSources\troll\` (2024-12-11, d/n/s for all four, 2048). Copied into
+  the Cave Troll `textures\` folder and resized to diffuse 1024, normal 512, specular 512 (Mike's sizes) with
+  `E:\taom-texture-backup-2026-09-13\resize_textures.py`; 2K originals in that backup tree.
+  The old compiled `_tex`/`_mtl` tpacs in `Safee` were NOT copied (about 480 bytes each, no pixel data, GUIDs from
+  another tree). Mike creates the four materials in the Kit (names must match the FBX slots), then imports the armor.
 
 ### Track 2 — bespoke retargeted set (pipeline proven; source step is a Kit/UI hand-off)
 

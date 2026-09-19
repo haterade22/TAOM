@@ -4,6 +4,92 @@
 
 ## 2026-09-18
 
+### fix(creatures): v2.0.29 - deep review of the ram, elephant and hit-capsule work (#618, #624)
+
+Eight review lenses, two at a time; no CRITICAL or HIGH. RCA: `docs/reviews/rca-creature-collision-review-2026-09-18.md`.
+
+- **The ram's drift guard covers the binding and the clip.** It caught only a missing action type; a typed action
+  whose `as_war_ram` binding or clip package was gone played nothing and logged nothing. It now looks the set up by
+  id and asks the engine whether the action has a clip in it (`WarRamConfig.ActionSetId`, pinned).
+- **The single-target pick skips ridden mounts** and runs in one pass through a small comparator,
+  `SingleVictimPick`, replacing `ElephantLikeVictimSelection` and its three scratch lists. Same pick otherwise; the
+  elephant and mumakil area attack hits exactly what it hit before.
+- **A wrong engine fact, corrected in ten places.** `Agent.IsInBeingStruckAction` uses the half-open
+  `MBMath.IsBetween(type, 48, 52)`, so `actt_mount_strike` (52) is NOT read as being struck. `act_horse_strike_*`
+  were still wrong for the ram: their clips are the horse's hit reactions. Lesson in
+  `docs/reviews/lessons/adapters-taleworlds-api.md`.
+- **Armory data.** Three dead `family_type` attributes on `<Horse>` (elephant, mumakil, chariot) removed, so
+  `LOTRAOM_horses.xml` passes the engine schema; the ram Monster's header describes `as_war_ram`; the repo snapshot
+  of `action_types.xml` matches live again. New gate: `tools/tests/test_live_ram_bardings.py` pins the eight
+  bardings' team colour and single `<Flags>` element, since the Armory is unversioned.
+- **Tools.** `skeleton_hit_capsules.py` refuses to write when it cannot list processes, refuses a fit made for
+  another skeleton, a misspelled `--mesh` and duplicate bone names, and reads back all four written fields;
+  `check_rdc_entries.py` exits 1 when it checked nothing. 10 new tests.
+- **Docs.** Claims stated ahead of their evidence were hedged or corrected: the howdah-floor slide cause is the
+  leading, unconfirmed mechanism; `SetAgentExcludeStateForFaceGroupId` has 13 base-game callers, all navmesh ids;
+  hit versus ragdoll capsules is inferred until the in-game hit test; the `UnknownUInt2` rule is the handoff's.
+  Issue #624 filed for the elephant collision work; provenance row for the Yotthani handoff and MithrilForge.
+
+### docs: v2.0.29 - Yotthani's animation handoff reviewed; a wrong crew-collision fix corrected
+
+Yotthani's DualWield handoff (441 lines, read in full) and his MithrilForge repo went through `/adopt-external`:
+security-clean, MIT, and the repo snapshot lacks the animation tool chain the handoff describes. Every claim was
+checked against TAOM before it moved (`docs/reviews/adopt-yotthani-animation-handoff-2026-09-18.md`). Ported as
+knowledge: a clip can carry its own motion segment, selected by the clip field `UnknownUInt2` (0 plays the named
+master, 2 the clip's own segment); a census of TAOM's 243 creature clips found 235 at 0 and exactly the eight
+ADOD_Beasts elephant attack clips at 2 with no segment, now an elephant open item. Also ported: native hit windows
+in `combat_parameters.xml`, `Mission.RayCastForClosestAgentsLimbs` for testing hit capsules, the TpacTool
+mesh-save corruption warning, the untested `AssetPackages/` load path as a lead, and the perspective and
+measurement traps. Proposed, not built: a pose recorder and the `AssetPackages/` load test.
+
+Corrected: `docs/features/elephant.md` named `Agent.SetAgentExcludeStateForFaceGroupId` as the fix for the howdah
+crew shoving the elephant. Its one base-game caller, `CastleGate.SetGateNavMeshStateForEnemies`, passes a navmesh
+face id to keep attacking AI from pathing through a gate, as do twelve SandBox call sites: a pathing exclusion,
+not a collision one (installed 1.5.3). `/deep-review` Step 1 now sweeps live `Assets/` binaries too, and takes its window from the change's own
+last review rather than the shared agent log, whose latest line can be another session's.
+
+### data(elephant): v2.0.29 - collision fitted to the model: body capsule and per-bone hit capsules
+
+Players found the war elephant's collision too small. Two layers were at fault. The body capsule (radius 0.9,
+y -2.57 to +1.8), what other agents bump into, left the head, trunk, tusks and rump outside it; it is now fitted
+to the measured model (radius 1.05, y -3.0 to +2.38, 0.6 to 2.7 m high) in the live Armory Monster and the repo
+reference copy. A doubled radius, the first ask, was written and reverted before any test: its top (3.3 to 4.2 m)
+would enclose the howdah's physics floor at 3.2 m, the leading (unconfirmed) cause of the elephant slide. The per-bone hit
+capsules, what blows and arrows strike, were mostly the Modding Kit's defaults (41 of 60: a rod along each bone,
+radius a ninth of its length, the neck 0.03 to 0.05 m wide), so only 48% of the skin was hittable. They are now
+fitted to the skinned mesh and patched into `adod_elephant_geo.tpac`: 98.2% of the skin inside a hit capsule, none
+more than 20 cm proud of it, ragdoll capsules untouched. The Mumakil shares the skeleton. New
+`tools/skeleton_hit_capsules.py` (show, fit, patch; 15 tests) and `tools/blender/export_skin_for_capsules.py`
+do it for any creature; the chariot (57 of 60) and spider (40 of 62) carry the same defaults. The patch reuses
+`tools/tpac_clone_metamesh.py`'s container and was read back through TpacTool.Lib before it was written.
+In-game test owed after a Kit load. Docs: `docs/reference/bannerlord-skeleton-authoring.md` "Hit capsules",
+`docs/features/elephant.md` "Collision", the creature handbook, two lessons.
+
+### data(ram): v2.0.29 - the eight ram bardings take team colours
+
+Mike added `<Flags UseTeamColor="true" />` to the eight `taom_ram_barding_*` items in the Armory's
+`LOTRAOM_horses.xml`, because their cloth is greyscale. Verified before recording: the file parses, the flag sits on
+exactly the eight bardings (not the two ram bodies), `ItemObject.Deserialize` ORs every `<Flags>` element into the
+item's flags so `Civilian` survives, and `MountVisualCreator` tints a harness mesh with the rider's clothing colours
+when the harness item uses team colour. It was a second `<Flags>` element where `Items.xsd` allows one (a schema
+error printed on every load), so each barding's two elements were then folded into one,
+`<Flags Civilian="true" UseTeamColor="true" />` (backup `LOTRAOM_horses.xml.bak-teamcolor-20260918-161512`; the
+file parses, all eight carry both flags). Recorded in the Armory ledger (unversioned file) and the mounts guide.
+Confirmed in game the same evening: the barding cloth takes the team colours.
+
+### docs: v2.0.29 - mount clip recipe, armor-free creature damage, log verification
+
+What the afternoon's Custom Battles taught, written where the next creature will look. The clip-flags reference
+gained the vanilla horse and mount recipes read from the tpacs (every horse clip carries `enforce_lowerbody`; an
+attack is priority 34 + `enforce_lowerbody` + `enforce_all`, blends 0.2 / 0.4, the same for `horse_kick` and the
+warg); the handbook's Kit-compile section, its troubleshooting table and the authoring guide say that a Kit-made clip
+(priority 0, no flags) plays in the viewer and not in battle, and the handbook's stale "Source 1 = 0" became 1.
+`CustomAttacksUtils.TakeDamage` bypasses armor, so every creature damage band is post-armor (advanced-combat,
+elephant and authoring docs). The shared profile's `singleTarget` switch is documented beside the radial sweep.
+`war-ram.md` records how to verify the head-butt from the logs (the magnitude-35 fingerprint, log paths, the deploy
+checks). Open Kit warnings recorded: the hill troll's two missing materials and the `rglBuffer.cpp:899` load
+assertion. Four lessons (animation-skeleton, adapters-taleworlds-api, two in build-tooling-workflow).
+
 ### fix(ranged): #617 deep review: translated names follow the tier ids, the writers share one set of rules
 
 A six-agent deep review of the #617 ranged rebalance found one live defect and several latent ones.
@@ -239,8 +325,14 @@ vanilla `horse_kick`'s priority 34 and blends 0.2 / 0.4, flags still empty so th
 butt now hits ONE enemy (Mike: "only hit 1 person not AOE"). The shared elephant-like profile gained a
 `SingleTarget` switch, off by default so the elephant and mumakil tramples stay radial; the ram turns it on
 (`WarRamConfig.AttackSingleTarget`), and the attack task then hits only the enemy faced most squarely, nearer on
-a tie (`ElephantLikeVictimSelection`, pure, 7 tests; `WarRamConfigTests` pins the switch; RED then GREEN).
-Not-tested: the second Custom Battle (open the Kit once first so it re-cooks the clip's RDC entry).
+a tie (`SingleVictimPick`, pure, 6 tests; `WarRamConfigTests` pins the switch; RED then GREEN).
+Second Custom Battle (15:47): 1,005 butts from 180 rams, every one on exactly 1 victim, 18 to 28 damage averaging
+23.1 with armor ignored (976 hits on Armored Trolls, all at the raw roll); the cave trolls fought on
+`as_cave_troll_warrior` with no clip or material warning (Mike: the troll animations work). The head still did not
+visibly drop at priority 34, so the clip took the warg attack's flags, identical to `horse_kick`'s:
+`enforce_lowerbody` + `enforce_all`. And the damage band went to 40-50 (Mike); `WarRamAttackServiceTests` moved
+first (10 RED), then `WarRamConfig` (GREEN). Not-tested: the third Custom Battle (open the Kit once first so it
+re-cooks the clip's RDC entry).
 
 ### fix(troll-mesh): the LOME troll head binds base_body_olog on every reimport
 
