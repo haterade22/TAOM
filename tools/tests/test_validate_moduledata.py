@@ -41,6 +41,17 @@ def _write(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
+def _run_main(*args) -> tuple:
+    """(exit code, stdout, stderr) of validate_moduledata.main() under these CLI args.
+    Mocks are the caller's business: baking one in here would let a future test of a pass
+    through main() silently exercise a stub."""
+    out, err = io.StringIO(), io.StringIO()
+    with mock.patch.object(sys, "argv", ["validate_moduledata.py", *args]), \
+         redirect_stdout(out), redirect_stderr(err):
+        code = vm.main()
+    return code, out.getvalue(), err.getvalue()
+
+
 class ValidatorContractTests(unittest.TestCase):
     def setUp(self):
         self._tmp = tempfile.TemporaryDirectory()
@@ -610,7 +621,7 @@ class ValidatorContractTests(unittest.TestCase):
         gone = Path(self._tmp.name) / "NoSuchModule" / "ModuleData"
         v = ts.Validator(self.md, self.schemas, self.registries, extra_ref_roots=[gone])
         v.run()
-        self.assertEqual([Path(p) for p in v.missing_ref_roots], [gone])
+        self.assertEqual(v.missing_ref_roots, [gone])   # Paths, like extra_ref_roots beside it
 
     def test_present_extra_ref_root_is_not_reported_missing(self):
         armory = Path(self._tmp.name) / "LOTRLOME_Armory" / "ModuleData"
@@ -1772,6 +1783,18 @@ class ExtraRefRootTests(unittest.TestCase):
                             for i in issues),
                         f"expected UNKNOWN_CULTURE for the TAOM_Map ref, got {[i.code for i in issues]}")
 
+    def test_main_warns_about_a_missing_root_instead_of_crashing(self):
+        """A Modules folder missing one of the live modules must print the warning that says
+        its sweep was skipped. Validator.missing_ref_roots once held strings while main()
+        called `.parent` on them, so this crashed with AttributeError instead."""
+        md = Path(self._tmp.name) / "ModuleData"
+        md.mkdir(parents=True)
+        (self.modules / "TAOM_Map" / "ModuleData").rmdir()
+        with mock.patch.object(vm, "generator_item_ref_issues", return_value=[]):
+            _, _, err = _run_main("--moduledata", str(md), "--game-modules", str(self.modules),
+                                  "--code", "UNKNOWN_CULTURE")
+        self.assertIn("extra ref root NOT FOUND, sweep SKIPPED for TAOM_Map", err)
+
 
 class ArmoryStructuralAssumptionTests(unittest.TestCase):
     """The Armory's schema checks silently do not run, and that is only safe today.
@@ -2139,8 +2162,8 @@ class MissingCollisionBodyTests(unittest.TestCase):
     piece whose `body_name` (or holster / collision body) names a PhysicsShape
     no loaded tpac ships. `validate_mesh_refs.py` Tier C is the engine; this
     pass only turns its MISSING_BODY findings into ERROR issues (and its
-    MISSING_MESH into WARNINGs) so the commit hook, the MCP tool and /verify see
-    them without anyone remembering a second command."""
+    MISSING_MESH into WARNINGs) so the commit hook sees them without anyone
+    remembering a second command (the MCP tool and /verify do not yet, #623)."""
 
     def _fake_tier_c(self, codes):
         import validate_mesh_refs as vmr
@@ -2175,6 +2198,68 @@ class MissingCollisionBodyTests(unittest.TestCase):
             issues = vm.missing_collision_body_issues(Path("game/Modules"), Path("md"))
         self.assertEqual([i.code for i in issues], [vm.BODY_CODE])
         self.assertIn("NOT verified", issues[0].message)
+
+    def test_fallback_scans_only_the_packs_that_failed_to_parse(self):
+        """A parsed pack's TOC already lists its bodies (#352), so only a pack that failed to
+        parse can hide one. Byte-scanning every pack instead took 110-119 s over 4,611 packs
+        (22.6 GiB), past the commit hook's 45 s bound, in exactly the #599 case."""
+        import validate_mesh_refs as vmr
+        present = vmr.PresentSet(physicsshapes={"bo_a"}, tpac_paths=["good.tpac", "bad.tpac"],
+                                 unparsed=[("bad.tpac", "suspicious udep_count")])
+        ref = vmr.MeshRef(name="bo_missing", attr="body_name", kind="collision_body",
+                          file="LOTRLOME_items/x.xml", line=7, item_id="it", culture="")
+        with mock.patch.object(vmr, "extract_refs", return_value=[ref]), \
+             mock.patch.object(vmr, "build_present_set", return_value=present), \
+             mock.patch.object(vmr, "bodies_present_in_tpacs", return_value=set()) as scan, \
+             mock.patch.object(vm, "_loaded_tpacs", return_value=[Path("good.tpac"), Path("bad.tpac")]):
+            issues = vm.missing_collision_body_issues(Path("game/Modules"), Path("md"))
+        scan.assert_called_once()
+        self.assertEqual(list(scan.call_args.args[1]), [Path("bad.tpac")])
+        self.assertEqual([(i.code, i.entry_id) for i in issues], [(vm.BODY_CODE, "it")])
+
+    def test_a_crash_inside_the_pass_is_a_not_verified_error(self):
+        """A scan that raises must say the bodies went unverified, as the generator pass does,
+        not escape as a traceback the hook turns into a blocked commit with no findings."""
+        import validate_mesh_refs as vmr
+        with mock.patch.object(vm, "_loaded_tpacs", return_value=[Path("a.tpac")]), \
+             mock.patch.object(vmr, "extract_refs", side_effect=MemoryError("corrupt sized string")):
+            issues = vm.missing_collision_body_issues(Path("game/Modules"), Path("md"))
+        self.assertEqual([(i.code, i.severity) for i in issues], [(vm.BODY_CODE, ts.Severity.ERROR)])
+        self.assertIn("NOT verified", issues[0].message)
+        self.assertIn("MemoryError", issues[0].message)
+
+    def test_main_runs_the_pass(self):
+        """#622: main() never called this pass, so MISSING_COLLISION_BODY never fired and the
+        commit hook's --code line for it blocked nothing, while this class stayed green.
+        Drive main(), not the function; exit 1 is the code the hook blocks on."""
+        import validate_mesh_refs as vmr
+        fake = self._fake_tier_c([("MISSING_BODY", "starter_highelf_longbow", "bo_wm_elven_bow_v1")])
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "ModuleData").mkdir()
+            (root / "Game" / "Modules").mkdir(parents=True)
+            with mock.patch.object(vmr, "extract_refs", return_value=[]), \
+                 mock.patch.object(vmr, "build_present_set", return_value=vmr.PresentSet(tpac_paths=["a.tpac"])), \
+                 mock.patch.object(vmr, "classify", return_value=fake), \
+                 mock.patch.object(vm, "_loaded_tpacs", return_value=[Path("a.tpac")]), \
+                 mock.patch.object(vm, "generator_item_ref_issues", return_value=[]):
+                code, out, err = _run_main("--moduledata", str(root / "ModuleData"),
+                                           "--game-modules", str(root / "Game" / "Modules"),
+                                           "--code", vm.BODY_CODE)
+        self.assertIn(vm.BODY_CODE, out, out + err)
+        self.assertIn("bo_wm_elven_bow_v1", out)
+        self.assertEqual(code, 1)
+
+    def test_main_without_install_says_the_pass_was_skipped(self):
+        """Without the install there are no tpacs to scan: the run must say this gate did not
+        run, never print nothing about it; exit 2 is the degraded-sweep code."""
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "ModuleData").mkdir()
+            code, _, err = _run_main("--moduledata", str(root / "ModuleData"),
+                                     "--game-modules", str(root / "nowhere"), "--code", vm.BODY_CODE)
+        self.assertIn(f"{vm.BODY_CODE} SKIPPED", err)
+        self.assertEqual(code, 2)
 
 
 _FACTIONS_XSD = """<?xml version="1.0" encoding="utf-8"?>
@@ -2270,14 +2355,12 @@ class SchemaInvalidPassTests(unittest.TestCase):
         """A pass main() never calls is a dead gate however well its unit tests pass.
         The schemas folder is found beside --game-modules, as in a real install."""
         _write(self.clans, _GOOD_CLANS.replace(' initial_home_settlement="Settlement.town_A1"', ""))
-        argv = ["validate_moduledata.py", "--moduledata", str(self.module / "ModuleData"),
-                "--game-modules", str(self.schemas.parent / "Modules"), "--code", vm.SCHEMA_CODE]
-        out, err = io.StringIO(), io.StringIO()
-        with mock.patch.object(sys, "argv", argv), redirect_stdout(out), redirect_stderr(err):
-            code = vm.main()
-        self.assertEqual(code, 1, out.getvalue())
-        self.assertIn(vm.SCHEMA_CODE, out.getvalue())
-        self.assertIn("characters/clans.xml:3", out.getvalue())
+        code, out, _ = _run_main("--moduledata", str(self.module / "ModuleData"),
+                                 "--game-modules", str(self.schemas.parent / "Modules"),
+                                 "--code", vm.SCHEMA_CODE)
+        self.assertEqual(code, 1, out)
+        self.assertIn(vm.SCHEMA_CODE, out)
+        self.assertIn("characters/clans.xml:3", out)
 
 
 class CommitGateCoverageTests(unittest.TestCase):
@@ -2303,6 +2386,21 @@ class CommitGateCoverageTests(unittest.TestCase):
         consts = dict(re.findall(r'^([A-Z_]+_CODE)\s*=\s*"([A-Z_]+)"', src, flags=re.M))
         used = re.findall(r'severity=(?:ts\.)?Severity\.' + severity + r',\s*code=([A-Z_]+_CODE)\b', src)
         return {consts[c] for c in used if c in consts}
+
+    @staticmethod
+    def _unreached_passes(src):
+        """Every module-level `def <x>_issues(` whose call does not appear in main()'s body."""
+        passes = re.findall(r"^def (\w+_issues)\(", src, flags=re.M)
+        main_body = re.search(r"^def main\(\).*?(?=^\S)", src, flags=re.M | re.S).group(0)
+        return passes, [p for p in passes if f"{p}(" not in main_body]
+
+    def test_every_issue_pass_is_reached_from_main(self):
+        """#622: missing_collision_body_issues was defined, documented, in the hook's --code
+        list and unit-tested, and main() never called it for three days. The code-string
+        checks in this class prove presence in source, not reachability; this checks the call."""
+        passes, unreached = self._unreached_passes(self.VALIDATOR.read_text(encoding="utf-8"))
+        self.assertGreaterEqual(len(passes), 3, "the pass scan found nothing")
+        self.assertEqual(unreached, [], f"main() never calls: {unreached}")
 
     def _error_codes(self):
         """ERROR codes from BOTH shapes the module uses: an inline Issue(...) and

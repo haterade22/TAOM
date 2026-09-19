@@ -215,7 +215,7 @@ class Validator:
         # shrinks back to TAOM-only and the run still prints PASS, which is exactly
         # the under-coverage state this sweep was added to end. Record it so the
         # caller can say so out loud -- never drop it on the floor.
-        self.missing_ref_roots = [str(r) for r in requested if not r.exists()]
+        self.missing_ref_roots = [r for r in requested if not r.exists()]
 
     # -- public ----------------------------------------------------------- #
     def run(self) -> list:

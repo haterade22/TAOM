@@ -544,5 +544,24 @@ class RepoBaselineTests(unittest.TestCase):
         self.assertEqual(report["failed"], [], "\n" + failures)
 
 
+class LiveTaomMapRegistrationTests(unittest.TestCase):
+    """The in-repo gate for #619. The live TAOM_Map is unversioned, and its seven removed
+    registrations (items, spcultures, spnpccharacters, partyTemplates, spkingdoms, spclans,
+    spworkshops) still ship in the mirror and the release, backed by empty stub files. Stubs
+    resolve, so `missing` alone cannot see a resync bring them back; the registered id set can.
+    A legitimate new TAOM_Map registration is a one-line edit of EXPECTED_IDS. Stdlib only, so
+    it runs without lxml; skipped, never faked, without the install."""
+
+    EXPECTED_IDS = ["Settlements"]
+
+    def test_taom_map_registers_exactly_the_expected_ids(self):
+        module = Path(vx.DEFAULT_GAME_MODULES) / "TAOM_Map"
+        if not (module / "SubModule.xml").is_file():
+            self.skipTest(f"no live TAOM_Map at {module}")
+        entries, missing = vx.registered_files(module)
+        self.assertEqual(missing, [], "\n" + "\n".join(missing))
+        self.assertEqual(sorted({xml_id for _, xml_id in entries}), self.EXPECTED_IDS)
+
+
 if __name__ == "__main__":
     unittest.main()

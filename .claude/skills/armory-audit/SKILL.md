@@ -61,5 +61,5 @@ which files changed in the live install and the mirror.
 
 - The catalogue diff's own "REFERENCED, will break" flag is the flag at the last regen, not today's; the audit re-derives it from the live XML. Trust the audit's count.
 - `validate_mesh_refs.py --unreferenced` matches case-insensitively and reported the new elven bows as used when nothing used them; the audit's "new art nothing uses" is an exact match.
-- `validate_moduledata.py` now carries the same body check as `MISSING_COLLISION_BODY` (ERROR) and `MISSING_VISUAL_MESH` (WARNING), so the commit hook, the MCP tool and `/verify` see it too. The audit is still the only place the troops are joined in.
+- `validate_moduledata.py` now carries the same body check as `MISSING_COLLISION_BODY` (ERROR) and `MISSING_VISUAL_MESH` (WARNING), so the commit hook blocks on it too (since #622: until 2026-09-18 `main()` never called the pass; the MCP tool and `/verify` still do not run it, #623). The audit is still the only place the troops are joined in.
 - The player release under `E:\LOTRAOM_Releases\dev` ships its own copy of the Armory; a repair here reaches players only through `/release`.

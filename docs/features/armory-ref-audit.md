@@ -76,7 +76,10 @@ the generators' `--verify` is per generator. And nothing ran any of them after a
   `validate_mesh_refs` engine, skipped never faked without the install, and a run that found no
   tpacs to scan is itself a finding. The commit hook's `--code` allowlist carries the ERROR;
   `CommitGateCoverageTests` now scans both emitting files so the next code cannot be added without
-  its hook line.
+  its hook line. **Correction, 2026-09-18 (#622):** `main()` never called the pass, so the hook line
+  blocked nothing from 2026-09-15 to 2026-09-18. It is wired now, `CommitGateCoverageTests` checks
+  that every `*_issues` pass is reached from `main()`, and the MCP tool and `/verify` still do not
+  run it (#623).
 - **A startup line that fires after a sync.** `session-start.sh` runs one bounded `find` for a
   `*_geo.tpac` newer than the committed catalogue (every catalogue row lives in a `_geo` pack;
   `_tex`, `_mtl` and `_anm` packs are re-saved constantly and never carry a mesh or body) and
@@ -94,7 +97,7 @@ session-start.sh  --"ARMORY ART DRIFT"-->  /armory-audit  -->  tools/audit_armor
                                                                     '-- generate_ranged_ladder_items / generate_starter_kit --verify
                                                                     v
                                                     docs/audits/armory-ref-audit.md  (committed)
-validate_moduledata.py  --MISSING_COLLISION_BODY-->  check-moduledata-validation.sh / MCP / verify
+validate_moduledata.py  --MISSING_COLLISION_BODY-->  check-moduledata-validation.sh  (MCP, /verify: #623)
 ```
 
 ## Configuration
@@ -148,8 +151,10 @@ the `lotraom-assets` mirror.
 ## Performance
 
 About 15 s against 4,497 tpacs (TOC scan only) including the two generator subprocesses; 3 s
-with `--no-generators`. The validator's new pass adds about 3 s to `validate_moduledata.py`
-(4.8 s total on 2026-09-15), inside the commit hook's 45 s inner bound. The startup probe is
+with `--no-generators`. The validator's pass adds about 3 s to `validate_moduledata.py`: about
+5.9 s without it, about 9 s with it, measured 2026-09-18 once #622 wired it in (the 4.8 s recorded
+on 2026-09-15 was the validator without the pass, which never ran then). Inside the commit hook's
+45 s inner bound. The startup probe is
 one `find`, under a second, bounded at 4 s.
 
 ## Changelog

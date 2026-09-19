@@ -173,8 +173,9 @@ def missing_collision_body_issues(game_modules: Path, moduledata: Path) -> list:
     game thread forever. Two body_name typos did it in #352; the 2026-09-11 art
     drop that renamed the elven bows did it again in #599, and the elf start
     hung for two days because the only gate for it was a separate command
-    nobody ran after the sync. This pass makes it part of the one validator the
-    commit hook, the MCP server and /verify already run.
+    nobody ran after the sync. This pass makes it part of the validator the
+    commit hook runs (wired into main() by #622; the MCP tool and /verify do not
+    run it yet, #623).
 
     validate_mesh_refs.py owns the ref extraction and the tpac TOC scan (Tier B
     visual meshes, Tier C PhysicsShapes); this only turns its findings into
@@ -192,12 +193,23 @@ def missing_collision_body_issues(game_modules: Path, moduledata: Path) -> list:
             severity=ts.Severity.ERROR, code=BODY_CODE, file="", line=0, entry_id="",
             message=f"no *.tpac found under {' / '.join(_ART_MODULES)} in {game_modules}; "
                     f"collision bodies were NOT verified this run")]
-    refs = vmr.extract_refs(game_modules / "LOTRLOME_Armory" / "ModuleData")
-    if moduledata.exists():
-        refs += vmr.extract_refs(moduledata)
-    present = vmr.build_present_set(tpacs)
+    try:
+        refs = vmr.extract_refs(game_modules / "LOTRLOME_Armory" / "ModuleData")
+        if moduledata.exists():
+            refs += vmr.extract_refs(moduledata)
+        present = vmr.build_present_set(tpacs)
+        # A parsed pack's TOC already lists its bodies (#352), so only a pack that failed to
+        # parse can hide one. Byte-scanning all of them took 110-119 s (4,611 packs, 22.6 GiB),
+        # past the commit hook's 45 s bound, in exactly the #599 case this gate exists for.
+        unparsed = [Path(p) for p, _ in present.unparsed]
+        findings = vmr.classify(refs, present, None, scan_bodies=True, body_tpac_paths=unparsed)
+    except Exception as exc:  # noqa: BLE001 - a scan that raised has verified nothing; say so
+        return [ts.Issue(
+            severity=ts.Severity.ERROR, code=BODY_CODE, file="", line=0, entry_id="",
+            message=f"collision bodies were NOT verified this run: the scan raised "
+                    f"{type(exc).__name__}: {exc}")]
     issues = []
-    for i in vmr.classify(refs, present, None, scan_bodies=True, body_tpac_paths=tpacs):
+    for i in findings:
         if i.code == "MISSING_BODY":
             issues.append(ts.Issue(
                 severity=ts.Severity.ERROR, code=BODY_CODE, file=i.file, line=i.line, entry_id=i.entry_id,
@@ -336,9 +348,14 @@ def main() -> int:
     issues += schema_invalid_issues(moduledata.parent, game_modules.parent / "XmlSchemas")
     if game_modules.exists():
         issues += generator_item_ref_issues(registries.items)
+        # Until #622 nothing called this pass, so MISSING_COLLISION_BODY never fired and the
+        # commit hook's --code line for it blocked nothing.
+        issues += missing_collision_body_issues(game_modules, moduledata)
     else:
         print(f"WARNING: {GENERATOR_CODE} SKIPPED: the tools/ generators' item ids can only be\n"
               f"         checked against the live install.", file=sys.stderr)
+        print(f"WARNING: {BODY_CODE} SKIPPED: collision bodies can only be checked against the\n"
+              f"         live install's tpacs.", file=sys.stderr)
     issues.sort(key=lambda i: i.sort_key())
 
     if args.code:

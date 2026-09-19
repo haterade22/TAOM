@@ -101,6 +101,37 @@ READ-ONLY review") and CLAUDE.md told reviewers to skip XML.
 - Updated to match: CLAUDE.md (custom agents, model routing, the Critical Rule and routing gate),
   `completion-workflow.md`, `new-culture-authoring.md`, `mcp-servers.md`, `agent-operating-manual.md`
   (the dump is v1.5.3), `INDEX.md`, `doc-lookup.md`, the `moduledata-validation` rule and feature doc,
+### fix(tools): MISSING_COLLISION_BODY fires; TAOM_Map's dead registrations removed (#622, #619)
+
+- **#622: the collision-body gate never ran.** `validate_moduledata.py` defined
+  `missing_collision_body_issues` but `main()` never called it, so `MISSING_COLLISION_BODY`, the
+  commit-time guard for the #352 infinite load, never fired and the hook's `--code` line for it
+  blocked nothing from 2026-09-15 to 2026-09-18. `main()` now runs it beside the generator pass and
+  says `SKIPPED` without an install. A test drives `main()`, and a structural test in
+  `CommitGateCoverageTests` fails if any `*_issues` pass is not called from `main()` (it fails on
+  the pre-fix validator). Live install: 0 missing bodies. The pass adds about 3 s: the validator
+  went from about 5.9 s to about 9 s, inside the hook's 45 s bound.
+- **The pass cannot stall or mislead the hook.** When a pack fails to parse it now byte-scans only
+  that pack for bodies; scanning all 4,611 (22.6 GiB) took 110-119 s, past the hook's bound, in the
+  exact #599 case. A scan that raises becomes one `MISSING_COLLISION_BODY` ERROR saying the bodies
+  were NOT verified and why, instead of a traceback.
+- **A partial install crashed the validator.** With a Modules folder missing the Armory or
+  `TAOM_Map`, `main()` hit `AttributeError` printing the "extra ref root NOT FOUND" warning.
+  `Validator.missing_ref_roots` now holds Paths like `extra_ref_roots` beside it; tested.
+- **#619: seven dead registrations removed from the live `TAOM_Map/SubModule.xml`** (`items`,
+  `spcultures`, `spnpccharacters`, `partyTemplates`, `spkingdoms`, `spclans`, `spworkshops`). In the
+  live install none had a file, folder or stylesheet (its 16 Kit stub files went missing on
+  2026-09-15), so each loaded nothing; every one of those ids is still registered by SandBoxCore or
+  SandBox, so no merged document changes. Byte-faithful edit (CRLF kept), backup at
+  `E:\taom-live-backups\2026-09-18\TAOM_Map\SubModule.xml`; Mike confirmed the live install loads
+  fine. `tools/tests/test_validate_xml_schemas.py` pins the live registrations to `Settlements`
+  alone, so a resync from the mirror (which still ships all eight over empty stubs, and which Mike
+  chose to leave as it is) fails it; #619 stays open for that half.
+- Stale claims corrected: the validator docstring, `/armory-audit` and `armory-ref-audit.md` said
+  the MCP tool and `/verify` run this pass; they do not (#623, with the hook's crash exit code and
+  the remaining scan-cost items). `armory-ref-audit.md`'s "4.8 s" was measured with the pass never
+  running. Lessons in `testing-qa`; RCA `docs/reviews/rca-deep-review-overhaul-2026-09-18.md`.
+
   `tools/README.md`, `skill-stocktake` and `external-skill-ports` (current frontmatter values), and a
   doc-backed `harness-facts.md` row for subagent `model` / `effort` values.
 

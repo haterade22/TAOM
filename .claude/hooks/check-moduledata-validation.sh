@@ -89,7 +89,8 @@ PY="$PYBIN"
 # runtime, so every ModuleData commit silently skipped the check. Bounding the work here
 # keeps the overrun inside the hook, where it can still speak.
 #
-# The validator itself now runs in ~4s, not 27s: 16.5s of that original figure was one
+# The validator runs in ~9s (measured 2026-09-18; the MISSING_COLLISION_BODY pass wired in by
+# #622 adds ~3s of tpac TOC scan), down from 27s: 16.5s of that original figure was one
 # quadratic regex in taom_schema.py scanning characters/lords.xml for a close tag that
 # file does not contain (fixed 2026-08-31, byte-identical output). The 60s/45s budget is
 # left deliberately generous. Headroom costs nothing unless the work overruns, and being
