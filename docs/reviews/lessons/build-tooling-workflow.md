@@ -2177,3 +2177,22 @@ The howdah prefab moved from `Main/_Module/Prefabs/` to `LOTRLOME_Armory/Prefabs
 - **Why missed:** "the deploy never deletes" was already a lesson (above), but it was read as a dev-machine fact. The move checked the dev install and not the installs players already have.
 - **Prevent:** when a file leaves a module and something is looked up by its name (a prefab, a string id, an XML id), rename the identifier so a stale copy is dead data, and pin the name the code asks for in a test. Deletion steps in the packager cannot reach installs already in players' hands.
 - **Source:** `docs/reviews/rca-howdah-prefab-review-2026-09-19.md`, #627.
+
+### A gate's hook trigger must cover every file kind its scope names (#626, 2026-09-19)
+`SKILL_TEMPLATE_MISMATCH` judges every XML and XSLT file of the repo module, `lords.xslt` included
+(364 of its 1,528 templated blocks), and its docs said the commit hook ran it. The hook ran the
+validator only when a commit staged `Main/_Module/ModuleData/*.xml`, so a commit touching only
+`lords.xslt` ran nothing.
+- **Why missed:** `CommitGateCoverageTests` pins the hook's `--code` list against the validator's codes,
+  which is one of the two statements of what a gate covers. The other, the path pattern that decides
+  whether the hook runs at all, has no test and nobody read it when the new code's scope went wider.
+- **Prevent:** when a gate's scope gains a file kind, read the hook's trigger pattern in the same
+  change and widen it, and run the pattern against one path of each kind. The trigger was widened to
+  `*.xml|*.xslt` with #626.
+- **Source:** `docs/reviews/rca-skill-template-parity-2026-09-19.md` finding 3.
+
+### Re-enabled parked code is new code: review the path the flag switches on, not the flag (#627, 2026-09-19)
+Howdah crew spawn sat behind a commented-out call from June to September. Turning it back on was a one-line change; the path behind it had drifted (the crew's formation comments still said HorseArcher, the rider had been Cavalry since June 29), carried a port deviation that booked crew deaths as the rider's (see adapters-taleworlds-api.md), and missed vanilla spawn parity. A seven-lens delta review found one HIGH and a dozen LOW in code that "already worked in June".
+- **Why missed:** "re-enable X" reads as a toggle, and the June code had once run, which read as proof.
+- **Prevent:** when a parked path comes back, review it as if newly written: trace it end to end against today's data and engine, and compare it with the reference it was ported from. Also: a validator described as read-only may write (`audit_armory_refs.py` rewrites `docs/audits/armory-ref-audit.md` on every run); re-run such a tool just before staging its output.
+- **Source:** `docs/reviews/rca-howdah-prefab-review-2026-09-19.md` (delta addendum), #627.

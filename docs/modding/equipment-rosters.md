@@ -367,6 +367,13 @@ are optional and every shipped culture has them anyway.
   overwrites the target's slot with nothing; it does not inherit. `Equipment.cs:184-194`.
   [career-system.md](../features/career-system.md) agrees since #629 corrected its add-a-culture
   recipe, the last place it still called `FillFrom` a slot-by-slot merge.
+- **A `_replaceWhileMerging` roster whose id no earlier module defines does not append.** When no
+  existing roster matches our id, `MBObjectManager.MergeElements` still takes the replace branch and
+  merges ours into the FIRST roster of the accumulated document, which loses its own id and content
+  (1.5.3, `MBObjectManager.cs:846`, `:857-859`). On a normal load order that is SandBoxCore's
+  `npc_disguised_hero_equipment_template`, which `SandBoxHelpers` dereferences unguarded while the player
+  is disguised. So the attribute belongs only on an id that exists upstream: `wire_starter_kit_rosters.py`
+  refuses to write an override id vanilla's `sandbox_equipment_sets.xml` lacks.
 - **A character's first battle set is not the first one in the file.** Every character's sets are
   re-sorted at the end of deserialization so battle sets come before civilian and stealth ones.
   `MBEquipmentRoster.cs:138-141`, called from `BasicCharacterObject.cs:526`.

@@ -238,13 +238,15 @@ class TestCareerKitIsNotRewired(unittest.TestCase):
         self.assertEqual(wk.REWIRE_FILES, (wk.CC_FILE,))
         self.assertNotIn(wk.CAREER_FILE, wk.REWIRE_FILES)
 
-    def test_override_from_career_file_keeps_troop_items(self):
-        import tempfile
-        from pathlib import Path
-        with tempfile.TemporaryDirectory() as tmp:
-            path = Path(tmp) / "career.xml"
-            path.write_bytes(CAREER_TROOP.encode("utf-8"))
-            text = wk.override_from_career_file(path, TITLES)
+    def test_civilian_sidearm_slot_holds_a_one_handed_weapon_of_any_kind(self):
+        # Dunland's is an axe; the error must not say "sword"
+        broken = CAREER.replace('<Equipment slot="Item2" id="Item.starter_empire_sword_1_t2" />', "")
+        with self.assertRaises(wk.WireError) as ctx:
+            wk.build_vanilla_override(broken, {"khuzait": ["hunter"]}, {}, eol="\n")
+        self.assertIn("one-handed weapon", str(ctx.exception))
+
+    def test_override_keeps_troop_items(self):
+        text = wk.build_vanilla_override(CAREER_TROOP, TITLES, wk.BORROW, eol="\n")
         root = ET.fromstring(text.encode("utf-8"))
         r = next(r for r in root.iter("EquipmentRoster") if r.get("id") == "player_char_creation_battania_hunter_m")
         battle, civ = r.findall("EquipmentSet")
@@ -255,6 +257,36 @@ class TestCareerKitIsNotRewired(unittest.TestCase):
         self.assertEqual(civ_rows["Item0"], "Item.sm_rh_loke_1h_sword_a")
         self.assertNotIn("Item.starter_ladder_", text)
         self.assertNotIn("Item.starter_sm_rh_loke", text)
+
+    def test_committed_override_is_what_the_tool_builds_from_the_committed_career_file(self):
+        # the override is generated from the career kit; editing the career file without
+        # re-running the tool leaves the six vanilla-mapped starts on the old kit
+        built = wk.build_vanilla_override(wk.gk.read_xml(wk.CAREER_FILE)[0],
+                                          wk.titles_from_menus(wk.MENUS_DIR), wk.BORROW)
+        committed = wk.gk.read_xml(wk.OVERRIDE_FILE)[0]
+        self.assertEqual(committed.replace("\r\n", "\n"), built.replace("\r\n", "\n"),
+                         "re-run python tools/wire_starter_kit_rosters.py --apply")
+
+
+VANILLA_SETS = """<EquipmentRosters>
+    <EquipmentRoster id="player_char_creation_khuzait_hunter_m" culture="Culture.khuzait"><EquipmentSet /></EquipmentRoster>
+    <EquipmentRoster id="npc_disguised_hero_equipment_template"><EquipmentSet /></EquipmentRoster>
+</EquipmentRosters>"""
+
+
+class TestOverrideIdsExistInVanilla(unittest.TestCase):
+    """An override roster whose id vanilla lacks does not append: MBObjectManager.MergeElements
+    merges it into the FIRST roster of the accumulated document (1.5.3, lines 846 and 857-859),
+    so that roster loses its id and its content. The tool must refuse to write one."""
+
+    def test_every_id_present_is_accepted(self):
+        override = '<EquipmentRosters><EquipmentRoster id="player_char_creation_khuzait_hunter_m" /></EquipmentRosters>'
+        self.assertEqual(wk.missing_vanilla_ids(override, VANILLA_SETS), [])
+
+    def test_an_id_vanilla_lacks_is_reported(self):
+        override = ('<EquipmentRosters><EquipmentRoster id="player_char_creation_khuzait_hunter_m" />'
+                    '<EquipmentRoster id="player_char_creation_khuzait_prophet_f" /></EquipmentRosters>')
+        self.assertEqual(wk.missing_vanilla_ids(override, VANILLA_SETS), ["player_char_creation_khuzait_prophet_f"])
 
 
 if __name__ == "__main__":

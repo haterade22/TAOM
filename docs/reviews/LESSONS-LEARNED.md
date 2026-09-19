@@ -19,7 +19,7 @@ This document **is the index** of the per-category lesson files under `lessons/`
 - [Build, Tooling & Workflow](lessons/build-tooling-workflow.md), 160 lessons
 - [Misc](lessons/misc.md), 8 lessons
 - [Testing & QA](lessons/testing-qa.md), 77 lessons
-- [Data, Content & Cultures](lessons/data-content-cultures.md), 115 lessons
+- [Data, Content & Cultures](lessons/data-content-cultures.md), 118 lessons
 - [Harmony & IL (Patches, Transpilers, Prefixes, Patch Lifecycle)](lessons/harmony-il.md), 56 lessons
 - [Animation & Skeleton](lessons/animation-skeleton.md), 38 lessons
 - [State, Lifecycle & Save](lessons/state-lifecycle-save.md), 57 lessons

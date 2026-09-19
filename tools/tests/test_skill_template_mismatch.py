@@ -148,6 +148,15 @@ class SkillTemplateMismatchTests(unittest.TestCase):
         self.assertEqual(["lord_1_15"], [i.entry_id for i in issues])
         self.assertEqual("lords.xslt", issues[0].file)
 
+    def test_a_skill_sets_file_the_pass_cannot_read_is_one_error_not_a_crash(self):
+        # Convergence pass (#626): the sibling passes turn any failure into a finding; a traceback
+        # here reached the hook as a deny with no detail.
+        (self.md / "taom_lord_skill_sets.xml").write_bytes(TAOM_SETS.encode("utf-8").replace(b"taom_a", b"taom_\xe9"))
+        self._lords(npc("lord_ok", "taom_a_skills", {"OneHanded": 80}))
+        issues = self._run()
+        self.assertEqual(1, len(issues))
+        self.assertIn("NOT", issues[0].message)
+
     def test_no_skill_sets_at_all_is_one_error_not_a_pass(self):
         (self.md / "taom_lord_skill_sets.xml").unlink()
         shutil.rmtree(self.game / "Modules")

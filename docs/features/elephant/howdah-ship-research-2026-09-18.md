@@ -67,8 +67,9 @@ every body `moveable`; the floor moved off the root onto a child, scaled to the 
 `moveable`; four crew frames tagged `taom_howdah_crew` on the floor, one per quarter, still carrying the seat script
 so today's code works. Because every child sits around the deck centre, the fixed-offset placement now lines the
 platform up with the visual howdah at rest; bone tracking would follow the walk. **Still to do in this step:**
-re-enable one slide source (C#) and test. When crew come back, `ElephantMissionBehavior.TrySpawnHowdahCrew` must
-spawn at the frame's position, not above the elephant's origin (its comment still describes the old floor).
+re-enable one slide source (C#) and test. **Mike chose crew first (2026-09-19, #627)**: crew spawn is back on for the
+new howdah harness, and bone tracking stays off until the crew run is read. The crew now spawn on their crew frames (`HowdahCrewSpawner`,
+2026-09-19), no longer above the elephant's origin.
 
 Re-enable ONE deferred slide source at a time (bone tracking first: it put the floor at the spine). **Pass:** the
 elephant walks and turns without sliding with that source on. The howdah status line measures it: `carriedV`, the

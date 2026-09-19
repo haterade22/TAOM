@@ -83,7 +83,6 @@ GENERATORS = (
     GeneratorSpec("tools/generate_gondor_troops.py", "run"),
     GeneratorSpec("tools/generate_rhun_troops.py", "run"),
     GeneratorSpec("tools/generate_char_creation_equipment.py", "tables", ("CULTURES",)),
-    GeneratorSpec("tools/oneoff/generate_career_starter_rosters.py", "tables", ("CULTURES", "GONDOR_BLOCK")),
     GeneratorSpec("tools/extract_wanderers.py", "tables", ("KINGDOM_EQUIPMENT",)),
     GeneratorSpec("tools/generate_batch2_wanderers.py", "tables", ("KINGDOM_EQUIPMENT",)),
     GeneratorSpec("tools/generate_starter_armor.py", "tables", ("CULTURES",), tuple_from=2),

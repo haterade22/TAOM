@@ -16,10 +16,23 @@ import tempfile
 import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import generate_starter_kit as gk  # noqa: E402
+
+_REAL_RETIRED_DONORS = gk.RETIRED_DONORS
+
+
+def setUpModule():
+    # the synthetic Armory holds none of the real retired donors; a test that needs some
+    # patches them in with mock.patch.object
+    gk.RETIRED_DONORS = ()
+
+
+def tearDownModule():
+    gk.RETIRED_DONORS = _REAL_RETIRED_DONORS
 
 
 def el(xml: str) -> ET.Element:
@@ -553,6 +566,20 @@ class TestPlan(unittest.TestCase):
             self.assertEqual(after, before)
 
 
+def _sources(tmp: Path, roster: Path) -> "gk.Sources":
+    return gk.Sources(rosters=[roster], armory=tmp / "LOTRLOME_Armory", vanilla_item_files=[],
+                      native_pieces=None, native_descriptions=tmp / "native_wd.xml",
+                      native_templates=tmp / "native_ct.xml")
+
+
+def _replan_without_career(tmp: Path) -> "gk.Plan":
+    """Re-plan the `_plan_in` layout with the career roster gone, as #629 left the real one."""
+    career = ROSTERS[ROSTERS.index('    <EquipmentRoster id="player_career_'):ROSTERS.index("</EquipmentRosters>")]
+    roster = tmp / "rosters_cc_only.xml"
+    roster.write_text(ROSTERS.replace(career, ""), encoding="utf-8")
+    return gk.build_plan(_sources(tmp, roster))
+
+
 class TestRerunAfterWiring(unittest.TestCase):
     """The rosters are rewired to the starter_ ids after the first apply, so a later run sees
     no donor by name. It must map each starter_ id back to its donor and plan the SAME clones,
@@ -626,24 +653,81 @@ class TestRerunAfterWiring(unittest.TestCase):
         # #629: the career rosters name real troop items; cloning those would make new twins
         self.assertEqual([p.name for p in gk.DEFAULT_ROSTERS], ["taom_char_creation_equipment.xml"])
 
-    def test_twin_no_roster_names_any_more_is_retained(self):
-        # #629: the career rosters stopped naming their twins. Saves started since #569 hold
-        # those ids, so the twins stay planned instead of tripping the shrink guard.
+    def test_retired_twins_are_retained_in_place_and_reapply_is_a_noop(self):
+        # #629: the career rosters stopped naming their twins; saves started since #569 hold
+        # them, so RETIRED_DONORS keeps them planned, in their old order, and a re-apply is
+        # byte-for-byte a no-op rather than a reorder.
         with tempfile.TemporaryDirectory() as tmp:
             tmp = Path(tmp)
             before = _plan_in(tmp)
             md = tmp / "LOTRLOME_Armory" / "ModuleData"
             gk.apply_plan(before, md, write=True)
-            career = ROSTERS[ROSTERS.index('    <EquipmentRoster id="player_career_'):ROSTERS.index("</EquipmentRosters>")]
-            (tmp / "rosters.xml").write_text(ROSTERS.replace(career, ""), encoding="utf-8")
-            sources = gk.Sources(rosters=[tmp / "rosters.xml"], armory=tmp / "LOTRLOME_Armory", vanilla_item_files=[],
-                                 native_pieces=None, native_descriptions=tmp / "native_wd.xml",
-                                 native_templates=tmp / "native_ct.xml")
-            after = gk.build_plan(sources)
-            gk.apply_plan(after, md, write=True)   # must not raise the shrink error
-        self.assertEqual(sorted(c.new_id for c in after.clones), sorted(c.new_id for c in before.clones))
-        self.assertIn("starter_wm_gondor_bow", [c.new_id for c in after.clones])
-        self.assertIn("starter_gondor_steel_bow", [c.new_id for c in after.clones])
+            with mock.patch.object(gk, "RETIRED_DONORS", ("wm_gondor_bow", "gondor_steel_bow_starter")):
+                after = _replan_without_career(tmp)
+            log = gk.apply_plan(after, md, write=False)
+        self.assertEqual([c.new_id for c in after.clones], [c.new_id for c in before.clones])
+        self.assertTrue(all(line.startswith("noop") for line in log), log)
+
+    def test_retired_twins_are_planned_even_when_the_install_lost_them(self):
+        # a reinstall wipes starter_kit.xml; the list, not the folder, decides what is kept
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            _plan_in(tmp)
+            with mock.patch.object(gk, "RETIRED_DONORS", ("wm_gondor_bow",)):
+                plan = _replan_without_career(tmp)
+        self.assertIn("starter_wm_gondor_bow", [c.new_id for c in plan.clones])
+
+    def test_a_retired_donor_that_no_longer_resolves_fails_loudly(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            _plan_in(tmp)
+            with mock.patch.object(gk, "RETIRED_DONORS", ("no_such_donor",)):
+                with self.assertRaises(gk.StarterKitError) as ctx:
+                    _replan_without_career(tmp)
+        self.assertIn("no_such_donor", str(ctx.exception))
+
+    def test_a_twin_neither_named_nor_retired_still_trips_the_shrink_guard(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            md = tmp / "LOTRLOME_Armory" / "ModuleData"
+            gk.apply_plan(_plan_in(tmp), md, write=True)
+            with mock.patch.object(gk, "RETIRED_DONORS", ()):
+                after = _replan_without_career(tmp)
+            with self.assertRaises(gk.StarterKitError) as ctx:
+                gk.apply_plan(after, md, write=True)
+        self.assertIn("shrink", str(ctx.exception))
+        self.assertIn("RETIRED_DONORS", str(ctx.exception))
+
+    def test_a_twin_keeps_its_on_disk_folder_when_its_donor_culture_moves(self):
+        # vanilla 1.5.3 gave battered_kite_shield culture=empire; its twin must not migrate
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            md = tmp / "LOTRLOME_Armory" / "ModuleData"
+            gk.apply_plan(_plan_in(tmp), md, write=True)
+            armours = md / "LOTRLOME_items" / "gondor" / "body_armors.xml"
+            armours.write_text(armours.read_text(encoding="utf-8")
+                               .replace('culture="Culture.gondor"', 'culture="Culture.rivendell"', 1), encoding="utf-8")
+            plan = gk.build_plan(_sources(tmp, tmp / "rosters.xml"))
+            chest = next(c for c in plan.clones if c.new_id == "starter_mkwd_inf3_chest")
+            drift = gk.verify_plan(plan, md)
+        self.assertEqual(chest.folder, "gondor")
+        self.assertEqual(drift, [])
+        self.assertTrue(any("starter_mkwd_inf3_chest" in n and "rivendell" in n for n in plan.notes), plan.notes)
+
+    def test_the_same_twin_in_two_folders_is_an_error(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            md = tmp / "LOTRLOME_Armory" / "ModuleData"
+            gk.apply_plan(_plan_in(tmp), md, write=True)
+            src = md / "LOTRLOME_items" / "gondor" / gk.ITEMS_FILE_NAME
+            (md / "LOTRLOME_items" / "rivendell" / gk.ITEMS_FILE_NAME).write_bytes(src.read_bytes())
+            with self.assertRaises(gk.StarterKitError) as ctx:
+                gk.build_plan(_sources(tmp, tmp / "rosters.xml"))
+        self.assertIn("two folders", str(ctx.exception))
+
+    def test_default_asset_repo_is_the_shared_mirror_path(self):
+        import _gamedir
+        self.assertEqual(gk.DEFAULT_ASSET_REPO, _gamedir.ASSET_REPO)
 
     def test_unparsable_item_file_is_reported_not_silently_skipped(self):
         with tempfile.TemporaryDirectory() as tmp:

@@ -4,6 +4,82 @@
 
 ## 2026-09-19
 
+### fix(starting-gear): v2.0.30 - #629 deep review: the career-kit rule is a tool now
+
+The eight-lens deep review of #629 found no critical or high defect; these are its fixes, with Mike's
+decisions on the four behaviour questions.
+
+- **`tools/generate_career_kits.py`** is the pick rule, committed: it derives all 78 career kits from
+  `troops/troops_*.xml` and the install, rewrites only the five slot ids, and `--verify` exits 1 when a
+  troop rebalance moves a culture's floor, and it names any Armory file that fails to parse instead of
+  quietly dropping its items. It reproduced 382 of the 390 hand-applied picks; the other 8 are the two
+  decisions below. An install-gated test pins the committed file to it.
+- **Bows by skill requirement first.** Ladder bows ask for up to 100 Bow to re-equip (the twins asked 0),
+  so a bow slot now takes the lowest `difficulty` the culture's troops carry: Gundabad moves to
+  `ladder_gundabad_bow_t2` (0, vanilla mesh). No other culture fields a lower-requirement bow; Harad and
+  Rivendell careers still start with a 100-requirement bow they can shoot but not re-equip once removed.
+- **No arrow borrowing.** Isengard's arrows (40 x 3) beat anything Mordor, Gundabad or Dol Guldur troops
+  carry, so those careers take their own troops' lowest arrows (`barbed_arrows`, `steppe_arrows`,
+  `bodkin_arrows_c`) and the test's allowlist is gone.
+- **Old writers deleted:** `tools/wire_career_starter_armor.py` and `tools/oneoff/generate_career_starter_rosters.py`
+  could each put the pre-#629 kit back with every validator green; its `check_generator_item_refs` row went too.
+- **`generate_starter_kit.py`:** the 18 retained twins are a committed `RETIRED_DONORS` list (a reinstall no
+  longer loses them, a retired donor that stops resolving fails the run); a twin on disk keeps its folder when
+  its donor's culture moves, which turns `--verify` green on the kite shield; the default mirror is
+  `lotraom-assets\v1.5` (it named the deleted `v1.4` tree, so every run skipped the mirror).
+- **`wire_starter_kit_rosters.py`** refuses an override id vanilla lacks: `MBObjectManager.MergeElements`
+  would merge it into the first vanilla roster (`npc_disguised_hero_equipment_template`) instead.
+- Tests: `StarterKitCoverageTests` reads troop gear as the engine does (`<Equipments>/<equipment>`
+  overrides included) and pins each career roster's `culture=` and identical `_m`/`_f` kits; the wiring
+  tests pin the committed override to the tool's output.
+
+Pre-existing tooling defects the review surfaced (five more tools on the `v1.4` mirror path, id-only
+`--verify` against twin content drifted since #569, live-before-mirror apply, non-civilian items in the
+override's civilian sets) are #630. RCA: `docs/reviews/rca-career-kits-2026-09-19.md`.
+
+Save-compat: career kits reach new characters only; an existing save keeps the kit it started with, and all
+127 `starter_` twins stay defined. Not-tested: the in-game starts (Gondor, Mordor, Gundabad and Harad ranged,
+Erebor ram, Rohan career and careerless, one cavalry pick) after a full restart. Docs:
+`starting-equipment-tuning.md`, `career-system.md`, `equipment-rosters.md`, `file-catalogue.md`,
+`tools/README.md`, the CLAUDE.md "Player start kits" row.
+
+### fix(validation): v2.0.30 - skill templates and inline rows must agree (#626)
+
+Mike: "ensure the templates match those skills that are inline." They already did: all 1,528 inline
+`<skills>` blocks beside a `skill_template` in the repo module equal their SkillSet, the 1,113 lords
+on TAOM's own sets and the 51 on SandBox's `spc_*` rookie sets alike, because
+`tools/sync_lord_inline_skills.py` re-synced them at v2.0.28 (`331032a1`). The 1.5.x engine bump
+retuned no lord. What was wrong was the gate and every place that still stated the 1.4.8 rule.
+
+- **`SKILL_TEMPLATE_SHADOWS_SKILLS` is gone; `SKILL_TEMPLATE_MISMATCH` replaces it.** The old gate
+  refused any troop or villager declaring both a template and inline rows, on the 1.4.8 rule that the
+  engine discards the inline block. Since 1.5.2 `BasicCharacterObject.Deserialize` copies the template
+  and lays the rows over it, so only a DIFFERENT row changes anything. The new gate errors on exactly
+  that, on a template with rows that names no SkillSet, on a file that is not UTF-8, and on a run that
+  finds no templated character at all, over every XML and XSLT file of the repo module, lords included.
+  Detection is the sync tool's own, so the fixer and the gate agree; repair with
+  `python tools/sync_lord_inline_skills.py --apply`. It costs about 0.2 s and is skipped, with a
+  warning, without the install. The MCP's `validate_moduledata` does not run it (#623).
+- **The commit hook** names the new code and now also fires on ModuleData `*.xslt`: a commit staging
+  only `lords.xslt` used to run no validator.
+- **The sync tool** reads a comment-blanked copy of each file, so nothing inside `<!-- -->` is matched,
+  judged, rewritten or loaded as a SkillSet row (a comment naming `<NPCCharacter` used to hide the next
+  real character); it reports each finding with its line; one `Scan` result serves the tool and the
+  gate. Proved identical to the old implementation on the real lords files, clean and perturbed.
+- The C# `SkillTemplate_NeverShadowsAnInlineSkillsBlock` is removed: it stated the old rule, and
+  `LordInlineSkillParityTests` already enforces the new one everywhere.
+- **The 1.4.8 rule is out of the prose:** `/lord-skills`' "one critical fact", its authoring doc, the
+  handbook's lords, troops, id-cheatsheet, skill-sets and wanderers chapters, `lord-perk-review.md`,
+  `troop-skill-balance.md`, `analyze_lord_balance.py`'s report and `tools/README.md` now name both
+  engine versions. `rebalance_lords.py --apply` is retired for skills (it writes rows that would win
+  over the SkillSet and that the gate now blocks).
+- Not built: template resolution in the upgrade-edge checks, which would judge 0 edges today.
+- Correction: the #617 second review, its feature doc and a comment on #626 said nothing had checked
+  whether the bump retuned the lords. The sync tool had.
+- Seven-lens deep review, six MED, no HIGH: `docs/reviews/rca-skill-template-parity-2026-09-19.md`.
+  The code, tests, hook and docs above landed in the combined commit `83bdad85`; this entry, the RCA,
+  the REVIEW-LOG entry and the lessons follow in the next one.
+
 ### data(starting-gear): v2.0.30 - career kits take each culture's lowest troop gear (#629)
 
 An audit of the 40 careers found 33 starting with vanilla gear. A `starter_` twin keeps its donor's meshes,
@@ -76,6 +152,49 @@ Save-compat: none; no persisted state. Children already born or generated stay. 
 next daily tick; the start-of-campaign exclusion reaches new campaigns only.
 Not-tested: in game. Owed: a new campaign with goblin and Misty Mountain clans checked on day one, then about
 five years fast-forwarded to compare orc and human clan child counts.
+
+### feat(elephant): v2.0.30 - howdah crew back on, the elite howdah made visible (#627)
+
+Mike watched the first run and saw nobody in the howdah (2026-09-19): crew spawn had been parked since June, and no
+item showed the howdah mesh. Two changes. **The visible howdah:** a new HorseHarness, `sk_elephant_armor_howdah_elite`,
+in LOTRLOME_Armory's `LOTRAOM_horses.xml`: a clone of `sk_elephant_armor_a` (same stats) on the elite howdah mesh
+`sk_hd_elep_armor_howdah_elite_a` that the platform is fitted to, named "[Harad] Elephant Howdah" with rows in English
+and the 12 languages (hand-written; the paid translator was not run). The Harad elephant rider now wears it.
+**Crew:** crew spawn is back on for that harness only (`HowdahHarness.CarriesCrew`), now in `HowdahCrewSpawner`; the plain armour keeps
+its crewless platform, since crew there would stand on an invisible deck. The spawn is queued on a
+`DeferredCallbackQueue` in `OnAgentBuild` and runs from the next `OnMissionTick` (a `SpawnAgent` nested in the engine's
+spawn loop re-enters it, #595), re-checks that the elephant and mahout are still live, and puts each archer on its crew
+frame (5 cm lift, facing outward) instead of 0.8 m ahead of the deck. Crew spawn was parked 2026-06-10 as a slide
+source (crew overlapping the elephant's capsule); the rebuilt floor's underside clears that capsule by 0.33 m, and the status
+line's `carriedV` measures any slide. `HowdahCrewSpawner.CrewSpawnEnabled` parks it again. Tests:
+`HowdahHarnessTests` (7) and `HowdahHarnessItemTests` (3: the live item on the elite mesh with `family_type` 10, its
+name row in all 13 files, the rider's harness), RED first. Full suite 9,861 passed, 2 skipped; deployed. Gates:
+`validate_moduledata.py` 0 errors; `audit_armory_refs.py` CLEAN; `check_external_loc_coverage.py` fails on 14 Armory
+keys untranslated in every language (the #602 and Khamul bardings, the #616 spiders) and 2 TAOM_Map keys
+(`castle_village_G4_1`/`_2`, Fram-burz and Fram-bosh, live since 2026-09-15), all pre-existing and unchanged by this
+edit. The Armory edit is recorded as an APPLIED EDIT in the snapshot README; live backups in
+`E:\taom-live-backups\2026-09-19\LOTRLOME_Armory\`.
+
+**Delta deep review** (data flow and XML first): one HIGH, fixed. The crew were built with the mahout's own origin (a
+June leftover), so the first crew casualty went through `PartyGroupAgentOrigin.SetKilled`: the Harad elephant rider
+left the party roster while still riding, the crew's hits gave the rider XP, and the troop supplier's
+`NumRemovedTroops` moved, which can end a battle while the elephant still fights. Each archer now gets a
+`HowdahCrewAgentOrigin`: casualty and score calls do nothing, the scoreboard combatant, colours and command come from
+the mahout's origin, and the seed is per seat (11 tests with the null-troop one below). The harness gate now reads the agent's `SpawnEquipment`, the
+roster the mount actually wears, not the troop's first roster. The Turkish name is now `[Harad] Fil Mahfesi`; stale
+comments (the crew's formation has been Cavalry since June) and the prefab header were corrected. Full suite 9,872
+passed; deployed.
+
+**Delta review, engine and standards lenses.** No incompatible engine use; the per-seat seed does reach each
+archer's face and equipment roll. The crew now spawn the way vanilla spawns a battle troop: the mahout's banner and
+clothing colours (they had the builder's defaults, which TAOM's colour persistence also skipped), `NoHorses`, and
+`WieldInitialWeapons` so the archers draw. The crew half moved out of `ElephantMissionBehavior` (350 lines, then 238,
+against 293 at HEAD `83bdad85`, which already carries the logging) into `HowdahCrewSpawner`, which owns the queue, the re-checks (the mahout-origin guard now sits
+with them instead of inside the per-seat loop) and the spawn. `HowdahCrewAgentOrigin.GetTraitsMask` reports no
+traits for a null troop (test only) instead of throwing; the banner test's name says what it proves. Also: the Armory
+catalogue regenerated (`sk_hd_elep_armor_howdah_elite_a` now referenced; the tsv also carries 4 new meshes from other
+sessions), the CLAUDE.md howdah trap row and `feature-map.md` say crew is on, and the research doc's step 1 note. Full
+suite 9,873 passed, 2 skipped; deployed. RCA addendum in `docs/reviews/rca-howdah-prefab-review-2026-09-19.md`.
 
 ### feat(elephant): v2.0.30 - howdah platform rebuilt, moved to the Armory, diagnostics logging (#627)
 

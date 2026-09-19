@@ -551,4 +551,29 @@ pages, the creature authoring guide and a CLAUDE.md trap row before an engine re
 `taom_schema.py`'s `SKILL_TEMPLATE_SHADOWS_SKILLS` (replaced by `SKILL_TEMPLATE_MISMATCH`, #626) said a `skill_template` makes the inline `<skills>` block unreachable, citing "v1.4.8, BasicCharacterObject.cs:337-358". True on 1.4.8 (`if (mBCharacterSkills == null)` around the inline read). On the installed 1.5.3, `Deserialize` copies the template into a fresh `MBCharacterSkills` and then applies the inline rows, so an inline row overrides. #617's first review built a refusal on the old rule; the second review's engine lens caught it.
 - **Why missed:** the rule came from a validator comment, not a decompile, and the engine bumps to 1.5.x re-verified signatures, not the behaviour claims the validator and the tools state.
 - **Prevent:** when a rule you are about to rely on names an engine version, and it is not the installed one, open the installed body (`pwsh tools/taom-src.ps1 path <Type>`) before building on it. When the behaviour moved, say both versions in the text (the patreon branch still ships 1.4.8).
+- **Recurrence, the prose half (#626, 2026-09-19):** the same flip was fixed in the DATA on 2026-09-14
+  (`331032a1` re-synced every lord's inline rows) while the 1.4.8 sentence lived on for five days in the
+  commit gate, the `/lord-skills` skill, five handbook chapters, a feature doc, a writer
+  (`rebalance_lords.py --apply`) and a report. When an engine rule flips, grep the docs, skills and
+  tools for the old sentence ("ignored", "documentation only", "dead", "pick one") and list every
+  writer and reader of the field, not only the data. Source: `docs/reviews/rca-skill-template-parity-2026-09-19.md`
+  findings 4 and 6.
 - **Source:** `docs/reviews/rca-ranged-rebalance-second-review-2026-09-18.md` finding 3; `TaleWorlds.Core.BasicCharacterObject.Deserialize`.
+
+### An agent spawned beside the troop supplier needs its own origin, never a supplier-backed one (#627, 2026-09-19)
+The howdah crew were built with `AgentBuildData.TroopOrigin(mahout.Origin)`. In a campaign battle that is a `PartyGroupAgentOrigin`, which latches per instance: the first crew casualty went through its `SetKilled`, removing the Harad elephant rider from the party roster while he still rode, moving the troop supplier's `NumRemovedTroops` (so `MissionBattleSideSpawnContext.NumberOfActiveTroops` read a lost unit and a side could be declared beaten while its elephant fought), and the crew's hits paid the rider XP. A null origin is no escape: `BattleObserverMissionLogic.OnAgentBuild` reads `agent.Origin.BattleCombatant` unguarded.
+- **Why missed:** the spawn was parked code, re-enabled by removing a comment, and the flip was reviewed as a flag rather than as the path it switches on. The June port also deviated from its own reference (ADOD_Beasts built a fresh origin per crewman).
+- **Prevent:** an agent the troop supplier did not spawn gets a per-agent `IAgentOriginBase` whose casualty and score calls do nothing and whose `BattleCombatant`, colours and command forward to the parent's (`HowdahCrewAgentOrigin` is the pattern, unit-tested with `Substitute.For<IAgentOriginBase>()`). Grep every `TroopOrigin(` for an origin that came from another agent.
+- **Source:** `docs/reviews/rca-howdah-prefab-review-2026-09-19.md` (delta addendum), #627; `PartyGroupAgentOrigin.cs:117-128`, `MissionBattleSideSpawnContext.cs:51`.
+
+### In OnAgentBuild the gear an agent wears is `agent.SpawnEquipment`, not `Character.Equipment` (#627, 2026-09-19)
+`Character.Equipment` is the troop's default (first) roster; `Mission.SpawnAgent` rolls a battle roster, stores it with `InitializeSpawnEquipment` before `OnAgentBuild`, and builds the mount from that roster's Horse and HorseHarness. A gate that reads the character's equipment answers for a roster the agent may not be wearing.
+- **Why missed:** the troop had one roster, so both reads agreed and nothing failed.
+- **Prevent:** read `agent.SpawnEquipment[slot]` in any build-time gate about what the agent carries or rides.
+- **Source:** `docs/reviews/rca-howdah-prefab-review-2026-09-19.md` (delta addendum), #627; `Mission.cs:4114`, `:4309`, `:4324-4328`.
+
+### A hand-built `AgentBuildData` gets none of what `Mission.SpawnTroop` adds (#627, 2026-09-19)
+The crew builder set team, position, direction, origin and formation. Vanilla's `GetAgentBuildDataToSpawnTroop` and `SpawnTroop` also set the banner, both clothing colours, `NoHorses`, and call `WieldInitialWeapons()` after the spawn; without them the crew wore the builder's default colours (which TAOM's colour persistence also skipped) and might stand with nothing in hand.
+- **Why missed:** the builder was written from what the spawn needed to work, not from what vanilla does to every troop.
+- **Prevent:** when spawning outside the troop supplier, open `Mission.GetAgentBuildDataToSpawnTroop` and `Mission.SpawnTroop` and match their builder calls and post-spawn steps, or say in a comment why one is left out.
+- **Source:** `docs/reviews/rca-howdah-prefab-review-2026-09-19.md` (delta addendum), #627; `Mission.cs:4467-4476`, `:4534-4537`.

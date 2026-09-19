@@ -15,6 +15,11 @@ public static class ElephantConfig
     /// <summary>HorseHarness item StringId that triggers howdah instantiation (sk_elephant_armor_a in LOTRLOME_Armory).</summary>
     public const string HarnessStringId = "sk_elephant_armor_a";
 
+    /// <summary>HorseHarness item that shows the elite howdah (mesh sk_hd_elep_armor_howdah_elite_a, the deck the platform
+    /// prefab is fitted to) in LOTRLOME_Armory's LOTRAOM_horses.xml. It triggers the platform AND its crew; the plain
+    /// <see cref="HarnessStringId"/> keeps a crewless platform (#627, Mike 2026-09-19). See <see cref="HowdahHarness"/>.</summary>
+    public const string HowdahHarnessStringId = "sk_elephant_armor_howdah_elite";
+
     /// <summary>Root game_entity name of the howdah platform prefab in LOTRLOME_Armory/Prefabs (#627). Renamed from
     /// taom_howdah_agent 2026-09-19: TAOM installs from v2.0.22 to v2.0.30 keep a copy under that name in
     /// Modules/TAOM/Prefabs, and two prefabs of one name have no defined winner. HowdahPrefabTests pins the prefab to it.</summary>

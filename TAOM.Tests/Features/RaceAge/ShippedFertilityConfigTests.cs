@@ -7,6 +7,7 @@ using NSubstitute;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Features.CharacterCreation;
+using TAOM.Features.CharacterCreation.Models;
 using TAOM.Features.InitialChildGeneration;
 using TAOM.Features.RaceAge;
 using TAOM.Features.RaceAge.Models;
@@ -54,15 +55,19 @@ public class ShippedFertilityConfigTests
             new InitialChildGenerationConfigProvider(ShippedPaths(), Substitute.For<IModLogger>()).LoadConfig().ExcludedCultures,
             StringComparer.OrdinalIgnoreCase);
 
-    /// <summary>culture_id -> races[0] (the default race), from the shipped cultures.json via the production loader.</summary>
-    private static Dictionary<string, string> DefaultRaceByCulture()
+    /// <summary>Every culture in the shipped cultures.json, via the production loader.</summary>
+    private static IReadOnlyList<CultureCreationData> ShippedCultures()
     {
         var cultures = new CultureCreationDataProvider(ShippedPaths(), Substitute.For<IModLogger>()).LoadCultures();
         Assert.IsTrue(cultures.Count > 0, "cultures.json parsed no entries; the file moved or its shape changed");
-        return cultures
+        return cultures;
+    }
+
+    /// <summary>culture_id -> races[0] (the default race), for cultures that list any race.</summary>
+    private static Dictionary<string, string> DefaultRaceByCulture() =>
+        ShippedCultures()
             .Where(c => c.Races.Length > 0)
             .ToDictionary(c => c.CultureId, c => c.Races[0], StringComparer.OrdinalIgnoreCase);
-    }
 
     [TestMethod]
     public void ShippedRaceAgeConfig_Load_EmitsNoValidationWarnings()
@@ -149,9 +154,9 @@ public class ShippedFertilityConfigTests
     public void ShippedInitialChildGeneration_EveryExcludedCulture_IsARealCulture()
     {
         // The reverse direction: a typo ("mistymountainorc") would exclude nothing, silently.
-        var cultures = DefaultRaceByCulture();
+        var cultures = new HashSet<string>(ShippedCultures().Select(c => c.CultureId), StringComparer.OrdinalIgnoreCase);
 
-        var unknown = ShippedExcludedCultures().Where(c => !cultures.ContainsKey(c)).ToList();
+        var unknown = ShippedExcludedCultures().Where(c => !cultures.Contains(c)).ToList();
 
         Assert.AreEqual(0, unknown.Count,
             "excluded_cultures ids that name no culture in cultures.json (a typo excludes nothing): "

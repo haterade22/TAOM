@@ -63,20 +63,31 @@ from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from _gamedir import game_dir  # noqa: E402
+from _gamedir import ASSET_REPO, game_dir  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_GAME = game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
 DEFAULT_MODULES = Path(DEFAULT_GAME) / "Modules"
 DEFAULT_ARMORY = DEFAULT_MODULES / "LOTRLOME_Armory"
-DEFAULT_ASSET_REPO = Path(r"E:\repos\lotraom-assets") / "v1.4" / "LOTRLOME_Armory"
+DEFAULT_ASSET_REPO = ASSET_REPO
 DEFAULT_MODULEDATA = REPO_ROOT / "Main" / "_Module" / "ModuleData"
 # Not the career file: since #629 its rosters name the gear each culture's lowest troops carry,
 # and cloning those would author twins nobody asked for. Its old twins are kept by
-# `retained_donors`.
+# RETIRED_DONORS.
 DEFAULT_ROSTERS = [
     DEFAULT_MODULEDATA / "equipmentsets" / "taom_char_creation_equipment.xml",
 ]
+# Donors whose twins no roster names since #629 (the pre-#629 career kits). Saves started since
+# #569 hold these ids, so they stay planned whatever the install holds, in the order the old
+# plan wrote them (so the list never reorders a file on its own). Remove one only with a
+# save-compat decision.
+RETIRED_DONORS: tuple[str, ...] = (
+    "wm_gondor_bow", "bodkin_arrows_a", "wm_gondor_spear_a", "battered_kite_shield",
+    "wm_isengard_bow_a01", "empire_sword_1_t2", "wm_isengard_shield_a01", "wm_gundabad_shield_a01",
+    "wm_dol_goldur_axe_a01", "wm_mirkwood_bow_a01", "wm_rohan_ws_bow_starter", "wm_rohan_ws_sword_a01",
+    "wm_rohan_ws_spear_a01", "dunland_caerdh_spear_a", "wm_harad_bow_a01", "wm_harad_sword_a01",
+    "wm_harad_spear_a01", "northern_spear_1_t2",
+)
 
 MARKER_START = "<!-- TAOM-STARTER-KIT:START -->"
 MARKER_END = "<!-- TAOM-STARTER-KIT:END -->"
@@ -783,22 +794,32 @@ def expected_roster_gaps(menus_dir: Path, present: set[str]) -> list[str]:
     return gaps
 
 
-def retained_donors(items_root: Path, items: dict, planned: "OrderedDict[str, set[str]]") -> list[str]:
-    """Donors of the twins already on disk that no roster names any more, in file order.
+def retained_donors(items: dict, planned: "OrderedDict[str, set[str]]") -> list[str]:
+    """The RETIRED_DONORS no roster names, in list order. A committed list rather than a scan
+    of the install, so a reinstall that wiped starter_kit.xml still restores them. A retired
+    donor the item index cannot resolve is an error, never a silent drop."""
+    missing = [d for d in RETIRED_DONORS if d not in items]
+    if missing:
+        raise StarterKitError(f"RETIRED_DONORS no longer defined anywhere: {missing}; restore the item "
+                              "or make a save-compat decision before removing it from the list")
+    return [d for d in RETIRED_DONORS if d not in planned]
 
-    Saves started since #569 hold those ids, and keeping them defined means a save never
-    depends on how the engine loads an item it no longer defines. The career rosters stopped
-    naming theirs in #629. A twin whose donor no longer resolves is NOT retained, so
-    `_refuse_shrink` still stops the run that genuinely cannot see its donors."""
-    out: list[str] = []
+
+def on_disk_folders(items_root: Path) -> dict[str, str]:
+    """starter id -> the folder its twin already sits in. A twin stays where it is when its
+    donor's culture later changes (vanilla 1.5.3 gave battered_kite_shield culture=empire),
+    because a moved id would leave a duplicate or an orphan behind."""
+    found: dict[str, str] = {}
     if not items_root.exists():
-        return out
+        return found
     for path in sorted(items_root.glob(f"*/{ITEMS_FILE_NAME}")):
-        for starter in sorted(_starter_ids_in(read_xml(path)[0])):
-            donor = resolve_donor(starter, items)
-            if donor and donor not in planned and donor not in out:
-                out.append(donor)
-    return out
+        folder = path.parent.name
+        for starter in _starter_ids_in(read_xml(path)[0]):
+            if found.get(starter, folder) != folder:
+                raise StarterKitError(f"{starter} is defined in two folders ({found[starter]}, {folder}); "
+                                      "delete one before re-planning")
+            found[starter] = folder
+    return found
 
 
 def build_plan(sources: Sources) -> Plan:
@@ -811,8 +832,9 @@ def build_plan(sources: Sources) -> Plan:
     items = index_items(_armory_item_files(armory_md) + [Path(p) for p in sources.vanilla_item_files],
                         items_root, failures=notes)
     donors = collect_donors(roots, items)
-    for donor_id in retained_donors(items_root, items, donors):
+    for donor_id in retained_donors(items, donors):
         donors[donor_id] = set()
+    kept_in = on_disk_folders(items_root)
     pieces = index_pieces([armory_md / PIECES_FILE, sources.native_pieces])
     submodule = Path(sources.armory) / "SubModule.xml"
     registered = registered_item_folders(submodule.read_text(encoding="utf-8-sig")) if submodule.exists() else set()
@@ -847,6 +869,12 @@ def build_plan(sources: Sources) -> Plan:
         if new_id in items:
             raise StarterKitError(f"{new_id} already exists as an item; the id scheme collided on {donor_id}")
         folder = folder_for(rec.element.get("culture"), rec.own_folder, registered)
+        if new_id in kept_in and kept_in[new_id] != folder:
+            if kept_in[new_id] not in registered:
+                raise StarterKitError(f"{new_id} sits in {kept_in[new_id]!r}, which the Armory's SubModule.xml "
+                                      "does not register as an Items path")
+            notes.append(f"{new_id}: kept in {kept_in[new_id]} (its donor's culture now maps to {folder})")
+            folder = kept_in[new_id]
         if kind == "crafted":
             blade_piece_id = next((p.get("id") for p in rec.element.iter("Piece") if p.get("Type") == "Blade"), None)
             if not blade_piece_id or blade_piece_id not in pieces:
@@ -921,8 +949,9 @@ def _refuse_shrink(what: str, on_disk: set[str], planned: set[str], allow: bool)
     if lost and not allow:
         raise StarterKitError(
             f"{what}: applying would shrink the starter set by {len(lost)} id(s) already on disk "
-            f"({', '.join(lost[:5])}{', ...' if len(lost) > 5 else ''}). If that is intended, re-run with "
-            "--allow-shrink; if not, the rosters this run read do not name every donor")
+            f"({', '.join(lost[:5])}{', ...' if len(lost) > 5 else ''}). No roster names these and "
+            "RETIRED_DONORS does not keep them: add the donor there to keep a twin old saves may hold, "
+            "or re-run with --allow-shrink to drop it")
 
 
 def apply_plan(plan: Plan, md: Path, write: bool, backups: bool = True, allow_shrink: bool = False) -> list[str]:

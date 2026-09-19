@@ -5,6 +5,7 @@ using System.Linq;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
+using TAOM.Tests.Core;
 
 namespace TAOM.Tests.Features.CharacterCreation;
 
@@ -50,21 +51,6 @@ public class StarterKitCoverageTests
     private static readonly Dictionary<string, string> KitSourceCulture =
         new Dictionary<string, string>(StringComparer.Ordinal) { ["battania"] = "khuzait" };
 
-    // Item -> (culture it is borrowed from, cultures allowed to borrow it). Mordor, Gundabad and
-    // Dol Guldur troops carry only vanilla arrows, so their ranged careers take Isengard's.
-    private static readonly Dictionary<string, (string From, HashSet<string> Borrowers)> KinBorrows =
-        new Dictionary<string, (string, HashSet<string>)>(StringComparer.Ordinal)
-        {
-            ["wm_isengard_arrow_a01"] = ("isengard",
-                new HashSet<string>(StringComparer.Ordinal) { "mordor", "gundabad", "dolguldur" }),
-        };
-
-    private static string CultureId(string? value) =>
-        (value ?? "").StartsWith("Culture.", StringComparison.Ordinal) ? value!.Substring("Culture.".Length) : value ?? "";
-
-    private static string BareItemId(string? value) =>
-        (value ?? "").StartsWith("Item.", StringComparison.Ordinal) ? value!.Substring("Item.".Length) : value ?? "";
-
     private static bool IsPlayerRoster(string id) =>
         (id.StartsWith("player_char_creation_", StringComparison.Ordinal)
          || id.StartsWith("player_career_", StringComparison.Ordinal))
@@ -105,44 +91,69 @@ public class StarterKitCoverageTests
     [TestMethod]
     public void EveryCareerAndOverrideRosterItem_IsCarriedByATroopOfItsCulture()
     {
-        // #629: a career kit is the gear the culture's lowest troops carry, so it can never beat
-        // regular gear. The override file is built from the career kit and obeys the same rule.
-        // This pins "a troop of this culture carries it" rather than "it is the lowest", so a
-        // routine troop edit does not fail here; the pick rule lives in
-        // docs/features/starting-equipment-tuning.md.
+        // #629: a career kit is the gear the culture's own troops carry, from its lowest tiers
+        // (tools/generate_career_kits.py derives it and its --verify pins the exact picks, which
+        // needs the game install). This install-free pin asks only "a troop of this culture
+        // carries it", so a routine troop edit does not fail here. The override file is built
+        // from the career kit and obeys the same rule.
         var carried = TroopBattleItemsByCulture();
         var violations = new List<string>();
         var checkedSlots = 0;
         foreach (var file in new[] { CareerFile, VanillaOverrideFile })
         foreach (var roster in PlayerRosters(LoadRosters(file)))
         {
-            var culture = CultureId((string?)roster.Attribute("culture"));
+            var culture = CultureDataFixture.StripPrefix((string?)roster.Attribute("culture") ?? "");
             var source = KitSourceCulture.TryGetValue(culture, out var mapped) ? mapped : culture;
             carried.TryGetValue(source, out var own);
             foreach (var eq in roster.Descendants("Equipment"))
             {
                 var slot = (string?)eq.Attribute("slot") ?? "";
                 if (!PlayerSlots.Contains(slot)) continue;
-                var id = BareItemId((string?)eq.Attribute("id"));
+                var id = CultureDataFixture.StripPrefix((string?)eq.Attribute("id") ?? "");
                 checkedSlots++;
-                if (own != null && own.Contains(id)) continue;
-                if (KinBorrows.TryGetValue(id, out var kin) && kin.Borrowers.Contains(source)
-                    && carried.TryGetValue(kin.From, out var lender) && lender.Contains(id))
-                    continue;
-                violations.Add($"{file}: {roster.Attribute("id")?.Value} {slot} {id} (no {source} troop carries it)");
+                if (own == null || !own.Contains(id))
+                    violations.Add($"{file}: {roster.Attribute("id")?.Value} {slot} {id} (no {source} troop carries it)");
             }
         }
 
         Assert.IsTrue(checkedSlots > 0, "no career or override weapon/armour slot was read");
         Assert.AreEqual(0, violations.Count,
             "A career or override roster hands out an item no troop of its culture carries in a battle "
-            + "set. Career kits are the culture's lowest troop gear (#629): pick from troops/troops_*.xml, "
-            + "then re-run tools/wire_starter_kit_rosters.py --apply for the override:\n  "
+            + "set. Career kits are the culture's lowest troop gear (#629): run "
+            + "tools/generate_career_kits.py --apply, then tools/wire_starter_kit_rosters.py --apply:\n  "
             + string.Join("\n  ", violations));
+    }
+
+    [TestMethod]
+    public void EveryCareerRoster_NamesItsOwnCulture_AndBothSexesGetTheSameKit()
+    {
+        // The culture= attribute selects the troop pool the test above checks against, and
+        // CareerEquipmentRosterIds.Build picks _m or _f by the player's sex alone.
+        var problems = new List<string>();
+        var kits = new Dictionary<string, string>(StringComparer.Ordinal);
+        foreach (var roster in PlayerRosters(LoadRosters(CareerFile)))
+        {
+            var id = roster.Attribute("id")!.Value;
+            var parts = id.Split('_');
+            var culture = CultureDataFixture.StripPrefix((string?)roster.Attribute("culture") ?? "");
+            if (parts.Length != 5 || culture != parts[2])
+                problems.Add($"{id}: culture=\"{roster.Attribute("culture")?.Value}\" does not match the id");
+            var kit = string.Join(";", roster.Descendants("Equipment")
+                .Select(e => $"{e.Attribute("slot")?.Value}={e.Attribute("id")?.Value}"));
+            var pair = id.Substring(0, id.Length - 2);
+            if (kits.TryGetValue(pair, out var other) && other != kit)
+                problems.Add($"{pair}: the _m and _f rosters differ");
+            kits[pair] = kit;
+        }
+
+        Assert.IsTrue(kits.Count > 0, "no career roster was read");
+        Assert.AreEqual(0, problems.Count, string.Join("\n  ", problems));
     }
 
     private static Dictionary<string, HashSet<string>> TroopBattleItemsByCulture()
     {
+        // Mirrors what the engine reads as troop gear (BasicCharacterObject.cs:365-418): inline
+        // battle rosters, plus <Equipments>/<equipment> overrides, which apply to every set.
         var troopsDir = Path.Combine(ModuleDataPath, "troops");
         Assert.IsTrue(Directory.Exists(troopsDir), $"troops folder not found at {troopsDir}");
         var byCulture = new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
@@ -150,22 +161,22 @@ public class StarterKitCoverageTests
         foreach (var npc in XDocument.Load(path).Descendants("NPCCharacter"))
         {
             if ((string?)npc.Attribute("is_hero") == "true") continue;
-            var culture = CultureId((string?)npc.Attribute("culture"));
-            if (culture.Length == 0) continue;
+            var culture = CultureDataFixture.StripPrefix((string?)npc.Attribute("culture") ?? "");
+            var equipments = npc.Element("Equipments");
+            if (culture.Length == 0 || equipments == null) continue;
             if (!byCulture.TryGetValue(culture, out var items))
                 byCulture[culture] = items = new HashSet<string>(StringComparer.Ordinal);
-            foreach (var roster in npc.Descendants("EquipmentRoster"))
-            {
-                if ((string?)roster.Attribute("civilian") == "true") continue;
-                foreach (var eq in roster.Elements("equipment"))
-                    items.Add(BareItemId((string?)eq.Attribute("id")));
-            }
+            var entries = equipments.Elements("equipment").Concat(equipments.Elements("EquipmentRoster")
+                .Where(r => !string.Equals((string?)r.Attribute("civilian"), "true", StringComparison.OrdinalIgnoreCase))
+                .SelectMany(r => r.Elements("equipment")));
+            foreach (var eq in entries)
+                items.Add(CultureDataFixture.StripPrefix((string?)eq.Attribute("id") ?? ""));
         }
         return byCulture;
     }
 
     [TestMethod]
-    public void EveryPlayerStartRoster_RewiresBothBattleAndCivilianSets()
+    public void EveryCultureDefaultRoster_RewiresBothBattleAndCivilianSets()
     {
         // Equipment.FillFrom copies the civilian set independently of the battle set, and the
         // career layer carries no civilian set, so the culture-default civilian set is the

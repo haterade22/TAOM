@@ -56,7 +56,7 @@ Every race has an explicit entry. The `defaultRace` ("human") is used as a fallb
 |-------|------|-------------|
 | `maxAge` | int | Maximum lifespan. Heroes die when they exceed this. |
 | `becomeOld` | int | Age when visual aging effects apply |
-| `comesOfAge` | int | Start of the race's fertile window. It does not move the engine's adult age: `AgeModel.HeroComesOfAge` stays 18 (`TaomAgeModel` does not override it), and the pregnancy tick gates on that first, so a value below 18 has no effect |
+| `comesOfAge` | int | Start of the race's fertile window, and the minimum age of location-spawned NPCs of that race (`TaomAgeModel.GetAgeLimitForLocation`, except `Child` tags). It does not move the engine's adult age: `AgeModel.HeroComesOfAge` stays 18 (`TaomAgeModel` does not override it) and the pregnancy tick gates on that first, so a value below 18 changes neither; a value above 18 changes both |
 | `middleAge` | int | Middle adulthood threshold |
 | `fertilityEnd` | int | Age when fertility drops to zero |
 | `fertilityMod` | float | Multiplier on vanilla pregnancy chance (1.0 = normal) |
@@ -134,7 +134,7 @@ Read from `race_age_config.json` on 2026-09-19 (#628). Every race comes of age a
 
 ## How Pregnancy Works
 
-`TaomPregnancyModel` **reimplements** `GetDailyChanceOfPregnancyForHero(Hero hero)` rather than calling `base`. This is necessary because the vanilla `DefaultPregnancyModel` hardcodes fertility age bounds to 18-45 in a private `IsHeroAgeSuitableForPregnancy` method — calling `base` would return 0 for any hero over age 45, defeating race-specific fertility windows (e.g., Dwarves with `fertilityEnd: 220`).
+`TaomPregnancyModel` **reimplements** `GetDailyChanceOfPregnancyForHero(Hero hero)` rather than calling `base`. This is necessary because the vanilla `DefaultPregnancyModel` hardcodes fertility age bounds to 18-45 in a private `IsHeroAgeSuitableForPregnancy` method: calling `base` would return 0 for any hero over age 45, defeating race-specific fertility windows (e.g., Dwarves with `fertilityEnd: 220`).
 
 ### Calculation Steps
 
@@ -207,7 +207,7 @@ The daily tick iterates all alive heroes to check age-based death. Several optim
 <!-- backlinks-end -->
 ## Changelog
 
-- 2026-09-19: Orcs and goblins overbred (#628). The race bonus now applies only while a clan is under its population cap and never to a player marriage; orc-kin modifiers cut from 2.0 to 3.0 down to 1.3 to 1.5; orc and berserker fertile to 45 (was 50); humans fertile to 60 (was 195); `goblin`, `mistymountainorcs` and `bluecraig` excluded from start-of-campaign children like the other orc cultures. The values table above was also stale against the file and is refreshed.
+- 2026-09-19: Orcs and goblins overbred (#628). The race bonus now applies only while a clan is at or under its population cap and never to a player marriage; orc-kin modifiers cut from 2.0 to 3.0 down to 1.3 to 1.5; orc and berserker fertile to 45 (was 50); humans fertile to 60 (was 195); `goblin`, `mistymountainorcs` and `bluecraig` excluded from start-of-campaign children like the other orc cultures. The values table above was also stale against the file and is refreshed.
 - 2026-07-27 — Two fixes found while cutting debug-log volume. **Deaths are announced only once they happen:** `IHeroAgeAdapter.KillByOldAge` now returns `bool` (re-reading `IsAlive` after the action) and `RaceAgeBehavior` kills before it logs. `KillCharacterAction.ApplyInternal` marks-and-defers when the victim is in a `MapEvent`/`SiegeEvent`, refuses the player character, and no-ops when the life/death cycle is disabled — all without changing `HeroState` — so the previous log-then-kill order announced deaths that had not occurred, and re-announced them on the next daily tick (16 duplicates in one session). **Immortals keep their authored fertility window:** `RaceAgeConfigProvider` no longer reads `"fertilityEnd": 0` on an immortal race as an inverted range and overwrites it with 18/45. That value is the deliberate "cannot reproduce" sentinel for `nazghul` / `saruman` / `sauron`; the overwrite was masked by `TaomPregnancyModel`'s `IsImmortal` short-circuit but visible through the public `IRaceAgeService.GetFertilityEndAge`, and it warned three times on every session start.
 - 2026-06-23 — Restored the `DeliverOffSpring_RaceAssert_Patch` transpiler (`Patch13_RaceAge`) to suppress the harmless `mother.Race == father.Race` SilentAssert on cross-race births (#283).
 - 2026-05-13 — RaceAge hardening: `_raceIdCache` reset on session launch, validate-before-lookup in `GetEntry`, semantic validation in `RaceAgeConfigProvider.LoadConfig`; extracted `TaomPregnancyModel.ComputeBaseChance` pure helper (#179) and fixed its `heroAge` int-truncation regression to use float `Hero.Age`.

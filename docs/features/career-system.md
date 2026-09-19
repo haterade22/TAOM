@@ -358,18 +358,20 @@ rule is in [starting-equipment-tuning.md](starting-equipment-tuning.md) "Career 
 
 Same fallback policy as the runtime grant: missing roster → log + leave the youth/culture-default preview in place.
 
-**`FillFrom` is a full replacement, not an overlay.** `Equipment.FillFrom(source)` (Equipment.cs:184-194, installed 1.4.8) copies all 12 slots unconditionally, so a slot the career roster omits is EMPTIED on the player; it does not inherit the culture-default value. That is why a careered player has no Head, Cape or Gloves (the career rosters set none) and why a ranged or infantry career roster needs no empty `<Equipment slot="Horse" id="" />` override to stay on foot. An earlier version of this paragraph said the opposite; `tools/wire_career_starter_armor.py`'s header and [starting-equipment-tuning.md](starting-equipment-tuning.md) had it right, and `docs/modding/open-questions.md` recorded the contradiction until it was corrected on 2026-09-12. The one thing the career layer does NOT replace is the civilian set: the adapter applies battle and civilian sets independently, and the career rosters carry no civilian set, so the culture-default civilian set is the civilian kit for every culture.
+**`FillFrom` is a full replacement, not an overlay.** `Equipment.FillFrom(source)` (Equipment.cs:184-194, installed 1.4.8) copies all 12 slots unconditionally, so a slot the career roster omits is EMPTIED on the player; it does not inherit the culture-default value. That is why a careered player has no Head, Cape or Gloves (the career rosters set none) and why a ranged or infantry career roster needs no empty `<Equipment slot="Horse" id="" />` override to stay on foot. An earlier version of this paragraph said the opposite; `tools/wire_career_starter_armor.py`'s header (the script was deleted in #629) and [starting-equipment-tuning.md](starting-equipment-tuning.md) had it right, and `docs/modding/open-questions.md` recorded the contradiction until it was corrected on 2026-09-12. The one thing the career layer does NOT replace is the civilian set: the adapter applies battle and civilian sets independently, and the career rosters carry no civilian set, so the culture-default civilian set is the civilian kit for every culture.
 
 ### How to add a new culture's career rosters
 
-1. Pick every weapon and armour slot by the rule in [starting-equipment-tuning.md](starting-equipment-tuning.md)
-   "Career kits": the lowest item of that class a non-hero troop of the culture carries in a battle set,
-   preferring non-vanilla (carrier level 21 or below). No new items: the culture's troops already carry
-   them, cover attributes and all. `StarterKitCoverageTests` fails on an item no troop of the culture carries.
-2. Append 6 rosters to [`taom_career_starting_equipment.xml`](../../Main/_Module/ModuleData/equipmentsets/taom_career_starting_equipment.xml),
-   one per (archetype, gender), each with `culture="Culture.<id>"`: `Item0`-`Item2`, `Body`, `Leg`, and for
-   cavalry `Horse` + `HorseHarness` (a dwarf culture only a war ram, and never a Horse without a harness).
-   `Equipment.FillFrom` replaces the whole battle set, so ranged and infantry rosters simply omit the mount.
+1. Append 6 rosters to [`taom_career_starting_equipment.xml`](../../Main/_Module/ModuleData/equipmentsets/taom_career_starting_equipment.xml),
+   one per (archetype, gender), each with `culture="Culture.<id>"`: `Item0`-`Item2`, `Body`, `Leg` (any
+   existing ids as placeholders), and for cavalry `Horse` + `HorseHarness`, which are hand-kept (a dwarf
+   culture only a war ram, and never a Horse without a harness). `Equipment.FillFrom` replaces the whole
+   battle set, so ranged and infantry rosters simply omit the mount.
+2. Run `python tools/generate_career_kits.py --apply`: it fills the five slots from the culture's troops by
+   the rule in [starting-equipment-tuning.md](starting-equipment-tuning.md) "Career kits" (lowest troop gear,
+   non-vanilla preferred up to level 21, bows by lowest skill requirement). A culture whose sidearm or
+   second weapon is not a sword or a polearm gets a row in the tool's `SIDEARM`/`SECOND` tables first. No
+   new items: the culture's troops already carry them. `--verify` and `StarterKitCoverageTests` pin the result.
 3. If the culture is one of the six vanilla-mapped ones, re-run `python tools/wire_starter_kit_rosters.py --apply`
    so its careerless override follows the new kit.
 4. Verify the archetype for each career in [`CareerSystemIoC.GetCareerArchetypeMap()`](../../Main/Features/CareerSystem/CareerSystemIoC.cs) and adjust if needed.

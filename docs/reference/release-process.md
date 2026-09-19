@@ -85,7 +85,9 @@ Use `/release`. It runs the sequence below and fails closed on the #371 pairing 
 **The Armory ships in the same release when the TAOM build needs a file it did not have.** Players get
 `LOTRLOME_Armory` only from the editor package Mike builds into `E:\LOTRAOM_Releases\<channel>\Modules\`. Since #627
 the TAOM build instantiates `taom_howdah_platform` from `LOTRLOME_Armory/Prefabs`; a TAOM build released without an Armory
-package carrying it logs `not found` and spawns no howdah platform.
+package carrying it logs `not found` and spawns no howdah platform. Since the same issue the Harad elephant rider
+(`troops_harad.xml`) wears `sk_elephant_armor_howdah_elite`, an item only the Armory defines (`LOTRAOM_horses.xml`):
+without it the rider's elephant spawns with no harness, no howdah and no crew.
 
 **Step 7 is the one that gets skipped**, which is why
 [`check-version-tagged.sh`](../../.claude/hooks/check-version-tagged.sh) reminds at turn end

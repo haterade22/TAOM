@@ -3313,6 +3313,37 @@ three lessons new, three extended. Codex: not dispatched. Owed: push the mirror,
 `/armory-audit`, a Custom Battle, a campaign battle crossbow line against bow line, one non-English
 client.
 
+## Review 121: skill-template parity gate (#626), 7-lens deep review (2026-09-19)
+
+Mike: "626 - Please proceed and ensure the templates match those skills that are inline." They
+already matched (1,528 inline blocks, 0 drift, since `331032a1`). The change replaced the 1.4.8-rule
+gate `SKILL_TEMPLATE_SHADOWS_SKILLS` with `SKILL_TEMPLATE_MISMATCH` over the whole repo module,
+reusing `sync_lord_inline_skills.py`'s detection, and removed the C# test stating the old rule. Seven
+lenses (Standards, Engine, Data flow, Tooling; Efficiency, Completeness, Design; XML not in scope):
+no HIGH, six MED (the sync tool's comment handling by match start, a quadratic line count, the hook
+not firing on `lords.xslt`, `rebalance_lords.py --apply` still writing rows the gate blocks, the MCP
+losing the check, the 1.4.8 rule in a skill and five handbook and feature docs), all fixed or recorded;
+four design proposals applied; parity with the old implementation proved on the real lords files. The
+code landed in the combined commit `83bdad85`. RCA
+[rca-skill-template-parity-2026-09-19.md](rca-skill-template-parity-2026-09-19.md); one lesson new,
+one extended. Codex: not dispatched. Owed: close #626 once the records commit lands.
+
+## Review 122: career kits take the lowest troop gear (#629), 8-lens deep review (2026-09-19)
+
+Mike asked which careers start with vanilla equipment (33 of 40 did, through `starter_` twins of vanilla
+donors), then directed that starting gear must not beat regular gear and that careers take the lowest
+troops' own equipment, nothing new. #629 repointed the 78 career rosters and regenerated the override; it
+landed in the combined commit `83bdad85`. Eight lenses in two waves of four (Standards, Engine, Data flow,
+XML; Efficiency, Completeness, Design, Tooling), two cut short by the session limit after delivering: no
+critical or high, six MED (ladder bows' Bow requirement up to 100, orc careers borrowing arrows better than
+their troops', two scripts still able to write the old kits, retention scanning the unversioned install, a
+generator verifying one Armory copy of two, a latent engine merge trap for override ids vanilla lacks),
+missing pins and a dozen LOW. Mike decided four behaviour questions (bows by lowest requirement, own
+arrows, delete the scripts, three tool hardenings); the pick rule became `tools/generate_career_kits.py`,
+which reproduced 382 of the 390 hand-applied ids. One convergence pass: no parity defect, four LOW fixed.
+RCA [rca-career-kits-2026-09-19.md](rca-career-kits-2026-09-19.md); three lessons new. Codex: not
+dispatched. Follow-up #630. Owed: the in-game starts listed on #629, then close it.
+
 
 Every file below is a real review artefact that nothing linked to, so the doc graph
 counted it as an orphan and no reader would ever have found it. Indexed here on

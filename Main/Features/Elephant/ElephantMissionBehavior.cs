@@ -32,6 +32,8 @@ public class ElephantMissionBehavior : MissionLogic
     private readonly HashSet<string> _loggedErrors = new();
     // Per-mission howdah serial for the [Howdah#n] log tag (#627); agent indices recycle, so the tag is not an index.
     private int _howdahSerial;
+    // The howdah crews (#627): queued from OnAgentBuild, spawned from OnMissionTick. See HowdahCrewSpawner.
+    private readonly HowdahCrewSpawner _crew;
     // Attach/prune bookkeeping (shadow list, dedup, late-attach counting) — shared tracker,
     // see CreatureTreeTracker for the discipline notes.
     private readonly CreatureTreeTracker _tracker;
@@ -43,6 +45,7 @@ public class ElephantMissionBehavior : MissionLogic
         _service = IoC.Resolve<IElephantAttackService>();
         _logger = IoC.Resolve<IModLogger>();
         _howdahDiagnostics = IoC.Resolve<IHowdahDiagnosticsSettingsProvider>();
+        _crew = new HowdahCrewSpawner(_logger);
         _tracker = new CreatureTreeTracker("ElephantTree", "[Elephant]",
             a => _service.IsCreatureMonster(a.Monster?.StringId), _logger);
     }
@@ -55,7 +58,7 @@ public class ElephantMissionBehavior : MissionLogic
         // Elephants that built before that are caught by the first-tick scan in OnMissionTick.
         if (_treesAdded) _tracker.TryLateAttach(agent);
 
-        // Howdah: when the mahout rider builds (human, mounted on an elephant, wearing sk_elephant_armor_a),
+        // Howdah: when the mahout rider builds (human, mounted on an elephant, wearing a harness HowdahHarness.GetsPlatform accepts),
         // instantiate the howdah seat entity above the elephant's neck. Behavioural port of ADOD_Beasts's
         // mission-logic OnAgentBuild howdah branch. MountAgent is already built at this point
         // because the engine always builds the mount before the rider (horse-slot spawn order).
@@ -72,21 +75,24 @@ public class ElephantMissionBehavior : MissionLogic
         bool diagnostics = _howdahDiagnostics?.IsEnabled == true;
         try
         {
-            var character = agent.Character;
-            if (character?.Equipment == null)
+            // The harness the mount actually wears (#627, delta review F4): SpawnEquipment is the roster the engine rolled
+            // for this agent, set before OnAgentBuild, where Character.Equipment is only the troop's first roster.
+            Equipment equipment = agent.SpawnEquipment;
+            if (equipment == null)
             {
                 if (diagnostics)
                     _logger.LogInfo($"[Howdah] rider {agent.Name} on elephant index {agent.MountAgent.Index}: no equipment, no howdah");
                 return;
             }
-            var harness = character.Equipment[EquipmentIndex.HorseHarness];
+            var harness = equipment[EquipmentIndex.HorseHarness];
             string harnessId = harness.Item?.StringId;
-            if (harnessId != ElephantConfig.HarnessStringId)
+            if (!HowdahHarness.GetsPlatform(harnessId))
             {
                 if (diagnostics)
                     _logger.LogInfo(
                         $"[Howdah] rider {agent.Name} on elephant index {agent.MountAgent.Index} wears harness " +
-                        $"'{harnessId ?? "none"}': no howdah (the trigger is {ElephantConfig.HarnessStringId})");
+                        $"'{harnessId ?? "none"}': no howdah (the triggers are {ElephantConfig.HowdahHarnessStringId} " +
+                        $"and {ElephantConfig.HarnessStringId})");
                 return;
             }
 
@@ -112,10 +118,10 @@ public class ElephantMissionBehavior : MissionLogic
             // seat GlobalPositions are valid world coordinates, not world origin (0,0,0).
             machine.RepositionToElephant();
 
-            // Capture the mahout's current formation for crew BEFORE moving mahout to Cavalry.
-            // Crew stay in the original formation (HorseArcher) to receive ranged fire orders;
-            // mahout moves to Cavalry so the elephant charges instead of circling at skirmish range.
-            Formation crewFormation = agent.Formation;
+            // Capture the mahout's current formation for crew BEFORE moving mahout to Cavalry, so the elephant
+            // charges instead of circling at skirmish range. The rider's default group has been Cavalry since
+            // 2026-06-29 (troops_harad.xml), so today this is the Cavalry formation and the move below is a no-op.
+            Formation? crewFormation = agent.Formation;
             if (agent.Team != null)
             {
                 var cavalryFormation = agent.Team.GetFormation(FormationClass.Cavalry);
@@ -129,17 +135,20 @@ public class ElephantMissionBehavior : MissionLogic
             _logger.LogInfo(
                 $"[Elephant] Howdah instantiated for rider={agent.Name} as {machine.LogTag}: prefab={ElephantConfig.HowdahPrefabName} " +
                 $"elephant={agent.MountAgent.Name} (index {agent.MountAgent.Index}) harness={harnessId} side={agent.Team?.Side}");
-            // DEFERRED (2026-06-10): crew spawn is a CONFIRMED slide source and is disabled for now.
-            // The 4 force-spawned archers, teleported onto the elephant each tick, overlap its collision capsule
-            // and the physics solver shoves the elephant ("slide"). Confirmed by the isolation ladder: Build B
-            // (crew on, everything else off) slid; rung 4 (all off) did not. Re-enable ONLY together with the
-            // crew↔elephant collision fix (e.g. give the crew the elephant's FaceGroupId so they don't collide
-            // with it, the engine's own rider-vs-mount mechanism). TrySpawnHowdahCrew is retained for that fix.
-            // See docs/features/elephant.md → "Slide root-cause isolation".
-            // When it comes back, do NOT call it from here: this runs inside Mission.SpawnAgent's loop
-            // over behaviors, and a nested SpawnAgent re-enters that loop mid-dispatch. Queue the crew
-            // and spawn from OnMissionTick, the way MountDespawn defers its fades (#595).
-            // TrySpawnHowdahCrew(machine, agent, crewFormation);
+            // Crew (#627): howdah harness only, and never spawned from here; this runs inside Mission.SpawnAgent's
+            // loop over behaviors (#595). HowdahCrewSpawner queues it for the next OnMissionTick.
+            if (HowdahCrewSpawner.CrewSpawnEnabled && HowdahHarness.CarriesCrew(harnessId))
+            {
+                _crew.Queue(machine, agent, crewFormation);
+                if (diagnostics)
+                    _logger.LogInfo($"{machine.LogTag} crew queued for the next mission tick");
+            }
+            else if (diagnostics)
+            {
+                _logger.LogInfo(HowdahCrewSpawner.CrewSpawnEnabled
+                    ? $"{machine.LogTag} no crew: harness {harnessId} carries none (only {ElephantConfig.HowdahHarnessStringId} does)"
+                    : $"{machine.LogTag} no crew: crew spawn is disabled");
+            }
         }
         catch (Exception ex)
         {
@@ -147,75 +156,6 @@ public class ElephantMissionBehavior : MissionLogic
             if (_loggedErrors.Add(key))
                 _logger.LogError($"[Elephant] Howdah instantiation failed: {ex.GetType().Name}: {ex.Message}");
         }
-    }
-
-    // Vanilla UsableMachine detachment cannot path to a moving target — archers walk toward
-    // the last-known seat position but the elephant moves away. Force-spawn harad archers
-    // directly into all howdah seats the moment the mahout builds, bypassing detachment.
-    private void TrySpawnHowdahCrew(TaomHowdahMachine machine, Agent mahout, Formation crewFormation)
-    {
-        var crewChar = MBObjectManager.Instance.GetObject<CharacterObject>(ElephantConfig.HowdahCrewCharacterId);
-        if (crewChar == null)
-        {
-            _logger.LogError($"[Elephant] Howdah crew character '{ElephantConfig.HowdahCrewCharacterId}' not found.");
-            return;
-        }
-
-        int seatIndex = 0;
-        _logger.LogInfo($"[Elephant] Howdah crew spawn: {machine.StandingPoints.Count} total StandingPoint(s) in prefab");
-        foreach (StandingPoint sp in machine.StandingPoints)
-        {
-            _logger.LogInfo($"[Elephant]   StandingPoint[{seatIndex}]: type={sp.GetType().Name} disabled={sp.IsDisabled} occupied={sp.MovingAgent != null}");
-            seatIndex++;
-        }
-
-        int spawned = 0;
-        foreach (StandingPoint sp in machine.StandingPoints)
-        {
-            if (!(sp is TaomHowdahStandingPoint seat) || seat.IsDisabled || seat.MovingAgent != null)
-                continue;
-
-            // Spawn 0.5m ABOVE the howdah entity origin so agents land ON the bo_empire_keep_a_door_top
-            // physics floor surface (at Z=0.273 local) rather than inside its bottom face.
-            // Spawning at entity origin (Z=0 local) puts agents inside the floor shape, causing physics
-            // to pop them downward on the first frame. TeleportToPosition in OnTick corrects to the
-            // exact seat position on the first tick regardless.
-            var spawnPos = mahout.Position + new Vec3(0f, 0f, ElephantConfig.HowdahHeightAboveGround + 0.5f);
-            _logger.LogInfo($"[Elephant]   Spawning crew #{spawned} at pos=({spawnPos.x:F1},{spawnPos.y:F1},{spawnPos.z:F1})");
-            var buildData = new AgentBuildData(crewChar)
-                .Team(mahout.Team)
-                .InitialPosition(spawnPos)
-                .InitialDirection(mahout.LookDirection.AsVec2);
-
-            if (mahout.Origin != null)
-                buildData = buildData.TroopOrigin(mahout.Origin);
-
-            // Assign crew to the pre-reassignment (HorseArcher) formation so ranged fire orders
-            // reach them. The mahout has already been moved to Cavalry for charge AI; crew stay
-            // in HorseArcher. Physical position is controlled by TeleportToPosition each tick.
-            if (crewFormation != null)
-                buildData = buildData.Formation(crewFormation);
-
-            Agent crewAgent = Mission.Current.SpawnAgent(buildData);
-            if (crewAgent == null)
-            {
-                _logger.LogError($"[Elephant] Howdah crew SpawnAgent returned null for seat {spawned}.");
-                continue;
-            }
-
-            _logger.LogInfo($"[Elephant]   Crew #{spawned} agent built: name={crewAgent.Name} isActive={crewAgent.IsActive()} hasRanged={crewAgent.HasRangedWeapon(false)}");
-            // Managed-only seating: OnUse registers the agent in our seat (AddMovingAgent + lock flags)
-            // WITHOUT triggering native AIUseGameObjectEnable. UseGameObject would cause the native
-            // pathfinder to continuously route agents toward the elevated seat (unreachable via navmesh),
-            // producing a climbing loop. TeleportToPosition in OnTick handles visual elevation instead.
-            seat.OnUse(crewAgent, 0);
-            spawned++;
-        }
-
-        if (spawned == 0)
-            _logger.LogWarning("[Elephant] Howdah: no available seats for crew spawn.");
-        else
-            _logger.LogInfo($"[Elephant] Howdah crew force-spawned: {spawned} archer(s)");
     }
 
     private void Initialize()
@@ -249,9 +189,10 @@ public class ElephantMissionBehavior : MissionLogic
                 "will get a howdah. It ships in LOTRLOME_Armory/Prefabs.");
         if (_howdahDiagnostics?.IsEnabled != true) return;
         _logger.LogInfo(
-            $"[Howdah] config: prefab={ElephantConfig.HowdahPrefabName} loaded={prefabLoaded} triggerHarness={ElephantConfig.HarnessStringId} " +
+            $"[Howdah] config: prefab={ElephantConfig.HowdahPrefabName} loaded={prefabLoaded} " +
+            $"triggers={ElephantConfig.HowdahHarnessStringId}(crew),{ElephantConfig.HarnessStringId}(no crew) " +
             $"heightAboveGround={HowdahDiagnostics.Format(ElephantConfig.HowdahHeightAboveGround, 2)} " +
-            $"boneTracking={TaomHowdahMachine.BoneTrackingEnabled} crewSpawn=disabled " +
+            $"boneTracking={TaomHowdahMachine.BoneTrackingEnabled} crewSpawn={(HowdahCrewSpawner.CrewSpawnEnabled ? "on" : "off")} " +
             $"statusEvery={HowdahDiagnostics.Format(ElephantConfig.HowdahStatusPeriodSeconds, 0)}s");
     }
 
@@ -271,6 +212,9 @@ public class ElephantMissionBehavior : MissionLogic
             // Prune dead elephants from the shadow list. Agent.Tick auto-ticks each BT component (v1.4.5) —
             // there is no manual tick here; we only drop dead elephants so the list doesn't grow unbounded.
             _tracker.PruneDead();
+
+            // Howdah crews queued from OnAgentBuild (#627): spawned here, outside the engine's SpawnAgent loop.
+            _crew.Drain();
         }
         catch (Exception ex)
         {
@@ -288,6 +232,7 @@ public class ElephantMissionBehavior : MissionLogic
         // Clear error dedup so a fresh mission can re-log genuinely new occurrences (spider/mumakil parity).
         _loggedErrors.Clear();
         _howdahSerial = 0;
+        _crew.Clear();
         base.OnRemoveBehavior();
     }
 }

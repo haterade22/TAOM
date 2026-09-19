@@ -771,6 +771,7 @@ shifted the ordering and two clan rosters immediately picked up `goblin_fighter_
 - **Why missed:** absence of the bug in output was mistaken for absence of the bug. A latent filter gap in a seeded, order-sensitive generator produces clean output until an unrelated input change perturbs the order.
 - **Prevent:** when a generator has an exclusion list, check it against the definitive list of things that should be excluded rather than against its current output. Here the authoritative list already existed in a test: `VolunteerRecruitmentServiceTests.IsIntentionallyUnrecruited` names `_militia_`, `_boss` and `_merc`, and the tool knew about only one of the three.
 - **Source:** the 2026-08-29 goblin tree merge, caught by `generate_clan_heraldry.py`'s own drift gate refusing to regenerate.
+- **Second instance (#628, 2026-09-19):** `initial_child_generation.json` `excluded_cultures` listed the four orc cultures that existed when it was written; `goblin`, `mistymountainorcs` and `bluecraig` came later and were never added, so every one of their clans started the campaign topped up with children. Now gated both ways by `ShippedFertilityConfigTests`: the orc cultures are derived from `cultures.json` and must all be excluded, and every excluded id must name a real culture. `docs/reviews/rca-race-fertility-2026-09-19.md` item B.
 
 ### A name substring stood in for a binding, and the one false positive was the worst troop in the game
 `rebalance_troops.is_militia` decided militia by name (`militia` plus spearman/archer/veteran).
@@ -1504,3 +1505,48 @@ same skill, never read it: it flattened the three troops to the ladder cells whi
 feature docs still claimed the hand-tune. A second writer inherits the first writer's exemptions and
 hand-tunes; list them with the predicates and decide each one (Mike kept the ladder here).
 `docs/reviews/rca-ranged-rebalance-second-review-2026-09-18.md` finding 4.
+
+### An item handed to the player must pass the engine's equip gate, not just its stats
+
+#629 moved the career kits onto real troop items and compared them on level, mesh, damage, hit points and
+armour. The Bow skill a ladder bow demands (`difficulty`, up to 100) was never looked at: troops ignore it,
+but `CharacterHelper.CanUseItem` refuses a player whose skill is lower, so a new character could shoot the
+bow it started with and never put it back on once removed. The twins it replaced asked 0.
+
+**Why missed:** the rule was written in the terms of the question (vanilla or not, lowest tier); the
+engine's per-hero requirements live in a different place from the stats being compared.
+
+**Prevent:** before handing the player any item, read `difficulty` (and the gender flags) against what a
+new character holds. `tools/generate_career_kits.py` picks bows by lowest requirement first.
+
+**Source:** issue #629 deep review, `docs/reviews/rca-career-kits-2026-09-19.md` finding 1 (2026-09-19).
+
+### When the governing rule changes mid-task, re-derive every decision made under the old one
+
+#629's rule changed twice in one session ("replace vanilla", then "never better than regular gear", then
+"the lowest troops' own equipment, nothing new"). The orc careers' borrowed Isengard arrows were the right
+answer to the first rule and wrong under the last (40 x 3 against the orcs' own 20 to 27 at 0 to 2), and
+the retention design was built for a scan that the later rules made fragile. Neither was revisited.
+
+**Why missed:** each new directive was applied to the next piece of work, not replayed over the earlier
+answers and code.
+
+**Prevent:** when the user restates the principle, list the decisions already taken and re-check each
+against the new wording before building further.
+
+**Source:** `docs/reviews/rca-career-kits-2026-09-19.md` findings 2 and 4 (2026-09-19).
+
+### A change that supersedes a generator deletes or disarms every writer of that file
+
+After #629 two scripts could still rewrite `taom_career_starting_equipment.xml` with the pre-#629 kits,
+and every validator would have stayed green. One was marked "do not run" in the README; the other, a
+one-off, was listed nowhere but a generator-ref registry.
+
+**Why missed:** the sweep searched the docs for descriptions of the old behaviour instead of the code for
+anything that can still write the file.
+
+**Prevent:** `grep -rn <file name> tools/` for every writer of a file the change takes over, and delete it
+(or make `main()` refuse, never a module-level exit, because `check_generator_item_refs.py` imports these
+modules) in the same change.
+
+**Source:** `docs/reviews/rca-career-kits-2026-09-19.md` finding 3 (2026-09-19).

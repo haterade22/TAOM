@@ -1,8 +1,9 @@
 <prefabs>
 	<!-- Functional howdah platform for the TAOM war elephant: floor, rails and crew frames, invisible in game (every
 	     mesh is visible_only_when_editing). It is fitted to the elite howdah harness mesh (sk_hd_elep_armor_howdah_elite_a;
-	     the heavy one shares its deck), which is skinned to the elephant's spine. No item binds that mesh yet: the trigger
-	     is still sk_elephant_armor_a, the plain armour, so today the platform sits over a back with no howdah on it (#627).
+	     the heavy one shares its deck), which is skinned to the elephant's spine. The HorseHarness sk_elephant_armor_howdah_elite
+	     shows that mesh and is the Harad elephant rider's harness; it gets this platform and a crew. The plain
+	     sk_elephant_armor_a still gets the platform, without crew (HowdahHarness, #627).
 
 	     Rebuilt 2026-09-18 on the moving-platform pattern of the vanilla siege tower (Native props_siege_siegetowers.xml)
 	     and the War Sails ships, read as a design reference only (TAOM does not require the DLC):

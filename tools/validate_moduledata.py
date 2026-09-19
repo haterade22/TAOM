@@ -256,7 +256,11 @@ def skill_template_mismatch_issues(game_dir: Path, moduledata: Path) -> list:
         return ts.Issue(severity=ts.Severity.ERROR, code=TEMPLATE_CODE, file=file, line=line,
                         entry_id=entry_id, message=message)
 
-    sets = sl.load_skill_sets(str(game_dir), str(moduledata))
+    try:
+        sets = sl.load_skill_sets(str(game_dir), str(moduledata))
+    except Exception as exc:  # noqa: BLE001 - any failure is a finding, never a pass or a traceback
+        return [issue("", 0, "", f"the SkillSet files could not be read ({exc}); templates were NOT "
+                                 f"checked this run")]
     if not sets:
         return [issue("", 0, "", f"found no SkillSet definitions under {game_dir} or {moduledata}, "
                                  f"so no template was compared; a gate that compared nothing is not a pass")]
@@ -269,6 +273,10 @@ def skill_template_mismatch_issues(game_dir: Path, moduledata: Path) -> list:
         except UnicodeDecodeError as exc:
             issues.append(issue(rel, 0, "", f"not valid UTF-8 ({exc.reason} at byte {exc.start}), so its "
                                             f"characters were NOT checked against their skill_template"))
+            continue
+        except Exception as exc:  # noqa: BLE001 - any failure is a finding, never a pass or a traceback
+            issues.append(issue(rel, 0, "", f"could not be scanned ({exc}); its characters were NOT "
+                                            f"checked against their skill_template this run"))
             continue
         checked += scan.checked
         by_char: dict = {}

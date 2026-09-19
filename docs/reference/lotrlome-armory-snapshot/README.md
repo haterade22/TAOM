@@ -366,12 +366,64 @@ A dev machine with a Modding Kit `Assets/` directory loads the **loose** tree; a
 `AssetPackages/pack*.tpac`. Confirm which by grepping a session's `rgl_log` for `Loading packages`.
 **Any asset fix must land in both**, or it works for the developer and not for players.
 
+### ⚠️ APPLIED EDIT: the war elephant's howdah harness `sk_elephant_armor_howdah_elite` (#627, 2026-09-19)
+
+**A live edit to `LOTRLOME_items/LOTRAOM_horses.xml` and the 13 `loc_LOTRAOM_horses.xml` language files that an
+Armory reinstall WILL silently revert.** There is no replay script: re-add it by hand from this block. The gate is
+`TAOM.Tests/Features/Elephant/HowdahHarnessItemTests` (the item on the elite howdah mesh with `family_type="10"`, a
+name row in all 13 files). The Harad elephant rider (`troops_harad.xml`) wears it, so without it that rider's elephant
+spawns with no harness, no howdah and no crew. Originals: `E:\taom-live-backups\2026-09-19\LOTRLOME_Armory\ModuleData\`.
+
+The item, directly after `sk_elephant_armor_a`, is a clone of it on the elite howdah mesh the platform prefab
+(`Prefabs/taom_howdah_platform.xml`) is fitted to; stats are unchanged:
+
+```xml
+<Item
+   id="sk_elephant_armor_howdah_elite"
+   name="{=aom_sk_elephant_armor_howdah_elite}[Harad] Elephant Howdah"
+   mesh="sk_hd_elep_armor_howdah_elite_a"
+   culture="Culture.aserai"
+   is_merchandise="false"
+   weight="50"
+   appearance="0.65"
+   Type="HorseHarness">
+  <ItemComponent>
+    <Armor body_armor="80" mane_cover_type="all" family_type="10" material_type="Plate" />
+  </ItemComponent>
+  <Flags Civilian="true" />
+</Item>
+```
+
+The name row `<string id="aom_sk_elephant_armor_howdah_elite" text="..." />` goes after `aom_sk_elephant_armor_a` in
+each file. Hand-written, not from the paid translator (which fills only untranslated rows, so these survive a run):
+
+| File | Text |
+|---|---|
+| `Languages/loc_LOTRAOM_horses.xml` (English) | [Harad] Elephant Howdah |
+| BR | [Harad] Howdah de Elefante |
+| CNs | [哈拉德] 战象象轿 |
+| CNt | [哈拉德] 戰象象轎 |
+| DE | [Harad] Elefanten-Howdah |
+| FR | [Harad] Howdah d'éléphant |
+| IT | [Harad] Howdah per elefante |
+| JP | [ハラド] 象用ハウダー |
+| KO | [하라드] 코끼리 하우다 |
+| PL | [Harad] Howdah słonia |
+| RU | [Харад] Хауда слона |
+| SP | [Harad] Howdah de elefante |
+| TR | [Harad] Fil Mahfesi |
+
 ## Snapshot date
 
 2026-09-19: `Prefabs/taom_howdah_platform.xml` **added** (LIVE + this snapshot, byte-identical, LF, pinned
 by `.gitattributes`). TAOM's war elephant howdah platform, rebuilt on the siege-tower pattern and moved here from the
 TAOM module on 2026-09-18, then renamed from `taom_howdah_agent` (#627). `HowdahPrefabTests` compares the bytes, so a
-Kit re-save of the live file shows up as a failing test that names the newer copy. Nothing else touched.
+Kit re-save of the live file shows up as a failing test that names the newer copy. Later that day the header was
+reworded when `sk_elephant_armor_howdah_elite` came to bind the mesh (live and snapshot byte-identical again; the
+previous live copy is `E:\taom-live-backups\2026-09-19\LOTRLOME_Armory\Prefabs\taom_howdah_platform.xml.pre-harness-header`).
+The harness item and its 13 name rows are an APPLIED EDIT above, deliberately without a replay script: 14 small
+hand edits, and two gates catch a reinstall (`HowdahHarnessItemTests`; `validate_moduledata.py` on the troop's item
+reference).
 Previous: 2026-08-20: `weapon_descriptions.xslt` **patched in place (LIVE)** with nine `<AvailablePiece>`
 entries under `OneHandedPolearm`, inside `<!-- TAOM-1H-POLEARM:START/END -->` markers: the four Dale
 spears' blades and handles (added 2026-08-10) plus the Black Numenorean lance's (added 2026-08-20,

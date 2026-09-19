@@ -204,7 +204,7 @@
                     id="Item.taom_war_elephant" />
                 <equipment
                     slot="HorseHarness"
-                    id="Item.sk_elephant_armor_a" />
+                    id="Item.sk_elephant_armor_howdah_elite" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
