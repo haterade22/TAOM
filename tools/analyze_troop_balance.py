@@ -200,6 +200,9 @@ def analyze(troops, weights, threshold):
         fc = formula_culture(t['culture'])
         ref = rb.calculate_skills(fc, t['level'], t['group'], t['id'], t['name'],
                                   t.get('weapon_classes'))
+        if ref is not None and t.get('weapon_classes') is not None:
+            # A ladder troop's Bow/Crossbow is its ranked cell (#617), as rebalance_troops writes it.
+            ref = dict(ref, **rb.ladder_cells(t['id'], t['file_culture'], t['level'], t['weapon_classes']))
         t['ref'] = ref
         t['off_grid'] = ref is None
 

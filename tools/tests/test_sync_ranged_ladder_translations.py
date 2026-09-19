@@ -61,18 +61,61 @@ class SyncTests(unittest.TestCase):
         self.jp_gondor.write_bytes(_loc([("ladder_gondor_special_bow_x", "イシリエンの弓 IV")]).encode("utf-8"))
         self.spec = root / "spec.json"
         self.spec.write_text(json.dumps(_spec()), encoding="utf-8")
+        # The translator's cache: rebuild_translation_files.py resolves override, then cache, then
+        # English, so a cache still keyed on the retired ids rebuilds every carried name in English.
+        self.cache = root / "cache"
+        self.cache.mkdir()
+        (self.cache / "de.json").write_text(json.dumps(
+            {"ladder_elf_bow_e": "[Elb] Langbogen I", "ladder_elf_bow_v": "[Elb] Langbogen III",
+             "ladder_elf_bow_c": "[Elb] Langbogen V", "other_key": "Andere"}), encoding="utf-8")
 
     def tearDown(self):
         self._tmp.cleanup()
 
     def _run(self, *extra):
         return st.main(["--game-modules", str(self.modules), "--asset-repo", str(self.modules / "none"),
-                        "--spec", str(self.spec), *extra])
+                        "--spec", str(self.spec), "--cache-dir", str(self.cache), *extra])
+
+    def _cache(self, lang):
+        return json.loads((self.cache / f"{lang}.json").read_text(encoding="utf-8"))
+
+    def test_apply_keeps_the_translation_cache_in_step(self):
+        self.assertEqual(self._run("--apply"), 0)
+        de = self._cache("de")
+        self.assertEqual(de["ladder_elf_bow_t2"], "[Elb] Langbogen II")
+        self.assertEqual(de["ladder_elf_bow_t5"], "[Elb] Langbogen V")
+        self.assertNotIn("ladder_elf_bow_e", de)                     # retired ids leave the cache
+        self.assertEqual(de["other_key"], "Andere")                  # everything else is kept
+        self.assertEqual(self._cache("jp")["ladder_ithilien_bow_t7"], "イシリエンの弓 VII")
+        self.assertEqual(self._run("--verify"), 0)
+        de.pop("ladder_elf_bow_t2")
+        (self.cache / "de.json").write_text(json.dumps(de), encoding="utf-8")
+        self.assertEqual(self._run("--verify"), 1)                   # a cache out of step is drift
+
+    def test_apply_backs_up_each_live_file_once(self):
+        original = self.de_elf.read_bytes()
+        self.assertEqual(self._run("--apply"), 0)
+        backup = self.de_elf.with_name(self.de_elf.name + st.BACKUP_SUFFIX)
+        self.assertEqual(backup.read_bytes(), original)
+        self.assertFalse(backup.name.endswith(".xml"))               # never globbed by the engine
+        self.assertEqual(self._run("--apply"), 0)
+        self.assertEqual(backup.read_bytes(), original)
+
+    def test_a_ladder_row_the_tool_cannot_parse_is_refused(self):
+        # Second review (#617): a row written text-first was kept as an ordinary line, so the
+        # current id was written twice and --verify still passed.
+        self.de_elf.write_bytes(self.de_elf.read_bytes().replace(
+            b'    <string id="tail_key"', b'    <string text="[Elb] Langbogen V" id="ladder_elf_bow_t5" />\r\r\n    <string id="tail_key"'))
+        before = self.de_elf.read_bytes()
+        self.assertEqual(self._run("--apply"), 2)
+        self.assertEqual(self.de_elf.read_bytes(), before)
 
     def test_dry_run_writes_nothing(self):
-        before = self.de_elf.read_bytes()
+        before, cache = self.de_elf.read_bytes(), (self.cache / "de.json").read_bytes()
         self.assertEqual(self._run(), 0)
         self.assertEqual(self.de_elf.read_bytes(), before)
+        self.assertEqual((self.cache / "de.json").read_bytes(), cache)      # the cache too
+        self.assertFalse((self.cache / "jp.json").exists())
 
     def test_apply_moves_the_translated_base_to_the_tier_ids_in_place(self):
         self.assertEqual(self._run("--apply"), 0)
@@ -102,6 +145,36 @@ class SyncTests(unittest.TestCase):
         before = self.de_elf.read_bytes()
         self.assertEqual(self._run("--apply"), 2)
         self.assertEqual(self.de_elf.read_bytes(), before)
+
+    def test_a_spec_that_contradicts_itself_or_cannot_be_read_is_refused(self):
+        # Second review (#617): the tool planned items from an unvalidated spec, and an unreadable
+        # spec was a traceback rather than a refusal.
+        bad = _spec()
+        bad["lines"][0]["ranks"]["overall"] = 0
+        self.spec.write_text(json.dumps(bad), encoding="utf-8")
+        before = self.de_elf.read_bytes()
+        self.assertEqual(self._run("--apply"), 2)
+        self.assertEqual(self.de_elf.read_bytes(), before)
+        self.spec.write_text("{ not json", encoding="utf-8")
+        self.assertEqual(self._run("--verify"), 2)
+
+    def test_a_cache_the_tool_cannot_read_is_refused(self):
+        # Fix-diff review (#617): a corrupt or non-object cache was a traceback after the loc files
+        # were planned, and a mistyped --cache-dir planned a fresh cache folder with exit 0.
+        before = self.de_elf.read_bytes()
+        (self.cache / "de.json").write_text("{ not json", encoding="utf-8")
+        self.assertEqual(self._run("--apply"), 2)
+        self.assertEqual(self.de_elf.read_bytes(), before)
+        (self.cache / "de.json").write_text("[1, 2]", encoding="utf-8")
+        self.assertEqual(self._run("--apply"), 2)
+        self.assertEqual(self.de_elf.read_bytes(), before)
+        self.assertEqual(st.main(["--game-modules", str(self.modules), "--asset-repo", str(self.modules / "none"),
+                                  "--spec", str(self.spec), "--cache-dir", str(self.cache / "nope"), "--apply"]), 2)
+        self.assertEqual(self.de_elf.read_bytes(), before)
+        self.assertFalse((self.cache / "nope").exists())
+
+    def test_the_fixture_spec_is_valid(self):
+        self.assertEqual(rl.validate_spec(_spec()), [])
 
     def test_translated_base_strips_only_a_separate_numeral(self):
         self.assertEqual(st.translated_base("[Elb] Langbogen IV"), "[Elb] Langbogen")

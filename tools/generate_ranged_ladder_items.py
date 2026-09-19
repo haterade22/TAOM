@@ -16,13 +16,19 @@ WHAT IT WRITES (live Armory and, when present, the lotraom-assets mirror)
   LOTRLOME_items/<folder>/ranged_ladder.xml   one generated file per line folder
   Languages/loc_<folder>.xml                  one marker block of English name rows, so
                                               `translate_with_claude.py --module Armory
-                                              --sync-ids` seeds the other eleven languages
+                                              --sync-ids` seeds the twelve translated
+                                              languages; when ids change,
+                                              sync_ranged_ladder_translations.py carries
+                                              the existing translations across
 
 The loc template is the one shared file touched: the block sits between markers just before
-`</strings>`, and a `.bak-rangedladder` sidecar is taken once. A clone keeps the
+`</strings>`, and a `.bak-rangedladder` sidecar is taken once in the live install (the mirror is
+a git repo, its history the backup). A clone keeps the
 donor's mesh, flags, usage and everything else; `is_merchandise` is forced to
-`false` (130 near-duplicate bows must not flood the town shops; loot still drops them because
-loot is the fallen troop's own kit). The name is `{=<id>}<donor name, its own numeral and
+`false`: 123 near-duplicate bows must not flood the town shops, and a NotMerchandise item never
+drops as loot either (DefaultBattleRewardModel.GetRandomItem skips it), so the donors stay the
+player's bows. The one path that hands a ladder bow to a hero is Field Commission, which copies
+the troop's battle set onto the new companion. The name is `{=<id>}<donor name, its own numeral and
 "- Starting" / "- Horse" suffix stripped> <tier numeral I..X>`, so `/localize` picks the keys up.
 
 RULES THIS TOOL FOLLOWS (tools/README.md "XML I/O convention")
@@ -53,11 +59,12 @@ from collections import OrderedDict
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import _gamedir as gd  # noqa: E402  ASSET_REPO, armory_trees
 import generate_starter_kit as gsk  # noqa: E402  read_xml, checked_write, index_items, registered_item_folders, _serialize
 import ranged_ladder as rl  # noqa: E402
 import rebalance_troops as rb  # noqa: E402  DEFAULT_GAME_MODULES
 
-DEFAULT_ASSET_REPO = Path(r"E:\repos\lotraom-assets") / "v1.5" / "LOTRLOME_Armory"
+DEFAULT_ASSET_REPO = gd.ASSET_REPO
 ITEMS_FILE_NAME = "ranged_ladder.xml"
 EOL = "\r\n"
 LOC_MARKER_START = "<!-- TAOM-RANGED-LADDER:START -->"
@@ -67,7 +74,6 @@ _LOC_BLOCK_RE = re.compile(r"[ \t]*" + re.escape(LOC_MARKER_START) + r".*?" + re
 
 _TAG_RE = re.compile(r"^\{=[^}]*\}")
 _SUFFIX_RE = re.compile(r"\s*-?\s*(?:Starting|Horse|Starter)\s*$", re.I)
-_NUMERAL_RE = re.compile(r"\s+(?:I|II|III|IV|V|VI|VII|VIII|IX|X)\s*$")
 
 
 class GeneratorError(Exception):
@@ -81,7 +87,7 @@ def ladder_name(donor_name: str | None, new_id: str, tier: int) -> str:
     text = _TAG_RE.sub("", donor_name or new_id).strip()
     for _ in range(3):
         text = _SUFFIX_RE.sub("", text).strip()
-        text = _NUMERAL_RE.sub("", text).strip()
+        text = rl.TIER_NUMERAL_RE.sub("", text).strip()
     return "{=%s}%s %s" % (new_id, text, rl.TIER_NUMERAL[int(tier)])
 
 
@@ -208,7 +214,7 @@ def _items_path(md: Path, folder: str) -> Path:
     return md / "LOTRLOME_items" / folder / ITEMS_FILE_NAME
 
 
-def apply_plan(plan, md: Path, write: bool) -> list[str]:
+def apply_plan(plan, md: Path, write: bool, backup: bool = True) -> list[str]:
     log: list[str] = []
     for folder, clones in plan.items():
         path = _items_path(md, folder)
@@ -230,7 +236,7 @@ def apply_plan(plan, md: Path, write: bool) -> list[str]:
         text, had_bom = gsk.read_xml(loc)
         new_text, action = apply_loc(text, clones)
         if action != "noop" and write:
-            err = gsk.checked_write(loc, new_text, had_bom, BACKUP_TAG, backup=True)
+            err = gsk.checked_write(loc, new_text, had_bom, BACKUP_TAG, backup=backup)
             if err:
                 raise GeneratorError(err)
         log.append(f"{action if write or action == 'noop' else 'would ' + action:10s} {loc} ({len(clones)} name rows)")
@@ -283,7 +289,7 @@ def verify_plan(plan, md: Path) -> list[str]:
     return drift
 
 
-def revert(md: Path) -> list[str]:
+def revert(md: Path, backup: bool = True) -> list[str]:
     log: list[str] = []
     items_root = md / "LOTRLOME_items"
     if not items_root.exists():
@@ -296,7 +302,7 @@ def revert(md: Path) -> list[str]:
         text, had_bom = gsk.read_xml(loc)
         new_text, changed = revert_loc(text)
         if changed:
-            err = gsk.checked_write(loc, new_text, had_bom, BACKUP_TAG, backup=True)
+            err = gsk.checked_write(loc, new_text, had_bom, BACKUP_TAG, backup=backup)
             if err:
                 raise GeneratorError(err)
             log.append(f"stripped   {loc}")
@@ -326,16 +332,11 @@ def main(argv=None) -> int:
     if not armory_md.is_dir():
         print(f"ERROR: LOTRLOME_Armory not found under {game_modules}; pass --game-modules. Nothing was written.")
         return 2
-    mirror_md = Path(args.asset_repo) / "ModuleData"
-    trees = [("armory", armory_md)]
-    if mirror_md.is_dir():
-        trees.append(("mirror", mirror_md))
-    else:
-        print(f"WARNING: assets mirror not found at {args.asset_repo}; only the live Armory is touched")
+    trees = gd.armory_trees(armory_md, args.asset_repo)
 
     if args.revert:
         for label, md in trees:
-            for line in revert(md):
+            for line in revert(md, backup=label == "armory"):
                 print(f"{label:7s} {line}")
         return 0
 
@@ -371,7 +372,7 @@ def main(argv=None) -> int:
 
     for label, md in trees:
         try:
-            for line in apply_plan(plan, md, write=args.apply):
+            for line in apply_plan(plan, md, write=args.apply, backup=label == "armory"):
                 print(f"{label:7s} {line}")
         except GeneratorError as exc:
             print(f"ERROR: {exc}")

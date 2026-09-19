@@ -12,7 +12,11 @@
     "             Bow or Crossbow, written by rebalance_ranged_ladders.py and matched by rebalance_troops.py",
     "Ranks: position 1 is best; lines may tie. anchor_rank 7 is the Gondor group, standing in for",
     "vanilla's typical culture. donor_stats / ammo_stats restat the Armory's own launchers and ammo",
-    "(tools/restat_ranged_donors.py); hero_ceiling caps what a lord or wanderer can carry."
+    "(tools/restat_ranged_donors.py); hero_ceiling caps what a lord or wanderer can carry.",
+    "Crossbows (Mike, 2026-09-18): inside a kingdom (the lines of one folder) a crossbow out-hits and",
+    "out-aims every bow at the same tier, for its slower reload. crossbow_bonus 9 is the most the",
+    "99 cap and the strict tier rise allow; the Crossbow curve steps up at T7 and T8 so Gondor's",
+    "crossbowmen out-hit its Ithilien and Blackroot rangers. test_a_crossbow_out_hits_and_out_aims_its_kingdoms_bows pins it."
   ],
   "bands": {
     "E": [0, 2],
@@ -25,13 +29,13 @@
     "anchor_rank": 7,
     "damage": {
       "Bow": {"1": 37, "2": 41, "3": 46, "4": 51, "5": 55, "6": 59, "7": 65, "8": 72, "9": 80, "10": 90},
-      "Crossbow": {"1": 68, "2": 72, "3": 76, "4": 80, "5": 85, "6": 90, "7": 96, "8": 103, "9": 110, "10": 118},
+      "Crossbow": {"1": 68, "2": 72, "3": 76, "4": 80, "5": 85, "6": 90, "7": 107, "8": 126, "9": 134, "10": 142},
       "step": {"1": 0.04, "2": 0.04, "3": 0.04, "4": 0.04, "5": 0.04, "6": 0.04, "7": 0.05, "8": 0.06, "9": 0.07, "10": 0.08}
     },
     "accuracy": {
       "top": {"1": 85, "2": 88, "3": 91, "4": 93, "5": 94, "6": 95, "7": 96, "8": 97, "9": 98, "10": 99},
       "rank_step": 1,
-      "crossbow_bonus": 3,
+      "crossbow_bonus": 9,
       "max": 99
     },
     "speed": {

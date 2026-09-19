@@ -27,6 +27,9 @@ from pathlib import Path
 
 ENV_VAR = "BANNERLORD_GAME_DIR"
 MODULES_ENV_VAR = "BANNERLORD_GAME_MODULES"
+# The lotraom-assets mirror of LOTRLOME_Armory for the 1.5 line (the v1.4 tree is gone), which
+# the Armory writers keep in step with the live install.
+ASSET_REPO = Path(r"E:\repos\lotraom-assets") / "v1.5" / "LOTRLOME_Armory"
 
 
 def game_dir(default):
@@ -56,6 +59,19 @@ def game_modules(default):
     if override is not None and override.strip():
         return Path(override)
     return Path(game_dir(default)) / "Modules"
+
+
+def armory_trees(armory_md, asset_repo):
+    """[(label, ModuleData)] for an Armory writer: the live Armory, then the mirror when it
+    exists. A missing mirror is a warning, never an error: the live install is what the game
+    loads. The caller checks the live Armory itself (each tool words that refusal its own way)."""
+    trees = [("armory", Path(armory_md))]
+    mirror = Path(asset_repo) / "ModuleData"
+    if mirror.is_dir():
+        trees.append(("mirror", mirror))
+    else:
+        print(f"WARNING: assets mirror not found at {asset_repo}; only the live Armory is touched")
+    return trees
 
 
 def ensure_exists(path, what="the Bannerlord install"):

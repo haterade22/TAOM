@@ -7,8 +7,16 @@ WHY
 Three things decide what an arrow does, and all three were verified in the decompile:
 
 - Reach is the launcher's `missile_speed` and nothing else. `Mission.OnAgentShootMissile` takes
-  the wielded bow's `GetModifiedMissileSpeedForCurrentUsage()` (the arrow's own `missile_speed` is a
-  dead field) and `SandboxAgentStatCalculateModel` pins `MissileSpeedMultiplier` at 1 for bows.
+  the wielded bow's `GetModifiedMissileSpeedForCurrentUsage()` as the launch speed and
+  `SandboxAgentStatCalculateModel` pins `MissileSpeedMultiplier` at 1 for bows. The arrow's own
+  `missile_speed` sets neither the launch speed nor its tier or price
+  (`DefaultItemValueModel.CalculateAmmoTier` reads damage and stack size); managed code reads it
+  only for the inventory tooltip and a tournament auto-resolve, and native receives it with the
+  ammo's stats on every shot, use unverified. In a campaign mission each troop slot also rolls a
+  random ItemModifier from the item's `modifier_group` (vanilla `bow`: none 45 of 102, splintered
+  -15 damage, cracked -8 damage and -6 speed, up to legendary +7 / +4; `crossbow`: none 45 of 102,
+  cracked -10 / -6 up to legendary +4 / +15), so one battle can invert adjacent tiers; the gates
+  compare base values. A Custom Battle rolls none.
 - Damage is `(v_hit / v_launch)^2 x (bow thrust_damage + ammo thrust_damage) x (1 + 0.0011 x Bow)`
   (`SandboxStrikeMagnitudeModel.CalculateStrikeMagnitudeForMissile`, `GetWeaponDamageMultiplier`,
   `DefaultSkillEffects.BowDamage`); crossbows get no skill factor. So the launcher's damage is
@@ -64,6 +72,10 @@ CLASSES = ("Bow", "Crossbow")
 CLASS_TOKEN = {"Bow": "bow", "Crossbow": "xbow"}
 LAUNCHER_SLOTS = ("Item0", "Item1", "Item2", "Item3")
 TIER_NUMERAL = {0: "0", 1: "I", 2: "II", 3: "III", 4: "IV", 5: "V", 6: "VI", 7: "VII", 8: "VIII", 9: "IX", 10: "X"}
+# The inverse: a trailing tier numeral written as its own word (tier 0 names none).
+TIER_NUMERAL_RE = re.compile(r"\s+(?:%s)\s*$" % "|".join(v for t, v in sorted(TIER_NUMERAL.items(), reverse=True) if t))
+
+
 # TAOM's TaomCharacterStatsModel.MaxCharacterTier override (Main/Features/TroopProgression), not
 # an engine constant: vanilla DefaultCharacterStatsModel caps the same formula at 6.
 MAX_TIER = 10
@@ -133,7 +145,7 @@ class RangedTroop:
     skills: dict = field(default_factory=dict)
     name: str = ""     # display name, localisation tag stripped
     mounted: bool = False  # HorseArcher/Cavalry group, or a Horse slot in any battle set
-    templated: bool = False  # skill_template=: the engine reads the template, never the inline skills
+    templated: bool = False  # skill_template=: on 1.5.3 the template's skills, inline rows laid over them
 
 
 @dataclass(frozen=True)
@@ -223,11 +235,6 @@ def engine_tier(level: int) -> int:
 def load_spec(path: Path | str = DEFAULT_SPEC) -> dict:
     with open(path, "r", encoding="utf-8") as fh:
         return json.load(fh)
-
-
-def band_order(spec: dict) -> list[str]:
-    """Bands sorted by their first tier. Bands only choose the donor mesh now."""
-    return sorted(spec["bands"], key=lambda b: spec["bands"][b][0])
 
 
 def band_of(tier: int, spec: dict) -> str:
@@ -347,6 +354,7 @@ def validate_spec(spec: dict, launchers: dict | None = None, cultures: set | Non
     claimed_files: dict[str, str] = {}
     prefixes_seen: list[tuple[str, str]] = []   # (prefix, line id)
     for line in spec.get("lines") or []:
+        before = len(problems)       # a line with a structural problem does not get its cells judged
         lid = line.get("id")
         if not lid:
             problems.append("a line has no id")
@@ -375,12 +383,10 @@ def validate_spec(spec: dict, launchers: dict | None = None, cultures: set | Non
                     problems.append(f"file {f!r} is claimed whole by both {owner!r} and {lid!r}")
                 claimed_files[f] = lid
         ranks = line.get("ranks") or {}
-        ranks_ok = True
         for key in RANK_KEYS:
             v = ranks.get(key)
             if not _is_int(v) or v < 1:
                 problems.append(f"line {lid!r} rank {key!r} is {v!r}; ranks are positive integers, 1 is best")
-                ranks_ok = False
         donors = line.get("donor") or {}
         if not donors:
             problems.append(f"line {lid!r} declares no donor")
@@ -401,7 +407,7 @@ def validate_spec(spec: dict, launchers: dict | None = None, cultures: set | Non
                 continue
             if len(set(ts)) != len(ts):
                 problems.append(f"line {lid!r} {cls} tiers {ts!r} repeat a tier")
-            if stats_ok and ranks_ok and not problems_for_line(lid, problems):
+            if stats_ok and len(problems) == before:
                 _check_cells(spec, lid, cls, sorted(set(ts)), problems)
         for cls, usage in (line.get("usage") or {}).items():
             if cls not in CLASSES:
@@ -416,20 +422,23 @@ def validate_spec(spec: dict, launchers: dict | None = None, cultures: set | Non
                     problems.append(f"line {lid!r} donor_by_band names unknown band {band!r}")
                 elif launchers is not None and cls in CLASSES:
                     _check_donor(lid, cls, donor, launchers, problems)
-    for key in ("donor_stats",):
-        for iid, row in (spec.get(key) or {}).items():
-            if not isinstance(row, dict) or not row or set(row) - {"damage", "accuracy"} \
-                    or not all(_is_int(v) and v > 0 for v in row.values()):
-                problems.append(f"{key} {iid!r}: {row!r} must set damage and/or accuracy to positive integers")
+    return problems + validate_restat_tables(spec)
+
+
+def validate_restat_tables(spec: dict) -> list[str]:
+    """Problems in `donor_stats` / `ammo_stats`, the only part of the spec restat_ranged_donors.py
+    reads. A row with no recognised stat would match its weapon, set nothing and verify OK."""
+    problems = []
+    for iid, row in (spec.get("donor_stats") or {}).items():
+        if not isinstance(row, dict) or not row or set(row) - {"damage", "accuracy"} \
+                or not all(_is_int(v) and v > 0 for v in row.values()):
+            problems.append(f"donor_stats {iid!r}: {row!r} must set damage and/or accuracy to positive integers")
     for iid, v in (spec.get("ammo_stats") or {}).items():
         if not _is_int(v) or v < 0:
             problems.append(f"ammo_stats {iid!r}: {v!r} must be a non-negative integer")
+    for iid in sorted(set(spec.get("donor_stats") or {}) & set(spec.get("ammo_stats") or {})):
+        problems.append(f"{iid!r} is in both donor_stats and ammo_stats; an item is a launcher or ammo")
     return problems
-
-
-def problems_for_line(lid: str, problems: list[str]) -> bool:
-    """True when a structural problem already names the line; its cells are then not judged."""
-    return any(f"line {lid!r}" in p for p in problems)
 
 
 def _validate_stats(stats, problems: list[str]) -> bool:
@@ -641,8 +650,16 @@ def troop_file_cultures(moduledata=MODULEDATA_DIR) -> set[str]:
     return {p.name[len("troops_"):-len(".xml")] for p in (Path(moduledata) / "troops").glob("troops_*.xml")}
 
 
-def _is_civilian(elem) -> bool:
+def is_civilian(elem) -> bool:
     return elem.get("civilian") == "true" or elem.get("equipmentType") == "Civilian"
+
+
+def battle_sets(npc):
+    """Every EquipmentRoster / EquipmentSet under a troop that is not civilian: the sets it can
+    spawn with in battle. The one reading of "which sets count" for the ladder and the level curve."""
+    for es in list(npc.iter("EquipmentRoster")) + list(npc.iter("EquipmentSet")):
+        if not is_civilian(es):
+            yield es
 
 
 def load_ranged_troops(moduledata=MODULEDATA_DIR, failures: list | None = None) -> dict[str, RangedTroop]:
@@ -667,9 +684,7 @@ def load_ranged_troops(moduledata=MODULEDATA_DIR, failures: list | None = None) 
                 continue
             sets = []
             horse = False
-            for es in list(npc.iter("EquipmentRoster")) + list(npc.iter("EquipmentSet")):
-                if _is_civilian(es):
-                    continue
+            for es in battle_sets(npc):
                 eqs = es.findall("equipment")
                 if not eqs:
                     continue
@@ -738,7 +753,8 @@ def troop_launchers(troop: RangedTroop, launchers: dict) -> dict[str, set[str]]:
     return out
 
 
-_LADDER_ID_RE = re.compile(r"^" + ID_PREFIX + r"(?P<line>.+)_(?P<cls>bow|xbow)_(?P<cell>[a-z]|t\d+)$")
+# What a ladder cell id has looked like: the #582 band letters and the #617 tiers.
+LADDER_ID_RE = re.compile(r"^" + ID_PREFIX + r"(?P<line>.+)_(?P<cls>bow|xbow)_(?P<cell>[a-z]|t\d+)$")
 
 
 def retired_ladder_launchers(troops: dict, launchers: dict) -> dict[str, Launcher]:
@@ -753,7 +769,7 @@ def retired_ladder_launchers(troops: dict, launchers: dict) -> dict[str, Launche
         for st in troop.sets:
             for slot in LAUNCHER_SLOTS:
                 iid = st.get(slot, "")
-                m = _LADDER_ID_RE.match(iid)
+                m = LADDER_ID_RE.match(iid)
                 if m and iid not in launchers and iid not in out:
                     out[iid] = Launcher(id=iid, cls=token_cls[m.group("cls")], speed=0, accuracy=0, damage=0,
                                         name="(retired ladder id)", file="(none)")
@@ -773,12 +789,6 @@ def troop_values(troop: RangedTroop, launchers: dict, cls: str, stat: str) -> tu
         return v, v
     vals = [getattr(launchers[i], stat) for i in ids]
     return min(vals), max(vals)
-
-
-def troop_speed(troop: RangedTroop, launchers: dict, cls: str) -> int | None:
-    """The troop's reach for one class: the MAX missile_speed over its battle sets."""
-    v = troop_values(troop, launchers, cls, "speed")
-    return v[1] if v else None
 
 
 def mount_conflicts(troops: dict, launchers: dict, barred: set) -> list[MountConflict]:
@@ -953,9 +963,10 @@ def planned_skill_edits(troops: dict, launchers: dict, spec: dict, militia=froze
     cell, which is an error. Militia-to-militia edges are flat by design and skipped, as are the
     `exempt_edges` {(source, target): {skills}} (rebalance_troops.RESPECIALIZATION_EXEMPT_EDGES).
     `sources` are read-only upgrade sources outside the troop files (the villagers). An edge with
-    a skill_template on either side is skipped, as UPGRADE_SKILL_REGRESSION skips it: the inline
-    values are not what the engine reads. A ladder troop with a skill_template is an error, since
-    its cell could never reach the game."""
+    a skill_template on either side is skipped, as UPGRADE_SKILL_REGRESSION skips it: that side's
+    real skills are the template's values with its inline rows laid over them, and the template is
+    not resolved here. A templated ladder troop still takes its cell: on 1.5.3 the inline row wins
+    over the template (BasicCharacterObject.Deserialize; 1.4.8 ignored the inline block)."""
     exempt_edges = exempt_edges or {}
     new: dict[tuple[str, str], int] = {}
     cells: set[tuple[str, str]] = set()
@@ -966,10 +977,6 @@ def planned_skill_edits(troops: dict, launchers: dict, spec: dict, militia=froze
             continue
         for cls in troop_launchers(t, launchers):
             if t.tier in tiers_for(line, cls, spec):
-                if t.templated:
-                    raise LadderError(
-                        f"{tid} is a {line} {cls} troop at tier {t.tier} but declares a skill_template, "
-                        f"so the engine never reads the {cls} cell written into its <skills>; drop the template")
                 new[(tid, cls)] = skill_cell(line, t.tier, spec)
                 cells.add((tid, cls))
     everyone = dict(sources or {})
@@ -1018,7 +1025,9 @@ def planned_skill_edits(troops: dict, launchers: dict, spec: dict, militia=froze
 # Heroes: what a lord or wanderer can carry                                     #
 # --------------------------------------------------------------------------- #
 _STRIP_REF_RE = re.compile(r"^(?:Item|EquipmentRoster)\.")
-PLAYER_ROSTER_PREFIXES = ("player_char_creation_", "player_career_")
+# Rosters the game applies to the player at runtime, which no NPCCharacter names: character
+# creation, the career start, and the enlistment quartermaster (EnlistmentRosterResolver).
+PLAYER_ROSTER_PREFIXES = ("player_char_creation_", "player_career_", "enlist_")
 
 
 def hero_launchers(moduledata, launchers: dict) -> dict[str, list[str]]:
@@ -1037,30 +1046,38 @@ def hero_launchers(moduledata, launchers: dict) -> dict[str, list[str]]:
 
     def battle_ids(roster):
         # Civilian is marked on the roster or on an inner set; neither is carried into battle.
-        if _is_civilian(roster):
+        if is_civilian(roster):
             return set()
         inner = roster.findall("EquipmentSet")
         if not inner:
             return ids_in(roster)
-        return set().union(*(ids_in(s) for s in inner if not _is_civilian(s)))
+        return set().union(*(ids_in(s) for s in inner if not is_civilian(s)))
 
     rosters: dict[str, set] = {}
     docs = []
     out: dict[str, set] = {}
     for path in sorted(md.rglob("*.xml")):
+        # Only a file holding a roster or a character can matter; the rest (two thirds of them
+        # language files) are skipped unparsed. iter() matches these tags exact-case, so the
+        # byte hint is the same predicate.
+        raw = path.read_bytes()
+        if b"<EquipmentRoster" not in raw and b"<NPCCharacter" not in raw:
+            continue
         try:
-            root = ET.parse(path).getroot()
+            root = ET.fromstring(raw)
         except ET.ParseError:
             continue
         docs.append((path, root))
         for r in root.iter("EquipmentRoster"):
-            if r.get("id"):
-                rosters[r.get("id")] = battle_ids(r)
+            rid = r.get("id")
+            if rid:
+                rosters[rid] = battle_ids(r)
                 # The player's start and career kits go onto a hero at runtime and no
                 # NPCCharacter names them (CareerStartingEquipmentService builds the id).
-                if r.get("id").startswith(PLAYER_ROSTER_PREFIXES):
-                    for iid in rosters[r.get("id")] & set(launchers):
-                        out.setdefault(iid, set()).add(r.get("id"))
+                if rid.startswith(PLAYER_ROSTER_PREFIXES):
+                    for iid in rosters[rid]:
+                        if iid in launchers:
+                            out.setdefault(iid, set()).add(rid)
     for path, root in docs:
         if path.parent.name == "troops":
             continue

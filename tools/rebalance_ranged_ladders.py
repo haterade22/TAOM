@@ -654,6 +654,16 @@ def main(argv=None):
 
     troops = rl.load_ranged_troops(args.moduledata, failures=failures)
     retired = rl.retired_ladder_launchers(troops, launchers)
+    # A CURRENT cell has the retired-id shape too. Planned as a placeholder it would pass the
+    # "item must exist" guard below, so a roster naming a cell no file defines (the generator never
+    # ran, or an Armory reinstall removed the items) would read clean and gain more troops.
+    planned_ids = {i.id for i in rl.planned_items(spec)}
+    undefined = sorted(i for i in retired if i in planned_ids)
+    if undefined:
+        print(f"ERROR: the rosters name {len(undefined)} ladder cell(s) no item file defines; run "
+              f"tools/generate_ranged_ladder_items.py --apply (or the Armory was reinstalled), then "
+              f"restart the game. Nothing was written. First few: {', '.join(undefined[:6])}")
+        return 2
     if retired:
         # The generator already replaced these ids; the rosters still name them. Plan them as
         # launchers so every slot is repointed, never left naming an item that no longer exists.

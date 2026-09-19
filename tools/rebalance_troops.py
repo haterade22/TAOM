@@ -49,17 +49,16 @@ SKIP_FILES = set()
 # (cave_troll = monster; harad_elephant_rider / harad_mumakil_rider = bespoke
 # elephant/mumakil-back riders.)
 #
-# The Iron Hills noble crossbow line is hand-tuned for a different reason: the formula
-# gives it exactly the same Crossbow value as the regular ironpass_* line at every tier
-# (130/170/205), so the noble branch had no edge in the one skill it exists for. Set to
-# 175/225/275 on 2026-07-30. Without these entries a --apply silently reverts that.
+# The Iron Hills noble crossbow line (iron_hills_noble_scout / _sharpshooter /
+# _veteran_sharpshooter) was listed here from 2026-07-30 to keep a Crossbow hand-tune
+# (175/225/275, #366). #617 put the line on the Erebor ranged ladder cells (120/160/195, the
+# same as ironpass_*): Mike, 2026-09-18, the ranking holds and a crossbow's edge is its item
+# (hardest-hitting crossbows at T4 to T6), so it is no longer skipped and a rebaseline gives it
+# the ladder cell like every other archer.
 SKIP_TROOP_IDS = {
     'cave_troll',
     'harad_elephant_rider',
     'harad_mumakil_rider',
-    'iron_hills_noble_scout',
-    'iron_hills_noble_sharpshooter',
-    'iron_hills_noble_veteran_sharpshooter',
 }
 
 # Troops whose ONLY ranged option is a thrown weapon, so Throwing rather than Bow is their
@@ -287,18 +286,19 @@ def detect_culture(troop_id, filename_culture):
 
 def troop_weapon_classes(npc_elem, item_classes):
     """Set of skill classes ('OneHanded'/'TwoHanded'/'Polearm'/'Bow'/'Crossbow'/
-    'Throwing'/'Arrows'/'Bolts'/'Shield') the troop actually carries, from the
-    inline battle-equipment weapon slots (Item0..Item3). Civilian sets are
-    template refs with no inline weapons, so nothing to exclude."""
+    'Throwing'/'Arrows'/'Bolts'/'Shield') the troop carries into battle, from the
+    weapon slots (Item0..Item3) of its battle sets. A civilian set (flagged on the
+    roster or an inner set) never cross-draws with a battle set, so a weapon only
+    there does not count: imladris_recruit holds a bow in a civilian roster and
+    fights with a sword. The same sets ranged_ladder.load_ranged_troops reads
+    (rl.battle_sets), so the curve and the ranged ladder class a troop alike (#617)."""
     classes = set()
-    for eq in npc_elem.findall('.//equipment'):
-        slot = eq.get('slot', '')
-        if not slot.startswith('Item'):
-            continue
-        item_id = (eq.get('id') or '').replace('Item.', '', 1)
-        skill = item_classes.get(item_id)
-        if skill:
-            classes.add(skill)
+    for es in rl.battle_sets(npc_elem):
+        for eq in es.findall('equipment'):
+            if (eq.get('slot') or '').startswith('Item'):
+                skill = item_classes.get((eq.get('id') or '').replace('Item.', '', 1))
+                if skill:
+                    classes.add(skill)
     return classes
 
 
@@ -397,12 +397,11 @@ def apply_specialization(skills, specialization, level=None, culture=None):
 # <xsl:attribute name="..."> element in spcultures.xslt. Dale and Rhun use only the second, so
 # both shapes have to be matched or those cultures silently fall off the militia rule.
 MILITIA_BINDING_FILES = ('taom_spcultures.xml', 'spcultures.xslt')
-# The leading (?<![A-Za-z0-9_]) stops a longer attribute that merely ENDS in militia_troop (say a
+# The validator's reader, not a copy: two copies drifted on quote style (#617 first review). The
+# leading (?<![A-Za-z0-9_]) stops a longer attribute that merely ENDS in militia_troop (say a
 # hypothetical reserve_melee_militia_troop) from being read as a militia binding.
 # Group 1 is the `elite_` marker (empty for a basic slot), group 2 the troop id.
-MILITIA_BINDING_RE = re.compile(
-    r'(?<![A-Za-z0-9_])(?:melee_|ranged_)?(elite_)?militia_troop["\']?\s*(?:=\s*["\']|>)\s*'
-    r'NPCCharacter\.([A-Za-z0-9_]+)')
+MILITIA_BINDING_RE = ts.Validator._MILITIA_BINDING_RE
 # The elite (veteran) militia stand this much above the basic militia on every skill. Both
 # take the level-21 baseline whatever their level (militia are siege and village defenders by
 # design), and until 2026-09-13 the four slots shared it exactly, so a culture's militia archer
@@ -500,20 +499,21 @@ def _ladder_spec():
     return _LADDER_SPEC["spec"]
 
 
-def battle_weapon_classes(npc_elem, item_classes):
-    """troop_weapon_classes over the BATTLE rosters only, the way ranged_ladder reads a troop:
-    a civilian set never cross-draws with a battle set, so a bow there is not a launcher the
-    troop fights with and must not earn a ladder cell."""
-    classes = set()
-    for es in list(npc_elem.iter('EquipmentRoster')) + list(npc_elem.iter('EquipmentSet')):
-        if es.get('civilian') == 'true' or es.get('equipmentType') == 'Civilian':
-            continue
-        for eq in es.findall('equipment'):
-            if (eq.get('slot') or '').startswith('Item'):
-                skill = item_classes.get((eq.get('id') or '').replace('Item.', '', 1))
-                if skill:
-                    classes.add(skill)
-    return classes
+
+def undefined_ladder_ids(troop_files, item_classes):
+    """Ranged ladder ids the rosters name that no loaded item file defines. Such a slot has no
+    class, so the troop would get the level-curve Bow and lose the Bow/Crossbow swap: the window
+    between generate_ranged_ladder_items.py retiring ids and rebalance_ranged_ladders.py
+    repointing them, or an Armory reinstall. Read as XML, as the engine reads it: any quote style,
+    comments dropped, every set (a civilian slot naming no item is a broken ref too)."""
+    ref = 'Item.' + rl.ID_PREFIX
+    found = set()
+    for path in troop_files:
+        for el in ET.parse(path).iter():
+            iid = el.get('id') or ''
+            if iid.startswith(ref):
+                found.add(iid[len('Item.'):])
+    return sorted(i for i in found if i not in item_classes)
 
 
 def ladder_cells(troop_id, filename_culture, level, battle_classes):
@@ -917,7 +917,7 @@ def process_file(filepath, item_classes=None):
         weapon_classes = troop_weapon_classes(npc, item_classes) if item_classes else None
         new_skills = calculate_skills(culture, level, group, troop_id, troop_name, weapon_classes)
         if new_skills is not None and item_classes:
-            cells = ladder_cells(troop_id, filename_culture, level, battle_weapon_classes(npc, item_classes))
+            cells = ladder_cells(troop_id, filename_culture, level, weapon_classes)
             new_skills = dict(new_skills, **cells)
             record['ladder'] = cells
         if new_skills is None:
@@ -1127,6 +1127,13 @@ def main():
 
     troop_files = sorted(glob.glob(os.path.join(TROOPS_DIR, 'troops_*.xml')))
     print(f"Found {len(troop_files)} troop files")
+    undefined = undefined_ladder_ids(troop_files, item_classes)
+    if undefined:
+        print(f"ERROR: the rosters name {len(undefined)} ranged ladder item(s) no loaded file defines "
+              f"(first few: {', '.join(undefined[:6])}), so those archers cannot be classed. Run "
+              f"tools/generate_ranged_ladder_items.py --apply, then tools/rebalance_ranged_ladders.py "
+              f"--apply, first. Nothing was written.")
+        sys.exit(1)
 
     print(f"Militia bound by culture: {len(militia_troop_ids())} troops "
           f"(level-21 baseline, from {' + '.join(MILITIA_BINDING_FILES)})")

@@ -1088,8 +1088,12 @@ class Validator:
     _UPGRADE_TARGET_RE = re.compile(r'<upgrade_target\b[^>]*?\bid=["\']([^"\']+)["\']')
     _SKILL_TEMPLATE_RE = re.compile(r'\bskill_template=["\']([^"\']+)["\']')
     # (?<![A-Za-z0-9_]) so a longer attribute merely ENDING in militia_troop is not read as one.
+    # The tools' one militia binding reader: rebalance_troops.MILITIA_BINDING_RE is this object, so
+    # the writer and the gate cannot disagree on who is militia (they did, on quote style, until
+    # #617's first review). The C# TroopUpgradeSkillMonotonicityTests.LoadMilitiaBoundIds keeps its
+    # own copy. Group 1 is the `elite_` marker (empty for a basic slot), group 2 the troop id.
     _MILITIA_BINDING_RE = re.compile(
-        r'(?<![A-Za-z0-9_])(?:melee_|ranged_)?(?:elite_)?militia_troop["\']?\s*(?:=\s*["\']|>)\s*'
+        r'(?<![A-Za-z0-9_])(?:melee_|ranged_)?(elite_)?militia_troop["\']?\s*(?:=\s*["\']|>)\s*'
         r'NPCCharacter\.([A-Za-z0-9_]+)')
 
     def _militia_bound_ids(self) -> set:
@@ -1100,7 +1104,7 @@ class Validator:
                 # Mask comments: a commented-out <Culture> block is not a live binding, and
                 # counting one would silently widen the militia exemption.
                 text = _COMMENT_RE.sub(lambda m: "\n" * m.group(0).count("\n"), self._read(path))
-                bound.update(self._MILITIA_BINDING_RE.findall(text))
+                bound.update(tid for _elite, tid in self._MILITIA_BINDING_RE.findall(text))
         return bound
 
     # The two upgrade-edge checks below read the same files and the same attributes, so the

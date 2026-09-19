@@ -375,17 +375,17 @@ def load_overrides(lang: str) -> dict[str, str]:
     return {}
 
 
-def load_cache(lang: str) -> dict[str, str]:
-    f = CACHE_DIR / f"{lang.lower()}.json"
+def load_cache(lang: str, cache_dir: Path = CACHE_DIR) -> dict[str, str]:
+    f = cache_dir / f"{lang.lower()}.json"
     if f.exists():
         with open(f, encoding="utf-8") as fh:
             return json.load(fh)
     return {}
 
 
-def save_cache(lang: str, cache: dict[str, str]) -> None:
-    CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    f = CACHE_DIR / f"{lang.lower()}.json"
+def save_cache(lang: str, cache: dict[str, str], cache_dir: Path = CACHE_DIR) -> None:
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    f = cache_dir / f"{lang.lower()}.json"
     with open(f, "w", encoding="utf-8") as fh:
         json.dump(cache, fh, ensure_ascii=False, indent=2, sort_keys=True)
 

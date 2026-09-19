@@ -16,6 +16,7 @@ line a lower tier never beats a higher tier; at the same tier a better rank is n
 """
 import json
 import os
+import re
 import sys
 import tempfile
 import unittest
@@ -197,6 +198,9 @@ class SpecTests(unittest.TestCase):
         badrow = _spec(donor_stats={"b": {"damage": 0}}, ammo_stats={"a": -1})
         problems = rl.validate_spec(badrow)
         self.assertTrue(any("donor_stats" in p for p in problems) and any("ammo_stats" in p for p in problems))
+        # An id in both tables: the restat would write a bow's stats and an ammo damage to one item.
+        both = _spec(donor_stats={"b": {"damage": 50}}, ammo_stats={"b": 4})
+        self.assertTrue(any("both" in p for p in rl.validate_spec(both)))
         badcap = _spec(hero_ceiling={"Bow": "x"})
         self.assertTrue(any("hero_ceiling" in p for p in rl.validate_spec(badcap)))
 
@@ -278,14 +282,51 @@ class RepoSpecTests(unittest.TestCase):
                     if ta == tb and ra < rb_:
                         self.assertGreaterEqual(da, db, f"{cls} T{ta}: {la} (rank {ra}) under {lb} (rank {rb_})")
 
+    def test_a_crossbow_out_hits_and_out_aims_its_kingdoms_bows(self):
+        # Mike, 2026-09-18: a crossbow hits harder than a bow (it reloads slower) and is a lot more
+        # accurate, within a kingdom (the lines of one Armory folder) at the same tier. Compared as
+        # the engine applies them: a bow's hit carries 1 + 0.0011 x Bow, a crossbow's none; spread
+        # is (100 - accuracy) x (1 - 0.0009 x Bow) for a bow, x (1 - 0.0005 x Crossbow) for a
+        # crossbow; ammo at the caps the restat applied (arrows +4, bolts +5).
+        s = self.spec
+        cells = []
+        for ln in s["lines"]:
+            for cls in rl.CLASSES:
+                for t in rl.tiers_for(ln["id"], cls, s):
+                    c, skill = rl.cell(ln["id"], cls, t, s), rl.skill_cell(ln["id"], t, s)
+                    bow = cls == "Bow"
+                    hit = (c.damage + 4) * (1 + 0.0011 * skill) if bow else c.damage + 5
+                    spread = (100 - c.accuracy) * (1 - (0.0009 if bow else 0.0005) * skill)
+                    cells.append((ln["folder"], t, cls, ln["id"], hit, spread))
+        for kx, tx, cx, lx, hx, sx in cells:
+            if cx != "Crossbow":
+                continue
+            for kb, tb, cb, lb, hb, sb in cells:
+                if cb == "Bow" and kb == kx and tb == tx:
+                    self.assertGreater(hx, hb, f"T{tx} {lx} crossbow hits {hx:.1f}, {lb} bow {hb:.1f}")
+                    self.assertLess(sx, sb, f"T{tx} {lx} crossbow spread {sx:.2f}, {lb} bow {sb:.2f}")
+
     def test_one_item_per_listed_tier(self):
         self.assertEqual(len(rl.planned_items(self.spec)), 123)
 
     def test_donor_table_stays_under_the_hero_ceiling(self):
         s = self.spec
         self.assertEqual(s["donor_stats"]["highelf_longbowd"], {"damage": 90, "accuracy": 98})
-        self.assertLessEqual(max(r["damage"] for r in s["donor_stats"].values()), s["hero_ceiling"]["Crossbow"])
+        # Per class (fix-diff review, #617): a bow compared to the Crossbow cap could reach 105.
+        # The spec records no class, so the id names it; every Armory crossbow id says "crossbow".
+        for iid, row in s["donor_stats"].items():
+            cls = "Crossbow" if "crossbow" in iid else "Bow"
+            self.assertLessEqual(row["damage"], s["hero_ceiling"][cls], f"{iid} ({cls})")
         self.assertTrue(all(v <= 5 for v in s["ammo_stats"].values()))
+
+    def test_hero_launchers_sweeps_the_shipped_enlistment_rosters(self):
+        # The quartermaster's rosters are built at runtime as enlist_<culture>_<assignment>_<rank>
+        # (EnlistmentRosterIds.cs); a rename would drop them from the ceiling sweep with no word.
+        class _Every(dict):
+            def __contains__(self, key):
+                return True
+        heroes = rl.hero_launchers(rl.MODULEDATA_DIR, _Every())
+        self.assertTrue(any(c.startswith("enlist_") for carriers in heroes.values() for c in carriers))
 
 
 # --------------------------------------------------------------------------- #
@@ -419,7 +460,7 @@ class IndexTests(unittest.TestCase):
                    skills={"Bow": 70})
         self.assertEqual(rl.troop_values(t, idx, "Bow", "speed"), (64, 80))
         self.assertEqual(rl.troop_values(t, idx, "Bow", "skill"), (70, 70))
-        self.assertEqual(rl.troop_speed(t, idx, "Crossbow"), 75)
+        self.assertEqual(rl.troop_values(t, idx, "Crossbow", "speed"), (75, 75))
         self.assertIsNone(rl.troop_values(_troop("u", "man", 21, [{"Item0": "sword"}]), idx, "Bow", "speed"))
 
 
@@ -631,20 +672,21 @@ class PlanTests(unittest.TestCase):
             rl.planned_skill_edits(troops, _launchers(), _spec(), sources={"villager_man": villager})
         self.assertIn("UPGRADE_SKILL_REGRESSION", str(ctx.exception))
 
-    def test_skill_clamp_mirrors_the_gate_on_a_templated_side_and_refuses_a_templated_ladder_troop(self):
-        # Review 2026-09-18: a skill_template makes the inline <skills> unreachable (the engine
-        # reads the template), so UPGRADE_SKILL_REGRESSION refuses to judge such an edge. The
-        # ladder clamp judged it on the dead inline values and could refuse a run the gate passes.
+    def test_skill_clamp_skips_a_templated_side_and_a_templated_ladder_troop_takes_its_cell(self):
+        # A templated character's real skills are its template's values with the inline rows laid
+        # over them (installed 1.5.3 BasicCharacterObject.Deserialize; 1.4.8 ignored the inline
+        # block). The tools do not resolve templates, so an edge with a templated side is not judged,
+        # as UPGRADE_SKILL_REGRESSION does not judge it.
         villager = _troop("villager_man", "", 6, [], upgrades=["man_b"], skills={"Bow": 120})
         villager.templated = True
-        troops = {"man_b": _troop("man_b", "man", 26, [{"Item0": "man_bow"}], skills={"Bow": 90})}
+        troops = {"man_b": _troop("man_b", "man", 26, [{"Item0": "man_bow"}], skills={"Bow": 60})}
         edits = rl.planned_skill_edits(troops, _launchers(), _spec(), sources={"villager_man": villager})
-        self.assertEqual(edits, [])          # already on its T5 cell (90): no LadderError off the dead 120
-        # A ladder troop whose own skills come from a template cannot take its cell at all.
+        self.assertEqual([(e.troop, e.new, e.reason) for e in edits], [("man_b", 90, "cell")])  # no clamp, no LadderError
+        # Second review (#617): on 1.5.3 the inline row wins over the template, so a templated
+        # ladder troop takes its cell like any other; the first review refused it on the 1.4.8 rule.
         troops["man_b"].templated = True
-        with self.assertRaises(rl.LadderError) as ctx:
-            rl.planned_skill_edits(troops, _launchers(), _spec())
-        self.assertIn("skill_template", str(ctx.exception))
+        edits = rl.planned_skill_edits(troops, _launchers(), _spec())
+        self.assertEqual([(e.troop, e.skill, e.new, e.reason) for e in edits], [("man_b", "Bow", 90, "cell")])
 
     def test_loader_marks_a_skill_template(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -707,6 +749,19 @@ class RebalanceTroopsAgreementTests(unittest.TestCase):
     """tools/rebalance_troops.py gives a ladder troop the same Bow the ladder tool writes, so a
     later full rebaseline never undoes the ranking."""
 
+    def test_the_balance_report_references_the_ladder_cell(self):
+        # Fix-diff review (#617): analyze_troop_balance judged every ladder archer against the
+        # level-curve Bow, so the report flagged the ranked values as deltas to "fix".
+        import analyze_troop_balance as atb
+        spec = rl.load_spec()
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "troops_rohan.xml"
+            body = _npc_xml("rohan_test_archer", 21, [{"Item0": "ladder_rohan_bow_t4", "Item1": "arrows"}], "vlandia")
+            path.write_bytes(f"<NPCCharacters>{body}\n</NPCCharacters>".encode())
+            _, troops = atb.parse_troop_file(str(path), {"ladder_rohan_bow_t4": "Bow", "arrows": "Arrows"})
+        t, = atb.analyze(troops, {}, 100)
+        self.assertEqual(t["ref"]["Bow"], rl.skill_cell("rohan", 4, spec))
+
     def test_process_file_takes_the_ladder_cell(self):
         import rebalance_troops as rbt
         spec = rl.load_spec()
@@ -721,6 +776,39 @@ class RebalanceTroopsAgreementTests(unittest.TestCase):
         self.assertEqual(rl.skill_cell("rohan", 4, spec), 100)                   # 130 + 10 * (7 - 10)
         self.assertNotEqual(recs["rohan_test_foot"]["new"]["Bow"], 100)         # no launcher: the level curve
 
+    def test_the_iron_hills_nobles_take_their_erebor_cell_in_a_rebaseline(self):
+        # Second review (#617): #617 put the noble crossbow line on the Erebor cells (Mike,
+        # 2026-09-18: crossbows out-hit bows within a kingdom; the #366 hand-tune is not kept), but
+        # SKIP_TROOP_IDS still skipped them, so the clamp's cell guard never covered them.
+        import rebalance_troops as rbt
+        spec = rl.load_spec()
+        path = Path(rbt.TROOPS_DIR) / "troops_erebor.xml"
+        classes = {"ladder_erebor_xbow_t4": "Crossbow", "ladder_erebor_xbow_t5": "Crossbow",
+                   "ladder_erebor_xbow_t6": "Crossbow"}
+        recs = {r["id"]: r for r in rbt.process_file(str(path), item_classes=classes)}
+        for tid, tier in (("iron_hills_noble_scout", 4), ("iron_hills_noble_sharpshooter", 5),
+                          ("iron_hills_noble_veteran_sharpshooter", 6)):
+            self.assertEqual(recs[tid].get("ladder"), {"Crossbow": rl.skill_cell("erebor", tier, spec)}, tid)
+
+    def test_a_ladder_id_no_file_defines_stops_a_rebaseline(self):
+        # Second review (#617): between the generator retiring ids and the roster tool repointing
+        # them, the registry cannot class a retired id, so a full rebaseline handed every archer the
+        # level-curve Bow and dropped the Bow/Crossbow swap with no word.
+        import rebalance_troops as rbt
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "troops_rohan.xml"
+            # A single-quoted id is the same reference to the engine (fix-diff review: a regex
+            # pinned to double quotes read it as absent).
+            single = ("\n  <NPCCharacter id='rohan_b' level='21'><equipmentSet>"
+                      "<equipment slot='Item0' id='Item.ladder_rohan_bow_t5'/></equipmentSet></NPCCharacter>")
+            path.write_bytes(("<NPCCharacters>" + _npc_xml("rohan_a", 21, [{"Item0": "ladder_rohan_bow_t4"}]) + single
+                              + "\n  <!-- " + _npc_xml("rohan_old", 21, [{"Item0": "ladder_rohan_bow_x"}])
+                              + " -->\n</NPCCharacters>").encode())
+            self.assertEqual(rbt.undefined_ladder_ids([str(path)], {"sword": "OneHanded"}),
+                             ["ladder_rohan_bow_t4", "ladder_rohan_bow_t5"])
+            self.assertEqual(rbt.undefined_ladder_ids([str(path)], {"ladder_rohan_bow_t4": "Bow",
+                                                                   "ladder_rohan_bow_t5": "Bow"}), [])
+
     def test_a_launcher_in_a_civilian_roster_is_not_a_ladder_cell(self):
         # Review 2026-09-18: the ladder tool reads battle sets only, so a bow in a civilian roster
         # handed the troop a cell only rebalance_troops would write; the two tools then disagreed.
@@ -731,9 +819,14 @@ class RebalanceTroopsAgreementTests(unittest.TestCase):
             body = _npc_xml("rohan_test_foot", 21, [{"Item0": "sword"},
                                                      {"_civilian": True, "Item0": "ladder_rohan_bow_t4"}], "vlandia")
             path.write_bytes(f"<NPCCharacters>{body}\n</NPCCharacters>".encode())
-            rec, = rbt.process_file(str(path), item_classes={"ladder_rohan_bow_t4": "Bow", "sword": "OneHanded"})
+            classes = {"ladder_rohan_bow_t4": "Bow", "sword": "OneHanded"}
+            rec, = rbt.process_file(str(path), item_classes=classes)
+            npc = ET.parse(path).getroot().find("NPCCharacter")
         self.assertNotIn("Bow", rec.get("ladder", {}))
         self.assertNotEqual(rec["new"]["Bow"], rl.skill_cell("rohan", 4, spec))
+        # Second review (#617, Mike approved): the curve reads the same classes as the ladder,
+        # one predicate, so a civilian-only bow gives no Bow emphasis in a rebaseline either.
+        self.assertEqual(rbt.troop_weapon_classes(npc, classes), {"OneHanded"})
 
     def test_the_clamp_refuses_to_raise_a_ladder_cell(self):
         # A ladder troop's Bow is its cell; a clamp that lifts it to a parent's higher Bow would
@@ -793,11 +886,13 @@ class HeroTests(unittest.TestCase):
   <EquipmentRoster id="player_career_man_archer_f"><EquipmentSet><Equipment slot="Item1" id="Item.elf_bow"/></EquipmentSet></EquipmentRoster>
   <EquipmentRoster id="player_char_creation_man_civ" equipmentType="Civilian"><EquipmentSet><Equipment slot="Item0" id="Item.man_bow"/></EquipmentSet></EquipmentRoster>
   <EquipmentRoster id="player_career_man_bard_m"><EquipmentSet equipmentType="Civilian"><Equipment slot="Item0" id="Item.man_bow"/></EquipmentSet></EquipmentRoster>
+  <EquipmentRoster id="enlist_man_archer"><EquipmentSet><Equipment slot="Item0" id="Item.elf_bow_top"/></EquipmentSet></EquipmentRoster>
   <EquipmentRoster id="other_kit"><EquipmentSet><Equipment slot="Item0" id="Item.man_xbow"/></EquipmentSet></EquipmentRoster>
 </EquipmentRosters>""")
             heroes = rl.hero_launchers(md, _launchers())
         self.assertEqual(heroes, {"heavy_bow": ["player_char_creation_man_hunter_m"],
-                                  "elf_bow": ["player_career_man_archer_f"]})
+                                  "elf_bow": ["player_career_man_archer_f"],
+                                  "elf_bow_top": ["enlist_man_archer"]})    # the quartermaster's kit (#617 review 2)
 
 
 # --------------------------------------------------------------------------- #
@@ -976,6 +1071,31 @@ class RebalanceToolTests(unittest.TestCase):
     def test_missing_install_is_reported_not_faked(self):
         self.assertEqual(self._run("--game-modules", str(self.modules / "nope")), 2)
         self.assertFalse((self.report_dir / "REPORT.md").exists())
+
+    def test_apply_refuses_a_cell_the_rosters_name_but_no_file_defines(self):
+        # Second review (#617): a CURRENT tier id matches the retired-id shape, so it was merged as
+        # a placeholder and passed the "item must exist" guard; --apply then pointed a second troop
+        # at an item nothing defines, exit 0.
+        self._write_ladder_items()
+        items = self.modules / "LOTRLOME_Armory" / "ModuleData" / "LOTRLOME_items" / "ranged_ladder.xml"
+        items.write_bytes(re.sub(rb'\n  <Item id="ladder_man_bow_t4"[^\n]*', b"", items.read_bytes()))
+        self.troop_file.write_bytes(self.troop_file.read_bytes().replace(
+            b'slot="Item0" id="Item.hunting_bow" />\r\n        <equipment slot="Item1" id="Item.arrows" />\r\n        <equipment slot="Head"',
+            b'slot="Item0" id="Item.ladder_man_bow_t4" />\r\n        <equipment slot="Item1" id="Item.arrows" />\r\n        <equipment slot="Head"'
+        ).replace(b"\r\n</NPCCharacters>", _npc_xml("man_archer2", 21, [{"Item0": "hunting_bow", "Item1": "arrows"}])
+                  .replace("\n", "\r\n").encode() + b"\r\n</NPCCharacters>"))
+        before = self.troop_file.read_bytes()
+        self.assertEqual(self._run("--apply"), 2)
+        self.assertEqual(self.troop_file.read_bytes(), before)
+
+    def test_a_deleted_items_file_is_not_a_clean_run(self):
+        # An Armory reinstall (or --revert) removes the generated items while every roster still
+        # names its cell: every archer would spawn bowless, and the tool must not read clean.
+        self._write_ladder_items()
+        self.assertEqual(self._run("--apply"), 0)
+        (self.modules / "LOTRLOME_Armory" / "ModuleData" / "LOTRLOME_items" / "ranged_ladder.xml").unlink()
+        self.assertEqual(self._run(), 2)
+        self.assertEqual(self._run("--apply"), 2)
 
 
 # --------------------------------------------------------------------------- #
@@ -1165,7 +1285,10 @@ class GeneratorTests(unittest.TestCase):
             self.assertIn('<string id="ladder_elf_bow_t10" text="[Elf] Longbow X"/>', text)
             self.assertIn('<string id="old_key" text="Old"/>', text)
             self.assertEqual(text.count("<string id="), 5)                    # 1 old + 4 tiers
-            self.assertTrue((md / "Languages" / "loc_elf.xml.bak-rangedladder").exists())
+            # A sidecar in the live install only: the mirror is a git repo whose history is the
+            # backup, and an untracked sidecar there is a file a broad add would ship.
+            self.assertEqual((md / "Languages" / "loc_elf.xml.bak-rangedladder").exists(),
+                             md == self.armory / "ModuleData")
             man = (md / "Languages" / "loc_man.xml").read_text(encoding="utf-8")
             self.assertEqual(man.count("<string id="), 12)                     # 1 old + 11 cells
         loc_elf = self.armory / "ModuleData" / "Languages" / "loc_elf.xml"

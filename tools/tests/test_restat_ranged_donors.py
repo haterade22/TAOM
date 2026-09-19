@@ -109,6 +109,9 @@ class RestatTests(unittest.TestCase):
         self.assertEqual(mirror, BOM + expected.replace("\n", "\r\n").encode())       # CRLF kept
         self.assertEqual(self.weapons.with_name(self.weapons.name + rd.BACKUP_SUFFIX).read_bytes(), WEAPONS.encode())
         self.assertIn(b'thrust_damage="90" />', self.weapons.read_bytes())            # elf_bow_b untouched
+        # The mirror is a git repo whose history is the backup; a sidecar there is an untracked file
+        # a broad add would ship (second review, #617).
+        self.assertFalse(self.mirror_weapons.with_name(self.mirror_weapons.name + rd.BACKUP_SUFFIX).exists())
 
     def test_apply_is_idempotent_and_verify_sees_drift(self):
         self.assertEqual(self._run("--verify"), 1)
@@ -165,6 +168,22 @@ class RestatTests(unittest.TestCase):
         self.weapons.write_bytes(WEAPONS.replace(
             "    <Item\n        id=\"elf_arrow\"", "    <!-- <Item id=\"elf_arrow\"> -->\n    <Item\n        id=\"elf_arrow_x\"").encode())
         self.assertEqual(self._run("--apply"), 2)                              # only a commented copy: unknown
+
+    def test_a_donor_row_with_no_known_stat_is_refused(self):
+        # Second review (#617): a row with misspelled keys built an empty attribute map, so the
+        # tool matched the weapon, set nothing and --verify reported OK while checking nothing.
+        self._spec({"elf_bow": {"dmg": 50, "acc": 50}}, {})
+        self.assertEqual(self._run("--verify"), 2)
+        self._spec({"elf_bow": {}}, {"elf_arrow": -1})
+        self.assertEqual(self._run("--verify"), 2)
+        self._spec({"elf_bow": 50}, {})          # not a container: refused, not a traceback (convergence pass)
+        self.assertEqual(self._run("--verify"), 2)
+
+    def test_an_id_in_both_tables_is_refused(self):
+        self._spec({"elf_bow": {"damage": 50}}, {"elf_bow": 4})
+        live = self.weapons.read_bytes()
+        self.assertEqual(self._run("--apply"), 2)
+        self.assertEqual(self.weapons.read_bytes(), live)
 
     def test_missing_mirror_is_a_warning(self):
         self.assertEqual(self._run("--apply", "--asset-repo", str(self.mirror / "nope")), 0)

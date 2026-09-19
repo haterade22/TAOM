@@ -37,13 +37,14 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import _gamedir as gd  # noqa: E402  ASSET_REPO, armory_trees
 import ranged_ladder as rl  # noqa: E402
 import rebalance_troops as rb  # noqa: E402  DEFAULT_GAME_MODULES
 
-DEFAULT_ASSET_REPO = Path(r"E:\repos\lotraom-assets") / "v1.5" / "LOTRLOME_Armory"
+DEFAULT_ASSET_REPO = gd.ASSET_REPO
 BACKUP_SUFFIX = ".bak-rangeddonor"
-LAUNCHER_CLASSES = ("Bow", "Crossbow")
-AMMO_CLASSES = ("Arrow", "Bolt")
+LAUNCHER_CLASSES = rl.CLASSES                            # ("Bow", "Crossbow")
+AMMO_CLASSES = tuple(rl.AMMO_CLASSES.values())           # ("Arrow", "Bolt")
 _WEAPON_TAG_RE = re.compile(r"<Weapon\b[^>]*>", re.S)
 _CLASS_RE = re.compile(r'\bweapon_class="([^"]*)"')
 _COMMENT_RE = re.compile(r"<!--.*?-->", re.S)
@@ -55,7 +56,8 @@ class RestatError(Exception):
 
 
 def targets(spec: dict) -> dict[str, tuple[tuple[str, ...], dict[str, int]]]:
-    """id -> (weapon classes it must carry, {attribute: value})."""
+    """id -> (weapon classes it must carry, {attribute: value}), from tables
+    rl.validate_restat_tables has passed (an id is in one table at most)."""
     out: dict[str, tuple] = {}
     for iid, row in (spec.get("donor_stats") or {}).items():
         attrs = {}
@@ -65,8 +67,6 @@ def targets(spec: dict) -> dict[str, tuple[tuple[str, ...], dict[str, int]]]:
             attrs["accuracy"] = int(row["accuracy"])
         out[iid] = (LAUNCHER_CLASSES, attrs)
     for iid, dmg in (spec.get("ammo_stats") or {}).items():
-        if iid in out:
-            raise RestatError(f"{iid} is in both donor_stats and ammo_stats")
         out[iid] = (AMMO_CLASSES, {"thrust_damage": int(dmg)})
     return out
 
@@ -159,9 +159,10 @@ def rewrite(text: str, iid: str, classes, attrs: dict[str, int]) -> tuple[str, l
     return text[:start] + "".join(pieces) + text[pos:], log
 
 
-def plan(md: Path, want: dict) -> tuple[dict[Path, str], list[str], list[str]]:
-    """({file: new text}, change log, drift) for one tree. Raises on an id the tree defines twice."""
-    where = locate(md, want)
+def plan(md: Path, want: dict, where: dict[str, list[Path]]) -> tuple[dict[Path, str], list[str], list[str]]:
+    """({file: new text}, change log, drift) for one tree, given `locate(md, want)`. Raises on an
+    id the tree defines twice. Each file is read once; the edits accumulate on its text."""
+    current: dict[Path, str] = {}
     texts: dict[Path, str] = {}
     log: list[str] = []
     drift: list[str] = []
@@ -173,25 +174,28 @@ def plan(md: Path, want: dict) -> tuple[dict[Path, str], list[str], list[str]]:
         if not files:
             continue
         path = files[0]
-        text = texts.get(path) or path.read_bytes().decode("utf-8")
-        new, changes = rewrite(text, iid, classes, attrs)
+        if path not in current:
+            current[path] = path.read_bytes().decode("utf-8")
+        new, changes = rewrite(current[path], iid, classes, attrs)
         if changes:
-            texts[path] = new
+            current[path] = texts[path] = new
             log.append(f"{iid} ({path.name}): " + ", ".join(changes))
             drift.append(f"{iid}: " + ", ".join(changes))
     return texts, log, drift
 
 
-def write(texts: dict[Path, str]) -> None:
+def write(texts: dict[Path, str], backup: bool = True) -> None:
+    """Parse every text, then write. `backup` takes a `.bak-rangeddonor` sidecar once per file: the
+    live Armory only; the mirror is a git repo, where a sidecar is an untracked file to ship."""
     for path, text in texts.items():
         try:
             ET.fromstring(text.encode("utf-8"))
         except ET.ParseError as exc:
             raise RestatError(f"{path} would no longer parse, nothing written to it: {exc}") from None
     for path, text in texts.items():
-        backup = path.with_name(path.name + BACKUP_SUFFIX)
-        if not backup.exists():
-            backup.write_bytes(path.read_bytes())
+        sidecar = path.with_name(path.name + BACKUP_SUFFIX)
+        if backup and not sidecar.exists():
+            sidecar.write_bytes(path.read_bytes())
         path.write_bytes(text.encode("utf-8"))
 
 
@@ -214,10 +218,16 @@ def main(argv=None) -> int:
         return 2
     try:
         spec = rl.load_spec(args.spec)
-        want = targets(spec)
-    except (OSError, ValueError, RestatError) as exc:
+    except (OSError, ValueError) as exc:
         print(f"ERROR: cannot read the donor and ammo tables from {args.spec}: {exc}")
         return 2
+    problems = rl.validate_restat_tables(spec)
+    if problems:
+        print(f"ERROR: {args.spec} donor and ammo tables are invalid; nothing was written:")
+        for p in problems:
+            print(f"  - {p}")
+        return 2
+    want = targets(spec)
     if not want:
         print(f"ERROR: {args.spec} lists no donor_stats or ammo_stats; nothing to restat.")
         return 2
@@ -226,12 +236,7 @@ def main(argv=None) -> int:
         print(f"ERROR: {', '.join(sorted(vanilla))} {'is' if len(vanilla) == 1 else 'are'} vanilla SandBoxCore "
               "items; restat those through an XSLT, never in place. Nothing was written.")
         return 2
-    trees = [("armory", armory_md)]
-    mirror_md = Path(args.asset_repo) / "ModuleData"
-    if mirror_md.is_dir():
-        trees.append(("mirror", mirror_md))
-    else:
-        print(f"WARNING: assets mirror not found at {args.asset_repo}; only the live Armory is touched")
+    trees = gd.armory_trees(armory_md, args.asset_repo)
 
     plans = []
     try:
@@ -243,7 +248,7 @@ def main(argv=None) -> int:
                 return 2
             for i in unknown:
                 print(f"WARNING: {label} does not define {i}")
-            plans.append((label, md, *plan(md, want)))
+            plans.append((label, md, *plan(md, want, where)))
     except RestatError as exc:
         print(f"ERROR: {exc}. Nothing was written.")
         return 2
@@ -263,7 +268,7 @@ def main(argv=None) -> int:
             print(f"{label:7s} {'set' if args.apply else 'would set'} {line}")
         if args.apply and texts:
             try:
-                write(texts)
+                write(texts, backup=label == "armory")
             except RestatError as exc:
                 print(f"ERROR: {exc}")
                 return 2
