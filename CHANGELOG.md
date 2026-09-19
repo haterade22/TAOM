@@ -4,6 +4,18 @@
 
 ## 2026-09-18
 
+### chore(release): v2.0.30 - TAOM v2.0.30
+
+The first release for Bannerlord v1.5.3 (Steam beta), cut at Mike's request. All four modules read v2.0.30
+(`Main/_Module/SubModule.xml`, `Dependencies/_Module/SubModule.xml` and the #371 `DependedModuleMetadata` pairing,
+plus the live `TAOM_Map` and `LOTRLOME_Armory` SubModule.xml). `./build.ps1 -RunTests` green (9,799 passed,
+2 skipped); `tools/sweep_module_backups.ps1 -Apply` moved 90 backup sidecars (448.7 MB) to
+`E:\Bannerlord_Backups\module_bak_sweep_2026-09-18`, 0 left in the modules. Release note:
+`docs/releases/v2.0.30-discord.md`. The release skill and `docs/reference/release-process.md` no longer assume
+`bannerlord-1.4.5`: the 1.5 line releases from `bannerlord-1.5.x`, as v2.0.29 already did. Before packaging, the
+Armory must be loaded in the Modding Kit once, so the patched elephant and ram clip packages get their
+RuntimeDataCache entries re-cooked.
+
 ### fix(creatures): v2.0.29 - deep review of the ram, elephant and hit-capsule work (#618, #624)
 
 Eight review lenses, two at a time; no CRITICAL or HIGH. RCA: `docs/reviews/rca-creature-collision-review-2026-09-18.md`.

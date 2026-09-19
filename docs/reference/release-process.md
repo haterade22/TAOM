@@ -66,7 +66,9 @@ mismatched pair is one line in the log. That stamp identifies a *build*; the tag
 
 Use `/release`. It runs the sequence below and fails closed on the #371 pairing check.
 
-1. Tree clean, on `bannerlord-1.4.5`, current version already tagged.
+1. Tree clean (or, when another session's edits are present, every path staged explicitly and theirs left out),
+   on the release branch (`bannerlord-1.5.x` since v2.0.29; `bannerlord-1.4.5` for a 1.4.8 build), current version
+   already tagged.
 2. `./build.ps1 -RunTests` green — no release on an unrun build.
 3. `pwsh tools/sweep_module_backups.ps1` reports 0 files. If it does not, run it with `-Apply`:
    backup sidecars must not ship, because `.bak` breaks the Cloudflare distribution. The first run
@@ -78,7 +80,7 @@ Use `/release`. It runs the sequence below and fails closed on the #371 pairing 
    commit carries the CURRENT version the same way (`<type>: vX.Y.Z - <description>`, user rule
    2026-09-13, hook `check-commit-subject-version.sh`), so between releases
    `git log --grep 'vX.Y.Z - '` lists the commits a build reporting that `TaomVersion` can contain.
-7. `git tag -a vX.Y.Z -m "…"` then `git push origin bannerlord-1.4.5 vX.Y.Z`.
+7. `git tag -a vX.Y.Z -m "…"` then `git push origin <release branch> vX.Y.Z`.
 
 **Step 7 is the one that gets skipped**, which is why
 [`check-version-tagged.sh`](../../.claude/hooks/check-version-tagged.sh) reminds at turn end

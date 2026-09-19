@@ -23,7 +23,7 @@ characters to players. Full contract: [`docs/reference/release-process.md`](../.
 
 1. `git status --porcelain` is **empty**. Another session's edits must not ride along in a release
    commit (CLAUDE.md multi-session git safety).
-2. On `bannerlord-1.4.5`.
+2. On the branch the release line lives on: `bannerlord-1.5.x` since v2.0.29 (Bannerlord 1.5 players), `bannerlord-1.4.5` for a 1.4.8 build. Tag the release commit on that branch and push that branch.
 3. The *current* version is already tagged: `git rev-parse -q --verify refs/tags/$(grep -o '<Version value="[^"]*"' Main/_Module/SubModule.xml | head -1 | sed 's/.*"\(.*\)"/\1/')`.
    If it is not, tag that one **first** — bumping past an untagged version manufactures another
    unresolvable phantom.
@@ -92,7 +92,7 @@ The label is the NEW version, the one this commit writes into `SubModule.xml`; t
 git tag -a vX.Y.Z -m "TAOM vX.Y.Z
 
 <one-line summary>. Release notes: docs/releases/vX.Y.Z-discord.md"
-git push origin bannerlord-1.4.5 vX.Y.Z
+git push origin <release branch> vX.Y.Z
 ```
 
 Annotated (`-a`), never lightweight. **`git push` does not push tags** — the tag needs its own
