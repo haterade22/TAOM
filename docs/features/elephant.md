@@ -110,6 +110,11 @@
 >
 > See how ADOD_Beasts implements this: **[howdah-crew-mechanism.md](elephant/howdah-crew-mechanism.md).**
 >
+> **How War Sails carries crews, and the recommended path back to howdah archers (2026-09-18):**
+> **[howdah-ship-research-2026-09-18.md](elephant/howdah-ship-research-2026-09-18.md).** Headline: none of the
+> howdah's physics bodies is flagged `moveable`, which every vanilla moving platform uses; that one prefab edit is
+> the first test of the slide mechanism.
+>
 > **Scope — this is a *standard* war elephant, NOT the giant mumakil / Oliphaunt.** A normal-scale ridden mount
 > (one Harad crewman rides it). TAOM already represents the mumakil separately (the existing `mumak_rider` troop
 > archetype + "Mumakil War Tower" framing in the Harad culture); this feature does not touch those.

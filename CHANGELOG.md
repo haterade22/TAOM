@@ -4,6 +4,16 @@
 
 ## 2026-09-18
 
+### docs(elephant): v2.0.30 - what War Sails teaches about howdah archers
+
+Four research passes over the War Sails decompile, the base engine and the ship prefabs, read as a design reference
+only (TAOM will not require the DLC). Ships keep crews on a navmesh island attached to the moving entity through base
+`MissionObject` calls that vanilla siege towers also use, hold the fighting crew in a ship-local detachment rather than
+seats, flag every moving body `moveable`, and release machine users from `OnMissionEnded`. TAOM's howdah flags none of
+its bodies `moveable`, its walls are 1 m tall rather than the 20 m the comment claims, and it teleports seated archers
+every tick. Recommendation, four gated steps with the seat model as fallback:
+`docs/features/elephant/howdah-ship-research-2026-09-18.md`.
+
 ### chore(release): v2.0.30 - TAOM v2.0.30
 
 The first release for Bannerlord v1.5.3 (Steam beta), cut at Mike's request. All four modules read v2.0.30
