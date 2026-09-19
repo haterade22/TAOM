@@ -321,9 +321,9 @@ in the Armory on 2026-09-18 (radius within 10% of length / 9):
 
 | Skeleton | Bodies | Kit-default hit capsules |
 |---|---|---|
-| `chariot_skeleton` | 60 | 57 |
+| `chariot_skeleton` | 60 | 57 before the fit; 5 after (2026-09-18: 8.8% of the skin hittable before, 98.0% after; the cart body and wheels are the gaps) |
 | `elephant_skeleton` | 60 | 41 before the fit; 27 after, all bones owning under 15 skin vertices (nine bones of one trunk chain, all 14 of the duplicate chain, both clavicles, three tail bones), whose skin the neighbouring capsules cover |
-| `spider_skeleton` | 62 | 40 |
+| `spider_skeleton` | 62 | 40 before the fit; 22 after, bones with too little skin (2026-09-18: 49.9% hittable before, 97.2% after) |
 | `skeleton_warg` | 49 | 2 |
 | `dwarf_skeleton_a` | 28 | 0 |
 

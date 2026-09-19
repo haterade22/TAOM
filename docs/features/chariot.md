@@ -154,6 +154,15 @@ hippodrome assets (cart material/textures are vanilla `roman_statue_chariot_*`).
 tooling + format notes: `E:\LOTRAOMAssets\_auto_workspace\chariot\` + the transfer package
 INVENTORY.md.
 
+## Hit capsules fitted to the mesh (2026-09-18)
+
+The chariot's per-bone hit capsules (what weapons and missiles strike) were the Modding Kit's defaults, thin rods
+along each bone: 57 of 60 bodies, and only 8.8% of the horses-and-cart skin sat inside any hit capsule. `tools/skeleton_hit_capsules.py` fitted them to the skinned mesh (`chariot_horse_brown` with the cart baked in, plus the mane; harness and barding variants left out), a little bigger
+than the skin and never more than 20 cm proud of it, and patched `Assets/creature/chariot/mesh/chariot_correct_geo.tpac` in the live Armory (backup
+`chariot_correct_geo.tpac.bak-hitcapsules-20260918-201114`): 53 capsules refit, 98.0% of the skin now inside one. Both horses (legs, spine, neck, head, tail) are covered 97 to 100%. The cart is the exception: the cart body is a box skinned to one bone and the wheels are discs, which a round capsule cannot hug within the 20 cm limit, so the cart body kept its old capsule (27% of it covered) and the wheels reach about a third. Whether arrows striking the cart should damage the chariot at all is a design decision, left open. Read back through TpacTool.Lib with zero mismatches and every segment hash intact.
+Method and format: [bannerlord-skeleton-authoring.md](../reference/bannerlord-skeleton-authoring.md) "Hit capsules".
+**Owed:** load LOTRLOME_Armory in the Kit once (re-cooks the package's `.rdc`), then a Custom Battle hit test.
+
 ## Status / pending
 
 - ✅ ModuleData, compiled assets (skeleton + 5 Metameshes w/ upstream-pack IK transplant, 3 masters, 24 clips), validators

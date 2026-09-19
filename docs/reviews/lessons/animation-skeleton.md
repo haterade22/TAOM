@@ -726,8 +726,8 @@ Players reported the war elephant's collision as too small (2026-09-18). A creat
 Monster's `body_capsule` (what agents bump into), a hit capsule per bone (what blows and missiles strike) and a ragdoll
 capsule per bone (the corpse). 41 of the elephant's 60 hit capsules were still the Kit's defaults, thin rods along each
 bone with a radius about a ninth of the capsule's length: the neck was 0.03 to 0.05 m wide inside 0.6 m of neck and
-only 48% of the skin sat inside any hit capsule. The chariot (57 of 60) and the spider (40 of 62) carry the same
-defaults. Fitted to the skinned mesh the elephant reaches 98%.
+only 48% of the skin sat inside any hit capsule. The chariot (57 of 60, 8.8% of its skin hittable) and the spider (40
+of 62, 49.9%) carried the same defaults. Fitted to the skinned mesh the three reach 98.2%, 98.0% and 97.2%.
 - **Why missed:** the creature renders, animates and takes damage, so nothing looks broken; the Kit shows the capsules
   only in its skeleton editor and no gate reads them. The first answer to "too small" went to the body capsule, a
   different layer, and a doubled radius would have enclosed the howdah's physics floor, the known slide cause.

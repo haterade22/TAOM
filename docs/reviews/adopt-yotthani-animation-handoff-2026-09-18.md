@@ -7,7 +7,7 @@ Procedure: `/adopt-external` ([external-repo-adoption.md](../ai-includes/externa
 
 | Source | What it is | Read |
 |---|---|---|
-| `Bannerlord_Animation_Handoff_EN.md` (Downloads, still named `.crdownload`) | Three months of DualWield mod work on Bannerlord 1.4.6: mirroring attack clips for the left hand without the Modding Kit, the clip's compressed segment format, left-hand combat, verification tooling, the MithrilForge tool chain, dead ends, working practices | In full, all 441 lines (28 KB). It ends on a complete section, so the unfinished-download suffix does not look like truncation, but that is an inference |
+| `Bannerlord_Animation_Handoff_EN.md` (Downloads; first read as the `.crdownload`) | Three months of DualWield mod work on Bannerlord 1.4.6: mirroring attack clips for the left hand without the Modding Kit, the clip's compressed segment format, left-hand combat, verification tooling, the MithrilForge tool chain, dead ends, working practices | In full, all 441 lines (28 KB). The finished download that replaced the `.crdownload` has the same size, line count and ending, so the review covered the whole document |
 | `MithrilForge-main` | C# (net8.0) command-line tool: a GLB file in, a static prop `.tpac` out, no Modding Kit. MIT, (c) yotthani. Its README lists TAOM_POI as a consumer | README, `docs/donor-findings.md`, `docs/delivery.md` in full; the plan's structure; build files and code for the security pass |
 
 **The repo snapshot is not the one the handoff describes.** The handoff's animation tool chain
@@ -33,7 +33,7 @@ Each claim was compared with TAOM's docs, tools and the installed 1.5.3 engine b
 | 1 | An `AnimationClip` can carry its own motion segment (type `6c1e136f`); clip field `UnknownUInt2` 0 plays the named `SkeletalAnimation`, 2 plays the clip's own segment | **New to TAOM** (no doc or tool mentioned it) | TpacTool.Lib 0.4.0 reads the field. Census of TAOM's 243 creature clips: 235 at 0 with no data segment; the 8 elephant attack clips (4 elephant, 4 rider, ADOD_Beasts-derived) at 2 with no segment |
 | 2 | Animations cannot be overridden by re-shipping a GUID | New | Handoff, citing TaleWorlds |
 | 3 | A new `SkeletalAnimation` in a mod package does not register (index -1) | **Contradicted as a general rule** | TAOM's Kit-imported masters register and play (troll, ram, warg, elephant). Holds for TpacTool-written masters only |
-| 4 | Native hit timing is `collision_check_starting/ending_percent` in `Native/ModuleData/combat_parameters.xml`, per the clip's `CombatParameterId` | New | 130 entries in the 1.5.3 file |
+| 4 | Native hit timing is `collision_check_starting/ending_percent` in `Native/ModuleData/combat_parameters.xml`, per the clip's `CombatParameterId` | New | 165 entries in the 1.5.3 file, 130 with an explicit window |
 | 5 | An action naming a missing clip crashes at agent spawn | **Partly gated** | `verify_mount_assets.py` "PHANTOM BINDING" covers spider, elephant, mumakil; `gen_troll_anim_clips.ps1 -Verify` covers the troll; ram, warg and chariot are not covered |
 | 6 | `Mission.RayCastForClosestAgentsLimbs` queries the engine's limb capsules | New | Public on the installed 1.5.3 DLL, signature as quoted |
 | 7 | Scripted strikes can reach vanilla damage (armour, blow, reactions) through `Mission.MeleeHitCallback` by reflection | New; TAOM's creature attacks bypass armour | Reflection into an internal method; not verified here |
@@ -58,8 +58,8 @@ Each claim was compared with TAOM's docs, tools and the installed 1.5.3 engine b
 - Claim 11 → `tools/README.md`, creature tpac surgery.
 - Claim 12 → `docs/reference/ue-to-bannerlord-asset-pipeline.md` as a lead with a test, never as a rule.
 - Claims 8 and 9 → `docs/ai-includes/creature-animation-blender-mcp-workflow.md` lessons.
-- The 8 elephant attack clips → `docs/features/elephant.md` Open items: watch whether they animate; set the field
-  to 0 if not.
+- The 8 elephant attack clips → `docs/features/elephant.md` Open items: watch whether they animate; if not, try the field
+  at 0 as an experiment with a backup (the rule is the handoff's, unmeasured by TAOM).
 
 **Tier 1, proposals that need code (each wants an issue and TDD):**
 1. A pose recorder dev-console command: sample an agent's bone frames every tick while an action plays, write

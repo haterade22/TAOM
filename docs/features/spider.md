@@ -274,6 +274,15 @@ used 1.0m with a 10-bone cone; the giant spider is ~2× and strikes with long le
 consts (`SpiderConfig.PounceCollisionRadius`/`SideCollisionRadius`) are the dials. The real fang bones
 (`joint5_r/l` = 26/32, mouth `joint12_m` = 25) are available if a bite-at-the-mouth model is wanted later.
 
+## Hit capsules fitted to the mesh (2026-09-18)
+
+The spider's per-bone hit capsules (what weapons and missiles strike) were the Modding Kit's defaults, thin rods
+along each bone: 40 of 62 bodies, and 49.9% of the skin sat inside any hit capsule. `tools/skeleton_hit_capsules.py` fitted them to the skinned mesh (both halves of the split body, `sk_spider_forest_c` and `sk_spider_forest_c_2`), a little bigger
+than the skin and never more than 20 cm proud of it, and patched `Assets/creature/spider/animations/spider_correct_geo.tpac` in the live Armory (backup
+`spider_correct_geo.tpac.bak-hitcapsules-20260918-201114`): 38 capsules refit, 97.2% of the skin now inside one. Legs, head, chest and fangs are covered fully, the abdomen bulb 87%. The Brown and Pale Spider meshes are clones of this geometry on the same skeleton, so all three skins get the fit. Read back through TpacTool.Lib with zero mismatches and every segment hash intact.
+Method and format: [bannerlord-skeleton-authoring.md](../reference/bannerlord-skeleton-authoring.md) "Hit capsules".
+**Owed:** load LOTRLOME_Armory in the Kit once (re-cooks the package's `.rdc`), then a Custom Battle hit test.
+
 ## Current state & known issues (2026-06-12, post-1.4.6 campaign)
 
 | Item | Status |

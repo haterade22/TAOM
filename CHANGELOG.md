@@ -4,6 +4,17 @@
 
 ## 2026-09-18
 
+### data(creatures): v2.0.30 - chariot and spider hit capsules fitted to the mesh
+
+The same fix the elephant got, with `tools/skeleton_hit_capsules.py`. The chariot's hit capsules were Kit defaults
+on 57 of 60 bones and only 8.8% of its horses-and-cart skin was hittable; 53 refit, 98.0% now. Both horses are
+covered 97 to 100%; the cart body (a box on one bone) and the wheels (discs) cannot be hugged by a round capsule
+within the 20 cm limit, so they stay mostly unhittable, and whether cart hits should damage the chariot is left
+as a design decision. The spider went from 49.9% to 97.2% (38 refit); the Brown and Pale Spiders share its
+geometry and skeleton. Both packages were read back through TpacTool.Lib with zero mismatches, and backups
+sit beside them. Owed: a Kit load to re-cook their `.rdc`, then a Custom Battle hit test. The Yotthani adoption
+report now records that the finished handoff download matches the copy reviewed.
+
 ### docs(elephant): v2.0.30 - what War Sails teaches about howdah archers
 
 Four research passes over the War Sails decompile, the base engine and the ship prefabs, read as a design reference
