@@ -461,13 +461,16 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Once per session, dump every troop type's engine-side tier, power, formation class and hit points. This verifies the offline analysis against the running game rather than trusting it — but it is one line per character (~8,300, roughly half the entire log) and the answer only changes when troop data or the balance config does. Capture it once, then leave it off. Requires the master switch above. Off by default.")]
     public bool LogAutoResolveTroopCensus { get; set; } = false;
 
-    // --- Battle Tactics / Howdah Diagnostics ---
-    // Instrumentation only (#627): gates the war elephant howdah's decision, layout, status and summary lines, never
-    // behaviour. On by default while the rebuilt platform is tested (Mike, 2026-09-19); HowdahDiagnosticsSettingsProvider
-    // falls back to the same value and a test pins both. RequireRestart = false: the machine reads it every sample.
-    [SettingPropertyGroup("Battle Tactics/Howdah Diagnostics", GroupOrder = 19)]
-    [SettingPropertyBool("Log Howdah Diagnostics", Order = 0, RequireRestart = false,
-        HintText = "Write the war elephant howdah's diagnostics to the TAOM log: why a rider did or did not get a howdah, the platform's layout and floor clearance over the elephant, a status line every 5 seconds per howdah (elephant speed against its walking speed, platform drift) and a battle summary. Diagnostic only, changes no gameplay. On by default while the howdah is being tested.")]
+    // --- Battle Tactics / Crew Platform Diagnostics ---
+    // Instrumentation only (#627): gates the crew-platform decision, layout, status and summary lines on BOTH the
+    // war elephant's howdah and the mumakil's war tower, never behaviour. On by default while the platforms are
+    // tested (Mike, 2026-09-19); HowdahDiagnosticsSettingsProvider falls back to the same value and a test pins both.
+    // The PROPERTY NAME stays EnableHowdahDiagnostics although the label widened: MCM's json2 persists per property,
+    // so renaming it would hand every existing install a fresh default (CLAUDE.md, the ShaderPrecompilation trap).
+    // RequireRestart = false: the platforms read it every sample.
+    [SettingPropertyGroup("Battle Tactics/Crew Platform Diagnostics", GroupOrder = 19)]
+    [SettingPropertyBool("Log Crew Platform Diagnostics", Order = 0, RequireRestart = false,
+        HintText = "Write the war elephant howdah's and the mumakil war tower's diagnostics to the TAOM log: why a rider did or did not get a howdah, each platform's layout and floor clearance over its beast, a status line every 5 seconds per platform (beast speed against its walking speed, platform drift, how many archers are seated and how many can reach a target) and a battle summary. Diagnostic only, changes no gameplay. On by default while the platforms are being tested.")]
     public bool EnableHowdahDiagnostics { get; set; } = true;
 
     // --- Enlistment ---

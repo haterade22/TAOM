@@ -2,6 +2,58 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-20
+
+### feat(mumakil): v2.0.30 - eight archers on the war tower (#627 phase 2)
+
+The mumakil's three-deck tower now carries a crew: five archers on the main deck, two on the
+upper, one in the crow's nest. It is a clone of the elephant's howdah crew per the
+one-feature-per-creature convention, and it carries that feature's four engine rules unchanged
+(keep the formation, rewrite the AI behaviour curves and keep rewriting them, give each archer a
+scripted position at its own seat, and only correct a position once it has actually drifted).
+Every measured constant is referenced from the pure helpers rather than copied, so the two
+creatures cannot drift apart on the numbers that took nine in-game rounds to find.
+
+**The scale is derived, never written down.** The prefab is authored mount-local, 1:1 with
+`sk_mumakil_harad_01.fbx`, and the platform multiplies its basis by the mount's own
+`Agent.AgentScale` every tick, so the 3.0x that `BodyLength=300` produces appears nowhere in the
+data. Change `BodyLength` and the crew follow it. The basis is orthonormalised before the scale
+is applied, because `Mat3.ApplyScaleLocal` multiplies an existing basis rather than setting one,
+and whether the native frame behind `Agent.Frame` already carries `AgentScale` cannot be settled
+from managed code. Stripping it first makes the answer irrelevant; getting it wrong would put the
+crow's nest at 41 m instead of 13.8. A `frameScale=` field in the diagnostics line lets one
+battle log answer the question for good.
+
+**A new rule came out of the review: headroom.** A crew frame under a higher deck's floor needs
+the human capsule's full 1.92 m of clearance (radius 0.37, `pos1` z 1.55, read from
+`Native/monsters.xml`). `BodyFlags.Barrier` sits in the engine's missile-exclusion mask but not
+in its agent mask, so an archer whose capsule reaches into the deck above is shoved by the engine
+every frame and put back by its seat, which reads as tens of m/s and stops every bow draw. One
+frame was authored there and moved. The first correction then put it 1.05 m from its neighbour,
+which a 0.45 m deadband would close to 0.15 m, inside the 0.74 m spacing rule, so it moved again.
+Both rules and the margin between them are now gates rather than measurements.
+
+**Also in this pass, from the same review:** a write-only rider field and its false comment
+deleted; the deadband's stated derivation corrected (the 0.10 m settle belongs to the archer, and
+archers are the same size on every beast; what scales is the lever arm); an ungated engine float
+gated before a native `SetFrame`, in the mumakil and in the elephant; the public reposition entry
+given the recycled-index guard its callers had; a missing-prefab error deduped to one line per
+battle rather than one per rider; the sealed-`CharacterObject` ban widened from a filter that
+named the elephant to one that names the crew, which is what it actually protects; and the MCM
+toggle relabelled Crew Platform Diagnostics since it gates both beasts, with its property name
+deliberately unchanged so no existing install is handed a fresh default.
+
+Troop weights rose to pay for the extra agents: the elephant rider 10.0 to 12.0, and a new
+`harad_mumakil_rider` row at 20.0. Twenty-eight would have matched the eight archers exactly; the
+identity test has only ever been proven to 20.0, so the shortfall is documented rather than
+smuggled past the gate.
+
+**Not yet smoked.** The ordered in-game checklist is in `docs/features/mumakil.md`, and the first
+thing it measures is whether the archers stay on a deck that is bolted to the beast's ROOT while
+the tower they stand on is skinned to its SKELETON. No deadband can fix that one, and at 3.0x with
+an 8 m lever arm it is several times the elephant's exposure. RCA:
+`docs/reviews/rca-mumakil-platform-2026-09-20.md`.
+
 ## 2026-09-19
 
 ### feat(elephant): v2.0.30 - #627 the howdah crew shoot, and the mission-end hang is gone

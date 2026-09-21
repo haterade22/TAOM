@@ -22,6 +22,30 @@ internal static class HowdahSeatMotion
     /// <summary>Human body capsule radius, Native/ModuleData/monsters.xml.</summary>
     public const float HumanCapsuleRadius = 0.37f;
 
+    /// <summary>
+    /// How far a seated agent may drift before its seat places it back, on a mount of scale 1.0, in metres.
+    /// Measured on the elephant: an archer settles about 0.10 m from its frame, and correcting that every frame is
+    /// what read to the engine as 30 m/s and stopped every bow draw.
+    ///
+    /// A LARGER mount needs a larger deadband, because its deck travels further between frames, so a caller on a
+    /// scaled mount multiplies this by the mount's AgentScale (see SeatDeadbandFor). Note what does NOT scale: the
+    /// 0.10 m settle itself belongs to the archer, and archers are the same size on every beast. So the scaled number
+    /// is generous for a standing mount and right for a moving one, which is the trade the elephant's smoke could
+    /// not distinguish and the mumakil's still has to.
+    ///
+    /// What DOES scale is the lever arm. The mumakil's decks sit up to 8 m behind and 14 m above its origin against
+    /// roughly 1 m and 3 m on the howdah, so for the same yaw rate a seat's world position moves several times
+    /// further per frame, and an unscaled band would fire a correction on every frame of a turn: the failure this
+    /// number exists to prevent.
+    /// </summary>
+    public const float BaseSeatDeadbandMetres = 0.15f;
+
+    /// <summary>The deadband for a mount of this scale. A non-finite or non-positive scale falls back to 1.0x.</summary>
+    public static float SeatDeadbandFor(float agentScale) =>
+        float.IsNaN(agentScale) || float.IsInfinity(agentScale) || agentScale <= 0f
+            ? BaseSeatDeadbandMetres
+            : BaseSeatDeadbandMetres * agentScale;
+
     /// <summary>The closest two crew frames may stand without their occupants shoving each other.</summary>
     public const float MinimumFrameSeparation = 2f * HumanCapsuleRadius;
 

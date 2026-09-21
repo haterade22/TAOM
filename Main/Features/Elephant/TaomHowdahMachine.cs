@@ -335,6 +335,8 @@ public class TaomHowdahMachine : UsableMachine
     private void RepositionToFixedOffset()
     {
         Vec3 anchor = elephantAgent.Position + new Vec3(0f, 0f, ElephantConfig.HowdahHeightAboveGround);
+        // A native position that came back NaN would go straight into SetFrame and take the whole platform with it.
+        if (!HowdahSeatMotion.IsPlaceable(anchor.x, anchor.y, anchor.z)) return;
         MatrixFrame next = elephantAgent.Frame;
         next.origin = anchor;
         GameEntity.SetFrame(ref next);

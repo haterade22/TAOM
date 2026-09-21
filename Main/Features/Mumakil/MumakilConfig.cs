@@ -9,8 +9,10 @@ namespace TAOM.Features.Mumakil;
 /// any Monster-XML field. Behaviorally identical to the elephant (auto trample + tusk on deterministic
 /// cooldowns); cloned per the project-owner's one-feature-per-creature convention (spider/chariot precedent).
 ///
-/// Phase 1 = ridden mount with ONE rider that auto-attacks. No platform crew, no howdah. The platform is baked
-/// into the mesh (visual only). See docs/features/mumakil.md.
+/// Phase 1 was a ridden mount with ONE rider that auto-attacks. Phase 2 (#627, 2026-09-20) adds the war tower's
+/// crew: eight archers across three decks, carried by TaomMumakilPlatform. The tower itself is still only an
+/// AdditionalMesh on the Horse item, so every mumakil has one and there is no harness to gate on.
+/// See docs/features/mumakil.md.
 /// </summary>
 public static class MumakilConfig
 {
@@ -19,6 +21,27 @@ public static class MumakilConfig
 
     /// <summary>MountDifficulty forced on the Mûmakil so non-rider AI can't take it (elephant/spider parity: 999f).</summary>
     public const float MountDifficulty = 999f;
+
+    // --- Platform crew (#627 phase 2, 2026-09-20). The war tower is an AdditionalMesh on the Horse item, so every
+    // mumakil carries one; there is no harness to gate on the way the elephant's howdah does. ---
+
+    /// <summary>Root game_entity name of the crew platform prefab in LOTRLOME_Armory/Prefabs. Authored MOUNT-LOCAL
+    /// (1:1 with sk_mumakil_harad_01.fbx); TaomMumakilPlatform scales it by the mount's Agent.AgentScale, so the
+    /// 3.0x that BodyLength=300 produces is never written down. MumakilPlatformTests pins the prefab to this name.</summary>
+    public const string PlatformPrefabName = "taom_mumakil_platform";
+
+    /// <summary>Tag on the platform's crew frames: eight of them, five on the main deck, two on the upper and one in
+    /// the crow's nest (Mike, 2026-09-20). Spacing, not deck area, is what limits the count. The tag is documentation
+    /// and a test key, NOT a runtime selector: the spawner picks seats by script type, so removing a tag does not
+    /// remove a seat, and removing the script does.</summary>
+    public const string CrewTag = "taom_mumakil_crew";
+
+    /// <summary>The crew troop: the same bow-and-quivers archer the howdah uses (troops_harad.xml). It carries no
+    /// melee weapon, which is deliberate: a seated archer can never reach a melee target.</summary>
+    public const string CrewCharacterId = "harad_howdah_crew";
+
+    /// <summary>Seconds between platform status lines in the diagnostics log, per mumakil.</summary>
+    public const float PlatformStatusPeriodSeconds = 5f;
 
     // --- AI attack gates (1-for-1 with the elephant; cooldown model replaces ADOD_Beasts's per-tick roll) ---
     /// <summary>Proximity gate: an attack only fires when a live enemy is within this distance of the Mûmakil's

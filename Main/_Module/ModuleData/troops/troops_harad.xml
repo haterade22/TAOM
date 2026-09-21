@@ -266,8 +266,12 @@
                 <equipment
                     slot="Leg"
                     id="Item.haradrim_boots" />
-                <!-- Mûmakil mount. No HorseHarness — the war-platform is baked into the mount mesh
-                     (Item.taom_mumakil AdditionalMeshes); Phase 1 has no platform crew/howdah. -->
+                <!-- Mumakil mount. The HorseHarness slot is deliberately EMPTY and must stay empty. The war
+                     tower is an AdditionalMesh on Item.taom_mumakil, and MountVisualCreator routes that mesh
+                     down the ManeCoverType branch as soon as a harness is equipped: at affected_by_cover="true"
+                     a covered mount drops the mesh, which would leave the eight tower archers (#627 phase 2)
+                     standing on nothing. tools/taom_schema.py exempts this troop in _HARNESSLESS_BY_DESIGN
+                     for the same reason. -->
                 <equipment
                     slot="Horse"
                     id="Item.taom_mumakil" />

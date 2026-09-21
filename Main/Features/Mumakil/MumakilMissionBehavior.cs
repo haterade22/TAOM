@@ -4,7 +4,9 @@ using BehaviorTrees;
 using BehaviorTreeWrapper;
 using TAOM.Core.Logging;
 using TAOM.Features.AdvancedCombat;
+using TAOM.Features.Elephant;
 using TaleWorlds.Core;
+using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.Mumakil;
@@ -14,7 +16,12 @@ namespace TAOM.Features.Mumakil;
 /// <c>BehaviorTreeAgentComponent</c>) to every Mûmakil-MOUNT agent in the battle — the elephant/spider wiring.
 /// The attach key is <c>Monster.StringId == "taom_mumakil"</c>, NEVER the character id: the horse-slot mount
 /// agent's Character is the Harad RIDER, not the Mûmakil. The rider's cavalry AI drives movement; the BT layers
-/// the trample/tusk attacks. No howdah (Phase 1 = single rider, no platform crew).
+/// the trample/tusk attacks.
+///
+/// Phase 2 (#627, 2026-09-20) adds the war tower's crew: when a rider builds on a mumakil, the behaviour
+/// instantiates <see cref="TaomMumakilPlatform"/> on it and queues a crew, which spawns from the next
+/// <see cref="OnMissionTick"/>. The platform is invisible; the tower the player sees is an AdditionalMesh on the
+/// Horse item, so every mumakil carries one and there is no harness to gate on.
 /// </summary>
 public class MumakilMissionBehavior : MissionLogic
 {
@@ -26,6 +33,8 @@ public class MumakilMissionBehavior : MissionLogic
     private readonly CreatureTreeTracker _tracker;
     private bool _initialized;
     private bool _treesAdded;
+    // The tower crews (#627 phase 2): queued from OnAgentBuild, spawned from OnMissionTick. See MumakilCrewSpawner.
+    private readonly MumakilCrewSpawner _crew;
 
     public MumakilMissionBehavior()
     {
@@ -33,6 +42,7 @@ public class MumakilMissionBehavior : MissionLogic
         _logger = IoC.Resolve<IModLogger>();
         _tracker = new CreatureTreeTracker("MumakilTree", "[Mumakil]",
             a => _service.IsCreatureMonster(a.Monster?.StringId), _logger);
+        _crew = new MumakilCrewSpawner(_logger);
     }
 
     private void Initialize()
@@ -69,6 +79,9 @@ public class MumakilMissionBehavior : MissionLogic
 
             // Prune dead Mûmakil from the shadow list (Agent.Tick auto-ticks the components).
             _tracker.PruneDead();
+
+            // Outside the engine's own SpawnAgent loop (#595): a crew queued while a rider was building spawns here.
+            _crew.Drain();
         }
         catch (Exception ex)
         {
@@ -85,6 +98,10 @@ public class MumakilMissionBehavior : MissionLogic
         // Mûmakil that built before that are caught by the first-tick scan.
         if (_treesAdded)
             _tracker.TryLateAttach(agent);
+
+        // Phase 2: the crew spawner owns the platform's whole lifecycle; this stays a delegation (ADR-002).
+        if (agent?.MountAgent != null && _service.IsCreatureMonster(agent.MountAgent.Monster?.StringId))
+            _crew.TryBuildPlatform(agent);
     }
 
     public override void OnRemoveBehavior()
@@ -92,6 +109,7 @@ public class MumakilMissionBehavior : MissionLogic
         if (_treesAdded)
             _logger.LogInfo($"[Mumakil] Mission end: {_tracker.LateAttachCount} tree(s) late-attached, {_tracker.AliveCount} mumakil(s) alive at end");
         _tracker.Clear();
+        _crew.Clear();
         // Clear error dedup so a fresh mission can re-log genuinely new occurrences.
         _loggedErrors.Clear();
         base.OnRemoveBehavior();

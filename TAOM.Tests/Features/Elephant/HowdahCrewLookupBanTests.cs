@@ -10,7 +10,8 @@ using TaleWorlds.CampaignSystem;
 namespace TAOM.Tests.Features.Elephant;
 
 /// <summary>
-/// The howdah crew must be looked up as a <see cref="TaleWorlds.Core.BasicCharacterObject"/>, never as the sealed
+/// Every crew spawner (the elephant's howdah and the mumakil's war tower) must look its troop up as a
+/// <see cref="TaleWorlds.Core.BasicCharacterObject"/>, never as the sealed
 /// <see cref="CharacterObject"/> (#627, delta review P1). <c>MBObjectManager.GetObject&lt;T&gt;</c> takes an exact-type
 /// path when T is sealed and matches only a record whose ObjectClass is that type; Custom Battle registers NPCCharacter
 /// as BasicCharacterObject (CustomGame.OnRegisterTypes) while the campaign registers CharacterObject. Asking for the
@@ -26,7 +27,7 @@ public class HowdahCrewLookupBanTests
     public static void Init(TestContext _) => _gameLoaded = GameAssemblies.EnsureLoaded();
 
     [TestMethod]
-    public void HowdahCrewSpawner_NeverResolvesTroopsAsTheSealedCharacterObject()
+    public void NoCrewSpawner_ResolvesTroopsAsTheSealedCharacterObject()
     {
         if (!_gameLoaded)
             Assert.Inconclusive("Game assemblies not loaded: " + string.Join("; ", GameAssemblies.Diagnostics));
@@ -42,10 +43,13 @@ public class HowdahCrewLookupBanTests
 
         Assert.AreEqual(0, unreadable.Count, "Unreadable method bodies, so the ban cannot vouch: " + string.Join("; ", unreadable));
         Assert.IsTrue(scanned > 0, "No method bodies scanned: the scan failed rather than passed.");
-        var howdah = violations.Where(v => v.Contains("Howdah")).ToList();
-        Assert.AreEqual(0, howdah.Count,
+        // Matched on "Crew", not "Howdah": the trap belongs to the Custom Battle registration, not to one beast,
+        // and a filter naming one creature waves every clone of that creature's spawner straight past (the Mumakil
+        // war tower, #627 phase 2, was exactly that clone).
+        var crew = violations.Where(v => v.IndexOf("Crew", StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+        Assert.AreEqual(0, crew.Count,
             "Resolve the crew with MBObjectManager.GetObject<BasicCharacterObject>: the sealed CharacterObject finds nothing in Custom Battle. " +
-            string.Join("; ", howdah));
+            string.Join("; ", crew));
     }
 
     private static bool IsSealedCharacterObjectLookup(MethodBase called) =>

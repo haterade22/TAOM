@@ -2,7 +2,8 @@
 
 > **Status: BUILT + WIRED + IN-GAME CONFIRMED (2026-06-29).** A scaled-up clone of the
 > [War Elephant](elephant.md): a ridden Harad mount that auto-attacks (trample + tusk) and **charges** into melee.
-> Phase 1 = one rider, no platform crew/howdah (the war-tower is baked into the mesh, visual only).
+> Phase 2 (#627, 2026-09-20) put a crew on the war tower: eight archers across its three decks, carried by an
+> invisible platform entity scaled onto the beast from `Agent.AgentScale`. NOT yet smoke-tested in game.
 
 ## Overview
 
@@ -160,7 +161,7 @@ Section A attribute-presence comparison at all, which compares spider vs warg vs
 measured table: [creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md) "The
 rein-attribute invariant"; sibling entry in [elephant.md](elephant.md) "v1.4.8 exposure".
 
-## Phase 2: platform crew (planned 2026-09-20, measured, not built)
+## Phase 2: platform crew (built 2026-09-20, not yet smoked)
 
 **The old blocker is gone.** This section used to say crew were deferred until a crew-versus-mount collision fix
 (a shared `FaceGroupId`), because force-spawned crew inside the mount capsule caused the slide. #627 solved that on
@@ -203,17 +204,63 @@ one in the crow's nest.**
 - **The crew troop is `harad_howdah_crew`** (bow and two quivers, no melee weapon, Bow 95 on its ladder cell,
   hidden from the Encyclopedia). No new troop unless the mumakil should field a distinct name.
 
-### The order of work
+### What shipped
 
-1. `taom_mumakil_platform` prefab in `LOTRLOME_Armory/Prefabs`, byte-snapshotted into the repo like the howdah's:
-   one floor body per deck, flagged `moveable` and `barrier` (barrier is in the engine's missile-exclusion mask, so
-   an archer shooting downward does not put the arrow into its own deck), eight tagged crew frames, no rails.
-2. The machine's placement gains a scale: place and scale the platform entity from the mount's `AgentScale` rather
-   than the elephant's fixed 3.2 m offset. This is the only genuinely new mechanism in Phase 2.
-3. Crew wiring: trigger on the mount item, spawn straight onto the frames, seat them exactly as the howdah does.
-4. Gates: the prefab test generalised so frame spacing is checked AFTER scaling (0.74 m apart in world metres, not
-   in mount-local ones) and every frame sits inside the measured walls; the existing IL gates for the mission-end
-   release, the `Disable` guard and the combat stance come along with the clone.
+| Piece | Where |
+|---|---|
+| `taom_mumakil_platform` prefab: three floor bodies (`moveable` + `barrier`), eight tagged crew frames, nothing rendered | `LOTRLOME_Armory/Prefabs/`, byte-snapshotted to `docs/reference/lotrlome-armory-snapshot/Prefabs/` |
+| `TaomMumakilPlatform` | places AND scales the entity onto the beast every tick; releases every seat before vanilla can deactivate it |
+| `TaomMumakilStandingPoint` | one seat, carrying the howdah's four engine rules |
+| `MumakilCrewSpawner` | owns the platform's whole lifecycle: builds it on the rider's `OnAgentBuild`, queues the crew, spawns them from the next `OnMissionTick` |
+| `MumakilCrewAgentOrigin` | a no-op casualty surface per archer, so a crew death is not booked to the mahout |
+| `MumakilPlatformTests` | 12 gates: prefab name, deck layout, spacing, headroom, containment, deadband margin, tag-vs-script parity, floor flags, visibility, no baked scale, live-copy match, IL release |
+
+Three things were genuinely new here and none of them existed on the elephant.
+
+**The scale is derived, never written down.** The prefab is authored mount-local, 1:1 with the FBX, and
+`RepositionToMount` multiplies the entity's basis by the mount's own `Agent.AgentScale`. Change `BodyLength` and the
+crew follow it. The basis is orthonormalised BEFORE the scale is applied, because `Mat3.ApplyScaleLocal` multiplies
+an existing basis rather than setting one, and whether the native `GetRotationFrame` behind `Agent.Frame` already
+carries `AgentScale` cannot be settled from managed code. Stripping it first makes the answer irrelevant; getting it
+wrong would put the crow's nest at 41 m instead of 13.8. The diagnostics line prints `frameScale=` so the first
+battle log answers the question permanently (1.00 = the basis is unit, 3.00 = it carried the scale).
+
+**Headroom, the rule a multi-deck platform adds.** A crew frame under a higher deck's floor needs the human
+capsule's full 1.92 m of clearance (radius 0.37, `pos1` z 1.55, `Native/monsters.xml`). `BodyFlags.Barrier` is in
+the engine's missile-exclusion mask but NOT in its agent mask, so an archer whose capsule reaches into the deck
+above is shoved by the engine every frame and put back by its seat, which reads as tens of m/s and stops every bow
+draw. It is the spacing failure in a new direction, and just as silent. Every deck underside here sits 1.79 m above
+the deck below, which means a frame under one can never pass: the only fix is to move it out from under, and the
+footprint it must clear is inflated by the capsule's radius. `mumakil_crew_main_4` was authored under the upper
+deck and moved beside it.
+
+**The two rules pull against each other.** The first correction moved `main_4` forward to y -0.386, which cleared
+the deck above but left it 1.05 m from `main_1`: at a 0.45 m deadband, two archers drifting at each other would
+close to 0.15 m, inside the 0.74 m spacing rule. The kept position, (0.700, -0.500), clears both. That is why the
+tests pin headroom, containment, spacing AND the deadband margin rather than any one of them.
+
+### The reference-frame mismatch, and why it is the first thing to watch
+
+`[Likely]` The tower the player SEES and the platform the crew STAND ON are placed by different mechanisms. The
+tower is an `AdditionalMesh` on the Horse item, and `MountVisualCreator.AddMountMeshToAgentVisual` hands it to
+`agentVisual.AddMultiMesh`, i.e. onto the beast's SKELETON, so it deforms with the walk cycle. The crew platform is
+framed from `Agent.Position` and `Agent.Frame`, which is root space and does not bob. The same mismatch exists on
+the elephant and is the stated reason `TaomHowdahMachine` carries a deferred `Spine1_05` bone-tracking path. At
+3.0x, with decks 9 to 13.8 m up and frames up to 8 m behind the origin, a given spine rotation moves the visible
+deck several times further than it moves on the elephant.
+
+This is not a code defect and no deadband can fix it: chasing the bob recreates the velocity failure the deadband
+exists to prevent. It is a measurement. Stand a mumakil still, walk it, then turn it hard, and watch whether the
+archers sink into or float above the tower floor. If they do, bone tracking becomes phase 2b.
+
+**Verified clear, separately:** the main deck's floor underside sits 0.59 m above the beast's body capsule
+(capsule top 2.6 authored, floor underside about 2.80), against 0.33 m on the rebuilt howdah. The vertical half of
+the old "slide" class does not reproduce here.
+
+**Do not equip a HorseHarness on `harad_mumakil_rider`.** The tower is an `AdditionalMesh`, and `taom_mumakil` sets
+`affected_by_cover="true"`, so equipping a harness routes the mesh down the `ManeCoverType` branch where a covered
+mount drops it entirely: eight archers standing on nothing. `tools/taom_schema.py` exempts the troop in
+`_HARNESSLESS_BY_DESIGN` for exactly this reason, and the comment in `troops_harad.xml` now says so.
 
 ### Risks to settle before or during the smoke
 
@@ -227,8 +274,29 @@ one in the crow's nest.**
   loose at an enemy directly below is the open combat-mask question from #627 (missiles ignore `barrier`, but the
   mask a native clear-shot check would use does not, and no managed code reads it). Three times the height makes the
   angle steeper and the question sharper. Check it in the first crew smoke.
-- **Rider clearance.** The deck runs y -8.6 to +1.1 m in game; the mahout sits forward on the neck. Confirm no crew
-  frame overlaps the rider before authoring the prefab.
+- **Rider clearance.** The deck runs y -8.6 to +1.1 m in game; the mahout sits forward on the neck. No crew frame
+  is forward of y -0.036 authored, but the mahout's seat is on the beast's skeleton and the crew's is not, so this
+  is a look rather than a calculation.
+
+### Owed in-game checks
+
+Custom Battle, one mumakil, Crew Platform Diagnostics ON, in this order. The first three are cheap and each one
+invalidates the rest if it fails.
+
+1. Read `scale=` and `frameScale=` in the first `[Mumakil#1] status` line. `scale=3.00` always; `frameScale=1.00`
+   means `Agent.Frame` carries no scale and `frameScale=3.00` means it does and the orthonormalise is load-bearing.
+   Either answer is fine; record it and the probe can be deleted.
+2. Read `topSeatZ`. It should be about 13.80. Near 4.6 means the scale never reached the platform; near 41 means it
+   was applied twice.
+3. Confirm the archers stand ON the decks, not above or inside them, and that `seated=8/8`.
+4. Stand still, walk, then turn hard, watching for archers sinking into or floating off the deck (the
+   reference-frame mismatch above) and for `drift` and `carriedV` in the log.
+5. Confirm arrows actually leave the bows at range, and separately whether an archer will loose at a target
+   directly BELOW it. That is the open combat-mask question from #627, and 9 to 14 m makes the angle sharper.
+6. End the battle WITH archers still aboard. That is the mission-end hang repro, and the IL test can only prove
+   the release is wired, not that it runs.
+7. A campaign battle with several mumakil, watching the archer formation: crew count toward their formation's
+   average position, and eight per beast scales that concern with the feature.
 
 ---
 
