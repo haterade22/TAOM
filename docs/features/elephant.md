@@ -214,7 +214,7 @@ per-tick random roll / fixed ~20 damage.
 | [`Main/Features/Elephant/TaomHowdahMachine.cs`](../../Main/Features/Elephant/TaomHowdahMachine.cs) + [`TaomHowdahStandingPoint.cs`](../../Main/Features/Elephant/TaomHowdahStandingPoint.cs) | The howdah platform's machine (re-frames the prefab onto the elephant every tick, fixed offset or spine bone) and its seats. Both carry a `[Howdah#n]` log tag. |
 | [`Main/Features/Elephant/HowdahCrewSpawner.cs`](../../Main/Features/Elephant/HowdahCrewSpawner.cs) + [`HowdahCrewAgentOrigin.cs`](../../Main/Features/Elephant/HowdahCrewAgentOrigin.cs) + [`HowdahHarness.cs`](../../Main/Features/Elephant/HowdahHarness.cs) | The howdah crew (#627): the spawner queues a crew from `OnAgentBuild` and spawns it from `OnMissionTick` onto the crew frames (the mahout's banner and colours, no horses, weapons wielded); each archer's origin books no casualty or XP against the mahout and reports the mahout's scoreboard party; `HowdahHarness` decides which harness gets the platform and which also gets a crew. `CrewSpawnEnabled` parks the crew. |
 | [`Main/Features/Elephant/HowdahDiagnosticsReporter.cs`](../../Main/Features/Elephant/HowdahDiagnosticsReporter.cs) + `HowdahDiagnostics.cs`, `HowdahSampleClock.cs`, `HowdahRunStats.cs`, `HowdahDiagnosticsSettingsProvider.cs` | The howdah diagnostics log (#627): the reporter reads the engine on sample frames; the rest is pure and unit-tested. Gated by MCM `EnableHowdahDiagnostics`. See "Reading the howdah log". |
-| `LOTRLOME_Armory/Prefabs/taom_howdah_platform.xml` (snapshot: [`docs/reference/lotrlome-armory-snapshot/Prefabs/taom_howdah_platform.xml`](../../docs/reference/lotrlome-armory-snapshot/Prefabs/taom_howdah_platform.xml)) | The howdah platform prefab: floor, four rails, four crew frames, every body moveable. |
+| `LOTRLOME_Armory/Prefabs/taom_howdah_platform.xml` (snapshot: [`docs/reference/lotrlome-armory-snapshot/Prefabs/taom_howdah_platform.xml`](../../docs/reference/lotrlome-armory-snapshot/Prefabs/taom_howdah_platform.xml)) | The howdah platform prefab: one floor body (moveable and barrier), no rails, two crew frames. |
 | [`TAOM.Tests/Features/Elephant/HowdahPrefabTests.cs`](../../TAOM.Tests/Features/Elephant/HowdahPrefabTests.cs) + `HowdahDiagnosticsTests.cs`, `HowdahSampleClockTests.cs`, `HowdahRunStatsTests.cs`, `HowdahDiagnosticsSettingsProviderTests.cs`, `HowdahCrewAgentOriginTests.cs`, `HowdahHarnessTests.cs`, `HowdahHarnessItemTests.cs` | The prefab's structure, name and location, live-copy parity; the diagnostics arithmetic; the toggle default. |
 | [`TAOM.Tests/Features/Elephant/ElephantAttackServiceTests.cs`](../../TAOM.Tests/Features/Elephant/ElephantAttackServiceTests.cs) | 24 tests (IsCreatureMonster ×3, ShouldEngage ×5 incl. the no-enemy −1 sentinel, IsOffCooldown ×6 incl. exact-boundary + future-stamp clock skew, ComputeInflictedDamage ×10 — both kinds × min/max/midpoint/blocking boundaries + NaN/out-of-range roll clamps). The BT calls these same pure methods, so they remain the attack decision's regression guard. |
 
@@ -862,7 +862,7 @@ different complaints:
       in the smoke below.
 - [x] **Rails on the howdah prefab** (2026-09-18, now `taom_howdah_platform.xml`): the prefab was rebuilt on the siege-tower and ship pattern
       (`elephant/howdah-ship-research-2026-09-18.md`): four `bo_barrier` rails scaled (width, 1, 1.1) and flagged
-      `barrier` + `moveable`, a floor fitted to the elite howdah's deck, every body `moveable`, four crew frames tagged
+      `barrier` + `moveable`, a floor fitted to the elite howdah's measured deck, no rails, two crew frames tagged
       `taom_howdah_crew`. Pinned by `HowdahPrefabTests`. The ADOD_Beasts cage it replaced scaled `bo_barrier`'s
       zero-thickness axis, so its walls were 1 m tall, not 20 m.
 - [x] **`TranslateUser`**: superseded (2026-09-18). The seats already carry `TranslateUser="true"` (the item above
@@ -875,14 +875,14 @@ different complaints:
          `Modules/TAOM/Prefabs` line.
       2. The TAOM log (`Logs/taom_debug_<timestamp>.log`) shows `[Howdah] config: ... loaded=True` at mission start.
       3. Custom Battle with a harad elephant rider (`sk_elephant_armor_howdah_elite` since 2026-09-19): `[Elephant] Howdah instantiated for rider=`
-         naming `[Howdah#1]`, then a `layout summary` with `seats=4`, `moveable=5` and a positive `floorClearance`
+         naming `[Howdah#1]`, then a `layout summary` with `seats=2`, `moveable=1` and a positive `floorClearance`
          (about 0.35 at the floor origin), then a `status` line every 5 s. No `not found`, no `layout:` WARN.
       4. Research doc step 1: turn on one slide source and watch `carriedV` in the status lines while the elephant
          walks and turns; a slide shows as `realV` well above `legsV`.
       **First run, 2026-09-19 14:14 (Custom Battle, `taom_mordor_battle_black_gates_forceatmo`, two harad elephants):**
       steps 1 to 3 PASS. `rgl_log` loads `LOTRLOME_Armory/Prefabs/taom_howdah_platform.xml` (no TAOM copy, no
       `Could not find prefab`); `config: ... loaded=True`; `[Howdah#1]` and `[Howdah#2]` each report 9 children,
-      `moveable=5`, `crewFrames=4`, `seats=4`, `floorClearance=0.349`, the root exactly 3.20 m above the feet and the
+      `moveable=1`, `crewFrames=2`, `seats=2`, `floorClearance=0.349`, the root exactly 3.20 m above the feet and the
       floor 0.79 m behind it; drift 0.000 throughout. Step 4 NOT yet measured: elephant #1 never moved, #2 walked once
       (realV 1.00, legsV 1.01, carriedV 0.11, so its legs account for the motion) then stood. The game was closed
       mid-battle (no crash bundle, no engine error), so no `summary` line. Next run: order the elephants to move and
@@ -914,8 +914,14 @@ different complaints:
       howdah), named in English and 12 languages; the Harad elephant rider wears it. An APPLIED EDIT in the snapshot
       README records it; `HowdahHarnessItemTests` gates it. The plain `sk_elephant_armor_a` now has no wearer and stays:
       a save may hold one as loot, and it still gets the crewless platform (`HowdahHarness`).
-- [ ] **Crew smoke** (first run with crew): four archers appear on the visible howdah facing outward, `crew force-spawned:
-      4 archer(s)` and `seated=4/4` in the log; order the elephants to move and turn and read `carriedV`; kill one archer and
+- [x] **Crew smoke** DONE 2026-09-20: two archers on the visible howdah, `crew force-spawned: 2 archer(s)` and
+      `seated=2/2`, and they shoot, standing and moving. Still owed below: the three runs nobody has made.
+- [ ] **Crew smoke, the runs still owed.** A SIEGE or deployment-enabled field battle (not plain Custom Battle),
+      reading the `[Howdah#n] status` lines emitted BEFORE deployment ends: that is the window where the engine sets
+      `Mission.IsTeleportingAgents`, and it is what would catch a regression of the `hasValidZ` fix. A CAMPAIGN battle,
+      which is the only place `HowdahCrewAgentOrigin`'s party accounting can be checked at all (a crew death must not
+      cost the party an Elephant Rider). And a crewed elephant KILLED mid-battle, watching the released archers
+      advance and defend themselves, which is what the behaviour-curve restore exists for. Original notes: order the elephants to move and turn and read `carriedV`; kill one archer and
       confirm the battle goes on and the party's Elephant Rider count is unchanged (the F1 fix); let the battle end so
       `summary` prints. Owed besides: the Armory mirror commit for the item and the 13 name rows.
 
@@ -948,7 +954,8 @@ tested) gates the lines marked (toggle); the rest always log.
 | `[Elephant] Howdah instantiated for rider=... as [Howdah#n]` | each howdah, always | the serial every later line carries, the elephant's name and index, the harness, the side |
 | `[Howdah#n] layout child[i]` / `layout summary` | first live tick (toggle) | what the engine actually loaded: children, tags, body flags (`Moveable`), positions, seats, the elephant capsule and the floor's clearance over it |
 | `[Howdah#n] layout:` WARN | first live tick | no seats loaded, no floor child (an old prefab under the new name?), or the floor inside the capsule |
-| `[Howdah#n] status` | every 5 s (toggle) | `realV` (how the elephant actually moved) against `legsV` (what its legs produced); `carriedV` is the gap, the slide signal. `drift` (the entity moved between frames by something other than the machine), `floorClearance`, `path` (fixed-offset or bone), seats taken, the elephant's action |
+| `[Howdah#n] status` | every 5 s (toggle) | `realV` (how the elephant actually moved) against `legsV` (what its legs produced); `carriedV` is the gap, the slide signal. `drift` (the entity moved between frames by something other than the machine), `floorClearance`, `path` (fixed-offset or bone), seats taken, `formation=<index>(n/seated)` and `detached=n/seated`, the elephant's action, then one block per seat |
+| a seat block in `status` | every 5 s (toggle) | `seatN=<body action>/<upper-body action>@<gap to its frame>` then `mr=` (`Agent.MissileRangeAdjusted`: 0 means the engine thinks this archer can reach nothing), `fire=` (0 FireAtWill, 1 HoldYourFire), `prog=` (highest upper-body action progress seen) and `restarts=` (times that progress went backwards, so a draw being reset every frame shows as a count climbing with the frame rate), `ammo=` (ranged weapon WITH ammunition), `tgt=` (the engine gave this archer a target) and `nav=` (the navmesh face under its feet) |
 | `[Howdah#n] Bone tracking:` | once, when bone tracking falls back | no skeleton yet, or the anchor bone index out of range |
 | `[Howdah#n] summary` | mission end (toggle) | live ticks (0 = never ticked with a live elephant), samples, minimum clearance, maximum drift and carried speed |
 | `[Howdah#n] crew queued` / `no crew:` | each howdah (toggle) | whether this harness carries crew (only `sk_elephant_armor_howdah_elite` does) |
@@ -968,6 +975,98 @@ player's own party fields a howdah elephant, crew kills also count as Field Comm
 
 The engine reads happen in `HowdahDiagnosticsReporter`; the arithmetic (clearance, drift, NaN handling, the 5 s clock,
 the summary extremes) is in `HowdahDiagnostics`, `HowdahSampleClock` and `HowdahRunStats`, unit-tested.
+
+### What the crew tests cost us, and the three engine rules they bought (2026-09-19/20, #627)
+
+Crew spawn went back on for the first time since June, and three battles found three separate engine behaviours.
+None of them logged anything on its own; each was found by measuring.
+
+**1. A standing point that still holds an agent hangs the end of the mission.** `UsableMissionObject`'s
+`IsDeactivated` setter runs `while (HasAIMovingTo) { MovingAgent.StopUsingGameObject(); }`
+(UsableMissionObject.cs:129-133), and `UsableMachine.OnMissionEnded` sets exactly that on every standing point. The
+seat registers its archer with `AddMovingAgent` and never calls `AIMoveToGameObjectEnable`, because that native path
+sends agents climbing after a seat the navmesh cannot reach, so `StopUsingGameObject` has nothing to unwind and the
+loop never exits. Symptom: the mission tick stops dead, the frame rate stays high, memory stays flat, no crash, no log
+line. It only fires when a battle ENDS with a seat occupied, which is why the platform-only runs never saw it. Both
+`TaomHowdahMachine.OnMissionEnded` and the seat's own now empty the seats before vanilla deactivates them, and
+`HowdahSeatReleaseTests` pins that plus the `AddMovingAgent` registration the guard exists for. The same shape sits in
+vanilla's `UsableMissionObject.OnUse`, so any future TAOM standing point that seats agents this way needs the same care.
+Found from a hang dump (`procdump -ma` while the game was still frozen, then WinDbgX; see the
+[hang-dump recipe](../../CLAUDE.md) and `E:\taom-dumps\`), not from reading code: two review passes over the managed
+rout and battle-over paths had found nothing.
+
+**2. A null `Formation` silently tells the engine an archer can reach nothing.** `Agent.MissileRangeAdjusted`
+(Agent.cs:764) resolves through `GetMissileRangeWithHeightDifference` (Agent.cs:5444-5450), which returns `0f` whenever
+`Formation` is null. The seat used to null the formation to stop the "walk to your ground slot" order. It now KEEPS the
+formation: the crew are ordinary arranged members of their side's Ranged formation all battle, and the scripted
+position below is what holds them on the seat. Measured after: `mr=75.2` per seat, where it had been an archer that
+never shot. (Vanilla's trio for a machine user, `Formation.DetachUnit` plus `agent.Detachment = machine` plus
+`SetDetachmentWeight(1f)`, was tried first and dropped in the same build as three other changes, so it was never
+isolated as a cause of anything. It is simply not needed once the scripted position holds the archer.)
+
+**3. Detaching an agent all but deletes its ranged behaviour.** `Formation.DetachUnit` ends with
+`SetBehaviorValueSet(BehaviorValueSet.DefaultDetached)`, and that set keeps Melee at (8, 7, 4, 20, 1) while cutting
+Ranged to (0.02, 7, 0.04, 20, 0.03), about a hundredth of Melee at every distance (HumanAIComponent.cs:770-777). It is
+tuned for loose skirmishers who carry a sword; a bow-only crew archer chased a melee stance it had no weapon for, which
+showed as `act_unequip_bow_back` cycling. The seat now overrides three curves through `OverrideBehaviorParams` (Ranged
+back to vanilla's Default row, Melee and GoToPos flat zero) and reasserts them twice a second, because
+`RefreshBehaviorValues` re-stamps `DefaultDetached` on a detached agent every time its formation re-applies a movement
+order. The numbers and the reasoning are in `HowdahCrewBehaviourCurves`, pinned by tests.
+
+**Placement: measure the walls, not the deck.** Two errors in a row. The deck's centre was first taken from the FACE
+CENTRES of the mesh's upward faces, which for a grid of quads is not the centre of the deck, and the platform sat
+0.34 m too far forward. Corrected from true vertex extents (deck x -0.68 to 0.68, y -2.026 to -0.270, centre 1.148 m
+behind the elephant's origin), the front pair STILL stood outside, because the deck is not the constraint: the walls
+are. Their inner faces are at x -0.63 and 0.63 and y -1.98 and -0.50, so the interior is 1.26 by 1.48 m and the deck
+juts about 0.17 m ahead of the front wall. Two 0.37 m capsules side by side need 1.48 m of width, so the deck holds exactly
+two, one behind the other at (0, -0.850) and (0, -1.630), 0.78 m apart. Three were tried first, at (0, -0.950) and
+(+-0.240, -1.580); that back pair is 0.48 m apart and would fail the spacing gate.
+
+**4. The archers walked toward a firing position they could never reach.** With the range gate open and the ranged
+curve restored they held the bow and played `act_reload_bow_right` forever. Measured with the elephant standing still,
+each archer's own locomotion read 3.18 m/s: its ranged behaviour was walking it to a shooting position it can never
+arrive at. Zeroing `Agent.MovementInputVector` did nothing, because the agent's AI tick runs on the asynchronous
+thread and writes the input again after the mission tick does. The seat now sets a scripted position at the seat
+itself every tick (`Agent.SetScriptedPosition`, `DoNotRun`, and deliberately NOT `NoAttack`, which is the flag that
+would silence the bow and the reason this seat avoids `UseGameObject`). Legs then read 0.00.
+
+**5. Our own teleport was the last gate, and the largest.** A seated archer settles about 0.10 m from its frame and
+the seat corrected that EVERY frame. The engine reads position deltas as real movement, so each archer reported
+**30 m/s** with its elephant motionless and its legs stopped, and nothing in this engine completes a bow draw at that
+speed: the draw stalled at 85 percent of its action and re-nocked about once a second, at every range, moving or
+stopped, for nine rounds. A deadband wider than the settle (`ElephantConfig.HowdahSeatDeadbandMetres` = 0.15,
+gated by the NaN-safe `HowdahSeatMotion.ShouldCorrect`) leaves a resting archer alone. Measured immediately after:
+velocity 0.00 standing and 5.2 to 5.8 m/s walking (the elephant's own speed), action progress 1.00, one restart in a
+whole battle, and the crew shoot, including from a moving elephant.
+
+**How many archers a platform can carry is decided by CAPSULE SPACING, not deck area.** Two 0.37 m body capsules
+closer than 0.74 m overlap; the engine shoves them apart every frame and the seat teleports them back, which recreates
+gate 5 exactly. The howdah interior is 1.26 by 1.48 m, so abreast is impossible (two capsules need 1.48 m of width)
+and it holds exactly two, one behind the other, 0.78 m apart. The walls are cosmetic (the rails are deleted and the
+harness mesh has no collision), so a 2 cm capsule overrun at the rim is accepted where crowding is not.
+`HowdahSeatMotion.FramesAreClear` and `HowdahPrefabTests.CrewFrames_StandFarEnoughApartForTheirCapsules` pin it, and
+it is the rule to size the mumakil's decks against.
+
+**What keeping them in the formation costs (data-flow review, F-4).** The crew are ordinary arranged members of the
+mahout's side's Ranged formation now, so `Formation.GetAveragePositionOfUnits` counts them: every crewed elephant
+drags that formation's average and median position toward the cavalry line by its archers, riding 3.2 m up at
+cavalry speed, and `FormationQuerySystem` reads those for its 30 m ally and enemy queries. Detaching them instead is
+not a lever: `DetachUnit` stamps `DefaultDetached` for both the loose and the strict form, and loose-detached units
+are still counted. The magnitude is unmeasured. Watch the archer formation's behaviour in a battle with several
+crewed elephants before deciding it matters.
+
+**Two rules for anyone changing the platform.** Never add a `DestructableComponent` to the howdah entity, and never
+route a howdah through a SiegeWeapon-style controller, without re-reading the hang above: `UsableMachine.Disable` and
+`UsableMachine.Deactivate` both end in the same `IsDeactivated` setter. `Disable` is virtual and is now guarded;
+`Deactivate` is not virtual and cannot be.
+
+**The route not taken, worth knowing.** ADOD_Beasts locks its howdah archers to an invisible mount (Mike's reading:
+"the watermelon"), which is almost certainly why: a rider is bound to its mount's bone and carried natively, so
+nobody writes positions per frame and shooting while carried is a case the engine already models (a horse archer).
+That is the fallback if the deadband ever proves too coarse, along with the ship route (a deck navmesh attached the
+way `SiegeTower.AttachDynamicNavmeshToEntity` does it, SiegeTower.cs:488-501), which would delete the teleport
+entirely. Neither was needed. `nav=0` is NOT evidence of a missing navmesh: the elephant standing on ordinary
+terrain reads 0 as well, and face id 0 is walkable.
 
 ---
 

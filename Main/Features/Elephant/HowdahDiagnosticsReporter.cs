@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using TAOM.Core.Logging;
+using TAOM.Features.AdvancedCombat;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
@@ -56,11 +57,20 @@ internal sealed class HowdahDiagnosticsReporter
     }
 
     /// <summary>Every live tick, AFTER the re-frame: on a sample frame writes the layout (first time only) and a status line.</summary>
-    public void AfterReposition(string tag, WeakGameEntity platform, Agent elephant, IReadOnlyList<StandingPoint> seats, string placement)
+    public void AfterReposition(string tag, WeakGameEntity platform, Agent elephant, IReadOnlyList<StandingPoint> seats, string placement,
+        string deckNavMeshName = "", int deckNavMeshIdStart = 0)
     {
         if (!_sampleDue) return;
         _sampleDue = false;
-        if (!_layoutLogged) LogLayout(tag, platform, elephant, seats);
+        if (!_layoutLogged)
+        {
+            LogLayout(tag, platform, elephant, seats);
+            _logger.LogInfo(
+                $"{tag} deck navmesh: name='{deckNavMeshName}' idStart={deckNavMeshIdStart} " +
+                (string.IsNullOrEmpty(deckNavMeshName)
+                    ? "(none: the crew stand on no navigation face, which is what nav=0 in the status line means)"
+                    : "(imported by MissionObject.OnInit and attached to this entity)"));
+        }
         LogStatus(tag, elephant, seats, placement);
     }
 
@@ -126,16 +136,60 @@ internal sealed class HowdahDiagnosticsReporter
         _stats.RecordSample(clearance, drift, carried);
 
         int seated = 0;
+        int detached = 0;
+        int ranged = 0;
+        string formationName = "none";
         var crew = new StringBuilder();
         for (int i = 0; i < seats.Count; i++)
         {
             Agent rider = seats[i].MovingAgent;
             if (rider == null) continue;
+            // A dead archer's index goes to the next agent built, and its handle then answers for that stranger
+            // (#592). This log is the evidence these decisions are made from, so a misattributed row is worse than a
+            // missing one.
+            if (!AgentSlotIdentity.IsCurrentOccupant(rider))
+            {
+                crew.Append($" seat{i}=stale-handle");
+                continue;
+            }
+            var seat = seats[i] as TaomHowdahStandingPoint;
             seated++;
+            if (rider.IsDetachedFromFormation) detached++;
+            if (rider.Formation != null)
+            {
+                ranged++;
+                formationName = rider.Formation.FormationIndex.ToString();
+            }
             Vec3 seatPos = seats[i].GameEntity.GlobalPosition;
             Vec3 riderPos = rider.Position;
             float gap = HowdahDiagnostics.Distance(riderPos.x, riderPos.y, riderPos.z, seatPos.x, seatPos.y, seatPos.z);
-            crew.Append($" seat{i}={rider.GetCurrentAction(0).GetName()}@{HowdahDiagnostics.Format(gap, 2)}m");
+            // Both channels: 0 is the body action, 1 the upper body, which is where a bow draw and release play. A
+            // seat that only ever reads act_none on both is an archer the engine is not letting shoot (#627).
+            // mr is Agent.MissileRangeAdjusted: 0 means the engine thinks this archer can reach nothing (it returns
+            // 0f for a null Formation, and for one whose closest enemy formation has not been cached). fire is
+            // GetFiringOrder: 0 FireAtWill, 1 HoldYourFire. Between them a single battle says which gate is shut.
+            crew.Append($" seat{i}={rider.GetCurrentAction(0).GetName()}/{rider.GetCurrentAction(1).GetName()}" +
+                        $"@{HowdahDiagnostics.Format(gap, 2)}m" +
+                        $" mr={HowdahDiagnostics.Format(rider.MissileRangeAdjusted, 1)}" +
+                        $" fire={rider.GetFiringOrder()}" +
+                        // prog is the highest upper-body action progress seen since the mission started and restarts
+                        // counts how often it went backwards: a draw that is being reset every frame never gets far
+                        // and restarts climbs with the frame rate, while a draw that completes reaches 1 and restarts
+                        // stays near the number of shots. ammo answers "ranged weapon WITH ammunition", tgt whether
+                        // the engine has given this archer someone to shoot, nav the navmesh face under its feet
+                        // (0 or -1 means the deck has none, which is the one thing vanilla's moving platforms do have).
+                        $" prog={HowdahDiagnostics.Format(seat?.MaxActionProgress ?? float.NaN, 2)}" +
+                        $" restarts={seat?.ActionRestarts ?? -1}" +
+                        $" ammo={rider.HasRangedWeapon(true)}" +
+                        $" tgt={(rider.GetTargetAgent() != null)}" +
+                        $" nav={rider.GetCurrentNavigationFaceId()}" +
+                        // The archer's OWN movement as the engine sees it, and the elephant's navmesh face as a
+                        // control: a foot archer that reads as travelling at the elephant's speed, or one standing on
+                        // no navmesh face where its mount has one, are the two remaining reasons a drawn shot is
+                        // refused at the release (#627).
+                        $" aV={HowdahDiagnostics.Format(rider.GetAverageRealGlobalVelocity().Length, 2)}" +
+                        $" legV={HowdahDiagnostics.Format(rider.AverageVelocity.Length, 2)}" +
+                        $" enav={elephant.GetCurrentNavigationFaceId()}");
         }
 
         _logger.LogInfo(
@@ -143,6 +197,7 @@ internal sealed class HowdahDiagnosticsReporter
             $"realV={HowdahDiagnostics.Format(real.Length, 2)} legsV={HowdahDiagnostics.Format(legs.Length, 2)} carriedV={HowdahDiagnostics.Format(carried, 2)} " +
             $"moveV={HowdahDiagnostics.Format(elephant.MovementVelocity.Length, 2)} drift={HowdahDiagnostics.Format(drift, 3)} " +
             $"floorClearance={HowdahDiagnostics.Format(clearance, 3)} path={placement} seated={seated}/{seats.Count} " +
+            $"formation={formationName}({ranged}/{seated}) detached={detached}/{seated} " +
             $"action={elephant.GetCurrentAction(0).GetName()}{crew}");
     }
 

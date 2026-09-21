@@ -40,10 +40,7 @@ internal sealed class HowdahCrewSpawner
         _queue.Enqueue(() => SpawnQueued(machine, mahout));
 
     /// <summary>From OnMissionTick, outside the engine's SpawnAgent loop.</summary>
-    public void Drain()
-    {
-        if (_queue.Count > 0) _queue.Drain();
-    }
+    public void Drain() => _queue.Drain();
 
     /// <summary>Mission end: drop anything still queued.</summary>
     public void Clear()
@@ -103,8 +100,9 @@ internal sealed class HowdahCrewSpawner
         }
 
         // The formation vanilla would give this troop (Mission.GetAgentTroopClass honours other mods' override and
-        // the siege-dismount rule), not the mahout's: harad_archer is Ranged, the rider is Cavalry, so a released
-        // archer rejoins the archers. The seat nulls the formation while seated either way.
+        // the siege-dismount rule), not the mahout's: the crew are Ranged, the rider is Cavalry, so a released archer
+        // rejoins the archers. The seat KEEPS this formation for the whole battle; a null one would pin
+        // Agent.MissileRangeAdjusted at 0 and the archer would never shoot.
         Formation crewFormation = mahout.Team.GetFormation(mission.GetAgentTroopClass(mahout.Team.Side, crewChar));
 
         // One pass: the layout dump already lists every seat, so only a SKIPPED seat is worth a line here.
@@ -138,8 +136,9 @@ internal sealed class HowdahCrewSpawner
                 .ClothingColor2(mahout.ClothingColor2)
                 .TroopOrigin(new HowdahCrewAgentOrigin(mahout.Origin, crewChar, mahout.Origin.Seed + 1 + spawned));
 
-            // The seat's OnUse clears the formation while they are seated and restores it on release, so this is the
-            // formation a released archer rejoins.
+            // The seat KEEPS this formation and detaches the archer from its arrangement instead of nulling it
+            // (#627, 2026-09-19): a null formation pins Agent.MissileRangeAdjusted at 0f and the archer never
+            // shoots. This is the formation it is counted in all battle, and the one it rejoins on release.
             if (crewFormation != null)
                 buildData = buildData.Formation(crewFormation);
 

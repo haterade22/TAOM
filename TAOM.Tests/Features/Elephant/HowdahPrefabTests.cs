@@ -11,8 +11,8 @@ namespace TAOM.Tests.Features.Elephant;
 /// <summary>
 /// Pins the war elephant's howdah platform prefab (#627), rebuilt on the moving-platform pattern the vanilla siege
 /// tower and the War Sails ships use (docs/features/elephant/howdah-ship-research-2026-09-18.md): every physics body
-/// flagged moveable, a floor fitted to the elite howdah's measured deck, rails as bo_barrier scaled (width, 1, height)
-/// and flagged barrier on the floor's edges, and four crew frames tagged for the crew spawn. The root is placed at the
+/// flagged moveable, a floor fitted to the elite howdah's measured deck, no rails (deleted 2026-09-20: they held nobody and may have
+/// stood in the line of fire), and two crew frames tagged for the crew spawn, one behind the other so their body capsules do not overlap. The root is placed at the
 /// elephant's origin plus ElephantConfig.HowdahHeightAboveGround, facing the elephant
 /// (TaomHowdahMachine.RepositionToFixedOffset), so every number below is in that frame: +y forward, z up from 3.2 m.
 /// The prefab lives in LOTRLOME_Armory/Prefabs (moved from the TAOM module 2026-09-18) and is named
@@ -23,10 +23,14 @@ namespace TAOM.Tests.Features.Elephant;
 [TestClass]
 public class HowdahPrefabTests
 {
+    // The deck, re-measured 2026-09-19 in Blender from the TRUE vertex extents of the elite howdah's upward faces at
+    // 3.15 m (SK_Elephant_Armor_Variations.fbx): x -0.68 to 0.68, y -2.026 to -0.270. The first build took the centre
+    // from face CENTRES and got -0.805, which placed the platform 0.34 m ahead of the real deck and stood the front
+    // pair of archers outside the howdah's front wall in the first crew test (#627).
     private const float MeasuredFloorHeight = 3.15f;      // elite howdah deck, SK_Elephant_Armor_Variations.fbx
-    private const float DeckCentreY = -0.805f;            // behind the elephant's origin
-    private const float DeckHalfWidth = 0.70f;            // 1.4 m across
-    private const float DeckHalfLength = 0.80f;           // 1.6 m along
+    private const float DeckCentreY = -1.148f;            // behind the elephant's origin
+    private const float DeckHalfWidth = 0.68f;            // 1.36 m across
+    private const float DeckHalfLength = 0.878f;          // 1.756 m along
     // Physics-shape bounding boxes, measured 2026-09-18/19 from the manifold data in Native/AssetPackages:
     // bo_empire_keep_a_door_top in bodies_shared.tpac, bo_barrier in core_game.tpac (a plane, zero thickness along y).
     private const float FloorShapeMinX = -0.81f, FloorShapeMaxX = 0.80f;
@@ -34,9 +38,17 @@ public class HowdahPrefabTests
     private const float FloorShapeTop = 0.32f;
     private const float BarrierShapeBottom = -0.06f;
     private const float HumanCapsuleRadius = 0.37f;       // Native monsters.xml, human body_capsule
-    // Four 0.37 m capsules cannot fit a 1.4 m deck clear (side by side 0.70 m apart, 0.74 m needed). Mike kept four
-    // until the first crew test settles the count (2026-09-19, #627), so a frame may press its side rail this much.
-    private const float AcceptedRailPress = 0.03f;
+    // The WALLS, not the deck, decide where a body can stand, measured 2026-09-19 from the mesh's vertical faces
+    // between 3.25 and 3.85 m: inner faces at x -0.63 and 0.63, y -1.98 at the back and -0.50 at the front. The deck
+    // runs about 0.17 m further forward than the front wall, which is how frames placed on the deck put an archer's
+    // capsule through it. Interior 1.26 x 1.48 m, and two 0.37 m capsules side by side need 1.48 m of width, so four
+    // cannot fit, and the deck's length holds exactly TWO in a line (#627).
+    private const float InteriorMinX = -0.63f, InteriorMaxX = 0.63f;
+    private const float InteriorMinY = -1.98f, InteriorMaxY = -0.50f;
+    private const int CrewFrameCount = 2;
+    // How far a body capsule may overlap the cosmetic rim. Nothing pushes back (no rails, no collision on the harness
+    // mesh), and archer-to-archer spacing is the rule that actually matters (HowdahSeatMotion).
+    private const float AcceptedRimOverlap = 0.03f;
     private const float PlacementTolerance = 0.02f;
 
     private const string DefaultGameDir = @"E:\Steam\steamapps\common\Mount & Blade II Bannerlord";
@@ -179,7 +191,7 @@ public class HowdahPrefabTests
     public void EveryPhysicsBody_IsMoveable_AsOnEveryVanillaMovingPlatform()
     {
         var bodies = _root.DescendantsAndSelf("physics").ToList();
-        Assert.IsTrue(bodies.Count >= 5, "floor plus four rails expected");
+        Assert.AreEqual(1, bodies.Count, "the floor is the platform's only body since the rails went (#627)");
         foreach (var body in bodies)
             Assert.IsTrue(HasFlag(body, "moveable"), $"{body.Parent?.Attribute("name")?.Value}: a body re-framed every tick must be moveable");
     }
@@ -198,7 +210,7 @@ public class HowdahPrefabTests
         Assert.AreEqual(nameof(TaomHowdahMachine), ScriptName(_root),
             "ElephantMissionBehavior logs an error and spawns nothing without the machine on the root");
         var frames = _root.Descendants("game_entity").Where(IsCrewFrame).ToList();
-        Assert.AreEqual(4, frames.Count);
+        Assert.AreEqual(CrewFrameCount, frames.Count);
         foreach (var frame in frames)
             Assert.AreEqual("TaomHowdahStandingPoint", ScriptName(frame),
                 $"{frame.Attribute("name")?.Value}: the seat code only drives TaomHowdahStandingPoint frames");
@@ -236,53 +248,70 @@ public class HowdahPrefabTests
     }
 
     [TestMethod]
-    public void FourCrewFrames_AreTaggedAndStandOnTheFloor_InsideTheRails()
+    public void EveryCrewFrame_IsTaggedAndStandsOnTheFloor_InsideTheWalls()
     {
         var frames = _root.Descendants("game_entity").Where(IsCrewFrame).ToList();
-        Assert.AreEqual(4, frames.Count);
+        Assert.AreEqual(CrewFrameCount, frames.Count);
         foreach (var f in frames)
         {
             float[] p = Vec(f.Element("transform"), "position", 0f);
             Assert.AreEqual(MeasuredFloorHeight, ElephantConfig.HowdahHeightAboveGround + p[2], PlacementTolerance, "on the floor");
-            Assert.IsTrue(Math.Abs(p[0]) + HumanCapsuleRadius <= DeckHalfWidth + AcceptedRailPress, $"x {p[0]} presses the side rail by more than 3 cm");
-            Assert.IsTrue(Math.Abs(p[1] - DeckCentreY) + HumanCapsuleRadius <= DeckHalfLength + AcceptedRailPress, $"y {p[1]} presses the end rail by more than 3 cm");
+            // Against the WALLS, with a small tolerance. The walls are cosmetic: the rails are gone and the harness
+            // mesh carries no collision, so a capsule may overlap the rim by a couple of centimetres and nothing
+            // pushes back. What must NOT happen is crowding between archers, which is a separate test, and that rule
+            // wins where the two conflict: the shipped pair sit 0.78 m apart and each overruns the rim by 2 cm.
+            // A body is visibly narrower than its 0.37 m capsule, so that overrun does not show.
+            Assert.IsTrue(p[0] - HumanCapsuleRadius >= InteriorMinX - AcceptedRimOverlap, $"x {p[0]}: well outside the left wall");
+            Assert.IsTrue(p[0] + HumanCapsuleRadius <= InteriorMaxX + AcceptedRimOverlap, $"x {p[0]}: well outside the right wall");
+            Assert.IsTrue(p[1] - HumanCapsuleRadius >= InteriorMinY - AcceptedRimOverlap, $"y {p[1]}: well outside the back wall");
+            Assert.IsTrue(p[1] + HumanCapsuleRadius <= InteriorMaxY + AcceptedRimOverlap, $"y {p[1]}: well outside the front wall (#627)");
         }
     }
 
     [TestMethod]
-    public void Rails_AreScaledBarrierPlanes_NotASolidCage()
+    public void CrewFrames_StandFarEnoughApartForTheirCapsules()
     {
-        var rails = _root.Descendants("game_entity").Where(e => (string?)e.Element("physics")?.Attribute("shape") == "bo_barrier").ToList();
-        Assert.AreEqual(4, rails.Count);
-        foreach (var rail in rails)
-        {
-            Assert.IsTrue(HasFlag(rail.Element("physics"), "barrier"), "rails hold agents, the vanilla siege-tower flag");
-            float[] s = Vec(rail.Element("transform"), "scale", 1f);
-            Assert.AreEqual(1f, s[1], 1e-6f, "bo_barrier has zero thickness along y; scaling it does nothing");
-            Assert.IsTrue(s[2] >= 0.9f && s[2] <= 1.3f, $"rail height scale {s[2]} (bo_barrier is 1 m tall)");
-        }
+        // The rule that decides how many archers a platform can carry, here and on the mumakil's decks: two 0.37 m
+        // capsules closer than 0.74 m overlap, the engine shoves them apart every frame and the seat teleports them
+        // back, which is the movement that stops a bow draw completing (HowdahSeatMotion).
+        var frames = _root.Descendants("game_entity").Where(IsCrewFrame)
+            .Select(f => Vec(f.Element("transform"), "position", 0f)).ToList();
+        for (int i = 0; i < frames.Count; i++)
+            for (int j = i + 1; j < frames.Count; j++)
+            {
+                float dx = frames[i][0] - frames[j][0], dy = frames[i][1] - frames[j][1];
+                float apart = (float)Math.Sqrt(dx * dx + dy * dy);
+                Assert.IsTrue(HowdahSeatMotion.FramesAreClear(apart),
+                    $"crew frames {i} and {j} are {apart:F2} m apart; they need {HowdahSeatMotion.MinimumFrameSeparation:F2} m");
+            }
     }
 
     [TestMethod]
-    public void Rails_StandOnTheFloorsEdges()
+    public void NothingStandsInTheArchersLineOfFire()
     {
-        var ft = Floor().Element("transform");
-        float[] fp = Vec(ft, "position", 0f), fs = Vec(ft, "scale", 1f);
-        float left = fp[0] + FloorShapeMinX * fs[0], right = fp[0] + FloorShapeMaxX * fs[0];
-        float back = fp[1] + FloorShapeMinY * fs[1], front = fp[1] + FloorShapeMaxY * fs[1];
-        float floorTop = fp[2] + FloorShapeTop * fs[2];
+        // The four bo_barrier rails were deleted 2026-09-20 (#627). They were the vanilla siege tower's railing,
+        // there to keep agents aboard, and the seat's per-frame teleport already does that, so they held nobody.
+        // What they could still do is stand chest-high in front of a drawn bow: an arrow ignores a barrier body
+        // (BodyFlags.CommonCollisionExcludeFlagsForMissile contains Barrier), but no managed code reads
+        // CommonCollisionExcludeFlagsForCombat, which does not, so whether a clear-shot check hits them cannot be
+        // settled from the decompile. The archers drew to 85 percent and re-nocked forever with ammo, a target and
+        // 75 m of credited range, so the rails go until they shoot.
+        var bodies = _root.Descendants("game_entity").Where(e => e.Element("physics") != null).ToList();
+        Assert.AreEqual(1, bodies.Count, "the floor is the only body the platform should carry");
+        Assert.AreEqual(ElephantConfig.HowdahFloorEntityName, (string?)bodies[0].Attribute("name"));
+        Assert.AreEqual(0, _root.Descendants("game_entity")
+                .Count(e => ((string?)e.Attribute("name") ?? "").Contains("rail")),
+            "a rail entity is back: read this test before restoring one");
+    }
 
-        var rails = _root.Descendants("game_entity")
-            .Where(e => (string?)e.Element("physics")?.Attribute("shape") == "bo_barrier")
-            .ToDictionary(e => (string?)e.Attribute("name") ?? "", e => e.Element("transform"));
-        Assert.AreEqual(front, Vec(rails["howdah_rail_front"], "position", 0f)[1], PlacementTolerance, "front rail on the front edge");
-        Assert.AreEqual(back, Vec(rails["howdah_rail_back"], "position", 0f)[1], PlacementTolerance, "back rail on the back edge");
-        Assert.AreEqual(left, Vec(rails["howdah_rail_left"], "position", 0f)[0], PlacementTolerance, "left rail on the left edge");
-        Assert.AreEqual(right, Vec(rails["howdah_rail_right"], "position", 0f)[0], PlacementTolerance, "right rail on the right edge");
-        foreach (var (name, t) in rails.Select(kv => (kv.Key, kv.Value)))
-        {
-            float bottom = Vec(t, "position", 0f)[2] + BarrierShapeBottom * Vec(t, "scale", 1f)[2];
-            Assert.AreEqual(floorTop, bottom, PlacementTolerance, $"{name}: rail bottom on the floor top");
-        }
+    [TestMethod]
+    public void TheFloor_LetsMissilesThrough()
+    {
+        // An archer shooting at anything below the deck fires through its own platform. Barrier is in
+        // CommonCollisionExcludeFlagsForMissile, moveable is not, so the floor needs both: moveable because the
+        // entity is re-framed every tick, barrier so the arrow passes.
+        var physics = Floor().Element("physics");
+        Assert.IsTrue(HasFlag(physics, "barrier"), "without barrier, a downward shot hits the howdah's own floor");
+        Assert.IsTrue(HasFlag(physics, "moveable"), "a body re-framed every tick must be moveable");
     }
 }

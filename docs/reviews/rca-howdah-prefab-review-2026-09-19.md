@@ -159,3 +159,65 @@ The crew smoke in `docs/features/elephant.md`: four archers on a visible howdah,
 `seated=4/4` with their actions in the status line, `carriedV` while the elephants move and turn, one archer killed
 without the party losing an Elephant Rider or the battle ending early, and the battle finishing so the `summary` line
 prints. Then the Armory mirror commit, and Mike's editor package of the Armory in the same release as this build.
+
+---
+
+# Addendum 2: the crew tests (2026-09-19/20)
+
+**What happened.** Crew spawn went on for the first time since June. Nine in-game rounds followed, two of which froze
+the game. The crew now shoot from a moving elephant and a battle ends cleanly with crew aboard.
+
+| # | Sev | Finding | Why missed | Preventive action |
+|---|---|---|---|---|
+| C1 | CRITICAL | A seat still holding an agent hangs mission end: `IsDeactivated`'s setter spins `while (HasAIMovingTo)` and an agent added by `AddMovingAgent` alone never clears | The loop is vanilla's, reached only through a state vanilla never produces. Two review passes over the managed rout and battle-over paths found nothing | Machine and seat both empty their seats before vanilla deactivates them; `HowdahSeatReleaseTests` pins it AND pins the `AddMovingAgent` registration the guard exists for. Lesson: dump a hang before killing it |
+| C2 | HIGH | Per-frame position correction made every archer read as travelling 30 m/s, so no bow draw ever completed | The archer visibly stayed on its seat, so the teleport looked free. Four genuine AI-side bugs in front of it kept the search on the AI | Deadband via the NaN-safe `HowdahSeatMotion.ShouldCorrect`; measure engine-side velocity before theorising about an agent's AI |
+| C3 | HIGH | A null `Formation` pins `MissileRangeAdjusted` at 0, so the engine credits the archer with no reach at all | The line was June's, re-enabled as a flag flip, and its comment asserted the opposite ("it auto-fires at nearby enemies instead") | Keep the formation and hold the archer with a scripted position; never null a formation to stop an order |
+| C4 | HIGH | `Formation.DetachUnit` stamps `DefaultDetached`, cutting Ranged to a hundredth of Melee, so a bow-only crew chases a melee stance it cannot use | The value set is named for its situation, not its effect, and nothing logs it | The seat overrides Ranged, Melee and GoToPos through `OverrideBehaviorParams` and reasserts them, since `RefreshBehaviorValues` re-stamps the set |
+| C5 | MED | Crew frames 0.50 m apart make their occupants shove each other every frame, recreating C2 | Frames were laid out against the visible deck, not against capsule radius | Spacing gate in `HowdahSeatMotion` plus `HowdahPrefabTests`; it is what sizes the mumakil's decks |
+| C6 | MED | The platform sat 0.34 m forward of the real deck: the centre had been taken from face CENTRES of a quad grid | A plausible measurement that was never checked against vertex extents | Re-measured from extents, and the wall faces measured separately, because the walls and not the deck are what a body stands inside |
+| C7 | LOW | The crew carried a sword they can never use, and archers were seen with it drawn | They were the line troop, `harad_archer` | Their own troop, `harad_howdah_crew`, bow and quivers only, pinned by `HowdahCrewLoadoutTests` |
+
+## Root-cause pattern
+
+**Four of the seven are the same shape: TAOM put an agent in a state vanilla never produces, and the engine answered
+with silence rather than an error.** No log line, no exception, no failed call: a formation-less archer simply had
+zero range, a detached one simply preferred a weapon it did not carry, a carried one simply never finished a draw,
+and a seated one simply hung the mission end. Every one was found by measuring engine state, not by reading TAOM's
+own code, which is why the diagnostics line grew from six fields to sixteen over the two days and why it stays.
+
+**The second pattern is cost.** Nine rounds, each one a full game restart and battle. The rounds that moved fastest
+were the ones where a single field told two hypotheses apart (`enav` killed the navmesh theory in one run; `prog` and
+`restarts` separated "interrupted" from "refused"). The rounds that cost the most were the ones where a plausible
+theory was acted on before it was instrumented. Instrument first, then act.
+
+## The review of the fix (2026-09-20, two lenses on Opus after the account hit its Fable limit)
+
+Data flow returned 13 findings, engine compatibility 3 behavioural defects and zero incompatible API usages across 63
+members. The ones that mattered, all fixed and pinned:
+
+| # | Sev | Finding | Fix |
+|---|---|---|---|
+| E1 | MED | `new WorldPosition(Scene, Vec3)` passes `hasValidZ: false`, and `SetScriptedPosition` ends with `if (Mission.IsTeleportingAgents && XY differs) TeleportToPosition(position.GetGroundVec3())`. An invalid Z resolves to the GROUND, so through the deployment phase, the one window that sets that flag, every archer would have been dropped off the howdah into the elephant's own capsule | The four-argument constructor with `hasValidZ: true`, which also skips a native Z resolution every frame |
+| E2 | MED | The crew behaviour curves are never restored, so an archer released when its elephant dies rejoins its formation with GoToPos and Melee flat zero and can neither advance nor defend itself until that formation happens to re-apply a movement order | `SetBehaviorValueSet(Default)` in the release, pinned |
+| E3 | LOW, latent | `UsableMachine.Disable` is a second copy of the mission-end hang, unreachable today only because the prefab carries no `DestructableComponent` | A three-line `Disable` override, pinned. `Deactivate` has the same shape and is NOT virtual, so it stays a documented risk |
+| F-1 | MED | A NaN could still reach native: the teleport was gated, the scripted position two lines below took the same engine-sourced value ungated | One `HowdahSeatMotion.IsPlaceable` above both, with tests |
+| F-6 | MED | `SetDetachableFromFormation(true)` was a no-op (it is the engine default) and the wrong polarity: a seated archer must NOT be detachable, or `DetachmentManager` scores it against every detachment its formation holds | `false` on seating, `true` on release |
+| F-3 | MED | The hand-rolled re-attach left a detachment holding a slot for an agent it no longer owned | `Agent.TryAttachToFormation`, vanilla's own |
+| F-7 | LOW | The death-release sat behind a guard on the machine reference, and it is the ONLY path that empties a seat whose archer died, which is the precondition for the hang | Release moved above the guard |
+| F-12 | LOW | The crew loadout test scanned only the Armory, hit Inconclusive on the SandBoxCore arrows and never checked the bow | Scans the vanilla module folders too; zero skips now |
+
+Also corrected: eight comments describing the pre-2026-09-20 design (the `Machine` field as a detachment, the seat
+nulling the formation, the firing-order justification, `AutoSheathWeapons`), and a wrong cost claim, since
+`OverrideBehaviorParams` makes no native call at all and the engine pushes the array once per parallel tick.
+
+**Owed smoke, specific:** a siege or deployment-enabled field battle, NOT a plain Custom Battle, reading the
+`[Howdah#n] status` lines emitted BEFORE deployment ends. That is the run that would have caught E1, and it is the one
+kind of battle the crew have never been tested in.
+
+## Not applied
+
+- A deck navmesh (the ship route) and crew as riders of an invisible mount (what ADOD_Beasts does): both would delete
+  the teleport entirely and both are recorded in `docs/features/elephant.md` as the fallbacks if the deadband proves
+  too coarse. Neither was needed once C2 was fixed.
+- Attributing which of the rails, the floor's missile flag and the detachment removal mattered: they shipped in one
+  build, and the user judged the rails ruled out rather than spend a round on attribution.

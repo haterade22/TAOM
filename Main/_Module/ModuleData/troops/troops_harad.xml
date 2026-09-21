@@ -587,6 +587,73 @@
                 equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
+    <NPCCharacter
+        id="harad_howdah_crew"
+        is_hidden_encyclopedia="true"
+        default_group="Ranged"
+        level="16"
+        name="{=aom_harad_howdah_crew_name}[Harad] Howdah Archer"
+        occupation="Soldier"
+        culture="Culture.aserai">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="85" />
+            <skill
+                id="Riding"
+                value="30" />
+            <skill
+                id="OneHanded"
+                value="40" />
+            <skill
+                id="TwoHanded"
+                value="20" />
+            <skill
+                id="Polearm"
+                value="20" />
+            <skill
+                id="Bow"
+                value="95" />
+            <skill
+                id="Crossbow"
+                value="25" />
+            <skill
+                id="Throwing"
+                value="30" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_harad_bow_t3" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_b" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.haradrim02a_head" />
+                <equipment
+                    slot="Body"
+                    id="Item.haradrim02a_toso" />
+                <equipment
+                    slot="Cape"
+                    id="Item.haradrim02_pauldrons" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.haradrim02a_gloves" />
+                <equipment
+                    slot="Leg"
+                    id="Item.haradrim02_boots" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
 
     <NPCCharacter
         id="harad_camelscout"

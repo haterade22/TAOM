@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Logging;
+using TAOM.Features.Elephant;
 using TAOM.Features.TroopProgression;
 
 namespace TAOM.Tests.Features.TroopProgression;
@@ -2946,6 +2947,9 @@ public class VolunteerRecruitmentServiceTests
            || troopId.EndsWith("_boss")           // bandit-hideout bosses
            || troopId.EndsWith("_merc")           // tavern mercenaries — hired for gold, not volunteered
            || troopId == "cave_troll"             // non-humanoid monster; deferred pending spider-style spawn support
+           // The howdah crew are placed on an elephant's platform by HowdahCrewSpawner, one per crew frame, and never
+           // enter a party roster: no pool offers them and no troop upgrades into them (#627).
+           || troopId == ElephantConfig.HowdahCrewCharacterId
            || BorrowedCultureCapstones.Contains(troopId)
            || BlackNumenoreanLine.Contains(troopId);
 

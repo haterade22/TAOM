@@ -116,7 +116,7 @@ The Armory ships three howdah meshes, none bound to an item yet (the only elepha
 
 | | Floor | Rim ledge | Crenel tops | Interior | Notes |
 |---|---|---|---|---|---|
-| `howdah_elite_a` | 3.15 m | 3.9 to 4.0 m (0.8 m above the floor) | 4.2 m (1.05 m) | about 1.4 m across x 1.6 m along, one flat plank floor with nothing inside but corner posts; centred about 0.8 m behind the elephant's origin | heavy plus extra head armour |
+| `howdah_elite_a` | 3.15 m | 3.9 to 4.0 m (0.8 m above the floor) | 4.2 m (1.05 m) | 1.36 m across x 1.756 m along (x -0.68 to 0.68, y -2.026 to -0.270), one flat plank floor with nothing inside but corner posts; centred 1.148 m behind the elephant's origin | heavy plus extra head armour |
 | `howdah_heavy_a` | same deck as elite | | | | |
 | `howdah_med_a` | about 3.1 m | | | a narrow basket, about 0.9 m wide | two archers in a line at most |
 
@@ -134,6 +134,20 @@ until the first crew test settles the count (2026-09-19, #627). The deck navmesh
 view in the Kit, 2026-09-18, confirmed the flat, unobstructed floor and its 1.12 : 1 proportions). Rim and crenels at
 waist and chest height suit shooting over. The howdah needs its own `HorseHarness` item (family_type 10), and the crew
 spawn keys off that item, as ADOD_Beasts keyed crews off its armour tier.
+
+### Correction, 2026-09-19: measure extents, not face centres
+
+The deck row above first read "about 1.4 m across x 1.6 m along, centred about 0.8 m behind the origin". The size was
+right and the centre was not. It came from the FACE CENTRES of the deck's upward faces, and a flat deck is a grid of
+quads whose centres sit inside its outline, so the centre of that set is not the centre of the deck unless the grid is
+symmetric about the origin. Re-measured from the true vertex extents of the same faces (Blender, headless, same FBX):
+x -0.68 to 0.68 and y -2.026 to -0.270, so 1.36 m across, 1.756 m along, centred 1.148 m behind the elephant's origin.
+
+The platform was built on the old centre, which put it 0.34 m ahead of the real deck. In the first crew test the back
+pair of archers stood inside the howdah and the front pair stood out past its front wall, which is exactly that 0.34 m
+plus a 0.37 m body capsule. Everything in the prefab now sits on the measured deck. The deck is also 0.156 m longer
+than the estimate, which is what lets two capsules fit along it rather than one. Four never could: four in a line need
+2.22 m between the outer centres, and the walls, measured separately on 2026-09-20, give 1.48 m.
 
 ## What this does not settle
 

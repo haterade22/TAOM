@@ -31,19 +31,27 @@ public static class ElephantConfig
     /// <summary>Tag on the platform's crew frames: where crew stand (research doc step 3 spawns at them).</summary>
     public const string HowdahCrewTag = "taom_howdah_crew";
 
+    /// <summary>
+    /// How far a seated archer may drift from its frame before the seat teleports it back, in metres (#627).
+    /// Teleporting EVERY frame is what kept the crew from shooting: the archer settles about 0.10 m from the frame,
+    /// the seat yanks it back, and the engine reads that as 30 m/s of real movement with the elephant standing still
+    /// and the archer's own legs stopped. Nothing completes a bow draw at that speed. A deadband wider than the
+    /// settle leaves a resting archer alone, so its measured velocity falls to what the elephant is actually doing.
+    /// </summary>
+    public const float HowdahSeatDeadbandMetres = 0.15f;
+
     /// <summary>Seconds between howdah status lines in the diagnostics log, per howdah.</summary>
     public const float HowdahStatusPeriodSeconds = 5f;
-
-    /// <summary>Z offset above the mahout rider's root position for howdah entity placement.
-    /// Tunable — start at 0.8f; increase if the seat appears below the elephant's back surface.</summary>
-    public const float HowdahHeightAboveRider = 0.8f;
 
     /// <summary>Z offset above the elephant agent's ground position when the rider is absent (fallback).</summary>
     public const float HowdahHeightAboveGround = 3.2f;
 
     /// <summary>CharacterObject StringId force-spawned into the howdah seat on mahout build.
     /// Vanilla detachment cannot path to a moving machine — crew must be spawned directly.</summary>
-    public const string HowdahCrewCharacterId = "harad_archer";
+    // The crew's own troop (#627, Mike 2026-09-19): bow and quivers, no sword. harad_archer sat here first and its
+    // roster carries aserai_sword_3_t3, so archers were seen with swords drawn on the deck; a seated archer can never
+    // reach a melee target anyway. troops_harad.xml owns it, HowdahCrewLoadoutTests pins the roster.
+    public const string HowdahCrewCharacterId = "harad_howdah_crew";
 
     /// <summary>MountDifficulty forced on the elephant so non-rider AI can't take it (ADOD_Beasts:999f).</summary>
     public const float MountDifficulty = 999f;

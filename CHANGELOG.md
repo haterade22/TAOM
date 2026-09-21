@@ -4,6 +4,70 @@
 
 ## 2026-09-19
 
+### feat(elephant): v2.0.30 - #627 the howdah crew shoot, and the mission-end hang is gone
+
+Crew spawn went back on for the first time since June and nine in-game rounds followed. The archers now
+loose arrows from a moving elephant, and a battle can end with crew aboard without freezing the game.
+
+**Why they never shot: four gates, each hiding the next.** None of them logged anything.
+
+1. **A null `Formation` reads as zero reach.** `Agent.MissileRangeAdjusted` (Agent.cs:764) resolves through
+   `GetMissileRangeWithHeightDifference` (Agent.cs:5444-5450), which returns `0f` whenever `Formation` is
+   null, and the seat nulled it to stop the "walk to your ground slot" order. The seat now does what vanilla
+   does when a `UsableMachine` takes an agent (UsableMachine.cs:897-899). Measured after: `mr=75.2`.
+2. **Detaching an agent all but deletes its ranged behaviour.** `Formation.DetachUnit` ends with
+   `SetBehaviorValueSet(DefaultDetached)`, which keeps Melee at (8, 7, 4, 20, 1) and cuts Ranged to
+   (0.02, 7, 0.04, 20, 0.03), roughly a hundredth of Melee at every distance (HumanAIComponent.cs:770-777).
+   It suits loose skirmishers carrying a sword; a bow-only crew archer chased a melee stance it had no weapon
+   for, visible as `act_unequip_bow_back` cycling. The seat overrides three curves through the engine's own
+   `OverrideBehaviorParams` and reasserts them twice a second, since `RefreshBehaviorValues` re-stamps the set
+   whenever the formation re-applies a movement order.
+3. **Their ranged behaviour walked them to a firing position they could never reach.** Legs at 3.18 m/s with
+   the elephant standing still. Zeroing `MovementInputVector` did nothing, because the agent AI tick runs on
+   the asynchronous thread and writes it again after ours. The seat now sets a scripted position at the seat
+   itself (`DoNotRun`, and deliberately no `NoAttack`, which is what would silence the bow), the same lever
+   `Agent.UseGameObject` uses for a standing point.
+4. **Our own teleport was the last gate.** An archer settles about 0.10 m from its frame, the seat corrected
+   that every frame, and the engine reads position deltas as real movement: each archer reported **30 m/s**
+   while its elephant stood still and its legs were stopped. Nothing in this engine finishes a bow draw at
+   that speed, which is why the draw stalled at 85 percent of its action and re-nocked about once a second at
+   every range, moving or stopped, for nine rounds. A 0.15 m deadband (`HowdahSeatMotion.ShouldCorrect`, NaN
+   safe) leaves a resting archer alone: velocity fell to 0.00 standing and the elephant's own 5.2 to 5.8 m/s
+   walking, action progress reached 1.00 with one restart in a whole battle, and the arrows flew.
+
+**Crew count is decided by capsule spacing, not by deck area.** Two 0.37 m body capsules closer than 0.74 m
+overlap, the engine shoves them apart every frame and the seat teleports them back, which recreates gate 4
+exactly. The howdah's interior is 1.26 by 1.48 m, so abreast is impossible (two capsules need 1.48 m of width)
+and the deck holds exactly two, one behind the other, 0.78 m apart. The walls are cosmetic, so a 2 cm capsule
+overrun at the rim is accepted where crowding is not. `HowdahSeatMotion` and `HowdahPrefabTests` pin both rules,
+which is what the mumakil's multiple decks will be sized against.
+
+**The mission-end hang, found from a dump.** Two battles froze with the mission tick dead at over 250 fps,
+memory flat, no crash. `procdump -ma` on the second, still frozen, gave the stack: `Mission.CheckMissionEnd` to
+`set_MissionEnded(true)` to `UsableMachine.OnMissionEnded()` to `StandingPoint.IsDeactivated = true`, whose
+setter runs `while (HasAIMovingTo) { MovingAgent.StopUsingGameObject(); }` (UsableMissionObject.cs:129-133).
+The seat registers its archer with `AddMovingAgent` and never calls `AIMoveToGameObjectEnable`, so
+`StopUsingGameObject` has nothing to unwind, `MovingAgent` never clears and the loop never exits. It can only
+fire when a battle ENDS with a seat occupied, which is why the crewless runs never saw it. Both
+`TaomHowdahMachine.OnMissionEnded` and the seat's own now empty the seats first; `HowdahSeatReleaseTests` pins
+it and pins the `AddMovingAgent` registration the guard exists for. Two reviews over the managed rout and
+battle-over paths had found nothing, which is the lesson: a hang is a dump, not a re-read.
+
+**Placement, corrected twice.** The deck's centre first came from the FACE CENTRES of the mesh's upward faces,
+which for a grid of quads is not the centre, and the platform sat 0.34 m too far forward. Re-measured from true
+vertex extents the deck is 1.36 by 1.756 m centred 1.148 m behind the elephant's origin. The front pair still
+stood outside, because the deck is not the constraint: the walls' inner faces are at x -0.63 and 0.63 and y
+-1.98 and -0.50, and the deck juts 0.17 m ahead of the front wall.
+
+**Also:** the crew have their own troop, `harad_howdah_crew` ("[Harad] Howdah Archer"), a bow and two quivers and no
+melee weapon, Bow 95 (its ladder cell, the same as `harad_archer`), hidden from the Encyclopedia because nothing can
+recruit it; the four `bo_barrier` rails are deleted (they
+held nobody once the seat teleports, and a chest-high body in front of a drawn bow was worth ruling out); the
+floor gained `barrier` so a downward shot is not stopped by our own deck; translations for the troop name are
+owed. The `[Howdah#n] status` line now carries formation, detachment, both action channels, action progress and
+restarts, missile range, firing order, ammunition, target, navmesh face and both velocities, which is what made
+this diagnosable at all. `nav=0` is NOT a missing navmesh: the elephant reads 0 too.
+
 ### fix(starting-gear): v2.0.30 - #629 deep review: the career-kit rule is a tool now
 
 The eight-lens deep review of #629 found no critical or high defect; these are its fixes, with Mike's

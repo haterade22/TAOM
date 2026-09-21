@@ -11,25 +11,48 @@
 	     howdah (provenance: docs/reference/provenance-register.md).
 
 	     FRAME. TaomHowdahMachine places this root at the elephant's origin + ElephantConfig.HowdahHeightAboveGround
-	     (3.2 m), facing the elephant: +y forward, +x right, z up from 3.2 m. The elite howdah's floor, measured from
-	     SK_Elephant_Armor_Variations.fbx, is 1.4 m across x 1.6 m along at 3.15 m, centred 0.805 m behind the origin, so
-	     the floor top sits at z -0.05 and every child below is placed around (0, -0.805). The machine leaves its pilot,
+	     (3.2 m), facing the elephant: +y forward, +x right, z up from 3.2 m. The elite howdah's deck, re-measured from
+	     SK_Elephant_Armor_Variations.fbx on 2026-09-19 by the true vertex extents of its upward faces at 3.15 m, spans
+	     x -0.68 to 0.68 and y -2.026 to -0.270: 1.36 m across, 1.756 m along, centred 1.148 m behind the origin. The
+	     first build read 0.805 m from face CENTRES instead, which put the platform 0.34 m too far forward and left the
+	     front pair of archers standing out past the front wall in the first crew test (Mike, 2026-09-19). Every child
+	     is now placed around (0, -1.148), floor top at z -0.05. The machine leaves its pilot,
 	     ammo and wait tags at the engine defaults ("Pilot", "ammopickup", "Wait"), which match no child here.
 
-	     PHYSICS. Every body is flagged moveable, as on every vanilla moving platform: the entity is re-framed every tick.
-	     The floor is bo_empire_keep_a_door_top (bbox x -0.81..0.80, y -0.89..0.87, z -0.06..0.32) scaled to the deck and
-	     to 0.12 m thick; its underside stays 0.33 m above the elephant's body capsule (top 2.7 m), since a body inside
-	     that capsule is the leading suspect for the elephant slide. The rails are bo_barrier (a 1 x 1 m plane, zero
-	     thickness along y) scaled (width, 1, 1.1) and flagged barrier, the siege tower's railing: they hold agents and are
-	     meant to let arrows through. The harness's own rim is the visual wall.
+	     PHYSICS. One body: the floor, bo_empire_keep_a_door_top (bbox x -0.81..0.80, y -0.89..0.87, z -0.06..0.32)
+	     scaled to the deck and to 0.12 m thick, flagged moveable like every vanilla moving platform (the entity is
+	     re-framed every tick). Its underside stays 0.33 m above the elephant's body capsule (top 2.7 m), since a body
+	     inside that capsule is the leading suspect for the elephant slide. It is ALSO flagged barrier, which is in
+	     BodyFlags.CommonCollisionExcludeFlagsForMissile: without that, an archer shooting at anything below the deck
+	     puts the arrow into its own platform.
 
-	     CREW. Four frames tagged taom_howdah_crew, one per quarter of the floor (0.35 m across, 0.4 m along from its
-	     centre), standing on the floor top and facing outward. Four 0.37 m human capsules do not fit clear: side by
-	     side they are 0.70 m apart where two need 0.74 m, and each presses its side rail by 2 cm; three would fit. The
-	     count is settled at the first crew test (Mike, 2026-09-19, #627). The frames still carry TaomHowdahStandingPoint
-	     so today's seat code works; only AutoSheathWeapons is set (false keeps the bow out), every other variable is the
-	     engine default. The ship model spawns crew at these frames and holds them in a detachment instead (step 3 of the
-	     research doc), and the machine's NavMeshPrefabName names the deck navmesh once the Kit has exported it.
+	     The four bo_barrier rails were DELETED 2026-09-20. They were the siege tower's railing, meant to keep agents
+	     aboard, and the seat's per-frame teleport already does that, so they held nobody. What they could still do is
+	     stand chest-high in front of a drawn bow: missiles ignore a barrier body, but the mask that a clear-shot check
+	     would use (CommonCollisionExcludeFlagsForCombat) does not, and no managed code reads it, so it is unverifiable
+	     from the decompile. The archers draw to 85 percent and re-nock forever, so the rails go until they shoot. The
+	     harness's own rim is the visual wall, and it carries no collision.
+
+	     CREW. TWO frames tagged taom_howdah_crew, in a line at (0, -0.850) and (0, -1.630), 0.78 m apart. Crew count
+	     is limited by CAPSULE SPACING, not by the deck: a human capsule is 0.37 m in radius, so frames closer than
+	     0.74 m make their occupants shove each other every frame, the seat teleports them back, and the engine reads
+	     tens of m/s of movement, which is what kept the crew from ever loosing an arrow. Abreast is impossible here
+	     (the interior is 1.26 m across, two capsules need 1.48), so the deck's 1.48 m length holds exactly two. A
+	     bigger platform, or the mumakil's multiple decks, can hold more on the same rule. The deck is 1.36 m across but
+	     the WALLS, measured 2026-09-19 from the vertical faces between 3.25 and 3.85 m, stand at x +-0.63 inside and
+	     y -1.98 to -0.50, so the interior is 1.26 x 1.48 m and the deck sticks out about 0.17 m ahead of the front
+	     wall. Two 0.37 m capsules side by side need 1.48 m of width and there is 1.26, so a four-frame layout puts a
+	     body through a wall: with four, the front pair's capsules reached y -0.43, past the front wall's inner face at
+	     -0.50 (Mike saw them standing out of the howdah, twice). Two fit in a line, 0.78 m between centres, which is the
+	     spacing two 0.37 m capsules need.
+	     A frame carries AutoSheathWeapons="false" and nothing else, but note that the engine never reads it here:
+	     StandingPoint.TickAux is the only consumer and it returns unless HasUser, which needs UserAgent, which only
+	     UsableMissionObject.OnUse sets, and this seat deliberately does not call it. The bow stays out because nothing
+	     sheathes it. The variable stays because it becomes live the day anyone routes seating through base.OnUse.
+	     The seat keeps each archer in its formation for the whole battle (a null formation pins
+	     Agent.MissileRangeAdjusted at 0f, which is why the first crew tests drew bows and never shot) and holds it in
+	     place with a scripted position rather than a detachment. The machine's NavMeshPrefabName names a deck navmesh
+	     if one is ever exported; empty is what the status line reports as nav=0, and 0 is a walkable face id anyway.
 	     LOCATION AND NAME. Lives in LOTRLOME_Armory/Prefabs with the elephant's Monster, meshes and clips (moved from the
 	     TAOM module 2026-09-18). Renamed from taom_howdah_agent 2026-09-19: TAOM installs from v2.0.22 to v2.0.30 keep a
 	     copy under that name in Modules/TAOM/Prefabs, and two prefabs of one name have no defined winner.
@@ -52,15 +75,16 @@
 			</script>
 		</scripts>
 		<children>
-			<!-- Floor: top at z -0.05 (3.15 m), 1.4 x 1.6 m, 0.12 m thick. -->
+			<!-- Floor: top at z -0.05 (3.15 m), the measured deck 1.36 x 1.756 m, 0.12 m thick. -->
 			<game_entity name="howdah_floor" old_prefab_name="" mobility="1">
 				<visibility_masks>
 					<visibility_mask name="visible_only_when_editing" value="true"/>
 				</visibility_masks>
-				<transform position="0.004, -0.796, -0.151" rotation_euler="0.000, 0.000, 0.000" scale="0.870, 0.909, 0.316"/>
+				<transform position="0.004, -1.138, -0.151" rotation_euler="0.000, 0.000, 0.000" scale="0.845, 0.998, 0.316"/>
 				<physics shape="bo_empire_keep_a_door_top">
 					<body_flags>
 						<body_flag name="moveable"/>
+						<body_flag name="barrier"/>
 						<body_flag name="dont_collide_with_camera"/>
 					</body_flags>
 				</physics>
@@ -68,15 +92,19 @@
 					<meta_mesh_component name="empire_keep_a_door_top"/>
 				</components>
 			</game_entity>
-			<!-- Crew frames: front-left, front-right, back-left, back-right, each facing outward. -->
-			<game_entity name="howdah_crew_front_left" old_prefab_name="" mobility="1">
+			<!-- Crew frames: TWO, one behind the other, 0.78 m apart (2026-09-20, Mike). The spacing is PHYSICAL,
+			     not visual: a human body capsule is 0.37 m in radius, so two closer than 0.74 m overlap and shove
+			     each other every frame, the seat teleports them back, and the engine reads that as tens of m/s,
+			     which is what stopped the crew shooting all along. The walls are cosmetic (the rails are gone and
+			     the harness mesh has no collision), so 2 cm of capsule past the rim is fine and crowding is not. -->
+			<game_entity name="howdah_crew_front" old_prefab_name="" mobility="1">
 				<visibility_masks>
 					<visibility_mask name="visible_only_when_editing" value="true"/>
 				</visibility_masks>
 				<tags>
 					<tag name="taom_howdah_crew"/>
 				</tags>
-				<transform position="-0.350, -0.405, -0.050" rotation_euler="0.000, 0.000, 0.785"/>
+				<transform position="0.000, -0.850, -0.050" rotation_euler="0.000, 0.000, 0.000"/>
 				<components>
 					<meta_mesh_component name="arrow_new_icon"/>
 				</components>
@@ -88,14 +116,14 @@
 					</script>
 				</scripts>
 			</game_entity>
-			<game_entity name="howdah_crew_front_right" old_prefab_name="" mobility="1">
+			<game_entity name="howdah_crew_back" old_prefab_name="" mobility="1">
 				<visibility_masks>
 					<visibility_mask name="visible_only_when_editing" value="true"/>
 				</visibility_masks>
 				<tags>
 					<tag name="taom_howdah_crew"/>
 				</tags>
-				<transform position="0.350, -0.405, -0.050" rotation_euler="0.000, 0.000, -0.785"/>
+				<transform position="0.000, -1.630, -0.050" rotation_euler="0.000, 0.000, 0.000"/>
 				<components>
 					<meta_mesh_component name="arrow_new_icon"/>
 				</components>
@@ -106,109 +134,6 @@
 						</variables>
 					</script>
 				</scripts>
-			</game_entity>
-			<game_entity name="howdah_crew_back_left" old_prefab_name="" mobility="1">
-				<visibility_masks>
-					<visibility_mask name="visible_only_when_editing" value="true"/>
-				</visibility_masks>
-				<tags>
-					<tag name="taom_howdah_crew"/>
-				</tags>
-				<transform position="-0.350, -1.205, -0.050" rotation_euler="0.000, 0.000, 2.356"/>
-				<components>
-					<meta_mesh_component name="arrow_new_icon"/>
-				</components>
-				<scripts>
-					<script name="TaomHowdahStandingPoint">
-						<variables>
-							<variable name="AutoSheathWeapons" value="false"/>
-						</variables>
-					</script>
-				</scripts>
-			</game_entity>
-			<game_entity name="howdah_crew_back_right" old_prefab_name="" mobility="1">
-				<visibility_masks>
-					<visibility_mask name="visible_only_when_editing" value="true"/>
-				</visibility_masks>
-				<tags>
-					<tag name="taom_howdah_crew"/>
-				</tags>
-				<transform position="0.350, -1.205, -0.050" rotation_euler="0.000, 0.000, -2.356"/>
-				<components>
-					<meta_mesh_component name="arrow_new_icon"/>
-				</components>
-				<scripts>
-					<script name="TaomHowdahStandingPoint">
-						<variables>
-							<variable name="AutoSheathWeapons" value="false"/>
-						</variables>
-					</script>
-				</scripts>
-			</game_entity>
-			<!-- Rails: bo_barrier scaled (width, 1, 1.1), bottom on the floor top, flagged barrier + moveable. -->
-			<game_entity name="howdah_rail_front" old_prefab_name="" mobility="1">
-				<visibility_masks>
-					<visibility_mask name="visible_only_when_editing" value="true"/>
-				</visibility_masks>
-				<transform position="0.000, -0.005, 0.016" rotation_euler="0.000, 0.000, 0.000" scale="1.400, 1.000, 1.100"/>
-				<physics shape="bo_barrier">
-					<body_flags>
-						<body_flag name="barrier"/>
-						<body_flag name="moveable"/>
-						<body_flag name="dont_collide_with_camera"/>
-					</body_flags>
-				</physics>
-				<components>
-					<meta_mesh_component name="barrier"/>
-				</components>
-			</game_entity>
-			<game_entity name="howdah_rail_back" old_prefab_name="" mobility="1">
-				<visibility_masks>
-					<visibility_mask name="visible_only_when_editing" value="true"/>
-				</visibility_masks>
-				<transform position="0.000, -1.605, 0.016" rotation_euler="0.000, 0.000, 3.141" scale="1.400, 1.000, 1.100"/>
-				<physics shape="bo_barrier">
-					<body_flags>
-						<body_flag name="barrier"/>
-						<body_flag name="moveable"/>
-						<body_flag name="dont_collide_with_camera"/>
-					</body_flags>
-				</physics>
-				<components>
-					<meta_mesh_component name="barrier"/>
-				</components>
-			</game_entity>
-			<game_entity name="howdah_rail_left" old_prefab_name="" mobility="1">
-				<visibility_masks>
-					<visibility_mask name="visible_only_when_editing" value="true"/>
-				</visibility_masks>
-				<transform position="-0.700, -0.805, 0.016" rotation_euler="0.000, 0.000, -1.571" scale="1.600, 1.000, 1.100"/>
-				<physics shape="bo_barrier">
-					<body_flags>
-						<body_flag name="barrier"/>
-						<body_flag name="moveable"/>
-						<body_flag name="dont_collide_with_camera"/>
-					</body_flags>
-				</physics>
-				<components>
-					<meta_mesh_component name="barrier"/>
-				</components>
-			</game_entity>
-			<game_entity name="howdah_rail_right" old_prefab_name="" mobility="1">
-				<visibility_masks>
-					<visibility_mask name="visible_only_when_editing" value="true"/>
-				</visibility_masks>
-				<transform position="0.700, -0.805, 0.016" rotation_euler="0.000, 0.000, 1.571" scale="1.600, 1.000, 1.100"/>
-				<physics shape="bo_barrier">
-					<body_flags>
-						<body_flag name="barrier"/>
-						<body_flag name="moveable"/>
-						<body_flag name="dont_collide_with_camera"/>
-					</body_flags>
-				</physics>
-				<components>
-					<meta_mesh_component name="barrier"/>
-				</components>
 			</game_entity>
 		</children>
 	</game_entity>

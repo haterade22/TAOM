@@ -577,3 +577,55 @@ The crew builder set team, position, direction, origin and formation. Vanilla's 
 - **Why missed:** the builder was written from what the spawn needed to work, not from what vanilla does to every troop.
 - **Prevent:** when spawning outside the troop supplier, open `Mission.GetAgentBuildDataToSpawnTroop` and `Mission.SpawnTroop` and match their builder calls and post-spawn steps, or say in a comment why one is left out.
 - **Source:** `docs/reviews/rca-howdah-prefab-review-2026-09-19.md` (delta addendum), #627; `Mission.cs:4467-4476`, `:4534-4537`.
+
+### Carrying an agent by writing its position every frame stops it fighting
+
+A seated agent settles about 0.10 m from where you put it. Correct that every frame and the engine reads the
+difference as real movement: TAOM's howdah archers reported 30 m/s with the elephant standing still and their own
+legs stopped, and no bow draw ever completed. They drew to 85 percent of the action and re-nocked about once a
+second, at every range, for nine in-game rounds. A deadband wider than the settle fixed it outright: velocity fell
+to 0.00 standing and the mount's own speed walking, action progress reached 1.00, and the arrows flew.
+
+**Why missed:** position was treated as the only thing the teleport affected, because the agent visibly stayed put.
+Every other hypothesis (formation, detachment, behaviour curves, line of fire, navmesh) was about the AI deciding to
+shoot, and all of those were real bugs too, which kept the search away from the carrier itself.
+
+**Prevent:** never correct a carried agent's position unconditionally. Gate it on a deadband wider than its settle
+(`HowdahSeatMotion.ShouldCorrect`, NaN safe), and when an agent will not act, measure what the ENGINE thinks its
+velocity is (`GetAverageRealGlobalVelocity` against `AverageVelocity`) before theorising about its AI. Vanilla never
+writes positions for a carried agent: it either mounts it (bound to a bone, carried natively) or gives the platform
+an attached navmesh and lets it walk.
+
+**Source:** #627 howdah crew, 2026-09-20. `docs/features/elephant.md`.
+
+### Two agents closer than 0.74 m shove each other, which is the same failure wearing a different hat
+
+A human body capsule is 0.37 m in radius (Native monsters.xml). Two crew frames closer than twice that make their
+occupants overlap; the engine pushes them apart every frame and whatever carries them puts them back, recreating the
+carried-velocity failure above. On the howdah this decided the crew count: the interior is 1.26 by 1.48 m, so two
+abreast (0.50 m apart) shoved constantly and two in a line (0.78 m apart) do not.
+
+**Why missed:** the frames were laid out to fit the visible deck, and the deck looked roomy. The constraint is
+physical spacing between capsules, and it is independent of how much floor there is.
+
+**Prevent:** size crew positions by capsule spacing first and cosmetics second; a capsule may overlap a rim that
+carries no collision, but it may never overlap another agent. Pin it in the prefab test
+(`HowdahPrefabTests.CrewFrames_StandFarEnoughApartForTheirCapsules`).
+
+**Source:** #627 howdah crew, 2026-09-20.
+
+### A frozen game is a dump, not a re-read
+
+Two battles froze at the end of a rout with the mission tick dead, the frame rate normal and memory flat. Two review
+passes over every managed rout, panic, battle-over and detachment path found nothing, because the loop was vanilla's:
+`UsableMissionObject.IsDeactivated`'s setter runs `while (HasAIMovingTo) { MovingAgent.StopUsingGameObject(); }`, and
+an agent registered with `AddMovingAgent` alone (no `AIMoveToGameObjectEnable`) can never clear it. `procdump -ma`
+against the still-frozen process named that stack in one pass.
+
+**Why missed:** reading code for a non-terminating loop assumes the loop is in the code you can read. This one needed
+a state vanilla never reaches, so it was invisible in both the diff and the decompile until the stack pointed at it.
+
+**Prevent:** when a hang reproduces, dump it before killing it (`topics/hang-dump-windbgx`, `procdump -ma` then
+WinDbgX headless). Spend the review budget after the stack, not before it.
+
+**Source:** #627 howdah crew, 2026-09-19. Dump at `E:\taom-dumps\bannerlord_hang_2026-09-19_1830.dmp`.

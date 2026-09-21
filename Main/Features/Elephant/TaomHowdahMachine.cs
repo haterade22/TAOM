@@ -102,7 +102,7 @@ public class TaomHowdahMachine : UsableMachine
         }
         _reporter?.BeforeReposition(dt, GameEntity, _lastAnchor, _hasAnchor);
         RepositionToElephant();
-        _reporter?.AfterReposition(LogTag, GameEntity, elephantAgent, StandingPoints, _placement);
+        _reporter?.AfterReposition(LogTag, GameEntity, elephantAgent, StandingPoints, _placement, DeckNavMeshName, DeckNavMeshIdStart);
 
         if (elephantRider?.MountAgent == null)
         {
@@ -137,8 +137,49 @@ public class TaomHowdahMachine : UsableMachine
         }
     }
 
+    /// <summary>
+    /// What the engine made of this platform's NavMeshPrefabName (#627). MissionObject.OnInit calls
+    /// AttachDynamicNavmeshToEntity, which imports the named prefab from any module's NavMeshPrefabs folder and
+    /// attaches its faces to this entity, and nothing re-attaches them as the entity moves: the faces follow it.
+    /// Empty name means no deck navmesh, which is what the crew's nav=0 reads. The pair is logged once per howdah.
+    /// </summary>
+    internal string DeckNavMeshName => NavMeshPrefabName ?? "";
+    internal int DeckNavMeshIdStart => DynamicNavmeshIdStart;
+
     public override TickRequirement GetTickRequirement()
         => TickRequirement.Tick | base.GetTickRequirement();
+
+    /// <summary>
+    /// Empties every seat BEFORE vanilla deactivates it, or the game hangs (#627, 2026-09-19).
+    /// <c>UsableMachine.OnMissionEnded</c> sets <c>IsDeactivated = true</c> on each standing point, and that setter
+    /// spins <c>while (HasAIMovingTo) MovingAgent.StopUsingGameObject();</c> (UsableMissionObject.cs:129-133). Our
+    /// seats register their archer with <c>AddMovingAgent</c> alone and never call <c>AIMoveToGameObjectEnable</c>,
+    /// the native path that would send agents climbing after a seat the navmesh cannot reach, so
+    /// <c>StopUsingGameObject</c> has nothing to unwind and <c>MovingAgent</c> never clears: the loop never exits.
+    /// It hung twice on 2026-09-19, both times as a battle ended with archers still aboard, mission tick dead at
+    /// over 250 fps while the memory sampler kept writing. The hang dump named this exact stack. Releasing first
+    /// leaves <c>MovingAgent</c> null, so vanilla's loop has nothing to spin on.
+    /// </summary>
+    public override void OnMissionEnded()
+    {
+        ReleaseAllSeats();
+        base.OnMissionEnded();
+    }
+
+    /// <summary>
+    /// The second copy of the same hang, closed before anyone can reach it (#627, engine review E3).
+    /// <c>UsableMachine.Disable</c> also ends by setting <c>IsDeactivated</c> on every standing point, and its one
+    /// <c>StopUsingGameObject</c> per seat cannot clear a <c>MovingAgent</c> registered the way this seat registers
+    /// one, so it would spin exactly as mission end did. Nothing reaches it today (it needs a
+    /// <c>DestructableComponent</c> on the howdah entity, which the prefab has none of), which is precisely why it is
+    /// worth three lines now rather than another hang dump later. <c>UsableMachine.Deactivate</c> has the same shape
+    /// and is NOT virtual: never route a howdah through a SiegeWeapon-style controller without re-reading this.
+    /// </summary>
+    public override void Disable()
+    {
+        ReleaseAllSeats();
+        base.Disable();
+    }
 
     public override void OnEndMission()
     {
