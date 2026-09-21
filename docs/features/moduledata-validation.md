@@ -557,6 +557,66 @@ check as a live-install gate. **Add a script to `GENERATORS` when it writes item
 ModuleData.** A one-off swap map names retired ids on its FROM side by design and does not belong
 there.
 
+## Borrowed collision body (`COLLISION_BODY_BORROWED`)
+
+**ERROR.** The question `MISSING_COLLISION_BODY` cannot ask. That check asks whether a `body_name`
+resolves, and a borrowed body resolves: it is some other mesh's twin, shipped in some other pack.
+This asks whether the body is this mesh's own.
+
+The convention is `docs/ai-includes/weapon-creation-workflow.md` Step D: a weapon body is `bo_` plus
+the exact mesh id, authored into the mesh's own FBX. That doc also sanctions borrowing a same-shaped
+body from another kit as a placeholder until the artist delivers. #633 is what happens when the
+placeholder ships: three Rhun longbow meshes (`sm_rh_drag_longbow_a`, `sm_dg_khml_longbow_a`,
+`sm_rh_loke_longbow_a`) had no twin, carried `bo_wm_elven_bow_a03`, and six generated `ladder_*`
+clones inherited it by `copy.deepcopy`. A borrow is a dependency on art the borrower does not own:
+the 2026-09-11 art drop had already renamed that body once (#599), and every "does it resolve" gate,
+`audit_armory_refs.py` included, read CLEAN on 2026-09-20.
+
+**A borrow is a body that is provably another mesh's twin.** For a `body_name` an Armory tpac ships:
+if it equals `bo_<mesh>` or `bo_cap_<mesh>` it is the item's own; if it is `bo_<M2>` or
+`bo_cap_<M2>` for a shipped mesh M2 that is not this item's mesh, it is a borrow; if no shipped mesh
+matches (`bo_uruk_halberd_blade_a1` for `sm_uruk_halberd_blade_a1`) it is the artist's own naming
+and nobody's twin. Refs are paired with their owner's `mesh` by item id, which for a
+`<CraftingPiece>` needed `validate_mesh_refs._ITEM_OPEN_RE` to learn that element: before #633 every
+piece ref carried item id `""` and all 313 piece bodies compared against one mesh.
+
+Three exemptions, each measured on the live install on 2026-09-21:
+
+- **Same-kit sharing is design.** A kit is the first two name tokens after the `sm_`/`wm_`/`bo_`
+  prefix (`rh_drag`, `elven_bow`, `rivendell_sword`). The ruby and topaz Aranruth blades, the silver
+  and black Rivendell swords, the `_a2` Erebor axe on `_a`'s body: one geometry, several textures.
+  20 shipped rows.
+- **Authorised cross-kit shares** live in `_SHARED_BODY_BY_DESIGN` with a reason each: Dragon and
+  Khamul are re-textured Loke geometry, so the three Rhun kits share bodies (Mike, 2026-09-21).
+  38 shipped rows.
+- **Vanilla bodies and shields.** A Native body is resident whatever TAOM does and vanilla art is
+  never our placeholder. A shield carries the `bo_cap_*` capsule in `body_name` and the full body in
+  `shield_body_name`, and sharing a sibling culture's is the convention
+  (`docs/modding/items-shields.md`). A body no pack ships is left to `MISSING_COLLISION_BODY`.
+
+Result: 0 findings on items and 0 on crafting pieces after the #633 repair; the nine #633 items fire
+under the rule (proved by restoring the borrow on one donor: one ERROR, `LOTRAOM_weapons.xml:8643`).
+
+**What this gate is not.** The first version, `COLLISION_BODY_FOREIGN_PACK`, compared the tpac that
+ships the body with the tpac that ships the mesh, on the theory that the release cook keeps a source
+tpac together and a body cooked into a different `AssetPackages/pack*.tpac` than its mesh is absent
+when the mesh loads. The `/deep-review` of 2026-09-21 refuted that against the shipped
+`E:\LOTRAOM_Releases\patreon` tree: the cook groups every one of the Armory's bodies into `pack0`
+and `pack1` and every mesh into the other packs, so the working elven and Isengard bows are split
+exactly like the broken Rhun ones, and `bo_wm_elven_bow_a03` is present in that tree's `pack0`. The
+engine resolves a body by name, process-wide (`PhysicsShape.GetFromResource`). Pack co-residency is
+neither achieved nor needed, and a draft that flagged every split pairing returned 430 findings.
+Why the player's build hung is therefore still open: the leading hypothesis is a build whose packs
+predate the 2026-09-11 art drop while its XML carries the post-#599 name, the plain #599 class.
+
+The repair is to author the twin, not to repoint the borrow:
+`tools/blender/add_collision_body.py --fbx <file> --mesh <MeshObject> --material <physics_material>
+--apply`, then a Modding Kit import of that FBX, or the new name exists in no tpac.
+
+Skipped, never faked, without the install; a run that finds no Armory packs is itself a finding.
+About 3.5 s, almost all of it `validate_mesh_refs.extract_refs` (the TOC scan is 0.2 s). Tests:
+`tools/tests/test_collision_body_borrowed.py` (14, synthetic, no install needed).
+
 ## Key Files
 
 | File | Purpose |
@@ -573,6 +633,8 @@ there.
 | `tools/validate_xml_schemas.py` | Engine-XSD layer: every engine-loaded file against its engine schema; also the `SCHEMA_INVALID` pass |
 | `tools/tests/test_validate_xml_schemas.py` | 47 unittest cases on synthetic modules, plus a repo-baseline gate (skips without the install or lxml) |
 | `tools/tests/test_taom_query.py` | unittest cases (query API) |
+| `tools/tests/test_collision_body_borrowed.py` | 14 synthetic cases for `COLLISION_BODY_BORROWED`: the #633 shape, own twin, own capsule, variant name, same-kit share, the Rhun family, vanilla, shields, missing body, per-piece pairing, no packs, a raising scan, `_kit`, `_twin_owner` |
+| `tools/tests/test_add_collision_body.py` | 9 cases for the twin-authoring tool's pure parts (`bpy` stubbed): the three required arguments, the report path under bad arguments, the round-trip comparison |
 | `.claude/hooks/check-moduledata-validation.sh` | PreToolUse commit gate (blocks on ERROR; fail-open) |
 | `.claude/rules/moduledata-validation.md` | Auto-loaded rule when editing the covered XML / schemas |
 
@@ -764,6 +826,22 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
 
 ## Changelog
 
+- 2026-09-21: `COLLISION_BODY_BORROWED` added (#633). `MISSING_COLLISION_BODY` asks whether a
+  body resolves; a borrowed body does, as another mesh's twin, so three Rhun longbows shipped on
+  the elven bow's `bo_wm_elven_bow_a03` while every gate read CLEAN. This asks whether the body is
+  the item's own (`bo_<mesh>` / `bo_cap_<mesh>`), with same-kit sharing, authorised cross-kit
+  shares (`_SHARED_BODY_BY_DESIGN`), vanilla bodies and shields exempt. The first version the same
+  day, `COLLISION_BODY_FOREIGN_PACK`, compared owning tpacs on the theory that the release cook
+  strands a body cooked apart from its mesh; the `/deep-review` refuted it against the shipped
+  patreon tree (every body cooks into pack0/pack1, the working bows are split identically, the
+  borrowed body is present there), so the gate was rewritten before it was ever committed and the
+  cause of the player's hang is recorded as open. Also fixed on the way: `validate_mesh_refs.
+  _ITEM_OPEN_RE` now recognises `<CraftingPiece>`, so a piece's `<BladeData body_name>` is
+  attributed to the piece (every piece ref used to carry item id `""`). Wired into `main()` and
+  the hook's `--code` list (`CommitGateCoverageTests` pins the pair); 0 findings on the live
+  install; about 3.5 s. Repair: `tools/blender/add_collision_body.py` plus a Modding Kit import,
+  never a different borrow. Like the other passes `main()` adds, the MCP's `validate_moduledata`
+  does not run it (#623).
 - 2026-09-19: `SKILL_TEMPLATE_MISMATCH` replaces `SKILL_TEMPLATE_SHADOWS_SKILLS` (#626). The old code, emitted
   from the Validator's upgrade index over `troops/` and `characters/npcs_*.xml`, refused any character that
   declared both a `skill_template` and inline `<skills>` rows, on the 1.4.8 rule. Since 1.5.2 the engine lays the

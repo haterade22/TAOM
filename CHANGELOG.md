@@ -4,6 +4,85 @@
 
 ## 2026-09-21
 
+### fix(armoury): v2.0.30 - the three Rhun longbows get their own collision body (#633)
+
+A player on the September Nexus build reported that battles against Rhun never finish loading, and
+narrowed it to the bows carried by Black Sun Chosen Marksman, Dragon-Wrath Longbowman and
+Dragon-Wrath Obsidian Warbow. Their workaround was to repoint those troops at a lower-tier bow.
+
+**It was never fixed in v2.0.28, and #599 did not fix it either.** The `v2.0.28` tag is `8ce42fe8`
+(2026-09-04) and the ladder bow items were created 2026-09-12 in `f46abb62`, so the tag predates
+them. #617 renamed the band ids (`_x`, `_c`) to per-tier ids (`_t7`, `_t8`, `_t9`) without touching
+the art refs. #599 repointed the retired elven body names onto `bo_wm_elven_bow_a03`, which repaired
+the borrow instead of ending it.
+
+What was wrong: three Armory longbow meshes have no `bo_` collision twin, so all three carried the
+elven bow's body. `weapon-creation-workflow.md:78` already states the rule (the body is `bo_` plus
+the exact mesh id) and :80-82 already sanctions borrowing one as a placeholder until the artist
+delivers. The placeholder shipped. Nine items carried it: donors `sm_rh_drag_longbow_a`,
+`sm_dg_khml_longbow_a` and `sm_rh_loke_longbow_a`, plus the six generated clones
+`ladder_rhun_new_bow_t7/t8/t9` and `ladder_dolguldur_bow_t7/t8/t9`. `sm_rh_loke_longbow_a` had the
+same defect and no player had reported it. A borrow is a dependency on art the borrower does not
+own, and the borrowed name resolves, so every "does it resolve" gate read CLEAN, `audit_armory_refs.py`
+on 2026-09-20 included.
+
+The fix is the collision body itself, not a different borrow. `tools/blender/add_collision_body.py`
+duplicates a mesh's lowest LOD, names it `bo_<Mesh>` and re-exports, which is how the 18
+`bo_SM_RH_Loke_*` bodies already in that file were authored (several are the mesh's `.lod4`
+verbatim). All three longbows are the same geometry, 1524 verts and 1.869 m, so one shape serves
+them: 30 verts, the full 1.87 m, against the 1.20 m the longest native bow body would have given.
+The script re-imports what it wrote and compares every pre-existing object before it will overwrite;
+all three round-tripped with zero drift. Modding Kit import done the same day: physics shapes 388 to
+391, `check_rdc_entries.py` `packages=6 without-rdc=0`, the regenerated catalogue shows each twin
+beside its mesh. The three bodies carry the FBX material `metal_weapon` (the Loke precedent); the
+artist's elven bow body carries `wood_weapon`, the item XML's `physics_material` is what the engine
+is handed for hits, and the tool now requires `--material` rather than guessing.
+
+**The first explanation of the hang was wrong, and the `/deep-review` caught it before commit.** The
+first gate, `COLLISION_BODY_FOREIGN_PACK`, compared the tpac shipping the body with the tpac shipping
+the mesh, on the theory that the release cook strands a body cooked into a different AssetPackage
+than its mesh. Three lenses refuted that independently against the shipped patreon tree: the cook
+groups every Armory body into `pack0`/`pack1` and every mesh into the other packs, the working elven
+and Isengard bows are split exactly like the broken Rhun ones, and `bo_wm_elven_bow_a03` is present
+in that tree's `pack0`, so the pre-fix XML resolved there. The "evidence" had been a byte-grep in
+which `wm_elven_bow_a03` matched inside `bo_wm_elven_bow_a03`. Why the player's build hung is
+therefore **open**: the leading hypothesis is a build whose packs predate the 2026-09-11 art drop
+while its XML carries the post-#599 name, the plain #599 class, and the issue stays open until the
+player's packs or `rgl_log` say so.
+
+The gate that shipped is `COLLISION_BODY_BORROWED`: ERROR on a body that is provably another kit's
+twin (`bo_<M2>` or `bo_cap_<M2>` for a shipped mesh M2 that is not the item's own). Sharing within a
+kit is design (the ruby and topaz Aranruth blades, the `_a2` Erebor axe on `_a`'s body: 20 shipped
+rows), authorised cross-kit shares live in `_SHARED_BODY_BY_DESIGN` with a reason (Dragon and Khamul
+are re-textured Loke, 38 rows; Mike, 2026-09-21), vanilla bodies and shields are exempt, and a body
+under a variant name is nobody's twin. 0 findings on the live install; restoring the borrow on one
+donor makes it fire on that line. On the way, `validate_mesh_refs._ITEM_OPEN_RE` learned
+`<CraftingPiece>`: every piece ref used to carry item id `""`, so a per-item pairing collapsed all
+313 piece bodies onto one key.
+
+**The already-packaged `E:\LOTRAOM_Releases\patreon` tree got a different edit**, because its cooked
+packs cannot carry the new twins: its seven affected items (the three donors plus the four band-named
+clones the player reported) were repointed to native `bo_longbow_c`, resident for every player. That
+trades a 187 collision for a 118 one, which for a bow affects being struck and ground pickup rather
+than shooting. The edit invalidated three `sha256` entries in the tree's `manifest.json`; Mike chose
+to keep it and re-cut the manifest with the packaging tool (outside this repo). Until then the tree
+is inconsistent with its own manifest.
+
+Not-tested: the in-game load, on either tree.
+
+Constraint: the `ladder_*` items and their donors live in the unversioned `LOTRLOME_Armory`, so no
+TAOM module version can carry this fix on its own; it reaches players through an Armory package.
+
+Rejected: repointing all nine dev-tree items to a native body (the first plan); Mike asked for the
+twin in the mesh's own FBX, which is the documented convention and keeps the 1.87 m length.
+
+Research: `PreloadHelper.WaitForMeshesToBeLoaded` (name-keyed, `PhysicsShape.GetFromResource`);
+`Mission.RecalculateBody` and `MissionWeapon.GetWeaponData` for what a body is used for; the
+shipped `bo_SM_RH_Loke_*` bodies as the authoring precedent; the patreon `AssetPackages` TOCs.
+
+RCA: `docs/reviews/rca-rhun-longbow-collision-body-2026-09-21.md` (the data defect and the eight
+review findings).
+
 ### feat(culture): v2.0.30 - conversion re-mans the garrison and militia (#632)
 
 Culture conversion already flipped a conquered fief's culture, swapped its notables and cleared
@@ -121,6 +200,8 @@ fix is a decision rather than a substitution.
 one-handed axe for seven tiers. Closing that means authoring weapons or moving those tiers to a
 class the culture has depth in.
 
+- `tools/generate_troop_roster_page.py` and the tracked `docs/reference/troop-rosters.html`: every
+  troop with every battle set, each slot priced, sibling to `ranged-troops.html`
 - `tools/restat_melee_blades.py`, `tools/tests/test_restat_melee_blades.py` (16 tests; the
   three guards and the whole Armory write path are pinned)
 - `LOTRLOME_crafting_pieces.xml` in the live Armory, backups beside it

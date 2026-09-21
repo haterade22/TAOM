@@ -160,6 +160,14 @@ crossbows of Erebor T6 (108), Gondor T7 and T8 (107 / 126) and Rhun T7 (107). Mi
 inventory screen (`CharacterHelper.CanUseItem`); no managed spawn, AI or loot code reads it, and
 `MissionWeapon.GetWeaponData` hands it to native, where its use is unverified.
 
+**A clone inherits the donor's art too, so fix the donor and regenerate.** `clone_launcher` is a
+`copy.deepcopy` of the donor, and `--verify` checks ids, speed, damage, accuracy, usage and the
+localization row but never `mesh` or `body_name`. In #633 three donors had no `bo_` twin of their
+own and carried the elven bow's; six ladder clones inherited it, and the borrow was invisible to
+every gate because the name resolves. Never hand-edit a `ranged_ladder.xml` to repair art: repoint
+the donor in `LOTRAOM_weapons.xml`, re-run the generator, and let `COLLISION_BODY_BORROWED` confirm
+it.
+
 Names are `{=<id>}<donor name, its own numeral and "- Starting" / "- Horse" suffix stripped>
 <tier numeral I..X>`, registered as English rows in the Armory's `Languages/loc_<folder>.xml`
 between `<!-- TAOM-RANGED-LADDER:START/END -->` markers so `translate_with_claude.py --module Armory

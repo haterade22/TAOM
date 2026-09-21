@@ -30,7 +30,10 @@ namespace TAOM.Features.Mumakil;
 /// two battles on 2026-09-19. <see cref="OnMissionEnded"/> here is the backstop; the platform's override is the
 /// load-bearing half.
 /// </summary>
-internal class TaomMumakilStandingPoint : StandingPoint
+// PUBLIC, not internal: the Modding Kit resolves script components by type and cannot see an internal
+// one, so the editor logs "Could not find object class" and may DROP the script when the prefab is saved.
+// The engine finds it either way at runtime, which is why this went unnoticed until the Kit was opened.
+public class TaomMumakilStandingPoint : StandingPoint
 {
     /// <summary>The mount this seat rides, set by <see cref="TaomMumakilPlatform"/> on its first tick.</summary>
     public Agent mumakilAgent;
@@ -41,6 +44,17 @@ internal class TaomMumakilStandingPoint : StandingPoint
     private IModLogger _logger;
     private HowdahSampleClock _behaviourClock;
     private int _teleportCount;
+
+    // Draw-cycle probe, read by the platform's status line. The bow lives on upper-body channel 1: a draw that
+    // completes runs its progress to 1.0 and releases; a draw the engine aborts falls back toward 0 and starts
+    // again, which is the re-nock loop. Counting the fall-backs tells re-nocking apart from a slow but honest
+    // draw, and the teleport count beside it tells whether the seat is what keeps interrupting it.
+    internal int TeleportCount => _teleportCount;
+    internal int ActionRestarts { get; private set; }
+    internal float MaxActionProgress { get; private set; }
+    private float _lastActionProgress;
+    internal string UpperBodyAction =>
+        MovingAgent != null && MovingAgent.IsActive() ? MovingAgent.GetCurrentAction(1).GetName() : "-";
 
     protected override void OnInit()
     {
@@ -71,6 +85,9 @@ internal class TaomMumakilStandingPoint : StandingPoint
         userAgent.SetWatchState(Agent.WatchState.Alarmed);
         _behaviourClock = new HowdahSampleClock(HowdahCrewBehaviourCurves.ReassertSeconds);
         _teleportCount = 0;
+        ActionRestarts = 0;
+        MaxActionProgress = 0f;
+        _lastActionProgress = 0f;
     }
 
     public override void OnUseStopped(Agent userAgent, bool isSuccessful, int preferenceIndex)
@@ -98,6 +115,12 @@ internal class TaomMumakilStandingPoint : StandingPoint
             HowdahCrewBehaviourCurves.GoToPosX3, HowdahCrewBehaviourCurves.GoToPosY3);
         // Nobody can order these archers from the command menu, so the seat sets fire at will itself.
         agent.SetFiringOrder(FiringOrder.RangedWeaponUsageOrderEnum.FireAtWill);
+        // Pinned in place, and this is NOT belt-and-braces: until the platform carried a navmesh the crew
+        // physically could not walk, so nothing ever had to stop them. Measured 2026-09-21, the first battle
+        // with a navmesh under them: they wandered up to 7.06 m horizontally, because a ranged agent that CAN
+        // reach a better firing position will go and take it. Turning and shooting are unaffected; only
+        // locomotion is. Re-asserted on the same clock as the curves, since a formation order can reset it.
+        agent.SetMaximumSpeedLimit(0f, isMultiplier: false);
     }
 
     /// <summary>The exact inverse of <see cref="ApplyCrewCombatStance"/>: anything added there is undone here, or a
@@ -106,6 +129,9 @@ internal class TaomMumakilStandingPoint : StandingPoint
     {
         agent.HumanAIComponent?.SetBehaviorValueSet(HumanAIComponent.BehaviorValueSet.Default);
         agent.SetDetachableFromFormation(true);
+        // -1 is the engine's own "no limit" value (FollowAgentBehavior clears it exactly this way). Without
+        // this a released archer keeps the seat's pin and stands rooted wherever it was put down.
+        agent.SetMaximumSpeedLimit(-1f, isMultiplier: false);
     }
 
     protected override void OnTick(float dt)
@@ -134,10 +160,15 @@ internal class TaomMumakilStandingPoint : StandingPoint
         // GameEntity.SetFrame, which nothing validates.
         if (!HowdahSeatMotion.IsPlaceable(seatPosition.x, seatPosition.y, seatPosition.z)) return;
 
-        // Derived from the mount, never baked: a bigger beast's deck travels further between frames, and this
-        // platform's whole design is that nothing writes the 3.0x down (HowdahSeatMotion.SeatDeadbandFor).
+        // UNSCALED since the navmesh (2026-09-21). The band used to be tripled for the lever arm, because a deck
+        // 8 m behind the origin moves further per frame than a howdah and the seat had to tolerate that before
+        // correcting. The attached navmesh carries the archer WITH the deck, so that displacement no longer
+        // happens: measured at realV=6.48 m/s the drift was 0.34 m, less than standing still. All the wide band
+        // did after that was let the ranged AI's sidestep run 45 cm before anything stopped it, which is the
+        // shuffle Mike saw. The vertical settle the base value was measured against is also gone (dz +0.00 on
+        // every seat), so what remains for the band to absorb is AI creep alone.
         if (HowdahSeatMotion.ShouldCorrect((seatPosition - MovingAgent.Position).LengthSquared,
-                HowdahSeatMotion.SeatDeadbandFor(mumakilAgent.AgentScale)))
+                HowdahSeatMotion.BaseSeatDeadbandMetres))
         {
             MovingAgent.TeleportToPosition(seatPosition);
             _teleportCount++;
@@ -151,6 +182,14 @@ internal class TaomMumakilStandingPoint : StandingPoint
 
         if (_behaviourClock != null && _behaviourClock.Tick(dt))
             ApplyCrewCombatStance(MovingAgent);
+
+        float progress = MovingAgent.GetCurrentActionProgress(1);
+        if (!float.IsNaN(progress))
+        {
+            if (progress < _lastActionProgress - 0.01f) ActionRestarts++;
+            if (progress > MaxActionProgress) MaxActionProgress = progress;
+            _lastActionProgress = progress;
+        }
     }
 
     /// <summary>Backstop half of the anti-hang release; <see cref="TaomMumakilPlatform.OnMissionEnded"/> is the

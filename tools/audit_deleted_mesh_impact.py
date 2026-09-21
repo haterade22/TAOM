@@ -242,10 +242,11 @@ def _owner_id_by_line(text: str) -> dict:
     return _id_by_line(text, "NPCCharacter|EquipmentRoster")
 
 
-# validate_mesh_refs attributes a mesh to its owning <Item>/<CraftedItem> only,
-# so a mesh named by a <CraftingPiece> arrives with no owner. Six of the deleted
-# easterling weapon meshes are exactly that, and a row with no item id cannot be
-# acted on.
+# validate_mesh_refs attributes a mesh to its owning <Item>/<CraftedItem>, and since
+# #633 to its <CraftingPiece> too (six of the deleted easterling weapon meshes were
+# pieces, which used to arrive with no owner). The backfill stays for whatever the
+# extractor still cannot name: skins.xml body meshes, 984 refs on 2026-09-21. A row
+# with no item id cannot be acted on.
 
 
 def _entry_id_by_line(text: str) -> dict:

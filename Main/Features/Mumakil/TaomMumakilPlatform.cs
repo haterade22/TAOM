@@ -100,25 +100,52 @@ public class TaomMumakilPlatform : UsableMachine
         // Gated HERE and not only in OnTick, because this is public and the crew spawner calls it outside the
         // tick's guards. A dead beast's handle still answers for whoever inherited its engine slot (#592, #595).
         if (mumakilAgent == null || !AgentSlotIdentity.IsCurrentOccupant(mumakilAgent)) return;
-        float scale = mumakilAgent.AgentScale;
-        if (!HowdahSeatMotion.IsPlaceable(scale, scale, scale) || scale <= 0f) scale = 1f;
-
         MatrixFrame next = mumakilAgent.Frame;
         next.origin = mumakilAgent.Position;
         // Orthonormalise BEFORE scaling (#627 phase 2 review, U1). Agent.Frame is a native read
         // (MBAPI.IMBAgent.GetRotationFrame) and whether the basis it returns already carries the agent's scale cannot
         // be settled from managed code. If it does and we simply multiplied, the platform would be scaled twice and
         // the crow's nest would sit at 41 m instead of 13.8. Stripping the basis to unit length first makes the
-        // result identical either way, which is worth more than being right about a native detail nothing can test.
-        // Mat3.MakeUnit() would strip the scale just as well; Orthonormalize also squares the basis, for nothing.
+        // Measured 2026-09-21: frameScale reads 1.00, so the native frame carries no scale of its own. This
+        // is kept anyway because it costs nothing and the prefab is now authored at final size, which means a
+        // basis that ever did carry a scale would multiply every deck height by it.
         next.rotation.Orthonormalize();
         // Position is an engine float heading for the same native write as the scale above, so it gets the same
         // gate: check every float-to-decision path in the method, not only the lines you added
         // (.claude/rules/csharp-architecture.md, "Engine-Float Decision Gates").
         if (!HowdahSeatMotion.IsPlaceable(next.origin.x, next.origin.y, next.origin.z)) return;
-        // The prefab is authored mount-local, so the mount's own scale is what maps it onto the beast.
-        next.rotation.ApplyScaleLocal(scale);
         GameEntity.SetFrame(ref next);
+    }
+
+    /// <summary>
+    /// Attaches ONLY navmesh face group 1. The base implementation attaches five groups in the siege-tower
+    /// layout (1 inside, 2 enter, 3 exit, 4 and 8 blockers), because a siege tower has to bridge onto a wall
+    /// when it arrives. Nobody walks onto or off this platform, so the other four groups do not exist in our
+    /// prefab and asking the engine to attach face ids that carry no faces is four native calls per beast per
+    /// battle for nothing.
+    ///
+    /// Group 1 is the one that matters: attached, so it travels with the entity, and unconnected, so the
+    /// pathfinder never treats a deck 9 m up as continuous with the ground below it.
+    /// </summary>
+    protected override void AttachDynamicNavmeshToEntity()
+    {
+        if (NavMeshPrefabName.Length == 0) return;
+        DynamicNavmeshIdStart = Mission.Current.GetNextDynamicNavMeshIdStart();
+        GameEntity.Scene.ImportNavigationMeshPrefab(NavMeshPrefabName, DynamicNavmeshIdStart);
+        GetEntityToAttachNavMeshFaces().AttachNavigationMeshFaces(DynamicNavmeshIdStart + 1, isConnected: false);
+        // Group 4, the edge blockers that keep an archer from walking or being carried off a deck. These are
+        // NAVMESH blockers, deliberately not physics rails: the howdah shipped chest-high bo_barrier rails and
+        // they were deleted 2026-09-20 because a barrier body is excluded from the missile mask but NOT from
+        // whatever mask a clear-shot check uses, which made them the leading suspect for archers drawing to 85
+        // percent and re-nocking forever. The deadband fix landed at the same time, so that suspicion was never
+        // retired. A navmesh blocker cannot stand in front of a bow, so it settles nothing and risks nothing.
+        // finalize is true here because this is the LAST blocker group we attach; the base implementation defers
+        // it to group 8, which we do not use.
+        GetEntityToAttachNavMeshFaces().AttachNavigationMeshFaces(
+            DynamicNavmeshIdStart + 4, isConnected: false, isBlocker: true,
+            autoLocalize: false, finalizeBlockerConvexHullComputation: true);
+        SetAbilityOfFaces(GameEntity.IsValid && GameEntity.GetPhysicsState());
+        _logger?.LogInfo($"{LogTag} navmesh '{NavMeshPrefabName}' imported at id {DynamicNavmeshIdStart}, group 1 attached");
     }
 
     private void PropagateRefsToSeats()
@@ -207,8 +234,21 @@ public class TaomMumakilPlatform : UsableMachine
                 float z = s.GameEntity.GlobalPosition.z - feet;
                 if (float.IsNaN(topSeatZ) || z > topSeatZ) topSeatZ = z;
             }
+        // Per-seat draw cycle: which upper-body action, how far the draw ever got, how many times it fell back,
+        // and how many times the seat teleported the archer. Every re-nock diagnosis on the elephant came down
+        // to reading restarts against teleports; without both side by side there is nothing to reason from.
+        string draws = "";
+        int n2 = 0;
+        foreach (StandingPoint sp in StandingPoints)
+        {
+            if (!(sp is TaomMumakilStandingPoint s4) || s4.MovingAgent == null) continue;
+            draws += $" s{n2}:{s4.UpperBodyAction}/max{HowdahDiagnostics.Format(s4.MaxActionProgress, 2)}" +
+                     $"/re{s4.ActionRestarts}/tp{s4.TeleportCount}";
+            n2++;
+        }
         _logger?.LogInfo(
-            $"{LogTag} status scale={HowdahDiagnostics.Format(mumakilAgent.AgentScale, 2)} " +
+            $"{LogTag} status beastScale={HowdahDiagnostics.Format(mumakilAgent.AgentScale, 2)} " +
+            $"navmeshId={DynamicNavmeshIdStart} " +
             // frameScale settles a question managed code cannot: whether the native GetRotationFrame behind
             // Agent.Frame already carries AgentScale. 1.00 means it does not, 3.00 means it does and the
             // Orthonormalize above is the only reason the decks are not at 41 m. Delete once a log has answered it.
@@ -217,7 +257,7 @@ public class TaomMumakilPlatform : UsableMachine
             $"seated={seated}/{StandingPoints.Count} withRange={shooting} " +
             $"realV={HowdahDiagnostics.Format(real.Length, 2)} legsV={HowdahDiagnostics.Format(legs.Length, 2)} " +
             $"carriedV={HowdahDiagnostics.Format((real - legs).Length, 2)} " +
-            $"maxDrift={HowdahDiagnostics.Format(maxDrift, 2)} {BoneProbe()}");
+            $"maxDrift={HowdahDiagnostics.Format(maxDrift, 2)} {BoneProbe()}{draws}");
     }
 
     /// <summary>

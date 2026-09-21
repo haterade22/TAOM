@@ -3533,3 +3533,29 @@ LOW, including vanilla spawn parity the crew never had (banner, colours, no hors
 addendum in the same file; three lessons. Codex: not dispatched. The crew and harness work landed in the
 multi-session commit `925db38d`; the review's own fixes were still uncommitted when this was written. Owed: the crew
 smoke on #627, the Armory mirror commit, and Mike's editor package of the Armory in the same release.
+
+## Review 125: the Rhun longbows' collision bodies and a gate rewritten before commit (#633), 8-lens deep review (2026-09-21)
+
+A player narrowed a hanging Rhun battle to four bow ids by hand. The session found three longbow meshes with no
+`bo_` twin, all carrying the elven bow's body, authored the twins into each mesh's own FBX with a new Blender tool,
+Kit-imported them, repointed the donors, regenerated the six ladder clones, and wrote a gate. Eight lenses in two
+waves of four, all on the deep-reviewer definition. One HIGH that three lenses (Engine, Data flow, XML) reached
+independently: the mechanism the whole changeset documented as fact, a body cooked into a different AssetPackage than
+its mesh and therefore absent when the mesh loads, is false. The shipped patreon cook puts every Armory body into
+`pack0`/`pack1` and every mesh elsewhere, the working elven bow is split identically, and the borrowed body is present
+in that tree's `pack0`; the "evidence" had been a byte-grep in which `wm_elven_bow_a03` matched inside
+`bo_wm_elven_bow_a03`. The gate was rewritten from a pack-residency test to an ownership test
+(`COLLISION_BODY_BORROWED`: a body that is provably another kit's twin, same-kit sharing and the authorised Rhun
+family exempt, ERROR by Mike's call), eleven passages were reworded, and the player's cause was recorded as open.
+Second HIGH from Data flow and Tooling: `validate_mesh_refs._ITEM_OPEN_RE` ignored `<CraftingPiece>`, so all 313
+piece bodies paired with one mesh and 58 real borrows were invisible; fixed at the source with tests. Standards and
+Tooling: the Blender tool overwrote an unversioned FBX with no backup, could leave no report on a bad argument, and
+had no `__main__` guard; all fixed, nine unit tests with `bpy` stubbed, proven on a scratch copy. Also: the hook's
+timing ledger (8.2 s written, 15 s measured, the cost misattributed to the TOC scan), the rule table row, three
+Shields tpacs and three RDCs the Kit had rewritten and nobody synced, report sidecars in the live `AssetSources/`, and
+the patreon `manifest.json` invalidated by the release edit (Mike: keep the edit, re-cut the manifest). Efficiency
+rejected a shared-scan refactor under the simplicity criterion and measured the real cost (`extract_refs`, with a
+quadratic line count) as a follow-up. Design proposed the ownership test and measured its zero item violations.
+Codex: not dispatched. RCA `docs/reviews/rca-rhun-longbow-collision-body-2026-09-21.md`, one lesson. Nothing
+committed at the time of writing. Owed: the in-game smoke on both trees, the player's packs or `rgl_log` before #633
+can close, the manifest re-cut, a cooked-tree MISSING-body pass as a `/release` step.

@@ -4,18 +4,22 @@
 	     the Horse item taom_mumakil. This prefab only gives the crew somewhere to stand and the engine somewhere
 	     to put them.
 
-	     SCALE. Authored MOUNT-LOCAL, 1:1 with sk_mumakil_harad_01.fbx, which is drawn at elephant scale. The
-	     engine grows the mount to 3.0x from the Horse item's BodyLength=300, and TaomMumakilPlatform scales this
-	     whole entity by the mount's Agent.AgentScale every tick, so the 3.0 is never written down here. Change
-	     BodyLength and the crew follow; bake the 3.0 in and they would end up inside the beast.
+	     SCALE. Authored at FINAL IN-GAME SIZE, so every number below is metres of the running game and
+	     nothing multiplies it at runtime. That is deliberate and it replaces an earlier design that authored
+	     this 1:1 with sk_mumakil_harad_01.fbx and multiplied the whole entity by the mount's Agent.AgentScale
+	     every tick. The old way was tidier on paper (change BodyLength and the crew follow) and it did not
+	     work: on 2026-09-21 all eight archers were placed on their seats correctly, to the centimetre in x
+	     and y, and then fell straight to the ground, which is what a collision slab that never reached the
+	     scene looks like. No vanilla object carrying a physics body or a navmesh is ever runtime-scaled, and
+	     this one is about to carry both. MumakilPlatformTests pins body_length="300" so the assumption that
+	     these numbers are final cannot break silently.
 
-	     DECKS, measured in Blender 2026-09-20 from the platform mesh's upward faces and its wall faces:
-	       main  z 3.00 authored =  9.00 m in game, 15.0 m2 standable inside the walls, ceiling 47 archers
-	       upper z 3.80 authored = 11.40 m in game,  2.6 m2 standable, ceiling 14
-	       nest  z 4.60 authored = 13.80 m in game,  1.9 m2 standable, ceiling 5
-	     Those are geometric ceilings at the 0.74 m rule, not a crew. Mike settled the crew at eight: five, two and
-	     one (2026-09-20). Every frame below was CHOSEN from the points Blender proved are both on the deck and a
-	     body's radius clear of a wall, then spread as far apart as that set allows.
+	     NAVMESH. A teleport alone cannot hold an agent up here. The engine's own answer for agents on a
+	     moving elevated object is a navigation-mesh prefab whose faces are ATTACHED to the entity, so they
+	     travel with it: SiegeTower and MissionShip are the only two classes in the engine that do this, and
+	     both do it the same way. TaomMumakilPlatform attaches face group 1 only (the group the siege layout
+	     calls "inside"); there is no enter, exit or blocker group, because nobody walks onto or off this
+	     platform. The asset is NavMeshPrefabs/taom_mumakil_howdah_navmesh.bin.
 
 	     SPACING is the rule that decides how many archers any platform can carry, here and on the howdah: two
 	     0.37 m body capsules closer than 0.74 m overlap, the engine shoves them apart every frame, the seat
@@ -51,7 +55,7 @@
 		<scripts>
 			<script name="TaomMumakilPlatform">
 				<variables>
-					<variable name="NavMeshPrefabName" value=""/>
+					<variable name="NavMeshPrefabName" value="taom_mumakil_howdah_navmesh"/>
 				</variables>
 			</script>
 		</scripts>
@@ -62,7 +66,7 @@
 				<visibility_masks>
 					<visibility_mask name="visible_only_when_editing" value="true"/>
 				</visibility_masks>
-				<transform position="-0.004, -1.349, 2.899" rotation_euler="0.000, 0.000, 0.000" scale="1.209, 1.652, 0.316"/>
+				<transform position="-0.012, -4.047, 8.697" rotation_euler="0.000, 0.000, 0.000" scale="3.627, 4.956, 0.948"/>
 				<physics shape="bo_empire_keep_a_door_top">
 					<body_flags>
 						<body_flag name="moveable"/>
@@ -81,7 +85,7 @@
 				<tags>
 					<tag name="taom_mumakil_crew"/>
 				</tags>
-				<transform position="-0.000, -2.696, 3.000" rotation_euler="0.000, 0.000, 3.142"/>
+				<transform position="-0.000, -8.088, 9.000" rotation_euler="0.000, 0.000, 3.142"/>
 				<components>
 					<meta_mesh_component name="arrow_new_icon"/>
 				</components>
@@ -100,7 +104,7 @@
 				<tags>
 					<tag name="taom_mumakil_crew"/>
 				</tags>
-				<transform position="-0.000, -0.036, 3.000" rotation_euler="0.000, 0.000, 0.000"/>
+				<transform position="-0.000, -0.108, 9.000" rotation_euler="0.000, 0.000, 0.000"/>
 				<components>
 					<meta_mesh_component name="arrow_new_icon"/>
 				</components>
@@ -119,7 +123,7 @@
 				<tags>
 					<tag name="taom_mumakil_crew"/>
 				</tags>
-				<transform position="0.800, -1.476, 3.000" rotation_euler="0.000, 0.000, -1.759"/>
+				<transform position="2.400, -4.428, 9.000" rotation_euler="0.000, 0.000, -1.759"/>
 				<components>
 					<meta_mesh_component name="arrow_new_icon"/>
 				</components>
@@ -138,7 +142,7 @@
 				<tags>
 					<tag name="taom_mumakil_crew"/>
 				</tags>
-				<transform position="-0.800, -1.476, 3.000" rotation_euler="0.000, 0.000, 1.759"/>
+				<transform position="-2.400, -4.428, 9.000" rotation_euler="0.000, 0.000, 1.759"/>
 				<components>
 					<meta_mesh_component name="arrow_new_icon"/>
 				</components>
@@ -157,7 +161,7 @@
 				<tags>
 					<tag name="taom_mumakil_crew"/>
 				</tags>
-				<transform position="0.700, -0.500, 3.000" rotation_euler="0.000, 0.000, 0.000"/>
+				<transform position="2.100, -1.500, 9.000" rotation_euler="0.000, 0.000, 0.000"/>
 				<components>
 					<meta_mesh_component name="arrow_new_icon"/>
 				</components>
@@ -175,7 +179,7 @@
 				<visibility_masks>
 					<visibility_mask name="visible_only_when_editing" value="true"/>
 				</visibility_masks>
-				<transform position="0.002, -1.284, 3.699" rotation_euler="0.000, 0.000, 0.000" scale="0.551, 0.913, 0.316"/>
+				<transform position="0.006, -3.852, 11.097" rotation_euler="0.000, 0.000, 0.000" scale="1.653, 2.739, 0.948"/>
 				<physics shape="bo_empire_keep_a_door_top">
 					<body_flags>
 						<body_flag name="moveable"/>
@@ -194,7 +198,7 @@
 				<tags>
 					<tag name="taom_mumakil_crew"/>
 				</tags>
-				<transform position="0.019, -1.973, 3.800" rotation_euler="0.000, 0.000, -3.112"/>
+				<transform position="0.057, -5.919, 11.400" rotation_euler="0.000, 0.000, -3.112"/>
 				<components>
 					<meta_mesh_component name="arrow_new_icon"/>
 				</components>
@@ -213,7 +217,7 @@
 				<tags>
 					<tag name="taom_mumakil_crew"/>
 				</tags>
-				<transform position="-0.021, -0.613, 3.800" rotation_euler="0.000, 0.000, 0.029"/>
+				<transform position="-0.063, -1.839, 11.400" rotation_euler="0.000, 0.000, 0.029"/>
 				<components>
 					<meta_mesh_component name="arrow_new_icon"/>
 				</components>
@@ -231,7 +235,7 @@
 				<visibility_masks>
 					<visibility_mask name="visible_only_when_editing" value="true"/>
 				</visibility_masks>
-				<transform position="0.000, -1.304, 4.499" rotation_euler="0.000, 0.000, 0.000" scale="0.414, 0.356, 0.316"/>
+				<transform position="0.000, -3.912, 13.497" rotation_euler="0.000, 0.000, 0.000" scale="1.242, 1.068, 0.948"/>
 				<physics shape="bo_empire_keep_a_door_top">
 					<body_flags>
 						<body_flag name="moveable"/>
@@ -250,7 +254,7 @@
 				<tags>
 					<tag name="taom_mumakil_crew"/>
 				</tags>
-				<transform position="0.128, -1.498, 4.600" rotation_euler="0.000, 0.000, 0.000"/>
+				<transform position="0.384, -4.494, 13.800" rotation_euler="0.000, 0.000, 0.000"/>
 				<components>
 					<meta_mesh_component name="arrow_new_icon"/>
 				</components>

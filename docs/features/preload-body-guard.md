@@ -33,6 +33,19 @@ in #599, and every elf start hung on the Rivendell tournament for two days.
 whose Armory copy already carries a bad pair, and the artists will keep combining, renaming and
 deleting meshes. This guard is the only protection at the point of failure.
 
+**#633 (2026-09-21) is the case the desk-side gates cannot see.** Three Rhun longbows had no
+collision body of their own and borrowed the elven bow's. Every desk-side gate passed,
+`/armory-audit` included (CLEAN, 2026-09-20), because the borrowed name resolves. A player found the
+hang by hand and narrowed it to four item ids before anyone here knew it existed. Why their build
+hung is still open: the shipped patreon tree carries that body in its `pack0`, so the borrow
+resolved there too, and the leading hypothesis is a build whose packs predate the 2026-09-11 art
+drop while its XML carries the post-#599 name, the plain #599 class. If that is right, this guard
+would have logged a `[PreloadGuard]` line naming the body, on a build that had it (v2.0.30,
+`bannerlord-1.5.x` only; the player's version is not recorded). If the stall is mesh-side instead
+(`MetaMesh.CheckResources` is in the same loop and this guard drains body names only), it would
+have logged nothing. The desk-side half is now `COLLISION_BODY_BORROWED`; see
+`docs/reviews/rca-rhun-longbow-collision-body-2026-09-21.md`.
+
 Six callers, all on the main thread: `MissionPreloadView.OnSceneRenderingStarted` (campaign
 battles and sieges), `ArenaPreloadView.OnSceneRenderingStarted` (tournaments and arena practice;
 `FightTournamentGame.GetParticipantCharacters` puts the player character first, so the player's

@@ -207,7 +207,10 @@ def _lineno(text: str, pos: int) -> int:
     return text.count("\n", 0, pos) + 1
 
 
-_ITEM_OPEN_RE = re.compile(r"<(?:Item|CraftedItem)\b")
+# A <CraftingPiece> owns its <BladeData body_name> the way an <Item> owns its body_name. Without
+# it every piece ref in LOTRLOME_crafting_pieces.xml carried item_id "" and any consumer that
+# pairs a body with its item's mesh by id collapsed all 313 piece bodies onto one key (#633).
+_ITEM_OPEN_RE = re.compile(r"<(?:Item|CraftedItem|CraftingPiece)\b")
 _ITEM_ID_RE = re.compile(r'\bid="([^"]+)"')
 # Definitions/refs inside XML comments must never be extracted (a commented item
 # example would otherwise look like a real ref). Mirrors taom_schema._COMMENT_RE.
@@ -235,8 +238,8 @@ def _culture_from_path(rel: str) -> str:
 
 
 def _entry_id_by_line(text: str) -> dict:
-    """Best-effort map line-number -> owning <Item>/<CraftedItem> id. Handles
-    multi-line element opens (item attributes can span lines)."""
+    """Best-effort map line-number -> owning <Item>/<CraftedItem>/<CraftingPiece> id.
+    Handles multi-line element opens (item attributes can span lines)."""
     result = {}
     current = ""
     awaiting = False

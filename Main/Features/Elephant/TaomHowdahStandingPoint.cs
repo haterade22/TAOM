@@ -24,7 +24,10 @@ namespace TAOM.Features.Elephant;
 /// scripted movement cleared. The seat MUST be empty before anything deactivates it: see
 /// <see cref="OnMissionEnded"/> and <see cref="TaomHowdahMachine.OnMissionEnded"/>.
 /// </summary>
-internal class TaomHowdahStandingPoint : StandingPoint
+// PUBLIC, not internal: the Modding Kit resolves script components by type and cannot see an internal
+// one, so the editor logs "Could not find object class" and may DROP the script when the prefab is saved.
+// The engine finds it either way at runtime, which is why this went unnoticed until the Kit was opened.
+public class TaomHowdahStandingPoint : StandingPoint
 {
     public Agent elephantAgent;
     public Agent elephantRider;

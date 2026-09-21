@@ -21,9 +21,14 @@ namespace TAOM.Tests.Features.Mumakil;
 [TestClass]
 public class MumakilPlatformTests
 {
-    // Measured in Blender 2026-09-20 from the platform mesh's upward faces, at authoring scale.
-    private const float MainDeckZ = 3.00f, UpperDeckZ = 3.80f, NestDeckZ = 4.60f;
-    private const float MountScale = 3.0f;          // Horse item taom_mumakil, BodyLength=300
+    // Deck heights in FINAL IN-GAME METRES above the beast's feet, which is the space the whole prefab is
+    // authored in since 2026-09-21. Measured in Blender from the platform mesh's upward faces and tripled.
+    private const float MainDeckZ = 9.00f, UpperDeckZ = 11.40f, NestDeckZ = 13.80f;
+
+    // The prefab's numbers are final, so this factor appears in no conversion here any more. It is kept
+    // because it is the assumption the whole file rests on, and TheHorseItem_StillDeclaresTheBodyLength
+    // below is what stops that assumption breaking in silence.
+    private const float AssumedMountScale = 3.0f;   // Horse item taom_mumakil, body_length=300
     private const int ExpectedCrewFrames = 8;       // 5 main, 2 upper, 1 nest (Mike, 2026-09-20)
     private const int ExpectedDecks = 3;
 
@@ -32,7 +37,12 @@ public class MumakilPlatformTests
     // world metres on any platform.
     private const float CapsuleTop = 1.55f + HowdahSeatMotion.HumanCapsuleRadius;
 
-    // Half-extents of the shared floor mesh (bo_empire_keep_a_door_top) at scale 1, in authoring units. Derived
+    /// <summary>The navmesh prefab the platform attaches; without it nothing holds an archer 9 m up.</summary>
+    private const string NavMeshPrefabName = "taom_mumakil_howdah_navmesh";
+
+    // Half-extents of the shared floor mesh (bo_empire_keep_a_door_top) at scale 1, in the mesh's own units.
+    // The floors' authored scales were tripled along with everything else, so scale * half-extent already
+    // comes out in game metres and no conversion is needed below. Derived
     // from the three measured footprints in the prefab header divided by their authored scales; all three decks
     // agree to three decimals, which is what makes this a measurement rather than a guess, and what
     // TheThreeFloors_AgreeOnTheSharedMeshSize re-checks from the file so a re-authored deck cannot silently drift.
@@ -97,15 +107,14 @@ public class MumakilPlatformTests
         // The rule #627 cost nine in-game rounds to find: two 0.37 m capsules closer than 0.74 m overlap, the engine
         // shoves them apart every frame, the seat puts them back, and the engine then reads tens of m/s of movement,
         // at which point no bow draw ever completes. Archers do NOT scale with the mount, so this is checked in
-        // world metres, which is where the authoring-scale trap lives: 0.25 m apart on the mesh is fine at 3.0x and
-        // would be a collision at 1.0x.
+        // world metres, which the prefab is now authored in directly.
         float[][] frames = CrewFrames().Select(Position).ToArray();
         for (int i = 0; i < frames.Length; i++)
             for (int j = i + 1; j < frames.Length; j++)
             {
                 if (Math.Abs(frames[i][2] - frames[j][2]) > 0.01f) continue;   // different decks cannot collide
-                float dx = (frames[i][0] - frames[j][0]) * MountScale;
-                float dy = (frames[i][1] - frames[j][1]) * MountScale;
+                float dx = frames[i][0] - frames[j][0];
+                float dy = frames[i][1] - frames[j][1];
                 float apart = (float)Math.Sqrt(dx * dx + dy * dy);
                 Assert.IsTrue(HowdahSeatMotion.FramesAreClear(apart),
                     $"frames {i} and {j} are {apart:F2} m apart in game; they need {HowdahSeatMotion.MinimumFrameSeparation:F2} m");
@@ -140,16 +149,50 @@ public class MumakilPlatformTests
     }
 
     [TestMethod]
-    public void NothingBakesInTheMountScale()
+    public void EveryFrameHeight_IsFinalInGameMetres()
     {
-        // The whole point of authoring mount-local: the 3.0x comes from BodyLength at runtime. A frame at a deck
-        // height already multiplied by three would put the crew three times too high the day that value changes.
+        // The mount scale IS baked in now, deliberately, because a runtime-scaled entity cannot carry the
+        // physics and navmesh this platform depends on. These heights are therefore metres of the running
+        // game, and a number near 3, 3.8 or 4.6 would mean someone reverted to the mount-local authoring.
         foreach (XElement f in CrewFrames())
         {
             float z = Position(f)[2];
             Assert.IsTrue(z >= MainDeckZ - 0.01f && z <= NestDeckZ + 0.01f,
-                $"{f.Attribute("name")?.Value}: z {z} is not an authoring-scale deck height (3.00, 3.80 or 4.60)");
+                $"{f.Attribute("name")?.Value}: z {z} is not a final deck height (9.00, 11.40 or 13.80)");
         }
+    }
+
+    [TestMethod]
+    public void ThePlatform_DeclaresTheNavMeshThatHoldsTheCrewUp()
+    {
+        // Measured 2026-09-21: with no navmesh, all eight archers were placed on their seats to the centimetre
+        // in x and y and then fell straight to the ground, and a native SetPosition every frame did not hold
+        // them. SiegeTower and MissionShip are the only engine classes that keep agents on a moving elevated
+        // object, and both do it with an attached navmesh rather than by moving the agents.
+        string? declared = _root.Element("scripts")?.Element("script")?.Element("variables")?.Elements("variable")
+            .FirstOrDefault(v => (string?)v.Attribute("name") == "NavMeshPrefabName")?.Attribute("value")?.Value;
+        Assert.AreEqual(NavMeshPrefabName, declared,
+            "an empty NavMeshPrefabName is the state in which the crew fall off the tower");
+    }
+
+    [TestMethod]
+    public void TheHorseItem_StillDeclaresTheBodyLengthTheseNumbersAssume()
+    {
+        // The prefab's heights are final metres, so they silently encode body_length=300. Changing that value
+        // without regenerating the prefab would leave every archer at the wrong height with no error anywhere.
+        string? env = Environment.GetEnvironmentVariable("BANNERLORD_GAME_DIR");
+        string horses = Path.Combine(string.IsNullOrWhiteSpace(env) ? DefaultGameDir : env,
+            "Modules", "LOTRLOME_Armory", "ModuleData", "LOTRLOME_items", "LOTRAOM_horses.xml");
+        if (!File.Exists(horses))
+            Assert.Inconclusive("LOTRLOME_Armory not installed on this machine; the item cannot be checked here.");
+
+        XElement? item = XDocument.Load(horses).Descendants("Item")
+            .FirstOrDefault(i => (string?)i.Attribute("id") == "taom_mumakil");
+        Assert.IsNotNull(item, "the taom_mumakil Horse item is missing from the Armory");
+        string? bodyLength = item!.Descendants("Horse").FirstOrDefault()?.Attribute("body_length")?.Value;
+        Assert.AreEqual(((int)AssumedMountScale * 100).ToString(), bodyLength,
+            $"body_length changed: every deck height in {MumakilConfig.PlatformPrefabName} assumes {AssumedMountScale}x " +
+            "and must be regenerated, because nothing scales this prefab at runtime any more");
     }
 
     private static XElement[] Floors() =>
@@ -189,7 +232,7 @@ public class MumakilPlatformTests
         // seat, which reads as tens of m/s and stops every bow draw: the same failure as bad spacing, and just as
         // silent. The footprint a frame must clear is inflated by the capsule RADIUS, because a shoulder under the
         // deck collides exactly as a head does.
-        float radiusAuthored = HowdahSeatMotion.HumanCapsuleRadius / MountScale;
+        float radius = HowdahSeatMotion.HumanCapsuleRadius;
         foreach (XElement frame in CrewFrames())
         {
             float[] f = Position(frame);
@@ -198,10 +241,10 @@ public class MumakilPlatformTests
                 float[] p = Position(floor), s = Scale(floor);
                 float underside = p[2] - s[2] * FloorHalfZ;
                 if (underside <= f[2] + 0.001f) continue;              // at or below this frame: not overhead
-                bool overlaps = Math.Abs(f[0] - p[0]) <= s[0] * FloorHalfX + radiusAuthored
-                             && Math.Abs(f[1] - p[1]) <= s[1] * FloorHalfY + radiusAuthored;
+                bool overlaps = Math.Abs(f[0] - p[0]) <= s[0] * FloorHalfX + radius
+                             && Math.Abs(f[1] - p[1]) <= s[1] * FloorHalfY + radius;
                 if (!overlaps) continue;
-                float clearance = (underside - f[2]) * MountScale;
+                float clearance = underside - f[2];
                 Assert.IsTrue(clearance >= CapsuleTop,
                     $"{frame.Attribute("name")?.Value} stands under {floor.Attribute("name")?.Value} with " +
                     $"{clearance:F2} m of headroom; a {CapsuleTop:F2} m archer needs to move out from under it, " +
@@ -241,15 +284,16 @@ public class MumakilPlatformTests
         // straight at each other. That is not what a shared deck actually does to them (it carries them the same
         // way), so this is a design margin rather than a prediction: it exists so that widening the deadband or
         // tightening the frames can never quietly reintroduce the overlap the spacing rule was written for.
-        float deadband = HowdahSeatMotion.SeatDeadbandFor(MountScale);
+        // Unscaled since the navmesh carries the archers with the deck (2026-09-21); see the seat for the measurement.
+        float deadband = HowdahSeatMotion.BaseSeatDeadbandMetres;
         float closest = float.MaxValue;
         float[][] frames = CrewFrames().Select(Position).ToArray();
         for (int i = 0; i < frames.Length; i++)
             for (int j = i + 1; j < frames.Length; j++)
             {
                 if (Math.Abs(frames[i][2] - frames[j][2]) > 0.01f) continue;
-                float dx = (frames[i][0] - frames[j][0]) * MountScale;
-                float dy = (frames[i][1] - frames[j][1]) * MountScale;
+                float dx = frames[i][0] - frames[j][0];
+                float dy = frames[i][1] - frames[j][1];
                 closest = Math.Min(closest, (float)Math.Sqrt(dx * dx + dy * dy));
             }
         Assert.IsTrue(closest - 2f * deadband >= HowdahSeatMotion.MinimumFrameSeparation,

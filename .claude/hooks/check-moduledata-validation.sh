@@ -91,13 +91,16 @@ PY="$PYBIN"
 # runtime, so every ModuleData commit silently skipped the check. Bounding the work here
 # keeps the overrun inside the hook, where it can still speak.
 #
-# The validator runs in ~9s (measured 2026-09-18; the MISSING_COLLISION_BODY pass wired in by
-# #622 adds ~3s of tpac TOC scan; 8.2s warm on 2026-09-19 with #626's SKILL_TEMPLATE_MISMATCH,
-# which costs ~0.2s; up to ~20s on a cold file cache), down from 27s: 16.5s of that original figure was one
-# quadratic regex in taom_schema.py scanning characters/lords.xml for a close tag that
-# file does not contain (fixed 2026-08-31, byte-identical output). The 60s/45s budget is
-# left deliberately generous. Headroom costs nothing unless the work overruns, and being
-# killed is the failure mode this gate has already suffered once.
+# Measured 2026-09-21, warm file cache: 14.9 to 15.6s. build_registries 3.8s, validator.run
+# 3.9s, MISSING_COLLISION_BODY 3.4 to 3.9s, COLLISION_BODY_BORROWED (#633) 3.5 to 3.9s,
+# SCHEMA_INVALID 0.5s, SKILL_TEMPLATE_MISMATCH 0.25s. Each body pass is ~3.1s of
+# validate_mesh_refs.extract_refs over 45 MiB of XML (1.3s of it a quadratic line count,
+# see the #633 review); the 4,611-pack tpac TOC scan is 0.2s, not the ~3s the 2026-09-18
+# ledger blamed it for. Cold file cache: unmeasured since the second body pass landed.
+# History: 27s until 2026-08-31 (a quadratic regex in taom_schema.py over lords.xml),
+# ~9s on 2026-09-18, 8.2s warm on 2026-09-19. The 60s/45s budget is left deliberately
+# generous, about 3x headroom warm. Headroom costs nothing unless the work overruns, and
+# being killed is the failure mode this gate has already suffered once.
 OUT=$(timeout -k 2 45 "$PY" tools/validate_moduledata.py \
         --code BROKEN_ITEM_REF --code BROKEN_TROOP_REF --code UNKNOWN_CULTURE \
         --code DUPLICATE_NPC_ID --code DUPLICATE_CULTURE_ID --code DUPLICATE_ROSTER_ID \
@@ -107,6 +110,7 @@ OUT=$(timeout -k 2 45 "$PY" tools/validate_moduledata.py \
         --code MISSING_BODY_ARMOUR --code MISSING_EDUCATION_TEMPLATES \
         --code MISSING_HARNESS_FAMILY_TYPE --code HARNESS_FAMILY_MISMATCH \
         --code MOUNT_WITHOUT_HARNESS --code MISSING_COLLISION_BODY \
+        --code COLLISION_BODY_BORROWED \
         --code SCHEMA_INVALID \
         2>/dev/null)
 RC=$?

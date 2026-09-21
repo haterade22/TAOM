@@ -85,6 +85,28 @@ class ExtractRefsTests(unittest.TestCase):
         # culture derived from folder.
         self.assertEqual(by_attr["mesh"].culture, "gondor")
 
+    def test_crafting_piece_owns_its_refs(self):
+        """A <CraftingPiece> owns its mesh and its <BladeData body_name> the way an <Item>
+        does. Before #633 every piece ref carried item_id "", so a consumer pairing a body with
+        its owner's mesh by id collapsed all 313 piece bodies onto one key."""
+        xml = (
+            '<CraftingPieces>\n'                                                  # 1
+            '  <CraftingPiece id="blade_a" mesh="sm_kit_blade_a">\n'              # 2
+            '    <BuildData piece_tier="1" />\n'                                  # 3
+            '    <BladeData body_name="bo_sm_kit_blade_a" />\n'                   # 4
+            '  </CraftingPiece>\n'                                                # 5
+            '  <CraftingPiece id="blade_b" mesh="sm_kit_blade_b">\n'              # 6
+            '    <BladeData body_name="bo_sm_other_blade" />\n'                   # 7
+            '  </CraftingPiece>\n'                                                # 8
+            '</CraftingPieces>\n'                                                 # 9
+        )
+        refs = vm.extract_refs_from_text(xml, "LOTRLOME_crafting_pieces.xml")
+        owners = {(r.name, r.attr): r.item_id for r in refs}
+        self.assertEqual(owners[("sm_kit_blade_a", "mesh")], "blade_a")
+        self.assertEqual(owners[("bo_sm_kit_blade_a", "body_name")], "blade_a")
+        self.assertEqual(owners[("sm_kit_blade_b", "mesh")], "blade_b")
+        self.assertEqual(owners[("bo_sm_other_blade", "body_name")], "blade_b")
+
     def test_excludes_three_false_positive_attrs(self):
         xml = (
             '<Item id="x" mesh="real_mesh" mesh_maturity_type="Teenager" '
