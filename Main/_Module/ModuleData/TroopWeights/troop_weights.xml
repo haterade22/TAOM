@@ -145,8 +145,25 @@
     <TroopWeight id="gondor_pg_vet_cavalry" weight="2.0" />
 
     <!-- ===== HARAD ===== -->
-    <!-- War Elephant package (Weight 7.0): 2 (elephant) + 1 (mahout) + 4 (howdah crew, auto-spawned in battle) -->
-    <TroopWeight id="harad_elephant_rider" weight="10.0" />
+    <!-- Beast packages. These two troops each put MORE THAN ONE agent on the field, so their weight prices the whole
+       package, not the rider: the rule is that every extra battlefield agent adds 1.0, which is what that archer
+       would have cost as a troop of its own.
+
+       War Elephant: 10.0 was set (c9fae4dc) while the howdah crew were parked, so it priced the beast and its mahout
+       only. Crew came back on 2026-09-20 (#627) at two archers, so the package is 12.0.
+
+       Mumakil: it had NO row until 2026-09-20, which meant the largest unit in the mod cost one party slot, the same
+       as a peasant. Its monster is the elephant's on paper (500 hit points, weight 9999) but it is 3.0x the body with
+       a 12 m trample radius against the elephant's 4 m, so beast and rider are worth about twice the elephant's, and
+       the rule above would add eight for the platform crew: 28.0.
+
+       It ships at 20.0, NOT 28.0, because 20 is the ceiling the weight system's identity was proven for
+       (WeightedFrameIdentityTests.HeaviestShippedWeight_StaysWithinTheRangeTheIdentityWasProvenFor). Above it a
+       normal party-size limit can fall under a single troop's weight, which makes the clamped single-body boundary
+       reachable and lets the displayed over-capacity verdict disagree with the enforced one. So the mumakil is
+       deliberately under-priced by about eight, and raising it means re-deriving that identity first. -->
+    <TroopWeight id="harad_elephant_rider" weight="12.0" />
+    <TroopWeight id="harad_mumakil_rider" weight="20.0" />
 
     <!-- ===== ISENGARD ===== -->
     <!-- Orthanc Guard Line: 2.0, the level-41 bodyguard 3.0 -->

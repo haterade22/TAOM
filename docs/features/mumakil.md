@@ -160,11 +160,75 @@ Section A attribute-presence comparison at all, which compares spider vs warg vs
 measured table: [creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md) "The
 rein-attribute invariant"; sibling entry in [elephant.md](elephant.md) "v1.4.8 exposure".
 
-## Phase 2 (not built)
+## Phase 2: platform crew (planned 2026-09-20, measured, not built)
 
-Platform crew (archers on the war-tower) — deferred for the same physics-contact reason the elephant howdah crew is
-disabled (force-spawned crew inside the mount collision capsule cause the "slide"). Re-enabling requires the
-crew↔mount collision fix (shared `FaceGroupId`). See [elephant.md](elephant.md) "Slide root-cause isolation".
+**The old blocker is gone.** This section used to say crew were deferred until a crew-versus-mount collision fix
+(a shared `FaceGroupId`), because force-spawned crew inside the mount capsule caused the slide. #627 solved that on
+the elephant a different way: the platform's floor underside sits clear of the mount's body capsule, and the seat
+only corrects an archer's position once it has drifted past a deadband. Measured on the elephant, 2026-09-20:
+`drift=0.000` on every sample, `carriedV` tracking the mount's own speed, and the crew shooting standing and moving.
+Nothing about the mumakil reintroduces the old failure.
+
+### What the asset actually is (Blender, read-only, 2026-09-20)
+
+`LOTRLOME_Armory/AssetSources/creature/mumakil/sk_mumakil_harad_01.fbx`. The war tower is
+`sk_mumakil_platform_a1`, carried as an `AdditionalMesh` on the Horse item `taom_mumakil`, not on a harness. The FBX
+is authored at ELEPHANT scale (basemesh x +-0.83, z to 3.00, the same as the elephant's); the 3.0x comes from the
+Horse item's `BodyLength=300` at runtime.
+
+| Deck | z authored | z in game (3.0x) | Standable area inside the walls, in game | Capacity at the 0.74 m rule |
+|---|---|---|---|---|
+| Main | 3.00 m | 9.00 m | 15.0 m2 | 47 |
+| Upper | 3.80 m | 11.40 m | 2.6 m2 | 14 |
+| Crow's nest | 4.60 m | 13.80 m | 1.9 m2 | 5 |
+
+Those capacities are geometric CEILINGS from packing 0.37 m capsules 0.74 m apart across the deck faces that are
+both walkable and clear of a wall (the rule #627 established: crew count is decided by capsule spacing, not by deck
+area). They are not proposals. **Mike's decision, 2026-09-20: eight archers, five on the main deck, two on the upper,
+one in the crow's nest.**
+
+### Decisions taken
+
+- **The platform prefab is authored mount-local (1:1 with the FBX) and scaled at runtime from `Agent.AgentScale`**,
+  never with 3.0 baked in. `AgentScale` is public on Agent, and the mount's scale comes from `BodyLength`, so a
+  future size tweak would otherwise drop every archer inside the beast with no error.
+- **The code is CLONED into `Main/Features/Mumakil/`**, matching the one-feature-per-creature convention the spider
+  and chariot set (Mike, 2026-09-20). The risk that buys is drift: the howdah's four engine rules took nine in-game
+  rounds to find, and a clone can regress them independently. Mitigation, and it is not optional: the clone
+  references the PURE helpers rather than copying their numbers (`HowdahSeatMotion` for the deadband and the 0.74 m
+  spacing, `HowdahCrewBehaviourCurves` for the AI curve rows, `HowdahDiagnostics`/`HowdahSampleClock`/
+  `HowdahRunStats` for the log maths). Those carry measured constants, not creature behaviour.
+- **The crew trigger is the mount item, not a harness.** The elephant gates on `sk_elephant_armor_howdah_elite`;
+  the mumakil's tower is on `taom_mumakil` itself, so every mumakil carries crew.
+- **The crew troop is `harad_howdah_crew`** (bow and two quivers, no melee weapon, Bow 95 on its ladder cell,
+  hidden from the Encyclopedia). No new troop unless the mumakil should field a distinct name.
+
+### The order of work
+
+1. `taom_mumakil_platform` prefab in `LOTRLOME_Armory/Prefabs`, byte-snapshotted into the repo like the howdah's:
+   one floor body per deck, flagged `moveable` and `barrier` (barrier is in the engine's missile-exclusion mask, so
+   an archer shooting downward does not put the arrow into its own deck), eight tagged crew frames, no rails.
+2. The machine's placement gains a scale: place and scale the platform entity from the mount's `AgentScale` rather
+   than the elephant's fixed 3.2 m offset. This is the only genuinely new mechanism in Phase 2.
+3. Crew wiring: trigger on the mount item, spawn straight onto the frames, seat them exactly as the howdah does.
+4. Gates: the prefab test generalised so frame spacing is checked AFTER scaling (0.74 m apart in world metres, not
+   in mount-local ones) and every frame sits inside the measured walls; the existing IL gates for the mission-end
+   release, the `Disable` guard and the combat stance come along with the clone.
+
+### Risks to settle before or during the smoke
+
+- **Agent budget.** Eight crew across four mumakil is 32 extra agents, on top of any crewed elephants in the same
+  battle. The engine's cap is native and unverified, and #627's RCA already records a reinforcement-headroom guard as
+  NOT APPLIED for the same reason.
+- **Formation averaging.** Crew are ordinary members of their side's Ranged formation and count toward its average
+  and median position (#627, data-flow F-4). A mumakil's crew is four times an elephant's, so this scales with the
+  feature. Unmeasured; watch the archer formation's behaviour with several beasts on the field.
+- **Shooting downward from 9 m.** Horizontal shooting is confirmed on the elephant at 3.2 m. Whether an archer will
+  loose at an enemy directly below is the open combat-mask question from #627 (missiles ignore `barrier`, but the
+  mask a native clear-shot check would use does not, and no managed code reads it). Three times the height makes the
+  angle steeper and the question sharper. Check it in the first crew smoke.
+- **Rider clearance.** The deck runs y -8.6 to +1.1 m in game; the mahout sits forward on the neck. Confirm no crew
+  frame overlaps the rider before authoring the prefab.
 
 ---
 
