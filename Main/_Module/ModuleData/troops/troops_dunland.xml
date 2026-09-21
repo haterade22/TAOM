@@ -769,7 +769,7 @@
         </skills>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
+                <equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_b" />
                 <equipment slot="Item1" id="Item.dunland_wulf_shield_medium_f" />
                 <equipment slot="Item2" id="Item.northern_javelin_2_t3" />
                 <equipment slot="Head" id="Item.dunland_wulf_helmet_medium_b" />
@@ -826,7 +826,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.dunland_caerdh_axe_1h_a" />
+                    id="Item.dunland_caerdh_axe_1h_b" />
                 <equipment
                     slot="Item1"
                     id="Item.dunland_wulf_shield_medium_f" />
@@ -2992,7 +2992,7 @@
                     id="Item.bolt_e" />
                 <equipment
                     slot="Item2"
-                    id="Item.dunland_caerdh_axe_1h_c" />
+                    id="Item.dunland_caerdh_axe_1h_b" />
                 <equipment
                     slot="Item3"
                     id="Item.dunland_caerdh_shield_light_a" />
@@ -3069,7 +3069,7 @@
                     id="Item.bolt_c" />
                 <equipment
                     slot="Item2"
-                    id="Item.dunland_caerdh_axe_1h_c" />
+                    id="Item.dunland_caerdh_axe_1h_b" />
                 <equipment
                     slot="Item3"
                     id="Item.dunland_caerdh_shield_heavy_a" />

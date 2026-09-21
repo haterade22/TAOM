@@ -4,5 +4,8 @@
   "requireStableLoyalty": false,
   "minLoyaltyToConvert": 50,
   "convertPlayerOwnedSettlements": true,
-  "replaceNotablesOnConversion": true
+  "replaceNotablesOnConversion": true,
+  "replaceGarrisonOnConversion": true,
+  "replaceMilitiaOnConversion": true,
+  "replaceGarrisonInPlayerFiefs": true
 }

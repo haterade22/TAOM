@@ -2,7 +2,246 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-21
+
+### feat(culture): v2.0.30 - conversion re-mans the garrison and militia (#632)
+
+Culture conversion already flipped a conquered fief's culture, swapped its notables and cleared
+their volunteer slots. It never touched the troops already standing in the place, and neither does
+vanilla: `ChangeOwnerOfSettlementAction.ApplyInternal` destroys the garrison party on a **siege**
+only, and every other route (gift, barter, a king's decision, clan destruction, leaving a faction)
+keeps the old culture's garrison verbatim, forever. The only recurring refill is
+`GarrisonRecruitmentCampaignBehavior` trickling in the owner faction's tier-1 basic troop. Militia
+is worse: no owner change touches `MilitiaPartyComponent` at all.
+
+So conversion now re-mans both, plus each bound village's militia. Matching is like-for-like and
+strength-neutral by construction: one head count serves both halves of a swap, wounded included, so
+it can neither farm nor gut a fief. Troops already of the new culture, heroes, prisoners and
+culture-less templates are left alone.
+
+**Candidates come from the culture's recruitment pool, not its troop tag,** and the deep review is
+why. Grouping `CharacterObject.Culture` reads as the obvious source and is wrong: four conversion
+targets deliberately field another culture's line, so their own tag carries almost nothing.
+Lothlorien's only non-hero `Soldier` is `gear_practice_dummy_lothlorien`, and the first
+implementation re-manned an entire captured city with Practice Dummies; Khand's six were all guards
+and arena dummies. `CharacterObject.All` also swept in 73 arena dummies, guards and caravan guards
+plus vanilla Calradian troops. The index is now the upgrade-closure of `CultureMap[culture]`, which
+is the same authority `OnSettlementConquered` already gates on, so a fief's garrison is exactly the
+troops that fief can recruit. All 22 targets resolve cleanly.
+
+**The fallback ladder is the load-bearing part.** TAOM's rosters are deliberately uneven, measured
+across the 16 `troops_*.xml` files: Mirkwood fields nothing at tiers 4, 5 or 6; Goblin, Blue Craig
+and the Misty Mountain orcs field no cavalry at any tier; Dunland, Dale and Umbar stop at tier 6, so
+a captured tier-8 Gondor stack has no same-tier target. Five rungs, in order: exact cell; same role
+within two tiers, preferring the lower on a tie so a swap never hands out a free upgrade; same tier
+down a role chain; same role at any distance; nearest populated tier. Nothing found keeps the stack
+and logs it, the same stance notable replacement takes for a missing occupation template.
+
+Militia maps slot-for-slot instead, which is why `ApplyConversion` captures the culture **before**
+the flip: all 16 cultures author the full four-slot militia set, and matching against the already
+updated `Settlement.Culture` would have quietly reduced every militia swap to the ladder.
+
+The pick inside a cell is a stable FNV-1a hash of settlement, tier and role. Deliberately not
+`string.GetHashCode`, which is not stable across processes; a garrison that re-rolled its troops on
+every game start would be a save-visible bug.
+
+Roster writes follow the engine's own idiom (index loop, `AddToCountsAtIndex` with
+`removeDepleted: false`, one `RemoveZeroCounts`), because `GetTroopRoster()` hands back a live
+cached list that any mutation invalidates. `RemoveTroop` is never called: it forwards a not-found
+index of -1 and throws.
+
+The swap runs inside `ApplyConversion` only, never the on-load re-apply, so it stays a one-shot and
+fiefs converted in older saves are not retrofitted.
+
+Three toggles, all default on: `replaceGarrisonOnConversion`, `replaceMilitiaOnConversion`, and a
+dedicated `replaceGarrisonInPlayerFiefs` so a player who stacks a garrison by hand can keep it.
+
+`GarrisonCultureCoverageTests` is the gate, and it had the same bug the code did: it seeded its
+candidate list from the cultures present in `troops_*.xml`, so the four that author no troops of
+their own never entered the loop and it could not fail for exactly the cultures that were broken.
+It now enumerates from the recruitment pools, with a floor so it cannot pass vacuously, and a
+companion test asserts no conversion target indexes a practice dummy or a guard. The lesson (a data
+gate must not inherit the premise of the code it guards) is in `lessons/testing-qa.md`; RCA in
+`docs/reviews/rca-garrison-culture-swap-2026-09-21.md`.
+
+Full suite green at 9,965 passing. `validate_moduledata.py` reports 0 errors.
+
 ## 2026-09-20
+
+### feat(weapons): v2.0.30 - melee ladder applied, weapons restatted onto the curve (#631)
+
+The roster pass alone reached a third of the problem. The rest needed the weapons themselves to
+move, so `restat_melee_blades.py` writes `damage_factor` on blade pieces in the unversioned
+Armory: dry-run by default, a `.bak-<tag>` backup before every write (never `*.xml`, which the
+engine globs), the document parsed before anything lands, and an absolute target rather than a
+multiplier so a re-run is a no-op. No search is needed for the number, because displayed damage
+is `magnitude * damage_factor` and the cycle time does not depend on the factor, so DPS is
+exactly linear in it.
+
+**The two passes iterate,** because a weapon's tier anchor is its lowest wearer: restatting
+moves the anchors, a roster pass then finds new options, which moves them again. Four rounds,
+regenerating career kits each time.
+
+| | Start | Final |
+|---|---|---|
+| Troops on curve | 46% | 81% |
+| Over-armed troops | 244 | 0 |
+| Tier inversions at 5 DPS or worse | 202 | 38 |
+| Troops reaching an over-ceiling weapon | 13 | 0 |
+| Climb, T1 to T10 median | 1.04x | 2.68x |
+
+It oscillates rather than converging: round three came back a point worse than round two before
+it settled. This is the fixed point, not an early stop.
+
+**Three guards, each wrong on the first attempt and each caught by re-reading the engine.** A
+couched lance already lands several times its standing-thrust magnitude, because closing speed
+enters `CalculateStrikeMagnitudeForThrust` inside a squared term, so raising one is refused;
+the first version refused to move them at all and thereby protected `wm_gundabad_spear_a02` at
+164 DPS on tier-3 militia, the worst weapon in the audit. The cave troll's club is scenery
+scale and would have been quadrupled to hit a tier-10 target. And taking a shared blade's ratio
+from only the weapons troops carry sent an unworn Erebor axe to 186 DPS while its worn sibling
+landed on target. Unworn weapons now get the ceiling even though no troop anchors them: two
+Rohan two-handed axes sat at 153 DPS in every market where no roster pass could see them.
+
+**On the generators.** `generate_starter_kit.py --verify` reports no drift on either Armory
+copy and `check_generator_item_refs.py` passes, so neither needed touching. `generate_career_
+kits.py` derives from each culture's lowest troop gear and was regenerated after every roster
+pass, `wire_starter_kit_rosters.py` behind it. `generate_gondor_troops.py`,
+`generate_rhun_troops.py` and the `apply_*_troop_revamp.py` family are historical scaffolds
+rather than live generators: the Gondor one was already 14,804 lines out of sync with the
+committed roster before any of this work, measured against HEAD, so patching their weapon
+tables would be work on dead code that implied they were safe to re-run. The one real finding
+is `generate_enlistment_rosters.py`, whose hand-authored `DEFAULT_ROSTER_ITEMS` ships as the
+neutral-culture last resort: 14 of its weapon entries now sit under their rank's band and ten
+cannot be fixed from that family at all, since Rohan's one-handed swords top out at 43 DPS
+against a sergeant band starting at 58. Documented in the file rather than patched, because the
+fix is a decision rather than a substitution.
+
+140 troops remain under-armed, all of it the same catalogue-depth problem: Rohan owns one
+one-handed axe for seven tiers. Closing that means authoring weapons or moving those tiers to a
+class the culture has depth in.
+
+- `tools/restat_melee_blades.py`, `tools/tests/test_restat_melee_blades.py` (16 tests; the
+  three guards and the whole Armory write path are pinned)
+- `LOTRLOME_crafting_pieces.xml` in the live Armory, backups beside it
+- 13 `troops_*.xml`, the two regenerated equipment-set files, a note in
+  `generate_enlistment_rosters.py`, `docs/features/melee-damage-model.md`
+
+### feat(weapons): v2.0.30 - melee ladder spec, gate, and the roster pass (#631)
+
+Troop tier barely changed melee output. Median best sustained damage per engine tier ran 66,
+64, 66, 67, 69, 69, 81, 82, 82, 69 for tiers 1 to 10: a climb of 1.04x, against vanilla's 2.23x
+over only five tiers. The capstone tier was armed below tier 7, and a tier-1 militiaman carried
+roughly a vanilla tier-5 elite's weapon. One thing was already right, and the fix is built on
+it: TAOM's tier-5 median of 69 matched vanilla's tier-5 median of 67, so the midpoint was
+calibrated and only the fan-out was missing.
+
+**The curve** is anchored there and spread at vanilla's own slope of about +9 per tier, with
+the per-kingdom offsets `rebalance_weapons.py` already defined so faction craftsmanship
+survives. The ceiling is 140 DPS, vanilla's own demonstrated maximum, which is what "no weapon
+too OP" means numerically. `tools/melee_ladder.py` holds the pure functions; the gate, the
+report and the fixer all call the same ones so they cannot drift apart.
+
+**The roster pass ran.** 243 swaps across 164 troops in 13 files, touching only git-tracked
+rosters and never the unversioned Armory. Troops inside their band went from 46% to 65%, tier
+inversions from 202 to 132, and weapons over the ceiling that a troop can actually reach from
+13 to 5. The median per tier barely moved, which is expected: a median is insensitive to fixing
+the tails and the tails were the problem.
+
+**Three constraints, each of which cost something to get right.** Culture started as a ranking
+tiebreak, and when a faction owned nothing in band the ranking fell through and handed Gondor's
+Swan Knights Uruk-hai halberds and Erebor's royal wardens orc spears; it is a hard filter now,
+and a faction with no in-band weapon is an unresolved case rather than an excuse. A
+shield-carrying troop is never handed a `requires_no_shield` polearm, the pairing that has
+shipped three times. And a swap is emitted per slot, because six melee weapons sit in two slots
+on one troop and a single swap would have left the old one behind.
+
+**Career kits moved with it,** because they derive from each culture's lowest troop gear
+(#629). Regenerated, 30 ids. Their own test caught that, which is the test working.
+
+**Pass 2 is the bigger half and has not started.** With culture locked, only 242 of 761
+out-of-band slots have an in-band replacement inside the troop's own faction. The other 519 do
+not: 36 of 63 culture/class pairs own fewer distinct weapons than the tiers they field, Rohan
+fielding one-handed axes across seven tiers with exactly one axe. No roster swap fixes that; it
+needs a blade restat, new weapons, or a decision that some tiers field a different class. That
+pass writes the unversioned Armory, so it needs a backup and a gate beside it.
+
+- `tools/melee_ladders.json`, `tools/melee_ladder.py`, `tools/fix_melee_ladder.py`
+- `MELEE_LADDER_INVERSION` in `tools/taom_schema.py` (252 warnings, never blocking: the weapon
+  half of the fix lands in a module a reinstall can revert)
+- `tools/tests/test_melee_ladder.py` (28 tests; the cross-culture swap and the multi-slot swap
+  are both pinned by name)
+- 13 `troops_*.xml`, the two regenerated equipment-set files, `docs/features/melee-damage-model.md`
+
+### feat(weapons): v2.0.30 - melee damage model ported, armoury ladder measured
+
+Bannerlord stores no damage on a crafted melee weapon. It simulates it from the four crafting
+pieces every load, so nothing in this repo could say what any of the Armory's 364 melee weapons
+actually hit for. The physics had been reverse-engineered once, but it lived in the website repo
+and had drifted. This brings it here, as a tested library, and measures the armoury with it.
+
+**The model still holds on v1.5.3, and that was checked rather than assumed.** Diffing the
+preserved decompile baselines: `CombatStatCalculator.cs` and `WeaponDesign.cs` are byte-identical
+from v1.4.5 through v1.5.3, and `Crafting.cs` differs by one debug-export string. The pipeline
+first derived on v1.3.12 is exactly right today. Re-diffing those three files is the whole
+maintenance burden; nothing else needs revisiting on an engine bump.
+
+**Three defects in the old JS calculator, all of which move damage.** Reach was a sum of forward
+piece lengths, where the engine walks pivot distances (`WeaponDesign.CalculateWeaponLength`), and
+reach drives swing drag, the impact-point window and the lever arm. The hardcoded
+`TwoHandedPolearm` build order dropped the Guard the real template declares. And usage modes were
+resolved for two-handed swords only, so all 120 polearms were priced under assumed flags. The one
+in-game verified anchor settles it: the Galadriel Sword reads 87/72 in game, this model returns
+87/72, the JS returned 86/72 and its own comment called the gap rounding.
+
+**An item is not one weapon, and that turned out to be the biggest trap here.**
+`GenerateCraftedItem` emits a mode for every `WeaponDescription` whose available pieces cover the
+item. `TwoHandedPolearm` lists `OneHandedPolearm` first, TAOM deliberately registers polearm
+pieces into it for shield compatibility, and that mode permits thrust only. So 107 of 120 polearms
+have a primary usage that cannot swing at all, and reading the primary prices a halberd at 12
+instead of 161. Attack capability comes from the usage set's `strike_type` rows unioned up the
+`base_set` chain, not from `item_usage_features`: an earlier pass read the feature tokens and
+concluded 100 weapons, war axes included, had no attacks.
+
+**One blow is not the weapon.** A fast weapon that hits for 48 can beat a slow one that hits
+for 56, so the model computes sustained damage too. The cycle time falls out of the speed stat
+exactly (`raw_speed = CONST / simulated_time`, so the ratio between two weapons is exact by
+construction) plus the attacker's recovery from `managed_core_parameters.xml`, where the
+asymmetry is enormous: 0.1 s after a swing against 0.67 s after a thrust. Speed already sits in
+the damage number once, because a blow is kinetic energy and energy goes as v squared; it then
+helps again by shortening the cycle. Both are real, so a fast weapon compounds. The absolute
+seconds assume the native animation runs for the simulated time, which is not established in
+managed code, so DPS is a relative index rather than a measured rate.
+
+**What the measurement found.** Ranking on sustained damage rather than on one blow changed the
+answer in both directions. 25 of the 74 numbered lines genuinely regress, 39 steps falling on
+both metrics; a further 10 steps lose damage but hold DPS and are weapons trading weight for
+speed, not faults. 202 tier inversions at 5 DPS or worse. 141 of the 364 weapons reach no troop
+at all. And in 1,150 same-class pairs the weapon with the bigger blow is the worse weapon over
+time.
+
+Two cases carry the argument. `wm_gundabad_spear_a02` is the worst weapon in the mod on both
+metrics: 210 damage for 164 DPS, above every vanilla polearm, on 13 troops including tier-2
+militia across three cultures. The cave troll is the opposite failure: its two-handed mace hits
+for 86, more than the 81 of a Dol Guldur mace, and sustains 25 DPS against that weapon's 78,
+because it is so slow that a lesser mace triples its output. That is why the troll reads as the
+worst-armed unit in Mordor while carrying a big number.
+
+`[Dale] Dale Sword` is the case that corrects an earlier reading of this data. Its swing runs
+56, 53, 48 down the line, which looks like a line built backwards, but its swing DPS runs 47,
+47, 48: it is trading blade weight for speed and its output is flat. Its thrust is a genuine
+regression, 44 to 35. Half the line is a defect, not all of it.
+
+Read-only throughout: `analyze_melee_ladder.py` has no `--apply` and no write path into any
+ModuleData, and nothing in the sibling website repo was touched. Restatting and the line rename
+are a separate pass, and the report's blade fan-out table exists to make it safe, since damage
+lives on the shared blade piece and one edit moves every weapon built on it.
+
+- `tools/melee_damage.py`, `tools/melee_catalogue.py`, `tools/analyze_melee_ladder.py`
+- `tools/tests/test_melee_damage.py`, `tools/tests/test_analyze_melee_ladder.py` (94 tests, two
+  pinning engine quirks that look like bugs and must not be "fixed", one pinning that a weapon's
+  damage and its DPS are read from the same usage mode)
+- `docs/features/melee-damage-model.md`, `tools/README.md`
 
 ### feat(mumakil): v2.0.30 - eight archers on the war tower (#627 phase 2)
 
@@ -119,7 +358,6 @@ floor gained `barrier` so a downward shot is not stopped by our own deck; transl
 owed. The `[Howdah#n] status` line now carries formation, detachment, both action channels, action progress and
 restarts, missile range, firing order, ammunition, target, navmesh face and both velocities, which is what made
 this diagnosable at all. `nav=0` is NOT a missing navmesh: the elephant reads 0 too.
-
 ### fix(starting-gear): v2.0.30 - #629 deep review: the career-kit rule is a tool now
 
 The eight-lens deep review of #629 found no critical or high defect; these are its fixes, with Mike's

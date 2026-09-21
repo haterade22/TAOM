@@ -173,7 +173,7 @@
                     id="Item.sk_dwarf_erebor_arrow_b" />
                 <equipment
                     slot="Item3"
-                    id="Item.sm_dwarf_erebor_1h_axe_d" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b" />
                 <equipment
                     slot="Body"
                     id="Item.sk_dwarf_erebor_chest_leather_light_b" />
@@ -190,7 +190,7 @@
                     id="Item.sk_dwarf_erebor_arrow_a" />
                 <equipment
                     slot="Item3"
-                    id="Item.sm_dwarf_erebor_1h_axe_e" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_erebor_helmet_leather_light_b" />
@@ -285,7 +285,7 @@
                     id="Item.sm_dwarf_erebor_shield_metal_b" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_1h_axe_c" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_erebor_helmet_leather_med_b" />
@@ -406,7 +406,7 @@
                     id="Item.sk_dwarf_erebor_arrow_b" />
                 <equipment
                     slot="Item3"
-                    id="Item.sm_dwarf_erebor_1h_axe_c" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_erebor_helmet_leather_med_b" />
@@ -492,7 +492,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_d" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_erebor_helmet_leather_light_a" />
@@ -511,7 +511,7 @@
                 <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_c" />
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_b" />
                 <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_b" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_light_a" />
                 <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_c" />
@@ -564,7 +564,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_c" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_shield_leather_a" />
@@ -644,7 +644,7 @@
                     id="Item.sk_dwarf_erebor_arrow_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_1h_axe_d" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_erebor_helmet_leather_med_a" />
@@ -658,7 +658,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.ladder_erebor_bow_t4" />
                 <equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
-                <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_b" />
+                <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_med_b" />
                 <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_b" />
                 <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_c" />
@@ -668,7 +668,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.ladder_erebor_bow_t4" />
                 <equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
-                <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_a" />
+                <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_light_b" />
                 <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_a" />
                 <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_b" />
@@ -678,7 +678,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.ladder_erebor_bow_t4" />
                 <equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
-                <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_b" />
+                <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_med_b" />
                 <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_b" />
                 <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_b" />
@@ -720,7 +720,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.ladder_erebor_bow_t5" />
                 <equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_b" />
-                <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_c" />
+                <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_med_b" />
                 <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_b" />
                 <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_b" />
@@ -760,7 +760,7 @@
                     id="Item.sk_dwarf_erebor_arrow_b" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_1h_axe_c" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_erebor_helmet_leather_med_b" />
@@ -774,7 +774,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.ladder_erebor_bow_t5" />
                 <equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
-                <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_e" />
+                <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_med_a" />
                 <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_b" />
                 <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_a" />
@@ -784,7 +784,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.ladder_erebor_bow_t5" />
                 <equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
-                <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_b" />
+                <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_light_b" />
                 <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_a" />
                 <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_b" />
@@ -794,7 +794,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.ladder_erebor_bow_t5" />
                 <equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
-                <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_d" />
+                <equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_heavy_b" />
                 <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_a" />
                 <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_c" />
@@ -840,7 +840,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_c" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_shield_leather_b" />
@@ -855,7 +855,7 @@
                     id="Item.sk_dwarf_erebor_boots_med_b" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_b" />
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_c" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_med_b" />
                 <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_b" />
@@ -864,7 +864,7 @@
                 <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_e" />
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_b" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_med_a" />
                 <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_a" />
@@ -873,7 +873,7 @@
                 <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_c" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_b" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_med_b" />
                 <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_b" />
@@ -921,7 +921,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_b" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_shield_leather_c" />
@@ -939,7 +939,7 @@
                     id="Item.sk_dwarf_erebor_boots_med_c" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_c" />
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_b" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_light_a" />
                 <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_a" />
@@ -948,7 +948,7 @@
                 <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_e" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_d" />
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_c" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_med_b" />
                 <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_b" />
@@ -957,7 +957,7 @@
                 <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_b" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_b" />
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_c" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_heavy_b" />
                 <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_b" />
@@ -1078,7 +1078,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_a" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_shield_leather_d" />
@@ -1096,7 +1096,7 @@
                     id="Item.sk_dwarf_erebor_boots_med_f" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_d" />
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_d" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_heavy_c" />
                 <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_b" />
@@ -1105,7 +1105,7 @@
                 <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_d" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_e" />
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_d" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_heavy_d" />
                 <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_a" />
@@ -1114,7 +1114,7 @@
                 <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_c" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_c" />
+                <equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_d" />
                 <equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_heavy_d" />
                 <equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_c" />
@@ -1185,7 +1185,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_c" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_shield_metal_a" />
@@ -1310,7 +1310,7 @@
                     id="Item.sk_dwarf_erebor_arrow_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_1h_axe_c" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item3"
                     id="Item.sm_dwarf_erebor_shield_tower_a" />
@@ -1333,7 +1333,7 @@
                     id="Item.sk_dwarf_erebor_arrow_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_1h_axe_a" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item3"
                     id="Item.sm_dwarf_erebor_shield_tower_d" />
@@ -1356,7 +1356,7 @@
                     id="Item.sk_dwarf_erebor_arrow_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_1h_axe_a" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item3"
                     id="Item.sm_dwarf_erebor_shield_tower_a" />
@@ -1379,7 +1379,7 @@
                     id="Item.sk_dwarf_erebor_arrow_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_1h_axe_a" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item3"
                     id="Item.sm_dwarf_erebor_shield_tower_a" />
@@ -1447,7 +1447,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_b" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_shield_metal_a" />
@@ -1467,7 +1467,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_b" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_shield_metal_a2" />
@@ -1484,7 +1484,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_a" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_shield_metal_b2" />
@@ -1501,7 +1501,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_b" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_shield_metal_b" />
@@ -1575,7 +1575,7 @@
                     id="Item.sk_dwarf_erebor_arrow_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_1h_axe_b" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item3"
                     id="Item.sm_dwarf_erebor_shield_tower_b" />
@@ -1604,7 +1604,7 @@
                     id="Item.sk_dwarf_erebor_arrow_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_1h_axe_b" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item3"
                     id="Item.sm_dwarf_erebor_shield_tower_d" />
@@ -1633,7 +1633,7 @@
                     id="Item.sk_dwarf_erebor_arrow_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_1h_axe_a" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item3"
                     id="Item.sm_dwarf_erebor_shield_tower_b" />
@@ -1662,7 +1662,7 @@
                     id="Item.sk_dwarf_erebor_arrow_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_1h_axe_b" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item3"
                     id="Item.sm_dwarf_erebor_shield_tower_b" />
@@ -1738,7 +1738,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_b" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_b" />
@@ -1764,7 +1764,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_b" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_a" />
@@ -1790,7 +1790,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_a" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_a" />
@@ -1816,7 +1816,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_b" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_a" />
@@ -1893,7 +1893,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_a" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_a" />
@@ -1919,7 +1919,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_c" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_b" />
@@ -1945,7 +1945,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_b" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_a" />
@@ -1971,7 +1971,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_e" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_b" />
@@ -2051,7 +2051,7 @@
                     id="Item.sk_dwarf_erebor_arrow_b" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_1h_axe_a" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item3"
                     id="Item.sm_dwarf_erebor_shield_tower_c" />
@@ -2080,7 +2080,7 @@
                     id="Item.sk_dwarf_erebor_arrow_b" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_1h_axe_b" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item3"
                     id="Item.sm_dwarf_erebor_shield_tower_d" />
@@ -2109,7 +2109,7 @@
                     id="Item.sk_dwarf_erebor_arrow_b" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_1h_axe_b" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item3"
                     id="Item.sm_dwarf_erebor_shield_tower_b" />
@@ -2138,7 +2138,7 @@
                     id="Item.sk_dwarf_erebor_arrow_b" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_1h_axe_b" />
+                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
                 <equipment
                     slot="Item3"
                     id="Item.sm_dwarf_erebor_shield_tower_c" />
@@ -2212,7 +2212,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_axe_2h_a" />
+                    id="Item.sm_dwarf_erebor_axe_2h_c2" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_erebor_helmet_plate_heavy_b" />
@@ -2232,7 +2232,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_axe_2h_b" />
+                    id="Item.sm_dwarf_erebor_axe_2h_c2" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_erebor_helmet_plate_heavy_c" />
@@ -2252,7 +2252,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_axe_2h_c" />
+                    id="Item.sm_dwarf_erebor_axe_2h_c2" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_erebor_helmet_plate_heavy_d" />
@@ -2272,7 +2272,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_axe_2h_d" />
+                    id="Item.sm_dwarf_erebor_axe_2h_c2" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_erebor_helmet_plate_med_d" />
@@ -2343,7 +2343,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_a" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_a" />
@@ -2372,7 +2372,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_d" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_b" />
@@ -2401,7 +2401,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_c" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_a" />
@@ -2430,7 +2430,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_e" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_b" />
@@ -2510,7 +2510,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_axe_2h_b" />
+                    id="Item.sm_dwarf_iron_axe_c" />
                 <equipment
                     slot="Item1"
                     id="Item.southern_throwing_axe_1_t4" />
@@ -2533,7 +2533,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_axe_2h_d" />
+                    id="Item.sm_dwarf_iron_axe_c" />
                 <equipment
                     slot="Item1"
                     id="Item.southern_throwing_axe_1_t4" />
@@ -2556,7 +2556,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_axe_2h_c" />
+                    id="Item.sm_dwarf_iron_axe_c" />
                 <equipment
                     slot="Item1"
                     id="Item.southern_throwing_axe_1_t4" />
@@ -2579,7 +2579,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_axe_2h_a" />
+                    id="Item.sm_dwarf_iron_axe_c" />
                 <equipment
                     slot="Item1"
                     id="Item.southern_throwing_axe_1_t4" />
@@ -2653,7 +2653,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_a" />
@@ -2682,7 +2682,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_e" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_b" />
@@ -2711,7 +2711,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_d" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_a" />
@@ -2740,7 +2740,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_e" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_b" />
@@ -2817,7 +2817,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_axe_2h_a2" />
+                    id="Item.sm_dwarf_erebor_axe_2h_d2" />
                 <equipment
                     slot="Item1"
                     id="Item.southern_throwing_axe_1_t4" />
@@ -2840,7 +2840,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_axe_2h_b2" />
+                    id="Item.sm_dwarf_erebor_axe_2h_d2" />
                 <equipment
                     slot="Item1"
                     id="Item.southern_throwing_axe_1_t4" />
@@ -2957,7 +2957,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_a" />
@@ -3015,7 +3015,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_a" />
@@ -3129,7 +3129,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_a" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_b" />
@@ -3155,7 +3155,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_d" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_b" />
@@ -3181,7 +3181,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_c" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_a" />
@@ -3207,7 +3207,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_e" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_b" />
@@ -3284,7 +3284,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_a" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_a" />
@@ -3313,7 +3313,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_e" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_b" />
@@ -3342,7 +3342,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_d" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_a" />
@@ -3371,7 +3371,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_e" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_b" />
@@ -3448,7 +3448,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_a" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_a" />
@@ -3506,7 +3506,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_a2" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_a" />
@@ -4008,7 +4008,7 @@
                     id="Item.sk_dwarf_erebor_arrow_b" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_iron_sword_b" />
+                    id="Item.sm_dwarf_iron_sword_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_med_a2" />
@@ -4060,7 +4060,7 @@
                     id="Item.sk_dwarf_erebor_arrow_b" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_iron_sword_b" />
+                    id="Item.sm_dwarf_iron_sword_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_med_b1" />
@@ -4086,7 +4086,7 @@
                     id="Item.sk_dwarf_erebor_arrow_b" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_iron_sword_b" />
+                    id="Item.sm_dwarf_iron_sword_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_med_b2" />
@@ -4291,7 +4291,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_iron_sword_b" />
+                    id="Item.sm_dwarf_iron_sword_a" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_iron_shield_b" />
@@ -4337,7 +4337,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_iron_sword_b" />
+                    id="Item.sm_dwarf_iron_sword_a" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_iron_shield_a" />
@@ -4360,7 +4360,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_iron_sword_b" />
+                    id="Item.sm_dwarf_iron_sword_a" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_iron_shield_a" />
@@ -4434,10 +4434,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_iron_axe_a" />
+                    id="Item.sm_dwarf_iron_axe_c" />
                 <equipment
                     slot="Item1"
-                    id="Item.sm_dwarf_iron_axe_b" />
+                    id="Item.sm_dwarf_iron_axe_c" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_heavy_b2" />
@@ -4457,7 +4457,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_iron_axe_b" />
+                    id="Item.sm_dwarf_iron_axe_c" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_heavy_a2" />
@@ -5949,7 +5949,7 @@
                     id="Item.sm_dwarf_iron_bolt_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_axe_2h_c" />
+                    id="Item.sm_dwarf_erebor_axe_2h_c2" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_heavy_a2" />
@@ -5975,7 +5975,7 @@
                     id="Item.sm_dwarf_iron_bolt_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_axe_2h_d" />
+                    id="Item.sm_dwarf_erebor_axe_2h_c2" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_heavy_c1" />
@@ -6001,7 +6001,7 @@
                     id="Item.sm_dwarf_iron_bolt_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_axe_2h_a" />
+                    id="Item.sm_dwarf_erebor_axe_2h_c2" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_heavy_b2" />
@@ -7260,7 +7260,7 @@
                     id="Item.sm_dwarf_iron_bolt_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_iron_sword_b" />
+                    id="Item.sm_dwarf_iron_sword_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_med_d1" />
@@ -7466,7 +7466,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_iron_sword_b" />
+                    id="Item.sm_dwarf_iron_sword_a" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_b" />
@@ -8022,7 +8022,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_a" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_b" />
@@ -8048,7 +8048,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_d" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_b" />
@@ -8074,7 +8074,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_c" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_a" />
@@ -8100,7 +8100,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_1h_axe_e" />
+                    id="Item.sm_dwarf_erebor_1h_axe_b2" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_dwarf_erebor_spear_b" />

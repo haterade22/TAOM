@@ -35,4 +35,13 @@ public sealed class CultureConversionSettingsProvider : ICultureConversionSettin
 
     public bool ReplaceNotablesOnConversion =>
         TaomSettings.Instance?.CultureConversionReplaceNotables ?? _defaults.ReplaceNotablesOnConversion;
+
+    public bool ReplaceGarrisonOnConversion =>
+        TaomSettings.Instance?.CultureConversionReplaceGarrison ?? _defaults.ReplaceGarrisonOnConversion;
+
+    public bool ReplaceMilitiaOnConversion =>
+        TaomSettings.Instance?.CultureConversionReplaceMilitia ?? _defaults.ReplaceMilitiaOnConversion;
+
+    public bool ReplaceGarrisonInPlayerFiefs =>
+        TaomSettings.Instance?.CultureConversionReplaceGarrisonPlayerFiefs ?? _defaults.ReplaceGarrisonInPlayerFiefs;
 }

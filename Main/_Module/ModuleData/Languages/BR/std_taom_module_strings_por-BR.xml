@@ -2085,6 +2085,7 @@
     <string id="taom_caravan_escort" text="Escolta de caravana" />
     <string id="taom_ai_forage" text="Forrageamento de campanha" />
     <string id="taom_ai_levy" text="Serviço de recrutamento" />
+    <string id="taom_garrison_culture_swap" text="{COUNT} soldados em {SETTLEMENT} foram substituídos por guerreiros da nova cultura do assentamento." />
     <string id="taom_res_desertion" text="{COUNT} tropas de elite desertaram — seus {RESOURCE} estão esgotados!" />
     <string id="taom_feat_erebor_gw" text="Guarnição Anã" />
     <string id="taom_feat_erebor_gw_desc" text="Salários da guarnição reduzidos em 25%." />

@@ -3,6 +3,7 @@ using System.Linq;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CultureConversion.Domain;
+using TAOM.Features.CultureConversion.GarrisonSwap;
 using TAOM.Features.TroopProgression;
 
 namespace TAOM.Features.CultureConversion;
@@ -27,6 +28,7 @@ public class CultureConversionService : ICultureConversionService
     private readonly ICultureConversionAdapter _adapter;
     private readonly ICultureConversionSettingsProvider _settings;
     private readonly IVolunteerRecruitmentService _recruitment;
+    private readonly IGarrisonCultureSwapService _garrisonSwap;
     private readonly IModLogger _logger;
 
     public CultureConversionService(
@@ -34,12 +36,14 @@ public class CultureConversionService : ICultureConversionService
         ICultureConversionAdapter adapter,
         ICultureConversionSettingsProvider settings,
         IVolunteerRecruitmentService recruitment,
+        IGarrisonCultureSwapService garrisonSwap,
         IModLogger logger)
     {
         _store = store;
         _adapter = adapter;
         _settings = settings;
         _recruitment = recruitment;
+        _garrisonSwap = garrisonSwap;
         _logger = logger;
     }
 
@@ -164,14 +168,24 @@ public class CultureConversionService : ICultureConversionService
 
     private void ApplyConversion(SettlementConversionRecord record, string targetCulture)
     {
+        // The culture the fief is leaving. Captured BEFORE the flip because the militia swap matches
+        // slot-for-slot against the OLD culture's four militia troops, and SetSettlementCulture has
+        // already overwritten Settlement.Culture by the time the swap runs.
+        var previousCulture = record.EffectiveCultureId;
+        var isPlayerOwned = _adapter.IsPlayerOwned(record.SettlementId);
+
         _adapter.SetSettlementCulture(record.SettlementId, targetCulture);
         ReplaceForeignNotables(record.SettlementId, targetCulture);
         _adapter.ResetVolunteers(record.SettlementId);
+        _garrisonSwap.SwapSettlementTroops(record.SettlementId, previousCulture, targetCulture, isPlayerOwned);
         foreach (var villageId in _adapter.GetBoundVillageSettlementIds(record.SettlementId))
         {
             _adapter.SetSettlementCulture(villageId, targetCulture);
             ReplaceForeignNotables(villageId, targetCulture);
             _adapter.ResetVolunteers(villageId);
+            // A village has no garrison, only militia — the swap handles both and no-ops on the half
+            // that is absent, so the same call covers it.
+            _garrisonSwap.SwapSettlementTroops(villageId, previousCulture, targetCulture, isPlayerOwned);
         }
 
         record.ClearPending();

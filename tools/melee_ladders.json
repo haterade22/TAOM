@@ -1,0 +1,114 @@
+{
+  "_comment": [
+    "Melee weapon ladder spec (#631). The melee counterpart to ranged_ladders.json.",
+    "",
+    "The unit is SUSTAINED damage (DPS), not one blow. A lighter blade that swings faster can",
+    "out-damage a heavier one, so ranking on the displayed damage number gets those backwards.",
+    "See docs/features/melee-damage-model.md for how DPS is derived and what its limits are.",
+    "",
+    "WHY THIS EXISTS. Measured 2026-09-20 across 364 Armory melee weapons and 858 troops, the",
+    "median best-DPS per engine tier ran 66, 64, 66, 67, 69, 69, 81, 82, 82, 69 for tiers 1 to",
+    "10. That is a 1.04x climb. Vanilla climbs 2.23x over five tiers (30, 50, 58, 60, 67). Troop",
+    "tier had almost no bearing on melee output, and the capstone tier was armed below tier 7.",
+    "",
+    "THE ANCHOR. TAOM's tier-5 median of 69 already matched vanilla's tier-5 median of 67, so",
+    "the midpoint was never the problem and is held fixed. The curve below fans out around it at",
+    "vanilla's own slope of roughly +9 DPS per tier. Changing `curve` changes the whole mod's",
+    "melee power distribution; changing `anchor_tier` moves what stays put while you do it.",
+    "",
+    "KINGDOM OFFSETS are carried over from tools/rebalance_weapons.py CULTURAL_POINTS, which is",
+    "the existing per-culture craftsmanship table, so faction flavour survives the flattening",
+    "fix. They are a percentage of the tier target, not flat DPS, so they scale with the curve.",
+    "",
+    "The band is what counts as on-curve. Too tight and every roster is a finding; too loose and",
+    "the ladder does not mean anything. 0.25 leaves 46% of troops already correct."
+  ],
+
+  "anchor_tier": 5,
+
+  "curve": {
+    "0": 25,
+    "1": 34,
+    "2": 43,
+    "3": 52,
+    "4": 60,
+    "5": 69,
+    "6": 78,
+    "7": 87,
+    "8": 96,
+    "9": 105,
+    "10": 114
+  },
+
+  "band": 0.25,
+
+  "_kingdom_comment": [
+    "Percentage shift applied to the tier target for a troop of this culture. Keys are engine",
+    "culture StringIds, which is what a troop's culture= attribute carries: TAOM remaps several",
+    "vanilla ids (vlandia is Rohan, empire and battania are Dunland, aserai is Harad, khuzait is",
+    "Rhun, sturgia is Dale). A culture absent from this table takes the plain tier target."
+  ],
+  "kingdom_offset": {
+    "rivendell": 0.10,
+    "lothlorien": 0.09,
+    "mirkwood": 0.04,
+    "erebor": 0.05,
+    "gondor": 0.03,
+    "arnor": 0.02,
+    "rhun": 0.02,
+    "khuzait": 0.02,
+    "sturgia": 0.00,
+    "vlandia": 0.00,
+    "isengard": 0.00,
+    "aserai": 0.00,
+    "gundabad": -0.01,
+    "goblin": -0.01,
+    "mordor": -0.02,
+    "empire": -0.02,
+    "battania": -0.02,
+    "dolguldur": -0.03
+  },
+
+  "_ceiling_comment": [
+    "No weapon may out-sustain this, in DPS, except the hero blades named in the exempt list.",
+    "140 is vanilla's own demonstrated maximum: the hardest-sustaining vanilla melee weapon",
+    "measured 138 DPS. Holding TAOM to it is what 'no weapon too OP' means numerically. 65",
+    "weapons were above it on 2026-09-20."
+  ],
+  "ceiling": 140,
+
+  "_exempt_comment": [
+    "Named hero weapons, which are meant to sit above the curve. Keyed by BLADE PIECE, because",
+    "that is what a restat edits and what a shared blade drags along with it. Carried over from",
+    "tools/rebalance_weapons.py HERO_BLADE_IDS so the two agree on who is exempt."
+  ],
+  "hero_blades": [
+    "wm_anduril_sword_blade",
+    "wm_glamdring_blade",
+    "wm_strider_sword_blade",
+    "wm_boromir_sword_blade",
+    "wm_faramir_sword_blade",
+    "wm_theoden_sword_blade",
+    "wm_eomer_blade",
+    "wm_eowyn_blade",
+    "wm_witch_king_sword_blade",
+    "wm_nazgul_sword_blade",
+    "wm_sauron_mace_blade",
+    "wm_galadriel_sword_blade",
+    "wm_aranruth_sword_blade",
+    "wm_aranruth_sword_ruby_blade",
+    "wm_aranruth_sword_topaz_blade",
+    "wm_legolas_sword_blade",
+    "wm_thranduil_sword_blade",
+    "wm_tuors_axe_blade"
+  ],
+
+  "_exempt_troops_comment": [
+    "Troops deliberately off the ladder, each with a stated reason. An entry naming a troop that",
+    "no longer exists, or one that is now on curve, is itself a finding: a stale allowlist reads",
+    "exactly like a clean run."
+  ],
+  "exempt_troops": {
+    "cave_troll": "A troll is a monster, not a soldier. Its weapons are scenery-scale and deliberately slow, and the creature's threat comes from its own attacks and its mass rather than from its kit sustaining tier-10 DPS."
+  }
+}

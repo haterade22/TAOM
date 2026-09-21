@@ -720,7 +720,7 @@
     </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_d" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_c" />
@@ -907,7 +907,7 @@
     </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a01" />
+              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Item2" id="Item.wm_gundabad_axe_a01" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_e" />
@@ -1302,9 +1302,9 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a01" />
+              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-              <equipment slot="Item2" id="Item.wm_gundabad_axe_a01" />
+              <equipment slot="Item2" id="Item.wm_gundabad_axe_a03" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_d" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_c" />
               <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_c" />
@@ -1316,7 +1316,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a01" />
+                    id="Item.wm_gundabad_spear_a03" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a03" />
@@ -1348,7 +1348,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a01" />
+                    id="Item.wm_gundabad_spear_a03" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a03" />
@@ -1380,7 +1380,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a01" />
+                    id="Item.wm_gundabad_spear_a03" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a03" />
@@ -1412,7 +1412,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a01" />
+                    id="Item.wm_gundabad_spear_a03" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a03" />
@@ -1444,7 +1444,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a01" />
+                    id="Item.wm_gundabad_spear_a03" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a03" />
@@ -2250,7 +2250,7 @@
     </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_light_c" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_a" />
               <equipment slot="Cape" id="Item.sk_gb_uruk_cape_b" />
@@ -2874,10 +2874,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.wm_gundabad_spear_a03" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gundabad_sword_a01" />
+                    id="Item.wm_gundabad_sword_a04" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gb_uruk_helmet_heavy_j" />
@@ -2897,10 +2897,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.wm_gundabad_spear_a03" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gundabad_sword_a01" />
+                    id="Item.wm_gundabad_sword_a04" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gb_uruk_helmet_heavy_j" />
@@ -3039,7 +3039,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.wm_gundabad_spear_a01" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a02" />
@@ -3056,7 +3056,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.wm_gundabad_spear_a01" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a03" />
@@ -3240,7 +3240,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.wm_gundabad_spear_a01" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a02" />
@@ -3263,7 +3263,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.wm_gundabad_spear_a01" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a03" />

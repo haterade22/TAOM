@@ -36,7 +36,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.ladder_gondor_bow_t2" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
+            <Equipment slot="Item2" id="Item.wm_gondor_sword_a02" />
             <Equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
             <Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
         </EquipmentSet>
@@ -46,7 +46,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.ladder_gondor_bow_t2" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
+            <Equipment slot="Item2" id="Item.wm_gondor_sword_a02" />
             <Equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
             <Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
         </EquipmentSet>
@@ -58,7 +58,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_gondor_spear_b" />
             <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-            <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
+            <Equipment slot="Item2" id="Item.wm_gondor_sword_a02" />
             <Equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
             <Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
@@ -70,7 +70,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_gondor_spear_b" />
             <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-            <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
+            <Equipment slot="Item2" id="Item.wm_gondor_sword_a02" />
             <Equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
             <Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
@@ -82,7 +82,7 @@
 
     <EquipmentRoster id="player_career_gondor_infantry_m" culture="Culture.gondor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+            <Equipment slot="Item0" id="Item.wm_gondor_sword_a02" />
             <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
             <Equipment slot="Item2" id="Item.wm_gondor_spear_b" />
             <Equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
@@ -92,7 +92,7 @@
 
     <EquipmentRoster id="player_career_gondor_infantry_f" culture="Culture.gondor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+            <Equipment slot="Item0" id="Item.wm_gondor_sword_a02" />
             <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
             <Equipment slot="Item2" id="Item.wm_gondor_spear_b" />
             <Equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
@@ -126,7 +126,7 @@
 
     <EquipmentRoster id="player_career_mordor_cavalry_m" culture="Culture.mordor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a02" />
+            <Equipment slot="Item0" id="Item.sm_md_num_lance_a" />
             <Equipment slot="Item1" id="Item.sm_mordor_shield_small_a" />
             <Equipment slot="Item2" id="Item.wm_mordor_set1_sword_a01" />
             <Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
@@ -138,7 +138,7 @@
 
     <EquipmentRoster id="player_career_mordor_cavalry_f" culture="Culture.mordor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a02" />
+            <Equipment slot="Item0" id="Item.sm_md_num_lance_a" />
             <Equipment slot="Item1" id="Item.sm_mordor_shield_small_a" />
             <Equipment slot="Item2" id="Item.wm_mordor_set1_sword_a01" />
             <Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
@@ -152,7 +152,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_mordor_set1_sword_a01" />
             <Equipment slot="Item1" id="Item.sm_mordor_shield_small_a" />
-            <Equipment slot="Item2" id="Item.wm_mordor_set1_polearm_a02" />
+            <Equipment slot="Item2" id="Item.sm_md_num_lance_a" />
             <Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
             <Equipment slot="Leg" id="Item.sk_md_orc_boots_a" />
         </EquipmentSet>
@@ -162,7 +162,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_mordor_set1_sword_a01" />
             <Equipment slot="Item1" id="Item.sm_mordor_shield_small_a" />
-            <Equipment slot="Item2" id="Item.wm_mordor_set1_polearm_a02" />
+            <Equipment slot="Item2" id="Item.sm_md_num_lance_a" />
             <Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
             <Equipment slot="Leg" id="Item.sk_md_orc_boots_a" />
         </EquipmentSet>
@@ -262,7 +262,7 @@
 
     <EquipmentRoster id="player_career_gundabad_cavalry_m" culture="Culture.gundabad">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+            <Equipment slot="Item0" id="Item.wm_gundabad_spear_a01" />
             <Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
             <Equipment slot="Item2" id="Item.wm_gundabad_sword_a01" />
             <Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_c" />
@@ -274,7 +274,7 @@
 
     <EquipmentRoster id="player_career_gundabad_cavalry_f" culture="Culture.gundabad">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+            <Equipment slot="Item0" id="Item.wm_gundabad_spear_a01" />
             <Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
             <Equipment slot="Item2" id="Item.wm_gundabad_sword_a01" />
             <Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_c" />
@@ -288,7 +288,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_gundabad_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-            <Equipment slot="Item2" id="Item.wm_gundabad_spear_a02" />
+            <Equipment slot="Item2" id="Item.wm_gundabad_spear_a01" />
             <Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_c" />
             <Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
         </EquipmentSet>
@@ -298,7 +298,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_gundabad_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-            <Equipment slot="Item2" id="Item.wm_gundabad_spear_a02" />
+            <Equipment slot="Item2" id="Item.wm_gundabad_spear_a01" />
             <Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_c" />
             <Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
         </EquipmentSet>
@@ -312,7 +312,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.ladder_dolguldur_bow_t2" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_c" />
-            <Equipment slot="Item2" id="Item.wm_dol_goldur_1h_sword_a02" />
+            <Equipment slot="Item2" id="Item.wm_dol_goldur_1h_sword_a01" />
             <Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
             <Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
         </EquipmentSet>
@@ -322,7 +322,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.ladder_dolguldur_bow_t2" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_c" />
-            <Equipment slot="Item2" id="Item.wm_dol_goldur_1h_sword_a02" />
+            <Equipment slot="Item2" id="Item.wm_dol_goldur_1h_sword_a01" />
             <Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
             <Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
         </EquipmentSet>
@@ -332,7 +332,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_dol_goldur_halberd_a01" />
             <Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
-            <Equipment slot="Item2" id="Item.wm_dol_goldur_1h_sword_a02" />
+            <Equipment slot="Item2" id="Item.wm_dol_goldur_1h_sword_a01" />
             <Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
             <Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
             <Equipment slot="Horse" id="Item.warg_brown" />
@@ -344,7 +344,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_dol_goldur_halberd_a01" />
             <Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
-            <Equipment slot="Item2" id="Item.wm_dol_goldur_1h_sword_a02" />
+            <Equipment slot="Item2" id="Item.wm_dol_goldur_1h_sword_a01" />
             <Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
             <Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
             <Equipment slot="Horse" id="Item.warg_brown" />
@@ -354,7 +354,7 @@
 
     <EquipmentRoster id="player_career_dolguldur_infantry_m" culture="Culture.dolguldur">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a02" />
+            <Equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
             <Equipment slot="Item2" id="Item.wm_dol_goldur_axe_a04" />
             <Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
@@ -364,7 +364,7 @@
 
     <EquipmentRoster id="player_career_dolguldur_infantry_f" culture="Culture.dolguldur">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a02" />
+            <Equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
             <Equipment slot="Item2" id="Item.wm_dol_goldur_axe_a04" />
             <Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
@@ -607,7 +607,7 @@
 
     <EquipmentRoster id="player_career_vlandia_cavalry_m" culture="Culture.vlandia">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rohan_ws_spear_a01" />
+            <Equipment slot="Item0" id="Item.wm_rohan_spear_b" />
             <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
             <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
             <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
@@ -619,7 +619,7 @@
 
     <EquipmentRoster id="player_career_vlandia_cavalry_f" culture="Culture.vlandia">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rohan_ws_spear_a01" />
+            <Equipment slot="Item0" id="Item.wm_rohan_spear_b" />
             <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
             <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
             <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
@@ -633,7 +633,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
-            <Equipment slot="Item2" id="Item.wm_rohan_ws_spear_a01" />
+            <Equipment slot="Item2" id="Item.wm_rohan_spear_b" />
             <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
             <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
@@ -643,7 +643,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
-            <Equipment slot="Item2" id="Item.wm_rohan_ws_spear_a01" />
+            <Equipment slot="Item2" id="Item.wm_rohan_spear_b" />
             <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
             <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
@@ -811,7 +811,7 @@
 
     <EquipmentRoster id="player_career_khuzait_cavalry_m" culture="Culture.khuzait">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Item0" id="Item.wm_harad_spear_a02" />
             <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
             <Equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
             <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
@@ -823,7 +823,7 @@
 
     <EquipmentRoster id="player_career_khuzait_cavalry_f" culture="Culture.khuzait">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Item0" id="Item.wm_harad_spear_a02" />
             <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
             <Equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
             <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
@@ -837,7 +837,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
             <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
-            <Equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Item2" id="Item.wm_harad_spear_a02" />
             <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
             <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
@@ -847,7 +847,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
             <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
-            <Equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Item2" id="Item.wm_harad_spear_a02" />
             <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
             <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>

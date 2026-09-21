@@ -236,7 +236,92 @@ class Validator:
         issues += self._armour_mesh_tier_ladder()
         issues += self._upgrade_tier_collapse()
         issues += self._ranged_ladder_inversions()
+        issues += self._melee_ladder_inversions()
         issues.sort(key=lambda i: i.sort_key())
+        return issues
+
+
+    # -- MELEE_LADDER_INVERSION -------------------------------------------- #
+    # A troop armed outside the sustained-damage band its tier and kingdom call for
+    # (tools/melee_ladders.json). The unit is DPS, not one blow, because a lighter blade that
+    # swings faster out-damages a heavier one and ranking on the displayed damage number gets
+    # those backwards: 10 of the 49 apparent line regressions measured on 2026-09-20 were
+    # weapons trading weight for speed, not faults. The ladder was flat before #631 (median
+    # best-DPS by tier 66, 64, 66, 67, 69, 69, 81, 82, 82, 69, a climb of 1.04x against
+    # vanilla's 2.23x over five tiers), so troop tier barely changed melee output at all.
+    # Weapon stats are SIMULATED from the crafting pieces rather than stored, so this needs the
+    # install and is skipped, never faked, without it. The same pure function drives the gate,
+    # tools/analyze_melee_ladder.py and tools/fix_melee_ladder.py, so they cannot disagree.
+    # Warns rather than errors because the Armory is unversioned: a reinstall can revert the
+    # weapon half of the fix while the rosters stay correct, and that must not block a commit.
+    def _melee_ladder_inversions(self) -> list:
+        import sys as _sys
+        _sys.path.insert(0, str(Path(__file__).resolve().parent))
+        code = "MELEE_LADDER_INVERSION"
+        spec_rel = "tools/melee_ladders.json"
+        try:
+            import melee_ladder as ml
+            import melee_catalogue as mc
+            import analyze_melee_ladder as mr
+        except ImportError as exc:
+            return [Issue(
+                severity=Severity.WARNING, code=code, file=spec_rel, line=0, entry_id="(tooling)",
+                message=(f"the melee ladder tools cannot be imported ({exc}), so no troop's melee "
+                         "output was checked. Not checked is not clean."),
+            )]
+        if not mr.MODULES.is_dir():
+            return []   # no install: skipped, and the caller already reports install-gated passes
+        try:
+            spec = ml.load_spec()
+        except ml.LadderError as exc:
+            return [Issue(
+                severity=Severity.WARNING, code=code, file=spec_rel, line=0, entry_id="(spec)",
+                message=(f"the melee ladder spec cannot be used ({exc}), so no troop's melee output "
+                         "was checked. Restore it from git rather than deleting the check."),
+            )]
+        try:
+            cat = mc.load(mr.MODULES, item_modules={mr.ARMORY_MODULE})
+            priced, _failures = mc.price_all(cat)
+            troops = mr.load_troops(mr.TROOPS)
+        except (mc.CatalogueError, mr.AnalysisError, OSError) as exc:
+            return [Issue(
+                severity=Severity.WARNING, code=code, file=spec_rel, line=0, entry_id="(install)",
+                message=f"the Armory could not be priced ({exc}), so no troop's melee output was checked",
+            )]
+        if not priced or not troops:
+            return [Issue(
+                severity=Severity.WARNING, code=code, file=spec_rel, line=0, entry_id="(install)",
+                message=("no melee weapon or no troop was loaded, so this pass checked nothing. "
+                         "A gate that quietly checks nothing reads exactly like a clean run."),
+            )]
+
+        issues = []
+        for stale in ml.stale_exemptions({t.id for t in troops}, spec):
+            issues.append(Issue(
+                severity=Severity.WARNING, code=code, file=spec_rel, line=0, entry_id=stale,
+                message=(f'exempt_troops names "{stale}", which no longer exists. A stale allowlist '
+                         "entry silently skips nothing and reads as a clean run; remove it."),
+            ))
+
+        by_id = {t.id: t for t in troops}
+        kits = []
+        for t in troops:
+            best = [(priced[i].best_dps, i) for i in t.items if i in priced]
+            if not best:
+                continue
+            dps, iid = max(best)
+            kits.append((t.id, t.culture, t.tier, iid, dps, priced[iid].blade_piece))
+        for f in ml.findings(kits, spec, min_gap=1.0):
+            troop = by_id.get(f.troop)
+            issues.append(Issue(
+                severity=Severity.WARNING, code=code,
+                file=self._rel(Path(troop.path)) if troop and troop.path else "troops",
+                line=0, entry_id=f.troop,
+                message=(f.describe() + ". Repair: python tools/fix_melee_ladder.py (dry-run, then "
+                         "--apply); where the culture owns no weapon in band the fix is a restat of "
+                         "the blade piece, not a roster swap. Deliberate exceptions go in "
+                         f"{spec_rel} exempt_troops with a reason (#631)"),
+            ))
         return issues
 
     # -- helpers ---------------------------------------------------------- #

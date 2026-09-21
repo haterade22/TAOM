@@ -189,6 +189,21 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "When enabled, conversion also replaces the settlement's notables with ones of the new culture (a Mordor-held Gondor town gets orc notables). Their workshops, alleys and caravans transfer to the newcomers; your relations with the old notables do not. Default: on.")]
     public bool CultureConversionReplaceNotables { get; set; } = true;
 
+    [SettingPropertyGroup("Culture Conversion")]
+    [SettingPropertyBool("Replace Garrison On Conversion", Order = 4, RequireRestart = false,
+        HintText = "When enabled, conversion re-mans the fief's garrison with the new culture's troops, matching tier, battlefield role and head count (a Gondor tier-4 archer becomes a Mordor tier-4 archer). Without this a fief taken by gift, barter or a king's decision keeps its old culture's garrison forever. Default: on.")]
+    public bool CultureConversionReplaceGarrison { get; set; } = true;
+
+    [SettingPropertyGroup("Culture Conversion")]
+    [SettingPropertyBool("Replace Militia On Conversion", Order = 5, RequireRestart = false,
+        HintText = "When enabled, conversion also swaps the settlement's and its villages' existing militia to the new culture's militia troops. New militia already spawn in the new culture once the fief converts; this makes the standing militia catch up the same day instead of over many. Default: on.")]
+    public bool CultureConversionReplaceMilitia { get; set; } = true;
+
+    [SettingPropertyGroup("Culture Conversion")]
+    [SettingPropertyBool("Replace Garrison In Your Own Fiefs", Order = 6, RequireRestart = false,
+        HintText = "When disabled, the two swaps above never touch a fief your clan owns, so a garrison you stacked by hand survives the conversion. AI fiefs still swap, and your fief still changes culture. Default: on.")]
+    public bool CultureConversionReplaceGarrisonPlayerFiefs { get; set; } = true;
+
     // --- War of the Ring ---
 
     [SettingPropertyGroup("War of the Ring")]

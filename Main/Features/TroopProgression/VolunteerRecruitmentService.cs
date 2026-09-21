@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TAOM.Core.Logging;
 
 namespace TAOM.Features.TroopProgression;
@@ -127,6 +128,22 @@ public partial class VolunteerRecruitmentService : IVolunteerRecruitmentService
 
     public bool HasCulturePool(string cultureId)
         => !string.IsNullOrEmpty(cultureId) && CultureMap.ContainsKey(cultureId);
+
+    public IReadOnlyCollection<string> GetPooledCultureIds() => CultureMap.Keys.ToList();
+
+    public IReadOnlyList<string> GetCulturePoolTroopIds(string cultureId)
+    {
+        if (string.IsNullOrEmpty(cultureId) || !CultureMap.TryGetValue(cultureId, out var pool))
+            return new List<string>();
+
+        var ids = new List<string>(pool.Count);
+        foreach (var chance in pool)
+        {
+            if (!string.IsNullOrEmpty(chance.CharacterId) && !ids.Contains(chance.CharacterId))
+                ids.Add(chance.CharacterId);
+        }
+        return ids;
+    }
 
     private static List<VolunteerChance> ResolveConditionalPool(string key, VolunteerContext context)
     {

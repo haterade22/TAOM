@@ -66,6 +66,9 @@ public class CultureConversionConfigProvider : ICultureConversionConfigProvider
             MinLoyaltyToConvert = parsed.MinLoyaltyToConvert,
             ConvertPlayerOwnedSettlements = parsed.ConvertPlayerOwnedSettlements,
             ReplaceNotablesOnConversion = parsed.ReplaceNotablesOnConversion,
+            ReplaceGarrisonOnConversion = parsed.ReplaceGarrisonOnConversion,
+            ReplaceMilitiaOnConversion = parsed.ReplaceMilitiaOnConversion,
+            ReplaceGarrisonInPlayerFiefs = parsed.ReplaceGarrisonInPlayerFiefs,
         };
 
         var defaults = new CultureConversionConfig();

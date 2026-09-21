@@ -8,4 +8,7 @@ public interface ICultureConversionSettingsProvider
     float MinLoyaltyToConvert { get; }
     bool ConvertPlayerOwnedSettlements { get; }
     bool ReplaceNotablesOnConversion { get; }
+    bool ReplaceGarrisonOnConversion { get; }
+    bool ReplaceMilitiaOnConversion { get; }
+    bool ReplaceGarrisonInPlayerFiefs { get; }
 }

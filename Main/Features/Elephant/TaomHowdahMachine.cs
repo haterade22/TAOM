@@ -319,7 +319,7 @@ public class TaomHowdahMachine : UsableMachine
 
     // Enumerate bones by index and match by name — validates existence without risking a native
     // fault on a bad name. Engine bone names carry a leading space + mixed case (e.g. " Spine1_05").
-    private static sbyte ResolveBoneIndex(Skeleton skel, string name, int boneCount)
+    internal static sbyte ResolveBoneIndex(Skeleton skel, string name, int boneCount)
     {
         for (sbyte i = 0; i < boneCount; i++)
         {

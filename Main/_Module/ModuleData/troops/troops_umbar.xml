@@ -172,7 +172,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gondor_boromir_sword" />
+                    id="Item.wm_gondor_sword_a02" />
                 <equipment
                     slot="Item1"
                     id="Item.northern_round_sparring_shield" />
@@ -195,7 +195,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gondor_boromir_sword" />
+                    id="Item.wm_gondor_sword_a02" />
                 <equipment
                     slot="Item1"
                     id="Item.northern_round_sparring_shield" />
@@ -218,7 +218,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gondor_boromir_sword" />
+                    id="Item.wm_gondor_sword_a02" />
                 <equipment
                     slot="Item1"
                     id="Item.northern_round_sparring_shield" />
@@ -241,7 +241,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gondor_boromir_sword" />
+                    id="Item.wm_gondor_sword_a02" />
                 <equipment
                     slot="Item1"
                     id="Item.northern_round_sparring_shield" />
@@ -319,7 +319,7 @@
                     id="Item.arrow_emp_1_a" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_gondor_sword_a01" />
+                    id="Item.wm_gondor_sword_a07" />
                 <equipment
                     slot="Head"
                     id="Item.haradrim02a_head" />
@@ -348,7 +348,7 @@
                     id="Item.arrow_emp_1_a" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_gondor_sword_a01" />
+                    id="Item.wm_gondor_sword_a07" />
                 <equipment
                     slot="Head"
                     id="Item.haradrim02a_head" />
@@ -377,7 +377,7 @@
                     id="Item.arrow_emp_1_a" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_gondor_sword_a01" />
+                    id="Item.wm_gondor_sword_a07" />
                 <equipment
                     slot="Head"
                     id="Item.haradrim02a_head" />
@@ -406,7 +406,7 @@
                     id="Item.arrow_emp_1_a" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_gondor_sword_a01" />
+                    id="Item.wm_gondor_sword_a07" />
                 <equipment
                     slot="Head"
                     id="Item.haradrim02a_head" />
@@ -474,7 +474,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gondor_lamedon_1h_sword_a" />
+                    id="Item.wm_gondor_lamedon_bastard_heavy" />
                 <equipment
                     slot="Item1"
                     id="Item.northern_round_shield" />
@@ -497,7 +497,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gondor_lamedon_1h_sword_a" />
+                    id="Item.wm_gondor_lamedon_bastard_heavy" />
                 <equipment
                     slot="Item1"
                     id="Item.northern_round_shield" />
@@ -520,7 +520,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gondor_lamedon_1h_sword_a" />
+                    id="Item.wm_gondor_lamedon_bastard_heavy" />
                 <equipment
                     slot="Item1"
                     id="Item.northern_round_shield" />
@@ -543,7 +543,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gondor_lamedon_1h_sword_a" />
+                    id="Item.wm_gondor_lamedon_bastard_heavy" />
                 <equipment
                     slot="Item1"
                     id="Item.northern_round_shield" />
@@ -907,7 +907,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.numenorean_greatsword_elite_b" />
+                    id="Item.wm_gondor_lamedon_bastard_heavy" />
                 <equipment
                     slot="Head"
                     id="Item.harad06_v1_helmet" />
@@ -927,7 +927,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.numenorean_greatsword_elite_b" />
+                    id="Item.wm_gondor_lamedon_bastard_heavy" />
                 <equipment
                     slot="Head"
                     id="Item.harad06_v1_helmet" />
@@ -947,7 +947,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.numenorean_greatsword_elite_b" />
+                    id="Item.wm_gondor_lamedon_bastard_heavy" />
                 <equipment
                     slot="Head"
                     id="Item.harad06_v1_helmet" />
@@ -967,7 +967,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.numenorean_greatsword_elite_b" />
+                    id="Item.wm_gondor_lamedon_bastard_heavy" />
                 <equipment
                     slot="Head"
                     id="Item.harad06_v1_helmet" />
@@ -1622,7 +1622,7 @@
                     id="Item.arrow_emp_1_a" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_gondor_sword_a02" />
+                    id="Item.wm_gondor_sword_a07" />
                 <equipment
                     slot="Head"
                     id="Item.harad05_v1_helmet" />
@@ -1651,7 +1651,7 @@
                     id="Item.arrow_emp_1_a" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_gondor_sword_a02" />
+                    id="Item.wm_gondor_sword_a07" />
                 <equipment
                     slot="Head"
                     id="Item.harad05_v1_helmet" />
@@ -1680,7 +1680,7 @@
                     id="Item.arrow_emp_1_a" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_gondor_sword_a02" />
+                    id="Item.wm_gondor_sword_a07" />
                 <equipment
                     slot="Head"
                     id="Item.harad05_v1_helmet" />
@@ -1709,7 +1709,7 @@
                     id="Item.arrow_emp_1_a" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_gondor_sword_a02" />
+                    id="Item.wm_gondor_sword_a07" />
                 <equipment
                     slot="Head"
                     id="Item.harad05_v1_helmet" />
@@ -1777,7 +1777,7 @@
                     id="Item.sm_dwarf_iron_bolt_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gondor_sword_a01" />
+                    id="Item.wm_gondor_sword_a07" />
                 <equipment
                     slot="Head"
                     id="Item.harad07_helmet" />
@@ -1803,7 +1803,7 @@
                     id="Item.sm_dwarf_iron_bolt_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gondor_sword_a01" />
+                    id="Item.wm_gondor_sword_a07" />
                 <equipment
                     slot="Head"
                     id="Item.harad07_helmet" />
@@ -1829,7 +1829,7 @@
                     id="Item.sm_dwarf_iron_bolt_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gondor_sword_a01" />
+                    id="Item.wm_gondor_sword_a07" />
                 <equipment
                     slot="Head"
                     id="Item.harad07_helmet" />
@@ -1855,7 +1855,7 @@
                     id="Item.sm_dwarf_iron_bolt_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gondor_sword_a01" />
+                    id="Item.wm_gondor_sword_a07" />
                 <equipment
                     slot="Head"
                     id="Item.harad07_helmet" />
@@ -1926,7 +1926,7 @@
                     id="Item.wm_elven_arrow_v4_a" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_gondor_sword_a03" />
+                    id="Item.wm_gondor_sword_a07" />
                 <equipment
                     slot="Head"
                     id="Item.harad07_helmet" />
@@ -1955,7 +1955,7 @@
                     id="Item.wm_elven_arrow_v4_a" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_gondor_sword_a03" />
+                    id="Item.wm_gondor_sword_a07" />
                 <equipment
                     slot="Head"
                     id="Item.harad07_helmet" />
@@ -1984,7 +1984,7 @@
                     id="Item.wm_elven_arrow_v4_a" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_gondor_sword_a03" />
+                    id="Item.wm_gondor_sword_a07" />
                 <equipment
                     slot="Head"
                     id="Item.harad07_helmet" />
@@ -2013,7 +2013,7 @@
                     id="Item.wm_elven_arrow_v4_a" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_gondor_sword_a03" />
+                    id="Item.wm_gondor_sword_a07" />
                 <equipment
                     slot="Head"
                     id="Item.harad07_helmet" />
@@ -2082,7 +2082,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gondor_boromir_sword" />
+                    id="Item.wm_gondor_sword_a02" />
                 <equipment
                     slot="Item1"
                     id="Item.northern_round_sparring_shield" />
@@ -2105,7 +2105,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gondor_boromir_sword" />
+                    id="Item.wm_gondor_sword_a02" />
                 <equipment
                     slot="Item1"
                     id="Item.northern_round_sparring_shield" />
@@ -2128,7 +2128,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gondor_boromir_sword" />
+                    id="Item.wm_gondor_sword_a02" />
                 <equipment
                     slot="Item1"
                     id="Item.northern_round_sparring_shield" />
@@ -2151,7 +2151,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gondor_boromir_sword" />
+                    id="Item.wm_gondor_sword_a02" />
                 <equipment
                     slot="Item1"
                     id="Item.northern_round_sparring_shield" />

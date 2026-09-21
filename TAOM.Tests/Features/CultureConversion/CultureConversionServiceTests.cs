@@ -5,6 +5,7 @@ using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CultureConversion;
 using TAOM.Features.CultureConversion.Domain;
+using TAOM.Features.CultureConversion.GarrisonSwap;
 using TAOM.Features.TroopProgression;
 
 namespace TAOM.Tests.Features.CultureConversion;
@@ -17,6 +18,7 @@ public class CultureConversionServiceTests
     private ICultureConversionAdapter _adapter = null!;
     private ICultureConversionSettingsProvider _settings = null!;
     private IVolunteerRecruitmentService _recruitment = null!;
+    private IGarrisonCultureSwapService _garrisonSwap = null!;
     private IModLogger _logger = null!;
     private CultureConversionStore _store = null!;
     private CultureConversionService _sut = null!;
@@ -27,9 +29,10 @@ public class CultureConversionServiceTests
         _adapter = Substitute.For<ICultureConversionAdapter>();
         _settings = Substitute.For<ICultureConversionSettingsProvider>();
         _recruitment = Substitute.For<IVolunteerRecruitmentService>();
+        _garrisonSwap = Substitute.For<IGarrisonCultureSwapService>();
         _logger = Substitute.For<IModLogger>();
         _store = new CultureConversionStore(_logger);
-        _sut = new CultureConversionService(_store, _adapter, _settings, _recruitment, _logger);
+        _sut = new CultureConversionService(_store, _adapter, _settings, _recruitment, _garrisonSwap, _logger);
 
         // Sensible defaults: feature on, 45-day hold, no loyalty gate, convert everyone, all cultures recruitable.
         _settings.IsEnabled.Returns(true);
@@ -514,5 +517,91 @@ public class CultureConversionServiceTests
         _sut.ReapplyConvertedCultures();
 
         _adapter.DidNotReceive().ReplaceNotable(Arg.Any<string>());
+    }
+
+    // --- Garrison + militia swap ---
+
+    [TestMethod]
+    public void RunDailyChecks_Converts_SwapsTroopsInTheTownAndEveryBoundVillage()
+    {
+        GivenCrossCultureConquest();
+        _adapter.GetBoundVillageSettlementIds(Town).Returns(new List<string> { "village_ES1_1", "village_ES1_2" });
+        _sut.OnSettlementConquered(Town, 0.0);
+
+        _sut.RunDailyChecks(50.0);
+
+        _garrisonSwap.Received(1).SwapSettlementTroops(Town, "gondor", "mordor", false);
+        _garrisonSwap.Received(1).SwapSettlementTroops("village_ES1_1", "gondor", "mordor", false);
+        _garrisonSwap.Received(1).SwapSettlementTroops("village_ES1_2", "gondor", "mordor", false);
+    }
+
+    [TestMethod]
+    public void RunDailyChecks_Converts_PassesThePreConversionCultureAsTheSource()
+    {
+        // The militia swap matches slot-for-slot against the OLD culture's four militia troops, and
+        // SetSettlementCulture has already overwritten Settlement.Culture by then. Getting this
+        // wrong would silently reduce every militia swap to the garrison ladder.
+        _store.Put(new SettlementConversionRecord(Town, "gondor", appliedCultureId: "mordor"));
+        _adapter.GetCurrentCultureId(Town).Returns("mordor");
+        _adapter.GetOwnerCultureId(Town).Returns("isengard");
+        _sut.OnSettlementConquered(Town, 0.0);
+
+        _sut.RunDailyChecks(50.0);
+
+        _garrisonSwap.Received(1).SwapSettlementTroops(Town, "mordor", "isengard", Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void RunDailyChecks_Converts_TellsTheSwapWhetherThePlayerOwnsTheFief()
+    {
+        GivenCrossCultureConquest();
+        _adapter.IsPlayerOwned(Town).Returns(true);
+        _sut.OnSettlementConquered(Town, 0.0);
+
+        _sut.RunDailyChecks(50.0);
+
+        _garrisonSwap.Received(1).SwapSettlementTroops(Town, "gondor", "mordor", true);
+    }
+
+    [TestMethod]
+    public void RunDailyChecks_RestoreToOriginalCulture_SwapsBackSymmetrically()
+    {
+        // A fief retaken by its original culture reverts, notables included — the garrison should
+        // follow the same way rather than staying orcish under a Gondor banner.
+        _store.Put(new SettlementConversionRecord(Town, "gondor", appliedCultureId: "mordor"));
+        _adapter.GetCurrentCultureId(Town).Returns("mordor");
+        _adapter.GetOwnerCultureId(Town).Returns("gondor");
+        _sut.OnSettlementConquered(Town, 0.0);
+
+        _sut.RunDailyChecks(50.0);
+
+        _garrisonSwap.Received(1).SwapSettlementTroops(Town, "mordor", "gondor", Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void ReapplyConvertedCultures_DoesNotSwapGarrison()
+    {
+        // The swap is a one-shot at conversion time. Repeating it on every load would re-man a
+        // garrison the player has since rebuilt by hand, and is also what would silently retrofit
+        // fiefs converted in older saves — which was explicitly not wanted.
+        _store.Put(new SettlementConversionRecord(Town, "gondor", appliedCultureId: "mordor"));
+
+        _sut.ReapplyConvertedCultures();
+
+        _garrisonSwap.DidNotReceive().SwapSettlementTroops(
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void RunDailyChecks_StaleTimerDropped_DoesNotSwapGarrison()
+    {
+        GivenCrossCultureConquest();
+        _sut.OnSettlementConquered(Town, 0.0);
+        _adapter.GetOwnerCultureId(Town).Returns("isengard"); // owner changed without an event
+
+        _sut.RunDailyChecks(50.0);
+
+        _garrisonSwap.DidNotReceive().SwapSettlementTroops(
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>());
     }
 }

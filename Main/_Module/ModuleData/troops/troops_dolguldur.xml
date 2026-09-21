@@ -110,7 +110,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_1h_sword_a03" />
+                    id="Item.wm_dol_goldur_1h_sword_a01" />
                 <equipment
                     slot="Body"
                     id="Item.sk_dg_uruk_chest_light_a" />
@@ -143,7 +143,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_1h_sword_a02" />
+                    id="Item.wm_dol_goldur_1h_sword_a01" />
                 <equipment
                     slot="Body"
                     id="Item.sk_dg_uruk_chest_light_d" />
@@ -344,10 +344,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_halberd_a02" />
+                    id="Item.sm_dg_khml_spear_a" />
                 <equipment
                     slot="Item1"
-                    id="Item.wm_dol_goldur_axe_a04" />
+                    id="Item.sm_dg_khml_2h_axe_b" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_a" />
@@ -364,10 +364,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_halberd_a02" />
+                    id="Item.sm_dg_khml_spear_a" />
                 <equipment
                     slot="Item1"
-                    id="Item.wm_dol_goldur_axe_a04" />
+                    id="Item.sm_dg_khml_2h_axe_b" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_a" />
@@ -387,7 +387,7 @@
                     id="Item.wm_dol_goldur_1h_sword_a03" />
                 <equipment
                     slot="Item1"
-                    id="Item.wm_dol_goldur_axe_a03" />
+                    id="Item.sm_dg_khml_2h_axe_b" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_b" />
@@ -404,7 +404,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_halberd_a01" />
+                    id="Item.sm_dg_khml_spear_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_dol_goldur_1h_sword_a02" />
@@ -516,7 +516,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_1h_mace_a02" />
+                    id="Item.wm_dol_goldur_1h_mace_a03" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_f" />
@@ -545,7 +545,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_1h_mace_a02" />
+                    id="Item.wm_dol_goldur_1h_mace_a03" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_f" />
@@ -574,7 +574,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_1h_mace_a01" />
+                    id="Item.wm_dol_goldur_1h_mace_a03" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_g" />
@@ -632,7 +632,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_2h_mace_a01" />
+                    id="Item.sm_dg_khml_2h_mace_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_a" />
@@ -661,7 +661,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_2h_mace_a04" />
+                    id="Item.sm_dg_khml_2h_mace_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_b" />
@@ -730,7 +730,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_1h_sword_a03" />
+                    id="Item.wm_dol_goldur_1h_sword_a01" />
                 <equipment
                     slot="Body"
                     id="Item.sk_dg_uruk_chest_light_a" />
@@ -752,7 +752,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_1h_sword_a02" />
+                    id="Item.wm_dol_goldur_1h_sword_a01" />
                 <equipment
                     slot="Body"
                     id="Item.sk_dg_uruk_chest_light_c" />
@@ -820,10 +820,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_halberd_a02" />
+                    id="Item.sm_dg_khml_spear_a" />
                 <equipment
                     slot="Item1"
-                    id="Item.wm_dol_goldur_1h_sword_a03" />
+                    id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_a" />
@@ -843,10 +843,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_halberd_a02" />
+                    id="Item.sm_dg_khml_spear_a" />
                 <equipment
                     slot="Item1"
-                    id="Item.wm_dol_goldur_1h_sword_a03" />
+                    id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_a" />
@@ -866,10 +866,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_halberd_a01" />
+                    id="Item.sm_dg_khml_spear_a" />
                 <equipment
                     slot="Item1"
-                    id="Item.wm_dol_goldur_axe_a04" />
+                    id="Item.sm_dg_khml_2h_axe_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_b" />
@@ -889,10 +889,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_halberd_a02" />
+                    id="Item.sm_dg_khml_spear_a" />
                 <equipment
                     slot="Item1"
-                    id="Item.wm_dol_goldur_1h_sword_a02" />
+                    id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_c" />
@@ -967,7 +967,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_1h_sword_a03" />
+                    id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_heavy_a" />
@@ -996,7 +996,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_2h_mace_a04" />
+                    id="Item.wm_dol_goldur_2h_mace_a01" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_heavy_a" />
@@ -1025,7 +1025,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_2h_mace_a03" />
+                    id="Item.wm_dol_goldur_2h_mace_a01" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_heavy_a" />
@@ -1297,7 +1297,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_halberd_a03" />
+                    id="Item.sm_dg_khml_spear_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a01" />
@@ -1317,7 +1317,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_halberd_a04" />
+                    id="Item.sm_dg_khml_spear_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a01" />
@@ -1337,7 +1337,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_halberd_a02" />
+                    id="Item.sm_dg_khml_spear_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a01" />
@@ -1357,7 +1357,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_halberd_a01" />
+                    id="Item.sm_dg_khml_spear_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a01" />
@@ -1377,7 +1377,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_1h_sword_a01" />
+                    id="Item.wm_dol_goldur_1h_sword_a02" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a01" />
@@ -1443,7 +1443,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_halberd_a01" />
+                    id="Item.sm_dg_khml_spear_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_f" />
@@ -1463,7 +1463,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_2h_mace_a04" />
+                    id="Item.sm_dg_khml_2h_mace_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_g" />
@@ -1483,7 +1483,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_2h_mace_a02" />
+                    id="Item.sm_dg_khml_2h_mace_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_h" />
@@ -1503,7 +1503,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_2h_mace_a01" />
+                    id="Item.sm_dg_khml_2h_mace_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_a" />
@@ -1523,7 +1523,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_2h_mace_a04" />
+                    id="Item.sm_dg_khml_2h_mace_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_b" />
@@ -1601,7 +1601,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_2h_mace_a04" />
+                    id="Item.sm_dg_khml_2h_mace_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_f" />
@@ -1630,7 +1630,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_2h_mace_a03" />
+                    id="Item.sm_dg_khml_2h_mace_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_g" />
@@ -1659,7 +1659,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_1h_sword_a02" />
+                    id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_h" />
@@ -1688,7 +1688,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_1h_sword_a03" />
+                    id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_a" />
@@ -1717,7 +1717,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_1h_sword_a01" />
+                    id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_b" />
@@ -1792,7 +1792,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_2h_mace_a04" />
+                    id="Item.wm_dol_goldur_2h_mace_a01" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_heavy_a" />
@@ -1821,7 +1821,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_2h_mace_a04" />
+                    id="Item.wm_dol_goldur_2h_mace_a01" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_heavy_f" />
@@ -1850,7 +1850,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_2h_mace_a04" />
+                    id="Item.wm_dol_goldur_2h_mace_a01" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_heavy_a" />
@@ -1879,7 +1879,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_2h_mace_a04" />
+                    id="Item.wm_dol_goldur_2h_mace_a01" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_heavy_a" />
@@ -1908,7 +1908,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_2h_mace_a04" />
+                    id="Item.wm_dol_goldur_2h_mace_a01" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_heavy_a" />
@@ -1937,7 +1937,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_halberd_a04" />
+                    id="Item.sm_dg_khml_spear_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_heavy_b" />
@@ -1966,7 +1966,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_halberd_a05" />
+                    id="Item.sm_dg_khml_spear_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_heavy_c" />
@@ -1995,7 +1995,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_halberd_a02" />
+                    id="Item.sm_dg_khml_spear_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_heavy_d" />
@@ -2024,7 +2024,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_2h_mace_a03" />
+                    id="Item.wm_dol_goldur_2h_mace_a01" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_heavy_e" />
@@ -2198,7 +2198,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a02" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
                 <equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_a" />
                 <equipment slot="Body" id="Item.sk_dg_uruk_chest_med_a" />
@@ -2254,7 +2254,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a02" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
                 <equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_b" />
                 <equipment slot="Body" id="Item.sk_dg_uruk_chest_med_b" />
@@ -2309,7 +2309,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_dol_goldur_1h_mace_a02" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_1h_mace_a" />
                 <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
                 <equipment slot="Head" id="Item.sk_dg_uruk_helmet_heavy_a" />
                 <equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_a" />
@@ -2362,7 +2362,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_dol_goldur_1h_mace_a01" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_1h_mace_b" />
                 <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
                 <equipment slot="Head" id="Item.sk_dg_uruk_helmet_heavy_b" />
                 <equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_a" />
@@ -2469,7 +2469,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_dol_goldur_axe_a01" />
+                <equipment slot="Item0" id="Item.wm_dol_goldur_axe_a02" />
                 <equipment slot="Head" id="Item.sk_dg_uruk_helmet_elite_b" />
                 <equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_b" />
                 <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_elite_a" />
@@ -2526,7 +2526,7 @@
                 <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t4" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
-                <equipment slot="Item3" id="Item.wm_dol_goldur_1h_sword_a03" />
+                <equipment slot="Item3" id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_a" />
                 <equipment slot="Body" id="Item.sk_dg_uruk_chest_med_a" />
                 <equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_b" />
@@ -2583,7 +2583,7 @@
                 <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t5" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
-                <equipment slot="Item3" id="Item.wm_dol_goldur_1h_sword_a02" />
+                <equipment slot="Item3" id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_e" />
                 <equipment slot="Body" id="Item.sk_dg_uruk_chest_med_a" />
                 <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_med_b" />
@@ -2640,7 +2640,7 @@
                 <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t6" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
-                <equipment slot="Item3" id="Item.wm_dol_goldur_1h_sword_a02" />
+                <equipment slot="Item3" id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_f" />
                 <equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_e" />
                 <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_elite_cape_d" />
@@ -2695,7 +2695,7 @@
                 <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t7" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
-                <equipment slot="Item3" id="Item.wm_dol_goldur_1h_sword_a01" />
+                <equipment slot="Item3" id="Item.sm_dg_khml_1h_sword_b" />
                 <equipment slot="Head" id="Item.sk_dg_uruk_helmet_heavy_e" />
                 <equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_e" />
                 <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_elite_cape_e" />
@@ -2808,9 +2808,9 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a02" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
-                <equipment slot="Item2" id="Item.wm_dol_goldur_halberd_a02" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_spear_a" />
                 <equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_g" />
                 <equipment slot="Body" id="Item.sk_dg_uruk_chest_med_c" />
                 <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_med_a" />
@@ -2866,9 +2866,9 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a02" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
-                <equipment slot="Item2" id="Item.wm_dol_goldur_halberd_a01" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_spear_a" />
                 <equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_h" />
                 <equipment slot="Body" id="Item.sk_dg_uruk_chest_med_d" />
                 <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_med_a" />
@@ -2924,9 +2924,9 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-                <equipment slot="Item2" id="Item.wm_dol_goldur_halberd_a01" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_spear_b" />
                 <equipment slot="Head" id="Item.sk_dg_uruk_helmet_heavy_g" />
                 <equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_c" />
                 <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_heavy_b" />
@@ -2980,9 +2980,9 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_1h_sword_b" />
                 <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-                <equipment slot="Item2" id="Item.wm_dol_goldur_halberd_a01" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_spear_b" />
                 <equipment slot="Head" id="Item.sk_dg_uruk_helmet_elite_g" />
                 <equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_c" />
                 <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_heavy_c" />
@@ -3271,7 +3271,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dg_khml_1h_mace_a" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_1h_mace_b" />
                 <equipment slot="Item1" id="Item.sm_dg_khml_shield_heavy_a" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_heavy_a" />
                 <equipment slot="Body" id="Item.sk_dg_khml_plate_med_a" />
@@ -3289,7 +3289,7 @@
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_plate_med_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dg_khml_1h_mace_a" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_1h_mace_b" />
                 <equipment slot="Item1" id="Item.sm_dg_khml_shield_heavy_a" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_heavy_c" />
                 <equipment slot="Body" id="Item.sk_dg_khml_plate_med_a" />
@@ -3333,7 +3333,7 @@
                 <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t7" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
-                <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_a" />
+                <equipment slot="Item3" id="Item.wm_dol_goldur_axe_a02" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_med_c" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_d" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_med_c" />
@@ -3344,7 +3344,7 @@
                 <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t7" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
-                <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_b" />
+                <equipment slot="Item3" id="Item.wm_dol_goldur_axe_a02" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_med_c" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_d" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_med_c" />
@@ -3355,7 +3355,7 @@
                 <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t7" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
-                <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_a" />
+                <equipment slot="Item3" id="Item.wm_dol_goldur_axe_a02" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_med_c" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_d" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_med_c" />
@@ -3395,9 +3395,9 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dg_khml_spear_a" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_spear_b" />
                 <equipment slot="Item1" id="Item.sm_dg_khml_shield_cav_med_a" />
-                <equipment slot="Item2" id="Item.sm_dg_khml_1h_sword_a" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_1h_sword_b" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_cav_light_a" />
                 <equipment slot="Body" id="Item.sk_dg_khml_plate_heavy_a" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_plate_heavy_a" />
@@ -3407,7 +3407,7 @@
                 <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dg_khml_spear_a" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_spear_b" />
                 <equipment slot="Item1" id="Item.sm_dg_khml_shield_cav_med_b" />
                 <equipment slot="Item2" id="Item.sm_dg_khml_1h_sword_b" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_cav_med_a" />
@@ -3419,9 +3419,9 @@
                 <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dg_khml_spear_a" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_spear_b" />
                 <equipment slot="Item1" id="Item.sm_dg_khml_shield_cav_med_a" />
-                <equipment slot="Item2" id="Item.sm_dg_khml_1h_sword_a" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_1h_sword_b" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_cav_med_b" />
                 <equipment slot="Body" id="Item.sk_dg_khml_plate_heavy_a" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_plate_heavy_a" />
@@ -3460,9 +3460,9 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dg_khml_spear_a" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_spear_b" />
                 <equipment slot="Item1" id="Item.sm_dg_khml_shield_cav_heavy_a" />
-                <equipment slot="Item2" id="Item.sm_dg_khml_1h_sword_a" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_1h_sword_b" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_cav_heavy_a" />
                 <equipment slot="Body" id="Item.sk_dg_khml_plate_heavy_b" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_plate_heavy_a" />
@@ -3472,7 +3472,7 @@
                 <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dg_khml_spear_a" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_spear_b" />
                 <equipment slot="Item1" id="Item.sm_dg_khml_shield_cav_heavy_a" />
                 <equipment slot="Item2" id="Item.sm_dg_khml_1h_sword_b" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_cav_heavy_b" />
@@ -3484,9 +3484,9 @@
                 <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dg_khml_spear_a" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_spear_b" />
                 <equipment slot="Item1" id="Item.sm_dg_khml_shield_cav_heavy_a" />
-                <equipment slot="Item2" id="Item.sm_dg_khml_1h_sword_a" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_1h_sword_b" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_cav_heavy_c" />
                 <equipment slot="Body" id="Item.sk_dg_khml_plate_heavy_b" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_plate_heavy_a" />
@@ -3643,7 +3643,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dg_khml_2h_axe_a" />
+                <equipment slot="Item0" id="Item.wm_dol_goldur_axe_a02" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_cult_heavy_a" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_c" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_heavy_a" />
@@ -3651,7 +3651,7 @@
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dg_khml_2h_axe_b" />
+                <equipment slot="Item0" id="Item.wm_dol_goldur_axe_a02" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_cult_heavy_b" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_d" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_heavy_b" />
@@ -3659,7 +3659,7 @@
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_heavy_b" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dg_khml_2h_axe_a" />
+                <equipment slot="Item0" id="Item.wm_dol_goldur_axe_a02" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_cult_heavy_c" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_c" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_heavy_c" />
@@ -3696,7 +3696,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dg_khml_2h_axe_a" />
+                <equipment slot="Item0" id="Item.wm_dol_goldur_axe_a02" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_cult_elite_g" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_c" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_heavy_a" />
@@ -3704,7 +3704,7 @@
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dg_khml_2h_axe_b" />
+                <equipment slot="Item0" id="Item.wm_dol_goldur_axe_a02" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_cult_elite_h" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_d" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_heavy_a" />
@@ -3712,7 +3712,7 @@
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_heavy_b" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dg_khml_2h_axe_a" />
+                <equipment slot="Item0" id="Item.wm_dol_goldur_axe_a02" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_cult_elite_i" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_c" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_heavy_a" />
@@ -3755,7 +3755,7 @@
                 <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t8" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
-                <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_a" />
+                <equipment slot="Item3" id="Item.wm_dol_goldur_axe_a02" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_med_c" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_d" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_med_c" />
@@ -3766,7 +3766,7 @@
                 <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t8" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
-                <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_b" />
+                <equipment slot="Item3" id="Item.wm_dol_goldur_axe_a02" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_med_c" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_d" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_med_c" />
@@ -3777,7 +3777,7 @@
                 <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t8" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
-                <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_a" />
+                <equipment slot="Item3" id="Item.wm_dol_goldur_axe_a02" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_med_c" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_d" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_med_c" />
@@ -3817,7 +3817,7 @@
                 <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t9" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
-                <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_a" />
+                <equipment slot="Item3" id="Item.wm_dol_goldur_axe_a02" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_med_c" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_d" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_med_c" />
@@ -3828,7 +3828,7 @@
                 <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t9" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
-                <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_b" />
+                <equipment slot="Item3" id="Item.wm_dol_goldur_axe_a02" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_med_c" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_d" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_med_c" />
@@ -3839,7 +3839,7 @@
                 <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t9" />
                 <equipment slot="Item1" id="Item.piercing_arrows" />
                 <equipment slot="Item2" id="Item.piercing_arrows" />
-                <equipment slot="Item3" id="Item.sm_dg_khml_2h_axe_a" />
+                <equipment slot="Item3" id="Item.wm_dol_goldur_axe_a02" />
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_med_c" />
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_d" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_med_c" />
@@ -4113,7 +4113,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_halberd_a03" />
+                    id="Item.sm_dg_khml_spear_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a02" />
@@ -4133,7 +4133,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_halberd_a04" />
+                    id="Item.sm_dg_khml_spear_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a02" />
@@ -4153,7 +4153,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_dol_goldur_halberd_a01" />
+                    id="Item.sm_dg_khml_spear_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a03" />
@@ -4362,7 +4362,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_2h_mace_a04" />
+                    id="Item.sm_dg_khml_2h_mace_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_f" />
@@ -4391,7 +4391,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_2h_mace_a03" />
+                    id="Item.sm_dg_khml_2h_mace_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_g" />
@@ -4420,7 +4420,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_1h_sword_a02" />
+                    id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_h" />
@@ -4449,7 +4449,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_1h_sword_a03" />
+                    id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_a" />
@@ -4478,7 +4478,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_1h_sword_a01" />
+                    id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_b" />

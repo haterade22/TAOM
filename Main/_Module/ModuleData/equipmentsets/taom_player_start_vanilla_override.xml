@@ -19,7 +19,7 @@
     <!-- vlandia -->
     <EquipmentRoster id="player_char_creation_vlandia_retainer_m" culture="Culture.vlandia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rohan_ws_spear_a01" />
+            <Equipment slot="Item0" id="Item.wm_rohan_spear_b" />
             <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
             <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
             <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
@@ -35,7 +35,7 @@
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_vlandia_retainer_f" culture="Culture.vlandia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rohan_ws_spear_a01" />
+            <Equipment slot="Item0" id="Item.wm_rohan_spear_b" />
             <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
             <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
             <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
@@ -53,7 +53,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
-            <Equipment slot="Item2" id="Item.wm_rohan_ws_spear_a01" />
+            <Equipment slot="Item2" id="Item.wm_rohan_spear_b" />
             <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
             <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
@@ -67,7 +67,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
-            <Equipment slot="Item2" id="Item.wm_rohan_ws_spear_a01" />
+            <Equipment slot="Item2" id="Item.wm_rohan_spear_b" />
             <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
             <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
@@ -137,7 +137,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
-            <Equipment slot="Item2" id="Item.wm_rohan_ws_spear_a01" />
+            <Equipment slot="Item2" id="Item.wm_rohan_spear_b" />
             <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
             <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
@@ -151,7 +151,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
-            <Equipment slot="Item2" id="Item.wm_rohan_ws_spear_a01" />
+            <Equipment slot="Item2" id="Item.wm_rohan_spear_b" />
             <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
             <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
@@ -683,7 +683,7 @@
     <!-- battania (borrows khuzait) -->
     <EquipmentRoster id="player_char_creation_battania_retainer_m" culture="Culture.battania" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Item0" id="Item.wm_harad_spear_a02" />
             <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
             <Equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
             <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
@@ -699,7 +699,7 @@
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_battania_retainer_f" culture="Culture.battania" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Item0" id="Item.wm_harad_spear_a02" />
             <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
             <Equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
             <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
@@ -717,7 +717,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
             <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
-            <Equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Item2" id="Item.wm_harad_spear_a02" />
             <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
             <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
@@ -731,7 +731,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
             <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
-            <Equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Item2" id="Item.wm_harad_spear_a02" />
             <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
             <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
@@ -773,7 +773,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
             <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
-            <Equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Item2" id="Item.wm_harad_spear_a02" />
             <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
             <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
@@ -787,7 +787,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
             <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
-            <Equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Item2" id="Item.wm_harad_spear_a02" />
             <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
             <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
@@ -857,7 +857,7 @@
     <!-- khuzait -->
     <EquipmentRoster id="player_char_creation_khuzait_retainer_m" culture="Culture.khuzait" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Item0" id="Item.wm_harad_spear_a02" />
             <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
             <Equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
             <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
@@ -873,7 +873,7 @@
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_khuzait_retainer_f" culture="Culture.khuzait" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Item0" id="Item.wm_harad_spear_a02" />
             <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
             <Equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_a" />
             <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
@@ -891,7 +891,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
             <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
-            <Equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Item2" id="Item.wm_harad_spear_a02" />
             <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
             <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
@@ -905,7 +905,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
             <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
-            <Equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Item2" id="Item.wm_harad_spear_a02" />
             <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
             <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
@@ -975,7 +975,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
             <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
-            <Equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Item2" id="Item.wm_harad_spear_a02" />
             <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
             <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>
@@ -989,7 +989,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
             <Equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
-            <Equipment slot="Item2" id="Item.sm_rh_loke_spear_a" />
+            <Equipment slot="Item2" id="Item.wm_harad_spear_a02" />
             <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
             <Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
         </EquipmentSet>

@@ -164,6 +164,18 @@ OVERSHOOT_WEIGHT = 2
 # These are the LAST resort, reached only by a culture with no roster of its own at any
 # assignment. They are Rohan/Dunland/Dale militia gear and so are not truly neutral -- that is
 # #431, and it is the reason this block should stay small rather than grow comfortable.
+# These ship as the `enlist_default_{assignment}_{rank}` rosters for `neutral_culture`, the
+# last resort when a culture has no roster of its own, so they are live data rather than a
+# scaffold. They are HAND-AUTHORED and deliberately Rohirric-flavoured militia gear.
+#
+# They are NOT on the melee ladder (#631), and checking them is not automatic: the ladder gate
+# reads troop kits and these rosters belong to no troop. Measured 2026-09-21, 14 of their
+# weapon entries sit under the band their rank implies (recruit/soldier/veteran/sergeant map to
+# roughly tiers 2/3/4/6). Ten of those cannot be fixed from this family at all, because Rohan's
+# one-handed swords top out at 43 DPS while a sergeant's band starts at 58: that is the
+# catalogue-depth problem #631 records, not a bug in this table. Re-check with
+# `tools/melee_ladder.band()` after any weapon restat, and prefer widening this table beyond
+# one kingdom over inventing Rohirric weapons, since the rosters are culture-neutral anyway.
 DEFAULT_ROSTER_ITEMS = {
     ('infantry', 'recruit'): [
         ('Item0', 'wm_rohan_ws_sword_a01'),

@@ -1,5 +1,8 @@
 # Ranged Ladders
 
+> **The melee side of the same question** lives in [melee-damage-model.md](melee-damage-model.md). It reuses `engine_tier()` and the trailing-numeral regex from `tools/ranged_ladder.py`, but melee weapons are assembled from crafting pieces rather than carrying explicit stats, so their damage is simulated rather than authored.
+
+
 > Every archer's reach, damage, accuracy and skill come from one ranked, per-tier ladder. Tier
 > climbs every stat inside a kingdom; rank orders the kingdoms at each tier; one generated item per
 > tier a kingdom fields. Issues #582 (2026-09-12, reach) and #617 (2026-09-18, the rest).
