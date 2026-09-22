@@ -73,6 +73,33 @@ internal static class HowdahSeatMotion
         !float.IsNaN(z) && !float.IsInfinity(z);
 
     /// <summary>True when two crew frames are far enough apart that their occupants will not shove each other.</summary>
+    /// <summary>How far the live spine may sit from its scaled rest height before the read is treated as bad, at
+    /// 1.0x. The spine bobs about 0.09 m and rides about 0.15 m high in the standing pose; a metre is a wrong read
+    /// (a ragdoll, a recycled slot, an unposed skeleton), not a deck.</summary>
+    public const float SpinePlausibleBandMetres = 1.0f;
+
+    /// <summary>
+    /// The howdah platform root's height above the elephant's feet, taken from where the spine actually is.
+    ///
+    /// The visible howdah is skinned to Spine1_05 and bobs with it, about 0.18 m peak to peak on a 1.3x elephant
+    /// (measured 2026-09-22). A platform at a FIXED height sits inside that bob: set it low enough never to meet the
+    /// deck and the archers look sunk behind the walls, set it at the deck's average and the deck rises through them
+    /// half the time, which Mike saw as constant stuttering and re-nocking. Following the spine's height, and only
+    /// its height, removes the relative motion without inheriting the bone's rotation, whose axes do not line up
+    /// with the animal's.
+    ///
+    /// Answers NaN on a bad read so the caller falls back to the fixed height rather than putting archers wherever a
+    /// broken bone says.
+    /// </summary>
+    public static float RootAboveFeetFromSpine(float spineAboveFeet, float scale)
+    {
+        if (float.IsNaN(spineAboveFeet) || float.IsInfinity(spineAboveFeet)) return float.NaN;
+        if (float.IsNaN(scale) || float.IsInfinity(scale) || !(scale > 0f)) return float.NaN;
+        float restSpine = ElephantConfig.HowdahSpineRestAboveFeet * scale;
+        if (!(System.Math.Abs(spineAboveFeet - restSpine) <= SpinePlausibleBandMetres * scale)) return float.NaN;
+        return spineAboveFeet + (ElephantConfig.HowdahRootRestAboveFeet - ElephantConfig.HowdahSpineRestAboveFeet) * scale;
+    }
+
     public static bool FramesAreClear(float separationMetres) =>
         !float.IsNaN(separationMetres) && separationMetres >= MinimumFrameSeparation;
 }

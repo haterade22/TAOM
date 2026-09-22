@@ -27,10 +27,18 @@ public class HowdahPrefabTests
     // 3.15 m (SK_Elephant_Armor_Variations.fbx): x -0.68 to 0.68, y -2.026 to -0.270. The first build took the centre
     // from face CENTRES and got -0.805, which placed the platform 0.34 m ahead of the real deck and stood the front
     // pair of archers outside the howdah's front wall in the first crew test (#627).
-    private const float MeasuredFloorHeight = 3.15f;      // elite howdah deck, SK_Elephant_Armor_Variations.fbx
-    private const float DeckCentreY = -1.148f;            // behind the elephant's origin
-    private const float DeckHalfWidth = 0.68f;            // 1.36 m across
-    private const float DeckHalfLength = 0.878f;          // 1.756 m along
+    //
+    // Every length below was measured at the FBX's own 1.0x and is kept exactly as measured. The elephant is 1.3x in
+    // game since 2026-09-22 (body_length 130, Mike), so each expected value is that measurement times
+    // ElephantConfig.AuthoredScale. The prefab is authored at that final size and nothing scales it at runtime: a
+    // runtime-scaled entity carrying a physics body is the construct that dropped the mumakil's whole crew (#627).
+    private static readonly float S = ElephantConfig.AuthoredScale;
+    // 3.15 m is the elite howdah deck measured off SK_Elephant_Armor_Variations.fbx in the REST pose; the lift is how
+    // much higher the live standing pose carries it, measured in game (ElephantConfig.HowdahLivePoseLift).
+    private static readonly float MeasuredFloorHeight = (3.15f + ElephantConfig.HowdahLivePoseLift) * S;
+    private static readonly float DeckCentreY = -1.148f * S;        // behind the elephant's origin
+    private static readonly float DeckHalfWidth = 0.68f * S;        // 1.36 m across at 1.0x
+    private static readonly float DeckHalfLength = 0.878f * S;      // 1.756 m along at 1.0x
     // Physics-shape bounding boxes, measured 2026-09-18/19 from the manifold data in Native/AssetPackages:
     // bo_empire_keep_a_door_top in bodies_shared.tpac, bo_barrier in core_game.tpac (a plane, zero thickness along y).
     private const float FloorShapeMinX = -0.81f, FloorShapeMaxX = 0.80f;
@@ -43,8 +51,8 @@ public class HowdahPrefabTests
     // runs about 0.17 m further forward than the front wall, which is how frames placed on the deck put an archer's
     // capsule through it. Interior 1.26 x 1.48 m, and two 0.37 m capsules side by side need 1.48 m of width, so four
     // cannot fit, and the deck's length holds exactly TWO in a line (#627).
-    private const float InteriorMinX = -0.63f, InteriorMaxX = 0.63f;
-    private const float InteriorMinY = -1.98f, InteriorMaxY = -0.50f;
+    private static readonly float InteriorMinX = -0.63f * S, InteriorMaxX = 0.63f * S;
+    private static readonly float InteriorMinY = -1.98f * S, InteriorMaxY = -0.50f * S;
     private const int CrewFrameCount = 2;
     // How far a body capsule may overlap the cosmetic rim. Nothing pushes back (no rails, no collision on the harness
     // mesh), and archer-to-archer spacing is the rule that actually matters (HowdahSeatMotion).
@@ -236,6 +244,38 @@ public class HowdahPrefabTests
             .ToList();
         Assert.AreEqual(0, overridden?.Count ?? 0,
             "an empty tag reaches native HasTag(\"\") with unknown semantics; the defaults match no child here");
+    }
+
+    [TestMethod]
+    public void TheElephantItem_DeclaresTheScaleThePrefabIsAuthoredAt()
+    {
+        // The prefab's heights and footprint are final metres at ElephantConfig.AuthoredScale, so they silently
+        // encode taom_war_elephant's body_length. Change one without the other and the crew stand inside the
+        // elephant's back or float above the howdah, with no error anywhere. This is the gate that stops it.
+        string? env = Environment.GetEnvironmentVariable("BANNERLORD_GAME_DIR");
+        string horses = System.IO.Path.Combine(string.IsNullOrWhiteSpace(env)
+                ? @"E:\Steam\steamapps\common\Mount & Blade II Bannerlord" : env,
+            "Modules", "LOTRLOME_Armory", "ModuleData", "LOTRLOME_items", "LOTRAOM_horses.xml");
+        if (!System.IO.File.Exists(horses))
+            Assert.Inconclusive("LOTRLOME_Armory not installed on this machine; the item cannot be checked here.");
+
+        var item = System.Xml.Linq.XDocument.Load(horses).Descendants("Item")
+            .FirstOrDefault(i => (string?)i.Attribute("id") == "taom_war_elephant");
+        Assert.IsNotNull(item, "the taom_war_elephant Horse item is missing from the Armory");
+        string? bodyLength = item!.Descendants("Horse").FirstOrDefault()?.Attribute("body_length")?.Value;
+        Assert.AreEqual(((int)Math.Round(ElephantConfig.AuthoredScale * 100f)).ToString(), bodyLength,
+            "taom_war_elephant's body_length no longer matches ElephantConfig.AuthoredScale: regenerate the howdah " +
+            "prefab at the new scale and change the constant, because nothing scales the platform at runtime");
+    }
+
+    [TestMethod]
+    public void TheTrampleReach_GrowsWithTheBody()
+    {
+        // Tuned at 1.0x as 3 m trigger and 4 m radius; Mike chose to scale both with the body (2026-09-22) so the
+        // tusks strike what they visibly reach. Trigger must stay inside the radius or the beast swings at air.
+        Assert.AreEqual(3f * ElephantConfig.AuthoredScale, ElephantConfig.TrampleTriggerRange, 0.001f);
+        Assert.AreEqual(4f * ElephantConfig.AuthoredScale, ElephantConfig.TrampleRadius, 0.001f);
+        Assert.IsTrue(ElephantConfig.TrampleTriggerRange <= ElephantConfig.TrampleRadius);
     }
 
     [TestMethod]

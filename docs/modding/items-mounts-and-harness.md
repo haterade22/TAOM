@@ -399,9 +399,13 @@ Code: No code changes needed for a reskin. A bespoke creature needs a behaviour 
    `EquipmentIndex.ArmorItemEndSlot`, the same enum value as `EquipmentIndex.Horse`
    (`EquipmentIndex.cs:21, 23`), it has no mount-only guard, and `BuildAgent` runs for the rider as
    well with the Horse item still in the rider's spawn equipment (`Mission.cs:4026-4032`).
-   **Any value other than 100 scales the rider too.**
-3. So either accept the shared scale (the mumakil at 300 and the wargs at 110 and 115 do) or leave
-   the mount at 100 and rescale the mesh instead.
+   Read on its own, that trace predicts the rider is scaled too. **In game it is not** (confirmed
+   2026-09-22: the mumakil at 300 carries a normal-sized rider beside its 1.0x crew archers). Whatever
+   prevents it happens on the native side of `SetInitialAgentScale`, so the managed code
+   alone cannot tell you; this handbook said the opposite until then.
+3. So changing `body_length` is safe for the rider. What it does NOT scale is anything your
+   own code positions against the mount: a platform, a seat offset, an attack range. Those need deriving
+   from the new scale (see the elephant's `ElephantConfig.AuthoredScale`).
 4. Re-check the hit box: the capsule scales with the agent, so a 1x capsule that fits becomes a 3x
    capsule that may not cover a longer body.
 5. Tune the seat with `rider_eye_height_adder`, `rider_body_capsule_height_adder` and

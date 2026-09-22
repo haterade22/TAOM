@@ -882,7 +882,7 @@ different complaints:
       **First run, 2026-09-19 14:14 (Custom Battle, `taom_mordor_battle_black_gates_forceatmo`, two harad elephants):**
       steps 1 to 3 PASS. `rgl_log` loads `LOTRLOME_Armory/Prefabs/taom_howdah_platform.xml` (no TAOM copy, no
       `Could not find prefab`); `config: ... loaded=True`; `[Howdah#1]` and `[Howdah#2]` each report 9 children,
-      `moveable=1`, `crewFrames=2`, `seats=2`, `floorClearance=0.349`, the root exactly 3.20 m above the feet and the
+      `moveable=1`, `crewFrames=2`, `seats=2`, `floorClearance=0.434` (0.349 before 2026-09-22; the field measures to the floor's ORIGIN, which rose 0.085 m when the body was thinned with its top held at 3.15 m, so the deck itself did not move), the root exactly 3.20 m above the feet and the
       floor 0.79 m behind it; drift 0.000 throughout. Step 4 NOT yet measured: elephant #1 never moved, #2 walked once
       (realV 1.00, legsV 1.01, carriedV 0.11, so its legs account for the motion) then stood. The game was closed
       mid-battle (no crash bundle, no engine error), so no `summary` line. Next run: order the elephants to move and

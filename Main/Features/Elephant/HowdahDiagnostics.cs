@@ -13,12 +13,23 @@ public static class HowdahDiagnostics
 {
     /// <summary>World z of the top of an agent's body capsule: feet z, plus the higher of the two capsule points
     /// (Monster.BodyCapsulePoint1/2 are in the agent's upright frame), plus the radius. NaN if any input is not finite.</summary>
-    public static float CapsuleTopZ(float feetZ, float point1Z, float point2Z, float radius)
+    public static float CapsuleTopZ(float feetZ, float point1Z, float point2Z, float radius) =>
+        CapsuleTopZ(feetZ, point1Z, point2Z, radius, 1f);
+
+    /// <summary>
+    /// The live capsule top of a mount built at <paramref name="scale"/>. The Monster's capsule points and radius are
+    /// its 1.0x DEFINITION and the engine scales the agent by AgentScale, so everything above the feet scales and
+    /// the feet (a world position) do not. Reading the definition unscaled put a 1.3x elephant's capsule at 2.70 m
+    /// when it was 3.51 m, overstating the logged floor clearance by 0.81 m (2026-09-22). A bad scale answers NaN
+    /// rather than a plausible height that is simply wrong.
+    /// </summary>
+    public static float CapsuleTopZ(float feetZ, float point1Z, float point2Z, float radius, float scale)
     {
         if (!FiniteFloatValidator.IsFinite(feetZ) || !FiniteFloatValidator.IsFinite(point1Z)
             || !FiniteFloatValidator.IsFinite(point2Z) || !FiniteFloatValidator.IsFinite(radius))
             return float.NaN;
-        return feetZ + Math.Max(point1Z, point2Z) + radius;
+        if (!(FiniteFloatValidator.IsFinite(scale) && scale > 0f)) return float.NaN;
+        return feetZ + (Math.Max(point1Z, point2Z) + radius) * scale;
     }
 
     /// <summary>How far a body's z sits above a capsule top: negative means inside the capsule. NaN if not computable.</summary>

@@ -43,8 +43,41 @@ public static class ElephantConfig
     /// <summary>Seconds between howdah status lines in the diagnostics log, per howdah.</summary>
     public const float HowdahStatusPeriodSeconds = 5f;
 
-    /// <summary>Z offset above the elephant agent's ground position when the rider is absent (fallback).</summary>
-    public const float HowdahHeightAboveGround = 3.2f;
+    /// <summary>
+    /// The size the war elephant is built at: taom_war_elephant's Horse <c>body_length</c> / 100, which the engine
+    /// applies uniformly at build (<c>SetInitialAgentScale</c>) to the skeleton, the animations, the body and hit
+    /// capsules and every mesh riding the skeleton, the visible howdah included. 1.3 since 2026-09-22 (Mike: "about
+    /// 30 percent" bigger). Everything the engine does NOT scale for us is derived from this below, and the howdah
+    /// prefab is authored at this final size. It is a constant rather than a read of AgentScale deliberately: the
+    /// platform carries a physics body, and no vanilla object carrying one is ever runtime-scaled; doing so is
+    /// what dropped the mumakil's entire crew to the ground (#627). HowdahPrefabTests pins body_length to it.
+    /// </summary>
+    public const float AuthoredScale = 1.3f;
+
+    /// <summary>
+    /// How much higher the elephant carries its back in the live standing pose than in the FBX rest pose, at 1.0x.
+    /// Measured in game 2026-09-22 with the Spine1_05 probe on a 1.3x elephant: the spine sat 0.06 to 0.24 m above
+    /// its scaled rest height across nine samples, averaging 0.19 m, which is 0.146 m at 1.0x. The 3.15 m deck and
+    /// the 3.2 m root below were measured off the REST pose, so the platform stood that much under the visible deck
+    /// at every size; at 1.0x it was 15 cm and did not show, at 1.3x with walls 30% taller it did.
+    /// </summary>
+    public const float HowdahLivePoseLift = 0.146f;
+
+    /// <summary>The howdah platform root above the elephant's feet in the FBX rest pose at 1.0x, measured against
+    /// the elite howdah deck.</summary>
+    public const float HowdahRootRestAboveFeet = 3.2f;
+
+    /// <summary>Spine1_05's rest head above the feet on elephant_skeleton at 1.0x, measured in Blender. The visible
+    /// howdah is skinned to this bone, so the root sits a fixed (3.2 - 2.199) above it in any pose.</summary>
+    public const float HowdahSpineRestAboveFeet = 2.199f;
+
+    /// <summary>
+    /// The FALLBACK height of the howdah platform above the elephant's feet, used only when the live spine cannot be
+    /// read (the build-time frame, before the skeleton is posed, or a failed bone read). The live path follows the
+    /// spine every frame (HowdahSeatMotion.RootAboveFeetFromSpine), so the deck bobs with the visible one; this is
+    /// the rest height plus the AVERAGE live-pose lift, the best a single fixed number can do.
+    /// </summary>
+    public const float HowdahHeightAboveGround = (HowdahRootRestAboveFeet + HowdahLivePoseLift) * AuthoredScale;
 
     /// <summary>CharacterObject StringId force-spawned into the howdah seat on mahout build.
     /// Vanilla detachment cannot path to a moving machine — crew must be spawned directly.</summary>
@@ -62,7 +95,9 @@ public static class ElephantConfig
     /// within this distance of the elephant's CENTER and in front of it — roughly 2m ahead of the tusks, since the
     /// agent origin sits ~1m behind the head. Must stay ≤ <see cref="TrampleRadius"/> (the damage radius). Without
     /// this gate the elephant swings its tusks into empty air, overriding its walk cycle (foot-slide).</summary>
-    public const float TrampleTriggerRange = 3f;
+    // Scaled with the body (Mike, 2026-09-22): tuned at 3 m for 1.0x, so a bigger elephant's tusks strike what they
+    // visibly reach rather than swinging short.
+    public const float TrampleTriggerRange = 3f * AuthoredScale;
     /// <summary>The elephant must face the direction of its nearest enemy: dot(toEnemy, lookDir) above this (ADOD_Beasts:0.25f).</summary>
     public const float TrampleFacingDot = 0.25f;
     /// <summary>Seconds between trample attacks (the big stomp — the priority attack when off cooldown).</summary>
@@ -70,7 +105,8 @@ public static class ElephantConfig
     /// <summary>Seconds between side (left/right tusk-swing) attacks — fills the gap while the trample recharges.</summary>
     public const double SideAttackCooldownSeconds = 4.0;
     /// <summary>Radius around the target inside which enemies are trampled (ADOD_Beasts:2f; raised to 4f to match elephant footprint).</summary>
-    public const float TrampleRadius = 4f;
+    // Scaled with the body, like the trigger range, so the trigger stays inside it.
+    public const float TrampleRadius = 4f * AuthoredScale;
     // --- Per-hit randomized damage (2026-06-15) — replaced ADOD_Beasts's fixed `round(10 * mult) * 2 = 20`
     // with distinct per-kind bands rolled per victim, so a war elephant feels lethal. The roll is supplied by the
     // BT node (MBRandom.RandomFloat) into the pure service. A shield block scales the rolled value by

@@ -30,10 +30,16 @@ troop, and a thin C# clone of the elephant attack feature.
 scales the whole agent uniformly — skeleton, rider-attach bone, **ragdoll bodies, and the collision capsule** all go
 3× (confirmed in-game: the rider sits correctly high on the 3× back).
 
-#### UNVERIFIED (2026-08-28): `body_length` probably scales the RIDER too
+#### RESOLVED (2026-09-22): `body_length` does NOT scale the rider
 
-`[Likely]` The scale block is not mount-only. Traced against the installed v1.4.8 decompile and
-independently by a Codex pass during the [war ram](war-ram.md) review:
+**Mike, 2026-09-22: the rider is not scaled.** This section used to say `[Likely]` the opposite and
+owed an in-game look. What settled it is the comparison it asked for: since #627 phase 2 every
+mumakil carries eight crew archers, 1.0x foot troops with no Horse slot, standing in the same frame as
+its rider. A 3x rider beside them would be unmissable in a way that a 3x rider on a 3x beast, seen
+alone, is not.
+
+The managed-code trace below is still accurate, and it is worth keeping because it explains why this
+was ever in doubt. Read on its own it predicts a scaled rider:
 
 - `EquipmentIndex.ArmorItemEndSlot` and `EquipmentIndex.Horse` are **the same value, 10**
   (`TaleWorlds.Core`, `EquipmentIndex`). The slot the scale block reads *is* the Horse slot.
@@ -44,20 +50,14 @@ independently by a Codex pass during the [war ram](war-ram.md) review:
   gets a trimmed equipment set: the mount agent is given a fresh `Equipment` holding slots 10 and 11
   alone, while the rider keeps the full set with the Horse item still in slot 10.
 
-The Mûmakil ships `body_length="300"`, so this predicts a **3× rider**, not a normal-sized man on a
-3× beast. Nothing settles it offline: `SetInitialAgentScale` is a one-line call into native
-(`MBAPI.IMBAgent.SetAgentScale`), and nothing else in the managed layer resets an agent's scale
-afterwards.
+So whatever stops the rider scaling is not in the managed layer. `SetInitialAgentScale` is a one-line
+call into native (`MBAPI.IMBAgent.SetAgentScale`), and the native side evidently ignores it for a
+mounted human or undoes it on mounting. The lesson that outlives this case: **a clean managed trace is
+not a prediction of behaviour when the last call in it crosses into native.** It was carried as
+`[Likely]` for almost a month on the strength of three correct bullet points.
 
-**Owed: an in-game look.** Spawn `harad_mumakil_rider` beside a foot troop and compare heights.
-Nothing already written here settles it either way. The paragraph above records "the rider sits
-correctly high on the 3× back", which is an observation about where the rider sits, not how big he
-is, and a 3× rider on a 3× mount would look proportionate from any distance. The "How-to" line
-below, "large scales can produce rider-perched-high quirks", may already be this same effect seen
-from the outside rather than a separate problem, so treat a rider that looks wrong as evidence for
-this rather than as a second bug. The war-ram RCA records the general shape of this miss (an
-engine path assumed inert because TAOM's own code does not drive it):
-[rca-war-ram-2026-08-28.md](../reviews/rca-war-ram-2026-08-28.md).
+This matters beyond the mumakil: it is why the war elephant could be resized to 1.3x on 2026-09-22
+with no work on its mahout.
 
 ### Shared skeleton + animation reuse
 

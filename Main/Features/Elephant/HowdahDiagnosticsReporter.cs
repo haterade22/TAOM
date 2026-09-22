@@ -112,7 +112,8 @@ internal sealed class HowdahDiagnosticsReporter
             $"{tag} layout summary scene={mission?.SceneName} mode={mission?.Mode} platform={Format(platform.GlobalPosition)} " +
             $"children={children} moveable={moveable} crewFrames={crew} seats={seats.Count} monster={monster?.StringId} " +
             $"capsuleR={HowdahDiagnostics.Format(monster?.BodyCapsuleRadius ?? float.NaN, 2)} capsuleTop={HowdahDiagnostics.Format(capsuleTop, 2)} " +
-            $"floorOrigin={(_hasFloor ? Format(_floor.GlobalPosition) : "missing")} floorClearance={HowdahDiagnostics.Format(clearance, 3)}");
+            $"floorOrigin={(_hasFloor ? Format(_floor.GlobalPosition) : "missing")} floorClearance={HowdahDiagnostics.Format(clearance, 3)} " +
+            $"scale={HowdahDiagnostics.Format(elephant.AgentScale, 2)} {SpineProbe(elephant, seats)}");
 
         if (seats.Count == 0)
             _logger.LogWarning($"{tag} layout: no seats collected; the crew frames' TaomHowdahStandingPoint scripts did not load");
@@ -198,14 +199,52 @@ internal sealed class HowdahDiagnosticsReporter
             $"moveV={HowdahDiagnostics.Format(elephant.MovementVelocity.Length, 2)} drift={HowdahDiagnostics.Format(drift, 3)} " +
             $"floorClearance={HowdahDiagnostics.Format(clearance, 3)} path={placement} seated={seated}/{seats.Count} " +
             $"formation={formationName}({ranged}/{seated}) detached={detached}/{seated} " +
-            $"action={elephant.GetCurrentAction(0).GetName()}{crew}");
+            $"action={elephant.GetCurrentAction(0).GetName()} {SpineProbe(elephant, seats)}{crew}");
+    }
+
+    // The visible howdah is a HorseHarness mesh skinned to the elephant's spine, so where the spine bone actually is
+    // says where the deck the player sees actually is. At 1.0x the elite deck sat 0.951 m above Spine1_05's rest
+    // head (2.199 m on elephant_skeleton), so deckShouldBe is that offset scaled from the LIVE bone. If it disagrees
+    // with the platform's own deck height, the platform is at the wrong height and this number is how far.
+    // Index-based and bounds-checked, never the by-name frame API, which faults on a missing name.
+    private string SpineProbe(Agent elephant, IReadOnlyList<StandingPoint> seats)
+    {
+        try
+        {
+            var visuals = elephant.AgentVisuals;
+            Skeleton skel = visuals?.GetSkeleton();
+            if (skel == null) return "spine=noskeleton";
+            int count = skel.GetBoneCount();
+            sbyte idx = TaomHowdahMachine.ResolveBoneIndex(skel, "Spine1_05", count);
+            if (idx < 0 || idx >= count) return $"spine=missing(count={count})";
+            MatrixFrame world = visuals.GetGlobalFrame().TransformToParent(skel.GetBoneEntitialFrameWithIndex(idx));
+            float spine = world.origin.z - elephant.Position.z;
+            float deckShouldBe = spine + 0.951f * elephant.AgentScale;
+            // Where the platform ACTUALLY put its deck this frame, read off the first seat, not a constant: since the
+            // platform follows the spine, the fixed fallback height no longer says where it is.
+            float seatDeck = float.NaN;
+            for (int i = 0; i < seats.Count; i++)
+                if (seats[i]?.GameEntity.IsValid == true)
+                {
+                    seatDeck = seats[i].GameEntity.GlobalPosition.z - elephant.Position.z;
+                    break;
+                }
+            return $"spineZ={HowdahDiagnostics.Format(spine, 2)} deckShouldBe={HowdahDiagnostics.Format(deckShouldBe, 2)} " +
+                   $"seatDeck={HowdahDiagnostics.Format(seatDeck, 2)} " +
+                   $"raiseBy={HowdahDiagnostics.Format(deckShouldBe - seatDeck, 2)}";
+        }
+        catch (System.Exception ex)
+        {
+            return "spine=error:" + ex.GetType().Name;
+        }
     }
 
     private static float CapsuleTop(Agent elephant)
     {
         Monster monster = elephant.Monster;
         if (monster == null) return float.NaN;
-        return HowdahDiagnostics.CapsuleTopZ(elephant.Position.z, monster.BodyCapsulePoint1.z, monster.BodyCapsulePoint2.z, monster.BodyCapsuleRadius);
+        return HowdahDiagnostics.CapsuleTopZ(elephant.Position.z, monster.BodyCapsulePoint1.z, monster.BodyCapsulePoint2.z,
+            monster.BodyCapsuleRadius, elephant.AgentScale);
     }
 
     private float FloorClearance(float capsuleTop) =>

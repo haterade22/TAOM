@@ -10,6 +10,14 @@
 	     docs/features/elephant/howdah-ship-research-2026-09-18.md. The first version was a port of ADOD_Beasts's 4-seat
 	     howdah (provenance: docs/reference/provenance-register.md).
 
+	     SCALE (2026-09-22). The elephant is 1.3x since then (taom_war_elephant body_length 130, Mike), and this
+	     prefab is authored at that FINAL size: every transform below is the 1.0x value times 1.3, and the root
+	     sits at 3.2 x 1.3 = 4.16 m (ElephantConfig.AuthoredScale). The lengths quoted in the rest of this header
+	     are the 1.0x MEASUREMENTS off the FBX, kept exactly as measured; multiply by 1.3 for the running game.
+	     Deck top 4.095 m; the body capsule top rises from 2.7 to 3.51 m and the floor underside clears it by
+	     about 0.56 m. Nothing scales this at runtime: a runtime-scaled entity carrying a physics body is what
+	     dropped the mumakil's whole crew (#627). HowdahPrefabTests pins body_length to the constant.
+
 	     FRAME. TaomHowdahMachine places this root at the elephant's origin + ElephantConfig.HowdahHeightAboveGround
 	     (3.2 m), facing the elephant: +y forward, +x right, z up from 3.2 m. The elite howdah's deck, re-measured from
 	     SK_Elephant_Armor_Variations.fbx on 2026-09-19 by the true vertex extents of its upward faces at 3.15 m, spans
@@ -20,7 +28,8 @@
 	     ammo and wait tags at the engine defaults ("Pilot", "ammopickup", "Wait"), which match no child here.
 
 	     PHYSICS. One body: the floor, bo_empire_keep_a_door_top (bbox x -0.81..0.80, y -0.89..0.87, z -0.06..0.32)
-	     scaled to the deck and to 0.12 m thick, flagged moveable like every vanilla moving platform (the entity is
+	     scaled to the deck and to 0.02 m thick (was 0.12 until 2026-09-22: the same body under the mumakil's decks
+	     stood archers on its raised ends, and squashing it took every one back onto the deck; top unchanged), flagged moveable like every vanilla moving platform (the entity is
 	     re-framed every tick). Its underside stays 0.33 m above the elephant's body capsule (top 2.7 m), since a body
 	     inside that capsule is the leading suspect for the elephant slide. It is ALSO flagged barrier, which is in
 	     BodyFlags.CommonCollisionExcludeFlagsForMissile: without that, an archer shooting at anything below the deck
@@ -75,12 +84,12 @@
 			</script>
 		</scripts>
 		<children>
-			<!-- Floor: top at z -0.05 (3.15 m), the measured deck 1.36 x 1.756 m, 0.12 m thick. -->
+			<!-- Floor: top at z -0.065 (4.095 m), the measured deck 1.36 x 1.756 m at 1.0x (1.77 x 2.28 m here), 0.025 m thick. -->
 			<game_entity name="howdah_floor" old_prefab_name="" mobility="1">
 				<visibility_masks>
 					<visibility_mask name="visible_only_when_editing" value="true"/>
 				</visibility_masks>
-				<transform position="0.004, -1.138, -0.151" rotation_euler="0.000, 0.000, 0.000" scale="0.845, 0.998, 0.316"/>
+				<transform position="0.005, -1.479, -0.086" rotation_euler="0.000, 0.000, 0.000" scale="1.099, 1.297, 0.065"/>
 				<physics shape="bo_empire_keep_a_door_top">
 					<body_flags>
 						<body_flag name="moveable"/>
@@ -92,7 +101,7 @@
 					<meta_mesh_component name="empire_keep_a_door_top"/>
 				</components>
 			</game_entity>
-			<!-- Crew frames: TWO, one behind the other, 0.78 m apart (2026-09-20, Mike). The spacing is PHYSICAL,
+			<!-- Crew frames: TWO, one behind the other, 1.01 m apart at 1.3x (0.78 m at 1.0x; 2026-09-20, Mike). The spacing is PHYSICAL,
 			     not visual: a human body capsule is 0.37 m in radius, so two closer than 0.74 m overlap and shove
 			     each other every frame, the seat teleports them back, and the engine reads that as tens of m/s,
 			     which is what stopped the crew shooting all along. The walls are cosmetic (the rails are gone and
@@ -104,7 +113,7 @@
 				<tags>
 					<tag name="taom_howdah_crew"/>
 				</tags>
-				<transform position="0.000, -0.850, -0.050" rotation_euler="0.000, 0.000, 0.000"/>
+				<transform position="0.000, -1.105, -0.065" rotation_euler="0.000, 0.000, 0.000"/>
 				<components>
 					<meta_mesh_component name="arrow_new_icon"/>
 				</components>
@@ -123,7 +132,7 @@
 				<tags>
 					<tag name="taom_howdah_crew"/>
 				</tags>
-				<transform position="0.000, -1.630, -0.050" rotation_euler="0.000, 0.000, 0.000"/>
+				<transform position="0.000, -2.119, -0.065" rotation_euler="0.000, 0.000, 0.000"/>
 				<components>
 					<meta_mesh_component name="arrow_new_icon"/>
 				</components>

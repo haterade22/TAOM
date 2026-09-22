@@ -11,6 +11,49 @@ namespace TAOM.Tests.Features.Elephant;
 [TestClass]
 public class HowdahSeatMotionTests
 {
+    // --- Howdah height from the live spine (2026-09-22) ---
+    // The visible howdah deck is skinned to Spine1_05 and bobs with it, about 0.18 m peak to peak on a 1.3x elephant.
+    // A platform at a fixed height sits inside that bob and the archers stutter; one below it looks sunk. So the
+    // platform takes its height from the live spine. These pin the arithmetic; the bone read lives in the machine.
+
+    [TestMethod]
+    public void RootAboveFeetFromSpine_RestPose_ReproducesTheRestRootHeight()
+    {
+        // Spine1_05's rest head is 2.199 m on elephant_skeleton at 1.0x, and the root was measured at 3.2 m there.
+        float scale = 1.3f;
+        Assert.AreEqual(3.2f * scale, HowdahSeatMotion.RootAboveFeetFromSpine(2.199f * scale, scale), 1e-4f);
+    }
+
+    [TestMethod]
+    public void RootAboveFeetFromSpine_SpineRidesHigher_TheRootRisesByTheSameAmount()
+    {
+        // The measured case: in the live standing pose the spine sits about 0.19 m above its scaled rest height, and
+        // the deck, being skinned to it, rises with it. The platform must follow one for one, not scaled again.
+        float scale = 1.3f;
+        float rest = HowdahSeatMotion.RootAboveFeetFromSpine(2.199f * scale, scale);
+        Assert.AreEqual(rest + 0.19f, HowdahSeatMotion.RootAboveFeetFromSpine(2.199f * scale + 0.19f, scale), 1e-4f);
+    }
+
+    [TestMethod]
+    public void RootAboveFeetFromSpine_BadInput_ReturnsNaN_SoTheCallerFallsBack()
+    {
+        // NaN means "use the fixed height", never "put the platform somewhere a bad bone read says".
+        Assert.IsTrue(float.IsNaN(HowdahSeatMotion.RootAboveFeetFromSpine(float.NaN, 1.3f)));
+        Assert.IsTrue(float.IsNaN(HowdahSeatMotion.RootAboveFeetFromSpine(float.PositiveInfinity, 1.3f)));
+        Assert.IsTrue(float.IsNaN(HowdahSeatMotion.RootAboveFeetFromSpine(2.8f, float.NaN)));
+        Assert.IsTrue(float.IsNaN(HowdahSeatMotion.RootAboveFeetFromSpine(2.8f, 0f)));
+    }
+
+    [TestMethod]
+    public void RootAboveFeetFromSpine_ImplausibleSpine_ReturnsNaN()
+    {
+        // A spine reported at the feet or far above the animal is a bad read (a ragdoll, a recycled slot, a skeleton
+        // not yet posed), not a deck to put archers on. Outside one body-length of the rest height: fall back.
+        float scale = 1.3f;
+        Assert.IsTrue(float.IsNaN(HowdahSeatMotion.RootAboveFeetFromSpine(0f, scale)));
+        Assert.IsTrue(float.IsNaN(HowdahSeatMotion.RootAboveFeetFromSpine(2.199f * scale + 5f, scale)));
+    }
+
     private const float Deadband = ElephantConfig.HowdahSeatDeadbandMetres;
 
     [TestMethod]

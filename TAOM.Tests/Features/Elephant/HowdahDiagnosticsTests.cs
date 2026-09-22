@@ -27,6 +27,26 @@ public class HowdahDiagnosticsTests
     }
 
     [TestMethod]
+    public void CapsuleTopZ_ScaledMount_ScalesTheCapsuleButNotTheFeet()
+    {
+        // The Monster's capsule points and radius are its 1.0x DEFINITION. The engine scales the live agent by
+        // AgentScale (body_length / 100), so a 1.3x elephant's capsule top is 1.3 times as high above its feet.
+        // Reading the definition unscaled reported 2.70 m for a capsule really at 3.51 m (2026-09-22), inflating the
+        // logged floor clearance by 0.81 m. The feet are a world position and do not scale.
+        Assert.AreEqual(10f + 2.70f * 1.3f, HowdahDiagnostics.CapsuleTopZ(10f, 1.65f, 1.65f, 1.05f, 1.3f), 1e-4f);
+    }
+
+    [TestMethod]
+    public void CapsuleTopZ_BadScale_ReturnsNaN_NeverAConfidentWrongHeight()
+    {
+        // A NaN, infinite or non-positive scale would otherwise print a plausible clearance that is simply false.
+        Assert.IsTrue(float.IsNaN(HowdahDiagnostics.CapsuleTopZ(0f, 1.65f, 1.65f, 1.05f, float.NaN)));
+        Assert.IsTrue(float.IsNaN(HowdahDiagnostics.CapsuleTopZ(0f, 1.65f, 1.65f, 1.05f, float.PositiveInfinity)));
+        Assert.IsTrue(float.IsNaN(HowdahDiagnostics.CapsuleTopZ(0f, 1.65f, 1.65f, 1.05f, 0f)));
+        Assert.IsTrue(float.IsNaN(HowdahDiagnostics.CapsuleTopZ(0f, 1.65f, 1.65f, 1.05f, -1f)));
+    }
+
+    [TestMethod]
     public void CapsuleTopZ_NaNInput_ReturnsNaN()
     {
         Assert.IsTrue(float.IsNaN(HowdahDiagnostics.CapsuleTopZ(float.NaN, 1.65f, 1.65f, 1.05f)));

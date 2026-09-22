@@ -258,14 +258,16 @@ public class TaomHowdahMachine : UsableMachine
             _placement = "bone";
             return;
         }
-        RepositionToFixedOffset();
-        _placement = "fixed-offset";
+        RepositionToFixedOffset();   // names its own path: "spine-height" live, "fixed-offset" before or on a bad read
     }
 
-    // Mirrors the safe, index-based, bounds-checked, null-guarded bone idiom in
-    // AdvancedCombat/BoneCheck.cs — never the by-name frame API, which faults on a missing name.
-    private bool TryRepositionToBone()
+    // The one copy of the fragile part: resolve Spine1_05 once, bounds-check it on every read, read its world frame.
+    // Mirrors the safe, index-based, bounds-checked, null-guarded bone idiom in AdvancedCombat/BoneCheck.cs, never
+    // the by-name frame API, which faults on a missing name. Both the full-frame path (off) and the height-only path
+    // (on) read through here, so the native guards exist once.
+    private bool TryReadAnchorBoneWorld(out MatrixFrame world)
     {
+        world = default;
         try
         {
             var visuals = elephantAgent?.AgentVisuals;
@@ -300,10 +302,7 @@ public class TaomHowdahMachine : UsableMachine
             }
 
             MatrixFrame boneLocal = skel.GetBoneEntitialFrameWithIndex(_anchorBoneIndex);
-            MatrixFrame world = visuals.GetGlobalFrame().TransformToParent(in boneLocal);
-            GameEntity.SetFrame(ref world);
-            _lastAnchor = world.origin;
-            _hasAnchor = true;
+            world = visuals.GetGlobalFrame().TransformToParent(in boneLocal);
             return true;
         }
         catch (Exception ex)
@@ -311,10 +310,22 @@ public class TaomHowdahMachine : UsableMachine
             if (!_loggedBoneError)
             {
                 _loggedBoneError = true;
-                _logger?.LogError($"{LogTag} Bone reposition failed ({ex.GetType().Name}: {ex.Message}); using fixed offset");
+                _logger?.LogError($"{LogTag} Bone read failed ({ex.GetType().Name}: {ex.Message}); using fixed offset");
             }
             return false;
         }
+    }
+
+    // The full-frame path, still OFF (BoneTrackingEnabled): it would set the platform to the bone's whole frame,
+    // rotation included, and a bone's axes do not line up with the animal's, so the prefab would need re-authoring
+    // against the bone. The height-only path in RepositionToFixedOffset gets the bob without that.
+    private bool TryRepositionToBone()
+    {
+        if (!TryReadAnchorBoneWorld(out MatrixFrame world)) return false;
+        GameEntity.SetFrame(ref world);
+        _lastAnchor = world.origin;
+        _hasAnchor = true;
+        return true;
     }
 
     // Enumerate bones by index and match by name — validates existence without risking a native
@@ -334,7 +345,26 @@ public class TaomHowdahMachine : UsableMachine
     // the bone path is unavailable (skeleton not ready, bone missing, or a native query failed).
     private void RepositionToFixedOffset()
     {
-        Vec3 anchor = elephantAgent.Position + new Vec3(0f, 0f, ElephantConfig.HowdahHeightAboveGround);
+        // Height from the live spine, yaw from the elephant (2026-09-22). The visible howdah is skinned to Spine1_05
+        // and bobs about 0.18 m with it on a 1.3x elephant; a platform at a fixed height either sits below that bob,
+        // so the archers look sunk, or inside it, so the deck rises through them and they stutter and re-nock (both
+        // seen in game). Following the spine's HEIGHT only removes the relative motion without taking on the bone's
+        // rotation. The June slide that turned bone tracking off came from the floor sitting INSIDE the elephant's
+        // capsule; the root here stays 1.3 m above the spine and the floor 0.66 m or more above the capsule.
+        // Only once the mission is live: skeleton reads at build time are the load-time native-AV risk.
+        float rootAbove = ElephantConfig.HowdahHeightAboveGround;
+        _placement = "fixed-offset";
+        if (_liveTicking && TryReadAnchorBoneWorld(out MatrixFrame spine))
+        {
+            float fromSpine = HowdahSeatMotion.RootAboveFeetFromSpine(
+                spine.origin.z - elephantAgent.Position.z, ElephantConfig.AuthoredScale);
+            if (!float.IsNaN(fromSpine))
+            {
+                rootAbove = fromSpine;
+                _placement = "spine-height";
+            }
+        }
+        Vec3 anchor = elephantAgent.Position + new Vec3(0f, 0f, rootAbove);
         // A native position that came back NaN would go straight into SetFrame and take the whole platform with it.
         if (!HowdahSeatMotion.IsPlaceable(anchor.x, anchor.y, anchor.z)) return;
         MatrixFrame next = elephantAgent.Frame;

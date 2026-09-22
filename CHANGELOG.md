@@ -4,6 +4,53 @@
 
 ## 2026-09-22
 
+### feat(elephant): v2.0.30 - war elephant 30% bigger, howdah rides its spine
+
+The war elephant is 1.3x its old size (Mike, 2026-09-22): `taom_war_elephant`'s `body_length`
+goes from 100 to 130 in the live Armory, which the engine applies at build to the skeleton, the
+animations, the body and hit capsules and the visible howdah alike. Everything it does not
+scale for us is now derived from one constant, `ElephantConfig.AuthoredScale`: the howdah
+platform's height, its footprint, and the trample reach (3 m to 3.9 m trigger, 4 m to 5.2 m
+radius, scaled so the tusks strike what they visibly reach). The howdah prefab is authored at
+that final size rather than scaled at runtime, since a runtime-scaled entity carrying a physics
+body is what dropped the mumakil's whole crew. A test pins `body_length` to the constant, so a
+future resize in the Armory without regenerating the howdah fails the suite instead of putting
+the crew inside the elephant's back. The mahout needed nothing: the rider is not scaled.
+
+**The howdah now takes its height from the elephant's spine.** At 1.3x the archers looked sunk,
+and a probe on the spine bone the howdah is skinned to showed why: the elephant carries its back
+about 19 cm higher standing than in the model's rest pose, and the visible deck bobs about 18 cm
+with every stride. A platform at a fixed height can only sit below that bob, where the archers
+look sunk, or inside it, where the deck rises through them and they stutter and re-nock (both
+seen in game). Following the spine's height, and only its height, removed the gap: across a
+two-minute walking battle the deck the archers stand on matched the visible one on 22 of 23
+samples; the 23rd was a rejected bad read, below.
+Bone tracking was switched off in June because the floor rode inside the elephant's own capsule
+and shoved it; the floor now sits at least 0.66 m above that capsule, which is the fix the old
+comment said it was waiting for. A plausibility band rejects a bad bone read and falls back to
+the fixed height, and it did exactly that once, for a spine reported 1.37 m high on an idle
+elephant.
+
+**The howdah floor is thinner.** It is the same door-lintel body as the mumakil's decks, whose
+raised ends stood archers above their footing there, so it was squashed from 0.12 m to about
+0.02 m with its top held where it was.
+
+**A diagnostics bug made scaled mounts look wrong.** The logged floor clearance read the
+Monster's capsule definition, which is never scaled, so at 1.3x it reported 1.374 m for a gap
+that was really 0.564. It now scales by the agent, with a test.
+
+**A wrong claim is out of the docs.** Both `docs/features/mumakil.md` and the modding handbook
+said `body_length` scales the rider too; the handbook stated it as fact and advised modders to
+avoid resizing mounts because of it. The managed code does read that way, and the rider is not
+scaled in game, so whatever prevents it is native. Both now say so.
+
+Still open, and not new: archers carried at 4 to 7 m/s sometimes abort a draw. The earlier
+battle that looked clean spent more of its moving time in the reload state than this one, so it
+predates today. A per-seat completed-shot counter is next, so a real shot can be told from a
+re-nock.
+
+Not reviewed with `/deep-review`; committed at Mike's instruction after in-game testing.
+
 ### fix(mumakil): v2.0.30 - the war tower's crew stand on a navmesh and shoot (#627)
 
 All eight archers confirmed drawing and loosing in game. The feature shipped on 2026-09-20 with
