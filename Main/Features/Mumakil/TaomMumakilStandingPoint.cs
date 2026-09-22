@@ -82,6 +82,13 @@ public class TaomMumakilStandingPoint : StandingPoint
         // detachment its formation holds, and an archer the seat teleports must not be handed to a machine.
         userAgent.SetDetachableFromFormation(false);
         ApplyCrewCombatStance(userAgent);
+        // Pinned in place, ONCE. Until the platform carried a navmesh the crew physically could not walk, so
+        // nothing ever had to stop them; the first battle with a navmesh under them they wandered up to 7.06 m
+        // for better firing positions. Locomotion only, turning and shooting untouched. This is applied here and
+        // NOT on the half-second stance clock: re-applying it every 0.5 s on eight seats in lockstep matched the
+        // draw dying at 0.85 once a second on all eight in lockstep, while the teleport count did not (340
+        // teleports against 27 restarts). A movement-limit reset mid-draw is the prime suspect for the abort.
+        userAgent.SetMaximumSpeedLimit(0f, isMultiplier: false);
         userAgent.SetWatchState(Agent.WatchState.Alarmed);
         _behaviourClock = new HowdahSampleClock(HowdahCrewBehaviourCurves.ReassertSeconds);
         _teleportCount = 0;
@@ -115,12 +122,7 @@ public class TaomMumakilStandingPoint : StandingPoint
             HowdahCrewBehaviourCurves.GoToPosX3, HowdahCrewBehaviourCurves.GoToPosY3);
         // Nobody can order these archers from the command menu, so the seat sets fire at will itself.
         agent.SetFiringOrder(FiringOrder.RangedWeaponUsageOrderEnum.FireAtWill);
-        // Pinned in place, and this is NOT belt-and-braces: until the platform carried a navmesh the crew
-        // physically could not walk, so nothing ever had to stop them. Measured 2026-09-21, the first battle
-        // with a navmesh under them: they wandered up to 7.06 m horizontally, because a ranged agent that CAN
-        // reach a better firing position will go and take it. Turning and shooting are unaffected; only
-        // locomotion is. Re-asserted on the same clock as the curves, since a formation order can reset it.
-        agent.SetMaximumSpeedLimit(0f, isMultiplier: false);
+
     }
 
     /// <summary>The exact inverse of <see cref="ApplyCrewCombatStance"/>: anything added there is undone here, or a
@@ -167,8 +169,13 @@ public class TaomMumakilStandingPoint : StandingPoint
         // did after that was let the ranged AI's sidestep run 45 cm before anything stopped it, which is the
         // shuffle Mike saw. The vertical settle the base value was measured against is also gone (dz +0.00 on
         // every seat), so what remains for the band to absorb is AI creep alone.
+        // EXPERIMENT 2026-09-21 15:30, one battle: with the navmesh under them and locomotion pinned, the seat's
+        // only remaining job is to catch an archer that has been shoved OFF its deck, not to hold it to the
+        // centimetre. At 0.15 m the seat fired eleven times a second and the draw still died at 0.85 once a second
+        // on every seat in lockstep (340 teleports against 27 restarts), so the teleport is not what kills it. A
+        // body-width band lets the archers settle where the navmesh puts them and shows whether they then shoot.
         if (HowdahSeatMotion.ShouldCorrect((seatPosition - MovingAgent.Position).LengthSquared,
-                HowdahSeatMotion.BaseSeatDeadbandMetres))
+                HowdahSeatMotion.MinimumFrameSeparation))
         {
             MovingAgent.TeleportToPosition(seatPosition);
             _teleportCount++;

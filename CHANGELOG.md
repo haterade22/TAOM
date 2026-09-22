@@ -2,6 +2,60 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-22
+
+### fix(mumakil): v2.0.30 - the war tower's crew stand on a navmesh and shoot (#627)
+
+All eight archers confirmed drawing and loosing in game. The feature shipped on 2026-09-20 with
+fifteen green gates, a clean review and a design that did not work at all: every archer was
+placed on its seat correctly, to the centimetre in x and y, and fell nine metres to the ground.
+Two days of in-game diagnosis later the mechanism is right, and almost none of what was wrong
+was visible from the code.
+
+**The headline is that a teleport cannot hold an agent up.** `Agent.TeleportToPosition` is a
+bare native `SetPosition` with no ground snapping, so it reads as though it must work, and at
+the war elephant's 3.2 m it has worked for months. At nine metres it holds nobody: twenty five
+thousand teleports in one battle did not lift a single archer off the ground. Searching the
+engine for how vanilla does this turns up exactly two classes, `SiegeTower` and `MissionShip`,
+and neither contains a single call that moves an agent. Both import a navmesh prefab and attach
+its faces to their own entity, so the walkable surface travels with the object and the agents
+simply stand on it. The platform now does the same, attaching face group 1, the group that rides
+along unconnected. Groups 2 and 3 are the connected ones and would have spliced a deck nine
+metres up into the world navmesh, which is not something anyone wants on a war elephant.
+
+**Navmesh is necessary and not sufficient.** Stripping the floor slabs while keeping the navmesh
+dropped everyone again. Navmesh makes a position valid to stand at; a physics body is what an
+agent stands on. The slabs stayed, squashed from 61 cm to 3 cm, because the body is a door
+lintel and its raised ends stood 70 cm proud at the platform's scale: four archers were standing
+on the ends, 70 cm above their own navmesh, snapped back down seven times a second.
+
+**Two placement rules came out of it, and both are now gates.** An archer whose 0.74 m body
+overhangs its navmesh or its deck edge gets resolved onto whatever the engine can find and sits
+at a fixed height above its seat, immovable; three of them held there through 7,619 teleports
+each. And the most forward frame on each deck re-nocked forever while its deckmates, taking the
+same teleports, shot normally, three times in three battles: the beast's head is at their height
+directly ahead and the mahout sits under the sightline, and the ranged AI will not loose past a
+friendly. Frames now sit a body radius inside their deck and behind the shoulders.
+
+**The prefab is authored at final in-game size** and nothing scales it at runtime any more. The
+old design multiplied the whole entity by the mount's own scale every tick, which was tidy and
+wrong: no vanilla object carrying a physics body or a navmesh is ever runtime-scaled. A test
+pins `body_length="300"` so the assumption that these numbers are final cannot break in silence.
+
+Also here: locomotion pinned with `SetMaximumSpeedLimit(0)` once at seating rather than on the
+re-assert clock, after a battle where the archers wandered seven metres looking for firing
+positions and another where re-applying the limit mid-draw matched the draw dying on all eight
+seats in lockstep. The navmesh asset lives in `Main/_Module/NavMeshPrefabs/` where git tracks
+it, not in the unversioned Armory.
+
+The diagnostic line is what made any of this tractable, and it is worth keeping: per seat it
+carries the upper-body action, how far the draw ever got, how many times it fell back, how many
+times the seat teleported, and the height error. "They look stuck" is not a bug report; "dz is
+constant at 1.04 m" is.
+
+RCA: `docs/reviews/rca-mumakil-navmesh-2026-09-22.md`. Owed: a campaign battle with several
+mumakil, the mission-end path with crew aboard, and shooting at a target directly below.
+
 ## 2026-09-21
 
 ### fix(armoury): v2.0.30 - the three Rhun longbows get their own collision body (#633)

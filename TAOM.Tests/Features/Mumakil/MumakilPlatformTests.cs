@@ -38,7 +38,7 @@ public class MumakilPlatformTests
     private const float CapsuleTop = 1.55f + HowdahSeatMotion.HumanCapsuleRadius;
 
     /// <summary>The navmesh prefab the platform attaches; without it nothing holds an archer 9 m up.</summary>
-    private const string NavMeshPrefabName = "taom_mumakil_howdah_navmesh";
+    private const string NavMeshPrefabName = "taom_mumakil_platform_navmesh";
 
     // Half-extents of the shared floor mesh (bo_empire_keep_a_door_top) at scale 1, in the mesh's own units.
     // The floors' authored scales were tripled along with everything else, so scale * half-extent already

@@ -133,17 +133,14 @@ public class TaomMumakilPlatform : UsableMachine
         DynamicNavmeshIdStart = Mission.Current.GetNextDynamicNavMeshIdStart();
         GameEntity.Scene.ImportNavigationMeshPrefab(NavMeshPrefabName, DynamicNavmeshIdStart);
         GetEntityToAttachNavMeshFaces().AttachNavigationMeshFaces(DynamicNavmeshIdStart + 1, isConnected: false);
-        // Group 4, the edge blockers that keep an archer from walking or being carried off a deck. These are
-        // NAVMESH blockers, deliberately not physics rails: the howdah shipped chest-high bo_barrier rails and
-        // they were deleted 2026-09-20 because a barrier body is excluded from the missile mask but NOT from
-        // whatever mask a clear-shot check uses, which made them the leading suspect for archers drawing to 85
-        // percent and re-nocking forever. The deadband fix landed at the same time, so that suspicion was never
-        // retired. A navmesh blocker cannot stand in front of a bow, so it settles nothing and risks nothing.
-        // finalize is true here because this is the LAST blocker group we attach; the base implementation defers
-        // it to group 8, which we do not use.
-        GetEntityToAttachNavMeshFaces().AttachNavigationMeshFaces(
-            DynamicNavmeshIdStart + 4, isConnected: false, isBlocker: true,
-            autoLocalize: false, finalizeBlockerConvexHullComputation: true);
+        // NO blocker group, deliberately. The base attaches groups 4 and 8 as blockers, the first with
+        // finalizeBlockerConvexHullComputation false and the second true, so both feed ONE hull computed once
+        // at the end. A siege tower is roughly a convex solid and a hull round it is what you want. This
+        // platform is eight small islands spread over three decks, and one convex hull round those would span
+        // the whole tower volume and could swallow the patches the archers stand on, with no error anywhere.
+        // (Hull semantics are read from the parameter name; the implementation is native. Treat as unverified.)
+        // We need no blocker regardless: SetMaximumSpeedLimit(0) on the seat took wandering from 7.06 m to
+        // 0.15 m, so there is nothing left for an edge to catch.
         SetAbilityOfFaces(GameEntity.IsValid && GameEntity.GetPhysicsState());
         _logger?.LogInfo($"{LogTag} navmesh '{NavMeshPrefabName}' imported at id {DynamicNavmeshIdStart}, group 1 attached");
     }
@@ -242,8 +239,9 @@ public class TaomMumakilPlatform : UsableMachine
         foreach (StandingPoint sp in StandingPoints)
         {
             if (!(sp is TaomMumakilStandingPoint s4) || s4.MovingAgent == null) continue;
+            float dz = s4.GameEntity.IsValid ? s4.MovingAgent.Position.z - s4.GameEntity.GlobalPosition.z : float.NaN;
             draws += $" s{n2}:{s4.UpperBodyAction}/max{HowdahDiagnostics.Format(s4.MaxActionProgress, 2)}" +
-                     $"/re{s4.ActionRestarts}/tp{s4.TeleportCount}";
+                     $"/re{s4.ActionRestarts}/tp{s4.TeleportCount}/dz{HowdahDiagnostics.Format(dz, 2)}";
             n2++;
         }
         _logger?.LogInfo(

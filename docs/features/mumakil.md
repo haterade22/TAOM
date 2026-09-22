@@ -2,8 +2,8 @@
 
 > **Status: BUILT + WIRED + IN-GAME CONFIRMED (2026-06-29).** A scaled-up clone of the
 > [War Elephant](elephant.md): a ridden Harad mount that auto-attacks (trample + tusk) and **charges** into melee.
-> Phase 2 (#627, 2026-09-20) put a crew on the war tower: eight archers across its three decks, carried by an
-> invisible platform entity scaled onto the beast from `Agent.AgentScale`. NOT yet smoke-tested in game.
+> Phase 2 (#627) put a crew on the war tower: eight archers across its three decks, standing on an attached
+> navmesh. **All eight confirmed drawing and loosing in game, 2026-09-22.**
 
 ## Overview
 
@@ -161,7 +161,7 @@ Section A attribute-presence comparison at all, which compares spider vs warg vs
 measured table: [creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md) "The
 rein-attribute invariant"; sibling entry in [elephant.md](elephant.md) "v1.4.8 exposure".
 
-## Phase 2: platform crew (built 2026-09-20, not yet smoked)
+## Phase 2: platform crew (working in game 2026-09-22)
 
 **The old blocker is gone.** This section used to say crew were deferred until a crew-versus-mount collision fix
 (a shared `FaceGroupId`), because force-spawned crew inside the mount capsule caused the slide. #627 solved that on
@@ -208,37 +208,92 @@ one in the crow's nest.**
 
 | Piece | Where |
 |---|---|
-| `taom_mumakil_platform` prefab: three floor bodies (`moveable` + `barrier`), eight tagged crew frames, nothing rendered | `LOTRLOME_Armory/Prefabs/`, byte-snapshotted to `docs/reference/lotrlome-armory-snapshot/Prefabs/` |
-| `TaomMumakilPlatform` | places AND scales the entity onto the beast every tick; releases every seat before vanilla can deactivate it |
-| `TaomMumakilStandingPoint` | one seat, carrying the howdah's four engine rules |
-| `MumakilCrewSpawner` | owns the platform's whole lifecycle: builds it on the rider's `OnAgentBuild`, queues the crew, spawns them from the next `OnMissionTick` |
-| `MumakilCrewAgentOrigin` | a no-op casualty surface per archer, so a crew death is not booked to the mahout |
-| `MumakilPlatformTests` | 12 gates: prefab name, deck layout, spacing, headroom, containment, deadband margin, tag-vs-script parity, floor flags, visibility, no baked scale, live-copy match, IL release |
+| `taom_mumakil_platform` prefab: three 3 cm floor slabs, eight crew frames, nothing rendered | `LOTRLOME_Armory/Prefabs/`, byte-snapshotted to `docs/reference/lotrlome-armory-snapshot/Prefabs/` |
+| `taom_mumakil_platform_navmesh.bin`: eight 1.6 m walkable squares, face group 1 | `Main/_Module/NavMeshPrefabs/` (git-tracked; deploys to `Modules/TAOM/`) |
+| `TaomMumakilPlatform` | places the entity on the beast each tick, attaches the navmesh, releases seats before vanilla deactivates them |
+| `TaomMumakilStandingPoint` | one seat: keeps the formation, rewrites the AI curves, pins locomotion, corrects drift past a deadband |
+| `MumakilCrewSpawner` | owns the platform's lifecycle; builds on the rider's `OnAgentBuild`, spawns crew from the next `OnMissionTick` |
+| `MumakilCrewAgentOrigin` | a no-op casualty surface per archer |
+| `MumakilPlatformTests` | 15 gates: prefab name, decks, spacing, headroom, containment, deadband margin, tag-vs-script parity, navmesh declaration, `body_length`, live-copy match, IL release |
 
-Three things were genuinely new here and none of them existed on the elephant.
+### The four things that had to be true at once
 
-**The scale is derived, never written down.** The prefab is authored mount-local, 1:1 with the FBX, and
-`RepositionToMount` multiplies the entity's basis by the mount's own `Agent.AgentScale`. Change `BodyLength` and the
-crew follow it. The basis is orthonormalised BEFORE the scale is applied, because `Mat3.ApplyScaleLocal` multiplies
-an existing basis rather than setting one, and whether the native `GetRotationFrame` behind `Agent.Frame` already
-carries `AgentScale` cannot be settled from managed code. Stripping it first makes the answer irrelevant; getting it
-wrong would put the crow's nest at 41 m instead of 13.8. The diagnostics line prints `frameScale=` so the first
-battle log answers the question permanently (1.00 = the basis is unit, 3.00 = it carried the scale).
+None of these was obvious, and the feature is dead without any one of them. They took 2026-09-21 and
+2026-09-22 to find, mostly because each one masks the next.
 
-**Headroom, the rule a multi-deck platform adds.** A crew frame under a higher deck's floor needs the human
-capsule's full 1.92 m of clearance (radius 0.37, `pos1` z 1.55, `Native/monsters.xml`). `BodyFlags.Barrier` is in
-the engine's missile-exclusion mask but NOT in its agent mask, so an archer whose capsule reaches into the deck
-above is shoved by the engine every frame and put back by its seat, which reads as tens of m/s and stops every bow
-draw. It is the spacing failure in a new direction, and just as silent. Every deck underside here sits 1.79 m above
-the deck below, which means a frame under one can never pass: the only fix is to move it out from under, and the
-footprint it must clear is inflated by the capsule's radius. `mumakil_crew_main_4` was authored under the upper
-deck and moved beside it.
+**1. A navmesh, because a teleport cannot hold an agent up.** This is the big one. `Agent.TeleportToPosition`
+is a bare native `SetPosition` with no ground snapping, so it looks like it should work, and at the
+elephant's 3.2 m it does. At 9 m it does not: all eight archers were placed on their seats correctly, to the
+centimetre in x and y, and fell straight to the ground, 25,000 teleports a battle not holding them. Searching
+the engine for how vanilla does it turns up exactly two classes, `SiegeTower` and `MissionShip`, and **neither
+moves an agent at all**. Both import a navmesh prefab and attach its faces to their own entity so the walkable
+surface travels with them. That is the mechanism; ours was a hack that happened to survive at low altitude.
 
-**The two rules pull against each other.** The first correction moved `main_4` forward to y -0.386, which cleared
-the deck above but left it 1.05 m from `main_1`: at a 0.45 m deadband, two archers drifting at each other would
-close to 0.15 m, inside the 0.74 m spacing rule. The kept position, (0.700, -0.500), clears both. That is why the
-tests pin headroom, containment, spacing AND the deadband margin rather than any one of them.
+**2. Physics as well as navmesh.** Stripping the floor slabs while keeping the navmesh dropped every archer to
+the ground again. Navmesh makes a position VALID to stand at; a physics body is what an agent stands ON. A
+siege tower has both and so does this.
 
+**3. The prefab authored at final size, with no runtime scale.** It was originally authored mount-local and
+multiplied by `Agent.AgentScale` every tick, which was elegant (change `BodyLength` and the crew follow) and
+wrong: no vanilla object carrying a physics body or a navmesh is ever runtime-scaled. `MumakilPlatformTests`
+pins `body_length="300"` so the assumption these numbers are final cannot break silently.
+
+**4. Frames inboard, and off the beast's sightline.** Covered below; it is the part most likely to catch the
+next creature.
+
+### Geometry rules for a crew frame
+
+Learned the hard way, and all four are now gates in `MumakilPlatformTests`.
+
+- **Headroom.** A frame under a higher deck needs the human capsule's full 1.92 m (radius 0.37, `pos1` z 1.55,
+  `Native/monsters.xml`). `BodyFlags.Barrier` is in the engine's missile-exclusion mask but NOT its agent mask,
+  so an archer whose capsule reaches into the deck above is shoved every frame. Deck undersides here sit 1.79 m
+  apart, so a frame under one can never pass: move it out from under.
+- **Footing beats separation.** Frames were first spread to the deck edges to maximise spacing. That is the
+  wrong objective. An archer needs its whole 0.74 m body on walkable ground, and the three nearest an edge sat
+  at a fixed 0.57 and 1.04 m above their seats, unmoved by 7,619 teleports, re-nocking forever. Every frame is
+  now at least a body radius plus margin inside its deck, and every navmesh square is 1.6 m, giving 0.43 m of
+  spare on each side.
+- **Navmesh islands must be bigger than a body.** The first hand-painted islands were 0.37 to 0.65 m across
+  against a 0.74 m body. An agent overhanging its island on every side has no stable footing. This was a
+  briefing error, not an authoring one: small islands were meant to stop wandering, and `SetMaximumSpeedLimit(0)`
+  already does that.
+- **Nothing forward.** See below.
+
+### The mount's own head blocks its crew's shots
+
+`[Likely]` The most forward frame on each deck failed, three times, in three separate battles: `main_1` at
+y -0.11, `main_4` at y -1.50, then `upper_1` at y -2.10. Each drew to 0.85 and re-nocked forever while every
+other seat on the same deck, taking the same teleports, shot normally. Moving each one back fixed it every
+time. The beast's head is at their height directly ahead and the mahout sits just under the sightline, and the
+ranged AI will not loose past a friendly. **Keep crew frames behind roughly y -3 in platform-local metres**,
+which on this tower means behind the shoulders.
+
+Not proven to the level of a decompiled clear-shot check, but three for three with a clean control each time.
+
+### Why locomotion is pinned
+
+`SetMaximumSpeedLimit(0f, isMultiplier: false)` at `OnUse`, cleared with `-1f` on release. Until the platform
+carried a navmesh the crew physically could not walk, so nothing ever had to stop them; the first battle with
+a navmesh under them they wandered up to 7.06 m, because a ranged agent that CAN reach a better firing
+position will go and take it. Turning and shooting are unaffected.
+
+It is applied ONCE at `OnUse` and deliberately NOT on the half-second stance clock. Re-applying it every 0.5 s
+on eight seats in lockstep matched the draw dying at 0.85 on all eight in lockstep, while the teleport count
+did not (340 teleports against 27 restarts in the same window).
+
+### What the log tells you
+
+`[Mumakil#n] status` carries, per seat, `action/max/re/tp/dz`:
+
+| Field | Healthy | What a bad value means |
+|---|---|---|
+| `dz` | 0.00 | non-zero and CONSTANT is the killer: the archer is standing on something that is not its seat, and no number of teleports will move it |
+| `max` | 1.00 | 0.85 is the draw dying at the release handoff, i.e. the re-nock loop |
+| `re` | any | restarts only mean "stuck" when `max` is 0.85. With `max` 1.00 a high count is a busy archer; the crow's nest ran 88 |
+| `tp` | tens | thousands means the seat is fighting something. 7,619 in one battle was an archer pinned a metre up |
+
+### The reference-frame mismatch, and why it is the first thing to watch
 ### The reference-frame mismatch, and why it is the first thing to watch
 
 `[Likely]` The tower the player SEES and the platform the crew STAND ON are placed by different mechanisms. The
