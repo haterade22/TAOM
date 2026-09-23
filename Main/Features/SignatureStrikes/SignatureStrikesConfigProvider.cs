@@ -21,7 +21,7 @@ namespace TAOM.Features.SignatureStrikes;
 /// What is dropped rather than reverted, each with a warning, because keeping it would be silent:
 /// a strike row whose direction or kind name is unknown (the service could never match it), a
 /// strike whose kind has no cooldown entry (it would fire on every swing), a signature with no id
-/// or a repeated one, and a signature that names nobody.
+/// or a repeated one, a null or blank entry in an identity list, and a signature that names nobody.
 ///
 /// Not validated here, deliberately: race names, hero set names and hero StringIds. Race names
 /// need the FaceGen registry, which is not populated at config-load time, so
@@ -365,7 +365,9 @@ public sealed class SignatureStrikesConfigProvider : ISignatureStrikesConfigProv
     }
 
     // An EMPTY list is a legitimate "nobody on this axis" switch and passes through; only a null
-    // (a JSON `null`) reverts.
+    // (a JSON `null`) reverts. A null or blank ENTRY names nobody, so it is removed here, before
+    // the caller asks whether any axis is left (Codex review 2026-09-23, O1), and a kept entry is
+    // trimmed as the id and the sound are, since the registry matches hero ids exactly.
     private List<string> ValidateList(List<string>? value, List<string> fallback, string field, ref bool rejected)
     {
         if (value == null)
@@ -375,6 +377,13 @@ public sealed class SignatureStrikesConfigProvider : ISignatureStrikesConfigProv
             return new List<string>(fallback);
         }
 
-        return value;
+        var named = value.Where(entry => !string.IsNullOrWhiteSpace(entry)).Select(entry => entry.Trim()).ToList();
+        if (named.Count != value.Count)
+        {
+            _logger.LogWarning($"SignatureStrikesConfigProvider: {field} had null or blank entries ({value.Count - named.Count} removed)");
+            rejected = true;
+        }
+
+        return named;
     }
 }

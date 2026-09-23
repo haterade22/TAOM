@@ -64,3 +64,25 @@ line already did.
   categories and says to widen the scope when a new one appears. A float into a native sink is a
   fifth; it was caught in review rather than shipped, so the rule change is left for the next
   harness pass rather than made inside a feature commit.
+
+## Codex pass (Review 130, 2026-09-23)
+
+Codex (gpt-6-astra, ultra) reviewed `b90fd3a4` together with #644's `9804f67b`: P1 0, P2 0. It
+disputed the Custom Battle, cooldown, geometry and NaN suspects with decompiled lines, matched every
+shipped config value to the compiled defaults, measured the three takes (mono Vorbis at 44.1 kHz;
+3.00 s, 3.48 s and 3.00 s, under `mission_voice_shout`'s 8 s), and left the native sound lookup,
+playback and the `Yell` fallback UNVERIFIED. It noted that `entry.Times = entry.Times.With(...)` is
+not a synchronised transaction: overlapping writers would lose an update only if native delivers
+melee hits concurrently, which nothing shows. Two #645 findings, both fixed in the follow-up commit:
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| C1 | P3 (Codex O1) | `"heroIds": [null]` or `[""]`, other axes empty, passed the "matches nobody" check, which reads `Count`; the registry then skipped the entry silently, so the signature loaded as valid and matched nobody. | Missing entry validation | The tests covered the list's `null` and `[]` states, not its entries, and the registry's skip hid the gap downstream. | `ValidateList` removes a null or blank entry with a warning; two RED tests; new lesson in `lessons/gamemodels-services.md`. |
+| C2 | LOW (found verifying the lesson) | `StrikeSoundPlayer`'s comment and `signature-strikes.md` said a NaN into `MakeSound` is what `CustomAttacksUtils` has guarded since the spider auto-bite AV; that AV was traced to `HandleBlowAux` (`rca-spider-dismount-on-hit-2026-06-15.md`), so the gate is a defence, not a known crash fix. Row 1 and its lesson were corrected before `b90fd3a4`; the two copies in that commit were not. | Correction not propagated | Corrected where it was noticed, with no search for the other copies. | Both corrected; new lesson in `lessons/misc.md` "A claim found wrong is wrong everywhere it was written". The guard's own comments in `CustomAttacksUtils.cs` still give the retracted cause; another session holds uncommitted edits there, so that copy is owed. |
+
+The fix diff got its own six-lens deep review. Its #645 findings, both fixed:
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| R1 | LOW (Standards, Engine, Data flow) | `ValidateList` removed a blank entry but kept a padded one, and the registry matches hero ids exactly and skips without a word, so `" lord_1_17 "` matched nobody silently: C1's class one step over. | Missing entry normalisation | The fix answered the inputs Codex sent (`[null]`, `[""]`), not the class. | A kept entry is trimmed, as the id and the sound are; `GetConfig_PaddedIdentityEntry_IsTrimmedWithoutAWarning`. |
+| R2 | LOW (Standards, Data flow) | The provider's class summary listed every drop case but the new one, and the warning read "holds 1 null or blank entries". | Completeness | The method was edited, not its summary. | Both corrected. |

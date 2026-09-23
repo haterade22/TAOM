@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace TAOM.Tests.Core;
@@ -148,16 +149,24 @@ public class CultureRaceConsistencyTests
         var registered = RegisteredRaces();
         var moduleData = Path.Combine(FindRepoRoot(), "Main", "_Module", "ModuleData");
 
+        var stylesheets = Directory.EnumerateFiles(moduleData, "*.xslt", SearchOption.AllDirectories)
+            .Select(f => (source: Path.GetFileName(f), scan: RacesEmittedByXslt(File.ReadAllText(f))))
+            .ToArray();
+
         var used = Directory.EnumerateFiles(moduleData, "*.xml", SearchOption.AllDirectories)
             .SelectMany(f => Regex.Matches(File.ReadAllText(f), @"<NPCCharacter\b[^>]*?\brace=""([^""]+)""")
                 .Cast<Match>().Select(m => (source: Path.GetFileName(f), race: m.Groups[1].Value)))
-            .Concat(Directory.EnumerateFiles(moduleData, "*.xslt", SearchOption.AllDirectories)
-                .SelectMany(f => Regex.Matches(File.ReadAllText(f), @"<xsl:attribute name=""race"">\s*([^<\s]+)\s*</xsl:attribute>")
-                    .Cast<Match>().Select(m => (source: Path.GetFileName(f), race: m.Groups[1].Value))))
+            .Concat(stylesheets.SelectMany(s => s.scan.Races.Select(race => (s.source, race))))
             .ToArray();
 
         Assert.IsTrue(used.Any(u => u.source == "lords.xml"), "parsed no race from characters/lords.xml; the file shape changed");
         Assert.IsTrue(used.Any(u => u.source == "lords.xslt"), "parsed no race from lords.xslt; the file shape changed");
+
+        var computed = stylesheets.SelectMany(s => s.scan.Unverifiable.Select(u => $"{s.source}: {u}")).ToArray();
+        Assert.AreEqual(0, computed.Length,
+            "An XSLT computes a race at transform time, which this scan cannot read; spell it as literal text, "
+            + "or extend the gate to check that stylesheet's transform output: "
+            + string.Join(", ", computed));
 
         var unknown = used.Where(u => !registered.Contains(u.race))
             .Select(u => $"{u.source} -> '{u.race}'")
@@ -167,6 +176,98 @@ public class CultureRaceConsistencyTests
         Assert.AreEqual(0, unknown.Length,
             "A character declares a race no skins.xml registers; loading NPCCharacters will throw: "
             + string.Join(", ", unknown));
+    }
+
+    private static readonly XNamespace Xsl = "http://www.w3.org/1999/XSL/Transform";
+
+    /// <summary>
+    /// Every race the stylesheet itself spells, read from its structure rather than one spelling
+    /// (#644; Codex review 2026-09-23, O2): the text of an <c>xsl:attribute name="race"</c>, and the
+    /// <c>race</c> attribute of a literal <c>NPCCharacter</c>, both verbatim, since the transform
+    /// emits padding as written and the engine indexes the name exactly. A race the transform
+    /// computes (an <c>xsl:attribute</c> holding instructions, or an attribute value template) comes
+    /// back as unverifiable and the gate fails on it. Not seen at all: a race copied from the source
+    /// (<c>xsl:copy</c>, <c>xsl:copy-of</c>; vanilla <c>lords.xml</c> carries none), an
+    /// <c>xsl:attribute</c> whose name is computed, and a stylesheet imported from outside
+    /// ModuleData. None ships.
+    /// </summary>
+    internal static (List<string> Races, List<string> Unverifiable) RacesEmittedByXslt(string xslt)
+    {
+        var doc = XDocument.Parse(xslt);
+        var races = new List<string>();
+        var unverifiable = new List<string>();
+
+        foreach (var attribute in doc.Descendants(Xsl + "attribute").Where(a => (string?)a.Attribute("name") == "race"))
+        {
+            if (attribute.Elements().All(e => e.Name == Xsl + "text"))
+                races.Add(attribute.Value);
+            else
+                unverifiable.Add(attribute.ToString(SaveOptions.DisableFormatting));
+        }
+
+        foreach (var literal in doc.Descendants().Where(e => e.Name.LocalName == "NPCCharacter" && e.Name.Namespace != Xsl))
+        {
+            var race = (string?)literal.Attribute("race");
+            if (race == null)
+                continue;
+
+            if (race.Contains("{"))
+                unverifiable.Add($"<NPCCharacter race=\"{race}\">");
+            else
+                races.Add(race);
+        }
+
+        return (races, unverifiable);
+    }
+
+    private static string Stylesheet(string body) =>
+        @"<xsl:stylesheet version=""1.0"" xmlns:xsl=""http://www.w3.org/1999/XSL/Transform"">"
+        + @"<xsl:template match=""NPCCharacter[@id='probe']""><xsl:copy>" + body + "</xsl:copy></xsl:template>"
+        + "</xsl:stylesheet>";
+
+    [TestMethod]
+    public void RacesEmittedByXslt_XslAttributeText_IsReadInEverySpelling()
+    {
+        var (races, unverifiable) = RacesEmittedByXslt(Stylesheet(
+            @"<xsl:attribute name=""race"">nazghul</xsl:attribute>"
+            + @"<xsl:attribute name='race'>sauron</xsl:attribute>"
+            + @"<xsl:attribute name=""race""><xsl:text>uruk</xsl:text></xsl:attribute>"));
+
+        CollectionAssert.AreEqual(new[] { "nazghul", "sauron", "uruk" }, races);
+        Assert.AreEqual(0, unverifiable.Count);
+    }
+
+    [TestMethod]
+    public void RacesEmittedByXslt_PaddedRace_IsReadVerbatim()
+    {
+        // The transform keeps text that is not whitespace-only as written, and the engine indexes
+        // the name as given (v1.5.3 BasicCharacterObject.cs:327, FaceGen.cs:115-118), so a padded
+        // race throws on load; the gate has to see the padding to fail on it.
+        var (races, _) = RacesEmittedByXslt(Stylesheet(@"<xsl:attribute name=""race""> sauron </xsl:attribute>"));
+
+        CollectionAssert.AreEqual(new[] { " sauron " }, races);
+    }
+
+    [TestMethod]
+    public void RacesEmittedByXslt_LiteralResultElement_IsRead()
+    {
+        // Codex review 2026-09-23 (O2): the regex this scan used saw one spelling of
+        // xsl:attribute, so a literal NPCCharacter in a stylesheet emitted an unregistered race
+        // that no scan read.
+        var (races, _) = RacesEmittedByXslt(Stylesheet(@"<NPCCharacter id=""review_probe"" race=""probe_race"" />"));
+
+        CollectionAssert.AreEqual(new[] { "probe_race" }, races);
+    }
+
+    [TestMethod]
+    public void RacesEmittedByXslt_RaceBuiltAtTransformTime_IsUnverifiable()
+    {
+        var (races, unverifiable) = RacesEmittedByXslt(Stylesheet(
+            @"<xsl:attribute name=""race""><xsl:value-of select=""@race"" /></xsl:attribute>"
+            + @"<NPCCharacter id=""review_probe"" race=""{@race}"" />"));
+
+        Assert.AreEqual(0, races.Count);
+        Assert.AreEqual(2, unverifiable.Count);
     }
 
     [TestMethod]

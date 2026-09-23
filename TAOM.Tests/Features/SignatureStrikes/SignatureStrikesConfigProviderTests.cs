@@ -246,6 +246,39 @@ public class SignatureStrikesConfigProviderTests
         _logger.DidNotReceive().LogWarning(Arg.Any<string>());
     }
 
+    [TestMethod]
+    public void GetConfig_NullOrBlankIdentityEntries_AreRemovedAndWarned()
+    {
+        WriteSauronWith(@"""heroIds"": [""lord_1_17"", null, ""  ""], ""races"": [""sauron"", """"]");
+
+        CollectionAssert.AreEqual(new[] { "lord_1_17" }, Only().HeroIds);
+        CollectionAssert.AreEqual(new[] { "sauron" }, Only().Races);
+        AssertRejected("heroIds");
+        AssertRejected("races");
+    }
+
+    [TestMethod]
+    public void GetConfig_PaddedIdentityEntry_IsTrimmedWithoutAWarning()
+    {
+        // The registry matches hero ids exactly and would skip " lord_1_17 " without a word; the
+        // id and the sound are trimmed the same way.
+        WriteSauronWith(@"""heroIds"": ["" lord_1_17 ""]");
+
+        CollectionAssert.AreEqual(new[] { "lord_1_17" }, Only().HeroIds);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void GetConfig_IdentityOfOnlyBlankEntries_MatchesNobodyAndIsDropped()
+    {
+        // Codex review 2026-09-23 (O1): a list holding only a null or blank entry counted as an
+        // identity, so the signature loaded as valid and matched nobody.
+        WriteSauronWith(@"""heroIds"": [null], ""heroSets"": [], ""races"": [""""]");
+
+        Assert.AreEqual(0, _sut.GetConfig().Signatures.Count);
+        AssertRejected("matches nobody");
+    }
+
     // ---- Cooldowns -------------------------------------------------------------
 
     [TestMethod]

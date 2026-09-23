@@ -3559,3 +3559,75 @@ quadratic line count) as a follow-up. Design proposed the ownership test and mea
 Codex: not dispatched. RCA `docs/reviews/rca-rhun-longbow-collision-body-2026-09-21.md`, one lesson. Nothing
 committed at the time of writing. Owed: the in-game smoke on both trees, the player's packs or `rgl_log` before #633
 can close, the manifest re-cut, a cooked-tree MISSING-body pass as a `/release` step.
+
+## Review 130: the Nine become race nazghul (#644) and the Nine's SCREAM (#645), two 7-lens deep reviews + Codex gpt-6-astra ultra (2026-09-23)
+
+Mike asked for a Nazgul signature like Sauron's: SCREAM, on an overhead or a slashing attack, that
+does damage and takes morale. The work became two commits. #644 (`9804f67b`) made the Nine race
+`nazghul` in `lords.xslt`, deleted the three `characters/lords.xml` rows that defined
+`lord_1_48_1/2/3` a second time, and taught `RacePersistenceService` to leave the Nine's XML race
+alone on load. #645 (`b90fd3a4`) turned SignatureStrikes into a list of signatures and gave the Nine
+a Scream: a 6 m ring centred on the wraith, part of the hit's damage, a knock-back, 25 morale and a
+generated shriek, on one 15 s timer.
+
+**Deep reviews, seven lenses and a convergence pass each.** #644: one pre-existing HIGH (the double
+definition, which dressed the trio in a random kit), a missing Armory race gate, stale counts and
+line references. #645: two MED (an ungated engine float into `MakeSound`; a sentence the change made
+false) and seven LOW. All fixed before each commit; RCAs
+[rca-nazgul-race-2026-09-23.md](rca-nazgul-race-2026-09-23.md) and
+[rca-nazgul-scream-2026-09-23.md](rca-nazgul-scream-2026-09-23.md).
+
+**Codex (gpt-6-astra, ultra), one run over both commits: P1 0, P2 0, two P3 observations.** It
+confirmed the restore skip's premise from the load sequence, ran the committed stylesheet over the
+installed vanilla `lords.xml` in memory, audited every race consumer the Nine now reach (none
+harmful), confirmed Custom Battle identity (the commander is a `BasicCharacterObject` whose id is
+the lord's), disputed the cooldown, geometry and NaN suspects with decompiled lines, matched the
+shipped config field by field and measured the three Ogg takes. It left the native sound lookup,
+playback, the `Yell` fallback and the melee callback's thread UNVERIFIED. O1: an identity list of
+only `[null]` or `[""]` passed the provider's "matches nobody" check. O2: the new race gate read one
+regex spelling of the XSLT race attribute, so a literal `NPCCharacter` in a stylesheet escaped it.
+Verifying its qualifications found three text defects: the restore-skip comment named two of the
+three runtime race writers, missing co-op join reconciliation (the comment's second overclaim), and
+the #644 CHANGELOG entry's "the other 173" (176 measured) and "the only kit" (a new campaign only;
+hero equipment is saved). Checking a lesson's wording found a fourth: the sound gate's comment and
+doc still cited the spider AV as a NaN crash after the RCA had been corrected. All six fixed in the
+follow-up commit.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|
+| O1 | `heroIds: [null]` passed the "matches nobody" check and matched nobody silently | Missing entry validation | Tests covered the list's `null` and `[]`, not its entries | `ValidateList` removes blank entries with a warning and trims padded ones; lesson in `lessons/gamemodels-services.md` |
+| O2 | The race gate read one spelling of the XSLT race attribute | Gate narrower than its claim | Written against the one form the file used | Structural scan read verbatim, a failure on a computed race, a probe test per construct; recurrence in `lessons/testing-qa.md` |
+| S2 | "The only runtime writer" named two of three | Unverified enumeration (REPEAT) | The first correction walked the engine's writers, not TAOM's | Comment and doc list all three from a grep; recurrence in `lessons/misc.md` |
+| S4a | "The other 173" (176) | Wrong count, correction not propagated | A hand subtraction; the fix reached the issue only | Corrected; new lesson in `lessons/misc.md` |
+| S4b | "The only kit" on an existing save | Lifecycle claim | The existing-save paragraph walked race only | CHANGELOG corrected |
+| L | The spider AV cited as a NaN crash in two committed copies | Correction not propagated | Corrected where it was noticed | Both corrected; the same new lesson |
+
+**The fix diff got its own six-lens deep review** (Standards, Engine compatibility, Data flow,
+Efficiency, Completeness, Design; XML and Tooling not in scope). Two MED: the first cut of the
+structural scan trimmed a race's text, which the transform emits verbatim and FaceGen indexes
+exactly (the Engine lens proved it with `XslCompiledTransform`), and the RCA rows said "Corrected"
+before the CHANGELOG edit existed. LOWs: a padded identity entry still matched nobody, a
+`SaveableProperty` id cited as a line, character import uncited (it is the
+`campaign.import_main_hero` cheat), the provider summary and a warning's grammar, and no
+author-facing note of the gate's rule (now in `.claude/rules/xslt.md`). All fixed. A convergence
+pass over the fixes found four more text slips (a line count for Codex's input written from memory,
+a quotation missing a word, a sentence counting the writers differently from this entry's table, a
+code span split across a line), all corrected. The design lens
+proposed asserting on `lords.xslt`'s transform output instead of scanning stylesheets; Mike kept
+the scan (every stylesheet in about 25 ms, against one stylesheet and about 3.3 s a suite run).
+Full suite 10208 passed, 2 skipped. Prompt
+[codex-adversarial-nazgul-2026-09-23.prompt.md](codex-adversarial-nazgul-2026-09-23.prompt.md).
+
+Owed and untracked (no issue filed; Mike's word): the same entry gap in the DreadAura,
+UncapturableHeroes and BannerBearers providers' `ValidateList`; the retracted spider cause still in
+`CustomAttacksUtils.cs`'s guard comments (another session's file); nazghul in
+`BasicTableauRaceGuard`'s allow-list after an in-game render test; one shared compiled `lords.xslt`
+for the transform tests (about 3.3 s each).
+
+Owed smokes. #645: a Custom Battle Witch-king (the ring, the stagger, the morale, one 15 s timer,
+the shriek, the first `.ogg` a TAOM module sound plays), a misspelled sound name for the -1 and
+`Yell` path, auditioning the three takes, and Sauron's slam now frightening the agent he hits.
+#644: a new campaign (the Nine render nazghul in one kit; the six formerly human wraiths go through
+the non-human spawner path), an old save (the `kept the XML race` line, nazghul, the rolled kit
+unchanged), and a wraith's human-headed Load Game thumbnail. Then push and deploy on Mike's word
+and close #644 and #645. Nothing is pushed or deployed.

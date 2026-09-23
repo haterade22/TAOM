@@ -848,3 +848,24 @@ A heap release was built on `ScreenManager.OnPopScreen` for the inventory, party
 - **Why missed:** the feature was written against the slot it found first; the second registration had landed the same day from another feature and nobody enumerated `AddModel<AgentStatCalculateModel>` call sites.
 - **Prevent:** before adding a rule to a `Taom*Model`, grep `AddModel<TheBaseModel>` in `SubModule.cs` and give every registration the rule (a shared static applier keeps the logic in one place); the binding test resolves both model types by name and asserts both call it. And place the rule per BASE model, not per copy: `SandboxAgentStatCalculateModel` rewrites `MountChargeDamage` on every `UpdateAgentStats` (:1280) while `CustomBattleAgentStatCalculateModel` writes it once in `InitializeAgentStats` (:48), so the same `*=` post-pass is idempotent in the campaign model and compounds in the Custom Battle one. Read the base's write site for the property before choosing the override that carries a multiply, and pin the placement (the Custom Battle test asserts `InitializeAgentStats` calls the applier and `UpdateAgentStats` does not).
 - **Source:** `docs/reviews/rca-cavalry-charge-2026-09-17.md` findings 2 and 6, #610.
+
+### A config list is validated entry by entry: a null or blank entry passes a count check (#645, 2026-09-23)
+
+`SignatureStrikesConfigProvider` reverted a `null` identity list and dropped a signature whose three
+lists were all empty ("matches nobody"), but it returned any non-null list as it was. `"heroIds":
+[null]` or `[""]` therefore counted as one identity, the signature loaded as valid, and the registry
+skipped the entry without a word, so it matched nobody while the log said Loaded. Codex found it with
+a one-signature JSON input.
+
+- **Why missed:** the provider's tests covered the list's two states (`null`, `[]`) and not its
+  entries; the "matches nobody" rule read `Count`, which a null entry satisfies. The registry's own
+  blank-entry skip hid the problem downstream instead of reporting it.
+- **Prevent:** for every list a provider accepts, validate each entry as a field of its own (remove
+  a null or blank entry with a warning, trim a padded one the way the provider's other names are
+  trimmed) before any rule that reads the list's size, and give each entry rule its own test
+  (`GetConfig_NullOrBlankIdentityEntries_AreRemovedAndWarned`,
+  `GetConfig_PaddedIdentityEntry_IsTrimmedWithoutAWarning`,
+  `GetConfig_IdentityOfOnlyBlankEntries_MatchesNobodyAndIsDropped`). Fix the class, not the input
+  the reviewer sent: the first cut removed `[null]` and `[""]` and still let `" lord_1_17 "` match
+  nobody.
+- **Source:** Codex review 130 (O1); `docs/reviews/rca-nazgul-scream-2026-09-23.md` "Codex pass".

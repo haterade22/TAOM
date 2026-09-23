@@ -4,6 +4,34 @@
 
 ## 2026-09-23
 
+### fix(nazgul): v2.0.30 - Codex review follow-ups for #644 and #645
+
+Codex (gpt-6-astra, ultra) reviewed both commits in one run: no P1 or P2, two observations, both
+fixed. A signature whose identity list held only a null or blank entry (`"heroIds": [null]`) loaded
+as valid and matched nobody, because the provider counted entries it never checked;
+`ValidateList` now removes a null or blank entry with a warning and trims a padded one, as the id
+and the sound already were. And the race gate #644 added read one regex spelling of the XSLT race
+attribute, so a literal `NPCCharacter` in a stylesheet escaped it; the gate now parses each
+stylesheet (`RacesEmittedByXslt`), reads every race verbatim as the engine does, and fails on a race
+computed at transform time. It finds the same 19 race emissions the regex did.
+
+Checking Codex's notes corrected four sentences. The restore-skip comment and `hero-race.md` named
+two of the three runtime race writers, missing co-op join reconciliation. The #644 entry below said
+"the other 173" lords are #648 (176, measured) and that the Nazgul kit is the only kit (true for a
+new campaign; a hero's equipment is saved, so an existing campaign keeps the kit it rolled). And the
+sound gate's comment and doc cited the spider auto-bite AV as a proven NaN crash, which a later RCA
+traced to `HandleBlowAux`. Smoke note: a wraith's Load Game thumbnail renders human-headed, because
+the agentless tableau guard allows only `uruk` until a race passes an in-game render test.
+
+The fix diff got its own six-lens deep review. It caught the first cut of the scan trimming a race
+the engine indexes verbatim, a padded identity entry still matching nobody, and several citation,
+wording and completeness slips, all fixed; `.claude/rules/xslt.md` now tells a stylesheet author the
+gate's rule. Mike kept the stylesheet scan over the design lens's alternative of checking
+`lords.xslt`'s transform output. RCAs: the "Codex pass" sections of
+`docs/reviews/rca-nazgul-race-2026-09-23.md` and `rca-nazgul-scream-2026-09-23.md`; lessons in
+`gamemodels-services.md` (new), `misc.md` (new, and a recurrence) and `testing-qa.md` (a
+recurrence); REVIEW-LOG Review 130. Full suite: 10208 passed, 2 skipped. Nothing smoked in game.
+
 ### feat(nazgul): v2.0.30 - the Nine SCREAM: a second SignatureStrikes signature (#645)
 
 Mike asked for a Nazgul signature like Sauron's: SCREAM, on an overhead or a slashing attack, that
@@ -50,8 +78,9 @@ engine merges a second definition per attribute (the later file wins) and unions
 different ids, so every campaign dressed those three in the Nazgul kit or a generic Mordor lord kit at
 random, and their age of 20 came only from the row (the templates said 31, 9 and 11, the vanilla
 children the ids once belonged to). Mike's rule: vanilla lords live in the XSLT, new ones in
-`lords.xml`. The rows are gone; race, age 20 and face age 22.19 moved into the templates, and the
-Nazgul kit is the only kit. The other 173 lords defined twice are #648.
+`lords.xml`. The rows are gone; race, age 20 and face age 22.19 moved into the templates, and a new
+campaign dresses them in the Nazgul kit only (a hero's equipment is saved, so an existing campaign
+keeps the kit it rolled). The other 176 lords defined twice are #648.
 
 Existing saves: vanilla never saves a character's race, and `RacePersistenceService` puts the captured
 race back at session launch, which would have restored human and uruk on every old campaign. The

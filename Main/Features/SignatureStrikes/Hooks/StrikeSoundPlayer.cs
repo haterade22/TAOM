@@ -43,10 +43,11 @@ public sealed class StrikeSoundPlayer
 
         if (id >= 0)
         {
-            // An engine float handed straight to native: a NaN or infinite position into MakeSound
-            // is what CustomAttacksUtils guards against since the spider auto-bite AV (RCA
-            // 2026-06-14), so no position, no sound (csharp-architecture.md "Engine-Float Decision
-            // Gates").
+            // An engine float handed straight to native, gated as CustomAttacksUtils keeps a
+            // non-finite position out of MakeSound. What native does with one is unproven (the
+            // spider AV that guard was written for traced to HandleBlowAux instead,
+            // rca-spider-dismount-on-hit-2026-06-15.md), so this is a defence: no position, no
+            // sound (csharp-architecture.md "Engine-Float Decision Gates").
             var position = attacker.GetEyeGlobalPosition();
             if (!FiniteFloatValidator.IsFinite(position.x)
                 || !FiniteFloatValidator.IsFinite(position.y)

@@ -71,7 +71,7 @@ every seam is an engine virtual.
 | `CustomAttacksUtils.TakeDamage(victim, attacker, damage, magnitude, knockDown, extraFlags)` | the one synthetic-blow primitive every creature tree uses, extended with a trailing `BlowFlags extraFlags` so a sweep or a scream can set `KnockBack` | ring victims |
 | `Mission.GetNearbyEnemyAgents(Vec2, float, Team, MBList<Agent>)` | enemies only, filtered native-side | the ring; allies are never flattened |
 | DreadAura's policy-free pieces: `DreadAgentGate.CanAffect`, `IDreadRegistry.ResolveResist`, the CALL to `BattleMoraleModel.CalculateMoraleChangeToCharacter` | the fear burst | tier, hero and race resistance at parity with the aura; NOT `DreadAuraService.ComputeDrain`, which is gated on the Dread Aura toggle and clamped to Dread's own morale floor |
-| `SoundEvent.GetEventIdFromString` + `Mission.MakeSound(id, position, false, true, -1, -1)` | a strike's sound, once, at the attacker's head (`Agent.GetEyeGlobalPosition`) | the one-shot call Native's `module_sounds.xml` documents. An unregistered name is expected to answer -1, the engine's null sound id (a native contract managed code cannot prove; the smoke checks it), and the attacker then gives the engine's `Yell` voice instead (`Agent.MakeVoice`). A non-finite eye position plays nothing, because a NaN into `MakeSound` is the input `CustomAttacksUtils` has guarded since the spider auto-bite AV |
+| `SoundEvent.GetEventIdFromString` + `Mission.MakeSound(id, position, false, true, -1, -1)` | a strike's sound, once, at the attacker's head (`Agent.GetEyeGlobalPosition`) | the one-shot call Native's `module_sounds.xml` documents. An unregistered name is expected to answer -1, the engine's null sound id (a native contract managed code cannot prove; the smoke checks it), and the attacker then gives the engine's `Yell` voice instead (`Agent.MakeVoice`). A non-finite eye position plays nothing, the defence `CustomAttacksUtils.IsBlowGeometrySafe` applies to `MakeSound`; what native does with one is unproven, since the spider AV that guard was written for traced to `HandleBlowAux` instead |
 
 **Execution is deferred one frame.** `OnMeleeHit` runs inside the engine's `MeleeHitCallback`
 while the swing's momentum is a live `ref` (`:5347`), and registering more blows there re-enters
@@ -170,7 +170,7 @@ The MCM cooldown multiplier applies live.
 | `signatures[].id` | string | Names the signature in the log and is the key a bad field reverts by. Blank or repeated (case-insensitive) drops the entry with a warning |
 | `signatures[].heroIds` | string[] | Hero StringIds. Empty is a legitimate "nobody on this axis"; `null` reverts |
 | `signatures[].heroSets` | string[] | Named lore groups; only `nazgul_nine` is known. Unknown names are skipped with a warning at first use |
-| `signatures[].races` | string[] | FaceGen race names. Unknown names are skipped with a warning at first use. An entry with no hero id, hero set or race matches nobody and is dropped with a warning |
+| `signatures[].races` | string[] | FaceGen race names. Unknown names are skipped with a warning at first use. In all three identity lists a null or blank name is removed with a warning and a padded one is trimmed; a signature left with no hero id, hero set or race matches nobody and is dropped with a warning |
 | `signatures[].cooldowns.<Kind>` | float 0.5..120 | Seconds per attacker per kind, mission time. The floor keeps a cleaving swing to one package. An unknown kind drops the entry; a bad value reverts to that signature's compiled value, or drops when there is none |
 | `signatures[].strikes.<Direction>` | object | One profile per `Overhead`, `Left`, `Right`, `Thrust` (member name only, case-insensitive, normalised; a numeric string is dropped). A direction with no row is a plain hit; an unknown key or `kind` drops the row, and so does a `kind` with no `cooldowns` entry. A profile with no `damageFraction` and no `fearMorale` rings nothing and logs nothing |
 | `strikes.*.kind` | `Slam`, `Sweep` or `Scream` | The cooldown is per kind |
@@ -276,7 +276,7 @@ campaign-only, so a Custom Battle gets the ring but vanilla primary knockdown an
 - `TAOM.Tests/Features/SignatureStrikes/SignatureStrikeServiceTests.cs`: direction mapping for both signatures, every rejection, shield-block and world-hit basis, cooldown boundary and NaN cases, the Scream's shared timer, the verdict matrix, ring damage rounding and overflow, fear headroom and sentinel
 - `SignatureStrikeFalloffTests.cs`: inside, edge (1/9), midpoint, beyond, degenerate radii, NaN/Infinity per argument
 - `SignatureStrikeRegistryTests.cs`: the three axes, hero before race, first listed wins, overlaps warned, unknown race and hero set skipped, no coercion, built once
-- `SignatureStrikesConfigProviderTests.cs`: one test per validation rule, including the signature list, cooldowns, origin and sound
+- `SignatureStrikesConfigProviderTests.cs`: one test per validation rule, including the signature list, identity entries, cooldowns, origin and sound
 - `ShippedSignatureStrikesConfigTests.cs`: the shipped file parses clean and ships exactly `sauron` and `nazgul`, each signature's identity, direction, cooldown and ring contract, the scream's sound registered with `.ogg` files on disk, no long dashes
 - `StrikeKindTimesTests.cs`, `StrikeNamesTests.cs`: every kind round-trips, the name-only parsing
 - `StrikeRequestBufferTests.cs`: swap semantics
@@ -359,6 +359,8 @@ registration lines); `hit by ... -> no effect` on every swing means the gates in
 - 2026-09-23: #645, the Nine's SCREAM: `signatures` list, `Scream` kind, `origin`, `sound`, per-kind
   stamps, the struck foe takes a strike's fear, Custom Battle character-id fallback, the scream's
   three ElevenLabs takes.
+- 2026-09-23: Codex review 130 fixes: an identity list's null or blank entry is removed with a
+  warning and a padded one trimmed, so neither leaves a signature that matches nobody.
 - 2026-09-16: #606, the mission gate moved off the dead `OnBehaviorInitialize` (never fires for a TAOM-added behavior) to a first-use read; stage logging for the replay.
 - 2026-09-16: Codex review 114 fixes (stand-down clears the roster, name-only enum parsing, impact finiteness gate, shared damage cast, 0.5 s cooldown floor, inert profiles skip).
 - 2026-09-16: feature landed (#605).

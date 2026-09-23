@@ -139,6 +139,12 @@ stack size only. The same round wrote that `characters/lords.xml` carries "empty
   review, point the engine and data lenses at every sentence the fix changed, not only the code.
 - **Source:** `docs/reviews/rca-ranged-rebalance-second-review-2026-09-18.md` "The fix-diff review",
   F3; first-RCA audit item 6.
+- **Recurred:** 2026-09-23 (#644, Codex review 130). The deep review found the restore-skip comment's
+  "nothing changes a wraith's race at runtime" false and replaced it with "the only runtime writer is
+  the player's own face editor or character import", naming the writer the lens had found. Codex found a
+  third, co-op join reconciliation (`JoinReconciliationService.ApplyRace`). An "only" claim is an
+  enumeration: its measurement is a grep of every writer (the `SetHeroRace` callers plus the
+  engine's own), run before the replacement is written.
 
 ### Triage a crash from logs by reading every line: the deciding fact is rarely an error (#635, 2026-09-22)
 A silent-CTD report came with two logs. The first pass read their tails and grepped for
@@ -190,3 +196,20 @@ new rule, across eleven files.
   into the edited files, open the owning feature doc of each changed class, and re-measure a count
   with the command its doc prints rather than subtracting by hand.
 - **Source:** `docs/reviews/rca-nazgul-race-2026-09-23.md` finding 5 (2026-09-23).
+
+### A claim found wrong is wrong everywhere it was written: grep for it before fixing the copy in front of you (#644, #645, 2026-09-23)
+
+Twice in one session a correction reached one surface and missed the others. The #648 count was
+corrected to 176 in the issue while the #644 CHANGELOG entry kept "the other 173", a hand subtraction
+from 179 that was wrong from the start (the #644 lesson above forbids subtracting by hand). And
+checking a lesson's wording showed that the spider AV `CustomAttacksUtils` guards against was later
+traced to `HandleBlowAux`; the RCA row and the lesson were corrected, but the same claim already sat
+in `StrikeSoundPlayer`'s comment and `signature-strikes.md`, both committed.
+
+- **Why missed:** each correction was made where the error was noticed, and the fix felt complete
+  because the surface being edited was now right. Nothing prompted a search for the other copies.
+- **Prevent:** when a claim turns out wrong, grep the whole change (committed files, the scratch
+  drafts of the CHANGELOG, issue and commit text, and memory) for the claim's distinctive words or
+  number, and fix every hit in the same edit.
+- **Source:** Codex review 130 (the S4 cross-check); `docs/reviews/rca-nazgul-race-2026-09-23.md` and
+  `docs/reviews/rca-nazgul-scream-2026-09-23.md` "Codex pass".

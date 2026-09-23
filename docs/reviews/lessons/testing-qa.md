@@ -104,6 +104,14 @@ When you author or port a pattern-detection ruleset (regex categories, YARA sign
 - **Why missed:** The SkillSpector port into `tools/audit_claude_config.py` (2026-06-22 deep-review) shipped a security gap: `agency-wildcard-tools` matched the YAML form (`allowed-tools: ["*"]`) but NOT the JSON `settings.json` form (`"tools": ["*"]`) (the leading quote broke the regex) and `scan_permissions` missed a bare `"*"` allow-grant entirely. A real wildcard grant slipped BOTH scanners because only the YAML form was tested. The same review found 26/36 regex rules + 3/8 AST rules had zero firing test (9 untested were HIGH).
 - **Prevent:** One positive firing test per rule, minimum. Enumerate the host config's format variations as test cases (single-quote vs double-quote, attribute order, article insertion in prose patterns). Verify by running the ruleset against a synthetic malicious sample via the tool's loud mode (`--external` for the auditor), asserting per-rule firing, not just "it runs." Prefer a false-positive over a false-negative only when the FP is cheap to triage.
 - **Source:** memory/feedback_detection_ruleset_per_rule_test_matrix.md, docs/reviews/rca-skillspector-2026-06-22.md
+- **Recurred:** 2026-09-23 (#644, Codex review 130, O2) on a data gate: `CultureRaceConsistencyTests`
+  read XSLT races with one regex spelling of `<xsl:attribute name="race">`, so a literal
+  `<NPCCharacter race="...">` in a stylesheet, a single-quoted `name` or an `xsl:text` child escaped
+  it; Codex proved it by transforming a probe stylesheet in memory. The gate now parses the
+  stylesheet (`RacesEmittedByXslt`), fails on a race computed at transform time, and has one probe
+  test per construct. Its first cut trimmed the text, the old regex's tolerance carried over, and a
+  probe test pinned that as a feature; the engine indexes the name verbatim, so the scan now does
+  too. Read a value the way its consumer reads it, not the way it looks tidiest.
 
 ### Write an end-to-end XML→calculator→property→guard smoke test for any config-pipeline feature
 When a feature gates on a sign / comparison / non-zero check downstream of a config calculator pipeline (XML → mutation → property → guard), the test surface MUST include an end-to-end smoke test that drives the FULL pipeline with a REAL shipped XML choice (not synthetic fixtures) and asserts the side effect (or its absence) at the end. Per-layer unit tests can ALL pass while the composition is broken at the join. Specifically test the gated value: if the guard is `> 0f`, cover a positive, zero, and (if reachable) negative value from the XML.

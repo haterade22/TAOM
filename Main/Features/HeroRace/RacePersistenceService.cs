@@ -123,9 +123,11 @@ public class RacePersistenceService : IRacePersistenceService
 
             // #644: a Ringwraith's race comes from its XML (nazghul). A save written before #644
             // captured the old race (human for six, uruk for three), so restoring it would undo the
-            // data change on every existing campaign. The only runtime writer is the player's own
-            // face editor or character import, which a Player Switcher wraith can reach; that edit
-            // is deliberately dropped on load, a wraith stays a wraith (Mike, 2026-09-23).
+            // data change on every existing campaign. Three runtime writers can reach a wraith: the
+            // player's face editor and the campaign.import_main_hero cheat (a Player Switcher
+            // wraith), and co-op join reconciliation (JoinReconciliationService, on the hero a
+            // joiner is handed). Each edit is deliberately dropped on load: a wraith stays a wraith
+            // (Mike, 2026-09-23).
             if (_nazgul.IsWraith(hero.StringId))
             {
                 keptWraiths++;
