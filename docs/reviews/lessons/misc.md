@@ -139,3 +139,38 @@ stack size only. The same round wrote that `characters/lords.xml` carries "empty
   review, point the engine and data lenses at every sentence the fix changed, not only the code.
 - **Source:** `docs/reviews/rca-ranged-rebalance-second-review-2026-09-18.md` "The fix-diff review",
   F3; first-RCA audit item 6.
+
+### Triage a crash from logs by reading every line: the deciding fact is rarely an error (#635, 2026-09-22)
+A silent-CTD report came with two logs. The first pass read their tails and grepped for
+`exception|error|crash|warn`, found nothing past a render census, and built a theory around the tableau
+patches nearest the last line. The user asked why the logs had not been read in full. The full read,
+with repeated noise collapsed by shape rather than skipped, surfaced the one fact that set this
+conversation apart: of six conversations in the session it was the only one started from a menu and
+the only one that played a voice line with lip-sync. Every earlier conversation logged
+`Voice object for text id is not found` and ended with `Conversation End`; this one logged
+`Conversation sound playing` and nothing after. None of those lines is an error.
+- **Why missed:** error-keyword grep answers "did something complain", and a native crash complains
+  nowhere. What separates the crashing path from the healthy ones is ordinary INFO traffic that looks
+  like noise until it is compared with the same event earlier in the session.
+- **Prevent:** for a log-only crash report, read both logs in full before stating a cause. Collapse
+  high-volume lines with a `sort | uniq -c` pass on the message shape, then read everything else in
+  order. Put the crash moment next to the same kind of event earlier in the session that did not
+  crash, and list what differs.
+- **Source:** issue #635; `docs/features/hero-race.md` "Open: Map-Conversation CTD With a Voiced Elf Speaker".
+
+### A doc that says "this never happens" is a claim about code: check the code before ranking a hypothesis on it (#635, 2026-09-22)
+`kingdom-voices.md` said no TAOM culture could match a voice-over file, because `GetAccentClass`
+returns `""` for them. The #635 triage used that sentence to rank lip-sync on a custom-race head as
+the leading suspect ("a path TAOM almost never exercises") and wrote the argument into the issue, the
+plan and memory. The code says otherwise: with an empty accent, `GetSoundPathForCharacter`'s last tier
+builds the regex `.+_.+`, which matches any gendered vanilla voice path, so TAOM characters speak
+random vanilla lines with lip-sync all the time. The log already in hand contradicted the doc:
+`accentClass: ` (empty) followed by `[VOICEOVER]Sound path found`.
+- **Why missed:** the doc sentence read as settled research, and it agreed with the theory being
+  built, so nobody opened `DefaultVoiceOverModel` to check it. The contradicting log line had been
+  read, but it was never tested against the claim.
+- **Prevent:** when a hypothesis leans on a documented negative ("never", "dead", "cannot match"), open
+  the method the doc summarises before ranking on it, and look in the evidence for a line that would
+  be impossible if the doc were right. A negative claim about a lookup with fallbacks is the most
+  likely kind to be wrong (`csharp-architecture.md` "Lookup Functions With Fallbacks").
+- **Source:** issue #635 (correction comment); `docs/features/kingdom-voices.md` "Dialogue voice-over", corrected 2026-09-22.

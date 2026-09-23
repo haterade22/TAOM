@@ -252,11 +252,33 @@ Do not conflate it with combat barks. Different assets, different registration, 
   `GetAccentClass(CultureObject, bool)`.
 - Reference implementation: the official `NavalDLC` module.
 
-**This is the one place culture is native**, and it is currently dead for TAOM.
+**This is the one place culture is native, and for TAOM it misfires rather than going silent.**
 `DefaultVoiceOverModel.GetAccentClass` hard-codes the vanilla cultures (`empire`, `vlandia`,
-`sturgia`, `khuzait`, `aserai`, `battania`, plus bandits) and **returns `""` for everything else**,
-so no TAOM culture can match a voice-over file. Fixing it is a `VoiceOverModel` override, ordinary
-GameModel work per `.claude/rules/gamemodels.md`.
+`sturgia`, `khuzait`, `aserai`, `battania`, plus bandits) and **returns `""` for everything else**.
+An earlier version of this section concluded that no TAOM culture could match a voice-over file.
+That is wrong (corrected 2026-09-22, #635). `GetSoundPathForCharacter` tries three tiers of regexes,
+and with an empty accent the last tier builds `".+" + accentClass + "_.+"`, which is `.+_.+`. That
+matches every voice path containing an underscore. The only remaining filter is gender:
+`doubleCheckForGender` keeps paths tagged `_male` or `_female` for the right sex. So a TAOM character
+speaking any dialogue line that carries a `VoiceObject` gets a **random vanilla voice from any
+culture**, and lip-sync on its head. Same code in v1.4.8 (`DefaultVoiceOverModel.cs:90` in the
+category dump) and v1.5.3 (`taom-src`).
+
+Observed in a player log (#635): the elf wanderer Thyrell (culture "Ñoldor Elves") logged
+`accentClass: ` (empty), then `[VOICEOVER]Sound path found: ...vlandian_male_softspoken_005`, then
+`Conversation sound playing`. Lines with no `VoiceObject` at all log
+`Voice object for text id is not found` and stay silent. That is what bandit encounter lines do,
+and it is why this looked dead.
+
+Both conversation paths drive the same native lip-sync, `IMBAgentVisuals.StartRhubarbRecord`:
+mission conversations through `CampaignMissionComponent` (`_currentAgent.AgentVisuals.StartRhubarbRecord`),
+and map conversations through `MapConversationTableau.PlayConversationSoundEvent`. The clip's
+Rhubarb `.xml` loads next to the `.ogg`. So custom-race heads (elf, dwarf, orc) already get lip-synced
+vanilla voices whenever a voiced vanilla line fires.
+
+Fixing the voices is a `VoiceOverModel` override, ordinary GameModel work per
+`.claude/rules/gamemodels.md`. It can map TAOM cultures to fitting vanilla accents, return `""` from
+`GetSoundPathForCharacter` to keep them silent, or point at TAOM-recorded lines.
 
 ## Key Files
 

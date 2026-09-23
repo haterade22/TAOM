@@ -220,7 +220,36 @@ Becoming the **ruler of a kingdom** crashed to desktop. Two crash logs (2026-06-
 
 **Scope / residual.** `Main/Features/HeroRace/Hooks/GauntletSceneNotification_OpenScene_Guard_Patch.cs` (three patch classes: the OpenScene Finalizer, the OnTick deferred-close Postfix, the InitializeWithAgentVisuals diagnostic Prefix). The one remaining live-only check is the deferred-close path — verify in-game that after an aborted become-king cinematic the campaign map still accepts input and the next scene-notification still displays. Known minor residual (engine-side, not fixable from a patch): the `PopupSceneSpawnPoint` that crashed throws before it's added to `_sceneCharacterScripts`, so its half-built `AgentVisuals` isn't `Reset()` during teardown — a bounded one-per-abort managed-reference leak reclaimed at scene `ClearAll()`. Fallback if the deferred close ever proves insufficient: suppress the offending notification up front via a `MBInformationManager.ShowSceneNotification` Prefix (deterministic, but loses those cinematics). Adversarially reviewed by 5 agents (0 HIGH; the deferred-close gap above was the one real finding, now fixed).
 
+## Open: Map-Conversation CTD With a Voiced Elf Speaker (#635, 2026-09-22)
+
+**Status: investigation only, no code, root cause unproven.** A player (1.4.8, v2.0.28) opened a map
+conversation with the elf wanderer Thyrell from Rivendell's tavern-district menu. They clicked his name,
+opened his encyclopedia page, went back, and the game died silently. No TAOM log line, no crash window.
+The two logs put the crash between 19:45:15 and 19:45:45, after the encyclopedia page had rendered him
+cleanly.
+
+**Why it may belong to this feature.** `MapConversationTableau` is a **fifth raw custom-race render path**, after the
+four listed above. TAOM does not guard it. The only TAOM patches on it are the BannerColorPersistence
+`SpawnOpponentLeader`/`SpawnOpponentBodyguardCharacter` postfixes, which call `AgentVisuals.Refresh`
+again on the custom-race visual. Engine lifecycle, lip-sync path and the latent `OnTick` NRE are
+written up in
+[gauntletui-viewmodel-screen.md](../reference/engine/gauntletui-viewmodel-screen.md) "Map conversation + encyclopedia".
+
+**What is and is not established.**
+- The silent death points to a native fault. TAOM's `Native2ManagedPatcher` finalizers log and swallow
+  a managed throw on the callback shims instead of letting it crash.
+- The conversation played a voiced line with Rhubarb lip-sync on the elf head. That is **not rare**:
+  an empty TAOM accent class falls through to any vanilla voice
+  ([kingdom-voices.md](kingdom-voices.md)), so custom-race heads are lip-synced routinely in keeps
+  and map encounters. On its own it is a weak suspect.
+- What stands out is the combination: a conversation started from a menu, a voice clip ending, and the
+  encyclopedia's map-state idle and return.
+
+**Next step.** Live repro with `procdump -ma -e` attached (paths in #635), then `/native-crash-triage` on the dump.
+No guard is to be written until a dump names the faulting frame.
+
 ## Changelog
+- 2026-09-22: #635 opened: silent CTD after an encyclopedia round trip during a voiced map conversation with an elf wanderer. Investigation only (section above); `MapConversationTableau` recorded as the fifth, unguarded custom-race render path.
 - 2026-08-03 — Race persistence survives a multiplayer host. `CaptureHeroRaces` refuses a race table below two entries: a co-op host without TAOM's modules has one race in FaceGen, so every hero read back as 0, and that map rode the host→client save transfer and force-set every hero on a full 15-race client to human — each value individually valid, which is why only the COUNT betrays it. Skips rather than clears, so a good in-memory capture survives the bad host. Second half: capture now also runs at session launch, **after** the restore, because the host→client save transfer never raises `OnBeforeSaveEvent` and a joiner was receiving a world with no race data; capturing first would have snapshotted every hero at their raw XML race over the map the restore was about to apply. Both orderings pinned by tests. The joiner's own character-creation race is repaired separately by [player-possession.md](player-possession.md).
 - 2026-07-05 — Reorder-proof race persistence (#330): `CaptureHeroRaces` snapshots the ordered race-name list (`IRaceManager.GetOrderedRaceNames`, new) as a `;`-joined legend under `_taom_raceNameLegend`; `RestoreHeroRaces` translates saved ints through the legend to CURRENT ids so a skins.xml merge-order shift (insert/remove/reorder, module-set change, Native-race patch) can no longer silently remap hero races — the old `IsValidRaceId` guard only caught out-of-range ints, not shifts. Removed race → skip+warn, hero keeps XML race. Pre-#330 saves take the legacy raw-int path unchanged; the first save after the update writes the legend. `SyncRaceData` clears map+legend on `IsLoading` (fixes the same-process stale-map leak for loads, the #130-R1 class). Deep-review 5 agents: 0 code findings; Codex adversarial pass on file.
 - 2026-07-02 — Race-correct Save/Load preview for verified races: `BasicTableauRaceGuard` refactored from a hardcoded int allow-list (`{0}`) to a name-based `TableauSafeRaceNames` resolved per call via `IRaceManager` (validate-before-lookup, throw-safe → human). Uruk empirically render-verified in the agentless build and allow-listed — an uruk save now previews as an uruk. Dwarf stays coerced (#295 proven unsafe). 9 guard tests.

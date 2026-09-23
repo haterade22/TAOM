@@ -4,6 +4,34 @@
 
 ## 2026-09-22
 
+### docs(herorace): v2.0.30 - #635 map-conversation CTD triage, voice-over fix
+
+A player on 1.4.8 (v2.0.28) crashed to desktop with no crash window. They had opened a map
+conversation with the elf wanderer Thyrell from Rivendell's tavern-district menu, clicked his name,
+viewed his encyclopedia page and gone back. Filed as #635; no code yet, because the root cause needs a
+dump. The two logs place the crash between 19:45:15 and 19:45:45, after the encyclopedia rendered him
+cleanly. TAOM's native-to-managed finalizers log and swallow managed throws, so a silent exit points to
+a native fault.
+
+What the triage established, now written down so the next session does not decompile it again:
+
+- `docs/reference/engine/gauntletui-viewmodel-screen.md` gains "Map conversation + encyclopedia". The
+  encyclopedia is a second layer on `MapScreen`, not a pushed screen. It puts the map state into idle
+  ticks, and it never finalizes the conversation's tableau. The tableau ticks only while its widget
+  renders. Voiced lines lip-sync the speaker through `StartRhubarbRecord`. `OnTick` has a latent
+  unguarded `_agentVisuals[0]` read. File and line evidence for v1.4.8 and v1.5.3 is included.
+- `docs/features/kingdom-voices.md` corrected. It said no TAOM culture could match a voice-over file.
+  With the empty accent `GetAccentClass` returns, `GetSoundPathForCharacter`'s last regex tier
+  becomes `.+_.+` and picks any gendered vanilla voice. So TAOM characters speak random vanilla lines
+  with lip-sync, in keeps and on the map. The #635 log shows it: an empty `accentClass`, then
+  `vlandian_male_softspoken_005`.
+- `docs/features/hero-race.md` records `MapConversationTableau` as a fifth, unguarded custom-race
+  render path and adds an open #635 section. The wrong voice-over sentence had made lip-sync look like
+  a rare path, so it is demoted to one hypothesis among several.
+- Two lessons in `docs/reviews/lessons/misc.md`: read a crash's logs in full, since the deciding line
+  was INFO; and check a documented "never happens" against the code before ranking a theory on it.
+  `LESSONS-LEARNED.md` counts re-derived: 778 lessons, six categories had drifted.
+
 ### feat(elephant): v2.0.30 - howdah log counts the arrows each archer looses
 
 The howdah's status line now carries `shots=N` per archer: arrows actually loosed, counted from
