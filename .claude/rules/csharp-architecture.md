@@ -261,12 +261,15 @@ Two facts about `TaleWorlds.MountAndBlade.Agent` shape every mission-time featur
 2. **Single-player ticks agents on an asynchronous AI thread, and TWParallel workers under that.**
    `AgentComponent.OnTick`, `TickAsAI`, `Team.Tick`, `TeamAI`, `Formation.SetMovementOrder` from the AI,
    `Formation.GetOrderPositionOfUnit` for AI units (worker pool), and `MBSubModuleBase.AfterAsyncTickTick`
-   all run off the main thread while the engine's main-thread callbacks (`OnAgentRemoved`,
-   `OnAgentDeleted`, `OnAgentHit`) fire. Mission logic that registers blows, plays actions, spawns or
-   fades agents, or touches a collection those callbacks write belongs in `MissionBehavior.OnMissionTick`
-   (creature trees: `BehaviorTreeMissionLogic`). A store reachable from a patch on any of those engine
-   methods takes a lock. Engine callbacks are not all main-thread either: `OnAgentPanicked` arrives on the
-   asynchronous tick (`CommonAIComponent.OnTick` -> `Mission.OnAgentPanicked`), so a behavior that owns
-   main-thread collections asks `MissionThreadGuard.IsOnMainThread` and parks such a callback in a
-   `DeferredCallbackQueue` for its next `OnMissionTick`. `MissionThreadGuard.NoteCall` is the tripwire;
-   wire it into any new native write.
+   all run off the main thread, overlapping every main-thread view, UI and input tick after
+   `Mission.OnTick` returns. Mission logic that registers blows, plays actions, spawns or fades agents, or
+   touches a collection an engine callback writes belongs in `MissionBehavior.OnMissionTick` (creature
+   trees: `BehaviorTreeMissionLogic`). A store reachable from a patch on any of those engine methods takes
+   a lock. **No engine callback is main-thread by contract.** Native raises `OnAgentRemoved` (and through
+   it every `AgentComponent.OnAgentRemoved`), `OnAgentDeleted`, `OnAgentHit`, `OnAgentShootMissile`,
+   `OnAgentDismount` and `OnAgentAlarmedStateChanged` on the thread it chooses, and a v1.4.8 player log
+   caught six callbacks off the main thread (#634); `OnAgentPanicked`, `OnObjectUsed` and `OnObjectStoppedBeingUsed`
+   have managed routes from the asynchronous tick. A behavior or component that owns main-thread
+   collections routes the write through `DeferredCallbackQueue.RunOrDefer`, which runs it inline on the
+   main thread and parks it for the next `OnMissionTick` anywhere else, or uses a concurrent collection
+   or a lock when order does not matter. `MissionThreadGuard.NoteCall` is the tripwire; wire it into any new native write.

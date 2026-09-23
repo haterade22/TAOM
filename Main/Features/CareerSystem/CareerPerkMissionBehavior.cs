@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using BehaviorTreeWrapper;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using TAOM.Core.Logging;
+using TAOM.Features.AdvancedCombat;
 using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.CareerSystem.Domain;
 using TAOM.Features.CareerSystem.UI;
@@ -32,6 +34,10 @@ public class CareerPerkMissionBehavior : MissionBehavior
     private bool _loggedMissionStart;
     private readonly List<MissionAbilityExecutionContext> _activeContexts = new List<MissionAbilityExecutionContext>();
 
+    // The player's death and score hits are native's to place, and a v1.4.8 player log caught
+    // OnAgentRemoved off the main thread (#634): their work is replayed from OnMissionTick.
+    private readonly DeferredCallbackQueue _deferred;
+
     public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
 
     public CareerPerkMissionBehavior(
@@ -50,10 +56,14 @@ public class CareerPerkMissionBehavior : MissionBehavior
         _agentStats = agentStats;
         _attributionReporter = new AbilityDamageAttributionReporter(config);
         _logger = logger;
+        _deferred = new DeferredCallbackQueue(message => _logger?.LogWarning(message));
     }
 
     public override void OnMissionTick(float dt)
     {
+        MissionThreadGuard.MarkMainThread();
+        _deferred.Drain();
+
         if (Campaign.Current == null) return;
         var hero = CharacterObject.PlayerCharacter?.HeroObject;
         if (hero == null) return;
@@ -124,7 +134,10 @@ public class CareerPerkMissionBehavior : MissionBehavior
         var hero = CharacterObject.PlayerCharacter?.HeroObject;
         if (hero == null || !CareerHeroIdentityGate.IsCareerHeroAgent(affectorAgent, hero)) return;
 
-        _attributionReporter.ReportHit(hero.StringId, affectedAgent?.Name, damagedHp);
+        var heroId = hero.StringId;
+        var targetName = affectedAgent?.Name;
+        _deferred.RunOrDefer("CareerPerkMissionBehavior.OnScoreHit",
+            () => _attributionReporter.ReportHit(heroId, targetName, damagedHp));
     }
 
     public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
@@ -137,29 +150,37 @@ public class CareerPerkMissionBehavior : MissionBehavior
 
         var mainAgent = Mission.Current?.MainAgent;
         if (affectedAgent == mainAgent)
+            EndAbilitiesForFallenHero(hero.StringId);
+    }
+
+    // Empties the list OnMissionTick walks and recomputes other agents' stats, so off the main thread
+    // it waits for the next mission tick.
+    internal void EndAbilitiesForFallenHero(string heroId) =>
+        _deferred.RunOrDefer("CareerPerkMissionBehavior.OnAgentRemoved", () => EndAbilitiesNow(heroId));
+
+    private void EndAbilitiesNow(string heroId)
+    {
+        // Deep-review 2026-08-05 — snapshot the buffed allies BEFORE the clear, then
+        // force a stat recompute on each. UpdateAgentProperties is event-triggered
+        // (never per-tick), and clearing _activeContexts kills the scheduled restores
+        // that would have refreshed them — without this loop the allies keep the
+        // buffed speed/damage/draw-speed baked in for the rest of the mission.
+        var buffedAllies = CareerAbilityBuffTracker.GetBuffedAllyIndices();
+
+        CareerAbilityBuffTracker.ClearBuff(heroId);
+        CareerAbilityBuffTracker.ClearAllAllyBuffs();
+        _activeContexts.Clear();
+
+        var mission = Mission.Current;
+        if (mission != null)
         {
-            // Deep-review 2026-08-05 — snapshot the buffed allies BEFORE the clear, then
-            // force a stat recompute on each. UpdateAgentProperties is event-triggered
-            // (never per-tick), and clearing _activeContexts kills the scheduled restores
-            // that would have refreshed them — without this loop the allies keep the
-            // buffed speed/damage/draw-speed baked in for the rest of the mission.
-            var buffedAllies = CareerAbilityBuffTracker.GetBuffedAllyIndices();
-
-            CareerAbilityBuffTracker.ClearBuff(hero.StringId);
-            CareerAbilityBuffTracker.ClearAllAllyBuffs();
-            _activeContexts.Clear();
-
-            var mission = Mission.Current;
-            if (mission != null)
+            foreach (var allyIndex in buffedAllies)
             {
-                foreach (var allyIndex in buffedAllies)
+                var ally = mission.FindAgentWithIndex(allyIndex);
+                if (ally != null && ally.IsActive())
                 {
-                    var ally = mission.FindAgentWithIndex(allyIndex);
-                    if (ally != null && ally.IsActive())
-                    {
-                        ally.UpdateAgentProperties();
-                        ally.MountAgent?.UpdateAgentProperties(); // #611: the mount carries the buff's mount fields
-                    }
+                    ally.UpdateAgentProperties();
+                    ally.MountAgent?.UpdateAgentProperties(); // #611: the mount carries the buff's mount fields
                 }
             }
         }
@@ -186,6 +207,7 @@ public class CareerPerkMissionBehavior : MissionBehavior
 
         _logger?.LogInfo("CareerSystem: Mission ended — clearing abilities");
         _loggedMissionStart = false;
+        _deferred.Clear();
         _activeContexts.Clear();
     }
 

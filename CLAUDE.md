@@ -224,7 +224,7 @@ instructions `AGENTS.md`.
 | **An Armory art drop renames meshes; the XML keeps the old names** | The Armory is unversioned and loads loose `Assets/**/*.tpac`; a `body_name` no tpac ships spins `PreloadHelper.WaitForMeshesToBeLoaded` forever (#352; #599 the elf start: the player's kit is first in every tournament preload). On `ARMORY ART DRIFT` run `/armory-audit`, repoint refs, never restore a tpac. |
 | **A borrowed `bo_` body** | A weapon body is `bo_` + its own mesh id, in the mesh's own FBX. Borrowing another kit's twin resolves today and dies with that kit's next art drop (#599 renamed it once; #633 three Rhun bows shipped on it), and every "does it resolve" gate passes it. Same-kit sharing is design. Gate `COLLISION_BODY_BORROWED`; fix `tools/blender/add_collision_body.py` + Kit import. |
 | **A tpac the Kit never saved is invisible, with no log line** | The client renders only packages with a `RuntimeDataCache/<package GUID>.rdc`, which ONLY the editor writes. A hand-built tpac, a Kit import without a module save, or a reimport leaves packages without one: skipped whole, no `Unable to find`, no `Overriding item`. Gate: `python tools/check_rdc_entries.py --under <folder>` (#616). |
-| **Agent slots recycle; Agent.Tick is off-thread** | A deleted agent's index goes to the next agent built and its dead `Agent` still reads that slot (`IsActive` says yes): never key mission state on `Agent.Index` (#592). In SP `Agent.Tick` runs on the async AI thread: no blows or mission collections from an `AgentComponent` tick; trees tick from `BehaviorTreeMissionLogic.OnMissionTick`. |
+| **Agent slots recycle; Agent.Tick and callbacks are off-thread** | A deleted agent's index goes to the next agent built and its dead `Agent` still reads that slot (`IsActive` says yes): never key mission state on `Agent.Index` (#592). `Agent.Tick` and native callbacks (`OnAgentRemoved` too, #634) run off the main thread: no blows from a component tick; write mission state via `RunOrDefer`. |
 
 ## Architecture (One-liner)
 
@@ -241,7 +241,7 @@ Override pattern + base-class + registration rules: `.claude/rules/gamemodels.md
 
 ## Harmony Patch Categories
 
-93 categories mapping a stack trace to its owning feature -> exact target -> status.
+94 categories mapping a stack trace to its owning feature -> exact target -> status.
 **Full table (category -> feature -> target -> status) + rationale / history / RCAs:
 [`docs/reference/harmony-patch-registry.md`](docs/reference/harmony-patch-registry.md)** — grep the
 failing type there. This is the crash-triage lookup; `/investigate` + `/native-crash-triage`

@@ -277,6 +277,7 @@ literal, and those two must describe the same game.
 - `TAOM.Tests/Features/FieldCommission/TroopUpgradeGraphTests.cs` — depth cap, 2-node and self-referencing cycles, branch-order BFS, null-entry tolerance.
 - `TAOM.Tests/Features/FieldCommission/FieldCommissionConfigProviderTests.cs` — valid parse, missing file, malformed JSON, every field's validation rule (incl. NaN), race-name sanitization, append-merge defense.
 - `TAOM.Tests/Features/FieldCommission/FieldCommissionMeritServiceTests.cs` — ratio/NaN gate, deduct-on-completion, decline-keeps-merit, orphan-merit consolidation, promotability gate (fail-closed), promoted-hero pruning, SyncData round-trip.
+- `FieldCommissionMeritServiceTests.RegisterKill_FromManyThreadsAtOnce_CountsEveryKill` pins the #634 lock: `RegisterKill` is called from `OnAgentRemoved`, which native can raise off the main thread, so two removals at once must not lose a kill (unsynchronised, 20,000 kills of one troop from four threads counted 9,709). `EndBattle_TiedKills_OffersFollowFirstKillOrder` pins why it is a lock and not a concurrent map: `EndBattle` breaks kill ties in the map's insertion order.
 - `TAOM.Tests/Features/FieldCommission/FieldCommissionOfferFlowServiceTests.cs` — full inquiry chain, no-room deferral + retainer allowance, hero-creation failure leaves state untouched.
 - `TAOM.Tests/Features/FieldCommission/FieldCommissionDismissServiceTests.cs`: one test per entity state in the
   dismissal matrix, remove-before-refund ordering, nothing partially applied on any refusal, the picker and
@@ -348,6 +349,7 @@ ever fielded — not a concern at any realistic party size.
   reported no promotions and found the `human`/`dwarf`/`elf` list; the seven evil races from
   character creation join it. An existing evil-faction save already holds banked merit, so it
   starts offering on its next won fair battle, capped by `maxOffersPerBattle`.
+- 2026-09-22: `RegisterKill` takes a lock (#634). Its caller, `FieldCommissionMissionLogic.OnAgentRemoved`, runs on whichever thread native raised the removal, and a v1.4.8 player log caught one off the main thread. `BeginBattle` and `EndBattle` run on the campaign map, never beside a mission's removals. Not a `ConcurrentDictionary`: `EndBattle` breaks kill ties in the map's insertion order, which a hash-ordered map would scramble.
 
 ## Firing a promoted companion (#486)
 

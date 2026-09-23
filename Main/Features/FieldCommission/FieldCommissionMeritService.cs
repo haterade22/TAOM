@@ -81,8 +81,14 @@ public class FieldCommissionMeritService : IFieldCommissionMeritService
         if (!_eligible || string.IsNullOrEmpty(troopId) || !_preBattleRoster.Contains(troopId))
             return;
 
-        _battleKills.TryGetValue(troopId, out var current);
-        _battleKills[troopId] = current + 1;
+        // The caller is OnAgentRemoved, which native raises on the thread it chooses; a player log caught it
+        // off the main thread (#634). A lock, not a concurrent map: EndBattle breaks kill ties in this map's
+        // insertion order, which a hash-ordered map would scramble.
+        lock (_battleKills)
+        {
+            _battleKills.TryGetValue(troopId, out var current);
+            _battleKills[troopId] = current + 1;
+        }
     }
 
     public IReadOnlyList<PendingPromotionOffer> EndBattle(bool won)

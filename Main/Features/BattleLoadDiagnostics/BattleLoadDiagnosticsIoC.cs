@@ -16,6 +16,7 @@ public static class BattleLoadDiagnosticsIoC
         container.Register<IEngineMemoryStatsReader, EngineMemoryStatsReader>(Reuse.Singleton);
         container.Register<BattleLoadStallWatchdog>(Reuse.Singleton);
         container.Register<ExitStallSampler>(Reuse.Singleton);
+        container.Register<MissionTickStallWatchdog>(Reuse.Singleton);
         container.Register<MemoryPressureSampler>(Reuse.Singleton);
         // Screen-transition anchors (#386 follow-up). Singleton like its sibling: it owns the
         // session emit counter and the one subscription to ScreenManager's static events.

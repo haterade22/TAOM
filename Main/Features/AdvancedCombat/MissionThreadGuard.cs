@@ -53,9 +53,9 @@ public static class MissionThreadGuard
 
         Interlocked.Increment(ref _offThreadCalls);
         if (_reportedSites.TryAdd(site, 0))
-            report?.Invoke($"[TAOM] {site} ran off the main mission thread (thread {current}, main {main}): " +
-                           "a creature tree, blow, grid read or engine callback is on the engine's asynchronous " +
-                           "agent tick (#592, #595).");
+            report?.Invoke($"[TAOM] {site} ran off the main mission thread (thread {current}, main {main}). " +
+                           "An engine callback here is parked for the next mission tick, which is expected; " +
+                           "a TAOM blow, creature tree or grid read here is a regression (#592, #595, #634).");
         return true;
     }
 

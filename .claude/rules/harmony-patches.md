@@ -47,6 +47,7 @@ ALWAYS decompile the target method with `ilspycmd` (`pwsh tools/taom-src.ps1 pat
 - **Prefix** — Runs before original method. Return `false` to skip original.
 - **Postfix** — Runs after original method. Can modify `__result`.
 - **Transpiler** — Modifies IL instructions. Most fragile — use sparingly.
+- **Finalizer**: runs after the original on every call, with a null `__exception` when nothing threw. `return null` swallows. Returning the exception makes Harmony `throw` it (whenever any finalizer on the method returns a value), which erases the throw site, so hand it back as `return RethrowStackPreserver.PreserveForRethrow(__exception, null);`. An observe-only finalizer should be `void`, which keeps Harmony's `rethrow` and the trace. Why: `lessons/harmony-il.md` "A value-returning finalizer that hands back its exception erases the throw site".
 
 ## Architecture Requirements
 - Patches are **thin entry points** — delegate ALL logic to services via `IHookInterface`
@@ -123,20 +124,34 @@ open the caller of any lifecycle virtual before wiring it, and quote the line in
 ## Which thread runs your target (MANDATORY before the first line of a patch)
 
 Decompile the caller chain up to the thread that invokes the target. `[MBCallback]` methods are entered
-from native, and native decides the thread. Verified on v1.4.8 (#592, #595):
+from native, and native decides the thread. Verified on v1.4.8, identical on v1.5.3 (#592, #595, #634):
 
 | Runs on | Engine entry points reached from it |
 |---|---|
-| Main thread | `Mission.OnTick` -> every `MissionBehavior.OnMissionTick`; native combat -> `Mission.OnAgentHit`, `OnAgentRemoved`, `OnAgentDeleted`; `OrderController` (player orders); `Mission.SpawnAgent` -> `OnAgentBuild`; `MissionAgentPanicHandler.OnPreMissionTick` -> `Mission.OnAgentFleeing` |
-| Async AI thread (`Mission.TickAgentsAndTeams`, an `[MBCallback]`) | `Agent.Tick` -> `AgentComponent.OnTick` (vanilla's `CommonAIComponent.OnTick` -> `Panic` -> `Mission.OnAgentPanicked` -> every `MissionBehavior.OnAgentPanicked`), `TickAsAI`; `Team.Tick` -> `TeamAI` -> `Formation.SetMovementOrder` / `SetTargetFormation` (also the retreat branch for the PLAYER's team); `Formation.Tick`; `MBSubModuleBase.AfterAsyncTickTick` |
-| TWParallel worker pool (`Mission.AgentTickMT`) | `Agent.TickParallel` -> `AgentComponent.OnTickParallel`, `HumanAIComponent.ParallelUpdateFormationMovement` -> `Agent.GetBaseFormationFrame` -> `Formation.GetOrderPositionOfUnit` |
+| Main thread | `Mission.OnTick` -> every `MissionBehavior.OnMissionTick`, then LAST `TickAgentsAndTeamsAsync`; `OrderController` (player orders); `Mission.SpawnAgent` -> `OnAgentBuild`; `MissionAgentPanicHandler.OnPreMissionTick` -> `Mission.OnAgentFleeing`; views, UI and input after `Mission.OnTick` returns |
+| Async AI thread (`Mission.TickAgentsAndTeams`, an `[MBCallback]`) | `Agent.Tick` -> `AgentComponent.OnTick` (vanilla's `CommonAIComponent.OnTick` -> `Panic` -> `Mission.OnAgentPanicked` -> every `MissionBehavior.OnAgentPanicked`, and `SetAlarmState`), `HumanAIComponent.OnTick` -> `Agent.UseGameObject` -> `Mission.OnObjectUsed`, and its `ItemPickupTick` -> `Agent.StopUsingGameObject` -> `Mission.OnObjectStoppedBeingUsed`, `TickAsAI`; `Team.Tick` -> `TeamAI` -> `Formation.SetMovementOrder` / `SetTargetFormation` (also the retreat branch for the PLAYER's team); `Formation.Tick`; `MBSubModuleBase.AfterAsyncTickTick` |
+| TWParallel worker pool (`Mission.AgentTickMT`) | `Agent.TickParallel` -> `AgentComponent.OnTickParallel` (`CommonAIComponent.OnTickParallel` -> `Agent.StartFadingOut` for routers), `HumanAIComponent.ParallelUpdateFormationMovement` -> `Agent.GetBaseFormationFrame` -> `Formation.GetOrderPositionOfUnit` |
+| **Either: native decides, and off-main is observed** | `Mission.OnAgentRemoved` (then `Agent.OnRemove` -> every `AgentComponent.OnAgentRemoved`), `OnAgentDeleted`, `OnAgentHit`, `OnAgentShootMissile`, `OnAgentDismount`, `Agent.OnAgentAlarmedStateChanged`. A v1.4.8 player log caught `OnAgentRemoved`, `OnAgentShootMissile`, `OnAgentDismount`, `OnAgentAlarmedStateChanged`, `OnObjectUsed` and `OnObjectStoppedBeingUsed` off the main thread (#634; the thread ids cannot say whether on the async tick thread or a pool worker). Vanilla's own handlers take no lock, so if they are safe native must serialise these with the agent tick rather than the main thread; nothing managed proves which |
 
-A patch on a target in the last two rows may run concurrently with the first row. Its shared state
+The frame order matters: `OnMissionTick` never overlaps the same frame's agent tick (the next frame's
+`OnPreTick` waits in `WaitTickCompletion`), but everything on the main thread after `Mission.OnTick`
+returns does, and `AfterAsyncTickTick` runs after `tickCompleted` is set, so it can overlap the next
+frame's `OnMissionTick`. A stuck agent tick freezes the game with no exception; Patch91's
+`[MissionStall]` line names the frame.
+
+A patch on a target in the last three rows may run concurrently with the first row. Its shared state
 takes a lock (`FormationLayoutService`, `CavalryChargeService`, `TroopStanceManager` are the shape), it
 never registers a blow or spawns an agent, and a team filter is not a thread filter (Patch35 gated on
 `PlayerTeam` and still ran on the async tick whenever that team's formations were AI-controlled). The
-`??=` lazy-static pattern is tolerable there only for an idempotent resolve. A `MissionBehavior` callback
-is not main-thread by virtue of being a callback: `OnAgentPanicked` arrives on the async tick, and a native
-`[MBCallback]` whose caller is unknown (`Agent.OnAgentAlarmedStateChanged`) may. A behavior that owns
-main-thread collections asks `MissionThreadGuard.IsOnMainThread` and parks such a callback in a
-`DeferredCallbackQueue` for its next `OnMissionTick` (`BehaviorTreeMissionLogic` is the shape; #595).
+`??=` lazy-static pattern is tolerable there only for an idempotent resolve. A `MissionBehavior` or
+`AgentComponent` callback is not main-thread by virtue of being a callback: every callback in the last
+row can arrive off the main thread. A behavior or component that owns main-thread collections routes the write
+through `DeferredCallbackQueue.RunOrDefer` (inline on the main thread, parked for the next
+`OnMissionTick` anywhere else; `BehaviorTreeMissionLogic`, `BehaviorTreeAgentComponent` and
+`MountDespawnMissionBehavior`, `CareerPerkMissionBehavior`, `WargMissionBehavior`, `SpatialGrid.Remove` are the
+shape; #595, #634), or keeps the state behind a lock or in a concurrent collection when replay order does
+not matter (`FieldCommissionMeritService.RegisterKill` locks because its map's insertion order breaks kill
+ties; `SignatureAgentRoster` is a `ConcurrentDictionary`). Such a queue's owner marks the main thread itself (`MissionThreadGuard.MarkMainThread`
+at the top of its `OnMissionTick`), and reports a parked callback at WARNING to the file log, never to an
+on-screen logger: the report runs on the thread that raised the callback. A row in this table is a claim until a log line proves it:
+the #595 audit trusted a "main thread" row for `OnAgentRemoved` that one player log falsified.

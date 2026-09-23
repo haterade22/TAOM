@@ -307,13 +307,13 @@ to characterise. The existing try/catch around acceptance is containment, not co
 
 ## What is NOT done
 
-- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **258** settings across
+- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **259** settings across
   four MCM classes (the 284 here counted `[SettingPropertyGroup]` lines alongside the properties;
-  the split is 243 in `TaomSettings`, 8 in `BattleLoadDiagnosticsSettings`, 6 in
+  the split is 243 in `TaomSettings`, 9 in `BattleLoadDiagnosticsSettings`, 6 in
   `CrashReportSettings` and 1 in `BlowDiagnosticsSettings`).
   **192 are simulation-relevant**, traced to the feature that consumes each one and kept when that feature
   ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 192 are in
-  `TaomSettings`. The 66 excluded (counted 2026-09-19 from the lists below) are instrumentation, player-local inventory convenience,
+  `TaomSettings`. The 67 excluded (counted 2026-09-22 from the lists below) are instrumentation, player-local inventory convenience,
   presentation, one action button, and the three time-acceleration knobs whose UI co-op already
   suppresses; the list with its reasons is
   `Main/Features/CoopInterop/CoopSettingsRelevance.cs`.

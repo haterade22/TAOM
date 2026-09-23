@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using TAOM.Core.Logging;
 using TaleWorlds.CampaignSystem;
@@ -15,7 +16,9 @@ public sealed class SignatureAgentRoster : ISignatureAgentRoster
 {
     private readonly ISignatureStrikeRegistry _registry;
     private readonly IModLogger _logger;
-    private readonly Dictionary<Agent, SignatureAgentEntry> _entries = new Dictionary<Agent, SignatureAgentEntry>();
+    // OnAgentDeleted (Remove) and OnMeleeHit (TryGet) are native's to place (#634); OnAgentBuild
+    // (TryRegister) is main-thread. A concurrent map keeps the three from meeting inside it.
+    private readonly ConcurrentDictionary<Agent, SignatureAgentEntry> _entries = new ConcurrentDictionary<Agent, SignatureAgentEntry>();
 
     public SignatureAgentRoster(ISignatureStrikeRegistry registry, IModLogger logger)
     {
@@ -41,7 +44,8 @@ public sealed class SignatureAgentRoster : ISignatureAgentRoster
         if (!_registry.IsSignatureAgent(heroStringId, character.Race))
             return false;
 
-        _entries[agent] = new SignatureAgentEntry();
+        if (!_entries.TryAdd(agent, new SignatureAgentEntry()))
+            return false;
         _logger.LogInfo($"[SignatureStrikes] {agent.Name} registered as a signature agent (race {character.Race})");
         return true;
     }
@@ -71,7 +75,7 @@ public sealed class SignatureAgentRoster : ISignatureAgentRoster
     public void Remove(Agent? agent)
     {
         if (agent != null)
-            _entries.Remove(agent);
+            _entries.TryRemove(agent, out _);
     }
 
     public void Clear() => _entries.Clear();

@@ -151,6 +151,36 @@ public class FieldCommissionMeritServiceTests
         Assert.AreEqual(3, _sut.GetMerit("troop_a"));
     }
 
+    // A player's log caught OnAgentRemoved, the caller of RegisterKill, off the main thread (#634), so
+    // two removals can register kills at once. Every kill must count.
+    [TestMethod]
+    public void RegisterKill_FromManyThreadsAtOnce_CountsEveryKill()
+    {
+        const int threads = 8;
+        const int killsPerThread = 5000;
+        _config.MeritThreshold = int.MaxValue;
+        _roster.GetRosterSnapshot().Returns(new Dictionary<string, int> { ["troop_a"] = 5, ["troop_b"] = 5 });
+        _sut.BeginBattle(true);
+
+        var workers = Enumerable.Range(0, threads).Select(t => new System.Threading.Thread(() =>
+        {
+            var troop = t % 2 == 0 ? "troop_a" : "troop_b";
+            for (int i = 0; i < killsPerThread; i++)
+                _sut.RegisterKill(troop);
+        })).ToList();
+        workers.ForEach(w => w.Start());
+        workers.ForEach(w => w.Join());
+
+        SetupHumanTroop("troop_a");
+        SetupHumanTroop("troop_b");
+        _roster.GetTroopCount("troop_a").Returns(5);
+        _roster.GetTroopCount("troop_b").Returns(5);
+        _sut.EndBattle(true);
+
+        Assert.AreEqual(threads / 2 * killsPerThread, _sut.GetMerit("troop_a"));
+        Assert.AreEqual(threads / 2 * killsPerThread, _sut.GetMerit("troop_b"));
+    }
+
     [TestMethod]
     public void EndBattle_MeritPerKillConfigTwo_DoublesAward()
     {
@@ -284,6 +314,32 @@ public class FieldCommissionMeritServiceTests
         Assert.AreEqual(1, offers.Count, "budget is one offer for the whole battle");
         Assert.AreEqual("troop_a", offers[0].TroopId);
         Assert.AreEqual(16, _sut.GetMerit("troop_b"), "troop_b earned no offer but must keep its merit");
+    }
+
+    // Equal kills: tied types are offered in first-kill order. OrderByDescending is stable, so a tie
+    // follows the kill map's enumeration order; a hash-ordered map would make it depend on bucket layout
+    // and the machine's core count (#634 review). Five types in a scrambled order, so neither an
+    // alphabetical tie-break nor a lucky bucket layout passes this.
+    [TestMethod]
+    public void EndBattle_TiedKills_OffersFollowFirstKillOrder()
+    {
+        var killOrder = new[] { "troop_m", "troop_c", "troop_x", "troop_a", "troop_q" };
+        _config.MaxOffersPerBattle = killOrder.Length;
+        _config.MeritThreshold = 1;
+        _roster.GetRosterSnapshot().Returns(killOrder.ToDictionary(id => id, _ => 1));
+        _sut.BeginBattle(true);
+        foreach (var id in killOrder)
+            _sut.RegisterKill(id);
+
+        foreach (var id in killOrder)
+        {
+            SetupHumanTroop(id);
+            _roster.GetTroopCount(id).Returns(1);
+        }
+
+        var offers = _sut.EndBattle(true);
+
+        CollectionAssert.AreEqual(killOrder, offers.Select(o => o.TroopId).ToArray());
     }
 
     [TestMethod]

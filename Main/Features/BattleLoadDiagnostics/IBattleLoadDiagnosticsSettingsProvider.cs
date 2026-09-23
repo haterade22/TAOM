@@ -14,6 +14,10 @@ public interface IBattleLoadDiagnosticsSettingsProvider
     /// diagnostics component that suspends the main thread; disableable on its own.</summary>
     bool ExitStallSamplerEnabled { get; }
 
+    /// <summary>Independent gate for the battle-freeze stack sampler (#634): photographs a mission
+    /// tick or asynchronous agent tick stuck for 10s or more.</summary>
+    bool MissionTickStallSamplerEnabled { get; }
+
     /// <summary>Independent gate for ALL session-wide memory telemetry: the periodic
     /// [MemSample] lines and low-headroom WARN (#386) AND the [MemStation] screen-transition
     /// anchors that ride the same switch. Deliberately NOT tied to the master

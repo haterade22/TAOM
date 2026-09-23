@@ -32,6 +32,37 @@ What the triage established, now written down so the next session does not decom
   was INFO; and check a documented "never happens" against the code before ranking a theory on it.
   `LESSONS-LEARNED.md` counts re-derived: 778 lessons, six categories had drifted.
 
+### fix(mission): v2.0.30 - off-thread agent removals, battle-freeze sampler (#634)
+
+A player froze in a large field battle on the 1.4.5 line: heap flat, no exception, no crash report.
+The log's only other signal was the #595 tripwire catching six engine callbacks off the main thread,
+`OnAgentRemoved` among them. TAOM's thread map had listed that callback as main-thread, and the #595
+audit trusted it.
+
+Every TAOM writer those callbacks reach now keeps off state the main thread owns:
+- Parked for the next mission tick through `DeferredCallbackQueue.RunOrDefer` (inline on the main
+  thread): the behaviour-tree component's removal, mount despawn's kill record and forget, the career
+  teardown when the player falls and its damage notice, `SpatialGrid` removals, the warg rider's dismount
+  reset. Each queue's owner marks the main thread itself.
+- Locked or concurrent: field commission's kill count takes a lock (its insertion order breaks kill ties,
+  now pinned by a test), the SignatureStrikes roster is a `ConcurrentDictionary`, and the enlistment kill
+  count uses `Interlocked`. Unsynchronised, 20,000 kills of one troop from four threads counted 9,709.
+- Off-thread reports go to the file log at WARNING. The behaviour-tree logic used to hand them to a
+  logger that can be the on-screen one, from the reporting thread.
+
+The cause is not proven, so Patch91 brackets the agent tick and the main thread's whole mission frame
+(`MissionState.TickMissionAux`, native `Mission.Tick` included, armed only while the mission is
+`Continuing`). The new `MissionTickStallWatchdog` logs each stuck thread's stack as `[MissionStall]` at
+10, 20 and 40 s, so the next freeze of this shape names its frame. Its MCM toggle "Enable Battle Freeze
+Sampler" defaults ON, is independent of the master diagnostics toggle, and is local-only for co-op
+(259 settings now). The stack capture moved out of `ExitStallSampler` into a shared `ThreadStackCapture`,
+with output unchanged.
+
+The thread map in `harmony-patches.md` and `csharp-architecture.md`, the #592 RCA and lesson, the
+warg-combat doc and the CLAUDE.md trap row now say native decides the thread. Deep review (6 lenses)
+found the extra writers and the watchdog's blind spot and false alarm; all fixed. RCA
+`docs/reviews/rca-offthread-agent-removed-2026-09-22.md`, four lessons in `lessons/harmony-il.md`.
+
 ### feat(elephant): v2.0.30 - howdah log counts the arrows each archer looses
 
 The howdah's status line now carries `shots=N` per archer: arrows actually loosed, counted from

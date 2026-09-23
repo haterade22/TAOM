@@ -1817,6 +1817,19 @@ public class SubModule : MBSubModuleBase
         }
         IoC.Resolve<Features.BattleLoadDiagnostics.BattleLoadStallWatchdog>().Start();
 
+        // Patch91 battle-freeze probes (#634): a player's battle froze with the heap flat and no
+        // exception, the shape of an agent tick that never finishes while the next frame waits in
+        // Mission.WaitTickCompletion. The probes bracket the agent tick and the main thread's whole
+        // mission frame; the watchdog photographs whichever is stuck past 10s. Guarded like Patch43: a
+        // diagnostic must never take startup down. Inside the once-per-process patch guard; Start() is
+        // idempotent regardless.
+        try { _harmony.PatchCategory("Patch91_MissionTickStall"); }
+        catch (System.Exception ex)
+        {
+            IoC.Resolve<IModLogger>().LogWarning($"[MissionStall] Patch91 probes failed to apply: {ex.Message}");
+        }
+        IoC.Resolve<Features.BattleLoadDiagnostics.MissionTickStallWatchdog>().Start();
+
         // Exit-stall stack sampler (#331 round 2): OnGameInitializationFinished runs on the
         // game's main thread — the same thread the tournament-exit stall freezes — so this
         // is a valid capture point for the sampler's main-thread reference. (Verified against
