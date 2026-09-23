@@ -14,7 +14,7 @@ This document **is the index** of the per-category lesson files under `lessons/`
 
 ## Categories
 
-- [GameModels & Services](lessons/gamemodels-services.md), 64 lessons
+- [GameModels & Services](lessons/gamemodels-services.md), 65 lessons
 - [Adapters & TaleWorlds API](lessons/adapters-taleworlds-api.md), 74 lessons
 - [Build, Tooling & Workflow](lessons/build-tooling-workflow.md), 167 lessons
 - [Misc](lessons/misc.md), 15 lessons

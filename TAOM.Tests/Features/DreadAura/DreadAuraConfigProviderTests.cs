@@ -154,6 +154,31 @@ public class DreadAuraConfigProviderTests
         CollectionAssert.AreEqual(new[] { "cave_troll" }, config.Races);
     }
 
+    [TestMethod]
+    public void GetConfig_BlankListEntries_AreRemovedAndWarned()
+    {
+        // DreadRegistry skips a blank hero id without a word, and matches a padded one against
+        // nobody (the class Codex review 130 found in SignatureStrikes).
+        WriteConfig(@"{ ""heroIds"": [""lord_1_17"", null, ""  ""], ""races"": [""sauron"", """"] }");
+
+        var config = _sut.GetConfig();
+
+        CollectionAssert.AreEqual(new[] { "lord_1_17" }, config.HeroIds);
+        CollectionAssert.AreEqual(new[] { "sauron" }, config.Races);
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains(": HeroIds had null or blank")));
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains(": Races had null or blank")));
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("contained invalid values")));
+    }
+
+    [TestMethod]
+    public void GetConfig_PaddedListEntry_IsTrimmedWithoutAWarning()
+    {
+        WriteConfig(@"{ ""heroIds"": ["" lord_1_17 ""] }");
+
+        CollectionAssert.AreEqual(new[] { "lord_1_17" }, _sut.GetConfig().HeroIds);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
     // ---- Range and finiteness, one test per rule ---------------------------
 
     [DataTestMethod]

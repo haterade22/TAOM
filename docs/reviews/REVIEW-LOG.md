@@ -3712,11 +3712,19 @@ the scan (every stylesheet in about 25 ms, against one stylesheet and about 3.3 
 Full suite 10208 passed, 2 skipped. Prompt
 [codex-adversarial-nazgul-2026-09-23.prompt.md](codex-adversarial-nazgul-2026-09-23.prompt.md).
 
-Owed and untracked (no issue filed; Mike's word): the same entry gap in the DreadAura,
-UncapturableHeroes and BannerBearers providers' `ValidateList`; the retracted spider cause still in
-`CustomAttacksUtils.cs`'s guard comments (another session's file); nazghul in
-`BasicTableauRaceGuard`'s allow-list after an in-game render test; one shared compiled `lords.xslt`
-for the transform tests (about 3.3 s each).
+Owed and untracked (no issue filed; Mike's word): nazghul in `BasicTableauRaceGuard`'s allow-list
+after an in-game render test. The same-day follow-up fixed the entry gap in the DreadAura,
+UncapturableHeroes and BannerBearers providers and the retracted spider cause in
+`CustomAttacksUtils`, plus an older `AllowedFormationGroups` gap its own six-lens review found (a
+padded, numeric or combined formation name, as the only entry, switched every banner bearer off),
+and showed a shared compiled `lords.xslt` would save under a second (one test transforms the full
+file; the two Nazgul data tests take 0.5 s and 0.3 s). Left for Mike's word:
+the same entry gap in `CombatMechanicsConfigProvider.CleanIdList` and
+`FieldCommissionConfigProvider.SanitizeRaceNames`; `ValidateWeaponClasses` storing a numeric name
+and `DoctrineTacticIds.TryParse` taking a comma list, plus the other twelve `Enum.TryParse` call
+sites in `Main/` (by `git grep`), whose impact is unverified; padded dictionary keys in `CultureBanners` and `raceResist`; and the NaN
+polarity of `victim.Health <= 0` in `CustomAttacksUtils.TakeDamage` (another session's file). RCA
+rows: `rca-nazgul-scream-2026-09-23.md` "Follow-ups to Review 130".
 
 Owed smokes. #645: a Custom Battle Witch-king (the ring, the stagger, the morale, one 15 s timer,
 the shriek, the first `.ogg` a TAOM module sound plays), a misspelled sound name for the -1 and

@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using TaleWorlds.Core;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
+using TAOM.Core.Validation;
 using TAOM.Features.BannerBearers.Domain;
 
 namespace TAOM.Features.BannerBearers;
@@ -12,7 +14,9 @@ namespace TAOM.Features.BannerBearers;
 // Validating boundary loader for banner_bearers/banner_bearers_config.json
 // (CombatMechanicsConfigProvider pattern): missing file → defaults + warn; parse failure →
 // defaults + error; parseable-but-invalid values revert per-field to the compiled default
-// + warn (csharp-architecture.md "Config Providers MUST Validate").
+// + warn (csharp-architecture.md "Config Providers MUST Validate"). A null or blank list
+// entry is dropped with a warning and a padded one trimmed, and AllowedFormationGroups takes
+// declared FormationClass names only (EnumNames), stored as the enum prints them.
 //
 // Not validated here, deliberately: banner ItemObject ids and race names. Both need engine
 // registries (MBObjectManager / FaceGen) that are not populated at config-load time. Banner
@@ -133,6 +137,9 @@ public class BannerBearerConfigProvider : IBannerBearerConfigProvider
     private int ValidatePerSoldiers(int value, int fallback, string field, ref bool rejected) =>
         ValidateRange(value, fallback, 0, 1000, field, ref rejected);
 
+    // A null or blank ENTRY is removed with a warning and a kept entry trimmed: BannerBearerService
+    // compares race names case-insensitively but never trims, so a padded one never matched (the
+    // class Codex review 130 found in SignatureStrikes).
     private List<string> ValidateList(List<string> value, List<string> fallback, string field, ref bool rejected)
     {
         if (value == null)
@@ -142,7 +149,14 @@ public class BannerBearerConfigProvider : IBannerBearerConfigProvider
             return fallback;
         }
 
-        return value;
+        var named = value.Where(entry => !string.IsNullOrWhiteSpace(entry)).Select(entry => entry.Trim()).ToList();
+        if (named.Count != value.Count)
+        {
+            _logger.LogWarning($"BannerBearerConfigProvider: {field} had null or blank entries ({value.Count - named.Count} removed)");
+            rejected = true;
+        }
+
+        return named;
     }
 
     private Dictionary<string, string> ValidateMap(
@@ -174,9 +188,13 @@ public class BannerBearerConfigProvider : IBannerBearerConfigProvider
         var kept = new List<string>();
         foreach (var entry in value)
         {
-            if (!string.IsNullOrEmpty(entry) && Enum.TryParse<FormationClass>(entry, ignoreCase: true, out _))
+            // Stored as the engine prints the value: BannerBearerService compares with
+            // FormationClass.ToString(), and Skirmisher, General and Unset share a value with another
+            // name. EnumNames takes declared names only; Enum.TryParse also took " Infantry ", "0"
+            // and "Infantry, Ranged", which loaded clean and matched no formation (alone: no bearers).
+            if (EnumNames.TryParse(entry, out FormationClass formationClass))
             {
-                kept.Add(entry);
+                kept.Add(formationClass.ToString());
             }
             else
             {

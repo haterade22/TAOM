@@ -170,6 +170,10 @@ The shipped file carries a `_comment_*` note on every key; the table below is th
 | `excludeHeroIds` | **Evaluated first**, beats the rule and both include lists. The escape hatch for handing one hero back to vanilla capture |
 | `announceEscape` | Whether to write the campaign message-feed line |
 
+In every list a null or blank entry is removed at load with a warning and a padded one trimmed
+(the Codex review 130 follow-up): a padded `excludeHeroIds` entry used to leave its hero
+uncapturable.
+
 Resolution order is fixed: exclude, then `heroIds`, then `heroSets`, then the race rule. First match
 wins.
 
@@ -239,7 +243,7 @@ field battle.
 |---|---|
 | `UncapturableRegistryTests` | Every resolution row, both wraith race shapes, exclude beating the rule, unknown set/race names skipped and warned, the unknown-race-id fallback trap, table built once |
 | `UncapturableHeroServiceTests` | Toggle off never asks the registry; the escape happens before the announce gate; a failed escape returns false so vanilla capture proceeds; a throwing toast does not undo a completed escape |
-| `UncapturableHeroesConfigProviderTests` | Missing file, malformed JSON, null lists reverted, empty lists passed through, and the `ObjectCreationHandling.Replace` append-merge regression |
+| `UncapturableHeroesConfigProviderTests` | Missing file, malformed JSON, null lists reverted, empty lists passed through, blank entries removed and padded ones trimmed (Codex review 130), and the `ObjectCreationHandling.Replace` append-merge regression |
 | `ShippedUncapturableHeroesConfigTests` | The shipped file parses clean and still names the Nazgûl set; every wraith id still exists in the data; **Sauron still carries `race="sauron"`** and **still ships `occupation="Lord"`** (Occupation.Special would silently unhook Seam 1) |
 | `UncapturableHeroesBindingTests` | Every engine member resolves, plus the IL premise test on `MapEvent.CaptureDefeatedPartyMembers` |
 | `UncapturableHeroesWiringTests` | IoC registration order (must follow Enlistment, which owns the single `IInquiryAdapter` registration), patch statics, category application, both `ResetForUnload` calls, the MCM property |

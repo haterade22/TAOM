@@ -148,10 +148,11 @@ public class CustomAttacksUtils
             m => TaleWorlds.Library.Debug.Print(m, 0, TaleWorlds.Library.Debug.DebugColor.Red));
 
         // Re-validate LIVE state at call time. The bone-collision callback fires several frames
-        // after the CustomAttack sweep captured these agents, so the t-0 Health guard is stale —
-        // an agent can despawn in the interim, and a despawning agent's native pointer is itself a
-        // prime candidate for the 0x3 AV (spider auto-bite crash RCA 2026-06-14). Additive: a
-        // healthy blow (every warg bite, every clean spider bite) passes unchanged.
+        // after the CustomAttack sweep captured these agents, so the t-0 Health guard is stale: an
+        // agent can despawn in the interim, and a blow on a despawning agent's native pointer is not
+        // worth the risk. Written for a spider 0x3 AV that rca-spider-dismount-on-hit-2026-06-15.md
+        // later traced to Agent.HandleBlowAux, so this is hardening, not that crash's fix. Additive:
+        // a healthy blow (every warg bite, every clean spider bite) passes unchanged.
         if (!victim.IsActive() || victim.IsFadingOut() || victim.Index < 0 || victim.Health <= 0) return;
         if (!attacker.IsActive() || attacker.IsFadingOut() || attacker.Index < 0) return;
 
@@ -186,12 +187,12 @@ public class CustomAttacksUtils
         blow.DamageCalculated = true;
         blow.BlowFlag |= ComposeBlowFlags(knockDown, victim.HasMount, extraFlags | ChargeImpactFlags(chargeImpactSound));
 
-        // Native-boundary geometry guard (spider auto-bite crash RCA 2026-06-14). GlobalPosition /
-        // SwingDirection / BaseMagnitude are the ONLY TAOM-supplied floats that reach native code
-        // unguarded — Mission.MakeSound + Mission.OnAgentHit place them into native spatial
-        // structures. A NaN/Inf (e.g. Normalize() of a near-zero direction when the spider is caught
-        // mid-jump / river-crossing — frames the battle-proven warg never hits) corrupts that native
-        // state; a later Mission.Tick walks it and AVs reading 0x3. Reject before it reaches native.
+        // Native-boundary geometry guard, kept as hardening (why, and what it is not known to
+        // prevent: IsBlowGeometrySafe). GlobalPosition is built here from both agents' positions and
+        // the victim's eye height and SwingDirection from the victim's frame, so an engine fault in
+        // either would reach native with the Blow; HandleBlow clamps BaseMagnitude itself
+        // (MathF.Min(b.BaseMagnitude, 1000f) maps NaN and +Inf to 1000 but passes a negative).
+        // Reject before it reaches native.
         if (!IsBlowGeometrySafe(blow.GlobalPosition, blow.SwingDirection, blow.BaseMagnitude))
         {
             ReportSkippedNonFiniteBlow();
@@ -203,7 +204,7 @@ public class CustomAttacksUtils
         // makes a managed->native call IMBAgentVisuals.GetBoneTypeData(visuals.Pointer, boneIndex, ...). The
         // engine guards ONLY `boneIndex >= 0`, NOT whether the victim's visuals are still alive. The
         // bone-collision callback fires several frames after the CustomAttack sweep, so the victim can begin
-        // NATIVE teardown in the interim — or DURING this RegisterBlow, a TOCTOU the line-135 live-state guard
+        // NATIVE teardown in the interim — or DURING this RegisterBlow, a TOCTOU the TakeDamage live-state guard
         // cannot fully close. Its native agent/visuals are then freed while the MANAGED MBAgentVisuals wrapper
         // survives (held by weakref) and Monster still returns a valid positive head-look bone. HandleBlow
         // derefs the dead visuals.Pointer -> AV reading 0x0 (crash report 2026-06-25: a horse caught
@@ -331,10 +332,15 @@ public class CustomAttacksUtils
     /// <summary>
     /// True when a synthetic blow's geometry is safe to hand to the native blow processor: every
     /// component of <paramref name="globalPosition"/> and <paramref name="swingDirection"/> is finite,
-    /// and <paramref name="magnitude"/> is finite and non-negative. A non-finite value here (produced
-    /// when an attacker/victim is caught in a transitional frame and Vec3.Normalize() of a near-zero
-    /// direction yields NaN) corrupts native spatial structures via MakeSound / OnAgentHit, which a
-    /// later Mission.Tick walks → AccessViolation reading 0x3. Pure + unit-tested.
+    /// and <paramref name="magnitude"/> is finite and non-negative. These are the only TAOM-supplied
+    /// floats in the Blow, and the whole Blow crosses into native through Agent.HandleBlowAux on
+    /// every damaging blow and Agent.Die on a lethal one, the position also through
+    /// Mission.MakeSound; Mission.OnAgentHit only hands the blow to managed listeners.
+    /// Vec3.Normalize() maps a near-zero or NaN vector to (0, 1, 0), but a vector with an infinite
+    /// component comes out NaN, so the direction check is live. What native does with a non-finite
+    /// value is unproven: the spider 0x3 AV this guard was written for traced to
+    /// Agent.HandleBlowAux itself (rca-spider-dismount-on-hit-2026-06-15.md), not to NaN geometry.
+    /// Pure + unit-tested.
     /// </summary>
     public static bool IsBlowGeometrySafe(Vec3 globalPosition, Vec3 swingDirection, float magnitude) =>
         FiniteFloatValidator.IsFinite(globalPosition.x)
@@ -345,7 +351,7 @@ public class CustomAttacksUtils
         && FiniteFloatValidator.IsFinite(swingDirection.z)
         && FiniteFloatValidator.IsFiniteAtLeast(magnitude, 0f);
 
-    // Sample-gated — a transitional-frame storm across many creatures must not flood the log from
+    // Sample-gated: a burst of non-finite blows across many creatures must not flood the log from
     // this per-bite hot path (the C++-port hot-path-logging discipline applied to managed code).
     private static void ReportSkippedNonFiniteBlow()
     {

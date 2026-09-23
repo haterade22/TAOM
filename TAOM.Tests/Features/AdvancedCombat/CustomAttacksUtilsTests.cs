@@ -5,14 +5,10 @@ using TaleWorlds.Library;
 namespace TAOM.Tests.Features.AdvancedCombat;
 
 /// <summary>
-/// Tests for the pure synthetic-blow geometry validation extracted from
-/// <see cref="CustomAttacksUtils.TakeDamage"/>. This guard exists because the only
-/// TAOM-supplied data that reaches native code unguarded is the blow's float geometry
-/// (GlobalPosition / SwingDirection / magnitude), and a non-finite value there — produced
-/// when an attacker/victim is caught in a transitional frame and `Normalize()` of a
-/// near-zero vector yields NaN — corrupts native spatial structures (MakeSound / OnAgentHit)
-/// that a later Mission.Tick walks → AccessViolation reading 0x3. See the spider auto-bite
-/// crash RCA (2026-06-14) and FiniteFloatValidator's shipped-3x NaN-guard history.
+/// Tests for <see cref="CustomAttacksUtils.IsBlowGeometrySafe"/>, the pure synthetic-blow geometry
+/// check extracted from <see cref="CustomAttacksUtils.TakeDamage"/>. Why the blow's floats are
+/// refused before native code, and what the guard is and is not known to prevent, is on that
+/// method.
 /// </summary>
 [TestClass]
 public class CustomAttacksUtilsTests
@@ -57,7 +53,8 @@ public class CustomAttacksUtilsTests
     [TestMethod]
     public void IsBlowGeometrySafe_NaNSwingDirection_ReturnsFalse()
     {
-        // Models Normalize() of a near-zero direction vector — the real-world NaN source.
+        // A non-finite direction is refused whatever produced it: Vec3.Normalize() turns a vector
+        // with an infinite component into NaN (a near-zero one becomes (0, 1, 0)).
         var dir = new Vec3(float.NaN, float.NaN, float.NaN);
         Assert.IsFalse(CustomAttacksUtils.IsBlowGeometrySafe(FinitePos, dir, 50f));
     }

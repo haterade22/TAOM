@@ -4,6 +4,36 @@
 
 ## 2026-09-23
 
+### fix(config): v2.0.30 - Review 130 follow-ups: list entries, formation names
+
+The four owed follow-ups from Codex review 130, reviewed and fixed where they were a problem.
+
+- **Blank and padded list entries** (the gap Codex found in SignatureStrikes): the DreadAura,
+  UncapturableHeroes and BannerBearers config loaders now drop a null or blank list entry with a
+  warning and trim a padded one. Before, a padded name matched nobody: a padded Dread Aura hero id
+  was no source and a padded `excludeHeroIds` entry left its hero uncapturable, both without a
+  word, and a padded `ExcludedRaces` entry excluded no one (warned as an unknown race).
+- **Formation names** (found by this change's review, older than it): `AllowedFormationGroups` kept
+  anything `Enum.TryParse` accepted, including `" infantry "`, `"2"` and `"Infantry, Ranged"`, as
+  typed. The service compares with the enum's own name, so such an entry loaded clean and, as the
+  only entry, switched every banner bearer off. It now takes declared names only, through
+  `TAOM.Core.Validation.EnumNames` (the name-only parser SignatureStrikes kept privately since Codex
+  review 114, now shared), stored as the enum prints them.
+- **`CustomAttacksUtils` comments** (comments only, no behaviour change): the guard comments and
+  their test class no longer give the spider 0x3 AV's retracted cause, and they name the real native
+  sinks (`Agent.HandleBlowAux`, `Agent.Die`, `Mission.MakeSound`). The rationale lives once, on
+  `IsBlowGeometrySafe`.
+- **Not worth it:** sharing one compiled `lords.xslt` across tests would save under a second (only
+  one test transforms the full file; the two Nazgul data tests take 0.5 s and 0.3 s). **Still owed:** nazghul in the Load Game thumbnail's safe-race list, after an
+  in-game render test.
+
+No change with the shipped configs: none has a blank or padded entry, and the shipped-config tests
+pin zero rejections. Left for Mike's word, listed in REVIEW-LOG Review 130: the same entry gap in
+two more providers, enum parsers elsewhere that take numbers or comma lists, padded dictionary keys,
+and a NaN polarity in `CustomAttacksUtils.TakeDamage`. No issue filed. Reviewed: `/deep-review`,
+six lenses and a convergence pass; RCA rows in `docs/reviews/rca-nazgul-scream-2026-09-23.md`
+"Follow-ups to Review 130". Full suite: 10303 passed, 2 skipped.
+
 ### chore(harness): v2.0.30 - deep-reviewer runs on Opus 5.5, not Fable
 
 Mike, 2026-09-23: reviews use Opus 5.5. `.claude/agents/deep-reviewer.md` now pins `model:

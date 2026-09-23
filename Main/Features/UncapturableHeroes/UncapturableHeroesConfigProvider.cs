@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
@@ -12,7 +13,8 @@ namespace TAOM.Features.UncapturableHeroes;
 /// Validating boundary loader for <c>uncapturable_heroes/uncapturable_heroes_config.json</c>
 /// (DreadAuraConfigProvider pattern): a missing file gives defaults + warn, a parse failure gives
 /// defaults + error, and a null list reverts that one field to the compiled default with a warning
-/// (csharp-architecture.md "Config Providers MUST Validate").
+/// (csharp-architecture.md "Config Providers MUST Validate"). In every list a null or blank entry
+/// is removed with a warning and a kept entry trimmed.
 ///
 /// There are no numeric fields here, so there is nothing for <c>FiniteFloatValidator</c> to guard.
 /// If a numeric knob is ever added, it must be range-checked through that validator FIRST, because
@@ -101,7 +103,11 @@ public sealed class UncapturableHeroesConfigProvider : IUncapturableHeroesConfig
     }
 
     // An EMPTY list is a legitimate "nothing of this kind" switch and passes through; only a null
-    // (a JSON `null`, or a missing key under Replace semantics) reverts to the compiled default.
+    // (a JSON `null`) reverts to the compiled default. A null or blank ENTRY is removed with a
+    // warning and a kept entry trimmed: UncapturableRegistry compares names case-insensitively but
+    // never trims, so a padded name matched nobody (a padded excludeHeroIds entry left its hero
+    // uncapturable), and it dropped a blank hero id without a word. The class Codex review 130
+    // found in SignatureStrikes.
     private List<string> ValidateList(List<string> value, List<string> fallback, string field, ref bool rejected)
     {
         if (value == null)
@@ -111,6 +117,13 @@ public sealed class UncapturableHeroesConfigProvider : IUncapturableHeroesConfig
             return fallback;
         }
 
-        return value;
+        var named = value.Where(entry => !string.IsNullOrWhiteSpace(entry)).Select(entry => entry.Trim()).ToList();
+        if (named.Count != value.Count)
+        {
+            _logger.LogWarning($"UncapturableHeroesConfigProvider: {field} had null or blank entries ({value.Count - named.Count} removed)");
+            rejected = true;
+        }
+
+        return named;
     }
 }

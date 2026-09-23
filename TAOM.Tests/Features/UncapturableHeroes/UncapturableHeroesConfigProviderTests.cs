@@ -109,6 +109,32 @@ public class UncapturableHeroesConfigProviderTests
     }
 
     [TestMethod]
+    public void GetConfig_BlankListEntries_AreRemovedAndWarned()
+    {
+        // The registry skips a blank id without a word; a padded excludeHeroIds entry silently
+        // failed to exclude its hero, who stayed uncapturable against the config (the class Codex
+        // review 130 found in SignatureStrikes).
+        WriteConfig(@"{ ""excludeHeroIds"": ["" lord_1_15 "", null], ""heroIds"": [""lord_1_17"", ""  ""] }");
+
+        var config = _sut.GetConfig();
+
+        CollectionAssert.AreEqual(new[] { "lord_1_15" }, config.ExcludeHeroIds.ToArray());
+        CollectionAssert.AreEqual(new[] { "lord_1_17" }, config.HeroIds.ToArray());
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains(": ExcludeHeroIds had null or blank")));
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains(": HeroIds had null or blank")));
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("contained invalid values")));
+    }
+
+    [TestMethod]
+    public void GetConfig_PaddedListEntry_IsTrimmedWithoutAWarning()
+    {
+        WriteConfig(@"{ ""excludeHeroIds"": ["" lord_1_15 ""] }");
+
+        CollectionAssert.AreEqual(new[] { "lord_1_15" }, _sut.GetConfig().ExcludeHeroIds.ToArray());
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
     public void GetConfig_NullHeroSets_RevertsToDefaultsAndWarns()
     {
         WriteConfig(@"{ ""heroSets"": null }");

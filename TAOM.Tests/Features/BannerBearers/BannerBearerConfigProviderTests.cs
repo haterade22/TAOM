@@ -1,9 +1,11 @@
+using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Features.BannerBearers;
+using TaleWorlds.Core;
 
 namespace TAOM.Tests.Features.BannerBearers;
 
@@ -100,6 +102,38 @@ public class BannerBearerConfigProviderTests
 
         Assert.AreEqual(1, config.ExcludedRaces.Count);
         Assert.AreEqual("goblin", config.ExcludedRaces[0]);
+    }
+
+    [TestMethod]
+    public void GetConfig_BlankExcludedRaces_AreRemovedAndWarned()
+    {
+        WriteConfig(@"{ ""ExcludedRaces"": [ ""goblin"", """", null, ""  "" ] }");
+
+        var config = _sut.GetConfig();
+
+        CollectionAssert.AreEqual(new[] { "goblin" }, config.ExcludedRaces);
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains(": ExcludedRaces had null or blank")));
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("contained invalid values")));
+    }
+
+    [TestMethod]
+    public void GetConfig_ExcludedRacesOfOnlyBlanks_BecomesEmptyWithAWarning()
+    {
+        // Fails open, as a literal [] does (every race may carry a banner), but no longer silently.
+        WriteConfig(@"{ ""ExcludedRaces"": [ """", ""  "" ] }");
+
+        Assert.AreEqual(0, _sut.GetConfig().ExcludedRaces.Count);
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains(": ExcludedRaces had null or blank")));
+    }
+
+    [TestMethod]
+    public void GetConfig_PaddedExcludedRace_IsTrimmedWithoutAWarning()
+    {
+        // The service compares race names untrimmed, so " goblin " would never exclude a goblin.
+        WriteConfig(@"{ ""ExcludedRaces"": [ "" goblin "" ] }");
+
+        CollectionAssert.AreEqual(new[] { "goblin" }, _sut.GetConfig().ExcludedRaces);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
     }
 
     [TestMethod]
@@ -239,6 +273,44 @@ public class BannerBearerConfigProviderTests
 
         CollectionAssert.AreEquivalent(new[] { "Infantry" }, config.AllowedFormationGroups);
         _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("Infntry")));
+    }
+
+    [TestMethod]
+    public void GetConfig_PaddedFormationGroup_IsStoredAsTheEnumPrintsIt()
+    {
+        // BannerBearerService compares the entry with FormationClass.ToString(), so " infantry "
+        // passed Enum.TryParse, loaded clean, and then matched no formation: no bearers anywhere.
+        WriteConfig(@"{ ""AllowedFormationGroups"": [ "" infantry "" ] }");
+
+        CollectionAssert.AreEqual(new[] { "Infantry" }, _sut.GetConfig().AllowedFormationGroups);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [DataTestMethod]
+    [DataRow("Skirmisher")]
+    [DataRow("NumberOfDefaultFormations")]
+    [DataRow("General")]
+    [DataRow("NumberOfRegularFormations")]
+    public void GetConfig_FormationGroupAlias_IsStoredAsTheValuePrints(string alias)
+    {
+        // FormationClass declares the values 4, 8 and 10 twice, and the service compares with
+        // FormationClass.ToString(), so an alias has to be stored as its value prints.
+        WriteConfig(@"{ ""AllowedFormationGroups"": [ """ + alias + @""" ] }");
+
+        var expected = ((FormationClass)Enum.Parse(typeof(FormationClass), alias)).ToString();
+        CollectionAssert.AreEqual(new[] { expected }, _sut.GetConfig().AllowedFormationGroups);
+    }
+
+    [DataTestMethod]
+    [DataRow("2")]
+    [DataRow("Infantry, Ranged")]
+    public void GetConfig_NumericOrCombinedFormationGroup_IsDroppedAndWarns(string entry)
+    {
+        // Enum.TryParse accepts a number and a comma list; neither is a name the service can match.
+        WriteConfig(@"{ ""AllowedFormationGroups"": [ ""Cavalry"", """ + entry + @""" ] }");
+
+        CollectionAssert.AreEqual(new[] { "Cavalry" }, _sut.GetConfig().AllowedFormationGroups);
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains($"'{entry}' is not a known FormationClass")));
     }
 
     [TestMethod]

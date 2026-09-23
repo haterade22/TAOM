@@ -1,5 +1,9 @@
 # RCA — Spider directional-attack model + crash-fix guard (deep-review, 2026-06-15)
 
+> Superseded on the cause (2026-09-23): the Part-A AV was traced to `Agent.HandleBlowAux` in
+> [rca-spider-dismount-on-hit-2026-06-15.md](rca-spider-dismount-on-hit-2026-06-15.md). The
+> `IsBlowGeometrySafe` guard stays as hardening, not as that crash's fix.
+
 ## Top-line
 
 `/deep-review` over the uncommitted spider directional-attack feature (Part B) + the shared

@@ -660,7 +660,8 @@ WinDbgX headless). Spend the review budget after the stack, not before it.
 `StrikeSoundPlayer` passed `Agent.GetEyeGlobalPosition()` straight into `Mission.MakeSound`, a one-line
 `MBAPI` wrapper (v1.5.3 `Mission.cs:1849-1852`) with no managed check, while the same runner gated its
 ring centre a few lines later. `CustomAttacksUtils.IsBlowGeometrySafe` keeps the same values out of
-`MakeSound` and `OnAgentHit`. What a non-finite position does inside native is unproven: the spider AV
+the native blow path (`HandleBlowAux`, `Die`, `MakeSound`; `Mission.OnAgentHit` is managed). What a
+non-finite position does inside native is unproven: the spider AV
 that guard was written for was later traced to `HandleBlowAux` (`rca-spider-dismount-on-hit-2026-06-15.md`),
 so the gate is a defence, not a known crash fix.
 

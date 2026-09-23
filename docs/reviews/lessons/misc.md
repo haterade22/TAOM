@@ -213,3 +213,9 @@ in `StrikeSoundPlayer`'s comment and `signature-strikes.md`, both committed.
   number, and fix every hit in the same edit.
 - **Source:** Codex review 130 (the S4 cross-check); `docs/reviews/rca-nazgul-race-2026-09-23.md` and
   `docs/reviews/rca-nazgul-scream-2026-09-23.md` "Codex pass".
+- **Recurred:** the same day. Fixing the retracted spider claim in `CustomAttacksUtils` corrected the
+  comments' conclusion but kept their sink list (`Mission.OnAgentHit`, which is managed) and their
+  NaN example; the same wrong list sat in the test class and in the #645 lesson in
+  `lessons/adapters-taleworlds-api.md`, and the retracted cause in
+  `rca-spider-directional-attacks-2026-06-15.md`. A correction re-reads every clause of the text it
+  keeps, not only the one found wrong.

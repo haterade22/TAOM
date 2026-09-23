@@ -869,3 +869,27 @@ a one-signature JSON input.
   the reviewer sent: the first cut removed `[null]` and `[""]` and still let `" lord_1_17 "` match
   nobody.
 - **Source:** Codex review 130 (O1); `docs/reviews/rca-nazgul-scream-2026-09-23.md` "Codex pass".
+- **Recurred:** the same day, in the Review 130 follow-up. The three sibling providers (DreadAura,
+  UncapturableHeroes, BannerBearers) had the same gap and were found by searching for the method name
+  `ValidateList`; `CombatMechanicsConfigProvider.CleanIdList` and
+  `FieldCommissionConfigProvider.SanitizeRaceNames` have the same shape under other names and only the
+  design lens found them. Find siblings by shape (every provider method that returns a config
+  `List<string>`), not by name.
+
+### `Enum.TryParse` is not a name check: it takes padding, numbers and comma lists (2026-09-23)
+
+`BannerBearerConfigProvider.ValidateFormationGroups` kept any `AllowedFormationGroups` entry
+`Enum.TryParse<FormationClass>` accepted, as typed. That includes `" Infantry "`, `"2"` and
+`"Infantry, Ranged"`, and `Enum.IsDefined` passes any defined number. `BannerBearerService` compares
+the stored string with `FormationClass.ToString()`, so such an entry loaded clean, logged "Loaded",
+and as the only entry switched every banner bearer off. SignatureStrikes had the same bug a week
+earlier (Codex review 114 F2) and fixed it with a private name-only parser nobody else could find.
+
+- **Why missed:** `TryParse` reads as "is this a member name", and the one test sent a typo
+  (`Infntry`), which it does reject.
+- **Prevent:** parse config enum strings with `TAOM.Core.Validation.EnumNames.TryParse` (declared
+  names only, trimmed, case-insensitive), and when a consumer compares strings, store the value as
+  the enum prints it: `FormationClass` declares three values twice. Test a padded name, a number and
+  a comma list, not only a typo.
+- **Source:** `docs/reviews/rca-nazgul-scream-2026-09-23.md` "Follow-ups to Review 130" F2;
+  `rca-signature-strikes-2026-09-16.md` C2.

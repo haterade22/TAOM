@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
@@ -13,7 +14,8 @@ namespace TAOM.Features.DreadAura;
 /// Validating boundary loader for <c>dread_aura/dread_aura_config.json</c>
 /// (BannerBearerConfigProvider pattern): missing file gives defaults + warn, a parse failure gives
 /// defaults + error, and a parseable-but-invalid value reverts that one field to the compiled
-/// default with a warning (csharp-architecture.md "Config Providers MUST Validate").
+/// default with a warning (csharp-architecture.md "Config Providers MUST Validate"). In the three
+/// identity lists a null or blank entry is removed with a warning and a kept entry trimmed.
 ///
 /// Not validated here, deliberately: race names and hero StringIds. Race names need the FaceGen
 /// registry, which is not populated at config-load time, so <see cref="DreadRegistry"/> validates
@@ -177,7 +179,10 @@ public sealed class DreadAuraConfigProvider : IDreadAuraConfigProvider
     }
 
     // An EMPTY list is a legitimate "no sources of this kind" switch and passes through; only a
-    // null (a JSON `null` or a missing-with-Replace-semantics key) reverts.
+    // null (a JSON `null`) reverts. A null or blank ENTRY is removed with a warning and a kept
+    // entry trimmed: DreadRegistry compares names case-insensitively but never trims, so a padded
+    // name matched nobody, and it dropped a blank hero id without a word (a blank set or race name
+    // only warned at first resolve). The class Codex review 130 found in SignatureStrikes.
     private List<string> ValidateList(List<string> value, List<string> fallback, string field, ref bool rejected)
     {
         if (value == null)
@@ -187,7 +192,14 @@ public sealed class DreadAuraConfigProvider : IDreadAuraConfigProvider
             return fallback;
         }
 
-        return value;
+        var named = value.Where(entry => !string.IsNullOrWhiteSpace(entry)).Select(entry => entry.Trim()).ToList();
+        if (named.Count != value.Count)
+        {
+            _logger.LogWarning($"DreadAuraConfigProvider: {field} had null or blank entries ({value.Count - named.Count} removed)");
+            rejected = true;
+        }
+
+        return named;
     }
 
     private Dictionary<string, float> ValidateResist(

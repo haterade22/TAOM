@@ -227,7 +227,9 @@ to make dread soften troops while leaving the kill to combat, without a code cha
 Above 1.0 a resist value would *amplify* dread on a race the author meant to protect, so those rows
 are dropped with a warning rather than clamped.
 
-Race names and hero ids are **not** validated at load: the FaceGen registry is not populated then.
+Race names and hero ids are **not** checked for existence at load: the FaceGen registry is not
+populated then. At load a null or blank entry is removed with a warning and a padded one trimmed
+(since the Codex review 130 follow-up).
 `DreadRegistry` validates race names lazily on first resolve and skips + warns per entry; hero ids
 are pinned instead by `ShippedDreadAuraConfigTests`.
 
@@ -271,12 +273,13 @@ save-load will not pick up an edit. The MCM knobs are the ones that take effect 
 
 ## Tests
 
-161 tests, all green as part of a 6,615-test suite.
+163 tests.
 
 - `DreadAuraServiceTests` (51): falloff geometry, the golden rout-time table, the morale floor, the
   `-1f` no-component sentinel, and a NaN / ±Infinity case for every float that reaches a decision.
-- `DreadAuraConfigProviderTests` (43): one test per validation rule, plus an every-field round-trip
-  and the `ObjectCreationHandling.Replace` regression.
+- `DreadAuraConfigProviderTests` (45): one test per validation rule (blank list entries removed
+  and padded ones trimmed since Codex review 130), plus an every-field round-trip and the
+  `ObjectCreationHandling.Replace` regression.
 - `DreadRegistryTests` (25): both identity axes, `PlainOrcTroop_IsNotSource`, unknown config keys
   skipped and warned, the lazy map built once.
 - `DreadPulseSchedulerTests` (16): the rotation starves nobody, the budget holds, a selected source
