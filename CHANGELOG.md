@@ -4,6 +4,27 @@
 
 ## 2026-09-23
 
+### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)
+
+The SCREAM's sound is now the clip Mike supplied, `TAOM_Nazgul Scream 2`, in place of the three
+ElevenLabs takes the #645 entry below describes. It is one variation,
+`Main/_Module/ModuleSounds/LOTR/Mordor/Nazgul/nazgul_scream.ogg`, under the same module sound name
+`LOTR/Mordor/Nazgul/nazgul_scream`, so no code or config value changed. The file is mono Ogg Vorbis
+at 44.1 kHz, 4.41 s, with the peak raised to -1 dBFS before encoding and the input's metadata tags
+dropped. The pitch range stays 0.95 to 1.05. Four film-style ElevenLabs takes generated along the
+way were not used; the three replaced takes' prompts are in `b90fd3a4`'s copy of the doc.
+
+After the next deploy and before the next release, delete `nazgul_scream_1.ogg` to `_3.ogg` from
+the game install: the module copy never removes a file, and the release zip is built from the
+install. The listening smoke needs a deploy and a restart first.
+
+Reviewed: `/deep-review` (XML, data flow, completeness, design and engine lenses, then a
+convergence pass); rows in `docs/reviews/rca-nazgul-scream-2026-09-23.md` "The scream swap". Full
+suite in a clean worktree: 10235 passed, 2 skipped, 2 failed
+(`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, which fail the same way without this
+change). Nothing smoked in game.
+
 ### fix(config): v2.0.30 - Review 130 follow-ups: list entries, formation names
 
 The four owed follow-ups from Codex review 130, reviewed and fixed where they were a problem.

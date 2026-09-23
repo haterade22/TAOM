@@ -196,6 +196,11 @@ new rule, across eleven files.
   into the edited files, open the owning feature doc of each changed class, and re-measure a count
   with the command its doc prints rather than subtracting by hand.
 - **Source:** `docs/reviews/rca-nazgul-race-2026-09-23.md` finding 5 (2026-09-23).
+- **Recurred:** the same day, in the #645 scream swap. Replacing the sound deleted the prompts from
+  the doc's Sound provenance section, which the committed #645 CHANGELOG entry still cites for them,
+  and left the shipped config comment and the feature map calling the sound ElevenLabs-generated.
+  Grep for pointers INTO a rewritten section (its heading text) as well as for its old facts.
+  `docs/reviews/rca-nazgul-scream-2026-09-23.md` W3, W8.
 
 ### A claim found wrong is wrong everywhere it was written: grep for it before fixing the copy in front of you (#644, #645, 2026-09-23)
 

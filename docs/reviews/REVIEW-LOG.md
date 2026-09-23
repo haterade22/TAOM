@@ -3732,7 +3732,19 @@ the shriek, the first `.ogg` a TAOM module sound plays), a misspelled sound name
 #644: a new campaign (the Nine render nazghul in one kit; the six formerly human wraiths go through
 the non-human spawner path), an old save (the `kept the XML race` line, nazghul, the rolled kit
 unchanged), and a wraith's human-headed Load Game thumbnail. Then push and deploy on Mike's word
-and close #644 and #645. Nothing is pushed or deployed.
+and close #644 and #645. Nothing is pushed; the game install has had #645 (the three takes and
+their XML) since 12:41 that day.
+
+The same day Mike replaced the three takes with a clip he supplied, as one variation
+(`nazgul_scream.ogg`), and asked for a deep review of the swap. The XML, data flow, completeness,
+design and engine lenses and a convergence pass found no runtime defect. They found that the first
+draft called the clip his own take although its metadata named `www.voicy.network` (Mike had the
+tags dropped and chose not to pursue provenance), that the deleted takes stay in the game install
+and would reach the next release zip unless deleted by hand, that the smoke step's pitch remedy
+assumed an unproven per-play pitch draw, and stale text, including this entry's claim that nothing
+was deployed (corrected above). Rows:
+`rca-nazgul-scream-2026-09-23.md` "The scream swap". The listening smoke above now means this clip,
+after a deploy.
 
 ## Review 131: ADR-011 knowledge delivery tiers, batch 1 (#647), 6-lens deep review + convergence + Codex gpt-6-astra ultra (2026-09-23)
 

@@ -55,7 +55,7 @@
       }
     },
     {
-      "_comment_balance": "The Nine (#645): SCREAM on the overhead and both side swings, one 15 s timer per wraith across all three (Mike, 2026-09-23). A ring around the wraith itself: damage, 25 morale before tier and race resistance, a knock-back stagger, no knockdown; the struck foe takes the fear and the stagger too. The hero set names exactly the Nine whatever their race data says; the race (#644) finds them in a Custom Battle as well. The sound was generated with ElevenLabs; provenance in docs/features/signature-strikes.md.",
+      "_comment_balance": "The Nine (#645): SCREAM on the overhead and both side swings, one 15 s timer per wraith across all three (Mike, 2026-09-23). A ring around the wraith itself: damage, 25 morale before tier and race resistance, a knock-back stagger, no knockdown; the struck foe takes the fear and the stagger too. The hero set names exactly the Nine whatever their race data says; the race (#644) finds them in a Custom Battle as well. Sound: docs/features/signature-strikes.md, Sound provenance.",
       "id": "nazgul",
       "heroSets": [ "nazgul_nine" ],
       "races": [ "nazghul" ],

@@ -24,8 +24,9 @@ creatures theirs: "when he hits with his mace it does X, Y, Z", later widened to
 swings except a throw or a shot (2026-09-16). Then the Nine (2026-09-23): "a special ability called
 SCREAM, which not only does damage but reduces the enemy's morale by X amount. This can be on an
 overhead attack and slashing attack. Same as Sauron." His answers: scream plus stagger, no
-knockdown, morale 25, every 15 s, a sound generated with ElevenLabs. The investigation that
-preceded #605 settled what the engine can and cannot do:
+knockdown, morale 25, every 15 s, a sound generated with ElevenLabs (later replaced by a clip he
+supplied; see Sound provenance). The investigation that preceded #605 settled what the engine can
+and cannot do:
 
 - **Vanilla behavior:** a boulder kills several people because native calls
   `Mission.MissileAreaDamageCallback` for missiles flagged `AffectsArea` / `AffectsAreaBig`
@@ -213,27 +214,22 @@ race resistance (elf 0.4, dwarf 0.5) and falloff, clamped to what the agent has;
 
 ### Sound provenance
 
-`Main/_Module/ModuleSounds/LOTR/Mordor/Nazgul/nazgul_scream_{1,2,3}.ogg`, registered as
-`LOTR/Mordor/Nazgul/nazgul_scream` (`mission_voice_shout`, pitch 0.95 to 1.05, one variation
-picked per play) in `Main/_Module/ModuleData/module_sounds.xml`.
+`Main/_Module/ModuleSounds/LOTR/Mordor/Nazgul/nazgul_scream.ogg`, registered as
+`LOTR/Mordor/Nazgul/nazgul_scream` (`mission_voice_shout`, pitch range 0.95 to 1.05) in
+`Main/_Module/ModuleData/module_sounds.xml`.
 
-- **Source:** generated 2026-09-23 with the ElevenLabs text-to-sound-effects API through the
-  ElevenLabs MCP server, on the account's Creator plan (a paid plan, whose terms grant commercial
-  use of generated audio; TAOM ships through Patreon). No third-party mod or sample library is
-  involved.
-- **Prompts** (one take each, `mp3_44100_192`):
-  1. 3.0 s: "The piercing shriek of a Nazgul ringwraith: an inhuman, high, wailing screech that
-     rises sharply and cracks, cold, rasping and echoing. No words, no music."
-  2. 3.5 s: "A terrifying undead wraith scream: a long ghostly shriek with a harsh rasping edge
-     that tears into a high whistling wail and fades with a cold echo. No words, no music."
-  3. 3.0 s: "An unearthly high-pitched keening scream of a dark rider on a battlefield, layered
-     with a breathy hiss, sharp attack and a trailing reverb. No voice, no words, no music."
-- **Processing:** ffmpeg 8.0.1: downmixed to mono at 44.1 kHz (a positional sound), a static gain
-  putting each take's peak at -1 dBFS before encoding, encoded Ogg Vorbis `-q:a 5` (31 to 35 KB
-  each; the encoded peaks read -0.3, -1.2 and -0.1 dB). Native's `module_sounds.xml` header lists
-  `.ogg` and `.wav` as supported.
-- **Not recorded in `docs/reference/provenance-register.md`:** its derivation vocabulary covers
-  third-party mods, not generated assets. Raised with Mike rather than stretched to fit.
+- **Source:** the clip Mike supplied, `TAOM_Nazgul Scream 2 .mp3`, 2026-09-23 (4.41 s, stereo,
+  48 kHz, MP3). It replaced three takes generated the same morning with the ElevenLabs
+  text-to-sound-effects API on the account's Creator plan (their prompts are in this section as of
+  `b90fd3a4`); four film-style takes generated after them were not used. The three old files stay in
+  the game install until deleted by hand: the module copy (`CopyModule`) runs with `Clean="false"`
+  and never removes a file. Delete them after the next deploy (until then the installed
+  `module_sounds.xml` still names them) and before packaging a release.
+- **Processing:** ffmpeg 8.0.1: downmixed to mono at 44.1 kHz (a positional sound), a static gain of
+  6.1 dB putting the mono peak at -1 dBFS before encoding, the input's metadata tags dropped
+  (`-map_metadata -1`), encoded Ogg Vorbis `-q:a 5` (47.3 KB; the encoded peak reads -1.6 dB).
+  Native's `module_sounds.xml` header lists `.ogg` and `.wav` as supported and caps a
+  `mission_voice_shout` sound at 8 s.
 
 ## Key Files
 
@@ -255,7 +251,7 @@ picked per play) in `Main/_Module/ModuleData/module_sounds.xml`.
 | `Main/Features/CombatMechanics/Models/TaomCombatMechanicsModel.cs` | Two thin delegations (optional ctor params, the `IRefugeDefenseService` precedent) |
 | `Main/Features/AdvancedCombat/CustomAttacksUtils.cs` | `TakeDamage` gains `extraFlags`; `ComposeBlowFlags` extracted and pinned |
 | `Main/_Module/ModuleData/signature_strikes/signature_strikes_config.json` | Shipped config |
-| `Main/_Module/ModuleData/module_sounds.xml`, `Main/_Module/ModuleSounds/LOTR/Mordor/Nazgul/` | The scream's registration and its three takes |
+| `Main/_Module/ModuleData/module_sounds.xml`, `Main/_Module/ModuleSounds/LOTR/Mordor/Nazgul/` | The scream's registration and its one clip |
 
 Registration: `Main/IoC.cs` (`SignatureStrikesIoC.RegisterSignatureStrikesFeature`; DryIoc wires
 `INazgulRegistry` into the registry), `Main/SubModule.cs` (the logic after `DreadAuraMissionLogic`;
@@ -336,8 +332,13 @@ registration lines); `hit by ... -> no effect` on every swing means the gates in
   does nothing; a thrust does nothing. Note which directions a MOUNTED swing reports in the
   `hit by` line. Then the campaign: PlayerSwitcher to the Witch-king, attack a Gondor party, the
   struck foe is knocked back (the model is campaign-only) and DreadAura still pulses.
-- Listen to the three takes in game and keep or regenerate them. The log's `resolved to event id`
-  line names the id the shriek played under.
+- Deploy first and restart the game (the installed `module_sounds.xml` must name
+  `nazgul_scream.ogg`). Listen to the scream and check it carries over a battle at its volume, and
+  that several of the Nine screaming close together do not sound like one clip on a loop; if they
+  do, try widening the pitch range toward 0.9 to 1.1 (whether native picks a new pitch per play is
+  unproven; this listen is the test), and add takes if the repeat persists. Native refuses a
+  minimum above 1.0 or a maximum below 1.0, so a deeper scream is pitched in the file. The log's
+  `resolved to event id` line names the id the shriek played under.
 - The -1 contract: with a deliberately misspelled `sound` in a scratch copy of the config, the log
   must show `is not registered` and `sound=yell (sound not registered)`, and a yell must be heard.
   If a misspelled name resolves to an id instead, native does not answer -1 and the fallback needs
@@ -356,11 +357,13 @@ registration lines); `hit by ... -> no effect` on every swing means the gates in
 
 ## Changelog
 
+- 2026-09-23: the scream is the clip Mike supplied (`TAOM_Nazgul Scream 2`), one variation in place
+  of the three generated takes.
+- 2026-09-23: Codex review 130 fixes: an identity list's null or blank entry is removed with a
+  warning and a padded one trimmed, so neither leaves a signature that matches nobody.
 - 2026-09-23: #645, the Nine's SCREAM: `signatures` list, `Scream` kind, `origin`, `sound`, per-kind
   stamps, the struck foe takes a strike's fear, Custom Battle character-id fallback, the scream's
   three ElevenLabs takes.
-- 2026-09-23: Codex review 130 fixes: an identity list's null or blank entry is removed with a
-  warning and a padded one trimmed, so neither leaves a signature that matches nobody.
 - 2026-09-16: #606, the mission gate moved off the dead `OnBehaviorInitialize` (never fires for a TAOM-added behavior) to a first-use read; stage logging for the replay.
 - 2026-09-16: Codex review 114 fixes (stand-down clears the roster, name-only enum parsing, impact finiteness gate, shared damage cast, 0.5 s cooldown floor, inert profiles skip).
 - 2026-09-16: feature landed (#605).
