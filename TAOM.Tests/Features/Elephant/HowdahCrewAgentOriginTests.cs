@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Features.Elephant;
@@ -23,6 +24,47 @@ public class HowdahCrewAgentOriginTests
     {
         _mahout = Substitute.For<IAgentOriginBase>();
         _crew = new HowdahCrewAgentOrigin(_mahout, troop: null, seed: 4242);
+    }
+
+    // --- Shots fired (2026-09-22) ---
+    // The howdah's draw-progress field latches at its best value once a draw completes, so the log could not tell a
+    // loosed arrow from a re-nock. The engine raises Mission.OnAgentShootMissile for every missile ([MBCallback]; vanilla's
+    // archery training counts shots through the same hook), and the crew's own origin is where each archer's count
+    // lives: one origin per archer, so no list of seats has to be searched from the callback.
+
+    [TestMethod]
+    public void ShotsFired_StartsAtZero()
+    {
+        Assert.AreEqual(0, _crew.ShotsFired);
+    }
+
+    [TestMethod]
+    public void RecordShot_CountsEveryArrowLoosed()
+    {
+        _crew.RecordShot();
+        _crew.RecordShot();
+        _crew.RecordShot();
+        Assert.AreEqual(3, _crew.ShotsFired);
+    }
+
+    [TestMethod]
+    public void RecordShot_CountsPerArcher_NotPerHowdah()
+    {
+        // Two archers on one elephant share a mahout; their counts must not, or one busy archer hides an idle one.
+        var other = new HowdahCrewAgentOrigin(_mahout, troop: null, seed: 4243);
+        _crew.RecordShot();
+        _crew.RecordShot();
+        other.RecordShot();
+        Assert.AreEqual(2, _crew.ShotsFired);
+        Assert.AreEqual(1, other.ShotsFired);
+    }
+
+    [TestMethod]
+    public void RecordShot_NeverReachesTheMahoutsOrigin()
+    {
+        // Counting is bookkeeping for our log, not a score event; the mahout's origin must hear nothing of it.
+        _crew.RecordShot();
+        Assert.AreEqual(0, _mahout.ReceivedCalls().Count());
     }
 
     [TestMethod]

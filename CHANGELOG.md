@@ -4,6 +4,21 @@
 
 ## 2026-09-22
 
+### feat(elephant): v2.0.30 - howdah log counts the arrows each archer looses
+
+The howdah's status line now carries `shots=N` per archer: arrows actually loosed, counted from
+the engine's missile-fired callback (`Mission.OnAgentShootMissile`, an `[MBCallback]` raised for every
+missile; vanilla's archery training counts the player's shots through the same hook). Until now
+the log could not tell a shot from a re-nock, because `prog` latches at 1.00 once any draw
+completes. Read `shots` against `restarts`: both climbing is an archer shooting, since every
+shot restarts the draw; restarts climbing while shots stays flat is the re-nock loop.
+
+The count lives on each archer's own `HowdahCrewAgentOrigin`, so the callback identifies a crew
+shot with one type check and never searches a list of seats, and it goes through
+`Interlocked` because the callback's thread is the engine's business. It exists to settle the
+question left open by the resize: whether archers carried at 4 to 7 m/s miss draws, or shoot
+normally and only look stuck between shots.
+
 ### feat(elephant): v2.0.30 - war elephant 30% bigger, howdah rides its spine
 
 The war elephant is 1.3x its old size (Mike, 2026-09-22): `taom_war_elephant`'s `body_length`

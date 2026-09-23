@@ -181,6 +181,9 @@ internal sealed class HowdahDiagnosticsReporter
                         // (0 or -1 means the deck has none, which is the one thing vanilla's moving platforms do have).
                         $" prog={HowdahDiagnostics.Format(seat?.MaxActionProgress ?? float.NaN, 2)}" +
                         $" restarts={seat?.ActionRestarts ?? -1}" +
+                        // Arrows actually loosed. Read against restarts: many restarts and few shots is the re-nock
+                        // loop; restarts rising with shots is an archer shooting normally, since every shot restarts.
+                        $" shots={(rider.Origin as HowdahCrewAgentOrigin)?.ShotsFired ?? -1}" +
                         $" ammo={rider.HasRangedWeapon(true)}" +
                         $" tgt={(rider.GetTargetAgent() != null)}" +
                         $" nav={rider.GetCurrentNavigationFaceId()}" +

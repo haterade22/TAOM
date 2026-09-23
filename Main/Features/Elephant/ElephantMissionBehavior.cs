@@ -224,6 +224,16 @@ public class ElephantMissionBehavior : MissionLogic
         }
     }
 
+    // Counts howdah crew shots for the diagnostics line. The native engine raises this for every missile fired
+    // ([MBCallback] Mission.OnAgentShootMissile), and vanilla's archery training counts shots through the same hook.
+    // A crew archer carries its own HowdahCrewAgentOrigin, so the origin identifies it and holds its count: no seat
+    // list is searched from a callback whose thread is the engine's business.
+    public override void OnAgentShootMissile(Agent shooterAgent, EquipmentIndex weaponIndex, Vec3 position, Vec3 velocity,
+        Mat3 orientation, bool hasRigidBody, int forcedMissileIndex)
+    {
+        if (shooterAgent?.Origin is HowdahCrewAgentOrigin crew) crew.RecordShot();
+    }
+
     public override void OnRemoveBehavior()
     {
         if (_treesAdded)

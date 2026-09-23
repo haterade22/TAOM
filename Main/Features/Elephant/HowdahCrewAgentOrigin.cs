@@ -21,6 +21,18 @@ public sealed class HowdahCrewAgentOrigin : IAgentOriginBase
     private readonly bool _hasHeavyArmor;
     private Banner? _banner;
 
+    // Arrows this archer has actually loosed, for the diagnostics log (2026-09-22). The draw-progress field latches
+    // at its best value once a draw completes, so it cannot tell a shot from a re-nock; this can. Written from the
+    // engine's missile callback and read by the log, so it goes through Interlocked/Volatile rather than trusting
+    // which thread the callback arrives on. Bookkeeping only: nothing here reaches the mahout's origin.
+    private int _shotsFired;
+
+    /// <summary>Arrows this archer has loosed since it was spawned onto the howdah.</summary>
+    public int ShotsFired => System.Threading.Volatile.Read(ref _shotsFired);
+
+    /// <summary>Called once per missile this archer fires.</summary>
+    public void RecordShot() => System.Threading.Interlocked.Increment(ref _shotsFired);
+
     public HowdahCrewAgentOrigin(IAgentOriginBase mahoutOrigin, BasicCharacterObject? troop, int seed)
     {
         _mahout = mahoutOrigin;
