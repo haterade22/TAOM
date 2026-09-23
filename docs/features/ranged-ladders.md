@@ -17,6 +17,10 @@ that stat. Five tools apply it (`generate_ranged_ladder_items.py`, `rebalance_ra
 agrees on the skill), and the validator's `RANGED_LADDER_INVERSION` and `RANGED_DAMAGE_CEILING` keep
 it true. Inside a kingdom a crossbow out-hits and out-aims every bow at the same tier.
 
+The items live in the unversioned `LOTRLOME_Armory`, so an Armory reinstall drops all of them and
+archers spawn bowless with no error. `python tools/generate_ranged_ladder_items.py --verify` is the
+gate that catches it.
+
 ## Why This Exists
 
 ### What decides an arrow (Bannerlord 1.5.3, `SandBox.dll` and `TaleWorlds.MountAndBlade.dll`)

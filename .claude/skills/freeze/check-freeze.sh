@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # check-freeze.sh — PreToolUse hook for /freeze skill
 # Reads JSON from stdin, checks if file_path is within the freeze boundary.
-# Returns {"permissionDecision":"deny","message":"..."} to block, or {} to allow.
+# Returns {"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"..."}} to block, or {} to allow.
 #
 # Adapted from gstack (https://github.com/garrytan/gstack/blob/main/freeze/bin/check-freeze.sh).
 # TAOM differences:
@@ -36,27 +36,19 @@ if [[ -z "$FREEZE_DIR" ]]; then
     exit 0
 fi
 
-# Extract file_path from tool_input JSON.
-# Try grep first (cheap, works for flat JSON), Python fallback for escaped quotes / nested.
-FILE_PATH=$(printf '%s' "$INPUT" \
-    | grep -o '"file_path"[[:space:]]*:[[:space:]]*"[^"]*"' \
-    | head -1 \
-    | sed 's/.*:[[:space:]]*"//;s/"$//' \
-    || true)
-
-if [[ -z "$FILE_PATH" ]]; then
-    # Python fallback, reached when the grep above misses: escaped quotes or nested
-    # JSON, which is exactly the Windows-path case this hook exists to handle.
-    #
-    # NEVER spell it `python3` here. On this machine that name resolves to a Microsoft
-    # Store App Execution Alias which, run from Git Bash, prints nothing, never exits and
-    # ignores SIGTERM. The old `for PY in python3 python py` loop picked it first because
-    # `command -v` only proves a file exists at that name. These registrations run on
-    # every Edit while /freeze or /investigate is active, so a wedge here stalls the
-    # debugging skill itself. _pybin.sh refuses anything under WindowsApps.
-    source "$PROJ_DIR/.claude/hooks/_pybin.sh" 2>/dev/null || PYBIN=""
-    if [[ -n "${PYBIN:-}" ]]; then
-        FILE_PATH=$(printf '%s' "$INPUT" | "$PYBIN" -c '
+# Extract file_path from tool_input JSON by DECODING it. A grep over the raw JSON keeps the
+# escapes (`漢`, a doubled `\\`) in the path, and the same in-bound file then compares as
+# out of bounds depending on how the harness chose to encode it (Codex review 2026-09-23). The
+# grep survives only as the fallback when no python is available.
+#
+# NEVER spell it `python3` here. On this machine that name resolves to a Microsoft Store App
+# Execution Alias which, run from Git Bash, prints nothing, never exits and ignores SIGTERM.
+# These registrations run on every Edit while /freeze or /investigate is active, so a wedge
+# here stalls the debugging skill itself. _pybin.sh refuses anything under WindowsApps.
+source "$PROJ_DIR/.claude/hooks/_pybin.sh" 2>/dev/null || PYBIN=""
+FILE_PATH=""
+if [[ -n "${PYBIN:-}" ]]; then
+    FILE_PATH=$(printf '%s' "$INPUT" | "$PYBIN" -c '
 import sys, json
 try:
     d = json.loads(sys.stdin.read())
@@ -64,7 +56,13 @@ try:
 except Exception:
     pass
 ' 2>/dev/null || true)
-    fi
+fi
+if [[ -z "$FILE_PATH" ]]; then
+    FILE_PATH=$(printf '%s' "$INPUT" \
+        | grep -o '"file_path"[[:space:]]*:[[:space:]]*"[^"]*"' \
+        | head -1 \
+        | sed 's/.*:[[:space:]]*"//;s/"$//' \
+        || true)
 fi
 
 # If we still cannot extract a file path, allow (don't block on parse failure).
@@ -152,7 +150,7 @@ case "$FILE_PATH" in
         # Outside boundary — deny.
         FILE_PATH_JSON=$(_json_escape "$FILE_PATH")
         FREEZE_DIR_JSON=$(_json_escape "$FREEZE_DIR")
-        printf '{"permissionDecision":"deny","message":"[freeze] Blocked: %s is outside the freeze boundary (%s/). Run /unfreeze to release the boundary, or pick a wider scope when you started /freeze."}\n' \
+        printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"[freeze] Blocked: %s is outside the freeze boundary (%s/). Run /unfreeze to release the boundary, or pick a wider scope when you started /freeze."}}\n' \
             "$FILE_PATH_JSON" "$FREEZE_DIR_JSON"
         ;;
 esac

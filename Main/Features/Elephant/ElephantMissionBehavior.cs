@@ -14,14 +14,14 @@ using TaleWorlds.ObjectSystem;
 namespace TAOM.Features.Elephant;
 
 /// <summary>
-/// Mission boundary for the AI war-elephant. Attaches a per-agent <see cref="ElephantBehaviorTree"/> (via a
+/// Mission boundary for the war-elephant. Attaches a per-agent <see cref="ElephantBehaviorTree"/> (via a
 /// <c>BehaviorTreeAgentComponent</c>) to every elephant in the battle — the warg's pattern
 /// (<see cref="TAOM.Features.Warg.WargMissionBehavior"/>) applied to the elephant. The tree drives the auto-trample
-/// (a behavioral 1-for-1 of ADOD_Beasts's <c>OnTickAsAI</c>): an AI-ridden elephant occasionally plays an attack animation
+/// (a behavioral 1-for-1 of ADOD_Beasts's <c>OnTickAsAI</c>; since 2026-09-23 under a player rider too): a ridden elephant plays an attack animation
 /// and deals a radial knockdown to enemies within <see cref="ElephantConfig.TrampleRadius"/>. The pure gate + damage
 /// formula live in <see cref="IElephantAttackService"/> (unit-tested); the engine work lives in the SHARED BT leaf
 /// nodes (<c>ElephantLikeEngageDecorator</c> + <c>ElephantLikeTrampleTask</c>). This behavior also instantiates the howdah
-/// when the mahout builds (see <see cref="TryInstantiateHowdah"/>). The rider/ai-controlled branch structure is the
+/// when the mahout builds (see <see cref="TryInstantiateHowdah"/>). The has-rider branch structure is the
 /// foundation for richer creature AI — player-triggered trample, enrage/charge — in later phases.
 /// </summary>
 public class ElephantMissionBehavior : MissionLogic

@@ -1,4 +1,5 @@
 using System;
+using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.ElephantLike.BehaviorTreeElements;
@@ -23,9 +24,13 @@ public sealed class ElephantLikeCombatProfile
         string sideAttackLeftActionName,
         string sideAttackRightActionName,
         Func<IElephantLikeAttackService> resolveService,
-        bool singleTarget = false)
+        bool singleTarget = false,
+        DamageTypes damageType = DamageTypes.Pierce,
+        Func<Agent, float>? riderMultiplier = null)
     {
         SingleTarget = singleTarget;
+        DamageType = damageType;
+        RiderMultiplier = riderMultiplier;
         TrampleTriggerRange = trampleTriggerRange;
         TrampleRadius = trampleRadius;
         TrampleBlowMagnitude = trampleBlowMagnitude;
@@ -50,6 +55,15 @@ public sealed class ElephantLikeCombatProfile
     /// <see cref="SingleVictimPick"/>) instead of every enemy in the radius. The war ram's head-butt sets
     /// it (#618); the elephant's and mumakil's tramples keep the default radial sweep.</summary>
     public bool SingleTarget { get; }
+
+    /// <summary>The blow's damage type. Pierce by default, as every creature blow has been; the elk's antler charge is
+    /// Blunt (#636), which <c>CustomAttacksUtils.TakeDamage</c> keeps lethal.</summary>
+    public DamageTypes DamageType { get; }
+
+    /// <summary>What the attack takes from its rider at the moment it fires, or null for nothing. The elk scales its
+    /// antler charge by the rider's career charge bonus (<c>ElkCombat.RiderChargeMultiplier</c>, #636); the service
+    /// ignores a value outside <c>(0, MaxRiderMultiplier]</c>.</summary>
+    public Func<Agent, float>? RiderMultiplier { get; }
 
     /// <summary>The trample (double-sweep thrash) animation.</summary>
     public ActionIndexCache Trample { get; }

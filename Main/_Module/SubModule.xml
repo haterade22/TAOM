@@ -245,6 +245,13 @@
         <GameType value = "EditorGame"/>
       </IncludedGameTypes>
     </XmlNode>
+    <!-- #646 test riders for the Animalia elk and moose: CustomGame only, remove with the file -->
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="troops/troops_animalia_test"/>
+      <IncludedGameTypes>
+        <GameType value = "CustomGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
     <XmlNode>
       <XmlName id="NPCCharacters" path="troops/troops_mordor"/>
       <IncludedGameTypes>

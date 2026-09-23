@@ -52,6 +52,11 @@ These files are convergence points. Only the **lead** should edit them:
 
 Teammates report needed changes to these files via message; the lead integrates.
 
+### Shared Working Tree
+Sessions and teammates share one working tree. The git rules for that (commit before a rebase, never
+pop a stash, stage explicit paths, reconstruct shared files in the index) are in
+[git-and-commits.md](git-and-commits.md).
+
 ### Build Artifacts
 - **Never run `./build.ps1` from two agents simultaneously** — build output goes to `out/` and will conflict
 - Use `dotnet build Main` or `dotnet test TAOM.Tests` for isolated compilation during development
@@ -152,7 +157,7 @@ All reviewers are **read-only** — they report findings to the lead via message
 When an orchestrator dispatches fresh subagents to implement and then review work — via Agent Teams, individual `Agent` calls, or a `Workflow` pipeline — apply this ordering (adapted from obra/superpowers' `subagent-driven-development`, 2026-05-29):
 
 1. **Two-stage review — spec compliance FIRST, code quality SECOND.** Stage 1 confirms the implementation does exactly what was asked: nothing missing, nothing extra (an unrequested addition is a finding too). Stage 2 reviews quality / maintainability / ADR compliance. **Running the quality review before spec compliance is confirmed wastes the pass** — quality feedback on code that solves the wrong problem is throwaway.
-2. **Give each subagent complete context in the spawn prompt — never make it re-read your session.** This is already TAOM's "Briefing subagents" convention (CLAUDE.md): the orchestrator puts task text, scope, and the docs-to-read in the prompt. A reviewer subagent gets the description + the plan/requirement + the diff (or `BASE_SHA..HEAD_SHA`), not "go figure out what changed."
+2. **Give each subagent complete context in the spawn prompt; never make it re-read your session.** This is already TAOM's briefing convention (CLAUDE.md "Subagents"): the orchestrator puts task text, scope, and the docs-to-read in the prompt. A reviewer subagent gets the description + the plan/requirement + the diff (or `BASE_SHA..HEAD_SHA`), not "go figure out what changed."
 3. **Fix → re-review → repeat until approved.** The implementer subagent fixes findings; the reviewer re-checks the fix. Don't skip the re-review — an unverified fix is an unverified claim (`.claude/rules/evidence-over-claims.md`), and a returned "✅ done" is a claim to verify, not evidence.
 4. **Severity triage:** fix Critical/HIGH in-session (TAOM's `/deep-review` already mandates this), fix Important before proceeding, note Minor for later.
 
@@ -178,7 +183,7 @@ This composes with the `Workflow` tool: a `pipeline()` can implement in stage 1,
 
 ## Integration with TAOM Rules
 
-All CLAUDE.md Critical Rules apply to **every teammate equally**:
+All AGENTS.md "Always" rules apply to **every teammate equally**:
 
 | Rule | Team Impact |
 |------|-------------|
@@ -205,7 +210,7 @@ Target: **3-6 tasks per teammate per session**. Fewer means the tasks are too la
 
 ## Spawn Prompt Templates
 
-> **Every spawn prompt must also carry the subagent briefing** (CLAUDE.md "Briefing subagents"): start with *"Read [docs/ai-includes/agent-operating-manual.md](./agent-operating-manual.md) first; you cannot invoke skills or spawn agents — recommend them in your report"*, and use `pwsh tools/taom-src.ps1 path <Type>` for signatures. The templates below assume that preamble.
+> **Every spawn prompt must also carry the subagent briefing** (CLAUDE.md "Subagents"): the task and its scope, *"you cannot invoke skills or spawn agents; recommend them in your report"*, and `pwsh tools/taom-src.ps1 path <Type>` for signatures. Custom and general-purpose agents already load CLAUDE.md, AGENTS.md and the unscoped rules; Explore and Plan load none of them, so their prompt also starts with *"Read [docs/ai-includes/agent-operating-manual.md](./agent-operating-manual.md) first"*. The templates below assume that preamble.
 
 ### Feature Developer
 ```

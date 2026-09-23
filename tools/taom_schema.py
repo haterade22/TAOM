@@ -643,7 +643,7 @@ class Validator:
     # The 2026-08-14 faction-economy pass raised every fief of eight fief-starved
     # cultures in the LIVE TAOM_Map settlements.xml. That file is unversioned, so a
     # module reinstall reverts the whole pass silently and nothing in this repo would
-    # notice — the same class of loss CLAUDE.md's "A fix in a dependency module" trap
+    # notice, the same class of loss the orientation.md "Unversioned modules" trap
     # describes, which closed seven issues in the 2026-08-08 triage. The floor spec is
     # committed at tools/settlement_economy_floor.json and is the single source of
     # truth: the rebalance tool writes from it, this check reads it. Neither restates
@@ -1518,6 +1518,10 @@ class Validator:
         "harad_elephant_rider": "bespoke mount rider at level 51 in light kit (rebalance_troops.SKIP_TROOP_IDS)",
         "harad_mumakil_rider": "bespoke mount rider at level 51 in light kit (rebalance_troops.SKIP_TROOP_IDS)",
         "gondor_ithilien_ranger": "tier-10 light ranger kit by design (docs/features/gondor-ithilien-ranger.md)",
+        # #646 test riders (troops/troops_animalia_test.xml, CustomGame only): without this their file is
+        # grouped as a kingdom ('animalia_test') and shifts every other culture's field median. Remove with the file.
+        "taom_test_animalia_elk_rider": "#646 Custom Battle test rider, not a kingdom's troop (troops_animalia_test.xml)",
+        "taom_test_animalia_moose_rider": "#646 Custom Battle test rider, not a kingdom's troop (troops_animalia_test.xml)",
     }
 
     def _cross_culture_armour_inversions(self) -> list:

@@ -151,7 +151,8 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
   (author on the engine's own `human_skeleton` frames) and the root yaw (turn the pose, not the node), see
   [bannerlord-skeleton-authoring.md](../reference/bannerlord-skeleton-authoring.md) 2026-09-18. `tools/bind_troll_action_set.py`
   wrote 213 overrides into `as_cave_troll_warrior` (walk/run/idle/strike/death codes; turns, strafes, attacks
-  inherit human), parity audit OK, snapshot refreshed. OWED: Custom Battle with Mordor trolls; provenance row.
+  inherit human), parity audit OK, snapshot refreshed. OWED: Custom Battle with Mordor trolls. (The provenance
+  row is cleared, 2026-09-23: bought on Fab, and Mike records no creator or licence tier for Fab purchases.)
   (The Kit save "for the 52 masters' RDC entries" owed here was a false target: the Kit never writes an entry
   for an animation master and masters play without one; `check_rdc_entries.py` now counts them separately and
   prints 0 for `creature/troll`. The junk `human_skeleton_notused.00x` skeletons are gone.)

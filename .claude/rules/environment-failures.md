@@ -2,54 +2,20 @@
 description: Environment failures are reported, not fixed. The agent works within infra; the user controls infra.
 ---
 
-<!-- NO paths: intentionally — always-load. See harness-facts.md "Rule loader (memory) semantics". -->
-
 # Environment failures: report, don't fix
 
-When something goes wrong that lives outside the project source — missing tools, broken paths, permissions, MCP server down, Bannerlord install drift, GitHub auth, network errors — **report and stop. Do not attempt to fix.**
+When something outside the repo's tracked files breaks (a missing tool, a broken path, permissions,
+an MCP server down, Bannerlord install drift, GitHub auth, the network), **report it and stop; don't
+fix it.** Infra fixes are hard to reverse from here, the user knows which install, feed or server is
+intended, and self-healing hides the real problem until it breaks differently.
 
-## Why
-
-Infra fixes are usually irreversible from the agent's view (installed wrong package, edited the wrong PATH entry, changed a global config). The user has context the agent does not — which Bannerlord install is current, which Steam library is preferred, which NuGet feed should host the package, why a particular MCP server is intentionally disabled.
-
-Self-healing infra silently masks the real problem, then breaks differently next session.
-
-## Examples — report, don't fix
-
-| Symptom | What NOT to do | What TO do |
-|---------|----------------|------------|
-| `ilspycmd: command not found` | `dotnet tool install -g ilspycmd` | "ilspycmd is missing — needed for v1.4.5 signature verification. Install with `dotnet tool install -g ilspycmd`?" |
-| `E:\Decompiled_Bannerlord\` empty | `git clone` something into it | "Decompiled folder is empty. Has the v1.4.5 dump moved? I need a path." |
-| `dotnet build` fails: `MSBuild not found` | Edit `.csproj`, change SDK ref | "MSBuild path not picked up — likely a Visual Studio install issue. Investigate from your end." |
-| Serena MCP returns no results | Restart MCP, reinstall | "Serena MCP is returning empty. The mcp-health hook may have marked it unhealthy. Check `.claude/logs/`." |
-| `gh auth status` fails | `gh auth login` interactively | "gh CLI isn't authenticated. Run `gh auth login` when convenient." |
-| Bannerlord DLL paths in `Directory.Build.props` don't resolve | Edit the props file | "Game install path may have moved. Current target: `E:\Steam\...`. Confirm or update?" |
-| `BANNERLORD_GAME_DIR` env var unset | Set it for the session | "BANNERLORD_GAME_DIR isn't set. Export it from your shell config and try again." |
-
-## Examples — these are NOT environment failures (fix normally)
-
-- A C# build error in TAOM source — fix per `/build-fix`
-- A test assertion fails — investigate per `/investigate`
-- An XSLT transform produces wrong XML — fix the XSLT
-- A Harmony patch doesn't take effect — debug per `/investigate`
-- A skill or hook script throws — fix the script
-- `git status` shows unexpected files — investigate (per `CLAUDE.md` guidance, never delete without checking)
-
-The line: anything inside the TAOM repo's tracked files is in scope. Anything outside (tools on PATH, env vars, Steam install, MCP servers, OS config) is the user's domain.
-
-**Before treating a content failure as a repo bug, check which machine you are on.** Development
-spans a desktop holding the full content set and a laptop that deliberately does not, and the live
-`TAOM_Map` / `LOTRLOME_Armory` installs are unversioned and absent from git. On the incomplete
-machine every reference into them fails and reads exactly like a repo defect: 6,894 broken items
-and 414 landless cultures, measured 2026-09-06, none of it real. That is an environment gap, so
-report it; never edit the repo to quiet it. [`development-machines.md`](../../docs/reference/development-machines.md)
-
-## Tone when reporting
-
-State the facts:
-- What you tried
-- What failed (exact error)
-- What you suspect (one line — not a long diagnosis)
-- The minimal next step the user can take
-
-Don't suggest the user "fix their machine" or imply incompetence. Most env failures are just drift — paths move, tools update, auth tokens expire.
+- **The line:** anything in the repo's tracked files is yours to fix: a build error, a failing test,
+  a broken XSLT, a hook script that throws. Tools on PATH, env vars, the Steam install, MCP servers
+  and OS config are the user's.
+- **Examples:** `ilspycmd` missing: ask before `dotnet tool install -g ilspycmd`. `gh auth status`
+  fails: "run `gh auth login` when convenient". Game DLL paths in `Directory.Build.props` don't
+  resolve: confirm the install path rather than editing the file.
+- **Check the machine first** (orientation.md "Two machines"): never edit the repo to quiet the
+  laptop's broken references.
+- **Report** what you tried, the exact error, a one-line suspicion, and the smallest next step for
+  the user. State facts; drift is normal, and nobody's machine is at fault.

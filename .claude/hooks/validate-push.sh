@@ -1,6 +1,6 @@
 #!/bin/bash
 # PreToolUse hook: Warn before git push to protected branches.
-# Hard-blocks force pushes to master (CLAUDE.md policy).
+# Hard-blocks force pushes to protected branches (AGENTS.md "Git and commits").
 # Non-blocking warning for regular pushes to master/main.
 
 # Resolve a safe Python interpreter. Never a Microsoft Store alias: those hang forever.
@@ -119,7 +119,7 @@ is_protected() {
 
 # Hard-block force push to a protected branch
 if [[ "$FORCE" == true ]] && is_protected "$TARGET"; then
-  echo "BLOCKED: force push to '$TARGET' is not allowed. CLAUDE.md policy." >&2
+  echo "BLOCKED: force push to '$TARGET' is not allowed. Do not retry with --no-verify or as a plain push; explain the block and ask the user whether to push to a non-protected branch." >&2
   exit 2
 fi
 

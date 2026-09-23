@@ -272,7 +272,7 @@ def test_improvement_is_positive_for_a_swap_toward_target():
 
 
 def test_shield_forbidden_reads_the_resolved_usage_set_flags():
-    """The trap CLAUDE.md records as shipped three times: a shield plus a no-shield polearm."""
+    """The orientation.md "Shield plus polearm" trap, shipped three times: a shield plus a no-shield polearm."""
     cat = cata.Catalogue(
         templates={"P": cata.Template("P", "Polearm", [("Handle", 0)], ["D"])},
         descriptions={"D": cata.Description("D", "P", frozenset({"MeleeWeapon"}),

@@ -10,7 +10,7 @@ using TaleWorlds.MountAndBlade;
 namespace TAOM.Features.Mumakil;
 
 /// <summary>
-/// Behavior tree for the AI Mûmakil — the warg/elephant per-agent BT pattern, built from the SHARED
+/// Behavior tree for the ridden Mûmakil — the warg/elephant per-agent BT pattern, built from the SHARED
 /// elephant-like nodes bound to <see cref="MumakilCombat.Profile"/>. Built per Mûmakil by
 /// <see cref="MumakilMissionBehavior"/> via a <c>BehaviorTreeAgentComponent</c>; the engine auto-ticks it each frame.
 ///
@@ -21,7 +21,8 @@ namespace TAOM.Features.Mumakil;
 /// <see cref="ElephantLikeEngageDecorator"/> prevents chaining a swing into a playing trample.
 ///
 /// Blackboard: cooldown stamps + target bearing (<see cref="IBTElephantLikeBlackboard"/>) shared across the
-/// nodes; the rider is read off <c>Agent.RiderAgent</c> in the leaves.
+/// nodes; the rider is read off <c>Agent.RiderAgent</c> in the leaves. The attacks fire under ANY rider, the player
+/// included, as the warg's bite does (Mike, 2026-09-23).
 /// </summary>
 public class MumakilBehaviorTree : BehaviorTree, IBTBannerlordBase, IBTElephantLikeBlackboard
 {
@@ -47,21 +48,18 @@ public class MumakilBehaviorTree : BehaviorTree, IBTBannerlordBase, IBTElephantL
         var profile = MumakilCombat.Profile;
         return StartBuildingTree(new MumakilBehaviorTree(agent))
             .AddSelector("main")
-                .AddSelector("has rider", new HasRiderDecorator())
-                    .AddSelector("ai controlled", new IsAiControlledDecorator())
-                        .AddSelector("enemy in range", new ElephantLikeEngageDecorator(profile))
-                            .AddSequence("trample", new ElephantLikeAttackOffCooldownDecorator(profile, ElephantLikeAttackKind.Trample, MumakilConfig.TrampleCooldownSeconds))
-                                .AddTask(new ElephantLikeTrampleTask(profile))
-                                .AddTask(new SleepTask(new(0, 0, 0, 0, 300)))     // settle before next eval
-                            .Up()
-                            .AddSequence("side attack", new ElephantLikeAttackOffCooldownDecorator(profile, ElephantLikeAttackKind.SideAttack, MumakilConfig.SideAttackCooldownSeconds))
-                                .AddTask(new ElephantLikeSideAttackTask(profile))
-                                .AddTask(new SleepTask(new(0, 0, 0, 0, 300)))
-                            .Up()
-                        .Up()                                                     // both on cooldown → falls through
-                        .AddTask(new SleepTask(new(0, 0, 0, 0, 200)))             // idle: bounds the scan cadence (~5/s)
-                    .Up()
-                    .AddTask(new SleepTask(new(0, 0, 1)))                         // player-ridden: ai branch skipped
+                .AddSelector("has rider", new HasRiderDecorator())                // AI or player rider alike (warg parity)
+                    .AddSelector("enemy in range", new ElephantLikeEngageDecorator(profile))
+                        .AddSequence("trample", new ElephantLikeAttackOffCooldownDecorator(profile, ElephantLikeAttackKind.Trample, MumakilConfig.TrampleCooldownSeconds))
+                            .AddTask(new ElephantLikeTrampleTask(profile))
+                            .AddTask(new SleepTask(new(0, 0, 0, 0, 300)))     // settle before next eval
+                        .Up()
+                        .AddSequence("side attack", new ElephantLikeAttackOffCooldownDecorator(profile, ElephantLikeAttackKind.SideAttack, MumakilConfig.SideAttackCooldownSeconds))
+                            .AddTask(new ElephantLikeSideAttackTask(profile))
+                            .AddTask(new SleepTask(new(0, 0, 0, 0, 300)))
+                        .Up()
+                    .Up()                                                     // both on cooldown → falls through
+                    .AddTask(new SleepTask(new(0, 0, 0, 0, 200)))             // idle: bounds the scan cadence (~5/s)
                 .Up()
                 .AddSequence("no rider", new HasNoRiderDecorator())
                     .AddTask(new SleepTask(new(0, 0, 4)))                         // riderless: long idle

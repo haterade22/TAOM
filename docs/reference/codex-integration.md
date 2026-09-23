@@ -20,6 +20,10 @@ slash commands are not available automatically in Codex or other clients. Read
 the actual skill before using it; a Markdown table does not establish runtime
 availability. Plugin commands require a separately available plugin.
 
+The Claude skills run `codex exec -c project_doc_max_bytes=65536 - < prompt > out` in the
+background. A `/codex-verify` pass typically takes 5 to 20 minutes and `/review-codex` 10 to 45.
+Pre-flight with the client's own status command (`codex login status`).
+
 ## Authority and isolation
 
 Run paid dispatch when the user explicitly requests it, within the agreed scope

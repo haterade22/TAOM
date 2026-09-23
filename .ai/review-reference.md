@@ -42,6 +42,14 @@ VERDICT: CLEAN / ISSUES FOUND
 ### Lessons From Prior Reviews (85 reviews, 188+ bugs found), distilled
 
 **What Codex does especially well (2026-09-01 memory-diagnostics review: 4/4 HIGH real, 0 false positives).**
+- **Drives a hook the way the harness does, and times it** (2026-09-23, ADR-011 harness review,
+  8 of 8 findings real): handed nine rewritten PreToolUse gates, it built fixtures outside the
+  repo, sent 54 hostile commands and parsed every output as JSON, and timed the tracked-files gate
+  at 6 s against its 5 s registration. It found the commit gate misreading `$'...'`, attached
+  `-m"..."` and option-shaped prose, the import scan closing a four-backtick fence early, and a
+  malformed rule frontmatter counted as scoped, each with a reproduction and the documentation it
+  rests on. It declined to run the one suite that commits to a temporary repo, saying so. For a
+  harness or tooling review, name the parser each gate relies on and ask for hostile input to it.
 - **Follows a stand-down to every consumer of the state it leaves behind** (2026-09-16,
   SignatureStrikes review 114): handed a `MissionLogic` that disables itself after a caught
   exception, it asked what ELSE reads the roster that logic stopped stamping, found the GameModel
@@ -184,7 +192,7 @@ archive the 6th-oldest, harvest durable patterns into `docs/reviews/lessons/<cat
 
 ## Project Overview
 
-TAOM is a .NET Framework 4.7.2 mod for Bannerlord v1.5.2. It uses Harmony patches, GameModel overrides, and CampaignBehaviors to implement LOTR-themed game mechanics.
+TAOM is a .NET Framework 4.7.2 mod for the Bannerlord version on AGENTS.md's `Target:` line. It uses Harmony patches, GameModel overrides, and CampaignBehaviors to implement LOTR-themed game mechanics.
 
 **Build and test:** use the [non-deploying verification commands](verification.md).
 Build the solution and test in the same configuration with both copy-suppression
@@ -210,15 +218,9 @@ HarmonyPatch / GameModel / CampaignBehavior   <-- THIN (<150 lines, no logic)
 
 ## Critical Rules (NEVER VIOLATE)
 
-| Rule | Details |
-|------|---------|
-| **TDD Mandatory** | RED -> GREEN -> REFACTOR. Test first, always. |
-| **No `#region`** | Use class decomposition (ADR-003) |
-| **No `[Obsolete]`** | Migrate all usage in same PR (ADR-004) |
-| **No `#if DEBUG`** | Except IoC.cs registration (ADR-005) |
-| **Adapter Pattern** | Services use `ICareerHeroAdapter` etc, NEVER `Hero` etc (ADR-007) |
-| **Thin Entry Points** | <150 lines, delegate to services (ADR-002) |
-| **Research First** | Never guess TaleWorlds behavior — decompile first |
+The invariants live in one place, [AGENTS.md "Always"](../AGENTS.md): TDD, evidence, the
+architecture chain, banned constructs, research first, verify before reference, human prose.
+Review against that table; this reference adds reviewer-specific detail below.
 
 ---
 
@@ -375,42 +377,10 @@ public class TaomFooModel : DefaultFooModel
 7. **Register in SubModule.cs** — via `CreateGameModels()` / `OnGameStart()`
 8. **Tests** — Service logic fully unit-tested. Model class itself is thin enough to skip
 
-### Existing Overrides (31+ total)
+### Existing Overrides
 
-| GameModel | Overrides | Purpose |
-|-----------|-----------|---------|
-| `TaomCharacterStatsModel` | `DefaultCharacterStatsModel` | `MaxCharacterTier => 10` (vanilla 6) |
-| `TaomPartyWageModel` | `DefaultPartyWageModel` | Extended tier wages (T0-T10) + culture feats |
-| `TaomVolunteerModel` | `DefaultVolunteerModel` | `MaxVolunteerTier => 6` (vanilla 4) |
-| `TaomArmyManagementModel` | `DefaultArmyManagementCalculationModel` | Culture army influence feats |
-| `TaomPartySpeedModel` | `DefaultPartySpeedCalculatingModel` | Culture forest/infantry speed feats |
-| `TaomSettlementProsperityModel` | `DefaultSettlementProsperityModel` | Culture hearth growth feats |
-| `TaomSettlementMilitiaModel` | `DefaultSettlementMilitiaModel` | Culture veteran militia feats |
-| `TaomBuildingConstructionModel` | `DefaultBuildingConstructionModel` | Culture construction speed feats |
-| `TaomVillageProductionModel` | `DefaultVillageProductionCalculatorModel` | Culture production feats |
-| `TaomCaravanModel` | `DefaultCaravanModel` | Umbar caravan cost feat (CulturalFeats) + CaravanTrade basket-diversity overrides (`GetInitialTradeGold` floor, `GetMaxGoldToSpendOnOneItemCategory`) |
-| `TaomBattleRewardModel` | `DefaultBattleRewardModel` | Umbar renown feat |
-| `TaomPartyTroopUpgradeModel` | `DefaultPartyTroopUpgradeModel` | Mounted recruit cost feats |
-| `TaomPartySizeModel` | `DefaultPartySizeLimitModel` | Party size feats |
-| `TaomFoodConsumptionModel` | `DefaultMobilePartyFoodConsumptionModel` | Food consumption feats |
-| `TaomSettlementLoyaltyModel` | `DefaultSettlementLoyaltyModel` | Settlement loyalty feats |
-| `TaomPartyMoraleModel` | `DefaultPartyMoraleModel` | Party morale feats |
-| `TaomSmithingModel` | `DefaultSmithingModel` | Smithing energy cost feats |
-| `TaomClanFinanceModel` | `DefaultClanFinanceModel` | Tariff income feat |
-| `TaomRaidModel` | `DefaultRaidModel` | Raid damage feats |
-| `TaomMilitaryPowerModel` | `DefaultMilitaryPowerModel` | Configurable T7-T10 troop power |
-| `TaomCombatSimulationModel` | `DefaultCombatSimulationModel` | Configurable blunt/cut damage ratio |
-| `TaomPartyHealingModel` | `DefaultPartyHealingModel` | Cultural survival bonuses |
-| `TaomTournamentModel` | `DefaultTournamentModel` | Per-participant culture armor + prize pools |
-| `TaomAgeModel` | `DefaultAgeModel` | Race-appropriate lifespans |
-| `TaomPregnancyModel` | `DefaultPregnancyModel` | Race-appropriate pregnancy durations |
-| `TaomHeroCreationModel` | `DefaultHeroCreationModel` | Race-aware hero creation defaults |
-| `TaomAllianceModel` | `DefaultAllianceModel` | Racial enmity constraints |
-| `TaomKingdomDecisionPermissionModel` | `DefaultKingdomDecisionPermissionModel` | Culture/race-based decision rules |
-| `TaomDiplomacyModel` | `DefaultDiplomacyModel` | LOTR faction relationships |
-| (none since v1.5.0: `ExecutionRelationModel` was deleted from the engine) | the alignment-aware execution penalties now live in two `Patch14_Execution` Harmony patches, see `docs/features/execution.md` | Culture-specific execution penalties |
-| `TaomInformationRestrictionModel` | `DefaultInformationRestrictionModel` | Encyclopedia visibility restrictions |
-| `TaomTargetScoreModel` | `DefaultTargetScoreCalculatingModel` | Army targeting: commitment stickiness, faction priority lists, border proximity |
+The current list, with each model's vanilla base and purpose, is
+[gamemodel-registry.md](../docs/reference/gamemodel-registry.md).
 
 ---
 
@@ -537,110 +507,33 @@ Mirror source structure: `TAOM.Tests/Features/{FeatureName}/{ServiceName}Tests.c
 
 ## Harmony Patch Categories (Known Intentional Patches)
 
-These are all registered, intentional patches — do not flag them as unauthorized modifications. Current-as-of 2026-07-12; per-patch rationale/history/RCAs: `docs/reference/harmony-patch-registry.md` (single maintained source — this table is a routing snapshot).
-
-| Category | Feature | Target | Status |
-|----------|---------|--------|--------|
-| `Patch0_BattleScenes` | Battle scenes | `Campaign.InitializeScenes` | DISABLED |
-| `Patch1_FirstTimeInit` | First-time initialization | Various | active |
-| `Patch2_RefreshTableau` | Banner tableau refresh | Various | active |
-| `Patch3_SetRace` | Race assignment | Various | active |
-| `Patch4_CharacterSpawner` | Character spawning | Various | active |
-| `Patch5_FaceGen` | Face generation | Various | active |
-| `Patch6_BannerEditor` | Banner editor | Various | active |
-| `Patch7_FactionMap` | Faction map | Various | active |
-| `Patch8_SiegeCampGuard` | Siege camp guard | Various | active |
-| `Patch9_RaceFilter` | Culture-restricted race dropdown on CC | `FaceGenVM.Refresh` | active |
-| `Patch10_WeatherBoundsGuard` | Weather bounds clamping | `DefaultMapWeatherModel` | active |
-| `Patch11_Diplomacy` | Diplomacy system | Various | active |
-| `Patch12_WarOfTheRing` | War of the Ring | Various | active |
-| `Patch13_RaceAge` | NOP vanilla's same-race birth assert (mixed-race births are normal in TAOM) | `HeroCreator.DeliverOffSpring` (Transpiler) | active |
-| `Patch14_Execution` | Execution system | Various | active |
-| `Patch15_BannerLayerLimit` | Banner layer limit | Various | DISABLED (engine-native since v1.4.7) |
-| `Patch16_AtmospherePersistence` | Forced-atmosphere scenes | `Mission.Initialize` | active |
-| `Patch17_TroopWeight` | TroopWeight shed-on-upgrade (elite tax lives in `TaomPartySizeModel` since 2026-07-11) | `PartyUpgraderCampaignBehavior.UpgradeReadyTroops` (Postfix) | active |
-| `Patch18_CulturalFeats` | Custom culture feat registration | `Campaign.InitializeDefaultCampaignObjects` | active |
-| `Patch19_CustomBattles` | Custom battle TAOM factions/commanders/troops | `CustomBattleData`, `CustomBattleHelper`, `BannerlordMissions` | active |
-| `Patch20_NarrativeHorseGuard` | Suppress CC narrative horse crashes for no-mount cultures | `CharacterCreationCampaignBehavior`, `CharacterCreationNarrativeStageView` | active |
-| `Patch21_ShaderPrecompilation` | Loading-screen shader progress text | `LoadingWindowViewModel` | active |
-| `Patch22_ArmyTargeting` | Border proximity floor for priority-list targets | `AiMilitaryBehavior` | active |
-| `Patch23_BannerColorPersistence` | Player clan colors everywhere (UI + 3D battle + conversation) | 16 targets across `CampaignUIHelper`/`SandBoxUIHelper`/party+inventory VMs/`Mission`/`Banner`/`AgentVisuals.Create`/`MapConversationTableau` — full list in the registry | active |
-| `Patch24_BannerDriftGuard` | Block vanilla banner color drift during War of the Ring | `Clan.UpdateBannerColorsAccordingToKingdom`, `Clan.UpdateBannerColor` | active |
-| `Patch25_LocalizationOverride` | Let English module_strings overrides of vanilla `{=ID}` tokens apply | `MBTextManager.GetLocalizedText` (Prefix) | active |
-| `Patch26_SpecialResources` | Per-kingdom resource gating + transactional spending | `PartyCharacterVM.InitializeUpgrades`, `PartyScreenLogic.UpgradeTroop`, `PartyScreenLogic.AddCommand` | active |
-| `Patch27_CareerSystem` | Career screen opening + ability V-key activation | `ViewModel.ExecuteCommand`, `AgentStatCalculateModel.UpdateAgentStats` | active |
-| `Patch28_SettlementGuards` | Per-settlement guard injection + per-culture spear mapping | `GuardsCampaignBehavior.TakeGuardAgentDataFromGarrisonTroopList` (manual), `GuardsCampaignBehavior.GetSuitableSpear` (manual) | active |
-| `Patch29_CCBodyProperties` | Per-culture default BodyProperties on CC + body re-apply | `CharacterCreationContent.SetSelectedCulture`, `CharacterCreationCultureStageVM.OnCultureSelection`, `CharacterCreationNarrativeStageView.RefreshAgentVisuals` | active |
-| `Patch30_MixedFormations` | Mixed ranged/melee formation layout (hot path, vanilla fall-through) | `Formation.GetOrderPositionOfUnit` (Prefix) | active |
-| `Patch31_SmartCavalryAI` | Player-cavalry coordinated line-charge state machine | `Formation.SetMovementOrder` (Postfix, deferred — see `Patch_MissionTime_SetMovementOrder`) | active |
-| `Patch33_EquipPresets` | Equipment-preset overlay on the inventory screen | `SPInventoryVM.RefreshValues` (Postfix), `GauntletInventoryScreen.OnInitialize` (Postfix) / `.OnFinalize` (Prefix) | active |
-| `Patch34_QuickActions` | Inventory "Sell All" multi-action menu | `SPInventoryVM.ExecuteSellAllItems` (Prefix), `SPInventoryVM` ctor (Postfix), `SPInventoryVM.RefreshCallbacks` (Postfix), `SPInventoryVM.OnFinalize` (Postfix) | active |
-| `Patch35_CompanionTactics` | Companion role prefixes (party/OOB) + OOB formation-preset overlay | `PartyCharacterVM.RefreshValues`, `OrderOfBattleHeroItemVM.RefreshValues`, `OrderOfBattleVM` ctor/finalize, OOB UI handler tick/finalize (+ manual tooltip Postfix; movement postfix in the shared deferred category) | active |
-| `Patch36_FiefManagement` | F6 fief-management screen (custom GameState) | `MapScreen.OnFrameTick` (Postfix), `GameStateScreenManager.CreateScreen` (Prefix) | active |
-| `Patch37_CrashReport` | Crash-capture pipeline (Priority-800 Finalizers -> `CrashReportPatchHelper`) | 9 engine-lifecycle Finalizers (`Managed.ApplicationTick`, `ScreenManager.Tick`, `Mission.Tick`, ...) | active |
-| `Patch38_SettlementNameplateFade` | Distance-based settlement nameplate fade (hot path ~3000/s) | `SettlementNameplateWidget.DetermineTargetAlphaValue` (Postfix) | active |
-| `Patch39_BanditPartySize` | Scale bandit initial rosters by PlayerProgress (cap = stack MaxValue) | `DefaultPartySizeLimitModel.FindAppropriateInitialRosterForMobileParty` (Postfix) | active |
-| `Patch40_HideoutDescription` | Themed LOTR hideout encounter descriptions | `HideoutCampaignBehavior.game_menu_hideout_place_on_init` (private, Postfix) | active |
-| `Patch41_McmLayoutFix` | Flip MCM options screen to top-to-bottom layout (#252) | UIExtenderEx `WidgetFactoryManager.CreateAndRegister` (Postfix) | active |
-| `Patch42_CastleRecruitment` | Castle troop recruitment — AI half | `AiVisitSettlementBehavior.AiHourlyTick` (Transpiler), `AiVisitSettlementBehavior.FillSettlementsToVisitWithDistancesAsDays` (Transpiler), `RecruitmentCampaignBehavior.HourlyTickParty` (Postfix) | active |
-| `Patch43_BattleLoadDiagnostics` | `[BattleLoad]` phase stamps: attack->playable + mission-exit lifecycle + stall watchdog | 11 hooks (`PlayerEncounter.Start`, `MissionState.OpenNew`, `Mission.EndMission`, `MapState.OnTick`, ...) | active |
-| `Patch44_CCNameAutofill` | Pre-fill CC Review-stage name field (culture-appropriate) | `CharacterCreationReviewStageVM..ctor` (Postfix) | active |
-| `Patch46_TournamentDwarfDismount` | Dwarf tournament dismount (race-keyed) | `TournamentFightMissionController.PrepareForMatch` (Postfix) | active |
-| `Patch47_SpiderDeathDismount` | Spider rider-death native-AV guard | `Agent.Die` (Prefix) | active |
-| `Patch48_SpiderHitDismountGuard` | Spider surviving-rider dismount-AV guard (Patch47 sibling) | `Agent.HandleBlowAux` (private, Prefix) | active |
-| `Patch49_ArmyGatheringNreGuard` | Army-gathering map-tick NRE guard + `[SiegeDiag]` diagnostics | `Army.FindBestGatheringSettlementAndMoveTheLeader` (private, Finalizer) | active |
-| `Patch50_DropFlaggedItemGuard` | Warg-on-warg bite NRE guard | `Agent.CheckToDropFlaggedItem` (public, Finalizer) | active |
-| `Patch51_RecruitmentResourceGate` | Special-resource affordability gate on the recruit Done button | `RecruitmentVM.RefreshPartyProperties` (Postfix) | active |
-| `Patch53_PartyIconScale` | Campaign-map party-icon figure/mount scale (MCM slider) | `MobilePartyVisual.AddCharacterToPartyIcon` (private, Transpiler) | active |
-| `Patch54_NavalTravelBoatVisual` | NavalTravel at-sea boat mesh | `MobilePartyVisual.OnTransitionEnded` + `.AddMobileIconComponents` (Postfix ×2, SandBox.View) | PARKED 2026-06-26 (#120/#296) |
-| `Patch55_BasicTableauRaceGuard` | Render-safe race coercion for Save/Load preview (custom-race native AV, #295) | `BasicCharacterTableau.RefreshCharacterTableau` (private, Prefix) | active |
-| `Patch56_SceneNotificationVisualGuard` | Become-king cinematic CTD guard (null AgentVisuals) | `GauntletSceneNotification.OpenScene` (private, Finalizer) + `.OnTick` (Postfix, deferred close) + `PopupSceneSpawnPoint.InitializeWithAgentVisuals` (diagnostic Prefix) | active |
-| `Patch57_NavalAtSeaLandRescueGuard` | At-sea land-pathfind native-AV guard | `AIMoveToNearestLandBehavior.AiHourlyTick` (internal, Prefix) | PARKED 2026-06-26 (#120/#296) |
-| `Patch58_SkipCampaignIntro` | Skip vanilla campaign intro video on NEW game (always-on) | `SandBoxGameManager.OnLoadFinished` (public override, Prefix) | active |
-| `Patch59_CaravanTrade` | Caravan range/war-gate/basket levers | `CaravansCampaignBehavior.CanTradeWith` + `.GetTradeScoreForTown` + `.GetDistanceLimitVeryFarAsDaysForNavigationType` + `.CalculateBudgetFactor` (all private, Postfix ×4) | active |
-| `Patch60_TournamentExitMovieRelease` | Tournament-exit movie release (#331 round 1; canary `ReleaseMovie=Nms`) | `MissionGauntletTournamentView.OnMissionScreenFinalize` (public override, SandBox.GauntletUI.dll, Prefix+Postfix) | active |
-| `Patch61_SaveLoadDiagnostics` | Always-on `[SaveLoad]` lifecycle logging (15 hooks) | save/load pipeline Finalizers/Postfixes (see the feature doc) | active |
-| `Patch61_SaveLoadDiagnostics_ArchiveParse` | Archive-chunk parse-fault stamps (truncation vs corruption) | `ArchiveDeserializer.LoadFrom` (internal, void Finalizer, Priority.First) | active |
-| `Patch61_SaveLoadDiagnostics_BehaviorData` | Names WHICH behavior's SyncData failed | `CampaignBehaviorDataStore.LoadBehaviorData`/`.SaveBehaviorData` (internal, void Finalizer) | active |
-| `Patch61_SaveLoadDiagnostics_ContainerFill` | Container (dict/list SyncData) load-fault stamps | `ContainerLoadData.InitializeReaders`/`FillCreatedObject`/`Read`/`FillObject` (internal, void Finalizers) | active |
-| `Patch_MissionTime_SetMovementOrder` | Shared deferred category — ANY postfix with `MovementOrder` in its signature MUST use it | `Formation.SetMovementOrder(MovementOrder)` (Postfix ×2) | active |
-| `Late_ActionSetOverride` | Race-aware action-set name resolution (null monster -> human; vanilla fall-through) | `ActionSetCode.GenerateActionSetNameWithSuffix` (Prefix) | active |
-| `Late_Transpiler` | Race-appropriate `_facegen` action set in the face-gen preview | `BodyGeneratorView.RefreshCharacterEntityAux` (Transpiler) | active |
+Every category registered in `Main/SubModule.cs` is an intentional patch: do not flag one as an
+unauthorized modification. The list, with feature, target, status and history, is
+[harmony-patch-registry.md](../docs/reference/harmony-patch-registry.md); grep the category there.
+Any postfix with `MovementOrder` in its signature must join the shared deferred category
+`Patch_MissionTime_SetMovementOrder`.
 
 ---
 
 ## Commit Conventions
 
-Every commit subject carries the module version: `<type>[(scope)]: vX.Y.Z - <description>`, with
-`vX.Y.Z` exactly the `<Version>` in `Main/_Module/SubModule.xml` as committed (user rule
-2026-09-13; the version moves only in a `/release` commit, whose subject names the new one).
-Subject at most 72 characters, body wrapped at 72. No AI attribution. A subject without the label
-or with the wrong version is a defect; `.claude/hooks/check-commit-subject-version.sh` refuses it
-at commit time in Claude Code.
-
-Example: `feat(recruitment): v2.0.28 - Glanhir recruits the Ringlo Vale line`
-
-**Optional trailers** (each on its own line after blank line):
-
-| Trailer | When to use |
-|---------|------------|
-| `Constraint:` | TaleWorlds limitation blocked the ideal solution |
-| `Rejected:` | Alternative approach considered and dropped |
-| `Not-tested:` | Parts that can't be unit tested |
-| `Research:` | What was decompiled to inform this change |
-| `Save-compat:` | Save file impact |
+Subject `<type>[(scope)]: vX.Y.Z - <description>` with the version from
+`Main/_Module/SubModule.xml`; the full conventions and optional trailers are in
+[git-and-commits.md](../docs/ai-includes/git-and-commits.md).
 
 ---
 
 ## TaleWorlds Research — Lookup Order
 
-**Check the engine study docs first for conceptual "how does X work" questions.** Use the decompile for signature verification.
+Engine concepts come from the process docs; signatures come only from the installed DLLs
+(AGENTS.md "Research first").
 
 | Step | Action | When |
 |------|--------|------|
-| 0. **[Engine process docs](../docs/reference/engine/)** | Pre-filtered, TAOM-relevant, file:line-cited docs for 19 engine subsystems | **First** for "how does this process work" questions — lifecycle, formation/team AI, mount/rider, campaign-mission seam, campaign heartbeat, agent spawn pipeline, usable machines, GauntletUI, save/object system, GameModel, campaign behaviors, items. Saves raw decompile time. |
-| 1. **Read decompiled source** | Read or search files in `E:\Decompiled_Bannerlord\` | Signature and behavior verification once you know which class/method to check |
-| 2. **ILSpy MCP** | `mcp__ilspy__decompile_assembly` / `mcp__ilspy__list_types` | Only if type not found in decompiled source |
+| 0. **[Engine process docs](../docs/reference/engine/)** | Pre-filtered, TAOM-relevant, file:line-cited docs for 19 engine subsystems | **First** for "how does this process work" questions |
+| 1. **`pwsh tools/taom-src.ps1 path <Type>`** | Decompiles the installed DLLs (version auto-detected) | Authoritative signatures; the dump can lag an engine bump |
+| 2. **Read decompiled source** | Read or search `E:\Decompiled_Bannerlord\` | Browsing namespaces and patterns |
+| 3. **ILSpy MCP** | `mcp__ilspy__decompile_assembly` / `mcp__ilspy__list_types` | Only if the type is in neither |
 
 > ⚠️ **The decompiled source at `E:\Decompiled_Bannerlord\` is the SHIPPING-CLIENT build — it strips editor-only code.** Editor-only types (`MBEditor`, `AnimalSpawnSettings`, FBX-import / animation authoring) exist ONLY in `Win64_Shipping_wEditor` DLLs. "Absent from the dump" ≠ "doesn't exist." If a class is missing, check the editor build at `E:\Decompiled_Bannerlord\_editor_build\` before concluding it's native. See [bannerlord-engine-and-toolchain.md](../docs/reference/bannerlord-engine-and-toolchain.md).
 

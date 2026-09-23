@@ -23,7 +23,7 @@ The engine takes the FIRST description whose AvailablePieces cover every piece a
 primary usage, and the later matches become additional usages. Registering the new pieces in all
 four therefore yields a shield-compatible primary AND a couch. That is not cosmetic: eight Rohan
 rosters pair these spears with a shield, and a polearm absent from OneHandedPolearm resolves
-`requires_no_shield`, so the troop carries it and never draws it (CLAUDE.md Traps; gate:
+`requires_no_shield`, so the troop carries it and never draws it (trap index in docs/ai-includes/orientation.md; gate:
 tools/audit_polearm_shield_parity.py).
 
 REACH DROPS. The old spears were 127.41 + 217.91 = 345cm and 96.28 + 246.76 = 343cm. The new ones

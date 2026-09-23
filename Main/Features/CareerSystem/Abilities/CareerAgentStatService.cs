@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using TaleWorlds.MountAndBlade;
 using TAOM.Core.Logging;
+using TAOM.Core.Validation;
 using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.CareerSystem.Abilities;
@@ -112,19 +113,43 @@ public class CareerAgentStatService : ICareerAgentStatService
     // horse's copies are the ones that matter. The rider's ids come from the mount's RiderAgent.
     public void ApplyMountStatModifiers(string? riderHeroId, int? riderAgentIndex, AgentDrivenProperties mountProps)
     {
-        if (!string.IsNullOrEmpty(riderHeroId))
-        {
-            var chargeBonus = _passives.GetPassiveMagnitude(riderHeroId!, PassiveEffectType.MountChargeDamage);
-            if (chargeBonus != 0f) mountProps.MountChargeDamage *= (1f + chargeBonus);
+        var charge = MountChargeMultiplier(riderHeroId, riderAgentIndex);
+        if (charge != 1f) mountProps.MountChargeDamage *= charge;
 
-            ApplyMountBuff(CareerAbilityBuffTracker.GetBuff(riderHeroId!), mountProps);
-        }
+        if (!string.IsNullOrEmpty(riderHeroId))
+            ApplyMountSpeedBuff(CareerAbilityBuffTracker.GetBuff(riderHeroId!), mountProps);
 
         if (riderAgentIndex.HasValue)
-            ApplyMountBuff(CareerAbilityBuffTracker.GetAllyBuff(riderAgentIndex.Value), mountProps);
+            ApplyMountSpeedBuff(CareerAbilityBuffTracker.GetAllyBuff(riderAgentIndex.Value), mountProps);
 
         if (_logger != null && !string.IsNullOrEmpty(riderHeroId))
             LogMountApplication(riderHeroId!, riderAgentIndex);
+    }
+
+    // The charge half of the mount bonuses as one product. ApplyMountStatModifiers scales the mount's
+    // MountChargeDamage by it; the elk's antler charge reads it when it fires (#636), so the two agree for any product
+    // the antler accepts, (0, 10] (outside it the antler lands unscaled while the mount still applies it).
+    public float MountChargeMultiplier(string? riderHeroId, int? riderAgentIndex)
+    {
+        var multiplier = 1f;
+        if (!string.IsNullOrEmpty(riderHeroId))
+        {
+            var passive = _passives.GetPassiveMagnitude(riderHeroId!, PassiveEffectType.MountChargeDamage);
+            if (passive != 0f) multiplier *= 1f + passive;
+
+            var self = CareerAbilityBuffTracker.GetBuff(riderHeroId!);
+            if (self != null && self.ChargeDamageBonus != 0f) multiplier *= 1f + self.ChargeDamageBonus;
+        }
+
+        if (riderAgentIndex.HasValue)
+        {
+            var ally = CareerAbilityBuffTracker.GetAllyBuff(riderAgentIndex.Value);
+            if (ally != null && ally.ChargeDamageBonus != 0f) multiplier *= 1f + ally.ChargeDamageBonus;
+        }
+
+        // The loader already rejects NaN and infinity (CareerConfigProvider.ParseFloat), but huge finite magnitudes can
+        // still overflow the product; a non-finite product scales nothing, for either consumer.
+        return FiniteFloatValidator.IsFinite(multiplier) ? multiplier : 1f;
     }
 
     private void LogMountApplication(string riderHeroId, int? riderAgentIndex)
@@ -283,13 +308,12 @@ public class CareerAgentStatService : ICareerAgentStatService
         // MountSpeedBonus / ChargeDamageBonus are MOUNT properties: ApplyMountStatModifiers (#611).
     }
 
-    // Mount stats: multiplicative scaling, the engine values are pre-normalized.
-    private static void ApplyMountBuff(ActiveBuffs? buffs, AgentDrivenProperties mountProps)
+    // Mount speed: multiplicative scaling, the engine values are pre-normalized. The buff's charge half is
+    // MountChargeMultiplier's.
+    private static void ApplyMountSpeedBuff(ActiveBuffs? buffs, AgentDrivenProperties mountProps)
     {
         if (buffs == null) return;
         if (buffs.MountSpeedBonus != 0f)
             mountProps.MountSpeed *= (1f + buffs.MountSpeedBonus);
-        if (buffs.ChargeDamageBonus != 0f)
-            mountProps.MountChargeDamage *= (1f + buffs.ChargeDamageBonus);
     }
 }

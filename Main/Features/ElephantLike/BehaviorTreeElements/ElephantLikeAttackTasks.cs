@@ -11,10 +11,10 @@ namespace TAOM.Features.ElephantLike.BehaviorTreeElements;
 
 /// <summary>
 /// Shared template for elephant-like attacks: plays the derived class's attack animation on channel 0, stamps the
-/// derived class's cooldown, and deals radial knockdown damage (`CustomAttacksUtils.TakeDamage`) to every live
-/// enemy within the profile's <see cref="ElephantLikeCombatProfile.TrampleRadius"/>, or to ONE of them when the
-/// profile sets <see cref="ElephantLikeCombatProfile.SingleTarget"/> (the war ram). Damage amount from the pure
-/// <see cref="IElephantLikeAttackService.ComputeInflictedDamage"/> (ADOD_Beasts's formula,
+/// derived class's cooldown, and deals radial knockdown damage (`CustomAttacksUtils.TakeDamage`, the rider's blow) to
+/// every live enemy within the profile's <see cref="ElephantLikeCombatProfile.TrampleRadius"/>, or to ONE of them
+/// when the profile sets <see cref="ElephantLikeCombatProfile.SingleTarget"/> (the war ram, the elk). Damage amount
+/// from the pure <see cref="IElephantLikeAttackService.ComputeInflictedDamage"/> (ADOD_Beasts's formula,
 /// shield-block-aware). Boundary code, mirroring the warg's <c>WargAttackTask</c>.
 /// </summary>
 public abstract class ElephantLikeAttackTaskBase : BTTask, IBTBannerlordBase, IBTElephantLikeBlackboard
@@ -66,7 +66,7 @@ public abstract class ElephantLikeAttackTaskBase : BTTask, IBTBannerlordBase, IB
             if (!Profile.SingleTarget)
             {
                 // Roll per victim so each enemy caught in the radius takes an independent hit within the kind's band.
-                Hit(a, creature);
+                Hit(a, creature, rider);
                 continue;
             }
             // One victim (the war ram's head-butt, #618): the enemy faced most squarely, nearer on a tie. A ridden
@@ -78,17 +78,24 @@ public abstract class ElephantLikeAttackTaskBase : BTTask, IBTBannerlordBase, IB
             float dot = distance > 1e-4f ? Vec3.DotProduct(offset.NormalizedCopy(), lookDir) : 1f;
             if (pick.Offer(dot, distance)) single = a;
         }
-        if (single != null) Hit(single, creature);
+        if (single != null) Hit(single, creature, rider);
         return BTTaskStatus.FinishedWithTrue;
     }
 
-    private void Hit(Agent victim, Agent creature)
+    // One blow of the profile's type, owned by the rider: the warg's rule (WargAttackService), so the engine hands the
+    // hit and the kill to the rider, the player included (Mike, 2026-09-23). The creature owns it only if the rider has
+    // gone, as on the warg. The engine would then pick a human owner's punch sound, so the blow keeps the creature's
+    // charge impact (chargeImpactSound, Mike the same day).
+    private void Hit(Agent victim, Agent creature, Agent rider)
     {
         // ADOD_Beasts parity: only a SHIELD block reduces the damage; weapon parries take full damage.
         // (Fully-qualified — the `Agent` blackboard property shadows the Agent type.)
         bool blocking = victim.GetCurrentActionType(1) == TaleWorlds.MountAndBlade.Agent.ActionCodeType.DefendShield;
-        int damage = _service.ComputeInflictedDamage(AttackKind, blocking, MBRandom.RandomFloat);
-        CustomAttacksUtils.TakeDamage(victim, creature, damage, Profile.TrampleBlowMagnitude, knockDown: !blocking);
+        float riderMultiplier = Profile.RiderMultiplier?.Invoke(rider) ?? 1f;
+        int damage = _service.ComputeInflictedDamage(AttackKind, blocking, MBRandom.RandomFloat, riderMultiplier);
+        Agent owner = rider.IsActive() ? rider : creature;
+        CustomAttacksUtils.TakeDamage(victim, owner, damage, Profile.TrampleBlowMagnitude, knockDown: !blocking, damageType: Profile.DamageType,
+            chargeImpactSound: true);
     }
 }
 

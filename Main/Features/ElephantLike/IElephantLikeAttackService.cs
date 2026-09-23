@@ -33,8 +33,11 @@ public interface IElephantLikeAttackService
     /// <summary>
     /// Per-hit damage for an attack <paramref name="kind"/>: rolls a value in the kind's [min,max] band using
     /// <paramref name="roll"/> (a [0,1] float from <c>MBRandom.RandomFloat</c>, clamped + NaN-guarded here), then
-    /// scales by the creature's blocked-damage multiplier when <paramref name="targetBlocking"/>.
+    /// scales by the creature's blocked-damage multiplier when <paramref name="targetBlocking"/>, then by
+    /// <paramref name="riderMultiplier"/>: what the attack takes from its rider, 1 unless the creature's profile
+    /// supplies one (the elk's rider's career charge bonus, #636). A NaN, non-positive or past-the-cap value
+    /// (<see cref="ElephantLikeAttackService.MaxRiderMultiplier"/>) counts as 1.
     /// Trample 50-100, side-swing (tusk) 50-75 before block scaling (both creatures, elephant parity).
     /// </summary>
-    int ComputeInflictedDamage(ElephantLikeAttackKind kind, bool targetBlocking, float roll);
+    int ComputeInflictedDamage(ElephantLikeAttackKind kind, bool targetBlocking, float roll, float riderMultiplier = 1f);
 }

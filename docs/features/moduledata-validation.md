@@ -727,8 +727,10 @@ as proof those kinds were stress-tested against the Armory.
 ### Module coverage at a glance (and what is NOT covered)
 
 TAOM's data spans **three modules**, and only one of them is in this repo. `TAOM_Map` and
-`LOTRLOME_Armory` live in the game install and are unversioned, which is why CLAUDE.md's
-"A fix in a dependency module" trap insists on an in-repo gate beside every external edit.
+`LOTRLOME_Armory` live in the game install and are unversioned. A fix made there is real, but a
+module reinstall silently reverts it, and "not tracked here" does not mean "not fixed" (the
+2026-08-08 triage closed seven issues on exactly that). So every external edit lands with an
+in-repo gate beside it, and the table below shows which gates cover which module.
 Counts measured 2026-08-18:
 
 | Module | Location | XML (ModuleData / all) | XSLT | XML well-formedness | Cross-ref sweep | XSLT checked |

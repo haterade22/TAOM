@@ -51,6 +51,12 @@ Key policies:
   unconditionally BEFORE clearing the record. The donor's commission-exit softlock is
   structurally impossible; `DischargeServiceTests` pins restore-before-clear for every
   `DischargeReason`.
+- **Only discharge ends service.** Several paths decide that it ends (the hourly
+  `EnlistmentReconciler`, `EnlistmentLoadNormalizer` at load, the player through
+  `EnlistmentService.RequestDischarge`); every one of them calls `DischargeService.Execute`, the
+  only code that ends it. Two presence states are
+  legitimate while enlisted: parked (hidden and inactive), and active and visible inside the
+  commander's settlement. Neither is a fault to repair.
 - **Commander captured/party-less:** `CommanderUnavailable` + 7-day grace (config), player
   freed to roam; recovery re-parks, expiry/death discharges honorably. Grace freezes while
   the player is captive.

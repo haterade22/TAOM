@@ -544,8 +544,8 @@
             <Equipment slot="Item2" id="Item.mirkwood_sword_a01" />
             <Equipment slot="Body" id="Item.mkwd_inf3_chest" />
             <Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
-            <Equipment slot="Horse" id="Item.saddle_horse" />
-            <Equipment slot="HorseHarness" id="Item.light_harness" />
+            <Equipment slot="Horse" id="Item.taom_elk_a" />
+            <Equipment slot="HorseHarness" id="Item.taom_elk_saddle_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -556,8 +556,8 @@
             <Equipment slot="Item2" id="Item.mirkwood_sword_a01" />
             <Equipment slot="Body" id="Item.mkwd_inf3_chest" />
             <Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
-            <Equipment slot="Horse" id="Item.saddle_horse" />
-            <Equipment slot="HorseHarness" id="Item.light_harness" />
+            <Equipment slot="Horse" id="Item.taom_elk_a" />
+            <Equipment slot="HorseHarness" id="Item.taom_elk_saddle_a" />
         </EquipmentSet>
     </EquipmentRoster>
 

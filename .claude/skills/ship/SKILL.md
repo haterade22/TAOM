@@ -6,12 +6,12 @@ argument-hint: [feature-name]
 
 # Ship a Feature (completion workflow orchestrator)
 
-Run the **mandatory** completion sequence from CLAUDE.md "Completion Workflow" end-to-end. This skill exists because the sequence is prose in CLAUDE.md and steps get silently skipped — the RCA history (`docs/reviews/rca-crash-report-2026-05-25.md`) shows a 60-file feature shipped with unfixed HIGH/MED findings because Phases 2 and 4 were skipped.
+Run the **mandatory** completion sequence from [completion-workflow.md](../../../docs/ai-includes/completion-workflow.md) end-to-end. This skill exists because a sequence written only as prose gets steps silently skipped: the RCA history (`docs/reviews/rca-crash-report-2026-05-25.md`) shows a 60-file feature shipped with unfixed HIGH/MED findings because Phases 2 and 4 were skipped.
 
 ## When to invoke
 
 - A C# feature or fix touching **≥2 files or any feature module**, or any XML/XSLT change (repo or live install), is ready to merge.
-- **Skip for** one-line C# fixes and config/docs-only changes; running 6+ review agents plus Codex on those is wasteful and costs money. An XML-only change still gets `/deep-review` (CLAUDE.md Critical Rules: XML is code); Codex on it is the user's call.
+- **Skip for** one-line C# fixes and config/docs-only changes; running 6+ review agents plus Codex on those is wasteful and costs money. An XML-only change still gets `/deep-review` (CLAUDE.md Skills: every commit touching C# or XML); Codex on it is the user's call.
 
 ## Phases (do not skip any — each exists because the prior proved insufficient)
 

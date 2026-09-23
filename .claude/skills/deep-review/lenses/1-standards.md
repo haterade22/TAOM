@@ -31,7 +31,7 @@ H1. **Skills and agents** (`.claude/rules/external-skill-ports.md` "Authoring a 
 H2. **Harness facts** (`.claude/rules/harness-facts.md` "What this rule changes"): every added fact cites a doc URL (DOC-BACKED) or an observation context (EMPIRICAL), and the file's "Last verified" line moves with it.
 H3. **Hooks** (`.claude/rules/hook-authoring.md`): run `bash tools/test_hooks.sh` and quote the summary line. A hook that consumes another hook's output (a log line, a state file) needs a two-direction case in `tools/test_hooks.sh`, or a rename on one side silently kills it.
 H4. **Prose** (`.claude/rules/output-style.md` Part 2): no em or en dash in new prose (exempt: code, verbatim quotes, text moved verbatim, untouched lines); run `python tools/lint_docs.py`.
-H5. **CLAUDE.md**: each table row at most 400 characters; report size growth against the 46,000 B budget, separating what the change added from what was already over.
+H5. **Context budget** (ADR-011): run `python tools/lint_docs.py --drift-only` and quote its Context budget section; report growth in CLAUDE.md, its imports and the rules without `paths:` against the `ENTRY_DOCS_*`, `TRAP_INDEX_*` and `UNSCOPED_RULES_*` caps, separating what the change added from what was already over.
 H6. **Tracked**: every new file under `.claude/{skills,agents,rules,hooks}/` is staged or tracked and not gitignored (`git check-ignore -v <path>`); the pre-commit hook blocks otherwise.
 
 OUTPUT FORMAT:

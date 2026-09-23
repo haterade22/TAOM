@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using TAOM.Dependencies.Foundation;
 using TAOM.Features.CrashReport.Domain;
 
 namespace TAOM.Features.CrashReport.Collectors;
@@ -42,9 +43,12 @@ public static class CrashSignatureCalculator
         => Compute(DescribeIdentity(exception), originatingPatchTarget, stack);
 
     /// <summary>
-    /// Outer type, then each inner type and its target site, to <see cref="InnerChainDepth"/>.
-    /// An exception with no inner chain yields exactly its type name, so signatures already in the
-    /// wild keep pointing at the same crash.
+    /// Outer type, then each inner type and its target site, to <see cref="InnerChainDepth"/>; each
+    /// level followed by its preserved throw site when a shield recorded one
+    /// (<see cref="AppendThrowSite"/>). An exception with no inner chain and no preserved site yields
+    /// exactly its type name, so the signatures of crashes that never crossed a shield are unchanged.
+    /// A crash that did cross one gets a new signature once, on purpose: its old signature merged
+    /// every throw site behind the shielded frame.
     ///
     /// Every read is defensive: a custom exception type can throw inside its own getters, and the
     /// one place that must never throw is the handler reporting someone else's crash.
@@ -66,6 +70,11 @@ public static class CrashSignatureCalculator
             if (depth > 0)
                 sb.Append('@').Append(SafeRead(() => TargetSiteOf(current)) ?? "?");
 
+            // Per level, not only the outer: a TargetInvocationException's own recorded site is the
+            // reflection path, a constant, and its inner's TargetSite is the shielded wrapper, also a
+            // constant. The inner's recorded site is the only thing telling two UI crashes apart.
+            AppendThrowSite(sb, current);
+
             Exception inner;
             try { inner = current.InnerException; } catch { break; }
 
@@ -77,6 +86,28 @@ public static class CrashSignatureCalculator
         }
 
         return sb.ToString();
+    }
+
+    /// <summary>
+    /// The frames of the ORIGINAL throw, when a shield preserved them across a Harmony rethrow.
+    ///
+    /// The frame list this signature hashes comes from <c>new StackTrace(ex)</c>, which only sees the
+    /// segment after the last throw. PatchShield rethrows at every patched method an exception
+    /// crosses, so every exception of one type through, say, MapState.OnTick hashed the same five
+    /// frames, and the throttle suppressed occurrences #2 and #3 of bundle 40de8e64 without anyone
+    /// being able to tell whether they were one bug or three. Only appended when present.
+    /// </summary>
+    private static void AppendThrowSite(StringBuilder sb, Exception exception)
+    {
+        try
+        {
+            if (exception.Data?[RethrowStackPreserver.ThrowSiteDataKey] is string site && site.Length > 0)
+                sb.Append("|site=").Append(site);
+        }
+        catch
+        {
+            // Data can throw on exotic exception types; the identity without the site still works.
+        }
     }
 
     private static string TargetSiteOf(Exception ex)

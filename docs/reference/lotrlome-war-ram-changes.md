@@ -120,13 +120,13 @@ remount after a dismount. `saddle_horse` (the item the ram replaced in that rost
 `spider_mount_a` are both 0; the ram is a basic culture mount, not an elite beast like the
 elephant (170) or mumakil (200).
 
-**`body_length="100"` is the scale knob, and it does NOT scale the mount only.**
-`EquipmentIndex.ArmorItemEndSlot` and `EquipmentIndex.Horse` are the same value (10), the scale
-block in `BuildAgent` has no `IsMount` guard, and `BuildAgent` runs for the rider as well as the
-mount with the Horse item still in the rider's spawn equipment. **Any `body_length` other than 100
-scales the dwarf too.** 100 is identity, which is why it is safe. This is pre-existing engine
-behaviour that also affects the mumakil (300) and the wargs (110/115); it is not this feature's to
-fix, but do not retune the ram's scale without accounting for the rider.
+**`body_length="100"` is the scale knob, and it scales the mount only** (corrected 2026-09-23).
+This ledger used to say it scales the dwarf too: `EquipmentIndex.ArmorItemEndSlot` and
+`EquipmentIndex.Horse` are the same value (10), the scale block in `BuildAgent` has no `IsMount`
+guard, and the rider is built with the Horse item in slot 10, so the managed trace predicts it. In
+game the rider is not resized (the 3x mumakil beside its 1x crew, TAOM `docs/features/mumakil.md`,
+"RESOLVED"). A resize would still leave the head-butt's reach, a fixed metre in `WarRamConfig`,
+unscaled.
 `BuildAgent` calls `SetInitialAgentScale(0.01f * BodyLength)`. 100 means the ram ships at its
 **authored size**, deliberately unshrunk.
 
@@ -226,6 +226,10 @@ the mount. Backups: `*.bak-ram-bind-20260918-125440` beside each file. Repo side
 Redo: run `tools/blender/transfer_clip_to_engine_rig.py` (its docstring has the command), import in the Kit,
 read the master back, then re-apply the three XML edits above (they are small enough to type) and
 `python tools/audit_action_set_parity.py` (the ram sets report under root `as_horse`, 0 gaps).
+
+**Since 2026-09-22 the great elk shares this set** (#636, [lotrlome-elk-changes.md](./lotrlome-elk-changes.md)):
+`Monster.taom_elk` names `as_war_ram` and plays `act_war_ram_butt` as its antler charge. A rollback of this
+section, a rename of the set or a re-cut of the clip changes the elk as well.
 
 ## Verification actually run (2026-08-28)
 

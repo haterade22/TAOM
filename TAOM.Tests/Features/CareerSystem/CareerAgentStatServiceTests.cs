@@ -454,6 +454,106 @@ public class CareerAgentStatServiceTests
     }
 
     // ──────────────────────────────────────────────────────────────────────────
+    // MountChargeMultiplier: the rider's charge product as a query. The elk's antler charge reads it when it
+    // fires (#636, Mike 2026-09-23: "scale the antler blows too"); ApplyMountStatModifiers applies the same
+    // product to the mount's MountChargeDamage, so the body charge and the antler blow agree for any product the
+    // antler accepts, (0, 10].
+    // ──────────────────────────────────────────────────────────────────────────
+
+    [TestMethod]
+    public void MountChargeMultiplier_NoRider_IsOneAndDoesNotQuery()
+    {
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { ChargeDamageBonus = 0.30f });
+
+        Assert.AreEqual(1f, _sut.MountChargeMultiplier(riderHeroId: null, riderAgentIndex: null), 1e-6f);
+        _passives.DidNotReceiveWithAnyArgs().GetPassiveMagnitude(default!, default);
+    }
+
+    [TestMethod]
+    public void MountChargeMultiplier_HeroRiderWithPassive_IsOnePlusThePassive()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(0.15f);
+
+        Assert.AreEqual(1.15f, _sut.MountChargeMultiplier(riderHeroId: "hero1", riderAgentIndex: 1), 1e-5f);
+    }
+
+    [TestMethod]
+    public void MountChargeMultiplier_HeroRiderWithSelfBuff_TakesTheChargeBonusOnly()
+    {
+        // Antler Crash: +25% charge and +20% mount speed; only the charge half scales a charge.
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { ChargeDamageBonus = 0.25f, MountSpeedBonus = 0.20f });
+
+        Assert.AreEqual(1.25f, _sut.MountChargeMultiplier(riderHeroId: "hero1", riderAgentIndex: 1), 1e-5f);
+    }
+
+    [TestMethod]
+    public void MountChargeMultiplier_NonHeroRiderWithAllyBuff_ReadsTheBuffByRiderIndex()
+    {
+        CareerAbilityBuffTracker.SetAllyBuff(42, new ActiveBuffs { ChargeDamageBonus = 0.20f });
+
+        Assert.AreEqual(1.20f, _sut.MountChargeMultiplier(riderHeroId: null, riderAgentIndex: 42), 1e-5f);
+        _passives.DidNotReceiveWithAnyArgs().GetPassiveMagnitude(default!, default);
+    }
+
+    [TestMethod]
+    public void MountChargeMultiplier_PassiveSelfBuffAndAllyBuff_StackMultiplicatively()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(0.10f);
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { ChargeDamageBonus = 0.30f });
+        CareerAbilityBuffTracker.SetAllyBuff(7, new ActiveBuffs { ChargeDamageBonus = 0.20f });
+
+        // 1.10 x 1.30 x 1.20
+        Assert.AreEqual(1.716f, _sut.MountChargeMultiplier(riderHeroId: "hero1", riderAgentIndex: 7), 1e-5f);
+    }
+
+    [TestMethod]
+    public void MountChargeMultiplier_HeroRiderWithoutIndex_SkipsTheAllyBuff()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(0.10f);
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { ChargeDamageBonus = 0.30f });
+        CareerAbilityBuffTracker.SetAllyBuff(7, new ActiveBuffs { ChargeDamageBonus = 0.20f });
+
+        // 1.10 x 1.30; the ally entry under index 7 is never consulted without an index.
+        Assert.AreEqual(1.43f, _sut.MountChargeMultiplier(riderHeroId: "hero1", riderAgentIndex: null), 1e-5f);
+    }
+
+    [TestMethod]
+    [DataRow(float.NaN)]
+    [DataRow(float.PositiveInfinity)]
+    public void MountChargeMultiplier_NonFinitePassive_IsOne(float passive)
+    {
+        // The loader rejects NaN and infinity, but a huge finite product can overflow. A non-finite product must
+        // poison neither the mount's charge nor the elk's antler blow; it scales nothing.
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(passive);
+
+        Assert.AreEqual(1f, _sut.MountChargeMultiplier(riderHeroId: "hero1", riderAgentIndex: 1), 1e-6f);
+    }
+
+    [TestMethod]
+    public void ApplyMountStatModifiers_NaNPassive_LeavesTheMountsChargeUnscaled()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(float.NaN);
+        var mount = new AgentDrivenProperties { MountChargeDamage = 100f };
+
+        _sut.ApplyMountStatModifiers(riderHeroId: "hero1", riderAgentIndex: 1, mount);
+
+        Assert.AreEqual(100f, mount.MountChargeDamage, 0.01f);
+    }
+
+    [TestMethod]
+    public void MountChargeMultiplier_IsExactlyWhatApplyMountStatModifiersAppliesToTheMount()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(0.10f);
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { ChargeDamageBonus = 0.25f });
+        CareerAbilityBuffTracker.SetAllyBuff(7, new ActiveBuffs { ChargeDamageBonus = 0.20f });
+        var mount = new AgentDrivenProperties { MountChargeDamage = 1f };
+
+        _sut.ApplyMountStatModifiers(riderHeroId: "hero1", riderAgentIndex: 7, mount);
+
+        Assert.AreEqual(mount.MountChargeDamage, _sut.MountChargeMultiplier(riderHeroId: "hero1", riderAgentIndex: 7), 1e-6f);
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
     // AmmoBonus (#613): the magnitude the model hands CareerAmmoApplier at InitializeMissionEquipment.
     // ──────────────────────────────────────────────────────────────────────────
 

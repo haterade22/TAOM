@@ -1,0 +1,52 @@
+{
+  "_comment": "Animalia quadruped rig (Fab 'Animalia' elk and moose, Rig* bones, exported 2026-09-23) onto Bannerlord's horse_skeleton (#646). Consumed by tools/blender/reskin_animalia_to_horse.py (mesh fit + weights) and the clip retarget. 'chains': each bone is fitted along the segment to the NEXT bone of its chain (its joint lands on the mapped horse joint, the segment swings onto the horse segment and stretches to its length); the last bone of a chain, and every bone in no chain, moves rigidly with its nearest fitted ancestor. 'joints': source joint -> horse joint (also the global scale/turn/offset fit). 'weights': source vertex group -> horse bone (several may merge into one). 'hoof_split': the Animalia ankle covers pastern and hoof, the horse has two bones; ankle weight past the hoof joint moves to the hoof bone. Measured fit 2026-09-23 (engine rest, after uniform scale): legs and spine 2 to 11 cm, head/neck/tail 0.2 to 0.7 m (posture). Engine spells the right rear hoof 'horserrearthoof'.",
+  "_chains_note": "RigPelvis is in no chain: the horse's pelvis joint is a pivot 8 cm straight above horsespine1, not a spine segment, so aiming the pack's pelvis along its spine turned the hips 90 deg and tore the rump (first run 2026-09-23). It moves with the global fit only. The tail is anchored at its root and swung, never stretched: the horse's tail segments are 5 to 6 times the elk's, and every tail group weights horsetail1.",
+  "chains": [
+    ["RigSpine1", "RigSpine2", "RigSpine3", "RigNeck1", "RigNeck2", "RigHead"],
+    ["RigLFLegCollarbone", "RigLFLeg1", "RigLFLeg2", "RigLFLeg3", "RigLFLegAnkle"],
+    ["RigRFLegCollarbone", "RigRFLeg1", "RigRFLeg2", "RigRFLeg3", "RigRFLegAnkle"],
+    ["RigLBLeg1", "RigLBLeg2", "RigLBLeg3", "RigLBLegAnkle"],
+    ["RigRBLeg1", "RigRBLeg2", "RigRBLeg3", "RigRBLegAnkle"],
+    {"bones": ["RigTail1", "RigTail2", "RigTail3"], "stretch": false, "anchor_first_only": true}
+  ],
+  "profiles": {
+    "_note": "--profile <name> replaces 'chains' with the profile's. moose (Mike, 2026-09-23, 'keep the moose neck'): the moose neck is 0.44 m against the horse's 0.90 m and carried level, so fitting it to the horse joints gave a horse neck and no hump. Its neck is moved into place unstretched and unswung; the cost is that horse_head sits about 0.54 m from the moose head, so head rotations pivot off the head. The front legs start at the upper leg: the pack's 'collarbone' is a short midline chest bone, not a shoulder blade (73 deg swing, x2.2 stretch when fitted to horselleg1).",
+    "moose": {
+      "chains": [
+        ["RigSpine1", "RigSpine2", "RigSpine3", "RigNeck1"],
+        {"bones": ["RigNeck1", "RigNeck2", "RigHead"], "stretch": false, "swing": false, "anchor_first_only": true},
+        ["RigLFLeg1", "RigLFLeg2", "RigLFLeg3", "RigLFLegAnkle"],
+        ["RigRFLeg1", "RigRFLeg2", "RigRFLeg3", "RigRFLegAnkle"],
+        ["RigLBLeg1", "RigLBLeg2", "RigLBLeg3", "RigLBLegAnkle"],
+        ["RigRBLeg1", "RigRBLeg2", "RigRBLeg3", "RigRBLegAnkle"],
+        {"bones": ["RigTail1", "RigTail2", "RigTail3"], "stretch": false, "anchor_first_only": true}
+      ]
+    }
+  },
+  "joints": {
+    "RigPelvis": "horsepelvis", "RigSpine1": "horsespine1", "RigSpine2": "horsespine2", "RigSpine3": "horsespine3",
+    "RigNeck1": "horseneck1", "RigNeck2": "horseneck2", "RigHead": "horse_head",
+    "RigLFLegCollarbone": "horselleg1", "RigLFLeg1": "horselleg2", "RigLFLeg2": "horselleg3", "RigLFLeg3": "horselleg4", "RigLFLegAnkle": "horsellegankle",
+    "RigRFLegCollarbone": "horserleg1", "RigRFLeg1": "horserleg2", "RigRFLeg2": "horserleg3", "RigRFLeg3": "horserleg4", "RigRFLegAnkle": "horserlegankle",
+    "RigLBLeg1": "horselfemur", "RigLBLeg2": "horseltibia", "RigLBLeg3": "horsellargecannon", "RigLBLegAnkle": "horselphalanx",
+    "RigRBLeg1": "horserfemur", "RigRBLeg2": "horsertibia", "RigRBLeg3": "horserlargecannon", "RigRBLegAnkle": "horserphalanx",
+    "RigTail1": "horsetail1", "RigTail2": "horsetail2", "RigTail3": "horsetail3"
+  },
+  "weights": {
+    "RigPelvis": "horsepelvis", "RigSpine1": "horsespine1", "RigSpine2": "horsespine2", "RigSpine3": "horsespine3", "RigChest": "horsespine3",
+    "RigNeck1": "horseneck1", "RigNeck2": "horseneck2", "RigNeck3": "horseneck2", "RigDewlap1": "horseneck2",
+    "RigHead": "horse_head", "RigJaw1": "horse_head", "RigTongue1": "horse_head", "RigTongue2": "horse_head", "RigTongue3": "horse_head",
+    "RigLEar1": "horse_head", "RigREar1": "horse_head", "RigLEye1": "horse_head", "RigREye1": "horse_head",
+    "RigLEyelid1": "horse_head", "RigREyelid1": "horse_head",
+    "RigLShoulderBlade1": "horselleg1", "RigRShoulderBlade1": "horserleg1",
+    "RigLFLegCollarbone": "horselleg1", "RigLFLeg1": "horselleg2", "RigLFLeg2": "horselleg3", "RigLFLeg3": "horselleg4", "RigLFLegAnkle": "horsellegankle",
+    "RigRFLegCollarbone": "horserleg1", "RigRFLeg1": "horserleg2", "RigRFLeg2": "horserleg3", "RigRFLeg3": "horserleg4", "RigRFLegAnkle": "horserlegankle",
+    "RigLBLeg1": "horselfemur", "RigLBLeg2": "horseltibia", "RigLBLeg3": "horsellargecannon", "RigLBLegAnkle": "horselphalanx",
+    "RigRBLeg1": "horserfemur", "RigRBLeg2": "horsertibia", "RigRBLeg3": "horserlargecannon", "RigRBLegAnkle": "horserphalanx",
+    "RigTail1": "horsetail1", "RigTail2": "horsetail1", "RigTail3": "horsetail1"
+  },
+  "hoof_split": {
+    "horsellegankle": "horselfronthoof", "horserlegankle": "horserfronthoof",
+    "horselphalanx": "horselrearhoof", "horserphalanx": "horserrearthoof"
+  }
+}

@@ -16,7 +16,7 @@ tools:
 You build feature modules for the TAOM Bannerlord mod following strict architectural patterns.
 
 ## Execution model (read first)
-You run with a fixed tool allowlist (Read/Write/Edit/Bash/Grep/Glob) and **cannot invoke skills or spawn agents**. When a step needs a skill (`/freeze`, `/build-fix`, `/investigate`, `/deep-review`, `/ship`), **recommend it in your report**; the orchestrator invokes it, not you. For TaleWorlds signatures use `pwsh tools/taom-src.ps1 path <Type>` (primary; the installed engine is **v1.5.2**). Don't assume CLAUDE.md / `.claude/rules` reached you. Full execution model + tool catalog: [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md).
+You run with a fixed tool allowlist (Read/Write/Edit/Bash/Grep/Glob) and **cannot invoke skills or spawn agents**. When a step needs a skill (`/freeze`, `/build-fix`, `/investigate`, `/deep-review`, `/ship`), **recommend it in your report**; the orchestrator invokes it, not you. For TaleWorlds signatures use `pwsh tools/taom-src.ps1 path <Type>` (primary; it decompiles the installed engine). CLAUDE.md, its imports and the unscoped rules are loaded for you; a path rule loads when you read a matching file. Full execution model + tool catalog: [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md).
 
 ## Architecture (MANDATORY)
 ```

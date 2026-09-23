@@ -1551,6 +1551,30 @@ modules) in the same change.
 
 **Source:** `docs/reviews/rca-career-kits-2026-09-19.md` finding 3 (2026-09-19).
 
+### Cloning a sibling clones its unverified claims: re-verify every engine statement in the copied text
+
+The great elk (#636) was built by copying the war ram, and three statements arrived word for word that the ram's
+own files make without evidence: that the engine derives `as_war_ram_town_and_village` by suffix (only `_map` is
+looked up, by the party icon), that the behavior's `: MissionLogic` base is pinned by a test (the test pinned only
+`BehaviorTreeMissionLogic`), and a translation step that cannot work until the names are registered in the
+Armory's English `Languages/loc_*.xml`. An older test idiom (a four-level path climb) came along too.
+
+**Why missed:** a clone's CODE is proven by the donor's tests, which made the whole copy feel proven. Its prose,
+comments and ledger steps are proven by nothing, and copying them reads as agreement.
+
+**Prevent:** when cloning a feature, treat every engine claim, "pinned by" line and redo or owed step in the copied
+comments and docs as new text you are asserting: verify each against the installed DLLs (`taom-src`) or the named
+test, or drop it. Fix the donor's copy too, or file it.
+
+**Source:** `docs/reviews/rca-elk-2026-09-22.md` findings F4, F5, F6 and F11 (2026-09-22).
+
+**Recurred 2026-09-23 (`docs/reviews/rca-elk-delta-2026-09-23.md` F4), from the template itself:** four statements
+said a mount agent's Character is its rider: `creature-mount-authoring.md`'s Phase 7 table and the elk, ram and
+mumakil mission behaviors cloned from it. The engine builds a mount agent with a null character (v1.5.3
+`Mission.cs:4611`), which #610 had recorded in `TaomAgentStatCalculateModel` on 2026-09-17. A fact established later
+does not flow back by itself: when you establish an engine fact, grep for the claim it contradicts (here
+`Character is the`) and fix the template first, since every clone copies it.
+
 ### A new reference into the unversioned Armory lands with a gate that reads the live file (#644, 2026-09-23)
 
 `race="nazghul"` names a race only the live `LOTRLOME_Armory/ModuleData/skins.xml` registers, and

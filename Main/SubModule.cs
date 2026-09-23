@@ -1962,6 +1962,7 @@ public class SubModule : MBSubModuleBase
         AddTaomBehavior(new Features.Elephant.ElephantMissionBehavior());
         AddTaomBehavior(new Features.Mumakil.MumakilMissionBehavior());
         AddTaomBehavior(new Features.WarRam.WarRamMissionBehavior());
+        AddTaomBehavior(new Features.Elk.ElkMissionBehavior());
         AddTaomBehavior(new SiegeDismountMissionBehavior());
         // Registered unconditionally; gates internally on its MCM toggle (off by default).
         AddTaomBehavior(new Features.SiegePropDiagnostics.Hooks.SiegePropDiagnosticsMissionBehavior());

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Dependencies.Foundation;
 using TAOM.Features.CrashReport.Collectors;
 using TAOM.Features.CrashReport.Domain;
 
@@ -128,6 +129,78 @@ public class CrashSignatureCalculatorTests
             CrashSignatureCalculator.Compute(deepA, "Foo.Bar", stack),
             CrashSignatureCalculator.Compute(deepB, "Foo.Bar", stack),
             "a difference deeper than the cap should not change the signature");
+    }
+
+    // ---- The preserved throw site (PatchShield rethrow, bundle 2d446100) ---------------------
+
+    [TestMethod]
+    public void Compute_SameTypeThroughSameFrameDifferentThrowSites_ReturnsDifferentSignatures()
+    {
+        // THE BUG: frames come from `new StackTrace(ex)`, which only sees the segment after the last
+        // rethrow. Every NullReferenceException crossing the shielded MapState.OnTick therefore had
+        // the same five frames, and the throttle suppressed occurrences #2 and #3 of 40de8e64
+        // without anyone being able to tell whether they were the same bug.
+        var stack = MakeStack("MapState.OnTick_Patch2", "GameStateManager.OnTick", "Game.OnTick");
+
+        var s1 = CrashSignatureCalculator.Compute(
+            WithThrowSite(new NullReferenceException(), "DefaultHeroCreationModel.GetBornSettlement"), "Module.OnApplicationTick", stack);
+        var s2 = CrashSignatureCalculator.Compute(
+            WithThrowSite(new NullReferenceException(), "EquipmentHelper.AssignHeroEquipmentFromEquipment"), "Module.OnApplicationTick", stack);
+
+        Assert.AreNotEqual(s1, s2, "two different throw sites must not share a crash signature");
+    }
+
+    [TestMethod]
+    public void Compute_SameThrowSite_StillDeduplicates()
+    {
+        var stack = MakeStack("MapState.OnTick_Patch2");
+
+        Assert.AreEqual(
+            CrashSignatureCalculator.Compute(WithThrowSite(new NullReferenceException(), "A.B"), "Origin", stack),
+            CrashSignatureCalculator.Compute(WithThrowSite(new NullReferenceException(), "A.B"), "Origin", stack));
+    }
+
+    [TestMethod]
+    public void Compute_TieWrappingInnersWithDifferentThrowSites_ReturnsDifferentSignatures()
+    {
+        // Every UI crash arrives as a TargetInvocationException over the same frames (#552). When the
+        // invoked method is shielded, the inner's TargetSite is the shielded wrapper (constant) and the
+        // TIE's own recorded site is the reflection path (constant), so only the INNER's recorded site
+        // can tell two real throw sites apart. Deep-review data-flow trace 4.
+        var stack = MakeStack("ViewModel.ExecuteCommand_Patch3", "GauntletView.OnCommand", "ScreenManager.Update");
+
+        var s1 = CrashSignatureCalculator.Compute(
+            WithThrowSite(new TargetInvocationException(WithThrowSite(new NullReferenceException(), "A.X")), "RuntimeMethodHandle.InvokeMethod"),
+            "ScreenManager.Update", stack);
+        var s2 = CrashSignatureCalculator.Compute(
+            WithThrowSite(new TargetInvocationException(WithThrowSite(new NullReferenceException(), "B.Y")), "RuntimeMethodHandle.InvokeMethod"),
+            "ScreenManager.Update", stack);
+
+        Assert.AreNotEqual(s1, s2, "an inner exception's preserved throw site must reach the signature");
+    }
+
+    [TestMethod]
+    public void DescribeIdentity_ThrowSiteRecorded_IncludesIt()
+    {
+        StringAssert.Contains(
+            CrashSignatureCalculator.DescribeIdentity(WithThrowSite(new NullReferenceException(), "A.B <- C.D")),
+            "A.B <- C.D");
+    }
+
+    [TestMethod]
+    public void DescribeIdentity_ThrowSiteNotAString_IsIgnored()
+    {
+        // Data is writable by anyone; only the string the preserver writes counts.
+        var ex = new NullReferenceException();
+        ex.Data[RethrowStackPreserver.ThrowSiteDataKey] = 42;
+
+        Assert.AreEqual(typeof(NullReferenceException).FullName, CrashSignatureCalculator.DescribeIdentity(ex));
+    }
+
+    private static Exception WithThrowSite(Exception ex, string site)
+    {
+        ex.Data[RethrowStackPreserver.ThrowSiteDataKey] = site;
+        return ex;
     }
 
     /// <summary>TargetInvocationException nested <paramref name="levels"/> deep around a leaf.</summary>

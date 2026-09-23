@@ -27,7 +27,7 @@ the cheap path even when the animal looks nothing like the donor. That is the wa
 
 | Record | File | Registered by | Root | Entry | Engine class |
 |---|---|---|---|---|---|
-| Mount and harness items | `LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_horses.xml` | `<XmlName id="Items" path="LOTRLOME_items/LOTRAOM_horses"/>` at `LOTRLOME_Armory/SubModule.xml:304` | `<Items>` | `<Item>` | `TaleWorlds.Core.ItemObject` |
+| Mount and harness items | `LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_horses.xml` | `<XmlName id="Items" path="LOTRLOME_items/LOTRAOM_horses"/>` at `LOTRLOME_Armory/SubModule.xml:317` | `<Items>` | `<Item>` | `TaleWorlds.Core.ItemObject` |
 | Creature definitions | `LOTRLOME_Armory/ModuleData/monsters.xml` plus seven files under `LOTRLOME_Armory/ModuleData/Monsters/LOTR/` <!-- measured: ls of that folder, 7 xml files, from the Modules folder 2026-09-05 --> | eight `<XmlName id="Monsters" .../>` rows, `LOTRLOME_Armory/SubModule.xml:216-295` <!-- measured: rg -c 'XmlName id="Monsters"' LOTRLOME_Armory/SubModule.xml 2026-09-05 --> | `<Monsters>` | `<Monster>` | `TaleWorlds.Core.Monster` |
 | Who rides it | `Main/_Module/ModuleData/troops/troops_<culture>.xml` and `Main/_Module/ModuleData/equipmentsets/` | this repo's own `SubModule.xml` | `<NPCCharacters>`, `<EquipmentRosters>` | `<equipment slot="Horse">` | see [Troops](troops.md) |
 
@@ -292,8 +292,8 @@ The item that makes it rideable:
 
 1. **`speed`, `maneuver`, `charge_damage`** are the three numbers a balance pass touches.
 2. **`monster="Monster.taom_war_ram"`** is the join to the element above, and the prefix is required.
-3. **`body_length="100"`** means "ship at authored size", and it is not mount-only: read the resize
-   recipe before changing it.
+3. **`body_length="100"`** means "ship at authored size". It scales the mount only, but not the
+   distances your own code measures against the mount: read the resize recipe before changing it.
 
 Its barding, the third record:
 

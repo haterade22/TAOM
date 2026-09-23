@@ -16,6 +16,7 @@ Quick reference index for TAOM ADRs. See individual files for complete details w
 | [008](./008-testability-requirements.md) | Testability Requirements | Business logic must be 100% unit testable | Accepted | **Mandatory** |
 | [009](./009-self-documenting-code.md) | Self-Documenting Code Standards | No inline comments, ELI5 summaries, code reads like English | Accepted | Standard |
 | [010](./010-knowledge-base-architecture.md) | Knowledge-Base Architecture | `docs/INDEX.md` + linter + backlinks + `raw/research/` layers; keep markdown links over Obsidian wikilinks | Accepted | Standard |
+| [011](./011-knowledge-delivery-tiers.md) | Knowledge Delivery Tiers | One home per fact, chosen by the narrowest trigger that reaches it: AGENTS.md for every AI, CLAUDE.md for Claude's harness, path rules carry area lessons, memory holds only resume cards | Accepted | Standard |
 
 ## Quick Rules Reference
 

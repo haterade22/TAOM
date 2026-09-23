@@ -17,6 +17,9 @@ namespace TAOM.Features.WarRam;
 /// No mount-lock: unlike the elephant/spider/Mumakil, the war ram is a player-rideable culture mount
 /// (there is a shipping ram_rider career for it), so TaomAgentStatCalculateModel does NOT gate it and
 /// this config deliberately carries no MountDifficulty constant.
+///
+/// Shared with the great elk (#636): Monster.taom_elk also names as_war_ram and plays act_war_ram_butt
+/// as its antler charge (Features/Elk/ElkConfig), so changing or reverting either reaches the elk too.
 /// </summary>
 public static class WarRamConfig
 {

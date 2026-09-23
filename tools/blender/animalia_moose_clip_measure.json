@@ -1,0 +1,183 @@
+{
+ "_comment": "tools/blender/measure_animalia_clips.py; keys are the pack's clip stems",
+ "clips": {
+  "Loco_Walk": {
+   "frames": [
+    1,
+    42
+   ],
+   "n": 42,
+   "loop_frames": 41,
+   "fit_scale": 0.8348,
+   "travel_source_m": 2.5216,
+   "loop_displacement_m": 2.105,
+   "speed_mps_at_30fps": 1.54,
+   "plants": {
+    "LF": 0.6585,
+    "RF": 0.1951,
+    "LB": 0.4878,
+    "RB": 0.9756
+   },
+   "plants_sorted": [
+    0.1951,
+    0.4878,
+    0.6585,
+    0.9756
+   ]
+  },
+  "Loco_Trot": {
+   "frames": [
+    1,
+    25
+   ],
+   "n": 25,
+   "loop_frames": 24,
+   "fit_scale": 0.8348,
+   "travel_source_m": 7.5647,
+   "loop_displacement_m": 6.315,
+   "speed_mps_at_30fps": 7.894,
+   "plants": {
+    "LF": 0.875,
+    "RF": 0.375,
+    "LB": 0.375,
+    "RB": 0.875
+   },
+   "plants_sorted": [
+    0.375,
+    0.375,
+    0.875,
+    0.875
+   ]
+  },
+  "Loco_Run": {
+   "frames": [
+    1,
+    35
+   ],
+   "n": 35,
+   "loop_frames": 34,
+   "fit_scale": 0.8348,
+   "travel_source_m": 20.1725,
+   "loop_displacement_m": 16.84,
+   "speed_mps_at_30fps": 14.859,
+   "plants": {
+    "LF": 0.1471,
+    "RF": 0.0588,
+    "LB": 0.2647,
+    "RB": 0.3824
+   },
+   "plants_sorted": [
+    0.0588,
+    0.1471,
+    0.2647,
+    0.3824
+   ]
+  },
+  "Loco_Sprint": {
+   "frames": [
+    1,
+    15
+   ],
+   "n": 15,
+   "loop_frames": 14,
+   "fit_scale": 0.8348,
+   "travel_source_m": 12.1035,
+   "loop_displacement_m": 10.104,
+   "speed_mps_at_30fps": 21.651,
+   "plants": {
+    "LF": 0.2857,
+    "RF": 0.1429,
+    "LB": 0.5714,
+    "RB": 0.7857
+   },
+   "plants_sorted": [
+    0.1429,
+    0.2857,
+    0.5714,
+    0.7857
+   ]
+  },
+  "Loco_WalkBack": {
+   "frames": [
+    1,
+    77
+   ],
+   "n": 77,
+   "loop_frames": 76,
+   "fit_scale": 0.8348,
+   "travel_source_m": 2.0172,
+   "loop_displacement_m": 1.684,
+   "speed_mps_at_30fps": 0.665,
+   "plants": {
+    "LF": 0.8026,
+    "RF": 0.3421,
+    "LB": 0.9605,
+    "RB": 0.4605
+   },
+   "plants_sorted": [
+    0.3421,
+    0.4605,
+    0.8026,
+    0.9605
+   ]
+  },
+  "Death_L": {
+   "frames": [
+    1,
+    24
+   ],
+   "n": 24,
+   "loop_frames": 23,
+   "fit_scale": 0.8348,
+   "travel_source_m": 1.0209,
+   "loop_displacement_m": 0.8523,
+   "speed_mps_at_30fps": 1.112,
+   "plants": {
+    "LF": 0.4783,
+    "RF": 0.5217,
+    "LB": 0.5217,
+    "RB": 0.6087
+   },
+   "plants_sorted": [
+    0.4783,
+    0.5217,
+    0.5217,
+    0.6087
+   ],
+   "fall_fraction": 0.5217,
+   "pelvis_z_start_end": [
+    1.668,
+    0.254
+   ]
+  },
+  "Death_R": {
+   "frames": [
+    1,
+    24
+   ],
+   "n": 24,
+   "loop_frames": 23,
+   "fit_scale": 0.8348,
+   "travel_source_m": 1.021,
+   "loop_displacement_m": 0.8523,
+   "speed_mps_at_30fps": 1.112,
+   "plants": {
+    "LF": 0.5217,
+    "RF": 0.4783,
+    "LB": 0.6087,
+    "RB": 0.5217
+   },
+   "plants_sorted": [
+    0.4783,
+    0.5217,
+    0.5217,
+    0.6087
+   ],
+   "fall_fraction": 0.5217,
+   "pelvis_z_start_end": [
+    1.668,
+    0.254
+   ]
+  }
+ }
+}

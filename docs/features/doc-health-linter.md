@@ -2,10 +2,11 @@
 
 ## Overview
 
-One read-only pass over `docs/` (plus `CLAUDE.md`, `AGENTS.md`, and the shipped ModuleData configs)
-that reports **doc rot** — the class of defect where the code moved and the prose did not. Seven
-checks, pure stdlib, no game install required. Three of the seven **block a commit** through
-`.claude/hooks/check-doc-config-drift.sh`; the other four are advisory.
+One read-only pass over `docs/` (plus the files CLAUDE.md loads, `AGENTS.md`, `.claude/rules/`, and
+the shipped ModuleData configs) that reports **doc rot**: the class of defect where the code moved
+and the prose did not. Seven checks, pure stdlib, no game install required. Three of the seven
+**block**: a commit through `.claude/hooks/check-doc-config-drift.sh`, and every push on every
+branch through `.github/workflows/doc-budget.yml`. The other four are advisory.
 
 Skill entry point: `/lint-docs`. Backs [ADR-010](../adrs/010-knowledge-base-architecture.md).
 Sibling validators: [moduledata-validation.md](moduledata-validation.md) (game data),
@@ -23,6 +24,9 @@ fact:
   v1.4.6 with a v1.4.5 snapshot header during the v1.4.7 bump. Now `check_version_consistency`.
 - **`AGENTS.md` grew to 112 KB with the review RULES starting at byte ~83.5 K**, past Codex's
   `project_doc_max_bytes` — so every Codex review ran without them. Now the eager-load budget check.
+- **CLAUDE.md regrew from 28 KB to 49 KB in six weeks, past its own cap,** because the only gate was
+  a Claude PreToolUse hook and commits made from the IDE never run it. Now the ADR-011 context
+  budget (check 7), which CI runs on every branch (#647).
 
 The fourth lesson is about the linter itself and is the reason the "what counts as a finding"
 section below is so specific: **a check that is wrong every time is a deleted check.** The
@@ -39,8 +43,8 @@ skip the whole report — including the six checks that were correct.
 | 3b | **Prose trapped in a backlinks region** | no | authored text sitting BETWEEN a file's `backlinks-start` / `backlinks-end` markers. `build_backlinks.py`'s `splice_footer` keeps only `content[:start] + regenerated footer + content[end:]`, so anything in there is deleted on its next run — no error, no conflict. The region may hold only blank lines, `## Referenced by`, and the generated link list. Uses the generator's own `rfind` semantics so it identifies the SAME region that will be rewritten, and skips `docs/reviews/raw/` (verbatim transcripts routinely QUOTE a footer). |
 | 4 | **Missing feature docs** | no | a `Main/Features/<X>/` with no `docs/features/<x>.md`. PascalCase→kebab plus a fuzzy match (exact, `-system` suffix, prefix, substring either way) — the same algorithm as `.claude/hooks/detect-docs-gaps.sh` |
 | 5 | **Config-example drift** | **yes** | a `docs/features/*.md` ```json block labelled with a config path whose values disagree with the shipped `Main/_Module/ModuleData/**/*.json`, or a doc key the shipped config no longer has. Shared keys only, so a partial example is fine; an unparseable (annotated) block is skipped rather than guessed at |
-| 6 | **Version mismatch** | **yes** | `CLAUDE.md`'s `Target: Bannerlord X`, `AGENTS.md`'s `mod for Bannerlord X`, or a `(vX snapshot)` header in `docs/reference/taleworlds-api-snapshot/{gamemodel-bases,patch-targets}.md` disagreeing with `.claude/pinned-game-version.txt` |
-| 7 | **CLAUDE.md / AGENTS.md eager budget** | **yes** (except `size-warn`) | size caps plus per-line caps on CLAUDE.md. Both files load into every session and every agent spawn, so bytes here are a permanent per-turn tax |
+| 6 | **Version mismatch** | **yes** | the `Target: Bannerlord X` line (AGENTS.md, or CLAUDE.md) or a `(vX snapshot)` header in `docs/reference/taleworlds-api-snapshot/{gamemodel-bases,patch-targets}.md` disagreeing with `.claude/pinned-game-version.txt`. No `Target:` line in either file is itself a finding, so moving the line cannot switch the check off |
+| 7 | **Context budget** ([ADR-011](../adrs/011-knowledge-delivery-tiers.md)) | **yes** (except `size-warn`) | everything CLAUDE.md loads at launch (its `@`-imports, read from CLAUDE.md itself), the orientation.md trap index, and the rules without `paths:`. These load into every session and every custom agent spawn, so bytes here are a per-turn tax. An oversized path-scoped rule warns until the path-rule diet |
 
 **Why 3b exists (2026-08-09).** `docs/features/enlistment.md` had **51 lines** of a live-session
 record sitting below its `backlinks-start` marker, and the regeneration was already armed — today's
@@ -50,18 +54,33 @@ pass then destroyed **50 lines of `REVIEW-LOG.md`** (Review 84's entire record) 
 reason, which had to be restored from `HEAD` — the bug demonstrating itself mid-fix is the reason
 this is a check and not a note.
 
-`--fail-on-drift` gates on **5, 6, and 7** — checks 1-4 never block. Within 7, only hard violations
-gate; a `size-warn` finding is report-only by design.
+`--fail-on-drift` gates on **5, 6, and 7**; checks 1-4 never block. Within 7, only hard violations
+gate; a `size-warn` finding is report-only by design. `--drift-only` runs just those three checks
+(about 0.15 s against the full run's 9 s) and is what the commit hook calls.
 
 ### Budget constants (check 7)
 
-| File | Warn | Hard cap | Current |
-|---|---|---|---|
-| `CLAUDE.md` | 44,000 B | 46,000 B | 28,070 B (2026-08-07) |
-| `AGENTS.md` | 40,000 B | 44,000 B | 38,879 B (2026-08-07) — inside the warn band |
+The caps are ADR-011's. Live numbers: `python tools/lint_docs.py --context-budget-json`, which is
+also what `/context-budget`'s `scan.sh` reads, so the report and the gate cannot disagree.
 
-Plus, on `CLAUDE.md` only: table rows ≤ 400 chars, non-table prose lines ≤ 600 chars, fenced code
-exempt. A row is an index entry; prose belongs in the doc it links to.
+| Constant | Value | Covers |
+|---|---|---|
+| `ENTRY_DOCS_MAX_BYTES` / `ENTRY_DOCS_WARN_BYTES` | 24,576 / 23,000 B | CLAUDE.md plus every file it imports, together |
+| `ENTRY_DOC_MAX_LINES` | 200 | each entry doc (the Claude Code docs' adherence ceiling) |
+| `ENTRY_DOC_MAX_TABLE_ROW` / `ENTRY_DOC_MAX_PROSE_LINE` | 400 / 600 chars | each entry doc line; fenced code exempt |
+| `TRAP_INDEX_MAX_ROWS` / `TRAP_INDEX_MAX_ROW_CHARS` | 45 / 180 | the `## Trap index` table in orientation.md |
+| `UNSCOPED_RULES_MAX_BYTES` / `UNSCOPED_RULES_WARN_BYTES` | 16,384 / 14,500 B | the rules without `paths:`, together |
+| `SCOPED_RULE_MAX_BYTES` | 12,288 B | each path-scoped rule; warn-only while `SCOPED_RULE_BUDGET_ENFORCE` is false |
+
+The entry docs are CLAUDE.md and its `@`-imports, followed four hops the way Claude Code follows
+them, with imports inside code ignored. Bytes are counted with CRLF folded to LF, so a Windows
+checkout and CI agree. Two findings exist so a check cannot be switched off in silence: an import
+that resolves to no file (`import-missing`), and a trap index that is no longer imported or has
+lost its heading (`trap-index-missing`). Both gate. The import scan reads Markdown as Claude Code
+does (a fence closes only with a run of its own character at least as long; a code span may
+cross lines within a paragraph), and rules are found recursively. A rule whose frontmatter does
+not parse loads in every session, so it counts as unscoped and is a gating
+`rule-frontmatter-invalid` finding.
 
 ## What "stale" means (check 2, the model that took two attempts)
 
@@ -143,7 +162,9 @@ python tools/lint_docs.py --summary        # --- delimited, grep-friendly counts
 python tools/lint_docs.py --quick          # dead links only (fastest; tight loops)
 python tools/lint_docs.py --report docs/reviews/doc-lint-$(date +%F).md   # atomic .tmp+rename
 python tools/lint_docs.py --fail-on-dead   # exit 1 on any dead link
-python tools/lint_docs.py --fail-on-drift  # exit 1 on checks 5/6/7 — the pre-commit gate
+python tools/lint_docs.py --fail-on-drift  # exit 1 on checks 5/6/7: the CI gate
+python tools/lint_docs.py --drift-only     # only checks 5/6/7, gating: the commit hook's mode
+python tools/lint_docs.py --context-budget-json   # entry docs, rules and caps, for tools
 ```
 
 `--summary` emits one line per check plus `total_findings`, which is the form to assert against in a
@@ -160,22 +181,25 @@ before treating it as an all-clear.
 
 | File | Role |
 |---|---|
-| `tools/lint_docs.py` | the linter — all seven checks, ~757 lines, stdlib only |
-| `tools/tests/test_lint_docs.py` | 23 unit tests over synthetic repo trees |
+| `tools/lint_docs.py` | the linter: all seven checks, stdlib only |
+| `tools/tests/test_lint_docs.py` | unit tests over synthetic repo trees, including the exit codes the gates act on |
 | `.claude/skills/lint-docs/SKILL.md` | `/lint-docs` — run + summarize; diagnostic, never auto-fixes |
-| `.claude/hooks/check-doc-config-drift.sh` | pre-commit gate; runs `--fail-on-drift` |
+| `.claude/hooks/check-doc-config-drift.sh` | pre-commit gate; runs `--drift-only` when a commit stages a file the three checks read (`tools/test_hooks.sh` 5d pins that list to the entry docs) |
+| `.github/workflows/doc-budget.yml` | runs `--fail-on-drift` on every push and pull request, every branch |
 | `.claude/pinned-game-version.txt` | the pin checks 2 and 6 read |
 | `.claude/hooks/detect-docs-gaps.sh` | SessionStart sibling of check 4; shares the slug algorithm |
 
 ## Dependencies
 
-Python 3.9+ stdlib only (`argparse`, `json`, `re`, `pathlib`, `urllib.parse`, `dataclasses`).
+Python 3.9+ stdlib (`argparse`, `json`, `re`, `pathlib`, `urllib.parse`, `dataclasses`), plus PyYAML
+when installed, to parse rule frontmatter for check 7; without it a `frontmatter-unchecked` note
+says the parse was skipped, and `doc-budget.yml` installs it.
 `Path.is_relative_to` sets the 3.9 floor. No game install, no network, no third-party packages —
 which is why this is one of the few TAOM gates that can run in CI unchanged.
 
 ## Tests
 
-`python -m unittest discover -s tools/tests -p "test_lint_docs.py"` — 23 tests, all synthetic trees
+`python -m unittest discover -s tools/tests -p "test_lint_docs.py"`: all synthetic trees
 in a tempdir with `lint_docs`'s module-level path constants repointed (`_TempRepo` /
 `_PathConstantRepo`). Repointing `DOCS_DIR` alone is not enough: `ADRS_DIR`, `REVIEWS_RAW_DIR` and the
 exempt-prefix tuples are computed at import time, so a test that misses them lints its synthetic tree
@@ -188,6 +212,11 @@ may delete this one.
 
 ## Changelog
 
+- **2026-09-23**: #647 (ADR-011). Check 7 became the context budget: the entry docs are read from
+  CLAUDE.md's imports, the trap index and the unscoped rules are capped, and a missing import or
+  trap-index heading is a finding. Check 6 reads the `Target:` line from AGENTS.md or CLAUDE.md.
+  Dead links are checked in CLAUDE.md, AGENTS.md and the rules. `--drift-only` and
+  `--context-budget-json` added; CI runs the gate on every branch.
 - **2026-08-07** — #399 (`fa7ba39b`, external contribution): stale-version model rewritten from "older
   than the pin" to "presented as the current target"; dead links skipped by target under
   `docs/reviews/raw/`; `docs/adrs/` added to the exempt prefixes; `_read_pin()` extracted. 43 findings
@@ -206,6 +235,8 @@ may delete this one.
 - [#399](https://github.com/haterade22/TAOM/pull/399) — the fix
 - [#405](https://github.com/haterade22/TAOM/issues/405) — closed: marker-word narrowing + v1.4.5/v1.4.6
   never matched
+- [#647](https://github.com/haterade22/TAOM/issues/647): ADR-011 knowledge delivery tiers; the context
+  budget and the CI workflow
 
 ---
 

@@ -174,7 +174,7 @@ co-op settings fingerprint (225 `TaomSettings` properties, 180 simulation-releva
 
 | Fact | Where | Consequence |
 |------|-------|-------------|
-| `MovementOrderStop` is `MovementStateEnum.StandGround`, and `GetOrderPositionOfUnit` returns the rider's OWN position for StandGround | `MovementOrder.cs:143-144`, `Formation.cs:1262` | A Stop never moves riders into a line. v1 issued Stop for its line-up and its reform; riders froze where they stood. Line-ups are Moves. |
+| `MovementOrderStop` is `MovementStateEnum.StandGround`, and `GetOrderPositionOfUnit` returns the rider's OWN position for StandGround | `MovementOrder.cs:143-144`, `Formation.cs:1262` | A Stop never moves riders into a line. v1 issued Stop for its line-up and its reform, and riders froze where they stood; it shipped that way for four months with 44 tests green (#586). Line-ups are Moves. |
 | `MovementOrderMove` is `Hold`; `GetOrderPositionOfUnit` returns the arrangement slot; `OnApply(Move)` calls `SetPositioning(position)` only | `MovementOrder.cs:145-147, 690-691`, `Formation.cs:1258-1259, 1206-1211` | `SetPositioning(pos, dir, spacing)` then Move keeps the direction and spacing and forms the line. |
 | `Vec2.RightVec()` is `(y, -x)` | `Vec2.cs:277` | v1's `IsAligned` measured spread ALONG the line and required 1.5 m; impossible for more than two riders. |
 | `ChargeToTarget` is inapplicable when the target has no units; the order degrades to a hold at the order position, and `Formation.Tick` substitutes a plain Charge | `MovementOrder.cs:816-817, 536-538, 1107-1115`, `Formation.cs:2291-2295` | The service re-targets on target death itself; the engine's substitute Charge re-enters Patch31 and lands in "charge now", the same re-target. |

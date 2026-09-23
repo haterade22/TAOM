@@ -1,4 +1,5 @@
 using System;
+using TAOM.Core.Validation;
 
 namespace TAOM.Features.ElephantLike;
 
@@ -46,7 +47,12 @@ public abstract class ElephantLikeAttackService : IElephantLikeAttackService
     public bool IsOffCooldown(DateTime? lastFired, DateTime now, double cooldownSeconds)
         => lastFired == null || (now - lastFired.Value).TotalSeconds >= cooldownSeconds;
 
-    public int ComputeInflictedDamage(ElephantLikeAttackKind kind, bool targetBlocking, float roll)
+    /// <summary>The largest rider multiplier <see cref="ComputeInflictedDamage"/> applies. Real career stacks sit far
+    /// below it; a value past it is corrupt data, and a large enough one would push the product past the int range,
+    /// where the cast wraps to int.MinValue.</summary>
+    public const float MaxRiderMultiplier = 10f;
+
+    public int ComputeInflictedDamage(ElephantLikeAttackKind kind, bool targetBlocking, float roll, float riderMultiplier = 1f)
     {
         int min = kind == ElephantLikeAttackKind.Trample ? _trampleMinDamage : _tuskMinDamage;
         int max = kind == ElephantLikeAttackKind.Trample ? _trampleMaxDamage : _tuskMaxDamage;
@@ -57,6 +63,8 @@ public abstract class ElephantLikeAttackService : IElephantLikeAttackService
 
         int rolled = min + (int)Math.Round(r * (max - min));
         float mult = targetBlocking ? _blockedDamageMultiplier : 1f;
-        return (int)Math.Round(rolled * mult);
+        // A positive requirement, so NaN fails it: a NaN, non-positive or past-the-cap multiplier lands the hit unscaled.
+        float rider = FiniteFloatValidator.IsFiniteInRange(riderMultiplier, float.Epsilon, MaxRiderMultiplier) ? riderMultiplier : 1f;
+        return (int)Math.Round(rolled * mult * rider);
     }
 }

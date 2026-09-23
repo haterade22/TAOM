@@ -601,6 +601,7 @@ The crew builder set team, position, direction, origin and formation. Vanilla's 
 - **Why missed:** the builder was written from what the spawn needed to work, not from what vanilla does to every troop.
 - **Prevent:** when spawning outside the troop supplier, open `Mission.GetAgentBuildDataToSpawnTroop` and `Mission.SpawnTroop` and match their builder calls and post-spawn steps, or say in a comment why one is left out.
 - **Source:** `docs/reviews/rca-howdah-prefab-review-2026-09-19.md` (delta addendum), #627; `Mission.cs:4467-4476`, `:4534-4537`.
+- **Recurred 2026-09-23 (#643, `docs/reviews/rca-elk-delta-2026-09-23.md` F1), on a struct:** `CustomAttacksUtils.TakeDamage` builds its `CombatLogData` with the constructor, which sets `DamageType = Blunt` (`CombatLogData.cs:385`). Vanilla overwrites the field only in `MissionCombatMechanicsHelper.GetAttackCollisionResults` (`:200`), which a synthetic blow never runs, so every creature blow logged Blunt for four months while a comment said the log read the collision data. The rule covers structs too: for each field the consumer reads (`GetLogString`, `:202`), find where vanilla writes it, and write it yourself when that code is skipped.
 
 ### Carrying an agent by writing its position every frame stops it fighting
 
@@ -671,3 +672,15 @@ so the gate is a defence, not a known crash fix.
   with `FiniteFloatValidator` and skip the call on failure, as the ring centre and `CustomAttacksUtils`
   do.
 - **Source:** `docs/reviews/rca-nazgul-scream-2026-09-23.md` finding 1 (2026-09-23).
+
+### Call a long all-bool engine signature with named arguments
+`CustomAttacksUtils.TakeDamage` builds a `CombatLogData` through its 17-argument constructor, fifteen of them bools, and passed them by position. The fifteenth is `crushedThrough`, which prints "Crushed through!" (`CombatLogData.cs:185-189`); TAOM passed `knockDown` there since the helper was ported, so every creature knockdown the player saw claimed a broken guard. A same-day review of the same struct fixed its `DamageType` and never mapped the other arguments.
+- **Why missed:** a positional list of bools reads as correct in any order, and a reviewer checks the argument they came for.
+- **Prevent:** name every argument of an engine constructor or factory that takes more than a few bools of one type (`crushedThrough: false`), at least from the first one TAOM sets on purpose; when reviewing such a call, map each position to the decompiled signature. `AttackCollisionData.GetAttackCollisionDataForDebugPurpose` (twelve leading bools) in the same method is the next candidate.
+- **Source:** `docs/reviews/rca-elk-delta-2026-09-23.md`, Codex F1 (#643).
+
+### Mark TAOM's own blows; never infer them from a field the engine's blows share
+A player who owns a creature's blow (#643) reached the career's "+N from ability" line, which is false for a blow that never ran the damage model. The first fix skipped every hit with a null `attackerWeapon`, because a TAOM blow has slot -1. A punch or kick has slot -1 too, and the ability's `DamageMultiplierBonus` does reach it (`SandboxAgentApplyDamageModel.cs:753`, outside the weapon branch), so the gate hid true lines to hide false ones.
+- **Why missed:** the cheapest discriminator was taken and its cost ("bare hands lose the line") accepted without asking whether the ability reaches bare hands.
+- **Prevent:** when TAOM code must tell its own engine calls apart inside an engine callback, mark them at the source: `CustomAttacksUtils.IsRegisteringSyntheticBlow` is set while `RegisterBlow` runs, and the engine raises `OnAgentHit` and `OnScoreHit` synchronously inside that call (`Agent.RegisterBlow` to `HandleBlow` to `Mission.OnAgentHit`). Confirm the callback is synchronous before relying on such a scope.
+- **Source:** `docs/reviews/rca-elk-delta-2026-09-23.md`, convergence C2 and Codex O1 (#643).

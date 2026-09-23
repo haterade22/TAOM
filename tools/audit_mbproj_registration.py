@@ -54,7 +54,7 @@ import xml.etree.ElementTree as ET
 
 DEFAULT_GAME_DIR = r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
 
-# The modules TAOM's own data surface spans (CLAUDE.md "Three-module data surface").
+# The modules TAOM's own data surface spans (docs/ai-includes/orientation.md, "Three modules").
 # Anything else installed is somebody else's module and is only audited under --all.
 TAOM_MODULES = ("TAOM", "TAOM_Map", "LOTRLOME_Armory")
 

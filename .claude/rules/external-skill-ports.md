@@ -10,7 +10,7 @@ This rule covers two cases: **authoring a skill from scratch** (§ Authoring a s
 
 ## Authoring a skill from scratch
 
-Before authoring, confirm the skill *should* exist. CLAUDE.md "Workflow → Skill convention" already gives the gate (repeatable + multi-step/chains-skills + TAOM-specific gotchas) and the "do NOT skill-ify" filter (one-offs, pure reference, single commands — descriptions load eagerly, so each skill is a permanent context tax). Two more tests from obra/superpowers worth applying: **was the technique non-obvious to you?** and **would you reference it across multiple tasks?** If a plain doc or a CLAUDE.md line would do, write that instead.
+Before authoring, confirm the skill *should* exist. CLAUDE.md "Where new knowledge goes" (item 4) already gives the gate (repeatable + multi-step/chains-skills + TAOM-specific gotchas) and the "do NOT skill-ify" filter (one-offs, pure reference, single commands; descriptions load eagerly, so each skill is a permanent context tax). Two more tests from obra/superpowers worth applying: **was the technique non-obvious to you?** and **would you reference it across multiple tasks?** If a plain doc or a CLAUDE.md line would do, write that instead.
 
 ### Description = *when to use*, not *what it does*
 

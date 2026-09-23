@@ -93,6 +93,27 @@ Enforcement is `check_ai_dashes` in `tools/lint_docs.py`, scoped to lines added 
 
 ---
 
+## 2026-09-23 compression (ADR-011)
+
+The always-load set went from seven rules (about 51 KB) to six (about 12 KB), and
+`harness-facts.md` became path-scoped ([ADR-011](../adrs/011-knowledge-delivery-tiers.md)). Every
+operative rule survived. The exact pre-compression text of any rule is in git:
+`git show f75288eb:.claude/rules/<rule>.md`.
+
+| Rule | What left, or arrived | Why |
+|---|---|---|
+| `evidence-over-claims.md` | The dated incidents: the 2026-05-29 subagent report that open-design's telemetry sent no content by default (its `app-config.ts` said `content: true`), the 2026-05-30 findings doc written before its `diff`, and the 2026-08-11 session that ran the 6,380-test suite about 15 times across seven fixes. Also references to memory files that no longer exist, and a claim that CLAUDE.md already carried a generic anti-sycophancy line (it did not). | Narrative lives here; the rule keeps the checks. |
+| `environment-failures.md` | The seven-row example table (three examples stay inline) and the 2026-09-06 laptop measurement, which lives in `development-machines.md`. | Same rule, fewer words. |
+| `output-style.md` | Lost the em-dash reversal narrative (section above) and the "about 40,000 pre-existing dashes" measurement. Gained the live-session rule from Mike's 2026-09-12 correction ("We need to take this one step at a time. No multi steps."), which had lived only in machine-local memory. | History moves here; a durable rule moves into the repo. |
+| `think-before-coding.md` | Lost the extra good and bad examples. Gained "make the goal testable before the first edit" from `working-discipline.md`. | Both fire at the same moment. |
+| `working-discipline.md` | Lost fork discipline (the harness's own Agent-tool instructions state it: never read a running agent's output file, never predict its result, never redo delegated work), the TodoWrite quality bar (no todo tool in current sessions), the inline-hook pointer (now in `harness-facts.md`) and "testable objectives" (now in `think-before-coding.md`). | Duplicates removed. The `evidence-over-claims.md` note above about fork discipline still describes the principle; its text now lives in the harness. |
+| `simplicity-criterion.md` | Wording only. | |
+| `harness-facts.md` | Became `paths:`-scoped to the harness files, and gained the 2026-09-23 facts: what subagents load, what survives compaction, which hook channels Claude sees, and that no rule fires outside the repo. | Needed while the harness is edited, not on every turn. |
+
+CLAUDE.md's closing note to run `/reload-plugins` after adding or changing a skill was dropped
+rather than moved: no session had verified it, and the documentation read for ADR-011 did not
+mention it. Re-add it with a source if it proves needed.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

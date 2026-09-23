@@ -44,4 +44,4 @@ Root cause (which hypothesis, with PE-import evidence) + the fix:
 - **If MinHook missing from the package:** fix the packaging/publish step to include `MinHook.x64.dll`.
 - Either way: document the dependency + requirement in `docs/features/native-skin-fixes.md`, and consider a clearer in-game/log message that names the *likely* cause (missing VC++ redist) rather than just "Win32 error 126."
 
-Apply the C++ port discipline in CLAUDE.md "Native C++ port discipline" + `.claude/skills/deep-review` C++ checks for any code change.
+Apply the C++ port discipline in `.claude/rules/native-cpp-ports.md` + `.claude/skills/deep-review` C++ checks for any code change.

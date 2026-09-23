@@ -109,6 +109,8 @@
     "exactly like a clean run."
   ],
   "exempt_troops": {
-    "cave_troll": "A troll is a monster, not a soldier. Its weapons are scenery-scale and deliberately slow, and the creature's threat comes from its own attacks and its mass rather than from its kit sustaining tier-10 DPS."
+    "cave_troll": "A troll is a monster, not a soldier. Its weapons are scenery-scale and deliberately slow, and the creature's threat comes from its own attacks and its mass rather than from its kit sustaining tier-10 DPS.",
+    "taom_test_animalia_elk_rider": "#646 Custom Battle test rider for the Animalia elk (troops/troops_animalia_test.xml, CustomGame only), carrying mirkwood_rochenlas's kit; not a kingdom's troop. Remove with the file.",
+    "taom_test_animalia_moose_rider": "#646 Custom Battle test rider for the Animalia moose (troops/troops_animalia_test.xml, CustomGame only), carrying mirkwood_rochenlas's kit; not a kingdom's troop. Remove with the file."
   }
 }

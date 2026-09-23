@@ -48,12 +48,12 @@ done
 if [[ ${#MISSING[@]} -gt 0 ]]; then
   echo ""
   echo "=== Feature Docs Gap Detected ==="
-  echo "Features without matching docs/features/<name>.md (CLAUDE.md requires one per feature):"
+  echo "Features without matching docs/features/<name>.md (AGENTS.md requires one per completed feature):"
   for entry in "${MISSING[@]}"; do
     echo "  - $entry"
   done
   echo ""
-  echo "Fix: write docs/features/<name>.md using docs/features/TEMPLATE.md, or add an alias doc."
+  echo "Mention these to the user once; do not write the docs unasked, since a gap can be deliberate. Template: docs/features/TEMPLATE.md."
   echo "================================="
 fi
 

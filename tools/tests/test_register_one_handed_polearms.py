@@ -4,7 +4,7 @@
 Run:  python -m unittest discover -s tools/tests -p "test_*.py"
 
 The gate's tests prove a bad state is NOTICED. These prove the fix can be REPLAYED, which is the
-other half of CLAUDE.md's dependency-module contract: the Armory is not in this repo, so after any
+other half of the dependency-module contract (orientation.md "Unversioned modules"): the Armory is not in this repo, so after any
 refresh this script is the only thing standing between the fix and a silent reversion.
 
 Each test maps to a way the replay could be wrong and still look like it worked:

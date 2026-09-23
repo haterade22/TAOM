@@ -33,7 +33,7 @@ installs are partial, so broken refs into them are environment gaps, not defects
    a file loads at all; confirm each XSLT still matches the elements it targets; a new file in a
    folder-registered Armory directory loads only after a game RESTART, so report the restart plus
    visual check as OWED; cross-module refs need a <DependedModule> (Agent 5 item 10 owns that
-   trace). Then read the CLAUDE.md "Traps" table and apply every row your files touch; each row
+   trace). Then read the trap index in `docs/ai-includes/orientation.md` and apply every row your files touch; each linked doc
    names its gate.
 
 3. BYTE FIDELITY for any file a script or bulk edit touched: BOM kept or dropped as the original

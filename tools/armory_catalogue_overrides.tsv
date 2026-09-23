@@ -19,3 +19,5 @@
 clo_witch_king	nazgul	chest	cloth layer over the Witch-King body; 'witch_king' is a proper name carrying no slot word
 witch_king	nazgul	body	the Witch-King body mesh itself; a proper name carrying no slot word
 sk_dwarf\x00\x00\x00\x00\x00\x00\x00\x00_10	dwarf	beard	name carries 8 embedded NUL bytes from a bad Kit export; it is a dwarf beard, per its tpac Race Test/Beards/SK_Dwarf_Beards_geo.tpac
+elk_001	creature	body	the great elk's body mesh (#636), filed as the war ram's sk_eb_goat_* are; 'elk' is a creature name the parser's vocabulary does not carry
+elk_saddle_001	creature	barding	the great elk's saddle, its HorseHarness item taom_elk_saddle_a (#636); 'elk' is a creature name the parser's vocabulary does not carry

@@ -7,7 +7,7 @@ The eight `taom_ram_barding_*` HorseHarness items in the LIVE
 `LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_horses.xml` carry greyscale cloth that is meant to take the
 rider's colours, so each needs `UseTeamColor="true"` (engine: `MountVisualCreator.AddMountMeshToAgentVisual` tints
 the harness mesh when `harnessItem.IsUsingTeamColor`). Added 2026-09-18 and confirmed in game. The Armory is not in
-git, so a reinstall reverts it with no signal; CLAUDE.md "A fix in a dependency module" asks for a gate in the repo.
+git, so a reinstall reverts it with no signal; the orientation.md "Unversioned modules" trap asks for a gate in the repo.
 Each item must also keep exactly ONE `<Flags>` element: `Items.xsd` allows one, and a second logs a schema error on
 every load (`docs/reference/lotrlome-war-ram-changes.md`). The same element keeps `Civilian="true"`, which every
 barding carried before the team-colour edit, so the fold into one element is checked not to have dropped it.

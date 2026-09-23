@@ -50,7 +50,7 @@ Adapted from [garrytan/gstack/context-restore](https://github.com/garrytan/gstac
 
 4. **Cross-check with current git state.** Has the branch moved? Are the files-in-flight still showing as modified? If yes, surface as "still in flight." If no, ask: "the snapshot says you were editing X, but current git is clean — was that committed since?"
 
-5. **Optionally re-Read files-in-flight.** Per `harness-facts.md` stale-file rule, if you're going to edit them, re-Read first.
+5. **Optionally re-Read files-in-flight.** Per `csharp-architecture.md` "Stale-file re-read", if you're going to edit them, re-Read first.
 
 ## Modes
 

@@ -78,4 +78,4 @@ Both are reported with actionable error messages if missing (per `.claude/rules/
 ## Related
 
 - `.claude/skills/research/SKILL.md` — broader "decompile and analyze before implementing" workflow. Use that for full analysis sessions; use `taom-src` for one-shot signature lookups.
-- `CLAUDE.md` "TaleWorlds Research — Lookup Order" — high-level routing.
+- `AGENTS.md` "Research first": high-level routing.

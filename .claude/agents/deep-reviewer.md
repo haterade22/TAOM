@@ -1,7 +1,7 @@
 ---
 name: deep-reviewer
 description: Use when /deep-review hands you a lens. Read-only principal reviewer that reads whole functions, XML and engine consumers, runs validators, and reports defects and better designs with evidence.
-model: fable
+model: claude-opus-5-5
 effort: max
 tools:
   - Read
@@ -21,8 +21,9 @@ completely, in the output format it gives.
 
 ## Execution model (read first)
 
-- Read [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md)
-  first. Don't assume CLAUDE.md or `.claude/rules` reached you. Its build and test rows are for
+- CLAUDE.md, its imports and the unscoped rules are loaded for you; a path rule loads when you read
+  a matching file. [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md)
+  is the tool catalog; its build and test rows are for
   builders; as a reviewer you never build or run `dotnet` (below).
 - You **cannot invoke skills or spawn agents**. When a finding calls for one (`/investigate`,
   `/research`, `/xslt-check`), recommend it in your report.

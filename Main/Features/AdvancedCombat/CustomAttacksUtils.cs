@@ -89,7 +89,39 @@ public class CustomAttacksUtils
             TaleWorlds.Library.Debug.Print($"[TAOM] CustomAttacksUtils.RegisterBlow: Skipped - initialization failed: {_initializationError ?? "delegate is null"}", 0, TaleWorlds.Library.Debug.DebugColor.Yellow);
             return;
         }
-        _registerBlow(Mission.Current, attacker, victim, realHitEntity, b, ref collisionData, in attackerWeapon, ref combatLogData);
+        using (EnterSyntheticBlow())
+            _registerBlow(Mission.Current, attacker, victim, realHitEntity, b, ref collisionData, in attackerWeapon, ref combatLogData);
+    }
+
+    // The flag belongs to the thread registering the blow, which is the thread the engine raises its hit callbacks on.
+    [ThreadStatic] private static int _syntheticBlowDepth;
+
+    /// <summary>
+    /// True while <see cref="RegisterBlow"/> is registering one of TAOM's blows. The engine raises its hit callbacks
+    /// synchronously inside that call (v1.5.3 <c>Mission.RegisterBlow</c>, <c>Agent.RegisterBlow</c>, <c>HandleBlow</c>,
+    /// <c>Mission.OnAgentHit</c>, then every behavior's <c>OnScoreHit</c>), so a listener can tell a blow TAOM wrote
+    /// directly, past the damage model, from one the engine computed.
+    /// </summary>
+    public static bool IsRegisteringSyntheticBlow => _syntheticBlowDepth > 0;
+
+    /// <summary>Marks the calling thread as registering a TAOM blow until the scope is disposed. Scopes nest.</summary>
+    public static SyntheticBlowScope EnterSyntheticBlow()
+    {
+        _syntheticBlowDepth++;
+        return new SyntheticBlowScope(entered: true);
+    }
+
+    /// <summary>The scope <see cref="EnterSyntheticBlow"/> returns; a default instance disposes as a no-op.</summary>
+    public readonly struct SyntheticBlowScope : IDisposable
+    {
+        private readonly bool _entered;
+
+        internal SyntheticBlowScope(bool entered) => _entered = entered;
+
+        public void Dispose()
+        {
+            if (_entered) _syntheticBlowDepth--;
+        }
     }
 
     public static void TakeDamage(Agent victim, int damage, float magnitude = 50f, bool knockDown = false)
@@ -97,7 +129,16 @@ public class CustomAttacksUtils
         TakeDamage(victim, victim, damage, magnitude, knockDown);
     }
 
-    public static void TakeDamage(Agent victim, Agent attacker, int damage, float magnitude = 50f, bool knockDown = false, BlowFlags extraFlags = BlowFlags.None)
+    /// <param name="damageType">The blow's damage type: Pierce unless the caller asks otherwise, and only the elk's antler
+    /// charge does (Blunt, #636). The damage is written directly, so armour never reduces it whatever the type. The type
+    /// sets the combat log's wording and, for Blunt, the killed-or-wounded rule, which <see cref="ComposeWeaponFlags"/>
+    /// keeps lethal.</param>
+    /// <param name="chargeImpactSound">Play a creature's charge impact instead of the sound the engine picks from the
+    /// owner. The engine gives a weaponless blow the charge-damage sound only when its owner is not humanoid
+    /// (<c>BlowWeaponRecord.GetHitSound</c>), and a rider owns the elephant-like creatures' blows since #643, so they
+    /// ask for it (Mike, 2026-09-23). The warg, spider and signature strikes keep the engine's choice.</param>
+    public static void TakeDamage(Agent victim, Agent attacker, int damage, float magnitude = 50f, bool knockDown = false, BlowFlags extraFlags = BlowFlags.None,
+        DamageTypes damageType = DamageTypes.Pierce, bool chargeImpactSound = false)
     {
         if (victim == null || attacker == null) return;
 
@@ -127,7 +168,7 @@ public class CustomAttacksUtils
 
         Blow blow = new(attacker.Index)
         {
-            DamageType = DamageTypes.Pierce,
+            DamageType = damageType,
             // -1 ("no bone"), NOT victim.Monster.HeadLookDirectionBoneIndex — see the bone-index comment below.
             BoneIndex = NoBoneIndex,
             GlobalPosition = (attacker.Position + victim.Position) * 0.5f
@@ -135,6 +176,7 @@ public class CustomAttacksUtils
         blow.GlobalPosition.z += victim.GetEyeGlobalHeight();
         blow.BaseMagnitude = magnitude;
         blow.WeaponRecord.FillAsMeleeBlow(null, null, -1, -1);
+        blow.WeaponRecord.WeaponFlags |= ComposeWeaponFlags(damageType);
         blow.InflictedDamage = damage;
         blow.SwingDirection = victim.LookDirection;
         MatrixFrame frame = victim.Frame;
@@ -142,7 +184,7 @@ public class CustomAttacksUtils
         blow.SwingDirection.Normalize();
         blow.Direction = blow.SwingDirection;
         blow.DamageCalculated = true;
-        blow.BlowFlag |= ComposeBlowFlags(knockDown, victim.HasMount, extraFlags);
+        blow.BlowFlag |= ComposeBlowFlags(knockDown, victim.HasMount, extraFlags | ChargeImpactFlags(chargeImpactSound));
 
         // Native-boundary geometry guard (spider auto-bite crash RCA 2026-06-14). GlobalPosition /
         // SwingDirection / BaseMagnitude are the ONLY TAOM-supplied floats that reach native code
@@ -172,17 +214,16 @@ public class CustomAttacksUtils
         // part is already hardcoded to BoneBodyPartType.Abdomen below, and damage/knockdown/death never read
         // BoneIndex. (mainHandItemBoneIndex is the ATTACKER's own bone, unaffected by victim teardown.)
         sbyte mainHandItemBoneIndex = attacker.Monster.MainHandItemBoneIndex;
-        // The 3 positional ints below map to (affectorWeaponSlotOrMissileIndex,
-        // StrikeType, DamageType). DamageType MUST match blow.DamageType — vanilla's
-        // combat-log message generator reads the collision data's DamageType, not the
-        // Blow's, so a mismatch makes hits read "Blunt" in the in-game log even when
-        // the Blow correctly says Pierce. LOTRAOM had this set to `2` (Blunt), which
-        // was a long-standing bug that only became visible once warg bites started
-        // landing reliably (post-cc9e0c4). See plan file 2026-05-27.
+        // The 3 positional ints below map to (affectorWeaponSlotOrMissileIndex, StrikeType, DamageType), and
+        // DamageType matches blow.DamageType (LOTRAOM had `2`, Blunt; fixed 2026-05-27). The combat log does not
+        // read it: vanilla copies the collision type into CombatLogData.DamageType inside
+        // MissionCombatMechanicsHelper.GetAttackCollisionResults (v1.5.3 line 200), which a synthetic blow never
+        // runs, and the CombatLogData constructor sets Blunt. So the log's type is set after the constructor below;
+        // until 2026-09-23 every creature blow logged as Blunt.
         AttackCollisionData attackCollisionDataForDebugPurpose = AttackCollisionData.GetAttackCollisionDataForDebugPurpose(
             false, false, false, true, false, false, false, false, false, false, false, false,
             CombatCollisionResult.StrikeAgent,
-            -1, 0, (int)DamageTypes.Pierce,
+            -1, 0, (int)damageType,
             blow.BoneIndex,
             BoneBodyPartType.Abdomen,
             mainHandItemBoneIndex,
@@ -199,9 +240,48 @@ public class CustomAttacksUtils
             Vec3.Up
         );
 
-        CombatLogData combatLogData = new(false, attacker.IsHuman, attacker.IsMine, attacker.RiderAgent != null, attacker.RiderAgent != null && attacker.RiderAgent.IsMine, attacker.IsMount, victim.IsHuman, victim.IsMine, victim.Health <= 0f, victim.RiderAgent != null, victim.RiderAgent != null && victim.RiderAgent.IsMine, victim.IsMount, null, victim.RiderAgent == victim, knockDown, false, 0f);
+        // Named, because fifteen of these are bools read by position: crushedThrough prints "Crushed through!"
+        // (CombatLogData.cs:185) and was passed knockDown until 2026-09-23, so every creature knockdown the player saw
+        // read as a broken guard; isVictimRiderAgentSameAsAttackerAgent compared the victim with itself where vanilla
+        // compares the victim's rider with the attacker (Mission.cs:6529). A synthetic blow never crushes a defence.
+        CombatLogData combatLogData = new(
+            isVictimAgentSameAsAttackerAgent: false,
+            isAttackerAgentHuman: attacker.IsHuman,
+            isAttackerAgentMine: attacker.IsMine,
+            doesAttackerAgentHaveRiderAgent: attacker.RiderAgent != null,
+            isAttackerAgentRiderAgentMine: attacker.RiderAgent != null && attacker.RiderAgent.IsMine,
+            isAttackerAgentMount: attacker.IsMount,
+            isVictimAgentHuman: victim.IsHuman,
+            isVictimAgentMine: victim.IsMine,
+            isVictimAgentDead: victim.Health <= 0f,
+            doesVictimAgentHaveRiderAgent: victim.RiderAgent != null,
+            isVictimAgentRiderAgentIsMine: victim.RiderAgent != null && victim.RiderAgent.IsMine,
+            isVictimAgentMount: victim.IsMount,
+            missionObjectHit: null,
+            isVictimRiderAgentSameAsAttackerAgent: victim.RiderAgent == attacker,
+            crushedThrough: false,
+            chamber: false,
+            distance: 0f);
+        combatLogData.DamageType = damageType;
         MissionWeapon weapon = MissionWeapon.Invalid;
+        // Before the blow, as the engine orders its own sound block inside HandleBlow.
+        if (chargeImpactSound && !_initializationFailed && _registerBlow != null)
+            PlayChargeImpactSound(attacker, victim, blow.GlobalPosition);
         RegisterBlow(attacker, victim, WeakGameEntity.Invalid, blow, ref attackCollisionDataForDebugPurpose, in weapon, ref combatLogData);
+    }
+
+    // The engine's hit-sound block for this blow (v1.5.3 Agent.HandleBlow :5466-5484), which a NoSound blow skips,
+    // replayed with the sound GetHitSound gives a non-humanoid owner. A synthetic blow has no bone, so the armour type
+    // is None, as the engine would have read it; it is neither a missile nor a sneak attack, so no player-hit sound is
+    // due and the alarm is.
+    private static void PlayChargeImpactSound(Agent owner, Agent victim, Vec3 position)
+    {
+        var mission = Mission.Current;
+        if (mission == null) return;
+        var parameter = new SoundEventParameter("Armor Type", Agent.GetSoundParameterForArmorType(ArmorComponent.ArmorMaterialTypes.None));
+        mission.MakeSound(CombatSoundContainer.SoundCodeMissionCombatChargeDamage, position,
+            soundCanBePredicted: false, isReliable: true, owner.Index, victim.Index, ref parameter);
+        mission.AddSoundAlarmFactorToAgents(owner, in position, 7f);
     }
 
     /// <summary>
@@ -218,6 +298,22 @@ public class CustomAttacksUtils
         if (knockDown) flags |= victimHasMount ? BlowFlags.CanDismount : BlowFlags.KnockDown;
         return flags;
     }
+
+    /// <summary>
+    /// <c>NoSound</c> for a blow whose charge impact TAOM plays itself (<c>TakeDamage</c>'s <c>chargeImpactSound</c>),
+    /// so the engine does not also play the punch it picks for a human owner. Pure, pinned by CreatureImpactSoundTests.
+    /// </summary>
+    public static BlowFlags ChargeImpactFlags(bool chargeImpactSound)
+        => chargeImpactSound ? BlowFlags.NoSound : BlowFlags.None;
+
+    /// <summary>
+    /// The weapon flags a synthetic blow carries beyond the empty melee record: <c>CanKillEvenIfBlunt</c> for a Blunt
+    /// blow, nothing otherwise. The engine reads the killing blow's weapon flags when it decides killed or wounded, and a
+    /// Blunt blow without this flag always wounds (<c>DefaultPartyHealingModel.GetSurvivalChance</c>, v1.5.3), so a
+    /// creature's Blunt blow kills as its Pierce blows always have. Pure, pinned by CustomAttacksUtilsBlowFlagsTests.
+    /// </summary>
+    public static WeaponFlags ComposeWeaponFlags(DamageTypes damageType)
+        => damageType == DamageTypes.Blunt ? WeaponFlags.CanKillEvenIfBlunt : 0;
 
     private static long _nonFiniteBlowSkips;
     private static long _staleBlowSkips;

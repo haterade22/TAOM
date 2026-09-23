@@ -384,7 +384,7 @@ Code: Code changes required in `Main/Features/TroopProgression/` if the id has a
 
 ## Gotchas: what fails silently and what crashes
 
-- **The repo copy is a decoy.** `Main/_Module/ModuleData/settlements.xml` is 125 settlements and three months behind the live file, and it is not registered in `Main/_Module/SubModule.xml`. Editing it looks exactly like working (`CLAUDE.md` Traps, [taom-map-settlement-naming.md](../reference/taom-map-settlement-naming.md)).
+- **The repo copy is a decoy.** `Main/_Module/ModuleData/settlements.xml` is 125 settlements and three months behind the live file, and it is not registered in `Main/_Module/SubModule.xml`. Editing it looks exactly like working (`orientation.md` trap index, [taom-map-settlement-naming.md](../reference/taom-map-settlement-naming.md)).
 - **A wrong entrance coordinate wedges the AI with no crash and no log line.** An entrance can sit on a navmesh island the rest of the map cannot path to. `PathFaceRecord.IsValid()` returns true for such a face, so an off-mesh check finds nothing; only comparing island indices does. Never hand-pick a replacement, run `taom.audit_settlement_entrances` in a loaded campaign and take the coordinate the engine computes ([dev-console.md](../features/dev-console.md) and `Main/Features/DevConsole/Cheats/SettlementEntranceCheats.cs`).
 - **A `<Location>` element blanks the template's scene names.** Every slot you do not write becomes an empty string, not the inherited value (`Settlement.cs:1003-1009`).
 - **A missing scene folder crashes on entry, far from the XML.** It reads as "battles near this place crash", not as bad data ([scene-reference-audit.md](../reference/scene-reference-audit.md)).
@@ -396,7 +396,7 @@ Code: Code changes required in `Main/Features/TroopProgression/` if the id has a
 - **The commit hook never fires on this file.** `.claude/hooks/check-moduledata-validation.sh` runs the validator only when the commit stages a path under `Main/_Module/ModuleData/*.xml` (lines 68 to 74), and this file is not in the repo at all. Run `python tools/validate_moduledata.py` by hand.
 - **What the validator covers here is narrow.** `TAOM_Map` contributes exactly two files to a run: `settlements.xslt` (one boolean, does it strip vanilla) and `settlements.xml` (the culture attribute plus town and village economy). Its 1,012 `Culture.` references are never swept, and because those ids feed the validator's own settled-culture set, a typo there masks a `LANDLESS_CULTURE` error instead of raising one ([`tools/README.md`](../../tools/README.md) line 37, [moduledata-validation.md](../features/moduledata-validation.md)).
 - **Siege camps are a scene contract, not a data one.** A settlement whose scene has no `siege_camp_1` entity logs a warning and runs on a safety net; the fix is in the map editor ([siege.md](../features/siege.md)).
-- **`tools/check_prefab_budget.py` counts only `TAOM_Map/Prefabs`** against a cap the engine applies across every loaded module, so it reports healthy at 99 percent of the real budget (`CLAUDE.md` Traps).
+- **`tools/check_prefab_budget.py` counts only `TAOM_Map/Prefabs`** against a cap the engine applies across every loaded module, so it reports healthy at 99 percent of the real budget (`orientation.md` trap index).
 
 ### What TAOM has not answered
 

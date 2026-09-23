@@ -139,7 +139,7 @@ Two consequences to carry into every chapter:
 - **For the two live modules, the edit is the deployment.** `TAOM_Map/ModuleData/settlements.xml` and
   every file under `LOTRLOME_Armory/ModuleData/LOTRLOME_items/` live in the game install, not the
   repo; a module reinstall reverts hand edits, so land a repo-side validator gate with any fix
-  ([CLAUDE.md](../../CLAUDE.md) Traps, "A fix in a dependency module").
+  ([orientation.md](../ai-includes/orientation.md) trap index, "Unversioned modules").
 - **The deploy of `TAOM` never deletes.** `CopyModule` mirrors `Main/_Module` into the install with
   `Clean="false"`, so a file you delete from the repo lives on in the game until you remove the
   installed copy by hand

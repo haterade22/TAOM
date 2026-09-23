@@ -1,8 +1,8 @@
 # MCP Servers
 
-> Extracted from CLAUDE.md 2026-08-05 (eager-context diet round 2). CLAUDE.md keeps the MCP
-> Usage Guide (which tool for which task) + a 4-line taom-src lookup-order summary; this file
-> holds the full server table, the research lookup-order detail, and configuration.
+> Extracted from CLAUDE.md 2026-08-05. CLAUDE.md keeps a short "MCP and shell" summary and AGENTS.md
+> the one-line research order; this file holds the server table (which tool for which task), the
+> research lookup-order detail, and configuration.
 
 ## Server table
 
@@ -71,7 +71,7 @@ Enabled plugins add their own skills alongside TAOM's and the MCP servers. Where
 | Job | TAOM route | Overlapping plugin/server |
 |-----|-----------|---------------------------|
 | Pre-commit C# or XML review | `/deep-review` (+ `/review-codex`) | `code-review` plugin (`/code-review`, kept for `/code-review ultra` cloud review) |
-| GitHub issues/PRs | `gh` CLI (per CLAUDE.md MCP Usage Guide: GitHub MCP when authenticated) | `github` plugin, `github` MCP server |
+| GitHub issues/PRs | `gh` CLI (GitHub MCP when authenticated) | `github` plugin, `github` MCP server |
 | Redundant-code deletion | `/deslop` | `code-simplifier` plugin (`/simplify`) — disabled 2026-08-05 |
 
 ---

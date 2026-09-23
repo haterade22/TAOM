@@ -141,7 +141,7 @@ Three consequences, each with its file-level detail in [File catalogue](file-cat
   content that neither `SubModule.xml` nor `project.mbproj` mentions at all. <!-- measured: wc -c on both files; grep -c settlement_track over TAOM_Map/SubModule.xml and TAOM_Map/ModuleData/project.mbproj, 0 and 0 2026-09-05 -->
 - **The repo's `settlements.xml` is a dead copy.** `id="Settlements"` occurs 0 times in
   `Main/_Module/SubModule.xml`; the repo file holds 863 `<Settlement>` elements in 1,023,041 bytes, the
-  live `TAOM_Map/ModuleData/settlements.xml` 988 in 1,153,217 bytes ([CLAUDE.md](../../CLAUDE.md) Traps,
+  live `TAOM_Map/ModuleData/settlements.xml` 988 in 1,153,217 bytes ([orientation.md](../ai-includes/orientation.md) trap index,
   "TAOM_Map settlements"). <!-- measured: grep -c 'id="Settlements"' Main/_Module/SubModule.xml; python re.findall(rb'<Settlement\s') over both files 2026-09-05 -->
 - **`TAOM_Map`'s `project.mbproj` is inert.** 9 `<Module id=...>` rows and 0 `<file>` rows, and
   `GetMbprojxmls` selects only `base/file` nodes (`XmlResource.cs:117`); `TAOM`'s mbproj has 5 `<file>`
@@ -167,16 +167,16 @@ walks every copy target. Two facts follow from `Clean="false"`:
 
 Both repo modules keep their whole `_Module` folder in the repo, and so do the 4 alias-stub manifests
 under `Stubs/`. `Main/_Module/bin` holds 7 files, of which only `MinHook.x64.dll` and
-`TAOM.NativeSkinFixes.dll` are vendored binaries the repo is allowed to carry ([CLAUDE.md](../../CLAUDE.md)
-Traps, "Vendored DLLs"); the rest is build output. `Dependencies/_Module/bin` holds 42, the bundled
+`TAOM.NativeSkinFixes.dll` are vendored binaries the repo is allowed to carry ([orientation.md](../ai-includes/orientation.md)
+trap index, "Vendored DLLs"); the rest is build output. `Dependencies/_Module/bin` holds 42, the bundled
 BUTR stack ([Module Dependencies](module-dependencies.md) has the allowlist). <!-- measured: find Main/_Module/bin -type f | wc -l; find Dependencies/_Module/bin -type f | wc -l; find Stubs -name SubModule.xml | wc -l 2026-09-05 -->
 
 **Live-only modules: `TAOM_Map` and `LOTRLOME_Armory`.** The repo holds no copy of either module: the
 only directory under the repo root carrying one of those names is a report output folder,
 `tools/reports/mesh-audit/LOTRLOME_Armory`. <!-- measured: find . -type d -name TAOM_Map -o -type d -name LOTRLOME_Armory 2026-09-05 -->
 There is no build and no deploy; an edit to `LOTRLOME_Armory/ModuleData/LOTRLOME_items/gondor/body_armors.xml`
-is the deployment, and a module reinstall silently reverts it ([CLAUDE.md](../../CLAUDE.md) Traps, "A fix
-in a dependency module"). The standing mitigation is an idempotent replay script plus an in-repo gate,
+is the deployment, and a module reinstall silently reverts it ([orientation.md](../ai-includes/orientation.md) trap index, "Unversioned
+modules"). The standing mitigation is an idempotent replay script plus an in-repo gate,
 and for the highest-value Armory files a restore point under
 [`docs/reference/lotrlome-armory-snapshot/`](../reference/lotrlome-armory-snapshot/README.md), whose
 "DO NOT REGISTER" section (lines 41-43) is load-bearing: referencing those copies from
@@ -215,7 +215,7 @@ can never write it, `package_release.py:3-10`), `ASSET_SOURCES` 33.44 GB, `PREFA
 (`:355-359`), and `project.mbproj` is never excluded because the shipping runtime reads it
 (`:126-135`). The four asset folders, and why `LOTRLOME_Armory` ships no `AssetPackages/` at all, are
 [bannerlord-engine-and-toolchain](../reference/bannerlord-engine-and-toolchain.md) section 6.1 and
-[CLAUDE.md](../../CLAUDE.md) Traps, "Armory asset trees".
+[orientation.md](../ai-includes/orientation.md) trap index, "Armory asset tree".
 
 Backup sidecars leave the modules first, because `.bak` breaks the Cloudflare distribution
 ([module-backup-sweep](../reference/module-backup-sweep.md)). `pwsh tools/sweep_module_backups.ps1` is
@@ -551,7 +551,7 @@ All measured 2026-09-05 on this machine; the game install is referred to as `<ga
 - [moduledata-validation](../features/moduledata-validation.md) and the [moduledata-validation rule](../../.claude/rules/moduledata-validation.md): what each validator reaches in each module.
 - [worldmap-battle-scene-grid](../reference/worldmap-battle-scene-grid.md), [main-map-vista](../reference/main-map-vista.md) and [taom-map-settlement-naming](../reference/taom-map-settlement-naming.md): the map module's own references.
 - [provenance-register](../reference/provenance-register.md): what the shipped modules redistribute and under which terms.
-- [CLAUDE.md](../../CLAUDE.md) Traps ("TAOM_Map settlements", "A fix in a dependency module", "Three-module data surface", "Vendored DLLs", "Armory asset trees") and [agent-operating-manual](../ai-includes/agent-operating-manual.md) for the `-p:DisableModuleCopy=true` caveat.
+- [orientation.md](../ai-includes/orientation.md) trap index ("TAOM_Map settlements", "Unversioned modules", "Vendored DLLs", "Armory asset tree") and "Where things are" (three modules), and [agent-operating-manual](../ai-includes/agent-operating-manual.md) for the `-p:DisableModuleCopy=true` caveat.
 
 ---
 

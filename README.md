@@ -147,7 +147,7 @@ hand-kitbashed in the editor — see the [build reference](docs/kitbash/erebor/)
 messengers, quick-action inventory, banner color persistence, settlement guards, custom battles,
 siege defense, tournament armor, shader precompilation, and more). Each is documented under
 [`docs/features/`](docs/features/). LOTR rules are enforced through **39 GameModel overrides** and
-**30+ Harmony patch categories** — both registries are catalogued in [CLAUDE.md](CLAUDE.md).
+**30+ Harmony patch categories**: both registries are catalogued in [harmony-patch-registry.md](docs/reference/harmony-patch-registry.md) and [gamemodel-registry.md](docs/reference/gamemodel-registry.md).
 
 ## How It's Built (AI-assisted pipeline)
 
@@ -156,7 +156,7 @@ TAOM is developed with a structured, AI-assisted engineering pipeline.
 - **[Claude Code](https://docs.anthropic.com/en/docs/claude-code)** is integrated as more than a
   code generator: 41 custom slash-command skills, 5 specialized agents, 22 automated hooks,
   18 path-scoped rule files, persistent cross-session memory, and 7 MCP servers (symbolic code
-  navigation, decompilation, git, GitHub). [CLAUDE.md](CLAUDE.md) is the authoritative reference
+  navigation, decompilation, git, GitHub). [AGENTS.md](AGENTS.md), with Claude's [CLAUDE.md](CLAUDE.md) layer, is the authoritative reference
   every session loads.
 - **Codex** (OpenAI) runs as an *independent adversarial reviewer* — it shares no session context
   with Claude, so it provides a genuine second opinion. 40+ reviews completed to date; review
@@ -178,7 +178,7 @@ existing saves are not supported.
 
 ## Contributing
 
-1. Read [CLAUDE.md](CLAUDE.md) for coding standards and conventions
+1. Read [AGENTS.md](AGENTS.md) for coding standards and conventions
 2. Write tests first — TDD is mandatory
 3. Use the adapter pattern for any TaleWorlds sealed type
 4. Keep Harmony patches and entry points thin (< 150 lines); delegate to services

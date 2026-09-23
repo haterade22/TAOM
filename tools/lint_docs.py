@@ -28,6 +28,13 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from urllib.parse import urlparse
 
+# PyYAML, when present, parses rule frontmatter for the context budget: a rule whose frontmatter
+# fails to parse loads in every session. Everything else here is stdlib; CI installs PyYAML.
+try:
+    import yaml as _yaml
+except ImportError:
+    _yaml = None
+
 # Repo root resolved from this script's location: tools/lint_docs.py -> repo root
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DOCS_DIR = REPO_ROOT / "docs"
@@ -35,34 +42,36 @@ FEATURES_DIR = DOCS_DIR / "features"
 MIGRATION_DIR = DOCS_DIR / "migration"
 ARCHIVE_DIR = DOCS_DIR / "archive"
 AUDITS_DIR = DOCS_DIR / "audits"
-# CLAUDE.md eager-load budget. CLAUDE.md loads into EVERY session and every agent spawn, so
-# every KB is a permanent per-turn tax. Two restructures thinned it: 174 KB -> 91 KB
-# (2026-07-12), then 93.6 KB -> ~42 KB (2026-07-18) by moving the four big index tables
-# (Key Paths, Harmony, GameModel, Doc Lookup) and the procedure sections (Localization, Codex,
-# Hooks, Equipment, PowerShell) out to docs/reference/*.md behind one-line stubs. The rule that
-# keeps it lean: CLAUDE.md answers "what must I never do, and where do I look next?" — a section
-# that answers "how do I do X" is a skill body; "what are all the X" is a docs/reference/ file
-# with a stub. Caps are calibrated to the ~42 KB landing; tighten further if the index is
-# slimmed again. NOTE: new features now add their row to docs/reference/feature-map.md, NOT to
-# a Key Paths table here (that table moved) — so CLAUDE.md should barely grow per feature.
-CLAUDE_MD = REPO_ROOT / "CLAUDE.md"
-CLAUDE_MD_MAX_BYTES = 46_000       # hard cap (fails --fail-on-drift); was 100_000 pre-2026-07-18
-CLAUDE_MD_WARN_BYTES = 44_000      # report-only early warning; was 95_000
-CLAUDE_MD_MAX_TABLE_ROW = 400      # chars; thin rows run ~80-300
-CLAUDE_MD_MAX_PROSE_LINE = 600     # chars; catches paragraph bloat outside tables
-# Enforcement flipped ON at the end of the decomposition (2026-07-12, Track C8).
-CLAUDE_MD_BUDGET_ENFORCE = True
-
-# AGENTS.md eager-load budget (added 2026-07-18). Codex reads AGENTS.md but TRUNCATES it at
-# project_doc_max_bytes. Before the rebuild, AGENTS.md was 112 KB with the actual review RULES
-# starting at byte ~83.5 K — past even the 64 KB flagged cap — so Codex reviewed without them.
-# The `.claude/skills/{codex-verify,review-codex,deep-review}` dispatch commands now pass
-# `-c project_doc_max_bytes=65536`; this budget keeps AGENTS.md well under that so the rules
-# (which must sit early) never get pushed past the cap again. THIS is the check that would have
-# caught the truncation. Historical catch-log lives in docs/reviews/codex-track-record.md.
-AGENTS_MD = REPO_ROOT / "AGENTS.md"
-AGENTS_MD_MAX_BYTES = 44_000       # hard cap (fails --fail-on-drift)
-AGENTS_MD_WARN_BYTES = 40_000      # report-only early warning
+# Context budget (ADR-011). Everything CLAUDE.md loads at launch, which is CLAUDE.md plus its
+# @-imports (entry_docs() reads them from CLAUDE.md itself), is paid by every session and every
+# custom or general-purpose subagent, and again after /compact. So is every rule without a
+# `paths:` field. These caps are ADR-011's ceilings; the 2026-09-23 landing was about 22 KB of
+# entry docs and about 12 KB of unscoped rules, down from 52.6 KB and 51 KB. What keeps them there is
+# ADR-011's routing: a trap's full text lives in its owning doc with one line in the orientation.md
+# trap index, a standing lesson is one line in its area rule, and nothing is restated. AGENTS.md
+# alone is also capped at 8,192 bytes by tools/reviewctl.py (the provider-neutral bootstrap every
+# Codex session pays for), which is stricter than anything here. Bytes are counted with CRLF
+# folded to LF, so a Windows checkout and CI agree.
+ENTRY_DOC_ROOT = "CLAUDE.md"
+IMPORT_MAX_HOPS = 4                # Claude Code follows nested @-imports this deep (memory docs)
+ENTRY_DOCS_MAX_BYTES = 24_576      # hard cap on the entry docs together (fails --fail-on-drift)
+ENTRY_DOCS_WARN_BYTES = 23_000     # report-only early warning
+ENTRY_DOC_MAX_LINES = 200          # per file: the Claude Code docs' adherence ceiling
+ENTRY_DOC_MAX_TABLE_ROW = 400      # chars; a row is an index entry
+ENTRY_DOC_MAX_PROSE_LINE = 600     # chars; catches paragraph bloat outside tables
+TRAP_INDEX_DOC = "docs/ai-includes/orientation.md"
+TRAP_INDEX_HEADING = "## Trap index"
+TRAP_INDEX_MAX_ROWS = 45           # when full, merge a line or move one into its area rule
+TRAP_INDEX_MAX_ROW_CHARS = 180
+RULES_DIR_REL = ".claude/rules"
+UNSCOPED_RULES_MAX_BYTES = 16_384  # hard cap on every rule without `paths:`, together
+UNSCOPED_RULES_WARN_BYTES = 14_500
+SCOPED_RULE_MAX_BYTES = 12_288     # per path-scoped rule
+# Report-only until the path-rule diet (ADR-011) brings every scoped rule under the cap.
+SCOPED_RULE_BUDGET_ENFORCE = False
+# Budget findings that report without failing --fail-on-drift / --drift-only.
+REPORT_ONLY_BUDGET_KINDS = frozenset({"size-warn", "frontmatter-unchecked"})
+CONTEXT_BUDGET_ENFORCE = True
 
 # Rolled-out CHANGELOG halves: verbatim historical text whose links/versions were written
 # relative to the repo root at the time — never lint them as living docs.
@@ -614,9 +623,10 @@ def check_config_example_drift(files: list[Path]) -> list[tuple[Path, int, str, 
 
 # --- version consistency ----------------------------------------------------
 # The canonical committed game-version markers must agree with the pin
-# (.claude/pinned-game-version.txt): CLAUDE.md's "Target: Bannerlord X" line(s) and the
-# API-snapshot headers. Catches "pin bumped but a doc/snapshot left stale" — the exact
-# drift this repo was in at the start of the v1.4.7 bump (pin v1.4.6, snapshot v1.4.5).
+# (.claude/pinned-game-version.txt): the "Target: Bannerlord X" line in AGENTS.md (its home since
+# ADR-011) or CLAUDE.md, and the API-snapshot headers. Catches "pin bumped but a doc/snapshot left
+# stale", the drift this repo was in at the start of the v1.4.7 bump (pin v1.4.6, snapshot v1.4.5).
+# A repo with no Target line at all is itself a finding, so moving the line never disables the check.
 def _norm_ver(s: str) -> str:
     return s.strip().lower().lstrip("v")
 
@@ -628,28 +638,34 @@ def check_version_consistency() -> list[tuple[Path, int, str, str]]:
     if not pin:
         return findings
 
-    def check_file(path: Path, pattern: re.Pattern, what: str):
+    def check_file(path: Path, pattern: re.Pattern, what: str) -> bool:
+        """Report every match that disagrees with the pin; return whether anything matched."""
         if not path.exists():
-            return
+            return False
         try:
             text = path.read_text(encoding="utf-8", errors="replace")
         except OSError:
-            return
+            return False
+        matched = False
         for lineno, line in enumerate(text.splitlines(), start=1):
             m = pattern.search(line)
-            if m and _norm_ver(m.group(1)) != pin:
+            if not m:
+                continue
+            matched = True
+            if _norm_ver(m.group(1)) != pin:
                 findings.append((path, lineno, m.group(1),
                                  f"{what} says {m.group(1)} but pin is {pin_raw}"))
+        return matched
 
-    check_file(REPO_ROOT / "CLAUDE.md",
-               re.compile(r"Target:\s*Bannerlord\s+v?([0-9]+(?:\.[0-9]+)+)"),
-               "CLAUDE.md target")
-    # AGENTS.md (Codex reviewer instructions) — anchor on its stable declarative line so
-    # incidental version mentions don't false-positive. The historical review essays that DID
-    # cite old versions moved to docs/reviews/codex-track-record.md (stale-version-exempt).
-    check_file(REPO_ROOT / "AGENTS.md",
-               re.compile(r"mod for Bannerlord\s+v?([0-9]+(?:\.[0-9]+)+)"),
-               "AGENTS.md target")
+    # Anchored on the "Target:" label so incidental version mentions don't false-positive.
+    target_re = re.compile(r"Target:\s*Bannerlord\s+v?([0-9]+(?:\.[0-9]+)+)")
+    found_target = False
+    for name in ("AGENTS.md", "CLAUDE.md"):
+        found_target |= check_file(REPO_ROOT / name, target_re, f"{name} target")
+    if not found_target:
+        findings.append((REPO_ROOT / "AGENTS.md", 1, "",
+                         f"no 'Target: Bannerlord X' line in AGENTS.md or CLAUDE.md, so nothing "
+                         f"checks the stated target against the pin ({pin_raw})"))
     snap_dir = DOCS_DIR / "reference" / "taleworlds-api-snapshot"
     for name in ("gamemodel-bases.md", "patch-targets.md"):
         check_file(snap_dir / name,
@@ -798,51 +814,265 @@ def check_orphan_features(files: list[Path]) -> list[Path]:
     return orphans
 
 
-def check_claude_md_budget() -> list[tuple[Path, int, str, str]]:
-    """CLAUDE.md + AGENTS.md eager-load budgets: total size (both) + CLAUDE.md per-line caps.
+_FRONTMATTER_RE = re.compile(r"\A---\r?\n(.*?)\r?\n---", re.S)
+_PATHS_KEY_RE = re.compile(r"^paths\s*:", re.M)
 
-    Findings are (file, lineno, kind, message). lineno 0 = whole-file finding.
-    Fenced code blocks are exempt from line caps (commands/JSON wrap awkwardly).
-    AGENTS.md gets a size-only budget (Codex-truncation guard, see AGENTS_MD_* constants).
-    """
+
+def _rule_scope(text: str) -> str:
+    """'scoped' when a rule's frontmatter parses and declares `paths:` (Claude Code loads it on a
+    matching read), 'unscoped' when it has no `paths:`, 'invalid' when the frontmatter does not
+    parse. Claude Code loads an invalid one in every session, so the budget counts it unscoped.
+    Without PyYAML the frontmatter cannot be parsed, and a `paths:` key is taken at its word."""
+    m = _FRONTMATTER_RE.match(text)
+    if not m:
+        return "unscoped"
+    if _yaml is None:
+        return "scoped" if _PATHS_KEY_RE.search(m.group(1)) else "unscoped"
+    try:
+        data = _yaml.safe_load(m.group(1))
+    except _yaml.YAMLError:
+        return "invalid"
+    if data is None:
+        return "unscoped"
+    if not isinstance(data, dict):
+        return "invalid"
+    return "scoped" if "paths" in data else "unscoped"
+
+
+def _rule_is_scoped(text: str) -> bool:
+    return _rule_scope(text) == "scoped"
+
+
+def _rule_files() -> list[Path]:
+    """Every rule, subfolders included: Claude Code discovers .claude/rules recursively."""
+    rules_dir = REPO_ROOT / RULES_DIR_REL
+    return sorted(rules_dir.rglob("*.md")) if rules_dir.is_dir() else []
+
+
+_IMPORT_RE = re.compile(r"(?:^|\s)@([^\s`]+)")
+_FENCE_LINE_RE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
+# A code span: a backtick run, then the nearest run of the same length, never across a blank line
+# (CommonMark: a span can cross lines inside a paragraph, not between paragraphs).
+_CODE_SPAN_RE = re.compile(r"(?<!`)(`+)(?!`)((?:(?!\n[ \t]*\n).)*?)(?<!`)\1(?!`)", re.S)
+
+
+def _markdown_prose(text: str) -> str:
+    """The text with fenced blocks and code spans blanked out, newlines kept so an offset still
+    maps to its line. A fence closes only on a line holding nothing but a run of its own
+    character at least as long as the opening run; a shorter run inside is content."""
+    out: list[str] = []
+    fence: str | None = None
+    for line in text.split("\n"):
+        m = _FENCE_LINE_RE.match(line)
+        if fence is None:
+            if m:
+                fence = m.group(1)
+                out.append("")
+            else:
+                out.append(line)
+            continue
+        run = line.strip()
+        if run and set(run) == {fence[0]} and len(run) >= len(fence):
+            fence = None
+        out.append("")
+    prose = "\n".join(out)
+    return _CODE_SPAN_RE.sub(lambda s: "\n" * s.group(0).count("\n"), prose)
+
+
+def markdown_imports(text: str) -> list[tuple[int, str]]:
+    """(lineno, target) for each @-import Claude Code would follow in this Markdown: skipping
+    code spans and fenced blocks, as the memory docs specify. Shared with
+    tools/audit_claude_config.py so the budget and the security scan see the same files."""
+    prose = _markdown_prose(text)
+    return [(prose.count("\n", 0, m.start(1)) + 1, m.group(1)) for m in _IMPORT_RE.finditer(prose)]
+
+
+def entry_docs() -> tuple[list[Path], list[tuple[Path, int, str]]]:
+    """What CLAUDE.md loads at launch: CLAUDE.md, then each file it @-imports, following nested
+    imports IMPORT_MAX_HOPS deep, in load order without repeats. Also returns (file, lineno,
+    target) for every import that resolves to no file. Like Claude Code, an import is resolved
+    from the importing file's folder and ignored inside a code span or fenced block; a `~/`
+    import is machine-local, so it is outside the repo's budget."""
+    docs: list[Path] = []
+    missing: list[tuple[Path, int, str]] = []
+    seen: set[Path] = set()
+
+    def visit(path: Path, depth: int) -> None:
+        key = path.resolve()
+        if key in seen:
+            return
+        seen.add(key)
+        docs.append(path)
+        if depth >= IMPORT_MAX_HOPS:
+            return
+        text = path.read_text(encoding="utf-8", errors="replace")
+        for lineno, target in markdown_imports(text):
+            if target.startswith("~"):
+                continue
+            child = path.parent / target
+            if child.is_file():
+                visit(child, depth + 1)
+            else:
+                missing.append((path, lineno, target))
+
+    root = REPO_ROOT / ENTRY_DOC_ROOT
+    if root.is_file():
+        visit(root, 0)
+    return docs, missing
+
+
+def _loaded_bytes(text: str) -> int:
+    """Bytes as every checkout holds them: CRLF folded to LF, so Windows and CI agree."""
+    return len(text.replace("\r\n", "\n").encode("utf-8"))
+
+
+def context_budget_snapshot() -> dict:
+    """What the context budget measures, for tools that report it (the /context-budget skill's
+    scan.sh reads this through --context-budget-json rather than re-deriving it)."""
+    docs, missing = entry_docs()
+    entries = []
+    for p in docs:
+        text = p.read_text(encoding="utf-8", errors="replace")
+        entries.append({"path": rel(p), "bytes": _loaded_bytes(text), "lines": len(text.splitlines())})
+    rules = []
+    for r in _rule_files():
+        text = r.read_text(encoding="utf-8", errors="replace")
+        scope = _rule_scope(text)
+        rules.append({"path": rel(r), "bytes": _loaded_bytes(text), "scoped": scope == "scoped",
+                      "frontmatter_valid": scope != "invalid"})
+    caps = {name: globals()[name] for name in (
+        "ENTRY_DOCS_MAX_BYTES", "ENTRY_DOCS_WARN_BYTES", "ENTRY_DOC_MAX_LINES",
+        "TRAP_INDEX_MAX_ROWS", "TRAP_INDEX_MAX_ROW_CHARS", "UNSCOPED_RULES_MAX_BYTES",
+        "UNSCOPED_RULES_WARN_BYTES", "SCOPED_RULE_MAX_BYTES")}
+    return {"entry_docs": entries, "rules": rules, "caps": caps,
+            "missing_imports": [{"file": rel(f), "line": n, "target": t} for f, n, t in missing]}
+
+
+def harness_link_files() -> list[Path]:
+    """Entry docs outside docs/ (docs/ is linted already) and every rule: harness files whose
+    links must keep resolving."""
+    doc_roots = [r.resolve() for r in DOC_ROOTS]
+    files: list[Path] = []
+    for p in entry_docs()[0] + [REPO_ROOT / "AGENTS.md"]:   # AGENTS.md: Codex reads it unimported
+        key = p.resolve()
+        if p.is_file() and key not in {f.resolve() for f in files} \
+                and not any(key.is_relative_to(r) for r in doc_roots):
+            files.append(p)
+    files.extend(_rule_files())
+    return [f for f in files if f.is_file()]
+
+
+def _trap_index_rows(text: str) -> list[tuple[int, str]]:
+    """(lineno, row) for each data row of the trap-index table; header and separator skipped."""
+    rows: list[tuple[int, str]] = []
+    inside = False
+    seen_header = False
+    for lineno, line in enumerate(text.splitlines(), start=1):
+        if line.startswith("## "):
+            inside = line.strip() == TRAP_INDEX_HEADING
+            continue
+        if not inside or not line.lstrip().startswith("|"):
+            continue
+        if not seen_header:
+            seen_header = True
+            continue
+        if re.fullmatch(r"\s*\|[\s:|-]+\|\s*", line):
+            continue
+        rows.append((lineno, line))
+    return rows
+
+
+def check_context_budget() -> list[tuple[Path, int, str, str]]:
+    """ADR-011 context budgets. Findings are (file, lineno, kind, message); lineno 0 means the
+    whole file. Kind "size-warn" is report-only; every other kind gates --fail-on-drift.
+    Fenced code blocks are exempt from the line caps."""
     findings: list[tuple[Path, int, str, str]] = []
-    if not CLAUDE_MD.is_file():
-        return findings
-    size = CLAUDE_MD.stat().st_size
-    if size > CLAUDE_MD_MAX_BYTES:
-        findings.append((CLAUDE_MD, 0, "size",
-                         f"CLAUDE.md is {size:,} B — over the {CLAUDE_MD_MAX_BYTES:,} B budget. "
-                         f"Move detail to docs/features/, docs/reference/, or a paths:-scoped rule."))
-    elif size > CLAUDE_MD_WARN_BYTES:
-        findings.append((CLAUDE_MD, 0, "size-warn",
-                         f"CLAUDE.md is {size:,} B — approaching the {CLAUDE_MD_MAX_BYTES:,} B budget "
-                         f"(warn threshold {CLAUDE_MD_WARN_BYTES:,} B)."))
-    text = CLAUDE_MD.read_text(encoding="utf-8", errors="replace")
-    for lineno, line in iter_lines_outside_code_fences(text):
-        stripped = line.rstrip("\n")
-        if stripped.lstrip().startswith("|"):
-            if len(stripped) > CLAUDE_MD_MAX_TABLE_ROW:
-                findings.append((CLAUDE_MD, lineno, "table-row",
-                                 f"table row is {len(stripped)} chars (cap {CLAUDE_MD_MAX_TABLE_ROW}) — "
-                                 f"a row is an index entry; the prose belongs in the linked doc."))
-        elif len(stripped) > CLAUDE_MD_MAX_PROSE_LINE:
-            findings.append((CLAUDE_MD, lineno, "prose-line",
-                             f"line is {len(stripped)} chars (cap {CLAUDE_MD_MAX_PROSE_LINE}) — "
-                             f"move the detail to a doc and keep a pointer."))
 
-    # AGENTS.md size budget — Codex truncates it at project_doc_max_bytes; keep it small so the
-    # review RULES stay early. The catch that would have caught the 2026-07-18 truncation.
-    if AGENTS_MD.is_file():
-        asize = AGENTS_MD.stat().st_size
-        if asize > AGENTS_MD_MAX_BYTES:
-            findings.append((AGENTS_MD, 0, "size",
-                             f"AGENTS.md is {asize:,} B — over the {AGENTS_MD_MAX_BYTES:,} B budget. "
-                             f"Codex truncates at project_doc_max_bytes; move worked-examples to "
-                             f"docs/reviews/codex-track-record.md and keep the RULES early."))
-        elif asize > AGENTS_MD_WARN_BYTES:
-            findings.append((AGENTS_MD, 0, "size-warn",
-                             f"AGENTS.md is {asize:,} B — approaching the {AGENTS_MD_MAX_BYTES:,} B "
-                             f"budget (warn {AGENTS_MD_WARN_BYTES:,} B)."))
+    total = 0
+    claude_md = REPO_ROOT / ENTRY_DOC_ROOT
+    trap_doc = (REPO_ROOT / TRAP_INDEX_DOC).resolve()
+    docs, missing = entry_docs()
+    for path, lineno, target in missing:
+        findings.append((path, lineno, "import-missing",
+                         f"`@{target}` resolves to no file, so Claude Code loads nothing for it."))
+    if trap_doc not in {p.resolve() for p in docs}:
+        findings.append((claude_md, 0, "trap-index-missing",
+                         f"{TRAP_INDEX_DOC} is not among the files CLAUDE.md imports, so the trap "
+                         f"index loads in no session."))
+    for path in docs:
+        rel_path = rel(path)
+        text = path.read_text(encoding="utf-8", errors="replace")
+        total += _loaded_bytes(text)
+        nlines = len(text.splitlines())
+        if nlines > ENTRY_DOC_MAX_LINES:
+            findings.append((path, 0, "lines",
+                             f"{rel_path} is {nlines} lines (cap {ENTRY_DOC_MAX_LINES}); a longer entry "
+                             f"doc loses adherence. Move detail to its owning doc (ADR-011)."))
+        for lineno, line in iter_lines_outside_code_fences(text):
+            stripped = line.rstrip("\n")
+            if stripped.lstrip().startswith("|"):
+                if len(stripped) > ENTRY_DOC_MAX_TABLE_ROW:
+                    findings.append((path, lineno, "table-row",
+                                     f"table row is {len(stripped)} chars (cap {ENTRY_DOC_MAX_TABLE_ROW}); "
+                                     f"a row is an index entry, and the prose belongs in the linked doc."))
+            elif len(stripped) > ENTRY_DOC_MAX_PROSE_LINE:
+                findings.append((path, lineno, "prose-line",
+                                 f"line is {len(stripped)} chars (cap {ENTRY_DOC_MAX_PROSE_LINE}); move the "
+                                 f"detail to a doc and keep a pointer."))
+        if path.resolve() == trap_doc:
+            if TRAP_INDEX_HEADING not in (line.strip() for line in text.splitlines()):
+                findings.append((path, 0, "trap-index-missing",
+                                 f"no '{TRAP_INDEX_HEADING}' heading, so the trap-row caps check "
+                                 f"nothing. Restore the heading or update TRAP_INDEX_HEADING."))
+            rows = _trap_index_rows(text)
+            if len(rows) > TRAP_INDEX_MAX_ROWS:
+                findings.append((path, 0, "trap-count",
+                                 f"the trap index has {len(rows)} rows (cap {TRAP_INDEX_MAX_ROWS}); merge a "
+                                 f"line, or move one into the path rule or skill for its area."))
+            for lineno, row in rows:
+                if len(row) > TRAP_INDEX_MAX_ROW_CHARS:
+                    findings.append((path, lineno, "trap-row",
+                                     f"trap row is {len(row)} chars (cap {TRAP_INDEX_MAX_ROW_CHARS}); keep the "
+                                     f"trigger and the never-do, and move the rest to the linked doc."))
+    if total > ENTRY_DOCS_MAX_BYTES:
+        findings.append((claude_md, 0, "size",
+                         f"CLAUDE.md with its imports is {total:,} B, over the {ENTRY_DOCS_MAX_BYTES:,} B "
+                         f"budget. Move detail to docs/features/, docs/reference/, a path rule or a skill."))
+    elif total > ENTRY_DOCS_WARN_BYTES:
+        findings.append((claude_md, 0, "size-warn",
+                         f"CLAUDE.md with its imports is {total:,} B, approaching the "
+                         f"{ENTRY_DOCS_MAX_BYTES:,} B budget (warn at {ENTRY_DOCS_WARN_BYTES:,} B)."))
+
+    rules_dir = REPO_ROOT / RULES_DIR_REL
+    unscoped_total = 0
+    for rule in _rule_files():
+        text = rule.read_text(encoding="utf-8", errors="replace")
+        size = _loaded_bytes(text)
+        scope = _rule_scope(text)
+        if scope == "invalid":
+            findings.append((rule, 0, "rule-frontmatter-invalid",
+                             "the frontmatter does not parse as YAML, so Claude Code loads this rule in "
+                             "every session whatever its paths: say (an unquoted `: ` in a value is the "
+                             "usual cause). It is counted with the rules without paths: until fixed."))
+        if scope != "scoped":
+            unscoped_total += size
+        elif size > SCOPED_RULE_MAX_BYTES:
+            kind = "scoped-rule-size" if SCOPED_RULE_BUDGET_ENFORCE else "size-warn"
+            findings.append((rule, 0, kind,
+                             f"path-scoped rule is {size:,} B (cap {SCOPED_RULE_MAX_BYTES:,} B); move "
+                             f"incident narratives to lessons or an RCA and keep the rule."))
+    if _yaml is None and _rule_files():
+        findings.append((rules_dir, 0, "frontmatter-unchecked",
+                         "PyYAML is not installed, so rule frontmatter was not parsed: a rule that "
+                         "loads everywhere because its YAML is broken would pass. pip install pyyaml."))
+    if unscoped_total > UNSCOPED_RULES_MAX_BYTES:
+        findings.append((rules_dir, 0, "rules-size",
+                         f"rules without paths: total {unscoped_total:,} B, over the "
+                         f"{UNSCOPED_RULES_MAX_BYTES:,} B budget; they load in every session and spawn."))
+    elif unscoped_total > UNSCOPED_RULES_WARN_BYTES:
+        findings.append((rules_dir, 0, "size-warn",
+                         f"rules without paths: total {unscoped_total:,} B, approaching the "
+                         f"{UNSCOPED_RULES_MAX_BYTES:,} B budget."))
     return findings
 
 
@@ -1063,21 +1293,28 @@ def rel(p: Path) -> str:
         return str(p)
 
 
-def format_report(report: LintReport, quick: bool) -> str:
+def format_report(report: LintReport, quick: bool, drift_only: bool = False) -> str:
     out: list[str] = []
     out.append("# Doc lint report")
     out.append("")
-    out.append(f"- Dead links: **{len(report.dead_links)}**")
-    out.append(f"- Link targets present but UNTRACKED (dead on the remote): "
-               f"**{len(report.untracked_targets)}**")
-    if not quick:
+    gating = [
+        f"- Config-example drift (doc JSON != shipped ModuleData config): **{len(report.config_drift)}**",
+        f"- Version mismatches (Target line / snapshot != pin): **{len(report.version_mismatches)}**",
+        f"- Context budget (entry docs, trap index, rules{'' if CONTEXT_BUDGET_ENFORCE else ', warn-only'}): **{len(report.budget)}**",
+    ]
+    if drift_only:
+        out.append("Only the checks `--fail-on-drift` gates on (`--drift-only`); run without it for the rest.")
+        out.extend(gating)
+    else:
+        out.append(f"- Dead links: **{len(report.dead_links)}**")
+        out.append(f"- Link targets present but UNTRACKED (dead on the remote): "
+                   f"**{len(report.untracked_targets)}**")
+    if not quick and not drift_only:
         out.append(f"- Stale version refs (outside migration/archive): **{len(report.stale_versions)}**")
         out.append(f"- Orphan feature docs (no inbound references): **{len(report.orphan_features)}**")
         out.append(f"- Prose trapped in an auto-generated backlinks region: **{len(report.backlinks_prose)}**")
         out.append(f"- Missing feature docs (Main/Features/<X> with no docs/features/<x>.md): **{len(report.missing_feature_docs)}**")
-        out.append(f"- Config-example drift (doc JSON != shipped ModuleData config): **{len(report.config_drift)}**")
-        out.append(f"- Version mismatches (CLAUDE.md / snapshot != pin): **{len(report.version_mismatches)}**")
-        out.append(f"- CLAUDE.md budget (size/row/line caps{'' if CLAUDE_MD_BUDGET_ENFORCE else ', warn-only'}): **{len(report.budget)}**")
+        out.extend(gating)
         out.append(f"- GameModel registry drift (code vs the two catalogues): **{len(report.model_registry)}**")
         out.append(f"- Em/en dashes in newly written prose: **{len(report.dashes)}**")
     out.append("")
@@ -1152,11 +1389,12 @@ def format_report(report: LintReport, quick: bool) -> str:
                 out.append(f"- `{rel(f)}:{lineno}` — {msg}")
             out.append("")
         if report.budget:
-            out.append("## CLAUDE.md budget")
+            out.append("## Context budget")
             out.append("")
-            out.append("CLAUDE.md is the eager per-session context load — it stays an INDEX (thin table rows "
-                       "+ doc links). Detail belongs in docs/features/, docs/reference/, or a paths:-scoped rule."
-                       + ("" if CLAUDE_MD_BUDGET_ENFORCE else " (Warn-only during the decomposition migration.)"))
+            out.append("Everything CLAUDE.md loads at launch, and every rule without paths:, is paid by every "
+                       "session and spawn (ADR-011). Entry docs stay an index; detail belongs in its owning doc, "
+                       "a path rule or a skill."
+                       + ("" if CONTEXT_BUDGET_ENFORCE else " (Warn-only.)"))
             out.append("")
             for f, lineno, kind, msg in report.budget:
                 loc = f"`{rel(f)}:{lineno}`" if lineno else f"`{rel(f)}`"
@@ -1204,12 +1442,22 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--report", type=Path, help="Write report to this path instead of stdout (atomic via .tmp+rename)")
     ap.add_argument("--fail-on-dead", action="store_true", help="Exit 1 if any dead links found")
     ap.add_argument("--fail-on-drift", action="store_true",
-                    help="Exit 1 if any config-example drift OR version mismatch found (pre-commit gate)")
+                    help="Exit 1 on config-example drift, a version mismatch, or a context-budget "
+                         "breach (size-warn findings excepted). The CI gate.")
+    ap.add_argument("--drift-only", action="store_true",
+                    help="Run only the three checks --fail-on-drift gates on, and gate on them. The "
+                         "commit hook's mode: about 0.1 s instead of the full run's 9 s.")
+    ap.add_argument("--context-budget-json", action="store_true",
+                    help="Print the context-budget inputs (entry docs, rules, caps) as JSON and exit.")
     ap.add_argument("--summary", action="store_true", help="Emit a --- delimited grep-friendly summary block instead of the full markdown report")
     ap.add_argument("--dash-base", default="HEAD", metavar="REF",
                     help="Base ref for the em/en dash check (default HEAD, i.e. uncommitted writing). "
                          "Pass a branch point to scan a whole branch.")
     args = ap.parse_args(argv)
+
+    if args.context_budget_json:
+        sys.stdout.write(json.dumps(context_budget_snapshot(), indent=2) + "\n")
+        return 0
 
     files: list[Path] = []
     for root in DOC_ROOTS:
@@ -1217,40 +1465,43 @@ def main(argv: list[str]) -> int:
             files.extend(iter_markdown(root))
 
     report = LintReport()
-    report.dead_links = check_dead_links(files)
-    report.untracked_targets = check_untracked_link_targets(files)
-    if not args.quick:
+    if args.drift_only:
+        args.fail_on_drift = True
+        report.config_drift = check_config_example_drift(files)
+        report.version_mismatches = check_version_consistency()
+        report.budget = check_context_budget()
+    else:
+        link_files = files + harness_link_files()
+        report.dead_links = check_dead_links(link_files)
+        report.untracked_targets = check_untracked_link_targets(link_files)
+    if not args.quick and not args.drift_only:
         report.stale_versions = check_stale_versions(files)
         report.orphan_features = check_orphan_features(files)
         report.backlinks_prose = check_backlinks_region_prose(files)
         report.missing_feature_docs = check_missing_feature_docs(feature_doc_basenames())
         report.config_drift = check_config_example_drift(files)
         report.version_mismatches = check_version_consistency()
-        report.budget = check_claude_md_budget()
+        report.budget = check_context_budget()
         report.model_registry = check_model_registry()
         report.dashes = check_ai_dashes(args.dash_base)
 
     if args.summary:
         # Structured grep-friendly block, modeled on autoresearch's train.py final output
-        summary = "\n".join([
-            "---",
-            f"dead_links:        {len(report.dead_links)}",
-            f"stale_versions:    {len(report.stale_versions)}",
-            f"orphan_features:   {len(report.orphan_features)}",
-            f"backlinks_prose:   {len(report.backlinks_prose)}",
-            f"missing_features:  {len(report.missing_feature_docs)}",
-            f"config_drift:      {len(report.config_drift)}",
-            f"version_mismatch:  {len(report.version_mismatches)}",
-            f"claude_budget:     {len(report.budget)}",
-            f"model_registry:    {len(report.model_registry)}",
-            f"ai_dashes:         {len(report.dashes)}",
-            f"total_findings:    {report.total}",
-            "---",
-            "",
-        ])
+        counters = [
+            ("dead_links", report.dead_links), ("stale_versions", report.stale_versions),
+            ("orphan_features", report.orphan_features), ("backlinks_prose", report.backlinks_prose),
+            ("missing_features", report.missing_feature_docs), ("config_drift", report.config_drift),
+            ("version_mismatch", report.version_mismatches), ("context_budget", report.budget),
+            ("model_registry", report.model_registry), ("ai_dashes", report.dashes),
+        ]
+        if args.drift_only:
+            counters = [c for c in counters if c[0] in ("config_drift", "version_mismatch", "context_budget")]
+        summary = "\n".join(["---"]
+                            + [f"{(name + ':').ljust(19)}{len(items)}" for name, items in counters]
+                            + [f"total_findings:    {report.total}", "---", ""])
         sys.stdout.write(summary)
     else:
-        rendered = format_report(report, quick=args.quick)
+        rendered = format_report(report, quick=args.quick, drift_only=args.drift_only)
         if args.report:
             # Atomic write: write to .tmp then rename. Prevents partial-write
             # corruption if interrupted mid-write (autoresearch prepare.py pattern).
@@ -1265,12 +1516,12 @@ def main(argv: list[str]) -> int:
     if args.fail_on_dead and report.dead_links:
         return 1
     # size-warn findings are report-only early warnings (per the WARN_BYTES constants);
-    # only hard violations (size / table-row / prose-line) gate the pre-commit hook.
-    gating_budget = [b for b in report.budget if b[2] != "size-warn"]
+    # every other kind (size, lines, rows, trap index, rules) gates --fail-on-drift.
+    gating_budget = [b for b in report.budget if b[2] not in REPORT_ONLY_BUDGET_KINDS]
     if args.fail_on_drift and (
         report.config_drift
         or report.version_mismatches
-        or (CLAUDE_MD_BUDGET_ENFORCE and gating_budget)
+        or (CONTEXT_BUDGET_ENFORCE and gating_budget)
     ):
         return 1
     return 0

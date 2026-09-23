@@ -331,13 +331,45 @@ the knock-down-and-rise strikes, arrow/fire deaths, and every attack (melee is e
 `tools/audit_action_set_parity.py` passes afterwards and the repo snapshot
 `docs/reference/lotrlome-armory-snapshot/action_sets.xml` is refreshed from the live file.
 
+### A quadruped pack onto `horse_skeleton` (2026-09-23, Animalia elk and moose, #646)
+
+The second Fab creature, and a different route from the troll's. Full record:
+[`docs/features/animalia-elk-moose.md`](../features/animalia-elk-moose.md).
+
+- **Export:** the same `ue_export_cave_troll.py`, driven by `TAOM_UE_CONTENT_ROOT=/Game/Animalia/<Pack>` and
+  `TAOM_UE_EXPORT_ROOT`. Two packs installed into one project share `_Bones` and `_Shaders` folders; scope
+  each run to the pack's own folder. The commandlet exits 1 when the GFur fur assets fail to load (no GFur
+  plugin); `export_report.json` is the record, not the exit code. **The clip's preview mesh is now the mesh
+  named after the skeleton** (`Elk_M_Skeleton` picks `Elk_M`): the Animalia packs list the GFur shell
+  (`Fur/Elk_M_FurBase`) first, so "first mesh on the skeleton" bundled a fur shell with every clip.
+- **Reskin without a donor:** the troll's meshes sat on the human joints already, so a nearest-surface weight
+  transfer worked. A pack on its own rig does not, so `tools/blender/reskin_animalia_to_horse.py` BENDS the
+  mesh into the horse rest pose with its own skinning (per bone: joint onto the horse joint, segment swung
+  and stretched onto the horse segment) and keeps the pack's weights, renamed onto horse bones. It exports on
+  the armature of TaleWorlds' own `horse.fbx`, the one `elk_001` ships on. Measure the joint gap first (one
+  uniform scale, then per joint): legs and spine within about 10 cm means the fit holds; head, neck and tail
+  gaps are usually posture.
+- **Retarget through the fit:** `tools/blender/retarget_animalia_to_horse.py` carries each pack bone's
+  world-space motion through the rotation the mesh was bent by, so rest stays the horse rest. The troll's
+  `S_align` (pose the target into the source's stance) is wrong for a mesh already bent onto the target.
+  Export and checks reuse `transfer_clip_to_engine_rig.py` (file-order rig, frame 0 rest, Kit root yaw).
+- **Per-animal profiles** in `tools/blender/animalia_to_horse_map.json` for a body that must keep its own
+  proportions (the moose's neck is half a horse's). Mesh and clips must use the same profile.
+- **Textures** at 1K through `convert_tripo_prop_textures.py --match <set>` (one folder, several sets).
+
 ## Current state / open items
+
+Animalia elk and moose (2026-09-23, #646): 6 reskinned variants built, 2 in use (`animalia_elk_08`,
+`animalia_moose_big`), 97 retargeted clips and 9 1K textures, sources in
+`LOTRLOME_Armory\AssetSources\creature\elk\`. Textures, 3 materials and both meshes imported in the Kit.
+Open: the clip import and module save, clip resources with the horse recipe, the jump clips' vertical travel,
+the game-side Monsters, action sets, items and troops.
 
 Cave troll (2026-09-18): 52 masters + 52 clips live in the Armory, playing correctly in the Kit; 213
 `as_cave_troll_warrior` overrides bound; LOME meshes re-skinned and in the Armory sources. Open: Kit
 reimport of `LOME_troll.fbx` + import of `LOME_troll_armor.fbx` (both done 2026-09-18 pm; the masters needed
 no RDC entry after all, `tools/check_rdc_entries.py --under creature/troll` prints 0), Custom Battle smoke, the junk
-`human_skeleton_notused.00x` skeletons to delete, the Fab licence tier for the provenance row, the hill
+`human_skeleton_notused.00x` skeletons to delete, the hill
 troll decision (stay on `troll_skeleton` + bind the clips, or conform the mesh), and the Fab troll on its
 own proportions as a separate job. The cave trolls fought in a Custom Battle on 2026-09-18 (15:47) on
 `as_cave_troll_warrior`, 2,982 blows taken and 19 deaths, no clip or material warning; Mike confirmed the

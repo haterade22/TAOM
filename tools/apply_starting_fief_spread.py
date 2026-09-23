@@ -14,7 +14,7 @@ that.
 
 Why a tool at all, for what is a handful of attribute edits: the target file lives in
 `Modules/TAOM_Map/`, which is NOT tracked by this repo. A module reinstall silently
-reverts the edit, and "untracked here" is not "unfixed" (see CLAUDE.md, Traps). Running
+reverts the edit, and "untracked here" is not "unfixed" (see the trap index in docs/ai-includes/orientation.md). Running
 `--check` after any TAOM_Map update tells you whether the spread survived.
 
 Two other things worth knowing before running this:
@@ -150,7 +150,7 @@ def main():
 
     if not args.apply:
         print(f"\n{len(drift)} fortification(s) need reassigning. Re-run with --apply.")
-        print("If TAOM_Map was just reinstalled, this is the expected revert (CLAUDE.md, Traps).")
+        print("If TAOM_Map was just reinstalled, this is the expected revert (trap index, docs/ai-includes/orientation.md).")
         return 1
 
     backup = path.with_suffix(path.suffix + ".bak")

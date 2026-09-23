@@ -112,7 +112,7 @@ No runtime impact. Pure data addition. ~277 new items add ~15 KB total to per-cu
 
 **Net result:** 0 duplicates across folders, 5 new items shipped (not 123 as originally claimed). Verified via `tools/validate_all_troop_refs.py` — 7/7 cultures PASS.
 
-**Codified lesson:** CLAUDE.md "Equipment & Armory" now includes a per-prefix canonical-folder table. Memory: `feedback_multi_folder_id_uniqueness.md`. RCA: `docs/reviews/rca-multi-culture-armor-revamp-2026-05-22.md`.
+**Codified lesson:** [armory-guide.md](../reference/armory-guide.md) now holds the per-prefix canonical-folder table. Memory: `feedback_multi_folder_id_uniqueness.md`. RCA: `docs/reviews/rca-multi-culture-armor-revamp-2026-05-22.md`.
 
 ## Changelog
 

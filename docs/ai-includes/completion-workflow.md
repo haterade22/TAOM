@@ -39,6 +39,10 @@ For **features**, the issue body MUST include:
 - Label issues appropriately (`bug`, `feature`, `crash`, `enhancement`)
 - Reference the issue number in commits when possible
 - **Close the issue** with `gh issue close` when the work is complete and verified
+- If an in-game check is still owed at close, label the closed issue `triage-needs-ingame`, and
+  remove the label once the check is done; a decision still owed is `triage-blocked-decision`.
+  The backlog is a query, visible from every machine and client:
+  `gh issue list --state all --label triage-needs-ingame`
 
 **Commands:** Use `gh issue create` and `gh issue close` via Bash.
 

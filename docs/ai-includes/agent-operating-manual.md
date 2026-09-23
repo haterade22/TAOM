@@ -6,9 +6,9 @@ the [shared policy](../../.ai/policy.md) and the user's assigned role. The tool
 allowlists, slash commands and dispatch behavior below are client-specific,
 not a grant of authority or a description of Codex's available tools.
 
-**Audience:** any subagent spawned in the TAOM project (the custom agents in `.claude/agents/`, and ad-hoc `Explore` / `Plan` / `general-purpose` agents). Read this at the start of your run. It tells you the execution model, which tools to run and how, and which skills exist (so you can *recommend* them — see below).
+**Audience:** any subagent spawned in the TAOM project (the custom agents in `.claude/agents/`, and ad-hoc `Explore` / `Plan` / `general-purpose` agents). Explore and Plan agents read this at the start of the run; other agents consult it. It tells you the execution model, which tools to run and how, and which skills exist (so you can *recommend* them; see below).
 
-> **Why this doc exists:** a subagent runs in its own context with a strict tool allowlist. Claude Code does **not** guarantee that the project's `CLAUDE.md`, the `.claude/rules/`, or the skill descriptions reach you. Do not assume you inherited them — this manual + your own agent definition are your reliable source of truth.
+> **What reaches you:** custom and general-purpose agents get CLAUDE.md, its imports (AGENTS.md and `docs/ai-includes/orientation.md`) and the unscoped `.claude/rules/` automatically, and a path rule loads when you read a matching file. The built-in Explore and Plan agents get none of these, and no subagent gets the main session's memory. This manual adds the execution model and the tool catalog.
 
 ---
 
@@ -35,22 +35,22 @@ not a grant of authority or a description of Codex's available tools.
 | Need | Command | Notes |
 |------|---------|-------|
 | **Engine process understanding** | `Read` [`docs/reference/engine/`](../reference/engine/) | **First for "how does X work" questions.** 19 processes pre-analyzed + TAOM-relevant gotchas: lifecycle, formations, mount/rider, campaign-mission seam, heartbeat, agent spawn, GauntletUI, GameModel, save/object system. Check here before cold decompile. |
-| **TaleWorlds signature / decompile** | `pwsh tools/taom-src.ps1 path <FullTypeName>` | **PRIMARY for signature verification.** Decompiles the installed DLL (auto-detected version, currently **v1.5.2**) on cache miss, prints an absolute `.cs` path. Compose: `rg "GetCharacterWage" $(pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.GameComponents.DefaultPartyWageModel)` |
-| Browse engine source for patterns | `Read`/`Grep` under `E:\Decompiled_Bannerlord\` | **v1.5.3** dump (`_*_v1.4.8`, `_*_v1.5.0`, `_*_v1.5.2` baselines beside it; it can lag an engine bump). Fine for browsing; for authoritative signatures still prefer `taom-src`. ⚠️ SHIPPING-CLIENT build: editor-only types (`MBEditor`, `AnimalSpawnSettings`, FBX toolchain) only exist in `_editor_build\`. "Absent from dump" ≠ "doesn't exist." |
+| **TaleWorlds signature / decompile** | `pwsh tools/taom-src.ps1 path <FullTypeName>` | **PRIMARY for signature verification.** Decompiles the installed DLL (auto-detected version) on cache miss, prints an absolute `.cs` path. Compose: `rg "GetCharacterWage" $(pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.GameComponents.DefaultPartyWageModel)` |
+| Browse engine source for patterns | `Read`/`Grep` under `E:\Decompiled_Bannerlord\` | The dump, with older baselines beside it, can lag an engine bump. Fine for browsing; for authoritative signatures still prefer `taom-src`. ⚠️ SHIPPING-CLIENT build: editor-only types (`MBEditor`, `AnimalSpawnSettings`, FBX toolchain) only exist in `_editor_build\`. "Absent from dump" ≠ "doesn't exist." |
 | Decompile fallback | `ilspycmd "<dll>" -t "<Type>"` or the `ilspy` MCP | Only if `taom-src` fails. |
 | **Build** | `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true` | Use this, NOT `./build.ps1`, during agent work (avoids `out/` contention). ⚠️ See the caveat below — this flag does **not** actually stop deployment. |
 | **Test** | `dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true` | Add `--filter "FullyQualifiedName~X"` to narrow. Same caveat. |
 | Engine-binding gate | `dotnet test TAOM.Tests/TAOM.Tests.csproj --filter "TestCategory=BindingVerification"` | Verifies patch/GameModel/reflection bindings resolve against the installed engine. |
 | Troop equipment refs | `python tools/validate_all_troop_refs.py` | Underwear-bug gate across all 7 culture troop XMLs. Proves refs resolve **on disk** — NOT that the engine loaded a NEW item file (those load only at a full game restart; naked-in-game with a green gate = new-file-not-loaded, not a data defect). |
-| API signature snapshot | `pwsh tools/snapshot_api_surface.ps1 [-Check]` | Regenerate / verify the committed signature snapshot (self-labels the installed version, currently v1.5.3). |
+| API signature snapshot | `pwsh tools/snapshot_api_surface.ps1 [-Check]` | Regenerate / verify the committed signature snapshot (self-labels the installed version). |
 | **Native crash site naming** | `python tools/native_crash_triage.py --rva 0x<EventLog-fault-offset>` (or `--ip 0x<RIP> --base 0x<module-base>`) | Names a native CTD site WITHOUT symbols: pdata function bounds, hexdump, referenced strings, caller chains. Full protocol (Event Log, debugger setup): `.claude/skills/native-crash-triage/SKILL.md`. |
 | **Creature-mount data parity** | `python tools/audit_mount_parity.py` | Diffs a mount's Monster/usage/action surfaces vs warg/elephant/horse. Run BEFORE battle-testing creature changes; extend its `FILES`/`MOUNTS` maps for new creatures. |
-| Doc health | `python tools/lint_docs.py --summary` | Dead links / stale-version refs / orphan docs / config-example drift (doc JSON vs shipped config) / version mismatch (CLAUDE.md + snapshot vs the pin). |
+| Doc health | `python tools/lint_docs.py --summary` | Dead links / stale-version refs / orphan docs / config-example drift (doc JSON vs shipped config) / version mismatch (the AGENTS.md Target line or a snapshot header vs the pin) / the ADR-011 context budget. |
 | **Claude-config / foreign-skill security audit** | `python tools/audit_claude_config.py` (self) or `--root <repo> --external` (vet a foreign skill at full severity) | Stdlib + optional YARA; deterministic, read-only. Self-audit before ship; `--external` BEFORE adopting an outside skill. Full skill: `.claude/skills/security-scan/SKILL.md`. |
 | Doc graph | `python tools/graph_query.py metrics` (+ `explain <doc>` / `path <a> <b>`) | Query/audit the docs link graph: god-nodes/bridges/orphans (`metrics`), a doc's neighbourhood (`explain`), shortest path between two docs (`path`). `--json` for machine output. Full ref: [`docs/features/doc-graph.md`](../features/doc-graph.md). |
 | Full tool list | see [`tools/README.md`](../../tools/README.md) | Generators, rebalancers, localization, faction-map, etc. |
 
-**Target engine version is Bannerlord v1.5.3** (Steam beta branch, since 2026-09-15; branch `bannerlord-1.5.x`; pinned in `.claude/pinned-game-version.txt`). Anything in an agent prompt or doc that still names "v1.3.15" / "v1.4.5" / "v1.4.6" / "v1.4.7" / "v1.4.8" / "v1.5.2" as the *current* target is stale; trust the installed DLLs + `taom-src` (which auto-detects the version). **This rule is broader than the checker that enforces it.** Since #399 `lint_docs.py` fires only on marker-word phrasing (`current` / `target` / `now` / `builds against` / …), and its patterns cover `1.3.15` / `Bannerlord 1.3` / `v1.3.x` only; v1.4.5 through v1.4.8 are not matched at all. A clean doc-health run does not mean the rule above holds; read for it. Gaps tracked in [#405](https://github.com/haterade22/TAOM/issues/405).
+**The target engine version** is the `Target:` line in [AGENTS.md](../../AGENTS.md), pinned in `.claude/pinned-game-version.txt`; `taom-src` auto-detects the installed one. A doc naming an older version as the current target is stale. `lint_docs.py` catches only marker phrasing, so a clean run does not prove there is none ([#405](https://github.com/haterade22/TAOM/issues/405)).
 
 > **⚠️ `-p:DisableModuleCopy=true` does NOT prevent deployment to the game install** (verified 2026-08-06 against `bannerlord.buildresources` 1.1.0.129). In that package's `build/Basic.targets`, only the `PostBuildCopyToModules` *wrapper* is gated on the flag; `CopyBinariesWindows` (L53) and `CopyModule` (L64) each carry their own `AfterTargets="PostBuildEvent"` with conditions that omit it, so they fire regardless. Every "safe" agent build has in fact been writing to `<game>\Modules\`. This is invisible while Bannerlord is closed and becomes a hard `UnauthorizedAccessException` / `IOException` build failure the moment it is **running**, because the game holds `0Harmony.dll` and `Bannerlord.ButterLib.dll`.
 >
@@ -60,7 +60,7 @@ not a grant of authority or a description of Codex's available tools.
 
 ## 3. Skill catalog — what to RECOMMEND (you can't invoke these)
 
-Grouped by purpose. Authoritative list + when-to-use routing: the **Skills** + **Skill Routing** tables in [`CLAUDE.md`](../../CLAUDE.md).
+Grouped by purpose. Authoritative list + when-to-use routing: the **Skills** index in [`CLAUDE.md`](../../CLAUDE.md).
 
 - **Build/debug:** `/build-fix` (compile errors, minimal diffs), `/investigate` (root-cause C# debugging), `/native-crash-triage` (native CTDs — Event Log offsets + `tools/native_crash_triage.py` + debugger protocol), `/engine-bump` (game version changed — baseline-preserve, regen, re-verify), `/agent-introspection-debugging` (failing agent runs).
 - **Build/verify a change:** `/verify` (build+test+git), `/verify-bindings` (engine API bindings + snapshot), `/deep-review` (multi-agent review), `/review-codex` + `/codex-verify` (Codex — costs money), `/ship` (full completion sequence).
@@ -75,13 +75,13 @@ When your job hits one of these situations, finish your analysis and **name the 
 
 ## 4. Where the project conventions live (read on demand)
 
-Don't assume these reached you — read the relevant one when your task touches it:
+Custom agents already hold AGENTS.md's invariants. Read these when your task touches them (Explore and Plan agents especially):
 
 - Architecture / layers: [`architecture.md`](./architecture.md) · patterns: [`patterns.md`](./patterns.md)
 - TDD workflow: [`tdd-enforcement.md`](./tdd-enforcement.md) · testing: [`testing-guide.md`](./testing-guide.md)
 - Adapter pattern (ADR-007), thin entry points (ADR-002), no #region/[Obsolete]/#if DEBUG (ADR-003/004/005): [`docs/adrs/`](../adrs/README.md)
 - TaleWorlds research workflow: [`taleworlds-research-guide.md`](./taleworlds-research-guide.md)
-- The `.claude/rules/*.md` (csharp-architecture, harmony-patches, gamemodels, adapters, tests, xslt, gui-ui, troops, xml-data) — read the one matching the files you're editing.
+- The path-scoped `.claude/rules/*.md` load by themselves when a custom or general-purpose agent reads a matching file. Explore and Plan agents: no document says they do for you, so read the area's rule directly before touching its files.
 
 ---
 

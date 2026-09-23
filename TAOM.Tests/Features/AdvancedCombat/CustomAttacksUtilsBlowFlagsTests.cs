@@ -1,5 +1,7 @@
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.AdvancedCombat;
+using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Tests.Features.AdvancedCombat;
@@ -55,5 +57,34 @@ public class CustomAttacksUtilsBlowFlagsTests
     {
         Assert.AreEqual(BlowFlags.KnockDown | BlowFlags.KnockBack,
             CustomAttacksUtils.ComposeBlowFlags(knockDown: true, victimHasMount: false, BlowFlags.KnockBack));
+    }
+
+    [TestMethod]
+    public void ComposeWeaponFlags_Blunt_CanKillEvenIfBlunt()
+    {
+        // A Blunt killing blow wounds instead of killing unless its weapon carries CanKillEvenIfBlunt
+        // (DefaultPartyHealingModel.GetSurvivalChance, v1.5.3). A synthetic blow kills as the Pierce ones always did,
+        // so a Blunt one carries the flag: the elk's antler charge (#636).
+        Assert.AreEqual(WeaponFlags.CanKillEvenIfBlunt, CustomAttacksUtils.ComposeWeaponFlags(DamageTypes.Blunt));
+    }
+
+    [TestMethod]
+    [DataRow(DamageTypes.Pierce)]
+    [DataRow(DamageTypes.Cut)]
+    public void ComposeWeaponFlags_NotBlunt_AddsNothing(DamageTypes damageType)
+    {
+        // The warg, spider, elephant, mumakil and ram blows and the signature strikes keep an empty weapon record.
+        Assert.AreEqual((WeaponFlags)0, CustomAttacksUtils.ComposeWeaponFlags(damageType));
+    }
+
+    [TestMethod]
+    public void TakeDamage_DamageTypeDefault_IsPierce()
+    {
+        // Every caller but the elk relies on the default, so changing it would re-type every creature blow at once.
+        var parameter = typeof(CustomAttacksUtils).GetMethods()
+            .Where(m => m.Name == nameof(CustomAttacksUtils.TakeDamage))
+            .SelectMany(m => m.GetParameters())
+            .Single(p => p.Name == "damageType");
+        Assert.AreEqual(DamageTypes.Pierce, parameter.DefaultValue);
     }
 }

@@ -100,6 +100,8 @@ The alignment rule for executions: killing your enemy is not dishonourable, and 
 
 Banner layer limit. **DISABLED at the v1.4.7 bump (2026-07-08)** — the engine made banner layers natively unlimited (`Banner.TryGetBannerDataFromCode` no longer caps at 32), which is exactly what the transpiler forced. See `docs/migration/v1.4.7-impact.md`.
 
+The category is still applied (`SubModule.cs`), so it can appear in a Harmony census: the transpiler returns vanilla's IL untouched unless `BannerColorConfig.EnableLayerLimitTranspiler` is true, and that defaults to false. It is kept so a future engine that brings the cap back can be answered with a config flip.
+
 ## Patch16_AtmospherePersistence
 
 **Target:** `Mission.Initialize`

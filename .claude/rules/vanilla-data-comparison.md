@@ -133,7 +133,7 @@ Generalize the question, not the check: when you author a culture, faction or ki
 - v1.4.5 renamed `<culture>_house_a_interior_house` interior scenes; 61 stale `scene_name` refs across TAOM towns.
 - TAOM's `sp_battle_scenes.xml` mapped map indices 158–255 to `battle_terrain_extended`, a scene that doesn't exist on disk.
 
-Full write-up: `docs/reference/scene-reference-audit.md`. Memory: `feedback_scene_name_refs_break_on_version_bump.md`. Sibling research-first rule for code: CLAUDE.md "Research First" (decompile before guessing TaleWorlds behavior) — this rule is its data-side counterpart.
+Full write-up: `docs/reference/scene-reference-audit.md`. Memory: `feedback_scene_name_refs_break_on_version_bump.md`. Sibling research-first rule for code: AGENTS.md "Research first" (decompile before guessing TaleWorlds behavior); this rule is its data-side counterpart.
 
 2026-05-31 session: the **GUI-prefab instance** of the same failure — every Party-screen troop thumbnail stuck on the loading spinner because TAOM's stale prefab clones bound the v1.4.5-renamed `ImageTypeCode` instead of `TextureProviderName`. Full write-up: `docs/reviews/rca-party-troop-thumbnail-stale-prefab-clone-2026-05-31.md`. Memory: `feedback_gui_prefab_clones_stale_across_versions.md`. (Prompted the "GUI prefab clones" section + `GUI/PreFabs` globs above.)
 

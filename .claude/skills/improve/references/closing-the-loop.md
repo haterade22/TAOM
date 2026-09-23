@@ -20,9 +20,9 @@ The founding rule survives unchanged: **the advisor never edits source code.** I
 
 ### Dispatch
 
-Spawn **one** subagent with `isolation: "worktree"` (mandatory — parallel executors editing the shared tree is the build-watcher cascade documented in `harness-facts.md`). Executor model: default `sonnet` (TAOM Model Routing: feature implementation = Sonnet); use what the user named if they named one.
+Spawn **one** subagent with `isolation: "worktree"` (mandatory: parallel executors editing the shared tree is the build-watcher cascade documented in `docs/ai-includes/agent-teams.md` "Case studies"). Executor model: default `sonnet` (TAOM Model Routing: feature implementation = Sonnet); use what the user named if they named one.
 
-The subagent prompt must contain the standard TAOM briefing (CLAUDE.md "Briefing subagents") plus the plan:
+The subagent prompt must contain the standard TAOM briefing (CLAUDE.md "Subagents") plus the plan:
 
 1. "Read `docs/ai-includes/agent-operating-manual.md` first. You cannot invoke skills or spawn agents."
 2. **The full plan file text, inlined.** The worktree contains only committed files — if `plans/` is uncommitted, the executor can't read it. Never assume; always inline.

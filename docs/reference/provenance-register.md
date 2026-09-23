@@ -66,7 +66,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Serilog | `Serilog` | Apache-2.0 | redistributed | `Dependencies/_Module/bin/Win64_Shipping_Client/Serilog*.dll` | cleared |
 | Yotthani modules (FieldCamp, Refuge, SupplyLines) | none published | maintainer-commissioned | behavioural-port | `Main/Features/SupplyLines/**` `Main/Features/FieldCamp/**` `Main/Features/Refuge/**` `Main/_Module/AssetPackages/*.tpac` | cleared |
 | LOTRAOM | `LOTRAOM` | maintainer-owned | data-port | `Main/_Module/ModuleData/characters/lords.xml` `Main/_Module/ModuleData/**/taom_wanderer*.xml` `Main/_Module/ModuleData/lords.xslt` `Main/_Module/ModuleData/spcultures.xslt` `Main/Features/WarOfTheRingMomentum/**` `Main/Features/Messengers/**` `Main/Features/HeroRace/**` | cleared |
-| ADOD_Beasts | `ADOD_Beasts` `ADOD` `ADODHowdahObject` `ADODBeastsMissionLogic` | purchased-asset, code terms informal | behavioural-port | `Main/Features/Elephant/**` `Main/Features/ElephantLike/**` `Main/Features/Mumakil/**` `Main/Features/WarRam/**` `docs/reference/lotrlome-armory-snapshot/Prefabs/taom_howdah_platform.xml` (live: `LOTRLOME_Armory/Prefabs`) | cleared |
+| ADOD_Beasts | `ADOD_Beasts` `ADOD` `ADODHowdahObject` `ADODBeastsMissionLogic` | purchased-asset, code terms informal | behavioural-port | `Main/Features/Elephant/**` `Main/Features/ElephantLike/**` `Main/Features/Mumakil/**` `Main/Features/WarRam/**` `Main/Features/Elk/**` `docs/reference/lotrlome-armory-snapshot/Prefabs/taom_howdah_platform.xml` (live: `LOTRLOME_Armory/Prefabs`) | cleared |
 | BehaviorTrees | `BehaviorTrees.dll` | maintainer-owned | verbatim-port | `Main/BehaviorTrees/**` | cleared |
 | BannerlordTogether | `BannerlordTogether` `BattleLinkMPClient` | no-decompile policy, see detail | interop-only | (none) | cleared |
 | BannerlordCoop | `BannerlordCoop` `Bannerlord-Coop-Team` `Bannerlord.Coop` | UNKNOWN | comparison-only | (none) | uncleared |
@@ -84,7 +84,8 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Minion Pro (Adobe) | `minionpro` `Minion Pro` | Adobe commercial, redistribution NOT granted by a desktop licence | redistributed | `Main/_Module/GUI/Fonts/minionpro.{fnt,bfnt}` | uncleared |
 | Ringbearer | `ringbearer` | UNKNOWN | redistributed | `Main/_Module/GUI/Fonts/ringbearer.{fnt,bfnt}` | uncleared |
 | Khuzdul vocabulary (J.R.R. Tolkien) | `Khuzdul` `Khazad` `Baruk` `khuzdul-lexicon` | UNKNOWN | verbatim-port | `docs/audio/khuzdul-lexicon.html` `docs/audio/vo-script-dwarves.html` | uncleared |
-| Cave Troll Lightweight (Fab) | `Cave Troll Lightweight` `cave_troll_lightweight` | Fab Standard License, tier and creator to be copied from the product page | data-port | `tools/oneoff/ue_export_cave_troll.py`; export staging `E:\LOTRAOMAssets\_export\cave_troll_lightweight\` (outside the repo); nothing ships yet | pending-license |
+| Cave Troll Lightweight (Fab) | `Cave Troll Lightweight` `cave_troll_lightweight` | purchased-asset, code terms informal | data-port | `tools/oneoff/ue_export_cave_troll.py` `tools/blender/retarget_mannequin_to_human.py`; the retargeted `anim_troll_*` clips in `LOTRLOME_Armory` (live, outside the repo) | cleared |
+| Animalia - Elk (male), Animalia - Moose (male) (Fab) | `Animalia` `Elk_M` `Moose_M` `animalia_elk` `animalia_moose` | purchased-asset, code terms informal | data-port | `tools/blender/reskin_animalia_to_horse.py` `tools/blender/retarget_animalia_to_horse.py` `tools/blender/animalia_to_horse_map.json` `docs/features/animalia-elk-moose.md`; meshes, clips and textures in `LOTRLOME_Armory/AssetSources/creature/elk/` and their Kit packages in `LOTRLOME_Armory/Assets/creature/elk/` (live, outside the repo) | cleared |
 | Yotthani DualWield handoff, MithrilForge | `MithrilForge` `DualWield` `Bannerlord_Animation_Handoff` `TpacTool-bannerlord` | MIT (MithrilForge); the handoff document was shared with the maintainer by its author, no licence stated | comparison-only | (none) | cleared |
 
 <!-- provenance-register-end -->
@@ -452,14 +453,26 @@ naming thirteen files that do. TOR_Core is a separate source, referenced for eng
 ### Cave Troll Lightweight (Fab)
 
 Bought on Fab (Epic) on 2026-09-17 as a source of troll animation clips, skeletal mesh and textures
-for the `cave_troll` race. Fab sells under its Standard License in Personal and Professional tiers;
-which tier was bought, and the creator's published name, are on the product page in My Library and
-have not been copied here yet, hence `pending-license`. Nothing derived from the pack ships today:
-`tools/oneoff/ue_export_cave_troll.py` exports it out of a UE 5.4 project into a staging folder
-outside the repo, and anything that later reaches `LOTRLOME_Armory` (a retargeted clip, a converted
-mesh) is `data-port` under that licence. The same acquisition path was used in July 2026 for the
-Fab Medieval Tent Collection and the ElvenForestCity kit (both in `TAOM_Map/AssetSources/Scenes/`),
-which have no row yet; adding them is open work, not something this row covers.
+for the `cave_troll` race. `tools/oneoff/ue_export_cave_troll.py` exports it out of a UE 5.4 project
+into a staging folder outside the repo; the retargeted clips now live in `LOTRLOME_Armory`, which is
+`data-port`. **Cleared on 2026-09-23 by the maintainer's decision:** the product was bought, and the
+creator's name and the Fab licence tier are not recorded (Mike: "I do not care about the fab
+creator/license. We bought the product."). That decision covers every Fab purchase, so the row no longer
+waits on the product page. The same acquisition path was used in July 2026 for the Fab Medieval Tent
+Collection and the ElvenForestCity kit (both in `TAOM_Map/AssetSources/Scenes/`), which have no row yet;
+adding them is open work, not something this row covers.
+
+### Animalia - Elk (male) and Animalia - Moose (male) (Fab)
+
+Bought on Fab on 2026-09-23 (#646): two quadruped packs with their own rigs, clips and textures. They
+come out of UE 5.4 through the same exporter, then `tools/blender/reskin_animalia_to_horse.py` bends the
+meshes onto `horse_skeleton` keeping the pack's weights and `tools/blender/retarget_animalia_to_horse.py`
+moves the clips onto the same skeleton; the textures are converted to 1K. Everything derived is art and
+animation data (`data-port`); no code is taken, so the "code terms informal" half of the licence value is
+empty here. The derived files sit in `LOTRLOME_Armory/AssetSources/creature/elk/` and reach players
+through the Armory, not through a TAOM `bin` folder, so nothing goes into a `THIRD-PARTY-LICENSES.txt`
+(the same as ADOD_Beasts). Cleared under the maintainer's Fab decision recorded in the Cave Troll section.
+Record: [`docs/features/animalia-elk-moose.md`](../features/animalia-elk-moose.md).
 
 ### Khuzdul vocabulary (J.R.R. Tolkien)
 

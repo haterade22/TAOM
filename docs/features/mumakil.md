@@ -115,6 +115,14 @@ unification (#305) the formerly-cloned internals are SHARED:** `MumakilAttackSer
 > **The Monster XML, Horse item, mesh, and SubModule.xml registration live in the external `LOTRLOME_Armory` module
 > (the game install), NOT this repo** — same as the elephant. They are not version-controlled here.
 
+### Player-ridden mûmakil attack too (#643, 2026-09-23)
+
+The trample and the tusk swings fire under ANY rider, the player included, as the warg's bite does (Mike: "All trees like the elephant, mumakil, the Rams, and Elk should also do these things when controlled by a player. Like the warg"). The tree used to gate its attack branch on `IsAiControlledDecorator`, so a player-ridden mount fell through to a one-second sleep and never attacked; the branch now sits directly under `HasRiderDecorator`. The attack stays automatic (enemy in front, in range, off cooldown), the rider keeps steering, and the knockdown rule is unchanged: anyone not shield-blocking goes down, a mounted victim is dismounted.
+
+**The blow is the rider's**, the creature's only once the rider has gone (the warg's rule), and the combat log reads Pierce instead of Blunt; the engine evidence for both is in [elephant.md](elephant.md), "Player-ridden elephants attack too". On a 3x beast the rider sits high, which lifts the hit's position, and with it the hit sound, well above the victim.
+
+The mûmakil stays mount-locked, so a player only rides one they spawned on.
+
 ## Key files
 
 | File | Role |

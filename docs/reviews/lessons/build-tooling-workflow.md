@@ -2139,6 +2139,8 @@ The war ram's Monster moved from `action_set="as_horse"` to `"as_war_ram"`. The 
 - **Why missed:** a search written in the vocabulary of the new state cannot find text written in the old one. `check_handbook_attributes.py` validates marker attribute NAMES against the engine dump, not VALUES against the file a marker names, so it printed 0 findings.
 - **Prevent:** before claiming a docs sweep is done, grep the literal old value (`attr="old"`, the old id, the old number) across `docs/`, `Main/` comments and the external modules' comments, and classify every hit as fixed, historical (marked superseded) or generic advice that is still true.
 - **Source:** #618 deep review, 2026-09-18, `docs/reviews/rca-war-ram-headbutt-2026-09-18.md` finding F1.
+- **Recurred 2026-09-22 (#636, `docs/reviews/rca-elk-2026-09-22.md` F8), four days later, on the next creature:** the old values `saddle_horse`, `noble_horse_southern` and `charger` were never grepped, and inserting 12 lines into the Armory's `SubModule.xml` silently shifted six line numbers the modding handbook cites. Add to the grep: every doc that cites a LINE NUMBER in a file you inserted lines into (`grep -rn "<file name>:[0-9]" docs/`).
+- **Recurred again 2026-09-23 (#643, `docs/reviews/rca-elk-delta-2026-09-23.md` F2, F3, F12), the third time in five days, all on creature work:** removing the `IsAiControlledDecorator` level from four trees, the doc pass added a subsection to each creature doc and grepped nothing, so `elephant.md`'s tree diagram and the Phase 7 template in `creature-mount-authoring.md` (the doc `/new-creature-mount` reads first) kept prescribing the gate. The Completeness lens caught it all three times; the author never did, so a rule met only at review time is not reaching the author. The fix has to be mechanical: a check that lists every identifier a diff deletes from `*.cs` that no longer exists in code and greps `docs/` and `.claude/` for it (recommended as its own change). Until it exists, before writing "docs updated": `git diff -U0 -- '*.cs' | grep '^-'`, take every removed type, member or decorator name, and grep each.
 
 ### Verify a re-serialised binary against the original bytes, not the fields its own library reads back
 `wire_anim_master_clip.ps1` re-saves a Kit-written clip tpac through TpacTool and verified the result by reading its fields back through TpacTool. The file came back 48 bytes shorter: the item version word 6 became 5 and the Kit's dependency tail (the master's GUID) was gone. The field read-back showed only the two intended changes.
@@ -2201,3 +2203,57 @@ Howdah crew spawn sat behind a commented-out call from June to September. Turnin
 - **Why missed:** "re-enable X" reads as a toggle, and the June code had once run, which read as proof.
 - **Prevent:** when a parked path comes back, review it as if newly written: trace it end to end against today's data and engine, and compare it with the reference it was ported from. Also: a validator described as read-only may write (`audit_armory_refs.py` rewrites `docs/audits/armory-ref-audit.md` on every run); re-run such a tool just before staging its output.
 - **Source:** `docs/reviews/rca-howdah-prefab-review-2026-09-19.md` (delta addendum), #627.
+
+### `ReadAllText` strips the BOM, so a "keep the BOM if present" check on its result can never fire
+A one-number edit to `docs/reviews/LESSONS-LEARNED.md` was made with PowerShell `[IO.File]::ReadAllText` then `WriteAllText(..., new UTF8Encoding($raw.StartsWith([char]0xFEFF)))`. `ReadAllText` detects the BOM and removes it from the string it returns, so `StartsWith(0xFEFF)` was always false and the write dropped the file's `EF BB BF`, a hunk nobody asked for in a file two sessions were editing.
+- **Why missed:** the check read as a preservation guard and was never run against a file known to have a BOM; its input had already lost the thing it was testing for.
+- **Prevent:** decide the BOM from bytes (`[IO.File]::ReadAllBytes(p)[0..2]`), or edit with the Edit tool, which keeps the file's encoding. After any scripted rewrite of a tracked file, `git diff --stat` it: a line-1 hunk you did not intend is the tell.
+- **Source:** `docs/reviews/rca-shield-rethrow-stack-2026-09-22.md` deep review finding 4.
+
+### `\b` is not a separator in snake_case: `\bao\b` never matches `elk_m_ao`
+`convert_tripo_prop_textures.py` found its AO map by `\bao\b`. `_` is a word character, so there is no boundary between `m_` and `ao` and a map named `Elk_M_AO.tga` was skipped; the converter then used a constant 1.0 and said so in one line. The throne's bake staging names its map plain `ao.png`, which matched, so no shipped texture lost its AO; the Animalia packs (#646) would have.
+- **Why missed:** the pattern was written against the one staging layout it first met, and the fallback to a constant is quiet by design.
+- **Prevent:** match a token inside snake_case names with explicit separators, `(^|[^a-z])ao([^a-z]|$)`, and try every role pattern against the real file names of a new source before the run (the converter prints `maps found`: read it).
+- **Source:** `tools/oneoff/convert_tripo_prop_textures.py` (fixed 2026-09-23), `docs/features/animalia-elk-moose.md` "Textures".
+
+### PowerShell variable names are case-insensitive: `$M` and `$m` are the same variable
+A two-run PowerShell line kept the bone-map path in `$M` and then set `$m` to the moose output folder. The second Blender run was handed the folder as `--map` and failed with `Permission denied` on opening it; the first run, made before the reassignment, was fine.
+- **Why missed:** the names look distinct to anyone reading them with Bash or Python habits.
+- **Prevent:** in PowerShell, give variables names that differ by more than case (`$mapPath`, `$mooseOut`). The commonest shape is a lookup table named in capitals and its loop variable in lower case: it struck again the same afternoon, after this lesson was written, when `$role = $PLAN[...]` in `gen_animalia_anim_clips.ps1` overwrote the `$ROLE` template table and the next `$ROLE[$r]` threw a null-index error. Name the table for what it holds (`$TEMPLATE_OF`) and the item for what it is (`$clipRole`).
+- **Source:** #646 moose reskin run and `tools/gen_animalia_anim_clips.ps1`, 2026-09-23.
+
+### A Fab pack's first skeletal mesh on a skeleton may be a fur shell, not the body
+`ue_export_cave_troll.py` gave each clip the first SkeletalMesh bound to its skeleton as the preview mesh that carries the rig into the FBX. The Animalia packs list `Fur/Elk_M_FurBase` (a GFur shell) before `Meshes/Elk_M`, so every clip would have shipped the fur shell. The cave troll pack had one mesh, so the rule had never been tested.
+- **Why missed:** a single-mesh pack makes "first" and "right" the same.
+- **Prevent:** prefer the mesh named after the skeleton (`Elk_M_Skeleton` picks `Elk_M`), fall back to the first; after an export, grep one clip FBX for the fur shell's name.
+- **Source:** `tools/oneoff/ue_export_cave_troll.py` `_mesh_for_skeleton` (2026-09-23).
+
+### A PreToolUse gate's decision counts only under `hookSpecificOutput`; prove a gate live (#647, 2026-09-23)
+Nine TAOM gates printed `{"permissionDecision": "deny", ...}` at the top level of their JSON, and Claude Code ignores that form, so no deny or ask they returned was ever honoured: the destructive-git prompt, `/freeze`, the commit-label, CHANGELOG, ModuleData and doc-drift gates. A debug dump showed the label gate returning a deny in 0.25 s while the commit ran.
+- **Why missed:** `harness-facts.md` stated the top-level form as the contract, and `tools/test_hooks.sh` judged a decision by matching the text `"permissionDecision":"deny"`, which the nested form contains too. Every test ran a gate through bash; none ran a tool call through the harness. The hooks catalog's "Hard-blocks" lines described the source, not an observed refusal.
+- **Prevent:** print `{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":...,"permissionDecisionReason":...}}` or exit 2. `test_hooks.sh` 5c fails the top-level form statically, and section 4 reads decisions the way the harness does. A gate is done when a live tool call it must stop has been shown refused (`hook-authoring.md` "Prove a gate live").
+- **Source:** `docs/reviews/rca-adr011-batch1-2026-09-23.md` F1.
+
+### Hook Python reads stdin in the ANSI code page: one character outside it blinded every gate (#647, 2026-09-23)
+On Windows a piped stdin and stdout default to cp1252. A command holding a character outside it made the hooks' extraction `print(command)` raise inside `except: pass`, the command came back empty, and each gate treated it as nothing to check. With the old `_pybin.sh`, `NOTE=→ git push --force origin bannerlord-1.4.5` passed the force-push block.
+- **Why missed:** every test payload was ASCII, and the bare `except` turned an encoding error into the gate's "not my command" path, which is silent by design.
+- **Prevent:** `_pybin.sh` exports `PYTHONIOENCODING=utf-8` for every hook that sources it. Test a gate with a non-ASCII command as raw and as escaped JSON; a new gate copies those cases.
+- **Source:** `docs/reviews/rca-adr011-batch1-2026-09-23.md` F2.
+
+### A CI step covers only the branches its workflow's `on:` block names (#647, 2026-09-23)
+The context-budget step went into `build.yml`'s validate job, which runs only for pushes and pull requests to `bannerlord-1.4.5`, while the work lands on `bannerlord-1.5.x`. The ADR said the gate "fails CI for every committer".
+- **Why missed:** the step was added to a job that already existed, and the workflow's triggers were never read.
+- **Prevent:** before claiming CI checks something, read the workflow's `on:` block and name the branches it covers. A gate meant for every committer gets a workflow with no branch filter (`.github/workflows/doc-budget.yml`).
+- **Source:** `docs/reviews/rca-adr011-batch1-2026-09-23.md` F6.
+
+### Read a shell command, Markdown or YAML with its parser, not a line regex (#647, 2026-09-23)
+Three gates approximated a language with regexes and each broke on valid input. The commit gate missed `$'...'` quoting, attached `-m"..."` and concatenated words, and took option-shaped prose inside a message for a real option. The import scan closed a four-backtick fence on a three-backtick line and read a code span across lines as prose. The budget took a rule with unparseable frontmatter for path-scoped.
+- **Why missed:** each regex matched the forms seen so far, and every test used those forms.
+- **Prevent:** tokenize shell with `shlex` (decode `$'...'` first, split at `;`, `&&`, `|` and unquoted newlines) and read each command's own options; scan Markdown by its documented rules (fence character and length, spans across lines inside a paragraph); parse YAML with `yaml.safe_load`. Test the unusual forms the language allows, not only the usual ones.
+- **Source:** `docs/reviews/rca-adr011-batch1-2026-09-23.md` C2 to C6.
+
+### A timeout check that picks hooks by what they launch misses the one slow for another reason (#647, 2026-09-23)
+`check-claude-files-tracked.sh` asked git two or three times per file, took 6 s against its 5 s registration, and was killed on every commit, which reads as a pass. `test_hooks.sh` check 3 times only hooks that launch a `tools/*.py`, so it never looked at this one: the 2026-08-31 "measure the slow path" lesson, missed a second time by how the check chose its hooks.
+- **Why missed:** the check discovered hooks by their external tool, not by being a gate.
+- **Prevent:** check 4b times every PreToolUse gate on a commit payload against the real repo and fails at 80% of its registration. Query git once for all files, never once per file.
+- **Source:** `docs/reviews/rca-adr011-batch1-2026-09-23.md` C1.

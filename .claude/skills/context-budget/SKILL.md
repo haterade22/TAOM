@@ -6,140 +6,68 @@ argument-hint: [optional: --verbose for per-file breakdown]
 
 # Context Budget
 
-Quantifies what TAOM's `.claude/` setup consumes from the context window before a single user message is processed. Drives every other context optimization decision (e.g., whether two-layer skill injection or three-layer compression are urgent or premature).
+Measures what TAOM's setup puts into Claude's context before the first user message, and what every
+custom subagent spawn pays. The budgets it checks come from
+[ADR-011](../../../docs/adrs/011-knowledge-delivery-tiers.md). Adapted from
+[affaan-m/everything-claude-code](https://github.com/affaan-m/everything-claude-code/tree/main/skills/context-budget).
 
-Adapted from [affaan-m/everything-claude-code](https://github.com/affaan-m/everything-claude-code/tree/main/skills/context-budget).
+## When to use
 
-## When to Use
+- Before optimizing the harness, and after adding an agent, skill, rule, hook, plugin or MCP server.
+- When a session hits compaction earlier than expected.
+- To re-baseline `docs/context-budget-baseline.md`.
 
-- Baseline diagnostic before optimizing the harness
-- Session feels sluggish or hits compaction earlier than expected
-- After adding agents, skills, rules, hooks, or MCP servers
-- Planning to add more components and want to know if there's room
-
-## How It Works
-
-### Phase 1: Run the scan
+## Phase 1: run the scan
 
 ```bash
-bash .claude/skills/context-budget/scan.sh
+bash .claude/skills/context-budget/scan.sh            # summary
+bash .claude/skills/context-budget/scan.sh --verbose  # per-file breakdown
 ```
 
-This walks every `.claude/` component, the `.mcp.json`, and `CLAUDE.md`, then prints a structured report.
+## Phase 2: read the report
 
-For a per-file breakdown, run with `--verbose`:
+| Line | What it counts |
+|---|---|
+| Eager baseline | CLAUDE.md with its `@`-imports, skill and agent descriptions, rules without `paths:`, MCP tool names, plugin descriptions, MEMORY.md (first 200 lines, cut at 25 KB) |
+| Per custom-agent spawn | CLAUDE.md, its imports and the rules without `paths:`; custom and general-purpose agents load these on every spawn, and no subagent loads MEMORY.md |
+| Worst case | the baseline plus every skill and agent body |
+| MCP "if eager" | what the schemas would cost; they stay deferred unless `ENABLE_TOOL_SEARCH=false` |
 
-```bash
-bash .claude/skills/context-budget/scan.sh --verbose
-```
+## Phase 3: decide
 
-### Phase 2: Read the report
-
-Sample structure:
-
-```
-TAOM Context Budget Report
-===========================
-
-Total estimated baseline overhead: ~XX,XXX tokens
-Context model: Claude Opus 4.7 (1M)
-Effective available context: ~XXX,XXX tokens (XX% headroom)
-
-Component Breakdown:
-+-----------------+-------+-----------+
-| Component       | Count | Tokens    |
-+-----------------+-------+-----------+
-| CLAUDE.md       | 1     | ~X,XXX    |
-| Agents          | N     | ~X,XXX    |
-| Skills          | N     | ~X,XXX    |
-| Rules           | N     | ~X,XXX    |
-| MCP servers     | N     | ~XX,XXX   |
-| Hooks (shell)   | N     | ~X,XXX    |
-+-----------------+-------+-----------+
-
-Issues Found (N):
-[ranked by token savings]
-
-Top 3 Optimizations:
-1. [action] -> save ~X,XXX tokens
-2. [action] -> save ~X,XXX tokens
-3. [action] -> save ~X,XXX tokens
-```
-
-### Phase 3: Decide
-
-Use the report to answer:
+The caps are constants in `tools/lint_docs.py`; `python tools/lint_docs.py --context-budget-json`
+prints their values with the files they measure, and `scan.sh` reads that rather than keeping its
+own copy.
 
 | Question | Threshold | Action |
-|----------|-----------|--------|
-| Are skills loading bodies into base context? | Skills total >10K tokens | Strongly consider two-layer skill injection |
-| Are MCP servers dominating overhead? | MCP >50% of total | Audit for CLI-replaceable servers (gh, git wrappers) |
-| Is CLAUDE.md too long? | >300 lines | Move repeating rules into scoped `.claude/rules/*.md` files |
-| Are agent descriptions bloated? | >30 words in any agent | Tighten frontmatter — descriptions are loaded into every Task spawn |
-| Are individual files heavy? | Skill >400 lines, Agent >200, Rule >100 | Split or reference an external doc |
+|---|---|---|
+| Is CLAUDE.md with its imports too big? | `ENTRY_DOCS_MAX_BYTES`, or a file over `ENTRY_DOC_MAX_LINES` | Route detail to its owning doc, a path rule or a skill (ADR-011) |
+| Are the always-load rules too big? | `UNSCOPED_RULES_MAX_BYTES` for the rules without `paths:` together | Compress, or give the rule a `paths:` scope |
+| Is a path-scoped rule too big? | `SCOPED_RULE_MAX_BYTES` | Move incident narratives to lessons or an RCA |
+| Is MEMORY.md drifting? | over 40 lines or 4 KB (ADR-011), or a dead link | Memory holds resume cards only; project facts go to the repo |
+| Is a description bloated? | over 30 words | Trim it; descriptions load on every Task spawn |
+| Are MCP schemas eager? | `ENABLE_TOOL_SEARCH=false` | Unset it, or drop servers that wrap a CLI |
 
-### Phase 4: Record baseline
+The same constants gate every commit that touches an entry doc or a rule (the commit hook runs
+`lint_docs.py --drift-only`) and every push (`.github/workflows/doc-budget.yml`); this scan adds the
+per-spawn view, MCP and memory.
 
-After the first run on a clean session, record numbers in `docs/context-budget-baseline.md`. Re-run after any harness change to detect creep.
+## Phase 4: record the baseline
 
-## Token Estimation
+Write the numbers into `docs/context-budget-baseline.md` with the date and what changed.
 
-The scanner uses simple heuristics:
+## Token estimation
 
-- **Prose markdown** (skills, agents, rules, CLAUDE.md): `words × 1.3`
-- **Code-heavy files** (.sh hooks, JSON): `chars / 4`
-- **MCP tools**: `~500 tokens` per declared tool, fixed estimate
-- **MCP server overhead**: `~200 tokens` per server (config + metadata)
-
-These match Anthropic's published rough tokenizer behavior to within ~10%. Good enough for budget decisions; not exact.
-
-## What's Counted
-
-| Path | What it represents |
-|------|-------------------|
-| `CLAUDE.md` | Always loaded into every session |
-| `.claude/agents/*.md` | Agent descriptions loaded with every Task tool spawn (full body loaded only when invoked) |
-| `.claude/skills/*/SKILL.md` | Skills (loaded names; bodies on demand if Claude Code skill cache is two-layer — verify this!) |
-| `.claude/rules/*.md` | Scoped rules; loaded conditionally based on file glob, but counted as worst-case |
-| `.claude/hooks/*.sh` | Hook scripts — not loaded into context, but counted to surface candidates for consolidation |
-| `.mcp.json` | MCP server count + estimated tool count overhead |
-
-## What's NOT Counted
-
-- User message history (variable)
-- System prompt boilerplate from Claude Code itself (fixed, ~3-5K tokens)
-- Memory file contents (loaded on demand)
-- Plan files
-- Tool call results during a session
-
-## Best Practices
-
-- **MCP is usually the biggest lever.** Each tool schema costs ~500 tokens. A 30-tool server eats more than every skill combined.
-- **Agent descriptions are loaded always.** Even if the agent is never invoked, its description sits in the Task tool context for every spawn decision.
-- **Verbose mode is for debugging.** Don't run it for routine audits — it drowns the signal.
-- **Audit after changes.** Run after adding any agent/skill/MCP server to catch creep early.
-- **Re-baseline quarterly.** Token tokenizer drift, model context window changes, and harness churn make the baseline file age fast.
-
-### Token-optimization knobs (beyond trimming)
-
-Trimming the eager surface is the structural lever; these per-session knobs reduce live cost (sourced from affaan-m/ECC's token-optimization guidance, 2026-05-29 — adopted as tips, not enforced). **All numeric values below are `[HEURISTIC]` estimates — re-verify against the current model/MCP limits, do not treat as exact:**
-
-- **Cap thinking tokens.** Set `MAX_THINKING_TOKENS` (default ~32k) to ~10k for routine work — large savings on hidden reasoning cost. Raise it deliberately for genuinely hard reasoning.
-- **Disable unused MCP servers per project.** A 200k window can effectively be ~70k with too many tools enabled. Keep active tool count modest (a useful rule of thumb is well under ~80); disable servers you aren't using in `.mcp.json` / settings rather than carrying all of them.
-- **Compact at a logical breakpoint, not at the wall.** Trigger `/compact` once a plan is finalized (clearing exploration context) rather than waiting for the auto-compact threshold. The `suggest-compact` hook already nudges this.
-- **Model tiering** (already in CLAUDE.md "Model Routing"): Haiku for read-only/search, Sonnet for most coding, Opus for architecture/deep reasoning.
-
-## Common Findings (Expected for TAOM)
-
-These are illustrative ratios, not current counts (the inventory drifts fast — as of 2026-05-28 it was ~32 skills, 5 agents, 15 rules, 18 hook scripts, 5 MCP servers). **Always run `scan.sh` for the live numbers; do not trust hardcoded counts in this doc:**
-
-- **MCP overhead dominant.** Serena alone has ~20+ tools (find_symbol, get_symbols_overview, find_referencing_symbols, etc.). Filesystem MCP plus git/github push the count over 50 tools. Expect MCP to be 40-60% of total overhead.
-- **CLAUDE.md substantial.** At ~10 words/line × 1.3, every 100 lines ≈ 1,300 tokens — check `scan.sh` for the current size.
-- **Skills: frontmatter is the eager cost.** Per `harness-facts.md`, only skill *descriptions* load at startup; bodies load lazily (only the invoked skill's body enters context). So ~32 skills cost ~32 descriptions eagerly, not 32 full bodies — the per-body line count matters only when a skill is actually invoked.
-- **Rules load contingent on globs.** Not all loaded every session, but counted at worst case.
-
-If MCP dominates and CLAUDE.md is large, the highest-leverage trim is usually MCP server pruning, not skill refactoring.
+Eager markdown is estimated at bytes/4: words×1.3 undercounted text dense with paths and code, putting
+the 49 KB CLAUDE.md of 2026-09-22 at 8.5K tokens instead of about 12K. Descriptions use words×1.3, a
+deferred MCP tool name ~15 tokens, a loaded schema ~500. Treat the numbers as ordinal: which item is
+biggest, not an exact count.
 
 ## Notes
 
-This skill is adapted for TAOM's layout (skills-as-directories, .mcp.json at project root). The token estimates are conservative — actual context cost varies by Claude Code version, MCP transport overhead, and tokenizer revision. Treat numbers as ordinal (which is biggest) not cardinal (exact byte count).
+- Skill bodies are lazy, and after `/compact` each invoked skill returns capped at 5,000 tokens, so
+  the most important instructions go at the top of a SKILL.md.
+- Hooks cost nothing in context, but a hook that prints outside a visible channel does nothing
+  either (`harness-facts.md` "Hook lifecycle").
+- Per-session knobs that are not measured here: cap thinking tokens for routine work, and
+  `/compact` at a logical break rather than at the wall.

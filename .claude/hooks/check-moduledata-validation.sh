@@ -15,12 +15,12 @@
 # MISSING_CIVILIAN_TYPE, BROKEN_PARTY_TEMPLATE_REF, DUPLICATE_ITEM_DEF -- do
 # not). Run `python tools/validate_moduledata.py` manually to see warnings.
 #
-# Fail-open (per .claude/rules/harness-facts.md "TAOM hooks MUST fail open"):
+# Fail-open (per .claude/rules/harness-facts.md "TAOM hooks fail open"):
 # ANY hook-internal failure -- no python, validator crash, missing game install
 # (rc=2), nothing staged -- ALLOWS the commit. Only a genuine validator ERROR
 # exit (rc=1) blocks.
 #
-# Returns: {} to allow, {"permissionDecision":"deny","message":"..."} to block.
+# Returns: {} to allow, {"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"..."}} to block.
 
 set -uo pipefail
 
@@ -43,7 +43,7 @@ except Exception:
 ' 2>/dev/null)
 
 # Two-stage git-commit matcher: handle `git -C/-c ... commit`; reject
-# `git commit-tree` / `commit-graph`. Per .claude/rules/harness-facts.md.
+# `git commit-tree` / `commit-graph`. Per .claude/rules/hook-authoring.md "Git invocation forms hooks must handle".
 case "$COMMAND" in
     *"git commit-"*) echo '{}'; exit 0 ;;
 esac
@@ -118,7 +118,7 @@ RC=$?
 # 124 = the inner timeout fired. Never report this as a pass; ask instead of blocking,
 # because an overrun is an infrastructure fault and a hook's own fault must not hard-block.
 if [[ $RC -eq 124 ]]; then
-    printf '%s\n' '{"permissionDecision":"ask","message":"[check-moduledata-validation] The ModuleData validator exceeded its 45s budget and was stopped. This commit is UNCHECKED for broken Item/NPCCharacter refs, unknown or landless cultures, and duplicate ids. This is NOT a pass. Run: python tools/validate_moduledata.py"}'
+    printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":"[check-moduledata-validation] The ModuleData validator exceeded its 45s budget and was stopped. This commit is UNCHECKED for broken Item/NPCCharacter refs, unknown or landless cultures, and duplicate ids. This is NOT a pass. Run: python tools/validate_moduledata.py"}}'
     exit 0
 fi
 
@@ -136,5 +136,5 @@ print(json.dumps(
 ' 2>/dev/null)
 [[ -z "$MSG" ]] && { echo '{}'; exit 0; }
 
-printf '{"permissionDecision":"deny","message":%s}\n' "$MSG"
+printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":%s}}\n' "$MSG"
 exit 0

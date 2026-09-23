@@ -378,7 +378,7 @@ ships as a downloadable Release zip. Export tuned offsets to JSON and patch them
 ## Related
 - [weapon-xml-pipeline.md](../features/weapon-xml-pipeline.md) — automated alternative for self-contained weapons
 - [item-equipment-model.md](../reference/engine/item-equipment-model.md) — engine `ItemObject`/`ItemComponent`/`Equipment` model
-- CLAUDE.md "Equipment & Armory" — canonical-folder table per item-ID prefix
+- [armory-guide.md](../reference/armory-guide.md): canonical-folder table per item-ID prefix
 - memory `kingdom-culture-mapping` — full LOTR-faction → culture-id table
 
 ---

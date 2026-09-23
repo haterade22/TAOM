@@ -6,10 +6,10 @@
 #
 # Why: across three review passes on the Tier 1 adoption (efbde5b, 5df21ea)
 # we shipped two commits without updating CHANGELOG.md despite the mandatory
-# rule in CLAUDE.md "Documentation Requirements". Codex caught it both times.
+# rule in AGENTS.md "Documentation duty". Codex caught it both times.
 # This hook catches it FIRST so the commit doesn't ship.
 #
-# Returns: {} to allow, {"permissionDecision":"deny", "message":"..."} to block.
+# Returns: {} to allow, {"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny", "permissionDecisionReason":"..."}} to block.
 
 set -uo pipefail
 
@@ -121,5 +121,5 @@ fi
 
 # Fail the commit with a clear message.
 cat <<'EOF'
-{"permissionDecision":"deny","message":"[check-changelog-changed] This commit touches .claude/, CLAUDE.md, or AGENTS.md but does NOT include a CHANGELOG.md update. Per CLAUDE.md 'Documentation Requirements (MANDATORY)', every session must update CHANGELOG.md. Add a CHANGELOG entry under today's date and re-stage. To bypass intentionally (rare), use git commit --no-verify -- but this hook is independent so that flag won't help; instead, stage CHANGELOG.md."}
+{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"[check-changelog-changed] This commit touches .claude/, CLAUDE.md, or AGENTS.md but does NOT include a CHANGELOG.md update. Per AGENTS.md 'Documentation duty', every session updates CHANGELOG.md. Add a CHANGELOG entry under today's date and re-stage. To bypass intentionally (rare), use git commit --no-verify -- but this hook is independent so that flag won't help; instead, stage CHANGELOG.md."}}
 EOF

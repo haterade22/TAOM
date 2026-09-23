@@ -56,6 +56,13 @@
     <Item id="taom_ram_barding_heavy_b" cultures="erebor" min_stock="1" />
     <Item id="taom_ram_barding_elite_a" cultures="erebor" min_stock="1" />
     <Item id="taom_ram_barding_elite_b" cultures="erebor" min_stock="1" />
+
+    <!-- The great elk and its saddle (#636), from the same Armory file, already
+         culture="Culture.mirkwood" upstream. Here for min_stock, as the rams are: the elk_rider
+         career starts the player on this elk, so a Mirkwood town must always have a remount, and
+         the saddle is the rider's seat, not optional armour. -->
+    <Item id="taom_elk_a" cultures="mirkwood" min_stock="1" />
+    <Item id="taom_elk_saddle_a" cultures="mirkwood" min_stock="1" />
   </Routing>
 
 </CultureMarketplaceConfig>

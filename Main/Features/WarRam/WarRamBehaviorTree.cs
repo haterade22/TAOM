@@ -10,7 +10,7 @@ using TaleWorlds.MountAndBlade;
 namespace TAOM.Features.WarRam;
 
 /// <summary>
-/// Behavior tree for the AI war ram, the warg/elephant/Mumakil per-agent BT pattern, built from the
+/// Behavior tree for the ridden war ram, the warg/elephant/Mumakil per-agent BT pattern, built from the
 /// SHARED elephant-like nodes bound to <see cref="WarRamCombat.Profile"/>. Built per ram by
 /// <see cref="WarRamMissionBehavior"/> via a <c>BehaviorTreeAgentComponent</c>, ticked from
 /// <c>BehaviorTreeMissionLogic.OnMissionTick</c> on the main thread (#592).
@@ -19,8 +19,10 @@ namespace TAOM.Features.WarRam;
 /// When a live enemy is in front and the kick is off cooldown (10 s), the ram fires it via
 /// <see cref="ElephantLikeTrampleTask"/>; there is no side-attack fallback sequence like the war
 /// elephant/Mumakil's tusk swing, so the ram simply idles between kicks and the engine's regular mount
-/// AI (rider cavalry AI + native charge) continues underneath, same as the other elephant-like
-/// creatures. This is a single-attack creature by design, not a scaled-down elephant.
+/// handling (the rider's steering or cavalry AI, plus native charge) continues underneath, same as the other
+/// elephant-like creatures. This is a single-attack creature by design, not a scaled-down elephant. The butt
+/// fires under ANY rider, the player included, as the warg's bite does (Mike, 2026-09-23): it is automatic and
+/// the rider keeps steering.
 ///
 /// Blackboard: cooldown stamps + target bearing (<see cref="IBTElephantLikeBlackboard"/>) are declared
 /// on this tree because the interface requires them, even though <c>SideAttackLastFired</c> and
@@ -53,17 +55,14 @@ public class WarRamBehaviorTree : BehaviorTree, IBTBannerlordBase, IBTElephantLi
         var profile = WarRamCombat.Profile;
         return StartBuildingTree(new WarRamBehaviorTree(agent))
             .AddSelector("main")
-                .AddSelector("has rider", new HasRiderDecorator())
-                    .AddSelector("ai controlled", new IsAiControlledDecorator())
-                        .AddSelector("enemy in range", new ElephantLikeEngageDecorator(profile))
-                            .AddSequence("kick attack", new ElephantLikeAttackOffCooldownDecorator(profile, ElephantLikeAttackKind.Trample, WarRamConfig.AttackCooldownSeconds))
-                                .AddTask(new ElephantLikeTrampleTask(profile))
-                                .AddTask(new SleepTask(new(0, 0, 0, 0, 300)))     // settle before next eval
-                            .Up()
-                        .Up()                                                     // on cooldown -> falls through
-                        .AddTask(new SleepTask(new(0, 0, 0, 0, 200)))             // idle: bounds the scan cadence (~5/s)
-                    .Up()
-                    .AddTask(new SleepTask(new(0, 0, 1)))                         // player-ridden: ai branch skipped
+                .AddSelector("has rider", new HasRiderDecorator())                // AI or player rider alike (warg parity)
+                    .AddSelector("enemy in range", new ElephantLikeEngageDecorator(profile))
+                        .AddSequence("kick attack", new ElephantLikeAttackOffCooldownDecorator(profile, ElephantLikeAttackKind.Trample, WarRamConfig.AttackCooldownSeconds))
+                            .AddTask(new ElephantLikeTrampleTask(profile))
+                            .AddTask(new SleepTask(new(0, 0, 0, 0, 300)))     // settle before next eval
+                        .Up()
+                    .Up()                                                     // on cooldown -> falls through
+                    .AddTask(new SleepTask(new(0, 0, 0, 0, 200)))             // idle: bounds the scan cadence (~5/s)
                 .Up()
                 .AddSequence("no rider", new HasNoRiderDecorator())
                     .AddTask(new SleepTask(new(0, 0, 4)))                         // riderless: long idle

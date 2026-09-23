@@ -43,7 +43,7 @@ Inside `ModuleData/`, the files that matter most:
 | `crafting_templates.xslt`, `weapon_descriptions.xslt` | XSLT with no `.xml` sibling: pure additive overrides of vanilla's crafting tables. |
 | `skins.xml` | 14 `<race>` blocks, 220,975 lines. The race registry. |
 | `monsters.xml` | 70 `<Monster>`, which is the 14 races times five rows each (base, `_child`, `_settlement`, `_settlement_slow`, `_settlement_fast`). |
-| `Monsters/LOTR/` | 7 creature monsters: spider, elephant, mumakil, chariot, warg, fell warg, war ram. |
+| `Monsters/LOTR/` | 8 creature monsters: spider, elephant, mumakil, chariot, warg, fell warg, war ram, great elk. |
 | `action_sets.xml` | 1,229 `<action_set>`, 0 root-level `<action>`, 26 facegen sets, 6 standalone sets. |
 | `action_types.xml` | 251 `<action>` declarations. |
 | `monster_usage_sets.xml` | 4 sets: spider, elephant, chariot, warg. |

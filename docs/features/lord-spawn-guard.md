@@ -242,7 +242,7 @@ or a debug console command that calls `Clan.CreateClan` without `SetInitialHomeS
 **Live-file note:** the retag targets
 `<game>/Modules/TAOM_Map/ModuleData/settlements.xml`. The repo's
 `Main/_Module/ModuleData/settlements.xml` is a stale shadow — editing it changes nothing
-(CLAUDE.md Traps).
+([trap index](../ai-includes/orientation.md)).
 
 ---
 

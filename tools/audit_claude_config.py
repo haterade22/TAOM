@@ -728,7 +728,36 @@ def collect(root: Path) -> list[Path]:
         p = root / f
         if p.is_file():
             out.append(p)
+    # Every file CLAUDE.md @-imports loads into every session exactly like CLAUDE.md, so it is
+    # part of the audited surface (#647: docs/ai-includes/orientation.md was imported, unscanned).
+    seen = {p.resolve() for p in out}
+    for p in _claude_md_imports(root / "CLAUDE.md", root):
+        if p.resolve() not in seen:
+            seen.add(p.resolve())
+            out.append(p)
     return out
+
+
+def _claude_md_imports(claude_md: Path, root: Path, hops: int = 4) -> list[Path]:
+    """The files an @-import chain from CLAUDE.md loads, as Claude Code follows it: resolved from
+    the importing file's folder, four hops deep. The Markdown reading (fences, code spans) is
+    lint_docs.markdown_imports, the same scanner the context budget uses, so the two tools never
+    disagree about what loads. Imports that leave the audited root (a `~/` file) are outside what
+    this audit owns."""
+    from lint_docs import markdown_imports
+    found: list[Path] = []
+    frontier = [claude_md] if claude_md.is_file() else []
+    for _ in range(hops):
+        nxt: list[Path] = []
+        for doc in frontier:
+            for _lineno, target_text in markdown_imports(_read(doc)):
+                target = (doc.parent / target_text).resolve()
+                if target.is_file() and target.is_relative_to(root.resolve()) \
+                        and target not in {f.resolve() for f in found}:
+                    found.append(target)
+                    nxt.append(target)
+        frontier = nxt
+    return found
 
 
 def scan_file(path: Path, root: Path, res: Result, external: bool = False) -> None:

@@ -6,8 +6,10 @@
 #   - config-example drift: a docs/features/*.md ```json example whose values disagree
 #     with the shipped Main/_Module/ModuleData/**/*.json config it mirrors, or a doc
 #     key absent from the shipped file (renamed/removed).
-#   - version mismatch: CLAUDE.md's "Target: Bannerlord X" line or an API-snapshot
+#   - version mismatch: the "Target: Bannerlord X" line (AGENTS.md) or an API-snapshot
 #     header that disagrees with .claude/pinned-game-version.txt.
+#   - a context-budget breach (ADR-011): CLAUDE.md with its imports, the trap index, or the
+#     rules without paths:. The same check runs in CI for every committer.
 #
 # Why: this is the enforcement for the v1.4.7-bump deep-review finding -- flipping
 # banner_color_config.json's EnableLayerLimitTranspiler default left the feature doc's
@@ -16,11 +18,11 @@
 # thing someone has to remember to grep for. See tools/lint_docs.py check_config_example_drift
 # / check_version_consistency + docs/reviews/rca-v1.4.7-bump-2026-07-08.md.
 #
-# Fail-open (per .claude/rules/harness-facts.md "TAOM hooks MUST fail open"):
+# Fail-open (per .claude/rules/harness-facts.md "TAOM hooks fail open"):
 # ANY hook-internal failure -- no python, linter crash, nothing relevant staged --
 # ALLOWS the commit. Only a genuine drift finding (linter rc=1 on --fail-on-drift) blocks.
 #
-# Returns: {} to allow, {"permissionDecision":"deny","message":"..."} to block.
+# Returns: {} to allow, {"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"..."}} to block.
 
 set -uo pipefail
 
@@ -30,7 +32,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 INPUT=$(cat)
 
 # Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
-taom_pybin_degraded "check-doc-config-drift" "doc/config drift and the CLAUDE.md budget" && { echo '{}'; exit 0; }
+taom_pybin_degraded "check-doc-config-drift" "doc/config drift and the context budget" && { echo '{}'; exit 0; }
 
 # Extract the bash command from tool_input (mirrors check-moduledata-validation.sh).
 COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
@@ -43,7 +45,7 @@ except Exception:
 ' 2>/dev/null)
 
 # Two-stage git-commit matcher: handle `git -C/-c ... commit`; reject
-# `git commit-tree` / `commit-graph`. Per .claude/rules/harness-facts.md.
+# `git commit-tree` / `commit-graph`. Per .claude/rules/hook-authoring.md "Git invocation forms hooks must handle".
 case "$COMMAND" in
     *"git commit-"*) echo '{}'; exit 0 ;;
 esac
@@ -64,15 +66,16 @@ case "$COMMAND" in
         ;;
 esac
 
-# Only run when the commit touches a surface the drift checks care about:
-# a feature doc, a shipped ModuleData JSON, or a version marker.
+# Only run when the commit touches a surface the drift checks care about: a feature doc, a
+# shipped ModuleData JSON, a version marker, or a file the ADR-011 context budget measures.
 RELEVANT=0
 while IFS= read -r f; do
     case "$f" in
         docs/features/*.md) RELEVANT=1; break ;;
         Main/_Module/ModuleData/*.json) RELEVANT=1; break ;;
         .claude/pinned-game-version.txt) RELEVANT=1; break ;;
-        CLAUDE.md) RELEVANT=1; break ;;
+        CLAUDE.md|AGENTS.md|docs/ai-includes/orientation.md) RELEVANT=1; break ;;
+        .claude/rules/*.md) RELEVANT=1; break ;;
         docs/reference/taleworlds-api-snapshot/*.md) RELEVANT=1; break ;;
     esac
 done <<< "$STAGED"
@@ -82,39 +85,41 @@ done <<< "$STAGED"
 PY="$PYBIN"
 [[ -z "$PY" ]] && { echo '{}'; exit 0; }
 
-# Run the drift gate. --fail-on-drift prints the full report to stdout and exits 1
-# iff there is config-example drift or a version mismatch; 0 otherwise. Only rc=1 blocks.
+# Run the drift gate. --drift-only runs just the three checks that can block (config-example
+# drift, version, context budget) and exits 1 iff one of them fails; 0 otherwise. Only rc=1
+# blocks. It takes about 0.15 s; the full run adds 8 s of report-only checks (orphans, dead
+# links) that never gate, and CI runs those.
 #
 # Inner bound, below the 30s registered timeout. A harness kill discards this hook's
 # output, which reads as a clean pass; this gate was dead from 2026-08-31 when it ran at
 # a 5s registration against a measured 7.8s runtime. Keep the overrun inside the hook.
-OUT=$(timeout -k 2 20 "$PY" tools/lint_docs.py --fail-on-drift 2>/dev/null)
+OUT=$(timeout -k 2 20 "$PY" tools/lint_docs.py --drift-only 2>/dev/null)
 RC=$?
 
 # 124 = the inner timeout fired. Not a pass. Ask rather than block: an overrun is an
 # infrastructure fault, and a hook's own fault must never hard-block the user.
 if [[ $RC -eq 124 ]]; then
-    printf '%s\n' '{"permissionDecision":"ask","message":"[check-doc-config-drift] The doc drift gate exceeded its 20s budget and was stopped. This commit is UNCHECKED for config-example drift, version-marker mismatches and the CLAUDE.md eager-load budget. This is NOT a pass. Run: python tools/lint_docs.py --fail-on-drift"}'
+    printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":"[check-doc-config-drift] The doc drift gate exceeded its 20s budget and was stopped. This commit is UNCHECKED for config-example drift, version-marker mismatches and the context budget. This is NOT a pass. Run: python tools/lint_docs.py --drift-only"}}'
     exit 0
 fi
 
 [[ $RC -ne 1 ]] && { echo '{}'; exit 0; }
 
-# Extract just the gating sections (drift / version / CLAUDE.md budget — the report's tail), bounded.
-DETAILS=$(printf '%s' "$OUT" | awk '/^## (Config-example drift|Version mismatches|CLAUDE\.md budget)/{f=1} f' | head -40)
+# Extract the gating sections (--drift-only prints nothing else below them), bounded.
+DETAILS=$(printf '%s' "$OUT" | awk '/^## (Config-example drift|Version mismatches|Context budget)/{f=1} f' | head -40)
 
 MSG=$(printf '%s' "$DETAILS" | "$PYBIN" -c '
 import sys, json
 lines = [l for l in sys.stdin.read().splitlines() if l.strip()][:36]
 print(json.dumps(
-    "[check-doc-config-drift] git commit BLOCKED: a documented config example / version "
-    "marker drifted from the source of truth, or CLAUDE.md broke its eager-load budget "
-    "(46KB file / 400-char table rows / 600-char prose lines — CLAUDE.md is an index; move "
-    "detail to the linked doc). Sync the doc example to the shipped ModuleData config, the "
-    "version marker to .claude/pinned-game-version.txt, or thin the CLAUDE.md row, then "
-    "re-stage. Details: python tools/lint_docs.py\n\n" + "\n".join(lines)))
+    "[check-doc-config-drift] git commit BLOCKED: a documented config example or version "
+    "marker drifted from its source of truth, or the ADR-011 context budget broke (CLAUDE.md "
+    "with its imports, the trap index, or the rules without paths:). Sync the doc example to "
+    "the shipped ModuleData config, the version marker to .claude/pinned-game-version.txt, or "
+    "move the detail out of the entry doc or rule into its owning doc, then re-stage. "
+    "Details: python tools/lint_docs.py\n\n" + "\n".join(lines)))
 ' 2>/dev/null)
 [[ -z "$MSG" ]] && { echo '{}'; exit 0; }
 
-printf '{"permissionDecision":"deny","message":%s}\n' "$MSG"
+printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":%s}}\n' "$MSG"
 exit 0

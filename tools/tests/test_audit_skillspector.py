@@ -277,5 +277,35 @@ class WildcardCoverageTests(unittest.TestCase):
                       _skill('"tools": ["*"]', downgrade=False).findings})
 
 
+class CollectTests(unittest.TestCase):
+    """What the audit reads. A file CLAUDE.md @-imports loads into every session exactly like
+    CLAUDE.md, so it is part of the surface (#647: orientation.md was imported and unscanned)."""
+
+    def test_claude_md_imports_are_collected(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "docs").mkdir()
+            (root / "CLAUDE.md").write_text("@docs/extra.md\n\n`@docs/not-an-import.md`\n", encoding="utf-8")
+            (root / "docs" / "extra.md").write_text("@nested.md\n", encoding="utf-8")
+            (root / "docs" / "nested.md").write_text("# n\n", encoding="utf-8")
+            (root / "docs" / "not-an-import.md").write_text("# no\n", encoding="utf-8")
+            names = sorted(p.relative_to(root).as_posix() for p in audit.collect(root))
+            self.assertEqual(names, ["CLAUDE.md", "docs/extra.md", "docs/nested.md"])
+
+    def test_imports_are_read_with_the_linter_s_markdown_rules(self):
+        # A four-backtick fence holding a three-backtick line, then a real import after it: the
+        # audit must see the same loaded files the context budget measures (Codex 2026-09-23).
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "docs").mkdir()
+            (root / "CLAUDE.md").write_text("````markdown\n```\n````\n@docs/after-fence.md\n",
+                                            encoding="utf-8")
+            (root / "docs" / "after-fence.md").write_text("# a\n", encoding="utf-8")
+            names = sorted(p.relative_to(root).as_posix() for p in audit.collect(root))
+            self.assertIn("docs/after-fence.md", names)
+
+
 if __name__ == "__main__":
     unittest.main()

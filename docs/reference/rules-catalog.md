@@ -1,51 +1,51 @@
 # Rules Catalog — `.claude/rules/`
 
-> Extracted from CLAUDE.md 2026-08-05 (eager-context diet round 2). CLAUDE.md keeps the
-> `paths:`-convention note + a stub; this file holds the full rule → scope → content table.
-> Source of truth for each row is the rule file's own frontmatter — update BOTH when a rule's
-> `paths:` or description changes (`/skill-stocktake` checks for drift).
+> What each rule is for. A rule's scope is its own `paths:` frontmatter, the only source of truth;
+> this table no longer repeats the globs, because 11 of 16 copies had drifted by 2026-09-23. To see a
+> scope: `grep -A14 '^paths:' .claude/rules/<rule>.md`. Where knowledge goes, and why these tiers:
+> [ADR-011](../adrs/011-knowledge-delivery-tiers.md).
 
 ## Load convention
 
-A rule with a `paths:` array loads **conditionally** when a matching file is opened. A rule
-**without** `paths:` (omit the field entirely) loads **at conversation start** for every session.
-`paths: ["**/*"]` is NOT the same as omitting `paths:` — the former is still conditional under
-the rule loader. Doc-backed facts: `.claude/rules/harness-facts.md` "Rule loader (memory) semantics".
+A rule with `paths:` loads when Claude reads a matching file in the repo; a rule without it loads in
+every session and subagent. The details and their sources (never for a file outside the repo, the
+`/compact` behaviour, a frontmatter that fails to parse) are in `.claude/rules/harness-facts.md`
+"Rule loader (memory) semantics" and "Context loading".
 
-## Always-load rules (no `paths:` — full text in context every session)
+## Always-load rules (no `paths:`)
 
-_(7 rules: `working-discipline.md` joined from CLAUDE.md 2026-08-05; `response-style.md` + `ai-prose-style.md` merged into `output-style.md`.)_
+_(6 rules; `python tools/lint_docs.py --context-budget-json` gives their sizes. `harness-facts.md` became path-scoped on 2026-09-23.)_
 
 | Rule | Content |
 |------|---------|
-| `environment-failures.md` | Report environment failures (missing tools, paths, MCP down). Don't auto-fix infra. |
-| `harness-facts.md` | Pinned Claude Code load semantics, hook lifecycle, rule loader rules with doc URLs. Source-of-truth for harness behavior. |
-| `simplicity-criterion.md` | Yes/No matrix for evaluating whether a change is worth keeping. Tiny gain + ugly code is rejected; deletions that hold parity always win. |
-| `think-before-coding.md` | Surface load-bearing assumptions before the first Edit; ask if uncertain. Don't ask on trivial/mechanical work. Lightweight design pass (one question at a time, propose 2-3 approaches) for open-ended work. Reuse-before-write ladder (engine API → existing service/adapter → one-line delegation → minimal new code) before writing new code. |
-| `evidence-over-claims.md` | Verify a review finding before implementing it; never sycophantically agree; no "done" claim without fresh verification output (subagent self-reports don't count). |
-| `working-discipline.md` | Fork discipline (never fabricate/peek at fork results), autonomous-loop stewardship (continue established work, never stop to ask permission), TodoWrite quality bar, inline-hook activation, edit-scope discipline. Moved from CLAUDE.md "Working Discipline" 2026-08-05. |
-| `output-style.md` | Merged 2026-08-05 from `response-style.md` + `ai-prose-style.md`. Part 1 (chat replies): open with scrutiny, not agreement; tag every response `[Certain]`/`[Likely]`/`[Guessing]`. Part 2 (artifacts): keep AI-writing tells out of produced prose; **no em or en dash in prose** (reversed 2026-08-11, `tools/lint_docs.py` reports them on new lines); TAOM boldface/table house style still carved out. Deep-clean: `/humanizer`. |
+| `environment-failures.md` | Report environment failures (missing tools, paths, MCP down) and stop; don't fix infra. Check which machine you are on first. |
+| `evidence-over-claims.md` | Verify a review finding before implementing it; no performative agreement; no "done" without fresh output (a subagent's self-report doesn't count); never state an unread fact. |
+| `output-style.md` | Part 1 (chat): open with scrutiny, not agreement; tag every response `[Certain]`/`[Likely]`/`[Guessing]`; one step per message in a live session. Part 2 (produced prose): no em or en dash, no AI-writing tells; boldface and tables stay. |
+| `simplicity-criterion.md` | Keep-or-reject matrix: a tiny gain with added complexity is rejected; a deletion that holds parity always wins. |
+| `think-before-coding.md` | State load-bearing assumptions before the first edit and ask when one is uncertain; don't ask on trivial work; make the goal testable; reuse-before-write ladder. |
+| `working-discipline.md` | Autonomous-loop stewardship (continue established work, never stop to ask permission) and edit-scope discipline, including during a review gate. |
 
-## Path-scoped rules (load when a matching file is opened)
+## Path-scoped rules (load when a matching file is read)
 
-| Rule | Scope | Content |
-|------|-------|---------|
-| `xslt.md` | `**/*.xslt` | XSLT passthrough, SandBoxCore reference |
-| `adapters.md` | `Main/Adapters/**` | Adapter pattern, research-first |
-| `tests.md` | `TAOM.Tests/**` | TDD, naming, AAA pattern, coverage |
-| `xml-data.md` | `ModuleData/**/*.xml` | NPC naming, region codes, formatting |
-| `troops.md` | `troops/**`, `taom_partyTemplates.xml`, `TroopProgression/**` | Troop checklist, races, party templates, save compat |
-| `harmony-patches.md` | `Main/**/Hooks/**` | Patch types, thin entry points, thread-local state |
-| `gamemodels.md` | `Main/Features/**/*Model.cs` | GameModel override pattern, base class rules, registration |
-| `csharp-patterns.md` | `Main/**/*.cs` | Hook/Strategy/GameModel patterns quick reference |
-| `csharp-architecture.md` | `Main/**/*.cs` | Layer stack, IoC lifetimes, non-negotiable rules, stale-file re-read |
-| `gui-ui.md` | `*Mixin*.cs`, `*Prefab*.cs`, `*Widget*.cs`, `*VM.cs`, `GUI/**` | Sprite verification, UIExtenderEx safety, ViewModel bindings |
-| `external-skill-ports.md` | `.claude/skills/**/SKILL.md` | Authoring a skill from scratch + per-field checklist for porting from external suites (gstack, etc.). |
-| `hook-authoring.md` | `.claude/hooks/**` | Hook authoring conventions: sibling-mirroring, two-stage git-commit matcher, amend handling, log rotation, detect-and-warn hooks must fail open but never fail silent |
-| `native-cpp-ports.md` | `Dependencies/**/*.cpp\|h`, `Main/SceneScripts/**` | 6-point C++ port audit (hot-path logging, SEH specificity, offsets, atomics, SRWLock, C++ deep-review) |
-| `moduledata-validation.md` | `troops/`, `characters/`, `equipmentsets/`, `taom_spcultures.xml`, `taom_partyTemplates.xml`, `named_companions/`, wanderers + education templates, `tools/schemas/*.json` | Run `python tools/validate_moduledata.py` before committing ModuleData edits; schemas are source-of-truth |
-| `provenance.md` | `Main/**/*.cs`, `Dependencies/**/*.cs`, `docs/{features,reference}/**/*.md`, `**/_Module/**/*.xml`, `**/THIRD-PARTY-LICENSES.txt` | Name the third-party source and state its license; euphemisms are the violation. Derivation vocabulary, the register as the record, and the reversal of the old "never name other mods" rule |
-| `vanilla-data-comparison.md` | `**/settlements.xml`, `**/sp_battle_scenes.xml`, `**/spcultures.xml`, `**/taom_spcultures.xml`, `**/spclans.xml`, `**/spkingdoms.xml`, `**/*.xslt` | Compare against current installed vanilla before modifying mirrored data. Vanilla renames/removes scenes & re-schemas XML between versions → stale TAOM refs crash. Scene-ref audit tools + post-bump checklist. |
+| Rule | Content |
+|------|---------|
+| `adapters.md` | Adapter pattern, research-first |
+| `csharp-architecture.md` | Layer stack, IoC lifetimes, non-negotiable rules, stale-file re-read, mission-scope agent handles and threads |
+| `csharp-patterns.md` | Hook, Strategy and GameModel patterns, quick reference |
+| `external-skill-ports.md` | Authoring a skill from scratch, and the per-field checklist for porting one from an external suite |
+| `gamemodels.md` | GameModel override pattern, base-class rules, registration |
+| `gui-ui.md` | Sprite verification, UIExtenderEx safety, ViewModel bindings |
+| `harmony-patches.md` | Patch types, thin entry points, thread-local state, the shared deferred `MovementOrder` category |
+| `harness-facts.md` | Verified Claude Code load semantics, hook lifecycle and visibility, frontmatter schema, with sources |
+| `hook-authoring.md` | Hook conventions: sibling-mirroring, the two-stage git-commit matcher, amend handling, fail open but never silent, timeouts, prove a gate live, log rotation |
+| `moduledata-validation.md` | Run `python tools/validate_moduledata.py` before committing ModuleData; schemas are the source of truth; the XML I/O convention for data-writing scripts |
+| `native-cpp-ports.md` | The 6-point C++ port audit (hot-path logging, SEH specificity, offsets, atomics, SRWLock, C++ review) |
+| `provenance.md` | Name the third-party source and state its license; the derivation vocabulary; the register as the record |
+| `tests.md` | TDD, naming, AAA pattern, coverage |
+| `troops.md` | Troop checklist, races, party templates, save compatibility |
+| `vanilla-data-comparison.md` | Compare against the installed vanilla before modifying mirrored data; stale references crash |
+| `xml-data.md` | NPC naming, region codes, culture ids, equipment roster schema, formatting |
+| `xslt.md` | XSLT passthrough, SandBoxCore reference |
 
 ---
 

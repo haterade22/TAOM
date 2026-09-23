@@ -10,12 +10,21 @@
 #     every Task spawn. Agent BODIES load only when that specific agent is
 #     spawned. Same frontmatter-only charge applies.
 #   - Hooks are .sh scripts invoked by the harness — not in any model context.
-#   - MEMORY.md loads first ~200 lines / ~25KB at conversation start.
+#   - MEMORY.md loads first ~200 lines / ~25KB at conversation start, main session only.
+#   - CLAUDE.md's @-imports load at launch with it, so they are counted in full. Which files
+#     load, whether a rule is path-scoped, and every ADR-011 cap come from
+#     `tools/lint_docs.py --context-budget-json`, the same code the CI and commit gate run.
+#   - MCP tool schemas are DEFERRED behind tool search by default; only the names load
+#     (code.claude.com/docs/en/context-window, verified 2026-09-23). ENABLE_TOOL_SEARCH=false
+#     loads every schema eagerly, and only then do schemas count.
+#   - Custom and general-purpose subagents load CLAUDE.md, its imports and the rules without
+#     paths: on every spawn (code.claude.com/docs/en/sub-agents); see the per-spawn line.
 #
 # Verbose mode (--verbose) prints per-file breakdown plus the "if-invoked"
 # (lazy) body size for skills/agents so you see the heavy-load worst case.
 #
-# Token heuristics: prose words*1.3, code chars/4, MCP tool ~500, server ~200.
+# Token heuristics: eager markdown bytes/4 (words*1.3 undercounted path- and code-dense text),
+# frontmatter descriptions words*1.3, MCP schema ~500 per tool, a deferred tool name ~15.
 
 set -uo pipefail
 
@@ -85,21 +94,66 @@ extract_description() {
     }' "$file" 2>/dev/null
 }
 
+# --- a python that is safe to run ---
+# `python` FIRST, and never a WindowsApps path: `python3` on this machine is a Microsoft Store
+# App Execution Alias that hangs forever and ignores SIGTERM, and `command -v` succeeding only
+# proves a file exists at that name. That made /context-budget unrunnable until 2026-08-31.
+PY=""
+for cand in python python3 py; do
+    cand_path=$(command -v "$cand" 2>/dev/null) || continue
+    case "$cand_path" in *[Ww]indows[Aa]pps*) continue ;; esac
+    PY="$cand_path"; break
+done
+
+# --- the budget inputs, from the gate itself ---
+# `tools/lint_docs.py --context-budget-json` names the files CLAUDE.md loads (its @-imports,
+# followed the way Claude Code follows them), each rule's bytes and whether it is scoped, and
+# every cap. Reading it here means the report and the gate cannot disagree.
+load_budget() {
+    BUDGET=""
+    if [[ -z "$PY" ]]; then
+        ISSUES+=("No usable python: CLAUDE.md, its imports and the rules were NOT measured")
+        return
+    fi
+    BUDGET=$("$PY" "$REPO_ROOT/tools/lint_docs.py" --context-budget-json 2>/dev/null | "$PY" -c '
+import json, sys
+d = json.load(sys.stdin)
+for e in d["entry_docs"]:
+    print("ENTRY", e["path"], e["bytes"], e["lines"])
+for r in d["rules"]:
+    print("RULE", r["path"], r["bytes"], int(r["scoped"]))
+for k, v in d["caps"].items():
+    print("CAP", k, v)
+for m in d["missing_imports"]:
+    print("MISSING", m["file"] + ":" + str(m["line"]), m["target"])
+' 2>/dev/null | tr -d '\r')
+    [[ -z "$BUDGET" ]] && ISSUES+=("tools/lint_docs.py --context-budget-json failed: CLAUDE.md, its imports and the rules were NOT measured")
+}
+cap() { printf '%s\n' "$BUDGET" | awk -v k="$1" '$1 == "CAP" && $2 == k { print $3; exit }'; }
+
 # --- per-component scans ---
 
 scan_claude_md() {
-    local file="$REPO_ROOT/CLAUDE.md"
-    local lines tokens
-    lines=$(wc -l < "$file" 2>/dev/null | tr -d ' ')
-    tokens=$(estimate_prose_tokens "$file")
-    CLAUDE_LINES=$lines
-    CLAUDE_TOKENS=$tokens
-    if [[ $VERBOSE -eq 1 ]]; then
-        echo "  CLAUDE.md: $lines lines, ~$tokens tokens"
-    fi
-    if [[ $lines -gt 300 ]]; then
-        ISSUES+=("CLAUDE.md is $lines lines (>300) — consider splitting repeating rules into .claude/rules/")
-    fi
+    CLAUDE_BYTES=0
+    CLAUDE_IMPORTS=0
+    CLAUDE_MAX_BYTES=$(cap ENTRY_DOCS_MAX_BYTES)
+    local max_lines kind path bytes lines where target
+    max_lines=$(cap ENTRY_DOC_MAX_LINES)
+    while read -r kind path bytes lines; do
+        [[ "$kind" == ENTRY ]] || continue
+        CLAUDE_BYTES=$(( CLAUDE_BYTES + bytes ))
+        [[ "$path" != CLAUDE.md ]] && CLAUDE_IMPORTS=$(( CLAUDE_IMPORTS + 1 ))
+        [[ -n "$max_lines" && $lines -gt $max_lines ]] && \
+            ISSUES+=("$path is $lines lines (over ENTRY_DOC_MAX_LINES, $max_lines); it loads at launch")
+        [[ $VERBOSE -eq 1 ]] && printf "  entry %-40s %4d lines  %6d bytes\n" "$path" "$lines" "$bytes"
+    done <<< "$BUDGET"
+    while read -r kind where target; do
+        [[ "$kind" == MISSING ]] && ISSUES+=("$where imports $target, which does not exist")
+    done <<< "$BUDGET"
+    CLAUDE_TOKENS=$(( CLAUDE_BYTES / 4 ))
+    [[ $VERBOSE -eq 1 ]] && echo "  CLAUDE.md with $CLAUDE_IMPORTS import(s): $CLAUDE_BYTES bytes, ~$CLAUDE_TOKENS tokens"
+    [[ -n "$CLAUDE_MAX_BYTES" && $CLAUDE_BYTES -gt $CLAUDE_MAX_BYTES ]] && \
+        ISSUES+=("CLAUDE.md with its imports is $CLAUDE_BYTES bytes (over ENTRY_DOCS_MAX_BYTES, $CLAUDE_MAX_BYTES)")
 }
 
 scan_agents() {
@@ -175,41 +229,39 @@ scan_skills() {
 }
 
 scan_rules() {
-    # Rules WITHOUT a `paths:` frontmatter field load at conversation start (eager);
-    # rules WITH paths: are glob-gated (conditional/lazy). See harness-facts.md
-    # "Rule loader (memory) semantics". Pre-2026-07-12 this counted ALL rules as
-    # eager "worst case", overstating the baseline by every conditional rule.
+    # Rules WITHOUT a `paths:` frontmatter field load at conversation start (eager); rules
+    # WITH paths: load on a matching read. lint_docs.py decides which is which, from the
+    # frontmatter block (harness-facts.md "Rule loader").
     RULES_TOKENS=0          # eager (always-load) only
     RULES_COND_TOKENS=0     # conditional (paths:-gated)
     RULES_COUNT=0
     RULES_EAGER_COUNT=0
+    RULES_EAGER_BYTES=0
     RULES_HEAVY=()
-    local dir="$REPO_ROOT/.claude/rules"
-    [[ ! -d "$dir" ]] && return
-    while IFS= read -r -d '' file; do
-        local name=$(basename "$file" .md)
-        local lines tokens kind
-        lines=$(wc -l < "$file" | tr -d ' ')
-        tokens=$(estimate_prose_tokens "$file")
-        if head -n 10 "$file" | grep -q '^paths:' 2>/dev/null; then
-            kind="cond "
+    local scoped_max unscoped_max kind path bytes scoped name tokens label
+    scoped_max=$(cap SCOPED_RULE_MAX_BYTES)
+    unscoped_max=$(cap UNSCOPED_RULES_MAX_BYTES)
+    while read -r kind path bytes scoped; do
+        [[ "$kind" == RULE ]] || continue
+        name=$(basename "$path" .md)
+        tokens=$(( bytes / 4 ))
+        if [[ "$scoped" == 1 ]]; then
+            label="cond "
             RULES_COND_TOKENS=$(( RULES_COND_TOKENS + tokens ))
+            [[ -n "$scoped_max" && $bytes -gt $scoped_max ]] && RULES_HEAVY+=("$name ($bytes bytes)")
         else
-            kind="EAGER"
+            label="EAGER"
             RULES_TOKENS=$(( RULES_TOKENS + tokens ))
             RULES_EAGER_COUNT=$(( RULES_EAGER_COUNT + 1 ))
+            RULES_EAGER_BYTES=$(( RULES_EAGER_BYTES + bytes ))
         fi
         RULES_COUNT=$(( RULES_COUNT + 1 ))
-        if [[ $VERBOSE -eq 1 ]]; then
-            printf "  rule  %-40s %4d lines  ~%5d tokens  [%s]
-" "$name" "$lines" "$tokens" "$kind"
-        fi
-        if [[ $lines -gt 100 ]]; then
-            RULES_HEAVY+=("$name ($lines lines)")
-        fi
-    done < <(find "$dir" -maxdepth 1 -name '*.md' -type f -print0)
+        [[ $VERBOSE -eq 1 ]] && printf "  rule  %-40s %6d bytes  ~%5d tokens  [%s]\n" "$name" "$bytes" "$tokens" "$label"
+    done <<< "$BUDGET"
 
-    [[ ${#RULES_HEAVY[@]} -gt 0 ]] && ISSUES+=("Heavy rules (>100 lines): ${RULES_HEAVY[*]}")
+    [[ ${#RULES_HEAVY[@]} -gt 0 ]] && ISSUES+=("Path-scoped rules over SCOPED_RULE_MAX_BYTES ($scoped_max): ${RULES_HEAVY[*]}")
+    [[ -n "$unscoped_max" && $RULES_EAGER_BYTES -gt $unscoped_max ]] && \
+        ISSUES+=("Rules without paths: total $RULES_EAGER_BYTES bytes (over UNSCOPED_RULES_MAX_BYTES, $unscoped_max); they load in every session and spawn")
 }
 
 scan_memory() {
@@ -258,22 +310,48 @@ scan_memory() {
     MEMORY_LINES=$(wc -l < "$mem_file" 2>/dev/null | tr -d ' ')
     MEMORY_BYTES=$(wc -c < "$mem_file" 2>/dev/null | tr -d ' ')
 
-    # Estimate tokens from min(first 200 lines, first 25KB) — whichever cap
-    # binds first. Both caps must be enforced together; counting `head -200`
-    # alone overcounts when the byte cap binds before the line cap.
-    local words
-    if [[ $MEMORY_BYTES -le 25600 ]]; then
-        # Byte cap not binding — just count first 200 lines (or whole file if shorter).
-        words=$(head -200 "$mem_file" 2>/dev/null | wc -w | tr -d ' ')
-    else
-        # Byte cap binding — slice the first 25KB, then take up to 200 lines of that.
-        words=$(head -c 25600 "$mem_file" 2>/dev/null | head -200 | wc -w | tr -d ' ')
-    fi
-    MEMORY_TOKENS=$(( words * 13 / 10 ))
+    # Estimate tokens from what actually loads: the first 200 lines, cut at 25KB,
+    # whichever binds first. Counting `head -200` alone overcounts when the byte cap binds.
+    local loaded
+    loaded=$(head -200 "$mem_file" 2>/dev/null | head -c 25600 | wc -c | tr -d ' ')
+    MEMORY_TOKENS=$(( loaded / 4 ))
 
     if [[ $VERBOSE -eq 1 ]]; then
         printf "  memory %-39s %4d lines  %5d bytes  ~%5d tokens\n" "MEMORY.md ($mem_file)" "$MEMORY_LINES" "$MEMORY_BYTES" "$MEMORY_TOKENS"
     fi
+
+    # ADR-011: memory holds only machine-local resume cards; MEMORY.md stays under 40 lines
+    # and 4 KB. A link to a missing file, or a memory file nothing links, is drift.
+    [[ $MEMORY_LINES -gt 40 || $MEMORY_BYTES -gt 4096 ]] && \
+        ISSUES+=("MEMORY.md is $MEMORY_LINES lines / $MEMORY_BYTES bytes (ADR-011 target: 40 lines, 4 KB; memory holds resume cards only)")
+    if [[ -z "$PY" ]]; then
+        ISSUES+=("No usable python: MEMORY.md's links were NOT checked for dead targets or orphans")
+        return
+    fi
+    local linkcheck
+    linkcheck=$("$PY" - "$mem_file" <<'PYEOF' 2>/dev/null
+import pathlib, re, sys
+mem = pathlib.Path(sys.argv[1])
+root = mem.parent
+text = mem.read_text(encoding="utf-8", errors="replace")
+targets = set()
+for m in re.finditer(r"\]\(([^)\s]+)\)", text):
+    t = m.group(1).split("#")[0]
+    if t and not re.match(r"[a-z]+:", t):
+        targets.add(t)
+dead = sorted(t for t in targets if not (root / t).exists())
+linked = {(root / t).resolve() for t in targets if (root / t).exists()}
+orphans = sorted(str(p.relative_to(root)).replace("\\", "/") for p in root.rglob("*.md")
+                 if p.name != "MEMORY.md" and p.resolve() not in linked)
+print("DEAD " + " ".join(dead))
+print("ORPHAN " + " ".join(orphans))
+PYEOF
+)
+    local dead orphans
+    dead=$(printf '%s\n' "$linkcheck" | sed -n 's/^DEAD //p' | tr -d '\r')
+    orphans=$(printf '%s\n' "$linkcheck" | sed -n 's/^ORPHAN //p' | tr -d '\r')
+    [[ -n "$dead" ]] && ISSUES+=("MEMORY.md links files that do not exist: $dead")
+    [[ -n "$orphans" ]] && ISSUES+=("Memory files nothing in MEMORY.md links: $orphans")
 }
 
 scan_hooks() {
@@ -298,6 +376,8 @@ scan_mcp() {
     MCP_SERVERS=0
     MCP_TOOLS_EST=0
     MCP_TOKENS=0
+    MCP_DEFERRED=1
+    MCP_IF_LOADED=0
     local mcp="$REPO_ROOT/.mcp.json"
     [[ ! -f "$mcp" ]] && return
 
@@ -306,18 +386,6 @@ scan_mcp() {
     if command -v cygpath >/dev/null 2>&1; then
         mcp_native=$(cygpath -w "$mcp" 2>/dev/null || echo "$mcp")
     fi
-
-    # Find a working python. `python` FIRST, and never accept a WindowsApps path:
-    # `python3` on this machine is a Microsoft Store App Execution Alias that hangs
-    # forever and ignores SIGTERM, and `command -v` succeeding only proves a file exists
-    # at that name. That is what made /context-budget unrunnable until 2026-08-31.
-    local PY="" cand_path=""
-    for cand in python python3 py; do
-        command -v "$cand" >/dev/null 2>&1 || continue
-        cand_path=$(command -v "$cand" 2>/dev/null) || continue
-        case "$cand_path" in *[Ww]indows[Aa]pps*) continue ;; esac
-        PY="$cand_path"; break
-    done
 
     local server_list=""
     if [[ -n "$PY" ]]; then
@@ -399,11 +467,19 @@ except Exception as e:
     done <<< "$server_list"
 
     MCP_TOOLS_EST=$total
-    # 500 tokens per tool schema + 200 per server overhead.
-    MCP_TOKENS=$(( total * 500 + MCP_SERVERS * 200 ))
-
-    if [[ $MCP_TOOLS_EST -gt 50 ]]; then
-        ISSUES+=("MCP tool count is ~$MCP_TOOLS_EST across $MCP_SERVERS servers — schemas dominate context")
+    # What the schemas would cost if loaded: 500 tokens per tool + 200 per server.
+    MCP_IF_LOADED=$(( total * 500 + MCP_SERVERS * 200 ))
+    if [[ "${ENABLE_TOOL_SEARCH:-}" == "false" ]]; then
+        MCP_DEFERRED=0
+        MCP_TOKENS=$MCP_IF_LOADED
+        if [[ $MCP_TOOLS_EST -gt 50 ]]; then
+            ISSUES+=("MCP tool count is ~$MCP_TOOLS_EST across $MCP_SERVERS servers and ENABLE_TOOL_SEARCH=false loads every schema eagerly")
+        fi
+    else
+        # Default: schemas are deferred behind tool search and only the names load
+        # (context-window docs, verified 2026-09-23). ~15 tokens per name.
+        MCP_DEFERRED=1
+        MCP_TOKENS=$(( total * 15 ))
     fi
 }
 
@@ -443,7 +519,7 @@ scan_plugins() {
             [[ $VERBOSE -eq 1 ]] && printf "  plugin %-39s %s\n" "$pname" "$(basename "$f")"
         done < <(find "$pdir/commands" -maxdepth 1 -name '*.md' 2>/dev/null; \
                  find "$pdir/skills" -maxdepth 2 -name 'SKILL.md' 2>/dev/null)
-    done < <(python - "$settings" <<'PYEOF' 2>/dev/null
+    done < <([[ -n "$PY" ]] && "$PY" - "$settings" <<'PYEOF' 2>/dev/null
 import json, sys
 try:
     d = json.load(open(sys.argv[1]))
@@ -470,6 +546,7 @@ if [[ $VERBOSE -eq 1 ]]; then
     echo
 fi
 
+load_budget
 scan_claude_md
 scan_agents
 scan_skills
@@ -481,11 +558,10 @@ scan_memory
 
 [[ $VERBOSE -eq 1 ]] && echo
 
-# EAGER total — what Claude Code actually loads at conversation start.
-# Counts: CLAUDE.md (full), agent FRONTMATTER only, skill FRONTMATTER only,
-# rules (full — most are conditional via paths: but counted at worst case),
-# MCP tool schemas + per-server overhead, enabled-plugin skill/command
-# descriptions, MEMORY.md (capped to first ~25KB).
+# EAGER total: what Claude Code actually loads at conversation start.
+# Counts: CLAUDE.md with its imports (full), agent and skill FRONTMATTER only, the rules
+# without paths: (full), MCP tool names (schemas only when ENABLE_TOOL_SEARCH=false),
+# enabled-plugin skill/command descriptions, MEMORY.md (first 200 lines / 25KB).
 # Excludes: skill bodies (lazy, on invocation), agent bodies (lazy, on Task spawn),
 # hook scripts (run by harness, never in model context), Claude Code's own system
 # prompt boilerplate (~3-5K, fixed per-version).
@@ -507,22 +583,24 @@ Eager (startup) baseline:         ~${TOTAL} tokens
 Effective available:              ~${HEADROOM} tokens (~$(( 100 - PCT_USED ))% headroom)
 Baseline as % of window:          ${PCT_USED}%
 Worst-case (all skills + agents invoked): ~${WORST_CASE} tokens (+~${LAZY_DELTA} lazy)
+Per custom-agent spawn:           ~$(( CLAUDE_TOKENS + RULES_TOKENS )) tokens (CLAUDE.md + imports + rules without paths:; no MEMORY.md)
 
 Component breakdown:
 +------------------+--------+-----------+--------------+
 | Component        | Count  | Eager tok | If-invoked   |
 +------------------+--------+-----------+--------------+
 EOF
-printf "| %-16s | %6d | %9d | %12s |\n" "CLAUDE.md"     1                    "$CLAUDE_TOKENS" "—"
+printf "| %-16s | %6d | %9d | %12s |\n" "CLAUDE.md+imp"   $(( 1 + CLAUDE_IMPORTS )) "$CLAUDE_TOKENS" "—"
 printf "| %-16s | %6d | %9d | %12d |\n" "Agents"        "$AGENTS_COUNT"      "$AGENTS_TOKENS" "$AGENTS_LAZY_TOKENS"
 printf "| %-16s | %6d | %9d | %12d |\n" "Skills"        "$SKILLS_COUNT"      "$SKILLS_TOKENS" "$SKILLS_LAZY_TOKENS"
 printf "| %-16s | %6d | %9d | %12d |\n" "Rules"         "$RULES_COUNT"       "$RULES_TOKENS" "$RULES_COND_TOKENS"
-printf "| %-16s | %6d | %9d | %12s |\n" "MCP servers"   "$MCP_SERVERS"       "$MCP_TOKENS" "—"
+printf "| %-16s | %6d | %9d | %12s |\n" "MCP servers"   "$MCP_SERVERS"       "$MCP_TOKENS" "$( [[ $MCP_DEFERRED -eq 1 ]] && echo "${MCP_IF_LOADED} if eager" || echo "—" )"
 printf "| %-16s | %6d | %9d | %12s |\n" "Plugins"       "$PLUGINS_COUNT"     "$PLUGINS_TOKENS" "—"
 printf "| %-16s | %6d | %9d | %12s |\n" "MEMORY.md"     1                    "$MEMORY_TOKENS" "—"
 printf "| %-16s | %6d | %9s | %12s |\n" "Hooks (.sh)"   "$HOOKS_COUNT"       "(not in ctx)" "—"
 echo "+------------------+--------+-----------+--------------+"
-echo "Eager = loaded at startup."
+echo "Eager = loaded at startup. MCP counts tool names only while schemas are deferred"
+echo "  (the default); the If-invoked column shows what the schemas would cost if loaded."
 echo "If-invoked = total bytes that load if EVERY agent / skill in that row is invoked"
 echo "  in one session (full body, not delta from eager). The WORST_CASE total above"
 echo "  adds only the delta (if-invoked minus eager) since eager is already counted."
@@ -541,8 +619,8 @@ fi
 # Top trim recommendations — heuristic, ranked by approximate savings
 echo "Top trim opportunities (approximate savings):"
 RECS=()
-[[ $MCP_TOKENS -gt 15000 ]]   && RECS+=("Audit MCP servers — currently ~${MCP_TOKENS} tokens. If any wrap CLI tools (gh, git), prefer Bash + the CLI to save ~5K-15K tokens.")
-[[ $CLAUDE_LINES -gt 400 ]]   && RECS+=("CLAUDE.md is ${CLAUDE_LINES} lines. Move repeating rules into scoped rules/*.md to defer load. Estimated savings: ~$(( (CLAUDE_LINES - 300) * 13 )) tokens.")
+[[ $MCP_DEFERRED -eq 0 && $MCP_TOKENS -gt 15000 ]] && RECS+=("MCP schemas load eagerly (~${MCP_TOKENS} tokens): unset ENABLE_TOOL_SEARCH=false, or drop servers that wrap a CLI (gh, git).")
+[[ -n "$CLAUDE_MAX_BYTES" && $CLAUDE_BYTES -gt $CLAUDE_MAX_BYTES ]] && RECS+=("CLAUDE.md with its imports is ${CLAUDE_BYTES} bytes, over ${CLAUDE_MAX_BYTES}: route detail to its owning doc, a path rule or a skill (ADR-011). Each byte cut saves a quarter token per session and spawn.")
 [[ ${#AGENTS_BLOATED_DESC[@]} -gt 0 ]] && RECS+=("Tighten ${#AGENTS_BLOATED_DESC[@]} bloated agent description(s) — descriptions load into every Task spawn.")
 [[ $SKILLS_TOKENS -gt 10000 ]] && RECS+=("Skills total ~${SKILLS_TOKENS} tokens. If Claude Code loads SKILL.md bodies eagerly (verify), consider two-layer skill injection — could reclaim 50-70%.")
 

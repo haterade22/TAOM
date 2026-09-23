@@ -11,7 +11,7 @@ Launch as many review agents as the work needs. Which lenses run follows what is
 
 Run this AFTER completing a feature or fix, BEFORE closing out.
 
-**Every reviewer is the most senior role available** (Mike, 2026-09-18). Every lens runs as `subagent_type: deep-reviewer` (`.claude/agents/deep-reviewer.md`: Fable at `effort: max`, read-only). **Never pass `model` on these Agent calls:** a per-invocation `model` overrides the definition's (`.claude/rules/harness-facts.md`), which would quietly downgrade the reviewer.
+**Every reviewer is the most senior role available** (Mike, 2026-09-18). Every lens runs as `subagent_type: deep-reviewer` (`.claude/agents/deep-reviewer.md`: Opus 5.5, `claude-opus-5-5`, at `effort: max`, read-only; Fable until 2026-09-23). **Never pass `model` on these Agent calls:** a per-invocation `model` overrides the definition's (`.claude/rules/harness-facts.md`), which would quietly downgrade the reviewer.
 
 **The review does not stop at a report.** Two lenses (Agent 3 Efficiency, Agent 6 Design & Elegance) propose better ways to do what the change does; Step 4 applies them. The reviewers stay read-only; the orchestrator applies, after every lens has reported.
 

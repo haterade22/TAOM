@@ -15,8 +15,8 @@ namespace TAOM.Features.Mumakil;
 /// Mission boundary for the ridden Mûmakil. Attaches a per-agent <see cref="MumakilBehaviorTree"/> (via a
 /// <c>BehaviorTreeAgentComponent</c>) to every Mûmakil-MOUNT agent in the battle — the elephant/spider wiring.
 /// The attach key is <c>Monster.StringId == "taom_mumakil"</c>, NEVER the character id: the horse-slot mount
-/// agent's Character is the Harad RIDER, not the Mûmakil. The rider's cavalry AI drives movement; the BT layers
-/// the trample/tusk attacks.
+/// agent has no Character (the engine builds it with null), and the only character on hand is the Harad RIDER's. The
+/// rider (the player, or the cavalry AI) drives movement; the BT layers the trample/tusk attacks.
 ///
 /// Phase 2 (#627, 2026-09-20) adds the war tower's crew: when a rider builds on a mumakil, the behaviour
 /// instantiates <see cref="TaomMumakilPlatform"/> on it and queues a crew, which spawns from the next

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  TEST RIDERS for the Animalia elk and moose (#646, docs/features/animalia-elk-moose.md), 2026-09-23.
+
+  Two clones of mirkwood_rochenlas (its committed kit, skills and face) that ride the new horse-skeleton
+  reskins, so their retargeted clips can be watched in a Custom Battle:
+      taom.spawn_troops taom_test_animalia_elk_rider 5 ally
+      taom.spawn_troops taom_test_animalia_moose_rider 5 enemy
+  Registered for CustomGame ONLY (Main/_Module/SubModule.xml), so no campaign, save or culture roster ever
+  sees them; nothing upgrades into or out of them. Remove this file, its SubModule block and both riders'
+  exemptions (tools/taom_schema.py _ARMOUR_LADDER_EXEMPT, tools/melee_ladders.json exempt_troops: a stale
+  exemption is itself a finding) once the elk and moose have real riders (the moose goes to Thranduil and
+  the Mirkwood lords after #636). The exemptions keep this file from being counted as a kingdom.
+
+  Every Horse slot carries a harness (MOUNT_WITHOUT_HARNESS): the Animalia meshes are bare animals, and
+  taom_elk_saddle_a (the great elk's saddle, #636) is the seat until they get their own.
+-->
+
+<NPCCharacters>
+    <NPCCharacter
+        id="taom_test_animalia_elk_rider"
+        race="elf"
+        default_group="Cavalry"
+        level="41"
+        name="{=taom_test_animalia_elk_rider}[Test] Animalia Elk Rider"
+        occupation="Soldier"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="215" />
+            <skill
+                id="Riding"
+                value="325" />
+            <skill
+                id="OneHanded"
+                value="350" />
+            <skill
+                id="TwoHanded"
+                value="280" />
+            <skill
+                id="Polearm"
+                value="370" />
+            <skill
+                id="Bow"
+                value="100" />
+            <skill
+                id="Crossbow"
+                value="85" />
+            <skill
+                id="Throwing"
+                value="140" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.mirkwood_spear_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_shield_a01" />
+                <equipment
+                    slot="Item3"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf2_t3_helmet_silver_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest_silver" />
+                <equipment
+                    slot="Cape"
+                    id="Item.mkwd_inf3_pauldrons_silver" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mkwd_inf3_vambraces_silver" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves_silver" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+            <equipment
+                slot="Horse"
+                id="Item.taom_animalia_elk_a" />
+            <equipment
+                slot="HorseHarness"
+                id="Item.taom_elk_saddle_a" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter
+        id="taom_test_animalia_moose_rider"
+        race="elf"
+        default_group="Cavalry"
+        level="41"
+        name="{=taom_test_animalia_moose_rider}[Test] Animalia Moose Rider"
+        occupation="Soldier"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="215" />
+            <skill
+                id="Riding"
+                value="325" />
+            <skill
+                id="OneHanded"
+                value="350" />
+            <skill
+                id="TwoHanded"
+                value="280" />
+            <skill
+                id="Polearm"
+                value="370" />
+            <skill
+                id="Bow"
+                value="100" />
+            <skill
+                id="Crossbow"
+                value="85" />
+            <skill
+                id="Throwing"
+                value="140" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.mirkwood_spear_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_shield_a01" />
+                <equipment
+                    slot="Item3"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf2_t3_helmet_silver_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest_silver" />
+                <equipment
+                    slot="Cape"
+                    id="Item.mkwd_inf3_pauldrons_silver" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mkwd_inf3_vambraces_silver" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves_silver" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+            <equipment
+                slot="Horse"
+                id="Item.taom_animalia_moose_a" />
+            <equipment
+                slot="HorseHarness"
+                id="Item.taom_elk_saddle_a" />
+        </Equipments>
+    </NPCCharacter>
+</NPCCharacters>

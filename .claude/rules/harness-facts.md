@@ -1,111 +1,117 @@
 ---
-description: Verified Claude Code load semantics, hook lifecycle, and frontmatter schema. Pinned source-of-truth so future skill/rule/agent edits don't recreate already-fixed bugs.
+paths:
+  - ".claude/settings*.json"
+  - ".claude/hooks/**"
+  - ".claude/rules/**"
+  - ".claude/agents/**"
+  - ".claude/skills/*/SKILL.md"
+  - ".claude/skills/**/*.sh"
+  - ".claude/statusline.sh"
+  - ".mcp.json"
+  - "CLAUDE.md"
+  - "AGENTS.md"
+  - "docs/ai-includes/orientation.md"
+  - "docs/adrs/011-knowledge-delivery-tiers.md"
+  - "docs/reference/hooks-catalog.md"
+  - "docs/reference/rules-catalog.md"
+  - "tools/test_hooks.sh"
+  - "tools/audit_claude_config.py"
+description: Verified Claude Code load semantics, hook lifecycle and frontmatter schema, loaded when harness files are opened so an edit does not recreate an already-fixed bug.
 ---
 
-<!-- NO paths: intentionally — always-load. Every fact cites a doc URL or an empirical context;
-     if Claude Code changes, update THIS file first — never let other harness files drift ahead. -->
+<!-- Path-scoped since 2026-09-23 (ADR-011): these facts matter while the harness is being changed,
+     not on every turn. The globs name the files that ARE the harness, not all of .claude/: a
+     /deep-review lens reading its lens file, or any agent in a .claude/worktrees/ checkout, would
+     otherwise pay for this file. Every fact cites a doc URL or an empirical context. If Claude
+     Code changes, update THIS file first. -->
 
-# Claude Code Harness Facts (verified)
+# Claude Code harness facts (verified)
+
+## Context loading
+
+| Fact | Source |
+|---|---|
+| CLAUDE.md should stay under 200 lines ("longer files consume more context and reduce adherence"). An `@path` import loads at launch (up to four hops), so it organises but saves nothing. Claude Code reads AGENTS.md natively only from v2.1.277; the installed 2.1.241 needs CLAUDE.md's `@AGENTS.md`. | https://code.claude.com/docs/en/memory (DOC, 2026-09-23); `claude --version` (EMPIRICAL, 2026-09-23) |
+| Custom and general-purpose subagents load the CLAUDE.md hierarchy, its imports and the project rules. The built-in Explore and Plan agents load none of them. No subagent loads the main session's auto memory (a fork inherits the conversation instead). `omitClaudeMd: true` (v2.1.271+) opts a custom agent out. | https://code.claude.com/docs/en/sub-agents (DOC, 2026-09-23) |
+| After `/compact`, CLAUDE.md, unscoped rules, auto memory, the plan file and a fresh git status are re-injected; up to five recent files are re-read; each invoked skill's body returns capped at 5,000 tokens (25,000 total, oldest dropped); path rules return on the next matching read; SessionStart hooks matching the `compact` source run and their output is added. **The skill-description listing does not return.** | https://code.claude.com/docs/en/context-window (DOC, 2026-09-23) |
+| MCP tool schemas are deferred behind tool search; only the tool names load at startup. | context-window docs (DOC, 2026-09-23); this session's deferred-tool list (EMPIRICAL, 2026-09-23) |
 
 ## Skill load semantics
 
 | Fact | Source | Why we care |
-|------|--------|-------------|
-| Skill **descriptions** load eagerly at conversation start, EXCEPT when the skill has `disable-model-invocation: true` — those descriptions are NOT in context. Skill **bodies** load only when the skill is invoked, regardless of model-invocation setting. | https://code.claude.com/docs/en/skills (verified 2026-04-26) | If you're auditing context overhead, count frontmatter only for the eager total — and skip the eager charge for skills with `disable-model-invocation: true`. The pre-fix `scan.sh` got the body-counting wrong and inflated the baseline 25× for skills. |
-| Frontmatter fields documented as consumed (verified 2026-07-18): `name`, `description`, `when_to_use`, `argument-hint`, `arguments`, `disable-model-invocation`, `user-invocable`, `allowed-tools`, `disallowed-tools`, `model`, `effort`, `context` (=`fork`), `agent`, `hooks`, `paths`, `shell`. | https://code.claude.com/docs/en/skills (verified 2026-07-18) | `triggers:` is still NOT documented (gstack preamble field — dead weight; move phrases into `description`/`when_to_use`). `effort`, `context: fork`, `disallowed-tools`, `paths`, `model`, `arguments`, `user-invocable`, `shell` were added to the platform after the 2026-04-26 baseline — the old list omitted them, so treat them as valid, not "undocumented." |
-| Skill description should be ≤30 words. It loads on every Task spawn. | empirical / scan.sh flag | We've trimmed `/freeze` and `/investigate` twice for description creep. The bloat comes back when phrases get pasted in during edits — keep an eye on word count. |
-| Skills with `disable-model-invocation: true` are user-only (no proactive invoke). | docs above | Use this for skills that cost money or create public artifacts. We currently apply it implicitly via routing-table "Never auto-invoke" tier rather than via frontmatter. |
+|---|---|---|
+| Skill **descriptions** load eagerly unless the skill sets `disable-model-invocation: true`; **bodies** load only when invoked. | https://code.claude.com/docs/en/skills (DOC, 2026-04-26) | Count frontmatter, not bodies, for the eager total. |
+| Consumed frontmatter: `name`, `description`, `when_to_use`, `argument-hint`, `arguments`, `disable-model-invocation`, `user-invocable`, `allowed-tools`, `disallowed-tools`, `model`, `effort`, `context` (`fork`), `agent`, `hooks`, `paths`, `shell`. | skills docs (DOC, 2026-07-18) | `triggers:` is not a field (a gstack preamble relic): move its phrases into `description`. |
+| A description stays at most 30 words: skill and agent descriptions load on every Task spawn. | EMPIRICAL (`scan.sh` flag) | Description creep came back twice on `/freeze` and `/investigate`. |
+| `disable-model-invocation: true` makes a skill user-only. | skills docs (DOC) | For skills that cost money or publish; TAOM mostly uses CLAUDE.md's "never auto-invoke" row instead. |
 
 ## Agent (subagent) load semantics
 
 | Fact | Source | Why we care |
-|------|--------|-------------|
-| Agent **descriptions** load into the Task tool's tool-definition context for every Task spawn. Agent **bodies** load only when that specific agent is spawned. | docs (skills + Task tool) | Same eager/lazy split as skills. `scan_agents` had the same body-counting bug as `scan_skills` — caught in RCA. |
-| Agent description should be ≤30 words. Loaded into every Task tool spawn. | empirical | Bloated agent descriptions tax every Task call, not just when that agent is used. |
-| Subagent `model:` takes an alias (`sonnet`, `opus`, `haiku`, `fable`), a full model ID, or `inherit`. `effort:` takes `low` / `medium` / `high` / `xhigh` / `max` ("available levels depend on the model"). The model resolves in this order: the per-invocation `model` parameter, then the definition's `model:`, then `CLAUDE_CODE_SUBAGENT_MODEL`, then the main conversation's model. | https://code.claude.com/docs/en/sub-agents (DOC-BACKED, verified 2026-09-18); per-model effort support: https://platform.claude.com/docs/en/build-with-claude/effort | `deep-reviewer` pins `model: fable` + `effort: max` (Fable 5.1 supports all five levels). Passing `model` on an Agent call silently OVERRIDES the definition, so `/deep-review` never passes one. |
+|---|---|---|
+| Agent **descriptions** load with every Task spawn; an agent's **body** loads only when that agent is spawned. | docs (skills + Task tool) | Same eager/lazy split as skills. |
+| `model:` takes an alias (`sonnet`, `opus`, `haiku`, `fable`), a full id or `inherit`; `effort:` takes `low` to `max`, per model. Resolution: the spawn's `model` parameter, then the definition's `model:`, then `CLAUDE_CODE_SUBAGENT_MODEL`, then the main model. | https://code.claude.com/docs/en/sub-agents (DOC, 2026-09-18) | `deep-reviewer` pins Opus 5.5 (`claude-opus-5-5`, Mike 2026-09-23; Fable before) at max effort, which Opus 5.5 supports (all five levels, https://platform.claude.com/docs/en/build-with-claude/effort, verified 2026-09-23); passing `model` on the spawn silently overrides that, so `/deep-review` never passes one. |
 
 ## Hook lifecycle
 
 | Fact | Source | Why we care |
-|------|--------|-------------|
-| Hooks declared in `.claude/settings.json` are **global** — they fire for every tool call matching the matcher, regardless of which skill is active. | https://code.claude.com/docs/en/hooks (verified 2026-04-26) | Use settings.json hooks for unconditional safety nets (build check, push validation). |
-| Hooks declared inline in a skill's `SKILL.md` `hooks:` frontmatter are **scoped to that skill's lifecycle** — they fire only while the skill is invoked. | docs above (verified 2026-04-26) | This is what `/freeze` does. Crucial corollary: writing the `freeze-dir.txt` state file from a non-`/freeze`, non-`/investigate` context does NOT activate the hook. The state file alone is inert. |
-| `/investigate` re-declares `/freeze`'s PreToolUse hook in its own SKILL.md frontmatter. This is intentional — it lets `/investigate` write the state file and have the hook fire under its own activation. | this repo's design | Don't extend this pattern blindly. Copy the inline hook block to another skill ONLY when that skill genuinely needs the same behavior, with explicit reasoning. |
-| Hook scripts read tool-input JSON from stdin and emit JSON to stdout: `{}` to allow, `{"permissionDecision":"deny","message":"..."}` to block, `{"permissionDecision":"ask",...}` to prompt. Malformed JSON typically results in fail-open (allow). | docs above + check-freeze.sh test cycle | Always escape backslashes (`\` → `\\`) and quotes (`"` → `\"`) in any path interpolated into the JSON message. Windows paths routinely contain backslashes; unescaped output crashes the parser silently. |
-| **TAOM hooks MUST fail open.** A hook's own bug must never block the user: swallow internal errors (`2>/dev/null`, `\|\| true`), and non-`deny` hooks always `exit 0`. A `deny` is only ever an *intentional* gate decision, never an accidental crash. | this repo's design (every Stop/PostToolUse hook exits 0; PreToolUse gates deny deliberately) | This is why `tools/audit_claude_config.py` (`/security-scan`) deliberately does NOT flag `\|\| true` / `2>/dev/null` / `exit 0` as exfil — they're mandated here, though upstream AgentShield flags them. Calibrate ported security rules to this. |
+|---|---|---|
+| Hooks in `settings.json` are global. Hooks in a skill's `hooks:` frontmatter fire only while that skill is invoked; a state file written from elsewhere is inert. `/investigate` deliberately re-declares `/freeze`'s hook. | https://code.claude.com/docs/en/hooks (DOC, 2026-04-26) | Copy an inline hook to another skill only with a stated reason. |
+| **Visibility.** Stdout reaches Claude only for `SessionStart`, `UserPromptSubmit`, `UserPromptExpansion` and `PostModelSwitch`; for every other event it goes to the debug log. Stderr from a hook that exits 0 never reaches Claude. A PreToolUse `deny` reason and exit-2 stderr do; an `ask` reason is shown to the user, not to Claude. | hooks docs (DOC, 2026-09-23); EMPIRICAL 2026-09-23: `suggest-compact.sh` printed about 18 times in one session and none arrived | A reminder printed anywhere else is silent: make it a gate, or move it to a visible channel. |
+| **PreToolUse output contract.** Tool-input JSON arrives on stdin. Print `{}` to allow; to block or confirm, print `{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"..."}}` (or `"ask"`), or exit 2 with the reason on stderr. A top-level `permissionDecision` is **ignored**. Other events keep a top-level `decision`. Malformed JSON fails open. | hooks docs, "PreToolUse decision control" (DOC, 2026-09-23); EMPIRICAL 2026-09-23: nine TAOM gates printed the top-level form, and a live commit the label gate had denied ran anyway, until #647 | `tools/test_hooks.sh` 5c fails on the top-level form; matching the text `"permissionDecision":"deny"` passes both forms, which is how the dead gates stayed green. Escape `\` and `"` in any interpolated path. |
+| **TAOM hooks fail open.** A hook's own bug never blocks: swallow internal errors, and non-deny hooks exit 0. A deny is only ever a deliberate gate decision. | this repo's design | `/security-scan` deliberately does not flag `\|\| true`, `2>/dev/null` or `exit 0`. |
+| All hooks matching an event run in **parallel**. An omitted `timeout` defaults to **600 s** (`UserPromptSubmit` 30 s, `SessionEnd` a 1.5 s shared budget). A timed-out hook is **killed and its output discarded**, so a PreToolUse gate then fails open. `async: true` hooks are exempt from timeouts and cannot gate. | hooks docs (DOC, 2026-08-31) | The 2026-08-31 twenty-minute stalls. Every registration carries an explicit `timeout`, and slow work is bounded inside the script (`hook-authoring.md`). |
+| 30 hook events exist, including `PostToolUseFailure`, `SubagentStart`, `PreCompact`, `PostCompact` and `WorktreeCreate`. Handler fields beyond `matcher` and `command`: `type`, `if` (a permission-rule gate such as `"Bash(git commit*)"`), `timeout`, `statusMessage`, `once`, and for command hooks `args`, `async`, `asyncRewake`, `shell`. | hooks docs (DOC, 2026-07-18) | Don't flag a real event as undocumented. The `if:` migration is deferred: a mis-scoped `if:` silently disables a gate, so it needs a per-gate proof. `WorktreeCreate` must print the worktree path, so no passive logger belongs there. |
+| Not documented, so assume neither way: whether `settings.json`'s `env` block reaches hook processes (`_pybin.sh` probes `TAOM_PYBIN` rather than trusting it), and any `timeout` for `statusLine` (keep `.claude/statusline.sh` cheap). | hooks docs | A per-session logger belongs on `SessionEnd`, not `Stop`, which fires every turn. |
 
-### Hook events + handler contract (verified 2026-07-18, https://code.claude.com/docs/en/hooks)
-
-**30 hook events exist — TAOM uses 8.** Do NOT flag any of the following as "undocumented" (a 2026-07-18 audit wrongly did for `PostToolUseFailure` and `SubagentStart` — both are real and firing; `.claude/logs/agent-audit.log` has live `SubagentStart` entries):
-
-`SessionStart` · `Setup` · `UserPromptSubmit` · `UserPromptExpansion` · `PreToolUse` · `PermissionRequest` · `PermissionDenied` · `PostToolUse` · `PostToolUseFailure` · `PostToolBatch` · `Notification` · `MessageDisplay` · `SubagentStart` · `SubagentStop` · `TaskCreated` · `TaskCompleted` · `Stop` · `StopFailure` · `TeammateIdle` · `InstructionsLoaded` · `ConfigChange` · `CwdChanged` · `FileChanged` · `WorktreeCreate` · `WorktreeRemove` · `Elicitation` · `ElicitationResult` · `PreCompact` · `PostCompact` · `SessionEnd`
-
-**Handler-object fields** (beyond `matcher` / `command`): `type` (`command` | `http` | `mcp_tool` | `prompt` | `agent`), `if` (a permission-rule string like `"Bash(git commit*)"` that gates the handler at the harness level — so a `matcher: "Bash"` gate need not re-parse the command in-script to skip non-matches), `timeout`, `statusMessage` (spinner label while the hook runs), `once` (run once per session), and for command hooks `args` / `async` (background, non-blocking) / `asyncRewake` (background, wakes Claude on exit 2) / `shell` (`bash` | `powershell`).
-
-### Timeouts and concurrency (DOC-BACKED, https://code.claude.com/docs/en/hooks, verified 2026-08-31)
-
-These four facts are the ones the 2026-08-31 outage turned on, and none of them was written down here beforehand.
-
-| Fact | Why it matters |
-|---|---|
-| **All hooks matching an event run in PARALLEL.** | Wall-clock for an event is the MAX of its hooks, not the sum. Nine hooks at `timeout: 5` cost up to 5s per tool call, not 45s. |
-| **An omitted `timeout` defaults to 600 SECONDS** for command hooks (exceptions: `UserPromptSubmit` / `PreModelSwitch` / `PostModelSwitch` 30s, `MessageDisplay` 10s, `SessionEnd` a 1.5s shared budget). | This is the number that produced the 20.0-minute stalls: a wedged Bash call paid one 600s PreToolUse batch plus one 600s PostToolUse batch = 1200s. The first write-up assumed 60s and got near-enough the right answer for the wrong reason. **Every registration must carry an explicit `timeout`.** |
-| **A timed-out hook is KILLED and its output DISCARDED.** On `PreToolUse` the tool then proceeds through the normal permission flow (fail-open); no user-visible signal is documented. | So for a gate, "killed" and "passed cleanly" are the same observable event. A registered timeout is therefore a KILL, never a budget: bound slow work *inside* the script under the registered value, where an overrun can still speak. See `hook-authoring.md` "A timeout must be measured against the SLOW path". |
-| **Async hooks (`async: true`) are exempt from timeout enforcement entirely.** | Do not reach for `async` to dodge a timeout on a gate: a non-blocking hook cannot return a `permissionDecision`, so it cannot gate anything. |
-
-**NOT documented, do not assume either way:** whether the `env` block in `settings.json` reaches command-hook processes. The docs say only that hooks inherit the parent environment (minus `OTEL_*`). TAOM sets `TAOM_PYBIN` there and `_pybin.sh` validates and probes it rather than trusting it, so the pin is an optimisation that degrades to discovery if it never arrives. There is also **no documented `timeout` knob for `statusLine`**, which is why `.claude/statusline.sh` must stay cheap by construction (it was 457ms per repaint until 2026-08-31; now ~119ms).
-
-**Event-placement facts we act on:** a pure per-session logger belongs on `SessionEnd`, NOT `Stop` — `Stop` fires every turn (that is what let `session-log.md` reach 137 KB with a 2.8 MB rotated `.1` before the 2026-07-18 move). Per-turn *reminders* (changelog/deep-review/verification-evidence) correctly stay on `Stop`.
-
-**The `if:` migration is DEFERRED by decision.** TAOM's 8 PreToolUse Bash gates still use bare `matcher: "Bash"` + the in-script two-stage git-commit matcher (below). `if:` supersedes that hand-rolled matcher, but a mis-scoped `if:` silently disables a load-bearing gate, so the migration needs a prove-each-gate pass, not a bulk flip. `WorktreeCreate` / `WorktreeRemove` are wired nowhere: `WorktreeCreate`'s command hook is expected to PRINT the worktree path on stdout, so a passive logger there could redirect creation — surface stale worktrees read-only from `session-start.sh` instead (done 2026-07-18).
+Authoring conventions (mirror a sibling's full convention set, the two-stage git-commit matcher, amend
+handling, log rotation, timing the slow path, never `python3`) are in `.claude/rules/hook-authoring.md`,
+which loads with any hook file.
 
 ## Rule loader (memory) semantics
 
-| Fact | Source | Why we care |
-|------|--------|-------------|
-| Rules WITHOUT a `paths:` field load at conversation start (always-on). | https://code.claude.com/docs/en/memory (verified 2026-04-26) | This is how `harness-facts.md`, `environment-failures.md`, and `csharp-architecture.md` etc. behave. |
-| Rules WITH any `paths:` field (any glob, including `paths: ["**/*"]`) load **conditionally** — only when a file matching the glob is opened. | docs above (verified 2026-04-26) | `paths: ["**/*"]` is NOT a synonym for "always-load". To make a rule unconditional, omit `paths:` entirely. The pre-fix `environment-failures.md` had this wrong. |
+| Fact | Source |
+|---|---|
+| A rule with no `paths:` loads at session start. A rule with any `paths:` (even `["**/*"]`) loads when Claude **reads** a matching file, not on every tool use. `paths` is the only frontmatter field Claude Code reads; other fields are ignored and stripped. A rule whose YAML fails to parse loads **unconditionally**. | https://code.claude.com/docs/en/memory (DOC, 2026-09-23) |
+| A `paths:` rule does **not** fire for a file outside the project directory, even through a `**/` glob. | EMPIRICAL 2026-09-23: reading the live `TAOM_Map/ModuleData/settlements.xml` loaded no rule; reading the repo's shadow copy loaded three |
 
 ## Memory file (MEMORY.md) semantics
 
-| Fact | Source | Why we care |
-|------|--------|-------------|
-| MEMORY.md is loaded at the start of every conversation. Cap is whichever binds first: first ~200 lines OR first ~25KB. | https://code.claude.com/docs/en/memory (verified 2026-04-26) | Counts toward the eager startup baseline. `scan_memory()` should enforce both caps in the token estimate. |
-| MEMORY.md lives at `~/.claude/projects/<project-slug>/memory/MEMORY.md`. The Claude Code memory docs only say `<project>` "is derived from the git repository". The exact derivation (drive letter lowercased + `--` + path with `/` and `\` replaced by `-`) is **empirical, not doc-backed** — observed on Windows + Git Bash on 2026-04-26. The format may differ on other platforms or change in future Claude Code versions. | https://code.claude.com/docs/en/memory + empirical | When auditing memory across projects, derive the candidate slug from `cygpath -w "$REPO_ROOT"` then transform — and fall back to substring matching if the derived slug doesn't match an actual directory. Substring matching alone on basename is ambiguous when multiple project slugs share a substring (TAOM, TAOM-Online, taommod), so prefer derived-then-fallback over fallback-only. |
-| `autoMemoryDirectory` (settings.json) accepts ONLY an absolute path or a `~/`-prefixed path; from project/local settings it's honored only after the workspace-trust dialog. A RELATIVE value (e.g. `.claude/memory`) is silently ignored — the harness falls back to the default `~/.claude/projects/<slug>/memory/`. | https://code.claude.com/docs/en/settings + https://code.claude.com/docs/en/memory#storage-location (verified 2026-08-05) | TAOM shipped `"autoMemoryDirectory": ".claude/memory"` — silently ignored, so the tracked `.claude/memory/` copy went stale (March) while the live memory accrued at the default path, and `post-compact.sh` pointed rehydration at the stale copy. Key removed + hook repointed + tracked copy deleted 2026-08-05 (all six stale facts verified present in live memory / repo rules first). |
+| Fact | Source |
+|---|---|
+| Auto memory is machine-local. MEMORY.md's first 200 lines or 25 KB load in each main session; other memory files load only when read. | memory docs (DOC, 2026-09-23) |
+| MEMORY.md lives at `~/.claude/projects/<slug>/memory/`; the docs say only that the slug "is derived from the git repository". The Windows derivation (drive letter lowercased, `--`, separators to `-`) is EMPIRICAL (2026-04-26): derive it, then fall back to substring matching. | memory docs + EMPIRICAL |
+| `autoMemoryDirectory` accepts only an absolute or `~/` path; a relative value is silently ignored (TAOM shipped `.claude/memory` that way until 2026-08-05). | https://code.claude.com/docs/en/settings (DOC, 2026-08-05) |
 
-## Hook authoring conventions -> `.claude/rules/hook-authoring.md`
+## Settings
 
-Writing or modifying a `.claude/hooks/` script? The authoring conventions — mirror-the-sibling's-FULL-convention-set, the two-stage git-commit matcher (handles `git -C ... commit`, rejects `commit-tree`), amend-exemption patterns, and log-rotation for appending hooks — live in the paths-scoped rule `.claude/rules/hook-authoring.md`, which loads automatically when a hook file is opened. The durable lifecycle facts (fail-open mandate, JSON output contract, settings-vs-frontmatter scoping) stay in the tables above.
+| Fact | Source |
+|---|---|
+| Claude Code asks for a `Co-Authored-By: <model>` commit trailer and a PR footer unless `attribution.commit` / `attribution.pr` are `""`; `sessionUrl: false` drops the cloud session link. TAOM sets all three in `.claude/settings.json`; `check-commit-subject-version.sh` stays as the backstop. `includeCoAuthoredBy` is the deprecated form. | https://code.claude.com/docs/en/settings-reference (DOC, 2026-09-23); EMPIRICAL 2026-09-23: the next harness reminder after the edit said to add no attribution |
 
 ## Gitignore blast radius
 
-| Fact | Source | Why we care |
-|------|--------|-------------|
-| `git check-ignore -v <path>` is the authoritative check for "is this file gitignored". Reading `.gitignore` and grepping is unreliable (multiple files, negation rules, parent dir patterns). | git docs + 2026-04-26 deep-review | The pre-fix `check-freeze.sh` was excluded by `.gitignore`'s `bin/` line (intended for `Main/bin/` .NET output) and shipped as a non-functional skill. Always run `git check-ignore` against any new file under `.claude/` before assuming it'll commit. |
-| Generic patterns in `.gitignore` (`bin/`, `obj/`, `*.cache`, `tmp/`, `node_modules/`) match anywhere in the tree, not just at the repo root. | git docs | When introducing a new directory under `.claude/`, prefer descriptive names (`scripts/`, `state/`) over generic ones (`bin/`, `tmp/`, `cache/`). |
+`git check-ignore -v <path>` is the authoritative test; grepping `.gitignore` is not. Generic patterns
+(`bin/`, `obj/`, `tmp/`, `cache/`) match at any depth, which once shipped `check-freeze.sh` untracked
+and dead. Name new `.claude/` folders descriptively (`scripts/`, `state/`). (git docs; 2026-04-26
+deep-review)
 
 ## What this rule changes about how you work
 
-When you write or modify any skill, agent, rule, or hook in `.claude/`:
+1. **Load behaviour:** check the facts here first. If this file disagrees with what you need, update
+   it first, with a source.
+2. **Porting from an external suite:** follow `external-skill-ports.md`, which starts with
+   `python tools/audit_claude_config.py --root <dir> --external`.
+3. **Committing `.claude/` changes:** `check-changelog-changed.sh` blocks unless CHANGELOG.md is in the
+   commit, amends included; `check-claude-files-tracked.sh` blocks if a file under
+   `.claude/{skills,agents,rules,hooks}/` is untracked or ignored. Both fire only on Claude-driven
+   commits.
+4. **Review skills:** Phase 3e root-cause analysis applies to every confirmed bug, not only HIGH ones.
+5. **Writing a fact here:** cite a doc URL (DOC-BACKED) or an observation (EMPIRICAL: where, when).
+   Unsourced "verified" claims age into wrong ones.
 
-1. **If the change relies on Claude Code load behavior** (eager vs lazy, hook lifecycle, rule loader scoping, frontmatter consumption) — verify against this file's facts. If this file disagrees with what you intended, update this file FIRST (with a doc citation) before changing the harness.
-2. **If you're porting a skill from an external suite** (gstack, everything-claude-code, etc.) — see `.claude/rules/external-skill-ports.md` for the per-field validation checklist, which now begins with a security-vet of the foreign tree (`python tools/audit_claude_config.py --root <dir> --external`, SkillSpector-derived threat categories at full severity).
-3. **If you're committing changes touching `.claude/`** — the pre-commit hook `check-changelog-changed.sh` will **hard-block** the commit if CHANGELOG.md isn't in the post-commit file set (staged for new commits, staged + HEAD for amends). The hook `check-claude-files-tracked.sh` will **hard-block** if any file under `.claude/{skills,agents,rules,hooks}/` exists on disk but is gitignored or untracked. Both hooks fire on amends too — there is no blanket `--amend` exemption (a Codex review on 2026-04-26 caught this as a recursion-risk; amend is commonly used as "oops forgot a file" workflow, exactly the case the gate must catch). NOTE: these hooks fire only when Claude Code invokes Bash via the tool dispatch — they do NOT fire when a user types `git commit` directly in a shell outside Claude. They are prevention for Claude-driven commits, not a global git pre-commit hook.
+Parallel agents that may edit single-owner files (csproj, `IoC.cs`, `SubModule.cs`,
+`Directory.Build.props`) pass `isolation: "worktree"`; case studies are in
+`docs/ai-includes/agent-teams.md`.
 
-4. **When running `/review-codex` or any review skill** — Phase 3e (Root Cause Analysis) applies to **EVERY confirmed bug**, not just HIGH ones. Conflating severity with importance for RCA means we patch LOW symptoms but never extract the systemic lesson — and the same category of bug ships again in the next commit. The skill's literal text is: *"Do NOT skip this step. The point is not just to fix bugs — it's to make the same category of bug impossible in future features."* Review #28 caught us shortcutting this — we ran RCA only for the HIGH+MED bypass, not for the 4 LOWs and 2 MEDs that also had real "why missed" stories.
-
-5. **When writing facts in this file** (or any rule that asserts behavior) — every fact must explicitly cite either a doc URL (DOC-BACKED) or an observation context (EMPIRICAL: where, when, by whom). Vague "verified" claims without source attribution age into wrong assumptions. Example: the project-slug derivation rule was originally presented as fact; Codex caught that the Claude Code memory docs only say `<project>` "is derived from the git repository" — the exact format is empirical-on-Windows, not doc-backed.
-
-## Parallel-agent case studies → `docs/ai-includes/agent-teams.md` "Case studies"
-
-The build-watcher cascade (2026-05-06), the parallel-builder-brief seam rule (2026-07-02,
-CombatMechanics), and worktree isolation for parallel agent runs moved there 2026-08-05 — they
-fire only when spawning parallel agents, not on every turn. The operative one-liner stays here:
-**parallel Agent calls that may edit single-owner files (csproj / `IoC.cs` / `SubModule.cs` /
-`Directory.Build.props`) pass `isolation: "worktree"`, and any sub-problem appearing in >=2
-builder briefs gets ONE pinned solution in the shared contracts.**
-
-## Last verified: 2026-09-18
-
-This file is the source of truth for harness behavior in TAOM. Update the "Last verified" date and add new facts whenever a Codex review or experiment confirms something not yet captured here. Authoring-time conventions live in their scoped rules (`hook-authoring.md`, `external-skill-ports.md`); incident write-ups live in `docs/ai-includes/agent-teams.md` + the RCAs.
+## Last verified: 2026-09-23

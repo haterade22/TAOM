@@ -127,6 +127,10 @@ public class CareerPerkMissionBehavior : MissionBehavior
         // player as affector, but the ability buff is an agent stat that does not drive
         // siege damage; attributing "+N from ability" there would be a false claim.
         if (isSiegeEngineHit) return;
+        // Same reason for TAOM's own blows (a creature's attack, owned by its rider since #643; a signature strike's
+        // ring): they write their damage directly and never run the damage model the buff feeds. Not a null-weapon
+        // test: a punch or kick is weaponless too, and the buff's DamageMultiplierBonus does reach it.
+        if (CustomAttacksUtils.IsRegisteringSyntheticBlow) return;
         if (isBlocked || !(damagedHp > 0f)) return;
         if (affectorAgent == null || affectorAgent != Mission.Current?.MainAgent) return;
         if (Campaign.Current == null) return;

@@ -10,7 +10,7 @@ using TaleWorlds.MountAndBlade;
 namespace TAOM.Features.Elephant;
 
 /// <summary>
-/// Behavior tree for the AI war-elephant — the warg's per-agent BT pattern (see <c>WargBehaviorTree</c>) applied
+/// Behavior tree for the ridden war-elephant — the warg's per-agent BT pattern (see <c>WargBehaviorTree</c>) applied
 /// to the elephant, built from the SHARED elephant-like nodes bound to <see cref="ElephantCombat.Profile"/>.
 /// Built per elephant by <see cref="ElephantMissionBehavior"/> via a <c>BehaviorTreeAgentComponent</c>; the
 /// engine auto-ticks it each frame.
@@ -23,8 +23,9 @@ namespace TAOM.Features.Elephant;
 /// a swing into a playing trample.
 ///
 /// Blackboard: cooldown stamps + target bearing (<see cref="IBTElephantLikeBlackboard"/>) shared across the nodes;
-/// the rider is read off <c>Agent.RiderAgent</c> in the leaves, as the warg does. Phase 2 (player-triggered
-/// trample, enrage/charge) slots in as new branches under "has rider" without disturbing these.
+/// the rider is read off <c>Agent.RiderAgent</c> in the leaves, as the warg does. Since 2026-09-23 the attacks fire
+/// under ANY rider, the player included, as the warg's bite does (Mike): they are automatic and the rider keeps
+/// steering. A player-TRIGGERED trample (on a key) or enrage would still slot in as new branches under "has rider".
 /// </summary>
 public class ElephantBehaviorTree : BehaviorTree, IBTBannerlordBase, IBTElephantLikeBlackboard
 {
@@ -50,21 +51,18 @@ public class ElephantBehaviorTree : BehaviorTree, IBTBannerlordBase, IBTElephant
         var profile = ElephantCombat.Profile;
         return StartBuildingTree(new ElephantBehaviorTree(agent))
             .AddSelector("main")
-                .AddSelector("has rider", new HasRiderDecorator())
-                    .AddSelector("ai controlled", new IsAiControlledDecorator())
-                        .AddSelector("enemy in range", new ElephantLikeEngageDecorator(profile))
-                            .AddSequence("trample", new ElephantLikeAttackOffCooldownDecorator(profile, ElephantLikeAttackKind.Trample, ElephantConfig.TrampleCooldownSeconds))
-                                .AddTask(new ElephantLikeTrampleTask(profile))
-                                .AddTask(new SleepTask(new(0, 0, 0, 0, 300)))     // settle before next eval
-                            .Up()
-                            .AddSequence("side attack", new ElephantLikeAttackOffCooldownDecorator(profile, ElephantLikeAttackKind.SideAttack, ElephantConfig.SideAttackCooldownSeconds))
-                                .AddTask(new ElephantLikeSideAttackTask(profile))
-                                .AddTask(new SleepTask(new(0, 0, 0, 0, 300)))
-                            .Up()
-                        .Up()                                                     // both on cooldown → falls through
-                        .AddTask(new SleepTask(new(0, 0, 0, 0, 200)))             // idle: bounds the scan cadence (~5/s)
-                    .Up()
-                    .AddTask(new SleepTask(new(0, 0, 1)))                         // player-ridden: ai branch skipped
+                .AddSelector("has rider", new HasRiderDecorator())                // AI or player rider alike (warg parity)
+                    .AddSelector("enemy in range", new ElephantLikeEngageDecorator(profile))
+                        .AddSequence("trample", new ElephantLikeAttackOffCooldownDecorator(profile, ElephantLikeAttackKind.Trample, ElephantConfig.TrampleCooldownSeconds))
+                            .AddTask(new ElephantLikeTrampleTask(profile))
+                            .AddTask(new SleepTask(new(0, 0, 0, 0, 300)))     // settle before next eval
+                        .Up()
+                        .AddSequence("side attack", new ElephantLikeAttackOffCooldownDecorator(profile, ElephantLikeAttackKind.SideAttack, ElephantConfig.SideAttackCooldownSeconds))
+                            .AddTask(new ElephantLikeSideAttackTask(profile))
+                            .AddTask(new SleepTask(new(0, 0, 0, 0, 300)))
+                        .Up()
+                    .Up()                                                     // both on cooldown → falls through
+                    .AddTask(new SleepTask(new(0, 0, 0, 0, 200)))             // idle: bounds the scan cadence (~5/s)
                 .Up()
                 .AddSequence("no rider", new HasNoRiderDecorator())
                     .AddTask(new SleepTask(new(0, 0, 4)))                         // riderless: long idle

@@ -13,7 +13,7 @@ tools:
 When a single root cause manifests as **multiple symptoms across multiple features**, the `/investigate` skill (one-bug-at-a-time, locked to a feature dir) is too narrow. This agent steps back and looks for cross-system error patterns.
 
 ## Execution model (read first)
-Fixed tool allowlist (Read/Grep/Glob/Bash, read-only); you **cannot invoke skills or spawn agents**. Your correlation map informs the orchestrator's next move — when you conclude "single root cause at X", **recommend** the orchestrator run `/investigate` scoped there; you don't invoke it. Don't assume CLAUDE.md / `.claude/rules` reached you. Tool catalog + full model: [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md).
+Fixed tool allowlist (Read/Grep/Glob/Bash, read-only); you **cannot invoke skills or spawn agents**. Your correlation map informs the orchestrator's next move: when you conclude "single root cause at X", **recommend** the orchestrator run `/investigate` scoped there; you don't invoke it. CLAUDE.md, its imports and the unscoped rules are loaded for you; a path rule loads when you read a matching file. Tool catalog + full model: [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md).
 
 ## When to invoke
 

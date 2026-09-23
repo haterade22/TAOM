@@ -35,7 +35,7 @@ above says a typo means the weapon "silently fails to load". That is right about
 thin about the mechanism, and the mechanism decides how much damage a mistake does.
 
 `CraftedItemGenerationHelper.GenerateCraftedItem` (`TaleWorlds.Core.Crafting.cs:566-610`) runs two
-independent checks, and only the second is recorded in CLAUDE.md's shield trap row.
+independent checks, and only the second is recorded in the "Shield plus polearm" trap in [orientation.md](../ai-includes/orientation.md).
 
 **Gate 1, membership.** Every piece a `<CraftedItem>` names must appear in the template's
 `<UsablePiece>` list, because `CraftingTemplate.Pieces` is populated from nothing else

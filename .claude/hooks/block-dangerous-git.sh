@@ -27,7 +27,7 @@
 # Concept (recalibrated) from mattpocock/skills git-guardrails, whose version
 # hard-blocked ALL pushes with no override — wrong for TAOM.
 #
-# Returns: {} to allow, {"permissionDecision":"ask","message":"..."} to confirm.
+# Returns: {} to allow, {"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":"..."}} to confirm.
 
 set -uo pipefail
 
@@ -105,10 +105,21 @@ done <<< "$SEGMENTS"
 # Not a guarded op → allow.
 [[ -z "$REASON" ]] && { echo '{}'; exit 0; }
 
-# Escape the command for JSON embedding (backslashes + quotes; Windows paths).
-CMD_ESC=$(printf '%s' "$COMMAND" | sed 's/\\/\\\\/g; s/"/\\"/g')
+MSG="CONFIRM destructive git op: ${REASON}. Command: \"${COMMAND}\". This can permanently lose uncommitted/unpushed work and TAOM has no undo for it. Approve ONLY if you intend to discard those changes — otherwise commit or stash first. (Pushes are guarded separately by validate-push.sh.)"
 
-MSG="CONFIRM destructive git op: ${REASON}. Command: \\\"${CMD_ESC}\\\". This can permanently lose uncommitted/unpushed work and TAOM has no undo for it. Approve ONLY if you intend to discard those changes — otherwise commit or stash first. (Pushes are guarded separately by validate-push.sh.)"
+# JSON-encode the reason as a whole. Escaping only backslashes and quotes by hand left the raw
+# newline of a multi-line Bash call inside the JSON string: invalid JSON, which the harness
+# reads as allow, so no confirm appeared (#647 convergence review).
+if [[ -n "${PYBIN:-}" ]]; then
+  REASON_JSON=$(printf '%s' "$MSG" | "$PYBIN" -c 'import sys, json; sys.stdout.write(json.dumps(sys.stdin.read()))' 2>/dev/null)
+else
+  REASON_JSON=$(printf '%s' "$MSG" | jq -Rs . 2>/dev/null)
+fi
+if [[ -z "$REASON_JSON" ]]; then
+  echo "[block-dangerous-git] could not encode the confirm message; this destructive op was NOT confirmed" >&2
+  echo '{}'
+  exit 0
+fi
 
-printf '{"permissionDecision":"ask","message":"%s"}\n' "$MSG"
+printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":%s}}\n' "$REASON_JSON"
 exit 0

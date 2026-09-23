@@ -120,6 +120,7 @@ public static class IoC
         Features.Elephant.ElephantIoC.RegisterElephantFeature(container);
         Features.Mumakil.MumakilIoC.RegisterMumakilFeature(container);
         Features.WarRam.WarRamIoC.RegisterWarRamFeature(container);
+        Features.Elk.ElkIoC.RegisterElkFeature(container);
         CustomBattlesIoC.RegisterCustomBattlesFeature(container);
         BattleBalanceIoC.RegisterBattleBalanceFeature(container);
         Features.CombatMechanics.CombatMechanicsIoC.RegisterCombatMechanicsFeature(container);

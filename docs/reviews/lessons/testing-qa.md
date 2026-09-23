@@ -1065,3 +1065,9 @@ The first `HowdahPrefabTests` pinned the geometry the rebuild changed (moveable 
 - **Why missed:** the tests were written from the diff, not from the consumer.
 - **Prevent:** before writing a data pin, list what each consumer reads from the data (names, scripts, flags, tags) and pin those, with the name shared through one constant the code and the test both use (`ElephantConfig.HowdahPrefabName`).
 - **Source:** `docs/reviews/rca-howdah-prefab-review-2026-09-19.md`, #627.
+
+### A smoke step that proves an engine decision names the game mode whose model makes it
+`elk.md` told the tester that a troop killed by the elk's Blunt charge proves the engine honours `CanKillEvenIfBlunt`. It named no game mode, and the mode a tester reaches first cannot fail the step: Custom Battle registers `DefaultAgentDecideKilledOrUnconsciousModel` (v1.5.3 `CustomGame.cs:102`), which answers killed for every downed agent, while only the campaign's `SandboxAgentDecideKilledOrUnconsciousModel` reads the weapon flags.
+- **Why missed:** the step was written from the campaign model's code, and a smoke list reads as mode-neutral unless it says otherwise.
+- **Prevent:** when a smoke step is there to prove an engine DECISION (killed or wounded, a morale roll, a capture), find the model that decides it in each game mode (`AddModel` in `CustomGame` and the campaign starter) and name the mode whose model can give the other answer. If no mode can, the step proves nothing; say so instead. When the model ROLLS (killed or wounded is a survival roll even with `CanKillEvenIfBlunt`), one outcome proves nothing either: say how many trials settle it and which result would (Codex, 2026-09-23: the step first demanded "killed, not wounded", which a correct build can fail).
+- **Source:** `docs/reviews/rca-elk-delta-2026-09-23.md` F5 (#636).

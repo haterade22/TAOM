@@ -34,7 +34,7 @@ Map the territory before judging it. TAOM has an unusually rich intent layer —
 
 - `CLAUDE.md` — the repo map: architecture, critical rules, feature inventory, GameModel/patch catalogs, key paths.
 - `docs/INDEX.md`, `docs/adrs/` (decided architecture), `docs/roadmap.md` (decided direction), `docs/migration/TRACKING.md` (migration state), recent `CHANGELOG.md` + `git log --oneline -30` (what's actively evolving vs frozen).
-- Standing calibrations that would otherwise read as findings — with their actual sources: fail-open hooks are *mandated* (`.claude/rules/harness-facts.md`); vendored DLLs in `Main/_Module/bin/` are *allowlisted* and `Main/_Module/ModuleData/settlements.xml` is a *known stale shadow* whose live copy is the external TAOM_Map module (both: CLAUDE.md Key Paths); LOTRLOME_Armory is *intentionally* absent from `<DependedModules>` (`docs/reviews/rca-morannon-2026-06-08.md`).
+- Standing calibrations that would otherwise read as findings, with their actual sources: fail-open hooks are *mandated* (`.claude/rules/harness-facts.md`); vendored DLLs in `Main/_Module/bin/` are *allowlisted* and `Main/_Module/ModuleData/settlements.xml` is a *known stale shadow* whose live copy is the external TAOM_Map module (both: the orientation.md trap index); LOTRLOME_Armory is *intentionally* absent from `<DependedModules>` (`docs/reviews/rca-morannon-2026-06-08.md`).
 - Verification commands (these go into every plan as gates): `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true`, `dotnet test TAOM.Tests -p:DisableModuleCopy=true`, `python tools/validate_moduledata.py`, `python tools/lint_docs.py`.
 - Conventions plans must tell executors to match: adapter pattern (ADR-007), thin entry points (ADR-002), TDD mandatory, no `#region`/`[Obsolete]`/`#if DEBUG`, 50/72 commits with no AI attribution.
 
@@ -44,7 +44,7 @@ If a verification path is broken (build red, tests failing), record it — "esta
 
 Audit across the categories in [references/audit-playbook.md](references/audit-playbook.md) — read it now. Categories: **correctness/bugs, security, performance, test coverage, tech debt & architecture, dependencies & migrations, DX & tooling, docs, game data integrity, direction**.
 
-For a full audit, fan out parallel read-only subagents — one per category (or cluster). **Subagents do not inherit this skill's context or TAOM's CLAUDE.md reliably**, so each subagent prompt must include:
+For a full audit, fan out parallel read-only subagents, one per category (or cluster). **Subagents do not inherit this skill's context** (custom and general-purpose agents do load CLAUDE.md and the unscoped rules; Explore and Plan load none of it), so each subagent prompt must include:
 
 - "Read `docs/ai-includes/agent-operating-manual.md` first; you cannot invoke skills or spawn agents — report findings only."
 - The **absolute path** to `references/audit-playbook.md` plus the exact section headings to read — **always including "## Finding format"**.

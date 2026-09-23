@@ -113,7 +113,7 @@ Port refactoring-specialist subagent to .claude/agents/, run /context-budget to 
 3. `/deep-review` the changed scope, then commit
 
 ## Anything that surprised you this session
-The amend bypass (Codex review #28) was a real prevention-theater finding. Now codified in harness-facts.md "Amend exemptions" section so the same mental model error can't recur.
+The amend bypass (Codex review #28) was a real prevention-theater finding. Now codified in `hook-authoring.md` "Amend exemptions in pre-commit hooks" so the same mental model error can't recur.
 ```
 
 ## Storage

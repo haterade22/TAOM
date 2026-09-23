@@ -200,15 +200,22 @@ def export_static_meshes():
 
 
 def _mesh_for_skeleton(skeleton, meshes):
-    """First SkeletalMesh bound to this skeleton, used as the clip's preview mesh."""
+    """The clip's preview mesh: the mesh named after the skeleton (Elk_M_Skeleton -> Elk_M)
+    when there is one, else the first SkeletalMesh bound to it. Animalia packs list GFur
+    shells (Fur/Elk_M_FurBase) before the body, so first-found alone picks a fur shell."""
     if skeleton is None:
         return None
     want = skeleton.get_path_name()
-    for _, mesh in meshes:
-        sk = mesh.get_editor_property("skeleton")
-        if sk is not None and sk.get_path_name() == want:
+    bound = [mesh for _, mesh in meshes
+             if mesh.get_editor_property("skeleton") is not None
+             and mesh.get_editor_property("skeleton").get_path_name() == want]
+    own_name = skeleton.get_name()
+    if own_name.endswith("_Skeleton"):
+        own_name = own_name[:-len("_Skeleton")]
+    for mesh in bound:
+        if mesh.get_name() == own_name:
             return mesh
-    return None
+    return bound[0] if bound else None
 
 
 def export_animations():

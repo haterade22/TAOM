@@ -214,9 +214,10 @@ an item folder loads as a duplicate item id.
 
 - About 127 new `{=starter_*}` item names use inline English defaults, plus the 180 older
   `{=starter_*}` armour names: none harvested into the 12-language pipeline (`/localize`).
-- Horse and HorseHarness are untouched; the career layer still hands a vanilla `saddle_horse` (and on seven
-  of them `light_harness`) to cavalry. The Armory has no riding horse of its own: every Armory `Horse` is a
-  creature (wargs, rams, spiders, mumakil, elephant, chariot).
+- Horse and HorseHarness are untouched by #629; the career layer hands a vanilla `saddle_horse` to seven
+  cultures' cavalry (six of them with `light_harness`), a warg to four, the war ram to Erebor (#515) and the
+  great elk to Mirkwood (#636). The Armory has no riding horse of its own: every Armory `Horse` is a creature
+  (wargs, rams, spiders, mumakil, elephant, chariot, elk).
 - The careerless culture-default kits of Umbar, Khand, Shaghana and Abanissa still hand out vanilla weapons,
   Lothlorien and Lindon a vanilla sumpter horse and harness, and Goblin, Misty Mountains and Blue Craig
   vanilla arrows (out of #629's scope).

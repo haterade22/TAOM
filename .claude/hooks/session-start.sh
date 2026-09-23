@@ -93,7 +93,8 @@ elif [[ -f "$PIN_FILE" ]]; then
   if [[ -n "$INSTALLED" && -n "$PINNED" && "$INSTALLED" != "$PINNED" ]]; then
     echo ""
     echo "!!! GAME VERSION DRIFT: installed $INSTALLED but TAOM is pinned to $PINNED !!!"
-    echo "!!! Steam likely force-updated. Run /engine-bump BEFORE trusting any test run. !!!"
+    echo "!!! Steam likely force-updated. Tell the user first, then run /engine-bump BEFORE any !!!"
+    echo "!!! build, test or crash attribution: a test on an unacknowledged bump proves nothing. !!!"
   fi
 fi
 
@@ -127,7 +128,8 @@ else
     echo "!!! ARMORY ART DRIFT: a tpac is newer than the committed catalogue !!!"
     echo "!!!   ${NEWER_TPAC#$ARMORY_ASSETS/}"
     echo "!!!   Run /armory-audit (python tools/audit_armory_refs.py --regen-catalogue) BEFORE any battle or"
-    echo "!!!   tournament smoke. A missing collision body is the #352 infinite load (#599)."
+    echo "!!!   tournament smoke, and repoint every MISSING_BODY row it names. A missing collision body"
+    echo "!!!   is the #352 infinite load (#599)."
   fi
 fi
 
@@ -147,7 +149,7 @@ fi
 # Stash visibility. `git pull --rebase` auto-stashes the WHOLE working tree, including
 # files another session is mid-edit on, and an auto-stash that is never popped reverts
 # that session's work to HEAD with no error and no conflict — invisible data loss
-# (CLAUDE.md "Multi-session git safety"; happened 2026-08-07, and an `autostash` entry
+# (docs/ai-includes/git-and-commits.md; happened 2026-08-07, and an `autostash` entry
 # was still sitting unresolved two days later). `git status` does not mention stashes, so
 # nothing surfaced it. Read-only, count only. Fail-open.
 STASH_COUNT=$(git stash list 2>/dev/null | grep -c . || true)

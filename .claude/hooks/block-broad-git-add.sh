@@ -37,7 +37,7 @@
 #
 # Calibrated to TAOM: confirm-not-block; fail-open (any parse error → allow).
 #
-# Returns: {} to allow, {"permissionDecision":"ask","message":"..."} to confirm.
+# Returns: {} to allow, {"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":"..."}} to confirm.
 
 set -uo pipefail
 
@@ -136,11 +136,21 @@ fi
 STASH_NOTE=""
 [[ "${STASH_COUNT:-0}" -gt 0 ]] && STASH_NOTE=" There ${STASH_COUNT} stash(es) present — an unrestored auto-stash is how this went wrong on 2026-08-07."
 
-# Escape for JSON embedding (backslashes + quotes; Windows paths).
-CMD_ESC=$(printf '%s' "$COMMAND" | sed 's/\\/\\\\/g; s/"/\\"/g')
-FILES_ESC=$(printf '%s' "$FILE_LIST" | sed 's/\\/\\\\/g; s/"/\\"/g')
+MSG="CONFIRM broad staging: ${REASON}. Command: \"${COMMAND}\". TAOM is worked by more than one session at a time, so the tree can hold edits you did not make — this has swept another session's work into the wrong commit three times (2026-08-07, 08-08, 08-09). Would stage ${DIRTY_COUNT:-0} path(s): ${FILE_LIST}.${STASH_NOTE} Approve ONLY if every one of those is yours. Otherwise cancel and stage explicitly: git add <paths>."
 
-MSG="CONFIRM broad staging: ${REASON}. Command: \\\"${CMD_ESC}\\\". TAOM is worked by more than one session at a time, so the tree can hold edits you did not make — this has swept another session's work into the wrong commit three times (2026-08-07, 08-08, 08-09). Would stage ${DIRTY_COUNT:-0} path(s): ${FILES_ESC}.${STASH_NOTE} Approve ONLY if every one of those is yours. Otherwise cancel and stage explicitly: git add <paths>."
+# JSON-encode the reason as a whole. Escaping only backslashes and quotes by hand left the raw
+# newline of a multi-line Bash call inside the JSON string: invalid JSON, which the harness
+# reads as allow, so no confirm appeared (#647 convergence review).
+if [[ -n "${PYBIN:-}" ]]; then
+  REASON_JSON=$(printf '%s' "$MSG" | "$PYBIN" -c 'import sys, json; sys.stdout.write(json.dumps(sys.stdin.read()))' 2>/dev/null)
+else
+  REASON_JSON=$(printf '%s' "$MSG" | jq -Rs . 2>/dev/null)
+fi
+if [[ -z "$REASON_JSON" ]]; then
+  echo "[block-broad-git-add] could not encode the confirm message; this broad staging was NOT confirmed" >&2
+  echo '{}'
+  exit 0
+fi
 
-printf '{"permissionDecision":"ask","message":"%s"}\n' "$MSG"
+printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":%s}}\n' "$REASON_JSON"
 exit 0

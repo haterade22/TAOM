@@ -48,6 +48,29 @@ for c in python python3 py; do
 done
 [[ -z "$HPY" ]] && { echo "test_hooks: no safe python for the harness itself; cannot run."; exit 1; }
 
+# A PreToolUse gate's decision, read the way Claude Code reads it: only
+# hookSpecificOutput.permissionDecision counts (hooks docs, "PreToolUse decision control").
+# Empty output and {} are allow. A top-level permissionDecision or decision is BADSHAPE: the
+# harness ignores it, which left nine gates inert until #647 while every text-matching test
+# here passed.
+decision_of() {
+    printf '%s' "$1" | "$HPY" -c '
+import json, sys
+raw = sys.stdin.read().strip() or "{}"
+try:
+    d = json.loads(raw)
+except Exception:
+    print("invalid"); sys.exit()
+if not isinstance(d, dict) or "permissionDecision" in d or "decision" in d:
+    print("BADSHAPE"); sys.exit()
+h = d.get("hookSpecificOutput")
+if h is None:
+    print("allow"); sys.exit()
+ok = (isinstance(h, dict) and h.get("hookEventName") == "PreToolUse"
+      and h.get("permissionDecision") in ("allow", "deny", "ask"))
+print(h["permissionDecision"] if ok else "BADSHAPE")'
+}
+
 # ---------------------------------------------------------------------------
 # 1. No hook may ever spell it `python3`.
 # ---------------------------------------------------------------------------
@@ -179,12 +202,14 @@ PYEOF
 done
 
 # ---------------------------------------------------------------------------
-# 3b. Every skill/agent frontmatter must parse as YAML.
+# 3b. Every skill, agent and rule frontmatter must parse as YAML.
 #     Four SKILL.md files shipped with an unquoted `argument-hint: [a] [b]`, which is
 #     not valid YAML, so the WHOLE frontmatter was dropped and those skills lost their
-#     eager description from the model's routing surface. Nothing detected it.
+#     eager description from the model's routing surface. Nothing detected it. For a
+#     rule the failure is worse than a lost field: Claude Code loads a rule whose
+#     frontmatter does not parse in EVERY session, as if it had no `paths:` (ADR-011).
 # ---------------------------------------------------------------------------
-head2 "3b. skill/agent frontmatter parses as YAML"
+head2 "3b. skill, agent and rule frontmatter parses as YAML"
 FM=$("$HPY" - <<'PYEOF'
 import pathlib, sys
 try:
@@ -206,7 +231,9 @@ def frontmatter(txt):
 
 bad = []
 n = 0
-for p in list(pathlib.Path('.claude/skills').glob('*/SKILL.md')) + list(pathlib.Path('.claude/agents').glob('*.md')):
+for p in (list(pathlib.Path('.claude/skills').glob('*/SKILL.md'))
+          + list(pathlib.Path('.claude/agents').glob('*.md'))
+          + list(pathlib.Path('.claude/rules').rglob('*.md'))):   # rules load recursively
     txt = p.read_text(encoding='utf-8', errors='replace')
     fm = frontmatter(txt)
     if fm is None:
@@ -301,6 +328,18 @@ PY
 # check-freeze.sh is registered from skill frontmatter, not settings.json, but is a gate.
 GATE_HOOKS="$GATE_HOOKS check-freeze.sh"
 is_gate() { [[ " $GATE_HOOKS " == *" $1 "* ]]; }
+# The PreToolUse subset: only these must use hookSpecificOutput. PostToolUse keeps the
+# top-level `decision` field as its current format, so it is judged by validity alone.
+PRE_GATES=$("$HPY" - <<'PY'
+import json
+d = json.load(open('.claude/settings.json', encoding='utf-8'))
+print(' '.join(sorted({h['command'].rsplit('/', 1)[-1]
+                       for g in d.get('hooks', {}).get('PreToolUse', [])
+                       for h in g.get('hooks', [])})))
+PY
+)
+PRE_GATES="$PRE_GATES check-freeze.sh"
+is_pre_gate() { [[ " $PRE_GATES " == *" $1 "* ]]; }
 
 PAYLOADS=(
   'bash|{"tool_name":"Bash","tool_input":{"command":"echo hi"},"hook_event_name":"PreToolUse"}'
@@ -333,6 +372,10 @@ for hookfile in .claude/hooks/*.sh .claude/skills/freeze/check-freeze.sh; do
                 bad "$name [$label] stdout is not valid JSON: $(printf '%s' "$OUT" | head -c 80)"
                 continue
             fi
+            if is_pre_gate "$name" && [[ "$(decision_of "$OUT")" == BADSHAPE ]]; then
+                bad "$name [$label] prints a decision Claude Code ignores (not under hookSpecificOutput): $(printf '%s' "$OUT" | head -c 80)"
+                continue
+            fi
         fi
         if (( MS > 3000 )); then
             bad "$name [$label] took ${MS}ms on a trivial payload (expected <3000ms)"
@@ -340,6 +383,34 @@ for hookfile in .claude/hooks/*.sh .claude/skills/freeze/check-freeze.sh; do
         fi
         ok "$name [$label] rc=$RC ${MS}ms"
     done
+done
+
+# ---------------------------------------------------------------------------
+# 4b. Every PreToolUse gate answers a commit payload on the REAL repo well inside its
+#     registration. Check 3 times only hooks that launch a tools/*.py; check-claude-files-
+#     tracked.sh ran git two or three times per file instead, took 6 s against its 5 s
+#     registration, and was killed on every commit (Codex review 2026-09-23). The payload is
+#     read-only for every gate: nothing is staged or written.
+# ---------------------------------------------------------------------------
+head2 "4b. every PreToolUse gate answers a commit inside 80% of its registration"
+for name in $PRE_GATES; do
+    [[ "$name" == check-freeze.sh ]] && continue
+    REG=$("$HPY" - "$name" <<'PYEOF'
+import json, sys
+d = json.load(open('.claude/settings.json', encoding='utf-8'))
+print(next((h.get('timeout', 600) for g in d['hooks'].get('PreToolUse', []) for h in g['hooks']
+            if h['command'].endswith(sys.argv[1])), 0))
+PYEOF
+)
+    S=$(date +%s%N)
+    printf '%s' '{"tool_name":"Bash","tool_input":{"command":"git commit -m \"docs: v0.0.0 - timing probe\""},"hook_event_name":"PreToolUse"}' \
+        | timeout -k 2 65 env CLAUDE_PROJECT_DIR="$REPO" bash ".claude/hooks/$name" >/dev/null 2>&1
+    MS=$(( ($(date +%s%N) - S) / 1000000 ))
+    if (( MS * 10 >= REG * 1000 * 8 )); then
+        bad "$name took ${MS}ms on a commit payload against its ${REG}s registration: the harness kills it (silently) under load"
+    else
+        ok "$name ${MS}ms of ${REG}s"
+    fi
 done
 
 # ---------------------------------------------------------------------------
@@ -439,6 +510,105 @@ for name in $BLOCKING_BASH_GATES; do
 done
 
 # ---------------------------------------------------------------------------
+# 5c. Every PreToolUse gate prints its decision where Claude Code reads it.
+#     Static, because most deny and ask paths need staged files or the game install
+#     to reach at runtime. Claude Code ignores a top-level {"permissionDecision": ...}:
+#     nine gates printed exactly that until #647, and each one passed a text match on
+#     "permissionDecision":"deny" while the harness let every command through.
+# ---------------------------------------------------------------------------
+head2 "5c. every PreToolUse gate nests its decision in hookSpecificOutput"
+for name in $PRE_GATES; do
+    f=".claude/hooks/$name"
+    [[ "$name" == check-freeze.sh ]] && f=".claude/skills/freeze/check-freeze.sh"
+    [[ -f "$f" ]] || continue
+    hit=$(grep -nF -e '{"permissionDecision' -e '{\"permissionDecision' "$f" | head -1 | cut -d: -f1)
+    if [[ -n "$hit" ]]; then
+        bad "$name:$hit prints a top-level permissionDecision, which Claude Code ignores; nest it under hookSpecificOutput with hookEventName PreToolUse"
+    else
+        ok "$name prints no top-level decision"
+    fi
+done
+
+# ---------------------------------------------------------------------------
+# 5c2. The confirm gates still confirm a multi-line command. A Claude Bash call often spans
+#      lines, and a reason built by hand-escaping only quotes and backslashes put a raw
+#      newline inside a JSON string: invalid JSON, which the harness treats as allow
+#      (#647 convergence review).
+# ---------------------------------------------------------------------------
+head2 "5c2. the ask gates emit valid JSON for a multi-line command"
+for pair in 'block-broad-git-add.sh|git add -A\necho hi' \
+            'block-broad-git-add.sh|git add -A\techo hi' \
+            'block-dangerous-git.sh|git reset --hard\necho hi' \
+            'block-dangerous-git.sh|git checkout -- a.txt\n\tgit status'; do
+    hook="${pair%%|*}"; cmd="${pair#*|}"
+    OUT=$(printf '{"tool_name":"Bash","tool_input":{"command":"%s"},"hook_event_name":"PreToolUse"}' "$cmd" \
+          | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$SANDBOX" bash ".claude/hooks/$hook" 2>/dev/null)
+    got=$(decision_of "$OUT")
+    if [[ "$got" == ask ]]; then
+        ok "$hook asks for [$cmd]"
+    else
+        bad "$hook returned '$got' for [$cmd]; a confirm gate must emit a valid ask: $(printf '%s' "$OUT" | head -c 120)"
+    fi
+done
+
+# ---------------------------------------------------------------------------
+# 5c3. /freeze judges a path the same however the JSON encodes it. It read file_path with a
+#      grep that kept JSON escapes, so an in-bound file written as 漢 compared as out of
+#      bounds (Codex review 2026-09-23). Its own project dir, so no other section sees a boundary.
+# ---------------------------------------------------------------------------
+head2 "5c3. check-freeze decodes the path before comparing it"
+FZ="$SANDBOX/fz-proj"
+mkdir -p "$FZ/.claude/hooks" "$FZ/.claude/tmp/freeze" "$FZ/漢/sub" "$FZ/other"
+cp .claude/hooks/_pybin.sh "$FZ/.claude/hooks/" 2>/dev/null
+FZ_NATIVE="$FZ"; command -v cygpath >/dev/null 2>&1 && FZ_NATIVE=$(cygpath -m "$FZ")
+printf '%s\n' "$FZ_NATIVE/漢" > "$FZ/.claude/tmp/freeze/freeze-dir.txt"
+for case in "allow|escaped|$FZ_NATIVE/漢/sub/a.cs" "allow|raw|$FZ_NATIVE/漢/sub/a.cs" "deny|escaped|$FZ_NATIVE/other/b.cs"; do
+    expect="${case%%|*}"; rest="${case#*|}"; enc="${rest%%|*}"; path="${rest#*|}"
+    payload=$("$HPY" -X utf8 -c 'import json,sys; print(json.dumps({"tool_name":"Edit","tool_input":{"file_path":sys.argv[1]},"hook_event_name":"PreToolUse"}, ensure_ascii=(sys.argv[2]=="escaped")))' "$path" "$enc")
+    OUT=$(printf '%s' "$payload" | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$FZ" bash .claude/skills/freeze/check-freeze.sh 2>/dev/null)
+    got=$(decision_of "$OUT")
+    if [[ "$got" == "$expect" ]]; then
+        ok "freeze [$enc] $expect for ${path#"$FZ_NATIVE"/}"
+    else
+        bad "freeze [$enc] expected $expect, got $got for ${path#"$FZ_NATIVE"/}: $(printf '%s' "$OUT" | head -c 120)"
+    fi
+done
+rm -rf "$FZ"
+
+# ---------------------------------------------------------------------------
+# 5d. The drift gate fires for every file the context budget measures.
+#     The linter reads the entry docs from CLAUDE.md's @-imports; the hook's RELEVANT
+#     case list is written by hand. A new import the list misses would let a commit grow
+#     that file past the budget with the local gate silent (#647 review).
+# ---------------------------------------------------------------------------
+head2 "5d. check-doc-config-drift covers every entry doc"
+DRIFT_HOOK=".claude/hooks/check-doc-config-drift.sh"
+RELEVANT_PATTERNS=$(grep -E '^[[:space:]]+[^#[:space:]].*\) RELEVANT=1' "$DRIFT_HOOK" \
+    | sed -E 's/^[[:space:]]+//; s/\) RELEVANT=1.*//')
+ENTRY_DOC_LIST=$("$HPY" tools/lint_docs.py --context-budget-json 2>/dev/null \
+    | "$HPY" -c 'import json,sys; print("\n".join(d["path"] for d in json.load(sys.stdin)["entry_docs"]))' 2>/dev/null \
+    | tr -d '\r')
+if [[ -z "$ENTRY_DOC_LIST" || -z "$RELEVANT_PATTERNS" ]]; then
+    bad "could not read the entry docs from lint_docs.py or the RELEVANT list from $DRIFT_HOOK"
+else
+    while IFS= read -r doc; do
+        matched=0
+        while IFS= read -r pat; do
+            IFS='|' read -r -a alts <<< "$pat"
+            for alt in "${alts[@]}"; do
+                # shellcheck disable=SC2053  # $alt is a glob on purpose, as in the hook's case
+                [[ "$doc" == $alt ]] && matched=1
+            done
+        done <<< "$RELEVANT_PATTERNS"
+        if [[ $matched -eq 1 ]]; then
+            ok "entry doc $doc is in the drift hook's RELEVANT list"
+        else
+            bad "entry doc $doc (loaded by CLAUDE.md) is missing from $DRIFT_HOOK's RELEVANT list"
+        fi
+    done <<< "$ENTRY_DOC_LIST"
+fi
+
+# ---------------------------------------------------------------------------
 head2 "6. check-commit-subject-version: subject cases against the real SubModule.xml"
 # The gate reads <Version value="..."> from Main/_Module/SubModule.xml, so it runs here
 # against the repo, not the sandbox, and the expected label is read the same way the hook
@@ -452,6 +622,7 @@ elif [[ -z "$CSV_VER" ]]; then
 else
     CSV_MSGFILE="$SANDBOX/subject-ok.txt"; printf 'docs: %s - from a file\n\nbody\n' "$CSV_VER" > "$CSV_MSGFILE"
     CSV_BADFILE="$SANDBOX/subject-bad.txt"; printf 'docs: from a file without the label\n' > "$CSV_BADFILE"
+    CSV_AIFILE="$SANDBOX/subject-ai.txt"; printf 'docs: %s - from a file\n\nbody\n\nCo-Authored-By: Claude <noreply@anthropic.com>\n' "$CSV_VER" > "$CSV_AIFILE"
     CSV_CASES=(
       "labelled -m|allow|git commit -m \"fix(recruitment): $CSV_VER - Glanhir recruits the Ringlo Vale line\""
       "labelled -m, no scope|allow|git commit -m 'docs: $CSV_VER - update the changelog'"
@@ -471,6 +642,54 @@ feat(gondor): three harbor ships
 Body line.
 EOF
 )\""
+      "heredoc with an AI co-author trailer|deny|git commit -m \"\$(cat <<'EOF'
+feat(gondor): $CSV_VER - three harbor ships
+
+Body line.
+
+Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+EOF
+)\""
+      "heredoc with a human co-author|allow|git commit -m \"\$(cat <<'EOF'
+feat(gondor): $CSV_VER - three harbor ships
+
+Body line.
+
+Co-Authored-By: Jane Doe <jane@example.com>
+EOF
+)\""
+      "AI co-author in a second -m|deny|git commit -m \"docs: $CSV_VER - x\" -m \"Co-Authored-By: Claude <noreply@anthropic.com>\""
+      "Generated-with line in a second -m|deny|git commit -m \"docs: $CSV_VER - x\" -m \"Generated with [Claude Code](https://claude.com/claude-code)\""
+      "Generated-with mid-sentence|allow|git commit -m \"docs: $CSV_VER - x\" -m \"The old file was not Generated with Claude Code.\""
+      "AI co-author via --trailer|deny|git commit -m \"docs: $CSV_VER - x\" --trailer \"Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>\""
+      "AI co-author via --trailer token=value|deny|git commit -m \"docs: $CSV_VER - x\" --trailer \"Co-authored-by=Claude <noreply@anthropic.com>\""
+      "human co-author via --trailer|allow|git commit -m \"docs: $CSV_VER - x\" --trailer \"Co-authored-by: Jane Doe <jane@example.com>\""
+      "AI co-author in ANSI-C quoting|deny|git commit -m \"docs: $CSV_VER - x\" -m \$'Co-Authored-By: Claude <noreply@anthropic.com>'"
+      "AI co-author in an ANSI-C --trailer|deny|git commit -m \"docs: $CSV_VER - x\" --trailer=\$'Co-Authored-By: Claude <noreply@anthropic.com>'"
+      "AI co-author in an attached -m|deny|git commit -m \"docs: $CSV_VER - x\" -m\"Co-Authored-By: Claude <noreply@anthropic.com>\""
+      "AI trailer file in an attached -F|deny|git commit -F$CSV_AIFILE"
+      "AI co-author from concatenated words|deny|git commit -m \"docs: $CSV_VER - x\" -m \"Co-Authored-By: Cla\"ude\" <noreply@anthropic.com>\""
+      "option-shaped prose in a message|allow|git commit -m 'fix: $CSV_VER - review probe' -m 'Check --trailer=\"Co-Authored-By: Claude <noreply@anthropic.com>\" handling.'"
+      "a literal backslash-n in single quotes|allow|git commit -m 'docs: $CSV_VER - x' -m 'mention \\nCo-Authored-By: Claude <noreply@anthropic.com>'"
+      "trailer text in a later command|allow|git commit -m \"docs: $CSV_VER - x\" && printf '%s' '--trailer=Co-Authored-By: Claude'"
+      "unlabelled, then python -c|deny|git commit -m \"docs: no label\" && python -c \"print(1)\""
+      "unlabelled, -C only in the body|deny|git commit -m \"docs: no label\" -m \"use git -C path\""
+      "second commit in the command unlabelled|deny|git commit -m \"docs: $CSV_VER - a\" && git commit --allow-empty -m \"docs: no label\""
+      "git commit only inside a quoted argument|allow|printf '%s' 'git commit -m test'"
+      "bash -c wrapper unlabelled|deny|bash -c \"git commit -m 'docs: no label'\""
+      "bundled -am unlabelled|deny|git commit -am \"docs: no label\""
+      "bundled -am labelled|allow|git commit -am \"docs: $CSV_VER - x\""
+      "stdin heredoc with an apostrophe, labelled|allow|git commit -F - <<'EOF'
+feat(gondor): $CSV_VER - Mike's harbor ships
+
+Body line.
+EOF"
+      "stdin heredoc unlabelled|deny|git commit -F - <<'EOF'
+feat(gondor): Mike's harbor ships
+EOF"
+      "reused message with an AI trailer|deny|git commit -C HEAD --trailer \"Co-Authored-By: Claude <noreply@anthropic.com>\""
+      "fixup with an AI trailer|deny|git commit --fixup=abc1234 --trailer \"Co-Authored-By: Claude <noreply@anthropic.com>\""
+      "-F file with an AI co-author trailer|deny|git commit -F $CSV_AIFILE"
       "-F file labelled|allow|git commit -F $CSV_MSGFILE"
       "-F file unlabelled|deny|git commit -F $CSV_BADFILE"
       "amend keeps HEAD subject|allow|git commit --amend --no-edit"
@@ -489,12 +708,30 @@ EOF
             bad "subject case [$label] exit $RC"
             continue
         fi
-        if printf '%s' "$OUT" | grep -q '"permissionDecision":"deny"'; then got=deny; else got=allow; fi
+        got=$(decision_of "$OUT")
         if [[ "$got" == "$expect" ]]; then
             ok "subject case [$label] -> $got"
         else
             bad "subject case [$label] expected $expect, got $got: $(printf '%s' "$OUT" | head -c 160)"
         fi
+    done
+    # Non-ASCII in the command (#647). Claude Code sends raw UTF-8, and Python's stdio on
+    # Windows defaults to the ANSI code page, so the JSON extraction failed on a character such
+    # as an arrow and every gate let the command through unchecked. Both payload encodings, and
+    # a labelled subject that must still pass.
+    for enc in raw escaped; do
+        for pair in "deny|git commit -m \"docs: no label → probe\"" \
+                    "allow|git commit -m \"docs: $CSV_VER - Khamûl → Dol Guldur\""; do
+            expect="${pair%%|*}"; cmd="${pair#*|}"
+            payload=$("$HPY" -X utf8 -c 'import json,sys; print(json.dumps({"tool_name":"Bash","tool_input":{"command":sys.argv[1]},"hook_event_name":"PreToolUse"}, ensure_ascii=(sys.argv[2]=="escaped")))' "$cmd" "$enc")
+            OUT=$(printf '%s' "$payload" | timeout -k 2 12 env CLAUDE_PROJECT_DIR="$REPO" bash "$CSV_HOOK" 2>/dev/null)
+            got=$(decision_of "$OUT")
+            if [[ "$got" == "$expect" ]]; then
+                ok "subject case [non-ASCII, $enc payload] -> $got"
+            else
+                bad "subject case [non-ASCII, $enc payload] expected $expect, got $got: $(printf '%s' "$OUT" | head -c 160)"
+            fi
+        done
     done
 fi
 
@@ -528,6 +765,54 @@ if cdr_reminds; then
 else
     ok "a deep-reviewer run logged by log-agent.sh mutes the reminder"
 fi
+
+# ---------------------------------------------------------------------------
+head2 "7b. check-claude-files-tracked: denies with a valid decision, inside its registration"
+# Until #647 it asked git two or three times per file, took 6 s against a 5 s registration,
+# and the harness killed it on every commit. A sandbox repo with one untracked and one
+# gitignored harness file must be denied, fast, and a clean tree allowed.
+CFT_REPO="$SANDBOX/cft-repo"
+mkdir -p "$CFT_REPO/.claude/skills/demo" "$CFT_REPO/.claude/hooks/bin"
+git -C "$CFT_REPO" init -q 2>/dev/null
+printf 'bin/\n' > "$CFT_REPO/.gitignore"
+printf '# demo\n' > "$CFT_REPO/.claude/skills/demo/SKILL.md"
+printf 'echo hi\n' > "$CFT_REPO/.claude/hooks/bin/check.sh"
+cft_run() {
+    printf '%s' '{"tool_name":"Bash","tool_input":{"command":"git commit -m x"},"hook_event_name":"PreToolUse"}' \
+        | CLAUDE_PROJECT_DIR="$CFT_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/check-claude-files-tracked.sh" 2>/dev/null
+}
+S=$(date +%s%N); OUT=$(cft_run); MS=$(( ($(date +%s%N) - S) / 1000000 ))
+if [[ "$(decision_of "$OUT")" == deny ]] && grep -q 'SKILL.md (untracked' <<< "$OUT" && grep -q 'check.sh (gitignored' <<< "$OUT"; then
+    ok "denies an untracked and a gitignored harness file in ${MS}ms"
+else
+    bad "check-claude-files-tracked did not deny both files with a valid decision: $(printf '%s' "$OUT" | head -c 160)"
+fi
+git -C "$CFT_REPO" add .claude/skills/demo/SKILL.md 2>/dev/null
+rm -rf "$CFT_REPO/.claude/hooks/bin"
+OUT=$(cft_run)
+if [[ "$(decision_of "$OUT")" == allow ]]; then
+    ok "allows once the file is staged and the ignored one is gone"
+else
+    bad "check-claude-files-tracked still objects to a clean tree: $(printf '%s' "$OUT" | head -c 160)"
+fi
+
+# ---------------------------------------------------------------------------
+head2 "8. /context-budget scan.sh runs under set -u and measures the launch load"
+# Nothing else runs this script, and it reads the budget from tools/lint_docs.py: an unbound
+# variable or a broken JSON handshake would otherwise surface only when someone runs the skill.
+for mode in "" "--verbose"; do
+    SCAN_OUT=$(timeout -k 2 60 bash -u .claude/skills/context-budget/scan.sh $mode 2>&1)
+    SCAN_RC=$?
+    if [[ $SCAN_RC -ne 0 ]]; then
+        bad "scan.sh ${mode:-(default)} exit $SCAN_RC: $(printf '%s' "$SCAN_OUT" | tail -2 | tr '\n' ' ')"
+    elif ! grep -q 'Per custom-agent spawn' <<< "$SCAN_OUT"; then
+        bad "scan.sh ${mode:-(default)} printed no per-spawn line"
+    elif grep -q 'NOT measured' <<< "$SCAN_OUT"; then
+        bad "scan.sh ${mode:-(default)} could not read the budget: $(grep 'NOT measured' <<< "$SCAN_OUT" | head -1)"
+    else
+        ok "scan.sh ${mode:-(default)} ran clean under set -u"
+    fi
+done
 
 # ---------------------------------------------------------------------------
 head2 "Summary"

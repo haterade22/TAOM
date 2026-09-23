@@ -46,7 +46,7 @@ is a `ScreenLayer` added to a `ScreenBase`/`MissionView`.
   a property/button to `SPInventoryVM`). TAOM: QuickActions, career.
 - **Prefab extensions** (`[PrefabExtension…]`) — inject widgets into an *existing* vanilla `.xml` prefab at an XPath
   (e.g. Messengers injects into `EncyclopediaHeroPage`). **Decompile the vanilla target prefab first** to verify the
-  XPath/child structure (CLAUDE.md "Verify Before Reference").
+  XPath/child structure (AGENTS.md "Verify before reference").
 
 ## WHY it's shaped this way
 

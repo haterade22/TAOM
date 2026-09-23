@@ -2950,6 +2950,9 @@ public class VolunteerRecruitmentServiceTests
            // The howdah crew are placed on an elephant's platform by HowdahCrewSpawner, one per crew frame, and never
            // enter a party roster: no pool offers them and no troop upgrades into them (#627).
            || troopId == ElephantConfig.HowdahCrewCharacterId
+           // Custom Battle test riders (#646, troops/troops_animalia_test.xml): registered for CustomGame only and
+           // spawned by taom.spawn_troops, so no lord fields them and no party roster ever holds them.
+           || troopId.StartsWith("taom_test_", System.StringComparison.Ordinal)
            || BorrowedCultureCapstones.Contains(troopId)
            || BlackNumenoreanLine.Contains(troopId);
 

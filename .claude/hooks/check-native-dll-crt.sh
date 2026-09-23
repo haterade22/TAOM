@@ -11,11 +11,11 @@
 # hand-copied or stale debug DLL that bypasses Build.ps1. See
 # docs/features/native-skin-fixes.md "Build & CRT requirement".
 #
-# Fail-open (per .claude/rules/harness-facts.md "TAOM hooks MUST fail open"):
+# Fail-open (per .claude/rules/harness-facts.md "TAOM hooks fail open"):
 # no python, no pe_inspect.py, DLL not staged, DLL absent on disk, or any
 # internal error ALLOWS the commit. Only a confirmed dynamic-CRT import blocks.
 #
-# Returns: {} to allow, {"permissionDecision":"deny","message":"..."} to block.
+# Returns: {} to allow, {"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"..."}} to block.
 
 set -uo pipefail
 
@@ -39,7 +39,7 @@ except Exception:
 
 # Two-stage git-commit matcher: handle `git -C/-c ... commit`; reject
 # `git commit-tree` / `commit-graph` (incl. option-prefixed `git -C . commit-tree`).
-# Per .claude/rules/harness-facts.md.
+# Per .claude/rules/hook-authoring.md "Git invocation forms hooks must handle".
 case "$COMMAND" in
     *"git commit-"* | *"git -"*" commit-"*) echo '{}'; exit 0 ;;
 esac
@@ -89,7 +89,7 @@ IMPORTS=$(timeout -k 2 3 "$PY" tools/pe_inspect.py "$TMP" 2>/dev/null)
 RC=$?
 rm -f "$TMP"
 if [[ $RC -eq 124 ]]; then
-    printf '%s\n' '{"permissionDecision":"ask","message":"[check-native-dll-crt] pe_inspect exceeded its 3s budget and was stopped, so the vendored native DLL is UNCHECKED for a dynamic CRT link. This is NOT a pass: a dynamic-CRT build fails LoadLibrary with error 126 on players machines. Run: python tools/pe_inspect.py <dll>"}'
+    printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":"[check-native-dll-crt] pe_inspect exceeded its 3s budget and was stopped, so the vendored native DLL is UNCHECKED for a dynamic CRT link. This is NOT a pass: a dynamic-CRT build fails LoadLibrary with error 126 on players machines. Run: python tools/pe_inspect.py <dll>"}}'
     exit 0
 fi
 [[ -z "$IMPORTS" ]] && { echo '{}'; exit 0; }
@@ -117,5 +117,5 @@ print(json.dumps(
 ' 2>/dev/null)
 [[ -z "$MSG" ]] && { echo '{}'; exit 0; }
 
-printf '{"permissionDecision":"deny","message":%s}\n' "$MSG"
+printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":%s}}\n' "$MSG"
 exit 0

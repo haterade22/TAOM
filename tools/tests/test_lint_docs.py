@@ -13,12 +13,15 @@ Covers the two checks added for the v1.4.7-bump deep-review finding:
 Each test builds a SYNTHETIC repo tree in a tempdir and points lint_docs's REPO_ROOT /
 DOCS_DIR at it, so the checks are exercised independently of the real repo contents.
 """
+import io
+import json
 import os
 import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -152,6 +155,252 @@ class VersionConsistencyTests(_TempRepo):
     def test_no_pin_is_noop(self):
         self._claude("1.4.6")
         self.assertEqual(ld.check_version_consistency(), [])
+
+    def _agents(self, target: str):
+        _write(self.root / "AGENTS.md", f"# TAOM\n\nTarget: Bannerlord {target} (installed).\n")
+
+    def test_agents_target_mismatch_flagged(self):
+        # ADR-011 moved the Target line into AGENTS.md; it must be checked like CLAUDE.md's was.
+        self._pin("v1.5.3")
+        self._agents("v1.5.2")
+        findings = ld.check_version_consistency()
+        self.assertTrue(any("AGENTS.md target" in f[3] for f in findings))
+
+    def test_agents_target_matching_no_finding(self):
+        self._pin("v1.5.3")
+        self._agents("v1.5.3")
+        self.assertEqual(ld.check_version_consistency(), [])
+
+    def test_no_target_line_anywhere_is_flagged(self):
+        # Moving the line must never switch the check off in silence.
+        self._pin("v1.5.3")
+        _write(self.root / "AGENTS.md", "# TAOM\n\nNo version stated here.\n")
+        findings = ld.check_version_consistency()
+        self.assertTrue(any("no 'Target: Bannerlord" in f[3] for f in findings))
+
+
+class ContextBudgetTests(_TempRepo):
+    """ADR-011 budgets: everything CLAUDE.md loads at launch, the trap index, and the rules."""
+
+    TRAP_HEAD = "# o\n\n## Trap index\n\n| Trap | Rule | Doc |\n|---|---|---|\n"
+    IMPORTS = "@AGENTS.md\n@docs/ai-includes/orientation.md\n\n"
+
+    def _entry(self, claude="# c\n", agents="# a\n", orientation=None):
+        _write(self.root / "CLAUDE.md", self.IMPORTS + claude)
+        _write(self.root / "AGENTS.md", agents)
+        _write(self.root / "docs" / "ai-includes" / "orientation.md",
+               self.TRAP_HEAD if orientation is None else orientation)
+
+    def _rule(self, name, body, paths=None):
+        fm = "---\n" + (f'paths:\n  - "{paths}"\n' if paths else "") + "description: x\n---\n"
+        _write(self.root / ".claude" / "rules" / name, fm + body)
+
+    def _kinds(self):
+        return [f[2] for f in ld.check_context_budget()]
+
+    def test_small_entry_docs_and_rules_pass(self):
+        self._entry()
+        self._rule("a.md", "short\n")
+        self.assertEqual(ld.check_context_budget(), [])
+
+    def test_an_import_counts_toward_the_entry_budget(self):
+        # orientation.md is @-imported by CLAUDE.md, so its bytes load at launch too.
+        self._entry(orientation="x" * 300 + "\n")
+        with mock.patch.object(ld, "ENTRY_DOCS_MAX_BYTES", 200), \
+                mock.patch.object(ld, "ENTRY_DOCS_WARN_BYTES", 150):
+            self.assertIn("size", self._kinds())
+
+    def test_entry_docs_between_warn_and_cap_only_warn(self):
+        self._entry(claude="x" * 170 + "\n")
+        with mock.patch.object(ld, "ENTRY_DOCS_MAX_BYTES", 400), \
+                mock.patch.object(ld, "ENTRY_DOCS_WARN_BYTES", 150):
+            self.assertEqual(self._kinds(), ["size-warn"])
+
+    def test_entry_doc_line_cap(self):
+        self._entry(agents="line\n" * 250)
+        self.assertIn("lines", self._kinds())
+
+    def test_trap_index_row_over_cap(self):
+        row = "| T | " + "r" * 200 + " | [d](x.md) |\n"
+        self._entry(orientation=self.TRAP_HEAD + row)
+        self.assertIn("trap-row", self._kinds())
+
+    def test_trap_index_row_count_over_cap(self):
+        rows = "".join(f"| T{i} | r | [d](x.md) |\n" for i in range(50))
+        self._entry(orientation=self.TRAP_HEAD + rows)
+        self.assertIn("trap-count", self._kinds())
+
+    def test_unscoped_rules_are_counted_together(self):
+        self._entry()
+        self._rule("a.md", "x" * 120 + "\n")
+        self._rule("b.md", "x" * 120 + "\n")
+        with mock.patch.object(ld, "UNSCOPED_RULES_MAX_BYTES", 250), \
+                mock.patch.object(ld, "UNSCOPED_RULES_WARN_BYTES", 200):
+            self.assertIn("rules-size", self._kinds())
+
+    def test_a_scoped_rule_is_not_counted_as_unscoped(self):
+        self._entry()
+        self._rule("scoped.md", "x" * 500 + "\n", paths="Main/**")
+        with mock.patch.object(ld, "UNSCOPED_RULES_MAX_BYTES", 250), \
+                mock.patch.object(ld, "UNSCOPED_RULES_WARN_BYTES", 200):
+            self.assertNotIn("rules-size", self._kinds())
+
+    def test_an_oversized_scoped_rule_warns_until_enforced(self):
+        self._entry()
+        self._rule("scoped.md", "x" * 500 + "\n", paths="Main/**")
+        with mock.patch.object(ld, "SCOPED_RULE_MAX_BYTES", 300), \
+                mock.patch.object(ld, "SCOPED_RULE_BUDGET_ENFORCE", False):
+            self.assertEqual(self._kinds(), ["size-warn"])
+        with mock.patch.object(ld, "SCOPED_RULE_MAX_BYTES", 300), \
+                mock.patch.object(ld, "SCOPED_RULE_BUDGET_ENFORCE", True):
+            self.assertEqual(self._kinds(), ["scoped-rule-size"])
+
+    def test_a_dead_link_in_an_entry_doc_or_a_rule_is_found(self):
+        self._entry(claude="# c\n\n[gone](docs/missing.md)\n")
+        self._rule("a.md", "[also gone](../../nope.md)\n")
+        dead = ld.check_dead_links(ld.harness_link_files())
+        self.assertEqual(sorted(p.name for p, *_ in dead), ["CLAUDE.md", "a.md"])
+
+    # The entry docs are whatever CLAUDE.md imports, read from CLAUDE.md itself: a second
+    # hand-kept list drifts from the imports and budgets the wrong files (#647 review).
+    def test_entry_docs_follow_the_imports_in_load_order(self):
+        _write(self.root / "CLAUDE.md", "@docs/x.md\n")
+        _write(self.root / "docs" / "x.md", "@y.md\n")
+        _write(self.root / "docs" / "y.md", "# y\n")
+        _write(self.root / "AGENTS.md", "# not imported\n")
+        docs, missing = ld.entry_docs()
+        self.assertEqual([ld.rel(p) for p in docs], ["CLAUDE.md", "docs/x.md", "docs/y.md"])
+        self.assertEqual(missing, [])
+
+    def test_imports_stop_after_four_hops(self):
+        _write(self.root / "CLAUDE.md", "@docs/h1.md\n")
+        for i in range(1, 7):
+            _write(self.root / "docs" / f"h{i}.md", f"@h{i + 1}.md\n" if i < 6 else "# end\n")
+        docs, _ = ld.entry_docs()
+        self.assertEqual([p.name for p in docs], ["CLAUDE.md", "h1.md", "h2.md", "h3.md", "h4.md"])
+
+    def test_a_missing_import_is_a_gating_finding(self):
+        self._entry(claude="@docs/gone.md\n")
+        self.assertIn("import-missing", self._kinds())
+
+    def test_an_import_inside_code_is_not_followed(self):
+        self._entry(claude="Write `@docs/gone.md` to import.\n\n```\n@docs/also-gone.md\n```\n")
+        self.assertNotIn("import-missing", self._kinds())
+
+    # A renamed heading or a dropped import must not switch the row caps off in silence.
+    def test_a_renamed_trap_index_heading_is_a_gating_finding(self):
+        self._entry(orientation="# o\n\n## Traps\n\n| Trap | Rule | Doc |\n|---|---|---|\n")
+        self.assertIn("trap-index-missing", self._kinds())
+
+    def test_a_trap_index_no_longer_imported_is_a_gating_finding(self):
+        _write(self.root / "CLAUDE.md", "@AGENTS.md\n")
+        _write(self.root / "AGENTS.md", "# a\n")
+        self.assertIn("trap-index-missing", self._kinds())
+
+    # Codex review 2026-09-23 (#647): the import scan must read Markdown the way Claude Code
+    # does, or a loaded file escapes the budget and a code example fails CI.
+    def test_a_longer_fence_is_closed_only_by_a_fence_as_long(self):
+        self._entry(claude="````markdown\n```\n````\n@docs/extra.md\n")
+        _write(self.root / "docs" / "extra.md", "# extra\n")
+        docs, missing = ld.entry_docs()
+        self.assertIn("docs/extra.md", [ld.rel(p) for p in docs])
+        self.assertEqual(missing, [])
+
+    def test_a_code_span_across_lines_hides_an_import(self):
+        self._entry(claude="Example `code\n@docs/not-an-import.md\nend` here.\n")
+        self.assertNotIn("import-missing", self._kinds())
+
+    def test_a_rule_in_a_subfolder_is_measured(self):
+        # Claude Code discovers .claude/rules recursively.
+        self._entry()
+        _write(self.root / ".claude" / "rules" / "nested" / "deep.md", "x" * 300 + "\n")
+        with mock.patch.object(ld, "UNSCOPED_RULES_MAX_BYTES", 250), \
+                mock.patch.object(ld, "UNSCOPED_RULES_WARN_BYTES", 200):
+            self.assertIn("rules-size", self._kinds())
+        self.assertIn(".claude/rules/nested/deep.md",
+                      [r["path"] for r in ld.context_budget_snapshot()["rules"]])
+
+    def test_a_rule_whose_frontmatter_does_not_parse_counts_as_unscoped(self):
+        # Claude Code loads such a rule in every session; the budget must see it that way.
+        self._entry()
+        _write(self.root / ".claude" / "rules" / "broken.md",
+               '---\npaths: [Main/**\ndescription: x\n---\n' + "x" * 300 + "\n")
+        with mock.patch.object(ld, "UNSCOPED_RULES_MAX_BYTES", 250), \
+                mock.patch.object(ld, "UNSCOPED_RULES_WARN_BYTES", 200):
+            kinds = self._kinds()
+        self.assertIn("rule-frontmatter-invalid", kinds)
+        self.assertIn("rules-size", kinds)
+
+    def test_an_unquoted_colon_in_a_description_breaks_the_frontmatter(self):
+        self._entry()
+        _write(self.root / ".claude" / "rules" / "colon.md",
+               '---\npaths:\n  - "Main/**"\ndescription: Use when: things break\n---\nbody\n')
+        self.assertIn("rule-frontmatter-invalid", self._kinds())
+
+    def test_crlf_and_lf_count_the_same_bytes(self):
+        # A Windows checkout may hold CRLF where CI holds LF; the gate must agree on both.
+        self._entry()
+        p = self.root / "CLAUDE.md"
+        body = (self.IMPORTS + "line\n" * 40).encode("utf-8")
+        p.write_bytes(body)
+        lf = ld.context_budget_snapshot()["entry_docs"]
+        p.write_bytes(body.replace(b"\n", b"\r\n"))
+        self.assertEqual(ld.context_budget_snapshot()["entry_docs"], lf)
+        self.assertEqual(lf[0]["bytes"], len(body))
+
+
+class DriftGateExitCodeTests(_TempRepo):
+    """The exit code CI and the commit hook act on, not only the finding lists."""
+
+    def setUp(self):
+        super().setUp()
+        roots = mock.patch.object(ld, "DOC_ROOTS", [self.root / "docs"])
+        roots.start()
+        self.addCleanup(roots.stop)
+        _write(self.root / ".claude" / "pinned-game-version.txt", "v1.5.3\n")
+        _write(self.root / "AGENTS.md", "# a\n\nTarget: Bannerlord v1.5.3 (installed).\n")
+        _write(self.root / "CLAUDE.md", ContextBudgetTests.IMPORTS)
+        _write(self.root / "docs" / "ai-includes" / "orientation.md", ContextBudgetTests.TRAP_HEAD)
+
+    def _run(self, *argv):
+        with mock.patch("sys.stdout", new_callable=io.StringIO) as out:
+            rc = ld.main(list(argv))
+        return rc, out.getvalue()
+
+    def test_drift_only_passes_a_clean_tree(self):
+        self.assertEqual(self._run("--drift-only")[0], 0)
+
+    def test_drift_only_fails_on_a_version_mismatch(self):
+        _write(self.root / "AGENTS.md", "# a\n\nTarget: Bannerlord v1.5.2 (installed).\n")
+        self.assertEqual(self._run("--drift-only")[0], 1)
+
+    def test_a_size_warning_does_not_fail_the_gate(self):
+        with mock.patch.object(ld, "ENTRY_DOCS_WARN_BYTES", 10):
+            rc, out = self._run("--drift-only")
+        self.assertEqual(rc, 0)
+        self.assertIn("size-warn", out)
+
+    def test_a_line_cap_breach_fails_the_gate(self):
+        _write(self.root / "AGENTS.md", "Target: Bannerlord v1.5.3\n" + "line\n" * 250)
+        self.assertEqual(self._run("--drift-only")[0], 1)
+
+    def test_the_full_run_gates_the_same_way(self):
+        _write(self.root / "AGENTS.md", "Target: Bannerlord v1.5.3\n" + "line\n" * 250)
+        self.assertEqual(self._run("--fail-on-drift")[0], 1)
+
+    def test_drift_only_prints_only_the_gating_checks(self):
+        _write(self.root / "CLAUDE.md", ContextBudgetTests.IMPORTS + "[gone](docs/missing.md)\n")
+        rc, out = self._run("--drift-only")
+        self.assertEqual(rc, 0)
+        self.assertNotIn("Dead links", out)
+
+    def test_context_budget_json_names_the_loaded_files_and_caps(self):
+        rc, out = self._run("--context-budget-json")
+        data = json.loads(out)
+        self.assertEqual(rc, 0)
+        self.assertEqual([d["path"] for d in data["entry_docs"]],
+                         ["CLAUDE.md", "AGENTS.md", "docs/ai-includes/orientation.md"])
+        self.assertEqual(data["caps"]["ENTRY_DOCS_MAX_BYTES"], ld.ENTRY_DOCS_MAX_BYTES)
 
 
 class NormVerTests(unittest.TestCase):

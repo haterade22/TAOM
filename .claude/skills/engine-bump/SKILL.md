@@ -149,7 +149,8 @@ abstract method resolves by name. Record the verdicts in `docs/migration/v<ver>-
    (timestamp filter).
 5. Update the pin: write the new version into `.claude/pinned-game-version.txt` (the file
    `session-start.sh` reads; note it's `.claude/`, NOT `.claude/state/`).
-6. CLAUDE.md target-version note + memory update (needs explicit user OK for CLAUDE.md).
+6. The `Target:` line in AGENTS.md (`lint_docs.py` checks it against the pin), plus the
+   memory resume card if one tracks the bump.
 
 ## Phase 5 — Control battles before believing anything
 

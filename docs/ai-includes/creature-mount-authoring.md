@@ -47,8 +47,27 @@ attributes**.
 
 **Phases 1 to 5 below are then skipped outright.** No clips, no `quad_movement` tagging, no
 `action_types`, no `action_sets`, no `monster_usage_sets`, no rider partial. The war ram authored
-**zero** animation data. It is also, as a direct consequence, the only TAOM mount carrying vanilla's
-complete rein surface, so it sidesteps gotcha 18 rather than adding to it.
+**zero** animation data. As a direct consequence every reskin of this kind inherits vanilla's complete
+rein surface, so it sidesteps gotcha 18 rather than adding to it.
+
+**A second reskin on the same rig can borrow the first one's clip by naming its action set.** The great
+elk (#636, [elk.md](../features/elk.md)) names the ram's `as_war_ram` instead of a set of its own, so the
+ram's head-butt, authored on the engine `horse_skeleton`, plays on the elk as an antler charge, and the
+elk authored no animation data at all. The cost is coupling: a change to that set or clip reaches both
+creatures. Give the second creature its own set the day it gets a clip of its own. Mounting a culture's
+LORDS on a new creature has a second stop: the generated `equipmentsets/taom_lord_template_equipment.xml`
+copies the culture's first `bat_template` roster into the lord and ruler templates the engine hands to new
+heroes, and its generator is not safe to rerun (elk.md, "Who rides it").
+
+**A creature bought on its OWN rig can still become a reskin, and keep its own animation.** The Animalia
+elk and moose (Fab, #646, [animalia-elk-moose.md](../features/animalia-elk-moose.md)) ship a quadruped rig
+the engine does not know. Instead of Phases 1 to 5, `tools/blender/reskin_animalia_to_horse.py` bends each
+mesh onto `horse_skeleton` keeping the pack's own weights, and `tools/blender/retarget_animalia_to_horse.py`
+moves the pack's clips onto the same skeleton through the same fit, so the Monster stays the `horse_2`
+shape and the action set is a child of `as_horse` overriding the actions the clips fill. Measure first:
+after one uniform scale the legs and spine must sit within about 10 cm of the horse's joints. A body that
+cannot take horse proportions (the moose's neck is half a horse's) keeps its own through a per-animal
+profile, at the price of joints that no longer sit on the horse's (the moose's head pivots 0.54 m off).
 
 ### The price of a reskin: you inherit the donor's BEHAVIOUR, not just its animations
 
@@ -83,11 +102,15 @@ this name real", which both wrong choices passed.
 
 Two more reskin-specific notes:
 
-- **`body_length` does not scale the mount only.** `EquipmentIndex.ArmorItemEndSlot` and
-  `EquipmentIndex.Horse` are the same value (10), the scale block in `Mission.BuildAgent` has no
-  `IsMount` guard, and `BuildAgent` runs for the rider as well as the mount with the Horse item still
-  in the rider's spawn equipment. Any value other than 100 scales the RIDER too. This is pre-existing
-  engine behaviour, not reskin-specific, but a reskin is where you are most likely to reach for it.
+- **`body_length` scales the mount only; derive your own distances from it.** The managed trace
+  predicts a scaled rider (`EquipmentIndex.ArmorItemEndSlot` and `EquipmentIndex.Horse` are the same
+  value, 10, the scale block in `Mission.BuildAgent` has no `IsMount` guard, and the rider is built
+  with the Horse item in slot 10), but in game the rider is not resized: the 3x mumakil's rider stands
+  at 1x beside its 1x crew ([mumakil.md](../features/mumakil.md), "RESOLVED"). This doc said the
+  opposite until 2026-09-23, and the elk shipped at 100 for a night because of it. What does NOT
+  scale is anything your own code positions against the mount (a platform, a seat offset, an attack
+  reach measured from the centre): derive it from a scale constant pinned to the item
+  (`ElephantConfig.AuthoredScale`, `ElkConfig.AuthoredScale`).
 - **You inherit the donor's SKELETON, not the donor's SADDLE.** Where the seat is modelled is a
   property of the mesh you authored, not of the mount system, and the two vary independently. The
   vanilla horse carries a saddle on the mount body, and so does the warg
@@ -412,10 +435,10 @@ monster leaves null native entries → spawn AV.
 
 | Piece | Pattern | Notes |
 |---|---|---|
-| `<C>MissionBehavior : MissionLogic` | elephant wiring verbatim: `BTRegister.RegisterClass` in lazy `Initialize()`, first-tick scan + `OnAgentBuild` late-attach keyed on **`Monster.StringId`** (NEVER character id — the mount agent's Character is the RIDER), dedup shadow list, dead pruning, error-dedup logging | custom-battle deployment spawns AFTER the first tick — late-attach is the main path |
-| `<C>BehaviorTree` | elephant shell (has-rider → ai-controlled → attack gate → task + SleepTask pacing; player-ridden and riderless branches sleep) + `On<C>Died` listener (warg parity); `base(10)` ctor (NOT a throttle — int division truncates <1000 to 0) | the BT layers attacks ON TOP of engine mount AI; it needs no Monster flags |
-| Attack service | pure, TaleWorlds-free (`ShouldEngage` / cooldowns / damage), boundary nodes hold the raw `Agent` | warg-pattern rider damage attribution |
-| **Damage bypasses armor** | `CustomAttacksUtils.TakeDamage` writes `InflictedDamage` directly with `DamageCalculated = true`, so the engine skips armor for every creature attack routed through it (trample, head-butt, bite, signature strikes) | Tune the band as a post-armor number: 976 ram head-butts on Armored Trolls averaged 23.1, exactly the raw 18-28 roll (2026-09-18) |
+| `<C>MissionBehavior : MissionLogic` | elephant wiring verbatim: `BTRegister.RegisterClass` in lazy `Initialize()`, first-tick scan + `OnAgentBuild` late-attach keyed on **`Monster.StringId`** (NEVER character id: the mount agent has no Character, the engine builds it with null, and the only character on hand is the RIDER's), dedup shadow list, dead pruning, error-dedup logging | custom-battle deployment spawns AFTER the first tick — late-attach is the main path |
+| `<C>BehaviorTree` | elephant shell (has-rider → attack gate → task + SleepTask pacing, under ANY rider, the player included, #643; the riderless branch sleeps) + `On<C>Died` listener (warg parity); `base(10)` ctor (NOT a throttle — int division truncates <1000 to 0) | the BT layers attacks ON TOP of engine mount AI; it needs no Monster flags |
+| Attack service | pure, TaleWorlds-free (`ShouldEngage` / cooldowns / damage), boundary nodes hold the raw `Agent` | warg-pattern rider damage attribution: the blow is the rider's, the creature's only once the rider has gone (the elephant-like nodes since #643) |
+| **Damage bypasses armor** | `CustomAttacksUtils.TakeDamage` writes `InflictedDamage` directly with `DamageCalculated = true`, so the engine skips armor for every creature attack routed through it (trample, head-butt, bite, signature strikes). The blow is Pierce unless the profile's `damageType` says otherwise; a Blunt blow carries `CanKillEvenIfBlunt` (`ComposeWeaponFlags`), because a Blunt killing blow otherwise only wounds (the elk, #636) | Tune the band as a post-armor number: 976 ram head-butts on Armored Trolls averaged 23.1, exactly the raw 18-28 roll (2026-09-18) |
 | Single target vs radial | `ElephantLikeCombatProfile(..., singleTarget: true)` makes the shared attack task hit only the enemy faced most squarely inside the radius (`SingleVictimPick`, nearer on a tie; a ridden mount is never picked, its rider is); default is the radial sweep | The war ram sets it; elephant and mumakil do not (#618) |
 | Eager `ActionIndexCache` + `AnyUnresolved()` drift guard | resolve attack clips at mission start; log if any → `act_none` | Armory rename = silent `act_none` = the "slide" |
 | Mount-lock | `TaomAgentStatCalculateModel`: `CanAgentRideMount=false` + `MountDifficulty=999` for the monster id | players can't steal the mount; the assigned rider's cavalry spawn ignores it |

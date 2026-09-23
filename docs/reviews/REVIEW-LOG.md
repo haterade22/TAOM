@@ -3560,6 +3560,100 @@ Codex: not dispatched. RCA `docs/reviews/rca-rhun-longbow-collision-body-2026-09
 committed at the time of writing. Owed: the in-game smoke on both trees, the player's packs or `rgl_log` before #633
 can close, the manifest re-cut, a cooked-tree MISSING-body pass as a `/release` step.
 
+## Review 126: shield rethrows keep the throw site; distinct crashes stop sharing a signature, 6-lens deep review (2026-09-22)
+
+Player bundle `2d446100` (v2.0.28 on 1.4.8) reported a childbirth failure deep in the daily pregnancy tick as five
+frames ending at `MapState.OnTick_Patch2`. PatchShield and SaveShield hand non-swallowed exceptions back to Harmony,
+whose wrapper ends with the `throw` opcode whenever a finalizer returns a value, and that replaced the stack trace at
+every shielded method; the signature, hashing `new StackTrace(ex)`, then merged distinct throw sites and the throttle
+suppressed them. New `RethrowStackPreserver` mirrors `InternalPreserveStackTrace` with a marker line per rethrow and
+records `TAOM.ThrowSite`; both shields return through it; the signature folds the site in per chain level. Six lenses
+in two waves (1, 2, 5, 3; then 4, 6), all on the deep-reviewer definition, plus one convergence pass. No CRITICAL or
+HIGH. Three MED fixed: an inner exception's site never reached the signature (the TIE shape, reproduced as one hash
+before the fix); the docs' coverage claims (void finalizers keep Harmony's `rethrow`; TAOM's late-batch categories are
+applied after PatchShield's pass 2 and stay unshielded for a process's first game); no measure of rethrow frequency
+(PatchShield now counts it in its session summary). Six LOW fixed, including a UTF-8 BOM this change had stripped from
+`LESSONS-LEARNED.md`. Design's same-instance return deleted SaveShield's wrapper. The convergence pass caught one doc
+line naming that deleted wrapper. Engine and Design both decompiled the shipped `0Harmony.dll` and confirmed that
+`ExceptionDispatchInfo.Throw()` cannot work from a finalizer. Codex: not dispatched (no paid dispatch requested).
+RCA `docs/reviews/rca-shield-rethrow-stack-2026-09-22.md`, three lessons. Nothing committed; the GitHub issues were
+drafted but their creation was denied in-session. Owed: file the issues, port to `bannerlord-1.4.5` (the player's
+line), convert ten feature finalizers plus the reporter's fallback paths, pin the Native2Managed bridge priority, and
+an in-game check that a real bundle shows the preserved frames.
+
+## Review 127: the great elk, a horse-skeleton reskin on the war ram's action set (#636), 7-lens deep review (2026-09-22)
+
+Mike imported an elk into the Armory skinned to the vanilla horse skeleton and asked for the war ram's treatment,
+head charge included, as an antler charge. The build cloned `Main/Features/WarRam/` into `Main/Features/Elk/`, gave
+`Monster.taom_elk` the ram's own action set `as_war_ram` (so the ram's head-butt, authored on the engine
+`horse_skeleton`, plays on the elk), added `taom_elk_a` and `taom_elk_saddle_a` to the Armory, and put the elk under
+Mirkwood's two cavalry troops, Thranduil, the five Mirkwood lord templates and the `elk_rider` career start. Seven
+lenses in two waves (Standards, Engine, Data flow, XML; then Efficiency, Completeness, Design), all on the
+deep-reviewer definition, and one convergence pass. No CRITICAL or HIGH and no engine incompatibility: Engine
+verified 25 claims against the installed v1.5.3 DLLs, XML ran eleven gates. Two MEDIUMs in the change, both fixed:
+Data flow found the GENERATED `taom_lord_template_equipment.xml` still on `charger` for Mirkwood's lord and ruler
+templates (its generator would delete 40 rosters if rerun, so the four rosters were edited by hand and pinned,
+#637), and Completeness found the coupling documented only on the elk's side (the ram's doc, ledger and config now
+name the elk). Nine LOWs, all fixed: test and doc precedence of troop-level `<equipment>` overrides (they win and
+reach the civilian set), three claims cloned from the ram without evidence (a suffix derivation, a test pin that
+did not exist, a translation step), the Armory catalogue for the new art, the provenance row, a repeat of the ram
+RCA's value-sweep miss (stale career-mount and handbook line-number docs), and doc precision. The XML lens's two
+MEDIUMs are Kit work (a leftover `take 001` take and a package `.rdc` older than its last save). Design proposed
+collapsing ram and elk into one spec-driven charge mount after both smokes (#642). Follow-ups #637 to #642.
+Codex: not dispatched. RCA `docs/reviews/rca-elk-2026-09-22.md`, five lessons (three in xslt-moduledata, one in
+data-content-cultures, one recurrence note in build-tooling-workflow). Nothing committed (no git action was asked
+for) and nothing deployed (a Bannerlord process held the module). Owed: deploy, the in-game ladder in
+`docs/features/elk.md`, the Kit save, paid translations, a provenance row for the elk art.
+
+## Review 128: the great elk delta and #643, any-rider creature attacks, 7-lens deep review (2026-09-23)
+
+Everything after Review 127, on Mike's instructions of 2026-09-23 and uncommitted: the elk built at 2x with
+`charge_damage` 50 (#636), the antler charge as 40 blunt plus 20 pierce, and #643, the elephant, mumakil, war ram and
+elk trees attacking under a player rider as the warg's does. Seven lenses in two waves (Standards, Engine, Data flow,
+XML; then Efficiency, Completeness, Design), all on the deep-reviewer definition, then one convergence pass. No
+CRITICAL or HIGH and no engine incompatibility: Engine verified 24 claims and left 4 native links unverified, XML ran
+7 gates with 0 failures. Four findings changed behaviour and went to Mike in one question batch. The blow was the
+creature's, so the kill went to a mount agent with no Character: it is now the rider's for all four creatures, the
+warg's rule. Two typed blows land exactly like one when armour is ignored: the charge is now one 60 Blunt blow and
+`ElkAntlerChargeTask` is gone. Previews scale by `scale_factor`, not `body_length`: kept at 1x and documented. The
+career's charge bonuses reached only the body charge: the antler blow now scales by the new
+`ICareerAgentStatService.MountChargeMultiplier`, which `ApplyMountStatModifiers` also uses. Three MEDIUMs, fixed:
+every synthetic creature blow logged "Blunt", because the `CombatLogData` constructor sets it and vanilla fills the
+field only in a path a synthetic blow skips (Engine); and `elephant.md`'s tree diagram and the Phase 7 authoring
+template still prescribed the removed AI-only gate (Completeness, the third old-value sweep miss in five days). Ten
+LOWs, fixed or documented: four comments calling a mount's Character its rider, a smoke step Custom Battle could not
+fail, CHANGELOG test counts, an unpinned default, a misplaced doc comment, a wrong parameter doc, `body_length` as an
+auto-resolve power stat, #636's stale body, doc drift, and the mount-parity audit's reskin gap (folded into #642).
+Design P2 (the kill flag folded into the damage type) applied; P3 (one live-Armory test fixture) is a follow-up, not
+filed. Convergence: three LOWs, all fixed (a kill-credit citation that proved the wrong bookkeeping, a false "+N from
+ability" line on a player's creature blows now that the rider owns them, and a NaN gate in
+`MountChargeMultiplier`). Full suite 10,186 passed / 0 failed / 2 skipped. RCA
+`docs/reviews/rca-elk-delta-2026-09-23.md`; one new lesson (testing-qa) and three recurrence notes
+(adapters-taleworlds-api, build-tooling-workflow, data-content-cultures). Codex: `/review-codex` follows this review
+(Mike's request). Nothing committed or deployed.
+
+## Review 129: the great elk delta and #643, Codex adversarial review (2026-09-23)
+
+`/review-codex` on the working tree after Review 128 converged, at Mike's request. Codex gpt-6-astra at ultra,
+200,341 tokens: **0 P0 / 0 P1 / 0 P2, 2 P3 findings and 3 P3 observations, all confirmed, no false positive.** It
+answered the seven Known Suspects with lines decompiled fresh from the installed DLLs (hashes recorded), refuted the
+stale-ally-buff suspect with the eviction in `OnAgentDeleted`, and widened the rider-owner suspect: the hit SOUND
+follows the owner (a weaponless blow plays a punch for a humanoid owner, the charge sound for a mount), and a human
+affector brings the attacking party's Doctor's Oath into the survival roll. Findings, all fixed with tests first:
+`TakeDamage` had passed `knockDown` into `CombatLogData`'s `crushedThrough` slot since its port, so every creature
+knockdown the player saw printed "Crushed through!" (now named arguments); `elk.md` asked a campaign smoke for
+"killed, not wounded" when the flag only lifts the always-wound rule and the survival roll still decides; the
+convergence pass's null-weapon gate in `CareerPerkMissionBehavior.OnScoreHit` also hid true "+N from ability" lines
+for punches and kicks (the ability's damage bonus reaches them), replaced by an explicit marker
+`CustomAttacksUtils.IsRegisteringSyntheticBlow`; and "the two cannot drift" overstated the charge multiplier's
+parity. It also showed the career loader already rejects NaN, a premise I had relayed from the convergence lens
+unchecked. Mike kept the creature's sound: the elephant-like hit silences the engine's block and replays it with the
+charge event. A fresh deep-reviewer pass on those fixes found four LOWs, all fixed (a rider flag that compared the
+victim with itself, two unpinned halves of the sound fix, a misplaced parenthetical, an overstated "named
+arguments"). Root cause table in `docs/reviews/rca-elk-delta-2026-09-23.md`, "Codex
+adversarial review"; two lessons in adapters-taleworlds-api, one extension in testing-qa. Nothing committed or
+deployed.
+
 ## Review 130: the Nine become race nazghul (#644) and the Nine's SCREAM (#645), two 7-lens deep reviews + Codex gpt-6-astra ultra (2026-09-23)
 
 Mike asked for a Nazgul signature like Sauron's: SCREAM, on an overhead or a slashing attack, that
@@ -3631,3 +3725,31 @@ the shriek, the first `.ogg` a TAOM module sound plays), a misspelled sound name
 the non-human spawner path), an old save (the `kept the XML race` line, nazghul, the rolled kit
 unchanged), and a wraith's human-headed Load Game thumbnail. Then push and deploy on Mike's word
 and close #644 and #645. Nothing is pushed or deployed.
+
+## Review 131: ADR-011 knowledge delivery tiers, batch 1 (#647), 6-lens deep review + convergence + Codex gpt-6-astra ultra (2026-09-23)
+
+The restructure of how TAOM delivers instructions: CLAUDE.md from 48,954 B to a 7 KB Claude layer
+importing AGENTS.md and a new `orientation.md`, the always-load rules from 51 KB to 12 KB, and the
+context budget as a gate in `lint_docs.py` and a CI workflow on every branch. `/deep-review` ran six
+lenses in two waves and a convergence pass; `/review-codex` followed at Mike's request.
+
+**30 confirmed findings, 0 false positives.** The deep review found 22 (2 HIGH), Codex 8 more
+(6 MED, 2 LOW, all reproduced). The two that reach past the change: nine PreToolUse gates had
+printed their decision at the top level of their JSON, which Claude Code ignores, so none had ever
+blocked or asked in a live session (proven live: the label gate returned deny and the commit ran;
+in the documented `hookSpecificOutput` form the same command was refused); and hook Python read
+stdin in cp1252, so one character outside it passed every Python-parsed gate, the force-push block
+included. Codex added a tracked-files gate killed by its 5 s timeout on every commit (6 s runtime),
+three ways past the attribution check and two false denials from reading shell with regexes, an
+import scan that misread nested fences and multi-line code spans, rules in subfolders escaping the
+budget, unparseable rule frontmatter counted as scoped, and `/freeze` refusing an in-bound path
+when its JSON escaped a character. All fixed with tests first where the fix was code: the commit
+gate now reads shell words (`shlex`), one Markdown-aware import scanner serves the linter and the
+security scan, and `test_hooks.sh` reads a decision the way the harness does, times every gate on
+a commit payload (check 4b), and fails the ignored form statically (5c).
+
+Codex did best by driving the hooks as the harness does: 54 hostile commands, every output parsed,
+one gate timed against its registration. Mike approved four design proposals mid-review (narrower
+`harness-facts.md` paths, the `triage-needs-ingame` label as the smoke backlog, `attribution` in
+`settings.json`, a CI workflow of its own on every branch). Root cause tables:
+`docs/reviews/rca-adr011-batch1-2026-09-23.md`; five lessons in build-tooling-workflow.

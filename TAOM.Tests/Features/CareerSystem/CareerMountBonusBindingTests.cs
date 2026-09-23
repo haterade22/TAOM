@@ -63,7 +63,9 @@ public class CareerMountBonusBindingTests
     public void HumanPath_NoLongerWritesTheMountProperties()
     {
         // The three private helpers behind ApplyAgentStatModifiers: none may set MountSpeed or
-        // MountChargeDamage. ApplyMountBuff is the one place allowed to.
+        // MountChargeDamage. The mount side is the one place allowed to: ApplyMountStatModifiers writes the
+        // charge product (MountChargeMultiplier, which the elk's antler charge also reads, #636) and
+        // ApplyMountSpeedBuff the buffs' mount speed.
         foreach (var name in new[] { "ApplyHeroPassives", "ApplyHeroSelfBuff", "ApplyAllyBuff" })
         {
             var method = AccessTools.Method(typeof(CareerAgentStatService), name);
@@ -72,10 +74,14 @@ public class CareerMountBonusBindingTests
             Assert.AreEqual(0, setters.Count, name + " writes a mount property on the rider's properties again: " + string.Join(", ", setters.Select(s => s.Name)));
         }
 
-        var mountBuff = AccessTools.Method(typeof(CareerAgentStatService), "ApplyMountBuff");
-        Assert.IsNotNull(mountBuff, "CareerAgentStatService.ApplyMountBuff is gone.");
-        var names = Called(mountBuff!).Select(m => m.Name).ToList();
-        CollectionAssert.IsSubsetOf(new[] { "set_MountSpeed", "set_MountChargeDamage" }, names, "ApplyMountBuff no longer writes both mount properties.");
+        var applyMount = AccessTools.Method(typeof(CareerAgentStatService), nameof(CareerAgentStatService.ApplyMountStatModifiers));
+        CollectionAssert.Contains(Called(applyMount!).Select(m => m.Name).ToList(), "set_MountChargeDamage",
+            "ApplyMountStatModifiers no longer writes the mount's charge.");
+
+        var speedBuff = AccessTools.Method(typeof(CareerAgentStatService), "ApplyMountSpeedBuff");
+        Assert.IsNotNull(speedBuff, "CareerAgentStatService.ApplyMountSpeedBuff is gone.");
+        CollectionAssert.Contains(Called(speedBuff!).Select(m => m.Name).ToList(), "set_MountSpeed",
+            "ApplyMountSpeedBuff no longer writes the mount's speed.");
     }
 
     [TestMethod]

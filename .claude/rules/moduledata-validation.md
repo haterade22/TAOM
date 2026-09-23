@@ -153,11 +153,11 @@ gate is registered here once. A gate that cannot run (no install, no lxml) has n
 | XSLT anywhere | `xslt.md` | `python tools/check_external_xslt.py`; transform and diff against SandBoxCore vanilla (`/xslt-check`); `CulturePartyTemplateTests` for `spcultures.xslt` |
 | Armory items, crafting pieces, weapon descriptions | `docs/reference/armory-guide.md` | `python tools/audit_armory_refs.py`; `python tools/audit_polearm_shield_parity.py` for weapons and pieces |
 | action sets, monsters, monster usage | `armory-guide.md` "action_sets structure" | `python tools/audit_action_set_parity.py`; `python tools/audit_mount_parity.py` for creature mounts |
-| `TAOM_Map` settlements | CLAUDE.md Traps "TAOM_Map settlements" | `python tools/validate_moduledata.py` (`LANDLESS_CULTURE`, `FORTIFICATION_WITHOUT_VILLAGE`); `python tools/add_map_villages.py --check` |
+| `TAOM_Map` settlements | `docs/reference/taom-map-settlement-naming.md` | `python tools/validate_moduledata.py` (`LANDLESS_CULTURE`, `FORTIFICATION_WITHOUT_VILLAGE`); `python tools/add_map_villages.py --check` |
 | GUI prefabs, PrefabExtension XML | `gui-ui.md` | sprite ids against `TAOMSpriteData.xml`; every `Command.*` handler resolves to a TAOM method with the right parameter count |
 | language files, `{=KEY}` text | `docs/reference/localization-map.md` | `python tools/check_external_loc_coverage.py`; `LanguageDataXmlTests` |
 | `project.mbproj` | the tool's docstring | `python tools/audit_mbproj_registration.py` |
-| scenes, prefabs | CLAUDE.md Traps "Prefab entity cap" | `python tools/check_prefab_budget.py` (counts `TAOM_Map` only; sum all modules) |
+| scenes, prefabs | `docs/modding/module-map.md` (prefab entity cap) | `python tools/check_prefab_budget.py` (counts `TAOM_Map` only; sum all modules) |
 | XML a `tools/` generator wrote | `tools/README.md` "XML I/O convention" | the generator's own `--verify` or `--check`; `python tools/check_generator_item_refs.py`; hand-read three generated entries |
 
 ## Discipline

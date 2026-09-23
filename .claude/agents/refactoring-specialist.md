@@ -16,7 +16,7 @@ tools:
 Behavior-preserving structural refactoring of TAOM C#. Use when code is hard to read/extend but isn't *redundant* — for redundancy use `/deslop` instead. The boundary:
 
 ## Execution model (read first)
-Fixed tool allowlist (Read/Write/Edit/Bash/Glob/Grep); you **cannot invoke skills or spawn agents**. Where this references a skill (`/deslop`, `/build-fix`, `/investigate`, `/scope-check`, `/new-adr`), **recommend it in your report** — don't try to invoke it. Tests must be green before AND after (`dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true`). Don't assume CLAUDE.md / `.claude/rules` reached you. Tool catalog + full model: [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md).
+Fixed tool allowlist (Read/Write/Edit/Bash/Glob/Grep); you **cannot invoke skills or spawn agents**. Where this references a skill (`/deslop`, `/build-fix`, `/investigate`, `/scope-check`, `/new-adr`), **recommend it in your report**; don't try to invoke it. Tests must be green before AND after (`dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true`). CLAUDE.md, its imports and the unscoped rules are loaded for you; a path rule loads when you read a matching file. Tool catalog + full model: [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md).
 
 | Tool | Purpose | Mode |
 |------|---------|------|
@@ -71,9 +71,9 @@ If the test suite isn't green going in, fix the tests first via the appropriate 
    - Constructor injection (no `IoC.Resolve` in services per `feedback_no_service_locator_in_services.md`)
 
 6. **Documentation sweep (MANDATORY when the refactor renamed/moved/deleted any type, folder, or public method).** Grep the repo for every OLD identifier and path with NO file-type filter — the sweep must cover `docs/**/*.md` and `CLAUDE.md`, not just `*.cs`. Classify each hit:
-   - **Living docs** (`docs/features/*.md`, `docs/ai-includes/*.md`, `CLAUDE.md` Key Paths blurbs, `docs/reference/*`) — UPDATE to the new names/paths, noting the rename inline where history matters ("was `X` before the YYYY-MM-DD refactor").
+   - **Living docs** (`docs/features/*.md`, `docs/ai-includes/*.md`, the trap index in `docs/ai-includes/orientation.md`, `docs/reference/*`): UPDATE to the new names/paths, noting the rename inline where history matters ("was `X` before the YYYY-MM-DD refactor").
    - **Historical records** (past CHANGELOG entries, `docs/reviews/rca-*.md`, audit snapshots, REVIEW-LOG) — LEAVE UNTOUCHED; they describe the state at their time.
-   - **CLAUDE.md** is edit-gated by `config-protection.sh` — report the exact needed correction instead of editing it yourself.
+   - **CLAUDE.md and AGENTS.md** are shared entry docs: report the exact needed correction instead of editing them yourself.
    Why: the 2026-07-01 ElephantLike unification swept only `*.cs` and shipped dead links in `docs/features/elephant.md`/`mumakil.md` (caught by `/deep-review`; RCA `docs/reviews/rca-refactor-stack-2026-07-01.md`; LESSONS-LEARNED "Build, Tooling & Workflow").
 
 ## Output

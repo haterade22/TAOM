@@ -66,6 +66,14 @@ section below): the Kit stores an FBX's bone locals verbatim, so the rig you exp
 engine's frames; `primary_bone_axis='Y'` / `secondary_bone_axis='X'` then passes them through untouched,
 and the root needs a 180 degree world-Z turn baked into the pose.
 
+**The horse's pelvis joint is a pivot, not a spine segment** (measured 2026-09-23, #646). `horsepelvis` sits
+8 cm straight above `horsespine1` (heads at z 1.396 and 1.312 in the engine rest, same y). A fit that aims a
+foreign rig's pelvis along its spine at `horsespine1` swings the hips 90 deg; the Animalia elk's rump tore
+open until the pelvis was left to the global fit. The spine proper runs `horsespine1` to `horsespine3` at
+about 0.31 m per segment, then `horseneck1` 0.39 m ahead. TaleWorlds' own `horse.fbx` mesh export
+(`horse_skeleton_notused`, 39 bones, facing -Y) lays its bone heads on this rest within 2 cm on average
+(8.6 cm worst) under a 180 deg turn, which is why a mesh fitted to that FBX's armature fits the engine.
+
 ## Rest-frame maths
 
 `RestFrame` is row-vector (rows are the basis vectors, `M41..M43` the offset). Blender is

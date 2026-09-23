@@ -268,10 +268,13 @@ public static class SaveShield
             // blaming nobody — burying the one correct attribution the innermost frame produced.
             // Only the swallow path used to exist here, which terminated at the first frame; the
             // co-op rethrow is what made this reachable.
+            // The attribute-once rule stays even though rethrows now preserve the trace text:
+            // AttributeCulprit walks `new StackTrace(ex)`, which only ever sees the frames after
+            // the last throw, so an outer pass would still resolve the wrong culprit.
             if (AlreadyAttributed(ex))
             {
                 var repeat = SaveShieldPolicy.ShouldSwallow(category, CoopPresence.IsActive, !IsSwallowEnabled());
-                return repeat ? null : __exception;
+                return repeat ? null : RethrowStackPreserver.PreserveForRethrow(__exception, __originalMethod);
             }
             MarkAttributed(ex);
 
@@ -319,12 +322,15 @@ public static class SaveShield
                 $"{(swallow ? "swallowed" : "rethrew")} {rec.ExceptionType} in {rec.OwnerType}.{rec.OwnerMethod} " +
                 $"[{category}] culprit={rec.CulpritAssembly}: {rec.Message}");
 
-            return swallow ? null : __exception;
+            // Every path that hands the exception back to Harmony preserves its stack first: this
+            // finalizer returns a value, so the wrapper rethrows with `throw`, which would replace the
+            // trace with the frames from this method outward (see RethrowStackPreserver).
+            return swallow ? null : RethrowStackPreserver.PreserveForRethrow(__exception, __originalMethod);
         }
         catch (Exception fxEx)
         {
             DiagLog.LogCaught(Tag, "SaveShieldFinalizer/internal", fxEx);
-            return __exception;  // re-throw original — internal failure
+            return RethrowStackPreserver.PreserveForRethrow(__exception, __originalMethod);  // re-throw original — internal failure
         }
     }
 

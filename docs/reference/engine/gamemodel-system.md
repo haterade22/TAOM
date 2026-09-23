@@ -56,7 +56,7 @@ no priority numbers. The decorator overload exists for mods that can't subclass 
 unknown previous model.
 
 ## TAOM relevance + gotchas
-- **TAOM overrides ~40 models** (CLAUDE.md "GameModel Overrides" table): `TaomPartyWageModel`,
+- **TAOM overrides ~40 models** ([gamemodel-registry.md](../gamemodel-registry.md)): `TaomPartyWageModel`,
   `TaomPartySpeedModel`, `TaomSettlementLoyaltyModel`, `TaomBattleRewardModel`, `TaomAgeModel`, …, each
   `: DefaultXxxModel`, overriding specific methods + calling `base`. Registered in `Main/SubModule.cs OnGameStart`
   via `campaignStarter.AddModel(new TaomXxxModel(...))`.

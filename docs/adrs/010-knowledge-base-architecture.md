@@ -75,6 +75,12 @@ own issue and ADR phase. Note it sits in tension with the feature doc's existing
 non-goal, which was written when `taom_schema` was the only owner of game-data refs; that non-goal
 should be revisited, not silently ignored, when the phase is written.
 
+### Amendment (2026-09-23): delivery into agent context is ADR-011
+
+This ADR organises the knowledge under `docs/`. How that knowledge, and the harness's own rules,
+reach an agent's context (CLAUDE.md, AGENTS.md, path rules, skills, memory, hooks) is decided in
+[ADR-011](./011-knowledge-delivery-tiers.md).
+
 ## Consequences
 
 ### Positive

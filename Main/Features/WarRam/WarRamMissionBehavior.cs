@@ -15,9 +15,9 @@ namespace TAOM.Features.WarRam;
 /// Mumakil wiring. MUST be <c>: MissionLogic</c>, NEVER <c>: MissionBehavior</c> (regression rule, see
 /// docs/reviews/rca-looter-battle-nre-2026-05-24.md, pinned by
 /// TAOM.Tests/BehaviorTreeWrapper/BehaviorTreeMissionLogicInheritanceTests.cs). The attach key is
-/// <c>Monster.StringId == "taom_war_ram"</c>, NEVER the character id: the horse-slot mount agent's
-/// Character is the DWARF RIDER, not the ram. The rider's cavalry AI drives movement; the BT layers the
-/// single kick attack on top of it.
+/// <c>Monster.StringId == "taom_war_ram"</c>, NEVER the character id: the horse-slot mount agent has no
+/// Character (the engine builds it with null), and the only character on hand is the DWARF RIDER's. The rider (the
+/// player, or the cavalry AI) drives movement; the BT layers the single kick attack on top of it.
 ///
 /// Unlike the war elephant/spider/Mumakil, the war ram carries NO mount-lock (it is a player-rideable
 /// culture mount, see the shipping ram_rider career) and gets no Patch47 dismount-before-death entry

@@ -448,10 +448,10 @@
                 equipmentType="Civilian" />
             <equipment
                 slot="Horse"
-                id="Item.noble_horse_southern" />
+                id="Item.taom_elk_a" />
             <equipment
                 slot="HorseHarness"
-                id="Item.saddle_of_aeneas" />
+                id="Item.taom_elk_saddle_a" />
         </Equipments>
     </NPCCharacter>
 
@@ -526,10 +526,10 @@
                 equipmentType="Civilian" />
             <equipment
                 slot="Horse"
-                id="Item.noble_horse_southern" />
+                id="Item.taom_elk_a" />
             <equipment
                 slot="HorseHarness"
-                id="Item.saddle_of_aeneas" />
+                id="Item.taom_elk_saddle_a" />
         </Equipments>
     </NPCCharacter>
 

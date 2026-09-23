@@ -49,8 +49,8 @@ For each skill/agent under audit, check:
 - [ ] Body is a thin entry point (Overview / When to Use / Steps / Gotchas) that points to a `docs/` file rather than duplicating it.
 
 ### Hook integrity (PreToolUse(Bash) hooks specifically)
-- [ ] If the hook detects `git commit` invocations, it uses the canonical two-stage pattern from `harness-facts.md:58-84` ("Git invocation forms hooks must handle"). Forms it must catch: `git commit`, `git -C path commit`, `git -c key=val commit`. Forms it must REJECT: `git commit-tree`, `git commit-graph`. **Catching review #28's recursion-risk: a bare `*"git commit"*` substring match is a CONFIRMED FAILURE — both Codex pass 1 and pass 4 found this exact bug class.**
-- [ ] If the hook handles `git commit --amend`, it does NOT blanket-skip amends. Per `harness-facts.md` "Amend exemptions": diff-based gates compute `staged ∪ HEAD`; working-tree-state gates don't exempt at all. Caught as a HIGH bypass in review #28.
+- [ ] If the hook detects `git commit` invocations, it uses the canonical two-stage pattern from `hook-authoring.md` ("Git invocation forms hooks must handle"). Forms it must catch: `git commit`, `git -C path commit`, `git -c key=val commit`. Forms it must REJECT: `git commit-tree`, `git commit-graph`. **Catching review #28's recursion-risk: a bare `*"git commit"*` substring match is a CONFIRMED FAILURE: both Codex pass 1 and pass 4 found this exact bug class.**
+- [ ] If the hook handles `git commit --amend`, it does NOT blanket-skip amends. Per `hook-authoring.md` "Amend exemptions in pre-commit hooks": diff-based gates compute `staged ∪ HEAD`; working-tree-state gates don't exempt at all. Caught as a HIGH bypass in review #28.
 
 ### Documentation labeling (per harness-facts.md rule 5)
 - [ ] If the skill or its referenced rules state facts about Claude Code runtime behavior, each fact is labeled DOC-BACKED (with URL) or EMPIRICAL (with observation context). Vague "verified" claims are forbidden.
@@ -63,7 +63,7 @@ For each skill/agent under audit, check:
 - [ ] Every ADR reference (e.g. `ADR-007`) maps to a real `docs/adrs/*.md` file
 
 ### Workflow coverage (the "workflow → skill" convention)
-- [ ] No qualifying documented workflow is missing a skill. Per CLAUDE.md "Workflow → Skill convention", a process that is **recurring + multi-step + gotcha-bearing** should be a skill. Scan for prose workflows that qualify but aren't skilled, and flag each as `[LOW] un-skilled workflow: <doc> — candidate /<name>`:
+- [ ] No qualifying documented workflow is missing a skill. Per CLAUDE.md "Where new knowledge goes" (item 4), a process that is **recurring + multi-step + gotcha-bearing** should be a skill. Scan for prose workflows that qualify but aren't skilled, and flag each as `[LOW] un-skilled workflow: <doc> — candidate /<name>`:
   - Numbered/phased authoring guides in `docs/ai-includes/*.md` with no matching `.claude/skills/<name>/`.
   - "Workflow (MANDATORY)" / "sequence" / "phases" blocks in CLAUDE.md that only chain other skills as prose.
   - Recurring `generate → apply → validate` tool pipelines in `tools/README.md` used across ≥2 features.
@@ -71,7 +71,7 @@ For each skill/agent under audit, check:
 
 ### Behavior consistency
 - [ ] Promises in the description match what the skill actually does (e.g., a description claiming "auto-engages /freeze" must have a hook block in frontmatter that engages it)
-- [ ] No claim that a state file alone activates a hook (per Codex review #28; see `harness-facts.md` "Inline-hook activation")
+- [ ] No claim that a state file alone activates a hook (per Codex review #28; see `harness-facts.md` "Hook lifecycle")
 
 ### Hardcoded values
 - [ ] EXACT-tagged constants still match their source (e.g., MCP server tool counts — re-spot-check)

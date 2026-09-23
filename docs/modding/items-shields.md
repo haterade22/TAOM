@@ -10,7 +10,7 @@ Every shield TAOM ships is one `<Item Type="Shield">` row in a single file, `LOT
 
 | | |
 |---|---|
-| Registration | `<XmlName id="Items" path="LOTRLOME_items/LOTRAOM_shields"/>` at `LOTRLOME_Armory/SubModule.xml:323`, gated to the `Campaign`, `CampaignStoryMode`, `CustomGame` and `EditorGame` game types |
+| Registration | `<XmlName id="Items" path="LOTRLOME_items/LOTRAOM_shields"/>` at `LOTRLOME_Armory/SubModule.xml:336`, gated to the `Campaign`, `CampaignStoryMode`, `CustomGame` and `EditorGame` game types |
 | Path form | a **file**, not a folder: the loader resolves `<module>/ModuleData/<path>.xml` first, so only `LOTRAOM_shields.xml` itself loads and a sibling `.xml` beside it does not join the registry. The folder form (`LOTRLOME_items/gondor` and 17 others: 18 of the Armory's 21 `Items` rows point at a folder) does glob every `.xml` inside, which is why backup naming matters there. See [Editing safely](editing-safely.md) and [SubModule and registration](submodule-and-registration.md) |
 | Root element | `<Items>` |
 | Per-entry element | `<Item>` |

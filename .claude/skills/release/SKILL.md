@@ -72,7 +72,7 @@ Source the content from CHANGELOG entries since the previous tag:
 
 ## Phase 5 — CHANGELOG
 
-Entry under today's date. Mandatory (CLAUDE.md Documentation Requirements).
+Entry under today's date. Mandatory (AGENTS.md "Documentation duty").
 
 ## Phase 6 — Commit
 

@@ -4,6 +4,14 @@
 
 ## 2026-09-23
 
+### chore(harness): v2.0.30 - deep-reviewer runs on Opus 5.5, not Fable
+
+Mike, 2026-09-23: reviews use Opus 5.5. `.claude/agents/deep-reviewer.md` now pins `model:
+claude-opus-5-5` (the full id, so it is exactly Opus 5.5 rather than whatever the `opus` alias maps to)
+and keeps `effort: max`, which Opus 5.5 supports (all five levels, per the effort docs checked the same
+day). CLAUDE.md, the `/deep-review` skill and `harness-facts.md` say the same. `/deep-review` still never
+passes `model` on a lens, so the definition decides. `bash tools/test_hooks.sh`: 250 passed.
+
 ### fix(nazgul): v2.0.30 - Codex review follow-ups for #644 and #645
 
 Codex (gpt-6-astra, ultra) reviewed both commits in one run: no P1 or P2, two observations, both
@@ -104,7 +112,193 @@ files (row counts, a line citation, a how-to that advised keeping the duplicate)
 `docs/reviews/rca-nazgul-race-2026-09-23.md`, lessons in `xslt-moduledata.md`,
 `data-content-cultures.md` and `misc.md`.
 
+### feat(creatures): v2.0.30 - Animalia elk and moose on horse_skeleton, art and clips (#646)
+
+Mike bought two Fab packs, "Animalia - Elk (male)" and "Animalia - Moose (male)". Both came out of
+UE 5.4 through `tools/oneoff/ue_export_cave_troll.py` (elk 173 clips on a 41-track rig, moose 97 on
+44); the exporter now bundles the mesh named after the skeleton with each clip, because the packs
+list a GFur shell first.
+
+The meshes are reskinned onto the vanilla `horse_skeleton` without a weight transfer:
+`tools/blender/reskin_animalia_to_horse.py` bends each mesh into the horse rest pose with its own
+skinning and keeps the pack's weights, renamed onto horse bones. After one uniform scale the legs and
+spine sit 2 to 11 cm from the horse's joints, so this holds; the horse's pelvis joint is a pivot above
+the spine (fitting it tore the rump), the elk's short tail must not stretch, and the moose keeps its
+own neck (Mike's call: its neck is half a horse's, a full fit gave a horse neck and no hump). Edge
+stretch under six bends is at or below TaleWorlds' own horse mesh. Four elk antler variants and two
+moose variants, five LODs each, on the armature of TaleWorlds' `horse.fbx`.
+
+`tools/blender/retarget_animalia_to_horse.py` moved 64 elk and 33 moose clips onto the engine rig,
+carrying each bone's motion through the same fit, and exports them in the skeleton's file order with
+frame 0 at rest; all 97 pass the re-import check. Textures are 1K d/n/s triples; the texture
+converter gained `--match` and no longer misses `_ao` maps. Staged for the Kit in
+`E:\LOTRAOMAssets\animalia_to_import\`. Mike kept two variants, `animalia_elk_08` and
+`animalia_moose_big`, moved the sources into `LOTRLOME_Armory\AssetSources\creature\elk\` and imported the
+textures, materials and both meshes in the Modding Kit, then all 97 clips. The Kit left every clip
+master's skeleton reference empty; the new `tools/wire_anim_master_skeletons.ps1` (census, and on `-Apply`
+the troll's in-place 16-byte patch in batch) pointed all 97 at `horse_skeleton`, re-read each and
+refreshed the checksums: census ok=97. Then `tools/gen_animalia_anim_clips.ps1` wrote the 52 clip
+resources (29 elk, 23 moose), each cloned from the vanilla horse clip its action uses, with the travel per
+loop, hoof plants and fall points measured by `tools/blender/measure_animalia_clips.py` (elk walk 2.02 m,
+trot 6.32 m, canter 7.40 m, gallop 8.75 m per loop); an independent re-read found 0 problems. Turns and
+jumps stay vanilla: the turn clips have their turn baked in, and the jumps need re-cutting.
+
+Set up for an in-game test: `tools/apply_animalia_armory.py` wrote the Monsters, the `as_animalia_elk` /
+`as_animalia_moose` action sets (33 and 30 horse actions bound to our clips, plus two standing-pace
+`_movement` clips) and the two Horse items into the live Armory (ledger:
+`docs/reference/lotrlome-animalia-changes.md`), and two Custom-Battle-only riders
+(`troops/troops_animalia_test.xml`) spawn them with `taom.spawn_troops`. The riders are exempt from the
+armour and melee ladders and the recruitment-reachability test, which would otherwise count their file as a
+kingdom. `AnimaliaMountWiringTests` (5) pins the wiring; the full suite passes (10,213). The
+Animalia elk is a separate second elk; the
+moose is for Thranduil and Mirkwood lords. Game-side XML and the antler attack come after the clip import.
+
+Documented in `docs/features/animalia-elk-moose.md` (new), the quadruped section of
+`docs/reference/ue-to-bannerlord-asset-pipeline.md`, the reskin section of `creature-mount-authoring.md`,
+the creature recipe's route table, the horse pelvis fact in `bannerlord-skeleton-authoring.md`, the
+feature map, INDEX, and five lessons (two animation, three tooling). The provenance register gains the
+Animalia row, and the Cave Troll row is cleared: Mike records no creator or licence tier for Fab
+purchases ("We bought the product").
+
+### feat(creatures): v2.0.30 - elephant, mumakil, war ram and elk attack under a player rider too (#643)
+
+Mike rode the new elk as an `elk_rider` and nothing happened: the log shows one elk, his, and zero
+antler-charge blows in an eight-minute battle. All four elephant-like trees gated their attack branch
+on `IsAiControlledDecorator`, so a player-ridden mount fell through to a one-second sleep. The warg's
+tree does not, and Mike asked for the warg's behaviour: the branch now sits directly under
+`HasRiderDecorator` in `ElephantBehaviorTree`, `MumakilBehaviorTree`, `WarRamBehaviorTree` and
+`ElkBehaviorTree`. The attack stays automatic and the rider keeps steering; knockdown, cooldowns and
+target rules are unchanged.
+
+- **The blow is the rider's** (Mike: "the rider, like the warg"). The shared hit passed the creature
+  as the attacker, so the engine gave the hit and the kill to a mount agent with no Character. It now
+  passes the rider and falls back to the creature only once the rider has gone, as `WargAttackService`
+  does. A hit's affector is read from `Blow.OwnerId`; the kill's goes through native, unread.
+  `CareerPerkMissionBehavior.OnScoreHit` now skips TAOM's own blows, because a player-owned creature
+  blow never runs the damage model its "+N from ability" line assumes. It reads the new
+  `CustomAttacksUtils.IsRegisteringSyntheticBlow`, set while `RegisterBlow` runs (the engine raises
+  the hit callbacks inside that call), so a punch or kick keeps its true line; a first cut that
+  skipped every weaponless hit lost those (Codex). The engine picks a weaponless blow's sound from
+  its owner, so a rider-owned creature blow would have played a punch (Codex); at Mike's call the four
+  creatures pass `chargeImpactSound: true`, which silences the engine's block and replays it with the
+  charge-damage sound, parameter and alarm.
+- `MountChargeMultiplier` returns 1 for a non-finite product. The career loader already rejects NaN
+  and infinity, so only an overflowing product of huge magnitudes reaches it (convergence pass).
+- **No more false "Crushed through!".** `TakeDamage` passed `knockDown` into the `CombatLogData`
+  constructor's `crushedThrough` slot, so every creature knockdown the player saw printed it (Codex).
+  The call now names all seventeen arguments, which also fixed a rider flag that compared the victim
+  with itself where vanilla compares the victim's rider with the attacker.
+- **The combat log names the right damage type.** It reads `CombatLogData.DamageType`, which the
+  constructor sets to Blunt and vanilla overwrites only in `GetAttackCollisionResults`, a path a
+  synthetic blow never runs, so every creature blow (warg and spider included) logged Blunt.
+  `TakeDamage` now sets it.
+- `CustomAttacksUtils.TakeDamage` gains an optional `damageType` (default Pierce, pinned by a test) and
+  marks a Blunt blow `CanKillEvenIfBlunt` through the pure `ComposeWeaponFlags(DamageTypes)`, so a
+  creature's Blunt blow kills as its Pierce ones do (the elk, #636).
+- The shared `ElephantLikeCombatProfile` carries the blow's damage type and an optional rider
+  multiplier, which `ComputeInflictedDamage` applies behind a positive-requirement gate (a NaN,
+  non-positive or past-10x value counts as 1). Only the elk sets either.
+- Docs: a player-ridden note in `war-ram.md`, `elephant.md`, `mumakil.md` and `elk.md`; the elephant's
+  tree diagram and the Phase 7 template in `creature-mount-authoring.md` lose the AI-only level, and
+  four comments that called a mount's Character its rider now say it has none.
+- Owed: ride each creature into enemies; the elephant and mumakil stay mount-locked, so only one you
+  spawned on. Watch steering while the ram and elk clips hold for 3.5 s, and check the combat log
+  names you and says Pierce (Blunt on the elk).
+
 ## 2026-09-22
+
+### feat(elk): v2.0.30 - Thranduil's great elk, ridden by Mirkwood with an antler charge (#636)
+
+Mirkwood shipped an `elk_rider` career with no elk to ride: its starting rosters handed out
+`saddle_horse`. Mike imported an elk into the Armory (`elk_001`, `elk_saddle_001`) skinned to the
+vanilla horse skeleton, and it is now built the way the war ram was. The FBX names only the 39 vanilla
+horse bones, so the Monster is the horse's shape and no animation data was authored.
+
+- **Armory (untracked, ledger `docs/reference/lotrlome-elk-changes.md`):** new
+  `Monster.taom_elk` (`base_monster="horse"`, weight 500, 250 hit points) on the ram's own action set
+  `as_war_ram`, so the ram's head-butt, authored on the engine `horse_skeleton`, plays on the elk as an
+  antler charge. Items `taom_elk_a` (`body_length="200"`, `charge_damage="50"`, `difficulty="0"`) and `taom_elk_saddle_a`
+  (`family_type="1"`, body armour 45) in `LOTRAOM_horses.xml`; the Monster registered in
+  `SubModule.xml` after the ram's; the two English names registered in `Languages/loc_LOTRAOM_horses.xml`
+  beside the ram's. Each edited file backed up as `.bak-elk-20260922`.
+- **`Main/Features/Elk/`**, cloned from WarRam: `ElkBehaviorTree` fires the antler charge at the one
+  enemy the elk faces most squarely (10 s cooldown). Since 2026-09-23 it lands one 60 Blunt blow
+  (Mike, who first asked for 40 blunt and 20 pierce and then chose one blow once shown the two land
+  alike). It ignores armour, stays lethal through `CanKillEvenIfBlunt` (Mike's call; a blunt killing
+  blow otherwise only wounds), belongs to the rider, and scales with the rider's career charge bonus
+  (Mike: "scale the antler blows too") through the new `ICareerAgentStatService.MountChargeMultiplier`,
+  the product that already scaled the elk's own charge. `ElkMissionBehavior : MissionLogic` attaches
+  the tree by `Monster.StringId` and guards the borrowed action and set at mission start. No
+  mount-lock, no Patch47 entry, as with the ram.
+- **Built at 2x (2026-09-23, Mike after the first in-game look):** `body_length` 100 to 200. The rider
+  is not scaled (observed on the 3x mumakil), so the first night's "must stay at 100" was wrong, copied
+  from the ram's docs; the elk docs, the Armory comments and the reskin guides now say so. The reach
+  is a fixed metre from the elk's centre, so `ElkConfig.AuthoredScale` (2.0) now scales it (3 m
+  trigger, 4 m radius), and `ElkConfigTests` pins the Armory's `body_length` to that constant.
+  Previews stay at 1x by Mike's choice: the inventory, party screen and map icon scale a mount by the
+  item's `scale_factor`, which the elk does not set.
+- **Riders:** `mirkwood_rochenlas` and `mirkwood_beleglas` (from `noble_horse_southern` +
+  `saddle_of_aeneas`), Thranduil and the five `mirkwood_bat_template_medium_*` lord sets (from `charger`
+  + `chain_horse_harness`), and the `elk_rider` career start. The lords' change reaches new campaigns
+  only, because a hero's battle equipment is saved. The four Mirkwood lord and ruler battle rosters in
+  the generated `taom_lord_template_equipment.xml` (heroes coming of age, a new ruler, spawned and rebel
+  lords) were edited by hand to match: its generator would delete 40 rosters if run today. The
+  marketplace keeps one elk and one saddle in Mirkwood towns.
+- **Tests:** `ElkConfigTests` (11), `ElkAttackServiceTests` (30), `ElkMountWiringTests` (5, including a
+  pin that every elk in `troops/` and `equipmentsets/` carries the elk saddle), and eight
+  `MountChargeMultiplier` tests plus one NaN test on `ApplyMountStatModifiers` in
+  `CareerAgentStatServiceTests`.
+- **Catalogue:** `docs/reference/armory-catalogue/catalogue.tsv` and `docs/audits/armory-ref-audit.md`
+  regenerated for the elk art drop (verdict CLEAN), with the two elk meshes classified in
+  `tools/armory_catalogue_overrides.tsv`; the provenance register's ADOD_Beasts row lists
+  `Main/Features/Elk/**`.
+- **Docs:** `docs/features/elk.md`, the ledger, feature-map and INDEX rows, and a paragraph in
+  `creature-mount-authoring.md` on borrowing another reskin's clip through its action set.
+- **Owed:** every in-game check in `elk.md` (the elk's front legs bind lower than the ram's in the FBX,
+  so watch them at a gallop), deleting the leftover `take 001` take in the Kit, translations, and a
+  provenance row for the elk art.
+
+### fix(dependencies): v2.0.30 - shield rethrows keep the throw site; distinct crashes stop sharing a signature
+
+A player crash bundle (`2d446100`, v2.0.28 on 1.4.8) reported a campaign-tick failure as five frames
+ending at `MapState.OnTick_Patch2`, with nothing below it. The real throw was several calls deeper, in
+the daily pregnancy tick. PatchShield puts a finalizer on every patched method in the process (1,476
+in that session) and hands every exception outside the missing-API trinity back to Harmony, which
+rethrows it with `throw`. That replaces the exception's stack trace at every shielded method it
+crosses. The same collapse hid distinct crashes: the signature hashes `new StackTrace(ex)`, which only
+sees the segment after the last rethrow, so three NullReferenceExceptions through that frame shared
+bundle `40de8e64` and two were suppressed unread.
+
+- New `Dependencies/Foundation/RethrowStackPreserver`: on a finalizer's rethrow path it moves the
+  trace into `_remoteStackTraceString` (what .NET's `InternalPreserveStackTrace` does) with a marker
+  line naming the rethrowing method, records the first five frames of the original throw under
+  `Exception.Data["TAOM.ThrowSite"]`, and returns the same instance. Idempotent per rethrow; fails
+  open to today's behaviour.
+- PatchShield's two finalizers and all three SaveShield rethrow paths return through it. PatchShield
+  counts the rethrows and its session summary prints "rethrew N with the stack preserved", apart from
+  the swallow counts. The no-exception path PatchShield runs on every call is still one null check.
+- `CrashSignatureCalculator.DescribeIdentity` appends the recorded site after each level of the inner
+  chain, so two UI crashes (a `TargetInvocationException` over the same frames) separate by their
+  inner site. Exceptions that never crossed a shield keep their old signatures.
+- The crash report's `Stack Frames` and `Patches on throwing call stack` sections say they show the
+  last segment only when the exception crossed a shield.
+- Tests: `RethrowStackPreserverTests` (19, real in-process Harmony patches, including PatchShield's
+  own finalizers, finalizer priority against the crash reporter, and a premise test that turns red if
+  Harmony ever starts preserving), five new `CrashSignatureCalculatorTests`, two renderer tests.
+- `/deep-review` (six lenses, two waves): no CRITICAL or HIGH; three MED and six LOW fixed, all
+  listed in the RCA `docs/reviews/rca-shield-rethrow-stack-2026-09-22.md`. Docs: `crash-report.md`,
+  `dr3-maintenance.md`, `submodule-lifecycle-and-harmony.md`, `feature-map.md`, a Finalizer entry in
+  `.claude/rules/harmony-patches.md`, two lessons in `lessons/harmony-il.md` and one in
+  `lessons/build-tooling-workflow.md`.
+
+Known limitation: twenty exception-returning finalizer methods in twelve TAOM files outside the two
+shields (`Patch65`, `Patch88`, `Patch69` and others; the RCA lists them) still reset the trace. The
+late-batch ones are not covered by PatchShield on a process's first game, because PatchShield's pass
+2 runs before TAOM applies them, nor with PatchShield uninstalled (co-op, `patchshield-disabled.flag`).
+Converting them is a one-line change each, left as follow-up because it touches code this change did
+not. `PatchShield.cs`, `SaveShield.cs` and `CrashSignatureCalculator.cs` are identical on
+`bannerlord-1.4.5`, the player's line; `PlainTextCrashReportRenderer.cs` differs there by six lines,
+so that hunk may need a hand merge.
 
 ### docs(herorace): v2.0.30 - #635 map-conversation CTD triage, voice-over fix
 

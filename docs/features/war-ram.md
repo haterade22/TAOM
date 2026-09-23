@@ -109,13 +109,14 @@ WarRamMissionBehavior : MissionLogic
 `body_length="100"` on the Horse item, so `SetInitialAgentScale(1.0)`: **the ram ships at its
 authored size and is deliberately not shrunk.**
 
-**It does NOT scale the mount only, contrary to what this doc previously said.**
-`EquipmentIndex.ArmorItemEndSlot` and `EquipmentIndex.Horse` are the same value (10), the scale block
-in `BuildAgent` has no `IsMount` guard, and `BuildAgent` runs for the rider as well as the mount with
-the Horse item still in the rider's spawn equipment. So any `body_length` other than 100 scales the
-**dwarf** too. 100 is identity, which is why it is safe, and why it should not be changed without
-accounting for the rider. This also affects the mumakil (300) and the wargs (110/115), which is
-pre-existing and not this feature's to fix.
+**It scales the mount only** (corrected 2026-09-23). This doc used to say it scales the dwarf too:
+`EquipmentIndex.ArmorItemEndSlot` and `EquipmentIndex.Horse` are the same value (10), the scale block in
+`BuildAgent` has no `IsMount` guard, and `BuildAgent` runs for the rider with the Horse item in slot 10,
+so the managed trace predicts a scaled rider. In game the rider is not resized: the 3x mumakil's rider
+stands at 1x beside its 1x crew ([mumakil.md](mumakil.md), "RESOLVED"). The ram stays at 100 because that
+is its authored size, not to protect the dwarf. What a resize would NOT scale is the head-butt's reach,
+a fixed metre from the centre in `WarRamConfig` (the elk, built at 2x on the same shape, derives its reach
+from `ElkConfig.AuthoredScale`).
 
 It was 75 first, reasoning that since TAOM dwarves render at about 82% of human height, a horse-sized
 ram would dwarf its rider. **That reasoning was backwards: the war goat is meant to dwarf its rider.**
@@ -236,6 +237,12 @@ matches the chariot, which is also left remountable on purpose.
 **No Patch47 entry.** The spider and elephant needed the dismount-before-death patch because their
 Monsters lacked vanilla's rider-death surface. The ram inherits that surface whole through
 `base_monster="horse"`. A ridden-death in-game test is what would justify revisiting this.
+
+### Player-ridden rams attack too (#643, 2026-09-23)
+
+The head-butt fires under ANY rider, the player included, as the warg's bite does (Mike: "All trees like the elephant, mumakil, the Rams, and Elk should also do these things when controlled by a player. Like the warg"). The tree used to gate its attack branch on `IsAiControlledDecorator`, so a player-ridden mount fell through to a one-second sleep and never attacked; the branch now sits directly under `HasRiderDecorator`. The attack stays automatic (enemy in front, in range, off cooldown), the rider keeps steering, and the knockdown rule is unchanged: anyone not shield-blocking goes down, a mounted victim is dismounted.
+
+**The blow is the rider's**, the ram's only once the rider has gone (the warg's rule), and the combat log reads Pierce instead of Blunt; the engine evidence for both is in [elephant.md](elephant.md), "Player-ridden elephants attack too". The head-butt keeps its own Pierce band and does not scale with the rider's charge bonus; the elk's antler charge does ([elk.md](elk.md)).
 
 ## Key Files
 
@@ -470,6 +477,11 @@ Cosmetically odd and pre-existing, but out of scope for a mount change.
   already proven and shipping: `elf_child` and `sauron_child` both use `base_monster="human"`, which
   only Native defines.
 - **`Main/Features/ElephantLike/`**: the shared attack service and BT nodes, reused unchanged.
+
+**Dependent: the great elk (#636).** `Monster.taom_elk` names this Monster's action set, `as_war_ram`, and
+plays `act_war_ram_butt` as its antler charge ([elk.md](elk.md)). Renaming the set, pointing the ram back at
+`as_horse`, restoring the ledger's section 5 backups or re-cutting the `war_ram_butt` clip reaches the elk too;
+a missing `as_war_ram_map` throws on every campaign-map icon that carries one.
 
 ## Tests
 

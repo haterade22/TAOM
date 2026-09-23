@@ -213,7 +213,7 @@ table at [dr3-maintenance.md](../migration/dr3-maintenance.md) lines 48-55: Stea
 
 **`Main/_Module/bin/Win64_Shipping_Client/`** is a different pool with its own allowlist, and it is
 exactly two files: `MinHook.x64.dll` and `TAOM.NativeSkinFixes.dll` (`.gitignore:73-80`,
-`CLAUDE.md:179`). <!-- measured: git ls-files Main/_Module/bin | wc -l 2026-09-05 -->
+the [orientation.md](../ai-includes/orientation.md) trap index ("Vendored DLLs")). <!-- measured: git ls-files Main/_Module/bin | wc -l 2026-09-05 -->
 `MCMv5.dll` is never vendored there: MCM's runtime comes from this module and the compile-time
 reference comes from the `Bannerlord.MCM` NuGet with `IncludeAssets="compile"`
 (`Main/TAOM.csproj:99`, `.gitignore:69-70`, [dr3-maintenance.md](../migration/dr3-maintenance.md)
@@ -776,7 +776,7 @@ Code: No code changes needed
 ### Never do
 
 1. **Never vendor `MCMv5.dll` into `Main/_Module/bin/`.** The Main allowlist is exactly
-   `MinHook.x64.dll` and `TAOM.NativeSkinFixes.dll` (`CLAUDE.md:179`, `.gitignore:79-80`). A second
+   `MinHook.x64.dll` and `TAOM.NativeSkinFixes.dll` (the [orientation.md](../ai-includes/orientation.md) trap index ("Vendored DLLs"), `.gitignore:79-80`). A second
    `MCMv5.dll` in the process is what the redirect list was written to fight
    (`Dependencies/SubModule.cs:39-46`).
 2. **Never edit the live `bin/` folders by hand.** The next build copies `_Module/**` over them, and

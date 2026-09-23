@@ -33,6 +33,27 @@ public class BehaviorTreeMissionLogicInheritanceTests
             "_missionLogics, then NRE every tick in CheckMissionEnded.");
     }
 
+    [TestMethod]
+    public void CreatureMissionBehaviors_InheritMissionLogic()
+    {
+        // The creature features' own mission behaviors carry the same rule in their doc comments ("MUST be
+        // : MissionLogic, NEVER : MissionBehavior ... pinned by BehaviorTreeMissionLogicInheritanceTests"); this
+        // is that pin. Each attaches creature trees from OnMissionTick, so a MissionBehavior-only base would be
+        // the looter-battle NRE again. Add a new creature's behavior here when it is written (#636 added the elk).
+        var creatureBehaviors = new[]
+        {
+            typeof(TAOM.Features.Warg.WargMissionBehavior),
+            typeof(TAOM.Features.Spider.SpiderMissionBehavior),
+            typeof(TAOM.Features.Elephant.ElephantMissionBehavior),
+            typeof(TAOM.Features.Mumakil.MumakilMissionBehavior),
+            typeof(TAOM.Features.WarRam.WarRamMissionBehavior),
+            typeof(TAOM.Features.Elk.ElkMissionBehavior),
+        };
+
+        foreach (var type in creatureBehaviors)
+            Assert.IsTrue(typeof(MissionLogic).IsAssignableFrom(type), $"{type.Name} must derive from MissionLogic");
+    }
+
     // Note: an instance-based `Assert.AreEqual(BehaviorType.Logic, logic.BehaviorType)` test
     // would need BehaviorTrees.dll in the test output folder (the BehaviorTreeMissionLogic
     // ctor touches BehaviorTree). The reflection-only IsAssignableFrom assertion above
