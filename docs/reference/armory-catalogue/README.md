@@ -31,20 +31,22 @@ every referenced mesh exist". This answers "what exists, and where did it come f
 
 | | |
 |---|---|
-| rows | 4,839 (4,456 metameshes, 383 collision bodies) |
-| source tpacs | 4,364 under `LOTRLOME_Armory/Assets/**` |
-| referenced by an item | 4,175 directly, 140 via the `_slim` build variant |
-| referenced by nothing | 524 |
-| classified automatically | 4,836 (99.94%) |
+| rows | 4,894 (4,503 metameshes, 391 collision bodies) |
+| source tpacs | 4,459 scanned under `LOTRLOME_Armory/Assets/**`, of which 527 carry a row |
+| referenced by an item | 4,216 directly, 140 via the `_slim` build variant |
+| referenced by nothing | 538 |
+| classified automatically | 4,891 (99.94%) |
 | resolved by an override row | 3 |
 
-Top cultures: gondor 641, rhun 513, dwarf 489, mordor 462, dol_guldur 452, rohan 286, dunland 279,
+Top cultures: gondor 640, rhun 532, dwarf 489, mordor 475, dol_guldur 460, rohan 286, dunland 279,
 uruk 274, rivendell 261, dale 235, gundabad 225. Top categories: helmet 1,037, chest 1,033,
-weapon 977, pauldron 416, shield 377, bracer 354.
+weapon 1,003, pauldron 416, shield 381, bracer 354.
 
-Counted from the committed TSV, not carried forward by hand. Ten of these moved when the parser
-learned Rohan's abbreviations and stopped bucketing unparsed names as `unknown`, and the first
-version of this paragraph was left behind by that regeneration.
+Counted from the committed TSV, not carried forward by hand, and the three header counts
+(`tpacs=`, `metameshes=`, `physicsshapes=`) must agree with this table. They did not between
+2026-09-05 and 2026-09-22: the TSV was regenerated several times while this prose sat at the
+2026-09-05 figures, so the file and the paragraph beside it disagreed by 55 rows. Nothing lints
+prose against the TSV, so re-count here on every regeneration.
 
 ## Commands
 

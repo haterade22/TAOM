@@ -66,6 +66,42 @@ re-nock.
 
 Not reviewed with `/deep-review`; committed at Mike's instruction after in-game testing.
 
+### chore(armoury): v2.0.30 - audit every mesh and body ref, live tree and patreon
+
+A full read-only pass over the armour and weapon XML in both trees, prompted by the Rhun and elf
+bow load hangs. **Both trees are clean of the hang class.** In the live install, 6,377 references
+resolved with zero missing meshes and zero missing collision bodies across all three tiers,
+including Tier A against a real 48 minute session whose error log holds nothing but its own
+header. The borrow gate was not merely run but instrumented, because a clean exit proves nothing
+here: `missing_collision_body_issues` was dead for three days in September (#622) and a regex
+that did not know `<CraftingPiece>` silently skipped all 313 piece bodies until #633. The funnel
+shows 768 `body_name` refs actually examined, 313 of them crafting pieces, for zero findings.
+
+**The patreon release tree was audited for the first time.** The #633 RCA names a body pass of a
+release tree against its own cooked packs as the leading unrefuted explanation for the still-open
+player hang, and records that nothing runs it. It now has: 1,015 body refs against the tree's own
+nine packs plus vanilla Native, **zero missing**. That tree is internally consistent because its
+XML and its packs were cooked together on 2026-09-13, and its three Rhun longbows point at the
+vanilla `bo_longbow_c`, which is always resident. So the hypothesis does not hold for this tree,
+and the player's hang needs another explanation. What the pass did find is drift: **218 of 452
+ModuleData files differ from the live tree**, so the patreon build predates the #599, #617, #629
+and #633 repairs, and it renders the cave troll with no armour because its packs were cooked
+before that art came back.
+
+**The dead-mesh allowlist is empty again.** `lotr_troll_armor`, `lotr_troll_bracers` and
+`lotr_troll_helmet` were accepted as missing on 2026-09-01, with the items deliberately kept
+because deleting them and their 18 refs would have taken the cave troll from 95 to 0 armour in
+every slot. The art is authored again and all three ship from `LOME_troll_armor_geo.tpac`, so the
+entries expired and are gone: losing that art a second time now errors instead of warning. Three
+allowlist tests had been using those production entries as their fixture and broke when the data
+changed, which is the wrong coupling for a mechanics test, so they now install their own fixture
+allowlist and a separate test keeps the shape rules on whatever the shipped one holds.
+
+Also: removed all six stray backup files from the live modules (four crafting-piece copies from a
+2026-09-21 editing session, two pre-refit geo tpacs from the 2026-09-18 hit-capsule work, 14.1 MB
+in total), and re-counted the armoury catalogue README against the TSV beside it. That prose had
+drifted 55 rows since 2026-09-05 because nothing lints the two against each other.
+
 ### fix(mumakil): v2.0.30 - the war tower's crew stand on a navmesh and shoot (#627)
 
 All eight archers confirmed drawing and loosing in game. The feature shipped on 2026-09-20 with

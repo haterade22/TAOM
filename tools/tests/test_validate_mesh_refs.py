@@ -279,7 +279,28 @@ class TierBTests(unittest.TestCase):
 class KnownDeadMeshTests(unittest.TestCase):
     """The allowlist exists so an accepted decision stops failing the gate. It
     must never turn into a blanket mute: exact names only, and it has to speak
-    up when its own reason expires."""
+    up when its own reason expires.
+
+    These tests own their fixture allowlist rather than reading the production one.
+    They used the real troll entries until 2026-09-22, when that art returned and the
+    allowlist emptied, which failed three of them: a mechanics test that depends on
+    live data breaks whenever a legitimate data decision changes."""
+
+    FIXTURE = {
+        "fixture_dead_mesh":
+            "2026-01-01: synthetic fixture for the allowlist mechanics tests. Long "
+            "enough to satisfy the reason-length rule, and it carries a date.",
+    }
+
+    def setUp(self):
+        self._saved = dict(vm.KNOWN_DEAD_MESHES)
+        vm.KNOWN_DEAD_MESHES.clear()
+        vm.KNOWN_DEAD_MESHES.update(self.FIXTURE)
+        self.addCleanup(self._restore)
+
+    def _restore(self):
+        vm.KNOWN_DEAD_MESHES.clear()
+        vm.KNOWN_DEAD_MESHES.update(self._saved)
 
     def _refs(self, mesh_name, item_id="it"):
         xml = f'<Item id="{item_id}" mesh="{mesh_name}" />\n'
@@ -289,7 +310,7 @@ class KnownDeadMeshTests(unittest.TestCase):
         return vm.PresentSet(metameshes=set(names), tpac_paths=["fake.tpac"])
 
     def test_allowlisted_dead_mesh_warns_instead_of_erroring(self):
-        refs = self._refs("lotr_troll_armor")
+        refs = self._refs("fixture_dead_mesh")
         issues = vm.classify(refs, self._present("other"), rgl=None, scan_bodies=False)
         codes = _codes(issues)
         self.assertIn("KNOWN_DEAD_MESH", codes)
@@ -300,47 +321,54 @@ class KnownDeadMeshTests(unittest.TestCase):
         self.assertNotIn("STALE_DEAD_MESH_ALLOWLIST", codes)
         known = [i for i in issues if i.code == "KNOWN_DEAD_MESH"][0]
         self.assertEqual(known.severity, vm.Severity.WARNING)
-        self.assertIn("cave_troll", known.message, "the reason must reach the report")
-
-    def test_every_allowlist_entry_states_a_reason_and_a_date(self):
-        self.assertTrue(vm.KNOWN_DEAD_MESHES, "allowlist should not be empty here")
-        for name, reason in vm.KNOWN_DEAD_MESHES.items():
-            self.assertRegex(reason, r"\d{4}-\d{2}-\d{2}",
-                             f"{name} needs a decision date")
-            self.assertGreater(len(reason), 40, f"{name} needs a real reason")
+        self.assertIn("synthetic fixture", known.message,
+                      "the reason must reach the report")
 
     def test_allowlist_is_exact_names_not_prefixes(self):
         # A NEW dead mesh in an allowlisted family must still be an error.
-        refs = self._refs("lotr_troll_greaves")
+        refs = self._refs("fixture_dead_mesh_greaves")
         issues = vm.classify(refs, self._present("other"), rgl=None, scan_bodies=False)
         codes = _codes(issues)
         self.assertIn("MISSING_MESH", codes)
         self.assertNotIn("KNOWN_DEAD_MESH", codes)
 
     def test_allowlist_entry_flagged_stale_when_art_returns(self):
-        refs = self._refs("lotr_troll_armor")
+        refs = self._refs("fixture_dead_mesh")
         present = self._present(*vm.KNOWN_DEAD_MESHES)   # all art back
         issues = vm.classify(refs, present, rgl=None, scan_bodies=False,
                              check_allowlist=True)
         stale = [i for i in issues if i.code == "STALE_DEAD_MESH_ALLOWLIST"]
         self.assertTrue(stale, "art returning must retire the entry")
-        self.assertIn("lotr_troll_armor", {i.entry_id for i in stale})
+        self.assertIn("fixture_dead_mesh", {i.entry_id for i in stale})
 
     def test_allowlist_entry_flagged_stale_when_nothing_references_it(self):
         refs = self._refs("something_else")
         issues = vm.classify(refs, self._present("something_else"),
                              rgl=None, scan_bodies=False, check_allowlist=True)
         stale = {i.entry_id for i in issues if i.code == "STALE_DEAD_MESH_ALLOWLIST"}
-        self.assertEqual(stale, set(vm.KNOWN_DEAD_MESHES))
+        self.assertEqual(stale, set(self.FIXTURE))
 
     def test_unparsed_pack_still_wins_over_the_allowlist(self):
         # Degraded evidence must not be dressed up as an accepted decision.
-        refs = self._refs("lotr_troll_armor")
+        refs = self._refs("fixture_dead_mesh")
         present = vm.PresentSet(metameshes={"other"}, tpac_paths=["a.tpac"],
                                 unparsed=[("a.tpac", "bad seg_count")])
         codes = _codes(vm.classify(refs, present, rgl=None, scan_bodies=False))
         self.assertIn("UNVERIFIED_MESH", codes)
         self.assertNotIn("KNOWN_DEAD_MESH", codes)
+
+
+class KnownDeadMeshProductionDataTests(unittest.TestCase):
+    """Shape rules for whatever the SHIPPED allowlist actually holds. Deliberately
+    separate from the mechanics tests above, which patch the dict: this one must read
+    the real thing. An empty allowlist is a valid, healthy state (it means no art is
+    accepted-missing right now), so emptiness is not asserted either way."""
+
+    def test_every_allowlist_entry_states_a_reason_and_a_date(self):
+        for name, reason in vm.KNOWN_DEAD_MESHES.items():
+            self.assertRegex(reason, r"\d{4}-\d{2}-\d{2}",
+                             f"{name} needs a decision date")
+            self.assertGreater(len(reason), 40, f"{name} needs a real reason")
 
 
 class TpacModuleFallbackTests(unittest.TestCase):
