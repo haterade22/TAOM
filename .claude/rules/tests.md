@@ -92,7 +92,8 @@ engine bump.
 
 Worked example, pinning culture party-template bindings across `spcultures.xslt`:
 `TAOM.Tests/Core/CulturePartyTemplateTests.cs`. The same technique applies to `spclans.xslt`,
-`spkingdoms.xslt`, `heroes.xslt` and `lords.xslt`, none of which currently has output coverage.
+`spkingdoms.xslt` and `heroes.xslt`, none of which currently has output coverage; `lords.xslt` has it
+only for the Nine's race, age, face age and kit (`TAOM.Tests/Features/NazgulFamily/NazgulRaceDataTests.cs`, #644).
 
 ## Test Organization
 Mirror source structure: `TAOM.Tests/Features/{FeatureName}/{ServiceName}Tests.cs`

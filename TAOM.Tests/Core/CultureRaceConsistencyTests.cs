@@ -111,13 +111,12 @@ public class CultureRaceConsistencyTests
             string.Join("\n  ", problems));
     }
 
-    [TestMethod]
-    public void EveryAllowedRaceIsARealRegisteredRace()
+    /// <summary>
+    /// Race ids the installed skins.xml files register. They live in the Armory, a game-install
+    /// path, so a caller skips (Inconclusive) rather than fails when the install is not present.
+    /// </summary>
+    private static HashSet<string> RegisteredRaces()
     {
-        // Guards the other direction: a typo in cultures.json (say "uruk-hai" for "uruk_hai")
-        // would silently produce a filter entry that matches no race. The registered set lives in
-        // the Armory's skins.xml, which is a game-install path, so this skips rather than fails
-        // when the install is not present.
         var skins = new[]
         {
             @"E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\LOTRLOME_Armory\ModuleData\skins.xml",
@@ -133,6 +132,49 @@ public class CultureRaceConsistencyTests
                 registered.Add(m.Groups[1].Value);
 
         Assert.IsTrue(registered.Count > 0, "parsed no races from skins.xml; the file shape changed");
+        return registered;
+    }
+
+    [TestMethod]
+    public void EveryCharacterRaceIsARealRegisteredRace()
+    {
+        // A character's race name reaches FaceGen.GetRaceOrDefault from BasicCharacterObject
+        // .Deserialize on every campaign start and load, lords, troops, notables and wanderers
+        // alike, and despite its name that is a plain dictionary index (v1.5.3
+        // TaleWorlds.MountAndBlade FaceGen.cs:115-118): a name no skins.xml registers throws
+        // KeyNotFoundException out of the NPCCharacters load. The races come from the unversioned
+        // Armory, so a missing one is a broken install, not a typo anyone would see in review
+        // (#644 put nazghul on the Nine).
+        var registered = RegisteredRaces();
+        var moduleData = Path.Combine(FindRepoRoot(), "Main", "_Module", "ModuleData");
+
+        var used = Directory.EnumerateFiles(moduleData, "*.xml", SearchOption.AllDirectories)
+            .SelectMany(f => Regex.Matches(File.ReadAllText(f), @"<NPCCharacter\b[^>]*?\brace=""([^""]+)""")
+                .Cast<Match>().Select(m => (source: Path.GetFileName(f), race: m.Groups[1].Value)))
+            .Concat(Directory.EnumerateFiles(moduleData, "*.xslt", SearchOption.AllDirectories)
+                .SelectMany(f => Regex.Matches(File.ReadAllText(f), @"<xsl:attribute name=""race"">\s*([^<\s]+)\s*</xsl:attribute>")
+                    .Cast<Match>().Select(m => (source: Path.GetFileName(f), race: m.Groups[1].Value))))
+            .ToArray();
+
+        Assert.IsTrue(used.Any(u => u.source == "lords.xml"), "parsed no race from characters/lords.xml; the file shape changed");
+        Assert.IsTrue(used.Any(u => u.source == "lords.xslt"), "parsed no race from lords.xslt; the file shape changed");
+
+        var unknown = used.Where(u => !registered.Contains(u.race))
+            .Select(u => $"{u.source} -> '{u.race}'")
+            .Distinct()
+            .ToArray();
+
+        Assert.AreEqual(0, unknown.Length,
+            "A character declares a race no skins.xml registers; loading NPCCharacters will throw: "
+            + string.Join(", ", unknown));
+    }
+
+    [TestMethod]
+    public void EveryAllowedRaceIsARealRegisteredRace()
+    {
+        // Guards the other direction: a typo in cultures.json (say "uruk-hai" for "uruk_hai")
+        // would silently produce a filter entry that matches no race.
+        var registered = RegisteredRaces();
 
         var unknown = AllowedRaces(FindRepoRoot())
             .SelectMany(c => c.Value.Select(r => (culture: c.Key, race: r)))

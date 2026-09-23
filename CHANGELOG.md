@@ -2,6 +2,44 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-23
+
+### feat(nazgul): v2.0.30 - the Nine become race nazghul (#644)
+
+The Armory has shipped a `nazghul` race (1.18 scale, its own meshes) that no hero used: six of the
+Nine carried no race in `lords.xslt`, so they loaded as human, and three were `race="uruk"`. All nine
+`lords.xslt` templates now emit `race="nazghul"`.
+
+`lord_1_48_1/2/3` were defined twice, by a `lords.xslt` template and a `characters/lords.xml` row. The
+engine merges a second definition per attribute (the later file wins) and unions equipment sets with
+different ids, so every campaign dressed those three in the Nazgul kit or a generic Mordor lord kit at
+random, and their age of 20 came only from the row (the templates said 31, 9 and 11, the vanilla
+children the ids once belonged to). Mike's rule: vanilla lords live in the XSLT, new ones in
+`lords.xml`. The rows are gone; race, age 20 and face age 22.19 moved into the templates, and the
+Nazgul kit is the only kit. The other 173 lords defined twice are #648.
+
+Existing saves: vanilla never saves a character's race, and `RacePersistenceService` puts the captured
+race back at session launch, which would have restored human and uruk on every old campaign. The
+restore now leaves the Nine's XML race alone (`INazgulRegistry`) and logs how many it kept. A Player
+Switcher player who changes a wraith's race in the barber gets nazghul back on the next load,
+deliberately.
+
+All nine get orc shield-crush (`orcShieldCrushRaces` adds `nazghul`, Mike's call; three had it only
+because they were tagged uruk). Other rows the race now reaches: immortal in `race_age_config.json`,
+excluded from banner bearers and field commissions (both already skip heroes). In a Custom Battle
+the Nine have the monster's 125 HP; campaign HP is unchanged. They render bald and clean-shaven (the
+skin has one hair and one beard entry) and speak with the skin's own voices.
+
+New gate: `CultureRaceConsistencyTests.EveryCharacterRaceIsARealRegisteredRace` checks every `race`
+in ModuleData XML and XSLT against the installed skins.xml, because `FaceGen.GetRaceOrDefault` is a
+plain dictionary index that throws on an unknown name.
+
+Deep review: seven lenses and a convergence pass. One pre-existing HIGH (the double definition), one
+MED (no gate on the new Armory reference), three LOW, and stale docs and comments across eleven
+files (row counts, a line citation, a how-to that advised keeping the duplicate), all fixed. RCA
+`docs/reviews/rca-nazgul-race-2026-09-23.md`, lessons in `xslt-moduledata.md`,
+`data-content-cultures.md` and `misc.md`.
+
 ## 2026-09-22
 
 ### docs(herorace): v2.0.30 - #635 map-conversation CTD triage, voice-over fix

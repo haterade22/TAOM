@@ -45,9 +45,9 @@ public sealed class DreadRegistry : IDreadRegistry
     {
         var tables = _tables ?? Build();
 
-        // Axis 1 — hero StringId. This is the axis that finds the Nine: eight of them carry no
-        // race attribute in TAOM's data and Khamûl is race="orc", so race alone would miss them
-        // and "orc" would over-match every orc in the game.
+        // Axis 1 — hero StringId. This is the axis that finds the Nine. Before #644 six carried no
+        // race attribute and three were race="uruk", so race alone missed them; they are race
+        // nazghul now, and the set still names exactly the Nine whatever their race data says.
         if (!string.IsNullOrEmpty(heroStringId))
         {
             if (tables.HeroIds.Contains(heroStringId))

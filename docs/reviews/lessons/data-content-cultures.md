@@ -1550,3 +1550,19 @@ anything that can still write the file.
 modules) in the same change.
 
 **Source:** `docs/reviews/rca-career-kits-2026-09-19.md` finding 3 (2026-09-19).
+
+### A new reference into the unversioned Armory lands with a gate that reads the live file (#644, 2026-09-23)
+
+`race="nazghul"` names a race only the live `LOTRLOME_Armory/ModuleData/skins.xml` registers, and
+`FaceGen.GetRaceOrDefault` is a plain dictionary index despite its name (v1.5.3
+`TaleWorlds.MountAndBlade.FaceGen.cs:115-118`), so an install without the race throws out of the
+NPCCharacters load on every campaign start. The #644 plan checked the Armory by reading it once; a
+reinstall or a rename there would have left every repo gate green.
+
+- **Why missed:** the "Unversioned modules" trap is phrased for a FIX landed in the Armory. A new
+  REFERENCE into it reads as ordinary repo data.
+- **Prevent:** `CultureRaceConsistencyTests.EveryCharacterRaceIsARealRegisteredRace` checks every
+  `race` in ModuleData XML and XSLT against the installed skins, Inconclusive without the install.
+  Give any new kind of reference into the Armory the same shape of gate in the same change: it reads
+  the live file and skips, never fails, when the file is absent.
+- **Source:** `docs/reviews/rca-nazgul-race-2026-09-23.md` finding 2 (2026-09-23).

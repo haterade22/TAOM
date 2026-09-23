@@ -165,8 +165,8 @@ A race id is not an object reference. `BasicCharacterObject.Deserialize` sets `R
 |---|---|---|---|
 | 0 | `human` | `Native/ModuleData/skins.xml:3` | 8 (3 wanderers, 5 named companions) |
 | 1 | `dwarf` | `LOTRLOME_Armory/ModuleData/skins.xml:3` | 194 |
-| 2 | `uruk` | `LOTRLOME_Armory/ModuleData/skins.xml:14953` | 163 |
-| 3 | `nazghul` | `LOTRLOME_Armory/ModuleData/skins.xml:30860` | 0 |
+| 2 | `uruk` | `LOTRLOME_Armory/ModuleData/skins.xml:14953` | 160 |
+| 3 | `nazghul` | `LOTRLOME_Armory/ModuleData/skins.xml:30860` | 0 (the Nine take it from `lords.xslt` since #644, which this column does not count) |
 | 4 | `orc` | `LOTRLOME_Armory/ModuleData/skins.xml:45257` | 295 |
 | 5 | `uruk_hai` | `LOTRLOME_Armory/ModuleData/skins.xml:59204` | 171 |
 | 6 | `berserker` | `LOTRLOME_Armory/ModuleData/skins.xml:75869` | 10 |
@@ -455,10 +455,10 @@ All measured 2026-09-05. Live-module paths are relative to the game's `Modules` 
 | per-culture and per-prefix settlement counts | see the two tables | same census, grouped by `culture=` and by id prefix |
 | 14 | kingdoms in `taom_spkingdoms.xml` | `python: re.findall(r'<Kingdom\b[^>]*?\bid="([^"]+)"', text, re.S)` |
 | 8 | kingdom templates in `spkingdoms.xslt` | `rg -c "xsl:template match=\"Kingdom\[@id=" Main/_Module/ModuleData/spkingdoms.xslt` |
-| 1,184 | `<NPCCharacter>` in `characters/lords.xml`; per-prefix counts | `python: re.match(r'lord_([A-Za-z]+)', id)` grouped against `culture=` |
+| 1,181 | `<NPCCharacter>` in `characters/lords.xml`; per-prefix counts | `python: re.match(r'lord_([A-Za-z]+)', id)` grouped against `culture=` |
 | 15 | race ids (1 Native + 14 Armory) with line numbers | `python: re.finditer(r'<race\b[^>]*?\bid="([^"]+)"', text, re.S)` over `Native/ModuleData/skins.xml`, `LOTRLOME_Armory/ModuleData/skins.xml`, `TAOM_Map/ModuleData/skins.xml` |
 | 220,975 | lines in the Armory `skins.xml` | `wc -l LOTRLOME_Armory/ModuleData/skins.xml` |
-| 8, 194, 163, 295, 171, 10, 1, 212, 238, 289, 458 | `race=` uses per id in repo data (11 distinct) | `rg -o 'race="[^"]+"' Main/_Module/ModuleData \| sort \| uniq -c` |
+| 8, 194, 160, 295, 171, 10, 1, 212, 238, 289, 458 | `race=` uses per id in repo data (11 distinct) | `rg -o 'race="[^"]+"' Main/_Module/ModuleData \| sort \| uniq -c` |
 | 18 | Armory item folders | `ls -d LOTRLOME_Armory/ModuleData/LOTRLOME_items/*/ \| wc -l` |
 | per-prefix item counts | Armory prefix table | `python: count <Item\|CraftedItem id= per prefix per subfolder` |
 | 11 | distinct `slot=` names in repo data, with counts | `rg -o 'slot="[^"]+"' Main/_Module/ModuleData \| sort \| uniq -c` |

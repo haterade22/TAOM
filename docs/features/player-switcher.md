@@ -437,7 +437,7 @@ takeover of an attached lord plays, so it is left as it is until someone wants i
 | Dropped | Reason |
 |---|---|
 | `KeepHeroRaceCampaignBehavior` + its `SaveableTypeDefiner` | Would race the shipped `RacePersistenceService` over `OnBeforeSave` and `OnSessionLaunched`, and burn a base id. The shipped service already covers the case and carries three post-ship bug fixes the old one does not |
-| `NazgulEditDisablePatch` | Keys on FaceGen race `"nazghul"`. TAOM has no hero at that race (six of the Nine carry no race attribute, three carry `uruk`), so it would compile, run, and match nothing. Any equivalent lock keys off `IUncapturableRegistry` |
+| `NazgulEditDisablePatch` | Keys on FaceGen race `"nazghul"`. When this was dropped no TAOM hero carried that race (six of the Nine had none, three were `uruk`), so it would have compiled, run, and matched nothing. The Nine are `race="nazghul"` since #644, but race is still the wrong key: any equivalent lock keys off `IUncapturableRegistry`, which names Sauron and the Nine by hero. For race specifically, #644's `RacePersistenceService` rule already acts as the lock: a player who switched into one of the Nine and changed race in the barber gets nazghul back on the next load, deliberately |
 | The `WarPartyComponent` sweep | Live operator-precedence bug, described above |
 | The five `FaceGeneratorVMPatch` patches | Replaced by one early return in `Patch9_RaceFilter` |
 | The heirless-leader eligibility rule | Unreachable. Adoption only ever targets clanless heroes, and a clanless hero leads no clan, so no clan is ever left with a dangling `_leader`. Do not restore it without a case that can actually reach it |

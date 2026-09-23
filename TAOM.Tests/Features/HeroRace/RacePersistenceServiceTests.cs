@@ -5,6 +5,7 @@ using TAOM.Adapters;
 using TAOM.Core.Domain;
 using TAOM.Core.Logging;
 using TAOM.Features.HeroRace;
+using TAOM.Features.NazgulFamily;
 using TaleWorlds.CampaignSystem;
 
 namespace TAOM.Tests.Features.HeroRace;
@@ -16,6 +17,7 @@ public class RacePersistenceServiceTests
     private IHeroRosterAdapter _heroRosterAdapter;
     private IRaceManager _raceManager;
     private IModLogger _logger;
+    private INazgulRegistry _nazgul;
 
     [TestInitialize]
     public void Setup()
@@ -23,6 +25,8 @@ public class RacePersistenceServiceTests
         _heroRosterAdapter = Substitute.For<IHeroRosterAdapter>();
         _raceManager = Substitute.For<IRaceManager>();
         _logger = Substitute.For<IModLogger>();
+        // #644: no hero is a wraith unless a test says so, so every pre-#644 test runs unchanged.
+        _nazgul = Substitute.For<INazgulRegistry>();
         // Phase 9b #171 — IRaceManager injected for validate-before-restore. Default-stub valid for
         // any non-zero so existing tests pass unchanged; specific tests override IsValidRaceId.
         _raceManager.IsValidRaceId(Arg.Any<int>()).Returns(true);
@@ -35,7 +39,7 @@ public class RacePersistenceServiceTests
         _raceManager.GetRaceIdFromName("human").Returns(0);
         _raceManager.GetRaceIdFromName("dwarf").Returns(1);
         _raceManager.GetRaceIdFromName("elf").Returns(2);
-        _sut = new RacePersistenceService(_heroRosterAdapter, _raceManager, _logger);
+        _sut = new RacePersistenceService(_heroRosterAdapter, _raceManager, _logger, _nazgul);
     }
 
     [TestMethod]
@@ -690,7 +694,8 @@ public class RacePersistenceServiceTests
         freshRaceManager.IsValidRaceName("elf").Returns(true);
         freshRaceManager.GetRaceIdFromName("dwarf").Returns(4);
         freshRaceManager.GetRaceIdFromName("elf").Returns(7);
-        var freshService = new RacePersistenceService(freshAdapter, freshRaceManager, Substitute.For<IModLogger>());
+        var freshService = new RacePersistenceService(freshAdapter, freshRaceManager, Substitute.For<IModLogger>(),
+            Substitute.For<INazgulRegistry>());
         var loadingStore = new RoundTripDataStore
         {
             IsSaving = false,
@@ -711,6 +716,100 @@ public class RacePersistenceServiceTests
 
         freshAdapter.Received(1).SetHeroRace(playerId, 7);
         freshAdapter.Received(1).SetHeroRace("npc_dwarf", 4);
+    }
+
+    // --- #644: the Nine keep the race their XML gives them ---
+    //
+    // Vanilla never saves Race, so a save written before #644 carries the Nine's OLD race (human
+    // for six, uruk for three) in the captured map. Restoring it would undo the data change on
+    // every existing campaign. A wraith's race is fixed by its XML, so the restore leaves it alone.
+
+    [TestMethod]
+    public void RestoreHeroRaces_Wraith_LegendPath_KeepsTheXmlRace()
+    {
+        _nazgul.IsWraith("lord_1_15").Returns(true);
+        var store = new RoundTripDataStore
+        {
+            IsSaving = false,
+            NextLoadDict = new Dictionary<string, int> { ["lord_1_15"] = 0 }, // saved as human
+            NextLoadLegend = "human;dwarf;elf"
+        };
+        _sut.SyncRaceData(store);
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("lord_1_15", 2) // the race the XML gave him this session
+        });
+
+        _sut.RestoreHeroRaces();
+
+        _heroRosterAdapter.DidNotReceive().SetHeroRace(Arg.Any<string>(), Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void RestoreHeroRaces_Wraith_LegacyPath_KeepsTheXmlRace()
+    {
+        _nazgul.IsWraith("lord_1_48_1").Returns(true);
+        var store = new RoundTripDataStore
+        {
+            IsSaving = false,
+            NextLoadDict = new Dictionary<string, int> { ["lord_1_48_1"] = 1 }
+            // NextLoadLegend deliberately absent: a pre-#330 save
+        };
+        _sut.SyncRaceData(store);
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("lord_1_48_1", 2)
+        });
+
+        _sut.RestoreHeroRaces();
+
+        _heroRosterAdapter.DidNotReceive().SetHeroRace(Arg.Any<string>(), Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void RestoreHeroRaces_WraithBesideNonWraith_RestoresOnlyTheNonWraith()
+    {
+        _nazgul.IsWraith("lord_1_15").Returns(true);
+        var store = new RoundTripDataStore
+        {
+            IsSaving = false,
+            NextLoadDict = new Dictionary<string, int> { ["lord_1_15"] = 0, ["hero_dwarf"] = 1 },
+            NextLoadLegend = "human;dwarf;elf"
+        };
+        _sut.SyncRaceData(store);
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("lord_1_15", 2),
+            new HeroRaceInfo("hero_dwarf", 0)
+        });
+
+        _sut.RestoreHeroRaces();
+
+        _heroRosterAdapter.Received(1).SetHeroRace("hero_dwarf", 1);
+        _heroRosterAdapter.DidNotReceive().SetHeroRace("lord_1_15", Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void RestoreHeroRaces_Wraith_LogsHowManyKeptTheirXmlRace()
+    {
+        _nazgul.IsWraith("lord_1_15").Returns(true);
+        _nazgul.IsWraith("lord_1_16").Returns(true);
+        var store = new RoundTripDataStore
+        {
+            IsSaving = false,
+            NextLoadDict = new Dictionary<string, int> { ["lord_1_15"] = 0, ["lord_1_16"] = 0 },
+            NextLoadLegend = "human;dwarf;elf"
+        };
+        _sut.SyncRaceData(store);
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("lord_1_15", 2),
+            new HeroRaceInfo("lord_1_16", 2)
+        });
+
+        _sut.RestoreHeroRaces();
+
+        _logger.Received(1).LogInfo(Arg.Is<string>(s => s.Contains("kept the XML race for 2 Ringwraiths")));
     }
 }
 

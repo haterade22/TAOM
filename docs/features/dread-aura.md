@@ -48,29 +48,29 @@ formation arrangement.
 
 ## Identifying a dread source: two axes, and why one is not enough
 
-**The Nazgûl are not identifiable by race.** Verified 2026-08-13 against TAOM's shipped data:
+**When the aura shipped, the Nazgûl were not identifiable by race.** Until #644 (2026-09-23) six
+of the Nine (the Witch-King `lord_1_15`, `lord_1_155`, `lord_1_16`, `lord_1_28`, `lord_1_38` and
+Khamûl `lord_1_48`) carried no `race` attribute, so they loaded as vanilla race 0 (human), and
+`lord_1_48_1` / `_2` / `_3` were `race="uruk"`. (This section first listed five as carrying none
+and Khamûl as `orc`, and counted eight unreachable; `uncapturable-heroes.md` recorded the correction
+on 2026-08-26.)
 
-| Hero | `race` in TAOM data |
-|---|---|
-| Sauron (`lord_1_17`) | `sauron` |
-| Witch-King (`lord_1_15`), `lord_1_155`, `lord_1_16`, `lord_1_28`, `lord_1_38` | **none**, inherits vanilla race 0 (human) |
-| Khamûl (`lord_1_48`) | `orc` |
-| `lord_1_48_1` / `_2` / `_3` | `uruk` |
+So a race-keyed source list would have emitted **zero auras for the Nine**, parsed cleanly, logged
+nothing, and looked like a working feature. Adding `uruk` to catch three of them would have handed
+an aura of dread to every uruk lord in the game.
 
-`race="nazghul"` appears **nowhere** in TAOM's data, even though the `nazghul` race exists in the
-FaceGen registry (referenced by `banner_bearers_config.json` and `raceage/race_age_config.json`).
-
-So a race-keyed source list would have emitted **zero auras for eight of the Nine**, parsed
-cleanly, logged nothing, and looked like a working feature. Adding `orc` to catch Khamûl would
-have handed an aura of dread to every orc in the game.
+Since #644 all nine are `race="nazghul"` (Sauron stays `race="sauron"`). A race list could reach
+them now, but the hero set stays the axis that finds the Nine: it names exactly those nine whatever
+their race data says.
 
 Identity is therefore a two-axis OR, the same shape `TaomCombatMechanicsModel` already uses:
 
 - **Hero StringId**: via `heroSets: ["nazgul_nine"]`, resolving to the existing
   [`INazgulRegistry`](../../Main/Features/NazgulFamily/NazgulRegistry.cs), plus explicit
   `heroIds: ["lord_1_17"]` for Sauron. This is the axis that finds the Nine.
-- **FaceGen race**: `races: ["sauron"]`. Sauron is the only dread-bearer this axis can find, and
-  he is listed on both so the feature survives a data change that drops his race attribute.
+- **FaceGen race**: `races: ["sauron"]`. Sauron is the only race listed (the Nine are race
+  `nazghul` since #644 but come in through the hero set), and he is listed on both so the feature
+  survives a data change that drops his race attribute.
 
 `ShippedDreadAuraConfigTests.ShippedConfig_KeepsTheNazgulHeroSet` pins this, because a
 well-meaning "simplify to a race list" refactor is otherwise silent.

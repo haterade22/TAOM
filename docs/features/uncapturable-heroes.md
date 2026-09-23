@@ -26,25 +26,27 @@ scope decision, not an oversight, and it is restated at the bottom of this doc.
 
 Two problems, one easy and one that looks easy and is not.
 
-**The identity problem.** There is no attribute that picks these ten heroes out. All of them are
-`occupation="Lord"`, and eight of the ten are `culture="Culture.mordor"`, exactly like every
-ordinary Mordor lord. Race gets you one of them:
+**The identity problem.** When this feature shipped, no attribute picked these ten heroes out. All
+of them are `occupation="Lord"`, and nine of the ten are `culture="Culture.mordor"` (Khamûl is
+`Culture.dolguldur`), exactly like
+every ordinary Mordor lord. Race got you one of them:
 
-| Hero | Race attribute | Where defined |
-|---|---|---|
-| `lord_1_17` Sauron | `race="sauron"`, the only one in the mod | `lords.xslt:1060` |
-| `lord_1_15` (Witch-King), `lord_1_155`, `lord_1_16`, `lord_1_28`, `lord_1_38`, `lord_1_48` (Khamûl) | **none**, so vanilla race 0 (human) | `lords.xslt` templates at `:888`, `:942`, `:996`, `:1594`, `:2086`, `:3550` |
-| `lord_1_48_1`, `lord_1_48_2`, `lord_1_48_3` | `race="uruk"` | `characters/lords.xml:24974`, `:25025`, `:25076` |
+| Hero | Race attribute at ship (2026-08-26) | Since #644 (2026-09-23) | Where defined |
+|---|---|---|---|
+| `lord_1_17` Sauron | `race="sauron"`, the only one in the mod | unchanged | `lords.xslt:1063` |
+| `lord_1_15` (Witch-King), `lord_1_155`, `lord_1_16`, `lord_1_28`, `lord_1_38`, `lord_1_48` (Khamûl) | **none**, so vanilla race 0 (human) | `race="nazghul"` | `lords.xslt` templates at `:888`, `:943`, `:998`, `:1597`, `:2090`, `:3555` |
+| `lord_1_48_1`, `lord_1_48_2`, `lord_1_48_3` | `race="uruk"` | `race="nazghul"` | `lords.xslt` templates at `:6113`, `:6169`, `:6225` (vanilla ids; their duplicate `characters/lords.xml` rows went in #644) |
 
-So a race list frees six of the Nine, and adding `uruk` to catch the other three would protect every
-uruk lord in the game. **The compiled `nazgul_nine` hero set is the only axis that covers all nine**,
-and a future refactor that "simplifies" the config to a race list would silently free six wraiths
-with no error and a config that still parses. `ShippedUncapturableHeroesConfigTests` fails if that
-set is ever dropped.
+So a race list freed six of the Nine, and adding `uruk` to catch the other three would have
+protected every uruk lord in the game. Since #644 a race list naming `nazghul` would reach all nine,
+but **the compiled `nazgul_nine` hero set stays the axis**: it names exactly the Nine whatever their
+race data says, while a refactor that "simplifies" the config to a race list would put their
+protection at the mercy of that data, with no error and a config that still parses.
+`ShippedUncapturableHeroesConfigTests` fails if that set is ever dropped.
 
 Note `lords.xslt` emits attributes as `<xsl:attribute name="race">`, never as a literal `race="..."`,
-so a naive grep for `race=` in that file reports zero. Two comments elsewhere in the repo state this
-distribution incorrectly; see "Known doc drift" below.
+so a naive grep for `race=` in that file reports zero. Two comments elsewhere in the repo once stated
+this distribution incorrectly; see "Doc drift, fixed in #644" below.
 
 **The seam problem.** The obvious hook, `CampaignEvents.CanHeroBecomePrisonerEvent`, is a dead end.
 `Hero.cs:2010-2012` reads:
@@ -256,18 +258,18 @@ AI-prisoner escape: `PrisonerReleaseCampaignBehavior` listens on `DailyTickHeroE
 4% daily chance and calls `EndCaptivityAction.ApplyByEscape`. So a Nazgûl imprisoned in an older save
 will get out on his own eventually, just not because of this feature.
 
-## Known doc drift (not fixed here)
+## Doc drift, fixed in #644
 
 `Main/_Module/ModuleData/dread_aura/dread_aura_config.json` (`_comment_heroSets`) and
-`Main/Features/DreadAura/DreadRegistry.cs` (the axis-1 comment) both assert that "eight of the Nine
-carry no race attribute and Khamûl is `race="orc"`". Verified false on 2026-08-26: **six** carry no
-race attribute and three are `race="uruk"`; Khamûl (`lord_1_48`) carries **no** race attribute at all,
-is `culture="Culture.dolguldur"`, and his "orc" is a `skill_template`
+`Main/Features/DreadAura/DreadRegistry.cs` (the axis-1 comment) used to assert that "eight of the
+Nine carry no race attribute and Khamûl is `race="orc"`". Verified false on 2026-08-26: **six**
+carried no race attribute and three were `race="uruk"`; Khamûl (`lord_1_48`) carried **no** race
+attribute at all, is `culture="Culture.dolguldur"`, and his "orc" is a `skill_template`
 (`SkillSet.taom_north_orc_warrior_skills`).
 
-DreadAura's behaviour is unaffected, since it finds the Nine through `heroSets` exactly as this
-feature does; only the stated reasoning is wrong. It needs its own issue and commit, because anyone
-re-deriving "which heroes can the race axis reach" from those comments gets the wrong answer.
+#644 (2026-09-23) made all nine `race="nazghul"` and corrected those comments along with this
+feature's own. DreadAura's behaviour never depended on them: it finds the Nine through `heroSets`
+exactly as this feature does.
 
 ---
 

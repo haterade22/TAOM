@@ -185,7 +185,7 @@ Say so rather than guessing, and go to the file named.
 - **Which `hair_tag` / `beard_tag` / `tattoo_tag` names are legal per race** is unresolved. The declaration site is the per race block in `skins.xml`; the matching is native (`MBBodyProperties.GetHairIndicesByTag`). Working examples to copy live in `Main/_Module/ModuleData/TAOM_bodyproperties.xml`.
 - **Whether a race integer that moves invalidates an existing save** was never tested. The in-file comment only records the mitigation (append at the end), not the failure it avoids. Issue #321 is the trail.
 - **Splitting one race's voice between two cultures** has no recorded method. `<voice_types>` is per `<skin>`, so today it cannot be done from data.
-- **`sauron` is the one race with no `as_<race>_facegen` pair**, and it is applied to a character at `Main/_Module/ModuleData/lords.xslt:1060`. That has not bitten because he is a lord and never a character creation parent, but a culture that made him one would hit failure mode 1 above.
+- **`sauron` is the one race with no `as_<race>_facegen` pair**, and it is applied to a character at `Main/_Module/ModuleData/lords.xslt:1063`. That has not bitten because he is a lord and never a character creation parent, but a culture that made him one would hit failure mode 1 above.
 
 ## Numbers in this chapter
 

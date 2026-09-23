@@ -402,3 +402,23 @@ Three Rhun longbow meshes had no `bo_` twin and carried the elven bow's `bo_wm_e
 - **Prevent:** `COLLISION_BODY_BORROWED` in `validate_moduledata.py` errors on a body that is provably another kit's twin (`bo_<M2>` for a shipped mesh M2 that is not the item's own); same-kit sharing (recolours, `_a2` on `_a`) is design, authorised cross-kit shares live in `_SHARED_BODY_BY_DESIGN` with a reason, vanilla bodies and shields are exempt. Pairing a body with its owner's mesh needed `validate_mesh_refs._ITEM_OPEN_RE` to learn `<CraftingPiece>`; before that every piece ref carried item id `""`. Fix by authoring the twin (`tools/blender/add_collision_body.py`, then a Kit import), never by repointing the borrow.
 - **Also, the mechanism first written down for this was wrong, and the review caught it before commit.** The first gate compared owning tpacs on the theory that the release cook strands a body cooked apart from its mesh. The shipped patreon tree refutes it: every Armory body cooks into `pack0`/`pack1`, every mesh elsewhere, the working elven bow is split identically, and the borrowed body is present in that tree's `pack0`. Three review lenses found it independently; my byte-grep "evidence" had matched `wm_elven_bow_a03` inside `bo_wm_elven_bow_a03`. So why the player's build hung is still open (leading hypothesis: packs that predate the 2026-09-11 art drop under post-#599 XML), and it was written as fact in eleven places before the review. A substring grep is not a TOC read; `validate_mesh_refs.scan_tpac_metameshes` reads cooked packs and should have been the first tool, not the last.
 - **Source:** player report on the September Nexus build, #633; `docs/reviews/rca-rhun-longbow-collision-body-2026-09-21.md`.
+
+### A vanilla lord in both `lords.xslt` and `characters/lords.xml` is two definitions merged, not an override (#644, 2026-09-23)
+
+The engine merges every file of one XML id: the later `characters/lords.xml` row wins each attribute
+it states, and `<Equipments>` is `AlwaysPreferMerge` with `EquipmentSet` unique on id + civilian +
+stealth, so a set whose id differs is ADDED and `Hero.SetInitialValuesFromCharacter` then picks one at
+random per campaign (v1.5.3 `Hero.cs:2315`, picks at `:2352`, `:2356`). Three of the Nine wore the
+Nazgul kit or a generic Mordor kit by coin flip, and their age of 20 came only from the row (the
+templates carried the vanilla children's ages, 9 and 11). 176 vanilla ids still have both, 113 of them
+with differing kits (#648).
+
+- **Why missed:** the #644 plan read "three are race uruk in characters/lords.xml" from a doc, grepped
+  `lords.xslt` only for the six ids it expected there, and edited the row. Either file alone looks
+  complete, and no gate compares the two.
+- **Prevent:** before editing a lord, grep BOTH files for its id. Mike's rule (2026-09-23): vanilla
+  lords live only in `lords.xslt`, new ones only in `characters/lords.xml`. Moving one means folding
+  every value the row wins into the template, checked by transforming the installed vanilla file
+  (the #644 shape), then deleting the row. `NazgulRaceDataTests.LordsXml_DefinesNoneOfTheNine` pins
+  the Nine; #648 carries the general gate.
+- **Source:** `docs/reviews/rca-nazgul-race-2026-09-23.md` finding 1 (2026-09-23).

@@ -62,6 +62,18 @@ public class ShippedCombatMechanicsConfigTests
     }
 
     [TestMethod]
+    public void ShippedConfig_OrcShieldCrushRaces_MatchCompiledDefaultsAndIncludeTheNine()
+    {
+        // Mike, 2026-09-23 (#644): three of the Nine had orc shield-crush only because they were
+        // tagged uruk; as race nazghul all nine get it, beside sauron. The compiled list is what a
+        // missing or invalid file reverts to, so the two surfaces agree entry for entry.
+        var shipped = _sut.GetConfig().CrushThrough.OrcShieldCrushRaces;
+
+        CollectionAssert.AreEqual(new CombatMechanicsConfig().CrushThrough.OrcShieldCrushRaces, shipped);
+        CollectionAssert.Contains(shipped, "nazghul");
+    }
+
+    [TestMethod]
     public void ShippedConfig_OnlyTrollsDwarvesAndSauronResistAHorse()
     {
         // Once the weight term stops protecting the 160-weight victims, the race rows are the

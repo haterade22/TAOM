@@ -4,7 +4,7 @@
   "_comment_enabled": "Master switch. The in-game MCM toggle overrides this at runtime; this value is the fallback when MCM is absent. Editing this file needs a full game restart, not a new campaign.",
   "enabled": true,
 
-  "_comment_heroSets": "INCLUDE, by named lore group. Only 'nazgul_nine' is known; it resolves to the nine Ringwraith StringIds compiled into Main/Features/NazgulFamily/NazgulRegistry.cs. This is the axis that finds the Nazgul: six of them carry no race attribute and three are race 'uruk', so no race list can reach them without also protecting every uruk lord in the game. Unknown names are skipped with a warning, never coerced.",
+  "_comment_heroSets": "INCLUDE, by named lore group. Only 'nazgul_nine' is known; it resolves to the nine Ringwraith StringIds compiled into Main/Features/NazgulFamily/NazgulRegistry.cs. This is the axis that finds the Nazgul. Since #644 all nine are race 'nazghul', which uncapturableRaces could name too, but the set names exactly the Nine whatever their race data says (before #644 six carried no race and three were 'uruk', and no race list could reach them). Unknown names are skipped with a warning, never coerced.",
   "heroSets": ["nazgul_nine"],
 
   "_comment_heroIds": "INCLUDE, by individual Hero StringId. lord_1_17 is Sauron. He is listed here as well as under uncapturableRaces so the feature survives a data change that drops his race attribute.",

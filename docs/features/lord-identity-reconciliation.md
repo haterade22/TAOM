@@ -9,7 +9,7 @@ A named lord is defined in two places, and nothing before 2026-08-29 checked tha
 
 | Half | Files | Carries |
 |---|---|---|
-| Who he is | `Main/_Module/ModuleData/characters/lords.xml` (1184 `<NPCCharacter>`), `Main/_Module/ModuleData/lords.xslt` (396 templates over vanilla `SandBox/ModuleData/lords.xml`) | `name`, `is_female`, `race`, `age`, `culture`, `BodyProperties`, `beard_tags`, skills, equipment |
+| Who he is | `Main/_Module/ModuleData/characters/lords.xml` (1181 `<NPCCharacter>`), `Main/_Module/ModuleData/lords.xslt` (396 templates over vanilla `SandBox/ModuleData/lords.xml`) | `name`, `is_female`, `race`, `age`, `culture`, `BodyProperties`, `beard_tags`, skills, equipment |
 | What the player is told | `Main/_Module/ModuleData/characters/heroes.xml` (961 `<Hero>`), `Main/_Module/ModuleData/heroes.xslt` (399 templates over vanilla `SandBox/ModuleData/heroes.xml`) | `faction`, `father`, `mother`, `spouse`, and the encyclopedia `text` |
 
 The encyclopedia shows the name and the biography side by side, so a player reads both at once.
@@ -17,9 +17,17 @@ The encyclopedia shows the name and the biography side by side, so a player read
 ## Load order, and what "wins" actually means
 
 `Main/_Module/SubModule.xml`: line 96 `lords.xslt`, line 106 `heroes.xslt`, line 148
-`characters/heroes.xml`, line 157 `characters/lords.xml`. 179 ids are defined in both lords files;
-their names agree on 178, the one deliberate exception being `lord_WE9_l`, where `lords.xml` has
-the fuller "Duinhir, Lord of Morthond".
+`characters/heroes.xml`, line 157 `characters/lords.xml`. 176 ids are defined in both lords files
+(179 until #644 removed three); their names agree on 175, the one deliberate exception being
+`lord_WE9_l`, where `lords.xml` has the fuller "Duinhir, Lord of Morthond".
+
+**None of them should be.** Mike, 2026-09-23: "If the lords are vanilla they should be in the xslt.
+If they are created new, they should be in lords.xml." A second definition is not an override
+layer, for two reasons below: the row silently wins every attribute it states, and its equipment
+sets are ADDED to the template's. The 176 are #648; #644 moved the three Nazgul (`lord_1_48_1/2/3`)
+as the worked example: each value the engine used to take from the row (race, age 20, face age
+22.19) went into the template, then the row was deleted. `NazgulRaceDataTests` pins that none of
+the Nine is defined in `lords.xml` again.
 
 **The plain XML wins per ATTRIBUTE, not per node.** `MBObjectManager.MergeElementAttributes` sets
 only the attributes the later document actually declares:
@@ -37,6 +45,15 @@ does not use it (the one TAOM file that does is the player-start override,
 all seventeen read `false` on both sides today. Both new tests model the merge this way, because a
 whole-node model reads the eighteenth one wrong.
 
+**Child elements merge by key, and equipment UNIONS.** `<Equipments>` is `AlwaysPreferMerge` in
+`XmlSchemas/NPCCharacters.xsd`, with `EquipmentSet` unique on `id` + `civilian` + `stealth`, so a
+set whose id the template does not carry is appended rather than replacing anything.
+`BasicCharacterObject.Deserialize` then keeps every set, and `Hero.SetInitialValuesFromCharacter`
+(v1.5.3 `Hero.cs:2315`) takes `GetRandomElement()` of the battle and the civilian lists
+(`:2352`, `:2356`). A lord defined twice with different set ids is dressed in one kit or the other
+at random on every new campaign: 113 of the 176 (#648), and the Nazgul trio until #644, whose
+Nazgul kit showed up only some of the time.
+
 **The stylesheet is also not fed `lords.xml` alone.** `GetMergedXmlForManaged` groups by the
 `XmlName id`, and ten vanilla files share `id="NPCCharacters"` (`spnpccharacters`,
 `spnpccharactertemplates`, `obsolete_characters` twice, `bandits`, `caravans`,
@@ -53,7 +70,7 @@ that if a future vanilla patch adds ids in those files.
 |---|---|---|---|
 | `lords.xslt` names | 396 | all, in `taom_xslt_strings.xml` | yes |
 | `heroes.xslt` biographies | 399 | all, in `taom_xslt_strings.xml` | yes |
-| `characters/lords.xml` names | 1184 | 179 in `taom_xslt_strings.xml` + 988 in `taom_lord_name_strings.xml` (added 2026-09-17 by `tools/generate_name_localization_strings.py`, excludes the 179 overlap) | yes, ~1167/1184 |
+| `characters/lords.xml` names | 1181 | 176 in `taom_xslt_strings.xml` + 988 in `taom_lord_name_strings.xml` (added 2026-09-17 by `tools/generate_name_localization_strings.py`, excludes the 176 overlap) | yes, ~1164/1181 |
 | `characters/heroes.xml` biographies | 456 | **none** | **no, English-only** |
 
 Through 2026-09-16 an edit confined to `characters/lords.xml` had zero locale ripple. As of

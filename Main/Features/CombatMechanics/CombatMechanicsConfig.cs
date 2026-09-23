@@ -58,9 +58,10 @@ public class CrushThroughConfig
     };
 
     public bool OrcShieldCrushEnabled { get; set; } = true;
+    // nazghul: all nine of the Nine since #644 (Mike, 2026-09-23); three had it only as uruk.
     public List<string> OrcShieldCrushRaces { get; set; } = new List<string>
     {
-        "orc", "goblin", "uruk", "uruk_hai", "pale_uruk", "dg_uruk", "sauron",
+        "orc", "goblin", "uruk", "uruk_hai", "pale_uruk", "dg_uruk", "sauron", "nazghul",
     };
 }
 

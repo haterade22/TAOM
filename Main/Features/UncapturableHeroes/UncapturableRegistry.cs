@@ -58,9 +58,10 @@ public sealed class UncapturableRegistry : IUncapturableRegistry
             if (tables.HeroIds.Contains(heroStringId))
                 return true;
 
-            // Axis 2 — named lore sets. THIS is the axis that finds the Nine: six of them carry no
-            // race attribute (so they are vanilla race 0, human) and three are race="uruk", so a
-            // race list either misses them or over-matches every uruk lord in the game.
+            // Axis 2 — named lore sets. THIS is the axis that finds the Nine. Before #644 six carried
+            // no race attribute (vanilla race 0, human) and three were race="uruk", so a race list
+            // either missed them or over-matched every uruk lord; they are race nazghul now, and the
+            // set still names exactly the Nine whatever their race data says.
             if (tables.IncludesNazgulSet && _nazgul.IsWraith(heroStringId))
                 return true;
         }

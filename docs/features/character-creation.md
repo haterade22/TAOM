@@ -401,7 +401,7 @@ CC parents + child preview at every narrative stage are rendered by the engine v
 
 All animation files referenced in the dwarf block (`anim_male_custom`, `anim_childhood_*`, `anim_father_*`, `anim_mother_*`, `anim_toddler_*`, `anim_rider_story_background_*`) are skeleton-flexible — they work on dwarf, human, orc, uruk, and elf skeletons identically. No re-targeting needed even for non-human-skeleton races.
 
-**Current race coverage (verified 2026-05-22):** all 10 race ids TAOM consumes (`berserker`, `cave_troll`, `dg_uruk`, `dwarf`, `elf`, `goblin`, `orc`, `pale_uruk`, `uruk`, `uruk_hai`) have complete `_facegen` entries with 106/31 action parity. `human` uses the engine default. The 3 LOTRLOME-only races TAOM doesn't consume (`nazghul`, `hill_troll`, `saruman`) are also complete and ride along in the snapshot.
+**Current race coverage (verified 2026-05-22):** all 10 race ids TAOM consumes (`berserker`, `cave_troll`, `dg_uruk`, `dwarf`, `elf`, `goblin`, `orc`, `pale_uruk`, `uruk`, `uruk_hai`) have complete `_facegen` entries with 106/31 action parity. `human` uses the engine default. The 3 remaining LOTRLOME `_facegen` races (`nazghul`, `hill_troll`, `saruman`) are also complete and ride along in the snapshot; `nazghul` is the Nine's race since #644, set on the lords themselves, never in `cultures.json`.
 
 See:
 - Memory `feedback_lotrlome_action_set_aliases.md` — recurring-failure notes + recipe.

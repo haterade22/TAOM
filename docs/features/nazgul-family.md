@@ -26,8 +26,8 @@ The wraiths can acquire family two ways, and both are addressed:
   Every marriage path in the engine funnels through `MarriageModel`, so blocking it there is complete.
 
 A third potential source — TAOM's initial child generation — is already a non-issue: it excludes both
-wraith cultures (`mordor` for `lord_1_15`/`155`/`16`/`28`/`38`, `dolguldur` for the `lord_1_48*`
-cluster) in `initial_child_generation.json`, and `HeroCreator.CreateChild` never sets a parent link
+wraith cultures (`mordor` for `lord_1_15`/`155`/`16`/`28`/`38` and `lord_1_48_1`/`_2`/`_3`,
+`dolguldur` for Khamûl, `lord_1_48`) in `initial_child_generation.json`, and `HeroCreator.CreateChild` never sets a parent link
 anyway (the "parent" is only an appearance/culture template).
 
 ## Architecture
@@ -98,9 +98,14 @@ so a skill_template-only scope would miss him — he is canonically the second o
 | `lord_1_28` | Nazgûl, The Betrayer | mordor |
 | `lord_1_38` | Nazgûl, the Undying | mordor |
 | `lord_1_48` | Khamûl the Easterling (second of the Nine) | dolguldur |
-| `lord_1_48_1` | Nazgûl, the Tainted | dolguldur |
-| `lord_1_48_2` | Nazgûl, the Shadow of Northmen | dolguldur |
-| `lord_1_48_3` | Nazgûl, the Shadow of Umbar | dolguldur |
+| `lord_1_48_1` | Nazgûl, the Tainted | mordor |
+| `lord_1_48_2` | Nazgûl, the Shadow of Northmen | mordor |
+| `lord_1_48_3` | Nazgûl, the Shadow of Umbar | mordor |
+
+All nine are race `nazghul` since #644 (2026-09-23), each defined once, by a `lords.xslt` template
+(the three `lord_1_48_*` used to have a second, `characters/lords.xml` definition as well). Existing
+saves adopt the race: `RacePersistenceService` leaves the Nine's XML race alone
+([hero-race.md](hero-race.md)).
 
 ## Key Files
 

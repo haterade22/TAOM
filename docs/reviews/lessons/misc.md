@@ -174,3 +174,19 @@ random vanilla lines with lip-sync all the time. The log already in hand contrad
   be impossible if the doc were right. A negative claim about a lookup with fallbacks is the most
   likely kind to be wrong (`csharp-architecture.md` "Lookup Functions With Fallbacks").
 - **Source:** issue #635 (correction comment); `docs/features/kingdom-voices.md` "Dialogue voice-over", corrected 2026-09-22.
+
+### A change that deletes or moves data invalidates numbers and line refs elsewhere: grep for those too (#644, 2026-09-23)
+
+#644 deleted three `characters/lords.xml` rows and inserted nine `lords.xslt` lines. The stale-text
+sweep grepped for how docs PHRASE the old facts and fixed those, but the completeness lens still found
+row counts (1184, 179 in both files, uruk 59 and 163), a line citation (`lords.xslt:1060`), a
+paraphrase the grep missed ("NOT reachable by race") and a how-to that now advised the opposite of the
+new rule, across eleven files.
+
+- **Why missed:** the sweep looked for the old facts' wording, not for the measurements a deletion
+  changes, and it covered the docs that mention the subject rather than the docs that own the changed
+  code and data.
+- **Prevent:** after a data change, grep the docs for the old counts and every `file:line` citation
+  into the edited files, open the owning feature doc of each changed class, and re-measure a count
+  with the command its doc prints rather than subtracting by hand.
+- **Source:** `docs/reviews/rca-nazgul-race-2026-09-23.md` finding 5 (2026-09-23).

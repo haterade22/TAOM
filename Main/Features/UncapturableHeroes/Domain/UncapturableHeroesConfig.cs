@@ -17,13 +17,13 @@ public class UncapturableHeroesConfig
     /// <c>nazgul_nine</c> is known, resolving to <see cref="NazgulFamily.INazgulRegistry"/>.
     /// Unknown names are skipped and warned, never coerced.
     ///
-    /// This axis is load-bearing, because the Nine are NOT reachable by race. Verified against
-    /// TAOM data on 2026-08-26: six of them (<c>lord_1_15</c>, <c>lord_1_155</c>, <c>lord_1_16</c>,
-    /// <c>lord_1_28</c>, <c>lord_1_38</c>, <c>lord_1_48</c>) carry no <c>race</c> attribute in
-    /// <c>lords.xslt</c> at all, so they inherit vanilla race 0 (human); the other three
-    /// (<c>lord_1_48_1/_2/_3</c>) are <c>race="uruk"</c> in <c>characters/lords.xml</c>. A
-    /// race-keyed list would free six of the Nine, and adding <c>uruk</c> to catch the other three
-    /// would protect every uruk lord in the game.</summary>
+    /// This axis is load-bearing: it names exactly the Nine whatever their race data says. When
+    /// the feature shipped (2026-08-26) no race could reach them: six (<c>lord_1_15</c>,
+    /// <c>lord_1_155</c>, <c>lord_1_16</c>, <c>lord_1_28</c>, <c>lord_1_38</c>, <c>lord_1_48</c>)
+    /// carried no <c>race</c> attribute, so they were vanilla race 0 (human), and the other three
+    /// (<c>lord_1_48_1/_2/_3</c>) were <c>race="uruk"</c>. Since #644 all nine are
+    /// <c>race="nazghul"</c>, which <see cref="UncapturableRaces"/> could name, but the shipped
+    /// rule lists only <c>sauron</c>.</summary>
     public List<string> HeroSets { get; set; } = new List<string> { "nazgul_nine" };
 
     /// <summary>Individual hero StringIds that can never be taken prisoner. <c>lord_1_17</c> is

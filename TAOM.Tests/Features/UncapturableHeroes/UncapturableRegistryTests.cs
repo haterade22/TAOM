@@ -14,13 +14,14 @@ namespace TAOM.Tests.Features.UncapturableHeroes;
 /// Identity tests for the capture-immunity qualifier, one per resolution row.
 ///
 /// The load-bearing pair is <see cref="IsUncapturable_WraithWithHumanRace_IsProtected"/> and
-/// <see cref="IsUncapturable_WraithWithUrukRace_IsProtected"/>. Verified against TAOM data on
-/// 2026-08-26: six of the Nine (<c>lord_1_15</c>, <c>lord_1_155</c>, <c>lord_1_16</c>,
-/// <c>lord_1_28</c>, <c>lord_1_38</c>, <c>lord_1_48</c>) carry no <c>race</c> attribute in
-/// <c>lords.xslt</c>, so they inherit vanilla race 0 (human); the other three
-/// (<c>lord_1_48_1/_2/_3</c>) are <c>race="uruk"</c> in <c>characters/lords.xml</c>. A race-keyed
-/// list would free six of the Nine, and adding <c>uruk</c> to catch the rest would protect every
-/// uruk lord in the game. The hero-set axis is the only one that covers all nine.
+/// <see cref="IsUncapturable_WraithWithUrukRace_IsProtected"/>. When the feature shipped
+/// (2026-08-26) six of the Nine (<c>lord_1_15</c>, <c>lord_1_155</c>, <c>lord_1_16</c>,
+/// <c>lord_1_28</c>, <c>lord_1_38</c>, <c>lord_1_48</c>) carried no <c>race</c> attribute, so they
+/// were vanilla race 0 (human), and the other three (<c>lord_1_48_1/_2/_3</c>) were
+/// <c>race="uruk"</c>. A race-keyed list would have freed six of the Nine, and adding <c>uruk</c>
+/// would have protected every uruk lord in the game. Since #644 all nine are <c>race="nazghul"</c>,
+/// but the shipped race rule names only <c>sauron</c>, so the hero-set axis is still the only one
+/// that covers all nine, and these tests keep it working whatever race an agent reports.
 /// </summary>
 [TestClass]
 public class UncapturableRegistryTests
@@ -96,14 +97,14 @@ public class UncapturableRegistryTests
     [TestMethod]
     public void IsUncapturable_WraithWithHumanRace_IsProtected()
     {
-        // Six of the Nine are race 0. A race-only qualifier frees all six.
+        // Before #644 six of the Nine were race 0. A race-only qualifier freed all six.
         Assert.IsTrue(_sut.IsUncapturable(WitchKing, HumanRace));
     }
 
     [TestMethod]
     public void IsUncapturable_WraithWithUrukRace_IsProtected()
     {
-        // The other three are race="uruk". Caught by the hero set, NOT by the race rule.
+        // Before #644 the other three were race="uruk". Caught by the hero set, NOT by the race rule.
         Assert.IsTrue(_sut.IsUncapturable(NazgulTainted, UrukRace));
     }
 

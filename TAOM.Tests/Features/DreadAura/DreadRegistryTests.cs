@@ -14,10 +14,10 @@ namespace TAOM.Tests.Features.DreadAura;
 /// Identity tests for the aura's two source axes and its target resist table.
 ///
 /// The load-bearing one is <see cref="IsDreadSource_NazgulHeroId_IsSource_EvenThoughRaceIsNotNazghul"/>.
-/// Verified against TAOM data on 2026-08-13: <c>lords.xslt</c> gives eight of the Nine no
-/// <c>race</c> attribute at all (they inherit vanilla race 0, human) and Khamûl
-/// (<c>lord_1_48</c>) is <c>race="orc"</c>. A race-only source list would emit zero auras for
-/// eight of the Nine; adding <c>orc</c> to catch Khamûl would hand the aura to every orc alive.
+/// When the aura shipped, six of the Nine carried no <c>race</c> attribute (vanilla race 0, human)
+/// and three were <c>race="uruk"</c>, so a race-only source list emitted zero auras for them. Since
+/// #644 all nine are <c>race="nazghul"</c>, but the hero set is still the axis that names exactly
+/// the Nine, so it has to hold whatever race an agent reports.
 /// </summary>
 [TestClass]
 public class DreadRegistryTests
@@ -72,11 +72,11 @@ public class DreadRegistryTests
     [TestMethod]
     public void IsDreadSource_NazgulHeroId_IsSource_EvenThoughRaceIsNotNazghul()
     {
-        // The Witch-King's race is vanilla 0 (human) in TAOM's data. Race cannot find him.
+        // Race 0 (human), as the Witch-King was before #644: the hero set must find him anyway.
         var isSource = _sut.IsDreadSource("lord_1_15", raceId: 0);
 
         Assert.IsTrue(isSource,
-            "The Nine are identified by hero StringId. If this fails, the aura is dead for eight of them.");
+            "The Nine are identified by hero StringId. If this fails, the aura depends on their race data.");
     }
 
     [TestMethod]

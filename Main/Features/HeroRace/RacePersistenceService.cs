@@ -3,6 +3,7 @@ using System.Linq;
 using TAOM.Adapters;
 using TAOM.Core.Domain;
 using TAOM.Core.Logging;
+using TAOM.Features.NazgulFamily;
 using TaleWorlds.CampaignSystem;
 
 namespace TAOM.Features.HeroRace;
@@ -15,6 +16,7 @@ public class RacePersistenceService : IRacePersistenceService
     // fallback gets permanently session-cached, silently breaking lifespan/fertility everywhere.
     private readonly IRaceManager _raceManager;
     private readonly IModLogger _logger;
+    private readonly INazgulRegistry _nazgul;
     private Dictionary<string, int> _heroRaceMap = new();
     // Issue #330 — race names in FaceGen index order at CAPTURE time, ";"-joined (the engine's own
     // GetRaceIds delimiter). The ints in _heroRaceMap are positions in the merged skins.xml <race>
@@ -28,11 +30,13 @@ public class RacePersistenceService : IRacePersistenceService
 
     public int CapturedRaceCount => _heroRaceMap.Count;
 
-    public RacePersistenceService(IHeroRosterAdapter heroRosterAdapter, IRaceManager raceManager, IModLogger logger)
+    public RacePersistenceService(IHeroRosterAdapter heroRosterAdapter, IRaceManager raceManager, IModLogger logger,
+        INazgulRegistry nazgul)
     {
         _heroRosterAdapter = heroRosterAdapter;
         _raceManager = raceManager;
         _logger = logger;
+        _nazgul = nazgul;
     }
 
     // A capture is only as trustworthy as the race table it was taken against. Below this many
@@ -106,6 +110,7 @@ public class RacePersistenceService : IRacePersistenceService
 
         var restoredCount = 0;
         var skippedInvalid = 0;
+        var keptWraiths = 0;
         var heroes = _heroRosterAdapter.GetAllAliveHeroRaces();
         // Issue #330 — legend path: translate the saved index through the save-time name list to
         // the CURRENT id, so a skins.xml merge-order shift between save and load can't remap races.
@@ -115,6 +120,17 @@ public class RacePersistenceService : IRacePersistenceService
         {
             if (!_heroRaceMap.TryGetValue(hero.StringId, out var savedRace))
                 continue;
+
+            // #644: a Ringwraith's race comes from its XML (nazghul). A save written before #644
+            // captured the old race (human for six, uruk for three), so restoring it would undo the
+            // data change on every existing campaign. The only runtime writer is the player's own
+            // face editor or character import, which a Player Switcher wraith can reach; that edit
+            // is deliberately dropped on load, a wraith stays a wraith (Mike, 2026-09-23).
+            if (_nazgul.IsWraith(hero.StringId))
+            {
+                keptWraiths++;
+                continue;
+            }
 
             if (legend != null)
             {
@@ -162,6 +178,8 @@ public class RacePersistenceService : IRacePersistenceService
             }
         }
 
+        if (keptWraiths > 0)
+            _logger.LogInfo($"RacePersistenceService: kept the XML race for {keptWraiths} Ringwraiths (#644).");
         _logger.LogInfo($"RacePersistenceService: Restored race for {restoredCount} heroes.");
     }
 

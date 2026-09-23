@@ -6,6 +6,6 @@ namespace TAOM.Features.NazgulFamily;
 /// </summary>
 public interface INazgulRegistry
 {
-    /// <summary>True if <paramref name="heroStringId"/> is one of the eight Ringwraith lords.</summary>
+    /// <summary>True if <paramref name="heroStringId"/> is one of the nine Ringwraith lords.</summary>
     bool IsWraith(string heroStringId);
 }

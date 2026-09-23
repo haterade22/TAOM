@@ -178,7 +178,7 @@ Code: No code changes needed
 
 ### Retire a lord or a clan
 
-1. A lord is two entries: an `<NPCCharacter>` in `Main/_Module/ModuleData/characters/lords.xml` (1,184
+1. A lord is two entries: an `<NPCCharacter>` in `Main/_Module/ModuleData/characters/lords.xml` (1,181
    of them) and a `<Hero>` in `characters/heroes.xml` (1,001) whose `faction="Faction.<clan>"` binds it
    to a clan in `characters/clans.xml` (145). Removing one and not the other leaves a half-entity.
 2. Both are save-bound (58 and 40 members in the table above), so the deletion never reaches a running

@@ -29,11 +29,11 @@ public class DreadAuraConfig
     /// <summary>Named compiled hero sets that project dread. Only <c>nazgul_nine</c> is known,
     /// resolving to <see cref="NazgulFamily.INazgulRegistry"/>. Unknown names are skipped + warned.
     ///
-    /// This axis exists because the Nine are NOT identifiable by race: verified 2026-08-13 against
-    /// <c>lords.xslt</c>, eight of them carry no <c>race</c> attribute at all (so they inherit
-    /// vanilla race 0, human) and Khamûl (<c>lord_1_48</c>) is <c>race="orc"</c>. A race-keyed
-    /// source list would emit zero auras for eight of the Nine, and adding <c>orc</c> to catch
-    /// Khamûl would hand the aura to every orc in the game.</summary>
+    /// This axis exists because the Nine were NOT identifiable by race when the aura shipped: six
+    /// carried no <c>race</c> attribute (vanilla race 0, human) and three were <c>race="uruk"</c>,
+    /// so a race-keyed source list emitted zero auras for them. Since #644 all nine are
+    /// <c>race="nazghul"</c>; the set stays the axis because it names exactly the Nine whatever
+    /// their race data says.</summary>
     public List<string> HeroSets { get; set; } = new List<string> { "nazgul_nine" };
 
     /// <summary>Individual hero StringIds that project dread. <c>lord_1_17</c> is Sauron; he is

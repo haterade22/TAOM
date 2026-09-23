@@ -57,14 +57,14 @@ public class ShippedDreadAuraConfigTests
     [TestMethod]
     public void ShippedConfig_KeepsTheNazgulHeroSet()
     {
-        // The load-bearing one. Eight of the Nine carry no race attribute in TAOM's data, so the
-        // hero-set axis is the ONLY thing that finds them. A well-meaning "simplify this to a race
-        // list" refactor would silently kill the aura for eight of nine wraiths with no error,
-        // no warning, and a config that still parses cleanly.
+        // The load-bearing one. The shipped race list names only sauron, so the hero-set axis is
+        // the ONLY thing that finds the Nine. A well-meaning "simplify this to a race list"
+        // refactor would silently kill the aura for all nine wraiths with no error, no warning,
+        // and a config that still parses cleanly.
         var config = _sut.GetConfig();
 
         CollectionAssert.Contains(config.HeroSets, "nazgul_nine",
-            "dread_aura_config.json must keep the nazgul_nine hero set. Race cannot identify the " +
+            "dread_aura_config.json must keep the nazgul_nine hero set. It is the axis that names the " +
             "Nazgul: see the _comment_heroSets note in the config and docs/features/dread-aura.md.");
     }
 

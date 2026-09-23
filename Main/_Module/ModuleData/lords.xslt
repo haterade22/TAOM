@@ -894,6 +894,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="race">nazghul</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_witch_king_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -948,6 +949,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="race">nazghul</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_nazgul_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1003,6 +1005,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="race">nazghul</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_nazgul_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1600,6 +1603,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="race">nazghul</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_nazgul_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -2093,6 +2097,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="race">nazghul</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_nazgul_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -3556,6 +3561,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.dolguldur</xsl:attribute>
+            <xsl:attribute name="race">nazghul</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_north_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -6108,17 +6114,18 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_48_1</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_48_1_name}Nazgûl, the Tainted</xsl:attribute>
-            <xsl:attribute name="age">31</xsl:attribute>
+            <xsl:attribute name="age">20</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="race">nazghul</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_nazgul_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.0116" build="1" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142"/>
+                <BodyProperties version="4" age="22.19" weight="0.0116" build="1" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142"/>
             </face>
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             <skills>
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <skill id="OneHanded" value="290" />
@@ -6163,17 +6170,18 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_48_2</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_48_2_name}Nazgûl, the Shadow of the Northmen</xsl:attribute>
-            <xsl:attribute name="age">9</xsl:attribute>
+            <xsl:attribute name="age">20</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="race">nazghul</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_nazgul_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.0116" build="1" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142"/>
+                <BodyProperties version="4" age="22.19" weight="0.0116" build="1" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142"/>
             </face>
                                                             <skills>
                                                                 <skill id="OneHanded" value="290" />
@@ -6218,17 +6226,18 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_48_3</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_48_3_name}Nazgûl, the Shadow of Umbar</xsl:attribute>
-            <xsl:attribute name="age">11</xsl:attribute>
+            <xsl:attribute name="age">20</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="race">nazghul</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_nazgul_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.0116" build="1" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142"/>
+                <BodyProperties version="4" age="22.19" weight="0.0116" build="1" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142"/>
             </face>
                                                             <skills>
                                                                 <skill id="OneHanded" value="290" />

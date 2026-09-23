@@ -12,7 +12,7 @@
     "monsterAutoCrushEnabled": true,
     "monsterCrushMonsterIds": ["cave_troll", "hill_troll", "taom_war_elephant", "taom_mumakil", "spider", "sauron"],
     "orcShieldCrushEnabled": true,
-    "orcShieldCrushRaces": ["orc", "goblin", "uruk", "uruk_hai", "pale_uruk", "dg_uruk", "sauron"]
+    "orcShieldCrushRaces": ["orc", "goblin", "uruk", "uruk_hai", "pale_uruk", "dg_uruk", "sauron", "nazghul"]
   },
   "chargeKnockdown": {
     "enabled": true,

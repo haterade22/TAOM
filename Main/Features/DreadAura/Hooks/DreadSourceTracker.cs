@@ -54,9 +54,9 @@ public sealed class DreadSourceTracker
         if (character == null)
             return;
 
-        // Hero StringId is the axis that actually finds the Nine: eight of them carry no race in
-        // TAOM's data. `as CharacterObject` rather than a cast, because a mission agent can carry
-        // a plain BasicCharacterObject outside a campaign.
+        // Hero StringId is the axis that finds the Nine (the nazgul_nine hero set; see
+        // DreadAuraConfig.HeroSets). `as CharacterObject` rather than a cast, because a mission
+        // agent can carry a plain BasicCharacterObject outside a campaign.
         var heroStringId = (character as CharacterObject)?.HeroObject?.StringId;
 
         if (!_registry.IsDreadSource(heroStringId, character.Race))

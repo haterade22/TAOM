@@ -63,15 +63,15 @@ public class ShippedUncapturableHeroesConfigTests
     [TestMethod]
     public void ShippedConfig_KeepsTheNazgulHeroSet()
     {
-        // The load-bearing one. Six of the Nine carry no race attribute and the other three are
-        // race="uruk", so the hero-set axis is the ONLY thing that covers all nine. A well-meaning
-        // "simplify this to a race list" refactor would silently free six wraiths with no error,
-        // no warning, and a config that still parses cleanly.
+        // The load-bearing one. The shipped race rule names only sauron, so the hero-set axis is
+        // the ONLY thing that covers all nine. A well-meaning "simplify this to a race list"
+        // refactor would silently free every wraith with no error, no warning, and a config that
+        // still parses cleanly.
         var config = _sut.GetConfig();
 
         CollectionAssert.Contains(config.HeroSets, "nazgul_nine",
-            "uncapturable_heroes_config.json must keep the nazgul_nine hero set. Race cannot "
-            + "identify the Nazgul: see docs/features/uncapturable-heroes.md.");
+            "uncapturable_heroes_config.json must keep the nazgul_nine hero set. It is the axis that "
+            + "names the Nazgul: see docs/features/uncapturable-heroes.md.");
     }
 
     [TestMethod]
