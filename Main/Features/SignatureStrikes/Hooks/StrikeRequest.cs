@@ -7,15 +7,15 @@ namespace TAOM.Features.SignatureStrikes.Hooks;
 /// <summary>
 /// One ring waiting for the next mission tick. Holds two <c>Agent</c> handles across exactly one
 /// frame; the runner re-gates both with <c>AgentSlotIdentity.IsCurrentOccupant</c> before either
-/// touches native state (#592). The impact is a value, never re-read off the primary victim.
+/// touches native state (#592). The centre is a value read at the hit, never re-read off an agent.
 /// </summary>
 public readonly struct StrikeRequest
 {
-    public StrikeRequest(Agent attacker, Agent? primaryVictim, Vec3 impact, StrikeEffect effect, string attackerName)
+    public StrikeRequest(Agent attacker, Agent? primaryVictim, Vec3 center, StrikeEffect effect, string attackerName)
     {
         Attacker = attacker;
         PrimaryVictim = primaryVictim;
-        Impact = impact;
+        Center = center;
         Effect = effect;
         AttackerName = attackerName;
     }
@@ -25,7 +25,9 @@ public readonly struct StrikeRequest
     /// <summary>Null on a ground hit.</summary>
     public Agent? PrimaryVictim { get; }
 
-    public Vec3 Impact { get; }
+    /// <summary>Where the ring is centred: the hit point, or the attacker's position at the hit
+    /// for a <see cref="StrikeOrigin.Self"/> strike.</summary>
+    public Vec3 Center { get; }
 
     public StrikeEffect Effect { get; }
 

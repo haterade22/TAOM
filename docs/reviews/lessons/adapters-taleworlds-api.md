@@ -653,3 +653,21 @@ a state vanilla never reaches, so it was invisible in both the diff and the deco
 WinDbgX headless). Spend the review budget after the stack, not before it.
 
 **Source:** #627 howdah crew, 2026-09-19. Dump at `E:\taom-dumps\bannerlord_hang_2026-09-19_1830.dmp`.
+
+### An engine float handed straight into a native call is a gate too (#645, 2026-09-23)
+
+`StrikeSoundPlayer` passed `Agent.GetEyeGlobalPosition()` straight into `Mission.MakeSound`, a one-line
+`MBAPI` wrapper (v1.5.3 `Mission.cs:1849-1852`) with no managed check, while the same runner gated its
+ring centre a few lines later. `CustomAttacksUtils.IsBlowGeometrySafe` keeps the same values out of
+`MakeSound` and `OnAgentHit`. What a non-finite position does inside native is unproven: the spider AV
+that guard was written for was later traced to `HandleBlowAux` (`rca-spider-dismount-on-hit-2026-06-15.md`),
+so the gate is a defence, not a known crash fix.
+
+- **Why missed:** `csharp-architecture.md` names four NaN categories (config floats at load, runtime
+  decision gates, float to int casts, a new input reaching an existing gate); a float that decides
+  nothing and is only handed on to native reads as none of them.
+- **Prevent:** before any call that passes an engine-sourced position, direction or magnitude into a
+  native API (`MakeSound`, `RegisterBlow`, particle and physics calls), finiteness-check every component
+  with `FiniteFloatValidator` and skip the call on failure, as the ring centre and `CustomAttacksUtils`
+  do.
+- **Source:** `docs/reviews/rca-nazgul-scream-2026-09-23.md` finding 1 (2026-09-23).

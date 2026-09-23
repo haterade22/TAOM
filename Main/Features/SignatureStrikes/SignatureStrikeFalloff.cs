@@ -11,7 +11,7 @@ namespace TAOM.Features.SignatureStrikes;
 public static class SignatureStrikeFalloff
 {
     /// <summary>
-    /// Multiplier in [0, 1] for a victim <paramref name="distance"/> metres from the impact. Zero
+    /// Multiplier in [0, 1] for a victim <paramref name="distance"/> metres from the ring's centre. Zero
     /// beyond <paramref name="outerRadius"/>, zero for any non-finite or negative input (every
     /// argument is an engine or config float; NaN must fail closed, never propagate).
     /// </summary>

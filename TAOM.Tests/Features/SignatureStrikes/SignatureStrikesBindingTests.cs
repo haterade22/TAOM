@@ -137,6 +137,67 @@ public class SignatureStrikesBindingTests
         Assert.AreEqual(3, Convert.ToInt32(Enum.Parse(usage, "AttackRight")));
     }
 
+    // ---- The scream's sound (#645) ---------------------------------------------------------
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void Mission_MakeSound_ResolvesWithTheOneShotSignature()
+    {
+        // Native module_sounds.xml documents exactly this one-shot: (id, position, false, true, -1, -1).
+        RequireGame();
+
+        var mission = AccessTools.TypeByName("TaleWorlds.MountAndBlade.Mission");
+        var vec3 = AccessTools.TypeByName("TaleWorlds.Library.Vec3");
+        var method = AccessTools.Method(mission, "MakeSound",
+            new[] { typeof(int), vec3, typeof(bool), typeof(bool), typeof(int), typeof(int) });
+
+        Assert.IsNotNull(method, "Mission.MakeSound(int, Vec3, bool, bool, int, int) did not resolve; the scream is silent.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void SoundEvent_GetEventIdFromString_IsAStaticIntLookup()
+    {
+        RequireGame();
+
+        var soundEvent = AccessTools.TypeByName("TaleWorlds.Engine.SoundEvent");
+        var method = AccessTools.Method(soundEvent, "GetEventIdFromString", new[] { typeof(string) });
+
+        Assert.IsNotNull(method, "SoundEvent.GetEventIdFromString(string) did not resolve.");
+        Assert.IsTrue(method!.IsStatic);
+        Assert.AreEqual(typeof(int), method.ReturnType, "-1 is the not-registered answer the runner falls back on");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void Agent_MakeVoice_AndTheYellFallbackResolve()
+    {
+        RequireGame();
+
+        var agent = AccessTools.TypeByName("TaleWorlds.MountAndBlade.Agent");
+        var skinVoiceType = AccessTools.TypeByName("TaleWorlds.MountAndBlade.SkinVoiceManager+SkinVoiceType");
+        var prediction = AccessTools.TypeByName("TaleWorlds.MountAndBlade.SkinVoiceManager+CombatVoiceNetworkPredictionType");
+        var voiceType = AccessTools.TypeByName("TaleWorlds.MountAndBlade.SkinVoiceManager+VoiceType");
+
+        Assert.IsNotNull(AccessTools.Method(agent, "MakeVoice", new[] { skinVoiceType, prediction }),
+            "Agent.MakeVoice(SkinVoiceType, CombatVoiceNetworkPredictionType) did not resolve.");
+        Assert.IsNotNull(AccessTools.Field(voiceType, "Yell"), "SkinVoiceManager.VoiceType.Yell is gone.");
+        CollectionAssert.Contains(Enum.GetNames(prediction), "NoPrediction");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void Agent_GetEyeGlobalPosition_ResolvesToAVec3()
+    {
+        RequireGame();
+
+        var agent = AccessTools.TypeByName("TaleWorlds.MountAndBlade.Agent");
+        var method = AccessTools.Method(agent, "GetEyeGlobalPosition", Type.EmptyTypes);
+
+        Assert.IsNotNull(method, "Agent.GetEyeGlobalPosition() did not resolve; the scream has no source.");
+        Assert.AreEqual("Vec3", method!.ReturnType.Name);
+    }
+
     [TestMethod]
     public void SubModule_WiresTheLogicAndHandsTheModelItsServices()
     {

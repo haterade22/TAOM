@@ -6,9 +6,11 @@ using TAOM.Features.SignatureStrikes.Domain;
 namespace TAOM.Features.SignatureStrikes;
 
 /// <summary>
-/// Pure decisions for a signature strike. Profiles are indexed once per process from the
-/// validated config (the provider already dropped unknown direction and kind names, so the parse
-/// here cannot fail on a row that reached it); the MCM cooldown multiplier is read live.
+/// Pure decisions for a signature strike. Each signature's profiles and cooldowns are indexed once
+/// per process from the validated config, in config order, so the index the registry resolved at
+/// spawn addresses them directly (the provider already dropped unknown direction and kind names
+/// and every strike whose kind has no cooldown, so the parse here cannot fail on a row that
+/// reached it); the MCM cooldown multiplier is read live.
 ///
 /// Every gate is a positive requirement, so a NaN mission time or last-strike time fails closed
 /// (csharp-architecture.md "Engine-Float Decision Gates").
@@ -17,7 +19,7 @@ public sealed class SignatureStrikeService : ISignatureStrikeService
 {
     private readonly ISignatureStrikesConfigProvider _configProvider;
     private readonly ISignatureStrikesSettingsProvider _settings;
-    private readonly Lazy<Dictionary<StrikeDirection, Profile>> _profiles;
+    private readonly Lazy<SignatureTable[]> _signatures;
 
     public SignatureStrikeService(
         ISignatureStrikesConfigProvider configProvider,
@@ -25,14 +27,14 @@ public sealed class SignatureStrikeService : ISignatureStrikeService
     {
         _configProvider = configProvider;
         _settings = settings;
-        _profiles = new Lazy<Dictionary<StrikeDirection, Profile>>(IndexProfiles);
+        _signatures = new Lazy<SignatureTable[]>(IndexSignatures);
     }
 
     public bool IsEnabled => _settings.IsEnabled;
 
     public StrikeEffect? Evaluate(in StrikeContext context)
     {
-        if (!PassesCommonGates(in context, out var profile))
+        if (!PassesCommonGates(in context, out var signature, out var profile))
             return null;
 
         var basis = ResolveDamageBasis(in context, profile);
@@ -48,7 +50,10 @@ public sealed class SignatureStrikeService : ISignatureStrikeService
             profile.Magnitude,
             profile.KnockDown,
             profile.KnockBack,
-            profile.FearMorale);
+            profile.FearMorale,
+            profile.Origin,
+            profile.Sound,
+            signature.Id);
     }
 
     public bool? DecideKnockdown(in StrikeContext context)
@@ -108,7 +113,7 @@ public sealed class SignatureStrikeService : ISignatureStrikeService
     // charges, and those must stay vanilla.
     private bool? DecideVerdict(in StrikeContext context, bool knockdown)
     {
-        if (!PassesCommonGates(in context, out var profile))
+        if (!PassesCommonGates(in context, out _, out var profile))
             return null;
 
         if (!(knockdown ? profile.KnockDown : profile.KnockBack))
@@ -126,8 +131,9 @@ public sealed class SignatureStrikeService : ISignatureStrikeService
         return true;
     }
 
-    private bool PassesCommonGates(in StrikeContext context, out Profile profile)
+    private bool PassesCommonGates(in StrikeContext context, out SignatureTable signature, out Profile profile)
     {
+        signature = default!;
         profile = default!;
 
         if (!_settings.IsEnabled
@@ -139,29 +145,31 @@ public sealed class SignatureStrikeService : ISignatureStrikeService
             || !context.HasMeleeWeapon)
             return false;
 
-        if (!_profiles.Value.TryGetValue(context.Direction, out profile))
+        var signatures = _signatures.Value;
+        if (context.SignatureIndex < 0 || context.SignatureIndex >= signatures.Length)
             return false;
 
-        return CooldownElapsed(in context, profile.Kind);
+        signature = signatures[context.SignatureIndex];
+        if (!signature.Profiles.TryGetValue(context.Direction, out profile)
+            || !signature.Cooldowns.TryGetValue(profile.Kind, out var cooldownSeconds))
+            return false;
+
+        return CooldownElapsed(in context, profile.Kind, cooldownSeconds);
     }
 
-    private bool CooldownElapsed(in StrikeContext context, StrikeKind kind)
+    private bool CooldownElapsed(in StrikeContext context, StrikeKind kind, float cooldownSeconds)
     {
         if (!FiniteFloatValidator.IsFinite(context.MissionTime))
             return false;
 
-        var last = kind == StrikeKind.Slam ? context.LastSlamTime : context.LastSweepTime;
+        var last = context.LastStrikeTimes.Get(kind);
 
         // A non-finite last-strike time is "never struck"; the roster seeds entries with NaN.
         if (!FiniteFloatValidator.IsFinite(last))
             return true;
 
-        var config = _configProvider.GetConfig();
-        var cooldown = (kind == StrikeKind.Slam ? config.SlamCooldownSeconds : config.SweepCooldownSeconds)
-            * _settings.CooldownMultiplier;
-
         // Positive requirement: elapsed must be at least the cooldown.
-        return context.MissionTime - last >= cooldown;
+        return context.MissionTime - last >= cooldownSeconds * _settings.CooldownMultiplier;
     }
 
     private int ResolveDamageBasis(in StrikeContext context, Profile profile)
@@ -185,31 +193,60 @@ public sealed class SignatureStrikeService : ISignatureStrikeService
         }
     }
 
-    private Dictionary<StrikeDirection, Profile> IndexProfiles()
+    private SignatureTable[] IndexSignatures()
     {
-        var index = new Dictionary<StrikeDirection, Profile>();
-        var strikes = _configProvider.GetConfig().Strikes;
-        if (strikes == null)
-            return index;
+        var signatures = _configProvider.GetConfig().Signatures ?? new List<SignatureConfig>();
+        var tables = new SignatureTable[signatures.Count];
+        for (var i = 0; i < signatures.Count; i++)
+            tables[i] = new SignatureTable(signatures[i]);
+        return tables;
+    }
 
-        foreach (var pair in strikes)
+    private sealed class SignatureTable
+    {
+        public SignatureTable(SignatureConfig? config)
         {
-            if (pair.Value == null
-                || !StrikeNames.TryParseDirection(pair.Key, out var direction)
-                || !StrikeNames.TryParseKind(pair.Value.Kind, out var kind))
-                continue;
+            Id = config?.Id ?? "";
 
-            index[direction] = new Profile(kind, pair.Value);
+            if (config?.Strikes != null)
+            {
+                foreach (var pair in config.Strikes)
+                {
+                    // All three names fail closed alike: a ring centred on the wrong point is worse
+                    // than no ring (the provider reverts an unknown origin before it gets here).
+                    if (pair.Value == null
+                        || !StrikeNames.TryParseDirection(pair.Key, out var direction)
+                        || !StrikeNames.TryParseKind(pair.Value.Kind, out var kind)
+                        || !StrikeNames.TryParseOrigin(pair.Value.Origin, out var origin))
+                        continue;
+
+                    Profiles[direction] = new Profile(kind, origin, pair.Value);
+                }
+            }
+
+            if (config?.Cooldowns != null)
+            {
+                foreach (var pair in config.Cooldowns)
+                {
+                    if (StrikeNames.TryParseKind(pair.Key, out var kind))
+                        Cooldowns[kind] = pair.Value;
+                }
+            }
         }
 
-        return index;
+        public string Id { get; }
+
+        public Dictionary<StrikeDirection, Profile> Profiles { get; } = new Dictionary<StrikeDirection, Profile>();
+
+        public Dictionary<StrikeKind, float> Cooldowns { get; } = new Dictionary<StrikeKind, float>();
     }
 
     private sealed class Profile
     {
-        public Profile(StrikeKind kind, StrikeProfileConfig config)
+        public Profile(StrikeKind kind, StrikeOrigin origin, StrikeProfileConfig config)
         {
             Kind = kind;
+            Origin = origin;
             OuterRadius = config.OuterRadius;
             InnerRadius = config.InnerRadius;
             DamageFraction = config.DamageFraction;
@@ -218,9 +255,11 @@ public sealed class SignatureStrikeService : ISignatureStrikeService
             KnockDown = config.KnockDown;
             KnockBack = config.KnockBack;
             FearMorale = config.FearMorale;
+            Sound = string.IsNullOrWhiteSpace(config.Sound) ? null : config.Sound;
         }
 
         public StrikeKind Kind { get; }
+        public StrikeOrigin Origin { get; }
         public float OuterRadius { get; }
         public float InnerRadius { get; }
         public float DamageFraction { get; }
@@ -229,5 +268,6 @@ public sealed class SignatureStrikeService : ISignatureStrikeService
         public bool KnockDown { get; }
         public bool KnockBack { get; }
         public float FearMorale { get; }
+        public string? Sound { get; }
     }
 }

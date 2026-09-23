@@ -1113,12 +1113,12 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Combat Mechanics")]
     [SettingPropertyBool("Signature Strikes", Order = 11, RequireRestart = false,
-        HintText = "Configured heroes (shipped: Sauron) get direction-mapped effects on any melee hit: an overhead is a Slam (the struck foe always goes down, enemies in a ring around the impact are knocked down and take part of the damage, a burst of fear drains their morale; also fires on an overhead into the ground), a side swing is a Sweep (the struck foe and enemies in front are staggered back). Never on a throw, a shot, a kick or bare hands. Cooldowns and radii live in signature_strikes_config.json.")]
+        HintText = "Configured heroes (shipped: Sauron and the Nine) get direction-mapped effects on any melee hit. Sauron: an overhead is a Slam (the struck foe always goes down, enemies in a ring around the impact are knocked down and take part of the damage, a burst of fear drains their morale; also fires on an overhead into the ground), a side swing is a Sweep (the struck foe and enemies in front are staggered back). The Nine: an overhead or a side swing is a Scream (enemies around the wraith take part of the damage, are staggered back and lose morale; the struck foe is staggered and frightened too). Never on a throw, a shot, a kick or bare hands. In a Custom Battle the struck foe keeps vanilla's knockdown and stagger rules; the ring and the fear still apply. Cooldowns and radii live in signature_strikes_config.json.")]
     public bool EnableSignatureStrikes { get; set; } = true;
 
     [SettingPropertyGroup("Combat Mechanics")]
     [SettingPropertyFloatingInteger("Signature Strike Cooldown Multiplier", 0.5f, 5f, "0.0x", Order = 12, RequireRestart = false,
-        HintText = "Multiplies both signature-strike cooldowns (shipped: Slam 20 s, Sweep 12 s). Raise it if Sauron feels overpowered; the JSON values need a full restart, this slider applies live.")]
+        HintText = "Multiplies every signature-strike cooldown (shipped: Sauron's Slam 20 s and Sweep 12 s, the Nine's Scream 15 s). Raise it if Sauron or the Nazgul feel overpowered; the JSON values need a full restart, this slider applies live.")]
     public float SignatureStrikeCooldownMultiplier { get; set; } = 1f;
 
     // --- Aura of Dread ---

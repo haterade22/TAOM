@@ -579,6 +579,13 @@
 			<variation path="LOTR/Monsters/Ent/ent_voice_8.wav" weight="1" />
 			<variation path="LOTR/Monsters/Ent/ent_voice_9.wav" weight="1" />
 		</module_sound>
+		<!--Sounds in LOTR/Mordor/Nazgul-->
+		<!-- The Nine's SCREAM (#645): generated 2026-09-23 with ElevenLabs text to sound effects on the Creator plan (commercial licence); prompts and processing in docs/features/signature-strikes.md, Sound provenance. Mono Ogg Vorbis, peak -1 dBFS. -->
+		<module_sound name="LOTR/Mordor/Nazgul/nazgul_scream" sound_category="mission_voice_shout" min_pitch_multiplier="0.95" max_pitch_multiplier="1.05">
+			<variation path="LOTR/Mordor/Nazgul/nazgul_scream_1.ogg" weight="1" />
+			<variation path="LOTR/Mordor/Nazgul/nazgul_scream_2.ogg" weight="1" />
+			<variation path="LOTR/Mordor/Nazgul/nazgul_scream_3.ogg" weight="1" />
+		</module_sound>
 		<!--Sounds in LOTR/OST-->
 		<module_sound name="LOTR/OST/Flaming Red Hair.wav" sound_category="mission_ambient_3d_medium" path="LOTR/OST/Flaming Red Hair.wav" />
 		<module_sound name="LOTR/OST/Charge Theoden.mp3" sound_category="mission_ambient_3d_medium" path="LOTR/OST/Charge Theoden.mp3" />

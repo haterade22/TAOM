@@ -381,6 +381,7 @@ Two consequences worth being deliberate about:
 - [nazgul-family.md](nazgul-family.md): the wraith roster in `NazgulRegistry`, shared with this feature.
 - [banner-bearers.md](banner-bearers.md): the MissionLogic + validated-config feature this mirrors.
 - [coop-interop.md](coop-interop.md): the MCM settings fingerprint the four new knobs join.
+- [signature-strikes.md](signature-strikes.md): Sauron's and the Nine's strikes, whose fear burst reuses `DreadAgentGate.CanAffect` and `IDreadRegistry.ResolveResist`.
 
 ---
 

@@ -78,4 +78,34 @@ public class StrikeNamesTests
     {
         Assert.IsFalse(StrikeNames.TryParseKind("Nova", out _));
     }
+
+    [TestMethod]
+    public void TryParseKind_Scream_Parses()
+    {
+        Assert.IsTrue(StrikeNames.TryParseKind("scream", out var kind));
+        Assert.AreEqual(StrikeKind.Scream, kind);
+    }
+
+    [TestMethod]
+    public void TryParseOrigin_MemberName_IsCaseInsensitive()
+    {
+        Assert.IsTrue(StrikeNames.TryParseOrigin("self", out var origin));
+        Assert.AreEqual(StrikeOrigin.Self, origin);
+        Assert.IsTrue(StrikeNames.TryParseOrigin(" Impact ", out origin));
+        Assert.AreEqual(StrikeOrigin.Impact, origin);
+    }
+
+    [TestMethod]
+    public void TryParseOrigin_NumericString_IsRejected()
+    {
+        Assert.IsFalse(StrikeNames.TryParseOrigin("1", out _));
+    }
+
+    [TestMethod]
+    public void TryParseOrigin_UnknownOrEmpty_IsRejected()
+    {
+        Assert.IsFalse(StrikeNames.TryParseOrigin("Sky", out _));
+        Assert.IsFalse(StrikeNames.TryParseOrigin(null, out _));
+        Assert.IsFalse(StrikeNames.TryParseOrigin("  ", out _));
+    }
 }

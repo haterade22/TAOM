@@ -71,12 +71,10 @@ public sealed class SignatureStrikesMissionLogic : MissionLogic
             if (!effect.HasValue)
                 return;
             // Stamp at enqueue: the later bodies of one cleaving swing read as inside the cooldown.
-            if (effect.Value.Kind == StrikeKind.Slam)
-                entry.LastSlamTime = now;
-            else
-                entry.LastSweepTime = now;
-            _buffer.Enqueue(new StrikeRequest(
-                attacker, victim, collisionData.CollisionGlobalPosition, effect.Value, attacker.Name));
+            entry.Times = entry.Times.With(effect.Value.Kind, now);
+            // A scream rings the wraith where it stands; a slam rings the point the weapon hit.
+            var center = effect.Value.Origin == StrikeOrigin.Self ? attacker.Position : collisionData.CollisionGlobalPosition;
+            _buffer.Enqueue(new StrikeRequest(attacker, victim, center, effect.Value, attacker.Name));
         }
         catch (Exception ex)
         {

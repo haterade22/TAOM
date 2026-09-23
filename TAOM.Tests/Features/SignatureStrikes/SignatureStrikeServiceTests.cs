@@ -11,7 +11,7 @@ namespace TAOM.Tests.Features.SignatureStrikes;
 /// must stay silent on: a parry, a kick, a throw, a horse charge, a hit that is still inside the
 /// cooldown. The verdicts share the cooldown with the ring on purpose: a slam is ONE package
 /// (guaranteed knockdown + ring + fear) at most once per cooldown, and every other overhead is a
-/// vanilla hit.
+/// vanilla hit. Runs against the compiled defaults: Sauron at index 0, the Nine at index 1.
 /// </summary>
 [TestClass]
 public class SignatureStrikeServiceTests
@@ -33,9 +33,16 @@ public class SignatureStrikeServiceTests
         _sut = new SignatureStrikeService(_configProvider, _settings);
     }
 
-    // A clean overhead strike on an unmounted human, well outside every cooldown.
+    // Positions in the compiled default Signatures list, the one the service indexes.
+    private const int Sauron = 0;
+    private const int Nazgul = 1;
+
+    private static StrikeKindTimes Struck(StrikeKind kind, float at) => default(StrikeKindTimes).With(kind, at);
+
+    // A clean overhead strike by Sauron on an unmounted human, well outside every cooldown.
     private static StrikeContext Overhead() => new StrikeContext(
         IsSignatureAttacker: true,
+        SignatureIndex: Sauron,
         Direction: StrikeDirection.Overhead,
         Collision: StrikeCollision.StrikeAgent,
         IsCanceled: false,
@@ -50,10 +57,137 @@ public class SignatureStrikeServiceTests
         HasShrugOff: false,
         InflictedDamage: 100,
         MissionTime: 30f,
-        LastSlamTime: float.NaN,
-        LastSweepTime: float.NaN);
+        LastStrikeTimes: default);
 
     private static StrikeContext Left() => Overhead() with { Direction = StrikeDirection.Left };
+
+    private static StrikeContext NazgulOverhead() => Overhead() with { SignatureIndex = Nazgul };
+
+    // ---- The Nine's SCREAM (#645) ---------------------------------------------------------------
+
+    [TestMethod]
+    public void Evaluate_NazgulOverhead_ReturnsAScreamAroundTheWraith()
+    {
+        var effect = _sut.Evaluate(NazgulOverhead());
+
+        Assert.IsTrue(effect.HasValue);
+        Assert.AreEqual(StrikeKind.Scream, effect!.Value.Kind);
+        Assert.AreEqual(StrikeOrigin.Self, effect.Value.Origin);
+        Assert.AreEqual(100, effect.Value.DamageBasis);
+        Assert.AreEqual(6f, effect.Value.OuterRadius, 0.001f);
+        Assert.AreEqual(2.5f, effect.Value.InnerRadius, 0.001f);
+        Assert.AreEqual(0.3f, effect.Value.DamageFraction, 0.001f);
+        Assert.AreEqual(25f, effect.Value.FearMorale, 0.001f);
+        Assert.IsTrue(effect.Value.KnockBack);
+        Assert.IsFalse(effect.Value.KnockDown);
+        Assert.AreEqual("LOTR/Mordor/Nazgul/nazgul_scream", effect.Value.Sound);
+        Assert.AreEqual("nazgul", effect.Value.SignatureId);
+    }
+
+    [TestMethod]
+    public void Evaluate_NazgulSideSwings_AlsoScream()
+    {
+        Assert.AreEqual(StrikeKind.Scream, _sut.Evaluate(NazgulOverhead() with { Direction = StrikeDirection.Left })!.Value.Kind);
+        Assert.AreEqual(StrikeKind.Scream, _sut.Evaluate(NazgulOverhead() with { Direction = StrikeDirection.Right })!.Value.Kind);
+    }
+
+    [TestMethod]
+    public void Evaluate_NazgulThrust_ReturnsNull()
+    {
+        Assert.IsNull(_sut.Evaluate(NazgulOverhead() with { Direction = StrikeDirection.Thrust }));
+    }
+
+    [TestMethod]
+    public void Evaluate_NazgulSideSwingInsideTheCooldownOfAnOverheadScream_ReturnsNull()
+    {
+        // One timer for all three directions: the overhead scream 10 s ago holds the side swing.
+        Assert.IsNull(_sut.Evaluate(NazgulOverhead() with
+        {
+            Direction = StrikeDirection.Left,
+            LastStrikeTimes = Struck(StrikeKind.Scream, 20f),
+            MissionTime = 30f,
+        }));
+    }
+
+    [TestMethod]
+    public void Evaluate_NazgulExactlyAtTheScreamCooldown_ReturnsEffect()
+    {
+        Assert.IsNotNull(_sut.Evaluate(NazgulOverhead() with { LastStrikeTimes = Struck(StrikeKind.Scream, 15f), MissionTime = 30f }));
+    }
+
+    [TestMethod]
+    public void Evaluate_ScreamCooldownIgnoresTheOtherKindsStamps()
+    {
+        // A stamp under another kind is not this signature's timer.
+        Assert.IsNotNull(_sut.Evaluate(NazgulOverhead() with { LastStrikeTimes = Struck(StrikeKind.Slam, 29f), MissionTime = 30f }));
+    }
+
+    [TestMethod]
+    public void Evaluate_NazgulOverheadIntoTheGround_ReturnsNull()
+    {
+        // The scream has no world-hit basis: it answers a hit on a foe, not on the ground.
+        Assert.IsNull(_sut.Evaluate(NazgulOverhead() with
+        {
+            Collision = StrikeCollision.HitWorld,
+            IsColliderAgent = false,
+            InflictedDamage = 0,
+        }));
+    }
+
+    [TestMethod]
+    public void DecideKnockdown_Scream_ReturnsNull()
+    {
+        Assert.IsNull(_sut.DecideKnockdown(NazgulOverhead()));
+    }
+
+    [TestMethod]
+    public void DecideKnockback_ScreamOnUnmountedHuman_ReturnsTrue()
+    {
+        Assert.AreEqual(true, _sut.DecideKnockback(NazgulOverhead()));
+        Assert.AreEqual(true, _sut.DecideKnockback(NazgulOverhead() with { Direction = StrikeDirection.Right }));
+    }
+
+    [TestMethod]
+    public void DecideKnockback_ScreamInsideTheCooldown_ReturnsNull()
+    {
+        Assert.IsNull(_sut.DecideKnockback(NazgulOverhead() with { LastStrikeTimes = Struck(StrikeKind.Scream, 20f), MissionTime = 30f }));
+    }
+
+    [TestMethod]
+    public void Evaluate_SauronSlam_KeepsItsOwnIdentity()
+    {
+        var effect = _sut.Evaluate(Overhead());
+
+        Assert.AreEqual("sauron", effect!.Value.SignatureId);
+        Assert.AreEqual(StrikeOrigin.Impact, effect.Value.Origin);
+        Assert.IsNull(effect.Value.Sound);
+    }
+
+    [TestMethod]
+    public void Evaluate_ProfileWithUnknownOrigin_ReturnsNull()
+    {
+        // The three names the service parses fail closed alike: a ring centred on the wrong point
+        // is worse than no ring. The provider already reverts an unknown origin; this pins the
+        // service for any config that did not come through it.
+        _config.Signatures[0].Strikes["Overhead"].Origin = "Sky";
+
+        Assert.IsNull(_sut.Evaluate(Overhead()));
+    }
+
+    [TestMethod]
+    public void Evaluate_SignatureIndexOutOfRange_ReturnsNull()
+    {
+        Assert.IsNull(_sut.Evaluate(Overhead() with { SignatureIndex = 2 }));
+        Assert.IsNull(_sut.Evaluate(Overhead() with { SignatureIndex = -1 }));
+    }
+
+    [TestMethod]
+    public void Evaluate_NoSignaturesConfigured_ReturnsNull()
+    {
+        _config.Signatures = new System.Collections.Generic.List<SignatureConfig>();
+
+        Assert.IsNull(_sut.Evaluate(Overhead()));
+    }
 
     // ---- Evaluate: direction mapping ------------------------------------------------------
 
@@ -254,26 +388,26 @@ public class SignatureStrikeServiceTests
     [TestMethod]
     public void Evaluate_InsideTheSlamCooldown_ReturnsNull()
     {
-        Assert.IsNull(_sut.Evaluate(Overhead() with { LastSlamTime = 20f, MissionTime = 30f }));
+        Assert.IsNull(_sut.Evaluate(Overhead() with { LastStrikeTimes = Struck(StrikeKind.Slam, 20f), MissionTime = 30f }));
     }
 
     [TestMethod]
     public void Evaluate_ExactlyAtTheSlamCooldown_ReturnsEffect()
     {
-        Assert.IsNotNull(_sut.Evaluate(Overhead() with { LastSlamTime = 10f, MissionTime = 30f }));
+        Assert.IsNotNull(_sut.Evaluate(Overhead() with { LastStrikeTimes = Struck(StrikeKind.Slam, 10f), MissionTime = 30f }));
     }
 
     [TestMethod]
     public void Evaluate_SweepCooldownIsIndependentOfTheSlamCooldown()
     {
         // A slam a second ago does not gate a sweep.
-        Assert.IsNotNull(_sut.Evaluate(Left() with { LastSlamTime = 29f, MissionTime = 30f }));
+        Assert.IsNotNull(_sut.Evaluate(Left() with { LastStrikeTimes = Struck(StrikeKind.Slam, 29f), MissionTime = 30f }));
     }
 
     [TestMethod]
     public void Evaluate_InsideTheSweepCooldown_ReturnsNull()
     {
-        Assert.IsNull(_sut.Evaluate(Left() with { LastSweepTime = 25f, MissionTime = 30f }));
+        Assert.IsNull(_sut.Evaluate(Left() with { LastStrikeTimes = Struck(StrikeKind.Sweep, 25f), MissionTime = 30f }));
     }
 
     [TestMethod]
@@ -281,8 +415,8 @@ public class SignatureStrikeServiceTests
     {
         _settings.CooldownMultiplier.Returns(2f);
 
-        Assert.IsNull(_sut.Evaluate(Overhead() with { LastSlamTime = 0f, MissionTime = 30f }));
-        Assert.IsNotNull(_sut.Evaluate(Overhead() with { LastSlamTime = 0f, MissionTime = 40f }));
+        Assert.IsNull(_sut.Evaluate(Overhead() with { LastStrikeTimes = Struck(StrikeKind.Slam, 0f), MissionTime = 30f }));
+        Assert.IsNotNull(_sut.Evaluate(Overhead() with { LastStrikeTimes = Struck(StrikeKind.Slam, 0f), MissionTime = 40f }));
     }
 
     [TestMethod]
@@ -294,13 +428,13 @@ public class SignatureStrikeServiceTests
     [TestMethod]
     public void Evaluate_NaNLastStrikeTime_MeansNeverStruck()
     {
-        Assert.IsNotNull(_sut.Evaluate(Overhead() with { LastSlamTime = float.NaN, MissionTime = 0f }));
+        Assert.IsNotNull(_sut.Evaluate(Overhead() with { LastStrikeTimes = Struck(StrikeKind.Slam, float.NaN), MissionTime = 0f }));
     }
 
     [TestMethod]
     public void Evaluate_InfiniteLastStrikeTime_MeansNeverStruck()
     {
-        Assert.IsNotNull(_sut.Evaluate(Overhead() with { LastSlamTime = float.PositiveInfinity, MissionTime = 0f }));
+        Assert.IsNotNull(_sut.Evaluate(Overhead() with { LastStrikeTimes = Struck(StrikeKind.Slam, float.PositiveInfinity), MissionTime = 0f }));
     }
 
     // ---- DecideKnockdown ---------------------------------------------------------------------
@@ -395,7 +529,7 @@ public class SignatureStrikeServiceTests
     public void DecideKnockdown_InsideTheSlamCooldown_ReturnsNull()
     {
         // The guaranteed knockdown is part of the slam package, not a permanent buff.
-        Assert.IsNull(_sut.DecideKnockdown(Overhead() with { LastSlamTime = 20f, MissionTime = 30f }));
+        Assert.IsNull(_sut.DecideKnockdown(Overhead() with { LastStrikeTimes = Struck(StrikeKind.Slam, 20f), MissionTime = 30f }));
     }
 
     // ---- DecideKnockback ---------------------------------------------------------------------
@@ -439,7 +573,7 @@ public class SignatureStrikeServiceTests
     [TestMethod]
     public void DecideKnockback_InsideTheSweepCooldown_ReturnsNull()
     {
-        Assert.IsNull(_sut.DecideKnockback(Left() with { LastSweepTime = 25f, MissionTime = 30f }));
+        Assert.IsNull(_sut.DecideKnockback(Left() with { LastStrikeTimes = Struck(StrikeKind.Sweep, 25f), MissionTime = 30f }));
     }
 
     [TestMethod]

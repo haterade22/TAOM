@@ -11,13 +11,23 @@ public enum StrikeDirection
     Right,
 }
 
-/// <summary>What a direction's profile does. Slam: a boulder-style ring around the impact.
-/// Sweep: a stagger ring in front of the attacker. The cooldown is per kind, so a slam and a
-/// sweep never gate each other.</summary>
+/// <summary>What a direction's profile does, and the unit a cooldown counts in. Slam: Sauron's
+/// boulder-style ring around the impact. Sweep: his stagger ring. Scream: the Nine's shriek, a
+/// ring around the wraith itself (#645). The cooldown is per kind, so a slam and a sweep never
+/// gate each other, while the three directions that all map to Scream share one timer. Append new
+/// kinds at the end: <see cref="StrikeKindTimes"/> indexes stamps by the member's value.</summary>
 public enum StrikeKind
 {
     Slam,
     Sweep,
+    Scream,
+}
+
+/// <summary>Where a strike's ring is centred: the point the weapon hit, or the attacker.</summary>
+public enum StrikeOrigin
+{
+    Impact,
+    Self,
 }
 
 /// <summary>

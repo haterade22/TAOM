@@ -137,7 +137,8 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
     }
 
     // Vanilla never grants KnockBack to a melee swing (SandboxAgentApplyDamageModel.CanWeaponKnockback
-    // returns false for swings), so a signature hero's sweep is the only true this can produce;
+    // returns false for swings), so a signature strike whose profile sets knockBack (Sauron's sweep,
+    // the Nine's scream) is the only true this can produce;
     // horse charges and every non-signature hit stay base (the 0.7-dot glancing gate is untouched).
     public override bool DecideAgentKnockedBackByBlow(Agent attackerAgent, Agent victimAgent, in AttackCollisionData collisionData, WeaponComponentData attackerWeapon, in Blow blow)
     {

@@ -24,6 +24,7 @@ public static class StrikeContextFactory
     {
         return new StrikeContext(
             IsSignatureAttacker: true,
+            SignatureIndex: entry.SignatureIndex,
             Direction: MapDirection(collisionData.AttackDirection),
             Collision: MapCollision(collisionData.CollisionResult),
             IsCanceled: isCanceled,
@@ -38,8 +39,7 @@ public static class StrikeContextFactory
             HasShrugOff: (blowFlags & BlowFlags.ShrugOff) != 0,
             InflictedDamage: collisionData.InflictedDamage,
             MissionTime: missionTime,
-            LastSlamTime: entry.LastSlamTime,
-            LastSweepTime: entry.LastSweepTime);
+            LastStrikeTimes: entry.Times);
     }
 
     /// <summary>

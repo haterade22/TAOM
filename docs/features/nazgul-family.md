@@ -174,6 +174,7 @@ roster from turn one, start a new campaign.
 
 - [lord-perk-review.md](lord-perk-review.md) — the lord stats/SkillSet review tooling.
 - `docs/reference/engine/campaign-object-graph.md` — Hero/Clan family relationships.
+- [signature-strikes.md](signature-strikes.md): the Nine's SCREAM (#645), keyed on the same `nazgul_nine` set.
 
 ---
 

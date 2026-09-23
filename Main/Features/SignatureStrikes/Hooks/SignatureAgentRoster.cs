@@ -8,9 +8,11 @@ namespace TAOM.Features.SignatureStrikes.Hooks;
 
 /// <summary>
 /// Reference-keyed roster of signature agents. Identity comes from <see cref="ISignatureStrikeRegistry"/>
-/// on the DreadSourceTracker's two axes: <c>HeroObject.StringId</c> (an <c>as CharacterObject</c>
+/// on the DreadSourceTracker's axes: <c>HeroObject.StringId</c> (an <c>as CharacterObject</c>
 /// cast, because a mission agent carries a plain <c>BasicCharacterObject</c> outside a campaign)
-/// and <c>Character.Race</c>.
+/// and <c>Character.Race</c>. With no hero (a Custom Battle) the character's own StringId stands
+/// in for the hero id: a lord's hero is bound to the character of the same id
+/// (<c>Hero.Deserialize</c>), so the Nine's hero set finds its commanders there too (#645).
 /// </summary>
 public sealed class SignatureAgentRoster : ISignatureAgentRoster
 {
@@ -40,13 +42,14 @@ public sealed class SignatureAgentRoster : ISignatureAgentRoster
         if (character == null)
             return false;
 
-        var heroStringId = (character as CharacterObject)?.HeroObject?.StringId;
-        if (!_registry.IsSignatureAgent(heroStringId, character.Race))
+        var heroStringId = (character as CharacterObject)?.HeroObject?.StringId ?? character.StringId;
+        var signatureIndex = _registry.ResolveSignatureIndex(heroStringId, character.Race);
+        if (!signatureIndex.HasValue)
             return false;
 
-        if (!_entries.TryAdd(agent, new SignatureAgentEntry()))
+        if (!_entries.TryAdd(agent, new SignatureAgentEntry(signatureIndex.Value)))
             return false;
-        _logger.LogInfo($"[SignatureStrikes] {agent.Name} registered as a signature agent (race {character.Race})");
+        _logger.LogInfo($"[SignatureStrikes] {agent.Name} registered for '{_registry.GetSignatureId(signatureIndex.Value)}' (id {heroStringId}, race {character.Race})");
         return true;
     }
 

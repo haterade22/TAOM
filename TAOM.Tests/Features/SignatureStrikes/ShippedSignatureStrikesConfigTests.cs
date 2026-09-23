@@ -1,12 +1,15 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using NSubstitute;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Features.SignatureStrikes;
+using TAOM.Features.SignatureStrikes.Domain;
 
 namespace TAOM.Tests.Features.SignatureStrikes;
 
@@ -18,6 +21,8 @@ namespace TAOM.Tests.Features.SignatureStrikes;
 [TestClass]
 public class ShippedSignatureStrikesConfigTests
 {
+    private const string ScreamSound = "LOTR/Mordor/Nazgul/nazgul_scream";
+
     private static string RepoRoot => Path.GetFullPath(
         Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\.."));
 
@@ -38,6 +43,8 @@ public class ShippedSignatureStrikesConfigTests
         _sut = new SignatureStrikesConfigProvider(pathService, _logger);
     }
 
+    private SignatureConfig Signature(string id) => _sut.GetConfig().Signatures.Single(s => s.Id == id);
+
     [TestMethod]
     public void ShippedConfig_FileExists()
         => Assert.IsTrue(File.Exists(ConfigPath), $"Shipped config missing at {ConfigPath}");
@@ -52,79 +59,88 @@ public class ShippedSignatureStrikesConfigTests
     }
 
     [TestMethod]
-    public void ShippedConfig_ListsSauronByBothHeroIdAndRace()
+    public void ShippedConfig_ShipsExactlySauronAndTheNine()
+    {
+        // Every signature is a balance change: a new one needs an issue, a control battle and a
+        // docs/features/signature-strikes.md update, never a quiet data edit.
+        CollectionAssert.AreEqual(new[] { "sauron", "nazgul" }, _sut.GetConfig().Signatures.Select(s => s.Id).ToArray());
+    }
+
+    // ---- Sauron (#605) ---------------------------------------------------------------------
+
+    [TestMethod]
+    public void Sauron_IsListedByBothHeroIdAndRace_AndNothingElse()
     {
         // Both axes on purpose: the hero id survives a data change that drops his race attribute,
         // the race finds him in a custom battle where the agent carries no HeroObject.
-        var config = _sut.GetConfig();
+        var sauron = Signature("sauron");
 
-        CollectionAssert.Contains(config.HeroIds, "lord_1_17", "Sauron's hero id must be listed.");
-        CollectionAssert.Contains(config.Races, "sauron", "Sauron's race must be listed.");
+        CollectionAssert.AreEquivalent(new[] { "lord_1_17" }, sauron.HeroIds);
+        CollectionAssert.AreEquivalent(new[] { "sauron" }, sauron.Races);
+        Assert.AreEqual(0, sauron.HeroSets.Count);
     }
 
     [TestMethod]
-    public void ShippedConfig_ShipsNoOtherSignatureHero()
+    public void Sauron_MapsOverheadToSlamAndSideSwingsToSweep()
     {
-        // The Witch-king and the trolls are deliberately OUT of v1. This is the gate that stops one
-        // of them arriving as a quiet data edit with no balance pass behind it.
-        var config = _sut.GetConfig();
+        var strikes = Signature("sauron").Strikes;
 
-        CollectionAssert.AreEquivalent(new[] { "lord_1_17" }, config.HeroIds,
-            "A hero was added to the shipped signature-strike roster. That is a balance change: " +
-            "give it an issue and a control battle, and update docs/features/signature-strikes.md.");
-        CollectionAssert.AreEquivalent(new[] { "sauron" }, config.Races);
+        Assert.AreEqual("Slam", strikes["Overhead"].Kind);
+        Assert.AreEqual("Sweep", strikes["Left"].Kind);
+        Assert.AreEqual("Sweep", strikes["Right"].Kind);
+        Assert.IsFalse(strikes.ContainsKey("Thrust"), "A thrust is a plain hit.");
     }
 
     [TestMethod]
-    public void ShippedConfig_MapsOverheadToSlamAndSideSwingsToSweep()
+    public void Sauron_SlamKnocksDownAndSweepKnocksBack()
     {
-        var config = _sut.GetConfig();
+        var strikes = Signature("sauron").Strikes;
 
-        Assert.AreEqual("Slam", config.Strikes["Overhead"].Kind);
-        Assert.AreEqual("Sweep", config.Strikes["Left"].Kind);
-        Assert.AreEqual("Sweep", config.Strikes["Right"].Kind);
-        Assert.IsFalse(config.Strikes.ContainsKey("Thrust"), "A thrust is a plain hit.");
+        Assert.IsTrue(strikes["Overhead"].KnockDown);
+        Assert.IsFalse(strikes["Overhead"].KnockBack);
+        Assert.IsTrue(strikes["Left"].KnockBack);
+        Assert.IsFalse(strikes["Left"].KnockDown);
+        Assert.IsTrue(strikes["Right"].KnockBack);
     }
 
     [TestMethod]
-    public void ShippedConfig_SlamKnocksDownAndSweepKnocksBack()
-    {
-        var config = _sut.GetConfig();
-
-        Assert.IsTrue(config.Strikes["Overhead"].KnockDown);
-        Assert.IsFalse(config.Strikes["Overhead"].KnockBack);
-        Assert.IsTrue(config.Strikes["Left"].KnockBack);
-        Assert.IsFalse(config.Strikes["Left"].KnockDown);
-        Assert.IsTrue(config.Strikes["Right"].KnockBack);
-    }
-
-    [TestMethod]
-    public void ShippedConfig_CooldownsAreTheDocumentedBalanceContract()
+    public void Sauron_CooldownsAreTheDocumentedBalanceContract()
     {
         // Mike's standing instruction (2026-09-16): long cooldowns, Sauron must not be overpowered.
         // These two numbers are quoted in docs/features/signature-strikes.md and issue #605.
-        var config = _sut.GetConfig();
+        var cooldowns = Signature("sauron").Cooldowns;
 
-        Assert.AreEqual(20f, config.SlamCooldownSeconds, 0.001f);
-        Assert.AreEqual(12f, config.SweepCooldownSeconds, 0.001f);
+        Assert.AreEqual(20f, cooldowns["Slam"], 0.001f);
+        Assert.AreEqual(12f, cooldowns["Sweep"], 0.001f);
     }
 
     [TestMethod]
-    public void ShippedConfig_OnlyTheSlamFiresOnAGroundHit()
+    public void Sauron_OnlyTheSlamFiresOnAGroundHit()
     {
-        var config = _sut.GetConfig();
+        var strikes = Signature("sauron").Strikes;
 
-        Assert.IsTrue(config.Strikes["Overhead"].WorldHitBaseDamage > 0);
-        Assert.AreEqual(0, config.Strikes["Left"].WorldHitBaseDamage);
-        Assert.AreEqual(0, config.Strikes["Right"].WorldHitBaseDamage);
+        Assert.IsTrue(strikes["Overhead"].WorldHitBaseDamage > 0);
+        Assert.AreEqual(0, strikes["Left"].WorldHitBaseDamage);
+        Assert.AreEqual(0, strikes["Right"].WorldHitBaseDamage);
     }
 
     [TestMethod]
-    public void ShippedConfig_SauronStillCarriesTheSauronRaceInLordsXslt()
+    public void Sauron_RingsAroundTheImpactAndPlaysNoSound()
+    {
+        foreach (var profile in Signature("sauron").Strikes.Values)
+        {
+            Assert.AreEqual("Impact", profile.Origin);
+            Assert.IsNull(profile.Sound);
+        }
+    }
+
+    [TestMethod]
+    public void Sauron_StillCarriesTheSauronRaceInLordsXslt()
     {
         // Cross-file: the config names a hero id and a race; lords.xslt is what binds the two. If
         // a lord regen ever drops the race attribute, the hero-id axis still finds him in a
         // campaign but the race axis stops finding him in a Custom Battle, with no error anywhere.
+        // The Nine's race is pinned by NazgulRaceDataTests (#644).
         var xslt = File.ReadAllText(Path.Combine(ModuleDataPath, "lords.xslt"));
         var start = xslt.IndexOf("NPCCharacter[@id='lord_1_17']", StringComparison.Ordinal);
         Assert.IsTrue(start >= 0, "lords.xslt no longer has a template for lord_1_17 (Sauron).");
@@ -136,23 +152,104 @@ public class ShippedSignatureStrikesConfigTests
             "lord_1_17 must keep race=\"sauron\" in lords.xslt; the shipped config lists that race.");
     }
 
+    // ---- The Nine (#645) ----------------------------------------------------------------------
+
+    [TestMethod]
+    public void Nazgul_IsListedByTheHeroSetAndTheRace()
+    {
+        // The hero set names exactly the Nine whatever their race data says; the race finds them
+        // in a Custom Battle too.
+        var nazgul = Signature("nazgul");
+
+        CollectionAssert.AreEquivalent(new[] { "nazgul_nine" }, nazgul.HeroSets);
+        CollectionAssert.AreEquivalent(new[] { "nazghul" }, nazgul.Races);
+        Assert.AreEqual(0, nazgul.HeroIds.Count);
+    }
+
+    [TestMethod]
+    public void Nazgul_ScreamsOnTheOverheadAndBothSideSwings()
+    {
+        // Mike, 2026-09-23: "on an overhead attack and slashing attack. Same as Sauron."
+        var strikes = Signature("nazgul").Strikes;
+
+        foreach (var direction in new[] { "Overhead", "Left", "Right" })
+            Assert.AreEqual("Scream", strikes[direction].Kind, direction);
+        Assert.IsFalse(strikes.ContainsKey("Thrust"), "A thrust is a plain hit.");
+    }
+
+    [TestMethod]
+    public void Nazgul_ScreamIsARingAroundTheWraithThatStaggersAndFrightens()
+    {
+        // Mike, 2026-09-23: scream + stagger, no knockdown, morale 25.
+        foreach (var pair in Signature("nazgul").Strikes)
+        {
+            var profile = pair.Value;
+            Assert.AreEqual("Self", profile.Origin, pair.Key);
+            Assert.IsTrue(profile.KnockBack, pair.Key);
+            Assert.IsFalse(profile.KnockDown, pair.Key);
+            Assert.AreEqual(25f, profile.FearMorale, 0.001f, pair.Key);
+            Assert.AreEqual(0, profile.WorldHitBaseDamage, pair.Key + ": a scream answers a hit on a foe");
+            Assert.AreEqual(ScreamSound, profile.Sound, pair.Key);
+        }
+    }
+
+    [TestMethod]
+    public void Nazgul_OneFifteenSecondTimerForAllThreeDirections()
+    {
+        // Mike, 2026-09-23: "every 15 s", one cooldown per Nazgul across overhead and side swings.
+        var cooldowns = Signature("nazgul").Cooldowns;
+
+        CollectionAssert.AreEquivalent(new[] { "Scream" }, cooldowns.Keys.ToArray());
+        Assert.AreEqual(15f, cooldowns["Scream"], 0.001f);
+    }
+
+    [TestMethod]
+    public void Nazgul_ScreamSoundIsARegisteredModuleSoundWithFilesOnDisk()
+    {
+        // A sound name nothing registers resolves to -1 at runtime and the wraith only yells.
+        var sounds = XDocument.Load(Path.Combine(ModuleDataPath, "module_sounds.xml"));
+        var entry = sounds.Descendants("module_sound").SingleOrDefault(e => (string?)e.Attribute("name") == ScreamSound);
+
+        Assert.IsNotNull(entry, $"module_sounds.xml has no module_sound named '{ScreamSound}'.");
+        Assert.AreEqual("mission_voice_shout", (string?)entry!.Attribute("sound_category"),
+            "A sound without a valid category is never played (Native module_sounds.xml).");
+
+        var variations = entry.Elements("variation").Select(v => (string?)v.Attribute("path")).ToArray();
+        Assert.IsTrue(variations.Length > 0, "the scream has no variations");
+        foreach (var path in variations)
+        {
+            Assert.IsNotNull(path);
+            var extension = Path.GetExtension(path!).ToLowerInvariant();
+            Assert.IsTrue(extension == ".ogg" || extension == ".wav",
+                $"{path}: ship the formats Native's module_sounds.xml header lists, .ogg or .wav.");
+            var file = Path.Combine(RepoRoot, "Main", "_Module", "ModuleSounds", path!.Replace('/', Path.DirectorySeparatorChar));
+            Assert.IsTrue(File.Exists(file), $"{path} is registered but not on disk at {file}");
+        }
+    }
+
+    // ---- The file itself --------------------------------------------------------------------
+
     [TestMethod]
     public void ShippedConfig_EveryCommentKeyHasALiveSibling()
     {
         // A _comment_x whose x was renamed or removed is documentation pointing at nothing.
         var root = JObject.Parse(File.ReadAllText(ConfigPath));
+        var scopes = new[] { root }.Concat(root["signatures"]!.Children<JObject>());
 
-        foreach (var property in root.Properties())
+        foreach (var scope in scopes)
         {
-            if (!property.Name.StartsWith("_comment_", StringComparison.Ordinal))
-                continue;
+            foreach (var property in scope.Properties())
+            {
+                if (!property.Name.StartsWith("_comment_", StringComparison.Ordinal))
+                    continue;
 
-            var sibling = property.Name.Substring("_comment_".Length);
-            if (sibling == "feature" || sibling == "balance")
-                continue;
+                var sibling = property.Name.Substring("_comment_".Length);
+                if (sibling == "feature" || sibling == "balance")
+                    continue;
 
-            Assert.IsNotNull(root[sibling],
-                $"{property.Name} documents a key '{sibling}' that no longer exists in the config.");
+                Assert.IsNotNull(scope[sibling],
+                    $"{property.Name} documents a key '{sibling}' that no longer exists in the config.");
+            }
         }
     }
 

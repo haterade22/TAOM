@@ -7,7 +7,9 @@ namespace TAOM.Features.SignatureStrikes.Domain;
 /// primary-victim verdicts so the model and the mission logic cannot describe the same hit
 /// differently.
 /// </summary>
-/// <param name="IsSignatureAttacker">The attacker is on the signature roster (hero id or race).</param>
+/// <param name="IsSignatureAttacker">The attacker is on the signature roster (hero id, hero set or race).</param>
+/// <param name="SignatureIndex">Which signature the attacker carries: its position in the
+/// validated config's <c>Signatures</c> list, resolved once at spawn.</param>
 /// <param name="Direction">The swing direction the engine animated.</param>
 /// <param name="Collision">Mirror of <c>CombatCollisionResult</c>.</param>
 /// <param name="IsCanceled">The engine's <c>isCanceled</c> on <c>OnMeleeHit</c>: invulnerable victim,
@@ -29,10 +31,11 @@ namespace TAOM.Features.SignatureStrikes.Domain;
 /// <param name="InflictedDamage">Damage the engine computed for this collision (shield damage on
 /// a shield block; not trusted on a world hit).</param>
 /// <param name="MissionTime">Mission clock now.</param>
-/// <param name="LastSlamTime">Mission time of this attacker's last slam; NaN means never.</param>
-/// <param name="LastSweepTime">Mission time of this attacker's last sweep; NaN means never.</param>
+/// <param name="LastStrikeTimes">Mission time of this attacker's last strike of each kind, a copy
+/// of the roster's value; NaN means never.</param>
 public readonly record struct StrikeContext(
     bool IsSignatureAttacker,
+    int SignatureIndex,
     StrikeDirection Direction,
     StrikeCollision Collision,
     bool IsCanceled,
@@ -47,8 +50,7 @@ public readonly record struct StrikeContext(
     bool HasShrugOff,
     int InflictedDamage,
     float MissionTime,
-    float LastSlamTime,
-    float LastSweepTime);
+    StrikeKindTimes LastStrikeTimes);
 
 /// <summary>
 /// The ring the runner should apply, resolved from the direction's validated profile plus the
@@ -57,6 +59,9 @@ public readonly record struct StrikeContext(
 /// <param name="DamageBasis">The hit's own damage (or the profile's world-hit damage), before the
 /// fraction and the falloff.</param>
 /// <param name="Magnitude">The blow impulse handed to <c>CustomAttacksUtils.TakeDamage</c>.</param>
+/// <param name="Origin">Where the ring is centred: the hit point, or the attacker.</param>
+/// <param name="Sound">Module sound played once per strike; null for none.</param>
+/// <param name="SignatureId">The signature's config id, for the log line.</param>
 public readonly record struct StrikeEffect(
     StrikeKind Kind,
     float OuterRadius,
@@ -66,4 +71,7 @@ public readonly record struct StrikeEffect(
     float Magnitude,
     bool KnockDown,
     bool KnockBack,
-    float FearMorale);
+    float FearMorale,
+    StrikeOrigin Origin = StrikeOrigin.Impact,
+    string? Sound = null,
+    string SignatureId = "");

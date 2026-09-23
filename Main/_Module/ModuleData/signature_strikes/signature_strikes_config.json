@@ -1,56 +1,106 @@
 {
-  "_comment_feature": "Signature strikes (#605): direction-mapped effects when a configured hero lands a melee hit with any weapon except thrown and ranged. Overhead = Slam, Left/Right = Sweep, Thrust = a plain hit. Keys are case-insensitive. Full design and every gate: docs/features/signature-strikes.md. A full Bannerlord restart is needed for changes here; the MCM cooldown multiplier applies live.",
+  "_comment_feature": "Signature strikes (#605, #645): direction-mapped effects when a configured hero lands a melee hit with any weapon except thrown and ranged. Sauron: Overhead = Slam, Left/Right = Sweep. The Nine: Overhead, Left and Right = Scream. Thrust = a plain hit. Keys are case-insensitive. Full design and every gate: docs/features/signature-strikes.md. A full Bannerlord restart is needed for changes here; the MCM cooldown multiplier applies live.",
 
   "_comment_enabled": "Read only when MCM is absent. Once MCM has loaded, the Combat Mechanics group's Signature Strikes toggle (default on) owns this switch and the value here is not consulted.",
   "enabled": true,
 
-  "_comment_heroIds": "Hero StringIds with signature strikes. lord_1_17 is Sauron. He is listed here AND by race so the feature survives a data change that drops his race attribute.",
-  "heroIds": [ "lord_1_17" ],
-
-  "_comment_races": "FaceGen race names with signature strikes. The race axis is what finds Sauron in a Custom Battle, where the agent carries no hero. An unknown name is skipped with a warning in the log.",
-  "races": [ "sauron" ],
-
-  "_comment_balance": "Cooldowns are per attacker and per kind, in mission seconds. Long on purpose: a Slam is guaranteed knockdown + ring + fear in one package, and Mike's standing instruction is that Sauron must not be overpowered. Range 0.5 to 120; the floor is what keeps a cleaving swing to one package.",
-  "slamCooldownSeconds": 20,
-  "sweepCooldownSeconds": 12,
-
-  "_comment_shieldBlockedMultiplier": "Fraction of the damage basis kept when the triggering hit landed on a shield, and of a ring victim's damage while that victim is shield-blocking (a blocking victim is never knocked down). 0 to 1.",
+  "_comment_shieldBlockedMultiplier": "Fraction of the damage basis kept when the triggering hit landed on a shield, and of a ring victim's damage while that victim is shield-blocking (a blocking victim is never knocked down). 0 to 1. Shared by every signature.",
   "shieldBlockedMultiplier": 0.25,
 
-  "_comment_strikes": "One profile per swing direction. kind: Slam or Sweep (the cooldown is per kind). outerRadius / innerRadius in metres (0.1 to 15, inner <= outer): full effect inside inner, one ninth at outer, the engine's own boulder curve. damageFraction (0 to 1): share of the hit's damage a ring victim takes before falloff. worldHitBaseDamage (0 to 500): damage basis when the swing hits the ground instead of a foe, 0 = a ground hit does nothing. magnitude (0 to 500): blow impulse on ring victims. knockDown: ring victims fall (riders are dismounted) and the struck foe always falls. knockBack: ring victims and the struck foe are staggered back. fearMorale (0 to 100): one-shot morale drain on ring victims before tier and race resistance, 0 = none.",
-  "strikes": {
-    "Overhead": {
-      "kind": "Slam",
-      "outerRadius": 4.0,
-      "innerRadius": 1.5,
-      "damageFraction": 0.6,
-      "worldHitBaseDamage": 60,
-      "magnitude": 80,
-      "knockDown": true,
-      "knockBack": false,
-      "fearMorale": 15
+  "_comment_signatures": "One entry per group of heroes. id: names the signature in the log, unique. heroIds: hero StringIds (in a Custom Battle the character's own id, which for a lord is the same). heroSets: named lore groups, only nazgul_nine is known. races: FaceGen race names. An agent carries the first signature whose heroIds or heroSets name it, else the first whose races do. cooldowns: seconds per strike kind (Slam, Sweep, Scream), per attacker, in mission time, 0.5 to 120; every kind a strike uses needs an entry, and the directions that share a kind share its timer. strikes: one profile per swing direction. kind: Slam, Sweep or Scream. origin: Impact centres the ring on the hit point, Self on the attacker. outerRadius / innerRadius in metres (0.1 to 15, inner <= outer): full effect inside inner, one ninth at outer, the engine's own boulder curve. damageFraction (0 to 1): share of the hit's damage a ring victim takes before falloff. worldHitBaseDamage (0 to 500): damage basis when the swing hits the ground instead of a foe, 0 = a ground hit does nothing. magnitude (0 to 500): blow impulse on ring victims. knockDown: ring victims fall (riders are dismounted) and the struck foe always falls. knockBack: ring victims and the struck foe are staggered back. fearMorale (0 to 100): one-shot morale drain on ring victims and the struck foe, before tier and race resistance, 0 = none. sound: a module_sounds.xml name played once per strike at the attacker's head, omit for none.",
+  "signatures": [
+    {
+      "_comment_balance": "Sauron (#605). Long cooldowns on purpose: a Slam is guaranteed knockdown + ring + fear in one package, and Mike's standing instruction is that Sauron must not be overpowered. Listed by hero id AND by race so the feature survives a data change that drops his race attribute; the race finds him in a Custom Battle.",
+      "id": "sauron",
+      "heroIds": [ "lord_1_17" ],
+      "races": [ "sauron" ],
+      "cooldowns": { "Slam": 20, "Sweep": 12 },
+      "strikes": {
+        "Overhead": {
+          "kind": "Slam",
+          "origin": "Impact",
+          "outerRadius": 4.0,
+          "innerRadius": 1.5,
+          "damageFraction": 0.6,
+          "worldHitBaseDamage": 60,
+          "magnitude": 80,
+          "knockDown": true,
+          "knockBack": false,
+          "fearMorale": 15
+        },
+        "Left": {
+          "kind": "Sweep",
+          "origin": "Impact",
+          "outerRadius": 3.0,
+          "innerRadius": 1.5,
+          "damageFraction": 0.25,
+          "worldHitBaseDamage": 0,
+          "magnitude": 60,
+          "knockDown": false,
+          "knockBack": true,
+          "fearMorale": 0
+        },
+        "Right": {
+          "kind": "Sweep",
+          "origin": "Impact",
+          "outerRadius": 3.0,
+          "innerRadius": 1.5,
+          "damageFraction": 0.25,
+          "worldHitBaseDamage": 0,
+          "magnitude": 60,
+          "knockDown": false,
+          "knockBack": true,
+          "fearMorale": 0
+        }
+      }
     },
-    "Left": {
-      "kind": "Sweep",
-      "outerRadius": 3.0,
-      "innerRadius": 1.5,
-      "damageFraction": 0.25,
-      "worldHitBaseDamage": 0,
-      "magnitude": 60,
-      "knockDown": false,
-      "knockBack": true,
-      "fearMorale": 0
-    },
-    "Right": {
-      "kind": "Sweep",
-      "outerRadius": 3.0,
-      "innerRadius": 1.5,
-      "damageFraction": 0.25,
-      "worldHitBaseDamage": 0,
-      "magnitude": 60,
-      "knockDown": false,
-      "knockBack": true,
-      "fearMorale": 0
+    {
+      "_comment_balance": "The Nine (#645): SCREAM on the overhead and both side swings, one 15 s timer per wraith across all three (Mike, 2026-09-23). A ring around the wraith itself: damage, 25 morale before tier and race resistance, a knock-back stagger, no knockdown; the struck foe takes the fear and the stagger too. The hero set names exactly the Nine whatever their race data says; the race (#644) finds them in a Custom Battle as well. The sound was generated with ElevenLabs; provenance in docs/features/signature-strikes.md.",
+      "id": "nazgul",
+      "heroSets": [ "nazgul_nine" ],
+      "races": [ "nazghul" ],
+      "cooldowns": { "Scream": 15 },
+      "strikes": {
+        "Overhead": {
+          "kind": "Scream",
+          "origin": "Self",
+          "outerRadius": 6.0,
+          "innerRadius": 2.5,
+          "damageFraction": 0.3,
+          "worldHitBaseDamage": 0,
+          "magnitude": 60,
+          "knockDown": false,
+          "knockBack": true,
+          "fearMorale": 25,
+          "sound": "LOTR/Mordor/Nazgul/nazgul_scream"
+        },
+        "Left": {
+          "kind": "Scream",
+          "origin": "Self",
+          "outerRadius": 6.0,
+          "innerRadius": 2.5,
+          "damageFraction": 0.3,
+          "worldHitBaseDamage": 0,
+          "magnitude": 60,
+          "knockDown": false,
+          "knockBack": true,
+          "fearMorale": 25,
+          "sound": "LOTR/Mordor/Nazgul/nazgul_scream"
+        },
+        "Right": {
+          "kind": "Scream",
+          "origin": "Self",
+          "outerRadius": 6.0,
+          "innerRadius": 2.5,
+          "damageFraction": 0.3,
+          "worldHitBaseDamage": 0,
+          "magnitude": 60,
+          "knockDown": false,
+          "knockBack": true,
+          "fearMorale": 25,
+          "sound": "LOTR/Mordor/Nazgul/nazgul_scream"
+        }
+      }
     }
-  }
+  ]
 }

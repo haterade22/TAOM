@@ -4,6 +4,41 @@
 
 ## 2026-09-23
 
+### feat(nazgul): v2.0.30 - the Nine SCREAM: a second SignatureStrikes signature (#645)
+
+Mike asked for a Nazgul signature like Sauron's: SCREAM, on an overhead or a slashing attack, that
+does damage and takes morale. SignatureStrikes held one signature (top-level `heroIds` and `races`,
+a binary Slam/Sweep kind, two hard-wired cooldown stamps), so `signature_strikes_config.json` is now
+a `signatures` list: `sauron` with his rows unchanged, and `nazgul` (the `nazgul_nine` hero set and
+race `nazghul`, #644). The Nine's overhead and both side swings Scream: a ring around the wraith
+(6 m, full effect inside 2.5 m) where each enemy takes 0.3 of the hit's damage, is knocked back
+(never down) and loses up to 25 morale; one 15 s timer covers all three directions (the cooldown is
+per kind), and a shriek plays once at the wraith's head. The engine's morale model divides the 25
+by the victim's resistance (a troop's tier or a hero's level; 1 in Custom Battle), then race
+resistance and the falloff apply.
+
+Under the hood: `StrikeKind.Scream`, `StrikeOrigin` (Impact or Self), per-kind stamps in
+`StrikeKindTimes` (a value the context copies), a registry that resolves a signature index (hero ids
+and hero sets before race, first listed wins, overlaps warned), a per-signature service, and a
+Custom Battle fallback to the character's own id (a lord's hero shares its character's id). A strike
+profile gains `origin` and `sound`; the provider drops a signature with no id, a repeated id, one
+that names nobody, and a strike whose kind has no cooldown, and reverts a bad field to that
+signature's compiled default. The struck foe now takes a strike's fear too, never its ring blow:
+before, it was skipped outright, so Sauron's slam never frightened the agent he hit.
+
+The sound: three ElevenLabs text-to-sound-effects takes on the account's Creator plan (commercial
+use), mono Ogg Vorbis in `Main/_Module/ModuleSounds/LOTR/Mordor/Nazgul/`, registered as
+`LOTR/Mordor/Nazgul/nazgul_scream` (`mission_voice_shout`). `StrikeSoundPlayer` plays it through
+`Mission.MakeSound` at the finiteness-gated eye position, logs the resolved id, and yells instead if
+the name does not resolve. Prompts and processing: `docs/features/signature-strikes.md`, Sound
+provenance.
+
+Reviewed: `/deep-review`, seven lenses and a convergence pass. Two MED findings (an ungated eye
+position into `MakeSound`; `combat-mechanics.md` saying every signature overhead floors its target),
+seven LOW doc, comment and placement misses (one from the convergence pass), and one design change
+(an unknown origin now fails closed) were all fixed; RCA `docs/reviews/rca-nazgul-scream-2026-09-23.md`.
+Nothing is smoked in game yet.
+
 ### feat(nazgul): v2.0.30 - the Nine become race nazghul (#644)
 
 The Armory has shipped a `nazghul` race (1.18 scale, its own meshes) that no hero used: six of the

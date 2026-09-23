@@ -3,7 +3,7 @@ using System;
 namespace TAOM.Features.SignatureStrikes.Domain;
 
 /// <summary>
-/// The one place the config's direction and kind STRINGS turn into enums, shared by the
+/// The one place the config's direction, kind and origin STRINGS turn into enums, shared by the
 /// validating provider (which drops unknown names with a warning) and the service (which indexes
 /// the validated rows). Two parsers would drift; a typo the provider let through must never be a
 /// row the service silently fails to match (the M1 trap, csharp-architecture.md).
@@ -21,6 +21,9 @@ public static class StrikeNames
 
     public static bool TryParseKind(string? name, out StrikeKind kind)
         => TryParseByName(name, out kind);
+
+    public static bool TryParseOrigin(string? name, out StrikeOrigin origin)
+        => TryParseByName(name, out origin);
 
     // By NAME only. Enum.TryParse also accepts "1" and "Left, Right", and Enum.IsDefined is true
     // for any defined numeric value, so a typo like "1" would silently become a live Overhead row

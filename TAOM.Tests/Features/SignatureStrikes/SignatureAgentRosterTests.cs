@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Logging;
 using TAOM.Features.SignatureStrikes;
+using TAOM.Features.SignatureStrikes.Domain;
 using TAOM.Features.SignatureStrikes.Hooks;
 
 namespace TAOM.Tests.Features.SignatureStrikes;
@@ -31,7 +32,7 @@ public class SignatureAgentRosterTests
     {
         Assert.IsFalse(_sut.TryRegister(null));
 
-        _registry.DidNotReceive().IsSignatureAgent(Arg.Any<string?>(), Arg.Any<int?>());
+        _registry.DidNotReceive().ResolveSignatureIndex(Arg.Any<string?>(), Arg.Any<int?>());
         Assert.AreEqual(0, _sut.Count);
     }
 
@@ -58,13 +59,14 @@ public class SignatureAgentRosterTests
     }
 
     [TestMethod]
-    public void NewEntry_StartsWithNeverStruckStamps()
+    public void NewEntry_KeepsItsSignatureAndStartsWithNeverStruckStamps()
     {
-        // NaN is the service's "never struck" sentinel; a zero would read as a slam at t=0 and
-        // gate the first real slam behind the whole cooldown.
-        var entry = new SignatureAgentEntry();
+        // NaN is the service's "never struck" sentinel; a zero would read as a strike at t=0 and
+        // gate the first real one behind the whole cooldown.
+        var entry = new SignatureAgentEntry(signatureIndex: 1);
 
-        Assert.IsTrue(float.IsNaN(entry.LastSlamTime));
-        Assert.IsTrue(float.IsNaN(entry.LastSweepTime));
+        Assert.AreEqual(1, entry.SignatureIndex);
+        foreach (StrikeKind kind in System.Enum.GetValues(typeof(StrikeKind)))
+            Assert.IsTrue(float.IsNaN(entry.Times.Get(kind)), kind.ToString());
     }
 }

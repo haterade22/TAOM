@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TAOM.Features.SignatureStrikes.Domain;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.SignatureStrikes.Hooks;
@@ -18,8 +19,8 @@ public interface ISignatureAgentRoster
 {
     int Count { get; }
 
-    /// <summary>Registers the agent if it is a signature hero (hero id or race). Idempotent;
-    /// true only when this call added it, so a re-scan logs nothing twice.</summary>
+    /// <summary>Registers the agent if it carries a signature (hero id, hero set or race).
+    /// Idempotent; true only when this call added it, so a re-scan logs nothing twice.</summary>
     bool TryRegister(Agent? agent);
 
     /// <summary>One pass over agents already on the field; returns how many this call added.</summary>
@@ -32,10 +33,18 @@ public interface ISignatureAgentRoster
     void Clear();
 }
 
-/// <summary>Per-attacker cooldown stamps in mission time. NaN means never.</summary>
+/// <summary>One signature agent: which signature it carries and when it last struck with each
+/// kind, in mission time (never, at spawn).</summary>
 public sealed class SignatureAgentEntry
 {
-    public float LastSlamTime { get; set; } = float.NaN;
+    public SignatureAgentEntry(int signatureIndex) => SignatureIndex = signatureIndex;
 
-    public float LastSweepTime { get; set; } = float.NaN;
+    /// <summary>The registry's answer at spawn: a position in the validated config's
+    /// <c>Signatures</c> list.</summary>
+    public int SignatureIndex { get; }
+
+    /// <summary>A value: each context copies it, so a stamp made after a context was built never
+    /// reaches that decision. Written by <c>OnMeleeHit</c>, read by the model inside the same
+    /// engine hit chain.</summary>
+    public StrikeKindTimes Times { get; set; }
 }

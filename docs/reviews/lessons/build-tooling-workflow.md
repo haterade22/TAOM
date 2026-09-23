@@ -511,6 +511,11 @@ A C# regex written as `"[\u2013\u2014]"` through the Write tool landed in the fi
 - **Why missed:** the file compiled and the test passed either way (a literal dash inside a regex character class matches the same text), so only the output-style dash scan noticed, and it noticed a `.cs` file the markdown linter does not read.
 - **Prevent:** when a source file must contain a literal `\u` escape (or any backslash sequence the tools interpret), write it via a script file that builds the backslash from `chr(92)`, then grep the file for the characters you did NOT want. Run the dash scan over changed `.cs` and `.json` files too, not only markdown.
 - **Source:** `docs/reviews/rca-signature-strikes-2026-09-16.md` finding 8.
+- **Recurred:** 2026-09-23 (#645) in the same file, when `ShippedSignatureStrikesConfigTests` was
+  rewritten wholesale with the Write tool: the escape form was retyped inside the new content and decoded
+  again, and the dash scan that session covered changed markdown and JSON only. A wholesale rewrite of a
+  file that holds an escape is the trigger: grep the written file for U+2013 and U+2014 right after the
+  Write. Source: `docs/reviews/rca-nazgul-scream-2026-09-23.md` finding 7.
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 

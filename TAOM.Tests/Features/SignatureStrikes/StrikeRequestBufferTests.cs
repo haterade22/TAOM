@@ -30,8 +30,8 @@ public class StrikeRequestBufferTests
         var drained = sut.Swap();
 
         Assert.AreEqual(2, drained.Count);
-        Assert.AreEqual(1f, drained[0].Impact.x, 0.001f);
-        Assert.AreEqual(2f, drained[1].Impact.x, 0.001f);
+        Assert.AreEqual(1f, drained[0].Center.x, 0.001f);
+        Assert.AreEqual(2f, drained[1].Center.x, 0.001f);
         Assert.AreEqual(0, sut.PendingCount);
     }
 
@@ -55,7 +55,7 @@ public class StrikeRequestBufferTests
         Assert.AreEqual(1, first.Count, "the list being iterated must not grow under the iterator");
         var second = sut.Swap();
         Assert.AreEqual(1, second.Count);
-        Assert.AreEqual(2f, second[0].Impact.x, 0.001f);
+        Assert.AreEqual(2f, second[0].Center.x, 0.001f);
     }
 
     [TestMethod]
