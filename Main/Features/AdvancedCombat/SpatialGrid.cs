@@ -30,25 +30,17 @@ public class SpatialGrid
         message => Debug.Print(message, 0, Debug.DebugColor.Yellow);
     private readonly DeferredCallbackQueue _pendingRemovals = new(ReportParkedRemoval);
 
+    // The Agent-typed API delegates to the generic helpers below, which never touch an Agent, so
+    // tests can run the exact query on plain points. One position read per agent per query.
+    private static readonly Func<Agent, Vec3> AgentPosition = agent => agent.Position;
+    private static readonly Func<Agent, bool> IsLiveAgent = agent => agent.IsActive();
+
     public void UpdateGrid(List<Agent> agents)
     {
         MissionThreadGuard.NoteCall("SpatialGrid.UpdateGrid", ReportOffThread);
         // A fresh map, published by one reference write: a reader that still holds the old one walks a
         // finished structure rather than a map being cleared under it.
-        var grid = new Dictionary<(int, int, int), List<Agent>>();
-        foreach (Agent agent in agents)
-        {
-            if (!agent.IsActive())
-                continue;
-            var cell = GetCell(agent.Position);
-            if (!grid.TryGetValue(cell, out List<Agent> list))
-            {
-                list = new List<Agent>();
-                grid[cell] = list;
-            }
-            list.Add(agent);
-        }
-        _grid = grid;
+        _grid = BuildCells(agents, IsLiveAgent, AgentPosition, CellSize);
     }
 
     /// <summary>
@@ -74,13 +66,24 @@ public class SpatialGrid
         }
     }
 
-    private (int, int, int) GetCell(Vec3 pos)
+    /// <summary>Buckets every included item by the cell of its position. Pure; tests drive it with plain points.</summary>
+    internal static Dictionary<(int, int, int), List<T>> BuildCells<T>(List<T> items, Func<T, bool> include, Func<T, Vec3> positionOf, float cellSize)
     {
-        return (
-            (int)Math.Floor(pos.x / CellSize),
-            (int)Math.Floor(pos.y / CellSize),
-            (int)Math.Floor(pos.z / CellSize)
-        );
+        var cells = new Dictionary<(int, int, int), List<T>>();
+        foreach (T item in items)
+        {
+            if (!include(item))
+                continue;
+            Vec3 pos = positionOf(item);
+            var key = ((int)Math.Floor(pos.x / cellSize), (int)Math.Floor(pos.y / cellSize), (int)Math.Floor(pos.z / cellSize));
+            if (!cells.TryGetValue(key, out List<T> list))
+            {
+                list = new List<T>();
+                cells[key] = list;
+            }
+            list.Add(item);
+        }
+        return cells;
     }
 
     public List<Agent> GetAgentsInRadius(Vec3 center, float radius)
@@ -99,33 +102,43 @@ public class SpatialGrid
     public void GetAgentsInRadius(Vec3 center, float radius, List<Agent> buffer)
     {
         MissionThreadGuard.NoteCall("SpatialGrid.GetAgentsInRadius", ReportOffThread);
-        buffer.Clear();
-        var grid = _grid;
-        float radiusSquared = radius * radius;
-        int minX = (int)Math.Floor((center.x - radius) / CellSize);
-        int maxX = (int)Math.Floor((center.x + radius) / CellSize);
-        int minY = (int)Math.Floor((center.y - radius) / CellSize);
-        int maxY = (int)Math.Floor((center.y + radius) / CellSize);
-        int minZ = (int)Math.Floor((center.z - radius) / CellSize);
-        int maxZ = (int)Math.Floor((center.z + radius) / CellSize);
+        CollectInRadius(_grid, center, radius, CellSize, AgentPosition, buffer);
+    }
 
-        // Enumerate ONLY the cells in the radius bounding box (TryGetValue per cell) rather than scanning every
-        // occupied cell in the grid and filtering by key — the bbox is tiny for the creature scan ranges (≤~27
-        // cells at CellSize 20) while the grid can hold hundreds of cells in a full battle (deep-review 2026-06-15).
+    /// <summary>
+    /// Clears <paramref name="buffer"/> and fills it with the items whose position is within
+    /// <paramref name="radius"/> of <paramref name="center"/> (3D distance, inclusive), looking up only
+    /// the cells in the query's bounding box. Returns how many cells it looked up. Pure.
+    /// </summary>
+    internal static int CollectInRadius<T>(Dictionary<(int, int, int), List<T>> cells, Vec3 center, float radius, float cellSize, Func<T, Vec3> positionOf, List<T> buffer)
+    {
+        buffer.Clear();
+        float radiusSquared = radius * radius;
+        int minX = (int)Math.Floor((center.x - radius) / cellSize);
+        int maxX = (int)Math.Floor((center.x + radius) / cellSize);
+        int minY = (int)Math.Floor((center.y - radius) / cellSize);
+        int maxY = (int)Math.Floor((center.y + radius) / cellSize);
+        int minZ = (int)Math.Floor((center.z - radius) / cellSize);
+        int maxZ = (int)Math.Floor((center.z + radius) / cellSize);
+
+        int probes = 0;
         for (int x = minX; x <= maxX; x++)
         for (int y = minY; y <= maxY; y++)
         for (int z = minZ; z <= maxZ; z++)
         {
-            if (!grid.TryGetValue((x, y, z), out List<Agent> cell)) continue;
-            foreach (Agent agent in cell)
+            probes++;
+            if (!cells.TryGetValue((x, y, z), out List<T> cell)) continue;
+            foreach (T item in cell)
             {
-                float dx = agent.Position.x - center.x;
-                float dy = agent.Position.y - center.y;
-                float dz = agent.Position.z - center.z;
+                Vec3 pos = positionOf(item);
+                float dx = pos.x - center.x;
+                float dy = pos.y - center.y;
+                float dz = pos.z - center.z;
                 if (dx * dx + dy * dy + dz * dz <= radiusSquared)
-                    buffer.Add(agent);
+                    buffer.Add(item);
             }
         }
+        return probes;
     }
 
     public List<Agent> GetNearAliveAgentsInRange(float range, Agent target)
