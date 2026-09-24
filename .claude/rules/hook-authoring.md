@@ -150,7 +150,7 @@ That is what wedged every JSON-parsing hook, and with no `timeout` on the regist
 Bash call paid a 600 s PreToolUse batch plus a 600 s PostToolUse batch, which is the 20.0-minute
 stall in the transcripts.
 
-**Inside a hook:** `source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"` at the TOP, above the
+**Inside a hook:** `source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"` after any raw-payload prefilter and above the
 first `"$PYBIN"` use, then honour `[ -n "$PYBIN" ] || { echo '{}'; exit 0; }`. Putting the
 `source` below the first use is not a style nit: `validate-push.sh` shipped that way on
 2026-08-31 and its force-push block was unreachable.

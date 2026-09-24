@@ -3,14 +3,20 @@
 # Hard-blocks force pushes to protected branches (AGENTS.md "Git and commits").
 # Non-blocking warning for regular pushes to master/main.
 
+INPUT=$(cat)
+
+# Prefilter: a push is only judged after a `git` token (below), and JSON never escapes an
+# ASCII letter, so a raw payload without the text `git` cannot concern this gate. Exiting
+# here skips the _pybin.sh probe and the parse on most Bash calls. Match the raw text, never
+# a token regex: a newline before `git` arrives as \n. tools/test_hooks.sh 4c checks it.
+[[ "$INPUT" == *git* ]] || exit 0
+
 # Resolve a safe Python interpreter. Never a Microsoft Store alias: those hang forever.
 # This MUST stay above the first "$PYBIN" use below. It was previously sourced at the
 # bottom of the flag-parsing block, so PYBIN was empty when line 16 ran, COMMAND came back
 # empty, and the force-push block below was unreachable. Verified dead 2026-08-31: a
 # `git push --force origin bannerlord-1.4.5` payload returned rc=0 with no output.
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
-
-INPUT=$(cat)
 
 # Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
 # Uses the shared helper rather than a bespoke branch, so `tools/test_hooks.sh` check 5b

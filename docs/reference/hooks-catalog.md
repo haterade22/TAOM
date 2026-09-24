@@ -12,6 +12,11 @@
 > **Source `_pybin.sh` and use `"$PYBIN"`**, then honour its contract
 > (`[ -n "$PYBIN" ] || { echo '{}'; exit 0; }`). `block-dangerous-git.sh` is the model.
 >
+> In a Bash-matched hook, read `INPUT=$(cat)` first and exit with the hook's allow output when
+> the raw payload lacks its trigger text (`*git*`, or `*dotnet*` and `*build.ps1*`), and only
+> then source `_pybin.sh`: the probe and the parse are two Python starts, about 200 ms, on every
+> Bash call. `tools/test_hooks.sh` 4c fails a Bash hook that starts Python on a payload without it.
+>
 > This paragraph used to say "use the python3 fallback". That advice, written 2026-08-20, is what
 > wedged every JSON-parsing hook: with no `timeout` on the registrations, a Bash call paid one
 > 600s PreToolUse batch plus one 600s PostToolUse batch, which is the 20.0-minute stall seen in the

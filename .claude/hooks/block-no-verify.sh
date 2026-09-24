@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# Resolve a safe Python (never a Microsoft Store alias — those hang forever).
-source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # PreToolUse(Bash): refuse any git command carrying --no-verify.
 #
 # WHY THIS IS NOT ALSO A BUILD GATE
@@ -25,6 +23,15 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # Returns exit 2 to block, 0 to allow. Fail-open: an unparseable payload allows.
 
 INPUT=$(cat)
+
+# Prefilter: the check below needs a `git` token, and JSON never escapes an ASCII letter,
+# so a raw payload without the text `git` cannot concern this gate. Exiting here skips the
+# _pybin.sh probe and the parse (two Python starts) on most Bash calls. Match the raw text,
+# never a token regex: a newline before `git` arrives as \n. tools/test_hooks.sh 4c checks it.
+[[ "$INPUT" == *git* ]] || exit 0
+
+# Resolve a safe Python (never a Microsoft Store alias — those hang forever).
+source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 
 # Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
 taom_pybin_degraded "block-no-verify" "the --no-verify ban" jq && { echo '{}'; exit 0; }

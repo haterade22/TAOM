@@ -2,6 +2,21 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-24
+
+### perf(hooks): v2.0.30 - skip Python in Bash hooks on non-git calls
+
+Every Bash call ran 13 hook scripts, and each one started Python twice (the `_pybin.sh`
+probe, then a JSON parse) before it looked at the command: 256 to 451 ms per hook on
+an `ls`. Each Bash hook now tests the raw payload for its trigger text first (`git` for
+the ten PreToolUse gates, `dotnet` or `build.ps1` for the two PostToolUse hooks, any of
+the three for `suggest-compact.sh`) and allows without starting Python when it is
+absent: 60 to 150 ms per hook. JSON never escapes an ASCII letter, so the raw test
+is a superset of every hook's own trigger; an old-versus-new run over 156 payload cases
+found no changed decision. A token regex was rejected: a newline before `git` arrives
+as `\n` and would have skipped a multi-line commit. `tools/test_hooks.sh` 4c counts
+interpreter starts with a pinned fake interpreter, in both directions.
+
 ## 2026-09-23
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)

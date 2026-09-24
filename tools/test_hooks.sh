@@ -414,6 +414,79 @@ PYEOF
 done
 
 # ---------------------------------------------------------------------------
+# 4c. A Bash call that cannot concern a hook starts no Python in it.
+#     Every Bash-path hook used to source _pybin.sh (one Python start, the probe) and
+#     parse the payload (a second) before it looked at the command: 200 to 330 ms per
+#     hook on an `ls`, for 13 hooks on every Bash call. Each now tests the RAW payload
+#     for its trigger text first. A counting interpreter pinned through TAOM_PYBIN
+#     records every start, so the check is deterministic on any platform. The trigger
+#     rows are multi-line on purpose: a newline before `git` arrives as the two
+#     characters \n, which is how a token regex over the raw JSON would have skipped a
+#     real commit. Hooks are discovered from settings.json, so a new Bash hook that
+#     parses before it filters fails here.
+# ---------------------------------------------------------------------------
+head2 "4c. the Bash hooks start no Python on a payload that cannot concern them"
+PF="$SANDBOX/prefilter"
+mkdir -p "$PF"
+FAKEPY="$PF/fakepy"
+printf '#!/bin/sh\necho started >> "%s/starts"\nprintf taompy\n' "$PF" > "$FAKEPY"
+chmod +x "$FAKEPY" 2>/dev/null
+pf_payload() {  # $1 event, $2 command already JSON-escaped; printf %s keeps its backslashes
+    printf '{"tool_name":"Bash","session_id":"taom-prefilter-test","hook_event_name":"%s","tool_input":{"command":"%s","description":"prefilter probe"},"tool_response":{"stdout":"ok","stderr":""}}' "$1" "$2"
+}
+pf_starts() {   # $1 hook file name, $2 payload; prints how many interpreter starts it caused
+    rm -f "$PF/starts"
+    printf '%s' "$2" | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$SANDBOX" TAOM_PYBIN="$FAKEPY" \
+        bash ".claude/hooks/$1" >/dev/null 2>&1
+    if [[ -f "$PF/starts" ]]; then grep -c . "$PF/starts"; else echo 0; fi
+}
+PF_PIN=$(env TAOM_PYBIN="$FAKEPY" bash -c 'source .claude/hooks/_pybin.sh; printf "%s" "$PYBIN"' 2>/dev/null)
+PF_ROWS=$("$HPY" - <<'PY'
+import json
+d = json.load(open('.claude/settings.json', encoding='utf-8'))
+rows = set()
+for ev in ('PreToolUse', 'PostToolUse'):
+    for g in d.get('hooks', {}).get(ev, []):
+        m = g.get('matcher', '')
+        if m == '' or 'Bash' in m.split('|'):
+            for h in g.get('hooks', []):
+                rows.add(ev + ':' + h['command'].rsplit('/', 1)[-1])
+print(' '.join(sorted(rows)))
+PY
+)
+if [[ "$PF_PIN" != "$FAKEPY" ]]; then
+    bad "4c premise: _pybin.sh did not accept the counting interpreter (got '$PF_PIN'), so nothing here is proven"
+elif [[ -z "$PF_ROWS" ]]; then
+    bad "4c discovery found no Bash-matched hooks in settings.json; the check is broken"
+else
+    for row in $PF_ROWS; do
+        ev="${row%%:*}"; name="${row#*:}"
+        [[ -f ".claude/hooks/$name" ]] || { bad "4c: $name is registered but missing from .claude/hooks/"; continue; }
+        n=$(pf_starts "$name" "$(pf_payload "$ev" 'ls docs')")
+        if [[ "$n" == 0 ]]; then
+            ok "$name [$ev] no interpreter on a non-trigger payload"
+        else
+            bad "$name [$ev] started an interpreter $n time(s) on a payload that cannot concern it (ls docs): test the raw payload before sourcing _pybin.sh"
+        fi
+        if [[ "$ev" == PostToolUse ]]; then
+            triggers=('cd /x\ndotnet test TAOM.Tests')
+            [[ "$name" == mark-verification-run.sh ]] && triggers+=('cd /x\npwsh ./build.ps1 -RunTests')
+        else
+            triggers=('cd /x\ngit commit -m x')
+        fi
+        for cmd in "${triggers[@]}"; do
+            n=$(pf_starts "$name" "$(pf_payload "$ev" "$cmd")")
+            if [[ "$n" -ge 1 ]]; then
+                ok "$name [$ev] still parses a multi-line trigger payload [$cmd]"
+            else
+                bad "$name [$ev] skipped its parse on a trigger payload [$cmd]: the prefilter is narrower than the hook's own trigger"
+            fi
+        done
+    done
+    rm -f /tmp/claude-tool-count-taom-prefilter-test /tmp/claude-last-boundary-taom-prefilter-test
+fi
+
+# ---------------------------------------------------------------------------
 # 5. Starved environment: no jq, no python at all.
 #    Every hook must still terminate promptly and must NOT block. This is the
 #    fail-open mandate in .claude/rules/harness-facts.md, tested rather than assumed.
