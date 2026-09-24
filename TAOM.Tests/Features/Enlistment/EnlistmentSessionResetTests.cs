@@ -137,4 +137,25 @@ public class EnlistmentSessionResetTests
 
         probe.Received(2).Probe(Arg.Any<string>());
     }
+
+    // ---- the new-campaign path (EnlistmentBehavior) --------------------------------------------
+
+    [TestMethod]
+    public void NewCampaign_DropsTheSessionCaches_AndStillClearsTheStore()
+    {
+        // The engine fires OnNewGameCreated, never OnGameLoaded, for a new campaign
+        // (Campaign.DoLoadingForGameType), so the load hook's reset alone left campaign two
+        // running on campaign one's caches.
+        var store = Substitute.For<IEnlistmentStore>();
+        var maintenance = Substitute.For<IServiceMaintenanceService>();
+        var sut = new EnlistmentBehavior(store, Substitute.For<IEnlistmentStateMachine>(),
+            Substitute.For<IEnlistmentReconciler>(), Substitute.For<IEnlistmentLoadNormalizer>(),
+            Substitute.For<IPlayerPartyAdapter>(), Substitute.For<ICoopSessionProvider>(),
+            maintenance, Substitute.For<IModLogger>());
+
+        sut.OnNewGameCreated(null);
+
+        maintenance.Received(1).ResetSessionCaches();
+        store.Received(1).Clear();
+    }
 }

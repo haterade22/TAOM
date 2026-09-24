@@ -121,8 +121,10 @@ public class EnlistmentBehavior : CampaignBehaviorBase
         _normalizer.Normalize(_playerParty.GetMainHeroId(), CampaignTime.Now.ToDays);
     }
 
-    private void OnNewGameCreated(CampaignGameStarter starter)
+    // internal for TAOM.Tests. A new campaign never reaches OnGameLoaded: drop the session caches here too.
+    internal void OnNewGameCreated(CampaignGameStarter starter)
     {
+        _maintenance.ResetSessionCaches();
         // A brand-new campaign starts with no service record. SyncData(IsLoading) has NOT
         // run here, so _justLoadedFromSave is false and clearing is correct.
         if (!_justLoadedFromSave)
