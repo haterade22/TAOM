@@ -13,9 +13,11 @@ reported "the prefilter is narrower than the hook's own trigger" for a hook whos
 byte-identical to seven that passed. The builder hit exactly that (`scratch/013/green.txt:193`),
 a plan STOP condition, reran, got green, and committed without recording it.
 
-All six code or doc findings are fixed with a failing proof first: two planted mutations passed
-the committed suite and fail the new one, and a fake interpreter slowed to 1 s no longer produces
-a false failure.
+All six code or doc findings are fixed. F1 to F3 have a failing proof first: a fake interpreter
+slowed to 1 s read 0 starts where the trace showed the `source` (F1), and a planted `exit 3`
+(F2) and a planted removal of suggest-compact's two arms (F3) passed the committed suite and fail
+the new one. F4 to F6 are discovery and wording fixes with no failing proof: F4's evidence is that
+discovery still finds the same 13 rows, and F5 and F6 are the rewording itself.
 
 ## Findings
 

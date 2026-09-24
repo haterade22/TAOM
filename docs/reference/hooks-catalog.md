@@ -20,7 +20,8 @@
 > In a Bash-matched hook, read `INPUT=$(cat)` first and exit with the hook's allow output when
 > the raw payload lacks its trigger text (`*git*` for a git gate; `*dotnet*` or `*build.ps1*` for
 > a build or test hook), and only then source `_pybin.sh`: the probe and the parse are two Python
-> starts, 256 to 451 ms per hook, on every Bash call. `tools/test_hooks.sh` 4c fails a Bash hook
+> starts on every Bash call, and a hook took 256 to 451 ms on an `ls` before the prefilter and 60
+> to 150 ms after. `tools/test_hooks.sh` 4c fails a Bash hook
 > that sources `_pybin.sh` on a payload without it. The raw test rests on how Claude Code writes
 > the payload, not on JSON: JSON allows `\u0067` for `g`, while Claude Code writes letters
 > literally (it sent raw UTF-8 in #647; the live proof for plan 013 is still owed). Re-prove it

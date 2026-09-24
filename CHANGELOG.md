@@ -13,9 +13,9 @@
   `build.ps1` trigger rows and finds Bash hooks by regex matcher, as the harness does.
 - Section 4 gains a Bash payload holding `git` and `dotnet`, so the exit-code and JSON
   contract covers each Bash hook's parse path again; `echo hi` stops at every prefilter.
-- The prefilter premise is Claude Code's payload, not JSON (JSON allows `g`). The
-  hook comments and `docs/reference/hooks-catalog.md` say so, and the catalog names the
-  re-check after a Claude Code upgrade.
+- The prefilter premise is Claude Code's payload, not JSON (JSON allows `\u0067`
+  for `g`). The hook comments and `docs/reference/hooks-catalog.md` say so, and the
+  catalog names the re-check after a Claude Code upgrade.
 - Report: `docs/reviews/deep-review-013-bash-hook-prefilter-2026-09-24.md`; RCA:
   `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md`.
 
@@ -27,11 +27,11 @@ an `ls`. Each Bash hook now tests the raw payload for its trigger text first (`g
 the ten PreToolUse gates, `dotnet` for `notify-test-results.sh`, `dotnet` or `build.ps1`
 for `mark-verification-run.sh`, any of the three for `suggest-compact.sh`) and allows
 without starting Python when it is absent: 60 to 150 ms per hook. Claude Code writes
-ASCII letters unescaped in the payload (JSON itself would allow `g`), so the raw
-test is a superset of every hook's own trigger; an old-versus-new run over 156 payload
-cases found no changed decision. A token regex was rejected: a newline before `git`
-arrives as `\n` and would have skipped a multi-line commit. `tools/test_hooks.sh` 4c
-checks both directions.
+ASCII letters unescaped in the payload (JSON itself would allow `\u0067` for `g`),
+so the raw test is a superset of every hook's own trigger; an old-versus-new run over
+156 payload cases found no changed decision. A token regex was rejected: a newline
+before `git` arrives as `\n` and would have skipped a multi-line commit.
+`tools/test_hooks.sh` 4c checks both directions.
 
 ## 2026-09-23
 

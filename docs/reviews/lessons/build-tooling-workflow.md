@@ -2271,7 +2271,7 @@ After the prefilter landed, none of section 4's contract payloads held `git`, `d
 - **Source:** `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md` F2, F3.
 
 ### State a payload premise as the producer's behaviour, with its re-check, not as a property of the format (plan 013, 2026-09-24)
-Eleven gates now skip parsing when the raw payload lacks `git`, which is safe only because Claude Code writes ASCII letters literally. The comments said "JSON never escapes an ASCII letter", which is false (`\u0067` is valid JSON for `g`), and the instruction to re-prove it after a Claude Code upgrade lived only in the plan.
+The ten git gates now skip parsing when the raw payload lacks `git`, which is safe only because Claude Code writes ASCII letters literally. The comments said "JSON never escapes an ASCII letter", which is false (`\u0067` is valid JSON for `g`), and the instruction to re-prove it after a Claude Code upgrade lived only in the plan.
 - **Why missed:** the plan's caveat did not reach the comment text it prescribed.
 - **Prevent:** name the producer and the evidence ("Claude Code writes letters literally; raw UTF-8 seen in #647"), and put the re-check where the next upgrade will find it (`docs/reference/hooks-catalog.md`, and `harness-facts.md` once free).
 - **Source:** `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md` F5.

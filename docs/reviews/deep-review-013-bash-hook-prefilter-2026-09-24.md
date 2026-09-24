@@ -169,3 +169,30 @@ Phase 3h is consolidated later for all branches. Lines I would add:
   line, and a concrete counter-payload (`\u0067it reset --hard`) for a stated premise.
 
 RCA: `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md`.
+
+## Convergence
+
+One deep-reviewer pass (standards plus behaviour parity) over `90141357..787fd366`. It found no
+behaviour defect: the 12 hook edits change comment lines only, the new 4c trace check fails safe,
+discovery still finds 13 rows, and the `bash-trigger` payload passes every prefilter without
+tripping any hook's own check. It found three LOW text defects, each verified against the file
+before fixing, and one NIT.
+
+| # | Sev | Finding | Verdict | Fix |
+|---|---|---|---|---|
+| V1 | LOW | `CHANGELOG.md:16` and `:30` read "JSON allows `g`": the escape had been decoded into the letter it spells | CONFIRMED | Both lines now name the escape for `g`. Cause: the Edit tool decodes a backslash-u escape in its replacement text, and did so again on the first attempt at this fix; the fix went in through a script that builds the backslash with `chr(92)` |
+| V2 | LOW | `hooks-catalog.md:22-23` gave 256 to 451 ms as the cost of the two Python starts; it is the whole hook's time on an `ls` before the change, bare-bash floor included (`scratch/013/step0-timing.txt`) | CONFIRMED | Now says a hook took 256 to 451 ms before the prefilter and 60 to 150 ms after (`step7-timing.txt`) |
+| V3 | LOW | `REVIEW-LOG.md:3790` said both MEDs were proven by planted mutations; the mutations were the `exit 3` (F2) and the suggest-compact arm removal (F3), and F1 was proven by the 1 s slow fake. The RCA claimed a failing proof first for all six findings; F4 to F6 had none | CONFIRMED | Each proof attributed to the finding it proves, in both files; the RCA says F4 to F6 are discovery and wording fixes without a failing proof |
+| V4 | NIT | `lessons/build-tooling-workflow.md:2274` said "Eleven gates" skip parsing without `git`; only the ten git gates do (`suggest-compact.sh:79` also accepts `dotnet` and `build.ps1`) | CONFIRMED | "The ten git gates" |
+
+False positives: none. Not acted on (the reviewer's UNVERIFIED items): the #647 citation as proof
+of Claude Code's payload writer, and the `re.fullmatch` matcher assumption; both wait on the live
+proof owed after merge (plan 013:695).
+
+Verification after the fixes, in the worktree:
+
+| Run | Result | File under `E:\repos\taom-improve\scratch\013-review\` |
+|---|---|---|
+| `bash tools/test_hooks.sh` | 341 passed, 0 failed | `convergence-hooks.txt` |
+| `python tools/lint_docs.py --dash-base 787fd366` | 0 new dashes; 7 size warnings, all on rules this branch does not touch | none |
+| `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` | Failed 2, Passed 10235, Skipped 2: the two known live-Armory tests, the same pair as `dotnet-test.txt` | `convergence-dotnet-test.txt` |

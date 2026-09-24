@@ -3787,7 +3787,9 @@ that misses its 0.8 s probe, so under load the check blamed a correct prefilter 
 done so once in the builder's logs, a plan STOP condition that went unrecorded). It now reads a
 `bash -x` trace for the `source` of `_pybin.sh`. The second MED: section 4's contract payloads no
 longer reached any Bash hook's parse path; a `git status && dotnet --info` payload restores it.
-Both were proven by planted mutations that passed the committed suite and fail the new one. The
+The first was proven by a fake interpreter slowed to 1 s, under which the counter read 0 starts
+while the trace showed the `source`; the second by a planted `exit 3` that passed the committed
+suite and fails the new one (a planted removal of suggest-compact's two arms did the same). The
 LOWs: suggest-compact's missing trigger rows, 4c's matcher discovery, the premise stated as a JSON
 property rather than Claude Code's, and a misplaced catalog paragraph. The false positive: the
 parity claim, whose evidence was unsaved but which reruns confirmed. For Mike: the plan's GitHub
