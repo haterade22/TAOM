@@ -5,7 +5,7 @@
 
 INPUT=$(cat)
 
-# Prefilter: a push is only judged after a `git` token (below), and JSON never escapes an
+# Prefilter: a push is only judged after a `git` token (below), and Claude Code never escapes an
 # ASCII letter, so a raw payload without the text `git` cannot concern this gate. Exiting
 # here skips the _pybin.sh probe and the parse on most Bash calls. Match the raw text, never
 # a token regex: a newline before `git` arrives as \n. tools/test_hooks.sh 4c checks it.

@@ -2257,3 +2257,21 @@ Three gates approximated a language with regexes and each broke on valid input. 
 - **Why missed:** the check discovered hooks by their external tool, not by being a gate.
 - **Prevent:** check 4b times every PreToolUse gate on a commit payload against the real repo and fails at 80% of its registration. Query git once for all files, never once per file.
 - **Source:** `docs/reviews/rca-adr011-batch1-2026-09-23.md` C1.
+
+### A test oracle must not sit downstream of anything the code under test can swap out (plan 013, 2026-09-24)
+`tools/test_hooks.sh` 4c proved "this hook starts no Python" by counting starts of a fake interpreter pinned through `TAOM_PYBIN`. `_pybin.sh` probes the pin under a 0.8 s timeout and silently falls back to the real `python` when it misses, which counts nothing. Under load the check read 0 starts and blamed a prefilter byte-identical to seven that passed; the same fallback could pass a hook that does start Python. The builder saw the false failure, reran, got green, and did not record it.
+- **Why missed:** the counter was designed without reading the resolver's fallback, and its premise check ran once, before the rows, so it could not see a later probe miss. A zero count looks exactly like success (repeat of "A zero you did not prove is not a zero", above).
+- **Prevent:** observe the decision itself, not a side effect behind a timed or fallible step: 4c reads a `bash -x` trace for the `source` of `_pybin.sh`. When a test flakes once, find the mechanism before rerunning; a green rerun is not evidence the red one was noise.
+- **Source:** `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md` F1.
+
+### An early exit moves every existing test off the path behind it: re-point the payloads and give each filter arm a row (plan 013, 2026-09-24)
+After the prefilter landed, none of section 4's contract payloads held `git`, `dotnet` or `build.ps1`, so the exit-code and JSON contract stopped at every Bash hook's first line, and nine hooks had no committed check on their parse path. 4c's positive rows also covered one arm of `suggest-compact.sh`'s three-arm filter. A planted `exit 3` after the `source` and a deleted filter arm both kept the suite green.
+- **Why missed:** the plan listed section 4 as "must stay green" and it did; nobody asked which path its payloads now reached. Rows were chosen per event, not per filter arm.
+- **Prevent:** when a change adds a fast path, list which existing tests now take it and add a payload that reaches the slow path. Give every alternative of a filter its own trigger row, and prove each row by deleting the arm it covers.
+- **Source:** `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md` F2, F3.
+
+### State a payload premise as the producer's behaviour, with its re-check, not as a property of the format (plan 013, 2026-09-24)
+Eleven gates now skip parsing when the raw payload lacks `git`, which is safe only because Claude Code writes ASCII letters literally. The comments said "JSON never escapes an ASCII letter", which is false (`\u0067` is valid JSON for `g`), and the instruction to re-prove it after a Claude Code upgrade lived only in the plan.
+- **Why missed:** the plan's caveat did not reach the comment text it prescribed.
+- **Prevent:** name the producer and the evidence ("Claude Code writes letters literally; raw UTF-8 seen in #647"), and put the re-check where the next upgrade will find it (`docs/reference/hooks-catalog.md`, and `harness-facts.md` once free).
+- **Source:** `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md` F5.

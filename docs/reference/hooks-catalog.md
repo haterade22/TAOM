@@ -12,15 +12,20 @@
 > **Source `_pybin.sh` and use `"$PYBIN"`**, then honour its contract
 > (`[ -n "$PYBIN" ] || { echo '{}'; exit 0; }`). `block-dangerous-git.sh` is the model.
 >
-> In a Bash-matched hook, read `INPUT=$(cat)` first and exit with the hook's allow output when
-> the raw payload lacks its trigger text (`*git*`, or `*dotnet*` and `*build.ps1*`), and only
-> then source `_pybin.sh`: the probe and the parse are two Python starts, about 200 ms, on every
-> Bash call. `tools/test_hooks.sh` 4c fails a Bash hook that starts Python on a payload without it.
->
 > This paragraph used to say "use the python3 fallback". That advice, written 2026-08-20, is what
 > wedged every JSON-parsing hook: with no `timeout` on the registrations, a Bash call paid one
 > 600s PreToolUse batch plus one 600s PostToolUse batch, which is the 20.0-minute stall seen in the
 > 2026-08-31 transcripts. Outside a hook, plain `python` is safe and is the repo convention.
+>
+> In a Bash-matched hook, read `INPUT=$(cat)` first and exit with the hook's allow output when
+> the raw payload lacks its trigger text (`*git*` for a git gate; `*dotnet*` or `*build.ps1*` for
+> a build or test hook), and only then source `_pybin.sh`: the probe and the parse are two Python
+> starts, 256 to 451 ms per hook, on every Bash call. `tools/test_hooks.sh` 4c fails a Bash hook
+> that sources `_pybin.sh` on a payload without it. The raw test rests on how Claude Code writes
+> the payload, not on JSON: JSON allows `\u0067` for `g`, while Claude Code writes letters
+> literally (it sent raw UTF-8 in #647; the live proof for plan 013 is still owed). Re-prove it
+> after a Claude Code upgrade: a two-line `cd` then `git commit --dry-run -m "no label here"`
+> must still be denied.
 
 | Hook | Event | Purpose |
 |------|-------|---------|

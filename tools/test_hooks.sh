@@ -341,8 +341,12 @@ PY
 PRE_GATES="$PRE_GATES check-freeze.sh"
 is_pre_gate() { [[ " $PRE_GATES " == *" $1 "* ]]; }
 
+# bash-trigger holds every Bash hook's prefilter text (git, dotnet) but matches no hook's
+# trigger, so the contract covers the parse path behind each prefilter; `echo hi` alone
+# now stops at the prefilter in every Bash hook (review of plan 013).
 PAYLOADS=(
   'bash|{"tool_name":"Bash","tool_input":{"command":"echo hi"},"hook_event_name":"PreToolUse"}'
+  'bash-trigger|{"tool_name":"Bash","tool_input":{"command":"git status && dotnet --info"},"hook_event_name":"PreToolUse"}'
   'edit|{"tool_name":"Edit","tool_input":{"file_path":"'"$SANDBOX"'/Main/Thing.cs"},"hook_event_name":"PreToolUse"}'
   'mcp|{"tool_name":"mcp__serena__find_symbol","tool_input":{},"hook_event_name":"PreToolUse"}'
   'session|{"hook_event_name":"SessionStart","session_id":"test","source":"startup"}'
@@ -416,14 +420,18 @@ done
 # ---------------------------------------------------------------------------
 # 4c. A Bash call that cannot concern a hook starts no Python in it.
 #     Every Bash-path hook used to source _pybin.sh (one Python start, the probe) and
-#     parse the payload (a second) before it looked at the command: 200 to 330 ms per
+#     parse the payload (a second) before it looked at the command: 256 to 451 ms per
 #     hook on an `ls`, for 13 hooks on every Bash call. Each now tests the RAW payload
-#     for its trigger text first. A counting interpreter pinned through TAOM_PYBIN
-#     records every start, so the check is deterministic on any platform. The trigger
-#     rows are multi-line on purpose: a newline before `git` arrives as the two
-#     characters \n, which is how a token regex over the raw JSON would have skipped a
-#     real commit. Hooks are discovered from settings.json, so a new Bash hook that
-#     parses before it filters fails here.
+#     for its trigger text first. Each row runs the hook under `bash -x` and reads the
+#     trace for its `source` of _pybin.sh, the only road to Python in these hooks. The
+#     first oracle counted starts of a fake interpreter pinned through TAOM_PYBIN, and
+#     it flaked under load: _pybin.sh drops a pin that misses its 0.8 s probe and finds
+#     the real python, which counted nothing (review of plan 013). The trace does not
+#     depend on timing; the fake stays to keep the parse cheap, and its count is a
+#     second witness on the negative row. The trigger rows are multi-line on purpose: a
+#     newline before `git` arrives as the two characters \n, which is how a token regex
+#     over the raw JSON would have skipped a real commit. Hooks are discovered from
+#     settings.json, so a new Bash hook that sources _pybin.sh before it filters fails.
 # ---------------------------------------------------------------------------
 head2 "4c. the Bash hooks start no Python on a payload that cannot concern them"
 PF="$SANDBOX/prefilter"
@@ -434,52 +442,60 @@ chmod +x "$FAKEPY" 2>/dev/null
 pf_payload() {  # $1 event, $2 command already JSON-escaped; printf %s keeps its backslashes
     printf '{"tool_name":"Bash","session_id":"taom-prefilter-test","hook_event_name":"%s","tool_input":{"command":"%s","description":"prefilter probe"},"tool_response":{"stdout":"ok","stderr":""}}' "$1" "$2"
 }
-pf_starts() {   # $1 hook file name, $2 payload; prints how many interpreter starts it caused
-    rm -f "$PF/starts"
-    printf '%s' "$2" | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$SANDBOX" TAOM_PYBIN="$FAKEPY" \
-        bash ".claude/hooks/$1" >/dev/null 2>&1
-    if [[ -f "$PF/starts" ]]; then grep -c . "$PF/starts"; else echo 0; fi
+pf_run() {      # $1 hook file name, $2 payload; prints "<times _pybin.sh was sourced> <fake starts>"
+    rm -f "$PF/starts" "$PF/trace"
+    printf '%s' "$2" | timeout -k 2 10 env PS4='+ ' CLAUDE_PROJECT_DIR="$SANDBOX" TAOM_PYBIN="$FAKEPY" \
+        bash -x ".claude/hooks/$1" >/dev/null 2>"$PF/trace"
+    local s n=0
+    s=$(grep -cE '^\++ (source|\.) .*_pybin\.sh$' "$PF/trace" 2>/dev/null)
+    [[ -f "$PF/starts" ]] && n=$(grep -c . "$PF/starts")
+    echo "${s:-0} $n"
 }
-PF_PIN=$(env TAOM_PYBIN="$FAKEPY" bash -c 'source .claude/hooks/_pybin.sh; printf "%s" "$PYBIN"' 2>/dev/null)
 PF_ROWS=$("$HPY" - <<'PY'
-import json
+import json, re
 d = json.load(open('.claude/settings.json', encoding='utf-8'))
+def matches_bash(m):  # the harness treats a matcher as a regex; '' and '*' mean every tool
+    if m in ('', '*'):
+        return True
+    try:
+        return re.fullmatch(m, 'Bash') is not None
+    except re.error:
+        return False
 rows = set()
-for ev in ('PreToolUse', 'PostToolUse'):
+for ev in ('PreToolUse', 'PostToolUse', 'PostToolUseFailure'):
     for g in d.get('hooks', {}).get(ev, []):
-        m = g.get('matcher', '')
-        if m == '' or 'Bash' in m.split('|'):
+        if matches_bash(g.get('matcher', '')):
             for h in g.get('hooks', []):
                 rows.add(ev + ':' + h['command'].rsplit('/', 1)[-1])
 print(' '.join(sorted(rows)))
 PY
 )
-if [[ "$PF_PIN" != "$FAKEPY" ]]; then
-    bad "4c premise: _pybin.sh did not accept the counting interpreter (got '$PF_PIN'), so nothing here is proven"
-elif [[ -z "$PF_ROWS" ]]; then
+if [[ -z "$PF_ROWS" ]]; then
     bad "4c discovery found no Bash-matched hooks in settings.json; the check is broken"
 else
     for row in $PF_ROWS; do
         ev="${row%%:*}"; name="${row#*:}"
         [[ -f ".claude/hooks/$name" ]] || { bad "4c: $name is registered but missing from .claude/hooks/"; continue; }
-        n=$(pf_starts "$name" "$(pf_payload "$ev" 'ls docs')")
-        if [[ "$n" == 0 ]]; then
+        read -r s n <<< "$(pf_run "$name" "$(pf_payload "$ev" 'ls docs')")"
+        if [[ "$s" == 0 && "$n" == 0 ]]; then
             ok "$name [$ev] no interpreter on a non-trigger payload"
         else
-            bad "$name [$ev] started an interpreter $n time(s) on a payload that cannot concern it (ls docs): test the raw payload before sourcing _pybin.sh"
+            bad "$name [$ev] reached _pybin.sh ($s source, $n start) on a payload that cannot concern it (ls docs): test the raw payload before sourcing _pybin.sh"
         fi
-        if [[ "$ev" == PostToolUse ]]; then
+        if [[ "$ev" == PostToolUse* ]]; then
             triggers=('cd /x\ndotnet test TAOM.Tests')
             [[ "$name" == mark-verification-run.sh ]] && triggers+=('cd /x\npwsh ./build.ps1 -RunTests')
         else
             triggers=('cd /x\ngit commit -m x')
+            # suggest-compact.sh also reads build and test boundaries (its `dotnet` and `build.ps1` arms).
+            [[ "$name" == suggest-compact.sh ]] && triggers+=('cd /x\ndotnet test TAOM.Tests' 'cd /x\n./build.ps1 -RunTests')
         fi
         for cmd in "${triggers[@]}"; do
-            n=$(pf_starts "$name" "$(pf_payload "$ev" "$cmd")")
-            if [[ "$n" -ge 1 ]]; then
-                ok "$name [$ev] still parses a multi-line trigger payload [$cmd]"
+            read -r s n <<< "$(pf_run "$name" "$(pf_payload "$ev" "$cmd")")"
+            if [[ "$s" -ge 1 ]]; then
+                ok "$name [$ev] reaches _pybin.sh on a multi-line trigger payload [$cmd]"
             else
-                bad "$name [$ev] skipped its parse on a trigger payload [$cmd]: the prefilter is narrower than the hook's own trigger"
+                bad "$name [$ev] never reached _pybin.sh on a trigger payload [$cmd]: the prefilter is narrower than the hook's own trigger"
             fi
         done
     done

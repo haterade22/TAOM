@@ -11,7 +11,7 @@
 INPUT=$(cat)
 
 # Prefilter: a mark needs `dotnet` or `build.ps1` in the command (the segment loop below),
-# and JSON never escapes an ASCII letter, so a raw payload with neither cannot concern this
+# and Claude Code never escapes an ASCII letter, so a raw payload with neither cannot concern this
 # hook. Exiting here skips the _pybin.sh probe and the parse on most Bash calls
 # (tools/test_hooks.sh 4c).
 [[ "$INPUT" == *dotnet* || "$INPUT" == *build.ps1* ]] || exit 0

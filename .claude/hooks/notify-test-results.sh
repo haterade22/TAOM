@@ -3,7 +3,7 @@
 # PostToolUse hook: summarize dotnet test results prominently
 INPUT=$(cat)
 
-# Prefilter: the summary below needs `dotnet test` in the command, and JSON never escapes
+# Prefilter: the summary below needs `dotnet test` in the command, and Claude Code never escapes
 # an ASCII letter, so a raw payload without the text `dotnet` cannot concern this hook.
 # Exiting here skips the _pybin.sh probe and the parse on most Bash calls (test_hooks.sh 4c).
 [[ "$INPUT" == *dotnet* ]] || exit 0

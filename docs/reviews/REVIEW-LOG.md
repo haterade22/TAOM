@@ -3773,3 +3773,33 @@ one gate timed against its registration. Mike approved four design proposals mid
 `harness-facts.md` paths, the `triage-needs-ingame` label as the smoke backlog, `attribution` in
 `settings.json`, a CI workflow of its own on every branch). Root cause tables:
 `docs/reviews/rca-adr011-batch1-2026-09-23.md`; five lessons in build-tooling-workflow.
+
+## Review 132 (renumber at merge): plan 013, the Bash hook prefilter, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+Plan 013 put a raw-text test in front of the Python start-up in all 13 Bash hooks, cutting a
+non-git Bash call from 256 to 451 ms per hook to 60 to 150 ms. Six lenses and Codex agree the
+prefilters are correct; two parity runs (156 and 300 cases, the second comparing stderr and the
+marker file too) found no changed decision.
+
+**9 findings: 7 confirmed and fixed, 1 false positive, 1 for Mike.** The one MED that mattered:
+the new test section 4c counted starts of a pinned fake interpreter, and `_pybin.sh` drops a pin
+that misses its 0.8 s probe, so under load the check blamed a correct prefilter (it had already
+done so once in the builder's logs, a plan STOP condition that went unrecorded). It now reads a
+`bash -x` trace for the `source` of `_pybin.sh`. The second MED: section 4's contract payloads no
+longer reached any Bash hook's parse path; a `git status && dotnet --info` payload restores it.
+Both were proven by planted mutations that passed the committed suite and fail the new one. The
+LOWs: suggest-compact's missing trigger rows, 4c's matcher discovery, the premise stated as a JSON
+property rather than Claude Code's, and a misplaced catalog paragraph. The false positive: the
+parity claim, whose evidence was unsaved but which reruns confirmed. For Mike: the plan's GitHub
+issue, two narrower-literal proposals, and the pre-existing multi-line force-push gap.
+
+Codex found 2 of the 7 (both P3, both confirmed, 0 false positives). It missed the flake because
+it read git refs only and never saw the run log; the lenses that caught it read the scratch logs.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| C1 | suggest-compact filter arms with no trigger row; oracle weaker than its label | Other: filter arm without a row | Rows chosen per event, parity excluded the hook | Lesson "An early exit moves every existing test off the path behind it" |
+| C2 | Serializer premise written as a JSON guarantee | Assumed an API behaviour | Plan caveat did not reach the prescribed comment | Lesson "State a payload premise as the producer's behaviour" |
+
+Report: `docs/reviews/deep-review-013-bash-hook-prefilter-2026-09-24.md`; RCA:
+`docs/reviews/rca-bash-hook-prefilter-2026-09-24.md`; three lessons in build-tooling-workflow.

@@ -24,7 +24,7 @@
 
 INPUT=$(cat)
 
-# Prefilter: the check below needs a `git` token, and JSON never escapes an ASCII letter,
+# Prefilter: the check below needs a `git` token, and Claude Code never escapes an ASCII letter,
 # so a raw payload without the text `git` cannot concern this gate. Exiting here skips the
 # _pybin.sh probe and the parse (two Python starts) on most Bash calls. Match the raw text,
 # never a token regex: a newline before `git` arrives as \n. tools/test_hooks.sh 4c checks it.

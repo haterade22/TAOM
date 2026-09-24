@@ -16,7 +16,7 @@ set -uo pipefail
 
 INPUT=$(cat)
 
-# Prefilter: every decision below needs the text `git` in the command, and JSON never
+# Prefilter: every decision below needs the text `git` in the command, and Claude Code never
 # escapes an ASCII letter, so a raw payload without it cannot concern this gate. Exiting
 # here skips the _pybin.sh probe and the parse (two Python starts) on most Bash calls.
 # Match the raw text, never a token regex: a newline before `git` arrives as \n.
