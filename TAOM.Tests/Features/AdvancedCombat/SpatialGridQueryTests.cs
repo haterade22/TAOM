@@ -106,4 +106,20 @@ public class SpatialGridQueryTests
         SpatialGrid.CollectInRadius(cells, new Vec3(0f, 0f, 0f), 10f, CellSize, PositionOf, buffer);
         CollectionAssert.AreEqual(new List<Point> { near }, buffer);
     }
+
+    [TestMethod]
+    public void CollectInRadius_SixtyMetreQuery_ProbesSevenBySevenColumns()
+    {
+        var cells = SpatialGrid.BuildCells(new List<Point>(), Everyone, PositionOf, CellSize);
+        int probes = SpatialGrid.CollectInRadius(cells, new Vec3(5f, 5f, 5f), 60f, CellSize, PositionOf, new List<Point>());
+        Assert.AreEqual(49, probes, "the warg's 60 m scan should look up 7 x 7 columns, not 7 x 7 x 7 cells");
+    }
+
+    [TestMethod]
+    public void CollectInRadius_TenMetreQuery_ProbesTwoByTwoColumns()
+    {
+        var cells = SpatialGrid.BuildCells(new List<Point>(), Everyone, PositionOf, CellSize);
+        int probes = SpatialGrid.CollectInRadius(cells, new Vec3(5f, 5f, 5f), 10f, CellSize, PositionOf, new List<Point>());
+        Assert.AreEqual(4, probes);
+    }
 }

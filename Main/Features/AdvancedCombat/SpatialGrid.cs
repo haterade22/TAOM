@@ -18,7 +18,7 @@ public class SpatialGrid
 {
     public static SpatialGrid Instance { get; internal set; }
 
-    private Dictionary<(int, int, int), List<Agent>> _grid = new();
+    private Dictionary<(int, int), List<Agent>> _grid = new();
     public float CellSize = 20f;
 
     private static readonly Action<string> ReportOffThread =
@@ -67,15 +67,15 @@ public class SpatialGrid
     }
 
     /// <summary>Buckets every included item by the cell of its position. Pure; tests drive it with plain points.</summary>
-    internal static Dictionary<(int, int, int), List<T>> BuildCells<T>(List<T> items, Func<T, bool> include, Func<T, Vec3> positionOf, float cellSize)
+    internal static Dictionary<(int, int), List<T>> BuildCells<T>(List<T> items, Func<T, bool> include, Func<T, Vec3> positionOf, float cellSize)
     {
-        var cells = new Dictionary<(int, int, int), List<T>>();
+        var cells = new Dictionary<(int, int), List<T>>();
         foreach (T item in items)
         {
             if (!include(item))
                 continue;
             Vec3 pos = positionOf(item);
-            var key = ((int)Math.Floor(pos.x / cellSize), (int)Math.Floor(pos.y / cellSize), (int)Math.Floor(pos.z / cellSize));
+            var key = ((int)Math.Floor(pos.x / cellSize), (int)Math.Floor(pos.y / cellSize));
             if (!cells.TryGetValue(key, out List<T> list))
             {
                 list = new List<T>();
@@ -110,7 +110,7 @@ public class SpatialGrid
     /// <paramref name="radius"/> of <paramref name="center"/> (3D distance, inclusive), looking up only
     /// the cells in the query's bounding box. Returns how many cells it looked up. Pure.
     /// </summary>
-    internal static int CollectInRadius<T>(Dictionary<(int, int, int), List<T>> cells, Vec3 center, float radius, float cellSize, Func<T, Vec3> positionOf, List<T> buffer)
+    internal static int CollectInRadius<T>(Dictionary<(int, int), List<T>> cells, Vec3 center, float radius, float cellSize, Func<T, Vec3> positionOf, List<T> buffer)
     {
         buffer.Clear();
         float radiusSquared = radius * radius;
@@ -118,16 +118,16 @@ public class SpatialGrid
         int maxX = (int)Math.Floor((center.x + radius) / cellSize);
         int minY = (int)Math.Floor((center.y - radius) / cellSize);
         int maxY = (int)Math.Floor((center.y + radius) / cellSize);
-        int minZ = (int)Math.Floor((center.z - radius) / cellSize);
-        int maxZ = (int)Math.Floor((center.z + radius) / cellSize);
 
+        // Cells are keyed on (x, y) only: a battlefield's vertical spread is a few metres, so a z axis
+        // mostly added empty lookups (7 x 7 x 7 = 343 for the warg's 60 m scan, now 7 x 7 = 49). The
+        // distance test below stays 3D, so the result is the same sphere.
         int probes = 0;
         for (int x = minX; x <= maxX; x++)
         for (int y = minY; y <= maxY; y++)
-        for (int z = minZ; z <= maxZ; z++)
         {
             probes++;
-            if (!cells.TryGetValue((x, y, z), out List<T> cell)) continue;
+            if (!cells.TryGetValue((x, y), out List<T> cell)) continue;
             foreach (T item in cell)
             {
                 Vec3 pos = positionOf(item);
