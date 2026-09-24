@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.Refuge;
 
@@ -57,7 +58,7 @@ public class RefugeWiringTests
     [TestMethod]
     public void SubModule_AppliesThePatch75Category()
     {
-        var src = ReadSource("Main", "SubModule.cs");
+        var src = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
         StringAssert.Contains(src, "TryPatchCategory(\"Patch75_Refuge\")",
             "SubModule.cs no longer applies Patch75_Refuge; Harmony is never asked to apply the "
@@ -67,7 +68,7 @@ public class RefugeWiringTests
     [TestMethod]
     public void SubModule_AddsTheRefugeBehavior()
     {
-        var src = ReadSource("Main", "SubModule.cs");
+        var src = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
         StringAssert.Contains(src, "new Features.Refuge.Hooks.RefugeCampaignBehavior(",
             "SubModule.cs no longer adds RefugeCampaignBehavior; menus, SyncData and every tick "

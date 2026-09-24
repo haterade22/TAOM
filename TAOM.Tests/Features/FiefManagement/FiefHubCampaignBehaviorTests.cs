@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Features.FiefManagement;
 using TAOM.Features.FiefManagement.Hooks;
+using TAOM.Tests.Infrastructure;
 using TaleWorlds.CampaignSystem;
 
 namespace TAOM.Tests.Features.FiefManagement;
@@ -129,9 +130,7 @@ public class FiefHubCampaignBehaviorTests
     [TestMethod]
     public void MainSubModule_AddsFiefHubCampaignBehavior()
     {
-        var source = ReadProjectSource("Main", "SubModule.cs");
-        if (source == null)
-            Assert.Inconclusive("Main/SubModule.cs not found");
+        var source = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
         StringAssert.Contains(source, "new FiefHubCampaignBehavior(",
             "Main/SubModule.cs::OnGameStart must add a FiefHubCampaignBehavior via " +
