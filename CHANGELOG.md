@@ -10,27 +10,36 @@ Warg battles do less work per frame. The warg behaviour tree no longer looks ser
 IoC container on every tick, its three enemy scans reuse buffers instead of allocating a list each
 call, the spatial grid looks up 49 cells for a 60 m scan instead of 343, and a live bite no longer
 builds a native skeleton wrapper for every agent within 20 m on every frame, only for those within
-reach. The set of targets a bite can hit is unchanged; when two targets are in reach on the same
-frame at slightly different heights, which one takes the hit can differ.
+reach. Two results can differ. Agents in one 20 m column come back in rebuild order, so when two
+targets are in reach on the same frame, which one takes a bite can differ (and which of two
+equidistant victims a spider engages). And between grid rebuilds (every 2 s) a scan can now return
+an agent that has moved up or down into range since the rebuild, which the old z cells missed.
 
 - **Tree nodes:** `PeriodicallyCheckIfCanAttackAnyone`, `CheckOnceIfCanAttackEnemy`,
   `WargAiControlledIsNotFacingEnemy` and `WargAttackTask` resolve their services once into
-  instance fields when the tree is built; `WargRiderHandManager.Tick` takes the factory
-  `WargMissionBehavior` resolves in its constructor. The scans use the buffer overload of
-  `SpatialGrid.GetNearAliveAgentsInRange`.
+  instance fields when the tree is built; `WargRiderHandManager.Tick` reads the mount's `Monster`
+  with `WargConfig.IsWargMonster` instead of resolving a factory. The scans use the buffer overload
+  of `SpatialGrid.GetNearAliveAgentsInRange`, and the attack checks look up the warg's adapter only
+  once a candidate passes the filters.
 - **SpatialGrid:** cells are keyed on (x, y); the distance test stays 3D. Agents in one 20 m column
   now come back in rebuild order rather than lower height band first.
 - **BoneCheck:** the attacker's skeleton is fetched once per tick and its bone positions reuse one
   list; a target's skeleton is fetched only inside the existing 20 square-metre gate, and a target
-  outside it stays for a later frame. The target skeleton's null test is `is null`, because
-  `== null` on a `NativeObject` runs that class's native static constructor in the test host.
-- **Tests:** `WargTickCostTests` (9, IL scans), `SpatialGridQueryTests` (7, brute-force sphere
-  comparison) and `BoneCheckRangeGateTests` (5). Full suite in the plan's worktree: 10256 passed,
+  outside it stays for a later frame. The gate is a positive requirement, so a NaN frame fails it.
+  The changed skeleton null tests are `is null`, because `== null` on a `NativeObject` runs that
+  class's native static constructor in the test host.
+- **Tests:** `WargTickCostTests` (12: IL scans with control fixtures, and no static service or
+  buffer field), `SpatialGridQueryTests` (9: brute-force sphere comparison, column order, a point
+  moved since the rebuild) and `BoneCheckRangeGateTests` (10: the gate, a NaN frame, every
+  per-target skip). Full suite in the plan's worktree after the review fixes: 10266 passed,
   2 skipped, 2 failed (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
   `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, which read the live Armory).
-- **Owed:** `/deep-review` before merge, and an in-game Custom Battle with warg riders on both
-  sides (bites land and still whiff, the rider hand pose holds, no `[Warg] Tree build failed` line).
-  Nothing smoked in game.
+- **Review:** six-lens deep review and Codex (gpt-6-astra, ultra), no HIGH finding:
+  `docs/reviews/deep-review-015-warg-tick-costs-2026-09-24.md`, RCA
+  `docs/reviews/rca-warg-tick-costs-2026-09-24.md`.
+- **Owed:** a GitHub issue for this work (Mike's call), and an in-game Custom Battle with warg
+  riders on both sides (bites land and still whiff, the rider hand pose holds, no
+  `[Warg] Tree build failed` line). Nothing smoked in game.
 
 ## 2026-09-23
 

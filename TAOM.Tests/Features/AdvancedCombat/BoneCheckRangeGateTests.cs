@@ -103,4 +103,78 @@ public class BoneCheckRangeGateTests
         Assert.AreEqual(0, sut.Targets.Count);
         _ = target.DidNotReceive().AgentVisuals;
     }
+
+    [TestMethod]
+    public void CheckTargets_NullTargetEntry_IsDropped()
+    {
+        var sut = new Probe(new List<IAgentAdapter> { null });
+
+        bool keepChecking = sut.CheckTargets(FrameAt(0f, 0f, 0f), NoAttackerBones);
+
+        Assert.IsTrue(keepChecking);
+        Assert.AreEqual(0, sut.Targets.Count);
+    }
+
+    [TestMethod]
+    public void CheckTargets_FadingOutTarget_IsDroppedBeforeItsVisualsAreRead()
+    {
+        var (target, _) = LiveTargetAt(1f, 0f, 0f);
+        target.IsFadingOut().Returns(true);
+        var sut = new Probe(new List<IAgentAdapter> { target });
+
+        sut.CheckTargets(FrameAt(0f, 0f, 0f), NoAttackerBones);
+
+        Assert.AreEqual(0, sut.Targets.Count);
+        _ = target.DidNotReceive().AgentVisuals;
+    }
+
+    [TestMethod]
+    public void CheckTargets_TargetWithNoVisuals_IsDropped()
+    {
+        var target = Substitute.For<IAgentAdapter>();
+        target.IsActive().Returns(true);
+        target.IsFadingOut().Returns(false);
+        target.AgentVisuals.Returns((IAgentVisualsAdapter)null);
+        var sut = new Probe(new List<IAgentAdapter> { target });
+
+        sut.CheckTargets(FrameAt(0f, 0f, 0f), NoAttackerBones);
+
+        Assert.AreEqual(0, sut.Targets.Count);
+    }
+
+    [TestMethod]
+    public void CheckTargets_TargetWithANonFiniteFrame_FailsTheGateAndIsKept()
+    {
+        // NaN compares false both ways, so the gate must be a positive requirement (distance <= gate)
+        // for a corrupt frame to fail it; an inverted `> gate` exit lets NaN reach GetSkeleton.
+        var (target, visuals) = LiveTargetAt(float.NaN, 0f, 0f);
+        var sut = new Probe(new List<IAgentAdapter> { target });
+
+        bool keepChecking = sut.CheckTargets(FrameAt(0f, 0f, 0f), NoAttackerBones);
+
+        Assert.IsTrue(keepChecking);
+        visuals.DidNotReceive().GetSkeleton();
+        CollectionAssert.AreEqual(new List<IAgentAdapter> { target }, sut.Targets);
+    }
+
+    [TestMethod]
+    public void CheckTargets_MixedTargets_DropsAndKeepsEachWithoutSkippingTheNext()
+    {
+        // Removals step the index back while a far target is kept in place: a lost `i--` would skip
+        // the entry after each removal, which a one-element list cannot show.
+        var inactive = Substitute.For<IAgentAdapter>();
+        inactive.IsActive().Returns(false);
+        var (far, farVisuals) = LiveTargetAt(10f, 0f, 0f);
+        var (nearNoSkeleton, nearVisuals) = LiveTargetAt(1f, 0f, 0f);
+        var (far2, far2Visuals) = LiveTargetAt(0f, 10f, 0f);
+        var sut = new Probe(new List<IAgentAdapter> { inactive, far, nearNoSkeleton, far2 });
+
+        bool keepChecking = sut.CheckTargets(FrameAt(0f, 0f, 0f), NoAttackerBones);
+
+        Assert.IsTrue(keepChecking);
+        CollectionAssert.AreEqual(new List<IAgentAdapter> { far, far2 }, sut.Targets);
+        farVisuals.DidNotReceive().GetSkeleton();
+        far2Visuals.DidNotReceive().GetSkeleton();
+        nearVisuals.Received(1).GetSkeleton();
+    }
 }

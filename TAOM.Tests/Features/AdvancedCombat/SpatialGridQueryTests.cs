@@ -20,7 +20,7 @@ public class SpatialGridQueryTests
     private sealed class Point
     {
         public Point(float x, float y, float z) => P = new Vec3(x, y, z);
-        public Vec3 P { get; }
+        public Vec3 P { get; set; }
         public override string ToString() => $"({P.x}, {P.y}, {P.z})";
     }
 
@@ -48,7 +48,7 @@ public class SpatialGridQueryTests
     }
 
     [TestMethod]
-    public void CollectInRadius_MatchesABruteForceSphereScan()
+    public void CollectInRadius_RandomPointsAndCentres_MatchesABruteForceSphereScan()
     {
         var rng = new Random(15);
         float Next(float min, float max) => (float)(min + rng.NextDouble() * (max - min));
@@ -97,7 +97,7 @@ public class SpatialGridQueryTests
     }
 
     [TestMethod]
-    public void CollectInRadius_ClearsTheBufferBeforeFilling()
+    public void CollectInRadius_BufferHoldsAnEarlierResult_ClearsItBeforeFilling()
     {
         var stale = new Point(500f, 500f, 0f);
         var near = new Point(1f, 0f, 0f);
@@ -121,5 +121,31 @@ public class SpatialGridQueryTests
         var cells = SpatialGrid.BuildCells(new List<Point>(), Everyone, PositionOf, CellSize);
         int probes = SpatialGrid.CollectInRadius(cells, new Vec3(5f, 5f, 5f), 10f, CellSize, PositionOf, new List<Point>());
         Assert.AreEqual(4, probes);
+    }
+
+    [TestMethod]
+    public void CollectInRadius_OneColumnAtTwoHeights_ReturnsThemInBuildOrder()
+    {
+        // Order inside a column is the rebuild's order; it decides which of two in-reach targets a
+        // stop-on-first-hit bite lands on, and which of two equidistant spiders' prey is engaged.
+        // The z-keyed grid returned the lower height band first.
+        var high = new Point(1f, 1f, 25f);
+        var low = new Point(1f, 1f, 5f);
+        var result = Query(new List<Point> { high, low }, new Vec3(0f, 0f, 15f), 30f);
+        CollectionAssert.AreEqual(new List<Point> { high, low }, result);
+    }
+
+    [TestMethod]
+    public void CollectInRadius_PointMovedVerticallySinceTheBuild_IsJudgedOnItsCurrentPosition()
+    {
+        // The grid is rebuilt every 2 s and queried with live positions. A point bucketed at z 21 that
+        // has since dropped to z 18 is inside a 10 m sphere around z 9. The z-keyed grid never probed
+        // its old z cell and missed it; the (x, y) column finds it (Codex review of plan 015, P2).
+        var moving = new Point(1f, 0f, 21f);
+        var cells = SpatialGrid.BuildCells(new List<Point> { moving }, Everyone, PositionOf, CellSize);
+        moving.P = new Vec3(1f, 0f, 18f);
+        var buffer = new List<Point>();
+        SpatialGrid.CollectInRadius(cells, new Vec3(0f, 0f, 9f), 10f, CellSize, PositionOf, buffer);
+        CollectionAssert.AreEqual(new List<Point> { moving }, buffer);
     }
 }

@@ -130,7 +130,9 @@ public class BoneCheck
             // Range gate BEFORE the skeleton: GetSkeleton builds a new native wrapper on every call (a
             // ref-count call, a lock, a GCHandle and a finalizer), and most agents captured at 20 m are
             // outside this gate on any given frame. A target out of range stays for a later frame.
-            if ((targetGlobalFrame.origin - agentGlobalFrame.origin).LengthSquared > _maxRangeForCheck)
+            // Written as a positive requirement so a NaN frame fails it (csharp-architecture.md,
+            // "Engine-Float Decision Gates").
+            if (!((targetGlobalFrame.origin - agentGlobalFrame.origin).LengthSquared <= _maxRangeForCheck))
                 continue;
 
             Skeleton targetSkeleton = targetVisuals.GetSkeleton();

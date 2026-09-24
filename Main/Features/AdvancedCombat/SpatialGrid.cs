@@ -108,7 +108,8 @@ public class SpatialGrid
     /// <summary>
     /// Clears <paramref name="buffer"/> and fills it with the items whose position is within
     /// <paramref name="radius"/> of <paramref name="center"/> (3D distance, inclusive), looking up only
-    /// the cells in the query's bounding box. Returns how many cells it looked up. Pure.
+    /// the cells in the query's bounding box. Returns how many cells it looked up. Touches no state
+    /// but the caller's buffer.
     /// </summary>
     internal static int CollectInRadius<T>(Dictionary<(int, int), List<T>> cells, Vec3 center, float radius, float cellSize, Func<T, Vec3> positionOf, List<T> buffer)
     {
@@ -121,7 +122,10 @@ public class SpatialGrid
 
         // Cells are keyed on (x, y) only: a battlefield's vertical spread is a few metres, so a z axis
         // mostly added empty lookups (7 x 7 x 7 = 343 for the warg's 60 m scan, now 7 x 7 = 49). The
-        // distance test below stays 3D, so the result is the same sphere.
+        // distance test below stays 3D, so on a grid built from current positions the result is the
+        // same sphere. Between rebuilds (every 2 s) positions are live and cells are not: a column
+        // also returns an agent that has since moved up or down into the sphere, which a z cell
+        // would have missed. Within a column, items come back in build order.
         int probes = 0;
         for (int x = minX; x <= maxX; x++)
         for (int y = minY; y <= maxY; y++)

@@ -1071,3 +1071,21 @@ The first `HowdahPrefabTests` pinned the geometry the rebuild changed (moveable 
 - **Why missed:** the step was written from the campaign model's code, and a smoke list reads as mode-neutral unless it says otherwise.
 - **Prevent:** when a smoke step is there to prove an engine DECISION (killed or wounded, a morale roll, a capture), find the model that decides it in each game mode (`AddModel` in `CustomGame` and the campaign starter) and name the mode whose model can give the other answer. If no mode can, the step proves nothing; say so instead. When the model ROLLS (killed or wounded is a survival roll even with `CanKillEvenIfBlunt`), one outcome proves nothing either: say how many trials settle it and which result would (Codex, 2026-09-23: the step first demanded "killed, not wounded", which a correct build can fail).
 - **Source:** `docs/reviews/rca-elk-delta-2026-09-23.md` F5 (#636).
+
+### A gate moved into new code is new code: re-check its NaN polarity where it lands (plan 015, 2026-09-24)
+Plan 015 moved `BoneCheck`'s range gate from `FindBoneInRange` into `CheckTargets` so it runs before the native `GetSkeleton` fetch. The line came across as it was, `if (LengthSquared > _maxRangeForCheck) continue;`, an inverted early exit that a NaN visuals frame passes, so a corrupt frame paid the very wrapper the move was meant to save. This is the fourth shipping of the NaN-gate category (see "Write engine-float decision gates as positive requirements" above).
+- **Why missed:** a relocated line reads as already reviewed, and the NaN sweep is framed around gates a change writes.
+- **Prevent:** when a change moves, extracts or reorders a comparison on an engine float, treat it as a new gate: rewrite it as a positive requirement (`if (!(d <= gate)) continue;`) and add the NaN test for it in the same commit.
+- **Source:** `docs/reviews/rca-warg-tick-costs-2026-09-24.md` F1.
+
+### An IL rule test fails on a body it cannot read, and ships a control it must reject (plan 015, 2026-09-24)
+`WargTickCostTests` scanned per-tick methods for `IoC.Resolve` one level down, but caught `FileNotFoundException` and returned no calls, so a helper whose locals named a `TaleWorlds.MountAndBlade.View` type was never scanned in a filtered run. Its "scans into a reused buffer" tests checked only the overload's arity, which `GetNearAliveAgentsInRange(60, agent, new List<Agent>())` satisfies. Both could not fail for the regression they were named after. Same family as "An audit query that reports zero found needs a positive control".
+- **Why missed:** "cannot read" was treated as "nothing to find", and each test pinned the old code's symptom (the two-argument overload) instead of the property (no allocation per call).
+- **Prevent:** an IL or reflection rule test loads what it needs (`GameAssemblies.EnsureLoaded()` in `[ClassInitialize]`), fails on an unreadable body in scope (inconclusive only when no game install resolves), and carries a small fixture class the rule must reject, asserted in its own test.
+- **Source:** `docs/reviews/rca-warg-tick-costs-2026-09-24.md` F2 and F3 (Codex P3s).
+
+### An equivalence test for a periodically rebuilt index queries it stale (plan 015, 2026-09-24)
+Plan 015 dropped `SpatialGrid`'s z cells and claimed every scan returns the same set. That holds only for a grid built from the positions being queried; the production grid is rebuilt every 2 s and queried with live positions, so a column now returns an agent that moved up or down into the sphere since the rebuild, which the old z cell was never probed for. The brute-force test rebuilt the grid before every query and could not see it.
+- **Why missed:** the proof and the test both modelled a fresh index; build-time cells against query-time positions was never a case.
+- **Prevent:** when a change alters how a cached or periodically rebuilt structure is keyed, test it build, then mutate, then query without rebuilding, against the base version's result, and state any difference in the CHANGELOG.
+- **Source:** `docs/reviews/rca-warg-tick-costs-2026-09-24.md` F4 (Codex P2).

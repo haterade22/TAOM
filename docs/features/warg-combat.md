@@ -123,7 +123,7 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 - **Adapter cache (#592):** `TAOM.Tests/Adapters/AgentAdapterCacheTests.cs` (15) and `MissionAdapterFactoryTests.cs` (6, on bare uninitialized `Agent` objects): reference identity, eviction, index-reuse count and the once-per-mission reuse log.
 - **Current:** `TAOM.Tests/Features/Warg/WargAttackServiceTests.cs` — 7 tests covering the pure damage formula in `CalculateWargAttackDamage` via a testable subclass that stubs the sealed armor lookup.
 - **Coverage gap (tracked in #178):** `HandleWargTargetHit` and `WargAttack` accept sealed `Agent` directly in their signatures (ADR-007 violation), so they cannot be unit-tested without the engine runtime. Closing #178 requires refactoring `IWargAttackService` to accept `IAgentAdapter` instead; once that lands, the missing tests can be added.
-- **Tick-cost tests (plan 015):** `TAOM.Tests/Features/Warg/WargTickCostTests.cs` pins, in the IL, that no per-tick node method reaches `IoC.Resolve` and that the grid scans use the buffer overload; `TAOM.Tests/Features/AdvancedCombat/SpatialGridQueryTests.cs` checks the grid query against a brute-force sphere scan through its generic helpers; `BoneCheckRangeGateTests.cs` pins that a target's skeleton is fetched only inside the range gate.
+- **Tick-cost tests (plan 015):** `TAOM.Tests/Features/Warg/WargTickCostTests.cs` (12) pins, in the IL, that no per-tick node method reaches `IoC.Resolve` and that the grid scans use the buffer overload without constructing a list, checks by reflection that no node keeps a service or buffer in a static field, and proves both IL checks against control fixtures; `TAOM.Tests/Features/AdvancedCombat/SpatialGridQueryTests.cs` (9) checks the grid query against a brute-force sphere scan through its generic helpers, plus column order and a point that moved since the rebuild; `BoneCheckRangeGateTests.cs` (10) pins that a target's skeleton is fetched only inside the range gate, that a NaN frame fails the gate, and every per-target skip.
 
 ## How to Add a New Creature with Custom Attacks
 
@@ -149,11 +149,17 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 
 - **SpatialGrid**: cells are keyed on (x, y) only (the distance test stays 3D), so the 60 m "no enemy close" scan looks up 49 cells instead of 343; every warg node scans into a reused buffer through the zero-allocation overload.
 - **BoneCheck**: the attacker's bone positions reuse one list and its skeleton is fetched once per tick; a target's skeleton is fetched only inside the 20 square-metre gate (about 4.5 m), because `MBAgentVisuals.GetSkeleton()` builds a new finalizable native wrapper on every call.
-- **IoC.Resolve in BT nodes**: resolved once per node when the tree is built, never per evaluation; `WargRiderHandManager.Tick` takes the factory `WargMissionBehavior` resolved in its constructor.
+- **IoC.Resolve in BT nodes**: the four per-tick nodes (`PeriodicallyCheckIfCanAttackAnyone`, `CheckOnceIfCanAttackEnemy`, `WargAiControlledIsNotFacingEnemy`, `WargAttackTask`) resolve once per node when the tree is built, never per evaluation (`LogTask` still resolves its logger per Execute; it runs only when the tree changes branch). `WargRiderHandManager.Tick` decides warg-ness from the mount's `Monster` with `WargConfig.IsWargMonster`, with no container or adapter-cache lookup.
 - **Grid updates**: Every 5 ticks via AdvancedCombatBehavior, not every frame
 
 ## Changelog
 
+- 2026-09-24 - plan 015: per-tick costs cut. The tree nodes resolve their services once, the three
+  scans reuse buffers, the grid keys cells on (x, y) (49 lookups for a 60 m scan instead of 343),
+  and a live bite fetches a target's skeleton only inside the 20 square-metre gate. Between grid
+  rebuilds a scan can now return an agent that moved up or down into range since the rebuild, and
+  agents in one column come back in rebuild order. Review:
+  `../reviews/deep-review-015-warg-tick-costs-2026-09-24.md`.
 - 2026-09-13 - #592: a reinforcement horse that inherited a dead warg's engine index was served the
   warg's cached adapter, got a warg tree, and asked the engine to play `act_warg_attack_running` on
   `as_horse` in the second a player's game froze. The adapter cache now keys by agent object, with

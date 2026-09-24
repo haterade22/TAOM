@@ -685,3 +685,15 @@ A player who owns a creature's blow (#643) reached the career's "+N from ability
 - **Why missed:** the cheapest discriminator was taken and its cost ("bare hands lose the line") accepted without asking whether the ability reaches bare hands.
 - **Prevent:** when TAOM code must tell its own engine calls apart inside an engine callback, mark them at the source: `CustomAttacksUtils.IsRegisteringSyntheticBlow` is set while `RegisterBlow` runs, and the engine raises `OnAgentHit` and `OnScoreHit` synchronously inside that call (`Agent.RegisterBlow` to `HandleBlow` to `Mission.OnAgentHit`). Confirm the callback is synchronous before relying on such a scope.
 - **Source:** `docs/reviews/rca-elk-delta-2026-09-23.md`, convergence C2 and Codex O1 (#643).
+
+### Fetch an engine NativeObject wrapper once per tick, and range-gate before fetching it (plan 015, 2026-09-24)
+`MBAgentVisuals.GetSkeleton()` returns a new managed `Skeleton` on every call (v1.5.3 `ScriptingInterfaceOfIMBAgentVisuals.cs:776-786`): a native ref-count increase, a process-wide lock, a `NativeObjectKeeper` and a `GCHandle` (`NativeObject.cs:32-43`), then a finalizer that calls native again (`:45-51`). `BoneCheck` fetched the attacker's skeleton twice per tick and every captured target's before testing the 4.5 m gate. Other `NativeObject` getters built through the scripting interface behave the same.
+- **Why missed:** a getter reads as a field read, and an adapter that passes straight through (`AgentVisualsAdapter.GetSkeleton`) hides the allocation.
+- **Prevent:** fetch a NativeObject wrapper once per tick and pass it down; run every cheap managed test (range, liveness) before the fetch.
+- **Source:** plan 015 Step 11; `docs/reviews/rca-warg-tick-costs-2026-09-24.md` F9.
+
+### Test a NativeObject reference with `is null` in code a unit test reaches (plan 015, 2026-09-24)
+`== null` on a `Skeleton` binds to `NativeObject.operator ==` (v1.5.3 `NativeObject.cs:221-232`), a static member, so the first call runs `NativeObject`'s static constructor, which calls `LibraryApplicationInterface.IManaged` (`:62-64`), null in the test host. The `TypeInitializationException` poisons `NativeObject` for the rest of the test run. In game the operator returns `(object)a == null` for a null right side, so `is null` gives the same result.
+- **Why missed:** the operator is invisible at the call site, and NSubstitute returns null for a sealed return type, so the null path looks test-safe.
+- **Prevent:** write `is null` / `is not null` for any `NativeObject` subclass (check the type's base with `taom-src`; `Skeleton` is one) on a line a unit test can reach.
+- **Source:** plan 015 orchestrator amendment, commit `7577894d`; `docs/reviews/rca-warg-tick-costs-2026-09-24.md` F9.

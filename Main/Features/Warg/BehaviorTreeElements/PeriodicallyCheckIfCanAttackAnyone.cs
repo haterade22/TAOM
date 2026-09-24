@@ -27,12 +27,14 @@ public class PeriodicallyCheckIfCanAttackAnyone : WaitNSecondsTickDecorator, IBT
         Agent warg = Agent.GetValue();
         BattleSideEnum wargSide = warg.RiderAgent?.Team.Side ?? warg.Team.Side;
         SpatialGrid.Instance.GetNearAliveAgentsInRange(10, warg, _scratch);
-        var wargAdapter = _adapterFactory.GetAgentAdapter(warg);
+        // Looked up once, at the first candidate: a scan with no candidate pays no cache lookup.
+        IAgentAdapter wargAdapter = null;
         foreach (Agent agent in _scratch)
         {
             if (agent == warg || agent == warg.RiderAgent || agent.IsMount) continue;
             if (agent.IsActive() && agent.Team?.Side != wargSide)
             {
+                wargAdapter ??= _adapterFactory.GetAgentAdapter(warg);
                 var agentAdapter = _adapterFactory.GetAgentAdapter(agent);
                 bool likelyToHit = agentAdapter.IsAttackLikelyToHit(wargAdapter, 30, WargConfig.WargAttackRange);
                 if (likelyToHit)
@@ -63,12 +65,14 @@ public class CheckOnceIfCanAttackEnemy : BTReturnFalseDecorator, IBTBannerlordBa
         Agent warg = Agent.GetValue();
         SpatialGrid.Instance.GetNearAliveAgentsInRange(10, warg, _scratch);
         BattleSideEnum wargSide = warg.RiderAgent?.Team.Side ?? warg.Team.Side;
-        var wargAdapter = _adapterFactory.GetAgentAdapter(warg);
+        // Looked up once, at the first candidate: a scan with no candidate pays no cache lookup.
+        IAgentAdapter wargAdapter = null;
         foreach (Agent agent in _scratch)
         {
             if (agent == warg || agent == warg.RiderAgent) continue;
             if (agent.IsActive() && agent.Team?.Side != wargSide && !agent.IsMount)
             {
+                wargAdapter ??= _adapterFactory.GetAgentAdapter(warg);
                 var agentAdapter = _adapterFactory.GetAgentAdapter(agent);
                 bool likelyToHit = agentAdapter.IsAttackLikelyToHit(wargAdapter, 30, WargConfig.WargAttackRange);
                 if (likelyToHit)

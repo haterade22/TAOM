@@ -42,7 +42,7 @@ public class BoneCheckDuringAnimation : BoneCheck
         // new native wrapper (a ref-count call, a lock, a GCHandle and a finalizer).
         IAgentVisualsAdapter agentVisuals = _agent.AgentVisuals;
         Skeleton agentSkeleton = agentVisuals?.GetSkeleton();
-        if (agentSkeleton == null
+        if (agentSkeleton is null
             || _agent.GetCurrentAction(0) != _action
             || _agent.GetCurrentActionProgress(0) >= _actionProgressMax)
         {

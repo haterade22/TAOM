@@ -29,8 +29,9 @@ AdvancedCombatBehavior (MissionLogic)
   |     |-- ISpatialGridDebugService.RenderDebugVisualization()
   |     `-- IBoneCollisionService.TickBoneChecks(dt)
   |           `-- BoneCheck / BoneCheckDuringAnimation.Tick(dt)
-  |                 `-- CheckBoneCollision()
-  |                       `-- _onCollisionCallback(attacker, target, boneId)
+  |                 `-- CheckBoneCollision(visuals, skeleton)   [skeleton fetched once per tick]
+  |                       `-- CheckTargets(...)                 [range gate before each target's skeleton]
+  |                             `-- _onCollisionCallback(attacker, target, boneId)
   |                             `-- CustomAttacksUtils.TakeDamage(...)
   |                                   `-- cached Mission.RegisterBlow(...)
   |
@@ -70,6 +71,8 @@ None. Grid cell size is a hardcoded constant (`CellSize = 20f`) in `SpatialGrid.
 ## Tests
 `TAOM.Tests/Features/AdvancedCombat/BoneCollisionServiceTests.cs` — 11 tests covering `IBoneCollisionService.CreateAnimationBoneCheck` / `CreateTimedBoneCheck` and the bone-tracking lifecycle via `IAgentAdapter` + `IAgentVisualsAdapter` substitutes.
 
+`SpatialGridQueryTests.cs` (9) runs the grid query through its generic helpers against a brute-force sphere scan, and pins column order and a point that moved since the rebuild. `BoneCheckRangeGateTests.cs` (10) drives `BoneCheck.CheckTargets`: the range gate, a NaN frame, and every per-target skip, singly and in a mixed list.
+
 **Coverage gaps (tracked elsewhere):**
 - `CustomAttacksUtils` needs a live engine for most paths. `SpatialGrid`'s query logic is covered by `SpatialGridQueryTests.cs` through its generic helpers; its `Agent`-typed wrappers are not.
 - `SpatialGridDebugService.RenderDebugVisualization` is untested (audit issue #185).
@@ -83,6 +86,7 @@ None. Grid cell size is a hardcoded constant (`CellSize = 20f`) in `SpatialGrid.
 5. The check runs automatically each tick until it expires or all targets are hit.
 
 ## Changelog
+- 2026-09-24 (plan 015): `SpatialGrid` keys cells on (x, y) behind the generic `BuildCells` / `CollectInRadius` helpers; `BoneCheck` fetches the attacker's skeleton once per tick, reuses its bone list and range-gates each target before fetching its skeleton (a positive requirement, so a NaN frame fails it). Review: `../reviews/deep-review-015-warg-tick-costs-2026-09-24.md`.
 - 2026-05-13 — Added `SpatialGridDebugServiceTests.cs` (2 minimum-coverage tests) for `#185`, and updated this doc's Tests section to reflect `BoneCollisionServiceTests.cs` (`#198`).
 - 2026-04-06 — Decoupled the bone-check tick from the 2-second spatial-grid update throttle.
 

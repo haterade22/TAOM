@@ -3773,3 +3773,30 @@ one gate timed against its registration. Mike approved four design proposals mid
 `harness-facts.md` paths, the `triage-needs-ingame` label as the smoke backlog, `attribution` in
 `settings.json`, a CI workflow of its own on every branch). Root cause tables:
 `docs/reviews/rca-adr011-batch1-2026-09-23.md`; five lessons in build-tooling-workflow.
+
+## Review (plan 015, number assigned at merge): warg tick costs, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+`/review-codex` Phase 3 on `improve/015-warg-tick-costs`, diff `7f02fc8d..66a85b08`: the warg tree
+resolves its services once per node, its scans reuse buffers, `SpatialGrid` keys cells on (x, y)
+and a live bite fetches a target's skeleton only inside the range gate. Codex gpt-6-astra at ultra:
+**0 P1, 1 P2, 2 P3, all confirmed, no false positive.** It decompiled 11 engine types fresh from the
+installed DLLs, answered all ten Known Suspects and cross-referenced every constant. The P2 was a
+worked counterexample (build, move, query) showing that dropping z cells changes scan membership
+between the 2 s rebuilds, against the plan's "same set" claim; I graded it LOW because every extra
+agent is inside the live sphere, corrected the claims, pinned the behaviour with a test and put
+keep-or-restore to Mike. The P3s were test oracles that could not fail: a `FileNotFoundException`
+catch that skipped an unreadable helper, and a buffer test an allocating call satisfied; both now
+fail properly, each with a control fixture. The six lenses found what Codex missed: the moved
+range gate kept its inverted NaN polarity (fixed test first), the `CheckTargets` skip guards and
+column order were untested, and the empty-scan adapter lookup the hoist added. Step 4 removed the
+factory plumbing into `WargRiderHandManager.Tick`. Suite 10266 passed, 2 skipped, 2 failed (the
+live-Armory pair). Root cause table: `docs/reviews/rca-warg-tick-costs-2026-09-24.md`; three
+lessons in testing-qa, two in adapters-taleworlds-api. Report:
+`docs/reviews/deep-review-015-warg-tick-costs-2026-09-24.md`. Nothing deployed or smoked.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | "Every scan returns the same set" false between grid rebuilds | Stale state / lifecycle | Proof and test used a grid built from the queried positions | Stale-query test; lesson in testing-qa |
+| 2 | IL resolve test skipped a helper it could not load | Other: test oracle fails open | "Cannot read" treated as "nothing to find"; no positive control | `EnsureLoaded`, hard failure, control fixture; lesson in testing-qa |
+| 3 | Buffer test satisfied by `new List<Agent>()` through the buffer overload | Other: test checks a proxy | Pinned the old symptom (arity), not the property | Constructor check and negative control; same lesson |
+
