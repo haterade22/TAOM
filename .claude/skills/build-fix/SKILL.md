@@ -88,7 +88,7 @@ Build status: PASS/FAIL
 | `CS0029: cannot implicitly convert type` | Add cast or fix type mismatch |
 | `CS0234: type or namespace does not exist in namespace` | v1.2->v1.3 namespace change — use `/research` to find new location |
 | `CS0012: type defined in unreferenced assembly` | Add assembly reference to `.csproj` |
-| `CS8602: dereference of possibly null reference` | Add null check or `!` operator |
+| `CS8600`-`CS8604`, `CS8618`, `CS8625` as errors (a nullable-ratchet folder) | `?` where null is real, or an `is null` check; never `!` on an engine value. Rules: `docs/ai-includes/code-quality.md`, "How nullable is enforced" |
 
 ## DO and DON'T
 
@@ -106,6 +106,7 @@ Build status: PASS/FAIL
 - Add new features
 - Suppress warnings with `#pragma`
 - Change `Directory.Build.props`
+- Silence a nullable error by adding its id to a csproj `<NoWarn>` or lowering a folder's `.editorconfig`
 
 ## When NOT to Use
 

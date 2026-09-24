@@ -2257,3 +2257,15 @@ Three gates approximated a language with regexes and each broke on valid input. 
 - **Why missed:** the check discovered hooks by their external tool, not by being a gate.
 - **Prevent:** check 4b times every PreToolUse gate on a commit payload against the real repo and fails at 80% of its registration. Query git once for all files, never once per file.
 - **Source:** `docs/reviews/rca-adr011-batch1-2026-09-23.md` C1.
+
+### Turning a warning into an error makes every skill's fix advice for it live: fix that advice in the same change (plan 019, 2026-09-24)
+Plan 019 set the seven nullable ids to `error` in `Main/Features/Siege`. CLAUDE.md sends every `error CS####` to `/build-fix`, whose table said "CS8602: Add null check or `!` operator" and whose smallest-change rule picks `!`. The row had never fired for `Main` (the ids sat in `<NoWarn>`, and the skill reads only `error` lines); the change made it the first advice a builder would get, and `!` silences exactly the error the ratchet exists to raise.
+- **Why missed:** the plan scoped itself to the compiler configuration and the docs describing it, and never followed the new error to the skill a builder is routed to. No lens checks harness advice against a newly enforced rule.
+- **Prevent:** when a change promotes a diagnostic (a warning to error, a new analyzer, a gate's new exit code), grep `.claude/skills/`, `.claude/rules/` and `docs/ai-includes/` for its id and fix any advice that contradicts the rule the promotion enforces, in the same change.
+- **Source:** `docs/reviews/rca-nullable-ratchet-2026-09-24.md` #1.
+
+### Text an `/improve` plan supplies (comments, doc lines, test oracles, "untestable") is a draft the executor verifies (plan 019, 2026-09-24)
+Six of the twelve confirmed findings on plan 019 were written into the plan and executed faithfully: the DTO comment promising a "" fallback its own later step contradicted, the feature-doc wording Step 8 told the executor to keep (stale since April), the camp-2 test's length-only oracle, "structurally untestable" for a path five tests now cover, a no-op `<NoWarn>$(NoWarn)</NoWarn>` kept for a reason MSBuild does not support (a project's property cannot reach another project), and the no-settlement comment describing a defer by its control flow.
+- **Why missed:** the executor treats the plan as the specification, and the plan's author wrote those lines without re-reading the code or engine they describe. Review of the plan checked its steps, not its prose.
+- **Prevent:** an `/improve` plan marks supplied comment and doc text as a draft, and its done criteria include "every supplied comment, doc line and test oracle re-checked against the code it describes". An executor that finds plan text wrong fixes the text and says so in the commit body, rather than copying it.
+- **Source:** `docs/reviews/rca-nullable-ratchet-2026-09-24.md`, "Root-cause pattern".

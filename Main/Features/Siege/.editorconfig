@@ -1,4 +1,5 @@
-# Nullable ratchet (plan 019): this folder is null-clean. Keep it that way.
+# Nullable ratchet: this folder is null-clean. Keep it that way. Procedure and fix rules:
+# docs/ai-includes/code-quality.md, "How nullable is enforced".
 [*.cs]
 dotnet_diagnostic.CS8600.severity = error
 dotnet_diagnostic.CS8601.severity = error

@@ -21,9 +21,10 @@ indent_size = 4
 [*.md]
 trim_trailing_whitespace = false
 
-# Nullable ratchet (plan 019). The seven nullable warnings are off for production code by
-# default. A folder that is null-clean carries its own .editorconfig setting them to error;
-# the nearer file wins. TAOM.Tests is deliberately not listed: its warnings stay visible.
+# Nullable ratchet (docs/ai-includes/code-quality.md, "How nullable is enforced"). The seven
+# nullable warnings are off for production code by default. A folder that is null-clean
+# carries its own .editorconfig setting them to error; the nearer file wins. TAOM.Tests is
+# deliberately not listed: its warnings stay visible.
 [{Main,Dependencies}/**.cs]
 dotnet_diagnostic.CS8600.severity = none
 dotnet_diagnostic.CS8601.severity = none

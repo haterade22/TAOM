@@ -2,7 +2,7 @@ namespace TAOM.Features.Siege.Models;
 
 /// <summary>
 /// One kingdom's entry in siege_defense_config.json. Newtonsoft leaves a property null when its
-/// key is missing from the entry, so every message is nullable; consumers fall back to "".
+/// key is missing from the entry, so every message is nullable.
 /// </summary>
 public class KingdomSiegeMessages
 {

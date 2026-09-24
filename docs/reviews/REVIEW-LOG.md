@@ -3773,3 +3773,37 @@ one gate timed against its registration. Mike approved four design proposals mid
 `harness-facts.md` paths, the `triage-needs-ingame` label as the smoke backlog, `attribution` in
 `settings.json`, a CI workflow of its own on every branch). Root cause tables:
 `docs/reviews/rca-adr011-batch1-2026-09-23.md`; five lessons in build-tooling-workflow.
+
+## Review (plan 019, number assigned at merge): nullable ratchet, Siege graduated to errors, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+Plan 019 moved the seven nullable ids (CS8600 to CS8604, CS8618, CS8625) out of both production
+`<NoWarn>` lists into the root `.editorconfig` and set them to `error` in `Main/Features/Siege`
+(`7f02fc8d..19ca72d3`). Six lenses and Codex found no runtime defect: the Main build is still
+2 warnings and 0 CS86xx, the test project's 2,256 CS86xx are unchanged, and every engine member was
+checked against the installed v1.5.3 DLLs.
+
+**Codex: 2 findings, 2 confirmed (both P3), 0 false positives.** The camp-2 test asserted array
+lengths, which a copy dropping the frames would pass (now `Assert.AreSame`), and the new DTO
+comment promised a "" fallback that `AcceptButton` does not get. Codex's two observations (the
+stale `GatePosition` wording, "without throwing" describing the prefix rather than the outcome)
+matched deep-review findings. Codex missed the MED one: `/build-fix` still told a builder to fix
+CS8602 with `!`, advice the ratchet made live for the first time, in a skill file outside the git
+refs its prompt scoped it to. It also missed the CHANGELOG pointer to a procedure that lived only in
+the plan, the missing NoWarn gate, path coverage and the missing GitHub issue.
+
+**12 confirmed across both reviews, 1 false positive, 0 HIGH.** Eleven fixed in the follow-up
+commit, with three more prefix tests (every path now covered, including the gate ring built on
+uninitialized engine objects the plan had called untestable) and `NullableRatchetGateTests`, shown
+failing on a leaked id. The GitHub issue is left to Mike. Six findings came from text the plan
+itself supplied; one repeats the harmony-il "defer describes control flow" lesson, whose own example
+had named Patch8 as a safe defer (corrected). Full suite: 10,246 total, only the two live-Armory
+failures.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| C1 | Camp-2 test's length-only oracle | Other: weak test oracle | Plan-prescribed oracle copied | `AreSame`; `lessons/testing-qa.md` |
+| C2 | DTO comment overstates the "" fallback | Convention inconsistency | Plan-supplied comment contradicted the plan's own step | Comment fixed; plan-text lesson in `lessons/build-tooling-workflow.md` |
+
+Report: `docs/reviews/deep-review-019-nullable-ratchet-2026-09-24.md`; RCA:
+`docs/reviews/rca-nullable-ratchet-2026-09-24.md`; lessons in build-tooling-workflow (2),
+testing-qa, misc, and a Recurred line in harmony-il.

@@ -54,9 +54,19 @@ Faction map
 
 ## Patch8_SiegeCampGuard
 
-**Target:** Various
+**Target:** `BesiegerCamp.GetSiegeCampPartyPosition(MobileParty, MatrixFrame[], MatrixFrame[])` (internal, Prefix)
 
-Siege camp guard
+**Feature:** Siege, `Main/Features/Siege/Hooks/BesiegerCamp_GetSiegeCampPartyPosition_Patch.cs`
+([siege.md](../features/siege.md)). **Status:** ACTIVE.
+
+Siege camp guard: with no camp-1 frames it hands camp-2 over, or places the party on a ring
+around the gate. **Two paths defer to a vanilla that throws**, and neither is a safe default: with
+no besieged settlement and no frames, and the catch. Vanilla indexes the camp-1 array with no
+length check (`BesiegerCamp.cs:312-315` in v1.5.3), so both end in the same
+`IndexOutOfRangeException` (or an NRE on a null array) the patch exists to stop. The no-settlement
+path is unreachable from vanilla (both engine callers dereference `SiegeEvent.BesiegedSettlement`
+first); choosing a fallback position there is an open decision (plan 019, "Deferred gameplay
+decision").
 
 ## Patch9_RaceFilter
 

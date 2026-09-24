@@ -43,9 +43,9 @@ public class BesiegerCamp_GetSiegeCampPartyPosition_Patch
                 return true;
             }
 
-            // Without a settlement there is no gate to ring. Defer to vanilla explicitly (the
-            // same outcome as before this guard, when the dereference below threw and the catch
-            // returned true) instead of throwing on purpose.
+            // Defensive only: both engine callers (v1.5.3) read the besieged settlement before
+            // calling, so vanilla never reaches this. With no settlement there is no gate to ring,
+            // so defer; vanilla then throws on the empty camp-1 array, as it did after the catch.
             if (settlement == null)
             {
                 Debug.Print(
