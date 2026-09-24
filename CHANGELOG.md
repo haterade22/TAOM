@@ -2,6 +2,36 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-24
+
+### perf(warg): v2.0.30 - warg battles do less work per frame (plan 015)
+
+Warg battles do less work per frame. The warg behaviour tree no longer looks services up in the
+IoC container on every tick, its three enemy scans reuse buffers instead of allocating a list each
+call, the spatial grid looks up 49 cells for a 60 m scan instead of 343, and a live bite no longer
+builds a native skeleton wrapper for every agent within 20 m on every frame, only for those within
+reach. The set of targets a bite can hit is unchanged; when two targets are in reach on the same
+frame at slightly different heights, which one takes the hit can differ.
+
+- **Tree nodes:** `PeriodicallyCheckIfCanAttackAnyone`, `CheckOnceIfCanAttackEnemy`,
+  `WargAiControlledIsNotFacingEnemy` and `WargAttackTask` resolve their services once into
+  instance fields when the tree is built; `WargRiderHandManager.Tick` takes the factory
+  `WargMissionBehavior` resolves in its constructor. The scans use the buffer overload of
+  `SpatialGrid.GetNearAliveAgentsInRange`.
+- **SpatialGrid:** cells are keyed on (x, y); the distance test stays 3D. Agents in one 20 m column
+  now come back in rebuild order rather than lower height band first.
+- **BoneCheck:** the attacker's skeleton is fetched once per tick and its bone positions reuse one
+  list; a target's skeleton is fetched only inside the existing 20 square-metre gate, and a target
+  outside it stays for a later frame. The target skeleton's null test is `is null`, because
+  `== null` on a `NativeObject` runs that class's native static constructor in the test host.
+- **Tests:** `WargTickCostTests` (9, IL scans), `SpatialGridQueryTests` (7, brute-force sphere
+  comparison) and `BoneCheckRangeGateTests` (5). Full suite in the plan's worktree: 10256 passed,
+  2 skipped, 2 failed (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+  `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, which read the live Armory).
+- **Owed:** `/deep-review` before merge, and an in-game Custom Battle with warg riders on both
+  sides (bites land and still whiff, the rider hand pose holds, no `[Warg] Tree build failed` line).
+  Nothing smoked in game.
+
 ## 2026-09-23
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)
