@@ -2,6 +2,18 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-24
+
+### chore(debug): v2.0.30 - managed-only default launch profile, mixed kept
+
+The Visual Studio `Bannerlord` launch profile (`Main/Properties/launchSettings.json`) now attaches
+the managed debugger only; a new `Bannerlord (mixed native debugger)` profile keeps the old
+managed plus native attach for native crash work. The Opus review sprint found this desktop's
+Harmony patching about 20 to 40 times slower than players' (PatchShield pass 2 about 69 s on the
+first game start against 0 to 1 s in player logs) and named the mixed debugger the likely cause,
+UNVERIFIED. The profile name is unchanged, so the saved selection keeps working. The next Play is
+the test: the `shield pass` line in `diag.log` should fall to a few seconds. Mike's decision 23.
+
 ## 2026-09-23
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)
