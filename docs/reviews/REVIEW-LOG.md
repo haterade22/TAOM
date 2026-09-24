@@ -3773,3 +3773,38 @@ one gate timed against its registration. Mike approved four design proposals mid
 `harness-facts.md` paths, the `triage-needs-ingame` label as the smoke backlog, `attribution` in
 `settings.json`, a CI workflow of its own on every branch). Root cause tables:
 `docs/reviews/rca-adr011-batch1-2026-09-23.md`; five lessons in build-tooling-workflow.
+
+## Review (plan 007; number assigned when the improve branches merge): PatchShield skips the callback shims, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+Plan 007 on `improve/007-patchshield-skip-callback-shims` (`7f02fc8d..0ad253d5`): PatchShield's
+hot-layer exclusion list gains `"ManagedCallbacks"` so pass 2 stops re-shielding the engine's 247
+callback shims, which Native2Managed crash capture already wraps; the shield-pass line gains elapsed
+time and ms per attach; the `OnGameInitializationFinished` docs stop saying "main menu". Codex
+gpt-6-astra at ultra, 177,288 tokens: **0 P0 / 0 P1 / 0 P2, 1 P3, confirmed, no false positive.**
+It quoted the shim types, the raise sites and Harmony 2.4.2's finalizer contract from the installed
+DLLs and disputed all ten Known Suspects with line evidence. Its P3: the new comment, `dr3` note and
+CHANGELOG said the Native2Managed finalizer swallows every exception while capture is on, when it
+hands the exception back on re-entry, an unresolved service or a handler failure. The data-flow lens
+found the same gap from the other side: the bridge is non-void, so on those paths Harmony rethrows
+with `throw` and the stack is reset, which PatchShield's finalizer used to prevent.
+
+The deep review added what Codex missed. The prefix reaches 88 classes in v1.5.3, not 3: 79
+managed-to-native `ScriptingInterfaceOf*` wrappers that Native2Managed does not wrap are now
+unshielded too (four lenses, independently, by listing the DLLs). The vendored ButterLib puts blank
+transpilers on three shims, so "carry only finalizers" was false. "30x between machines" was one
+desktop over time. A `v1.5.2-impact.md` row contradicted `diag.log`. Nothing pinned the namespace
+to the engine. 13 findings confirmed in all (2 MED, 11 LOW), 0 false positives; everything in the
+changed code was about claims, not behaviour. Fixed: comments, docs, CHANGELOG "Known limitation",
+and a `BindingVerification` test that selects the shims from the installed DLLs as
+Native2ManagedPatcher does (RED with the entry misspelt). Waiting on Mike: the GitHub issue, whether
+to narrow the prefix, and whether to preserve the stack on the fallback returns in
+`CrashReportPatchHelper` (plan 006's file). Full suite: 10243 passed, 2 skipped, 2 failed (the two
+live-Armory tests).
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|
+| 1 | Coverage claim reasoned from the normal path of the finalizer that stays | Other: stale coverage claim | Did not trace every return path of the remaining layer against what the removed layer did | `lessons/harmony-il.md`: "Removing one of two finalizers on a method..." |
+
+Report: `docs/reviews/deep-review-007-patchshield-skip-callback-shims-2026-09-24.md`. RCA:
+`docs/reviews/rca-patchshield-skip-callback-shims-2026-09-24.md`; two lessons in harmony-il, one in
+testing-qa. AGENTS.md lessons are listed in the report, pending the consolidated Phase 3h.

@@ -7,8 +7,8 @@ namespace TAOM.Dependencies.Foundation;
 
 /// <summary>
 /// The pure decisions behind <see cref="PatchShield"/> (which targets to skip, which owners never
-/// to unpatch, when to install), extracted so they can be tested without Harmony or a running
-/// game. PatchShield keeps the plumbing; this keeps the policy.
+/// to unpatch, when to install, and the shield-pass log line), extracted so they can be tested
+/// without Harmony or a running game. PatchShield keeps the plumbing; this keeps the policy.
 /// </summary>
 public static class PatchShieldPolicy
 {
@@ -85,12 +85,22 @@ public static class PatchShieldPolicy
         "TaleWorlds.MountAndBlade.GauntletUI",
         // Plan 007 (2026-09-23, measured from diag.log): the engine's native-to-managed callback
         // shims, ManagedCallbacks.{Library,Core,Engine}CallbacksGenerated. TAOM's own
-        // Native2ManagedPatcher already wraps every one (247 in v1.5.3) with a finalizer that
-        // swallows every exception while crash capture is on (CrashReportPatchHelper.HandleAndSwallow).
+        // Native2ManagedPatcher already wraps every one (247 in v1.5.3) with a finalizer that, on
+        // its normal path, swallows the exception (CrashReportPatchHelper.HandleAndSwallow). It hands
+        // the exception back unchanged when capture is off, on re-entry, or when the crash service
+        // is unresolved or throws; on those paths nothing on a shim now swallows the missing-API
+        // trinity or preserves the stack (a non-void finalizer makes Harmony rethrow with `throw`).
         // Shielding them again cost one Harmony.Patch each at the first game start (about 46 s of a
         // 69 s pass 2 on a machine paying 186 ms per Patch) and stacked an __originalMethod wrapper
-        // on engine callback hot paths: the #331 hot-layer rationale. Rescue value is nil: those
-        // shims carry only finalizers, and the rescue strips prefixes, postfixes and transpilers.
+        // on engine callback hot paths: the #331 hot-layer rationale. Rescue value is nil in
+        // practice: the known patches on the shims are TAOM's finalizers and ButterLib BEW's blank
+        // transpilers on three tick shims (a protected owner); a third-party prefix, postfix or
+        // transpiler on a shim loses the rescue.
+        // The prefix is the whole namespace, not only the three shims: it also holds the engine's
+        // 79 managed-to-native ScriptingInterfaceOf* wrappers plus CallbackManager and
+        // ScriptingInterfaceObjects (88 classes in v1.5.3), which Native2Managed does NOT wrap.
+        // They are excluded on the #331 per-call rationale alone, so a third-party patch on one of
+        // them gets no shield. PatchShieldPolicyTests pins the shim half against the installed DLLs.
         "ManagedCallbacks",
     };
 
@@ -108,8 +118,9 @@ public static class PatchShieldPolicy
     /// <summary>
     /// The diag.log line for one shield pass. The prefix up to "(total: N)" is unchanged; the timing
     /// suffix exists because diag.log ships in every crash bundle, and the per-attach cost of
-    /// Harmony.Patch varies about 30x between machines (5 ms to 186 ms observed), which decides
-    /// whether pass 2 costs 2 s or 70 s of a player's first loading screen.
+    /// Harmony.Patch is not stable: one desktop has logged both about 5 to 10 ms and about 186 ms per
+    /// attach (diag.log, 2026-06 to 2026-09), a 30x swing that decides whether a pass costs about a
+    /// second or tens of seconds of a player's loading screen.
     /// </summary>
     public static string FormatShieldPassSummary(int added, int alreadyShielded, int skipped, int total, long elapsedMs)
     {

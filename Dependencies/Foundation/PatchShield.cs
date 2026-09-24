@@ -165,9 +165,10 @@ public static class PatchShield
                     }
                     catch { }
 
-                    // Never shield hot UI-layer targets — a per-call __originalMethod
-                    // finalizer on the Gauntlet prefab system froze tournament exits for
-                    // ~107s (#331 round 2). See PatchShieldPolicy.ExcludedTargetNamespacePrefixes.
+                    // Never shield the excluded hot layers: the Gauntlet/2D UI (#331 round 2: a
+                    // per-call __originalMethod finalizer froze tournament exits for ~107s) and the
+                    // engine's ManagedCallbacks boundary, whose callback shims Native2Managed crash
+                    // capture already wraps (plan 007). See PatchShieldPolicy.ExcludedTargetNamespacePrefixes.
                     if (IsExcludedTarget(method))
                     {
                         _shielded.Add(method);
