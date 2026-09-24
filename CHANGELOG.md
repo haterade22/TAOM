@@ -4,6 +4,21 @@
 
 ## 2026-09-24
 
+### fix(ci): v2.0.30 - convergence fixes for plan 010
+
+- **The no-game recipe runs as written.** `.ai/verification.md` now sends the reader to the build,
+  unit and gate steps of `csharp.yml` exactly as written (all Debug, since the gate reads
+  `bin/Debug/net472/refasm-game`), and says to unset `BANNERLORD_GAME_DIR` and
+  `BANNERLORD_OVERRIDE_DIR` before the build: the build records the install in the test DLL and
+  the tests fall back to it. Replayed from a clean copy: unit 8,194 executed with 0 failures, gate
+  338 of 338.
+- **The reference guard has a failing test for each spelling it rejects.** Ten fixture rows cover
+  the four install properties, a lower-case `$(gameFolder)` and an import made conditional by its
+  own attribute, an `ImportGroup`, a `When` or an `Otherwise`. The guard now matches property
+  names without case and rejects those enclosing conditions.
+- `.claude/rules/tests.md` adds the `ReflectionTypeLoadException` from `Assembly.GetTypes()` to
+  the CI failure signatures. The review report's verdict is now set from the convergence pass.
+
 ### fix(ci): v2.0.30 - review follow-ups for plan 010
 
 - **The BUTR pin now checks the build, not just the version.** `GameReferencesTargetsTests`

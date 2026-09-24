@@ -3835,8 +3835,9 @@ Fixed on the branch:
 - the reference guard reads the whole element and only unconditional imports (fixture test red
   first, import check proven by mutation);
 - the gate fails when any check did not execute;
-- the workflow header, both build errors, the `.ai/verification.md` recipe (then run as written
-  from a clean tree), the `tests.md` failure signatures, the CHANGELOG (#421) and the feature map.
+- the workflow header, both build errors, the `.ai/verification.md` recipe (replayed only with a
+  hand-added `-c Release` and no gate run; the convergence pass below fixed that), the `tests.md`
+  failure signatures, the CHANGELOG (#421) and the feature map.
 
 Applied improvements, both behaviour-preserving: one `_TaomNuGetRoot` property (9 of 9 reference
 snapshots identical) and no stub copies in the fake game's `bin` (gate still 338 of 338). Left for
@@ -3856,3 +3857,13 @@ Passed: 10246, Skipped: 2` (the two known live-Armory tests); CI replay unit 8,1
 Report: `docs/reviews/deep-review-010-ci-on-hosted-windows-2026-09-24.md`. RCA:
 `docs/reviews/rca-ci-on-hosted-windows-2026-09-24.md`. Two lessons in testing-qa and one in
 build-tooling-workflow.
+
+**Convergence pass** (one `deep-reviewer` on `b8c00045..a4b90e4d`): 5 LOW, 0 HIGH or MED, all
+confirmed and fixed. The no-game recipe now sends the reader to all three `csharp.yml` steps as
+written (all Debug; the gate's `refasm-game` path exists only for Debug) and says to unset the
+game variables before the build, since the build bakes the install into the test DLL's
+`TaomGameFolder`. `tests.md` adds the `ReflectionTypeLoadException` signature from `6b.log`. The
+reference guard gained one fixture row per rejected spelling (seven of ten rows red first, the
+Import's own `Condition` row proven by mutation), matches property names without case and rejects an import under a conditional
+`ImportGroup`, `When` or `Otherwise`. Replayed as written from a clean copy: unit
+`executed=8194 failed=0`, gate 338/0/0. Full suite `Failed: 2, Passed: 10256, Skipped: 2`.

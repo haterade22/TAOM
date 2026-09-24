@@ -34,7 +34,7 @@ the files at `b8c00045` or by a run named in the evidence column.
 | F2 | Agent 1 L1, Agent 4, Agent 6, Codex P3 #1 | LOW | The reference guard misses `<HintPath>$(GameFolder)...` and other install properties; a conditional import still counts | CONFIRMED, fixed | `GameReferencesTargetsTests.cs:60-65` read only `Include`/`Exclude`; the new fixture test failed before the fix |
 | F3 | Agent 1 L2, Codex P3 #2, Agents 2 to 5 | LOW | `csharp.yml:3-6` overclaims projects, tests and triggers | CONFIRMED, fixed | `on:` block at `csharp.yml:25-30`; `tools/BannerlordCraftingTool` not built; 24 unit skips in `7-unit.log` |
 | F4 | Agent 2 F2, Agent 4, Agent 5 traces 5 and 6 | LOW | `tests.md` lists one CI failure signature; `RequiresGame` has no effect on the gate | CONFIRMED, fixed | `scratch/010/6a.log`: 6 `TypeInitializationException`, 6 `FileNotFoundException` (`TaleWorlds.MountAndBlade.View`), 1 (`SandBox`), 5 NRE |
-| F5 | Agent 5 traces 8 and 9, Agent 6 | LOW | The `.ai/verification.md` no-game recipe fails as written; the RefAsm error names the failing step | CONFIRMED, fixed | `PackageDownload` is conditioned on RefAsm (`GameReferences.targets:53`); the new recipe was run from a clean tree: restore 0, build 0 errors, unit 8,184 passed |
+| F5 | Agent 5 traces 8 and 9, Agent 6 | LOW | The `.ai/verification.md` no-game recipe fails as written; the RefAsm error names the failing step | CONFIRMED, fixed | `PackageDownload` is conditioned on RefAsm (`GameReferences.targets:53`); the recipe was replayed with `-c Release` added by hand (`r6-unit.log:1` tested `bin\Release`) and no gate run, not as written; convergence D1 rewrote it and replayed it as written |
 | F6 | Agent 2 F3 | LOW | The missing-install error names only the Win64 layout | CONFIRMED, fixed | `Directory.Build.props:41` also accepts `Gaming.Desktop.x64_Shipping_Client` |
 | F7 | Agent 5 trace 11 | LOW | "a skip fails" holds only for Inconclusive; an `[Ignore]`d check passes the gate | CONFIRMED, fixed | `binding-gate.runsettings` maps Inconclusive only; the `[Ignore]` path itself not run (UNVERIFIED) |
 | F8 | Agent 1 L4, Agent 4, Agent 5 trace 13 | LOW | CHANGELOG: "again", runs on `bannerlord-1.4.5`, no issue link | CONFIRMED, fixed | `gh issue view 421`: OPEN, "No CI verifies any PR: Build & Test is skipped, and nothing runs the Python suite" |
@@ -130,17 +130,19 @@ edits for whoever lands the branch, or belong to another plan):
 - `docs/reference/rules-catalog.md:44` could mention the CI categories; the main-session memory
   line "CI never compiles C#" goes stale after the first green hosted run (Agent 1 F7, F8).
 
-VERDICT: READY FOR COMMIT
+VERDICT: READY FOR COMMIT, set after the convergence pass and its fixes (see CONVERGENCE below).
+When this section was first written the convergence pass had not run, so the verdict was premature.
 
-Final full suite (install mode, clean `bin` and `obj`): `Failed: 2, Passed: 10246, Skipped: 2,
+Suite at the review-fix commit `a4b90e4d` (install mode, clean `bin` and `obj`): `Failed: 2, Passed: 10246, Skipped: 2,
 Total: 10250`; the two failures are the known live-Armory tests
 (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor`,
 `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`). CI replay with the game variables
 unset: unit `total=8208 executed=8184 passed=8184 failed=0`, gate
 `total=338 executed=338 passed=338 failed=0`. `reviewctl.py lint`: "Shared contract OK: 10 lanes";
 `test_reviewctl` and `test_ai_documentation`: 47 tests OK; `lint_docs.py`: `dead_links: 0`,
-`ai_dashes: 0`, `--fail-on-drift` exit 0. No convergence `deep-reviewer` pass ran (the review lead
-cannot spawn agents); the orchestrator owes it on the fix diff.
+`ai_dashes: 0`, `--fail-on-drift` exit 0. The CI replay above ran the `csharp.yml` steps in the
+worktree (`r4-*.log`, Debug); the separate replay of the `.ai/verification.md` recipe (`r6-*.log`)
+did not follow the recipe as written (D1 below). The final numbers are in CONVERGENCE.
 
 ## CODEX REVIEW
 
@@ -182,3 +184,45 @@ For the consolidated Phase 3h pass (not edited here, to avoid conflicts between 
 - **Bugs Codex typically misses:** claims in rules and reviewer docs that only a run log or an
   executed recipe can disprove (a failure-signature list, a no-game restore recipe), when it
   reviews through git objects without the executor's logs.
+
+## CONVERGENCE
+
+One `deep-reviewer` pass on the review-fix diff `b8c00045..a4b90e4d`: **5 LOW, 0 HIGH, 0 MED.**
+Both applied improvements (the `_TaomNuGetRoot` property and the stub copies removed from
+`refasm-game\bin`) were confirmed behaviour-preserving. Each defect was re-read against the
+worktree before fixing; all five were confirmed, none was a false positive.
+
+| # | Defect | Verdict | Evidence | Fix |
+|---|---|---|---|---|
+| D1 | The `.ai/verification.md` no-game recipe still could not be run as written: it built Release with the `managed-build` row, then sent the reader to the `csharp.yml` test commands, which run Debug and read `bin/Debug/net472/refasm-game` | CONFIRMED, fixed | `scratch/010r/r6-build.log:10` Release build; `r6-unit.log:1` tested `bin\Release\net472\TAOM.Tests.dll`, so `-c Release` was added by hand; no r6 gate log | The recipe now runs the `run:` blocks of all three `csharp.yml` steps (build, unit, gate) as written, all Debug, and says the gate path exists only for Debug. F5 above and the REVIEW-LOG line corrected |
+| D2 | "Unset first" gave only a test-time reason, but the build writes `$(GameFolder)` into the test DLL's `TaomGameFolder` metadata, which `GameAssemblies.ResolveGameDir` falls back to | CONFIRMED, fixed | `Directory.Build.props:37-38`, `TAOM.Tests.csproj:41-48`, `GameAssemblies.cs:141-142` | The recipe says to unset both variables before the build and gives the reason |
+| D3 | `tests.md` missed the `ReflectionTypeLoadException` from `Assembly.GetTypes()` | CONFIRMED, fixed | `scratch/010/6b.log:6,77` (`HarmonyFieldInjectionNamingTests.cs:49`); `6a.log` has none | Added to the signature list, noting that the test output does not print `LoaderExceptions` |
+| D4 | Most of the guard's checks had no failing test; an `Import` under a conditional `ImportGroup` or `When` counted, and `$(gameFolder)` slipped past a case-sensitive match | CONFIRMED, fixed | `GameReferencesTargetsTests.cs:61,93,97` at `a4b90e4d` | One fixture row per rejected spelling: five install-property rows and five import rows. The import check now rejects a `Condition` on the Import or any ancestor and any `When` or `Otherwise` ancestor; property names match without case |
+| D5 | The verdict was written before the convergence pass | CONFIRMED, fixed | line "No convergence `deep-reviewer` pass ran" under the verdict at `a4b90e4d` | Verdict now set from this pass; REVIEW-LOG Review 133 records it |
+
+**RED first (D4).** With the new rows added, the property list cut to `$(GameFolder)` and the old
+import check, 7 of 13 filtered tests failed: the three other install properties, `$(gameFolder)`,
+and the `ImportGroup`, `When` and `Otherwise` rows (`scratch/010r/c1-red.log`). After the fix
+13 of 13 passed (`c2-green.log`). Mutating the ancestor check to ignore `Condition` failed the
+Import's own `Condition` row and the `ImportGroup` row (2 of 13, `c3-importmut.log`), so the
+existing unconditional-import rule is now pinned by a test.
+
+**Recipe replay, as written (D1, D2).** `scratch/010r/c-replay.py` copied every tracked and
+unignored file of the worktree into a fresh folder with no `bin`, `obj` or `TestResults`, ran
+`git init` (a checkout has a `.git`, and four source-reading tests locate the root by it), removed
+`BANNERLORD_GAME_DIR` and `BANNERLORD_OVERRIDE_DIR` before anything ran, and executed the three
+`run:` blocks read from that copy's `csharp.yml` under `pwsh`, in order (`scratch/010c/c-*.log`):
+build exit 0 (Debug, the implicit restore reported `BANNERLORD_GAME_DIR` not set), unit
+`total=8218 executed=8194 passed=8194 failed=0` against `bin\Debug\net472\TAOM.Tests.dll`, gate
+`total=338 executed=338 passed=338 failed=0`. The first attempt without `git init` failed three
+source-reading tests with "repo root (.git) not found", an artifact of the copy, not the recipe.
+
+**Final checks.** Full suite (install mode): `Failed: 2, Passed: 10256, Skipped: 2, Total: 10260`;
+the two failures are the known live-Armory tests (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor`,
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`). `test_reviewctl` and
+`test_ai_documentation`: 47 tests OK. `reviewctl.py lint`: "Shared contract OK: 10 lanes".
+`lint_docs.py`: 0 dead links, 0 new dashes; its size warnings are on other rules.
+
+Per the skill, this was the one convergence pass; its fixes do not open another design round.
+
+VERDICT (after convergence): READY FOR COMMIT

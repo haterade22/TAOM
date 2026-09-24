@@ -105,10 +105,11 @@ Armory or the vanilla install. `RequiresGame` only removes a test from the unit 
 `BindingVerification` test that executes engine code, or needs vanilla method IL or vanilla data,
 carries `RequiresGameIL` on the method. An untagged test that needs the game fails on CI with a
 `NullReferenceException` from a `TaleWorlds` frame (a TaleWorlds attribute constructor run by
-`GetCustomAttributes` included), a `TypeInitializationException` wrapping one, or a
+`GetCustomAttributes` included), a `TypeInitializationException` wrapping one, a
 `FileNotFoundException` for a module assembly (`SandBox*`, `StoryMode*`,
 `TaleWorlds.MountAndBlade.View`) or a game-bin dependency (`System.Management`, `Steamworks.NET`,
-`GalaxyCSharp`, `StbSharp`): tag it, never catch the exception.
+`GalaxyCSharp`, `StbSharp`), or a `ReflectionTypeLoadException` from `Assembly.GetTypes()` on TAOM's
+assembly (the test output does not print its `LoaderExceptions`): tag it, never catch the exception.
 
 ## Test Organization
 Mirror source structure: `TAOM.Tests/Features/{FeatureName}/{ServiceName}Tests.cs`

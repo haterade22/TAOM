@@ -19,15 +19,21 @@ untrusted PR code on the personal self-hosted workstation.
 Both MSBuild flags are required on build AND test. Build the solution, not just
 `Main`, before testing with `--no-build`; otherwise a stale test DLL can pass.
 Do not use the deploying default of `build.ps1` as a review-time check. Without
-the game, pass `-p:TaomGameRefs=RefAsm` to the restore, the build and the test
-to use BUTR's metadata-only reference assemblies (`GameReferences.targets`); a
-restore without it downloads none of them. Run the tests with the unit and
-binding-gate commands in `.github/workflows/csharp.yml`, not the `managed-tests`
-row: an unfiltered run executes the tests tagged `RequiresGame` on stubs and
-fails. On a machine that has the game, unset `BANNERLORD_GAME_DIR` and
-`BANNERLORD_OVERRIDE_DIR` first, or the tests load the real module assemblies
-beside the stubs. Such a run cannot execute the tests tagged `RequiresGame`,
-`RequiresGameIL` or `LiveInstall`, so it is partial evidence. Missing
+the game, skip the `managed-build` and `managed-tests` rows and run the `run:`
+blocks of the three steps in `.github/workflows/csharp.yml` as written, in
+order, from the repository root under PowerShell: the build (its implicit restore
+passes `-p:TaomGameRefs=RefAsm`, so BUTR's metadata-only reference assemblies
+from `GameReferences.targets` are downloaded; a restore without it downloads
+none), the unit tests and the binding gate. All three use the Debug
+configuration, and the gate reads `TAOM.Tests/bin/Debug/net472/refasm-game`,
+which only a Debug RefAsm build writes; adding `-c Release` to one step and not
+the others tests a stale or missing DLL. An unfiltered run executes the tests
+tagged `RequiresGame` on stubs and fails. On a machine that has the game, unset
+`BANNERLORD_GAME_DIR` and `BANNERLORD_OVERRIDE_DIR` before the build, not only
+before the tests: the build records the install as the test DLL's
+`TaomGameFolder` metadata, and the tests fall back to it, loading the real
+module assemblies beside the stubs. Such a run cannot execute the tests tagged
+`RequiresGame`, `RequiresGameIL` or `LiveInstall`, so it is partial evidence. Missing
 prerequisites mean not run, not passed.
 
 Capture test totals, failures and skips. Empty discovery is not success. The
