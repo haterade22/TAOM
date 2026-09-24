@@ -22,7 +22,9 @@ session committed "Review 130 follow-ups"). Plan of record:
 | 2c critic | DONE | `wf_adf6333c-f3c` -> `critic.md`: coverage gaps listed; 6 lane findings never checked (COMP-04/05/06, ARCH-08, CORRECTNESS-03/06); GitHub issue dedupe (#491, #593, #623, #573/#578, #607, #501); one ranking-changing question |
 | 2c' follow-up | DONE | `wf_74cdeeed-731`: players FAST (11 player processes, 247 attaches in 0-1 s; orchestrator re-read `Downloads\taom_crash_20260923_010057_2d446100\taom_debug.log:3-4`); slow mode is this desktop only, likely the VS launch profile's mixed debugger (`launchSettings.json:8,17`, UNVERIFIED). REPORT re-ranked: shim patching moves from #1 to #6 |
 | 2d REPORT | DONE (draft) | `REPORT.md` written; README and commit after W5 |
-| 3 plans | RUNNING | W5 `wf_4979475d-392`: 14 plans (006-019) write, cold review, revise; briefs in `plan-briefs.json` |
+| 3 plans | DONE | W5 `wf_4979475d-392`: 14 plans (006-019), each written, cold-reviewed (all had findings; 12 had blocking items) and revised; README rewritten |
+| sprint commit | DONE | `7f02fc8d` docs(plans): 71 files, all under `plans/`, index empty after, NOT pushed (HEAD had moved to `4b5662b2`, another session's commit) |
+| N1 exec batch 1 | RUNNING | `wf_663bfa64-8b4`: 008, 009, 011, 012 in `E:\repos\taom-improve\wt-NNN` on `improve/NNN-<slug>` from `7f02fc8d` |
 | wrap-up (worktree removed, commit) | TODO | |
 
 ## Log

@@ -22,6 +22,7 @@ Both were raised in issue #404. Import it as a sibling module — tools run as
     GAME = game_dir(r"E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord")
 """
 import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -87,3 +88,26 @@ def ensure_exists(path, what="the Bannerlord install"):
     print(f"ERROR: {what} not found at {resolved}", file=sys.stderr)
     print(f"       Set ${ENV_VAR} to your Bannerlord install root.", file=sys.stderr)
     raise SystemExit(2)
+
+
+def game_or_kit_running():
+    """True when the game or the Modding Kit runs, and also when the check itself could not
+    run: a writer that guards on this refuses to write rather than risk racing a live process
+    (fail-closed, `.claude/rules/environment-failures.md`). Called by apply_animalia_armory.py and
+    skeleton_hit_capsules.py; the two Animalia .ps1 writers carry a PowerShell equivalent (a process-name
+    prefix match through Get-Process). tpac_fix_item_checksums.py does not guard yet.
+
+    tasklist writes the OEM code page, not the ANSI one a text-mode read assumes, so the output is read as
+    bytes and decoded as ASCII with replacement: the two names looked for are ASCII, and a process name
+    outside it can no longer turn the read into an exception."""
+    try:
+        raw = subprocess.run(["tasklist", "/FO", "CSV", "/NH"], capture_output=True,
+                             timeout=20, check=True).stdout
+    except (OSError, subprocess.SubprocessError) as exc:
+        print("WARNING: could not list processes (%s); refusing to write" % exc)
+        return True
+    if raw is None:
+        print("WARNING: the process list came back empty-handed; refusing to write")
+        return True
+    out = raw.decode("ascii", errors="replace")
+    return any(k in out for k in ("TaleWorlds.MountAndBlade", "Bannerlord"))

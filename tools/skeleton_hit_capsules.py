@@ -46,7 +46,6 @@ import json
 import os
 import shutil
 import struct
-import subprocess
 import sys
 import uuid
 
@@ -56,6 +55,7 @@ import xxhash
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import tpac_clone_metamesh as tcm  # noqa: E402  (the shared tpac container parser and writer)
+from _gamedir import game_or_kit_running  # noqa: E402  (shared fail-closed process check)
 
 SKELETON_ITEM_TYPE = uuid.UUID("c635a3d5-eabb-45dd-883e-aa57e4196113")
 METAMESH_ITEM_TYPE = uuid.UUID("a08f8b97-197c-4bea-b95b-53846cae834e")
@@ -339,17 +339,6 @@ def load_skin(path, mesh_names, skel):
 def _read(path):
     with open(path, "rb") as fh:
         return fh.read()
-
-
-def game_or_kit_running():
-    """True when the game or the Kit runs, and also when the check itself could not run: a writer refuses then."""
-    try:
-        out = subprocess.run(["tasklist", "/FO", "CSV", "/NH"], capture_output=True, text=True,
-                             timeout=20, check=True).stdout
-    except (OSError, subprocess.SubprocessError) as exc:
-        print("WARNING: could not list processes (%s); refusing to write" % exc)
-        return True
-    return any(k in out for k in ("TaleWorlds.MountAndBlade", "Bannerlord"))
 
 
 def _cmd_show(args):

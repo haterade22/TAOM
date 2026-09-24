@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.Elephant;
 using TAOM.Features.Mumakil;
+using TAOM.Features.MonsterSize;
 using TAOM.Tests.Migration;
 
 namespace TAOM.Tests.Features.Mumakil;
@@ -193,6 +194,16 @@ public class MumakilPlatformTests
         Assert.AreEqual(((int)AssumedMountScale * 100).ToString(), bodyLength,
             $"body_length changed: every deck height in {MumakilConfig.PlatformPrefabName} assumes {AssumedMountScale}x " +
             "and must be regenerated, because nothing scales this prefab at runtime any more");
+
+        // Since #646 a Monster's taom_body_length overrides every item's body_length at game init
+        // (docs/features/monster-size.md), so the item alone no longer proves the size the prefab was baked at.
+        string monsters = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(horses))!,
+            "Monsters", "LOTR", "lotr_monster_mumakil.xml");
+        XElement? monster = XDocument.Load(monsters).Descendants("Monster")
+            .SingleOrDefault(m => (string?)m.Attribute("id") == MumakilConfig.MumakilMonsterId);
+        Assert.IsNotNull(monster, "Monster taom_mumakil is missing from lotr_monster_mumakil.xml");
+        Assert.IsNull(monster!.Attribute(MonsterSizeConfig.AttributeName),
+            "taom_mumakil must not be sized on its Monster: the tower prefab is baked for the item's body_length");
     }
 
     private static XElement[] Floors() =>

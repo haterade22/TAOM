@@ -334,7 +334,8 @@ the knock-down-and-rise strikes, arrow/fire deaths, and every attack (melee is e
 ### A quadruped pack onto `horse_skeleton` (2026-09-23, Animalia elk and moose, #646)
 
 The second Fab creature, and a different route from the troll's. Full record:
-[`docs/features/animalia-elk-moose.md`](../features/animalia-elk-moose.md).
+[`docs/features/animalia-elk-moose.md`](../features/animalia-elk-moose.md); the procedure as a workflow for the
+next pack: [`quadruped-pack-to-horse-skeleton-workflow.md`](../ai-includes/quadruped-pack-to-horse-skeleton-workflow.md).
 
 - **Export:** the same `ue_export_cave_troll.py`, driven by `TAOM_UE_CONTENT_ROOT=/Game/Animalia/<Pack>` and
   `TAOM_UE_EXPORT_ROOT`. Two packs installed into one project share `_Bones` and `_Shaders` folders; scope

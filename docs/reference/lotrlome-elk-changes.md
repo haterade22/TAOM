@@ -52,8 +52,11 @@ ModuleData/Languages/loc_LOTRAOM_horses.xml.bak-elk-20260922
 
 ```xml
 <Monster id="taom_elk" base_monster="horse" action_set="as_war_ram"
-         weight="500" hit_points="250" />
+         weight="500" hit_points="250"
+         taom_body_length="110" />
 ```
+
+`taom_body_length` since 2026-09-23 evening (section 7): the elk's size, which TAOM copies into `taom_elk_a` at game init.
 
 | Decision | Why |
 |---|---|
@@ -74,10 +77,10 @@ Inserted after the ram bardings, before the warg block. BOM and LF preserved.
 
 | id | mesh | stats |
 |---|---|---|
-| `taom_elk_a` "Great Elk" | `elk_001` | `monster="Monster.taom_elk"`, maneuver 74, speed 62, charge_damage 50 (40 until 2026-09-23), extra_health 20, `body_length="200"` (100 until 2026-09-23, section 5), `difficulty="0"`, value 1400, weight 450, `culture="Culture.mirkwood"`, `is_merchandise="true"`, `<Flags Civilian="true" />` |
+| `taom_elk_a` "Great Elk" | `elk_001` | `monster="Monster.taom_elk"`, maneuver 74, speed 62, charge_damage 50 (40 until 2026-09-23), extra_health 20, `body_length="100"`, only the placeholder `Items.xsd` requires since section 7 (the size, 110, is the Monster's `taom_body_length`; before that the item carried it: 100, then 200, 120 and 110 on 2026-09-23: sections 5 and 6), `difficulty="0"`, value 1400, weight 450, `culture="Culture.mirkwood"`, `is_merchandise="true"`, `<Flags Civilian="true" />` |
 | `taom_elk_saddle_a` "[Mirkwood] Elk Saddle" | `elk_saddle_001` | `HorseHarness`, `body_armor="45"`, Leather, `family_type="1"`, `mane_cover_type="none"`, weight 20, `culture="Culture.mirkwood"`, `<Flags Civilian="true" />`, no `UseTeamColor` (the saddle texture is coloured, not greyscale) |
 
-`difficulty="0"` because the `elk_rider` career starts a player on this elk. The saddle is required beside every elk: `elk_001` is the
+`difficulty="0"` so any player can ride one: it was set when the `elk_rider` career started a player on this elk, a start that is the Animalia elk since 2026-09-23 (#646). The saddle is required beside every elk: `elk_001` is the
 bare animal and the seat is the saddle mesh (`ElkMountWiringTests` pins the pairing).
 
 ## 4. `ModuleData/Languages/loc_LOTRAOM_horses.xml`: two English rows
@@ -104,6 +107,44 @@ not scale for free is the antler charge's reach, a fixed metre measured from the
 `ElkConfig.AuthoredScale` (2.0) now multiplies it (3 m trigger, 4 m radius), and `ElkConfigTests` fails if this
 `body_length` and that constant drift. A 2x elk also means 2x capsules and 2x the Monster's rider-attach height:
 check the elf's legs against the wider back, and gates and tight forest paths, in game.
+
+## 6. 2026-09-23 afternoon: reduced to 1.2x, then 1.1x
+
+Mike, after a Custom Battle with the elk beside the Animalia elk and moose (#646): "Elk needs to be reduced", then
+120 when asked.
+
+| File | Edit |
+|---|---|
+| `ModuleData/LOTRLOME_items/LOTRAOM_horses.xml` | `taom_elk_a` `body_length` 200 to 120, and the item comment's size sentence. Backup `.bak-sizes-20260923` (it also covers the Animalia moose's 100 to 150 in the same file) |
+| `ModuleData/Monsters/LOTR/lotr_monster_elk.xml` | The "SIZE LIVES ON THE HORSE ITEM" sentence (comment only). Backup `.bak-sizes-20260923` |
+
+TAOM's `ElkConfig.AuthoredScale` went 2.0 to 1.2 with it; `ElkConfigTests` failed on the mismatch until the item
+followed, then passed. After the next battle ("still a bit too big") both went again, to 110 and 1.1, the same way
+(red, then green): the antler charge now reaches 1.65 m (trigger) and 2.2 m (radius). The reach was C# then: the
+13:02 deploy carried 1.2, and a deploying build at 13:42 carried 1.1. Section 7 removed the constant.
+
+## 7. 2026-09-23 evening: the size moves onto the Monster; new riders
+
+Mike: "The monster xml should control the size of the animal" (the design: [monster-size.md](../features/monster-size.md)).
+Backups `.bak-monstersize-20260923`; the same one-off also made the Animalia edits
+([lotrlome-animalia-changes.md](lotrlome-animalia-changes.md) section 6).
+
+| File | Edit |
+|---|---|
+| `ModuleData/Monsters/LOTR/lotr_monster_elk.xml` | `taom_body_length="110"` on `taom_elk`; the title line (the top cavalry's mount now) and the size paragraph rewritten |
+| `ModuleData/LOTRLOME_items/LOTRAOM_horses.xml` | `taom_elk_a`'s `body_length` from 110 to the placeholder 100 (removed first, then restored the same evening: the engine's `Items.xsd` requires it; backup `.bak-placeholder-20260923`); the block comment's title, size and `difficulty` paragraphs rewritten |
+
+TAOM copies the Monster's value into `taom_elk_a` at every game init, and `ElkConfig.AuthoredScale` is gone: the
+shared nodes multiply the 1.0x reach (1.5 m / 2 m) by the elk's live agent scale (`ElkConfig.ReachScalesWithBody`).
+`ElkConfigTests.TheElkMonster_DeclaresItsSize_AndItsItemHoldsTheSchemaPlaceholder` pins the Monster value and the
+item's placeholder 100.
+The engine prints one "not declared" validation line for the attribute at load; the file loads.
+
+**Riders (Mike, the same evening):** only `mirkwood_beleglas`, the top cavalry, rides the great elk now. Thranduil,
+the five lord battle templates and the generated lord and ruler templates ride the Animalia moose;
+`mirkwood_rochenlas` and the `elk_rider` career start ride the Animalia elk. **`taom_elk_saddle_a` is the seat of all
+three animals**, so the rollback above (restoring `LOTRAOM_horses.xml.bak-elk-20260922`) would also delete both
+Animalia items, inserted after the saddle on 2026-09-23: restore a later backup, or redo the Animalia items after.
 
 ## Verification actually run (2026-09-22)
 

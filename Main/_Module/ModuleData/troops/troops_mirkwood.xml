@@ -448,7 +448,7 @@
                 equipmentType="Civilian" />
             <equipment
                 slot="Horse"
-                id="Item.taom_elk_a" />
+                id="Item.taom_animalia_elk_a" />
             <equipment
                 slot="HorseHarness"
                 id="Item.taom_elk_saddle_a" />

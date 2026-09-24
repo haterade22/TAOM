@@ -9,8 +9,10 @@
   Registered for CustomGame ONLY (Main/_Module/SubModule.xml), so no campaign, save or culture roster ever
   sees them; nothing upgrades into or out of them. Remove this file, its SubModule block and both riders'
   exemptions (tools/taom_schema.py _ARMOUR_LADDER_EXEMPT, tools/melee_ladders.json exempt_troops: a stale
-  exemption is itself a finding) once the elk and moose have real riders (the moose goes to Thranduil and
-  the Mirkwood lords after #636). The exemptions keep this file from being counted as a kingdom.
+  exemption is itself a finding) before the next player release (Mike, 2026-09-23: keep them visible until
+  then; the Custom Battle picker lists them). Since the riders were reassigned, mirkwood_rochenlas rides the
+  Animalia elk, so the elk rider duplicates it; only heroes ride the moose, so the moose rider is still the
+  one troop that spawns on one. The exemptions keep this file from being counted as a kingdom.
 
   Every Horse slot carries a harness (MOUNT_WITHOUT_HARNESS): the Animalia meshes are bare animals, and
   taom_elk_saddle_a (the great elk's saddle, #636) is the seat until they get their own.

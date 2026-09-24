@@ -125,10 +125,15 @@ def main():
                 report["clips"][stem] = {"error": traceback.format_exc()}
     except Exception:
         report["error"] = traceback.format_exc()
+    # A clip that failed is kept as {"error": ...} so the rest still measure, but the launcher detaches and .DONE is
+    # the only completion signal: it must say "error" for a failed clip too, not only for a failed run.
+    failed = [stem for stem, clip in report["clips"].items() if "error" in clip]
+    if failed:
+        report["failed"] = failed
     with open(args.out, "w") as fh:
         json.dump(report, fh, indent=1)
     with open(args.out + ".DONE", "w") as fh:
-        fh.write("error" if "error" in report else "ok")
+        fh.write("error" if "error" in report or failed else "ok")
 
 
 if __name__ == "__main__":

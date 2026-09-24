@@ -60,8 +60,8 @@ public interface ICareerAgentStatService
     /// The charge half of <see cref="ApplyMountStatModifiers"/> as one multiplier: (1 + the rider hero's
     /// <c>MountChargeDamage</c> passive) x (1 + the self buff's <c>ChargeDamageBonus</c>) x (1 + the ally buff's,
     /// keyed by the rider's agent index). 1 when both ids are null, nothing applies, or the product is not finite
-    /// (an overflow). The mount's own charge is scaled by exactly this, and the elk's antler charge reads it at the
-    /// moment it fires (#636), so the two agree for any product the antler accepts, (0, 10].
+    /// (an overflow). The mount's own charge is scaled by exactly this, and the antler attacks read it at the moment they
+    /// fire (the great elk's, #636, and the Animalia elk's and moose's, #646), so the two agree for any product the antler accepts, (0, 10].
     /// </summary>
     float MountChargeMultiplier(string? riderHeroId, int? riderAgentIndex);
 

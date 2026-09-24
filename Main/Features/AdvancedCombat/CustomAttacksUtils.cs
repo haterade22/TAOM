@@ -129,8 +129,8 @@ public class CustomAttacksUtils
         TakeDamage(victim, victim, damage, magnitude, knockDown);
     }
 
-    /// <param name="damageType">The blow's damage type: Pierce unless the caller asks otherwise, and only the elk's antler
-    /// charge does (Blunt, #636). The damage is written directly, so armour never reduces it whatever the type. The type
+    /// <param name="damageType">The blow's damage type: Pierce unless the caller asks otherwise, and only the antler attacks do
+    /// (Blunt: the great elk's, #636, and the Animalia elk's and moose's, #646). The damage is written directly, so armour never reduces it whatever the type. The type
     /// sets the combat log's wording and, for Blunt, the killed-or-wounded rule, which <see cref="ComposeWeaponFlags"/>
     /// keeps lethal.</param>
     /// <param name="chargeImpactSound">Play a creature's charge impact instead of the sound the engine picks from the

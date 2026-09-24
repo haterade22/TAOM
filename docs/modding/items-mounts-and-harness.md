@@ -136,7 +136,7 @@ more on its child elements, and six child element names
 | `speed` | int | no | 0 | Top gallop speed | `HorseComponent.cs:146` |
 | `maneuver` | int | no | 0 | Turning agility | `HorseComponent.cs:144` |
 | `charge_damage` | int | no | 0 | Damage of a trample or couched impact | `HorseComponent.cs:145` |
-| `body_length` | int | no | 0 | Hundredths of the authored size, and the only scale knob a mount has. 100 is identity. Zero is not a small mount: the engine skips the scale call entirely (`Mission.cs:4026-4032`) | `HorseComponent.cs:147` |
+| `body_length` | int | no | 0 | Hundredths of the authored size, and the only scale knob the engine reads. 100 is identity. Zero is not a small mount: the engine skips the scale call entirely (`Mission.cs:4026-4032`). A Monster carrying TAOM's `taom_body_length` overrides it at game init (see "Resize a mount") | `HorseComponent.cs:147` |
 | `is_mountable` | bool | no | false | False makes it a herd animal rather than a mount | `HorseComponent.cs:148` |
 | `is_pack_animal` | bool | no | false | Mule behaviour. Mountable and pack-animal together is not a mount | `HorseComponent.cs:149` |
 | `extra_health` | int | no | 0 | Flat bonus on top of the Monster's hit points | `HorseComponent.cs:151` |
@@ -393,6 +393,10 @@ Code: No code changes needed for a reskin. A bespoke creature needs a behaviour 
 
 **Resize a mount.**
 
+0. First look at the item's Monster (`monster="Monster.<id>"`). If that `<Monster>` carries `taom_body_length`
+   (the great elk and the Animalia elk and moose do), the size lives THERE: TAOM copies it into the item at every
+   game init, so an edit to the item is undone in game, and the data tests pin such items at the placeholder 100.
+   Change `taom_body_length` on the Monster instead ([monster-size.md](../features/monster-size.md)). Otherwise:
 1. On-screen size is `body_length / 100` of the authored mesh, and `body_length` is on the
    `Type="Horse"` `<Item>`.
 2. Before changing it: the scale block in `Mission.BuildAgent` is keyed on
@@ -405,7 +409,8 @@ Code: No code changes needed for a reskin. A bespoke creature needs a behaviour 
    alone cannot tell you; this handbook said the opposite until then.
 3. So changing `body_length` is safe for the rider. What it does NOT scale is anything your
    own code positions against the mount: a platform, a seat offset, an attack range. Those need deriving
-   from the new scale (see the elephant's `ElephantConfig.AuthoredScale`).
+   from the new scale (the elephant's `ElephantConfig.AuthoredScale`; the elk's reach reads the live
+   `Agent.AgentScale`).
 4. Re-check the hit box: the capsule scales with the agent, so a 1x capsule that fits becomes a 3x
    capsule that may not cover a longer body.
 5. Tune the seat with `rider_eye_height_adder`, `rider_body_capsule_height_adder` and
@@ -485,8 +490,9 @@ Code: No code changes needed unless a feature names the id. The war ram's is pin
 - **A reskin inherits the donor's behaviour, not just its look.** The inherited `monster_usage`
   means the engine fires the donor's actions on your creature. On the horse rig, `act_horse_rear` is
   typed `actt_rear` and `Agent.Mount` refuses a mount whose current action type is Rear, and
-  `act_horse_strike_front` and `_back` sit in the band the engine reads as BEING struck. Vanilla
-  horses have no attack animation at all; their only offensive action is `act_horse_kick`
+  `act_horse_strike_front` and `_back` play the horse's own hit reactions (their type, 52, sits just outside
+  the band the engine reads as BEING struck). The vanilla horse rig's only attack clip is the kick,
+  `act_horse_kick`
   ([custom_creature_xml](../community/bannerlordmodding-lt/guides/custom_creature_xml.md), lines
   326-366).
 - **A harness can take team colours.** `<Flags UseTeamColor="true" />` on a `HorseHarness` item makes the engine

@@ -7,15 +7,29 @@ Two purchased Fab packs, "Animalia - Elk (male)" and "Animalia - Moose (male)", 
 keeping the pack's hand-made weights, and the pack's clips are retargeted onto the same skeleton, so each
 animal moves with its own gaits, idles, attacks, hit reactions and deaths instead of the horse's.
 
-State on 2026-09-23: **set up for an in-game animation test.** The two meshes, 97 masters (wired to
-`horse_skeleton`) and 54 clips are in the Armory; the Monsters, action sets and Horse items are written
-([ledger](../reference/lotrlome-animalia-changes.md)); two Custom-Battle-only test riders spawn them. Not yet: the
-antler attack (action type + C#), real riders (the moose goes to Thranduil and Mirkwood lords after #636), size.
-Issue #646.
+State on 2026-09-23 night: **gaits and idles seen in game; nothing built after 13:07 has been.** The two meshes,
+97 masters (wired to `horse_skeleton`) and 54 clips are in the Armory; the Monsters, action sets, antler actions and
+Horse items are written ([ledger](../reference/lotrlome-animalia-changes.md)); `Main/Features/Animalia/` fires each
+animal's antler attack. **Riders (Mike, evening):** the moose carries Thranduil and the Mirkwood lords, the Animalia
+elk the lower cavalry and the `elk_rider` career start (see "Who rides them"). **The installed `TAOM.dll` (14:45) is
+older than this tree:** it has the antler attack with the old baked reach and no Monster size, while the live Armory
+already holds the sizes on the Monsters and the items' placeholder 100, so until a deploy every animal builds at 1.0x
+with the old reach. **Run the in-game checklist only after a deploy.** And until this tree is committed, HEAD's own
+`ElkConfigTests` and `AnimaliaMountWiringTests` fail against the live Armory (they predate the move): the code, its
+tests and the ledgers go in one commit. Not yet: the attack seen in game, the jumps.
+Issue #646. The whole procedure, for the next pack: [quadruped-pack-to-horse-skeleton-workflow.md](../ai-includes/quadruped-pack-to-horse-skeleton-workflow.md).
+
+**In game, 2026-09-23 (Custom Battle, both sessions from 12:48 and 13:07):** both animals spawn on their own
+sets (`[MissionDiag]`: `as_animalia_elk`, `as_animalia_moose`) with no engine or TAOM log errors. Mike: "The
+running and walking and idle animations look great." Still to judge: rear, kick, hit reactions, deaths, the
+moose's hooves at `body_length` 150, the saddle on these bodies. The head-lowering attack seen in that battle was
+the #636 great elk's; these two had no attack wired then.
 
 ### Testing it in game
 
-1. Open the Modding Kit once and close it (the two `_movement` clips need their RuntimeDataCache entries).
+1. The clips' RuntimeDataCache entries exist (a Kit load on 2026-09-23 wrote them;
+   `python tools/check_rdc_entries.py --module <Armory> --under creature/elk` reads 0 missing). After any clip
+   re-import, open the Kit once and close it again.
 2. Launch with TAOM, cheat mode on (`engine_config.txt`), start any Custom Battle, open the console:
    ```
    taom.spawn_troops taom_test_animalia_elk_rider 5 ally
@@ -28,8 +42,10 @@ Issue #646.
 
 ## Why This Exists
 
-- **Vanilla behavior:** a mount on `horse_skeleton` plays the horse's clips. The horse rig has no attack
-  animation at all (horses damage by charge collision), see [war-ram.md](war-ram.md).
+- **Vanilla behavior:** a mount on `horse_skeleton` plays the horse's clips. The horse rig's only attack is the
+  rear kick, `act_horse_kick` (`actt_kick`; its clip carries `horse_kick_params`, the engine's hit detection), which
+  the horse usage set fires itself at whatever stands behind the mount. There is no forward attack; otherwise
+  horses damage by charge collision (see [war-ram.md](war-ram.md)).
 - **TAOM requirement:** Mirkwood's mounts should look and move like an elk and a moose. The existing great
   elk (#636, [elk.md](elk.md)) is `elk_001` on the horse's clips with the ram's head-butt as its antler
   charge; it has no motion of its own.
@@ -43,10 +59,11 @@ Issue #646.
 |---|---|
 | Skeleton | Both on the vanilla `horse_skeleton` (a reskin), with the pack's clips retargeted onto it |
 | The Animalia elk vs `elk_001` | A **separate second elk**: its own item and Monster; `elk_001` and #636 stay as they are |
-| Who rides the moose | Woodland Realm (Mirkwood): **Thranduil and some Mirkwood lords**. #636 currently puts Thranduil on the elk, so that change lands only after #636 is committed |
+| Who rides them (evening) | **Moose: Thranduil and the Mirkwood lords. Animalia elk: the lower Mirkwood cavalry and the `elk_rider` career start. The great elk keeps the top cavalry troop** (see "Who rides them") |
 | Clip scope | Every vanilla horse action an Animalia clip fits, plus an antler attack of their own; no ambient behaviours played by our code |
 | Moose proportions | **Keep the moose neck** (see "The moose keeps its neck") |
 | Textures | **1K** (1024) for every map |
+| Size (after the first battle, 2026-09-23) | Moose `body_length` 150 ("way bigger"); the Animalia elk stays 100. Mike also cut the #636 great elk from 200 to 120, then 110 after the next battle (sizes in metres: "Sizes in game") |
 | Variants in use | **`animalia_elk_08` and `animalia_moose_big` only** ("those two are fine for what we are doing"). The other four were built and are kept in `E:\LOTRAOMAssets\_reskin_out\`, not in the Armory |
 | Licence bookkeeping | Bought on Fab; no creator or tier research. Register rows say purchased, cleared |
 
@@ -80,7 +97,7 @@ LOTRLOME_Armory\AssetSources\creature\elk\  animalia_elk_08.fbx, animalia_moose_
                                            animations\{elk,moose}\, textures\
    |  Modding Kit import (Mike)  ->  Assets\creature\elk\ (same layout)
    v
-Monster (base_monster="horse") + action set (child of as_horse) + items + troops   [owed]
+Monster (base_monster="horse") + action set (child of as_horse) + items + test riders + antler attack (C#)
 ```
 
 **The fit (reskin).** For each pack bone the tool builds one transform: a global uniform scale, turn and
@@ -241,7 +258,7 @@ Gait StepPoints are the measured hoof plants (four sorted for walk, trot and bac
 and gallop, as vanilla); a death's body-fall point (vanilla 0.35) is the measured fall, 0.52 for both. The
 antler clips are the war ram's head-butt recipe (the kick's flags and blends without its combat parameter,
 sound or step points). Idle clips drop the eating sound; eating and drinking keep it. **Watch in game:** the
-pack's trot covers 6.3 m per loop, so at the horse's trot speeds the legs play at a quarter to three quarters
+pack's trot covers 6.3 m per loop, so at the horse's trot speeds the legs play at about a fifth to three fifths
 of their authored rate (no hoof slide, but a slow trot is possible); tune Duration or LoopDisplacement there.
 
 Proof: an independent re-read of all 52 against the 97 masters (each names a `horse_skeleton` master, range
@@ -252,6 +269,140 @@ Before binding, read "The price of a reskin" in
 [creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md): the inherited `horse` usage set
 fires `rear` and `kick` itself, and a clip on a mount rig needs the vanilla horse recipe (priority,
 `enforce_lowerbody`) or it never shows in battle.
+
+## The antler attack (`Main/Features/Animalia/`, 2026-09-23)
+
+Each animal attacks with its own clip, fired by TAOM's behavior tree the way the great elk's charge is (#636): a
+live enemy in front within the trigger range, the attack off its 10 s cooldown, then the clip plays and one blow
+lands on the enemy the animal faces most squarely (the ram's #618 single-target rule), under any rider, the
+player included, scaled by the rider's career charge bonus. Built on the shared elephant-like engine rather than
+as two clones of the great elk's seven files:
+
+| File | Role |
+|---|---|
+| `AnimaliaConfig.cs` | Both animals' tuning. The reach is the war ram's at 1.0x (1.5 m trigger, 2 m radius); `ReachScalesWithBody` makes the shared nodes multiply it by each animal's live size, which lives on its Monster ([monster-size.md](monster-size.md)) |
+| `AnimaliaElkAttackService.cs`, `AnimaliaMooseAttackService.cs` (+ `IAnimaliaElkAttackService.cs`, `IAnimaliaMooseAttackService.cs`) | One binding of `ElephantLikeAttackService` per animal (monster gate, facing gate, damage), each behind its own marker interface so IoC keys them apart |
+| `AnimaliaCombat.cs` | One static profile per animal (ranges, blow magnitude, the attack action in all four slots, single target, Blunt, the rider multiplier) |
+| `AnimaliaBehaviorTree.cs` | One tree class; the profile is passed in, so both animals share it |
+| `AnimaliaMissionBehavior.cs` | `: MissionLogic`; one `CreatureTreeTracker` and one registered tree name per animal, keyed on the Monster id; a start-up drift guard per animal (the action resolves, its set exists, the clip is bound) |
+| `AnimaliaIoC.cs` | Registers both services; one line in `Main/IoC.cs`, one `AddTaomBehavior` line in `Main/SubModule.cs` |
+
+| | Animalia elk | Animalia moose |
+|---|---|---|
+| Action (`action_types.xml`, `actt_kick`) | `act_animalia_elk_antler` | `act_animalia_moose_antler` |
+| Clip | `anim_animalia_elk_attack_front_low` (2.5 s) | `anim_animalia_moose_attack_head_01` (1.57 s) |
+| Reach (trigger / radius), at today's size | 1.5 m / 2 m (size 100) | 2.25 m / 3 m (size 150) |
+| Damage | one 60 Blunt blow (the great elk's) | one 70 Blunt blow |
+| Knockback | 35 (the ram's) | 45 |
+
+Their own actions, never `act_horse_kick`: the inherited horse usage set fires that itself as its `kick_action`,
+so the kick slot keeps its own clip (`attack_hind`, `attack_legs_01`) and the engine keeps firing it. Tests:
+`AnimaliaConfigTests` (literal id pins, the 1.0x reach and its flag, cooldown past each clip, damage / knockback /
+Blunt / single target, distinct actions), `AnimaliaWiringTests` (the IoC line, the `AddTaomBehavior` line, both
+profiles passing `reachScalesWithBody`, both services resolving),
+`AnimaliaAttackServiceTests` (each service answers only to its Monster, not the great elk's; each animal's one blow,
+a quarter on a shield block, rounded: 15 and 18; facing and already-attacking gates),
+`AnimaliaMountWiringTests.AntlerActions_AreKickTyped_AndBoundToTheirAttackClip` and
+`AnimaliaMonsters_DeclareTheirSize_AndTheirItemsHoldTheSchemaPlaceholder`, and the behavior's entry in
+`BehaviorTreeMissionLogicInheritanceTests`.
+
+## Sizes in game (measured 2026-09-23)
+
+`body_length / 100` times the mesh, the mesh measured in Blender at 1.0 (withers = the top of the back over
+`horsespine3`):
+
+| Mount | `body_length` | Withers | Total height (antlers) | Length |
+|---|---|---|---|---|
+| Vanilla horse | 100 | 1.57 m | 2.18 m | 2.69 m |
+| Animalia elk | 100 | 1.68 m | 2.99 m | 2.57 m |
+| Animalia moose | 150 | 2.74 m | 3.66 m | 3.85 m |
+| Great elk (#636, `elk_001`) | 110 | 1.72 m | 3.38 m | 2.87 m |
+
+The moose went 100 to 150 after the first battle ("way bigger"); the great elk 200 to 120 to 110 ("still a bit
+too big"). That evening Mike moved the size onto the Monster ("The monster xml should control the size of the
+animal"): `body_length` in the table is now each Monster's `taom_body_length`, copied into its Horse item at game
+init, and the reach follows it with no C# constant ([monster-size.md](monster-size.md)). Whether the engine scales a
+gait clip's `LoopDisplacement` with the size is not established: the managed code reads `BodyLength` only for the
+agent scale, the camera and the item's effectiveness, so any travel scaling happens natively. The moose's travel was
+measured at 100, so watch its hooves at 150.
+
+## Who rides them
+
+Mike, 2026-09-23 evening: the moose for Thranduil and the lords, the great elk for the highest Mirkwood cavalry,
+the Animalia elk for the lower cavalry; the `elk_rider` career start follows the lower cavalry (Mike extended #629's
+rule, that a career kit is the culture's lowest troop gear, to the mount; `generate_career_kits.py` itself never
+touches Horse). Every one of them sits on `taom_elk_saddle_a`, the only elk seat.
+These were the great elk's rows until then ([elk.md](elk.md) "Who rides it").
+
+| Owner | File | Mount | Reaches existing saves? |
+|---|---|---|---|
+| `mirkwood_rochenlas` (41, upgrades to beleglas) | `troops/troops_mirkwood.xml` (troop-level override, so every set) | Animalia elk | Yes, after a restart |
+| `mirkwood_beleglas` (46, the top) | same | great elk (unchanged) | Yes, after a restart |
+| Thranduil (`thranduil_bat_equipment`) | `equipmentsets/taom_equipment_sets_mirkwood.xml` | moose | **New campaign only**: `Hero._battleEquipment` is a `[SaveableProperty(210)]` (v1.5.3), so an existing campaign keeps what he was created with: the `charger` in any campaign from a released build (v2.0.30 and earlier), the great elk only in one started on a development build that carried #636's lord wiring |
+| The lords on `mirkwood_bat_template_medium_a..e` | same | moose | **New campaign only**, same reason and same two cases |
+| Heroes equipped later from `taom_mirkwood_{lord,ruler}_battle_{male,female}` | `equipmentsets/taom_lord_template_equipment.xml` | moose | Yes, for heroes equipped after the restart |
+| `elk_rider` career start (`player_career_mirkwood_cavalry_m` / `_f`) | `equipmentsets/taom_career_starting_equipment.xml` | Animalia elk | Character creation only |
+| A player starting as a Mirkwood lord or ruler (Advanced Start) | the lord or ruler template above, through `CampaignAdvancedStartingPlayerOptionsCampaignBehavior.AssignMainHeroEquipmentKeepingHorse` | moose and elk saddle, into the party inventory | New game only |
+
+Legolas keeps his horseless set and every civilian set keeps its horse. The lord-template file is generated, but
+its generator is broken (#637), so the four rosters were edited by hand, as the great elk's were. Tests:
+`AnimaliaMountWiringTests` (the rows above), `ElkMountWiringTests` (beleglas, and every elk or moose on the elk
+saddle). The Animalia elk is guaranteed stock in every Mirkwood-owned town (Mike: "The starting elk should also be
+available in the marketplace"): `culture_marketplace_config.xml` routes it to `mirkwood` with `min_stock="1"`,
+beside the great elk and the saddle, so a player who loses the starting elk buys the same animal. **The moose is
+sold too, by chance:** TAOM's culture pool takes every `Culture.mirkwood` item and does not read `is_merchandise`, so
+each day's draw can put a moose in a Mirkwood-owned town (about once in two weeks per town; Mike, 2026-09-23: let it
+appear). `is_merchandise="false"` still keeps both animals out of vanilla loot, workshop output and tournament
+prizes; a caravan can buy one from a market, since `CaravansCampaignBehavior.BuyCategory` does not read it either.
+`AnimaliaMountWiringTests.ElkRiderStartingMount_AndItsSaddle_AreGuaranteedStockInMirkwoodMarkets` reads the
+career roster, so a new starting mount must be routed too.
+
+**The two test riders stay visible** (Mike, 2026-09-23): `taom_test_animalia_elk_rider` and
+`taom_test_animalia_moose_rider` (Soldier, Cavalry, Mirkwood, registered for CustomGame) appear in every Custom
+Battle's Mirkwood cavalry picker, in English in every language. The elk rider is an exact twin of
+`mirkwood_rochenlas` now. **Delete `troops/troops_animalia_test.xml`, its SubModule.xml node, its two ladder
+exemptions (`tools/taom_schema.py`, `tools/melee_ladders.json`) and the `taom_test_` recruitment exemption before the
+next player release**; `AnimaliaMountWiringTests.TestRiders_*` goes with them.
+
+## Configuration
+
+- **The antler attack:** compiled constants in `Main/Features/Animalia/AnimaliaConfig.cs`: the Monster and set ids,
+  the 1.0x reach (1.5 m trigger, 2 m radius) and `ReachScalesWithBody`, one Blunt blow (elk 60, moose 70; a quarter on
+  a shield block), knockback 35 / 45, facing 0.25, a 10 s cooldown, one target. A change needs a build.
+- **Size:** each Monster's `taom_body_length` in the live `lotr_monster_animalia.xml` (elk 100, moose 150), read at
+  every game init ([monster-size.md](monster-size.md)); no build.
+- **Riders and market:** the repo data files in "Who rides them" and `culture_marketplace_config.xml` (the provider
+  is a singleton: restart the game after an edit).
+
+## Tests
+
+- C#: `AnimaliaConfigTests` (5), `AnimaliaAttackServiceTests` (7), `AnimaliaWiringTests` (4) and
+  `AnimaliaMountWiringTests` (12; its live-Armory reads are Inconclusive where the Armory is absent), the behavior's
+  entry in `BehaviorTreeMissionLogicInheritanceTests`, and `ElkMountWiringTests`' elk-saddle check over all three
+  animals.
+- Tools: `tools/tests/test_apply_animalia_armory.py` (27, the live recipe parity pair included). The PowerShell tools
+  have no test harness: `gen_animalia_anim_clips.ps1 -Verify` and the `wire_anim_master_skeletons.ps1` census are
+  their checks.
+
+## Performance
+
+Per ridden animal, a tree pass about five times a second; each scan reads the native `AgentScale` once and queries
+nearby agents over 2 m times the scale (2 m for the elk, 3 m for the moose). The attack fires at most once per 10 s.
+Without these animals in a mission the behavior costs two empty prune loops per tick. The size pass is MonsterSize's,
+once per game init.
+
+## Dependencies
+
+- **`LOTRLOME_Armory`** (unversioned): the Monsters, the two sets and twins, the two antler actions, the two items,
+  the name rows, every clip and mesh package ([ledger](../reference/lotrlome-animalia-changes.md)). The recipe
+  replays on top of the war ram's (`act_war_ram_butt`, the `/WARG` anchor) and the great elk's (`taom_elk_saddle_a`,
+  its Monsters registration) edits, so after a reinstall redo those first.
+- **The great elk (#636):** `taom_elk_saddle_a` is the seat of both animals. Its ledger's rollback to
+  `.bak-elk-20260922` predates the Animalia items and would delete them.
+- **`Main/Features/ElephantLike/`**: the shared attack service, profile and BT nodes, including
+  `reachScalesWithBody`.
+- **`Main/Features/MonsterSize/`**: the size ([monster-size.md](monster-size.md)).
+- **`Main/Features/CareerSystem/`**: `ICareerAgentStatService.MountChargeMultiplier`, the rider's charge bonus.
 
 ## Textures
 
@@ -274,11 +425,15 @@ UE exported them; whether Bannerlord wants the green channel flipped is settled 
 | `tools/oneoff/convert_tripo_prop_textures.py` | 1K d/n/s triples (`--match` picks one set out of a folder) |
 | `tools/wire_anim_master_skeletons.ps1` | Census of every master's skeleton reference; `-Apply` points EMPTY ones at `horse_skeleton` |
 | `tools/blender/measure_animalia_clips.py` + `tools/blender/animalia_{elk,moose}_clip_measure.json` | Travel per loop, hoof plants, fall fraction, measured on the pack's root-motion clips |
+| `Main/Features/Animalia/*.cs` | The antler attack (see "The antler attack") |
+| `TAOM.Tests/Features/Animalia/AnimaliaConfigTests.cs`, `AnimaliaAttackServiceTests.cs`, `AnimaliaWiringTests.cs` | Reach, cooldown, damage pins; monster gates and damage; the IoC and mission-behavior lines, the reach flag, the container |
+| `tools/tests/test_apply_animalia_armory.py` | The Armory writer on a synthetic tree (dry run, refusals, byte stability, backups, half-present steps) and its recipe against the live Armory, attribute for attribute |
+| `docs/ai-includes/quadruped-pack-to-horse-skeleton-workflow.md` | The whole procedure as a workflow, for the next pack |
 | `tools/gen_animalia_anim_clips.ps1` | The 54 `_anm.tpac` clips (52 + two `_movement` standing clips), cloned from vanilla horse clips, with the measured values |
 | `tools/apply_animalia_armory.py` | The Armory edits: Monsters file + registration, `as_animalia_*` action sets and twins, the two Horse items (dry run / `--apply`) |
 | `docs/reference/lotrlome-animalia-changes.md` | Ledger of every live Armory edit, backups, redo steps |
 | `Main/_Module/ModuleData/troops/troops_animalia_test.xml` | The two test riders (CustomGame only), registered in `Main/_Module/SubModule.xml`; exempt from the armour and melee ladders and from the recruitment-reachability test, all marked for removal with the file |
-| `TAOM.Tests/Features/Animalia/AnimaliaMountWiringTests.cs` | 5 tests: riders pair mount and saddle; items name their Monster and mesh; Monsters are horses on their own set and registered; sets are children of `as_horse` with `_map` / `_town_and_village` twins; every bound clip exists and every bound type is an `as_horse` action |
+| `TAOM.Tests/Features/Animalia/AnimaliaMountWiringTests.cs` | 12 tests: test riders pair mount and saddle; items name their Monster and mesh; Monsters are horses on their own set and registered; sets are children of `as_horse` with `_map` / `_town_and_village` twins; every bound clip exists and every bound type is an `as_horse` action (or the antler); the antler actions are `actt_kick` and bound; and the real riders ("Who rides them"): the lower cavalry, Thranduil and the lord templates, the generated lord and ruler templates, the career start; the career start's mount and saddle as guaranteed Mirkwood stock; each Monster's size and its item's placeholder |
 | `C:\Users\mikew\Downloads\horse.fbx` | TaleWorlds' horse mesh export: the template armature (outside the repo) |
 | `LOTRLOME_Armory\AssetSources\creature\elk\` | Mike's layout: `animalia_elk_08.fbx`, `animalia_moose_big.fbx`, `animations\elk\` (64), `animations\moose\` (33), `textures\` (9); beside `elk_001.fbx` |
 | `LOTRLOME_Armory\Assets\creature\elk\` | What the Kit made of them: `animalia_elk_08_geo.tpac`, `animalia_moose_big_geo.tpac`, `textures\` (9 `_tex`, 3 `_mtl`), `animations\elk\`, `animations\moose\` |
@@ -314,19 +469,46 @@ the output folder in variables whose names differ by more than case (`$M` and `$
    skeleton, but **the Kit left every master's Skeleton reference EMPTY**. `tools/wire_anim_master_skeletons.ps1
    -Apply` (Kit closed) patched all 97 to `horse_skeleton` (`1163bb17-777d-49b1-b083-aad79dc544fd`), re-read
    each, refreshed the item checksums; the census now reads ok=97, 0 stale checksums, 97 `.bak-preskel`
-   backups beside them. OWED: open the Kit once so it re-reads the patched masters, a vanilla gallop on each
-   mesh (the rest-pose and normal-map check), a module save. Re-run the census after any re-import of a clip:
-   a re-import can bring the empty reference back.
-2. **Clip resources:** DONE (52, above). OWED: open the Kit once so it writes their RuntimeDataCache entries
-   (a clip needs one; a master does not), save, close. Jumps later: in `jump_run_high` the pelvis climbs to
+   backups beside them. The Kit re-read them at the 12:39 load. OWED: a vanilla gallop on each mesh (the
+   rest-pose and normal-map check). Re-run the census after any re-import of a clip: a re-import can bring the
+   empty reference back.
+2. **Clip resources:** DONE (54, above), with their RuntimeDataCache entries (the 12:39 Kit load;
+   `check_rdc_entries.py` reads 0 missing). Jumps later: in `jump_run_high` the pelvis climbs to
    3.36 m, about 2 m above its standing 1.37 m, and the engine flies a mount's jump itself, so the jump clips
    need the vertical travel removed and a cut into start / loop / end before they can replace vanilla's.
-3. **Game side:** Monsters, action sets and items DONE for the test (both on `taom_elk_saddle_a`; the moose's
-   hump may want its own saddle). OWED: the antler attack (an `action_types.xml` entry typed `actt_kick` plus
-   the C# that fires it, after #636 lands, since it owns the elk behaviour code), real riders replacing the test
-   file (Thranduil and the lords on the moose after #636), size (`body_length`), shop listing, `/localize` for the
-   two item names.
+3. **Game side:** Monsters, action sets, items and the antler actions DONE (both on `taom_elk_saddle_a`; the
+   moose's hump may want its own saddle). The antler attack's C# is written and tested; real riders DONE (evening,
+   "Who rides them"); the size moved onto the Monsters. OWED: a deploy, then the in-game checklist below, the
+   twelve translations of the two item names (English rows registered; `/localize`, a paid run), deleting the test
+   riders before the next release, the jumps.
 4. In-game ladder per [creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md).
+
+### In-game checklist (owed, after a deploy)
+
+1. **Sizes after the move** (a Custom Battle, then a campaign, then a second Custom Battle in the same process: the
+   campaign re-reads its own Monster files, and the pass sits before the once-per-process guard so it runs each
+   time): the TAOM log shows `[MonsterSize] 3 Monster size(s), 2 Horse item(s) resized: taom_elk_a=110 (was 100), taom_animalia_moose_a=150 (was 100)` (the Animalia elk is 100 on its Monster and its placeholder alike, so it needs no write). The rgl log shows one
+   `The 'taom_body_length' attribute is not declared` line per sized Monster, no "required" line for `body_length`,
+   and the size pass's `opening <path>` lines. Each animal is the size it was (the table above).
+2. **The antler attack** (Custom Battle, Blow Diagnostics on: MCM `TAOM — Blow Diagnostics`): `[Animalia]
+   Initialized`, then `Attached behavior trees to 0 elk(s) and 0 moose` in a Custom Battle (the trees arrive by
+   late attach, `First late-spawn tree attached`, which does not say which animal), and none of the three
+   `[Animalia]` error lines. Per hit one `[BlowDiag]` line, `dmgType=Blunt`, the elk `dmg=60 mag=35`, the moose
+   `dmg=70 mag=45`; on a shield block 15 and 18; `attackerIdx` is the RIDER's index. Look for a hit owned by the
+   MOUNT during the clip: that would be a native kick hit on top of TAOM's (the clips carry no combat parameter, so
+   none is expected). The moose's antlers reach what they strike at 150.
+3. **A campaign battle:** the Blunt blow can kill (Custom Battle kills every downed agent, so it proves nothing
+   here): finish several troops with the attack alone and look for at least one kill.
+4. **The `elk_rider` career start** (new character): the Animalia elk and the elk saddle in the inventory; the
+   player-ridden attack fires; `dmg` above 60 while Antler Crash is active.
+5. **The map:** in a new campaign, Thranduil's or a moose-riding lord's party icon and the `elk_rider` player's show
+   their mount (at horse size: neither item sets `scale_factor`) with no "Invalid action set code". These are the
+   first uses of `as_animalia_moose_map` and `as_animalia_elk_map`.
+6. **An existing save** after a restart: it loads; `mirkwood_rochenlas` rides the Animalia elk (troops re-read
+   their XML); the lords keep the mount they were saved with.
+7. Rear, kick, hit reactions and deaths for both animals; the moose's hooves at 150; the saddle on both bodies.
+8. **The market:** in a new campaign, a Mirkwood-owned town after its first day holds at least one Animalia elk and
+   the elk saddle; over a couple of weeks a moose may turn up too (by chance, Mike's call).
 
 ## Known gaps
 
@@ -335,7 +517,8 @@ the output folder in variables whose names differ by more than case (`$M` and `$
   ankle.
 - The curving gaits (`loco_*_l/_r`) lose their root turn; the engine steers, so they play as straight gaits.
 - A slight pinch at the elk's front elbow in extreme poses (the rearing strike).
-- Not yet seen in the Kit or in game: all QA so far is in Blender.
+- Seen in game for gaits and idles only (Mike: "look great"); rear, kick, hits, deaths and the attack not yet
+  judged.
 
 ## Changelog
 
@@ -347,7 +530,23 @@ the output folder in variables whose names differ by more than case (`$M` and `$
   textures, materials and both meshes in the Kit, then all 97 clips; the Kit left every master's skeleton
   reference empty, and `tools/wire_anim_master_skeletons.ps1` pointed all 97 at `horse_skeleton`. Then
   `tools/gen_animalia_anim_clips.ps1` wrote the 52 clip resources from vanilla horse templates with measured
-  travel, hoof plants and fall points; turns and jumps stay vanilla.
+  travel, hoof plants and fall points; turns and jumps stay vanilla. Game side: Monsters, action sets and items
+  via `tools/apply_animalia_armory.py`, Custom-Battle test riders; first battle clean, gaits and idles confirmed
+  by Mike; moose `body_length` 150. The antler attack: `Main/Features/Animalia/` on the elephant-like engine, its
+  two `actt_kick` actions bound in the Armory, 9 new tests (suite 10,222). The workflow written up as
+  `docs/ai-includes/quadruped-pack-to-horse-skeleton-workflow.md`. Evening: real riders (Mike): the moose to
+  Thranduil, the five lord battle templates and the generated lord and ruler templates; the Animalia elk to
+  `mirkwood_rochenlas` and the `elk_rider` career start; the great elk kept for `mirkwood_beleglas`. 13 Horse ids
+  changed by hand-scoped edit, the rider pins moved from `ElkMountWiringTests` to `AnimaliaMountWiringTests`. Then
+  the size moved onto the Monsters (`taom_body_length`, [monster-size.md](monster-size.md)) and the reach follows the
+  live size; the deep review's fixes: the four service types split into their own files, literal id and behaviour
+  pins, the antler-type reason corrected, the Armory snapshot refreshed, the two item names registered in English,
+  the twin comment corrected, and the writer scripts guarded against a running game or Kit. Night: the starting
+  elk routed into Mirkwood markets (`min_stock` 1); the final review (8 lenses and Codex): the skeleton patcher
+  checks the rig's bone count again (it could re-point another rig's empty master), the clip generator refuses a
+  failed measurement and checks clip names and checksums, the size pass warns on a size nothing rides, the three
+  reflection targets joined the binding gate, the moose's sale made true in the docs (Mike: it may be sold), and the
+  Animalia wiring and reach-flag pins added.
 
 ## GitHub Issue
 

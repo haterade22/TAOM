@@ -4,6 +4,7 @@ using System.Linq;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.Elk;
+using TAOM.Features.MonsterSize;
 using TAOM.Features.WarRam;
 
 // Great elk attack wiring, pinned (#636). The elk mesh is skinned to the vanilla horse_skeleton, so its
@@ -80,35 +81,67 @@ public class ElkConfigTests
     }
 
     [TestMethod]
-    public void AntlerReach_GrowsWithTheBody()
+    public void AntlerReach_IsTheRamsAtOneX_AndScalesWithTheLiveBody()
     {
-        // Tuned at 1.0x as the ram's 1.5 m trigger and 2 m radius, both measured from the elk's CENTER. At 2x the
-        // antlers sit about twice as far forward, so an unscaled reach would only ever hit what stands under the
-        // chest (Mike, 2026-09-23: "x2 the size"). Same rule as ElephantConfig's trample reach.
-        Assert.AreEqual(1.5f * ElkConfig.AuthoredScale, ElkConfig.AttackTriggerRange, 0.001f);
-        Assert.AreEqual(2f * ElkConfig.AuthoredScale, ElkConfig.AttackRadius, 0.001f);
+        // The ram's 1.5 m trigger and 2 m radius, both measured from the elk's CENTER, at 1.0x. The shared nodes
+        // multiply them by the elk's live agent scale (ReachScalesWithBody), which comes from the Monster's
+        // taom_body_length (docs/features/monster-size.md), so the antlers strike what they visibly reach at any size
+        // and a resize is one XML edit (the 2026-09-23 resizes each needed a C# constant and a redeploy).
+        Assert.AreEqual(1.5f, ElkConfig.AttackTriggerRange, 0.001f);
+        Assert.AreEqual(2f, ElkConfig.AttackRadius, 0.001f);
+        Assert.IsTrue(ElkConfig.ReachScalesWithBody);
     }
 
     [TestMethod]
-    public void TheElkItem_DeclaresTheScaleTheReachIsTunedFor()
+    public void ElkProfile_PassesTheReachFlag()
     {
-        // The reach above silently encodes taom_elk_a's body_length (the engine scales the mount by body_length / 100
-        // at build). Change one without the other and the antler charge swings short or strikes air, with no error
-        // anywhere. The item lives in the unversioned Armory, so this reads the live install and is Inconclusive
-        // where the Armory is absent.
-        string? env = Environment.GetEnvironmentVariable("BANNERLORD_GAME_DIR");
-        string horses = Path.Combine(string.IsNullOrWhiteSpace(env)
-                ? @"E:\Steam\steamapps\common\Mount & Blade II Bannerlord" : env,
-            "Modules", "LOTRLOME_Armory", "ModuleData", "LOTRLOME_items", "LOTRAOM_horses.xml");
-        if (!File.Exists(horses))
-            Assert.Inconclusive("LOTRLOME_Armory not installed on this machine; the item cannot be checked here.");
+        // The profile's reachScalesWithBody defaults to false and the profile cannot be built in a unit test (it creates
+        // ActionIndexCaches), so a dropped argument would compile and leave the 1.1x elk scanning at the 1.0x ranges.
+        string? combat = ReadProjectSource("Main", "Features", "Elk", "ElkCombat.cs");
+        if (combat == null)
+            Assert.Inconclusive("Main/Features/Elk/ElkCombat.cs not found: run from the repo root");
+        StringAssert.Contains(combat, "reachScalesWithBody: ElkConfig.ReachScalesWithBody");
+    }
 
-        var item = XDocument.Load(horses).Descendants("Item").FirstOrDefault(i => (string?)i.Attribute("id") == "taom_elk_a");
+    private static string? ReadProjectSource(params string[] relativeParts)
+    {
+        string? dir = Directory.GetCurrentDirectory();
+        while (dir != null)
+        {
+            string candidate = Path.Combine(new[] { dir }.Concat(relativeParts).ToArray());
+            if (File.Exists(candidate))
+                return File.ReadAllText(candidate);
+            dir = Directory.GetParent(dir)?.FullName;
+        }
+        return null;
+    }
+
+    [TestMethod]
+    public void TheElkMonster_DeclaresItsSize_AndItsItemHoldsTheSchemaPlaceholder()
+    {
+        // One place for the size (Mike: "the monster xml should control the size of the animal"): the Monster's
+        // taom_body_length, which MonsterSizeService copies into the item at game init. Items.xsd requires body_length
+        // on <Horse>, so the item keeps the neutral placeholder; any other value there would read as a second size.
+        // Both live in the unversioned Armory, so this reads the live install and is Inconclusive where it is absent.
+        string? env = Environment.GetEnvironmentVariable("BANNERLORD_GAME_DIR");
+        string armory = Path.Combine(string.IsNullOrWhiteSpace(env)
+                ? @"E:\Steam\steamapps\common\Mount & Blade II Bannerlord" : env, "Modules", "LOTRLOME_Armory", "ModuleData");
+        if (!Directory.Exists(armory))
+            Assert.Inconclusive("LOTRLOME_Armory not installed on this machine; the Monster cannot be checked here.");
+
+        var monster = XDocument.Load(Path.Combine(armory, "Monsters", "LOTR", "lotr_monster_elk.xml")).Descendants("Monster")
+            .SingleOrDefault(m => (string?)m.Attribute("id") == ElkConfig.ElkMonsterId);
+        Assert.IsNotNull(monster, "Monster taom_elk is missing from lotr_monster_elk.xml");
+        string? size = (string?)monster!.Attribute(MonsterSizeConfig.AttributeName);
+        Assert.IsTrue(MonsterSizeService.TryParseBodyLength(size, out _),
+            $"taom_elk must declare {MonsterSizeConfig.AttributeName} as a whole number from " +
+            $"{MonsterSizeConfig.MinBodyLength} to {MonsterSizeConfig.MaxBodyLength}, found \"{size}\"");
+
+        var item = XDocument.Load(Path.Combine(armory, "LOTRLOME_items", "LOTRAOM_horses.xml")).Descendants("Item")
+            .SingleOrDefault(i => (string?)i.Attribute("id") == "taom_elk_a");
         Assert.IsNotNull(item, "the taom_elk_a Horse item is missing from the Armory");
-        string? bodyLength = item!.Descendants("Horse").FirstOrDefault()?.Attribute("body_length")?.Value;
-        Assert.AreEqual(((int)Math.Round(ElkConfig.AuthoredScale * 100f)).ToString(), bodyLength,
-            "taom_elk_a's body_length no longer matches ElkConfig.AuthoredScale: change both together, because the " +
-            "antler charge's reach is derived from the constant");
+        Assert.AreEqual(MonsterSizeConfig.ItemPlaceholderBodyLength.ToString(), (string?)item!.Descendants("Horse").Single().Attribute("body_length"),
+            "taom_elk_a must keep body_length at the placeholder: the size lives on Monster taom_elk, so resize it there");
     }
 
     [TestMethod]

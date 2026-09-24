@@ -1568,12 +1568,24 @@ test, or drop it. Fix the donor's copy too, or file it.
 
 **Source:** `docs/reviews/rca-elk-2026-09-22.md` findings F4, F5, F6 and F11 (2026-09-22).
 
+**Recurred again 2026-09-23 night (#646 final review):** the first #646 review corrected "the horse rig has no attack
+animation" in the Animalia doc but not in `/new-creature-mount`, `creature-mount-authoring.md` or five other copies, so
+the next creature would have learned it again; and "a reskin has no clips" survived in the skill beside the paragraph
+that sends a bought pack WITH its clips down the reskin path. Fix the template first (the skill, the authoring doc),
+then grep the claim repo-wide.
+
 **Recurred 2026-09-23 (`docs/reviews/rca-elk-delta-2026-09-23.md` F4), from the template itself:** four statements
 said a mount agent's Character is its rider: `creature-mount-authoring.md`'s Phase 7 table and the elk, ram and
 mumakil mission behaviors cloned from it. The engine builds a mount agent with a null character (v1.5.3
 `Mission.cs:4611`), which #610 had recorded in `TaomAgentStatCalculateModel` on 2026-09-17. A fact established later
 does not flow back by itself: when you establish an engine fact, grep for the claim it contradicts (here
 `Character is the`) and fix the template first, since every clone copies it.
+
+**Recurred again 2026-09-23 evening (`docs/reviews/rca-animalia-2026-09-23.md` row 13), from memory rather than a
+copy:** the Animalia workflow doc, its ledger, the apply script's comment and the live `action_sets.xml` comment all
+said the engine requires or derives both twins, hours after this lesson recorded that only `_map` is looked up. A
+lesson in a category file does not reach text written without opening that file. The fact now sits in
+`/new-creature-mount` Phase 4, the place creature work starts.
 
 ### A new reference into the unversioned Armory lands with a gate that reads the live file (#644, 2026-09-23)
 
@@ -1590,3 +1602,34 @@ reinstall or a rename there would have left every repo gate green.
   Give any new kind of reference into the Armory the same shape of gate in the same change: it reads
   the live file and skips, never fails, when the file is absent.
 - **Source:** `docs/reviews/rca-nazgul-race-2026-09-23.md` finding 2 (2026-09-23).
+
+### A CustomGame-only troop is not hidden: the Custom Battle picker lists every Soldier of a culture (#646, 2026-09-23)
+The two `taom_test_*` riders were registered for CustomGame only and read as private test data, but
+`ArmyCompositionGroupVM` lists every `IsSoldier && !IsObsolete` character, and TAOM offers every settled culture, so
+both appeared in every player's Mirkwood cavalry picker, in English in every language.
+- **Why missed:** "CustomGame only" answers where a troop loads, not who sees it.
+- **Prevent:** a test troop is either `is_obsolete="true"` (hidden from the picker, still spawnable by
+  `taom.spawn_troops`) or on the release checklist to delete; say which in the file's header.
+- **Source:** `docs/reviews/rca-animalia-2026-09-23.md` row 3.
+
+### Trace an availability claim through TAOM's own market, and quote Mike before calling it his decision (#646, 2026-09-23)
+Six texts said "the moose is not sold" because the item is `is_merchandise="false"`. TAOM's CultureMarketplace never
+reads that flag: `ItemPoolAdapter.GetAllItems` takes every item, `CultureItemPoolService.BuildPools` groups them by
+culture, and the daily draw put the `Culture.mirkwood` moose in a Mirkwood town about once a fortnight. The review
+scope then recorded "the moose is not sold" as Mike's standing decision; he had asked only that the starting elk be
+sold. Asked, he chose to let the moose appear.
+- **Why missed:** a vanilla flag was read as the whole story, and a session's own wording was promoted to a decision.
+- **Prevent:** before writing that an item is or is not sold, dropped or looted, follow it through TAOM's systems (the
+  CultureMarketplace pool and routing, loot and reward models), not only the vanilla flag. A decision attributed to
+  Mike carries his words or the question he answered; anything else is the session's wording, and says so.
+- **Source:** `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F2.
+
+### When a feature moves where a value lives, grep every doc that tells a reader where to change it (#646, 2026-09-23)
+The size moved from the Horse item onto the Monster, and the feature docs followed, but the modding handbook's
+"Resize a mount" recipe still said to edit the item's `body_length`, "the only scale knob a mount has". For the three
+sized mounts that edit is undone at every game init and fails the data tests; and the handbook is the no-C#
+audience's only guide.
+- **Why missed:** the doc sweep followed links from the feature, and the handbook recipe does not link to it.
+- **Prevent:** when the place a value lives changes, grep the repo for the old place's name (the attribute, the file,
+  "resize") and fix every how-to, the handbook and doc-lookup included, in the same change.
+- **Source:** `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F6.

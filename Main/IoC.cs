@@ -121,6 +121,8 @@ public static class IoC
         Features.Mumakil.MumakilIoC.RegisterMumakilFeature(container);
         Features.WarRam.WarRamIoC.RegisterWarRamFeature(container);
         Features.Elk.ElkIoC.RegisterElkFeature(container);
+        Features.Animalia.AnimaliaIoC.RegisterAnimaliaFeature(container);
+        Features.MonsterSize.MonsterSizeIoC.RegisterMonsterSizeFeature(container);
         CustomBattlesIoC.RegisterCustomBattlesFeature(container);
         BattleBalanceIoC.RegisterBattleBalanceFeature(container);
         Features.CombatMechanics.CombatMechanicsIoC.RegisterCombatMechanicsFeature(container);

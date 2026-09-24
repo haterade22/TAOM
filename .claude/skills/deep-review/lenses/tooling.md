@@ -34,6 +34,12 @@ FOR EVERY SCRIPT, READ-ONLY GATES INCLUDED:
 13. For hooks: the timeout is measured against the slow path, the hook fails open but never
    silent, and a hook that consumes another hook's output has a two-direction case in
    `tools/test_hooks.sh`. Run `bash tools/test_hooks.sh`.
+14. A removed parameter, flag or check: name what input it made the tool reject, and run the changed
+   tool on such an input. A "nuisance" parameter can be the only guard (#646: dropping
+   `-BoneCount` let the skeleton patcher re-point another rig's master; it passed on a one-rig folder).
+15. A consumer of another tool's report validates each record (an error record, a zero, a missing
+   field), not only that the key exists: PowerShell reads a missing field as `$null` and `[float]`
+   makes it 0.
 
 WHY: deep-review 2026-05-28 (scene tooling): BOM handling differed across a new script family and
 no core lens saw it (RCA `docs/reviews/rca-scene-tooling-2026-05-28.md`). Deep review 2026-09-18:

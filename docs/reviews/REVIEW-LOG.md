@@ -3773,3 +3773,33 @@ one gate timed against its registration. Mike approved four design proposals mid
 `harness-facts.md` paths, the `triage-needs-ingame` label as the smoke backlog, `attribution` in
 `settings.json`, a CI workflow of its own on every branch). Root cause tables:
 `docs/reviews/rca-adr011-batch1-2026-09-23.md`; five lessons in build-tooling-workflow.
+
+## Review 132: the Animalia elk and moose, antler attacks, riders and Monster size (#646), 8-lens deep review + convergence, then a final 8-lens deep review + Codex gpt-6-astra ultra + convergence (2026-09-23)
+
+Two Fab packs brought in as horse-skeleton reskins with their own clips, an antler attack each on the elephant-like
+engine, the Mirkwood riders reassigned (the moose to Thranduil and the lords), the Animalia elk sold in Mirkwood
+markets, and a mount's size moved onto its Monster (`taom_body_length`, `Main/Features/MonsterSize`). The first review
+(eight lenses, evening) found 12 MEDIUM and 10 LOW groups, no CRITICAL or HIGH; its convergence pass one MEDIUM (a
+Monster size would move the elephant or mumakil under its baked platform, now pinned).
+
+The final review covered the whole session: eight lenses in two waves of four on Opus 5.5, Codex in parallel, one
+convergence pass. **No CRITICAL, no engine incompatibility, two HIGH, six MEDIUM.** The engine questions a player would
+feel first (an undeclared XML attribute, the init timing, the reflection targets, the kick type) all held against the
+installed DLLs, settled by the Engine lens and Codex independently. The HIGHs: the first fix round had removed the
+skeleton patcher's only rig check (a regression the one-rig re-runs could not see; the live warg folder held a
+patchable master), and seven texts said the moose is not sold while TAOM's culture pool, which ignores
+`is_merchandise`, draws it into Mirkwood towns (Mike: let it appear). The MEDIUMs: the size pass's reflection sites
+missing from the binding gate, the clip generator reading a failed measurement as zeros, the live Armory running ahead
+of the installed DLL, the handbook's resize recipe, the test-rider blocker off the release path, and a CHANGELOG line
+the convergence pass caught. Codex matched the market finding and the recompute gap independently and missed the
+tooling regression; one disagreement (the struck band's upper bound) changed no conclusion. Two LOW-level wrong
+engine claims came from lenses, not the code: "caravans read `is_merchandise`" (they do not, v1.5.3
+`CaravansCampaignBehavior.BuyCategory`) and "no attack clip" repeated from a template the first round had fixed only in
+a copy.
+
+All fixed, with tests first for the C# and the Armory writer; the tools proven read-only on the live tree and on
+scratch copies. Final: `dotnet test` 10,313 passed, 0 failed; `pytest tools/tests` 2,054; `test_hooks.sh` 283;
+`validate_moduledata.py` 0 errors; `validate_xml_schemas.py --live` 241 pass. Nothing is committed or deployed; the
+in-game checklist waits for a deploy. Root cause tables and the not-applied list:
+`docs/reviews/rca-animalia-2026-09-23.md`; seven new lessons (build-tooling-workflow, data-content-cultures,
+adapters-taleworlds-api) and a recurrence note, and one new check each in the Engine and Tooling lenses.

@@ -26,8 +26,10 @@ public sealed class ElephantLikeCombatProfile
         Func<IElephantLikeAttackService> resolveService,
         bool singleTarget = false,
         DamageTypes damageType = DamageTypes.Pierce,
-        Func<Agent, float>? riderMultiplier = null)
+        Func<Agent, float>? riderMultiplier = null,
+        bool reachScalesWithBody = false)
     {
+        ReachScalesWithBody = reachScalesWithBody;
         SingleTarget = singleTarget;
         DamageType = damageType;
         RiderMultiplier = riderMultiplier;
@@ -40,6 +42,18 @@ public sealed class ElephantLikeCombatProfile
         SwingRight = ActionIndexCache.Create(sideAttackRightActionName);
         ResolveService = resolveService;
     }
+
+    /// <summary>True when <see cref="TrampleTriggerRange"/> and <see cref="TrampleRadius"/> are the reach at 1.0x and the
+    /// nodes multiply them by the creature's live size (<see cref="ReachScaleOf"/>). Set by the creatures whose size
+    /// lives on their Monster (the great elk and the Animalia elk and moose, docs/features/monster-size.md), so a
+    /// resize is one XML edit. Off, the ranges are absolute metres, as the elephant's and mumakil's stay: their
+    /// constants also size the howdah and the tower.</summary>
+    public bool ReachScalesWithBody { get; }
+
+    /// <summary>The multiplier for this profile's ranges on <paramref name="creature"/>: its guarded agent scale when
+    /// <see cref="ReachScalesWithBody"/>, else 1. One native read per call; call it once per scan.</summary>
+    public float ReachScaleOf(Agent creature)
+        => ReachScalesWithBody ? ElephantLikeReach.Scale(creature.AgentScale) : 1f;
 
     /// <summary>Proximity gate: an attack only fires when a live enemy is within this distance of the creature's
     /// CENTER and in front of it. Must stay ≤ <see cref="TrampleRadius"/>.</summary>
@@ -56,13 +70,14 @@ public sealed class ElephantLikeCombatProfile
     /// it (#618); the elephant's and mumakil's tramples keep the default radial sweep.</summary>
     public bool SingleTarget { get; }
 
-    /// <summary>The blow's damage type. Pierce by default, as every creature blow has been; the elk's antler charge is
-    /// Blunt (#636), which <c>CustomAttacksUtils.TakeDamage</c> keeps lethal.</summary>
+    /// <summary>The blow's damage type. Pierce by default, as every creature blow has been; the antler attacks are
+    /// Blunt (the great elk's, #636, and the Animalia elk's and moose's, #646), which
+    /// <c>CustomAttacksUtils.TakeDamage</c> keeps lethal.</summary>
     public DamageTypes DamageType { get; }
 
-    /// <summary>What the attack takes from its rider at the moment it fires, or null for nothing. The elk scales its
-    /// antler charge by the rider's career charge bonus (<c>ElkCombat.RiderChargeMultiplier</c>, #636); the service
-    /// ignores a value outside <c>(0, MaxRiderMultiplier]</c>.</summary>
+    /// <summary>What the attack takes from its rider at the moment it fires, or null for nothing. The antler attacks
+    /// scale by the rider's career charge bonus (<c>ElkCombat</c> and <c>AnimaliaCombat.RiderChargeMultiplier</c>,
+    /// #636, #646); the service ignores a value outside <c>(0, MaxRiderMultiplier]</c>.</summary>
     public Func<Agent, float>? RiderMultiplier { get; }
 
     /// <summary>The trample (double-sweep thrash) animation.</summary>

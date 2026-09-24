@@ -50,7 +50,7 @@ description: Verified Claude Code load semantics, hook lifecycle and frontmatter
 | Fact | Source | Why we care |
 |---|---|---|
 | Agent **descriptions** load with every Task spawn; an agent's **body** loads only when that agent is spawned. | docs (skills + Task tool) | Same eager/lazy split as skills. |
-| `model:` takes an alias (`sonnet`, `opus`, `haiku`, `fable`), a full id or `inherit`; `effort:` takes `low` to `max`, per model. Resolution: the spawn's `model` parameter, then the definition's `model:`, then `CLAUDE_CODE_SUBAGENT_MODEL`, then the main model. | https://code.claude.com/docs/en/sub-agents (DOC, 2026-09-18) | `deep-reviewer` pins Opus 5.5 (`claude-opus-5-5`, Mike 2026-09-23; Fable before) at max effort, which Opus 5.5 supports (all five levels, https://platform.claude.com/docs/en/build-with-claude/effort, verified 2026-09-23); passing `model` on the spawn silently overrides that, so `/deep-review` never passes one. |
+| `model:` takes an alias (`sonnet`, `opus`, `haiku`, `fable`), a full id or `inherit`; `effort:` takes `low` to `max`, per model. Resolution: the spawn's `model` parameter, then the definition's `model:`, then `CLAUDE_CODE_SUBAGENT_MODEL`, then the main model. | https://code.claude.com/docs/en/sub-agents (DOC, 2026-09-18) | `deep-reviewer` pins Opus 5.5 (`claude-opus-5-5`, Mike 2026-09-23) at max effort, which Opus 5.5 supports (all five levels, https://platform.claude.com/docs/en/build-with-claude/effort, verified 2026-09-23); passing `model` on the spawn silently overrides that, so `/deep-review` never passes one. |
 
 ## Hook lifecycle
 

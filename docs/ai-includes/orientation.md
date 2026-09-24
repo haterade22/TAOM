@@ -63,6 +63,7 @@ and the gate.
 | Armory asset tree | Loose `Assets/**` loads and wins; the inventory is generated, never counted by hand | [armory](../reference/armory-guide.md) |
 | Horse-skeleton reskins | Share the engine's action vocabulary; the rig's only attack is `act_horse_kick` | [war ram](../features/war-ram.md) |
 | HorseHarness | Required beside every Horse slot; exemptions only in `_HARNESSLESS_BY_DESIGN` | [war ram](../features/war-ram.md) |
+| Mount size | A Monster with `taom_body_length` overrides every item's `body_length`: resize on the Monster | [monster size](../features/monster-size.md) |
 | Animation | Author on the engine skeleton: engine frames, rest pose at frame 0, list-order hierarchy | [skeleton](../reference/bannerlord-skeleton-authoring.md) |
 | Kit clip rename | Corrupts the clip: keep the name, close the Kit, run `rename_anim_clip_tpac.py` | [tools](../../tools/README.md) |
 | Player start kits | Defaults are `starter_<donor>` twins, careers take troop gear; override the roster, never a set | [start kits](../features/starting-equipment-tuning.md) |

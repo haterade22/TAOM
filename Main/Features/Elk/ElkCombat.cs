@@ -26,7 +26,8 @@ internal static class ElkCombat
         () => IoC.Resolve<IElkAttackService>(),
         singleTarget: ElkConfig.AttackSingleTarget,
         damageType: ElkConfig.AttackDamageType,
-        riderMultiplier: RiderChargeMultiplier);
+        riderMultiplier: RiderChargeMultiplier,
+        reachScalesWithBody: ElkConfig.ReachScalesWithBody);
 
     /// <summary>
     /// The rider's career charge bonus, read when the antler charge fires (Mike, 2026-09-23: "scale the antler blows

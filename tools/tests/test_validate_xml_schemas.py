@@ -310,6 +310,102 @@ class ValidationTests(_Tree):
         self.assertEqual(len(vx.validate(self.clans, split)), 1)
 
 
+MONSTERS_XSD = """<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Monsters">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Monster" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="id" type="xs:string" use="required"/>
+            <xs:attribute name="base_monster" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
+"""
+
+GOOD_MONSTER = """<?xml version="1.0" encoding="utf-8"?>
+<Monsters>
+  <Monster id="taom_animalia_elk" base_monster="horse" taom_body_length="100" />
+</Monsters>
+"""
+
+
+@NEEDS_LXML
+class TaomExtensionAttributeAllowlistTests(unittest.TestCase):
+    """#646: the engine's Monsters.xsd does not declare taom_body_length
+    (Main/Features/MonsterSize), so the gate needs a narrow, explicit allowlist rather than
+    failing every sized Monster file."""
+
+    def setUp(self):
+        vx._schema.cache_clear()
+        self._tmp = tempfile.TemporaryDirectory()
+        root = Path(self._tmp.name)
+        self.xsd = root / "Monsters.xsd"
+        _write(self.xsd, MONSTERS_XSD)
+        self.monster = root / "lotr_monster_animalia.xml"
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def test_taom_body_length_on_monster_is_allowed(self):
+        _write(self.monster, GOOD_MONSTER)
+        errors = vx.validate(self.monster, self.xsd, xml_id="Monsters")
+        self.assertEqual(errors, [])
+
+    def test_without_the_xml_id_the_attribute_still_fails(self):
+        # The allowlist only applies when the caller states which schema id is in play; a bare
+        # validate() call (as every existing caller other than run() makes) is unaffected.
+        _write(self.monster, GOOD_MONSTER)
+        errors = vx.validate(self.monster, self.xsd)
+        self.assertEqual(len(errors), 1)
+        self.assertIn("taom_body_length", errors[0])
+
+    def test_a_different_undeclared_attribute_on_monster_still_fails(self):
+        _write(self.monster, GOOD_MONSTER.replace('taom_body_length="100"', 'taom_typo_attr="100"'))
+        errors = vx.validate(self.monster, self.xsd, xml_id="Monsters")
+        self.assertEqual(len(errors), 1)
+        self.assertIn("taom_typo_attr", errors[0])
+
+    def test_a_missing_required_attribute_is_not_hidden_by_the_allowlist(self):
+        # taom_body_length is still allowed, but base_monster's absence is a real, unrelated
+        # schema error and must still be reported: the allowlist suppresses one message, not
+        # the whole file's validation.
+        broken = GOOD_MONSTER.replace(' base_monster="horse"', "")
+        _write(self.monster, broken)
+        errors = vx.validate(self.monster, self.xsd, xml_id="Monsters")
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("base_monster", errors[0])
+
+    def test_the_attribute_on_another_element_still_fails(self):
+        _write(self.monster, GOOD_MONSTER.replace("<Monsters>", '<Monsters taom_body_length="1">'))
+        errors = vx.validate(self.monster, self.xsd, xml_id="Monsters")
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("taom_body_length", errors[0])
+
+    def test_run_passes_the_schema_id_so_a_sized_monster_file_passes(self):
+        root = Path(self._tmp.name)
+        module = root / "Modules" / "SizeMod"
+        schemas = root / "XmlSchemas"
+        _write(schemas / "Monsters.xsd", MONSTERS_XSD)
+        _write(module / "SubModule.xml", '<?xml version="1.0" encoding="utf-8"?>\n'
+               '<Module><Xmls><XmlNode><XmlName id="Monsters" path="monsters"/></XmlNode></Xmls></Module>\n')
+        _write(module / "ModuleData" / "monsters.xml", GOOD_MONSTER)
+        report = vx.run([module], schemas)
+        self.assertEqual([Path(r["file"]).name for r in report["checked"]], ["monsters.xml"])
+        self.assertEqual(report["failed"], [])
+
+    def test_allowlist_is_keyed_by_schema_id_not_just_element_name(self):
+        # A "Monster" element under a DIFFERENT schema id must not inherit the exemption.
+        _write(self.monster, GOOD_MONSTER)
+        errors = vx.validate(self.monster, self.xsd, xml_id="NotMonsters")
+        self.assertEqual(len(errors), 1)
+        self.assertIn("taom_body_length", errors[0])
+
+
 @NEEDS_LXML
 class RunTests(_Tree):
     def test_clean_tree_reports_every_registered_file(self):

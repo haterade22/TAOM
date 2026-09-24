@@ -3,10 +3,11 @@ using TaleWorlds.Core;
 namespace TAOM.Features.Elk;
 
 /// <summary>
-/// Tuning for the great elk, Thranduil's mount and the Mirkwood cavalry's (#636). Built exactly as the Dwarven
-/// war ram (docs/features/war-ram.md): elk_001 is skinned to the vanilla horse_skeleton, so its Monster in
-/// LOTRLOME_Armory (taom_elk) is base_monster="horse" and it moves on the horse's own clips, inheriting
-/// family_type="1", monster_usage="horse" and all twelve rein attributes.
+/// Tuning for the great elk (#636), the mount of Mirkwood's top cavalry troop (Thranduil and the lords moved to the
+/// Animalia moose on 2026-09-23, #646). Built exactly as the Dwarven war ram (docs/features/war-ram.md): elk_001 is
+/// skinned to the vanilla horse_skeleton, so its Monster in LOTRLOME_Armory (taom_elk) is base_monster="horse" and
+/// it moves on the horse's own clips, inheriting family_type="1", monster_usage="horse" and all twelve rein
+/// attributes.
 ///
 /// Its one attack, the antler charge, is the ram's head-butt. The Monster names the ram's action set
 /// as_war_ram, so act_war_ram_butt (clip war_ram_butt, authored on the engine horse_skeleton, typed actt_kick)
@@ -15,13 +16,13 @@ namespace TAOM.Features.Elk;
 /// name what the elk's own Monster names, not the ram's constants: if the ram ever moves to a set of its own,
 /// the elk stays on as_war_ram until its Monster is changed with it.
 ///
-/// Tuning began equal to the ram's and lives here so the two can be tuned apart; the reach (grown with the 2x body)
-/// and the damage (one 60 Blunt blow, scaled by the rider's career charge bonus) now differ. All four profile slots
-/// hold the one attack for the reason WarRamConfig gives: IsAttack ORs across them, so any other action there would
-/// widen "am I mid-charge" to an unrelated engine-driven action.
+/// Tuning began equal to the ram's and lives here so the two can be tuned apart; the reach (scaled with the body, see
+/// ReachScalesWithBody) and the damage (one 60 Blunt blow, scaled by the rider's career charge bonus) now differ. All
+/// four profile slots hold the one attack for the reason WarRamConfig gives: IsAttack ORs across them, so any other
+/// action there would widen "am I mid-charge" to an unrelated engine-driven action.
 ///
-/// No mount-lock: the elk_rider career hands the elk to a starting player, so TaomAgentStatCalculateModel does
-/// not gate it and there is no MountDifficulty constant here.
+/// No mount-lock: Mirkwood's markets sell the elk, so a player can ride one, TaomAgentStatCalculateModel does not
+/// gate it and there is no MountDifficulty constant here.
 /// </summary>
 public static class ElkConfig
 {
@@ -29,20 +30,20 @@ public static class ElkConfig
     public const string ElkMonsterId = "taom_elk";
 
     /// <summary>
-    /// The size the elk is built at: taom_elk_a's Horse <c>body_length</c> / 100, which the engine applies at build
+    /// The elk's size lives on its Monster, not here: taom_body_length on taom_elk (110 since 2026-09-23, after 200 and
+    /// 120), which MonsterSizeService copies into taom_elk_a's body_length at game init and the engine applies at build
     /// (<c>SetInitialAgentScale</c>) to the elk's skeleton, clips, capsules and every mesh on it, the saddle included.
-    /// The rider is NOT scaled (observed in game on the 3x mumakil, docs/features/mumakil.md). 2.0 since 2026-09-23
-    /// (Mike: "x2 the size ... maybe even bigger"). The reach below is derived from it because nothing scales a
-    /// fixed metre for us; ElkConfigTests pins the Armory's body_length to this constant, so change both together.
+    /// The rider is NOT scaled (observed in game on the 3x mumakil, docs/features/mumakil.md). The two ranges below
+    /// are the reach at 1.0x, and the shared nodes multiply them by the elk's live size (this flag), so a resize is one
+    /// XML edit (docs/features/monster-size.md).
     /// </summary>
-    public const float AuthoredScale = 2.0f;
+    public const bool ReachScalesWithBody = true;
 
     /// <summary>Proximity gate: the charge fires only when a live enemy is within this distance of the elk's
-    /// CENTER and in front of it. Must stay &lt;= <see cref="AttackRadius"/>: ElephantLikeEngageDecorator scans
-    /// ONCE at the radius and filters by this value, so anything larger is unreachable. 75% of the radius, the
-    /// ram's ratio. Tuned at 1.0x as the ram's 1.5 m and scaled with the body, so the antlers strike what they
-    /// visibly reach (the ElephantConfig rule).</summary>
-    public const float AttackTriggerRange = 1.5f * AuthoredScale;
+    /// CENTER and in front of it, at 1.0x (scaled with the body, <see cref="ReachScalesWithBody"/>). Must stay
+    /// &lt;= <see cref="AttackRadius"/>: ElephantLikeEngageDecorator scans ONCE at the radius and filters by this
+    /// value, so anything larger is unreachable. The ram's 1.5 m, 75% of the radius.</summary>
+    public const float AttackTriggerRange = 1.5f;
 
     /// <summary>The elk must face its target: dot(toEnemy, lookDir) above this (elephant-like parity).</summary>
     public const float AttackFacingDot = 0.25f;
@@ -53,7 +54,7 @@ public static class ElkConfig
 
     /// <summary>The charge's reach: it hits ONE enemy inside this radius (<see cref="AttackSingleTarget"/>). The ram's
     /// 2 m at 1.0x, scaled with the body like the trigger range so the trigger stays inside it.</summary>
-    public const float AttackRadius = 2f * AuthoredScale;
+    public const float AttackRadius = 2f;
 
     /// <summary>One victim per charge, the enemy the elk faces most squarely (the ram's #618 rule).</summary>
     public const bool AttackSingleTarget = true;

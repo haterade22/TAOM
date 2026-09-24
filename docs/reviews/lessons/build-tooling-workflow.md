@@ -2257,3 +2257,73 @@ Three gates approximated a language with regexes and each broke on valid input. 
 - **Why missed:** the check discovered hooks by their external tool, not by being a gate.
 - **Prevent:** check 4b times every PreToolUse gate on a commit payload against the real repo and fails at 80% of its registration. Query git once for all files, never once per file.
 - **Source:** `docs/reviews/rca-adr011-batch1-2026-09-23.md` C1.
+
+### A hand edit to live data is done when its replay script, snapshot and ledger say the same (#646, 2026-09-23)
+Mike resized the moose to 150 by hand in the live Armory; `tools/apply_animalia_armory.py`, the ledger's reinstall
+recipe, still wrote 100, and its verification step ran no size test, so a reinstall would have reverted the moose
+silently with a 1.5x reach left on a 1.0x body. The same evening's Animalia sets and antler actions never reached the
+in-repo snapshot whose README is the restore path.
+- **Why missed:** the live edit was the visible deliverable; the replay script and the snapshot are read only after
+  a loss, so nothing failed while they drifted.
+- **Prevent:** when you edit live Armory or TAOM_Map data by hand, update in the same change the script that replays
+  it, the ledger's redo steps (with a test filter that covers the edited value) and, for a file under
+  `docs/reference/lotrlome-armory-snapshot/`, the snapshot copy.
+- **Source:** `docs/reviews/rca-animalia-2026-09-23.md` rows 1 and 2.
+
+### A new live-data writer copies the newest sibling's guards and ships a synthetic-tree test (#646, 2026-09-23)
+`apply_animalia_armory.py`, `gen_animalia_anim_clips.ps1` and `wire_anim_master_skeletons.ps1` all wrote the live
+Armory with no check for a running game or Kit (a Kit save rewrites what it loaded); the Armory writer's fifth step
+sat outside its dry-run envelope, so the documented dry run crashed on a fresh Armory and a failing step wrote the
+other four first; the clip generator had no read-only verify mode; none had a test. Every one of those guards already
+existed in a sibling (`skeleton_hit_capsules.py`, `gen_troll_anim_clips.ps1 -Verify`).
+- **Why missed:** each script was written for one run on this machine, and a first run on known-good input exercises
+  none of the failure paths.
+- **Prevent:** a tool that writes a live module refuses while Bannerlord or the Kit runs (`_gamedir.game_or_kit_running`),
+  computes and parses every edit before writing any, and offers a read-only verify mode. A Python writer lands with a
+  synthetic-tree test of its dry run and its refusal paths; the repo has no PowerShell test harness, so a PowerShell
+  writer's refusal paths are proven by runs on a scratch copy, recorded in its review.
+- **Source:** `docs/reviews/rca-animalia-2026-09-23.md` rows 7 to 11.
+
+### A fix that removes a parameter removes what it rejected: name the rejection first (#646, 2026-09-23)
+The first review's tooling round removed `wire_anim_master_skeletons.ps1`'s `-BoneCount` parameter as a nuisance
+("a mixed-rig folder had no way to get that right") and read each master's own bone count instead. The parameter had
+been the script's only rig check: an EMPTY master of another rig found no patch offset and failed. Afterwards any
+EMPTY master could be re-pointed at `horse_skeleton`, and the live warg folder held one (`Warg_Taunt2_geo.tpac`, 50
+bones). The convergence pass and every re-run used the elk folder, one rig, where the change is invisible.
+- **Why missed:** the fix was judged on the input it was written for; nobody asked what the removed value refused.
+- **Prevent:** before deleting a parameter, a check or a flag in a fix, write down what input it made the tool reject,
+  and run the fixed tool on such an input (here a mixed folder: warg, elephant or chariot animations). The tooling
+  lens asks this of every removal.
+- **Source:** `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F1.
+
+### A consumer of a JSON report rejects its error records, not only its missing keys (#646, 2026-09-23)
+`measure_animalia_clips.py` stores a clip that failed as `{"error": ...}` so the rest still measure, and its `.DONE`
+said "ok" unless the whole run failed. `gen_animalia_anim_clips.ps1` checked only for a missing key; PowerShell reads
+an error record's absent `loop_displacement_m` and `plants_sorted` as `$null`, and `[float]$null` is 0, so a failed
+measurement would have been written into the live Armory as a gait that covers no ground, with every check passing.
+- **Why missed:** the committed measurements are clean, so the path never ran; a null check reads as validation.
+- **Prevent:** a tool that consumes another tool's report validates each record's meaning (a loop above 0, enough
+  plants, a fraction inside its range, no error key) before use, and a producer's completion flag fails when any
+  record failed. Prove it with a deliberately broken report.
+- **Source:** `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F4.
+
+### A live-data edit that needs new code changes the installed game when it is written (#646, 2026-09-23)
+Moving the sizes onto the Monsters edited the live Armory at once (the items to the placeholder 100), while the code
+that reads the new attribute waited for a deploy. The installed `TAOM.dll` had no size pass and still baked the old
+reach, so every in-game check in between would have read 1.0x bodies with 1.5x reach; and HEAD's committed tests
+(`ElkConfigTests`, `AnimaliaMountWiringTests`) failed against the live install until the new tests were committed.
+Another session recorded those two failures in its own commit.
+- **Why missed:** the "Unversioned modules" trap is about a reinstall reverting a live edit; here the live edit ran
+  ahead of the code instead, and nothing ties a live edit to the deploy it depends on.
+- **Prevent:** when a live edit depends on unshipped code, say so in the feature doc's state line ("smokes only after
+  a deploy"), and commit the code, the tests that read the live data and the ledger together, so HEAD is never red
+  against the live install.
+- **Source:** `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F5.
+
+### A release blocker goes in the /release pre-flight, not only in a feature doc (#646, 2026-09-23)
+Mike kept the Custom-Battle test riders visible until release (D1), and the blocker was written in the feature doc,
+the workflow doc and the CHANGELOG, none of which `/release` reads.
+- **Why missed:** writing it down felt like tracking it.
+- **Prevent:** a "must happen before a release" item becomes a mechanical pre-flight line in
+  `.claude/skills/release/SKILL.md` (here `git grep -l taom_test_ -- Main/_Module` prints nothing).
+- **Source:** `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F7.

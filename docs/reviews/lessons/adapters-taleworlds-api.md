@@ -685,3 +685,14 @@ A player who owns a creature's blow (#643) reached the career's "+N from ability
 - **Why missed:** the cheapest discriminator was taken and its cost ("bare hands lose the line") accepted without asking whether the ability reaches bare hands.
 - **Prevent:** when TAOM code must tell its own engine calls apart inside an engine callback, mark them at the source: `CustomAttacksUtils.IsRegisteringSyntheticBlow` is set while `RegisterBlow` runs, and the engine raises `OnAgentHit` and `OnScoreHit` synchronously inside that call (`Agent.RegisterBlow` to `HandleBlow` to `Mission.OnAgentHit`). Confirm the callback is synchronous before relying on such a scope.
 - **Source:** `docs/reviews/rca-elk-delta-2026-09-23.md`, convergence C2 and Codex O1 (#643).
+
+### A member reached by name joins the reflection binding gate in the same change (#646, 2026-09-23)
+`MonsterSizeCatalogAdapter` reaches `HorseComponent.BodyLength`'s private setter, `ItemObject.CalculateEffectiveness`
+and the `Effectiveness` setter by name. None had a row in `ReflectionSiteBindingTests` or `reflection-sites.md`, so an
+engine update that renamed one would have left every sized mount at 1.0x (or its tournament rating stale) with no
+failing test, and the recompute's absence was not even logged.
+- **Why missed:** the size pass was designed inside the first review's fix round, and its convergence pass checked
+  that the members exist today, not that the offline gate would see them tomorrow; no lens asked.
+- **Prevent:** every `AccessTools` / `GetMethod` / `GetField` / `TypeByName` by literal name lands with its DataRow and
+  catalogue row (`/verify-bindings`); the engine-compatibility lens now reports a missing row.
+- **Source:** `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F3.

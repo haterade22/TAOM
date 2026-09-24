@@ -46,7 +46,10 @@ public class ElephantLikeEngageDecorator : BTReturnFalseDecorator, IBTBannerlord
         if (alreadyAttacking) return false;                                          // cheap exit before the scan
 
         // One scan at the (larger) damage radius; the gate uses the BEST-facing enemy within the trigger range.
-        Mission.Current.GetNearbyAgents(creature.Position.AsVec2, _profile.TrampleRadius, _scratch);
+        // Both ranges follow the creature's size when its profile says so (one native scale read per scan).
+        float reachScale = _profile.ReachScaleOf(creature);
+        float triggerRange = _profile.TrampleTriggerRange * reachScale;
+        Mission.Current.GetNearbyAgents(creature.Position.AsVec2, _profile.TrampleRadius * reachScale, _scratch);
         Vec3 lookDir = creature.LookDirection;
         float bestFacingDot = -1f;
         float bestBearing = 0f;
@@ -54,7 +57,7 @@ public class ElephantLikeEngageDecorator : BTReturnFalseDecorator, IBTBannerlord
         {
             if (a == null || a == creature || !a.IsActive() || !a.IsEnemyOf(rider)) continue;
             Vec3 offset = a.Position - creature.Position;
-            if (offset.Length > _profile.TrampleTriggerRange) continue;
+            if (offset.Length > triggerRange) continue;
             Vec3 toEnemy = offset.NormalizedCopy();
             float dot = Vec3.DotProduct(toEnemy, lookDir);
             if (dot > bestFacingDot)

@@ -708,7 +708,7 @@
     			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
     			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
     			<Equipment slot="HorseHarness" id="Item.taom_elk_saddle_a" />
-    			<Equipment slot="Horse" id="Item.taom_elk_a" />
+    			<Equipment slot="Horse" id="Item.taom_animalia_moose_a" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" />
   </EquipmentRoster>
@@ -722,7 +722,7 @@
     			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
     			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
     			<Equipment slot="HorseHarness" id="Item.taom_elk_saddle_a" />
-    			<Equipment slot="Horse" id="Item.taom_elk_a" />
+    			<Equipment slot="Horse" id="Item.taom_animalia_moose_a" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -792,7 +792,7 @@
     			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
     			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
     			<Equipment slot="HorseHarness" id="Item.taom_elk_saddle_a" />
-    			<Equipment slot="Horse" id="Item.taom_elk_a" />
+    			<Equipment slot="Horse" id="Item.taom_animalia_moose_a" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" />
   </EquipmentRoster>
@@ -806,7 +806,7 @@
     			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
     			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
     			<Equipment slot="HorseHarness" id="Item.taom_elk_saddle_a" />
-    			<Equipment slot="Horse" id="Item.taom_elk_a" />
+    			<Equipment slot="Horse" id="Item.taom_animalia_moose_a" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>

@@ -66,6 +66,7 @@ from __future__ import annotations
 import argparse
 import functools
 import os
+import re
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -98,6 +99,29 @@ XS_BOOLEAN = {"true", "false", "1", "0"}
 #: xs:boolean's whitespace facet is "collapse", which strips these four and nothing else.
 XS_WHITESPACE = " \t\r\n"
 MAX_ERRORS_SHOWN = 20
+
+#: TAOM attributes the engine's own XSD does not declare, keyed by (schema id, element name) ->
+#: the attribute names allowed on that element. The engine tolerates an undeclared attribute
+#: (MBObjectManager.ValidationEventHandler only Debug.Prints and loading continues), so this
+#: suppresses exactly the "attribute is not declared" / "not allowed" error for these
+#: element+attribute pairs, nothing else: a different undeclared attribute, or this one on a
+#: different element, still fails. taom_body_length: Main/Features/MonsterSize (#646, Mike,
+#: 2026-09-23, "the monster xml should control the size").
+ALLOWED_EXTRA_ATTRIBUTES = {
+    ("Monsters", "Monster"): {"taom_body_length"},
+}
+
+#: lxml's XSD "attribute not declared" message, e.g. "Element 'Monster', attribute
+#: 'taom_body_length': The attribute 'taom_body_length' is not allowed."
+_UNDECLARED_ATTRIBUTE_RE = re.compile(r"Element '([^']+)', attribute '([^']+)':.*is not allowed")
+
+
+def _is_allowed_extra_attribute(message: str, xml_id: str) -> bool:
+    match = _UNDECLARED_ATTRIBUTE_RE.search(message)
+    if not match:
+        return False
+    element, attribute = match.group(1), match.group(2)
+    return attribute in ALLOWED_EXTRA_ATTRIBUTES.get((xml_id, element), ())
 
 _XS = "{http://www.w3.org/2001/XMLSchema}"
 _SCHEMA_REFS = (f"{_XS}include", f"{_XS}import", f"{_XS}redefine")
@@ -177,8 +201,9 @@ def _schema(xsd_path: str):
         return None, f"schema {xsd_path} does not compile: {exc}"
 
 
-def validate(xml_path: Path, xsd_path: Path) -> list:
-    """Problems with one file, each "L<line>: <message>". Empty list means clean."""
+def validate(xml_path: Path, xsd_path: Path, xml_id: str = None) -> list:
+    """Problems with one file, each "L<line>: <message>". Empty list means clean. `xml_id` gates
+    ALLOWED_EXTRA_ATTRIBUTES: without it (the default) nothing is suppressed."""
     parser = etree.XMLParser(resolve_entities=False, no_network=True, huge_tree=True)
     try:
         doc = etree.parse(str(xml_path), parser)
@@ -200,7 +225,10 @@ def validate(xml_path: Path, xsd_path: Path) -> list:
 
     if schema.validate(doc):
         return []
-    return [f"L{e.line}: {e.message}" for e in schema.error_log]
+    errors = [f"L{e.line}: {e.message}" for e in schema.error_log]
+    if xml_id is not None:
+        errors = [e for e in errors if not _is_allowed_extra_attribute(e, xml_id)]
+    return errors
 
 
 def _key(path) -> str:
@@ -241,7 +269,7 @@ def run(modules, game_schemas: Path, only=None) -> dict:
         if xsd is None:
             report["no_schema"].append({"file": str(path), "id": xml_id})
             continue
-        errors = validate(path, xsd)
+        errors = validate(path, xsd, xml_id)
         record = {"file": str(path), "id": xml_id, "schema": str(xsd), "errors": errors}
         report["checked"].append(record)
         if errors:

@@ -61675,6 +61675,87 @@
 	<action_set id="as_war_ram_map" skeleton="horse_skeleton" base_set="as_horse_map">
 		<action type="act_war_ram_butt" animation="war_ram_butt" />
 	</action_set>
+	<!-- ============================== ANIMALIA ELK + MOOSE (#646, 2026-09-23) ============================== -->
+	<!-- Horse-skeleton reskins of the Fab Animalia packs that play their OWN clips (anim_animalia_*, written by
+	     TAOM tools/gen_animalia_anim_clips.ps1 beside the masters in Assets/creature/elk/animations). Each action
+	     copies the vanilla as_horse action's attributes and changes only the clip. Turns, jumps, strafes and quick
+	     stops stay the horse's. The _map twin is required (MobilePartyVisual looks up
+	     the Monster's action_set + "_map"; MBGlobals.GetActionSet throws on a miss); _town_and_village mirrors
+	     vanilla's as_horse_town_and_village, which nothing in v1.5.3 appends. Both inherit the horse variants. -->
+	<action_set id="as_animalia_elk" skeleton="horse_skeleton" base_set="as_horse">
+		<action type="act_horse_forward_walk" animation="anim_animalia_elk_loco_walk" />
+		<action type="act_horse_forward_walk_stand" animation="anim_animalia_elk_loco_walk_stand" />
+		<action type="act_horse_forward_trot" animation="anim_animalia_elk_loco_trot" />
+		<action type="act_horse_forward_trot_stand" animation="anim_animalia_elk_loco_trot_stand" />
+		<action type="act_horse_forward_canter" animation="anim_animalia_elk_loco_run" />
+		<action type="act_horse_forward_canter_stand" animation="anim_animalia_elk_loco_run_stand" />
+		<action type="act_horse_forward_gallop_right_foot" animation="anim_animalia_elk_loco_sprint" />
+		<action type="act_horse_forward_gallop_right_foot_stand" animation="anim_animalia_elk_loco_sprint_stand" />
+		<action type="act_horse_forward_gallop_left_foot" animation="anim_animalia_elk_loco_sprint" />
+		<action type="act_horse_forward_gallop_left_foot_stand" animation="anim_animalia_elk_loco_sprint_stand" />
+		<action type="act_horse_backward_walk" animation="anim_animalia_elk_loco_walkback" />
+		<action type="act_horse_backward_walk_stand" animation="anim_animalia_elk_loco_walkback_stand" />
+		<action type="act_horse_stand_for_movement_data" animation="anim_animalia_elk_stand_01_movement" />
+		<action type="act_horse_stand_1" animation="anim_animalia_elk_stand_01" alternative_group="horse_stand_alternative_group" />
+		<action type="act_horse_stand_2" animation="anim_animalia_elk_stand_02" alternative_group="horse_stand_alternative_group" />
+		<action type="act_horse_stand_3" animation="anim_animalia_elk_stand_03" alternative_group="horse_stand_alternative_group" />
+		<action type="act_horse_stand_4" animation="anim_animalia_elk_alert_looking_l" alternative_group="horse_stand_alternative_group" />
+		<action type="act_horse_idle_1" animation="anim_animalia_elk_stand_01" alternative_group="idle_horse" />
+		<action type="act_horse_idle_2" animation="anim_animalia_elk_alert_looking_r" alternative_group="idle_horse" />
+		<action type="act_horse_idle_3" animation="anim_animalia_elk_stand_02" alternative_group="idle_horse" />
+		<action type="act_horse_idle_4" animation="anim_animalia_elk_stand_03" alternative_group="idle_horse" />
+		<action type="act_horse_riderless_idle_1" animation="anim_animalia_elk_stand_eating_01" alternative_group="riderless_idle_alternative_group" />
+		<action type="act_horse_riderless_idle_2" animation="anim_animalia_elk_stand_eating_02" alternative_group="riderless_idle_alternative_group" />
+		<action type="act_horse_riderless_idle_3" animation="anim_animalia_elk_stand_drinking_01" alternative_group="riderless_idle_alternative_group" />
+		<action type="act_horse_riderless_idle_4" animation="anim_animalia_elk_vocalization_bugling" alternative_group="riderless_idle_alternative_group" />
+		<action type="act_horse_rear" animation="anim_animalia_elk_attack_front_high" />
+		<action type="act_horse_kick" animation="anim_animalia_elk_attack_hind" />
+		<action type="act_horse_strike_front" animation="anim_animalia_elk_hit_chestl_heavy" />
+		<action type="act_horse_strike_back" animation="anim_animalia_elk_hit_pelvisl_heavy" />
+		<action type="act_horse_fall_left" animation="anim_animalia_elk_death_stand_l" />
+		<action type="act_horse_fall_left_continue" animation="anim_animalia_elk_death_stand_l_pose" />
+		<action type="act_horse_fall_right" animation="anim_animalia_elk_death_stand_r" />
+		<action type="act_horse_fall_right_continue" animation="anim_animalia_elk_death_stand_r_pose" />
+		<action type="act_animalia_elk_antler" animation="anim_animalia_elk_attack_front_low" />
+	</action_set>
+	<action_set id="as_animalia_elk_town_and_village" skeleton="horse_skeleton" base_set="as_horse_town_and_village" />
+	<action_set id="as_animalia_elk_map" skeleton="horse_skeleton" base_set="as_horse_map" />
+	<action_set id="as_animalia_moose" skeleton="horse_skeleton" base_set="as_horse">
+		<action type="act_horse_forward_walk" animation="anim_animalia_moose_loco_walk" />
+		<action type="act_horse_forward_walk_stand" animation="anim_animalia_moose_loco_walk_stand" />
+		<action type="act_horse_forward_trot" animation="anim_animalia_moose_loco_trot" />
+		<action type="act_horse_forward_trot_stand" animation="anim_animalia_moose_loco_trot_stand" />
+		<action type="act_horse_forward_canter" animation="anim_animalia_moose_loco_run" />
+		<action type="act_horse_forward_canter_stand" animation="anim_animalia_moose_loco_run_stand" />
+		<action type="act_horse_forward_gallop_right_foot" animation="anim_animalia_moose_loco_sprint" />
+		<action type="act_horse_forward_gallop_right_foot_stand" animation="anim_animalia_moose_loco_sprint_stand" />
+		<action type="act_horse_forward_gallop_left_foot" animation="anim_animalia_moose_loco_sprint" />
+		<action type="act_horse_forward_gallop_left_foot_stand" animation="anim_animalia_moose_loco_sprint_stand" />
+		<action type="act_horse_backward_walk" animation="anim_animalia_moose_loco_walkback" />
+		<action type="act_horse_backward_walk_stand" animation="anim_animalia_moose_loco_walkback_stand" />
+		<action type="act_horse_stand_for_movement_data" animation="anim_animalia_moose_stand_00_movement" />
+		<action type="act_horse_stand_1" animation="anim_animalia_moose_stand_00" alternative_group="horse_stand_alternative_group" />
+		<action type="act_horse_stand_2" animation="anim_animalia_moose_stand_01" alternative_group="horse_stand_alternative_group" />
+		<action type="act_horse_stand_3" animation="anim_animalia_moose_stand_02" alternative_group="horse_stand_alternative_group" />
+		<action type="act_horse_stand_4" animation="anim_animalia_moose_stand_00" alternative_group="horse_stand_alternative_group" />
+		<action type="act_horse_idle_1" animation="anim_animalia_moose_stand_00" alternative_group="idle_horse" />
+		<action type="act_horse_idle_2" animation="anim_animalia_moose_stand_01" alternative_group="idle_horse" />
+		<action type="act_horse_idle_3" animation="anim_animalia_moose_stand_02" alternative_group="idle_horse" />
+		<action type="act_horse_idle_4" animation="anim_animalia_moose_stand_01" alternative_group="idle_horse" />
+		<action type="act_horse_riderless_idle_1" animation="anim_animalia_moose_eating_01" alternative_group="riderless_idle_alternative_group" />
+		<action type="act_horse_riderless_idle_2" animation="anim_animalia_moose_eating_02" alternative_group="riderless_idle_alternative_group" />
+		<action type="act_horse_riderless_idle_3" animation="anim_animalia_moose_drinking_01" alternative_group="riderless_idle_alternative_group" />
+		<action type="act_horse_riderless_idle_4" animation="anim_animalia_moose_eating_03" alternative_group="riderless_idle_alternative_group" />
+		<action type="act_horse_kick" animation="anim_animalia_moose_attack_legs_01" />
+		<action type="act_horse_fall_left" animation="anim_animalia_moose_death_l" />
+		<action type="act_horse_fall_left_continue" animation="anim_animalia_moose_death_l_pose" />
+		<action type="act_horse_fall_right" animation="anim_animalia_moose_death_r" />
+		<action type="act_horse_fall_right_continue" animation="anim_animalia_moose_death_r_pose" />
+		<action type="act_animalia_moose_antler" animation="anim_animalia_moose_attack_head_01" />
+	</action_set>
+	<action_set id="as_animalia_moose_town_and_village" skeleton="horse_skeleton" base_set="as_horse_town_and_village" />
+	<action_set id="as_animalia_moose_map" skeleton="horse_skeleton" base_set="as_horse_map" />
+	<!-- ============================== /ANIMALIA ============================== -->
 	<!-- ============================== /WARG ============================== -->
 
 	<!-- TAOM-CIVILIAN-COVERAGE:START (generated by tools/generate_race_civilian_action_sets.py) -->

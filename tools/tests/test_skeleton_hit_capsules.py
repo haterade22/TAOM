@@ -281,23 +281,8 @@ class CliTests(unittest.TestCase):
         self.assertEqual(self._backups(), [])
 
 
-class ProcessCheckTests(unittest.TestCase):
-    def _stdout(self, text):
-        return mock.patch.object(shc.subprocess, "run", return_value=mock.Mock(stdout=text))
-
-    def test_game_in_the_process_list_is_running(self):
-        with self._stdout('"Bannerlord.exe","42164","Console","1","6,584,108 K"\n'):
-            self.assertTrue(shc.game_or_kit_running())
-
-    def test_other_processes_are_not(self):
-        with self._stdout('"explorer.exe","1234","Console","1","90,000 K"\n'):
-            self.assertFalse(shc.game_or_kit_running())
-
-    def test_a_process_list_that_cannot_be_read_counts_as_running(self):
-        buf = io.StringIO()
-        with redirect_stdout(buf), mock.patch.object(shc.subprocess, "run", side_effect=OSError("no tasklist")):
-            self.assertTrue(shc.game_or_kit_running())
-        self.assertIn("refusing", buf.getvalue())
+# The process-list cases for game_or_kit_running live in test_gamedir.py beside the function (moved
+# 2026-09-23, #646): this module skips without lz4/numpy/xxhash, so CI never ran them here.
 
 
 def _cylinder(radius=0.5, length=2.0, rings=21, around=32):

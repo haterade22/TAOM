@@ -41,6 +41,9 @@ Reflection against engine members performed *outside* a patch's target resolutio
 | `…SelectorVM`1` | `_onChange` | field | `FaceGenRaceSelectorRebuilder.cs:213`, `CommanderSelectorRebuilder.cs:21` | Selector callback rewire |
 | `…CustomBattle.CustomBattleSideVM` | `OnCultureSelection` | method | `CustomBattleSideVM_Constructor_Patch.cs:23` | CustomBattles faction injection |
 | `TaleWorlds.MountAndBlade.Mission` | `RegisterBlow` | method | `CustomAttacksUtils.cs:55` | AdvancedCombat custom attacks |
+| `TaleWorlds.Core.HorseComponent` | `set_BodyLength` | method (private setter) | `MonsterSizeCatalogAdapter.cs:22` | MonsterSize (#646): a Monster's `taom_body_length` written into its items. Missing: every sized mount builds at its item's placeholder, 1.0x, with one error logged per item |
+| `TaleWorlds.Core.ItemObject` | `CalculateEffectiveness` | method (private) | `MonsterSizeCatalogAdapter.cs:28` | MonsterSize: recomputes the cached tournament rating after the resize. Missing: a warning, the rating keeps the old size |
+| `TaleWorlds.Core.ItemObject` | `set_Effectiveness` | method (private setter) | `MonsterSizeCatalogAdapter.cs:29` | MonsterSize: stores that recompute |
 | `SandBox.GauntletUI.BannerEditor.BannerEditorView` | `RefreshShieldAndCharacter` | method | `BannerEditorView_OnTick_Patch.cs:21` | Banner paste refresh |
 | `…Party.PartyScreenLogic+PartyCommand` | `TotalNumber` | member | `PartyScreenLogic_AddCommand_Patch.cs:71` | SpecialResources transactional spend |
 | `…ViewModelCollection.Encyclopedia.Items.EncyclopediaUnitVM` | `_character` | field (private) | `EncyclopediaUnitBadgeMixin.cs:31` | SpecialResources encyclopedia troop badge (#590). The unit VM keeps the troop only here, so the badge reads its `StringId` once at construction; a null read hides the badge |

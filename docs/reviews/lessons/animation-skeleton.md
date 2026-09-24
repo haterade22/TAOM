@@ -182,7 +182,7 @@ set names it in a **verb slot or table** (which means the engine fires it too); 
      `_back`): the creature flinches as though hit while you emit damage. **Corrected 2026-09-18:** its
      type `actt_mount_strike` (`ActionCodeType.MountStrike = 52`) is NOT read as being struck;
      `Agent.IsInBeingStruckAction` tests `MBMath.IsBetween(type, 48, 52)`, which is half-open, so it reads 48 to 51 (`StrikeLight` .. `StrikeKnockBack`) as being struck and NOT `MountStrike` (52).
-- **The fact underneath both:** **vanilla horses have no attack animation at all.** They deal damage by
+- **The fact underneath both:** **the vanilla horse rig's only attack clip is the kick.** They deal damage by
   charge collision, so `monster_usage_strikes` is the mount's hit-REACTION table, not an attack table.
   The horse rig's only genuinely offensive action is `act_horse_kick` (`actt_kick`,
   `ActionCodeType.Kick = 28`). If you need a creature on the horse rig to attack with anything other
@@ -748,3 +748,9 @@ The troll retarget (`retarget_mannequin_to_human.py`) swings each target bone's 
 - **Why missed:** not shipped; caught at design time. The troll tool is the proven path and its docstring presents `S_align` as the method, so reusing it unchanged is the natural mistake.
 - **Prevent:** before reusing a retarget, ask what the target mesh's rest is. If the mesh was fitted to the target skeleton, retarget through the same fit (the reskin exports its rotations: `bone_transforms` returns them). Check with a side-by-side render of the retarget and the source clip at the same frames.
 - **Source:** `docs/features/animalia-elk-moose.md` "Solution Approach", `tools/blender/retarget_animalia_to_horse.py` docstring.
+
+### Every animation the Modding Kit imports may name no skeleton: census the masters after each import
+The Kit imported all 97 Animalia masters (2026-09-23) with their Skeleton reference EMPTY: the 16 zero bytes before BoneNum and Duration in the SkeletalAnimation metadata. The troll's 52 masters (2026-09-17) and the war ram's re-import (2026-09-18, a `.001` take) came in the same way. Nothing in the Kit or its log says so, every clip still plays in the Kit's viewer, and a master that names no skeleton is not tied to the rig its action set plays it on.
+- **Why missed:** each time it was found by reading a master back with TpacTool while chasing something else, and fixed by a one-off patch inside a pack-specific generator (`gen_troll_anim_clips.ps1`, `wire_anim_master_clip.ps1`), so there was no step in the workflow that looked for it.
+- **Prevent:** after every animation import, run `powershell.exe -File tools\wire_anim_master_skeletons.ps1 -Masters <Assets folder>` (census: ok / EMPTY / WRONG RIG / OTHER, plus packages with no animation and stray Skeleton copies), then `-Apply` with the Kit closed, which patches EMPTY in place and re-reads each file. It is stage 7 of `docs/ai-includes/quadruped-pack-to-horse-skeleton-workflow.md`.
+- **Source:** #646, `docs/features/animalia-elk-moose.md` "Owed" item 1; the troll and ram notes in the headers of `tools/gen_troll_anim_clips.ps1` and `tools/wire_anim_master_clip.ps1`.

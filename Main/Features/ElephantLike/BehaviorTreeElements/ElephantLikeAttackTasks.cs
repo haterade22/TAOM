@@ -13,9 +13,9 @@ namespace TAOM.Features.ElephantLike.BehaviorTreeElements;
 /// Shared template for elephant-like attacks: plays the derived class's attack animation on channel 0, stamps the
 /// derived class's cooldown, and deals radial knockdown damage (`CustomAttacksUtils.TakeDamage`, the rider's blow) to
 /// every live enemy within the profile's <see cref="ElephantLikeCombatProfile.TrampleRadius"/>, or to ONE of them
-/// when the profile sets <see cref="ElephantLikeCombatProfile.SingleTarget"/> (the war ram, the elk). Damage amount
-/// from the pure <see cref="IElephantLikeAttackService.ComputeInflictedDamage"/> (ADOD_Beasts's formula,
-/// shield-block-aware). Boundary code, mirroring the warg's <c>WargAttackTask</c>.
+/// when the profile sets <see cref="ElephantLikeCombatProfile.SingleTarget"/> (the war ram, the great elk, the Animalia
+/// elk and moose). Damage amount from the pure <see cref="IElephantLikeAttackService.ComputeInflictedDamage"/>
+/// (ADOD_Beasts's formula, shield-block-aware). Boundary code, mirroring the warg's <c>WargAttackTask</c>.
 /// </summary>
 public abstract class ElephantLikeAttackTaskBase : BTTask, IBTBannerlordBase, IBTElephantLikeBlackboard
 {
@@ -56,7 +56,7 @@ public abstract class ElephantLikeAttackTaskBase : BTTask, IBTBannerlordBase, IB
         StampCooldown(DateTime.Now);
 
         _service ??= Profile.ResolveService();
-        Mission.Current.GetNearbyAgents(creature.Position.AsVec2, Profile.TrampleRadius, _scratch);
+        Mission.Current.GetNearbyAgents(creature.Position.AsVec2, Profile.TrampleRadius * Profile.ReachScaleOf(creature), _scratch);
         Agent single = null;
         var pick = new SingleVictimPick();
         Vec3 lookDir = creature.LookDirection;

@@ -12,6 +12,9 @@ import os
 import sys
 import tempfile
 import unittest
+import io
+from contextlib import redirect_stdout
+from unittest import mock
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -62,6 +65,39 @@ class GameDirTests(_EnvIsolated):
         # forward-slash literal, so the separator style they get back is theirs.
         os.environ[_gamedir.ENV_VAR] = "D:/SteamLibrary/Bannerlord"
         self.assertEqual(_gamedir.game_dir(DEFAULT), "D:/SteamLibrary/Bannerlord")
+
+
+class GameOrKitRunningTests(unittest.TestCase):
+    """The fail-closed guard every live-Armory writer calls before writing (#646)."""
+
+    # tasklist writes the OEM code page, so the guard reads bytes: a text-mode read decodes them as the ANSI code
+    # page, and a process name outside ASCII then came back as stdout None and a TypeError instead of a refusal.
+    def _stdout(self, data):
+        return mock.patch.object(_gamedir.subprocess, "run", return_value=mock.Mock(stdout=data))
+
+    def test_game_in_the_process_list_is_running(self):
+        with self._stdout(b'"Bannerlord.exe","42164","Console","1","6,584,108 K"\r\n'):
+            self.assertTrue(_gamedir.game_or_kit_running())
+
+    def test_other_processes_are_not(self):
+        with self._stdout(b'"explorer.exe","1234","Console","1","90,000 K"\r\n'):
+            self.assertFalse(_gamedir.game_or_kit_running())
+
+    def test_a_non_ascii_process_name_is_read_not_raised(self):
+        with self._stdout(b'"ping\x81.exe","5150","Console","1","4,000 K"\r\n'):
+            self.assertFalse(_gamedir.game_or_kit_running())
+        with self._stdout(b'"ping\x81.exe","5150","Console","1","4,000 K"\r\n"Bannerlord.exe","42164","Console","1","6 K"\r\n'):
+            self.assertTrue(_gamedir.game_or_kit_running())
+
+    def test_no_output_at_all_counts_as_running(self):
+        with redirect_stdout(io.StringIO()), self._stdout(None):
+            self.assertTrue(_gamedir.game_or_kit_running())
+
+    def test_a_process_list_that_cannot_be_read_counts_as_running(self):
+        buf = io.StringIO()
+        with redirect_stdout(buf), mock.patch.object(_gamedir.subprocess, "run", side_effect=OSError("no tasklist")):
+            self.assertTrue(_gamedir.game_or_kit_running())
+        self.assertIn("refusing", buf.getvalue())
 
 
 class EnsureExistsTests(_EnvIsolated):

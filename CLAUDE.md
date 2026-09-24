@@ -92,7 +92,7 @@ instructions: follow its phases in order.
 Architecture and trade-offs: Opus. Feature implementation and Plan agents: Sonnet. Lightweight
 research, docs and Explore searches: Haiku, passed explicitly as `model` (a spawn otherwise inherits
 yours).
-`/deep-review` lenses: Opus 5.5 (`claude-opus-5-5`) at max effort (Fable until 2026-09-23).
+`/deep-review` lenses: Opus 5.5 (`claude-opus-5-5`) at max effort.
 
 ## MCP and shell
 

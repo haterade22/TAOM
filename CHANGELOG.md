@@ -163,7 +163,7 @@ files (row counts, a line citation, a how-to that advised keeping the duplicate)
 `docs/reviews/rca-nazgul-race-2026-09-23.md`, lessons in `xslt-moduledata.md`,
 `data-content-cultures.md` and `misc.md`.
 
-### feat(creatures): v2.0.30 - Animalia elk and moose on horse_skeleton, art and clips (#646)
+### feat(creatures): v2.0.30 - Animalia elk and moose: clips, antler attacks, riders, Monster size (#646)
 
 Mike bought two Fab packs, "Animalia - Elk (male)" and "Animalia - Moose (male)". Both came out of
 UE 5.4 through `tools/oneoff/ue_export_cave_troll.py` (elk 173 clips on a 41-track rig, moose 97 on
@@ -200,14 +200,97 @@ Set up for an in-game test: `tools/apply_animalia_armory.py` wrote the Monsters,
 `docs/reference/lotrlome-animalia-changes.md`), and two Custom-Battle-only riders
 (`troops/troops_animalia_test.xml`) spawn them with `taom.spawn_troops`. The riders are exempt from the
 armour and melee ladders and the recruitment-reachability test, which would otherwise count their file as a
-kingdom. `AnimaliaMountWiringTests` (5) pins the wiring; the full suite passes (10,213). The
-Animalia elk is a separate second elk; the
-moose is for Thranduil and Mirkwood lords. Game-side XML and the antler attack come after the clip import.
+kingdom. `AnimaliaMountWiringTests` (5) pins the wiring; the full suite passes (10,213).
+
+First battle, 2026-09-23 12:48: both animals spawned on their own sets (`[MissionDiag]` shows `as_animalia_elk`
+and `as_animalia_moose`), with no material or animation errors in the engine or TAOM logs. Mike resized after
+it: the moose `body_length` 100 to 150, and the #636 great elk 200 to 120, then 110 after a second battle, with
+`ElkConfig.AuthoredScale` following to 1.1 (its antler reach is derived from it, now 1.65 m / 2.2 m;
+`ElkConfigTests` failed on each mismatch until the Armory item followed). Measured in game units: horse 1.57 m at
+the withers, Animalia elk 1.68 m, moose 2.74 m, great elk 1.72 m.
+
+The antler attack: `Main/Features/Animalia/` fires each animal's own clip (the elk's `attack_front_low`, the
+moose's `attack_head_01`) through the shared elephant-like engine, as one
+feature for both animals rather than two clones of the great elk's seven files: one config (reach derived from
+each animal's size, 1.5 m / 2 m for the elk and 2.25 m / 3 m for the moose), one service binding and profile
+per animal, one tree class, one mission behavior with a tracker per animal. Its two actions are declared
+`actt_kick` in the Armory's `action_types.xml` and bound in the animals' sets by a new step 5 of
+`tools/apply_animalia_armory.py` (pure inserts, backups `.bak-animalia-antler-20260923`). 9 new tests; the full
+suite passes (10,222). A deploying build at 13:42 put it in the installed `TAOM.dll`; not yet seen in game.
+
+Riders (Mike, evening): the moose now carries Thranduil (`thranduil_bat_equipment`), the Mirkwood lords (the five
+`mirkwood_bat_template_medium_*` battle rosters) and the heroes the generated `taom_mirkwood_{lord,ruler}_battle_*`
+templates equip; the Animalia elk carries the lower cavalry, `mirkwood_rochenlas`, and the `elk_rider` career start
+(`player_career_mirkwood_cavalry_m` / `_f`: Mike extended #629's lowest-troop-gear rule to the mount); the great
+elk keeps `mirkwood_beleglas`, the top of that line. 13 Horse ids changed, the saddle unchanged
+(`taom_elk_saddle_a` on all three). Thranduil and the lords see the moose only in a new campaign, because a hero's
+battle equipment is saved (`Hero._battleEquipment`, `[SaveableProperty(210)]`). The rider pins moved from
+`ElkMountWiringTests` to `AnimaliaMountWiringTests` (4 new); the former's saddle check now covers all three animals.
+
+Size on the Monster (Mike: "The monster xml should control the size of the animal"): the engine has no size on
+`<Monster>` and sizes a mount only from the ridden item's `body_length` (`Mission.BuildAgent`), so the new
+`Main/Features/MonsterSize/` reads TAOM's `taom_body_length` off the merged Monsters XML at every game init and
+writes it into every Horse item naming that Monster (`HorseComponent.BodyLength`'s private setter, then the item's
+cached `Effectiveness` recomputed). The great elk (110), the Animalia elk (100) and the moose (150) carry it; their
+items keep only `body_length="100"`, the placeholder the engine's `Items.xsd` requires (removing it failed the schema
+gate the same evening). `ElephantLikeCombatProfile.reachScalesWithBody` multiplies those three
+creatures' 1.0x reach by the live `Agent.AgentScale` (NaN-guarded), so `ElkConfig.AuthoredScale` and the Animalia
+scales and their size pins are gone and a resize is one XML edit. Cost, accepted: the engine's `Monsters.xsd` does
+not declare the attribute, so it prints one "not declared" validation line per sized Monster at load (a module
+schema would crash the merge instead); `tools/validate_xml_schemas.py` allowlists it. `docs/features/monster-size.md`
+(new); the orientation trap index has a line for it.
+
+Deep review (8 lenses on Opus 5.5, no CRITICAL or HIGH) and its fixes: the four attack-service types split into
+their own files; literal pins for the Monster and set ids and for the damage, knockback, Blunt and single-target
+tuning; the moose's rounded block (18) pinned; the wrong `actt_kick` reason, the "horse rig has no attack" claim,
+the "engine requires both twins" claim, the great elk's "auto-resolve" claim (Effectiveness feeds only the
+tournament simulator) and the "older campaign keeps the great elk" claim corrected (released builds' lords ride a
+`charger`); the in-repo Armory snapshot refreshed (+81 / +5); the two item names registered in the Armory's English
+loc file (twelve translations owed); the Armory writer scripts refuse to run while the game or Kit is open, the
+Animalia writer's antler step moved inside its dry run with its own tests, and the clip generator gained
+`-Verify`. The test riders stay visible by Mike's choice and must be deleted before the next player release. A
+four-lens convergence pass on the fixes (1 MEDIUM, the rest LOW) followed: the elephant and mumakil prefab tests now
+refuse a Monster size, the reach floor admits the engine's single-precision 0.099999994f, the size re-read uses the
+engine's game-type filter, and the service warns once when it refuses a value. RCA `docs/reviews/rca-animalia-2026-09-23.md`.
+Final: `dotnet test` 10,287 passed, `pytest tools/tests` 2,044 passed. Nothing built after 13:07 has been seen in
+game.
+
+The starting elk is sold in Mirkwood markets (Mike: "The starting elk should also be available in the marketplace"):
+`culture_marketplace_config.xml` routes `taom_animalia_elk_a` to `mirkwood` with `min_stock="1"`, beside the great elk
+and the saddle, so a Mirkwood town always has one for an `elk_rider` who lost theirs. TAOM's culture pool does not
+read `is_merchandise`, so the moose, a `Culture.mirkwood` item, can be drawn into a Mirkwood market too (Mike, asked in
+the final review: let it appear). A new
+`AnimaliaMountWiringTests` case reads the career roster and fails if the start's mount or saddle is not guaranteed
+Mirkwood stock (RED first, then GREEN; the marketplace and wiring tests, 118, pass). The config is deployed by copy.
+
+Final review of the whole session (Mike: "a deep review and codex review of the entire sessions work"): eight lenses
+on Opus 5.5 in two waves, Codex `gpt-6-astra` at `ultra`, and a convergence pass. No CRITICAL and no engine
+incompatibility: the engine claims (the undeclared attribute loads, items are final at game init, the reflection
+targets exist) held against the installed DLLs. Two HIGH: the first fix round had removed the skeleton patcher's only
+rig check, so it could re-point another rig's empty master (the live warg folder holds one); it checks the rig's bone
+count again and reports WRONG RIG. And seven texts said the moose is not sold while TAOM's culture pool sells it; Mike
+chose to let it appear, and the texts now say so (a caravan can buy one too). Also fixed: the three by-name reflection
+sites joined `ReflectionSiteBindingTests`; the clip generator refuses a failed measurement (it read as zeros) and its
+`-Verify` checks clip names and checksums; the size pass warns on a size nothing rides and reports a failed recompute;
+the reach gate is a plain positive requirement (Mike); the handbook's resize recipe points at the Monster; the test
+riders are a `/release` pre-flight check; the shared game/Kit guard survives a non-ASCII process name; the Armory
+writer refuses an empty `--game-dir` and half-present steps, and a new test compares its recipe with the live Armory;
+Animalia wiring and reach-flag pins; the docs' state lines say to smoke only after a deploy, since the installed DLL
+predates the size pass. The Engine and Tooling lenses gained a check each. RCA `docs/reviews/rca-animalia-2026-09-23.md`
+"Final review"; `dotnet test` 10,313 passed, `pytest tools/tests` 2,054 passed, `test_hooks.sh` 283.
+
+The procedure is written up as a workflow for the next pack,
+`docs/ai-includes/quadruped-pack-to-horse-skeleton-workflow.md` (13 stages from Fab to battle, who runs each,
+its tool and gate, and the gotchas this pack hit), linked from the `/new-creature-mount` skill, INDEX,
+doc-lookup, creature-mount-authoring, the asset pipeline doc and the creature recipe. A lesson records that the
+Kit imports animation masters with no skeleton (three imports running), with the census as the standing step. The
+great elk's docs and ledger (section 6) record its resize. The Animalia elk is a separate second elk.
 
 Documented in `docs/features/animalia-elk-moose.md` (new), the quadruped section of
 `docs/reference/ue-to-bannerlord-asset-pipeline.md`, the reskin section of `creature-mount-authoring.md`,
 the creature recipe's route table, the horse pelvis fact in `bannerlord-skeleton-authoring.md`, the
-feature map, INDEX, and five lessons (two animation, three tooling). The provenance register gains the
+feature map, INDEX, and lessons in the animation, tooling, data, testing and state categories (seven more from the
+final review). The provenance register gains the
 Animalia row, and the Cave Troll row is cleared: Mike records no creator or licence tier for Fab
 purchases ("We bought the product").
 

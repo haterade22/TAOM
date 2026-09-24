@@ -221,6 +221,11 @@
 	     act_horse_kick itself (kick_action) at whatever stands behind the mount. Repo side:
 	     Main/Features/WarRam/WarRamConfig.AttackActionName; ledger docs/reference/lotrlome-war-ram-changes.md. -->
 	<action name="act_war_ram_butt" type="actt_kick" />
+	<!-- #646 Animalia elk and moose antler attacks, fired by TAOM Main/Features/Animalia (AnimaliaConfig).
+	     Typed actt_kick like act_war_ram_butt; their own actions, because the horse usage set fires
+	     act_horse_kick itself as its kick_action. -->
+	<action name="act_animalia_elk_antler" type="actt_kick" />
+	<action name="act_animalia_moose_antler" type="actt_kick" />
 	<action name="act_warg_stand_1"/>
 	<action name="act_warg_stand_2"/>
 	<action name="act_warg_idle_1" type="actt_idle" />

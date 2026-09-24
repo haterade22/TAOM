@@ -127,7 +127,7 @@ public class CareerAgentStatService : ICareerAgentStatService
     }
 
     // The charge half of the mount bonuses as one product. ApplyMountStatModifiers scales the mount's
-    // MountChargeDamage by it; the elk's antler charge reads it when it fires (#636), so the two agree for any product
+    // MountChargeDamage by it; the antler attacks read it when they fire (the great elk, #636; the Animalia elk and moose, #646), so the two agree for any product
     // the antler accepts, (0, 10] (outside it the antler lands unscaled while the mount still applies it).
     public float MountChargeMultiplier(string? riderHeroId, int? riderAgentIndex)
     {

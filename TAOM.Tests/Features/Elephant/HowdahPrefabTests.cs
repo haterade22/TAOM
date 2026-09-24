@@ -5,6 +5,7 @@ using System.Linq;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.Elephant;
+using TAOM.Features.MonsterSize;
 
 namespace TAOM.Tests.Features.Elephant;
 
@@ -266,6 +267,16 @@ public class HowdahPrefabTests
         Assert.AreEqual(((int)Math.Round(ElephantConfig.AuthoredScale * 100f)).ToString(), bodyLength,
             "taom_war_elephant's body_length no longer matches ElephantConfig.AuthoredScale: regenerate the howdah " +
             "prefab at the new scale and change the constant, because nothing scales the platform at runtime");
+
+        // Since #646 a Monster's taom_body_length overrides every item's body_length at game init
+        // (docs/features/monster-size.md), so the item alone no longer proves the size the prefab was baked at.
+        string monsters = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(horses))!,
+            "Monsters", "LOTR", "lotr_monster_elephant.xml");
+        var monster = System.Xml.Linq.XDocument.Load(monsters).Descendants("Monster")
+            .SingleOrDefault(m => (string?)m.Attribute("id") == ElephantConfig.ElephantMonsterId);
+        Assert.IsNotNull(monster, "Monster taom_war_elephant is missing from lotr_monster_elephant.xml");
+        Assert.IsNull(monster!.Attribute(MonsterSizeConfig.AttributeName),
+            "taom_war_elephant must not be sized on its Monster: the howdah prefab is baked for the item's body_length");
     }
 
     [TestMethod]

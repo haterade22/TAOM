@@ -67,7 +67,8 @@ moves the pack's clips onto the same skeleton through the same fit, so the Monst
 shape and the action set is a child of `as_horse` overriding the actions the clips fill. Measure first:
 after one uniform scale the legs and spine must sit within about 10 cm of the horse's joints. A body that
 cannot take horse proportions (the moose's neck is half a horse's) keeps its own through a per-animal
-profile, at the price of joints that no longer sit on the horse's (the moose's head pivots 0.54 m off).
+profile, at the price of joints that no longer sit on the horse's (the moose's head pivots 0.54 m off). The full
+procedure, every stage with its tool and gate: [quadruped-pack-to-horse-skeleton-workflow.md](quadruped-pack-to-horse-skeleton-workflow.md).
 
 ### The price of a reskin: you inherit the donor's BEHAVIOUR, not just its animations
 
@@ -85,7 +86,7 @@ The war ram got this wrong **twice**, the second time while fixing the first:
 | `act_horse_rear` | `actt_rear` (`ActionCodeType.Rear = 47`) | The inherited `horse` usage set declares `rear_action="act_horse_rear"`, so the engine fires it on every damaged mount. Worse, `Agent.Mount` reads `mountAgent.GetCurrentActionType(0) == ActionCodeType.Rear` and **refuses the mount while true**, so forcing it each cooldown made the ram briefly unmountable in combat |
 | `act_horse_strike_front` / `_back` | `actt_mount_strike` (`ActionCodeType.MountStrike = 52`) | The clips are the horse's hit reactions, `horse_hit_from_front` / `_back`: the creature flinches as though hit while you emit damage. The TYPE is harmless: `Agent.IsInBeingStruckAction` tests `MBMath.IsBetween(type, 48, 52)`, which is half-open, so it reads 48 to 51 (`StrikeLight` .. `StrikeKnockBack`) as being struck and NOT `MountStrike` (52) (corrected 2026-09-18; the warg's `actt_mount_strike` attacks play) |
 
-**The fact underneath both: the vanilla horse rig has no attack animation at all.** Horses deal damage
+**The fact underneath both: the vanilla horse rig's only attack clip is the kick.** Horses deal damage
 through charge collision, so `monster_usage_strikes` is the mount's hit-REACTION table, not an attack
 table. The rig's only genuinely offensive action is **`act_horse_kick`** (`actt_kick`,
 `ActionCodeType.Kick = 28`), which the ram attacked with until 2026-09-18. If a horse-rig creature needs
@@ -100,7 +101,10 @@ fires it too); and whether the engine **branches on that type** anywhere (`Actio
 `AgentActionFlag`, `IsInBeingStruckAction`). `ActionIndexCache` + `AnyUnresolved()` answer only "is
 this name real", which both wrong choices passed.
 
-Two more reskin-specific notes:
+Two more reskin-specific notes (and where the size lives: a creature can carry it on its Monster as TAOM's
+`taom_body_length`, which TAOM copies into every Horse item naming the Monster at game init, so the Monster file
+is the one place to resize it and a profile with `reachScalesWithBody` keeps its attack reach in step:
+[monster-size.md](../features/monster-size.md); the great elk and the Animalia elk and moose do):
 
 - **`body_length` scales the mount only; derive your own distances from it.** The managed trace
   predicts a scaled rider (`EquipmentIndex.ArmorItemEndSlot` and `EquipmentIndex.Horse` are the same
@@ -109,8 +113,9 @@ Two more reskin-specific notes:
   at 1x beside its 1x crew ([mumakil.md](../features/mumakil.md), "RESOLVED"). This doc said the
   opposite until 2026-09-23, and the elk shipped at 100 for a night because of it. What does NOT
   scale is anything your own code positions against the mount (a platform, a seat offset, an attack
-  reach measured from the centre): derive it from a scale constant pinned to the item
-  (`ElephantConfig.AuthoredScale`, `ElkConfig.AuthoredScale`).
+  reach measured from the centre): read the live `Agent.AgentScale` (the elk and the Animalia animals, through
+  `reachScalesWithBody` and `ElephantLikeReach`), or, where a prefab is baked for one size and the Monster must
+  carry none, a scale constant pinned to the item (`ElephantConfig.AuthoredScale`).
 - **You inherit the donor's SKELETON, not the donor's SADDLE.** Where the seat is modelled is a
   property of the mesh you authored, not of the mount system, and the two vary independently. The
   vanilla horse carries a saddle on the mount body, and so does the warg

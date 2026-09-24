@@ -1454,6 +1454,10 @@ public class SubModule : MBSubModuleBase
         // game init in the process gets one, not just the first.
         StampSaveLoadPhase(Features.SaveLoadDiagnostics.Domain.SaveLoadPhase.GameInitializationFinished);
 
+        // Mount sizes live on the Monster (taom_body_length, docs/features/monster-size.md). Every game init, before
+        // the once-per-process guard: each game reloads its items from XML, and no mission has built a mount yet.
+        IoC.Resolve<Features.MonsterSize.IMonsterSizeService>().ApplyMonsterSizes();
+
         // Harmony patches are process-global (applied to methods, persist across games). Apply this
         // whole per-game-init patch block ONCE per process — re-applying on a 2nd game init duplicates
         // every prefix/postfix, restarts the BattleLoad watchdog, and CRASHES the non-idempotent
@@ -1963,6 +1967,7 @@ public class SubModule : MBSubModuleBase
         AddTaomBehavior(new Features.Mumakil.MumakilMissionBehavior());
         AddTaomBehavior(new Features.WarRam.WarRamMissionBehavior());
         AddTaomBehavior(new Features.Elk.ElkMissionBehavior());
+        AddTaomBehavior(new Features.Animalia.AnimaliaMissionBehavior());
         AddTaomBehavior(new SiegeDismountMissionBehavior());
         // Registered unconditionally; gates internally on its MCM toggle (off by default).
         AddTaomBehavior(new Features.SiegePropDiagnostics.Hooks.SiegePropDiagnosticsMissionBehavior());

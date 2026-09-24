@@ -28,6 +28,9 @@ characters to players. Full contract: [`docs/reference/release-process.md`](../.
    If it is not, tag that one **first** — bumping past an untagged version manufactures another
    unresolvable phantom.
 4. `git tag -l 'v*'` does not already contain the target version. **Never move a pushed tag.**
+5. `git grep -l taom_test_ -- Main/_Module` prints nothing. Custom-Battle test riders show in every player's
+   Custom Battle picker; delete them (with their SubModule node and their ladder and recruitment exemptions)
+   before a release. The Animalia ones (#646, `troops/troops_animalia_test.xml`) are kept visible until then.
 
 ## Phase 2 — Verify
 

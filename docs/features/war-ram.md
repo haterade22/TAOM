@@ -115,8 +115,8 @@ authored size and is deliberately not shrunk.**
 so the managed trace predicts a scaled rider. In game the rider is not resized: the 3x mumakil's rider
 stands at 1x beside its 1x crew ([mumakil.md](mumakil.md), "RESOLVED"). The ram stays at 100 because that
 is its authored size, not to protect the dwarf. What a resize would NOT scale is the head-butt's reach,
-a fixed metre from the centre in `WarRamConfig` (the elk, built at 2x on the same shape, derives its reach
-from `ElkConfig.AuthoredScale`).
+a fixed metre from the centre in `WarRamConfig` (the great elk, on the same shape, keeps its size on its Monster
+and its reach scales with the live body: [monster-size.md](monster-size.md)).
 
 It was 75 first, reasoning that since TAOM dwarves render at about 82% of human height, a horse-sized
 ram would dwarf its rider. **That reasoning was backwards: the war goat is meant to dwarf its rider.**
@@ -179,8 +179,8 @@ committed against a target loitering on the rim now wastes a ten-second window.
 `act_horse_kick` as its `kick_action`, so the engine fires that action itself at whatever stands behind the
 mount; re-pointing its animation would have made a rear kick play a forward head-butt. `actt_kick` is the
 type the ram attacked with from #515 on, and the two candidates rejected then explain why the type matters
-(vanilla horses have no attack animation at all: they damage by charge collision, so `monster_usage_strikes`
-is the mount's hit-REACTION table rather than an attack table):
+(the vanilla horse rig's only attack clip is the kick: horses damage by charge collision, so
+`monster_usage_strikes` is the mount's hit-REACTION table rather than an attack table):
 
 - **`act_horse_rear`** is typed `actt_rear` (`ActionCodeType.Rear = 47`). The inherited `horse` usage
   set declares `rear_action="act_horse_rear"`, so the engine fires it on a damaged mount, and

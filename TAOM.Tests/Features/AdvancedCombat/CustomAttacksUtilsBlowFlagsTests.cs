@@ -80,7 +80,7 @@ public class CustomAttacksUtilsBlowFlagsTests
     [TestMethod]
     public void TakeDamage_DamageTypeDefault_IsPierce()
     {
-        // Every caller but the elk relies on the default, so changing it would re-type every creature blow at once.
+        // Every caller but the antler attacks (the great elk, the Animalia elk and moose) relies on the default, so changing it would re-type every creature blow at once.
         var parameter = typeof(CustomAttacksUtils).GetMethods()
             .Where(m => m.Name == nameof(CustomAttacksUtils.TakeDamage))
             .SelectMany(m => m.GetParameters())

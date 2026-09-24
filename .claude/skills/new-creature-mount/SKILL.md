@@ -1,6 +1,6 @@
 ---
 name: new-creature-mount
-description: Author a rideable creature mount end-to-end (assets, Monster/action/usage XML, C# behavior tree, validation) following the elephant+spider-proven workflow. Warg parity is law.
+description: Use when adding a rideable creature or mount (custom rig, horse-skeleton reskin, or a bought quadruped pack moved onto horse_skeleton). Warg parity is law.
 ---
 
 # New Creature Mount
@@ -19,23 +19,31 @@ does, byte-for-byte in shape.**
 
 ## FIRST: is this a reskin? (if yes, Phases 1 to 5 are skipped outright)
 
+**A bought four-legged pack on its OWN rig with its OWN clips** (Fab, a marketplace) becomes a reskin: follow
+[quadruped-pack-to-horse-skeleton-workflow.md](../../../docs/ai-includes/quadruped-pack-to-horse-skeleton-workflow.md)
+end to end (the Animalia elk and moose, #646). It bends the mesh onto `horse_skeleton`, retargets the pack's clips
+onto it, and binds them in an `as_horse` child set of its own.
+
 If the mesh is skinned to an **already-registered skeleton**, answer this before authoring
 anything. The war ram uses the stock vanilla `horse_skeleton`, so its Monster is the vanilla
 `horse_2` shape: `base_monster="horse"` + an action set + a few tuning attributes, inheriting
 Flags, `family_type`, `monster_usage`, every bone, the slope block and all twelve rein
-attributes. **No clips, no `quad_movement`, no action_types / action_sets / monster_usage_sets,
-no rider partial, no animation data at all.** Phases 1 to 5 below do not apply.
+attributes. **No new rig, no `quad_movement` authoring, no `monster_usage_sets`, no rider partial:** Phases 1
+to 5 below do not apply. What a reskin may still add is an `as_horse` child set binding clips of its own (the
+Animalia animals), with its `_map` twin (`MobilePartyVisual` throws without it, Phase 4), and its own typed attack
+action with its clip (the ram's `act_war_ram_butt`).
 
 **The cost is shared vocabulary.** A reskin inherits the donor's *behaviour*, not just its
 animations, so "our code never fires this" stops implying "nothing fires this". Before binding
 any action to a behavior tree check three things: its type in `action_types.xml`, whether the
 inherited `monster_usage` set names it in a verb slot or table, and whether the engine branches
-on that type. The ram got this wrong twice. The vanilla horse rig has **no attack animation at
-all** (horses damage by charge collision, so `monster_usage_strikes` is a hit-REACTION table);
-its only offensive action is `act_horse_kick` (`actt_kick`, `ActionCodeType.Kick = 28`).
+on that type. The ram got this wrong twice. The vanilla horse rig's **only attack clip is the
+kick** (horses damage by charge collision, so `monster_usage_strikes` is a hit-REACTION table):
+`act_horse_kick` (`actt_kick`, `ActionCodeType.Kick = 28`), which the usage set fires itself.
 `act_horse_rear` is `actt_rear` and blocks `Agent.Mount`; `act_horse_strike_front` is
-`actt_mount_strike = 52`, inside the `48..52` band `Agent.IsInBeingStruckAction` reads as being
-struck. Worked example: [docs/features/war-ram.md](../../../docs/features/war-ram.md).
+`actt_mount_strike = 52`, just outside the half-open `48..51` band `Agent.IsInBeingStruckAction`
+reads (`MBMath.IsBetween(type, 48, 52)`), so its type is harmless and its clip, the horse's hit
+reaction, is the problem. Worked example: [docs/features/war-ram.md](../../../docs/features/war-ram.md).
 
 ## Phase order (each gated before the next)
 
@@ -52,7 +60,9 @@ struck. Worked example: [docs/features/war-ram.md](../../../docs/features/war-ra
    rear/kick/dash/quick-stops/hit_object/strikes typed; light strikes UNTYPED `*_while_moving`;
    **`jump_start` action typed `actt_dash`, NEVER `actt_jump`**; a dedicated `actt_idle` `_1`.
 4. **action_sets** (Phase 4): bind every usage-referenced action to a VALIDATED clip; explicit
-   `act_horse_forward_canter` binding; `_map` + `_town_and_village` children; the rider partial
+   `act_horse_forward_canter` binding; `_map` + `_town_and_village` children (`_map` is REQUIRED:
+   `MobilePartyVisual` looks up `ActionSetCode + "_map"` and throws on a miss; `_town_and_village` only
+   mirrors vanilla, nothing derives it, so never write that the engine needs both); the rider partial
    `as_human_warrior` **at the TOP of the file** (base_set snapshots at definition).
 5. **monster_usage_sets** (Phase 5): all 10 verb attrs; per-pace `direction="none"` reference
    rows; **jump table TOTAL — all 9 directions × all states = 45 rows** (a missing lookup key

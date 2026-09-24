@@ -754,3 +754,11 @@ The shader walk's runner treated its own state as the truth about the engine: `E
 - **Why missed:** the fix answered the stale-handle question (never seat a newcomer by index) and never asked the allocator question (where does the newcomer go). The oracle was written from the fix's intent, not from the invariant (unique slots inside the footprint).
 - **Prevent:** when a change evicts from a store that also allocates, write down what the next allocation returns, and test the invariant over turnover (N deaths and replacements at a fixed population: uniqueness, class placement, bounded footprint), not the single step. `SlotAssignment.Forget` plus `TryReclaim` is the shape: the vacated slot waits for the next unit of its class.
 - **Source:** `docs/reviews/raw/codex-adversarial-creature-handles-2026-09-13.md` F1; `docs/reviews/rca-warg-clip-on-horse-2026-09-13.md`; #595.
+
+### Say what an existing save holds from the last released data, not from the working tree (#646, 2026-09-23)
+The rider docs said an older campaign keeps Thranduil and the lords on the great elk. A hero's battle equipment is
+saved, but the great elk's lord wiring never shipped in a release, so every player's save has them on a `charger`.
+- **Why missed:** "before this change" was read from the working tree, which held another session's unreleased edit.
+- **Prevent:** when you describe what existing saves contain, read the value at the last release tag
+  (`git show <tag>:<path>`) and name both cases if an unreleased build could have written something else.
+- **Source:** `docs/reviews/rca-animalia-2026-09-23.md` row 5.

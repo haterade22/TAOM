@@ -1071,3 +1071,12 @@ The first `HowdahPrefabTests` pinned the geometry the rebuild changed (moveable 
 - **Why missed:** the step was written from the campaign model's code, and a smoke list reads as mode-neutral unless it says otherwise.
 - **Prevent:** when a smoke step is there to prove an engine DECISION (killed or wounded, a morale roll, a capture), find the model that decides it in each game mode (`AddModel` in `CustomGame` and the campaign starter) and name the mode whose model can give the other answer. If no mode can, the step proves nothing; say so instead. When the model ROLLS (killed or wounded is a survival roll even with `CanKillEvenIfBlunt`), one outcome proves nothing either: say how many trials settle it and which result would (Codex, 2026-09-23: the step first demanded "killed, not wounded", which a correct build can fail).
 - **Source:** `docs/reviews/rca-elk-delta-2026-09-23.md` F5 (#636).
+
+### Pin an id that crosses into unversioned data as a literal, and build the data test's rows from the constant (#646, 2026-09-23)
+`AnimaliaConfig`'s Monster and action-set ids were tested only against a service built from the same constants, and
+the wiring tests checked the Armory against their own literals. A typo in a constant would have passed every test and
+never attached a tree, and the first-tick log reads "0 elk(s)" in a normal Custom Battle anyway.
+- **Why missed:** each test passed for a real reason inside its own file; none linked the constant to the data.
+- **Prevent:** pin such a constant against a literal once, and build the rows of the test that reads the live data
+  from the constant, so the data check also proves the code names what the data declares.
+- **Source:** `docs/reviews/rca-animalia-2026-09-23.md` row 4.
