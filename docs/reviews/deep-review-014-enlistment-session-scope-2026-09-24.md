@@ -211,3 +211,27 @@ RCA: [rca-enlistment-session-scope-2026-09-24.md](rca-enlistment-session-scope-2
 
 VERDICT: READY FOR COMMIT (the missing GitHub issue must be settled before merge; the convergence
 pass on the fix diff is owed)
+
+## Convergence
+
+A convergence reviewer ran on the fix diff `d1221b7f..b9d18458`. Behaviour parity: PASS (the
+folded `InvalidateCommanderCache` pass-through had one caller, now gone; every reset callee is a
+field clear, so the new order does not matter; the new hook tests hold under NSubstitute 5.1.0).
+Standards: PASS. It raised two text defects; the review lead re-read the cited code and confirmed
+both. No false positives.
+
+| # | Sev | Defect | Verified against | Fix |
+|---|---|---|---|---|
+| C1 | LOW | The narrowed wording still overclaimed: CHANGELOG "the feature's cached engine handles", closed "not reset" lists in the CHANGELOG and `enlistment.md` ("Both are follow-ups"), and `IServiceMaintenanceService` "Drop the feature's per-session caches" | `CommanderLordAdapter._lastSeenMapEvent` is assigned only in `TokenFor` and never cleared, on a singleton (`EnlistmentIoC.cs:13`); `BattleMeritAccumulator._pending` is cleared only by `Consume`, also a singleton (`EnlistmentIoC.cs:86`); `ResetSessionCaches` calls neither | CHANGELOG names the cached commander party and the army handle; both lists add the two fields and say the list comes from the review's field sweep and may not be complete; the interface doc points at `ResetSessionCaches` |
+| C2 | NIT | RCA row 3 called "Each held an absolute campaign hour" false for the rhythm cache, and the test class summary gave every covered field the "a moment ago" hazard | `ArmyRhythmSnapshotService.GetSnapshot` stores `Math.Floor(nowDays * 24.0)` and tests it with `==`, so a future stamp misses rather than reading as recent | RCA row 3 names the "a moment ago" clause as the false one; the test summary covers the clock stamps, the rhythm cache's same-hour reload, the cached `MobileParty` handle and the hooks |
+
+Both fixes are text only (one doc comment in `Main`, one in `TAOM.Tests`), so no test was added.
+`_lastSessionStarter` (listed above under the `OnGameEnd` follow-up) is a hook-registration guard,
+not a per-session value the reset should clear, so it stays out of the "not reset" lists.
+
+Full suite after the convergence fixes: 10246 passed, 2 skipped, 2 failed, total 10250. The two
+failures are the known live-Armory tests `TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`.
+
+CONVERGENCE: DEFECTS 2, both fixed; the text-only fixes have not had a fresh review. The missing
+GitHub issue must still be settled before merge.

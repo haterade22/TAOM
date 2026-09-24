@@ -1717,7 +1717,12 @@ Not every per-session value is reset yet. `EnlistmentReconciler._lossAnnouncedFo
 commander-loss modal's shown-flag) is cleared only on a commander's recovery, so after loading an
 earlier save, in a second campaign, or after re-enlisting under the same lord, that commander's
 next loss can go unannounced. `FieldDutyRuntime`'s real-time pace estimate also survives a session
-change (cosmetic: the first duty after a load can fold its assignment toast into the result). Both are follow-ups, not part of this reset.
+change (cosmetic: the first duty after a load can fold its assignment toast into the result).
+`BattleMeritAccumulator._pending`, the pending battle-merit sample, is cleared only by `Consume`
+(reachability across a session change unverified). `CommanderLordAdapter`'s one-slot `MapEvent`
+cache (`_lastSeenMapEvent`) is never cleared, so it keeps one finished battle referenced. These are
+follow-ups, not part of this reset, and the list comes from the review's field sweep, so it may
+not be complete.
 
 ### The engine backstop, and the bundle that was suppressed
 

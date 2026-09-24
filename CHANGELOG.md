@@ -10,7 +10,7 @@ Enlistment no longer carries clocks from one campaign into the next. Loading an 
 hold you inside a town your commander had already left, and silence the shore-leave offer for up to
 the rest of the playthrough, because both remembered a campaign hour from the session before.
 Starting a new campaign without restarting the game also skipped Enlistment's cache reset entirely.
-Both paths now clear those remembered hours and the feature's cached engine handles.
+Both paths now clear those remembered hours, the cached commander party and the army handle.
 
 `ServiceMaintenanceService.ResetSessionCaches`, the feature's one reset point, now also clears the
 settlement-dwell anchor, the arrival-offer settlement id and its 24-hour cooldown, and the per-hour
@@ -26,7 +26,10 @@ separate `InvalidateCommanderCache` pass-through is deleted; a test pins the loa
 its order before normalizing; comments and docs that overclaimed the reset are narrowed. Still not
 reset, and tracked as follow-ups: the commander-loss modal's shown-flag
 (`EnlistmentReconciler._lossAnnouncedFor`), so a reloaded or repeated loss of the same commander
-can go unannounced, and the duty runtime's real-time pace estimate.
+can go unannounced; the duty runtime's real-time pace estimate; the pending battle-merit sample
+(`BattleMeritAccumulator._pending`, reachability unverified); and `CommanderLordAdapter`'s one-slot
+`MapEvent` cache, which keeps one finished battle referenced. This list comes from the review's
+field sweep and may not be complete.
 
 Tests: `EnlistmentSessionResetTests` (9) and two `ServiceMaintenanceServiceTests`. Full suite in the
 plan worktree: 10246 passed, 2 skipped, 2 failed (the two live-Armory tests that fail without this

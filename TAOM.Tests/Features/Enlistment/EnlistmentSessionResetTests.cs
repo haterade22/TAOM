@@ -15,9 +15,13 @@ namespace TAOM.Tests.Features.Enlistment;
 /// <summary>
 /// Session scope for the Enlistment singletons (csharp-architecture.md, "Singleton Services Holding
 /// Per-Campaign State MUST Have a Session-Reset Story"). Every service here is Reuse.Singleton and
-/// outlives the campaign, while these fields hold absolute campaign hours. Loading an earlier save,
-/// or starting a new campaign, runs the clock backwards, and a stamp left in the future reads as
-/// "a moment ago" until the new clock catches up with it.
+/// outlives the campaign. Three kinds of per-session value are covered. The dwell anchor and the
+/// offer cooldown hold absolute campaign hours: loading an earlier save, or starting a new
+/// campaign, runs the clock backwards, and a stamp left in the future reads as "a moment ago" until
+/// the new clock catches up with it. The rhythm snapshot is keyed on an equal hour stamp, so its
+/// hazard is a reload inside the same campaign hour serving the previous world's snapshot. The
+/// adapter's cached commander MobileParty is a handle matched by StringId, which a later campaign
+/// can reissue. The hook tests pin that both lifecycle edges reach the one reset point.
 /// </summary>
 [TestClass]
 public class EnlistmentSessionResetTests
