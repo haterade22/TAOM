@@ -24,7 +24,13 @@ public sealed class AppDomainExceptionHook
     private readonly ICrashReportService _service;
     private readonly IModLogger _logger;
     private bool _subscribed;
-    private int _mainThreadId;
+
+    // Static so Native2ManagedBridge reads the same boot-time id to mark its own off-thread
+    // captures (maintainer decision 2026-09-24, #650). 0 until Subscribe() runs; managed thread
+    // ids start at 1, so 0 never names a real thread.
+    private static int s_mainThreadId;
+
+    internal static int MainThreadId => Volatile.Read(ref s_mainThreadId);
 
     public AppDomainExceptionHook(ICrashReportService service, IModLogger logger)
     {
@@ -39,7 +45,7 @@ public sealed class AppDomainExceptionHook
         // Subscribe() is called from SubModule.OnSubModuleLoad on the main game thread,
         // so capturing the current managed thread id here is the right reference for
         // "main thread" comparisons inside OnUnhandled.
-        _mainThreadId = Thread.CurrentThread.ManagedThreadId;
+        Volatile.Write(ref s_mainThreadId, Thread.CurrentThread.ManagedThreadId);
         try { AppDomain.CurrentDomain.UnhandledException += OnUnhandled; }
         catch (Exception ex) { _logger.LogWarning($"[CrashReport] AppDomain.UnhandledException subscribe failed: {ex.GetType().Name}"); }
     }
@@ -63,7 +69,7 @@ public sealed class AppDomainExceptionHook
             if (ex == null) return;
 
             // Tag off-main-thread captures so the service can pick reduced-capture mode.
-            if (Thread.CurrentThread.ManagedThreadId != _mainThreadId)
+            if (Thread.CurrentThread.ManagedThreadId != MainThreadId)
             {
                 try { ex.Data[OffMainThreadDataKey] = true; } catch { /* exotic Exception types may have read-only Data */ }
             }

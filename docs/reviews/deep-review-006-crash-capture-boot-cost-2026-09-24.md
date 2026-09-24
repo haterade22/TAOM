@@ -282,7 +282,7 @@ section, `fix(crash-report): v2.0.30 - apply maintainer decisions for plan 006`.
 | 2 | NEEDS MIKE 2: entry 6 becomes `RenderTargetComponent_OnPaintNeeded` | APPLIED | See "Decision: allowlist entry 6" |
 | 3 | NEEDS MIKE 4 (Agent 6 #1): one bridge exit that always preserves the throw site | APPLIED | See "Decision: bridge single exit" |
 | 4 | Plan 007 review: `HandleAndSwallow` fallback returns preserve the throw site | APPLIED | See "Decision: helper hand-backs" |
-| 5 | Mission combat callbacks back on the allowlist | NOT APPLIED: stopped as unsafe | See "Decision: combat callbacks (stopped)" |
+| 5 | Mission combat callbacks back on the allowlist | NOT APPLIED in this pass: stopped as unsafe; APPLIED in the second pass as D43 and D47 | See "Decision: combat callbacks (stopped)" and "Second pass: decisions D43 and D47" |
 | 6 | NEEDS MIKE 5, 6, 7: no code change | RECORDED | Bridge stays at Harmony priority 400; the suppression log keeps its 1, 2, 10, 100 cadence with no time floor; capture stays ON by default and `EnableNativeToManagedCapture` stays as its toggle |
 | 7 | NEEDS MIKE 3: in-game probe | STILL OWED | Listed in the feature doc's GitHub Issue section |
 
@@ -335,6 +335,9 @@ NEEDS MIKE 8 (the CHANGELOG date header at merge) is unchanged.
 
 ### Decision: combat callbacks (stopped)
 
+Superseded by "Second pass: decisions D43 and D47" below, which marks off-thread bridge captures
+and then adds the ten entries.
+
 The decision was applied up to the code and then stopped, per the assignment's rule to stop and
 report rather than improvise when a decision proves unsafe on reading the code.
 
@@ -377,3 +380,85 @@ report rather than improvise when a decision proves unsafe on reading the code.
   tests `TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
   `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`.
 - This section's changes had no fresh review; a review of the commit is owed.
+
+### Second pass: decisions D43 and D47 (2026-09-24)
+
+The maintainer resolved the stopped combat-callback decision on 2026-09-24 with two binding
+decisions, applied in order, test first, in the worktree at base `42624b95`. The code, tests and
+docs are in the commit that adds this subsection,
+`fix(crash-report): v2.0.30 - apply maintainer decisions for plan 006`. Issue: #650.
+
+| # | Decision | Outcome |
+|---|---|---|
+| D43 | Mark a bridge capture off-main from the main-thread id `AppDomainExceptionHook` records in `Subscribe()` at `OnSubModuleLoad`; an unset id marks | APPLIED |
+| D47 | Then add the ten traced combat callbacks, one literal pin each, and raise the cap to 16 | APPLIED |
+
+#### D43: off-thread mark from the crash hook's boot-time id
+
+- **Why this id:** `MissionThreadGuard.IsOnMainThread` returns true on every thread until
+  `MarkMainThread` runs at the first mission tick (`MissionThreadGuard.cs:39`), so it cannot tell a
+  bridge capture before that. `AppDomainExceptionHook.Subscribe()` runs in
+  `SubModule.OnSubModuleLoad` (`SubModule.cs:203`, inside the method at `:111`) before
+  `Native2ManagedPatcher.AttachAll` (`:204`), so the id is set before any shim is patched.
+  `SubModule.cs` and `MissionThreadGuard` are unchanged.
+- **Change:** the hook's instance `_mainThreadId` became a private static written with
+  `Volatile.Write` in `Subscribe()` and read through `internal static int MainThreadId`
+  (`Volatile.Read`); `OnUnhandled` compares against it as before. `Native2ManagedBridge.Finalizer`
+  passes `AppDomainExceptionHook.MainThreadId` to `HandleOrPassThrough`, which now takes it as a
+  parameter; with capture on, `MarkIfOffMainThread` sets `ex.Data[OffMainThreadDataKey] = true`
+  unless the current thread is the recorded one, inside the same `try { } catch { }` guard as
+  `AppDomainExceptionHook` uses for a read-only `Data`. An id of 0 (never subscribed) marks, and the
+  comment says why: the safe direction costs a main-thread capture only its Mission and Campaign
+  sections and the inquiry. With the native toggle off nothing is marked. `CrashReportService`
+  (`IsOffMainThread`, `CrashReportService.cs:164-174`) is unchanged and takes its reduced path on
+  the mark.
+- **TDD:** four tests, three in `Native2ManagedBridgeTests`
+  (`HandleOrPassThrough_CaptureOnAWorkerThread_MarksTheExceptionOffMainThread`,
+  `HandleOrPassThrough_CaptureOnTheRecordedMainThread_LeavesTheExceptionUnmarked`,
+  `HandleOrPassThrough_WhenNoMainThreadWasRecorded_MarksTheExceptionOffMainThread`) and
+  `AppDomainExceptionHookTests.Subscribe_RecordsTheSubscribingThreadAsTheMainThread`, written
+  against a scaffold that added the parameter and an accessor returning 0. RED:
+  `Assert.AreEqual failed. Expected:<14>. Actual:<0>.` (the hook test),
+  `Assert.AreEqual failed. Expected:<True>. Actual:<(null)>. a bridge capture on a thread other than
+  the recorded main thread must be marked off-main` and `Assert.AreEqual failed. Expected:<True>.
+  Actual:<(null)>. with no recorded main thread the bridge cannot prove main-thread delivery, so it
+  takes the safe path`; `Failed: 3, Passed: 5, Total: 8`. The main-thread test passed at RED by
+  construction; it guards against marking every capture. GREEN: `Passed: 8, Total: 8`.
+
+#### D47: the ten combat callbacks
+
+- **Engine check** (`pwsh tools/taom-src.ps1 path ManagedCallbacks.CoreCallbacksGenerated`,
+  v1.5.3): all ten shims exist as single static methods in `ManagedCallbacks.CoreCallbacksGenerated`
+  (`TaleWorlds.MountAndBlade.AutoGenerated`) and each body calls the `Mission` method of the same
+  name (`:745-885`). No TAOM code patches any of them already.
+- **Change:** `Native2ManagedTargets.All` gains `Mission_MeleeHitCallback`,
+  `Mission_MissileHitCallback`, `Mission_ChargeDamageCallback`, `Mission_FallDamageCallback`,
+  `Mission_MissileAreaDamageCallback`, `Mission_OnAgentHitBlocked`,
+  `Mission_GetDefendCollisionResults`, `Mission_OnAgentRemoved`, `Mission_OnAgentDeleted` and
+  `Mission_OnAgentShootMissile`, each with its reason. `Agent_OnDismount`, `Agent_OnMount` and
+  `Agent_OnAgentAlarmedStateChanged` stay out.
+- **TDD:** `All_IsExactlyTheSixReviewedShims` became `All_IsExactlyTheSixteenReviewedShims` with
+  the ten literal names, and `All_IsASmallDistinctAllowlist`'s cap went from 12 to 16. RED:
+  `CollectionAssert.AreEquivalent failed. The number of elements in the collections do not match.
+  Expected:<16>. Actual:<6>.` After the entries, the crash-report filter
+  (`Native2ManagedTargetsTests`, `Native2ManagedBridgeTests`, `AppDomainExceptionHookTests`,
+  `CrashReportPatchHelperTests`, `RethrowStackPreserverTests`, `Patch37TargetShapeTests`) passed
+  37 of 37, including the `BindingVerification` resolve of all 16 against the installed engine.
+- **Boot cost:** not measured. No test times the attach, and no game was launched; the
+  `attached 16 of 16 Finalizer(s) in X ms` line is owed from the first launch.
+
+#### Docs
+
+`docs/features/crash-report.md` (catch-point row 6, a new "Off-main-thread captures" paragraph,
+Tests, Performance, Risks, Changelog, GitHub Issue status), the Patch37 target line in
+`docs/reference/harmony-patch-registry.md`, and the branch's CHANGELOG entry.
+
+#### Test evidence
+
+- `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId=`: build succeeded,
+  0 errors.
+- Full suite, `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` in the worktree:
+  `Failed: 2, Passed: 10265, Skipped: 2, Total: 10269`. The two failures are the known
+  live-Armory tests `TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+  `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`.
+- This subsection's changes had no fresh review; a review of the commit is owed.

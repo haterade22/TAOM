@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using HarmonyLib;
 using TAOM.Core.Logging;
 using TAOM.Dependencies.Foundation;
@@ -78,17 +79,32 @@ internal static class Native2ManagedBridge
         bool enabled = true;
         try { enabled = CrashReportSettings.Instance?.EnableNativeToManagedCapture ?? true; }
         catch { /* a settings read failure must not change the capture path */ }
-        return HandleOrPassThrough(__exception, enabled);
+        return HandleOrPassThrough(__exception, enabled, AppDomainExceptionHook.MainThreadId);
     }
 
     // One exit: Harmony rethrows whatever this returns, so a non-null result always goes through
     // PreserveForRethrow (a no-op on null, and idempotent if HandleAndSwallow already preserved).
-    internal static Exception? HandleOrPassThrough(Exception? exception, bool nativeCaptureEnabled)
+    internal static Exception? HandleOrPassThrough(Exception? exception, bool nativeCaptureEnabled, int mainThreadId)
     {
         if (exception == null) return null;
+        if (nativeCaptureEnabled) MarkIfOffMainThread(exception, mainThreadId);
         var rethrow = nativeCaptureEnabled
             ? CrashReportPatchHelper.HandleAndSwallow(exception, Origin)
             : exception;
         return RethrowStackPreserver.PreserveForRethrow(rethrow, null);
+    }
+
+    // Native decides which thread raises a callback, and combat callbacks such as
+    // Mission_OnAgentRemoved arrive off the main thread (harmony-patches.md, "Which thread runs
+    // your target"). The mark sends CrashReportService down its reduced path: no Mission or
+    // Campaign reads, no inquiry. The reference is the id AppDomainExceptionHook.Subscribe()
+    // records at OnSubModuleLoad; MissionThreadGuard learns its id only at the first mission tick.
+    // An unset id (0: the hook never subscribed) counts as off-thread, the safe direction: a
+    // main-thread capture then loses only its Mission and Campaign sections and the inquiry.
+    private static void MarkIfOffMainThread(Exception exception, int mainThreadId)
+    {
+        if (mainThreadId != 0 && Thread.CurrentThread.ManagedThreadId == mainThreadId) return;
+        try { exception.Data[AppDomainExceptionHook.OffMainThreadDataKey] = true; }
+        catch { /* exotic Exception types may have read-only Data */ }
     }
 }

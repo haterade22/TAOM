@@ -26,7 +26,7 @@ MCM, hero-race, Gauntlet screen, patch registry and API snapshot docs now say wh
 Full suite in the plan worktree: 10254 passed, 2 skipped, 2 failed
 (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
 `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, which fail the same way at the base).
-Nothing smoked in game: the boot time, the six-shim attach and live MCM toggling are owed.
+Nothing smoked in game: the boot time, the allowlist attach and live MCM toggling are owed.
 
 Review follow-ups (deep review and Codex,
 `docs/reviews/deep-review-006-crash-capture-boot-cost-2026-09-24.md`): the bridge test now throws
@@ -44,9 +44,16 @@ place of a tableau-setup callback nothing in v1.5.3 arms. Every exception the cr
 back to Harmony, from the callback bridge or from `CrashReportPatchHelper.HandleAndSwallow` when
 capture is off, the service is unreachable or a capture is already running, now keeps its throw
 site through the rethrow. Bridge priority 400, the powers-of-ten suppression log and capture on by
-default all stay. Putting the mission combat callbacks back on the allowlist is decided but held:
-several arrive off the main thread, where an untagged capture would run the mission collectors and
-the on-screen notice. Full suite: 10261 passed, 2 skipped, 2 failed (the same two).
+default all stay. Full suite: 10261 passed, 2 skipped, 2 failed (the same two).
+
+Then the mission combat callbacks (#650). A capture by the callback bridge on any thread other than
+the one the crash hook records at module load (or before it records one) is now marked off the
+main thread, so the report skips its mission and campaign sections and the on-screen notice there,
+as an unhandled-exception capture already did. With that in place, the ten combat callbacks traced
+into TAOM code (melee, missile, charge, fall and area damage, blocked hits, defend collisions, and
+agent removal, deletion and missile shots) are back on the allowlist, now 16 entries; mount,
+dismount and alarmed-state stay out. Their attach time is not measured yet. Full suite: 10265
+passed, 2 skipped, 2 failed (the same two).
 
 ## 2026-09-23
 
