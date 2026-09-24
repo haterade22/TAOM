@@ -266,7 +266,7 @@ Crash UI doesn't expose per-section toggles in v1 — every collector runs by de
 
 ### Coexist with another crash mod (BEW, third-party)
 
-Default: TAOM's handler wins (priority 800 + first registration + suspends BUTR). If you want another mod's UI:
+Default: TAOM's handler wins on the Patch37 targets (rows 1 to 5: priority 800, first registration, suspends BUTR). The row 6 callback shims carry TAOM's bridge at Harmony's default 400, so another mod's finalizer above 400 on those shims runs before it; whether BEW patches them is unverified. If you want another mod's UI:
 
 1. MCM → **Master** → uncheck **Suspend BUTR Exception Handler**.
 2. MCM → **Master** → uncheck **Enable Crash Capture**.
@@ -275,7 +275,7 @@ No restart is needed before TAOM's first capture of the session: TAOM's finalize
 
 ## Performance
 
-- **Boot cost: one `harmony.Patch` per target, plus one PatchShield attach per Native2Managed target at the first game start** (PatchShield's pass 2 shields every foreign-patched method outside its exclusions, and `ManagedCallbacks` is not excluded). Each attach cost about 120 to 190 ms on the maintainer's desktop on 2026-09-23 (the old sweep of all 247 `*CallbacksGenerated` methods cost 29 to 33 s on 30 of 30 launches, and PatchShield timed 186 ms per attach in the same process). On 11 player processes the same 247-method sweep took 0 to 1 s, under about 8 ms per attach ([followup-patch-tax.md](../../plans/_audit/2026-09-23-opus/followup-patch-tax.md)), so the saving is large on that desktop and about a second for players. The allowlist still drops 241 attaches at boot and about as many PatchShield attaches at the first game start. `[CrashReport] Native2Managed: attached N of M Finalizer(s) in X ms` in `taom_debug.log` shows the current cost.
+- **Boot cost: one `harmony.Patch` per target, plus one PatchShield attach per Native2Managed target at the first game start** (PatchShield's pass 2 shields every patched method not declared in a TAOM assembly, outside its namespace exclusions, and `ManagedCallbacks` is not excluded). Each attach cost about 120 to 190 ms on the maintainer's desktop on 2026-09-23 (the old sweep of all 247 `*CallbacksGenerated` methods cost 29 to 33 s on 30 of 30 launches, and PatchShield timed 186 ms per attach in the same process). On 11 player processes the same 247-method sweep took 0 to 1 s, under about 8 ms per attach ([followup-patch-tax.md](../../plans/_audit/2026-09-23-opus/followup-patch-tax.md)), so the saving is large on that desktop and about a second for players. The allowlist still drops 241 attaches at boot and about as many PatchShield attaches at the first game start. `[CrashReport] Native2Managed: attached N of M Finalizer(s) in X ms` in `taom_debug.log` shows the current cost.
 - **Steady-state cost: small, not zero.** Harmony runs a finalizer on every call of its target (with a null `__exception` on success, which returns at once), and the patched method becomes a replacement wrapped in try/catch.
 - **Suppression log cadence trades recency for volume.** A throw that recurs every frame logs its 1000th occurrence after about 17 s at 60 fps and its 10,000th after about 3 minutes, so before a later hard crash the last suppression line can be minutes old. The bundle (occurrence 1) and the lines at 2, 10 and 100 remain.
 - **WMI for GPU info** runs once per captured crash (not per tick). ~50ms typical.

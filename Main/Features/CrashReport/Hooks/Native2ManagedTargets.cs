@@ -7,7 +7,8 @@ namespace TAOM.Features.CrashReport.Hooks;
 // The native-to-managed callback shims that get a crash-capture Finalizer. An allowlist, not a
 // sweep. Patching every static method of every *CallbacksGenerated type (247) captured nothing
 // in 30 logged sessions. Each entry costs one harmony.Patch at boot plus one PatchShield attach
-// at the first game start (pass 2 shields every foreign-patched method outside its exclusions).
+// at the first game start (pass 2 shields every patched method not declared in a TAOM assembly,
+// outside its namespace exclusions).
 // On the maintainer's desktop each attach took about 120 to 190 ms (2026-09-23 logs), so the
 // sweep cost 29 to 33 s of every launch there; on 11 player processes it took 0 to 1 s in all
 // (plans/_audit/2026-09-23-opus/followup-patch-tax.md).

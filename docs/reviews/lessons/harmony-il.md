@@ -607,7 +607,7 @@ Four Patch37 crash finalizers sat on `MissionBehavior.OnMissionTick`, `MBSubModu
 - **Source:** plan 006 (`plans/006-crash-capture-boot-cost.md`), `docs/reviews/deep-review-006-crash-capture-boot-cost-2026-09-24.md`.
 
 ### A hand-attached patch's priority is its own attribute's, not its category's
-Plan 006 rewrote two docs to say every crash finalizer runs at priority 800. The five Patch37 finalizers carry `[HarmonyPriority(800)]`; the Native2Managed bridge is attached with `new HarmonyMethod(bridge)` and carries none, and Harmony 2.4.2's `HarmonyMethod(MethodInfo)` imports only that method's own attributes, so `Patch` maps its -1 to 400. `RethrowStackPreserver.cs` already said so; the docs contradicted it.
+Plan 006 rewrote two docs to say every crash finalizer runs at priority 800. The five Patch37 finalizers carry `[HarmonyPriority(800)]`; the Native2Managed bridge is attached with `new HarmonyMethod(typeof(Native2ManagedBridge), nameof(Native2ManagedBridge.Finalizer))` and carries none, and Harmony 2.4.2's `HarmonyMethod` constructors import only that method's own attributes, so `Patch` maps its -1 to 400. `RethrowStackPreserver.cs` already said so; the docs contradicted it.
 - **Why missed:** the sentence was carried over from the text describing the attribute-applied category, and both the plan and the implementation repeated it.
 - **Prevent:** when a doc states a patch's priority or ordering, read the attribute on the exact patch method (or the `priority:` argument at the `harmony.Patch` call). A hand-attached patch never inherits a category's priority.
 - **Source:** `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F7 (Codex finding 3 and lenses 1, 2, 4, 5).

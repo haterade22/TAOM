@@ -250,3 +250,22 @@ Phase 3h is consolidated later for all branches. Proposed lines:
   named method's callers.
 - **What Codex does well:** caught that the plan's own smoke recipe and allowlist tests could not
   fail, and declined to recommend a runtime priority change just to match documentation.
+
+## Convergence
+
+A convergence pass on the review-fix commit `65b691b6` (`git diff 6fe83bca..HEAD`) found the code
+changes behaviour-preserving and the new tests sound, and raised three LOW text defects. Each was
+rechecked against the code and the v1.5.3 engine cache before fixing; all three held.
+
+| # | Defect | Checked against | Fix |
+|---|---|---|---|
+| 1 | Registry said every later lifecycle callback runs inside `Module.OnApplicationTick` | `Module.cs:478-541` dispatches `SetInitialModuleScreenAsRootScreen` (:524), `GlobalGameStateManager.OnTick` (:527) and `GameManagerBase.Current.OnTick` (:534); `OnSubModuleUnloaded` runs from `CoreManaged.Finalize` (:114-116) through `FinalizeCurrentModule` (:1317) and `FinalizeSubModulesBases` (:242-246) | Sentence scoped to the tick's callbacks; `OnSubModuleUnloaded` named as outside it |
+| 2 | "Pass 2 shields every foreign-patched method" in `Native2ManagedTargets.cs` and `crash-report.md` | `PatchShield.cs:176-215` shields every entry of `GetAllPatchedMethods()` and skips only TAOM-declared methods, excluded namespaces and SaveShield targets, whoever owns the patch | "every patched method not declared in a TAOM assembly, outside its namespace exclusions" |
+| 3 | Coexistence how-to still claimed priority 800 for TAOM's handler everywhere | `crash-report.md` row 6 text and `Native2ManagedPatcher.cs:45-46` (no priority, so 400) | 800 limited to rows 1 to 5; the shims' 400 stated, BEW's use of them left unverified |
+
+The optional NIT was also taken: the `harmony-il.md` lesson now names the constructor the bridge
+really uses. No false positives.
+
+Full suite after the fixes, in the worktree:
+`Failed: 2, Passed: 10258, Skipped: 2, Total: 10262`; the two failures are the same known
+live-Armory tests.
