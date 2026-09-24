@@ -20,6 +20,8 @@ public class BoneCheck
     protected float _boneCheckLifeTime = 0f;
     protected Action<IAgentAdapter, IAgentAdapter, sbyte> _onCollisionCallback;
     protected Action _onExpiration;
+    // The attacker's tracked bone positions, refilled every tick (was a new list per tick).
+    private readonly List<(sbyte, Vec3)> _agentBonePositions = new();
 
     public BoneCheck(IAgentAdapter agent, List<IAgentAdapter> targets, List<sbyte> boneIds, float maxDuration, float boneCollisionRadius, bool stopAfterFirstHit, Action<IAgentAdapter, IAgentAdapter, sbyte> onCollisionCallback, Action onExpiration)
     {
@@ -71,9 +73,18 @@ public class BoneCheck
             Logger.LogWarning($"Failed to get skeleton for {_agent.Name}");
             return false;
         }
+        return CheckBoneCollision(agentVisuals, agentSkeleton);
+    }
+
+    /// <summary>
+    /// The collision pass for an attacker the caller has already validated this tick, reusing the
+    /// skeleton it fetched: MBAgentVisuals.GetSkeleton builds a new native wrapper on every call.
+    /// </summary>
+    protected bool CheckBoneCollision(IAgentVisualsAdapter agentVisuals, Skeleton agentSkeleton)
+    {
         MatrixFrame agentGlobalFrame = agentVisuals.GetGlobalFrame();
 
-        List<(sbyte, Vec3)> agentBonePositions = new();
+        _agentBonePositions.Clear();
         int boneCount = agentSkeleton.GetBoneCount();
         foreach (sbyte bone in _boneIds)
         {
@@ -84,9 +95,18 @@ public class BoneCheck
             }
             MatrixFrame agentBoneFrame = agentSkeleton.GetBoneEntitialFrameWithIndex(bone);
             Vec3 agentBoneGlobalPos = agentGlobalFrame.TransformToParent(agentBoneFrame.origin);
-            agentBonePositions.Add((bone, agentBoneGlobalPos));
+            _agentBonePositions.Add((bone, agentBoneGlobalPos));
         }
 
+        return CheckTargets(agentGlobalFrame, _agentBonePositions);
+    }
+
+    /// <summary>
+    /// Tests every held target against the attacker's bone positions. Returns false when a hit ends
+    /// the check (stop on first hit), true otherwise. Internal for TAOM.Tests.
+    /// </summary>
+    internal bool CheckTargets(MatrixFrame agentGlobalFrame, List<(sbyte, Vec3)> agentBonePositions)
+    {
         for (int i = 0; i < _targets.Count; i++)
         {
             IAgentAdapter target = _targets[i];
@@ -106,15 +126,23 @@ public class BoneCheck
                 continue;
             }
 
+            MatrixFrame targetGlobalFrame = targetVisuals.GetGlobalFrame();
+            // Range gate BEFORE the skeleton: GetSkeleton builds a new native wrapper on every call (a
+            // ref-count call, a lock, a GCHandle and a finalizer), and most agents captured at 20 m are
+            // outside this gate on any given frame. A target out of range stays for a later frame.
+            if ((targetGlobalFrame.origin - agentGlobalFrame.origin).LengthSquared > _maxRangeForCheck)
+                continue;
+
             Skeleton targetSkeleton = targetVisuals.GetSkeleton();
-            if (targetSkeleton == null)
+            // `is null`, not `==`: NativeObject.operator == runs NativeObject's static constructor,
+            // which calls native code; the result is the same and unit tests can reach this line.
+            if (targetSkeleton is null)
             {
                 _targets.RemoveAt(i);
                 i--;
                 continue;
             }
-            MatrixFrame targetGlobalFrame = targetVisuals.GetGlobalFrame();
-            sbyte boneId = FindBoneInRange(agentGlobalFrame, agentBonePositions, targetSkeleton, targetGlobalFrame);
+            sbyte boneId = FindBoneInRange(agentBonePositions, targetSkeleton, targetGlobalFrame);
             if (boneId != -1)
             {
                 _targets.RemoveAt(i);
@@ -126,12 +154,9 @@ public class BoneCheck
         return true;
     }
 
-    protected sbyte FindBoneInRange(MatrixFrame agentGlobalFrame, List<(sbyte boneId, Vec3 position)> agentBonePositions, Skeleton targetSkeleton, MatrixFrame targetGlobalFrame)
+    protected sbyte FindBoneInRange(List<(sbyte boneId, Vec3 position)> agentBonePositions, Skeleton targetSkeleton, MatrixFrame targetGlobalFrame)
     {
         int targetBoneCount = targetSkeleton.GetBoneCount();
-        if ((targetGlobalFrame.origin - agentGlobalFrame.origin).LengthSquared > _maxRangeForCheck)
-            return -1;
-
         for (int i = 0; i < targetBoneCount; i++)
         {
             MatrixFrame targetBoneFrame = targetSkeleton.GetBoneEntitialFrameWithIndex((sbyte)i);
