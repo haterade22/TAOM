@@ -46,10 +46,10 @@ public class EnlistmentReconciler : IEnlistmentReconciler
     /// campaign days are absolute. Load a later save and <c>elapsed</c> is enormous, so the recovery
     /// fires on the very first latched tick and finishes what may be a genuine loot screen with no
     /// real waiting at all: exactly the destructive <c>Finish</c> R1b exists to prevent, committed by
-    /// the code meant to be the safety net. Two independent guards, because they cover different
-    /// paths: <see cref="ResetForNewSession"/> handles the load path, and the backwards-clock
-    /// re-anchor in <see cref="BreakStaleBattleLatch"/> handles a brand-new campaign, which never
-    /// reaches <c>ResetSessionCaches</c> at all.
+    /// the code meant to be the safety net. Two independent guards: <see cref="ResetForNewSession"/>
+    /// runs from <c>ResetSessionCaches</c> on a load and on a new campaign, and the backwards-clock
+    /// re-anchor in <see cref="BreakStaleBattleLatch"/> stays as the self-contained second guard for
+    /// any path that skips the reset (a co-op client's load returns before it).
     /// </summary>
     private double _staleBattleLatchSinceDays = double.NaN;
 
@@ -449,10 +449,9 @@ public class EnlistmentReconciler : IEnlistmentReconciler
 
         // Re-anchor on no anchor, and equally on an anchor in the FUTURE. A clock that ran backwards
         // cannot be a continuous episode; it means a different campaign or an earlier save, and the
-        // anchor belongs to a world this one has nothing to do with. This is the guard for the path
-        // ResetForNewSession does not reach: ResetSessionCaches is wired to OnGameLoaded only, so a
-        // brand-new campaign in the same process never calls it, and a new campaign's low day count
-        // puts the leftover anchor ahead of it.
+        // anchor belongs to a world this one has nothing to do with. ResetSessionCaches runs on a
+        // load and on a new campaign, so this is the second guard, for any path that skips the
+        // reset: a leftover anchor ahead of a new campaign's low day count is re-anchored here.
         if (!FiniteFloatValidator.IsFinite(_staleBattleLatchSinceDays) || nowDays < _staleBattleLatchSinceDays)
         {
             _staleBattleLatchSinceDays = nowDays;

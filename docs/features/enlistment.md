@@ -1689,14 +1689,27 @@ player turns out to be in a map event after all. Like R2c, R1c enforces its own
 that ends while latched leaves a finite value behind; load a later save and the elapsed time is
 enormous, so the recovery fires on the very first latched tick and finishes what may be a genuine loot
 screen with no real waiting at all. That is the destructive `Finish` R1b exists to prevent, committed
-by the safety net written to prevent it. Two guards, because they cover different paths.
-`IEnlistmentReconciler.ResetForNewSession` covers the load path, dropped from
-`ServiceMaintenanceService.ResetSessionCaches` (the feature's one place that knows this lifetime,
-which is also why the army handle is dropped there rather than from the load hook). A backwards-clock
-re-anchor inside `BreakStaleBattleLatch` covers a brand-new campaign, which never reaches
-`ResetSessionCaches` at all because it is wired to `OnGameLoaded` only: a new campaign starts at a low
-day count, so the leftover anchor sits in its future, and a clock that ran backwards cannot be one
-continuous episode. Found by the `/deep-review` data-flow agent, not by the tests, which all passed.
+by the safety net written to prevent it. Two guards. `IEnlistmentReconciler.ResetForNewSession` is
+dropped from `ServiceMaintenanceService.ResetSessionCaches` (the feature's one place that knows this
+lifetime, which is also why the army handle is dropped there rather than from the load hook), and
+that reset now runs on a load and on a new campaign. A backwards-clock re-anchor inside
+`BreakStaleBattleLatch` is the second, self-contained guard. When it was written,
+`ResetSessionCaches` ran from `OnGameLoaded` only, so a brand-new campaign never reached it; a new
+campaign starts at a low day count, so the leftover anchor sat in its future, and a clock that ran
+backwards cannot be one continuous episode. Found by the `/deep-review` data-flow agent, not by the
+tests, which all passed. `EnlistmentBehavior.OnNewGameCreated` now runs the reset too; the re-anchor
+stays for any path that skips it (a co-op client's load returns before the reset).
+
+**Every clock-keyed latch on an Enlistment singleton is reset on both lifecycle edges.**
+`ResetSessionCaches` also clears the settlement-dwell anchor
+(`IServiceAttachmentService.ResetForNewSession`), the arrival-offer settlement id and 24-hour
+cooldown (`IEnlistmentWaitMenuPresenter.ResetForNewSession`) and the per-hour army-rhythm snapshot
+(`IArmyRhythmSnapshotService.ResetForNewSession`). Each held an absolute campaign hour. Before this,
+loading an earlier save left the stamps in the future, which the code read as "a moment ago": the
+exit sweep held the player in a town the commander had left until the new clock passed the old
+stamp plus 6 hours, and the shore-leave offer stayed silent until it passed the old stamp plus a
+day. The tests are `EnlistmentSessionResetTests` and the `ResetSessionCaches_*` tests in
+`ServiceMaintenanceServiceTests`.
 
 ### The engine backstop, and the bundle that was suppressed
 
