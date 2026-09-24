@@ -6,11 +6,28 @@ using TAOM.Features.CrashReport.Hooks;
 namespace TAOM.Tests.Features.CrashReport;
 
 // The callback-shim Finalizer's decision, with the MCM read factored out. The enabled branch with
-// an exception reaches IoC.Resolve, which this test process has not configured, so it is not
-// exercised here.
+// an exception reaches IoC.Resolve; no test calls IoC.Configure, so the service is unreachable and
+// HandleAndSwallow takes its hand-back fallback, which is the path the enabled-branch test pins.
 [TestClass]
 public class Native2ManagedBridgeTests
 {
+    [TestInitialize]
+    public void ClearTheCachedService() => CrashReportPatchHelper.ResetForUnload();
+
+    [TestMethod]
+    public void HandleOrPassThrough_WhenCaptureCannotSwallow_HandsBackAnExceptionThatKeepsItsThrowSite()
+    {
+        // Every non-null return of the bridge is rethrown by Harmony, so every exit must preserve
+        // (maintainer decision 2026-09-24, #650). Here capture is on but the service is unreachable.
+        var ex = RethrowProbe.CaughtFromTheSite();
+
+        var handedBack = Native2ManagedBridge.HandleOrPassThrough(ex, nativeCaptureEnabled: true);
+
+        Assert.AreSame(ex, handedBack);
+        StringAssert.Contains(RethrowProbe.TraceAfterHarmonyRethrow(handedBack!), nameof(RethrowProbe.ThrowAtTheSite),
+            "the throw site must survive Harmony's `throw <result>`");
+    }
+
     [TestMethod]
     public void HandleOrPassThrough_WhenNativeCaptureIsOff_HandsBackTheSameExceptionWithItsThrowSite()
     {

@@ -58,17 +58,17 @@ Native2ManagedPatcher (allowlisted shims) ───────────► �
 | 3 | `TaleWorlds.ScreenSystem.ScreenManager.Tick` | Screen system tick |
 | 4 | `TaleWorlds.ScreenSystem.ScreenManager.Update` (private, no-arg) | Screen system update |
 | 5 | `TaleWorlds.MountAndBlade.Mission.Tick` | Mission tick. Its body is one native call (`MBAPI.IMBMission.Tick`), so it catches only a managed throw that unwinds back out through native code; mission behaviours' `OnMissionTick` runs later from `Mission.OnTick` and is caught at row 2 |
-| 6 | Native2Managed allowlist (`Native2ManagedTargets.All`): `EngineScreenManager_PreTick`, `EngineScreenManager_LateTick`, `EngineScreenManager_Update`, `ManagedScriptHolder_TickComponents`, `ThumbnailCreatorView_OnThumbnailRenderComplete`, `BannerlordTableauManager_RequestCharacterTableauSetup` | Native-to-managed callback shims whose managed work no row above wraps; attached by hand at startup |
+| 6 | Native2Managed allowlist (`Native2ManagedTargets.All`): `EngineScreenManager_PreTick`, `EngineScreenManager_LateTick`, `EngineScreenManager_Update`, `ManagedScriptHolder_TickComponents`, `ThumbnailCreatorView_OnThumbnailRenderComplete`, `RenderTargetComponent_OnPaintNeeded` | Native-to-managed callback shims whose managed work no row above wraps; attached by hand at startup |
 
 Plus `AppDomain.CurrentDomain.UnhandledException` as a final safety net.
 
-Rows 1 to 5 run at Harmony priority 800, matching BEW, and route through `CrashReportPatchHelper.HandleAndSwallow`. The row 6 bridge (`Native2ManagedBridge.Finalizer`) is attached with `new HarmonyMethod(...)` and no priority, so it runs at Harmony's default 400; it reaches `HandleAndSwallow` only while Enable Native-to-Managed Capture is on. Harmony runs a finalizer on every call of its target, with a null `__exception` when nothing threw, and that path returns at once. Four more targets (`ScriptComponentBehavior.OnTick`, `MissionView.OnMissionScreenTick`, `MissionBehavior.OnMissionTick`, `MBSubModuleBase.OnSubModuleLoad`) were removed on 2026-09-24: they are base virtuals with empty or assert-only bodies, and a finalizer on a base method never runs for an override, so they could never fire. `Patch37TargetShapeTests` now refuses an overridable virtual target.
+Rows 1 to 5 run at Harmony priority 800, matching BEW, and route through `CrashReportPatchHelper.HandleAndSwallow`. The row 6 bridge (`Native2ManagedBridge.Finalizer`) is attached with `new HarmonyMethod(...)` and no priority, so it runs at Harmony's default 400; it reaches `HandleAndSwallow` only while Enable Native-to-Managed Capture is on. Harmony runs a finalizer on every call of its target, with a null `__exception` when nothing threw, and that path returns at once. Every exception a finalizer hands back (the bridge with the toggle off, and `HandleAndSwallow` when capture is off, the service is unreachable or a capture is already on the stack) goes through `RethrowStackPreserver.PreserveForRethrow`, so Harmony's rethrow keeps the throw site. Four more targets (`ScriptComponentBehavior.OnTick`, `MissionView.OnMissionScreenTick`, `MissionBehavior.OnMissionTick`, `MBSubModuleBase.OnSubModuleLoad`) were removed on 2026-09-24: they are base virtuals with empty or assert-only bodies, and a finalizer on a base method never runs for an override, so they could never fire. `Patch37TargetShapeTests` now refuses an overridable virtual target.
 
 ### Re-entry guard
 
 Two layers of protection prevent infinite recursion if a collector / renderer itself throws:
 
-1. `CrashReportPatchHelper._onPatchStack` — thread-static `bool`. Set by every Finalizer entry; if already set, returns the original exception unchanged (lets vanilla / BUTR take over).
+1. `CrashReportPatchHelper._onPatchStack`, a thread-static `bool`. Set by every Finalizer entry; if already set, hands the original exception back with its throw site preserved (lets vanilla / BUTR take over).
 2. `CrashReportService._handling` (also thread-static) — short-circuits a second `HandleException` call on the same thread.
 
 ### Bundle deduplication / throttle
@@ -215,7 +215,8 @@ No new third-party dependencies.
 - `RingBufferTests` — push order, overflow chronological, clear, capacity, empty snapshot
 - `Patch37TargetShapeTests` (`BindingVerification`): every Patch37 target resolves, through the same resolver as `HarmonyPatchBindingTests`, and is not an overridable virtual
 - `Native2ManagedTargetsTests`: every allowlisted shim resolves against the installed engine (`BindingVerification`); the list is exactly the six reviewed shims, small and distinct; a missing assembly, type or method, or a lookup that throws, is reported and skipped
-- `Native2ManagedBridgeTests`: with the toggle off the bridge hands back the same exception with `TAOM.ThrowSite` recorded; with no exception it returns null
+- `Native2ManagedBridgeTests`: with the toggle off the bridge hands back the same exception with `TAOM.ThrowSite` recorded; with the toggle on and the service unreachable its hand-back still names the throw site after a `throw` of the same object (what Harmony's wrapper does); with no exception it returns null
+- `CrashReportPatchHelperTests`: `HandleAndSwallow` with the service unreachable hands back the same instance, which keeps its throw site across that `throw`; with no exception it returns null
 - `CrashBundleThrottleTests`: dedup, session cap and cooldown admission, and the 1, 2, 10, 100 suppression-log cadence
 - `PlainTextCrashReportRendererTests`: all 19 sections render, signature in header, inner exception chain, collector failures, and the "last segment only" note under both frame sections exactly when `TAOM.ThrowSite` is present
 
@@ -284,7 +285,23 @@ No restart is needed before TAOM's first capture of the session: TAOM's finalize
 ## Risks & Known Limitations
 
 - **Other mods' `OnSubModuleLoad` throws are not captured.** TAOM applies Patch37 inside its own `OnSubModuleLoad`, and a finalizer on the base `MBSubModuleBase.OnSubModuleLoad` would never see an override's throw, so none is attached; those throws land in vanilla or BUTR.
-- **Most native-to-managed callbacks are no longer wrapped.** The 2026-09-24 allowlist keeps six of the 247 shims. A managed throw inside any of the other 241 (for example `Mission_OnAgentRemoved`, `Mission_MeleeHitCallback` or `Agent_UpdateAgentStats` in `CoreCallbacksGenerated`) is caught only if it unwinds through native code into a Patch37 finalizer such as `Mission.Tick`; whether it can is UNVERIFIED, so such a throw may now reach vanilla's handler, or crash to desktop with no bundle. Of the six, `BannerlordTableauManager_RequestCharacterTableauSetup` may never fire (nothing in v1.5.3 assigns its `RequestCallback`), and the tableau render callback `RenderTargetComponent_OnPaintNeeded` (which runs `CharacterTableau` and `MapConversationTableau` render functions) is not on the list.
+- **Most native-to-managed callbacks are no longer wrapped.** The 2026-09-24 allowlist keeps six of the 247 shims. A managed throw inside any of the other 241 (for example `Mission_OnAgentRemoved`, `Mission_MeleeHitCallback` or `Agent_UpdateAgentStats` in `CoreCallbacksGenerated`) is caught only if it unwinds through native code into a Patch37 finalizer such as `Mission.Tick`; whether it can is UNVERIFIED, so such a throw may now reach vanilla's handler, or crash to desktop with no bundle. The sixth entry is the tableau render callback `RenderTargetComponent_OnPaintNeeded`, which raises `RenderTargetComponent.PaintNeeded`, the render function each `TableauView.AddTableau` caller registers (`CharacterTableau`, `ItemTableau`, `BannerTableau`, `MapConversationTableau` in v1.5.3). It replaced `BannerlordTableauManager_RequestCharacterTableauSetup` on 2026-09-24 (#650), because nothing in v1.5.3 assigns that one's `RequestCallback`. Which thread native runs the tableau and thumbnail callbacks on is UNVERIFIED. Adding the mission combat callbacks back is decided but not done: see "Mission combat callbacks" below.
+- **Mission combat callbacks (decided 2026-09-24, not yet applied).** The maintainer decided to put the combat callbacks back on the allowlist. The trace (below) finds a verified path into TAOM code for each, but several can arrive off the main thread (`harmony-patches.md`, "Which thread runs your target"), and a bridge capture there is not tagged off-main, so `CrashReportService` would run the Mission and Campaign collectors and `CrashNotifier`'s inquiry on that thread, which its own comments call unsafe. The entries wait for that to be settled.
+
+  | Callback (`CoreCallbacksGenerated`) | Managed target (v1.5.3) | TAOM code reached |
+  |---|---|---|
+  | `Mission_MeleeHitCallback` | `Mission.MeleeHitCallback` | `OnMeleeHit` (`SignatureStrikesMissionLogic`); `TaomCombatMechanicsModel.DecideWeaponCollisionReaction` (campaign); `RegisterBlow` into `Agent.HandleBlow`: `Mission.OnAgentHit` (`BehaviorTreeMissionLogic.OnAgentHit`, `CareerPerkMissionBehavior.OnScoreHit`), `Agent.Die` and `Agent.HandleBlowAux` (BlowDiagnostics and Spider patches) |
+  | `Mission_MissileHitCallback` | `Mission.MissileHitCallback` | the same `RegisterBlow` chain |
+  | `Mission_ChargeDamageCallback` | `Mission.ChargeDamageCallback` | the same `RegisterBlow` chain |
+  | `Mission_FallDamageCallback` | `Mission.FallDamageCallback` | the same `RegisterBlow` chain |
+  | `Mission_MissileAreaDamageCallback` | `Mission.MissileAreaDamageCallback` | the same `RegisterBlow` chain |
+  | `Mission_OnAgentHitBlocked` | `Mission.OnAgentHitBlocked` | `Mission.OnAgentHit`: `BehaviorTreeMissionLogic.OnAgentHit`, `CareerPerkMissionBehavior.OnScoreHit` |
+  | `Mission_GetDefendCollisionResults` | `Mission.GetDefendCollisionResults` | `MissionCombatMechanicsHelper.GetDefendCollisionResults`: `TaomCombatMechanicsModel.DecideCrushedThrough` (campaign) |
+  | `Mission_OnAgentRemoved` | `Mission.OnAgentRemoved` | `OnAgentRemoved` in `BehaviorTreeMissionLogic`, `CareerPerkMissionBehavior`, `EnlistmentMeritMissionBehavior`, `FieldCommissionMissionLogic`, `MountDespawnMissionBehavior`; `Agent.OnRemove` into `BehaviorTreeAgentComponent.OnAgentRemoved` |
+  | `Mission_OnAgentDeleted` | `Mission.OnAgentDeleted` | `OnAgentDeleted` in `BehaviorTreeMissionLogic`, `AdvancedCombatBehavior`, `CareerPerkMissionBehavior`, `MixedFormationsMissionBehavior`, `MountDespawnMissionBehavior`, `SignatureStrikesMissionLogic` |
+  | `Mission_OnAgentShootMissile` | `Mission.OnAgentShootMissile` | `OnAgentShootMissile` in `BehaviorTreeMissionLogic`, `ElephantMissionBehavior` |
+
+  Not combat, left out: `Agent_OnDismount` and `Agent_OnMount` (`Mission.OnAgentDismount`/`OnAgentMount`: `WargMissionBehavior`, `BehaviorTreeMissionLogic`) and `Agent_OnAgentAlarmedStateChanged` (`BehaviorTreeMissionLogic`). `Mission_GetAgentState` reaches no TAOM override.
 - **Crash UI re-entry.** A throw in our own collector or renderer would loop. Two layers of thread-static `_handling` flags break the loop and let the original exception bubble out to vanilla.
 - **ZIP bundle write to `Logs/`.** If `Logs/` is read-only or full, only the log line lands (no bundle). Bundle write is wrapped in try/catch.
 - **Frame timing buffer not yet populated.** v1 instantiates the `FrameTimingBuffer` singleton but no hook pushes into it. v2 will add a `Mission.Tick` / `ScreenManager.Tick` Postfix that samples `dt`. For now the section shows 0 samples.
@@ -303,11 +320,17 @@ No restart is needed before TAOM's first capture of the session: TAOM's finalize
 ## Changelog
 
 - 2026-09-24: **Boot cost and dead finalizers** (plan 006). The Native2Managed sweep patched all 247 `*CallbacksGenerated` methods and cost 29 to 33 s of every launch on the maintainer's desktop (0 to 1 s on player machines); it is now an allowlist of six shims (`Native2ManagedTargets`) and logs its attach time. Four Patch37 finalizers on empty base virtuals were deleted. Both MCM toggles are read at capture time (the `OnSubModuleLoad` gate always saw a null MCM instance) and no longer ask for a restart. Suppression log lines for a recurring crash are written at occurrences 1, 2, 10, 100 and so on.
+- 2026-09-24: **Maintainer decisions** (#650). The sixth allowlist entry is now `RenderTargetComponent_OnPaintNeeded`, the tableau render callback, in place of the never-armed `BannerlordTableauManager_RequestCharacterTableauSetup`. Every exception the bridge or `CrashReportPatchHelper.HandleAndSwallow` hands back now goes through `RethrowStackPreserver.PreserveForRethrow`, so Harmony's rethrow keeps the throw site. The bridge stays at Harmony priority 400, the suppression log keeps its powers-of-ten cadence with no time floor, and capture stays on by default with Enable Native-to-Managed Capture as its toggle. Adding the mission combat callbacks back waits on off-main-thread capture (see Risks).
 - 2026-09-01: **Added the System Memory section + the header memory verdict** (#385 follow-up). The bundle carried no commit or headroom figure, which is the exact number #385 was diagnosed by. Reuses `MemorySampleReader` and delegates the threshold to `MemoryPressureSampler.IsLowHeadroom` rather than copying its constants; the snapshot is a nullable sibling record so a failed read renders `(unavailable)` instead of zeros.
 
 - 2026-06-15 — Deduplicated crash bundle ZIPs: new session-scoped `CrashBundleThrottle` (dedup + ≤25/session cap + 30s cooldown) at the `HandleException` chokepoint so a per-tick recurring crash produces exactly one zip instead of hundreds; 10 throttle tests added.
 - 2026-05-25 — Codex adversarial review (Review 41): 8 confirmed findings fixed (2 HIGH including post-reload disposed-logger Finalizers and a decorative `EnableCrashCapture` toggle, plus 4 MED / 2 LOW such as the dead per-frame Harmony-correlation block).
 - 2026-05-25 — Initial feature: TAOM-native comprehensive crash diagnostic capture — 10 Harmony Finalizers (Patch37_CrashReport) + `*CallbacksGenerated` reflection hooks + AppDomain safety net, full sectioned `report.txt`/`report.json` capture, ZIP bundle, ButterLib coexistence, and a dedicated MCM page.
+
+## GitHub Issue
+
+- **Issue:** #650 (plan 006: crash-capture boot cost, live toggles and the callback allowlist)
+- **Status:** Open. Owed in game: the boot time and the `attached 6 of 6` line, live MCM toggling, and the probe for a throw in a dropped callback (for example a behaviour's `OnAgentRemoved`)
 
 ---
 

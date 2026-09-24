@@ -243,8 +243,8 @@ written up in
   `ScreenManager.Tick` covered the conversation's UI tick (`MapConversationTableau.OnTick`), and
   that build's callback sweep covered the tableau's render function, which the native
   `RenderTargetComponent_OnPaintNeeded` callback runs; either would have logged and swallowed a
-  managed throw. The allowlist of 2026-09-24 does not cover that callback, so on a later build a
-  managed throw in the render function could also die silently.
+  managed throw. The 2026-09-24 allowlist keeps that callback (#650), so a managed throw in the
+  render function is still logged and swallowed.
 - The conversation played a voiced line with Rhubarb lip-sync on the elf head. That is **not rare**:
   an empty TAOM accent class falls through to any vanilla voice
   ([kingdom-voices.md](kingdom-voices.md)), so custom-race heads are lip-synced routinely in keeps

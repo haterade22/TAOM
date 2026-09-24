@@ -4,7 +4,7 @@
 
 ## 2026-09-24
 
-### perf(crash-report): v2.0.30 - crash capture boot cost and live toggles (plan 006)
+### perf(crash-report): v2.0.30 - crash capture boot cost and live toggles (plan 006, #650)
 
 Crash capture no longer patches every engine callback at boot: the native-to-managed sweep patched
 all 247 engine callback methods (the gap between `[SaveDefiners]` and the attach line was 29 to 33 s
@@ -37,6 +37,16 @@ is attached by `nameof`. The docs no longer claim priority 800 for the bridge, d
 of the callback shims, a restart-free return to BUTR after a capture, or a 30 s saving for players,
 and they list the callbacks the allowlist no longer covers. Full suite after the follow-ups: 10258
 passed, 2 skipped, 2 failed (the same two).
+
+Maintainer decisions (#650): the sixth allowlisted callback is now the tableau render callback
+`RenderTargetComponent_OnPaintNeeded` (character, item, banner and map-conversation tableaus), in
+place of a tableau-setup callback nothing in v1.5.3 arms. Every exception the crash capture hands
+back to Harmony, from the callback bridge or from `CrashReportPatchHelper.HandleAndSwallow` when
+capture is off, the service is unreachable or a capture is already running, now keeps its throw
+site through the rethrow. Bridge priority 400, the powers-of-ten suppression log and capture on by
+default all stay. Putting the mission combat callbacks back on the allowlist is decided but held:
+several arrive off the main thread, where an untagged capture would run the mission collectors and
+the on-screen notice. Full suite: 10261 passed, 2 skipped, 2 failed (the same two).
 
 ## 2026-09-23
 

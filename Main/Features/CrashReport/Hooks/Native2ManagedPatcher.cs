@@ -81,11 +81,14 @@ internal static class Native2ManagedBridge
         return HandleOrPassThrough(__exception, enabled);
     }
 
+    // One exit: Harmony rethrows whatever this returns, so a non-null result always goes through
+    // PreserveForRethrow (a no-op on null, and idempotent if HandleAndSwallow already preserved).
     internal static Exception? HandleOrPassThrough(Exception? exception, bool nativeCaptureEnabled)
     {
         if (exception == null) return null;
-        if (!nativeCaptureEnabled)
-            return RethrowStackPreserver.PreserveForRethrow(exception, null);
-        return CrashReportPatchHelper.HandleAndSwallow(exception, Origin);
+        var rethrow = nativeCaptureEnabled
+            ? CrashReportPatchHelper.HandleAndSwallow(exception, Origin)
+            : exception;
+        return RethrowStackPreserver.PreserveForRethrow(rethrow, null);
     }
 }
