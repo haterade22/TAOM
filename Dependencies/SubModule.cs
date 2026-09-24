@@ -272,7 +272,8 @@ public class SubModule : MBSubModuleBase
     /// crash-loop marker and snapshots last-good-modlist.txt; a process that quits from the main
     /// menu without starting a game therefore leaves the marker behind, a known gap), then runs
     /// PatchShield pass 2, which the player waits through on that loading screen. Pass 2 reruns at
-    /// every game start; the first one pays the most.
+    /// every game start and attaches only what was patched since the last pass (at a second start,
+    /// TAOM's late batch, about +140 attaches).
     /// </summary>
     public override void OnGameInitializationFinished(Game game)
     {

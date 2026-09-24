@@ -9,9 +9,10 @@
 PatchShield no longer re-shields the engine's 247 native-to-managed callback shims
 (`ManagedCallbacks.{Library,Core,Engine}CallbacksGenerated`), which TAOM's Native2Managed crash
 capture already wraps with a finalizer that swallows the exception on its normal path. Pass 2 runs
-inside the loading screen of every game start (campaign or custom battle), not at the main menu,
-and the first one pays the most; on a machine paying about 186 ms per Harmony patch this takes
-about 46 s off that first loading screen. The hot-layer exclusion list moved from `PatchShield` into
+inside the loading screen of every game start (campaign or custom battle), not at the main menu;
+on a machine paying about 186 ms per Harmony patch this takes about 46 s off the first game
+start's loading screen. A later start's pass attaches only what was patched since the last pass
+(TAOM's late batch, about +140 at a second start) and does not shrink. The hot-layer exclusion list moved from `PatchShield` into
 `PatchShieldPolicy.ExcludedTargetNamespacePrefixes` behind a tested `IsExcludedTargetNamespace`,
 and the three #331 entries are unchanged.
 

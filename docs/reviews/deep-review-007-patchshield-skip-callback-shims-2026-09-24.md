@@ -232,3 +232,29 @@ Full table for all findings: `docs/reviews/rca-patchshield-skip-callback-shims-2
 VERDICT: READY FOR COMMIT (the three NEEDS MIKE items are disclosed in the CHANGELOG and docs and
 change no code on this branch; the convergence pass and the GitHub issue are owed by the
 orchestrator and Mike).
+
+## Convergence
+
+Convergence pass on `0ad253d5..578ac7d6` (lens 1 format). Behaviour parity held: every changed line
+under `Dependencies/` in `578ac7d6` is a comment. It reported three LOW defects, all in prose; each
+was checked against the code and the live `Modules/TAOM.Dependencies/diag.log` before fixing.
+
+| # | Finding | Verdict | Evidence | Fix |
+|---|---|---|---|---|
+| 1 | "the first one pays the most" is false once the shims are excluded | CONFIRMED | `diag.log`: a second game start's pass 2 attached `+139 new` (16:18:55.312 to 16:19:21.389) and `+141 new` (13:54:52.950 to 13:55:19.490); the first pass 2 after this change is predicted at about `+125` | `Dependencies/SubModule.cs` doc comment and `CHANGELOG.md` now say each rerun attaches only what was patched since the last pass (TAOM's late batch, about +140 at a second start) |
+| 2 | The `diag.log` sample puts `SESSION SUMMARY` at game start and lists an `[AliasStub]` line | CONFIRMED | `WriteSessionSummary`'s only caller is the `AppDomain.ProcessExit` handler (`Dependencies/SubModule.cs:257`); `diag.log` has 4 `SESSION SUMMARY` lines and 0 `alias stub loaded` lines | `dr3-maintenance.md`: the AliasStub line is dropped and the summary line sits under "at process exit (clean managed shutdown only)" |
+| 3 | "(or Native2Managed capture off)" describes a path that does not exist | CONFIRMED | `CrashReportPatchHelper.HandleAndSwallow` reads only `EnableCrashCapture`; `EnableNativeToManagedCapture` gates `AttachAll` at launch (`Main/SubModule.cs:201`) | `dr3-maintenance.md`: parenthetical removed; a sentence says that with Native2Managed capture off at launch the shims carry no TAOM finalizer, so only BEW's three transpiled shims lose PatchShield |
+
+No false positives. The INFO items (NavalDLC's `NavalCustomGame.OnInitialize` caller, the
+pre-existing dashes on `docs/features/arena.md:10`) were left alone: NavalDLC is not in this
+machine's modlist, and the dashes predate this branch.
+
+**Verification after the convergence fixes:**
+
+- `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`:
+  `Failed: 2, Passed: 10243, Skipped: 2, Total: 10247`. The two failures are the known live-Armory
+  tests `TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+  `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`.
+- `--filter "FullyQualifiedName~PatchShieldPolicyTests"`: `Passed: 24, Failed: 0`.
+
+CONVERGENCE: 3 LOW fixed (prose only, no code path changed).
