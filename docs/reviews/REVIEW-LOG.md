@@ -3812,3 +3812,47 @@ missed every prose and test-adequacy finding. Full suite `Failed: 2, Passed: 102
 Report: `docs/reviews/deep-review-008-binding-gate-no-silent-skips-2026-09-24.md`. RCA:
 `docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md`. Two lessons in
 build-tooling-workflow and one in testing-qa.
+
+## Review 133 (number provisional: parallel improve branches): plan 010, C# on hosted Windows runners against BUTR reference assemblies, 6-lens deep review + Codex adversarial (2026-09-24)
+
+Plan 010 (`2ca0805b..b8c00045`, branch `improve/010-ci-on-hosted-windows`) adds
+`GameReferences.targets`, which switches all three projects between the install and BUTR's
+metadata-only reference assemblies (`-p:TaomGameRefs=RefAsm`), a hosted-Windows workflow
+(`csharp.yml`) that builds, runs the unit tests that need no game and runs the binding gate on the
+stubs, and three test categories on 122 test files. Codex (gpt-6-astra, ultra) used 129,699 tokens
+and found **0 P1, 0 P2, 2 P3, both confirmed, no false positive.** It disputed 6 of its 10 Known
+Suspects, partly confirmed 1 and left 3 unverified, with reasons.
+
+The first P3 was raised to MED: the pin test checked only that the BUTR version starts with
+`1.5.3.`, while its name, the workflow and the CHANGELOG claimed the Steam build, so a same-label
+BUTR build would have gone unnoticed. The second was the workflow header overclaiming what it
+builds and runs. The six lenses found 7 more confirmed defects (9 in all, 0 HIGH, 1 MED) and 1
+false positive (a STOP bypass the orchestrator had authorized as Amendment 2).
+
+Fixed on the branch:
+- the pin test also compares the changeset with `ApplicationVersion.DefaultChangeSet` (shown red
+  on a mutated version first);
+- the reference guard reads the whole element and only unconditional imports (fixture test red
+  first, import check proven by mutation);
+- the gate fails when any check did not execute;
+- the workflow header, both build errors, the `.ai/verification.md` recipe (then run as written
+  from a clean tree), the `tests.md` failure signatures, the CHANGELOG (#421) and the feature map.
+
+Applied improvements, both behaviour-preserving: one `_TaomNuGetRoot` property (9 of 9 reference
+snapshots identical) and no stub copies in the fake game's `bin` (gate still 338 of 338). Left for
+Mike: deleting the SandBoxCore reference (1.4.8 unchecked), a method-level tag on Patch86, and
+pointing the unit step at `refasm-game`.
+
+Codex did best by reading PE metadata to catch the plan's `net46` forwarding assembly. It missed
+every finding that needed the executor's logs or an executed recipe. Full suite `Failed: 2,
+Passed: 10246, Skipped: 2` (the two known live-Armory tests); CI replay unit 8,184 executed, gate
+338/0/0.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|---|---|---|---|
+| 1 | Pin test proves the version, not the build | Logic error | Assumed one BUTR build per game version; the plan prescribed the prefix | Changeset assertion; lesson in testing-qa |
+| 2 | Workflow header overclaims | Other: doc claim | Written from the goal, not read against `on:` and the filters | Repeat of the #647 `on:`-block lesson; fixed |
+
+Report: `docs/reviews/deep-review-010-ci-on-hosted-windows-2026-09-24.md`. RCA:
+`docs/reviews/rca-ci-on-hosted-windows-2026-09-24.md`. Two lessons in testing-qa and one in
+build-tooling-workflow.

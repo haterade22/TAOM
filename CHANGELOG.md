@@ -4,12 +4,32 @@
 
 ## 2026-09-24
 
+### fix(ci): v2.0.30 - review follow-ups for plan 010
+
+- **The BUTR pin now checks the build, not just the version.** `GameReferencesTargetsTests`
+  also compares the fourth part of `BannerlordRefAsmVersion` with the installed engine's
+  changeset (`ApplicationVersion.DefaultChangeSet`, 122374), so a same-label hotfix fails locally
+  instead of leaving CI on the old build. The reference check now reads the whole `Reference`
+  element (a `<HintPath>$(GameFolder)...` spelling no longer slips through), flags the other
+  install properties, and counts only an unconditional import.
+- **The binding gate fails on any check that did not execute**, not only on Inconclusive ones.
+- **Accurate text.** The workflow header names what it builds and runs; the missing-install error
+  names both bin layouts; the RefAsm error says to restore with `-p:TaomGameRefs=RefAsm`;
+  `.ai/verification.md` gives a no-game recipe that works; `.claude/rules/tests.md` lists every CI
+  failure signature and says `RequiresGame` only leaves the unit step. The feature map points at
+  `GameReferences.targets` and `csharp.yml`.
+- **Smaller.** The RefAsm game folder no longer copies the TaleWorlds stubs into its `bin`
+  (nothing reads them; the gate still executes 338 checks), and the package root is written once.
+- Review: `docs/reviews/deep-review-010-ci-on-hosted-windows-2026-09-24.md`, RCA
+  `docs/reviews/rca-ci-on-hosted-windows-2026-09-24.md`.
+
 ### ci(tests): v2.0.30 - build and test C# on hosted Windows runners
 
-- **CI compiles C# again, with no game and no workstation.** No job compiled TAOM on any branch:
-  the C# job needed a self-hosted runner that was never registered and ran only for
+- **CI compiles C#, with no game and no workstation (#421, the C# half).** No job compiled TAOM on
+  any branch: the C# job needed a self-hosted runner that was never registered and ran only for
   `bannerlord-1.4.5`. The new `.github/workflows/csharp.yml` runs on GitHub-hosted Windows for
-  every push and pull request on `bannerlord-1.5.x` and `bannerlord-1.4.5`. It builds against
+  every push and pull request on `bannerlord-1.5.x`, and on `bannerlord-1.4.5` once the file is
+  ported there. It builds against
   BUTR's metadata-only reference assemblies for the pinned Steam build, runs the unit tests that
   need no game (8,183 executed locally) and the binding gate against those assemblies laid out as a
   game folder (338 checks, skips fail). The self-hosted job and its warning are gone.
@@ -19,9 +39,9 @@
   `BANNERLORD_GAME_DIR` instead of hundreds of CS0246. `GameReferencesTargetsTests` pins the BUTR
   build to `.claude/pinned-game-version.txt`: bump both on an engine bump. In RefAsm mode the
   targets also copy the `System.Numerics.Vectors` package's `netstandard2.0` copy into the test
-  output and the reference game folder, where install mode gets the game's own copy.
+  output, where install mode gets the game's own copy.
 - **Three test categories, used only by CI.** `RequiresGame` (103 classes that execute engine
-  code), `RequiresGameIL` (29 binding checks that need vanilla IL or data) and `LiveInstall` (10
+  code or load a game module assembly), `RequiresGameIL` (29 binding checks that need vanilla IL or data) and `LiveInstall` (10
   classes that read the live Armory or the vanilla install). Local runs are unchanged;
   `.claude/rules/tests.md` says when to add each.
 

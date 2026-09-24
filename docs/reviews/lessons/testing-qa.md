@@ -1077,3 +1077,15 @@ The first `HowdahPrefabTests` pinned the geometry the rebuild changed (moveable 
 - **Why missed:** `tests.md` "Skip-Guard Exhaustion" asks for one test per guard in each direction, but it was read as a rule for skip guards, not for a resolver's guards. The plan's test table said "every cell" and counted inputs, not guards.
 - **Prevent:** for each guard in a resolution chain, write the test where that guard alone fails and the chain must fall through. Prove it by deleting the guard and watching exactly that test go red.
 - **Source:** `docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md` F3.
+
+### A pin or guard test proves the identity its name claims, and is tested against the spellings it must reject (plan 010, 2026-09-24)
+`BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild` asserted only that the BUTR version starts with `1.5.3.`, while its name, the workflow header and the CHANGELOG said it pinned the Steam build. BUTR publishes several builds of one game version, so a same-label hotfix would have left CI on the old build with nothing red. Its sibling guard read only a `Reference`'s `Include` and `Exclude`, so the usual `<HintPath>$(GameFolder)\...</HintPath>` spelling passed.
+- **Why missed:** both tests were written from the current data (a one-part pin file, `%(Identity)` HintPaths) and the plan's prescribed assertions, not from the failure each was named after.
+- **Prevent:** before naming a pin test, write down what identity the consumer needs (here the engine changeset, `ApplicationVersion.DefaultChangeSet`) and assert that, not a label that only usually implies it. For a guard over project or data files, add one fixture test per spelling it must reject and prove it by mutation.
+- **Source:** `docs/reviews/rca-ci-on-hosted-windows-2026-09-24.md` F1, F2.
+
+### A rule's list of failure signatures comes from the run log, not from the expected failure (plan 010, 2026-09-24)
+`tests.md` told authors that an untagged game test fails on CI with a `NullReferenceException` from a TaleWorlds frame. The executor's own first stub run had also failed with `FileNotFoundException` for module assemblies, a `TypeInitializationException` wrapping one, and an NRE from a TaleWorlds attribute constructor. A future test failing the second way would not match the rule.
+- **Why missed:** the rule was drafted from the mechanism (stub bodies throw) before the run that measured it, and the log was not re-read afterwards.
+- **Prevent:** when a rule or doc lists how something fails, grep the run log for every distinct exception type (`grep -o "System\.[A-Za-z.]*Exception" | sort | uniq -c`) and list each one.
+- **Source:** `docs/reviews/rca-ci-on-hosted-windows-2026-09-24.md` F4.

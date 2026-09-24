@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -40,6 +41,10 @@ public class GameReferencesTargetsTests
         StringAssert.StartsWith(versions[0], pin + ".",
             $"BannerlordRefAsmVersion {versions[0]} is not a build of the pinned game version v{pin}. " +
             "Bump both together (engine bump) and use the BUTR build published for that version.");
+        var changeSet = versions[0].Split('-')[0].Split('.').Last();
+        Assert.AreEqual(TaleWorlds.Library.ApplicationVersion.DefaultChangeSet.ToString(CultureInfo.InvariantCulture), changeSet,
+            $"BannerlordRefAsmVersion {versions[0]} was built from another changeset of v{pin} than the installed game " +
+            "(TaleWorlds.Library.ApplicationVersion.DefaultChangeSet). Use the BUTR build published for this Steam build.");
     }
 
     [TestMethod]
@@ -53,19 +58,42 @@ public class GameReferencesTargetsTests
             // Act
             var doc = XDocument.Load(RepoPaths.RepoPath(project));
             var imports = doc.Descendants("Import")
-                .Count(e => (string?)e.Attribute("Project") == @"..\GameReferences.targets");
+                .Count(e => (string?)e.Attribute("Project") == @"..\GameReferences.targets" && e.Attribute("Condition") == null);
             if (imports != 1)
-                problems.Add($"{project}: expected one <Import Project=\"..\\GameReferences.targets\" />, found {imports}");
+                problems.Add($"{project}: expected one unconditional <Import Project=\"..\\GameReferences.targets\" />, found {imports}");
 
-            foreach (var reference in doc.Descendants("Reference"))
-            {
-                var spelled = ((string?)reference.Attribute("Include") ?? "") + ((string?)reference.Attribute("Exclude") ?? "");
-                if (spelled.Contains("$(GameFolder)"))
-                    problems.Add($"{project}: <Reference Include=\"{(string?)reference.Attribute("Include")}\"> names $(GameFolder) directly");
-            }
+            foreach (var include in InstallPathReferences(doc))
+                problems.Add($"{project}: <Reference Include=\"{include}\"> names the install path directly");
         }
 
         // Assert
         Assert.AreEqual(0, problems.Count, string.Join("\n", problems));
     }
+
+    [TestMethod]
+    public void InstallPathReferences_HintPathNamesTheInstall_IsFlagged()
+    {
+        // Arrange
+        var project = XDocument.Parse(
+            "<Project><ItemGroup>" +
+            "<Reference Include=\"StoryMode\"><HintPath>$(GameFolder)\\Modules\\StoryMode\\bin\\Win64_Shipping_Client\\StoryMode.dll</HintPath></Reference>" +
+            "<Reference Include=\"$(TaomGameBin)\\TaleWorlds.*.dll\"><HintPath>%(Identity)</HintPath></Reference>" +
+            "</ItemGroup></Project>");
+
+        // Act
+        var flagged = InstallPathReferences(project).ToList();
+
+        // Assert
+        CollectionAssert.AreEqual(new[] { "StoryMode" }, flagged);
+    }
+
+    // The properties Directory.Build.props derives the install from. The whole element is searched,
+    // because <HintPath>$(GameFolder)\...</HintPath> is the usual Bannerlord spelling.
+    private static readonly string[] InstallPathProperties =
+        { "$(GameFolder)", "$(GameBinariesFolder)", "$(BANNERLORD_GAME_DIR)", "$(BANNERLORD_OVERRIDE_DIR)" };
+
+    private static IEnumerable<string> InstallPathReferences(XDocument project) =>
+        project.Descendants("Reference")
+            .Where(r => InstallPathProperties.Any(r.ToString().Contains))
+            .Select(r => (string?)r.Attribute("Include") ?? "");
 }

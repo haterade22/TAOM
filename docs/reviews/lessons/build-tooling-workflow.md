@@ -2269,3 +2269,9 @@ Plan 008 changed the binding gate's command and added two red forms. Three consu
 - **Why missed:** each claim was checked against the diff, not against the files that consume the gate or the run that measured it.
 - **Prevent:** grep for the command's stem (`BindingVerification`, the test class names) rather than one filter spelling. When a change adds a failure message, update the table that tells an agent how to read a failure. Before writing a quantifier ("every", "all", "never") about a gate, check it against the measured counts in the run log.
 - **Source:** `docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md` F4, F5, F7.
+
+### Run a documented recipe for an opt-in build mode as written, restore included (plan 010, 2026-09-24)
+`.ai/verification.md` told a reviewer without the game to "add `-p:TaomGameRefs=RefAsm` to build" after its usual `dotnet restore TAOM.sln`. The BUTR packages are `PackageDownload` items that exist only in RefAsm mode, so that restore fetched nothing and the `--no-restore` build stopped at an error that said "Restore first". The unfiltered test row would then have run the `RequiresGame` tests on stubs, and on a machine with the game the environment variables mix real module DLLs in.
+- **Why missed:** the executor replayed the CI commands, which build without `--no-restore`, and never ran the reviewer recipe; the plan's `NOGAME` prefix lived only in the plan.
+- **Prevent:** when a property gates restore-time items (`PackageDownload`, `PackageReference`), the doc puts it on the restore too, and the recipe is run once from a clean `obj` exactly as written before the doc lands. An error message names the step that fixes it, never the step that just failed.
+- **Source:** `docs/reviews/rca-ci-on-hosted-windows-2026-09-24.md` F5.
