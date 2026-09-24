@@ -6,6 +6,7 @@ Running scorecard of all reviews. **Reviews 1-99, 2026-04-05 to 2026-09-12.** 93
 
 | # | Date | Feature | Codex Verdict | Claude Verdict | Real Bugs | False Positives | Missed Bugs | Prompt Version |
 |---|------|---------|--------------|----------------|-----------|-----------------|-------------|----------------|
+| 132 | 2026-09-24 | Plan 009, every Harmony patch category applied through `PatchCategoryApplier` (one drifted binding costs one category) | issues-found (0 P1, 1 P2, 1 P3) | agree (both fixed; P2 rated HIGH) | 2 | 0 | 4 (chat log cleared after the splash, assembly-wide category index, stale lens and lesson greps, Patch43 triage consumers) | adversarial-xhigh |
 | 109 | 2026-09-13 | Creature handles and threads (#592, #595): reference-keyed adapter cache, slot identity, trees on the mission tick, the nine-site audit, two deep-review passes | issues-found (0 P1, 1 P2, 3 P3, 3 observations) | agree (all fixed but one observation) | 1 P2 confirmed (`ForgetAgent` left the layout counters growing: replacements a row deeper, onto the other class's rows; vacancy reclaim per class) + 3 P3 (vanilla `CommonAIComponent.OnTick` raises `OnAgentPanicked` on the async tick, so the tree logic now defers off-thread callbacks; the howdah seat's own rider and `SpatialGrid` held ungated handles; five global listener loops outside the catch) + 2 observations fixed (atomic `GetOrAdd`; one warg attach helper) + the registration swap taken as a precaution. Disputed with evidence: 5 of 9 suspects, including the deletion-order objection that had held the swap back. One observation rejected (buff getters returning live objects). The player's third freeze the same evening (no spider, four wargs) folded into the RCA `rca-warg-clip-on-horse-2026-09-13.md` | 0 | 0 | v6 + 9 Known Suspects, gpt-6-astra at ultra |
 | 110 | 2026-09-13 | Nameplate relation MCM controls, second pass on commit fe266439 (#596): the four sliders composed with the #591 plate widget | issues-found (0 P1, 1 P2, 1 P3) | agree (both fixed) | 1 P2 confirmed (the text curve anchored on vanilla's 0.35 dimmed the name at close range for any opacity 10 to 34; now anchored on the plate's configured resting opacity) + 1 P3 (silent reversion of an invalid TAOM.json value; now one warning per property) + 2 RCA corrections (MCM's slider clamps; MCM raises a save-time event). Deep review before it: data flow found the same P2 independently, performance and compatibility clean | 0 | 0 | v6 + 8 Known Suspects, gpt-6-astra at ultra (explicit -c model/effort) |
 | 108 | 2026-09-13 | Nameplate relation MCM controls (#596): colour toggle, tint strength, neutral and coloured plate opacity, live through a validated settings provider, a static on the plate widget and the Patch38 postfix | (no Codex pass) | 5-agent deep review, ready | 1 LOW fixed (the alpha service interface's doc comment still described the #591 raise-only contract) | 1 (a dirty-check reorder that still read the settings on every frame; the per-frame read is the live-apply mechanism, MCM raises no event) | 0 | deep-review v5 |
@@ -3773,3 +3774,35 @@ one gate timed against its registration. Mike approved four design proposals mid
 `harness-facts.md` paths, the `triage-needs-ingame` label as the smoke backlog, `attribution` in
 `settings.json`, a CI workflow of its own on every branch). Root cause tables:
 `docs/reviews/rca-adr011-batch1-2026-09-23.md`; five lessons in build-tooling-workflow.
+
+## Review 132: plan 009, guarded patch-category apply, 6-lens deep review + Codex adversarial (2026-09-24)
+
+Branch `improve/009-guarded-patch-category-apply`, `7f02fc8d..9da9b5b9`: all 84 `PatchCategory`
+calls in `SubModule.cs` go through `PatchCategoryApplier`, which logs a failure under
+`[PatchApply]`, records it and returns false, so one binding that no longer resolves no longer
+fails the module load or the rest of the game-init batch.
+
+**Codex: 2 findings, both confirmed, 0 false positives.** P2: the module-load failure notice was
+sent from `OnSubModuleLoad`, where `InformationManager.DisplayMessage` has no subscriber, and the
+list was cleared as it was sent (rated HIGH here: the change's promise that a dead crash guard is
+never silent did not hold for 28 categories). P3: the summary said a failed group was off, but
+Harmony keeps the classes it applied before the failing one. The deep review found 11 more,
+including two Codex missed that matter: the initial screen clears the chat log after the splash
+video, so Codex's suggested fix (report at the main-menu hook) would still have shown nothing, and
+Harmony's category index is built once per assembly, so an attribute naming a vanished type fails
+every category (a product decision for Mike). All code findings fixed with RED tests first: the
+startup failures now go into an inquiry at the first main menu. Full suite 10248 passed, 2 skipped,
+2 known live-Armory failures.
+
+Codex did best at quoting the runtime Harmony 2.4.2 class loop to disprove the "off this session"
+wording, and at tracing the subscriber order from the installed Native GauntletUI DLL.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | Module-load notice sent to no subscriber, list cleared | Dead / no-op code | Assumed an API worked a certain way; copied the "TAOM loaded successfully!" line as precedent | `SubModuleSource_OnSubModuleLoad_DoesNotReportPatchFailures`; lesson in `lessons/localization-ui.md` |
+| 2 | Summary claims a failed group is wholly off | Other (library semantics) | Assumed `PatchCategory` is atomic | Wording test; lesson in `lessons/harmony-il.md` |
+
+Report `docs/reviews/deep-review-009-guarded-patch-category-apply-2026-09-24.md`, RCA
+`docs/reviews/rca-guarded-patch-category-apply-2026-09-24.md`. Owed: the GitHub issue, Mike's call
+on the assembly-wide index case, and an in-game smoke that breaks one module-load and one game-init
+target.

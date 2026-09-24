@@ -15,9 +15,9 @@ Two multi-agent rounds (22+ agents) "refuted" the true tournament-exit sink with
 - **Source:** docs/reviews/rca-tournament-exit-hang-2026-07-06.md (round 2), #331.
 
 ### Register every Harmony patch in all three places or it's silent dead code
-Every TAOM patch class needs ALL THREE or it never engages with no error/warning/log: (1) `[HarmonyPatch(typeof(X), "Method")]`, (2) `[HarmonyPatchCategory("PatchN_FeatureName")]`, and (3) a matching `_harmony.PatchCategory("PatchN_FeatureName")` call in `Main/SubModule.cs`. TAOM uses category-based patching exclusively — `Harmony.PatchAll()` is never called.
+Every TAOM patch class needs ALL THREE or it never engages with no error/warning/log: (1) `[HarmonyPatch(typeof(X), "Method")]`, (2) `[HarmonyPatchCategory("PatchN_FeatureName")]`, and (3) a matching `TryPatchCategory("PatchN_FeatureName")` call in `Main/SubModule.cs` (the guarded helper; plan 009 replaced the bare `_harmony.PatchCategory` calls). TAOM uses category-based patching exclusively; `Harmony.PatchAll()` is never called.
 - **Why missed:** `Patch39_BanditPartySize` shipped (Bandit Management, 2026-05-27) with the `[HarmonyPatch]` but no `[HarmonyPatchCategory]` → postfix was dead, bandits spawned at vanilla sizes regardless of the MCM curve. All 5 `/deep-review` Claude agents missed it (Standards checks thin-entry/ADR-002, Compatibility verifies the target signature, Data Flow traces XML/config — none grep `SubModule.cs` for the registration). Codex caught it HIGH.
-- **Prevent:** Pre-commit grep gate — for every new patch class confirm `grep -l 'HarmonyPatchCategory'` on the file AND `grep "_harmony.PatchCategory(\"PatchN_"` in `Main/SubModule.cs`. Add patch-to-registration tracing to `/deep-review` Agent 5's prompt as a permanent category.
+- **Prevent:** Pre-commit grep gate: for every new patch class confirm `grep -l 'HarmonyPatchCategory'` on the file AND `grep "TryPatchCategory(\"PatchN_"` in `Main/SubModule.cs`. Add patch-to-registration tracing to `/deep-review` Agent 5's prompt as a permanent category.
 - **Source:** memory/feedback_harmony_patch_category_registration_verification.md (sibling: `feedback_no_aspirational_enum_values.md`)
 
 ### Apply a patch's category at a lifecycle point that PRECEDES the earliest render of the screen it protects — "registered" ≠ "applied in time"
@@ -599,3 +599,9 @@ Patch91 first bracketed `Mission.OnTick`, the managed tick TAOM knows. Its calle
 - **Why missed:** the reporter was chosen for where its text lands (the player's log in the sessions that were read), not for which thread calls it; the logger slot's value depends on behavior order, which no test pins.
 - **Prevent:** any callback that can run off the main thread reports through `IModLogger` (`FileLogger` takes a lock) at WARNING, wrapped so a reporting failure can never throw into an engine callback. Never pass an on-screen or UI-backed logger as a report delegate.
 - **Source:** `docs/reviews/rca-offthread-agent-removed-2026-09-22.md` finding 7, #634.
+
+### `Harmony.PatchCategory` is neither atomic nor category-local (plan 009, 2026-09-24)
+In Lib.Harmony 2.4.2, `PatchCategory(Assembly, string)` runs `CreateClassProcessor(type).Patch()` for each class of the category in turn with no catch and no rollback, so the classes before a failing one stay patched. Before that it builds the category index once per assembly (`BuildCategoryCache`), reading `GetCustomAttributes(inherit: true)` on every type; a throwing factory is never cached, so one attribute naming a type the engine no longer has makes every category call throw. Plan 009's summary told the player a failed group was off, and its docs said a failure costs one category.
+- **Why missed:** the plan quoted the throw (`Undefined target method`) and not the loop around it or the index built before it.
+- **Prevent:** say a failed category "stops at its failing class" and name the assembly-wide index case wherever a doc claims category isolation. Read the whole Harmony entry point, not the line that throws, before describing what a failure leaves behind.
+- **Source:** `docs/reviews/rca-guarded-patch-category-apply-2026-09-24.md` findings 2 and 3.

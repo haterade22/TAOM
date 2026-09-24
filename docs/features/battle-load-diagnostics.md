@@ -735,7 +735,7 @@ Within the OpenNew→Initialize window, the last stamp names the segment:
 
 **Two reading traps on the new tokens.** `polls=0` on a `FinishMissionLoadingBegin` line means the
 `MissionState.TickLoading` **binding failed**, not that there was no wait — check for a
-`Patch43 diagnostics failed to apply` warning near the top of the log. And `t=+` is an *absolute*
+`[PatchApply] Patch43_BattleLoadDiagnostics FAILED` error near the top of the log. And `t=+` is an *absolute*
 that survives across chained missions in one process (the clock is `IsRunning`-guarded, so a second
 mission inherits the first's origin): read **gaps between consecutive lines**, never the absolute.
 

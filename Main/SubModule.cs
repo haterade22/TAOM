@@ -190,13 +190,13 @@ public class SubModule : MBSubModuleBase
         // live as early as possible. It does NOT cover this method's own body: its
         // MBSubModuleBase.OnSubModuleLoad finalizer patches the base method, and this override is
         // already on the stack when it attaches. A throw from here reaches the engine's
-        // Module.InitializeSubModuleBases catch, which logs and rethrows, and the game does not
-        // start; that is why every category below goes through TryPatchCategory.
-        _harmony = new Harmony("com.taom.mod");
-        // Every category goes through TryPatchCategory, so one binding that no longer resolves
-        // costs one category instead of the module load or the rest of a batch. The explicit
+        // Module.InitializeSubModuleBases catch, which logs it and throws a new exception, and the
+        // game does not start. That is why every category goes through TryPatchCategory: one
+        // binding that no longer resolves costs its category (Harmony keeps the classes it applied
+        // before the failing one) instead of the module load or the rest of a batch. The explicit
         // assembly matters: the one-argument Harmony.PatchCategory(string) picks its assembly
         // from the caller's stack frame.
+        _harmony = new Harmony("com.taom.mod");
         _patches = new PatchCategoryApplier(
             category => _harmony.PatchCategory(typeof(SubModule).Assembly, category),
             IoC.Resolve<IModLogger>());
@@ -319,10 +319,10 @@ public class SubModule : MBSubModuleBase
         // OnGameInitializationFinished batch is far too late and a campaign behavior could never
         // work at all. See docs/features/stale-character-repair.md.
         //
-        // GUARDED, unlike Patch58 above, and the guard is load-bearing: this category binds an
-        // engine method by name AND the adapter reflects four engine members. A rename would throw
-        // out of OnSubModuleLoad and take the remaining ~250 lines of module init with it — turning
-        // a crash guard into a worse crash than the one it prevents (the Patch61/Patch62 shape).
+        // GUARDED, and the guard is load-bearing: the adapter behind Initialize reflects four
+        // engine members. A rename would throw out of OnSubModuleLoad and take the rest of module
+        // init with it, turning a crash guard into a worse crash than the one it prevents (the
+        // Patch61/Patch62 shape). A category that fails to apply is contained by TryPatchCategory.
         try
         {
             Features.StaleCharacterRepair.Hooks.Patch83_StaleCharacterRepair.Initialize(
@@ -348,8 +348,8 @@ public class SubModule : MBSubModuleBase
         // menu, before any game init — the late batch would miss the first load. Each
         // reflection-target hook (internal engine types) gets its OWN category: Harmony aborts a
         // category on the first failing class, so per-hook categories keep one drifted internal
-        // type from killing its siblings. Diagnostics must never break startup: every category in
-        // its own try/catch, fail = vanilla.
+        // type from killing its siblings. Diagnostics must never break startup: TryPatchCategory
+        // contains each category's failure, the try/catch covers the Initialize calls, fail = vanilla.
         try
         {
             var saveLoadDiagnostics = IoC.Resolve<Features.SaveLoadDiagnostics.ISaveLoadDiagnosticsService>();
@@ -614,8 +614,9 @@ public class SubModule : MBSubModuleBase
         Patch42_FillSettlements_Transpiler.Initialize(logger);
         Patch42_HourlyTickParty_Postfix.Initialize(castleRecruitmentSettings, logger);
         TryPatchCategory("Patch42_CastleRecruitment");
+        // No ReportPatchFailures here: nothing receives a message yet (see the startup report in
+        // OnBeforeInitialModuleScreenSetAsRoot), so this phase's failures wait for it.
 
-        ReportPatchFailures("module load");
         InformationManager.DisplayMessage(new InformationMessage("TAOM loaded successfully!", Colors.Green));
     }
 
@@ -635,7 +636,12 @@ public class SubModule : MBSubModuleBase
         {
             _basicTableauGuardApplied = true;
             TryPatchCategory("Patch55_BasicTableauRaceGuard");
-            ReportPatchFailures("main menu setup");
+            // Reports OnSubModuleLoad's failures and Patch55's together. The earliest a notice can
+            // be shown: Native's GauntletUISubModule, which runs before TAOM, creates the chat log
+            // and the inquiry manager in this hook, and InformationManager queues nothing sent
+            // before them. An inquiry, not a chat line: the initial screen clears the chat log
+            // after the splash video (GauntletInitialScreen.OnInitialize, ClearAllMessages).
+            ReportPatchFailures("startup", persistent: true);
         }
 
 
@@ -841,15 +847,20 @@ public class SubModule : MBSubModuleBase
 
     private bool TryPatchCategory(string category) => _patches.TryApply(category);
 
-    // One red line per phase naming every category that failed, so a dead crash guard is never
-    // silent. The notice itself must never break the phase, hence the catch.
-    private void ReportPatchFailures(string phase)
+    // One notice per phase naming every category that failed, so a dead crash guard is never
+    // silent: a red chat line, or an inquiry the player dismisses when a screen change would clear
+    // the chat log first. The notice itself must never break the phase, hence the catch.
+    private void ReportPatchFailures(string phase, bool persistent = false)
     {
         var summary = _patches.TakeFailureSummary(phase);
         if (summary == null) return;
         try
         {
-            InformationManager.DisplayMessage(new InformationMessage(summary, Colors.Red));
+            if (persistent)
+                InformationManager.ShowInquiry(new InquiryData(
+                    "TAOM", summary, true, false, "OK", string.Empty, null, null));
+            else
+                InformationManager.DisplayMessage(new InformationMessage(summary, Colors.Red));
         }
         catch (System.Exception ex)
         {
@@ -1511,9 +1522,10 @@ public class SubModule : MBSubModuleBase
         TryPatchCategory("Patch7_FactionMap");
         TryPatchCategory("Patch9_RaceFilter");
         // Patch77 (#514) — attaches the Player Switcher panel to the character creation face
-        // generator and tears it down again. Wrapped because the constructor postfix binds by
-        // arity: if a future engine build declares a second BodyGeneratorView constructor, Prepare
-        // returns false and nothing binds, but a PatchCategory throw here would brick startup.
+        // generator and tears it down again. The constructor postfix binds by arity: if a future
+        // engine build declares a second BodyGeneratorView constructor, Prepare returns false and
+        // nothing binds. A category that fails to apply disables the switcher through the if below;
+        // the try/catch does the same when an Initialize call throws.
         try
         {
             TAOM.Features.PlayerSwitcher.Hooks.Patch77_BodyGeneratorView_Constructor.Initialize(IoC.Resolve<IModLogger>());

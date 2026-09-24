@@ -18,7 +18,7 @@ namespace TAOM.Tests.Infrastructure;
 [TestClass]
 public class PatchCategoryApplierTests
 {
-    internal const string UnresolvableCategory = "Plan009_UnresolvableTargetProbe";
+    internal const string UnresolvableCategory = "Test_UnresolvableTargetProbe";
 
     private static readonly Regex CommentPattern =
         new(@"/\*.*?\*/|//[^\n]*", RegexOptions.Singleline | RegexOptions.Compiled);
@@ -44,6 +44,18 @@ public class PatchCategoryApplierTests
                 throw new InvalidOperationException("Undefined target method for patch method " + category + "_Probe");
             _applied.Add(category);
         }, _logger);
+    }
+
+    [TestMethod]
+    public void Constructor_WithANullApplyAction_Throws()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() => new PatchCategoryApplier(null!, _logger));
+    }
+
+    [TestMethod]
+    public void Constructor_WithANullLogger_Throws()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() => new PatchCategoryApplier(_ => { }, null!));
     }
 
     [TestMethod]
@@ -89,6 +101,8 @@ public class PatchCategoryApplierTests
         Assert.IsNull(sut.TakeFailureSummary("game initialization"));
     }
 
+    // Harmony applies a category class by class with no rollback, so classes before the failing
+    // one stay patched: the summary must not claim the whole group is off.
     [TestMethod]
     public void TakeFailureSummary_NamesThePhaseAndEveryFailedCategoryInOrder()
     {
@@ -98,7 +112,7 @@ public class PatchCategoryApplierTests
 
         Assert.AreEqual(
             "TAOM: patch groups failed to apply during game initialization: Patch_B, Patch_D. "
-            + "Those fixes are off this session; the TAOM log names the cause.",
+            + "Some fixes in those groups are off this session; the TAOM log names the cause.",
             sut.TakeFailureSummary("game initialization"));
     }
 
@@ -108,8 +122,8 @@ public class PatchCategoryApplierTests
         var sut = ApplierFailingOn("Patch_B", "Patch_M");
 
         sut.TryApply("Patch_B");
-        Assert.IsNotNull(sut.TakeFailureSummary("module load"));
-        Assert.IsNull(sut.TakeFailureSummary("module load"));
+        Assert.IsNotNull(sut.TakeFailureSummary("startup"));
+        Assert.IsNull(sut.TakeFailureSummary("startup"));
 
         sut.TryApply("Patch_M");
         var second = sut.TakeFailureSummary("mission start")!;
@@ -117,27 +131,17 @@ public class PatchCategoryApplierTests
         Assert.IsFalse(second.Contains("Patch_B"), second);
     }
 
-    // Pins the premise against the pinned Harmony 2.4.2: a category whose target does not resolve
-    // THROWS out of PatchCategory (it is not a silent no-op), with the cause in the inner exception.
-    [TestMethod]
-    public void RealHarmony_ACategoryWhoseTargetDoesNotResolve_ThrowsHarmonyException()
-    {
-        var harmony = new Harmony("taom.tests.plan009.premise");
-
-        var ex = Assert.ThrowsException<HarmonyException>(
-            () => harmony.PatchCategory(typeof(PatchCategoryApplierTests).Assembly, UnresolvableCategory));
-
-        StringAssert.Contains(ex.InnerException?.Message ?? string.Empty, "Undefined target method");
-    }
-
+    // Also pins the premise against the pinned Harmony 2.4.2: a category whose target does not
+    // resolve THROWS out of PatchCategory rather than being a silent no-op.
     [TestMethod]
     public void TryApply_RealHarmonyCategoryWhoseTargetDoesNotResolve_ReturnsFalseAndLogsTheMissingTarget()
     {
-        var harmony = new Harmony("taom.tests.plan009.applier");
+        var harmony = new Harmony("taom.tests.patchcategoryapplier");
         var sut = new PatchCategoryApplier(
             category => harmony.PatchCategory(typeof(PatchCategoryApplierTests).Assembly, category), _logger);
 
-        Assert.IsFalse(sut.TryApply(UnresolvableCategory));
+        Assert.IsFalse(sut.TryApply(UnresolvableCategory),
+            "Harmony no longer throws on an unresolvable target; the guard's premise changed");
         _logger.Received(1).LogError(Arg.Is<string>(s =>
             s.Contains(UnresolvableCategory) && s.Contains("Undefined target method")));
     }
@@ -170,15 +174,71 @@ public class PatchCategoryApplierTests
         StringAssert.Contains(hits[0], "SubModule.cs: ");
         StringAssert.Contains(hits[0], "PatchCategory(typeof(SubModule).Assembly, category)");
     }
+
+    // Nothing receives InformationManager.DisplayMessage during OnSubModuleLoad: Native builds the
+    // chat log (the only subscriber) in its OnBeforeInitialModuleScreenSetAsRoot, and the event
+    // has no queue. A report there drains the failure list into nothing.
+    [TestMethod]
+    public void SubModuleSource_OnSubModuleLoad_DoesNotReportPatchFailures()
+    {
+        var body = SubModuleMethodBody("protected override void OnSubModuleLoad()");
+
+        Assert.IsFalse(body.Contains("ReportPatchFailures("),
+            "OnSubModuleLoad must leave its failures for the main-menu startup report");
+    }
+
+    // The initial screen clears the chat log after the splash video, so the startup report is an
+    // inquiry (which it does not clear), shown once the Native inquiry subscriber exists.
+    [TestMethod]
+    public void SubModuleSource_MainMenuSetup_ReportsStartupFailuresInAnInquiry()
+    {
+        var body = SubModuleMethodBody("protected override void OnBeforeInitialModuleScreenSetAsRoot()");
+
+        StringAssert.Contains(body, "ReportPatchFailures(\"startup\", persistent: true);");
+    }
+
+    // The three rewrites whose failure branch carries behaviour: Patch37 attaches its hooks only on
+    // success, a Patch77 failure disables the Player Switcher, and the preview log says FAILED.
+    [TestMethod]
+    public void SubModuleSource_KeepsTheSideEffectsOfAFailedApply()
+    {
+        var code = CommentPattern.Replace(File.ReadAllText(RepoPaths.RepoPath("Main", "SubModule.cs")), string.Empty);
+
+        StringAssert.Matches(code, new Regex(
+            @"if \(TryPatchCategory\(""Patch37_CrashReport""\)\)\s*\{\s*IoC\.Resolve<[\w.]+AppDomainExceptionHook>\(\)\.Subscribe\(\);"));
+        StringAssert.Matches(code, new Regex(
+            @"if \(!TryPatchCategory\(""Patch77_PlayerSwitcher""\)\)\s*\{\s*IoC\.Resolve<[\w.]+IPlayerSwitchPolicyProvider>\(\)\s*\.DisableForSession\("));
+        StringAssert.Matches(code, new Regex(
+            @"if \(TryPatchCategory\(previewCategory\)\)[^;]+applied OK[^;]+;\s*else[^;]+FAILED"));
+    }
+
+    private static string SubModuleMethodBody(string signature)
+    {
+        var code = CommentPattern.Replace(File.ReadAllText(RepoPaths.RepoPath("Main", "SubModule.cs")), string.Empty);
+        var start = code.IndexOf(signature, StringComparison.Ordinal);
+        Assert.IsTrue(start >= 0, "SubModule.cs no longer declares " + signature);
+
+        var open = code.IndexOf('{', start);
+        var depth = 0;
+        for (var i = open; i < code.Length; i++)
+        {
+            if (code[i] == '{') depth++;
+            else if (code[i] == '}' && --depth == 0)
+                return code.Substring(open, i - open + 1);
+        }
+
+        Assert.Fail("Unbalanced braces after " + signature);
+        return string.Empty;
+    }
 }
 
 /// <summary>
-/// A patch class whose target cannot resolve, for the real-Harmony tests above. Nothing outside
+/// A patch class whose target cannot resolve, for the real-Harmony test above. Nothing outside
 /// <c>PatchCategoryApplierTests</c> applies this category.
 /// </summary>
 [HarmonyPatchCategory(PatchCategoryApplierTests.UnresolvableCategory)]
-[HarmonyPatch(typeof(PatchCategoryApplierTests), "NoSuchMethod_Plan009")]
-internal static class Plan009UnresolvableTargetProbe
+[HarmonyPatch(typeof(PatchCategoryApplierTests), "NoSuchMethod_UnresolvableTargetProbe")]
+internal static class UnresolvableTargetProbe
 {
     internal static void Postfix() { }
 }

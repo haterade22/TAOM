@@ -2257,3 +2257,9 @@ Three gates approximated a language with regexes and each broke on valid input. 
 - **Why missed:** the check discovered hooks by their external tool, not by being a gate.
 - **Prevent:** check 4b times every PreToolUse gate on a commit payload against the real repo and fails at 80% of its registration. Query git once for all files, never once per file.
 - **Source:** `docs/reviews/rca-adr011-batch1-2026-09-23.md` C1.
+
+### Renaming a convention or deleting a log line: grep the review harness and the tools for the old text (plan 009, 2026-09-24)
+Plan 009 replaced every `_harmony.PatchCategory("X")` with `TryPatchCategory("X")` and collapsed nine catch blocks. The Data Flow lens (`lenses/5-data-flow.md`) and the Harmony lesson still told reviewers to grep for the old spelling and flag its absence HIGH, so every later patch review would raise a false HIGH. `tools/triage_battle_load.py` and `battle-load-diagnostics.md` still sent triagers to the deleted "Patch43 diagnostics failed to apply" warning.
+- **Why missed:** the plan's maintenance notes named the one rule line it knew about; nobody grepped `.claude/`, `docs/reviews/lessons/` and `tools/` for the old text, and no build or test reads them.
+- **Prevent:** when a change renames a call convention or deletes a log message, grep the whole repo for the old literal (code, `.claude/`, `docs/reviews/lessons/`, `tools/`, feature docs) and update every consumer that acts on it in the same change; list the rest as follow-ups.
+- **Source:** `docs/reviews/rca-guarded-patch-category-apply-2026-09-24.md` findings 4 and 5.

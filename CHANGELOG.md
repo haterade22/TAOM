@@ -9,16 +9,20 @@
 `Main/SubModule.cs` applied TAOM's Harmony patches one category at a time with bare
 `_harmony.PatchCategory("PatchNN_X")` calls, 64 of 84 with no guard at all. Harmony 2.4.2 has no
 catch around a category, so one patch class whose target no longer resolves (an engine rename after
-a Steam bump, or another mod reshaping IL) threw straight out of the SubModule hook. In
-`OnSubModuleLoad` the engine logs and rethrows, so the game would not start with TAOM enabled. In
+a Steam bump) threw straight out of the SubModule hook. In `OnSubModuleLoad` the engine logs it and
+throws a new exception, so the game would not start with TAOM enabled. In
 `OnGameInitializationFinished` the once-per-process flag is set before the batch, so the throw
 skipped every later category (the Patch65, Patch82 and Patch84 crash guards among them), the three
 watchdogs, `ManualPatchApplicator.ApplyAll` and the Harmony census.
 
 Every category now goes through `TryPatchCategory`, backed by the new `PatchCategoryApplier`
 (`Main/PatchCategoryApplier.cs`). A failure is logged at Error under `[PatchApply]` with its full
-cause, skips only that category, and is named in one red on-screen line per phase (module load,
-main menu setup, game initialization, mission start). The applier calls the two-argument
+cause, stops that category at its failing class (Harmony keeps the classes it applied before it),
+and every other category still applies. The failures are named in one notice per phase: startup
+(an inquiry at the first main menu, covering `OnSubModuleLoad` and Patch55), then a red chat line
+for game initialization and for mission start. One case is not category-local: Harmony builds its
+category index once per assembly from every type's attributes, so an attribute naming a type the
+engine no longer has fails every category. The applier calls the two-argument
 `PatchCategory(assembly, category)` with `typeof(SubModule).Assembly`, because the one-argument
 overload picks its assembly from the caller's stack frame. Three hand-guarded sites keep their side
 effects: the crash-report hooks subscribe only when Patch37 applied, the character-preview log says
@@ -32,13 +36,25 @@ they cannot (the finalizer patches the base method, and TAOM's override is alrea
 comment, `docs/features/crash-report.md` and
 `docs/reference/engine/submodule-lifecycle-and-harmony.md` now say so and name the guard.
 
-Tests: `PatchCategoryApplierTests` (9) covers the try and catch paths, per-category isolation, the
-phase summary, the real Harmony 2.4.2 throw on an unresolvable target, and a source gate that fails
-the build on any direct `.PatchCategory(` call in `Main` other than the applier's delegate. Nine
-text tests that pinned the old call spelling now pin `TryPatchCategory(`. Full suite: 10244 passed,
-2 skipped, 2 failed (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+**Review follow-ups** (`docs/reviews/deep-review-009-guarded-patch-category-apply-2026-09-24.md`,
+RCA `docs/reviews/rca-guarded-patch-category-apply-2026-09-24.md`): the first version reported the
+module-load failures at the end of `OnSubModuleLoad`, where `InformationManager.DisplayMessage` has
+no subscriber and the list was cleared into nothing; a main-menu chat line would have been cleared
+by the initial screen after the splash video. Both now go into the startup inquiry. The summary no
+longer claims a failed group is wholly off. `tools/triage_battle_load.py` and
+`docs/features/battle-load-diagnostics.md` pointed triagers at the deleted Patch43 warning; they
+now name the `[PatchApply]` line. The Data Flow lens and the Harmony lesson still told reviewers to
+grep for the old `_harmony.PatchCategory("...")` spelling and flag its absence HIGH.
+
+Tests: `PatchCategoryApplierTests` (13) covers the constructor guards, the try and catch paths,
+per-category isolation, the phase summary, real Harmony 2.4.2 through the applier on an
+unresolvable target, a source gate that fails on any direct `.PatchCategory(` call in `Main` other
+than the applier's delegate, and source-shape tests that keep the failure report out of
+`OnSubModuleLoad` and pin the Patch37, Patch77 and preview side effects. Nine text tests that
+pinned the old call spelling now pin `TryPatchCategory(`. Full suite: 10248 passed, 2 skipped,
+2 failed (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
 `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, which fail the same way at the base).
-Nothing smoked in game: the live apply path and the red notice need a running game. Plan 009.
+Nothing smoked in game: the live apply path and both notices need a running game. Plan 009.
 
 ## 2026-09-23
 
