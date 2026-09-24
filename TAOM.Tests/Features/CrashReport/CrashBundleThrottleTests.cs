@@ -153,4 +153,22 @@ public class CrashBundleThrottleTests
 
         Assert.AreEqual(10, written, "the lock must keep concurrent admits from exceeding the session cap");
     }
+
+    // Occurrence 1 is the only trace of a new signature suppressed by the cap or cooldown, and
+    // occurrence 2 is the first repeat of a bundled crash; after that, powers of ten.
+    [DataTestMethod]
+    [DataRow(0, false)]
+    [DataRow(1, true)]
+    [DataRow(2, true)]
+    [DataRow(3, false)]
+    [DataRow(9, false)]
+    [DataRow(10, true)]
+    [DataRow(11, false)]
+    [DataRow(20, false)]
+    [DataRow(100, true)]
+    [DataRow(1000, true)]
+    [DataRow(1001, false)]
+    [DataRow(int.MaxValue, false)]
+    public void IsLoggedOccurrence_LogsTheFirstTwoAndThenPowersOfTen(int occurrence, bool expected)
+        => Assert.AreEqual(expected, CrashBundleThrottle.IsLoggedOccurrence(occurrence));
 }
