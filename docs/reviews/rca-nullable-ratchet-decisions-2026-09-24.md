@@ -13,7 +13,7 @@ The commit added three nullable warnings to the test project (2,259 against a 2,
 plan requires), its fresh-copy test could not catch a regression on the defaults path, and the doc
 edits stopped short: the patch registry still called decision 2 open, `siege-defense.md` gave two
 test counts, and the new token table promised tokens the code does not substitute. All 11 are
-fixed in the review follow-up; the test count is back to 2,256.
+fixed in the review follow-up; the test project's nullable warning count is back to 2,256.
 
 ## Findings
 

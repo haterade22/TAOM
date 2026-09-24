@@ -174,27 +174,45 @@ NOT APPLIED:
 - SiegeDefenseService.cs:52 (A6 P2), log a warning per incomplete KingdomMessages entry:
   behaviour-changing (new [WARNING] log lines), needs Mike. Mandatory-rule basis:
   csharp-architecture.md "Config Providers MUST Validate" items 5-6.
-- SiegeDefenseService.cs:95-96 (A1 N3, A4 N1), `string.IsNullOrWhiteSpace` fallback:
+- SiegeDefenseService.cs:96-97 (A1 N3, A4 N1), `string.IsNullOrWhiteSpace` fallback:
   behaviour-changing beyond the decided "missing or empty" scope, needs Mike.
 - SiegeDefenseServiceTests.cs `rohan` to `vlandia` (Codex): not a defect; synthetic key.
 FOLLOW-UP (pre-existing; no issue filed, since filing is public and this lead is not authorised):
 - siege-defense.md:143 "Changes take effect on next game load": the provider and service are
   Reuse.Singleton (SiegeDefenseIoC.cs:10,13), so a JSON edit needs a full restart
   (csharp-architecture.md "Doc requirement"; file-catalogue.md:290 says so correctly).
-- SiegeDefenseService.cs:351: RewardMessage `{settlement}` becomes the settlement string id
+- SiegeDefenseService.cs:352: RewardMessage `{settlement}` becomes the settlement string id
   (latent; no shipped RewardMessage uses it).
 - siege-defense.md:101 says DisplayMessage is wrapped in try/catch; the one in
-  GrantReward (:353) is not.
+  GrantReward (:354) is not.
 - siege-defense.md:19, :88 call SiegeEvent sealed; in v1.5.3 it is `public class SiegeEvent`.
 - Popup text (DefaultMessages, JSON, "Ignore") bypasses {=KEY} localization: /localize candidate.
 - A whole `"KingdomMessages": null` (or WatchedSettlementIds) is caught only because the
   provider's log line dereferences it inside the try.
 - ResponseWindowDays is never read in Main, though siege-defense.md says MCM overrides it.
 - SiegeDefenseService calls engine statics directly (ADR-007), already on the first review's list;
-  :162 passes a `string?` to affirmativeText (breaks if TaleWorlds annotates its DLLs).
-- SiegeDefenseService.cs:180-220: hourly ticks allocate with no active events (A3; already the
+  :163 passes a `string?` to affirmativeText (breaks if TaleWorlds annotates its DLLs).
+- SiegeDefenseService.cs:181-221: hourly ticks allocate with no active events (A3; already the
   first review's A3 #2).
 
 VERDICT: READY FOR COMMIT (pending the orchestrator's Step 4.6 convergence pass and the two
 NEEDS MIKE design questions, neither of which blocks the commit)
 ```
+
+## Convergence
+
+The convergence pass on `bdc80a5a` found 4 defects (1 LOW, 3 NIT) and no production-code change.
+The review lead re-checked each against the code; all 4 were confirmed and fixed, with no false positives.
+
+| # | Sev | Finding | Verified | Fix |
+|---|---|---|---|---|
+| 1 | LOW | The isolation test never mutated a `GetMessages("")` result, so `if (string.IsNullOrEmpty(factionId)) return DefaultMessages;` (the first half of the pre-#660 shape) passed all 31 tests | `GetMessages("")` is called only at `SiegeDefenseServiceTests.cs:385` and `:493`, and neither writes to the result | The test now mutates `_sut.GetMessages("")`, asserts `AreNotSame` against the next lookup, and the existing `AcceptButton` assert checks it. With the mutant applied, only this test failed (30 passed, 1 failed); after restoring, 31/31. `siege-defense.md:116` ("configured or defaults") is now backed by a test and stays as written |
+| 2 | NIT | "the test count is back to 2,256" in `REVIEW-LOG.md` and the RCA: 2,256 is the nullable warning count | Both paragraphs use "test count" for tests elsewhere | Now "the test project's nullable warning count is back to 2,256" |
+| 3 | NIT | The lesson's "Why missed" said the warnings sat at untouched lines | `git blame 503b933e`: `:39` is from `3c0a4870f`; `:393` and `:470` came from `503b933e` itself | Now says one sat at an untouched Setup line and two in the commit's own new test code |
+| 4 | NIT | NOT APPLIED and FOLLOW-UP cited `SiegeDefenseService.cs` by `503b933e` numbers | The comment edit shifted each target down by one line; checked at HEAD | Renumbered: `:96-97`, `:352`, `:354`, `:163`, `:181-221` |
+
+**Verification:** `dotnet build TAOM.Tests --no-incremental` then `count_cs86.py`: `total=2256`, 0 in
+`Main`, 9 in `Features\Siege\` (the same count, since the new lines add no warning). Full suite:
+`Failed: 2, Passed: 10254, Skipped: 2, Total: 10258`; the two failures are the live-Armory tests
+(`TheElkItem_DeclaresTheScaleTheReachIsTunedFor`, `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`),
+the same pair as the previous run.

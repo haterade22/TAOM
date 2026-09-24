@@ -479,7 +479,7 @@ public class SiegeDefenseServiceTests
     [TestMethod]
     public void GetMessages_DefaultsResultMutatedByCaller_LaterLookupsStillGetDefaults()
     {
-        // Arrange: an unknown kingdom and a JSON-null entry both take the defaults-only path
+        // Arrange: an unknown kingdom, a JSON-null entry and an empty id all take the defaults-only path
         var sut = CreateSutFromJson("{\"KingdomMessages\":{\"rohan\":null}}", out _);
 
         // Act
@@ -490,6 +490,8 @@ public class SiegeDefenseServiceTests
         nullEntry.RewardMessage = "mutated by a caller";
         var unknownAgain = sut.GetMessages("unknown_faction");
         var nullEntryAgain = sut.GetMessages("rohan");
+        var emptyId = _sut.GetMessages("");
+        emptyId.AcceptButton = "mutated by a caller";
         var otherService = _sut.GetMessages("");
 
         // Assert
@@ -498,6 +500,7 @@ public class SiegeDefenseServiceTests
         Assert.AreEqual("Help Defend", unknownAgain.AcceptButton);
         Assert.AreEqual("Help Defend", nullEntryAgain.AcceptButton);
         Assert.AreEqual("You answered the call! +{influence} influence, +{relation} relation.", nullEntryAgain.RewardMessage);
+        Assert.AreNotSame(emptyId, otherService);
         Assert.AreEqual("Help Defend", otherService.AcceptButton);
     }
 

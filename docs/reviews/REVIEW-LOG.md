@@ -3824,7 +3824,7 @@ stale test count and token table in `siege-defense.md`, the unpinned `AcceptMess
 the silent-fallback design question.
 
 **11 confirmed across both reviews (5 LOW, 6 NIT), 1 false positive, 0 HIGH, 2 for Mike.** All
-11 fixed in the review follow-up: the test count is back to 2,256, and the two strengthened tests
+11 fixed in the review follow-up: the test project's nullable warning count is back to 2,256, and the two strengthened tests
 were shown failing under both mutants. Mike decides whether an incomplete entry logs a warning
 (`csharp-architecture.md` "Config Providers MUST Validate") and whether a value of only spaces
 counts as empty. Full suite: 10,258 total, only the two live-Armory failures.
