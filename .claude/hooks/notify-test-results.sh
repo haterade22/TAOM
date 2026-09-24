@@ -2,7 +2,9 @@
 
 # Resolve a safe Python (never a Microsoft Store alias — those hang forever).
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
-# PostToolUse hook: summarize dotnet test results prominently
+# PostToolUse hook: summarize dotnet test results. The banner goes to stderr from an exit-0
+# hook, which Claude Code sends to the debug log only (harness-facts.md "Visibility"): Claude
+# never sees it. Read the Skipped: count from the tool result itself.
 INPUT=$(cat)
 
 # Extract tool_input.command and tool_response. Prefer jq; fall back to python3 for
@@ -58,8 +60,10 @@ if echo "$COMMAND" | grep -q "dotnet test"; then
   fi
   if [[ -n "$FAILED" && "$FAILED" -gt 0 ]]; then
     echo "=== TEST RESULTS: FAILED (Failed: ${FAILED}, Passed: ${PASSED:-?}${SKIPNOTE}) ===" >&2
-  elif [[ -n "$PASSED" && -n "$SKIPNOTE" ]]; then
-    echo "=== TEST RESULTS: PASSED WITH SKIPS (Passed: ${PASSED}${SKIPNOTE}; a skipped test checked nothing) ===" >&2
+  elif [[ -n "$SKIPNOTE" ]]; then
+    # At normal verbosity vstest prints "Passed:" only when a test passed, so an all-skipped
+    # run has no Passed count at all.
+    echo "=== TEST RESULTS: PASSED WITH SKIPS (Passed: ${PASSED:-0}${SKIPNOTE}; a skipped test checked nothing) ===" >&2
   elif [[ -n "$PASSED" ]]; then
     echo "=== TEST RESULTS: PASSED (${PASSED} tests) ===" >&2
   elif echo "$RESPONSE" | grep -q "Failed"; then

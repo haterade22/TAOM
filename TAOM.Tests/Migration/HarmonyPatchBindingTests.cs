@@ -46,7 +46,7 @@ public class HarmonyPatchBindingTests
         // The game loaded, so a short discovery is a TAOM type-load failure: fail, never skip.
         if (patchTypes.Count < 30)
             Assert.Fail(
-                $"Only {patchTypes.Count} [HarmonyPatch] types discovered (expected ~70). " +
+                $"Only {patchTypes.Count} [HarmonyPatch] types discovered (taleworlds-api-snapshot/patch-targets.md has the current count). " +
                 $"{typesFailedToLoad} type(s) failed to load. This indicates an assembly-load problem, " +
                 "not a genuine pass — investigate before trusting this gate.");
 

@@ -83,6 +83,35 @@ public class GameAssembliesResolutionTests
     }
 
     [TestMethod]
+    public void ResolveGameDir_OverrideWithoutBannerlordExe_FallsThroughToTheGameDir()
+    {
+        // Arrange
+        var over = MakeDir("over");
+        var game = MakeDir("game");
+        var built = MakeDir("built");
+
+        // Act
+        var result = GameAssemblies.ResolveGameDir(over, game, built);
+
+        // Assert
+        Assert.AreEqual(game, result);
+    }
+
+    [TestMethod]
+    public void ResolveGameDir_GameDirNotOnDisk_FallsBackToTheBuildFolder()
+    {
+        // Arrange
+        var gone = Path.Combine(_root, "gone");
+        var built = MakeDir("built");
+
+        // Act
+        var result = GameAssemblies.ResolveGameDir(null, gone, built);
+
+        // Assert
+        Assert.AreEqual(built, result);
+    }
+
+    [TestMethod]
     public void ResolveGameDir_BuildFolderNotOnDisk_ReturnsNull()
     {
         // Arrange

@@ -24,7 +24,7 @@ Re-verify that TAOM's engine touchpoints still bind against the **installed** Ba
 
 ## Pre-flight
 
-`BANNERLORD_GAME_DIR` (or `BANNERLORD_OVERRIDE_DIR`) points the gate at the install; when neither is set in the test process, it falls back to the game folder the test DLL was built against. The gate loads the SandBox/CustomBattle/StoryMode module DLLs from there. If no install resolves, every gate test calls `Assert.Inconclusive`, and the Step 1 command's `binding-gate.runsettings` turns each one into a failure, so the run is red. Without that file MSTest reports them as Skipped and exits 0: never quote such a run, or any run with a non-zero `Skipped:` count, as a green gate. A missing install is an environment fact to report, not fix (see `.claude/rules/environment-failures.md`).
+`BANNERLORD_GAME_DIR` (or `BANNERLORD_OVERRIDE_DIR`) points the gate at the install; when neither names a usable folder in the test process (the override needs `bin\Win64_Shipping_Client\Bannerlord.exe`, the game dir only needs to exist), it falls back to the game folder the test DLL was built against. The gate loads the SandBox/CustomBattle/StoryMode module DLLs from there. If no install resolves, or the resolved folder holds no `Bannerlord.exe`, every gate test that needs the module DLLs calls `Assert.Inconclusive` (tests that bind only against the `TaleWorlds.*.dll` copies in the test bin still run and pass), and the Step 1 command's `binding-gate.runsettings` turns each one into a failure, so the run is red. Without that file MSTest reports them as Skipped and exits 0: never quote such a run, or any run with a non-zero `Skipped:` count, as a green gate. A missing install is an environment fact to report, not fix (see `.claude/rules/environment-failures.md`).
 
 ## Step 1 — Run the binding gate
 
@@ -39,10 +39,11 @@ Three test classes under `TAOM.Tests/Migration/`:
 
 ## Step 2 — Interpret a failure (do NOT just rerun)
 
-A red gate is a real finding — one of three classes. Fix at the source, do not silence the test:
+A red gate is an environment gap or a real finding. `Assert.Inconclusive failed. Game assemblies not loaded` (or `unavailable`, or `Game dir unresolved`) means no install resolved: report it (Pre-flight) and change no code. Every other failure is one of the classes below. Fix at the source, do not silence the test:
 
 | Failure message | Root cause | Fix |
 |---|---|---|
+| `Only N [HarmonyPatch] types discovered` / `Only N GameModel subclasses discovered` | the game loaded but TAOM's types failed to load against it: a stale build, or a test-time variable naming a different install than the build used | rebuild (no `--no-build`), check the variables against the build's install, then `/investigate` with the loader exceptions |
 | `AmbiguousMatchException` on a patch | name-only `[HarmonyPatch]` on a method overloaded anywhere in the type hierarchy | pin argument types: `[HarmonyPatch(typeof(X), "M", new[] { typeof(...) })]` (the documented HarmonyLib way) |
 | target/member `did not resolve` / `not found` | engine renamed/moved/removed the member in this version | `/research` the new signature, update the patch / adapter / GameModel; if a reflection site, update both `reflection-sites.md` and the `[DataRow]` |
 | GameModel `never AddModel'd` | a `Taom*Model` compiles but isn't registered | add `campaignStarter.AddModel(new TaomXModel(...))` in `Main/SubModule.cs` |

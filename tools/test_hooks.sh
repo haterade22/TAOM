@@ -823,6 +823,14 @@ if grep -q 'TEST RESULTS: FAILED (Failed: 2, Passed: 10235, Skipped: 2)' <<< "$O
 else
     bad "notify-test-results.sh dropped the skip count from a red run: $OUT"
 fi
+# At normal verbosity vstest prints "Passed:" only when a test passed, so an all-skipped run
+# carries only "Total tests" and "Skipped:" lines.
+OUT=$(ntr_banner 'Test Run Successful.\nTotal tests: 5\n     Skipped: 5')
+if grep -q 'PASSED WITH SKIPS (Passed: 0, Skipped: 5' <<< "$OUT"; then
+    ok "an all-skipped run with no Passed line still names the skips"
+else
+    bad "notify-test-results.sh stayed silent on an all-skipped run: $OUT"
+fi
 
 # ---------------------------------------------------------------------------
 head2 "8. /context-budget scan.sh runs under set -u and measures the launch load"

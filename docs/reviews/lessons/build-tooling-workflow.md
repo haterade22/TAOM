@@ -2257,3 +2257,15 @@ Three gates approximated a language with regexes and each broke on valid input. 
 - **Why missed:** the check discovered hooks by their external tool, not by being a gate.
 - **Prevent:** check 4b times every PreToolUse gate on a commit payload against the real repo and fails at 80% of its registration. Query git once for all files, never once per file.
 - **Source:** `docs/reviews/rca-adr011-batch1-2026-09-23.md` C1.
+
+### An advisory hook's output must reach Claude: test the channel, not the text (plan 008, 2026-09-24)
+Plan 008 taught `notify-test-results.sh` to print `PASSED WITH SKIPS` for a gate that had skipped 335 of 368 tests. The banner went to stderr from a hook that exits 0, which Claude Code sends to the debug log only, so no agent ever saw it. The hooks catalog and the CHANGELOG described it as visible.
+- **Why missed:** the plan specified stderr, and `hook-authoring.md:128` still advises "write to stderr for an advisory hook", which contradicts `harness-facts.md` "Visibility". `tools/test_hooks.sh` 7c captured stderr with `2>&1 >/dev/null` and matched the text, which proves the string and not its delivery. This repeats #647, where gates printed a decision format the harness ignores.
+- **Prevent:** before writing an advisory hook, pick its channel from `harness-facts.md` "Visibility" and name it in the catalog row. For a PostToolUse hook, stderr with exit 0 reaches no one. A test pins what the harness reads (the JSON on stdout, or the exit code), and the first live tool call that should show the output is checked in the transcript. A doc says "shown" only after that check.
+- **Source:** `docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md` F1.
+
+### A change to how a gate behaves updates every doc that runs or reads it (plan 008, 2026-09-24)
+Plan 008 changed the binding gate's command and added two red forms. Three consumers were left behind. `reflection-sites.md` still gave the old command, because the sweep grepped only the `TestCategory=BindingVerification"` spelling. The skill's triage line still said "a red gate is a real finding, one of three classes". The skill claimed "every gate test" goes Inconclusive without the game, while the executor's own log showed 33 of 368 passing.
+- **Why missed:** each claim was checked against the diff, not against the files that consume the gate or the run that measured it.
+- **Prevent:** grep for the command's stem (`BindingVerification`, the test class names) rather than one filter spelling. When a change adds a failure message, update the table that tells an agent how to read a failure. Before writing a quantifier ("every", "all", "never") about a gate, check it against the measured counts in the run log.
+- **Source:** `docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md` F4, F5, F7.

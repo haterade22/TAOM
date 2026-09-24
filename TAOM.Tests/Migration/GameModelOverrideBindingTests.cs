@@ -51,7 +51,7 @@ public class GameModelOverrideBindingTests
         var models = DiscoverGameModels();
         // The game loaded, so a short discovery is a TAOM type-load failure: fail, never skip.
         if (models.Count < 20)
-            Assert.Fail($"Only {models.Count} GameModel subclasses discovered (expected ~37) — assembly-load problem, not a genuine pass.");
+            Assert.Fail($"Only {models.Count} GameModel subclasses discovered (taleworlds-api-snapshot/gamemodel-bases.md has the current count) — assembly-load problem, not a genuine pass.");
 
         var subModule = ReadRepoFile("Main", "SubModule.cs");
         if (subModule == null)

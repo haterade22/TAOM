@@ -4,6 +4,26 @@
 
 ## 2026-09-24
 
+### fix(bindings): v2.0.30 - review follow-ups for plan 008
+
+- **Both resolver guards are pinned.** Two tests cover the override that holds no `Bannerlord.exe`
+  and a `BANNERLORD_GAME_DIR` that names a missing folder; each goes red if its guard is deleted
+  (checked by deleting each guard and re-running).
+- **The skip banner no longer claims an audience.** `notify-test-results.sh` writes to stderr and
+  exits 0, which Claude Code sends to the debug log only, so the hooks catalog row and this
+  CHANGELOG no longer say Claude sees it. It now also names the skips of an all-skipped run at
+  normal verbosity, where vstest prints no `Passed:` line (`tools/test_hooks.sh` section 7c).
+  Delivering the banner to Claude is left for Mike.
+- **The docs match the gate.** The verify-bindings skill no longer says every gate test goes
+  Inconclusive without the game (33 bind only against the test bin's TaleWorlds DLLs and pass),
+  and its Step 2 now names the two red forms plan 008 added: no install resolved (an environment
+  fact) and a short discovery (a TAOM type-load failure). `reflection-sites.md` gives the strict
+  gate command, and the discovery-floor messages drop their stale expected counts.
+- Review record: `docs/reviews/deep-review-008-binding-gate-no-silent-skips-2026-09-24.md` and
+  `docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md`.
+
+## 2026-09-23
+
 ### test(bindings): v2.0.30 - make the binding gate fail loudly on skips
 
 - **The gate finds the game the build used.** `GameAssemblies` read the install only from the test
@@ -20,12 +40,11 @@
 - **The test banner names skips.** `notify-test-results.sh` printed `PASSED (33 tests)` for a run of
   33 passes and 335 skips; it now prints `PASSED WITH SKIPS` with the count, and a red run carries its
   skip count too. Pinned by `tools/test_hooks.sh` section 7c; `docs/reference/hooks-catalog.md`
-  lists the new banner.
-- Closes the binding-gate half of "`Assert.Inconclusive` is a pass" in
-  `docs/reviews/rca-lord-identity-2026-08-29.md`; `LordFamilyTransformTests` and the rest of the
-  default suite stay open.
-
-## 2026-09-23
+  lists the new banner. The banner reaches the debug log only, not Claude (see the 2026-09-24
+  follow-up).
+- Applies to the binding gate the fix that the "`Assert.Inconclusive` is a pass" item in
+  `docs/reviews/rca-lord-identity-2026-08-29.md` asks for. That item names
+  `LordFamilyTransformTests`, which is not in the gate, so it stays open.
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)
 

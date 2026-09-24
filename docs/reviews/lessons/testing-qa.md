@@ -1071,3 +1071,9 @@ The first `HowdahPrefabTests` pinned the geometry the rebuild changed (moveable 
 - **Why missed:** the step was written from the campaign model's code, and a smoke list reads as mode-neutral unless it says otherwise.
 - **Prevent:** when a smoke step is there to prove an engine DECISION (killed or wounded, a morale roll, a capture), find the model that decides it in each game mode (`AddModel` in `CustomGame` and the campaign starter) and name the mode whose model can give the other answer. If no mode can, the step proves nothing; say so instead. When the model ROLLS (killed or wounded is a survival roll even with `CanKillEvenIfBlunt`), one outcome proves nothing either: say how many trials settle it and which result would (Codex, 2026-09-23: the step first demanded "killed, not wounded", which a correct build can fail).
 - **Source:** `docs/reviews/rca-elk-delta-2026-09-23.md` F5 (#636).
+
+### Every existence guard in a resolver gets a test that fails it (plan 008, 2026-09-24)
+`GameAssemblies.ResolveGameDir` checks three inputs: the override must hold `Bannerlord.exe`, the game dir must exist, and so must the build folder. Six tests covered each input's happy path. Deleting the override's `File.Exists` check, or the game dir's `Directory.Exists` check, left all six green. The change had also turned a set-but-missing `BANNERLORD_GAME_DIR` from a skip into a fallback, and no test pinned that.
+- **Why missed:** `tests.md` "Skip-Guard Exhaustion" asks for one test per guard in each direction, but it was read as a rule for skip guards, not for a resolver's guards. The plan's test table said "every cell" and counted inputs, not guards.
+- **Prevent:** for each guard in a resolution chain, write the test where that guard alone fails and the chain must fall through. Prove it by deleting the guard and watching exactly that test go red.
+- **Source:** `docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md` F3.

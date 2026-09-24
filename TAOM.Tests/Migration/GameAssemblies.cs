@@ -17,10 +17,12 @@ namespace TAOM.Tests.Migration;
 /// this pre-load they would return null in tests and produce false binding failures.
 ///
 /// Game dir resolution: BANNERLORD_OVERRIDE_DIR (if its bin holds Bannerlord.exe), else
-/// BANNERLORD_GAME_DIR, else the GameFolder this assembly was compiled against (the TaomGameFolder
-/// assembly metadata TAOM.Tests.csproj emits). The last step lets a test process started without
-/// the variables (an IDE runner, dotnet test --no-build from a fresh shell, a -p: property on the
-/// build) load the install the build used instead of skipping. If nothing resolves,
+/// BANNERLORD_GAME_DIR (if the folder exists), else the GameFolder this assembly was compiled
+/// against (the TaomGameFolder assembly metadata TAOM.Tests.csproj emits). The last step lets a
+/// test process started without the variables (an IDE runner, dotnet test --no-build from a fresh
+/// shell) load the install the build used instead of skipping. A variable set in the test process
+/// still wins over the build's folder, even when the build took its folder from a -p: property.
+/// If nothing resolves, or the resolved folder has no bin folder holding Bannerlord.exe,
 /// <see cref="EnsureLoaded"/> returns false and the binding tests Assert.Inconclusive (e.g. CI
 /// without a game install): Skipped in the default suite, a failure under
 /// TAOM.Tests/binding-gate.runsettings.

@@ -3773,3 +3773,42 @@ one gate timed against its registration. Mike approved four design proposals mid
 `harness-facts.md` paths, the `triage-needs-ingame` label as the smoke backlog, `attribution` in
 `settings.json`, a CI workflow of its own on every branch). Root cause tables:
 `docs/reviews/rca-adr011-batch1-2026-09-23.md`; five lessons in build-tooling-workflow.
+
+## Review 132 (number provisional: parallel improve branches): plan 008, the binding gate fails loudly instead of passing by skipping, 7-lens deep review + Codex adversarial (2026-09-24)
+
+Plan 008 (`7f02fc8d..8c89e042`, branch `improve/008-binding-gate-no-silent-skips`) points the gate
+at the build's game folder when the test process has no variables, adds an opt-in
+`binding-gate.runsettings` that maps Inconclusive to Failed, turns the discovery floors into
+failures, and teaches the test-results hook to name skips. Codex used 117,503 tokens and found
+**0 P1, 1 P2, 1 P3, both confirmed, no false positive.** It disputed or left unverified 8 of its 10
+Known Suspects, with reasons.
+
+The P2 matched two lenses: the new `PASSED WITH SKIPS` banner goes to stderr from an exit-0 hook,
+which Claude Code sends to the debug log only, so nobody sees it. It repeats #647. The P3 found
+that a response with two summaries loses the second's skips (`head -1`). The seven lenses found 11
+more confirmed defects (13 in all, 0 HIGH) and 1 false positive (a metadata assert that plan 010's
+empty `TaomGameFolder` needs to stay presence-only).
+
+Fixed on the branch:
+- two resolver guard tests, each proven by deleting its guard;
+- the hook's silence on an all-skipped normal-verbosity run (test first);
+- the skill's quantifier and its triage table, which now lists the two red forms plan 008 added;
+- a stale gate command in `reflection-sites.md` and stale counts in the floor messages;
+- the doc comment, the CHANGELOG date and an overclaimed RCA closure.
+
+Left for Mike: the banner's channel (with the P3), `TreatNoTestsAsError` (measured: a zero-match
+gate run goes from rc 0 to rc 1, and the gate is unchanged), `if: ${{ !cancelled() }}` on the CI
+step, build-folder-first resolution, and the GitHub issue.
+
+Codex did best by citing the vendor hook contract and building a two-summary counterexample. It
+missed every prose and test-adequacy finding. Full suite `Failed: 2, Passed: 10243, Skipped: 2`
+(the two known live-Armory tests); strict gate 368/0/0; `test_hooks.sh` 287 passed.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|---|---|---|---|
+| 1 | Skip banner never reaches Claude | Dead / no-op code | The plan specified stderr; `hook-authoring.md:128` advises it; 7c tested the text, not the delivery | Lesson in build-tooling-workflow; `hook-authoring.md:128` edit recommended |
+| 2 | Later summaries' skips dropped | Logic error | Every fixture held one summary | Deferred with 1: a two-summary fixture goes with the aggregation fix |
+
+Report: `docs/reviews/deep-review-008-binding-gate-no-silent-skips-2026-09-24.md`. RCA:
+`docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md`. Two lessons in
+build-tooling-workflow and one in testing-qa.
