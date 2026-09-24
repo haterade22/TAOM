@@ -36,6 +36,13 @@ public interface IServiceAttachmentService
     /// <summary>Record when a placement happened, so the dwell above can be measured from it.</summary>
     void StampSettlementEntry(double nowHours);
 
+    /// <summary>
+    /// Forget the dwell anchor. Session reset only (a load or a new campaign), never per tick:
+    /// the anchor is an absolute campaign hour, and one left in the future reads as "inside the
+    /// dwell" until the new clock passes it.
+    /// </summary>
+    void ResetForNewSession();
+
     /// <summary>Pass the commander id or distToCommander reads -1 and the drift line prints '?'.</summary>
     PlayerPresenceSnapshot GetPresence(string commanderHeroId = null);
 

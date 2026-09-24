@@ -43,6 +43,8 @@ public class ServiceAttachmentService : IServiceAttachmentService
     public bool IsWithinSettlementDwell(double nowHours) =>
         _settlementEntryHours.HasValue && nowHours - _settlementEntryHours.Value < SettlementDwellHours;
 
+    public void ResetForNewSession() => _settlementEntryHours = null;
+
     public AttachmentAssessment Assess(
         EnlistmentState state, CommanderSnapshot commander, PlayerPresenceSnapshot player,
         bool onTownLeave)

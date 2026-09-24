@@ -41,6 +41,13 @@ public interface IEnlistmentWaitMenuPresenter
     /// per settlement stop, so a re-follow does not re-ask.
     /// </summary>
     void OfferTownLeave(string settlementId, double nowHours);
+
+    /// <summary>
+    /// Forget which stop was last offered and when. Session reset only (a load or a new
+    /// campaign): the cooldown stamp is an absolute campaign hour, so an earlier save's clock
+    /// would otherwise keep the offer silent until it caught up.
+    /// </summary>
+    void ResetForNewSession();
 }
 
 public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
@@ -155,6 +162,12 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
             "SETTLEMENT", _commander.GetSnapshot(_store.Record.CommanderHeroId)?.SettlementName ?? settlementId);
 
         _logger?.LogInfo($"[Enlistment] offered shore leave on arrival at '{settlementId}'");
+    }
+
+    public void ResetForNewSession()
+    {
+        _lastOfferedSettlementId = null;
+        _lastOfferedAtHours = null;
     }
 
     public void TakeTownLeave()
