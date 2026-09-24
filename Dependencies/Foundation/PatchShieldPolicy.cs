@@ -116,15 +116,17 @@ public static class PatchShieldPolicy
     }
 
     /// <summary>
-    /// The diag.log line for one shield pass. The prefix up to "(total: N)" is unchanged; the timing
+    /// The diag.log line for one shield pass. "seen" counts every method the passes so far decided on,
+    /// skipped ones included; "attached" counts the methods carrying PatchShield's finalizer, the
+    /// real coverage (they were one conflated "total" before 2026-09-24). The timing
     /// suffix exists because diag.log ships in every crash bundle, and the per-attach cost of
     /// Harmony.Patch is not stable: one desktop has logged both about 5 to 10 ms and about 186 ms per
     /// attach (diag.log, 2026-06 to 2026-09), a 30x swing that decides whether a pass costs about a
     /// second or tens of seconds of a player's loading screen.
     /// </summary>
-    public static string FormatShieldPassSummary(int added, int alreadyShielded, int skipped, int total, long elapsedMs)
+    public static string FormatShieldPassSummary(int added, int alreadySeen, int skipped, int seenTotal, int attachedTotal, long elapsedMs)
     {
-        var line = $"shield pass: +{added} new, {alreadyShielded} already-shielded, {skipped} skipped (total: {total}) in {elapsedMs} ms";
+        var line = $"shield pass: +{added} new, {alreadySeen} already-seen, {skipped} skipped (seen: {seenTotal}, attached: {attachedTotal}) in {elapsedMs} ms";
         return added > 0
             ? line + " (" + ((double)elapsedMs / added).ToString("F1", CultureInfo.InvariantCulture) + " ms/attach)"
             : line + " (no new attaches)";

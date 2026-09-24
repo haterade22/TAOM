@@ -258,3 +258,53 @@ machine's modlist, and the dashes predate this branch.
 - `--filter "FullyQualifiedName~PatchShieldPolicyTests"`: `Passed: 24, Failed: 0`.
 
 CONVERGENCE: 3 LOW fixed (prose only, no code path changed).
+
+## Maintainer decisions applied (2026-09-24)
+
+The maintainer answered the NEEDS MIKE items on 2026-09-24; rows use the decision numbers. All
+land in one commit, the one that adds this section
+(`fix(patchshield): v2.0.30 - apply maintainer decisions for plan 007`), on top of `31a31f16`,
+except where a row names another commit.
+
+| # | Decision | Where | Commit |
+|---|---|---|---|
+| 1 | Agent 6 P3, label half: the pass-2 entry label reads `OnGameInitializationFinished: entered (game start: campaign, custom battle or editor)`, matching the doc comment | `Dependencies/SubModule.cs:281`; the same start list in `dr3-maintenance.md` (three places) and the CHANGELOG | this commit |
+| 2 | Agent 6 P4: `_shielded` split into seen and attached. The bookkeeping moved into `Dependencies/Foundation/ShieldCoverage.cs` (internal, tested through `InternalsVisibleTo`). The pass line reads `shield pass: +P new, S already-seen, Q skipped (seen: N, attached: A) in T ms`; the session summary reads `shielded A of N patched method(s) seen`. `ShieldedCount` became `SeenCount` and `AttachedCount` (no other reader in the repo). Which methods get a finalizer is unchanged: the dedupe check reads the seen set, which holds exactly what the old set held | `PatchShield.cs`, `PatchShieldPolicy.FormatShieldPassSummary`, `dr3-maintenance.md` log sample | this commit |
+| 3a | Action item 2: the whole `ManagedCallbacks` namespace stays excluded (88 classes, the 79 `ScriptingInterfaceOf*` wrappers included). Recorded, no code change | `CHANGELOG.md` "Known limitation" | this commit |
+| 3b | Action item 3: the Native2Managed fallback stack preservation is fixed on plan 006's branch, not here: `CrashReportPatchHelper.HandleAndSwallow` routes all four hand-back paths through `RethrowStackPreserver.PreserveForRethrow` | `improve/006-crash-capture-boot-cost` | `42624b95` (read with `git show`; recorded here and in the CHANGELOG, no code change) |
+| 4 | Action item 1: the public issue is #651; the CHANGELOG heading cites it | `CHANGELOG.md` heading | this commit |
+
+**Label (decision 1), no test:** the literal sits in `SubModule.OnGameInitializationFinished`, an
+`MBSubModuleBase` override that needs a live `Game` and writes through `DiagLog` to the module
+directory, so the test host cannot reach it. `grep` over `tools/` and `TAOM.Tests/` found no reader
+of the old text (the only hits for `campaign or custom battle` were the label itself, the
+CHANGELOG, `dr3-maintenance.md`, the plan and the Codex prompt).
+
+**Seen/attached split (decision 2), test first:**
+
+- Step A, behaviour-preserving: the single set moved behind `ShieldCoverage` with both counts
+  reading it, as the summary did before.
+- RED: new `ShieldCoverageTests` (3 tests). `Counts_SkippedAndAttached_ReportSeenAndAttachedSeparately`
+  failed with `Assert.AreEqual failed. Expected:<1>. Actual:<3>. attached counts only methods
+  carrying the finalizer`, and `Record_SameMethodTwice_CountsItOnce` with `Expected:<1>. Actual:<2>`
+  (`Failed: 2, Passed: 25, Total: 27` with the 24 `PatchShieldPolicyTests`).
+- GREEN after the split: `Passed: 27, Failed: 0`.
+- The three `FormatShieldPassSummary` tests were updated to the new layout first: RED as
+  `error CS1739: The best overload for 'FormatShieldPassSummary' does not have a parameter named
+  'alreadySeen'`, then GREEN (`Passed: 27, Failed: 0`). The 24 existing `PatchShieldPolicyTests`
+  stay green; three of them now assert the new layout.
+
+**Follow-up:** the `PatchShieldPolicy.cs` comment on the `ManagedCallbacks` entry and this
+branch's CHANGELOG still say nothing on a shim preserves the stack on the fallback paths. That is
+true on this branch alone; whichever of plans 006 and 007 merges second rewords it.
+
+**Verification:**
+
+- `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId=`: `Build succeeded`,
+  `0 Error(s)`.
+- `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`:
+  `Failed: 2, Passed: 10246, Skipped: 2, Total: 10250`. The two failures are the known live-Armory
+  tests `TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+  `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`.
+- Owed in game (unchanged from action item 4, new wording): the second `shield pass` line should
+  read about `+125 new`, with `attached` well below `seen`.

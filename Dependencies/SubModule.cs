@@ -278,7 +278,7 @@ public class SubModule : MBSubModuleBase
     public override void OnGameInitializationFinished(Game game)
     {
         base.OnGameInitializationFinished(game);
-        DiagLog.Log("Dependencies", "OnGameInitializationFinished: entered (game start: campaign or custom battle)");
+        DiagLog.Log("Dependencies", "OnGameInitializationFinished: entered (game start: campaign, custom battle or editor)");
 
         try { DiagLog.Log("Dependencies", "OnGameInitializationFinished: → MarkSessionLaunchSuccessful"); IncompatibleModDetector.MarkSessionLaunchSuccessful(); }
         catch (Exception ex) { DiagLog.LogCaught("Dependencies", "MarkSessionLaunchSuccessful", ex); EarlyLog.Error($"[TAOM.Dependencies] MarkSessionLaunchSuccessful failed: {ex.Message}"); }

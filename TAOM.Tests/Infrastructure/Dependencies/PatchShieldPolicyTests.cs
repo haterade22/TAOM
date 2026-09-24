@@ -247,10 +247,12 @@ public class PatchShieldPolicyTests
     [TestMethod]
     public void FormatShieldPassSummary_WithAttaches_AppendsElapsedAndPerAttach()
     {
-        var line = PatchShieldPolicy.FormatShieldPassSummary(added: 372, alreadyShielded: 46, skipped: 19, total: 437, elapsedMs: 69300);
+        var line = PatchShieldPolicy.FormatShieldPassSummary(added: 372, alreadySeen: 46, skipped: 19, seenTotal: 437, attachedTotal: 399, elapsedMs: 69300);
 
-        // The existing prefix stays byte-identical: docs/migration/dr3-maintenance.md and triagers grep it.
-        StringAssert.StartsWith(line, "shield pass: +372 new, 46 already-shielded, 19 skipped (total: 437)");
+        // Seen and attached are separate counts: a pass decides on far more methods than it
+        // shields (TAOM's own, the excluded hot layers, SaveShield's targets). The layout is the
+        // one docs/migration/dr3-maintenance.md shows.
+        StringAssert.StartsWith(line, "shield pass: +372 new, 46 already-seen, 19 skipped (seen: 437, attached: 399)");
         StringAssert.Contains(line, "in 69300 ms");
         StringAssert.Contains(line, "186.3 ms/attach");
     }
@@ -260,8 +262,9 @@ public class PatchShieldPolicyTests
     {
         // The only zero-attach line PatchShield logs is a first pass that attached nothing
         // (PatchShield.Install logs when added > 0 || alreadyShielded == 0).
-        var line = PatchShieldPolicy.FormatShieldPassSummary(added: 0, alreadyShielded: 0, skipped: 16, total: 16, elapsedMs: 3);
+        var line = PatchShieldPolicy.FormatShieldPassSummary(added: 0, alreadySeen: 0, skipped: 16, seenTotal: 16, attachedTotal: 0, elapsedMs: 3);
 
+        StringAssert.Contains(line, "(seen: 16, attached: 0)");
         StringAssert.Contains(line, "in 3 ms");
         StringAssert.EndsWith(line, "(no new attaches)");
         Assert.IsFalse(line.Contains("ms/attach"), line);
@@ -275,7 +278,7 @@ public class PatchShieldPolicyTests
         try
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("de-DE");
-            var line = PatchShieldPolicy.FormatShieldPassSummary(added: 372, alreadyShielded: 46, skipped: 19, total: 437, elapsedMs: 69300);
+            var line = PatchShieldPolicy.FormatShieldPassSummary(added: 372, alreadySeen: 46, skipped: 19, seenTotal: 437, attachedTotal: 399, elapsedMs: 69300);
             StringAssert.Contains(line, "186.3 ms/attach");
         }
         finally

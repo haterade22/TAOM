@@ -37,7 +37,7 @@ public static class PatchShield
     private const string HarmonyId = "TAOM.Dependencies.Foundation.PatchShield";
     private const string DisableFlagName = "patchshield-disabled.flag";
 
-    private static readonly HashSet<MethodBase> _shielded = new();
+    private static readonly ShieldCoverage _coverage = new();
     private static readonly HashSet<string> _unpatched = new();
     private static readonly HashSet<string> _withheld = new();
     private static readonly object _lock = new();
@@ -71,7 +71,11 @@ public static class PatchShield
     // summary prints it.
     private static long _rethrown;
 
-    public static int ShieldedCount { get { lock (_lock) return _shielded.Count; } }
+    /// <summary>Methods carrying PatchShield's finalizer.</summary>
+    public static int AttachedCount { get { lock (_lock) return _coverage.AttachedCount; } }
+
+    /// <summary>Patched methods the passes examined and decided on, skipped ones included.</summary>
+    public static int SeenCount { get { lock (_lock) return _coverage.SeenCount; } }
     public static int UnpatchedCount { get { lock (_lock) return _unpatched.Count; } }
 
     /// <summary>Targets where the rescue unpatch was suppressed because a co-op module is active.</summary>
@@ -144,13 +148,13 @@ public static class PatchShield
                 return;
             }
 
-            int added = 0, skipped = 0, alreadyShielded = 0;
+            int added = 0, skipped = 0, alreadySeen = 0, seenTotal, attachedTotal;
             lock (_lock)
             {
                 foreach (var method in patched)
                 {
                     if (method == null) { skipped++; continue; }
-                    if (_shielded.Contains(method)) { alreadyShielded++; continue; }
+                    if (_coverage.HasSeen(method)) { alreadySeen++; continue; }
 
                     // Don't shield our own methods.
                     try
@@ -158,7 +162,7 @@ public static class PatchShield
                         var declAsm = method.DeclaringType?.Assembly.GetName().Name ?? string.Empty;
                         if (declAsm.StartsWith("TAOM", StringComparison.OrdinalIgnoreCase))
                         {
-                            _shielded.Add(method);
+                            _coverage.RecordSkipped(method);
                             skipped++;
                             continue;
                         }
@@ -171,7 +175,7 @@ public static class PatchShield
                     // capture already wraps (plan 007). See PatchShieldPolicy.ExcludedTargetNamespacePrefixes.
                     if (IsExcludedTarget(method))
                     {
-                        _shielded.Add(method);
+                        _coverage.RecordSkipped(method);
                         skipped++;
                         continue;
                     }
@@ -184,7 +188,7 @@ public static class PatchShield
                     // broader exception set on those methods, so we add nothing by shielding them.
                     if (SaveShield.IsShielding(method))
                     {
-                        _shielded.Add(method);
+                        _coverage.RecordSkipped(method);
                         skipped++;
                         continue;
                     }
@@ -196,7 +200,7 @@ public static class PatchShield
                         var finalizer = isVoid ? voidFinalizer : resultFinalizer;
                         harmony.Patch(method, prefix: null, postfix: null, transpiler: null,
                             finalizer: new HarmonyMethod(finalizer));
-                        _shielded.Add(method);
+                        _coverage.RecordAttached(method);
                         added++;
                     }
                     catch (Exception ex)
@@ -205,11 +209,14 @@ public static class PatchShield
                         DiagLog.LogCaught(Tag, $"shielding {method.DeclaringType?.FullName}.{method.Name}", ex);
                     }
                 }
+
+                seenTotal = _coverage.SeenCount;
+                attachedTotal = _coverage.AttachedCount;
             }
 
-            if (added > 0 || alreadyShielded == 0)
+            if (added > 0 || alreadySeen == 0)
             {
-                DiagLog.Log(Tag, PatchShieldPolicy.FormatShieldPassSummary(added, alreadyShielded, skipped, _shielded.Count, stopwatch.ElapsedMilliseconds));
+                DiagLog.Log(Tag, PatchShieldPolicy.FormatShieldPassSummary(added, alreadySeen, skipped, seenTotal, attachedTotal, stopwatch.ElapsedMilliseconds));
             }
         }
         catch (Exception ex)
@@ -411,7 +418,7 @@ public static class PatchShield
             }
             var withheld = WithheldCount;
             DiagLog.Log(Tag,
-                $"SESSION SUMMARY: shielded {ShieldedCount} method(s), unpatched {UnpatchedCount} target(s)" +
+                $"SESSION SUMMARY: shielded {AttachedCount} of {SeenCount} patched method(s) seen, unpatched {UnpatchedCount} target(s)" +
                 (withheld > 0 ? $", withheld {withheld} target(s) (co-op active)" : string.Empty) + ", " +
                 $"swallowed {SwallowedTotal} exception(s) " +
                 $"(MissingMethod {SwallowedMissingMethod}, MissingField {SwallowedMissingField}, " +

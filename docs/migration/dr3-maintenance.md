@@ -252,7 +252,7 @@ The DR3 Phase 4 roster: `RuntimeLog` (log-path resolver), `DiagLog` (threadsafe 
 The co-op additions: `CoopPresence` — "is a co-op module in this launcher session", read from the launcher's active-module list, static rather than IoC because its first consumer runs long before TAOM.dll's `IoC.Configure()`, and failing CLOSED when the list can't be read — plus `CoopPresencePolicy` and `CoopModuleList` + `CoopModuleListResult` (the `coop-modules.txt` parser), plus `PatchShieldPolicy` and `SaveShieldPolicy`, the two shields' decisions extracted as pure functions so their full input matrix is testable without Harmony or a running game. `SubModule.OnSubModuleLoad` calls `CoopPresence.Refresh()` before the shields install and again in `OnGameInitializationFinished`, where the module list is reliably populated — that second read is the one that decides the session's policy.
 
 **Components installed in stub-ctor (early phase, before any third-party mod):**
-- `IncompatibleModDetector`: writes `session-launching.marker` at startup, deletes it at the first game start (campaign or custom battle), not at the main menu. If the marker survives to the next launch, the previous session crashed before a game started or quit from the main menu without starting one; diffs modlist against `last-good-modlist.txt` to identify newly-added likely-culprit mods. **Detection only**, no XML mutation of LauncherData.xml.
+- `IncompatibleModDetector`: writes `session-launching.marker` at startup, deletes it at the first game start (campaign, custom battle or editor), not at the main menu. If the marker survives to the next launch, the previous session crashed before a game started or quit from the main menu without starting one; diffs modlist against `last-good-modlist.txt` to identify newly-added likely-culprit mods. **Detection only**, no XML mutation of LauncherData.xml.
 - `CollectAssemblyTypesShim` — wraps `Assembly.GetTypes()` + `.GetExportedTypes()` with a Finalizer that catches `ReflectionTypeLoadException` and returns the partial type list (`ex.Types.Where(t => t != null)`). Prevents cascade failures.
 - `SubModuleConstructionGuard` — Harmony Finalizer on `MBSubModuleBase` ctors. Swallows third-party SubModule ctor exceptions, logs culprit, lets launcher continue. Refuses to shield TAOM-owned SubModules.
 
@@ -267,7 +267,7 @@ The co-op additions: `CoopPresence` — "is a co-op module in this launcher sess
 |---|---|
 | `<game>/Modules/TAOM.Dependencies/diag.log` | Append-only runtime event log (DiagLog). All shield activity, AssemblyResolve redirects, version probe results, crash-loop detection. Inspect first when diagnosing any incident. |
 | `<game>/Modules/TAOM.Dependencies/failed-mods-catalog.txt` | One line per (culprit-mod, exception-type, owner-method) that a shield swallowed. Format: `<UTC> | <culprit> | <category> | <ExceptionType> | <owner method> | <message head>`. |
-| `<game>/Modules/TAOM.Dependencies/session-launching.marker` | Crash-loop sentinel. Created in `OnSubModuleLoad` (`IncompatibleModDetector.RunEarlyPhase`); deleted on `OnGameInitializationFinished`, which fires at the first game start (campaign or custom battle), not at the main menu. Survival to next launch means the previous session crashed before a game started, or quit from the main menu without starting one. |
+| `<game>/Modules/TAOM.Dependencies/session-launching.marker` | Crash-loop sentinel. Created in `OnSubModuleLoad` (`IncompatibleModDetector.RunEarlyPhase`); deleted on `OnGameInitializationFinished`, which fires at the first game start (campaign, custom battle or editor), not at the main menu. Survival to next launch means the previous session crashed before a game started, or quit from the main menu without starting one. |
 | `<game>/Modules/TAOM.Dependencies/last-good-modlist.txt` | Snapshot of enabled modules at the last game start (written with the marker delete). Used by `IncompatibleModDetector` to diff against current modlist for culprit identification. |
 
 **Flag files (place an empty file at the path to activate — the first two opt out of a shield, the third opts co-op detection in):**
@@ -284,17 +284,17 @@ The co-op additions: `CoopPresence` — "is a co-op module in this launcher sess
 
 **Verifying the shields are healthy:**
 
-After a normal launch and one game start (campaign or custom battle), `diag.log` should contain entries like the ones below, in this order. The first `shield pass` line is pass 1 (module load), the second is pass 2 (game start, reruns at every later game start). `total` counts every method a pass has decided on, skipped ones included (a failed attach excepted), and the session summary's "shielded S" is the same count, so it is not the number of methods carrying a shield finalizer:
+After a normal launch and one game start (campaign, custom battle or editor), `diag.log` should contain entries like the ones below, in this order. The first `shield pass` line is pass 1 (module load), the second is pass 2 (game start, reruns at every later game start). `seen` counts every method the passes so far have decided on, skipped ones included (a failed attach is in neither count, so the next pass retries it); `attached` counts the methods carrying a shield finalizer, which is the real coverage. The session summary's "shielded A of S" reports the same two numbers. Until 2026-09-24 one `total` (and a session summary "shielded S") conflated them:
 ```
-[INFO  ] [PatchShield]                shield pass: +N new, 0 already-shielded, M skipped (total: N+M) in T ms (X.X ms/attach)
+[INFO  ] [PatchShield]                shield pass: +N new, 0 already-seen, M skipped (seen: N+M, attached: N) in T ms (X.X ms/attach)
 [INFO  ] [SaveShield]                 install complete: shielded +K new, 0 already-shielded, 0 skipped
 [INFO  ] [VersionProbe]               detected via ApplicationVersionHelper: v1.4
 [INFO  ] [TAOM.Dependencies]          OnSubModuleLoad complete
                                        ... then, at the game start:
 [INFO  ] [IncompatibleModDetector]    MarkSessionLaunchSuccessful: saved 47-mod last-good snapshot
-[INFO  ] [PatchShield]                shield pass: +P new, N+M already-shielded, Q skipped (total: N+M+P+Q) in T ms (X.X ms/attach)
+[INFO  ] [PatchShield]                shield pass: +P new, N+M already-seen, Q skipped (seen: N+M+P+Q, attached: N+P) in T ms (X.X ms/attach)
                                        ... then, at process exit (clean managed shutdown only):
-[INFO  ] [PatchShield]                SESSION SUMMARY: shielded S method(s), unpatched 0 target(s), swallowed 0 exception(s)...
+[INFO  ] [PatchShield]                SESSION SUMMARY: shielded A of S patched method(s) seen, unpatched 0 target(s), swallowed 0 exception(s)...
 ```
 
 If the session summary shows non-zero swallow counts, **a mod in the user's modlist is broken** — check `failed-mods-catalog.txt` for the culprit attribution. If swallow counts are climbing across sessions for the same mod, that mod needs updating or removing.
