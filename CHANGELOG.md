@@ -4,13 +4,30 @@
 
 ## 2026-09-24
 
+### fix(bindings): v2.0.30 - apply maintainer decisions for plan 008 (#652)
+
+- **No skip banner.** The `PASSED WITH SKIPS` change to `notify-test-results.sh` is reverted to
+  its content before plan 008, and `tools/test_hooks.sh` section 7c goes with it. The banner went
+  to stderr from an exit-0 hook, so it only ever reached the debug log. The signal for a skipped
+  test is the `Skipped:` count in `dotnet test`'s own output, and for the binding gate it is
+  `binding-gate.runsettings`, which fails the skip. The hooks catalog row says so.
+- **A gate filter that matches nothing is red.** `binding-gate.runsettings` now sets
+  `TreatNoTestsAsError`. Under the strict settings a filter that matched no test exited 0 before
+  and exits 1 now; the real gate still passes 368 of 368 with 0 skipped.
+  `BindingGateRunSettingsTests` pins this setting and `MapInconclusiveToFailed` in the default
+  suite, so deleting either goes red. The verify-bindings skill's Step 2 names the zero-match
+  message as a command error.
+- **The resolver order stays as built:** the two environment variables first, the build's game
+  folder last.
+
 ### fix(bindings): v2.0.30 - convergence fixes for plan 008
 
 - **A failed or aborted run is never a pass.** The all-skipped branch added below also caught
   `Test Run Failed.` (an error message with zero failed tests) and `Test Run Aborted.` when their
   only count was `Skipped:`, and printed `PASSED WITH SKIPS`. With no `Passed:` count it now fires
   only on `Test Run Successful.`, so those runs get the old `FAILED (counts unavailable)` or no
-  banner again (two new `tools/test_hooks.sh` 7c cases, red first).
+  banner again (two new `tools/test_hooks.sh` 7c cases, red first). The whole banner change was
+  removed afterwards (the maintainer decisions entry above).
 - **The skill no longer claims a complete failure list.** verify-bindings Step 2 names
   `Main/SubModule.cs not found` as a precondition to report, and says a failure matching no row is
   still a finding. Two test comments now state the resolver's fallback exactly and drop the stale
@@ -25,7 +42,8 @@
   exits 0, which Claude Code sends to the debug log only, so the hooks catalog row and this
   CHANGELOG no longer say Claude sees it. It now also names the skips of an all-skipped run at
   normal verbosity, where vstest prints no `Passed:` line (`tools/test_hooks.sh` section 7c).
-  Delivering the banner to Claude is left for Mike.
+  Delivering the banner to Claude was left for Mike, who chose to remove the banner change
+  instead (the maintainer decisions entry above).
 - **The docs match the gate.** The verify-bindings skill no longer says every gate test goes
   Inconclusive without the game (33 bind only against the test bin's TaleWorlds DLLs and pass),
   and its Step 2 now names the two red forms plan 008 added: no install resolved (an environment
@@ -52,8 +70,8 @@
 - **The test banner names skips.** `notify-test-results.sh` printed `PASSED (33 tests)` for a run of
   33 passes and 335 skips; it now prints `PASSED WITH SKIPS` with the count, and a red run carries its
   skip count too. Pinned by `tools/test_hooks.sh` section 7c; `docs/reference/hooks-catalog.md`
-  lists the new banner. The banner reaches the debug log only, not Claude (see the 2026-09-24
-  follow-up).
+  lists the new banner. The banner reaches the debug log only, not Claude, and the 2026-09-24
+  maintainer decisions entry removes it again.
 - Applies to the binding gate the fix that the "`Assert.Inconclusive` is a pass" item in
   `docs/reviews/rca-lord-identity-2026-08-29.md` asks for. That item names
   `LordFamilyTransformTests`, which is not in the gate, so it stays open.

@@ -245,3 +245,33 @@ The stale-text FOLLOW-UP above is unchanged; the `:14` line it missed is fixed h
   tests `TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
   `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`.
 - The C# edits are comment-only, so the strict gate was not re-run.
+
+## Maintainer decisions applied (2026-09-24)
+
+Mike answered three of the NEEDS MIKE action items on 2026-09-24; the issue is #652. All three are
+in one commit on top of `2ca0805b`: `fix(bindings): v2.0.30 - apply maintainer decisions for plan
+008`, the commit that adds this section.
+
+| # | Action item | Decision | Applied |
+|---|---|---|---|
+| 1 | The skip banner's channel (with Codex P3) | Option (a): drop the banner change. The signal is the `Skipped:` count in `dotnet test`'s own output plus the strict gate runsettings | `.claude/hooks/notify-test-results.sh` restored to its content at `7f02fc8d` and `tools/test_hooks.sh` section 7c removed (`git diff 7f02fc8d` on both is empty). The hooks catalog row now says the hook reports no skips and names the two signals. The CHANGELOG, the RCA (a resolution section) and REVIEW-LOG note the removal. Codex P3 (F11) lapses with the banner. |
+| 2 | `TreatNoTestsAsError` | Add it to `binding-gate.runsettings` | Added under `<RunConfiguration>`. Test first: `BindingGateRunSettingsTests` failed with `Assert.AreEqual failed. Expected:<true>. Actual:<(null)>. binding-gate.runsettings must set <RunConfiguration><TreatNoTestsAsError>true</TreatNoTestsAsError></RunConfiguration>`, then passed (2 of 2; the second row pins `MapInconclusiveToFailed`). The verify-bindings skill's Step 2 names the zero-match message. |
+| 4 | Build folder first (Agent 6 P1) | Keep the order as built: `BANNERLORD_OVERRIDE_DIR`, then `BANNERLORD_GAME_DIR`, then the build's `TaomGameFolder` | No code change. |
+
+Still open: action item 3 (`if: ${{ !cancelled() }}` on the CI step, F13) was not among the
+decisions. Action item 5's issue is #652; the two earlier CHANGELOG headings do not yet carry it.
+
+**Verification of the decisions:**
+- A filter that matches no test under the strict settings,
+  `dotnet test TAOM.Tests --no-build -p:DisableModuleCopy=true -p:ModuleId= --settings TAOM.Tests/binding-gate.runsettings --filter "TestCategory=NoSuchCategory008"`:
+  rc 0 before the change, rc 1 after, both printing `No test matches the given testcase filter`.
+- The strict gate,
+  `dotnet test TAOM.Tests --no-build -p:DisableModuleCopy=true -p:ModuleId= --settings TAOM.Tests/binding-gate.runsettings --filter TestCategory=BindingVerification`:
+  `Passed!  - Failed:     0, Passed:   368, Skipped:     0, Total:   368`, rc 0.
+- `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId=`: 0 errors.
+- The full suite, `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`:
+  `Failed: 2, Passed: 10245, Skipped: 2, Total: 10249`. The two failures are the known live-Armory
+  tests `TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+  `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`; the two new passes are
+  `BindingGateRunSettingsTests`.
+- `bash tools/test_hooks.sh`: `283 passed, 0 failed`, rc 0 (the six 7c cases are gone).

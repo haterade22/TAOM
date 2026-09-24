@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Settings for the engine-binding gate (TestCategory=BindingVerification) only. The
      verify-bindings skill and CI pass this file to dotnet test explicitly. In the gate an
-     Assert.Inconclusive means nothing was checked, so it fails the run here. The default suite
-     does not use this file on purpose: there a test skips when the game or the Armory is absent
-     (see the GameAssemblies doc comment). -->
+     Assert.Inconclusive means nothing was checked, so it fails the run here, and a filter that
+     matches no test (a renamed category, a typo) is an error, not a green run of nothing. The
+     default suite does not use this file on purpose: there a test skips when the game or the
+     Armory is absent (see the GameAssemblies doc comment). BindingGateRunSettingsTests pins
+     both settings. -->
 <RunSettings>
+  <RunConfiguration>
+    <TreatNoTestsAsError>true</TreatNoTestsAsError>
+  </RunConfiguration>
   <MSTest>
     <MapInconclusiveToFailed>true</MapInconclusiveToFailed>
   </MSTest>

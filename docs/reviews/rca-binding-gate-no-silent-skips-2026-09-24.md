@@ -92,3 +92,13 @@ missed them, and each lens's blind spots.
 - Recommended rule edit, not made on this branch: `.claude/rules/hook-authoring.md:128` should read
   "or, for an advisory hook, a channel from `harness-facts.md` 'Visibility'; stderr from an exit-0
   hook reaches no one".
+
+## Resolution of the open findings (2026-09-24, #652)
+
+- **F1 and F11:** Mike chose to remove the banner change. `notify-test-results.sh` is back to its
+  content at `7f02fc8d`, and `tools/test_hooks.sh` 7c is gone. The signal for a skip is the
+  `Skipped:` count in `dotnet test`'s own output, and for the gate the strict runsettings. F11
+  lapses with the banner.
+- **F12:** fixed. `binding-gate.runsettings` sets `TreatNoTestsAsError`; a zero-match filter under
+  it now exits 1, and `BindingGateRunSettingsTests` pins the setting.
+- **F13:** not among the decisions; still open.

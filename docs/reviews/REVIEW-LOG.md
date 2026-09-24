@@ -3800,6 +3800,12 @@ Left for Mike: the banner's channel (with the P3), `TreatNoTestsAsError` (measur
 gate run goes from rc 0 to rc 1, and the gate is unchanged), `if: ${{ !cancelled() }}` on the CI
 step, build-folder-first resolution, and the GitHub issue.
 
+Mike's decisions (2026-09-24, #652): the banner change and 7c are removed (the `Skipped:` count in
+`dotnet test`'s output and the strict runsettings are the signal, so the P3 lapses with them);
+`TreatNoTestsAsError` is added to the gate settings; the resolver order stays variables first. The
+CI `if:` was not among them and stays open. Recorded in the deep-review report's maintainer
+decisions section.
+
 Codex did best by citing the vendor hook contract and building a two-summary counterexample. It
 missed every prose and test-adequacy finding. Full suite `Failed: 2, Passed: 10243, Skipped: 2`
 (the two known live-Armory tests); strict gate 368/0/0; `test_hooks.sh` 287 passed.

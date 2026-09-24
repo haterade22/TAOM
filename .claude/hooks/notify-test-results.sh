@@ -2,9 +2,7 @@
 
 # Resolve a safe Python (never a Microsoft Store alias — those hang forever).
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
-# PostToolUse hook: summarize dotnet test results. The banner goes to stderr from an exit-0
-# hook, which Claude Code sends to the debug log only (harness-facts.md "Visibility"): Claude
-# never sees it. Read the Skipped: count from the tool result itself.
+# PostToolUse hook: summarize dotnet test results prominently
 INPUT=$(cat)
 
 # Extract tool_input.command and tool_response. Prefer jq; fall back to python3 for
@@ -50,22 +48,8 @@ if echo "$COMMAND" | grep -q "dotnet test"; then
   # would have mislabelled every green run the moment it started working.
   FAILED=$(echo "$RESPONSE" | grep -oP 'Failed:\s*\K[0-9]+' | head -1)
   PASSED=$(echo "$RESPONSE" | grep -oP 'Passed:\s*\K[0-9]+' | head -1)
-  # A skipped test checked nothing. MSTest reports Assert.Inconclusive as Skipped and exits 0,
-  # so a binding-gate run of 33 passes and 335 skips used to print "PASSED (33 tests)" here.
-  # Name the skips whenever there are any (tools/test_hooks.sh section 7c).
-  SKIPPED=$(echo "$RESPONSE" | grep -oP 'Skipped:\s*\K[0-9]+' | head -1)
-  SKIPNOTE=""
-  if [[ -n "$SKIPPED" && "$SKIPPED" -gt 0 ]]; then
-    SKIPNOTE=", Skipped: ${SKIPPED}"
-  fi
   if [[ -n "$FAILED" && "$FAILED" -gt 0 ]]; then
-    echo "=== TEST RESULTS: FAILED (Failed: ${FAILED}, Passed: ${PASSED:-?}${SKIPNOTE}) ===" >&2
-  elif [[ -n "$SKIPNOTE" ]] && { [[ -n "$PASSED" ]] || echo "$RESPONSE" | grep -q "Test Run Successful\."; }; then
-    # At normal verbosity vstest prints "Passed:" only when a test passed, so an all-skipped
-    # run has no Passed count at all. Without one, only "Test Run Successful." makes it a pass:
-    # "Test Run Failed." (an error message, zero failed tests) and "Test Run Aborted." fall
-    # through to the fallback below (tools/test_hooks.sh section 7c).
-    echo "=== TEST RESULTS: PASSED WITH SKIPS (Passed: ${PASSED:-0}${SKIPNOTE}; a skipped test checked nothing) ===" >&2
+    echo "=== TEST RESULTS: FAILED (Failed: ${FAILED}, Passed: ${PASSED:-?}) ===" >&2
   elif [[ -n "$PASSED" ]]; then
     echo "=== TEST RESULTS: PASSED (${PASSED} tests) ===" >&2
   elif echo "$RESPONSE" | grep -q "Failed"; then
