@@ -797,6 +797,34 @@ else
 fi
 
 # ---------------------------------------------------------------------------
+head2 "7c. notify-test-results: skipped tests are named, never folded into PASSED"
+# MSTest reports Assert.Inconclusive as Skipped and still exits 0. A binding-gate run with no
+# game printed "Passed! - Failed: 0, Passed: 33, Skipped: 335" and the banner said
+# "PASSED (33 tests)". Drive the real hook with the three summary shapes.
+ntr_banner() {
+    printf '{"tool_name":"Bash","tool_input":{"command":"dotnet test TAOM.Tests"},"tool_response":"%s","hook_event_name":"PostToolUse"}' "$1" \
+        | CLAUDE_PROJECT_DIR="$SANDBOX" timeout -k 2 10 bash "$REPO/.claude/hooks/notify-test-results.sh" 2>&1 >/dev/null
+}
+OUT=$(ntr_banner 'Passed!  - Failed:     0, Passed:    33, Skipped:   335, Total:   368')
+if grep -q 'PASSED WITH SKIPS (Passed: 33, Skipped: 335' <<< "$OUT"; then
+    ok "a green run with skips names the skips"
+else
+    bad "notify-test-results.sh folded 335 skipped tests into a pass: $OUT"
+fi
+OUT=$(ntr_banner 'Passed!  - Failed:     0, Passed:  6380, Skipped:     0, Total:  6380')
+if grep -q 'TEST RESULTS: PASSED (6380 tests)' <<< "$OUT"; then
+    ok "a green run with no skips keeps the plain PASSED banner"
+else
+    bad "notify-test-results.sh changed the no-skip banner: $OUT"
+fi
+OUT=$(ntr_banner 'Failed!  - Failed:     2, Passed: 10235, Skipped:     2, Total: 10239')
+if grep -q 'TEST RESULTS: FAILED (Failed: 2, Passed: 10235, Skipped: 2)' <<< "$OUT"; then
+    ok "a red run reports its skips too"
+else
+    bad "notify-test-results.sh dropped the skip count from a red run: $OUT"
+fi
+
+# ---------------------------------------------------------------------------
 head2 "8. /context-budget scan.sh runs under set -u and measures the launch load"
 # Nothing else runs this script, and it reads the budget from tools/lint_docs.py: an unbound
 # variable or a broken JSON handshake would otherwise surface only when someone runs the skill.

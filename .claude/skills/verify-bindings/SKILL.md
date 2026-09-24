@@ -24,12 +24,12 @@ Re-verify that TAOM's engine touchpoints still bind against the **installed** Ba
 
 ## Pre-flight
 
-`BANNERLORD_GAME_DIR` (or `BANNERLORD_OVERRIDE_DIR`) must point at the install — the gate loads the SandBox/CustomBattle/StoryMode module DLLs from there. If unset, the gate self-reports `Assert.Inconclusive` (it does not falsely pass). This is an environment fact to report, not fix (see `.claude/rules/environment-failures.md`).
+`BANNERLORD_GAME_DIR` (or `BANNERLORD_OVERRIDE_DIR`) points the gate at the install; when neither is set in the test process, it falls back to the game folder the test DLL was built against. The gate loads the SandBox/CustomBattle/StoryMode module DLLs from there. If no install resolves, every gate test calls `Assert.Inconclusive`, and the Step 1 command's `binding-gate.runsettings` turns each one into a failure, so the run is red. Without that file MSTest reports them as Skipped and exits 0: never quote such a run, or any run with a non-zero `Skipped:` count, as a green gate. A missing install is an environment fact to report, not fix (see `.claude/rules/environment-failures.md`).
 
 ## Step 1 — Run the binding gate
 
 ```bash
-dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true --filter "TestCategory=BindingVerification"
+dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true -p:ModuleId= --settings TAOM.Tests/binding-gate.runsettings --filter "TestCategory=BindingVerification"
 ```
 
 Three test classes under `TAOM.Tests/Migration/`:
@@ -71,4 +71,4 @@ The gate is offline-only. Patch *application*, prefab visual order, ruler equipm
 
 ## Output
 
-Report: gate result (pass/fail with the per-finding class for any failure), whether the snapshot reproduced (`-Check` exit code), and any open punch-list items the change implicates. Update `docs/migration/TRACKING.md` and `CHANGELOG.md` if bindings were fixed.
+Report: gate result (pass/fail with the per-finding class for any failure), the run's `Skipped:` count (it must be 0), whether the snapshot reproduced (`-Check` exit code), and any open punch-list items the change implicates. Update `docs/migration/TRACKING.md` and `CHANGELOG.md` if bindings were fixed.

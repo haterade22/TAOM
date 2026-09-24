@@ -48,8 +48,18 @@ if echo "$COMMAND" | grep -q "dotnet test"; then
   # would have mislabelled every green run the moment it started working.
   FAILED=$(echo "$RESPONSE" | grep -oP 'Failed:\s*\K[0-9]+' | head -1)
   PASSED=$(echo "$RESPONSE" | grep -oP 'Passed:\s*\K[0-9]+' | head -1)
+  # A skipped test checked nothing. MSTest reports Assert.Inconclusive as Skipped and exits 0,
+  # so a binding-gate run of 33 passes and 335 skips used to print "PASSED (33 tests)" here.
+  # Name the skips whenever there are any (tools/test_hooks.sh section 7c).
+  SKIPPED=$(echo "$RESPONSE" | grep -oP 'Skipped:\s*\K[0-9]+' | head -1)
+  SKIPNOTE=""
+  if [[ -n "$SKIPPED" && "$SKIPPED" -gt 0 ]]; then
+    SKIPNOTE=", Skipped: ${SKIPPED}"
+  fi
   if [[ -n "$FAILED" && "$FAILED" -gt 0 ]]; then
-    echo "=== TEST RESULTS: FAILED (Failed: ${FAILED}, Passed: ${PASSED:-?}) ===" >&2
+    echo "=== TEST RESULTS: FAILED (Failed: ${FAILED}, Passed: ${PASSED:-?}${SKIPNOTE}) ===" >&2
+  elif [[ -n "$PASSED" && -n "$SKIPNOTE" ]]; then
+    echo "=== TEST RESULTS: PASSED WITH SKIPS (Passed: ${PASSED}${SKIPNOTE}; a skipped test checked nothing) ===" >&2
   elif [[ -n "$PASSED" ]]; then
     echo "=== TEST RESULTS: PASSED (${PASSED} tests) ===" >&2
   elif echo "$RESPONSE" | grep -q "Failed"; then

@@ -276,3 +276,8 @@ jobs:
 
       - name: Test
         run: dotnet test TAOM.Tests -c Release --no-build -p:DisableModuleCopy=true -p:ModuleId= --verbosity normal
+
+      # The engine-binding gate again, with Inconclusive mapped to Failed: a gate that could not
+      # load the game checked nothing, and the default Test step above reports that as Skipped.
+      - name: Binding gate (a skip fails)
+        run: dotnet test TAOM.Tests -c Release --no-build -p:DisableModuleCopy=true -p:ModuleId= --settings TAOM.Tests/binding-gate.runsettings --filter "TestCategory=BindingVerification"

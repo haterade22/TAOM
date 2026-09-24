@@ -2,6 +2,29 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-24
+
+### test(bindings): v2.0.30 - make the binding gate fail loudly on skips
+
+- **The gate finds the game the build used.** `GameAssemblies` read the install only from the test
+  process's `BANNERLORD_OVERRIDE_DIR` and `BANNERLORD_GAME_DIR`, so a test DLL built against the
+  game but run without them (an IDE runner, `dotnet test --no-build` from a fresh shell) skipped most
+  of the binding suite and still exited green. `TAOM.Tests.csproj` now records the build's
+  `GameFolder` as `TaomGameFolder` assembly metadata, and `GameAssemblies` falls back to it after the
+  two variables.
+- **A skip in the gate is a failure.** `TAOM.Tests/binding-gate.runsettings` maps Inconclusive to
+  Failed. The verify-bindings skill, the docs that give the gate command and the CI job run the gate
+  with it. The default suite does not: a test there still skips when the game or the Armory is
+  absent, as decided. The discovery floors (fewer than 30 patch types, fewer than 20 GameModels) now
+  fail instead of skipping, since they only run once the game has loaded.
+- **The test banner names skips.** `notify-test-results.sh` printed `PASSED (33 tests)` for a run of
+  33 passes and 335 skips; it now prints `PASSED WITH SKIPS` with the count, and a red run carries its
+  skip count too. Pinned by `tools/test_hooks.sh` section 7c; `docs/reference/hooks-catalog.md`
+  lists the new banner.
+- Closes the binding-gate half of "`Assert.Inconclusive` is a pass" in
+  `docs/reviews/rca-lord-identity-2026-08-29.md`; `LordFamilyTransformTests` and the rest of the
+  default suite stay open.
+
 ## 2026-09-23
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)

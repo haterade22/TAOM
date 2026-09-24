@@ -43,8 +43,9 @@ public class HarmonyPatchBindingTests
 
         var patchTypes = DiscoverPatchTypes(out var typesFailedToLoad);
 
+        // The game loaded, so a short discovery is a TAOM type-load failure: fail, never skip.
         if (patchTypes.Count < 30)
-            Assert.Inconclusive(
+            Assert.Fail(
                 $"Only {patchTypes.Count} [HarmonyPatch] types discovered (expected ~70). " +
                 $"{typesFailedToLoad} type(s) failed to load. This indicates an assembly-load problem, " +
                 "not a genuine pass — investigate before trusting this gate.");
