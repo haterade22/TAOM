@@ -2,6 +2,25 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-24
+
+### perf(map-load): v2.0.30 - log a loading-window lower only when it drops
+
+The map-load diagnostics no longer write a log line on every frame of the main menu, the party
+screen and character creation. The engine lowers the loading window on each of those frames even
+when it is already down, and TAOM traced every call with a stack walk and a flushed write (84 MB in
+a 35-minute session, 1.16 GB with the main menu left open for three hours). A lower is now traced
+only when the window was actually up: `LoadingWindow_Disable_Patch` captures
+`IsLoadingWindowActive` in a Prefix through `__state`, and the Postfix asks
+`LoadingWindowTraceGate.IsRealLower` before calling `MapLoadTracer.TraceWithCallers`. Raises are
+traced as before. Plan 012.
+
+Eight new tests in `TAOM.Tests/Features/MapLoadDiagnostics/`. Full suite in the plan worktree:
+10243 passed, 2 skipped, 2 failed (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, which fail the same way without this
+change). Not smoked in game: the owed check is a minute on the main menu and the party screen, then
+a campaign load, with a single-digit `LOADING-WINDOW lowered` count in the new log.
+
 ## 2026-09-23
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)
