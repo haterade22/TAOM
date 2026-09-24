@@ -193,7 +193,10 @@ public class SubModule : MBSubModuleBase
         // Module.InitializeSubModuleBases catch, which logs it and throws a new exception, and the
         // game does not start. That is why every category goes through TryPatchCategory: one
         // binding that no longer resolves costs its category (Harmony keeps the classes it applied
-        // before the failing one) instead of the module load or the rest of a batch. The explicit
+        // before the failing one) instead of the module load or the rest of a batch. The exception:
+        // a [HarmonyPatch] attribute naming a type the engine no longer has breaks Harmony's
+        // assembly-wide category index, so every category fails, still without failing the load.
+        // The explicit
         // assembly matters: the one-argument Harmony.PatchCategory(string) picks its assembly
         // from the caller's stack frame.
         _harmony = new Harmony("com.taom.mod");

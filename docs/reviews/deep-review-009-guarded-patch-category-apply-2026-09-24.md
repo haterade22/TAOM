@@ -130,6 +130,15 @@ No finding was a false positive. Agent 3 reported no performance issue.
   (the plan's residual; finding 6 rides on it).
 - Plan 009 line 838 attributes runtime Harmony to the Bannerlord.Harmony module; the dependency
   project ships it (Codex).
+- `plans/018-composition-root-first-steps.md` (depends on 009, `plans/README.md:36,52`) needs a
+  re-cut after 009 merges. Its precondition (:18-19) expects `grep -c "ReportPatchFailures("` to
+  return 5 (now 4); its drift check (:26) allows only the commit ending "apply every patch
+  category through one guard"; its anchors (:183-184, the kernel test's `AssertOnceBetween` at
+  :1399-1401, :1582-1583) name `ReportPatchFailures("module load");` (gone) and
+  `ReportPatchFailures("main menu setup");` (now `ReportPatchFailures("startup", persistent: true);`).
+  Its `FeatureModuleHooks.ReportFaults` (:1531-1544) sends a red `DisplayMessage` for the
+  ProcessLoad and MainMenu phases, which repeats finding 1; the re-cut must follow the startup
+  inquiry rule in `lessons/localization-ui.md`.
 
 ## Verification
 
@@ -185,3 +194,27 @@ For the consolidated Phase 3h update, not applied here:
   rename in the code makes stale.
 - **What Codex does well:** stdout decompiles of the exact runtime Harmony, with the non-transactional
   class loop quoted to disprove a wording claim.
+
+## Convergence
+
+A `deep-reviewer` convergence pass over `9da9b5b9..bdf7d515` (16 files) found no runtime defect.
+It re-checked the engine and Harmony 2.4.2 claims behind the startup inquiry, the parity of the
+normal path, the 13 tests and the harness checks. It raised three defects; all three held up when
+re-checked against the code, and none was a false positive.
+
+| # | Severity | Defect | Fix |
+|---|---|---|---|
+| C1 | MED | Plan 018 depends on 009 and anchors on text this fix changed: its precondition expects 5 `ReportPatchFailures(` calls (4 at HEAD, 5 at `9da9b5b9`, both counted this pass), its drift check allows only 009's first commit, and its `ReportFaults` repeats finding 1 for the startup phases | Listed under FOLLOW-UP with every line; `plans/` added to the grep list in `lessons/build-tooling-workflow.md`. The plan itself is not re-cut here: that waits until 009 merges |
+| C2 | LOW | `SubModule.cs:194-196`, `crash-report.md:284` and lifecycle doc :20 still said a failure costs only its category, without the assembly-wide index exception that `lessons/harmony-il.md` requires | Clause added at all three |
+| C3 | LOW | RCA summary said 7 LOW and 3 nits; its table has 8 LOW (rows 2, 5 to 11) and 2 NIT (12, 13) | Corrected |
+
+Nits, also applied: `lessons/localization-ui.md` now names both chat-log subscribers (`MPChatVM`
+and `ChatLogMessageManager`, sound only; `ChatLogMessageManager.cs:29`, created in the
+`GauntletChatLogView` constructor at :60). The lifecycle doc's `OnBeforeInitialModuleScreenSetAsRoot`
+row now points at :623 and mentions the startup inquiry. The other rows' stale line refs predate
+plan 009 and are left alone.
+
+- Full suite after the edits (`dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`):
+  **Failed 2, Passed 10248, Skipped 2, Total 10252**, the same two known live-Armory failures.
+- The in-game U1 and U2 items stand: Esc cannot dismiss the inquiry during the splash video, but
+  Enter can.

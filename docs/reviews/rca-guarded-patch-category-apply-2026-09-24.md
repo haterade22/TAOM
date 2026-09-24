@@ -4,7 +4,7 @@
 
 Plan 009 routed all 84 Harmony category applies through `PatchCategoryApplier` so one drifted
 binding costs one category. Six deep-review lenses and a Codex adversarial review of
-`7f02fc8d..9da9b5b9` produced 13 confirmed findings (1 HIGH, 2 MED, 7 LOW, 3 nits) and no false
+`7f02fc8d..9da9b5b9` produced 13 confirmed findings (1 HIGH, 2 MED, 8 LOW, 2 nits) and no false
 positives. The HIGH one defeated the change's own promise: the failure notice for the 28 categories
 applied in `OnSubModuleLoad` was sent before anything in the engine listens for messages, and the
 list was cleared as it was sent, so a dead crash guard stayed silent on screen. The rest were
