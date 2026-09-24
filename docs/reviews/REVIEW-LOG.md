@@ -3786,7 +3786,8 @@ mutant runs, no false positive.** It decompiled the installed engine fresh, qual
 historical, 1 partly confirmed). Lenses: no HIGH, no engine incompatibility (10 verified), no efficiency issue.
 Confirmed: 1 MED process gap (no GitHub issue; needs Mike) and 4 LOW, all fixed in the review follow-up commit: the
 stale "every raise and lower" phrase in `feature-map.md` and the class summary; the incomplete screen list (the
-engine also lowers every frame from inventory, clan, kingdom, quests, character, crafting and the banner editor) and
+engine also lowers every frame from inventory, clan, kingdom, quests, character, crafting, the barber, the face
+generator and the banner editor, among others) and
 the gate doc's "unconditionally"; no test ran the real Prefix (a `__state = true` mutant passed all eight tests,
 now fails the new round-trip test); the lowered-trace test accepted a fallback or helper-shifted caller chain (a
 helper-hop mutant now fails it). Codex missed the stale phrase outside the diff and the screen list beyond the three

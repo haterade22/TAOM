@@ -102,7 +102,8 @@ intact, the patch category is applied in `OnSubModuleLoad` before the first lowe
 
 APPLIED:
 - `Main/Features/MapLoadDiagnostics/Hooks/LoadingWindow_Transitions_Patch.cs:7,17-22`: class summary
-  now "every raise, and every lower that actually took the window down"; the full screen list.
+  now "every raise, and every lower that actually took the window down"; a longer screen list
+  (still incomplete, see Convergence).
   Comment only. Proof: full suite green before (builder's run, re-verified by the filtered baseline,
   26 passed) and after (below).
 - `Main/Features/MapLoadDiagnostics/LoadingWindowTraceGate.cs:5-9`: the clear happens "whenever a
@@ -195,3 +196,24 @@ Phase 3h is consolidated later for all branches. Proposed lines for "Lessons Fro
   feature map, a class summary above the edited paragraph), and a caller list it was handed in the
   prompt; it verifies the named callers rather than enumerating all of them.
 - **False positives:** none new.
+
+## Convergence
+
+One `deep-reviewer` pass on the review-fix diff `6f7ddd39..15e5475a` (15 files). Production code
+unchanged (every `Main/` line in the diff is a `///` comment); tests, standards and the evidence
+figures (Codex tokens, log line counts, the 123922/123928/123939 sequence) all confirmed. Three LOW
+defects, all prose, each re-checked by the lead against the worktree and the decompiled v1.5.3
+sources before fixing:
+
+| # | Finding | Verdict | Action |
+|---|---|---|---|
+| C1 | The "fixed" screen list still omits the barber (`GauntletBarberScreen.OnFrameTick` ticks `BodyGeneratorView.OnTick`, which lowers once `SceneLayer.ReadyToRender()` holds, `:349-351`) and the face generator (`GauntletBodyGeneratorScreen.OnFrameTick`, same view); "full" and "every caller" overclaimed | CONFIRMED | Patch summary, feature doc and CHANGELOG now name the barber and face generator and say "among them" / "such as" (non-exhaustive); harmony-il Repeat, REVIEW-LOG 3789, RCA finding 2 and the Agent 2 line corrected; "full" removed from Step 4 above |
+| C2 | Test comment said a helper hop would show up as the first caller; `TraceWithCallers` skips frames by position (`MapLoadTracer.cs:71`), so the helper takes the skipped slot and the Postfix becomes the first caller, which is what the assertion catches | CONFIRMED | Comment rewritten; comment only |
+| C3 | "two lines above the paragraph it rewrote": at `6f7ddd39` the summary is line 7 and the rewritten paragraph lines 16-22, with the first `<para>` between | CONFIRMED | "one paragraph above" in build-tooling-workflow and the RCA |
+
+False positives: none.
+
+**Suite after the convergence fixes** (worktree, `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`):
+`Failed!  - Failed: 2, Passed: 10244, Skipped: 2, Total: 10248` (net472). The two failures are the
+known live-Armory tests `TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`.

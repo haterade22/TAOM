@@ -522,8 +522,9 @@ agents independently falsified the same one.
 - **Repeat (plan 012, 2026-09-24):** "the engine calls `DisableGlobalLoadingWindow` on every frame of
   the main menu, the party screen and character creation" shipped in a patch comment, a test
   docstring, the feature doc and the CHANGELOG. The list came from the log's top callers, not a
-  caller census; the installed DLLs add the inventory, clan, kingdom, quests, character, crafting
-  and banner-editor ticks. A plan's own prose is a claim too: when a plan quotes a call frequency
+  caller census; the installed DLLs add at least the inventory, clan, kingdom, quests, character,
+  crafting, barber, face-generator and banner-editor ticks, and the review's own "full" list still
+  missed the barber and face generator (convergence pass). A plan's own prose is a claim too: when a plan quotes a call frequency
   for the builder to copy, the census belongs in the plan's evidence, or the prose says "several
   screens". Source: `docs/reviews/rca-loading-window-trace-per-frame-2026-09-24.md` finding 2.
 

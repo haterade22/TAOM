@@ -48,8 +48,9 @@ chain**.
 
 The caller chain is what solved it. It is affordable because real transitions fire a handful of
 times. The engine also calls `LoadingWindow.DisableGlobalLoadingWindow()` on every frame of the main
-menu and most campaign screens (party, inventory, clan, kingdom, quests, character, crafting), and
-of character creation and the banner editor once their scene is ready, whether or not the window is
+menu and several campaign screens (party, inventory, clan, kingdom, quests, character and crafting
+among them), and of scene screens such as character creation, the barber, the face generator and
+the banner editor once their scene is ready, whether or not the window is
 up, so the Disable patch captures `IsLoadingWindowActive` in a Prefix and traces only a
 true-to-false change (`LoadingWindowTraceGate`). Raise lines are still traced per call, not per
 transition: a healthy new-campaign load can log two raises (the map screen, then character creation

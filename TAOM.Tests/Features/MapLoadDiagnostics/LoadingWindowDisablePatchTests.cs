@@ -67,8 +67,9 @@ public class LoadingWindowDisablePatchTests
 
         LoadingWindow_Disable_Patch.Postfix(__state: true);
 
-        // TraceWithCallers skips itself and the Postfix, so a helper between them would show up as
-        // the first caller; a fallback chain would lose the caller information entirely.
+        // TraceWithCallers skips its first two frames by position (itself and, normally, the
+        // Postfix), so a helper between them takes the Postfix's skipped slot and pushes the Postfix
+        // itself into the first-caller position; a fallback chain would lose the callers entirely.
         _logger.ReceivedWithAnyArgs(1).LogInfo(default!);
         _logger.Received(1).LogInfo(Arg.Is<string>(s =>
             s.Contains("LOADING-WINDOW lowered") && s.Contains("callers: ")

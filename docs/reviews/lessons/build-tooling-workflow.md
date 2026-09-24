@@ -2106,7 +2106,7 @@ the total. The tool's tests assert behaviour, so they stayed green.
 - **Source:** #564 deep-review, `docs/reviews/rca-hideout-boss-fight-2026-09-11.md` finding 1.
 - **Repeat (plan 012, 2026-09-24):** the change narrowed "every raise and lower of the loading
   window" in the feature doc and the registry, and left the same phrase in `feature-map.md:34` and
-  in the class summary two lines above the paragraph it rewrote. The plan's file list scoped the
+  in the class summary one paragraph above the paragraph it rewrote. The plan's file list scoped the
   edit, and neither place was on it. Grep the whole repo for the old phrase, not only the files a
   plan names. Source: `docs/reviews/rca-loading-window-trace-per-frame-2026-09-24.md` finding 1.
 

@@ -16,9 +16,10 @@ namespace TAOM.Features.MapLoadDiagnostics.Hooks;
 ///
 /// <para>
 /// Caller chains are affordable only on real transitions. Raises are rare, but the engine calls
-/// <c>DisableGlobalLoadingWindow</c> on every frame of the main menu and most campaign screens
-/// (party, inventory, clan, kingdom, quests, character, crafting), and of character creation and the
-/// banner editor once their scene is ready, and clears the flag whether or not the window was up.
+/// <c>DisableGlobalLoadingWindow</c> on every frame of the main menu and several campaign screens
+/// (party, inventory, clan, kingdom, quests, character and crafting among them), and of scene
+/// screens such as character creation, the barber, the face generator and the banner editor once
+/// their scene is ready, and clears the flag whether or not the window was up.
 /// The Disable patch therefore captures the flag in a Prefix and traces only a true-to-false change
 /// (otherwise one no-op lower per rendered frame, each a stack walk and a flushed log line).
 /// </para>

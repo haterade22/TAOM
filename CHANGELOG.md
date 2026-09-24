@@ -6,9 +6,10 @@
 
 ### perf(map-load): v2.0.30 - log a loading-window lower only when it drops
 
-The map-load diagnostics no longer write a log line on every frame of the main menu and most
-campaign screens (party, inventory, clan, kingdom, quests, character, crafting), or of character
-creation and the banner editor. The engine calls the loading-window lower on each of those frames
+The map-load diagnostics no longer write a log line on every frame of the main menu and several
+campaign screens (party, inventory, clan, kingdom, quests, character and crafting among them), or
+of scene screens such as character creation, the barber, the face generator and the banner editor.
+The engine calls the loading-window lower on each of those frames
 even when the window is already down, and TAOM traced every call with a stack walk and a flushed
 write (84 MB in a 35-minute session, 1.16 GB with the main menu left open for three hours). A lower
 is now traced only when the window was actually up: `LoadingWindow_Disable_Patch` captures
