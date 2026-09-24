@@ -2,6 +2,31 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-24
+
+### perf(crash-report): v2.0.30 - crash capture boot cost and live toggles (plan 006)
+
+Crash capture no longer costs about 30 s of every boot: the native-to-managed sweep patched all 247
+engine callback methods (the gap between `[SaveDefiners]` and the attach line was 29 to 33 s on 30
+of 30 desktop launches, and it never captured an exception) and now patches an allowlist of six in
+the new `Native2ManagedTargets`, each covering managed work no other crash finalizer wraps. The
+attach line now reports its own time. Four Patch37 finalizers that could never fire were removed:
+they sat on empty base virtuals (`MissionBehavior.OnMissionTick`, `MBSubModuleBase.OnSubModuleLoad`,
+`MissionView.OnMissionScreenTick`, `ScriptComponentBehavior.OnTick`), and a finalizer on a base
+method never runs for an override. `Patch37TargetShapeTests` refuses that shape from now on.
+
+Both crash-capture MCM toggles now work live without a restart. Before, `OnSubModuleLoad` read them
+at a point where MCM's settings instance is always null, so the game ignored them at launch; they
+are now read when an exception arrives, and the native-to-managed toggle hands the exception back
+with its throw site intact when off. Defaults stay ON. A crash that repeats every frame now logs its
+suppression line at occurrences 1, 2, 10, 100 and so on instead of every frame. The crash-report,
+MCM, hero-race, Gauntlet screen, patch registry and API snapshot docs now say what the code does.
+
+Full suite in the plan worktree: 10254 passed, 2 skipped, 2 failed
+(`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, which fail the same way at the base).
+Nothing smoked in game: the boot time, the six-shim attach and live MCM toggling are owed.
+
 ## 2026-09-23
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)

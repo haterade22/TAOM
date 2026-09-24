@@ -108,7 +108,7 @@ Reflection whose target is a TAOM-owned type or a dynamic member name. Not affec
 |---|---|---|
 | `Core/Infrastructure/Reflection/ReflectionService.cs` | caller-supplied `(Type, name)` keys | generic cached-reflection helper; targets are at the call sites (Category B/C above) |
 | `CareerSystem/Mutations/MutationService.cs:105` | `typeof(AbilityTemplateData).GetProperty(propertyName)` | `AbilityTemplateData` is a TAOM type; `propertyName` is data-driven |
-| `CrashReport/Hooks/Native2ManagedPatcher.cs:41,52` | `typeof(CrashReportPatchHelper)`, `typeof(Native2ManagedBridge)` | TAOM finalizer/bridge types |
+| `CrashReport/Hooks/Native2ManagedPatcher.cs`, `Native2ManagedTargets.cs` | `typeof(Native2ManagedBridge)`; `Assembly.GetType` and `GetMethod` by name on `ManagedCallbacks.*CallbacksGenerated` | the TAOM bridge type, plus six engine callback-shim names pinned offline by `Native2ManagedTargetsTests` (not by `ReflectionSiteBindingTests`) |
 | `CharacterSelection/Patches/RefreshCharacterEntityAuxPatch.cs:43` | `typeof(AgentVisualsData).GetMethod(nameof(AgentVisualsData.ActionSet))` | `nameof` → compiler-verified member; no string drift risk |
 
 ---
