@@ -43,6 +43,17 @@ public class BesiegerCamp_GetSiegeCampPartyPosition_Patch
                 return true;
             }
 
+            // Without a settlement there is no gate to ring. Defer to vanilla explicitly (the
+            // same outcome as before this guard, when the dereference below threw and the catch
+            // returned true) instead of throwing on purpose.
+            if (settlement == null)
+            {
+                Debug.Print(
+                    "TAOM: No besieged settlement and no siege camp frames; deferring to vanilla",
+                    0, Debug.DebugColor.Red, 17592186044416uL);
+                return true;
+            }
+
             Debug.Print(
                 $"TAOM: No siege camp frames at all for '{settlementId}', generating positions around gate",
                 0, Debug.DebugColor.Red, 17592186044416uL);

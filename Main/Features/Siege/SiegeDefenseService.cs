@@ -81,10 +81,12 @@ public class SiegeDefenseService : ISiegeDefenseService
         return DefaultMessages;
     }
 
-    private static string Resolve(string template, string settlement, string attacker,
+    private static string Resolve(string? template, string settlement, string attacker,
         int days, int influence, int relation)
     {
-        if (string.IsNullOrEmpty(template)) return "";
+        // net472's string.IsNullOrEmpty has no [NotNullWhen(false)], so spell the check out
+        // for the compiler; the behaviour is identical.
+        if (template is null || template.Length == 0) return "";
         return template
             .Replace("{settlement}", settlement)
             .Replace("{attacker}", attacker)

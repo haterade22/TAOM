@@ -370,7 +370,7 @@ public class SiegeDefenseServiceTests
         var msgs = _sut.GetMessages("unknown_faction");
 
         // Assert
-        Assert.IsTrue(msgs.Title.Contains("{attacker}"));
+        Assert.IsTrue(msgs.Title?.Contains("{attacker}") == true);
         Assert.AreEqual("Help Defend", msgs.AcceptButton);
     }
 
