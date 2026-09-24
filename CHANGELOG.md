@@ -2,6 +2,17 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-24
+
+### docs(rules): v2.0.30 - new patches need no ResetForUnload
+
+`.claude/rules/harmony-patches.md` now records that nothing reloads TAOM inside one process: the
+engine calls `OnSubModuleUnloaded` only from `Module.FinalizeModule` at shutdown, and a rebuild
+means restarting the game. A new patch that caches a service statically therefore needs no
+`ResetForUnload()`. The existing 14 stay until their class is next touched, and
+`ResetForUnloadSweepTests` still checks that every one that exists is called. Mike's decision 22
+(sprint finding COMP-05).
+
 ## 2026-09-23
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)
