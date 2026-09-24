@@ -47,6 +47,8 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
     private readonly IEncounterAdapter _encounter;
     private readonly IEncounterOwnershipPolicy _ownership;
     private readonly IEnlistmentReconciler _reconciler;
+    private readonly Presentation.IEnlistmentWaitMenuPresenter _presenter;
+    private readonly Content.IArmyRhythmSnapshotService _rhythm;
     private readonly IModLogger _logger;
 
     private float _budget;
@@ -67,6 +69,8 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         IEncounterAdapter encounter,
         IEncounterOwnershipPolicy ownership,
         IEnlistmentReconciler reconciler,
+        Presentation.IEnlistmentWaitMenuPresenter presenter,
+        Content.IArmyRhythmSnapshotService rhythm,
         IModLogger logger)
     {
         _store = store;
@@ -80,6 +84,8 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         _encounter = encounter;
         _ownership = ownership;
         _reconciler = reconciler;
+        _presenter = presenter;
+        _rhythm = rhythm;
         _logger = logger;
     }
 
@@ -204,7 +210,7 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
     }
 
     /// <summary>
-    /// Drop per-session caches. MUST be called on game load and session launch: the cached party
+    /// Drop per-session caches. MUST be called on game load and on a new campaign: the cached party
     /// id is matched by StringId, and lord-party ids are identical across a reload of the same
     /// campaign — so a stale handle from a destroyed campaign HITS the cache test and the cheap
     /// position sync then drives the player from a dead party's position at frame rate.
@@ -238,6 +244,15 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         // tick and finishes a live loot screen with no real waiting. Dropped here for the same
         // reason the army handle is, rather than being wired separately into the load hook.
         _reconciler?.ResetForNewSession();
+
+        // Three more pieces of absolute campaign-hour state on singletons: the settlement-dwell
+        // anchor, the arrival-offer latch and its 24-hour cooldown, and the per-hour rhythm
+        // snapshot. Loading an earlier save or starting a new campaign runs the clock backwards,
+        // and a stamp left in the future reads as "a moment ago": the exit sweep would hold the
+        // player in a town the commander has left, and the shore-leave offer would stay silent.
+        _attachment.ResetForNewSession();
+        _presenter?.ResetForNewSession();
+        _rhythm?.ResetForNewSession();
     }
 
     public void OnPartyJoinedRunningMapEvent(string partyId)

@@ -48,7 +48,7 @@ public interface IServiceMaintenanceService
     void OnPartyJoinedRunningMapEvent(string partyId);
 
     /// <summary>
-    /// Drop every per-session cache. Call on game load and session launch — a commander-party
+    /// Drop every per-session cache. Call on game load and on a new campaign — a commander-party
     /// handle cached from a previous campaign matches by StringId and would drive the position
     /// sync from a destroyed party.
     /// </summary>

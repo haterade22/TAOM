@@ -38,6 +38,12 @@ public class EnlistmentContainerWiringTests
         // EnlistmentBattleBehavior -> IServiceMaintenanceService -> IServiceStatusService ->
         // IPromotionService / IEnlistmentContentConfigProvider -> IPathService.
         container.RegisterInstance(Substitute.For<IPathService>());
+        // IPlayerContextAdapter (SiegeDefenseIoC) and IDutyOrchestrationService (DutiesIoC) entered
+        // this graph when ResetSessionCaches began resetting the wait-menu presenter:
+        // IServiceMaintenanceService -> IEnlistmentWaitMenuPresenter -> IEnlistmentDialogGateService
+        // -> IPlayerContextAdapter, and -> IEnlistmentPlayerActionService -> IDutyOrchestrationService.
+        container.RegisterInstance(Substitute.For<global::TAOM.Adapters.IPlayerContextAdapter>());
+        container.RegisterInstance(Substitute.For<global::TAOM.Features.Enlistment.Duties.IDutyOrchestrationService>());
 
         EnlistmentIoC.RegisterEnlistmentFeature(container);
         return container;

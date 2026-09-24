@@ -3,7 +3,9 @@ using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.Enlistment;
+using TAOM.Features.Enlistment.Content;
 using TAOM.Features.Enlistment.Domain;
+using TAOM.Features.Enlistment.Presentation;
 
 namespace TAOM.Tests.Features.Enlistment;
 
@@ -50,7 +52,8 @@ public class EnlistmentPumpAuthorityTests
             _store, _machine, _attachment, _commander, menu, menuService,
             Substitute.For<IServiceStatusService>(), Substitute.For<IArmyMembershipAdapter>(),
             _encounter, new EncounterOwnershipPolicy(),
-            Substitute.For<IEnlistmentReconciler>(), _logger);
+            Substitute.For<IEnlistmentReconciler>(), Substitute.For<IEnlistmentWaitMenuPresenter>(),
+            Substitute.For<IArmyRhythmSnapshotService>(), _logger);
 
         _store.Record.State = EnlistmentState.EnlistedAttached;
         _store.Record.EnlistedHeroId = "main_hero";
