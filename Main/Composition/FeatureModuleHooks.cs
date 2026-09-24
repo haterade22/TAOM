@@ -30,7 +30,7 @@ internal enum FaultNotice
 /// notice a player can see at that point (<see cref="NoticeFor"/>; the startup inquiry rule in
 /// docs/reviews/lessons/localization-ui.md): faults from IoC.Configure and OnSubModuleLoad wait for
 /// the main-menu inquiry, in-game faults get a red line. Nothing here throws, except the runner's
-/// deliberate fail-closed rethrow for a save-owning module at campaign start. Every factory runs
+/// deliberate fail-closed throw for a save-owning module at campaign start. Every factory runs
 /// before anything is handed to the engine, so a module whose factory throws adds nothing. The
 /// public entry points read IoC; the overloads that take the runner and resolver are the tested seam.
 /// </summary>

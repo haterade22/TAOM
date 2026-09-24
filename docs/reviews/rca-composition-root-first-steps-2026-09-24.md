@@ -8,9 +8,13 @@ review of `4c728dac..44045b34` produced 16 confirmed code and test findings (4 M
 a stale plan precondition and one pre-existing doc line, 4 items for Mike and 2 false positives.
 The MED runner defect contradicted the change's own promise: a save-owning module that faulted in a fail-open step was skipped silently at the next campaign start, because
 the "already faulted" skip ran before the fail-closed check, and the campaign's next save would
-have dropped its data. A second MED item goes further: TAOM's own `Patch37_CrashReport` finalizer
-on `Module.OnApplicationTick` swallows the fail-closed throw, so the promise cannot hold at
-campaign start as written; that one is Mike's decision. Nothing is live today: the only module
+have dropped its data. A second MED item decides what that fix costs: TAOM's own
+`Patch37_CrashReport` finalizer on `Module.OnApplicationTick` swallows the fail-closed throw while
+crash capture is on, and the engine re-runs the loading step. Since the fix throws on every retry,
+the load never finishes: the player is stuck on the loading screen, but no campaign runs without
+the save owner. With crash capture off, the exception reaches the engine. That end state is traced
+through the code, not seen in game; hang or silent data loss (or an inquiry and a return to the
+menu) is Mike's decision. Nothing is live today: the only module
 owns no save data. Report: `docs/reviews/deep-review-018-composition-root-first-steps-2026-09-24.md`.
 
 ## Findings
@@ -21,7 +25,7 @@ owns no save data. Report: `docs/reviews/deep-review-018-composition-root-first-
 | 2 | MED, latent | The fail-closed throw at campaign start is swallowed by TAOM's Patch37 finalizer and the engine re-runs the loading step | Missing vanilla gate (TAOM's own patch on the caller) | The plan traced the engine's call chain up from `OnGameStart` and stopped at "no managed catch"; nobody asked whether TAOM patches a frame on that chain | NEEDS MIKE; CHANGELOG known limitation; lesson in `lessons/state-lifecycle-save.md` |
 | 3 | MED | `IoC.Modules = modules;` untested; its removal silences every module | Dead / no-op code (the "registered, invoked by nothing" class, again) | The kernel test pinned the two runner calls, not the hand-off between them; the hooks' null guard turns a missing hand-off into a silent return | Kernel test pins the line; mutation-checked |
 | 4 | MED | The engine-facing hooks had no test | Missing test | The plan assumed the starters need a running game; v1.5.3 `CampaignGameStarter` and `BasicGameStarter` construct with no engine | Tested seam (overloads taking the runner and resolver); `FeatureModuleHooksTests` |
-| 5 | LOW | Comments and CHANGELOG said modules run after every hand-wired block | Other: ordering claim from the plan table, not the file | The plan's ordering table missed three hand-wired blocks after the module call | Text corrected; OnGameStart branch position pinned |
+| 5 | LOW | Comments and CHANGELOG said modules run after every hand-wired block | Other: ordering claim from the plan table, not the file | The plan's ordering table missed four hand-wired blocks after the module call (the first fix still left out the co-op Harmony census after GameInit; the convergence pass added it) | Text corrected; OnGameStart branch position pinned |
 | 6 | LOW | Campaign-start fail-closed flag lived outside the runner | Convention inconsistency | The flag was passed at the call site instead of named in the class that documents the rule | `RunCampaignStart` |
 | 7 | LOW | `IoC.Resolver` invisible to the service-locator grep | Other: new container accessor | The review grep keys on the old spelling `IoC.Resolve<` | Source test allows only the hooks |
 | 8 | LOW | Failed notice swallowed without a log line | Convention inconsistency | Plan 009's sibling logs it; the new catch copied the shape, not the log | Logged |

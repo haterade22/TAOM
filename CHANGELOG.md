@@ -28,9 +28,10 @@ including when it faulted in an earlier step. Module patch categories go through
 `TryPatchCategory`, so a failed category is reported by `ReportPatchFailures` and does not fault the
 module. Module faults from startup are held for one main-menu inquiry; in-game faults get a red chat
 line. `IoC.Configure` and each `SubModule` phase call the runner once, after the phase's feature
-block, and `FeatureModulesTests` pins each call between its anchors. Three hand-wired blocks still
+block, and `FeatureModulesTests` pins each call between its anchors. Four hand-wired blocks still
 run after the module call: the main-menu work after the once-only MainMenu block,
-`ManualPatchApplicator.ApplyAll` after GameInit, and the kernel tail of mission behaviors. The
+`ManualPatchApplicator.ApplyAll` and the co-op Harmony census after the GameInit phase, and the
+kernel tail of mission behaviors. The
 trade-off: five small files (11 types) and one runner call per phase in the two kernel files before
 a second module uses them, in return for every later migration only deleting lines from the two
 single-owner files.
@@ -49,10 +50,14 @@ branch, prove the `OwnsSaveData` IL check fires, and keep `IoC.Resolver` inside 
 `docs/reviews/rca-composition-root-first-steps-2026-09-24.md`.
 
 Known limitation: TAOM's own `Patch37_CrashReport` finalizer on `Module.OnApplicationTick` swallows
-exceptions while crash capture is on, so the campaign-start fail-closed throw would not stop a load;
-the engine retries the loading step on the next tick. No module owns save data today, so nothing
-reaches this path; what "closed" should mean at campaign start is Mike's call before the first
-save-owning module migrates.
+exceptions while crash capture is on (the default), and the engine then re-runs the same loading
+step on the next tick. Because a faulted save owner throws on every retry, the load never finishes:
+the player is stuck on the loading screen, but no campaign runs without the save owner, so its data
+is never dropped. A new campaign rebuilds its Campaign and Game on each retry. With crash capture
+off, the exception reaches the engine instead. This end state is traced through the code, not seen
+in game. No module owns save data today, so nothing reaches this path. The choice (that hang, a
+silent loss of the module's data, or something better such as an inquiry and a return to the menu)
+is Mike's call before the first save-owning module migrates.
 
 **The pilot: WandererAllegiance.** `WandererAllegianceModule` now registers the feature's services
 and declares its dialog behavior, and its lines are gone from `IoC.cs` and `SubModule.cs`. The

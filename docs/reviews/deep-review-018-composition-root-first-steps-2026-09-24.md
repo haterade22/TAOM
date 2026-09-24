@@ -188,3 +188,31 @@ Not written here (Phase 3h is consolidated for all branches). Proposed:
   own patches on them.
 - "What Codex does well": turning a documented invariant (fail closed) into concrete call sequences
   (early fault, retry) that break it.
+
+## Convergence
+
+One `deep-reviewer` pass over the fix commit `fa0b24e1` (`44045b34..fa0b24e1`, lens 1 plus
+behaviour parity) reported 2 LOW defects, both in prose; the runner logic, the delegate pass-through
+removal, the hook overloads and every engine assumption in the new tests came back clean. The lead
+re-read each claim before editing.
+
+| # | Sev | Defect | Verification | Resolution |
+|---|---|---|---|---|
+| D1 | LOW | Three documents described the Patch37 interplay as it was before the fix ("would not stop a load", "defeats the throw", "the promise cannot hold"); the fix makes a faulted save owner throw on every retry | CONFIRMED: `ModuleRunner.cs:70-75` throws for a faulted save owner in a fail-closed step; `CrashReportPatchHelper.HandleAndSwallow` returns null while `EnableCrashCapture` is on; v1.5.3 `GameLoadingState.OnTick` calls `DoLoadingForGameManager` until it returns true; `SandBoxGameManager` step 3 rebuilds the Campaign and Game (new game) or calls `Game.LoadSaveGame` after `_loadedGameResult` was cleared (saved game); `Campaign.OnInitialize` reaches `GameManager.OnGameStart`. In-game end state UNVERIFIED | CHANGELOG known limitation, `lessons/state-lifecycle-save.md` and the RCA summary now state the trade-off: with crash capture on, the load never finishes (stuck on the loading screen, no campaign runs without the save owner); with it off, the exception reaches the engine. `FeatureModuleHooks` summary says "throw", since the runner now also throws a new `InvalidOperationException` |
+| D2 | LOW | The corrected ordering sentence still left out the co-op Harmony census and settings-fingerprint block, which runs after `FeatureModuleHooks.RunPhase(ApplyPhase.GameInit, ...)` and `ManualPatchApplicator.ApplyAll` in `OnGameInitializationFinished` and says it must run last | CONFIRMED (read `SubModule.cs:1874-1919`) | `FeatureModules.cs`, the CHANGELOG and RCA row 5 now name four blocks. Row 5 above is left as the record of the first fix |
+
+**False positives:** none.
+
+**Mike's decision, restated:** row 2 and the confirmation of row 1 are one question. With crash
+capture on (the default), the fail-closed rule as committed means a hang on the loading screen
+after a save owner faults; the alternative the old code gave was a campaign that silently drops
+that module's save data. An inquiry and a return to the menu, or a Patch37 exemption, would need
+new design work and is not done here.
+
+**Tests:** docs and comments only, so no new test. Full suite
+(`dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`):
+`Failed: 2, Passed: 10289, Skipped: 2, Total: 10293`, the same two known live-Armory failures
+(`TheElkItem_DeclaresTheScaleTheReachIsTunedFor`,
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`).
+
+CONVERGENCE VERDICT: READY FOR COMMIT; no code behaviour changed in this pass.
