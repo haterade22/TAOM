@@ -205,3 +205,33 @@ with reasons). It could not read #659 (`gh` config access denied); the lenses re
 |---|-----|----------|-----------|-------------------|
 | 1 | IL order test accepted a fetch on every wind-up frame | Other: test checks a proxy (repeat of `harmony-il.md` "An IL call-presence test does not pin control flow" and of this branch's first-review F3) | The builder accepted "no test can call `Tick`" without trying one, so the IL scan was the only tool, and its name described the goal rather than what a call list can show | Behaviour tests; lesson in testing-qa ("Try a substitute-driven test before an IL rule") |
 | 2 | Behaviour-difference text omitted skeleton recovery | Logic error (in the claim) | The difference was written from the one scenario pictured (skeleton stays missing), not from the condition the code tests | Wording fixed; lesson in misc (claims and conditions) |
+
+## Convergence
+
+A `deep-reviewer` convergence pass on the review-fix diff `23f6f85b..5d9d4cc9` (read-only) found
+the code and tests sound and reported one defect, LOW (process). The review lead re-checked it in
+the worktree before acting.
+
+| # | Sev | Finding | Verdict | Outcome |
+|---|---|---|---|---|
+| C1 | LOW | The RCA left out two confirmed findings: row 6 (the reordered window-end gate shipped with no NaN test, a repeat of `testing-qa.md` "A gate moved into new code is new code", whose Prevent line asks for the NaN test in the same commit) and row 5 (`InjectedNodes` skipped `NoEnemyCloseDecorator`). "Seven" was too low | CONFIRMED: at `23f6f85b` the test file's four `[TestMethod]`s (lines 53, 58, 76, 80) are IL rules and none mentions NaN; `Tick` line 49 is `if (progress >= _actionProgressMax)`; the lesson's Prevent line reads as quoted; the RCA table ended at F7 | Fixed: RCA rows F8 (marked repeat) and F9, the count corrected to nine, the per-lens lines updated. Because F8 is a repeat, its preventive action is stronger than the lesson: one line in `.claude/rules/csharp-architecture.md` (a `paths:` rule, loaded on every C# read) and a repeat note on the lesson. No code change |
+
+**Stale lines outside the diff (reported, not counted), all confirmed and fixed:**
+- `docs/features/warg-combat.md:124-125`: "7 tests" and the #178 coverage gap. `WargAttackServiceTests.cs`
+  has 22 `[TestMethod]`s, 2 of them `[Ignore]`d; `IWargAttackService` takes `IAgentAdapter` since
+  `5a61e174`. The two lines now say so and name the real gap (the ignored dispatch tests).
+- `TAOM.Tests/Features/Warg/WargTickCostTests.cs:188-189`: the comment said no IL scan reaches the
+  type initializer. `Declared` includes `BindingFlags.Static`, so `DeclaredBodies` does scan it.
+  The comment now gives the true reason for the reflection check (the IL rules look for a resolve,
+  not for what a static field holds). Comment only.
+
+**False positives:** none.
+
+**Not fixable in place:** the `5d9d4cc9` commit body repeats "seven"; commits are not amended, so
+this section is the correction.
+
+**Verification:** full suite, `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` in
+the worktree after these edits: `Failed: 2, Passed: 10282, Skipped: 2, Total: 10286` (the two
+known live-Armory failures, `TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`). `python tools/lint_docs.py --quick`:
+clean. No em or en dash on an added line.

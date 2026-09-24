@@ -185,8 +185,8 @@ public class WargTickCostTests
     public void TreeNodes_StaticFields_HoldNoServiceOrScanBuffer()
     {
         // A static service would outlive IoC.Dispose on a module reload; a static buffer would be
-        // shared by every warg's tree. Field initializers of a static run in the type initializer,
-        // which no IL scan above reaches, so this is checked by reflection.
+        // shared by every warg's tree. The IL rules above scan the type initializer for a resolve,
+        // but not for what it stores, so the static fields themselves are checked by reflection.
         List<string> offenders = TreeNodes
             .SelectMany(t => t.GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
             .Where(f => f.FieldType.IsInterface || f.FieldType == typeof(List<Agent>))
