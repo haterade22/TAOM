@@ -3738,7 +3738,7 @@ their XML) since 12:41 that day.
 The same day Mike replaced the three takes with a clip he supplied, as one variation
 (`nazgul_scream.ogg`), and asked for a deep review of the swap. The XML, data flow, completeness,
 design and engine lenses and a convergence pass found no runtime defect. They found that the first
-draft called the clip his own take although its metadata named `www.voicy.network` (Mike had the
+draft called the clip his own take although its metadata named a third-party website (Mike had the
 tags dropped and chose not to pursue provenance), that the deleted takes stay in the game install
 and would reach the next release zip unless deleted by hand, that the smoke step's pitch remedy
 assumed an unproven per-play pitch draw, and stale text, including this entry's claim that nothing
