@@ -18,7 +18,7 @@ public sealed class CrashReportSettings : AttributeGlobalSettings<CrashReportSet
 
     [SettingPropertyGroup("Master")]
     [SettingPropertyBool("Enable Crash Capture", Order = 0, RequireRestart = false,
-        HintText = "Master toggle. When off, every TAOM crash finalizer passes exceptions straight through and the AppDomain hook ignores them, so the game's own handler (or BUTR) takes over. Takes effect immediately: the finalizers are always installed at launch and check this toggle only when an exception arrives. Default ON.")]
+        HintText = "Master toggle. When off, every TAOM crash finalizer passes exceptions straight through and the AppDomain hook ignores them, so the game's own handler takes over (BUTR's too, unless TAOM already suspended it this session; then restart). Takes effect immediately: the finalizers are always installed at launch and check this toggle only when an exception arrives. Default ON.")]
     public bool EnableCrashCapture { get; set; } = true;
 
     [SettingPropertyGroup("Master")]

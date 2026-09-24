@@ -239,9 +239,12 @@ written up in
 [gauntletui-viewmodel-screen.md](../reference/engine/gauntletui-viewmodel-screen.md) "Map conversation + encyclopedia".
 
 **What is and is not established.**
-- The silent death points to a native fault. TAOM's Patch37 finalizers on the screen and application
-  ticks (`ScreenManager.Tick`, `Managed.ApplicationTick`) log and swallow a managed throw on the
-  conversation's UI tick path instead of letting it crash.
+- On v2.0.28 the silent death points to a native fault. TAOM's Patch37 finalizer on
+  `ScreenManager.Tick` covered the conversation's UI tick (`MapConversationTableau.OnTick`), and
+  that build's callback sweep covered the tableau's render function, which the native
+  `RenderTargetComponent_OnPaintNeeded` callback runs; either would have logged and swallowed a
+  managed throw. The allowlist of 2026-09-24 does not cover that callback, so on a later build a
+  managed throw in the render function could also die silently.
 - The conversation played a voiced line with Rhubarb lip-sync on the elf head. That is **not rare**:
   an empty TAOM accent class falls through to any vanilla voice
   ([kingdom-voices.md](kingdom-voices.md)), so custom-race heads are lip-synced routinely in keeps

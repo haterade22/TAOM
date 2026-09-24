@@ -7,8 +7,8 @@ namespace TAOM.Features.CrashReport.DevTriggers;
 // checks the MCM toggle and throws on the next tick if set. Lets QA exercise the
 // CrashReport pipeline without entering a mission (e.g., on the main menu).
 //
-// Lives in its own patch category so SubModule can register it conditionally
-// alongside Patch37_CrashReport when CrashReportSettings.EnableCrashCapture is true.
+// Shares the Patch37_CrashReport category, which SubModule applies unconditionally;
+// the Postfix checks EnableCrashCapture itself.
 //
 // Settings caching (Codex review #46 LOW-01 fix): see comment in
 // CrashReportDevTriggerMissionBehavior. Cache the MCM Instance once it's non-null —

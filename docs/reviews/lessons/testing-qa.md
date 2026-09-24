@@ -1071,3 +1071,27 @@ The first `HowdahPrefabTests` pinned the geometry the rebuild changed (moveable 
 - **Why missed:** the step was written from the campaign model's code, and a smoke list reads as mode-neutral unless it says otherwise.
 - **Prevent:** when a smoke step is there to prove an engine DECISION (killed or wounded, a morale roll, a capture), find the model that decides it in each game mode (`AddModel` in `CustomGame` and the campaign starter) and name the mode whose model can give the other answer. If no mode can, the step proves nothing; say so instead. When the model ROLLS (killed or wounded is a survival roll even with `CanKillEvenIfBlunt`), one outcome proves nothing either: say how many trials settle it and which result would (Codex, 2026-09-23: the step first demanded "killed, not wounded", which a correct build can fail).
 - **Source:** `docs/reviews/rca-elk-delta-2026-09-23.md` F5 (#636).
+
+### A test that a finalizer preserves the throw site uses an exception that was actually thrown
+Plan 006's `Native2ManagedBridgeTests` checked the native-capture-off path with `new InvalidOperationException(...)` and asserted only `AreSame`. `RethrowStackPreserver.PreserveForRethrow` returns at once for an exception with no stack trace, so the test passed unchanged when the preserve call was mutated to a bare `return exception;`, the exact violation `harmony-patches.md` forbids. The fixed test throws and catches first and asserts `Data` holds `TAOM.ThrowSite`; the same mutation now fails it.
+- **Why missed:** the fixture was built to reach the branch, not to exercise the callee's precondition; `RethrowStackPreserverTests` already documents the unthrown no-op, and nobody read it against the new test.
+- **Prevent:** when a test's assertion depends on a helper's effect, read the helper's early returns and give the fixture the state that gets past them (a thrown exception, a non-empty list, a live frame). Then mutate the call away once and watch the test go red.
+- **Source:** `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F1, plan 006.
+
+### An allowlist pin names its members independently of the production list
+`Native2ManagedTargetsTests` resolved `Native2ManagedTargets.All` and compared the count with `All.Count`, and the size test checked only an upper bound, so an empty list passed every test while the patcher attached nothing (Codex, plan 006).
+- **Why missed:** the plan prescribed the self-referential check; a resolve-everything test reads as coverage.
+- **Prevent:** pair every "each entry resolves" test over a curated list with one that states the expected members literally (`CollectionAssert.AreEquivalent`), so removing or swapping an entry fails a test and the change has to be made in two places on purpose.
+- **Source:** `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F9.
+
+### A test that pins an engine name looked up by string carries `[TestCategory("BindingVerification")]`
+The two new plan 006 tests that resolve engine members (`Native2ManagedTargetsTests.All_ResolvesEveryShimAgainstTheInstalledEngine`, `Patch37TargetShapeTests`) had no category, so `/verify-bindings`, which an engine bump runs as `--filter TestCategory=BindingVerification`, skipped them; a renamed shim would have cost one warning line at launch and a quietly smaller capture list.
+- **Why missed:** the category is a convention (62 of the 73 test files that call `GameAssemblies.EnsureLoaded` carried it at `6fe83bca`), not a gate, and the reflection catalogue row was filed under the "not engine drift" category D.
+- **Prevent:** any test that resolves a TaleWorlds member by name gets the category, and its catalogue entry goes where engine reflection lives (`reflection-sites.md` category A or B), never category D.
+- **Source:** `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F6.
+
+### A smoke step for an off switch needs an input that still fires while the switch is off
+Plan 006's owed check for the live master toggle was "turn Enable Crash Capture off; the next dev-trigger throw is not captured". Both dev triggers return before throwing when that toggle is off, so the check passes whether the finalizer gate works or not. No trigger throws inside a callback shim either, so the native toggle had no in-game check at all, while the feature doc claimed dev-trigger coverage of the Native2Managed attach.
+- **Why missed:** the step was written from the toggle's hint, not from the trigger's code; "nothing happened" reads as success.
+- **Prevent:** for a step that proves a gate is OFF, read the input's code and confirm it still produces the event with the gate off; if the input reads the same gate, the step proves nothing. Name which catch point each trigger reaches before claiming it covers a component.
+- **Source:** `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F4 (Codex and lenses 1, 4, 5 agree).

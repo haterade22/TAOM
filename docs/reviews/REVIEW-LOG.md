@@ -3773,3 +3773,40 @@ one gate timed against its registration. Mike approved four design proposals mid
 `harness-facts.md` paths, the `triage-needs-ingame` label as the smoke backlog, `attribution` in
 `settings.json`, a CI workflow of its own on every branch). Root cause tables:
 `docs/reviews/rca-adr011-batch1-2026-09-23.md`; five lessons in build-tooling-workflow.
+
+## Review 132 (number provisional: parallel improve branches append here): plan 006 crash capture boot cost, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+Branch `improve/006-crash-capture-boot-cost`, `7f02fc8d..6fe83bca`: the Native2Managed sweep cut
+from 247 patched callback shims to an allowlist of six, four Patch37 finalizers on empty base
+virtuals deleted, both crash-capture MCM toggles read at capture time, and suppression lines logged
+at occurrences 1, 2, 10, 100. Six `/deep-review` lenses ran in one wave; Codex reviewed the same
+range read-only from git objects.
+
+**Codex: 3 findings, 3 confirmed, 0 false positives** (all P3): the allowlist tests passed on an
+empty list; the plan's owed smoke for the master toggle cannot fail, because both dev triggers
+return before throwing when capture is off, and the doc claimed trigger coverage of the shims; and
+two rewritten docs gave the hand-attached bridge priority 800 where Harmony runs it at 400. It also
+settled ten Known Suspects with quoted engine, MCM and Harmony code. **The lenses confirmed 19
+more**, none HIGH: a bridge test that could not fail (unthrown exception), a boot saving of "about
+30 s" measured only on the maintainer's desktop (players: 0 to 1 s), hint text promising a
+restart-free return to BUTR that TAOM had already disabled, a wrong catch point in `hero-race.md`,
+engine-name tests outside `BindingVerification`, and doc and date drift. All 22 are fixed on the
+branch with tests where testable; the full suite went from 10254 to 10258 passed (2 known
+live-Armory failures). Eight decisions wait for Mike, among them the public issue, whether the
+never-armed tableau-setup callback should give its slot to `RenderTargetComponent_OnPaintNeeded`,
+and an in-game probe for throws in the 241 dropped callbacks.
+
+Codex did best at refusing to trust the plan: it named three places where the plan itself was wrong
+and advised against changing a runtime priority just to match a doc. It missed the claims that
+needed data outside the diff (the audit's player timings, ButterLib's `Disable()`, the test-category
+convention) and called the `hero-race.md` catch point "supported".
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | Allowlist tests pass on an empty list | Logic error (test) | The plan prescribed a self-referential check | Literal six-name pin; lesson in `testing-qa.md` |
+| 2 | Owed master-toggle smoke cannot fail; doc claims trigger coverage of the shims | Other: verification gap | Step written from the hint, not the trigger code | Doc corrected, redesigned check for Mike; lesson in `testing-qa.md` |
+| 3 | Bridge priority documented as 800 | Convention inconsistency | Category text reused for a hand-attached patch | Lesson in `harmony-il.md` |
+
+Report: `docs/reviews/deep-review-006-crash-capture-boot-cost-2026-09-24.md`. RCA:
+`docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md`. Lessons: four in `testing-qa.md`, two in
+`harmony-il.md`, two in `misc.md`.

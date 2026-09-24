@@ -1,9 +1,7 @@
 using System;
 using HarmonyLib;
 using TaleWorlds.DotNet;
-using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
-using TaleWorlds.MountAndBlade.View.MissionViews;
 using TaleWorlds.ScreenSystem;
 
 namespace TAOM.Features.CrashReport.Hooks;
@@ -17,7 +15,7 @@ namespace TAOM.Features.CrashReport.Hooks;
 // virtual never runs for an override, which is a different method: four such targets
 // (MissionBehavior.OnMissionTick, MBSubModuleBase.OnSubModuleLoad,
 // MissionView.OnMissionScreenTick, ScriptComponentBehavior.OnTick) could never fire and
-// were removed on 2026-09-23. Patch37TargetShapeTests enforces the rule.
+// were removed on 2026-09-24. Patch37TargetShapeTests enforces the rule.
 //
 // A Finalizer that returns null swallows the exception (game continues); returning
 // the exception lets it bubble. We always swallow (caller decision in helper).

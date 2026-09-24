@@ -57,12 +57,12 @@ Native2ManagedPatcher (allowlisted shims) ───────────► �
 | 2 | `TaleWorlds.MountAndBlade.Module.OnApplicationTick` | Module tick |
 | 3 | `TaleWorlds.ScreenSystem.ScreenManager.Tick` | Screen system tick |
 | 4 | `TaleWorlds.ScreenSystem.ScreenManager.Update` (private, no-arg) | Screen system update |
-| 5 | `TaleWorlds.MountAndBlade.Mission.Tick` | Mission tick |
+| 5 | `TaleWorlds.MountAndBlade.Mission.Tick` | Mission tick. Its body is one native call (`MBAPI.IMBMission.Tick`), so it catches only a managed throw that unwinds back out through native code; mission behaviours' `OnMissionTick` runs later from `Mission.OnTick` and is caught at row 2 |
 | 6 | Native2Managed allowlist (`Native2ManagedTargets.All`): `EngineScreenManager_PreTick`, `EngineScreenManager_LateTick`, `EngineScreenManager_Update`, `ManagedScriptHolder_TickComponents`, `ThumbnailCreatorView_OnThumbnailRenderComplete`, `BannerlordTableauManager_RequestCharacterTableauSetup` | Native-to-managed callback shims whose managed work no row above wraps; attached by hand at startup |
 
 Plus `AppDomain.CurrentDomain.UnhandledException` as a final safety net.
 
-All of them run at Harmony priority 800, matching BEW. Harmony runs a finalizer on every call of its target, with a null `__exception` when nothing threw, and that path returns at once. Four more targets (`ScriptComponentBehavior.OnTick`, `MissionView.OnMissionScreenTick`, `MissionBehavior.OnMissionTick`, `MBSubModuleBase.OnSubModuleLoad`) were removed on 2026-09-23: they are base virtuals with empty or assert-only bodies, and a finalizer on a base method never runs for an override, so they could never fire. `Patch37TargetShapeTests` now refuses an overridable virtual target.
+Rows 1 to 5 run at Harmony priority 800, matching BEW, and route through `CrashReportPatchHelper.HandleAndSwallow`. The row 6 bridge (`Native2ManagedBridge.Finalizer`) is attached with `new HarmonyMethod(...)` and no priority, so it runs at Harmony's default 400; it reaches `HandleAndSwallow` only while Enable Native-to-Managed Capture is on. Harmony runs a finalizer on every call of its target, with a null `__exception` when nothing threw, and that path returns at once. Four more targets (`ScriptComponentBehavior.OnTick`, `MissionView.OnMissionScreenTick`, `MissionBehavior.OnMissionTick`, `MBSubModuleBase.OnSubModuleLoad`) were removed on 2026-09-24: they are base virtuals with empty or assert-only bodies, and a finalizer on a base method never runs for an override, so they could never fire. `Patch37TargetShapeTests` now refuses an overridable virtual target.
 
 ### Re-entry guard
 
@@ -97,9 +97,9 @@ Settings live on a dedicated MCM page **TAOM — Crash Report** (separate from t
 
 | Group | Setting | Default | Effect |
 |---|---|---|---|
-| Master | Enable Crash Capture | true | Master toggle. When off, every Patch37 finalizer and the AppDomain hook pass exceptions through untouched. Live: the patches are always installed. |
+| Master | Enable Crash Capture | true | Master toggle. When off, every Patch37 finalizer and the AppDomain hook hand exceptions back uncaptured (the Patch37 path returns the raw exception, so the rethrow loses its throw site unless PatchShield wraps that method). Live: the patches are always installed. |
 | Master | Suspend BUTR Exception Handler | true | On first capture, calls ButterLib's `Disable()`. |
-| Master | Enable Native-to-Managed Capture | true | When off, the allowlisted callback-shim finalizers pass exceptions through untouched. Live: the shims are always patched. |
+| Master | Enable Native-to-Managed Capture | true | When off, the allowlisted callback-shim finalizers hand exceptions back uncaptured, with the throw site recorded (`RethrowStackPreserver`). Live: the shims are always patched. |
 | Bundle | Write Crash Bundle ZIP | true | Produces `Logs/taom_crash_*.zip`. Set false if you only want the log line. |
 | QA — Dev Triggers | Throw On Next Mission Tick | false | Throws `TaomDevTriggerException` on the next `MissionLogic.OnMissionTick`. Auto-resets. |
 | QA — Dev Triggers | Throw On Next Application Tick | false | Throws `TaomDevTriggerException` on the next `Module.OnApplicationTick`. Auto-resets. Works on the main menu (no mission needed). |
@@ -206,22 +206,23 @@ No new third-party dependencies.
 
 ## Tests
 
-[TAOM.Tests/Features/CrashReport/](../../TAOM.Tests/Features/CrashReport), by class:
+[TAOM.Tests/Features/CrashReport/](../../TAOM.Tests/Features/CrashReport), among them:
 
 - `ExceptionFrameBuilderTests` — depth cap, null handling, inner-chain walking, `Data` dictionary
 - `StackFrameSnapshotBuilderTests` — null exception, real thrown exception
 - `CrashSignatureCalculatorTests`: deterministic, sensitive to exception type and origin, ignores frames beyond depth 5, separates two crashes that differ only in their INNER exception while still deduplicating identical ones (#552), keeps an inner-less exception's signature identical to the old plain-type hash, caps the inner-chain walk, separates two exceptions of one type through one frame when a shield preserved different throw sites (`TAOM.ThrowSite`), including two `TargetInvocationException`s whose INNER sites differ, and ignores a non-string value under that key
 - `RethrowStackPreserverTests` (`TAOM.Tests/Infrastructure/Dependencies/`, 19): real in-process Harmony patches pinning the premise (a value-returning finalizer's rethrow drops the throw-site frame), PatchShield's own two finalizers keeping it across one and two rethrows, the recorded site staying the innermost and exactly five frames long, idempotency, the same instance returned, the rethrow counter kept apart from swallows, a priority-800 reporter finalizer seeing live frames before PatchShield's 400 preserves (and Patch37 declaring a priority above `Priority.Normal`), and IL call presence of the preserver on every shield rethrow path
 - `RingBufferTests` — push order, overflow chronological, clear, capacity, empty snapshot
-- `Patch37TargetShapeTests`: every Patch37 target resolves and is not an overridable virtual
-- `Native2ManagedTargetsTests`: every allowlisted shim resolves against the installed engine; a missing assembly or method is reported and skipped; the list stays small and distinct
-- `Native2ManagedBridgeTests`: with the toggle off the bridge hands back the same exception; with no exception it returns null
+- `Patch37TargetShapeTests` (`BindingVerification`): every Patch37 target resolves, through the same resolver as `HarmonyPatchBindingTests`, and is not an overridable virtual
+- `Native2ManagedTargetsTests`: every allowlisted shim resolves against the installed engine (`BindingVerification`); the list is exactly the six reviewed shims, small and distinct; a missing assembly, type or method, or a lookup that throws, is reported and skipped
+- `Native2ManagedBridgeTests`: with the toggle off the bridge hands back the same exception with `TAOM.ThrowSite` recorded; with no exception it returns null
 - `CrashBundleThrottleTests`: dedup, session cap and cooldown admission, and the 1, 2, 10, 100 suppression-log cadence
 - `PlainTextCrashReportRendererTests`: all 19 sections render, signature in header, inner exception chain, collector failures, and the "last segment only" note under both frame sections exactly when `TAOM.ThrowSite` is present
 
 Components NOT unit-tested (per ADR-008 + the plan's "Not-tested:" trailer policy):
 
-- The 5 Harmony Finalizers and the live Native2Managed attach: covered by manual QA via MCM dev triggers
+- The 5 Harmony Finalizers: `ModuleOnApplicationTickFinalizer` is exercised in game by both MCM dev triggers (the mission trigger's `OnMissionTick` runs inside `Module.OnApplicationTick`); the other four have no trigger. Both triggers return early while Enable Crash Capture is off, so they cannot test the master toggle's pass-through
+- The live Native2Managed attach: only the `attached N of M` launch log line checks it; no trigger throws inside a callback shim, so the native toggle's pass-through has no in-game check
 - `CrashReportService.HandleException` composition — depends on 14 collectors, each touching TaleWorlds APIs; integration-only
 - TaleWorlds-facing collectors (`Modules`, `Assemblies`, `Campaign`, `Mission`, `Process`, `Gpu`, `Logs`) — best-effort with try/catch on every field; failure surfaces in `CollectorFailures` section
 - MCM settings reflection collector — reflection over loaded third-party assemblies, hard to fixture
@@ -270,18 +271,20 @@ Default: TAOM's handler wins (priority 800 + first registration + suspends BUTR)
 1. MCM → **Master** → uncheck **Suspend BUTR Exception Handler**.
 2. MCM → **Master** → uncheck **Enable Crash Capture**.
 
-No restart is needed: TAOM's finalizers stay installed but pass every exception through, so the other mod's Finalizers take over.
+No restart is needed before TAOM's first capture of the session: TAOM's finalizers stay installed but pass every exception through, so the other mod's Finalizers take over. After a capture with Suspend BUTR on, TAOM has already called ButterLib's `Disable()`, and nothing in TAOM re-enables it: re-enable it on ButterLib's own MCM page or restart the game.
 
 ## Performance
 
-- **Boot cost: one `harmony.Patch` per target.** Each attach cost about 120 to 190 ms on the maintainer's desktop on 2026-09-23 (the old sweep of all 247 `*CallbacksGenerated` methods cost 29 to 33 s on 30 of 30 launches, and PatchShield timed 186 ms per attach in the same process). That is why Native2Managed is an allowlist. `[CrashReport] Native2Managed: attached N of M Finalizer(s) in X ms` in `taom_debug.log` shows the current cost.
+- **Boot cost: one `harmony.Patch` per target, plus one PatchShield attach per Native2Managed target at the first game start** (PatchShield's pass 2 shields every foreign-patched method outside its exclusions, and `ManagedCallbacks` is not excluded). Each attach cost about 120 to 190 ms on the maintainer's desktop on 2026-09-23 (the old sweep of all 247 `*CallbacksGenerated` methods cost 29 to 33 s on 30 of 30 launches, and PatchShield timed 186 ms per attach in the same process). On 11 player processes the same 247-method sweep took 0 to 1 s, under about 8 ms per attach ([followup-patch-tax.md](../../plans/_audit/2026-09-23-opus/followup-patch-tax.md)), so the saving is large on that desktop and about a second for players. The allowlist still drops 241 attaches at boot and about as many PatchShield attaches at the first game start. `[CrashReport] Native2Managed: attached N of M Finalizer(s) in X ms` in `taom_debug.log` shows the current cost.
 - **Steady-state cost: small, not zero.** Harmony runs a finalizer on every call of its target (with a null `__exception` on success, which returns at once), and the patched method becomes a replacement wrapped in try/catch.
+- **Suppression log cadence trades recency for volume.** A throw that recurs every frame logs its 1000th occurrence after about 17 s at 60 fps and its 10,000th after about 3 minutes, so before a later hard crash the last suppression line can be minutes old. The bundle (occurrence 1) and the lines at 2, 10 and 100 remain.
 - **WMI for GPU info** runs once per captured crash (not per tick). ~50ms typical.
 - **MCM reflection collector** scans every loaded assembly for `AttributeGlobalSettings<>` derivatives — runs once per captured crash. ~10ms typical.
 
 ## Risks & Known Limitations
 
 - **Other mods' `OnSubModuleLoad` throws are not captured.** TAOM applies Patch37 inside its own `OnSubModuleLoad`, and a finalizer on the base `MBSubModuleBase.OnSubModuleLoad` would never see an override's throw, so none is attached; those throws land in vanilla or BUTR.
+- **Most native-to-managed callbacks are no longer wrapped.** The 2026-09-24 allowlist keeps six of the 247 shims. A managed throw inside any of the other 241 (for example `Mission_OnAgentRemoved`, `Mission_MeleeHitCallback` or `Agent_UpdateAgentStats` in `CoreCallbacksGenerated`) is caught only if it unwinds through native code into a Patch37 finalizer such as `Mission.Tick`; whether it can is UNVERIFIED, so such a throw may now reach vanilla's handler, or crash to desktop with no bundle. Of the six, `BannerlordTableauManager_RequestCharacterTableauSetup` may never fire (nothing in v1.5.3 assigns its `RequestCallback`), and the tableau render callback `RenderTargetComponent_OnPaintNeeded` (which runs `CharacterTableau` and `MapConversationTableau` render functions) is not on the list.
 - **Crash UI re-entry.** A throw in our own collector or renderer would loop. Two layers of thread-static `_handling` flags break the loop and let the original exception bubble out to vanilla.
 - **ZIP bundle write to `Logs/`.** If `Logs/` is read-only or full, only the log line lands (no bundle). Bundle write is wrapped in try/catch.
 - **Frame timing buffer not yet populated.** v1 instantiates the `FrameTimingBuffer` singleton but no hook pushes into it. v2 will add a `Mission.Tick` / `ScreenManager.Tick` Postfix that samples `dt`. For now the section shows 0 samples.
@@ -299,7 +302,7 @@ No restart is needed: TAOM's finalizers stay installed but pass every exception 
 
 ## Changelog
 
-- 2026-09-23: **Boot cost and dead finalizers** (plan 006). The Native2Managed sweep patched all 247 `*CallbacksGenerated` methods and cost 29 to 33 s of every launch; it is now an allowlist of six shims (`Native2ManagedTargets`) and logs its attach time. Four Patch37 finalizers on empty base virtuals were deleted. Both MCM toggles are read at capture time (the `OnSubModuleLoad` gate always saw a null MCM instance) and no longer ask for a restart. Suppression log lines for a recurring crash are written at occurrences 1, 2, 10, 100 and so on.
+- 2026-09-24: **Boot cost and dead finalizers** (plan 006). The Native2Managed sweep patched all 247 `*CallbacksGenerated` methods and cost 29 to 33 s of every launch on the maintainer's desktop (0 to 1 s on player machines); it is now an allowlist of six shims (`Native2ManagedTargets`) and logs its attach time. Four Patch37 finalizers on empty base virtuals were deleted. Both MCM toggles are read at capture time (the `OnSubModuleLoad` gate always saw a null MCM instance) and no longer ask for a restart. Suppression log lines for a recurring crash are written at occurrences 1, 2, 10, 100 and so on.
 - 2026-09-01: **Added the System Memory section + the header memory verdict** (#385 follow-up). The bundle carried no commit or headroom figure, which is the exact number #385 was diagnosed by. Reuses `MemorySampleReader` and delegates the threshold to `MemoryPressureSampler.IsLowHeadroom` rather than copying its constants; the snapshot is a nullable sibling record so a failed read renders `(unavailable)` instead of zeros.
 
 - 2026-06-15 — Deduplicated crash bundle ZIPs: new session-scoped `CrashBundleThrottle` (dedup + ≤25/session cap + 30s cooldown) at the `HandleException` chokepoint so a per-tick recurring crash produces exactly one zip instead of hundreds; 10 throttle tests added.

@@ -25,9 +25,9 @@ namespace TAOM.Tests.Features.Mcm;
 /// everywhere, and a new setting that omits the flag is a bug this test catches. The allowlist
 /// holds settings whose consumer is parked (commented out in SubModule.cs), where a restart does
 /// not help either but flipping the flag would promise an effect that does not exist. Note that no
-/// MCM setting can gate anything in OnSubModuleLoad: GlobalSettings<T>.Instance is null until MCM's
-/// own OnBeforeInitialModuleScreenSetAsRoot, which is why the two CrashReport toggles left this
-/// list on 2026-09-23 and are read at capture time instead.
+/// MCM setting can gate anything in OnSubModuleLoad: <c>GlobalSettings&lt;T&gt;.Instance</c> is null
+/// until MCM's own OnBeforeInitialModuleScreenSetAsRoot, which is why the two CrashReport toggles
+/// left this list on 2026-09-24 and are read at capture time instead.
 ///
 /// MCMv5.dll is a runtime-only dependency of the test project, so the attribute is read by name
 /// rather than by type, the same way MCM's own <c>BasePropertyDefinitionWrapper</c> reads it.

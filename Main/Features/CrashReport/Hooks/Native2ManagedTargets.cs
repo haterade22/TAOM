@@ -5,9 +5,12 @@ using System.Reflection;
 namespace TAOM.Features.CrashReport.Hooks;
 
 // The native-to-managed callback shims that get a crash-capture Finalizer. An allowlist, not a
-// sweep: each harmony.Patch costs about 120 to 190 ms at boot on the maintainer's desktop
-// (2026-09-23 logs), so patching every static method of every *CallbacksGenerated type (247)
-// cost 29 to 33 s of every launch and captured nothing in 30 logged sessions.
+// sweep. Patching every static method of every *CallbacksGenerated type (247) captured nothing
+// in 30 logged sessions. Each entry costs one harmony.Patch at boot plus one PatchShield attach
+// at the first game start (pass 2 shields every foreign-patched method outside its exclusions).
+// On the maintainer's desktop each attach took about 120 to 190 ms (2026-09-23 logs), so the
+// sweep cost 29 to 33 s of every launch there; on 11 player processes it took 0 to 1 s in all
+// (plans/_audit/2026-09-23-opus/followup-patch-tax.md).
 //
 // An entry earns its place by covering managed code that no Patch37 finalizer already wraps.
 // Names are pinned against the installed engine by Native2ManagedTargetsTests.
@@ -30,7 +33,9 @@ public static class Native2ManagedTargets
         (EngineAssembly, EngineCallbacks, "ManagedScriptHolder_TickComponents"),
         // ThumbnailCreatorView.OnThumbnailRenderComplete: portrait and item thumbnail callbacks.
         (EngineAssembly, EngineCallbacks, "ThumbnailCreatorView_OnThumbnailRenderComplete"),
-        // BannerlordTableauManager.RequestCharacterTableauSetup: character tableau setup.
+        // BannerlordTableauManager.RequestCharacterTableauSetup: character tableau setup. Nothing in
+        // v1.5.3 assigns its RequestCallback, so this may never fire; replacing it with
+        // RenderTargetComponent_OnPaintNeeded (the tableau render path) is an open decision.
         (CoreAssembly, CoreCallbacks, "BannerlordTableauManager_RequestCharacterTableauSetup"),
     };
 
