@@ -14,8 +14,11 @@ namespace TAOM.Features.MapLoadDiagnostics.Hooks;
 /// </para>
 ///
 /// <para>
-/// Caller chains are affordable here because these fire a handful of times per session, not per
-/// frame.
+/// Caller chains are affordable only on real transitions. Raises are rare, but the engine calls
+/// <c>DisableGlobalLoadingWindow</c> on every frame of the main menu, the party screen and character
+/// creation, and clears the flag whether or not the window was up. The Disable patch therefore
+/// captures the flag in a Prefix and traces only a true-to-false change (otherwise one no-op lower
+/// per rendered frame, each a stack walk and a flushed log line).
 /// </para>
 /// </summary>
 [HarmonyPatch(typeof(LoadingWindow), nameof(LoadingWindow.EnableGlobalLoadingWindow))]
@@ -31,6 +34,15 @@ public static class LoadingWindow_Enable_Patch
 [HarmonyPatchCategory("Patch89_MapLoadDiagnostics_Lifecycle")]
 public static class LoadingWindow_Disable_Patch
 {
+    [HarmonyPrefix]
+    public static void Prefix(out bool __state) => __state = LoadingWindow.IsLoadingWindowActive;
+
+    // TraceWithCallers skips two frames (itself and this Postfix), so it must be called from here
+    // directly, never through a helper.
     [HarmonyPostfix]
-    public static void Postfix() => MapLoadTracer.TraceWithCallers("LOADING-WINDOW lowered");
+    public static void Postfix(bool __state)
+    {
+        if (LoadingWindowTraceGate.IsRealLower(__state, LoadingWindow.IsLoadingWindowActive))
+            MapLoadTracer.TraceWithCallers("LOADING-WINDOW lowered");
+    }
 }
