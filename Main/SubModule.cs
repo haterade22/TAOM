@@ -644,7 +644,7 @@ public class SubModule : MBSubModuleBase
             // and the inquiry manager in this hook, and InformationManager queues nothing sent
             // before them. An inquiry, not a chat line: the initial screen clears the chat log
             // after the splash video (GauntletInitialScreen.OnInitialize, ClearAllMessages).
-            ReportPatchFailures("startup", persistent: true);
+            ReportPatchFailures(new TextObject("{=taom_patch_apply_phase_startup}startup"), persistent: true);
         }
 
 
@@ -852,16 +852,19 @@ public class SubModule : MBSubModuleBase
 
     // One notice per phase naming every category that failed, so a dead crash guard is never
     // silent: a red chat line, or an inquiry the player dismisses when a screen change would clear
-    // the chat log first. The notice itself must never break the phase, hence the catch.
-    private void ReportPatchFailures(string phase, bool persistent = false)
+    // the chat log first. The notice itself must never break the phase, hence the catch. The
+    // button reuses vanilla's own "Ok" row (Native global_strings.xml str_ok), already translated.
+    private void ReportPatchFailures(TextObject phase, bool persistent = false)
     {
-        var summary = _patches.TakeFailureSummary(phase);
-        if (summary == null) return;
+        var failures = _patches.TakeFailureSummary(phase);
+        if (failures == null) return;
         try
         {
+            var summary = failures.ToString();
             if (persistent)
                 InformationManager.ShowInquiry(new InquiryData(
-                    "TAOM", summary, true, false, "OK", string.Empty, null, null));
+                    new TextObject("{=taom_patch_apply_notice_title}TAOM").ToString(), summary, true, false,
+                    new TextObject("{=oHaWR73d}Ok").ToString(), string.Empty, null, null));
             else
                 InformationManager.DisplayMessage(new InformationMessage(summary, Colors.Red));
         }
@@ -1869,7 +1872,7 @@ public class SubModule : MBSubModuleBase
         // Both categories fail independently: a diagnostic must never cost a working tournament.
         TryPatchCategory("Patch69_TournamentRosterGuard");
         TryPatchCategory("Patch69_TournamentEndGuard");
-        ReportPatchFailures("game initialization");
+        ReportPatchFailures(new TextObject("{=taom_patch_apply_phase_game_init}game initialization"));
 
         // Manual patches for PRIVATE engine methods (AccessTools-resolved targets; can't use
         // [HarmonyPatch] attribute binding + PatchCategory). Extracted verbatim to
@@ -1928,7 +1931,7 @@ public class SubModule : MBSubModuleBase
         {
             _missionTimePatchesApplied = true;
             TryPatchCategory("Patch_MissionTime_SetMovementOrder");
-            ReportPatchFailures("mission start");
+            ReportPatchFailures(new TextObject("{=taom_patch_apply_phase_mission_start}mission start"));
         }
 
         // [BattleLoad] TAOM-behavior bracket. Mission.AfterStart calls this for EVERY submodule,

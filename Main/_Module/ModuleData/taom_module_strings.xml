@@ -2928,5 +2928,14 @@
   <string id="str_formation_ai_behavior_text.BehaviorEnvelopWing" text="{=taom_behavior_f6.envelop_wing}{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are swinging round the flank." />
   <string id="str_formation_ai_behavior_text.BehaviorFootCharge" text="{=taom_behavior_f6.foot_charge}{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging the enemy foot." />
   <string id="str_formation_ai_behavior_text.BehaviorArcherFlank" text="{=taom_behavior_f6.archer_flank}{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are taking the flank of the wall." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- PatchCategoryApplier -->
+	<string id="taom_patch_apply_failed" text="{=taom_patch_apply_failed}TAOM: patch groups failed to apply during {PHASE}: {GROUPS}. Some fixes in those groups are off this session; the TAOM log names the cause." />
+	<!-- SubModule -->
+	<string id="taom_patch_apply_phase_startup" text="{=taom_patch_apply_phase_startup}startup" />
+	<string id="taom_patch_apply_notice_title" text="{=taom_patch_apply_notice_title}TAOM" />
+	<string id="taom_patch_apply_phase_game_init" text="{=taom_patch_apply_phase_game_init}game initialization" />
+	<string id="taom_patch_apply_phase_mission_start" text="{=taom_patch_apply_phase_mission_start}mission start" />
+
 
 </strings>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TaleWorlds.Localization;
 using TAOM.Core.Logging;
 
 namespace TAOM;
@@ -14,7 +15,8 @@ namespace TAOM;
 /// category index and so every category; PatchCategoryIndex skips that class instead, and
 /// RecordSkippedClasses reports it here. Each failure or skipped class is logged at Error with its
 /// full cause and remembered until the phase summary is taken.
-/// The apply delegate keeps HarmonyLib and the engine out of this class, so it is unit-testable.
+/// The apply delegate keeps HarmonyLib out of this class, and its only engine type is the
+/// TextObject it builds (never rendered here), so it is unit-testable.
 /// </summary>
 internal sealed class PatchCategoryApplier
 {
@@ -62,14 +64,16 @@ internal sealed class PatchCategoryApplier
 
     /// <summary>
     /// One player-facing line naming every category that failed since the last call, or null when
-    /// none did. Clears the list, so each phase reports only its own failures.
+    /// none did. Clears the list, so each phase reports only its own failures. A localized
+    /// TextObject built here but rendered by the caller; the category ids stay literal.
     /// </summary>
-    internal string? TakeFailureSummary(string phase)
+    internal TextObject? TakeFailureSummary(TextObject phase)
     {
         if (_failed.Count == 0) return null;
 
-        var summary = $"TAOM: patch groups failed to apply during {phase}: {string.Join(", ", _failed)}. "
-            + "Some fixes in those groups are off this session; the TAOM log names the cause.";
+        var summary = new TextObject("{=taom_patch_apply_failed}TAOM: patch groups failed to apply during {PHASE}: {GROUPS}. Some fixes in those groups are off this session; the TAOM log names the cause.")
+            .SetTextVariable("PHASE", phase)
+            .SetTextVariable("GROUPS", string.Join(", ", _failed));
         _failed.Clear();
         return summary;
     }

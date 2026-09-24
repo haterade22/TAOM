@@ -8,6 +8,7 @@ using System.Text;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TaleWorlds.Localization;
 using TAOM.Core.Logging;
 
 namespace TAOM.Tests.Infrastructure;
@@ -82,9 +83,8 @@ public class PatchCategoryIndexTests
         CollectionAssert.Contains(PostfixOwners(), _harmony.Id);
         _logger.Received(1).LogError(Arg.Is<string>(s =>
             s.Contains("[PatchApply]") && s.Contains(BrokenClassName) && s.Contains("TypeLoadException")));
-        var summary = sut.TakeFailureSummary("startup")!;
-        StringAssert.Contains(summary, BrokenClassName);
-        Assert.IsFalse(summary.Contains(HealthyCategory), summary);
+        var groups = PatchCategoryApplierTests.Variable(sut.TakeFailureSummary(new TextObject("startup"))!, "GROUPS");
+        Assert.AreEqual(BrokenClassName, groups);
     }
 
     // Parity with Harmony.PatchCategory: an unknown category name applies nothing, silently.

@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TaleWorlds.Localization;
 using TAOM.Core.Logging;
 
 namespace TAOM.Tests.Infrastructure;
@@ -98,22 +99,29 @@ public class PatchCategoryApplierTests
         var sut = ApplierFailingOn();
         sut.TryApply("Patch_A");
 
-        Assert.IsNull(sut.TakeFailureSummary("game initialization"));
+        Assert.IsNull(sut.TakeFailureSummary(new TextObject("game initialization")));
     }
 
     // Harmony applies a category class by class with no rollback, so classes before the failing
-    // one stay patched: the summary must not claim the whole group is off.
+    // one stay patched: the summary must not claim the whole group is off. The summary is a
+    // registered {=taom_...} TextObject so the player reads it in their language; the category
+    // ids stay literal.
     [TestMethod]
     public void TakeFailureSummary_NamesThePhaseAndEveryFailedCategoryInOrder()
     {
         var sut = ApplierFailingOn("Patch_B", "Patch_D");
         foreach (var category in new[] { "Patch_A", "Patch_B", "Patch_C", "Patch_D" })
             sut.TryApply(category);
+        var phase = new TextObject("{=taom_test_phase}game initialization");
+
+        var summary = sut.TakeFailureSummary(phase)!;
 
         Assert.AreEqual(
-            "TAOM: patch groups failed to apply during game initialization: Patch_B, Patch_D. "
+            "{=taom_patch_apply_failed}TAOM: patch groups failed to apply during {PHASE}: {GROUPS}. "
             + "Some fixes in those groups are off this session; the TAOM log names the cause.",
-            sut.TakeFailureSummary("game initialization"));
+            summary.Value);
+        Assert.AreEqual(phase.Value, Variable(summary, "PHASE"));
+        Assert.AreEqual("Patch_B, Patch_D", Variable(summary, "GROUPS"));
     }
 
     [TestMethod]
@@ -122,13 +130,18 @@ public class PatchCategoryApplierTests
         var sut = ApplierFailingOn("Patch_B", "Patch_M");
 
         sut.TryApply("Patch_B");
-        Assert.IsNotNull(sut.TakeFailureSummary("startup"));
-        Assert.IsNull(sut.TakeFailureSummary("startup"));
+        Assert.IsNotNull(sut.TakeFailureSummary(new TextObject("startup")));
+        Assert.IsNull(sut.TakeFailureSummary(new TextObject("startup")));
 
         sut.TryApply("Patch_M");
-        var second = sut.TakeFailureSummary("mission start")!;
-        StringAssert.Contains(second, "Patch_M");
-        Assert.IsFalse(second.Contains("Patch_B"), second);
+        var second = sut.TakeFailureSummary(new TextObject("mission start"))!;
+        Assert.AreEqual("Patch_M", Variable(second, "GROUPS"));
+    }
+
+    internal static string Variable(TextObject text, string tag)
+    {
+        Assert.IsTrue(text.GetVariableValue(tag, out var value), "no " + tag + " variable");
+        return value.Value;
     }
 
     // Also pins the premise against the pinned Harmony 2.4.2: a class whose target does not
@@ -201,7 +214,25 @@ public class PatchCategoryApplierTests
     {
         var body = SubModuleMethodBody("protected override void OnBeforeInitialModuleScreenSetAsRoot()");
 
-        StringAssert.Contains(body, "ReportPatchFailures(\"startup\", persistent: true);");
+        StringAssert.Contains(body,
+            "ReportPatchFailures(new TextObject(\"{=taom_patch_apply_phase_startup}startup\"), persistent: true);");
+    }
+
+    // The notice, its inquiry title and its button are localized; every phase name is a
+    // registered key, and the button reuses vanilla's own "Ok" row (global_strings.xml str_ok).
+    [TestMethod]
+    public void SubModuleSource_PatchFailureNotice_IsLocalized()
+    {
+        var body = SubModuleMethodBody("private void ReportPatchFailures(TextObject phase, bool persistent = false)");
+
+        StringAssert.Contains(body, "new TextObject(\"{=taom_patch_apply_notice_title}TAOM\").ToString()");
+        StringAssert.Contains(body, "new TextObject(\"{=oHaWR73d}Ok\").ToString()");
+        Assert.IsFalse(body.Contains("\"OK\""), "the inquiry button is still a literal");
+
+        var code = CommentPattern.Replace(File.ReadAllText(RepoPaths.RepoPath("Main", "SubModule.cs")), string.Empty);
+        StringAssert.Contains(code, "ReportPatchFailures(new TextObject(\"{=taom_patch_apply_phase_game_init}game initialization\"));");
+        StringAssert.Contains(code, "ReportPatchFailures(new TextObject(\"{=taom_patch_apply_phase_mission_start}mission start\"));");
+        Assert.IsFalse(Regex.IsMatch(code, @"ReportPatchFailures\(\s*"""), "a phase name is still a literal");
     }
 
     // The three rewrites whose failure branch carries behaviour: Patch37 attaches its hooks only on

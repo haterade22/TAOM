@@ -52,16 +52,24 @@ class whose attributes cannot be read, and applies each category's classes exact
 does. The skipped class is logged under `[PatchApply]` as SKIPPED with its cause and named in the
 startup inquiry; every other category still applies.
 
-Tests: `PatchCategoryApplierTests` (13) covers the constructor guards, the try and catch paths,
+**The failure notice is localized** (maintainer decision on review finding 15): the summary, the
+three phase names and the inquiry title are registered `{=taom_patch_apply_*}` keys in
+`taom_module_strings.xml`, and the inquiry button reuses vanilla's own `{=oHaWR73d}Ok` row
+(`str_ok` in Native's `global_strings.xml`). The category ids in the notice stay literal.
+`PatchCategoryApplier.TakeFailureSummary` now returns the `TextObject` and `SubModule` renders it.
+The five keys are translated into all 12 languages (AI first drafts, placeholders checked).
+
+Tests: `PatchCategoryApplierTests` (14) covers the constructor guards, the try and catch paths,
 per-category isolation, the phase summary, real Harmony 2.4.2 through the index and the applier on
 an unresolvable target, a source gate that fails on any direct `.PatchCategory(` call in `Main` and
 pins the `PatchCategoryIndex` wiring in `SubModule`, and source-shape tests that keep the failure report out of
-`OnSubModuleLoad` and pin the Patch37, Patch77 and preview side effects. Nine text tests that
+`OnSubModuleLoad`, pin the Patch37, Patch77 and preview side effects, and pin the localized
+notice. Nine text tests that
 pinned the old call spelling now pin `TryPatchCategory(`. `PatchCategoryIndexTests` (4) emits a
 probe assembly at run time with one class whose `[HarmonyPatch]` names a missing type beside a
 healthy class in another category: through Harmony's own index both categories throw
 `TypeLoadException` (pinned as the premise); through `PatchCategoryIndex` only the broken class is
-skipped and reported, and the healthy one is patched. Full suite: 10248 passed, 2 skipped,
+skipped and reported, and the healthy one is patched. Full suite at `7912fdd8`: 10252 passed, 2 skipped,
 2 failed (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
 `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, which fail the same way at the base).
 Nothing smoked in game: the live apply path and both notices need a running game. Plan 009.
