@@ -158,8 +158,8 @@ def find_alpha_bbox(filepath):
         # Actually, let's use a more reliable approach with a helper script
         import subprocess
         result = subprocess.run(
-            [sys.executable, "-c", f"""
-import struct, zlib, io
+            [sys.executable, "-c", """
+import struct, zlib, io, sys
 
 def read_png_rgba(path):
     with open(path, 'rb') as f:
@@ -186,7 +186,7 @@ def read_png_rgba(path):
                 break
 
     if color_type != 6:  # Must be RGBA
-        raise ValueError(f"Expected RGBA (color_type=6), got {{color_type}}")
+        raise ValueError(f"Expected RGBA (color_type=6), got {color_type}")
 
     raw = zlib.decompress(b''.join(chunks))
     stride = width * 4 + 1  # 4 bytes per pixel + 1 filter byte
@@ -255,10 +255,10 @@ def read_png_rgba(path):
     if max_x < 0:
         print("EMPTY")
     else:
-        print(f"{{min_x}},{{min_y}},{{max_x - min_x + 1}},{{max_y - min_y + 1}},{{width}},{{height}}")
+        print(f"{min_x},{min_y},{max_x - min_x + 1},{max_y - min_y + 1},{width},{height}")
 
-read_png_rgba(r'{filepath}')
-"""],
+read_png_rgba(sys.argv[1])
+""", filepath],
             capture_output=True, text=True, timeout=120
         )
 
@@ -281,8 +281,8 @@ def crop_png_to_bbox(input_path, output_path, bbox, max_width=DEPLOY_MAX_WIDTH):
     x, y, w, h, canvas_w, canvas_h = bbox
     import subprocess
     result = subprocess.run(
-        [sys.executable, "-c", f"""
-import struct, zlib
+        [sys.executable, "-c", """
+import struct, zlib, sys
 
 def crop_and_save(input_path, output_path, cx, cy, cw, ch, max_w):
     # Read PNG
@@ -378,10 +378,11 @@ def crop_and_save(input_path, output_path, cx, cy, cw, ch, max_w):
     with open(output_path, 'wb') as f:
         f.write(buf.getvalue())
 
-    print(f"{{out_w}}x{{out_h}}")
+    print(f"{out_w}x{out_h}")
 
-crop_and_save(r'{input_path}', r'{output_path}', {x}, {y}, {w}, {h}, {max_width})
-"""],
+crop_and_save(sys.argv[1], sys.argv[2], int(sys.argv[3]), int(sys.argv[4]),
+              int(sys.argv[5]), int(sys.argv[6]), int(sys.argv[7]))
+""", input_path, output_path, str(x), str(y), str(w), str(h), str(max_width)],
         capture_output=True, text=True, timeout=120
     )
     if result.returncode != 0:

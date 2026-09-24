@@ -2,6 +2,21 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-24
+
+### fix(tools): v2.0.30 - faction-map helpers take paths as arguments (plan 005)
+
+`tools/process_faction_map.py` ran two child Python scripts with each file path pasted into
+the script source as `r'<path>'`, so a path holding a quote broke the script and, worse, let the
+path's text run as code. Both children now read their paths and numbers from `sys.argv`. Probe
+on a PNG under a folder named `it's here`: the trunk version fails both calls (a `SyntaxError`
+in the generated source), the new one finds the bounding box and writes the crop.
+
+The external-repo vetting checklist (`docs/ai-includes/external-repo-adoption.md`) gains a grep
+for inline package credentials in any vendored drop before porting a file from it. Both changes
+are ported from the June branch `impl-005` (`4310aa6e`, `4bc520a1`). The vendored credential that
+prompted the grep is already gone from disk, and plan 005's MCP pinning moved to plan 016.
+
 ## 2026-09-23
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)
