@@ -240,6 +240,18 @@ public class SettlementFollowingTests
     }
 
     [TestMethod]
+    public void Exit_AThrowingColumnLeftSubscriber_IsSwallowed_AndTheReParkStillRuns()
+    {
+        // The exit has landed before the event is raised, so a listener's fault must not strand
+        // the player out of position.
+        _sut.ColumnLeftSettlement += () => throw new System.InvalidOperationException("listener");
+
+        _sut.ExitSettlementForService("lord_1");
+
+        _attachment.Received(1).ParkNear("lord_1");
+    }
+
+    [TestMethod]
     public void Exit_LeaveFails_DoesNotRaiseColumnLeftSettlement()
     {
         // Still inside: the stop has not ended.

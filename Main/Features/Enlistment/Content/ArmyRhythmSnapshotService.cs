@@ -9,7 +9,7 @@ public interface IArmyRhythmSnapshotService
     /// <summary>Snapshot for the given campaign time; cached per game hour (one probe per hour, 11 donor call sites shared it).</summary>
     ArmyRhythmSnapshot GetSnapshot(double nowDays, double hourOfDay);
 
-    /// <summary>Drop the cached snapshot. Session reset only (a load or a new campaign).</summary>
+    /// <summary>Drop the cached snapshot. Session reset only (a load, a new campaign or game end).</summary>
     void ResetForNewSession();
 }
 

@@ -3811,3 +3811,39 @@ RCA [rca-enlistment-session-scope-2026-09-24.md](rca-enlistment-session-scope-20
 [codex-adversarial-014-enlistment-session-scope-2026-09-24.prompt.md](codex-adversarial-014-enlistment-session-scope-2026-09-24.prompt.md).
 Owed: the convergence pass on the fix diff, the in-game load and second-campaign smokes. The review
 number may need renumbering at merge (parallel plan branches).
+
+## Review 133 (plan 014): Enlistment session scope, maintainer decisions (#656), 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+The commit applying Mike's six decisions for plan 014 (branch `improve/014-enlistment-session-scope`,
+`41754a03..a67792c4`) was reviewed by six lenses (Standards, Engine, Efficiency, Completeness, Data
+flow, Design; XML and Tooling not in scope) and Codex. **18 confirmed findings, 0 false positives;
+16 fixed, 2 need Mike** (the ADR-002 split issue for `EnlistmentMenuBehavior`, now 162 lines, and
+the stale #656 body). The one behaviour defect: decision 6 cleared the arrival offer's settlement
+latch only in the exit sweep, which a shore-leave pass suspends, so an accepted offer never re-armed
+the town. `EnlistmentMaintenanceBehavior` now ends the stop on the commander's settlement-left edge
+(RED test first, `EnlistmentStopEndTests`). The rest was a heap-release overclaim, a reversed
+teardown-order comment, a source pin that passed on a commented-out call, stale reset docs and three
+test gaps. Design's `RepoPath` reuse was applied; deleting `ColumnLeftSettlement` and
+`_lossAnnouncedFor` wait for Mike.
+
+**Codex (gpt-6-astra, ultra, 144,802 tokens): P1 0, P2 1, P3 2, all confirmed.** It traced vanilla's
+town Leave consequence through `PlayerEncounter.LeaveSettlement` to `LeaveSettlementAction` to show
+the pass route bypasses TAOM's exit sweep, with a numbered hour-100 to hour-130 reproduction, and it
+caught that the source pin passes on a commented-out call. Its proposed fix (the main party's
+departure) was replaced by the commander's departure, which cannot re-ask inside one running stop.
+It missed the CHANGELOG and doc versions of the heap-release claim, the stale interface docs, the
+untested wiring and co-op cells, and the line growth over the ADR-002 ceiling (it disputed that
+suspect as existing debt).
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|
+| 1 | Stop end signalled only by the exit sweep | Stale state / lifecycle | Stop end identified with one exit; tests called the handler directly | `EnlistmentStopEndTests`; lesson in `lessons/state-lifecycle-save.md` |
+| 2 | Source pin passes on a commented-out call | Test oracle | Substring search over source | Comment lines filtered, test renamed; second lesson |
+| 3 | Teardown order reversed in a comment | Assumed API order (REPEAT) | `Game.Destroy` not opened | Corrected; second lesson in `lessons/state-lifecycle-save.md` |
+
+Full suite 10266 passed, 2 skipped, 2 failed (the known live-Armory tests), total 10270. Report
+[deep-review-014-enlistment-session-scope-decisions-2026-09-24.md](deep-review-014-enlistment-session-scope-decisions-2026-09-24.md),
+RCA [rca-enlistment-session-scope-decisions-2026-09-24.md](rca-enlistment-session-scope-decisions-2026-09-24.md),
+raw output `raw/codex-adversarial-014-enlistment-session-scope-decisions-2026-09-24.md`. Owed: the
+convergence pass on the fix diff and the in-game smokes. The review number may need renumbering at
+merge (parallel plan branches).

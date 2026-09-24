@@ -81,10 +81,11 @@ public class EnlistmentContainerWiringTests
     }
 
     /// <summary>
-    /// <c>EnlistmentBehavior.OnGameLoaded</c> is the load hook, and it cannot be executed in a unit
-    /// test — it reads <c>CampaignTime.Now</c>, which needs a live <c>Campaign</c>. What IS testable
-    /// is that it resolves, which is what breaks when a dependency is added to the graph below it.
-    /// The behaviour it triggers is pinned directly on the service:
+    /// <c>EnlistmentBehavior.OnGameLoaded</c> is the load hook. It cannot finish in a unit test on
+    /// the host (it reads <c>CampaignTime.Now</c>, which needs a live <c>Campaign</c>); its routing is
+    /// pinned in <c>EnlistmentSessionResetTests</c> with a sentinel thrown before that read. This
+    /// test pins that it resolves, which is what breaks when a dependency is added to the graph
+    /// below it. The reset itself is pinned on the service:
     /// <c>ServiceMaintenanceServiceTests.ResetSessionCaches_AlsoDropsTheArmyAdapterHandle</c>.
     /// </summary>
     [TestMethod]
@@ -114,6 +115,22 @@ public class EnlistmentContainerWiringTests
             0,
             errors.Length,
             "IServiceMaintenanceService is not resolvable: "
+                + string.Join("; ", errors.Select(e => e.Value.Message)));
+    }
+
+    [TestMethod]
+    public void MaintenanceBehavior_Resolvable_StopEndPresenterDependencySatisfied()
+    {
+        // The commander's settlement-left edge ends the arrival offer's stop, so this hook takes
+        // the wait-menu presenter (#656).
+        var container = BuildContainer();
+
+        var errors = container.Validate(typeof(EnlistmentMaintenanceBehavior));
+
+        Assert.AreEqual(
+            0,
+            errors.Length,
+            "EnlistmentMaintenanceBehavior is not resolvable: "
                 + string.Join("; ", errors.Select(e => e.Value.Message)));
     }
 

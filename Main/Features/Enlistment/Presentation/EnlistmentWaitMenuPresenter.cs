@@ -43,8 +43,8 @@ public interface IEnlistmentWaitMenuPresenter
     void OfferTownLeave(string settlementId, double nowHours);
 
     /// <summary>
-    /// Forget which stop was last offered and when. Session reset only (a load or a new
-    /// campaign): the cooldown stamp is an absolute campaign hour, so an earlier save's clock
+    /// Forget which stop was last offered and when. Session reset only (a load, a new campaign
+    /// or game end): the cooldown stamp is an absolute campaign hour, so an earlier save's clock
     /// would otherwise keep the offer silent until it caught up.
     /// </summary>
     void ResetForNewSession();

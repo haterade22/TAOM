@@ -25,7 +25,8 @@ public interface IServiceAttachmentService
     /// <summary>
     /// Raised when <see cref="ExitSettlementForService"/> has walked the player out of the stop
     /// (even if the re-park then failed): the stop is over. The arrival offer's settlement latch is
-    /// cleared on it, so a later stop in the same town is offered again.
+    /// cleared on it. Not the only stop end: a shore-leave pass suspends the exit sweep, so the
+    /// commander's settlement-left edge (<c>EnlistmentMaintenanceBehavior</c>) clears it too.
     /// </summary>
     event System.Action ColumnLeftSettlement;
 
@@ -45,9 +46,9 @@ public interface IServiceAttachmentService
 
     /// <summary>
     /// Forget the dwell anchor and the adapter's cached commander party. Session reset only (a
-    /// load or a new campaign), never per tick: the anchor is an absolute campaign hour, and one
-    /// left in the future reads as "inside the dwell" until the new clock passes it plus the
-    /// 6-hour dwell. The cached party is matched by StringId, which a later campaign can reissue.
+    /// load, a new campaign or game end), never per tick: the anchor is an absolute campaign hour,
+    /// and one left in the future reads as "inside the dwell" until the new clock passes it plus
+    /// the 6-hour dwell. The cached party is matched by StringId, which a later campaign can reissue.
     /// </summary>
     void ResetForNewSession();
 

@@ -1379,13 +1379,18 @@ re-asking is harmless and persisting it would buy save-compat surface for nothin
 `CanTakeTownLeave()` already agrees, and behind the MCM toggle `OfferLeaveOnArrival` (default ON,
 classified `PlayerLocal` for co-op because the pass it offers is host-gated anyway).
 
-"Once per stop" is literal (plan 014, #656). The settlement-id latch is cleared when the stop ends:
-`ServiceAttachmentService.ExitSettlementForService` raises `ColumnLeftSettlement` once the player
-is out (even if the re-park then fails), and `EnlistmentMenuBehavior` routes it to
-`IEnlistmentWaitMenuPresenter.OnStopEnded`. Before this the latch held until a different settlement
-was offered or the session ended, so a later stop in the same town was never offered. The 24-hour
-cooldown is not cleared by the stop's end, so a commander dipping straight back in still gets one
-modal a day at most.
+"Once per stop" (plan 014, #656): the settlement-id latch is cleared when the stop ends, which is
+the commander leaving the town. `EnlistmentMaintenanceBehavior` routes the commander's
+settlement-left edge to `IEnlistmentWaitMenuPresenter.OnStopEnded` before its re-attach pass, so
+the latch clears however the player leaves: walked out by the exit sweep, or on foot later from a
+shore-leave pass. A pass suspends the exit sweep, so an accepted offer never reached it; the first
+cut cleared the latch only there (`ServiceAttachmentService.ExitSettlementForService` raising
+`ColumnLeftSettlement`, which `EnlistmentMenuBehavior` still routes to the same handler), and the
+review of that cut found the pass route uncovered. Before plan 014 the latch held until a different
+settlement was offered or the session ended, so a later stop in the same town was not offered
+until then. The 24-hour cooldown is not cleared by the stop's end, so a commander dipping straight
+back in still gets one modal a day at most. A discharge inside the town still leaves the latch
+set until the next stop elsewhere or a session reset.
 
 `TownLeavePolicy.ShouldRevokeLeave` is unchanged: it already revokes exactly when the player is no
 longer inside the settlement, which is the wanted behaviour. Only the exit sweep needed teaching.
@@ -1717,9 +1722,10 @@ guard for any path that skips the reset.
 campaign and at game end.** `EnlistmentBehavior.OnGameLoaded` calls `ResetSessionCaches` before its
 co-op authority gate, so a co-op client drops its session state too; only the normalization, which
 discharges and parks, stays host-only. Every callee is an in-memory field clear, which is what makes
-the ungated call safe. `SubModule.OnGameEnd` calls it as well, so the finished campaign's cached
-commander `MobileParty` and `Army` are not kept reachable at the main menu (plan 014, #656; the heap
-benefit is unmeasured). `ResetSessionCaches` also clears the settlement-dwell anchor and the adapter's cached
+the ungated call safe. `SubModule.OnGameEnd` calls it as well, so the cached commander
+`MobileParty` and `Army` handles no longer point into the finished campaign (plan 014, #656). Other
+roots can still hold that campaign at the main menu (`CommanderLordAdapter._lastSeenMapEvent`, and
+the singleton behaviors' `_lastSessionStarter`), so the heap benefit is unmeasured and not claimed. `ResetSessionCaches` also clears the settlement-dwell anchor and the adapter's cached
 commander party (`IServiceAttachmentService.ResetForNewSession`), the arrival-offer settlement id
 and 24-hour cooldown (`IEnlistmentWaitMenuPresenter.ResetForNewSession`) and the per-hour
 army-rhythm snapshot (`IArmyRhythmSnapshotService.ResetForNewSession`). The dwell anchor and the
@@ -1742,8 +1748,8 @@ peer, and the host then normalizes the empty record (the ownerless-parked rescue
 The tests are `EnlistmentSessionResetTests` (the load hook's routing and order, the co-op client's
 reset, the no-data clear, and a source check that `SubModule.OnGameEnd` reaches the reset), the
 `ResetSessionCaches_*` tests in `ServiceMaintenanceServiceTests`, the latch tests in
-`CommanderLossAnnouncementTests`, and the stop-end tests in `EnlistmentWaitMenuPresenterTests` and
-`SettlementFollowingTests`.
+`CommanderLossAnnouncementTests`, and the stop-end tests in `EnlistmentWaitMenuPresenterTests`,
+`SettlementFollowingTests` and `EnlistmentStopEndTests`.
 
 Not every per-session value is reset yet. `FieldDutyRuntime`'s real-time pace estimate survives a session
 change (cosmetic: the first duty after a load can fold its assignment toast into the result).

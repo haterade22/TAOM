@@ -203,7 +203,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
 
     /// <summary>
     /// The one moment the player is told their service just changed underneath them. Raised at the
-    /// transition, once per commander, with a real choice.
+    /// transition, once per loss episode (see <c>_lossAnnouncedFor</c>), with a real choice.
     ///
     /// WHY A MODAL AND NOT A TOAST. This fires in the tick after a battle, which is exactly when
     /// the player is accelerating time — and a toast at speed is not a message. #436 measured that
@@ -460,8 +460,9 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         // Re-anchor on no anchor, and equally on an anchor in the FUTURE. A clock that ran backwards
         // cannot be a continuous episode; it means a different campaign or an earlier save, and the
         // anchor belongs to a world this one has nothing to do with. ResetSessionCaches runs on a
-        // load and on a new campaign, so this is the second guard, for any path that skips the
-        // reset: a leftover anchor ahead of a new campaign's low day count is re-anchored here.
+        // load, on a new campaign and at game end, so this is the second guard, for any path that
+        // skips the reset: a leftover anchor ahead of a new campaign's low day count is re-anchored
+        // here.
         if (!FiniteFloatValidator.IsFinite(_staleBattleLatchSinceDays) || nowDays < _staleBattleLatchSinceDays)
         {
             _staleBattleLatchSinceDays = nowDays;

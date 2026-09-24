@@ -35,16 +35,30 @@ loss under the same lord after a discharge or in a new session: its shown-once l
 discharge. The load reset runs on every peer, a co-op client included, above the authority gate;
 only the normalization stays host-only. A save with no Enlistment data now loads with no record
 instead of normalizing the previous session's term (which could discharge or park a player that
-save never enlisted). The shore-leave offer is once per stop, not once per session: leaving a stop
-re-arms it for that town (the 24-hour cooldown stays). `SubModule.OnGameEnd` calls the reset, so
-the finished campaign's cached commander party and army are released at the main menu.
+save never enlisted). The shore-leave offer is once per stop, not once per session: the commander
+leaving the town re-arms it for that town, however you leave (the 24-hour cooldown stays).
+`SubModule.OnGameEnd` calls the reset, so Enlistment's cached commander party and army handles
+no longer point into the finished campaign; other roots can still hold it, and the heap effect is
+unmeasured.
 
-Tests: `EnlistmentSessionResetTests` (14), two `ServiceMaintenanceServiceTests`, two
-`CommanderLossAnnouncementTests`, three `EnlistmentWaitMenuPresenterTests` and three
-`SettlementFollowingTests`. Full suite in the plan worktree after the maintainer decisions: 10259
-passed, 2 skipped, 2 failed, total 10263 (the two live-Armory tests that fail without this change).
+Review follow-ups for the decisions (report
+`docs/reviews/deep-review-014-enlistment-session-scope-decisions-2026-09-24.md`, RCA
+`docs/reviews/rca-enlistment-session-scope-decisions-2026-09-24.md`): the first cut cleared the
+offer latch only when the exit sweep walked the player out, which a shore-leave pass suspends, so
+an accepted offer never re-armed. `EnlistmentMaintenanceBehavior` now also ends the stop on the
+commander's settlement-left edge (it takes the presenter). The game-end test is renamed to what it
+proves (a source-presence pin that ignores comment lines) and uses the shared `RepoPath` helper;
+comments that reversed the teardown order or overclaimed a heap release are corrected.
+
+Tests: `EnlistmentSessionResetTests` (15), `EnlistmentStopEndTests` (4), two
+`ServiceMaintenanceServiceTests`, two `CommanderLossAnnouncementTests`, three
+`EnlistmentWaitMenuPresenterTests`, four `SettlementFollowingTests` and one
+`EnlistmentContainerWiringTests`. Full suite in the plan worktree after the review follow-ups: 10266
+passed, 2 skipped, 2 failed, total 10270 (the two live-Armory tests that fail without this change).
 Not smoked in game: load an earlier save while enlisted, start a second campaign in one process,
-load a save made without Enlistment data after serving, and a co-op client load.
+load a save made without Enlistment data after serving, a co-op client load, the loss popup after
+re-enlisting under the same lord, and the arrival offer at a town the column returns to after you
+took shore leave there.
 
 ## 2026-09-23
 

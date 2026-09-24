@@ -96,7 +96,7 @@ public class EnlistmentBehavior : CampaignBehaviorBase
             Dictionary<string, string> snapshot = null;
             dataStore.SyncData(SaveKey, ref snapshot);
             _store.Deserialize(snapshot);
-            _justLoadedFromSave = true; // tells OnSessionLaunched NOT to clear the freshly-loaded store
+            _justLoadedFromSave = true; // OnGameLoaded and OnSessionLaunched must not clear it
         }
     }
 

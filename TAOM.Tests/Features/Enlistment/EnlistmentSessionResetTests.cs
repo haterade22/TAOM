@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
@@ -9,6 +10,7 @@ using TAOM.Features.Enlistment.Content.Domain;
 using TAOM.Features.Enlistment.Domain;
 using TAOM.Features.Enlistment.Hooks;
 using TAOM.Features.Enlistment.Presentation;
+using static TAOM.Tests.Infrastructure.RepoPaths;
 
 namespace TAOM.Tests.Features.Enlistment;
 
@@ -317,37 +319,46 @@ public class EnlistmentSessionResetTests
         store.DidNotReceive().Clear();
     }
 
+    [TestMethod]
+    public void GameLoad_AfterALoadingSyncData_OnACoopClient_KeepsTheLoadedRecord()
+    {
+        // The usual co-op load: the client's save holds Enlistment data, so the no-data clear must
+        // not wipe the record the client just loaded, even though it runs above the authority gate.
+        var store = Substitute.For<IEnlistmentStore>();
+        var maintenance = Substitute.For<IServiceMaintenanceService>();
+        var normalizer = Substitute.For<IEnlistmentLoadNormalizer>();
+        var sut = NewBehavior(store, maintenance, normalizer: normalizer);
+        var dataStore = Substitute.For<TaleWorlds.CampaignSystem.IDataStore>();
+        dataStore.IsSaving.Returns(false);
+        sut.SyncData(dataStore);
+
+        sut.OnGameLoaded(null!);
+
+        maintenance.Received(1).ResetSessionCaches();
+        store.DidNotReceive().Clear();
+        normalizer.DidNotReceiveWithAnyArgs().Normalize(default!, default);
+    }
+
     // ---- the menu teardown (SubModule.OnGameEnd) -----------------------------------------------
 
     [TestMethod]
-    public void GameEnd_ReachesTheSessionReset_SoTheDeadCampaignsObjectsAreReleased()
+    public void GameEnd_CallsTheEnlistmentSessionReset()
     {
-        // OnGameEnd is an engine entry point that cannot run in a unit test, so pin the wiring at
-        // the source: the reset drops the cached commander MobileParty and the army handle, which
-        // otherwise keep the finished campaign reachable at the main menu.
-        var source = System.IO.File.ReadAllText(FromRepoRoot("Main/SubModule.cs"));
+        // A source-presence pin, not a runtime proof. OnGameEnd resolves the service through the
+        // static IoC container, which a test cannot substitute, so read the OnGameEnd body instead
+        // (comment lines ignored, so a commented-out call fails). It shows the call is there; it
+        // does not show that the finished campaign becomes collectable, which stays unmeasured.
+        var source = System.IO.File.ReadAllText(RepoPath("Main", "SubModule.cs"));
         var start = source.IndexOf("public override void OnGameEnd(", System.StringComparison.Ordinal);
         Assert.IsTrue(start >= 0, "SubModule.OnGameEnd is gone");
         var end = source.IndexOf("protected override void OnGameStart(", start, System.StringComparison.Ordinal);
         Assert.IsTrue(end > start, "could not find the end of SubModule.OnGameEnd");
-        var body = source.Substring(start, end - start);
+        var code = source.Substring(start, end - start)
+            .Split('\n')
+            .Where(line => !line.TrimStart().StartsWith("//", System.StringComparison.Ordinal));
 
-        StringAssert.Contains(body, "IServiceMaintenanceService>()?.ResetSessionCaches()",
+        Assert.IsTrue(
+            code.Any(line => line.Contains("IServiceMaintenanceService>()?.ResetSessionCaches()")),
             "SubModule.OnGameEnd does not call the Enlistment session reset");
-    }
-
-    private static string FromRepoRoot(string relPath)
-    {
-        var dir = new System.IO.DirectoryInfo(System.AppDomain.CurrentDomain.BaseDirectory);
-        while (dir != null)
-        {
-            // A worktree's .git is a FILE, not a directory.
-            var gitPath = System.IO.Path.Combine(dir.FullName, ".git");
-            if (System.IO.Directory.Exists(gitPath) || System.IO.File.Exists(gitPath))
-                return System.IO.Path.Combine(dir.FullName, relPath.Replace('/', System.IO.Path.DirectorySeparatorChar));
-            dir = dir.Parent;
-        }
-
-        throw new System.InvalidOperationException("repo root (.git) not found from " + System.AppDomain.CurrentDomain.BaseDirectory);
     }
 }
