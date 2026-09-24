@@ -236,3 +236,14 @@ Filtered run over the Warg and BoneCheck tests: `Passed: 68, Skipped: 2, Failed:
 ones, `TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
 `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`. The seven new tests account for the
 rise from 10266. A fresh review of this commit is owed before merge.
+
+## Second review of the decisions (2026-09-24)
+
+The decisions commit had its own deep review and Codex pass:
+`deep-review-015-warg-tick-costs-decisions-2026-09-24.md` (RCA
+`rca-warg-tick-costs-decisions-2026-09-24.md`). It corrects three claims above: `Tick` can be
+called in a test (`ActionIndexCache` is beforefieldinit in v1.5.3, so `default` needs no engine),
+and the IL order rule is now five behaviour tests; there was one control fixture, not two; and a
+skeleton missing during the wind-up ends the bite only if it is still missing at the first
+in-window tick. NEEDS MIKE items 1, 2, 3 and 5 above are decided (see "Maintainer decisions
+applied"); item 4 is still open.

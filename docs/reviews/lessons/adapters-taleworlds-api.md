@@ -697,3 +697,9 @@ A player who owns a creature's blow (#643) reached the career's "+N from ability
 - **Why missed:** the operator is invisible at the call site, and NSubstitute returns null for a sealed return type, so the null path looks test-safe.
 - **Prevent:** write `is null` / `is not null` for any `NativeObject` subclass (check the type's base with `taom-src`; `Skeleton` is one) on a line a unit test can reach.
 - **Source:** plan 015 orchestrator amendment, commit `7577894d`; `docs/reviews/rca-warg-tick-costs-2026-09-24.md` F9.
+
+### `default(ActionIndexCache)` needs no engine in v1.5.3: check the beforefieldinit header before calling a method untestable (plan 015 decisions, 2026-09-24)
+The installed v1.5.3 `TaleWorlds.MountAndBlade.dll` declares `.class public sequential ansi sealed beforefieldinit TaleWorlds.MountAndBlade.ActionIndexCache`, and its `!=` compares only the instance `Index`. A test can build a check with `default(ActionIndexCache)` and drive `Tick` through substitutes; the engine-backed static constructor runs only on a static member access (`Create`, an `act_*` field). Plan 015 wrote "no test can call `Tick`" from `BoneCollisionServiceTests.cs:202-208` and the v1.4.7 note in animation-skeleton ("not beforefieldinit"), and shipped a weaker IL test because of it.
+- **Why missed:** a static-constructor hazard was read as "the type cannot appear in a test" without reading the class header or trying `default`.
+- **Prevent:** before calling code untestable because an engine type's static constructor needs the engine, read the class header (`ilspycmd -il <dll> | grep "\.class.*<Type>$"`) and write the spike; a beforefieldinit type is safe while the path touches no static member. Re-check per engine version: the v1.4.7 lesson and this one disagree.
+- **Source:** `docs/reviews/rca-warg-tick-costs-decisions-2026-09-24.md` F2 (Agent 2 F1).

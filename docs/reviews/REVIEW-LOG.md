@@ -3800,3 +3800,27 @@ lessons in testing-qa, two in adapters-taleworlds-api. Report:
 | 2 | IL resolve test skipped a helper it could not load | Other: test oracle fails open | "Cannot read" treated as "nothing to find"; no positive control | `EnsureLoaded`, hard failure, control fixture; lesson in testing-qa |
 | 3 | Buffer test satisfied by `new List<Agent>()` through the buffer overload | Other: test checks a proxy | Pinned the old symptom (arity), not the property | Constructor check and negative control; same lesson |
 
+
+## Review (plan 015 decisions, number assigned at merge): warg tick costs, maintainer decisions, 6-lens deep review + Codex gpt-6-astra (2026-09-24)
+
+`/review-codex` Phase 3 on `improve/015-warg-tick-costs`, diff `56eb4bc8..23f6f85b`: the node
+services are resolved once in `WargBehaviorTree.BuildTree` and injected, and
+`BoneCheckDuringAnimation.Tick` reads the progress once and fetches the attacker skeleton only
+inside the hit window. Codex gpt-6-astra: **0 P1, 0 P2, 2 P3, both confirmed, no false positive.**
+It decompiled seven engine types fresh, traced ten bite scenarios and answered the ten Known
+Suspects; it could not read #659. P3-1: the new IL order test proved call order, not the branch;
+running Codex's counterexample as a mutant left both IL tests green, so the test was replaced by
+five substitute-driven `Tick` tests, which went RED on the mutant. P3-2: the docs said a skeleton
+missing in the wind-up ends the bite at the window, but one back by then lets it continue; wording
+fixed. The lenses found what Codex missed: "no test can call `Tick`" was false (the installed
+`ActionIndexCache` is beforefieldinit; a spike ran `Tick` on `default`), `LogTask` still resolves
+per Execute against a "no node is a service locator" comment, `IoC.ResolveAll` escaped the resolve
+rule, the injected nodes had no fake-driven test, and `IsWarg` was still in the doc. Root cause
+table: `docs/reviews/rca-warg-tick-costs-decisions-2026-09-24.md`; lessons in testing-qa,
+adapters-taleworlds-api and misc. Report:
+`docs/reviews/deep-review-015-warg-tick-costs-decisions-2026-09-24.md`. Nothing deployed or smoked.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | IL order test accepted a skeleton fetch on every wind-up frame | Other: test checks a proxy (repeat) | "No test can call `Tick`" was never tried, and the test was named for the goal, not for what a call list shows | Substitute-driven `Tick` tests, mutation-checked; lesson in testing-qa |
+| 2 | Behaviour-difference text omitted skeleton recovery | Logic error (claim) | Written from the scenario pictured, not the condition the code tests | Wording fixed; lesson in misc |

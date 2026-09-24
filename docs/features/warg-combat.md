@@ -80,7 +80,7 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 | File | Purpose |
 |------|---------|
 | **Adapters** | |
-| `Main/Adapters/IAgentAdapter.cs` | Mission-scope agent interface (IsWarg, CustomAttack, ProjectAgent) |
+| `Main/Adapters/IAgentAdapter.cs` | Mission-scope agent interface (CustomAttack, ProjectAgent) |
 | `Main/Adapters/AgentAdapter.cs` | Wraps sealed Agent for mission-time operations |
 | `Main/Adapters/IMissionAdapterFactory.cs` | Factory creating IAgentAdapter instances |
 | `Main/Adapters/MissionAdapterFactory.cs` | Adapter cache keyed by agent OBJECT, evicted on `OnAgentDeleted`, logs index reuse (#592) |
@@ -123,7 +123,7 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 - **Adapter cache (#592):** `TAOM.Tests/Adapters/AgentAdapterCacheTests.cs` (15) and `MissionAdapterFactoryTests.cs` (6, on bare uninitialized `Agent` objects): reference identity, eviction, index-reuse count and the once-per-mission reuse log.
 - **Current:** `TAOM.Tests/Features/Warg/WargAttackServiceTests.cs` — 7 tests covering the pure damage formula in `CalculateWargAttackDamage` via a testable subclass that stubs the sealed armor lookup.
 - **Coverage gap (tracked in #178):** `HandleWargTargetHit` and `WargAttack` accept sealed `Agent` directly in their signatures (ADR-007 violation), so they cannot be unit-tested without the engine runtime. Closing #178 requires refactoring `IWargAttackService` to accept `IAgentAdapter` instead; once that lands, the missing tests can be added.
-- **Tick-cost tests (plan 015, #659):** `TAOM.Tests/Features/Warg/WargTickCostTests.cs` (15) pins, in the IL, that no per-tick node method reaches `IoC.Resolve`, that the four service nodes reach it from no body at all (constructors and field initializers included) while `WargBehaviorTree.BuildTree` resolves each service exactly once, and that the grid scans use the buffer overload without constructing a list; it checks by reflection that no node keeps a service or buffer in a static field, and proves the IL checks against control fixtures; `TAOM.Tests/Features/AdvancedCombat/BoneCheckDuringAnimationTickTests.cs` (4) pins in the IL that the bite's `Tick` reads the action progress once and fetches the attacker skeleton only after the progress tests; `TAOM.Tests/Features/AdvancedCombat/SpatialGridQueryTests.cs` (9) checks the grid query against a brute-force sphere scan through its generic helpers, plus column order and a point that moved since the rebuild; `BoneCheckRangeGateTests.cs` (10) pins that a target's skeleton is fetched only inside the range gate, that a NaN frame fails the gate, and every per-target skip.
+- **Tick-cost tests (plan 015, #659):** `TAOM.Tests/Features/Warg/WargTickCostTests.cs` (17) pins, in the IL, that no per-tick node method reaches `IoC.Resolve` or `IoC.ResolveAll`, that the five warg nodes that scan or hold a service reach neither from any body (constructors and field initializers included) while `WargBehaviorTree.BuildTree` resolves each service exactly once, and that the grid scans use the buffer overload without constructing a list; it checks by reflection that no node keeps a service or buffer in a static field, and proves the IL checks against control fixtures; `TAOM.Tests/Features/AdvancedCombat/BoneCheckDuringAnimationTickTests.cs` (7) drives the bite's `Tick` with substitutes: a wind-up frame never touches the attacker's visuals, the window end and a missing skeleton or visuals in the window expire the bite, and a NaN progress keeps it without a hit test; one IL rule pins a single progress read per tick; `WargTreeNodeInjectionTests.cs` (3) drives `WargAttackTask` and `WargAiControlledIsNotFacingEnemy` with substitute services; `TAOM.Tests/Features/AdvancedCombat/SpatialGridQueryTests.cs` (9) checks the grid query against a brute-force sphere scan through its generic helpers, plus column order and a point that moved since the rebuild; `BoneCheckRangeGateTests.cs` (10) pins that a target's skeleton is fetched only inside the range gate, that a NaN frame fails the gate, and every per-target skip.
 
 ## How to Add a New Creature with Custom Attacks
 
@@ -131,7 +131,7 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 2. Create `BehaviorTreeElements/` folder with BT nodes implementing your creature's AI
 3. Create a `{Creature}BehaviorTree.cs` using the fluent BT builder API
 4. Create `{Creature}MissionBehavior.cs` to register the BT and attach components
-5. Create `{Creature}AttackService.cs` for damage calculation
+5. Create `{Creature}AttackService.cs` for damage calculation. Resolve each service a node needs once in the tree's static `BuildTree` and pass it to the node's constructor (never `IoC.Resolve` in a node: its root runs every mission tick), and scan into a reused instance buffer; `WargTickCostTests` is the pattern to copy (#659)
 6. Register services in IoC, add MissionBehavior in SubModule.cs `OnMissionBehaviorInitialize`
 7. Identify warg/creature via `agent.Monster.StringId == "your_monster_id"`
 
@@ -148,18 +148,20 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 ## Performance
 
 - **SpatialGrid**: cells are keyed on (x, y) only (the distance test stays 3D), so the 60 m "no enemy close" scan looks up 49 cells instead of 343; every warg node scans into a reused buffer through the zero-allocation overload.
-- **BoneCheck**: the attacker's bone positions reuse one list and its skeleton is fetched once per tick; a target's skeleton is fetched only inside the 20 square-metre gate (about 4.5 m), because `MBAgentVisuals.GetSkeleton()` builds a new finalizable native wrapper on every call. `BoneCheckDuringAnimation.Tick` reads the action progress once per tick and fetches the attacker's skeleton only once the progress reaches the hit window, so a wind-up frame builds no wrapper. The one behaviour difference: a missing attacker skeleton during the wind-up now ends the bite when the hit window opens, not at once. The owed in-game warg Custom Battle is the proof for this change (bites must still land and end as before); no unit test can call `Tick`.
+- **BoneCheck**: the attacker's bone positions reuse one list and its skeleton is fetched once per tick; a target's skeleton is fetched only inside the 20 square-metre gate (about 4.5 m), because `MBAgentVisuals.GetSkeleton()` builds a new finalizable native wrapper on every call. `BoneCheckDuringAnimation.Tick` reads the action progress once per tick and fetches the attacker's skeleton only once the progress reaches the hit window, so a standing bite's wind-up frame builds no wrapper (the running bite's window opens at 0). The one behaviour difference: a missing attacker skeleton no longer ends the bite during the wind-up; it ends it only if still missing at the first in-window tick, and a skeleton back by then lets the bite go on (whether that happens in the engine is unverified). Tests drive `Tick` with substitutes; the owed in-game warg Custom Battle is the proof for a live skeleton in the hit window (bites must still land and end as before).
 - **Services in BT nodes**: `WargBehaviorTree.BuildTree` resolves `IMissionAdapterFactory` and `IWargAttackService` once per tree and passes them to the constructors of the four nodes that need them (`PeriodicallyCheckIfCanAttackAnyone`, `CheckOnceIfCanAttackEnemy`, `WargAiControlledIsNotFacingEnemy`, `WargAttackTask`), which keep them in private readonly instance fields and never call `IoC.Resolve` (#659). The tree's attack tasks share one `WargAttackService`, which keeps no per-call state. `LogTask` still resolves its logger per Execute; it runs only when the tree changes branch. `WargRiderHandManager.Tick` decides warg-ness from the mount's `Monster` with `WargConfig.IsWargMonster`, with no container or adapter-cache lookup.
 - **Grid updates**: Every 5 ticks via AdvancedCombatBehavior, not every frame
 
 ## Changelog
 
 - 2026-09-24 - #659, maintainer decisions on the plan 015 review: `WargBehaviorTree.BuildTree`
-  resolves the node services once per tree and injects them, so the nodes hold no `IoC.Resolve`;
+  resolves the node services once per tree and injects them, so the four service nodes hold no
+  `IoC.Resolve` (`LogTask` still does);
   `BoneCheckDuringAnimation.Tick` reads the action progress once and fetches the attacker skeleton
-  only inside the hit window (a missing attacker skeleton during the wind-up now ends the bite when
-  the hit window opens, not at once; the owed in-game warg Custom Battle is the proof that bites
-  still land and end as before). The wider scan results between grid rebuilds are kept.
+  only inside the hit window (a skeleton missing during the wind-up ends the bite only if still
+  missing at the first in-window tick; the owed in-game warg Custom Battle is the proof that bites
+  still land and end as before). Second review:
+  `../reviews/deep-review-015-warg-tick-costs-decisions-2026-09-24.md`. The wider scan results between grid rebuilds are kept.
 - 2026-09-24 - plan 015 (#659): per-tick costs cut. The tree nodes resolve their services once, the three
   scans reuse buffers, the grid keys cells on (x, y) (49 lookups for a 60 m scan instead of 343),
   and a live bite fetches a target's skeleton only inside the 20 square-metre gate. Between grid

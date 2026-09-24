@@ -224,3 +224,9 @@ in `StrikeSoundPlayer`'s comment and `signature-strikes.md`, both committed.
   `lessons/adapters-taleworlds-api.md`, and the retracted cause in
   `rca-spider-directional-attacks-2026-06-15.md`. A correction re-reads every clause of the text it
   keeps, not only the one found wrong.
+
+### A scope word in a claim is checked by a grep over that scope; a behaviour difference is stated as the condition the code tests (plan 015 decisions, 2026-09-24)
+The decisions commit said "no node is a service locator" while the same `BuildTree` built three `LogTask`s that resolve per Execute (the first review had already corrected the same `LogTask` overclaim in the feature doc). It also said a skeleton missing during the wind-up "ends the bite when the hit window opens", but the code tests the skeleton at the first in-window tick, so one that is back by then lets the bite go on and hit.
+- **Why missed:** both were written from intent (the decision, the scenario pictured) and not from the code: no grep over every node the tree builds, no read of the condition.
+- **Prevent:** before writing "no", "every", "all" or "none" about a set, grep the whole set it names and quote the count; scope the claim to what the grep covered. State a behaviour difference as the condition the code evaluates and when it evaluates it, then list the cases it allows, not only the one expected.
+- **Source:** `docs/reviews/rca-warg-tick-costs-decisions-2026-09-24.md` F3 and F6 (Agents 1, 4, 5, 6; Codex P3-2).

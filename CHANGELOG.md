@@ -32,25 +32,37 @@ an agent that has moved up or down into range since the rebuild, which the old z
   class's native static constructor in the test host.
 - **BoneCheckDuringAnimation (maintainer decision):** `Tick` tests the action and the progress
   upper bound first, reads the action progress once per tick, and fetches the attacker's skeleton
-  only once the progress reaches the hit window, so a wind-up frame builds no native wrapper. One
-  behaviour difference: a missing attacker skeleton during the wind-up now ends the bite when the
-  hit window opens instead of at once. No unit test can call `Tick`; the owed in-game Custom
-  Battle below is the proof that bites still land and end as before.
+  only once the progress reaches the hit window, so a wind-up frame (the standing bite's; the
+  running bite's window opens at 0) builds no native wrapper. One behaviour difference: a
+  missing attacker skeleton no longer ends the bite during the wind-up. It ends the bite only if
+  it is still missing at the first in-window tick; a skeleton that is back by then lets the bite
+  go on and hit (whether an active agent's skeleton is ever briefly missing is unverified). Tests
+  drive `Tick` with substitutes (`ActionIndexCache` is beforefieldinit and its `!=` reads only
+  `Index`, so `default` needs no engine); the owed in-game Custom Battle below is still the proof
+  for a live skeleton in the hit window.
 - **Grid widening kept:** the maintainer kept the wider scan results between grid rebuilds
   described above; no z buckets are restored.
-- **Tests:** `WargTickCostTests` (15: IL scans with control fixtures, no `IoC.Resolve` in any body
-  of the four service nodes, one resolve per service in `BuildTree`, and no static service or
-  buffer field), `BoneCheckDuringAnimationTickTests` (4: one progress read, skeleton after the
-  progress tests, with controls), `SpatialGridQueryTests` (9: brute-force sphere comparison,
+- **Tests:** `WargTickCostTests` (17: IL scans with control fixtures, no `IoC.Resolve` or
+  `IoC.ResolveAll` in any body of the five warg nodes that scan or hold a service, one resolve
+  per service in `BuildTree`, and no static service or buffer field),
+  `BoneCheckDuringAnimationTickTests` (7:
+  `Tick` driven with substitutes through the wind-up, the window end, a missing skeleton or
+  visuals in the window and a NaN progress, plus one IL rule, one progress read per tick, with
+  its control), `WargTreeNodeInjectionTests` (3: the attack task and the facing decorator use
+  their injected services), `SpatialGridQueryTests` (9: brute-force sphere comparison,
   column order, a point moved since the rebuild) and `BoneCheckRangeGateTests` (10: the gate, a
-  NaN frame, every per-target skip). Full suite in the plan's worktree after the maintainer
-  decisions: 10273 passed, 2 skipped, 2 failed (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+  NaN frame, every per-target skip). Full suite in the plan's worktree after the review of the
+  maintainer decisions: 10282 passed, 2 skipped, 2 failed (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
   `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, which read the live Armory).
 - **Review:** six-lens deep review and Codex (gpt-6-astra, ultra), no HIGH finding:
   `docs/reviews/deep-review-015-warg-tick-costs-2026-09-24.md`, RCA
-  `docs/reviews/rca-warg-tick-costs-2026-09-24.md`.
+  `docs/reviews/rca-warg-tick-costs-2026-09-24.md`. The maintainer decisions had their own deep
+  review and Codex pass, no HIGH finding:
+  `docs/reviews/deep-review-015-warg-tick-costs-decisions-2026-09-24.md`, RCA
+  `docs/reviews/rca-warg-tick-costs-decisions-2026-09-24.md`.
 - **Owed:** an in-game Custom Battle with warg riders on both sides (bites land and still whiff,
-  bites end as before, the rider hand pose holds, no `[Warg] Tree build failed` line). Nothing
+  bites end as before, standing bites included, the rider hand pose holds, no
+  `[Warg] Tree build failed` line). Nothing
   smoked in game; label #659 `triage-needs-ingame` at close.
 
 ## 2026-09-23

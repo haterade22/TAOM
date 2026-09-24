@@ -44,7 +44,9 @@ public class BoneCheckDuringAnimation : BoneCheck
             return false;
         }
 
-        // One progress read per tick, used for both bounds.
+        // One progress read per tick, used for both bounds. Both bounds are >= tests on purpose
+        // (parity with the code before #659): a NaN progress neither ends the bite nor reaches the
+        // collision pass, so the check idles until the action changes.
         float progress = _agent.GetCurrentActionProgress(0);
         if (progress >= _actionProgressMax)
         {
@@ -54,8 +56,9 @@ public class BoneCheckDuringAnimation : BoneCheck
 
         // The attacker's skeleton is fetched only inside the hit window, once per tick, and handed
         // to CheckBoneCollision: every GetSkeleton call builds a new native wrapper (a ref-count
-        // call, a lock, a GCHandle and a finalizer). A wind-up frame fetches none, so a missing
-        // skeleton during the wind-up ends the bite when the hit window opens (#659).
+        // call, a lock, a GCHandle and a finalizer). A wind-up frame fetches none, so a skeleton
+        // missing during the wind-up ends the bite only if it is still missing at the first
+        // in-window tick; one that is back by then lets the bite go on (#659).
         if (progress >= _actionProgressMin)
         {
             IAgentVisualsAdapter agentVisuals = _agent.AgentVisuals;

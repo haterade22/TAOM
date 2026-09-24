@@ -34,8 +34,11 @@ public class WargBehaviorTree : BehaviorTree, IBTBannerlordBase, IBTWargBlackboa
     public static new BehaviorTree BuildTree(object[] objects)
     {
         if (objects[0] is not Agent agent) return null;
-        // Resolved once per tree and passed to the nodes that need them, so no node is a service
-        // locator and none resolves per tick (the root runs every mission tick).
+        // Resolved once per tree and passed to the four service nodes, so none of them is a service
+        // locator or resolves per tick (the root runs every mission tick). Resolved here, not in the
+        // BTRegister lambda: the registry keeps the first factory for the whole process, so a
+        // captured service would outlive its container. (LogTask still resolves its logger per
+        // Execute; it runs only when a rage branch fires.)
         IMissionAdapterFactory adapterFactory = IoC.Resolve<IMissionAdapterFactory>();
         IWargAttackService attackService = IoC.Resolve<IWargAttackService>();
         BehaviorTree tree = StartBuildingTree(new WargBehaviorTree(agent))

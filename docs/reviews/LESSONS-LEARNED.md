@@ -15,10 +15,10 @@ This document **is the index** of the per-category lesson files under `lessons/`
 ## Categories
 
 - [GameModels & Services](lessons/gamemodels-services.md), 65 lessons
-- [Adapters & TaleWorlds API](lessons/adapters-taleworlds-api.md), 74 lessons
+- [Adapters & TaleWorlds API](lessons/adapters-taleworlds-api.md), 77 lessons
 - [Build, Tooling & Workflow](lessons/build-tooling-workflow.md), 167 lessons
-- [Misc](lessons/misc.md), 15 lessons
-- [Testing & QA](lessons/testing-qa.md), 84 lessons
+- [Misc](lessons/misc.md), 16 lessons
+- [Testing & QA](lessons/testing-qa.md), 88 lessons
 - [Data, Content & Cultures](lessons/data-content-cultures.md), 120 lessons
 - [Harmony & IL (Patches, Transpilers, Prefixes, Patch Lifecycle)](lessons/harmony-il.md), 62 lessons
 - [Animation & Skeleton](lessons/animation-skeleton.md), 40 lessons
