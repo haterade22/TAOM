@@ -49,10 +49,6 @@
 			<HintPath>%(Identity)</HintPath>
 			<Private>False</Private>
 		</Reference>
-		<Reference Include="$(TaomSandBoxCoreModuleBin)\*.dll" Condition="'$(TaomSandBoxCoreModuleBin)' != ''">
-			<HintPath>%(Identity)</HintPath>
-			<Private>False</Private>
-		</Reference>
 		<Reference Include="$(TaomCustomBattleModuleBin)\*.dll">
 			<HintPath>%(Identity)</HintPath>
 			<Private>False</Private>

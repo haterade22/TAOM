@@ -226,3 +226,46 @@ the two failures are the known live-Armory tests (`TheElkItem_DeclaresTheScaleTh
 Per the skill, this was the one convergence pass; its fixes do not open another design round.
 
 VERDICT (after convergence): READY FOR COMMIT
+
+## Maintainer decisions applied (2026-09-24)
+
+Mike answered the three NOT APPLIED items above. All three outcomes are in one commit,
+`fix(ci): v2.0.30 - apply maintainer decisions for plan 010`, on base `2897fcca`. Every number
+below was measured in this worktree for this section (logs in `scratch/010/md/`), except the
+convergence figures named as recorded. The CI replay
+(`replay.py`) deleted the three projects' `bin` and `obj` folders and `TestResults`, removed
+`BANNERLORD_GAME_DIR` and `BANNERLORD_OVERRIDE_DIR` from the environment before anything ran, and
+executed the `run:` blocks of the `build`, `unit` and `gate` steps read from the worktree's
+`csharp.yml` under `pwsh`, in order, from the worktree root.
+
+| # | Decision | Outcome | Evidence |
+|---|---|---|---|
+| D44 | Delete the unused SandBoxCore reference | APPLIED | `Main/TAOM.csproj` Reference and both `TaomSandBoxCoreModuleBin` properties removed; the targets header now says the install paths leave out the empty `Modules\SandBoxCore\bin`. Normalized `-getItem:Reference` snapshots before and after: IDENTICAL for all three projects in install and RefAsm mode (6 of 6; Main 75, Dependencies 58, Tests 60 references). Install: `dotnet build Main/TAOM.csproj --no-incremental -p:DisableModuleCopy=true -p:ModuleId=` 0 errors; full suite `Failed: 2, Passed: 10256, Skipped: 2, Total: 10260`, the recorded totals, with the two known live-Armory failures. RefAsm replay build: `0 Error(s)`, no SandBoxCore type named |
+| D45 | Move `RequiresGame` from the Patch86 binding class to `PatchClasses_AreRegisteredInAllThreePlaces` | APPLIED | Replay unit step: `unit: total=8220 executed=8196 passed=8196 failed=0` (the convergence replay recorded 8,218 and 8,194); `AssaultPrefix_StillCallsPlanAssaultAndRemoveIf` and `AmbushPrefix_StillCallsPlanAmbush` both Passed on the reference assemblies. Gate `total=338 executed=338 passed=338 failed=0`. `.claude/rules/tests.md` now allows a method tag when the rest of the class runs on the stubs |
+| D46 | Point the unit step's `BANNERLORD_GAME_DIR` at `refasm-game` | MEASURED, REVERTED | Without it: total 8,220, 8,196 passed, 24 skipped (NotExecuted), 0 failed. With `$env:BANNERLORD_GAME_DIR = Join-Path $PWD 'TAOM.Tests/bin/Debug/net472/refasm-game'` (the gate's path) as the first line of the unit `run:` block: total 8,220, 8,210 passed, 0 skipped, **10 failed**, step exit 1. Skips dropped by 24 but 10 new failures appeared, so the edit was reverted and `csharp.yml` is unchanged |
+
+**D46 failures.** Five `Patch71FillTests` methods (`Fill_FallsBackToBattleGear_LeavesTheTargetsOwnEquipmentTypeAlone`,
+`Fill_NoSlotEquipmentAndNoBattleGear_LeavesTheTargetUntouched`, `Fill_NullTarget_DoesNotThrow`,
+`Fill_TargetIsTheCampaignWideSingleton_IsLeftUnwritten`,
+`Fill_TemplateSuppliesTheSlot_CopiesTheSourceEquipmentType`) and five `TeamCombatantSelectorTests`
+methods (`Select_EnemySide_TakesEveryCombatantOnThatSide`,
+`Select_NoAllyTeam_PlayerTeamGetsTheWholeSide`, `Select_NullCombatant_IsSkipped`,
+`Select_PlayerSideSplit_AllyTeamGetsTheUncommandedPartiesOutsideThePlayersArmy`,
+`Select_PlayerSideSplit_BothTeamsRegisterWithTheSidesBestSkill`). Each threw
+`System.NullReferenceException: Object reference not set to an instance of an object.` from a stub
+constructor: `at TaleWorlds.Core.Equipment..ctor(EquipmentType equipmentType)` via
+`Patch71FillTests.New` (line 30), and `at TaleWorlds.Core.BasicCultureObject..ctor()` via
+`TeamCombatantSelectorTests.Combatant` (line 36). The other 14 of the 24 skips (in
+`EconomyDiagnosticsPatchDiscoveryTests`, `HowdahCrewBehaviourCurvesTests`,
+`HowdahCrewLookupBanTests`, `HowdahSeatReleaseTests`, `InformationManagerClearBanTests`,
+`LotrIssueSuppressionTests`, `PartyOwnerGetterBanTests` and `SettlementEncounterInvariantTests`)
+passed.
+
+**Follow-up (not applied).** The ten failing methods carry no `RequiresGame` tag and pass the unit
+step today only because `GameAssemblies` resolves no game there and they go Inconclusive. Tagging
+`Patch71FillTests` and `TeamCombatantSelectorTests` `RequiresGame` would let a later change point
+the unit step at `refasm-game` and recover the other 14; that is a new decision for Mike, not part
+of D46.
+
+**Other checks.** CHANGELOG: new entry `fix(ci): v2.0.30 - apply maintainer decisions for plan 010
+(#421)`, and the base entry's heading now cites #421 (kept open for its Python half).

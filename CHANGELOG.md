@@ -4,7 +4,22 @@
 
 ## 2026-09-24
 
-### fix(ci): v2.0.30 - convergence fixes for plan 010
+### fix(ci): v2.0.30 - apply maintainer decisions for plan 010 (#421)
+
+- **The empty SandBoxCore reference is gone.** `Main/TAOM.csproj` and `GameReferences.targets` no
+  longer name `Modules\SandBoxCore\bin`, which holds no DLL on v1.5.3 (BUTR publishes no
+  SandBoxCore package). The reference items of all three projects are identical before and after
+  in both modes (6 of 6 snapshots), the install build and the RefAsm build have 0 errors, and the
+  full suite is unchanged.
+- **Two Patch86 checks now run on CI.** `RequiresGame` moved from the
+  `Patch86HideoutBossFightBindingTests` class to its one game-bound method,
+  `PatchClasses_AreRegisteredInAllThreePlaces`, so the two IL checks on TAOM's own prefixes run in
+  the unit step (replayed: 8,220 total, 8,196 executed, 0 failed; the convergence replay recorded
+  8,218 and 8,194). `.claude/rules/tests.md` allows a method tag when the rest of the class runs
+  on the stubs.
+- **The unit step stays off `refasm-game`.** Pointed at it, the 24 unit skips executed but 10
+  failed on stub constructors (`Patch71FillTests`, `TeamCombatantSelectorTests`), so the change
+  was measured and reverted. #421 stays open for its Python half.
 
 - **The no-game recipe runs as written.** `.ai/verification.md` now sends the reader to the build,
   unit and gate steps of `csharp.yml` exactly as written (all Debug, since the gate reads
@@ -38,7 +53,7 @@
 - Review: `docs/reviews/deep-review-010-ci-on-hosted-windows-2026-09-24.md`, RCA
   `docs/reviews/rca-ci-on-hosted-windows-2026-09-24.md`.
 
-### ci(tests): v2.0.30 - build and test C# on hosted Windows runners
+### ci(tests): v2.0.30 - build and test C# on hosted Windows runners (#421)
 
 - **CI compiles C#, with no game and no workstation (#421, the C# half).** No job compiled TAOM on
   any branch: the C# job needed a self-hosted runner that was never registered and ran only for

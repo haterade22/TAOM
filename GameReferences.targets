@@ -5,7 +5,8 @@
     whose game Reference items name only the properties below (GameReferencesTargetsTests).
 
     TaomGameRefs=Install (the default): the Bannerlord install that Directory.Build.props resolves
-    into GameFolder. These are exactly the paths the projects spelled out before this file existed.
+    into GameFolder. These are the paths the projects spelled out before this file existed, less
+    Modules\SandBoxCore\bin, which holds no DLL (BUTR publishes no SandBoxCore package either).
 
     TaomGameRefs=RefAsm: BUTR's stripped, metadata-only reference assemblies from nuget.org
     (Bannerlord.ReferenceAssemblies.*, generated from the Steam build named in their nuspec tags),
@@ -29,7 +30,6 @@
     <TaomGameBin>$(GameFolder)\bin\$(GameBinariesFolder)</TaomGameBin>
     <TaomNativeModuleBin>$(GameFolder)\Modules\Native\bin\$(GameBinariesFolder)</TaomNativeModuleBin>
     <TaomSandBoxModuleBin>$(GameFolder)\Modules\SandBox\bin\$(GameBinariesFolder)</TaomSandBoxModuleBin>
-    <TaomSandBoxCoreModuleBin>$(GameFolder)\Modules\SandBoxCore\bin\$(GameBinariesFolder)</TaomSandBoxCoreModuleBin>
     <TaomCustomBattleModuleBin>$(GameFolder)\Modules\CustomBattle\bin\$(GameBinariesFolder)</TaomCustomBattleModuleBin>
     <TaomSystemManagementDll>$(TaomGameBin)\System.Management.dll</TaomSystemManagementDll>
     <TaomSystemNumericsVectorsDll>$(TaomGameBin)\System.Numerics.Vectors.dll</TaomSystemNumericsVectorsDll>
@@ -40,8 +40,6 @@
     <TaomGameBin>$(_TaomNuGetRoot)bannerlord.referenceassemblies.core\$(BannerlordRefAsmVersion)\ref\net472</TaomGameBin>
     <TaomNativeModuleBin>$(_TaomNuGetRoot)bannerlord.referenceassemblies.native\$(BannerlordRefAsmVersion)\ref\net472</TaomNativeModuleBin>
     <TaomSandBoxModuleBin>$(_TaomNuGetRoot)bannerlord.referenceassemblies.sandbox\$(BannerlordRefAsmVersion)\ref\net472</TaomSandBoxModuleBin>
-    <!-- Empty on purpose: the game's SandBoxCore bin holds no DLL and BUTR publishes no SandBoxCore package. -->
-    <TaomSandBoxCoreModuleBin></TaomSandBoxCoreModuleBin>
     <TaomCustomBattleModuleBin>$(_TaomNuGetRoot)bannerlord.referenceassemblies.custombattle\$(BannerlordRefAsmVersion)\ref\net472</TaomCustomBattleModuleBin>
     <TaomStoryModeModuleBin>$(_TaomNuGetRoot)bannerlord.referenceassemblies.storymode\$(BannerlordRefAsmVersion)\ref\net472</TaomStoryModeModuleBin>
     <TaomSystemManagementDll>$(_TaomNuGetRoot)system.management\4.7.0\lib\netstandard2.0\System.Management.dll</TaomSystemManagementDll>

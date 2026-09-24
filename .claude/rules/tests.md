@@ -101,8 +101,9 @@ only for the Nine's race, age, face age and kit (`TAOM.Tests/Features/NazgulFami
 engine method body throws. Tag the class `[TestCategory("RequiresGame")]` when a test executes
 engine code (constructing a `Vec2`, `TextObject`, `ExplainedNumber` or `CampaignBehaviorBase`
 counts, even through TAOM code), and `[TestCategory("LiveInstall")]` when it reads the live
-Armory or the vanilla install. `RequiresGame` only removes a test from the unit step: a
-`BindingVerification` test that executes engine code, or needs vanilla method IL or vanilla data,
+Armory or the vanilla install. When the class's other tests run on the stubs, tag only the method
+that needs the game (`Patch86HideoutBossFightBindingTests`). `RequiresGame` only removes a test
+from the unit step: a `BindingVerification` test that executes engine code, or needs vanilla method IL or vanilla data,
 carries `RequiresGameIL` on the method. An untagged test that needs the game fails on CI with a
 `NullReferenceException` from a `TaleWorlds` frame (a TaleWorlds attribute constructor run by
 `GetCustomAttributes` included), a `TypeInitializationException` wrapping one, a
