@@ -47,6 +47,7 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
     private readonly IEncounterAdapter _encounter;
     private readonly IEncounterOwnershipPolicy _ownership;
     private readonly IEnlistmentReconciler _reconciler;
+    // For ResetSessionCaches only: a service never calls presentation (popups stay presenter-side).
     private readonly Presentation.IEnlistmentWaitMenuPresenter _presenter;
     private readonly Content.IArmyRhythmSnapshotService _rhythm;
     private readonly IModLogger _logger;
@@ -217,8 +218,10 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
     ///
     /// This method is the ONE place that knows the lifetime of the feature's per-session state, so
     /// collaborators' caches are dropped from here too rather than each being wired separately into
-    /// the load hook — the same reason <c>_attachment.InvalidateCommanderCache()</c> is called here
-    /// and not from <c>EnlistmentBehavior</c>.
+    /// the lifecycle hooks: <c>EnlistmentBehavior</c>'s load and new-campaign hooks call only this.
+    ///
+    /// It runs on every peer on a new campaign (only the host's load reaches it), so keep every
+    /// callee to an in-memory field clear: no engine call, no world mutation.
     /// </summary>
     public void ResetSessionCaches()
     {
@@ -227,7 +230,6 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         _menuFailures = 0;
         _budget = 0f;
         _statusBudget = 0f;
-        _attachment.InvalidateCommanderCache();
         _status?.Invalidate();
 
         // The army adapter holds a live Army REFERENCE on a singleton that outlives the campaign.
@@ -242,16 +244,20 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         // campaign day (#551). A campaign that ended WHILE latched leaves that anchor behind; load a
         // later save and the elapsed time is enormous, so the recovery fires on the first latched
         // tick and finishes a live loot screen with no real waiting. Dropped here for the same
-        // reason the army handle is, rather than being wired separately into the load hook.
+        // reason the army handle is, rather than being wired separately into a lifecycle hook.
         _reconciler?.ResetForNewSession();
 
-        // Three more pieces of absolute campaign-hour state on singletons: the settlement-dwell
-        // anchor, the arrival-offer latch and its 24-hour cooldown, and the per-hour rhythm
-        // snapshot. Loading an earlier save or starting a new campaign runs the clock backwards,
-        // and a stamp left in the future reads as "a moment ago": the exit sweep would hold the
-        // player in a town the commander has left, and the shore-leave offer would stay silent.
+        // Two more absolute campaign-hour stamps on singletons: the settlement-dwell anchor and
+        // the arrival-offer latch with its 24-hour cooldown. Loading an earlier save or starting a
+        // new campaign runs the clock backwards, and a stamp left in the future reads as "a moment
+        // ago": the exit sweep would hold the player in a town the commander has left, and the
+        // shore-leave offer would stay silent. The attachment reset also drops the adapter's
+        // cached commander MobileParty (the StringId hazard in the summary above).
         _attachment.ResetForNewSession();
         _presenter?.ResetForNewSession();
+
+        // The rhythm snapshot is keyed on an equal hour stamp, not an elapsed time: its hazard is
+        // a reload inside the same campaign hour serving the previous world's snapshot.
         _rhythm?.ResetForNewSession();
     }
 

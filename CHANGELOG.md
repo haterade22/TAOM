@@ -10,7 +10,7 @@ Enlistment no longer carries clocks from one campaign into the next. Loading an 
 hold you inside a town your commander had already left, and silence the shore-leave offer for up to
 the rest of the playthrough, because both remembered a campaign hour from the session before.
 Starting a new campaign without restarting the game also skipped Enlistment's cache reset entirely.
-Both paths now clear every per-session value.
+Both paths now clear those remembered hours and the feature's cached engine handles.
 
 `ServiceMaintenanceService.ResetSessionCaches`, the feature's one reset point, now also clears the
 settlement-dwell anchor, the arrival-offer settlement id and its 24-hour cooldown, and the per-hour
@@ -20,8 +20,16 @@ army handle and the stale-battle anchor no longer leak into a second campaign in
 reset only nulls in-memory fields: no save-format change. Accepted trade-off: the maintenance
 service now depends on the wait-menu presenter's interface so the reset point stays single.
 
-Tests: `EnlistmentSessionResetTests` (6) and two `ServiceMaintenanceServiceTests`. Full suite in the
-plan worktree: 10243 passed, 2 skipped, 2 failed (the two live-Armory tests that fail without this
+Review follow-ups (report `docs/reviews/deep-review-014-enlistment-session-scope-2026-09-24.md`):
+the attachment service's reset now also drops the adapter's cached commander party, so its
+separate `InvalidateCommanderCache` pass-through is deleted; a test pins the load hook's reset and
+its order before normalizing; comments and docs that overclaimed the reset are narrowed. Still not
+reset, and tracked as follow-ups: the commander-loss modal's shown-flag
+(`EnlistmentReconciler._lossAnnouncedFor`), so a reloaded or repeated loss of the same commander
+can go unannounced, and the duty runtime's real-time pace estimate.
+
+Tests: `EnlistmentSessionResetTests` (9) and two `ServiceMaintenanceServiceTests`. Full suite in the
+plan worktree: 10246 passed, 2 skipped, 2 failed (the two live-Armory tests that fail without this
 change). Not smoked in game: load an earlier save while enlisted, then start a second campaign in one
 process.
 

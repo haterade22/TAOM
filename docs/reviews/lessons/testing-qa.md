@@ -1071,3 +1071,20 @@ The first `HowdahPrefabTests` pinned the geometry the rebuild changed (moveable 
 - **Why missed:** the step was written from the campaign model's code, and a smoke list reads as mode-neutral unless it says otherwise.
 - **Prevent:** when a smoke step is there to prove an engine DECISION (killed or wounded, a morale roll, a capture), find the model that decides it in each game mode (`AddModel` in `CustomGame` and the campaign starter) and name the mode whose model can give the other answer. If no mode can, the step proves nothing; say so instead. When the model ROLLS (killed or wounded is a survival roll even with `CanKillEvenIfBlunt`), one outcome proves nothing either: say how many trials settle it and which result would (Codex, 2026-09-23: the step first demanded "killed, not wounded", which a correct build can fail).
 - **Source:** `docs/reviews/rca-elk-delta-2026-09-23.md` F5 (#636).
+
+### A hook that cannot finish outside a campaign is testable up to its first engine read: throw a sentinel from the argument before it (plan 014, 2026-09-24)
+
+`EnlistmentBehavior.OnGameLoaded` calls `_normalizer.Normalize(_playerParty.GetMainHeroId(),
+CampaignTime.Now.ToDays)`, and `CampaignTime.Now` needs a live campaign, so plan 014 declared the
+load hook untestable and pinned only the new-campaign hook. The load edge, the one the CHANGELOG led
+with, had no test. C# evaluates arguments left to right, so a substitute whose `GetMainHeroId()`
+throws a private sentinel exception stops the hook after the reset and before the engine read.
+`GameLoad_OnTheHost_ResetsTheSessionCaches_BeforeNormalizing` asserts the sentinel, the reset, and
+their order with `Received.InOrder`.
+
+- **Why missed:** "calls the engine" was read as "cannot be unit tested", for the whole method.
+- **Prevent:** before calling a hook untestable, find the first statement that touches the engine
+  and ask what an adapter call evaluated just before it can do: throw a sentinel there and assert
+  everything that ran first. Prefer this to reflection or to moving an engine read.
+- **Source:** Codex review of plan 014 (gpt-6-astra, ultra), observation 1;
+  `docs/reviews/rca-enlistment-session-scope-2026-09-24.md` finding 4.

@@ -25,10 +25,23 @@ public class EnlistmentSessionResetTests
     // ---- settlement-dwell anchor (ServiceAttachmentService) ------------------------------------
 
     private static ServiceAttachmentService NewAttachment() =>
-        new ServiceAttachmentService(
-            Substitute.For<IMobilePartyAttachmentAdapter>(),
-            Substitute.For<IGameMenuAdapter>(),
-            Substitute.For<IModLogger>());
+        NewAttachment(Substitute.For<IMobilePartyAttachmentAdapter>());
+
+    private static ServiceAttachmentService NewAttachment(IMobilePartyAttachmentAdapter adapter) =>
+        new ServiceAttachmentService(adapter, Substitute.For<IGameMenuAdapter>(), Substitute.For<IModLogger>());
+
+    [TestMethod]
+    public void AttachmentReset_AlsoDropsTheAdaptersCachedCommanderParty()
+    {
+        // One session-reset member on the attachment service: the cached commander MobileParty is
+        // matched by StringId, which a later campaign can reissue.
+        var adapter = Substitute.For<IMobilePartyAttachmentAdapter>();
+        var sut = NewAttachment(adapter);
+
+        sut.ResetForNewSession();
+
+        adapter.Received(1).InvalidateCommanderCache();
+    }
 
     [TestMethod]
     public void AttachmentReset_DropsTheDwellAnchor_SoAnEarlierClockIsNotInsideTheDwell()
@@ -138,24 +151,75 @@ public class EnlistmentSessionResetTests
         probe.Received(2).Probe(Arg.Any<string>());
     }
 
-    // ---- the new-campaign path (EnlistmentBehavior) --------------------------------------------
+    // ---- the lifecycle hooks (EnlistmentBehavior) ----------------------------------------------
+
+    private static EnlistmentBehavior NewBehavior(
+        IEnlistmentStore store, IServiceMaintenanceService maintenance,
+        ICoopSessionProvider? coop = null, IPlayerPartyAdapter? playerParty = null,
+        IEnlistmentLoadNormalizer? normalizer = null) =>
+        new EnlistmentBehavior(store, Substitute.For<IEnlistmentStateMachine>(),
+            Substitute.For<IEnlistmentReconciler>(), normalizer ?? Substitute.For<IEnlistmentLoadNormalizer>(),
+            playerParty ?? Substitute.For<IPlayerPartyAdapter>(), coop ?? Substitute.For<ICoopSessionProvider>(),
+            maintenance, Substitute.For<IModLogger>());
 
     [TestMethod]
     public void NewCampaign_DropsTheSessionCaches_AndStillClearsTheStore()
     {
         // The engine fires OnNewGameCreated, never OnGameLoaded, for a new campaign
         // (Campaign.DoLoadingForGameType), so the load hook's reset alone left campaign two
-        // running on campaign one's caches.
+        // running on campaign one's caches. The co-op substitute defaults IsAuthority to false:
+        // this reset is deliberately not authority-gated (it only nulls in-memory fields).
         var store = Substitute.For<IEnlistmentStore>();
         var maintenance = Substitute.For<IServiceMaintenanceService>();
-        var sut = new EnlistmentBehavior(store, Substitute.For<IEnlistmentStateMachine>(),
-            Substitute.For<IEnlistmentReconciler>(), Substitute.For<IEnlistmentLoadNormalizer>(),
-            Substitute.For<IPlayerPartyAdapter>(), Substitute.For<ICoopSessionProvider>(),
-            maintenance, Substitute.For<IModLogger>());
+        var sut = NewBehavior(store, maintenance);
 
-        sut.OnNewGameCreated(null);
+        sut.OnNewGameCreated(null!);
 
         maintenance.Received(1).ResetSessionCaches();
         store.Received(1).Clear();
+    }
+
+    [TestMethod]
+    public void NewCampaign_AfterALoadingSyncData_StillResets_ButKeepsTheLoadedRecord()
+    {
+        // The reset is not gated on _justLoadedFromSave; only the store clear is.
+        var store = Substitute.For<IEnlistmentStore>();
+        var maintenance = Substitute.For<IServiceMaintenanceService>();
+        var sut = NewBehavior(store, maintenance);
+        var dataStore = Substitute.For<TaleWorlds.CampaignSystem.IDataStore>();
+        dataStore.IsSaving.Returns(false);
+        sut.SyncData(dataStore);
+
+        sut.OnNewGameCreated(null!);
+
+        maintenance.Received(1).ResetSessionCaches();
+        store.DidNotReceive().Clear();
+    }
+
+    private sealed class ReachedNormalizeArguments : System.Exception { }
+
+    [TestMethod]
+    public void GameLoad_OnTheHost_ResetsTheSessionCaches_BeforeNormalizing()
+    {
+        // OnGameLoaded cannot finish outside a campaign (CampaignTime.Now). The hero-id argument
+        // is evaluated before CampaignTime.Now, so a sentinel thrown there stops the hook after
+        // the reset and before the engine read, which pins the load edge's routing and order.
+        var store = Substitute.For<IEnlistmentStore>();
+        var maintenance = Substitute.For<IServiceMaintenanceService>();
+        var coop = Substitute.For<ICoopSessionProvider>();
+        coop.IsAuthority.Returns(true);
+        var playerParty = Substitute.For<IPlayerPartyAdapter>();
+        playerParty.GetMainHeroId().Returns(_ => throw new ReachedNormalizeArguments());
+        var normalizer = Substitute.For<IEnlistmentLoadNormalizer>();
+        var sut = NewBehavior(store, maintenance, coop, playerParty, normalizer);
+
+        Assert.ThrowsException<ReachedNormalizeArguments>(() => sut.OnGameLoaded(null!));
+
+        Received.InOrder(() =>
+        {
+            maintenance.ResetSessionCaches();
+            playerParty.GetMainHeroId();
+        });
+        normalizer.DidNotReceiveWithAnyArgs().Normalize(default!, default);
     }
 }

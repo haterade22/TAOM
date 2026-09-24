@@ -124,7 +124,7 @@ public class ServiceMaintenanceServiceTests
         _pump.ResetSessionCaches();
 
         _army.Received(1).ResetSessionCaches();
-        _attachment.Received(1).InvalidateCommanderCache();
+        _attachment.Received(1).ResetForNewSession();   // also drops the cached commander party
         _status.Received(1).Invalidate();
         _reconciler.Received(1).ResetForNewSession();
     }

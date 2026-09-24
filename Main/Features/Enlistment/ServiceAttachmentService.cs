@@ -43,7 +43,11 @@ public class ServiceAttachmentService : IServiceAttachmentService
     public bool IsWithinSettlementDwell(double nowHours) =>
         _settlementEntryHours.HasValue && nowHours - _settlementEntryHours.Value < SettlementDwellHours;
 
-    public void ResetForNewSession() => _settlementEntryHours = null;
+    public void ResetForNewSession()
+    {
+        _settlementEntryHours = null;
+        _attachment.InvalidateCommanderCache();   // the adapter's cached commander MobileParty
+    }
 
     public AttachmentAssessment Assess(
         EnlistmentState state, CommanderSnapshot commander, PlayerPresenceSnapshot player,
@@ -158,8 +162,6 @@ public class ServiceAttachmentService : IServiceAttachmentService
         _attachment.SyncPositionCached(commanderHeroId, expectedCommanderPartyId);
 
     public PlayerPresenceFlags GetPresenceFlags() => _attachment.GetPresenceFlags();
-
-    public void InvalidateCommanderCache() => _attachment.InvalidateCommanderCache();
 
     public bool ClearArmyAttachment() => _attachment.ClearArmyAttachment();
 

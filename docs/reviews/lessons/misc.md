@@ -224,3 +224,19 @@ in `StrikeSoundPlayer`'s comment and `signature-strikes.md`, both committed.
   `lessons/adapters-taleworlds-api.md`, and the retracted cause in
   `rca-spider-directional-attacks-2026-06-15.md`. A correction re-reads every clause of the text it
   keeps, not only the one found wrong.
+
+### A plan's stale-claim grep is a floor: search the whole repo, tests included, by distinctive words (plan 014, 2026-09-24)
+
+Plan 014 rewrote the claim "ResetSessionCaches is wired to OnGameLoaded only" and its Step 7 gate
+grepped `EnlistmentReconciler.cs` for it. The executor ran the gate as written and it passed, while
+the same claim sat in `EnlistmentReconcilerTests.cs:835-836`, split across two lines so no phrase
+grep could have matched it. Four review lenses caught it; Codex, which checked the same file the
+plan named, did not.
+
+- **Why missed:** the gate was scoped to the file the plan changed, and it searched for a phrase. A
+  test comment is a copy of the claim too, and a line break splits a phrase.
+- **Prevent:** after rewriting a claim, grep the whole repo (`Main`, `TAOM.Tests`, `docs`) for one or
+  two of its distinctive words (`OnGameLoaded only`, `wired to`), never for the full sentence, and
+  treat a plan's narrower grep as the minimum, not the check. Recurrence of the #644 and #645 lesson
+  above.
+- **Source:** `docs/reviews/rca-enlistment-session-scope-2026-09-24.md` finding 1.

@@ -1284,8 +1284,8 @@ so whatever it holds survives every reload.
   absolute campaign day left behind by a campaign that ended while latched makes the recovery fire
   instantly on the next later save.
   It lives there, not in `EnlistmentBehavior`, because that method is the one place that knows the
- lifetime of the feature's per-session state, the same reason `InvalidateCommanderCache` is called
-  from it.
+ lifetime of the feature's per-session state, the same reason the adapter's cached commander party
+  is dropped from it (through `IServiceAttachmentService.ResetForNewSession`).
 - `CreateArmyLedBy` disbands any prior created army before raising another, so a missed `LeaveArmy`
   cannot orphan one by overwriting the handle.
 
@@ -1690,7 +1690,7 @@ that ends while latched leaves a finite value behind; load a later save and the 
 enormous, so the recovery fires on the very first latched tick and finishes what may be a genuine loot
 screen with no real waiting at all. That is the destructive `Finish` R1b exists to prevent, committed
 by the safety net written to prevent it. Two guards. `IEnlistmentReconciler.ResetForNewSession` is
-dropped from `ServiceMaintenanceService.ResetSessionCaches` (the feature's one place that knows this
+called from `ServiceMaintenanceService.ResetSessionCaches` (the feature's one place that knows this
 lifetime, which is also why the army handle is dropped there rather than from the load hook), and
 that reset now runs on a load and on a new campaign. A backwards-clock re-anchor inside
 `BreakStaleBattleLatch` is the second, self-contained guard. When it was written,
@@ -1700,16 +1700,24 @@ backwards cannot be one continuous episode. Found by the `/deep-review` data-flo
 tests, which all passed. `EnlistmentBehavior.OnNewGameCreated` now runs the reset too; the re-anchor
 stays for any path that skips it (a co-op client's load returns before the reset).
 
-**Every clock-keyed latch on an Enlistment singleton is reset on both lifecycle edges.**
-`ResetSessionCaches` also clears the settlement-dwell anchor
-(`IServiceAttachmentService.ResetForNewSession`), the arrival-offer settlement id and 24-hour
-cooldown (`IEnlistmentWaitMenuPresenter.ResetForNewSession`) and the per-hour army-rhythm snapshot
-(`IArmyRhythmSnapshotService.ResetForNewSession`). Each held an absolute campaign hour. Before this,
-loading an earlier save left the stamps in the future, which the code read as "a moment ago": the
-exit sweep held the player in a town the commander had left until the new clock passed the old
-stamp plus 6 hours, and the shore-leave offer stayed silent until it passed the old stamp plus a
-day. The tests are `EnlistmentSessionResetTests` and the `ResetSessionCaches_*` tests in
-`ServiceMaintenanceServiceTests`.
+**Every campaign-clock latch on an Enlistment singleton is reset on a host's load and on a new
+campaign.** `ResetSessionCaches` also clears the settlement-dwell anchor and the adapter's cached
+commander party (`IServiceAttachmentService.ResetForNewSession`), the arrival-offer settlement id
+and 24-hour cooldown (`IEnlistmentWaitMenuPresenter.ResetForNewSession`) and the per-hour
+army-rhythm snapshot (`IArmyRhythmSnapshotService.ResetForNewSession`). The dwell anchor and the
+offer cooldown held an absolute campaign hour. Before this, loading an earlier save left those
+stamps in the future, which the code read as "a moment ago": the exit sweep held the player in a
+town the commander had left until the new clock passed the old stamp plus 6 hours, and the
+shore-leave offer stayed silent until it passed the old stamp plus a day. The rhythm snapshot is
+keyed on an equal hour stamp, so a reload inside the same campaign hour served the previous
+world's snapshot. The tests are `EnlistmentSessionResetTests` (including the load hook's routing
+and order) and the `ResetSessionCaches_*` tests in `ServiceMaintenanceServiceTests`.
+
+Not every per-session value is reset yet. `EnlistmentReconciler._lossAnnouncedFor` (the
+commander-loss modal's shown-flag) is cleared only on a commander's recovery, so after loading an
+earlier save, in a second campaign, or after re-enlisting under the same lord, that commander's
+next loss can go unannounced. `FieldDutyRuntime`'s real-time pace estimate also survives a session
+change (cosmetic: the first duty after a load can fold its assignment toast into the result). Both are follow-ups, not part of this reset.
 
 ### The engine backstop, and the bundle that was suppressed
 

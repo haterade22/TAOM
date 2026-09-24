@@ -37,9 +37,10 @@ public interface IServiceAttachmentService
     void StampSettlementEntry(double nowHours);
 
     /// <summary>
-    /// Forget the dwell anchor. Session reset only (a load or a new campaign), never per tick:
-    /// the anchor is an absolute campaign hour, and one left in the future reads as "inside the
-    /// dwell" until the new clock passes it.
+    /// Forget the dwell anchor and the adapter's cached commander party. Session reset only (a
+    /// load or a new campaign), never per tick: the anchor is an absolute campaign hour, and one
+    /// left in the future reads as "inside the dwell" until the new clock passes it plus the
+    /// 6-hour dwell. The cached party is matched by StringId, which a later campaign can reissue.
     /// </summary>
     void ResetForNewSession();
 
@@ -57,9 +58,6 @@ public interface IServiceAttachmentService
 
     /// <summary>Allocation-free presence read for the pump.</summary>
     PlayerPresenceFlags GetPresenceFlags();
-
-    /// <summary>Drop the cached commander handle — discharge, session launch, game load.</summary>
-    void InvalidateCommanderCache();
 
     /// <summary>Clear AttachedTo / non-led Army so the main party is a free agent again.</summary>
     bool ClearArmyAttachment();

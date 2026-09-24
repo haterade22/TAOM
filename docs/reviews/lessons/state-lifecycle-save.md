@@ -754,3 +754,19 @@ The shader walk's runner treated its own state as the truth about the engine: `E
 - **Why missed:** the fix answered the stale-handle question (never seat a newcomer by index) and never asked the allocator question (where does the newcomer go). The oracle was written from the fix's intent, not from the invariant (unique slots inside the footprint).
 - **Prevent:** when a change evicts from a store that also allocates, write down what the next allocation returns, and test the invariant over turnover (N deaths and replacements at a fixed population: uniqueness, class placement, bounded footprint), not the single step. `SlotAssignment.Forget` plus `TryReclaim` is the shape: the vacated slot waits for the next unit of its class.
 - **Source:** `docs/reviews/raw/codex-adversarial-creature-handles-2026-09-13.md` F1; `docs/reviews/rca-warg-clip-on-horse-2026-09-13.md`; #595.
+
+### "Every per-session value is reset" is an enumeration: sweep the singletons' mutable fields before writing it (plan 014, 2026-09-24)
+
+Plan 014 reset three campaign-clock latches, and its CHANGELOG said "Both paths now clear every
+per-session value". `EnlistmentReconciler._lossAnnouncedFor`, a shown-flag on the same singleton, is
+per-session and no reset clears it (so a reloaded or repeated loss of the same commander can go
+unannounced), and `FieldDutyRuntime` keeps a real-time pace estimate. The feature doc's bold claim
+("on both lifecycle edges") sat one line below its own note that a co-op client's load skips the
+reset.
+
+- **Why missed:** the summary was written from the plan's list of three latches, not from the code.
+  The architecture rule names shown-flags explicitly, but nobody swept for them.
+- **Prevent:** before writing "every" about session state, list the fields not marked `readonly` on
+  every `Reuse.Singleton` the feature and its adapters register, and mark each reset or not. Write the claim from that list, and name the values left out. State
+  the edges exactly: a load gated on co-op authority is "a host's load".
+- **Source:** `docs/reviews/rca-enlistment-session-scope-2026-09-24.md` findings 2 and 3.
