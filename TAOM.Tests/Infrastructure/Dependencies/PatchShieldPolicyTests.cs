@@ -1,6 +1,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
 using TAOM.Dependencies.Foundation;
 
 namespace TAOM.Tests.Infrastructure.Dependencies;
@@ -164,5 +166,87 @@ public class PatchShieldPolicyTests
         // per-call tax. Under co-op both are now false, by different mechanisms.
         Assert.IsFalse(PatchShieldPolicy.ShouldUnpatchForeignOwners(coopActive: true));
         Assert.IsFalse(PatchShieldPolicy.ShouldInstall(coopActive: true, disabledByFlag: false));
+    }
+
+    // IsExcludedTargetNamespace: the hot-layer exclusion list
+
+    [TestMethod]
+    public void IsExcludedTargetNamespace_GauntletAndTwoDimensionLayers_ReturnsTrue()
+    {
+        foreach (var ns in new[]
+                 {
+                     "TaleWorlds.GauntletUI",
+                     "TaleWorlds.GauntletUI.PrefabSystem",
+                     "TaleWorlds.TwoDimension",
+                     "TaleWorlds.MountAndBlade.GauntletUI.Widgets",
+                 })
+        {
+            Assert.IsTrue(PatchShieldPolicy.IsExcludedTargetNamespace(ns), $"'{ns}' must be excluded (#331)");
+        }
+    }
+
+    [TestMethod]
+    public void IsExcludedTargetNamespace_GameplayNamespaces_ReturnsFalse()
+    {
+        // The list is not co-op-scoped: widening it to gameplay code would drop the shield in solo play.
+        foreach (var ns in new[] { "TaleWorlds.CampaignSystem", "TaleWorlds.MountAndBlade", "SandBox", "TaleWorlds.Core" })
+        {
+            Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetNamespace(ns), $"'{ns}' must stay shielded");
+        }
+    }
+
+    [TestMethod]
+    public void IsExcludedTargetNamespace_NullOrEmpty_ReturnsFalse()
+    {
+        Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetNamespace(null));
+        Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetNamespace(string.Empty));
+    }
+
+    [TestMethod]
+    public void IsExcludedTargetNamespace_ManagedCallbacksShims_ReturnsTrue()
+    {
+        // Native2ManagedPatcher (Main/Features/CrashReport/Hooks) puts a swallow-everything finalizer
+        // on every static method of ManagedCallbacks.{Library,Core,Engine}CallbacksGenerated (247 in
+        // v1.5.3). Re-shielding them cost about 46 s of the first game start's loading screen and
+        // adds nothing: PatchShield's rescue only strips prefixes, postfixes and transpilers, and
+        // those shims carry only finalizers.
+        Assert.IsTrue(PatchShieldPolicy.IsExcludedTargetNamespace("ManagedCallbacks"));
+    }
+
+    [TestMethod]
+    public void FormatShieldPassSummary_WithAttaches_AppendsElapsedAndPerAttach()
+    {
+        var line = PatchShieldPolicy.FormatShieldPassSummary(added: 372, alreadyShielded: 46, skipped: 19, total: 437, elapsedMs: 69300);
+
+        // The existing prefix stays byte-identical: docs/migration/dr3-maintenance.md and triagers grep it.
+        StringAssert.StartsWith(line, "shield pass: +372 new, 46 already-shielded, 19 skipped (total: 437)");
+        StringAssert.Contains(line, "in 69300 ms");
+        StringAssert.Contains(line, "186.3 ms/attach");
+    }
+
+    [TestMethod]
+    public void FormatShieldPassSummary_NoAttaches_DoesNotDivideByZero()
+    {
+        var line = PatchShieldPolicy.FormatShieldPassSummary(added: 0, alreadyShielded: 437, skipped: 0, total: 437, elapsedMs: 3);
+
+        StringAssert.Contains(line, "in 3 ms");
+        Assert.IsFalse(line.Contains("ms/attach"), line);
+        Assert.IsFalse(line.Contains("NaN") || line.Contains("Infinity") || line.Contains("∞"), line);
+    }
+
+    [TestMethod]
+    public void FormatShieldPassSummary_CommaDecimalCulture_UsesInvariantDecimalPoint()
+    {
+        var saved = Thread.CurrentThread.CurrentCulture;
+        try
+        {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("de-DE");
+            var line = PatchShieldPolicy.FormatShieldPassSummary(added: 372, alreadyShielded: 46, skipped: 19, total: 437, elapsedMs: 69300);
+            StringAssert.Contains(line, "186.3 ms/attach");
+        }
+        finally
+        {
+            Thread.CurrentThread.CurrentCulture = saved;
+        }
     }
 }

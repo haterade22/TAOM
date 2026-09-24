@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace TAOM.Dependencies.Foundation;
 
 /// <summary>
-/// The two pure decisions behind <see cref="PatchShield"/>'s rescue path, extracted so they can be
-/// tested without Harmony or a running game. PatchShield keeps the plumbing; this keeps the policy.
+/// The pure decisions behind <see cref="PatchShield"/> (which targets to skip, which owners never
+/// to unpatch, when to install), extracted so they can be tested without Harmony or a running
+/// game. PatchShield keeps the plumbing; this keeps the policy.
 /// </summary>
 public static class PatchShieldPolicy
 {
@@ -61,6 +63,61 @@ public static class PatchShieldPolicy
         "Coop.BootFix",
         "CoopAutoRegistryFactory",
     };
+
+    // Issue #331 round 2 (2026-07-09, measured): NEVER shield the Gauntlet/2D UI layer.
+    // A shield finalizer binds __originalMethod, so Harmony's generated wrapper pays a
+    // MethodBase.GetMethodFromHandle + try/catch on EVERY CALL (~50µs). The Gauntlet
+    // prefab system contains per-widget-recursion methods that UIExtenderEx patches
+    // (WidgetFactory.IsCustomType prefix, WidgetTemplate.OnRelease blank-transpiler);
+    // a tournament's accumulated template tree calls them ~2 MILLION times at release,
+    // so the shield tax amplified a milliseconds-scale teardown into a measured 104-109s
+    // frozen exit (+8,276 gen0 GCs, invariant across sessions; stack-sampled proof in
+    // docs/reviews/rca-tournament-exit-hang-2026-07-06.md round 2). Shield value there
+    // is nil anyway: the only patcher of that layer is BUTR's own UIExtenderEx.
+    public static readonly IReadOnlyList<string> ExcludedTargetNamespacePrefixes = new[]
+    {
+        "TaleWorlds.GauntletUI",
+        "TaleWorlds.TwoDimension",
+        // Round-2 compat review (2026-07-10): TAOM's own Patch38 target
+        // (SettlementNameplateWidget.DetermineTargetAlphaValue, ~3000 calls/sec on the
+        // campaign map) lives here and was silently paying the shield tax every frame.
+        // Same rationale as above: hot widget/view layer, shield value nil.
+        "TaleWorlds.MountAndBlade.GauntletUI",
+        // Plan 007 (2026-09-23, measured from diag.log): the engine's native-to-managed callback
+        // shims, ManagedCallbacks.{Library,Core,Engine}CallbacksGenerated. TAOM's own
+        // Native2ManagedPatcher already wraps every one (247 in v1.5.3) with a finalizer that
+        // swallows every exception while crash capture is on (CrashReportPatchHelper.HandleAndSwallow).
+        // Shielding them again cost one Harmony.Patch each at the first game start (about 46 s of a
+        // 69 s pass 2 on a machine paying 186 ms per Patch) and stacked an __originalMethod wrapper
+        // on engine callback hot paths: the #331 hot-layer rationale. Rescue value is nil: those
+        // shims carry only finalizers, and the rescue strips prefixes, postfixes and transpilers.
+        "ManagedCallbacks",
+    };
+
+    /// <summary>Whether a patch target's declaring namespace is on the hot-layer exclusion list (ordinal prefix match).</summary>
+    public static bool IsExcludedTargetNamespace(string? targetNamespace)
+    {
+        if (string.IsNullOrEmpty(targetNamespace)) return false;
+        foreach (var prefix in ExcludedTargetNamespacePrefixes)
+        {
+            if (targetNamespace!.StartsWith(prefix, StringComparison.Ordinal)) return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// The diag.log line for one shield pass. The prefix up to "(total: N)" is unchanged; the timing
+    /// suffix exists because diag.log ships in every crash bundle, and the per-attach cost of
+    /// Harmony.Patch varies about 30x between machines (5 ms to 186 ms observed), which decides
+    /// whether pass 2 costs 2 s or 70 s of a player's first loading screen.
+    /// </summary>
+    public static string FormatShieldPassSummary(int added, int alreadyShielded, int skipped, int total, long elapsedMs)
+    {
+        var line = $"shield pass: +{added} new, {alreadyShielded} already-shielded, {skipped} skipped (total: {total}) in {elapsedMs} ms";
+        return added > 0
+            ? line + " (" + ((double)elapsedMs / added).ToString("F1", CultureInfo.InvariantCulture) + " ms/attach)"
+            : line + " (no new attaches)";
+    }
 
     /// <summary>
     /// Unions the compiled defaults with any extra prefixes from <c>coop-modules.txt</c>. Union

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -47,40 +48,12 @@ public static class PatchShield
     // prefixes from coop-modules.txt — union only, so a bad config edit can never unprotect the
     // BUTR/MCM stack. Built once per unpatch attempt in TryUnpatchOffendingPatches.
 
-    // Issue #331 round 2 (2026-07-09, measured): NEVER shield the Gauntlet/2D UI layer.
-    // A shield finalizer binds __originalMethod, so Harmony's generated wrapper pays a
-    // MethodBase.GetMethodFromHandle + try/catch on EVERY CALL (~50µs). The Gauntlet
-    // prefab system contains per-widget-recursion methods that UIExtenderEx patches
-    // (WidgetFactory.IsCustomType prefix, WidgetTemplate.OnRelease blank-transpiler);
-    // a tournament's accumulated template tree calls them ~2 MILLION times at release,
-    // so the shield tax amplified a milliseconds-scale teardown into a measured 104-109s
-    // frozen exit (+8,276 gen0 GCs, invariant across sessions — stack-sampled proof in
-    // docs/reviews/rca-tournament-exit-hang-2026-07-06.md round 2). Shield value there
-    // is nil anyway: the only patcher of that layer is BUTR's own UIExtenderEx.
-    private static readonly string[] ExcludedTargetNamespacePrefixes =
-    {
-        "TaleWorlds.GauntletUI",
-        "TaleWorlds.TwoDimension",
-        // Round-2 compat review (2026-07-10): TAOM's own Patch38 target
-        // (SettlementNameplateWidget.DetermineTargetAlphaValue, ~3000 calls/sec on the
-        // campaign map) lives here and was silently paying the shield tax every frame.
-        // Same rationale as above: hot widget/view layer, shield value nil.
-        "TaleWorlds.MountAndBlade.GauntletUI",
-    };
+    // The hot-layer target exclusion list lives in PatchShieldPolicy.ExcludedTargetNamespacePrefixes (#331).
 
     private static bool IsExcludedTarget(MethodBase method)
     {
-        try
-        {
-            var ns = method.DeclaringType?.Namespace ?? string.Empty;
-            foreach (var prefix in ExcludedTargetNamespacePrefixes)
-            {
-                if (ns.StartsWith(prefix, StringComparison.Ordinal))
-                    return true;
-            }
-        }
-        catch { /* fail open — an unreadable type just gets shielded as before */ }
-        return false;
+        try { return PatchShieldPolicy.IsExcludedTargetNamespace(method.DeclaringType?.Namespace); }
+        catch { return false; /* fail open: an unreadable type just gets shielded as before */ }
     }
 
     private static readonly Dictionary<string, int> _ownerCounts =
@@ -159,6 +132,7 @@ public static class PatchShield
                 return;
             }
 
+            var stopwatch = Stopwatch.StartNew();
             List<MethodBase> patched;
             try
             {
@@ -193,7 +167,7 @@ public static class PatchShield
 
                     // Never shield hot UI-layer targets — a per-call __originalMethod
                     // finalizer on the Gauntlet prefab system froze tournament exits for
-                    // ~107s (#331 round 2). See ExcludedTargetNamespacePrefixes.
+                    // ~107s (#331 round 2). See PatchShieldPolicy.ExcludedTargetNamespacePrefixes.
                     if (IsExcludedTarget(method))
                     {
                         _shielded.Add(method);
@@ -234,7 +208,7 @@ public static class PatchShield
 
             if (added > 0 || alreadyShielded == 0)
             {
-                DiagLog.Log(Tag, $"shield pass: +{added} new, {alreadyShielded} already-shielded, {skipped} skipped (total: {_shielded.Count})");
+                DiagLog.Log(Tag, PatchShieldPolicy.FormatShieldPassSummary(added, alreadyShielded, skipped, _shielded.Count, stopwatch.ElapsedMilliseconds));
             }
         }
         catch (Exception ex)
