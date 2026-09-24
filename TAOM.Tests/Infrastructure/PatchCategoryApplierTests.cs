@@ -131,14 +131,15 @@ public class PatchCategoryApplierTests
         Assert.IsFalse(second.Contains("Patch_B"), second);
     }
 
-    // Also pins the premise against the pinned Harmony 2.4.2: a category whose target does not
-    // resolve THROWS out of PatchCategory rather than being a silent no-op.
+    // Also pins the premise against the pinned Harmony 2.4.2: a class whose target does not
+    // resolve THROWS out of its class processor rather than being a silent no-op. Goes through
+    // PatchCategoryIndex, as SubModule does.
     [TestMethod]
     public void TryApply_RealHarmonyCategoryWhoseTargetDoesNotResolve_ReturnsFalseAndLogsTheMissingTarget()
     {
         var harmony = new Harmony("taom.tests.patchcategoryapplier");
-        var sut = new PatchCategoryApplier(
-            category => harmony.PatchCategory(typeof(PatchCategoryApplierTests).Assembly, category), _logger);
+        var index = PatchCategoryIndex.Build(typeof(PatchCategoryApplierTests).Assembly);
+        var sut = new PatchCategoryApplier(category => index.Apply(harmony, category), _logger);
 
         Assert.IsFalse(sut.TryApply(UnresolvableCategory),
             "Harmony no longer throws on an unresolvable target; the guard's premise changed");
@@ -146,8 +147,10 @@ public class PatchCategoryApplierTests
             s.Contains(UnresolvableCategory) && s.Contains("Undefined target method")));
     }
 
-    // Source gate: the only direct Harmony PatchCategory call left in Main is the one inside the
-    // applier's delegate in SubModule. A new bare call would re-open the fail-as-a-group hole.
+    // Source gate: no direct Harmony PatchCategory call is left in Main. SubModule applies every
+    // category through TryPatchCategory, whose delegate goes through PatchCategoryIndex. A bare call
+    // would re-open the fail-as-a-group hole, and Harmony's own category index fails every category
+    // over one class whose attributes cannot be read.
     [TestMethod]
     public void MainSource_AppliesEveryPatchCategoryThroughTheGuardedHelper()
     {
@@ -168,11 +171,15 @@ public class PatchCategoryApplierTests
             }
         }
 
-        Assert.AreEqual(1, hits.Count,
+        Assert.AreEqual(0, hits.Count,
             "Every category must be applied with TryPatchCategory(\"...\") in SubModule.cs. Direct calls found: "
             + string.Join(" | ", hits));
-        StringAssert.Contains(hits[0], "SubModule.cs: ");
-        StringAssert.Contains(hits[0], "PatchCategory(typeof(SubModule).Assembly, category)");
+
+        var subModule = CommentPattern.Replace(File.ReadAllText(RepoPaths.RepoPath("Main", "SubModule.cs")), string.Empty);
+        StringAssert.Matches(subModule, new Regex(
+            @"var (\w+) = PatchCategoryIndex\.Build\(typeof\(SubModule\)\.Assembly\);\s*"
+            + @"_patches = new PatchCategoryApplier\(\s*category => \1\.Apply\(_harmony, category\),[^;]+;\s*"
+            + @"_patches\.RecordSkippedClasses\(\1\.SkippedClasses\);"));
     }
 
     // Nothing receives InformationManager.DisplayMessage during OnSubModuleLoad: Native builds the

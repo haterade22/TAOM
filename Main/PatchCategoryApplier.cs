@@ -9,10 +9,11 @@ namespace TAOM;
 /// costs only that category. Harmony's PatchCategory has no catch: the first class whose target is
 /// missing throws a HarmonyException out of the caller, which in OnSubModuleLoad fails the module
 /// load and in OnGameInitializationFinished skips every later category of the batch. Harmony does
-/// not roll back, so the failing category's earlier classes stay patched. One case is NOT
-/// category-local: Harmony builds its category index once per assembly by reading every type's
-/// attributes, so an attribute naming a type the engine no longer has makes every call fail. Each
-/// failure is logged at Error with its full cause and remembered until the phase summary is taken.
+/// not roll back, so the failing category's earlier classes stay patched. A class whose attributes
+/// cannot be read (one naming a type the engine no longer has) would fail Harmony's assembly-wide
+/// category index and so every category; PatchCategoryIndex skips that class instead, and
+/// RecordSkippedClasses reports it here. Each failure or skipped class is logged at Error with its
+/// full cause and remembered until the phase summary is taken.
 /// The apply delegate keeps HarmonyLib and the engine out of this class, so it is unit-testable.
 /// </summary>
 internal sealed class PatchCategoryApplier
@@ -41,6 +42,21 @@ internal sealed class PatchCategoryApplier
             _logger.LogError(
                 $"[PatchApply] {category} FAILED (Harmony stops a category at its first failing class): {ex}");
             return false;
+        }
+    }
+
+    /// <summary>
+    /// Logs each class the category index skipped because its attributes could not be read, and
+    /// records it by name for the next phase summary.
+    /// </summary>
+    internal void RecordSkippedClasses(IEnumerable<KeyValuePair<Type, Exception>> skipped)
+    {
+        foreach (var entry in skipped)
+        {
+            var name = entry.Key.FullName ?? entry.Key.Name;
+            _failed.Add(name);
+            _logger.LogError(
+                $"[PatchApply] {name} SKIPPED (its attributes cannot be read, so its patches are off; every other class still applies): {entry.Value}");
         }
     }
 

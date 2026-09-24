@@ -218,3 +218,13 @@ plan 009 and are left alone.
   **Failed 2, Passed 10248, Skipped 2, Total 10252**, the same two known live-Armory failures.
 - The in-game U1 and U2 items stand: Esc cannot dismiss the inquiry during the splash video, but
   Enter can.
+
+## Maintainer decisions applied (2026-09-24)
+
+Mike answered the NEEDS MIKE items on 2026-09-24; the public issue is #653 (finding 14).
+
+| # | Decision | Applied in |
+|---|---|---|
+| 1 | Finding 3: isolate the broken class. The category index is built class by class; a class whose attributes cannot be read is skipped and reported through the startup notice and the `[PatchApply]` log, and every other category still applies. | Commit `fix(harmony): v2.0.30 - apply maintainer decisions for plan 009`. New `Main/PatchCategoryIndex.cs` mirrors Harmony 2.4.2's `BuildCategoryCache` and `PatchCategory(Assembly, string)` through public API only (`AccessTools.GetTypesFromAssembly`, `HarmonyMethodExtensions.GetFromType`, `HarmonyMethod.Merge`, `Harmony.CreateClassProcessor`), with a catch per class. `PatchCategoryApplier.RecordSkippedClasses` logs `[PatchApply] <class> SKIPPED` with the cause and names the class in the next phase summary (the startup inquiry). RED first: `PatchCategoryIndexTests` on an emitted probe assembly (one class whose `[HarmonyPatch]` names a missing type, one healthy class in another category) failed with "the healthy category must apply" and a `TypeLoadException` on an unknown category while the index still delegated to Harmony's `PatchCategory`; GREEN after the class-by-class build. The source gate now allows no direct `.PatchCategory(` call in `Main` and pins the index wiring. Full suite: Failed 2, Passed 10252, Skipped 2, Total 10256 (the two known live-Armory tests). |
+| 2 | Finding 15: localize the startup failure notice, without the paid translation step. | Left uncommitted in the worktree for the orchestrator, which runs the translator. |
+| 3 | Action item 1: cite #653 in the CHANGELOG heading. | Same commit as decision 1. |

@@ -4,7 +4,7 @@
 
 ## 2026-09-24
 
-### fix(harmony): v2.0.30 - apply every patch category through one guard
+### fix(harmony): v2.0.30 - apply every patch category through one guard (#653)
 
 `Main/SubModule.cs` applied TAOM's Harmony patches one category at a time with bare
 `_harmony.PatchCategory("PatchNN_X")` calls, 64 of 84 with no guard at all. Harmony 2.4.2 has no
@@ -20,11 +20,7 @@ Every category now goes through `TryPatchCategory`, backed by the new `PatchCate
 cause, stops that category at its failing class (Harmony keeps the classes it applied before it),
 and every other category still applies. The failures are named in one notice per phase: startup
 (an inquiry at the first main menu, covering `OnSubModuleLoad` and Patch55), then a red chat line
-for game initialization and for mission start. One case is not category-local: Harmony builds its
-category index once per assembly from every type's attributes, so an attribute naming a type the
-engine no longer has fails every category. The applier calls the two-argument
-`PatchCategory(assembly, category)` with `typeof(SubModule).Assembly`, because the one-argument
-overload picks its assembly from the caller's stack frame. Three hand-guarded sites keep their side
+for game initialization and for mission start. Three hand-guarded sites keep their side
 effects: the crash-report hooks subscribe only when Patch37 applied, the character-preview log says
 FAILED rather than "applied OK" on a failure, and a Patch77 failure still disables the Player
 Switcher for the session. Nine per-category try/catch blocks collapsed into the helper. One
@@ -46,12 +42,26 @@ longer claims a failed group is wholly off. `tools/triage_battle_load.py` and
 now name the `[PatchApply]` line. The Data Flow lens and the Harmony lesson still told reviewers to
 grep for the old `_harmony.PatchCategory("...")` spelling and flag its absence HIGH.
 
+**One broken class no longer fails every category** (maintainer decision on review finding 3):
+Harmony's `PatchCategory` builds its category index once per assembly from every type's
+attributes, with no catch, and does not cache a build that threw, so one `[HarmonyPatch]` naming a
+type the engine no longer has made all 84 categories fail. The new `PatchCategoryIndex`
+(`Main/PatchCategoryIndex.cs`) builds the same index class by class from Harmony's public API
+(`GetTypesFromAssembly`, `GetFromType`, `HarmonyMethod.Merge`, `CreateClassProcessor`), skips a
+class whose attributes cannot be read, and applies each category's classes exactly as Harmony
+does. The skipped class is logged under `[PatchApply]` as SKIPPED with its cause and named in the
+startup inquiry; every other category still applies.
+
 Tests: `PatchCategoryApplierTests` (13) covers the constructor guards, the try and catch paths,
-per-category isolation, the phase summary, real Harmony 2.4.2 through the applier on an
-unresolvable target, a source gate that fails on any direct `.PatchCategory(` call in `Main` other
-than the applier's delegate, and source-shape tests that keep the failure report out of
+per-category isolation, the phase summary, real Harmony 2.4.2 through the index and the applier on
+an unresolvable target, a source gate that fails on any direct `.PatchCategory(` call in `Main` and
+pins the `PatchCategoryIndex` wiring in `SubModule`, and source-shape tests that keep the failure report out of
 `OnSubModuleLoad` and pin the Patch37, Patch77 and preview side effects. Nine text tests that
-pinned the old call spelling now pin `TryPatchCategory(`. Full suite: 10248 passed, 2 skipped,
+pinned the old call spelling now pin `TryPatchCategory(`. `PatchCategoryIndexTests` (4) emits a
+probe assembly at run time with one class whose `[HarmonyPatch]` names a missing type beside a
+healthy class in another category: through Harmony's own index both categories throw
+`TypeLoadException` (pinned as the premise); through `PatchCategoryIndex` only the broken class is
+skipped and reported, and the healthy one is patched. Full suite: 10248 passed, 2 skipped,
 2 failed (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
 `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, which fail the same way at the base).
 Nothing smoked in game: the live apply path and both notices need a running game. Plan 009.
