@@ -48,6 +48,7 @@ siege_defense_config.json
 | Field | Type | Description |
 |-------|------|-------------|
 | `WatchedSettlementIds` | `string[]` | Explicit settlement IDs that always trigger, regardless of player kingdom. Empty by default. |
+| `KingdomMessages` | object, kingdom id to messages | Per-kingdom popup text: `Title`, `Body`, `AcceptButton`, `AcceptMessage`, `RewardMessage`, with the `{settlement}`, `{attacker}`, `{days}`, `{influence}` and `{relation}` tokens. A kingdom with no entry, or an entry that is `null`, gets the built-in defaults in `SiegeDefenseService`; a key that is missing or `""` falls back to its default alone, so the accept button always has a label (#660). |
 | `RelationshipThreshold` | int | Reserved for future relationship-gated filtering. Currently unused in eligibility. |
 | `ResponseWindowDays` | int | Default response window in campaign days. Overridden by MCM if set. |
 | `RewardRelation` | int | Relation points granted to defender faction leader on arrival. |
@@ -88,7 +89,7 @@ siege_defense_config.json
 | `Main/Adapters/IPlayerContextAdapter.cs` | Interface — `GetPlayerKingdomId()`, `IsUnderMercenaryService()` |
 | `Main/Adapters/PlayerContextAdapter.cs` | Wraps `Clan.PlayerClan` (sealed) |
 | `Main/_Module/ModuleData/siege/siege_defense_config.json` | Default config |
-| `TAOM.Tests/Features/Siege/SiegeDefenseServiceTests.cs` | 17 unit tests |
+| `TAOM.Tests/Features/Siege/SiegeDefenseServiceTests.cs` | 30 unit tests |
 
 ## Dependencies
 
@@ -144,6 +145,7 @@ Changes take effect on next game load (config is loaded at construction).
 
 ## Changelog
 
+- 2026-09-24: `GetMessages` fills each missing or empty `KingdomMessages` field, and a `null` entry, from the defaults instead of passing null or `""` to the popup, always as a fresh copy (#660, plan 019); +4 tests.
 - 2026-05-13 — Phase 9b persistence hardening (#132): implemented `SiegeDefenseBehavior.SyncData` (flat-primitive serialization of `_activeEvents`, re-registers VisualTracker on load), added `OnNewGameCreatedEvent` → `Reset()`, and replaced the silent `DaysFromNow` catch with `CampaignTime.Never` fallback; +6 tests.
 - 2026-04-05 — Initial SiegeDefense feature: `OnSiegeEventStartedEvent`-driven detection (no Harmony), `IPlayerContextAdapter` dynamic kingdom/mercenary check replacing the static `WatchedFactionIds` list, native `VisualTrackerManager` tracking circle, towns-only filter, config + "Siege Defense" MCM group; 17 unit tests.
 

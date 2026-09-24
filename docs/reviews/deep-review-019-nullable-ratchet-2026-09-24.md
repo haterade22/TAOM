@@ -239,3 +239,34 @@ The CHANGELOG entry's gate test count is now 9 (2 csproj rows, 6 spelling rows, 
 Passed 10249, Skipped 2, Total 10253. The two failures are the known live-Armory ones
 (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor`,
 `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`).
+
+## Maintainer decisions applied (2026-09-24)
+
+Mike's answers to the NEEDS MIKE items above, applied on top of `de288136`. All three are in the
+commit `fix(siege): v2.0.30 - apply maintainer decisions for plan 019` (the one after
+`de288136` on this branch).
+
+| NEEDS MIKE | Decision | Applied |
+|---|---|---|
+| 1, GitHub issue | Filed as #660 | The CHANGELOG heading ends `(#660)`; `siege.md` "GitHub Issue" names haterade22/TAOM#660 and its changelog line cites it; `siege-defense.md` cites it for the fallback |
+| 2, no-settlement fallback | Closed as unreachable from vanilla in v1.5.3; the log line stays as the tripwire | No code change; recorded in `siege.md`'s 2026-09-24 changelog line |
+| 3, partial JSON entry | Per-field fallback to `DefaultMessages`, covering a JSON `null` entry too | `SiegeDefenseService.GetMessages` returns a fresh `KingdomSiegeMessages` whose null or `""` fields come from `DefaultMessages` (neither the static nor the config entry is written); `SiegeDefenseConfig.KingdomMessages` values are `KingdomSiegeMessages?`, so the Siege error tier enforces the null check |
+| 4, `/build-fix` scope extension | Kept | No change |
+
+**Decision 3, TDD.** Four tests in `SiegeDefenseServiceTests`, each loading its config through
+`JsonConvert.DeserializeObject<SiegeDefenseConfig>` as `SiegeDefenseConfigProvider` does:
+missing keys, `""` values, a `null` entry, and a caller mutating the result. RED before the change:
+`Failed: 4, Passed: 3` on the `GetMessages` filter (`Expected:<Help Defend>. Actual:<(null)>`,
+`Expected:<{attacker} is besieging {settlement}!>. Actual:<>`, `Assert.IsNotNull failed`,
+`Expected:<Help Defend>. Actual:<mutated by a caller>`). GREEN after: the Siege tests 105/105.
+
+This closes the follow-up "SiegeDefenseConfig: a `"kingdom": null` entry returns null from
+GetMessages and throws in GrantReward" and the Codex observation that partial-JSON behaviour was
+untested through deserialization.
+
+**Verification.** `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId=
+--no-incremental`: `2 Warning(s)`, `0 Error(s)`, 0 CS86xx. `dotnet test TAOM.Tests
+-p:DisableModuleCopy=true -p:ModuleId=`: `Failed: 2, Passed: 10253, Skipped: 2, Total: 10257`;
+the two failures are the known live-Armory tests (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor`,
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`). No reviewer has seen this change;
+it needs its own review before merge.

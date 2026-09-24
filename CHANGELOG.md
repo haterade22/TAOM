@@ -4,7 +4,7 @@
 
 ## 2026-09-24
 
-### fix(siege): v2.0.30 - nullable warnings graduate folder by folder, Siege first
+### fix(siege): v2.0.30 - nullable warnings graduate folder by folder, Siege first (#660)
 
 The seven main nullable warnings (CS8600 to CS8604, CS8618, CS8625) were thrown away by
 `<NoWarn>` in both production csproj files, and `/nowarn` beats any `.editorconfig`, so no
@@ -27,6 +27,13 @@ warnings untouched), and `Main/Features/Siege` is the first folder at `error`.
   it throws on, and that vanilla cannot reach that path; the no-op `<NoWarn>$(NoWarn)</NoWarn>`
   in `Main/TAOM.csproj` is gone. The graduation procedure's build command no longer deploys into
   the game install, and `siege.md` says the catch also hands vanilla an array it throws on.
+- **Siege defense popup never blank** (maintainer decision): a kingdom's `KingdomMessages`
+  entry in `siege_defense_config.json` that leaves `Title`, `Body`, `AcceptButton`,
+  `AcceptMessage` or `RewardMessage` missing or `""` now takes that field from
+  `SiegeDefenseService`'s defaults, so the accept button always has a label; an entry that is
+  JSON `null` gets every default instead of a null that suppressed the popup (the NRE was
+  caught and logged as "ShowInquiry unavailable") and threw in the reward path. The static
+  defaults and the config entry are never written to. 4 new `SiegeDefenseServiceTests`.
 
 ## 2026-09-23
 
