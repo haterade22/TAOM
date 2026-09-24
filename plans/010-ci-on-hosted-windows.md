@@ -39,6 +39,32 @@
 
 ## Status
 
+> **Amendment (orchestrator, 2026-09-24, after the first execution stopped at Step 4.4).** The RefAsm
+> build failed with `CS1069` in `Main/Features/FactionMap/Widgets/PolygonWidget.cs(10,38)`: the
+> package's `lib\net46\System.Numerics.Vectors.dll` is a type-forwarding facade (it forwards `Vector2`
+> to `System.Numerics`), and `PolygonWidget.cs` reaches the type through `extern alias SNV`, which
+> cannot follow a forward. The game's own copy and the package's `lib\netstandard2.0` copy both DEFINE
+> the types (same identity, 4.1.3.0). **Amended Step 4:** point the RefAsm `TaomSystemNumericsVectorsDll`
+> at `lib\netstandard2.0\System.Numerics.Vectors.dll` (done in the content below). If net472 then needs
+> the netstandard facade, the SDK's implicit facade expansion should supply it; if the build still fails,
+> STOP and report. Optional hardening, apply it: wrap the package root as
+> `$([MSBuild]::EnsureTrailingSlash('$(NuGetPackageRoot)'))` wherever the targets build a package path, so a
+> `NUGET_PACKAGES` value without a trailing backslash cannot glue the folder names together.
+>
+> **Amendment 2 (orchestrator, 2026-09-24, after the second execution stopped at Step 6).** With
+> amendment 1 the RefAsm build succeeds, but RefAsm test runs fail with `FileNotFoundException` for
+> `System.Numerics.Vectors, Version=4.1.3.0`: in install mode the DLL reaches `TAOM.Tests` output only
+> because it sits in the game's bin beside the `Private=True` TaleWorlds references; BUTR's `ref/net472`
+> has no copy, and Main's SNV reference is `Private=False`. **Amended Step 6:** in RefAsm mode only,
+> copy `$(TaomSystemNumericsVectorsDll)` into the test project's output (for example a
+> `<None Include="$(TaomSystemNumericsVectorsDll)" Link="System.Numerics.Vectors.dll" CopyToOutputDirectory="PreserveNewest" Condition="'$(TaomGameRefs)' == 'RefAsm'" />`
+> in `TAOM.Tests.csproj` or the equivalent in `GameReferences.targets`, scoped to the test project), and into
+> `refasm-game\bin\Win64_Shipping_Client` if the gate's `GameAssemblies` resolver loads from there.
+> .NET Framework 4.7.2 ships `netstandard.dll` itself, so the `netstandard2.0` copy loads at runtime; if
+> it does not, STOP. Then tag, under the plan's rule (a), the three classes that need the real game at
+> runtime (`ConsoleCommandBindingTests`, `LiveTableauRefTests`,
+> `Patch86HideoutBossFightBindingTests`) and re-run Step 6 (a) and (b).
+
 - **Priority**: P2
 - **Effort**: M
 - **Risk**: MED (first compile of TAOM against reference assemblies; the GitHub run itself cannot
@@ -711,7 +737,7 @@ your test file (not production code) and re-run.
     <TaomCustomBattleModuleBin>$(NuGetPackageRoot)bannerlord.referenceassemblies.custombattle\$(BannerlordRefAsmVersion)\ref\net472</TaomCustomBattleModuleBin>
     <TaomStoryModeModuleBin>$(NuGetPackageRoot)bannerlord.referenceassemblies.storymode\$(BannerlordRefAsmVersion)\ref\net472</TaomStoryModeModuleBin>
     <TaomSystemManagementDll>$(NuGetPackageRoot)system.management\4.7.0\lib\netstandard2.0\System.Management.dll</TaomSystemManagementDll>
-    <TaomSystemNumericsVectorsDll>$(NuGetPackageRoot)system.numerics.vectors\4.4.0\lib\net46\System.Numerics.Vectors.dll</TaomSystemNumericsVectorsDll>
+    <TaomSystemNumericsVectorsDll>$(NuGetPackageRoot)system.numerics.vectors\4.4.0\lib\netstandard2.0\System.Numerics.Vectors.dll</TaomSystemNumericsVectorsDll>
   </PropertyGroup>
 
   <!-- Download only: the Reference items above point at the package folders themselves, which keeps

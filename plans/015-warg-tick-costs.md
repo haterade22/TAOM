@@ -45,6 +45,18 @@
 - **Planned at**: commit `b2e387db`, 2026-09-23
 - **Issue**: create before implementation lands (orchestrator)
 
+> **Amendment (orchestrator, 2026-09-24, after the first execution stopped at Step 8).** The claim
+> that a substitute returning null keeps the tests away from native code is wrong for any null test
+> written with `==` on a `NativeObject` subtype (`Skeleton`, `MBAgentVisuals`): `==` binds to
+> `NativeObject.operator ==`, and calling any static member of `NativeObject` runs its static
+> constructor, which calls native code and throws `TypeInitializationException` in the test host.
+> The operator itself (v1.5.3 `TaleWorlds.DotNet.NativeObject.cs:221-232`) returns `true` only for the
+> same reference and `false` when exactly one side is null, so `x == null` and `x is null` are
+> behaviour-identical. **Amended Steps 8 and 9:** in `BoneCheck.CheckTargets` (and any other null
+> test on a `NativeObject` value the new tests reach), write the null checks as `is null` /
+> `is object` instead of `== null` / `!= null`; the RED test then fails for the intended reason (the
+> range gate is missing), not in the engine's static constructor. Record this as a lesson.
+
 ## Why this matters
 
 Every warg's behaviour tree re-runs its root on every mission tick, and the nodes it runs for an
