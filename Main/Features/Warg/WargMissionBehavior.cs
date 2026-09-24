@@ -1,5 +1,6 @@
 using BehaviorTrees;
 using BehaviorTreeWrapper;
+using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.AdvancedCombat;
 using TAOM.Features.AdvancedCombat.Services;
@@ -15,6 +16,7 @@ public class WargMissionBehavior : MissionLogic
 {
     private readonly IBoneCollisionService _boneCollisionService;
     private readonly IModLogger _logger;
+    private readonly IMissionAdapterFactory _adapterFactory;
     private readonly HashSet<string> _loggedErrors = new();
     private readonly List<(Agent agent, BehaviorTreeAgentComponent comp)> _wargComponents = new();
     private float _timeSinceStart = 0f;
@@ -39,6 +41,7 @@ public class WargMissionBehavior : MissionLogic
     {
         _boneCollisionService = IoC.Resolve<IBoneCollisionService>();
         _logger = IoC.Resolve<IModLogger>();
+        _adapterFactory = IoC.Resolve<IMissionAdapterFactory>();
         _deferred = new DeferredCallbackQueue(message => _logger.LogWarning(message));
     }
 
@@ -112,7 +115,7 @@ public class WargMissionBehavior : MissionLogic
                 _logger.LogInfo($"[Warg] Added behavior trees to {wargCount} wargs");
             }
 
-            WargRiderHandManager.Tick();
+            WargRiderHandManager.Tick(_adapterFactory);
 
             // Trees tick from BehaviorTreeMissionLogic.OnMissionTick, on the main thread (#592):
             // the engine's Agent.Tick component call runs on its asynchronous AI thread in

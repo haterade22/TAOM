@@ -7,11 +7,12 @@ namespace TAOM.Features.Warg;
 
 internal static class WargRiderHandManager
 {
-    public static void Tick()
+    /// <summary>Called every mission tick by WargMissionBehavior, which resolves the factory once.</summary>
+    public static void Tick(IMissionAdapterFactory adapterFactory)
     {
         if (Agent.Main == null) return;
 
-        if (Agent.Main.HasMount && IoC.Resolve<IMissionAdapterFactory>().GetAgentAdapter(Agent.Main.MountAgent).IsWarg())
+        if (Agent.Main.HasMount && adapterFactory.GetAgentAdapter(Agent.Main.MountAgent).IsWarg())
         {
             UpdateWargRiderHandle();
         }
