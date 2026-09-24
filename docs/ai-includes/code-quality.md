@@ -427,6 +427,17 @@ public void ProcessHero(IHeroAdapter? hero)
 }
 ```
 
+**How nullable is enforced (the ratchet).** `Directory.Build.props` enables nullable for every
+project. For `Main/` and `Dependencies/` the root `.editorconfig` sets the seven main nullable
+ids (CS8600, CS8601, CS8602, CS8603, CS8604, CS8618, CS8625) to `none`; a folder that is
+null-clean carries its own `.editorconfig` setting them to `error`, and the nearer file wins.
+Graduated folders: `Main/Features/Siege`. Never add these ids back to a csproj `<NoWarn>`: the
+compiler's `/nowarn` beats every `.editorconfig`, which would silently turn off every graduated
+folder. On net472 `string.IsNullOrEmpty` does not narrow (no `[NotNullWhen]` in the reference
+assemblies), so write `x is null || x.Length == 0` where the compiler must see the check. This
+supersedes the "deliberately suppressed project-wide" note in
+`docs/reviews/rca-banner-bearers-2026-07-16.md` for graduated folders.
+
 ### LINQ Best Practices
 
 ```csharp

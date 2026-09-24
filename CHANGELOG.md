@@ -2,6 +2,23 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-24
+
+### fix(siege): v2.0.30 - nullable warnings graduate folder by folder, Siege first
+
+The seven main nullable warnings (CS8600 to CS8604, CS8618, CS8625) were thrown away by
+`<NoWarn>` in both production csproj files, and `/nowarn` beats any `.editorconfig`, so no
+folder could turn them back on (2,028 were hidden at `b2e387db`). They now live in the root
+`.editorconfig` as `none` for `Main/` and `Dependencies/` (build output unchanged; test-project
+warnings untouched), and `Main/Features/Siege` is the first folder at `error`.
+
+- **Siege is null-clean**: the siege-camp guard (Patch8) now has an explicit branch for a camp
+  with no settlement instead of throwing and catching its own NRE (same outcome, defer to
+  vanilla); `KingdomSiegeMessages` is nullable because a partial JSON entry leaves a key null.
+- **New tests**: `SiegeCampGuardPatchTests` (2).
+- **Procedure for the next folder**: `docs/ai-includes/code-quality.md`, "How nullable is
+  enforced".
+
 ## 2026-09-23
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)
