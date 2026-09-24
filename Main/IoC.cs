@@ -114,7 +114,6 @@ public static class IoC
         RecruitmentAlignmentIoC.RegisterAlignmentRecruitmentFeature(container);
         AlignmentDesertionIoC.RegisterAlignmentDesertionFeature(container);
         MarriageAlignmentIoC.RegisterMarriageAlignmentFeature(container);
-        Features.WandererAllegiance.WandererAllegianceIoC.RegisterWandererAllegianceFeature(container);
         Features.PrisonerRecruitment.PrisonerRecruitmentIoC.RegisterPrisonerRecruitmentFeature(container);
         NazgulFamilyIoC.RegisterNazgulFamilyFeature(container);
         NavalTravelIoC.RegisterNavalTravelFeature(container);

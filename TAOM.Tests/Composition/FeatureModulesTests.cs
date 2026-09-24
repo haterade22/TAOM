@@ -1,6 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TaleWorlds.CampaignSystem;
 using TAOM.Composition;
 using TAOM.Tests.Infrastructure;
 
@@ -33,6 +37,71 @@ public class FeatureModulesTests
                 Assert.IsFalse(string.IsNullOrWhiteSpace(module.ParkedReason), $"{module.Id} is parked with no reason; name the issue.");
             else
                 Assert.IsNull(module.ParkedReason, $"{module.Id} is enabled but carries a parked reason.");
+        }
+    }
+
+    [TestMethod]
+    public void EveryDeclaredCampaignBehavior_IsDeclaredOnce_AndSubModuleNoLongerAddsIt()
+    {
+        var declared = FeatureModules.All
+            .SelectMany(m => m.CampaignBehaviors.Select(d => (Module: m.Id, Type: d.BehaviorType))).ToList();
+
+        AssertDeclaredOnce(declared.Select(d => d.Type.FullName!), "campaign behavior");
+        AssertNotHandWiredToo(declared, "added");
+    }
+
+    [TestMethod]
+    public void EveryDeclaredMissionBehavior_IsDeclaredOnce_AndSubModuleNoLongerAddsIt()
+    {
+        var declared = FeatureModules.All
+            .SelectMany(m => m.MissionBehaviors.Select(d => (Module: m.Id, Type: d.BehaviorType))).ToList();
+
+        AssertDeclaredOnce(declared.Select(d => d.Type.FullName!), "mission behavior");
+        AssertNotHandWiredToo(declared, "added");
+    }
+
+    [TestMethod]
+    public void EveryDeclaredGameModel_SlotIsDeclaredOncePerTarget_AndSubModuleNoLongerAddsIt()
+    {
+        var declared = FeatureModules.All.SelectMany(m => m.GameModels.Select(d => (Module: m.Id, Decl: d))).ToList();
+
+        // One engine model per slot: a second AddModel for the same slot silently shadows the first.
+        AssertDeclaredOnce(declared.Select(d => d.Decl.Target + ":" + d.Decl.SlotType.FullName), "model slot");
+        AssertNotHandWiredToo(declared.Select(d => (d.Module, Type: d.Decl.ModelType)).ToList(), "registered");
+    }
+
+    [TestMethod]
+    public void EveryDeclaredPatchCategory_IsDeclaredOnce_AndSubModuleNoLongerAppliesIt()
+    {
+        var declared = FeatureModules.All.SelectMany(m => m.PatchCategories.Select(d => (Module: m.Id, d.Category))).ToList();
+        var subModule = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
+
+        AssertDeclaredOnce(declared.Select(d => d.Category), "patch category");
+        foreach (var (module, category) in declared)
+        {
+            Assert.IsFalse(subModule.Contains("\"" + category + "\""),
+                $"{category} is declared by the {module} module AND still applied in SubModule.cs: Harmony would "
+                + "apply it twice (duplicated prefixes and postfixes). Delete the SubModule line.");
+        }
+    }
+
+    [TestMethod]
+    public void ModulesWhoseBehaviorsPersistData_DeclareOwnsSaveData()
+    {
+        foreach (var module in FeatureModules.All)
+        {
+            foreach (var decl in module.CampaignBehaviors)
+            {
+                var syncData = decl.BehaviorType.GetMethod("SyncData",
+                    BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(IDataStore) }, null);
+                var il = syncData?.GetMethodBody()?.GetILAsByteArray();
+
+                // An empty override compiles to "nop; ret" (2 bytes, Debug) or "ret" (1 byte, Release).
+                if (il != null && il.Length > 2)
+                    Assert.IsTrue(module.OwnsSaveData,
+                        $"{decl.BehaviorType.Name} persists data in SyncData, so the {module.Id} module must set OwnsSaveData "
+                        + "(it then fails closed instead of running a campaign without its persistence).");
+            }
         }
     }
 
@@ -81,6 +150,27 @@ public class FeatureModulesTests
         Assert.AreEqual(FaultNotice.Inquiry, FeatureModuleHooks.NoticeFor(ApplyPhase.MainMenu));
         Assert.AreEqual(FaultNotice.ChatLine, FeatureModuleHooks.NoticeFor(ApplyPhase.GameInit));
         Assert.AreEqual(FaultNotice.ChatLine, FeatureModuleHooks.NoticeFor(ApplyPhase.FirstMission));
+    }
+
+    private static void AssertDeclaredOnce(IEnumerable<string> keys, string what)
+    {
+        var duplicates = keys.GroupBy(k => k, StringComparer.Ordinal).Where(g => g.Count() > 1).Select(g => g.Key).ToList();
+        Assert.AreEqual(0, duplicates.Count, $"Declared more than once ({what}): " + string.Join(", ", duplicates));
+    }
+
+    // Transitional, until the last feature migrates: a type a module declares must not also be built
+    // by hand in SubModule.cs ("new X(" or "Resolve<...X>()"), or the engine gets it twice.
+    private static void AssertNotHandWiredToo(IReadOnlyList<(string Module, Type Type)> declared, string verb)
+    {
+        var subModule = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
+        foreach (var (module, type) in declared)
+        {
+            var name = Regex.Escape(type.Name);
+            var handWired = Regex.IsMatch(subModule,
+                @"new\s+(?:\w+\.)*" + name + @"\s*\(|Resolve<(?:\w+\.)*" + name + @">\s*\(");
+            Assert.IsFalse(handWired,
+                $"{type.Name} is declared by the {module} module AND still {verb} by hand in SubModule.cs. Delete the SubModule line.");
+        }
     }
 
     private static void AssertOnceBetween(string code, string after, string call, string before)

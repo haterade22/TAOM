@@ -2,7 +2,16 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using DryIoc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
+using TAOM.Composition;
+using TAOM.Core.Infrastructure;
+using TAOM.Core.Logging;
+using TAOM.Features.Execution;
+using TAOM.Features.NamedCompanions;
+using TAOM.Features.WandererAllegiance;
+using TAOM.Features.WandererAllegiance.Hooks;
 using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.WandererAllegiance;
@@ -32,12 +41,44 @@ public class WandererAllegianceWiringTests
         ReadSource("Main", "Features", "WandererAllegiance", "Hooks", "WandererAllegianceDialogBehavior.cs");
 
     [TestMethod]
-    public void IoC_RegistersTheFeature()
+    public void FeatureModules_ListTheWandererAllegianceModuleOnce()
+    {
+        Assert.AreEqual(1, FeatureModules.All.OfType<WandererAllegianceModule>().Count(),
+            "WandererAllegianceModule must be listed exactly once in Main/Composition/FeatureModules.cs, or the "
+            + "refusal lines are never registered (or registered twice).");
+    }
+
+    [TestMethod]
+    public void IoC_NoLongerRegistersTheFeatureByHand()
     {
         var src = RepoPaths.ReadSource("Main/IoC.cs", stripComments: true);
 
-        StringAssert.Contains(src, "WandererAllegianceIoC.RegisterWandererAllegianceFeature(container)",
-            "Main/IoC.cs no longer registers WandererAllegiance; SubModule's Resolve would throw at campaign start.");
+        Assert.IsFalse(src.Contains("RegisterWandererAllegianceFeature"),
+            "Main/IoC.cs registers WandererAllegiance by hand AND through its module: every service gets a second "
+            + "default registration and Resolve throws at campaign start.");
+    }
+
+    [TestMethod]
+    public void Module_RegistersTheServiceGraph_AndItsBehaviorDeclResolvesTheSingleton()
+    {
+        using var container = new Container();
+        var paths = Substitute.For<IPathService>();
+        paths.ModuleDataPath.Returns(Path.Combine(Path.GetTempPath(), "taom-plan018-" + Guid.NewGuid().ToString("N")));
+        container.RegisterInstance(paths);
+        container.RegisterInstance(Substitute.For<IModLogger>());
+        container.RegisterInstance(Substitute.For<IAlignmentService>());
+        container.RegisterInstance(Substitute.For<INamedCompanionConfigProvider>());
+        var module = new WandererAllegianceModule();
+
+        module.RegisterServices(container);
+
+        Assert.AreEqual(1, module.CampaignBehaviors.Count);
+        var decl = module.CampaignBehaviors[0];
+        Assert.AreEqual(typeof(WandererAllegianceDialogBehavior), decl.BehaviorType);
+        var behavior = decl.Create(container);
+        Assert.IsInstanceOfType(behavior, typeof(WandererAllegianceDialogBehavior));
+        Assert.AreSame(behavior, decl.Create(container),
+            "Parity: the behavior stays a container singleton, as it was when SubModule resolved it.");
     }
 
     [TestMethod]
@@ -49,17 +90,6 @@ public class WandererAllegianceWiringTests
         StringAssert.Contains(src, "IWandererAllegianceSettingsProvider, WandererAllegianceSettingsProvider");
         StringAssert.Contains(src, "IWandererAllegianceService, WandererAllegianceService");
         StringAssert.Contains(src, "Hooks.WandererAllegianceDialogBehavior");
-    }
-
-    [TestMethod]
-    public void SubModule_AddsTheDialogBehavior()
-    {
-        var src = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
-
-        StringAssert.Contains(src, "WandererAllegianceDialogBehavior>()",
-            "SubModule.cs no longer adds WandererAllegianceDialogBehavior; the refusal lines are never registered.");
-        StringAssert.Contains(src, "campaignStarter.AddBehavior(IoC.Resolve<Features.WandererAllegiance.Hooks.WandererAllegianceDialogBehavior>())",
-            "The behavior must be resolved from IoC (it needs the service) and added via AddBehavior.");
     }
 
     [TestMethod]

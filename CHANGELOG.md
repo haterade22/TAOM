@@ -4,6 +4,45 @@
 
 ## 2026-09-24
 
+### refactor(composition): v2.0.30 - start the feature-module composition root
+
+Every feature is wired by hand into `Main/SubModule.cs` and `Main/IoC.cs`, the two single-owner
+files, so most feature commits have to edit one of them and parallel sessions collide there. Plan
+018 lays the first three pieces of the fix, in three commits.
+
+**One source reader for the wiring tests.** The 26 test files that assert on `SubModule.cs` or
+`IoC.cs` text now read both through `RepoPaths.ReadSource` with comments stripped (lengths and line
+breaks kept), and a missing file fails the test instead of going Inconclusive. No assertion
+changed. The switch exposed one false pass: `GameModelOverrideBindingTests` counted the parked
+`TaomPartyNavigationModel` as registered only because a commented-out `AddModel` line named it. The
+parked model is now an explicit `ParkedModels` entry with its reason, and a new test keeps that list
+honest in both directions.
+
+**The feature-module runner.** `Main/Composition` adds the module contract (`ITaomFeatureModule`,
+the `TaomFeatureModule` base with empty defaults), declarations for patch categories, campaign
+behaviors, game models and mission behaviors, the ordered `FeatureModules.All` list, and
+`ModuleRunner`. The runner visits modules in list order; a module that throws is logged under
+`[Module]` and skipped for the rest of the session while the next module still runs, except that a
+module owning save data fails closed during registration, static initialisation and campaign start.
+Module patch categories go through plan 009's `TryPatchCategory`, so a failed category is reported by
+`ReportPatchFailures` and does not fault the module. Module faults from startup are held for one
+main-menu inquiry; in-game faults get a red chat line. `IoC.Configure` and each `SubModule` phase
+call the runner once, at the end of the phase's hand-wired block, and `FeatureModulesTests` pins each
+call between its anchors. The trade-off: six small types and eight kernel lines before a second
+module uses them, in return for every later migration only deleting lines from the two single-owner
+files.
+
+**The pilot: WandererAllegiance.** `WandererAllegianceModule` now registers the feature's services
+and declares its dialog behavior, and its lines are gone from `IoC.cs` and `SubModule.cs`. The
+behavior is still a container singleton and is now added after every hand-wired behavior, which is
+order-free: its two lines are the only TAOM lines on `companion_hire` and outrank vanilla's reply by
+priority. Generic tests over the module list catch a type that is declared by a module and still
+wired by hand, a slot or category declared twice, and a behavior that persists data without
+`OwnsSaveData`.
+
+Owed: an in-game check that a Free-aligned player still gets the refusal from an Evil-culture
+wanderer, with no `[Module]` line in the log.
+
 ### fix(harmony): v2.0.30 - apply every patch category through one guard
 
 `Main/SubModule.cs` applied TAOM's Harmony patches one category at a time with bare
