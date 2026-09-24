@@ -1,6 +1,7 @@
 using BehaviorTrees;
 using BehaviorTreeWrapper.BlackBoardClasses;
 using BehaviorTreeWrapper.Tasks;
+using TAOM.Adapters;
 using TAOM.Features.AdvancedCombat.BaseBehaviorTree;
 using TAOM.Features.Warg.BehaviorTreeElements;
 using System;
@@ -33,6 +34,10 @@ public class WargBehaviorTree : BehaviorTree, IBTBannerlordBase, IBTWargBlackboa
     public static new BehaviorTree BuildTree(object[] objects)
     {
         if (objects[0] is not Agent agent) return null;
+        // Resolved once per tree and passed to the nodes that need them, so no node is a service
+        // locator and none resolves per tick (the root runs every mission tick).
+        IMissionAdapterFactory adapterFactory = IoC.Resolve<IMissionAdapterFactory>();
+        IWargAttackService attackService = IoC.Resolve<IWargAttackService>();
         BehaviorTree tree = StartBuildingTree(new WargBehaviorTree(agent))
             .AddSelector("main")
             .AddSelector("has rider", new HasRiderDecorator())
@@ -47,9 +52,9 @@ public class WargBehaviorTree : BehaviorTree, IBTBannerlordBase, IBTWargBlackboa
             .AddSequence("enemy died", new WargEnemyDiedDecorator())
             .AddTask(new LogTask("enemy died, rage mode finished"))
             .Up()
-            .AddSequence("find enemy", new PeriodicallyCheckIfCanAttackAnyone())
+            .AddSequence("find enemy", new PeriodicallyCheckIfCanAttackAnyone(adapterFactory))
             .AddTask(new LogTask("found enemy"))
-            .AddTask(new WargAttackTask())
+            .AddTask(new WargAttackTask(adapterFactory, attackService))
             .AddTask(new SleepTask(new(0, 0, 1)))
             .Up()
             .AddSequence("can not find enemy", new WargCanNotFindEnemyDecorator(6))
@@ -70,11 +75,11 @@ public class WargBehaviorTree : BehaviorTree, IBTBannerlordBase, IBTWargBlackboa
             .AddSequence("can not find enemy", new WargCanNotFindEnemyDecorator(6))
             .AddTask(new FinishRageMode())
             .Up()
-            .AddSequence("able to attack enemy", new PeriodicallyCheckIfCanAttackAnyone())
-            .AddTask(new WargAttackTask())
+            .AddSequence("able to attack enemy", new PeriodicallyCheckIfCanAttackAnyone(adapterFactory))
+            .AddTask(new WargAttackTask(adapterFactory, attackService))
             .AddTask(new SleepTask(new(0, 0, 1)))
             .Up()
-            .AddSequence("get to the enemy", new WargAiControlledIsNotFacingEnemy())
+            .AddSequence("get to the enemy", new WargAiControlledIsNotFacingEnemy(adapterFactory))
             .AddTask(new WargAiControlledGetToEnemy())
             .AddTask(new SleepTask(new(0, 0, 0, 0, 250)))
             .Up()
@@ -84,8 +89,8 @@ public class WargBehaviorTree : BehaviorTree, IBTBannerlordBase, IBTWargBlackboa
             .Up()
             .AddTask(new ResetRageAttackTimer())
             .Up()
-            .AddSequence("hit enemy", new CheckOnceIfCanAttackEnemy())
-            .AddTask(new WargAttackTask())
+            .AddSequence("hit enemy", new CheckOnceIfCanAttackEnemy(adapterFactory))
+            .AddTask(new WargAttackTask(adapterFactory, attackService))
             .AddTask(new SleepTask(new(0, 0, WargConfig.SleepAfterAttack)))
             .Up()
             .Up()

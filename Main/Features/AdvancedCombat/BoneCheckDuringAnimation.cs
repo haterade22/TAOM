@@ -38,21 +38,29 @@ public class BoneCheckDuringAnimation : BoneCheck
             return false;
         }
 
-        // One skeleton fetch per tick, handed to CheckBoneCollision: every GetSkeleton call builds a
-        // new native wrapper (a ref-count call, a lock, a GCHandle and a finalizer).
-        IAgentVisualsAdapter agentVisuals = _agent.AgentVisuals;
-        Skeleton agentSkeleton = agentVisuals?.GetSkeleton();
-        if (agentSkeleton is null
-            || _agent.GetCurrentAction(0) != _action
-            || _agent.GetCurrentActionProgress(0) >= _actionProgressMax)
+        if (_agent.GetCurrentAction(0) != _action)
         {
             _onExpiration?.Invoke();
             return false;
         }
 
-        if (_agent.GetCurrentActionProgress(0) >= _actionProgressMin)
+        // One progress read per tick, used for both bounds.
+        float progress = _agent.GetCurrentActionProgress(0);
+        if (progress >= _actionProgressMax)
         {
-            if (!CheckBoneCollision(agentVisuals, agentSkeleton))
+            _onExpiration?.Invoke();
+            return false;
+        }
+
+        // The attacker's skeleton is fetched only inside the hit window, once per tick, and handed
+        // to CheckBoneCollision: every GetSkeleton call builds a new native wrapper (a ref-count
+        // call, a lock, a GCHandle and a finalizer). A wind-up frame fetches none, so a missing
+        // skeleton during the wind-up ends the bite when the hit window opens (#659).
+        if (progress >= _actionProgressMin)
+        {
+            IAgentVisualsAdapter agentVisuals = _agent.AgentVisuals;
+            Skeleton agentSkeleton = agentVisuals?.GetSkeleton();
+            if (agentSkeleton is null || !CheckBoneCollision(agentVisuals, agentSkeleton))
             {
                 _onExpiration?.Invoke();
                 return false;

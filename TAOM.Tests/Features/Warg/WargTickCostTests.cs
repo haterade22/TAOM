@@ -102,6 +102,50 @@ public class WargTickCostTests
         typeof(WargAiControlledIsNotFacingEnemy), typeof(WargAttackTask), typeof(NoEnemyCloseDecorator),
     };
 
+    // The nodes that need a service take it from WargBehaviorTree.BuildTree, which resolves each
+    // service once per tree (maintainer decision 2026-09-24, #659): no node is a service locator.
+    private static readonly Type[] InjectedNodes =
+    {
+        typeof(PeriodicallyCheckIfCanAttackAnyone), typeof(CheckOnceIfCanAttackEnemy),
+        typeof(WargAiControlledIsNotFacingEnemy), typeof(WargAttackTask),
+    };
+
+    /// <summary>Every body a type declares: methods, accessors, instance constructors (where field
+    /// initializers compile), the type initializer, and the same for its nested types (lambdas).</summary>
+    private static IEnumerable<MethodBase> DeclaredBodies(Type type) =>
+        type.GetMethods(Declared).Cast<MethodBase>()
+            .Concat(type.GetConstructors(Declared))
+            .Concat(type.GetNestedTypes(BindingFlags.Public | BindingFlags.NonPublic).SelectMany(DeclaredBodies))
+            .Distinct();
+
+    private static bool IsResolve(MethodBase m) =>
+        m.DeclaringType == typeof(global::TAOM.IoC) && m.Name == "Resolve";
+
+    private static List<string> ResolvesAnywhereIn(Type type) =>
+        DeclaredBodies(type)
+            .SelectMany(body => ReadCalls(body).Where(IsResolve).Select(m => $"{type.Name}.{body.Name}: {m}"))
+            .ToList();
+
+    [TestMethod]
+    public void InjectedTreeNodes_ConstructorsAndMembers_NeverResolveFromIoC()
+    {
+        List<string> resolves = InjectedNodes.SelectMany(ResolvesAnywhereIn).ToList();
+        Assert.AreEqual(0, resolves.Count,
+            $"a warg tree node takes its services through its constructor from WargBehaviorTree, never from IoC: {string.Join("; ", resolves)}");
+    }
+
+    [TestMethod]
+    public void WargBehaviorTree_BuildTree_ResolvesEachServiceOncePerTree()
+    {
+        List<string> resolved = ReadCalls(typeof(WargBehaviorTree).GetMethod(nameof(WargBehaviorTree.BuildTree), Declared))
+            .Where(IsResolve)
+            .Select(m => ((MethodInfo)m).GetGenericArguments()[0].Name)
+            .OrderBy(n => n)
+            .ToList();
+        CollectionAssert.AreEqual(new[] { "IMissionAdapterFactory", "IWargAttackService" }, resolved,
+            $"BuildTree resolves: {string.Join(", ", resolved)}");
+    }
+
     [TestMethod]
     public void PeriodicallyCheckIfCanAttackAnyone_Evaluate_NeverResolvesFromIoC()
         => AssertNeverResolves(typeof(PeriodicallyCheckIfCanAttackAnyone), "Evaluate");
@@ -172,6 +216,16 @@ public class WargTickCostTests
     [TestMethod]
     public void ResolveCheck_ResolveInASameTypeHelper_IsFound()
         => Assert.AreEqual(1, ResolvesReachedFrom(typeof(ResolvesInAHelper), "Tick").Count);
+
+    private sealed class ResolvesInAFieldInitializer
+    {
+        private readonly IModLogger _logger = global::TAOM.IoC.Resolve<IModLogger>();
+        public IModLogger Logger => _logger;
+    }
+
+    [TestMethod]
+    public void ResolveCheck_ResolveInAFieldInitializer_IsFound()
+        => Assert.AreEqual(1, ResolvesAnywhereIn(typeof(ResolvesInAFieldInitializer)).Count);
 
     [TestMethod]
     public void BufferCheck_ThreeArgumentScanIntoAFreshList_IsFound()

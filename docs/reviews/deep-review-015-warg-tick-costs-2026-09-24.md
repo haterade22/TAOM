@@ -205,3 +205,34 @@ ones, `TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
 
 **CONVERGENCE VERDICT: 4 fixed, 0 false positives.** The fixes are test, comment, doc and one
 parity deletion; a fresh review of this commit is still owed before merge.
+
+## Maintainer decisions applied (2026-09-24)
+
+Mike answered NEEDS MIKE items 1, 2, 3 and 5 on 2026-09-24. All four are applied on top of
+`56eb4bc8` in one commit, `fix(warg): v2.0.30 - apply maintainer decisions for plan 015`
+(its hash is in `git log`; a commit cannot name its own). Item 4 (the `is null` amendment in
+`E:\repos\TAOM`) was not part of these decisions and stays with the orchestrator.
+
+| NEEDS MIKE | Decision | What changed | Proof |
+|---|---|---|---|
+| 1 | Cite issue #659 | CHANGELOG heading reads `(plan 015, #659)`; the GitHub Issue sections of `warg-combat.md` and `advanced-combat.md` name #659 (title read with `gh issue view 659`: open, "Warg battles: cut per-tick service lookups, scan allocations and skeleton wrappers") | Docs only |
+| 2 | Keep the wider scan results between grid rebuilds | No code change. Recorded here, in the CHANGELOG entry ("Grid widening kept") and in the `warg-combat.md` Changelog | `CollectInRadius_PointMovedVerticallySinceTheBuild_IsJudgedOnItsCurrentPosition` stays green |
+| 3 | Inject the node services through `WargBehaviorTree` | `WargBehaviorTree.BuildTree` resolves `IMissionAdapterFactory` and `IWargAttackService` once per tree and passes them to the constructors of `PeriodicallyCheckIfCanAttackAnyone`, `CheckOnceIfCanAttackEnemy`, `WargAiControlledIsNotFacingEnemy` and `WargAttackTask`, which keep them in private readonly instance fields and contain no `IoC.Resolve`. A grep of the worktree for `new <NodeType>(` found every construction site in `WargBehaviorTree.cs` (seven), none elsewhere. The three `WargAttackTask`s of one tree now share one `WargAttackService` instead of one each; the service holds only two readonly fields, so this is equivalent | RED first: `InjectedTreeNodes_ConstructorsAndMembers_NeverResolveFromIoC` failed with `Expected:<0>. Actual:<5>` (the four constructors, `WargAttackTask` twice) and `WargBehaviorTree_BuildTree_ResolvesEachServiceOncePerTree` failed with `CollectionAssert.AreEqual failed. BuildTree resolves: (Different number of elements.)`. Control `ResolveCheck_ResolveInAFieldInitializer_IsFound` was green before and after. All three pass after the change, as do the existing per-call and static-field tests |
+| 5 | Apply Agent 3 APPLY 3 and Agent 6 Proposal 2 | `BoneCheckDuringAnimation.Tick` tests the action, then reads `GetCurrentActionProgress(0)` once into a local for the max and min bounds, and only when the progress has reached `_actionProgressMin` fetches `agentVisuals?.GetSkeleton()`; a null skeleton invokes `_onExpiration` and returns false (`is null` kept). The `>=` comparisons keep their polarity, so a NaN progress still skips the check as before | RED first, IL rule tests in `BoneCheckDuringAnimationTickTests`: `Tick_EveryFrame_ReadsTheActionProgressOnce` failed with `Expected:<1>. Actual:<2>` and `Tick_BeforeTheHitWindow_FetchesTheAttackerSkeletonOnlyAfterTheProgressTests` failed on the old order; both pass after. Two control fixtures (the old shape) prove each rule can fail |
+
+**Behaviour difference (item 5).** Before, a missing attacker skeleton ended the bite on the first
+tick it was seen, wind-up included. Now a wind-up frame fetches no skeleton, so a skeleton missing
+during the wind-up ends the bite when the hit window opens instead of at once. Inside the hit
+window the result is the same as before. The IL tests pin only the call shape; no unit test can
+call `Tick` (the `ActionIndexCache` static constructor needs the engine). **The owed in-game warg
+Custom Battle is the proof for items 3 and 5: bites must still land and end as before.** This is
+recorded in the CHANGELOG entry and in `warg-combat.md`.
+
+**Verification.** Build: `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId=`,
+`0 Error(s)` (the two warnings are the Harmony analyzer's BHA0001 and BHA0006 on unrelated types).
+Filtered run over the Warg and BoneCheck tests: `Passed: 68, Skipped: 2, Failed: 0`. Full suite,
+`dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`:
+`Failed: 2, Passed: 10273, Skipped: 2, Total: 10277`; the two failures are the known live-Armory
+ones, `TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`. The seven new tests account for the
+rise from 10266. A fresh review of this commit is owed before merge.

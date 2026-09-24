@@ -14,10 +14,18 @@ public class WargAttackTask : BTTask, IBTBannerlordBase, IBTWargBlackboard
     BTBlackboardValue<int> _rageAttackAmount;
     BTBlackboardValue<DateTime?> _rageAttackStartTime;
     BTBlackboardValue<bool> _firstAttack;
-    // Resolved once when the tree is built, not on every attack. IWargAttackService is registered
-    // Transient, but WargAttackService keeps no per-call state, so one instance per task is equivalent.
-    private readonly IMissionAdapterFactory _adapterFactory = IoC.Resolve<IMissionAdapterFactory>();
-    private readonly IWargAttackService _attackService = IoC.Resolve<IWargAttackService>();
+    // Passed in by WargBehaviorTree.BuildTree, resolved once per tree, not on every attack.
+    // IWargAttackService is registered Transient, but WargAttackService keeps no per-call state, so
+    // one instance shared by a tree's attack tasks is equivalent.
+    private readonly IMissionAdapterFactory _adapterFactory;
+    private readonly IWargAttackService _attackService;
+
+    public WargAttackTask(IMissionAdapterFactory adapterFactory, IWargAttackService attackService)
+    {
+        _adapterFactory = adapterFactory;
+        _attackService = attackService;
+    }
+
     public BTBlackboardValue<Agent> Agent { get => agent; set => agent = value; }
     public BTBlackboardValue<Agent> AgentHitBy { get => _agentHitBy; set => _agentHitBy = value; }
     public BTBlackboardValue<int> RageAttackAmount { get => _rageAttackAmount; set => _rageAttackAmount = value; }

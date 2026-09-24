@@ -4,7 +4,7 @@
 
 ## 2026-09-24
 
-### perf(warg): v2.0.30 - warg battles do less work per frame (plan 015)
+### perf(warg): v2.0.30 - warg battles do less work per frame (plan 015, #659)
 
 Warg battles do less work per frame. The warg behaviour tree no longer looks services up in the
 IoC container on every tick, its three enemy scans reuse buffers instead of allocating a list each
@@ -15,9 +15,11 @@ targets are in reach on the same frame, which one takes a bite can differ (and w
 equidistant victims a spider engages). And between grid rebuilds (every 2 s) a scan can now return
 an agent that has moved up or down into range since the rebuild, which the old z cells missed.
 
-- **Tree nodes:** `PeriodicallyCheckIfCanAttackAnyone`, `CheckOnceIfCanAttackEnemy`,
-  `WargAiControlledIsNotFacingEnemy` and `WargAttackTask` resolve their services once into
-  instance fields when the tree is built; `WargRiderHandManager.Tick` reads the mount's `Monster`
+- **Tree nodes:** `WargBehaviorTree.BuildTree` resolves `IMissionAdapterFactory` and
+  `IWargAttackService` once per tree and passes them to the constructors of
+  `PeriodicallyCheckIfCanAttackAnyone`, `CheckOnceIfCanAttackEnemy`,
+  `WargAiControlledIsNotFacingEnemy` and `WargAttackTask`, which keep them in instance fields and
+  never call `IoC.Resolve` (maintainer decision); `WargRiderHandManager.Tick` reads the mount's `Monster`
   with `WargConfig.IsWargMonster` instead of resolving a factory. The scans use the buffer overload
   of `SpatialGrid.GetNearAliveAgentsInRange`, and the attack checks look up the warg's adapter only
   once a candidate passes the filters.
@@ -28,18 +30,28 @@ an agent that has moved up or down into range since the rebuild, which the old z
   outside it stays for a later frame. The gate is a positive requirement, so a NaN frame fails it.
   The changed skeleton null tests are `is null`, because `== null` on a `NativeObject` runs that
   class's native static constructor in the test host.
-- **Tests:** `WargTickCostTests` (12: IL scans with control fixtures, and no static service or
-  buffer field), `SpatialGridQueryTests` (9: brute-force sphere comparison, column order, a point
-  moved since the rebuild) and `BoneCheckRangeGateTests` (10: the gate, a NaN frame, every
-  per-target skip). Full suite in the plan's worktree after the review fixes: 10266 passed,
-  2 skipped, 2 failed (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+- **BoneCheckDuringAnimation (maintainer decision):** `Tick` tests the action and the progress
+  upper bound first, reads the action progress once per tick, and fetches the attacker's skeleton
+  only once the progress reaches the hit window, so a wind-up frame builds no native wrapper. One
+  behaviour difference: a missing attacker skeleton during the wind-up now ends the bite when the
+  hit window opens instead of at once. No unit test can call `Tick`; the owed in-game Custom
+  Battle below is the proof that bites still land and end as before.
+- **Grid widening kept:** the maintainer kept the wider scan results between grid rebuilds
+  described above; no z buckets are restored.
+- **Tests:** `WargTickCostTests` (15: IL scans with control fixtures, no `IoC.Resolve` in any body
+  of the four service nodes, one resolve per service in `BuildTree`, and no static service or
+  buffer field), `BoneCheckDuringAnimationTickTests` (4: one progress read, skeleton after the
+  progress tests, with controls), `SpatialGridQueryTests` (9: brute-force sphere comparison,
+  column order, a point moved since the rebuild) and `BoneCheckRangeGateTests` (10: the gate, a
+  NaN frame, every per-target skip). Full suite in the plan's worktree after the maintainer
+  decisions: 10273 passed, 2 skipped, 2 failed (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
   `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, which read the live Armory).
 - **Review:** six-lens deep review and Codex (gpt-6-astra, ultra), no HIGH finding:
   `docs/reviews/deep-review-015-warg-tick-costs-2026-09-24.md`, RCA
   `docs/reviews/rca-warg-tick-costs-2026-09-24.md`.
-- **Owed:** a GitHub issue for this work (Mike's call), and an in-game Custom Battle with warg
-  riders on both sides (bites land and still whiff, the rider hand pose holds, no
-  `[Warg] Tree build failed` line). Nothing smoked in game.
+- **Owed:** an in-game Custom Battle with warg riders on both sides (bites land and still whiff,
+  bites end as before, the rider hand pose holds, no `[Warg] Tree build failed` line). Nothing
+  smoked in game; label #659 `triage-needs-ingame` at close.
 
 ## 2026-09-23
 

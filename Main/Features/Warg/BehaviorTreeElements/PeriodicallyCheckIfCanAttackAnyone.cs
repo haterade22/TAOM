@@ -12,15 +12,18 @@ namespace TAOM.Features.Warg.BehaviorTreeElements;
 public class PeriodicallyCheckIfCanAttackAnyone : WaitNSecondsTickDecorator, IBTBannerlordBase
 {
     BTBlackboardValue<Agent> _agent;
-    // Resolved once when the tree is built (once per warg per mission), never per evaluation: the
-    // tree's root runs every mission tick. An instance field, not a static, so a module reload can
-    // never keep a factory from a disposed container.
-    private readonly IMissionAdapterFactory _adapterFactory = IoC.Resolve<IMissionAdapterFactory>();
+    // Passed in by WargBehaviorTree.BuildTree, which resolves it once per tree (once per warg per
+    // mission), never per evaluation: the tree's root runs every mission tick. An instance field,
+    // not a static, so a module reload can never keep a factory from a disposed container.
+    private readonly IMissionAdapterFactory _adapterFactory;
     // Reused scan buffer. SpatialGrid clears and refills it on every call, so no handle from an
     // earlier tick is ever read.
     private readonly List<Agent> _scratch = new();
 
-    public PeriodicallyCheckIfCanAttackAnyone() : base(0.2) { }
+    public PeriodicallyCheckIfCanAttackAnyone(IMissionAdapterFactory adapterFactory) : base(0.2)
+    {
+        _adapterFactory = adapterFactory;
+    }
     public BTBlackboardValue<Agent> Agent { get => _agent; set => _agent = value; }
     public override bool Evaluate()
     {
@@ -50,13 +53,18 @@ public class PeriodicallyCheckIfCanAttackAnyone : WaitNSecondsTickDecorator, IBT
 public class CheckOnceIfCanAttackEnemy : BTReturnFalseDecorator, IBTBannerlordBase
 {
     BTBlackboardValue<Agent> _agent;
-    // Resolved once when the tree is built (once per warg per mission), never per evaluation: the
-    // tree's root runs every mission tick. An instance field, not a static, so a module reload can
-    // never keep a factory from a disposed container.
-    private readonly IMissionAdapterFactory _adapterFactory = IoC.Resolve<IMissionAdapterFactory>();
+    // Passed in by WargBehaviorTree.BuildTree, which resolves it once per tree (once per warg per
+    // mission), never per evaluation: the tree's root runs every mission tick. An instance field,
+    // not a static, so a module reload can never keep a factory from a disposed container.
+    private readonly IMissionAdapterFactory _adapterFactory;
     // Reused scan buffer. SpatialGrid clears and refills it on every call, so no handle from an
     // earlier tick is ever read.
     private readonly List<Agent> _scratch = new();
+
+    public CheckOnceIfCanAttackEnemy(IMissionAdapterFactory adapterFactory)
+    {
+        _adapterFactory = adapterFactory;
+    }
 
     public BTBlackboardValue<Agent> Agent { get => _agent; set => _agent = value; }
 

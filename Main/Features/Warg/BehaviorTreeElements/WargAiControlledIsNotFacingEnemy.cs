@@ -13,8 +13,14 @@ public class WargAiControlledIsNotFacingEnemy : BTReturnFalseDecorator, IBTBanne
     BTBlackboardValue<int> _rageAttackAmount;
     BTBlackboardValue<DateTime?> _rageAttackStartTime;
     BTBlackboardValue<bool> _firstAttack;
-    // Resolved once when the tree is built, never per evaluation (the root runs every tick).
-    private readonly IMissionAdapterFactory _adapterFactory = IoC.Resolve<IMissionAdapterFactory>();
+    // Passed in by WargBehaviorTree.BuildTree, resolved once per tree, never per evaluation (the
+    // root runs every tick).
+    private readonly IMissionAdapterFactory _adapterFactory;
+
+    public WargAiControlledIsNotFacingEnemy(IMissionAdapterFactory adapterFactory)
+    {
+        _adapterFactory = adapterFactory;
+    }
 
     public BTBlackboardValue<Agent> Agent { get => agent; set => agent = value; }
     public BTBlackboardValue<Agent> AgentHitBy { get => _agentHitBy; set => _agentHitBy = value; }
