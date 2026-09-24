@@ -30,6 +30,8 @@ public class ServiceAttachmentService : IServiceAttachmentService
 
     public event System.Action<string> ColumnEnteredSettlement;
 
+    public event System.Action ColumnLeftSettlement;
+
     /// <summary>Campaign hour of the last successful placement. Session state; see IsWithinSettlementDwell.</summary>
     private double? _settlementEntryHours;
 
@@ -234,6 +236,18 @@ public class ServiceAttachmentService : IServiceAttachmentService
 
         _settlementEntryHours = null;
         _logger?.LogInfo("[EnlistDiag] EXIT: left the settlement to rejoin the column");
+
+        // The stop is over once the player is out, whatever the re-park below does. A subscriber
+        // throw is swallowed for the same reason as ColumnEnteredSettlement's: the exit has landed.
+        try
+        {
+            ColumnLeftSettlement?.Invoke();
+        }
+        catch (System.Exception ex)
+        {
+            _logger?.LogError($"[EnlistDiag] ColumnLeftSettlement subscriber threw: {ex.Message}");
+        }
+
         return _attachment.ParkNear(commanderHeroId);
     }
 }

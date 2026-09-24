@@ -48,6 +48,12 @@ public interface IEnlistmentWaitMenuPresenter
     /// would otherwise keep the offer silent until it caught up.
     /// </summary>
     void ResetForNewSession();
+
+    /// <summary>
+    /// The column has left the stop: forget which settlement was offered, so the next stop there
+    /// is offered again (once per stop, not once per session). The cooldown stamp stays.
+    /// </summary>
+    void OnStopEnded();
 }
 
 public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
@@ -65,8 +71,9 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
     private readonly IModLogger _logger;
 
     /// <summary>
-    /// Which settlement we last offered a pass for. Session state, never persisted: see
-    /// <see cref="OfferTownLeave"/>.
+    /// Which settlement we last offered a pass for, during the current stop. Never persisted: see
+    /// <see cref="OfferTownLeave"/>. Cleared when the stop ends (<see cref="OnStopEnded"/>) and on
+    /// a session reset.
     /// </summary>
     private string _lastOfferedSettlementId;
 
@@ -169,6 +176,8 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
         _lastOfferedSettlementId = null;
         _lastOfferedAtHours = null;
     }
+
+    public void OnStopEnded() => _lastOfferedSettlementId = null;
 
     public void TakeTownLeave()
     {

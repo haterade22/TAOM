@@ -235,3 +235,44 @@ failures are the known live-Armory tests `TheElkItem_DeclaresTheScaleTheReachIsT
 
 CONVERGENCE: DEFECTS 2, both fixed; the text-only fixes have not had a fresh review. The missing
 GitHub issue must still be settled before merge.
+
+## Maintainer decisions applied (2026-09-24)
+
+Mike answered the NEEDS MIKE items on 2026-09-24; the public issue is #656. All six are applied in
+one commit on this branch, `fix(enlistment): v2.0.30 - apply maintainer decisions for plan 014`
+(parent `41754a03`; a commit cannot name its own hash, so `git log` on the branch gives it). Each
+behaviour change was test-first: the new tests were run and seen failing on the unchanged code, with
+the failure quoted below, then passed after the change.
+
+| NEEDS MIKE | Decision | What changed | RED seen before the change |
+|---|---|---|---|
+| 3 | Clear `_lossAnnouncedFor` on the session reset and on discharge | `EnlistmentReconciler.ResetForNewSession` clears it; the reconciler's constructor subscribes `DischargeService.EnlistmentEnded` and clears it there, so every discharge path counts, not only those the reconciler raises. The subscription sits in the reconciler because `DischargeService` cannot take the reconciler (the reconciler already depends on `IDischargeService`, so that would be a DryIoc cycle); both are singletons, so it subscribes once per process | `ResetForNewSession_ReArmsTheLossModal_ForTheSameCommander`: "Expected:<2>. Actual:<1>. a loss in a new session was silent"; `Discharge_ReArmsTheLossModal_ForAReEnlistmentUnderTheSameCommander`: "Expected:<2>. Actual:<1>. a loss in a new term was silent" |
+| 2 | Reset above the co-op authority gate in `OnGameLoaded` | `ResetSessionCaches` now runs first on every peer; only `Normalize` stays behind the gate. The interface, method and reconciler comments and `enlistment.md` now say "every peer's load, a new campaign and game end" | `GameLoad_OnACoopClient_StillResetsTheSessionCaches_ButDoesNotNormalize`: "Expected to receive exactly 1 call matching: ResetSessionCaches() Actually received no matching calls." |
+| 4 | Clear the store first when the loaded save has no Enlistment data | `OnGameLoaded` calls `_store.Clear()` when no loading `SyncData` ran (`_justLoadedFromSave` false), before the gate, so it applies on every peer; the host then normalizes the empty record, so the ownerless-parked rescue still runs. Engine order re-checked in the installed v1.5.3 decompile: `LoadBehaviorData` runs in the saved-campaign initialize branch (`Campaign.cs:1448`), `OnGameLoaded` later in `PostInitializeFourthState` (`:1685`) | `GameLoad_SaveWithNoEnlistmentData_ClearsThePreviousRecord_BeforeNormalizing`: "Expected:<False>. Actual:<True>. the previous session's term reached normalization"; the co-op client twin: "Assert.IsFalse failed." A characterisation test (`GameLoad_AfterALoadingSyncData_KeepsTheLoadedRecord`) pins that a load with data is not cleared |
+| 6 | The offer latch clears when the stop ends | `ServiceAttachmentService.ExitSettlementForService` raises a new `ColumnLeftSettlement` event once the player is out (also when only the re-park fails; not when the leave fails); `EnlistmentMenuBehavior` routes it to the new `IEnlistmentWaitMenuPresenter.OnStopEnded`, which clears the settlement id only. The 24-hour cooldown is kept, so a commander dipping straight back in still gets one modal a day | Against no-op stubs of the new members: `OfferTownLeave_SameSettlementAfterTheStopEnded_AsksAgain`: "Expected to receive exactly 2 calls ... Actually received 1 matching call"; `Exit_RaisesColumnLeftSettlement_WhenThePlayerLeaves` and `..._EvenWhenOnlyTheReParkFails`: "Expected:<1>. Actual:<0>." |
+| 5 | `SubModule.OnGameEnd` calls the reset | One call, `IoC.Resolve<Features.Enlistment.IServiceMaintenanceService>()?.ResetSessionCaches()`, plus a one-line comment, placed last inside the existing best-effort teardown `try`, so a throw cannot skip the two ArmyTargeting resets before it. Nothing else in `SubModule.cs` changed | `GameEnd_ReachesTheSessionReset_SoTheDeadCampaignsObjectsAreReleased`: "StringAssert.Contains failed." An honest RED was possible only at the source level: `OnGameEnd` needs a live `Game` and cannot run in a unit test, so the test reads `Main/SubModule.cs` and checks the `OnGameEnd` body, the same pattern as `ExitStallDisarmTests.DisarmWiring_IsPresentInBothClosers`. The heap benefit stays UNVERIFIED |
+| 1 | Cite #656 | The CHANGELOG heading now reads `(#656, plan 014)` | Text only |
+
+Notes for the next reviewer:
+
+- `EnlistmentBehavior.cs` stays at 149 lines. `EnlistmentMenuBehavior.cs` goes from 160 to 162
+  lines (it was already over the ADR-002 ceiling, listed above as a follow-up); the two lines are
+  the `-=`/`+=` pair for `ColumnLeftSettlement`, mirroring `ColumnEnteredSettlement` beside it.
+- The `ColumnLeftSettlement` subscription in `EnlistmentMenuBehavior.RegisterEvents` has no unit
+  test, like its `ColumnEnteredSettlement` sibling: `RegisterEvents` touches `CampaignEvents` first,
+  which needs a live campaign. The event and the presenter's handler are each tested.
+- The stop's end is defined as `ExitSettlementForService`, the path that walks the player out to
+  rejoin the column. A player leaving by another route (discharge, the siege leave in
+  `ServiceBattleService`) does not clear the settlement latch; a later stop there is still covered
+  once the next exit or a different settlement changes it.
+- Clearing the store on a co-op client's load with no Enlistment data follows decision 2's "every
+  peer resets its session state"; it is an in-memory `_record.Reset()`, and `OnSessionLaunched`
+  would have cleared the same record on a new starter anyway.
+- These changes have not had a fresh `/deep-review` or Codex pass; one is owed on this commit.
+
+Verification: `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId=` succeeded
+(0 errors). All Enlistment tests (`FullyQualifiedName~TAOM.Tests.Features.Enlistment`): 1105
+passed, 0 failed. Full suite, `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`:
+"Failed: 2, Passed: 10259, Skipped: 2, Total: 10263"; the two failures are the known live-Armory
+tests `TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`.

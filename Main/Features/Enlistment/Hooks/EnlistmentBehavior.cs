@@ -109,15 +109,15 @@ public class EnlistmentBehavior : CampaignBehaviorBase
         _reconciler.ReconcileHourly(CampaignTime.Now.ToDays);
     }
 
-    // CO-OP: host-only. Normalization discharges/parks — world mutations a client must
-    // not apply; the client loads the host's already-normalized record.
-    // internal for TAOM.Tests (InternalsVisibleTo).
+    // Every peer drops the last session's state first (in-memory clears only). A save with no
+    // Enlistment data never ran SyncData, so the store still holds the previous session's term.
+    // CO-OP: normalization is host-only (it discharges and parks); the client loads the host's
+    // already-normalized record. internal for TAOM.Tests (InternalsVisibleTo).
     internal void OnGameLoaded(CampaignGameStarter starter)
     {
-        if (!_coopSession.IsAuthority) return;
-
-        // BEFORE normalizing — it owns every per-session cache (stale commander id, stale Army handle).
         _maintenance.ResetSessionCaches();
+        if (!_justLoadedFromSave) _store.Clear();
+        if (!_coopSession.IsAuthority) return;
         _normalizer.Normalize(_playerParty.GetMainHeroId(), CampaignTime.Now.ToDays);
     }
 

@@ -23,6 +23,13 @@ public interface IServiceAttachmentService
     event System.Action<string> ColumnEnteredSettlement;
 
     /// <summary>
+    /// Raised when <see cref="ExitSettlementForService"/> has walked the player out of the stop
+    /// (even if the re-park then failed): the stop is over. The arrival offer's settlement latch is
+    /// cleared on it, so a later stop in the same town is offered again.
+    /// </summary>
+    event System.Action ColumnLeftSettlement;
+
+    /// <summary>
     /// True while the player is inside a settlement we placed them in less than
     /// <see cref="ServiceAttachmentService.SettlementDwellHours"/> campaign hours ago.
     ///

@@ -214,6 +214,44 @@ public class SettlementFollowingTests
         _attachment.DidNotReceive().ParkNear(Arg.Any<string>());
     }
 
+    [TestMethod]
+    public void Exit_RaisesColumnLeftSettlement_WhenThePlayerLeaves()
+    {
+        // The stop's end: the arrival offer re-arms for that settlement on it.
+        var raised = 0;
+        _sut.ColumnLeftSettlement += () => raised++;
+
+        _sut.ExitSettlementForService("lord_1");
+
+        Assert.AreEqual(1, raised);
+    }
+
+    [TestMethod]
+    public void Exit_RaisesColumnLeftSettlement_EvenWhenOnlyTheReParkFails()
+    {
+        // The player did leave, so the stop is over whatever the park did.
+        _attachment.ParkNear(Arg.Any<string>()).Returns(false);
+        var raised = 0;
+        _sut.ColumnLeftSettlement += () => raised++;
+
+        Assert.IsFalse(_sut.ExitSettlementForService("lord_1"));
+
+        Assert.AreEqual(1, raised);
+    }
+
+    [TestMethod]
+    public void Exit_LeaveFails_DoesNotRaiseColumnLeftSettlement()
+    {
+        // Still inside: the stop has not ended.
+        _attachment.LeaveSettlement().Returns(false);
+        var raised = 0;
+        _sut.ColumnLeftSettlement += () => raised++;
+
+        _sut.ExitSettlementForService("lord_1");
+
+        Assert.AreEqual(0, raised);
+    }
+
     // ---- A held pass suspends the exit sweep, end to end (#512) ------------------------------
 
     [TestMethod]

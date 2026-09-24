@@ -4,7 +4,7 @@
 
 ## 2026-09-24
 
-### fix(enlistment): v2.0.30 - session reset covers load and new campaign (plan 014)
+### fix(enlistment): v2.0.30 - session reset covers load and new campaign (#656, plan 014)
 
 Enlistment no longer carries clocks from one campaign into the next. Loading an earlier save could
 hold you inside a town your commander had already left, and silence the shore-leave offer for up to
@@ -24,17 +24,27 @@ Review follow-ups (report `docs/reviews/deep-review-014-enlistment-session-scope
 the attachment service's reset now also drops the adapter's cached commander party, so its
 separate `InvalidateCommanderCache` pass-through is deleted; a test pins the load hook's reset and
 its order before normalizing; comments and docs that overclaimed the reset are narrowed. Still not
-reset, and tracked as follow-ups: the commander-loss modal's shown-flag
-(`EnlistmentReconciler._lossAnnouncedFor`), so a reloaded or repeated loss of the same commander
-can go unannounced; the duty runtime's real-time pace estimate; the pending battle-merit sample
-(`BattleMeritAccumulator._pending`, reachability unverified); and `CommanderLordAdapter`'s one-slot
-`MapEvent` cache, which keeps one finished battle referenced. This list comes from the review's
-field sweep and may not be complete.
+reset, and tracked as follow-ups: the duty runtime's real-time pace estimate; the pending
+battle-merit sample (`BattleMeritAccumulator._pending`, reachability unverified); and
+`CommanderLordAdapter`'s one-slot `MapEvent` cache, which keeps one finished battle referenced.
+This list comes from the review's field sweep and may not be complete.
 
-Tests: `EnlistmentSessionResetTests` (9) and two `ServiceMaintenanceServiceTests`. Full suite in the
-plan worktree: 10246 passed, 2 skipped, 2 failed (the two live-Armory tests that fail without this
-change). Not smoked in game: load an earlier save while enlisted, then start a second campaign in one
-process.
+Maintainer decisions applied (2026-09-24). The commander-loss modal is announced again for a later
+loss under the same lord after a discharge or in a new session: its shown-once latch
+(`EnlistmentReconciler._lossAnnouncedFor`) is now cleared by the session reset and by every
+discharge. The load reset runs on every peer, a co-op client included, above the authority gate;
+only the normalization stays host-only. A save with no Enlistment data now loads with no record
+instead of normalizing the previous session's term (which could discharge or park a player that
+save never enlisted). The shore-leave offer is once per stop, not once per session: leaving a stop
+re-arms it for that town (the 24-hour cooldown stays). `SubModule.OnGameEnd` calls the reset, so
+the finished campaign's cached commander party and army are released at the main menu.
+
+Tests: `EnlistmentSessionResetTests` (14), two `ServiceMaintenanceServiceTests`, two
+`CommanderLossAnnouncementTests`, three `EnlistmentWaitMenuPresenterTests` and three
+`SettlementFollowingTests`. Full suite in the plan worktree after the maintainer decisions: 10259
+passed, 2 skipped, 2 failed, total 10263 (the two live-Armory tests that fail without this change).
+Not smoked in game: load an earlier save while enlisted, start a second campaign in one process,
+load a save made without Enlistment data after serving, and a co-op client load.
 
 ## 2026-09-23
 

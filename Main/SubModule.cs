@@ -794,6 +794,8 @@ public class SubModule : MBSubModuleBase
         {
             IoC.Resolve<TAOM.Adapters.IMapReachAdapter>()?.Reset();
             IoC.Resolve<Features.ArmyTargeting.ITargetScoreContextFactory>()?.Reset();
+            // Enlistment's singletons cache the commander MobileParty and an Army (field clears only).
+            IoC.Resolve<Features.Enlistment.IServiceMaintenanceService>()?.ResetSessionCaches();
         }
         catch { /* teardown is best-effort, never break OnGameEnd */ }
     }

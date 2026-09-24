@@ -211,7 +211,8 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
     }
 
     /// <summary>
-    /// Drop per-session caches. MUST be called on game load and on a new campaign: the cached party
+    /// Drop per-session caches. MUST be called on game load and on a new campaign (and is called at
+    /// game end, from <c>SubModule.OnGameEnd</c>, to release the finished campaign): the cached party
     /// id is matched by StringId, and lord-party ids are identical across a reload of the same
     /// campaign — so a stale handle from a destroyed campaign HITS the cache test and the cheap
     /// position sync then drives the player from a dead party's position at frame rate.
@@ -220,8 +221,8 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
     /// collaborators' caches are dropped from here too rather than each being wired separately into
     /// the lifecycle hooks: <c>EnlistmentBehavior</c>'s load and new-campaign hooks call only this.
     ///
-    /// It runs on every peer on a new campaign (only the host's load reaches it), so keep every
-    /// callee to an in-memory field clear: no engine call, no world mutation.
+    /// It runs on every peer, on a load as well as on a new campaign, and after the Game is gone at
+    /// game end, so keep every callee to an in-memory field clear: no engine call, no world mutation.
     /// </summary>
     public void ResetSessionCaches()
     {
