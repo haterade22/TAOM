@@ -2,6 +2,18 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-24
+
+### fix(config): v2.0.30 - reject NaN and Infinity in career mutation floats (plan 002)
+
+`MutationParams.GetFloat` now returns the default when a mutation parameter parses to NaN or
+plus or minus Infinity, through the same `FiniteFloatValidator` the other float loaders use. A
+`"NaN"` in a career mutation's XML used to parse fine and then poison every comparison it met,
+since NaN compares false both ways. Ported from the June branch `impl-002` (`cfc47206`); that
+commit's troop-weight half already landed on trunk in `bee07b48`, so only the mutation half is
+new. `MutationParamsTests` (5): three RED without the guard (NaN, plus and minus Infinity), all
+GREEN with it. Full suite: 10318 passed, 2 skipped, 0 failed.
+
 ## 2026-09-23
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)
