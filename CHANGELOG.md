@@ -4,7 +4,7 @@
 
 ## 2026-09-24
 
-### refactor(composition): v2.0.30 - start the feature-module composition root
+### refactor(composition): v2.0.30 - start the feature-module composition root (#662)
 
 Every feature is wired by hand into `Main/SubModule.cs` and `Main/IoC.cs`, the two single-owner
 files, so most feature commits have to edit one of them and parallel sessions collide there. Plan
