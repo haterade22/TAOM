@@ -13,48 +13,57 @@
 > and may deny the command.
 >
 > **Precondition (run first)**: this plan builds on plan 009
-> (`plans/009-guarded-patch-category-apply.md`), which must already be merged
-> into `bannerlord-1.5.x`. From the worktree root (see "Git workflow"):
-> `test -f Main/PatchCategoryApplier.cs && grep -c "ReportPatchFailures(" Main/SubModule.cs && grep -c "private bool TryPatchCategory(string category)" Main/SubModule.cs`
-> Expected: the file exists, then `5`, then `1`. Anything else is a STOP condition.
+> (`plans/009-guarded-patch-category-apply.md`) as it stands at commit
+> `4c728dac`, the reviewed tip of branch `improve/009-guarded-patch-category-apply`
+> (009's first commit `45bcf80b` plus its review follow-ups `9da9b5b9`,
+> `bdf7d515` and convergence fixes `4c728dac`). The worktree is created at
+> `4c728dac` (see "Git workflow"). From the worktree root:
+> `test -f Main/PatchCategoryApplier.cs && grep -c "ReportPatchFailures(" Main/SubModule.cs && grep -c "private bool TryPatchCategory(string category)" Main/SubModule.cs && grep -c 'ReportPatchFailures("startup", persistent: true);' Main/SubModule.cs`
+> Expected: the file exists, then `4`, then `1`, then `1`. (The four are the
+> `startup`, `game initialization` and `mission start` calls plus the
+> definition; `bdf7d515` removed the module-load call.) Anything else is a
+> STOP condition.
 >
-> **Drift check (run second, from the worktree root)**:
+> **Drift check (run second, from the worktree root)**: first
+> `git rev-parse --short=8 HEAD` → `4c728dac`. Then:
 > `git diff --stat b2e387db..HEAD -- Main/SubModule.cs Main/IoC.cs Main/Composition Main/Features/WandererAllegiance TAOM.Tests/Infrastructure/RepoPaths.cs TAOM.Tests/Infrastructure/RepoPathsTests.cs TAOM.Tests/Composition docs/features/wanderer-allegiance.md TAOM.Tests/Features/AutoResolveDiagnostics/AutoResolveDiagnosticsWiringTests.cs TAOM.Tests/Features/BanditManagement/Patch86HideoutBossFightBindingTests.cs TAOM.Tests/Features/BannerColorPersistence/BannerTripletOrderingTests.cs TAOM.Tests/Features/BattleLoadDiagnostics/ExitStallDisarmTests.cs TAOM.Tests/Features/CompanionTactics/SharedMovementOrderPostfixTests.cs TAOM.Tests/Features/CoopInterop/ResetForUnloadSweepTests.cs TAOM.Tests/Features/Diplomacy/Patch80KingdomVoteDeadlockBindingTests.cs TAOM.Tests/Features/Enlistment/Patch85EnlistedDetachDeferralBindingTests.cs TAOM.Tests/Features/FiefManagement/FiefHubCampaignBehaviorTests.cs TAOM.Tests/Features/FieldCamp/FieldCampWiringTests.cs TAOM.Tests/Features/HeroRace/HeroRaceWiringTests.cs TAOM.Tests/Features/HeroRace/RacePersistenceBehaviorTests.cs TAOM.Tests/Features/LordPartyTemplates/Patch88LordPartyTemplateTests.cs TAOM.Tests/Features/MapEventGuard/Patch82MapEventObserverInvariantBindingTests.cs TAOM.Tests/Features/MapEventGuard/Patch84SiegeAftermathMenuGuardTests.cs TAOM.Tests/Features/Messengers/MessengerCampaignBehaviorTests.cs TAOM.Tests/Features/MountDespawn/MountDespawnWiringTests.cs TAOM.Tests/Features/Refuge/RefugeWiringTests.cs TAOM.Tests/Features/ReturnToArmy/Patch87ReturnToArmyTests.cs TAOM.Tests/Features/SettlementGuards/SettlementGuardsWiringTests.cs TAOM.Tests/Features/SiegeDismount/SiegeDismountWiringTests.cs TAOM.Tests/Features/SiegePropDiagnostics/SiegePropDiagnosticsWiringTests.cs TAOM.Tests/Features/SignatureStrikes/SignatureStrikesBindingTests.cs TAOM.Tests/Features/UncapturableHeroes/UncapturableHeroesWiringTests.cs TAOM.Tests/Features/WandererAllegiance/WandererAllegianceWiringTests.cs TAOM.Tests/Migration/GameModelOverrideBindingTests.cs`
-> Expected: exactly ten files listed, `Main/SubModule.cs` plus these nine test files (plan 009's edits): Patch86HideoutBossFightBindingTests, Patch80KingdomVoteDeadlockBindingTests, Patch85EnlistedDetachDeferralBindingTests, FieldCampWiringTests, Patch88LordPartyTemplateTests, Patch82MapEventObserverInvariantBindingTests, Patch84SiegeAftermathMenuGuardTests, RefugeWiringTests, Patch87ReturnToArmyTests. At planning time `HEAD` was `4b5662b2`, which touched none of these paths.
+> Expected: exactly ten files listed, summary `10 files changed, 168 insertions(+), 159 deletions(-)`: `Main/SubModule.cs` plus these nine test files (plan 009's edits): Patch86HideoutBossFightBindingTests, Patch80KingdomVoteDeadlockBindingTests, Patch85EnlistedDetachDeferralBindingTests, FieldCampWiringTests, Patch88LordPartyTemplateTests, Patch82MapEventObserverInvariantBindingTests, Patch84SiegeAftermathMenuGuardTests, RefugeWiringTests, Patch87ReturnToArmyTests. `b2e387db` is where this plan was first cut; `4b5662b2` and `7f02fc8d` between it and 009 touched none of these paths.
 >
 > Then run the same path list through `git log --oneline b2e387db..HEAD -- <the same paths>`.
-> Expected: every commit listed is plan 009's (its subject ends `apply every patch category through one guard`), plus at most a merge commit that brought plan 009's branch in. Any other commit is a STOP condition.
+> Expected: exactly three commits, all plan 009's: `4c728dac` (`convergence fixes for plan 009`), `bdf7d515` (`review follow-ups for plan 009`) and `45bcf80b` (`apply every patch category through one guard`). 009's `9da9b5b9` (`correct Patch37 coverage, name the guard`) touches none of these paths; it is allowed if it appears. Any other commit is a STOP condition.
 >
 > Then check that the nine test files changed only in their category strings (one Bash command; the nine paths are the nine test files named above, each under `TAOM.Tests/Features/`):
 > `git diff b2e387db..HEAD -- <the nine test files> | grep -E "^[-+] " | grep -vc "PatchCategory("` → `0` (every changed line holds a category string), and
 > `git diff b2e387db..HEAD -- <the nine test files> | grep -cE "^\+ .*TryPatchCategory\("` → `9`.
 >
-> On any other result, compare the "Current state" excerpts against the live code; a mismatch is a STOP condition.
+> Both results were re-measured at `4c728dac` during the re-cut. On any other result, compare the "Current state" excerpts against the live code; a mismatch is a STOP condition.
 
 ## Status
 
 - **Priority**: P3
 - **Effort**: L (three commits: S-M mechanical test migration, M new composition types plus 8 kernel lines, S pilot move)
-- **Risk**: MED (both single-owner files are edited, another live session holds uncommitted edits to both, and the runner sits on every lifecycle hook; parity is proven by the full suite, the pilot by its own tests)
-- **Depends on**: `plans/009-guarded-patch-category-apply.md` (the runner applies module categories through its `TryPatchCategory` helper and reports next to its `ReportPatchFailures` calls)
+- **Risk**: MED. Both single-owner files are edited, `bannerlord-1.5.x` has moved past this plan's base in both (commit `709649c3`; see the merge note in "Git workflow"), and the runner sits on every lifecycle hook. Parity is proven by the full suite, the pilot by its own tests.
+- **Depends on**: `plans/009-guarded-patch-category-apply.md` at `4c728dac` (the runner applies module categories through its `TryPatchCategory` helper, sits before its `ReportPatchFailures` calls, and follows its startup inquiry rule)
 - **Category**: tech-debt
-- **Planned at**: commit `b2e387db`, 2026-09-23
+- **Planned at**: commit `4c728dac`, 2026-09-24 (re-cut; first cut at `b2e387db`, 2026-09-23)
+- **Re-cut**: 2026-09-24, after an executor stopped at the precondition (`ReportPatchFailures(` counted 4, not 5). Plan 009's review follow-ups removed `ReportPatchFailures("module load")` from `OnSubModuleLoad` and replaced `ReportPatchFailures("main menu setup")` with `ReportPatchFailures("startup", persistent: true)`, an inquiry (009 convergence finding C1). Changed: the precondition, the drift check and worktree base, every SubModule anchor and line number, the kernel test's ProcessLoad and MainMenu anchors, `FeatureModuleHooks.ReportFaults` (startup faults are held for one main-menu inquiry instead of a red chat line nothing receives), one new test for that policy, the test totals and the merge note. Design and scope are otherwise unchanged.
 - **Issue**: create before implementation lands (orchestrator)
 
 ## Why this matters
 
-`Main/SubModule.cs` is 2,148 lines at `b2e387db` (758 in June) and every feature is wired into it and into `Main/IoC.cs` by hand: services, patch categories, hook handshakes, campaign behaviors, game models and mission behaviors. Since the June audit, 131 of the 349 commits that touched `Main/Features/` (38%) also had to edit one of those two single-owner files, which is why parallel sessions keep colliding there (both files carry another session's uncommitted edits right now). The 26 test files that guard this wiring read the two files as raw text, so they pin its spelling and cannot tell code from a comment: `GameModelOverrideBindingTests` counts `TaomPartyNavigationModel` as registered only because a commented-out line contains `new TaomPartyNavigationModel(`. This plan lays the first three stones of the approved design: one shared, comment-aware source reader for those tests (with the parked model made explicit), the feature-module contract with an empty ordered list and a runner called once at the end of each lifecycle phase (so behaviour is identical and, from then on, the single-owner files only lose lines), and one pilot feature, WandererAllegiance, moved into its own module with its text asserts replaced.
+`Main/SubModule.cs` is 2,157 lines at `4c728dac` (758 in June) and every feature is wired into it and into `Main/IoC.cs` by hand: services, patch categories, hook handshakes, campaign behaviors, game models and mission behaviors. Since the June audit (measured at `b2e387db`), 131 of the 349 commits that touched `Main/Features/` (38%) also had to edit one of those two single-owner files, which is why parallel sessions keep colliding there (while plan 009 was in review, `709649c3` edited both on `bannerlord-1.5.x`). The 26 test files that guard this wiring read the two files as raw text, so they pin its spelling and cannot tell code from a comment: `GameModelOverrideBindingTests` counts `TaomPartyNavigationModel` as registered only because a commented-out line contains `new TaomPartyNavigationModel(`. This plan lays the first three stones of the approved design: one shared, comment-aware source reader for those tests (with the parked model made explicit), the feature-module contract with an empty ordered list and a runner called once at the end of each lifecycle phase (so behaviour is identical and, from then on, the single-owner files only lose lines), and one pilot feature, WandererAllegiance, moved into its own module with its text asserts replaced.
 
 ## Current state
 
-All excerpts are from commit `b2e387db` unless marked "after plan 009". Line numbers are for `b2e387db`; find every site by its text, not its number.
+All excerpts are from commit `4c728dac`, which already contains every plan 009 edit. Line numbers are for `4c728dac`; find every site by its text, not its number. Under `Main/` and `TAOM.Tests/`, plan 009 changed only `Main/SubModule.cs`, the nine test files named in the drift check, `Patch65LandlessCultureSpawnGuardBindingTests.cs` (not read here) and its two new files (`Main/PatchCategoryApplier.cs`, `TAOM.Tests/Infrastructure/PatchCategoryApplierTests.cs`); `git diff --name-only b2e387db 4c728dac -- Main TAOM.Tests` lists nothing else apart from the Nazgul sound files, `module_sounds.xml` and one JSON config that `4b5662b2` changed. The nine test files each changed one category-string line, so no test-file line number in this plan moved.
 
 ### Files and roles
 
-- `Main/SubModule.cs` (2,148 lines): the module entry point (`MBSubModuleBase`). **Single-owner** (CLAUDE.md: "`Main/IoC.cs` and `Main/SubModule.cs` are single-owner: recommend, don't edit"). The orchestrator's dispatch of this plan authorizes the exact edits listed under "Scope", on your worktree branch only. Do not halt on that CLAUDE.md line; do not make any other edit there.
+- `Main/SubModule.cs` (2,157 lines): the module entry point (`MBSubModuleBase`). **Single-owner** (CLAUDE.md: "`Main/IoC.cs` and `Main/SubModule.cs` are single-owner: recommend, don't edit"). The orchestrator's dispatch of this plan authorizes the exact edits listed under "Scope", on your worktree branch only. Do not halt on that CLAUDE.md line; do not make any other edit there.
 - `Main/IoC.cs` (251 lines): the DryIoc composition root, `public static class IoC` with `Configure()`, `Resolve<T>()`, `ResolveAll<T>()`, `Dispose()`. **Single-owner**, same authorization and limits as above.
-- `TAOM.Tests/Infrastructure/RepoPaths.cs`: the layout-proof repo locator (4 users today).
+- `TAOM.Tests/Infrastructure/RepoPaths.cs`: the layout-proof repo locator (5 users at `4c728dac`: `EnlistmentDiagnosticsSettingsProviderTests`, `FieldCommissionConfigProviderTests`, `FieldCommissionSettingsProviderTests`, `ShippedFertilityConfigTests`, and plan 009's `PatchCategoryApplierTests`).
 - The 26 test files that read `Main/SubModule.cs` or `Main/IoC.cs` as text (table in Step 0.3).
+- `Main/PatchCategoryApplier.cs` and `TAOM.Tests/Infrastructure/PatchCategoryApplierTests.cs` (plan 009, read-only here). The test file is a 27th reader of `Main/SubModule.cs`, but it already strips comments with its own `CommentPattern` before every source gate, so it has no comment-shaped hole; it stays out of scope. (`IoCRegistrationDisciplineTests` also matches a naive grep for `IoC.cs"`, but it reads feature `*IoC.cs` files, not `Main/IoC.cs`.)
 - `Main/Features/WandererAllegiance/WandererAllegianceIoC.cs` and `Hooks/WandererAllegianceDialogBehavior.cs`: the pilot feature.
 - New: `Main/Composition/*.cs` (six files), `TAOM.Tests/Infrastructure/RepoPathsTests.cs`, `TAOM.Tests/Composition/ModuleRunnerTests.cs`, `TAOM.Tests/Composition/FeatureModulesTests.cs`, `Main/Features/WandererAllegiance/WandererAllegianceModule.cs`.
 
@@ -101,7 +110,7 @@ The only comment-stripping reader in the suite, `TAOM.Tests/Features/CoopInterop
         CommentPattern.Replace(source, m => Regex.Replace(m.Value, "[^\n]", " "));
 ```
 
-It blanks comments to spaces, so length and line breaks survive and `IndexOf` offsets stay valid. It is not string-literal aware; measured at `b2e387db`, neither `Main/SubModule.cs` nor `Main/IoC.cs` has a string literal containing `//` or `/*` (checked with a Python scan of every literal on every line). A simulation of stripping both files against every string literal in the 26 test files found no literal the tests assert on SubModule/IoC text that exists only inside a comment, so switching all 26 to the stripped view should keep them green.
+It blanks comments to spaces, so length and line breaks survive and `IndexOf` offsets stay valid. It is not string-literal aware; re-measured at `4c728dac`, neither `Main/SubModule.cs` nor `Main/IoC.cs` has a string literal containing `//` or `/*` (checked with a Python scan of every literal on every line). A simulation of stripping both files against every string literal in the 26 test files found no literal the tests assert on SubModule/IoC text that exists only inside a comment (first cut, at `b2e387db`); the re-cut re-ran the literal-versus-stripped comparison at both commits and got the identical result set, so plan 009's comment rewrites opened no new case and switching all 26 to the stripped view should keep them green.
 
 ### The false pass (`TAOM.Tests/Migration/GameModelOverrideBindingTests.cs:46-62`; the method's `[TestMethod]` is at 44 and its closing brace at 69)
 
@@ -125,13 +134,13 @@ It blanks comments to spaces, so length and line breaks survive and `IndexOf` of
             .ToList();
 ```
 
-`ReadRepoFile` (lines 190-198) walks up from the working directory to `TAOM.sln` and returns raw text or null. `DiscoverGameModels` (153-164) returns every non-abstract TAOM type deriving from `TaleWorlds.Core.GameModel`. `TaomPartyNavigationModel` (`Main/Features/NavalTravel/Models/TaomPartyNavigationModel.cs:28`, namespace `TAOM.Features.NavalTravel.Models`, `: DefaultPartyNavigationModel`) is parked; its only `new TaomPartyNavigationModel(` in `SubModule.cs` is the comment at line 1044:
+`ReadRepoFile` (lines 190-198) walks up from the working directory to `TAOM.sln` and returns raw text or null. `DiscoverGameModels` (153-164) returns every non-abstract TAOM type deriving from `TaleWorlds.Core.GameModel`. `TaomPartyNavigationModel` (`Main/Features/NavalTravel/Models/TaomPartyNavigationModel.cs:28`, namespace `TAOM.Features.NavalTravel.Models`, `: DefaultPartyNavigationModel`) is parked; its only `new TaomPartyNavigationModel(` in `SubModule.cs` is the comment at line 1063:
 
 ```csharp
         // campaignStarter.AddModel(new TaomPartyNavigationModel(IoC.Resolve<INavalTravelService>(), IoC.Resolve<IModLogger>()));
 ```
 
-Measured at `b2e387db`: of every `new XxxModel(` in SubModule.cs, `TaomPartyNavigationModel` is the only one that exists in the raw text but not in the comment-stripped text. The orchestrator's baseline run had 0 inconclusive results, so this test runs (and passes) on the desktop.
+Re-measured at `4c728dac`: of every `new XxxModel(` in SubModule.cs, `TaomPartyNavigationModel` is the only one that exists in the raw text but not in the comment-stripped text. The orchestrator's baseline run at `b2e387db` had 0 inconclusive results, so this test runs (and passes) on the desktop.
 
 ### Engine and library facts (verified during planning; do not re-derive)
 
@@ -145,7 +154,8 @@ Bannerlord v1.5.3, from `pwsh tools/taom-src.ps1 path <Type>`:
 - `TaleWorlds.Core.MBGameModel<T>`: `public abstract class MBGameModel<T> : GameModel where T : GameModel` with `public void Initialize(T baseModel)`.
 - `TaleWorlds.CampaignSystem.CampaignBehaviorBase`: `public abstract class CampaignBehaviorBase : ICampaignBehavior`; its parameterless constructor only sets `StringId = GetType().Name` (safe to construct in a unit test); `public abstract void SyncData(IDataStore dataStore);` (`IDataStore` is in `TaleWorlds.CampaignSystem`).
 - `TaleWorlds.MountAndBlade.Mission`: `public void AddMissionBehavior(MissionBehavior missionBehavior)`.
-- `TaleWorlds.Library`: `InformationManager.DisplayMessage(InformationMessage message)`, `new InformationMessage(string information, Color color)`, `Colors.Red`.
+- `TaleWorlds.Library`: `InformationManager.DisplayMessage(InformationMessage message)`, `new InformationMessage(string information, Color color)`, `Colors.Red`, `public static void ShowInquiry(InquiryData data, bool pauseGameActiveState = false, bool prioritize = false)`, and `public InquiryData(string titleText, string text, bool isAffirmativeOptionShown, bool isNegativeOptionShown, string affirmativeText, string negativeText, Action affirmativeAction, Action negativeAction, string soundEventPath = "", float expireTime = 0f, ...)` (`InquiryData` is in `TaleWorlds.Library`).
+- **Who receives a notice, and when (the startup inquiry rule, `docs/reviews/lessons/localization-ui.md`, "Nothing receives a chat message before the initial screen", from plan 009's RCA finding 1)**: `DisplayMessage` is `DisplayMessageInternal?.Invoke(message)` with no queue, and its single-player subscribers (`MPChatVM`, `ChatLogMessageManager`) are built by `GauntletChatLogView` in Native's `OnBeforeInitialModuleScreenSetAsRoot`, after every module's `OnSubModuleLoad`. A chat line sent from `OnSubModuleLoad` goes nowhere; one sent from the first `OnBeforeInitialModuleScreenSetAsRoot` is hidden by the splash video and then cleared by `GauntletInitialScreen.OnInitialize` (`ClearAllMessages()`, `GauntletInitialScreen.cs:77` in the v1.5.3 decompile). A startup notice therefore waits for TAOM's `OnBeforeInitialModuleScreenSetAsRoot` and goes through `ShowInquiry`, which `GauntletQueryManager` queues (`CreateQuery` enqueues an inquiry that is not equal to the active or a queued one, `GauntletQueryManager.cs:164-174`), and the initial screen does not clear it. Checked during the re-cut: the only other `ClearAllMessages()` callers in v1.5.3 are the `chatlog.clear` console command (`GauntletUISubModule.cs:261`) and `Module.OnBeforeGameStart` (`Module.cs:1785`), which `MBGameManager.StartNewGame` calls (`MBGameManager.cs:48`) before it pushes the loading state, so before any `OnGameStart`. A red chat line from `OnGameStart`, `OnGameInitializationFinished` or `OnMissionBehaviorInitialize` has a receiver and nothing clears it; plan 009 keeps its red line in the last two for that reason.
 - `MBSubModuleBase` hooks TAOM overrides: `OnSubModuleLoad()`, `OnBeforeInitialModuleScreenSetAsRoot()`, `OnGameStart(Game game, IGameStarter gameStarterObject)`, `OnGameInitializationFinished(Game game)`, `OnMissionBehaviorInitialize(Mission mission)`, `OnSubModuleUnloaded()`.
 
 Language: `Directory.Build.props` sets `<TargetFramework>net472</TargetFramework>` and `<LangVersion>10.0</LangVersion>`. **Default interface members are not available** (the .NET Framework runtime does not support them; the compiler reports CS8701), which is why the design's `OnPhase(...) { }` default lives in the abstract base class, not the interface. `Main/TAOM.csproj` exposes internals to `TAOM.Tests` (the `TAOM.Tests` InternalsVisibleTo attribute at `Main/TAOM.csproj:119-121`, inside the ItemGroup at 117-125), so the new types are `internal`.
@@ -176,22 +186,101 @@ Language: `Directory.Build.props` sets `<TargetFramework>net472</TargetFramework
 
 Line 109 is the pilot's registration: `        Features.WandererAllegiance.WandererAllegianceIoC.RegisterWandererAllegianceFeature(container);`. No test calls `IoC.Configure()` (`git grep -n "IoC.Configure()" -- TAOM.Tests` finds two comments and no call: `EconomyDiagnosticsWiringTests.cs:12` and `SiegeDismountWiringTests.cs:71`).
 
-### SubModule phase anchors (after plan 009)
+### Plan 009's helpers at `4c728dac` (read-only here)
 
-Plan 009 replaces every `_harmony.PatchCategory("X")` with `TryPatchCategory("X")` (a private `bool` instance helper over `PatchCategoryApplier`) and adds one `ReportPatchFailures("<phase>")` call per phase. The anchors this plan inserts next to, as they read after plan 009:
+`Main/PatchCategoryApplier.cs` (`internal sealed class PatchCategoryApplier`, namespace `TAOM`), its three members' signatures:
 
-- `OnSubModuleLoad` ends: `TryPatchCategory("Patch42_CastleRecruitment");`, blank line, `ReportPatchFailures("module load");`, then `InformationManager.DisplayMessage(new InformationMessage("TAOM loaded successfully!", Colors.Green));`.
-- `OnBeforeInitialModuleScreenSetAsRoot`: `if (!_basicTableauGuardApplied) { _basicTableauGuardApplied = true; TryPatchCategory("Patch55_BasicTableauRaceGuard"); ReportPatchFailures("main menu setup"); }` (one statement per line).
-- `OnGameStart` (`SubModule.cs:801-839`, untouched by 009) ends:
+- `internal PatchCategoryApplier(Action<string> apply, IModLogger logger)`
+- `internal bool TryApply(string category)`: "Applies the category; on a throw, logs it, records it and returns false." (logged `[PatchApply] <category> FAILED ...`)
+- `internal string? TakeFailureSummary(string phase)`: "One player-facing line naming every category that failed since the last call, or null when none did. Clears the list, so each phase reports only its own failures."
+
+`SubModule` builds it in `OnSubModuleLoad` (`SubModule.cs:203-205`) as `_patches = new PatchCategoryApplier(category => _harmony.PatchCategory(typeof(SubModule).Assembly, category), IoC.Resolve<IModLogger>());`, the one direct `.PatchCategory(` call 009's source gate allows.
+
+`Main/SubModule.cs:851-872`:
+
+```csharp
+    private bool TryPatchCategory(string category) => _patches.TryApply(category);
+
+    // One notice per phase naming every category that failed, so a dead crash guard is never
+    // silent: a red chat line, or an inquiry the player dismisses when a screen change would clear
+    // the chat log first. The notice itself must never break the phase, hence the catch.
+    private void ReportPatchFailures(string phase, bool persistent = false)
+    {
+        var summary = _patches.TakeFailureSummary(phase);
+        if (summary == null) return;
+        try
+        {
+            if (persistent)
+                InformationManager.ShowInquiry(new InquiryData(
+                    "TAOM", summary, true, false, "OK", string.Empty, null, null));
+            else
+                InformationManager.DisplayMessage(new InformationMessage(summary, Colors.Red));
+        }
+        catch (System.Exception ex)
+        {
+            IoC.Resolve<IModLogger>().LogError($"[PatchApply] failure notice not shown: {ex.Message}");
+        }
+    }
+```
+
+Both helpers are private instance members of `SubModule`, so `Main/Composition` cannot call `ReportPatchFailures` and does not try to: a module's patch category goes through the `TryPatchCategory` delegate the kernel passes in, so its failure lands in `_patches` and is reported by 009's next `ReportPatchFailures` call, as long as the runner call sits before that call (every anchor below does). A module FAULT (a module that throws) is the runner's, and `FeatureModuleHooks` reports it with the same `InquiryData` shape or red line (Step 1.4).
+
+### SubModule phase anchors (at `4c728dac`)
+
+Plan 009 replaced every `_harmony.PatchCategory("X")` with `TryPatchCategory("X")` and reports per phase: no report in `OnSubModuleLoad` (its failures wait), one persistent `startup` inquiry at the main menu for `OnSubModuleLoad`'s and Patch55's failures together, and a red line after the game-init batch and the first-mission category. The anchors this plan inserts next to:
+
+- `OnSubModuleLoad` ends (`SubModule.cs:619-624`):
+  ```csharp
+          TryPatchCategory("Patch42_CastleRecruitment");
+          // No ReportPatchFailures here: nothing receives a message yet (see the startup report in
+          // OnBeforeInitialModuleScreenSetAsRoot), so this phase's failures wait for it.
+
+          InformationManager.DisplayMessage(new InformationMessage("TAOM loaded successfully!", Colors.Green));
+      }
+  ```
+  The next member is `    protected override void OnBeforeInitialModuleScreenSetAsRoot()` (626).
+- `OnBeforeInitialModuleScreenSetAsRoot` (`SubModule.cs:638-648`):
+  ```csharp
+          if (!_basicTableauGuardApplied)
+          {
+              _basicTableauGuardApplied = true;
+              TryPatchCategory("Patch55_BasicTableauRaceGuard");
+              // Reports OnSubModuleLoad's failures and Patch55's together. The earliest a notice can
+              // be shown: Native's GauntletUISubModule, which runs before TAOM, creates the chat log
+              // and the inquiry manager in this hook, and InformationManager queues nothing sent
+              // before them. An inquiry, not a chat line: the initial screen clears the chat log
+              // after the splash video (GauntletInitialScreen.OnInitialize, ClearAllMessages).
+              ReportPatchFailures("startup", persistent: true);
+          }
+  ```
+  `_basicTableauGuardApplied` is a `private static bool` (`SubModule.cs:110`), so this block runs once per process although the hook fires on every return to the main menu.
+- `OnGameStart` (`SubModule.cs:797-835`, untouched by 009) ends:
   ```csharp
               RegisterSpecialResourcesAndCareers(campaignStarter, careerPassives);
               RegisterCampaignLifeBehaviors(campaignStarter);
           }
       }
   ```
-  Before the `if`, it calls `RegisterCustomBattleModels(gameStarterObject);`, which returns unless the starter is a `BasicGameStarter` and not a `CampaignGameStarter` (`1260-1268`).
-- `OnGameInitializationFinished`: after the once-per-process guard `if (_gameInitPatchesApplied) return;` / `_gameInitPatchesApplied = true;` (`1464-1465`), the batch ends `TryPatchCategory("Patch69_TournamentRosterGuard");`, `TryPatchCategory("Patch69_TournamentEndGuard");`, `ReportPatchFailures("game initialization");`, then the comment `// Manual patches for PRIVATE engine methods` and `ManualPatchApplicator.ApplyAll(_harmony);`.
-- `OnMissionBehaviorInitialize`: `if (!_missionTimePatchesApplied) { _missionTimePatchesApplied = true; TryPatchCategory("Patch_MissionTime_SetMovementOrder"); ReportPatchFailures("mission start"); }`, then the `[BattleLoad]` bracket and the local function `void AddTaomBehavior(MissionBehavior behavior)` (`1936-1941`), the feature adds, and (`2020-2033`, untouched by 009):
+  Before the `if`, it calls `RegisterCustomBattleModels(gameStarterObject);` (810), which returns unless the starter is a `BasicGameStarter` and not a `CampaignGameStarter` (`1279-1287`). The next member after `OnGameStart` is `    public override void OnGameLoaded(Game game, object initializerObject)` (845).
+- `OnGameInitializationFinished`: after the once-per-process guard `if (_gameInitPatchesApplied) return;` / `_gameInitPatchesApplied = true;` (`1483-1484`), the batch ends (`SubModule.cs:1870-1874`):
+  ```csharp
+          TryPatchCategory("Patch69_TournamentRosterGuard");
+          TryPatchCategory("Patch69_TournamentEndGuard");
+          ReportPatchFailures("game initialization");
+
+          // Manual patches for PRIVATE engine methods (AccessTools-resolved targets; can't use
+  ```
+  followed by `ManualPatchApplicator.ApplyAll(_harmony);` (1877).
+- `OnMissionBehaviorInitialize` (`SubModule.cs:1919`) opens with (`1927-1932`):
+  ```csharp
+          if (!_missionTimePatchesApplied)
+          {
+              _missionTimePatchesApplied = true;
+              TryPatchCategory("Patch_MissionTime_SetMovementOrder");
+              ReportPatchFailures("mission start");
+          }
+  ```
+  then the `[BattleLoad]` bracket and the local function `void AddTaomBehavior(MissionBehavior behavior)` (`1945-1950`), the feature adds, and (`2029-2042`, untouched by 009):
   ```csharp
           var colorStore = IoC.Resolve<IAgentColorStore>();
           if (colorStore != null)
@@ -202,7 +291,7 @@ Plan 009 replaces every `_harmony.PatchCategory("X")` with `TryPatchCategory("X"
               AddTaomBehavior(new Features.MissionDiagnostic.Hooks.MissionDiagnosticBehavior(diagSvc, raceMgr, diagLogger));
   ```
 
-The pilot's lines in `RegisterCampaignLifeBehaviors` (`1380-1389`, untouched by 009):
+The pilot's lines in `RegisterCampaignLifeBehaviors` (`1399-1408`, untouched by 009):
 
 ```csharp
         campaignStarter.AddBehavior(new Features.AlignmentDesertion.Hooks.AlignmentDesertionBehavior(
@@ -234,7 +323,7 @@ public static class WandererAllegianceIoC
 }
 ```
 
-Its dependencies from other features resolve lazily: `WandererAllegianceService(IAlignmentService alignment, IWandererAllegianceSettingsProvider settings, INamedCompanionConfigProvider namedCompanions)` (`IAlignmentService` in `TAOM.Features.Execution`, `INamedCompanionConfigProvider` in `TAOM.Features.NamedCompanions`, read lazily); `WandererAllegianceSettingsProvider(IWandererAllegianceConfigProvider)` calls `GetConfig()` in its constructor; `WandererAllegianceConfigProvider(IPathService pathService, IModLogger logger)` falls back to defaults with a warning when `wanderer_allegiance/wanderer_allegiance_config.json` is missing under `IPathService.ModuleDataPath` (`IPathService` in `TAOM.Core.Infrastructure`). `WandererAllegianceDialogBehavior(IWandererAllegianceService service, IModLogger logger) : CampaignBehaviorBase` registers two dialog lines on `OnSessionLaunchedEvent` at `private const int Priority = 110;` and has an empty `public override void SyncData(IDataStore dataStore) { }`. `git grep` at `b2e387db` finds `RegisterWandererAllegianceFeature` called only from `Main/IoC.cs:109`, and no other feature registers any WandererAllegiance service type.
+Its dependencies from other features resolve lazily: `WandererAllegianceService(IAlignmentService alignment, IWandererAllegianceSettingsProvider settings, INamedCompanionConfigProvider namedCompanions)` (`IAlignmentService` in `TAOM.Features.Execution`, `INamedCompanionConfigProvider` in `TAOM.Features.NamedCompanions`, read lazily); `WandererAllegianceSettingsProvider(IWandererAllegianceConfigProvider)` calls `GetConfig()` in its constructor; `WandererAllegianceConfigProvider(IPathService pathService, IModLogger logger)` falls back to defaults with a warning when `wanderer_allegiance/wanderer_allegiance_config.json` is missing under `IPathService.ModuleDataPath` (`IPathService` in `TAOM.Core.Infrastructure`). `WandererAllegianceDialogBehavior(IWandererAllegianceService service, IModLogger logger) : CampaignBehaviorBase` registers two dialog lines on `OnSessionLaunchedEvent` at `private const int Priority = 110;` and has an empty `public override void SyncData(IDataStore dataStore) { }`. `git grep` at `4c728dac` finds `RegisterWandererAllegianceFeature` called only from `Main/IoC.cs:109`, and no other feature registers any WandererAllegiance service type.
 
 Why the pilot's move to the end of the campaign-start phase is order-free: its two lines are the only TAOM lines on the `companion_hire` token, and vanilla's reply sits at priority 100, so priority, not add order, decides; and the `LotrIssueSuppression.SuppressAll` call that ends `RegisterCampaignLifeBehaviors` removes only the vanilla issue behavior types in its own list (`Main/Features/LotrIssues/LotrIssueSuppression.cs:170-197`, `RemoveBehaviors<T>` per vanilla type), so a TAOM behavior added after it is untouched. Its services move from IoC position 109 to after the last hand-wired registration; that is order-free because DryIoc resolves lazily, the feature registers no `IfAlreadyRegistered` or contributor-collection type, and nothing resolves its types during `Configure`.
 
@@ -266,30 +355,31 @@ The other four (`WandererAllegianceIoC_RegistersEveryConsumerOfTheBehavior`, `Di
 
 ### Ordering constraints found in the code (awareness; only the WandererAllegiance facts above apply to this plan)
 
-Line numbers are `Main/SubModule.cs` at `b2e387db` unless a file is named. When a later migration moves a feature to the end-of-phase module loop, check it against this table.
+Line numbers are `Main/SubModule.cs` at `4c728dac` unless a file is named (re-mapped from the first cut with a line-level diff and spot-read). When a later migration moves a feature to the end-of-phase module loop, check it against this table.
 
 | Constraint | Evidence | Where it lands in the design |
 |---|---|---|
-| CrashReport patch first, before any other apply | `187-210` | kernel, before the loop |
-| Patch41 MCM layout and Patch83/58/61/62/89/90 must apply in `OnSubModuleLoad`, not later | `216-222`, `294-302`, `304-315`, `337-338` | `ApplyPhase.ProcessLoad` on the category decl |
-| Patch55 must apply at the main menu | `634-640` | `ApplyPhase.MainMenu` |
-| Mission-time category only once `Mission.Current` exists | `1915-1923` | `ApplyPhase.FirstMission` |
-| Game-init batch once per process (re-apply duplicates patches and breaks the DeliverOffSpring transpiler) | `1457-1465` | kernel flag around the `GameInit` loop |
-| Patch65/Patch88 must be in the standard game-init batch, not lazier (new-game spawn path) | `1587-1601` | `ApplyPhase.GameInit`; the paragraph moves to the patch class |
+| CrashReport patch first, before any other apply | `188-223` | kernel, before the loop |
+| Patch41 MCM layout and Patch83/58/61/62/89/90 must apply in `OnSubModuleLoad`, not later | `229-236`, `307-315`, `317-333`, `350-351` | `ApplyPhase.ProcessLoad` on the category decl |
+| Patch55 must apply at the main menu | `631-637` | `ApplyPhase.MainMenu` |
+| Mission-time category only once `Mission.Current` exists | `1923-1932` | `ApplyPhase.FirstMission` |
+| Game-init batch once per process (re-apply duplicates patches and breaks the DeliverOffSpring transpiler) | `1476-1484` | kernel flag around the `GameInit` loop |
+| Patch65/Patch88 must be in the standard game-init batch, not lazier (new-game spawn path) | `1606-1620` | `ApplyPhase.GameInit`; the paragraph moves to the patch class |
 | FieldCommission after Enlistment (`IfAlreadyRegistered.Keep`) | `IoC.cs:180-182`, `FieldCommissionIoC.cs:31` | list order; index test |
 | UncapturableHeroes after Enlistment (single `IInquiryAdapter` registration) | `IoC.cs:194-199` | list order; the existing `IndexOf` test becomes a list-index test |
 | Eager patch statics only after every registration | `IoC.cs:203-210`, `IoCRegistrationDisciplineTests` | phase 2 `InitializeStatics`; `IRegistrator` has no `Resolve`, so an eager resolve does not compile |
 | Contributor collections complete before first resolve (`ICampOverlayContributor`, `IPartySpottingContributor`) | `FieldCampIoC.cs:19-27` | same two-phase rule; `ResolveMany` order is registration order, so module order also fixes contributor order |
-| One engine model per slot: MarriageModel, AgentStatCalculateModel, AgentApplyDamageModel, BattleMoraleModel, MapVisibilityModel, BattleBannerBearersModel, BattleInitializationModel | `1059-1066`, `1214-1250`, `FieldCampIoC.cs:19-20` | a slot type in exactly one module's `GameModels` per target; a generic test enforces it |
-| TAOM models registered in `OnGameStart` so they follow SandBox's defaults | `1031-1034`, `1233-1246` | the model loop runs in `OnGameStart` |
-| Custom Battle mirrors two models on `BasicGameStarter` only | `1253-1268` | `ModelTarget.CustomBattle` |
-| Vanilla behavior removal before its TAOM replacement | `1006-1008` (InitialChildGeneration), `1443-1446` (LotrIssues) | inside the owning module's factory; `SuppressAll` removes vanilla types only (see above) |
-| Player Switcher character-creation handler at priority 1100, after TAOM's 1050; equal priorities throw | `969-972`; `CharacterCreationRegistrationBehavior.cs:9` | independent of list order; a later test reads both constants |
-| Mission behaviors tick in reverse add order; the tree logic must be added before `AdvancedCombatBehavior` | `1952-1958` | list order, asserted by index |
-| `MissionDiagnosticBehavior` added last among TAOM's inspected adds, `BattleLoadPhaseBehavior` after TAOM's adds | `2024-2055` | kernel tail |
-| Harmony census after every patch | `1871-1875` | kernel tail |
+| One engine model per slot: MarriageModel, AgentStatCalculateModel, AgentApplyDamageModel, BattleMoraleModel, MapVisibilityModel, BattleBannerBearersModel, BattleInitializationModel | `1078-1085`, `1233-1269`, `FieldCampIoC.cs:19-20` | a slot type in exactly one module's `GameModels` per target; a generic test enforces it |
+| TAOM models registered in `OnGameStart` so they follow SandBox's defaults | `1050-1053`, `1252-1265` | the model loop runs in `OnGameStart` |
+| Custom Battle mirrors two models on `BasicGameStarter` only | `1272-1287` | `ModelTarget.CustomBattle` |
+| Vanilla behavior removal before its TAOM replacement | `1025-1027` (InitialChildGeneration), `1462-1465` (LotrIssues) | inside the owning module's factory; `SuppressAll` removes vanilla types only (see above) |
+| Player Switcher character-creation handler at priority 1100, after TAOM's 1050; equal priorities throw | `988-991`; `CharacterCreationRegistrationBehavior.cs:9` | independent of list order; a later test reads both constants |
+| Mission behaviors tick in reverse add order; the tree logic must be added before `AdvancedCombatBehavior` | `1961-1967` | list order, asserted by index |
+| `MissionDiagnosticBehavior` added last among TAOM's inspected adds, `BattleLoadPhaseBehavior` after TAOM's adds | `2033-2064` | kernel tail |
+| Harmony census after every patch | `1879-1883` | kernel tail |
+| A notice raised before the main menu has no receiver; startup problems are shown once, in an inquiry, at the first `OnBeforeInitialModuleScreenSetAsRoot` (the startup inquiry rule, see Engine facts) | `620-621`, `642-647`; `lessons/localization-ui.md`; 009's `PatchCategoryApplierTests.SubModuleSource_OnSubModuleLoad_DoesNotReportPatchFailures` | `FeatureModuleHooks.NoticeFor`: ProcessLoad holds, MainMenu shows an inquiry (Step 1.4) |
 
-Two constraints in the prose are stale (lane finding COMP-06): FieldCamp's position comment in `IoC.cs:184-186` (the eager resolve it describes was removed in `16a58b51`) and the Patch25 "must be first" comment (`257`). Before the first gameplay feature with patches moves, the design calls for a one-off reflection script that lists every engine method patched by two or more TAOM categories; each such pair becomes an explicit list-order constraint with a test. Not part of this plan.
+Two constraints in the prose are stale (lane finding COMP-06): FieldCamp's position comment in `IoC.cs:184-186` (the eager resolve it describes was removed in `16a58b51`) and the Patch25 "must be first" comment (`270`). Before the first gameplay feature with patches moves, the design calls for a one-off reflection script that lists every engine method patched by two or more TAOM categories; each such pair becomes an explicit list-order constraint with a test. Not part of this plan.
 
 ### Conventions that bind this change
 
@@ -299,7 +389,8 @@ Two constraints in the prose are stale (lane finding COMP-06): FieldCamp's posit
 - **`.claude/rules/csharp-architecture.md`**: constructor injection, no service locator inside services, NSubstitute for mocks, `Reuse.Singleton` for services. **ADR-003/004/005**: no `#region`, no `[Obsolete]`, no `#if DEBUG`.
 - **`.claude/rules/simplicity-criterion.md`**: the contract carries every dimension now although the list is empty and the pilot uses two. The trade-off, stated: win, every later migration only deletes lines from the two single-owner files; cost, six small types and eight kernel lines before a second module uses them. That is the "improvement large enough to dominate its cost" row; say it in the commit body.
 - **Plan 009's source gate** (`PatchCategoryApplierTests.MainSource_AppliesEveryPatchCategoryThroughTheGuardedHelper`) fails on any direct `.PatchCategory(` call in `Main/**/*.cs` other than the one delegate in `SubModule.cs`. Never write `.PatchCategory(` in new Main code; modules apply categories through the `Func<string, bool>` the kernel passes in.
-- **Localization**: the on-screen fault notice is literal English, like plan 009's patch notice and "TAOM loaded successfully!". Do not use a `{=key}` string (the localization ratchet tests would fail on an unregistered key).
+- **Localization**: the fault notice (the inquiry's title `TAOM`, button `OK` and body, and the red line) is literal English, exactly like plan 009's `ReportPatchFailures`. Do not use a `{=key}` string (the localization ratchet tests would fail on an unregistered key).
+- **Startup notices (the startup inquiry rule, `docs/reviews/lessons/localization-ui.md`)**: nothing receives a chat line before the initial screen, and the initial screen clears the chat log after the splash video. A problem found during startup is held until TAOM's first `OnBeforeInitialModuleScreenSetAsRoot` and shown there with `InformationManager.ShowInquiry`; never a `DisplayMessage` from `OnSubModuleLoad` or `IoC.Configure`. See "Engine and library facts" for the receivers.
 - **Tests model**: container tests follow `TAOM.Tests/Features/AutoResolveDiagnostics/AutoResolveDiagnosticsWiringTests.cs` (`new Container()`, `RegisterInstance(Substitute.For<IModLogger>())`, `using var container`); logger assertions follow `TAOM.Tests/Core/Domain/RaceManagerTests.cs` (`_logger.Received(1).LogError(Arg.Is<string>(...))`).
 
 ### Decisions already taken (do not reopen)
@@ -309,7 +400,7 @@ Two constraints in the prose are stale (lane finding COMP-06): FieldCamp's posit
 - **The pilot's behavior stays a container singleton** (`r => r.Resolve<WandererAllegianceDialogBehavior>()`), exactly as `SubModule` resolved it. The design's `Reuse.Transient` for behaviors (lane finding COMP-02) is a separate, deferred change.
 - **`RegisterServices` takes `IRegistrator`**, so an eager `Resolve` during registration does not compile; `InitializeStatics` takes `IResolver`.
 - **Parked modules get only `RegisterServices`** (their services stay resolvable, as NavalTravel's are today); the runner skips their statics, categories, behaviors, models, mission behaviors and `OnPhase`. No log line for a parked module.
-- **Fault policy**: a module that throws is logged `[Module] <Id> failed in <step>: <exception>`, marked faulted and skipped in every later step of the session; the next module still runs; one red on-screen line per report point names the faulted modules. A module with `OwnsSaveData = true` fails CLOSED (rethrows) in service registration, static initialisation and campaign start. A failed patch category is plan 009's business (logged `[PatchApply]`, reported by `ReportPatchFailures`) and does not fault the module.
+- **Fault policy**: a module that throws is logged `[Module] <Id> failed in <step>: <exception>`, marked faulted and skipped in every later step of the session; the next module still runs. Each report point names the modules that faulted since the last one, in one notice chosen by who can receive it: faults from `IoC.Configure` (service registration, static initialisation) and from `ApplyPhase.ProcessLoad` are held; the `ApplyPhase.MainMenu` point shows them, with any MainMenu fault, in one inquiry of the same shape as 009's startup report (queued just before it); campaign start, `ApplyPhase.GameInit`, `ApplyPhase.FirstMission` and every mission start show a red chat line. (Re-cut: the first cut showed a red line at every point, including the two that nothing receives.) A module with `OwnsSaveData = true` fails CLOSED (rethrows) in service registration, static initialisation and campaign start. A failed patch category is plan 009's business (logged `[PatchApply]`, reported by `ReportPatchFailures`) and does not fault the module.
 - **No auto-discovery of modules, no `CoopRelevance`, no per-frame module tick, and the loop never reads MCM.** An explicit ordered list is what the ordering constraints need.
 - **The "declared category exists in the assembly" reflection test is deferred** to the first module that declares a category (nothing to check yet). This plan adds only the double-apply guard.
 
@@ -326,7 +417,7 @@ Run all of them from the worktree root. Never `./build.ps1` (it deploys into the
 | Docs | `python tools/lint_docs.py` | exit 0, 0 dead links |
 | Docs, commit gate | `python tools/lint_docs.py --fail-on-drift` | exit 0 (a PreToolUse hook runs this on commits touching feature docs) |
 
-**Known baseline at `b2e387db`** (clean worktree, orchestrator-measured): 10,239 tests, 10,235 passed, 2 failed, 2 not executed, 0 inconclusive. The 2 failures are `ElkConfigTests.TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and `AnimaliaMountWiringTests.AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`; both read the live, unversioned Armory install, which another session is editing. They are not caused by this or any plan: do not chase them and do not edit either file. The 2 not executed are deliberate `[Ignore]`s in `WargAttackServiceTests`. Plan 009 adds 9 tests (7 if its executor took its documented fallback), so your Step 0.0 total will be higher than 10,239: record it. Any failure other than the two Armory tests is yours.
+**Known baseline at `4c728dac`** (recorded in the Convergence section of plan 009's deep review, `docs/reviews/deep-review-009-guarded-patch-category-apply-2026-09-24.md`, after its last test edit; `4c728dac` itself changed no test): **Failed 2, Passed 10248, Skipped 2, Total 10252**. That is the first cut's `b2e387db` baseline (10,239 tests, 0 inconclusive) plus 009's 13 `PatchCategoryApplierTests`. The 2 failures are `ElkConfigTests.TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and `AnimaliaMountWiringTests.AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`; both read the live, unversioned Armory install, which other sessions edit. They are not caused by this or any plan: do not chase them and do not edit either file. The 2 not executed are deliberate `[Ignore]`s in `WargAttackServiceTests`. Record your own Step 0.0 total as `T0` even if it differs from 10,252 (the Armory tests can pass or fail with the live install); any failure other than the two Armory tests is yours.
 
 ## Scope
 
@@ -346,15 +437,15 @@ Run all of them from the worktree root. Never `./build.ps1` (it deploys into the
 
 - `Main/TAOM.csproj`, `TAOM.Tests/TAOM.Tests.csproj`, `Directory.Build.props`: not needed (SDK-style globbing picks up new `.cs` files). If you believe one needs a change, STOP and report the exact line.
 - Any other feature's wiring in `SubModule.cs` or `IoC.cs`, `ManualPatchApplicator.cs`, `PatchCategoryApplier.cs`, and plan 009's helpers.
-- Any test file not listed, including `ResetForUnloadSweepTests`'s declaration scan and `CoopVetoClassificationTests` (leave its private `StripComments` in place).
+- Any test file not listed, including `ResetForUnloadSweepTests`'s declaration scan, `CoopVetoClassificationTests` (leave its private `StripComments` in place) and plan 009's `PatchCategoryApplierTests` (it already strips comments itself; its source gates must stay green unchanged).
 - `CHANGELOG.md` (another session holds uncommitted edits; the orchestrator writes the entry), everything under `.claude/` (including `.claude/rules/gamemodels.md`), `docs/INDEX.md`, `docs/reference/feature-map.md`, `plans/README.md`.
 - Behavior reuse (`Reuse.Singleton` stays), any save-format change, any MCM setting.
 
 ## Git workflow
 
-- Work in a new worktree off `bannerlord-1.5.x`, never in `E:\repos\TAOM` itself (its working tree holds another live session's uncommitted edits, including to `Main/SubModule.cs` and `Main/IoC.cs`):
-  `git -C E:/repos/TAOM worktree add E:/repos/wt-plan-018 -b plan/018-composition-root bannerlord-1.5.x`
-  Run every command in this plan from `E:/repos/wt-plan-018`. If the branch or directory already exists, STOP and report; do not delete, reuse or reset either.
+- Work in a new worktree at commit `4c728dac` (the reviewed tip of `improve/009-guarded-patch-category-apply`; plan 009 is not yet merged into `bannerlord-1.5.x`), never in `E:\repos\TAOM` itself (its working tree holds other sessions' uncommitted edits):
+  `git -C E:/repos/TAOM worktree add E:/repos/wt-plan-018 -b plan/018-composition-root 4c728dac`
+  Run every command in this plan from `E:/repos/wt-plan-018`. If the branch or directory already exists, STOP and report; do not delete, reuse or reset either. Do not create archive extractions or other copies of the repo (the C: drive is nearly full); the worktree on E: is the only checkout you need.
 - The worktree checks out with CRLF line endings (`core.autocrlf=true`) and `SubModule.cs` starts with a UTF-8 BOM. Use the Edit tool; never `sed -i`. Create new files with the Write tool (write scripts to the session scratchpad, not heredocs).
 - Commit subject: `<type>(<scope>): v<version> - <description>`, where the version is the `<Version value="..."/>` in `Main/_Module/SubModule.xml` (`v2.0.30` at planning time; re-read it before each commit). At most 72 characters (check with `git log -1 --format=%s | awk '{print length}'`), body wrapped at 72, **no AI attribution trailer** (no `Co-Authored-By`).
 - Stage explicit paths only (`git add <path> ...`), never `git add -A` or `git commit -a`.
@@ -363,7 +454,7 @@ Run all of them from the worktree root. Never `./build.ps1` (it deploys into the
   2. `refactor(composition): v2.0.30 - add the feature-module runner, empty` (69 chars): the six `Main/Composition` files, both `TAOM.Tests/Composition` files, `Main/IoC.cs`, `Main/SubModule.cs`. Body states the simplicity trade-off (see Conventions). Trailers: `Not-tested: FeatureModuleHooks against a live engine (needs the game)` and `Save-compat: no save data touched`.
   3. `refactor(composition): v2.0.30 - move WandererAllegiance into a module` (70 chars): the module, `WandererAllegianceIoC.cs`, `FeatureModules.cs`, `FeatureModulesTests.cs`, `WandererAllegianceWiringTests.cs`, `Main/IoC.cs`, `Main/SubModule.cs`, `docs/features/wanderer-allegiance.md`. Trailers: `Not-tested: in-game wanderer refusal (needs a campaign)` and `Save-compat: the behavior's SyncData is empty; no save data touched`.
 - No commit stages a `.claude/*` path. The CHANGELOG hook (`.claude/hooks/check-changelog-changed.sh`) can still deny one: it changes to `CLAUDE_PROJECT_DIR` (the main tree, `E:\repos\TAOM`) and reads that tree's index, so another session's staged `.claude/` files there block your commits. If any hook denies a commit, STOP and report its message verbatim; never bypass a hook and never edit an out-of-scope file to satisfy one.
-- Never push, never open a PR, never merge. **Merge note for the orchestrator**: the main tree has another session's uncommitted edits in both single-owner files: `Main/IoC.cs` inserts two lines after line 123 (near the Elk registration), `Main/SubModule.cs` inserts four lines after line 1456 (above the game-init guard) and one `AddTaomBehavior` line after line 1965. Merging this branch needs a rebase over that work once it is committed. After the rebase, re-run `FeatureModulesTests` (the kernel wiring test pins the runner calls between their anchors) and the full suite.
+- Never push, never open a PR, never merge. **Merge note for the orchestrator**: this branch sits on `4c728dac`, so it carries plan 009's four commits; merge plan 009 first (or the two together). `bannerlord-1.5.x` has two commits that `4c728dac` lacks: `473e4ccc` (docs only) and `709649c3`, which edits both single-owner files: `Main/IoC.cs` gains the Animalia and MonsterSize registrations after the Elk registration (line 123), and `Main/SubModule.cs` gains four lines above the game-init guard (a `MonsterSize` `ApplyMonsterSizes()` call after the `StampSaveLoadPhase` line) and one `AddTaomBehavior(new Features.Animalia.AnimaliaMissionBehavior());` after the Elk mission behavior. None of those lines is next to an anchor this plan uses. `709649c3` also adds `AnimaliaWiringTests` and `MonsterSizeWiringTests`, which read `SubModule.cs` or `IoC.cs` as raw text; they stay raw (outside this plan's 26). After the merge, re-run `FeatureModulesTests` (the kernel wiring test pins the runner calls between their anchors), `PatchCategoryApplierTests` and the full suite.
 
 ## Steps
 
@@ -493,7 +584,7 @@ public static class RepoPaths
     /// <summary>
     /// Blanks // and /* */ comments to spaces, keeping length and line breaks so IndexOf offsets and
     /// line numbers still line up. Not string-literal aware: a "//" inside a string literal also blanks
-    /// the rest of that line. Main/SubModule.cs and Main/IoC.cs had no such literal at b2e387db.
+    /// the rest of that line. Main/SubModule.cs and Main/IoC.cs had no such literal at 4c728dac.
     /// </summary>
     public static string StripComments(string source) =>
         CommentPattern.Replace(source, m => Regex.Replace(m.Value, "[^\n]", " "));
@@ -577,7 +668,7 @@ Then:
 
 ### Step 0.3: Move the other 25 files onto the reader
 
-For each file in the table (paths under `TAOM.Tests/`, line numbers at `b2e387db`; `GameModelOverrideBindingTests` was done in 0.2), apply these rules and nothing else:
+For each file in the table (paths under `TAOM.Tests/`, line numbers at `4c728dac`, the same as at the first cut's `b2e387db` because plan 009 replaced one category-string line in nine of these files without adding or removing lines; `GameModelOverrideBindingTests` was done in 0.2), apply these rules and nothing else:
 
 - **Rule A (replace the read)**: every expression that reads `Main/SubModule.cs` or `Main/IoC.cs` becomes `RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true)` or `RepoPaths.ReadSource("Main/IoC.cs", stripComments: true)`. Where the read was spread over a path variable, a `File.Exists` assert and a `File.ReadAllText`, collapse it into one declaration that keeps the name the assertions use (for example `var source = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);`). If a `var repoRoot = FindRepoRoot();` local fed only that path, delete it too (Patch80 line 289, SharedMovementOrderPostfixTests line 56). Always call it qualified as `RepoPaths.ReadSource`: several files have their own private `ReadSource`, which would otherwise win.
 - **Rule A, inline reads (rows 7 and 14)**: in `Patch80KingdomVoteDeadlockBindingTests.SubModule_AppliesThePatchCategory` and in the Patch82 test, `subModule` is the *path* and the text is passed inline as `File.ReadAllText(subModule)`. Reuse the name `subModule` for the text. Patch80 before (lines 289-294; the expected string is as plan 009 left it):
@@ -703,7 +794,7 @@ sys.exit(1 if old else 0)
 ```
 
 **Verify**:
-- Before your edits (run it once at the start of this step, before touching any of the 25 files): `old-style reads: 41` (31 SubModule reads, 10 IoC reads), `new reads: {'Main/SubModule.cs': 2, 'Main/IoC.cs': 0}`, exit 1. At `b2e387db` the 26 files held 42 old-style reads; Step 0.2 already converted the one at `GameModelOverrideBindingTests.cs:55` and added a second `RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true)` in the new `ParkedModels` test, which the checker counts as new reads. If the old-style count is not 41 before you start, STOP.
+- Before your edits (run it once at the start of this step, before touching any of the 25 files): `old-style reads: 41` (31 SubModule reads, 10 IoC reads), `new reads: {'Main/SubModule.cs': 2, 'Main/IoC.cs': 0}`, exit 1. At `4c728dac` the 26 files hold 42 old-style reads (32 SubModule, 10 IoC; re-counted during the re-cut, the same as at `b2e387db`); Step 0.2 already converted the one at `GameModelOverrideBindingTests.cs:55` and added a second `RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true)` in the new `ParkedModels` test, which the checker counts as new reads. If the old-style count is not 41 before you start, STOP.
 - After your edits: `old-style reads: 0`, `new reads: {'Main/SubModule.cs': 33, 'Main/IoC.cs': 10}`, exit 0 (31 converted SubModule reads plus the two in `GameModelOverrideBindingTests`).
 - Build command → exit 0.
 - Tests command → only the two known Armory tests may fail; total = `T0` + 5 (4 `RepoPathsTests` plus `ParkedModels_AreRealModels_ThatSubModuleDoesNotRegister`). If any of the 26 files' tests fails, see STOP conditions.
@@ -720,6 +811,10 @@ using System.Collections.Generic;
 using DryIoc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+
+// DryIoc and NSubstitute both export an `Arg` type (the DischargeConsequenceServiceTests.cs
+// precedent). Every `Arg` here is an NSubstitute argument matcher.
+using Arg = NSubstitute.Arg;
 using TAOM.Composition;
 using TAOM.Core.Logging;
 
@@ -981,7 +1076,7 @@ public class ModuleRunnerTests
 }
 ```
 
-**Verify (RED)**: filtered tests with `ModuleRunnerTests` → the test build fails with `error CS0234` or `CS0246` for `TAOM.Composition` / `ModuleRunner` (the namespace and types do not exist yet).
+**Verify (RED)**: filtered tests with `ModuleRunnerTests` → the test build fails with `error CS0234` or `CS0246` for `TAOM.Composition` / `ModuleRunner` (the namespace and types do not exist yet). It must NOT report `error CS0104` (`'Arg' is an ambiguous reference between 'DryIoc.Arg' and 'NSubstitute.Arg'`): DryIoc 4.8.8 exports `DryIoc.Arg`, and the `using Arg = NSubstitute.Arg;` alias above is what prevents it. If CS0104 appears, the alias was dropped; restore it exactly as shown, then re-run.
 
 ### Step 1.2 (GREEN): Create the composition types
 
@@ -1395,10 +1490,15 @@ public class FeatureModulesTests
     {
         var code = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
+        // OnSubModuleLoad reports nothing (plan 009: no receiver yet), so its runner call is pinned
+        // between its last category and the next method, not before a report call.
         AssertOnceBetween(code, "TryPatchCategory(\"Patch42_CastleRecruitment\");",
-            "FeatureModuleHooks.RunPhase(ApplyPhase.ProcessLoad, TryPatchCategory);", "ReportPatchFailures(\"module load\");");
+            "FeatureModuleHooks.RunPhase(ApplyPhase.ProcessLoad, TryPatchCategory);",
+            "protected override void OnBeforeInitialModuleScreenSetAsRoot()");
+        // Before 009's startup inquiry, so a module category that fails at MainMenu is in it.
         AssertOnceBetween(code, "TryPatchCategory(\"Patch55_BasicTableauRaceGuard\");",
-            "FeatureModuleHooks.RunPhase(ApplyPhase.MainMenu, TryPatchCategory);", "ReportPatchFailures(\"main menu setup\");");
+            "FeatureModuleHooks.RunPhase(ApplyPhase.MainMenu, TryPatchCategory);",
+            "ReportPatchFailures(\"startup\", persistent: true);");
         AssertOnceBetween(code, "RegisterCampaignLifeBehaviors(campaignStarter);",
             "FeatureModuleHooks.AddGameStartContent(gameStarterObject);", "public override void OnGameLoaded(");
         AssertOnceBetween(code, "TryPatchCategory(\"Patch69_TournamentEndGuard\");",
@@ -1440,12 +1540,30 @@ using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Composition;
 
+/// <summary>How a report point shows the modules that faulted since the last one.</summary>
+internal enum FaultNotice
+{
+    /// <summary>Nothing receives a notice yet: keep the faults for the main-menu inquiry.</summary>
+    Hold,
+
+    /// <summary>
+    /// An inquiry: GauntletQueryManager queues it and the initial screen does not clear it, unlike
+    /// the chat log, which the initial screen clears after the splash video.
+    /// </summary>
+    Inquiry,
+
+    /// <summary>A red chat line: in a game the chat log exists and nothing clears it first.</summary>
+    ChatLine,
+}
+
 /// <summary>
 /// The one line each SubModule hook calls: the engine-facing half of <see cref="ModuleRunner"/>.
-/// Each method runs the modules for its phase and then shows one red line if any module faulted.
-/// Nothing here throws, except the runner's deliberate fail-closed rethrow for a save-owning module
-/// at campaign start. Every factory runs before anything is handed to the engine, so a module whose
-/// factory throws adds nothing.
+/// Each method runs the modules for its phase and then reports any module that faulted, in the one
+/// notice a player can see at that point (<see cref="NoticeFor"/>; the startup inquiry rule in
+/// docs/reviews/lessons/localization-ui.md): faults from IoC.Configure and OnSubModuleLoad wait for
+/// the main-menu inquiry, in-game faults get a red line. Nothing here throws, except the runner's
+/// deliberate fail-closed rethrow for a save-owning module at campaign start. Every factory runs
+/// before anything is handed to the engine, so a module whose factory throws adds nothing.
 /// </summary>
 internal static class FeatureModuleHooks
 {
@@ -1456,8 +1574,22 @@ internal static class FeatureModuleHooks
         if (runner == null || resolver == null) return;
 
         runner.RunPhase(phase, tryPatchCategory, resolver);
-        ReportFaults(runner);
+        ReportFaults(runner, NoticeFor(phase));
     }
+
+    /// <summary>
+    /// ProcessLoad runs in OnSubModuleLoad, before Native builds the chat log and the inquiry manager,
+    /// so its faults (and those of service registration and static initialisation, which run in
+    /// IoC.Configure even earlier) are held. MainMenu runs once per process in the first
+    /// OnBeforeInitialModuleScreenSetAsRoot, where only an inquiry survives the splash video. GameInit
+    /// and FirstMission run inside a game, where the chat log receives a red line.
+    /// </summary>
+    internal static FaultNotice NoticeFor(ApplyPhase phase) => phase switch
+    {
+        ApplyPhase.ProcessLoad => FaultNotice.Hold,
+        ApplyPhase.MainMenu => FaultNotice.Inquiry,
+        _ => FaultNotice.ChatLine,
+    };
 
     /// <summary>
     /// OnGameStart: campaign behaviors and campaign models on a CampaignGameStarter; Custom Battle
@@ -1493,7 +1625,8 @@ internal static class FeatureModuleHooks
             });
         }
 
-        ReportFaults(runner);
+        // OnGameStart runs during game loading, after Module.OnBeforeGameStart's ClearAllMessages.
+        ReportFaults(runner, FaultNotice.ChatLine);
     }
 
     /// <summary>OnMissionBehaviorInitialize: hands each behavior to SubModule's AddTaomBehavior, which stamps [BattleLoad].</summary>
@@ -1512,7 +1645,7 @@ internal static class FeatureModuleHooks
                 addTaomBehavior(behavior);
         });
 
-        ReportFaults(runner);
+        ReportFaults(runner, FaultNotice.ChatLine);
     }
 
     private static List<(GameModelDecl Decl, GameModel Model)> CreateModels(
@@ -1528,14 +1661,24 @@ internal static class FeatureModuleHooks
         return models;
     }
 
-    private static void ReportFaults(ModuleRunner runner)
+    // Hold leaves the runner's list untouched, so the next report point (the main-menu inquiry)
+    // still names every earlier fault. The inquiry is built exactly like plan 009's startup report in
+    // SubModule.ReportPatchFailures; when both have something to say, GauntletQueryManager queues
+    // them one after the other (this one first, because the runner call precedes 009's report).
+    private static void ReportFaults(ModuleRunner runner, FaultNotice notice)
     {
+        if (notice == FaultNotice.Hold) return;
+
         var summary = runner.TakeFaultSummary();
         if (summary == null) return;
 
         try
         {
-            InformationManager.DisplayMessage(new InformationMessage(summary, Colors.Red));
+            if (notice == FaultNotice.Inquiry)
+                InformationManager.ShowInquiry(new InquiryData(
+                    "TAOM", summary, true, false, "OK", string.Empty, null, null));
+            else
+                InformationManager.DisplayMessage(new InformationMessage(summary, Colors.Red));
         }
         catch
         {
@@ -1544,6 +1687,24 @@ internal static class FeatureModuleHooks
     }
 }
 ```
+
+Then append this test to `TAOM.Tests/Composition/FeatureModulesTests.cs`, inside the class, directly after `Kernel_SubModule_CallsEachRunnerHookOnce_AtTheEndOfItsFeatureBlock` (it pins the startup inquiry rule for module faults, as 009's `SubModuleSource_OnSubModuleLoad_DoesNotReportPatchFailures` does for patch failures):
+
+```csharp
+    // Nothing receives a chat line before the initial screen, and the initial screen clears the chat
+    // log after the splash video (docs/reviews/lessons/localization-ui.md). Startup faults are held
+    // for the main-menu inquiry; in-game phases have a chat log to take a red line.
+    [TestMethod]
+    public void FaultNotice_HoldsProcessLoad_InquiresAtMainMenu_AndUsesAChatLineInGame()
+    {
+        Assert.AreEqual(FaultNotice.Hold, FeatureModuleHooks.NoticeFor(ApplyPhase.ProcessLoad));
+        Assert.AreEqual(FaultNotice.Inquiry, FeatureModuleHooks.NoticeFor(ApplyPhase.MainMenu));
+        Assert.AreEqual(FaultNotice.ChatLine, FeatureModuleHooks.NoticeFor(ApplyPhase.GameInit));
+        Assert.AreEqual(FaultNotice.ChatLine, FeatureModuleHooks.NoticeFor(ApplyPhase.FirstMission));
+    }
+```
+
+It calls only `NoticeFor`, which touches no engine type, so it runs without the game.
 
 Edit `Main/IoC.cs` (Edit tool; nothing else):
 
@@ -1579,8 +1740,8 @@ Edit `Main/IoC.cs` (Edit tool; nothing else):
 Edit `Main/SubModule.cs` (Edit tool; nothing else):
 
 1. Add `using TAOM.Composition;` to the using block (for example directly after `using TAOM.Adapters;`).
-2. `OnSubModuleLoad`: on the line directly before `        ReportPatchFailures("module load");`, add `        FeatureModuleHooks.RunPhase(ApplyPhase.ProcessLoad, TryPatchCategory);`.
-3. `OnBeforeInitialModuleScreenSetAsRoot`: inside `if (!_basicTableauGuardApplied)`, on the line directly before `            ReportPatchFailures("main menu setup");`, add `            FeatureModuleHooks.RunPhase(ApplyPhase.MainMenu, TryPatchCategory);`.
+2. `OnSubModuleLoad`: on a new line directly after `        TryPatchCategory("Patch42_CastleRecruitment");` (`SubModule.cs:619`) and before the comment `        // No ReportPatchFailures here: nothing receives a message yet (see the startup report in`, add `        FeatureModuleHooks.RunPhase(ApplyPhase.ProcessLoad, TryPatchCategory);`. Do not add any report call here: `FeatureModuleHooks` holds ProcessLoad faults itself, and 009's `SubModuleSource_OnSubModuleLoad_DoesNotReportPatchFailures` gate fails on a `ReportPatchFailures(` in this method.
+3. `OnBeforeInitialModuleScreenSetAsRoot`: inside `if (!_basicTableauGuardApplied)`, on a new line directly after `            TryPatchCategory("Patch55_BasicTableauRaceGuard");` (`SubModule.cs:641`) and before the comment `            // Reports OnSubModuleLoad's failures and Patch55's together. The earliest a notice can`, add `            FeatureModuleHooks.RunPhase(ApplyPhase.MainMenu, TryPatchCategory);`. It must precede `ReportPatchFailures("startup", persistent: true);` so a module category that fails here is in 009's startup inquiry.
 4. `OnGameStart`: after the closing brace of `if (gameStarterObject is CampaignGameStarter campaignStarter) { ... }` and before the method's own closing brace, add (with a blank line above it):
    ```csharp
 
@@ -1588,8 +1749,8 @@ Edit `Main/SubModule.cs` (Edit tool; nothing else):
            // Battle starter gets only CustomBattle-target models).
            FeatureModuleHooks.AddGameStartContent(gameStarterObject);
    ```
-5. `OnGameInitializationFinished`: on the line directly before `        ReportPatchFailures("game initialization");`, add `        FeatureModuleHooks.RunPhase(ApplyPhase.GameInit, TryPatchCategory);`.
-6. `OnMissionBehaviorInitialize`, first-mission block: inside `if (!_missionTimePatchesApplied)`, on the line directly before `            ReportPatchFailures("mission start");`, add `            FeatureModuleHooks.RunPhase(ApplyPhase.FirstMission, TryPatchCategory);`.
+5. `OnGameInitializationFinished`: on the line directly before `        ReportPatchFailures("game initialization");` (`SubModule.cs:1872`, after `        TryPatchCategory("Patch69_TournamentEndGuard");`), add `        FeatureModuleHooks.RunPhase(ApplyPhase.GameInit, TryPatchCategory);`.
+6. `OnMissionBehaviorInitialize`, first-mission block: inside `if (!_missionTimePatchesApplied)`, on the line directly before `            ReportPatchFailures("mission start");` (`SubModule.cs:1931`), add `            FeatureModuleHooks.RunPhase(ApplyPhase.FirstMission, TryPatchCategory);`.
 7. `OnMissionBehaviorInitialize`, behaviors: directly after
    ```csharp
            if (colorStore != null)
@@ -1606,8 +1767,9 @@ Edit `Main/SubModule.cs` (Edit tool; nothing else):
 - `grep -c "FeatureModuleHooks\." Main/SubModule.cs` → `6`.
 - `grep -c "modules\.RegisterServices(container);\|modules\.InitializeStatics(container);" Main/IoC.cs` → `2`.
 - `grep -rn "\.PatchCategory(" Main/Composition` → no output.
-- Filtered tests with `FeatureModulesTests` → 4 passed. Filtered tests with `PatchCategoryApplierTests` → 0 failed (plan 009's source gate still sees exactly one direct call).
-- Tests command → only the two known Armory tests may fail; total = `T0` + 5 + 17 (13 `ModuleRunnerTests`, 4 `FeatureModulesTests`). With an empty module list the runtime behaviour is unchanged; the full suite is the parity proof.
+- `grep -c "ReportPatchFailures(" Main/SubModule.cs` → `4` (unchanged: this plan adds no report call).
+- Filtered tests with `FeatureModulesTests` → 5 passed (the four from Step 1.3 plus `FaultNotice_HoldsProcessLoad_InquiresAtMainMenu_AndUsesAChatLineInGame`). Filtered tests with `PatchCategoryApplierTests` → 13 passed, 0 failed (plan 009's source gates still see exactly one direct `.PatchCategory(` call, no report in `OnSubModuleLoad` and the startup inquiry in `OnBeforeInitialModuleScreenSetAsRoot`).
+- Tests command → only the two known Armory tests may fail; total = `T0` + 5 + 18 (13 `ModuleRunnerTests`, 5 `FeatureModulesTests`). With an empty module list the runtime behaviour is unchanged; the full suite is the parity proof.
 
 Then make commit 2.
 
@@ -1703,7 +1865,7 @@ Append these members to `FeatureModulesTests` (inside the class, after `ParkedMo
     }
 ```
 
-**Verify**: build command → exit 0. Filtered tests with `FeatureModulesTests` → 9 passed (the five new ones pass trivially on the empty list).
+**Verify**: build command → exit 0. Filtered tests with `FeatureModulesTests` → 10 passed (the five new ones pass trivially on the empty list).
 
 ### Step 2.2 (RED): Convert the pilot's text asserts
 
@@ -1760,7 +1922,17 @@ In `TAOM.Tests/Features/WandererAllegiance/WandererAllegianceWiringTests.cs`:
 
 ### Step 2.3 (GREEN for the build, RED for the double-wiring guards): Create the module
 
-1. `Main/Features/WandererAllegiance/WandererAllegianceIoC.cs`: change only the parameter type, `public static void RegisterWandererAllegianceFeature(IContainer container)` → `public static void RegisterWandererAllegianceFeature(IRegistrator container)`. Keep the name `container` (the `IoCRegistrationDisciplineTests` scan reads `container.Resolve` inside register bodies). In its class summary, replace the sentence fragment `and resolved by <c>SubModule.OnGameStart</c> for <c>AddBehavior</c> (the FieldCommission precedent)` with `and resolved by <see cref="WandererAllegianceModule"/>'s behavior decl at campaign start`.
+1. `Main/Features/WandererAllegiance/WandererAllegianceIoC.cs`: change only the parameter type, `public static void RegisterWandererAllegianceFeature(IContainer container)` → `public static void RegisterWandererAllegianceFeature(IRegistrator container)`. Keep the name `container` (the `IoCRegistrationDisciplineTests` scan reads `container.Resolve` inside register bodies). In its class summary, the fragment to replace spans two lines (lines 7-8 at `4c728dac`; match both lines exactly, as one Edit):
+   ```csharp
+   /// and resolved by <c>SubModule.OnGameStart</c> for <c>AddBehavior</c> (the FieldCommission
+   /// precedent). Depends on <c>IAlignmentService</c> (ExecutionIoC) and
+   ```
+   Replace those two lines with:
+   ```csharp
+   /// and resolved by <see cref="WandererAllegianceModule"/>'s behavior decl at campaign start.
+   /// Depends on <c>IAlignmentService</c> (ExecutionIoC) and
+   ```
+   Verify: `grep -c "FieldCommission" Main/Features/WandererAllegiance/WandererAllegianceIoC.cs` prints `0` and `grep -c "WandererAllegianceModule" Main/Features/WandererAllegiance/WandererAllegianceIoC.cs` prints `1`. If the first prints anything else, the Edit did not match; STOP and re-read the file.
 2. Create `Main/Features/WandererAllegiance/WandererAllegianceModule.cs`:
    ```csharp
    using System.Collections.Generic;
@@ -1801,11 +1973,11 @@ In `TAOM.Tests/Features/WandererAllegiance/WandererAllegianceWiringTests.cs`:
 **Verify**:
 - Build command → exit 0.
 - Filtered tests with `WandererAllegianceWiringTests` → 1 failed, `IoC_NoLongerRegistersTheFeatureByHand`; the other six pass.
-- Filtered tests with `FeatureModulesTests` → 1 failed, `EveryDeclaredCampaignBehavior_IsDeclaredOnce_AndSubModuleNoLongerAddsIt`, naming `WandererAllegianceDialogBehavior` and the `WandererAllegiance` module. These two failures are the guards catching a migration that has not deleted its hand wiring yet.
+- Filtered tests with `FeatureModulesTests` → 1 failed (the other nine pass), `EveryDeclaredCampaignBehavior_IsDeclaredOnce_AndSubModuleNoLongerAddsIt`, naming `WandererAllegianceDialogBehavior` and the `WandererAllegiance` module. These two failures are the guards catching a migration that has not deleted its hand wiring yet.
 
 ### Step 2.4 (GREEN): Delete the hand wiring
 
-1. `Main/IoC.cs`: delete the whole line `        Features.WandererAllegiance.WandererAllegianceIoC.RegisterWandererAllegianceFeature(container);` (line 109 at `b2e387db`).
+1. `Main/IoC.cs`: delete the whole line `        Features.WandererAllegiance.WandererAllegianceIoC.RegisterWandererAllegianceFeature(container);` (line 109 at `4c728dac`).
 2. `Main/SubModule.cs`, in `RegisterCampaignLifeBehaviors`: delete the three comment lines that start `        // WandererAllegiance (#575): a wanderer refuses to be hired across the Free/Evil line. Two`, the line `        campaignStarter.AddBehavior(IoC.Resolve<Features.WandererAllegiance.Hooks.WandererAllegianceDialogBehavior>());`, and one of the two blank lines that then sit together, so exactly one blank line separates the AlignmentDesertion block from the `// EliteEmissary` comment.
 
 **Verify**:
@@ -1813,7 +1985,7 @@ In `TAOM.Tests/Features/WandererAllegiance/WandererAllegianceWiringTests.cs`:
 - `grep -c "WandererAllegiance" Main/SubModule.cs` → `0`; `grep -c "WandererAllegiance" Main/IoC.cs` → `0`.
 - `grep -c "new Features.WandererAllegiance.WandererAllegianceModule()" Main/Composition/FeatureModules.cs` → `1`.
 - `grep -rn "RegisterWandererAllegianceFeature" Main --include=*.cs` → exactly two hits, the definition in `WandererAllegianceIoC.cs` and the call in `WandererAllegianceModule.cs` (plain `grep`, because `git grep` does not see the still-untracked module file).
-- Filtered tests with `WandererAllegianceWiringTests` → 7 passed. Filtered tests with `FeatureModulesTests` → 9 passed.
+- Filtered tests with `WandererAllegianceWiringTests` → 7 passed. Filtered tests with `FeatureModulesTests` → 10 passed.
 - Rerun `python <scratchpad>/check_reads_018.py` → `old-style reads: 0`, `new reads: {'Main/SubModule.cs': 32, 'Main/IoC.cs': 10}` (Step 2.2 deleted one SubModule read and one IoC read and added one IoC read).
 
 ### Step 2.5: Update the feature doc
@@ -1822,7 +1994,7 @@ In `docs/features/wanderer-allegiance.md` (no em or en dashes in anything you wr
 
 Each block below holds the exact new line (the fence is not part of the text).
 
-1. Replace the table row that begins with the `WandererAllegianceIoC.cs` path (line 179 at `b2e387db`, ending "called from `Main/IoC.cs` after MarriageAlignment") with:
+1. Replace the table row that begins with the `WandererAllegianceIoC.cs` path (line 179 at `4c728dac`, ending "called from `Main/IoC.cs` after MarriageAlignment") with:
    ```markdown
    | `Main/Features/WandererAllegiance/WandererAllegianceIoC.cs` | DryIoc registration, called by `WandererAllegianceModule.RegisterServices` |
    ```
@@ -1841,7 +2013,7 @@ Each block below holds the exact new line (the fence is not part of the text).
 
 **Verify**:
 - Build command → exit 0, 0 errors.
-- Tests command → only `TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist` may fail; total = `T0` + 28 (Step 0: +5, Step 1: +17, Step 2: +6, which is five generic tests plus three pilot tests minus the two deleted).
+- Tests command → only `TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist` may fail; total = `T0` + 29 (Step 0: +5, Step 1: +18, Step 2: +6, which is five generic tests plus three pilot tests minus the two deleted).
 - `python tools/validate_moduledata.py` → 0 errors.
 - `git status --porcelain` → only in-scope paths. Build and test output (`bin/`, `obj/`, `TestResults/`) is gitignored; if any other path appears, STOP and report it rather than deleting it.
 
@@ -1859,39 +2031,41 @@ Then make commit 3. Do not push.
 | same | `ParkedModels_AreRealModels_ThatSubModuleDoesNotRegister` (new) | the allowlist cannot go stale in either direction |
 | 25 other files | unchanged assertions on the comment-stripped view | the comment-shaped hole is closed for every wiring assert |
 | `TAOM.Tests/Composition/ModuleRunnerTests.cs` | 13 tests (Step 1.1) | list order; parked (registered, otherwise skipped); isolation; fault persists; save owners fail closed in a fail-closed step and are isolated in a fail-open one; category phase filter and order; failed category not a fault; summary text and clearing; throwing logger; base defaults |
-| `TAOM.Tests/Composition/FeatureModulesTests.cs` | 9 tests (Steps 1.3, 2.1) | unique ids; parked reasons; kernel runner calls once each between their anchors in `IoC.cs` and `SubModule.cs`; each behavior, mission behavior, model slot and category declared once and not also hand-wired; save-persisting behaviors force `OwnsSaveData` |
+| `TAOM.Tests/Composition/FeatureModulesTests.cs` | 10 tests (Steps 1.3, 1.4, 2.1) | unique ids; parked reasons; kernel runner calls once each between their anchors in `IoC.cs` and `SubModule.cs`; startup module faults held for the main-menu inquiry, in-game faults a red line (`NoticeFor`); each behavior, mission behavior, model slot and category declared once and not also hand-wired; save-persisting behaviors force `OwnsSaveData` |
 | `TAOM.Tests/Features/WandererAllegiance/WandererAllegianceWiringTests.cs` | 3 new, 2 removed | listed once; not hand-registered in IoC; module handshake against a real DryIoc container with fakes, singleton parity |
 
 Structural pattern: `ModuleRunnerTests` follows `TAOM.Tests/Core/Domain/RaceManagerTests.cs` for NSubstitute logger assertions; the handshake follows `TAOM.Tests/Features/AutoResolveDiagnostics/AutoResolveDiagnosticsWiringTests.cs`.
 
-Structurally untestable here (name them in the `Not-tested:` trailers): `FeatureModuleHooks` against a live engine (a real `CampaignGameStarter`, `BasicGameStarter`, `Mission` and `InformationManager`), and the in-game refusal dialogue after the move. Owed by whoever deploys this: start a campaign with a Free-aligned player, talk to an Evil-culture wanderer, confirm the refusal line; the log must show no `[Module]` line.
+Structurally untestable here (name them in the `Not-tested:` trailers): `FeatureModuleHooks` against a live engine (a real `CampaignGameStarter`, `BasicGameStarter`, `Mission` and `InformationManager`, including whether the main-menu fault inquiry and the in-game red line actually appear; only the phase-to-notice mapping is unit-tested), and the in-game refusal dialogue after the move. Owed by whoever deploys this: start a campaign with a Free-aligned player, talk to an Evil-culture wanderer, confirm the refusal line; the log must show no `[Module]` line.
 
 ## Done criteria
 
 ALL must hold, run from the worktree root:
 
 - [ ] `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId=` exits 0 with 0 errors
-- [ ] `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`: the only failures are the two named Armory tests; total is `T0` + 28
-- [ ] `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter "FullyQualifiedName~TAOM.Tests.Composition"` → 22 passed, 0 failed
+- [ ] `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`: the only failures are the two named Armory tests; total is `T0` + 29
+- [ ] `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter "FullyQualifiedName~TAOM.Tests.Composition"` → 23 passed, 0 failed
 - [ ] `python <scratchpad>/check_reads_018.py` exits 0 and prints `new reads: {'Main/SubModule.cs': 32, 'Main/IoC.cs': 10}`
 - [ ] `grep -c "FeatureModuleHooks\." Main/SubModule.cs` → `6`
 - [ ] `grep -c "WandererAllegiance" Main/SubModule.cs Main/IoC.cs` → `Main/SubModule.cs:0` and `Main/IoC.cs:0`
 - [ ] `grep -rn "\.PatchCategory(" Main/Composition Main/Features/WandererAllegiance` → no output
 - [ ] `grep -rln "#region\|\[Obsolete\|#if DEBUG" Main/Composition Main/Features/WandererAllegiance/WandererAllegianceModule.cs` → no output
 - [ ] `python tools/lint_docs.py` exits 0
-- [ ] `git status --porcelain` prints nothing after the three commits; `git diff --name-only bannerlord-1.5.x..HEAD` lists only in-scope paths (no `.claude/`, `CHANGELOG.md` or `plans/` path); `git log --format=%B -3` shows no `Co-Authored-By`
+- [ ] `git status --porcelain` prints nothing after the three commits; `git diff --name-only 4c728dac..HEAD` lists only in-scope paths (no `.claude/`, `CHANGELOG.md` or `plans/` path); `git log --format=%B -3` shows no `Co-Authored-By`
 
 ## STOP conditions
 
 Stop and report back (do not improvise) if:
 
-- The precondition fails: `Main/PatchCategoryApplier.cs` is missing, `ReportPatchFailures(` does not count 5, or `TryPatchCategory` is not a `private bool TryPatchCategory(string category)` in `SubModule.cs` (plan 009 has not landed, or landed differently; every SubModule anchor in this plan depends on it).
-- The drift check shows any change beyond plan 009's (listed at the top), or a "Current state" excerpt does not match the live code.
+- The precondition fails: `HEAD` is not `4c728dac`, `Main/PatchCategoryApplier.cs` is missing, `ReportPatchFailures(` does not count 4, `ReportPatchFailures("startup", persistent: true);` does not count 1, or `TryPatchCategory` is not a `private bool TryPatchCategory(string category)` in `SubModule.cs` (the worktree is not at plan 009's reviewed tip, or 009 changed again; every SubModule anchor in this plan depends on it).
+- The drift check shows any change beyond plan 009's three commits on these paths (listed at the top), or a "Current state" excerpt does not match the live code.
 - `git worktree add` fails because `plan/018-composition-root` or `E:/repos/wt-plan-018` already exists.
 - The checker's first run (start of Step 0.3, after Step 0.2) prints a count other than 41 old-style reads (a test was added, removed or rewritten since planning).
 - The Step 0.2 RED run is Inconclusive (game assemblies not loaded on this machine) or lists any model other than `TAOM.Features.NavalTravel.Models.TaomPartyNavigationModel`.
 - Any test in the 26 files fails after it moves to the comment-stripped view: that test asserts on text that lives only in a comment. Report the test and the asserted string; do not switch the file back to raw text.
 - A `Main/SubModule.cs` or `Main/IoC.cs` anchor named in Step 1.4 or 2.4 is missing or appears more than once.
+- A `PatchCategoryApplierTests` test fails after Step 1.4 (009's startup-report gates or its one-direct-call gate): the kernel lines landed in the wrong place. Do not edit that test file.
+- The `FaultNotice_...` test fails with a `TypeLoadException` or `FileNotFoundException` for a TaleWorlds assembly (the test assumes `FeatureModuleHooks.NoticeFor` runs without the game, as `CampaignBehaviorBase` subclasses already do in this suite).
 - Step 1.4's full suite shows any failure besides the two Armory tests (parity is broken with an empty list).
 - `grep -rn "RegisterWandererAllegianceFeature" Main TAOM.Tests --include=*.cs` at the start of Step 2 finds a call other than the one in `Main/IoC.cs` (moving it would drop that caller's registration); the definition and the text asserts in `WandererAllegianceWiringTests.cs` are expected hits.
 - `TAOM.Tests/TAOM.Tests.csproj` or `Directory.Build.props` contains `PathMap` or `ContinuousIntegrationBuild` (the `RepoPaths` locator assumption no longer holds).
@@ -1904,7 +2078,7 @@ Stop and report back (do not improvise) if:
 
 - **What changes for the next feature author**: a feature can now live entirely in its folder. Add `XModule.cs` beside the feature (derive from `TaomFeatureModule`, override only the dimensions it has), append one line to `Main/Composition/FeatureModules.cs`, then only DELETE that feature's lines from `SubModule.cs` and `IoC.cs`; the `FeatureModulesTests` double-wiring guards go red until the deletion is done. Moving to the end-of-phase loop changes the feature's position: check it against the ordering-constraints table in this plan (copy it into the next plan) and, before the first gameplay feature with patches moves, run the multi-patched-method script the design calls for.
 - **Suggested migration order** (from the design): the remaining pilots with an existing text test (SiegePropDiagnostics, ReturnToArmy), then the diagnostics features (fail-open by design), then gameplay leaves, then the constrained cores last (Enlistment, FieldCommission, CareerSystem, HeroRace, the creature mounts, LotrIssues). Roughly 20 small commits; each is S with build, full suite and, for gameplay features, a two-campaign smoke.
-- **What a reviewer should probe** (the orchestrator runs `/deep-review` before merging): (1) the fail-closed rethrow is limited to `OwnsSaveData` modules in the three named steps; (2) `FeatureModuleHooks` builds every behavior and model before adding any; (3) `IoC.Modules` is assigned after `RegisterServices` and before `_container`, and `InitializeStatics` is the last statement of `Configure`; (4) the six SubModule calls sit exactly at their anchors (the kernel test pins this); (5) `GameModelDecl.Of` uses the generic `AddModel<TSlot>`, which chains `BaseModel` like today's calls; (6) the 26 test conversions changed no assertion.
+- **What a reviewer should probe** (the orchestrator runs `/deep-review` before merging): (1) the fail-closed rethrow is limited to `OwnsSaveData` modules in the three named steps; (2) `FeatureModuleHooks` builds every behavior and model before adding any; (3) `IoC.Modules` is assigned after `RegisterServices` and before `_container`, and `InitializeStatics` is the last statement of `Configure`; (4) the six SubModule calls sit exactly at their anchors (the kernel test pins this), and the ProcessLoad and MainMenu calls sit before 009's startup inquiry so module category failures reach it; (5) `GameModelDecl.Of` uses the generic `AddModel<TSlot>`, which chains `BaseModel` like today's calls; (6) the 26 test conversions changed no assertion; (7) no module fault is shown with `DisplayMessage` before a game exists: ProcessLoad and the two `IoC.Configure` steps hold, MainMenu shows an inquiry (the startup inquiry rule), and a held fault still reaches that inquiry (`Hold` never calls `TakeFaultSummary`).
 - **Deferred on purpose**:
   - `ResetForUnload` in the contract waits on COMP-05 (does anything reload TAOM in-process?).
   - Behaviors and models as `Reuse.Transient` (COMP-02): a separate, per-behavior change.
@@ -1912,4 +2086,5 @@ Stop and report back (do not improvise) if:
   - `.claude/rules/gamemodels.md:40` (rule 7 tells authors to write `new TaomXxxModel(` because the binding test greps it): update it when the first model moves into a module.
   - The last migration step deletes the transitional "not also hand-wired" branches, the per-feature `Register*Feature` calls in `IoC.cs`, and `ManualPatchApplicator` (its three features declare their manual patches through `OnPhase(GameInit)`).
   - An ADR recording the composition-root decision (the orchestrator, through `/new-adr`), a CHANGELOG entry, the GitHub issue, and the stale FieldCamp and Patch25 comments (COMP-06).
-  - The wider test-locator collapse (TEST-L5-03: 47 source scrapers and 28 `FindRepoRoot` copies onto `RepoPaths`): this plan moved only the 26 files that read `SubModule.cs` or `IoC.cs`.
+  - The wider test-locator collapse (TEST-L5-03: 47 source scrapers and 28 `FindRepoRoot` copies onto `RepoPaths`): this plan moved only the 26 files that read `SubModule.cs` or `IoC.cs`. Plan 009's `PatchCategoryApplierTests` (its own `CommentPattern`) and `709649c3`'s `AnimaliaWiringTests` and `MonsterSizeWiringTests` (raw reads, on `bannerlord-1.5.x` only) are candidates for `RepoPaths.ReadSource` in that pass.
+  - One merged startup inquiry for patch failures and module faults: it needs `SubModule.ReportPatchFailures` (plan 009's helper, out of scope here) to take the runner's summary. Until then a startup with both shows two queued inquiries.
