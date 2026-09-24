@@ -29,7 +29,7 @@ public class LoadingWindowDisablePatchTests
     public void Cleanup() => MapLoadTracer.Initialize(null!);
 
     [TestMethod]
-    public void Prefix_CapturesTheFlagIntoAnOutBoolNamedState()
+    public void Prefix_Signature_IsOutBoolNamedState()
     {
         var prefix = typeof(LoadingWindow_Disable_Patch).GetMethod("Prefix", BindingFlags.Public | BindingFlags.Static);
         Assert.IsNotNull(prefix, "LoadingWindow_Disable_Patch has no public static Prefix.");
@@ -41,7 +41,7 @@ public class LoadingWindowDisablePatchTests
     }
 
     [TestMethod]
-    public void Postfix_TakesTheCapturedStateByValue()
+    public void Postfix_Signature_TakesStateByValue()
     {
         var postfix = typeof(LoadingWindow_Disable_Patch).GetMethod("Postfix", BindingFlags.Public | BindingFlags.Static);
         Assert.IsNotNull(postfix, "LoadingWindow_Disable_Patch has no public static Postfix.");
@@ -67,7 +67,24 @@ public class LoadingWindowDisablePatchTests
 
         LoadingWindow_Disable_Patch.Postfix(__state: true);
 
+        // TraceWithCallers skips itself and the Postfix, so a helper between them would show up as
+        // the first caller; a fallback chain would lose the caller information entirely.
+        _logger.ReceivedWithAnyArgs(1).LogInfo(default!);
         _logger.Received(1).LogInfo(Arg.Is<string>(s =>
-            s.Contains("LOADING-WINDOW lowered") && s.Contains("callers:")));
+            s.Contains("LOADING-WINDOW lowered") && s.Contains("callers: ")
+            && !s.Contains("callers: <none>") && !s.Contains("callers: <unavailable>")
+            && !s.Contains("callers: LoadingWindow_Disable_Patch.")));
+    }
+
+    [TestMethod]
+    public void PrefixThenPostfix_WhenTheWindowIsAlreadyDown_CapturesFalseAndLogsNothing()
+    {
+        Assert.IsFalse(LoadingWindow.IsLoadingWindowActive, "precondition: engine flag is down");
+
+        LoadingWindow_Disable_Patch.Prefix(out var state);
+        LoadingWindow_Disable_Patch.Postfix(state);
+
+        Assert.IsFalse(state, "the Prefix must capture the engine flag, not a constant");
+        _logger.DidNotReceiveWithAnyArgs().LogInfo(default!);
     }
 }

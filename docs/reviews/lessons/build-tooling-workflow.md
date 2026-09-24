@@ -2104,6 +2104,11 @@ the total. The tool's tests assert behaviour, so they stayed green.
   that file (and its tests and its README row) for the old value as a bare literal (`50`, `16 bandit`)
   and re-derive each hit. Same class as REVIEW-LOG 90 and 91, where unverified counts rode into prose.
 - **Source:** #564 deep-review, `docs/reviews/rca-hideout-boss-fight-2026-09-11.md` finding 1.
+- **Repeat (plan 012, 2026-09-24):** the change narrowed "every raise and lower of the loading
+  window" in the feature doc and the registry, and left the same phrase in `feature-map.md:34` and
+  in the class summary two lines above the paragraph it rewrote. The plan's file list scoped the
+  edit, and neither place was on it. Grep the whole repo for the old phrase, not only the files a
+  plan names. Source: `docs/reviews/rca-loading-window-trace-per-frame-2026-09-24.md` finding 1.
 
 ### A generator whose input its own next step rewrites must re-derive its plan from the rewritten state
 `generate_starter_kit.py` read the donor ids out of the player-start rosters; `wire_starter_kit_rosters.py` then rewrote those rosters to the `starter_` ids, which the donor scan skipped. The first `--apply` and its idempotency check both ran before the wiring, so the second run was a genuine no-op at that moment and looked like proof. Once wired, a re-run planned 0 clones, and `--apply` would have emptied the crafting-pieces marker block (39 blades), every stylesheet marker block and every generated item file, while `--verify` reported no drift because it checked only the plan's own entries.

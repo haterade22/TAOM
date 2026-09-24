@@ -48,11 +48,14 @@ chain**.
 
 The caller chain is what solved it. It is affordable because real transitions fire a handful of
 times. The engine also calls `LoadingWindow.DisableGlobalLoadingWindow()` on every frame of the main
-menu, the party screen and character creation, whether or not the window is up, so the Disable
-patch captures `IsLoadingWindowActive` in a Prefix and traces only a true-to-false change
-(`LoadingWindowTraceGate`). In v2.0.29 and v2.0.30, before this guard, those no-op lowers wrote one
-line per rendered frame (up to about 360 a second): 84 MB in a 35-minute session, 1.16 GB with the
-main menu left open for three hours.
+menu and most campaign screens (party, inventory, clan, kingdom, quests, character, crafting), and
+of character creation and the banner editor once their scene is ready, whether or not the window is
+up, so the Disable patch captures `IsLoadingWindowActive` in a Prefix and traces only a
+true-to-false change (`LoadingWindowTraceGate`). Raise lines are still traced per call, not per
+transition: a healthy new-campaign load can log two raises (the map screen, then character creation
+finalizing) and one lower, so do not pair each raise with its own lower. In v2.0.29 and v2.0.30,
+before this guard, those no-op lowers wrote one line per rendered frame (up to about 360 a second):
+84 MB in a 35-minute session, 1.16 GB with the main menu left open for three hours.
 
 ## What it found
 

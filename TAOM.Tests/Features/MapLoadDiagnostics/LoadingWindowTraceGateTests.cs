@@ -4,8 +4,8 @@ using TAOM.Features.MapLoadDiagnostics;
 namespace TAOM.Tests.Features.MapLoadDiagnostics;
 
 /// <summary>
-/// The engine lowers the loading window from the main menu, party screen and character creation on
-/// every frame, and clears the flag whether or not it was up. Only a true-to-false change is a real
+/// The engine calls the loading-window lower from the main menu and most campaign screens on every
+/// frame, and clears the flag whether or not it was up. Only a true-to-false change is a real
 /// lower worth a caller chain; everything else is the per-frame no-op that filled 84 MB logs.
 /// </summary>
 [TestClass]

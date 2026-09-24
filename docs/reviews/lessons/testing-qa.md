@@ -1071,3 +1071,18 @@ The first `HowdahPrefabTests` pinned the geometry the rebuild changed (moveable 
 - **Why missed:** the step was written from the campaign model's code, and a smoke list reads as mode-neutral unless it says otherwise.
 - **Prevent:** when a smoke step is there to prove an engine DECISION (killed or wounded, a morale roll, a capture), find the model that decides it in each game mode (`AddModel` in `CustomGame` and the campaign starter) and name the mode whose model can give the other answer. If no mode can, the step proves nothing; say so instead. When the model ROLLS (killed or wounded is a survival roll even with `CanKillEvenIfBlunt`), one outcome proves nothing either: say how many trials settle it and which result would (Codex, 2026-09-23: the step first demanded "killed, not wounded", which a correct build can fail).
 - **Source:** `docs/reviews/rca-elk-delta-2026-09-23.md` F5 (#636).
+
+### A Harmony state pair needs one test through the real Prefix, and a trace test must reject the fallback text
+Plan 012's Prefix/Postfix pair was pinned by a reflection test of the Prefix's signature and by
+Postfix tests fed a hand-made `__state`. A Prefix hard-coded to `true` (the per-frame flood back)
+or to `false` (every real lower silenced) passed all eight tests. The lowered-line test accepted
+any `callers:` text, so a helper between the Postfix and `TraceWithCallers` (which skips exactly
+two frames), `callers: <none>` or `callers: <unavailable>` all passed.
+- **Why missed:** the tests were written from the plan's test list, which named the Prefix test
+  after what the Prefix should do while asserting only its shape. Nobody ran a mutant.
+- **Prevent:** for every `__state` pair, add one test that calls the real Prefix and passes its
+  output to the Postfix, in whatever engine state the test host can reach. For a trace or log
+  assertion, also assert the fallback strings are absent and that the first caller is not the
+  patch class itself. Prove both with a mutant run (`__state = true`; a helper hop), per "If you
+  didn't watch the test fail, mutate the code until it does".
+- **Source:** `docs/reviews/rca-loading-window-trace-per-frame-2026-09-24.md` findings 3 and 4 (lens 4, lens 5, Codex P3-1 and P3-2).

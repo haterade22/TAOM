@@ -3773,3 +3773,31 @@ one gate timed against its registration. Mike approved four design proposals mid
 `harness-facts.md` paths, the `triage-needs-ingame` label as the smoke backlog, `attribution` in
 `settings.json`, a CI workflow of its own on every branch). Root cause tables:
 `docs/reviews/rca-adr011-batch1-2026-09-23.md`; five lessons in build-tooling-workflow.
+
+## Review 132 (number provisional: parallel improve branches): plan 012, the loading-window lower traced only on a real drop, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+`/deep-review` (Standards, Engine, Efficiency, Completeness, Data flow, Design) and `/review-codex` on branch
+`improve/012-loading-window-trace-per-frame`, diff `7f02fc8d..6f7ddd39`: `LoadingWindow_Disable_Patch` captures
+`IsLoadingWindowActive` in a Prefix through `__state` and traces a lower only on a true-to-false change
+(`LoadingWindowTraceGate`), ending the one-line-per-frame flood (84 MB in 35 minutes, 1.16 GB in three hours on the
+main menu). Codex gpt-6-astra at ultra, 110,352 tokens: **0 P1 / 0 P2, 2 P3 coverage observations, both confirmed by
+mutant runs, no false positive.** It decompiled the installed engine fresh, qualified the briefing's
+"unconditionally" against the manager guard, and answered ten Known Suspects (5 disputed, 4 unverified as
+historical, 1 partly confirmed). Lenses: no HIGH, no engine incompatibility (10 verified), no efficiency issue.
+Confirmed: 1 MED process gap (no GitHub issue; needs Mike) and 4 LOW, all fixed in the review follow-up commit: the
+stale "every raise and lower" phrase in `feature-map.md` and the class summary; the incomplete screen list (the
+engine also lowers every frame from inventory, clan, kingdom, quests, character, crafting and the banner editor) and
+the gate doc's "unconditionally"; no test ran the real Prefix (a `__state = true` mutant passed all eight tests,
+now fails the new round-trip test); the lowered-trace test accepted a fallback or helper-shifted caller chain (a
+helper-hop mutant now fails it). Codex missed the stale phrase outside the diff and the screen list beyond the three
+it was handed. Full suite 10244 passed, 2 skipped, 2 failed (the two known live-Armory tests). Step 4.6 convergence
+pass owed by the orchestrator.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| P3-1 | Prefix test proves shape, not capture | Other: shape assertion under a behaviour name | The plan's test list prescribed it; no mutant run | Round-trip test; testing-qa lesson "A Harmony state pair needs one test through the real Prefix" |
+| P3-2 | Trace test accepts fallback or helper-shifted caller chain | Other: assertion weaker than the constraint it guards | The two-frame skip constraint had no test | Assertions tightened; same lesson |
+
+Report `docs/reviews/deep-review-012-loading-window-trace-per-frame-2026-09-24.md`, RCA
+`docs/reviews/rca-loading-window-trace-per-frame-2026-09-24.md`; lessons in harmony-il (one new, one repeat
+bullet), testing-qa (new) and build-tooling-workflow (repeat bullet). Not pushed, not deployed, not smoked.

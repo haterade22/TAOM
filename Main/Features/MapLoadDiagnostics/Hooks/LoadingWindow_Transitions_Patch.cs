@@ -4,7 +4,8 @@ using TaleWorlds.Engine;
 namespace TAOM.Features.MapLoadDiagnostics.Hooks;
 
 /// <summary>
-/// Traces every raise and lower of the global loading window, WITH the managed caller chain.
+/// Traces every raise, and every lower that actually took the window down, WITH the managed caller
+/// chain.
 ///
 /// <para>
 /// This is the central question of the v1.5.0 map-load stall. The heartbeat proved the map runs at
@@ -15,10 +16,11 @@ namespace TAOM.Features.MapLoadDiagnostics.Hooks;
 ///
 /// <para>
 /// Caller chains are affordable only on real transitions. Raises are rare, but the engine calls
-/// <c>DisableGlobalLoadingWindow</c> on every frame of the main menu, the party screen and character
-/// creation, and clears the flag whether or not the window was up. The Disable patch therefore
-/// captures the flag in a Prefix and traces only a true-to-false change (otherwise one no-op lower
-/// per rendered frame, each a stack walk and a flushed log line).
+/// <c>DisableGlobalLoadingWindow</c> on every frame of the main menu and most campaign screens
+/// (party, inventory, clan, kingdom, quests, character, crafting), and of character creation and the
+/// banner editor once their scene is ready, and clears the flag whether or not the window was up.
+/// The Disable patch therefore captures the flag in a Prefix and traces only a true-to-false change
+/// (otherwise one no-op lower per rendered frame, each a stack walk and a flushed log line).
 /// </para>
 /// </summary>
 [HarmonyPatch(typeof(LoadingWindow), nameof(LoadingWindow.EnableGlobalLoadingWindow))]
