@@ -121,7 +121,8 @@ observation that needs no change.
   caller stops on first hit).
 - Agent 1: `IAgentVisualsAdapter.GetSkeleton` returns the sealed `Skeleton` (ADR-007);
   `WargMissionBehavior` is 207 lines against ADR-002's 150; `LogTask` resolves per Execute;
-  `BoneCheck.cs:71` still uses `== null`; `IAgentAdapter.IsWarg()` now has no caller.
+  `BoneCheck.cs:71` still uses `== null`. (`IAgentAdapter.IsWarg()` was orphaned by this change,
+  not pre-existing; deleted in the convergence pass below.)
 - Agent 4: stale lines in `warg-combat.md` (17, 21, 124, 125, 141) and `advanced-combat.md:90`.
 
 **VERDICT: READY FOR COMMIT** (full suite green apart from the two known live-Armory failures;
@@ -177,3 +178,30 @@ Phase 3h is consolidated later for all branches. Proposed lines:
   that rebuilds before every query.
 - **What Codex does well:** attacking a test's oracle with the smallest regression it would accept
   (`new List<Agent>()` through the buffer overload).
+
+## Convergence
+
+Second pass over the review-fix commit `fe8f30c7` (diff `66a85b08..fe8f30c7`). The convergence
+reviewer reported four LOW defects; each was checked against the code before any edit. All four
+were confirmed; none was a false positive. None is a runtime regression.
+
+| # | Finding | Verified | Fix |
+|---|---|---|---|
+| 1 | The mixed-list test could not fail for a lost `i--`: every entry after a removal was a far target, and the asserts could not tell "skipped" from "examined and kept". The null-visuals guard was not in the list | CONFIRMED by trace of `BoneCheck.cs:110-146` against the old list `[inactive, far, nearNoSkeleton, far2]` | List is now `[far, inactive, noVisuals, nearNoSkeleton, fadingOut, far2]`: each removal is followed by an entry that must also be dropped, and each far target's `GetGlobalFrame` read is asserted. Deleting each `i--` locally (`BoneCheck.cs:117`, `:125`, `:144`, one at a time) turned exactly this test red (`Failed: 1, Passed: 9` each time); the file was restored and is unchanged in this commit |
+| 2 | `WargMonsterIdTests` named `AgentAdapter.IsWarg()` as the only warg gate, and `IsWarg()` had no caller left | CONFIRMED: `WargRiderHandManager.cs:18` and `WargMissionBehavior.cs:154` gate on `WargConfig.IsWargMonster`; grep finds `IsWarg` only at its two declarations; at `66a85b08` `Tick` still called it | Comment names `WargConfig.IsWargMonster`. `IsWarg()` deleted from `IAgentAdapter` and `AgentAdapter` (and the `using` only it needed); the `WargRiderHandManager` comment no longer points at it. A deletion with no caller holds parity. The FOLLOW-UP entry is relabelled |
+| 3 | Component diagram put `TakeDamage` beside the collision callback instead of under it | CONFIRMED: both at column 31 in `advanced-combat.md` | `TakeDamage` and `RegisterBlow` indented one level under `_onCollisionCallback`, as at `66a85b08` |
+| 4 | `TreeNodes_StaticFields_HoldNoServiceOrScanBuffer` is a reflection rule test with no rejecting fixture, against the lesson written in the same commit | CONFIRMED: the controls cover only the two IL rules | The cheaper fix: the testing-qa Prevent line now asks for the fail-on-unreadable-body rule and the control fixture from IL rule tests only; a plain `GetFields` check has no body read that can fail open |
+
+The report row 5, RCA F5 and `advanced-combat.md` Tests line ("every per-target skip, singly and in
+a mixed list") are accurate again after fix 1; the test count stays 10.
+
+Filtered run after fix 1, `dotnet test TAOM.Tests --filter FullyQualifiedName~BoneCheckRangeGateTests
+-p:DisableModuleCopy=true -p:ModuleId=`: `Passed: 10, Failed: 0`.
+
+Full suite after all four fixes, `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`:
+`Failed: 2, Passed: 10266, Skipped: 2, Total: 10270`. The two failures are the known live-Armory
+ones, `TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`.
+
+**CONVERGENCE VERDICT: 4 fixed, 0 false positives.** The fixes are test, comment, doc and one
+parity deletion; a fresh review of this commit is still owed before merge.

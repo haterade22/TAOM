@@ -161,20 +161,31 @@ public class BoneCheckRangeGateTests
     public void CheckTargets_MixedTargets_DropsAndKeepsEachWithoutSkippingTheNext()
     {
         // Removals step the index back while a far target is kept in place: a lost `i--` would skip
-        // the entry after each removal, which a one-element list cannot show.
+        // the entry after each removal, which a one-element list cannot show. Each removal below is
+        // followed by an entry that must also be dropped, so a skipped entry stays in the list and
+        // fails the assert; a skipped far target would look the same as a kept one, so each far
+        // target's frame read is asserted as well.
+        var (far, farVisuals) = LiveTargetAt(10f, 0f, 0f);
         var inactive = Substitute.For<IAgentAdapter>();
         inactive.IsActive().Returns(false);
-        var (far, farVisuals) = LiveTargetAt(10f, 0f, 0f);
+        var noVisuals = Substitute.For<IAgentAdapter>();
+        noVisuals.IsActive().Returns(true);
+        noVisuals.IsFadingOut().Returns(false);
+        noVisuals.AgentVisuals.Returns((IAgentVisualsAdapter)null);
         var (nearNoSkeleton, nearVisuals) = LiveTargetAt(1f, 0f, 0f);
+        var (fadingOut, _) = LiveTargetAt(1f, 0f, 0f);
+        fadingOut.IsFadingOut().Returns(true);
         var (far2, far2Visuals) = LiveTargetAt(0f, 10f, 0f);
-        var sut = new Probe(new List<IAgentAdapter> { inactive, far, nearNoSkeleton, far2 });
+        var sut = new Probe(new List<IAgentAdapter> { far, inactive, noVisuals, nearNoSkeleton, fadingOut, far2 });
 
         bool keepChecking = sut.CheckTargets(FrameAt(0f, 0f, 0f), NoAttackerBones);
 
         Assert.IsTrue(keepChecking);
         CollectionAssert.AreEqual(new List<IAgentAdapter> { far, far2 }, sut.Targets);
+        nearVisuals.Received(1).GetSkeleton();
+        farVisuals.Received(1).GetGlobalFrame();
+        far2Visuals.Received(1).GetGlobalFrame();
         farVisuals.DidNotReceive().GetSkeleton();
         far2Visuals.DidNotReceive().GetSkeleton();
-        nearVisuals.Received(1).GetSkeleton();
     }
 }

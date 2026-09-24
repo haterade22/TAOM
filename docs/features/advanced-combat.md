@@ -32,8 +32,8 @@ AdvancedCombatBehavior (MissionLogic)
   |                 `-- CheckBoneCollision(visuals, skeleton)   [skeleton fetched once per tick]
   |                       `-- CheckTargets(...)                 [range gate before each target's skeleton]
   |                             `-- _onCollisionCallback(attacker, target, boneId)
-  |                             `-- CustomAttacksUtils.TakeDamage(...)
-  |                                   `-- cached Mission.RegisterBlow(...)
+  |                                   `-- CustomAttacksUtils.TakeDamage(...)
+  |                                         `-- cached Mission.RegisterBlow(...)
   |
   `-- AddBoneCheckComponent(BoneCheck)   <-- called by WargAttackService
 

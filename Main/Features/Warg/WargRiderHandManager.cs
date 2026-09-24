@@ -9,7 +9,7 @@ internal static class WargRiderHandManager
     /// <summary>
     /// Called every mission tick by WargMissionBehavior. Warg-ness comes from the mount's own Monster,
     /// as WargMissionBehavior.TryAttachWargTree decides it: no container lookup and no adapter cache
-    /// lookup per frame (AgentAdapter.IsWarg is this same predicate).
+    /// lookup per frame.
     /// </summary>
     public static void Tick()
     {
