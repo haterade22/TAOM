@@ -224,6 +224,13 @@ in `StrikeSoundPlayer`'s comment and `signature-strikes.md`, both committed.
   `lessons/adapters-taleworlds-api.md`, and the retracted cause in
   `rca-spider-directional-attacks-2026-06-15.md`. A correction re-reads every clause of the text it
   keeps, not only the one found wrong.
+- **Recurred:** plan 019's maintainer decisions (2026-09-24). Decision 2 closed the no-settlement
+  fallback, and the commit recorded that in `siege.md`, but `harmony-patch-registry.md`, the
+  crash-triage entry point, still called it "an open decision". The same commit set the Key Files
+  test count to 30 while the Tests section of the same file kept "17 tests", although the first
+  review had named both lines. A closed decision or a new count is a claim: grep for the old
+  wording ("open decision", the plan section's name, the old number) before committing
+  (`rca-nullable-ratchet-decisions-2026-09-24.md` #2, #3).
 
 ### A pointer to a procedure points at the knowledge base, never at a plan (plan 019, 2026-09-24)
 Plan 019's CHANGELOG said the procedure for graduating the next folder was in `code-quality.md`, "How nullable is enforced". That paragraph held the mechanism only; the steps, the fix rules (no `!` on an engine value, `= null!` only with an owner comment) and the hotfix escape lived only in the plan's "Maintenance notes", and both `.editorconfig` comments cited "plan 019". `plans/README.md` calls plans a working backlog, not a knowledge base.

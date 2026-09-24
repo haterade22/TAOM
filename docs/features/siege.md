@@ -17,7 +17,7 @@ The Siege feature guards against a crash in `BesiegerCamp.GetSiegeCampPartyPosit
 A Harmony Prefix on `BesiegerCamp.GetSiegeCampPartyPosition` runs before the original method. It checks whether `siegeCamp1GlobalFrames` is null or empty. If the frames exist, it returns `true` immediately to let the original run unchanged. If they are missing, it:
 1. Logs a red warning to `TaleWorlds.Library.Debug` identifying the settlement by name and ID, and the count of camp-2 frames available.
 2. If `siegeCamp2GlobalFrames` is non-empty, copies those frames into `siegeCamp1GlobalFrames`, clears camp-2, and returns `true` so the original method can proceed normally with the substituted frames.
-3. If neither set of frames exists and there is no besieged settlement to ring (the camp's `SiegeEvent` or its settlement is null), it logs that and returns `true`. Vanilla then throws on the empty camp-1 array, exactly as it did after the catch-all that handled this case before. The path is defensive only: in v1.5.3 both engine callers (`MobileParty.OnPartyJoinedSiegeInternal`, `BesiegerCamp.SetPositionAfterMapChange`) dereference `SiegeEvent.BesiegedSettlement` before calling, so vanilla cannot reach it.
+3. If neither set of frames exists and there is no besieged settlement to ring (the camp's `SiegeEvent` or its settlement is null), it logs that and returns `true`. Vanilla then throws on the empty camp-1 array, exactly as it did after the catch-all that handled this case before. The path is defensive only: in v1.5.3 both engine callers (`MobileParty.OnPartyJoinedSiegeInternal`, `BesiegerCamp.SetPositionAfterMapChange`) use `SiegeEvent.BesiegedSettlement` before calling (the first dereferences it; the second passes it to `MapScene.GetSiegeCampFrames`, which dereferences it), so vanilla cannot reach it.
 4. Otherwise, with neither set of frames, it places the party on a ring around `settlement.GatePosition` (eight slots per ring, radius 0.5 plus 0.3 per further ring, chosen by the party's index), keeps the gate's `IsOnLand`, and returns `false` to skip the original entirely.
 5. Any exception within the prefix is caught and logged, and the original runs (`return true`). The catch can only fire while camp-1 is still null or empty, so vanilla then throws the same `IndexOutOfRangeException` (or an NRE on a null array); see the [patch registry](../reference/harmony-patch-registry.md).
 
@@ -73,7 +73,7 @@ The patch is a safety net only; the intended fix is to add the scene entities.
 
 ## GitHub Issue
 - **Issue:** haterade22/TAOM#660 (plan 019: nullable ratchet, Siege folder graduated). The original guard predates issue tracking (introduced in commit `d3cb87c`: "fix: add patch to guard against IndexOutOfRangeException in siege camp positioning").
-- **Status:** #660 tracks branch `improve/019-nullable-ratchet`; the original guard's issue is unknown.
+- **Status:** Open (#660); the original guard's issue is unknown.
 
 ---
 

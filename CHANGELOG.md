@@ -27,13 +27,14 @@ warnings untouched), and `Main/Features/Siege` is the first folder at `error`.
   it throws on, and that vanilla cannot reach that path; the no-op `<NoWarn>$(NoWarn)</NoWarn>`
   in `Main/TAOM.csproj` is gone. The graduation procedure's build command no longer deploys into
   the game install, and `siege.md` says the catch also hands vanilla an array it throws on.
-- **Siege defense popup never blank** (maintainer decision): a kingdom's `KingdomMessages`
-  entry in `siege_defense_config.json` that leaves `Title`, `Body`, `AcceptButton`,
-  `AcceptMessage` or `RewardMessage` missing or `""` now takes that field from
-  `SiegeDefenseService`'s defaults, so the accept button always has a label; an entry that is
-  JSON `null` gets every default instead of a null that suppressed the popup (the NRE was
+- **Siege defense popup text falls back per field** (maintainer decision): a kingdom's
+  `KingdomMessages` entry in `siege_defense_config.json` that leaves `Title`, `Body`,
+  `AcceptButton`, `AcceptMessage` or `RewardMessage` missing or `""` now takes that field from
+  `SiegeDefenseService`'s defaults, so the accept button is never missing its label; an entry
+  that is JSON `null` gets every default instead of a null that suppressed the popup (the NRE was
   caught and logged as "ShowInquiry unavailable") and threw in the reward path. The static
-  defaults and the config entry are never written to. 4 new `SiegeDefenseServiceTests`.
+  defaults and the config entry are never written to. 5 new `SiegeDefenseServiceTests`, and
+  the test project's nullable warning count stays at 2,256.
 
 ## 2026-09-23
 

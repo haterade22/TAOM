@@ -74,7 +74,8 @@ public class SiegeDefenseService : ISiegeDefenseService
     }
 
     // A kingdom's entry may omit keys, leave them "", or be JSON null; each such field takes the
-    // default so the popup never shows a blank button or empty text (#660). Always a fresh copy:
+    // default, so none reaches the popup as a blank button or empty text (#660); a value of only
+    // spaces is kept as written. Always a fresh copy:
     // neither DefaultMessages nor the config entry is ever handed out or written to.
     internal KingdomSiegeMessages GetMessages(string factionId)
     {

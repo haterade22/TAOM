@@ -270,3 +270,8 @@ untested through deserialization.
 the two failures are the known live-Armory tests (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor`,
 `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`). No reviewer has seen this change;
 it needs its own review before merge.
+
+**Correction (second review).** This paragraph left out the test project's nullable count: the
+run above had 2,259 CS86xx in `TAOM.Tests`, three more than the 2,256 baseline, all in
+`SiegeDefenseServiceTests.cs`. The review follow-up restored 2,256; see
+`docs/reviews/deep-review-019-nullable-ratchet-decisions-2026-09-24.md`.

@@ -36,7 +36,7 @@ public class SiegeDefenseServiceTests
         var config = new SiegeDefenseConfig
         {
             WatchedSettlementIds = new List<string> { "town_special" },
-            KingdomMessages = new Dictionary<string, KingdomSiegeMessages>
+            KingdomMessages = new Dictionary<string, KingdomSiegeMessages?>
             {
                 ["gondor"] = new KingdomSiegeMessages
                 {
@@ -361,7 +361,10 @@ public class SiegeDefenseServiceTests
 
         // Assert
         Assert.AreEqual("Gondor Calls For Aid!", msgs.Title);
+        Assert.AreEqual("{attacker} besieges {settlement}! You have {days} days.", msgs.Body);
         Assert.AreEqual("For Gondor!", msgs.AcceptButton);
+        Assert.AreEqual("Ride to {settlement}!", msgs.AcceptMessage);
+        Assert.AreEqual("Gondor remembers! +{influence} influence, +{relation} relation.", msgs.RewardMessage);
     }
 
     [TestMethod]
@@ -390,7 +393,8 @@ public class SiegeDefenseServiceTests
     private SiegeDefenseService CreateSutFromJson(string json, out SiegeDefenseConfig config)
     {
         // Same deserializer SiegeDefenseConfigProvider uses, so a missing key arrives as null.
-        config = JsonConvert.DeserializeObject<SiegeDefenseConfig>(json);
+        config = JsonConvert.DeserializeObject<SiegeDefenseConfig>(json)
+            ?? throw new AssertFailedException("test JSON deserialized to null");
         var provider = Substitute.For<ISiegeDefenseConfigProvider>();
         provider.LoadConfig().Returns(config);
         return new SiegeDefenseService(provider, _settings, _playerContext, _logger, _coopSession);
@@ -467,7 +471,34 @@ public class SiegeDefenseServiceTests
         Assert.AreEqual("{attacker} is besieging {settlement}!", defaults.Title);
         Assert.AreEqual("Help Defend", defaults.AcceptButton);
         Assert.AreEqual("Help Defend", again.AcceptButton);
-        Assert.IsNull(config.KingdomMessages["rohan"].AcceptButton);
+        var entry = config.KingdomMessages["rohan"];
+        Assert.IsNotNull(entry);
+        Assert.IsNull(entry.AcceptButton);
+    }
+
+    [TestMethod]
+    public void GetMessages_DefaultsResultMutatedByCaller_LaterLookupsStillGetDefaults()
+    {
+        // Arrange: an unknown kingdom and a JSON-null entry both take the defaults-only path
+        var sut = CreateSutFromJson("{\"KingdomMessages\":{\"rohan\":null}}", out _);
+
+        // Act
+        var unknown = sut.GetMessages("unknown_faction");
+        unknown.Title = "mutated by a caller";
+        unknown.AcceptButton = "mutated by a caller";
+        var nullEntry = sut.GetMessages("rohan");
+        nullEntry.RewardMessage = "mutated by a caller";
+        var unknownAgain = sut.GetMessages("unknown_faction");
+        var nullEntryAgain = sut.GetMessages("rohan");
+        var otherService = _sut.GetMessages("");
+
+        // Assert
+        Assert.AreNotSame(unknown, unknownAgain);
+        Assert.AreEqual("{attacker} is besieging {settlement}!", unknownAgain.Title);
+        Assert.AreEqual("Help Defend", unknownAgain.AcceptButton);
+        Assert.AreEqual("Help Defend", nullEntryAgain.AcceptButton);
+        Assert.AreEqual("You answered the call! +{influence} influence, +{relation} relation.", nullEntryAgain.RewardMessage);
+        Assert.AreEqual("Help Defend", otherService.AcceptButton);
     }
 
     // Phase 9b #132 — Reset + Snapshot/Restore for save-load + R1 singleton reset

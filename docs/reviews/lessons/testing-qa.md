@@ -1077,3 +1077,9 @@ Plan 019 called Patch8's settlement path untestable, so the patch's main purpose
 - **Why missed:** the claim came from the old feature doc ("not feasible without the game runtime") and was never tried; the oracle checked the shape of the result, not what was handed over.
 - **Prevent:** before calling a prefix untestable, list the engine members it reads and check in the decompile that each has a setter or field reflection can reach and that no static constructor needs the engine; if so, write the test. When the code under test hands over a reference, assert `AreSame`, not a length.
 - **Source:** `docs/reviews/rca-nullable-ratchet-2026-09-24.md` #7 and #9.
+
+### A "never hands out the shared object" test mutates the result of the path that could return it, and a mutant proves the test (plan 019, 2026-09-24)
+`SiegeDefenseService.GetMessages` promises a fresh copy, never the static `DefaultMessages`. Its test mutated only the result for a configured entry, which any plausible implementation copies; `if (configured is null) return DefaultMessages;` passed it and every other `GetMessages` test. The known-faction test asserted two of five fields, so reading `AcceptMessage` from `AcceptButton` passed too (Codex found the first; the data-flow lens both).
+- **Why missed:** the test was written from the RED it had to produce (the config-entry mutation), and its "defaults unchanged" asserts looked like coverage of the static without ever mutating a defaults result.
+- **Prevent:** for an isolation claim, mutate the result of every path that could hand out the shared object (the fallback, the empty id, the null entry) and read it back; add `AreNotSame` between two results. For a field-by-field mapping, assert every field with a distinct value. Then prove the test with a mutant: write the plausible regression, watch the test fail, restore.
+- **Source:** `docs/reviews/rca-nullable-ratchet-decisions-2026-09-24.md` #5 and #6.

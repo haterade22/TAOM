@@ -64,9 +64,10 @@ around the gate. **Two paths defer to a vanilla that throws**, and neither is a 
 no besieged settlement and no frames, and the catch. Vanilla indexes the camp-1 array with no
 length check (`BesiegerCamp.cs:312-315` in v1.5.3), so both end in the same
 `IndexOutOfRangeException` (or an NRE on a null array) the patch exists to stop. The no-settlement
-path is unreachable from vanilla (both engine callers dereference `SiegeEvent.BesiegedSettlement`
-first); choosing a fallback position there is an open decision (plan 019, "Deferred gameplay
-decision").
+path is unreachable from vanilla (one engine caller dereferences `SiegeEvent.BesiegedSettlement`
+first, the other passes it to `MapScene.GetSiegeCampFrames`, which does). No fallback position is
+planned (closed 2026-09-24, #660): the "No besieged settlement" log line is the tripwire, and if it
+ever fires, a fallback is a separate, smoke-tested change.
 
 ## Patch9_RaceFilter
 

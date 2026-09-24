@@ -3807,3 +3807,33 @@ failures.
 Report: `docs/reviews/deep-review-019-nullable-ratchet-2026-09-24.md`; RCA:
 `docs/reviews/rca-nullable-ratchet-2026-09-24.md`; lessons in build-tooling-workflow (2),
 testing-qa, misc, and a Recurred line in harmony-il.
+
+## Review (plan 019 decisions, number assigned at merge): per-field KingdomMessages fallback and the Siege follow-ups, 6-lens deep review + Codex second round (2026-09-24)
+
+The maintainer-decisions commit on plan 019 (`de288136..503b933e`): `GetMessages` fills each
+missing or empty `KingdomMessages` field, and a JSON `null` entry, from the defaults as a fresh
+copy; the no-settlement siege-camp path is recorded as closed (#660). No runtime defect: both
+consumers go through the fallback, and every engine call it reaches was checked against v1.5.3.
+
+**Codex: 2 findings, 2 confirmed (both P3), 0 false positives; 1 observation that is not a
+defect.** It found the test-project nullable warnings (two of the three sites) and that the
+fresh-copy test could not catch a `return DefaultMessages` shortcut, naming that exact mutant.
+Its config table flagged the synthetic test key `rohan` (not a defect). It missed the patch
+registry still calling decision 2 open (outside the diff's files, as in the first round), the
+stale test count and token table in `siege-defense.md`, the unpinned `AcceptMessage` mapping and
+the silent-fallback design question.
+
+**11 confirmed across both reviews (5 LOW, 6 NIT), 1 false positive, 0 HIGH, 2 for Mike.** All
+11 fixed in the review follow-up: the test count is back to 2,256, and the two strengthened tests
+were shown failing under both mutants. Mike decides whether an incomplete entry logs a warning
+(`csharp-architecture.md` "Config Providers MUST Validate") and whether a value of only spaces
+counts as empty. Full suite: 10,258 total, only the two live-Armory failures.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| C1 | Three new test-project nullable warnings | Other: annotation change reaches unchanged consumers | Verified Main's count only; warnings keep the build green | Fixed; `lessons/build-tooling-workflow.md` |
+| C2 | Fresh-copy test blind to the defaults path | Other: weak test oracle | Test written from the RED it had to produce | New test, mutant-proven; `lessons/testing-qa.md` |
+
+Report: `docs/reviews/deep-review-019-nullable-ratchet-decisions-2026-09-24.md`; RCA:
+`docs/reviews/rca-nullable-ratchet-decisions-2026-09-24.md`; lessons in build-tooling-workflow,
+testing-qa, and a Recurred line in misc.
