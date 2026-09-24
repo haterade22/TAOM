@@ -5,11 +5,14 @@
 
 INPUT=$(cat)
 
-# Prefilter: a push is only judged after a `git` token (below), and Claude Code never escapes an
-# ASCII letter, so a raw payload without the text `git` cannot concern this gate. Exiting
-# here skips the _pybin.sh probe and the parse on most Bash calls. Match the raw text, never
-# a token regex: a newline before `git` arrives as \n. tools/test_hooks.sh 4c checks it.
-[[ "$INPUT" == *git* ]] || exit 0
+# Prefilter: a push is only judged at a `push` token (below), and Claude Code never escapes an
+# ASCII letter, so a raw payload without the text `push` cannot concern this gate. Exiting
+# here skips the _pybin.sh probe and the parse on every Bash call but a push, other git
+# calls included. Match the raw text, never a token regex: a newline before a command
+# arrives as \n. tools/test_hooks.sh 4c checks it.
+# Fail open on escapes: a payload holding any JSON \u escape takes the full parse,
+# because an escaped letter would hide the word from this raw test.
+[[ "$INPUT" == *push* || "$INPUT" == *'\u'* ]] || exit 0
 
 # Resolve a safe Python interpreter. Never a Microsoft Store alias: those hang forever.
 # This MUST stay above the first "$PYBIN" use below. It was previously sourced at the

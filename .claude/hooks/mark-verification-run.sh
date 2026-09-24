@@ -14,7 +14,9 @@ INPUT=$(cat)
 # and Claude Code never escapes an ASCII letter, so a raw payload with neither cannot concern this
 # hook. Exiting here skips the _pybin.sh probe and the parse on most Bash calls
 # (tools/test_hooks.sh 4c).
-[[ "$INPUT" == *dotnet* || "$INPUT" == *build.ps1* ]] || exit 0
+# Fail open on escapes: a payload holding any JSON \u escape takes the full parse,
+# because an escaped letter would hide the word from this raw test.
+[[ "$INPUT" == *dotnet* || "$INPUT" == *build.ps1* || "$INPUT" == *'\u'* ]] || exit 0
 
 # Resolve a safe Python interpreter. Never a Microsoft Store alias: those hang forever.
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"

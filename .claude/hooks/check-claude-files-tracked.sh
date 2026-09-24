@@ -16,12 +16,15 @@ set -uo pipefail
 
 INPUT=$(cat)
 
-# Prefilter: every decision below needs the text `git` in the command, and Claude Code never
-# escapes an ASCII letter, so a raw payload without it cannot concern this gate. Exiting
-# here skips the _pybin.sh probe and the parse (two Python starts) on most Bash calls.
-# Match the raw text, never a token regex: a newline before `git` arrives as \n.
-# tools/test_hooks.sh 4c checks both directions.
-[[ "$INPUT" == *git* ]] || { echo '{}'; exit 0; }
+# Prefilter: every decision below needs `git commit` in the command, and Claude Code never
+# escapes an ASCII letter, so a raw payload without the text `commit` cannot concern this
+# gate. Exiting here skips the _pybin.sh probe and the parse (two Python starts) on every
+# Bash call but a commit, `git status` and `git log` included. Match the raw text, never a
+# token regex: a newline before a command arrives as \n. tools/test_hooks.sh 4c checks both
+# directions.
+# Fail open on escapes: a payload holding any JSON \u escape takes the full parse,
+# because an escaped letter would hide the word from this raw test.
+[[ "$INPUT" == *commit* || "$INPUT" == *'\u'* ]] || { echo '{}'; exit 0; }
 
 # Resolve a safe Python (never a Microsoft Store alias — those hang forever).
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"

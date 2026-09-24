@@ -4,6 +4,21 @@
 
 ## 2026-09-24
 
+### fix(hooks): v2.0.30 - apply maintainer decisions for plan 013
+
+- Each narrowed gate now prefilters on the word it gates instead of `git` (D39): the six
+  commit gates on `commit`, `validate-push.sh` on `push`, `block-no-verify.sh` on
+  `no-verify`. `git status`, `git diff` and `git log` start no Python in them any more.
+  The two confirm gates keep `git`; `suggest-compact.sh` is unchanged, as plan 011 deletes
+  it. Visible change: with no usable Python, those gates print their degraded warning
+  only on a call holding their word.
+- A payload holding any JSON `\u` escape takes the full parse in the twelve prefiltered
+  hooks (D40), so an escaped letter can no longer hide the gated word. Before the change,
+  `git \u0063ommit -m "no label here"` passed the subject gate that denies the plain form;
+  `tools/test_hooks.sh` 4c and the new 4d now feed every hook its word escaped.
+- `tools/test_hooks.sh` sections 4 and 5 carry the new words in their payloads. An
+  old-versus-new run over 240 payload cases found no changed decision.
+
 ### fix(hooks): v2.0.30 - review follow-ups for plan 013
 
 - `tools/test_hooks.sh` 4c flaked under load: it counted starts of a fake interpreter,

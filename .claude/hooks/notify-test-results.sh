@@ -6,7 +6,9 @@ INPUT=$(cat)
 # Prefilter: the summary below needs `dotnet test` in the command, and Claude Code never escapes
 # an ASCII letter, so a raw payload without the text `dotnet` cannot concern this hook.
 # Exiting here skips the _pybin.sh probe and the parse on most Bash calls (test_hooks.sh 4c).
-[[ "$INPUT" == *dotnet* ]] || exit 0
+# Fail open on escapes: a payload holding any JSON \u escape takes the full parse,
+# because an escaped letter would hide the word from this raw test.
+[[ "$INPUT" == *dotnet* || "$INPUT" == *'\u'* ]] || exit 0
 
 # Resolve a safe Python (never a Microsoft Store alias — those hang forever).
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"

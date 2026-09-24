@@ -38,7 +38,9 @@ INPUT=$(cat)
 # here skips the _pybin.sh probe and the parse (two Python starts) on most Bash calls.
 # Match the raw text, never a token regex: a newline before `git` arrives as \n.
 # tools/test_hooks.sh 4c checks both directions.
-[[ "$INPUT" == *git* ]] || { echo '{}'; exit 0; }
+# Fail open on escapes: a payload holding any JSON \u escape takes the full parse,
+# because an escaped letter would hide the word from this raw test.
+[[ "$INPUT" == *git* || "$INPUT" == *'\u'* ]] || { echo '{}'; exit 0; }
 
 # Resolve a safe Python (never a Microsoft Store alias — those hang forever).
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"

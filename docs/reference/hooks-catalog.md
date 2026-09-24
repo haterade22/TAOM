@@ -18,15 +18,27 @@
 > 2026-08-31 transcripts. Outside a hook, plain `python` is safe and is the repo convention.
 >
 > In a Bash-matched hook, read `INPUT=$(cat)` first and exit with the hook's allow output when
-> the raw payload lacks its trigger text (`*git*` for a git gate; `*dotnet*` or `*build.ps1*` for
-> a build or test hook), and only then source `_pybin.sh`: the probe and the parse are two Python
-> starts on every Bash call, and a hook took 256 to 451 ms on an `ls` before the prefilter and 60
-> to 150 ms after. `tools/test_hooks.sh` 4c fails a Bash hook
-> that sources `_pybin.sh` on a payload without it. The raw test rests on how Claude Code writes
-> the payload, not on JSON: JSON allows `\u0067` for `g`, while Claude Code writes letters
-> literally (it sent raw UTF-8 in #647; the live proof for plan 013 is still owed). Re-prove it
-> after a Claude Code upgrade: a two-line `cd` then `git commit --dry-run -m "no label here"`
-> must still be denied.
+> the raw payload lacks the word the hook gates, and only then source `_pybin.sh`: the probe and
+> the parse are two Python starts on every Bash call, and a hook took 256 to 451 ms on an `ls`
+> before the prefilter and 60 to 150 ms after. Filter on the gated word, not on `git`
+> (maintainer decision D39, 2026-09-24): `*commit*` for the six commit gates, `*push*` for
+> `validate-push.sh`, `*no-verify*` for `block-no-verify.sh`, `*git*` only for the two confirm
+> gates, which judge several git subcommands, and `*dotnet*` or `*build.ps1*` for a build or test
+> hook. A commit gate then starts no Python on `git status`, `git diff` or `git log` either.
+> `tools/test_hooks.sh` 4c fails a Bash hook that sources `_pybin.sh` on a payload without its
+> word, and a narrowed gate that does so on any of those three git calls.
+>
+> The raw test rests on how Claude Code writes the payload, not on JSON: JSON allows `\u0067`
+> for `g`, while Claude Code writes letters literally (it sent raw UTF-8 in #647; the live proof
+> for plan 013 is still owed). So every prefiltered hook also sends a payload holding any `\u`
+> escape down the full parse (maintainer decision D40): an escaped letter can cost a parse but
+> can never hide the gated word. JSON has no short escape for a control character such as ESC,
+> so a tool response with colour codes (`\u001b`) takes the parse in the two PostToolUse hooks;
+> that costs time only. 4c feeds each hook its word with one letter escaped, and 4d checks that
+> each blocking gate answers the escaped form as it answers the plain one. `suggest-compact.sh`
+> keeps its `git`, `dotnet` and `build.ps1` filter without the escape rule, because plan 011
+> deletes it. Re-prove the premise after a Claude Code upgrade: a two-line `cd` then
+> `git commit --dry-run -m "no label here"` must still be denied.
 
 | Hook | Event | Purpose |
 |------|-------|---------|

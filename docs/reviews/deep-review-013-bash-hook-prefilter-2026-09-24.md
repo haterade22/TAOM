@@ -196,3 +196,64 @@ Verification after the fixes, in the worktree:
 | `bash tools/test_hooks.sh` | 341 passed, 0 failed | `convergence-hooks.txt` |
 | `python tools/lint_docs.py --dash-base 787fd366` | 0 new dashes; 7 size warnings, all on rules this branch does not touch | none |
 | `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` | Failed 2, Passed 10235, Skipped 2: the two known live-Armory tests, the same pair as `dotnet-test.txt` | `convergence-dotnet-test.txt` |
+
+## Maintainer decisions applied (2026-09-24)
+
+Applied on `improve/013-bash-hook-prefilter` over base `5dcef67a`, in one commit:
+`fix(hooks): v2.0.30 - apply maintainer decisions for plan 013`, the commit that adds this
+section (its hash is the branch head that carries it). No GitHub issue is cited: plan 013's
+issue is not filed yet (F7).
+
+| Decision | Review item it answers | What changed | Commit |
+|---|---|---|---|
+| D39 | NOT APPLIED: Design P2 / Efficiency F1 and Design P3 | Each gate prefilters on the word it gates: the six commit gates on `*commit*`, `validate-push.sh` on `*push*`, `block-no-verify.sh` on `*no-verify*`. `block-dangerous-git.sh` and `block-broad-git-add.sh` keep `*git*`, `suggest-compact.sh` is untouched (D42) | `fix(hooks): v2.0.30 - apply maintainer decisions for plan 013` |
+| D40 | Phase 3d row 2, Codex's alternative | A payload holding any `\u` escape takes the full parse: `\|\| "$INPUT" == *'\u'*` on the prefilter line of the twelve prefiltered hooks | same commit |
+| D38 | FOLLOW-UP HIGH: `validate-push.sh` reads only the first line | Handled in plan 011, which executes on top of this branch; nothing here | none |
+| D41 | FOLLOW-UP MED: `mark-verification-run.sh` never marks the canonical test command | Handled in plan 011; nothing here | none |
+| D42 | FOLLOW-UP: delete `suggest-compact.sh` and `notify-test-results.sh` | Handled in plan 011; nothing here. `suggest-compact.sh` is left exactly as it was, and `notify-test-results.sh` takes D40 until then | none |
+
+**D39, the word each gate needs, read from its body.** The six commit gates
+(`check-changelog-changed.sh`, `check-claude-files-tracked.sh`, `check-commit-subject-version.sh`,
+`check-moduledata-validation.sh`, `check-native-dll-crt.sh`, `check-doc-config-drift.sh`) act only
+past `*"git commit"* | *"git -"*" commit"*`; both arms hold `commit`, and the subject gate's
+`bash -c` unwrapping still needs the word `commit` in the text. `validate-push.sh` acts only at a
+token equal to `push`; `block-no-verify.sh` only on `--no-verify`. None needs more than its one
+word. `block-dangerous-git.sh` and `block-broad-git-add.sh` judge reset, clean, branch, checkout,
+restore, stash, add and `commit -a`, so `git` stays the narrowest word that reaches every case;
+the decision named neither, and they are unchanged by it. `.claude/rules/hook-authoring.md` names
+no prefilter literal (line 153 says only "after any raw-payload prefilter"), so it is unchanged;
+`docs/reference/hooks-catalog.md` carries the words. Behaviour change the maintainer accepted: with
+no usable Python, a narrowed gate prints its degraded warning only on a call holding its word.
+
+**D40, where the condition lives.** The hooks share no prefilter: each tests the raw payload on its
+own line, so the condition went into each of the twelve lines rather than into a new shared helper
+(`simplicity-criterion.md`). The rule costs a parse on any payload with a `\u` escape, including a
+tool response carrying colour codes (ESC has no short JSON escape, so it is written `\u001b`); it
+can never skip one.
+
+**Tests, written first.** `tools/test_hooks.sh`: 4c gives each narrowed gate `git status --short`,
+`git diff --stat` and `git log --oneline -5` rows that must not source `_pybin.sh`, gives
+`validate-push.sh` and `block-no-verify.sh` their own trigger rows, and feeds every prefiltered
+hook but `suggest-compact.sh` its word with one letter escaped. The new 4d feeds five blocking
+gates their blocked command plain and escaped (`git \u0063ommit -m "no label here"`,
+`git \u0070ush --force origin master`, `git commit --\u006eo-verify -m x`, `\u0067it reset --hard`,
+`\u0067it add -A`) and requires the same verdict. Section 4's `bash-trigger` payload and section
+5's starved payload gained the new words, so the contract and the degraded branch still reach
+every gate's parse path; with the old section 5 payload, `check-changelog-changed.sh` and
+`block-no-verify.sh` printed no degraded warning after D39.
+
+| Run | Result | File under `E:\repos\taom-improve\scratch\013\apply\` |
+|---|---|---|
+| `bash tools/test_hooks.sh`, before any change | 341 passed, 0 failed | `baseline.txt` |
+| D39 RED, new rows only | 341 passed, 24 failed: the 24 git-call rows of the eight narrowed gates | `red-d39.txt` |
+| D39 GREEN | 365 passed, 0 failed | `green-d39.txt` |
+| D40 RED, new rows only | 365 passed, 17 failed: 12 escaped-word rows in 4c, 5 in 4d (each plain form gave its expected verdict) | `red-d40.txt` |
+| D40 GREEN | 382 passed, 0 failed | `green-d40.txt` |
+| Old (`HEAD`) versus new hooks, stdout and exit code, 12 hooks by 20 commands | `parity: 240 cases, 0 differences` | `parity-out.txt` |
+| `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId=` | 0 errors | `dotnet-build.txt` |
+| `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` | Failed 2, Passed 10235, Skipped 2: the two known live-Armory tests | `dotnet-test.txt` |
+| `python tools/lint_docs.py --dash-base 5dcef67a` | 0 new dashes; 7 size warnings, all on rules this branch does not touch | `lint.txt` |
+| `python tools/audit_claude_config.py --no-repo-secrets --min HIGH` | no findings at or above HIGH | none |
+
+Still owed: the live proof after merge (plan 013:695). Add one case to it: a plain `git status`
+must complete with no hook message.
