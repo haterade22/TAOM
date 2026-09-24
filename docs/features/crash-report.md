@@ -281,7 +281,7 @@ Restart the game. Patch37 won't apply; the other mod's Finalizers take over.
 
 ## Risks & Known Limitations
 
-- **`MBSubModuleBase.OnSubModuleLoad` chicken-and-egg.** TAOM's own `OnSubModuleLoad` is what registers Patch37. Throws in `OnSubModuleLoad` of mods that load BEFORE TAOM are not catchable by us — those land in vanilla / BUTR. Patch37 is registered first in TAOM's load to maximise coverage of our own init.
+- **`MBSubModuleBase.OnSubModuleLoad` chicken-and-egg.** TAOM's own `OnSubModuleLoad` is what registers Patch37, and Patch37 cannot catch a throw from that method: its `MBSubModuleBase.OnSubModuleLoad` finalizer patches the base method's body, and TAOM's override is already running when it attaches. Throws in `OnSubModuleLoad` of mods that load BEFORE TAOM are not catchable by us either; those land in vanilla / BUTR. TAOM applies its own categories through `TryPatchCategory`, so a binding that no longer resolves logs a `[PatchApply]` error and skips one category instead of failing the load. Patch37 is still registered first so its tick finalizers are live as early as possible.
 - **`MissionBehavior.OnMissionTick` is abstract.** Harmony patches its overrides at JIT time. Mods whose `MissionBehavior` subclasses were already JIT'd before TAOM loaded won't have the Finalizer attached. Acceptable — same caveat applies to BEW.
 - **Crash UI re-entry.** A throw in our own collector or renderer would loop. Two layers of thread-static `_handling` flags break the loop and let the original exception bubble out to vanilla.
 - **ZIP bundle write to `Logs/`.** If `Logs/` is read-only or full, only the log line lands (no bundle). Bundle write is wrapped in try/catch.

@@ -17,7 +17,7 @@ fixed points (load, pre-menu, game start, mission init, tick, unload). Inside th
 
 | Override | When | What TAOM does |
 |---|---|---|
-| **`OnSubModuleLoad()`** (:91) | Earliest — module DLL loaded, before menu | `_harmony = new Harmony("com.taom.mod")` (:104); apply most patch categories via **`_harmony.PatchCategory("PatchNN_X")`** (:133-242); wire static patch fields via `.Initialize(service, …)` (:207-235); IoC bootstrap. |
+| **`OnSubModuleLoad()`** (:91) | Earliest — module DLL loaded, before menu | `_harmony = new Harmony("com.taom.mod")` (:104); apply most patch categories via **`TryPatchCategory("PatchNN_X")`** (:133-242), the guarded helper over `_harmony.PatchCategory(assembly, category)`: a failure logs `[PatchApply]` and skips only that category; wire static patch fields via `.Initialize(service, …)` (:207-235); IoC bootstrap. |
 | **`OnBeforeInitialModuleScreenSetAsRoot()`** (:247) | After all modules load, before main menu | Pre-menu setup; NativeSkinFixes **install** (the native MinHook layer — managed Harmony can't touch native; **parked 2026-07-08** — the install call is commented out, so it does no MinHook work until re-enabled). |
 | **`OnGameStart(Game, IGameStarter)`** (:294) | A game (campaign) is starting | `if (gameStarter is CampaignGameStarter cs)` → **`cs.AddBehavior(new XxxBehavior(...))`** (every CampaignBehavior, Phase 9) + **`cs.AddModel(new TaomXxxModel(...))`** (every GameModel, Phase 7/15/16). |
 | **`OnGameInitializationFinished(Game)`** (:512) | Campaign fully initialized | Post-init; defensive-infra success marker (DR3 `OnGameInitializationFinished`). |
@@ -27,7 +27,7 @@ fixed points (load, pre-menu, game start, mission init, tick, unload). Inside th
 
 ## HOW it works — Harmony mechanics
 - **`new Harmony(id)`** — the patch *owner* (`"com.taom.mod"`); all TAOM patches belong to this owner (used by PatchShield's allowlist — `feedback_harmony_owner_allowlist_from_vendored_dll_enumeration`).
-- **Categories:** a patch class carries `[HarmonyPatch(typeof(Target), "Method")]` + `[HarmonyPatchCategory("PatchNN_X")]`; **`_harmony.PatchCategory("PatchNN_X")`** applies all patches in that group. TAOM applies categories *selectively* (some conditionally, e.g. `Patch37_CrashReport` :109), so a category can be skipped without disabling everything.
+- **Categories:** a patch class carries `[HarmonyPatch(typeof(Target), "Method")]` + `[HarmonyPatchCategory("PatchNN_X")]`; **`TryPatchCategory("PatchNN_X")`** (in `SubModule`, through `PatchCategoryApplier`) applies all patches in that group. Harmony stops a category at its first class whose target does not resolve and throws; the helper contains that to the one category. TAOM applies categories *selectively* (some conditionally, e.g. `Patch37_CrashReport` :109), so a category can be skipped without disabling everything.
 - **Patch kinds:**
   - **Prefix** — runs before the original; **`return false` skips the original** (and you set `__result`). Used to fully replace behavior (the spider spawn patch, QuickActions Sell-All).
   - **Postfix** — runs after; reads/modifies `__result` + args. The default (SmartCavalry/CompanionTactics `SetMovementOrder`, banner-color).
