@@ -13,12 +13,10 @@ namespace TAOM.Tests.Features.LordSpawnGuard;
 ///    fail silently — verified against the shipped 0Harmony: <c>PatchClassProcessor
 ///    .PatchWithAttributes</c> throws <c>ArgumentException("Undefined target method for patch
 ///    method …")</c> when <c>GetOriginalMethod()</c> returns null, and <c>ReportException</c>
-///    rethrows it as a <c>HarmonyException</c>. Since <c>SubModule</c>'s
-///    <c>OnGameInitializationFinished</c> batch does not wrap its <c>PatchCategory</c> calls, that
-///    surfaces as a module-load crash taking the rest of the batch with it. This test exists to
-///    turn that into a red build instead. (An earlier revision of this comment claimed the
-///    opposite — "no warning anywhere" — which would send crash triage looking for a silent no-op
-///    that cannot happen.)
+///    rethrows it as a <c>HarmonyException</c>. <c>SubModule</c> applies the category through
+///    <c>TryPatchCategory</c>, which logs that as a <c>[PatchApply]</c> error, shows a red notice
+///    and skips only this category, so the landless-culture guard would be off for the session.
+///    This test exists to turn that into a red build instead.
 ///  - The finalizer declares <c>ref MobileParty __result</c>. If the return type ever changes,
 ///    Harmony throws while applying the category at module load, same path.
 ///

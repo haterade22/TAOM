@@ -2,6 +2,44 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-24
+
+### fix(harmony): v2.0.30 - apply every patch category through one guard
+
+`Main/SubModule.cs` applied TAOM's Harmony patches one category at a time with bare
+`_harmony.PatchCategory("PatchNN_X")` calls, 64 of 84 with no guard at all. Harmony 2.4.2 has no
+catch around a category, so one patch class whose target no longer resolves (an engine rename after
+a Steam bump, or another mod reshaping IL) threw straight out of the SubModule hook. In
+`OnSubModuleLoad` the engine logs and rethrows, so the game would not start with TAOM enabled. In
+`OnGameInitializationFinished` the once-per-process flag is set before the batch, so the throw
+skipped every later category (the Patch65, Patch82 and Patch84 crash guards among them), the three
+watchdogs, `ManualPatchApplicator.ApplyAll` and the Harmony census.
+
+Every category now goes through `TryPatchCategory`, backed by the new `PatchCategoryApplier`
+(`Main/PatchCategoryApplier.cs`). A failure is logged at Error under `[PatchApply]` with its full
+cause, skips only that category, and is named in one red on-screen line per phase (module load,
+main menu setup, game initialization, mission start). The applier calls the two-argument
+`PatchCategory(assembly, category)` with `typeof(SubModule).Assembly`, because the one-argument
+overload picks its assembly from the caller's stack frame. Three hand-guarded sites keep their side
+effects: the crash-report hooks subscribe only when Patch37 applied, the character-preview log says
+FAILED rather than "applied OK" on a failure, and a Patch77 failure still disables the Player
+Switcher for the session. Nine per-category try/catch blocks collapsed into the helper. One
+deliberate behaviour change: a failed Patch61 or Patch89 main category no longer skips its three
+sub-categories.
+
+The comment above the Patch37 attach claimed its finalizers covered the rest of `OnSubModuleLoad`;
+they cannot (the finalizer patches the base method, and TAOM's override is already running). The
+comment, `docs/features/crash-report.md` and
+`docs/reference/engine/submodule-lifecycle-and-harmony.md` now say so and name the guard.
+
+Tests: `PatchCategoryApplierTests` (9) covers the try and catch paths, per-category isolation, the
+phase summary, the real Harmony 2.4.2 throw on an unresolvable target, and a source gate that fails
+the build on any direct `.PatchCategory(` call in `Main` other than the applier's delegate. Nine
+text tests that pinned the old call spelling now pin `TryPatchCategory(`. Full suite: 10244 passed,
+2 skipped, 2 failed (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, which fail the same way at the base).
+Nothing smoked in game: the live apply path and the red notice need a running game. Plan 009.
+
 ## 2026-09-23
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)

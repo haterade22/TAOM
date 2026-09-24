@@ -292,7 +292,7 @@ public class Patch80KingdomVoteDeadlockBindingTests
 
         StringAssert.Contains(
             File.ReadAllText(subModule),
-            "_harmony.PatchCategory(\"" + Category + "\")",
+            "TryPatchCategory(\"" + Category + "\")",
             "SubModule.cs never applies " + Category + " — all three seams would be dead code.");
     }
 
