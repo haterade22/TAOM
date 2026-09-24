@@ -2,6 +2,23 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-24
+
+### perf(battlebalance): v2.0.30 - read the MCM settings once per process (plan 003)
+
+`BattleBalanceSettingsProvider` resolved `TaomSettings.Instance` on every property read, and
+`GetDefaultTroopPower` reads up to seven of them per troop per simulation round. The provider now
+takes the reference once in its constructor and reads through it, so live MCM edits still apply
+(the same contract as `NameplateFadeSettingsProvider`). The one precondition, checked in code: the
+provider is first built at campaign start (`RegisterBattleBalanceAndTargeting` under
+`OnGameStart`), after MCM has created the settings; nothing in the `OnSubModuleLoad` eager pass
+resolves it, so it never caches a null. Ported from the June branch `impl-003` (`6eb5955c`); that
+branch's warg half is superseded by plan 015.
+
+Tests: the six no-MCM default pins from `6eb5955c` (green before and after) and a new IL rule,
+`Getters_NeverReadTaomSettingsInstance_TheConstructorDoes`, RED against the old provider. Full
+suite: 10320 passed, 2 skipped, 0 failed.
+
 ## 2026-09-23
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)
