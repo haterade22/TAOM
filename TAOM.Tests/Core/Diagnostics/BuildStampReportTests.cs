@@ -49,6 +49,30 @@ public class BuildStampReportTests
         Assert.IsFalse(BuildStampReport.TryParseStamp("2.0.15+build.", out _));
     }
 
+    [TestMethod]
+    public void TryParseStamp_DirtyAndNoGitSuffixes_StillParse()
+    {
+        foreach (var s in new[]
+        {
+            "build.20260923-184249Z+0123456789abcdef0123456789abcdef01234567.dirty",
+            "build.20260923-184249Z+0123456789abcdef0123456789abcdef01234567.nogit",
+            "build.20260923-184249Z+nogit",
+        })
+        {
+            Assert.IsTrue(BuildStampReport.TryParseStamp(s, out var stamp), s);
+            Assert.AreEqual(new DateTime(2026, 9, 23, 18, 42, 49, DateTimeKind.Utc), stamp, s);
+        }
+    }
+
+    [TestMethod]
+    public void ReadInformationalVersion_TaomAssembly_CarriesTheBuildStamp()
+    {
+        string text = BuildStampReport.ReadInformationalVersion(typeof(BuildStampReport).Assembly);
+
+        StringAssert.StartsWith(text, "v");
+        Assert.IsTrue(BuildStampReport.TryParseStamp(text, out _), text);
+    }
+
     // The three IsMismatched tests that used to sit here were deleted with the method itself:
     // Classify superseded it in production, and its same-build / weeks-apart / symmetry cases are
     // covered verbatim by the Classify tests below. Keeping a method alive only to keep its tests

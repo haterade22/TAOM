@@ -17,6 +17,9 @@ namespace TAOM.Tests.Features.CrashReport;
 [TestClass]
 public class CrashBundleWriterTests
 {
+    private const string TestBuildStamp =
+        "v2.0.0.0 build.20260923-184249Z+0123456789abcdef0123456789abcdef01234567.dirty";
+
     private string _dir = string.Empty;
 
     [TestInitialize]
@@ -57,6 +60,15 @@ public class CrashBundleWriterTests
         // The rest of the manifest is unaffected.
         StringAssert.Contains(manifest, "TAOM CrashReport bundle");
         StringAssert.Contains(manifest, "Signature: deadbeef");
+    }
+
+    [TestMethod]
+    public void BuildManifest_CarriesTheTaomBuildStamp()
+    {
+        var manifest = CrashBundleWriter.BuildManifest(MakeContext(null, EmptyLogs()), "report", "{}");
+
+        StringAssert.Contains(manifest, "TAOM build: " + TestBuildStamp,
+            "the manifest is read first, so the build identity belongs there without unzipping");
     }
 
     // ---- the ZIP (#481: diag.log travels with the bundle) ----
@@ -125,7 +137,7 @@ public class CrashBundleWriterTests
         return new ExceptionContext(
             CapturedAtUtc: new DateTime(2026, 8, 19, 19, 4, 50, DateTimeKind.Utc),
             CrashSignature: "deadbeef",
-            Identity: new IdentitySnapshot("v1.5.2", "1.5.2.x", "v2.0.28", "sha1", "Some.Origin", "en-US"),
+            Identity: new IdentitySnapshot("v1.5.2", "1.5.2.x", "v2.0.28", "sha1", "Some.Origin", "en-US", TestBuildStamp),
             Exception: null,
             StackFrames: Array.Empty<StackFrameSnapshot>(),
             Harmony: new HarmonyCorrelationSnapshot(Array.Empty<StackFramePatchInfo>(), Array.Empty<HarmonyOwnerSummary>(), 0),

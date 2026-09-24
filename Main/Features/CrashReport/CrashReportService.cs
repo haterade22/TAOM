@@ -180,7 +180,7 @@ public sealed class CrashReportService : ICrashReportService
             stack);
 
         var identity = Safe(() => _identity.Collect(originatingPatchTarget), failures, "Identity")
-                       ?? new IdentitySnapshot("?", "?", "?", "?", originatingPatchTarget, "?");
+                       ?? new IdentitySnapshot("?", "?", "?", "?", originatingPatchTarget, "?", "?");
         var modules = Safe(() => _modules.Collect(), failures, "Modules") ?? new ModuleInventorySnapshot(Array.Empty<ModuleSnapshot>());
         var assemblies = Safe(() => _assemblies.Collect(), failures, "Assemblies") ?? new AssemblyInventorySnapshot(Array.Empty<AssemblySnapshot>());
         var harmony = Safe(() => _harmony.CollectFromException(exception, stack), failures, "Harmony") ?? new HarmonyCorrelationSnapshot(Array.Empty<StackFramePatchInfo>(), Array.Empty<HarmonyOwnerSummary>(), 0);

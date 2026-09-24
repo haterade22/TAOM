@@ -65,6 +65,7 @@ public sealed class PlainTextCrashReportRenderer : ICrashReportRenderer
         Section(sb, "Identity");
         sb.AppendLine($"Bannerlord: {id.BannerlordVersion} (exe {id.BannerlordExeFileVersion})");
         sb.AppendLine($"TAOM:       {id.TaomVersion} (dll sha1 {id.TaomDllSha1})");
+        sb.AppendLine($"Build:      {id.TaomBuild}");
         sb.AppendLine($"Origin:     {id.OriginatingPatchTarget}");
         sb.AppendLine($"Language:   {id.LanguageCode}");
     }
