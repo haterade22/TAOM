@@ -2,6 +2,29 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-24
+
+### fix(enlistment): v2.0.30 - session reset covers load and new campaign (plan 014)
+
+Enlistment no longer carries clocks from one campaign into the next. Loading an earlier save could
+hold you inside a town your commander had already left, and silence the shore-leave offer for up to
+the rest of the playthrough, because both remembered a campaign hour from the session before.
+Starting a new campaign without restarting the game also skipped Enlistment's cache reset entirely.
+Both paths now clear every per-session value.
+
+`ServiceMaintenanceService.ResetSessionCaches`, the feature's one reset point, now also clears the
+settlement-dwell anchor, the arrival-offer settlement id and its 24-hour cooldown, and the per-hour
+army-rhythm snapshot (the rhythm service's uncalled `Invalidate` is renamed `ResetForNewSession`).
+`EnlistmentBehavior.OnNewGameCreated` now calls the reset too, so the cached commander party, the
+army handle and the stale-battle anchor no longer leak into a second campaign in one process. The
+reset only nulls in-memory fields: no save-format change. Accepted trade-off: the maintenance
+service now depends on the wait-menu presenter's interface so the reset point stays single.
+
+Tests: `EnlistmentSessionResetTests` (6) and two `ServiceMaintenanceServiceTests`. Full suite in the
+plan worktree: 10243 passed, 2 skipped, 2 failed (the two live-Armory tests that fail without this
+change). Not smoked in game: load an earlier save while enlisted, then start a second campaign in one
+process.
+
 ## 2026-09-23
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)
