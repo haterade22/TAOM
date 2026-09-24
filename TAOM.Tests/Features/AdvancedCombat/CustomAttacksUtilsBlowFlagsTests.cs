@@ -15,6 +15,7 @@ namespace TAOM.Tests.Features.AdvancedCombat;
 /// relied on since the elephant port.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class CustomAttacksUtilsBlowFlagsTests
 {
     [TestMethod]

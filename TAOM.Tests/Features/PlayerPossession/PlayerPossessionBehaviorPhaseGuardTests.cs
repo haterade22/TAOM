@@ -12,6 +12,7 @@ namespace TAOM.Tests.Features.PlayerPossession;
 /// Hero.MainHero, so it is live-game.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class PlayerPossessionBehaviorPhaseGuardTests
 {
     private IPlayerPossessionService _possession;

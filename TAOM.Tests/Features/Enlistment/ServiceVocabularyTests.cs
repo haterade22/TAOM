@@ -18,6 +18,7 @@ namespace TAOM.Tests.Features.Enlistment;
 /// process-global text variable would have been overwritten by another sentence's condition.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class ServiceVocabularyTests
 {
     [TestMethod]

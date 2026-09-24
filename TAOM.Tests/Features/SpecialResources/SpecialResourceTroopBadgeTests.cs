@@ -15,6 +15,7 @@ namespace TAOM.Tests.Features.SpecialResources;
 /// string, never baked into a default text (#434).
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class SpecialResourceTroopBadgeTests
 {
     private static SpecialResource Resource(string id, string name) =>

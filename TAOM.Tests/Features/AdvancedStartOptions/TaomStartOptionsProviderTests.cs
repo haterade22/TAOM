@@ -61,6 +61,7 @@ public class TaomStartOptionsProviderTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void Provider_BindsTheWayTheEngineDiscoversIt()
     {
@@ -87,6 +88,7 @@ public class TaomStartOptionsProviderTests
     // ---- the merged option set, vanilla's provider first as load order guarantees ----
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void MergedOptions_VanillaThenTaom_CarryEveryTaomKingdomAndNoUnitedEmpire()
     {

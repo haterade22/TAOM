@@ -5,6 +5,7 @@ using TAOM.Features.InitialChildGeneration;
 namespace TAOM.Tests.Features.InitialChildGeneration;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class TaomInitialChildGenerationBehaviorTests
 {
     private IInitialChildGenerationService _service;

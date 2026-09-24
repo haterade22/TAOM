@@ -12,6 +12,7 @@ namespace TAOM.Tests.Features.CultureDoctrine;
 /// through it. The fourth battle lost 116 of 122 archers standing behind the wall.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class ArcherFlankGeometryTests
 {
     // The wall stands at the origin facing +Y (the enemy is north); right is +X.

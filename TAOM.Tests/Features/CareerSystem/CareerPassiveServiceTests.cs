@@ -9,6 +9,7 @@ using TAOM.Features.CareerSystem.Domain;
 namespace TAOM.Tests.Features.CareerSystem;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class CareerPassiveServiceTests
 {
     private CareerPassiveService _service;

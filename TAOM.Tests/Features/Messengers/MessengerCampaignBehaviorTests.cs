@@ -24,6 +24,7 @@ namespace TAOM.Tests.Features.Messengers;
 // catalog. This test class closes that gap with two regression-grade source-file assertions
 // (catch the exact #121 class) plus DryIoc + lifecycle checks for the behavior itself.
 [TestClass]
+[TestCategory("RequiresGame")]
 public class MessengerCampaignBehaviorTests
 {
     // --- Wiring catalog regression tests ---

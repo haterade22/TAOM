@@ -21,6 +21,7 @@ namespace TAOM.Tests.Features.FieldCamp;
 /// bodies are the honest untested boundary sliver, exercised only in game.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class CampServiceTests
 {
     private sealed class TestableCampService : CampService

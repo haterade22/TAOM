@@ -10,6 +10,7 @@ using TaleWorlds.Core;
 namespace TAOM.Tests.Features.HeroRace;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class EyeHeightAdjustmentHookTests
 {
     private EyeHeightAdjustmentHook _sut;

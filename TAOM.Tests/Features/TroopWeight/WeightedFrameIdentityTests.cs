@@ -27,6 +27,7 @@ namespace TAOM.Tests.Features.TroopWeight;
 /// quietly moving a player-facing prompt.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class WeightedFrameIdentityTests
 {
     private static string FindRepoRoot()

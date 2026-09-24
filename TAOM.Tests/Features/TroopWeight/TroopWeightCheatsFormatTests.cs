@@ -18,6 +18,7 @@ namespace TAOM.Tests.Features.TroopWeight;
 /// exists to catch.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class TroopWeightCheatsFormatTests
 {
     [TestMethod]

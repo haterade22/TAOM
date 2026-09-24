@@ -4,6 +4,27 @@
 
 ## 2026-09-24
 
+### ci(tests): v2.0.30 - build and test C# on hosted Windows runners
+
+- **CI compiles C# again, with no game and no workstation.** No job compiled TAOM on any branch:
+  the C# job needed a self-hosted runner that was never registered and ran only for
+  `bannerlord-1.4.5`. The new `.github/workflows/csharp.yml` runs on GitHub-hosted Windows for
+  every push and pull request on `bannerlord-1.5.x` and `bannerlord-1.4.5`. It builds against
+  BUTR's metadata-only reference assemblies for the pinned Steam build, runs the unit tests that
+  need no game (8,183 executed locally) and the binding gate against those assemblies laid out as a
+  game folder (338 checks, skips fail). The self-hosted job and its warning are gone.
+- **`GameReferences.targets` owns the game references.** `-p:TaomGameRefs=RefAsm` switches all
+  three projects to the reference assemblies; the default, `Install`, evaluates to exactly the
+  references the projects had before. A build with no install now stops with one error naming
+  `BANNERLORD_GAME_DIR` instead of hundreds of CS0246. `GameReferencesTargetsTests` pins the BUTR
+  build to `.claude/pinned-game-version.txt`: bump both on an engine bump. In RefAsm mode the
+  targets also copy the `System.Numerics.Vectors` package's `netstandard2.0` copy into the test
+  output and the reference game folder, where install mode gets the game's own copy.
+- **Three test categories, used only by CI.** `RequiresGame` (103 classes that execute engine
+  code), `RequiresGameIL` (29 binding checks that need vanilla IL or data) and `LiveInstall` (10
+  classes that read the live Armory or the vanilla install). Local runs are unchanged;
+  `.claude/rules/tests.md` says when to add each.
+
 ### fix(bindings): v2.0.30 - convergence fixes for plan 008
 
 - **A failed or aborted run is never a pass.** The all-skipped branch added below also caught

@@ -20,6 +20,7 @@ namespace TAOM.Tests.Features.EconomyDiagnostics;
 /// resolution proves the object graph is satisfiable.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class EconomyDiagnosticsWiringTests
 {
     private static IContainer NewContainer()

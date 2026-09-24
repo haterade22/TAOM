@@ -21,6 +21,7 @@ namespace TAOM.Tests.Features.AutoResolveDiagnostics;
 ///     reads as "no battles happened" rather than "the logger was never wired".
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class AutoResolveDiagnosticsWiringTests
 {
     private static IContainer BuildContainer()

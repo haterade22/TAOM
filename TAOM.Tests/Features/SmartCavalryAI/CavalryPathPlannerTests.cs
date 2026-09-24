@@ -8,6 +8,7 @@ using TAOM.Features.SmartCavalryAI;
 namespace TAOM.Tests.Features.SmartCavalryAI;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class CavalryPathPlannerTests
 {
     private CavalryPathPlanner _sut = null!;

@@ -23,6 +23,7 @@ namespace TAOM.Tests.Features.FiefGranting;
 /// handler may touch the record for a null settlement, a non-siege battle, or a co-op client.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class FiefGrantingBehaviorSessionResetTests
 {
     private IFiefSiegeParticipationService _participation = null!;

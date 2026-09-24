@@ -19,6 +19,7 @@ namespace TAOM.Tests.Features.FieldCamp;
 /// claim to check, so the test can fail by construction).
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class FieldCampWiringTests
 {
     private static string RepoRoot => Path.GetFullPath(

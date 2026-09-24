@@ -19,6 +19,7 @@ namespace TAOM.Tests.Features.Animalia;
 /// the an_spi_attack_back phantom, 2026-06-11), and nothing logs it at load.
 /// </summary>
 [TestClass]
+[TestCategory("LiveInstall")]
 public class AnimaliaMountWiringTests
 {
     private const string ElkSaddle = "Item.taom_elk_saddle_a";

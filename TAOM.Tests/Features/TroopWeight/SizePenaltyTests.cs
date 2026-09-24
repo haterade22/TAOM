@@ -8,6 +8,7 @@ namespace TAOM.Tests.Features.TroopWeight;
 // LIMIT, so counts read raw everywhere. ComputeSizePenalty is the pure clamp behind that deflation:
 // subtract the weight surplus (weighted − raw) from the limit, floored so the limit never drops below 1.
 [TestClass]
+[TestCategory("RequiresGame")]
 public class SizePenaltyTests
 {
     [TestMethod]
@@ -61,6 +62,7 @@ public class SizePenaltyTests
 // limit.ResultNumber), so subtracting it raw over-deflated every factor-boosted culture by
 // penalty * SumOfFactors. SubtractResultFramePenalty divides the factor back out.
 [TestClass]
+[TestCategory("RequiresGame")]
 public class ResultFramePenaltyTests
 {
     private const float Tolerance = 0.01f;

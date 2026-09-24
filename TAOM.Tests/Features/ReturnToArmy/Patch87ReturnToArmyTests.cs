@@ -164,6 +164,7 @@ public class Patch87ReturnToArmyTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void VanillaConsequence_StillReachesTheWaitMenuSwitchAndTheVillageLeave()
     {

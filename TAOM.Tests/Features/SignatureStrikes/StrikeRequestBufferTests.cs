@@ -12,6 +12,7 @@ namespace TAOM.Tests.Features.SignatureStrikes;
 /// if something did, it would land in the NEXT drain rather than in the list being iterated.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class StrikeRequestBufferTests
 {
     private static StrikeEffect Slam => new StrikeEffect(

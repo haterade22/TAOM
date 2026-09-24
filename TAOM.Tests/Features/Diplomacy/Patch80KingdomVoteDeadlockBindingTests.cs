@@ -198,6 +198,7 @@ public class Patch80KingdomVoteDeadlockBindingTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void ReadyToAiChoose_StillRunsInsideStartElection_WhichIsWhatSeamDCatches()
     {
@@ -219,6 +220,7 @@ public class Patch80KingdomVoteDeadlockBindingTests
     // ---- The engine premises the fix rests on ----------------------------------------------
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void ApplySelection_StillGatesOnIsCancelled()
     {
@@ -240,6 +242,7 @@ public class Patch80KingdomVoteDeadlockBindingTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void ExecuteDone_StillReadsChosenOutcomeText_WhichIsWhySeamBDoesNotCallIt()
     {

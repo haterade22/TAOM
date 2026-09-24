@@ -16,6 +16,7 @@ namespace TAOM.Tests.Features.CareerSystem;
 /// are passed to dataStore.SyncData().
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class CareerPersistenceTests
 {
     private CareerDataService _dataService;

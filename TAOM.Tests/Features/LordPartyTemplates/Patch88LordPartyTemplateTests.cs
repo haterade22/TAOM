@@ -98,6 +98,7 @@ public class Patch88LordPartyTemplateTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void BothVanillaReads_StillGoThroughTheClanGetter()
     {

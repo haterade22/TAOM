@@ -12,6 +12,7 @@ namespace TAOM.Tests.Features.PlayerSwitcher;
 /// settled the player's kingdom.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class KingdomJoinOfferBehaviorTests
 {
     private IKingdomJoinOfferService _offer;

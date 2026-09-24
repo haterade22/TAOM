@@ -21,6 +21,7 @@ namespace TAOM.Tests.Features.Elephant;
 /// read the repo snapshot, and the live tests prove the installed copy matches it and no other module declares the name.
 /// </summary>
 [TestClass]
+[TestCategory("LiveInstall")]
 public class HowdahPrefabTests
 {
     // The deck, re-measured 2026-09-19 in Blender from the TRUE vertex extents of the elite howdah's upward faces at

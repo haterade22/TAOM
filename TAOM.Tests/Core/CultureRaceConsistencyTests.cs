@@ -25,6 +25,7 @@ namespace TAOM.Tests.Core;
 /// Data-only check, so it needs no game and runs in milliseconds.
 /// </summary>
 [TestClass]
+[TestCategory("LiveInstall")]
 public class CultureRaceConsistencyTests
 {
     private static string FindRepoRoot()

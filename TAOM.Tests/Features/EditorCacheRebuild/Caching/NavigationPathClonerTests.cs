@@ -5,6 +5,7 @@ using TAOM.Features.EditorCacheRebuild.Caching;
 namespace TAOM.Tests.Features.EditorCacheRebuild.Caching;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class NavigationPathClonerTests
 {
     [TestMethod]

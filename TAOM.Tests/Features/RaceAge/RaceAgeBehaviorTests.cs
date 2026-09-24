@@ -15,6 +15,7 @@ namespace TAOM.Tests.Features.RaceAge;
 // while the hero is in a MapEvent/SiegeEvent, and for the player character). The hero survived the
 // day, still matched ShouldDieOfOldAge on the next daily tick, and was announced again.
 [TestClass]
+[TestCategory("RequiresGame")]
 public class RaceAgeBehaviorTests
 {
     private IRaceAgeService _raceAgeService;

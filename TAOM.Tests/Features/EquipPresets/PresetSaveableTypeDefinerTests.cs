@@ -8,6 +8,7 @@ using TAOM.Features.EquipPresets.Models;
 namespace TAOM.Tests.Features.EquipPresets;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class PresetSaveableTypeDefinerTests
 {
     [TestMethod]

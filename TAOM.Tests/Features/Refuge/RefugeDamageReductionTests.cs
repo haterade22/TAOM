@@ -14,6 +14,7 @@ namespace TAOM.Tests.Features.Refuge;
 /// were non-zero.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class RefugeDamageReductionTests
 {
     [TestMethod]

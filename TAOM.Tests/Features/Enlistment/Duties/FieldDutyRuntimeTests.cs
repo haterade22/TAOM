@@ -22,6 +22,7 @@ namespace TAOM.Tests.Features.Enlistment.Duties;
 /// because they asserted the defect.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class FieldDutyRuntimeTests
 {
     private IModLogger _logger = null!;

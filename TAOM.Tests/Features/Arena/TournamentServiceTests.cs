@@ -13,6 +13,7 @@ namespace TAOM.Tests.Features.Arena;
 /// ShouldDismountInTournament (dwarf tournament-cavalry fix, Patch46) is pure over IRaceManager.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class TournamentServiceTests
 {
     // Arbitrary FaceGen race ids — the IRaceManager mock defines their meaning.

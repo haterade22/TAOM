@@ -18,6 +18,7 @@ namespace TAOM.Tests.Features.SupplyLines;
 /// on the VMs must be bound somewhere (unused properties are dead code per gui-ui.md).
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class SupplyOrderPrefabBindingTests
 {
     private static string RepoRoot => Path.GetFullPath(

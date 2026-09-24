@@ -10,6 +10,7 @@ using TaleWorlds.Core;
 namespace TAOM.Tests.Features.CustomBattles;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class SideCommanderFilterTests
 {
     private ICustomBattleService _service;

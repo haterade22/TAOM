@@ -73,6 +73,7 @@ public class GlobalStringsOverridesTests
     // ---- the engine facts this class exists for, pinned on the installed DLLs ----
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void Engine_AddVariationWithId_AppendsAndTheFirstRowWins()
     {
@@ -90,6 +91,7 @@ public class GlobalStringsOverridesTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void Apply_ReplacesVanillasRowInPlace_AndAddsTaomOnlyRows()
     {
@@ -113,6 +115,7 @@ public class GlobalStringsOverridesTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void Apply_TheRealGlobalStrings_MakesEveryAsoKingdomResolveOverVanilla()
     {

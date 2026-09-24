@@ -26,6 +26,7 @@ namespace TAOM.Tests.Features.BanditManagement;
 /// member is pinned. The behaviour is covered by <c>HideoutBossFightServiceTests</c>.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class Patch86HideoutBossFightBindingTests
 {
     private static bool _gameLoaded;
@@ -112,6 +113,7 @@ public class Patch86HideoutBossFightBindingTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void BossPhaseCap_StillFeedsTheCampaignTrim()
     {
@@ -177,6 +179,7 @@ public class Patch86HideoutBossFightBindingTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void AmbushPadding_StillDrawsFromTheTypeCache()
     {

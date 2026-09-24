@@ -10,6 +10,7 @@ using TAOM.Features.Siege.Models;
 namespace TAOM.Tests.Features.Siege;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class SiegeDefenseServiceTests
 {
     private ISiegeDefenseConfigProvider _configProvider;

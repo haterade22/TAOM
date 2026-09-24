@@ -18,9 +18,12 @@ untrusted PR code on the personal self-hosted workstation.
 
 Both MSBuild flags are required on build AND test. Build the solution, not just
 `Main`, before testing with `--no-build`; otherwise a stale test DLL can pass.
-Do not use the deploying default of `build.ps1` as a review-time check. The game
-and .NET Framework 4.7.2 targeting pack are local dependencies, not provided by a
-generic hosted runner. Missing prerequisites mean not run, not passed.
+Do not use the deploying default of `build.ps1` as a review-time check. Without
+the game, add `-p:TaomGameRefs=RefAsm` to build against BUTR's metadata-only
+reference assemblies (`GameReferences.targets`, as `.github/workflows/csharp.yml`
+does). Such a run cannot execute the tests tagged `RequiresGame`,
+`RequiresGameIL` or `LiveInstall`, so it is partial evidence. Missing
+prerequisites mean not run, not passed.
 
 Capture test totals, failures and skips. Empty discovery is not success. The
 existing Python CI job checks its discovery floor; record skips affecting the

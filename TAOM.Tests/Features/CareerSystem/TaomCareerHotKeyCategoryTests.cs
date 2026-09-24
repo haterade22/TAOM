@@ -17,6 +17,7 @@ namespace TAOM.Tests.Features.CareerSystem;
 /// the campaign-map time controls.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class TaomCareerHotKeyCategoryTests
 {
     private TaomCareerHotKeyCategory _sut;

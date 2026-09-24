@@ -22,7 +22,7 @@
 		     System.Management.dll v4.700.19.56404 at <game>\bin\Win64_Shipping_Client\. At
 		     runtime the game has already loaded the 4.0.1.0 copy, so compile-time matching is
 		     required for predictable behavior. -->
-		<Reference Include="$(GameFolder)\bin\$(GameBinariesFolder)\System.Management.dll">
+		<Reference Include="$(TaomSystemManagementDll)">
 			<HintPath>%(Identity)</HintPath>
 			<Private>False</Private>
 		</Reference>
@@ -32,28 +32,28 @@
 		     no version skew. -->
 		<Reference Include="System.IO.Compression" />
 		<Reference Include="System.IO.Compression.FileSystem" />
-		<Reference Include="$(GameFolder)\bin\$(GameBinariesFolder)\System.Numerics.Vectors.dll">
+		<Reference Include="$(TaomSystemNumericsVectorsDll)">
 			<HintPath>%(Identity)</HintPath>
 			<Private>False</Private>
 			<Aliases>SNV</Aliases>
 		</Reference>
-		<Reference Include="$(GameFolder)\bin\$(GameBinariesFolder)\TaleWorlds.*.dll" Exclude="$(GameFolder)\bin\$(GameBinariesFolder)\TaleWorlds.Native.dll">
+		<Reference Include="$(TaomGameBin)\TaleWorlds.*.dll" Exclude="$(TaomGameBin)\TaleWorlds.Native.dll">
 			<HintPath>%(Identity)</HintPath>
 			<Private>False</Private>
 		</Reference>
-		<Reference Include="$(GameFolder)\Modules\Native\bin\$(GameBinariesFolder)\*.dll">
+		<Reference Include="$(TaomNativeModuleBin)\*.dll">
 			<HintPath>%(Identity)</HintPath>
 			<Private>False</Private>
 		</Reference>
-		<Reference Include="$(GameFolder)\Modules\SandBox\bin\$(GameBinariesFolder)\*.dll">
+		<Reference Include="$(TaomSandBoxModuleBin)\*.dll">
 			<HintPath>%(Identity)</HintPath>
 			<Private>False</Private>
 		</Reference>
-		<Reference Include="$(GameFolder)\Modules\SandBoxCore\bin\$(GameBinariesFolder)\*.dll">
+		<Reference Include="$(TaomSandBoxCoreModuleBin)\*.dll" Condition="'$(TaomSandBoxCoreModuleBin)' != ''">
 			<HintPath>%(Identity)</HintPath>
 			<Private>False</Private>
 		</Reference>
-		<Reference Include="$(GameFolder)\Modules\CustomBattle\bin\$(GameBinariesFolder)\*.dll">
+		<Reference Include="$(TaomCustomBattleModuleBin)\*.dll">
 			<HintPath>%(Identity)</HintPath>
 			<Private>False</Private>
 		</Reference>
@@ -194,4 +194,5 @@
 		<Message Importance="high" Text="TAOM: mirrored @(_TaomServerMirrorFiles->Count()) files Win64_Shipping_Client -&gt; Win64_Shipping_Server in $(GameFolder)\Modules\$(ModuleId)\bin\" />
 	</Target>
 
+	<Import Project="..\GameReferences.targets" />
 </Project>

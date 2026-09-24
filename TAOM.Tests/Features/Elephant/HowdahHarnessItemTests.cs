@@ -14,6 +14,7 @@ namespace TAOM.Tests.Features.Elephant;
 /// machine without the Armory); the troop binding is in the repo and always checked.
 /// </summary>
 [TestClass]
+[TestCategory("LiveInstall")]
 public class HowdahHarnessItemTests
 {
     private const string EliteHowdahMesh = "sk_hd_elep_armor_howdah_elite_a";

@@ -65,6 +65,7 @@ public class MarriageAlignmentBindingTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void CheckNpcMarriages_ReadsClanAll_ExactlyTwice()
     {

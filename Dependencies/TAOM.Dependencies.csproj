@@ -13,8 +13,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Reference Include="$(GameFolder)\bin\$(GameBinariesFolder)\TaleWorlds.*.dll"
-				   Exclude="$(GameFolder)\bin\$(GameBinariesFolder)\TaleWorlds.Native.dll;$(GameFolder)\bin\$(GameBinariesFolder)\TaleWorlds.CampaignSystem.dll">
+		<Reference Include="$(TaomGameBin)\TaleWorlds.*.dll"
+				   Exclude="$(TaomGameBin)\TaleWorlds.Native.dll;$(TaomGameBin)\TaleWorlds.CampaignSystem.dll">
 			<HintPath>%(Identity)</HintPath>
 			<Private>False</Private>
 		</Reference>
@@ -123,4 +123,5 @@
 		<Message Importance="high" Text="TAOM.Dependencies: mirrored @(_TaomDepsServerMirrorFiles->Count()) files Win64_Shipping_Client -&gt; Win64_Shipping_Server in $(GameFolder)\Modules\$(ModuleId)\bin\" />
 	</Target>
 
+	<Import Project="..\GameReferences.targets" />
 </Project>
