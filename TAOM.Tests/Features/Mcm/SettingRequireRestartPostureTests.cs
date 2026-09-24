@@ -23,10 +23,11 @@ namespace TAOM.Tests.Features.Mcm;
 /// Every TAOM setting is read live through <c>TaomSettings.Instance</c> (no Harmony category is
 /// gated on a setting at apply time), so the honest posture is <c>RequireRestart = false</c>
 /// everywhere, and a new setting that omits the flag is a bug this test catches. The allowlist
-/// holds two kinds of exception: a setting whose consumer is parked (commented out in SubModule.cs),
-/// where a restart does not help either but flipping the flag would promise an effect that does not
-/// exist; and the two CrashReport gates that SubModule.OnSubModuleLoad reads once to decide whether
-/// to install the patches at all, where a restart genuinely is the only way to turn them on.
+/// holds settings whose consumer is parked (commented out in SubModule.cs), where a restart does
+/// not help either but flipping the flag would promise an effect that does not exist. Note that no
+/// MCM setting can gate anything in OnSubModuleLoad: GlobalSettings<T>.Instance is null until MCM's
+/// own OnBeforeInitialModuleScreenSetAsRoot, which is why the two CrashReport toggles left this
+/// list on 2026-09-23 and are read at capture time instead.
 ///
 /// MCMv5.dll is a runtime-only dependency of the test project, so the attribute is read by name
 /// rather than by type, the same way MCM's own <c>BasePropertyDefinitionWrapper</c> reads it.
@@ -37,8 +38,6 @@ public class SettingRequireRestartPostureTests
     private static readonly IReadOnlyDictionary<string, string> RestartAllowlist = new Dictionary<string, string>
     {
         [$"{nameof(TaomSettings)}.{nameof(TaomSettings.EnableNativeSkinFixes)}"] = "PARKED 2026-07-08: the install call is commented out in SubModule.cs, the toggle drives nothing",
-        [$"{nameof(CrashReportSettings)}.{nameof(CrashReportSettings.EnableCrashCapture)}"] = "gates PatchCategory(Patch37_CrashReport) in OnSubModuleLoad: off is live, on needs a launch",
-        [$"{nameof(CrashReportSettings)}.{nameof(CrashReportSettings.EnableNativeToManagedCapture)}"] = "gates Native2ManagedPatcher.AttachAll in OnSubModuleLoad: installed once at launch",
     };
 
     private static readonly Type[] SettingsClasses =

@@ -192,21 +192,20 @@ public class SubModule : MBSubModuleBase
         // unreachable. Split CrashReport bootstrap doesn't fix this without re-implementing
         // a manual DI container; accept and document the residual.
         _harmony = new Harmony("com.taom.mod");
-        if ((TAOM.Features.CrashReport.CrashReportSettings.Instance?.EnableCrashCapture) ?? true)
+        // Installed unconditionally. CrashReportSettings.Instance is always null here: MCM builds
+        // its settings provider in its own OnBeforeInitialModuleScreenSetAsRoot, after every
+        // OnSubModuleLoad, so an MCM gate at this point always took its fallback. The toggles are
+        // read at capture time instead (CrashReportPatchHelper.HandleAndSwallow,
+        // Native2ManagedBridge.Finalizer, AppDomainExceptionHook).
+        try
         {
-            try
-            {
-                _harmony.PatchCategory("Patch37_CrashReport");
-                IoC.Resolve<TAOM.Features.CrashReport.Hooks.AppDomainExceptionHook>().Subscribe();
-                if ((TAOM.Features.CrashReport.CrashReportSettings.Instance?.EnableNativeToManagedCapture) ?? true)
-                {
-                    IoC.Resolve<TAOM.Features.CrashReport.Hooks.Native2ManagedPatcher>().AttachAll(_harmony);
-                }
-            }
-            catch (System.Exception ex)
-            {
-                IoC.Resolve<IModLogger>().LogError($"[CrashReport] init failed: {ex.GetType().Name}: {ex.Message}");
-            }
+            _harmony.PatchCategory("Patch37_CrashReport");
+            IoC.Resolve<TAOM.Features.CrashReport.Hooks.AppDomainExceptionHook>().Subscribe();
+            IoC.Resolve<TAOM.Features.CrashReport.Hooks.Native2ManagedPatcher>().AttachAll(_harmony);
+        }
+        catch (System.Exception ex)
+        {
+            IoC.Resolve<IModLogger>().LogError($"[CrashReport] init failed: {ex.GetType().Name}: {ex.Message}");
         }
 
         _uiExtender = UIExtender.Create("TAOM");
