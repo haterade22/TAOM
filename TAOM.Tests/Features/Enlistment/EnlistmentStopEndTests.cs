@@ -23,7 +23,7 @@ public class EnlistmentStopEndTests
 {
     private const string Commander = "lord_1_1";
 
-    private sealed class ReachedTheReconcile : System.Exception { }
+    private sealed class ReachedTheStopEnd : System.Exception { }
 
     private static EnlistmentMaintenanceBehavior NewBehavior(
         IEnlistmentWaitMenuPresenter presenter, bool isAuthority = true)
@@ -47,10 +47,10 @@ public class EnlistmentStopEndTests
         // throws a sentinel: reaching it proves the stop ended on the commander's edge, and before
         // the engine read.
         var presenter = Substitute.For<IEnlistmentWaitMenuPresenter>();
-        presenter.When(p => p.OnStopEnded()).Do(_ => throw new ReachedTheReconcile());
+        presenter.When(p => p.OnStopEnded()).Do(_ => throw new ReachedTheStopEnd());
         var sut = NewBehavior(presenter);
 
-        Assert.ThrowsException<ReachedTheReconcile>(() => sut.OnPartyLeftSettlement(Commander),
+        Assert.ThrowsException<ReachedTheStopEnd>(() => sut.OnPartyLeftSettlement(Commander),
             "the commander left the town and the offer's settlement latch was not cleared");
     }
 
@@ -85,6 +85,9 @@ public class EnlistmentStopEndTests
         // A source-presence pin: RegisterEvents reads CampaignEvents.Instance (a live campaign),
         // and the engine handler takes a MobileParty, so neither wiring line can run in a test.
         // Comment lines are ignored, so a commented-out line fails.
+        AssertHasCodeLine(
+            RepoPath("Main", "Features", "Enlistment", "Hooks", "EnlistmentMaintenanceBehavior.cs"),
+            "CampaignEvents.OnSettlementLeftEvent.AddNonSerializedListener(this, OnSettlementLeft);");
         AssertHasCodeLine(
             RepoPath("Main", "Features", "Enlistment", "Hooks", "EnlistmentMaintenanceBehavior.cs"),
             "OnPartyLeftSettlement(party?.LeaderHero?.StringId)");

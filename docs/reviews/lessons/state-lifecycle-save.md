@@ -778,7 +778,7 @@ code cleared it in `ServiceAttachmentService.ExitSettlementForService`, the swee
 player out when the commander has gone. The offer grants a pass, and a pass suspends that sweep
 (#512), so the route every accepted offer takes (the player walks out later through vanilla's Leave
 option) never cleared it, and the next stop in the same town stayed silent. The feature doc called
-"once per stop" literal. Five review lenses and Codex found it.
+"once per stop" literal. Four review lenses and Codex found it.
 
 - **Why missed:** the stop's end was identified with one of the player's exits instead of with the
   event that ends a stop (the commander leaving the town). The `TownLeavePolicy` class doc still

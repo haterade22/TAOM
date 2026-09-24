@@ -5,7 +5,7 @@ reviewed by six deep-review lenses and a Codex gpt-6-astra (ultra) pass. Five of
 held up in code. Decision 6 ("the offer latch clears when the stop ends") was implemented on only
 one of the ways a stop ends: the exit sweep that walks the player out. A shore-leave pass, which the
 offer itself grants, suspends that sweep, so the player walks out through vanilla's Leave option
-and the latch never cleared. Five lenses and Codex found it independently. The rest was text and
+and the latch never cleared. Four lenses and Codex found it independently. The rest was text and
 coverage: a heap-release claim the code does not establish, a comment that reversed the engine's
 teardown order, a source-level test that passed on a commented-out call, stale "a load or a new
 campaign" docs, and three untested edges. All sixteen confirmed findings in the changed code are

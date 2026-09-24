@@ -74,7 +74,7 @@ No hot-path cost in the changed hunks (all lifecycle edges and field clears).
 | # | Sev | Finding | Verdict | Action |
 |---|---|---|---|---|
 | F1 | LOW | Decision 6 not done on the shore-leave path | CONFIRMED | Fixed (code), see below |
-| F2 | LOW | `ColumnLeftSettlement` wiring in `EnlistmentMenuBehavior` untested | CONFIRMED | Fixed: `EnlistmentStopEndTests.BothStopEndEdges_AreWiredToTheHooks`, a source pin that also covers the new maintenance-hook route; mutation-checked (commenting the menu line out fails the test) |
+| F2 | LOW | `ColumnLeftSettlement` wiring in `EnlistmentMenuBehavior` untested | CONFIRMED | Fixed: `EnlistmentStopEndTests.BothStopEndEdges_AreWiredToTheHooks`, a source pin that also covers the new maintenance-hook route (its event subscription pin was added in the convergence pass); mutation-checked (commenting the menu line out fails the test) |
 | F3 | LOW | Co-op client load of a save with data untested | CONFIRMED | Fixed: `GameLoad_AfterALoadingSyncData_OnACoopClient_KeepsTheLoadedRecord` (characterisation, green first run) |
 | F4 | LOW | Throwing `ColumnLeftSettlement` subscriber untested | CONFIRMED | Fixed: `Exit_AThrowingColumnLeftSubscriber_IsSwallowed_AndTheReParkStillRuns` |
 | F5 | LOW | `EnlistmentContainerWiringTests` comment said `OnGameLoaded` cannot run in a test | CONFIRMED | Fixed |
@@ -156,7 +156,7 @@ string keys and test ids. Verdict: ISSUES FOUND, P1 0, P2 1, P3 2.
 2. Fixed: heap-release overclaims narrowed; teardown order corrected; source pins ignore comments.
 3. Fixed: test gaps F2, F3, F4; stale comments and docs.
 4. NEEDS MIKE: the items listed below.
-5. Owed: the Step 4 convergence pass on the fix diff (a single `deep-reviewer`; this delegate cannot spawn agents), and the in-game smokes in the CHANGELOG list.
+5. Done: the Step 4 convergence pass on the fix diff (see Convergence below). Still owed: the in-game smokes in the CHANGELOG list.
 
 ## Improvements (Step 4)
 
@@ -216,6 +216,29 @@ Phase 3h is consolidated later for all branches. Lessons to add:
 
 RCA: [rca-enlistment-session-scope-decisions-2026-09-24.md](rca-enlistment-session-scope-decisions-2026-09-24.md).
 
-VERDICT: READY FOR COMMIT. Every confirmed defect in the changed code is fixed except S1 (the
-ADR-002 split, which needs an issue) and F9 (the issue body), both waiting on Mike. The Step 4
-convergence pass on this fix diff is still owed.
+## Convergence
+
+A single convergence reviewer read the review-fix diff `a67792c4..fd61757b`. It found no runtime
+defect and confirmed behaviour parity (the commander filter, the singleton presenter latch, army
+followers, the co-op client path and every cited engine line). It reported four defects, all in
+tests or review docs. Each was checked against the code before fixing; all four held.
+
+| # | Severity | Defect | Verified | Fix |
+|---|---|---|---|---|
+| C1 | LOW | `BothStopEndEdges_AreWiredToTheHooks` pinned the forwarding line in `EnlistmentMaintenanceBehavior` but not its `OnSettlementLeftEvent` subscription (`:60`), so deleting the subscription kept the suite green | CONFIRMED: no test referenced `OnSettlementLeftEvent` | A third `AssertHasCodeLine` on the subscription text. Mutation check: with `:60` commented out, the filtered run failed ("EnlistmentMaintenanceBehavior.cs no longer contains: CampaignEvents.OnSettlementLeftEvent..."), then the line was restored |
+| C2 | LOW | The RCA summary and the lesson said five lenses found the stop-end defect | CONFIRMED: the RCA's own per-agent section credits it to Agents 1, 4, 5 and 6 | "Five" changed to "Four" in the RCA summary and in `lessons/state-lifecycle-save.md` |
+| C3 | NIT | The sentinel `ReachedTheReconcile` is thrown from `OnStopEnded`, before the reconcile | CONFIRMED against the test body | Renamed `ReachedTheStopEnd`. The RED output quoted under decision 6 above keeps the old name, since it is the recorded output of that run |
+| C4 | NIT | The verdict said READY FOR COMMIT while Step 4 was still owed | CONFIRMED | Verdict rewritten below |
+
+False positives: none.
+
+Verification after the convergence fixes:
+
+- `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter FullyQualifiedName~EnlistmentStopEndTests`
+  with the subscription commented out: "Failed: 1, Passed: 3, Total: 4" (the mutation check).
+- Full suite with the line restored: "Failed: 2, Passed: 10266, Skipped: 2, Total: 10270". The two
+  failures are the same known live-Armory tests.
+
+VERDICT: READY FOR COMMIT. Step 4 is complete: the convergence pass found four defects in tests and
+review docs, all fixed, and none in runtime code. Every confirmed defect in the changed code is fixed
+except S1 (the ADR-002 split, which needs an issue) and F9 (the issue body), both waiting on Mike.
