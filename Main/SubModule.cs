@@ -20,6 +20,7 @@ using TAOM.Features.CharacterCreation;
 using TAOM.Features.FactionMap;
 using TAOM.Features.InitialChildGeneration;
 using TAOM.Adapters;
+using TAOM.Composition;
 using TAOM.Features.Diplomacy;
 using TAOM.Features.Diplomacy.Hooks;
 using TAOM.Features.Diplomacy.Models;
@@ -617,6 +618,7 @@ public class SubModule : MBSubModuleBase
         Patch42_FillSettlements_Transpiler.Initialize(logger);
         Patch42_HourlyTickParty_Postfix.Initialize(castleRecruitmentSettings, logger);
         TryPatchCategory("Patch42_CastleRecruitment");
+        FeatureModuleHooks.RunPhase(ApplyPhase.ProcessLoad, TryPatchCategory);
         // No ReportPatchFailures here: nothing receives a message yet (see the startup report in
         // OnBeforeInitialModuleScreenSetAsRoot), so this phase's failures wait for it.
 
@@ -639,6 +641,7 @@ public class SubModule : MBSubModuleBase
         {
             _basicTableauGuardApplied = true;
             TryPatchCategory("Patch55_BasicTableauRaceGuard");
+            FeatureModuleHooks.RunPhase(ApplyPhase.MainMenu, TryPatchCategory);
             // Reports OnSubModuleLoad's failures and Patch55's together. The earliest a notice can
             // be shown: Native's GauntletUISubModule, which runs before TAOM, creates the chat log
             // and the inquiry manager in this hook, and InformationManager queues nothing sent
@@ -832,6 +835,10 @@ public class SubModule : MBSubModuleBase
             RegisterSpecialResourcesAndCareers(campaignStarter, careerPassives);
             RegisterCampaignLifeBehaviors(campaignStarter);
         }
+
+        // Feature modules last: their behaviors and models follow every hand-wired one (a Custom
+        // Battle starter gets only CustomBattle-target models).
+        FeatureModuleHooks.AddGameStartContent(gameStarterObject);
     }
 
     // [SaveLoad] campaign-launch memory stamps. Engine order for a saved campaign (installed
@@ -1869,6 +1876,7 @@ public class SubModule : MBSubModuleBase
         // Both categories fail independently: a diagnostic must never cost a working tournament.
         TryPatchCategory("Patch69_TournamentRosterGuard");
         TryPatchCategory("Patch69_TournamentEndGuard");
+        FeatureModuleHooks.RunPhase(ApplyPhase.GameInit, TryPatchCategory);
         ReportPatchFailures("game initialization");
 
         // Manual patches for PRIVATE engine methods (AccessTools-resolved targets; can't use
@@ -1928,6 +1936,7 @@ public class SubModule : MBSubModuleBase
         {
             _missionTimePatchesApplied = true;
             TryPatchCategory("Patch_MissionTime_SetMovementOrder");
+            FeatureModuleHooks.RunPhase(ApplyPhase.FirstMission, TryPatchCategory);
             ReportPatchFailures("mission start");
         }
 
@@ -2029,6 +2038,9 @@ public class SubModule : MBSubModuleBase
         var colorStore = IoC.Resolve<IAgentColorStore>();
         if (colorStore != null)
             AddTaomBehavior(new AgentColorStoreCleanupBehavior(colorStore));
+
+        // Feature modules' mission behaviors, after every hand-wired one and before the kernel tail.
+        FeatureModuleHooks.AddMissionBehaviors(mission, AddTaomBehavior);
 
         // MissionDiagnostic: added LAST so it sees all behaviors added by TAOM AND
         // every other mod in the load chain. Dumps MissionBehaviors + MissionLogics

@@ -1,6 +1,7 @@
 using DryIoc;
 using System.Collections.Generic;
 using TAOM.Adapters;
+using TAOM.Composition;
 using TAOM.Core.Domain;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
@@ -78,6 +79,13 @@ namespace TAOM;
 public static class IoC
 {
     private static IContainer _container;
+
+    // The feature-module runner (Main/Composition), built by Configure. SubModule's hooks reach it
+    // through FeatureModuleHooks. Null only before Configure has run.
+    internal static ModuleRunner? Modules { get; private set; }
+
+    // The container as a resolver for feature-module factories. Null before Configure and after Dispose.
+    internal static IResolver? Resolver => _container;
 
     public static void Configure()
     {
@@ -198,6 +206,13 @@ public static class IoC
         // Enlistment's would be appended as a second unkeyed default.
         Features.UncapturableHeroes.UncapturableHeroesIoC.RegisterUncapturableHeroesFeature(container);
 
+        // Feature modules (Main/Composition/FeatureModules.cs) register after every hand-wired
+        // feature above, so a module sees the container as the last hand-wired feature did. A module
+        // that throws is logged and skipped for the session, unless it owns save data.
+        var modules = new ModuleRunner(FeatureModules.All, () => container.Resolve<IModLogger>());
+        modules.RegisterServices(container);
+        Modules = modules;
+
         _container = container;
 
         // Eager patch-static initialisation runs ONLY after the last registration above: an eager
@@ -211,6 +226,10 @@ public static class IoC
 
         // Post-registration initialization
         CareerSystemIoC.InitializeCalculators(container.Resolve<Features.CareerSystem.Mutations.IMutationCalculatorRegistry>());
+
+        // Feature-module statics: after every registration, hand-wired and module alike (the rule
+        // the patch-static block above states).
+        modules.InitializeStatics(container);
     }
 
     private static void RegisterCoreServices(IContainer container)
