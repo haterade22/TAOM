@@ -220,3 +220,22 @@ Not edited here; for the consolidated Phase 3h update:
   makes live, because a git-ref-scoped prompt never opens them; pointers whose target text it does
   not open (a CHANGELOG line promising a procedure).
 - **False positives Codex has produced:** none new in this review.
+
+## Convergence
+
+Convergence pass on `19ca72d3..155e3ea5` (the review-fix commit). No runtime or code-standards
+violation in the changed C#; three LOW defects in the applied fixes, all verified against the code
+and fixed. No false positives.
+
+| # | Defect | Verified by | Fix |
+|---|---|---|---|
+| 1 | `NullableRatchetGateTests` split `<NoWarn>` on `;` only and matched numeric ids, so `1701,8602`, `1701 8602` or the `nullable` alias (which the compiler expands to every nullable warning) switched the ratchet off with the gate green | New `LeakedRatchetIds_CatchesEveryCompilerSpelling` rows: 4 of 6 RED on the old parsing (comma, space, `nullable`, `Nullable`). A temporary `;nullable` in the Dependencies `<NoWarn>` left the Dependencies gate row green | Split on `;`, `,` and space; expand `nullable` (any case) to the seven ids. The same temporary `;nullable` now fails the Dependencies row (reverted). `code-quality.md` names the alias |
+| 2 | `siege.md` item 5 and the diagram's catch line still called the catch's hand-back to vanilla protective, against the registry and `lessons/harmony-il.md` | The patch returns at `:24-25` when camp-1 has frames, and its only write to camp-1 (`:41`) is followed by a statement that cannot throw, so the catch only fires with camp-1 null or empty | Item 5 and the diagram now say the original runs and throws, and link the registry |
+| 3 | The graduation procedure in `code-quality.md` built `Main/TAOM.csproj` without `-p:DisableModuleCopy=true -p:ModuleId=`, which deploys into the game install (`ModuleId` defaults to the project name; `DisableModuleCopy` does not gate CopyModule, per the csproj's own comment) | `Main/TAOM.csproj:7` and the `FailOnIdeStateInModule` comment | Steps 1 and 3 use `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId= --no-incremental` |
+
+The CHANGELOG entry's gate test count is now 9 (2 csproj rows, 6 spelling rows, 1 negative row).
+
+**Verification:** `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`: Failed 2,
+Passed 10249, Skipped 2, Total 10253. The two failures are the known live-Armory ones
+(`TheElkItem_DeclaresTheScaleTheReachIsTunedFor`,
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`).

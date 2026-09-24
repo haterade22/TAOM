@@ -19,7 +19,7 @@ A Harmony Prefix on `BesiegerCamp.GetSiegeCampPartyPosition` runs before the ori
 2. If `siegeCamp2GlobalFrames` is non-empty, copies those frames into `siegeCamp1GlobalFrames`, clears camp-2, and returns `true` so the original method can proceed normally with the substituted frames.
 3. If neither set of frames exists and there is no besieged settlement to ring (the camp's `SiegeEvent` or its settlement is null), it logs that and returns `true`. Vanilla then throws on the empty camp-1 array, exactly as it did after the catch-all that handled this case before. The path is defensive only: in v1.5.3 both engine callers (`MobileParty.OnPartyJoinedSiegeInternal`, `BesiegerCamp.SetPositionAfterMapChange`) dereference `SiegeEvent.BesiegedSettlement` before calling, so vanilla cannot reach it.
 4. Otherwise, with neither set of frames, it places the party on a ring around `settlement.GatePosition` (eight slots per ring, radius 0.5 plus 0.3 per further ring, chosen by the party's index), keeps the gate's `IsOnLand`, and returns `false` to skip the original entirely.
-5. Any exception within the prefix is caught and logged; the original method is allowed to run (`return true`) to avoid cascading failures.
+5. Any exception within the prefix is caught and logged, and the original runs (`return true`). The catch can only fire while camp-1 is still null or empty, so vanilla then throws the same `IndexOutOfRangeException` (or an NRE on a null array); see the [patch registry](../reference/harmony-patch-registry.md).
 
 ### Component Diagram
 ```
@@ -34,7 +34,7 @@ BesiegerCamp.GetSiegeCampPartyPosition  (Harmony Prefix)
   |     `-- No:  no settlement? --> log + return true (original runs and throws)
   |              else __result = ring slot around GatePosition  --> return false (skip original)
   |
-  `-- Exception? --> log + return true
+  `-- Exception? --> log + return true (original runs and throws)
 ```
 
 ## Configuration

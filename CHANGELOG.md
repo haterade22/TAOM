@@ -16,8 +16,8 @@ warnings untouched), and `Main/Features/Siege` is the first folder at `error`.
   with no settlement instead of throwing and catching its own NRE (same outcome, defer to
   vanilla); `KingdomSiegeMessages` is nullable because a partial JSON entry leaves a key null.
 - **New tests**: `SiegeCampGuardPatchTests` (5, one per path through the prefix) and
-  `NullableRatchetGateTests` (2), which fails if a ratchet id goes back into a production
-  `<NoWarn>`.
+  `NullableRatchetGateTests` (9), which fails if a ratchet id, in any separator the compiler
+  accepts, or the `nullable` alias goes back into a production `<NoWarn>`.
 - **Procedure for the next folder**: `docs/ai-includes/code-quality.md`, "How nullable is
   enforced" (steps, fix rules, hotfix escape).
 - **Review follow-ups** (deep review and Codex,
@@ -25,7 +25,8 @@ warnings untouched), and `Main/Features/Siege` is the first folder at `error`.
   recommends `!` for the nullable ids a graduated folder turns into errors; the Patch8 comment,
   `siege.md` and the registry entry now say that the no-settlement path hands vanilla an array
   it throws on, and that vanilla cannot reach that path; the no-op `<NoWarn>$(NoWarn)</NoWarn>`
-  in `Main/TAOM.csproj` is gone.
+  in `Main/TAOM.csproj` is gone. The graduation procedure's build command no longer deploys into
+  the game install, and `siege.md` says the catch also hands vanilla an array it throws on.
 
 ## 2026-09-23
 
