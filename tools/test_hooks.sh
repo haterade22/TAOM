@@ -831,6 +831,20 @@ if grep -q 'PASSED WITH SKIPS (Passed: 0, Skipped: 5' <<< "$OUT"; then
 else
     bad "notify-test-results.sh stayed silent on an all-skipped run: $OUT"
 fi
+# vstest prints "Test Run Failed." with no Failed: line when a run logs an error message, and
+# "Test Run Aborted." when the host dies. Neither is a pass, whatever the Skipped: count says.
+OUT=$(ntr_banner 'Test Run Failed.\nTotal tests: 5\n     Skipped: 5')
+if grep -q 'TEST RESULTS: FAILED' <<< "$OUT" && ! grep -q 'PASSED' <<< "$OUT"; then
+    ok "a failed run with only skips still reports FAILED"
+else
+    bad "notify-test-results.sh called a failed skips-only run a pass: $OUT"
+fi
+OUT=$(ntr_banner 'Test Run Aborted.\nTotal tests: Unknown\n     Skipped: 5')
+if ! grep -q 'PASSED' <<< "$OUT"; then
+    ok "an aborted run with skips is never called a pass"
+else
+    bad "notify-test-results.sh called an aborted run a pass: $OUT"
+fi
 
 # ---------------------------------------------------------------------------
 head2 "8. /context-budget scan.sh runs under set -u and measures the launch load"

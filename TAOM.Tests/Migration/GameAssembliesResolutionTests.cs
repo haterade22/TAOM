@@ -5,7 +5,8 @@ namespace TAOM.Tests.Migration;
 
 /// <summary>
 /// How the binding gate finds the game. The two environment variables win, in the order
-/// Directory.Build.props uses; when neither is set in the test process, the gate falls back to
+/// Directory.Build.props uses; when neither names a usable folder in the test process (the
+/// override needs Bannerlord.exe, the game dir only needs to exist), the gate falls back to
 /// the GameFolder this test assembly was compiled against, so a test DLL built against the game
 /// never skips the binding suite just because its runner lacks the variables.
 /// </summary>

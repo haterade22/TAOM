@@ -4,6 +4,18 @@
 
 ## 2026-09-24
 
+### fix(bindings): v2.0.30 - convergence fixes for plan 008
+
+- **A failed or aborted run is never a pass.** The all-skipped branch added below also caught
+  `Test Run Failed.` (an error message with zero failed tests) and `Test Run Aborted.` when their
+  only count was `Skipped:`, and printed `PASSED WITH SKIPS`. With no `Passed:` count it now fires
+  only on `Test Run Successful.`, so those runs get the old `FAILED (counts unavailable)` or no
+  banner again (two new `tools/test_hooks.sh` 7c cases, red first).
+- **The skill no longer claims a complete failure list.** verify-bindings Step 2 names
+  `Main/SubModule.cs not found` as a precondition to report, and says a failure matching no row is
+  still a finding. Two test comments now state the resolver's fallback exactly and drop the stale
+  model count.
+
 ### fix(bindings): v2.0.30 - review follow-ups for plan 008
 
 - **Both resolver guards are pinned.** Two tests cover the override that holds no `Bannerlord.exe`

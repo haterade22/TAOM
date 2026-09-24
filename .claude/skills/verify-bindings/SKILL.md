@@ -39,7 +39,7 @@ Three test classes under `TAOM.Tests/Migration/`:
 
 ## Step 2 — Interpret a failure (do NOT just rerun)
 
-A red gate is an environment gap or a real finding. `Assert.Inconclusive failed. Game assemblies not loaded` (or `unavailable`, or `Game dir unresolved`) means no install resolved: report it (Pre-flight) and change no code. Every other failure is one of the classes below. Fix at the source, do not silence the test:
+A red gate is an environment gap or a real finding. `Assert.Inconclusive failed. Game assemblies not loaded` (or `unavailable`, or `Game dir unresolved`) means no install resolved: report it (Pre-flight) and change no code. `Main/SubModule.cs not found` is the same kind of precondition: the test process ran outside a `TAOM.sln` tree, so report it and rerun from the repo, never edit code for it. The common finding classes are below; a failure that matches none of them is still a finding, so read its message and the test that raised it. Fix at the source, do not silence the test:
 
 | Failure message | Root cause | Fix |
 |---|---|---|

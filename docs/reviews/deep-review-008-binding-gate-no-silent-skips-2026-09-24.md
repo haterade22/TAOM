@@ -224,3 +224,24 @@ reasons.
 VERDICT: READY FOR COMMIT. The remaining open items are the five NEEDS MIKE items above: the banner
 channel (with Codex P3), `TreatNoTestsAsError`, the CI `if:`, build-folder-first, and the GitHub
 issue.
+
+## Convergence
+
+The orchestrator's convergence pass reviewed the fix diff `8c89e042..549afffd` and reported three
+LOW defects. Each was checked against the code before it was fixed; none was a false positive.
+
+| # | Defect | Verified | Fix |
+|---|---|---|---|
+| D1 | The new all-skipped branch in `notify-test-results.sh` ran before the `grep -q "Failed"` fallback, so `Test Run Failed.\nTotal tests: 5\n Skipped: 5` and `Test Run Aborted.\nTotal tests: Unknown\n Skipped: 5` both printed `PASSED WITH SKIPS`. At `8c89e042` they printed `FAILED (counts unavailable)` and nothing | Two new 7c cases went red on the `549afffd` hook (`287 passed, 2 failed`), both with `PASSED WITH SKIPS (Passed: 0, Skipped: 5 ...)` | With no `Passed:` count, the skip branch now needs `Test Run Successful.`; failed and aborted runs fall through as before |
+| D2 | `verify-bindings/SKILL.md:42` said "Every other failure is one of the classes below". `GameModelOverrideBindingTests.cs:58` (`Main/SubModule.cs not found`) and `HarmonyPatchBindingTests.cs:178` (`... grew a body ...`) are in the category and match no row | Read both assertions; `grep -rl 'TestCategory("BindingVerification")' TAOM.Tests` lists 66 files | Step 2 names `Main/SubModule.cs not found` as a precondition to report, calls the table the common classes, and says an unmatched failure is still a finding |
+| D3 | `GameAssembliesResolutionTests.cs:7-10` said the fallback fires "when neither is set", which the class's own two new tests contradict; `GameModelOverrideBindingTests.cs:14` said "~37" models against `gamemodel-bases.md:7` `Models: 46.` | Read both comments and the snapshot line | The first now says "when neither names a usable folder"; the second points at the snapshot for the count |
+
+The stale-text FOLLOW-UP above is unchanged; the `:14` line it missed is fixed here.
+
+**Convergence verification:**
+- `bash tools/test_hooks.sh`: `289 passed, 0 failed` (the two new 7c cases included).
+- The full suite, `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`:
+  `Failed: 2, Passed: 10243, Skipped: 2, Total: 10247`. The two failures are the known live-Armory
+  tests `TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+  `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`.
+- The C# edits are comment-only, so the strict gate was not re-run.

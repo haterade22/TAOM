@@ -11,7 +11,8 @@ using TAOM.Features.TroopProgression.Models;
 namespace TAOM.Tests.Migration;
 
 /// <summary>
-/// Binding-verification gate for TAOM's GameModel overrides (the ~37 <c>Taom*Model</c> classes).
+/// Binding-verification gate for TAOM's GameModel overrides (the <c>Taom*Model</c> classes;
+/// taleworlds-api-snapshot/gamemodel-bases.md has the current count).
 ///
 /// Scope note — what the C# compiler already covers vs. what this adds:
 /// the compiler enforces that every <c>override</c> matches a base <c>virtual</c> with the exact

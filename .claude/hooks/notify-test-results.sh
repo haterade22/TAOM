@@ -60,9 +60,11 @@ if echo "$COMMAND" | grep -q "dotnet test"; then
   fi
   if [[ -n "$FAILED" && "$FAILED" -gt 0 ]]; then
     echo "=== TEST RESULTS: FAILED (Failed: ${FAILED}, Passed: ${PASSED:-?}${SKIPNOTE}) ===" >&2
-  elif [[ -n "$SKIPNOTE" ]]; then
+  elif [[ -n "$SKIPNOTE" ]] && { [[ -n "$PASSED" ]] || echo "$RESPONSE" | grep -q "Test Run Successful\."; }; then
     # At normal verbosity vstest prints "Passed:" only when a test passed, so an all-skipped
-    # run has no Passed count at all.
+    # run has no Passed count at all. Without one, only "Test Run Successful." makes it a pass:
+    # "Test Run Failed." (an error message, zero failed tests) and "Test Run Aborted." fall
+    # through to the fallback below (tools/test_hooks.sh section 7c).
     echo "=== TEST RESULTS: PASSED WITH SKIPS (Passed: ${PASSED:-0}${SKIPNOTE}; a skipped test checked nothing) ===" >&2
   elif [[ -n "$PASSED" ]]; then
     echo "=== TEST RESULTS: PASSED (${PASSED} tests) ===" >&2
