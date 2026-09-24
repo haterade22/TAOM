@@ -47,7 +47,7 @@ None. Grid cell size is a hardcoded constant (`CellSize = 20f`) in `SpatialGrid.
 | File | Purpose |
 |------|---------|
 | `Main/Features/AdvancedCombat/AdvancedCombatBehavior.cs` | `MissionLogic` entry point; owns tick loop and grid rebuild |
-| `Main/Features/AdvancedCombat/SpatialGrid.cs` | 3D cell-hash grid for fast radius queries; singleton pattern |
+| `Main/Features/AdvancedCombat/SpatialGrid.cs` | Cell grid keyed on (x, y) for fast radius queries (the distance test stays 3D); singleton pattern |
 | `Main/Features/AdvancedCombat/BoneCheck.cs` | Time-limited bone collision check; fires callback on hit |
 | `Main/Features/AdvancedCombat/BoneCheckDuringAnimation.cs` | Subclass of `BoneCheck`; active only during a specific animation window |
 | `Main/Features/AdvancedCombat/CustomAttacksUtils.cs` | Reflection-cached `RegisterBlow` delegate; `TakeDamage` utility |
@@ -71,9 +71,9 @@ None. Grid cell size is a hardcoded constant (`CellSize = 20f`) in `SpatialGrid.
 `TAOM.Tests/Features/AdvancedCombat/BoneCollisionServiceTests.cs` — 11 tests covering `IBoneCollisionService.CreateAnimationBoneCheck` / `CreateTimedBoneCheck` and the bone-tracking lifecycle via `IAgentAdapter` + `IAgentVisualsAdapter` substitutes.
 
 **Coverage gaps (tracked elsewhere):**
-- `SpatialGrid` and `CustomAttacksUtils` remain untested — these consume live `Skeleton` / `MatrixFrame` / sealed `Agent` types and need adapter work before they're unit-testable.
+- `CustomAttacksUtils` needs a live engine for most paths. `SpatialGrid`'s query logic is covered by `SpatialGridQueryTests.cs` through its generic helpers; its `Agent`-typed wrappers are not.
 - `SpatialGridDebugService.RenderDebugVisualization` is untested (audit issue #185).
-- `BoneCheck` itself uses live `Skeleton` matrices and is not directly unit-testable without the game runtime — coverage is achieved indirectly via `BoneCollisionService` orchestration tests.
+- `BoneCheck`'s bone math uses live `Skeleton` matrices and is not unit-testable; its per-target range gate is (`BoneCheckRangeGateTests.cs`).
 
 ## How to Add a New Bone-Based Attack
 1. Obtain an `IAgentAdapter` for the attacker and a `List<IAgentAdapter>` for targets (use `SpatialGrid.Instance.GetAgentsInRadius` to find nearby agents).
