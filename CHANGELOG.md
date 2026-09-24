@@ -2,6 +2,33 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-24
+
+### perf(patchshield): v2.0.30 - skip the ManagedCallbacks callback shims
+
+PatchShield no longer re-shields the engine's 247 native-to-managed callback shims
+(`ManagedCallbacks.{Library,Core,Engine}CallbacksGenerated`), which TAOM's Native2Managed crash
+capture already wraps with a finalizer that swallows every exception while capture is on. Pass 2
+runs inside the loading screen of the first game start (campaign or custom battle), not at the
+main menu; on a machine paying about 186 ms per Harmony patch this takes about 46 s off that
+loading screen. The hot-layer exclusion list moved from `PatchShield` into
+`PatchShieldPolicy.ExcludedTargetNamespacePrefixes` behind a tested `IsExcludedTargetNamespace`,
+and the three #331 entries are unchanged.
+
+The `shield pass` line in `diag.log` now ends with the pass's elapsed time and ms per attach, so a
+crash bundle shows what pass 2 cost that player. The prefix up to `(total: N)` is unchanged. The
+`OnGameInitializationFinished` doc comment, its log label, `docs/migration/dr3-maintenance.md` and
+`docs/migration/v1.5.2-impact.md` now say pass 2 and the crash-loop marker delete happen at game
+start; a session that quits from the main menu without starting a game still leaves the marker
+behind (documented, not changed).
+
+Plan 007. Seven new `PatchShieldPolicyTests` (23 pass). Full suite: 10242 passed, 2 skipped, 2
+failed (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, which read the live Armory and fail the
+same way without this change). Not tested in game: the live pass-2 attach count and timing need a
+custom battle start, then the last `shield pass` line in `Modules/TAOM.Dependencies/diag.log`
+should read about `+125 new` instead of `+372 new`.
+
 ## 2026-09-23
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)
