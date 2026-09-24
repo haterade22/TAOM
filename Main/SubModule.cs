@@ -2034,7 +2034,8 @@ public class SubModule : MBSubModuleBase
         if (colorStore != null)
             AddTaomBehavior(new AgentColorStoreCleanupBehavior(colorStore));
 
-        // Feature modules' mission behaviors, after every hand-wired one and before the kernel tail.
+        // Feature modules' mission behaviors: after the feature behaviors above, before the kernel tail
+        // below (MissionDiagnostic, BattleLoadPhase, the CrashReport dev trigger, CareerPerk).
         FeatureModuleHooks.AddMissionBehaviors(mission, AddTaomBehavior);
 
         // MissionDiagnostic: added LAST so it sees all behaviors added by TAOM AND

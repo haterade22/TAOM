@@ -11,18 +11,20 @@ namespace TAOM.Composition;
 /// is worse than absent), and the next module still runs. A module that owns save data fails CLOSED
 /// instead in the steps that decide whether its SyncData runs (service registration, static
 /// initialisation, campaign start): the throw propagates, because a campaign that runs without the
-/// behavior persisting its data can lose that data on the next save. Parked modules get only their
-/// service registration. Engine-free and unit-tested; the engine-facing loops are in
+/// behavior persisting its data can lose that data on the next save. That holds for a save owner
+/// that faulted in an earlier, fail-open step too: a fail-closed step throws for it instead of
+/// skipping it. A parked module never fails closed, since its behavior never runs. Parked modules
+/// get only their service registration. Engine-free and unit-tested; the engine-facing loops are in
 /// <see cref="FeatureModuleHooks"/>.
 /// </summary>
 internal sealed class ModuleRunner
 {
-    private readonly IReadOnlyList<ITaomFeatureModule> _modules;
+    private readonly IReadOnlyList<TaomFeatureModule> _modules;
     private readonly Func<IModLogger?> _logger;
     private readonly HashSet<string> _faulted = new(StringComparer.Ordinal);
     private readonly List<string> _unreported = new();
 
-    internal ModuleRunner(IReadOnlyList<ITaomFeatureModule> modules, Func<IModLogger?> logger)
+    internal ModuleRunner(IReadOnlyList<TaomFeatureModule> modules, Func<IModLogger?> logger)
     {
         _modules = modules ?? throw new ArgumentNullException(nameof(modules));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -35,6 +37,10 @@ internal sealed class ModuleRunner
 
     internal void InitializeStatics(IResolver resolver) =>
         Run("static initialisation", includeParked: false, failClosed: true, m => m.InitializeStatics(resolver));
+
+    /// <summary>The campaign-start step: fail-closed, because it decides whether a behavior's SyncData runs.</summary>
+    internal void RunCampaignStart(Action<TaomFeatureModule> addContent) =>
+        Run("campaign start", includeParked: false, failClosed: true, addContent);
 
     /// <summary>
     /// Applies each module's categories for <paramref name="phase"/> through the kernel's guarded
@@ -53,12 +59,21 @@ internal sealed class ModuleRunner
             m.OnPhase(phase, resolver);
         });
 
-    internal void Run(string step, bool includeParked, bool failClosed, Action<ITaomFeatureModule> action)
+    internal void Run(string step, bool includeParked, bool failClosed, Action<TaomFeatureModule> action)
     {
         foreach (var module in _modules)
         {
-            if (!includeParked && module.State == FeatureState.Parked) continue;
-            if (_faulted.Contains(module.Id)) continue;
+            var parked = module.ParkedReason != null;
+            if (!includeParked && parked) continue;
+            var closes = failClosed && module.OwnsSaveData && !parked;
+
+            if (_faulted.Contains(module.Id))
+            {
+                if (closes)
+                    throw new InvalidOperationException(
+                        $"[Module] {module.Id} owns save data and faulted earlier this session; {step} stops here.");
+                continue;
+            }
 
             try
             {
@@ -69,7 +84,7 @@ internal sealed class ModuleRunner
                 _faulted.Add(module.Id);
                 _unreported.Add($"{module.Id} ({step})");
                 Log($"[Module] {module.Id} failed in {step}: {ex}");
-                if (failClosed && module.OwnsSaveData)
+                if (closes)
                     throw;
             }
         }
@@ -89,7 +104,8 @@ internal sealed class ModuleRunner
         return summary;
     }
 
-    private void Log(string message)
+    /// <summary>Logs through the module logger; never throws.</summary>
+    internal void Log(string message)
     {
         try
         {

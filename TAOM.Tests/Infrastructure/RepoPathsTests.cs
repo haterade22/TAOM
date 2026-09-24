@@ -1,3 +1,4 @@
+using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -19,6 +20,24 @@ public class RepoPathsTests
 
         StringAssert.Contains(text, "public static class RepoPaths");
         Assert.IsFalse(text.Contains("\r"), "ReadSource must normalise CRLF to LF.");
+    }
+
+    // The repo-file read above passes without normalisation on an LF checkout (Codex review of plan
+    // 018, P3), so this one reads a file that certainly holds CRLF. bin/ is ignored by git.
+    [TestMethod]
+    public void ReadSource_NormalisesAnExplicitCrlfFile_ToLf()
+    {
+        var probe = RepoPaths.RepoPath("TAOM.Tests", "bin", "repopaths-crlf-probe.txt");
+        Directory.CreateDirectory(Path.GetDirectoryName(probe)!);
+        File.WriteAllText(probe, "a\r\nb\r\n");
+        try
+        {
+            Assert.AreEqual("a\nb\n", RepoPaths.ReadSource("TAOM.Tests/bin/repopaths-crlf-probe.txt"));
+        }
+        finally
+        {
+            File.Delete(probe);
+        }
     }
 
     [TestMethod]

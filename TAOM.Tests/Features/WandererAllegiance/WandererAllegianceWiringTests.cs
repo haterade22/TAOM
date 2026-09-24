@@ -17,12 +17,12 @@ using TAOM.Tests.Infrastructure;
 namespace TAOM.Tests.Features.WandererAllegiance;
 
 /// <summary>
-/// Wiring regression guard. The feature has no Harmony patch and no GameModel; it hangs off three
-/// lines that no behavioural test can see: the IoC registration, the <c>AddBehavior</c> call in
-/// <c>SubModule.cs</c>, and the two dialogue lines being registered on vanilla's
-/// <c>companion_hire</c> token ABOVE vanilla's priority 100. Drop any of them and every wanderer
-/// hires as in vanilla with no error and no log line (the "registered in IoC, invoked by nothing"
-/// class, <c>HeroRaceWiringTests</c>).
+/// Wiring regression guard. The feature has no Harmony patch and no GameModel; it hangs off its
+/// feature module (listed once in <c>FeatureModules.All</c>; its service graph resolves the dialog
+/// behavior the runner adds at campaign start) and the two dialogue lines registered on vanilla's
+/// <c>companion_hire</c> token ABOVE vanilla's priority 100. Drop the list entry or either line and
+/// every wanderer hires as in vanilla with no error and no log line (the "registered in IoC, invoked
+/// by nothing" class, <c>HeroRaceWiringTests</c>).
 /// </summary>
 [TestClass]
 public class WandererAllegianceWiringTests
@@ -79,17 +79,6 @@ public class WandererAllegianceWiringTests
         Assert.IsInstanceOfType(behavior, typeof(WandererAllegianceDialogBehavior));
         Assert.AreSame(behavior, decl.Create(container),
             "Parity: the behavior stays a container singleton, as it was when SubModule resolved it.");
-    }
-
-    [TestMethod]
-    public void WandererAllegianceIoC_RegistersEveryConsumerOfTheBehavior()
-    {
-        var src = ReadSource("Main", "Features", "WandererAllegiance", "WandererAllegianceIoC.cs");
-
-        StringAssert.Contains(src, "IWandererAllegianceConfigProvider, WandererAllegianceConfigProvider");
-        StringAssert.Contains(src, "IWandererAllegianceSettingsProvider, WandererAllegianceSettingsProvider");
-        StringAssert.Contains(src, "IWandererAllegianceService, WandererAllegianceService");
-        StringAssert.Contains(src, "Hooks.WandererAllegianceDialogBehavior");
     }
 
     [TestMethod]

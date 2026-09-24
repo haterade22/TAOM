@@ -32,7 +32,7 @@ public class ModuleRunnerTests
         _calls = new List<string>();
     }
 
-    private ModuleRunner Runner(params ITaomFeatureModule[] modules) => new(modules, () => _logger);
+    private ModuleRunner Runner(params TaomFeatureModule[] modules) => new(modules, () => _logger);
 
     private RecordingModule Module(string id) => new(id, _calls);
 
@@ -40,7 +40,7 @@ public class ModuleRunnerTests
     public void RegisterServices_VisitsEveryModuleInListOrder_ParkedIncluded()
     {
         var parked = Module("P");
-        parked.StateValue = FeatureState.Parked;
+        parked.Parked = true;
         using var container = new Container();
 
         Runner(Module("A"), parked, Module("B")).RegisterServices(container);
@@ -52,7 +52,7 @@ public class ModuleRunnerTests
     public void InitializeStatics_SkipsParkedModules()
     {
         var parked = Module("P");
-        parked.StateValue = FeatureState.Parked;
+        parked.Parked = true;
         using var container = new Container();
 
         Runner(Module("A"), parked, Module("B")).InitializeStatics(container);
@@ -89,7 +89,7 @@ public class ModuleRunnerTests
 
         runner.InitializeStatics(container);
         runner.RunPhase(ApplyPhase.GameInit, _ => true, container);
-        runner.Run("campaign start", includeParked: false, failClosed: false, m => _calls.Add(m.Id + ":step"));
+        runner.RunCampaignStart(m => _calls.Add(m.Id + ":step"));
 
         CollectionAssert.AreEqual(new[] { "B:statics", "B:phase:GameInit", "B:step" }, _calls);
     }
@@ -125,6 +125,61 @@ public class ModuleRunnerTests
         Assert.IsTrue(runner.IsFaulted("A"));
     }
 
+    // Review of plan 018 (Codex P2, lens 2, lens 5 F1): the faulted-module skip ran before the
+    // fail-closed rethrow, so a save owner that faulted in a fail-open step was silently left out of
+    // the next campaign, whose next save then dropped its data.
+    [TestMethod]
+    public void ASaveOwningModule_ThatFaultedInAFailOpenStep_FailsClosedAtTheNextCampaignStart()
+    {
+        var a = Module("A");
+        a.OwnsSave = true;
+        a.ThrowIn = "phase";
+        using var container = new Container();
+        var runner = Runner(a, Module("B"));
+        runner.RunPhase(ApplyPhase.MainMenu, _ => true, container);
+        _calls.Clear();
+
+        var ex = Assert.ThrowsException<InvalidOperationException>(
+            () => runner.RunCampaignStart(m => _calls.Add(m.Id + ":step")));
+
+        StringAssert.Contains(ex.Message, "A");
+        StringAssert.Contains(ex.Message, "campaign start");
+        Assert.AreEqual(0, _calls.Count, "Nothing after a fail-closed throw may run.");
+    }
+
+    [TestMethod]
+    public void ASaveOwningModule_ThatFailedCampaignStart_FailsClosedAgainOnTheRetry()
+    {
+        var a = Module("A");
+        a.OwnsSave = true;
+        var runner = Runner(a, Module("B"));
+        Assert.ThrowsException<InvalidOperationException>(() => runner.RunCampaignStart(
+            m => { if (m.Id == "A") throw new InvalidOperationException("A broke"); }));
+        _calls.Clear();
+
+        Assert.ThrowsException<InvalidOperationException>(
+            () => runner.RunCampaignStart(m => _calls.Add(m.Id + ":step")));
+        Assert.AreEqual(0, _calls.Count);
+    }
+
+    // Lens 5 F3: a parked module's behavior never runs, so its SyncData never runs either; failing
+    // closed over it would stop TAOM loading for a feature that is switched off.
+    [TestMethod]
+    public void AParkedSaveOwningModule_IsIsolated_InServiceRegistration()
+    {
+        var parked = Module("P");
+        parked.Parked = true;
+        parked.OwnsSave = true;
+        parked.ThrowIn = "register";
+        using var container = new Container();
+        var runner = Runner(parked, Module("B"));
+
+        runner.RegisterServices(container);
+
+        CollectionAssert.AreEqual(new[] { "P:register", "B:register" }, _calls);
+        Assert.IsTrue(runner.IsFaulted("P"));
+    }
+
     [TestMethod]
     public void RunPhase_AppliesOnlyThatPhasesCategories_InOrder_ThenCallsOnPhase()
     {
@@ -157,7 +212,7 @@ public class ModuleRunnerTests
     public void RunPhase_SkipsParkedModules()
     {
         var parked = Module("P");
-        parked.StateValue = FeatureState.Parked;
+        parked.Parked = true;
         parked.Categories.Add(new PatchCategoryDecl("Cat_Init", ApplyPhase.GameInit));
         using var container = new Container();
 
@@ -215,7 +270,6 @@ public class ModuleRunnerTests
         var module = new EmptyModule();
         using var container = new Container();
 
-        Assert.AreEqual(FeatureState.Enabled, module.State);
         Assert.IsNull(module.ParkedReason);
         Assert.IsFalse(module.OwnsSaveData);
         Assert.AreEqual(0, module.PatchCategories.Count);
@@ -243,14 +297,13 @@ public class ModuleRunnerTests
             _calls = calls;
         }
 
-        internal FeatureState StateValue = FeatureState.Enabled;
+        internal bool Parked;
         internal bool OwnsSave;
         internal string? ThrowIn;
         internal readonly List<PatchCategoryDecl> Categories = new();
 
         public override string Id => _id;
-        public override FeatureState State => StateValue;
-        public override string? ParkedReason => StateValue == FeatureState.Parked ? "test" : null;
+        public override string? ParkedReason => Parked ? "test" : null;
         public override bool OwnsSaveData => OwnsSave;
         public override IReadOnlyList<PatchCategoryDecl> PatchCategories => Categories;
 

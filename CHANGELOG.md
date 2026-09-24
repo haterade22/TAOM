@@ -18,19 +18,41 @@ changed. The switch exposed one false pass: `GameModelOverrideBindingTests` coun
 parked model is now an explicit `ParkedModels` entry with its reason, and a new test keeps that list
 honest in both directions.
 
-**The feature-module runner.** `Main/Composition` adds the module contract (`ITaomFeatureModule`,
-the `TaomFeatureModule` base with empty defaults), declarations for patch categories, campaign
+**The feature-module runner.** `Main/Composition` adds the module contract (the abstract
+`TaomFeatureModule` with empty defaults), declarations for patch categories, campaign
 behaviors, game models and mission behaviors, the ordered `FeatureModules.All` list, and
 `ModuleRunner`. The runner visits modules in list order; a module that throws is logged under
 `[Module]` and skipped for the rest of the session while the next module still runs, except that a
-module owning save data fails closed during registration, static initialisation and campaign start.
-Module patch categories go through plan 009's `TryPatchCategory`, so a failed category is reported by
-`ReportPatchFailures` and does not fault the module. Module faults from startup are held for one
-main-menu inquiry; in-game faults get a red chat line. `IoC.Configure` and each `SubModule` phase
-call the runner once, at the end of the phase's hand-wired block, and `FeatureModulesTests` pins each
-call between its anchors. The trade-off: six small types and eight kernel lines before a second
-module uses them, in return for every later migration only deleting lines from the two single-owner
-files.
+module owning save data fails closed during registration, static initialisation and campaign start,
+including when it faulted in an earlier step. Module patch categories go through plan 009's
+`TryPatchCategory`, so a failed category is reported by `ReportPatchFailures` and does not fault the
+module. Module faults from startup are held for one main-menu inquiry; in-game faults get a red chat
+line. `IoC.Configure` and each `SubModule` phase call the runner once, after the phase's feature
+block, and `FeatureModulesTests` pins each call between its anchors. Three hand-wired blocks still
+run after the module call: the main-menu work after the once-only MainMenu block,
+`ManualPatchApplicator.ApplyAll` after GameInit, and the kernel tail of mission behaviors. The
+trade-off: five small files (11 types) and one runner call per phase in the two kernel files before
+a second module uses them, in return for every later migration only deleting lines from the two
+single-owner files.
+
+**Review follow-ups.** The deep review and the Codex review found one real gap, dormant because no
+module owns save data yet: the runner skipped an already-faulted module before its fail-closed
+check, so a save owner that faulted in a fail-open step (a main-menu phase, a mission start) would
+have been left out of the next campaign silently, and that campaign's next save would have dropped
+its data. It now throws instead, on the first campaign start and on any retry. A parked save owner
+no longer fails closed (its behavior never runs). The single-implementation `ITaomFeatureModule`
+interface and the `FeatureState` enum are gone (a parked module is one with a `ParkedReason`), the
+engine-facing hooks have tests against real `CampaignGameStarter` and `BasicGameStarter` instances,
+and new guards pin the `Modules = modules;` hand-off, keep `AddGameStartContent` outside the campaign
+branch, prove the `OwnsSaveData` IL check fires, and keep `IoC.Resolver` inside the hooks. Reports:
+`docs/reviews/deep-review-018-composition-root-first-steps-2026-09-24.md`,
+`docs/reviews/rca-composition-root-first-steps-2026-09-24.md`.
+
+Known limitation: TAOM's own `Patch37_CrashReport` finalizer on `Module.OnApplicationTick` swallows
+exceptions while crash capture is on, so the campaign-start fail-closed throw would not stop a load;
+the engine retries the loading step on the next tick. No module owns save data today, so nothing
+reaches this path; what "closed" should mean at campaign start is Mike's call before the first
+save-owning module migrates.
 
 **The pilot: WandererAllegiance.** `WandererAllegianceModule` now registers the feature's services
 and declares its dialog behavior, and its lines are gone from `IoC.cs` and `SubModule.cs`. The

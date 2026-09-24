@@ -37,7 +37,7 @@ internal sealed class CampaignBehaviorDecl
 
     internal static CampaignBehaviorDecl Of<TBehavior>(Func<IResolver, TBehavior> create)
         where TBehavior : CampaignBehaviorBase =>
-        new(typeof(TBehavior), resolver => create(resolver));
+        new(typeof(TBehavior), create);
 }
 
 /// <summary>Which game starter a model is added to.</summary>
@@ -46,7 +46,7 @@ internal enum ModelTarget
     /// <summary>The CampaignGameStarter in OnGameStart, after SandBox's defaults.</summary>
     Campaign,
 
-    /// <summary>The BasicGameStarter Custom Battle hands OnGameStart.</summary>
+    /// <summary>The BasicGameStarter Custom Battle (and the editor's test battle) hands OnGameStart.</summary>
     CustomBattle,
 }
 
@@ -81,7 +81,7 @@ internal sealed class GameModelDecl
         where TSlot : GameModel
         where TModel : MBGameModel<TSlot> =>
         new(typeof(TSlot), typeof(TModel), target,
-            resolver => create(resolver),
+            create,
             (starter, model) => starter.AddModel<TSlot>((MBGameModel<TSlot>)model));
 }
 
@@ -100,5 +100,5 @@ internal sealed class MissionBehaviorDecl
 
     internal static MissionBehaviorDecl Of<TBehavior>(Func<Mission, IResolver, TBehavior> create)
         where TBehavior : MissionBehavior =>
-        new(typeof(TBehavior), (mission, resolver) => create(mission, resolver));
+        new(typeof(TBehavior), create);
 }

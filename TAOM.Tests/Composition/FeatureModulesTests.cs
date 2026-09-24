@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -29,14 +30,12 @@ public class FeatureModulesTests
     }
 
     [TestMethod]
-    public void ParkedModules_CarryAReason_AndEnabledModulesDoNot()
+    public void ParkedModules_NameTheirReason()
     {
         foreach (var module in FeatureModules.All)
         {
-            if (module.State == FeatureState.Parked)
-                Assert.IsFalse(string.IsNullOrWhiteSpace(module.ParkedReason), $"{module.Id} is parked with no reason; name the issue.");
-            else
-                Assert.IsNull(module.ParkedReason, $"{module.Id} is enabled but carries a parked reason.");
+            if (module.ParkedReason != null)
+                Assert.IsFalse(string.IsNullOrWhiteSpace(module.ParkedReason), $"{module.Id} is parked with a blank reason; name the issue.");
         }
     }
 
@@ -65,7 +64,9 @@ public class FeatureModulesTests
     {
         var declared = FeatureModules.All.SelectMany(m => m.GameModels.Select(d => (Module: m.Id, Decl: d))).ToList();
 
-        // One engine model per slot: a second AddModel for the same slot silently shadows the first.
+        // One engine model per slot among the modules: a second AddModel for the same slot silently
+        // shadows the first. Not checked yet: a module slot that SubModule also fills by hand with a
+        // different type (the first model migration adds that, with gamemodels.md rule 7).
         AssertDeclaredOnce(declared.Select(d => d.Decl.Target + ":" + d.Decl.SlotType.FullName), "model slot");
         AssertNotHandWiredToo(declared.Select(d => (d.Module, Type: d.Decl.ModelType)).ToList(), "registered");
     }
@@ -92,17 +93,37 @@ public class FeatureModulesTests
         {
             foreach (var decl in module.CampaignBehaviors)
             {
-                var syncData = decl.BehaviorType.GetMethod("SyncData",
-                    BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(IDataStore) }, null);
-                var il = syncData?.GetMethodBody()?.GetILAsByteArray();
-
-                // An empty override compiles to "nop; ret" (2 bytes, Debug) or "ret" (1 byte, Release).
-                if (il != null && il.Length > 2)
+                if (PersistsData(decl.BehaviorType))
                     Assert.IsTrue(module.OwnsSaveData,
                         $"{decl.BehaviorType.Name} persists data in SyncData, so the {module.Id} module must set OwnsSaveData "
                         + "(it then fails closed instead of running a campaign without its persistence).");
             }
         }
+    }
+
+    // Positive and negative control for the IL check above (review of plan 018, lens 4 F4): the pilot's
+    // behavior alone cannot show that the check ever fires.
+    [TestMethod]
+    public void PersistsData_FlagsARealSyncData_AndPassesAnEmptyOne()
+    {
+        Assert.IsTrue(PersistsData(typeof(TAOM.Features.FieldCamp.Hooks.FieldCampCampaignBehavior)));
+        Assert.IsFalse(PersistsData(typeof(TAOM.Features.WandererAllegiance.Hooks.WandererAllegianceDialogBehavior)));
+    }
+
+    // Review of plan 018 (lens 1): IoC.Resolver hands the whole container to Main, and a service
+    // reaching it would be a service locator the "IoC.Resolve<" review grep cannot see.
+    [TestMethod]
+    public void IoCResolver_IsReadOnlyByTheFeatureModuleHooks()
+    {
+        var mainDir = RepoPaths.RepoPath("Main");
+        var readers = Directory.GetFiles(mainDir, "*.cs", SearchOption.AllDirectories)
+            .Select(f => f.Substring(mainDir.Length + 1).Replace('\\', '/'))
+            .Where(rel => !rel.StartsWith("obj/", StringComparison.Ordinal) && !rel.StartsWith("bin/", StringComparison.Ordinal))
+            .Where(rel => RepoPaths.StripComments(File.ReadAllText(Path.Combine(mainDir, rel))).Contains("IoC.Resolver"))
+            .ToList();
+
+        CollectionAssert.AreEquivalent(new[] { "Composition/FeatureModuleHooks.cs" }, readers,
+            "Only the feature-module hooks may read IoC.Resolver; a service takes its dependencies by constructor.");
     }
 
     [TestMethod]
@@ -112,12 +133,15 @@ public class FeatureModulesTests
 
         AssertOnceBetween(code, "RegisterUncapturableHeroesFeature(container);",
             "modules.RegisterServices(container);", "_container = container;");
+        // The one line that hands the runner to FeatureModuleHooks (lens 4 F1): without it every hook
+        // returns early and every module silently does nothing.
+        AssertOnceBetween(code, "modules.RegisterServices(container);", "Modules = modules;", "_container = container;");
         AssertOnceBetween(code, "CareerSystemIoC.InitializeCalculators(",
             "modules.InitializeStatics(container);", "private static void RegisterCoreServices(");
     }
 
     [TestMethod]
-    public void Kernel_SubModule_CallsEachRunnerHookOnce_AtTheEndOfItsFeatureBlock()
+    public void Kernel_SubModule_CallsEachRunnerHookOnce_AfterItsFeatureBlock()
     {
         var code = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
@@ -132,6 +156,12 @@ public class FeatureModulesTests
             "ReportPatchFailures(\"startup\", persistent: true);");
         AssertOnceBetween(code, "RegisterCampaignLifeBehaviors(campaignStarter);",
             "FeatureModuleHooks.AddGameStartContent(gameStarterObject);", "public override void OnGameLoaded(");
+        // Outside the CampaignGameStarter branch (lens 5 F4): inside it, a Custom Battle starter never
+        // reaches the hook and every CustomBattle-target model is dropped silently.
+        var lifeAt = code.IndexOf("RegisterCampaignLifeBehaviors(campaignStarter);", StringComparison.Ordinal);
+        var hookAt = code.IndexOf("FeatureModuleHooks.AddGameStartContent(gameStarterObject);", StringComparison.Ordinal);
+        StringAssert.Contains(code.Substring(lifeAt, hookAt - lifeAt), "}",
+            "AddGameStartContent must follow the close of the CampaignGameStarter branch in OnGameStart.");
         AssertOnceBetween(code, "TryPatchCategory(\"Patch69_TournamentEndGuard\");",
             "FeatureModuleHooks.RunPhase(ApplyPhase.GameInit, TryPatchCategory);", "ReportPatchFailures(\"game initialization\");");
         AssertOnceBetween(code, "TryPatchCategory(\"Patch_MissionTime_SetMovementOrder\");",
@@ -150,6 +180,17 @@ public class FeatureModulesTests
         Assert.AreEqual(FaultNotice.Inquiry, FeatureModuleHooks.NoticeFor(ApplyPhase.MainMenu));
         Assert.AreEqual(FaultNotice.ChatLine, FeatureModuleHooks.NoticeFor(ApplyPhase.GameInit));
         Assert.AreEqual(FaultNotice.ChatLine, FeatureModuleHooks.NoticeFor(ApplyPhase.FirstMission));
+    }
+
+    // An empty override compiles to "nop; ret" (2 bytes, Debug) or "ret" (1 byte, Release).
+    // CampaignBehaviorBase.SyncData is abstract, so every concrete behavior has one.
+    private static bool PersistsData(Type behaviorType)
+    {
+        var syncData = behaviorType.GetMethod("SyncData",
+            BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(IDataStore) }, null);
+        Assert.IsNotNull(syncData, $"{behaviorType.Name} has no SyncData(IDataStore).");
+        var il = syncData!.GetMethodBody()?.GetILAsByteArray();
+        return il != null && il.Length > 2;
     }
 
     private static void AssertDeclaredOnce(IEnumerable<string> keys, string what)

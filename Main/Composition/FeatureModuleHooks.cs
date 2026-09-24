@@ -31,14 +31,17 @@ internal enum FaultNotice
 /// docs/reviews/lessons/localization-ui.md): faults from IoC.Configure and OnSubModuleLoad wait for
 /// the main-menu inquiry, in-game faults get a red line. Nothing here throws, except the runner's
 /// deliberate fail-closed rethrow for a save-owning module at campaign start. Every factory runs
-/// before anything is handed to the engine, so a module whose factory throws adds nothing.
+/// before anything is handed to the engine, so a module whose factory throws adds nothing. The
+/// public entry points read IoC; the overloads that take the runner and resolver are the tested seam.
 /// </summary>
 internal static class FeatureModuleHooks
 {
-    internal static void RunPhase(ApplyPhase phase, Func<string, bool> tryPatchCategory)
+    internal static void RunPhase(ApplyPhase phase, Func<string, bool> tryPatchCategory) =>
+        RunPhase(IoC.Modules, IoC.Resolver, phase, tryPatchCategory);
+
+    internal static void RunPhase(ModuleRunner? runner, IResolver? resolver, ApplyPhase phase,
+        Func<string, bool> tryPatchCategory)
     {
-        var runner = IoC.Modules;
-        var resolver = IoC.Resolver;
         if (runner == null || resolver == null) return;
 
         runner.RunPhase(phase, tryPatchCategory, resolver);
@@ -63,15 +66,16 @@ internal static class FeatureModuleHooks
     /// OnGameStart: campaign behaviors and campaign models on a CampaignGameStarter; Custom Battle
     /// models on a BasicGameStarter (the same split RegisterCustomBattleModels makes).
     /// </summary>
-    internal static void AddGameStartContent(IGameStarter gameStarter)
+    internal static void AddGameStartContent(IGameStarter gameStarter) =>
+        AddGameStartContent(IoC.Modules, IoC.Resolver, gameStarter);
+
+    internal static void AddGameStartContent(ModuleRunner? runner, IResolver? resolver, IGameStarter gameStarter)
     {
-        var runner = IoC.Modules;
-        var resolver = IoC.Resolver;
         if (runner == null || resolver == null) return;
 
         if (gameStarter is CampaignGameStarter campaignStarter)
         {
-            runner.Run("campaign start", includeParked: false, failClosed: true, module =>
+            runner.RunCampaignStart(module =>
             {
                 var behaviors = new List<CampaignBehaviorBase>();
                 foreach (var decl in module.CampaignBehaviors)
@@ -98,10 +102,12 @@ internal static class FeatureModuleHooks
     }
 
     /// <summary>OnMissionBehaviorInitialize: hands each behavior to SubModule's AddTaomBehavior, which stamps [BattleLoad].</summary>
-    internal static void AddMissionBehaviors(Mission mission, Action<MissionBehavior> addTaomBehavior)
+    internal static void AddMissionBehaviors(Mission mission, Action<MissionBehavior> addTaomBehavior) =>
+        AddMissionBehaviors(IoC.Modules, IoC.Resolver, mission, addTaomBehavior);
+
+    internal static void AddMissionBehaviors(ModuleRunner? runner, IResolver? resolver, Mission mission,
+        Action<MissionBehavior> addTaomBehavior)
     {
-        var runner = IoC.Modules;
-        var resolver = IoC.Resolver;
         if (runner == null || resolver == null) return;
 
         runner.Run("mission start", includeParked: false, failClosed: false, module =>
@@ -117,7 +123,7 @@ internal static class FeatureModuleHooks
     }
 
     private static List<(GameModelDecl Decl, GameModel Model)> CreateModels(
-        ITaomFeatureModule module, ModelTarget target, IResolver resolver)
+        TaomFeatureModule module, ModelTarget target, IResolver resolver)
     {
         var models = new List<(GameModelDecl Decl, GameModel Model)>();
         foreach (var decl in module.GameModels)
@@ -148,9 +154,10 @@ internal static class FeatureModuleHooks
             else
                 InformationManager.DisplayMessage(new InformationMessage(summary, Colors.Red));
         }
-        catch
+        catch (Exception ex)
         {
             // The notice must never break the phase; the [Module] log line already names the fault.
+            runner.Log($"[Module] fault notice not shown: {ex.Message}");
         }
     }
 }
