@@ -7,8 +7,9 @@ Six `/deep-review` lenses and Codex (gpt-6-astra, ultra) reviewed `a39a9c86..426
 process-lifetime balance storage before the character-creation seed, and the SyncData load reads into
 a null local. **No CRITICAL or HIGH.** Eight findings were confirmed: one MEDIUM, pre-existing and
 behaviour-changing to fix (a save with no behavior record still inherits the previous campaign's
-balances), and seven LOW or NIT, all in prose, test fixtures or the plan. Six are fixed on the branch;
-the MEDIUM's fix and the missing GitHub issue wait for Mike; the plan's wrong RED command is recorded.
+balances), and seven LOW or NIT, in prose, test fixtures, the plan or the process (F4). Five are
+fixed on the branch (F2, F3, F5, F6, F7); the MEDIUM's fix (F1) and the missing GitHub issue (F4) wait
+for Mike; the plan's wrong RED command (F8) is recorded.
 Full suite before and after: 10318 passed, 2 skipped, 0 failed.
 
 ## Findings

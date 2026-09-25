@@ -169,3 +169,18 @@ VERDICT: READY FOR COMMIT. The two NEEDS MIKE items (F1's load-path fix, F4's is
 silently deferred; the final full suite is green (10318 passed, 2 skipped, 0 failed).
 
 RCA: `docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md`.
+
+## Convergence
+
+A convergence pass over the review-fix diff `4263535a..8ea31505` (11 files) found the fixes
+behaviour-preserving and within the standards, with one LOW docs defect.
+
+| # | Sev | Finding | Verified | Disposition |
+|---|---|---|---|---|
+| C1 | LOW | The RCA's top-line said "Six are fixed on the branch", but its own table marks five rows Fixed (F2, F3, F5, F6, F7), and "all in prose, test fixtures or the plan" left out F4, which the table files under Process | Confirmed by re-reading the RCA's top-line and table; this report's own table also marks exactly five rows "CONFIRMED, fixed" | Fixed: the sentence now reads "Five are fixed on the branch (F2, F3, F5, F6, F7)" and names the process (F4), with F1, F4 and F8 labelled |
+
+**False positives:** none. **Production code:** unchanged by the convergence fix (docs only).
+**Full suite after the fix:** `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`,
+10318 passed, 2 skipped, 0 failed.
+
+VERDICT: CONVERGED.
