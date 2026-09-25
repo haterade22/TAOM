@@ -275,3 +275,13 @@ Plan 019's CHANGELOG said the procedure for graduating the next folder was in `c
 - **Why missed:** the plan's docs step added only the mechanism to `code-quality.md`, and nobody opened the pointer's target to find the promised text. Five of the six review lenses flagged it afterwards.
 - **Prevent:** when a plan's maintenance notes hold a procedure later work must follow, the executing change moves it where ADR-011 routes it and points every comment and CHANGELOG line there. Before committing a pointer, open its target and find the promised text.
 - **Source:** `docs/reviews/rca-nullable-ratchet-2026-09-24.md` #4.
+### A plan's RED step builds the project that holds the test, and names the test filter (plan 001, 2026-09-24)
+Plan 001 said building `Main/TAOM.csproj` would fail because a new test calls a missing handler, and
+called that compile failure the RED state. The test lives in `TAOM.Tests`, which references `Main`, not
+the other way round, so that build cannot see the test at all.
+- **Why missed:** the plan reasoned from "the method is missing" without asking which project compiles
+  the call.
+- **Prevent:** a handoff plan's RED step runs
+  `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter FullyQualifiedName~<Class>`
+  and states the expected failure (a CS error in the test project, or a named failing assertion).
+- **Source:** `docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md` F8; Codex P3.

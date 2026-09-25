@@ -948,6 +948,33 @@ Harmony patching about 20 to 40 times slower than players' (PatchShield pass 2 a
 first game start against 0 to 1 s in player logs) and named the mixed debugger the likely cause,
 UNVERIFIED. The profile name is unchanged, so the saved selection keeps working. The next Play is
 the test: the `shield pass` line in `diag.log` should fall to a few seconds. Mike's decision 23.
+### fix(specres): v2.0.30 - a new campaign no longer keeps the old balances
+
+Special resource balances live in a storage service that lasts for the whole game process, not one
+campaign. Starting a second campaign without restarting the game kept every balance the first
+campaign had written (War Spoils, Castar, Gems and the rest, for every hero the player had
+controlled), and the new campaign's first save then wrote them into its own save file.
+`OnNewGameCreated` now wipes the storage before the character-creation finalize seeds the new
+hero, and runs the session-state reset without reading `Hero.MainHero`, which the two resets never
+used. The SyncData load now reads into a null local instead of the live dictionary, a defensive
+change: the engine leaves the ref unchanged when a key is missing, so a behavior record without the
+balances key now loads empty (no TAOM build has written such a record). Saving is unchanged, and a
+save that carries the key round-trips exactly.
+
+Known limitation: a save older than SpecialResources (before 2026-04-07) has no record for this
+behavior, so the engine never calls its SyncData. Loaded after another campaign in the same process,
+it still inherits that campaign's balances. The load-path reset is a follow-up awaiting Mike's call
+(review report `docs/reviews/deep-review-001-cross-campaign-singleton-resets-2026-09-24.md`).
+
+Plan 001 (the SpecialResources half; the CareerSystem half landed earlier as `f4273639`). Five new
+tests in `SpecialResourcesBehaviorSessionResetTests`, against real storage. A six-lens deep review
+and Codex found no CRITICAL or HIGH; the follow-up commit fixes the prose above, a fixture that used
+the display name `castar` for the id `caster`, a test comment (outside a game `Hero.MainHero`
+throws, it is not null) and the test fake's save side (report
+`docs/reviews/deep-review-001-cross-campaign-singleton-resets-2026-09-24.md`, RCA
+`docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md`). Full suite: 10318 passed, 2
+skipped, 0 failed. Not smoked in game: start a second campaign in one session and check
+the map bar shows only the new culture's starting amount.
 
 ## 2026-09-23
 

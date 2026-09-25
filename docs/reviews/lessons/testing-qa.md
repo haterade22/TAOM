@@ -1239,3 +1239,24 @@ discards it, all passed every test.
   resolve the type from a real container in a test.
 - **Source:** `docs/reviews/rca-hot-path-resolve-and-grid-caching-2026-09-24.md` row 2 (Codex P3,
   lens 4 F1, lens 6).
+
+### Outside a game Hero.MainHero throws; a test must not describe it as null (plan 001, 2026-09-24)
+A test comment said `Hero.MainHero` is null outside a campaign, and a test was named for a "no main
+hero yet" state. In v1.5.3 `MainHero => CharacterObject.PlayerCharacter.HeroObject` and
+`PlayerCharacter` reads `Game.Current`, which is null in the test host, so the getter throws a
+`NullReferenceException`. The test still passed for the right reason (any hero read fails it), but the
+explanation was false and the doc repeated it.
+- **Why missed:** the plan's excerpt said "null in the test harness" and nobody read `Hero.cs:958`.
+- **Prevent:** when a test relies on an engine static being unusable in the harness, read the getter
+  and say what it does (throws, or returns null); name the test for what it pins ("reads no hero").
+- **Source:** `docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md` F5.
+
+### A test fixture's content id comes from the shipped config's `id`, never its display name (plan 001, 2026-09-24)
+The plan 001 tests wrote Gondor's resource as `castar`; the id in
+`special_resources_config.xml` is `caster` and "Castar" is only the display name. Storage keys are
+opaque, so no assertion could fail, but the fixture's message tied the pair to the seed gate, which
+keys on `resource.Id`.
+- **Why missed:** docs and the CHANGELOG say "Castar"; the executor typed the name it had read most.
+- **Prevent:** copy a content id into a fixture from the config file (or the `taom-moduledata` MCP),
+  not from prose. Codex's config cross-reference table is the check that caught it.
+- **Source:** `docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md` F6; Codex P3.

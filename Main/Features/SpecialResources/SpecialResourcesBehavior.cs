@@ -104,7 +104,18 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
     public override void SyncData(IDataStore dataStore)
     {
         _logger.LogInfo("[SpecRes] SyncData called (save/load)");
-        var data = _storage.GetAllData();
+        if (dataStore.IsSaving)
+        {
+            var saved = _storage.GetAllData();
+            dataStore.SyncData("_taom_specialResources", ref saved);
+            return;
+        }
+
+        // Null-first on load: a missing key leaves the ref unchanged, so seeding it from the live
+        // singleton would hand the previous campaign's balances straight back (plan 001). A save
+        // with no record for this behavior never reaches SyncData at all; that load gap is still
+        // open (special-resources.md, SyncData persistence).
+        Dictionary<string, float> data = null;
         dataStore.SyncData("_taom_specialResources", ref data);
         _storage.RestoreData(data);
         _logger.LogInfo($"[SpecRes] SyncData restored {data?.Count ?? 0} entries");
@@ -115,10 +126,13 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         // cap belongs inside RestoreData/Set (keyed by resource), not here.
     }
 
-    private void OnNewGameCreated(CampaignGameStarter starter)
+    // Internal for unit-test reach. Reads no hero: neither reset below needs one.
+    internal void OnNewGameCreated(CampaignGameStarter starter)
     {
-        var hero = Hero.MainHero;
-        if (hero == null) return;
+        // Plan 001: the storage is a process-lifetime singleton and a new game never runs the
+        // SyncData load, so campaign B would keep campaign A's balances and write them into B's
+        // first save. Wipe it before the character-creation finalize seeds B.
+        _storage.RestoreData(null);
 
         // Phase 9b deferred #133 P2 R1 — clear singleton-scope service state so a second
         // campaign in the same process can't inherit _inSession / _pendingSpend from the

@@ -4574,3 +4574,36 @@ archive loop read only top-level `.tar.gz` files (now a `find` over `.tar.gz` an
 depth), the CHANGELOG named gzip as the only cause of the missed check (the worktree was the other),
 the RCA left out the missing-issue finding and misquoted a lesson title, the lesson index counts
 were stale (824 and 181), and the verdict stood without the convergence pass.
+
+## Review 133 (number provisional: parallel improve branches): plan 001, the SpecialResources new-campaign reset, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+Branch `improve/001-specialresources-reset`, `a39a9c86..4263535a`: a new campaign wipes the
+process-lifetime balance storage in `OnNewGameCreated` (no hero read) before the character-creation
+seed, and the SyncData load reads into a null local instead of the live dictionary. The June port of
+plan 001's SpecialResources half, rewritten against today's code (decision 17); the CareerSystem half
+landed earlier in `f4273639`. Six `/deep-review` lenses ran; Codex reviewed the same range read-only
+from git objects.
+
+**Codex: 3 findings, 3 confirmed, 0 false positives.** P2, pre-existing: a save with no behavior record
+never reaches `SyncData` (v1.5.3 `LoadBehaviorData`), so a pre-feature save loaded after another
+campaign still inherits its balances; the plan deferred it and the fix is behaviour-changing, so it
+waits for Mike and is recorded as a known limitation. P3: a fixture used the display name `castar` for
+the id `caster` (fixed). P3: the plan's RED step builds the wrong project (recorded). It settled ten
+Known Suspects with quoted engine code. **The lenses confirmed five more**, all LOW or NIT and none in
+runtime code: the CHANGELOG and doc overclaimed the key-miss fix and said balances leaked "for every
+lord", a test comment said `Hero.MainHero` is null outside a game (it throws), the test fake diverged
+from the engine on the save side, and no GitHub issue exists (for Mike). Suite before and after the
+fixes: 10318 passed, 2 skipped, 0 failed.
+
+Codex did best at separating the engine's "no record" path from "missing key" by quoting
+`LoadBehaviorData`, and at the config cross-reference. It missed the scope claim ("every lord", which
+needs the writers' keys) and the fake's save-side divergence.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 2 | Fixture id `castar` for `caster` | Config ID mismatch | Display name typed from prose; opaque keys cannot fail an assertion | Lesson in `lessons/testing-qa.md` |
+| 3 | Plan RED step builds `Main/TAOM.csproj` | Other: plan procedure | Reasoned from the missing method, not from which project holds the test | Lesson in `lessons/misc.md` |
+
+Report: `docs/reviews/deep-review-001-cross-campaign-singleton-resets-2026-09-24.md`. RCA:
+`docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md`; lessons in state-lifecycle-save,
+testing-qa (two) and misc.
