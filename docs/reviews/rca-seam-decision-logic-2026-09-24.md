@@ -7,8 +7,8 @@ lenses (standards, engine compatibility, efficiency, completeness, data flow, de
 adversarial pass (gpt-6-astra, ultra). The refactor moved nine seams' decisions into their services
 and kept behaviour: no lens and no Codex finding showed a reachable behaviour change. Seven findings
 were confirmed, none HIGH: one latent fail-open in a split guard, one CI coverage gap, one imprecise
-engine claim, two doc gaps, one unpinned contract, and one plan-text defect. The process gap (no
-GitHub issue yet) is the orchestrator's at merge. Report:
+engine claim, one process gap (no GitHub issue yet, the orchestrator's at merge), one doc gap (two
+feature docs), one unpinned contract, and one plan-text defect. Report:
 `docs/reviews/deep-review-026-seam-decision-logic-2026-09-24.md`.
 
 ## Findings + Root Cause Table

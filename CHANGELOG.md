@@ -18,8 +18,8 @@ CI runs them; the raid scan sizes its list up front; two doc comments now say a 
 row's captor can be none; the Supply Lines and Field Camp feature docs name the new tests and
 types. Two new tests: the winner-only name render and the minted-hero hand-off. Report
 `docs/reviews/deep-review-026-seam-decision-logic-2026-09-24.md`, RCA
-`docs/reviews/rca-seam-decision-logic-2026-09-24.md`. Owed in game: the warden promotion smoke above
-now also covers the hand-off.
+`docs/reviews/rca-seam-decision-logic-2026-09-24.md`. Owed in game: the warden promotion smoke in the
+refactor entry below now also covers the hand-off.
 
 ### refactor(seams): v2.0.30 - move decision logic out of nine seams
 

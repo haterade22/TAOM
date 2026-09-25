@@ -15,7 +15,8 @@ Waves:   wave 1: Agent 1 Standards, Agent 2 Engine compatibility, Agent 5 Data f
          Completeness; wave 2: Agent 3 Efficiency, Agent 6 Design. Codex adversarial
          (gpt-6-astra, ultra) in parallel. Review lead: verification, fixes, Step 4.
 
-STANDARDS:     PASS: 0 violations (2 LOW notes: S1 confirmed and fixed, S2 needs Mike)
+STANDARDS:     PASS: 0 violations (2 LOW notes: note 1 is S1, fixed, and S2, needs
+               Mike; note 2 is S3, fixed)
 COMPATIBILITY: PASS: 40 verified, 0 incompatible, 0 unverified (1 LOW doc finding, fixed)
 EFFICIENCY:    PASS: 7 issues (0 high, 0 medium, 7 low); 1 applied, 5 no change, 1 follow-up
 COMPLETENESS:  INCOMPLETE until merge: the GitHub issue is owed (orchestrator files it at merge
@@ -204,3 +205,19 @@ nine of its ten Known Suspects with evidence.
   that no execution could satisfy, which no lens checked.
 
 RCA: `docs/reviews/rca-seam-decision-logic-2026-09-24.md`.
+
+## Convergence
+
+A convergence pass on `af6329ea..12b1c200` found no code or test defect: the refuge peace-release
+guard, the `MintedHero` hand-off, the raid-scan pre-size, the moved `FortificationSearchTests` and
+the two new tests all matched the source and the v1.5.3 engine. It found two LOW accuracy errors
+in the review records, both confirmed against the files and fixed:
+
+| ID | Where | Defect | Fix |
+|---|---|---|---|
+| D1 | `CHANGELOG.md`, the `fix(seams)` entry | "the warden promotion smoke above" pointed up; the smoke is listed in the `refactor(seams)` entry below it | Now reads "in the refactor entry below" |
+| D2 | RCA top-line; this report's STANDARDS line | The RCA reached seven findings by counting P2 as two doc gaps and leaving P1 out of the count; the STANDARDS line named Agent 1's two notes as S1 and S2, while its section says the notes are S1/S2 (note 1) and S3 (note 2) | RCA counts P1 as the process gap and P2 as one doc gap (two feature docs); the STANDARDS line now matches the Agent 1 section |
+
+False positives: none. Full suite after the fixes (docs only, no code change):
+`Passed! - Failed: 0, Passed: 10707, Skipped: 2, Total: 10709`
+(`E:\repos\taom-improve\scratch\review-026-convergence\full-suite.log`).
