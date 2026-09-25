@@ -4694,3 +4694,8 @@ Report `docs/reviews/deep-review-016-repo-hygiene-pins-readme-2026-09-24.md`; RC
 `docs/reviews/rca-repo-hygiene-pins-readme-2026-09-24.md`; three lessons in build-tooling-workflow.
 Needs Mike: the 1.4.5 port, serena write-tool denies, the managed crash cited as a native example.
 Convergence pass owed. Nothing merged or deployed.
+Update 2026-09-25: the 1.4.5 port is Mike's own (decision 59); the Serena write-tool denies are
+decided and applied (decision 58, 16 tools, memory tools kept); the Serena pin is main `7a296833`
+(decision 51). Convergence: the first pass found 4 LOW (fixed in `35f212c6`), the final pass 5 LOW
+(one missed tool, counts, the memory scope, a commit body, this entry, a freeze skill line), fixed
+by the orchestrator. The managed-crash example (N2) stays open.

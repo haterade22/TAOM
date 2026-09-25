@@ -75,8 +75,11 @@ follow-up.
 All confirmed items are fixed on the branch. Remaining, in priority order:
 
 1. Mike: decide the `bannerlord-1.4.5` port (FU1), the serena write-tool denies (FU-S) and N2.
-2. Post-merge: `/permissions` lists the nine denies with no local deny list present, and `/mcp`
-   shows serena v1.7.0 connected (N1). Record the result as a `harness-facts.md` row.
+   DECIDED 2026-09-25: FU1, Mike ports from `bannerlord-1.5.x` himself (decision 59); FU-S, deny
+   all Serena editing tools but memory (decision 58, applied, see "Orchestrator follow-ups").
+2. Post-merge: `/permissions` lists the denies (25 after decision 58) with no local deny list
+   present, and `/mcp` shows serena connected at `7a296833` (decision 51) (N1). Record the result
+   as a `harness-facts.md` row.
 3. Orchestrator: one convergence `deep-reviewer` pass on the fix diff (Step 4.6); this lead cannot
    spawn agents.
 
@@ -216,3 +219,16 @@ worktree before changing anything.
 - `python -m pytest -q tools/tests/test_ai_documentation.py`: 4 passed, 152 subtests passed.
 
 CONVERGENCE: CLEAN after these fixes (no runtime file changed).
+
+## Orchestrator follow-ups (2026-09-25)
+
+Mike decided two items after this review; the orchestrator applied both on this branch (the
+settings file under the protected-file bypass Mike granted for plan 016).
+
+| Decision | Change |
+|---|---|
+| 51: pin the newest Serena, not the v1.7.0 release | `.mcp.json` pins `git+https://github.com/oraios/serena@7a2968335f2198b966864de1ce3655c8e485a653` (`serena-agent` 2.0.0.dev0, `main` as of 2026-09-24; the newest release is v1.7.0 of 2026-08-09). Checked first: `uvx --from` that commit `serena start-mcp-server --help` exits 0 and lists `--context` and `--project`, and `ide-assistant` still maps to `claude-code` there |
+| 58: deny Serena editing tools, keep memory (FU-S) | Sixteen `mcp__serena__` entries join the nine git and filesystem denies in `.claude/settings.json` (25 in total): every tool the pinned commit marks can-edit in `src/serena/tools/` except the four memory tools; `execute_shell_command` included. The final convergence pass found `jet_brains_inline_symbol` missing (its class name lacks the `Tool` suffix the first derivation searched for); it was added, and a marker-based re-derivation prints `missing: []`, `extra: []`. The list and its rule are in `docs/reference/mcp-servers.md` |
+
+The CHANGELOG entry now names the `main` pin and the Serena denies. FU1 is settled by decision 59
+(Mike ports the untrack and pins to `bannerlord-1.4.5` from `bannerlord-1.5.x` himself).

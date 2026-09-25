@@ -20,16 +20,28 @@
 
 ## Denied write tools (2026-08-31)
 
-Nine MCP write tools are listed under `permissions.deny` in the tracked `.claude/settings.json`, so every clone gets them (they lived in `settings.local.json` until it was untracked):
+Twenty-five MCP write tools are listed under `permissions.deny` in the tracked `.claude/settings.json`, so every clone gets them (the first nine lived in `settings.local.json` until it was untracked):
 
 `mcp__git__git_add` · `git_commit` · `git_reset` · `git_checkout` · `git_create_branch` ·
 `mcp__filesystem__write_file` · `edit_file` · `move_file` · `create_directory`
 
-The list is exactly the tools the pinned `git` and `filesystem` versions annotate
-`readOnlyHint: false`. On a pin bump of either, re-derive it from the new version's annotations,
-so a newly added write tool is denied too. Serena's editing tools (`replace_content`,
-`replace_symbol_body`, `rename_symbol`, `write_memory` and the rest) are also `readOnlyHint: false`
-and are not denied yet; whether to deny them is an open decision for Mike.
+and sixteen Serena tools (2026-09-25, decision 58), `mcp__serena__` followed by:
+`create_text_file` · `replace_content` · `replace_in_files` · `delete_lines` · `replace_lines` ·
+`insert_at_line` · `replace_symbol_body` · `insert_after_symbol` · `insert_before_symbol` ·
+`rename_symbol` · `safe_delete_symbol` · `execute_shell_command` · `jet_brains_move` ·
+`jet_brains_safe_delete` · `jet_brains_rename` · `jet_brains_inline_symbol`
+
+The git and filesystem entries are exactly the tools the pinned `git` and `filesystem` versions
+annotate `readOnlyHint: false`. The Serena entries are every tool the pinned Serena commit marks
+can-edit (`ToolMarkerCanEdit` in `src/serena/tools/`) except its four memory tools, which Mike chose
+to keep (`write_memory`, `edit_memory`, `rename_memory`, `delete_memory` write only Serena's
+memory folders: the repo's `.serena/memories/` and, for a `global/` name,
+`~/.serena/memories/global/`). The can-edit rule includes classes whose names lack the usual
+`Tool` suffix (`SafeDeleteSymbol`, `JetBrainsInlineSymbol`), so derive the list from the class
+markers, not from names ending in `Tool`. `execute_shell_command` is among them because it would run a shell command
+past every Bash hook. The optional beta `serena_repl` is not marked can-edit and not enabled, so it
+is not listed. On a pin bump of any of the three servers, re-derive its entries from the new
+version, so a newly added write tool is denied too.
 
 **Why:** every safety hook in this repo is registered against `matcher: "Bash"`, and
 `config-protection.sh` against `matcher: "Edit|Write"`. Nothing matches `mcp__*`. So the MCP

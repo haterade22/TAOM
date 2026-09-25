@@ -234,10 +234,14 @@ registry served that day.
 - **Deny list moved**: the nine MCP write-tool denies (`mcp__git__git_add` and the rest) now live
   in the tracked `.claude/settings.json`, so every clone keeps them. `enabledMcpjsonServers`
   stays per-user on purpose: a tracked trust list would pre-approve seven servers on every clone.
-- **Pinned**: serena to the `v1.7.0` commit `949a27ef`, `@modelcontextprotocol/server-filesystem@2026.8.31`,
-  `mcp-server-git@2026.8.18` and `elevenlabs-mcp@0.12.2`, in `.mcp.json` and (filesystem, git)
-  `.codex/config.toml`. `python tools/audit_claude_config.py` no longer reports
-  `mcp-npx-unpinned`. Serena moves from its unreleased main branch to the latest release.
+- **Pinned**: serena to its newest `main` commit `7a296833` (`serena-agent` 2.0.0.dev0, the code
+  sessions already ran unpinned; Mike's decision 51 chose it over the older v1.7.0 release),
+  `@modelcontextprotocol/server-filesystem@2026.8.31`, `mcp-server-git@2026.8.18` and
+  `elevenlabs-mcp@0.12.2`, in `.mcp.json` and (filesystem, git) `.codex/config.toml`.
+  `python tools/audit_claude_config.py` no longer reports `mcp-npx-unpinned`.
+- **Serena edits denied**: Serena's sixteen editing tools (its file and symbol editors and
+  `execute_shell_command`) join the deny list, because they went around every Edit, Write and Bash
+  hook; its memory tools stay allowed (decision 58). The list is in `docs/reference/mcp-servers.md`.
 
 **After merging or pulling this commit**, git deletes `.claude/settings.local.json`,
 `_taom_loc.pkl` and `crashz/` from that working tree. Restore your own settings file with
