@@ -4,6 +4,19 @@
     "pr": "",
     "sessionUrl": false
   },
+  "permissions": {
+    "deny": [
+      "mcp__git__git_add",
+      "mcp__git__git_commit",
+      "mcp__git__git_reset",
+      "mcp__git__git_checkout",
+      "mcp__git__git_create_branch",
+      "mcp__filesystem__write_file",
+      "mcp__filesystem__edit_file",
+      "mcp__filesystem__move_file",
+      "mcp__filesystem__create_directory"
+    ]
+  },
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "TAOM_PYBIN": "C:/Python314/python.exe"

@@ -4,6 +4,31 @@
 
 ## 2026-09-24
 
+### chore(security): v2.0.30 - untrack local files and pin MCP servers
+
+Three tracked paths were never repo content, and four MCP servers ran whatever version their
+registry served that day.
+
+- **Untracked and ignored**: `.claude/settings.local.json` (Claude Code's per-user settings:
+  personal allow rules, machine paths and the MCP trust list), `_taom_loc.pkl` (a 37 MB pickle
+  from a one-off localization session that nothing reads) and `crashz/` (an unpacked v1.4.7
+  player crash bundle). The blobs stay in history; the three docs that cite the crash report now
+  give `git show b2e387db:crashz/report.json`, and `moduledata-validation.md` no longer links to
+  the now-untracked settings file.
+- **Deny list moved**: the nine MCP write-tool denies (`mcp__git__git_add` and the rest) now live
+  in the tracked `.claude/settings.json`, so every clone keeps them. `enabledMcpjsonServers`
+  stays per-user on purpose: a tracked trust list would pre-approve seven servers on every clone.
+- **Pinned**: serena to the `v1.7.0` commit `949a27ef`, `@modelcontextprotocol/server-filesystem@2026.8.31`,
+  `mcp-server-git@2026.8.18` and `elevenlabs-mcp@0.12.2`, in `.mcp.json` and (filesystem, git)
+  `.codex/config.toml`. `python tools/audit_claude_config.py` no longer reports
+  `mcp-npx-unpinned`. Serena moves from its unreleased main branch to the latest release.
+
+**After merging or pulling this commit**, git deletes `.claude/settings.local.json`,
+`_taom_loc.pkl` and `crashz/` from that working tree. Restore your own settings file with
+`git show b2e387db:.claude/settings.local.json > .claude/settings.local.json` (or from a copy
+taken before the merge); it is ignored from now on. Then restart Claude Code so it reloads the
+pinned servers.
+
 ### feat(troll): v2.0.30 - human clips retargeted onto the hill troll's own rest pose
 
 Mike's Kit look after the re-import: the hill troll's own clips were right, but the cave troll's `anim_troll_*`

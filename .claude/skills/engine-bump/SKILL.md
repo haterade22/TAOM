@@ -26,8 +26,9 @@ misattributed crashes) or we migrate deliberately. The session-start hook warns 
    Steam overwrites in place and nothing archives native modules (the decompile stack only *lists*
    them in `_native_dlls.txt`), so **copy both `bin/Win64_Shipping_{Client,wEditor}/TaleWorlds.Native.dll`
    aside now** — that copy is the only baseline the NEXT bump will have. The cost of not having one
-   is already booked: the open player report at `crashz/report.json`
-   (`BannerlordVersion v1.4.7.117484`) can no longer be triaged against a local binary.
+   is already booked: the open player report (untracked; read it with
+   `git show b2e387db:crashz/report.json`; `BannerlordVersion v1.4.7.117484`) can no longer be
+   triaged against a local binary.
 3. `taom-src` auto-detects the new version (fresh cache under `~/.taom-src/v<new>/`) — old
    caches remain but are unused.
 

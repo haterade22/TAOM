@@ -71,7 +71,7 @@ protocol has produced was DATA (XML) or a routing patch — never a blind retry.
    under `bin/Win64_Shipping_{Client,wEditor}`, and both are now v1.5.2 (rewritten 2026-09-14; the archived `.dll` twins under `E:\Decompiled_Bannerlord\_native` are the exception); nothing v1.4.5 through v1.5.0
    is preserved in the repo or under `E:\Decompiled_Bannerlord\` (the decompile stack holds `.cs`
    for managed assemblies only — native modules are merely *listed* in `_native_dlls.txt`).
-   Consequence: the open player report at `crashz/report.json` (`BannerlordVersion v1.4.7.117484`)
+   Consequence: the open player report `crashz/report.json` (untracked; `git show b2e387db:crashz/report.json`; `BannerlordVersion v1.4.7.117484`)
    **cannot currently be triaged locally** — there is no v1.4.7 image to disassemble against.
    Copy both `TaleWorlds.Native.dll` files aside before the next update lands.
 

@@ -5,7 +5,7 @@
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://github.com/oraios/serena",
+        "git+https://github.com/oraios/serena@949a27ef1e5fda1a6e7b561e777bcece345c6ffd",
         "serena",
         "start-mcp-server",
         "--context",
@@ -24,7 +24,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "@modelcontextprotocol/server-filesystem",
+        "@modelcontextprotocol/server-filesystem@2026.8.31",
         "E:\\repos\\TAOM",
         "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules",
         "E:\\LOTRAOMAssets\\LOTRAOM_Jan_1_Patreon\\Modules\\LOTRAOM\\ModuleData"
@@ -34,7 +34,7 @@
     "git": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["mcp-server-git"],
+      "args": ["mcp-server-git@2026.8.18"],
       "env": {}
     },
     "ilspy": {
@@ -58,7 +58,7 @@
     "elevenlabs": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["elevenlabs-mcp"],
+      "args": ["elevenlabs-mcp@0.12.2"],
       "env": {
         "ELEVENLABS_API_KEY": "${ELEVENLABS_API_KEY}",
         "ELEVENLABS_MCP_BASE_PATH": "${CLAUDE_PROJECT_DIR:-E:/repos/TAOM}/.voice-scratch",
