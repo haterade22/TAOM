@@ -64,7 +64,7 @@
 - Report: `docs/reviews/deep-review-013-bash-hook-prefilter-2026-09-24.md`; RCA:
   `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md`.
 
-### perf(hooks): v2.0.30 - skip Python in Bash hooks on non-git calls
+### perf(hooks): v2.0.30 - skip Python in Bash hooks on non-git calls (#661)
 
 Every Bash call ran 13 hook scripts, and each one started Python twice (the `_pybin.sh`
 probe, then a JSON parse) before it looked at the command: 256 to 451 ms per hook on
