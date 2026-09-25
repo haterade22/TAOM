@@ -1,5 +1,5 @@
 #!/bin/bash
-# PostToolUse(Bash) hook: record that a build/test verification command ran.
+# PostToolUse and PostToolUseFailure (Bash and PowerShell) hook: record that a build/test verification command ran.
 #
 # Touches .claude/logs/.verification-ran so the check-verification-evidence Stop
 # hook can tell whether C# source was edited AFTER the most recent verification.
@@ -22,7 +22,8 @@ INPUT=$(cat)
 # Resolve a safe Python interpreter. Never a Microsoft Store alias: those hang forever.
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 
-# Parse the command field precisely. jq if present, else "$PYBIN".
+# Parse the command field precisely, with "$PYBIN" (jq is not on PATH here, and the split
+# below needs a real parser).
 #
 # There is deliberately NO raw-payload fallback. The old code did
 # `[ -z "$COMMAND" ] && COMMAND="$INPUT"`, and since jq is absent that was the ONLY
@@ -35,41 +36,81 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # If the command cannot be parsed, do nothing. The marker stays unset, the Stop
 # reminder still fires, and the worst case is one redundant nudge instead of a
 # silently skipped verification.
-if command -v jq >/dev/null 2>&1; then
-  COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
-elif [ -n "$PYBIN" ]; then
-  COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
+#
+# Match an INVOCATION, not a mention. A substring test on the whole command still marks
+# verification for `grep -rn "dotnet test" docs/`, which mutes the reminder that backs
+# evidence-over-claims.md. So the command is split into segments at ; & | and newlines outside
+# quotes, and each segment's leading token is inspected below, the shape block-dangerous-git.sh
+# uses. Quotes are honoured (maintainer decision D41): splitting with `tr` cut
+# `grep "x; dotnet test" docs/` into a segment that starts with dotnet, so a mention marked. A
+# newline inside quotes (a commit message) becomes a space, so it cannot start a segment.
+#
+# The split runs in Python (plan 011 review): a per-character bash loop was quadratic (9.5 s for
+# a 100 KB command, past the 5 s registration), and it read `\` as the escape in PowerShell,
+# where the escape is a backtick, so `Write-Output "x`"; dotnet test"` marked and
+# `Set-Location "E:\x\"; dotnet test` did not. An escaped newline is a continuation, so it joins.
+# CR goes: Python's print writes CRLF on Windows, which hid a command on a non-final line.
+# Output is written as bytes, LF only.
+SEGMENTS=""
+if [ -n "$PYBIN" ]; then
+  SEGMENTS=$(printf '%s' "$INPUT" | "$PYBIN" -c '
 import sys, json
 try:
-    print(json.loads(sys.stdin.read()).get("tool_input", {}).get("command", ""))
+    d = json.loads(sys.stdin.read())
+    cmd = (d.get("tool_input") or {}).get("command") or ""
+    esc = "`" if d.get("tool_name") == "PowerShell" else "\\"
 except Exception:
-    pass
+    sys.exit()
+cmd = cmd.replace("\r", "")
+out, q, i, n = [], "", 0, len(cmd)
+while i < n:
+    c = cmd[i]
+    if c == esc and q != "\x27":
+        nxt = cmd[i + 1:i + 2]
+        out.append(" " if nxt == "\n" else c + nxt)
+        i += 2
+        continue
+    if q:
+        if c == q:
+            q = ""
+        out.append(" " if c == "\n" else c)
+    elif c in "\"\x27":
+        q = c
+        out.append(c)
+    elif c in ";&|\n":
+        out.append("\n")
+    else:
+        out.append(c)
+    i += 1
+sys.stdout.buffer.write(("".join(out) + "\n").encode("utf-8"))
 ' 2>/dev/null)
-else
-  COMMAND=""
 fi
 
 # Touch on any build/test invocation (pass OR fail: a failed build is still
 # verification evidence; you have the output). build.ps1 -RunTests, plain
 # dotnet build/test, and /verify all route through one of these substrings.
+# A command that exits non-zero raises PostToolUseFailure, not PostToolUse (Claude Code
+# 2.1.241), so the "fail" half holds only while this hook is registered on both events
+# (tools/test_hooks.sh 7c checks both).
 #
 # Anchor the marker to the project, not the inherited cwd. A relative path here is how
 # a stray .claude/logs/ tree got written under .claude/hooks/ on 2026-08-31 when these
 # scripts were run from that directory.
 LOGDIR="${CLAUDE_PROJECT_DIR:-$(pwd)}/.claude/logs"
 
-# Match an INVOCATION, not a mention. A substring test on the whole command still marks
-# verification for `grep -rn "dotnet test" docs/`, which mutes the reminder that backs
-# evidence-over-claims.md. Split on shell separators and inspect each segment's leading
-# token, the same shape block-dangerous-git.sh already uses.
 MARK=0
 while IFS= read -r seg; do
   seg="${seg#"${seg%%[![:space:]]*}"}"          # left-trim
-  while :; do                                    # drop env-var prefixes: FOO=bar cmd
-    case "$seg" in
-      [A-Za-z_]*=*\ *) seg="${seg#* }"; seg="${seg#"${seg%%[![:space:]]*}"}" ;;
-      *) break ;;
-    esac
+  # Drop env-var prefixes (FOO=bar cmd), and only a word that IS an assignment. The old
+  # pattern took any word with an `=` and a space somewhere after it, so it read
+  # `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`, the repo's canonical
+  # test command, as a prefix and dropped `dotnet`: that command never marked (D41).
+  while :; do
+    word="${seg%%[[:space:]]*}"
+    [[ "$word" == "$seg" ]] && break             # a lone word is the command itself
+    # `env` too: `env DOTNET_NOLOGO=1 dotnet test` marked before D41 (plan 011 review).
+    [[ "$word" == env || "$word" =~ ^[A-Za-z_][A-Za-z0-9_]*= ]] || break
+    seg="${seg#"$word"}"; seg="${seg#"${seg%%[![:space:]]*}"}"
   done
   first="${seg%% *}"
   case "$first" in
@@ -80,7 +121,7 @@ while IFS= read -r seg; do
     pwsh | powershell | powershell.exe)
       case "$seg" in *build.ps1*) MARK=1 ;; esac ;;
   esac
-done <<< "$(printf '%s' "$COMMAND" | tr ';&|' '\n')"
+done <<< "$SEGMENTS"
 
 if [[ $MARK -eq 1 ]]; then
   mkdir -p "$LOGDIR" 2>/dev/null

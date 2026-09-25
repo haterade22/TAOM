@@ -308,10 +308,11 @@ cp .claude/hooks/_pybin.sh "$SANDBOX/.claude/hooks/" 2>/dev/null
 cleanup() { rm -rf "$SANDBOX"; }
 trap cleanup EXIT
 
-# Only PreToolUse / PostToolUse hooks speak the JSON decision protocol. SessionStart,
-# PreCompact, PostCompact, Stop, SubagentStart and SessionEnd hooks deliberately print
-# human-readable context to stdout, which the harness injects verbatim. Applying the JSON
-# rule to those would be a false positive, so classify from settings.json first.
+# Only PreToolUse, PostToolUse and PostToolUseFailure hooks must print JSON (PreToolUse under
+# hookSpecificOutput, PRE_GATES below). SessionStart, PreCompact, PostCompact, SubagentStart and
+# SessionEnd hooks print plain text, and Stop hooks print a top-level {"decision":"block"}
+# (section 7a checks it). Applying the JSON rule to the plain-text hooks would be a false
+# positive, so classify from settings.json first.
 GATE_HOOKS=$("$HPY" - <<'PY'
 import json
 d = json.load(open('.claude/settings.json', encoding='utf-8'))
@@ -356,7 +357,7 @@ PAYLOADS=(
 
 for hookfile in .claude/hooks/*.sh .claude/skills/freeze/check-freeze.sh; do
     name=$(basename "$hookfile")
-    [[ "$name" == "_pybin.sh" ]] && continue
+    [[ "$name" == _*.sh ]] && continue
     for entry in "${PAYLOADS[@]}"; do
         label="${entry%%|*}"; payload="${entry#*|}"
         S=$(date +%s%N)
@@ -505,8 +506,6 @@ else
                 # but not `git commit`: its own row keeps a prefilter from narrowing to the latter.
                 *)                  triggers=('cd /x\ngit commit -m x' 'cd /x\ngit -C /y commit -m x') ;;
             esac
-            # suggest-compact.sh also reads build and test boundaries (its `dotnet` and `build.ps1` arms).
-            [[ "$name" == suggest-compact.sh ]] && triggers+=('cd /x\ndotnet test TAOM.Tests' 'cd /x\n./build.ps1 -RunTests')
         fi
         for cmd in "${triggers[@]}"; do
             read -r s n <<< "$(pf_run "$name" "$(pf_payload "$ev" "$cmd")")"
@@ -518,15 +517,13 @@ else
         done
         # The hook's word spelled with a JSON \u escape must still reach the parser
         # (maintainer decision D40): the raw test cannot read an escaped letter, so a
-        # payload holding any \u takes the full path. suggest-compact.sh is left as it
-        # was, pending its deletion in plan 011.
+        # payload holding any \u takes the full path.
         esc=""
         case "$name" in
             validate-push.sh)       esc="cd /x\ngit ${PF_U}0070ush origin x" ;;
             block-no-verify.sh)     esc="cd /x\ngit commit --${PF_U}006eo-verify -m x" ;;
-            notify-test-results.sh | mark-verification-run.sh)
+            mark-verification-run.sh)
                                     esc="cd /x\n${PF_U}0064otnet test TAOM.Tests" ;;
-            suggest-compact.sh)     ;;
             # The commit gates, the two confirm gates and any new Bash hook: the row holds no
             # literal `git` or `commit`, so a hook filtering on either word without the
             # escape arm skips it and fails here.
@@ -552,7 +549,6 @@ else
             done
         fi
     done
-    rm -f /tmp/claude-tool-count-taom-prefilter-test /tmp/claude-last-boundary-taom-prefilter-test
 fi
 
 # ---------------------------------------------------------------------------
@@ -599,7 +595,7 @@ done
 head2 "5. fail-open with no jq and no python on PATH"
 # The never-fail-silent assertion below applies only to hooks that can actually BLOCK a
 # Bash call: registered PreToolUse against a Bash-matching matcher, and carrying a deny or
-# exit-2 path. Advisory hooks (notify-*, suggest-compact, mark-verification-run) and hooks
+# exit-2 path. Advisory hooks (notify-*, mark-verification-run) and hooks
 # matched on other tools legitimately produce nothing for this payload, and demanding
 # output from them would make the check noise rather than signal.
 BLOCKING_BASH_GATES=$("$HPY" - <<'PYEOF'
@@ -645,7 +641,7 @@ done
 
 for hookfile in .claude/hooks/*.sh .claude/skills/freeze/check-freeze.sh; do
     name=$(basename "$hookfile")
-    [[ "$name" == "_pybin.sh" ]] && continue
+    [[ "$name" == _*.sh ]] && continue
     S=$(date +%s%N)
     ERRFILE=$(mktemp 2>/dev/null) || ERRFILE="$SANDBOX/stderr.$$"
     # The payload holds every gate's prefilter word (commit, push, no-verify, git), so each
@@ -930,8 +926,10 @@ cdr_log() {
         | CLAUDE_PROJECT_DIR="$CDR_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/log-agent.sh" >/dev/null 2>&1
 }
 cdr_reminds() {
-    ( cd "$CDR_REPO" && timeout -k 2 10 bash "$REPO/.claude/hooks/check-deep-review.sh" </dev/null 2>&1 >/dev/null ) \
-        | grep -q 'REMINDER: Run /deep-review'
+    rm -f "$CDR_REPO/.claude/logs/.deep-review-reminded"
+    printf '%s' '{"hook_event_name":"Stop","session_id":"t","stop_hook_active":false}' \
+        | CLAUDE_PROJECT_DIR="$CDR_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/check-deep-review.sh" 2>/dev/null \
+        | grep -q '"decision":"block".*/deep-review'
 }
 cdr_log Explore
 if cdr_reminds; then
@@ -945,6 +943,157 @@ if cdr_reminds; then
 else
     ok "a deep-reviewer run logged by log-agent.sh mutes the reminder"
 fi
+
+# ---------------------------------------------------------------------------
+head2 "7a. Stop reminders reach Claude: one JSON block per streak, never bare stderr"
+# Claude Code sends a Stop hook's exit-0 stderr and its plain stdout to the debug log only. The
+# four reminders wrote there until plan 011 and none ever arrived. The Stop channel TAOM uses is
+# {"decision":"block","reason":...} on stdout (hooks docs, "Stop decision control").
+STOP_HOOKS=$("$HPY" - <<'PY'
+import json
+d = json.load(open('.claude/settings.json', encoding='utf-8'))
+print(' '.join(sorted({h['command'].rsplit('/', 1)[-1]
+                       for g in d.get('hooks', {}).get('Stop', [])
+                       for h in g.get('hooks', [])})))
+PY
+)
+[[ -z "$STOP_HOOKS" ]] && bad "no Stop registrations found in settings.json; the 7a discovery is broken"
+for name in $STOP_HOOKS; do
+    f=".claude/hooks/$name"
+    [[ -f "$f" ]] || { bad "$name is registered on Stop but missing from .claude/hooks/"; continue; }
+    hit=$(grep -n '>&2' "$f" | grep -vE '^[0-9]+:[[:space:]]*#' | head -1 | cut -d: -f1)
+    if [[ -n "$hit" ]]; then
+        bad "$name:$hit writes to stderr, which Claude never sees from a Stop hook; use taom_stop_block"
+    else
+        ok "$name writes nothing to stderr"
+    fi
+done
+
+# The helper: JSON-escapes the reason, and the loop guard reads only the real key.
+STOP_SAMPLE='quote " and backslash \ end'
+HELPER_OUT=$(bash -c 'source .claude/hooks/_stop_reminder.sh && taom_stop_block "$1"' _ "$STOP_SAMPLE" 2>/dev/null)
+if printf '%s' "$HELPER_OUT" | "$HPY" -c 'import json,sys; d=json.loads(sys.stdin.read()); sys.exit(0 if d.get("decision")=="block" and d.get("reason")==sys.argv[1] else 1)' "$STOP_SAMPLE" 2>/dev/null; then
+    ok "taom_stop_block emits valid JSON and keeps quotes and backslashes"
+else
+    bad "taom_stop_block output is not a valid block with the reason intact: $(printf '%s' "$HELPER_OUT" | head -c 120)"
+fi
+# Through a variable: Git Bash drops a CR that $'\r' puts inside the text of a $( ).
+STOP_CTRL=$'one\ntwo\tthree\rfour'
+HELPER_OUT=$(source .claude/hooks/_stop_reminder.sh 2>/dev/null && taom_stop_block "$STOP_CTRL")
+if printf '%s' "$HELPER_OUT" | "$HPY" -c 'import json,sys; d=json.loads(sys.stdin.read()); sys.exit(0 if d.get("reason")=="one two three four" else 1)' 2>/dev/null; then
+    ok "taom_stop_block turns CR, LF and TAB into spaces and stays valid JSON"
+else
+    bad "taom_stop_block does not flatten CR, LF and TAB into valid JSON: $(printf '%s' "$HELPER_OUT" | head -c 120)"
+fi
+for pair in '0|{"stop_hook_active":true}' '0|{"stop_hook_active": true}' \
+            '1|{"stop_hook_active":false}' \
+            '1|{"last_assistant_message":"x \"stop_hook_active\":true","stop_hook_active":false}'; do
+    want="${pair%%|*}"; js="${pair#*|}"
+    bash -c 'source .claude/hooks/_stop_reminder.sh && taom_stop_hook_active "$1"' _ "$js" 2>/dev/null
+    got=$?
+    [[ "$got" == "$want" ]] && ok "taom_stop_hook_active $want for $js" || bad "taom_stop_hook_active returned $got, expected $want, for $js"
+done
+
+# Each hook against a sandbox repo that triggers all four: a tracked, modified .cs, an untagged
+# version, an untouched CHANGELOG, no build marker, no logged review.
+STOP_REPO="$SANDBOX/stop-repo"
+mkdir -p "$STOP_REPO/.claude/logs" "$STOP_REPO/Main/_Module"
+git -C "$STOP_REPO" init -q 2>/dev/null
+printf 'class Foo {}\n' > "$STOP_REPO/Main/Foo.cs"
+printf '<Module>\n  <Version value="v9.9.9" />\n</Module>\n' > "$STOP_REPO/Main/_Module/SubModule.xml"
+printf '# CHANGELOG\n' > "$STOP_REPO/CHANGELOG.md"
+git -C "$STOP_REPO" add Main CHANGELOG.md 2>/dev/null
+git -C "$STOP_REPO" -c user.name=t -c user.email=t@example.invalid commit -qm init 2>/dev/null
+printf 'class Foo { int x; }\n' > "$STOP_REPO/Main/Foo.cs"
+stop_run() {
+    printf '%s' "$2" | CLAUDE_PROJECT_DIR="$STOP_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/$1" 2>"$SANDBOX/stop.err"
+    echo "$?" > "$SANDBOX/stop.rc"
+}
+stop_shape() {
+    printf '%s' "$1" | "$HPY" -c '
+import json, sys
+raw = sys.stdin.read().strip()
+if not raw:
+    print("silent"); sys.exit()
+try:
+    d = json.loads(raw)
+except Exception:
+    print("invalid"); sys.exit()
+ok = isinstance(d, dict) and d.get("decision") == "block" and isinstance(d.get("reason"), str) and d["reason"].strip()
+print("block" if ok else "BADSHAPE")'
+}
+STOP_LIVE='{"hook_event_name":"Stop","session_id":"t","stop_hook_active":false}'
+STOP_LOOP='{"hook_event_name":"Stop","session_id":"t","stop_hook_active":true}'
+# One step: the hook's answer must have the expected shape, exit 0 and write no stderr. A shape
+# check alone let a silent timeout or crash pass as "silent" (Codex review of plan 011).
+stop_expect() {  # hook payload want label
+    local got; got=$(stop_shape "$(stop_run "$1" "$2")")
+    if [[ "$got" == "$3" && "$(cat "$SANDBOX/stop.rc" 2>/dev/null)" == 0 && ! -s "$SANDBOX/stop.err" ]]; then
+        ok "$1 $4"
+    else
+        bad "$1: expected $3 ($4), got '$got', rc $(cat "$SANDBOX/stop.rc" 2>/dev/null), stderr: $(head -c 100 "$SANDBOX/stop.err" 2>/dev/null)"
+    fi
+}
+stop_markers() { ls -A "$STOP_REPO/.claude/logs" 2>/dev/null | grep -c -- '-reminded$'; }
+# Ends (clear) or restarts (set) each hook's streak the way a session would. The verification
+# streak ends through the real writer, called as the PowerShell tool, so the writer's marker path
+# and the reader's are proven to agree (a PowerShell build must mute the reminder: plan 011).
+stop_condition() {  # hook clear|set
+    local now; now=$(date +%s)
+    case "$1:$2" in
+        check-verification-evidence.sh:clear)
+            touch -d "@$((now - 10))" "$STOP_REPO/Main/Foo.cs"
+            "$HPY" -c 'import json; print(json.dumps({"tool_name":"PowerShell","tool_input":{"command":"dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId="},"hook_event_name":"PostToolUse"}))' \
+                | CLAUDE_PROJECT_DIR="$STOP_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/mark-verification-run.sh" >/dev/null 2>&1 ;;
+        check-verification-evidence.sh:set) touch -d "@$((now + 3))" "$STOP_REPO/Main/Foo.cs" ;;
+        check-deep-review.sh:clear)          git -C "$STOP_REPO" checkout -q -- Main/Foo.cs ;;
+        check-deep-review.sh:set)            printf 'class Foo { int x; }\n' > "$STOP_REPO/Main/Foo.cs" ;;
+        check-changelog-updated.sh:clear)    printf -- '- entry\n' >> "$STOP_REPO/CHANGELOG.md" ;;
+        check-changelog-updated.sh:set)      git -C "$STOP_REPO" checkout -q -- CHANGELOG.md ;;
+        check-version-tagged.sh:clear)       git -C "$STOP_REPO" tag v9.9.9 ;;
+        check-version-tagged.sh:set)         git -C "$STOP_REPO" tag -d v9.9.9 >/dev/null 2>&1 ;;
+        *) return 2 ;;
+    esac
+    return 0
+}
+for name in $STOP_HOOKS; do
+    # The shared triggering state: a modified Foo.cs, no build marker, CHANGELOG untouched, no tag,
+    # no logged review, no streak marker.
+    printf 'class Foo { int x; }\n' > "$STOP_REPO/Main/Foo.cs"
+    git -C "$STOP_REPO" checkout -q -- CHANGELOG.md
+    git -C "$STOP_REPO" tag -d v9.9.9 >/dev/null 2>&1
+    rm -f "$STOP_REPO"/.claude/logs/.*-reminded "$STOP_REPO"/.claude/logs/.verification-ran "$STOP_REPO/.claude/logs/agent-audit.log"
+    stop_condition "$name" set
+    [[ $? == 2 ]] && { bad "7a has no clear and set steps for the Stop hook $name"; continue; }
+    stop_expect "$name" "$STOP_LOOP" silent "is silent when stop_hook_active is true"
+    [[ $(stop_markers) == 0 ]] && ok "$name writes no marker when stop_hook_active is true" \
+        || bad "$name wrote a streak marker on a stop_hook_active Stop, which spends the reminder unseen"
+    stop_expect "$name" "$STOP_LIVE" block "reminds through a JSON block"
+    stop_expect "$name" "$STOP_LIVE" silent "mutes after one reminder"
+    stop_condition "$name" clear
+    stop_expect "$name" "$STOP_LIVE" silent "is silent once its condition clears"
+    [[ $(stop_markers) == 0 ]] && ok "$name clears its streak marker once its condition clears" \
+        || bad "$name left its streak marker after its condition cleared: the next streak stays muted"
+    stop_condition "$name" set
+    stop_expect "$name" "$STOP_LIVE" block "reminds again on the next streak"
+    # Claude acts on the reminder in the continuation, so the streak ends before a Stop that carries
+    # stop_hook_active; the next streak must still be reminded (Codex review of plan 011, P2).
+    stop_condition "$name" clear
+    stop_expect "$name" "$STOP_LOOP" silent "is silent on the continuation Stop"
+    stop_condition "$name" set
+    stop_expect "$name" "$STOP_LIVE" block "reminds on the next streak after one that ended in the continuation"
+done
+# A deep-reviewer run logged by the real writer ends the deep-review streak and clears its marker.
+printf 'class Foo { int y; }\n' > "$STOP_REPO/Main/Foo.cs"
+rm -f "$STOP_REPO"/.claude/logs/.*-reminded "$STOP_REPO/.claude/logs/agent-audit.log"
+stop_expect check-deep-review.sh "$STOP_LIVE" block "reminds before a review is logged"
+printf '{"agent_type":"deep-reviewer","agent_id":"t"}' \
+    | CLAUDE_PROJECT_DIR="$STOP_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/log-agent.sh" >/dev/null 2>&1
+stop_expect check-deep-review.sh "$STOP_LIVE" silent "is silent after log-agent.sh logs a deep-reviewer run"
+[[ -f "$STOP_REPO/.claude/logs/.deep-review-reminded" ]] \
+    && bad "check-deep-review.sh kept .deep-review-reminded after a logged review: the next streak stays muted" \
+    || ok "check-deep-review.sh clears its streak marker when a review is logged"
+rm -f "$STOP_REPO/.claude/logs/agent-audit.log"
 
 # ---------------------------------------------------------------------------
 head2 "7b. check-claude-files-tracked: denies with a valid decision, inside its registration"
@@ -975,6 +1124,205 @@ if [[ "$(decision_of "$OUT")" == allow ]]; then
 else
     bad "check-claude-files-tracked still objects to a clean tree: $(printf '%s' "$OUT" | head -c 160)"
 fi
+
+# ---------------------------------------------------------------------------
+head2 "7c. validate-push refuses a force push to either trunk, on any line, from either shell tool"
+# The protected list named only master, main and bannerlord-1.4.5 while the release tags moved to
+# bannerlord-1.5.x, and the hook was registered for Bash only (plan 011). It names exactly the two
+# trunks, not bannerlord-* (maintainer decision D30), so a port branch stays force-pushable. It
+# also read only the first line of the command, so a `cd` line before the push hid a force push
+# (D38); a continued line (a trailing \ in bash, ` in PowerShell) is one command.
+VP_CASES=(
+  "2|git push --force origin bannerlord-1.5.x"
+  "2|git push origin +bannerlord-1.5.x"
+  "2|git push --force-with-lease origin bannerlord-1.5.x"
+  "2|git push -f origin bannerlord-1.4.5"
+  "2|git push --force origin main"
+  "2|cd /x"$'\n'"git push --force origin bannerlord-1.5.x"
+  "2|git status"$'\n'"git push origin feature"$'\n'"git push -f origin bannerlord-1.4.5"
+  "2|git push --force \\"$'\n'"  origin bannerlord-1.5.x"
+  "2|git push --force \`"$'\n'"  origin bannerlord-1.5.x"
+  "0|git push origin bannerlord-1.5.x"
+  "0|git push --force origin bannerlord-1.6.x"
+  "0|git push --force origin bannerlord-1.5.0-port"
+  "0|git push --force origin improve/011-stop-reminders-and-trunk-guard"
+  "0|cd /x"$'\n'"git push --force origin improve/011-stop-reminders-and-trunk-guard"
+  # Plan 011 review: anything after the push on its line became the "target", so a shell tail
+  # let a trunk force push through; and only the last refspec was judged. Each command of a
+  # line is now judged on its own, a redirection is never a refspec, and every refspec counts.
+  "2|git push --force origin bannerlord-1.5.x 2>&1"
+  "2|git push --force origin bannerlord-1.5.x 2>&1 | tail -5"
+  "2|git push --force origin bannerlord-1.5.x && echo done"
+  "2|git push --force origin bannerlord-1.5.x; git status"
+  "2|git push --force origin bannerlord-1.5.x > /dev/null"
+  "2|git push --force origin bannerlord-1.5.x | Out-Null"
+  "2|git push --force origin bannerlord-1.5.x; if (\$?) { \"ok\" }"
+  "2|git -C /e/repos/TAOM push -f origin bannerlord-1.4.5 2>/dev/null"
+  "2|bash -c \"git push --force origin bannerlord-1.5.x; echo x\""
+  "2|(git push --force origin bannerlord-1.5.x)"
+  "2|git push -f origin bannerlord-1.4.5; git push origin feature"
+  "2|git push --force origin bannerlord-1.5.x feature"
+  "2|git push origin +bannerlord-1.5.x feature"
+  "2|git push --force origin HEAD:bannerlord-1.5.x 2>&1"
+  "2|git push origin \"bannerlord-1.5.x\" --force"
+  "2|git push --force --all origin"
+  "2|git push --mirror origin"
+  "2|git push --force origin bannerlord-1.4.5 # note"
+  "2|git push --force origin bannerlord-1.5.x"$'\n'"echo done"
+  # Plan 011 convergence: a quote-blind split at ; & | cut a quoted -C, -c or -o value that
+  # held one, separating git from push; and a refspec glued to its redirection was dropped.
+  "2|git push --force -o \"ci.skip;x\" origin bannerlord-1.5.x"
+  "2|git -C \"E:/R&D/TAOM\" push --force origin bannerlord-1.5.x"
+  "2|git -c \"credential.helper=!f() { echo x; }; f\" push --force origin bannerlord-1.5.x"
+  "2|git -C \"E:\\a;b\" push -f origin bannerlord-1.4.5"
+  "2|git push --force origin bannerlord-1.5.x>/dev/null"
+  "2|git push --force origin bannerlord-1.5.x>/dev/null 2>&1"
+  "2|git push -f origin bannerlord-1.4.5>nul"
+  "2|git push --force origin bannerlord-1.5.x>&2"
+  # Plan 011 final convergence: an apostrophe in a comment or heredoc line opens a quote that
+  # never closes, gluing the later lines into its segment, so the push is anchored on the first
+  # `push` with a `git` before it, not on the first `push` word.
+  "2|# don't push to the trunk"$'\n'"git -C \"E:/R&D/TAOM\" push --force origin bannerlord-1.5.x"
+  "2|git commit -F - <<'EOF'"$'\n'"Don't push yet"$'\n'"EOF"$'\n'"git -C \"E:/R&D/TAOM\" push --force origin bannerlord-1.5.x"
+  # Deliberately fail-safe: a gate cannot tell quoted or heredoc text from a command it runs
+  # (bash -c "..." and bash <<EOF both run it), so a message that quotes a trunk force push is
+  # refused. Write such a message with git commit -F <file>.
+  "2|git commit -F - <<'EOF'"$'\n'"git push --force origin bannerlord-1.5.x"$'\n'"EOF"
+  "0|git push --force origin feature 2>&1 | tail -5"
+  "0|git push --force origin feature && git log --oneline bannerlord-1.5.x"
+  "0|git push -f origin feature; git push origin bannerlord-1.5.x"
+  "0|git push origin bannerlord-1.5.x 2>&1 | tail -3"
+  "0|git push --all origin"
+  "0|git push --force-with-lease=bannerlord-1.5.x:abc origin feature"
+  "0|echo push"
+)
+# The table above holds no escape, so PowerShell repeats one case to keep its path covered; the
+# tool-tagged table below covers the one place the hook reads tool_name, and the PowerShell
+# registration itself is checked below and live (plan 011 check B).
+vp_run() {  # $1 tool, $2 command; returns the hook's rc
+    local payload
+    payload=$("$HPY" -c 'import json,sys; print(json.dumps({"tool_name":sys.argv[1],"tool_input":{"command":sys.argv[2]},"hook_event_name":"PreToolUse"}))' "$1" "$2")
+    printf '%s' "$payload" | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$SANDBOX" bash .claude/hooks/validate-push.sh >/dev/null 2>&1
+}
+for tool in Bash PowerShell; do
+    for entry in "${VP_CASES[@]}"; do
+        [[ "$tool" == PowerShell && "$entry" != "${VP_CASES[0]}" ]] && continue
+        want="${entry%%|*}"; cmd="${entry#*|}"; shown="${cmd//$'\n'/\\n}"
+        vp_run "$tool" "$cmd"; got=$?
+        [[ "$got" == "$want" ]] && ok "validate-push [$tool] rc=$got for: $shown" \
+            || bad "validate-push [$tool] expected rc=$want, got $got for: $shown"
+    done
+done
+# The quote-aware split uses each shell's own escape, picked from tool_name (plan 011 final
+# convergence): PowerShell keeps a backslash literal, so "a\" closes its quote and the & in the
+# -C path stays quoted; Bash escapes the quote, so the value runs on to the next ". A hook that
+# used one escape for both tools passed every row above.
+VP_TOOL_CASES=(
+  'PowerShell|2|git -c "user.name=a\" -C "E:/R&D" push --force origin bannerlord-1.5.x'
+  'Bash|2|git -c "user.name=a\" b" -C "E:/R&D" push --force origin bannerlord-1.5.x'
+)
+for entry in "${VP_TOOL_CASES[@]}"; do
+    tool="${entry%%|*}"; rest="${entry#*|}"; want="${rest%%|*}"; cmd="${rest#*|}"
+    vp_run "$tool" "$cmd"; got=$?
+    [[ "$got" == "$want" ]] && ok "validate-push [$tool] rc=$got for: $cmd" \
+        || bad "validate-push [$tool] expected rc=$want, got $got for: $cmd"
+done
+# Every segment is judged under both splits, and a push with no refspec asks git for the current
+# branch: once per segment, 100 such lines took 7.9 s against the 5 s registration, and a killed
+# gate fails open. The branch is now resolved once per run and a repeated segment judged once.
+VP_LINES=""
+for i in $(seq 1 100); do VP_LINES+="git -C /x/r$i push origin"$'\n'; done
+S=$(date +%s%N); vp_run Bash "$VP_LINES"; got=$?; MS=$(( ($(date +%s%N) - S) / 1000000 ))
+[[ "$got" == 0 && $MS -lt 4000 ]] && ok "validate-push judges 100 no-refspec push lines in ${MS}ms" \
+    || bad "validate-push took ${MS}ms (rc=$got) on 100 no-refspec push lines; the limit is 4000ms"
+VP_REG=$("$HPY" - <<'PY'
+import json
+d = json.load(open('.claude/settings.json', encoding='utf-8'))
+def has(ev, hook, tool):
+    return any(tool in g.get('matcher', '').split('|')
+               and any(h['command'].endswith(hook) for h in g.get('hooks', []))
+               for g in d.get('hooks', {}).get(ev, []))
+# A command that exits non-zero raises PostToolUseFailure, not PostToolUse, so a failed build or
+# test marks only while mark-verification-run.sh is registered on both events (plan 011 review).
+need = [('PreToolUse', 'validate-push.sh'), ('PostToolUse', 'mark-verification-run.sh'),
+        ('PostToolUseFailure', 'mark-verification-run.sh')]
+gaps = [f'{hook} ({ev}, {tool})' for ev, hook in need for tool in ('Bash', 'PowerShell')
+        if not has(ev, hook, tool)]
+print('ok' if not gaps else 'missing: ' + '; '.join(gaps))
+PY
+)
+[[ "$VP_REG" == ok ]] && ok "validate-push (PreToolUse) and mark-verification-run (PostToolUse, PostToolUseFailure) are registered for Bash and PowerShell" \
+    || bad "settings.json registration $VP_REG"
+
+# ---------------------------------------------------------------------------
+head2 "7d. mark-verification-run marks the repo's own build and test commands, never a quoted mention"
+# Its env-prefix strip read `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` as an
+# assignment (a word, then `=`, then a space) and dropped `dotnet`, so the repo's canonical test
+# command never marked; and it split on ; & | and newlines inside quotes, so a quoted mention
+# marked (maintainer decision D41). A case is "1" for marked, "0" for not.
+MVR_DIR="$SANDBOX/mvr"
+MVR_CASES=(
+  "1|dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId="
+  "1|dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId="
+  "1|TEMP=E:/t TMP=E:/t dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId="
+  "1|cd \"E:/repos/x\" && dotnet test TAOM.Tests"
+  "1|dotnet test TAOM.Tests --filter \"FullyQualifiedName~A|FullyQualifiedName~B\""
+  "1|pwsh ./build.ps1 -RunTests"
+  "1|echo start; dotnet build Main/TAOM.csproj"
+  "1|env DOTNET_NOLOGO=1 dotnet test TAOM.Tests"
+  "0|grep -rn \"dotnet test\" docs/"
+  "0|grep -rn \"x; dotnet test\" docs/"
+  "0|echo 'a | dotnet build'"
+  "0|git commit -m \"first line"$'\n'"dotnet test TAOM.Tests\""
+  "0|DOTNET_NOLOGO=1 echo dotnet test"
+)
+for tool in Bash PowerShell; do
+    for entry in "${MVR_CASES[@]}"; do
+        want="${entry%%|*}"; cmd="${entry#*|}"; shown="${cmd//$'\n'/\\n}"
+        rm -rf "$MVR_DIR"; mkdir -p "$MVR_DIR"
+        payload=$("$HPY" -c 'import json,sys; print(json.dumps({"tool_name":sys.argv[1],"tool_input":{"command":sys.argv[2]},"hook_event_name":"PostToolUse","tool_response":{"stdout":"ok"}}))' "$tool" "$cmd")
+        printf '%s' "$payload" | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$MVR_DIR" bash .claude/hooks/mark-verification-run.sh >/dev/null 2>&1
+        got=0; [[ -f "$MVR_DIR/.claude/logs/.verification-ran" ]] && got=1
+        [[ "$got" == "$want" ]] && ok "mark-verification-run [$tool] marked=$got for: $shown" \
+            || bad "mark-verification-run [$tool] expected marked=$want, got $got for: $shown"
+    done
+done
+# Each shell's own escape (plan 011 review): PowerShell escapes with a backtick and keeps a
+# backslash literal, so a path ending in \ closes its quote, and `" does not. Bash is the reverse.
+# A command's non-final lines arrive with a CR, which must not hide a command on them.
+MVR_TOOL_CASES=(
+  'PowerShell|0|Write-Output "x`"; dotnet test"'
+  'PowerShell|1|Set-Location "E:\repos\TAOM\"; dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId='
+  'PowerShell|1|Push-Location E:\repos\TAOM\; dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId='
+  'Bash|0|echo "a\"; dotnet test"'
+  "Bash|1|cd E:/x"$'\n'"./build.ps1"$'\n'"echo done"
+  "PowerShell|1|cd E:/x"$'\n'"./build.ps1"$'\n'"echo done"
+)
+for entry in "${MVR_TOOL_CASES[@]}"; do
+    tool="${entry%%|*}"; rest="${entry#*|}"; want="${rest%%|*}"; cmd="${rest#*|}"; shown="${cmd//$'\n'/\\n}"
+    rm -rf "$MVR_DIR"; mkdir -p "$MVR_DIR"
+    payload=$("$HPY" -c 'import json,sys; print(json.dumps({"tool_name":sys.argv[1],"tool_input":{"command":sys.argv[2]},"hook_event_name":"PostToolUse","tool_response":{"stdout":"ok"}}))' "$tool" "$cmd")
+    printf '%s' "$payload" | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$MVR_DIR" bash .claude/hooks/mark-verification-run.sh >/dev/null 2>&1
+    got=0; [[ -f "$MVR_DIR/.claude/logs/.verification-ran" ]] && got=1
+    [[ "$got" == "$want" ]] && ok "mark-verification-run [$tool] marked=$got for: $shown" \
+        || bad "mark-verification-run [$tool] expected marked=$want, got $got for: $shown"
+done
+# A 100 KB command still marks inside the 5 s registration: a per-character bash split took 9.5 s.
+rm -rf "$MVR_DIR"; mkdir -p "$MVR_DIR"
+S=$(date +%s%N)
+"$HPY" -c 'import json; print(json.dumps({"tool_name":"Bash","tool_input":{"command":"echo " + "x" * 100000 + "; dotnet test TAOM.Tests"},"hook_event_name":"PostToolUse"}))' \
+    | timeout -k 1 5 env CLAUDE_PROJECT_DIR="$MVR_DIR" bash .claude/hooks/mark-verification-run.sh >/dev/null 2>&1
+MS=$(( ($(date +%s%N) - S) / 1000000 ))
+[[ -f "$MVR_DIR/.claude/logs/.verification-ran" ]] && ok "mark-verification-run marks a 100 KB command in ${MS}ms" \
+    || bad "mark-verification-run did not mark a 100 KB command inside its 5 s registration (${MS}ms)"
+# A failed test run arrives as PostToolUseFailure, with an `error` and no `tool_response`; it must
+# mark too, or the Stop hook nags after every red run (7c checks the registration).
+rm -rf "$MVR_DIR"; mkdir -p "$MVR_DIR"
+printf '%s' '{"tool_name":"PowerShell","tool_input":{"command":"dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId="},"hook_event_name":"PostToolUseFailure","error":"Exit code 1"}' \
+    | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$MVR_DIR" bash .claude/hooks/mark-verification-run.sh >/dev/null 2>&1
+[[ -f "$MVR_DIR/.claude/logs/.verification-ran" ]] && ok "mark-verification-run marks a PostToolUseFailure payload" \
+    || bad "mark-verification-run did not mark a PostToolUseFailure payload"
+rm -rf "$MVR_DIR"
 
 # ---------------------------------------------------------------------------
 head2 "8. /context-budget scan.sh runs under set -u and measures the launch load"

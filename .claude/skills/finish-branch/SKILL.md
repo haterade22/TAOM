@@ -38,7 +38,7 @@ Integrate a completed branch into TAOM's trunk (`bannerlord-1.4.5`, the de-facto
 - `git push origin --delete <branch>` — only after local delete succeeds (confirms it was merged).
 
 ### 6. Push the trunk
-- **Confirm with the user before pushing `bannerlord-1.4.5`.** It's the becoming-master branch; `validate-push.sh` warns on master/main pushes. Do not auto-push — surface "ready to push N commits" and wait, unless the user pre-authorized the push for this run.
+- **Confirm with the user before pushing a trunk (`bannerlord-1.5.x` or `bannerlord-1.4.5`).** `validate-push.sh` refuses only a force push to one; a plain push is not gated, and its warning never reaches you. Do not auto-push: surface "ready to push N commits" and wait, unless the user pre-authorized the push for this run.
 
 ## Gotchas
 

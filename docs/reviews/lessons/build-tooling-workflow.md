@@ -2606,3 +2606,25 @@ the untrack starts with no copy at all.
 - **Prevent:** when untracking a per-user file, list each live branch that still tracks it and
   state in the migration note what a switch, a new worktree and a fresh clone do to the user's copy.
 - **Source:** `docs/reviews/rca-repo-hygiene-pins-readme-2026-09-24.md`, finding D8.
+### A hook that parses a shell command judges each command, in the shell's own grammar, against the shapes Claude sends (plan 011, 2026-09-25)
+`validate-push.sh` took the last word of a line as the refspec, so
+`git push --force origin bannerlord-1.5.x 2>&1 | tail -5` passed, as did `&& echo done`, a second
+refspec, and `--force --all`. It was the only force-push guard (D29). The ADR-011 batch 1 RCA had
+already recorded the trailing-comment form of this bypass on 2026-09-23; plan 011 rewrote that same
+function and claimed the trunks were guarded. Separately, `mark-verification-run.sh` applied Bash
+escaping to PowerShell text, so ``Write-Output "x`"; dotnet test"`` marked a build that never ran.
+Both hooks also missed a command on a non-final line, because Python's `print` writes CRLF on
+Windows.
+- **Why missed:** the plan called `;` and `&` "harmless tokens", and the tests fed each hook the
+  executor's own idea of a command: pushes that end their line, and Bash strings under a PowerShell
+  tool name. The 2026-09-23 follow-up stayed as prose, not a failing test.
+- **Prevent:** before registering a command-parsing hook for a shell, test it with that shell's
+  real shapes: a trailing `2>&1 | tail -5` or `| Out-Null`, `;` and `&&` chains, two refspecs or
+  arguments, a quoted path ending in the shell's escape, and the command on a middle line. Split a
+  line into commands before judging it. Choose the escape from `tool_name`. For a gate, over-block
+  quoted text rather than open a `bash -c` bypass, but a quote-blind split alone also under-blocks
+  (a `;` or `&` inside a quoted `-C` path cuts `git` from `push`): judge both splits, block on
+  either, and test a separator inside a quoted value. A known bypass recorded as a follow-up gets a
+  failing test row the day it is found.
+- **Source:** `docs/reviews/rca-stop-reminders-and-trunk-guard-2026-09-24.md` F1, F3, F7, F9
+  (repeat of `docs/reviews/rca-adr011-batch1-2026-09-23.md`, "Follow-ups not taken").

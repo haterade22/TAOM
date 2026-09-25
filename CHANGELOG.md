@@ -192,8 +192,6 @@ controller on every AI human to be fought at all. The feature therefore needs it
 `elephant.md` gains a dated correction: its "a shape the engine doesn't have" is about cost, not possibility.
 Documentation only; nothing built.
 
-## 2026-09-25
-
 ### feat(troll): v2.0.30 - trolls at 200 health, costed, and in three Mordor warbands
 
 Mike's calls after the deep review of the hill troll:
@@ -416,6 +414,57 @@ line. Of the ADR wording the review found still inconsistent, O3, O5 and O6 are 
 (`b22edd47`), Mike decided O1 (decision 55, applied) and O2 (decision 56, plan 026), and the
 optional tightening O4 stays with Mike because it rewords decision 49; see
 `docs/reviews/deep-review-021-architecture-rule-amendments-2026-09-24.md`.
+### fix(hooks): v2.0.30 - Stop reminders reach Claude, both trunks guarded against force pushes (#654)
+
+Plan 011. The four Stop reminders were silent: `check-verification-evidence.sh`, `check-deep-review.sh`,
+`check-version-tagged.sh` and `check-changelog-updated.sh` printed to stderr and exited 0, which Claude Code sends
+to the debug log only, so no reminder ever reached Claude and each one-shot marker was spent on nothing. They now
+print `{"decision":"block","reason":...}` through the new `.claude/hooks/_stop_reminder.sh`, stay silent when
+`stop_hook_active` is true, and still fire once per streak. `check-deep-review.sh` gained the streak marker it
+never had (`.deep-review-reminded`); without it a visible reminder would block every turn in a dirty tree. The
+verification reason now names the non-deploying build and test commands. `validate-push.sh` protected
+`bannerlord-1.4.5` but not `bannerlord-1.5.x`, where the release tags live; it now names both trunks, not a
+`bannerlord-*` pattern (maintainer decision D30), and judges every line of a multi-line command, joining a line
+continued with a backslash or a PowerShell backtick, where it used to read only the first line, so a `cd` line
+hid a force push (D38). It and `mark-verification-run.sh` are registered for the PowerShell tool too.
+`mark-verification-run.sh` now marks the repo's own `dotnet test TAOM.Tests -p:DisableModuleCopy=true
+-p:ModuleId=`, which its env-prefix strip read as an assignment and dropped, and it splits a command outside
+quotes only, so a quoted mention such as `grep "x; dotnet test"` no longer marks (D41). `suggest-compact.sh` and
+`notify-test-results.sh` are deleted with their registrations, test rows and catalog rows (D42): both printed to
+stderr on exit 0, which reached no one. `tools/test_hooks.sh` 7a, 7c and 7d pin all of it; the docs follow (hooks
+catalog, `harness-facts.md` Visibility, `hook-authoring.md`, the CLAUDE.md hooks bullet). No GitHub ruleset
+(D29). Owed: Mike's live check that a Stop reminder arrives and that a PowerShell force push to
+`bannerlord-1.5.x` is refused.
+
+Review follow-ups (deep review and Codex, 2026-09-25). The force-push guard took the last word on a
+line as the refspec, so `git push --force origin bannerlord-1.5.x 2>&1 | tail -5`, `... && echo done`,
+`... bannerlord-1.5.x feature` and `git push --force --all origin` all passed (rc 0) before and after plan
+011. It now judges each command of a line on its own, skips redirections, judges every refspec, and
+refuses `--all` with a force flag and `--mirror`; quoted or heredoc text that reads as a trunk force push
+is refused by design. Each Stop reminder exited at the top on `stop_hook_active`, so a streak Claude
+ended in that continuation (a build, a CHANGELOG entry) kept its marker and muted the next streak; the
+guard now only withholds the block. `mark-verification-run.sh` splits a command in Python with each
+shell's escape: the bash loop took 9.5 s on a 100 KB command, past its 5 s registration, marked
+``Write-Output "x`"; dotnet test"`` under PowerShell, and missed a build on a non-final line. 7a now
+checks exit status, stderr, marker clearing and re-arming for every Stop hook; 7c and 7d gained the
+shapes above. Report: `docs/reviews/deep-review-011-stop-reminders-and-trunk-guard-2026-09-24.md`.
+
+Convergence fixes (2026-09-25). Splitting at `;`, `&` and `|` without regard to quotes let a trunk
+force push through when a quoted value held one: `git -C "E:/R&D/TAOM" push --force origin
+bannerlord-1.5.x` and `git push --force -o "ci.skip;x" origin bannerlord-1.5.x` returned rc 0, where
+43e6780e refused them. `validate-push.sh` now judges two splits and blocks when either does: the
+quote-blind one, which keeps `bash -c "git push ...; echo x"` refused, and one outside quotes only. A
+refspec glued to its redirection (`bannerlord-1.5.x>/dev/null`, `>&2`) now counts; it passed before and
+after plan 011. Three comments that called the JSON block the only Stop channel Claude reads, and the
+section 4 comment in `tools/test_hooks.sh`, now say what the code does. 7c gained eight rows. The
+orchestrator registered `mark-verification-run.sh` on PostToolUseFailure for Bash and PowerShell, since
+a command that exits non-zero never raises PostToolUse, so a failed build or test now records a
+verification run too; 7c checks the registration (red against the previous `settings.json`) and 7d
+feeds the hook a failure payload. The hooks catalog is recounted: 29 `settings.json` registrations, 34
+in total. Final convergence: an apostrophe in a comment or heredoc line (`# don't push`) glued the next
+line into its segment and hid a trunk force push behind it, so `validate-push.sh` now anchors on the
+first `push` with a `git` before it, 7c gained a row for each shell's quote escape, and the hook asks
+git for the current branch once per run, so 100 push lines no longer outrun the 5 s registration.
 
 ### feat(troll): v2.0.30 - human clips retargeted onto the hill troll's own rest pose
 
@@ -598,8 +647,6 @@ screen list, the class summary, the gate's "unconditionally", the feature-map ro
 identifier were corrected, and the feature doc now says raise lines are traced per call. Report
 `docs/reviews/deep-review-012-loading-window-trace-per-frame-2026-09-24.md`, RCA
 `docs/reviews/rca-loading-window-trace-per-frame-2026-09-24.md`.
-## 2026-09-25
-
 ### fix(docs): v2.0.30 - review follow-ups for plan 016 (#657)
 
 The deep review and the Codex pass on plan 016 found only documentation defects; each is fixed

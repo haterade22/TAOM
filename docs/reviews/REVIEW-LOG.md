@@ -4736,3 +4736,30 @@ decided and applied (decision 58, 16 tools, memory tools kept); the Serena pin i
 (decision 51). Convergence: the first pass found 4 LOW (fixed in `35f212c6`), the final pass 5 LOW
 (one missed tool, counts, the memory scope, a commit body, this entry, a freeze skill line), fixed
 by the orchestrator. The managed-crash example (N2) stays open.
+## Review (plan 011, number assigned at merge): Stop reminders reach Claude and both trunks guarded, 6-lens deep review + Codex adversarial (2026-09-25)
+
+`/review-codex` Phase 3 on branch `improve/011-stop-reminders-and-trunk-guard` (`bec0389d..43e6780e`), verified
+by the review lead alongside the Standards, Efficiency, Completeness, Data flow, Design and Tooling lenses. Codex,
+122,619 tokens: **1 P1 / 4 P2 / 2 P3; 6 confirmed, 1 process observation, no false positive.** It quoted the
+vendor hooks contract and Microsoft's PowerShell quoting rules, and it cross-referenced every marker, registration
+and branch name. P1: `validate-push.sh` took the last word of a line as the refspec, so a trunk force push
+with any tail (`; Write-Output done`) or a second refspec passed. Every lens except Efficiency found it too, and it
+repeats a follow-up recorded on 2026-09-23. Fixed: per-command split, every refspec judged, `--all` with force
+and `--mirror` refused. P2 found only by Codex: every Stop hook exited at the top on `stop_hook_active`, so a
+streak Claude ended in the continuation kept its marker and muted the next one. Fixed by moving the guard to just
+before the block. P2: Bash escaping applied to PowerShell text marked a verification that never ran; fixed by
+a Python split with a per-shell escape. P2 over-blocking of quoted force-push text: kept as fail-safe and
+pinned. P2 stale markers across the upgrade: a merge step. P3 test oracle: fixed. Codex missed the
+PostToolUseFailure gap (a failed build never marks; needs a `settings.json` change by the orchestrator), the
+quadratic split (5.4 s at 100 KB, past the 5 s registration), the CRLF middle-line miss and the `env`-prefix
+regression, all from the lenses. Six questions to Mike. Metrics not recomputed here (parallel branches).
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|---|---|---|---|
+| 1 | Tail or second refspec bypasses the only force-push guard | Logic error | Plan premise "harmless tokens"; 2026-09-23 follow-up left as prose | 7c rows; lesson in build-tooling-workflow |
+| 2 | Continuation Stop skips marker cleanup, muting the next streak | Stale state / lifecycle | Plan prescribed the early return; no clear or re-arm test | 7a full cycle per Stop hook; lesson in state-lifecycle-save |
+| 3 | Bash escaping applied to PowerShell commands | Convention inconsistency | Tests replayed Bash strings under a PowerShell tool name | 7d per-shell rows; same build-tooling lesson |
+| 6 | Stop tests ignored exit status and stderr | Other: test oracle | Shape-only assertions | `stop_expect` in 7a |
+
+Report `docs/reviews/deep-review-011-stop-reminders-and-trunk-guard-2026-09-24.md`; RCA
+`docs/reviews/rca-stop-reminders-and-trunk-guard-2026-09-24.md`. Convergence pass owed. Nothing merged or pushed.

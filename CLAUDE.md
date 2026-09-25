@@ -20,8 +20,9 @@ authorizes no `/ship`, no fixes and no extra paid reviewers.
   its traps ([rules catalog](docs/reference/rules-catalog.md)).
 - **On invoke:** a skill's body. After `/compact` only its first ~5,000 tokens come back.
 - **Memory:** MEMORY.md loads in the main session only, on this machine only, never in a subagent.
-- **Hooks** reach you only as SessionStart output, a deny reason or exit-2 stderr (an ask reason goes
-  to the user); follow the instruction in the message ([hooks catalog](docs/reference/hooks-catalog.md)).
+- **Hooks** reach you only as SessionStart output, a deny reason, exit-2 stderr or a Stop hook's
+  block reason (an ask reason goes to the user); follow the instruction in the message
+  ([hooks catalog](docs/reference/hooks-catalog.md)).
 
 ## Where new knowledge goes
 
