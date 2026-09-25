@@ -2671,5 +2671,10 @@
     <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are swinging round the flank." />
     <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging the enemy foot." />
     <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are taking the flank of the wall." />
+    <string id="taom_patch_apply_failed" text="TAOM: {PHASE}にパッチグループの適用に失敗しました: {GROUPS}。これらのグループの一部の修正は今回のセッションでは無効です。原因はTAOMのログに記録されています。" />
+    <string id="taom_patch_apply_phase_startup" text="起動時" />
+    <string id="taom_patch_apply_notice_title" text="TAOM" />
+    <string id="taom_patch_apply_phase_game_init" text="ゲーム初期化時" />
+    <string id="taom_patch_apply_phase_mission_start" text="ミッション開始時" />
   </strings>
 </base>

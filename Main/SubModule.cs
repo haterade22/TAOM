@@ -100,6 +100,7 @@ namespace TAOM;
 public class SubModule : MBSubModuleBase
 {
     private Harmony _harmony;
+    private PatchCategoryApplier _patches;
     private UIExtender? _uiExtender;
     private ITimeAccelerationService? _timeAccelerationService;
     private static float _shaderTickAccumulator;
@@ -184,23 +185,35 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IModLogger>().LogWarning($"[SaveDefiners] preflight wiring failed: {ex.GetType().Name}: {ex.Message}");
         }
 
-        // Codex review #46 (2026-05-25) MED-01: attach Patch37_CrashReport IMMEDIATELY
-        // after IoC.Configure() so its Finalizers cover the rest of OnSubModuleLoad
-        // (UIExtender init, time-acceleration resolve, downstream PatchCategory calls).
-        // Previous order left lines 88-107 uncatchable. The only unavoidable blind spot
-        // is the IoC.Configure() call itself — if THAT throws, the entire feature is
-        // unreachable. Split CrashReport bootstrap doesn't fix this without re-implementing
-        // a manual DI container; accept and document the residual.
+        // Codex review #46 (2026-05-25) MED-01: attach Patch37_CrashReport first so its tick
+        // finalizers (Module.OnApplicationTick, ScreenManager.Tick, Mission.Tick and the rest) are
+        // live as early as possible. It does NOT cover this method's own body: its
+        // MBSubModuleBase.OnSubModuleLoad finalizer patches the base method, and this override is
+        // already on the stack when it attaches. A throw from here reaches the engine's
+        // Module.InitializeSubModuleBases catch, which logs it and throws a new exception, and the
+        // game does not start. That is why every category goes through TryPatchCategory: one
+        // binding that no longer resolves costs its category (Harmony keeps the classes it applied
+        // before the failing one) instead of the module load or the rest of a batch. Categories are
+        // indexed by PatchCategoryIndex, class by class, not by Harmony's own assembly-wide index:
+        // a class whose [HarmonyPatch] names a type the engine no longer has would fail Harmony's
+        // index and so every category, where here only that class is skipped and reported (#653).
         _harmony = new Harmony("com.taom.mod");
+        var categoryIndex = PatchCategoryIndex.Build(typeof(SubModule).Assembly);
+        _patches = new PatchCategoryApplier(
+            category => categoryIndex.Apply(_harmony, category),
+            IoC.Resolve<IModLogger>());
+        _patches.RecordSkippedClasses(categoryIndex.SkippedClasses);
         if ((TAOM.Features.CrashReport.CrashReportSettings.Instance?.EnableCrashCapture) ?? true)
         {
             try
             {
-                _harmony.PatchCategory("Patch37_CrashReport");
-                IoC.Resolve<TAOM.Features.CrashReport.Hooks.AppDomainExceptionHook>().Subscribe();
-                if ((TAOM.Features.CrashReport.CrashReportSettings.Instance?.EnableNativeToManagedCapture) ?? true)
+                if (TryPatchCategory("Patch37_CrashReport"))
                 {
-                    IoC.Resolve<TAOM.Features.CrashReport.Hooks.Native2ManagedPatcher>().AttachAll(_harmony);
+                    IoC.Resolve<TAOM.Features.CrashReport.Hooks.AppDomainExceptionHook>().Subscribe();
+                    if ((TAOM.Features.CrashReport.CrashReportSettings.Instance?.EnableNativeToManagedCapture) ?? true)
+                    {
+                        IoC.Resolve<TAOM.Features.CrashReport.Hooks.Native2ManagedPatcher>().AttachAll(_harmony);
+                    }
                 }
             }
             catch (System.Exception ex)
@@ -220,7 +233,7 @@ public class SubModule : MBSubModuleBase
         // MUST be applied here in OnSubModuleLoad: MCM's ResourceInjector.Inject() runs at
         // OnBeforeInitialModuleScreenSetAsRoot (after every module's OnSubModuleLoad), so the Postfix
         // must already be attached when MCM calls CreateAndRegister.
-        _harmony.PatchCategory("Patch41_McmLayoutFix");
+        TryPatchCategory("Patch41_McmLayoutFix");
 
         _timeAccelerationService = IoC.Resolve<ITimeAccelerationService>();
 
@@ -256,7 +269,7 @@ public class SubModule : MBSubModuleBase
 
         // Must be first — intercepts GetLocalizedText before any game texts are resolved.
         // Loads English string overrides from taom_module_strings.xml (removes hardcoded "The" articles).
-        _harmony.PatchCategory("Patch25_LocalizationOverride");
+        TryPatchCategory("Patch25_LocalizationOverride");
         var pathService0 = IoC.Resolve<IPathService>();
         var logger0 = IoC.Resolve<IModLogger>();
         var xmlPath = System.IO.Path.Combine(pathService0.ModuleDataPath, "taom_module_strings.xml");
@@ -288,8 +301,8 @@ public class SubModule : MBSubModuleBase
             logger0.LogError($"[LocalizationOverride] Failed to re-apply global_strings.xml: {ex.Message}");
         }
 
-        _harmony.PatchCategory("Patch18_CulturalFeats");
-        _harmony.PatchCategory("Patch19_CustomBattles");
+        TryPatchCategory("Patch18_CulturalFeats");
+        TryPatchCategory("Patch19_CustomBattles");
 
         // Patch58_SkipCampaignIntro — Prefix on SandBoxGameManager.OnLoadFinished that skips the vanilla
         // SandBox campaign intro video on a NEW game (mirrors the engine's own IsDevelopmentMode no-video
@@ -299,7 +312,7 @@ public class SubModule : MBSubModuleBase
         // character creation), so the patch must already be attached before any new game can start. Any
         // binding failure inside the prefix falls back to the vanilla video. See docs/features/skip-campaign-intro.md.
         Features.SkipCampaignIntro.Hooks.Patch58_SkipCampaignIntro.Initialize(IoC.Resolve<IModLogger>());
-        _harmony.PatchCategory("Patch58_SkipCampaignIntro");
+        TryPatchCategory("Patch58_SkipCampaignIntro");
 
         // Patch83_StaleCharacterRepair — makes a character restored from a save whose ModuleData
         // definition is gone INERT, so the engine's several unguarded dereferences of its null
@@ -309,15 +322,15 @@ public class SubModule : MBSubModuleBase
         // OnGameInitializationFinished batch is far too late and a campaign behavior could never
         // work at all. See docs/features/stale-character-repair.md.
         //
-        // GUARDED, unlike Patch58 above, and the guard is load-bearing: this category binds an
-        // engine method by name AND the adapter reflects four engine members. A rename would throw
-        // out of OnSubModuleLoad and take the remaining ~250 lines of module init with it — turning
-        // a crash guard into a worse crash than the one it prevents (the Patch61/Patch62 shape).
+        // GUARDED, and the guard is load-bearing: the adapter behind Initialize reflects four
+        // engine members. A rename would throw out of OnSubModuleLoad and take the rest of module
+        // init with it, turning a crash guard into a worse crash than the one it prevents (the
+        // Patch61/Patch62 shape). A category that fails to apply is contained by TryPatchCategory.
         try
         {
             Features.StaleCharacterRepair.Hooks.Patch83_StaleCharacterRepair.Initialize(
                 IoC.Resolve<Features.StaleCharacterRepair.IStaleCharacterRepairService>());
-            _harmony.PatchCategory("Patch83_StaleCharacterRepair");
+            TryPatchCategory("Patch83_StaleCharacterRepair");
         }
         catch (System.Exception ex)
         {
@@ -338,8 +351,8 @@ public class SubModule : MBSubModuleBase
         // menu, before any game init — the late batch would miss the first load. Each
         // reflection-target hook (internal engine types) gets its OWN category: Harmony aborts a
         // category on the first failing class, so per-hook categories keep one drifted internal
-        // type from killing its siblings. Diagnostics must never break startup: every category in
-        // its own try/catch, fail = vanilla.
+        // type from killing its siblings. Diagnostics must never break startup: TryPatchCategory
+        // contains each category's failure, the try/catch covers the Initialize calls, fail = vanilla.
         try
         {
             var saveLoadDiagnostics = IoC.Resolve<Features.SaveLoadDiagnostics.ISaveLoadDiagnosticsService>();
@@ -359,7 +372,7 @@ public class SubModule : MBSubModuleBase
             Features.SaveLoadDiagnostics.Hooks.ContainerLoadData_Fill_Patch.Initialize(saveLoadDiagnostics, saveLoadLogger);
             Features.SaveLoadDiagnostics.Hooks.CampaignBehaviorDataStore_LoadBehaviorData_Patch.Initialize(saveLoadDiagnostics, saveLoadLogger);
             Features.SaveLoadDiagnostics.Hooks.ArchiveDeserializer_LoadFrom_Patch.Initialize(saveLoadDiagnostics, saveLoadLogger);
-            _harmony.PatchCategory("Patch61_SaveLoadDiagnostics");
+            TryPatchCategory("Patch61_SaveLoadDiagnostics");
             foreach (var category in new[]
             {
                 "Patch61_SaveLoadDiagnostics_ContainerFill",
@@ -367,14 +380,7 @@ public class SubModule : MBSubModuleBase
                 "Patch61_SaveLoadDiagnostics_ArchiveParse",
             })
             {
-                try
-                {
-                    _harmony.PatchCategory(category);
-                }
-                catch (System.Exception ex)
-                {
-                    saveLoadLogger.LogWarning($"[SaveLoad] {category} not applied (engine drift?): {ex.GetType().Name}: {ex.Message}");
-                }
+                TryPatchCategory(category);
             }
         }
         catch (System.Exception ex)
@@ -394,7 +400,7 @@ public class SubModule : MBSubModuleBase
             Features.MapLoadDiagnostics.Hooks.Campaign_RealTick_MapLoad_Patch.Initialize(
                 IoC.Resolve<Features.MapLoadDiagnostics.IMapLoadHeartbeatService>(), mapLoadLogger);
             Features.MapLoadDiagnostics.MapLoadTracer.Initialize(mapLoadLogger);
-            _harmony.PatchCategory("Patch89_MapLoadDiagnostics");
+            TryPatchCategory("Patch89_MapLoadDiagnostics");
 
             // Lifecycle trace: state pushes/pops, loading-window raise/lower with caller chains,
             // and the map state/screen seams. Each category applies separately because Harmony
@@ -407,11 +413,7 @@ public class SubModule : MBSubModuleBase
                 "Patch89_MapLoadDiagnostics_SceneReady",
             })
             {
-                try { _harmony.PatchCategory(traceCategory); }
-                catch (System.Exception ex)
-                {
-                    mapLoadLogger.LogError($"[MapLoad] {traceCategory} did not attach: {ex.Message}");
-                }
+                TryPatchCategory(traceCategory);
             }
         }
         catch (System.Exception ex)
@@ -430,7 +432,7 @@ public class SubModule : MBSubModuleBase
         {
             Features.PreloadBodyGuard.Hooks.PreloadHelper_WaitForMeshesToBeLoaded_Patch.Initialize(
                 IoC.Resolve<Features.PreloadBodyGuard.IPreloadBodyGuardService>(), IoC.Resolve<IModLogger>());
-            _harmony.PatchCategory("Patch90_PreloadBodyGuard");
+            TryPatchCategory("Patch90_PreloadBodyGuard");
         }
         catch (System.Exception ex)
         {
@@ -449,7 +451,7 @@ public class SubModule : MBSubModuleBase
         try
         {
             Features.Arena.Hooks.GauntletMovie_Release_AvGuard_Patch.Initialize(IoC.Resolve<IModLogger>());
-            _harmony.PatchCategory("Patch62_MovieReleaseAvGuard");
+            TryPatchCategory("Patch62_MovieReleaseAvGuard");
         }
         catch (System.Exception ex)
         {
@@ -472,7 +474,7 @@ public class SubModule : MBSubModuleBase
         {
             Features.DevConsole.Hooks.Patch79_MapInfoItemVM_ExecuteBeginHint_Probe.Initialize(IoC.Resolve<IModLogger>());
             Features.DevConsole.Hooks.Patch79_GauntletInformationView_OnShowTooltip_Probe.Initialize(IoC.Resolve<IModLogger>());
-            _harmony.PatchCategory("Patch79_TooltipDiagnostics");
+            TryPatchCategory("Patch79_TooltipDiagnostics");
         }
         catch (System.Exception ex)
         {
@@ -484,7 +486,7 @@ public class SubModule : MBSubModuleBase
         // FailedAsserting against vanilla's 1-157 table. Re-enabled 2026-06-01 (TAOM_Map ships Main_map +
         // the extended XML exists; 3 patch targets verified against installed 1.4.5). In-game grid validation
         // pending the worldmap_battle_scene_grid re-author. See docs/reference/worldmap-battle-scene-grid.md.
-        _harmony.PatchCategory("Patch0_BattleScenes");
+        TryPatchCategory("Patch0_BattleScenes");
         // Remaining patches applied in OnGameInitializationFinished — View assembly must be initialized first
 
         var pathService = IoC.Resolve<IPathService>();
@@ -525,28 +527,28 @@ public class SubModule : MBSubModuleBase
         // Patch21_ShaderPrecompilation (re-enabled 2026-09-11, #560): mirrors the shader walk's status
         // line onto the loading screen (LoadingWindowViewModel.Update); the postfix returns immediately
         // unless a walk is active.
-        _harmony.PatchCategory("Patch21_ShaderPrecompilation");
+        TryPatchCategory("Patch21_ShaderPrecompilation");
         _shaderRunner = IoC.Resolve<ShaderPrecompileRunner>();
         ShaderPrecompilationIoC.InitializeHooks(logger, _shaderRunner);
 
-        _harmony.PatchCategory("Patch22_ArmyTargeting");
+        TryPatchCategory("Patch22_ArmyTargeting");
         // Patch49: Finalizer guarding vanilla Army.FindBestGatheringSettlementAndMoveTheLeader,
         // which NREs (Army.cs:726 settlement.GatePosition / 659 Kingdom.Settlements, v1.4.6) when a
         // besieger army can't resolve a gathering fortification — a map-tick CTD on siege start.
         // No TAOM patch is on the stack; aggressive Patch22 targeting just makes it more reachable.
         // Crash report 2026-06-17. See the patch's doc-comment.
-        _harmony.PatchCategory("Patch49_ArmyGatheringNreGuard");
+        TryPatchCategory("Patch49_ArmyGatheringNreGuard");
         // Patch59: CaravanTrade — four postfixes on CaravansCampaignBehavior private methods
         // (war gate, destination re-weight, range envelope, budget-factor floor) so AI/player caravans
         // range past the local town cluster instead of shuttling. Campaign-behavior target, so applied
         // in this campaign-phase block alongside the other AI patches.
-        _harmony.PatchCategory("Patch59_CaravanTrade");
+        TryPatchCategory("Patch59_CaravanTrade");
         // Patch81 (#542): MarriageAlignment — transpiler narrowing the AI's partner-clan draw in
         // RomanceCampaignBehavior.CheckNpcMarriages to alignment-compatible clans. The Free/Evil
         // BLOCK lives in TaomMarriageModel, not here; this only stops a blocked Free lord from
         // wasting the day's uniform draw on a clan he can never marry into. Campaign-behavior
         // target, so this block alongside Patch59. Self-bails to vanilla IL if the anchor moves.
-        _harmony.PatchCategory("Patch81_MarriageAlignment");
+        TryPatchCategory("Patch81_MarriageAlignment");
         // Patch68: EconomyDiagnostics — read-only town-gold telemetry. One prefix/postfix recorder on
         // SettlementComponent.ChangeGold (the pool's sole mutator, so no flow site can be missed)
         // plus four flow-tag pairs naming the caller. Answers "where does a town's daily mint go",
@@ -554,15 +556,8 @@ public class SubModule : MBSubModuleBase
         // Guarded like Patch60/61/62/63: this is DIAGNOSTIC-ONLY, and an unguarded throw here would
         // abort the rest of this block — taking Patch30_MixedFormations and everything after it down
         // with it. A read-only instrument must never be able to disable gameplay patches.
-        try
-        {
-            _harmony.PatchCategory("Patch68_EconomyDiagnostics");
-        }
-        catch (System.Exception ex)
-        {
-            logger.LogWarning($"[EconomyDiagnostics] Patch68 failed to apply: {ex.Message}");
-        }
-        _harmony.PatchCategory("Patch30_MixedFormations");
+        TryPatchCategory("Patch68_EconomyDiagnostics");
+        TryPatchCategory("Patch30_MixedFormations");
         // Patch63 — guarded reimplementation of BannerBearerLogic.SpawnBannerBearer (issue #360):
         // the engine's reinforcement bearer spawn reads the new agent's ExtraWeaponSlot native
         // entity with no check and AVs when the banner never made it into the slot (validating
@@ -572,7 +567,7 @@ public class SubModule : MBSubModuleBase
         {
             Features.BannerBearers.Hooks.BannerBearerLogic_SpawnBannerBearer_Patch.Initialize(
                 IoC.Resolve<Features.BannerBearers.IBannerBearerService>(), logger);
-            _harmony.PatchCategory("Patch63_BannerBearerSpawnGuard");
+            TryPatchCategory("Patch63_BannerBearerSpawnGuard");
         }
         catch (System.Exception ex)
         {
@@ -621,7 +616,9 @@ public class SubModule : MBSubModuleBase
         Patch42_AiHourlyTick_Transpiler.Initialize(logger);
         Patch42_FillSettlements_Transpiler.Initialize(logger);
         Patch42_HourlyTickParty_Postfix.Initialize(castleRecruitmentSettings, logger);
-        _harmony.PatchCategory("Patch42_CastleRecruitment");
+        TryPatchCategory("Patch42_CastleRecruitment");
+        // No ReportPatchFailures here: nothing receives a message yet (see the startup report in
+        // OnBeforeInitialModuleScreenSetAsRoot), so this phase's failures wait for it.
 
         InformationManager.DisplayMessage(new InformationMessage("TAOM loaded successfully!", Colors.Green));
     }
@@ -641,14 +638,13 @@ public class SubModule : MBSubModuleBase
         if (!_basicTableauGuardApplied)
         {
             _basicTableauGuardApplied = true;
-            try
-            {
-                _harmony.PatchCategory("Patch55_BasicTableauRaceGuard");
-            }
-            catch (System.Exception ex)
-            {
-                IoC.Resolve<IModLogger>().LogError($"[HeroRace] Patch55_BasicTableauRaceGuard apply failed: {ex.GetType().Name}: {ex.Message}");
-            }
+            TryPatchCategory("Patch55_BasicTableauRaceGuard");
+            // Reports OnSubModuleLoad's failures and Patch55's together. The earliest a notice can
+            // be shown: Native's GauntletUISubModule, which runs before TAOM, creates the chat log
+            // and the inquiry manager in this hook, and InformationManager queues nothing sent
+            // before them. An inquiry, not a chat line: the initial screen clears the chat log
+            // after the splash video (GauntletInitialScreen.OnInitialize, ClearAllMessages).
+            ReportPatchFailures(new TextObject("{=taom_patch_apply_phase_startup}startup"), persistent: true);
         }
 
 
@@ -850,6 +846,32 @@ public class SubModule : MBSubModuleBase
     {
         base.OnGameLoaded(game, initializerObject);
         StampSaveLoadPhase(Features.SaveLoadDiagnostics.Domain.SaveLoadPhase.GameLoaded);
+    }
+
+    private bool TryPatchCategory(string category) => _patches.TryApply(category);
+
+    // One notice per phase naming every category that failed, so a dead crash guard is never
+    // silent: a red chat line, or an inquiry the player dismisses when a screen change would clear
+    // the chat log first. The notice itself must never break the phase, hence the catch. The
+    // button reuses vanilla's own "Ok" row (Native global_strings.xml str_ok), already translated.
+    private void ReportPatchFailures(TextObject phase, bool persistent = false)
+    {
+        var failures = _patches.TakeFailureSummary(phase);
+        if (failures == null) return;
+        try
+        {
+            var summary = failures.ToString();
+            if (persistent)
+                InformationManager.ShowInquiry(new InquiryData(
+                    new TextObject("{=taom_patch_apply_notice_title}TAOM").ToString(), summary, true, false,
+                    new TextObject("{=oHaWR73d}Ok").ToString(), string.Empty, null, null));
+            else
+                InformationManager.DisplayMessage(new InformationMessage(summary, Colors.Red));
+        }
+        catch (System.Exception ex)
+        {
+            IoC.Resolve<IModLogger>().LogError($"[PatchApply] failure notice not shown: {ex.Message}");
+        }
     }
 
     // The GameInitializationFinished stamp lives in the existing OnGameInitializationFinished
@@ -1492,16 +1514,11 @@ public class SubModule : MBSubModuleBase
             "Patch72_TableauRacePosition",
         })
         {
-            try
-            {
-                _harmony.PatchCategory(previewCategory);
+            if (TryPatchCategory(previewCategory))
                 Features.HeroRace.Diagnostics.TableauDiagnostics.LogAlways($"PatchCategory '{previewCategory}' applied OK.");
-            }
-            catch (System.Exception ex)
-            {
+            else
                 Features.HeroRace.Diagnostics.TableauDiagnostics.LogError(
-                    $"PatchCategory '{previewCategory}' FAILED — the character preview will fall back to vanilla resolution: {ex}");
-            }
+                    $"PatchCategory '{previewCategory}' FAILED, the character preview will fall back to vanilla resolution; the [PatchApply] line in the TAOM log has the cause.");
         }
 
 
@@ -1511,18 +1528,23 @@ public class SubModule : MBSubModuleBase
         // cause the poisoning it exists to fix. CharacterSpawnerService retries on the first
         // tableau, which is late enough to always succeed.
         Features.HeroRace.ActionIndexCacheRepair.TryEnsureRepaired("OnGameInitializationFinished");
-        _harmony.PatchCategory("Patch6_BannerEditor");
-        _harmony.PatchCategory("Patch7_FactionMap");
-        _harmony.PatchCategory("Patch9_RaceFilter");
+        TryPatchCategory("Patch6_BannerEditor");
+        TryPatchCategory("Patch7_FactionMap");
+        TryPatchCategory("Patch9_RaceFilter");
         // Patch77 (#514) — attaches the Player Switcher panel to the character creation face
-        // generator and tears it down again. Wrapped because the constructor postfix binds by
-        // arity: if a future engine build declares a second BodyGeneratorView constructor, Prepare
-        // returns false and nothing binds, but a PatchCategory throw here would brick startup.
+        // generator and tears it down again. The constructor postfix binds by arity: if a future
+        // engine build declares a second BodyGeneratorView constructor, Prepare returns false and
+        // nothing binds. A category that fails to apply disables the switcher through the if below;
+        // the try/catch does the same when an Initialize call throws.
         try
         {
             TAOM.Features.PlayerSwitcher.Hooks.Patch77_BodyGeneratorView_Constructor.Initialize(IoC.Resolve<IModLogger>());
             TAOM.Features.PlayerSwitcher.Hooks.Patch77_BodyGeneratorView_OnFinalize.Initialize(IoC.Resolve<IModLogger>());
-            _harmony.PatchCategory("Patch77_PlayerSwitcher");
+            if (!TryPatchCategory("Patch77_PlayerSwitcher"))
+            {
+                IoC.Resolve<TAOM.Features.PlayerSwitcher.IPlayerSwitchPolicyProvider>()
+                    .DisableForSession("Patch77 could not be applied; the [PatchApply] line in the TAOM log has the cause");
+            }
         }
         catch (System.Exception ex)
         {
@@ -1538,18 +1560,18 @@ public class SubModule : MBSubModuleBase
         {
             TAOM.Features.PlayerSwitcher.Hooks.Patch78_CharacterCreationManager_StartNarrativeStage
                 .Initialize(IoC.Resolve<IModLogger>());
-            _harmony.PatchCategory("Patch78_PlayerSwitcher_CareerFastPath");
+            TryPatchCategory("Patch78_PlayerSwitcher_CareerFastPath");
         }
         catch (System.Exception ex)
         {
             IoC.Resolve<IModLogger>().LogError(
                 $"Patch78 could not be applied; the backstory questions will not be skipped: {ex.Message}");
         }
-        _harmony.PatchCategory("Patch20_NarrativeHorseGuard");
-        _harmony.PatchCategory("Patch8_SiegeCampGuard");
-        _harmony.PatchCategory("Patch10_WeatherBoundsGuard");
-        _harmony.PatchCategory("Patch11_Diplomacy");
-        _harmony.PatchCategory("Patch12_WarOfTheRing");
+        TryPatchCategory("Patch20_NarrativeHorseGuard");
+        TryPatchCategory("Patch8_SiegeCampGuard");
+        TryPatchCategory("Patch10_WeatherBoundsGuard");
+        TryPatchCategory("Patch11_Diplomacy");
+        TryPatchCategory("Patch12_WarOfTheRing");
 
         // Patch80 (#547) — stops a kingdom decision window that can never be closed. Vanilla builds
         // the popup without checking ShouldBeCancelled(), and KingdomElection.ApplySelection() is a
@@ -1567,16 +1589,16 @@ public class SubModule : MBSubModuleBase
         // Seam E: ExecuteDone runs once and only on a concluded window, because seam D closes before
         // the popup widget's five-second timer and nothing else ever disarms that timer.
         TAOM.Features.Diplomacy.Hooks.DecisionItemBaseVM_ExecuteDone_Patch.Initialize(IoC.Resolve<IModLogger>());
-        _harmony.PatchCategory("Patch80_KingdomVoteDeadlock");
+        TryPatchCategory("Patch80_KingdomVoteDeadlock");
 
-        _harmony.PatchCategory("Patch14_Execution");
-        _harmony.PatchCategory("Patch15_BannerLayerLimit");
-        _harmony.PatchCategory("Patch16_AtmospherePersistence");
-        _harmony.PatchCategory("Patch17_TroopWeight");
-        _harmony.PatchCategory("Patch23_BannerColorPersistence");
-        _harmony.PatchCategory("Patch24_BannerDriftGuard");
-        _harmony.PatchCategory("Patch39_BanditPartySize");
-        _harmony.PatchCategory("Patch40_HideoutDescription");
+        TryPatchCategory("Patch14_Execution");
+        TryPatchCategory("Patch15_BannerLayerLimit");
+        TryPatchCategory("Patch16_AtmospherePersistence");
+        TryPatchCategory("Patch17_TroopWeight");
+        TryPatchCategory("Patch23_BannerColorPersistence");
+        TryPatchCategory("Patch24_BannerDriftGuard");
+        TryPatchCategory("Patch39_BanditPartySize");
+        TryPatchCategory("Patch40_HideoutDescription");
         // Patch86 — the hideout boss fight is exactly boss + N bodyguards on both routes (#564).
         // Targets: MapEventHelper.GetPriorityListForHideoutMission (assault split; sole caller
         // SandBoxMissions.OpenHideoutBattleMission) and the private
@@ -1584,10 +1606,10 @@ public class SubModule : MBSubModuleBase
         // inside a campaign mission, so the standard batch is early enough. Resolver, not instance.
         TAOM.Features.BanditManagement.Hooks.Patch86_HideoutBossFight.Initialize(
             IoC.Resolve<IModLogger>(), () => IoC.Resolve<IHideoutBossFightService>());
-        _harmony.PatchCategory("Patch86_HideoutBossFight");
+        TryPatchCategory("Patch86_HideoutBossFight");
         // Patch64 — retints game-menu hyperlinks by faction. GameMenuVM is constructed when the
         // map/menu state opens, well after initialization, so the standard batch is early enough.
-        _harmony.PatchCategory("Patch64_MenuLinkColors");
+        TryPatchCategory("Patch64_MenuLinkColors");
         // Patch65 — guards vanilla's unguarded Settlement.All.First(culture) in
         // HeroSpawnCampaignBehavior.SpawnLordParty. TWO listeners reach that target, and the
         // tighter of the two is what constrains this placement: DailyTickClanEvent (the daily
@@ -1597,7 +1619,7 @@ public class SubModule : MBSubModuleBase
         // later from PostInitializeFourthState — but do NOT re-batch this to a lazier hook on the
         // strength of "it only fires on the daily tick": the new-game path would then be
         // unguarded.
-        _harmony.PatchCategory("Patch65_LandlessCultureSpawnGuard");
+        TryPatchCategory("Patch65_LandlessCultureSpawnGuard");
         // Patch88 (#580): a lord named in lord_party_templates.json fields his own party template.
         // Postfix on the Clan.DefaultPartyTemplate getter, live only inside the two spawn scopes
         // (SpawnLordParty and InitializeLordPartyProperties). Same two listeners as Patch65 reach
@@ -1606,14 +1628,14 @@ public class SubModule : MBSubModuleBase
         TAOM.Features.LordPartyTemplates.Hooks.Patch88_LordPartyTemplate.Initialize(
             IoC.Resolve<TAOM.Features.LordPartyTemplates.ILordPartyTemplateService>(),
             IoC.Resolve<IModLogger>());
-        _harmony.PatchCategory("Patch88_LordPartyTemplate");
+        TryPatchCategory("Patch88_LordPartyTemplate");
         // Patch82 (#551) — restores the engine's own BattleObserver/TroopUpgradeTracker pairing
         // before MapEventSide.AllocateTroops dereferences the tracker unguarded. The target runs off
         // each map event's simulation timer under MapEventManager.Tick, which Campaign.Tick drives,
         // so the standard batch is early enough: no map event can tick before the campaign exists.
         TAOM.Features.MapEventGuard.Hooks.Patch82_MapEventObserverInvariant.Initialize(
             IoC.Resolve<IModLogger>());
-        _harmony.PatchCategory("Patch82_MapEventObserverInvariant");
+        TryPatchCategory("Patch82_MapEventObserverInvariant");
         // Patch84 (bundle d7d9f7d3) — the siege aftermath menus dereference _besiegerParty and the
         // settlement read off it with no null guard, and vanilla leaves that field unassigned
         // whenever the main party is not among the ending event's parties. Both targets are game
@@ -1621,14 +1643,14 @@ public class SubModule : MBSubModuleBase
         // enough.
         TAOM.Features.MapEventGuard.Hooks.Patch84_SiegeAftermathMenuGuard.Initialize(
             IoC.Resolve<IModLogger>());
-        _harmony.PatchCategory("Patch84_SiegeAftermathMenuGuard");
+        TryPatchCategory("Patch84_SiegeAftermathMenuGuard");
         // Patch87 (#566): "Return to Army" leaves the town or castle when the player is an army
         // member who is NOT attached to the army. Vanilla only ever leaves a village, hides "Leave"
         // for every non-leader member, and the wait menu it opens instead has no exit. The target is
         // a game menu consequence, which cannot run before the campaign exists, so the standard
         // batch is early enough.
         TAOM.Features.ReturnToArmy.Hooks.Patch87_ReturnToArmy.Initialize(IoC.Resolve<IModLogger>());
-        _harmony.PatchCategory("Patch87_ReturnToArmy");
+        TryPatchCategory("Patch87_ReturnToArmy");
         // Patch85 (#557) — defers the enlisted battle-end detach out of the MapEventEnded dispatch
         // into PlayerEncounter.Finish's one-statement window between FinalizeBattle (which dispatches
         // the event) and FinishEncounterInternal (which reads AttachedTo for the post-defeat escape).
@@ -1639,26 +1661,26 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IModLogger>(),
             () => IoC.Resolve<Features.Enlistment.IServiceBattleService>(),
             () => IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>());
-        _harmony.PatchCategory("Patch85_EnlistedDetachDeferral");
+        TryPatchCategory("Patch85_EnlistedDetachDeferral");
         // Patch66 — enlistment menu guard (SetNextMenu redirect + EnterMenuMode recovery) and,
         // as the battle layer lands, the four LordConversations condition suppressions. All
         // campaign-runtime targets; menus first open well after this batch. Fail-open prefixes
         // gated on IEnlistmentStateQuery — inert while not enlisted.
-        _harmony.PatchCategory("Patch66_Enlistment");
+        TryPatchCategory("Patch66_Enlistment");
         // Patch70 — swaps vanilla's fief-grant election for TAOM's (#458). Target is
         // Kingdom.AddDecision, the sink all three producers pass through (the daily settlement
         // tick, the annexation follow-up, and KingdomManager.RelinquishSettlementOwnership). All are
         // campaign runtime, so the standard batch is early enough; the prefix is inert until a
         // kingdom actually gains or gives up a fortification.
-        _harmony.PatchCategory("Patch70_FiefGrantDecisionSwap");
+        TryPatchCategory("Patch70_FiefGrantDecisionSwap");
         // Patch71 — null-guards vanilla's Hero.ResetEquipments (#486). Its only caller is
         // RemoveCompanionAction.ApplyInternal on the fire-a-wanderer path, which is campaign
         // runtime and cannot fire before a conversation exists, so the standard batch is early
         // enough. The prefix defers to vanilla whenever the template supplies all three equipment
         // slots, so it is inert for every hero except a FieldCommission promotion off a troop with
         // no civilian roster.
-        _harmony.PatchCategory("Patch71_HeroResetEquipmentsGuard");
-        _harmony.PatchCategory("Patch46_TournamentDwarfDismount");
+        TryPatchCategory("Patch71_HeroResetEquipmentsGuard");
+        TryPatchCategory("Patch46_TournamentDwarfDismount");
         // Patch47 RE-ENABLED 2026-06-12 after full exoneration: its 06-12 morning indictment
         // ("post-sever tick AV") was actually the CanAttack charge crash at set_attack_entity
         // (0x6BAB4E), which fired with AND without Patch47 and is fixed in data (LOTRLOME
@@ -1667,27 +1689,27 @@ public class SubModule : MBSubModuleBase
         // which 1.4.6 still does on melee deaths (Die-path AV reading float-bits-as-index from
         // a corrupted action record, debugger-proven 06-12). See docs/features/spider.md.
         Features.Spider.Hooks.Agent_Die_SpiderDismount_Patch.Initialize();
-        _harmony.PatchCategory("Patch47_SpiderDeathDismount");
+        TryPatchCategory("Patch47_SpiderDeathDismount");
 
         // Patch48: the non-lethal sibling of Patch47. A CanDismount melee hit on a mounted Spider Rider AVs in
         // native HandleBlowAux (reading 0x3) — the same broken non-vanilla mounted-dismount path Patch47 routes
         // around on death. Strips CanDismount for spider riders so the native dismount never fires (the rider
         // stays on the locked mount; damage still applies). Debugger-proven 2026-06-15. See docs/features/spider.md.
-        _harmony.PatchCategory("Patch48_SpiderHitDismountGuard");
+        TryPatchCategory("Patch48_SpiderHitDismountGuard");
 
         // Patch50: Finalizer swallowing a vanilla NRE in Agent.CheckToDropFlaggedItem (Agent.cs:3595),
         // reached via the shared synthetic-bite path (CustomAttacksUtils.TakeDamage → RegisterBlow →
         // OnAgentHit → affectedAgent.CheckToDropFlaggedItem) when a warg bites another warg (mount
         // victim with a null wielded Item). Already caught by WargAttackService, but swallowing lets
         // OnAgentHit finish and stops the log spam. Crash report 2026-06-17. See the patch doc-comment.
-        _harmony.PatchCategory("Patch50_DropFlaggedItemGuard");
+        TryPatchCategory("Patch50_DropFlaggedItemGuard");
 
         // Patch63_BlowDiagnostics: toggle-gated (MCM "TAOM — Blow Diagnostics", OFF by default)
         // durable [BlowDiag] stamps on Agent.HandleBlowAux / Agent.Die / RangedSiegeWeapon.ShootProjectileAux.
         // Ships to capture the dwarf-siege native AV (wound + fire-pot impact) that leaves no managed
         // stack: the last durable line before the process dies names the fatal blow. Diagnostic siblings
         // of Patch47/48 — separate classes so the spider guards are untouched. See docs/features/blow-diagnostics.md.
-        _harmony.PatchCategory("Patch63_BlowDiagnostics");
+        TryPatchCategory("Patch63_BlowDiagnostics");
 
         // Patch56_SceneNotificationVisualGuard: Finalizer swallowing a managed NRE in
         // PopupSceneSpawnPoint.InitializeWithAgentVisuals, reached via GauntletSceneNotification.OpenScene
@@ -1696,12 +1718,12 @@ public class SubModule : MBSubModuleBase
         // finalizer aborts the cinematic cleanly (HideSceneNotification) so cinematics that CAN render
         // still play. Fourth raw custom-race/visual render path (after Patch55). Crash reports
         // 2026-06-24/25 (become ruler of empire_w/gondor). See the patch doc-comment.
-        _harmony.PatchCategory("Patch56_SceneNotificationVisualGuard");
+        TryPatchCategory("Patch56_SceneNotificationVisualGuard");
 
         // Patch13_RaceAge — noise reduction (NOT a crash fix). NOPs the harmless
         // mother.Race == father.Race SilentAssert in DeliverOffSpring that fires on every
         // mixed-race birth (normal in TAOM). Stops the debugger break + debug-log spam.
-        _harmony.PatchCategory("Patch13_RaceAge");
+        TryPatchCategory("Patch13_RaceAge");
 
         var resourceHook = IoC.Resolve<IOnPartyUpgradeResourceCheck>();
         var specResLogger = IoC.Resolve<IModLogger>();
@@ -1709,44 +1731,44 @@ public class SubModule : MBSubModuleBase
         PartyScreenLogic_UpgradeTroop_Patch.Initialize(resourceHook, specResLogger);
         PartyScreenLogic_AddCommand_Patch.Initialize(resourceHook, specResLogger);
         RecruitmentVM_RecruitGate_Patch.Initialize(IoC.Resolve<IOnRecruitmentResourceGate>(), specResLogger);
-        _harmony.PatchCategory("Patch26_SpecialResources");
-        _harmony.PatchCategory("Patch51_RecruitmentResourceGate");
-        _harmony.PatchCategory("Patch27_CareerSystem");
-        _harmony.PatchCategory("Patch29_CCBodyProperties");
-        _harmony.PatchCategory("Patch44_CCNameAutofill");
-        _harmony.PatchCategory("Patch33_EquipPresets");
-        _harmony.PatchCategory("Patch34_QuickActions");
-        _harmony.PatchCategory("Patch35_CompanionTactics");
-        _harmony.PatchCategory("Patch36_FiefManagement");
+        TryPatchCategory("Patch26_SpecialResources");
+        TryPatchCategory("Patch51_RecruitmentResourceGate");
+        TryPatchCategory("Patch27_CareerSystem");
+        TryPatchCategory("Patch29_CCBodyProperties");
+        TryPatchCategory("Patch44_CCNameAutofill");
+        TryPatchCategory("Patch33_EquipPresets");
+        TryPatchCategory("Patch34_QuickActions");
+        TryPatchCategory("Patch35_CompanionTactics");
+        TryPatchCategory("Patch36_FiefManagement");
         SettlementNameplateWidget_DetermineTargetAlphaValue_Patch.Initialize(
             IoC.Resolve<INameplateFadeService>(), IoC.Resolve<INameplateRelationAlphaService>());
-        _harmony.PatchCategory("Patch38_SettlementNameplateFade");
+        TryPatchCategory("Patch38_SettlementNameplateFade");
 
         // Patch74 (#506): camp-type icon over the player nameplate. Same PatchShield-excluded
         // namespace as Patch38, so the postfix body is written to be unable to throw.
-        _harmony.PatchCategory("Patch74_FieldCampNameplateIcon");
+        TryPatchCategory("Patch74_FieldCampNameplateIcon");
 
         // Patch75 (#507): refuge clan-screen listing + click-to-manage encounter interception.
-        _harmony.PatchCategory("Patch75_Refuge");
+        TryPatchCategory("Patch75_Refuge");
 
         // Patch76 (#513): Sauron and the Nine are never taken prisoner; they escape as fugitives.
         // Two seams — the battle capture gate (Hero.CanBecomePrisoner, where vanilla's own
         // fall-through performs the escape) and the direct-capture chokepoint
         // (TakePrisonerAction.Apply, which covers a hero captured inside a settlement that changes
         // hands). Does NOT block death; that is deliberate.
-        _harmony.PatchCategory("Patch76_UncapturableHeroes");
+        TryPatchCategory("Patch76_UncapturableHeroes");
 
         // Patch73 (#505): suppress the meeting conversation when the player clicks a supply
         // caravan (its component has no Leader, so vanilla would open a conversation with an
         // arbitrary troop; review round A / Codex round 1).
-        _harmony.PatchCategory("Patch73_SupplyLines");
+        TryPatchCategory("Patch73_SupplyLines");
         // Patch53_PartyIconScale — transpiler that rewrites the two hardcoded 0.3f campaign-map scale
         // literals in MobilePartyVisual.AddCharacterToPartyIcon (leader figure + its mount) into a call
         // to PartyIconScaleConfig.GetScale(), so both honour the MCM "Map Figure Scale" slider
         // (default 0.15 = half vanilla). See docs/features/party-icon-scale.md.
         Features.PartyIconScale.Hooks.Patch53_PartyIconScale.Initialize(IoC.Resolve<IModLogger>());
         Features.PartyIconScale.Hooks.Patch53_PartyIconScaleHumanVisual.Initialize(IoC.Resolve<IModLogger>());
-        _harmony.PatchCategory("Patch53_PartyIconScale");
+        TryPatchCategory("Patch53_PartyIconScale");
 
         // NavalTravel PARKED 2026-06-26 (#296/#120) — see the model-registration comment in OnGameStart.
         // Patch54 (boat visual) + Patch57 (at-sea native-AV crash guard) are only meaningful while a party
@@ -1754,15 +1776,14 @@ public class SubModule : MBSubModuleBase
         // applied while the feature is parked. RE-ENABLE: uncomment both blocks with the model registration.
         // Patch54_NavalTravelBoatVisual — render an at-sea party as a boat (base game renders no ship at sea).
         // Features.NavalTravel.Hooks.Patch54_NavalTravelBoatVisual.Initialize(IoC.Resolve<Features.NavalTravel.INavalTravelService>(), IoC.Resolve<IModLogger>());
-        // _harmony.PatchCategory("Patch54_NavalTravelBoatVisual");
+        // TryPatchCategory("Patch54_NavalTravelBoatVisual");
         //
         // Patch57_NavalAtSeaLandRescueGuard — prevent the native AV CTD on the hourly AI tick (the vanilla
         // AIMoveToNearestLandBehavior's native cross-region pathfind AVs on TAOM_Map's missing naval navmesh,
         // #120). Only fires for an at-sea party, which can't happen while the model is unregistered.
         // var navalRescueLogger = IoC.Resolve<IModLogger>();
         // Features.NavalTravel.Hooks.Patch57_NavalAtSeaLandRescueGuard.Initialize(IoC.Resolve<Features.NavalTravel.INavalTravelService>(), navalRescueLogger);
-        // try { _harmony.PatchCategory("Patch57_NavalAtSeaLandRescueGuard"); }
-        // catch (System.Exception ex) { navalRescueLogger.LogWarning($"[NavalTravel] Patch57 at-sea rescue guard failed to apply: {ex.Message}"); }
+        // TryPatchCategory("Patch57_NavalAtSeaLandRescueGuard");
 
         // BattleLoadDiagnostics — phase-stamp the attack->battle-playable lifecycle so an
         // intermittent battle-load hang leaves a log whose last line names the stuck phase
@@ -1814,11 +1835,7 @@ public class SubModule : MBSubModuleBase
         // Guarded like Patch60/61/62: this category binds several engine targets by string (two of
         // them private), so an engine bump can throw here. A DIAGNOSTICS category must never take
         // startup down with it — losing the stamps is survivable, losing the game is not.
-        try { _harmony.PatchCategory("Patch43_BattleLoadDiagnostics"); }
-        catch (System.Exception ex)
-        {
-            IoC.Resolve<IModLogger>().LogWarning($"[BattleLoad] Patch43 diagnostics failed to apply: {ex.Message}");
-        }
+        TryPatchCategory("Patch43_BattleLoadDiagnostics");
         IoC.Resolve<Features.BattleLoadDiagnostics.BattleLoadStallWatchdog>().Start();
 
         // Patch91 battle-freeze probes (#634): a player's battle froze with the heap flat and no
@@ -1827,11 +1844,7 @@ public class SubModule : MBSubModuleBase
         // mission frame; the watchdog photographs whichever is stuck past 10s. Guarded like Patch43: a
         // diagnostic must never take startup down. Inside the once-per-process patch guard; Start() is
         // idempotent regardless.
-        try { _harmony.PatchCategory("Patch91_MissionTickStall"); }
-        catch (System.Exception ex)
-        {
-            IoC.Resolve<IModLogger>().LogWarning($"[MissionStall] Patch91 probes failed to apply: {ex.Message}");
-        }
+        TryPatchCategory("Patch91_MissionTickStall");
         IoC.Resolve<Features.BattleLoadDiagnostics.MissionTickStallWatchdog>().Start();
 
         // Exit-stall stack sampler (#331 round 2): OnGameInitializationFinished runs on the
@@ -1851,8 +1864,7 @@ public class SubModule : MBSubModuleBase
         // the exit loading screen, where an in-flight prize tableau render stalls it ~108s (#331).
         var tournamentExitLogger = IoC.Resolve<IModLogger>();
         Features.Arena.Hooks.Patch60_TournamentExitMovieRelease.Initialize(tournamentExitLogger);
-        try { _harmony.PatchCategory("Patch60_TournamentExitMovieRelease"); }
-        catch (System.Exception ex) { tournamentExitLogger.LogWarning($"[Arena] Patch60 tournament-exit movie release failed to apply: {ex.Message}"); }
+        TryPatchCategory("Patch60_TournamentExitMovieRelease");
 
         // Patch69 — winner-panel crash guard. Vanilla TournamentVM.OnTournamentEnd dereferences
         // hero.MapFaction.Color / character.Culture.Color without a null check; a clanless hero
@@ -1862,10 +1874,9 @@ public class SubModule : MBSubModuleBase
         // TournamentMatch.AddParticipant NREs on a short roster. The end guard is containment plus
         // the bracket dump that names any null site the roster guard does not cover.
         // Both categories fail independently: a diagnostic must never cost a working tournament.
-        try { _harmony.PatchCategory("Patch69_TournamentRosterGuard"); }
-        catch (System.Exception ex) { tournamentExitLogger.LogWarning($"[Arena] Patch69 tournament roster guard failed to apply: {ex.Message}"); }
-        try { _harmony.PatchCategory("Patch69_TournamentEndGuard"); }
-        catch (System.Exception ex) { tournamentExitLogger.LogWarning($"[Arena] Patch69 tournament end guard failed to apply: {ex.Message}"); }
+        TryPatchCategory("Patch69_TournamentRosterGuard");
+        TryPatchCategory("Patch69_TournamentEndGuard");
+        ReportPatchFailures(new TextObject("{=taom_patch_apply_phase_game_init}game initialization"));
 
         // Manual patches for PRIVATE engine methods (AccessTools-resolved targets; can't use
         // [HarmonyPatch] attribute binding + PatchCategory). Extracted verbatim to
@@ -1923,7 +1934,8 @@ public class SubModule : MBSubModuleBase
         if (!_missionTimePatchesApplied)
         {
             _missionTimePatchesApplied = true;
-            _harmony.PatchCategory("Patch_MissionTime_SetMovementOrder");
+            TryPatchCategory("Patch_MissionTime_SetMovementOrder");
+            ReportPatchFailures(new TextObject("{=taom_patch_apply_phase_mission_start}mission start"));
         }
 
         // [BattleLoad] TAOM-behavior bracket. Mission.AfterStart calls this for EVERY submodule,

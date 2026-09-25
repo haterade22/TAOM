@@ -397,6 +397,25 @@ public class LanguageDataXmlTests
         }
     }
 
+    // LocalizedTextManager.LoadLanguage (v1.5.3) reads only <string> children of a <strings>
+    // child of the root and skips every other <string> without a log line, so the player sees the
+    // English default. Plan 009 once seeded 60 rows after </strings> that every presence check
+    // (which walks descendants) counted as translated.
+    [TestMethod]
+    public void AllTranslationFiles_StringRowOutsideRootStrings_IsNeverPresent()
+    {
+        foreach (var (file, lang) in GetAllTranslationFiles())
+        {
+            var doc = XDocument.Load(file);
+            var loaded = new HashSet<XElement>(doc.Root!.Elements("strings").Elements("string"));
+            var stray = doc.Descendants("string").Where(s => !loaded.Contains(s))
+                .Select(s => (string?)s.Attribute("id")).ToList();
+            Assert.AreEqual(0, stray.Count,
+                $"Languages/{lang}/{Path.GetFileName(file)}: rows outside <base>/<strings> never load: "
+                + string.Join(", ", stray));
+        }
+    }
+
     [TestMethod]
     public void AllTranslationFiles_StringEntries_HaveIdAndTextAttributes()
     {

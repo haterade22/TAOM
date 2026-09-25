@@ -254,7 +254,7 @@ public class Patch87ReturnToArmyTests
         Assert.IsTrue(File.Exists(subModule), $"SubModule.cs not found at {subModule}");
 
         var source = File.ReadAllText(subModule);
-        StringAssert.Contains(source, "_harmony.PatchCategory(\"Patch87_ReturnToArmy\")",
+        StringAssert.Contains(source, "TryPatchCategory(\"Patch87_ReturnToArmy\")",
             "SubModule.cs no longer applies Patch87_ReturnToArmy; the patch is dead code.");
         StringAssert.Contains(source, "Patch87_ReturnToArmy.Initialize(",
             "SubModule.cs no longer initialises Patch87; the prefix runs without a logger and its diagnostics vanish.");

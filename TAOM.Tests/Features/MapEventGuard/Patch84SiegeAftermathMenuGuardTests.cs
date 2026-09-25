@@ -202,7 +202,7 @@ public class Patch84SiegeAftermathMenuGuardTests
         Assert.IsTrue(File.Exists(subModule), $"SubModule.cs not found at {subModule}");
 
         var source = File.ReadAllText(subModule);
-        StringAssert.Contains(source, "_harmony.PatchCategory(\"Patch84_SiegeAftermathMenuGuard\")",
+        StringAssert.Contains(source, "TryPatchCategory(\"Patch84_SiegeAftermathMenuGuard\")",
             "SubModule.cs no longer applies Patch84_SiegeAftermathMenuGuard — the patch is dead code.");
 
         // The binding is resolved in Initialize, and without that call IsReady is false forever,

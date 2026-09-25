@@ -353,6 +353,89 @@ identifier were corrected, and the feature doc now says raise lines are traced p
   gate command, and the discovery-floor messages drop their stale expected counts.
 - Review record: `docs/reviews/deep-review-008-binding-gate-no-silent-skips-2026-09-24.md` and
   `docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md`.
+### fix(harmony): v2.0.30 - apply every patch category through one guard (#653)
+
+`Main/SubModule.cs` applied TAOM's Harmony patches one category at a time with bare
+`_harmony.PatchCategory("PatchNN_X")` calls, 64 of 84 with no guard at all. Harmony 2.4.2 has no
+catch around a category, so one patch class whose target no longer resolves (an engine rename after
+a Steam bump) threw straight out of the SubModule hook. In `OnSubModuleLoad` the engine logs it and
+throws a new exception, so the game would not start with TAOM enabled. In
+`OnGameInitializationFinished` the once-per-process flag is set before the batch, so the throw
+skipped every later category (the Patch65, Patch82 and Patch84 crash guards among them), the three
+watchdogs, `ManualPatchApplicator.ApplyAll` and the Harmony census.
+
+Every category now goes through `TryPatchCategory`, backed by the new `PatchCategoryApplier`
+(`Main/PatchCategoryApplier.cs`). A failure is logged at Error under `[PatchApply]` with its full
+cause, stops that category at its failing class (Harmony keeps the classes it applied before it),
+and every other category still applies. The failures are named in one notice per phase: startup
+(an inquiry at the first main menu, covering `OnSubModuleLoad` and Patch55), then a red chat line
+for game initialization and for mission start. Three hand-guarded sites keep their side
+effects: the crash-report hooks subscribe only when Patch37 applied, the character-preview log says
+FAILED rather than "applied OK" on a failure, and a Patch77 failure still disables the Player
+Switcher for the session. Nine per-category try/catch blocks collapsed into the helper. One
+deliberate behaviour change: a failed Patch61 or Patch89 main category no longer skips its three
+sub-categories.
+
+The comment above the Patch37 attach claimed its finalizers covered the rest of `OnSubModuleLoad`;
+they cannot (the finalizer patches the base method, and TAOM's override is already running). The
+comment, `docs/features/crash-report.md` and
+`docs/reference/engine/submodule-lifecycle-and-harmony.md` now say so and name the guard.
+
+**Review follow-ups** (`docs/reviews/deep-review-009-guarded-patch-category-apply-2026-09-24.md`,
+RCA `docs/reviews/rca-guarded-patch-category-apply-2026-09-24.md`): the first version reported the
+module-load failures at the end of `OnSubModuleLoad`, where `InformationManager.DisplayMessage` has
+no subscriber and the list was cleared into nothing; a main-menu chat line would have been cleared
+by the initial screen after the splash video. Both now go into the startup inquiry. The summary no
+longer claims a failed group is wholly off. `tools/triage_battle_load.py` and
+`docs/features/battle-load-diagnostics.md` pointed triagers at the deleted Patch43 warning; they
+now name the `[PatchApply]` line. The Data Flow lens and the Harmony lesson still told reviewers to
+grep for the old `_harmony.PatchCategory("...")` spelling and flag its absence HIGH.
+
+**One broken class no longer fails every category** (maintainer decision on review finding 3):
+Harmony's `PatchCategory` builds its category index once per assembly from every type's
+attributes, with no catch, and does not cache a build that threw, so one `[HarmonyPatch]` naming a
+type the engine no longer has made all 84 categories fail. The new `PatchCategoryIndex`
+(`Main/PatchCategoryIndex.cs`) builds the same index class by class from Harmony's public API
+(`GetTypesFromAssembly`, `GetFromType`, `HarmonyMethod.Merge`, `CreateClassProcessor`), skips a
+class whose attributes cannot be read, and applies each category's classes exactly as Harmony
+does. The skipped class is logged under `[PatchApply]` as SKIPPED with its cause and named in the
+startup inquiry; every other category still applies. Its category applies the classes left and
+reports success, so the character-preview log can say "applied OK" for a category that lost a
+class this way; the SKIPPED line and the inquiry are the report (whether such a category should
+count as failed is open for Mike).
+
+**The failure notice is localized** (maintainer decision on review finding 15): the summary, the
+three phase names and the inquiry title are registered `{=taom_patch_apply_*}` keys in
+`taom_module_strings.xml`, and the inquiry button reuses vanilla's own `{=oHaWR73d}Ok` row
+(`str_ok` in Native's `global_strings.xml`). The category ids in the notice stay literal.
+`PatchCategoryApplier.TakeFailureSummary` now returns the `TextObject` and `SubModule` renders it.
+The five keys are translated into all 12 languages (AI first drafts, placeholders checked). The
+translator's seeding first put the 60 rows after `</strings>`, where
+`LocalizedTextManager.LoadLanguage` never reads them, and every check passed because each counts
+rows at any depth; `7eae4704` moved them inside, and
+`LanguageDataXmlTests.AllTranslationFiles_StringRowOutsideRootStrings_IsNeverPresent` now fails
+any row the engine would skip. The German phase names now carry their genitive article ("während
+des Starts"), and the French and Japanese sentences no longer read "lors de le démarrage" and
+"起動時中に".
+
+Tests: `PatchCategoryApplierTests` (14) covers the constructor guards, the try and catch paths,
+per-category isolation, the phase summary, real Harmony 2.4.2 through the index and the applier on
+an unresolvable target, a source gate that fails on any direct `.PatchCategory(` call in `Main` and
+pins the `PatchCategoryIndex` wiring in `SubModule`, and source-shape tests that keep the failure report out of
+`OnSubModuleLoad`, pin the Patch37, Patch77 and preview side effects, and pin the localized
+notice. Nine text tests that pinned the old call spelling now pin `TryPatchCategory(`.
+`PatchCategoryIndexTests` (6) emits a probe assembly at run time with one class whose
+`[HarmonyPatch]` names a missing type beside a healthy class in another category: through
+Harmony's own index both categories throw `TypeLoadException` (pinned as the premise); through
+`PatchCategoryIndex` only the broken class is skipped and reported, and the healthy one is patched.
+It also pins that an uncategorised patch class is neither skipped nor applied, and that a category
+whose second class cannot resolve throws with its first class still patched. Full suite after the
+second review's follow-ups: 10256 passed, 2 skipped, 2 failed
+(`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, which fail the same way at the base).
+Second review: `docs/reviews/deep-review-009-guarded-patch-category-apply-decisions-2026-09-24.md`,
+RCA `docs/reviews/rca-guarded-patch-category-apply-decisions-2026-09-24.md`.
+Nothing smoked in game: the live apply path and both notices need a running game. Plan 009.
 
 ## 2026-09-23
 

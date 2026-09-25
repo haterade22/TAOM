@@ -2671,5 +2671,10 @@
     <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are swinging round the flank." />
     <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging the enemy foot." />
     <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are taking the flank of the wall." />
+    <string id="taom_patch_apply_failed" text="TAOM: {PHASE} sırasında şu yama grupları uygulanamadı: {GROUPS}. Bu gruplardaki bazı düzeltmeler bu oturumda devre dışı; nedeni TAOM günlüğünde belirtiliyor." />
+    <string id="taom_patch_apply_phase_startup" text="başlangıç" />
+    <string id="taom_patch_apply_notice_title" text="TAOM" />
+    <string id="taom_patch_apply_phase_game_init" text="oyun başlatma" />
+    <string id="taom_patch_apply_phase_mission_start" text="görev başlangıcı" />
   </strings>
 </base>

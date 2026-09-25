@@ -161,7 +161,7 @@ public class Patch88LordPartyTemplateTests
     {
         var source = File.ReadAllText(Path.Combine(FindRepoRoot(), "Main", "SubModule.cs"));
 
-        StringAssert.Contains(source, "_harmony.PatchCategory(\"" + Category + "\")",
+        StringAssert.Contains(source, "TryPatchCategory(\"" + Category + "\")",
             "SubModule.cs never applies " + Category + "; all three patches are dead code.");
         StringAssert.Contains(source, "Patch88_LordPartyTemplate.Initialize(",
             "SubModule.cs never hands the patch its service; the postfix would return on every call.");

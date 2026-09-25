@@ -136,7 +136,7 @@ public class Patch82MapEventObserverInvariantBindingTests
         Assert.IsTrue(File.Exists(subModule), $"SubModule.cs not found at {subModule}");
         StringAssert.Contains(
             File.ReadAllText(subModule),
-            "_harmony.PatchCategory(\"Patch82_MapEventObserverInvariant\")",
+            "TryPatchCategory(\"Patch82_MapEventObserverInvariant\")",
             "SubModule.cs no longer applies Patch82_MapEventObserverInvariant — the patch is dead code.");
     }
 

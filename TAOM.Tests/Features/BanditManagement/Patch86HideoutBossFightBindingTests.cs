@@ -238,7 +238,7 @@ public class Patch86HideoutBossFightBindingTests
         var subModule = Path.Combine(FindRepoRoot(), "Main", "SubModule.cs");
         Assert.IsTrue(File.Exists(subModule), $"SubModule.cs not found at {subModule}");
         var source = File.ReadAllText(subModule);
-        StringAssert.Contains(source, "_harmony.PatchCategory(\"Patch86_HideoutBossFight\")",
+        StringAssert.Contains(source, "TryPatchCategory(\"Patch86_HideoutBossFight\")",
             "SubModule.cs no longer applies Patch86_HideoutBossFight — both prefixes are dead code.");
         StringAssert.Contains(source, "Patch86_HideoutBossFight.Initialize(",
             "SubModule.cs no longer initialises Patch86 — the prefixes would have no service and defer to vanilla forever.");
