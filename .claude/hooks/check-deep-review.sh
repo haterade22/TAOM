@@ -3,7 +3,8 @@
 # recently. A reminder, not a gate: it cannot stop a commit.
 #
 # Channel: one JSON {"decision":"block","reason":...} on stdout per streak, through
-# _stop_reminder.sh (see check-verification-evidence.sh). Silent when stop_hook_active is true.
+# _stop_reminder.sh (see check-verification-evidence.sh). Silent when stop_hook_active is true,
+# though the marker still clears then.
 # Always exits 0; any internal failure exits 0 with no output (fail open).
 #
 # Muting, two layers:
@@ -16,7 +17,6 @@
 
 source "$(dirname "${BASH_SOURCE[0]}")/_stop_reminder.sh" 2>/dev/null || exit 0
 INPUT=$(cat)
-taom_stop_hook_active "$INPUT" && exit 0
 cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" 2>/dev/null || exit 0
 
 REMINDED=".claude/logs/.deep-review-reminded"
@@ -47,6 +47,7 @@ ALL_FILES="$CHANGED_FILES"$'\n'"$UNTRACKED_FILES"
 # TAOM_Map / Armory installs, so those never trigger this; /deep-review Step 1 sweeps them.
 if echo "$ALL_FILES" | grep -qE '\.(cs|cpp|h|xml|xsl|xslt|mbproj|json)$'; then
   if [[ ! -f "$REMINDED" ]]; then
+    taom_stop_hook_active "$INPUT" && exit 0
     taom_stop_block "check-deep-review: C#, C++, XML, XSLT or JSON files are modified or untracked in this tree and no deep-reviewer agent has run in the last 8 hours (.claude/logs/agent-audit.log). Run /deep-review before committing that work. If the files belong to another session, or the work is not ready to commit, say so in one line. This fires once per streak; a logged deep-reviewer run re-arms it."
     mkdir -p .claude/logs 2>/dev/null
     touch "$REMINDED" 2>/dev/null || true

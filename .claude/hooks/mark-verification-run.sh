@@ -22,7 +22,8 @@ INPUT=$(cat)
 # Resolve a safe Python interpreter. Never a Microsoft Store alias: those hang forever.
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 
-# Parse the command field precisely. jq if present, else "$PYBIN".
+# Parse the command field precisely, with "$PYBIN" (jq is not on PATH here, and the split
+# below needs a real parser).
 #
 # There is deliberately NO raw-payload fallback. The old code did
 # `[ -z "$COMMAND" ] && COMMAND="$INPUT"`, and since jq is absent that was the ONLY
@@ -35,60 +36,66 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # If the command cannot be parsed, do nothing. The marker stays unset, the Stop
 # reminder still fires, and the worst case is one redundant nudge instead of a
 # silently skipped verification.
-if command -v jq >/dev/null 2>&1; then
-  COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
-elif [ -n "$PYBIN" ]; then
-  COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
+#
+# Match an INVOCATION, not a mention. A substring test on the whole command still marks
+# verification for `grep -rn "dotnet test" docs/`, which mutes the reminder that backs
+# evidence-over-claims.md. So the command is split into segments at ; & | and newlines outside
+# quotes, and each segment's leading token is inspected below, the shape block-dangerous-git.sh
+# uses. Quotes are honoured (maintainer decision D41): splitting with `tr` cut
+# `grep "x; dotnet test" docs/` into a segment that starts with dotnet, so a mention marked. A
+# newline inside quotes (a commit message) becomes a space, so it cannot start a segment.
+#
+# The split runs in Python (plan 011 review): a per-character bash loop was quadratic (9.5 s for
+# a 100 KB command, past the 5 s registration), and it read `\` as the escape in PowerShell,
+# where the escape is a backtick, so `Write-Output "x`"; dotnet test"` marked and
+# `Set-Location "E:\x\"; dotnet test` did not. An escaped newline is a continuation, so it joins.
+# CR goes: Python's print writes CRLF on Windows, which hid a command on a non-final line.
+# Output is written as bytes, LF only.
+SEGMENTS=""
+if [ -n "$PYBIN" ]; then
+  SEGMENTS=$(printf '%s' "$INPUT" | "$PYBIN" -c '
 import sys, json
 try:
-    print(json.loads(sys.stdin.read()).get("tool_input", {}).get("command", ""))
+    d = json.loads(sys.stdin.read())
+    cmd = (d.get("tool_input") or {}).get("command") or ""
+    esc = "`" if d.get("tool_name") == "PowerShell" else "\\"
 except Exception:
-    pass
+    sys.exit()
+cmd = cmd.replace("\r", "")
+out, q, i, n = [], "", 0, len(cmd)
+while i < n:
+    c = cmd[i]
+    if c == esc and q != "\x27":
+        nxt = cmd[i + 1:i + 2]
+        out.append(" " if nxt == "\n" else c + nxt)
+        i += 2
+        continue
+    if q:
+        if c == q:
+            q = ""
+        out.append(" " if c == "\n" else c)
+    elif c in "\"\x27":
+        q = c
+        out.append(c)
+    elif c in ";&|\n":
+        out.append("\n")
+    else:
+        out.append(c)
+    i += 1
+sys.stdout.buffer.write(("".join(out) + "\n").encode("utf-8"))
 ' 2>/dev/null)
-else
-  COMMAND=""
 fi
 
 # Touch on any build/test invocation (pass OR fail: a failed build is still
 # verification evidence; you have the output). build.ps1 -RunTests, plain
 # dotnet build/test, and /verify all route through one of these substrings.
+# A command that exits non-zero raises PostToolUseFailure, not PostToolUse (Claude Code
+# 2.1.241), so the "fail" half holds only while this hook is registered on both events.
 #
 # Anchor the marker to the project, not the inherited cwd. A relative path here is how
 # a stray .claude/logs/ tree got written under .claude/hooks/ on 2026-08-31 when these
 # scripts were run from that directory.
 LOGDIR="${CLAUDE_PROJECT_DIR:-$(pwd)}/.claude/logs"
-
-# Match an INVOCATION, not a mention. A substring test on the whole command still marks
-# verification for `grep -rn "dotnet test" docs/`, which mutes the reminder that backs
-# evidence-over-claims.md. Split on shell separators and inspect each segment's leading
-# token, the same shape block-dangerous-git.sh already uses.
-#
-# The split honours quotes (maintainer decision D41): splitting on ; & | with `tr` cut
-# `grep "x; dotnet test" docs/` into a segment that starts with dotnet, so a mention marked.
-# A newline inside quotes (a commit message) becomes a space, so it cannot start a segment
-# either, and a backslash outside single quotes keeps the next character. Byte-wise under
-# LC_ALL=C and linear: about 0.4 s for a 20 KB command.
-split_segments() {
-  local LC_ALL=C
-  local s="$1" out="" q="" c i n=${#1}
-  for ((i = 0; i < n; i++)); do
-    c="${s:i:1}"
-    if [[ "$c" == "\\" && "$q" != "'" ]]; then
-      out+="$c${s:i+1:1}"; i=$((i + 1)); continue
-    fi
-    if [[ -n "$q" ]]; then
-      [[ "$c" == "$q" ]] && q=""
-      [[ "$c" == $'\n' ]] && c=" "
-      out+="$c"; continue
-    fi
-    case "$c" in
-      \" | \') q="$c"; out+="$c" ;;
-      ';' | '&' | '|' | $'\n') out+=$'\n' ;;
-      *) out+="$c" ;;
-    esac
-  done
-  printf '%s\n' "$out"
-}
 
 MARK=0
 while IFS= read -r seg; do
@@ -100,7 +107,8 @@ while IFS= read -r seg; do
   while :; do
     word="${seg%%[[:space:]]*}"
     [[ "$word" == "$seg" ]] && break             # a lone word is the command itself
-    [[ "$word" =~ ^[A-Za-z_][A-Za-z0-9_]*= ]] || break
+    # `env` too: `env DOTNET_NOLOGO=1 dotnet test` marked before D41 (plan 011 review).
+    [[ "$word" == env || "$word" =~ ^[A-Za-z_][A-Za-z0-9_]*= ]] || break
     seg="${seg#"$word"}"; seg="${seg#"${seg%%[![:space:]]*}"}"
   done
   first="${seg%% *}"
@@ -112,7 +120,7 @@ while IFS= read -r seg; do
     pwsh | powershell | powershell.exe)
       case "$seg" in *build.ps1*) MARK=1 ;; esac ;;
   esac
-done <<< "$(split_segments "$COMMAND")"
+done <<< "$SEGMENTS"
 
 if [[ $MARK -eq 1 ]]; then
   mkdir -p "$LOGDIR" 2>/dev/null

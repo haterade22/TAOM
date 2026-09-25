@@ -6,7 +6,9 @@
 # Channel: one JSON {"decision":"block","reason":...} on stdout per unbuilt streak, through
 # _stop_reminder.sh, the only Stop output Claude reads (exit-0 stderr goes to the debug log;
 # until plan 011 this hook wrote there and nothing arrived). Silent when stop_hook_active is
-# true. Detection reads git state; stdin is read only for that flag. Always exits 0, and any
+# true, which only withholds the reminder: the marker still clears when a build ran during that
+# continuation, or the next streak would stay muted. Detection reads git state; stdin is read
+# only for that flag. Always exits 0, and any
 # internal failure exits 0 with no output (fail open).
 #
 # Signal: a dirty *.cs file is NEWER than .claude/logs/.verification-ran (touched
@@ -23,7 +25,6 @@
 
 source "$(dirname "${BASH_SOURCE[0]}")/_stop_reminder.sh" 2>/dev/null || exit 0
 INPUT=$(cat)
-taom_stop_hook_active "$INPUT" && exit 0
 # Anchor to the project, not the inherited cwd: mark-verification-run.sh writes its marker
 # under CLAUDE_PROJECT_DIR, and tools/test_hooks.sh runs this hook against sandboxes.
 cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" 2>/dev/null || exit 0
@@ -53,6 +54,7 @@ done <<< "$ALL_FILES"
 
 if [[ $NEEDS_REMINDER -eq 1 ]]; then
   if [[ ! -f "$REMINDED" ]]; then
+    taom_stop_hook_active "$INPUT" && exit 0
     taom_stop_block "check-verification-evidence: a C# file in this tree changed after the last recorded build or test (nothing newer in .claude/logs/.verification-ran). Before calling the work done, run dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId= or dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= and read the output (.claude/rules/evidence-over-claims.md); a subagent's report does not count. If the changed files belong to another session, or you are not claiming the work is done, say so in one line. This fires once per unbuilt streak."
     mkdir -p .claude/logs 2>/dev/null
     touch "$REMINDED" 2>/dev/null || true

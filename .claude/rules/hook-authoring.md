@@ -13,7 +13,7 @@ holds the authoring-time conventions moved out of it (repo-reorg 2026-07-12).
 
 When you add a hook to an existing category (a Stop reminder, a PreToolUse gate, a PostToolUse logger), do NOT copy only the part you're focused on. Enumerate and consciously **match-or-deviate** on the sibling hooks' entire convention set:
 
-| Convention | Where to copy it from | The 2026-05-29 miss |
+| Convention | Where to copy it from | Past miss |
 |---|---|---|
 | Detection (git state vs stdin JSON) | the nearest sibling in the same event | (got this right) |
 | **Muting / idempotency** (early-exit when already-handled) | `check-deep-review.sh` checks the audit log before re-reminding | `check-verification-evidence.sh` shipped without muting → re-nagged on every Stop while `.cs` stayed dirty (MED) |
@@ -51,7 +51,7 @@ case "$COMMAND" in
 esac
 ```
 
-**MANDATORY for any new hook that detects git commits.** Codex review #29 caught `suggest-compact.sh` shipping in `79350f2` with a bare `*"git commit"*` substring matcher — the same recursion-risk class codified after review #28. The prevention rule existed but wasn't applied to its own first user.
+**MANDATORY for any new hook that detects git commits.** Codex review #29 found a bare `*"git commit"*` matcher in a hook shipped in `79350f2` (since deleted), after review #28 had codified the rule.
 
 When you write a NEW hook (or add commit detection to an existing one), grep for `git commit` substring matches in the diff before commit. If you find one that's NOT using the two-stage pattern above, that's a regression — fix before shipping. The `/skill-stocktake` checklist now includes this check.
 

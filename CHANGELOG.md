@@ -4,7 +4,7 @@
 
 ## 2026-09-24
 
-### fix(hooks): v2.0.30 - Stop reminders reach Claude, both trunks guarded against force pushes
+### fix(hooks): v2.0.30 - Stop reminders reach Claude, both trunks guarded against force pushes (#654)
 
 Plan 011. The four Stop reminders were silent: `check-verification-evidence.sh`, `check-deep-review.sh`,
 `check-version-tagged.sh` and `check-changelog-updated.sh` printed to stderr and exited 0, which Claude Code sends
@@ -25,6 +25,19 @@ stderr on exit 0, which reached no one. `tools/test_hooks.sh` 7a, 7c and 7d pin 
 catalog, `harness-facts.md` Visibility, `hook-authoring.md`, the CLAUDE.md hooks bullet). No GitHub ruleset
 (D29). Owed: Mike's live check that a Stop reminder arrives and that a PowerShell force push to
 `bannerlord-1.5.x` is refused.
+
+Review follow-ups (deep review and Codex, 2026-09-25). The force-push guard took the last word on a
+line as the refspec, so `git push --force origin bannerlord-1.5.x 2>&1 | tail -5`, `... && echo done`,
+`... bannerlord-1.5.x feature` and `git push --force --all origin` all passed (rc 0) before and after plan
+011. It now judges each command of a line on its own, skips redirections, judges every refspec, and
+refuses `--all` with a force flag and `--mirror`; quoted or heredoc text that reads as a trunk force push
+is refused by design. Each Stop reminder exited at the top on `stop_hook_active`, so a streak Claude
+ended in that continuation (a build, a CHANGELOG entry) kept its marker and muted the next streak; the
+guard now only withholds the block. `mark-verification-run.sh` splits a command in Python with each
+shell's escape: the bash loop took 9.5 s on a 100 KB command, past its 5 s registration, marked
+``Write-Output "x`"; dotnet test"`` under PowerShell, and missed a build on a non-final line. 7a now
+checks exit status, stderr, marker clearing and re-arming for every Stop hook; 7c and 7d gained the
+shapes above. Report: `docs/reviews/deep-review-011-stop-reminders-and-trunk-guard-2026-09-24.md`.
 
 ### feat(troll): v2.0.30 - human clips retargeted onto the hill troll's own rest pose
 

@@ -1,6 +1,6 @@
 #!/bin/bash
-# PreToolUse hook: Warn before git push to protected branches.
-# Hard-blocks force pushes to protected branches (AGENTS.md "Git and commits").
+# PreToolUse hook (Bash and PowerShell): hard-blocks a force push to a protected branch
+# (AGENTS.md "Git and commits"). It is the only force-push guard: GitHub protects no branch (D29).
 # Non-blocking stderr warning (which Claude does not see) for a plain push to a protected branch.
 
 INPUT=$(cat)
@@ -58,22 +58,28 @@ is_protected() {
   esac
 }
 
-# Judge every line (maintainer decision D38). `read -a` below takes one line, and until plan
-# 011 it took only the command's first, so a `cd <dir>` line hid a force push on the next.
-# A continued line (a trailing \ in bash, a trailing ` in PowerShell) is one command, so the
-# continuations are joined first; CR goes too, since a PowerShell command may use CRLF.
+# Judge every command (maintainer decision D38, widened by the plan 011 review). `read -a`
+# below takes one line, and until plan 011 it took only the command's first, so a `cd <dir>`
+# line hid a force push on the next. The CR goes first: Python's print writes CRLF on Windows,
+# so every non-final line of a multi-line command ends in one. A continued line (a trailing \ in
+# bash, a trailing ` in PowerShell) is one command, so the continuations are joined. Then each
+# command on a line is split out at ; & |: judging a whole line took its last word as the
+# refspec, so `git push --force origin bannerlord-1.5.x 2>&1 | tail -5` passed. The split
+# ignores quotes on purpose, as the tokeniser below flattens them: a gate cannot tell quoted or
+# heredoc text from a command that `bash -c` or `bash <<EOF` runs, so it over-blocks there.
 COMMAND=${COMMAND//$'\r'/}
 COMMAND=${COMMAND//$'\\\n'/ }
 COMMAND=${COMMAND//$'`\n'/ }
+COMMAND=${COMMAND//[;&|]/$'\n'}
 
 BLOCK_TARGET=""
 WARN_TARGET=""
 
-# Judges one line. Sets BLOCK_TARGET on a force push to a protected branch, and WARN_TARGET on
-# a plain push to one.
-judge_line() {
-  local CLEAN PUSH_IDX GIT_SEEN FORCE TARGET i j tok
-  local -a TOKENS POSITIONAL
+# Judges one command. Sets BLOCK_TARGET on a force push to a protected branch, and WARN_TARGET
+# on a plain push to one.
+judge_command() {
+  local CLEAN PUSH_IDX GIT_SEEN FORCE ALL f ref i j tok skip
+  local -a TOKENS POSITIONAL REFS
 
   # Locate the `push` subcommand by TOKEN, not by the substring "git push".
   #
@@ -82,8 +88,8 @@ judge_line() {
   # them. Verified 2026-08-31: `git -C /e/repos/TAOM push --force origin master` returned
   # rc=0, silently. Quotes are flattened first so a wrapped form (bash -c "git push ...")
   # still tokenises; that also preserves the old behaviour of matching a quoted mention.
-  CLEAN=${1//\"/ }
-  CLEAN=${CLEAN//\'/ }
+  # Parentheses go too, so a subshell `(git push ...)` still shows its `git`.
+  CLEAN=${1//[\"\'()]/ }
   read -r -a TOKENS <<< "$CLEAN"
 
   PUSH_IDX=-1
@@ -101,13 +107,21 @@ judge_line() {
   done
   [[ $GIT_SEEN -eq 0 ]] && return 0
 
-  # Split the push arguments into force flags and positionals.
+  # Split the push arguments into force flags and positionals. A redirection (2>, >, 2>/dev/null;
+  # the & of 2>&1 was split off above) and its target are never refspecs.
   FORCE=false
+  ALL=false
   POSITIONAL=()
+  skip=0
   for tok in "${TOKENS[@]:PUSH_IDX+1}"; do
+    if (( skip )); then skip=0; continue; fi
     case "$tok" in
+      *[\<\>]) skip=1; continue ;;
+      *[\<\>]*) continue ;;
       --force | --force-with-lease | --force-with-lease=* | --force-if-includes | -f)
         FORCE=true; continue ;;
+      --all | --branches) ALL=true; continue ;;
+      --mirror) ALL=true; FORCE=true; continue ;;   # --mirror force-updates every ref
       -*f | -f*)
         # A bundled short flag such as -fu. Still a force push.
         case "$tok" in --*) ;; *) FORCE=true ;; esac
@@ -117,44 +131,42 @@ judge_line() {
     POSITIONAL+=("$tok")
   done
 
-  # `git push <remote> <refspec>`: the refspec is the last positional. With fewer than two,
-  # git pushes the current branch.
-  if [[ ${#POSITIONAL[@]} -ge 2 ]]; then
-    TARGET="${POSITIONAL[${#POSITIONAL[@]} - 1]}"
-  else
-    TARGET=""
+  if [[ "$FORCE" == true && "$ALL" == true ]]; then
+    BLOCK_TARGET="every branch, both trunks included (--all or --mirror)"
+    return 0
   fi
 
-  # Strip surrounding quotes. `git push origin "master" --force` is a legal invocation and
-  # the token arrives here as literal "master", quotes included, so the comparisons below
-  # silently failed to match and the force-push block did not fire.
-  TARGET="${TARGET%\"}"; TARGET="${TARGET#\"}"
-  TARGET="${TARGET%\'}"; TARGET="${TARGET#\'}"
+  # `git push <remote> <refspec>...`: every positional after the remote is a refspec, and
+  # --force applies to all of them; judging only the last let `bannerlord-1.5.x feature` through.
+  # With no refspec, git pushes the current branch.
+  REFS=("${POSITIONAL[@]:1}")
+  (( ${#REFS[@]} )) || REFS=("")
 
-  # Normalise the refspec. Every form below reached is_protected unmatched before
-  # 2026-08-31 and so passed silently:
+  # Normalise each refspec. Every form below reached is_protected unmatched before 2026-08-31
+  # and so passed silently:
   #   +branch          a leading + IS force, with no flag anywhere on the line
   #   src:dst          only the destination matters
   #   refs/heads/x     fully-qualified destination
-  #   HEAD / @         resolve to the branch actually checked out
-  case "$TARGET" in
-    +*) FORCE=true; TARGET="${TARGET#+}" ;;
-  esac
-  TARGET="${TARGET##*:}"
-  TARGET="${TARGET#refs/heads/}"
-  if [[ -z "$TARGET" || "$TARGET" == "HEAD" || "$TARGET" == "@" ]]; then
-    TARGET=$(git branch --show-current 2>/dev/null)
-  fi
-
-  if [[ "$FORCE" == true ]] && is_protected "$TARGET"; then
-    BLOCK_TARGET="$TARGET"
-  elif is_protected "$TARGET"; then
-    WARN_TARGET="$TARGET"
-  fi
+  #   HEAD / @         resolve to the branch checked out in the hook's cwd, which is the main
+  #                    tree even for a push run in a worktree (hooks-catalog.md, known gap)
+  for ref in "${REFS[@]}"; do
+    f=$FORCE
+    case "$ref" in +*) f=true; ref="${ref#+}" ;; esac
+    ref="${ref##*:}"
+    ref="${ref#refs/heads/}"
+    if [[ -z "$ref" || "$ref" == "HEAD" || "$ref" == "@" ]]; then
+      ref=$(git branch --show-current 2>/dev/null)
+    fi
+    if is_protected "$ref"; then
+      if [[ "$f" == true ]]; then BLOCK_TARGET="$ref"; return 0; fi
+      WARN_TARGET="$ref"
+    fi
+  done
 }
 
-while IFS= read -r LINE; do
-  judge_line "$LINE"
+while IFS= read -r SEG; do
+  [[ "$SEG" == *push* ]] || continue
+  judge_command "$SEG"
   [[ -n "$BLOCK_TARGET" ]] && break
 done <<< "$COMMAND"
 

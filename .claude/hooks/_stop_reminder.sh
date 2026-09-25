@@ -5,21 +5,23 @@
 # Claude Code sends a Stop hook's stderr (on exit 0) and its plain stdout to the debug log only;
 # Claude never sees either (hooks docs, "Exit code 0"; .claude/rules/harness-facts.md
 # "Visibility"). Until plan 011 all four reminders printed there and none ever arrived. The Stop
-# channel Claude does read is JSON on stdout:
+# channel TAOM uses is JSON on stdout (exit 2 with stderr also reaches Claude):
 #   {"decision":"block","reason":"..."}
 # Claude then answers the reason in one more response (hooks docs, "Stop decision control").
 #
 # LOOP GUARD
 # The Stop payload's stop_hook_active is true when Claude is already continuing because a Stop
-# hook blocked. Every caller exits silently then, so a reminder never blocks twice in a row. The
-# harness also ends the turn after 8 consecutive blocks.
+# hook blocked. Every caller stays silent then, so a reminder never blocks twice in a row. The
+# harness also ends the turn after 8 consecutive blocks. The guard sits just before the block,
+# never at the top: Claude often ends the streak in that continuation (builds, adds the entry),
+# and a caller that exited early kept its marker and muted the next streak (plan 011 review).
 #
-# USAGE (the top of every Stop reminder, in this order)
+# USAGE (every Stop reminder)
 #   source "$(dirname "${BASH_SOURCE[0]}")/_stop_reminder.sh" 2>/dev/null || exit 0
 #   INPUT=$(cat)
-#   taom_stop_hook_active "$INPUT" && exit 0
 #   cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" 2>/dev/null || exit 0
-#   ...
+#   ...detect; when the condition has cleared, remove the streak marker...
+#   taom_stop_hook_active "$INPUT" && exit 0
 #   taom_stop_block "<hook name>: <what is true> <what to do> <how to decline in one line>"
 #   ...then write the streak marker.
 #
