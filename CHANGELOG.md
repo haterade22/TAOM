@@ -931,6 +931,14 @@ line now sweeps archives too, uses a `-E` pattern that also works in ripgrep, an
 finding it came from. `tools/tests/test_process_faction_map.py` pins the path fix: a plain folder, a
 quote in the folder name, and Python text in the folder name (the last two fail on the pre-fix
 tool). Report: `docs/reviews/deep-review-005-security-hygiene-2026-09-24.md`.
+### docs(rules): v2.0.30 - new patches need no ResetForUnload
+
+`.claude/rules/harmony-patches.md` now records that nothing reloads TAOM inside one process: the
+engine calls `OnSubModuleUnloaded` only from `Module.FinalizeModule` at shutdown, and a rebuild
+means restarting the game. A new patch that caches a service statically therefore needs no
+`ResetForUnload()`. The existing 14 stay until their class is next touched, and
+`ResetForUnloadSweepTests` still checks that every one that exists is called. Mike's decision 22
+(sprint finding COMP-05).
 
 ## 2026-09-23
 
