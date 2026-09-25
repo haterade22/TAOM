@@ -244,12 +244,23 @@ public class CustomSettlementFoodModel : SettlementFoodModel
 ## Service Design Guidelines
 
 1. **Single Responsibility**: One service per feature domain
-2. **Interface-Based**: Always define `IServiceName` interface
+2. **Interface When Needed**: Define an `IServiceName` interface only when a test fakes the service or a second implementation exists; every adapter always has one (ADR-007)
 3. **Constructor Injection**: Services receive dependencies via constructor
-4. **No Game Dependencies**: Services should not depend on game lifecycle or sealed game types
+4. **No Game Dependencies**: Services should not depend on game lifecycle or sealed game types, except through protected-virtual boundary seams (ADR-007 "Exceptions")
 5. **Adapter Interfaces Only**: Services MUST accept adapter interfaces (IHeroAdapter), NEVER sealed game types (Hero)
 6. **No Reflection in Services**: ALL reflection access MUST be encapsulated in adapter implementations
-7. **Testable**: All services must have unit tests using mocked adapters
+7. **Testable**: All services must have unit tests using mocked adapters, or a test subclass that overrides the service's boundary seams (ADR-007 "Exceptions")
+
+### Amendment (2026-09-24): service interfaces and boundary seams
+
+Guideline 2 used to read "Always define `IServiceName` interface". The 2026-09-23 audit found most
+service interfaces had exactly one implementation and many were faked by no test
+(`plans/_audit/2026-09-23-opus/lane-2.findings.md`, ARCH-01), while `.claude/rules/think-before-coding.md`
+forbade single-implementation interfaces. An interface now earns its file for one of two reasons: a
+test fakes it, or a second class implements it. Adapters keep their interfaces unconditionally
+(ADR-007). Existing interfaces are not deleted in bulk; one goes when its file is next touched and
+nothing fakes it. Guidelines 4 and 7 now name the protected-virtual boundary seam that ADR-007
+records.
 
 ## Adapter Pattern Implementation
 
@@ -288,7 +299,7 @@ Before merging code touching entry points, verify:
 - [ ] Entry point class is <150 lines (excluding interface definitions)
 - [ ] All complex logic delegated to services
 - [ ] Service is registered in IoC container
-- [ ] Service has corresponding interface
+- [ ] Service has an interface if a test fakes it or a second implementation exists (not otherwise)
 - [ ] Service has unit tests using mocked adapters
 - [ ] Entry point only contains orchestration logic
 - [ ] Game objects wrapped in adapters before passing to services

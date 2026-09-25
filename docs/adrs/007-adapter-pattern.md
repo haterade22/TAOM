@@ -581,6 +581,31 @@ public interface IPositionService
 - Keep conversion minimal (single line per object)
 - Pass only adapters to services
 
+### Protected-Virtual Boundary Seams (amendment, 2026-09-24)
+
+A service may keep its engine access in `protected virtual` members of its own class, instead of
+behind an adapter, when all four conditions hold:
+
+1. **Seam signatures use ids, value types and TAOM types only**: string ids, primitives, enums,
+   TAOM data classes, engine structs such as `Vec2` and `CampaignTime`, and the value-like types
+   under "Value Types Don't Need Adapters"; never a sealed TaleWorlds class.
+2. **Each seam body is one engine operation**: the engine calls or queries for one action, with
+   their null guards and id lookups, and no TAOM decision logic.
+3. **The service's interface stays engine-free**: callers still pass ids or adapters.
+4. **A test subclass overrides every seam the tests reach**, so every decision path runs in unit
+   tests without the game.
+
+Why: `RefugeService`, `CampService`, `SupplyOrderService` and `WardenService` use this pattern, each
+tested through one subclass (for example `RefugeService.MainPartyId()` and `TestableRefugeService`
+in `RefugeServiceTests.cs`); the 2026-09-23 audit counted 94 seam members
+(`plans/_audit/2026-09-23-opus/verify-a-batch-02.md`, ARCH-05). The adapter route for the same
+coverage would need several new adapter interfaces per service for no behaviour gain. The cost is
+that seam bodies are untested engine code inside a service, so they stay thin.
+
+Reviewers: a seam that meets these conditions is not an ADR-007 violation. A seam that breaks one,
+or engine use in a service outside a seam, still is. This exception also qualifies ADR-002 Service
+Design Guideline 4 and ADR-008 Rule 1, which point here.
+
 ## Migration Strategy (TDD Approach)
 
 ### Phase 1: Identify Sealed Types
@@ -750,13 +775,13 @@ public class MyCampaignBehavior : CampaignBehaviorBase
 
 Before merging PRs touching service layer:
 - [ ] Service interfaces accept adapter interfaces (NOT sealed types)
-- [ ] Service implementations use adapters throughout
+- [ ] Service implementations use adapters throughout, or protected-virtual boundary seams that meet the Exceptions conditions
 - [ ] Entry points convert sealed types to adapters
 - [ ] All new adapters registered in `AdapterFactory`
 - [ ] **Adapters recursively wrap ALL nested sealed types** (properties returning sealed types must return adapter interfaces)
 - [ ] Adapter implementations inject `IAdapterFactory` and use it for nested wrapping
 - [ ] Services have >80% test coverage
-- [ ] Tests use mocked adapters (NSubstitute)
+- [ ] Tests use mocked adapters (NSubstitute), or a test subclass that overrides the service's boundary seams
 - [ ] Tests mock nested adapter interfaces where properties are accessed
 
 ### Architecture Tests (Recommended)

@@ -12,6 +12,8 @@ Services must be 100% unit testable without requiring game framework initializat
 
 Services MUST NOT call static methods or properties from TaleWorlds game framework:
 
+**Exception (2026-09-24):** a static read inside a protected-virtual boundary seam that meets ADR-007's "Protected-Virtual Boundary Seams" conditions is allowed; the service's test subclass overrides the seam, so no test touches the static.
+
 **FORBIDDEN** (causes test failures):
 ```csharp
 public class MyService
@@ -82,7 +84,7 @@ When creating a new abstraction (interface + implementation):
 
 ### Rule 3: Required Provider Interfaces
 
-All services MUST use these providers instead of static calls:
+All services MUST use these providers instead of static calls (or a protected-virtual boundary seam, per the Rule 1 exception):
 
 | Static Call | Provider Interface | Registration Location |
 |-------------|-------------------|----------------------|
