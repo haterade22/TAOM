@@ -9,6 +9,7 @@ Running scorecard of all reviews. **Reviews 1-99, 2026-04-05 to 2026-09-12.** 93
 | 132b | 2026-09-24 | Plan 009 maintainer decisions: class-by-class Harmony category index and the localized patch-failure notice | issues-found (0 P1, 1 P2, 1 P3) | agree (P2 fixed and gated, rated HIGH; P3 confirmed, decision owed to Mike) | 2 | 0 | 5 (the translator's seeding bug behind P2, DE/FR/JP fragment grammar, untested null-category guard, stale line refs, CHANGELOG test snapshot) | adversarial-xhigh |
 | 133 | 2026-09-24 | Plan 018, the feature-module composition root (contract, `ModuleRunner`, hooks) and the WandererAllegiance pilot | issues-found (0 P1, 1 P2, 3 P3) | agree (P2 and one P3 fixed; plan P3 left to the orchestrator; doc P3 pre-existing) | 3 | 0 | 6 (Patch37 swallows the fail-closed throw, untested `Modules` hand-off, untested hooks, wrong "after every hand-wired block" claim, parked save owners, vacuous IL check) | adversarial-xhigh |
 | 132 | 2026-09-24 | Plan 009, every Harmony patch category applied through `PatchCategoryApplier` (one drifted binding costs one category) | issues-found (0 P1, 1 P2, 1 P3) | agree (both fixed; P2 rated HIGH) | 2 | 0 | 4 (chat log cleared after the splash, assembly-wide category index, stale lens and lesson greps, Patch43 triage consumers) | adversarial-xhigh |
+| 133 | 2026-09-24 | Plan 003 (PERF-04, decision 17 port of `6eb5955c`): `BattleBalanceSettingsProvider` takes the MCM settings reference once instead of per read | issues-found (0 P1, 0 P2, 2 P3) | agree | 1 P3 confirmed (no test put a live settings object behind the cache; fixed with a read-through test) + 1 P3 plan observation (cadence 20x, not 6x; follow-up) | 0 | 3 (stale feature doc and file catalogue; undercounted hot path; the constructor null pin rated only a contingency) | adversarial-ultra |
 | 109 | 2026-09-13 | Creature handles and threads (#592, #595): reference-keyed adapter cache, slot identity, trees on the mission tick, the nine-site audit, two deep-review passes | issues-found (0 P1, 1 P2, 3 P3, 3 observations) | agree (all fixed but one observation) | 1 P2 confirmed (`ForgetAgent` left the layout counters growing: replacements a row deeper, onto the other class's rows; vacancy reclaim per class) + 3 P3 (vanilla `CommonAIComponent.OnTick` raises `OnAgentPanicked` on the async tick, so the tree logic now defers off-thread callbacks; the howdah seat's own rider and `SpatialGrid` held ungated handles; five global listener loops outside the catch) + 2 observations fixed (atomic `GetOrAdd`; one warg attach helper) + the registration swap taken as a precaution. Disputed with evidence: 5 of 9 suspects, including the deletion-order objection that had held the swap back. One observation rejected (buff getters returning live objects). The player's third freeze the same evening (no spider, four wargs) folded into the RCA `rca-warg-clip-on-horse-2026-09-13.md` | 0 | 0 | v6 + 9 Known Suspects, gpt-6-astra at ultra |
 | 110 | 2026-09-13 | Nameplate relation MCM controls, second pass on commit fe266439 (#596): the four sliders composed with the #591 plate widget | issues-found (0 P1, 1 P2, 1 P3) | agree (both fixed) | 1 P2 confirmed (the text curve anchored on vanilla's 0.35 dimmed the name at close range for any opacity 10 to 34; now anchored on the plate's configured resting opacity) + 1 P3 (silent reversion of an invalid TAOM.json value; now one warning per property) + 2 RCA corrections (MCM's slider clamps; MCM raises a save-time event). Deep review before it: data flow found the same P2 independently, performance and compatibility clean | 0 | 0 | v6 + 8 Known Suspects, gpt-6-astra at ultra (explicit -c model/effort) |
 | 108 | 2026-09-13 | Nameplate relation MCM controls (#596): colour toggle, tint strength, neutral and coloured plate opacity, live through a validated settings provider, a static on the plate widget and the Patch38 postfix | (no Codex pass) | 5-agent deep review, ready | 1 LOW fixed (the alpha service interface's doc comment still described the #591 raise-only contract) | 1 (a dirty-check reorder that still read the settings on every frame; the per-frame read is the live-apply mechanism, MCM raises no event) | 0 | deep-review v5 |
@@ -4511,3 +4512,26 @@ CHANGELOG claim reworded. Open for Mike: the GitHub issue, the silent fallback a
 `docs/reviews/deep-review-002-nan-infinity-config-guards-2026-09-24.md`; RCA:
 `docs/reviews/rca-nan-infinity-config-guards-2026-09-24.md`; two lessons (testing-qa,
 gamemodels-services).
+
+## Review 133: plan 003, the BattleBalanceSettingsProvider cache (PERF-04), 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+The decision-17 port of the June commit `6eb5955c` as `7feca96b` on
+`improve/003-battlebalance-settings-cache`: the provider stopped resolving `TaomSettings.Instance` on
+every read. Codex returned 0 P1 and 0 P2. Its P3 (the tests only ever ran the null path, so a
+constructor that snapshots or discards the reference passes) was confirmed and matched lenses 4 and 6
+independently; its counterexample (a constructor that reads `Instance` and throws it away) is one an
+IL rule cannot see. Its second P3 (plan 003 says a 0.1 s grid rebuilds about 6x as often as 2 s; it is
+20x) is pre-existing plan text and goes to the orchestrator. It disputed eight of the ten suspects
+correctly and rated the constructor null pin an UNVERIFIED contingency; three lenses treated it as a
+latent defect, and the follow-up removed it with the lazy `??=` accessor. Codex missed the two docs
+the change made stale and the live-battle XP path that makes this hotter than "simulation only".
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | No read-through test behind the cache | Other (test proves call location, not value) | MCM is not initialised under MSTest and no seam injected a live object; the IL rule read as full coverage | Internal test constructor and a mutate-after-construction test; lesson in `lessons/testing-qa.md` |
+| 2 | Plan cadence arithmetic | Logic error (plan) | Reasoned from frames, not the two intervals | Follow-up to the plan owner |
+
+Final: `dotnet test` 10,323 passed, 2 skipped, 0 failed. Reports:
+`docs/reviews/deep-review-003-hot-path-resolve-and-grid-caching-2026-09-24.md`,
+`docs/reviews/rca-hot-path-resolve-and-grid-caching-2026-09-24.md`; two lessons (state-lifecycle-save,
+testing-qa). Owed: a GitHub issue (Mike) and an in-game slider check.

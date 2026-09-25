@@ -1219,3 +1219,23 @@ Plan 019 called Patch8's settlement path untestable, so the patch's main purpose
 - **Why missed:** the test list was written from the bug (what must be rejected), not from the guard's full contract.
 - **Prevent:** for every validation guard, write one test per rejection condition AND one per boundary the guard must keep (a negative, a zero, the edge of the range), and one for each pre-existing fallback branch the edited expression shares. Prove the keep-tests with a mutant that over-constrains the guard. A reviewer probe in a plan becomes a test in the same change.
 - **Source:** `docs/reviews/rca-nan-infinity-config-guards-2026-09-24.md` finding 1.
+
+### A caching refactor's test puts a live object behind the cache and edits it afterwards (plan 003, 2026-09-24)
+The provider cache's tests pinned the null-path fallbacks and an IL rule that the getters never call
+`TaomSettings.Instance`. None ever put a real settings object behind the provider, because MCM is not
+initialised under MSTest. A constructor that snapshots the values into fields (the exact regression
+the plan forbade), a getter wired to the wrong setting, or a constructor that reads `Instance` and
+discards it, all passed every test.
+- **Why missed:** an IL rule proves WHERE a call happens and reads as full coverage; it cannot see
+  what value reaches the getter.
+- **Prevent:** for any cached read-through (an MCM reference, a config object, an adapter), add a
+  seam that injects a live object (an internal constructor, visible to `TAOM.Tests`), read every
+  getter once, then mutate ONE property per pass on a fresh object and assert every getter after
+  each mutation. Mutating all of them together misses a cross-wired pair whose values coincide (two
+  bools that both default to `true` and both flip to `false`), and skipping the first read misses a
+  getter that caches its first value (convergence pass, plan 003). The test then fails a snapshot,
+  a first-read cache, a cross-wired getter and a discarded reference. Keep the IL rule
+  for the cost claim only. When the seam is a second constructor on a DryIoc-registered type, also
+  resolve the type from a real container in a test.
+- **Source:** `docs/reviews/rca-hot-path-resolve-and-grid-caching-2026-09-24.md` row 2 (Codex P3,
+  lens 4 F1, lens 6).

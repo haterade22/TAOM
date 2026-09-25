@@ -822,3 +822,20 @@ on a commented-out call.
   caller of a teardown virtual before writing when it runs. Name a source-presence test for what it
   proves, and make it ignore comment lines.
 - **Source:** `docs/reviews/rca-enlistment-session-scope-decisions-2026-09-24.md` findings 2 to 4.
+
+### Cache an MCM settings reference lazily, never in a constructor (plan 003, 2026-09-24)
+`BattleBalanceSettingsProvider` took `TaomSettings.Instance` once in its constructor. MCM sets
+`BaseSettingsProvider.Instance` only in `MCMSubModule.OnBeforeInitialModuleScreenSetAsRoot`, so a
+resolve during `OnSubModuleLoad` (the `IoC.Configure` eager block, a patch hook `Initialize`) caches
+null and pins every setting in the group to its compiled default for the session, with no log line.
+It was safe only because its one resolve sits under `OnGameStart`, a fact recorded in the CHANGELOG.
+- **Why missed:** the June code copied `NameplateFadeSettingsProvider`, the older constructor-read
+  exemplar; the trap was documented only as a class comment in `NameplateRelationSettingsProvider`,
+  never as a lesson, and a port verifies the commit it is given rather than re-designing it.
+- **Prevent:** cache with `private TaomSettings? Settings => _settings ??= TaomSettings.Instance;`
+  and read every value through it (MCM edits its one registered instance in place, so this stays
+  live). Pin it with an IL rule that no constructor and no public getter calls `get_Instance`. A
+  correctness precondition on WHEN a singleton is first resolved belongs in code, never in a
+  CHANGELOG sentence.
+- **Source:** `docs/reviews/rca-hot-path-resolve-and-grid-caching-2026-09-24.md` row 1;
+  `NameplateRelationSettingsProvider.cs:14-17` (first occurrence, 2026-09-13).
