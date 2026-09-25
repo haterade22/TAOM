@@ -821,6 +821,37 @@ an agent that has moved up or down into range since the rebuild, which the old z
   bites end as before, standing bites included, the rider hand pose holds, no
   `[Warg] Tree build failed` line). Nothing
   smoked in game; label #659 `triage-needs-ingame` at close.
+### fix(siege): v2.0.30 - nullable warnings graduate folder by folder, Siege first (#660)
+
+The seven main nullable warnings (CS8600 to CS8604, CS8618, CS8625) were thrown away by
+`<NoWarn>` in both production csproj files, and `/nowarn` beats any `.editorconfig`, so no
+folder could turn them back on (2,028 were hidden at `b2e387db`). They now live in the root
+`.editorconfig` as `none` for `Main/` and `Dependencies/` (build output unchanged; test-project
+warnings untouched), and `Main/Features/Siege` is the first folder at `error`.
+
+- **Siege is null-clean**: the siege-camp guard (Patch8) now has an explicit branch for a camp
+  with no settlement instead of throwing and catching its own NRE (same outcome, defer to
+  vanilla); `KingdomSiegeMessages` is nullable because a partial JSON entry leaves a key null.
+- **New tests**: `SiegeCampGuardPatchTests` (5, one per path through the prefix) and
+  `NullableRatchetGateTests` (9), which fails if a ratchet id, in any separator the compiler
+  accepts, or the `nullable` alias goes back into a production `<NoWarn>`.
+- **Procedure for the next folder**: `docs/ai-includes/code-quality.md`, "How nullable is
+  enforced" (steps, fix rules, hotfix escape).
+- **Review follow-ups** (deep review and Codex,
+  `docs/reviews/deep-review-019-nullable-ratchet-2026-09-24.md`): `/build-fix` no longer
+  recommends `!` for the nullable ids a graduated folder turns into errors; the Patch8 comment,
+  `siege.md` and the registry entry now say that the no-settlement path hands vanilla an array
+  it throws on, and that vanilla cannot reach that path; the no-op `<NoWarn>$(NoWarn)</NoWarn>`
+  in `Main/TAOM.csproj` is gone. The graduation procedure's build command no longer deploys into
+  the game install, and `siege.md` says the catch also hands vanilla an array it throws on.
+- **Siege defense popup text falls back per field** (maintainer decision): a kingdom's
+  `KingdomMessages` entry in `siege_defense_config.json` that leaves `Title`, `Body`,
+  `AcceptButton`, `AcceptMessage` or `RewardMessage` missing or `""` now takes that field from
+  `SiegeDefenseService`'s defaults, so the accept button is never missing its label; an entry
+  that is JSON `null` gets every default instead of a null that suppressed the popup (the NRE was
+  caught and logged as "ShowInquiry unavailable") and threw in the reward path. The static
+  defaults and the config entry are never written to. 5 new `SiegeDefenseServiceTests`, and
+  the test project's nullable warning count stays at 2,256.
 
 ## 2026-09-23
 

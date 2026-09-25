@@ -262,3 +262,16 @@ The decisions commit said "no node is a service locator" while the same `BuildTr
 - **Why missed:** both were written from intent (the decision, the scenario pictured) and not from the code: no grep over every node the tree builds, no read of the condition.
 - **Prevent:** before writing "no", "every", "all" or "none" about a set, grep the whole set it names and quote the count; scope the claim to what the grep covered. State a behaviour difference as the condition the code evaluates and when it evaluates it, then list the cases it allows, not only the one expected.
 - **Source:** `docs/reviews/rca-warg-tick-costs-decisions-2026-09-24.md` F3 and F6 (Agents 1, 4, 5, 6; Codex P3-2).
+- **Recurred:** plan 019's maintainer decisions (2026-09-24). Decision 2 closed the no-settlement
+  fallback, and the commit recorded that in `siege.md`, but `harmony-patch-registry.md`, the
+  crash-triage entry point, still called it "an open decision". The same commit set the Key Files
+  test count to 30 while the Tests section of the same file kept "17 tests", although the first
+  review had named both lines. A closed decision or a new count is a claim: grep for the old
+  wording ("open decision", the plan section's name, the old number) before committing
+  (`rca-nullable-ratchet-decisions-2026-09-24.md` #2, #3).
+
+### A pointer to a procedure points at the knowledge base, never at a plan (plan 019, 2026-09-24)
+Plan 019's CHANGELOG said the procedure for graduating the next folder was in `code-quality.md`, "How nullable is enforced". That paragraph held the mechanism only; the steps, the fix rules (no `!` on an engine value, `= null!` only with an owner comment) and the hotfix escape lived only in the plan's "Maintenance notes", and both `.editorconfig` comments cited "plan 019". `plans/README.md` calls plans a working backlog, not a knowledge base.
+- **Why missed:** the plan's docs step added only the mechanism to `code-quality.md`, and nobody opened the pointer's target to find the promised text. Five of the six review lenses flagged it afterwards.
+- **Prevent:** when a plan's maintenance notes hold a procedure later work must follow, the executing change moves it where ADR-011 routes it and points every comment and CHANGELOG line there. Before committing a pointer, open its target and find the promised text.
+- **Source:** `docs/reviews/rca-nullable-ratchet-2026-09-24.md` #4.

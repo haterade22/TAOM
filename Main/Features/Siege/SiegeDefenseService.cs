@@ -73,18 +73,35 @@ public class SiegeDefenseService : ISiegeDefenseService
         return false;
     }
 
+    // A kingdom's entry may omit keys, leave them "", or be JSON null; each such field takes the
+    // default, so none reaches the popup as a blank button or empty text (#660); a value of only
+    // spaces is kept as written. Always a fresh copy:
+    // neither DefaultMessages nor the config entry is ever handed out or written to.
     internal KingdomSiegeMessages GetMessages(string factionId)
     {
-        if (!string.IsNullOrEmpty(factionId) &&
-            _config.KingdomMessages.TryGetValue(factionId, out var messages))
-            return messages;
-        return DefaultMessages;
+        KingdomSiegeMessages? configured = null;
+        if (!string.IsNullOrEmpty(factionId))
+            _config.KingdomMessages.TryGetValue(factionId, out configured);
+
+        return new KingdomSiegeMessages
+        {
+            Title = OrDefault(configured?.Title, DefaultMessages.Title),
+            Body = OrDefault(configured?.Body, DefaultMessages.Body),
+            AcceptButton = OrDefault(configured?.AcceptButton, DefaultMessages.AcceptButton),
+            AcceptMessage = OrDefault(configured?.AcceptMessage, DefaultMessages.AcceptMessage),
+            RewardMessage = OrDefault(configured?.RewardMessage, DefaultMessages.RewardMessage)
+        };
     }
 
-    private static string Resolve(string template, string settlement, string attacker,
+    private static string? OrDefault(string? value, string? fallback) =>
+        value is null || value.Length == 0 ? fallback : value;
+
+    private static string Resolve(string? template, string settlement, string attacker,
         int days, int influence, int relation)
     {
-        if (string.IsNullOrEmpty(template)) return "";
+        // net472's string.IsNullOrEmpty has no [NotNullWhen(false)], so spell the check out
+        // for the compiler; the behaviour is identical.
+        if (template is null || template.Length == 0) return "";
         return template
             .Replace("{settlement}", settlement)
             .Replace("{attacker}", attacker)

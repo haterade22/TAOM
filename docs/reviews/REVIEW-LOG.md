@@ -4424,3 +4424,66 @@ adapters-taleworlds-api and misc. Report:
 |---|-----|----------|-----------|-------------------|
 | 1 | IL order test accepted a skeleton fetch on every wind-up frame | Other: test checks a proxy (repeat) | "No test can call `Tick`" was never tried, and the test was named for the goal, not for what a call list shows | Substitute-driven `Tick` tests, mutation-checked; lesson in testing-qa |
 | 2 | Behaviour-difference text omitted skeleton recovery | Logic error (claim) | Written from the scenario pictured, not the condition the code tests | Wording fixed; lesson in misc |
+## Review (plan 019, number assigned at merge): nullable ratchet, Siege graduated to errors, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+Plan 019 moved the seven nullable ids (CS8600 to CS8604, CS8618, CS8625) out of both production
+`<NoWarn>` lists into the root `.editorconfig` and set them to `error` in `Main/Features/Siege`
+(`7f02fc8d..19ca72d3`). Six lenses and Codex found no runtime defect: the Main build is still
+2 warnings and 0 CS86xx, the test project's 2,256 CS86xx are unchanged, and every engine member was
+checked against the installed v1.5.3 DLLs.
+
+**Codex: 2 findings, 2 confirmed (both P3), 0 false positives.** The camp-2 test asserted array
+lengths, which a copy dropping the frames would pass (now `Assert.AreSame`), and the new DTO
+comment promised a "" fallback that `AcceptButton` does not get. Codex's two observations (the
+stale `GatePosition` wording, "without throwing" describing the prefix rather than the outcome)
+matched deep-review findings. Codex missed the MED one: `/build-fix` still told a builder to fix
+CS8602 with `!`, advice the ratchet made live for the first time, in a skill file outside the git
+refs its prompt scoped it to. It also missed the CHANGELOG pointer to a procedure that lived only in
+the plan, the missing NoWarn gate, path coverage and the missing GitHub issue.
+
+**12 confirmed across both reviews, 1 false positive, 0 HIGH.** Eleven fixed in the follow-up
+commit, with three more prefix tests (every path now covered, including the gate ring built on
+uninitialized engine objects the plan had called untestable) and `NullableRatchetGateTests`, shown
+failing on a leaked id. The GitHub issue is left to Mike. Six findings came from text the plan
+itself supplied; one repeats the harmony-il "defer describes control flow" lesson, whose own example
+had named Patch8 as a safe defer (corrected). Full suite: 10,246 total, only the two live-Armory
+failures.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| C1 | Camp-2 test's length-only oracle | Other: weak test oracle | Plan-prescribed oracle copied | `AreSame`; `lessons/testing-qa.md` |
+| C2 | DTO comment overstates the "" fallback | Convention inconsistency | Plan-supplied comment contradicted the plan's own step | Comment fixed; plan-text lesson in `lessons/build-tooling-workflow.md` |
+
+Report: `docs/reviews/deep-review-019-nullable-ratchet-2026-09-24.md`; RCA:
+`docs/reviews/rca-nullable-ratchet-2026-09-24.md`; lessons in build-tooling-workflow (2),
+testing-qa, misc, and a Recurred line in harmony-il.
+
+## Review (plan 019 decisions, number assigned at merge): per-field KingdomMessages fallback and the Siege follow-ups, 6-lens deep review + Codex second round (2026-09-24)
+
+The maintainer-decisions commit on plan 019 (`de288136..503b933e`): `GetMessages` fills each
+missing or empty `KingdomMessages` field, and a JSON `null` entry, from the defaults as a fresh
+copy; the no-settlement siege-camp path is recorded as closed (#660). No runtime defect: both
+consumers go through the fallback, and every engine call it reaches was checked against v1.5.3.
+
+**Codex: 2 findings, 2 confirmed (both P3), 0 false positives; 1 observation that is not a
+defect.** It found the test-project nullable warnings (two of the three sites) and that the
+fresh-copy test could not catch a `return DefaultMessages` shortcut, naming that exact mutant.
+Its config table flagged the synthetic test key `rohan` (not a defect). It missed the patch
+registry still calling decision 2 open (outside the diff's files, as in the first round), the
+stale test count and token table in `siege-defense.md`, the unpinned `AcceptMessage` mapping and
+the silent-fallback design question.
+
+**11 confirmed across both reviews (5 LOW, 6 NIT), 1 false positive, 0 HIGH, 2 for Mike.** All
+11 fixed in the review follow-up: the test project's nullable warning count is back to 2,256, and the two strengthened tests
+were shown failing under both mutants. Mike decides whether an incomplete entry logs a warning
+(`csharp-architecture.md` "Config Providers MUST Validate") and whether a value of only spaces
+counts as empty. Full suite: 10,258 total, only the two live-Armory failures.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| C1 | Three new test-project nullable warnings | Other: annotation change reaches unchanged consumers | Verified Main's count only; warnings keep the build green | Fixed; `lessons/build-tooling-workflow.md` |
+| C2 | Fresh-copy test blind to the defaults path | Other: weak test oracle | Test written from the RED it had to produce | New test, mutant-proven; `lessons/testing-qa.md` |
+
+Report: `docs/reviews/deep-review-019-nullable-ratchet-decisions-2026-09-24.md`; RCA:
+`docs/reviews/rca-nullable-ratchet-decisions-2026-09-24.md`; lessons in build-tooling-workflow,
+testing-qa, and a Recurred line in misc.

@@ -48,6 +48,7 @@ siege_defense_config.json
 | Field | Type | Description |
 |-------|------|-------------|
 | `WatchedSettlementIds` | `string[]` | Explicit settlement IDs that always trigger, regardless of player kingdom. Empty by default. |
+| `KingdomMessages` | object, kingdom id to messages | Per-kingdom popup text: `Title`, `Body`, `AcceptButton`, `AcceptMessage`, `RewardMessage`. Tokens differ per field: `Title`, `Body` and `AcceptMessage` take `{settlement}` (the name), `{attacker}` and `{days}`; `RewardMessage` takes `{influence}` and `{relation}`; `AcceptButton` is shown exactly as written. A kingdom with no entry, or an entry that is `null`, gets the built-in defaults in `SiegeDefenseService`; a key that is missing or `""` falls back to its default alone, so the accept button is never missing its label (#660). A value of only spaces is kept as written. |
 | `RelationshipThreshold` | int | Reserved for future relationship-gated filtering. Currently unused in eligibility. |
 | `ResponseWindowDays` | int | Default response window in campaign days. Overridden by MCM if set. |
 | `RewardRelation` | int | Relation points granted to defender faction leader on arrival. |
@@ -82,13 +83,14 @@ siege_defense_config.json
 | `Main/Features/Siege/ISiegeDefenseSettingsProvider.cs` | MCM wrapper interface |
 | `Main/Features/Siege/SiegeDefenseSettingsProvider.cs` | Reads `TaomSettings.Instance` |
 | `Main/Features/Siege/Models/SiegeDefenseConfig.cs` | Config POCO |
+| `Main/Features/Siege/Models/KingdomSiegeMessages.cs` | One kingdom's message entry; every field nullable, filled from the defaults by `GetMessages` |
 | `Main/Features/Siege/Models/ActiveSiegeDefenseEvent.cs` | Runtime tracking state per settlement |
 | `Main/Adapters/ISiegeEventAdapter.cs` | Adapter interface for sealed `SiegeEvent` |
 | `Main/Adapters/SiegeEventAdapter.cs` | Wraps `SiegeEvent` with `?.` throughout |
 | `Main/Adapters/IPlayerContextAdapter.cs` | Interface — `GetPlayerKingdomId()`, `IsUnderMercenaryService()` |
 | `Main/Adapters/PlayerContextAdapter.cs` | Wraps `Clan.PlayerClan` (sealed) |
 | `Main/_Module/ModuleData/siege/siege_defense_config.json` | Default config |
-| `TAOM.Tests/Features/Siege/SiegeDefenseServiceTests.cs` | 17 unit tests |
+| `TAOM.Tests/Features/Siege/SiegeDefenseServiceTests.cs` | 31 unit tests |
 
 ## Dependencies
 
@@ -100,7 +102,7 @@ siege_defense_config.json
 
 ## Tests
 
-- `TAOM.Tests/Features/Siege/SiegeDefenseServiceTests.cs` — 17 tests covering:
+- `TAOM.Tests/Features/Siege/SiegeDefenseServiceTests.cs`, 31 tests covering:
   - Player kingdom match → fires; different kingdom → suppressed; no kingdom → suppressed
   - Mercenary service → fires (same code path as regular member)
   - `WatchedSettlementIds` override → fires regardless of player kingdom
@@ -111,6 +113,8 @@ siege_defense_config.json
   - Unknown settlement `OnSiegeEnded` does not throw
   - Config loaded at construction
   - Active event defaults (`PlayerAccepted = false`, `RewardClaimed = false`, correct `DefenderFactionId`)
+  - `GetMessages`: all five fields of a configured entry; an unknown or empty faction id gets the defaults; an entry loaded through `JsonConvert` with missing keys, `""` values or a `null` value falls back per field; every result is a fresh copy, so a caller mutating one (configured or defaults) changes no later lookup (#660)
+  - `Reset`, and `RestoreFromSave` with a null snapshot, a malformed entry, the flag round trip and the defender faction (#132)
 
 Not tested (require live `Campaign.Current`): `OnHourlyTick` reward granting, `GrantReward`, `TrackSettlement`/`UntrackSettlement`.
 
@@ -144,6 +148,7 @@ Changes take effect on next game load (config is loaded at construction).
 
 ## Changelog
 
+- 2026-09-24: `GetMessages` fills each missing or empty `KingdomMessages` field, and a `null` entry, from the defaults instead of passing null or `""` to the popup, always as a fresh copy (#660, plan 019); +5 tests.
 - 2026-05-13 — Phase 9b persistence hardening (#132): implemented `SiegeDefenseBehavior.SyncData` (flat-primitive serialization of `_activeEvents`, re-registers VisualTracker on load), added `OnNewGameCreatedEvent` → `Reset()`, and replaced the silent `DaysFromNow` catch with `CampaignTime.Never` fallback; +6 tests.
 - 2026-04-05 — Initial SiegeDefense feature: `OnSiegeEventStartedEvent`-driven detection (no Harmony), `IPlayerContextAdapter` dynamic kingdom/mercenary check replacing the static `WatchedFactionIds` list, native `VisualTrackerManager` tracking circle, towns-only filter, config + "Siege Defense" MCM group; 17 unit tests.
 
@@ -151,6 +156,8 @@ Changes take effect on next game load (config is loaded at construction).
 
 - **Issue:** haterade22/TAOM#67 — feat: Siege Defense — timed settlement defense events for player kingdom
 - **Status:** Closed (2026-08-08 issue triage)
+- **Issue:** haterade22/TAOM#660 (plan 019: per-field message fallback, Siege nullable graduation)
+- **Status:** Open
 
 ---
 
