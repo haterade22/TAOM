@@ -9,7 +9,8 @@ defect: the 60 translated rows for the notice sat after `</strings>`, where
 non-English player while every test and the CHANGELOG said it was done. The translator's
 `sync_missing_ids` put them there: it reads these files as CRLF, but their lines end `\r\r\n` with
 a bare-LF tail, so the last rows and `</strings>` split as one line and the insert lands after it.
-Ten more findings were confirmed (4 LOW data, test and doc gaps, 2 NIT), one was a false positive,
+Ten more findings were confirmed (8 LOW data, test, doc and result-semantics findings, 2 NIT), one
+was a false positive,
 and one LOW is a design question for Mike. Report:
 `docs/reviews/deep-review-009-guarded-patch-category-apply-decisions-2026-09-24.md`.
 

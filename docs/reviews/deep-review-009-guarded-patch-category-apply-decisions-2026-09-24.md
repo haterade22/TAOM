@@ -180,3 +180,30 @@ For the consolidated Phase 3h pass across all branches:
 VERDICT: READY FOR COMMIT (every confirmed defect fixed or, for finding 4, documented with the
 decision owed to Mike; full suite: Failed 2, Passed 10256, Skipped 2, Total 10260, the two known
 live-Armory tests on a branch based before `a39a9c86`).
+
+## Convergence
+
+The convergence reviewer read `b6cb6ff5..HEAD` (`7eae4704`, `27fd23bb`) and found no C# or data
+defect, and two LOW doc defects. Both were checked against the files and are fixed.
+
+| # | Sev | Defect | Verification | Fix |
+|---|---|---|---|---|
+| C1 | LOW | The RCA summary said "4 LOW ... 2 NIT", which sums to 6, not the 10 it claims | The RCA table has 8 LOW rows (#2, #3, #4, #5, #7, #9, #10, #11) and 2 NIT rows (#6, #8) | Summary now reads "8 LOW data, test, doc and result-semantics findings, 2 NIT" |
+| C2 | LOW | `LESSONS-LEARNED.md` said Localization & UI has 49 lessons | `grep -c '^### '` gives 52 (two lessons appended by `27fd23bb`) | Set to 52 |
+
+In the same edit, the two counts that had drifted before this range were set to their derived
+values: Harmony & IL 62 to 63, Build, Tooling & Workflow 167 to 173. All 13 category counts now
+match `grep -c '^### '` on their files.
+
+- **False positives:** none.
+- **Not fixed here, outside this range:** the untracked
+  `codex-adversarial-009-guarded-patch-category-apply-decisions-2026-09-24.prompt.md` is left for its
+  owner to commit; the stale line references in
+  `docs/reference/engine/submodule-lifecycle-and-harmony.md` (`:294`, `:512`, `:640`, and the one at
+  `:74`) predate plan 009 and are a follow-up.
+- **Suite:** Failed 2, Passed 10256, Skipped 2, Total 10260. The two failures are
+  `TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+  `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, the known live-Armory tests on a branch
+  based before `a39a9c86`.
+
+CONVERGENCE VERDICT: READY FOR COMMIT.
