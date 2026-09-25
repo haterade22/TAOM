@@ -216,7 +216,9 @@ public static class PatchShield
 
             if (added > 0 || alreadySeen == 0)
             {
-                DiagLog.Log(Tag, PatchShieldPolicy.FormatShieldPassSummary(added, alreadySeen, skipped, seenTotal, attachedTotal, stopwatch.ElapsedMilliseconds));
+                DiagLog.Log(Tag, PatchShieldPolicy.FormatShieldPassSummary(
+                    added: added, alreadySeen: alreadySeen, skipped: skipped,
+                    seenTotal: seenTotal, attachedTotal: attachedTotal, elapsedMs: stopwatch.ElapsedMilliseconds));
             }
         }
         catch (Exception ex)

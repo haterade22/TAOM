@@ -245,7 +245,7 @@ Both derivations are enforced by [`BundledDependencyManifestTests`](../../TAOM.T
 
 ### Defensive infrastructure (DR3 Phase 4 — BetaDeps parity)
 
-TAOM.Dependencies ships 18 classes under `Dependencies/Foundation/` that catch third-party mod runtime errors and let the game keep running. Eleven came from DR3 Phase 4 (2026-05-27), adopted from BetaDeps v0.7.5.1 (Nexus 11274) via clean-room rewrite under MIT — see `Dependencies/_Module/THIRD-PARTY-LICENSES.txt`. Six more arrived with the co-op gate (2026-08-01/02) and are TAOM-authored. One more, `RethrowStackPreserver` (2026-09-22, TAOM-authored), keeps a rethrown exception's stack trace intact; see the two shield bullets below.
+TAOM.Dependencies ships 19 classes under `Dependencies/Foundation/` that catch third-party mod runtime errors and let the game keep running. Eleven came from DR3 Phase 4 (2026-05-27), adopted from BetaDeps v0.7.5.1 (Nexus 11274) via clean-room rewrite under MIT; see `Dependencies/_Module/THIRD-PARTY-LICENSES.txt`. Six more arrived with the co-op gate (2026-08-01/02) and are TAOM-authored. One more, `RethrowStackPreserver` (2026-09-22, TAOM-authored), keeps a rethrown exception's stack trace intact; see the two shield bullets below. And `ShieldCoverage` (2026-09-24, TAOM-authored) holds PatchShield's seen and attached method sets behind a testable seam.
 
 The DR3 Phase 4 roster: `RuntimeLog` (log-path resolver), `DiagLog` (threadsafe append-only logger — see the diagnostic-logs table below), `ReflectionUtils` (small reflection helpers), `VersionProbe` (Bannerlord version + branch detection), `IncompatibleModDetector`, `PatchShield`, `SaveShield` + `FailureRecord` + `FailedModsCatalog` (the record type + catalog writer behind `failed-mods-catalog.txt`), `SubModuleConstructionGuard`, `CollectAssemblyTypesShim`.
 
@@ -284,7 +284,7 @@ The co-op additions: `CoopPresence` — "is a co-op module in this launcher sess
 
 **Verifying the shields are healthy:**
 
-After a normal launch and one game start (campaign, custom battle or editor), `diag.log` should contain entries like the ones below, in this order. The first `shield pass` line is pass 1 (module load), the second is pass 2 (game start, reruns at every later game start). `seen` counts every method the passes so far have decided on, skipped ones included (a failed attach is in neither count, so the next pass retries it); `attached` counts the methods carrying a shield finalizer, which is the real coverage. The session summary's "shielded A of S" reports the same two numbers. Until 2026-09-24 one `total` (and a session summary "shielded S") conflated them:
+After a normal launch and one game start (campaign, custom battle or editor), `diag.log` should contain entries like the ones below, in this order. The first `shield pass` line is pass 1 (module load), the second is pass 2 (game start, reruns at every later game start). `seen` counts every method the passes so far have decided on, skipped ones included (a failed attach is in neither count, so the next pass retries it); `attached` counts the methods carrying a shield finalizer, which is the real coverage. The session summary's "shielded A of S" reports the same two numbers. Until 2026-09-24 one `total` (and a session summary "shielded S") conflated them.
 ```
 [INFO  ] [PatchShield]                shield pass: +N new, 0 already-seen, M skipped (seen: N+M, attached: N) in T ms (X.X ms/attach)
 [INFO  ] [SaveShield]                 install complete: shielded +K new, 0 already-shielded, 0 skipped

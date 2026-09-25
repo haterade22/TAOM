@@ -20,7 +20,7 @@ public class ShieldCoverageTests
     private static readonly MethodBase Unknown = typeof(string).GetMethod(nameof(string.Normalize), Type.EmptyTypes)!;
 
     [TestMethod]
-    public void Counts_SkippedAndAttached_ReportSeenAndAttachedSeparately()
+    public void SeenCountAndAttachedCount_TwoSkippedOneAttached_ReturnThreeAndOne()
     {
         var coverage = new ShieldCoverage();
         coverage.RecordSkipped(Skipped1);
@@ -32,19 +32,28 @@ public class ShieldCoverageTests
     }
 
     [TestMethod]
-    public void HasSeen_SkippedOrAttached_IsTrue_SoALaterPassDoesNotRevisitThem()
+    public void HasSeen_SkippedOrAttachedMethod_ReturnsTrue()
     {
         var coverage = new ShieldCoverage();
         coverage.RecordSkipped(Skipped1);
         coverage.RecordAttached(Attached);
 
-        Assert.IsTrue(coverage.HasSeen(Skipped1));
-        Assert.IsTrue(coverage.HasSeen(Attached));
-        Assert.IsFalse(coverage.HasSeen(Unknown), "a failed attach is recorded nowhere, so the next pass retries it");
+        Assert.IsTrue(coverage.HasSeen(Skipped1), "a skipped method is seen, so a later pass does not revisit it");
+        Assert.IsTrue(coverage.HasSeen(Attached), "an attached method is seen, so a later pass does not attach twice");
     }
 
     [TestMethod]
-    public void Record_SameMethodTwice_CountsItOnce()
+    public void HasSeen_UnrecordedMethod_ReturnsFalse()
+    {
+        var coverage = new ShieldCoverage();
+        coverage.RecordSkipped(Skipped1);
+        coverage.RecordAttached(Attached);
+
+        Assert.IsFalse(coverage.HasSeen(Unknown), "an unrecorded method has not been seen");
+    }
+
+    [TestMethod]
+    public void RecordAttachedAndRecordSkipped_SameMethodTwice_CountItOnce()
     {
         var coverage = new ShieldCoverage();
         coverage.RecordAttached(Attached);

@@ -3808,3 +3808,31 @@ live-Armory tests).
 Report: `docs/reviews/deep-review-007-patchshield-skip-callback-shims-2026-09-24.md`. RCA:
 `docs/reviews/rca-patchshield-skip-callback-shims-2026-09-24.md`; two lessons in harmony-il, one in
 testing-qa. AGENTS.md lessons are listed in the report, pending the consolidated Phase 3h.
+
+## Review (plan 007 decisions; number assigned when the improve branches merge): PatchShield seen/attached split, 6-lens deep review + Codex gpt-6-astra second pass (2026-09-24)
+
+Plan 007's maintainer-decisions commit on `improve/007-patchshield-skip-callback-shims`
+(`31a31f16..0bf2409e`) answers the three items the entry above left waiting on Mike: the issue is
+#651, the whole `ManagedCallbacks` namespace stays excluded, and the fallback stack preservation is
+fixed on plan 006's branch (`42624b95`). It also splits PatchShield's one method set into seen and
+attached (`ShieldCoverage`), so `diag.log` stops counting skipped methods as shielded, and names the
+editor in the pass-2 label. Codex gpt-6-astra, 158,323 tokens: **0 P1 / 0 P2, 1 P3, confirmed, no
+false positive.** It tabled the six install-loop outcomes against the old set, proving the dedupe
+set unchanged, and disputed all ten Known Suspects with line evidence. Its P3: a `ShieldCoverageTests`
+message claimed the failed-attach retry, which the test cannot exercise.
+
+The deep review added what Codex missed, all text the change made stale: a test comment naming the
+renamed local, the `Dependencies/Foundation/` class count (18, now 19) in two docs, and a reword list
+for plan 006's merge that missed `dr3-maintenance.md:261` and two older lines. 6 findings confirmed
+(4 LOW, 1 INFO, 1 NIT), 4 false positives, 3 NEEDS MIKE (the 1.4.5 port, #651's stale body, filing
+the deferred follow-ups). All six fixed; one named-argument call applied as a preserving
+improvement. Full suite: 10247 passed, 2 skipped, 2 failed (the two live-Armory tests).
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|
+| 1 | Test message claims a retry the test cannot exercise | Other: test claims more than it proves | Message written from the production design, not the test body | Renamed, split, message narrowed; one-off |
+
+Report: `docs/reviews/deep-review-007-patchshield-skip-callback-shims-decisions-2026-09-24.md`. RCA:
+`docs/reviews/rca-patchshield-skip-callback-shims-decisions-2026-09-24.md`; one lesson in
+build-tooling-workflow. AGENTS.md lessons are listed in the report, pending the consolidated
+Phase 3h.

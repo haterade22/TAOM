@@ -61,6 +61,13 @@ a finalizer is unchanged. The bookkeeping moved into `ShieldCoverage`, pinned by
 now names every start that reaches it: `game start: campaign, custom battle or editor`.
 Full suite: 10246 passed, 2 skipped, 2 failed (the same two live-Armory tests).
 
+Decisions review follow-ups (deep review and Codex, 2026-09-24): a test comment names the renamed
+`alreadySeen`; the `ShieldCoverageTests` names follow the house convention and one test is split
+(4 tests); the `FormatShieldPassSummary` call passes named arguments; `dr3-maintenance.md` and the
+feature map count 19 Foundation classes; the plan 007 review record lists every text to reword
+once plan 006 lands. Full suite: 10247 passed, 2 skipped, 2 failed (the same two live-Armory
+tests). Report: `docs/reviews/deep-review-007-patchshield-skip-callback-shims-decisions-2026-09-24.md`.
+
 ## 2026-09-23
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)

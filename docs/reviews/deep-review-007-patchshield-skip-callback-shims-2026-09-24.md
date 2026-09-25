@@ -284,7 +284,8 @@ CHANGELOG, `dr3-maintenance.md`, the plan and the Codex prompt).
 
 - Step A, behaviour-preserving: the single set moved behind `ShieldCoverage` with both counts
   reading it, as the summary did before.
-- RED: new `ShieldCoverageTests` (3 tests). `Counts_SkippedAndAttached_ReportSeenAndAttachedSeparately`
+- RED: new `ShieldCoverageTests` (3 tests; the decisions review renamed them and split one, so
+  the names below are the originals). `Counts_SkippedAndAttached_ReportSeenAndAttachedSeparately`
   failed with `Assert.AreEqual failed. Expected:<1>. Actual:<3>. attached counts only methods
   carrying the finalizer`, and `Record_SameMethodTwice_CountsItOnce` with `Expected:<1>. Actual:<2>`
   (`Failed: 2, Passed: 25, Total: 27` with the 24 `PatchShieldPolicyTests`).
@@ -294,9 +295,16 @@ CHANGELOG, `dr3-maintenance.md`, the plan and the Codex prompt).
   'alreadySeen'`, then GREEN (`Passed: 27, Failed: 0`). The 24 existing `PatchShieldPolicyTests`
   stay green; three of them now assert the new layout.
 
-**Follow-up:** the `PatchShieldPolicy.cs` comment on the `ManagedCallbacks` entry and this
-branch's CHANGELOG still say nothing on a shim preserves the stack on the fallback paths. That is
-true on this branch alone; whichever of plans 006 and 007 merges second rewords it.
+**Follow-up:** four texts on this branch say nothing on a shim, or no crash-reporter finalizer,
+preserves the stack on the fallback paths: the `PatchShieldPolicy.cs` comment on the
+`ManagedCallbacks` entry (lines 91-92), this branch's CHANGELOG ("Known limitation"),
+`docs/migration/dr3-maintenance.md:261` ("nothing on a shim now swallows the missing-API trinity or
+preserves the stack"), and two older lines this plan did not write, `dr3-maintenance.md:304` ("as do
+the crash reporter's own ten on their fallback paths") and `docs/reviews/lessons/harmony-il.md:572`
+("plus the crash reporter's ten on their fallback paths"). That is true on this branch alone;
+whichever of plans 006 and 007 merges second rewords the stack half of each (the trinity half stays
+true). Added by the decisions review,
+`docs/reviews/deep-review-007-patchshield-skip-callback-shims-decisions-2026-09-24.md`.
 
 **Verification:**
 

@@ -2257,3 +2257,9 @@ Three gates approximated a language with regexes and each broke on valid input. 
 - **Why missed:** the check discovered hooks by their external tool, not by being a gate.
 - **Prevent:** check 4b times every PreToolUse gate on a commit payload against the real repo and fails at 80% of its registration. Query git once for all files, never once per file.
 - **Source:** `docs/reviews/rca-adr011-batch1-2026-09-23.md` C1.
+
+### A change's sweep has two halves: readers of what changed, and text that states it (plan 007, 2026-09-24)
+The plan 007 decisions commit renamed a local (`alreadyShielded` to `alreadySeen`), added a class to `Dependencies/Foundation/` and wrote a "reword when plan 006 lands" list. Its sweep grepped for code that reads the old log format and the removed `ShieldedCount` (both clean) and stopped. A test comment kept the old local's name, two docs kept the folder's old class count (18, now 19), and the reword list missed a line on the same branch that makes the same claim. Two of the three repeat lessons above ("After a whole-word identifier rename sweep", "When a change alters what an artifact CONTAINS").
+- **Why missed:** "who reads this?" was answered; "what text describes this?" was never asked. A reword list written from memory of the decision covers the files the decision touched, not every file that states the claim.
+- **Prevent:** before the commit, `git grep -n <old identifier>` over the whole repo for every rename, comments included; `git grep -n -e "<N> classes" -e "<N>-class"` (or the folder name) for every file added to or removed from a folder a doc counts; and build any "reword when X lands" list by grepping the claim's own words (here "preserves the stack", "fallback paths") across `docs/`, `CHANGELOG.md` and the code comments, then list every hit.
+- **Source:** `docs/reviews/rca-patchshield-skip-callback-shims-decisions-2026-09-24.md` findings 1, 3 and 4.

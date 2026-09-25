@@ -261,7 +261,7 @@ public class PatchShieldPolicyTests
     public void FormatShieldPassSummary_NoAttaches_DoesNotDivideByZero()
     {
         // The only zero-attach line PatchShield logs is a first pass that attached nothing
-        // (PatchShield.Install logs when added > 0 || alreadyShielded == 0).
+        // (PatchShield.Install logs when added > 0 || alreadySeen == 0).
         var line = PatchShieldPolicy.FormatShieldPassSummary(added: 0, alreadySeen: 0, skipped: 16, seenTotal: 16, attachedTotal: 0, elapsedMs: 3);
 
         StringAssert.Contains(line, "(seen: 16, attached: 0)");
