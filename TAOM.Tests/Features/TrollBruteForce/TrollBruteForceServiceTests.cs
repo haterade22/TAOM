@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.TrollBruteForce;
 
-// The pure decisions behind the cave troll's Brute Force smash (#649): who gets the tree, when the smash
+// The pure decisions behind the trolls' Brute Force smash (#649): who gets the tree, when the smash
 // may start, where it lands, when the clip has reached its impact, and what each enemy in the ring takes.
 // Every input is an engine float, so each rule is also pinned against NaN and infinity (fail closed).
 
@@ -15,22 +15,25 @@ public class TrollBruteForceServiceTests
     [TestInitialize]
     public void Setup() => _service = new TrollBruteForceService();
 
-    [TestMethod]
-    public void IsCaveTroll_TheBattleMonster_IsTrue()
+    [DataTestMethod]
+    [DataRow("cave_troll")]
+    [DataRow("hill_troll")]   // the hill troll joined on 2026-09-25, on its own skeleton with its own set
+    public void IsBruteForceTroll_TheBattleMonsters_AreTrue(string monsterId)
     {
-        Assert.IsTrue(_service.IsCaveTroll("cave_troll"));
+        Assert.IsTrue(_service.IsBruteForceTroll(monsterId));
     }
 
     [DataTestMethod]
     [DataRow("cave_troll_settlement")]
     [DataRow("cave_troll_child")]
-    [DataRow("hill_troll")]
+    [DataRow("hill_troll_settlement")]
+    [DataRow("hill_troll_child")]
     [DataRow("CAVE_TROLL")]
     [DataRow("")]
     [DataRow(null)]
-    public void IsCaveTroll_AnyOtherMonster_IsFalse(string? monsterId)
+    public void IsBruteForceTroll_AnyOtherMonster_IsFalse(string? monsterId)
     {
-        Assert.IsFalse(_service.IsCaveTroll(monsterId));
+        Assert.IsFalse(_service.IsBruteForceTroll(monsterId));
     }
 
     [TestMethod]
@@ -240,5 +243,40 @@ public class TrollBruteForceServiceTests
     {
         Assert.AreEqual(TrollBruteForceConfig.OuterRadius * 2f, _service.OuterRadius(2f), 1e-4f);
         Assert.AreEqual(TrollBruteForceConfig.OuterRadius, _service.OuterRadius(float.NaN), 1e-4f);
+    }
+    // ── Body size (Mike, 2026-09-25): AgentScale times the Monster's eye height over the human's 1.70 ──────────
+    // The cave troll is a human skeleton scaled 1.9 with the human's eye height, so AgentScale alone measured it;
+    // the hill troll's size is in its own skeleton (eye height 3.58) at a scale near 1.09.
+
+    [TestMethod]
+    public void BodySize_CaveTroll_EqualsItsAgentScale()
+    {
+        Assert.AreEqual(1.9f, _service.BodySize(1.9f, 1.70f), 1e-5f);
+    }
+
+    [TestMethod]
+    public void BodySize_HillTroll_GrowsWithItsOwnHeight()
+    {
+        Assert.AreEqual(1.09f * 3.58f / 1.70f, _service.BodySize(1.09f, 3.58f), 1e-4f);
+    }
+
+    [DataTestMethod]
+    [DataRow(float.NaN)]
+    [DataRow(float.PositiveInfinity)]
+    [DataRow(0f)]
+    [DataRow(-1f)]
+    public void BodySize_BadEyeHeight_KeepsTheAgentScale(float eyeHeight)
+    {
+        Assert.AreEqual(1.09f, _service.BodySize(1.09f, eyeHeight), 1e-6f);
+    }
+
+    [TestMethod]
+    public void BodySize_HillTroll_ReachesFartherThanItsAgentScaleAlone()
+    {
+        // The whole point of the change: the hill troll's trigger range follows its real height.
+        var size = _service.BodySize(1.09f, 3.58f);
+
+        Assert.IsTrue(_service.ShouldEngage(5.5f, 1f, size, busy: false), "an enemy 5.5 m ahead is in reach of a 3.6 m troll");
+        Assert.IsFalse(_service.ShouldEngage(5.5f, 1f, 1.09f, busy: false), "AgentScale alone kept it out of reach");
     }
 }

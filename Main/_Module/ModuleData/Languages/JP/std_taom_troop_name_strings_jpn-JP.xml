@@ -14,7 +14,8 @@
     <string id="aom_balcoth_horse_archer_name" text="[ルーン] バルコスの騎馬弓兵" />
     <string id="aom_balcoth_veteran_axeman_name" text="[ルーン] バルコスの熟練斧兵" />
     <string id="aom_balcoth_volunteer_name" text="[ルーン] バルコスの志願兵" />
-    <string id="aom_battlemaster_of_the_first_age_name" text="[リンドン] 第一紀の戦闘達人" />
+    <string id="aom_battlemaster_of_the_first_age_name" text="[裂け谷] 第一紀の戦闘達人" />
+    <string id="aom_lindon_battlemaster_of_the_first_age_name" text="[リンドン] 第一紀の戦闘達人" />
     <string id="aom_black_sun_archer_name" text="[ルーン] 黒陽の射手" />
     <string id="aom_black_sun_chosen_marksman_name" text="[ルーン] 黒陽の選抜狙撃手" />
     <string id="aom_black_sun_executioner_name" text="[ルーン] 黒陽の処刑人" />
@@ -301,9 +302,8 @@
     <string id="aom_gondor_bel_vet_infantry_name" text="[ゴンドール] ベルファラスの精鋭歩兵" />
     <string id="aom_gondor_brv_archer_name" text="[ゴンドール] 黒根谷の射手" />
     <string id="aom_gondor_brv_bowman_name" text="[ゴンドール] 黒根谷の弓兵" />
-    <string id="aom_gondor_brv_ranger_name" text="[ゴンドール] 黒根谷の影弓兵" />
     <string id="aom_gondor_brv_scout_name" text="[ゴンドール] 黒根谷の斥候" />
-    <string id="aom_gondor_brv_shadowbow_name" text="[ゴンドール] 黒根谷の影狩人" />
+    <string id="aom_gondor_brv_shadowbow_name" text="[ゴンドール] 黒根谷の影弓兵" />
     <string id="aom_gondor_brv_shadowhunter_name" text="[ゴンドール] 黒根谷の先鋒" />
     <string id="aom_gondor_brv_vet_archer_name" text="[ゴンドール] 黒根谷の精鋭射手" />
     <string id="aom_gondor_ca_guard_name" text="[ゴンドール] カイア・アンドロスの衛兵" />
@@ -374,11 +374,7 @@
     <string id="aom_gondor_loss_axebearer_name" text="[ゴンドール] ロッサルナハの斧兵" />
     <string id="aom_gondor_loss_guard_name" text="[ゴンドール] ロッサルナハの衛兵" />
     <string id="aom_gondor_loss_lumberman_name" text="[ゴンドール] ロッサルナハの木こり" />
-    <string id="aom_gondor_loss_noble_captain_name" text="[ゴンドール] ロッサルナハの貴族隊長" />
     <string id="aom_gondor_loss_noble_name" text="[ゴンドール] ロッサルナハの貴族" />
-    <string id="aom_gondor_loss_noble_sergeant_name" text="[ゴンドール] ロッサルナハの貴族軍曹" />
-    <string id="aom_gondor_loss_noble_veteran_name" text="[ゴンドール] ロッサルナハの熟練貴族兵" />
-    <string id="aom_gondor_loss_noble_warden_name" text="[ゴンドール] ロッサルナハの貴族守衛" />
     <string id="aom_gondor_loss_skirmisher_name" text="[ゴンドール] ロッサルナハの散兵" />
     <string id="aom_gondor_loss_vet_axe_thrower_name" text="[ゴンドール] ロッサルナハの熟練投斧兵" />
     <string id="aom_gondor_loss_vet_axebearer_name" text="[ゴンドール] ロッサルナハの熟練斧兵" />
@@ -496,19 +492,32 @@
     <string id="aom_harad_swordfighter_name" text="[ハラド] 剣の戦士" />
     <string id="aom_harad_vipereye_name" text="[ハラド] 毒蛇" />
     <string id="aom_harad_warlance_name" text="[ハラド] 戦槍騎兵" />
-    <string id="aom_imladris_archer_name" text="[リンドン] ミスロンドの弓兵" />
-    <string id="aom_imladris_blademaster_name" text="[リンドン] ミスロンドの剣達者" />
-    <string id="aom_imladris_bowman_name" text="[リンドン] ミスロンドの射手" />
-    <string id="aom_imladris_guardsman_name" text="[リンドン] ミスロンドの衛兵" />
-    <string id="aom_imladris_horse_archer_name" text="[リンドン] ミスロンドの騎射兵" />
-    <string id="aom_imladris_infantry_name" text="[リンドン] ミスロンドの歩兵" />
-    <string id="aom_imladris_marchwarden_name" text="[リンドン] ミスロンドの辺境守護兵" />
-    <string id="aom_imladris_marksman_name" text="[リンドン] ミスロンドの狙撃手" />
-    <string id="aom_imladris_nobleman_name" text="[リンドン] ミスロンドの貴族" />
-    <string id="aom_imladris_outrider_name" text="[リンドン] ミスロンドの先駆騎兵" />
-    <string id="aom_imladris_recruit_name" text="[リンドン] ミスロンドの新兵" />
-    <string id="aom_imladris_swordguard_name" text="[リンドン] ミスロンドの剣衛兵" />
-    <string id="aom_imladris_warden_name" text="[リンドン] ミスロンドの守護兵" />
+    <string id="aom_imladris_archer_name" text="[裂け谷] イムラドリスの射手" />
+    <string id="aom_lindon_imladris_archer_name" text="[リンドン] ミスロンドの弓兵" />
+    <string id="aom_imladris_blademaster_name" text="[裂け谷] イムラドリスの剣匠" />
+    <string id="aom_lindon_imladris_blademaster_name" text="[リンドン] ミスロンドの剣達者" />
+    <string id="aom_imladris_bowman_name" text="[裂け谷] イムラドリスの弓兵" />
+    <string id="aom_lindon_imladris_bowman_name" text="[リンドン] ミスロンドの射手" />
+    <string id="aom_imladris_guardsman_name" text="[裂け谷] イムラドリスの衛士" />
+    <string id="aom_lindon_imladris_guardsman_name" text="[リンドン] ミスロンドの衛兵" />
+    <string id="aom_imladris_horse_archer_name" text="[裂け谷] イムラドリスの騎射兵" />
+    <string id="aom_lindon_imladris_horse_archer_name" text="[リンドン] ミスロンドの騎射兵" />
+    <string id="aom_imladris_infantry_name" text="[裂け谷] イムラドリスの歩兵" />
+    <string id="aom_lindon_imladris_infantry_name" text="[リンドン] ミスロンドの歩兵" />
+    <string id="aom_imladris_marchwarden_name" text="[裂け谷] イムラドリスの辺境守護者" />
+    <string id="aom_lindon_imladris_marchwarden_name" text="[リンドン] ミスロンドの辺境守護兵" />
+    <string id="aom_imladris_marksman_name" text="[裂け谷] イムラドリスの狙撃手" />
+    <string id="aom_lindon_imladris_marksman_name" text="[リンドン] ミスロンドの狙撃手" />
+    <string id="aom_imladris_nobleman_name" text="[裂け谷] イムラドリスの貴族" />
+    <string id="aom_lindon_imladris_nobleman_name" text="[リンドン] ミスロンドの貴族" />
+    <string id="aom_imladris_outrider_name" text="[裂け谷] イムラドリスの斥候騎兵" />
+    <string id="aom_lindon_imladris_outrider_name" text="[リンドン] ミスロンドの先駆騎兵" />
+    <string id="aom_imladris_recruit_name" text="[裂け谷] イムラドリスの新兵" />
+    <string id="aom_lindon_imladris_recruit_name" text="[リンドン] ミスロンドの新兵" />
+    <string id="aom_imladris_swordguard_name" text="[裂け谷] イムラドリスの剣衛兵" />
+    <string id="aom_lindon_imladris_swordguard_name" text="[リンドン] ミスロンドの剣衛兵" />
+    <string id="aom_imladris_warden_name" text="[裂け谷] イムラドリスの守護者" />
+    <string id="aom_lindon_imladris_warden_name" text="[リンドン] ミスロンドの守護兵" />
     <string id="aom_iron_hills_reg_axe_warrior_name" text="[鉄の丘] 斧戦士" />
     <string id="aom_iron_hills_reg_bowman_name" text="[鉄の丘] 射手" />
     <string id="aom_iron_hills_reg_company_name" text="[鉄の丘] 一隊" />
@@ -517,7 +526,7 @@
     <string id="aom_iron_hills_reg_recruit_name" text="[鉄の丘] 新兵" />
     <string id="aom_iron_hills_reg_skirmisher_name" text="[鉄の丘] 散兵" />
     <string id="aom_iron_hills_reg_warrior_name" text="[鉄の丘] 勇士" />
-    <string id="aom_ironpass_arbalest_name" text="[アイアンパス] 重弩兵" />
+    <string id="aom_ironpass_arbalest_name" text="[鉄峠] 重弩兵" />
     <string id="aom_ironpass_axeman_name" text="[鉄峠] 斧兵" />
     <string id="aom_ironpass_goat_charger_name" text="[鉄峠] 山羊騎突撃兵" />
     <string id="aom_ironpass_infantry_name" text="[鉄峠] 歩兵" />
@@ -590,7 +599,8 @@
     <string id="aom_merc_gundabad_fighter_name" text="[グンダバド] 雇われ青白きウルク襲撃者" />
     <string id="aom_merc_gundabad_scout_name" text="[グンダバド] 雇われ斥候" />
     <string id="aom_merc_harad_noble_name" text="[ハラド] 雇われ蛇の若獅子" />
-    <string id="aom_merc_imladris_bowman_name" text="[リンドン] 雇われミスロンドの弓兵" />
+    <string id="aom_merc_imladris_bowman_name" text="[裂け谷] 雇われイムラドリス弓兵" />
+    <string id="aom_lindon_imladris_bowman_merc_name" text="[リンドン] 雇われミスロンドの弓兵" />
     <string id="aom_merc_lindon_noble_name" text="[リンドン] 雇われ貴族" />
     <string id="aom_merc_mirkwood_recruit_name" text="[闇の森] 雇われシルヴァンの徴募兵" />
     <string id="aom_merc_mordor_orc_hunter_name" text="[モルドール] 雇われオーク狩人" />
@@ -677,7 +687,8 @@
     <string id="aom_mordor_warg_reaver_name" text="[モルドール] ヌルネンのワーグ略奪兵" />
     <string id="aom_mordor_warg_rider_name" text="[モルドール] ヌルネンのワーグ騎乗兵" />
     <string id="aom_mordor_warg_tamer_name" text="[モルドール] ヌルネンのワーグ調教師" />
-    <string id="aom_noldorin_lancer_name" text="[リンドン] ファラスリムの槍騎兵" />
+    <string id="aom_noldorin_lancer_name" text="[裂け谷] ノルドール槍騎兵" />
+    <string id="aom_lindon_noldorin_lancer_name" text="[リンドン] ファラスリムの槍騎兵" />
     <string id="aom_orc_warg_enforcer_name" text="[アイゼンガルド] オーク・ワーグ騎乗執行者" />
     <string id="aom_orc_warg_lieutenant_name" text="[アイゼンガルド] オーク・ワーグ騎乗副官" />
     <string id="aom_orc_warg_overseer_name" text="[アイゼンガルド] オーク・ワーグ騎乗監督官" />
@@ -690,7 +701,8 @@
     <string id="aom_rhun_mil_spear_name" text="[ルーン] 民兵槍兵" />
     <string id="aom_rhun_mil_varch_name" text="[ルーン] 民兵熟練弓兵" />
     <string id="aom_rhun_mil_vspear_name" text="[ルーン] 民兵熟練槍兵" />
-    <string id="aom_rider_of_himring_name" text="[リンドン] バラルの騎手" />
+    <string id="aom_rider_of_himring_name" text="[裂け谷] ヒムリングの騎手" />
+    <string id="aom_lindon_rider_of_himring_name" text="[リンドン] バラルの騎手" />
     <string id="aom_rivendell_glorfindel_guard_name" text="[裂け谷] ロハンノン・エレナス" />
     <string id="aom_rivendell_gondolin_battlemaster_name" text="[裂け谷] メギル=アラン・エレナス" />
     <string id="aom_rivendell_high_captain_name" text="[裂け谷] 上級隊長" />
@@ -756,10 +768,14 @@
     <string id="aom_rohan_wold_recruit_name" text="[ローハン] ウォルドの新兵" />
     <string id="aom_rohan_wold_scout_name" text="[ローハン] ウォルドの斥候" />
     <string id="aom_rohan_wold_veteran_horse_archer_name" text="[ローハン] ウォルドの古参騎兵" />
-    <string id="aom_rv_militia_archer" text="[リンドン] 民兵弓兵" />
-    <string id="aom_rv_militia_spear" text="[リンドン] 民兵槍兵" />
-    <string id="aom_rv_militia_vet_archer" text="[リンドン] 民兵古参弓兵" />
-    <string id="aom_rv_militia_vet_spear" text="[リンドン] 民兵古参槍兵" />
+    <string id="aom_rv_militia_archer" text="[裂け谷] 民兵射手" />
+    <string id="aom_lindon_militia_archer_name" text="[リンドン] 民兵弓兵" />
+    <string id="aom_rv_militia_spear" text="[裂け谷] 民兵槍兵" />
+    <string id="aom_lindon_militia_spearman_name" text="[リンドン] 民兵槍兵" />
+    <string id="aom_rv_militia_vet_archer" text="[裂け谷] 古参民兵射手" />
+    <string id="aom_lindon_militia_veteran_archer_name" text="[リンドン] 民兵古参弓兵" />
+    <string id="aom_rv_militia_vet_spear" text="[裂け谷] 古参民兵槍兵" />
+    <string id="aom_lindon_militia_veteran_spearman_name" text="[リンドン] 民兵古参槍兵" />
     <string id="aom_sagarun_arbalest_name" text="[ルーン] サガルーンの重弩兵" />
     <string id="aom_sagarun_crossbowman_name" text="[ルーン] サガルーンの弩兵" />
     <string id="aom_sagarun_deckhand_name" text="[ルーン] サガルーンの甲板員" />
@@ -789,7 +805,7 @@
     <string id="aom_urukhai_champion_name" text="[アイゼンガルド] ウルク=ハイの闘将" />
     <string id="aom_urukhai_crossbowman_name" text="[アイゼンガルド] ウルク=ハイの弩兵" />
     <string id="aom_urukhai_feller_name" text="[アイゼンガルド] ウルク=ハイの伐採兵" />
-    <string id="aom_urukhai_fighter_name" text="[アイゼンガルド] ウルク=ハイの戦士" />
+    <string id="aom_urukhai_fighter_name" text="[アイゼンガルド] ウルク=ハイの闘士" />
     <string id="aom_urukhai_infantry_name" text="[アイゼンガルド] ウルク=ハイの歩兵" />
     <string id="aom_urukhai_nazg_hai_name" text="[アイゼンガルド] ウルク=ハイのナズグ=ハイ" />
     <string id="aom_urukhai_pavise_name" text="[アイゼンガルド] ウルク=ハイの大盾衛兵" />
@@ -842,5 +858,14 @@
     <string id="taom_mirkwood_stalkers_boss_name" text="[闇の森] 追跡者隊長" />
     <string id="taom_rhun_raiders_boss_name" text="[ルーン] カラグールの将" />
     <string id="taom_umbar_corsairs_boss_name" text="[ウンバール] 海賊船長" />
+    <string id="aom_hill_troll_name" text="[モルドール] 丘のトロル" />
+    <string id="aom_gondor_brv_ranger_name" text="[ゴンドール] 黒根谷のレンジャー" />
+    <string id="aom_gondor_loss_noble_captain_name" text="[ゴンドール] ロッサールナッハの上級斧衛長" />
+    <string id="aom_gondor_loss_noble_sergeant_name" text="[ゴンドール] ロッサールナッハの斧衛兵" />
+    <string id="aom_gondor_loss_noble_veteran_name" text="[ゴンドール] ロッサールナッハの斧兵" />
+    <string id="aom_gondor_loss_noble_warden_name" text="[ゴンドール] ロッサールナッハの斧衛長" />
+    <string id="aom_harad_howdah_crew_name" text="[ハラド] 象輿の射手" />
+    <string id="taom_test_animalia_elk_rider" text="[テスト] アニマリア・エルク騎手" />
+    <string id="taom_test_animalia_moose_rider" text="[テスト] アニマリア・ヘラジカ騎手" />
   </strings>
 </base>

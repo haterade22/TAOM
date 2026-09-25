@@ -26,11 +26,11 @@
     <string id="taom_career_eotheod_windrider_desc" text="Un descendiente de los antiguos maestros ecuestres Eothéod que cabalga con el trueno de generaciones de leyenda, inspirando a sus aliados con un grito de guerra que evoca a Eorl el Joven y dispersando enemigos bajo los cascos de una caballería pesada imparable." />
     <string id="taom_career_watchman_of_stangard" text="Vigilante de Stangard" />
     <string id="taom_career_watchman_of_stangard_desc" text="Un curtido guardián fluvial de Stangard que patrulla los cruces del Anduin en barcaza y a pie, protegiendo el flanco oriental de Rohan mediante resistencia, conocimiento local y el agarre tenaz de un contramaestre en territorio disputado." />
-    <string id="taom_career_avanc_luth_raider" text="Asaltante Avanc-lúth" />
+    <string id="taom_career_avanc_luth_raider" text="Campeón dunlendino" />
     <string id="taom_career_avanc_luth_raider_desc" text="Un escaramuzador pintado de sangre del clan Avanc-lúth que carga al combate cuerpo a cuerpo con agresión temeraria, intercambiando precisión quirúrgica por fuerza salvaje pura que abruma a los oponentes mediante presión implacable." />
-    <string id="taom_career_wolfskin_hunter" text="Cazador Piel de Lobo" />
+    <string id="taom_career_wolfskin_hunter" text="Arquero dunlendino" />
     <string id="taom_career_wolfskin_hunter_desc" text="Un acechador paciente que viste pieles de lobo y se mueve por las estribaciones de las Montañas Nubladas como un fantasma, marcando a su presa desde el ocultamiento antes de soltar una flecha precisamente apuntada que la víctima nunca oye venir." />
-    <string id="taom_career_clanguard_rider" text="Jinete de la Guardia del Clan" />
+    <string id="taom_career_clanguard_rider" text="Explorador montado dunlendino" />
     <string id="taom_career_clanguard_rider_desc" text="Un jinete de asalto rápido del clan que hostiga los flancos enemigos con veloces ataques de golpear y huir, usando velocidad superior y coordinación en manada para desorganizar formaciones antes de que la infantería del clan cierre para la matanza." />
     <string id="taom_career_blademaster_of_ren" text="Maestro de Espada de Rên" />
     <string id="taom_career_blademaster_of_ren_desc" text="Un duelista de precisión de las cortes guerreras de Rên que despacha enemigos con trabajo de hoja calculado y letal." />
@@ -52,11 +52,11 @@
     <string id="taom_career_lokhas_drus_marksman_desc" text="Un especialista perforador de armaduras del cuerpo Lôkhas Drûs que entrena para clavar flechas a través de las placas más pesadas a distancia." />
     <string id="taom_career_balchoth_kan" text="Kân Balchoth" />
     <string id="taom_career_balchoth_kan_desc" text="Un comandante de caballería pesada de los Balchoth que lidera cargas montadas imparables, manteniendo moral de hierro sin importar las probabilidades." />
-    <string id="taom_career_dale_guardsman" text="Guardia de Dale" />
+    <string id="taom_career_dale_guardsman" text="Maestro espadachín de Valle" />
     <string id="taom_career_dale_guardsman_desc" text="Un protector inquebrantable de la ciudad reconstruida de Dale que mantiene la puerta contra todos los atacantes con escudo y lanza." />
-    <string id="taom_career_dale_marksman" text="Tirador de Dale" />
+    <string id="taom_career_dale_marksman" text="Tirador de Esgaroth" />
     <string id="taom_career_dale_marksman_desc" text="Un legendario arquero de Dale cuyos ancestros mataron a Smaug, continuando la tradición de puntería infalible." />
-    <string id="taom_career_dale_outrider" text="Jinete Explorador de Valle" />
+    <string id="taom_career_dale_outrider" text="Jinete de Valle" />
     <string id="taom_career_dale_outrider_desc" text="Una patrulla montada de los caminos comerciales del norte que protege las caravanas entre Valle y la Montaña Solitaria." />
     <string id="taom_career_ironguard" text="Guardia de Hierro" />
     <string id="taom_career_ironguard_desc" text="Un guerrero enano de élite vestido con armadura de placas forjada en mithril que defiende las profundidades de Erebor contra orcos y dragones por igual." />
@@ -64,11 +64,11 @@
     <string id="taom_career_crossbow_master_desc" text="Un ingeniero-guerrero enano que empuña ballestas de obra maestra de increíble poder de detención, cada virote elaborado con precisión." />
     <string id="taom_career_ram_rider" text="Jinete de Carnero" />
     <string id="taom_career_ram_rider_desc" text="Un guerrero de caballería enano montado en un gran carnero de guerra, cargando a través de estrechos pasos montañosos donde los caballos no pueden transitar." />
-    <string id="taom_career_blade_dancer" text="Danzarín de Espadas" />
+    <string id="taom_career_blade_dancer" text="Maestro de la espada Ñoldor" />
     <string id="taom_career_blade_dancer_desc" text="Un grácil guerrero élfico que se desliza por la batalla como agua fluyente, golpeando con espadas antiguas forjadas en la Primera Edad." />
-    <string id="taom_career_elven_archer" text="Arquero Élfico" />
+    <string id="taom_career_elven_archer" text="Centinela Ñoldor" />
     <string id="taom_career_elven_archer_desc" text="Un tirador sin igual de Imladris cuyas flechas vuelan certeras a través de vastas distancias, guiadas por siglos de práctica." />
-    <string id="taom_career_rivendell_knight" text="Caballero de Rivendel" />
+    <string id="taom_career_rivendell_knight" text="Caballero Ñoldor" />
     <string id="taom_career_rivendell_knight_desc" text="Un guerrero montado de la casa de Elrond que cabalga a la guerra en veloces corceles élficos, un faro de esperanza contra la sombra." />
     <string id="taom_career_warden" text="Guardián de Lothlórien" />
     <string id="taom_career_warden_desc" text="Un guardián silencioso del Bosque Dorado que ataca sin aviso, defendiendo las fronteras de Lothlórien con antigua determinación." />
@@ -82,17 +82,17 @@
     <string id="taom_career_silvan_archer_desc" text="Un cazador de vista aguda del Reino del Bosque que ataca desde las copas de los árboles con precisión letal." />
     <string id="taom_career_elk_rider" text="Jinete de Alce" />
     <string id="taom_career_elk_rider_desc" text="Un guerrero montado de la guardia de Thranduil que cabalga grandes alces de guerra al combate, arrasando a través de maleza y enemigos por igual." />
-    <string id="taom_career_uruk_berserker" text="Uruk Berserker" />
+    <string id="taom_career_uruk_berserker" text="Berserker Uruk-hai" />
     <string id="taom_career_uruk_berserker_desc" text="Un Uruk-hai enloquecido que carga de frente a la batalla, volviéndose más fuerte a medida que las heridas alimentan una furia imparable." />
-    <string id="taom_career_uruk_crossbow" text="Ballestero Uruk" />
+    <string id="taom_career_uruk_crossbow" text="Ballestero Uruk-hai" />
     <string id="taom_career_uruk_crossbow_desc" text="Un tirador Uruk disciplinado que empuña las ballestas de hierro de Saruman, entregando andanadas devastadoras desde las forjas de Orthanc." />
-    <string id="taom_career_warg_scout" text="Explorador Huargo" />
+    <string id="taom_career_warg_scout" text="Jinete de huargo" />
     <string id="taom_career_warg_scout_desc" text="Un astuto jinete Uruk montado en un huargo veloz, explorando por delante de los ejércitos de Isengard y persiguiendo presas que huyen." />
-    <string id="taom_career_cave_troll_master" text="Maestro de Trolls de Caverna" />
-    <string id="taom_career_cave_troll_master_desc" text="Un jefe orco brutal que comanda trolls de caverna en batalla, impulsándolos hacia adelante con látigo y astucia." />
-    <string id="taom_career_goblin_sniper" text="Francotirador Goblin" />
+    <string id="taom_career_cave_troll_master" text="Berserker de Gundabad" />
+    <string id="taom_career_cave_troll_master_desc" text="Un brutal caudillo orco de Gundabad que comanda trolls de las cavernas en batalla, impulsándolos con látigo y astucia." />
+    <string id="taom_career_goblin_sniper" text="Orco cazador de Gundabad" />
     <string id="taom_career_goblin_sniper_desc" text="Un tirador goblin rencoroso que acecha en los riscos de las montañas, abatiendo objetivos con dardos envenenados y arcos toscos." />
-    <string id="taom_career_warg_pack_leader" text="Líder de Manada de Huargos" />
+    <string id="taom_career_warg_pack_leader" text="Líder de manada de huargos crueles de Gundabad" />
     <string id="taom_career_warg_pack_leader_desc" text="Un temido alfa orco que cabalga el huargo más grande de la manada, liderando cacerías salvajes por las Montañas Nubladas." />
     <string id="taom_career_shadow_warrior" text="Guerrero de las Sombras" />
     <string id="taom_career_shadow_warrior_desc" text="Un campeón oscuro de Dol Guldur empoderado por la hechicería del Nigromante, drenando la vida de todos los que se interponen en su camino." />
@@ -107,105 +107,105 @@
     <string id="taom_career_corsair_captain" text="Capitán Corsario" />
     <string id="taom_career_corsair_captain_desc" text="Un comandante de flota experimentado que lidera desde la proa, inspirando a las tripulaciones con promesas de botín y gloria en alta mar." />
     <string id="taom_ability_ranger_of_ithilien" text="Emboscada" />
-    <string id="taom_ability_ranger_of_ithilien_tt" text="Tiende una emboscada mortal, aumentando tu daño a distancia, velocidad de disparo y velocidad de movimiento durante poco tiempo." />
+    <string id="taom_ability_ranger_of_ithilien_tt" text="Desata una emboscada mortal: otorga +20% de daño a distancia, +20% de velocidad de tensado y +15% de velocidad de movimiento durante 8 s." />
     <string id="taom_ability_captain_of_osgiliath" text="Mantener la Línea" />
-    <string id="taom_ability_captain_of_osgiliath_tt" text="Reagrupa a tus soldados con disciplina férrea, aumentando el daño cuerpo a cuerpo en 20 para todos los aliados cercanos durante poco tiempo." />
+    <string id="taom_ability_captain_of_osgiliath_tt" text="Reúne a tus soldados con disciplina férrea: otorga +15% de daño cuerpo a cuerpo y +10% de reducción de daño a los aliados en 50 m durante 8 s." />
     <string id="taom_ability_knight_of_belfalas" text="Estampida" />
-    <string id="taom_ability_knight_of_belfalas_tt" text="Avanza como un trueno con una carga de caballería imparable, aumentando la velocidad de tu montura, el daño de carga y el daño cuerpo a cuerpo durante poco tiempo." />
+    <string id="taom_ability_knight_of_belfalas_tt" text="Avanza atronador con una carga de caballería imparable: otorga +25% de daño de carga, +20% de velocidad de montura y +10% de daño cuerpo a cuerpo durante 8 s." />
     <string id="taom_ability_black_uruk_captain" text="Furia Sangrienta" />
-    <string id="taom_ability_black_uruk_captain_tt" text="Entra en una furia alimentada por sangre, aumentando drásticamente la resistencia al daño y el poder cuerpo a cuerpo mientras inspiras a las tropas Uruk Negros." />
+    <string id="taom_ability_black_uruk_captain_tt" text="Entra en una furia sedienta de sangre que inspira a los Uruks Negros cercanos: otorga +15% de daño cuerpo a cuerpo y +10% de reducción de daño a los aliados en 50 m durante 8 s." />
     <string id="taom_ability_mulkerhili_cultist" text="Voz del Único" />
-    <string id="taom_ability_mulkerhili_cultist_tt" text="Canaliza el pavor susurrado del Anillo Único por el campo de batalla, minando la moral enemiga y potenciando tus flechas malditas." />
+    <string id="taom_ability_mulkerhili_cultist_tt" text="Canaliza el pavor susurrado del Anillo Único para potenciar tus flechas malditas: otorga +20% de daño a distancia, +20% de velocidad de tensado y +15% de velocidad de movimiento durante 8 s." />
     <string id="taom_ability_snaga_rider" text="Sigilo Rastrero" />
-    <string id="taom_ability_snaga_rider_tt" text="Atraviesa las sombras de la formación enemiga, golpeando los flancos con daño montado amplificado antes de escabullirte sin ser visto." />
+    <string id="taom_ability_snaga_rider_tt" text="Escabúllete entre las sombras de los flancos enemigos: otorga +25% de daño de carga, +20% de velocidad de montura y +10% de daño cuerpo a cuerpo durante 8 s." />
     <string id="taom_ability_olog_hai_warchief" text="Martillazo" />
-    <string id="taom_ability_olog_hai_warchief_tt" text="Descarga tu martillo de guerra con fuerza titánica, sacudiendo el suelo y aumentando enormemente tu mitigación de daño y la resistencia de tus tropas." />
+    <string id="taom_ability_olog_hai_warchief_tt" text="Descarga tu martillo de guerra con fuerza titánica: otorga +15% de daño cuerpo a cuerpo y +10% de reducción de daño a los aliados en 50 m durante 10 s." />
     <string id="taom_ability_marksman_of_aldburg" text="Emplumado Ligero" />
-    <string id="taom_ability_marksman_of_aldburg_tt" text="Encaja una ráfaga de flechas ligeras y veloces, aumentando tu daño a distancia, velocidad de disparo y velocidad de movimiento durante poco tiempo." />
+    <string id="taom_ability_marksman_of_aldburg_tt" text="Dispara una andanada de veloces flechas de pluma ligera: otorga +20% de daño a distancia, +20% de velocidad de tensado y +15% de velocidad de movimiento durante 8 s." />
     <string id="taom_ability_eotheod_windrider" text="Grito de Guerra de Eorl" />
-    <string id="taom_ability_eotheod_windrider_tt" text="Alza el antiguo grito de guerra de Eorl el Joven, aumentando la velocidad de tu montura, el daño de carga y el daño cuerpo a cuerpo durante poco tiempo." />
+    <string id="taom_ability_eotheod_windrider_tt" text="Alza el antiguo grito de guerra de Eorl el Joven: otorga +25% de daño de carga, +20% de velocidad de montura y +10% de daño cuerpo a cuerpo durante 8 s." />
     <string id="taom_ability_watchman_of_stangard" text="Mantenerse Firme" />
-    <string id="taom_ability_watchman_of_stangard_tt" text="Atrincheráte con resolución férrea, aumentando el daño cuerpo a cuerpo en 20 para todos los aliados cercanos durante poco tiempo." />
+    <string id="taom_ability_watchman_of_stangard_tt" text="Resiste con voluntad de hierro: +15% de daño cuerpo a cuerpo y +10% de reducción de daño a los aliados en 50 m durante 8 s." />
     <string id="taom_ability_avanc_luth_raider" text="Arremetida Salvaje" />
-    <string id="taom_ability_avanc_luth_raider_tt" text="Lánzate a la batalla con un aullido de guerra, aumentando masivamente el daño cuerpo a cuerpo y la velocidad de movimiento a costa de una defensa mesurada." />
+    <string id="taom_ability_avanc_luth_raider_tt" text="Lanza un grito de guerra dunlendino en la refriega: +15% de daño cuerpo a cuerpo y +10% de reducción de daño a los aliados en 50 m durante 8 s." />
     <string id="taom_ability_wolfskin_hunter" text="Presa Marcada" />
-    <string id="taom_ability_wolfskin_hunter_tt" text="Marca un objetivo entre las brumas, aumentando el daño a distancia contra él y otorgando a tu grupo mayor conciencia de rastreo." />
+    <string id="taom_ability_wolfskin_hunter_tt" text="Marca un objetivo entre las nieblas: +20% de daño a distancia, +20% de velocidad de tensado y +15% de velocidad de movimiento durante 8 s." />
     <string id="taom_ability_clanguard_rider" text="Carga de la Manada de Guerra" />
-    <string id="taom_ability_clanguard_rider_tt" text="Lidera a tu manada de guerra en una carga rápida coordinada, aumentando el daño montado y la velocidad de movimiento del grupo mientras hostigan los flancos enemigos." />
+    <string id="taom_ability_clanguard_rider_tt" text="Guía a tu jauría de guerra en una carga coordinada: +25% de daño de carga, +20% de velocidad de montura y +10% de daño cuerpo a cuerpo durante 8 s." />
     <string id="taom_ability_blademaster_of_ren" text="Golpe Gemelo" />
-    <string id="taom_ability_blademaster_of_ren_tt" text="Ejecuta una secuencia precisa de hojas gemelas, aumentando enormemente la velocidad de ataque y la penetración de armadura." />
+    <string id="taom_ability_blademaster_of_ren_tt" text="Ejecuta una secuencia precisa de doble hoja: +15% de daño cuerpo a cuerpo y +10% de reducción de daño a los aliados en 50 m durante 8 s." />
     <string id="taom_ability_steppe_bowmaster" text="Tormenta de Flechas" />
-    <string id="taom_ability_steppe_bowmaster_tt" text="Suelta una tormenta sostenida de flechas mientras retrocedes a velocidad, saturando un área amplia con andanadas." />
+    <string id="taom_ability_steppe_bowmaster_tt" text="Desata una tormenta sostenida de flechas desde la silla: +20% de daño a distancia, +20% de velocidad de tensado y +15% de velocidad de movimiento durante 8 s." />
     <string id="taom_ability_chariot_warlord" text="Carga Segadora" />
-    <string id="taom_ability_chariot_warlord_tt" text="Conduce carros con hojas de guadaña a través de la línea enemiga, causando daño masivo de carga en área en un arco amplio." />
+    <string id="taom_ability_chariot_warlord_tt" text="Lanza los carros de hoces contra la línea enemiga: +25% de daño de carga, +20% de velocidad de montura y +10% de daño cuerpo a cuerpo durante 8 s." />
     <string id="taom_ability_tribesman_of_jelut" text="Hojas Envenenadas" />
-    <string id="taom_ability_tribesman_of_jelut_tt" text="Cubre tus armas con toxinas del desierto, aumentando el daño cuerpo a cuerpo y aplicando un efecto debilitante de desgaste." />
+    <string id="taom_ability_tribesman_of_jelut_tt" text="Unta tus armas con toxinas del desierto: +15% de daño cuerpo a cuerpo y +10% de reducción de daño a los aliados en 50 m durante 8 s." />
     <string id="taom_ability_pezarsani_javelineer" text="Descarga Solar" />
-    <string id="taom_ability_pezarsani_javelineer_tt" text="Desata una ardiente lluvia de jabalinas, aumentando el daño a distancia y la velocidad de movimiento de cobertura." />
+    <string id="taom_ability_pezarsani_javelineer_tt" text="Desata una lluvia ardiente de jabalinas: +20% de daño a distancia, +20% de velocidad de tensado y +15% de velocidad de movimiento durante 8 s." />
     <string id="taom_ability_mahud_beast_rider" text="Ecos de Mûmakan" />
-    <string id="taom_ability_mahud_beast_rider_tt" text="Canaliza el antiguo temor de los Mûmakan, aumentando el daño de carga de las bestias y propagando el terror entre las filas enemigas." />
+    <string id="taom_ability_mahud_beast_rider_tt" text="Canaliza el antiguo temor de Mûmakan: +25% de daño de carga, +20% de velocidad de montura y +10% de daño cuerpo a cuerpo durante 8 s." />
     <string id="taom_ability_far_harad_halftroll" text="Brutalidad Vil" />
-    <string id="taom_ability_far_harad_halftroll_tt" text="Entra en un estado de brutalidad salvaje, aumentando masivamente la salud y resistencia mientras aterrorizas a los enemigos cercanos." />
+    <string id="taom_ability_far_harad_halftroll_tt" text="Entra en un estado de brutalidad salvaje: +15% de daño cuerpo a cuerpo y +10% de reducción de daño a los aliados en 50 m durante 8 s." />
     <string id="taom_ability_codyan_legionaire" text="Muro de Escudos" />
-    <string id="taom_ability_codyan_legionaire_tt" text="Entrelaza escudos en formación, aumentando el daño cuerpo a cuerpo en 20 para todos los aliados cercanos durante un breve período." />
+    <string id="taom_ability_codyan_legionaire_tt" text="Traba los escudos en formación legionaria: +15% de daño cuerpo a cuerpo y +10% de reducción de daño a los aliados en 50 m durante 8 s." />
     <string id="taom_ability_lokhas_drus_marksman" text="Descarga Perforante" />
-    <string id="taom_ability_lokhas_drus_marksman_tt" text="Dispara flechas especialmente endurecidas, aumentando tu daño a distancia, velocidad de disparo y velocidad de movimiento durante un breve período." />
+    <string id="taom_ability_lokhas_drus_marksman_tt" text="Dispara flechas rhûnicas endurecidas: +20% de daño a distancia, +20% de velocidad de tensado y +15% de velocidad de movimiento durante 8 s." />
     <string id="taom_ability_balchoth_kan" text="Inquebrantable" />
-    <string id="taom_ability_balchoth_kan_tt" text="Invoca la férrea disciplina de los Balchoth, aumentando la velocidad de tu montura, daño de carga y daño cuerpo a cuerpo durante un breve período." />
+    <string id="taom_ability_balchoth_kan_tt" text="Invoca la férrea disciplina de los balchoth: +25% de daño de carga, +20% de velocidad de montura y +10% de daño cuerpo a cuerpo durante 8 s." />
     <string id="taom_ability_dale_guardsman" text="Defensa de Puerta" />
-    <string id="taom_ability_dale_guardsman_tt" text="Planta tus pies y defiende la puerta, aumentando enormemente la salud y resistencia mientras permaneces inmóvil." />
+    <string id="taom_ability_dale_guardsman_tt" text="Afirma los pies y defiende la puerta: +15% de daño cuerpo a cuerpo y +10% de reducción de daño a los aliados en 50 m durante 8 s." />
     <string id="taom_ability_dale_marksman" text="Flecha Negra" />
-    <string id="taom_ability_dale_marksman_tt" text="Canaliza el legado de Bardo el Arquero, aumentando masivamente el daño y penetración de tus próximos disparos." />
+    <string id="taom_ability_dale_marksman_tt" text="Canaliza el legado de Bardo el Arquero: +20% de daño a distancia, +20% de velocidad de tensado y +15% de velocidad de movimiento durante 8 s." />
     <string id="taom_ability_dale_outrider" text="Carrera del Camino Comercial" />
-    <string id="taom_ability_dale_outrider_tt" text="Espolea tu caballo por caminos familiares, ganando una ráfaga de velocidad y destreza en combate montado." />
+    <string id="taom_ability_dale_outrider_tt" text="Espolea tu caballo por caminos conocidos: +25% de daño de carga, +20% de velocidad de montura y +10% de daño cuerpo a cuerpo durante 8 s." />
     <string id="taom_ability_ironguard" text="Bastión de Mithril" />
-    <string id="taom_ability_ironguard_tt" text="Invoca la fuerza de la artesanía enana, aumentando el daño cuerpo a cuerpo en 20 para todos los aliados cercanos durante un breve período." />
+    <string id="taom_ability_ironguard_tt" text="Invoca la fuerza de la forja enana: +15% de daño cuerpo a cuerpo y +10% de reducción de daño a los aliados en 50 m durante 8 s." />
     <string id="taom_ability_crossbow_master" text="Andanada de Precisión" />
-    <string id="taom_ability_crossbow_master_tt" text="Carga virotes de obra maestra, aumentando tu daño a distancia, velocidad de disparo y velocidad de movimiento durante un breve período." />
+    <string id="taom_ability_crossbow_master_tt" text="Carga virotes enanos de maestro: +20% de daño a distancia, +20% de velocidad de tensado y +15% de velocidad de movimiento durante 8 s." />
     <string id="taom_ability_ram_rider" text="Carga Montañesa" />
-    <string id="taom_ability_ram_rider_tt" text="Impulsa tu carnero de guerra hacia adelante, aumentando la velocidad de tu montura, daño de carga y daño cuerpo a cuerpo durante un breve período." />
+    <string id="taom_ability_ram_rider_tt" text="Impulsa tu carnero de guerra hacia adelante: +25% de daño de carga, +20% de velocidad de montura y +10% de daño cuerpo a cuerpo durante 8 s." />
     <string id="taom_ability_blade_dancer" text="Tejido de Luz Estelar" />
-    <string id="taom_ability_blade_dancer_tt" text="Entra en un trance de combate elegante, esquivando ataques mientras golpeas con precisión élfica." />
+    <string id="taom_ability_blade_dancer_tt" text="Entra en un grácil trance de combate noldo: +15% de daño cuerpo a cuerpo y +10% de reducción de daño a los aliados en 50 m durante 8 s." />
     <string id="taom_ability_elven_archer" text="Vista Élfica" />
-    <string id="taom_ability_elven_archer_tt" text="Enfoca la antigua percepción élfica, permitiendo puntería infalible a distancia extrema." />
+    <string id="taom_ability_elven_archer_tt" text="Concentra la antigua percepción élfica: +20% de daño a distancia, +20% de velocidad de tensado y +15% de velocidad de movimiento durante 8 s." />
     <string id="taom_ability_rivendell_knight" text="Última Alianza" />
-    <string id="taom_ability_rivendell_knight_tt" text="Cabalga con el valor de la Última Alianza, aumentando el daño montado e inspirando a todos los aliados cercanos." />
+    <string id="taom_ability_rivendell_knight_tt" text="Cabalga con el valor de la Última Alianza: +25% de daño de carga, +20% de velocidad de montura y +10% de daño cuerpo a cuerpo durante 8 s." />
     <string id="taom_ability_warden" text="Bendición de Nimrodel" />
-    <string id="taom_ability_warden_tt" text="Invoca las aguas de Nimrodel, sanando heridas y aumentando la resistencia durante un breve tiempo." />
+    <string id="taom_ability_warden_tt" text="Invoca las aguas del Nimrodel: +15% de daño cuerpo a cuerpo y +10% de reducción de daño a los aliados en 50 m durante 8 s." />
     <string id="taom_ability_galadhrim_archer" text="Lluvia Plateada" />
-    <string id="taom_ability_galadhrim_archer_tt" text="Dispara una andanada de flechas con puntas plateadas a velocidad cegadora, destrozando las filas enemigas." />
+    <string id="taom_ability_galadhrim_archer_tt" text="Dispara una andanada de flechas de punta de plata: +20% de daño a distancia, +20% de velocidad de tensado y +15% de velocidad de movimiento durante 8 s." />
     <string id="taom_ability_sentinel" text="Presteza de Elanor" />
-    <string id="taom_ability_sentinel_tt" text="Canaliza la gracia del Bosque Dorado, avanzando con velocidad y precisión sobrenaturales." />
+    <string id="taom_ability_sentinel_tt" text="Canaliza la gracia del Bosque de Oro: +25% de daño de carga, +20% de velocidad de montura y +10% de daño cuerpo a cuerpo durante 8 s." />
     <string id="taom_ability_shadow_walker" text="Manto del Bosque" />
-    <string id="taom_ability_shadow_walker_tt" text="Fúndete con las sombras del bosque, aumentando el daño cuerpo a cuerpo en 20 para todos los aliados cercanos durante un corto período." />
+    <string id="taom_ability_shadow_walker_tt" text="Fúndete con las sombras del bosque: +15% de daño cuerpo a cuerpo y +10% de reducción de daño a los aliados en 50 m durante 8 s." />
     <string id="taom_ability_silvan_archer" text="Golpe del Dosel" />
-    <string id="taom_ability_silvan_archer_tt" text="Dispara desde una posición elevada, aumentando tu daño a distancia, velocidad de tensado y velocidad de movimiento durante un corto período." />
+    <string id="taom_ability_silvan_archer_tt" text="Dispara desde una posición elevada del bosque: +20% de daño a distancia, +20% de velocidad de tensado y +15% de velocidad de movimiento durante 8 s." />
     <string id="taom_ability_elk_rider" text="Embestida de Astas" />
-    <string id="taom_ability_elk_rider_tt" text="Baja las grandes astas y carga, aumentando la velocidad de tu montura, daño de carga y daño cuerpo a cuerpo durante un corto período." />
+    <string id="taom_ability_elk_rider_tt" text="Baja la gran cornamenta y carga: +25% de daño de carga, +20% de velocidad de montura y +10% de daño cuerpo a cuerpo durante 8 s." />
     <string id="taom_ability_uruk_berserker" text="Furia Sangrienta" />
-    <string id="taom_ability_uruk_berserker_tt" text="Entra en un frenesí berserker, aumentando masivamente el daño y la salud mientras ignoras el dolor." />
+    <string id="taom_ability_uruk_berserker_tt" text="Entra en un frenesí berserker uruk-hai: +15% de daño cuerpo a cuerpo y +10% de reducción de daño a los aliados en 50 m durante 8 s." />
     <string id="taom_ability_uruk_crossbow" text="Lluvia de Hierro" />
-    <string id="taom_ability_uruk_crossbow_tt" text="Desata una andanada de virotes forjados en Orthanc con devastadora penetración y cadencia de fuego." />
+    <string id="taom_ability_uruk_crossbow_tt" text="Desata una descarga de virotes forjados en Orthanc: +20% de daño a distancia, +20% de velocidad de tensado y +15% de velocidad de movimiento durante 8 s." />
     <string id="taom_ability_warg_scout" text="Aullido de Manada" />
-    <string id="taom_ability_warg_scout_tt" text="Desata un aullido aterrador que aumenta tu velocidad e infunde miedo en los enemigos cercanos." />
-    <string id="taom_ability_cave_troll_master" text="Frenesí de Trol" />
-    <string id="taom_ability_cave_troll_master_tt" text="Azuza a tus trols al frenesí, aumentando masivamente la salud y el daño de las tropas." />
+    <string id="taom_ability_warg_scout_tt" text="Lanza un aterrador aullido de huargo: +25% de daño de carga, +20% de velocidad de montura y +10% de daño cuerpo a cuerpo durante 8 s." />
+    <string id="taom_ability_cave_troll_master" text="Berserker de Gundabad" />
+    <string id="taom_ability_cave_troll_master_tt" text="Azota a tus trolls hasta el frenesí: +15% de daño cuerpo a cuerpo y +10% de reducción de daño a los aliados en 50 m durante 8 s." />
     <string id="taom_ability_goblin_sniper" text="Dardo Venenoso" />
-    <string id="taom_ability_goblin_sniper_tt" text="Cubre tus proyectiles con toxina de hongos de caverna, añadiendo daño continuo y ralentizando objetivos." />
+    <string id="taom_ability_goblin_sniper_tt" text="Unta tus virotes con toxina de hongos de caverna: +20% de daño a distancia, +20% de velocidad de tensado y +15% de velocidad de movimiento durante 8 s." />
     <string id="taom_ability_warg_pack_leader" text="Aullido Alfa" />
-    <string id="taom_ability_warg_pack_leader_tt" text="Impón tu dominio con un aullido atronador, aumentando la velocidad y ferocidad de la manada." />
+    <string id="taom_ability_warg_pack_leader_tt" text="Impón tu dominio con un aullido atronador de la manada: +25% de daño de carga, +20% de velocidad de montura y +10% de daño cuerpo a cuerpo durante 8 s." />
     <string id="taom_ability_shadow_warrior" text="Drenaje de Alma" />
-    <string id="taom_ability_shadow_warrior_tt" text="Drena la fuerza vital de los enemigos cercanos, curándote y debilitando sus ataques." />
+    <string id="taom_ability_shadow_warrior_tt" text="Recurre a las sombras de Dol Guldur: +15% de daño cuerpo a cuerpo y +10% de reducción de daño a los aliados en 50 m durante 8 s." />
     <string id="taom_ability_necromancer_acolyte" text="Rayo Oscuro" />
-    <string id="taom_ability_necromancer_acolyte_tt" text="Canaliza energía nigromante a través de tus ataques, aumentando enormemente el daño a distancia y la penetración de armadura." />
+    <string id="taom_ability_necromancer_acolyte_tt" text="Canaliza energía nigromántica en tus disparos: +20% de daño a distancia, +20% de velocidad de tensado y +15% de velocidad de movimiento durante 8 s." />
     <string id="taom_ability_fell_rider" text="Carga Pavorosa" />
-    <string id="taom_ability_fell_rider_tt" text="Carga envuelto en sombras, haciendo que los enemigos huyan aterrorizados mientras infliges daño devastador." />
+    <string id="taom_ability_fell_rider_tt" text="Carga envuelto en sombras: +25% de daño de carga, +20% de velocidad de montura y +10% de daño cuerpo a cuerpo durante 8 s." />
     <string id="taom_ability_corsair_boarder" text="Acción de Abordaje" />
-    <string id="taom_ability_corsair_boarder_tt" text="Lanza un brutal asalto de abordaje, aumentando el daño cuerpo a cuerpo y la resistencia en combate cercano." />
+    <string id="taom_ability_corsair_boarder_tt" text="Lanza un brutal asalto de abordaje: +15% de daño cuerpo a cuerpo y +10% de reducción de daño a los aliados en 50 m durante 8 s." />
     <string id="taom_ability_corsair_crossbow" text="Disparo al Aparejo" />
-    <string id="taom_ability_corsair_crossbow_tt" text="Dispara desde una posición estable con precisión letal, aumentando enormemente el daño a distancia y la precisión." />
+    <string id="taom_ability_corsair_crossbow_tt" text="Dispara desde una postura firme de corsario: otorga +20% de daño a distancia, +20% de velocidad de carga y +15% de velocidad de movimiento durante 8 s." />
     <string id="taom_ability_corsair_captain" text="Saqueo" />
-    <string id="taom_ability_corsair_captain_tt" text="Reúne a tu tripulación con promesas de saqueo, aumentando velocidad, daño y moral de las tropas." />
+    <string id="taom_ability_corsair_captain_tt" text="Arenga a tu tripulación con promesas de botín: otorga +25% de daño de carga, +20% de velocidad de montura y +10% de daño cuerpo a cuerpo durante 8 s." />
     <string id="taom_ranger_of_ithilien_root_desc" text="Emboscada otorga +5% de daño a distancia y escala la duración con la habilidad de Arco." />
     <string id="taom_roi_t1a_key" text="Radio de emboscada aumentado, las flechas infligen daño adicional desde el sigilo." />
     <string id="taom_roi_t1a_p1" text="+8% daño a distancia." />
@@ -216,11 +216,11 @@
     <string id="taom_roi_t1b_p1" text="+5% resistencia." />
     <string id="taom_roi_t1b_p2" text="+5 salud máxima." />
     <string id="taom_roi_t1b_p3" text="+5% rango de detección del grupo." />
-    <string id="taom_roi_t1b_p4" text="+5% bonificación de sigilo." />
+    <string id="taom_roi_t1b_p4" text="+10% de bonificación de sigilo." />
     <string id="taom_roi_t2a_key" text="Requisito de carga de Emboscada reducido, activándose con mayor frecuencia." />
     <string id="taom_roi_t2a_p1" text="+10% rango de avistamiento del grupo." />
     <string id="taom_roi_t2a_p2" text="+10% velocidad de movimiento." />
-    <string id="taom_roi_t2a_p3" text="+10% bonificación de sigilo." />
+    <string id="taom_roi_t2a_p3" text="+13% de bonificación de sigilo." />
     <string id="taom_roi_t2a_p4" text="+10% ganancia de renombre en batalla." />
     <string id="taom_roi_t2b_key" text="Emboscada también aumenta el daño a distancia de las tropas mientras está activa." />
     <string id="taom_roi_t2b_p1" text="+12% daño a distancia." />
@@ -278,17 +278,17 @@
     <string id="taom_kob_t1b_p1" text="+8% resistencia." />
     <string id="taom_kob_t1b_p2" text="+7 salud máxima." />
     <string id="taom_kob_t1b_p3" text="+10% salud de caballo." />
-    <string id="taom_kob_t1b_p4" text="+5% resistencia de tropas." />
+    <string id="taom_kob_t1b_p4" text="+10% de resistencia de las tropas." />
     <string id="taom_kob_t2a_key" text="Requisito de carga de Estampida reducido para cargas atronadoras más frecuentes." />
-    <string id="taom_kob_t2a_p1" text="+15% daño de carga de caballo." />
+    <string id="taom_kob_t2a_p1" text="+13% de daño de carga a caballo." />
     <string id="taom_kob_t2a_p2" text="+12% daño cuerpo a cuerpo." />
     <string id="taom_kob_t2a_p3" text="+8% velocidad de movimiento." />
     <string id="taom_kob_t2a_p4" text="+10% ganancia de renombre en batalla." />
     <string id="taom_kob_t2b_key" text="Estampida también incrementa la resistencia de tropas mientras está activa." />
     <string id="taom_kob_t2b_p1" text="+10% resistencia." />
     <string id="taom_kob_t2b_p2" text="+8 salud máxima." />
-    <string id="taom_kob_t2b_p3" text="+15% salud de caballo." />
-    <string id="taom_kob_t2b_p4" text="+8% resistencia de tropas." />
+    <string id="taom_kob_t2b_p3" text="+13% de salud del caballo." />
+    <string id="taom_kob_t2b_p4" text="+13% de resistencia de las tropas." />
     <string id="taom_kob_t3a_key" text="Estampida otorga moral a las tropas mientras está activa, inspirando a las huestes de Belfalas." />
     <string id="taom_kob_t3a_p1" text="+15% moral de tropas." />
     <string id="taom_kob_t3a_p2" text="+4 tamaño de grupo." />
@@ -297,8 +297,8 @@
     <string id="taom_kob_t3b_key" text="Radio y duración de Estampida maximizados — la carga de Dol Amroth es imparable." />
     <string id="taom_kob_t3b_p1" text="+15% resistencia." />
     <string id="taom_kob_t3b_p2" text="+9 de salud máxima." />
-    <string id="taom_kob_t3b_p3" text="+20% de daño de carga a caballo." />
-    <string id="taom_kob_t3b_p4" text="+12% de resistencia de tropas." />
+    <string id="taom_kob_t3b_p3" text="+15% de daño de carga a caballo." />
+    <string id="taom_kob_t3b_p4" text="+15% de resistencia de las tropas." />
     <string id="taom_buc_root_desc" text="Fortaleza Oscura otorga +6 de salud y envalentona la furia de batalla de los Uruk Negros." />
     <string id="taom_buc_t1_a_key" text="Piel de Hierro" />
     <string id="taom_buc_t1_a_key_desc" text="Templado por la forja y la guerra, tu piel rechaza las espadas. Radio de Sed de Sangre +3." />
@@ -364,21 +364,21 @@
     <string id="taom_mc_t1_a_key" text="Púa Envenenada" />
     <string id="taom_mc_t1_a_key_desc" text="Tus flechas portan toxinas viles. Radio de Voz del Único +3." />
     <string id="taom_mc_t1_a_p1" text="Susurro Oscuro" />
-    <string id="taom_mc_t1_a_p1_desc" text="Tus cánticos perturban al enemigo. +5% resistencia de tropas." />
+    <string id="taom_mc_t1_a_p1_desc" text="Tus cánticos inquietan al enemigo. +10% de resistencia de las tropas." />
     <string id="taom_mc_t1_a_p2" text="Puntería Firme" />
     <string id="taom_mc_t1_a_p2_desc" text="Paciente y preciso. +6% daño a distancia." />
     <string id="taom_mc_t1_a_p3" text="Fervor del Culto" />
     <string id="taom_mc_t1_a_p3_desc" text="La bendición del Único protege a los fieles. +5 salud." />
     <string id="taom_mc_t1_a_p4" text="Paso de las Sombras" />
-    <string id="taom_mc_t1_a_p4_desc" text="Te mueves sin ser visto entre descargas. +5% bonificación de sigilo." />
+    <string id="taom_mc_t1_a_p4_desc" text="Te mueves sin ser visto entre las descargas. +10% de bonificación de sigilo." />
     <string id="taom_mc_t1_b_key" text="Susurro de Sauron" />
     <string id="taom_mc_t1_b_key_desc" text="La voz llega más lejos. Duración de Voz del Único +4s." />
     <string id="taom_mc_t1_b_p1" text="Carcaj de Oscuridad" />
-    <string id="taom_mc_t1_b_p1_desc" text="Portas más virotes de asta negra. +3 munición." />
+    <string id="taom_mc_t1_b_p1_desc" text="Llevas más virotes de astil negro. +10% de munición." />
     <string id="taom_mc_t1_b_p2" text="Cicatrices Rituales" />
     <string id="taom_mc_t1_b_p2_desc" text="Protecciones contra el dolor de los ritos Mulkerhili. +6 salud." />
     <string id="taom_mc_t1_b_p3" text="Paso del Profeta" />
-    <string id="taom_mc_t1_b_p3_desc" text="La gracia de Sauron te mantiene veloz y oculto. +4% bonificación de sigilo." />
+    <string id="taom_mc_t1_b_p3_desc" text="La gracia de Sauron te mantiene veloz y oculto. +10% de bonificación de sigilo." />
     <string id="taom_mc_t1_b_p4" text="Bendición Oscura" />
     <string id="taom_mc_t1_b_p4_desc" text="El ojo del Único está sobre ti. +8% resistencia a distancia." />
     <string id="taom_mc_t2_a_key" text="Congregación del Pavor" />
@@ -390,7 +390,7 @@
     <string id="taom_mc_t2_a_p3" text="Resolución del Fanático" />
     <string id="taom_mc_t2_a_p3_desc" text="La muerte no significa nada para los verdaderos creyentes. +6 salud." />
     <string id="taom_mc_t2_a_p4" text="Logística del Culto" />
-    <string id="taom_mc_t2_a_p4_desc" text="La red del culto mantiene al ejército aprovisionado. +5 munición." />
+    <string id="taom_mc_t2_a_p4_desc" text="La red del culto mantiene abastecida a la hueste. +13% de munición." />
     <string id="taom_mc_t2_b_key" text="Sermón Oscuro" />
     <string id="taom_mc_t2_b_key_desc" text="Tu plegaria se extiende sobre el campo de batalla. Duración de Voz del Único +2s." />
     <string id="taom_mc_t2_b_p1" text="Mantra del Pavor" />
@@ -410,7 +410,7 @@
     <string id="taom_mc_t3_a_p3" text="Ejército de la Congregación" />
     <string id="taom_mc_t3_a_p3_desc" text="Los creyentes acuden en masa a tu estandarte. +4 tamaño de grupo." />
     <string id="taom_mc_t3_a_p4" text="Carcaj Bendito" />
-    <string id="taom_mc_t3_a_p4_desc" text="La bendición de Sauron multiplica tus flechas. +8 munición." />
+    <string id="taom_mc_t3_a_p4_desc" text="La bendición de Sauron multiplica tus saetas. +15% de munición." />
     <string id="taom_mc_t3_b_key" text="Pacto Oscuro" />
     <string id="taom_mc_t3_b_key_desc" text="La voz requiere menos sacrificio para invocarla. Coste de carga de Voz -30." />
     <string id="taom_mc_t3_b_p1" text="Culto del Ojo" />
@@ -425,9 +425,9 @@
     <string id="taom_sr_t1_a_key" text="Galope Sombrío" />
     <string id="taom_sr_t1_a_key_desc" text="Te desvaneces en la oscuridad de Mordor. Radio de Acecho Sigiloso +3." />
     <string id="taom_sr_t1_a_p1" text="Instinto de Huargo" />
-    <string id="taom_sr_t1_a_p1_desc" text="Tu montura es tan feroz como tú. +6% daño de carga montada." />
+    <string id="taom_sr_t1_a_p1_desc" text="Tu montura es tan feroz como tú. +10% de daño de carga a caballo." />
     <string id="taom_sr_t1_a_p2" text="Flanqueador Sigiloso" />
-    <string id="taom_sr_t1_a_p2_desc" text="Apareces donde menos se espera. +5% bonificación de sigilo." />
+    <string id="taom_sr_t1_a_p2_desc" text="Apareces donde menos se te espera. +10% de bonificación de sigilo." />
     <string id="taom_sr_t1_a_p3" text="Cabalgar Duro" />
     <string id="taom_sr_t1_a_p3_desc" text="Tu cuerpo resiste las cabalgatas más duras. +5 salud." />
     <string id="taom_sr_t1_a_p4" text="Golpear y Esfumarse" />
@@ -435,7 +435,7 @@
     <string id="taom_sr_t1_b_key" text="Jinete Nocturno" />
     <string id="taom_sr_t1_b_key_desc" text="La oscuridad te protege por más tiempo. Duración de Acecho Sigiloso +4s." />
     <string id="taom_sr_t1_b_p1" text="Montura Resistente" />
-    <string id="taom_sr_t1_b_p1_desc" text="Tu bestia mantiene sus patas en las batallas más duras. +5% salud de caballo." />
+    <string id="taom_sr_t1_b_p1_desc" text="Tu bestia se mantiene en pie en los combates más duros. +10% de salud del caballo." />
     <string id="taom_sr_t1_b_p2" text="Velocidad de Saqueador" />
     <string id="taom_sr_t1_b_p2_desc" text="Superas a cualquier persecución. +5% velocidad de movimiento." />
     <string id="taom_sr_t1_b_p3" text="Tácticas de Manada" />
@@ -445,7 +445,7 @@
     <string id="taom_sr_t2_a_key" text="Embestida de Emboscada" />
     <string id="taom_sr_t2_a_key_desc" text="Golpeas antes de que el enemigo sepa que estás ahí. Costo de carga de Acecho Sigiloso -20." />
     <string id="taom_sr_t2_a_p1" text="Asesino del Impulso" />
-    <string id="taom_sr_t2_a_p1_desc" text="Tu carga rompe las formaciones enemigas. +8% daño de carga montada." />
+    <string id="taom_sr_t2_a_p1_desc" text="Tu carga rompe las formaciones enemigas. +13% de daño de carga a caballo." />
     <string id="taom_sr_t2_a_p2" text="Persecución Implacable" />
     <string id="taom_sr_t2_a_p2_desc" text="Nadie supera a un jinete Snaga. +8% velocidad de movimiento del grupo." />
     <string id="taom_sr_t2_a_p3" text="Botín del Saqueador" />
@@ -457,7 +457,7 @@
     <string id="taom_sr_t2_b_p1" text="Descenso Aullante" />
     <string id="taom_sr_t2_b_p1_desc" text="Tu grito de guerra desmoraliza a todos excepto a los más valientes. +6% moral de tropas." />
     <string id="taom_sr_t2_b_p2" text="Experto en Flanqueo" />
-    <string id="taom_sr_t2_b_p2_desc" text="Diriges el asalto de flanqueo con precisión. +10% bonificación de sigilo." />
+    <string id="taom_sr_t2_b_p2_desc" text="Diriges el asalto por el flanco con precisión. +13% de bonificación de sigilo." />
     <string id="taom_sr_t2_b_p3" text="Parte del Saqueador" />
     <string id="taom_sr_t2_b_p3_desc" text="El botín compartido mantiene leal a la manada. -5% salarios de tropas." />
     <string id="taom_sr_t2_b_p4" text="Montura de Hierro" />
@@ -465,7 +465,7 @@
     <string id="taom_sr_t3_a_key" text="Estampida de las Sombras" />
     <string id="taom_sr_t3_a_key_desc" text="Un ejército de jinetes se materializa desde la oscuridad. Radio de Acecho Sigiloso +5." />
     <string id="taom_sr_t3_a_p1" text="Carga Mortal" />
-    <string id="taom_sr_t3_a_p1_desc" text="Tu carga devasta todo a su paso. +12% daño de carga de caballo." />
+    <string id="taom_sr_t3_a_p1_desc" text="Tu carga devasta todo a su paso. +15% de daño de carga a caballo." />
     <string id="taom_sr_t3_a_p2" text="Mando del Señor de los Huargos" />
     <string id="taom_sr_t3_a_p2_desc" text="Una vasta manada cabalga bajo tu estandarte. +4 tamaño de grupo." />
     <string id="taom_sr_t3_a_p3" text="Sombra Perdurable" />
@@ -553,7 +553,7 @@
     <string id="taom_moa_t1_a_p3" text="Entrenamiento de Aldburg" />
     <string id="taom_moa_t1_a_p3_desc" text="Los arqueros de Aldburg son los mejores de la Marca. +5 de salud." />
     <string id="taom_moa_t1_a_p4" text="Carcaj Repleto" />
-    <string id="taom_moa_t1_a_p4_desc" text="Cargas más flechas de plumas blancas que cualquier otro. +3 de munición." />
+    <string id="taom_moa_t1_a_p4_desc" text="Llevas más flechas de plumas blancas que ningún otro. +10% de munición." />
     <string id="taom_moa_t1_b_key" text="Tensado Firme" />
     <string id="taom_moa_t1_b_key_desc" text="Mantienes tu tensado más tiempo para el disparo perfecto. Duración de Emplumado Ligero +4s." />
     <string id="taom_moa_t1_b_p1" text="Encaje Veloz" />
@@ -563,17 +563,17 @@
     <string id="taom_moa_t1_b_p3" text="Explorador de Campo Abierto" />
     <string id="taom_moa_t1_b_p3_desc" text="Lees las llanuras de Rohan como un libro. +5% de alcance de exploración de grupo." />
     <string id="taom_moa_t1_b_p4" text="Disciplina Rohirrim" />
-    <string id="taom_moa_t1_b_p4_desc" text="Entrenas a tus arqueros para mantener la línea. +3% de resistencia de tropa." />
+    <string id="taom_moa_t1_b_p4_desc" text="Adiestras a tus arqueros para mantener la línea. +10% de resistencia de las tropas." />
     <string id="taom_moa_t2_a_key" text="Capitán de Andanada" />
     <string id="taom_moa_t2_a_key_desc" text="Coordinas fuego masivo devastador. Costo de carga de Emplumado Ligero -20." />
     <string id="taom_moa_t2_a_p1" text="Clavar la Línea" />
-    <string id="taom_moa_t2_a_p1_desc" text="Tus andanadas suprimen los avances enemigos. +8% de resistencia de tropa." />
+    <string id="taom_moa_t2_a_p1_desc" text="Tus descargas contienen el avance enemigo. +13% de resistencia de las tropas." />
     <string id="taom_moa_t2_a_p2" text="Punta de Bodkin" />
     <string id="taom_moa_t2_a_p2_desc" text="Las puntas endurecidas perforan cota de malla y placas. +10% de penetración de armadura." />
     <string id="taom_moa_t2_a_p3" text="Técnica de Campo" />
-    <string id="taom_moa_t2_a_p3_desc" text="Usas cada pliegue del terreno a tu favor. +8% de bonificación de sigilo." />
+    <string id="taom_moa_t2_a_p3_desc" text="Aprovechas cada pliegue del terreno. +13% de bonificación de sigilo." />
     <string id="taom_moa_t2_a_p4" text="Reserva de Flechas de Guerra" />
-    <string id="taom_moa_t2_a_p4_desc" text="Reservas pre-posicionadas mantienen tu carcaj lleno. +5 de munición." />
+    <string id="taom_moa_t2_a_p4_desc" text="Los depósitos preparados mantienen llena tu aljaba. +13% de munición." />
     <string id="taom_moa_t2_b_key" text="Bombardeo Sostenido" />
     <string id="taom_moa_t2_b_key_desc" text="La lluvia de flechas no cesa. Duración de Emplumado Ligero +2s." />
     <string id="taom_moa_t2_b_p1" text="Fuego de Cobertura" />
@@ -593,7 +593,7 @@
     <string id="taom_moa_t3_a_p3" text="Arqueros de la Hueste de Guerra" />
     <string id="taom_moa_t3_a_p3_desc" text="Tu leyenda atrae a los mejores arqueros. +4 de tamaño del grupo." />
     <string id="taom_moa_t3_a_p4" text="Flechas Sin Fin" />
-    <string id="taom_moa_t3_a_p4_desc" text="Tus líneas de suministro mantienen las flechas volando. +8 de munición." />
+    <string id="taom_moa_t3_a_p4_desc" text="Tus líneas de suministro mantienen las flechas volando. +15% de munición." />
     <string id="taom_moa_t3_b_key" text="Disparo Reflejo" />
     <string id="taom_moa_t3_b_key_desc" text="El encaje y liberación es pura memoria muscular. Costo de carga de Flechas Ligeras -30." />
     <string id="taom_moa_t3_b_p1" text="Lluvia de Flechas" />
@@ -604,13 +604,13 @@
     <string id="taom_moa_t3_b_p3_desc" text="Tus hazañas traen gloria a Aldburg. +12% de ganancia de renombre en batalla." />
     <string id="taom_moa_t3_b_p4" text="Ejército de la Marca" />
     <string id="taom_moa_t3_b_p4_desc" text="Los mejores arqueros de Rohan se unen a tu estandarte. +5 al tamaño del grupo." />
-    <string id="taom_ew_root_desc" text="Grito de Guerra de Eorl otorga +5% de daño de carga a caballo, invocando el trueno de los ancestros." />
+    <string id="taom_ew_root_desc" text="El Grito de Guerra de Eorl otorga +10% de daño de carga a caballo, invocando el trueno de los ancestros." />
     <string id="taom_ew_t1_a_key" text="Trueno Ancestral" />
     <string id="taom_ew_t1_a_key_desc" text="El grito de guerra resuena por la llanura. Radio de Grito de Guerra de Eorl +3." />
     <string id="taom_ew_t1_a_p1" text="Primera Carga" />
-    <string id="taom_ew_t1_a_p1_desc" text="Lideras la carga y nadie puede igualar tu velocidad. +6% de daño de carga a caballo." />
+    <string id="taom_ew_t1_a_p1_desc" text="Encabezas la carga y nadie iguala tu velocidad. +10% de daño de carga a caballo." />
     <string id="taom_ew_t1_a_p2" text="Nacido para Cabalgar" />
-    <string id="taom_ew_t1_a_p2_desc" text="Caballo y jinete son uno. +5% de salud del caballo." />
+    <string id="taom_ew_t1_a_p2_desc" text="Caballo y jinete son uno. +10% de salud del caballo." />
     <string id="taom_ew_t1_a_p3" text="Resistencia de las Praderas" />
     <string id="taom_ew_t1_a_p3_desc" text="Cabalgar por las llanuras de la Marca te ha endurecido. +5 de salud." />
     <string id="taom_ew_t1_a_p4" text="Grito de Reunión" />
@@ -624,11 +624,11 @@
     <string id="taom_ew_t1_b_p3" text="Determinación del Jinete" />
     <string id="taom_ew_t1_b_p3_desc" text="No te quiebras, sin importar las adversidades. +6 salud." />
     <string id="taom_ew_t1_b_p4" text="Montura Firme" />
-    <string id="taom_ew_t1_b_p4_desc" text="Tu caballo está curtido en batalla. +6% salud de caballo." />
+    <string id="taom_ew_t1_b_p4_desc" text="Tu caballo está curtido en la batalla. +10% de salud del caballo." />
     <string id="taom_ew_t2_a_key" text="Legado de Eorl" />
     <string id="taom_ew_t2_a_key_desc" text="Los ancestros cabalgan contigo siempre. Coste de carga del grito de guerra -20." />
     <string id="taom_ew_t2_a_p1" text="Carga Imparable" />
-    <string id="taom_ew_t2_a_p1_desc" text="Nada se interpone ante los Rohirrim. +10% daño de carga de caballo." />
+    <string id="taom_ew_t2_a_p1_desc" text="Nada se interpone ante los Rohirrim. +13% de daño de carga a caballo." />
     <string id="taom_ew_t2_a_p2" text="Rompe Muros de Escudos" />
     <string id="taom_ew_t2_a_p2_desc" text="Tu carga destroza muros de escudos. +8% daño cuerpo a cuerpo." />
     <string id="taom_ew_t2_a_p3" text="Moral de los Rohirrim" />
@@ -638,7 +638,7 @@
     <string id="taom_ew_t2_b_key" text="Canción de Cabalgar" />
     <string id="taom_ew_t2_b_key_desc" text="La canción de los Eothéod lleva a los jinetes adelante. Duración del grito de guerra +2s." />
     <string id="taom_ew_t2_b_p1" text="De Raza Mearas" />
-    <string id="taom_ew_t2_b_p1_desc" text="Tu caballo tiene la sangre de los Mearas. +10% salud de caballo." />
+    <string id="taom_ew_t2_b_p1_desc" text="Tu caballo tiene la sangre de los Mearas. +13% de salud del caballo." />
     <string id="taom_ew_t2_b_p2" text="Maestro de las Llanuras" />
     <string id="taom_ew_t2_b_p2_desc" text="Conoces cada valle y colina de la Marca. +8% alcance de visión del grupo." />
     <string id="taom_ew_t2_b_p3" text="Atado por el Honor" />
@@ -648,7 +648,7 @@
     <string id="taom_ew_t3_a_key" text="Carga de los Rohirrim" />
     <string id="taom_ew_t3_a_key_desc" text="La mayor carga en la edad de los hombres. Radio del grito de guerra +5." />
     <string id="taom_ew_t3_a_p1" text="Trueno del Pelennor" />
-    <string id="taom_ew_t3_a_p1_desc" text="Como en los Campos del Pelennor, tu carga es imparable. +14% daño de carga de caballo." />
+    <string id="taom_ew_t3_a_p1_desc" text="Como en los Campos del Pelennor, tu carga es imparable. +15% de daño de carga a caballo." />
     <string id="taom_ew_t3_a_p2" text="Señor de la Marca" />
     <string id="taom_ew_t3_a_p2_desc" text="Los mejores jinetes te siguen. +9 salud." />
     <string id="taom_ew_t3_a_p3" text="Comandante de Éored" />
@@ -685,11 +685,11 @@
     <string id="taom_ws_t1_b_p3" text="Guardia Leal" />
     <string id="taom_ws_t1_b_p3_desc" text="Tus hombres necesitan poco pago -- el deber es suficiente. -4% salarios de tropas." />
     <string id="taom_ws_t1_b_p4" text="Disciplina del Señor del Río" />
-    <string id="taom_ws_t1_b_p4_desc" text="Tu infantería se mantiene firme cuando otros se quiebran. +3% resistencia de tropas." />
+    <string id="taom_ws_t1_b_p4_desc" text="Tu infantería resiste firme cuando otros ceden. +10% de resistencia de las tropas." />
     <string id="taom_ws_t2_a_key" text="Cruce Preparado" />
     <string id="taom_ws_t2_a_key_desc" text="Has explorado este terreno por años. Costo de carga de Navegante del Río -20." />
     <string id="taom_ws_t2_a_p1" text="Línea de Escudos" />
-    <string id="taom_ws_t2_a_p1_desc" text="Tus hombres forman un muro impenetrable. +8% resistencia de tropas." />
+    <string id="taom_ws_t2_a_p1_desc" text="Tus hombres forman un muro impenetrable. +13% de resistencia de las tropas." />
     <string id="taom_ws_t2_a_p2" text="Acero Probado" />
     <string id="taom_ws_t2_a_p2_desc" text="Cada arma es afilada por los herreros de Stangard. +8% daño cuerpo a cuerpo." />
     <string id="taom_ws_t2_a_p3" text="Advertencia de Fangorn" />
@@ -709,7 +709,7 @@
     <string id="taom_ws_t3_a_key" text="Bastión de Stangard" />
     <string id="taom_ws_t3_a_key_desc" text="Eres la última línea entre la civilización y la oscuridad. Radio de Navegante Fluvial +5." />
     <string id="taom_ws_t3_a_p1" text="Línea Inquebrantable" />
-    <string id="taom_ws_t3_a_p1_desc" text="Tu muro de escudos nunca se ha roto. +12% resistencia de tropas." />
+    <string id="taom_ws_t3_a_p1_desc" text="Tu muro de escudos jamás se ha quebrado. +15% de resistencia de las tropas." />
     <string id="taom_ws_t3_a_p2" text="Guardia Inmortal" />
     <string id="taom_ws_t3_a_p2_desc" text="La guardia nunca termina. +9 salud." />
     <string id="taom_ws_t3_a_p3" text="Comandante de Guarnición" />
@@ -793,11 +793,11 @@
     <string id="taom_wh_t1_a_p1" text="Paciencia del Lobo" />
     <string id="taom_wh_t1_a_p1_desc" text="Esperas el momento perfecto para atacar. +6% daño a distancia." />
     <string id="taom_wh_t1_a_p2" text="Acechador de Colinas" />
-    <string id="taom_wh_t1_a_p2_desc" text="Te mueves sin hacer ruido por las colinas de Dunland. +5% bonificación de sigilo." />
+    <string id="taom_wh_t1_a_p2_desc" text="Te mueves sin hacer ruido por las colinas de Dunlandia. +10% de bonificación de sigilo." />
     <string id="taom_wh_t1_a_p3" text="Resistencia del Cazador" />
     <string id="taom_wh_t1_a_p3_desc" text="Rastreas presas durante días sin descanso. +5 salud." />
     <string id="taom_wh_t1_a_p4" text="Carcaj de Hueso" />
-    <string id="taom_wh_t1_a_p4_desc" text="Las tradiciones de flechado Dunlendesas llenan tu carcaj. +3 munición." />
+    <string id="taom_wh_t1_a_p4_desc" text="Las tradiciones de emplumado de Dunlandia llenan tu aljaba. +10% de munición." />
     <string id="taom_wh_t1_b_key" text="Cacería Extendida" />
     <string id="taom_wh_t1_b_key_desc" text="La marca persiste a través del caos de la batalla. Duración de Presa Marcada +4s." />
     <string id="taom_wh_t1_b_p1" text="Encare Rápido" />
@@ -817,11 +817,11 @@
     <string id="taom_wh_t2_a_p3" text="Superviviente de la Naturaleza" />
     <string id="taom_wh_t2_a_p3_desc" text="La naturaleza te ha enseñado a sobrevivir a cualquier cosa. +6 salud." />
     <string id="taom_wh_t2_a_p4" text="Carcaj Profundo" />
-    <string id="taom_wh_t2_a_p4_desc" text="Tu clan provee suficientes flechas para un asedio. +5 munición." />
+    <string id="taom_wh_t2_a_p4_desc" text="Tu clan provee flechas suficientes para un asedio. +13% de munición." />
     <string id="taom_wh_t2_b_key" text="Marca Sostenida" />
     <string id="taom_wh_t2_b_key_desc" text="La marca se fija profundamente y no se desvanece. Duración de Presa Marcada +2s." />
     <string id="taom_wh_t2_b_p1" text="Depredador de Emboscada" />
-    <string id="taom_wh_t2_b_p1_desc" text="Atacas desde el ocultamiento para máximo efecto. +10% bonificación de sigilo." />
+    <string id="taom_wh_t2_b_p1_desc" text="Atacas desde el ocultamiento para lograr el máximo efecto. +13% de bonificación de sigilo." />
     <string id="taom_wh_t2_b_p2" text="Resistencia Dunlendesa" />
     <string id="taom_wh_t2_b_p2_desc" text="La vida dura en las colinas te hace casi indestructible. +10% resistencia al combate cuerpo a cuerpo." />
     <string id="taom_wh_t2_b_p3" text="Sendero Invisible" />
@@ -848,15 +848,15 @@
     <string id="taom_wh_t3_b_p3_desc" text="Cada trofeo añade a tu temible leyenda. +14% ganancia de renombre en batalla." />
     <string id="taom_wh_t3_b_p4" text="Gran Manada" />
     <string id="taom_wh_t3_b_p4_desc" text="Cada cazador de piel de lobo en Dunland cabalga contigo. +6 al tamaño del grupo." />
-    <string id="taom_cr_root_desc" text="Carga de Manada de Guerra otorga +5% daño de carga de caballo y lleva las líneas enemigas al caos." />
+    <string id="taom_cr_root_desc" text="Carga de la Jauría otorga +10% de daño de carga montada y sume las líneas enemigas en el caos." />
     <string id="taom_cr_t1_a_key" text="Trueno del Clan" />
     <string id="taom_cr_t1_a_key_desc" text="La tierra tiembla cuando los jinetes descienden. Radio de Carga de Manada de Guerra +3." />
     <string id="taom_cr_t1_a_p1" text="Jinete Dunlendés" />
-    <string id="taom_cr_t1_a_p1_desc" text="Cabalgas como uno con tu montura. +6% daño de carga de caballo." />
+    <string id="taom_cr_t1_a_p1_desc" text="Cabalgas como uno solo con tu montura. +10% de daño de carga montada." />
     <string id="taom_cr_t1_a_p2" text="Montura Resistente" />
-    <string id="taom_cr_t1_a_p2_desc" text="Los ponis de montaña dunlendeses son duros como el hierro. +5% salud de caballo." />
+    <string id="taom_cr_t1_a_p2_desc" text="Los ponis de montaña dunlendinos son duros como el hierro. +10% de salud de los caballos." />
     <string id="taom_cr_t1_a_p3" text="Escolta del Clan" />
-    <string id="taom_cr_t1_a_p3_desc" text="Tus jinetes protegen al clan del peligro. +3% de resistencia de tropas." />
+    <string id="taom_cr_t1_a_p3_desc" text="Tus jinetes protegen al clan del peligro. +10% de resistencia de las tropas." />
     <string id="taom_cr_t1_a_p4" text="Resistencia en la Montura" />
     <string id="taom_cr_t1_a_p4_desc" text="Cabalgas durante días sin desmontar. +5 de salud." />
     <string id="taom_cr_t1_b_key" text="Carga Sostenida" />
@@ -872,7 +872,7 @@
     <string id="taom_cr_t2_a_key" text="Manada de Guerra Desatada" />
     <string id="taom_cr_t2_a_key_desc" text="La manada siempre está lista para cargar. Costo de Carga de Manada de Guerra -20." />
     <string id="taom_cr_t2_a_p1" text="Impacto Demoledor" />
-    <string id="taom_cr_t2_a_p1_desc" text="Tu carga destroza las formaciones enemigas. +10% de daño de carga a caballo." />
+    <string id="taom_cr_t2_a_p1_desc" text="Tu carga destroza las formaciones enemigas. +13% de daño de carga montada." />
     <string id="taom_cr_t2_a_p2" text="Persecución Veloz" />
     <string id="taom_cr_t2_a_p2_desc" text="Nadie supera en velocidad a la guardia del clan. +8% de velocidad de movimiento del grupo." />
     <string id="taom_cr_t2_a_p3" text="Renombre por Saqueo" />
@@ -892,7 +892,7 @@
     <string id="taom_cr_t3_a_key" text="Clan de Jinetes" />
     <string id="taom_cr_t3_a_key_desc" text="Cada jinete en Dunland cabalga bajo tu estandarte. Radio de Carga de Manada de Guerra +5." />
     <string id="taom_cr_t3_a_p1" text="Carga Avalancha" />
-    <string id="taom_cr_t3_a_p1_desc" text="Tu carga no puede ser detenida. +14% de daño de carga a caballo." />
+    <string id="taom_cr_t3_a_p1_desc" text="Tu carga es imparable. +15% de daño de carga montada." />
     <string id="taom_cr_t3_a_p2" text="Nacido de las Montañas" />
     <string id="taom_cr_t3_a_p2_desc" text="Naciste para esta montura. +9 de salud." />
     <string id="taom_cr_t3_a_p3" text="Gran Manada de Guerra" />
@@ -943,7 +943,7 @@
     <string id="taom_steppe_bowmaster_root_desc" text="Tormenta de Flechas otorga +5% de daño a distancia y mejora el fuego sostenido." />
     <string id="taom_sb_t1a_key" text="Radio de Tormenta de Flechas aumentado, las andanadas cubren más terreno." />
     <string id="taom_sb_t1a_p1" text="+8% de daño a distancia." />
-    <string id="taom_sb_t1a_p2" text="+2 de munición." />
+    <string id="taom_sb_t1a_p2" text="+10% de munición." />
     <string id="taom_sb_t1a_p3" text="+7% de velocidad de movimiento." />
     <string id="taom_sb_t1a_p4" text="+5% de rango de avistamiento del grupo." />
     <string id="taom_sb_t1b_key" text="Duración de Tormenta de Flechas extendida, un granizo implacable." />
@@ -952,7 +952,7 @@
     <string id="taom_sb_t1b_p3" text="+3% de daño de tropas." />
     <string id="taom_sb_t1b_p4" text="+5% de ganancia de renombre en batalla." />
     <string id="taom_sb_t2a_key" text="Carga de Tormenta de Flechas reducida, carcaj interminable." />
-    <string id="taom_sb_t2a_p1" text="+4 de munición." />
+    <string id="taom_sb_t2a_p1" text="+13% de munición." />
     <string id="taom_sb_t2a_p2" text="+10% de daño a distancia." />
     <string id="taom_sb_t2a_p3" text="+10% de velocidad de movimiento." />
     <string id="taom_sb_t2a_p4" text="+10% de rango de avistamiento del grupo." />
@@ -963,7 +963,7 @@
     <string id="taom_sb_t2b_p4" text="+10% de ganancia de renombre en batalla." />
     <string id="taom_sb_t3a_key" text="Radio de Tormenta de Flechas enormemente expandido, una lluvia ineludible." />
     <string id="taom_sb_t3a_p1" text="+15% de daño a distancia." />
-    <string id="taom_sb_t3a_p2" text="+6 de munición." />
+    <string id="taom_sb_t3a_p2" text="+15% de munición." />
     <string id="taom_sb_t3a_p3" text="+15% de ganancia de renombre en batalla." />
     <string id="taom_sb_t3a_p4" text="+15% de rango de avistamiento del grupo." />
     <string id="taom_sb_t3b_key" text="Carga de Tormenta de Flechas enormemente reducida, andanadas incesantes." />
@@ -971,34 +971,34 @@
     <string id="taom_sb_t3b_p2" text="+9 de salud máxima." />
     <string id="taom_sb_t3b_p3" text="+7% de daño de tropas." />
     <string id="taom_sb_t3b_p4" text="+5 de tamaño de grupo." />
-    <string id="taom_chariot_warlord_root_desc" text="Carga Segadora otorga +5% de daño de carga de caballo e inspira a los guerreros montados." />
+    <string id="taom_chariot_warlord_root_desc" text="Carga Segadora otorga +10% de daño de carga montada e inspira a los guerreros montados." />
     <string id="taom_cw_t1a_key" text="Radio de Carga Segadora expandido, las hojas cortan un camino más amplio." />
-    <string id="taom_cw_t1a_p1" text="+7% de daño de carga de caballo." />
+    <string id="taom_cw_t1a_p1" text="+10% de daño de carga montada." />
     <string id="taom_cw_t1a_p2" text="+8% de daño cuerpo a cuerpo." />
     <string id="taom_cw_t1a_p3" text="+3% de daño de tropas." />
     <string id="taom_cw_t1a_p4" text="+5% velocidad de movimiento del grupo." />
     <string id="taom_cw_t1b_key" text="Duración de Carga Segadora extendida, impulso sostenido." />
-    <string id="taom_cw_t1b_p1" text="+30 salud del caballo." />
+    <string id="taom_cw_t1b_p1" text="+10% de salud de los caballos." />
     <string id="taom_cw_t1b_p2" text="+5 salud máxima." />
     <string id="taom_cw_t1b_p3" text="+5% moral de las tropas." />
     <string id="taom_cw_t1b_p4" text="+5% ganancia de renombre en batalla." />
     <string id="taom_cw_t2a_key" text="Recarga de Carga Segadora reducida, las ruedas nunca dejan de girar." />
-    <string id="taom_cw_t2a_p1" text="+12% daño de carga del caballo." />
+    <string id="taom_cw_t2a_p1" text="+13% de daño de carga montada." />
     <string id="taom_cw_t2a_p2" text="+10% velocidad de movimiento del grupo." />
     <string id="taom_cw_t2a_p3" text="+10% moral de las tropas." />
     <string id="taom_cw_t2a_p4" text="+3 tamaño del grupo." />
     <string id="taom_cw_t2b_key" text="Carga Segadora aumenta la resistencia de la montura durante la carga." />
     <string id="taom_cw_t2b_p1" text="+10% daño cuerpo a cuerpo." />
-    <string id="taom_cw_t2b_p2" text="+60 salud del caballo." />
+    <string id="taom_cw_t2b_p2" text="+13% de salud de los caballos." />
     <string id="taom_cw_t2b_p3" text="+6% daño de las tropas." />
     <string id="taom_cw_t2b_p4" text="+10% ganancia de renombre en batalla." />
     <string id="taom_cw_t3a_key" text="Radio de Carga Segadora enormemente expandido, un barrido de área imparable." />
-    <string id="taom_cw_t3a_p1" text="+18% daño de carga del caballo." />
+    <string id="taom_cw_t3a_p1" text="+15% de daño de carga montada." />
     <string id="taom_cw_t3a_p2" text="+15% daño cuerpo a cuerpo." />
     <string id="taom_cw_t3a_p3" text="+7% daño de las tropas." />
     <string id="taom_cw_t3a_p4" text="+15% ganancia de renombre en batalla." />
     <string id="taom_cw_t3b_key" text="Recarga de Carga Segadora enormemente reducida, las ruedas muelen sin cesar." />
-    <string id="taom_cw_t3b_p1" text="+100 salud del caballo." />
+    <string id="taom_cw_t3b_p1" text="+15% de salud de los caballos." />
     <string id="taom_cw_t3b_p2" text="+15% velocidad de movimiento del grupo." />
     <string id="taom_cw_t3b_p3" text="+20% moral de las tropas." />
     <string id="taom_cw_t3b_p4" text="+5 tamaño del grupo." />
@@ -1036,7 +1036,7 @@
     <string id="taom_pezarsani_javelineer_root_desc" text="Descarga Solar otorga +5% de daño a distancia y acelera los lanzamientos de jabalinas." />
     <string id="taom_pj_t1a_key" text="Radio de Descarga Solar aumentado, las jabalinas cubren terreno más amplio." />
     <string id="taom_pj_t1a_p1" text="+8% daño a distancia." />
-    <string id="taom_pj_t1a_p2" text="+2 munición." />
+    <string id="taom_pj_t1a_p2" text="+10% de munición." />
     <string id="taom_pj_t1a_p3" text="+7% velocidad de movimiento." />
     <string id="taom_pj_t1a_p4" text="+5% ganancia de renombre en batalla." />
     <string id="taom_pj_t1b_key" text="Duración de Descarga Solar extendida, fuego de hostigamiento sostenido." />
@@ -1045,7 +1045,7 @@
     <string id="taom_pj_t1b_p3" text="+3% daño de tropas." />
     <string id="taom_pj_t1b_p4" text="+5% rango de exploración del grupo." />
     <string id="taom_pj_t2a_key" text="Recarga de Descarga Solar reducida, nunca sin jabalinas." />
-    <string id="taom_pj_t2a_p1" text="+4 munición." />
+    <string id="taom_pj_t2a_p1" text="+13% de munición." />
     <string id="taom_pj_t2a_p2" text="+10% daño a distancia." />
     <string id="taom_pj_t2a_p3" text="+10% velocidad de movimiento." />
     <string id="taom_pj_t2a_p4" text="+10% ganancia de renombre en batalla." />
@@ -1056,7 +1056,7 @@
     <string id="taom_pj_t2b_p4" text="+10% rango de exploración del grupo." />
     <string id="taom_pj_t3a_key" text="Radio de Descarga Solar enormemente expandido, un bombardeo ineludible." />
     <string id="taom_pj_t3a_p1" text="+15% daño a distancia." />
-    <string id="taom_pj_t3a_p2" text="+6 de munición." />
+    <string id="taom_pj_t3a_p2" text="+15% de munición." />
     <string id="taom_pj_t3a_p3" text="+15% de ganancia de renombre en batalla." />
     <string id="taom_pj_t3a_p4" text="+15% de velocidad de movimiento." />
     <string id="taom_pj_t3b_key" text="La carga de Descarga Solar se reduce enormemente, acoso implacable." />
@@ -1064,34 +1064,34 @@
     <string id="taom_pj_t3b_p2" text="+9 de salud máxima." />
     <string id="taom_pj_t3b_p3" text="+7% de daño de tropas." />
     <string id="taom_pj_t3b_p4" text="+15% de rango de detección del grupo." />
-    <string id="taom_mahud_beast_rider_root_desc" text="Ecos de Mûmakan otorga +5% de daño de carga de caballo y propaga el miedo." />
+    <string id="taom_mahud_beast_rider_root_desc" text="Ecos de Mûmakan otorga +10% de daño de carga montada y siembra el miedo." />
     <string id="taom_mbr_t1a_key" text="Radio de Ecos de Mûmakan expandido, el miedo se propaga más lejos." />
-    <string id="taom_mbr_t1a_p1" text="+7% de daño de carga de caballo." />
+    <string id="taom_mbr_t1a_p1" text="+10% de daño de carga montada." />
     <string id="taom_mbr_t1a_p2" text="+8% de daño cuerpo a cuerpo." />
     <string id="taom_mbr_t1a_p3" text="+5% de moral de tropas." />
     <string id="taom_mbr_t1a_p4" text="+5% de velocidad de movimiento del grupo." />
     <string id="taom_mbr_t1b_key" text="Duración de Ecos de Mûmakan extendida, el miedo persiste." />
-    <string id="taom_mbr_t1b_p1" text="+30 de salud de caballo." />
+    <string id="taom_mbr_t1b_p1" text="+10% de salud de los caballos." />
     <string id="taom_mbr_t1b_p2" text="+3% de daño de tropas." />
     <string id="taom_mbr_t1b_p3" text="+5% de ganancia de renombre en batalla." />
     <string id="taom_mbr_t1b_p4" text="+5% de resistencia." />
     <string id="taom_mbr_t2a_key" text="Carga de Ecos de Mûmakan reducida, el terror siempre es inminente." />
-    <string id="taom_mbr_t2a_p1" text="+12% de daño de carga de caballo." />
+    <string id="taom_mbr_t2a_p1" text="+13% de daño de carga montada." />
     <string id="taom_mbr_t2a_p2" text="+10% de moral de tropas." />
     <string id="taom_mbr_t2a_p3" text="+5% de daño de tropas." />
     <string id="taom_mbr_t2a_p4" text="+10% de ganancia de renombre en batalla." />
     <string id="taom_mbr_t2b_key" text="Ecos de Mûmakan aumenta la resistencia de la bestia durante la carga." />
     <string id="taom_mbr_t2b_p1" text="+12% de daño cuerpo a cuerpo." />
-    <string id="taom_mbr_t2b_p2" text="+60 de salud de caballo." />
+    <string id="taom_mbr_t2b_p2" text="+13% de salud de los caballos." />
     <string id="taom_mbr_t2b_p3" text="+10% de velocidad de movimiento del grupo." />
     <string id="taom_mbr_t2b_p4" text="+3 de tamaño del grupo." />
     <string id="taom_mbr_t3a_key" text="Radio de Ecos de Mûmakan enormemente expandido, la tierra misma tiembla." />
-    <string id="taom_mbr_t3a_p1" text="+18% de daño de carga de caballo." />
+    <string id="taom_mbr_t3a_p1" text="+15% de daño de carga montada." />
     <string id="taom_mbr_t3a_p2" text="+15% de daño cuerpo a cuerpo." />
     <string id="taom_mbr_t3a_p3" text="+20% de moral de tropas." />
     <string id="taom_mbr_t3a_p4" text="+15% de ganancia de renombre en batalla." />
     <string id="taom_mbr_t3b_key" text="Carga de Ecos de Mûmakan enormemente reducida, pavor interminable." />
-    <string id="taom_mbr_t3b_p1" text="+100 de salud de caballo." />
+    <string id="taom_mbr_t3b_p1" text="+15% de salud de los caballos." />
     <string id="taom_mbr_t3b_p2" text="+15% de velocidad de movimiento del grupo." />
     <string id="taom_mbr_t3b_p3" text="+7% de daño de tropas." />
     <string id="taom_mbr_t3b_p4" text="+9 de salud máxima." />
@@ -1102,14 +1102,14 @@
     <string id="taom_fhh_t1a_p3" text="+8% daño cuerpo a cuerpo." />
     <string id="taom_fhh_t1a_p4" text="+5% moral de tropas." />
     <string id="taom_fhh_t1b_key" text="Duración de Brutalidad Vil extendida, la furia del trol dura más." />
-    <string id="taom_fhh_t1b_p1" text="+8% resistencia de tropas." />
+    <string id="taom_fhh_t1b_p1" text="+10% de resistencia de las tropas." />
     <string id="taom_fhh_t1b_p2" text="+3% daño de tropas." />
     <string id="taom_fhh_t1b_p3" text="+5% ganancia de renombre en batalla." />
     <string id="taom_fhh_t1b_p4" text="+5 salud máxima." />
     <string id="taom_fhh_t2a_key" text="Carga de Brutalidad Vil reducida, la furia se enciende más rápido." />
     <string id="taom_fhh_t2a_p1" text="+12% resistencia." />
     <string id="taom_fhh_t2a_p2" text="+8 salud máxima." />
-    <string id="taom_fhh_t2a_p3" text="+12% resistencia de tropas." />
+    <string id="taom_fhh_t2a_p3" text="+13% de resistencia de las tropas." />
     <string id="taom_fhh_t2a_p4" text="+10% moral de tropas." />
     <string id="taom_fhh_t2b_key" text="Brutalidad Vil hace al semitrol aún más aterrador." />
     <string id="taom_fhh_t2b_p1" text="+8 salud máxima." />
@@ -1129,16 +1129,16 @@
     <string id="taom_cl_root_desc" text="Muro de Escudos otorga +5% de resistencia y tu formación se mantiene firme contra todo pronóstico." />
     <string id="taom_cl_t1_a_key" text="Radio de Muro de Escudos expandido, protegiendo una formación más amplia." />
     <string id="taom_cl_t1_a_p1" text="+8% de resistencia." />
-    <string id="taom_cl_t1_a_p2" text="+5% de resistencia de tropas." />
+    <string id="taom_cl_t1_a_p2" text="+10% de resistencia de las tropas." />
     <string id="taom_cl_t1_a_p3" text="+6 salud máxima." />
     <string id="taom_cl_t1_a_p4" text="+5% de moral de tropas." />
     <string id="taom_cl_t1_b_key" text="Duración de Muro de Escudos extendida, resistiendo los asaltos más prolongados." />
     <string id="taom_cl_t1_b_p1" text="+8% de daño cuerpo a cuerpo." />
     <string id="taom_cl_t1_b_p2" text="+5 salud máxima." />
-    <string id="taom_cl_t1_b_p3" text="+5% de resistencia de tropas." />
+    <string id="taom_cl_t1_b_p3" text="+10% de resistencia de las tropas." />
     <string id="taom_cl_t1_b_p4" text="+7% de velocidad de balanceo." />
     <string id="taom_cl_t2_a_key" text="Carga de muro de escudos reducida, reagrupando el muro con mayor frecuencia." />
-    <string id="taom_cl_t2_a_p1" text="+10% de resistencia de tropas." />
+    <string id="taom_cl_t2_a_p1" text="+13% de resistencia de las tropas." />
     <string id="taom_cl_t2_a_p2" text="+2 de tamaño de grupo." />
     <string id="taom_cl_t2_a_p3" text="+10% de resistencia." />
     <string id="taom_cl_t2_a_p4" text="-10% de salarios de tropas." />
@@ -1188,11 +1188,11 @@
     <string id="taom_ldm_t3_b_p2" text="+15% de daño a distancia." />
     <string id="taom_ldm_t3_b_p3" text="+9 de salud máxima." />
     <string id="taom_ldm_t3_b_p4" text="+10% de rango de exploración del grupo." />
-    <string id="taom_bk_root_desc" text="Inquebrantable otorga +5% de daño de carga de caballo mientras tu hueste cabalga sin piedad." />
+    <string id="taom_bk_root_desc" text="Inquebrantable otorga +10% de daño de carga montada mientras tu hueste cabalga sin piedad." />
     <string id="taom_bk_t1_a_key" text="Radio de Inquebrantable expandido, reuniendo una marea más amplia de jinetes." />
-    <string id="taom_bk_t1_a_p1" text="+8% de daño de carga de caballo." />
+    <string id="taom_bk_t1_a_p1" text="+10% de daño de carga montada." />
     <string id="taom_bk_t1_a_p2" text="+5% de moral de tropas." />
-    <string id="taom_bk_t1_a_p3" text="+30 de salud de caballo." />
+    <string id="taom_bk_t1_a_p3" text="+10% de salud de los caballos." />
     <string id="taom_bk_t1_a_p4" text="+5% de daño cuerpo a cuerpo." />
     <string id="taom_bk_t1_b_key" text="Duración de Inquebrantable extendida, sosteniendo la carga sin temor." />
     <string id="taom_bk_t1_b_p1" text="+7% de resistencia." />
@@ -1205,13 +1205,13 @@
     <string id="taom_bk_t2_a_p3" text="+10% de ganancia de renombre en batalla." />
     <string id="taom_bk_t2_a_p4" text="-10% de salarios de tropas." />
     <string id="taom_bk_t2_b_key" text="Inquebrantable fortifica monturas durante la carga." />
-    <string id="taom_bk_t2_b_p1" text="+12% de daño de carga de caballo." />
-    <string id="taom_bk_t2_b_p2" text="+60 de salud de caballo." />
+    <string id="taom_bk_t2_b_p1" text="+13% de daño de carga montada." />
+    <string id="taom_bk_t2_b_p2" text="+13% de salud de los caballos." />
     <string id="taom_bk_t2_b_p3" text="+10% de resistencia." />
     <string id="taom_bk_t2_b_p4" text="+10% de moral de tropas." />
     <string id="taom_bk_t3_a_key" text="Radio de Inquebrantable enormemente expandido, la estampida es imparable." />
-    <string id="taom_bk_t3_a_p1" text="+18% de daño de carga de caballo." />
-    <string id="taom_bk_t3_a_p2" text="+100 de salud de caballo." />
+    <string id="taom_bk_t3_a_p1" text="+15% de daño de carga montada." />
+    <string id="taom_bk_t3_a_p2" text="+15% de salud de los caballos." />
     <string id="taom_bk_t3_a_p3" text="+15% de moral de tropas." />
     <string id="taom_bk_t3_a_p4" text="+4 de tamaño del grupo." />
     <string id="taom_bk_t3_b_key" text="Carga de Inquebrantable enormemente reducida, siempre presente e implacable." />
@@ -1228,7 +1228,7 @@
     <string id="taom_dg2_t1_b_key" text="Duración de Defensa de la Puerta extendida, fortificando la defensa." />
     <string id="taom_dg2_t1_b_p1" text="+8% resistencia." />
     <string id="taom_dg2_t1_b_p2" text="+5% moral de tropas." />
-    <string id="taom_dg2_t1_b_p3" text="+5% resistencia de tropas." />
+    <string id="taom_dg2_t1_b_p3" text="+10% de resistencia de las tropas." />
     <string id="taom_dg2_t1_b_p4" text="+5% de supervivencia de tropas." />
     <string id="taom_dg2_t2_a_key" text="Carga de Defensa de la Puerta reducida, activándose con mayor frecuencia." />
     <string id="taom_dg2_t2_a_p1" text="+10% moral de tropas." />
@@ -1238,7 +1238,7 @@
     <string id="taom_dg2_t2_b_key" text="Defensa de la Puerta otorga bonificaciones defensivas adicionales mientras está activa." />
     <string id="taom_dg2_t2_b_p1" text="+12% resistencia." />
     <string id="taom_dg2_t2_b_p2" text="+8 salud máxima." />
-    <string id="taom_dg2_t2_b_p3" text="+10% resistencia de tropas." />
+    <string id="taom_dg2_t2_b_p3" text="+13% de resistencia de las tropas." />
     <string id="taom_dg2_t2_b_p4" text="+5% daño de tropas." />
     <string id="taom_dg2_t3_a_key" text="Radio de Defensa de la Puerta enormemente expandido, poder devastador." />
     <string id="taom_dg2_t3_a_p1" text="+15% daño cuerpo a cuerpo." />
@@ -1247,7 +1247,7 @@
     <string id="taom_dg2_t3_a_p4" text="+4 tamaño del grupo." />
     <string id="taom_dg2_t3_b_key" text="Carga de Defensa de la Puerta enormemente reducida, casi siempre disponible." />
     <string id="taom_dg2_t3_b_p1" text="+18% resistencia." />
-    <string id="taom_dg2_t3_b_p2" text="+15% regeneración de salud." />
+    <string id="taom_dg2_t3_b_p2" text="+15% de regeneración de salud del héroe." />
     <string id="taom_dg2_t3_b_p3" text="+20% moral de tropas." />
     <string id="taom_dg2_t3_b_p4" text="+15% de supervivencia de tropas." />
     <string id="taom_dale_marksman_root_desc" text="Flecha Negra otorga +5% daño a distancia en honor a Bardo el Arquero." />
@@ -1260,11 +1260,11 @@
     <string id="taom_dm_t1_b_p1" text="+5% de resistencia." />
     <string id="taom_dm_t1_b_p2" text="+5 salud máxima." />
     <string id="taom_dm_t1_b_p3" text="+5% de rango de exploración del grupo." />
-    <string id="taom_dm_t1_b_p4" text="+5% de bonificación de sigilo." />
+    <string id="taom_dm_t1_b_p4" text="+10% de bonificación de sigilo." />
     <string id="taom_dm_t2_a_key" text="Carga de Flecha Negra reducida, manteniendo presión constante." />
     <string id="taom_dm_t2_a_p1" text="+10% de rango de exploración del grupo." />
     <string id="taom_dm_t2_a_p2" text="+10% de velocidad de movimiento." />
-    <string id="taom_dm_t2_a_p3" text="+10% de bonificación de sigilo." />
+    <string id="taom_dm_t2_a_p3" text="+13% de bonificación de sigilo." />
     <string id="taom_dm_t2_a_p4" text="+10% de ganancia de renombre en batalla." />
     <string id="taom_dm_t2_b_key" text="Flecha Negra gana penetración adicional mientras está activa." />
     <string id="taom_dm_t2_b_p1" text="+12% de daño a distancia." />
@@ -1284,11 +1284,11 @@
     <string id="taom_dale_outrider_root_desc" text="Carrera de la Ruta Comercial otorga +5% de daño cuerpo a cuerpo y tu caballo se acelera." />
     <string id="taom_dor_t1_a_key" text="Radio de Carrera de la Ruta Comercial expandido, barriendo formaciones más amplias." />
     <string id="taom_dor_t1_a_p1" text="+8% de daño cuerpo a cuerpo." />
-    <string id="taom_dor_t1_a_p2" text="+7% de daño de carga de caballo." />
+    <string id="taom_dor_t1_a_p2" text="+10% de daño por carga del caballo." />
     <string id="taom_dor_t1_a_p3" text="+7% de velocidad de balanceo." />
     <string id="taom_dor_t1_a_p4" text="+5% de velocidad de movimiento del grupo." />
     <string id="taom_dor_t1_b_key" text="Duración de Carrera por Ruta Comercial extendida, manteniendo el impulso." />
-    <string id="taom_dor_t1_b_p1" text="+30 de salud de caballo." />
+    <string id="taom_dor_t1_b_p1" text="+10% de salud del caballo." />
     <string id="taom_dor_t1_b_p2" text="+5 de salud máxima." />
     <string id="taom_dor_t1_b_p3" text="-5% de salarios de tropas." />
     <string id="taom_dor_t1_b_p4" text="+5% de resistencia." />
@@ -1299,16 +1299,16 @@
     <string id="taom_dor_t2_a_p4" text="+10% de ganancia de renombre en batalla." />
     <string id="taom_dor_t2_b_key" text="Esprínt del Camino Comercial aumenta la resistencia de la montura mientras está activo." />
     <string id="taom_dor_t2_b_p1" text="+12% de daño cuerpo a cuerpo." />
-    <string id="taom_dor_t2_b_p2" text="+12% de daño de carga a caballo." />
-    <string id="taom_dor_t2_b_p3" text="+60 de salud del caballo." />
+    <string id="taom_dor_t2_b_p2" text="+13% de daño por carga del caballo." />
+    <string id="taom_dor_t2_b_p3" text="+13% de salud del caballo." />
     <string id="taom_dor_t2_b_p4" text="+10% de velocidad de ataque." />
     <string id="taom_dor_t3_a_key" text="Radio del Esprínt del Camino Comercial enormemente expandido, impacto imparable." />
     <string id="taom_dor_t3_a_p1" text="+18% de daño cuerpo a cuerpo." />
-    <string id="taom_dor_t3_a_p2" text="+18% de daño de carga a caballo." />
+    <string id="taom_dor_t3_a_p2" text="+15% de daño por carga del caballo." />
     <string id="taom_dor_t3_a_p3" text="+15% de velocidad de ataque." />
     <string id="taom_dor_t3_a_p4" text="+7% de daño de tropas." />
     <string id="taom_dor_t3_b_key" text="Recarga del Esprínt del Camino Comercial enormemente reducida, cabalga sin cesar." />
-    <string id="taom_dor_t3_b_p1" text="+100 de salud del caballo." />
+    <string id="taom_dor_t3_b_p1" text="+15% de salud del caballo." />
     <string id="taom_dor_t3_b_p2" text="-15% de salarios de tropas." />
     <string id="taom_dor_t3_b_p3" text="+15% de velocidad de movimiento del grupo." />
     <string id="taom_dor_t3_b_p4" text="+9 de salud máxima." />
@@ -1321,7 +1321,7 @@
     <string id="taom_ig_t1_b_key" text="Duración del Bastión de Mithril extendida, fortificando la defensa." />
     <string id="taom_ig_t1_b_p1" text="+8% de resistencia." />
     <string id="taom_ig_t1_b_p2" text="+5% de moral de tropas." />
-    <string id="taom_ig_t1_b_p3" text="+5% de resistencia de tropas." />
+    <string id="taom_ig_t1_b_p3" text="+10% de resistencia de las tropas." />
     <string id="taom_ig_t1_b_p4" text="+5% de supervivencia de tropas." />
     <string id="taom_ig_t2_a_key" text="Recarga del Bastión de Mithril reducida, activándose más frecuentemente." />
     <string id="taom_ig_t2_a_p1" text="+10% de moral de tropas." />
@@ -1331,7 +1331,7 @@
     <string id="taom_ig_t2_b_key" text="Bastión de Mithril otorga bonificaciones defensivas adicionales mientras está activo." />
     <string id="taom_ig_t2_b_p1" text="+12% de resistencia." />
     <string id="taom_ig_t2_b_p2" text="+8 de salud máxima." />
-    <string id="taom_ig_t2_b_p3" text="+10% de resistencia de tropas." />
+    <string id="taom_ig_t2_b_p3" text="+13% de resistencia de las tropas." />
     <string id="taom_ig_t2_b_p4" text="+5% de daño de tropas." />
     <string id="taom_ig_t3_a_key" text="Radio del Bastión de Mithril enormemente expandido, poder devastador." />
     <string id="taom_ig_t3_a_p1" text="+15% de daño cuerpo a cuerpo." />
@@ -1340,7 +1340,7 @@
     <string id="taom_ig_t3_a_p4" text="+4 de tamaño de grupo." />
     <string id="taom_ig_t3_b_key" text="Carga de Bastión de Mithril muy reducida, casi siempre disponible." />
     <string id="taom_ig_t3_b_p1" text="+18% de resistencia." />
-    <string id="taom_ig_t3_b_p2" text="+15% de regeneración de salud." />
+    <string id="taom_ig_t3_b_p2" text="+15% de regeneración de salud del héroe." />
     <string id="taom_ig_t3_b_p3" text="+20% de moral de tropas." />
     <string id="taom_ig_t3_b_p4" text="+15% de supervivencia de tropas." />
     <string id="taom_crossbow_master_root_desc" text="Andanada de Precisión otorga +5% de daño a distancia con virotes de obra maestra." />
@@ -1353,11 +1353,11 @@
     <string id="taom_cbm_t1_b_p1" text="+5% de resistencia." />
     <string id="taom_cbm_t1_b_p2" text="+5 de salud máxima." />
     <string id="taom_cbm_t1_b_p3" text="+5% de rango de avistamiento del grupo." />
-    <string id="taom_cbm_t1_b_p4" text="+5% de bonificación de sigilo." />
+    <string id="taom_cbm_t1_b_p4" text="+10% de bonificación de sigilo." />
     <string id="taom_cbm_t2_a_key" text="Carga de Andanada de Precisión reducida, manteniendo presión constante." />
     <string id="taom_cbm_t2_a_p1" text="+10% de rango de avistamiento del grupo." />
     <string id="taom_cbm_t2_a_p2" text="+10% de velocidad de movimiento." />
-    <string id="taom_cbm_t2_a_p3" text="+10% de bonificación de sigilo." />
+    <string id="taom_cbm_t2_a_p3" text="+13% de bonificación de sigilo." />
     <string id="taom_cbm_t2_a_p4" text="+10% de ganancia de renombre en batalla." />
     <string id="taom_cbm_t2_b_key" text="Andanada de Precisión gana penetración adicional mientras está activa." />
     <string id="taom_cbm_t2_b_p1" text="+12% de daño a distancia." />
@@ -1377,11 +1377,11 @@
     <string id="taom_ram_rider_root_desc" text="Carga de Montaña otorga +5% de daño cuerpo a cuerpo, el carnero baja sus cuernos." />
     <string id="taom_rr_t1_a_key" text="Radio de Carga de Montaña ampliado, arrasando formaciones más amplias." />
     <string id="taom_rr_t1_a_p1" text="+8% daño cuerpo a cuerpo." />
-    <string id="taom_rr_t1_a_p2" text="+7% daño de carga de caballo." />
+    <string id="taom_rr_t1_a_p2" text="+10% de daño por carga del caballo." />
     <string id="taom_rr_t1_a_p3" text="+7% velocidad de golpe." />
     <string id="taom_rr_t1_a_p4" text="+5% velocidad de movimiento de grupo." />
     <string id="taom_rr_t1_b_key" text="Duración de Carga de Montaña extendida, manteniendo el impulso." />
-    <string id="taom_rr_t1_b_p1" text="+30 salud de caballo." />
+    <string id="taom_rr_t1_b_p1" text="+10% de salud del caballo." />
     <string id="taom_rr_t1_b_p2" text="+5 salud máxima." />
     <string id="taom_rr_t1_b_p3" text="-5% salario de tropas." />
     <string id="taom_rr_t1_b_p4" text="+5% resistencia." />
@@ -1392,16 +1392,16 @@
     <string id="taom_rr_t2_a_p4" text="+10% ganancia de renombre en batalla." />
     <string id="taom_rr_t2_b_key" text="Carga de Montaña aumenta la resistencia de la montura mientras está activa." />
     <string id="taom_rr_t2_b_p1" text="+12% daño cuerpo a cuerpo." />
-    <string id="taom_rr_t2_b_p2" text="+12% daño de carga de caballo." />
-    <string id="taom_rr_t2_b_p3" text="+60 salud de caballo." />
+    <string id="taom_rr_t2_b_p2" text="+13% de daño por carga del caballo." />
+    <string id="taom_rr_t2_b_p3" text="+13% de salud del caballo." />
     <string id="taom_rr_t2_b_p4" text="+10% velocidad de golpe." />
     <string id="taom_rr_t3_a_key" text="Radio de Carga de Montaña ampliado enormemente, impacto imparable." />
     <string id="taom_rr_t3_a_p1" text="+18% daño cuerpo a cuerpo." />
-    <string id="taom_rr_t3_a_p2" text="+18% daño de carga de caballo." />
+    <string id="taom_rr_t3_a_p2" text="+15% de daño por carga del caballo." />
     <string id="taom_rr_t3_a_p3" text="+15% velocidad de golpe." />
     <string id="taom_rr_t3_a_p4" text="+7% daño de tropas." />
     <string id="taom_rr_t3_b_key" text="Carga de Carga de Montaña reducida enormemente, cabalgar sin cesar." />
-    <string id="taom_rr_t3_b_p1" text="+100 salud de caballo." />
+    <string id="taom_rr_t3_b_p1" text="+15% de salud del caballo." />
     <string id="taom_rr_t3_b_p2" text="-15% salario de tropas." />
     <string id="taom_rr_t3_b_p3" text="+15% velocidad de movimiento de grupo." />
     <string id="taom_rr_t3_b_p4" text="+9 salud máxima." />
@@ -1414,7 +1414,7 @@
     <string id="taom_bd_t1_b_key" text="Duración de Tejido de Luz Estelar extendida, fortificando la defensa." />
     <string id="taom_bd_t1_b_p1" text="+8% resistencia." />
     <string id="taom_bd_t1_b_p2" text="+5% moral de tropas." />
-    <string id="taom_bd_t1_b_p3" text="+5% resistencia de tropas." />
+    <string id="taom_bd_t1_b_p3" text="+10% de resistencia de las tropas." />
     <string id="taom_bd_t1_b_p4" text="+5% de supervivencia de tropas." />
     <string id="taom_bd_t2_a_key" text="Carga de Tejido de Luz Estelar reducida, activándose con mayor frecuencia." />
     <string id="taom_bd_t2_a_p1" text="+10% de moral de tropas." />
@@ -1424,7 +1424,7 @@
     <string id="taom_bd_t2_b_key" text="Tejido de Luz Estelar otorga bonificaciones defensivas adicionales mientras está activo." />
     <string id="taom_bd_t2_b_p1" text="+12% de resistencia." />
     <string id="taom_bd_t2_b_p2" text="+8 de salud máxima." />
-    <string id="taom_bd_t2_b_p3" text="+10% de resistencia de tropas." />
+    <string id="taom_bd_t2_b_p3" text="+13% de resistencia de las tropas." />
     <string id="taom_bd_t2_b_p4" text="+5% de daño de tropas." />
     <string id="taom_bd_t3_a_key" text="Radio de Tejido de Luz Estelar enormemente expandido, poder devastador." />
     <string id="taom_bd_t3_a_p1" text="+15% de daño cuerpo a cuerpo." />
@@ -1433,7 +1433,7 @@
     <string id="taom_bd_t3_a_p4" text="+4 de tamaño de grupo." />
     <string id="taom_bd_t3_b_key" text="Carga de Tejido de Luz Estelar enormemente reducida, casi siempre disponible." />
     <string id="taom_bd_t3_b_p1" text="+18% de resistencia." />
-    <string id="taom_bd_t3_b_p2" text="+15% de regeneración de salud." />
+    <string id="taom_bd_t3_b_p2" text="+15% de regeneración de salud del héroe." />
     <string id="taom_bd_t3_b_p3" text="+20% de moral de tropas." />
     <string id="taom_bd_t3_b_p4" text="+15% de supervivencia de tropas." />
     <string id="taom_elven_archer_root_desc" text="Vista Élfica otorga +5% de daño a distancia con siglos de práctica." />
@@ -1446,11 +1446,11 @@
     <string id="taom_elar_t1_b_p1" text="+5% de resistencia." />
     <string id="taom_elar_t1_b_p2" text="+5 salud máxima." />
     <string id="taom_elar_t1_b_p3" text="+5% rango de exploración del grupo." />
-    <string id="taom_elar_t1_b_p4" text="+5% bonificación de sigilo." />
+    <string id="taom_elar_t1_b_p4" text="+10% de bonificación de sigilo." />
     <string id="taom_elar_t2_a_key" text="Carga de Vista Élfica reducida, manteniendo presión constante." />
     <string id="taom_elar_t2_a_p1" text="+10% rango de exploración del grupo." />
     <string id="taom_elar_t2_a_p2" text="+10% velocidad de movimiento." />
-    <string id="taom_elar_t2_a_p3" text="+10% bonificación de sigilo." />
+    <string id="taom_elar_t2_a_p3" text="+13% de bonificación de sigilo." />
     <string id="taom_elar_t2_a_p4" text="+10% ganancia de renombre en batalla." />
     <string id="taom_elar_t2_b_key" text="Vista Élfica gana penetración adicional mientras está activa." />
     <string id="taom_elar_t2_b_p1" text="+12% daño a distancia." />
@@ -1470,11 +1470,11 @@
     <string id="taom_rivendell_knight_root_desc" text="Última Alianza otorga +5% de daño cuerpo a cuerpo e inspira a tus aliados." />
     <string id="taom_rvk_t1_a_key" text="Radio de Última Alianza expandido, barriendo formaciones más amplias." />
     <string id="taom_rvk_t1_a_p1" text="+8% de daño cuerpo a cuerpo." />
-    <string id="taom_rvk_t1_a_p2" text="+7% de daño de carga de caballo." />
+    <string id="taom_rvk_t1_a_p2" text="+10% de daño por carga del caballo." />
     <string id="taom_rvk_t1_a_p3" text="+7% de velocidad de balanceo." />
     <string id="taom_rvk_t1_a_p4" text="+5% de velocidad de movimiento de grupo." />
     <string id="taom_rvk_t1_b_key" text="Duración de Última Alianza extendida, manteniendo el impulso." />
-    <string id="taom_rvk_t1_b_p1" text="+30 de salud de caballo." />
+    <string id="taom_rvk_t1_b_p1" text="+10% de salud del caballo." />
     <string id="taom_rvk_t1_b_p2" text="+5 de salud máxima." />
     <string id="taom_rvk_t1_b_p3" text="-5% de salarios de tropas." />
     <string id="taom_rvk_t1_b_p4" text="+5% de resistencia." />
@@ -1485,16 +1485,16 @@
     <string id="taom_rvk_t2_a_p4" text="+10% de ganancia de renombre en batalla." />
     <string id="taom_rvk_t2_b_key" text="Última Alianza aumenta la resistencia de la montura mientras está activa." />
     <string id="taom_rvk_t2_b_p1" text="+12% de daño cuerpo a cuerpo." />
-    <string id="taom_rvk_t2_b_p2" text="+12% de daño de carga de caballo." />
-    <string id="taom_rvk_t2_b_p3" text="+60 de salud de caballo." />
+    <string id="taom_rvk_t2_b_p2" text="+13% de daño por carga del caballo." />
+    <string id="taom_rvk_t2_b_p3" text="+13% de salud del caballo." />
     <string id="taom_rvk_t2_b_p4" text="+10% de velocidad de balanceo." />
     <string id="taom_rvk_t3_a_key" text="Radio de Última Alianza enormemente expandido, impacto imparable." />
     <string id="taom_rvk_t3_a_p1" text="+18% de daño cuerpo a cuerpo." />
-    <string id="taom_rvk_t3_a_p2" text="+18% de daño de carga de caballo." />
+    <string id="taom_rvk_t3_a_p2" text="+15% de daño por carga del caballo." />
     <string id="taom_rvk_t3_a_p3" text="+15% de velocidad de balanceo." />
     <string id="taom_rvk_t3_a_p4" text="+7% de daño de tropas." />
     <string id="taom_rvk_t3_b_key" text="Carga de Última Alianza enormemente reducida, cabalgar sin cesar." />
-    <string id="taom_rvk_t3_b_p1" text="+100 de salud de caballo." />
+    <string id="taom_rvk_t3_b_p1" text="+15% de salud del caballo." />
     <string id="taom_rvk_t3_b_p2" text="-15% de salarios de tropas." />
     <string id="taom_rvk_t3_b_p3" text="+15% de velocidad de movimiento del grupo." />
     <string id="taom_rvk_t3_b_p4" text="+9 de salud máxima." />
@@ -1507,7 +1507,7 @@
     <string id="taom_wdn_t1_b_key" text="Duración de la Bendición de Nimrodel extendida, fortificando la defensa." />
     <string id="taom_wdn_t1_b_p1" text="+8% de resistencia." />
     <string id="taom_wdn_t1_b_p2" text="+5% de moral de tropas." />
-    <string id="taom_wdn_t1_b_p3" text="+5% de resistencia de tropas." />
+    <string id="taom_wdn_t1_b_p3" text="+10% de resistencia de las tropas." />
     <string id="taom_wdn_t1_b_p4" text="+5% de supervivencia de tropas." />
     <string id="taom_wdn_t2_a_key" text="Carga de la Bendición de Nimrodel reducida, activándose con mayor frecuencia." />
     <string id="taom_wdn_t2_a_p1" text="+10% de moral de tropas." />
@@ -1517,7 +1517,7 @@
     <string id="taom_wdn_t2_b_key" text="La Bendición de Nimrodel otorga bonificaciones defensivas adicionales mientras está activa." />
     <string id="taom_wdn_t2_b_p1" text="+12% de resistencia." />
     <string id="taom_wdn_t2_b_p2" text="+8 de salud máxima." />
-    <string id="taom_wdn_t2_b_p3" text="+10% de resistencia de tropas." />
+    <string id="taom_wdn_t2_b_p3" text="+13% de resistencia de las tropas." />
     <string id="taom_wdn_t2_b_p4" text="+5% de daño de tropas." />
     <string id="taom_wdn_t3_a_key" text="Radio de la Bendición de Nimrodel ampliamente expandido, poder devastador." />
     <string id="taom_wdn_t3_a_p1" text="+15% de daño cuerpo a cuerpo." />
@@ -1526,7 +1526,7 @@
     <string id="taom_wdn_t3_a_p4" text="+4 de tamaño del grupo." />
     <string id="taom_wdn_t3_b_key" text="Carga de la Bendición de Nimrodel enormemente reducida, casi siempre disponible." />
     <string id="taom_wdn_t3_b_p1" text="+18% de resistencia." />
-    <string id="taom_wdn_t3_b_p2" text="+15% de regeneración de salud." />
+    <string id="taom_wdn_t3_b_p2" text="+15% de regeneración de salud del héroe." />
     <string id="taom_wdn_t3_b_p3" text="+20% de moral de tropas." />
     <string id="taom_wdn_t3_b_p4" text="+15% de supervivencia de tropas." />
     <string id="taom_galadhrim_archer_root_desc" text="Lluvia de Plata otorga +5% de daño a distancia, flechas bañadas en luz estelar." />
@@ -1539,11 +1539,11 @@
     <string id="taom_gar_t1_b_p1" text="+5% de resistencia." />
     <string id="taom_gar_t1_b_p2" text="+5 de salud máxima." />
     <string id="taom_gar_t1_b_p3" text="+5% de rango de avistamiento del grupo." />
-    <string id="taom_gar_t1_b_p4" text="+5% de bonificación de sigilo." />
+    <string id="taom_gar_t1_b_p4" text="+10% de bonificación de sigilo." />
     <string id="taom_gar_t2_a_key" text="Carga de Lluvia de Plata reducida, manteniendo presión constante." />
     <string id="taom_gar_t2_a_p1" text="+10% de rango de avistamiento del grupo." />
     <string id="taom_gar_t2_a_p2" text="+10% de velocidad de movimiento." />
-    <string id="taom_gar_t2_a_p3" text="+10% de bonificación de sigilo." />
+    <string id="taom_gar_t2_a_p3" text="+13% de bonificación de sigilo." />
     <string id="taom_gar_t2_a_p4" text="+10% de ganancia de renombre en batalla." />
     <string id="taom_gar_t2_b_key" text="Lluvia de Plata gana penetración adicional mientras está activa." />
     <string id="taom_gar_t2_b_p1" text="+12% de daño a distancia." />
@@ -1563,11 +1563,11 @@
     <string id="taom_sentinel_root_desc" text="Rapidez de Elanor otorga +5% de daño cuerpo a cuerpo y gracia élfica." />
     <string id="taom_snt_t1_a_key" text="Radio de Rapidez de Elanor expandido, barriendo formaciones más amplias." />
     <string id="taom_snt_t1_a_p1" text="+8% de daño cuerpo a cuerpo." />
-    <string id="taom_snt_t1_a_p2" text="+7% de daño de carga a caballo." />
+    <string id="taom_snt_t1_a_p2" text="+10% de daño por carga del caballo." />
     <string id="taom_snt_t1_a_p3" text="+7% de velocidad de golpe." />
     <string id="taom_snt_t1_a_p4" text="+5% de velocidad de movimiento del grupo." />
     <string id="taom_snt_t1_b_key" text="Duración de Rapidez de Elanor extendida, manteniendo el impulso." />
-    <string id="taom_snt_t1_b_p1" text="+30 de salud de caballo." />
+    <string id="taom_snt_t1_b_p1" text="+10% de salud del caballo." />
     <string id="taom_snt_t1_b_p2" text="+5 de salud máxima." />
     <string id="taom_snt_t1_b_p3" text="-5% de salarios de tropas." />
     <string id="taom_snt_t1_b_p4" text="+5% de resistencia." />
@@ -1578,16 +1578,16 @@
     <string id="taom_snt_t2_a_p4" text="+10% de ganancia de renombre en batalla." />
     <string id="taom_snt_t2_b_key" text="Rapidez de Elanor aumenta la resistencia de la montura mientras está activa." />
     <string id="taom_snt_t2_b_p1" text="+12% daño cuerpo a cuerpo." />
-    <string id="taom_snt_t2_b_p2" text="+12% daño de carga de caballo." />
-    <string id="taom_snt_t2_b_p3" text="+60 salud de caballo." />
+    <string id="taom_snt_t2_b_p2" text="+13% de daño de carga del caballo." />
+    <string id="taom_snt_t2_b_p3" text="+13% de salud del caballo." />
     <string id="taom_snt_t2_b_p4" text="+10% velocidad de ataque." />
     <string id="taom_snt_t3_a_key" text="Radio de Rapidez de Elanor expandido enormemente, impacto imparable." />
     <string id="taom_snt_t3_a_p1" text="+18% daño cuerpo a cuerpo." />
-    <string id="taom_snt_t3_a_p2" text="+18% daño de carga de caballo." />
+    <string id="taom_snt_t3_a_p2" text="+15% de daño de carga del caballo." />
     <string id="taom_snt_t3_a_p3" text="+15% velocidad de ataque." />
     <string id="taom_snt_t3_a_p4" text="+7% daño de tropas." />
     <string id="taom_snt_t3_b_key" text="Carga de Rapidez de Elanor reducida enormemente, cabalga sin cesar." />
-    <string id="taom_snt_t3_b_p1" text="+100 salud de caballo." />
+    <string id="taom_snt_t3_b_p1" text="+15% de salud del caballo." />
     <string id="taom_snt_t3_b_p2" text="-15% salarios de tropas." />
     <string id="taom_snt_t3_b_p3" text="+15% velocidad de movimiento del grupo." />
     <string id="taom_snt_t3_b_p4" text="+9 salud máxima." />
@@ -1600,7 +1600,7 @@
     <string id="taom_shw_t1_b_key" text="Duración de Manto del Bosque extendida, fortificando la defensa." />
     <string id="taom_shw_t1_b_p1" text="+8% resistencia." />
     <string id="taom_shw_t1_b_p2" text="+5% moral de tropas." />
-    <string id="taom_shw_t1_b_p3" text="+5% resistencia de tropas." />
+    <string id="taom_shw_t1_b_p3" text="+10% de resistencia de las tropas." />
     <string id="taom_shw_t1_b_p4" text="+5% de supervivencia de tropas." />
     <string id="taom_shw_t2_a_key" text="Carga de Manto del Bosque reducida, activándose con mayor frecuencia." />
     <string id="taom_shw_t2_a_p1" text="+10% moral de tropas." />
@@ -1610,7 +1610,7 @@
     <string id="taom_shw_t2_b_key" text="Manto del Bosque otorga mejoras defensivas adicionales mientras está activo." />
     <string id="taom_shw_t2_b_p1" text="+12% resistencia." />
     <string id="taom_shw_t2_b_p2" text="+8 salud máxima." />
-    <string id="taom_shw_t2_b_p3" text="+10% resistencia de tropas." />
+    <string id="taom_shw_t2_b_p3" text="+13% de resistencia de las tropas." />
     <string id="taom_shw_t2_b_p4" text="+5% daño de tropas." />
     <string id="taom_shw_t3_a_key" text="Radio del Manto del Bosque muy expandido, poder devastador." />
     <string id="taom_shw_t3_a_p1" text="+15% daño cuerpo a cuerpo." />
@@ -1619,7 +1619,7 @@
     <string id="taom_shw_t3_a_p4" text="+4 tamaño de grupo." />
     <string id="taom_shw_t3_b_key" text="Carga de Manto del Bosque enormemente reducida, casi siempre disponible." />
     <string id="taom_shw_t3_b_p1" text="+18% resistencia." />
-    <string id="taom_shw_t3_b_p2" text="+15% regeneración de salud." />
+    <string id="taom_shw_t3_b_p2" text="+15% de regeneración de salud del héroe." />
     <string id="taom_shw_t3_b_p3" text="+20% moral de tropas." />
     <string id="taom_shw_t3_b_p4" text="+15% de supervivencia de tropas." />
     <string id="taom_silvan_archer_root_desc" text="Golpe del Dosel otorga +5% daño a distancia desde las copas de los árboles." />
@@ -1632,11 +1632,11 @@
     <string id="taom_sva_t1_b_p1" text="+5% resistencia." />
     <string id="taom_sva_t1_b_p2" text="+5 salud máxima." />
     <string id="taom_sva_t1_b_p3" text="+5% rango de exploración del grupo." />
-    <string id="taom_sva_t1_b_p4" text="+5% bonificación de sigilo." />
+    <string id="taom_sva_t1_b_p4" text="+10% de bonificación de sigilo." />
     <string id="taom_sva_t2_a_key" text="Carga de Golpe del Dosel reducida, manteniendo presión constante." />
     <string id="taom_sva_t2_a_p1" text="+10% rango de exploración del grupo." />
     <string id="taom_sva_t2_a_p2" text="+10% velocidad de movimiento." />
-    <string id="taom_sva_t2_a_p3" text="+10% bonificación de sigilo." />
+    <string id="taom_sva_t2_a_p3" text="+13% de bonificación de sigilo." />
     <string id="taom_sva_t2_a_p4" text="+10% ganancia de renombre en batalla." />
     <string id="taom_sva_t2_b_key" text="Golpe del Dosel gana penetración adicional mientras está activo." />
     <string id="taom_sva_t2_b_p1" text="+12% daño a distancia." />
@@ -1656,11 +1656,11 @@
     <string id="taom_elk_rider_root_desc" text="Embestida de Astas otorga +5% daño cuerpo a cuerpo, el gran alce carga." />
     <string id="taom_elk_t1_a_key" text="Radio de Embestida de Astas expandido, barriendo formaciones más amplias." />
     <string id="taom_elk_t1_a_p1" text="+8% daño cuerpo a cuerpo." />
-    <string id="taom_elk_t1_a_p2" text="+7% de daño de carga de caballo." />
+    <string id="taom_elk_t1_a_p2" text="+10% de daño de carga del caballo." />
     <string id="taom_elk_t1_a_p3" text="+7% de velocidad de golpe." />
     <string id="taom_elk_t1_a_p4" text="+5% de velocidad de movimiento del grupo." />
     <string id="taom_elk_t1_b_key" text="Duración de Embestida de Cuernos extendida, manteniendo el impulso." />
-    <string id="taom_elk_t1_b_p1" text="+30 de salud de caballo." />
+    <string id="taom_elk_t1_b_p1" text="+10% de salud del caballo." />
     <string id="taom_elk_t1_b_p2" text="+5 de salud máxima." />
     <string id="taom_elk_t1_b_p3" text="-5% de salarios de tropas." />
     <string id="taom_elk_t1_b_p4" text="+5% de resistencia." />
@@ -1671,16 +1671,16 @@
     <string id="taom_elk_t2_a_p4" text="+10% de ganancia de renombre en batalla." />
     <string id="taom_elk_t2_b_key" text="Embestida de Cuernos aumenta la resistencia de la montura mientras está activa." />
     <string id="taom_elk_t2_b_p1" text="+12% de daño cuerpo a cuerpo." />
-    <string id="taom_elk_t2_b_p2" text="+12% de daño de carga de caballo." />
-    <string id="taom_elk_t2_b_p3" text="+60 de salud de caballo." />
+    <string id="taom_elk_t2_b_p2" text="+13% de daño de carga del caballo." />
+    <string id="taom_elk_t2_b_p3" text="+13% de salud del caballo." />
     <string id="taom_elk_t2_b_p4" text="+10% de velocidad de golpe." />
     <string id="taom_elk_t3_a_key" text="Radio de Embestida de Cuernos enormemente expandido, impacto imparable." />
     <string id="taom_elk_t3_a_p1" text="+18% de daño cuerpo a cuerpo." />
-    <string id="taom_elk_t3_a_p2" text="+18% de daño de carga de caballo." />
+    <string id="taom_elk_t3_a_p2" text="+15% de daño de carga del caballo." />
     <string id="taom_elk_t3_a_p3" text="+15% de velocidad de golpe." />
     <string id="taom_elk_t3_a_p4" text="+7% de daño de tropas." />
     <string id="taom_elk_t3_b_key" text="Carga de Embestida de Cuernos enormemente reducida, cabalga sin cesar." />
-    <string id="taom_elk_t3_b_p1" text="+100 de salud de caballo." />
+    <string id="taom_elk_t3_b_p1" text="+15% de salud del caballo." />
     <string id="taom_elk_t3_b_p2" text="-15% de salarios de tropas." />
     <string id="taom_elk_t3_b_p3" text="+15% de velocidad de movimiento del grupo." />
     <string id="taom_elk_t3_b_p4" text="+9 de salud máxima." />
@@ -1693,7 +1693,7 @@
     <string id="taom_ub_t1_b_key" text="Duración de Furia Sangrienta extendida, fortificando la defensa." />
     <string id="taom_ub_t1_b_p1" text="+8% de resistencia." />
     <string id="taom_ub_t1_b_p2" text="+5% de moral de tropas." />
-    <string id="taom_ub_t1_b_p3" text="+5% de resistencia de tropas." />
+    <string id="taom_ub_t1_b_p3" text="+10% de resistencia de las tropas." />
     <string id="taom_ub_t1_b_p4" text="+5% de supervivencia de tropas." />
     <string id="taom_ub_t2_a_key" text="Carga de Furia Sangrienta reducida, activándose con más frecuencia." />
     <string id="taom_ub_t2_a_p1" text="+10% moral de tropas." />
@@ -1703,7 +1703,7 @@
     <string id="taom_ub_t2_b_key" text="Furia Sangrienta otorga bonificaciones defensivas adicionales mientras está activa." />
     <string id="taom_ub_t2_b_p1" text="+12% resistencia." />
     <string id="taom_ub_t2_b_p2" text="+8 salud máxima." />
-    <string id="taom_ub_t2_b_p3" text="+10% resistencia de tropas." />
+    <string id="taom_ub_t2_b_p3" text="+13% de resistencia de las tropas." />
     <string id="taom_ub_t2_b_p4" text="+5% daño de tropas." />
     <string id="taom_ub_t3_a_key" text="Radio de Furia Sangrienta enormemente expandido, poder devastador." />
     <string id="taom_ub_t3_a_p1" text="+15% daño cuerpo a cuerpo." />
@@ -1712,7 +1712,7 @@
     <string id="taom_ub_t3_a_p4" text="+4 tamaño de grupo." />
     <string id="taom_ub_t3_b_key" text="Carga de Furia Sangrienta enormemente reducida, casi siempre disponible." />
     <string id="taom_ub_t3_b_p1" text="+18% resistencia." />
-    <string id="taom_ub_t3_b_p2" text="+15% regeneración de salud." />
+    <string id="taom_ub_t3_b_p2" text="+15% de regeneración de salud del héroe." />
     <string id="taom_ub_t3_b_p3" text="+20% moral de tropas." />
     <string id="taom_ub_t3_b_p4" text="+15% de supervivencia de tropas." />
     <string id="taom_uruk_crossbow_root_desc" text="Lluvia de Hierro otorga +5% daño a distancia con virotes forjados en Orthanc." />
@@ -1725,11 +1725,11 @@
     <string id="taom_ucb_t1_b_p1" text="+5% resistencia." />
     <string id="taom_ucb_t1_b_p2" text="+5 salud máxima." />
     <string id="taom_ucb_t1_b_p3" text="+5% rango de exploración del grupo." />
-    <string id="taom_ucb_t1_b_p4" text="+5% bonificación de sigilo." />
+    <string id="taom_ucb_t1_b_p4" text="+10% de bonificación de sigilo." />
     <string id="taom_ucb_t2_a_key" text="Carga de Lluvia de Hierro reducida, manteniendo presión constante." />
     <string id="taom_ucb_t2_a_p1" text="+10% rango de exploración del grupo." />
     <string id="taom_ucb_t2_a_p2" text="+10% velocidad de movimiento." />
-    <string id="taom_ucb_t2_a_p3" text="+10% bonificación de sigilo." />
+    <string id="taom_ucb_t2_a_p3" text="+13% de bonificación de sigilo." />
     <string id="taom_ucb_t2_a_p4" text="+10% ganancia de renombre en batalla." />
     <string id="taom_ucb_t2_b_key" text="Lluvia de Hierro gana penetración adicional mientras está activa." />
     <string id="taom_ucb_t2_b_p1" text="+12% daño a distancia." />
@@ -1749,11 +1749,11 @@
     <string id="taom_warg_scout_root_desc" text="Aullido de Manada otorga +5% daño cuerpo a cuerpo y aterroriza a enemigos cercanos." />
     <string id="taom_wsc_t1_a_key" text="Radio de Aullido de Manada expandido, abarcando formaciones más amplias." />
     <string id="taom_wsc_t1_a_p1" text="+8% daño cuerpo a cuerpo." />
-    <string id="taom_wsc_t1_a_p2" text="+7% daño de carga de caballo." />
+    <string id="taom_wsc_t1_a_p2" text="+10% de daño de carga del caballo." />
     <string id="taom_wsc_t1_a_p3" text="+7% velocidad de golpe." />
     <string id="taom_wsc_t1_a_p4" text="+5% velocidad de movimiento de grupo." />
     <string id="taom_wsc_t1_b_key" text="Duración de Aullido de Manada extendida, manteniendo el impulso." />
-    <string id="taom_wsc_t1_b_p1" text="+30 salud de caballo." />
+    <string id="taom_wsc_t1_b_p1" text="+10% de salud del caballo." />
     <string id="taom_wsc_t1_b_p2" text="+5 salud máxima." />
     <string id="taom_wsc_t1_b_p3" text="-5% salarios de tropas." />
     <string id="taom_wsc_t1_b_p4" text="+5% resistencia." />
@@ -1764,48 +1764,48 @@
     <string id="taom_wsc_t2_a_p4" text="+10% ganancia de renombre en batalla." />
     <string id="taom_wsc_t2_b_key" text="Aullido de Manada aumenta la resistencia de la montura mientras está activo." />
     <string id="taom_wsc_t2_b_p1" text="+12% daño cuerpo a cuerpo." />
-    <string id="taom_wsc_t2_b_p2" text="+12% de daño de carga de caballo." />
-    <string id="taom_wsc_t2_b_p3" text="+60 de salud de caballo." />
+    <string id="taom_wsc_t2_b_p2" text="+13% de daño de carga del caballo." />
+    <string id="taom_wsc_t2_b_p3" text="+13% de salud del caballo." />
     <string id="taom_wsc_t2_b_p4" text="+10% de velocidad de golpe." />
     <string id="taom_wsc_t3_a_key" text="Radio de Aullido de Manada muy expandido, impacto imparable." />
     <string id="taom_wsc_t3_a_p1" text="+18% de daño cuerpo a cuerpo." />
-    <string id="taom_wsc_t3_a_p2" text="+18% de daño de carga de caballo." />
+    <string id="taom_wsc_t3_a_p2" text="+15% de daño de carga del caballo." />
     <string id="taom_wsc_t3_a_p3" text="+15% de velocidad de golpe." />
     <string id="taom_wsc_t3_a_p4" text="+7% de daño de tropas." />
     <string id="taom_wsc_t3_b_key" text="Carga de Aullido de Manada muy reducida, cabalga sin cesar." />
-    <string id="taom_wsc_t3_b_p1" text="+100 de salud de caballo." />
+    <string id="taom_wsc_t3_b_p1" text="+15% de salud del caballo." />
     <string id="taom_wsc_t3_b_p2" text="-15% de salario de tropas." />
     <string id="taom_wsc_t3_b_p3" text="+15% de velocidad de movimiento del grupo." />
     <string id="taom_wsc_t3_b_p4" text="+9 de salud máxima." />
     <string id="taom_cave_troll_master_root_desc" text="Frenesí de Trol otorga +5 de salud y vuelve berserk a tus troles." />
-    <string id="taom_ctm_t1_a_key" text="Radio de Frenesí de Trol aumentado, potenciando más guerreros." />
+    <string id="taom_ctm_t1_a_key" text="Aumenta el radio del Berserker de Gundabad, potenciando a más guerreros." />
     <string id="taom_ctm_t1_a_p1" text="+8% de daño cuerpo a cuerpo." />
     <string id="taom_ctm_t1_a_p2" text="+3% de daño de tropas." />
     <string id="taom_ctm_t1_a_p3" text="+6 de salud máxima." />
     <string id="taom_ctm_t1_a_p4" text="+7% de velocidad de golpe." />
-    <string id="taom_ctm_t1_b_key" text="Duración de Frenesí de Trol extendida, fortificando la defensa." />
+    <string id="taom_ctm_t1_b_key" text="Se extiende la duración del Berserker de Gundabad, fortaleciendo la defensa." />
     <string id="taom_ctm_t1_b_p1" text="+8% de resistencia." />
     <string id="taom_ctm_t1_b_p2" text="+5% de moral de tropas." />
-    <string id="taom_ctm_t1_b_p3" text="+5% de resistencia de tropas." />
+    <string id="taom_ctm_t1_b_p3" text="+10% de resistencia de las tropas." />
     <string id="taom_ctm_t1_b_p4" text="+5% de supervivencia de tropas." />
-    <string id="taom_ctm_t2_a_key" text="Carga de Frenesí de Trol reducida, activándose con mayor frecuencia." />
+    <string id="taom_ctm_t2_a_key" text="Se reduce la carga del Berserker de Gundabad, activándose con más frecuencia." />
     <string id="taom_ctm_t2_a_p1" text="+10% de moral de tropas." />
     <string id="taom_ctm_t2_a_p2" text="+2 de tamaño de grupo." />
     <string id="taom_ctm_t2_a_p3" text="+10% de ganancia de renombre en batalla." />
     <string id="taom_ctm_t2_a_p4" text="-10% de salarios de tropas." />
-    <string id="taom_ctm_t2_b_key" text="Frenesí de Trol otorga beneficios defensivos adicionales mientras está activo." />
+    <string id="taom_ctm_t2_b_key" text="El Berserker de Gundabad otorga bonificaciones defensivas adicionales mientras está activo." />
     <string id="taom_ctm_t2_b_p1" text="+12% de resistencia." />
     <string id="taom_ctm_t2_b_p2" text="+8 de salud máxima." />
-    <string id="taom_ctm_t2_b_p3" text="+10% de resistencia de tropas." />
+    <string id="taom_ctm_t2_b_p3" text="+13% de resistencia de las tropas." />
     <string id="taom_ctm_t2_b_p4" text="+5% de daño de tropas." />
-    <string id="taom_ctm_t3_a_key" text="Radio de Frenesí de Trol enormemente expandido, poder devastador." />
+    <string id="taom_ctm_t3_a_key" text="El radio del Berserker de Gundabad se expande enormemente, con poder devastador." />
     <string id="taom_ctm_t3_a_p1" text="+15% de daño cuerpo a cuerpo." />
     <string id="taom_ctm_t3_a_p2" text="+10 de salud máxima." />
     <string id="taom_ctm_t3_a_p3" text="+7% de daño de tropas." />
     <string id="taom_ctm_t3_a_p4" text="+4 de tamaño de grupo." />
-    <string id="taom_ctm_t3_b_key" text="Carga de Frenesí de Trol enormemente reducida, casi siempre disponible." />
+    <string id="taom_ctm_t3_b_key" text="La carga del Berserker de Gundabad se reduce enormemente, casi siempre disponible." />
     <string id="taom_ctm_t3_b_p1" text="+18% de resistencia." />
-    <string id="taom_ctm_t3_b_p2" text="+15% de regeneración de salud." />
+    <string id="taom_ctm_t3_b_p2" text="+15% de regeneración de salud del héroe." />
     <string id="taom_ctm_t3_b_p3" text="+20% de moral de tropas." />
     <string id="taom_ctm_t3_b_p4" text="+15% de supervivencia de tropas." />
     <string id="taom_goblin_sniper_root_desc" text="Dardo Venenoso otorga +5% de daño a distancia con toxina de hongo de caverna." />
@@ -1818,11 +1818,11 @@
     <string id="taom_gbs_t1_b_p1" text="+5% de resistencia." />
     <string id="taom_gbs_t1_b_p2" text="+5 de salud máxima." />
     <string id="taom_gbs_t1_b_p3" text="+5% de rango de detección de grupo." />
-    <string id="taom_gbs_t1_b_p4" text="+5% de bonificación de sigilo." />
+    <string id="taom_gbs_t1_b_p4" text="+10% de bonificación de sigilo." />
     <string id="taom_gbs_t2_a_key" text="Carga de Dardo Venenoso reducida, manteniendo presión constante." />
     <string id="taom_gbs_t2_a_p1" text="+10% de rango de detección de grupo." />
     <string id="taom_gbs_t2_a_p2" text="+10% de velocidad de movimiento." />
-    <string id="taom_gbs_t2_a_p3" text="+10% de bonificación de sigilo." />
+    <string id="taom_gbs_t2_a_p3" text="+13% de bonificación de sigilo." />
     <string id="taom_gbs_t2_a_p4" text="+10% de ganancia de renombre en batalla." />
     <string id="taom_gbs_t2_b_key" text="Dardo Venenoso gana penetración adicional mientras está activo." />
     <string id="taom_gbs_t2_b_p1" text="+12% de daño a distancia." />
@@ -1842,11 +1842,11 @@
     <string id="taom_warg_pack_leader_root_desc" text="Aullido Alfa otorga +5% de daño cuerpo a cuerpo y la manada caza." />
     <string id="taom_wpl_t1_a_key" text="Radio de Aullido Alfa expandido, abarcando formaciones más amplias." />
     <string id="taom_wpl_t1_a_p1" text="+8% de daño cuerpo a cuerpo." />
-    <string id="taom_wpl_t1_a_p2" text="+7% de daño de carga de caballo." />
+    <string id="taom_wpl_t1_a_p2" text="+10% de daño de carga del caballo." />
     <string id="taom_wpl_t1_a_p3" text="+7% de velocidad de golpe." />
     <string id="taom_wpl_t1_a_p4" text="+5% de velocidad de movimiento de grupo." />
     <string id="taom_wpl_t1_b_key" text="Duración de Aullido Alfa extendida, manteniendo el impulso." />
-    <string id="taom_wpl_t1_b_p1" text="+30 de salud de caballo." />
+    <string id="taom_wpl_t1_b_p1" text="+10% de salud del caballo." />
     <string id="taom_wpl_t1_b_p2" text="+5 de salud máxima." />
     <string id="taom_wpl_t1_b_p3" text="-5% de salarios de tropas." />
     <string id="taom_wpl_t1_b_p4" text="+5% de resistencia." />
@@ -1857,16 +1857,16 @@
     <string id="taom_wpl_t2_a_p4" text="+10% de ganancia de renombre en batalla." />
     <string id="taom_wpl_t2_b_key" text="Aullido Alfa aumenta la resistencia de la montura mientras está activo." />
     <string id="taom_wpl_t2_b_p1" text="+12% de daño cuerpo a cuerpo." />
-    <string id="taom_wpl_t2_b_p2" text="+12% de daño de carga de caballo." />
-    <string id="taom_wpl_t2_b_p3" text="+60 de salud de caballo." />
+    <string id="taom_wpl_t2_b_p2" text="+13% de daño de carga del caballo." />
+    <string id="taom_wpl_t2_b_p3" text="+13% de salud del caballo." />
     <string id="taom_wpl_t2_b_p4" text="+10% de velocidad de balanceo." />
     <string id="taom_wpl_t3_a_key" text="Radio de Aullido Alfa muy expandido, impacto imparable." />
     <string id="taom_wpl_t3_a_p1" text="+18% de daño cuerpo a cuerpo." />
-    <string id="taom_wpl_t3_a_p2" text="+18% de daño de carga de caballo." />
+    <string id="taom_wpl_t3_a_p2" text="+15% de daño de carga del caballo." />
     <string id="taom_wpl_t3_a_p3" text="+15% de velocidad de balanceo." />
     <string id="taom_wpl_t3_a_p4" text="+7% de daño de tropas." />
     <string id="taom_wpl_t3_b_key" text="Carga de Aullido Alfa muy reducida, cabalga sin cesar." />
-    <string id="taom_wpl_t3_b_p1" text="+100 de salud de caballo." />
+    <string id="taom_wpl_t3_b_p1" text="+15% de salud del caballo." />
     <string id="taom_wpl_t3_b_p2" text="-15% de salarios de tropas." />
     <string id="taom_wpl_t3_b_p3" text="+15% de velocidad de movimiento del grupo." />
     <string id="taom_wpl_t3_b_p4" text="+9 de salud máxima." />
@@ -1879,7 +1879,7 @@
     <string id="taom_swr_t1_b_key" text="Duración de Drenar Alma extendida, fortificando la defensa." />
     <string id="taom_swr_t1_b_p1" text="+8% de resistencia." />
     <string id="taom_swr_t1_b_p2" text="+5% de moral de tropas." />
-    <string id="taom_swr_t1_b_p3" text="+5% de resistencia de tropas." />
+    <string id="taom_swr_t1_b_p3" text="+10% de resistencia de las tropas." />
     <string id="taom_swr_t1_b_p4" text="+5% de supervivencia de tropas." />
     <string id="taom_swr_t2_a_key" text="Carga de Drenar Alma reducida, activándose más frecuentemente." />
     <string id="taom_swr_t2_a_p1" text="+10% de moral de tropas." />
@@ -1889,7 +1889,7 @@
     <string id="taom_swr_t2_b_key" text="Drenar Alma otorga mejoras defensivas adicionales mientras está activo." />
     <string id="taom_swr_t2_b_p1" text="+12% de resistencia." />
     <string id="taom_swr_t2_b_p2" text="+8 de salud máxima." />
-    <string id="taom_swr_t2_b_p3" text="+10% de resistencia de tropas." />
+    <string id="taom_swr_t2_b_p3" text="+13% de resistencia de las tropas." />
     <string id="taom_swr_t2_b_p4" text="+5% de daño de tropas." />
     <string id="taom_swr_t3_a_key" text="Radio de Drenar Alma muy expandido, poder devastador." />
     <string id="taom_swr_t3_a_p1" text="+15% de daño cuerpo a cuerpo." />
@@ -1898,7 +1898,7 @@
     <string id="taom_swr_t3_a_p4" text="+4 de tamaño de grupo." />
     <string id="taom_swr_t3_b_key" text="Carga de Drenaje de Alma muy reducida, casi siempre disponible." />
     <string id="taom_swr_t3_b_p1" text="+18% resistencia." />
-    <string id="taom_swr_t3_b_p2" text="+15% regeneración de salud." />
+    <string id="taom_swr_t3_b_p2" text="+15% de regeneración de salud del héroe." />
     <string id="taom_swr_t3_b_p3" text="+20% moral de tropas." />
     <string id="taom_swr_t3_b_p4" text="+15% de supervivencia de tropas." />
     <string id="taom_necromancer_acolyte_root_desc" text="Rayo Oscuro otorga +5% daño a distancia con energía nigromántica." />
@@ -1911,11 +1911,11 @@
     <string id="taom_nca_t1_b_p1" text="+5% resistencia." />
     <string id="taom_nca_t1_b_p2" text="+5 salud máxima." />
     <string id="taom_nca_t1_b_p3" text="+5% rango de avistamiento del grupo." />
-    <string id="taom_nca_t1_b_p4" text="+5% bonificación de sigilo." />
+    <string id="taom_nca_t1_b_p4" text="+10% de bonificación de sigilo." />
     <string id="taom_nca_t2_a_key" text="Carga de Rayo Oscuro reducida, manteniendo presión constante." />
     <string id="taom_nca_t2_a_p1" text="+10% rango de avistamiento del grupo." />
     <string id="taom_nca_t2_a_p2" text="+10% velocidad de movimiento." />
-    <string id="taom_nca_t2_a_p3" text="+10% bonificación de sigilo." />
+    <string id="taom_nca_t2_a_p3" text="+13% de bonificación de sigilo." />
     <string id="taom_nca_t2_a_p4" text="+10% ganancia de renombre en batalla." />
     <string id="taom_nca_t2_b_key" text="Rayo Oscuro gana penetración adicional mientras está activo." />
     <string id="taom_nca_t2_b_p1" text="+12% daño a distancia." />
@@ -1935,11 +1935,11 @@
     <string id="taom_fell_rider_root_desc" text="Carga del Pavor otorga +5% daño cuerpo a cuerpo, envolviendo tu montura en sombras." />
     <string id="taom_flr_t1_a_key" text="Radio de Carga del Pavor expandido, arrasando formaciones más amplias." />
     <string id="taom_flr_t1_a_p1" text="+8% daño cuerpo a cuerpo." />
-    <string id="taom_flr_t1_a_p2" text="+7% daño de carga de caballo." />
+    <string id="taom_flr_t1_a_p2" text="+10% de daño de carga del caballo." />
     <string id="taom_flr_t1_a_p3" text="+7% velocidad de golpe." />
     <string id="taom_flr_t1_a_p4" text="+5% velocidad de movimiento del grupo." />
     <string id="taom_flr_t1_b_key" text="Duración de Carga Temible extendida, manteniendo el impulso." />
-    <string id="taom_flr_t1_b_p1" text="+30 salud de caballo." />
+    <string id="taom_flr_t1_b_p1" text="+10% de salud del caballo." />
     <string id="taom_flr_t1_b_p2" text="+5 salud máxima." />
     <string id="taom_flr_t1_b_p3" text="-5% salarios de tropas." />
     <string id="taom_flr_t1_b_p4" text="+5% resistencia." />
@@ -1950,16 +1950,16 @@
     <string id="taom_flr_t2_a_p4" text="+10% ganancia de renombre en batalla." />
     <string id="taom_flr_t2_b_key" text="Carga Temible aumenta la resistencia de la montura mientras está activa." />
     <string id="taom_flr_t2_b_p1" text="+12% daño cuerpo a cuerpo." />
-    <string id="taom_flr_t2_b_p2" text="+12% daño de carga de caballo." />
-    <string id="taom_flr_t2_b_p3" text="+60 salud de caballo." />
+    <string id="taom_flr_t2_b_p2" text="+13% de daño de carga del caballo." />
+    <string id="taom_flr_t2_b_p3" text="+13% de salud del caballo." />
     <string id="taom_flr_t2_b_p4" text="+10% velocidad de golpe." />
     <string id="taom_flr_t3_a_key" text="Radio de Carga Temible muy expandido, impacto imparable." />
     <string id="taom_flr_t3_a_p1" text="+18% daño cuerpo a cuerpo." />
-    <string id="taom_flr_t3_a_p2" text="+18% daño de carga de caballo." />
+    <string id="taom_flr_t3_a_p2" text="+15% de daño de carga del caballo." />
     <string id="taom_flr_t3_a_p3" text="+15% velocidad de golpe." />
     <string id="taom_flr_t3_a_p4" text="+7% daño de tropas." />
     <string id="taom_flr_t3_b_key" text="Carga de Carga Temible muy reducida, cabalga sin cesar." />
-    <string id="taom_flr_t3_b_p1" text="+100 salud de caballo." />
+    <string id="taom_flr_t3_b_p1" text="+15% de salud del caballo." />
     <string id="taom_flr_t3_b_p2" text="-15% salarios de tropas." />
     <string id="taom_flr_t3_b_p3" text="+15% velocidad de movimiento del grupo." />
     <string id="taom_flr_t3_b_p4" text="+9 salud máxima." />
@@ -1972,7 +1972,7 @@
     <string id="taom_crb_t1_b_key" text="Duración de Acción de Abordaje extendida, fortificando la defensa." />
     <string id="taom_crb_t1_b_p1" text="+8% resistencia." />
     <string id="taom_crb_t1_b_p2" text="+5% moral de tropas." />
-    <string id="taom_crb_t1_b_p3" text="+5% resistencia de tropas." />
+    <string id="taom_crb_t1_b_p3" text="+10% de resistencia de las tropas." />
     <string id="taom_crb_t1_b_p4" text="+5% de supervivencia de tropas." />
     <string id="taom_crb_t2_a_key" text="Carga de Acción de Abordaje reducida, activándose con más frecuencia." />
     <string id="taom_crb_t2_a_p1" text="+10% moral de tropas." />
@@ -1982,7 +1982,7 @@
     <string id="taom_crb_t2_b_key" text="Acción de Abordaje otorga beneficios defensivos adicionales mientras está activa." />
     <string id="taom_crb_t2_b_p1" text="+12% de resistencia." />
     <string id="taom_crb_t2_b_p2" text="+8 de salud máxima." />
-    <string id="taom_crb_t2_b_p3" text="+10% de resistencia de tropas." />
+    <string id="taom_crb_t2_b_p3" text="+13% de resistencia de las tropas." />
     <string id="taom_crb_t2_b_p4" text="+5% de daño de tropas." />
     <string id="taom_crb_t3_a_key" text="Radio de Acción de Abordaje ampliado enormemente, poder devastador." />
     <string id="taom_crb_t3_a_p1" text="+15% de daño cuerpo a cuerpo." />
@@ -1991,7 +1991,7 @@
     <string id="taom_crb_t3_a_p4" text="+4 al tamaño del grupo." />
     <string id="taom_crb_t3_b_key" text="Recarga de Acción de Abordaje reducida enormemente, casi siempre disponible." />
     <string id="taom_crb_t3_b_p1" text="+18% de resistencia." />
-    <string id="taom_crb_t3_b_p2" text="+15% de regeneración de salud." />
+    <string id="taom_crb_t3_b_p2" text="+15% de regeneración de salud del héroe." />
     <string id="taom_crb_t3_b_p3" text="+20% de moral de tropas." />
     <string id="taom_crb_t3_b_p4" text="+15% de supervivencia de tropas." />
     <string id="taom_corsair_crossbow_root_desc" text="Disparo al Aparejo otorga +5% de daño a distancia con puntería firme." />
@@ -2004,11 +2004,11 @@
     <string id="taom_crc_t1_b_p1" text="+5% de resistencia." />
     <string id="taom_crc_t1_b_p2" text="+5 de salud máxima." />
     <string id="taom_crc_t1_b_p3" text="+5% de rango de avistamiento del grupo." />
-    <string id="taom_crc_t1_b_p4" text="+5% de bonificación de sigilo." />
+    <string id="taom_crc_t1_b_p4" text="+10% de bonificación de sigilo." />
     <string id="taom_crc_t2_a_key" text="Recarga de Disparo al Aparejo reducida, manteniendo presión constante." />
     <string id="taom_crc_t2_a_p1" text="+10% de rango de avistamiento del grupo." />
     <string id="taom_crc_t2_a_p2" text="+10% de velocidad de movimiento." />
-    <string id="taom_crc_t2_a_p3" text="+10% de bonificación de sigilo." />
+    <string id="taom_crc_t2_a_p3" text="+13% de bonificación de sigilo." />
     <string id="taom_crc_t2_a_p4" text="+10% de ganancia de renombre en batalla." />
     <string id="taom_crc_t2_b_key" text="Disparo al Aparejo gana penetración adicional mientras está activo." />
     <string id="taom_crc_t2_b_p1" text="+12% de daño a distancia." />
@@ -2028,11 +2028,11 @@
     <string id="taom_corsair_captain_root_desc" text="Saquear otorga +5% de daño cuerpo a cuerpo y reagrupa a tu tripulación." />
     <string id="taom_crca_t1_a_key" text="Radio de Saqueo expandido, barriendo formaciones más amplias." />
     <string id="taom_crca_t1_a_p1" text="+8% de daño cuerpo a cuerpo." />
-    <string id="taom_crca_t1_a_p2" text="+7% de daño de carga a caballo." />
+    <string id="taom_crca_t1_a_p2" text="+10% de daño de carga del caballo." />
     <string id="taom_crca_t1_a_p3" text="+7% de velocidad de golpe." />
     <string id="taom_crca_t1_a_p4" text="+5% de velocidad de movimiento de grupo." />
     <string id="taom_crca_t1_b_key" text="Duración de Saqueo extendida, manteniendo el impulso." />
-    <string id="taom_crca_t1_b_p1" text="+30 de salud de caballo." />
+    <string id="taom_crca_t1_b_p1" text="+10% de salud del caballo." />
     <string id="taom_crca_t1_b_p2" text="+5 de salud máxima." />
     <string id="taom_crca_t1_b_p3" text="-5% de salarios de tropas." />
     <string id="taom_crca_t1_b_p4" text="+5% de resistencia." />
@@ -2043,16 +2043,16 @@
     <string id="taom_crca_t2_a_p4" text="+10% de ganancia de renombre en batalla." />
     <string id="taom_crca_t2_b_key" text="Saquear aumenta la resistencia de la montura mientras está activo." />
     <string id="taom_crca_t2_b_p1" text="+12% de daño cuerpo a cuerpo." />
-    <string id="taom_crca_t2_b_p2" text="+12% de daño de carga a caballo." />
-    <string id="taom_crca_t2_b_p3" text="+60 de salud de caballo." />
+    <string id="taom_crca_t2_b_p2" text="+13% de daño de carga del caballo." />
+    <string id="taom_crca_t2_b_p3" text="+13% de salud del caballo." />
     <string id="taom_crca_t2_b_p4" text="+10% de velocidad de golpe." />
     <string id="taom_crca_t3_a_key" text="Radio de Saqueo muy expandido, impacto imparable." />
     <string id="taom_crca_t3_a_p1" text="+18% de daño cuerpo a cuerpo." />
-    <string id="taom_crca_t3_a_p2" text="+18% de daño de carga a caballo." />
+    <string id="taom_crca_t3_a_p2" text="+15% de daño de carga del caballo." />
     <string id="taom_crca_t3_a_p3" text="+15% de velocidad de golpe." />
     <string id="taom_crca_t3_a_p4" text="+7% de daño de tropas." />
     <string id="taom_crca_t3_b_key" text="Carga de Saqueo muy reducida, cabalga sin cesar." />
-    <string id="taom_crca_t3_b_p1" text="+100 de salud de caballo." />
+    <string id="taom_crca_t3_b_p1" text="+15% de salud del caballo." />
     <string id="taom_crca_t3_b_p2" text="-15% de salarios de tropas." />
     <string id="taom_crca_t3_b_p3" text="+15% de velocidad de movimiento de grupo." />
     <string id="taom_crca_t3_b_p4" text="+9 de salud máxima." />

@@ -1639,3 +1639,22 @@ audience's only guide.
 - **Prevent:** when the place a value lives changes, grep the repo for the old place's name (the attribute, the file,
   "resize") and fix every how-to, the handbook and doc-lookup included, in the same change.
 - **Source:** `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F6.
+
+### A troop in a culture's hero party template reaches no lord whose clan binds its own (2026-09-25)
+Both trolls sit only in `kingdom_hero_party_mordor_template`, the Mordor culture's default. A lord's roster comes from
+`Clan.DefaultPartyTemplate`, which falls back to the culture's template only when the clan names none, and all 15 Mordor
+clans name their own (9 in `spclans.xslt`, 6 in `characters/clans.xml`). So no AI lord fields a troll, and a comment
+saying the troll "spawns via the Mordor hero party template" had carried the error since the cave troll's return.
+- **Why missed:** the hill troll copied the cave troll's placement and comment without tracing `LordPartyComponent`.
+- **Prevent:** before writing "spawns via template X", grep which clans and lords reference X; a culture template is a
+  fallback, not a roster.
+- **Source:** `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 6.
+
+### A culture's lord template is not unused because every shipped clan binds its own (2026-09-25)
+The review called Mordor's culture template unused because all 15 Mordor clans bind a template. A companion
+made a lord gets a clan with the settlement's culture and no template (`Clan.CreateCompanionToLordClan`), so
+`Clan.DefaultPartyTemplate` falls back to the culture's, and `Campaign.CalculateAverageWage` reads every main
+culture's template too.
+- **Why missed:** the claim was built from the shipped data, not from the callers of `DefaultPartyTemplate`.
+- **Prevent:** before calling a template, list or setting unused, list every engine caller that can reach it.
+- **Source:** `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 46.

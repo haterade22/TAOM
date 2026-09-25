@@ -12,8 +12,8 @@
     <string id="taom_career_captain_of_osgiliath_desc" text="Закалённый в боях пехотный офицер, командующий передовой обороной Гондора на руинах Осгилиата, создающий порядок из хаоса в жестоких городских боях. Капитан держит рубеж там, где другие бы отступили, вдохновляя солдат чистой силой воли." />
     <string id="taom_career_knight_of_belfalas" text="Рыцарь Белфаласа" />
     <string id="taom_career_knight_of_belfalas_desc" text="Закованный в броню воин прибрежного удела Белфалас, чей громоподобный натиск разбивал бесчисленные вражеские строи. Рыцарь Белфаласа сочетает гондорскую дисциплину с гордыми кавалерийскими традициями Дол Амрота, становясь несокрушимой стеной из стали." />
-    <string id="taom_career_black_uruk_captain" text="Капитан чёрных uruков" />
-    <string id="taom_career_black_uruk_captain_desc" text="Железномускулистый воин Мордора, ведущий военные отряды чёрных uruков в прорыв, принимающий удары, что свалили бы меньших воинов, и переламывающий ход битвы грубой жестокой мощью." />
+    <string id="taom_career_black_uruk_captain" text="Капитан чёрных уруков" />
+    <string id="taom_career_black_uruk_captain_desc" text="Железномышечный поборник Мордора, что ведёт отряды чёрных уруков в прорыв, снося удары, которые сокрушили бы меньших воинов, и переламывая ход битвы грубой мощью." />
     <string id="taom_career_mulkerhili_cultist" text="Культист Мулкерхили" />
     <string id="taom_career_mulkerhili_cultist_desc" text="Фанатичный приверженец нашёптываний Единого Кольца, направляющий ужас голоса Саурона на разрушение вражеской решимости, сочетающий проклятую стрельбу из лука с безумным присутствием, разрушающим волю к сопротивлению." />
     <string id="taom_career_snaga_rider" text="Всадник Снага" />
@@ -26,11 +26,11 @@
     <string id="taom_career_eotheod_windrider_desc" text="Потомок древних конных мастеров Эотеод, скачущий с громом поколений легенд, вдохновляющий союзников боевым кличем, что вторит Эорлу Юному, и рассеивающий врагов под копытами неудержимой тяжёлой конницы." />
     <string id="taom_career_watchman_of_stangard" text="Страж Стангарда" />
     <string id="taom_career_watchman_of_stangard_desc" text="Видавший виды речной страж Стангарда, патрулирующий переправы через Андуин на плоскодонке и пешком, охраняющий восточный фланг Рохана через выносливость, знание местности и цепкую хватку боцмана на оспариваемой земле." />
-    <string id="taom_career_avanc_luth_raider" text="Налётчик Аванк-лут" />
+    <string id="taom_career_avanc_luth_raider" text="Дунландский поборник" />
     <string id="taom_career_avanc_luth_raider_desc" text="Раскрашенный кровью легковооружённый воин клана Аванк-лут, бросающийся в ближний бой с безрассудной агрессией, меняющий хирургическую точность на грубую дикую силу, сокрушающую противников чистым неослабевающим натиском." />
-    <string id="taom_career_wolfskin_hunter" text="Охотник в волчьей шкуре" />
+    <string id="taom_career_wolfskin_hunter" text="Дунландский лучник" />
     <string id="taom_career_wolfskin_hunter_desc" text="Терпеливый следопыт, одетый в волчьи шкуры и передвигающийся по предгорьям Мглистых гор как призрак, отмечающий добычу из укрытия, прежде чем выпустить точно нацеленную стрелу, которую жертва даже не слышит." />
-    <string id="taom_career_clanguard_rider" text="Всадник клановой стражи" />
+    <string id="taom_career_clanguard_rider" text="Дунландский дозорный всадник" />
     <string id="taom_career_clanguard_rider_desc" text="Быстрый кавалерийский налётчик клана, изматывающий вражеские фланги стремительными атаками с отходом, использующий превосходную скорость и координацию стаи для разрушения строев, пока клановая пехота не сблизится для последнего удара." />
     <string id="taom_career_blademaster_of_ren" text="Мастер клинка из Рен" />
     <string id="taom_career_blademaster_of_ren_desc" text="Точный дуэлянт из воинских дворов Рен, расправляющийся с врагами расчётливым смертоносным клинковым мастерством." />
@@ -52,11 +52,11 @@
     <string id="taom_career_lokhas_drus_marksman_desc" text="Специалист по пробитию брони из корпуса Локхас Друс, который тренируется пробивать стрелами самую тяжелую броню на расстоянии." />
     <string id="taom_career_balchoth_kan" text="Балхотский кан" />
     <string id="taom_career_balchoth_kan_desc" text="Командир тяжелой кавалерии балхотов, который возглавляет неудержимые конные атаки, поддерживая железный боевой дух вопреки любым шансам." />
-    <string id="taom_career_dale_guardsman" text="Стражник Дейла" />
+    <string id="taom_career_dale_guardsman" text="Мастер меча из Дейла" />
     <string id="taom_career_dale_guardsman_desc" text="Стойкий защитник отстроенного города Дейл, который держит врата против всех пришедших со щитом и копьем." />
-    <string id="taom_career_dale_marksman" text="Стрелок Дейла" />
+    <string id="taom_career_dale_marksman" text="Бардингский стрелок" />
     <string id="taom_career_dale_marksman_desc" text="Легендарный лучник Дейла, чьи предки убили Смауга, продолжающий традицию безошибочной меткости." />
-    <string id="taom_career_dale_outrider" text="Дозорный всадник Дейла" />
+    <string id="taom_career_dale_outrider" text="Кавалерист Дейла" />
     <string id="taom_career_dale_outrider_desc" text="Конный патруль северных торговых дорог, который охраняет караваны между Дейлом и Одинокой Горой." />
     <string id="taom_career_ironguard" text="Железная стража" />
     <string id="taom_career_ironguard_desc" text="Элитный гномий воин, закованный в мифриловые латы, который держит глубины Эребора против орков и драконов." />
@@ -64,11 +64,11 @@
     <string id="taom_career_crossbow_master_desc" text="Гномий воин-инженер, который владеет мастерски сделанными арбалетами невероятной останавливающей силы, каждый болт изготовлен с точностью." />
     <string id="taom_career_ram_rider" text="Всадник на баране" />
     <string id="taom_career_ram_rider_desc" text="Гномий кавалерийский воин верхом на огромном боевом баране, атакующий через узкие горные проходы, где кони не пройдут." />
-    <string id="taom_career_blade_dancer" text="Танцор клинков" />
+    <string id="taom_career_blade_dancer" text="Мастер клинка нолдор" />
     <string id="taom_career_blade_dancer_desc" text="Грациозный эльфийский воин, который движется в битве как текущая вода, нанося удары древними клинками, выкованными в Первую Эпоху." />
-    <string id="taom_career_elven_archer" text="Эльфийский лучник" />
+    <string id="taom_career_elven_archer" text="Часовой нолдор" />
     <string id="taom_career_elven_archer_desc" text="Несравненный стрелок Имладриса, чьи стрелы летят точно на огромные расстояния, направляемые веками практики." />
-    <string id="taom_career_rivendell_knight" text="Рыцарь Ривенделла" />
+    <string id="taom_career_rivendell_knight" text="Рыцарь нолдор" />
     <string id="taom_career_rivendell_knight_desc" text="Конный воин дома Элронда, который скачет на войну на быстрых эльфийских скакунах, маяк надежды против тьмы." />
     <string id="taom_career_warden" text="Страж Лориэна" />
     <string id="taom_career_warden_desc" text="Безмолвный хранитель Золотого Леса, который наносит удар без предупреждения, защищая границы Лотлориэна с древней решимостью." />
@@ -82,17 +82,17 @@
     <string id="taom_career_silvan_archer_desc" text="Зоркий охотник Лесного Королевства, который наносит удар с верхушек деревьев со смертельной точностью." />
     <string id="taom_career_elk_rider" text="Всадник на лосе" />
     <string id="taom_career_elk_rider_desc" text="Конный воин из стражи Трандуила, который въезжает в битву верхом на великом лесном лосе, сметая подлесок и врагов." />
-    <string id="taom_career_uruk_berserker" text="Урук-берсерк" />
+    <string id="taom_career_uruk_berserker" text="Берсерк Урук-хай" />
     <string id="taom_career_uruk_berserker_desc" text="Неистовый урук-хай, который бросается в бой сломя голову, становясь сильнее по мере того, как раны питают неудержимую ярость." />
-    <string id="taom_career_uruk_crossbow" text="Урук-арбалетчик" />
+    <string id="taom_career_uruk_crossbow" text="Арбалетчик Урук-хай" />
     <string id="taom_career_uruk_crossbow_desc" text="Дисциплинированный урук-стрелок, владеющий железными арбалетами Сарумана и обрушивающий разрушительные залпы из кузниц Ортханка." />
-    <string id="taom_career_warg_scout" text="Варговый разведчик" />
+    <string id="taom_career_warg_scout" text="Всадник на варге" />
     <string id="taom_career_warg_scout_desc" text="Хитрый урук-всадник на быстром варге, разведывающий путь для армий Изенгарда и настигающий бегущую добычу." />
-    <string id="taom_career_cave_troll_master" text="Повелитель пещерных троллей" />
-    <string id="taom_career_cave_troll_master_desc" text="Жестокий вождь орков, командующий пещерными троллями в бою, погоняя их кнутом и хитростью." />
-    <string id="taom_career_goblin_sniper" text="Гоблин-снайпер" />
+    <string id="taom_career_cave_troll_master" text="Берсерк Гундабада" />
+    <string id="taom_career_cave_troll_master_desc" text="Жестокий орочий вождь Гундабада, что ведёт в бой пещерных троллей, погоняя их кнутом и хитростью." />
+    <string id="taom_career_goblin_sniper" text="Орк-охотник Гундабада" />
     <string id="taom_career_goblin_sniper_desc" text="Злобный гоблин-стрелок, скрывающийся в горных расселинах и сражающий цели отравленными дротиками и грубыми луками." />
-    <string id="taom_career_warg_pack_leader" text="Вожак варговой стаи" />
+    <string id="taom_career_warg_pack_leader" text="Вожак стаи лютых варгов Гундабада" />
     <string id="taom_career_warg_pack_leader_desc" text="Внушающий страх орк-вожак, который ездит верхом на крупнейшем варге стаи и возглавляет дикие охоты по Мглистым горам." />
     <string id="taom_career_shadow_warrior" text="Воин Тени" />
     <string id="taom_career_shadow_warrior_desc" text="Тёмный чемпион Дол Гулдура, наделённый силой колдовства Некроманта и вытягивающий жизнь из всех, кто предстаёт перед ним." />
@@ -107,105 +107,105 @@
     <string id="taom_career_corsair_captain" text="Капитан корсаров" />
     <string id="taom_career_corsair_captain_desc" text="Опытный командир флота, ведущий бой с носа корабля и вдохновляющий команды обещаниями добычи и славы в открытом море." />
     <string id="taom_ability_ranger_of_ithilien" text="Засада" />
-    <string id="taom_ability_ranger_of_ithilien_tt" text="Устройте смертоносную засаду, повысив урон в дальнем бою, скорость натяжения лука и скорость передвижения на короткое время." />
+    <string id="taom_ability_ranger_of_ithilien_tt" text="Устройте смертоносную засаду — +20% к урону в дальнем бою, +20% к скорости натяжения и +15% к скорости передвижения на 8 с." />
     <string id="taom_ability_captain_of_osgiliath" text="Держать строй" />
-    <string id="taom_ability_captain_of_osgiliath_tt" text="Сплотите своих воинов железной дисциплиной, повысив урон в ближнем бою на 20 для всех ближайших союзников на короткое время." />
+    <string id="taom_ability_captain_of_osgiliath_tt" text="Сплотите воинов железной дисциплиной — +15% к урону в ближнем бою и +10% к снижению урона союзникам в радиусе 50 м на 8 с." />
     <string id="taom_ability_knight_of_belfalas" text="Натиск" />
-    <string id="taom_ability_knight_of_belfalas_tt" text="Ринуйтесь вперёд в неудержимой кавалерийской атаке, повысив скорость скакуна, урон от тарана и урон в ближнем бою на короткое время." />
+    <string id="taom_ability_knight_of_belfalas_tt" text="Ринитесь вперёд в неудержимой конной атаке — +25% к урону наскока, +20% к скорости коня и +10% к урону в ближнем бою на 8 с." />
     <string id="taom_ability_black_uruk_captain" text="Кровавая ярость" />
-    <string id="taom_ability_black_uruk_captain_tt" text="Впадите в ярость, питаемую кровью, значительно повысив сопротивление урону и силу в ближнем бою, вдохновляя войска Чёрных уруков." />
+    <string id="taom_ability_black_uruk_captain_tt" text="Впадите в кровавую ярость, воодушевляя ближних Чёрных Уруков — +15% к урону в ближнем бою и +10% к снижению урона союзникам в радиусе 50 м на 8 с." />
     <string id="taom_ability_mulkerhili_cultist" text="Глас Единого" />
-    <string id="taom_ability_mulkerhili_cultist_tt" text="Направьте шёпот ужаса Единого Кольца по всему полю боя, подрывая боевой дух врага и наделяя силой ваши проклятые стрелы." />
+    <string id="taom_ability_mulkerhili_cultist_tt" text="Призовите шёпот ужаса Единого Кольца, напитав свои проклятые стрелы — +20% к урону в дальнем бою, +20% к скорости натяжения и +15% к скорости передвижения на 8 с." />
     <string id="taom_ability_snaga_rider" text="Прокрадывание" />
-    <string id="taom_ability_snaga_rider_tt" text="Проскользните сквозь тени вражеского строя, нанося удары во фланг с усиленным уроном верхом, прежде чем скрыться незамеченным." />
+    <string id="taom_ability_snaga_rider_tt" text="Скользните сквозь тени вражеских флангов — +25% к урону наскока, +20% к скорости коня и +10% к урону в ближнем бою на 8 с." />
     <string id="taom_ability_olog_hai_warchief" text="Сокрушительный удар" />
-    <string id="taom_ability_olog_hai_warchief_tt" text="Обрушьте свой боевой молот с титанической силой, сотрясая землю и значительно повышая свою защиту от урона и сопротивление войск." />
+    <string id="taom_ability_olog_hai_warchief_tt" text="Обрушьте боевой молот с титанической мощью — +15% к урону в ближнем бою и +10% к снижению урона союзникам в радиусе 50 м на 10 с." />
     <string id="taom_ability_marksman_of_aldburg" text="Лёгкое Оперение" />
-    <string id="taom_ability_marksman_of_aldburg_tt" text="Наложите на тетиву быстрые стрелы с лёгким оперением, увеличивая урон дальнего боя, скорость натяжения и скорость передвижения на короткое время." />
+    <string id="taom_ability_marksman_of_aldburg_tt" text="Наложите на тетиву рой лёгких быстрых стрел — +20% к урону в дальнем бою, +20% к скорости натяжения и +15% к скорости передвижения на 8 с." />
     <string id="taom_ability_eotheod_windrider" text="Боевой Клич Эорла" />
-    <string id="taom_ability_eotheod_windrider_tt" text="Возгласите древний боевой клич Эорла Юного, увеличивая скорость скакуна, урон от тарана и урон ближнего боя на короткое время." />
+    <string id="taom_ability_eotheod_windrider_tt" text="Издайте древний боевой клич Эорла Юного — +25% к урону наскока, +20% к скорости коня и +10% к урону в ближнем бою на 8 с." />
     <string id="taom_ability_watchman_of_stangard" text="Стоять Насмерть" />
-    <string id="taom_ability_watchman_of_stangard_tt" text="Встаньте твёрдо с железной решимостью, увеличивая урон ближнего боя на 20 для всех ближайших союзников на короткое время." />
+    <string id="taom_ability_watchman_of_stangard_tt" text="Стойте насмерть с железной решимостью — +15% к урону в ближнем бою и +10% к снижению урона союзникам в радиусе 50 м на 8 с." />
     <string id="taom_ability_avanc_luth_raider" text="Дикий Натиск" />
-    <string id="taom_ability_avanc_luth_raider_tt" text="Бросьтесь в бой с воющим боевым кличем, значительно увеличивая урон ближнего боя и скорость передвижения ценой обдуманной защиты." />
+    <string id="taom_ability_avanc_luth_raider_tt" text="Издайте боевой клич дунлендингов — +15% к урону в ближнем бою и +10% к снижению урона союзникам в радиусе 50 м на 8 с." />
     <string id="taom_ability_wolfskin_hunter" text="Меченая Добыча" />
-    <string id="taom_ability_wolfskin_hunter_tt" text="Пометьте цель сквозь туман, увеличивая урон дальнего боя против неё и даруя вашему отряду улучшенное чутьё следопыта." />
+    <string id="taom_ability_wolfskin_hunter_tt" text="Отметьте цель сквозь туман — +20% к урону в дальнем бою, +20% к скорости натяжения и +15% к скорости передвижения на 8 с." />
     <string id="taom_ability_clanguard_rider" text="Атака Боевой Стаи" />
-    <string id="taom_ability_clanguard_rider_tt" text="Возглавьте боевую стаю в скоординированной быстрой атаке, увеличивая урон конницы и скорость передвижения отряда, тревожа фланги врага." />
+    <string id="taom_ability_clanguard_rider_tt" text="Поведите свою свору в согласованную атаку — +25% к урону при натиске, +20% к скорости скакуна и +10% к урону в ближнем бою на 8 с." />
     <string id="taom_ability_blademaster_of_ren" text="Двойной Удар" />
-    <string id="taom_ability_blademaster_of_ren_tt" text="Выполните точную последовательность ударов двумя клинками, значительно увеличивая скорость замаха и пробитие брони." />
+    <string id="taom_ability_blademaster_of_ren_tt" text="Проведите точную серию ударов двумя клинками — +15% к урону в ближнем бою и +10% к снижению урона союзникам в радиусе 50 м на 8 с." />
     <string id="taom_ability_steppe_bowmaster" text="Буря Стрел" />
-    <string id="taom_ability_steppe_bowmaster_tt" text="Выпустите непрерывную бурю стрел, отступая на скорости, насыщая широкую область залпами." />
+    <string id="taom_ability_steppe_bowmaster_tt" text="Обрушьте непрерывный ливень стрел прямо из седла — +20% к урону в дальнем бою, +20% к скорости натяжения и +15% к скорости передвижения на 8 с." />
     <string id="taom_ability_chariot_warlord" text="Косящая Атака" />
-    <string id="taom_ability_chariot_warlord_tt" text="Прорвитесь сквозь вражескую линию на колесницах с серповидными лезвиями, нанося массивный урон по площади в широкой дуге." />
+    <string id="taom_ability_chariot_warlord_tt" text="Прогоните серпоносные колесницы сквозь строй врага — +25% к урону при натиске, +20% к скорости скакуна и +10% к урону в ближнем бою на 8 с." />
     <string id="taom_ability_tribesman_of_jelut" text="Отравленные Клинки" />
-    <string id="taom_ability_tribesman_of_jelut_tt" text="Покройте оружие пустынными ядами, увеличивая урон ближнего боя и применяя изнуряющий эффект истощения." />
+    <string id="taom_ability_tribesman_of_jelut_tt" text="Смажьте оружие пустынными ядами — +15% к урону в ближнем бою и +10% к снижению урона союзникам в радиусе 50 м на 8 с." />
     <string id="taom_ability_pezarsani_javelineer" text="Залп Солнечного Огня" />
-    <string id="taom_ability_pezarsani_javelineer_tt" text="Обрушьте пылающий град дротиков, увеличивая урон дальнего боя и скорость манёвренного передвижения." />
+    <string id="taom_ability_pezarsani_javelineer_tt" text="Обрушьте шквал пылающих дротиков — +20% к урону в дальнем бою, +20% к скорости натяжения и +15% к скорости передвижения на 8 с." />
     <string id="taom_ability_mahud_beast_rider" text="Отголоски Мумаков" />
-    <string id="taom_ability_mahud_beast_rider_tt" text="Призовите древний ужас мумаков, увеличивая урон от тарана зверей и распространяя страх среди вражеских рядов." />
+    <string id="taom_ability_mahud_beast_rider_tt" text="Призовите древний ужас Мумакана — +25% к урону при натиске, +20% к скорости скакуна и +10% к урону в ближнем бою на 8 с." />
     <string id="taom_ability_far_harad_halftroll" text="Гнусная Жестокость" />
-    <string id="taom_ability_far_harad_halftroll_tt" text="Войдите в состояние дикой жестокости, значительно увеличивая здоровье и сопротивление, внушая ужас ближайшим врагам." />
+    <string id="taom_ability_far_harad_halftroll_tt" text="Впадите в состояние дикой ярости — +15% к урону в ближнем бою и +10% к снижению урона союзникам в радиусе 50 м на 8 с." />
     <string id="taom_ability_codyan_legionaire" text="Стена Щитов" />
-    <string id="taom_ability_codyan_legionaire_tt" text="Сомкните щиты в строю, увеличивая урон ближнего боя на 20 для всех ближайших союзников на короткое время." />
+    <string id="taom_ability_codyan_legionaire_tt" text="Сомкните щиты в легионном строю — +15% к урону в ближнем бою и +10% к снижению урона союзникам в радиусе 50 м на 8 с." />
     <string id="taom_ability_lokhas_drus_marksman" text="Пробивной Залп" />
-    <string id="taom_ability_lokhas_drus_marksman_tt" text="Выпустите особо закалённые стрелы, увеличивая урон дальнего боя, скорость натяжения и скорость передвижения на короткое время." />
+    <string id="taom_ability_lokhas_drus_marksman_tt" text="Выпустите особо закалённые рунские стрелы — +20% к урону в дальнем бою, +20% к скорости натяжения и +15% к скорости передвижения на 8 с." />
     <string id="taom_ability_balchoth_kan" text="Несгибаемость" />
-    <string id="taom_ability_balchoth_kan_tt" text="Призовите железную дисциплину балхотов, увеличивая скорость скакуна, урон от тарана и урон ближнего боя на короткое время." />
+    <string id="taom_ability_balchoth_kan_tt" text="Призовите железную дисциплину балхот — +25% к урону при натиске, +20% к скорости скакуна и +10% к урону в ближнем бою на 8 с." />
     <string id="taom_ability_dale_guardsman" text="Держать Врата" />
-    <string id="taom_ability_dale_guardsman_tt" text="Встаньте твёрдо и держите врата, значительно увеличивая здоровье и сопротивление в неподвижном состоянии." />
+    <string id="taom_ability_dale_guardsman_tt" text="Встаньте твёрдо и удержите врата — +15% к урону в ближнем бою и +10% к снижению урона союзникам в радиусе 50 м на 8 с." />
     <string id="taom_ability_dale_marksman" text="Чёрная Стрела" />
-    <string id="taom_ability_dale_marksman_tt" text="Призовите наследие Барда Лучника, значительно увеличивая урон и пробитие ваших следующих выстрелов." />
+    <string id="taom_ability_dale_marksman_tt" text="Призовите наследие Барда Лучника — +20% к урону в дальнем бою, +20% к скорости натяжения и +15% к скорости передвижения на 8 с." />
     <string id="taom_ability_dale_outrider" text="Рывок по Торговому Пути" />
-    <string id="taom_ability_dale_outrider_tt" text="Пустите коня вскачь по знакомым дорогам, получая всплеск скорости и мастерства конного боя." />
+    <string id="taom_ability_dale_outrider_tt" text="Пришпорьте коня по знакомым дорогам — +25% к урону при натиске, +20% к скорости скакуна и +10% к урону в ближнем бою на 8 с." />
     <string id="taom_ability_ironguard" text="Мифрильный Бастион" />
-    <string id="taom_ability_ironguard_tt" text="Призовите силу гномьего мастерства, увеличивая урон ближнего боя на 20 для всех ближайших союзников на короткое время." />
+    <string id="taom_ability_ironguard_tt" text="Призовите силу гномьего ремесла — +15% к урону в ближнем бою и +10% к снижению урона союзникам в радиусе 50 м на 8 с." />
     <string id="taom_ability_crossbow_master" text="Точный залп" />
-    <string id="taom_ability_crossbow_master_tt" text="Зарядить мастерские болты, увеличивая урон дальнего боя, скорость перезарядки и скорость передвижения на короткое время." />
+    <string id="taom_ability_crossbow_master_tt" text="Зарядите превосходные гномьи болты — +20% к урону в дальнем бою, +20% к скорости натяжения и +15% к скорости передвижения на 8 с." />
     <string id="taom_ability_ram_rider" text="Горная атака" />
-    <string id="taom_ability_ram_rider_tt" text="Направить боевого барана вперёд, увеличивая скорость скакуна, урон от атаки и урон в ближнем бою на короткое время." />
+    <string id="taom_ability_ram_rider_tt" text="Гоните боевого барана вперёд — +25% к урону при натиске, +20% к скорости скакуна и +10% к урону в ближнем бою на 8 с." />
     <string id="taom_ability_blade_dancer" text="Плетение звёздного света" />
-    <string id="taom_ability_blade_dancer_tt" text="Войти в грациозный боевой транс, уклоняясь от атак и нанося удары с эльфийской точностью." />
+    <string id="taom_ability_blade_dancer_tt" text="Войдите в изящный боевой транс нолдор — +15% к урону в ближнем бою и +10% к снижению урона союзникам в радиусе 50 м на 8 с." />
     <string id="taom_ability_elven_archer" text="Эльфийское зрение" />
-    <string id="taom_ability_elven_archer_tt" text="Сфокусировать древнее эльфийское восприятие, позволяющее безошибочно стрелять на экстремальную дальность." />
+    <string id="taom_ability_elven_archer_tt" text="Сосредоточьте древнее эльфийское чутьё — +20% к урону в дальнем бою, +20% к скорости натяжения и +15% к скорости передвижения на 8 с." />
     <string id="taom_ability_rivendell_knight" text="Последний союз" />
-    <string id="taom_ability_rivendell_knight_tt" text="Скакать с доблестью Последнего союза, увеличивая конный урон и вдохновляя всех ближайших союзников." />
+    <string id="taom_ability_rivendell_knight_tt" text="Скачите с доблестью Последнего Союза — +25% к урону при натиске, +20% к скорости скакуна и +10% к урону в ближнем бою на 8 с." />
     <string id="taom_ability_warden" text="Благословение Нимродели" />
-    <string id="taom_ability_warden_tt" text="Призвать воды Нимродели, исцеляя раны и повышая сопротивление на короткое время." />
+    <string id="taom_ability_warden_tt" text="Призовите воды Нимродели — +15% к урону в ближнем бою и +10% к снижению урона союзникам в радиусе 50 м на 8 с." />
     <string id="taom_ability_galadhrim_archer" text="Серебряный дождь" />
-    <string id="taom_ability_galadhrim_archer_tt" text="Выпустить залп стрел с серебряными наконечниками с ослепительной скоростью, прореживая вражеские ряды." />
+    <string id="taom_ability_galadhrim_archer_tt" text="Выпустите залп стрел с серебряными наконечниками — +20% к урону в дальнем бою, +20% к скорости натяжения и +15% к скорости передвижения на 8 с." />
     <string id="taom_ability_sentinel" text="Быстрота эланора" />
-    <string id="taom_ability_sentinel_tt" text="Направить грацию Золотого леса, устремляясь вперёд со сверхъестественной скоростью и точностью." />
+    <string id="taom_ability_sentinel_tt" text="Призовите благодать Золотого Леса — +25% к урону при натиске, +20% к скорости скакуна и +10% к урону в ближнем бою на 8 с." />
     <string id="taom_ability_shadow_walker" text="Лесной плащ" />
-    <string id="taom_ability_shadow_walker_tt" text="Слиться с лесными тенями, увеличивая урон в ближнем бою на 20 для всех ближайших союзников на короткое время." />
+    <string id="taom_ability_shadow_walker_tt" text="Слейтесь с лесными тенями — +15% к урону в ближнем бою и +10% к снижению урона союзникам в радиусе 50 м на 8 с." />
     <string id="taom_ability_silvan_archer" text="Удар с высоты" />
-    <string id="taom_ability_silvan_archer_tt" text="Стрелять с возвышенной позиции, увеличивая урон дальнего боя, скорость перезарядки и скорость передвижения на короткое время." />
+    <string id="taom_ability_silvan_archer_tt" text="Стреляйте с высокой лесной позиции — +20% к урону в дальнем бою, +20% к скорости натяжения и +15% к скорости передвижения на 8 с." />
     <string id="taom_ability_elk_rider" text="Удар рогов" />
-    <string id="taom_ability_elk_rider_tt" text="Опустить могучие рога и атаковать, увеличивая скорость скакуна, урон от атаки и урон в ближнем бою на короткое время." />
+    <string id="taom_ability_elk_rider_tt" text="Опустите могучие рога и мчитесь в атаку — +25% к урону при натиске, +20% к скорости скакуна и +10% к урону в ближнем бою на 8 с." />
     <string id="taom_ability_uruk_berserker" text="Кровавая ярость" />
-    <string id="taom_ability_uruk_berserker_tt" text="Войти в берсеркерское неистовство, значительно увеличивая урон и здоровье, игнорируя боль." />
+    <string id="taom_ability_uruk_berserker_tt" text="Впадите в берсеркское неистовство урук-хай — +15% к урону в ближнем бою и +10% к снижению урона союзникам в радиусе 50 м на 8 с." />
     <string id="taom_ability_uruk_crossbow" text="Железный дождь" />
-    <string id="taom_ability_uruk_crossbow_tt" text="Обрушить шквал болтов, выкованных в Ортханке, с разрушительной пробивной силой и скорострельностью." />
+    <string id="taom_ability_uruk_crossbow_tt" text="Обрушьте шквал болтов, кованных в Ортханке — +20% к урону в дальнем бою, +20% к скорости натяжения и +15% к скорости передвижения на 8 с." />
     <string id="taom_ability_warg_scout" text="Вой стаи" />
-    <string id="taom_ability_warg_scout_tt" text="Издать ужасающий вой, который увеличивает вашу скорость и вселяет страх в ближайших врагов." />
-    <string id="taom_ability_cave_troll_master" text="Троллье неистовство" />
-    <string id="taom_ability_cave_troll_master_tt" text="Довести троллей до неистовства, значительно увеличивая здоровье и урон войск." />
+    <string id="taom_ability_warg_scout_tt" text="Издайте устрашающий вой варга — +25% к урону при натиске, +20% к скорости скакуна и +10% к урону в ближнем бою на 8 с." />
+    <string id="taom_ability_cave_troll_master" text="Берсерк Гундабада" />
+    <string id="taom_ability_cave_troll_master_tt" text="Плетью доведите троллей до неистовства — +15% к урону в ближнем бою и +10% к снижению урона союзникам в радиусе 50 м на 8 с." />
     <string id="taom_ability_goblin_sniper" text="Отравленная стрела" />
-    <string id="taom_ability_goblin_sniper_tt" text="Покрыть снаряды токсином пещерного гриба, добавляя урон со временем и замедляя цели." />
+    <string id="taom_ability_goblin_sniper_tt" text="Смажьте болты ядом пещерных грибов — +20% к урону в дальнем бою, +20% к скорости натяжения и +15% к скорости передвижения на 8 с." />
     <string id="taom_ability_warg_pack_leader" text="Вой вожака" />
-    <string id="taom_ability_warg_pack_leader_tt" text="Утвердить доминирование громогласным воем, увеличивая скорость и свирепость стаи." />
+    <string id="taom_ability_warg_pack_leader_tt" text="Утвердите власть громовым воем стаи — +25% к урону при натиске, +20% к скорости скакуна и +10% к урону в ближнем бою на 8 с." />
     <string id="taom_ability_shadow_warrior" text="Высасывание душ" />
-    <string id="taom_ability_shadow_warrior_tt" text="Высосать жизненную силу из ближайших врагов, исцеляя себя и ослабляя их атаки." />
+    <string id="taom_ability_shadow_warrior_tt" text="Черпайте силу теней Дол Гулдура — +15% к урону в ближнем бою и +10% к снижению урона союзникам в радиусе 50 м на 8 с." />
     <string id="taom_ability_necromancer_acolyte" text="Тёмный разряд" />
-    <string id="taom_ability_necromancer_acolyte_tt" text="Направить некромантическую энергию в свои атаки, значительно увеличивая урон дальнего боя и пробитие брони." />
+    <string id="taom_ability_necromancer_acolyte_tt" text="Направьте некромантскую энергию в свои выстрелы — +20% к урону в дальнем бою, +20% к скорости натяжения и +15% к скорости передвижения на 8 с." />
     <string id="taom_ability_fell_rider" text="Ужасающая атака" />
-    <string id="taom_ability_fell_rider_tt" text="Атаковать, окутанным тенью, заставляя врагов в ужасе бежать и нанося сокрушительный урон." />
+    <string id="taom_ability_fell_rider_tt" text="Мчитесь в атаку, окутанные тьмой — +25% к урону при натиске, +20% к скорости скакуна и +10% к урону в ближнем бою на 8 с." />
     <string id="taom_ability_corsair_boarder" text="Абордажная атака" />
-    <string id="taom_ability_corsair_boarder_tt" text="Начните жестокий абордажный штурм, повышая урон в ближнем бою и сопротивление в ближней схватке." />
+    <string id="taom_ability_corsair_boarder_tt" text="Начните жестокий абордажный штурм — +15% к урону в ближнем бою и +10% к снижению урона союзникам в радиусе 50 м на 8 с." />
     <string id="taom_ability_corsair_crossbow" text="Выстрел по снастям" />
-    <string id="taom_ability_corsair_crossbow_tt" text="Стреляйте с устойчивой позиции со смертельной точностью, значительно повышая дальний урон и меткость." />
+    <string id="taom_ability_corsair_crossbow_tt" text="Стреляйте из устойчивой корсарской стойки — +20% к урону стрелкового оружия, +20% к скорости перезарядки и +15% к скорости передвижения на 8 сек." />
     <string id="taom_ability_corsair_captain" text="Грабёж" />
-    <string id="taom_ability_corsair_captain_tt" text="Воодушевите команду обещаниями добычи, повышая скорость, урон и боевой дух войск." />
+    <string id="taom_ability_corsair_captain_tt" text="Воодушевите команду обещаниями добычи — +25% к урону от натиска, +20% к скорости коня и +10% к урону в ближнем бою на 8 сек." />
     <string id="taom_ranger_of_ithilien_root_desc" text="Засада даёт +5% к дальнему урону, длительность масштабируется с навыком Лук." />
     <string id="taom_roi_t1a_key" text="Радиус засады увеличен, стрелы наносят дополнительный урон из скрытности." />
     <string id="taom_roi_t1a_p1" text="+8% к дальнему урону." />
@@ -216,11 +216,11 @@
     <string id="taom_roi_t1b_p1" text="+5% к сопротивлению." />
     <string id="taom_roi_t1b_p2" text="+5 к максимальному здоровью." />
     <string id="taom_roi_t1b_p3" text="+5% к дальности обзора отряда." />
-    <string id="taom_roi_t1b_p4" text="+5% к бонусу скрытности." />
+    <string id="taom_roi_t1b_p4" text="+10% к скрытности." />
     <string id="taom_roi_t2a_key" text="Требование к заряду засады снижено, активируется чаще." />
     <string id="taom_roi_t2a_p1" text="+10% к дальности обзора отряда." />
     <string id="taom_roi_t2a_p2" text="+10% к скорости передвижения." />
-    <string id="taom_roi_t2a_p3" text="+10% к бонусу скрытности." />
+    <string id="taom_roi_t2a_p3" text="+13% к скрытности." />
     <string id="taom_roi_t2a_p4" text="+10% к получению боевой славы." />
     <string id="taom_roi_t2b_key" text="Засада также повышает дальний урон войск, пока активна." />
     <string id="taom_roi_t2b_p1" text="+12% к дальнему урону." />
@@ -278,17 +278,17 @@
     <string id="taom_kob_t1b_p1" text="+8% к сопротивлению." />
     <string id="taom_kob_t1b_p2" text="+7 к максимальному здоровью." />
     <string id="taom_kob_t1b_p3" text="+10% к здоровью коня." />
-    <string id="taom_kob_t1b_p4" text="+5% к сопротивлению войск." />
+    <string id="taom_kob_t1b_p4" text="+10% к стойкости войск." />
     <string id="taom_kob_t2a_key" text="Требование к заряду Натиска снижено для более частых громоподобных атак." />
-    <string id="taom_kob_t2a_p1" text="+15% к урону конной атаки." />
+    <string id="taom_kob_t2a_p1" text="+13% к урону от конного натиска." />
     <string id="taom_kob_t2a_p2" text="+12% к урону в ближнем бою." />
     <string id="taom_kob_t2a_p3" text="+8% к скорости передвижения." />
     <string id="taom_kob_t2a_p4" text="+10% к получению боевой славы." />
     <string id="taom_kob_t2b_key" text="Натиск также повышает сопротивление войск пока активен." />
     <string id="taom_kob_t2b_p1" text="+10% к сопротивлению." />
     <string id="taom_kob_t2b_p2" text="+8 к максимальному здоровью." />
-    <string id="taom_kob_t2b_p3" text="+15% к здоровью коня." />
-    <string id="taom_kob_t2b_p4" text="+8% к сопротивлению войск." />
+    <string id="taom_kob_t2b_p3" text="+13% к здоровью коня." />
+    <string id="taom_kob_t2b_p4" text="+13% к стойкости войск." />
     <string id="taom_kob_t3a_key" text="Натиск повышает боевой дух войск пока активен, вдохновляя воинство Белфаласа." />
     <string id="taom_kob_t3a_p1" text="+15% к боевому духу войск." />
     <string id="taom_kob_t3a_p2" text="+4 к размеру отряда." />
@@ -297,9 +297,9 @@
     <string id="taom_kob_t3b_key" text="Радиус и длительность Натиска максимальны — атака Дол Амрота неостановима." />
     <string id="taom_kob_t3b_p1" text="+15% к сопротивлению." />
     <string id="taom_kob_t3b_p2" text="+9 к максимальному здоровью." />
-    <string id="taom_kob_t3b_p3" text="+20% к урону конной атаки." />
-    <string id="taom_kob_t3b_p4" text="+12% к сопротивлению войск." />
-    <string id="taom_buc_root_desc" text="Тёмная Стойкость даёт +6 к здоровью и усиливает боевую ярость Чёрных Uruков." />
+    <string id="taom_kob_t3b_p3" text="+15% к урону от конного натиска." />
+    <string id="taom_kob_t3b_p4" text="+15% к стойкости войск." />
+    <string id="taom_buc_root_desc" text="Тёмная стойкость даёт +6 к здоровью и разжигает боевую ярость чёрных уруков." />
     <string id="taom_buc_t1_a_key" text="Железная Шкура" />
     <string id="taom_buc_t1_a_key_desc" text="Закалённая в кузне и войне, твоя шкура отражает клинки. Радиус Кровавой Ярости +3." />
     <string id="taom_buc_t1_a_p1" text="Безжалостная Атака" />
@@ -364,21 +364,21 @@
     <string id="taom_mc_t1_a_key" text="Отравленное жало" />
     <string id="taom_mc_t1_a_key_desc" text="Ваши стрелы несут мерзкие токсины. Радиус Голоса Единого +3." />
     <string id="taom_mc_t1_a_p1" text="Тёмный шёпот" />
-    <string id="taom_mc_t1_a_p1_desc" text="Ваши песнопения смущают врага. +5% к сопротивлению войск." />
+    <string id="taom_mc_t1_a_p1_desc" text="Ваши песнопения тревожат врага. +10% к стойкости войск." />
     <string id="taom_mc_t1_a_p2" text="Твёрдая рука" />
     <string id="taom_mc_t1_a_p2_desc" text="Терпеливый и точный. +6% к дальнобойному урону." />
     <string id="taom_mc_t1_a_p3" text="Пыл культиста" />
     <string id="taom_mc_t1_a_p3_desc" text="Благословение Единого защищает верных. +5 здоровья." />
     <string id="taom_mc_t1_a_p4" text="Теневой шаг" />
-    <string id="taom_mc_t1_a_p4_desc" text="Вы движетесь незамеченным между залпами. +5% к скрытности." />
+    <string id="taom_mc_t1_a_p4_desc" text="Вы движетесь незаметно между залпами. +10% к скрытности." />
     <string id="taom_mc_t1_b_key" text="Шёпот Саурона" />
     <string id="taom_mc_t1_b_key_desc" text="Голос звучит дальше. Длительность Голоса Единого +4 сек." />
     <string id="taom_mc_t1_b_p1" text="Колчан тьмы" />
-    <string id="taom_mc_t1_b_p1_desc" text="Вы носите больше чёрных стрел. +3 боеприпаса." />
+    <string id="taom_mc_t1_b_p1_desc" text="Вы носите больше чернодревковых болтов. +10% к боезапасу." />
     <string id="taom_mc_t1_b_p2" text="Ритуальные шрамы" />
     <string id="taom_mc_t1_b_p2_desc" text="Защитные знаки от обрядов Мулкерхили. +6 здоровья." />
     <string id="taom_mc_t1_b_p3" text="Поступь пророка" />
-    <string id="taom_mc_t1_b_p3_desc" text="Милость Саурона делает вас быстрым и скрытым. +4% к скрытности." />
+    <string id="taom_mc_t1_b_p3_desc" text="Милость Саурона хранит вашу быстроту и незримость. +10% к скрытности." />
     <string id="taom_mc_t1_b_p4" text="Тёмное благословение" />
     <string id="taom_mc_t1_b_p4_desc" text="Око Единого обращено на вас. +8% к сопротивлению дальнобойному урону." />
     <string id="taom_mc_t2_a_key" text="Сонм ужаса" />
@@ -390,7 +390,7 @@
     <string id="taom_mc_t2_a_p3" text="Решимость фанатика" />
     <string id="taom_mc_t2_a_p3_desc" text="Смерть ничего не значит для истинно верующих. +6 здоровья." />
     <string id="taom_mc_t2_a_p4" text="Снабжение культа" />
-    <string id="taom_mc_t2_a_p4_desc" text="Сеть культа обеспечивает войско припасами. +5 боеприпасов." />
+    <string id="taom_mc_t2_a_p4_desc" text="Сеть культа снабжает воинство. +13% к боезапасу." />
     <string id="taom_mc_t2_b_key" text="Тёмная проповедь" />
     <string id="taom_mc_t2_b_key_desc" text="Ваша молитва простирается над полем битвы. Длительность Голоса Единого +2 сек." />
     <string id="taom_mc_t2_b_p1" text="Мантра ужаса" />
@@ -410,7 +410,7 @@
     <string id="taom_mc_t3_a_p3" text="Армия паствы" />
     <string id="taom_mc_t3_a_p3_desc" text="Верующие стекаются под ваше знамя. +4 размера отряда." />
     <string id="taom_mc_t3_a_p4" text="Благословенный колчан" />
-    <string id="taom_mc_t3_a_p4_desc" text="Благословение Саурона умножает ваши стрелы. +8 боеприпасов." />
+    <string id="taom_mc_t3_a_p4_desc" text="Благословение Саурона умножает ваши стрелы. +15% к боезапасу." />
     <string id="taom_mc_t3_b_key" text="Тёмный завет" />
     <string id="taom_mc_t3_b_key_desc" text="Голос требует меньше жертв для призыва. Стоимость заряда голоса -30." />
     <string id="taom_mc_t3_b_p1" text="Культ Ока" />
@@ -425,9 +425,9 @@
     <string id="taom_sr_t1_a_key" text="Теневой галоп" />
     <string id="taom_sr_t1_a_key_desc" text="Вы исчезаете в мраке Мордора. Радиус крадущейся-ходьбы +3." />
     <string id="taom_sr_t1_a_p1" text="Инстинкт варга" />
-    <string id="taom_sr_t1_a_p1_desc" text="Ваш скакун так же свиреп, как и вы. +6% урона атакой коня." />
+    <string id="taom_sr_t1_a_p1_desc" text="Ваш скакун столь же свиреп, как и вы. +10% к урону от конного натиска." />
     <string id="taom_sr_t1_a_p2" text="Крадущийся фланговик" />
-    <string id="taom_sr_t1_a_p2_desc" text="Вы появляетесь там, где вас меньше всего ждут. +5% бонуса к скрытности." />
+    <string id="taom_sr_t1_a_p2_desc" text="Вы появляетесь там, где вас меньше всего ждут. +10% к скрытности." />
     <string id="taom_sr_t1_a_p3" text="Суровая езда" />
     <string id="taom_sr_t1_a_p3_desc" text="Ваше тело выдерживает самые тяжёлые переезды. +5 здоровья." />
     <string id="taom_sr_t1_a_p4" text="Удар и отход" />
@@ -435,7 +435,7 @@
     <string id="taom_sr_t1_b_key" text="Ночной всадник" />
     <string id="taom_sr_t1_b_key_desc" text="Тьма защищает вас дольше. Длительность крадущейся-ходьбы +4 сек." />
     <string id="taom_sr_t1_b_p1" text="Жилистый скакун" />
-    <string id="taom_sr_t1_b_p1_desc" text="Ваш зверь держится на ногах в самых жёстких битвах. +5% здоровья коня." />
+    <string id="taom_sr_t1_b_p1_desc" text="Ваш зверь держится на ногах в самых тяжких боях. +10% к здоровью коня." />
     <string id="taom_sr_t1_b_p2" text="Скорость налётчика" />
     <string id="taom_sr_t1_b_p2_desc" text="Вы опережаете любую погоню. +5% скорости движения." />
     <string id="taom_sr_t1_b_p3" text="Тактика стаи" />
@@ -445,7 +445,7 @@
     <string id="taom_sr_t2_a_key" text="Натиск из Засады" />
     <string id="taom_sr_t2_a_key_desc" text="Вы наносите удар прежде, чем враг узнает о вашем присутствии. Стоимость атаки Крадущегося-Ползущего -20." />
     <string id="taom_sr_t2_a_p1" text="Убийца Импульса" />
-    <string id="taom_sr_t2_a_p1_desc" text="Ваша атака разбивает строй врага. +8% урона кавалерийской атаки." />
+    <string id="taom_sr_t2_a_p1_desc" text="Ваш натиск ломает строй врага. +13% к урону от конного натиска." />
     <string id="taom_sr_t2_a_p2" text="Неустанное Преследование" />
     <string id="taom_sr_t2_a_p2_desc" text="Никто не уйдёт от всадника Снага. +8% скорости отряда." />
     <string id="taom_sr_t2_a_p3" text="Добыча Налётчика" />
@@ -457,7 +457,7 @@
     <string id="taom_sr_t2_b_p1" text="Вопящее Падение" />
     <string id="taom_sr_t2_b_p1_desc" text="Ваш боевой клич деморализует всех, кроме самых храбрых. +6% морали войск." />
     <string id="taom_sr_t2_b_p2" text="Мастер Обхода" />
-    <string id="taom_sr_t2_b_p2_desc" text="Вы направляете фланговый удар с точностью. +10% бонус скрытности." />
+    <string id="taom_sr_t2_b_p2_desc" text="Вы точно направляете удар во фланг. +13% к скрытности." />
     <string id="taom_sr_t2_b_p3" text="Доля Грабителя" />
     <string id="taom_sr_t2_b_p3_desc" text="Разделённая добыча сохраняет верность стаи. -5% жалованья войск." />
     <string id="taom_sr_t2_b_p4" text="Железное Седло" />
@@ -465,7 +465,7 @@
     <string id="taom_sr_t3_a_key" text="Теневой Топот" />
     <string id="taom_sr_t3_a_key_desc" text="Армия всадников возникает из тьмы. Радиус Крадущегося-Ползущего +5." />
     <string id="taom_sr_t3_a_p1" text="Смертельная Атака" />
-    <string id="taom_sr_t3_a_p1_desc" text="Ваша атака сокрушает всё на своём пути. +12% урона кавалерийской атаки." />
+    <string id="taom_sr_t3_a_p1_desc" text="Ваш натиск сметает всё на своём пути. +15% к урону от конного натиска." />
     <string id="taom_sr_t3_a_p2" text="Повеление Варго-владыки" />
     <string id="taom_sr_t3_a_p2_desc" text="Огромная стая скачет под вашим знаменем. +4 размер отряда." />
     <string id="taom_sr_t3_a_p3" text="Вечная Тень" />
@@ -553,7 +553,7 @@
     <string id="taom_moa_t1_a_p3" text="Обучение в Альдбурге" />
     <string id="taom_moa_t1_a_p3_desc" text="Лучники Альдбурга — лучшие в Марке. +5 к здоровью." />
     <string id="taom_moa_t1_a_p4" text="Полный Колчан" />
-    <string id="taom_moa_t1_a_p4_desc" text="Ты носишь больше стрел с белым оперением, чем кто-либо другой. +3 к боеприпасам." />
+    <string id="taom_moa_t1_a_p4_desc" text="Вы носите больше белопёрых стрел, чем кто-либо. +10% к боезапасу." />
     <string id="taom_moa_t1_b_key" text="Стойкая Натяжка" />
     <string id="taom_moa_t1_b_key_desc" text="Ты держишь натянутую тетиву дольше для идеального выстрела. Длительность Лёгкого Оперения +4 сек." />
     <string id="taom_moa_t1_b_p1" text="Быстрое Накладывание" />
@@ -563,17 +563,17 @@
     <string id="taom_moa_t1_b_p3" text="Разведчик Открытых Полей" />
     <string id="taom_moa_t1_b_p3_desc" text="Вы читаете равнины Рохана как книгу. +5% к дальности обзора отряда." />
     <string id="taom_moa_t1_b_p4" text="Дисциплина Рохиррим" />
-    <string id="taom_moa_t1_b_p4_desc" text="Вы муштруете своих лучников держать строй. +3% к сопротивлению войск." />
+    <string id="taom_moa_t1_b_p4_desc" text="Вы учите лучников держать строй. +10% к стойкости войск." />
     <string id="taom_moa_t2_a_key" text="Капитан Залпов" />
     <string id="taom_moa_t2_a_key_desc" text="Вы координируете разрушительный массированный огонь. Стоимость заряда Лёгкого Оперения -20." />
     <string id="taom_moa_t2_a_p1" text="Пригвоздить Строй" />
-    <string id="taom_moa_t2_a_p1_desc" text="Ваши залпы подавляют вражеские наступления. +8% к сопротивлению войск." />
+    <string id="taom_moa_t2_a_p1_desc" text="Ваши залпы сдерживают наступление врага. +13% к стойкости войск." />
     <string id="taom_moa_t2_a_p2" text="Бронебойный Наконечник" />
     <string id="taom_moa_t2_a_p2_desc" text="Закалённые наконечники пробивают кольчугу и латы. +10% к пробитию брони." />
     <string id="taom_moa_t2_a_p3" text="Полевое Мастерство" />
-    <string id="taom_moa_t2_a_p3_desc" text="Вы используете каждую складку местности себе на пользу. +8% к бонусу скрытности." />
+    <string id="taom_moa_t2_a_p3_desc" text="Вы используете каждую складку местности. +13% к скрытности." />
     <string id="taom_moa_t2_a_p4" text="Тайник Боевых Стрел" />
-    <string id="taom_moa_t2_a_p4_desc" text="Заранее подготовленные тайники держат ваш колчан полным. +5 боеприпасов." />
+    <string id="taom_moa_t2_a_p4_desc" text="Заранее укрытые запасы наполняют ваш колчан. +13% к боезапасу." />
     <string id="taom_moa_t2_b_key" text="Непрерывный Обстрел" />
     <string id="taom_moa_t2_b_key_desc" text="Дождь стрел не прекращается. Длительность Лёгкого Оперения +2 сек." />
     <string id="taom_moa_t2_b_p1" text="Прикрывающий Огонь" />
@@ -593,7 +593,7 @@
     <string id="taom_moa_t3_a_p3" text="Лучники Ратного Войска" />
     <string id="taom_moa_t3_a_p3_desc" text="Ваша слава привлекает лучших лучников. +4 к размеру отряда." />
     <string id="taom_moa_t3_a_p4" text="Бесконечные Древки" />
-    <string id="taom_moa_t3_a_p4_desc" text="Ваши линии снабжения держат стрелы в полёте. +8 боеприпасов." />
+    <string id="taom_moa_t3_a_p4_desc" text="Ваши обозы не дают стрелам иссякнуть. +15% к боезапасу." />
     <string id="taom_moa_t3_b_key" text="Рефлекторный Выстрел" />
     <string id="taom_moa_t3_b_key_desc" text="Натяжение и выстрел — чистая мышечная память. Стоимость заряда Лёгкого Оперения -30." />
     <string id="taom_moa_t3_b_p1" text="Ливень Стрел" />
@@ -604,13 +604,13 @@
     <string id="taom_moa_t3_b_p3_desc" text="Ваши подвиги приносят славу Альдбургу. +12% к получению боевой известности." />
     <string id="taom_moa_t3_b_p4" text="Войско Рохана" />
     <string id="taom_moa_t3_b_p4_desc" text="Лучшие лучники Рохана собираются под вашим знаменем. +5 к размеру отряда." />
-    <string id="taom_ew_root_desc" text="Боевой клич Эорла дает +5% к урону конной атаки, призывая гром предков." />
+    <string id="taom_ew_root_desc" text="Боевой клич Эорла даёт +10% к урону от конного натиска, призывая гром предков." />
     <string id="taom_ew_t1_a_key" text="Гром Предков" />
     <string id="taom_ew_t1_a_key_desc" text="Боевой клич разносится по равнине. Радиус Боевого клича Эорла +3." />
     <string id="taom_ew_t1_a_p1" text="Первая Атака" />
-    <string id="taom_ew_t1_a_p1_desc" text="Вы возглавляете атаку, и никто не может сравниться с вашей скоростью. +6% к урону конной атаки." />
+    <string id="taom_ew_t1_a_p1_desc" text="Вы ведёте натиск, и никто не сравнится с вами в скорости. +10% к урону от конного натиска." />
     <string id="taom_ew_t1_a_p2" text="Рожденный в Седле" />
-    <string id="taom_ew_t1_a_p2_desc" text="Конь и всадник едины. +5% к здоровью коня." />
+    <string id="taom_ew_t1_a_p2_desc" text="Конь и всадник — одно целое. +10% к здоровью коня." />
     <string id="taom_ew_t1_a_p3" text="Выносливость Степняка" />
     <string id="taom_ew_t1_a_p3_desc" text="Скачки по равнинам Рохана закалили вас. +5 к здоровью." />
     <string id="taom_ew_t1_a_p4" text="Призывный Клич" />
@@ -624,11 +624,11 @@
     <string id="taom_ew_t1_b_p3" text="Решимость Всадника" />
     <string id="taom_ew_t1_b_p3_desc" text="Вы не дрогнете, каковы бы ни были шансы. +6 к здоровью." />
     <string id="taom_ew_t1_b_p4" text="Стойкий Скакун" />
-    <string id="taom_ew_t1_b_p4_desc" text="Ваш конь закален в битвах. +6% к здоровью коня." />
+    <string id="taom_ew_t1_b_p4_desc" text="Ваш конь закалён в битвах. +10% к здоровью коня." />
     <string id="taom_ew_t2_a_key" text="Наследие Эорла" />
     <string id="taom_ew_t2_a_key_desc" text="Предки всегда скачут с вами. Стоимость заряда Боевого клича -20." />
     <string id="taom_ew_t2_a_p1" text="Неудержимая Атака" />
-    <string id="taom_ew_t2_a_p1_desc" text="Ничто не устоит перед рохиррим. +10% к урону конной атаки." />
+    <string id="taom_ew_t2_a_p1_desc" text="Ничто не устоит перед рохиррим. +13% к урону от конного натиска." />
     <string id="taom_ew_t2_a_p2" text="Сокрушитель Щитовых Стен" />
     <string id="taom_ew_t2_a_p2_desc" text="Ваша атака разбивает щитовые стены. +8% к урону ближнего боя." />
     <string id="taom_ew_t2_a_p3" text="Дух Рохиррим" />
@@ -638,7 +638,7 @@
     <string id="taom_ew_t2_b_key" text="Песня Всадников" />
     <string id="taom_ew_t2_b_key_desc" text="Песня эотеод несет всадников вперед. Длительность Боевого клича +2 сек." />
     <string id="taom_ew_t2_b_p1" text="Кровь Меарас" />
-    <string id="taom_ew_t2_b_p1_desc" text="В жилах вашего коня течет кровь меарас. +10% к здоровью коня." />
+    <string id="taom_ew_t2_b_p1_desc" text="В вашем коне течёт кровь меарас. +13% к здоровью коня." />
     <string id="taom_ew_t2_b_p2" text="Мастер Равнин" />
     <string id="taom_ew_t2_b_p2_desc" text="Вы знаете каждую долину и хребет Марки. +8% к радиусу обнаружения отряда." />
     <string id="taom_ew_t2_b_p3" text="Связанные честью" />
@@ -648,7 +648,7 @@
     <string id="taom_ew_t3_a_key" text="Атака рохиррим" />
     <string id="taom_ew_t3_a_key_desc" text="Величайшая атака в эпоху людей. Радиус боевого клича +5." />
     <string id="taom_ew_t3_a_p1" text="Гром Пеленнора" />
-    <string id="taom_ew_t3_a_p1_desc" text="Как на Пеленнорских полях, ваша атака неудержима. +14% к урону при конной атаке." />
+    <string id="taom_ew_t3_a_p1_desc" text="Как на полях Пеленнора, ваш натиск неудержим. +15% к урону от конного натиска." />
     <string id="taom_ew_t3_a_p2" text="Владыка Марки" />
     <string id="taom_ew_t3_a_p2_desc" text="Величайшие всадники следуют за вами. +9 к здоровью." />
     <string id="taom_ew_t3_a_p3" text="Командир эореда" />
@@ -685,11 +685,11 @@
     <string id="taom_ws_t1_b_p3" text="Верная Стража" />
     <string id="taom_ws_t1_b_p3_desc" text="Вашим воинам нужно мало жалованья — долг для них достаточная награда. -4% жалованье войск." />
     <string id="taom_ws_t1_b_p4" text="Дисциплина Владыки Реки" />
-    <string id="taom_ws_t1_b_p4_desc" text="Ваша пехота держит строй там, где другие отступают. +3% сопротивление войск." />
+    <string id="taom_ws_t1_b_p4_desc" text="Ваша пехота стоит твёрдо там, где другие бегут. +10% к стойкости войск." />
     <string id="taom_ws_t2_a_key" text="Подготовленная Переправа" />
     <string id="taom_ws_t2_a_key_desc" text="Вы годами изучали эту местность. Стоимость заряда Речного Навигатора -20." />
     <string id="taom_ws_t2_a_p1" text="Щитовая Линия" />
-    <string id="taom_ws_t2_a_p1_desc" text="Ваши воины образуют непробиваемую стену. +8% сопротивление войск." />
+    <string id="taom_ws_t2_a_p1_desc" text="Ваши воины образуют непробиваемую стену. +13% к стойкости войск." />
     <string id="taom_ws_t2_a_p2" text="Испытанная Сталь" />
     <string id="taom_ws_t2_a_p2_desc" text="Каждое оружие отточено кузнецами Стангарда. +8% урон ближнего боя." />
     <string id="taom_ws_t2_a_p3" text="Предостережение Фангорна" />
@@ -709,7 +709,7 @@
     <string id="taom_ws_t3_a_key" text="Бастион Стангарда" />
     <string id="taom_ws_t3_a_key_desc" text="Вы — последний рубеж между цивилизацией и тьмой. Радиус Речного Навигатора +5." />
     <string id="taom_ws_t3_a_p1" text="Нерушимая Линия" />
-    <string id="taom_ws_t3_a_p1_desc" text="Ваша щитовая стена никогда не ломалась. +12% сопротивление войск." />
+    <string id="taom_ws_t3_a_p1_desc" text="Ваша стена щитов никогда не была сломлена. +15% к стойкости войск." />
     <string id="taom_ws_t3_a_p2" text="Бессмертная Стража" />
     <string id="taom_ws_t3_a_p2_desc" text="Дозор никогда не кончается. +9 здоровья." />
     <string id="taom_ws_t3_a_p3" text="Командир Гарнизона" />
@@ -793,11 +793,11 @@
     <string id="taom_wh_t1_a_p1" text="Терпение волка" />
     <string id="taom_wh_t1_a_p1_desc" text="Вы ждёте идеального момента для удара. +6% к дальнобойному урону." />
     <string id="taom_wh_t1_a_p2" text="Преследователь холмов" />
-    <string id="taom_wh_t1_a_p2_desc" text="Вы передвигаетесь беззвучно по дунландским холмам. +5% к бонусу скрытности." />
+    <string id="taom_wh_t1_a_p2_desc" text="Вы бесшумно движетесь по холмам Дунланда. +10% к скрытности." />
     <string id="taom_wh_t1_a_p3" text="Выносливость охотника" />
     <string id="taom_wh_t1_a_p3_desc" text="Вы преследуете добычу днями без отдыха. +5 к здоровью." />
     <string id="taom_wh_t1_a_p4" text="Костяной колчан" />
-    <string id="taom_wh_t1_a_p4_desc" text="Дунландские традиции оперения наполняют ваш колчан. +3 к боеприпасам." />
+    <string id="taom_wh_t1_a_p4_desc" text="Дунландские традиции оперения наполняют ваш колчан. +10% к боезапасу." />
     <string id="taom_wh_t1_b_key" text="Затянувшаяся охота" />
     <string id="taom_wh_t1_b_key_desc" text="Метка сохраняется в хаосе битвы. Длительность Меченой добычи +4 сек." />
     <string id="taom_wh_t1_b_p1" text="Быстрое натягивание" />
@@ -817,11 +817,11 @@
     <string id="taom_wh_t2_a_p3" text="Выживший в дикой природе" />
     <string id="taom_wh_t2_a_p3_desc" text="Дикая природа научила вас переживать что угодно. +6 к здоровью." />
     <string id="taom_wh_t2_a_p4" text="Глубокий колчан" />
-    <string id="taom_wh_t2_a_p4_desc" text="Ваш клан снабжает стрелами даже для осады. +5 боеприпасов." />
+    <string id="taom_wh_t2_a_p4_desc" text="Ваш клан поставляет достаточно стрел для осады. +13% к боезапасу." />
     <string id="taom_wh_t2_b_key" text="Длительная метка" />
     <string id="taom_wh_t2_b_key_desc" text="Метка нанесена глубоко и не исчезает. Длительность Меченой добычи +2 сек." />
     <string id="taom_wh_t2_b_p1" text="Хищник из засады" />
-    <string id="taom_wh_t2_b_p1_desc" text="Вы атакуете из укрытия для максимального эффекта. +10% к бонусу скрытности." />
+    <string id="taom_wh_t2_b_p1_desc" text="Вы атакуете из укрытия с наибольшим эффектом. +13% к скрытности." />
     <string id="taom_wh_t2_b_p2" text="Стойкость дунландца" />
     <string id="taom_wh_t2_b_p2_desc" text="Суровая жизнь в холмах делает вас почти неубиваемым. +10% к сопротивлению ближнему бою." />
     <string id="taom_wh_t2_b_p3" text="Незримая тропа" />
@@ -848,15 +848,15 @@
     <string id="taom_wh_t3_b_p3_desc" text="Каждый трофей добавляет к вашей грозной легенде. +14% к получению славы в бою." />
     <string id="taom_wh_t3_b_p4" text="Великая Стая" />
     <string id="taom_wh_t3_b_p4_desc" text="Каждый охотник в волчьей шкуре Дунланда скачет с вами. +6 к размеру отряда." />
-    <string id="taom_cr_root_desc" text="Натиск Боевой Стаи даёт +5% к урону конной атаки и сеет хаос во вражеских рядах." />
+    <string id="taom_cr_root_desc" text="«Натиск военной своры» даёт +10% к урону от конного натиска и вносит хаос во вражеские ряды." />
     <string id="taom_cr_t1_a_key" text="Гром Клана" />
     <string id="taom_cr_t1_a_key_desc" text="Земля дрожит, когда всадники обрушиваются. Радиус Натиска Боевой Стаи +3." />
     <string id="taom_cr_t1_a_p1" text="Всадник Дунланда" />
-    <string id="taom_cr_t1_a_p1_desc" text="Вы едины со своим скакуном. +6% к урону конной атаки." />
+    <string id="taom_cr_t1_a_p1_desc" text="Вы едины со своим скакуном. +10% к урону от конного натиска." />
     <string id="taom_cr_t1_a_p2" text="Выносливый Скакун" />
-    <string id="taom_cr_t1_a_p2_desc" text="Горные пони Дунланда крепки как железо. +5% к здоровью лошадей." />
+    <string id="taom_cr_t1_a_p2_desc" text="Горные пони дунлендингов крепки, как железо. +10% к здоровью лошадей." />
     <string id="taom_cr_t1_a_p3" text="Эскорт Клана" />
-    <string id="taom_cr_t1_a_p3_desc" text="Ваши всадники защищают клан от опасности. +3% к сопротивлению войск." />
+    <string id="taom_cr_t1_a_p3_desc" text="Ваши всадники оберегают клан от бед. +10% к сопротивлению войск." />
     <string id="taom_cr_t1_a_p4" text="Седельная Стойкость" />
     <string id="taom_cr_t1_a_p4_desc" text="Вы скачете днями, не слезая с седла. +5 к здоровью." />
     <string id="taom_cr_t1_b_key" text="Непрерывный Натиск" />
@@ -872,7 +872,7 @@
     <string id="taom_cr_t2_a_key" text="Спущенная с Привязи Боевая Стая" />
     <string id="taom_cr_t2_a_key_desc" text="Стая всегда готова к атаке. Стоимость Натиска Боевой Стаи -20." />
     <string id="taom_cr_t2_a_p1" text="Сокрушительный Удар" />
-    <string id="taom_cr_t2_a_p1_desc" text="Ваш натиск разбивает вражеские строи. +10% к урону конной атаки." />
+    <string id="taom_cr_t2_a_p1_desc" text="Ваш натиск сокрушает вражеские построения. +13% к урону от конного натиска." />
     <string id="taom_cr_t2_a_p2" text="Стремительное Преследование" />
     <string id="taom_cr_t2_a_p2_desc" text="Никто не ускользнёт от клановой стражи. +8% к скорости отряда." />
     <string id="taom_cr_t2_a_p3" text="Слава Грабежа" />
@@ -892,7 +892,7 @@
     <string id="taom_cr_t3_a_key" text="Клан всадников" />
     <string id="taom_cr_t3_a_key_desc" text="Каждый всадник в Дунланде скачет под вашим знаменем. Радиус Натиска стаи +5." />
     <string id="taom_cr_t3_a_p1" text="Лавинная атака" />
-    <string id="taom_cr_t3_a_p1_desc" text="Вашу атаку невозможно остановить. +14% к урону конной атаки." />
+    <string id="taom_cr_t3_a_p1_desc" text="Ваш натиск не остановить. +15% к урону от конного натиска." />
     <string id="taom_cr_t3_a_p2" text="Рожденный в горах" />
     <string id="taom_cr_t3_a_p2_desc" text="Вы рождены для этого седла. +9 здоровья." />
     <string id="taom_cr_t3_a_p3" text="Великая стая" />
@@ -943,7 +943,7 @@
     <string id="taom_steppe_bowmaster_root_desc" text="Буря Стрел дает +5% к дальнобойному урону и улучшает непрерывную стрельбу." />
     <string id="taom_sb_t1a_key" text="Радиус Бури Стрел увеличен, залпы покрывают больше пространства." />
     <string id="taom_sb_t1a_p1" text="+8% к дальнобойному урону." />
-    <string id="taom_sb_t1a_p2" text="+2 к боеприпасам." />
+    <string id="taom_sb_t1a_p2" text="+10% к боезапасу." />
     <string id="taom_sb_t1a_p3" text="+7% к скорости передвижения." />
     <string id="taom_sb_t1a_p4" text="+5% к дальности обзора отряда." />
     <string id="taom_sb_t1b_key" text="Длительность Бури Стрел увеличена, безжалостный град." />
@@ -952,7 +952,7 @@
     <string id="taom_sb_t1b_p3" text="+3% к урону войск." />
     <string id="taom_sb_t1b_p4" text="+5% к получению боевой славы." />
     <string id="taom_sb_t2a_key" text="Заряд Бури Стрел снижен, бесконечный колчан." />
-    <string id="taom_sb_t2a_p1" text="+4 к боеприпасам." />
+    <string id="taom_sb_t2a_p1" text="+13% к боезапасу." />
     <string id="taom_sb_t2a_p2" text="+10% к дальнобойному урону." />
     <string id="taom_sb_t2a_p3" text="+10% к скорости передвижения." />
     <string id="taom_sb_t2a_p4" text="+10% к дальности обзора отряда." />
@@ -963,7 +963,7 @@
     <string id="taom_sb_t2b_p4" text="+10% к получению славы в бою." />
     <string id="taom_sb_t3a_key" text="Радиус Бури Стрел значительно расширен, неотвратимый ливень." />
     <string id="taom_sb_t3a_p1" text="+15% к урону дальнего боя." />
-    <string id="taom_sb_t3a_p2" text="+6 боеприпасов." />
+    <string id="taom_sb_t3a_p2" text="+15% к боезапасу." />
     <string id="taom_sb_t3a_p3" text="+15% к получению славы в бою." />
     <string id="taom_sb_t3a_p4" text="+15% к дальности обзора отряда." />
     <string id="taom_sb_t3b_key" text="Перезарядка Бури Стрел значительно уменьшена, непрекращающиеся залпы." />
@@ -971,34 +971,34 @@
     <string id="taom_sb_t3b_p2" text="+9 к максимальному здоровью." />
     <string id="taom_sb_t3b_p3" text="+7% к урону войск." />
     <string id="taom_sb_t3b_p4" text="+5 к размеру отряда." />
-    <string id="taom_chariot_warlord_root_desc" text="Косящая Атака дает +5% к урону конной атаки и вдохновляет конных воинов." />
+    <string id="taom_chariot_warlord_root_desc" text="«Косящий натиск» даёт +10% к урону от конного натиска и вдохновляет конных воинов." />
     <string id="taom_cw_t1a_key" text="Радиус Косящей Атаки расширен, лезвия прорезают более широкую полосу." />
-    <string id="taom_cw_t1a_p1" text="+7% к урону конной атаки." />
+    <string id="taom_cw_t1a_p1" text="+10% к урону от конного натиска." />
     <string id="taom_cw_t1a_p2" text="+8% к урону ближнего боя." />
     <string id="taom_cw_t1a_p3" text="+3% к урону войск." />
     <string id="taom_cw_t1a_p4" text="+5% к скорости передвижения отряда." />
     <string id="taom_cw_t1b_key" text="Длительность Косящей Атаки продлена, импульс сохраняется." />
-    <string id="taom_cw_t1b_p1" text="+30 к здоровью лошади." />
+    <string id="taom_cw_t1b_p1" text="+10% к здоровью лошадей." />
     <string id="taom_cw_t1b_p2" text="+5 к максимальному здоровью." />
     <string id="taom_cw_t1b_p3" text="+5% к боевому духу войск." />
     <string id="taom_cw_t1b_p4" text="+5% к получению славы в бою." />
     <string id="taom_cw_t2a_key" text="Перезарядка Косящей Атаки уменьшена, колеса никогда не перестают вращаться." />
-    <string id="taom_cw_t2a_p1" text="+12% к урону конной атаки." />
+    <string id="taom_cw_t2a_p1" text="+13% к урону от конного натиска." />
     <string id="taom_cw_t2a_p2" text="+10% к скорости передвижения отряда." />
     <string id="taom_cw_t2a_p3" text="+10% к боевому духу войск." />
     <string id="taom_cw_t2a_p4" text="+3 к размеру отряда." />
     <string id="taom_cw_t2b_key" text="Косящая Атака повышает стойкость скакуна во время атаки." />
     <string id="taom_cw_t2b_p1" text="+10% к урону ближнего боя." />
-    <string id="taom_cw_t2b_p2" text="+60 к здоровью лошади." />
+    <string id="taom_cw_t2b_p2" text="+13% к здоровью лошадей." />
     <string id="taom_cw_t2b_p3" text="+6% к урону войск." />
     <string id="taom_cw_t2b_p4" text="+10% к получению славы в бою." />
     <string id="taom_cw_t3a_key" text="Радиус Косящей Атаки значительно расширен, неостановимый удар по области." />
-    <string id="taom_cw_t3a_p1" text="+18% к урону конной атаки." />
+    <string id="taom_cw_t3a_p1" text="+15% к урону от конного натиска." />
     <string id="taom_cw_t3a_p2" text="+15% к урону ближнего боя." />
     <string id="taom_cw_t3a_p3" text="+7% к урону войск." />
     <string id="taom_cw_t3a_p4" text="+15% к получению славы в бою." />
     <string id="taom_cw_t3b_key" text="Перезарядка Косящей Атаки значительно уменьшена, колеса перемалывают без остановки." />
-    <string id="taom_cw_t3b_p1" text="+100 к здоровью лошади." />
+    <string id="taom_cw_t3b_p1" text="+15% к здоровью лошадей." />
     <string id="taom_cw_t3b_p2" text="+15% к скорости передвижения отряда." />
     <string id="taom_cw_t3b_p3" text="+20% к боевому духу войск." />
     <string id="taom_cw_t3b_p4" text="+5 к размеру отряда." />
@@ -1036,7 +1036,7 @@
     <string id="taom_pezarsani_javelineer_root_desc" text="Залп солнечного огня дает +5% к дальнобойному урону и ускоряет метание дротиков." />
     <string id="taom_pj_t1a_key" text="Радиус действия Залпа солнечного огня увеличен, дротики покрывают большую площадь." />
     <string id="taom_pj_t1a_p1" text="+8% к дальнобойному урону." />
-    <string id="taom_pj_t1a_p2" text="+2 боеприпаса." />
+    <string id="taom_pj_t1a_p2" text="+10% к боезапасу." />
     <string id="taom_pj_t1a_p3" text="+7% к скорости передвижения." />
     <string id="taom_pj_t1a_p4" text="+5% к получению славы в бою." />
     <string id="taom_pj_t1b_key" text="Длительность Залпа солнечного огня увеличена, непрерывный беспокоящий огонь." />
@@ -1045,7 +1045,7 @@
     <string id="taom_pj_t1b_p3" text="+3% урон отряда." />
     <string id="taom_pj_t1b_p4" text="+5% дальность обзора отряда." />
     <string id="taom_pj_t2a_key" text="Перезарядка Залпа Солнечного Огня снижена, дротики никогда не заканчиваются." />
-    <string id="taom_pj_t2a_p1" text="+4 боеприпасы." />
+    <string id="taom_pj_t2a_p1" text="+13% к боезапасу." />
     <string id="taom_pj_t2a_p2" text="+10% урон дальнего боя." />
     <string id="taom_pj_t2a_p3" text="+10% скорость передвижения." />
     <string id="taom_pj_t2a_p4" text="+10% получение славы в битве." />
@@ -1056,7 +1056,7 @@
     <string id="taom_pj_t2b_p4" text="+10% дальность обзора отряда." />
     <string id="taom_pj_t3a_key" text="Радиус Залпа Солнечного Огня значительно расширен, неизбежный обстрел." />
     <string id="taom_pj_t3a_p1" text="+15% урон дальнего боя." />
-    <string id="taom_pj_t3a_p2" text="+6 боеприпасы." />
+    <string id="taom_pj_t3a_p2" text="+15% к боезапасу." />
     <string id="taom_pj_t3a_p3" text="+15% получение славы в битве." />
     <string id="taom_pj_t3a_p4" text="+15% скорость передвижения." />
     <string id="taom_pj_t3b_key" text="Перезарядка Залпа Солнечного Огня значительно снижена, неустанное преследование." />
@@ -1064,34 +1064,34 @@
     <string id="taom_pj_t3b_p2" text="+9 макс. здоровье." />
     <string id="taom_pj_t3b_p3" text="+7% урон отряда." />
     <string id="taom_pj_t3b_p4" text="+15% дальность обзора отряда." />
-    <string id="taom_mahud_beast_rider_root_desc" text="Отголоски Мумакиль дают +5% урон от конной атаки и сеют страх." />
+    <string id="taom_mahud_beast_rider_root_desc" text="«Отзвуки Мумакана» дают +10% к урону от конного натиска и сеют страх." />
     <string id="taom_mbr_t1a_key" text="Радиус Отголосков Мумакиль расширен, страх распространяется дальше." />
-    <string id="taom_mbr_t1a_p1" text="+7% урон от конной атаки." />
+    <string id="taom_mbr_t1a_p1" text="+10% к урону от конного натиска." />
     <string id="taom_mbr_t1a_p2" text="+8% урон ближнего боя." />
     <string id="taom_mbr_t1a_p3" text="+5% боевой дух отряда." />
     <string id="taom_mbr_t1a_p4" text="+5% скорость передвижения отряда." />
     <string id="taom_mbr_t1b_key" text="Длительность Отголосков Мумакиль увеличена, страх задерживается." />
-    <string id="taom_mbr_t1b_p1" text="+30 здоровье лошади." />
+    <string id="taom_mbr_t1b_p1" text="+10% к здоровью лошадей." />
     <string id="taom_mbr_t1b_p2" text="+3% урон отряда." />
     <string id="taom_mbr_t1b_p3" text="+5% получение славы в битве." />
     <string id="taom_mbr_t1b_p4" text="+5% сопротивление." />
     <string id="taom_mbr_t2a_key" text="Перезарядка Отголосков Мумакиль снижена, ужас всегда неминуем." />
-    <string id="taom_mbr_t2a_p1" text="+12% урон от конной атаки." />
+    <string id="taom_mbr_t2a_p1" text="+13% к урону от конного натиска." />
     <string id="taom_mbr_t2a_p2" text="+10% боевой дух отряда." />
     <string id="taom_mbr_t2a_p3" text="+5% урон отряда." />
     <string id="taom_mbr_t2a_p4" text="+10% получение славы в битве." />
     <string id="taom_mbr_t2b_key" text="Отголоски Мумакиль повышают стойкость зверя во время атаки." />
     <string id="taom_mbr_t2b_p1" text="+12% к урону в ближнем бою." />
-    <string id="taom_mbr_t2b_p2" text="+60 к здоровью лошади." />
+    <string id="taom_mbr_t2b_p2" text="+13% к здоровью лошадей." />
     <string id="taom_mbr_t2b_p3" text="+10% к скорости передвижения отряда." />
     <string id="taom_mbr_t2b_p4" text="+3 к размеру отряда." />
     <string id="taom_mbr_t3a_key" text="Радиус Отголосков Мумакиль значительно расширен, сама земля сотрясается." />
-    <string id="taom_mbr_t3a_p1" text="+18% к урону от конной атаки." />
+    <string id="taom_mbr_t3a_p1" text="+15% к урону от конного натиска." />
     <string id="taom_mbr_t3a_p2" text="+15% к урону в ближнем бою." />
     <string id="taom_mbr_t3a_p3" text="+20% к моральному духу войск." />
     <string id="taom_mbr_t3a_p4" text="+15% к получению славы в бою." />
     <string id="taom_mbr_t3b_key" text="Атака Отголосков Мумакиль значительно снижена, бесконечный ужас." />
-    <string id="taom_mbr_t3b_p1" text="+100 к здоровью лошади." />
+    <string id="taom_mbr_t3b_p1" text="+15% к здоровью лошадей." />
     <string id="taom_mbr_t3b_p2" text="+15% к скорости передвижения отряда." />
     <string id="taom_mbr_t3b_p3" text="+7% к урону войск." />
     <string id="taom_mbr_t3b_p4" text="+9 к максимальному здоровью." />
@@ -1102,14 +1102,14 @@
     <string id="taom_fhh_t1a_p3" text="+8% к урону в ближнем бою." />
     <string id="taom_fhh_t1a_p4" text="+5% к моральному духу войск." />
     <string id="taom_fhh_t1b_key" text="Длительность Отвратительной Жестокости продлена, ярость тролля длится дольше." />
-    <string id="taom_fhh_t1b_p1" text="+8% к сопротивлению войск." />
+    <string id="taom_fhh_t1b_p1" text="+10% к сопротивлению войск." />
     <string id="taom_fhh_t1b_p2" text="+3% к урону войск." />
     <string id="taom_fhh_t1b_p3" text="+5% к получению славы в бою." />
     <string id="taom_fhh_t1b_p4" text="+5 к максимальному здоровью." />
     <string id="taom_fhh_t2a_key" text="Атака Отвратительной Жестокости снижена, ярость разгорается быстрее." />
     <string id="taom_fhh_t2a_p1" text="+12% к сопротивлению." />
     <string id="taom_fhh_t2a_p2" text="+8 к максимальному здоровью." />
-    <string id="taom_fhh_t2a_p3" text="+12% к сопротивлению войск." />
+    <string id="taom_fhh_t2a_p3" text="+13% к сопротивлению войск." />
     <string id="taom_fhh_t2a_p4" text="+10% к моральному духу войск." />
     <string id="taom_fhh_t2b_key" text="Отвратительная Жестокость делает полутролля еще более ужасающим." />
     <string id="taom_fhh_t2b_p1" text="+8 к максимальному здоровью." />
@@ -1129,16 +1129,16 @@
     <string id="taom_cl_root_desc" text="Стена Щитов дает +5% к сопротивлению, и ваш строй держится стойко вопреки всему." />
     <string id="taom_cl_t1_a_key" text="Радиус Стены Щитов расширен, защищая более широкий строй." />
     <string id="taom_cl_t1_a_p1" text="+8% к сопротивлению." />
-    <string id="taom_cl_t1_a_p2" text="+5% к сопротивлению войск." />
+    <string id="taom_cl_t1_a_p2" text="+10% к сопротивлению войск." />
     <string id="taom_cl_t1_a_p3" text="+6 к максимальному здоровью." />
     <string id="taom_cl_t1_a_p4" text="+5% к боевому духу войск." />
     <string id="taom_cl_t1_b_key" text="Длительность Стены Щитов увеличена, выдерживая самые долгие штурмы." />
     <string id="taom_cl_t1_b_p1" text="+8% к урону в ближнем бою." />
     <string id="taom_cl_t1_b_p2" text="+5 к максимальному здоровью." />
-    <string id="taom_cl_t1_b_p3" text="+5% к сопротивлению войск." />
+    <string id="taom_cl_t1_b_p3" text="+10% к сопротивлению войск." />
     <string id="taom_cl_t1_b_p4" text="+7% к скорости удара." />
     <string id="taom_cl_t2_a_key" text="Перезарядка Стены Щитов уменьшена, чаще воздвигая стену." />
-    <string id="taom_cl_t2_a_p1" text="+10% к сопротивлению войск." />
+    <string id="taom_cl_t2_a_p1" text="+13% к сопротивлению войск." />
     <string id="taom_cl_t2_a_p2" text="+2 к размеру отряда." />
     <string id="taom_cl_t2_a_p3" text="+10% к сопротивлению." />
     <string id="taom_cl_t2_a_p4" text="-10% к жалованию войск." />
@@ -1188,11 +1188,11 @@
     <string id="taom_ldm_t3_b_p2" text="+15% к дальнему урону." />
     <string id="taom_ldm_t3_b_p3" text="+9 к максимальному здоровью." />
     <string id="taom_ldm_t3_b_p4" text="+10% к дальности обзора отряда." />
-    <string id="taom_bk_root_desc" text="Непоколебимость даёт +5% к урону конной атаки, пока ваш отряд мчится без пощады." />
+    <string id="taom_bk_root_desc" text="«Несгибаемость» даёт +10% к урону от конного натиска, ибо ваш отряд скачет без пощады." />
     <string id="taom_bk_t1_a_key" text="Радиус Непоколебимости расширен, воодушевляя более широкую волну всадников." />
-    <string id="taom_bk_t1_a_p1" text="+8% к урону конной атаки." />
+    <string id="taom_bk_t1_a_p1" text="+10% к урону от конного натиска." />
     <string id="taom_bk_t1_a_p2" text="+5% к боевому духу войск." />
-    <string id="taom_bk_t1_a_p3" text="+30 к здоровью коня." />
+    <string id="taom_bk_t1_a_p3" text="+10% к здоровью лошадей." />
     <string id="taom_bk_t1_a_p4" text="+5% к урону в ближнем бою." />
     <string id="taom_bk_t1_b_key" text="Длительность Непоколебимости увеличена, поддерживая бесстрашную атаку." />
     <string id="taom_bk_t1_b_p1" text="+7% к сопротивлению." />
@@ -1205,13 +1205,13 @@
     <string id="taom_bk_t2_a_p3" text="+10% к получению славы в бою." />
     <string id="taom_bk_t2_a_p4" text="-10% к жалованию войск." />
     <string id="taom_bk_t2_b_key" text="Непоколебимость укрепляет скакунов во время атаки." />
-    <string id="taom_bk_t2_b_p1" text="+12% к урону от конной атаки." />
-    <string id="taom_bk_t2_b_p2" text="+60 к здоровью коня." />
+    <string id="taom_bk_t2_b_p1" text="+13% к урону от конного натиска." />
+    <string id="taom_bk_t2_b_p2" text="+13% к здоровью лошадей." />
     <string id="taom_bk_t2_b_p3" text="+10% к сопротивлению." />
     <string id="taom_bk_t2_b_p4" text="+10% к боевому духу отряда." />
     <string id="taom_bk_t3_a_key" text="Радиус Непоколебимости значительно увеличен, натиск неостановим." />
-    <string id="taom_bk_t3_a_p1" text="+18% к урону от конной атаки." />
-    <string id="taom_bk_t3_a_p2" text="+100 к здоровью коня." />
+    <string id="taom_bk_t3_a_p1" text="+15% к урону от конного натиска." />
+    <string id="taom_bk_t3_a_p2" text="+15% к здоровью лошадей." />
     <string id="taom_bk_t3_a_p3" text="+15% к боевому духу отряда." />
     <string id="taom_bk_t3_a_p4" text="+4 к размеру отряда." />
     <string id="taom_bk_t3_b_key" text="Атака Непоколебимости значительно ускорена, всегда готова и неумолима." />
@@ -1228,7 +1228,7 @@
     <string id="taom_dg2_t1_b_key" text="Длительность Стойкости у врат увеличена, укрепляя оборону." />
     <string id="taom_dg2_t1_b_p1" text="+8% к сопротивлению." />
     <string id="taom_dg2_t1_b_p2" text="+5% к боевому духу отряда." />
-    <string id="taom_dg2_t1_b_p3" text="+5% к сопротивлению отряда." />
+    <string id="taom_dg2_t1_b_p3" text="+10% к сопротивляемости войск." />
     <string id="taom_dg2_t1_b_p4" text="+5% к выживаемости войск." />
     <string id="taom_dg2_t2_a_key" text="Время восстановления Стойкости у врат сокращено, активируется чаще." />
     <string id="taom_dg2_t2_a_p1" text="+10% к боевому духу отряда." />
@@ -1238,7 +1238,7 @@
     <string id="taom_dg2_t2_b_key" text="Стойкость у врат даёт дополнительные защитные бонусы в активном состоянии." />
     <string id="taom_dg2_t2_b_p1" text="+12% к сопротивлению." />
     <string id="taom_dg2_t2_b_p2" text="+8 к максимальному здоровью." />
-    <string id="taom_dg2_t2_b_p3" text="+10% к сопротивлению отряда." />
+    <string id="taom_dg2_t2_b_p3" text="+13% к сопротивляемости войск." />
     <string id="taom_dg2_t2_b_p4" text="+5% к урону отряда." />
     <string id="taom_dg2_t3_a_key" text="Радиус удержания ворот значительно расширен, разрушительная мощь." />
     <string id="taom_dg2_t3_a_p1" text="+15% к урону в ближнем бою." />
@@ -1247,7 +1247,7 @@
     <string id="taom_dg2_t3_a_p4" text="+4 к размеру отряда." />
     <string id="taom_dg2_t3_b_key" text="Время восстановления Удержания Врат значительно снижено, почти всегда доступно." />
     <string id="taom_dg2_t3_b_p1" text="+18% к сопротивлению." />
-    <string id="taom_dg2_t3_b_p2" text="+15% к восстановлению здоровья." />
+    <string id="taom_dg2_t3_b_p2" text="+15% к восстановлению здоровья героя." />
     <string id="taom_dg2_t3_b_p3" text="+20% к боевому духу войск." />
     <string id="taom_dg2_t3_b_p4" text="+15% к выживаемости войск." />
     <string id="taom_dale_marksman_root_desc" text="Чёрная Стрела дарует +5% к дальнобойному урону в честь Барда Лучника." />
@@ -1260,11 +1260,11 @@
     <string id="taom_dm_t1_b_p1" text="+5% к сопротивлению." />
     <string id="taom_dm_t1_b_p2" text="+5 к максимальному здоровью." />
     <string id="taom_dm_t1_b_p3" text="+5% к дальности обзора отряда." />
-    <string id="taom_dm_t1_b_p4" text="+5% к бонусу скрытности." />
+    <string id="taom_dm_t1_b_p4" text="+10% к скрытности." />
     <string id="taom_dm_t2_a_key" text="Время восстановления Чёрной Стрелы снижено, поддерживая постоянное давление." />
     <string id="taom_dm_t2_a_p1" text="+10% к дальности обзора отряда." />
     <string id="taom_dm_t2_a_p2" text="+10% к скорости передвижения." />
-    <string id="taom_dm_t2_a_p3" text="+10% к бонусу скрытности." />
+    <string id="taom_dm_t2_a_p3" text="+13% к скрытности." />
     <string id="taom_dm_t2_a_p4" text="+10% к получению боевой славы." />
     <string id="taom_dm_t2_b_key" text="Чёрная Стрела получает дополнительное пробитие во время действия." />
     <string id="taom_dm_t2_b_p1" text="+12% к дальнобойному урону." />
@@ -1284,11 +1284,11 @@
     <string id="taom_dale_outrider_root_desc" text="Рывок по торговому пути дает +5% к урону в ближнем бою, и ваш конь ускоряется." />
     <string id="taom_dor_t1_a_key" text="Радиус Рывка по торговому пути расширен, охватывая более широкие построения." />
     <string id="taom_dor_t1_a_p1" text="+8% к урону в ближнем бою." />
-    <string id="taom_dor_t1_a_p2" text="+7% к урону от кавалерийской атаки." />
+    <string id="taom_dor_t1_a_p2" text="+10% к урону от наскока коня." />
     <string id="taom_dor_t1_a_p3" text="+7% к скорости размаха." />
     <string id="taom_dor_t1_a_p4" text="+5% к скорости передвижения отряда." />
     <string id="taom_dor_t1_b_key" text="Продолжительность Рывка по торговому пути увеличена, сохраняя импульс." />
-    <string id="taom_dor_t1_b_p1" text="+30 к здоровью коня." />
+    <string id="taom_dor_t1_b_p1" text="+10% к здоровью коня." />
     <string id="taom_dor_t1_b_p2" text="+5 к максимальному здоровью." />
     <string id="taom_dor_t1_b_p3" text="-5% к содержанию войск." />
     <string id="taom_dor_t1_b_p4" text="+5% к сопротивлению." />
@@ -1299,16 +1299,16 @@
     <string id="taom_dor_t2_a_p4" text="+10% к получению славы в бою." />
     <string id="taom_dor_t2_b_key" text="Рывок по торговому пути повышает живучесть коня во время действия." />
     <string id="taom_dor_t2_b_p1" text="+12% к урону в ближнем бою." />
-    <string id="taom_dor_t2_b_p2" text="+12% к урону от кавалерийской атаки." />
-    <string id="taom_dor_t2_b_p3" text="+60 к здоровью коня." />
+    <string id="taom_dor_t2_b_p2" text="+13% к урону от наскока коня." />
+    <string id="taom_dor_t2_b_p3" text="+13% к здоровью коня." />
     <string id="taom_dor_t2_b_p4" text="+10% к скорости размаха." />
     <string id="taom_dor_t3_a_key" text="Радиус Рывка по торговому пути значительно расширен, неудержимый натиск." />
     <string id="taom_dor_t3_a_p1" text="+18% к урону в ближнем бою." />
-    <string id="taom_dor_t3_a_p2" text="+18% к урону от кавалерийской атаки." />
+    <string id="taom_dor_t3_a_p2" text="+15% к урону от наскока коня." />
     <string id="taom_dor_t3_a_p3" text="+15% к скорости размаха." />
     <string id="taom_dor_t3_a_p4" text="+7% к урону войск." />
     <string id="taom_dor_t3_b_key" text="Время накопления Рывка по торговому пути значительно сокращено, скачите без остановки." />
-    <string id="taom_dor_t3_b_p1" text="+100 к здоровью коня." />
+    <string id="taom_dor_t3_b_p1" text="+15% к здоровью коня." />
     <string id="taom_dor_t3_b_p2" text="-15% к содержанию войск." />
     <string id="taom_dor_t3_b_p3" text="+15% к скорости передвижения отряда." />
     <string id="taom_dor_t3_b_p4" text="+9 к максимальному здоровью." />
@@ -1321,7 +1321,7 @@
     <string id="taom_ig_t1_b_key" text="Продолжительность Мифрилового бастиона увеличена, укрепляя оборону." />
     <string id="taom_ig_t1_b_p1" text="+8% к сопротивлению." />
     <string id="taom_ig_t1_b_p2" text="+5% к боевому духу войск." />
-    <string id="taom_ig_t1_b_p3" text="+5% к сопротивлению войск." />
+    <string id="taom_ig_t1_b_p3" text="+10% к сопротивляемости войск." />
     <string id="taom_ig_t1_b_p4" text="+5% к выживаемости войск." />
     <string id="taom_ig_t2_a_key" text="Заряд Мифрильного Бастиона уменьшен, активируется чаще." />
     <string id="taom_ig_t2_a_p1" text="+10% к боевому духу войск." />
@@ -1331,7 +1331,7 @@
     <string id="taom_ig_t2_b_key" text="Мифрильный Бастион дает дополнительные защитные бонусы в активном состоянии." />
     <string id="taom_ig_t2_b_p1" text="+12% к сопротивлению." />
     <string id="taom_ig_t2_b_p2" text="+8 к максимальному здоровью." />
-    <string id="taom_ig_t2_b_p3" text="+10% к сопротивлению войск." />
+    <string id="taom_ig_t2_b_p3" text="+13% к сопротивляемости войск." />
     <string id="taom_ig_t2_b_p4" text="+5% к урону войск." />
     <string id="taom_ig_t3_a_key" text="Радиус Мифрильного Бастиона значительно увеличен, разрушительная мощь." />
     <string id="taom_ig_t3_a_p1" text="+15% к урону в ближнем бою." />
@@ -1340,7 +1340,7 @@
     <string id="taom_ig_t3_a_p4" text="+4 к размеру отряда." />
     <string id="taom_ig_t3_b_key" text="Заряд Мифрильного Бастиона значительно уменьшен, почти всегда доступен." />
     <string id="taom_ig_t3_b_p1" text="+18% к сопротивлению." />
-    <string id="taom_ig_t3_b_p2" text="+15% к регенерации здоровья." />
+    <string id="taom_ig_t3_b_p2" text="+15% к восстановлению здоровья героя." />
     <string id="taom_ig_t3_b_p3" text="+20% к боевому духу войск." />
     <string id="taom_ig_t3_b_p4" text="+15% к выживаемости войск." />
     <string id="taom_crossbow_master_root_desc" text="Точный Залп дает +5% к дальнобойному урону мастерскими болтами." />
@@ -1353,11 +1353,11 @@
     <string id="taom_cbm_t1_b_p1" text="+5% к сопротивлению." />
     <string id="taom_cbm_t1_b_p2" text="+5 к максимальному здоровью." />
     <string id="taom_cbm_t1_b_p3" text="+5% к дальности обзора отряда." />
-    <string id="taom_cbm_t1_b_p4" text="+5% к бонусу скрытности." />
+    <string id="taom_cbm_t1_b_p4" text="+10% к скрытности." />
     <string id="taom_cbm_t2_a_key" text="Заряд Точного Залпа уменьшен, поддерживая постоянное давление." />
     <string id="taom_cbm_t2_a_p1" text="+10% к дальности обзора отряда." />
     <string id="taom_cbm_t2_a_p2" text="+10% к скорости передвижения." />
-    <string id="taom_cbm_t2_a_p3" text="+10% к бонусу скрытности." />
+    <string id="taom_cbm_t2_a_p3" text="+13% к скрытности." />
     <string id="taom_cbm_t2_a_p4" text="+10% к получению славы в битвах." />
     <string id="taom_cbm_t2_b_key" text="Точный Залп получает дополнительное пробивание в активном состоянии." />
     <string id="taom_cbm_t2_b_p1" text="+12% к урону дальнего боя." />
@@ -1377,11 +1377,11 @@
     <string id="taom_ram_rider_root_desc" text="Горная Атака дает +5% к урону в ближнем бою, баран опускает рога." />
     <string id="taom_rr_t1_a_key" text="Радиус Горной Атаки увеличен, охватывая более широкие построения." />
     <string id="taom_rr_t1_a_p1" text="+8% к урону в ближнем бою." />
-    <string id="taom_rr_t1_a_p2" text="+7% к урону от атаки верхом." />
+    <string id="taom_rr_t1_a_p2" text="+10% к урону от наскока коня." />
     <string id="taom_rr_t1_a_p3" text="+7% к скорости замаха." />
     <string id="taom_rr_t1_a_p4" text="+5% к скорости передвижения отряда." />
     <string id="taom_rr_t1_b_key" text="Длительность Горной Атаки увеличена, сохраняя инерцию." />
-    <string id="taom_rr_t1_b_p1" text="+30 к здоровью коня." />
+    <string id="taom_rr_t1_b_p1" text="+10% к здоровью коня." />
     <string id="taom_rr_t1_b_p2" text="+5 к максимальному здоровью." />
     <string id="taom_rr_t1_b_p3" text="-5% к жалованию войск." />
     <string id="taom_rr_t1_b_p4" text="+5% к сопротивлению." />
@@ -1392,16 +1392,16 @@
     <string id="taom_rr_t2_a_p4" text="+10% к получению славы в битвах." />
     <string id="taom_rr_t2_b_key" text="Горная Атака усиливает стойкость скакуна во время действия." />
     <string id="taom_rr_t2_b_p1" text="+12% к урону в ближнем бою." />
-    <string id="taom_rr_t2_b_p2" text="+12% к урону от атаки верхом." />
-    <string id="taom_rr_t2_b_p3" text="+60 к здоровью коня." />
+    <string id="taom_rr_t2_b_p2" text="+13% к урону от наскока коня." />
+    <string id="taom_rr_t2_b_p3" text="+13% к здоровью коня." />
     <string id="taom_rr_t2_b_p4" text="+10% к скорости замаха." />
     <string id="taom_rr_t3_a_key" text="Радиус Горной Атаки значительно увеличен, неудержимый натиск." />
     <string id="taom_rr_t3_a_p1" text="+18% к урону в ближнем бою." />
-    <string id="taom_rr_t3_a_p2" text="+18% к урону от атаки верхом." />
+    <string id="taom_rr_t3_a_p2" text="+15% к урону от наскока коня." />
     <string id="taom_rr_t3_a_p3" text="+15% к скорости замаха." />
     <string id="taom_rr_t3_a_p4" text="+7% к урону войск." />
     <string id="taom_rr_t3_b_key" text="Заряд Горного Натиска значительно снижен, скачи без остановки." />
-    <string id="taom_rr_t3_b_p1" text="+100 к здоровью лошади." />
+    <string id="taom_rr_t3_b_p1" text="+15% к здоровью коня." />
     <string id="taom_rr_t3_b_p2" text="-15% к жалованию войск." />
     <string id="taom_rr_t3_b_p3" text="+15% к скорости передвижения отряда." />
     <string id="taom_rr_t3_b_p4" text="+9 к максимальному здоровью." />
@@ -1414,7 +1414,7 @@
     <string id="taom_bd_t1_b_key" text="Длительность Звёздного Плетения увеличена, укрепляя защиту." />
     <string id="taom_bd_t1_b_p1" text="+8% к сопротивлению." />
     <string id="taom_bd_t1_b_p2" text="+5% к моральному духу войск." />
-    <string id="taom_bd_t1_b_p3" text="+5% к сопротивлению войск." />
+    <string id="taom_bd_t1_b_p3" text="+10% к сопротивляемости войск." />
     <string id="taom_bd_t1_b_p4" text="+5% к выживаемости войск." />
     <string id="taom_bd_t2_a_key" text="Заряд Звёздного Плетения снижен, активируется чаще." />
     <string id="taom_bd_t2_a_p1" text="+10% к моральному духу войск." />
@@ -1424,7 +1424,7 @@
     <string id="taom_bd_t2_b_key" text="Звёздное Плетение даёт дополнительные защитные бонусы в активном состоянии." />
     <string id="taom_bd_t2_b_p1" text="+12% к сопротивлению." />
     <string id="taom_bd_t2_b_p2" text="+8 к максимальному здоровью." />
-    <string id="taom_bd_t2_b_p3" text="+10% к сопротивлению войск." />
+    <string id="taom_bd_t2_b_p3" text="+13% к сопротивляемости войск." />
     <string id="taom_bd_t2_b_p4" text="+5% к урону войск." />
     <string id="taom_bd_t3_a_key" text="Радиус Звёздного Плетения значительно расширен, сокрушительная мощь." />
     <string id="taom_bd_t3_a_p1" text="+15% к урону в ближнем бою." />
@@ -1433,7 +1433,7 @@
     <string id="taom_bd_t3_a_p4" text="+4 к размеру отряда." />
     <string id="taom_bd_t3_b_key" text="Заряд Звёздного Плетения значительно снижен, доступно почти всегда." />
     <string id="taom_bd_t3_b_p1" text="+18% к сопротивлению." />
-    <string id="taom_bd_t3_b_p2" text="+15% к регенерации здоровья." />
+    <string id="taom_bd_t3_b_p2" text="+15% к восстановлению здоровья героя." />
     <string id="taom_bd_t3_b_p3" text="+20% к моральному духу войск." />
     <string id="taom_bd_t3_b_p4" text="+15% к выживаемости войск." />
     <string id="taom_elven_archer_root_desc" text="Эльфийское Зрение даёт +5% к дальнобойному урону благодаря векам практики." />
@@ -1446,11 +1446,11 @@
     <string id="taom_elar_t1_b_p1" text="+5% к сопротивлению." />
     <string id="taom_elar_t1_b_p2" text="+5 к максимальному здоровью." />
     <string id="taom_elar_t1_b_p3" text="+5% к дальности обзора отряда." />
-    <string id="taom_elar_t1_b_p4" text="+5% к бонусу скрытности." />
+    <string id="taom_elar_t1_b_p4" text="+10% к скрытности." />
     <string id="taom_elar_t2_a_key" text="Перезарядка Эльфийского Зрения сокращена, постоянное давление." />
     <string id="taom_elar_t2_a_p1" text="+10% к дальности обзора отряда." />
     <string id="taom_elar_t2_a_p2" text="+10% к скорости передвижения." />
-    <string id="taom_elar_t2_a_p3" text="+10% к бонусу скрытности." />
+    <string id="taom_elar_t2_a_p3" text="+13% к скрытности." />
     <string id="taom_elar_t2_a_p4" text="+10% к получению боевой славы." />
     <string id="taom_elar_t2_b_key" text="Эльфийское Зрение получает дополнительное пробитие во время действия." />
     <string id="taom_elar_t2_b_p1" text="+12% к урону в дальнем бою." />
@@ -1470,11 +1470,11 @@
     <string id="taom_rivendell_knight_root_desc" text="Последний Союз даёт +5% к урону в ближнем бою и вдохновляет ваших союзников." />
     <string id="taom_rvk_t1_a_key" text="Радиус Последнего Союза расширен, охватывает более широкие построения." />
     <string id="taom_rvk_t1_a_p1" text="+8% к урону в ближнем бою." />
-    <string id="taom_rvk_t1_a_p2" text="+7% к урону от конной атаки." />
+    <string id="taom_rvk_t1_a_p2" text="+10% к урону от наскока коня." />
     <string id="taom_rvk_t1_a_p3" text="+7% к скорости замаха." />
     <string id="taom_rvk_t1_a_p4" text="+5% к скорости передвижения отряда." />
     <string id="taom_rvk_t1_b_key" text="Длительность Последнего Союза увеличена, сохранение импульса." />
-    <string id="taom_rvk_t1_b_p1" text="+30 к здоровью лошади." />
+    <string id="taom_rvk_t1_b_p1" text="+10% к здоровью коня." />
     <string id="taom_rvk_t1_b_p2" text="+5 к максимальному здоровью." />
     <string id="taom_rvk_t1_b_p3" text="-5% к жалованию войск." />
     <string id="taom_rvk_t1_b_p4" text="+5% к сопротивлению." />
@@ -1485,16 +1485,16 @@
     <string id="taom_rvk_t2_a_p4" text="+10% к получению славы в бою." />
     <string id="taom_rvk_t2_b_key" text="Последний Союз повышает выносливость скакунов, пока активен." />
     <string id="taom_rvk_t2_b_p1" text="+12% к урону в ближнем бою." />
-    <string id="taom_rvk_t2_b_p2" text="+12% к урону от конной атаки." />
-    <string id="taom_rvk_t2_b_p3" text="+60 к здоровью лошади." />
+    <string id="taom_rvk_t2_b_p2" text="+13% к урону от наскока коня." />
+    <string id="taom_rvk_t2_b_p3" text="+13% к здоровью коня." />
     <string id="taom_rvk_t2_b_p4" text="+10% к скорости замаха." />
     <string id="taom_rvk_t3_a_key" text="Радиус Последнего Союза значительно увеличен, неудержимый натиск." />
     <string id="taom_rvk_t3_a_p1" text="+18% к урону в ближнем бою." />
-    <string id="taom_rvk_t3_a_p2" text="+18% к урону от конной атаки." />
+    <string id="taom_rvk_t3_a_p2" text="+15% к урону от наскока коня." />
     <string id="taom_rvk_t3_a_p3" text="+15% к скорости замаха." />
     <string id="taom_rvk_t3_a_p4" text="+7% к урону войск." />
     <string id="taom_rvk_t3_b_key" text="Перезарядка Последнего Союза значительно снижена, скачи без устали." />
-    <string id="taom_rvk_t3_b_p1" text="+100 к здоровью лошади." />
+    <string id="taom_rvk_t3_b_p1" text="+15% к здоровью коня." />
     <string id="taom_rvk_t3_b_p2" text="-15% к жалованью войск." />
     <string id="taom_rvk_t3_b_p3" text="+15% к скорости передвижения отряда." />
     <string id="taom_rvk_t3_b_p4" text="+9 к максимальному здоровью." />
@@ -1507,7 +1507,7 @@
     <string id="taom_wdn_t1_b_key" text="Длительность Благословения Нимродели увеличена, укрепляя оборону." />
     <string id="taom_wdn_t1_b_p1" text="+8% к сопротивлению." />
     <string id="taom_wdn_t1_b_p2" text="+5% к боевому духу войск." />
-    <string id="taom_wdn_t1_b_p3" text="+5% к сопротивлению войск." />
+    <string id="taom_wdn_t1_b_p3" text="+10% к сопротивляемости войск." />
     <string id="taom_wdn_t1_b_p4" text="+5% к выживаемости войск." />
     <string id="taom_wdn_t2_a_key" text="Перезарядка Благословения Нимродели снижена, активируется чаще." />
     <string id="taom_wdn_t2_a_p1" text="+10% к боевому духу войск." />
@@ -1517,7 +1517,7 @@
     <string id="taom_wdn_t2_b_key" text="Благословение Нимродели даёт дополнительные защитные бонусы, пока активно." />
     <string id="taom_wdn_t2_b_p1" text="+12% к сопротивлению." />
     <string id="taom_wdn_t2_b_p2" text="+8 к максимальному здоровью." />
-    <string id="taom_wdn_t2_b_p3" text="+10% к сопротивлению войск." />
+    <string id="taom_wdn_t2_b_p3" text="+13% к сопротивляемости войск." />
     <string id="taom_wdn_t2_b_p4" text="+5% к урону войск." />
     <string id="taom_wdn_t3_a_key" text="Радиус Благословения Нимродели значительно увеличен, сокрушительная мощь." />
     <string id="taom_wdn_t3_a_p1" text="+15% к урону в ближнем бою." />
@@ -1526,7 +1526,7 @@
     <string id="taom_wdn_t3_a_p4" text="+4 к размеру отряда." />
     <string id="taom_wdn_t3_b_key" text="Заряд Благословения Нимродэль значительно уменьшен, почти всегда доступен." />
     <string id="taom_wdn_t3_b_p1" text="+18% к сопротивлению." />
-    <string id="taom_wdn_t3_b_p2" text="+15% к регенерации здоровья." />
+    <string id="taom_wdn_t3_b_p2" text="+15% к восстановлению здоровья героя." />
     <string id="taom_wdn_t3_b_p3" text="+20% к боевому духу войск." />
     <string id="taom_wdn_t3_b_p4" text="+15% к выживаемости войск." />
     <string id="taom_galadhrim_archer_root_desc" text="Серебряный Дождь дает +5% к дальнобойному урону, стрелы, окропленные звездным светом." />
@@ -1539,11 +1539,11 @@
     <string id="taom_gar_t1_b_p1" text="+5% к сопротивлению." />
     <string id="taom_gar_t1_b_p2" text="+5 к максимальному здоровью." />
     <string id="taom_gar_t1_b_p3" text="+5% к дальности обзора отряда." />
-    <string id="taom_gar_t1_b_p4" text="+5% к бонусу скрытности." />
+    <string id="taom_gar_t1_b_p4" text="+10% к скрытности." />
     <string id="taom_gar_t2_a_key" text="Заряд Серебряного Дождя уменьшен, поддерживает постоянное давление." />
     <string id="taom_gar_t2_a_p1" text="+10% к дальности обзора отряда." />
     <string id="taom_gar_t2_a_p2" text="+10% к скорости передвижения." />
-    <string id="taom_gar_t2_a_p3" text="+10% к бонусу скрытности." />
+    <string id="taom_gar_t2_a_p3" text="+13% к скрытности." />
     <string id="taom_gar_t2_a_p4" text="+10% к получению славы в бою." />
     <string id="taom_gar_t2_b_key" text="Серебряный Дождь получает дополнительное пробитие во время активности." />
     <string id="taom_gar_t2_b_p1" text="+12% к дальнобойному урону." />
@@ -1563,11 +1563,11 @@
     <string id="taom_sentinel_root_desc" text="Быстрота Эланор дарует +5% к урону в ближнем бою и эльфийскую грацию." />
     <string id="taom_snt_t1_a_key" text="Радиус Быстроты Эланор расширен, охватывая более широкие построения." />
     <string id="taom_snt_t1_a_p1" text="+8% к урону в ближнем бою." />
-    <string id="taom_snt_t1_a_p2" text="+7% к урону от атаки в конном строю." />
+    <string id="taom_snt_t1_a_p2" text="+10% к урону от наскока коня." />
     <string id="taom_snt_t1_a_p3" text="+7% к скорости замаха." />
     <string id="taom_snt_t1_a_p4" text="+5% к скорости передвижения отряда." />
     <string id="taom_snt_t1_b_key" text="Длительность Быстроты Эланор увеличена, сохраняя натиск." />
-    <string id="taom_snt_t1_b_p1" text="+30 к здоровью коня." />
+    <string id="taom_snt_t1_b_p1" text="+10% к здоровью коня." />
     <string id="taom_snt_t1_b_p2" text="+5 к максимальному здоровью." />
     <string id="taom_snt_t1_b_p3" text="-5% к жалованию войск." />
     <string id="taom_snt_t1_b_p4" text="+5% к сопротивлению." />
@@ -1578,16 +1578,16 @@
     <string id="taom_snt_t2_a_p4" text="+10% к получению славы в битвах." />
     <string id="taom_snt_t2_b_key" text="Быстрота Эланор усиливает стойкость скакуна во время действия." />
     <string id="taom_snt_t2_b_p1" text="+12% к урону в ближнем бою." />
-    <string id="taom_snt_t2_b_p2" text="+12% к урону от атаки в конном строю." />
-    <string id="taom_snt_t2_b_p3" text="+60 к здоровью коня." />
+    <string id="taom_snt_t2_b_p2" text="+13% к урону от наскока коня." />
+    <string id="taom_snt_t2_b_p3" text="+13% к здоровью коня." />
     <string id="taom_snt_t2_b_p4" text="+10% к скорости замаха." />
     <string id="taom_snt_t3_a_key" text="Радиус Быстроты Эланор значительно расширен, неостановимый удар." />
     <string id="taom_snt_t3_a_p1" text="+18% к урону в ближнем бою." />
-    <string id="taom_snt_t3_a_p2" text="+18% к урону от атаки в конном строю." />
+    <string id="taom_snt_t3_a_p2" text="+15% к урону от наскока коня." />
     <string id="taom_snt_t3_a_p3" text="+15% к скорости замаха." />
     <string id="taom_snt_t3_a_p4" text="+7% к урону войск." />
     <string id="taom_snt_t3_b_key" text="Перезарядка Быстроты Эланор значительно сокращена, мчись без остановок." />
-    <string id="taom_snt_t3_b_p1" text="+100 к здоровью коня." />
+    <string id="taom_snt_t3_b_p1" text="+15% к здоровью коня." />
     <string id="taom_snt_t3_b_p2" text="-15% к жалованию войск." />
     <string id="taom_snt_t3_b_p3" text="+15% к скорости передвижения отряда." />
     <string id="taom_snt_t3_b_p4" text="+9 к максимальному здоровью." />
@@ -1600,7 +1600,7 @@
     <string id="taom_shw_t1_b_key" text="Длительность Лесного Плаща увеличена, укрепляя оборону." />
     <string id="taom_shw_t1_b_p1" text="+8% к сопротивлению." />
     <string id="taom_shw_t1_b_p2" text="+5% к боевому духу войск." />
-    <string id="taom_shw_t1_b_p3" text="+5% к сопротивлению отряда." />
+    <string id="taom_shw_t1_b_p3" text="+10% к сопротивлению войск." />
     <string id="taom_shw_t1_b_p4" text="+5% к выживаемости войск." />
     <string id="taom_shw_t2_a_key" text="Заряд Лесного плаща уменьшен, активируется чаще." />
     <string id="taom_shw_t2_a_p1" text="+10% к боевому духу отряда." />
@@ -1610,7 +1610,7 @@
     <string id="taom_shw_t2_b_key" text="Лесной плащ дает дополнительные защитные бонусы при активации." />
     <string id="taom_shw_t2_b_p1" text="+12% к сопротивлению." />
     <string id="taom_shw_t2_b_p2" text="+8 к максимальному здоровью." />
-    <string id="taom_shw_t2_b_p3" text="+10% к сопротивлению отряда." />
+    <string id="taom_shw_t2_b_p3" text="+13% к сопротивлению войск." />
     <string id="taom_shw_t2_b_p4" text="+5% к урону отряда." />
     <string id="taom_shw_t3_a_key" text="Радиус Лесного плаща значительно расширен, разрушительная мощь." />
     <string id="taom_shw_t3_a_p1" text="+15% к урону в ближнем бою." />
@@ -1619,7 +1619,7 @@
     <string id="taom_shw_t3_a_p4" text="+4 к размеру отряда." />
     <string id="taom_shw_t3_b_key" text="Заряд Лесного плаща значительно уменьшен, почти всегда доступен." />
     <string id="taom_shw_t3_b_p1" text="+18% к сопротивлению." />
-    <string id="taom_shw_t3_b_p2" text="+15% к регенерации здоровья." />
+    <string id="taom_shw_t3_b_p2" text="+15% к восстановлению здоровья героя." />
     <string id="taom_shw_t3_b_p3" text="+20% к боевому духу отряда." />
     <string id="taom_shw_t3_b_p4" text="+15% к выживаемости войск." />
     <string id="taom_silvan_archer_root_desc" text="Удар с крон дает +5% к дальнобойному урону с верхушек деревьев." />
@@ -1632,11 +1632,11 @@
     <string id="taom_sva_t1_b_p1" text="+5% к сопротивлению." />
     <string id="taom_sva_t1_b_p2" text="+5 к максимальному здоровью." />
     <string id="taom_sva_t1_b_p3" text="+5% к дальности обзора отряда." />
-    <string id="taom_sva_t1_b_p4" text="+5% к бонусу скрытности." />
+    <string id="taom_sva_t1_b_p4" text="+10% к бонусу скрытности." />
     <string id="taom_sva_t2_a_key" text="Заряд Удара с крон уменьшен, поддерживая постоянное давление." />
     <string id="taom_sva_t2_a_p1" text="+10% к дальности обзора отряда." />
     <string id="taom_sva_t2_a_p2" text="+10% к скорости передвижения." />
-    <string id="taom_sva_t2_a_p3" text="+10% к бонусу скрытности." />
+    <string id="taom_sva_t2_a_p3" text="+13% к бонусу скрытности." />
     <string id="taom_sva_t2_a_p4" text="+10% к получению славы в бою." />
     <string id="taom_sva_t2_b_key" text="Удар с крон получает дополнительное пробивание при активации." />
     <string id="taom_sva_t2_b_p1" text="+12% к дальнобойному урону." />
@@ -1656,11 +1656,11 @@
     <string id="taom_elk_rider_root_desc" text="Удар рогами дает +5% к урону в ближнем бою, великий лось идет в атаку." />
     <string id="taom_elk_t1_a_key" text="Радиус Удара рогами расширен, охватывая более широкие строи." />
     <string id="taom_elk_t1_a_p1" text="+8% к урону в ближнем бою." />
-    <string id="taom_elk_t1_a_p2" text="+7% к урону от атаки верхом." />
+    <string id="taom_elk_t1_a_p2" text="+10% к урону от наскока коня." />
     <string id="taom_elk_t1_a_p3" text="+7% к скорости замаха." />
     <string id="taom_elk_t1_a_p4" text="+5% к скорости движения отряда." />
     <string id="taom_elk_t1_b_key" text="Длительность Удара рогами увеличена, сохраняя импульс." />
-    <string id="taom_elk_t1_b_p1" text="+30 к здоровью скакуна." />
+    <string id="taom_elk_t1_b_p1" text="+10% к здоровью коня." />
     <string id="taom_elk_t1_b_p2" text="+5 к максимальному здоровью." />
     <string id="taom_elk_t1_b_p3" text="-5% к жалованью отряда." />
     <string id="taom_elk_t1_b_p4" text="+5% к сопротивлению." />
@@ -1671,16 +1671,16 @@
     <string id="taom_elk_t2_a_p4" text="+10% к получению славы в битвах." />
     <string id="taom_elk_t2_b_key" text="Удар рогами повышает выносливость скакуна во время действия." />
     <string id="taom_elk_t2_b_p1" text="+12% к урону в ближнем бою." />
-    <string id="taom_elk_t2_b_p2" text="+12% к урону от атаки верхом." />
-    <string id="taom_elk_t2_b_p3" text="+60 к здоровью скакуна." />
+    <string id="taom_elk_t2_b_p2" text="+13% к урону от наскока коня." />
+    <string id="taom_elk_t2_b_p3" text="+13% к здоровью коня." />
     <string id="taom_elk_t2_b_p4" text="+10% к скорости замаха." />
     <string id="taom_elk_t3_a_key" text="Радиус Удара рогами значительно увеличен, неотразимый натиск." />
     <string id="taom_elk_t3_a_p1" text="+18% к урону в ближнем бою." />
-    <string id="taom_elk_t3_a_p2" text="+18% к урону от атаки верхом." />
+    <string id="taom_elk_t3_a_p2" text="+15% к урону от наскока коня." />
     <string id="taom_elk_t3_a_p3" text="+15% к скорости замаха." />
     <string id="taom_elk_t3_a_p4" text="+7% к урону отряда." />
     <string id="taom_elk_t3_b_key" text="Время восстановления Удара рогами значительно снижено, скачи без остановки." />
-    <string id="taom_elk_t3_b_p1" text="+100 к здоровью лошади." />
+    <string id="taom_elk_t3_b_p1" text="+15% к здоровью коня." />
     <string id="taom_elk_t3_b_p2" text="-15% к жалованию войск." />
     <string id="taom_elk_t3_b_p3" text="+15% к скорости передвижения отряда." />
     <string id="taom_elk_t3_b_p4" text="+9 к максимальному здоровью." />
@@ -1693,7 +1693,7 @@
     <string id="taom_ub_t1_b_key" text="Длительность Кровавой Ярости увеличена, укрепляя защиту." />
     <string id="taom_ub_t1_b_p1" text="+8% к сопротивлению." />
     <string id="taom_ub_t1_b_p2" text="+5% к боевому духу войск." />
-    <string id="taom_ub_t1_b_p3" text="+5% к сопротивлению войск." />
+    <string id="taom_ub_t1_b_p3" text="+10% к сопротивлению войск." />
     <string id="taom_ub_t1_b_p4" text="+5% к выживаемости войск." />
     <string id="taom_ub_t2_a_key" text="Заряд Кровавой Ярости уменьшен, активируется чаще." />
     <string id="taom_ub_t2_a_p1" text="+10% к боевому духу войск." />
@@ -1703,7 +1703,7 @@
     <string id="taom_ub_t2_b_key" text="Кровавая Ярость дает дополнительные защитные бонусы во время действия." />
     <string id="taom_ub_t2_b_p1" text="+12% к сопротивлению." />
     <string id="taom_ub_t2_b_p2" text="+8 к максимальному здоровью." />
-    <string id="taom_ub_t2_b_p3" text="+10% к сопротивлению войск." />
+    <string id="taom_ub_t2_b_p3" text="+13% к сопротивлению войск." />
     <string id="taom_ub_t2_b_p4" text="+5% к урону войск." />
     <string id="taom_ub_t3_a_key" text="Радиус Кровавой Ярости значительно расширен, опустошительная мощь." />
     <string id="taom_ub_t3_a_p1" text="+15% к урону в ближнем бою." />
@@ -1712,7 +1712,7 @@
     <string id="taom_ub_t3_a_p4" text="+4 к размеру отряда." />
     <string id="taom_ub_t3_b_key" text="Заряд Кровавой Ярости значительно уменьшен, почти всегда доступна." />
     <string id="taom_ub_t3_b_p1" text="+18% к сопротивлению." />
-    <string id="taom_ub_t3_b_p2" text="+15% к регенерации здоровья." />
+    <string id="taom_ub_t3_b_p2" text="+15% к восстановлению здоровья героя." />
     <string id="taom_ub_t3_b_p3" text="+20% к боевому духу войск." />
     <string id="taom_ub_t3_b_p4" text="+15% к выживаемости войск." />
     <string id="taom_uruk_crossbow_root_desc" text="Железный Дождь дает +5% к дальнобойному урону болтами, откованными в Ортханке." />
@@ -1725,11 +1725,11 @@
     <string id="taom_ucb_t1_b_p1" text="+5% к сопротивлению." />
     <string id="taom_ucb_t1_b_p2" text="+5 к максимальному здоровью." />
     <string id="taom_ucb_t1_b_p3" text="+5% к дальности обзора отряда." />
-    <string id="taom_ucb_t1_b_p4" text="+5% к бонусу скрытности." />
+    <string id="taom_ucb_t1_b_p4" text="+10% к бонусу скрытности." />
     <string id="taom_ucb_t2_a_key" text="Перезарядка Железного Дождя сокращена, постоянное давление." />
     <string id="taom_ucb_t2_a_p1" text="+10% к дальности обзора отряда." />
     <string id="taom_ucb_t2_a_p2" text="+10% к скорости передвижения." />
-    <string id="taom_ucb_t2_a_p3" text="+10% к бонусу скрытности." />
+    <string id="taom_ucb_t2_a_p3" text="+13% к бонусу скрытности." />
     <string id="taom_ucb_t2_a_p4" text="+10% к получению известности в битве." />
     <string id="taom_ucb_t2_b_key" text="Железный Дождь получает дополнительное пробитие во время действия." />
     <string id="taom_ucb_t2_b_p1" text="+12% к урону дальнего боя." />
@@ -1749,11 +1749,11 @@
     <string id="taom_warg_scout_root_desc" text="Вой Стаи дает +5% к урону ближнего боя и устрашает ближайших врагов." />
     <string id="taom_wsc_t1_a_key" text="Радиус Воя Стаи увеличен, охватывая более широкие построения." />
     <string id="taom_wsc_t1_a_p1" text="+8% к урону ближнего боя." />
-    <string id="taom_wsc_t1_a_p2" text="+7% к урону атаки в конном строю." />
+    <string id="taom_wsc_t1_a_p2" text="+10% к урону от наскока коня." />
     <string id="taom_wsc_t1_a_p3" text="+7% к скорости замаха." />
     <string id="taom_wsc_t1_a_p4" text="+5% к скорости передвижения отряда." />
     <string id="taom_wsc_t1_b_key" text="Длительность Воя Стаи увеличена, поддерживая натиск." />
-    <string id="taom_wsc_t1_b_p1" text="+30 к здоровью коня." />
+    <string id="taom_wsc_t1_b_p1" text="+10% к здоровью коня." />
     <string id="taom_wsc_t1_b_p2" text="+5 к максимальному здоровью." />
     <string id="taom_wsc_t1_b_p3" text="-5% к жалованию войск." />
     <string id="taom_wsc_t1_b_p4" text="+5% к сопротивлению." />
@@ -1764,48 +1764,48 @@
     <string id="taom_wsc_t2_a_p4" text="+10% к получению славы в бою." />
     <string id="taom_wsc_t2_b_key" text="Вой стаи повышает выносливость скакунов, пока активен." />
     <string id="taom_wsc_t2_b_p1" text="+12% к урону в ближнем бою." />
-    <string id="taom_wsc_t2_b_p2" text="+12% к урону от атаки конницы." />
-    <string id="taom_wsc_t2_b_p3" text="+60 к здоровью лошади." />
+    <string id="taom_wsc_t2_b_p2" text="+13% к урону от наскока коня." />
+    <string id="taom_wsc_t2_b_p3" text="+13% к здоровью коня." />
     <string id="taom_wsc_t2_b_p4" text="+10% к скорости замаха." />
     <string id="taom_wsc_t3_a_key" text="Радиус Воя стаи значительно увеличен, неудержимое воздействие." />
     <string id="taom_wsc_t3_a_p1" text="+18% к урону в ближнем бою." />
-    <string id="taom_wsc_t3_a_p2" text="+18% к урону от атаки конницы." />
+    <string id="taom_wsc_t3_a_p2" text="+15% к урону от наскока коня." />
     <string id="taom_wsc_t3_a_p3" text="+15% к скорости замаха." />
     <string id="taom_wsc_t3_a_p4" text="+7% к урону войск." />
     <string id="taom_wsc_t3_b_key" text="Время восстановления Воя стаи значительно сокращено, скачите без остановки." />
-    <string id="taom_wsc_t3_b_p1" text="+100 к здоровью лошади." />
+    <string id="taom_wsc_t3_b_p1" text="+15% к здоровью коня." />
     <string id="taom_wsc_t3_b_p2" text="-15% к жалованию войск." />
     <string id="taom_wsc_t3_b_p3" text="+15% к скорости передвижения отряда." />
     <string id="taom_wsc_t3_b_p4" text="+9 к максимальному здоровью." />
     <string id="taom_cave_troll_master_root_desc" text="Неистовство тролля даёт +5 к здоровью и приводит ваших троллей в ярость." />
-    <string id="taom_ctm_t1_a_key" text="Радиус Неистовства тролля увеличен, усиливая больше воинов." />
+    <string id="taom_ctm_t1_a_key" text="Радиус Берсерка Гундабада увеличен, усиливая больше воинов." />
     <string id="taom_ctm_t1_a_p1" text="+8% к урону в ближнем бою." />
     <string id="taom_ctm_t1_a_p2" text="+3% к урону войск." />
     <string id="taom_ctm_t1_a_p3" text="+6 к максимальному здоровью." />
     <string id="taom_ctm_t1_a_p4" text="+7% к скорости замаха." />
-    <string id="taom_ctm_t1_b_key" text="Длительность Неистовства тролля увеличена, укрепляя оборону." />
+    <string id="taom_ctm_t1_b_key" text="Длительность Берсерка Гундабада продлена, укрепляя оборону." />
     <string id="taom_ctm_t1_b_p1" text="+8% к сопротивлению." />
     <string id="taom_ctm_t1_b_p2" text="+5% к моральному духу войск." />
-    <string id="taom_ctm_t1_b_p3" text="+5% к сопротивлению войск." />
+    <string id="taom_ctm_t1_b_p3" text="+10% к сопротивлению войск." />
     <string id="taom_ctm_t1_b_p4" text="+5% к выживаемости войск." />
-    <string id="taom_ctm_t2_a_key" text="Время восстановления Неистовства тролля сокращено, активируется чаще." />
+    <string id="taom_ctm_t2_a_key" text="Перезарядка Берсерка Гундабада сокращена, срабатывает чаще." />
     <string id="taom_ctm_t2_a_p1" text="+10% к моральному духу войск." />
     <string id="taom_ctm_t2_a_p2" text="+2 к размеру отряда." />
     <string id="taom_ctm_t2_a_p3" text="+10% к получению славы в бою." />
     <string id="taom_ctm_t2_a_p4" text="-10% к жалованию войск." />
-    <string id="taom_ctm_t2_b_key" text="Неистовство тролля даёт дополнительные защитные бонусы, пока активно." />
+    <string id="taom_ctm_t2_b_key" text="Берсерк Гундабада даёт дополнительные защитные усиления во время действия." />
     <string id="taom_ctm_t2_b_p1" text="+12% к сопротивлению." />
     <string id="taom_ctm_t2_b_p2" text="+8 к максимальному здоровью." />
-    <string id="taom_ctm_t2_b_p3" text="+10% к сопротивлению войск." />
+    <string id="taom_ctm_t2_b_p3" text="+13% к сопротивлению войск." />
     <string id="taom_ctm_t2_b_p4" text="+5% к урону войск." />
-    <string id="taom_ctm_t3_a_key" text="Радиус Неистовства тролля значительно увеличен, разрушительная мощь." />
+    <string id="taom_ctm_t3_a_key" text="Радиус Берсерка Гундабада значительно расширен, разрушительная мощь." />
     <string id="taom_ctm_t3_a_p1" text="+15% к урону в ближнем бою." />
     <string id="taom_ctm_t3_a_p2" text="+10 к максимальному здоровью." />
     <string id="taom_ctm_t3_a_p3" text="+7% к урону войск." />
     <string id="taom_ctm_t3_a_p4" text="+4 к размеру отряда." />
-    <string id="taom_ctm_t3_b_key" text="Заряд Троллиного Безумия значительно снижен, доступен почти всегда." />
+    <string id="taom_ctm_t3_b_key" text="Перезарядка Берсерка Гундабада сильно сокращена, доступен почти всегда." />
     <string id="taom_ctm_t3_b_p1" text="+18% к сопротивлению." />
-    <string id="taom_ctm_t3_b_p2" text="+15% к регенерации здоровья." />
+    <string id="taom_ctm_t3_b_p2" text="+15% к восстановлению здоровья героя." />
     <string id="taom_ctm_t3_b_p3" text="+20% к боевому духу войск." />
     <string id="taom_ctm_t3_b_p4" text="+15% к выживаемости войск." />
     <string id="taom_goblin_sniper_root_desc" text="Ядовитый Дротик даёт +5% к дальнобойному урону благодаря токсину пещерных грибов." />
@@ -1818,11 +1818,11 @@
     <string id="taom_gbs_t1_b_p1" text="+5% к сопротивлению." />
     <string id="taom_gbs_t1_b_p2" text="+5 к максимальному здоровью." />
     <string id="taom_gbs_t1_b_p3" text="+5% к дальности обзора отряда." />
-    <string id="taom_gbs_t1_b_p4" text="+5% к бонусу скрытности." />
+    <string id="taom_gbs_t1_b_p4" text="+10% к бонусу скрытности." />
     <string id="taom_gbs_t2_a_key" text="Заряд Ядовитого Дротика снижен, поддерживая постоянное давление." />
     <string id="taom_gbs_t2_a_p1" text="+10% к дальности обзора отряда." />
     <string id="taom_gbs_t2_a_p2" text="+10% к скорости передвижения." />
-    <string id="taom_gbs_t2_a_p3" text="+10% к бонусу скрытности." />
+    <string id="taom_gbs_t2_a_p3" text="+13% к бонусу скрытности." />
     <string id="taom_gbs_t2_a_p4" text="+10% к получению боевой славы." />
     <string id="taom_gbs_t2_b_key" text="Ядовитый Дротик получает дополнительное пробивание во время действия." />
     <string id="taom_gbs_t2_b_p1" text="+12% к дальнобойному урону." />
@@ -1842,11 +1842,11 @@
     <string id="taom_warg_pack_leader_root_desc" text="Вой Вожака даёт +5% к рукопашному урону, и стая идёт на охоту." />
     <string id="taom_wpl_t1_a_key" text="Радиус Вожачьего Воя расширен, охватывая более широкие строи." />
     <string id="taom_wpl_t1_a_p1" text="+8% к урону в ближнем бою." />
-    <string id="taom_wpl_t1_a_p2" text="+7% к урону конной атаки." />
+    <string id="taom_wpl_t1_a_p2" text="+10% к урону от наскока коня." />
     <string id="taom_wpl_t1_a_p3" text="+7% к скорости замаха." />
     <string id="taom_wpl_t1_a_p4" text="+5% к скорости передвижения отряда." />
     <string id="taom_wpl_t1_b_key" text="Длительность Альфа-воя увеличена, сохраняя импульс." />
-    <string id="taom_wpl_t1_b_p1" text="+30 к здоровью лошади." />
+    <string id="taom_wpl_t1_b_p1" text="+10% к здоровью коня." />
     <string id="taom_wpl_t1_b_p2" text="+5 к максимальному здоровью." />
     <string id="taom_wpl_t1_b_p3" text="-5% к жалованию войск." />
     <string id="taom_wpl_t1_b_p4" text="+5% к сопротивлению." />
@@ -1857,16 +1857,16 @@
     <string id="taom_wpl_t2_a_p4" text="+10% к получению славы в бою." />
     <string id="taom_wpl_t2_b_key" text="Альфа-вой усиливает стойкость скакуна во время действия." />
     <string id="taom_wpl_t2_b_p1" text="+12% к урону в ближнем бою." />
-    <string id="taom_wpl_t2_b_p2" text="+12% к урону от конной атаки." />
-    <string id="taom_wpl_t2_b_p3" text="+60 к здоровью лошади." />
+    <string id="taom_wpl_t2_b_p2" text="+13% к урону от наскока коня." />
+    <string id="taom_wpl_t2_b_p3" text="+13% к здоровью коня." />
     <string id="taom_wpl_t2_b_p4" text="+10% к скорости замаха." />
     <string id="taom_wpl_t3_a_key" text="Радиус Альфа-воя значительно увеличен, неудержимое воздействие." />
     <string id="taom_wpl_t3_a_p1" text="+18% к урону в ближнем бою." />
-    <string id="taom_wpl_t3_a_p2" text="+18% к урону от конной атаки." />
+    <string id="taom_wpl_t3_a_p2" text="+15% к урону от наскока коня." />
     <string id="taom_wpl_t3_a_p3" text="+15% к скорости замаха." />
     <string id="taom_wpl_t3_a_p4" text="+7% к урону войск." />
     <string id="taom_wpl_t3_b_key" text="Время накопления Альфа-воя значительно сокращено, скачи без остановки." />
-    <string id="taom_wpl_t3_b_p1" text="+100 к здоровью лошади." />
+    <string id="taom_wpl_t3_b_p1" text="+15% к здоровью коня." />
     <string id="taom_wpl_t3_b_p2" text="-15% к жалованию войск." />
     <string id="taom_wpl_t3_b_p3" text="+15% к скорости передвижения отряда." />
     <string id="taom_wpl_t3_b_p4" text="+9 к максимальному здоровью." />
@@ -1879,7 +1879,7 @@
     <string id="taom_swr_t1_b_key" text="Длительность Похищения души увеличена, укрепляя оборону." />
     <string id="taom_swr_t1_b_p1" text="+8% к сопротивлению." />
     <string id="taom_swr_t1_b_p2" text="+5% к моральному духу войск." />
-    <string id="taom_swr_t1_b_p3" text="+5% к сопротивлению войск." />
+    <string id="taom_swr_t1_b_p3" text="+10% к сопротивляемости войск." />
     <string id="taom_swr_t1_b_p4" text="+5% к выживаемости войск." />
     <string id="taom_swr_t2_a_key" text="Заряд Похищения Души уменьшен, активируется чаще." />
     <string id="taom_swr_t2_a_p1" text="+10% к моральному духу войск." />
@@ -1889,7 +1889,7 @@
     <string id="taom_swr_t2_b_key" text="Похищение Души дает дополнительные защитные бонусы при активации." />
     <string id="taom_swr_t2_b_p1" text="+12% к сопротивлению." />
     <string id="taom_swr_t2_b_p2" text="+8 к максимальному здоровью." />
-    <string id="taom_swr_t2_b_p3" text="+10% к сопротивлению войск." />
+    <string id="taom_swr_t2_b_p3" text="+13% к сопротивляемости войск." />
     <string id="taom_swr_t2_b_p4" text="+5% к урону войск." />
     <string id="taom_swr_t3_a_key" text="Радиус Похищения Души значительно увеличен, разрушительная мощь." />
     <string id="taom_swr_t3_a_p1" text="+15% к урону в ближнем бою." />
@@ -1898,7 +1898,7 @@
     <string id="taom_swr_t3_a_p4" text="+4 к размеру отряда." />
     <string id="taom_swr_t3_b_key" text="Заряд Похищения Души значительно уменьшен, почти всегда доступно." />
     <string id="taom_swr_t3_b_p1" text="+18% к сопротивлению." />
-    <string id="taom_swr_t3_b_p2" text="+15% к восстановлению здоровья." />
+    <string id="taom_swr_t3_b_p2" text="+15% к восстановлению здоровья героя." />
     <string id="taom_swr_t3_b_p3" text="+20% к моральному духу войск." />
     <string id="taom_swr_t3_b_p4" text="+15% к выживаемости войск." />
     <string id="taom_necromancer_acolyte_root_desc" text="Темный Разряд дает +5% к дальнобойному урону некромантской энергией." />
@@ -1911,11 +1911,11 @@
     <string id="taom_nca_t1_b_p1" text="+5% к сопротивлению." />
     <string id="taom_nca_t1_b_p2" text="+5 к максимальному здоровью." />
     <string id="taom_nca_t1_b_p3" text="+5% к дальности обзора отряда." />
-    <string id="taom_nca_t1_b_p4" text="+5% к бонусу скрытности." />
+    <string id="taom_nca_t1_b_p4" text="+10% к скрытности." />
     <string id="taom_nca_t2_a_key" text="Заряд Темного Разряда уменьшен, поддерживая постоянное давление." />
     <string id="taom_nca_t2_a_p1" text="+10% к дальности обзора отряда." />
     <string id="taom_nca_t2_a_p2" text="+10% к скорости передвижения." />
-    <string id="taom_nca_t2_a_p3" text="+10% к бонусу скрытности." />
+    <string id="taom_nca_t2_a_p3" text="+13% к скрытности." />
     <string id="taom_nca_t2_a_p4" text="+10% к получению славы в бою." />
     <string id="taom_nca_t2_b_key" text="Темный Разряд получает дополнительное пробитие при активации." />
     <string id="taom_nca_t2_b_p1" text="+12% к дальнобойному урону." />
@@ -1935,11 +1935,11 @@
     <string id="taom_fell_rider_root_desc" text="Ужасающая Атака дает +5% к урону в ближнем бою, окутывая вашего скакуна тенью." />
     <string id="taom_flr_t1_a_key" text="Радиус Ужасающей Атаки расширен, охватывая более широкие построения." />
     <string id="taom_flr_t1_a_p1" text="+8% к урону в ближнем бою." />
-    <string id="taom_flr_t1_a_p2" text="+7% к урону от таранного удара коня." />
+    <string id="taom_flr_t1_a_p2" text="+10% к урону от наскока коня." />
     <string id="taom_flr_t1_a_p3" text="+7% к скорости замаха." />
     <string id="taom_flr_t1_a_p4" text="+5% к скорости передвижения отряда." />
     <string id="taom_flr_t1_b_key" text="Длительность Ужасающей Атаки продлена, поддерживая импульс." />
-    <string id="taom_flr_t1_b_p1" text="+30 к здоровью коня." />
+    <string id="taom_flr_t1_b_p1" text="+10% к здоровью коня." />
     <string id="taom_flr_t1_b_p2" text="+5 к максимальному здоровью." />
     <string id="taom_flr_t1_b_p3" text="-5% к содержанию войск." />
     <string id="taom_flr_t1_b_p4" text="+5% к сопротивлению." />
@@ -1950,16 +1950,16 @@
     <string id="taom_flr_t2_a_p4" text="+10% к получению славы в бою." />
     <string id="taom_flr_t2_b_key" text="Ужасающая Атака повышает стойкость скакуна во время действия." />
     <string id="taom_flr_t2_b_p1" text="+12% к урону в ближнем бою." />
-    <string id="taom_flr_t2_b_p2" text="+12% к урону от таранного удара коня." />
-    <string id="taom_flr_t2_b_p3" text="+60 к здоровью коня." />
+    <string id="taom_flr_t2_b_p2" text="+13% к урону от наскока коня." />
+    <string id="taom_flr_t2_b_p3" text="+13% к здоровью коня." />
     <string id="taom_flr_t2_b_p4" text="+10% к скорости замаха." />
     <string id="taom_flr_t3_a_key" text="Радиус Ужасающей Атаки значительно расширен, неостановимый удар." />
     <string id="taom_flr_t3_a_p1" text="+18% к урону в ближнем бою." />
-    <string id="taom_flr_t3_a_p2" text="+18% к урону от таранного удара коня." />
+    <string id="taom_flr_t3_a_p2" text="+15% к урону от наскока коня." />
     <string id="taom_flr_t3_a_p3" text="+15% к скорости замаха." />
     <string id="taom_flr_t3_a_p4" text="+7% к урону войск." />
     <string id="taom_flr_t3_b_key" text="Перезарядка Ужасающей Атаки значительно сокращена, скачи без остановки." />
-    <string id="taom_flr_t3_b_p1" text="+100 к здоровью коня." />
+    <string id="taom_flr_t3_b_p1" text="+15% к здоровью коня." />
     <string id="taom_flr_t3_b_p2" text="-15% к содержанию войск." />
     <string id="taom_flr_t3_b_p3" text="+15% к скорости передвижения отряда." />
     <string id="taom_flr_t3_b_p4" text="+9 к максимальному здоровью." />
@@ -1972,7 +1972,7 @@
     <string id="taom_crb_t1_b_key" text="Длительность Абордажа увеличена, укрепляя оборону." />
     <string id="taom_crb_t1_b_p1" text="+8% к сопротивлению." />
     <string id="taom_crb_t1_b_p2" text="+5% к боевому духу войск." />
-    <string id="taom_crb_t1_b_p3" text="+5% к сопротивлению войск." />
+    <string id="taom_crb_t1_b_p3" text="+10% к сопротивляемости войск." />
     <string id="taom_crb_t1_b_p4" text="+5% к выживаемости войск." />
     <string id="taom_crb_t2_a_key" text="Время перезарядки Абордажа уменьшено, активируется чаще." />
     <string id="taom_crb_t2_a_p1" text="+10% к боевому духу войск." />
@@ -1982,7 +1982,7 @@
     <string id="taom_crb_t2_b_key" text="Абордаж даёт дополнительные защитные бонусы во время действия." />
     <string id="taom_crb_t2_b_p1" text="+12% к сопротивлению." />
     <string id="taom_crb_t2_b_p2" text="+8 к максимальному здоровью." />
-    <string id="taom_crb_t2_b_p3" text="+10% к сопротивлению войск." />
+    <string id="taom_crb_t2_b_p3" text="+13% к сопротивляемости войск." />
     <string id="taom_crb_t2_b_p4" text="+5% к урону войск." />
     <string id="taom_crb_t3_a_key" text="Радиус действия Абордажа значительно расширен, сокрушительная мощь." />
     <string id="taom_crb_t3_a_p1" text="+15% к урону в ближнем бою." />
@@ -1991,7 +1991,7 @@
     <string id="taom_crb_t3_a_p4" text="+4 к размеру отряда." />
     <string id="taom_crb_t3_b_key" text="Время перезарядки Абордажа значительно уменьшено, почти всегда доступен." />
     <string id="taom_crb_t3_b_p1" text="+18% к сопротивлению." />
-    <string id="taom_crb_t3_b_p2" text="+15% к регенерации здоровья." />
+    <string id="taom_crb_t3_b_p2" text="+15% к восстановлению здоровья героя." />
     <string id="taom_crb_t3_b_p3" text="+20% к боевому духу войск." />
     <string id="taom_crb_t3_b_p4" text="+15% к выживаемости войск." />
     <string id="taom_corsair_crossbow_root_desc" text="Выстрел по такелажу даёт +5% к дальнобойному урону при твёрдой руке." />
@@ -2004,11 +2004,11 @@
     <string id="taom_crc_t1_b_p1" text="+5% к сопротивлению." />
     <string id="taom_crc_t1_b_p2" text="+5 к максимальному здоровью." />
     <string id="taom_crc_t1_b_p3" text="+5% к дальности обзора отряда." />
-    <string id="taom_crc_t1_b_p4" text="+5% к бонусу скрытности." />
+    <string id="taom_crc_t1_b_p4" text="+10% к скрытности." />
     <string id="taom_crc_t2_a_key" text="Время перезарядки Выстрела по оснастке снижено, постоянное давление." />
     <string id="taom_crc_t2_a_p1" text="+10% к дальности обзора отряда." />
     <string id="taom_crc_t2_a_p2" text="+10% к скорости передвижения." />
-    <string id="taom_crc_t2_a_p3" text="+10% к бонусу скрытности." />
+    <string id="taom_crc_t2_a_p3" text="+13% к скрытности." />
     <string id="taom_crc_t2_a_p4" text="+10% к получению славы в битве." />
     <string id="taom_crc_t2_b_key" text="Выстрел по оснастке получает дополнительную пробивную силу во время действия." />
     <string id="taom_crc_t2_b_p1" text="+12% к дальнобойному урону." />
@@ -2028,11 +2028,11 @@
     <string id="taom_corsair_captain_root_desc" text="Грабёж даёт +5% к урону в ближнем бою и подбадривает вашу команду." />
     <string id="taom_crca_t1_a_key" text="Радиус Грабежа увеличен, охватывает более широкие построения." />
     <string id="taom_crca_t1_a_p1" text="+8% к урону в ближнем бою." />
-    <string id="taom_crca_t1_a_p2" text="+7% к урону от атаки конницы." />
+    <string id="taom_crca_t1_a_p2" text="+10% к урону от наскока коня." />
     <string id="taom_crca_t1_a_p3" text="+7% к скорости удара." />
     <string id="taom_crca_t1_a_p4" text="+5% к скорости передвижения отряда." />
     <string id="taom_crca_t1_b_key" text="Длительность Грабежа увеличена, сохраняет импульс." />
-    <string id="taom_crca_t1_b_p1" text="+30 к здоровью лошади." />
+    <string id="taom_crca_t1_b_p1" text="+10% к здоровью коня." />
     <string id="taom_crca_t1_b_p2" text="+5 к максимальному здоровью." />
     <string id="taom_crca_t1_b_p3" text="-5% к жалованью войск." />
     <string id="taom_crca_t1_b_p4" text="+5% к сопротивлению." />
@@ -2043,16 +2043,16 @@
     <string id="taom_crca_t2_a_p4" text="+10% к получению славы в бою." />
     <string id="taom_crca_t2_b_key" text="Грабёж повышает выносливость скакуна, пока активен." />
     <string id="taom_crca_t2_b_p1" text="+12% к урону в ближнем бою." />
-    <string id="taom_crca_t2_b_p2" text="+12% к урону от конной атаки." />
-    <string id="taom_crca_t2_b_p3" text="+60 к здоровью коня." />
+    <string id="taom_crca_t2_b_p2" text="+13% к урону от наскока коня." />
+    <string id="taom_crca_t2_b_p3" text="+13% к здоровью коня." />
     <string id="taom_crca_t2_b_p4" text="+10% к скорости замаха." />
     <string id="taom_crca_t3_a_key" text="Радиус грабежа значительно увеличен, неудержимый натиск." />
     <string id="taom_crca_t3_a_p1" text="+18% к урону в ближнем бою." />
-    <string id="taom_crca_t3_a_p2" text="+18% к урону от конной атаки." />
+    <string id="taom_crca_t3_a_p2" text="+15% к урону от наскока коня." />
     <string id="taom_crca_t3_a_p3" text="+15% к скорости замаха." />
     <string id="taom_crca_t3_a_p4" text="+7% к урону войск." />
     <string id="taom_crca_t3_b_key" text="Заряд грабежа значительно снижен, скачи без остановки." />
-    <string id="taom_crca_t3_b_p1" text="+100 к здоровью коня." />
+    <string id="taom_crca_t3_b_p1" text="+15% к здоровью коня." />
     <string id="taom_crca_t3_b_p2" text="-15% к жалованью войск." />
     <string id="taom_crca_t3_b_p3" text="+15% к скорости передвижения отряда." />
     <string id="taom_crca_t3_b_p4" text="+9 к максимальному здоровью." />

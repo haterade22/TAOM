@@ -49,19 +49,19 @@
     <string id="taom_lotr_issue_horses_soln" text="Vi porterò dei cavalli." />
     <string id="taom_lotr_issue_horses_task" text="Consegna cavalli ({COUNT})" />
     <string id="taom_lotr_issue_recruits_title" text="Sangue Fresco per la Banda" />
-    <string id="taom_lotr_issue_recruits_desc" text="Un capo banda vuole fuorilegge catturati arruolati al suo servizio." />
-    <string id="taom_lotr_issue_recruits_brief" text="Una banda è forte solo quanto il suo numero, e i miei sono scarsi. Portatemi prigionieri senza amore per la legge e ne farò buon uso." />
+    <string id="taom_lotr_issue_recruits_desc" text="Un capobanda vuole dei prigionieri costretti al suo servizio." />
+    <string id="taom_lotr_issue_recruits_brief" text="Una banda vale quanto i suoi numeri, e i miei sono scarsi. Portami dei prigionieri, chiunque siano, e saprò come usarli." />
     <string id="taom_lotr_issue_recruits_accept" text="Che tipo di prigionieri?" />
-    <string id="taom_lotr_issue_recruits_expl" text="Portami {COUNT} banditi prigionieri e li metterò al lavoro. C'è denaro per te, senza fare domande." />
+    <string id="taom_lotr_issue_recruits_expl" text="Portami {COUNT} prigionieri e li metterò al lavoro. C'è del denaro per te, senza fare domande." />
     <string id="taom_lotr_issue_recruits_soln" text="Ti porterò dei prigionieri." />
-    <string id="taom_lotr_issue_recruits_task" text="Consegna banditi prigionieri ({COUNT})" />
+    <string id="taom_lotr_issue_recruits_task" text="Consegna prigionieri ({COUNT})" />
     <string id="taom_lotr_issue_laborers_title" text="Braccia per le Miniere" />
-    <string id="taom_lotr_issue_laborers_desc" text="Un proprietario terriero ha bisogno di spalle robuste per il lavoro duro e accetterà banditi catturati." />
-    <string id="taom_lotr_issue_laborers_brief" text="Gli scavi hanno bisogno di lavoratori e gli uomini liberi non vogliono scendere laggiù. Portami banditi in catene e si guadagneranno il pane con un piccone." />
+    <string id="taom_lotr_issue_laborers_desc" text="Un proprietario terriero ha bisogno di braccia forti per lavori pesanti e accetterà qualunque prigioniero tu abbia catturato." />
+    <string id="taom_lotr_issue_laborers_brief" text="Gli scavi hanno bisogno di operai e gli uomini liberi non scendono là sotto. Portami prigionieri in catene e si guadagneranno il pane col piccone." />
     <string id="taom_lotr_issue_laborers_accept" text="Vuoi prigionieri?" />
-    <string id="taom_lotr_issue_laborers_expl" text="Portami {COUNT} banditi prigionieri per le squadre di lavoro e ti pagherò per la fatica di catturarli." />
+    <string id="taom_lotr_issue_laborers_expl" text="Portami {COUNT} prigionieri per le squadre di lavoro e ti pagherò per il disturbo di catturarli." />
     <string id="taom_lotr_issue_laborers_soln" text="Ti porterò dei prigionieri." />
-    <string id="taom_lotr_issue_laborers_task" text="Consegna banditi prigionieri ({COUNT})" />
+    <string id="taom_lotr_issue_laborers_task" text="Consegna prigionieri ({COUNT})" />
     <string id="taom_lotr_issue_banditbase_title" text="Un Covo presso {ISSUE_SETTLEMENT}" />
     <string id="taom_lotr_issue_banditbase_desc" text="Un nido di predoni infesta le strade vicino a {ISSUE_SETTLEMENT}." />
     <string id="taom_lotr_issue_banditbase_brief" text="C'è un covo immondo di quella feccia nelle colline, viaggiatore. Ci rubano i beni e la gente, e la guardia è troppo esigua per stanarli." />
@@ -300,19 +300,24 @@
     <string id="taom_lotr_issue_common_task" text="Raccogli Beni" />
     <string id="taom_lotr_issue_pers_expl" text="Portami {COUNT} prigionieri e ti pagherò bene." />
     <string id="taom_lotr_issue_pers_soln" text="Ti porterò dei prigionieri." />
-    <string id="taom_lotr_issue_pers_accepted" text="Consegna {COUNT} prigionieri banditi a {QUEST_SETTLEMENT}." />
+    <string id="taom_lotr_issue_pers_accepted" text="Consegna {COUNT} prigionieri a {QUEST_SETTLEMENT}." />
     <string id="taom_lotr_issue_pers_ready" text="Hai abbastanza prigionieri. Torna a {QUEST_SETTLEMENT} per consegnarli." />
     <string id="taom_lotr_issue_pers_timeout" text="Non sei riuscito a consegnare i prigionieri in tempo." />
     <string id="taom_lotr_issue_pers_have" text="Hai portato i prigionieri?" />
     <string id="taom_lotr_issue_pers_thanks" text="Andranno benissimo. Hai la mia gratitudine." />
     <string id="taom_lotr_issue_pers_turnin" text="Sì. Eccoli qui." />
     <string id="taom_lotr_issue_pers_not_enough" text="Non hai ancora abbastanza prigionieri." />
-    <string id="taom_lotr_issue_pers_task" text="Cattura banditi prigionieri" />
+    <string id="taom_lotr_issue_pers_task" text="Cattura prigionieri" />
     <string id="taom_lotr_issue_combat_expl" text="Occupati dei nostri nemici e sarai ricompensato." />
     <string id="taom_lotr_issue_combat_soln" text="Me ne occuperò io." />
     <string id="taom_lotr_issue_combat_task_capture" text="Cattura signori nemici ({COUNT})" />
     <string id="taom_lotr_issue_combat_task_tourney" text="Vinci tornei ({COUNT})" />
     <string id="taom_lotr_issue_combat_task_defeat" text="Sconfiggi i predoni ({COUNT})" />
     <string id="taom_lotr_issue_combat_timeout" text="Non sei riuscito a fronteggiare la minaccia in tempo." />
+    <string id="taom_lotr_issue_combat_fallback_desc" text="Bisogna occuparsi di un nemico." />
+    <string id="taom_lotr_issue_combat_fallback_brief" text="Siamo circondati dai nemici, viandante." />
+    <string id="taom_lotr_issue_combat_fallback_accept" text="Cosa c'è da fare?" />
+    <string id="taom_lotr_issue_pers_fallback_desc" text="Qualcuno ha bisogno che vengano consegnati dei prigionieri." />
+    <string id="taom_lotr_issue_pers_fallback_brief" text="Ho bisogno di schiene forti, viandante." />
   </strings>
 </base>

@@ -121,5 +121,10 @@
     <string id="aom_clan_vlandia_20_name" text="モルカルガス家" />
     <string id="aom_clan_vlandia_21_name" text="ハレスリング家" />
     <string id="aom_clan_vlandia_22_name" text="ルンガリング家" />
+    <string id="aom_clan_umbar_2_name" text="ジャルジャクス家" />
+    <string id="aom_clan_umbar_3_name" text="ヘシュラー家" />
+    <string id="aom_clan_umbar_4_name" text="ベル・インズール家" />
+    <string id="aom_clan_umbar_5_name" text="ハルラクス家" />
+    <string id="aom_clan_umbar_6_name" text="カトゥーグ家" />
   </strings>
 </base>

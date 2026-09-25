@@ -999,3 +999,28 @@ diff of the previews showed a few hundred pixels).
 - **Prevent:** every read of an exported clip takes `f0 = action.frame_range[0]` and addresses frames as `f0 + n`;
   when two runs are expected to differ, pixel-diff the previews before drawing a conclusion.
 - **Source:** `posture_from_clip` in `tools/blender/retarget_mannequin_to_human.py`.
+
+### Before calling an action set's inherited clips "rarely played", list the engine's other consumers (2026-09-25)
+The hill troll's set left 4,049 codes on human clips, called "rarely played" because the names looked like swimming,
+ladders and cutscenes. The engine also plays that set off the battlefield: `CharacterTableau` idles party-screen,
+encyclopedia and inventory previews on `act_inventory_idle*`, `ConversationMissionLogic` spawns the two highest-level
+troops as map-conversation bodyguards on the `_poses` set, and `AgentVictoryLogic` plays `act_cheer_*` after a won
+battle. On a hunched rig each shows the human rest relations (head up, wrists twisted). 49 derived `as_hill_troll_*`
+sets also carried 2,376 overrides of their own, all human clips.
+- **Why missed:** frequency was judged from code names, not from the engine's callers of the set or the derived sets.
+- **Prevent:** before binding a race's set, grep the installed engine for `GetActionSetWithSuffix` and the idle and
+  victory actions, list the derived `<race>_*` sets that override, and retarget what those paths play.
+- **Source:** `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 4.
+
+### A clip reused for another code must carry the flags that code's consumers rely on (2026-09-25)
+The hill troll's Fab idles were bound to 172 inventory, conversation, pose and cheer codes. The idles are
+priority 1 with no `cyclic` flag; the vanilla clips behind those codes are `cyclic`, some continue into a loop
+code, the cheers are priority 64, and the party screen, the map conversation and the victory logic set the
+action once, so the reused clip plays five seconds and stops.
+- **Why missed:** the reuse was judged by motion (an idle for an idle), not by the clip definition the engine
+  reads.
+- **Prevent:** before binding one clip to another code, read the code's vanilla clip (flags, priority,
+  `ContinueWithAction`) and the consumer that plays it; where they differ, clone the code's own vanilla clip onto
+  the reused master, as `gen_troll_anim_clips.ps1 -CloneByName` does.
+- **Source:** `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 45.
+

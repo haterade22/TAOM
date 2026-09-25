@@ -84,6 +84,194 @@ from live. `docs/reference/troop-rosters.html` and `tools/data/armor_roster_tier
 every troop file, so they are left for regeneration once the other sessions editing troops have committed. In-game checks owed after a deploying
 build: the #669 checklist.
 
+## 2026-09-25
+
+### feat(troll): v2.0.30 - trolls at 200 health, costed, and in three Mordor warbands
+
+Mike's calls after the deep review of the hill troll:
+
+- **200 health for both trolls.** A campaign troop's health is `CharacterStatsModel.MaxHitpoints`, which starts
+  every character at 100; `TaomCharacterStatsModel` now adds a race's `baseHitPoints` less 100 from
+  `combat_mechanics_config.json`, where only `cave_troll` and `hill_troll` carry one (200). Custom Battle reads the
+  Monster's `hit_points` instead, so the Armory's `cave_troll` Monster went from 300 to 200 (the hill troll's was
+  200; backup `monsters.xml.bak-trollhp-*`, snapshot refreshed). The provider rejects a value outside 0 to 1,000
+  with a warning, and `TrollHitPointsLiveDataTests` (LiveInstall) fails when a Monster and the config disagree.
+- **Special resources.** Both cost 50 of the player's own special resource to recruit (War Spoils for a Mordor
+  player; `resource_id` is documentation only), with a daily upkeep of 5 for the cave troll and 4 for the hill troll (`troop_resource_costs.xml`; `TroopResourceCostDataTests` counts them with the other creatures,
+  outside the 0.4 ceiling for tree troops). The system charges the player only. The recruit cost fires on the three
+  player recruit paths the engine reports (the volunteer screen, a tavern mercenary hire, recruiting prisoners), and
+  no volunteer pool or tavern offers a troll, so in practice it is the price of recruiting a captured one. That
+  path has no affordability gate and floors the balance at zero (#563); the emissary does not sell trolls.
+- **Three Mordor clans field trolls.** Bolgrûkig (`clan_empire_south_5`), Zarûnik (`_13`) and Brughash (`_15`)
+  carry a 0 to 2 stack of each troll, trimmed from an orc stack so each template's maximum stays at 260
+  (`ShippedLordPartyTemplateTests`). Until now no AI lord could field one: all 15 Mordor clans bind their own
+  template. Mordor's culture template still lists 0 to 7 of each, and it is not unused: a companion made a lord
+  of a Mordor settlement's culture gets a clan with no template of its own, which falls back to it, and the
+  campaign's average wage reads every main culture's template.
+- **The smash scales with the troll's height.** Brute Force distances now use a body size of `AgentScale` times
+  the Monster's standing eye height over the human's 1.70 (`TrollBruteForceService.BodySize`), still capped at 3.
+  The cave troll's eye height is the human's, so its tuning is unchanged, and a wiring test pins that; the hill
+  troll's 3.58 m eye multiplies its body size, and so its trigger range and ring, by 2.1 up to that cap. The
+  task's log line names the scale the distances actually use (capped, a bad value read as 1), which the Custom
+  Battle smoke should read.
+- **The hill troll reuses its own idles.** Mike: "reuse animations that we already have. the idle animation is
+  fine". The binder's new reuse rule, tried after the Fab and retargeted-human rules, put 172 codes that showed
+  the human clip on the hunched rig onto the troll's Fab idles: the party-screen and encyclopedia idle and the 148
+  map-conversation codes on `anim_hill_troll_idle1`, the 22 victory cheers alternating the two combat idles.
+  `as_hill_troll_poses` takes the same idle for its bodyguard pose. Applied live (backup `-130423`), parity 0
+  gaps, snapshot refreshed; 3,877 codes stay on the human clip. The binder also defaults `--clips-dir` to the
+  install's animations folder and refuses a missing one, uses the shared fail-closed process guard, and its 26
+  tests run under `unittest`, which is what CI runs.
+- **Duinhir keeps his title.** `lords.xslt` and `taom_xslt_strings.xml` both read "Duinhir, Lord of Morthond",
+  the 12 language rows re-translated ("Duinhir, Herr von Morthond"), and `LordNameAndSexConsistencyTests` accepts
+  no name difference any more. Brute Force gets its feature doc, `docs/features/troll-brute-force.md`. Both
+  Chinese rows follow his bio (杜因希尔，摩尔松德领主; 杜因希爾，墨松德領主).
+
+Known limitations, from the review of these changes (each confirmed in the installed engine or the data; the
+in-game effect of the first is unverified): the reused Fab idles are not looping clips (`allow_head_movement`,
+priority 1, no continuation), while the vanilla clips behind the inventory, conversation, pose and cheer codes
+are `cyclic` (conversation starts continue into their loop; cheers are priority 64 with `lock_movement`), and the
+party screen, the map conversation and the victory logic set the action once, so after about five seconds the
+troll may hold a frame and a priority-1 cheer may be refused; the fix is per-code clips cloned from each code's
+own vanilla clip, which needs new clip packages and a Kit save. The cave troll's `TroopWeight` row (4.0) still
+sits in a May comment, so it weighs 1.0 beside the hill troll's 4.0. A player of a Free culture pays in their own
+resource and loses a recruited troll to alignment desertion on the next daily tick. Turning off Race Combat
+Modifiers in MCM also drops campaign trolls to 100 health (Custom Battle keeps 200 from the Monster), and the
+setting's hint does not say so; the +100 has no tooltip line. `tools/analyze_battle_logs.py`'s auto-resolve
+simulator still rolls against 100 health. Twice the health also doubles the combat XP a hit on a troll gives.
+
+### fix(loc): v2.0.30 - stale translations swept across all three modules
+
+A sweep compared every registered key's English history with its 12 language rows and found 351
+keys whose English had changed while the rows kept the old translation. 329 of them (3,545 rows)
+were reset to the current English, their cache entries dropped, and re-translated on Mike's key with
+no failures; the other rows were accent-only fixes the translation already carried or whitespace.
+Players in other languages had been reading renamed Mordor and Dale lords under their old names
+(Bofur for Hauk, Honoratus for Khorgath, Obron for Skarnak), career ability tooltips with their old
+numbers, the old Lindon, Moria and Goblin-town lore, quests asking for "bandit captives", and an empty
+Field Commission promotion offer.
+
+Four places where one localization key served two different English texts are split. Lindon's 21
+troops were copied from Rivendell's with their keys, so every other language showed "Mithlond" on
+Rivendell troops: the Lindon troops take `aom_<id>_name` keys with their existing translations carried
+across, and the Rivendell keys were re-translated from the Rivendell English. `clan_umbar_2` to `_6`
+named `aom_clan_umbar_1_name`, so all six houses read "House of Casîmirionî": each has its own key
+now. The Combat and Deliver Personnel quests borrowed Deliver Goods' fallback keys and get their own
+five. Two messenger lines in C# are aligned with their registered English ("is a fugitive"), and the
+Gundabad career description's registry text catches up with the game's.
+
+Also: 206 half-translated rows in the five non-Latin languages (Traditional Chinese left the
+Dunlending career names in Latin, Korean kept English ability names inside descriptions, Russian had
+"opportunист") re-translated; 21 untranslated rows per language in the live `LOTRLOME_Armory` (the
+new horse and barding items, and three Gondor capes and pauldrons) and 8 in the live `TAOM_Map` (new villages)
+translated, backups in
+`E:\LOTRAOMAssets\_loc_backup_20260925\`; 18 troop names that two troops shared in one language
+renamed by hand (Uruk-hai Fighter and Warrior, Dalian Mariner and Shipman, Lossarnach Axebearer and
+Axeman); culture tags made uniform per language, 448 rows (the language's own kingdom name where it
+was one of the variants, otherwise the majority form); nine Russian overrides corrected, one a
+translation of the old shader hint; one corrupt Korean row ("[루), 임시") and the Korean "Horse
+Master" rows that read as "chief magician" fixed. Printed API cost about $8 across all runs.
+
+The deep review the same day caught four more defects, all fixed. The first translator run had seeded
+the 26 `taom_aso_*` keys of `global_strings.xml` (23 of them also in `taom_module_strings.xml`) into every
+keybind file; a language's later file wins, so 22 of those copies (Italian "Valle" among them) had
+replaced the curated module rows. They are removed, and `translate_with_claude.py` now neither seeds
+nor translates a key another English source owns or another file of the language already carries
+(`key_owners`, `skip_ids_for`). Seeding had also given new rows a bare `\r\n` in files that end lines
+in `\r\r\n`; the tool now keeps each file's own terminator, and 384 rows were repaired (156 in the repo,
+228 in the live Armory). Three translations came back with words from another script
+("[Ривенделл]新obranец", "estão投", "黑numenor"), and a scan found about 120 older ones across nine
+languages (Korean 돌진 and Chinese 氏族 inside Turkish sentences, Latin letters inside Russian words,
+katakana in the Korean "Imladris"): 63 corrected by a letter map or by hand, 54 re-translated. The
+French, Brazilian and Spanish Lindon "Bowman" had become a crossbowman, and the English source's
+"Nõldorin" typo had spread to six languages; both fixed at the source and in the rows. New gates, each
+tested against the incident's own strings: `LocalizationKeyConsistencyTests` (one text per id within a
+language; C# defaults equal their registered English; one English name per key in the name generator's
+sources) and `LanguageTextIntegrityTests.NoTranslatedString_MixesWritingSystems`. The Umbar split reaches
+new campaigns only, because a clan's name is saved with the campaign.
+
+The review's second wave widened those gates and fixed an over-correction. The new skip rule had also hidden 45
+keys per language that a target file carries itself; they are examined again, the last three
+(`taom_aso_desc_invasion` and the two `taom_aso_item_desc_*`, declared by `global_strings.xml` alone) once their rows
+moved from the module-strings file into the keybind file, their owner's, in all 12 languages. A tools test now fails
+when any declared key is examined by no pass. `LocalizationKeyConsistencyTests`
+now also compares data-XML and XSLT defaults with their registration and requires one English text for a key two
+English sources share, both proven red on a broken copy; `NoCachedTranslation_MixesWritingSystems` reads
+`tools/translation_cache/`, which refills the Armory and TAOM_Map on the next run (its split-word rule now judges
+each hyphenated part, so "Bahr al-Yeshm" and "Cigfran-lûth" pass). The Simplified Chinese hill troll is
+山地食人妖, like the cave troll and both Traditional rows; the Armory's troll items still say 巨魔 in both
+scripts. The live language edits are recorded by file in the Armory snapshot's README.
+
+Not done, and why: 5,765 inline `{=KEY}` texts are registered in no English source, so the translator
+has never seen them (culture name lists, career choices, hero bios, notable and townsfolk names);
+closing that needs new source files and a decision on which names translate. Six `heroes.xml`
+description keys each serve two heroes, and `npcs_lindon.xml` still borrows Rivendell's `aom_rv_*` keys
+(all three unregistered, so each still shows its own English). Four Korean TAOM_Map village texts keep
+vanilla Calradia place names in Latin letters. Owed: a GitHub issue and the commit, which must travel
+with the other session's uncommitted Gondor troop renames: the regenerated troop-name file and 75
+language rows encode them.
+
+### feat(troll): v2.0.30 - the hill troll fights for Mordor
+
+`hill_troll` joins `troops_mordor.xml` beside `cave_troll`: race `hill_troll`, level 51, the cave troll's skills,
+the cave troll's `fighter_cave_troll` body property (a byte-identical copy was merged back in review), a stack of
+0 to 7 beside the cave troll's in Mordor's culture template,
+weight 4.0, the same guard-duty exclusion (`SettlementGuardService`), encyclopedia framing and melee-ladder
+exemption. Two deliberate differences from a copy: no armour items, because the `lotr_troll_*` pieces are skinned
+to `human_skeleton` and would float on `troll_skeleton_a` (`hill_troll` joins `_BODYLESS_BY_DESIGN`), and only the
+two-handed mace, because the two-handed set is what was retargeted onto this rig. The Brute Force tree (#649) now
+attaches to both trolls: `TrollBruteForceConfig.ActionSetsByMonster` maps each Monster to the set that binds
+`act_troll_brute_force`, `IsBruteForceTroll` replaces `IsCaveTroll`, the start-up drift guard checks both sets, and
+`bind_hill_troll_action_set.py` appends the binding to `anim_hill_troll_attack1`, the same Fab heavy attack
+retargeted (4,701 nodes). The same morning: Mike imported the 255 human-sourced masters ("all of the animations I
+tested look amazing"); 428 of 429 clips cut; 15 clip names ran past the engine's fixed-size(64) string (the Kit's
+"Could not set fixed-size(64) string" warning) and take shortened names through
+`tools/blender/hill_troll_clip_renames.json`, read by the generator (`-Renames`) and the bind (`--renames`); the
+bind now takes clip availability from the files on disk (`--clips-dir`), after its first pass had bound a clip the
+generator refused; and the Kit's `Unable to find material: t_hilltroll_mouth` traced to the skins'
+`<mouth_textures>`, which `wire_hill_troll_race.py` now points at the head material too (39 `mouth_texture` tags,
+78 attributes, live and
+snapshot). The translator then ran on Mike's key for all 12 languages (`aom_hill_troll_name`: Hügeltroll, Troll des
+collines, 丘のトロル, 산악 트롤, Горный тролль), which also seeded and translated the other pending ids in the
+source files; the localization tests and the whole suite (10,632) pass. One side effect was a regression: the
+Italian row for `taom_aso_kingdom.sturgia` held `Dale` by hand (the Italian editions keep the name), which the
+translator reads as untranslated and rewrote from its cache as `Valle`; the row is back to `Dale`, the cache agrees,
+and a new `tools/translation_overrides/it.json` pins it (`TRANSLATOR_GUIDE.md` "mirror-image trap"). On the same
+key, the six Gondor troops renamed in this working tree (Blackroot Vale Ranger, the four Lossarnach axe ranks,
+the Anórien accent) had their 12 rows reset to the new English and re-translated (the ranger is now "Waldläufer",
+"Rôdeur", "Ramingo", no longer a second Shadowbow), their old cache entries dropped, and the shadowbow's cache
+entry pointed at the rows it already had.
+
+The deep review (2026-09-25) left the troll's data sound and changed five things: `TrollBruteForceConfig.ActionSetId`
+is `CaveTrollActionSetId` beside `HillTrollActionSetId`; `python tools/wire_hill_troll_race.py --check` is the
+reinstall gate for the unversioned Armory (exit 1 when the race, Monster or standalone set is no longer wired, 2 when
+a file is missing, never writes; three tests); the wiring tests carry `LiveInstall` and the config-only one moved to
+`TrollBruteForceConfigTests`; the Armory snapshot now carries #649's two lines, so it equals live; and the balance
+tools skip `hill_troll` as they skip `cave_troll`. Known limitations at review time, each confirmed in the engine or
+the data (the first, the idles and the smash's reach were addressed later that day, entry above):
+neither troll reaches an AI lord's party, because all 15 Mordor clans bind their own party template and only the
+unused culture template lists the trolls (the cave troll's stack has the same gap); human clips still
+played on the hunched rig where the engine uses them often, the party-screen and encyclopedia idle, the
+map-conversation bodyguard idles (`as_hill_troll_poses`) and the victory cheers, and 48 of the 83 other derived sets
+carry human-clip overrides of their own; the Brute Force distances scale with `AgentScale` only while the engine's
+reach is `arm_length` times scale (the hill troll's 2.79 at scale 1.09 against the cave troll's 0.9 at 1.9), so the
+smash's ring is unverified on the hill troll until the Custom Battle logs it. Owed: the Custom Battle fight (log
+`AgentScale` and the ring), a Kit re-save of `anim_hill_troll_2h_bash` and of `hill_troll_a_geo.tpac` (both RDC
+entries predate their last write), a GitHub issue.
+
+The review's second wave fixed the tools behind the troll. `gen_troll_anim_clips.ps1 -CloneByName -Verify` exited 1
+on the correct folder, counting the clip it refuses by design as missing; it now lists that clip as
+`refused-by-design` and exits 0 (run on live). Every generator mode refuses a folder whose masters name another
+skeleton than `-SkeletonGuid`, since bone counts cannot tell the troll rig from the human one; `-RetargetReport`
+reads the travel scale from the retarget report; and one shared check re-reads written clips and reaches the exit
+code. `bind_hill_troll_action_set.py` defaults `--clips-dir` to the install, uses the shared fail-closed process
+guard, and its tests run under `unittest` (a new ratchet, `tools/tests/test_ci_runner_compat.py`, fails on any new
+tool test that imports pytest). `wire_hill_troll_race.py --check` also fails an empty or unbound set, keeps CRLF
+line endings when it deletes a line, and refuses a Monster present under both ids. The retarget script's `.DONE`
+reports failures, the keyframe reader exits 1 on a miss, the hill troll shares `fighter_cave_troll` instead of a
+byte-identical copy, and the ledger's reinstall path now names every step. RCA:
+`docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md`, findings 18 to 37.
+
 ## 2026-09-24
 
 ### feat(troll): v2.0.30 - human clips retargeted onto the hill troll's own rest pose
@@ -109,8 +297,12 @@ each clip's own vanilla definition onto the new master with the range shifted fo
 first, retargeted human clip second, the human clip inherited last (dry run: 213, 439, 4,048). The first batch, 429
 two-handed and reaction clips on 255 masters (53,652 frames), retargeted with every frame 0 at rest and every IK
 goal within 7.3 cm, its contact sheets read pose for pose, and the 255 FBX are staged in
-`AssetSources\...\Trolls\animations\`, beside the 52 Fab masters, for one Kit import. Owed: that import, the clips, the bind, the parity
-audit, the in-game fight. Four lessons in
+`AssetSources\...\Trolls\animations\`, beside the 52 Fab masters, for one Kit import. After Mike's import
+(2026-09-25): the 255 masters wired to `troll_skeleton_a`, 428 of the 429 clips cut (`aserai_mp_guard_idle_2hperk`
+refused, its vanilla range running one frame past its master, so that code keeps the human clip), both clip sets
+verifying clean in the one folder, `as_hill_troll_warrior` rewritten from the clips on disk (Fab 213, retargeted
+438, inherited 4,049; every bound clip exists) in the live file and the tracked snapshot alike, parity audit 0
+gaps. Owed: the Kit save for the cache entries, the Kit look, the in-game fight. Four lessons in
 animation-skeleton.
 
 ### fix(troll): v2.0.30 - the hill troll's Fab clips keep their feet and wrists

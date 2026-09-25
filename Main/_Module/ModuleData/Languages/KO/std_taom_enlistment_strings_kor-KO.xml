@@ -42,8 +42,8 @@
     <string id="taom_fc_confirm_name" text="확인" />
     <string id="taom_fc_decline" text="아직은 아니다" />
     <string id="taom_fc_keep_name" text="기본 이름 유지" />
-    <string id="taom_fc_no_room_body" text="지금은 동료를 더 받을 자리가 없습니다. {TROOP_NAME}의 승진은 나중에 다시 제안됩니다." />
-    <string id="taom_fc_offer_body" text="{TROOP_NAME}이(가) 전투에서 두각을 나타냈습니다. 동료로 승진시키겠습니까?" />
+    <string id="taom_fc_no_room_body" text="지금은 동료를 더 받을 자리가 없습니다. {TROOP_NAME}의 승급은 나중에 다시 제안됩니다." />
+    <string id="taom_fc_offer_body" text="{TROOP_NAME}이(가) 전투에서 두각을 나타냈습니다. 동료로 승급시키겠습니까?" />
     <string id="taom_fc_offer_title" text="전장 승진" />
     <string id="taom_fc_rename_body" text="{TROOP_NAME}에게 이름을 지어 주거나, 전장에서 쓰던 이름을 그대로 두십시오." />
     <string id="taom_fc_rename_title" text="새 동료의 이름 짓기" />

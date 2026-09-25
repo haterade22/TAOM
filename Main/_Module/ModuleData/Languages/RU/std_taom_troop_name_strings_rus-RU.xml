@@ -14,7 +14,8 @@
     <string id="aom_balcoth_horse_archer_name" text="[Рун] Балхот — конный лучник" />
     <string id="aom_balcoth_veteran_axeman_name" text="[Рун] Балхот — опытный секироносец" />
     <string id="aom_balcoth_volunteer_name" text="[Рун] Балхот-доброволец" />
-    <string id="aom_battlemaster_of_the_first_age_name" text="[Линдон] Мастер битвы Первой Эпохи" />
+    <string id="aom_battlemaster_of_the_first_age_name" text="[Ривенделл] Мастер битвы Первой Эпохи" />
+    <string id="aom_lindon_battlemaster_of_the_first_age_name" text="[Линдон] Мастер битвы Первой Эпохи" />
     <string id="aom_black_sun_archer_name" text="[Рун] Лучник Чёрного Солнца" />
     <string id="aom_black_sun_chosen_marksman_name" text="[Рун] Избранный стрелок Чёрного Солнца" />
     <string id="aom_black_sun_executioner_name" text="[Рун] Палач Чёрного Солнца" />
@@ -301,9 +302,8 @@
     <string id="aom_gondor_bel_vet_infantry_name" text="[Гондор] Бельфаласский ветеран-пехотинец" />
     <string id="aom_gondor_brv_archer_name" text="[Гондор] Лучник Чернолесной долины" />
     <string id="aom_gondor_brv_bowman_name" text="[Гондор] Стрелок Чернолесной долины" />
-    <string id="aom_gondor_brv_ranger_name" text="[Гондор] Теневой лук Чернолесной долины" />
     <string id="aom_gondor_brv_scout_name" text="[Гондор] Разведчик Чернолесной долины" />
-    <string id="aom_gondor_brv_shadowbow_name" text="[Гондор] Теневой охотник Чернолесной долины" />
+    <string id="aom_gondor_brv_shadowbow_name" text="[Гондор] Теневой лук Чернолесной долины" />
     <string id="aom_gondor_brv_shadowhunter_name" text="[Гондор] Авангард Чернолесной долины" />
     <string id="aom_gondor_brv_vet_archer_name" text="[Гондор] Лучник-ветеран Чернолесной долины" />
     <string id="aom_gondor_ca_guard_name" text="[Гондор] Стражник Каир-Андроса" />
@@ -374,11 +374,7 @@
     <string id="aom_gondor_loss_axebearer_name" text="[Гондор] Топороносец Лоссарнаха" />
     <string id="aom_gondor_loss_guard_name" text="[Гондор] Стражник Лоссарнаха" />
     <string id="aom_gondor_loss_lumberman_name" text="[Гондор] Лесоруб Лоссарнаха" />
-    <string id="aom_gondor_loss_noble_captain_name" text="[Гондор] Знатный капитан Лоссарнаха" />
     <string id="aom_gondor_loss_noble_name" text="[Гондор] Знатный воин Лоссарнаха" />
-    <string id="aom_gondor_loss_noble_sergeant_name" text="[Гондор] Знатный сержант Лоссарнаха" />
-    <string id="aom_gondor_loss_noble_veteran_name" text="[Гондор] Знатный ветеран Лоссарнаха" />
-    <string id="aom_gondor_loss_noble_warden_name" text="[Гондор] Знатный хранитель Лоссарнаха" />
     <string id="aom_gondor_loss_skirmisher_name" text="[Гондор] Застрельщик Лоссарнаха" />
     <string id="aom_gondor_loss_vet_axe_thrower_name" text="[Гондор] Опытный метатель топоров Лоссарнаха" />
     <string id="aom_gondor_loss_vet_axebearer_name" text="[Гондор] Опытный топороносец Лоссарнаха" />
@@ -477,7 +473,7 @@
     <string id="aom_harad_footman_name" text="[Харад] Пехотинец" />
     <string id="aom_harad_gildedfang_name" text="[Харад] Воин Золочёного клыка" />
     <string id="aom_harad_horsearcher_name" text="[Харад] Всадник Золотой завесы" />
-    <string id="aom_harad_levy_name" text="[Харад] Ополченец" />
+    <string id="aom_harad_levy_name" text="[Харад] Призывник" />
     <string id="aom_harad_marksman_name" text="[Харад] Стрелок" />
     <string id="aom_harad_militia_archer_name" text="[Харад] Лучник-ополченец" />
     <string id="aom_harad_militia_name" text="[Харад] Ополченец" />
@@ -496,19 +492,32 @@
     <string id="aom_harad_swordfighter_name" text="[Харад] Боец с мечом" />
     <string id="aom_harad_vipereye_name" text="[Харад] Гадюка" />
     <string id="aom_harad_warlance_name" text="[Харад] Боевое копьё" />
-    <string id="aom_imladris_archer_name" text="[Линдон] Лучник Митлонда" />
-    <string id="aom_imladris_blademaster_name" text="[Линдон] Мастер клинка Митлонда" />
-    <string id="aom_imladris_bowman_name" text="[Линдон] Стрелок из лука Митлонда" />
-    <string id="aom_imladris_guardsman_name" text="[Линдон] Гвардеец Митлонда" />
-    <string id="aom_imladris_horse_archer_name" text="[Линдон] Конный лучник Митлонда" />
-    <string id="aom_imladris_infantry_name" text="[Линдон] Пехотинец Митлонда" />
-    <string id="aom_imladris_marchwarden_name" text="[Линдон] Стражник рубежей Митлонда" />
-    <string id="aom_imladris_marksman_name" text="[Линдон] Меткий стрелок Митлонда" />
-    <string id="aom_imladris_nobleman_name" text="[Линдон] Вельможа Митлонда" />
-    <string id="aom_imladris_outrider_name" text="[Линдон] Дозорный всадник Митлонда" />
-    <string id="aom_imladris_recruit_name" text="[Линдон] Новобранец Митлонда" />
-    <string id="aom_imladris_swordguard_name" text="[Линдон] Мечная стража Митлонда" />
-    <string id="aom_imladris_warden_name" text="[Линдон] Хранитель Митлонда" />
+    <string id="aom_imladris_archer_name" text="[Ривенделл] Лучник Имладриса" />
+    <string id="aom_lindon_imladris_archer_name" text="[Линдон] Лучник Митлонда" />
+    <string id="aom_imladris_blademaster_name" text="[Ривенделл] Мастер клинка Имладриса" />
+    <string id="aom_lindon_imladris_blademaster_name" text="[Линдон] Мастер клинка Митлонда" />
+    <string id="aom_imladris_bowman_name" text="[Ривенделл] Стрелок Имладриса" />
+    <string id="aom_lindon_imladris_bowman_name" text="[Линдон] Стрелок из лука Митлонда" />
+    <string id="aom_imladris_guardsman_name" text="[Ривенделл] Страж Имладриса" />
+    <string id="aom_lindon_imladris_guardsman_name" text="[Линдон] Гвардеец Митлонда" />
+    <string id="aom_imladris_horse_archer_name" text="[Ривенделл] Конный лучник Имладриса" />
+    <string id="aom_lindon_imladris_horse_archer_name" text="[Линдон] Конный лучник Митлонда" />
+    <string id="aom_imladris_infantry_name" text="[Ривенделл] Пехотинец Имладриса" />
+    <string id="aom_lindon_imladris_infantry_name" text="[Линдон] Пехотинец Митлонда" />
+    <string id="aom_imladris_marchwarden_name" text="[Ривенделл] Хранитель рубежей Имладриса" />
+    <string id="aom_lindon_imladris_marchwarden_name" text="[Линдон] Стражник рубежей Митлонда" />
+    <string id="aom_imladris_marksman_name" text="[Ривенделл] Меткий стрелок Имладриса" />
+    <string id="aom_lindon_imladris_marksman_name" text="[Линдон] Меткий стрелок Митлонда" />
+    <string id="aom_imladris_nobleman_name" text="[Ривенделл] Вельможа Имладриса" />
+    <string id="aom_lindon_imladris_nobleman_name" text="[Линдон] Вельможа Митлонда" />
+    <string id="aom_imladris_outrider_name" text="[Ривенделл] Дозорный всадник Имладриса" />
+    <string id="aom_lindon_imladris_outrider_name" text="[Линдон] Дозорный всадник Митлонда" />
+    <string id="aom_imladris_recruit_name" text="[Ривенделл] Новобранец Имладриса" />
+    <string id="aom_lindon_imladris_recruit_name" text="[Линдон] Новобранец Митлонда" />
+    <string id="aom_imladris_swordguard_name" text="[Ривенделл] Меченосец-гвардеец Имладриса" />
+    <string id="aom_lindon_imladris_swordguard_name" text="[Линдон] Мечная стража Митлонда" />
+    <string id="aom_imladris_warden_name" text="[Ривенделл] Защитник Имладриса" />
+    <string id="aom_lindon_imladris_warden_name" text="[Линдон] Хранитель Митлонда" />
     <string id="aom_iron_hills_reg_axe_warrior_name" text="[Железные Холмы] Воин с топором" />
     <string id="aom_iron_hills_reg_bowman_name" text="[Железные Холмы] Лучник" />
     <string id="aom_iron_hills_reg_company_name" text="[Железные Холмы] Дружинник" />
@@ -517,7 +526,7 @@
     <string id="aom_iron_hills_reg_recruit_name" text="[Железные Холмы] Новобранец" />
     <string id="aom_iron_hills_reg_skirmisher_name" text="[Железные Холмы] Застрельщик" />
     <string id="aom_iron_hills_reg_warrior_name" text="[Железные Холмы] Воин" />
-    <string id="aom_ironpass_arbalest_name" text="[Железный Перевал] Арбалетчик" />
+    <string id="aom_ironpass_arbalest_name" text="[Железный перевал] Арбалетчик" />
     <string id="aom_ironpass_axeman_name" text="[Железный перевал] Топорник" />
     <string id="aom_ironpass_goat_charger_name" text="[Железный перевал] Наездник на козле" />
     <string id="aom_ironpass_infantry_name" text="[Железный перевал] Пехотинец" />
@@ -590,7 +599,8 @@
     <string id="aom_merc_gundabad_fighter_name" text="[Гундабад] Наёмный бледный урук-налётчик" />
     <string id="aom_merc_gundabad_scout_name" text="[Гундабад] Наёмный разведчик" />
     <string id="aom_merc_harad_noble_name" text="[Харад] Наёмный юнец Змея" />
-    <string id="aom_merc_imladris_bowman_name" text="[Линдон] Наёмный лучник Митлонда" />
+    <string id="aom_merc_imladris_bowman_name" text="[Ривенделл] Наёмный стрелок Имладриса" />
+    <string id="aom_lindon_imladris_bowman_merc_name" text="[Линдон] Наёмный лучник Митлонда" />
     <string id="aom_merc_lindon_noble_name" text="[Линдон] Наёмный знатный воин" />
     <string id="aom_merc_mirkwood_recruit_name" text="[Лихолесье] Наёмный синдарский ополченец" />
     <string id="aom_merc_mordor_orc_hunter_name" text="[Мордор] Наёмный орк-охотник" />
@@ -677,7 +687,8 @@
     <string id="aom_mordor_warg_reaver_name" text="[Мордор] Нурнский разбойник на варге" />
     <string id="aom_mordor_warg_rider_name" text="[Мордор] Нурнский всадник на варге" />
     <string id="aom_mordor_warg_tamer_name" text="[Мордор] Нурнский укротитель варгов" />
-    <string id="aom_noldorin_lancer_name" text="[Линдон] Копейщик фалатрим" />
+    <string id="aom_noldorin_lancer_name" text="[Ривенделл] Нолдорский улан" />
+    <string id="aom_lindon_noldorin_lancer_name" text="[Линдон] Копейщик фалатрим" />
     <string id="aom_orc_warg_enforcer_name" text="[Изенгард] Орк-наездник варга, надзиратель" />
     <string id="aom_orc_warg_lieutenant_name" text="[Изенгард] Орк-наездник варга, лейтенант" />
     <string id="aom_orc_warg_overseer_name" text="[Изенгард] Орк-наездник варга, смотритель" />
@@ -690,7 +701,8 @@
     <string id="aom_rhun_mil_spear_name" text="[Рун] Копейщик-ополченец" />
     <string id="aom_rhun_mil_varch_name" text="[Рун] Опытный лучник-ополченец" />
     <string id="aom_rhun_mil_vspear_name" text="[Рун] Опытный копейщик-ополченец" />
-    <string id="aom_rider_of_himring_name" text="[Линдон] Всадник Балара" />
+    <string id="aom_rider_of_himring_name" text="[Ривенделл] Всадник Химринга" />
+    <string id="aom_lindon_rider_of_himring_name" text="[Линдон] Всадник Балара" />
     <string id="aom_rivendell_glorfindel_guard_name" text="[Ривенделл] Роханнон Эленат" />
     <string id="aom_rivendell_gondolin_battlemaster_name" text="[Ривенделл] Мегил-Аран Эленат" />
     <string id="aom_rivendell_high_captain_name" text="[Ривенделл] Верховный капитан" />
@@ -756,10 +768,14 @@
     <string id="aom_rohan_wold_recruit_name" text="[Рохан] Новобранец Волда" />
     <string id="aom_rohan_wold_scout_name" text="[Рохан] Разведчик Волда" />
     <string id="aom_rohan_wold_veteran_horse_archer_name" text="[Рохан] Опытный всадник Волда" />
-    <string id="aom_rv_militia_archer" text="[Линдон] Лучник ополчения" />
-    <string id="aom_rv_militia_spear" text="[Линдон] Копейщик ополчения" />
-    <string id="aom_rv_militia_vet_archer" text="[Линдон] Опытный лучник ополчения" />
-    <string id="aom_rv_militia_vet_spear" text="[Линдон] Опытный копейщик ополчения" />
+    <string id="aom_rv_militia_archer" text="[Ривенделл] Ополченец-лучник" />
+    <string id="aom_lindon_militia_archer_name" text="[Линдон] Лучник ополчения" />
+    <string id="aom_rv_militia_spear" text="[Ривенделл] Ополченец-копейщик" />
+    <string id="aom_lindon_militia_spearman_name" text="[Линдон] Копейщик ополчения" />
+    <string id="aom_rv_militia_vet_archer" text="[Ривенделл] Опытный ополченец-лучник" />
+    <string id="aom_lindon_militia_veteran_archer_name" text="[Линдон] Опытный лучник ополчения" />
+    <string id="aom_rv_militia_vet_spear" text="[Ривенделл] Опытный ополченец-копейщик" />
+    <string id="aom_lindon_militia_veteran_spearman_name" text="[Линдон] Опытный копейщик ополчения" />
     <string id="aom_sagarun_arbalest_name" text="[Рун] Сагарунский арбалетчик-ветеран" />
     <string id="aom_sagarun_crossbowman_name" text="[Рун] Сагарунский арбалетчик" />
     <string id="aom_sagarun_deckhand_name" text="[Рун] Сагарунский матрос" />
@@ -842,5 +858,14 @@
     <string id="taom_mirkwood_stalkers_boss_name" text="[Лихолесье] Капитан ловчих" />
     <string id="taom_rhun_raiders_boss_name" text="[Рун] Полководец Карагхул" />
     <string id="taom_umbar_corsairs_boss_name" text="[Умбар] Капитан корсаров" />
+    <string id="aom_hill_troll_name" text="[Мордор] Горный тролль" />
+    <string id="aom_gondor_brv_ranger_name" text="[Гондор] Следопыт долины Мортонд" />
+    <string id="aom_gondor_loss_noble_captain_name" text="[Гондор] Верховный страж-секироносец Лоссарнаха" />
+    <string id="aom_gondor_loss_noble_sergeant_name" text="[Гондор] Секирный стражник Лоссарнаха" />
+    <string id="aom_gondor_loss_noble_veteran_name" text="[Гондор] Секироносец Лоссарнаха" />
+    <string id="aom_gondor_loss_noble_warden_name" text="[Гондор] Страж-секироносец Лоссарнаха" />
+    <string id="aom_harad_howdah_crew_name" text="[Харад] Лучник хауды" />
+    <string id="taom_test_animalia_elk_rider" text="[Тест] Всадник на олене" />
+    <string id="taom_test_animalia_moose_rider" text="[Тест] Всадник на лосе" />
   </strings>
 </base>

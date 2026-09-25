@@ -1404,7 +1404,7 @@
     <string id="taom_faction_goblins_of_blue_craig_bonus_3" text="+20% Nahrungsverbrauch der Gruppe (Gefräßiger Schwarm)" />
     <string id="taom_faction_goblins_of_blue_craig_bonus_4" text="+10% Schmiedeeffizienz (Hort erbeuteter Waffen)" />
     <string id="taom_faction_goblins_of_blue_craig_bonus_5" text="+10% Plünderungsschaden (Goblinhinterhalt)" />
-    <string id="taom_faction_goblins_of_blue_craig_desc" text="Die Goblins vom Blauen Fels." />
+    <string id="taom_faction_goblins_of_blue_craig_desc" text="Ein eigenständiges Orkheer der Blauen Berge (Ered Luin) im fernen Westen, dicht bei den Grauen Anfurten von Lindon — ein Reich fern ihrer Vettern aus der Orkstadt im Nebelgebirge. Dieselben zahllosen, schlecht bewaffneten Schwärme: allein schwach, in der Masse überwältigend und auf dem Marsch unersättlich. Sie plagen die Elben der Westküste." />
     <string id="taom_faction_goblins_of_blue_craig_name" text="Goblins vom Blauen Fels" />
     <string id="taom_faction_goblins_of_blue_craig_perk_0_desc" text="+40% Gruppengröße und +25% Wiederauferstehungsrate der Dorffreiwilligen — schwach, aber zahllos." />
     <string id="taom_faction_goblins_of_blue_craig_perk_0_name" text="Goblinschwarm" />
@@ -1435,7 +1435,7 @@
     <string id="taom_faction_goblins_of_goblin_town_bonus_3" text="+20% Nahrungsverbrauch der Gruppe (Gefräßiger Schwarm)" />
     <string id="taom_faction_goblins_of_goblin_town_bonus_4" text="+10% Schmiedeeffizienz (Hort erbeuteter Waffen)" />
     <string id="taom_faction_goblins_of_goblin_town_bonus_5" text="+10% Plünderungsschaden (Goblinhinterhalt)" />
-    <string id="taom_faction_goblins_of_goblin_town_desc" text="Die goblinverseuchten Tunnel und Höhlen des Nebelgebirges. Diese Orks kontrollieren die hohen Pässe und bedrohen alle, die es wagen, die Berge zu überqueren." />
+    <string id="taom_faction_goblins_of_goblin_town_desc" text="Die wimmelnden Orkhöhlen unter dem Hohen Pass des Nebelgebirges. Seit dem Fall des Großen Orks haben sich die Stämme ohne Zahl vermehrt — riesige, schlecht bewaffnete Schwärme, die allein durch ihr Gewicht siegen und schneller brüten, als ein Feind sie dezimieren kann. Über die Schneefelder ihrer Bergheimat laufen sie am schnellsten, doch solche Horden sind stets unersättlich." />
     <string id="taom_faction_goblins_of_goblin_town_name" text="Goblins von Goblinstadt" />
     <string id="taom_faction_goblins_of_goblin_town_perk_0_desc" text="+40% Gruppengröße und +25% Wiederauferstehungsrate der Dorffreiwilligen — Goblins sind schwach, aber zahllos." />
     <string id="taom_faction_goblins_of_goblin_town_perk_0_name" text="Goblinschwarm" />
@@ -1453,9 +1453,9 @@
     <string id="taom_faction_goblins_of_goblin_town_su_1_name" text="Höhlengoblin-Plänkler" />
     <string id="taom_faction_goblins_of_goblin_town_su_2_desc" text="Schwererer Stoßgoblin aus den tiefen Bauten." />
     <string id="taom_faction_goblins_of_goblin_town_su_2_name" text="Goblinschläger" />
-    <string id="taom_faction_goblins_of_goblin_town_trait_0" text="Goblintunnel" />
-    <string id="taom_faction_goblins_of_goblin_town_trait_1" text="Gebirgspässe" />
-    <string id="taom_faction_goblins_of_goblin_town_trait_2" text="Wargreiter" />
+    <string id="taom_faction_goblins_of_goblin_town_trait_0" text="Höhlen der Orkstadt" />
+    <string id="taom_faction_goblins_of_goblin_town_trait_1" text="Brut des Hohen Passes" />
+    <string id="taom_faction_goblins_of_goblin_town_trait_2" text="Hinterhaltsleger der Bergpässe" />
     <string id="taom_faction_goblins_of_goblin_town_trait_3" text="Zahllose Schwärme" />
     <string id="taom_faction_goblins_of_goblin_town_weakness_0" text="Einzeln schwache Truppen" />
     <string id="taom_faction_goblins_of_goblin_town_weakness_1" text="Gefräßig — belastet jede Versorgungslinie" />
@@ -1526,17 +1526,17 @@
     <string id="taom_faction_havens_of_umbar_weakness_1" text="Von Gondor gehasst" />
     <string id="taom_faction_havens_of_umbar_weakness_2" text="Landheer schwächer als Flotte" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_0" text="+35% Einfluss für Armeen (Elbenweisheit)" />
-    <string id="taom_faction_high_kingdom_of_lindon_bonus_1" text="+20% Dorfherdwachstum (Das letzte heimelige Haus)" />
+    <string id="taom_faction_high_kingdom_of_lindon_bonus_1" text="+20 % Wachstum der Dorfherdstellen (Die Grauen Anfurten)" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_2" text="+10% Gruppentempo im Wald (Waldgrazilität)" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_3" text="-15% Nahrungsverbrauch der Gruppe (Elbische Genügsamkeit)" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_4" text="+0,5 Siedlungstreue pro Tag" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_5" text="+25% Armeeneinflusskosten (Elbenstolz)" />
-    <string id="taom_faction_high_kingdom_of_lindon_desc" text="Das uralte Elbenreich Lindon an den westlichen Gestaden Mittelerdes. Regiert von Gil-galads Nachfolgern, ist es ein Land schwindenden Elbenruhms und der Grauen Anfurten." />
+    <string id="taom_faction_high_kingdom_of_lindon_desc" text="Das grüne Land westlich der Blauen Berge, letztes Reich der Hochelben an den Küsten Mittelerdes. Von den Grauen Anfurten von Mithlond segeln die weißen Schiffe in den Westen. Círdan der Schiffbauer, der Älteste der Eldar, bewahrt das schwindende Licht der Falathrim — weise, wenige, und jede Klinge unersetzlich. Lindon teilt die Stärke der Falathrim von Mithlond." />
     <string id="taom_faction_high_kingdom_of_lindon_name" text="Hohes Königreich von Lindon" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_0_desc" text="+35% Einfluss bei Armeeerfolg — die Weisen wissen, wie man führt." />
     <string id="taom_faction_high_kingdom_of_lindon_perk_0_name" text="Elbenweisheit" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_1_desc" text="+20% Dorfherdwachstum und -15% Nahrungsverbrauch der Gruppe." />
-    <string id="taom_faction_high_kingdom_of_lindon_perk_1_name" text="Das letzte heimelige Haus" />
+    <string id="taom_faction_high_kingdom_of_lindon_perk_1_name" text="Die Grauen Anfurten" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_2_desc" text="+10% Gruppentempo im Wald und +0,5 Siedlungstreue pro Tag." />
     <string id="taom_faction_high_kingdom_of_lindon_perk_2_name" text="Waldgrazilität" />
     <string id="taom_faction_high_kingdom_of_lindon_strength_0" text="Legendäre Elitekrieger" />
@@ -1544,15 +1544,15 @@
     <string id="taom_faction_high_kingdom_of_lindon_strength_2" text="Genügsame, selbstständige Heerscharen" />
     <string id="taom_faction_high_kingdom_of_lindon_strength_3" text="Herdreiche, treue Zufluchtsorte" />
     <string id="taom_faction_high_kingdom_of_lindon_su_0_desc" text="Legendärer Veteran des Ersten Zeitalters der Eldar." />
-    <string id="taom_faction_high_kingdom_of_lindon_su_0_name" text="Noldor-Klingenmeister" />
+    <string id="taom_faction_high_kingdom_of_lindon_su_0_name" text="Falathrim-Klingenmeister" />
     <string id="taom_faction_high_kingdom_of_lindon_su_1_desc" text="See-Elben-Wächter der Häfen." />
     <string id="taom_faction_high_kingdom_of_lindon_su_1_name" text="Falathrim-Seefahrerwächter" />
-    <string id="taom_faction_high_kingdom_of_lindon_su_2_desc" text="Schwerer Noldor-Wächter der Grauen Anfurten." />
+    <string id="taom_faction_high_kingdom_of_lindon_su_2_desc" text="Schwerer Falathrim-Wächter der Grauen Anfurten." />
     <string id="taom_faction_high_kingdom_of_lindon_su_2_name" text="Mithlond-Wachposten" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_0" text="Graue Anfurten" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_1" text="Uraltes Elbenreich" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_2" text="Schiffe nach Valinor" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_3" text="Círdan der Schiffbauer" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_0" text="Círdan der Schiffbauer" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_1" text="Die Grauen Anfurten" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_2" text="Schiffe in den Westen" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_3" text="Die Letzten der Hochelben" />
     <string id="taom_faction_high_kingdom_of_lindon_weakness_0" text="Elbenstolz erhöht Einflusskosten" />
     <string id="taom_faction_high_kingdom_of_lindon_weakness_1" text="Schwindendes Volk — wenig Ersatz" />
     <string id="taom_faction_khudorom_of_khand_bonus_0" text="+10% Parteigeschwindigkeit in der Steppe (Steppenstreitwagenfahrer)" />
@@ -1778,8 +1778,8 @@
     <string id="taom_faction_kingdom_of_moria_bonus_4" text="+15% Schmiedeeffizienz (Geplünderte Schmieden)" />
     <string id="taom_faction_kingdom_of_moria_bonus_5" text="+15% Raubzugschaden (Höhlentrollaufgebot)" />
     <string id="taom_faction_kingdom_of_moria_bonus_6" text="-10% Baugeschwindigkeit (Hallende Säle)" />
-    <string id="taom_faction_kingdom_of_moria_desc" text="Das Königreich Moria." />
-    <string id="taom_faction_kingdom_of_moria_name" text="Königreich Moria" />
+    <string id="taom_faction_kingdom_of_moria_desc" text="Das Orkheer, das die tiefen Orte des Nebelgebirges hält — die schwarzen Schächte von Moria, den Zwergen abgerungen, und die kalten Gipfel vom Caradhras bis zum Methedras. Größer und besser bewaffnet als das Orkgesindel des Hohen Passes, stellen sie gewaltige Kriegsheere für fast keinen Einfluss auf und marschieren hungrig, doch unermüdlich über den Schnee." />
+    <string id="taom_faction_kingdom_of_moria_name" text="Orks des Nebelgebirges" />
     <string id="taom_faction_kingdom_of_moria_perk_0_desc" text="Armeerekrutierung kostet 40% weniger Einfluss — das Orkheer braucht keinen Konsens zum Marschieren." />
     <string id="taom_faction_kingdom_of_moria_perk_0_name" text="Orkhorde" />
     <string id="taom_faction_kingdom_of_moria_perk_1_desc" text="+30% Gruppengröße und +10% Geschwindigkeit auf Schnee — große Kriegsheere, an die kalten Gipfel gewöhnt." />
@@ -2643,9 +2643,6 @@
     <string id="taom_aso_kingdom.lindon" text="Lindon" />
     <string id="taom_aso_kingdom.bluecraig" text="Goblins vom Blauen Fels" />
     <string id="taom_aso_item_name_randomized" text="Zufälliges Mittelerde" />
-    <string id="taom_aso_desc_invasion" text="Die Fraktion, die den größten Teil Mittelerdes beherrscht." />
-    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} beherrscht den überwiegenden Teil Mittelerdes." />
-    <string id="taom_aso_item_desc_randomized" text="Randomisiert den Ausgangszustand Mittelerdes in dem von dir gewählten Maße, im Rahmen des Sinnvollen." />
     <string id="taom_tactic.shield_wall" text="Unser Plan ist es, die Schilde zu schließen und die Stellung zu halten." />
     <string id="taom_tactic.infantry_mass" text="Unser Plan ist es, sie mit unserer Überzahl zu überrennen." />
     <string id="taom_tactic.cavalry_dominance" text="Unser Plan ist es, sie niederzureiten und das Fußvolk vollenden zu lassen, was die Reiter beginnen." />
@@ -2662,22 +2659,22 @@
     <string id="taom_behavior.infantry_skirmish" text="Auf Wurfweite heran, werfen und zurückweichen" />
     <string id="taom_behavior.cycle_charge" text="Durchbrechen, neu formieren und erneut angreifen" />
     <string id="taom_behavior.envelop_wing" text="Um ihre Flanke schwenken und von der Seite zuschlagen" />
-    <string id="taom_behavior.foot_charge" text="Charge their foot; square up if horse come at you" />
-    <string id="taom_behavior.archer_flank" text="Stand beside the wall and shoot; fall in behind it if they come for you" />
-    <string id="taom_behavior_f6.braced_defend" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are holding in a wall." />
-    <string id="taom_behavior_f6.braced_advance" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are advancing in a wall." />
-    <string id="taom_behavior_f6.infantry_skirmish" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are throwing and falling back." />
-    <string id="taom_behavior_f6.cycle_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging in cycles." />
-    <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are swinging round the flank." />
-    <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging the enemy foot." />
-    <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are taking the flank of the wall." />
+    <string id="taom_behavior.foot_charge" text="Greift ihr Fußvolk an; stellt euch geschlossen, wenn Reiter kommen" />
+    <string id="taom_behavior.archer_flank" text="Stellt euch neben die Schildwand und schießt; fallt dahinter zurück, wenn sie euch angehen" />
+    <string id="taom_behavior_f6.braced_defend" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} und {?}{\?}{TROOP_NAMES_END} halten in einer Schildwand." />
+    <string id="taom_behavior_f6.braced_advance" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} und {?}{\?}{TROOP_NAMES_END} rücken in einer Schildwand vor." />
+    <string id="taom_behavior_f6.infantry_skirmish" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} und {?}{\?}{TROOP_NAMES_END} werfen und ziehen sich zurück." />
+    <string id="taom_behavior_f6.cycle_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} und {?}{\?}{TROOP_NAMES_END} greifen in Wellen an." />
+    <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} und {?}{\?}{TROOP_NAMES_END} umgehen die Flanke." />
+    <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} und {?}{\?}{TROOP_NAMES_END} greifen das feindliche Fußvolk an." />
+    <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} und {?}{\?}{TROOP_NAMES_END} nehmen die Flanke der Schildwand ein." />
     <string id="taom_patch_apply_failed" text="TAOM: Patch-Gruppen konnten während {PHASE} nicht angewendet werden: {GROUPS}. Einige Korrekturen in diesen Gruppen sind in dieser Sitzung deaktiviert; das TAOM-Protokoll nennt die Ursache." />
     <string id="taom_patch_apply_phase_startup" text="des Starts" />
     <string id="taom_patch_apply_notice_title" text="TAOM" />
     <string id="taom_patch_apply_phase_game_init" text="der Spielinitialisierung" />
     <string id="taom_patch_apply_phase_mission_start" text="des Missionsbeginns" />
-    <string id="taom_oob_autoassign_done" text="Captains assigned: {COUNT}." />
-    <string id="taom_oob_autoassign_not_general" text="Only the general of this battle can assign heroes." />
-    <string id="taom_oob_autoassign_none" text="No hero suits an open captain slot." />
+    <string id="taom_oob_autoassign_done" text="Zugewiesene Hauptleute: {COUNT}." />
+    <string id="taom_oob_autoassign_not_general" text="Nur der Feldherr dieser Schlacht kann Helden zuweisen." />
+    <string id="taom_oob_autoassign_none" text="Kein Held passt auf einen freien Hauptmannsposten." />
   </strings>
 </base>

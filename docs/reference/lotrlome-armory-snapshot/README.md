@@ -16,10 +16,10 @@ Any future Steam-Workshop or manual update of `LOTRLOME_Armory` will overwrite o
 
 | File | Purpose | Size |
 |---|---|---|
-| `action_sets.xml` | All LOTRLOME race action sets (combat / facegen / villager / etc.). **Includes the 1.3 action-type aliases** added 2026-05-04 across all 12 pre-existing facegen sets, **plus** the new `as_elf_facegen` + `as_elf_female_facegen` action_sets authored 2026-05-22 (see CC parent fix checklist below), **plus** `as_warg` / `as_warg_map` / `as_warg_town_and_village` and the 75 warg rider rows absorbed 2026-08-28 ([lotrlome-warg-changes.md](../lotrlome-warg-changes.md)), **plus** the war ram's `as_war_ram` sets (2026-09-18, #618), **plus** the six `as_animalia_elk` / `as_animalia_moose` sets with their antler bindings (refreshed 2026-09-23, #646, [lotrlome-animalia-changes.md](../lotrlome-animalia-changes.md)), **plus** the standalone `as_hill_troll_warrior` on `troll_skeleton_a` with its 4,700 actions (2026-09-24, [lotrlome-hill-troll-changes.md](../lotrlome-hill-troll-changes.md); #649's uncommitted cave troll lines are not in this copy). | ~3.9 MB |
-| `monsters.xml` | LOTRLOME monster definitions (dwarf, uruk, nazghul, orc, etc.) and their skeleton bindings. **Plus** the hill troll's measured sizes, `CanRide` off and its variants renamed `hill_troll_*` (2026-09-24, [lotrlome-hill-troll-changes.md](../lotrlome-hill-troll-changes.md)) | ~63 KB |
-| `skins.xml` | Race-to-skeleton mapping, body proportions, mesh slot configurations. **Plus** all ten `hill_troll` skins on `troll_skeleton_a` and the `hill_troll_a_*` meshes (2026-09-24, [lotrlome-hill-troll-changes.md](../lotrlome-hill-troll-changes.md)) | ~5.4 MB |
-| `action_types.xml` | Every LOTRLOME action-type declaration. **Added to the snapshot 2026-08-28**: it now carries the 80 `act_warg_*` types absorbed from the retired `Alliance.Wargs`, 32 of them explicitly typed, which a module reinstall would otherwise destroy. Also the war ram's `act_war_ram_butt` (2026-09-18, #618) and the Animalia elk and moose's two `actt_kick` antler actions (refreshed 2026-09-23, #646). | ~16 KB |
+| `action_sets.xml` | All LOTRLOME race action sets (combat / facegen / villager / etc.). **Includes the 1.3 action-type aliases** added 2026-05-04 across all 12 pre-existing facegen sets, **plus** the new `as_elf_facegen` + `as_elf_female_facegen` action_sets authored 2026-05-22 (see CC parent fix checklist below), **plus** `as_warg` / `as_warg_map` / `as_warg_town_and_village` and the 75 warg rider rows absorbed 2026-08-28 ([lotrlome-warg-changes.md](../lotrlome-warg-changes.md)), **plus** the war ram's `as_war_ram` sets (2026-09-18, #618), **plus** the six `as_animalia_elk` / `as_animalia_moose` sets with their antler bindings (refreshed 2026-09-23, #646, [lotrlome-animalia-changes.md](../lotrlome-animalia-changes.md)), **plus** the standalone `as_hill_troll_warrior` on `troll_skeleton_a` with its 4,700 actions (2026-09-24), rebound on 2026-09-25 by `tools/bind_hill_troll_action_set.py` to the hill troll's own clips (Fab 213, retargeted human 438, the troll's idles reused for 172 inventory, conversation and cheer codes, human 3,877), with `as_hill_troll_poses`' `act_stand_1` on the same idle, identical to the live body ([lotrlome-hill-troll-changes.md](../lotrlome-hill-troll-changes.md); since 2026-09-25 the copy also carries #649's `act_troll_brute_force` binding in `as_cave_troll_warrior` and its declaration in `action_types.xml`, so both files equal live). | ~3.9 MB |
+| `monsters.xml` | LOTRLOME monster definitions (dwarf, uruk, nazghul, orc, etc.) and their skeleton bindings. **Plus** the hill troll's measured sizes, `CanRide` off and its variants renamed `hill_troll_*` (2026-09-24, [lotrlome-hill-troll-changes.md](../lotrlome-hill-troll-changes.md)); the `cave_troll` Monster's `hit_points` 300 to 200, so both trolls have 200 health in Custom Battle (2026-09-25, `TrollHitPointsLiveDataTests`) | ~63 KB |
+| `skins.xml` | Race-to-skeleton mapping, body proportions, mesh slot configurations. **Plus** all ten `hill_troll` skins on `troll_skeleton_a` and the `hill_troll_a_*` meshes (2026-09-24, [lotrlome-hill-troll-changes.md](../lotrlome-hill-troll-changes.md)), and since 2026-09-25 their 39 `mouth_texture` tags on the troll head material | ~5.4 MB |
+| `action_types.xml` | Every LOTRLOME action-type declaration. **Added to the snapshot 2026-08-28**: it now carries the 80 `act_warg_*` types absorbed from the retired `Alliance.Wargs`, 32 of them explicitly typed, which a module reinstall would otherwise destroy. Also the war ram's `act_war_ram_butt` (2026-09-18, #618) and the Animalia elk and moose's two `actt_kick` antler actions (refreshed 2026-09-23, #646), and the trolls' untyped `act_troll_brute_force` (#649, 2026-09-25). | ~16 KB |
 | `monster_usage_sets.xml` | The `spider` / `elephant` / `chariot` / `warg` usage sets. **Added 2026-08-28** for the same reason. | ~81 KB |
 | `monster_usage_sets.xslt` | Rider-side `mount_id` injections into vanilla's `human` usage set: 22 warg rows across mountings, strikes and falls, plus the elephant and chariot rows. **Added 2026-08-28.** | ~13 KB |
 | `project.mbproj` | The native-side registration manifest. **Added 2026-08-28** because the warg's three new `<file>` rows live only here. | ~3.6 KB |
@@ -104,9 +104,9 @@ python tools/oneoff/fix_orphaned_tavern_conversation_actions.py
 
 Separate from the `_facegen` (Character Creation) sets above: `as_dwarf_warrior` is the dwarf race's **combat** action set, and it is **standalone** — `skeleton="dwarf_skeleton_a"`, **no `base_set`**. Standalone sets inherit nothing, so every action type the engine gains after the set was authored is simply absent until added by hand.
 
-This is the only LOTR race at risk. The other races' combat sets are stubs with `base_set="as_human_warrior"` (`as_orc_warrior`, `as_uruk_warrior`, `as_goblin_warrior`, and the cave troll's `as_cave_troll_warrior`; `as_hill_troll_warrior` stopped being a stub on 2026-09-24 and is a standalone set on `troll_skeleton_a`, filled with Native's 4,700 actions and kept at parity the dwarf's way), and LOTRLOME's own `as_human_warrior` is a 48-line PARTIAL that **field-merges into Native's full `as_human_warrior`** (the load-order comment at the top of `action_sets.xml` explains this; the engine merge is confirmed in `Module.cs` `CreateProcessedActionSetsXMLForNative`): Native carries the water/swim/stagger actions, so every `base_set="as_human_warrior"` race inherits them. `as_dwarf_warrior` has no merge partner.
+It was the only LOTR race at risk until 2026-09-24, when the hill troll's set went standalone too. The other races' combat sets are stubs with `base_set="as_human_warrior"` (`as_orc_warrior`, `as_uruk_warrior`, `as_goblin_warrior`, and the cave troll's `as_cave_troll_warrior`; `as_hill_troll_warrior` stopped being a stub on 2026-09-24 and is a standalone set on `troll_skeleton_a`, filled with Native's 4,700 actions and kept at parity the dwarf's way), and LOTRLOME's own `as_human_warrior` is a 48-line PARTIAL that **field-merges into Native's full `as_human_warrior`** (the load-order comment at the top of `action_sets.xml` explains this; the engine merge is confirmed in `Module.cs` `CreateProcessedActionSetsXMLForNative`): Native carries the water/swim/stagger actions, so every `base_set="as_human_warrior"` race inherits them. `as_dwarf_warrior` has no merge partner.
 
-Enumerating every `action_set` with a `skeleton=` and no `base_set` confirms the scope: the LIVE file has only **5** standalone sets — the `as_human_warrior` merge-partial, `as_dwarf_warrior`, and the creature mounts `as_spider` / `as_elephant` / `as_chariot`. `as_dwarf_warrior` is the **only standalone humanoid combat set**; the creature mounts use creature movement systems (the bipedal water-dive path doesn't apply to them).
+Enumerating every `action_set` with a `skeleton=` and no `base_set` confirms the scope: the LIVE file has **7** standalone sets (counted 2026-09-25): the `as_human_warrior` merge-partial, `as_dwarf_warrior`, `as_hill_troll_warrior` (4,701 actions), and the creature mounts `as_spider` / `as_elephant` / `as_chariot` / `as_warg`. `as_dwarf_warrior` and `as_hill_troll_warrior` are the **only standalone humanoid combat sets**; the creature mounts use creature movement systems (the bipedal water-dive path doesn't apply to them).
 
 `as_dwarf_warrior` was originally seeded from **Native 1.3** action types (`tools/Generate-ActionSets.ps1`). By Native **1.4.6** it had silently drifted to **423 missing active action types** — including the engine's water actions (`act_dive_*` / `act_swim_*`), which CTD the game when a dwarf falls into water (the 2026-06-25 crash). The fix restores full parity with Native's active `as_human_warrior`:
 
@@ -414,9 +414,42 @@ each file. Hand-written, not from the paid translator (which fills only untransl
 | SP | [Harad] Howdah de elefante |
 | TR | [Harad] Fil Mahfesi |
 
+### ⚠️ APPLIED EDIT: live language files, the stale-translation sweep (2026-09-25)
+
+**Live edits to the Armory's and TAOM_Map's language files that a reinstall WILL revert.** This snapshot carries no
+language files, so the edits are recorded here by file. Originals: `E:\LOTRAOMAssets\_loc_backup_20260925\` (the
+tree omits the `ModuleData` level). Measured against those backups on 2026-09-25, no row removed:
+
+| Live file (under `<module>/ModuleData/Languages/<L>/`) | Rows added | Rows changed | Languages |
+|---|---|---|---|
+| Armory `loc_LOTRAOM_horses.xml` | 192 | 24 | all 12 (Black Númenórean bardings, the spider, elk and moose mounts; two Khamûl barding names re-translated) |
+| Armory `loc_gondor.xml` | 36 | 1 | all 12 (three Gondor capes and pauldrons); the changed row is RU |
+| Armory `loc_mordor.xml`, `loc_LOTRAOM_shields.xml`, `loc_LOTRAOM_weapons.xml` | 0 | 12, 2, 1 | CNs (words in the wrong writing system) |
+| TAOM_Map `loc_settlements.xml` | 0 | 56 | all 12 (village names around EW10, EW11 and G4, `castle_EW8`, the `town_EW5` text; 2 rows in the Latin-script languages, 8 to 10 in the others) |
+
+**Replay:** every one of these texts is also in `tools/translation_cache/<lang>.json` (tracked; the cache agreed with
+every live row in review), so after a reinstall `python tools/translate_with_claude.py --lang <L> --module all
+--sync-ids --apply` rewrites them from the cache at no API cost. **Except 23 rows, which a replay never visits:**
+discovery picks a row only when it is missing or still equals its English, and these replaced an older translation,
+so a reinstall brings the damaged text back and the replay leaves it. Reset each to its English first, then replay:
+CNs `loc_mordor.xml` the 12 ids `aom_sk_md_num_{arc,inf}_bracer_{med,heavy,elite,lord}_a_name`,
+`aom_sk_md_mor_arc_chest_light_a_name`, `aom_sm_md_num_chest_light_a_name`, `aom_sm_md_num_arc_chest_med_a_name`,
+`aom_sk_md_mor_arc_helmet_heavy_a_name`; CNs `loc_LOTRAOM_shields.xml` `aom_sm_md_num_inf_shield_med_{a,b}_name`;
+CNs `loc_LOTRAOM_weapons.xml` `aom_sm_md_num_bow_a_name`; RU `loc_gondor.xml`
+`aom_sk_gd_ano_cav_helmet_heavy_b_name`; TAOM_Map `loc_settlements.xml` `Settlements.Settlement.name.castle_village_G4_1`
+in CNs, CNt, JP, KO and RU, and in RU `Settlements.Settlement.name.castle_EW8` and `=Settlements.Settlement.text.town_EW5`.
+Do not use `rebuild_translation_files.py` for this: it rewrites every repo language file. **Gates:** `python tools/check_external_loc_coverage.py`
+catches a row that fell back to English; `LanguageTextIntegrityTests.NoCachedTranslation_MixesWritingSystems` keeps
+the cache free of wrong-script words, so a replay cannot bring the CNs damage back.
+
 ## Snapshot date
 
-2026-09-19: `Prefabs/taom_howdah_platform.xml` **added** (LIVE + this snapshot, byte-identical, LF, pinned
+2026-09-25: `action_sets.xml`, `action_types.xml`, `monsters.xml` and `skins.xml` refreshed from live and
+byte-identical to it: the hill troll's set rebound (Fab, retargeted human, reused idles) with its pose override,
+#649's Brute Force declaration and bindings, the cave troll Monster's 200 `hit_points`, and the hill troll skins'
+mouth textures (rows above; [lotrlome-hill-troll-changes.md](../lotrlome-hill-troll-changes.md)).
+
+Previous: 2026-09-19: `Prefabs/taom_howdah_platform.xml` **added** (LIVE + this snapshot, byte-identical, LF, pinned
 by `.gitattributes`). TAOM's war elephant howdah platform, rebuilt on the siege-tower pattern and moved here from the
 TAOM module on 2026-09-18, then renamed from `taom_howdah_agent` (#627). `HowdahPrefabTests` compares the bytes, so a
 Kit re-save of the live file shows up as a failing test that names the newer copy. Later that day the header was

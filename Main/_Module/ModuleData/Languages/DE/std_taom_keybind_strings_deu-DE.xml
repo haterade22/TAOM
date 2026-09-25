@@ -14,5 +14,8 @@
     <string id="taom_key_turbo_desc" text="Halte Strg zusammen mit dieser Taste für den höchsten TAOM-Geschwindigkeitsmultiplikator. Wird eine der Tasten losgelassen, wird die vorherige Geschwindigkeit wiederhergestellt." />
     <string id="taom_key_career_ability" text="Laufbahnfähigkeit (TAOM)" />
     <string id="taom_key_career_ability_desc" text="Aktiviert deine Laufbahnfähigkeit während einer Schlacht, sobald die Energieleiste voll ist. Standard: V." />
+    <string id="taom_aso_desc_invasion" text="Die Fraktion, die den größten Teil Mittelerdes beherrscht." />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} beherrscht den überwiegenden Teil Mittelerdes." />
+    <string id="taom_aso_item_desc_randomized" text="Randomisiert den Ausgangszustand Mittelerdes in dem von dir gewählten Maße, im Rahmen des Sinnvollen." />
   </strings>
 </base>

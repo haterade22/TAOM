@@ -4,13 +4,13 @@ namespace TAOM.Features.TrollBruteForce;
 public readonly record struct BruteForceBlow(int Damage, bool KnockDown);
 
 /// <summary>
-/// Pure decisions for the cave troll's Brute Force smash (#649). Floats in, no TaleWorlds types (ADR-007);
+/// Pure decisions for the trolls' Brute Force smash (#649). Floats in, no TaleWorlds types (ADR-007);
 /// every float is an engine value, so a NaN or infinity fails closed. A bad body scale reads as 1.
 /// </summary>
 public interface ITrollBruteForceService
 {
-    /// <summary>True only for the battle troll's Monster id, <see cref="TrollBruteForceConfig.CaveTrollMonsterId"/>.</summary>
-    bool IsCaveTroll(string? monsterId);
+    /// <summary>True only for a battle troll's Monster id, a key of <see cref="TrollBruteForceConfig.ActionSetsByMonster"/>.</summary>
+    bool IsBruteForceTroll(string? monsterId);
 
     /// <summary>
     /// True when the smash never fired or <see cref="TrollBruteForceConfig.CooldownSeconds"/> of mission time have
@@ -23,6 +23,13 @@ public interface ITrollBruteForceService
     /// range and strictly in front. The scan passes a facing of -1 when it found no enemy.
     /// </summary>
     bool ShouldEngage(float enemyDistance, float facingDot, float bodyScale, bool busy);
+
+    /// <summary>
+    /// The troll's body size for every distance below: <paramref name="agentScale"/> times its Monster's eye height
+    /// over <see cref="TrollBruteForceConfig.ReferenceEyeHeight"/>. A non-finite or non-positive eye height keeps the
+    /// agent scale; a bad agent scale passes through and the distance rules read it as 1.
+    /// </summary>
+    float BodySize(float agentScale, float standingEyeHeight);
 
     /// <summary>The ring's centre on the ground plane, <see cref="TrollBruteForceConfig.ImpactForward"/> (scaled) along the look direction.</summary>
     bool TryGetImpactCentre(float x, float y, float lookX, float lookY, float bodyScale, out float centreX, out float centreY);

@@ -975,7 +975,7 @@
 			   action_set="as_cave_troll_warrior"
 			   monster_usage="human"
 			   weight="160"
-			   hit_points="300"
+			   hit_points="200"
 			   absorbed_damage_ratio="1.0"
 			   walking_speed_limit="2.0"
 			   crouch_walking_speed_limit="1.8"

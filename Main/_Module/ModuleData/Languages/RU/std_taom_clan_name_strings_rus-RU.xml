@@ -96,15 +96,15 @@
     <string id="aom_clan_mistymountainorcs_12_name" text="Узгнаш" />
     <string id="aom_clan_mistymountainorcs_13_name" text="Вракмо" />
     <string id="aom_clan_mistymountainorcs_14_name" text="Гашрим" />
-    <string id="aom_clan_mistymountainorcs_15_name" text="Морзûк" />
-    <string id="aom_clan_mistymountainorcs_1_name" text="Бûрзгâш" />
-    <string id="aom_clan_mistymountainorcs_2_name" text="Кримпâш" />
+    <string id="aom_clan_mistymountainorcs_15_name" text="Морзук" />
+    <string id="aom_clan_mistymountainorcs_1_name" text="Бурзгаш" />
+    <string id="aom_clan_mistymountainorcs_2_name" text="Кримпаш" />
     <string id="aom_clan_mistymountainorcs_3_name" text="Душнакх" />
     <string id="aom_clan_mistymountainorcs_4_name" text="Моргрим" />
     <string id="aom_clan_mistymountainorcs_5_name" text="Варгрим" />
-    <string id="aom_clan_mistymountainorcs_6_name" text="Гробûрз" />
-    <string id="aom_clan_mistymountainorcs_7_name" text="Скарнâк" />
-    <string id="aom_clan_mistymountainorcs_8_name" text="Маугâш" />
+    <string id="aom_clan_mistymountainorcs_6_name" text="Гробурз" />
+    <string id="aom_clan_mistymountainorcs_7_name" text="Скарнак" />
+    <string id="aom_clan_mistymountainorcs_8_name" text="Маугаш" />
     <string id="aom_clan_mistymountainorcs_9_name" text="Трогмо" />
     <string id="aom_clan_rivendell_1_name" text="Нос Передхель" />
     <string id="aom_clan_rivendell_2_name" text="Нос Глорфиндэль" />
@@ -121,5 +121,10 @@
     <string id="aom_clan_vlandia_20_name" text="Дом Моркаргов" />
     <string id="aom_clan_vlandia_21_name" text="Дом Халетрингов" />
     <string id="aom_clan_vlandia_22_name" text="Дом Рунгарингов" />
+    <string id="aom_clan_umbar_2_name" text="Дом Джарджакса" />
+    <string id="aom_clan_umbar_3_name" text="Дом Хешлы" />
+    <string id="aom_clan_umbar_4_name" text="Дом Бел Инзула" />
+    <string id="aom_clan_umbar_5_name" text="Дом Халракса" />
+    <string id="aom_clan_umbar_6_name" text="Дом Хатуга" />
   </strings>
 </base>

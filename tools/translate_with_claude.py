@@ -30,6 +30,7 @@ import time
 import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
+from collections import Counter
 
 # Force UTF-8 stdout/stderr so we can print translated Russian/Japanese/Chinese error messages
 # without crashing on Windows cp1252 console encoding.
@@ -270,12 +271,16 @@ def discover_entries(lang: str, module_filter: str) -> list[Entry]:
     locale, _ = LANGUAGES[lang]
     entries: list[Entry] = []
 
-    # TAOM module
+    # TAOM module. A key two English sources declare is translated only into the first one's
+    # language file (key_owners): a second copy loads later and silently replaces the first.
     if module_filter in ("TAOM", "all"):
         taom_lang_dir = TAOM_LANG_DIR / lang
-        for _, source_xml, tgt_template in english_source_files("TAOM"):
+        sources = english_source_files("TAOM")
+        owners = key_owners([src for _, src, _ in sources])
+        for _, source_xml, tgt_template in sources:
             target_file = taom_lang_dir / tgt_template.format(locale=locale)
-            entries.extend(_diff_files(source_xml, target_file))
+            elsewhere = skip_ids_for(source_xml, target_file, owners, taom_lang_dir)
+            entries.extend(_diff_files(source_xml, target_file, skip_ids=elsewhere))
 
     # Only these two read the install. The TAOM module above is repo-only, so
     # asking for it alone must not require a game at all.
@@ -311,13 +316,55 @@ def discover_entries(lang: str, module_filter: str) -> list[Entry]:
     return entries
 
 
-def _diff_files(source: Path, target: Path) -> list[Entry]:
-    """Return entries where target text still matches source text (not translated)."""
+def key_owners(sources: list[Path]) -> dict[str, Path]:
+    """Map each {=KEY} to the first source in `sources` that declares it.
+
+    Each language loads its files in language_data.xml order and the engine keeps the LAST row it
+    loads for an id (LocalizedTextManager.DeserializeStrings assigns by indexer). So a new row for a
+    key two English sources share goes into the owner's language file only: global_strings.xml
+    shares 23 taom_aso_* keys with taom_module_strings.xml (and declares 3 more alone), and a seeded
+    second copy in the keybind file replaced the curated module rows in 11 languages (2026-09-25).
+    """
+    owners: dict[str, Path] = {}
+    for src in sources:
+        for sid in _parse_string_xml(src, strip_keys=True):
+            owners.setdefault(sid, src)
+    return owners
+
+
+def skip_ids_for(source: Path, target: Path, owners: dict, lang_dir: Path) -> set:
+    """Keys the TAOM pass must neither seed into nor translate for `target`: those another English
+    source owns, and those another file of the same language already carries, EXCEPT any row the
+    target itself holds. The engine reads a language as the union of its files (so do
+    LanguageFileCoverageTests), so a second row is never missing coverage, only a later-loading copy
+    that can drift; but a row the target already has is always diffed, or keys declared by two
+    sources (42 module/xslt pairs) would be skipped by both passes and never translated again.
+
+    A sibling file that exists but does not parse raises: read as empty, its keys would look absent
+    and --sync-ids would seed duplicates of them."""
+    elsewhere = {k for k, owner in owners.items() if owner != source}
+    for other in lang_dir.glob("std_taom_*.xml"):
+        if other != target:
+            try:
+                ET.parse(other)
+            except ET.ParseError as exc:
+                raise SystemExit(f"{other} does not parse ({exc}); fix it before a translator run")
+            elsewhere.update(_parse_string_xml(other, strip_keys=False))
+    return elsewhere - set(_parse_string_xml(target, strip_keys=False))
+
+
+def _diff_files(source: Path, target: Path, skip_ids=frozenset()) -> list[Entry]:
+    """Return entries where target text still matches source text (not translated).
+
+    skip_ids: keys another source owns (key_owners); they belong in that source's language file.
+    """
     src_map = _parse_string_xml(source, strip_keys=True)  # for TAOM source XMLs with {=KEY}prefix
     tgt_map = _parse_string_xml(target, strip_keys=False) if target.exists() else {}
 
     entries = []
     for sid, eng_text in src_map.items():
+        if sid in skip_ids:
+            continue
         cur_text = tgt_map.get(sid, eng_text)
         if cur_text == eng_text:  # not yet translated
             entries.append(Entry(file_path=target, string_id=sid, english_text=eng_text, current_text=cur_text))
@@ -726,7 +773,8 @@ def absorb_translations(batch: list[Entry], translated_map: dict[str, str],
 
 # ── Id sync ────────────────────────────────────────────────────────────────────
 
-def sync_missing_ids(source_path: Path, target_path: Path, dry_run: bool = False) -> list[str]:
+def sync_missing_ids(source_path: Path, target_path: Path, dry_run: bool = False,
+                     skip_ids=frozenset()) -> list[str]:
     """Seed the per-language file with any {=KEY} the English source declares but it lacks.
 
     write_back substitutes by id, so a key with no <string id="KEY"> element has nowhere to
@@ -736,30 +784,48 @@ def sync_missing_ids(source_path: Path, target_path: Path, dry_run: bool = False
     dry_run reports what WOULD be seeded without touching the file. Until 2026-08-28 this
     function wrote unconditionally, so `--sync-ids --dry-run` mutated every language file
     while the same run printed "no files written". A dry run that writes is worse than none.
+
+    skip_ids: keys another English source owns or another file of the language carries
+    (skip_ids_for). Seeding them here would put a second row for the id in the same language,
+    and the file that loads later wins. The result is parsed before it is written.
+
+    Every line keeps its own terminator. 156 of the 204 TAOM language files end every line in
+    \\r\\r\\n and the other 48 mix it with \\r\\n; splitting on one fixed terminator left a stray \\r on
+    each existing line and gave every seeded row a bare \\r\\n (2026-09-25, plan 022 before it).
     """
     if not target_path.exists():
         return []
     src_map = _parse_string_xml(source_path, strip_keys=True)
     tgt_map = _parse_string_xml(target_path, strip_keys=False)
-    missing = [sid for sid in src_map if sid not in tgt_map]
+    missing = [sid for sid in src_map if sid not in tgt_map and sid not in skip_ids]
     if not missing:
         return []
 
-    raw = target_path.read_text(encoding="utf-8", newline="")
-    nl = "\r\n" if "\r\n" in raw else "\n"
-    lines = raw.split(nl)
+    # open(), not Path.read_text(newline=...): that keyword is Python 3.13+, and CI runs older.
+    with open(target_path, encoding="utf-8", newline="") as fh:
+        raw = fh.read()
+    parts = re.findall(r"[^\r\n]*(?:\r*\n|$)", raw)
+    if parts and parts[-1] == "":
+        parts.pop()
+    lines = [(p.rstrip("\r\n"), p[len(p.rstrip("\r\n")):]) for p in parts]
+    if "".join(c + term for c, term in lines) != raw:
+        raise ValueError(f"{target_path}: a line ending the parser does not model (a lone \\r); nothing written")
+    terminators = Counter(term for _, term in lines if term)
+    default_nl = terminators.most_common(1)[0][0] if terminators else "\n"
 
-    string_lines = [i for i, l in enumerate(lines) if l.lstrip().startswith("<string ")]
-    close = next((i for i, l in enumerate(lines) if "</strings>" in l), None)
+    close = next((i for i, (c, _) in enumerate(lines) if "</strings>" in c), None)
     if close is None:
         return []
+    string_lines = [i for i, (c, _) in enumerate(lines[:close]) if c.lstrip().startswith("<string ")]
     if string_lines:
         anchor = string_lines[-1]
-        indent = re.match(r"\s*", lines[anchor]).group(0)
-        blank_separated = anchor + 1 < len(lines) and lines[anchor + 1].strip() == ""
+        indent = re.match(r"\s*", lines[anchor][0]).group(0)
+        nl = lines[anchor][1] or default_nl
+        blank_separated = anchor + 1 < close and lines[anchor + 1][0].strip() == ""
         insert_at = anchor + (2 if blank_separated else 1)
     else:  # empty stub — indent one level past </strings>
-        indent = re.match(r"\s*", lines[close]).group(0) + "  "
+        indent = re.match(r"\s*", lines[close][0]).group(0) + "  "
+        nl = default_nl
         blank_separated = False
         insert_at = close
 
@@ -767,14 +833,19 @@ def sync_missing_ids(source_path: Path, target_path: Path, dry_run: bool = False
     for sid in missing:
         text = (src_map[sid].replace("&", "&amp;").replace('"', "&quot;")
                             .replace("<", "&lt;").replace(">", "&gt;"))
-        block.append(f'{indent}<string id="{sid}" text="{text}" />')
+        block.append((f'{indent}<string id="{sid}" text="{text}" />', nl))
         if blank_separated:
-            block.append("")
+            block.append(("", nl))
 
     if dry_run:
         return missing
     lines[insert_at:insert_at] = block
-    target_path.write_text(nl.join(lines), encoding="utf-8", newline="")
+    new_text = "".join(c + term for c, term in lines)
+    try:
+        ET.fromstring(new_text.lstrip("﻿").encode("utf-8"))
+    except ET.ParseError as exc:
+        raise ValueError(f"{target_path}: seeding would leave a document that does not parse ({exc}); nothing written")
+    target_path.write_text(new_text, encoding="utf-8", newline="")
     return missing
 
 
@@ -889,9 +960,12 @@ def main():
     if args.sync_ids:
         seeded = 0
         if args.module in ("TAOM", "all"):
-            for _, src, tpl in english_source_files("TAOM"):
+            taom_sources = english_source_files("TAOM")
+            owners = key_owners([s for _, s, _ in taom_sources])
+            for _, src, tpl in taom_sources:
                 target = TAOM_LANG_DIR / lang / tpl.format(locale=locale)
-                added = sync_missing_ids(src, target, dry_run=args.dry_run)
+                elsewhere = skip_ids_for(src, target, owners, TAOM_LANG_DIR / lang)
+                added = sync_missing_ids(src, target, dry_run=args.dry_run, skip_ids=elsewhere)
                 if added:
                     print(f"  +{len(added):>4} ids {'to seed' if args.dry_run else 'seeded'} into {target.name}")
                     seeded += len(added)

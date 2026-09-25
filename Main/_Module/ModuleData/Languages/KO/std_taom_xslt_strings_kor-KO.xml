@@ -662,8 +662,8 @@
     <string id="aom_lord_1_155_name" text="나즈굴, 어둠의 원수" />
     <string id="aom_lord_1_16_name" text="나즈굴, 움바르의 기사" />
     <string id="aom_lord_1_17_name" text="사우론" />
-    <string id="aom_lord_1_177_name" text="호노라투스" />
-    <string id="aom_lord_1_18_name" text="자테아" />
+    <string id="aom_lord_1_177_name" text="코르가스" />
+    <string id="aom_lord_1_18_name" text="모르가" />
     <string id="aom_lord_1_21_name" text="펜릭 붉은늑대" />
     <string id="aom_lord_1_22_name" text="비욘릭 스트롱암" />
     <string id="aom_lord_1_23_name" text="칼라드웬" />
@@ -672,7 +672,7 @@
     <string id="aom_lord_1_26_name" text="히르곤" />
     <string id="aom_lord_1_27_name" text="마우그라쉬" />
     <string id="aom_lord_1_28_name" text="나즈굴, 배신자" />
-    <string id="aom_lord_1_29_name" text="사니온" />
+    <string id="aom_lord_1_29_name" text="헤루마르스" />
     <string id="aom_lord_1_31_name" text="즈르사 블랙팽" />
     <string id="aom_lord_1_32_name" text="엘드라 보어송" />
     <string id="aom_lord_1_33_name" text="브리기드 더 하울링" />
@@ -681,14 +681,14 @@
     <string id="aom_lord_1_36_name" text="이브리니엘" />
     <string id="aom_lord_1_37_name" text="고샹크" />
     <string id="aom_lord_1_38_name" text="나즈굴, 불사자" />
-    <string id="aom_lord_1_39_name" text="데바나" />
+    <string id="aom_lord_1_39_name" text="낙타릴" />
     <string id="aom_lord_1_41_name" text="베레군드 울프본" />
     <string id="aom_lord_1_411_name" text="그림울프 아이언팽" />
     <string id="aom_lord_1_42_name" text="흐로드가르 철갑피" />
     <string id="aom_lord_1_43_name" text="고르문드 황소옆구리" />
     <string id="aom_lord_1_44_name" text="네모스" />
     <string id="aom_lord_1_47_name" text="울보스" />
-    <string id="aom_lord_1_49_name" text="오브론" />
+    <string id="aom_lord_1_49_name" text="스카르낙" />
     <string id="aom_lord_1_20_name" text="아스트리드 곰발톱" />
     <string id="aom_lord_1_64_name" text="토르문드 회색곰도끼" />
     <string id="aom_lord_1_50_name" text="코르윈 까마귀눈" />
@@ -712,10 +712,10 @@
     <string id="aom_lord_1_55_name" text="마스모그" />
     <string id="aom_lord_1_63_name" text="고르바그, 미나스 모르굴의 대장" />
     <string id="aom_lord_1_56_name" text="토르문드, 망치" />
-    <string id="aom_lord_1_68_name" text="타로스" />
-    <string id="aom_lord_1_69_name" text="니폰" />
+    <string id="aom_lord_1_68_name" text="고르삭" />
+    <string id="aom_lord_1_69_name" text="그루카쉬" />
     <string id="aom_lord_1_72_name" text="볼그" />
-    <string id="aom_lord_1_74_name" text="자카니스" />
+    <string id="aom_lord_1_74_name" text="부르즈낙" />
     <string id="aom_lord_1_1_1_name" text="엘디스 회색발톱" />
     <string id="aom_lord_1_1_2_name" text="시가 용살해자" />
     <string id="aom_lord_1_1_3_name" text="시그룬 멧돼지엄니" />
@@ -772,9 +772,9 @@
     <string id="aom_lord_1_74_1_name" text="제나" />
     <string id="aom_lord_2_1_name" text="바르드 2세" />
     <string id="aom_lord_2_2_name" text="아스타" />
-    <string id="aom_lord_2_3_name" text="소린 3세 스톤헬름" />
+    <string id="aom_lord_2_3_name" text="란드" />
     <string id="aom_lord_2_4_name" text="시가" />
-    <string id="aom_lord_2_5_name" text="오리" />
+    <string id="aom_lord_2_5_name" text="아스크" />
     <string id="aom_lord_2_6_name" text="에르타" />
     <string id="aom_lord_2_7_name" text="시미르" />
     <string id="aom_lord_2_8_name" text="우리크" />
@@ -787,11 +787,11 @@
     <string id="aom_lord_2_13_name" text="비다르" />
     <string id="aom_lord_2_14_name" text="이스반" />
     <string id="aom_lord_2_15_name" text="라타고스트" />
-    <string id="aom_lord_2_16_name" text="보푸르" />
-    <string id="aom_lord_2_17_name" text="소린 2세 오컨쉴드" />
-    <string id="aom_lord_2_18_name" text="글로인" />
-    <string id="aom_lord_2_19_name" text="드왈린" />
-    <string id="aom_lord_2_20_name" text="오인" />
+    <string id="aom_lord_2_16_name" text="하우크" />
+    <string id="aom_lord_2_17_name" text="스테인" />
+    <string id="aom_lord_2_18_name" text="울프" />
+    <string id="aom_lord_2_19_name" text="게이르" />
+    <string id="aom_lord_2_20_name" text="발" />
     <string id="aom_lord_2_21_name" text="스베도른" />
     <string id="aom_lord_2_22_name" text="라쇼넥" />
     <string id="aom_lord_2_23_name" text="갈덴" />
@@ -1025,7 +1025,7 @@
     <string id="aom_lord_NE9_s_name" text="송곳니절단자 루릭" />
     <string id="aom_lord_S8_u_name" text="갈릭" />
     <string id="aom_lord_S9_c_name" text="포림" />
-    <string id="aom_lord_S9_l_name" text="봄부르" />
+    <string id="aom_lord_S9_l_name" text="오르바르" />
     <string id="aom_lord_S9_m_name" text="다킬라" />
     <string id="aom_lord_S9_u_name" text="차스티미르" />
     <string id="aom_lord_SE8_c_name" text="샤그랄라" />
@@ -1035,7 +1035,7 @@
     <string id="aom_lord_SE9_s_name" text="존나" />
     <string id="aom_lord_WE8_c_name" text="펠렌두르" />
     <string id="aom_lord_WE8_u_name" text="바란딜" />
-    <string id="aom_lord_WE9_l_name" text="두인히르" />
+    <string id="aom_lord_WE9_l_name" text="모르손드의 영주, 두인히르" />
     <string id="aom_lord_WE9_u_name" text="두일린" />
     <string id="aom_lord_WE9_u2_name" text="로스핀" />
     <string id="TAOM_hero_dead_2_1" text="노인 올렉은 동부인 약탈자들로부터 데일을 지키다 전사했다. 그의 희생으로 산길이 지켜졌고, 그 이야기는 왕국 전역의 노래로 전해진다." />
@@ -1156,31 +1156,31 @@
     <string id="TAOM_hero_1_48_1" text="오염된 자는 그가 달리는 곳마다 타락을 퍼뜨린다." />
     <string id="TAOM_hero_1_48_2" text="북부인의 그림자는 추운 땅에서 사냥한다." />
     <string id="TAOM_hero_1_48_3" text="움바르의 그림자는 남부 해안을 배회한다." />
-    <string id="TAOM_hero_1_177" text="호노라투스는 모르도르 군대의 장교로 복무한다." />
-    <string id="TAOM_hero_1_29" text="사니온은 요새를 지휘하는 검은 누메노르 대장이다." />
-    <string id="TAOM_hero_1_17" text="위대한 사우론, 모르도르의 암흑 군주. 이 항목은 그의 무서운 갑옷을 표시하기 위해서만 존재한다." />
-    <string id="TAOM_hero_1_18" text="자테아는 모르도르의 어둠의 계층에서 복무한다." />
-    <string id="TAOM_hero_1_39" text="데바나는 그림자의 하인으로, 어둠의 기술에 능숙하다." />
+    <string id="TAOM_hero_1_177" text="코르가스는 모르도르 군대의 고위 장교로, 전쟁의 소집을 위해 길러진 사우론의 아들이다. 그는 눈이 언제나 지켜보고 있음을 아는 자의 차가운 인내로 자신의 군단을 인간의 땅으로 몰아간다." />
+    <string id="TAOM_hero_1_29" text="헤루마르스는 사우론의 피를 이어받은 검은 누메노르인으로, 모르도르 변경의 요새를 지휘한다. 차갑고 오만한 그는 자신을 낳은 그림자를 통해 옛 누메노르의 잔혹함을 날카롭게 벼려 왔다." />
+    <string id="TAOM_hero_1_17" text="모르도르의 암흑군주이자 반지의 제왕, 위대한 사우론이 다시 일어섰다. 바랏두르의 검은 탑에서 그의 눈은 서부의 땅을 훑고, 고르고로스의 군단은 그의 깃발 아래 모여든다. 자유민들은 그가 패배했다 여겼으나, 그림자는 그저 때를 기다렸을 뿐이었다. 이제 그는 그들을 부수고 가운데땅 전체를 하나의 지배 아래 묶고자 진군한다. 인간의 왕들이여 절망하라, 사우론의 시대가 도래했으니." />
+    <string id="TAOM_hero_1_18" text="모르가는 암흑군주의 곁에 서서 루그부르즈 내부 위계의 주인 노릇을 한다. 그녀의 말은 눈의 무게를 지니며, 모르도르의 지휘관들은 사우론의 진노만큼이나 그녀의 조언을 두려워한다." />
+    <string id="TAOM_hero_1_39" text="암흑군주의 딸 낙타릴은 돌 굴두르와 루그부르즈의 어둠의 기예에 깊이 물들어 있다. 그녀는 그림자의 은밀한 길을 걸으며, 그녀를 거스른 자들의 소식은 다시 들리지 않는다." />
     <string id="TAOM_hero_1_30" text="모르굴의 부관 고스모그는 펠레노르 평원에서 모르도르의 군대를 지휘한다. 잔혹하고 교활한 오크인 그는 선두에서 군대를 이끈다." />
     <string id="TAOM_hero_1_30_1" text="스발라 레드팽은 고스모그 휘하의 오크 대장이다." />
-    <string id="TAOM_hero_1_49" text="오브론은 모르도르 오크 부대를 이끈다." />
+    <string id="TAOM_hero_1_49" text="스카르낙은 모르도르 오르크 부대를 이끄는 잔혹한 대장으로, 자기 위의 자들을 꺾으며 계급을 기어올랐다. 채찍과 눈만이 그가 지키는 유일한 법이다." />
     <string id="TAOM_hero_1_49_1" text="트리스타니아는 어둠의 세력에 복무한다." />
     <string id="TAOM_hero_1_49_2" text="고르디아나는 어둠의 탑 그림자 속에 거한다." />
     <string id="TAOM_hero_1_30_2" text="모그라는 모르도르의 암흑 세력을 섬긴다." />
     <string id="TAOM_hero_1_30_3" text="스나가는 암흑의 종복이다." />
-    <string id="TAOM_hero_1_56_2" text="루스티카는 어둠의 군대에 복무한다." />
+    <string id="TAOM_hero_1_56_2" text="루스티카는 아버지 토르문드와 함께 전쟁터로 나서는, 씨족의 사나운 젊은 전사다." />
     <string id="TAOM_hero_1_63_2" text="코마타사는 전쟁을 위해 사육된 오크다." />
     <string id="TAOM_hero_1_63_3" text="엘리딜레아는 어둠의 계급에 복무한다." />
     <string id="TAOM_hero_1_63" text="미나스 모르굴의 대장 고르바그는 죽은 도시의 수비대를 이끈다. 그는 오크 기준으로도 교활하다." />
     <string id="TAOM_hero_1_63_1" text="발라리아는 죽은 자의 요새에 복무한다." />
-    <string id="TAOM_hero_1_74" text="자카니스는 오크 연대를 지휘한다." />
+    <string id="TAOM_hero_1_74" text="부르즈낙은 모르도르 오르크 연대를 지휘하는 기마 대장으로, 낙오자든 탈주자든 가리지 않고 짓밟는다." />
     <string id="TAOM_hero_1_74_1" text="제나는 모르도르의 어둠의 주인들을 섬긴다." />
     <string id="TAOM_hero_1_54" text="키리스 웅골의 대장 샤그라트는 모르도르로 통하는 고갯길을 지킨다. 그는 오크들 사이에서도 잔혹함으로 알려져 있다." />
     <string id="TAOM_hero_1_54_1" text="콘스탈리아는 키리스 웅골의 탑에 복무한다." />
-    <string id="TAOM_hero_1_68" text="타로스는 고갯길에서 복무하는 오크 대장이다." />
+    <string id="TAOM_hero_1_68" text="고르삭은 모르도르로 통하는 높은 고갯길을 지키는 오르크 대장으로, 눈을 피해 몰래 지나려는 자라면 누구에게든 경계를 늦추지 않고 무자비하다." />
     <string id="TAOM_hero_1_68_1" text="실비나는 거미의 고갯길 수비대에 복무한다." />
     <string id="TAOM_hero_1_69_2" text="도라틸라는 어둠의 군대에 복무한다." />
-    <string id="TAOM_hero_1_69" text="니폰은 모르도르 국경의 요새를 지휘한다." />
+    <string id="TAOM_hero_1_69" text="그루카쉬는 모르도르 국경의 요새를 지휘하며, 그림자의 변경을 경계 깊게 지킨다." />
     <string id="TAOM_hero_1_69_1" text="아렐리아나는 변경지대에 복무한다." />
     <string id="TAOM_hero_1_55" text="마스모그는 강력한 우루크하이 전쟁 족장이다." />
     <string id="TAOM_hero_1_55_1" text="메게티아는 어둠의 힘을 섬긴다." />
@@ -1201,13 +1201,13 @@
     <string id="TAOM_hero_2_7_1" text="미미르는 골짜기나라 왕가의 왕자다." />
     <string id="TAOM_hero_2_10" text="발라는 골짜기나라의 공주로, 외교와 정치 기술을 훈련받았다." />
     <string id="TAOM_hero_2_13" text="비다르는 북부 변경지대의 영주로, 동방인의 침입에 대비해 경비를 선다." />
-    <string id="TAOM_hero_2_3" text="토린 3세 스톤헬름, 산 아래의 왕은 에레보르의 드워프들을 통치한다. 그는 데일과의 고대 동맹을 유지하며 어둠에 맞서 방어할 준비를 하고 있다." />
+    <string id="TAOM_hero_2_3" text="란드는 데일의 영주이자 동부 골짜기의 수호자로, 에레보르의 난쟁이들과의 옛 동맹을 지켜 오고 있다." />
     <string id="TAOM_hero_2_4" text="시가는 두린 가문의 드워프 귀족 여성이다." />
     <string id="TAOM_hero_2_4_1" text="아폴라네아는 귀족 출신의 드워프 처녀이다." />
     <string id="TAOM_hero_2_8" text="우릭은 에레보르의 드워프 왕자로, 대장간 기술과 전투에 능숙하다." />
     <string id="TAOM_hero_2_11" text="이드룬은 왕실 근위대의 드워프 전사이다." />
     <string id="TAOM_hero_2_111" text="로지볼은 산의 문을 지키는 드워프 전사이다." />
-    <string id="TAOM_hero_2_5" text="오리는 소린 오켄쉴드의 동료 중 한 명의 후손인 드워프 군주이다. 그는 에레보르와 데일 사이의 무역로를 관리한다." />
+    <string id="TAOM_hero_2_5" text="아스크는 산과 긴 호수 사이의 교역로를 관리하는 데일의 영주다." />
     <string id="TAOM_hero_2_6" text="에르타는 오리의 아내로, 보석 세공 기술로 유명하다." />
     <string id="TAOM_hero_2_9" text="렉은 오리의 영지를 물려받을 후계자로, 무역과 전투 모두에서 훈련받았다." />
     <string id="TAOM_hero_2_12" text="스바나는 무역 가문의 딸이다." />
@@ -1216,18 +1216,18 @@
     <string id="TAOM_hero_2_14_1" text="발카바는 이스반 군주의 아내이다." />
     <string id="TAOM_hero_2_14_2" text="자베레나는 동쪽 영지의 후계자이다." />
     <string id="TAOM_hero_2_14_3" text="비즈두나는 동쪽 변경 지대의 젊은 귀족이다." />
-    <string id="TAOM_hero_2_16" text="보푸르는 에레보르의 드워프 군주로, 전설적인 원정대의 후손이다." />
-    <string id="TAOM_hero_2_16_1" text="티야스카는 보푸르의 아내로, 치유 기술에 능숙하다." />
+    <string id="TAOM_hero_2_16" text="하우크는 데일의 영주로, 시장 길과 겨울 대상단을 관장한다." />
+    <string id="TAOM_hero_2_16_1" text="티아스카는 하우크의 아내로, 치유의 기술에 능하다." />
     <string id="TAOM_hero_2_21" text="스베도른은 호수마을의 수비대를 지휘한다." />
     <string id="TAOM_hero_2_21_1" text="이즈덴카는 호수마을의 업무를 관리한다." />
-    <string id="TAOM_hero_2_17" text="소린 2세 오켄쉴드는 스마우그로부터 에레보르를 되찾은 영웅으로 기억된다. 그의 영혼은 후손들에게 영감을 준다." />
+    <string id="TAOM_hero_2_17" text="스테인은 데일의 영주로, 용이 쓰러진 후 여러 해 동안 북쪽 성문을 지켜낸 일로 기억된다." />
     <string id="TAOM_hero_2_17_1" text="드라차는 옛 왕의 기억을 살아있게 한다." />
     <string id="TAOM_hero_2_22" text="라쇼넥은 데일의 전사들을 지휘한다." />
     <string id="TAOM_hero_2_22_1" text="제네바는 라쇼넥의 아내이다." />
     <string id="TAOM_hero_2_24" text="알바르는 데일 근위대의 대장이다." />
     <string id="TAOM_hero_2_24_1" text="조리나는 데일의 귀족 부인이다." />
-    <string id="TAOM_hero_2_18" text="글로인은 에레보르의 드워프 군주로, 원정대의 김리의 아버지이다." />
-    <string id="TAOM_hero_2_18_1" text="조리카는 글로인의 아내이자, 유명한 김리의 어머니이다." />
+    <string id="TAOM_hero_2_18" text="울프는 데일의 영주로, 달리는강의 강 경비대장이다." />
+    <string id="TAOM_hero_2_18_1" text="조리카는 울프의 아내로, 달리는강 가에 있는 그의 저택의 안주인이다." />
     <string id="TAOM_hero_2_23" text="갈덴은 데일의 남부 수비대를 지휘한다." />
     <string id="TAOM_hero_2_23_1" text="즐라트카는 갈덴의 딸이다." />
     <string id="TAOM_hero_2_15" text="라타고스트는 국정 문제에 대해 왕에게 조언하는 현명한 고문이다." />
@@ -1235,10 +1235,10 @@
     <string id="TAOM_hero_2_15_2" text="밀란카는 궁정의 귀족 여성이다." />
     <string id="TAOM_hero_2_15_3" text="벨리나는 왕실 가문을 섬긴다." />
     <string id="TAOM_hero_2_15_4" text="보반은 데일의 젊은 귀족이다." />
-    <string id="TAOM_hero_2_19" text="드왈린은 대단한 명성을 지닌 드워프 전사로, 최초 원정대의 마지막 생존자이다." />
-    <string id="TAOM_hero_2_19_1" text="비토미라는 드왈린과 함께 봉사한다." />
-    <string id="TAOM_hero_2_20" text="오인은 드워프 장로로, 고대 전승과 치유 기술의 수호자이다." />
-    <string id="TAOM_hero_2_20_1" text="키샤는 오인의 아내로, 약초 지식에 능숙하다." />
+    <string id="TAOM_hero_2_19" text="게이르는 명성 높은 데일의 전사로, 옛 기리온 가문의 혈족이다." />
+    <string id="TAOM_hero_2_19_1" text="비토미라는 게이르와 함께 복무한다." />
+    <string id="TAOM_hero_2_20" text="발은 데일의 원로로, 전승과 치유술의 수호자다." />
+    <string id="TAOM_hero_2_20_1" text="키샤는 발의 아내로, 약초 지식에 밝다." />
     <string id="TAOM_hero_S8_u" text="갈릭은 산속 회랑을 지키는 백전노장이다." />
     <string id="TAOM_hero_3_1" text="카두라크는 하라드의 타스크랄로, 남부 군대의 최고 사령관이다. 그는 곤도르에 맞서 모르도르와 동맹을 맺고 자신의 민족의 적들에 맞서 무마킬 전쟁 코끼리를 이끈다." />
     <string id="TAOM_hero_3_2" text="칼리다는 카두락의 아내이며, 지위 높은 하라드림 귀부인이다." />
@@ -1281,48 +1281,48 @@
     <string id="TAOM_hero_3_19_1" text="살마는 변경 사령관의 아내이다." />
     <string id="TAOM_hero_3_19_2" text="줄라이카는 변경 수비대와 함께 훈련한다." />
     <string id="TAOM_hero_3_19_3" text="술하나는 변경의 귀족이다." />
-    <string id="TAOM_hero_3_23" text="Qahin은 적의 영토로 정찰병들을 이끈다." />
-    <string id="TAOM_hero_3_23_1" text="Sukayna는 정찰대장의 아내이다." />
+    <string id="TAOM_hero_3_23" text="카힌은 정찰대를 이끌고 적진으로 들어갑니다." />
+    <string id="TAOM_hero_3_23_1" text="수카이나는 정찰대장의 아내입니다." />
     <string id="TAOM_hero_3_22" text="나미르는 사막 부족의 궁수들을 지휘한다." />
-    <string id="TAOM_hero_3_22_1" text="Yamina는 궁수 지휘관의 아내이다." />
-    <string id="TAOM_hero_3_22_2" text="Suna는 젊은 궁수들을 훈련시킨다." />
-    <string id="TAOM_hero_3_22_3" text="Zanuwa는 부족의 숙련된 궁수이다." />
-    <string id="TAOM_hero_3_22_4" text="Hajara는 사막의 감시탑을 지킨다." />
+    <string id="TAOM_hero_3_22_1" text="야미나는 궁수대장의 아내입니다." />
+    <string id="TAOM_hero_3_22_2" text="수나는 젊은 궁수들을 훈련시킵니다." />
+    <string id="TAOM_hero_3_22_3" text="자누와는 부족의 뛰어난 궁수입니다." />
+    <string id="TAOM_hero_3_22_4" text="하자라는 사막의 감시탑을 지킵니다." />
     <string id="TAOM_hero_4_1" text="로한의 왕 세오덴은 에도라스의 메두셀드에서 통치한다. 한때 사루만의 하인 그리마에게 현혹되었으나, 간달프에 의해 해방되어 헬름 협곡과 펠렌노르 평원에서 그의 백성을 영광으로 이끌었다." />
     <string id="TAOM_hero_4_2" text="엘프힐드는 로한의 왕비였으며, 세오드레드의 어머니였다. 그녀는 출산 중 사망했으며, 이는 세오덴의 치세에 그림자를 드리운 슬픔이었다." />
     <string id="TAOM_hero_4_7" text="세오드레드는 세오덴 왕의 외아들이자 로한의 왕자였다. 그는 사루만의 우루크-하이에 맞서 이센 여울을 방어하다 전사했다." />
-    <string id="TAOM_hero_4_10" text="Elys는 로히림 궁정의 귀족 부인이다." />
-    <string id="TAOM_hero_4_13" text="Romund는 왕실 근위대의 대장으로 복무한다." />
-    <string id="TAOM_hero_4_14" text="Morcon은 왕의 가신단에서 신뢰받는 대장이다." />
-    <string id="TAOM_hero_4_141" text="Amorcon은 근위대에서 그의 친족과 함께 복무한다." />
-    <string id="TAOM_hero_4_15" text="Erdurand는 세오덴의 가신단 기병이다." />
+    <string id="TAOM_hero_4_10" text="엘뤼스는 로히림 궁정의 귀부인입니다." />
+    <string id="TAOM_hero_4_13" text="로문드는 왕실 근위대의 대장으로 복무합니다." />
+    <string id="TAOM_hero_4_14" text="모르콘은 왕실 가솔의 신임받는 대장입니다." />
+    <string id="TAOM_hero_4_141" text="아모르콘은 친족과 함께 근위대에서 복무합니다." />
+    <string id="TAOM_hero_4_15" text="에르두란드는 세오덴 왕가의 기사입니다." />
     <string id="TAOM_hero_4_3_3" text="세오드윈은 세오덴 왕의 누이이자 에오메르와 에오윈의 어머니였다. 그녀는 남편 에오문드가 오크에게 살해된 후 슬픔으로 사망했다." />
     <string id="TAOM_hero_4_3" text="알드릭은 이스트폴드에 회당을 두고 에도라스의 소집에 응해 말을 달린다. 그는 대가문 출신이 아닌 평범한 기수이며, 그렇기에 신뢰받는다." />
     <string id="TAOM_hero_rohan_10_1" text="이스트폴드의 에오문드는 마크의 원수로서 말을 달렸고, 왕의 누이 세오드윈과 혼인했다. 오르크들이 에민 무일에서 그를 베어 넘겼고, 그의 두 자녀는 세오덴의 보호 아래 들어갔다." />
     <string id="TAOM_hero_4_3_1" text="에오메르 에아디그는 제3원수이자 세오덴의 조카이며 왕위 계승자이다. 그는 동부 평원의 기병들을 맹렬한 충성심으로 이끈다." />
-    <string id="TAOM_hero_4_4" text="Elthild는 에오포링 가문의 귀족 부인이다." />
-    <string id="TAOM_hero_4_8" text="Furnhard는 에오메르의 휘하에서 신뢰받는 기병으로 복무한다." />
-    <string id="TAOM_hero_4_11" text="Liena는 왕실 가신단을 섬긴다." />
+    <string id="TAOM_hero_4_4" text="엘실드는 에오포링의 귀부인입니다." />
+    <string id="TAOM_hero_4_8" text="푸른하르드는 에오메르 휘하의 신임받는 기사로 복무합니다." />
+    <string id="TAOM_hero_4_11" text="리에나는 왕실 가솔을 섬깁니다." />
     <string id="TAOM_hero_4_6" text="그림슬라드의 그림볼드는 서부 평원의 기병들을 지휘한다. 맹렬한 전사로서 이센 여울을 지켰으며, 후에 펠렌노르에서 영웅적으로 전사했다." />
     <string id="TAOM_hero_4_6_1" text="Deorwyn은 그림볼드의 지휘권을 계승할 후계자이다." />
-    <string id="TAOM_hero_4_5" text="Unthery는 서부 평원 기병대의 대장으로 복무한다." />
-    <string id="TAOM_hero_4_9" text="Thomund는 서부 평원 기병 중대를 지휘한다." />
-    <string id="TAOM_hero_4_12" text="Silvind는 서부 평원의 방패 여전사이다." />
-    <string id="TAOM_hero_4_121" text="Lasand는 서부 평원 수비대에서 복무한다." />
+    <string id="TAOM_hero_4_5" text="운세리는 웨스트폴드 기사단의 대장으로 복무합니다." />
+    <string id="TAOM_hero_4_9" text="토문드는 웨스트폴드 기사 중대를 지휘합니다." />
+    <string id="TAOM_hero_4_12" text="실빈드는 웨스트폴드의 방패처녀입니다." />
+    <string id="TAOM_hero_4_121" text="라산드는 웨스트폴드 수비대에서 복무합니다." />
     <string id="TAOM_hero_4_16" text="서부 평원의 영주 에르켄브란드는 뿔성의 요새를 지휘한다. 그는 간달프와 함께 헬름 협곡에 도착하여 전투의 흐름을 역전시켰다." />
     <string id="TAOM_hero_4_16_1" text="Merthu는 에르켄브란드의 아내이자 뿔성의 영주 부인이다." />
-    <string id="TAOM_hero_4_17" text="Elbet는 에르켄브란드의 가신단에서 복무한다." />
-    <string id="TAOM_hero_4_18" text="Amalgun은 에르켄브란드의 후계자이다." />
-    <string id="TAOM_hero_4_181" text="Arthamund는 뿔성 수비대의 대장으로 복무한다." />
-    <string id="TAOM_hero_4_19" text="Asela는 디핑 협곡을 지키는 방패 여전사이다." />
-    <string id="TAOM_hero_4_25" text="Lucand는 동부 목초지의 기병들을 지휘한다." />
-    <string id="TAOM_hero_4_25_1" text="Bertliana는 Lucand의 아내이다." />
-    <string id="TAOM_hero_4_21" text="오르들라싱 가문의 Cuthraed는 동부 국경을 순찰한다." />
-    <string id="TAOM_hero_4_20" text="Varmund는 알드부르크 수비대를 지휘한다." />
-    <string id="TAOM_hero_4_20_1" text="Ingeltrud는 Varmund의 아내이자 알드부르크의 영주 부인이다." />
-    <string id="TAOM_hero_4_22" text="첼문딩 가문의 Wulf는 북부 계곡의 기병들을 이끈다." />
-    <string id="TAOM_hero_4_22_1" text="Sunnifa는 Wulf의 아내이다." />
-    <string id="TAOM_hero_4_23" text="Marhath는 남부 초원의 말 사육자들을 이끈다." />
+    <string id="TAOM_hero_4_17" text="엘벳은 에르켄브란드의 가솔로 복무합니다." />
+    <string id="TAOM_hero_4_18" text="아말군은 에르켄브란드의 후계자입니다." />
+    <string id="TAOM_hero_4_181" text="아르타문드는 나팔산성 수비대의 대장으로 복무합니다." />
+    <string id="TAOM_hero_4_19" text="아셀라는 협곡분지를 지키는 방패처녀입니다." />
+    <string id="TAOM_hero_4_25" text="루칸드는 동이스트엠넷의 기병들을 지휘한다." />
+    <string id="TAOM_hero_4_25_1" text="베르틀리아나는 루칸드의 아내이다." />
+    <string id="TAOM_hero_4_21" text="쿠스레드 오르들라싱은 동쪽 국경을 순찰한다." />
+    <string id="TAOM_hero_4_20" text="바르문드는 알드부르그의 수비대를 지휘한다." />
+    <string id="TAOM_hero_4_20_1" text="잉겔트루드는 바르문드의 아내이며, 알드부르그의 부인이다." />
+    <string id="TAOM_hero_4_22" text="켈문드의 아들 울프는 북쪽 계곡의 기병들을 이끈다." />
+    <string id="TAOM_hero_4_22_1" text="순니파는 울프의 아내이다." />
+    <string id="TAOM_hero_4_23" text="마르하스는 남쪽 초원의 말 사육자들을 이끈다." />
     <string id="TAOM_hero_4_23_1" text="울프윈은 마르하스의 딸로, 숙련된 기병이다." />
     <string id="TAOM_hero_4_23_2" text="엘레두란은 왕의 군대를 위해 군마를 훈련한다." />
     <string id="TAOM_hero_4_23_3" text="엘레두란 2세는 말 관리인으로 복무한다." />
@@ -1337,8 +1337,8 @@
     <string id="TAOM_hero_4_21_1" text="시게베르트는 로한의 국경을 순찰한다." />
     <string id="TAOM_hero_4_26" text="페릭은 로한의 협곡 일대의 기병들을 지휘한다." />
     <string id="TAOM_hero_4_26_1" text="라인가르다는 협곡의 방패전사 여인이다." />
-    <string id="TAOM_hero_4_27" text="에텔라핑의 아엘레는 던랜드의 습격으로부터 골짜기를 수호한다." />
-    <string id="TAOM_hero_4_27_1" text="바에르부르크는 아엘레의 아내이다." />
+    <string id="TAOM_hero_4_27" text="엘레 에델라핑은 던랜드인의 습격으로부터 폴드를 지킨다." />
+    <string id="TAOM_hero_4_27_1" text="베르부르그는 엘레의 아내다." />
     <string id="TAOM_hero_V9_u" text="우룬둘프는 지역 세인을 보좌하는 노련한 기수다." />
     <string id="TAOM_hero_4_28" text="모르카르가스의 파스트헬름은 남부 초소를 지휘한다." />
     <string id="TAOM_hero_4_28_1" text="모르카르는 파스트헬름의 아들이다." />

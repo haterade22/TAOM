@@ -122,4 +122,41 @@ public class RaceCombatModifiersResolverTests
         Assert.IsNotNull(result);
         Assert.AreSame(RaceCombatModifiers.Neutral, result);
     }
+
+    // ── Base hit points (Mike, 2026-09-25: both trolls have 200 health) ──────────────────────
+
+    [TestMethod]
+    public void BaseHitPointsBonus_RowWithBaseHitPoints_ReturnsTheLiftAboveTheEngineBase()
+    {
+        AddRace("cave_troll", 9, new RaceCombatModifiers { BaseHitPoints = 200 });
+
+        Assert.AreEqual(100, _sut.BaseHitPointsBonus(9));
+    }
+
+    [TestMethod]
+    public void BaseHitPointsBonus_RowWithoutBaseHitPoints_ReturnsZero()
+    {
+        AddRace("dwarf", 3, new RaceCombatModifiers { KnockdownResistanceMultiplier = 2.5f });
+
+        Assert.AreEqual(0, _sut.BaseHitPointsBonus(3));
+    }
+
+    [TestMethod]
+    public void BaseHitPointsBonus_RaceModifiersDisabled_ReturnsZero()
+    {
+        AddRace("cave_troll", 9, new RaceCombatModifiers { BaseHitPoints = 200 });
+        _settings.RaceCombatModifiersEnabled.Returns(false);
+
+        Assert.AreEqual(0, _sut.BaseHitPointsBonus(9));
+    }
+
+    [TestMethod]
+    public void BaseHitPointsBonus_InvalidOrNullRaceId_ReturnsZero()
+    {
+        AddRace("cave_troll", 9, new RaceCombatModifiers { BaseHitPoints = 200 });
+        _raceManager.IsValidRaceId(42).Returns(false);
+
+        Assert.AreEqual(0, _sut.BaseHitPointsBonus(42));
+        Assert.AreEqual(0, _sut.BaseHitPointsBonus(null));
+    }
 }

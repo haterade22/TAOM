@@ -6,8 +6,10 @@ Pins: every hill_troll skin gets the troll skeleton and meshes and the adult mal
 lists; face textures outside comments point at the troll head material; nothing outside the race changes; the
 Monster gets the measured sizes, CanRide off, and its variants the <race>_<suffix> names the engine looks up;
 the warrior action set becomes standalone on the troll skeleton; a second run changes nothing; a missing anchor is
-refused.
+refused; --check also fails an empty set, a set the binder never bound and one without the Brute Force binding.
 """
+import contextlib
+import io
 import os
 import sys
 import unittest
@@ -35,11 +37,20 @@ SKINS = """<?xml version="1.0" encoding="utf-8"?>
 \t\t\t\t<face_texture name="mordor_hill_troll_head" lod_material="mordor_hill_troll_head" tags="t1" />
 \t\t\t\t<!-- <face_texture name="head_male_e" lod_material="head_male_e" tags="t2" /> -->
 \t\t\t</face_textures>
+\t\t\t<mouth_textures group_id="4">
+\t\t\t\t<mouth_texture
+\t\t\t\t\tname="t_hilltroll_mouth"
+\t\t\t\t\tlod_material="t_hilltroll_mouth"
+\t\t\t\t\tcolor="0xFFFFFFFF"
+\t\t\t\t\ttags="mouth_texture1,mouth_texture2"></mouth_texture>
+\t\t\t\t<!-- <mouth_texture name="mouth_mat" lod_material="mouth_mat" tags="mouth_texture3" /> -->
+\t\t\t</mouth_textures>
 \t\t</skin>
 \t\t<skin gender="1" name="kid_2_female" skeleton="human_skeleton" body_meta_mesh="body_female_a" body_meta_mesh_shoulders="body_female_a_sh" legs_mesh="feet_female_a" hands_mesh="hands_female_a" face_meta_mesh="head_female_a" underwear_bottom_mesh="underwear_female" underwear_top_mesh="underwear_female_top">
 \t\t\t<hair_meshes group_id="3"><hair_mesh name="female_hair_l" /><hair_mesh name="female_hair_m" /></hair_meshes>
 \t\t\t<eyebrow_meshes><eyebrow_mesh name="female_eyebrow_2" /></eyebrow_meshes>
 \t\t\t<face_textures group_id="1"><face_texture name="head_female_a" lod_material="head_female_a.lod" tags="t1" /></face_textures>
+\t\t\t<mouth_textures group_id="4"><mouth_texture name="mouth_mat_kid_b" lod_material="mouth_mat_kid_b" color="0xFFFFFFFF" tags="mouth_texture1" /></mouth_textures>
 \t\t</skin>
 \t\t<skin gender="0" name="toddler_male" skeleton="human_skeleton" body_meta_mesh="body_female_a_kid3" body_meta_mesh_shoulders="body_male_a_sh" legs_mesh="feet_female_kid3" hands_mesh="hands_female_kid3" face_meta_mesh="head_male_a" underwear_bottom_mesh="underwear_baby" underwear_top_mesh="">
 \t\t\t<default_hair_meshes
@@ -143,6 +154,17 @@ class SkinTests(unittest.TestCase):
                 self.assertEqual((t.get("name"), t.get("lod_material")), ("t_tr_hill_troll_head_a",) * 2)
         self.assertIn('<!-- <face_texture name="head_male_e" lod_material="head_male_e"', self.out)
 
+    def test_mouth_textures_point_at_the_troll_head_too(self):
+        # the engine puts the skin's mouth material on the head's face_mouth_mesh; the old t_hilltroll_mouth never
+        # existed in the Kit ("Unable to find material" every session) and the kids carried the human mouth_mat
+        for name in ("man", "kid_2_female"):
+            tags = list(_skin(self.root, name).iter("mouth_texture"))
+            self.assertTrue(tags)
+            for t in tags:
+                self.assertEqual((t.get("name"), t.get("lod_material")), ("t_tr_hill_troll_head_a",) * 2)
+        self.assertNotIn('name="t_hilltroll_mouth"', self.out.replace('<!-- <mouth_texture name="mouth_mat"', ""))
+        self.assertIn('<!-- <mouth_texture name="mouth_mat" lod_material="mouth_mat"', self.out)
+
     def test_nothing_outside_the_race_changes(self):
         dwarf_before = SKINS.split('<race id="hill_troll">')[0]
         self.assertEqual(self.out.split('<race id="hill_troll">')[0], dwarf_before)
@@ -155,6 +177,20 @@ class SkinTests(unittest.TestCase):
     def test_a_missing_race_is_refused(self):
         with self.assertRaises(w.Refused):
             w.edit_skins(SKINS.replace('id="hill_troll"', 'id="hill_trol"'))
+
+    def test_deleting_a_helmet_default_keeps_every_crlf_line_ending(self):
+        crlf = SKINS.replace("\n", "\r\n")
+        out, _ = w.edit_skins(crlf)
+        self.assertNotIn("\r\r\n", out)
+        self.assertNotIn("\n", out.replace("\r\n", ""), "no bare LF and no lone CR either")
+        self.assertEqual(out.replace("\r\n", "\n"), self.out, "the same edit as on the LF file")
+
+    def test_a_helmet_default_sharing_its_line_loses_only_the_tag(self):
+        inline = SKINS.replace("\t\t\t<default_beard_meshes\n\t\t\t\tcover_type1=\"beards_c_a\" />\n",
+                               "\t\t\t<beard_x /><default_beard_meshes cover_type1=\"beards_c_a\" />\n")
+        out, _ = w.edit_skins(inline)
+        self.assertIn("\t\t\t<beard_x />\n", out)
+        self.assertNotIn("default_beard_meshes", out)
 
 
 class MonsterTests(unittest.TestCase):
@@ -189,6 +225,11 @@ class MonsterTests(unittest.TestCase):
         self.assertEqual(again, self.out)
         self.assertEqual(report["changes"], 0)
 
+    def test_an_old_and_a_new_variant_id_side_by_side_are_refused(self):
+        both = MONSTERS.replace("</Monsters>", '\t<Monster id="hill_troll_child" base_monster="hill_troll" />\n</Monsters>')
+        with self.assertRaises(w.Refused):
+            w.edit_monsters(both)
+
 
 class ActionSetTests(unittest.TestCase):
     def test_the_warrior_set_becomes_standalone_on_the_troll_skeleton(self):
@@ -199,6 +240,71 @@ class ActionSetTests(unittest.TestCase):
         self.assertEqual(sets["as_cave_troll_warrior"].get("base_set"), "as_human_warrior")
         again, report = w.edit_action_sets(out)
         self.assertEqual((again, report["changes"]), (out, 0))
+
+
+class CheckModeTests(unittest.TestCase):
+    """--check is the reinstall gate: the Armory is unversioned, so a reinstall silently puts the old
+    hill troll (human skeleton meshes, the inheriting set) back, and nothing else would notice."""
+
+    BOUND = ('\t\t<action type="act_walk_forward_unarmed" animation="anim_hill_troll_walk1" />\n'
+             '\t\t<action type="act_swim_idle" animation="swim_idle" />\n'
+             '\t\t<action type="act_troll_brute_force" animation="anim_hill_troll_attack1" />\n')
+
+    def _armory(self, d, wired, body=BOUND):
+        texts = {"skins.xml": SKINS, "monsters.xml": MONSTERS, "action_sets.xml": ACTION_SETS}
+        if wired:
+            sets = w.edit_action_sets(ACTION_SETS)[0]
+            sets = sets.replace(w.ACTION_SET_HEADER + "\n", w.ACTION_SET_HEADER + "\n" + body, 1)
+            texts = {"skins.xml": w.edit_skins(SKINS)[0], "monsters.xml": w.edit_monsters(MONSTERS)[0],
+                     "action_sets.xml": sets}
+        for name, text in texts.items():
+            with open(os.path.join(d, name), "wb") as fh:
+                fh.write(text.encode("utf-8"))
+
+    def _check(self, **kw):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            self._armory(d, **kw)
+            with contextlib.redirect_stdout(io.StringIO()) as out:
+                rc = w.main(["--armory", d, "--check"])
+        return rc, out.getvalue()
+
+    def test_check_passes_on_a_wired_armory(self):
+        rc, out = self._check(wired=True)
+        self.assertEqual(rc, 0, out)
+        self.assertIn("OK:", out)
+
+    def test_check_fails_on_a_wired_but_empty_set(self):
+        rc, out = self._check(wired=True, body="")
+        self.assertEqual(rc, 1)
+        self.assertIn("no actions", out)
+
+    def test_check_fails_when_the_binder_never_ran(self):
+        # the parity tool's fill: every code on its human clip, no troll clip, no Brute Force binding
+        rc, out = self._check(wired=True, body='\t\t<action type="act_swim_idle" animation="swim_idle" />\n')
+        self.assertEqual(rc, 1)
+        self.assertIn("no anim_hill_troll_* clip", out)
+        self.assertIn("act_troll_brute_force is bound 0 times", out)
+
+    def test_check_fails_without_the_brute_force_binding(self):
+        body = self.BOUND.replace('\t\t<action type="act_troll_brute_force" animation="anim_hill_troll_attack1" />\n', "")
+        rc, out = self._check(wired=True, body=body)
+        self.assertEqual(rc, 1)
+        self.assertIn("bound 0 times", out)
+
+    def test_check_fails_when_a_reinstall_reverted_the_race(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            self._armory(d, wired=False)
+            before = {n: open(os.path.join(d, n), "rb").read() for n in os.listdir(d)}
+            self.assertEqual(w.main(["--armory", d, "--check"]), 1)
+            after = {n: open(os.path.join(d, n), "rb").read() for n in os.listdir(d)}
+            self.assertEqual(before, after, "--check must never write")
+
+    def test_check_on_a_folder_without_the_files_does_not_pass(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            self.assertEqual(w.main(["--armory", d, "--check"]), 2)
 
 
 if __name__ == "__main__":

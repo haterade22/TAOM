@@ -4,16 +4,20 @@ dwarf's layout (docs/features/troll-race.md "Hill troll moved onto its own skele
 
     python tools/wire_hill_troll_race.py            # dry run: what would change in each file
     python tools/wire_hill_troll_race.py --apply    # write; refused while the game or the Kit runs
+    python tools/wire_hill_troll_race.py --check    # the reinstall gate; writes nothing
     then: python tools/patch_dwarf_action_parity.py --target <Armory>/ModuleData/action_sets.xml
               --set-id as_hill_troll_warrior --apply
+          python tools/bind_hill_troll_action_set.py --clips-index <human_json_batch1>/clips_index.json --apply
 
 skins.xml, inside <race id="hill_troll"> only: every skin (adult, teen, child, toddler; the dwarf puts all ten on its
 own skeleton) gets skeleton troll_skeleton_a, the hill_troll_a body / shoulder / legs / hands / head meshes and no
 underwear meshes; every skin's hair, eyebrow and beard lists become the adult male's (bald, no brow, clean-shaven),
 because a human hair mesh on this skeleton would hang at a human head's height (an empty `<beard_meshes />` stays);
 the children's default_hair_meshes / default_beard_meshes (human hair and beards shown under a helmet) go, as
-neither the dwarf nor the adult male troll has them; every face texture outside a comment names the troll head
-material.
+neither the dwarf nor the adult male troll has them; every face texture AND every mouth texture outside a comment
+names the troll head material (the engine puts the skin's mouth material on the head's face_mouth_mesh sub-mesh,
+which carries the head material in KEYForce's model; the old `t_hilltroll_mouth` never existed in the Kit and
+warned "Unable to find material" every session, 2026-09-25).
 monsters.xml: Monster hill_troll takes the sizes measured from the 3.6 m model (eye centre 3.58 m; the eyes in
 the head bone's frame; arm length 0.9 x the shoulder-to-wrist ratio 3.10; body capsules and crouch x the height
 ratio 2.215), CanRide off; its four variants get the <race>_<suffix> names FaceGen.GetMonsterWithSuffix looks up
@@ -27,7 +31,10 @@ Native's as_human_warrior: run that next, before any load.
 Each edit is computed on the file's own text and applied back to front, byte-faithful otherwise (BOM, CRLF,
 comments, other races and sets untouched); the result must parse and pass a read-back check of every value, or
 nothing is written. Idempotent; a missing anchor is refused. --apply writes <file>.bak-hilltroll-race-<time> first.
-Exit codes: 0 done (or dry run), 1 refused, 2 the game or the Kit runs.
+--check also requires the set's body the two follow-up steps write: at least one action, at least one
+anim_hill_troll_* clip and exactly one act_troll_brute_force binding (audit_action_set_parity.py covers the codes).
+Exit codes: 0 done (or dry run, or wired), 1 refused (or --check found drift or an unfilled set), 2 the game or the
+Kit runs (or a file is missing).
 """
 import argparse
 import datetime
@@ -61,6 +68,7 @@ RENAMES = {"troll_child": "hill_troll_child", "troll_settlement": "hill_troll_se
 CHILD_ATTRS = {"standing_eye_height": "2.53", "crouch_eye_height": "1.47", "arm_length": "1.86"}
 NO_RIDING = ("hill_troll", "hill_troll_settlement")
 ACTION_SET = "as_hill_troll_warrior"
+BRUTE_FORCE_ACTION = "act_troll_brute_force"   # TrollBruteForceConfig.ActionName, bound by the binder (#649)
 ACTION_SET_HEADER = '<action_set id="as_hill_troll_warrior" skeleton="troll_skeleton_a" movement_system="bipedal">'
 
 
@@ -151,15 +159,26 @@ def edit_skins(text):
     for a, b, _ in spans:
         for name, (s, e) in lists(a, b).items():
             edits.append((s, e, bald[name]))
-    for m in _start_tags(text, "face_texture", start, end, comments):
-        tag = _set_attr(_set_attr(m.group(0), "name", FACE_MATERIAL), "lod_material", FACE_MATERIAL)
-        edits.append((start + m.start(), start + m.end(), tag))
+    # the face AND the mouth: the engine puts a skin's <mouth_texture> material on the head's face_mouth_mesh sub-mesh,
+    # and the old troll's `t_hilltroll_mouth` never existed in the Kit ("Unable to find material", every session);
+    # the new mouth sub-mesh carries the head material, as KEYForce set it, so both lists name that one
+    for name in ("face_texture", "mouth_texture"):
+        for m in _start_tags(text, name, start, end, comments):
+            tag = _set_attr(_set_attr(m.group(0), "name", FACE_MATERIAL), "lod_material", FACE_MATERIAL)
+            edits.append((start + m.start(), start + m.end(), tag))
     for name in HELMET_DEFAULTS:
         for m in _start_tags(text, name, start, end, comments):
             if not m.group(0).endswith("/>"):
                 raise Refused("%s in the %s race is not self-closing" % (name, RACE))
-            line = text.rfind("\n", 0, start + m.start())
-            edits.append((line, start + m.end(), ""))
+            # delete the tag's whole line, its own terminator included, so a CRLF (or doubled-CR) file keeps every
+            # other line's ending; a tag sharing its line with other markup loses only the tag
+            tag_start, tag_end = start + m.start(), start + m.end()
+            line_start = text.rfind("\n", 0, tag_start) + 1
+            eol = re.compile(r"[ \t]*\r*\n").match(text, tag_end)
+            if text[line_start:tag_start].strip() or not eol:
+                edits.append((tag_start, tag_end, ""))
+            else:
+                edits.append((line_start, eol.end(), ""))
     new, changes = _apply(text, edits)
     _check_skins(new)
     return new, {"changes": changes, "skins": len(skins)}
@@ -177,9 +196,10 @@ def _check_skins(text):
             el = s.find(name)
             if el is not None and len(el) and [ET.tostring(c) for c in el] != [ET.tostring(c) for c in man.find(name)]:
                 raise Refused("read-back: skin %s %s is not the adult male's" % (s.get("name"), name))
-        for t in s.iter("face_texture"):
-            if (t.get("name"), t.get("lod_material")) != (FACE_MATERIAL, FACE_MATERIAL):
-                raise Refused("read-back: skin %s face texture %s" % (s.get("name"), t.get("name")))
+        for tag in ("face_texture", "mouth_texture"):
+            for t in s.iter(tag):
+                if (t.get("name"), t.get("lod_material")) != (FACE_MATERIAL, FACE_MATERIAL):
+                    raise Refused("read-back: skin %s %s %s" % (s.get("name"), tag, t.get("name")))
         for name in HELMET_DEFAULTS:
             if s.find(name) is not None:
                 raise Refused("read-back: skin %s still has %s" % (s.get("name"), name))
@@ -217,7 +237,11 @@ def edit_monsters(text):
         edits.append((main.end() + found[0].start(), main.end() + found[0].end(), t))
     variants = {}
     for old, new in RENAMES.items():
-        m = _monster_tag(text, old, comments) or _monster_tag(text, new, comments)
+        old_m, new_m = _monster_tag(text, old, comments), _monster_tag(text, new, comments)
+        if old_m and new_m:
+            # renaming would define the new id twice; the read-back's dict would hide the duplicate
+            raise Refused("both Monster %s and %s exist; remove one by hand first" % (old, new))
+        m = old_m or new_m
         if not m:
             raise Refused("neither Monster %s nor %s exists" % (old, new))
         t = _set_attr(m.group(0), "id", new)
@@ -269,19 +293,44 @@ def edit_action_sets(text):
     s = [a for a in _parse(new).iter("action_set") if a.get("id") == ACTION_SET]
     if len(s) != 1 or s[0].get("skeleton") != "troll_skeleton_a" or s[0].get("base_set") is not None:
         raise Refused("read-back: %s is not standalone on troll_skeleton_a" % ACTION_SET)
-    return new, {"changes": changes, "actions_now": len(s[0].findall("action"))}
+    actions = s[0].findall("action")
+    # what the two fill steps leave behind, for --check: the parity tool fills the body with human clips, the
+    # binder puts the troll's own clips and the Brute Force binding in
+    return new, {"changes": changes, "actions_now": len(actions),
+                 "troll_clips": sum(1 for a in actions if (a.get("animation") or "").startswith("anim_hill_troll_")),
+                 "brute_force": sum(1 for a in actions if a.get("type") == BRUTE_FORCE_ACTION)}
+
+
+def unfilled(report):
+    """The --check findings on the standalone set's body: empty, never bound by the binder, or without exactly one
+    Brute Force binding. A reinstall that kept the wiring but lost the binder's work reads as wired otherwise."""
+    if not report["actions_now"]:
+        return ["the set has no actions: run patch_dwarf_action_parity.py, then bind_hill_troll_action_set.py"]
+    found = []
+    if not report["troll_clips"]:
+        found.append("the set binds no anim_hill_troll_* clip: run bind_hill_troll_action_set.py --apply")
+    if report["brute_force"] != 1:
+        found.append("%s is bound %d times, not once: run bind_hill_troll_action_set.py --apply"
+                     % (BRUTE_FORCE_ACTION, report["brute_force"]))
+    return found
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--armory", default=ARMORY, help="the LOTRLOME_Armory ModuleData folder")
     ap.add_argument("--apply", action="store_true")
+    ap.add_argument("--check", action="store_true",
+                    help="exit 1 if the live Armory is not wired (a reinstall reverts it), 0 if it is, 2 if a "
+                         "file is missing; writes nothing")
     args = ap.parse_args(argv)
     plan = []
     try:
         for name, fn in (("skins.xml", edit_skins), ("monsters.xml", edit_monsters),
                          ("action_sets.xml", edit_action_sets)):
             path = os.path.join(args.armory, name)
+            if not os.path.isfile(path):
+                print("MISSING: %s (is --armory the LOTRLOME_Armory ModuleData folder?)" % path)
+                return 2
             with open(path, "rb") as fh:
                 raw = fh.read()
             new, report = fn(raw.decode("utf-8"))
@@ -290,6 +339,17 @@ def main(argv=None):
     except Refused as exc:
         print("REFUSED: %s" % exc)
         return 1
+    if args.check:
+        drift = [(os.path.basename(p), r["changes"]) for p, _, _, r in plan if r["changes"]]
+        for name, changes in drift:
+            print("DRIFT: %s needs %d change(s); the hill troll race is not wired (re-run with --apply)"
+                  % (name, changes))
+        gaps = [] if drift else unfilled(plan[-1][3])
+        for gap in gaps:
+            print("UNFILLED: %s" % gap)
+        if not drift and not gaps:
+            print("OK: the hill troll race, Monster and standalone set are wired, and the set is bound")
+        return 1 if drift or gaps else 0
     if not args.apply:
         print("dry run: nothing written (add --apply)")
         return 0
@@ -310,6 +370,8 @@ def main(argv=None):
         print("wrote %s (backup .bak-hilltroll-race-%s)" % (path, stamp))
     print("NEXT, before any load: python tools/patch_dwarf_action_parity.py --target \"%s\" --set-id %s --apply"
           % (os.path.join(args.armory, "action_sets.xml"), ACTION_SET))
+    print("  then python tools/bind_hill_troll_action_set.py --clips-index <human_json_batch1>/clips_index.json "
+          "--apply, and this tool's --check")
     return 0
 
 

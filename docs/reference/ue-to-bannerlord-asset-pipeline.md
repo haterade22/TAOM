@@ -314,6 +314,12 @@ and death codes first.
   checksum fields; on clip packages it does the same, and `tools/tpac_fix_item_checksums.py`
   recomputes them (xxHash64 over the metadata, the #616 lesson) so every file matches Kit output.
   73 warg, 24 spider and 24 chariot clips ship with zeros and load, so this is hygiene, not a fix.
+- **An AnimationClip's name is a fixed-size 64-byte engine string: 63 usable characters** (2026-09-25). The Kit
+  warned `Could not set fixed-size(64) string` on 15 hill troll clips whose `anim_hill_troll_` + vanilla name ran
+  to 70 characters (`..._strike_fall_right_heavy_back_rise_left_stance_continue`); a master's name has no such
+  limit. Prefix a long vanilla name and it overflows, so the clone-by-name generator reads a renames map
+  (`tools/blender/hill_troll_clip_renames.json`, `left_stance` to `ls`), refuses any name still over 63 rather
+  than truncating it, and the binder reads the same map (`--renames`) so the action set names what was written.
 
 - **Untested alternative, a lead (2026-09-18):** MithrilForge ships hand-written packages, with no Kit save, into
   a module's `AssetPackages/` folder, and the game renders them (props and FaceLearner heads, Bannerlord 1.4.6;

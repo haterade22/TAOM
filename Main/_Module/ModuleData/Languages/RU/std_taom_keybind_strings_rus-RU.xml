@@ -14,5 +14,8 @@
     <string id="taom_key_turbo_desc" text="Удерживайте Ctrl вместе с этой клавишей для максимального множителя скорости TAOM. Отпускание любой из клавиш возвращает прежнюю скорость." />
     <string id="taom_key_career_ability" text="Способность карьеры (TAOM)" />
     <string id="taom_key_career_ability_desc" text="Активирует вашу способность карьеры в бою, когда шкала энергии заполнена. По умолчанию — V." />
+    <string id="taom_aso_desc_invasion" text="Фракция, правящая большей частью Средиземья." />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} господствует над подавляющей частью Средиземья." />
+    <string id="taom_aso_item_desc_randomized" text="Случайным образом задаёт начальное состояние Средиземья в выбранной вами степени, в разумных пределах." />
   </strings>
 </base>

@@ -12,6 +12,7 @@
     <!-- DISABLED 2026-05-14: Cave troll WIP; not ready for live game yet. Re-enable by uncommenting.
     <TroopWeight id="cave_troll" weight="4.0" />
     -->
+    <TroopWeight id="hill_troll" weight="4.0" />
 
     <!-- ===== RIVENDELL / IMLADRIS — High Elves ===== -->
     <!-- Level 51 (3.0) -->

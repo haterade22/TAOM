@@ -121,5 +121,10 @@
     <string id="aom_clan_vlandia_20_name" text="Ród Morcargas" />
     <string id="aom_clan_vlandia_21_name" text="Ród Halethringów" />
     <string id="aom_clan_vlandia_22_name" text="Ród Rungaringów" />
+    <string id="aom_clan_umbar_2_name" text="Ród Jarjâxa" />
+    <string id="aom_clan_umbar_3_name" text="Ród Heshlâ" />
+    <string id="aom_clan_umbar_4_name" text="Ród Bel Inzûl" />
+    <string id="aom_clan_umbar_5_name" text="Ród Halraxa" />
+    <string id="aom_clan_umbar_6_name" text="Ród Khatûga" />
   </strings>
 </base>

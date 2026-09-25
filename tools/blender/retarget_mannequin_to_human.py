@@ -735,7 +735,7 @@ def check_export_against_engine(out_path, engine_json):
     """Re-import the exported FBX and report, at frame 1, each bone's local rotation angle away from the
     engine rest local. The Kit stores FBX locals verbatim, so this is what the engine will play. An idle
     should sit within a few tens of degrees; the FixBoneForBlender rig produced 90 to 180 on most bones."""
-    with open(engine_json) as fh:
+    with open(engine_json, encoding="utf-8-sig") as fh:   # as build_engine_rig reads the same file
         bones = json.load(fh)["bones"]
     world = _engine_rest_world(bones)
     parent = {b["name"]: b["parent"] for b in bones}
@@ -1121,17 +1121,29 @@ def main():
                          "errors": [k for k, e in report["clips"].items() if "error" in e]}
     with open(os.path.join(args.out, "retarget_report.json"), "w") as fh:
         json.dump(report, fh, indent=1)
-    open(os.path.join(args.out, "retarget_report.json.DONE"), "w").write("done\n")
+    # the caller waits on .DONE, so it says whether the run worked (the reskin tool's convention)
+    failed = report["summary"]["errors"] + [k for k, e in report["clips"].items()
+                                            if "error" not in e and not e.get("export", {}).get("ok")]
+    with open(os.path.join(args.out, "retarget_report.json.DONE"), "w") as fh:
+        if not report["clips"]:
+            fh.write("fail: no clip matched the inputs\n")   # an empty --only match or source folder did nothing
+        else:
+            fh.write(("fail: %d clip(s): %s" % (len(failed), ", ".join(failed[:20])) if failed else "done") + "\n")
 
 
 if __name__ == "__main__":
     try:
         main()
-    except Exception:
-        # the launcher detaches, so an uncaught error is otherwise invisible
+    except BaseException as exc:
+        if isinstance(exc, SystemExit) and not exc.code:
+            raise
+        # the launcher detaches, so an uncaught error (an argparse exit included) is otherwise invisible, and a
+        # caller polling for .DONE would wait for ever
         _argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
         _out = _argv[_argv.index("--out") + 1] if "--out" in _argv else os.getcwd()
         os.makedirs(_out, exist_ok=True)
         with open(os.path.join(_out, "retarget_error.log"), "w") as fh:
             fh.write(traceback.format_exc())
+        with open(os.path.join(_out, "retarget_report.json.DONE"), "w") as fh:
+            fh.write("fail: see retarget_error.log\n")
         raise

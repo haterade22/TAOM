@@ -33,8 +33,8 @@ public class CombatMechanicsConfig
         // #610: trolls share weight 160 with uruks, so once the weight term stops protecting the
         // heavy victims (MinPenetrationFactor 1.0) the race row is what keeps a troll on its feet
         // against a horse: 4.0 puts the threshold far above any horse charge; a mumak is Branch A.
-        ["cave_troll"] = new RaceCombatModifiers { KnockdownResistanceMultiplier = 4.0f },
-        ["hill_troll"] = new RaceCombatModifiers { KnockdownResistanceMultiplier = 4.0f },
+        ["cave_troll"] = new RaceCombatModifiers { KnockdownResistanceMultiplier = 4.0f, BaseHitPoints = 200 },
+        ["hill_troll"] = new RaceCombatModifiers { KnockdownResistanceMultiplier = 4.0f, BaseHitPoints = 200 },
     };
 }
 

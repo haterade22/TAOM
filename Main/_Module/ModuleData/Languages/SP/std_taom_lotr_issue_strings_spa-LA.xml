@@ -49,19 +49,19 @@
     <string id="taom_lotr_issue_horses_soln" text="Te traeré caballos." />
     <string id="taom_lotr_issue_horses_task" text="Entregar caballos ({COUNT})" />
     <string id="taom_lotr_issue_recruits_title" text="Sangre Fresca para la Banda" />
-    <string id="taom_lotr_issue_recruits_desc" text="Un líder de banda quiere forajidos capturados para forzarlos a su servicio." />
-    <string id="taom_lotr_issue_recruits_brief" text="Una banda es tan fuerte como sus números, y los míos están escasos. Tráeme cautivos sin amor por la ley y les daré uso." />
+    <string id="taom_lotr_issue_recruits_desc" text="Un cabecilla de banda quiere cautivos forzados a su servicio." />
+    <string id="taom_lotr_issue_recruits_brief" text="Una banda vale tanto como sus números, y los míos son escasos. Tráeme cautivos, sean quienes sean, y les daré uso." />
     <string id="taom_lotr_issue_recruits_accept" text="¿Qué clase de cautivos?" />
-    <string id="taom_lotr_issue_recruits_expl" text="Tráeme {COUNT} bandidos cautivos y los pondré a trabajar. Hay monedas para ti, sin preguntas." />
+    <string id="taom_lotr_issue_recruits_expl" text="Tráeme {COUNT} cautivos y me encargaré de ponerlos a trabajar. Hay monedas para ti, sin preguntas." />
     <string id="taom_lotr_issue_recruits_soln" text="Te traeré cautivos." />
-    <string id="taom_lotr_issue_recruits_task" text="Entregar bandidos cautivos ({COUNT})" />
+    <string id="taom_lotr_issue_recruits_task" text="Entregar cautivos ({COUNT})" />
     <string id="taom_lotr_issue_laborers_title" text="Manos para las Minas" />
-    <string id="taom_lotr_issue_laborers_desc" text="Un terrateniente necesita espaldas fuertes para trabajo duro y tomará bandidos capturados." />
-    <string id="taom_lotr_issue_laborers_brief" text="Las excavaciones necesitan trabajadores y los hombres libres no bajarán allí. Tráeme bandidos encadenados y ganarán su sustento con un pico." />
+    <string id="taom_lotr_issue_laborers_desc" text="Un terrateniente necesita espaldas fuertes para trabajo duro y aceptará cualquier cautivo que hayas tomado." />
+    <string id="taom_lotr_issue_laborers_brief" text="Las excavaciones necesitan obreros y los hombres libres no bajan ahí. Tráeme cautivos encadenados y se ganarán el sustento con un pico." />
     <string id="taom_lotr_issue_laborers_accept" text="¿Quieres prisioneros?" />
-    <string id="taom_lotr_issue_laborers_expl" text="Tráeme {COUNT} bandidos cautivos para las cuadrillas de trabajo y te pagaré por la molestia de capturarlos." />
+    <string id="taom_lotr_issue_laborers_expl" text="Tráeme {COUNT} cautivos para las cuadrillas de trabajo y te pagaré por la molestia de capturarlos." />
     <string id="taom_lotr_issue_laborers_soln" text="Te traeré cautivos." />
-    <string id="taom_lotr_issue_laborers_task" text="Entregar bandidos cautivos ({COUNT})" />
+    <string id="taom_lotr_issue_laborers_task" text="Entregar cautivos ({COUNT})" />
     <string id="taom_lotr_issue_banditbase_title" text="Una Guarida Cerca de {ISSUE_SETTLEMENT}" />
     <string id="taom_lotr_issue_banditbase_desc" text="Un nido de saqueadores acecha los caminos cerca de {ISSUE_SETTLEMENT}." />
     <string id="taom_lotr_issue_banditbase_brief" text="Hay un nido inmundo de ellos en las colinas, viajero. Se llevan nuestros bienes y nuestra gente, y la guardia es muy escasa para exterminarlos." />
@@ -300,19 +300,24 @@
     <string id="taom_lotr_issue_common_task" text="Recolectar bienes" />
     <string id="taom_lotr_issue_pers_expl" text="Tráeme {COUNT} cautivos y te pagaré bien." />
     <string id="taom_lotr_issue_pers_soln" text="Te traeré cautivos." />
-    <string id="taom_lotr_issue_pers_accepted" text="Entrega {COUNT} cautivos bandidos a {QUEST_SETTLEMENT}." />
+    <string id="taom_lotr_issue_pers_accepted" text="Entrega {COUNT} cautivos en {QUEST_SETTLEMENT}." />
     <string id="taom_lotr_issue_pers_ready" text="Tienes suficientes cautivos. Regresa a {QUEST_SETTLEMENT} para entregarlos." />
     <string id="taom_lotr_issue_pers_timeout" text="No lograste entregar los cautivos a tiempo." />
     <string id="taom_lotr_issue_pers_have" text="¿Has traído los cautivos?" />
     <string id="taom_lotr_issue_pers_thanks" text="Servirán perfectamente. Tienes mi gratitud." />
     <string id="taom_lotr_issue_pers_turnin" text="Sí. Aquí están." />
     <string id="taom_lotr_issue_pers_not_enough" text="Todavía no tienes suficientes cautivos." />
-    <string id="taom_lotr_issue_pers_task" text="Capturar bandidos cautivos" />
+    <string id="taom_lotr_issue_pers_task" text="Tomar cautivos" />
     <string id="taom_lotr_issue_combat_expl" text="Encárgate de nuestros enemigos y serás recompensado." />
     <string id="taom_lotr_issue_combat_soln" text="Me encargaré de ellos." />
     <string id="taom_lotr_issue_combat_task_capture" text="Capturar señores enemigos ({COUNT})" />
     <string id="taom_lotr_issue_combat_task_tourney" text="Ganar torneos ({COUNT})" />
     <string id="taom_lotr_issue_combat_task_defeat" text="Derrotar a los saqueadores ({COUNT})" />
     <string id="taom_lotr_issue_combat_timeout" text="No lograste enfrentar la amenaza a tiempo." />
+    <string id="taom_lotr_issue_combat_fallback_desc" text="Hay que ocuparse de un enemigo." />
+    <string id="taom_lotr_issue_combat_fallback_brief" text="Estamos acosados por enemigos, viajero." />
+    <string id="taom_lotr_issue_combat_fallback_accept" text="¿Qué hay que hacer?" />
+    <string id="taom_lotr_issue_pers_fallback_desc" text="Alguien necesita que se entreguen cautivos." />
+    <string id="taom_lotr_issue_pers_fallback_brief" text="Necesito espaldas fuertes, viajero." />
   </strings>
 </base>

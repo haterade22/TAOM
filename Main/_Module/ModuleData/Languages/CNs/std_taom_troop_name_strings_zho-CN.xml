@@ -7,37 +7,38 @@
   </tags>
   <strings>
     <string id="aom_aux_basic_name" text="[乌姆巴尔] 辅军新兵" />
-    <string id="aom_balcoth_archer_name" text="[罗恩] 巴尔柯斯弓手" />
-    <string id="aom_balcoth_axeman_name" text="[罗恩] 巴尔柯斯斧兵" />
-    <string id="aom_balcoth_farshot_horse_archer_name" text="[罗恩] 巴尔柯斯远射骑射手" />
-    <string id="aom_balcoth_footman_name" text="[罗恩] 巴尔柯斯步兵" />
-    <string id="aom_balcoth_horse_archer_name" text="[罗恩] 巴尔柯斯骑射手" />
-    <string id="aom_balcoth_veteran_axeman_name" text="[罗恩] 巴尔柯斯老兵斧手" />
-    <string id="aom_balcoth_volunteer_name" text="[罗恩] 巴尔柯斯志愿兵" />
-    <string id="aom_battlemaster_of_the_first_age_name" text="[林顿] 上古之战战阵宗师" />
-    <string id="aom_black_sun_archer_name" text="[罗恩] 黑日弓手" />
-    <string id="aom_black_sun_chosen_marksman_name" text="[罗恩] 黑日精选射手" />
-    <string id="aom_black_sun_executioner_name" text="[罗恩] 黑日刑刀手" />
-    <string id="aom_black_sun_footman_name" text="[罗恩] 黑日步兵" />
-    <string id="aom_black_sun_longbowman_name" text="[罗恩] 黑日长弓手" />
-    <string id="aom_black_sun_marksman_name" text="[罗恩] 黑日射手" />
-    <string id="aom_black_sun_raider_name" text="[罗恩] 黑日袭掠者" />
-    <string id="aom_black_sun_reaver_name" text="[罗恩] 黑日掠夺者" />
-    <string id="aom_black_sun_scourge_name" text="[罗恩] 黑日鞭祸者" />
-    <string id="aom_black_sun_scout_name" text="[罗恩] 黑日斥候" />
-    <string id="aom_black_sun_trainee_name" text="[罗恩] 黑日受训兵" />
+    <string id="aom_balcoth_archer_name" text="[鲁恩] 巴尔柯斯弓手" />
+    <string id="aom_balcoth_axeman_name" text="[鲁恩] 巴尔柯斯斧兵" />
+    <string id="aom_balcoth_farshot_horse_archer_name" text="[鲁恩] 巴尔柯斯远射骑射手" />
+    <string id="aom_balcoth_footman_name" text="[鲁恩] 巴尔柯斯步兵" />
+    <string id="aom_balcoth_horse_archer_name" text="[鲁恩] 巴尔柯斯骑射手" />
+    <string id="aom_balcoth_veteran_axeman_name" text="[鲁恩] 巴尔柯斯老兵斧手" />
+    <string id="aom_balcoth_volunteer_name" text="[鲁恩] 巴尔柯斯志愿兵" />
+    <string id="aom_battlemaster_of_the_first_age_name" text="[幽谷] 上古时代战斗大师" />
+    <string id="aom_lindon_battlemaster_of_the_first_age_name" text="[林顿] 上古之战战阵宗师" />
+    <string id="aom_black_sun_archer_name" text="[鲁恩] 黑日弓手" />
+    <string id="aom_black_sun_chosen_marksman_name" text="[鲁恩] 黑日精选射手" />
+    <string id="aom_black_sun_executioner_name" text="[鲁恩] 黑日刑刀手" />
+    <string id="aom_black_sun_footman_name" text="[鲁恩] 黑日步兵" />
+    <string id="aom_black_sun_longbowman_name" text="[鲁恩] 黑日长弓手" />
+    <string id="aom_black_sun_marksman_name" text="[鲁恩] 黑日射手" />
+    <string id="aom_black_sun_raider_name" text="[鲁恩] 黑日袭掠者" />
+    <string id="aom_black_sun_reaver_name" text="[鲁恩] 黑日掠夺者" />
+    <string id="aom_black_sun_scourge_name" text="[鲁恩] 黑日鞭祸者" />
+    <string id="aom_black_sun_scout_name" text="[鲁恩] 黑日斥候" />
+    <string id="aom_black_sun_trainee_name" text="[鲁恩] 黑日受训兵" />
     <string id="aom_bluecraig_bolgs_ironfang_name" text="[半兽人] 斯卡纳克的铁牙卫" />
     <string id="aom_cave_troll_name" text="[魔多] 披甲食人妖" />
-    <string id="aom_dale_black_arrow_marksman_name" text="[河谷镇] 河谷巴德卫士" />
-    <string id="aom_dale_bowman_name" text="[河谷镇] 河谷自耕农兵" />
-    <string id="aom_dale_crossbowman_name" text="[河谷镇] 河谷弩手" />
-    <string id="aom_dale_dalian_mariner_name" text="[河谷镇] 河谷水手" />
-    <string id="aom_dale_footman_name" text="[河谷镇] 长湖镇巡卫" />
-    <string id="aom_dale_guardsman_name" text="[河谷镇] 河谷守卫" />
-    <string id="aom_dale_kings_guard_name" text="[河谷镇] 河谷国王卫队" />
-    <string id="aom_dale_kinsman_of_eorl_name" text="[河谷镇] 河谷重骑兵" />
-    <string id="aom_dale_knight_name" text="[河谷镇] 河谷北方人斥候" />
-    <string id="aom_dale_lake_town_hearthguard_name" text="[河谷镇] 长湖镇炉边卫士" />
+    <string id="aom_dale_black_arrow_marksman_name" text="[河谷] 河谷巴德卫士" />
+    <string id="aom_dale_bowman_name" text="[河谷] 河谷自耕农兵" />
+    <string id="aom_dale_crossbowman_name" text="[河谷] 河谷弩手" />
+    <string id="aom_dale_dalian_mariner_name" text="[河谷] 河谷水手" />
+    <string id="aom_dale_footman_name" text="[河谷] 长湖镇巡卫" />
+    <string id="aom_dale_guardsman_name" text="[河谷] 河谷守卫" />
+    <string id="aom_dale_kings_guard_name" text="[河谷] 河谷国王卫队" />
+    <string id="aom_dale_kinsman_of_eorl_name" text="[河谷] 河谷重骑兵" />
+    <string id="aom_dale_knight_name" text="[河谷] 河谷北方人斥候" />
+    <string id="aom_dale_lake_town_hearthguard_name" text="[河谷] 长湖镇炉边卫士" />
     <string id="aom_dale_lake_town_mariner_name" text="[河谷] 长湖镇老兵守卫" />
     <string id="aom_dale_lake_town_skirmisher_name" text="[河谷] 长湖镇守卫" />
     <string id="aom_dale_lake_town_veteran_name" text="[河谷] 长湖镇守卫官" />
@@ -118,25 +119,25 @@
     <string id="aom_dg_uruk_skirmisher_name" text="[多尔哥多] 乌鲁克散兵" />
     <string id="aom_dg_uruk_swordsman_name" text="[多尔哥多] 乌鲁克剑士" />
     <string id="aom_dg_uruk_veteran_warrior_name" text="[多尔哥多] 乌鲁克战士" />
-    <string id="aom_dg_uruk_warrior_name" text="[多尔哥多] 乌鲁克战士" />
+    <string id="aom_dg_uruk_warrior_name" text="[多尔哥多] 乌鲁克斗士" />
     <string id="aom_dg_warg_raider_name" text="[多尔哥多] 恶狼骑手" />
     <string id="aom_dg_warg_red_fang_name" text="[多尔哥多] 恶狼獠牙" />
     <string id="aom_dg_warg_scout_name" text="[多尔哥多] 恶狼追踪者" />
     <string id="aom_dg_warg_skirmisher_name" text="[多尔哥多] 恶狼掠袭者" />
-    <string id="aom_dragon_wrath_acolyte_name" text="[茹恩] 龙怒侍从" />
-    <string id="aom_dragon_wrath_archer_name" text="[茹恩] 龙怒弓手" />
-    <string id="aom_dragon_wrath_ash_executioner_name" text="[茹恩] 龙怒灰烬行刑者" />
-    <string id="aom_dragon_wrath_ash_knight_name" text="[茹恩] 龙怒灰烬骑士" />
-    <string id="aom_dragon_wrath_ash_marksman_name" text="[茹恩] 龙怒灰烬神射手" />
-    <string id="aom_dragon_wrath_ash_shieldguard_name" text="[茹恩] 龙怒灰烬盾卫" />
-    <string id="aom_dragon_wrath_disciple_name" text="[茹恩] 龙怒信徒" />
-    <string id="aom_dragon_wrath_infantry_name" text="[茹恩] 龙怒步兵" />
-    <string id="aom_dragon_wrath_lancer_name" text="[茹恩] 龙怒枪骑兵" />
-    <string id="aom_dragon_wrath_longbowman_name" text="[茹恩] 龙怒长弓手" />
-    <string id="aom_dragon_wrath_obsidian_knight_name" text="[茹恩] 龙怒黑曜骑士" />
-    <string id="aom_dragon_wrath_obsidian_shieldmaster_name" text="[茹恩] 龙怒黑曜盾师" />
-    <string id="aom_dragon_wrath_obsidian_war_reaver_name" text="[茹恩] 龙怒黑曜战掠者" />
-    <string id="aom_dragon_wrath_obsidian_warbow_name" text="[茹恩] 龙怒黑曜战弓手" />
+    <string id="aom_dragon_wrath_acolyte_name" text="[鲁恩] 龙怒侍从" />
+    <string id="aom_dragon_wrath_archer_name" text="[鲁恩] 龙怒弓手" />
+    <string id="aom_dragon_wrath_ash_executioner_name" text="[鲁恩] 龙怒灰烬行刑者" />
+    <string id="aom_dragon_wrath_ash_knight_name" text="[鲁恩] 龙怒灰烬骑士" />
+    <string id="aom_dragon_wrath_ash_marksman_name" text="[鲁恩] 龙怒灰烬神射手" />
+    <string id="aom_dragon_wrath_ash_shieldguard_name" text="[鲁恩] 龙怒灰烬盾卫" />
+    <string id="aom_dragon_wrath_disciple_name" text="[鲁恩] 龙怒信徒" />
+    <string id="aom_dragon_wrath_infantry_name" text="[鲁恩] 龙怒步兵" />
+    <string id="aom_dragon_wrath_lancer_name" text="[鲁恩] 龙怒枪骑兵" />
+    <string id="aom_dragon_wrath_longbowman_name" text="[鲁恩] 龙怒长弓手" />
+    <string id="aom_dragon_wrath_obsidian_knight_name" text="[鲁恩] 龙怒黑曜骑士" />
+    <string id="aom_dragon_wrath_obsidian_shieldmaster_name" text="[鲁恩] 龙怒黑曜盾师" />
+    <string id="aom_dragon_wrath_obsidian_war_reaver_name" text="[鲁恩] 龙怒黑曜战掠者" />
+    <string id="aom_dragon_wrath_obsidian_warbow_name" text="[鲁恩] 龙怒黑曜战弓手" />
     <string id="aom_dunland_bear_berserker_name" text="[登兰德] 阿尔斯-卢斯狂战士" />
     <string id="aom_dunland_bear_chosen_name" text="[登兰德] 阿尔斯-卢斯精选勇士" />
     <string id="aom_dunland_bear_executioner_name" text="[登兰德] 阿尔斯-卢斯行刑者" />
@@ -182,19 +183,19 @@
     <string id="aom_dunland_wolf_axeman_name" text="[登兰德] 狼氏族斧兵" />
     <string id="aom_dunland_wolf_champion_name" text="[登兰德] 狼氏族勇士" />
     <string id="aom_dunland_wolf_raider_name" text="[登兰德] 狼氏族掠袭者" />
-    <string id="aom_easterling_archer_new_name" text="[卢恩] 东方人弓手" />
-    <string id="aom_easterling_bowman_name" text="[卢恩] 东方人射手" />
-    <string id="aom_easterling_cavalry_new_name" text="[卢恩] 东方人骑兵" />
-    <string id="aom_easterling_footman_new_name" text="[卢恩] 东方人步兵" />
-    <string id="aom_easterling_halberdier_new_name" text="[卢恩] 东方人戟兵" />
-    <string id="aom_easterling_militia_name" text="[卢恩] 东方人民兵" />
-    <string id="aom_easterling_recruit_name" text="[卢恩] 东方人新兵" />
-    <string id="aom_easterling_skirmisher_new_name" text="[卢恩] 东方人散兵" />
-    <string id="aom_easterling_swordsman_new_name" text="[卢恩] 东方人剑士" />
-    <string id="aom_easterling_veteran_archer_new_name" text="[卢恩] 东方人老练弓手" />
-    <string id="aom_easterling_veteran_cavalry_name" text="[卢恩] 东方人老练骑兵" />
-    <string id="aom_easterling_veteran_halberdier_new_name" text="[卢恩] 东方人老练戟兵" />
-    <string id="aom_easterling_veteran_swordsman_new_name" text="[卢恩] 东方人老练剑士" />
+    <string id="aom_easterling_archer_new_name" text="[鲁恩] 东方人弓手" />
+    <string id="aom_easterling_bowman_name" text="[鲁恩] 东方人射手" />
+    <string id="aom_easterling_cavalry_new_name" text="[鲁恩] 东方人骑兵" />
+    <string id="aom_easterling_footman_new_name" text="[鲁恩] 东方人步兵" />
+    <string id="aom_easterling_halberdier_new_name" text="[鲁恩] 东方人戟兵" />
+    <string id="aom_easterling_militia_name" text="[鲁恩] 东方人民兵" />
+    <string id="aom_easterling_recruit_name" text="[鲁恩] 东方人新兵" />
+    <string id="aom_easterling_skirmisher_new_name" text="[鲁恩] 东方人散兵" />
+    <string id="aom_easterling_swordsman_new_name" text="[鲁恩] 东方人剑士" />
+    <string id="aom_easterling_veteran_archer_new_name" text="[鲁恩] 东方人老练弓手" />
+    <string id="aom_easterling_veteran_cavalry_name" text="[鲁恩] 东方人老练骑兵" />
+    <string id="aom_easterling_veteran_halberdier_new_name" text="[鲁恩] 东方人老练戟兵" />
+    <string id="aom_easterling_veteran_swordsman_new_name" text="[鲁恩] 东方人老练剑士" />
     <string id="aom_er_militia_archer" text="[埃瑞博] 民兵弓手" />
     <string id="aom_er_militia_spear" text="[埃瑞博] 民兵枪兵" />
     <string id="aom_er_militia_vet_archer" text="[埃瑞博] 民兵老练弓手" />
@@ -233,10 +234,10 @@
     <string id="aom_far_rhun_iron_cataphract_name" text="[鲁恩] 远鲁恩钢铁铁甲骑兵" />
     <string id="aom_far_rhun_iron_legionary_name" text="[鲁恩] 远鲁恩钢铁军团士兵" />
     <string id="aom_far_rhun_levy_name" text="[鲁恩] 远鲁恩征召兵" />
-    <string id="aom_gb_militia_archer" text="[刚达巴] 民兵弓箭手" />
-    <string id="aom_gb_militia_spear" text="[刚达巴] 民兵枪手" />
-    <string id="aom_gb_militia_vet_archer" text="[刚达巴] 民兵老兵弓箭手" />
-    <string id="aom_gb_militia_vet_spear" text="[刚达巴] 民兵老兵枪手" />
+    <string id="aom_gb_militia_archer" text="[刚达巴德] 民兵弓箭手" />
+    <string id="aom_gb_militia_spear" text="[刚达巴德] 民兵枪手" />
+    <string id="aom_gb_militia_vet_archer" text="[刚达巴德] 民兵老兵弓箭手" />
+    <string id="aom_gb_militia_vet_spear" text="[刚达巴德] 民兵老兵枪手" />
     <string id="aom_gob_militia_archer" text="[半兽人] 民兵弓箭手" />
     <string id="aom_gob_militia_spear" text="[半兽人] 民兵长矛手" />
     <string id="aom_gob_militia_vet_archer" text="[半兽人] 民兵老兵弓箭手" />
@@ -301,9 +302,8 @@
     <string id="aom_gondor_bel_vet_infantry_name" text="[刚铎] 贝尔法拉斯老兵步兵" />
     <string id="aom_gondor_brv_archer_name" text="[刚铎] 黑根谷弓箭手" />
     <string id="aom_gondor_brv_bowman_name" text="[刚铎] 黑根谷弓手" />
-    <string id="aom_gondor_brv_ranger_name" text="[刚铎] 黑根谷暗影弓手" />
     <string id="aom_gondor_brv_scout_name" text="[刚铎] 黑根谷斥候" />
-    <string id="aom_gondor_brv_shadowbow_name" text="[刚铎] 黑根谷暗影猎手" />
+    <string id="aom_gondor_brv_shadowbow_name" text="[刚铎] 黑根谷暗影弓手" />
     <string id="aom_gondor_brv_shadowhunter_name" text="[刚铎] 黑根谷先锋" />
     <string id="aom_gondor_brv_vet_archer_name" text="[刚铎] 黑根谷老兵弓箭手" />
     <string id="aom_gondor_ca_guard_name" text="[刚铎] 凯尔安德洛斯卫兵" />
@@ -374,11 +374,7 @@
     <string id="aom_gondor_loss_axebearer_name" text="[刚铎] 洛萨那赫持斧战士" />
     <string id="aom_gondor_loss_guard_name" text="[刚铎] 洛萨那赫卫兵" />
     <string id="aom_gondor_loss_lumberman_name" text="[刚铎] 洛萨那赫伐木工" />
-    <string id="aom_gondor_loss_noble_captain_name" text="[刚铎] 洛萨那赫贵族队长" />
     <string id="aom_gondor_loss_noble_name" text="[刚铎] 洛萨那赫贵族" />
-    <string id="aom_gondor_loss_noble_sergeant_name" text="[刚铎] 洛萨那赫贵族军士" />
-    <string id="aom_gondor_loss_noble_veteran_name" text="[刚铎] 洛萨那赫贵族老兵" />
-    <string id="aom_gondor_loss_noble_warden_name" text="[刚铎] 洛萨那赫贵族守护者" />
     <string id="aom_gondor_loss_skirmisher_name" text="[刚铎] 洛萨那赫散兵" />
     <string id="aom_gondor_loss_vet_axe_thrower_name" text="[刚铎] 洛萨那赫老兵掷斧手" />
     <string id="aom_gondor_loss_vet_axebearer_name" text="[刚铎] 洛萨那赫老兵持斧战士" />
@@ -496,19 +492,32 @@
     <string id="aom_harad_swordfighter_name" text="[哈拉德] 持剑战士" />
     <string id="aom_harad_vipereye_name" text="[哈拉德] 蝮蛇" />
     <string id="aom_harad_warlance_name" text="[哈拉德] 战枪骑士" />
-    <string id="aom_imladris_archer_name" text="[林顿] 米斯隆德弓箭手" />
-    <string id="aom_imladris_blademaster_name" text="[林顿] 米斯隆德剑术大师" />
-    <string id="aom_imladris_bowman_name" text="[林顿] 米斯隆德弓手" />
-    <string id="aom_imladris_guardsman_name" text="[林顿] 米斯隆德卫兵" />
-    <string id="aom_imladris_horse_archer_name" text="[林顿] 米斯隆德弓骑兵" />
-    <string id="aom_imladris_infantry_name" text="[林顿] 米斯隆德步兵" />
-    <string id="aom_imladris_marchwarden_name" text="[林顿] 米斯隆德边境守卫长" />
-    <string id="aom_imladris_marksman_name" text="[林顿] 米斯隆德神射手" />
-    <string id="aom_imladris_nobleman_name" text="[林顿] 米斯隆德贵族" />
-    <string id="aom_imladris_outrider_name" text="[林顿] 米斯隆德先驱骑兵" />
-    <string id="aom_imladris_recruit_name" text="[林顿] 米斯隆德新兵" />
-    <string id="aom_imladris_swordguard_name" text="[林顿] 米斯隆德剑卫" />
-    <string id="aom_imladris_warden_name" text="[林顿] 米斯隆德守卫" />
+    <string id="aom_imladris_archer_name" text="[幽谷] 伊姆拉缀斯弓手" />
+    <string id="aom_lindon_imladris_archer_name" text="[林顿] 米斯隆德弓箭手" />
+    <string id="aom_imladris_blademaster_name" text="[幽谷] 伊姆拉缀斯剑术大师" />
+    <string id="aom_lindon_imladris_blademaster_name" text="[林顿] 米斯隆德剑术大师" />
+    <string id="aom_imladris_bowman_name" text="[幽谷] 伊姆拉缀斯射手" />
+    <string id="aom_lindon_imladris_bowman_name" text="[林顿] 米斯隆德弓手" />
+    <string id="aom_imladris_guardsman_name" text="[幽谷] 伊姆拉缀斯卫兵" />
+    <string id="aom_lindon_imladris_guardsman_name" text="[林顿] 米斯隆德卫兵" />
+    <string id="aom_imladris_horse_archer_name" text="[幽谷] 伊姆拉缀斯骑射手" />
+    <string id="aom_lindon_imladris_horse_archer_name" text="[林顿] 米斯隆德弓骑兵" />
+    <string id="aom_imladris_infantry_name" text="[幽谷] 伊姆拉缀斯步兵" />
+    <string id="aom_lindon_imladris_infantry_name" text="[林顿] 米斯隆德步兵" />
+    <string id="aom_imladris_marchwarden_name" text="[幽谷] 伊姆拉缀斯边境守卫" />
+    <string id="aom_lindon_imladris_marchwarden_name" text="[林顿] 米斯隆德边境守卫长" />
+    <string id="aom_imladris_marksman_name" text="[幽谷] 伊姆拉缀斯神射手" />
+    <string id="aom_lindon_imladris_marksman_name" text="[林顿] 米斯隆德神射手" />
+    <string id="aom_imladris_nobleman_name" text="[幽谷] 伊姆拉缀斯贵族" />
+    <string id="aom_lindon_imladris_nobleman_name" text="[林顿] 米斯隆德贵族" />
+    <string id="aom_imladris_outrider_name" text="[幽谷] 伊姆拉缀斯游骑兵" />
+    <string id="aom_lindon_imladris_outrider_name" text="[林顿] 米斯隆德先驱骑兵" />
+    <string id="aom_imladris_recruit_name" text="[幽谷] 伊姆拉缀斯新兵" />
+    <string id="aom_lindon_imladris_recruit_name" text="[林顿] 米斯隆德新兵" />
+    <string id="aom_imladris_swordguard_name" text="[幽谷] 伊姆拉缀斯剑卫" />
+    <string id="aom_lindon_imladris_swordguard_name" text="[林顿] 米斯隆德剑卫" />
+    <string id="aom_imladris_warden_name" text="[幽谷] 伊姆拉缀斯守卫者" />
+    <string id="aom_lindon_imladris_warden_name" text="[林顿] 米斯隆德守卫" />
     <string id="aom_iron_hills_reg_axe_warrior_name" text="[铁丘陵] 斧战士" />
     <string id="aom_iron_hills_reg_bowman_name" text="[铁丘陵] 弓手" />
     <string id="aom_iron_hills_reg_company_name" text="[铁丘陵] 战团兵" />
@@ -582,23 +591,24 @@
     <string id="aom_loke_rim_marksman_name" text="[鲁恩] 洛克瑞姆神射手" />
     <string id="aom_loke_rim_shieldguard_name" text="[鲁恩] 洛克瑞姆盾卫" />
     <string id="aom_merc_dg_orc_scout_name" text="[多尔哥多] 雇佣半兽人斥候" />
-    <string id="aom_merc_erebor_oathsworn_name" text="[孤山] 雇佣誓约战士" />
+    <string id="aom_merc_erebor_oathsworn_name" text="[埃瑞博] 雇佣誓约战士" />
     <string id="aom_merc_goblin_fighter_name" text="[半兽人] 雇佣半兽人掠袭者" />
     <string id="aom_merc_gondor_bel_recruit_name" text="[刚铎] 雇佣贝尔法拉斯新兵" />
     <string id="aom_merc_gondor_lam_clansman_name" text="[刚铎] 雇佣拉美顿族人" />
     <string id="aom_merc_gondor_loss_lumberman_name" text="[刚铎] 雇佣洛沙那赫伐木工" />
-    <string id="aom_merc_gundabad_fighter_name" text="[刚达巴] 雇佣灰白乌鲁克掠袭者" />
-    <string id="aom_merc_gundabad_scout_name" text="[刚达巴] 雇佣斥候" />
+    <string id="aom_merc_gundabad_fighter_name" text="[刚达巴德] 雇佣灰白乌鲁克掠袭者" />
+    <string id="aom_merc_gundabad_scout_name" text="[刚达巴德] 雇佣斥候" />
     <string id="aom_merc_harad_noble_name" text="[哈拉德] 雇佣毒蛇少壮子弟" />
-    <string id="aom_merc_imladris_bowman_name" text="[林顿] 雇佣米斯泷德射手" />
+    <string id="aom_merc_imladris_bowman_name" text="[幽谷] 受雇的伊姆拉缀斯射手" />
+    <string id="aom_lindon_imladris_bowman_merc_name" text="[林顿] 雇佣米斯泷德射手" />
     <string id="aom_merc_lindon_noble_name" text="[林顿] 雇佣贵族" />
     <string id="aom_merc_mirkwood_recruit_name" text="[幽暗密林] 雇佣西尔凡征召兵" />
     <string id="aom_merc_mordor_orc_hunter_name" text="[魔多] 雇佣半兽人猎手" />
     <string id="aom_merc_mordor_orc_impaler_name" text="[魔多] 雇佣半兽人穿刺兵" />
     <string id="aom_merc_mordor_uruk_grunt_name" text="[魔多] 雇佣黑乌鲁克小卒" />
     <string id="aom_merc_mordor_warg_tamer_name" text="[魔多] 雇佣努恩恶狼驯兽者" />
-    <string id="aom_merc_orthanc_chosen_name" text="[艾辛格] 雇佣欧散克精选战士" />
-    <string id="aom_merc_rivendell_noble_name" text="[瑞文戴尔] 雇佣贵族" />
+    <string id="aom_merc_orthanc_chosen_name" text="[艾森加德] 雇佣欧散克精选战士" />
+    <string id="aom_merc_rivendell_noble_name" text="[幽谷] 雇佣贵族" />
     <string id="aom_merc_umbar_elite_name" text="[乌姆巴尔] 雇佣阿督耐新兵" />
     <string id="aom_merc_urukhai_scout_name" text="[艾森加德] 雇佣乌鲁克族斥候" />
     <string id="aom_merc_urukhai_warrior_name" text="[艾森加德] 雇佣乌鲁克族战士" />
@@ -677,7 +687,8 @@
     <string id="aom_mordor_warg_reaver_name" text="[魔多] 努尔恩座狼掠夺者" />
     <string id="aom_mordor_warg_rider_name" text="[魔多] 努尔恩座狼骑手" />
     <string id="aom_mordor_warg_tamer_name" text="[魔多] 努尔恩座狼驯者" />
-    <string id="aom_noldorin_lancer_name" text="[林顿] 法拉斯林枪骑兵" />
+    <string id="aom_noldorin_lancer_name" text="[幽谷] 诺多枪骑兵" />
+    <string id="aom_lindon_noldorin_lancer_name" text="[林顿] 法拉斯林枪骑兵" />
     <string id="aom_orc_warg_enforcer_name" text="[艾森加德] 座狼骑兵执行者" />
     <string id="aom_orc_warg_lieutenant_name" text="[艾森加德] 座狼骑兵副官" />
     <string id="aom_orc_warg_overseer_name" text="[艾森加德] 座狼骑兵监工" />
@@ -686,19 +697,20 @@
     <string id="aom_orthanc_chosen_name" text="[艾森加德] 欧尔桑克精选战士" />
     <string id="aom_orthanc_guard_name" text="[艾森加德] 欧尔桑克卫兵" />
     <string id="aom_orthanc_warden_name" text="[艾森加德] 欧尔桑克守望者" />
-    <string id="aom_rhun_mil_arch_name" text="[茹恩] 民兵弓箭手" />
-    <string id="aom_rhun_mil_spear_name" text="[茹恩] 民兵长矛手" />
-    <string id="aom_rhun_mil_varch_name" text="[茹恩] 民兵老兵弓箭手" />
-    <string id="aom_rhun_mil_vspear_name" text="[茹恩] 民兵老兵长矛手" />
-    <string id="aom_rider_of_himring_name" text="[林顿] 巴拉尔骑手" />
-    <string id="aom_rivendell_glorfindel_guard_name" text="[瑞文戴尔] 埃兰纳斯骑将" />
-    <string id="aom_rivendell_gondolin_battlemaster_name" text="[瑞文戴尔] 埃兰纳斯剑王" />
-    <string id="aom_rivendell_high_captain_name" text="[瑞文戴尔] 大队长" />
-    <string id="aom_rivendell_knight_golden_flower_name" text="[瑞文戴尔] 金花剑士" />
-    <string id="aom_rivendell_noble_name" text="[瑞文戴尔] 贵族" />
-    <string id="aom_rivendell_royal_guard_name" text="[瑞文戴尔] 王室卫兵" />
-    <string id="aom_rivendell_royal_knight_name" text="[瑞文戴尔] 王室骑士" />
-    <string id="aom_rivendell_warden_gondolin_name" text="[瑞文戴尔] 埃兰纳斯护卫队" />
+    <string id="aom_rhun_mil_arch_name" text="[鲁恩] 民兵弓箭手" />
+    <string id="aom_rhun_mil_spear_name" text="[鲁恩] 民兵长矛手" />
+    <string id="aom_rhun_mil_varch_name" text="[鲁恩] 民兵老兵弓箭手" />
+    <string id="aom_rhun_mil_vspear_name" text="[鲁恩] 民兵老兵长矛手" />
+    <string id="aom_rider_of_himring_name" text="[幽谷] 希姆凛骑手" />
+    <string id="aom_lindon_rider_of_himring_name" text="[林顿] 巴拉尔骑手" />
+    <string id="aom_rivendell_glorfindel_guard_name" text="[幽谷] 埃兰纳斯骑将" />
+    <string id="aom_rivendell_gondolin_battlemaster_name" text="[幽谷] 埃兰纳斯剑王" />
+    <string id="aom_rivendell_high_captain_name" text="[幽谷] 大队长" />
+    <string id="aom_rivendell_knight_golden_flower_name" text="[幽谷] 金花剑士" />
+    <string id="aom_rivendell_noble_name" text="[幽谷] 贵族" />
+    <string id="aom_rivendell_royal_guard_name" text="[幽谷] 王室卫兵" />
+    <string id="aom_rivendell_royal_knight_name" text="[幽谷] 王室骑士" />
+    <string id="aom_rivendell_warden_gondolin_name" text="[幽谷] 埃兰纳斯护卫队" />
     <string id="aom_rohan_eastemnet_elite_lancer_name" text="[洛汗] 东埃姆内特精锐枪骑兵" />
     <string id="aom_rohan_eastemnet_eorlingas_lancer_name" text="[洛汗] 东埃姆内特伊欧之民枪骑兵" />
     <string id="aom_rohan_eastemnet_kings_own_lancer_name" text="[洛汗] 东埃姆内特国王枪骑兵" />
@@ -756,10 +768,14 @@
     <string id="aom_rohan_wold_recruit_name" text="[洛汗] 荒野新兵" />
     <string id="aom_rohan_wold_scout_name" text="[洛汗] 荒野斥候" />
     <string id="aom_rohan_wold_veteran_horse_archer_name" text="[洛汗] 荒野老兵骑手" />
-    <string id="aom_rv_militia_archer" text="[林顿] 民兵弓箭手" />
-    <string id="aom_rv_militia_spear" text="[林顿] 民兵枪兵" />
-    <string id="aom_rv_militia_vet_archer" text="[林顿] 民兵老兵弓手" />
-    <string id="aom_rv_militia_vet_spear" text="[林顿] 民兵老兵枪手" />
+    <string id="aom_rv_militia_archer" text="[幽谷] 民兵弓手" />
+    <string id="aom_lindon_militia_archer_name" text="[林顿] 民兵弓箭手" />
+    <string id="aom_rv_militia_spear" text="[幽谷] 民兵长枪兵" />
+    <string id="aom_lindon_militia_spearman_name" text="[林顿] 民兵枪兵" />
+    <string id="aom_rv_militia_vet_archer" text="[幽谷] 民兵老练弓手" />
+    <string id="aom_lindon_militia_veteran_archer_name" text="[林顿] 民兵老兵弓手" />
+    <string id="aom_rv_militia_vet_spear" text="[幽谷] 民兵老练长枪兵" />
+    <string id="aom_lindon_militia_veteran_spearman_name" text="[林顿] 民兵老兵枪手" />
     <string id="aom_sagarun_arbalest_name" text="[鲁恩] 萨加鲁恩重弩手" />
     <string id="aom_sagarun_crossbowman_name" text="[鲁恩] 萨加鲁恩弩手" />
     <string id="aom_sagarun_deckhand_name" text="[鲁恩] 萨加鲁恩水手" />
@@ -770,26 +786,26 @@
     <string id="aom_sagarun_storm_helmed_naffatun_name" text="[鲁恩] 萨加鲁恩风暴盔纵火兵" />
     <string id="aom_sagarun_storm_marked_arbalest_name" text="[鲁恩] 萨加鲁恩风暴印记重弩手" />
     <string id="aom_sagarun_watchman_name" text="[鲁恩] 萨加鲁恩守望者" />
-    <string id="aom_umbar_elite_name" text="[乌姆巴] 阿都耐姆新兵" />
-    <string id="aom_umbar_elite_root0000_name" text="[乌姆巴] 纳鲁·恩·阿鲁王家卫队" />
-    <string id="aom_umbar_elite_root0001_name" text="[乌姆巴] 纳鲁·恩·阿鲁王家骑士" />
-    <string id="aom_umbar_elite_root000_name" text="[乌姆巴] 阿布拉扎尼姆·纳尔杜塔里克" />
-    <string id="aom_umbar_elite_root001_name" text="[乌姆巴] 阿布拉扎尼姆·纳尔杜扎加" />
-    <string id="aom_umbar_elite_root00_name" text="[乌姆巴] 罗扎丹步兵" />
-    <string id="aom_umbar_elite_root010_name" text="[乌姆巴] 阿都耐姆忠信者" />
-    <string id="aom_umbar_elite_root01_name" text="[乌姆巴] 罗扎丹戟兵" />
-    <string id="aom_umbar_elite_root0_name" text="[乌姆巴] 阿都耐姆步兵" />
-    <string id="aom_umbar_elite_root100_name" text="[乌姆巴] 阿布拉扎尼姆·纳尔杜巴威布" />
-    <string id="aom_umbar_elite_root101_name" text="[乌姆巴] 贝露西尔游侠" />
-    <string id="aom_umbar_elite_root10_name" text="[乌姆巴] 罗扎丹弓手" />
-    <string id="aom_umbar_elite_root1_name" text="[乌姆巴] 阿都耐姆弓手" />
+    <string id="aom_umbar_elite_name" text="[乌姆巴尔] 阿都耐姆新兵" />
+    <string id="aom_umbar_elite_root0000_name" text="[乌姆巴尔] 纳鲁·恩·阿鲁王家卫队" />
+    <string id="aom_umbar_elite_root0001_name" text="[乌姆巴尔] 纳鲁·恩·阿鲁王家骑士" />
+    <string id="aom_umbar_elite_root000_name" text="[乌姆巴尔] 阿布拉扎尼姆·纳尔杜塔里克" />
+    <string id="aom_umbar_elite_root001_name" text="[乌姆巴尔] 阿布拉扎尼姆·纳尔杜扎加" />
+    <string id="aom_umbar_elite_root00_name" text="[乌姆巴尔] 罗扎丹步兵" />
+    <string id="aom_umbar_elite_root010_name" text="[乌姆巴尔] 阿都耐姆忠信者" />
+    <string id="aom_umbar_elite_root01_name" text="[乌姆巴尔] 罗扎丹戟兵" />
+    <string id="aom_umbar_elite_root0_name" text="[乌姆巴尔] 阿都耐姆步兵" />
+    <string id="aom_umbar_elite_root100_name" text="[乌姆巴尔] 阿布拉扎尼姆·纳尔杜巴威布" />
+    <string id="aom_umbar_elite_root101_name" text="[乌姆巴尔] 贝露西尔游侠" />
+    <string id="aom_umbar_elite_root10_name" text="[乌姆巴尔] 罗扎丹弓手" />
+    <string id="aom_umbar_elite_root1_name" text="[乌姆巴尔] 阿都耐姆弓手" />
     <string id="aom_urukhai_arbalest_name" text="[艾森加德] 强兽人重弩手" />
     <string id="aom_urukhai_archer_name" text="[艾森加德] 强兽人弓手" />
     <string id="aom_urukhai_berserker_name" text="[艾森加德] 强兽人狂战士" />
     <string id="aom_urukhai_champion_name" text="[艾森加德] 强兽人勇士" />
     <string id="aom_urukhai_crossbowman_name" text="[艾森加德] 强兽人弩手" />
     <string id="aom_urukhai_feller_name" text="[艾森加德] 强兽人伐木者" />
-    <string id="aom_urukhai_fighter_name" text="[艾森加德] 强兽人战士" />
+    <string id="aom_urukhai_fighter_name" text="[艾森加德] 强兽人斗士" />
     <string id="aom_urukhai_infantry_name" text="[艾森加德] 强兽人步兵" />
     <string id="aom_urukhai_nazg_hai_name" text="[艾森加德] 强兽人纳兹海" />
     <string id="aom_urukhai_pavise_name" text="[艾森加德] 强兽人巨盾卫兵" />
@@ -837,10 +853,19 @@
     <string id="taom_dunland_raiders_boss_name" text="[登兰德] 布莱兹-卢斯统帅" />
     <string id="taom_erebor_warriors_boss_name" text="黑锁族酋长" />
     <string id="taom_gondor_soldiers_boss_name" text="[刚铎] 士兵队长" />
-    <string id="taom_gundabad_raiders_boss_name" text="[刚达巴] 谷地统帅" />
+    <string id="taom_gundabad_raiders_boss_name" text="[刚达巴德] 谷地统帅" />
     <string id="taom_harad_raiders_boss_name" text="[哈拉德] 哈拉德林军阀" />
     <string id="taom_mirkwood_stalkers_boss_name" text="[幽暗密林] 潜行者队长" />
-    <string id="taom_rhun_raiders_boss_name" text="[罗恩] 卡拉古尔军阀" />
-    <string id="taom_umbar_corsairs_boss_name" text="[乌姆巴] 海盗船长" />
+    <string id="taom_rhun_raiders_boss_name" text="[鲁恩] 卡拉古尔军阀" />
+    <string id="taom_umbar_corsairs_boss_name" text="[乌姆巴尔] 海盗船长" />
+    <string id="aom_hill_troll_name" text="[魔多] 山地食人妖" />
+    <string id="aom_gondor_brv_ranger_name" text="[刚铎] 黑根谷游侠" />
+    <string id="aom_gondor_loss_noble_captain_name" text="[刚铎] 洛萨那赫高阶斧卫" />
+    <string id="aom_gondor_loss_noble_sergeant_name" text="[刚铎] 洛萨那赫斧卫兵" />
+    <string id="aom_gondor_loss_noble_veteran_name" text="[刚铎] 洛萨那赫斧兵" />
+    <string id="aom_gondor_loss_noble_warden_name" text="[刚铎] 洛萨那赫斧卫" />
+    <string id="aom_harad_howdah_crew_name" text="[哈拉德] 象轿弓箭手" />
+    <string id="taom_test_animalia_elk_rider" text="[测试] 驯兽驼鹿骑手" />
+    <string id="taom_test_animalia_moose_rider" text="[测试] 驯兽麋鹿骑手" />
   </strings>
 </base>

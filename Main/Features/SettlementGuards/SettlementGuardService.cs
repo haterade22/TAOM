@@ -13,7 +13,7 @@ public class SettlementGuardService : ISettlementGuardService
     // troll-guard leak (#346) whenever the config fails to load. Race-keyed (not troop-keyed)
     // so future troops sharing the race are covered automatically.
     private static readonly HashSet<string> ExcludedGuardRaces =
-        new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "cave_troll" };
+        new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "cave_troll", "hill_troll" };
 
     private readonly ISettlementGuardConfigProvider _config;
     private readonly IRandomProvider _random;

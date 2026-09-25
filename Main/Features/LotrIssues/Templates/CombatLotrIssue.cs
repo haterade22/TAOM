@@ -60,9 +60,9 @@ public class CombatLotrIssue : IssueBase
     }
 
     public override TextObject Title => Tx(_def?.Text.TitleKey, "{=taom_lotr_issue_fallback_title}A Request for Aid");
-    public override TextObject Description => Tx(_def?.Text.DescriptionKey, "{=taom_lotr_issue_fallback_desc}A foe must be dealt with.");
-    public override TextObject IssueBriefByIssueGiver => Tx(_def?.Text.BriefKey, "{=taom_lotr_issue_fallback_brief}We are beset by enemies, traveller.");
-    public override TextObject IssueAcceptByPlayer => Tx(_def?.Text.AcceptKey, "{=taom_lotr_issue_fallback_accept}What needs doing?");
+    public override TextObject Description => Tx(_def?.Text.DescriptionKey, "{=taom_lotr_issue_combat_fallback_desc}A foe must be dealt with.");
+    public override TextObject IssueBriefByIssueGiver => Tx(_def?.Text.BriefKey, "{=taom_lotr_issue_combat_fallback_brief}We are beset by enemies, traveller.");
+    public override TextObject IssueAcceptByPlayer => Tx(_def?.Text.AcceptKey, "{=taom_lotr_issue_combat_fallback_accept}What needs doing?");
     public override TextObject IssueQuestSolutionExplanationByIssueGiver => Tx(_def?.Text.ExplanationKey, "{=taom_lotr_issue_combat_expl}Deal with our enemies and you will be rewarded.");
     public override TextObject IssueQuestSolutionAcceptByPlayer => Tx(_def?.Text.SolutionAcceptKey, "{=taom_lotr_issue_combat_soln}I will deal with them.");
 
@@ -282,7 +282,7 @@ public class CombatLotrIssueQuest : QuestBase
         StartQuest();
         EnsureDef();
         var body = new TextObject(_def == null || string.IsNullOrEmpty(_def.Text.DescriptionKey)
-            ? "{=taom_lotr_issue_fallback_desc}A foe must be dealt with." : _def.Text.DescriptionKey);
+            ? "{=taom_lotr_issue_combat_fallback_desc}A foe must be dealt with." : _def.Text.DescriptionKey);
         _log = AddDiscreteLog(body, TaskLogText, _progress, _neededCount);
     }
 

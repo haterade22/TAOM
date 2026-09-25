@@ -712,3 +712,92 @@ a misplaced row.
   them with a binary round-trip. Follow-ups: `sync_missing_ids` should insert before the `</strings>` token by
   position, and the coverage test should read `base/strings/string` only.
 - **Source:** `docs/reviews/rca-order-of-battle-auto-assign-2026-09-24.md` row 11 (XML lens).
+
+### A language row kept identical to the English is rewritten from the cache on every run: pin it in the overrides (hill troll, 2026-09-25)
+The Italian editions keep `Dale` untranslated, and the IT row for `taom_aso_kingdom.sturgia` held `Dale` by hand.
+`translate_with_claude.py` discovers a row when `cur_text == eng_text`, so that row counted as untranslated on the
+hill troll's translator run and was rewritten from the cache, which held `Valle`. Nothing in the run's output
+distinguished it from the 26 rows the run was meant to fill.
+- **Why missed:** the discovery gate cannot tell "not yet translated" from "translated as the English word"; the
+  guide documented the stale-English direction of this trap, not its mirror image.
+- **Prevent:** a canonical rendering that equals the English goes in `tools/translation_overrides/<lang>.json`, and
+  the cache gets the same text (`it.json` now pins `Dale`). After any translator run, diff the changed rows against
+  HEAD by id, not by line, and read every row that changed from a non-English value.
+- **Source:** the hill troll translator run, 2026-09-25 (`docs/localization/TRANSLATOR_GUIDE.md` "mirror-image trap").
+
+### A documented checklist did not stop 351 keys going stale: sweep the history, then gate it (2026-09-25)
+The TRANSLATOR_GUIDE had described the stale-English trap since #388 (2026-08-06). A sweep on
+2026-09-25 still found 351 keys whose English had changed while every language kept the old text:
+renamed lords, 249 career tooltips with old numbers, rewritten faction lore, an empty promotion offer.
+- **Why missed:** nothing reports it. Discovery skips any row that differs from the English, so a
+  run over a stale file prints "0 untranslated" exactly like a clean one; the checklist relies on the
+  author of the English edit remembering 12 other files.
+- **Prevent:** after an English edit, reset the rows and the cache in the same change. Periodically,
+  walk each English source's `git log`, find each key's last text change, and flag rows byte-identical
+  to their value at that commit's parent (the method in the guide). Follow-up: turn that sweep into a
+  `tools/` check so the count is computed, not discovered.
+- **Source:** the 2026-09-25 localization sweep (CHANGELOG `fix(loc)`).
+
+### A character copied with its localization key shows the original's name in every other language (2026-09-25)
+Lindon's 21 troops were copied from Rivendell's and kept the Rivendell `{=KEY}`s with new English
+defaults; six Umbar clans shared one key; two quest templates reused a third's fallback keys. English
+looked right everywhere, because English reads the inline default. The other 12 languages look up the
+key alone, so they showed one text for both.
+- **Why missed:** no gate compares the inline defaults of one key across files, and every English
+  surface a reviewer checks renders correctly.
+- **Prevent:** a character's name key is `aom_<id>_name`, changed whenever the character is copied;
+  a C# fallback key belongs to one class. When splitting a shared key, give the copy the new key, carry
+  the existing translations onto it, and translate only the reset original.
+- **Source:** the 2026-09-25 localization sweep (TRANSLATOR_GUIDE "One key, one character").
+
+### An override is a translation of one English text and goes stale with it (2026-09-25)
+`tools/translation_overrides/ru.json` pinned `taom_precompile_hint` to a translation of its July
+English. The English was rewritten for #560; the override outranked the cache and the re-translation,
+so Russian kept describing the old behaviour.
+- **Why missed:** overrides are written for names that never change, and nothing flags an override
+  whose key's English moved afterwards.
+- **Prevent:** keep sentences out of the override files; when editing English, grep the override
+  files for the key (TRANSLATOR_GUIDE checklist step 5).
+- **Source:** the 2026-09-25 localization sweep.
+
+### Seed a translation row by ownership: a second row for the same id in one language replaces the first (2026-09-25)
+`global_strings.xml` declares 26 `taom_aso_*` keys, 23 of them also in `taom_module_strings.xml`, and the translator maps it to the
+keybind file, so a `--sync-ids` run seeded all 26 into every keybind file. The engine keeps the row a language loads
+last (`LocalizedTextManager.DeserializeStrings` assigns by indexer; files load in `language_data.xml` order), and the
+keybind file loads after the module file: 22 copies replaced curated rows in 11 languages, the Italian "Dale" among them.
+- **Why missed:** the run printed "26 ids seeded" and nobody asked whether those ids already lived in another file of
+  the language; every check read one file at a time.
+- **Prevent:** `translate_with_claude.py` now skips a key another English source owns (`key_owners`) or another file
+  of the language carries (`skip_ids_for`); `LocalizationKeyConsistencyTests` fails on one id with two texts in one
+  language. When two English sources declare a key, treat that as a smell, not a feature.
+- **Source:** `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 1.
+
+### Read the script a translation is written in: the model returns words from other languages (2026-09-25)
+Korean 돌진 and Chinese 氏族 inside Turkish sentences, "[Ривенделл]新obranец" and Latin look-alike letters inside
+Russian words ("Брандa", "Бûрзгâш"), katakana in the Korean "Imladris", "黑numenor" in Chinese: about 120 rows across
+nine languages, each also in the cache, so every re-run served it back. The placeholder gate passed all of them.
+- **Why missed:** every check on translator output compared ids, counts and placeholders, never the characters.
+- **Prevent:** `LanguageTextIntegrityTests.NoTranslatedString_MixesWritingSystems` (per-language allowed scripts, no
+  word gluing two scripts in Russian, no lowercase Latin run glued to CJK or Hangul). Repair a flagged row and its cache
+  entry together: a letter map for Latin look-alikes in Cyrillic, a reset plus re-run for the rest.
+- **Source:** `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 2.
+
+### The seeding terminator bug came back: fix the tool the first time a lesson names it (2026-09-25)
+Plan 022's lesson (2026-09-24, above) named `sync_missing_ids` giving seeded rows the wrong terminator in `\r\r\n`
+files and left the fix as a follow-up. A day later the hill troll's translator runs seeded 384 more such rows (156 in
+the repo, 228 in the live Armory), and the builder had written that the translator preserved terminators, having
+checked `write_back` only.
+- **Why missed:** a follow-up with no owner and no failing test is a note, not a fix.
+- **Prevent:** `sync_missing_ids` now keeps each line's own terminator, with a `\r\r\n` test. A lesson that ends in
+  "follow-up" gets an issue or a failing test the same day.
+- **Source:** `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 10.
+
+### Gate the translation cache, not only the rows (2026-09-25)
+The writing-system gate read the repo's language files, but `tools/translation_cache/<lang>.json` holds the
+translator's output for all three modules, the unversioned Armory and TAOM_Map included, and a re-run writes
+its values back. Damage fixed in the rows but left in the cache returns on the next run.
+- **Why missed:** the gate was written against the files the repo ships, and the cache is not shipped.
+- **Prevent:** a content rule on translations runs over the cache too
+  (`NoCachedTranslation_MixesWritingSystems`); a word rule judges each hyphen-separated part of a name, so
+  "Bahr al-Yeshm" and "Cigfran-lûth" stay clean.
+- **Source:** `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 36.

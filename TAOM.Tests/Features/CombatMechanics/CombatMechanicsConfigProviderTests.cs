@@ -507,4 +507,28 @@ public class CombatMechanicsConfigProviderTests
         Assert.AreEqual(5f, c.ChargeDamage.CultureMultipliers["gondor"], 0.0001f);
         _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("cultureMultipliers")));
     }
+
+    [DataTestMethod]
+    [DataRow(-5)]
+    [DataRow(1001)]
+    public void GetConfig_BaseHitPointsOutOfRange_RevertsToUnsetAndWarns(int value)
+    {
+        WriteConfig(@"{ ""raceModifiers"": { ""cave_troll"": { ""baseHitPoints"": " + value + @" } } }");
+
+        var c = _sut.GetConfig();
+
+        Assert.AreEqual(0, c.RaceModifiers["cave_troll"].BaseHitPoints);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("baseHitPoints")));
+    }
+
+    [TestMethod]
+    public void GetConfig_BaseHitPointsInRange_IsKept()
+    {
+        WriteConfig(@"{ ""raceModifiers"": { ""hill_troll"": { ""baseHitPoints"": 200 } } }");
+
+        var c = _sut.GetConfig();
+
+        Assert.AreEqual(200, c.RaceModifiers["hill_troll"].BaseHitPoints);
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("baseHitPoints")));
+    }
 }

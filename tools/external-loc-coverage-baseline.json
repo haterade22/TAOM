@@ -5,14 +5,14 @@
   },
   "CNs": {
     "armory": 0,
-    "taom_map": 6
+    "taom_map": 0
   },
   "CNt": {
     "armory": 0,
-    "taom_map": 6
+    "taom_map": 0
   },
   "DE": {
-    "armory": 15,
+    "armory": 13,
     "taom_map": 348
   },
   "FR": {
@@ -25,11 +25,11 @@
   },
   "JP": {
     "armory": 0,
-    "taom_map": 6
+    "taom_map": 0
   },
   "KO": {
     "armory": 0,
-    "taom_map": 29
+    "taom_map": 23
   },
   "PL": {
     "armory": 2,
@@ -37,7 +37,7 @@
   },
   "RU": {
     "armory": 0,
-    "taom_map": 6
+    "taom_map": 0
   },
   "SP": {
     "armory": 1,

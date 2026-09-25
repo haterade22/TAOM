@@ -517,6 +517,18 @@ A C# regex written as `"[\u2013\u2014]"` through the Write tool landed in the fi
   file that holds an escape is the trigger: grep the written file for U+2013 and U+2014 right after the
   Write. Source: `docs/reviews/rca-nazgul-scream-2026-09-23.md` finding 7.
 
+### A binder takes clip availability from the files on disk, never from the plan that promised them (2026-09-25)
+`bind_hill_troll_action_set.py` read its available clips from the retarget index, and the clip generator, fed the
+same index, refused one clip whose vanilla range ran a frame past its master (`aserai_mp_guard_idle_2hperk`). The
+set then named a clip that did not exist; an in-game hit on that code would have played nothing. A post-bind check
+(every `animation="anim_hill_troll_*"` in the set against the `_anm.tpac` names in the folder) caught it.
+- **Why missed:** the index and the clips came out of the same pipeline in the same hour, so "in the index" read as
+  "on disk"; one refusal downstream broke that equality.
+- **Prevent:** `--clips-dir`: a clip is bound only if its file is there; and after any bind, list the bound names
+  against the folder before the parity audit.
+- **Source:** `tools/bind_hill_troll_action_set.py` `available_clips`; `docs/features/troll-race.md` "Human clips for
+  the hill troll".
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by
@@ -2491,3 +2503,60 @@ The adoption checklist's `grep -rln "a\|b"` works in GNU grep, but ripgrep (the 
 - **Prevent:** write alternation in documented commands as `grep -E 'a|b'`, which GNU grep, ripgrep
   and the Grep tool read the same way.
 - **Source:** `docs/reviews/rca-security-hygiene-2026-09-24.md`, finding 6.
+
+### Run the docs lint in the mode the hook runs: --fail-on-drift (2026-09-25)
+A new trap row was 197 characters (cap 180). `python tools/lint_docs.py` in report mode printed it among eight
+context-budget lines while the builder read only the dash count; `--fail-on-drift`, which the commit hook and CI run,
+exits 1 on it.
+- **Why missed:** the report mode exits 0 whatever it finds.
+- **Prevent:** before a commit that touches docs, run `python tools/lint_docs.py --fail-on-drift` and read the exit code.
+- **Source:** `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 3.
+
+### Regenerating a generated file encodes every input's working-tree state, another session's included (2026-09-25)
+`generate_name_localization_strings.py --apply` rebuilt `taom_troop_name_strings.xml` from `troops/*.xml` as they stood
+on disk, so the file picked up another session's uncommitted Gondor renames and dropped a troop that session deleted;
+the translator then re-translated 75 language rows to those names. Committed alone, 11 languages would name troops the
+committed English does not.
+- **Why missed:** the regeneration's own diff looked right, and its inputs were not compared with HEAD.
+- **Prevent:** before regenerating a shared generated file, `git status` its inputs; if another session has them
+  modified, commit the regenerated file with that session's work or `/commit-split` the hunks.
+- **Source:** `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 9.
+
+### A live-install fix ships with a check mode, not only a read-back (2026-09-25)
+`wire_hill_troll_race.py` verified its own writes, yet nothing could tell, after an Armory reinstall, that the hill
+troll's skins, Monster and standalone set had reverted: the trap index row "Unversioned modules" already asked for an
+in-repo gate and it was not written.
+- **Why missed:** a read-back that runs only inside `--apply` is not a gate anyone can run later.
+- **Prevent:** a tool that edits the live Armory or `TAOM_Map` gets a `--check` mode (exit 1 on drift, 2 on a missing
+  file, never writes) in the same change; `wire_hill_troll_race.py --check` is the template.
+- **Source:** `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 8.
+
+### When a finding reverses a documented claim, grep the claim's key terms, not one phrasing (2026-09-24/25)
+On 2026-09-24 the builder corrected "the human set plays on the re-framed rig" in eight docs and missed a ninth,
+`troll-race.md`'s recipe step "Human clips need no retarget on a re-framed rig", worded differently.
+- **Why missed:** the sweep searched for the sentence as first written.
+- **Prevent:** grep the nouns of the claim together (here `re-framed` with `human clip`, `retarget`, `no retarget`)
+  across `docs/`, the CHANGELOG and tool docstrings, and read every hit.
+- **Source:** `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 5.
+
+### The safe invocation is the default invocation (2026-09-25)
+Two hill troll tools had four defaults that were safe only when called the way their author called them: the binder bound a clip
+that was never written unless `--clips-dir` was passed, the clip generator's default skeleton GUID would wire a
+re-imported troll master to the human rig, the binder's own process check failed open, and the clip generator's
+clone path skipped the checksum fix silently when python was missing.
+- **Why missed:** each live run passed the flag and ran on a machine where the defaults never fired, and the
+  docstring's usage line, the one a later reader copies, omitted the flag.
+- **Prevent:** give every writer a default that is safe on its own (the install's folder, the shared
+  fail-closed `_gamedir.game_or_kit_running`), refuse where no default is safe (a folder whose masters name
+  another skeleton), and run the docstring's own usage line once before calling the tool done.
+- **Source:** `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` findings 20, 22, 29 and 33.
+
+### A verify mode that fails on the correct state is a dead gate (2026-09-25)
+`gen_troll_anim_clips.ps1 -CloneByName -Verify` counted the one clip the generator refuses by design as
+missing and exited 1 on the correct live folder, while troll-race.md recorded both verify modes as clean.
+- **Why missed:** "clean" was read off the printed counts (`ok=428 bad=0`), not the exit status, so a gate
+  that could never pass looked like a pass.
+- **Prevent:** a verify mode lists deliberate refusals under their own name and does not count them as missing;
+  write "clean" in a doc only with the exit code in hand (`refused-by-design=1`, exit 0 now).
+- **Source:** `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 21.
+

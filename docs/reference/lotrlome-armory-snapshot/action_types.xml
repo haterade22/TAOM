@@ -226,6 +226,10 @@
 	     act_horse_kick itself as its kick_action. -->
 	<action name="act_animalia_elk_antler" type="actt_kick" />
 	<action name="act_animalia_moose_antler" type="actt_kick" />
+	<!-- #649 cave troll Brute Force: the smash TAOM Main/Features/TrollBruteForce plays from its behaviour tree
+	     (TrollBruteForceConfig.ActionName). Untyped: its ring is a synthetic RegisterBlow, which never runs the
+	     kick pipeline, so actt_kick would buy nothing. Bound in as_cave_troll_warrior by tools/bind_troll_action_set.py. -->
+	<action name="act_troll_brute_force" />
 	<action name="act_warg_stand_1"/>
 	<action name="act_warg_stand_2"/>
 	<action name="act_warg_idle_1" type="actt_idle" />

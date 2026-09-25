@@ -14,5 +14,8 @@
     <string id="taom_key_turbo_desc" text="Tieni premuto Ctrl insieme a questo tasto per il moltiplicatore di velocità più alto di TAOM. Rilasciando uno dei due tasti si ripristina la velocità precedente." />
     <string id="taom_key_career_ability" text="Abilità di Carriera (TAOM)" />
     <string id="taom_key_career_ability_desc" text="Attiva la tua abilità di carriera durante una battaglia quando la barra di energia è piena. Predefinito: V." />
+    <string id="taom_aso_desc_invasion" text="La fazione che domina la maggior parte della Terra di Mezzo." />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} domina la gran parte della Terra di Mezzo." />
+    <string id="taom_aso_item_desc_randomized" text="Rende casuale lo stato iniziale della Terra di Mezzo nella misura che preferisci, entro limiti ragionevoli." />
   </strings>
 </base>

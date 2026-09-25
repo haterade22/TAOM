@@ -45,7 +45,7 @@
     <string id="taom_fc_no_room_body" text="Derzeit ist kein Platz für einen weiteren Gefährten. Die Beförderung von {TROOP_NAME} wird später erneut angeboten." />
     <string id="taom_fc_offer_body" text="{TROOP_NAME} hat sich im Kampf ausgezeichnet. Zum Gefährten befördern?" />
     <string id="taom_fc_offer_title" text="Beförderung auf dem Schlachtfeld" />
-    <string id="taom_fc_rename_body" text="Gebt {TROOP_NAME} einen Namen oder behaltet den, mit dem er in die Schlacht zog." />
+    <string id="taom_fc_rename_body" text="Gib {TROOP_NAME} einen Namen oder behalte jenen, den er in die Schlacht trug." />
     <string id="taom_fc_rename_title" text="Benennt den neuen Gefährten" />
     <string id="taom_fc_cancel" text="Abbrechen" />
     <string id="taom_fc_dismiss" text="Dein Amt ist beendet. Kehre in die Reihen zurück." />
@@ -101,7 +101,7 @@
     <string id="taom_enlist_section_sup" text="Tross" />
     <string id="taom_enlist_trust_known" text="bekannt" />
     <string id="taom_enlist_trust_new" text="unerprobt" />
-    <string id="taom_enlist_trust_poor" text="in schlechtem Ruf" />
+    <string id="taom_enlist_trust_poor" text="schlecht angesehen" />
     <string id="taom_enlist_trust_solid" text="gut angesehen" />
     <string id="taom_enlist_trust_trusted" text="vertraut" />
     <string id="taom_enlist_grade_distinguished" text="ausgezeichnet" />

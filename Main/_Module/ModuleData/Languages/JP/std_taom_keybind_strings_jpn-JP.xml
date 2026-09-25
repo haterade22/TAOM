@@ -14,5 +14,8 @@
     <string id="taom_key_turbo_desc" text="Ctrlとこのキーを同時に長押しすると、TAOMの最高速度倍率が適用されます。どちらかのキーを離すと元の速度に戻ります。" />
     <string id="taom_key_career_ability" text="キャリア能力（TAOM）" />
     <string id="taom_key_career_ability_desc" text="戦闘中、エネルギーバーが満たされるとキャリア能力を発動します。既定キーはVです。" />
+    <string id="taom_aso_desc_invasion" text="中つ国の大部分を支配する勢力。" />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId}が中つ国の圧倒的大部分を支配している。" />
+    <string id="taom_aso_item_desc_randomized" text="中つ国の初期状態を、常識の範囲内であなたの選んだ度合いでランダム化します。" />
   </strings>
 </base>

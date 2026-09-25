@@ -42,14 +42,14 @@
     <string id="taom_cc_taom_parent_erebor_5_desc" text="당신의 가문은 에레보르의 방대한 보물고를 지키며, 그 부를 관리하고 적으로부터 산의 재산을 보호하기 위한 방어를 계획했습니다." />
     <string id="taom_cc_taom_parent_erebor_6_text" text="산악 정찰병" />
     <string id="taom_cc_taom_parent_erebor_6_desc" text="당신의 가문은 에레보르 주변의 황야를 순찰하며 오크를 추적하고 활을 쏘아 외로운 산의 국경을 수호했습니다." />
-    <string id="taom_cc_taom_parent_rivendell_1_text" text="이ムladris의 귀족" />
-    <string id="taom_cc_taom_parent_rivendell_1_desc" text="당신의 가문은 이ムladris의 존경받는 엘프로, 엘론드를 섬기기로 맹세했습니다. 그들은 시대의 지혜와 리벤델이 필요로 할 때 그것을 수호할 힘을 지녔습니다." />
+    <string id="taom_cc_taom_parent_rivendell_1_text" text="임라드리스의 귀족" />
+    <string id="taom_cc_taom_parent_rivendell_1_desc" text="당신의 가문은 엘론드를 섬기기로 맹세한 임라드리스의 존경받는 요정들이었습니다. 그들은 오랜 세월의 지혜와, 위기의 때에 깊은골을 지킬 힘을 지니고 있었습니다." />
     <string id="taom_cc_taom_parent_rivendell_2_text" text="리벤델의 장인" />
     <string id="taom_cc_taom_parent_rivendell_2_desc" text="당신의 가문은 숙련된 장인이자 전승가로서, 엘프 공예의 경이로움을 창조하고 중간계의 고대 지식을 보존했습니다." />
     <string id="taom_cc_taom_parent_rivendell_3_text" text="숨은 골짜기의 농부" />
     <string id="taom_cc_taom_parent_rivendell_3_desc" text="당신의 가문은 리벤델의 비옥한 들판을 경작하며, 평화로운 피난처에서 그곳의 주민들과 손님들이 잘 먹고 지낼 수 있도록 했습니다." />
     <string id="taom_cc_taom_parent_rivendell_4_text" text="골짜기의 수호자" />
-    <string id="taom_cc_taom_parent_rivendell_4_desc" text="당신의 가문은 정찰병이자 수호자로 복무하며, 이ムladris의 국경을 순찰하고 골짜기가 악으로부터 자유로운 성역으로 남도록 보장했습니다." />
+    <string id="taom_cc_taom_parent_rivendell_4_desc" text="당신의 가문은 정찰병이자 수호자로서 임라드리스의 국경을 순찰하며, 그 골짜기가 악이 없는 성역으로 남도록 지켰습니다." />
     <string id="taom_cc_taom_parent_rivendell_5_text" text="엘프 학자" />
     <string id="taom_cc_taom_parent_rivendell_5_desc" text="당신의 가문은 전승, 치유, 마법의 학자로서, 엘프의 고대 지식을 보존하고 중간계의 자유 종족들을 도왔습니다." />
     <string id="taom_cc_taom_parent_rivendell_6_text" text="야생의 방랑자" />
@@ -268,7 +268,7 @@
     <string id="taom_cc_taom_youth_erebor_5_desc" text="당신은 에레보르 선봉대의 일원으로 훈련하며 규율 잡힌 드워프 전투 대형에서 양손 도끼와 장창을 마스터했습니다." />
     <string id="taom_cc_taom_youth_erebor_6_text" text="대상 호위대와 함께 일했다." />
     <string id="taom_cc_taom_youth_erebor_6_desc" text="당신은 에레보르와 골짜기 마을 사이를 오가는 교역 대상을 호위하며 상업의 방식과 귀중한 화물을 지키는 기술을 배웠습니다." />
-    <string id="taom_cc_taom_youth_rivendell_1_text" text="이ムラ드리스의 근위대와 함께 훈련했다." />
+    <string id="taom_cc_taom_youth_rivendell_1_text" text="임라드리스의 수호대와 함께 훈련했다." />
     <string id="taom_cc_taom_youth_rivendell_1_desc" text="당신은 리븐델의 깃발 아래 복무하며 마지막 아늑한 집을 지키기 위해 기마 전투와 우아한 엘프 무술을 훈련했습니다." />
     <string id="taom_cc_taom_youth_rivendell_2_text" text="엘론드의 전당에서 경비를 섰다." />
     <string id="taom_cc_taom_youth_rivendell_2_desc" text="당신은 엘론드의 전당에서 보초로 복무하며 땅을 읽고 위협이 숨겨진 계곡에 도달하기 전에 예측하는 법을 배웠습니다." />
@@ -694,7 +694,7 @@
     <string id="taom_cc_taom_adulthood_erebor_5_desc" text="장부는 재탈환 이후 어긋나 있었고 아무도 설명할 수 없는 손실이 있었습니다. 당신은 석 달 동안 기록을 대조하여 오류를 식별했습니다 — 이십 년의 항목에 걸쳐 복합된 단순한 환산 실수였습니다. 왕의 재무관이 당신의 손을 잡았습니다." />
     <string id="taom_cc_taom_adulthood_erebor_6_text" text="당신은 오크 습격대를 그들의 소굴까지 추적하고 수비대를 위해 표시했습니다." />
     <string id="taom_cc_taom_adulthood_erebor_6_desc" text="그 무리는 같은 방향에서 세 번 습격했고 누구도 따라가기 전에 빠져나갔습니다. 당신은 혼자 소나무 숲으로 들어가 야영지를 찾고 그들을 세고 접근로를 스케치하여 수비대가 행동할 시간에 맞춰 보고서를 가져왔습니다." />
-    <string id="taom_cc_taom_adulthood_rivendell_1_text" text="당신은 부상당한 전령을 이ムladris로 호위하기 위해 혼자 출발했습니다." />
+    <string id="taom_cc_taom_adulthood_rivendell_1_text" text="당신은 홀로 말을 달려 부상당한 전령을 임라드리스로 호위해 돌아왔습니다." />
     <string id="taom_cc_taom_adulthood_rivendell_1_desc" text="전령은 여울 동쪽에서 매복을 당했고 혼자서는 말을 탈 수 없었습니다. 당신은 그를 찾고 아직 길을 수색하던 오크 잔당들을 격퇴하고 그를 데려왔습니다. 엘론드는 메시지로 돌아가기 전에 당신에게 잠깐 말을 걸었습니다." />
     <string id="taom_cc_taom_adulthood_rivendell_2_text" text="당신은 엘론드의 학자들이 보존하기로 선택한 공예 작품을 완성했습니다." />
     <string id="taom_cc_taom_adulthood_rivendell_2_desc" text="그 작품 — 단편적인 자료에서 재구성한 에리아도르의 고대 도로망의 상세한 양각 지도 — 은 도서관 기록 보관소에 복사될 만큼 정확하다고 여겨졌습니다. 세 명의 학자들이 두 계곡에 대해 의견이 달랐습니다. 당신은 둘 다 옳았습니다." />

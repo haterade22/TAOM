@@ -655,7 +655,7 @@
     <string id="taom_precompile_shaders" text="シェーダーをプリコンパイル" />
     <string id="taom_precompile_hint" text="兵士と装備のシェーダーを事前にコンパイルし、最初の戦闘でのカクつきや停止を防ぎます。MODリストを変更した後は再実行してください。モジュール構成が変わるとゲームはコンパイル済みシェーダーを消去します。" />
     <string id="taom_precompile_inquiry_title" text="シェーダー事前コンパイル" />
-    <string id="taom_precompile_inquiry_body" text="TAOMと基本ゲームの兵士、領主、戦闘装備を含む一連の隠し戦闘を読み込み、各文化との初戦闘中ではなく今のうちにシェーダーをコンパイルします。{newline}{newline}これには時間がかかります。シェーダーキャッシュが新しい場合、20〜70分ほどかかります。ゲームを起動したままにし、別の戦闘を始めないでください。進行状況はローディング画面とステータス行に表示されます。中止するにはいつでもCtrl+Shift+Kを長押ししてください。{newline}{newline}モジュールリストが変更されるたびにゲームはコンパイル済みシェーダーを消去するため、MODの追加・削除・並べ替えの後は再度実行してください。{newline}{newline}シーンパス（TAOM独自の戦闘シーン用の地形および大気シェーダー）は一部のGPUでクラッシュするため、既定では無効です。必要であればMODオプション → TAOM → グラフィック/シェーダー事前コンパイルから有効にしてください。{newline}{newline}「Shader pre-compilation COMPLETE」と表示されたらプレイできます。" />
+    <string id="taom_precompile_inquiry_body" text="TAOMおよびベースゲームの兵士、諸侯、戦闘装備を含む一連の隠し戦闘を読み込み、各文化との初戦時ではなく今のうちにシェーダーをコンパイルします。{newline}{newline}これには時間がかかります。シェーダーキャッシュが空の場合、20分から70分ほどかかります。ゲームを起動したままにし、別の戦闘を始めないでください。進行状況はロード画面とステータス行に表示されます。Ctrl+Shift+Kを長押しすればいつでも中止できます。{newline}{newline}モジュール一覧が変わるとゲームはコンパイル済みシェーダーを消去しますので、MODを追加・削除・並べ替えた後は再度実行してください。{newline}{newline}シーンパス(TAOM独自の戦闘シーンの地形・大気シェーダー)は一部のGPUでクラッシュするため、既定では無効です。必要であればMODオプション → TAOM → グラフィック/シェーダー事前コンパイルから有効にしてください。{newline}{newline}「シェーダー事前コンパイル完了」と表示されたらプレイできます。" />
     <string id="taom_main_menu_new_game" text="人間の時代へ" />
     <string id="taom_career_screen_title" text="キャリア" />
     <string id="taom_career_done" text="完了" />
@@ -1404,7 +1404,7 @@
     <string id="taom_faction_goblins_of_blue_craig_bonus_3" text="+20% 部隊食糧消費(貪欲なる群れ)" />
     <string id="taom_faction_goblins_of_blue_craig_bonus_4" text="+10% 鍛冶効率(奪取武器の山)" />
     <string id="taom_faction_goblins_of_blue_craig_bonus_5" text="+10% 略奪ダメージ(ゴブリンの奇襲)" />
-    <string id="taom_faction_goblins_of_blue_craig_desc" text="青い岩山のゴブリン。" />
+    <string id="taom_faction_goblins_of_blue_craig_desc" text="遥か西方、リンドンの灰色港にほど近い青の山脈（エレド・ルイン）に巣食う独立したゴブリンの軍勢。霧ふり山脈のゴブリン町の同族とは別の勢力である。同じく数知れぬ、粗末な武装の群れ——単体では弱いが、群がれば圧倒的で、行軍中は飢えに貪欲だ。彼らは西の岸辺のエルフたちを悩ませている。" />
     <string id="taom_faction_goblins_of_blue_craig_name" text="青い岩山のゴブリン" />
     <string id="taom_faction_goblins_of_blue_craig_perk_0_desc" text="+40% 部隊規模と+25% 村の志願兵再出現率 — 弱いが無数。" />
     <string id="taom_faction_goblins_of_blue_craig_perk_0_name" text="ゴブリンの群れ" />
@@ -1435,7 +1435,7 @@
     <string id="taom_faction_goblins_of_goblin_town_bonus_3" text="+20% 部隊食糧消費(貪欲なる群れ)" />
     <string id="taom_faction_goblins_of_goblin_town_bonus_4" text="+10% 鍛冶効率(奪取武器の山)" />
     <string id="taom_faction_goblins_of_goblin_town_bonus_5" text="+10% 略奪ダメージ(ゴブリンの奇襲)" />
-    <string id="taom_faction_goblins_of_goblin_town_desc" text="霧ふり山脈のゴブリンが蔓延るトンネルと洞窟。これらのオークは高地の峠を支配し、山を越えようとする者すべてを脅かす。" />
+    <string id="taom_faction_goblins_of_goblin_town_desc" text="霧ふり山脈の高い峠の下に群がるゴブリンの巣穴。大ゴブリンの滅び以来、諸部族は数え切れぬほど増え広がった——粗末な武装ながら膨大な群れで、ただ数の重みによって勝ち、いかなる敵が間引くよりも速く増える。山の故郷の雪の上を最も速く駆けるが、かような大群は常に飢えている。" />
     <string id="taom_faction_goblins_of_goblin_town_name" text="ゴブリン街のゴブリン" />
     <string id="taom_faction_goblins_of_goblin_town_perk_0_desc" text="+40% 部隊規模と+25% 村の志願兵再出現率 — ゴブリンは弱いが無数。" />
     <string id="taom_faction_goblins_of_goblin_town_perk_0_name" text="ゴブリンの群れ" />
@@ -1453,9 +1453,9 @@
     <string id="taom_faction_goblins_of_goblin_town_su_1_name" text="洞窟ゴブリン散兵" />
     <string id="taom_faction_goblins_of_goblin_town_su_2_desc" text="深き巣穴の重装衝撃ゴブリン。" />
     <string id="taom_faction_goblins_of_goblin_town_su_2_name" text="ゴブリンの荒くれ者" />
-    <string id="taom_faction_goblins_of_goblin_town_trait_0" text="ゴブリンのトンネル" />
-    <string id="taom_faction_goblins_of_goblin_town_trait_1" text="山の峠" />
-    <string id="taom_faction_goblins_of_goblin_town_trait_2" text="ワーグ騎兵" />
+    <string id="taom_faction_goblins_of_goblin_town_trait_0" text="ゴブリン町の巣穴" />
+    <string id="taom_faction_goblins_of_goblin_town_trait_1" text="高い峠の落とし子" />
+    <string id="taom_faction_goblins_of_goblin_town_trait_2" text="山道の伏兵" />
     <string id="taom_faction_goblins_of_goblin_town_trait_3" text="無数の群れ" />
     <string id="taom_faction_goblins_of_goblin_town_weakness_0" text="個々の兵は弱い" />
     <string id="taom_faction_goblins_of_goblin_town_weakness_1" text="貪欲 — すべての補給線を圧迫" />
@@ -1526,17 +1526,17 @@
     <string id="taom_faction_havens_of_umbar_weakness_1" text="ゴンドールに憎まれている" />
     <string id="taom_faction_havens_of_umbar_weakness_2" text="陸軍が海軍より弱い" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_0" text="軍隊影響力報酬+35%(エルフの知恵)" />
-    <string id="taom_faction_high_kingdom_of_lindon_bonus_1" text="村の炉辺成長+20%(最後の安らぎの家)" />
+    <string id="taom_faction_high_kingdom_of_lindon_bonus_1" text="村の人口増加 +20%（灰色港）" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_2" text="森での部隊速度+10%(森林の優雅さ)" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_3" text="部隊の食料消費-15%(エルフの質素)" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_4" text="入植地忠誠度+0.5/日" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_5" text="軍隊影響力コスト+25%(エルフの誇り)" />
-    <string id="taom_faction_high_kingdom_of_lindon_desc" text="中つ国の西岸にある古代エルフの王国リンドン。ギル=ガラドの後継者によって統治され、衰えゆくエルフの栄光と灰色港の地である。" />
+    <string id="taom_faction_high_kingdom_of_lindon_desc" text="青の山脈の西に広がる緑の地、中つ国の岸辺における上のエルフ最後の王国。ミスロンドの灰色港より、白き船は西方へと出帆する。エルダー最年長の造船者キーアダンが、ファラスリムの消えゆく光を守っている——賢く、数少なく、一振りの剣も掛け替えがない。リンドンはミスロンドのファラスリムの力を分かち合う。" />
     <string id="taom_faction_high_kingdom_of_lindon_name" text="リンドン上級王国" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_0_desc" text="軍の成功時に獲得する影響力+35% — 賢者は率いる術を知る。" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_0_name" text="エルフの知恵" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_1_desc" text="村の炉辺成長+20%、部隊の食料消費-15%。" />
-    <string id="taom_faction_high_kingdom_of_lindon_perk_1_name" text="最後の安らぎの家" />
+    <string id="taom_faction_high_kingdom_of_lindon_perk_1_name" text="灰色港" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_2_desc" text="森での部隊速度+10%、入植地忠誠度+0.5/日。" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_2_name" text="森林の優雅さ" />
     <string id="taom_faction_high_kingdom_of_lindon_strength_0" text="伝説の精鋭戦士" />
@@ -1544,15 +1544,15 @@
     <string id="taom_faction_high_kingdom_of_lindon_strength_2" text="質素で自給自足の軍勢" />
     <string id="taom_faction_high_kingdom_of_lindon_strength_3" text="炉辺豊かで忠実な避難所" />
     <string id="taom_faction_high_kingdom_of_lindon_su_0_desc" text="エルダールの伝説的な第一紀の古強者。" />
-    <string id="taom_faction_high_kingdom_of_lindon_su_0_name" text="ノルドールの剣聖" />
+    <string id="taom_faction_high_kingdom_of_lindon_su_0_name" text="ファラスリムの剣の達人" />
     <string id="taom_faction_high_kingdom_of_lindon_su_1_desc" text="灰色港の海のエルフの守護者。" />
     <string id="taom_faction_high_kingdom_of_lindon_su_1_name" text="ファラスリム海洋守護兵" />
-    <string id="taom_faction_high_kingdom_of_lindon_su_2_desc" text="灰色港の重装ノルドール守護者。" />
+    <string id="taom_faction_high_kingdom_of_lindon_su_2_desc" text="灰色港を守るファラスリムの重装守護者。" />
     <string id="taom_faction_high_kingdom_of_lindon_su_2_name" text="ミスロンド歩哨" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_0" text="灰色港" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_1" text="古代エルフの王国" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_2" text="ヴァリノールへの船" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_3" text="造船匠キアダン" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_0" text="造船者キーアダン" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_1" text="灰色港" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_2" text="西方へ向かう船" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_3" text="上のエルフの最後の者たち" />
     <string id="taom_faction_high_kingdom_of_lindon_weakness_0" text="エルフの誇りが影響力コストを上昇させる" />
     <string id="taom_faction_high_kingdom_of_lindon_weakness_1" text="衰退する民 — 補充兵が少ない" />
     <string id="taom_faction_khudorom_of_khand_bonus_0" text="草原での部隊速度+10%(草原戦車兵)" />
@@ -1778,8 +1778,8 @@
     <string id="taom_faction_kingdom_of_moria_bonus_4" text="+15% 鍛冶効率(略奪した鍛冶場)" />
     <string id="taom_faction_kingdom_of_moria_bonus_5" text="+15% 略奪ダメージ(洞窟トロール徴兵)" />
     <string id="taom_faction_kingdom_of_moria_bonus_6" text="-10% 建設速度(反響する大広間)" />
-    <string id="taom_faction_kingdom_of_moria_desc" text="モリアの王国。" />
-    <string id="taom_faction_kingdom_of_moria_name" text="モリアの王国" />
+    <string id="taom_faction_kingdom_of_moria_desc" text="霧ふり山脈の深き場所を占めるオークの軍勢——ドワーフから奪い取ったモリアの黒き坑と、カラズラスからメセドラスに至る冷たき峰々。高い峠のゴブリンの烏合の衆より大きく、装備も優れ、ほとんど影響力を要さずに膨大な戦の軍勢を集め、飢えながらも疲れを知らず雪原を進軍する。" />
+    <string id="taom_faction_kingdom_of_moria_name" text="霧ふり山脈のオーク" />
     <string id="taom_faction_kingdom_of_moria_perk_0_desc" text="軍隊招集コストが影響力40%減 — オークの大群は行軍に合意を必要としない。" />
     <string id="taom_faction_kingdom_of_moria_perk_0_name" text="オークの大群" />
     <string id="taom_faction_kingdom_of_moria_perk_1_desc" text="+30% 部隊サイズと雪上+10%速度 — 冷たい峰々で育った大戦軍勢。" />
@@ -2643,9 +2643,6 @@
     <string id="taom_aso_kingdom.lindon" text="リンドン" />
     <string id="taom_aso_kingdom.bluecraig" text="青岩のゴブリン" />
     <string id="taom_aso_item_name_randomized" text="ランダム化された中つ国" />
-    <string id="taom_aso_desc_invasion" text="中つ国の大部分を支配する勢力。" />
-    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId}が中つ国の圧倒的大部分を支配している。" />
-    <string id="taom_aso_item_desc_randomized" text="中つ国の初期状態を、常識の範囲内であなたの選んだ度合いでランダム化します。" />
     <string id="taom_tactic.shield_wall" text="我らの策は盾を並べ、陣地を守り抜くことだ。" />
     <string id="taom_tactic.infantry_mass" text="我らの策は数にものを言わせて押し潰すことだ。" />
     <string id="taom_tactic.cavalry_dominance" text="我らの策は騎馬で蹴散らし、歩兵がそれを仕留めることだ。" />
@@ -2662,22 +2659,22 @@
     <string id="taom_behavior.infantry_skirmish" text="投擲距離まで接近し、投げてから退け" />
     <string id="taom_behavior.cycle_charge" text="突き抜け、隊列を整え、再び突撃せよ" />
     <string id="taom_behavior.envelop_wing" text="敵の側面に回り込み、横から討て" />
-    <string id="taom_behavior.foot_charge" text="Charge their foot; square up if horse come at you" />
-    <string id="taom_behavior.archer_flank" text="Stand beside the wall and shoot; fall in behind it if they come for you" />
-    <string id="taom_behavior_f6.braced_defend" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are holding in a wall." />
-    <string id="taom_behavior_f6.braced_advance" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are advancing in a wall." />
-    <string id="taom_behavior_f6.infantry_skirmish" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are throwing and falling back." />
-    <string id="taom_behavior_f6.cycle_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging in cycles." />
-    <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are swinging round the flank." />
-    <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging the enemy foot." />
-    <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are taking the flank of the wall." />
+    <string id="taom_behavior.foot_charge" text="敵の歩兵に突撃せよ。騎兵が来たら隊列を組め" />
+    <string id="taom_behavior.archer_flank" text="壁の側面に立って射よ。敵が迫れば壁の後ろへ下がれ" />
+    <string id="taom_behavior_f6.braced_defend" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL}と{?}{\?}{TROOP_NAMES_END}は壁を組んで持ちこたえている。" />
+    <string id="taom_behavior_f6.braced_advance" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL}と{?}{\?}{TROOP_NAMES_END}は壁を組んで前進している。" />
+    <string id="taom_behavior_f6.infantry_skirmish" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL}と{?}{\?}{TROOP_NAMES_END}は投擲しつつ後退している。" />
+    <string id="taom_behavior_f6.cycle_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL}と{?}{\?}{TROOP_NAMES_END}は反復突撃を行っている。" />
+    <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL}と{?}{\?}{TROOP_NAMES_END}は側面へ回り込んでいる。" />
+    <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL}と{?}{\?}{TROOP_NAMES_END}は敵の歩兵に突撃している。" />
+    <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL}と{?}{\?}{TROOP_NAMES_END}は壁の側面に付いている。" />
     <string id="taom_patch_apply_failed" text="TAOM: {PHASE}にパッチグループの適用に失敗しました: {GROUPS}。これらのグループの一部の修正は今回のセッションでは無効です。原因はTAOMのログに記録されています。" />
     <string id="taom_patch_apply_phase_startup" text="起動時" />
     <string id="taom_patch_apply_notice_title" text="TAOM" />
     <string id="taom_patch_apply_phase_game_init" text="ゲーム初期化時" />
     <string id="taom_patch_apply_phase_mission_start" text="ミッション開始時" />
-    <string id="taom_oob_autoassign_done" text="Captains assigned: {COUNT}." />
-    <string id="taom_oob_autoassign_not_general" text="Only the general of this battle can assign heroes." />
-    <string id="taom_oob_autoassign_none" text="No hero suits an open captain slot." />
+    <string id="taom_oob_autoassign_done" text="隊長を任命しました：{COUNT}名。" />
+    <string id="taom_oob_autoassign_not_general" text="この戦の総大将のみが英雄を任命できます。" />
+    <string id="taom_oob_autoassign_none" text="空いている隊長の席に適した英雄がいません。" />
   </strings>
 </base>

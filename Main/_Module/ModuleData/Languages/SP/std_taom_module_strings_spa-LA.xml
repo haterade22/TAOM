@@ -735,7 +735,7 @@
     <string id="taom_career_rank3_dale_marksman" text="Portador de la Flecha Negra" />
     <string id="taom_career_rank1_dale_outrider" text="Jinete de Caminos de Valle" />
     <string id="taom_career_rank2_dale_outrider" text="Guardián del Camino del Norte" />
-    <string id="taom_career_rank3_dale_outrider" text="Mariscal de los Bардингos" />
+    <string id="taom_career_rank3_dale_outrider" text="Mariscal de los Bárdidos" />
     <string id="taom_career_rank1_elk_rider" text="Explorador del Bosque" />
     <string id="taom_career_rank2_elk_rider" text="Guardián de Alces del Bosque Negro" />
     <string id="taom_career_rank3_elk_rider" text="Señor Astado de Eryn Lasgalen" />
@@ -1404,7 +1404,7 @@
     <string id="taom_faction_goblins_of_blue_craig_bonus_3" text="+20% consumo de comida del grupo (Enjambre Voraz)" />
     <string id="taom_faction_goblins_of_blue_craig_bonus_4" text="+10% eficiencia de herrería (Arsenal de Armas Capturadas)" />
     <string id="taom_faction_goblins_of_blue_craig_bonus_5" text="+10% daño de saqueo (Emboscada Goblin)" />
-    <string id="taom_faction_goblins_of_blue_craig_desc" text="Los Trasgos de Blue Craig." />
+    <string id="taom_faction_goblins_of_blue_craig_desc" text="Una hueste trasga distinta de las Montañas Azules (Ered Luin), en el lejano oeste, junto a los Puertos Grises de Lindon: un reino aparte de sus primos de Ciudad de los Trasgos en las Montañas Nubladas. Los mismos enjambres innumerables y mal armados: débiles en solitario, abrumadores en masa y voraces en marcha. Hostigan a los Elfos de la costa occidental." />
     <string id="taom_faction_goblins_of_blue_craig_name" text="Trasgos de Blue Craig" />
     <string id="taom_faction_goblins_of_blue_craig_perk_0_desc" text="+40% tamaño de grupo y +25% reaparición de voluntarios de aldea — débiles pero innumerables." />
     <string id="taom_faction_goblins_of_blue_craig_perk_0_name" text="Enjambre Goblin" />
@@ -1435,7 +1435,7 @@
     <string id="taom_faction_goblins_of_goblin_town_bonus_3" text="+20% consumo de comida del grupo (Enjambre Voraz)" />
     <string id="taom_faction_goblins_of_goblin_town_bonus_4" text="+10% eficiencia de herrería (Arsenal de Armas Capturadas)" />
     <string id="taom_faction_goblins_of_goblin_town_bonus_5" text="+10% daño de saqueo (Emboscada Goblin)" />
-    <string id="taom_faction_goblins_of_goblin_town_desc" text="Los túneles y cavernas infestados de trasgos de las Montañas Nubladas. Estos Orcos controlan los pasos altos y amenazan a todos los que se atreven a cruzar las montañas." />
+    <string id="taom_faction_goblins_of_goblin_town_desc" text="Los atestados túneles trasgos bajo el Paso Alto de las Montañas Nubladas. Desde la caída del Gran Trasgo, las tribus se han multiplicado sin número: vastos enjambres mal armados que vencen por puro peso y se reproducen más rápido de lo que cualquier enemigo puede diezmarlos. Corren más veloces sobre las nieves de su hogar montañoso, pero tales hordas son siempre voraces." />
     <string id="taom_faction_goblins_of_goblin_town_name" text="Trasgos de la Ciudad Trasgo" />
     <string id="taom_faction_goblins_of_goblin_town_perk_0_desc" text="+40% tamaño de grupo y +25% reaparición de voluntarios de aldea — los goblins son débiles pero innumerables." />
     <string id="taom_faction_goblins_of_goblin_town_perk_0_name" text="Enjambre Goblin" />
@@ -1453,9 +1453,9 @@
     <string id="taom_faction_goblins_of_goblin_town_su_1_name" text="Escaramuzador Trasgo de las Cavernas" />
     <string id="taom_faction_goblins_of_goblin_town_su_2_desc" text="Trasgo de choque más pesado de las madrigueras profundas." />
     <string id="taom_faction_goblins_of_goblin_town_su_2_name" text="Bruto Trasgo" />
-    <string id="taom_faction_goblins_of_goblin_town_trait_0" text="Túneles Trasgos" />
-    <string id="taom_faction_goblins_of_goblin_town_trait_1" text="Pasos de Montaña" />
-    <string id="taom_faction_goblins_of_goblin_town_trait_2" text="Jinetes de Huargo" />
+    <string id="taom_faction_goblins_of_goblin_town_trait_0" text="Túneles de la Ciudad de los Trasgos" />
+    <string id="taom_faction_goblins_of_goblin_town_trait_1" text="Engendros del Paso Alto" />
+    <string id="taom_faction_goblins_of_goblin_town_trait_2" text="Emboscadores de los pasos de montaña" />
     <string id="taom_faction_goblins_of_goblin_town_trait_3" text="Enjambres Innumerables" />
     <string id="taom_faction_goblins_of_goblin_town_weakness_0" text="Tropas individualmente débiles" />
     <string id="taom_faction_goblins_of_goblin_town_weakness_1" text="Voraces — tensan toda línea de suministro" />
@@ -1526,17 +1526,17 @@
     <string id="taom_faction_havens_of_umbar_weakness_1" text="Odiados por Gondor" />
     <string id="taom_faction_havens_of_umbar_weakness_2" text="Ejército terrestre más débil que la armada" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_0" text="+35% de influencia otorgada por ejército (Sabiduría Élfica)" />
-    <string id="taom_faction_high_kingdom_of_lindon_bonus_1" text="+20% de crecimiento de hogares de aldea (La Última Casa Acogedora)" />
+    <string id="taom_faction_high_kingdom_of_lindon_bonus_1" text="+20% de crecimiento de hogares en aldeas (Los Puertos Grises)" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_2" text="+10% de velocidad del grupo en bosque (Gracia del Bosque)" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_3" text="-15% de consumo de comida del grupo (Frugalidad Élfica)" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_4" text="+0.5 de lealtad del asentamiento por día" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_5" text="+25% de costo de influencia del ejército (Orgullo Élfico)" />
-    <string id="taom_faction_high_kingdom_of_lindon_desc" text="El antiguo reino élfico de Lindon en las costas occidentales de la Tierra Media. Gobernado por los sucesores de Gil-galad, es una tierra de gloria élfica menguante y los Puertos Grises." />
+    <string id="taom_faction_high_kingdom_of_lindon_desc" text="La tierra verde al oeste de las Montañas Azules, último reino de los Altos Elfos en las costas de la Tierra Media. Desde los Puertos Grises de Mithlond, las naves blancas zarpan hacia el Oeste. Círdan el Carpintero de Barcos, el más anciano de los Eldar, guarda la luz menguante de los Falathrim: sabios, pocos, y cada espada irreemplazable. Lindon comparte la fuerza Falathrim de Mithlond." />
     <string id="taom_faction_high_kingdom_of_lindon_name" text="Alto Reino de Lindon" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_0_desc" text="+35% de influencia otorgada por éxito del ejército — los Sabios saben cómo liderar." />
     <string id="taom_faction_high_kingdom_of_lindon_perk_0_name" text="Sabiduría Élfica" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_1_desc" text="+20% de crecimiento de hogares de aldea y -15% de consumo de comida del grupo." />
-    <string id="taom_faction_high_kingdom_of_lindon_perk_1_name" text="La Última Casa Acogedora" />
+    <string id="taom_faction_high_kingdom_of_lindon_perk_1_name" text="Los Puertos Grises" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_2_desc" text="+10% de velocidad del grupo en bosque y +0.5 de lealtad del asentamiento por día." />
     <string id="taom_faction_high_kingdom_of_lindon_perk_2_name" text="Gracia del Bosque" />
     <string id="taom_faction_high_kingdom_of_lindon_strength_0" text="Guerreros de élite de leyenda" />
@@ -1544,15 +1544,15 @@
     <string id="taom_faction_high_kingdom_of_lindon_strength_2" text="Huestes frugales y autosuficientes" />
     <string id="taom_faction_high_kingdom_of_lindon_strength_3" text="Refugios ricos en hogares y leales" />
     <string id="taom_faction_high_kingdom_of_lindon_su_0_desc" text="Legendario veterano de la Primera Edad de los Eldar." />
-    <string id="taom_faction_high_kingdom_of_lindon_su_0_name" text="Maestro de Espada Noldor" />
+    <string id="taom_faction_high_kingdom_of_lindon_su_0_name" text="Maestro espadachín Falathrim" />
     <string id="taom_faction_high_kingdom_of_lindon_su_1_desc" text="Elfo del mar guardián de los Puertos." />
     <string id="taom_faction_high_kingdom_of_lindon_su_1_name" text="Guardián Marino Falathrim" />
-    <string id="taom_faction_high_kingdom_of_lindon_su_2_desc" text="Guardián Noldor pesado de los Puertos Grises." />
+    <string id="taom_faction_high_kingdom_of_lindon_su_2_desc" text="Guardián pesado Falathrim de los Puertos Grises." />
     <string id="taom_faction_high_kingdom_of_lindon_su_2_name" text="Centinela de Mithlond" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_0" text="Puertos Grises" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_1" text="Reino Élfico Ancestral" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_2" text="Naves a Valinor" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_3" text="Círdan el Constructor de Barcos" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_0" text="Círdan el Carpintero de Barcos" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_1" text="Los Puertos Grises" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_2" text="Naves hacia el Oeste" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_3" text="Los últimos Altos Elfos" />
     <string id="taom_faction_high_kingdom_of_lindon_weakness_0" text="El Orgullo Élfico aumenta los costos de influencia" />
     <string id="taom_faction_high_kingdom_of_lindon_weakness_1" text="Pueblo que se desvanece — pocos reemplazos" />
     <string id="taom_faction_khudorom_of_khand_bonus_0" text="+10% de velocidad de grupo en la estepa (Aurigas de la Estepa)" />
@@ -1778,8 +1778,8 @@
     <string id="taom_faction_kingdom_of_moria_bonus_4" text="+15% de eficiencia de herrería (Forjas Saqueadas)" />
     <string id="taom_faction_kingdom_of_moria_bonus_5" text="+15% de daño de saqueo (Leva de Trolls de Caverna)" />
     <string id="taom_faction_kingdom_of_moria_bonus_6" text="-10% de velocidad de construcción (Salones Resonantes)" />
-    <string id="taom_faction_kingdom_of_moria_desc" text="El Reino de Moria." />
-    <string id="taom_faction_kingdom_of_moria_name" text="Reino de Moria" />
+    <string id="taom_faction_kingdom_of_moria_desc" text="La hueste orca que domina los lugares profundos de las Montañas Nubladas: los pozos negros de Moria, arrebatados a los Enanos, y las cumbres heladas desde el Caradhras hasta el Methedras. Más grandes y mejor armados que la chusma trasga del Paso Alto, reúnen vastas huestes de guerra por casi nada de influencia y marchan hambrientos pero incansables sobre las nieves." />
+    <string id="taom_faction_kingdom_of_moria_name" text="Orcos de las Montañas Nubladas" />
     <string id="taom_faction_kingdom_of_moria_perk_0_desc" text="El reclutamiento de ejércitos cuesta 40% menos influencia — la hueste orca no necesita consenso para marchar." />
     <string id="taom_faction_kingdom_of_moria_perk_0_name" text="Horda Orca" />
     <string id="taom_faction_kingdom_of_moria_perk_1_desc" text="+30% de tamaño del grupo y +10% de velocidad en nieve — grandes huestes de guerra criadas en los picos helados." />
@@ -2643,9 +2643,6 @@
     <string id="taom_aso_kingdom.lindon" text="Lindon" />
     <string id="taom_aso_kingdom.bluecraig" text="Trasgos del Risco Azul" />
     <string id="taom_aso_item_name_randomized" text="Tierra Media aleatoria" />
-    <string id="taom_aso_desc_invasion" text="La facción que gobierna la mayor parte de la Tierra Media." />
-    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} domina la gran mayoría de la Tierra Media." />
-    <string id="taom_aso_item_desc_randomized" text="Aleatoriza el estado inicial de la Tierra Media en el grado que elijas, dentro de lo razonable." />
     <string id="taom_tactic.shield_wall" text="Nuestro plan es unir los escudos y mantener la posición." />
     <string id="taom_tactic.infantry_mass" text="Nuestro plan es abrumarlos con nuestra superioridad numérica." />
     <string id="taom_tactic.cavalry_dominance" text="Nuestro plan es arrollarlos a caballo y que la infantería termine lo que empiezan los jinetes." />
@@ -2662,22 +2659,22 @@
     <string id="taom_behavior.infantry_skirmish" text="Acercarse a distancia de tiro, lanzar y retroceder" />
     <string id="taom_behavior.cycle_charge" text="Cargar, reagruparse y cargar de nuevo" />
     <string id="taom_behavior.envelop_wing" text="Rodear su flanco y golpear desde el costado" />
-    <string id="taom_behavior.foot_charge" text="Charge their foot; square up if horse come at you" />
-    <string id="taom_behavior.archer_flank" text="Stand beside the wall and shoot; fall in behind it if they come for you" />
-    <string id="taom_behavior_f6.braced_defend" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are holding in a wall." />
-    <string id="taom_behavior_f6.braced_advance" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are advancing in a wall." />
-    <string id="taom_behavior_f6.infantry_skirmish" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are throwing and falling back." />
-    <string id="taom_behavior_f6.cycle_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging in cycles." />
-    <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are swinging round the flank." />
-    <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging the enemy foot." />
-    <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are taking the flank of the wall." />
+    <string id="taom_behavior.foot_charge" text="Cargad contra su infantería; formad si la caballería os embiste" />
+    <string id="taom_behavior.archer_flank" text="Colocaos junto al muro y disparad; replegaos tras él si van por vosotros" />
+    <string id="taom_behavior_f6.braced_defend" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} y {?}{\?}{TROOP_NAMES_END} resisten en muro." />
+    <string id="taom_behavior_f6.braced_advance" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} y {?}{\?}{TROOP_NAMES_END} avanzan en muro." />
+    <string id="taom_behavior_f6.infantry_skirmish" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} y {?}{\?}{TROOP_NAMES_END} arrojan sus armas y retroceden." />
+    <string id="taom_behavior_f6.cycle_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} y {?}{\?}{TROOP_NAMES_END} cargan en ciclos." />
+    <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} y {?}{\?}{TROOP_NAMES_END} rodean el flanco." />
+    <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} y {?}{\?}{TROOP_NAMES_END} cargan contra la infantería enemiga." />
+    <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} y {?}{\?}{TROOP_NAMES_END} toman el flanco del muro." />
     <string id="taom_patch_apply_failed" text="TAOM: no se pudieron aplicar los grupos de parches durante {PHASE}: {GROUPS}. Algunas correcciones de esos grupos están desactivadas en esta sesión; el registro de TAOM indica la causa." />
     <string id="taom_patch_apply_phase_startup" text="el inicio" />
     <string id="taom_patch_apply_notice_title" text="TAOM" />
     <string id="taom_patch_apply_phase_game_init" text="la inicialización del juego" />
     <string id="taom_patch_apply_phase_mission_start" text="el inicio de la misión" />
-    <string id="taom_oob_autoassign_done" text="Captains assigned: {COUNT}." />
-    <string id="taom_oob_autoassign_not_general" text="Only the general of this battle can assign heroes." />
-    <string id="taom_oob_autoassign_none" text="No hero suits an open captain slot." />
+    <string id="taom_oob_autoassign_done" text="Capitanes asignados: {COUNT}." />
+    <string id="taom_oob_autoassign_not_general" text="Solo el general de esta batalla puede asignar héroes." />
+    <string id="taom_oob_autoassign_none" text="Ningún héroe encaja en un puesto de capitán libre." />
   </strings>
 </base>

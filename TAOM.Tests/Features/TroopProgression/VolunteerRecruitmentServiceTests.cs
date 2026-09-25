@@ -2947,6 +2947,7 @@ public class VolunteerRecruitmentServiceTests
            || troopId.EndsWith("_boss")           // bandit-hideout bosses
            || troopId.EndsWith("_merc")           // tavern mercenaries — hired for gold, not volunteered
            || troopId == "cave_troll"             // non-humanoid monster; deferred pending spider-style spawn support
+           || troopId == "hill_troll"             // the same monster rule: a Mordor lord's troll, never a volunteer (2026-09-25)
            // The howdah crew are placed on an elephant's platform by HowdahCrewSpawner, one per crew frame, and never
            // enter a party roster: no pool offers them and no troop upgrades into them (#627).
            || troopId == ElephantConfig.HowdahCrewCharacterId

@@ -14,5 +14,8 @@
     <string id="taom_key_turbo_desc" text="Maintenez Ctrl avec cette touche pour le multiplicateur de vitesse le plus élevé de TAOM. Relâcher l'une des deux touches rétablit la vitesse précédente." />
     <string id="taom_key_career_ability" text="Capacité de carrière (TAOM)" />
     <string id="taom_key_career_ability_desc" text="Active votre capacité de carrière pendant une bataille une fois sa jauge d'énergie remplie. Touche par défaut : V." />
+    <string id="taom_aso_desc_invasion" text="La faction qui domine la majeure partie de la Terre du Milieu." />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} domine la très grande majorité de la Terre du Milieu." />
+    <string id="taom_aso_item_desc_randomized" text="Rend aléatoire l'état initial de la Terre du Milieu selon le degré de votre choix, dans la limite du raisonnable." />
   </strings>
 </base>

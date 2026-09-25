@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.TrollBruteForce;
 
@@ -11,6 +12,14 @@ public class TrollBruteForceConfigTests
 {
     /// <summary>The prototype clip, the Fab anim_troll_attack1 (troll_danger_attack_0): 73 frames at 30 fps.</summary>
     private const float SmashClipSeconds = 72f / 30f;
+
+    [TestMethod]
+    public void ActionSetsByMonster_CoversBothTrolls_OnDistinctSets()
+    {
+        CollectionAssert.AreEquivalent(new[] { "cave_troll", "hill_troll" },
+            TrollBruteForceConfig.ActionSetsByMonster.Keys.ToList());
+        Assert.AreEqual(2, TrollBruteForceConfig.ActionSetsByMonster.Values.Distinct().Count());
+    }
 
     [TestMethod]
     public void Ring_HasAPositiveInnerRadiusInsideTheOuter()

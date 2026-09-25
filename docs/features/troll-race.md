@@ -5,8 +5,9 @@
 A **playable/NPC humanoid race** — the troll — built the same way as the human, dwarf, and orc races:
 a big bipedal body skinned to a humanoid skeleton, using `monster_usage="human"` and a standard
 (bipedal) action set. It is **NOT a rideable mount** — none of the mount machinery (rider sit-bone,
-mount-lock, Horse item, behavior tree, `quad_movement` clips) applies. The troll walks, fights, dies,
-and reacts on foot exactly like any humanoid, just at troll scale and proportions.
+mount-lock, Horse item, `quad_movement` clips) applies. The troll walks, fights, dies, and reacts on foot
+exactly like any humanoid, just at troll scale and proportions. The one creature-style layer is the Brute
+Force smash (#649): a behaviour tree per troll, `Main/Features/TrollBruteForce/`, on both trolls.
 
 ## Why this exists
 
@@ -41,8 +42,8 @@ LOTRLOME_Armory already ships two troll races — **the ready-made data template
 - `hill_troll`: since 2026-09-24 on its own skeleton `troll_skeleton_a` with KEYForce's `hill_troll_a_*` meshes
   and a standalone `as_hill_troll_warrior`, the dwarf's layout (the 2026-09-24 entries below). Before that
   `skeleton="troll_skeleton"`, mesh `mordor_hill_troll`.
-- TAOM has a `cave_troll` NPCCharacter (`troops_mordor.xml`) + `BodyProperty.fighter_cave_troll`
-  (`TAOM_bodyproperties.xml`), **currently disabled** (2026-05-14).
+- TAOM has `cave_troll` (enabled 2026-06-14, after the 2026-05-14 disable) and `hill_troll` (2026-09-25)
+  NPCCharacters in `troops_mordor.xml`, both on `BodyProperty.fighter_cave_troll` (`TAOM_bodyproperties.xml`).
 
 > ⚠ Verify these entries against the live files before editing — paths/keys must be confirmed, not
 > assumed. They are the copy-from template, not a spec.
@@ -90,8 +91,9 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
 3. **Animations:** retarget a clip set onto the skeleton's engine dump
    (`retarget_mannequin_to_human.py --engine-skeleton <json> --armature-name <skeleton>_notused`), Kit-import
    the FBX, wire the masters (`wire_anim_master_skeletons.ps1`), then `gen_troll_anim_clips.ps1` with
-   `-TravelScale` = the retarget report's `pelvis_scale` → `_anm.tpac`. Human clips need no retarget on a
-   re-framed rig.
+   `-TravelScale` = the retarget report's `pelvis_scale` → `_anm.tpac`. On a re-framed rig human clips bend
+   about the right axes but keep the human's rest relations: retarget the ones the race plays
+   (`retarget_mannequin_to_human.py --source-json --source-rig human`).
 4. **Action set** (`action_sets.xml`, LOTRLOME_Armory): `as_troll_warrior` (+ female / child / villager
    variants) with `skeleton="<troll skeleton>"`, `movement_system="bipedal"`, binding each standard
    human `act_*` to the troll clip. **No `quad_movement`, no mount/`act_horse_*` codes.**
@@ -118,15 +120,30 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
 | Hill troll rig (LIVE) | `LOTRLOME_Armory\AssetSources\Race Test\Mordor\Trolls\hill_troll_a\hill_troll_a.fbx` (from KEYForce's `troll_rig_base_01.blend` via `tools/blender/export_rig_for_kit.py`), package `Assets\...\hill_troll_a\hill_troll_a_geo.tpac` (skeleton `troll_skeleton_a`); ledger [lotrlome-hill-troll-changes.md](../reference/lotrlome-hill-troll-changes.md) |
 | Hill troll clip masters + clips (LIVE) | `LOTRLOME_Armory\Assets\Race Test\Mordor\Trolls\animations\` (`anim_hill_troll_*_geo.tpac` masters on `troll_skeleton_a`, `anim_hill_troll_*_anm.tpac` clips); sources `AssetSources\Race Test\Mordor\Trolls\animations\*.fbx`, staged from `E:\LOTRAOMAssets\troll_clips_to_import\fab_hill_troll_v5\` |
 | Hill troll retarget inputs | `tools/blender/troll_skeleton_a_engine.json` (engine dump of the re-framed skeleton), `tools/blender/fab_hill_troll_clip_names.json`; physics and re-frame: `tools/tpac_skeleton_copy_physics.py`, `tools/skeleton_hit_capsules.py`; race wiring `tools/wire_hill_troll_race.py` |
-| Clip + action-set tooling | `tools/gen_troll_anim_clips.ps1`, `tools/tpac_fix_item_checksums.py`, `tools/check_rdc_entries.py`, `tools/bind_troll_action_set.py` |
+| Clip + action-set tooling | `tools/gen_troll_anim_clips.ps1` (`-CloneByName`, `-Renames`, `-RetargetReport`), `tools/read_anim_keyframes_tpac.ps1 -ByClip`, `tools/tpac_fix_item_checksums.py`, `tools/check_rdc_entries.py`, `tools/bind_troll_action_set.py` (cave troll), `tools/bind_hill_troll_action_set.py` (hill troll: Fab, retargeted, reused idles), `tools/blender/hill_troll_clip_renames.json` (the 15 names over 63 characters) |
 | Retarget work scene | `E:\LOTRAOMAssets\_export\cave_troll_lightweight\cave_troll_retarget_WORK.blend` (all 52 actions on the engine rig) + `retarget_preview\` renders |
 | Re-skinned LOME meshes | `LOTRLOME_Armory\AssetSources\Race Test\Mordor\Trolls\Cave Troll\LOME_troll.fbx`, `LOME_troll_armor.fbx`; QA renders `E:\LOTRAOMAssets\_troll_rig_out_20260918\preview\`; originals `E:\LOTRAOMAssets\_troll_rig_backup_20260918\` |
 | Lumber work scene | `E:\LOTRAOMAssets\troll_lumber_WORK_20260614.blend` (`human_skeleton` + the 2 lumber actions) |
 | Monster / skin / action_set | `<game>\Modules\LOTRLOME_Armory\ModuleData\{monsters,skins,action_sets}.xml` |
-| BodyProperty | `Main/_Module/ModuleData/TAOM_bodyproperties.xml` (`fighter_cave_troll`) |
-| Troop | `Main/_Module/ModuleData/troops/troops_mordor.xml` (`cave_troll`, **ENABLED 2026-06-14**) |
-| Party template | `Main/_Module/ModuleData/taom_partyTemplates.xml` (`kingdom_hero_party_mordor_template`) |
+| BodyProperty | `Main/_Module/ModuleData/TAOM_bodyproperties.xml` (`fighter_cave_troll`, both trolls) |
+| Troop | `Main/_Module/ModuleData/troops/troops_mordor.xml` (`cave_troll`, **ENABLED 2026-06-14**; `hill_troll`, 2026-09-25) |
+| Party template | `Main/_Module/ModuleData/taom_partyTemplates.xml` (`kingdom_hero_party_mordor_template`, 0..7 each; the Bolgrûkig, Zarûnik and Brughash templates `..._empire_south_{5,13,15}_template`, 0..2 each) |
+| Brute Force smash (#649) | `Main/Features/TrollBruteForce/` (`TrollBruteForceConfig.ActionSetsByMonster`, `TrollBruteForceService.BodySize`); the action in the Armory's `action_types.xml`, bound in both troll sets |
+| Health | `Main/_Module/ModuleData/combat_mechanics/combat_mechanics_config.json` (`baseHitPoints` 200) read by `TaomCharacterStatsModel` (campaign); the Armory Monsters' `hit_points` (Custom Battle) |
+| Special resources | `Main/_Module/ModuleData/special_resources/troop_resource_costs.xml` (recruit 50 War Spoils, upkeep 5 and 4) |
+| Other troop wiring | `Main/Features/SettlementGuards/SettlementGuardService.cs` (no guard duty), `troop_weights.xml` (4.0), `CharacterAvatarPatch.json` (encyclopedia framing), `tools/taom_schema.py` (`_BODYLESS_BY_DESIGN`, `_ARMOUR_LADDER_EXEMPT`), `tools/melee_ladders.json` (exempt) |
 | Race C# | `Main/Core/Domain/RaceManager.cs`, `Main/Features/HeroRace/` (no change needed) |
+
+## Tests
+
+| What | Where |
+|---|---|
+| Brute Force decisions, body size, config, both sets bound in the live Armory | `TAOM.Tests/Features/TrollBruteForce/` (`TrollBruteForceWiringTests` is `LiveInstall`) |
+| 200 health: config, resolver, provider bounds; the Monsters agree with the config | `TAOM.Tests/Features/CombatMechanics/` (`RaceCombatModifiersResolverTests`, `CombatMechanicsConfigProviderTests`, `ShippedCombatMechanicsConfigTests`, `TrollHitPointsLiveDataTests` `LiveInstall`) |
+| Resource costs, party templates at 260, guard exclusion, face coverage | `TroopResourceCostDataTests`, `ShippedLordPartyTemplateTests`, `SettlementGuardServiceTests`, `CharacterFaceCoverageTests` |
+| Armory race wiring (reinstall gate) | `python tools/wire_hill_troll_race.py --check`; `tools/tests/test_wire_hill_troll_race.py` |
+| Action set body and the reused idles | `tools/tests/test_bind_hill_troll_action_set.py`; `python tools/audit_action_set_parity.py` |
+| Clips on disk | `gen_troll_anim_clips.ps1 -Verify` and `-CloneByName -Verify` (no unit harness) |
 
 ## Status / pending (updated 2026-06-14)
 
@@ -346,8 +363,71 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
   frame 0 at rest everywhere, IK misses under 7.3 cm with six clips over 5 cm, all falls, knockbacks and quick
   swings; the 15 prototype masters came out pixel-identical to the prototype run) and staged, all 255, in the
   `animations` source folder beside the Fab set (307 FBX, no name collisions; the generator's two modes each skip
-  the other's clips and masters). OWED: Mike's Kit import of that folder, the clips, the bind, the parity
-  audit, the in-game fight.
+  the other's clips and masters). Mike imported the 255 on 2026-09-25: `wire_anim_master_skeletons.ps1` patched
+  all 255 EMPTY masters (the 52 kept theirs); `gen_troll_anim_clips.ps1 -CloneByName` wrote 428 clips and refused
+  `aserai_mp_guard_idle_2hperk` (vanilla range 1..551 on a master the Kit reports at 552 frames, one past the last
+  key: a multiplayer perk idle, left on the human clip). The Fab verify was clean (52); the clone-by-name verify reported the 428 with that
+  clip as missing and exited 1 until the deep review taught it the refusal (2026-09-25: `refused-by-design=1`,
+  exit 0). `bind_hill_troll_action_set.py --clips-dir` rewrote the set from the clips ON DISK (its first pass had
+  trusted the index and bound the refused clip): 4,700 nodes, Fab 213, retargeted 438, inherited 4,049, every bound
+  troll clip present, the cave troll's set untouched, `audit_action_set_parity.py` 0 gaps; the tracked snapshot
+  carries the identical body. Mike's Kit look: "all of the animations I tested look amazing". The Kit also warned
+  `Could not set fixed-size(64) string` on 15 clips: an AnimationClip's name is a 64-byte engine string, 63 usable
+  characters, and `anim_hill_troll_` + the vanilla name ran to 70 (`..._strike_fall_right_heavy_back_rise_left_
+  stance_continue`); master names are not fixed-size (the import session logged nothing on the seven long ones).
+  `tools/blender/hill_troll_clip_renames.json` shortens those 15 (`left_stance` to `ls`, no collisions, longest 61),
+  the generator reads it as `-Renames` and refuses any name still over 63, the bind as `--renames`. OWED: a Kit
+  save (the `.rdc` entries; `check_rdc_entries.py --under "Race Test/Mordor/Trolls/animations"` after it), the
+  in-game fight.
+- **The hill troll troop and the Brute Force tree (2026-09-25):** Mike: "set up the hill troll race according to our
+  new animations, mesh and skeleton" and "add them as a troop just like the cave_troll to Mordor". `hill_troll` in
+  `troops_mordor.xml` beside `cave_troll` (race `hill_troll`, Infantry, level 51, the cave troll's skills, name
+  `{=aom_hill_troll_name}[AMordor] Hill Troll`, face `BodyProperty.fighter_cave_troll`, the cave troll's own, since
+  a byte-identical `fighter_hill_troll` copy was merged back in review), a `0..7` stack in `kingdom_hero_party_mordor_template` next to the cave troll's
+  (the Mordor culture's default template, which no shipped lord uses: all 15 Mordor clans bind their own, so
+  neither troll reached an AI lord's party, a gap that predated the hill troll; three clans field them since, entry below), `TroopWeight` 4.0 (the cave
+  troll's row is still inside a stale "WIP" comment from May), `hill_troll` in `SettlementGuardService`'s excluded
+  guard races, in `CharacterAvatarPatch.json` with the cave troll's framing (re-check on the taller model), in the
+  validator's `_BODYLESS_BY_DESIGN` and the melee ladder's exemptions; the combat-mechanics, banner-bearer, field
+  commission and race-age configs already named it. Kit: one battle set and one civilian set, both
+  `wm_cave_troll_2h_mace_a` only: the two-handed clips are the retargeted ones, and the `lotr_troll_*` armour is
+  skinned to `human_skeleton` and would float on this rig. The Brute Force tree (#649, committed in
+  `9354b0b2`) attaches to both trolls: `TrollBruteForceConfig.ActionSetsByMonster`
+  (`cave_troll` to `as_cave_troll_warrior`, `hill_troll` to `as_hill_troll_warrior`), `IsBruteForceTroll` replaces
+  `IsCaveTroll`, the start-up drift guard checks every set, the wiring tests cover both Monsters and both bindings
+  (each set must bind its own troll's clip, found once under `Assets`), and `bind_hill_troll_action_set.py`'s
+  `EXTRA_BINDINGS` appends `act_troll_brute_force` to `anim_hill_troll_attack1` (4,701 nodes, parity 0 gaps).
+  Validators: XSD pass on the three edited files, `validate_moduledata.py` 0 errors. The translator ran on Mike's key the same morning: `aom_hill_troll_name` in all 12 language files (the
+  `[AMordor]` sort prefix now follows the cave troll's row in each language: plain Mordor in RU, JP, KO, CNs and CNt),
+  localization tests 39 green. Reinstall gate: `python tools/wire_hill_troll_race.py --check` exits 1 when the
+  Armory's hill troll race, Monster or standalone set is no longer wired (a reinstall reverts all three). OWED: a Kit
+  save, a Custom Battle with hill trolls on the Mordor side (gait, the two-handed swings, the smash, a death), a
+  GitHub issue, the deep review.
+- **Health, costs, clans, reach and idles (2026-09-25, after the deep review):** both trolls have 200 health
+  (the campaign through `TaomCharacterStatsModel` and the race's `baseHitPoints` in
+  `combat_mechanics_config.json`; Custom Battle through the Monster's `hit_points`, the cave troll's cut from 300);
+  both are special-resource troops at 50 War Spoils to recruit and 5 (cave) or 4 (hill) a day, charged to the
+  player only, which in practice means recruiting captured trolls from prisoners; Bolgrûkig, Zarûnik and Brughash
+  (`clan_empire_south_5`, `_13`, `_15`) field 0 to 2 of each, the first shipped lords that can (a companion clan on a Mordor settlement already
+  fell back to the culture template's 0 to 7); Brute Force distances
+  scale with `AgentScale` times eye height over 1.70, so the cave troll's tuning holds and the hill troll's reach
+  follows its height; and the bind's reuse rule puts the inventory, conversation and cheer codes (172) and the
+  bodyguard pose on the troll's own Fab idles (Mike: "reuse animations that we already have"). Detail and the
+  tests: CHANGELOG "trolls at 200 health, costed, and in three Mordor warbands". OWED: the Custom Battle smoke
+  reads the `[TrollBruteForce]` body size and the ring for both trolls. Brute Force has its own doc,
+  [troll-brute-force.md](troll-brute-force.md). OPEN for Mike (review of these changes): the reused Fab idles are
+  not `cyclic` while the vanilla clips behind those codes are, and the party screen, map conversation and victory
+  logic set the action once (per-code clone clips and a Kit save would fix it); the Mordor culture template's 0 to 7
+  trolls reach companion clans; the cave troll's `TroopWeight` row is still commented out (1.0 against the hill
+  troll's 4.0); a Free-culture player pays the recruit cost in their own resource and loses the troll to alignment
+  desertion the next day.
+- **Mouth textures (2026-09-25):** Mike asked where `t_hilltroll_mouth` lived. Not in any package or FBX: every
+  `hill_troll` skin's `<mouth_textures>` named it (17 entries of the OLD troll's material, the kids the human
+  `mouth_mat*`), and the engine puts that material on the head's `face_mouth_mesh`, so the new head's mouth would
+  have had none in game. `wire_hill_troll_race.py` now rewrites mouth textures like face textures (39 `mouth_texture` tags, 78 attributes;
+  16 tests then, 22 since the review); applied live and to the snapshot, 0 mentions left. The old `Assets/.../Trolls/Hill Troll/` folder
+  (March meshes, `troll_skeleton*` packages, `m_hilltroll_*` materials) is unreferenced now; deleting it is a
+  separate art-drop decision (`audit_deleted_mesh_impact.py` first).
 - OK **LOME cave troll set RE-SKINNED (2026-09-18):** `tools/blender/reskin_to_human_skeleton.py` transferred
   TaleWorlds' body weights onto `lotr_troll_body/feet/hands/head` and `lotr_troll_armor/bracers/helmet` (42 meshes
   with LODs). Before: 115 un-normalised + 9 over-4-influence vertices on the body, 1,836 un-normalised on the head.
@@ -422,6 +502,11 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
 
 ## Changelog
 
+- 2026-09-25, `feat(troll)`: 200 health for both trolls, special-resource costs, troll stacks in three Mordor
+  clans' templates, Brute Force reach scaled by eye height, the hill troll's idles reused for inventory,
+  conversation, cheers and the bodyguard pose.
+- 2026-09-25, `feat(troll)`: the `hill_troll` troop for Mordor, the Brute Force tree on both trolls, 428 human clips
+  cut and bound (`bind_hill_troll_action_set.py`), `wire_hill_troll_race.py --check` as the reinstall gate.
 - 2026-09-24, `fix(troll)`: the Fab clips re-retargeted with twist bones, flat feet, leg IK on the Fab stance and
   the root's height kept; feet within 2 cm of the source over all 52; `-TravelScale` is the report's `pelvis_scale`.
 - 2026-09-24, `feat(troll)`: `troll_skeleton_a` re-framed to the human's axes on export (human clips bend it right),

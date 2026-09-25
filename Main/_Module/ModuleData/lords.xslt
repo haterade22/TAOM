@@ -21150,7 +21150,7 @@
     <xsl:template match="NPCCharacter[@id='lord_WE9_l']">
         <xsl:copy>
             <xsl:attribute name="id">lord_WE9_l</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_WE9_l_name}Duinhir</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_WE9_l_name}Duinhir, Lord of Morthond</xsl:attribute>
             <xsl:attribute name="age">63</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>

@@ -772,9 +772,9 @@
     <string id="aom_lord_1_74_1_name" text="Zena" />
     <string id="aom_lord_2_1_name" text="Bard II" />
     <string id="aom_lord_2_2_name" text="Asta" />
-    <string id="aom_lord_2_3_name" text="Thorin III Kamienny Hełm" />
+    <string id="aom_lord_2_3_name" text="Rand" />
     <string id="aom_lord_2_4_name" text="Siga" />
-    <string id="aom_lord_2_5_name" text="Ori" />
+    <string id="aom_lord_2_5_name" text="Ask" />
     <string id="aom_lord_2_6_name" text="Erta" />
     <string id="aom_lord_2_7_name" text="Simir" />
     <string id="aom_lord_2_8_name" text="Urik" />
@@ -787,11 +787,11 @@
     <string id="aom_lord_2_13_name" text="Vidar" />
     <string id="aom_lord_2_14_name" text="Isvan" />
     <string id="aom_lord_2_15_name" text="Ratagost" />
-    <string id="aom_lord_2_16_name" text="Bofur" />
-    <string id="aom_lord_2_17_name" text="Thorin II Dębowa Tarcza" />
-    <string id="aom_lord_2_18_name" text="Glóin" />
-    <string id="aom_lord_2_19_name" text="Dwalin" />
-    <string id="aom_lord_2_20_name" text="Óin" />
+    <string id="aom_lord_2_16_name" text="Hauk" />
+    <string id="aom_lord_2_17_name" text="Stein" />
+    <string id="aom_lord_2_18_name" text="Ulf" />
+    <string id="aom_lord_2_19_name" text="Geir" />
+    <string id="aom_lord_2_20_name" text="Val" />
     <string id="aom_lord_2_21_name" text="Svedorn" />
     <string id="aom_lord_2_22_name" text="Lashonek" />
     <string id="aom_lord_2_23_name" text="Galden" />
@@ -1025,7 +1025,7 @@
     <string id="aom_lord_NE9_s_name" text="Rurik Kłotłuk" />
     <string id="aom_lord_S8_u_name" text="Galyk" />
     <string id="aom_lord_S9_c_name" text="Forim" />
-    <string id="aom_lord_S9_l_name" text="Bombur" />
+    <string id="aom_lord_S9_l_name" text="Orvar" />
     <string id="aom_lord_S9_m_name" text="Dakhila" />
     <string id="aom_lord_S9_u_name" text="Chastimir" />
     <string id="aom_lord_SE8_c_name" text="Shagrala" />
@@ -1035,7 +1035,7 @@
     <string id="aom_lord_SE9_s_name" text="Jonna" />
     <string id="aom_lord_WE8_c_name" text="Pelendur" />
     <string id="aom_lord_WE8_u_name" text="Barandil" />
-    <string id="aom_lord_WE9_l_name" text="Duinhir" />
+    <string id="aom_lord_WE9_l_name" text="Duinhir, Władca Morthondu" />
     <string id="aom_lord_WE9_u_name" text="Duilin" />
     <string id="aom_lord_WE9_u2_name" text="Rosfin" />
     <string id="TAOM_hero_dead_2_1" text="Olek Stary poległ, broniąc Dale przed najeźdźcami ze Wschodu. Jego poświęcenie zabezpieczyło górskie przełęcze i jest wspominane w pieśniach po całym królestwie." />
@@ -1201,13 +1201,13 @@
     <string id="TAOM_hero_2_7_1" text="Mimir jest księciem królewskiego rodu Dale." />
     <string id="TAOM_hero_2_10" text="Valla jest księżniczką Dale, wyszkoloną w dyplomacji i sztuce rządzenia." />
     <string id="TAOM_hero_2_13" text="Vidar jest władcą północnych rubieży, strzegącym ich przed najazdami Easterlingów." />
-    <string id="TAOM_hero_2_3" text="Thorin III Kamienny Hełm, Król pod Górą, włada krasnoludami Ereboru. Utrzymuje starożytne przymierze z Dale i jest gotów stanąć przeciw Cieniowi." />
+    <string id="TAOM_hero_2_3" text="Rand jest władcą Dale, strażnikiem wschodnich dolin, który dochowuje dawnego przymierza z Krasnoludami z Ereboru." />
     <string id="TAOM_hero_2_4" text="Siga jest krasnoludzką szlachcianką z rodu Durina." />
     <string id="TAOM_hero_2_4_1" text="Apolanea jest szlachetnie urodzoną krasnoludzką panną." />
     <string id="TAOM_hero_2_8" text="Urik jest krasnoludzkim księciem Ereboru, biegłym w kowalstwie i wojnie." />
     <string id="TAOM_hero_2_11" text="Idrun jest krasnoludzkim wojownikiem gwardii królewskiej." />
     <string id="TAOM_hero_2_111" text="Rozhivol jest krasnoludzkim wojownikiem strzegącym bram góry." />
-    <string id="TAOM_hero_2_5" text="Ori jest krasnoludzkim władcą, potomkiem jednego z towarzyszy Thorina Dębowej Tarczy. Zarządza szlakami handlowymi między Ereborem a Dale." />
+    <string id="TAOM_hero_2_5" text="Ask jest władcą Dale, który zarządza szlakami handlowymi między Górą a Długim Jeziorem." />
     <string id="TAOM_hero_2_6" text="Erta jest żoną Oriego, znaną z biegłości w szlifowaniu klejnotów." />
     <string id="TAOM_hero_2_9" text="Lek jest dziedzicem włości Oriego, wyszkolonym w handlu i walce." />
     <string id="TAOM_hero_2_12" text="Svana jest córką kupieckiego rodu." />
@@ -1216,18 +1216,18 @@
     <string id="TAOM_hero_2_14_1" text="Valkava jest żoną lorda Isvana." />
     <string id="TAOM_hero_2_14_2" text="Zaverena jest dziedziczką wschodnich włości." />
     <string id="TAOM_hero_2_14_3" text="Vizhduna jest młodą szlachcianką wschodnich rubieży." />
-    <string id="TAOM_hero_2_16" text="Bofur jest krasnoludzkim władcą Ereboru, potomkiem legendarnej kompanii." />
-    <string id="TAOM_hero_2_16_1" text="Tyaska jest żoną Bofura, biegłą w sztuce uzdrawiania." />
+    <string id="TAOM_hero_2_16" text="Hauk jest władcą Dale, panem kupieckich dróg i zimowych karawan." />
+    <string id="TAOM_hero_2_16_1" text="Tyaska jest żoną Hauka, biegłą w sztuce uzdrawiania." />
     <string id="TAOM_hero_2_21" text="Svedorn dowodzi garnizonem Miasta na Jeziorze." />
     <string id="TAOM_hero_2_21_1" text="Izdenka zarządza sprawami Miasta na Jeziorze." />
-    <string id="TAOM_hero_2_17" text="Thorin II Dębowa Tarcza jest pamiętany jako bohater, który odzyskał Erebor ze szponów Smauga. Jego duch wciąż inspiruje potomków." />
+    <string id="TAOM_hero_2_17" text="Stein jest władcą Dale, pamiętanym za obronę północnej bramy w latach po upadku smoka." />
     <string id="TAOM_hero_2_17_1" text="Dracha podtrzymuje pamięć o dawnym królu." />
     <string id="TAOM_hero_2_22" text="Lashonek dowodzi wojownikami Dale." />
     <string id="TAOM_hero_2_22_1" text="Zheneva jest żoną Lashoneka." />
     <string id="TAOM_hero_2_24" text="Alvar jest kapitanem Straży Dale." />
     <string id="TAOM_hero_2_24_1" text="Zorina jest szlachetną damą Dale." />
-    <string id="TAOM_hero_2_18" text="Gloin jest krasnoludzkim władcą Ereboru, ojcem Gimlego z Drużyny Pierścienia." />
-    <string id="TAOM_hero_2_18_1" text="Zorika jest żoną Gloina, matką słynnego Gimlego." />
+    <string id="TAOM_hero_2_18" text="Ulf jest władcą Dale, kapitanem straży rzecznej na Bystrej Rzece." />
+    <string id="TAOM_hero_2_18_1" text="Zorika jest żoną Ulfa i panią jego dworu nad Bystrą Rzeką." />
     <string id="TAOM_hero_2_23" text="Galden dowodzi południowym garnizonem Dale." />
     <string id="TAOM_hero_2_23_1" text="Zlatka jest córką Galdena." />
     <string id="TAOM_hero_2_15" text="Ratagost jest mądrym doradcą, który wspiera króla w sprawach państwowych." />
@@ -1235,10 +1235,10 @@
     <string id="TAOM_hero_2_15_2" text="Milanka jest szlachetnie urodzoną damą dworu." />
     <string id="TAOM_hero_2_15_3" text="Velina służy w królewskim domostwie." />
     <string id="TAOM_hero_2_15_4" text="Bovan jest młodym szlachcicem z Dale." />
-    <string id="TAOM_hero_2_19" text="Dwalin jest krasnoludzkim wojownikiem wielkiej sławy, ostatnim ocalałym z pierwotnej kompanii." />
-    <string id="TAOM_hero_2_19_1" text="Vitomira służy przy boku Dwalina." />
-    <string id="TAOM_hero_2_20" text="Oin jest krasnoludzkim starcem, strażnikiem dawnej wiedzy i sztuki uzdrawiania." />
-    <string id="TAOM_hero_2_20_1" text="Kisha jest żoną Oina, biegłą w wiedzy o zielarstwie." />
+    <string id="TAOM_hero_2_19" text="Geir jest wojownikiem Dale wielkiej sławy, krewnym dawnego rodu Giriona." />
+    <string id="TAOM_hero_2_19_1" text="Vitomira służy u boku Geira." />
+    <string id="TAOM_hero_2_20" text="Val jest starszyzną Dale, strażnikiem wiedzy i sztuki uzdrawiania." />
+    <string id="TAOM_hero_2_20_1" text="Kisha jest żoną Vala, biegłą w wiedzy o ziołach." />
     <string id="TAOM_hero_S8_u" text="Galyk to zaprawiony w boju weteran, który strzeże górskich sal." />
     <string id="TAOM_hero_3_1" text="Khadurak jest Taskralem Haradu, najwyższym wodzem armii Południa. Prowadzi bojowe słonie mûmakil przeciw wrogom swego ludu, sprzymierzony z Mordorem przeciwko Gondorowi." />
     <string id="TAOM_hero_3_2" text="Khalida jest żoną Khaduraka i haradrimską szlachetną panią wysokiego rodu." />
@@ -1288,7 +1288,7 @@
     <string id="TAOM_hero_3_22_2" text="Suna szkoli młodych łuczników." />
     <string id="TAOM_hero_3_22_3" text="Zanuwa jest biegłym łucznikiem plemienia." />
     <string id="TAOM_hero_3_22_4" text="Hajara strzeże pustynnych wież straży." />
-    <string id="TAOM_hero_4_1" text="Théoden, król Rohanu, panuje z Meduseldu w Edoras. Niegdyś omotany przez Grímę, sługę Sarumana, został uwolniony przez Gandalfa i powiódł swój lud do chwały pod Helmowym Jarem i na Polach Pelennoru." />
+    <string id="TAOM_hero_4_1" text="Théoden, król Rohanu, włada z Meduseldu w Edoras. Niegdyś omamiony przez Grímę, sługę Sarumana, został uwolniony przez Gandalfa i poprowadził swój lud ku chwale w Helmowym Jarze i na polach Pelennoru." />
     <string id="TAOM_hero_4_2" text="Elfhilda była królową Rohanu, matką Théodreda. Zmarła przy porodzie, a ten żal kładł się cieniem na panowaniu Théodena." />
     <string id="TAOM_hero_4_7" text="Théodred był jedynym synem króla Théodena, księciem Rohanu. Poległ, broniąc Brodów Iseny przed Uruk-hai Sarumana." />
     <string id="TAOM_hero_4_10" text="Elys jest szlachetną damą dworu Rohirrimów." />
@@ -1404,12 +1404,12 @@
     <string id="TAOM_hero_6_16_1" text="Chambui jest żoną Akvotha." />
     <string id="TAOM_hero_6_16_2" text="Unagen jest dziedzicem dowództwa Akvotha." />
     <string id="TAOM_hero_6_17" text="Amdur Amdûrid przewodzi potężnemu klanowi wschodnich stepów." />
-    <string id="TAOM_hero_6_17_1" text="Ergene jest żoną Amdura." />
-    <string id="TAOM_hero_6_17_2" text="Yesum jest dziedzicem włości Amduridów." />
+    <string id="TAOM_hero_6_17_1" text="Ergene jest żoną Amdûra." />
+    <string id="TAOM_hero_6_17_2" text="Yesum jest dziedzicem włości Amdûridów." />
     <string id="TAOM_hero_6_18" text="Lûthkan Khundolar dowodzi wojownikami zachodnich prowincji." />
-    <string id="TAOM_hero_6_18_1" text="Tilun jest żoną Luthkana." />
+    <string id="TAOM_hero_6_18_1" text="Tilun jest żoną Lûthkana." />
     <string id="TAOM_hero_6_18_2" text="Chagun jest dziedzicem Khundolarów." />
-    <string id="TAOM_hero_6_19" text="Vakheraltan Khundolar jest bratem Luthkana i dowodzi konnymi zwiadowcami." />
+    <string id="TAOM_hero_6_19" text="Vakheraltan Khundolar jest bratem Lûthkana i dowodzi konnymi zwiadowcami." />
     <string id="TAOM_hero_6_19_1" text="Sokhatai jest żoną Vakheraltana." />
     <string id="TAOM_hero_6_19_2" text="Korte jest dziedzicem zwiadowców Vakheraltana." />
     <string id="TAOM_hero_6_20" text="Khurubra Mashakian dowodzi północnymi plemionami Rhûnu." />

@@ -14,5 +14,8 @@
     <string id="taom_key_turbo_desc" text="이 키와 함께 Ctrl을 누르고 있으면 TAOM 최고 속도 배율이 적용됩니다. 둘 중 하나를 떼면 이전 속도로 돌아갑니다." />
     <string id="taom_key_career_ability" text="경력 능력 (TAOM)" />
     <string id="taom_key_career_ability_desc" text="전투 중 에너지 게이지가 가득 차면 경력 능력을 발동합니다. 기본 키는 V입니다." />
+    <string id="taom_aso_desc_invasion" text="가운데땅의 대부분을 지배하는 세력입니다." />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId}이(가) 가운데땅의 대부분을 지배합니다." />
+    <string id="taom_aso_item_desc_randomized" text="합리적인 범위 내에서, 원하는 정도만큼 가운데땅의 시작 상태를 무작위로 설정합니다." />
   </strings>
 </base>

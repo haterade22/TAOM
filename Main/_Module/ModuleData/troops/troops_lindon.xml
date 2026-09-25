@@ -7,7 +7,7 @@
         race="elf"
         default_group="Infantry"
         level="21"
-        name="{=aom_imladris_recruit_name}[Lindon] Mithlond Recruit"
+        name="{=aom_lindon_imladris_recruit_name}[Lindon] Mithlond Recruit"
         occupation="Soldier"
         is_basic_troop="true"
         culture="Culture.lindon">
@@ -298,7 +298,7 @@
         race="elf"
         default_group="Infantry"
         level="26"
-        name="{=aom_imladris_infantry_name}[Lindon] Mithlond Infantry"
+        name="{=aom_lindon_imladris_infantry_name}[Lindon] Mithlond Infantry"
         occupation="Soldier"
         culture="Culture.lindon">
         <face>
@@ -625,7 +625,7 @@
         race="elf"
         default_group="Ranged"
         level="26"
-        name="{=aom_imladris_bowman_name}[Lindon] Mithlond Bowman"
+        name="{=aom_lindon_imladris_bowman_name}[Lindon] Mithlond Bowman"
         occupation="Soldier"
         culture="Culture.lindon">
         <face>
@@ -906,7 +906,7 @@
         race="elf"
         default_group="Infantry"
         level="31"
-        name="{=aom_imladris_swordguard_name}[Lindon] Mithlond Swordguard"
+        name="{=aom_lindon_imladris_swordguard_name}[Lindon] Mithlond Swordguard"
         occupation="Soldier"
         culture="Culture.lindon">
         <face>
@@ -1484,7 +1484,7 @@
         race="elf"
         default_group="Infantry"
         level="36"
-        name="{=aom_imladris_nobleman_name}[Lindon] Mithlond Nobleman"
+        name="{=aom_lindon_imladris_nobleman_name}[Lindon] Mithlond Nobleman"
         occupation="Soldier"
         culture="Culture.lindon">
         <face>
@@ -1970,7 +1970,7 @@
         race="elf"
         default_group="Ranged"
         level="31"
-        name="{=aom_imladris_archer_name}[Lindon] Mithlond Archer"
+        name="{=aom_lindon_imladris_archer_name}[Lindon] Mithlond Archer"
         occupation="Soldier"
         culture="Culture.lindon">
         <face>
@@ -2249,7 +2249,7 @@
         race="elf"
         default_group="HorseArcher"
         level="41"
-        name="{=aom_imladris_horse_archer_name}[Lindon] Mithlond Horse Archer"
+        name="{=aom_lindon_imladris_horse_archer_name}[Lindon] Mithlond Horse Archer"
         occupation="Soldier"
         culture="Culture.lindon">
         <face>
@@ -2541,7 +2541,7 @@
         race="elf"
         default_group="Cavalry"
         level="41"
-        name="{=aom_imladris_outrider_name}[Lindon] Mithlond Outrider"
+        name="{=aom_lindon_imladris_outrider_name}[Lindon] Mithlond Outrider"
         occupation="Soldier"
         culture="Culture.lindon">
         <face>
@@ -2844,7 +2844,7 @@
         race="elf"
         default_group="Ranged"
         level="36"
-        name="{=aom_imladris_marksman_name}[Lindon] Mithlond Marksman"
+        name="{=aom_lindon_imladris_marksman_name}[Lindon] Mithlond Marksman"
         occupation="Soldier"
         culture="Culture.lindon">
         <face>
@@ -3328,7 +3328,7 @@
         race="elf"
         default_group="HorseArcher"
         level="46"
-        name="{=aom_rider_of_himring_name}[Lindon] Rider of Balar"
+        name="{=aom_lindon_rider_of_himring_name}[Lindon] Rider of Balar"
         occupation="Soldier"
         culture="Culture.lindon">
         <face>
@@ -3687,7 +3687,7 @@
         race="elf"
         default_group="Cavalry"
         level="46"
-        name="{=aom_noldorin_lancer_name}[Lindon] Falathrim Lancer"
+        name="{=aom_lindon_noldorin_lancer_name}[Lindon] Falathrim Lancer"
         occupation="Soldier"
         culture="Culture.lindon">
         <face>
@@ -4115,7 +4115,7 @@
         race="elf"
         default_group="Infantry"
         level="41"
-        name="{=aom_imladris_blademaster_name}[Lindon] Mithlond Blademaster"
+        name="{=aom_lindon_imladris_blademaster_name}[Lindon] Mithlond Blademaster"
         occupation="Soldier"
         culture="Culture.lindon">
         <face>
@@ -4379,7 +4379,7 @@
         race="elf"
         default_group="Infantry"
         level="41"
-        name="{=aom_battlemaster_of_the_first_age_name}[Lindon] Battlemaster of the First Age"
+        name="{=aom_lindon_battlemaster_of_the_first_age_name}[Lindon] Battlemaster of the First Age"
         occupation="Soldier"
         culture="Culture.lindon">
         <face>
@@ -4653,7 +4653,7 @@
         race="elf"
         default_group="Infantry"
         level="36"
-        name="{=aom_imladris_guardsman_name}[Lindon] Mithlond Guardsman"
+        name="{=aom_lindon_imladris_guardsman_name}[Lindon] Mithlond Guardsman"
         occupation="Soldier"
         culture="Culture.lindon">
         <face>
@@ -4910,7 +4910,7 @@
         race="elf"
         default_group="Infantry"
         level="41"
-        name="{=aom_imladris_warden_name}[Lindon] Mithlond Warden"
+        name="{=aom_lindon_imladris_warden_name}[Lindon] Mithlond Warden"
         occupation="Soldier"
         culture="Culture.lindon">
         <face>
@@ -5110,7 +5110,7 @@
         race="elf"
         default_group="Ranged"
         level="41"
-        name="{=aom_imladris_marchwarden_name}[Lindon] Mithlond Marchwarden"
+        name="{=aom_lindon_imladris_marchwarden_name}[Lindon] Mithlond Marchwarden"
         occupation="Soldier"
         culture="Culture.lindon">
         <face>
@@ -10413,7 +10413,7 @@
         race="elf"
         default_group="Infantry"
         level="11"
-        name="{=aom_rv_militia_spear}[Lindon] Militia Spearman"
+        name="{=aom_lindon_militia_spearman_name}[Lindon] Militia Spearman"
         occupation="Soldier"
         culture="Culture.lindon">
         <face>
@@ -10541,7 +10541,7 @@
         race="elf"
         default_group="Ranged"
         level="11"
-        name="{=aom_rv_militia_archer}[Lindon] Militia Archer"
+        name="{=aom_lindon_militia_archer_name}[Lindon] Militia Archer"
         occupation="Soldier"
         culture="Culture.lindon">
         <face>
@@ -10653,7 +10653,7 @@
         race="elf"
         default_group="Infantry"
         level="16"
-        name="{=aom_rv_militia_vet_spear}[Lindon] Militia Veteran Spearman"
+        name="{=aom_lindon_militia_veteran_spearman_name}[Lindon] Militia Veteran Spearman"
         occupation="Soldier"
         culture="Culture.lindon">
         <face>
@@ -11008,7 +11008,7 @@
         race="elf"
         default_group="Ranged"
         level="16"
-        name="{=aom_rv_militia_vet_archer}[Lindon] Militia Veteran Archer"
+        name="{=aom_lindon_militia_veteran_archer_name}[Lindon] Militia Veteran Archer"
         occupation="Soldier"
         culture="Culture.lindon">
         <face>
@@ -12167,7 +12167,7 @@
         race="elf"
         default_group="Ranged"
         level="26"
-        name="{=aom_merc_imladris_bowman_name}[Lindon] Hired Mithlond Bowman"
+        name="{=aom_lindon_imladris_bowman_merc_name}[Lindon] Hired Mithlond Bowman"
         occupation="Mercenary"
         culture="Culture.lindon">
         <face>

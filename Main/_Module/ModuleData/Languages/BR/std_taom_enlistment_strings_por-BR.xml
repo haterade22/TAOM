@@ -42,10 +42,10 @@
     <string id="taom_fc_confirm_name" text="Confirmar" />
     <string id="taom_fc_decline" text="Ainda Não" />
     <string id="taom_fc_keep_name" text="Manter Nome Padrão" />
-    <string id="taom_fc_no_room_body" text="Não há espaço para outro companheiro agora. A promoção de {TROOP_NAME} será oferecida novamente mais tarde." />
+    <string id="taom_fc_no_room_body" text="Não há espaço para outro companheiro no momento. A promoção de {TROOP_NAME} será oferecida novamente mais tarde." />
     <string id="taom_fc_offer_body" text="{TROOP_NAME} se destacou em batalha. Promovê-lo a companheiro?" />
     <string id="taom_fc_offer_title" text="Promoção em Campo de Batalha" />
-    <string id="taom_fc_rename_body" text="Dê um nome a {TROOP_NAME}, ou mantenha o que ele levou à batalha." />
+    <string id="taom_fc_rename_body" text="Dê um nome a {TROOP_NAME}, ou mantenha aquele que levou à batalha." />
     <string id="taom_fc_rename_title" text="Nomeie o Novo Companheiro" />
     <string id="taom_fc_cancel" text="Cancelar" />
     <string id="taom_fc_dismiss" text="Sua comissão terminou. Volte às fileiras." />
@@ -101,7 +101,7 @@
     <string id="taom_enlist_section_sup" text="o comboio de bagagens" />
     <string id="taom_enlist_trust_known" text="conhecido" />
     <string id="taom_enlist_trust_new" text="não provado" />
-    <string id="taom_enlist_trust_poor" text="mal-visto" />
+    <string id="taom_enlist_trust_poor" text="malvisto" />
     <string id="taom_enlist_trust_solid" text="bem considerado" />
     <string id="taom_enlist_trust_trusted" text="de confiança" />
     <string id="taom_enlist_grade_distinguished" text="distinto" />

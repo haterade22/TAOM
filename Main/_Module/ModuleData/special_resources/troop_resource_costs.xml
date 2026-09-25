@@ -23,6 +23,12 @@
   <Troop id="harad_elephant_rider" resource_id="war_drums" recruit_cost="50" daily_upkeep="10" merchant_cost="70" />
   <Troop id="harad_mumakil_rider" resource_id="war_drums" recruit_cost="2000" daily_upkeep="500" />
   <Troop id="taom_spider_creature" resource_id="war_spoils" recruit_cost="5" daily_upkeep="1" merchant_cost="18" />
+  <!-- Trolls (Mike, 2026-09-25): a high cost, a lowish upkeep, both in the PLAYER's own resource. Neither is a
+       volunteer or a mercenary, so in practice the recruit cost is charged when the player recruits a captured
+       troll, a path Patch51 does not gate (the balance floors at 0, #563); the upkeep charges every troll in the
+       player's party. -->
+  <Troop id="cave_troll" resource_id="war_spoils" recruit_cost="50" daily_upkeep="5" />
+  <Troop id="hill_troll" resource_id="war_spoils" recruit_cost="50" daily_upkeep="4" />
   <!-- Spider Rider upgrade rungs (#616): a bigger spider is the same package to feed, so upkeep
        stays at the creature rate; the climb itself costs War Spoils on the party screen
        (upgrade_cost, player only via Patch26). Neither rung is pooled or sold, so no recruit or

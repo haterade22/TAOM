@@ -10,4 +10,8 @@ public interface IRaceCombatModifiersResolver
     // Neutral when the id is null/invalid (validate-before-lookup — never the "human" fallback
     // row), when the race has no config row, or when race modifiers are disabled.
     RaceCombatModifiers Resolve(int? raceId);
+
+    // Health to add on top of the engine's campaign base (RaceCombatModifiers.EngineBaseHitPoints) for this race:
+    // its row's BaseHitPoints minus the base, or 0 under the same conditions Resolve returns Neutral.
+    int BaseHitPointsBonus(int? raceId);
 }

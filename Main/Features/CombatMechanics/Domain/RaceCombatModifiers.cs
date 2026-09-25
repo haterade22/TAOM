@@ -23,5 +23,13 @@ public class RaceCombatModifiers
     // (decision bias only — never a native momentum change).
     public float SwingEnergyBonusFactor { get; set; }
 
+    // A campaign character's base health (the trolls' 200). 0 keeps the engine's base: the campaign starts every
+    // troop at EngineBaseHitPoints (DefaultCharacterStatsModel.MaxHitpoints) whatever its race, while Custom Battle
+    // reads the race Monster's hit_points, so this row and the Monster must carry the same number.
+    public int BaseHitPoints { get; set; }
+
+    // DefaultCharacterStatsModel.MaxHitpoints' starting value in v1.5.3.
+    public const int EngineBaseHitPoints = 100;
+
     public static readonly RaceCombatModifiers Neutral = new RaceCombatModifiers();
 }

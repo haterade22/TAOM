@@ -45,6 +45,12 @@ public class RaceCombatModifiersResolver : IRaceCombatModifiersResolver
         return map.TryGetValue(raceId.Value, out var modifiers) ? modifiers : RaceCombatModifiers.Neutral;
     }
 
+    public int BaseHitPointsBonus(int? raceId)
+    {
+        var baseHitPoints = Resolve(raceId).BaseHitPoints;
+        return baseHitPoints > 0 ? baseHitPoints - RaceCombatModifiers.EngineBaseHitPoints : 0;
+    }
+
     private Dictionary<int, RaceCombatModifiers> BuildMap()
     {
         lock (_buildGate)

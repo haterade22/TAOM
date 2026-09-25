@@ -356,10 +356,22 @@ public class CombatMechanicsConfigProvider : ICombatMechanicsConfigProvider
                 StaggerThresholdMultiplier = CheckFiniteInRange(pair.Value.StaggerThresholdMultiplier, 0f, 100f, rowDefaults.StaggerThresholdMultiplier, $"raceModifiers['{pair.Key}'].staggerThresholdMultiplier", ref rejected),
                 SwingEnergyBonusFactor = CheckFiniteInRange(pair.Value.SwingEnergyBonusFactor, 0f, 10f, rowDefaults.SwingEnergyBonusFactor, $"raceModifiers['{pair.Key}'].swingEnergyBonusFactor", ref rejected),
                 RemoveNonOverheadPenalty = pair.Value.RemoveNonOverheadPenalty,
+                BaseHitPoints = CheckBaseHitPoints(pair.Value.BaseHitPoints, $"raceModifiers['{pair.Key}'].baseHitPoints", ref rejected),
             };
         }
 
         return cleaned;
+    }
+
+    // 0 means "the engine's base"; anything else is a whole health value a troop can plausibly carry. A value
+    // outside 0..1000 is a typo or a sign flip, reverted to the engine base rather than applied.
+    private int CheckBaseHitPoints(int value, string field, ref bool rejected)
+    {
+        if (value >= 0 && value <= 1000)
+            return value;
+        _logger.LogWarning($"CombatMechanicsConfigProvider: {field} = {value} is outside 0..1000, reverting to the engine base (0)");
+        rejected = true;
+        return 0;
     }
 
     private List<string> CleanIdList(List<string> parsed, List<string> fallback, string field, ref bool rejected)

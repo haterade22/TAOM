@@ -1077,6 +1077,8 @@ class Validator:
         "dg_goblin_slave": "a slave in rags; bare torso is the intended look",
         "urukhai_champion": "Uruk-hai champions fight bare-chested by design",
         "urukhai_berserker": "Uruk-hai berserkers fight bare-chested by design",
+        "hill_troll": "KEYForce's hill troll model wears its own cloth; the lotr_troll_* armour is skinned to "
+                      "human_skeleton and would float on troll_skeleton_a (2026-09-25)",
     }
 
     def _armour_slot_coverage(self) -> list:
@@ -1515,6 +1517,7 @@ class Validator:
     # Troops whose kit is off the ladder on purpose. Adding an entry is a decision: state why.
     _ARMOUR_LADDER_EXEMPT = {
         "cave_troll": "non-humanoid; troll plate at level 51 is its own scale",
+        "hill_troll": "non-humanoid, no armour by design (the troll pieces are skinned to human_skeleton)",
         "harad_elephant_rider": "bespoke mount rider at level 51 in light kit (rebalance_troops.SKIP_TROOP_IDS)",
         "harad_mumakil_rider": "bespoke mount rider at level 51 in light kit (rebalance_troops.SKIP_TROOP_IDS)",
         "gondor_ithilien_ranger": "tier-10 light ranger kit by design (docs/features/gondor-ithilien-ranger.md)",
@@ -1523,7 +1526,6 @@ class Validator:
         "taom_test_animalia_elk_rider": "#646 Custom Battle test rider, not a kingdom's troop (troops_animalia_test.xml)",
         "taom_test_animalia_moose_rider": "#646 Custom Battle test rider, not a kingdom's troop (troops_animalia_test.xml)",
     }
-
     # Gondor noble lines at engine tier 2 to 7 (level 11 to 36), from the "<Region> Noble" troop
     # trees of KEYforce's spec (lotraom-assets tools/gondor_armors_and_troops.md). Mike, 2026-09-25:
     # nobles wear better armour than regular troops of their level. The mesh gate and fixer allow

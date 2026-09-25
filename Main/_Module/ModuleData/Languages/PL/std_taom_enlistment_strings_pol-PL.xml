@@ -42,10 +42,10 @@
     <string id="taom_fc_confirm_name" text="Zatwierdź" />
     <string id="taom_fc_decline" text="Jeszcze nie" />
     <string id="taom_fc_keep_name" text="Zachowaj domyślne imię" />
-    <string id="taom_fc_no_room_body" text="Nie ma teraz miejsca na kolejnego towarzysza. Awans {TROOP_NAME} zostanie zaproponowany później." />
-    <string id="taom_fc_offer_body" text="{TROOP_NAME} wyróżnił się w bitwie. Awansować go na towarzysza?" />
+    <string id="taom_fc_no_room_body" text="Nie ma teraz miejsca na kolejnego towarzysza. Awans {TROOP_NAME} zostanie zaproponowany ponownie później." />
+    <string id="taom_fc_offer_body" text="{TROOP_NAME} wyróżnił się w boju. Awansować go na towarzysza?" />
     <string id="taom_fc_offer_title" text="Awans na polu bitwy" />
-    <string id="taom_fc_rename_body" text="Nadaj {TROOP_NAME} imię lub pozostaw to, z którym stanął do bitwy." />
+    <string id="taom_fc_rename_body" text="Nadaj {TROOP_NAME} imię albo zachowaj to, z którym ruszył do boju." />
     <string id="taom_fc_rename_title" text="Nazwij nowego towarzysza" />
     <string id="taom_fc_cancel" text="Anuluj" />
     <string id="taom_fc_dismiss" text="Twoja służba na tym stanowisku dobiegła końca. Wracaj w szeregi." />
@@ -101,7 +101,7 @@
     <string id="taom_enlist_section_sup" text="taborem" />
     <string id="taom_enlist_trust_known" text="znany" />
     <string id="taom_enlist_trust_new" text="niesprawdzony" />
-    <string id="taom_enlist_trust_poor" text="w złej opinii" />
+    <string id="taom_enlist_trust_poor" text="źle postrzegany" />
     <string id="taom_enlist_trust_solid" text="dobrze oceniany" />
     <string id="taom_enlist_trust_trusted" text="zaufany" />
     <string id="taom_enlist_grade_distinguished" text="wyróżniony" />

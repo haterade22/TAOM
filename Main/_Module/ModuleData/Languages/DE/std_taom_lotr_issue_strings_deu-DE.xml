@@ -49,19 +49,19 @@
     <string id="taom_lotr_issue_horses_soln" text="Ich werde Euch Pferde bringen." />
     <string id="taom_lotr_issue_horses_task" text="Pferde liefern ({COUNT})" />
     <string id="taom_lotr_issue_recruits_title" text="Frisches Blut für die Bande" />
-    <string id="taom_lotr_issue_recruits_desc" text="Ein Bandenführer will gefangene Gesetzlose in seinen Dienst pressen." />
-    <string id="taom_lotr_issue_recruits_brief" text="Eine Bande ist nur so stark wie ihre Zahlen, und meine sind dünn. Bringt mir Gefangene, die kein Gesetz lieben, und ich werde sie nutzen." />
+    <string id="taom_lotr_issue_recruits_desc" text="Ein Bandenführer will Gefangene, die man in seinen Dienst presst." />
+    <string id="taom_lotr_issue_recruits_brief" text="Eine Bande ist nur so stark wie ihre Zahl, und meine ist dünn. Bring mir Gefangene, wer immer sie sind, und ich werde sie zu nutzen wissen." />
     <string id="taom_lotr_issue_recruits_accept" text="Was für Gefangene?" />
-    <string id="taom_lotr_issue_recruits_expl" text="Bringt mir {COUNT} Banditengefangene und ich werde sie an die Arbeit setzen. Es gibt Münzen für Euch, keine Fragen gestellt." />
+    <string id="taom_lotr_issue_recruits_expl" text="Bring mir {COUNT} Gefangene, und ich werde sie zur Arbeit bringen. Es gibt Münzen dafür, ohne Fragen." />
     <string id="taom_lotr_issue_recruits_soln" text="Ich werde Euch Gefangene bringen." />
-    <string id="taom_lotr_issue_recruits_task" text="Liefert Banditengefangene ab ({COUNT})" />
+    <string id="taom_lotr_issue_recruits_task" text="Gefangene abliefern ({COUNT})" />
     <string id="taom_lotr_issue_laborers_title" text="Hände für die Minen" />
-    <string id="taom_lotr_issue_laborers_desc" text="Ein Grundbesitzer braucht starke Rücken für harte Arbeit und wird gefangene Banditen nehmen." />
-    <string id="taom_lotr_issue_laborers_brief" text="Die Gruben brauchen Arbeiter und freie Männer wollen dort nicht hinunter. Bringt mir Banditen in Ketten und sie werden mit der Spitzhacke ihren Lohn verdienen." />
+    <string id="taom_lotr_issue_laborers_desc" text="Ein Grundherr braucht starke Rücken für harte Arbeit und nimmt alle Gefangenen, die du gemacht hast." />
+    <string id="taom_lotr_issue_laborers_brief" text="Die Gruben brauchen Arbeiter, und freie Männer steigen da nicht hinab. Bring mir Gefangene in Ketten, und sie werden sich ihr Brot mit der Spitzhacke verdienen." />
     <string id="taom_lotr_issue_laborers_accept" text="Ihr wollt Gefangene?" />
-    <string id="taom_lotr_issue_laborers_expl" text="Bringt mir {COUNT} Banditengefangene für die Arbeitstruppen und ich bezahle Euch für die Mühe, sie zu fangen." />
+    <string id="taom_lotr_issue_laborers_expl" text="Bring mir {COUNT} Gefangene für die Arbeitskolonnen, und ich zahle dir für die Mühe, sie zu fangen." />
     <string id="taom_lotr_issue_laborers_soln" text="Ich werde Euch Gefangene bringen." />
-    <string id="taom_lotr_issue_laborers_task" text="Liefert Banditengefangene ab ({COUNT})" />
+    <string id="taom_lotr_issue_laborers_task" text="Gefangene abliefern ({COUNT})" />
     <string id="taom_lotr_issue_banditbase_title" text="Ein Lager nahe {ISSUE_SETTLEMENT}" />
     <string id="taom_lotr_issue_banditbase_desc" text="Ein Räubernest bedroht die Straßen nahe {ISSUE_SETTLEMENT}." />
     <string id="taom_lotr_issue_banditbase_brief" text="Es gibt ein übles Nest von ihnen in den Hügeln, Wanderer. Sie nehmen unsere Güter und unsere Leute, und die Wache ist zu schwach, um sie auszuräuchern." />
@@ -300,19 +300,24 @@
     <string id="taom_lotr_issue_common_task" text="Waren sammeln" />
     <string id="taom_lotr_issue_pers_expl" text="Bringt mir {COUNT} Gefangene und ich werde Euch gut bezahlen." />
     <string id="taom_lotr_issue_pers_soln" text="Ich werde Euch Gefangene bringen." />
-    <string id="taom_lotr_issue_pers_accepted" text="Liefert {COUNT} Banditengefangene nach {QUEST_SETTLEMENT}." />
+    <string id="taom_lotr_issue_pers_accepted" text="Liefere {COUNT} Gefangene nach {QUEST_SETTLEMENT}." />
     <string id="taom_lotr_issue_pers_ready" text="Ihr habt genug Gefangene. Kehrt nach {QUEST_SETTLEMENT} zurück, um sie zu übergeben." />
     <string id="taom_lotr_issue_pers_timeout" text="Ihr habt die Gefangenen nicht rechtzeitig geliefert." />
     <string id="taom_lotr_issue_pers_have" text="Habt Ihr die Gefangenen gebracht?" />
     <string id="taom_lotr_issue_pers_thanks" text="Die werden ihren Zweck erfüllen. Ihr habt meinen Dank." />
     <string id="taom_lotr_issue_pers_turnin" text="Ja. Hier sind sie." />
     <string id="taom_lotr_issue_pers_not_enough" text="Ihr habt noch nicht genug Gefangene." />
-    <string id="taom_lotr_issue_pers_task" text="Banditengefangene nehmen" />
+    <string id="taom_lotr_issue_pers_task" text="Gefangene machen" />
     <string id="taom_lotr_issue_combat_expl" text="Kümmert Euch um unsere Feinde und Ihr werdet belohnt werden." />
     <string id="taom_lotr_issue_combat_soln" text="Ich werde mich um sie kümmern." />
     <string id="taom_lotr_issue_combat_task_capture" text="Feindliche Lords gefangen nehmen ({COUNT})" />
     <string id="taom_lotr_issue_combat_task_tourney" text="Turniere gewinnen ({COUNT})" />
     <string id="taom_lotr_issue_combat_task_defeat" text="Die Plünderer besiegen ({COUNT})" />
     <string id="taom_lotr_issue_combat_timeout" text="Ihr habt die Bedrohung nicht rechtzeitig beseitigt." />
+    <string id="taom_lotr_issue_combat_fallback_desc" text="Ein Feind muss beseitigt werden." />
+    <string id="taom_lotr_issue_combat_fallback_brief" text="Wir werden von Feinden bedrängt, Reisender." />
+    <string id="taom_lotr_issue_combat_fallback_accept" text="Was muss getan werden?" />
+    <string id="taom_lotr_issue_pers_fallback_desc" text="Jemand braucht Gefangene, die überbracht werden." />
+    <string id="taom_lotr_issue_pers_fallback_brief" text="Ich brauche kräftige Arme, Reisender." />
   </strings>
 </base>

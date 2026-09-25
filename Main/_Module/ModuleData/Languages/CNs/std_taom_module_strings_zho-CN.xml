@@ -297,7 +297,7 @@
     <string id="taom_str_faction_official.abanissa_f" text="家族女领主" />
     <string id="taom_str_faction_ruler.abanissa" text="Châjaphân" />
     <string id="taom_str_faction_ruler.abanissa_f" text="Châjaphân" />
-    <string id="taom_str_faction_ruler_term_in_speech.abanissa" text="Châjaphân，{RULER.NAME}" />
+    <string id="taom_str_faction_ruler_term_in_speech.abanissa" text="沙贾芬{RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.abanissa" text="Châjaphân {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.abanissa" text="{?RULER.GENDER}女领主{?}领主{\?} {RULER.NAME}" />
     <string id="taom_str_faction_formal_name_for_culture.abanissa" text="阿巴尼萨领地" />
@@ -312,13 +312,13 @@
     <string id="taom_str_faction_official.shaghana_f" text="氏族女首领" />
     <string id="taom_str_faction_ruler.shaghana" text="Taskral" />
     <string id="taom_str_faction_ruler.shaghana_f" text="Taskral" />
-    <string id="taom_str_faction_ruler_term_in_speech.shaghana" text="Taskral，{RULER.NAME}" />
+    <string id="taom_str_faction_ruler_term_in_speech.shaghana" text="塔斯克拉尔{RULER.NAME}" />
     <string id="taom_str_faction_ruler_name_with_title.shaghana" text="Taskral {RULER.NAME}" />
     <string id="taom_str_faction_noble_name_with_title.shaghana" text="{?RULER.GENDER}女领主{?}领主{\?} {RULER.NAME}" />
     <string id="taom_str_faction_formal_name_for_culture.shaghana" text="沙加纳部落" />
     <string id="taom_str_faction_informal_name_for_culture.shaghana" text="沙加纳" />
     <string id="taom_str_neutral_term_for_culture.shaghana" text="沙加纳哈拉德人" />
-    <string id="taom_str_culture_description.shaghana" text="沙加纳是哈拉德的东部地区，一片烈日灼烧的草原与古老堡垒的土地。它的九大部落氏族是凶猛的骑士和掠袭者，以誓约与血脉相连，令所有敢于反抗他们的人心生恐惧。他们效忠于他们的Taskral，并通过他服从索伦的意志。" />
+    <string id="taom_str_culture_description.shaghana" text="沙加纳是哈拉德的东部边陲，一片被烈日炙烤的草原与古老堡垒之地。其九大部族皆为凶悍的骑手与劫掠者，以誓言与血缘相连，令一切胆敢与之为敌者闻风丧胆。他们听命于自己的塔斯克拉尔，并通过他服从索伦的意志。" />
     <string id="taom_str_culture_rich_name.shaghana" text="沙加纳" />
     <string id="taom_str_adjective_for_culture.shaghana" text="沙加纳" />
     <string id="taom_str_player_father_name.shaghana" text="扎尔坎" />
@@ -1404,7 +1404,7 @@
     <string id="taom_faction_goblins_of_blue_craig_bonus_3" text="+20%队伍食物消耗（贪婪群集）" />
     <string id="taom_faction_goblins_of_blue_craig_bonus_4" text="+10%锻造效率（掠夺武器储备）" />
     <string id="taom_faction_goblins_of_blue_craig_bonus_5" text="+10%劫掠伤害（哥布林伏击）" />
-    <string id="taom_faction_goblins_of_blue_craig_desc" text="蓝峰的哥布林。" />
+    <string id="taom_faction_goblins_of_blue_craig_desc" text="远西蓝色山脉（埃瑞德隆恩）中一支独特的半兽人大军，紧邻林顿的灰港——与迷雾山脉半兽人镇的同族分属两地。同样是无穷无尽、装备低劣的群兽：孤身孱弱，成群则势不可挡，行军途中贪食无度。他们不断侵扰西岸的精灵。" />
     <string id="taom_faction_goblins_of_blue_craig_name" text="蓝峰哥布林" />
     <string id="taom_faction_goblins_of_blue_craig_perk_0_desc" text="+40%队伍规模和+25%村庄志愿兵重生速度——虚弱但无穷无尽。" />
     <string id="taom_faction_goblins_of_blue_craig_perk_0_name" text="哥布林群集" />
@@ -1435,7 +1435,7 @@
     <string id="taom_faction_goblins_of_goblin_town_bonus_3" text="+20%队伍食物消耗（饕餮蜂群）" />
     <string id="taom_faction_goblins_of_goblin_town_bonus_4" text="+10%锻造效率（缴获武器囤积）" />
     <string id="taom_faction_goblins_of_goblin_town_bonus_5" text="+10%劫掠伤害（哥布林伏击）" />
-    <string id="taom_faction_goblins_of_goblin_town_desc" text="迷雾山脉中哥布林出没的隧道与洞穴。这些半兽人控制着高山隘口,威胁所有胆敢穿越山脉的人。" />
+    <string id="taom_faction_goblins_of_goblin_town_desc" text="迷雾山脉高隘口之下密布的半兽人巢穴。自大半兽人陨落以来，各部族繁衍无数——庞大而装备低劣的群兽，全凭数量取胜，繁殖之快胜过任何敌人所能剿灭的速度。他们在故乡的雪原上奔行最速，但如此大军永远饥肠辘辘。" />
     <string id="taom_faction_goblins_of_goblin_town_name" text="哥布林镇哥布林" />
     <string id="taom_faction_goblins_of_goblin_town_perk_0_desc" text="+40%队伍规模与+25%村庄志愿兵重生——哥布林虽弱，但数量无穷。" />
     <string id="taom_faction_goblins_of_goblin_town_perk_0_name" text="哥布林蜂群" />
@@ -1453,9 +1453,9 @@
     <string id="taom_faction_goblins_of_goblin_town_su_1_name" text="洞穴哥布林游击兵" />
     <string id="taom_faction_goblins_of_goblin_town_su_2_desc" text="深层巢穴中更强壮的冲锋哥布林。" />
     <string id="taom_faction_goblins_of_goblin_town_su_2_name" text="哥布林暴徒" />
-    <string id="taom_faction_goblins_of_goblin_town_trait_0" text="哥布林隧道" />
-    <string id="taom_faction_goblins_of_goblin_town_trait_1" text="山地隘口" />
-    <string id="taom_faction_goblins_of_goblin_town_trait_2" text="座狼骑士" />
+    <string id="taom_faction_goblins_of_goblin_town_trait_0" text="半兽人镇巢穴" />
+    <string id="taom_faction_goblins_of_goblin_town_trait_1" text="高隘口之裔" />
+    <string id="taom_faction_goblins_of_goblin_town_trait_2" text="山隘伏击者" />
     <string id="taom_faction_goblins_of_goblin_town_trait_3" text="无穷蜂群" />
     <string id="taom_faction_goblins_of_goblin_town_weakness_0" text="单兵战力薄弱" />
     <string id="taom_faction_goblins_of_goblin_town_weakness_1" text="贪婪如饕——消耗每一条补给线" />
@@ -1526,17 +1526,17 @@
     <string id="taom_faction_havens_of_umbar_weakness_1" text="被刚铎仇视" />
     <string id="taom_faction_havens_of_umbar_weakness_2" text="陆军弱于海军" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_0" text="+35%军队影响力奖励（精灵智慧）" />
-    <string id="taom_faction_high_kingdom_of_lindon_bonus_1" text="+20% 村庄炉火增长(最后的安宁之家)" />
+    <string id="taom_faction_high_kingdom_of_lindon_bonus_1" text="+20% 村庄户数增长（灰港）" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_2" text="+10% 森林中队伍速度(林地优雅)" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_3" text="-15% 队伍食物消耗(精灵节俭)" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_4" text="+0.5 每日定居点忠诚度" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_5" text="+25% 军队影响力消耗(精灵骄傲)" />
-    <string id="taom_faction_high_kingdom_of_lindon_desc" text="中洲西岸的古老精灵王国林顿。由吉尔-加拉德的继承者统治,这是一片精灵荣光渐逝之地,也是灰港岸的所在。" />
+    <string id="taom_faction_high_kingdom_of_lindon_desc" text="蓝色山脉以西的青翠之地，中洲海岸上高等精灵最后的国度。白船自米斯泷德的灰港启航驶向西方。造船者奇尔丹，埃尔达中最年长者，守护着法拉斯瑞姆渐逝的光辉——睿智、稀少，每一柄利刃都无可替代。林顿共享米斯泷德法拉斯瑞姆之力。" />
     <string id="taom_faction_high_kingdom_of_lindon_name" text="林顿至高王国" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_0_desc" text="+35% 军队胜利获得影响力——智者懂得如何领导。" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_0_name" text="精灵智慧" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_1_desc" text="+20% 村庄炉火增长和-15% 队伍食物消耗。" />
-    <string id="taom_faction_high_kingdom_of_lindon_perk_1_name" text="最后的安宁之家" />
+    <string id="taom_faction_high_kingdom_of_lindon_perk_1_name" text="灰港" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_2_desc" text="+10% 森林中队伍速度和+0.5 每日定居点忠诚度。" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_2_name" text="林地优雅" />
     <string id="taom_faction_high_kingdom_of_lindon_strength_0" text="传奇的精锐战士" />
@@ -1544,15 +1544,15 @@
     <string id="taom_faction_high_kingdom_of_lindon_strength_2" text="节俭、自给自足的军队" />
     <string id="taom_faction_high_kingdom_of_lindon_strength_3" text="炉火丰盛、忠诚的避难所" />
     <string id="taom_faction_high_kingdom_of_lindon_su_0_desc" text="埃尔达族传奇的第一纪元老兵。" />
-    <string id="taom_faction_high_kingdom_of_lindon_su_0_name" text="诺多剑术大师" />
+    <string id="taom_faction_high_kingdom_of_lindon_su_0_name" text="法拉斯瑞姆剑术大师" />
     <string id="taom_faction_high_kingdom_of_lindon_su_1_desc" text="海港的海精灵守卫者。" />
     <string id="taom_faction_high_kingdom_of_lindon_su_1_name" text="法拉斯林海洋守望者" />
-    <string id="taom_faction_high_kingdom_of_lindon_su_2_desc" text="灰港的重装诺多守卫。" />
+    <string id="taom_faction_high_kingdom_of_lindon_su_2_desc" text="灰港的法拉斯瑞姆重装守卫。" />
     <string id="taom_faction_high_kingdom_of_lindon_su_2_name" text="密斯隆德哨兵" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_0" text="灰港岸" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_1" text="古老精灵王国" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_2" text="驶向瓦林诺的船只" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_3" text="造船者瑟丹" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_0" text="造船者奇尔丹" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_1" text="灰港" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_2" text="驶向西方的白船" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_3" text="最后的高等精灵" />
     <string id="taom_faction_high_kingdom_of_lindon_weakness_0" text="精灵骄傲提高影响力消耗" />
     <string id="taom_faction_high_kingdom_of_lindon_weakness_1" text="衰落的种族——很少有补充" />
     <string id="taom_faction_khudorom_of_khand_bonus_0" text="+10%草原队伍速度(草原战车兵)" />
@@ -1595,7 +1595,7 @@
     <string id="taom_faction_kingdom_of_arthedain_trait_0" text="阿尔诺遗裔" />
     <string id="taom_faction_kingdom_of_arthedain_trait_1" text="安努米那斯真知晶石" />
     <string id="taom_faction_kingdom_of_arthedain_trait_2" text="北方登丹人" />
-    <string id="taom_faction_kingdom_of_cardolan_desc" text="卡多兰的继承国度,曾是伟大的阿尔诺王国的一部分。如今是一片散落定居点和被尸妖haunted的古老墓丘之地。" />
+    <string id="taom_faction_kingdom_of_cardolan_desc" text="卡多兰的继承王国，昔日曾是伟大的阿尔诺王国的一部分。如今只剩零散的聚落，以及被尸妖萦绕的古老古冢。" />
     <string id="taom_faction_kingdom_of_cardolan_name" text="卡多兰王国" />
     <string id="taom_faction_kingdom_of_cardolan_trait_0" text="阿尔诺的继承者" />
     <string id="taom_faction_kingdom_of_cardolan_trait_1" text="古墓岗" />
@@ -1778,8 +1778,8 @@
     <string id="taom_faction_kingdom_of_moria_bonus_4" text="+15% 锻造效率(掠夺的熔炉)" />
     <string id="taom_faction_kingdom_of_moria_bonus_5" text="+15% 突袭伤害(洞穴巨魔征召)" />
     <string id="taom_faction_kingdom_of_moria_bonus_6" text="-10% 建造速度(回响大厅)" />
-    <string id="taom_faction_kingdom_of_moria_desc" text="摩瑞亚王国。" />
-    <string id="taom_faction_kingdom_of_moria_name" text="摩瑞亚王国" />
+    <string id="taom_faction_kingdom_of_moria_desc" text="占据迷雾山脉深处的奥克大军——自矮人手中夺来的摩瑞亚黑暗矿坑，以及从卡拉兹拉斯到梅塞德拉斯的严寒峰峦。他们比高隘口的半兽人乌合之众更为庞大、装备更精良，几乎无需影响力便可召集庞大战团，忍饥行军却不知疲倦地穿越雪原。" />
+    <string id="taom_faction_kingdom_of_moria_name" text="迷雾山脉的奥克" />
     <string id="taom_faction_kingdom_of_moria_perk_0_desc" text="军队招募消耗的影响力减少40% — 兽人大军无需共识即可进军。" />
     <string id="taom_faction_kingdom_of_moria_perk_0_name" text="兽人部落" />
     <string id="taom_faction_kingdom_of_moria_perk_1_desc" text="在雪地上队伍规模+30%,速度+10% — 为寒冷山峰而生的庞大战争部队。" />
@@ -2126,7 +2126,7 @@
     <string id="taom_feat_mrk_mor" text="林地的羁绊" />
     <string id="taom_feat_mrk_mor_desc" text="队伍士气提高3点。" />
     <string id="taom_feat_mrk_aic" text="闭关朝堂" />
-    <string id="taom_feat_mrk_aic_desc" text="组建军队所需influence增加15%。" />
+    <string id="taom_feat_mrk_aic_desc" text="组建军队所需的影响力增加15%。" />
     <string id="taom_feat_loth_fs" text="金色森林" />
     <string id="taom_feat_loth_fs_desc" text="部队在森林中的移动速度提高10%。" />
     <string id="taom_feat_loth_gw" text="洛丝罗林守卫" />
@@ -2643,9 +2643,6 @@
     <string id="taom_aso_kingdom.lindon" text="林顿" />
     <string id="taom_aso_kingdom.bluecraig" text="蓝岩半兽人" />
     <string id="taom_aso_item_name_randomized" text="随机化的中土世界" />
-    <string id="taom_aso_desc_invasion" text="统治中洲大部分地区的阵营。" />
-    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId}统治着中洲的绝大部分地区。" />
-    <string id="taom_aso_item_desc_randomized" text="在合理范围内，按你选择的程度随机化中洲的初始局势。" />
     <string id="taom_tactic.shield_wall" text="我们的计划是紧锁盾牌，坚守阵地。" />
     <string id="taom_tactic.infantry_mass" text="我们的计划是以人数优势将他们淹没。" />
     <string id="taom_tactic.cavalry_dominance" text="我们的计划是骑兵冲垮他们，再由步兵收尾。" />
@@ -2662,22 +2659,22 @@
     <string id="taom_behavior.infantry_skirmish" text="接近投掷距离，投掷后后撤" />
     <string id="taom_behavior.cycle_charge" text="冲锋穿透，重整队形，再次冲锋" />
     <string id="taom_behavior.envelop_wing" text="绕至其侧翼，从侧面打击" />
-    <string id="taom_behavior.foot_charge" text="Charge their foot; square up if horse come at you" />
-    <string id="taom_behavior.archer_flank" text="Stand beside the wall and shoot; fall in behind it if they come for you" />
-    <string id="taom_behavior_f6.braced_defend" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are holding in a wall." />
-    <string id="taom_behavior_f6.braced_advance" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are advancing in a wall." />
-    <string id="taom_behavior_f6.infantry_skirmish" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are throwing and falling back." />
-    <string id="taom_behavior_f6.cycle_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging in cycles." />
-    <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are swinging round the flank." />
-    <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging the enemy foot." />
-    <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are taking the flank of the wall." />
+    <string id="taom_behavior.foot_charge" text="冲击敌方步兵；若骑兵来袭则立盾结阵" />
+    <string id="taom_behavior.archer_flank" text="立于盾墙侧翼射击；若敌来犯则退至墙后" />
+    <string id="taom_behavior_f6.braced_defend" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL}与{?}{\?}{TROOP_NAMES_END}正结成盾墙坚守。" />
+    <string id="taom_behavior_f6.braced_advance" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL}与{?}{\?}{TROOP_NAMES_END}正结成盾墙推进。" />
+    <string id="taom_behavior_f6.infantry_skirmish" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL}与{?}{\?}{TROOP_NAMES_END}正投掷并后撤。" />
+    <string id="taom_behavior_f6.cycle_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL}与{?}{\?}{TROOP_NAMES_END}正进行循环冲锋。" />
+    <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL}与{?}{\?}{TROOP_NAMES_END}正迂回敌军侧翼。" />
+    <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL}与{?}{\?}{TROOP_NAMES_END}正冲击敌方步兵。" />
+    <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL}与{?}{\?}{TROOP_NAMES_END}正据守盾墙侧翼。" />
     <string id="taom_patch_apply_failed" text="TAOM：在{PHASE}期间，以下补丁组应用失败：{GROUPS}。本次游戏中这些组内的部分修复将不会生效；具体原因请查看 TAOM 日志。" />
     <string id="taom_patch_apply_phase_startup" text="启动" />
     <string id="taom_patch_apply_notice_title" text="TAOM" />
     <string id="taom_patch_apply_phase_game_init" text="游戏初始化" />
     <string id="taom_patch_apply_phase_mission_start" text="任务开始" />
-    <string id="taom_oob_autoassign_done" text="Captains assigned: {COUNT}." />
-    <string id="taom_oob_autoassign_not_general" text="Only the general of this battle can assign heroes." />
-    <string id="taom_oob_autoassign_none" text="No hero suits an open captain slot." />
+    <string id="taom_oob_autoassign_done" text="已指派队长：{COUNT}。" />
+    <string id="taom_oob_autoassign_not_general" text="只有本场战斗的主帅才能指派英雄。" />
+    <string id="taom_oob_autoassign_none" text="没有合适的英雄可担任空缺的队长职位。" />
   </strings>
 </base>

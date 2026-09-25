@@ -14,5 +14,8 @@
     <string id="taom_key_turbo_desc" text="En yüksek TAOM hız çarpanı için Ctrl ile birlikte bu tuşu basılı tutun. Tuşlardan birini bıraktığınızda önceki hıza dönülür." />
     <string id="taom_key_career_ability" text="Kariyer Yeteneği (TAOM)" />
     <string id="taom_key_career_ability_desc" text="Enerji çubuğu dolduğunda savaş sırasında kariyer yeteneğini etkinleştirir. Varsayılan tuş: V." />
+    <string id="taom_aso_desc_invasion" text="Orta Dünya'nın büyük bölümünü yöneten hizip." />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} Orta Dünya'nın çok büyük bir kısmına hükmediyor." />
+    <string id="taom_aso_item_desc_randomized" text="Orta Dünya'nın başlangıç durumunu, makul sınırlar içinde, istediğiniz ölçüde rastgeleleştirir." />
   </strings>
 </base>

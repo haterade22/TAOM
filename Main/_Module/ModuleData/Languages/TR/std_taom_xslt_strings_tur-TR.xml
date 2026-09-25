@@ -662,8 +662,8 @@
     <string id="aom_lord_1_155_name" text="Nazgûl, Kara Marşal" />
     <string id="aom_lord_1_16_name" text="Nazgûl, Umbar Şövalyesi" />
     <string id="aom_lord_1_17_name" text="Sauron" />
-    <string id="aom_lord_1_177_name" text="Honoratus" />
-    <string id="aom_lord_1_18_name" text="Jathea" />
+    <string id="aom_lord_1_177_name" text="Khorgath" />
+    <string id="aom_lord_1_18_name" text="Morgha" />
     <string id="aom_lord_1_21_name" text="Kızıl Kurt Fenrik" />
     <string id="aom_lord_1_22_name" text="Bjornric Güçlükol" />
     <string id="aom_lord_1_23_name" text="Caladwen" />
@@ -672,7 +672,7 @@
     <string id="aom_lord_1_26_name" text="Hirgon" />
     <string id="aom_lord_1_27_name" text="Maugrash" />
     <string id="aom_lord_1_28_name" text="Nazgûl, Hain" />
-    <string id="aom_lord_1_29_name" text="Sanion" />
+    <string id="aom_lord_1_29_name" text="Herumarth" />
     <string id="aom_lord_1_31_name" text="Zrsa Karadiş" />
     <string id="aom_lord_1_32_name" text="Eldra Domuzşarkısı" />
     <string id="aom_lord_1_33_name" text="Uluyan Brigid" />
@@ -681,14 +681,14 @@
     <string id="aom_lord_1_36_name" text="Ivriniel" />
     <string id="aom_lord_1_37_name" text="Goshank" />
     <string id="aom_lord_1_38_name" text="Nazgûl, Ölümsüz" />
-    <string id="aom_lord_1_39_name" text="Debana" />
+    <string id="aom_lord_1_39_name" text="Naktharil" />
     <string id="aom_lord_1_41_name" text="Beregund Kurtdoğan" />
     <string id="aom_lord_1_411_name" text="Grimwulf Demirdiş" />
     <string id="aom_lord_1_42_name" text="Hrodgar Demirderi" />
     <string id="aom_lord_1_43_name" text="Gormund Öküzkanat" />
     <string id="aom_lord_1_44_name" text="Nemos" />
     <string id="aom_lord_1_47_name" text="Ulbos" />
-    <string id="aom_lord_1_49_name" text="Obron" />
+    <string id="aom_lord_1_49_name" text="Skarnak" />
     <string id="aom_lord_1_20_name" text="Astrid Ayıpençesi" />
     <string id="aom_lord_1_64_name" text="Thormund Bozayıkesen" />
     <string id="aom_lord_1_50_name" text="Corwyn Kuzgungözü" />
@@ -712,10 +712,10 @@
     <string id="aom_lord_1_55_name" text="Mathmog" />
     <string id="aom_lord_1_63_name" text="Gorbag, Minas Morgul Kaptanı" />
     <string id="aom_lord_1_56_name" text="Tormund Çekiç" />
-    <string id="aom_lord_1_68_name" text="Tharos" />
-    <string id="aom_lord_1_69_name" text="Niphon" />
+    <string id="aom_lord_1_68_name" text="Gorthak" />
+    <string id="aom_lord_1_69_name" text="Grukhash" />
     <string id="aom_lord_1_72_name" text="Bolg" />
-    <string id="aom_lord_1_74_name" text="Zachanis" />
+    <string id="aom_lord_1_74_name" text="Bûrznak" />
     <string id="aom_lord_1_1_1_name" text="Eldith Gri-Pençe" />
     <string id="aom_lord_1_1_2_name" text="Sigga Ejderhabane" />
     <string id="aom_lord_1_1_3_name" text="Sigrun Domuzdiş" />
@@ -772,9 +772,9 @@
     <string id="aom_lord_1_74_1_name" text="Zena" />
     <string id="aom_lord_2_1_name" text="Bard II" />
     <string id="aom_lord_2_2_name" text="Asta" />
-    <string id="aom_lord_2_3_name" text="Thorin III Taşmiğfer" />
+    <string id="aom_lord_2_3_name" text="Rand" />
     <string id="aom_lord_2_4_name" text="Siga" />
-    <string id="aom_lord_2_5_name" text="Ori" />
+    <string id="aom_lord_2_5_name" text="Ask" />
     <string id="aom_lord_2_6_name" text="Erta" />
     <string id="aom_lord_2_7_name" text="Simir" />
     <string id="aom_lord_2_8_name" text="Urik" />
@@ -787,11 +787,11 @@
     <string id="aom_lord_2_13_name" text="Vidar" />
     <string id="aom_lord_2_14_name" text="Isvan" />
     <string id="aom_lord_2_15_name" text="Ratagost" />
-    <string id="aom_lord_2_16_name" text="Bofur" />
-    <string id="aom_lord_2_17_name" text="Thorin II Meşekalkan" />
-    <string id="aom_lord_2_18_name" text="Glóin" />
-    <string id="aom_lord_2_19_name" text="Dwalin" />
-    <string id="aom_lord_2_20_name" text="Óin" />
+    <string id="aom_lord_2_16_name" text="Hauk" />
+    <string id="aom_lord_2_17_name" text="Stein" />
+    <string id="aom_lord_2_18_name" text="Ulf" />
+    <string id="aom_lord_2_19_name" text="Geir" />
+    <string id="aom_lord_2_20_name" text="Val" />
     <string id="aom_lord_2_21_name" text="Svedorn" />
     <string id="aom_lord_2_22_name" text="Lashonek" />
     <string id="aom_lord_2_23_name" text="Galden" />
@@ -1025,7 +1025,7 @@
     <string id="aom_lord_NE9_s_name" text="Azıkıran Rurik" />
     <string id="aom_lord_S8_u_name" text="Galyk" />
     <string id="aom_lord_S9_c_name" text="Forim" />
-    <string id="aom_lord_S9_l_name" text="Bombur" />
+    <string id="aom_lord_S9_l_name" text="Orvar" />
     <string id="aom_lord_S9_m_name" text="Dakhila" />
     <string id="aom_lord_S9_u_name" text="Chastimir" />
     <string id="aom_lord_SE8_c_name" text="Shagrala" />
@@ -1035,7 +1035,7 @@
     <string id="aom_lord_SE9_s_name" text="Jonna" />
     <string id="aom_lord_WE8_c_name" text="Pelendur" />
     <string id="aom_lord_WE8_u_name" text="Barandil" />
-    <string id="aom_lord_WE9_l_name" text="Duinhir" />
+    <string id="aom_lord_WE9_l_name" text="Duinhir, Morthond Lordu" />
     <string id="aom_lord_WE9_u_name" text="Duilin" />
     <string id="aom_lord_WE9_u2_name" text="Rosfin" />
     <string id="TAOM_hero_dead_2_1" text="Yaşlı Olek, Dale'i Doğulu akıncılara karşı savunurken can verdi. Fedakârlığı dağ geçitlerini güvence altına aldı ve krallığın dört bir yanında türkülerde anılıyor." />
@@ -1156,31 +1156,31 @@
     <string id="TAOM_hero_1_48_1" text="Kirlenmiş, gittiği her yere yozlaşmayı yayar." />
     <string id="TAOM_hero_1_48_2" text="Kuzey İnsanlarının Gölgesi, soğuk topraklarda avlanır." />
     <string id="TAOM_hero_1_48_3" text="Umbar'ın Gölgesi, güney kıyılarında dolaşır." />
-    <string id="TAOM_hero_1_177" text="Honoratus, Mordor ordularında bir subay olarak hizmet eder." />
-    <string id="TAOM_hero_1_29" text="Sanion, bir kaleyi komuta eden Kara Númenórlu bir kaptandır." />
-    <string id="TAOM_hero_1_17" text="Büyük Sauron, Mordor'un Karanlık Lordu. Bu giriş yalnızca onun korkunç zırhını göstermek için vardır." />
-    <string id="TAOM_hero_1_18" text="Jathea, Mordor'un karanlık hiyerarşisinde hizmet eder." />
-    <string id="TAOM_hero_1_39" text="Debana, Gölge'nin bir hizmetkarıdır ve karanlık sanatlarda yeteneklidir." />
+    <string id="TAOM_hero_1_177" text="Khorgath, Mordor ordularında yüksek bir subay olarak hizmet eder; savaş için yetiştirilmiş bir Sauron oğludur. Lejyonlarını, Göz'ün daima izlediğini bilenlerin soğuk sabrıyla İnsanların topraklarına sürer." />
+    <string id="TAOM_hero_1_29" text="Sauron'un kendi kanından bir Kara Númenórlu olan Herumarth, Mordor sınırlarındaki bir kaleye komuta eder. Soğuk ve kibirlidir; eski Númenór zalimliğini, kendisini yaratan Gölge ile bilenmiş tutar." />
+    <string id="TAOM_hero_1_17" text="Ulu Sauron, Mordor'un Karanlık Efendisi ve Yüzüklerin Efendisi, yeniden yükseldi. Barad-dûr'un kara kulesinden Gözü Batı diyarlarını tarıyor ve Gorgoroth'un lejyonları onun sancağı altında toplanıyor. Özgür Halklar onu yenilmiş sayıyordu, ama Gölge yalnızca vaktini bekledi. Şimdi onları kırmak ve tüm Orta Dünya'yı tek bir hükümranlık altında bağlamak için yürüyor. İnsanların kralları umutlarını yitirsin, zira Sauron'un çağı geldi." />
+    <string id="TAOM_hero_1_18" text="Morgha, Karanlık Efendi'nin yanında durur; Lugbúrz'un iç hiyerarşisinin hanımıdır. Sözü Göz'ün ağırlığını taşır ve Mordor'un kaptanları onun öğüdünden, Sauron'un gazabı kadar korkar." />
+    <string id="TAOM_hero_1_39" text="Karanlık Efendi'nin kızı Naktharil, Dol Guldur ve Lugbúrz'un kara sanatlarına gömülmüştür. Gölge'nin gizli yollarında yürür ve onun karşısına çıkanlardan bir daha haber alınmaz." />
     <string id="TAOM_hero_1_30" text="Gothmog, Morgul Teğmeni, Pelennor Ovaları'nda Mordor ordularına komuta eder. Vahşi ve kurnaz bir Ork olup, önden yönetir." />
     <string id="TAOM_hero_1_30_1" text="Svala Kızıldiş, Gothmog'un komutası altında bir Ork kaptanıdır." />
-    <string id="TAOM_hero_1_49" text="Obron bir Mordor orku bölüğüne komuta eder." />
+    <string id="TAOM_hero_1_49" text="Skarnak bir Mordor ork bölüğüne önderlik eder; üstündekileri kırarak yükselen gaddar bir kaptandır. Kırbaç ve Göz, uyduğu tek yasalardır." />
     <string id="TAOM_hero_1_49_1" text="Tristania karanlık güçlere hizmet eder." />
     <string id="TAOM_hero_1_49_2" text="Gordiana, Karanlık Kule'nin gölgesinde yaşar." />
     <string id="TAOM_hero_1_30_2" text="Mogra, Mordor'un kara güçlerine hizmet eder." />
     <string id="TAOM_hero_1_30_3" text="Snaga, Gölge'nin bir hizmetkârıdır." />
-    <string id="TAOM_hero_1_56_2" text="Rustica, karanlığın ordularında hizmet eder." />
+    <string id="TAOM_hero_1_56_2" text="Rustica, babası Tormund'un yanında savaşa gider; klanın azılı genç bir savaşçısıdır." />
     <string id="TAOM_hero_1_63_2" text="Comatasa, savaş için yetiştirilmiş bir Ork'tur." />
     <string id="TAOM_hero_1_63_3" text="Elidilea, karanlık hiyerarşide hizmet eder." />
     <string id="TAOM_hero_1_63" text="Gorbag, Minas Morgul Kaptanı, ölü şehrin garnizonu komuta eder. Ork standartlarına göre bile kurnaz biridir." />
     <string id="TAOM_hero_1_63_1" text="Valaria, ölülerin kalesinde hizmet eder." />
-    <string id="TAOM_hero_1_74" text="Zachanis bir ork alayına komuta eder." />
+    <string id="TAOM_hero_1_74" text="Bûrznak bir Mordor ork alayına komuta eder; geride kalanları da kaçakları da atıyla ezip geçen süvari bir kaptandır." />
     <string id="TAOM_hero_1_74_1" text="Zena, Mordor'un karanlık efendilerine hizmet eder." />
     <string id="TAOM_hero_1_54" text="Shagrat, Cirith Ungol Kaptanı, Mordor'a giden geçidi korur. Orklar arasında bile zalimliğiyle bilinir." />
     <string id="TAOM_hero_1_54_1" text="Constalia, Cirith Ungol kulesinde hizmet eder." />
-    <string id="TAOM_hero_1_68" text="Tharos, geçitte hizmet eden bir Ork kaptanıdır." />
+    <string id="TAOM_hero_1_68" text="Gorthak, Mordor'a açılan yüksek geçidi tutan bir ork kaptanıdır; uyanıktır ve Göz'ün yanından sıvışmaya kalkan herkese acımasızdır." />
     <string id="TAOM_hero_1_68_1" text="Silvina, örümcek geçidinin garnizonu hizmet eder." />
     <string id="TAOM_hero_1_69_2" text="Dorathila, karanlık ordularda hizmet eder." />
-    <string id="TAOM_hero_1_69" text="Niphon, Mordor sınırlarındaki bir kaleye komuta eder." />
+    <string id="TAOM_hero_1_69" text="Grukhash, Mordor sınırlarındaki bir kaleye komuta eder; Gölge'nin sınır boylarının ihtiyatlı bir bekçisidir." />
     <string id="TAOM_hero_1_69_1" text="Areliana, sınır topraklarında hizmet eder." />
     <string id="TAOM_hero_1_55" text="Mathmog, güçlü bir Uruk-hai savaş reisidir." />
     <string id="TAOM_hero_1_55_1" text="Megethia, karanlık güçlere hizmet eder." />
@@ -1201,13 +1201,13 @@
     <string id="TAOM_hero_2_7_1" text="Mimir, Dale kraliyet hanedanının bir prensidir." />
     <string id="TAOM_hero_2_10" text="Valla, Dale'in bir prensesi, diplomasi ve devlet işlerinde eğitilmiştir." />
     <string id="TAOM_hero_2_13" text="Vidar, kuzey sınırlarının bir lordu, Doğulu saldırılarına karşı koruma sağlar." />
-    <string id="TAOM_hero_2_3" text="Thorin III Taşmiğfer, Dağ Altı Kralı, Erebor Cücelerini yönetir. Dale ile kadim ittifakı sürdürür ve Gölge'ye karşı savunmaya hazır durur." />
+    <string id="TAOM_hero_2_3" text="Rand, Dale'in bir lordudur; doğu vadilerinin muhafızı olarak Erebor Cüceleriyle olan eski ittifakı korur." />
     <string id="TAOM_hero_2_4" text="Siga, Durin soyundan gelen bir Cüce soylususudur." />
     <string id="TAOM_hero_2_4_1" text="Apolanea, soylu bir aileden gelen bir Cüce kızıdır." />
     <string id="TAOM_hero_2_8" text="Urik, demircilik ve savaş sanatında yetenekli bir Erebor Cüce prensidir." />
     <string id="TAOM_hero_2_11" text="Idrun, kraliyet muhafızlarından bir Cüce savaşçısıdır." />
     <string id="TAOM_hero_2_111" text="Rozhivol, dağ kapılarını koruyan bir Cüce savaşçısıdır." />
-    <string id="TAOM_hero_2_5" text="Ori, Thorin Meşekalkan'ın yoldaşlarından birinin soyundan gelen bir Cüce lordudur. Erebor ve Dale arasındaki ticaret yollarını yönetir." />
+    <string id="TAOM_hero_2_5" text="Ask, Dağ ile Uzun Göl arasındaki ticaret yollarını yöneten bir Dale lordudur." />
     <string id="TAOM_hero_2_6" text="Erta, Ori'nin karısıdır ve mücevher kesme becerisinde ünlüdür." />
     <string id="TAOM_hero_2_9" text="Lek, Ori'nin mülklerinin varisidir ve hem ticaret hem de savaş konusunda eğitilmiştir." />
     <string id="TAOM_hero_2_12" text="Svana, ticaret hanedanının bir kızıdır." />
@@ -1216,18 +1216,18 @@
     <string id="TAOM_hero_2_14_1" text="Valkava, Lord Isvan'ın karısıdır." />
     <string id="TAOM_hero_2_14_2" text="Zaverena, doğu mülklerinin varisidir." />
     <string id="TAOM_hero_2_14_3" text="Vizhduna, doğu sınır bölgelerinin genç bir soylususudur." />
-    <string id="TAOM_hero_2_16" text="Bofur, efsanevi yoldaş grubunun soyundan gelen bir Erebor Cüce lordudur." />
-    <string id="TAOM_hero_2_16_1" text="Tyaska, Bofur'un karısıdır ve şifa sanatlarında yeteneklidir." />
+    <string id="TAOM_hero_2_16" text="Hauk, Dale'in bir lordudur; pazar yollarının ve kış kervanlarının efendisidir." />
+    <string id="TAOM_hero_2_16_1" text="Tyaska, Hauk'un karısıdır ve şifa sanatlarında ustadır." />
     <string id="TAOM_hero_2_21" text="Svedorn, Göl Kasabası garnizonunun komutanıdır." />
     <string id="TAOM_hero_2_21_1" text="Izdenka, Göl Kasabası'nın işlerini yönetir." />
-    <string id="TAOM_hero_2_17" text="Thorin II Meşekalkan, Erebor'u Smaug'dan geri alan kahraman olarak anılır. Ruhu, soyundan gelenlere ilham verir." />
+    <string id="TAOM_hero_2_17" text="Stein, Dale'in bir lordudur; ejderhanın düşüşünden sonraki yıllarda kuzey kapısını tutmasıyla hatırlanır." />
     <string id="TAOM_hero_2_17_1" text="Dracha, eski kralın anısını canlı tutar." />
     <string id="TAOM_hero_2_22" text="Lashonek, Dale savaşçılarının komutanıdır." />
     <string id="TAOM_hero_2_22_1" text="Zheneva, Lashonek'in karısıdır." />
     <string id="TAOM_hero_2_24" text="Alvar, Dale Muhafızları'nın bir yüzbaşısıdır." />
     <string id="TAOM_hero_2_24_1" text="Zorina, Dale'in soylu bir hanımefendisidir." />
-    <string id="TAOM_hero_2_18" text="Gloin, Yüzüklerin Efendisi Yüzük Kardeşliği'nin üyesi Gimli'nin babası olan bir Erebor Cüce lordudur." />
-    <string id="TAOM_hero_2_18_1" text="Zorika, Gloin'in karısı ve ünlü Gimli'nin annesidir." />
+    <string id="TAOM_hero_2_18" text="Ulf, Dale'in bir lordudur; Akan Nehir üzerindeki nehir devriyesinin kaptanıdır." />
+    <string id="TAOM_hero_2_18_1" text="Zorika, Ulf'un karısı ve Akan Nehir üzerindeki salonunun hanımıdır." />
     <string id="TAOM_hero_2_23" text="Galden, Dale'in güney garnizonunun komutanıdır." />
     <string id="TAOM_hero_2_23_1" text="Zlatka, Galden'in kızıdır." />
     <string id="TAOM_hero_2_15" text="Ratagost, krala devlet meseleleri konusunda tavsiyelerde bulunan bilge bir danışmandır." />
@@ -1235,10 +1235,10 @@
     <string id="TAOM_hero_2_15_2" text="Milanka, sarayın bir soylu hanımefendisidir." />
     <string id="TAOM_hero_2_15_3" text="Velina, kraliyet hanedanına hizmet eder." />
     <string id="TAOM_hero_2_15_4" text="Bovan, Dale'in genç bir soylususudur." />
-    <string id="TAOM_hero_2_19" text="Dwalin, büyük şöhrete sahip bir Cüce savaşçısıdır ve orijinal yoldaş grubunun son hayatta kalanıdır." />
-    <string id="TAOM_hero_2_19_1" text="Vitomira, Dwalin'in yanında hizmet eder." />
-    <string id="TAOM_hero_2_20" text="Oin, eski bilginin ve şifa sanatlarının koruyucusu olan bir Cüce büyüğüdür." />
-    <string id="TAOM_hero_2_20_1" text="Kisha, Oin'in karısıdır ve şifalı ot bilgisinde yeteneklidir." />
+    <string id="TAOM_hero_2_19" text="Geir, Dale'in büyük şöhrete sahip bir savaşçısıdır; Girion'un eski soyundan gelir." />
+    <string id="TAOM_hero_2_19_1" text="Vitomira, Geir'in yanında hizmet eder." />
+    <string id="TAOM_hero_2_20" text="Val, Dale'in bir ihtiyarıdır; bilgeliğin ve şifa sanatlarının koruyucusudur." />
+    <string id="TAOM_hero_2_20_1" text="Kisha, Val'in karısıdır ve şifalı otlar konusunda bilgilidir." />
     <string id="TAOM_hero_S8_u" text="Galyk, dağ salonlarını koruyan çetin bir kıdemli askerdir." />
     <string id="TAOM_hero_3_1" text="Khadurak, Harad'ın Taskral'ı ve güney ordularının en yüksek komutanıdır. Halkının düşmanlarına karşı Mumakil savaş fillerini yönetir ve Gondor'a karşı Mordor ile müttefiktir." />
     <string id="TAOM_hero_3_2" text="Khalida, Khadurak'ın karısı ve yüksek mevkili bir Haradrim soylu hanımıdır." />

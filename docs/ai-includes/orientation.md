@@ -74,3 +74,4 @@ and the gate.
 | Troop bows | Generated `ladder_*` items in the unversioned Armory: `generate_ranged_ladder_items.py --verify` | [ladders](../features/ranged-ladders.md) |
 | Stop order | `StandGround` never forms a line; shape a formation with a Move | [cavalry](../features/smart-cavalry-ai.md) |
 | Agent slots, threads | Indices recycle and callbacks run off-thread: never key on `Agent.Index`, write via `RunOrDefer` | [rule](../../.claude/rules/csharp-architecture.md) |
+| Loc keys | An English edit stales 12 languages; a copied `{=KEY}` shows the original: reset rows and cache, one key per id | [guide](../localization/TRANSLATOR_GUIDE.md) |

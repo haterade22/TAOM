@@ -42,10 +42,10 @@
     <string id="taom_fc_confirm_name" text="Onayla" />
     <string id="taom_fc_decline" text="Henüz Değil" />
     <string id="taom_fc_keep_name" text="Varsayılan Adı Koru" />
-    <string id="taom_fc_no_room_body" text="Şu anda başka bir yoldaş için yer yok. {TROOP_NAME}'in terfisi daha sonra yeniden sunulacak." />
-    <string id="taom_fc_offer_body" text="{TROOP_NAME} savaşta kendini gösterdi. Onu yoldaş olarak yükseltmek ister misin?" />
+    <string id="taom_fc_no_room_body" text="Şu anda başka bir yoldaş için yer yok. {TROOP_NAME} için terfi teklifi daha sonra tekrar sunulacak." />
+    <string id="taom_fc_offer_body" text="{TROOP_NAME} savaşta kendini gösterdi. Yoldaşlığa terfi ettirilsin mi?" />
     <string id="taom_fc_offer_title" text="Savaş Alanı Terfisi" />
-    <string id="taom_fc_rename_body" text="{TROOP_NAME}'e bir ad ver ya da savaşa taşıdığı adı koru." />
+    <string id="taom_fc_rename_body" text="{TROOP_NAME} için bir isim seç ya da savaşa taşıdığı ismi koru." />
     <string id="taom_fc_rename_title" text="Yeni Yoldaşa İsim Ver" />
     <string id="taom_fc_cancel" text="İptal" />
     <string id="taom_fc_dismiss" text="Görevin sona erdi. Saflara geri dön." />
@@ -101,7 +101,7 @@
     <string id="taom_enlist_section_sup" text="levazım kolu" />
     <string id="taom_enlist_trust_known" text="tanınmış" />
     <string id="taom_enlist_trust_new" text="sınanmamış" />
-    <string id="taom_enlist_trust_poor" text="gözden düşmüş" />
+    <string id="taom_enlist_trust_poor" text="hakkında kötü düşünülen" />
     <string id="taom_enlist_trust_solid" text="itibarlı" />
     <string id="taom_enlist_trust_trusted" text="güvenilir" />
     <string id="taom_enlist_grade_distinguished" text="seçkin" />

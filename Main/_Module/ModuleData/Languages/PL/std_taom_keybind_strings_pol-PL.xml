@@ -14,5 +14,8 @@
     <string id="taom_key_turbo_desc" text="Przytrzymaj Ctrl razem z tym klawiszem, aby uzyskać najwyższy mnożnik prędkości TAOM. Zwolnienie któregokolwiek klawisza przywraca poprzednią prędkość." />
     <string id="taom_key_career_ability" text="Zdolność kariery (TAOM)" />
     <string id="taom_key_career_ability_desc" text="Aktywuje zdolność kariery podczas bitwy, gdy pasek energii jest pełny. Domyślnie V." />
+    <string id="taom_aso_desc_invasion" text="Frakcja, która włada większością Śródziemia." />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} panuje nad przeważającą częścią Śródziemia." />
+    <string id="taom_aso_item_desc_randomized" text="Losuje stan początkowy Śródziemia w wybranym przez ciebie stopniu, w granicach rozsądku." />
   </strings>
 </base>

@@ -49,19 +49,19 @@
     <string id="taom_lotr_issue_horses_soln" text="Size at getireceğim." />
     <string id="taom_lotr_issue_horses_task" text="At teslim et ({COUNT})" />
     <string id="taom_lotr_issue_recruits_title" text="Çete İçin Taze Kan" />
-    <string id="taom_lotr_issue_recruits_desc" text="Bir çete lideri yakalanan haydutların kendi hizmetine sokulmasını istiyor." />
-    <string id="taom_lotr_issue_recruits_brief" text="Bir çete ancak sayısı kadar güçlüdür ve benimki azaldı. Bana yasaya sevgisi olmayan esirler getir, onları kullanıma sokarım." />
+    <string id="taom_lotr_issue_recruits_desc" text="Bir çete lideri, hizmetine zorla sokulacak esirler istiyor." />
+    <string id="taom_lotr_issue_recruits_brief" text="Bir çete ancak sayısı kadar güçlüdür, benimkiler de azaldı. Bana esir getir, kim olurlarsa olsunlar, onları işe yarar hale getiririm." />
     <string id="taom_lotr_issue_recruits_accept" text="Ne tür esirler?" />
-    <string id="taom_lotr_issue_recruits_expl" text="Bana {COUNT} haydut esiri getir, işe yaramalarını sağlarım. Sana da altın var, soru sorulmaz." />
+    <string id="taom_lotr_issue_recruits_expl" text="Bana {COUNT} esir getir, onları çalıştırırım. Sana da para var, hiç soru sorulmadan." />
     <string id="taom_lotr_issue_recruits_soln" text="Sana esirler getireceğim." />
-    <string id="taom_lotr_issue_recruits_task" text="Haydut esirlerini teslim et ({COUNT})" />
+    <string id="taom_lotr_issue_recruits_task" text="Esirleri teslim et ({COUNT})" />
     <string id="taom_lotr_issue_laborers_title" text="Madenler İçin Eller" />
-    <string id="taom_lotr_issue_laborers_desc" text="Bir toprak sahibi ağır iş için güçlü sırtlara ihtiyaç duyuyor ve yakalanan haydutları alacak." />
-    <string id="taom_lotr_issue_laborers_brief" text="Kazılara işçi lazım ve özgür insanlar oraya gitmek istemiyor. Bana zincirlenmiş haydutlar getir, kazmayla ekmeğini kazanırlar." />
+    <string id="taom_lotr_issue_laborers_desc" text="Bir toprak sahibi ağır iş için güçlü sırtlara ihtiyaç duyuyor ve aldığın her esiri kabul edecek." />
+    <string id="taom_lotr_issue_laborers_brief" text="Kazı yerleri işçi istiyor, özgür insanlar da oraya inmez. Bana zincirli esirler getir, kazmayla ekmeklerini kazansınlar." />
     <string id="taom_lotr_issue_laborers_accept" text="Mahkum mu istiyorsun?" />
-    <string id="taom_lotr_issue_laborers_expl" text="Bana işçi takımları için {COUNT} haydut esiri getir, onları yakaladığın zahmete karşılık sana ödeme yaparım." />
+    <string id="taom_lotr_issue_laborers_expl" text="Bana çalışma taburları için {COUNT} esir getir, onları yakalama zahmetin için sana ödeme yapayım." />
     <string id="taom_lotr_issue_laborers_soln" text="Sana esirler getireceğim." />
-    <string id="taom_lotr_issue_laborers_task" text="Haydut esirlerini teslim et ({COUNT})" />
+    <string id="taom_lotr_issue_laborers_task" text="Esirleri teslim et ({COUNT})" />
     <string id="taom_lotr_issue_banditbase_title" text="{ISSUE_SETTLEMENT} Yakınında Bir İn" />
     <string id="taom_lotr_issue_banditbase_desc" text="{ISSUE_SETTLEMENT} yakınındaki yollarda bir akıncı yuvası avlanıyor." />
     <string id="taom_lotr_issue_banditbase_brief" text="Tepelerde onların iğrenç bir yuvası var, yolcu. Mallarımızı ve insanlarımızı alıyorlar ve nöbet köklerini kazımak için çok az." />
@@ -300,19 +300,24 @@
     <string id="taom_lotr_issue_common_task" text="Mal Topla" />
     <string id="taom_lotr_issue_pers_expl" text="Bana {COUNT} esir getir, seni iyi ödüllendireceğim." />
     <string id="taom_lotr_issue_pers_soln" text="Sana esirler getireceğim." />
-    <string id="taom_lotr_issue_pers_accepted" text="{QUEST_SETTLEMENT} bölgesine {COUNT} haydut esiri teslim et." />
+    <string id="taom_lotr_issue_pers_accepted" text="{QUEST_SETTLEMENT} yerleşimine {COUNT} esir teslim et." />
     <string id="taom_lotr_issue_pers_ready" text="Yeterli esirin var. Onları teslim etmek için {QUEST_SETTLEMENT} bölgesine dön." />
     <string id="taom_lotr_issue_pers_timeout" text="Esirleri zamanında teslim edememedin." />
     <string id="taom_lotr_issue_pers_have" text="Esirleri getirdin mi?" />
     <string id="taom_lotr_issue_pers_thanks" text="Gayet uygun olacaklar. Teşekkürlerimi sunuyorum." />
     <string id="taom_lotr_issue_pers_turnin" text="Evet. İşte buradalar." />
     <string id="taom_lotr_issue_pers_not_enough" text="Henüz yeterli esirin yok." />
-    <string id="taom_lotr_issue_pers_task" text="Haydut esirleri al" />
+    <string id="taom_lotr_issue_pers_task" text="Esir al" />
     <string id="taom_lotr_issue_combat_expl" text="Düşmanlarımızla ilgilen, ödüllendirileceksin." />
     <string id="taom_lotr_issue_combat_soln" text="Onlarla ilgileneceğim." />
     <string id="taom_lotr_issue_combat_task_capture" text="Düşman lordları yakala ({COUNT})" />
     <string id="taom_lotr_issue_combat_task_tourney" text="Turnuvaları kazan ({COUNT})" />
     <string id="taom_lotr_issue_combat_task_defeat" text="Akıncıları yok et ({COUNT})" />
     <string id="taom_lotr_issue_combat_timeout" text="Tehditle zamanında ilgilenememedin." />
+    <string id="taom_lotr_issue_combat_fallback_desc" text="Bir düşmanın icabına bakılmalı." />
+    <string id="taom_lotr_issue_combat_fallback_brief" text="Düşmanlarla kuşatılmış durumdayız, yolcu." />
+    <string id="taom_lotr_issue_combat_fallback_accept" text="Ne yapılması gerekiyor?" />
+    <string id="taom_lotr_issue_pers_fallback_desc" text="Birinin esirlerin teslim edilmesine ihtiyacı var." />
+    <string id="taom_lotr_issue_pers_fallback_brief" text="Güçlü sırtlara ihtiyacım var, yolcu." />
   </strings>
 </base>

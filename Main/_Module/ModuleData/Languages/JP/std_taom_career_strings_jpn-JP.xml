@@ -26,11 +26,11 @@
     <string id="taom_career_eotheod_windrider_desc" text="古のエオセオド馬術師の末裔。幾世代もの伝説の雷鳴と共に駆け、エオルの若き日を彷彿とさせる雄叫びで味方を鼓舞し、止められぬ重騎兵の蹄の下で敵を蹴散らす。" />
     <string id="taom_career_watchman_of_stangard" text="スタンガルドの監視兵" />
     <string id="taom_career_watchman_of_stangard_desc" text="スタンガルドの歴戦の河川監視兵。平底船と徒歩でアンドゥイン渡河点を巡回し、忍耐力、地元知識、そして争奪地に対する船頭の粘り強い掌握力でローハンの東側面を守る。" />
-    <string id="taom_career_avanc_luth_raider" text="アヴァンク=ルース襲撃兵" />
+    <string id="taom_career_avanc_luth_raider" text="ダンランド人の勇士" />
     <string id="taom_career_avanc_luth_raider_desc" text="アヴァンク=ルース氏族の血塗られた散兵。無謀な攻撃性で白兵戦に突入し、外科的精密さを生の野蛮な力と引き換えにし、純粋な容赦ない圧力で敵を圧倒する。" />
-    <string id="taom_career_wolfskin_hunter" text="狼皮の狩人" />
+    <string id="taom_career_wolfskin_hunter" text="ダンランド人の射手" />
     <string id="taom_career_wolfskin_hunter_desc" text="忍耐強き追跡者。狼の毛皮を纏い、霧ふり山脈の麓を幽霊のように移動し、隠れた場所から獲物を狙い、犠牲者が聞くこともない精密な矢を放つ。" />
-    <string id="taom_career_clanguard_rider" text="氏族護衛騎兵" />
+    <string id="taom_career_clanguard_rider" text="ダンランド人の斥候騎兵" />
     <string id="taom_career_clanguard_rider_desc" text="迅速な襲撃を行う氏族騎兵。素早い一撃離脱攻撃で敵の側面を嫌がらせし、優れた速度と群れの連携を使って陣形を乱し、氏族の歩兵が接近して止めを刺す前に撤退する。" />
     <string id="taom_career_blademaster_of_ren" text="レーンの剣豪" />
     <string id="taom_career_blademaster_of_ren_desc" text="レーンの戦士宮廷出身の精密な決闘者。計算された致命的な剣技で敵を始末する。" />
@@ -52,11 +52,11 @@
     <string id="taom_career_lokhas_drus_marksman_desc" text="ローカス・ドルース部隊の対甲冑専門家。遠距離から最も重い板金鎧を貫通する矢を放つ訓練を受けている。" />
     <string id="taom_career_balchoth_kan" text="バルホスのカーン" />
     <string id="taom_career_balchoth_kan_desc" text="バルホスの重騎兵指揮官。止められぬ騎馬突撃を率い、いかなる状況でも鉄の士気を維持する。" />
-    <string id="taom_career_dale_guardsman" text="谷間の国の守衛兵" />
+    <string id="taom_career_dale_guardsman" text="デイルの剣術師範" />
     <string id="taom_career_dale_guardsman_desc" text="再建された谷間の国の街の頑強な守護者。盾と槍であらゆる攻撃者から門を守る。" />
-    <string id="taom_career_dale_marksman" text="谷間の国の射手" />
+    <string id="taom_career_dale_marksman" text="バルドの狙撃手" />
     <string id="taom_career_dale_marksman_desc" text="谷間の国の伝説的な弓使い。スマウグを討った祖先の血を引き、誤ることのない射撃の伝統を受け継ぐ。" />
-    <string id="taom_career_dale_outrider" text="谷間の国の外縁騎兵" />
+    <string id="taom_career_dale_outrider" text="デイルの騎士" />
     <string id="taom_career_dale_outrider_desc" text="谷間の国とはなれ山の間を行き交う隊商を護衛する、北方交易路の騎馬哨戒兵。" />
     <string id="taom_career_ironguard" text="鋼鉄護衛兵" />
     <string id="taom_career_ironguard_desc" text="ミスリル鍛造の鎧に身を包み、オークと竜からエレボールの深淵を守る、ドワーフの精鋭戦士。" />
@@ -64,11 +64,11 @@
     <string id="taom_career_crossbow_master_desc" text="驚異的な制止力を持つ名工の弩を操るドワーフの技師戦士。一本一本の矢が精密に製作されている。" />
     <string id="taom_career_ram_rider" text="雄羊騎兵" />
     <string id="taom_career_ram_rider_desc" text="馬が通れない険しい山道を突進する、巨大な軍用雄羊に跨るドワーフの騎兵戦士。" />
-    <string id="taom_career_blade_dancer" text="刃の舞い手" />
+    <string id="taom_career_blade_dancer" text="ノルドールの剣の達人" />
     <string id="taom_career_blade_dancer_desc" text="流れる水のように戦場を舞い、第一紀に鍛えられた古の剣で敵を討つ、優雅なエルフの戦士。" />
-    <string id="taom_career_elven_archer" text="エルフの射手" />
+    <string id="taom_career_elven_archer" text="ノルドールの歩哨" />
     <string id="taom_career_elven_archer_desc" text="何世紀もの修練に導かれ、遥か彼方まで正確に矢を飛ばす、裂け谷の無双の射手。" />
-    <string id="taom_career_rivendell_knight" text="裂け谷の騎士" />
+    <string id="taom_career_rivendell_knight" text="ノルドールの騎士" />
     <string id="taom_career_rivendell_knight_desc" text="俊足のエルフの馬に乗り戦場へ赴く、エルロンドの家臣たる騎馬戦士。闇に対する希望の灯火。" />
     <string id="taom_career_warden" text="ロスローリエンの守護者" />
     <string id="taom_career_warden_desc" text="古の決意を持ってロスローリエンの境界を守り、警告なしに襲い掛かる、黄金の森の沈黙の守護者。" />
@@ -82,17 +82,17 @@
     <string id="taom_career_silvan_archer_desc" text="樹上から致命的な精度で敵を射抜く、森の王国の鋭い眼を持つ狩人。" />
     <string id="taom_career_elk_rider" text="大鹿騎兵" />
     <string id="taom_career_elk_rider_desc" text="巨大な森の大鹿に跨り戦場へ突進し、下草も敵も薙ぎ倒す、スランドゥイルの護衛の騎馬戦士。" />
-    <string id="taom_career_uruk_berserker" text="ウルク・ハイの狂戦士" />
+    <string id="taom_career_uruk_berserker" text="ウルク＝ハイのバーサーカー" />
     <string id="taom_career_uruk_berserker_desc" text="戦場へ猛然と突撃し、傷が怒りを燃料に変えてより強くなる、狂乱のウルク・ハイ。" />
-    <string id="taom_career_uruk_crossbow" text="ウルク・ハイの弩兵" />
+    <string id="taom_career_uruk_crossbow" text="ウルク＝ハイの弩兵" />
     <string id="taom_career_uruk_crossbow_desc" text="サルマンの鉄の弩を操り、オルサンクの鍛冶場から送り出される壊滅的な一斉射撃を繰り出す、訓練されたウルクの射手。" />
-    <string id="taom_career_warg_scout" text="ワーグ斥候" />
+    <string id="taom_career_warg_scout" text="ワーグ乗り" />
     <string id="taom_career_warg_scout_desc" text="俊足のワーグに跨り、アイゼンガルドの軍勢の先陣を偵察し、逃げる獲物を追い詰める狡猾なウルクの騎兵。" />
-    <string id="taom_career_cave_troll_master" text="洞窟トロルの使い手" />
-    <string id="taom_career_cave_troll_master_desc" text="鞭と狡知で洞窟トロルを戦場で指揮し、前進させる残忍なオークの族長。" />
-    <string id="taom_career_goblin_sniper" text="ゴブリンの狙撃兵" />
+    <string id="taom_career_cave_troll_master" text="グンダバドのバーサーカー" />
+    <string id="taom_career_cave_troll_master_desc" text="洞窟トロルを戦場で操るグンダバドの残虐なオーク族長。鞭と狡知で彼らを前へと駆り立てる。" />
+    <string id="taom_career_goblin_sniper" text="グンダバドのオーク狩人" />
     <string id="taom_career_goblin_sniper_desc" text="山の岩場に潜み、毒を塗った投げ矢や粗末な弓で標的を狙い撃つ、意地悪なゴブリンの射手。" />
-    <string id="taom_career_warg_pack_leader" text="ワーグ群れの頭領" />
+    <string id="taom_career_warg_pack_leader" text="グンダバドの凶暴ワーグ群れの長" />
     <string id="taom_career_warg_pack_leader_desc" text="群れで最大のワーグに跨り、霧ふり山脈を通して野蛮な狩りを率いる、恐れられたオークの頭目。" />
     <string id="taom_career_shadow_warrior" text="影の戦士" />
     <string id="taom_career_shadow_warrior_desc" text="死霊術師の妖術によって力を与えられ、眼前に立つ者全ての命を吸い取る、ドル・グルドゥアの闇の勇士。" />
@@ -107,105 +107,105 @@
     <string id="taom_career_corsair_captain" text="海賊船長" />
     <string id="taom_career_corsair_captain_desc" text="船首から指揮を執る歴戦の艦隊司令官。略奪と栄光の約束で船員たちを鼓舞する。" />
     <string id="taom_ability_ranger_of_ithilien" text="待ち伏せ" />
-    <string id="taom_ability_ranger_of_ithilien_tt" text="致命的な待ち伏せを仕掛け、短時間、射撃ダメージ、引き速度、移動速度を向上させる。" />
+    <string id="taom_ability_ranger_of_ithilien_tt" text="必殺の伏撃を仕掛ける——8秒間、遠隔ダメージ+20%、引き絞り速度+20%、移動速度+15%。" />
     <string id="taom_ability_captain_of_osgiliath" text="戦線死守" />
-    <string id="taom_ability_captain_of_osgiliath_tt" text="鉄の規律で兵士を奮起させ、短時間、近くの味方全員の近接ダメージを20増加させる。" />
+    <string id="taom_ability_captain_of_osgiliath_tt" text="鉄の規律で兵を鼓舞する——8秒間、50m以内の味方の近接ダメージ+15%、被ダメージ軽減+10%。" />
     <string id="taom_ability_knight_of_belfalas" text="蹂躙" />
-    <string id="taom_ability_knight_of_belfalas_tt" text="止められない騎兵突撃で雷鳴のように突進し、短時間、騎獣の速度、突撃ダメージ、近接ダメージを向上させる。" />
+    <string id="taom_ability_knight_of_belfalas_tt" text="止められぬ騎兵突撃で雷のごとく突き進む——8秒間、突撃ダメージ+25%、騎乗速度+20%、近接ダメージ+10%。" />
     <string id="taom_ability_black_uruk_captain" text="血の狂乱" />
-    <string id="taom_ability_black_uruk_captain_tt" text="血に飢えた狂乱状態に入り、ダメージ耐性と近接攻撃力を劇的に増加させながら黒ウルク部隊を鼓舞する。" />
+    <string id="taom_ability_black_uruk_captain_tt" text="血に猛る怒りに入り、近くの黒のウルクを奮い立たせる——8秒間、50m以内の味方の近接ダメージ+15%、被ダメージ軽減+10%。" />
     <string id="taom_ability_mulkerhili_cultist" text="唯一なる者の声" />
-    <string id="taom_ability_mulkerhili_cultist_tt" text="一つの指輪が囁く恐怖を戦場全体に広げ、敵の士気を削ぎながら呪われた矢の力を高める。" />
+    <string id="taom_ability_mulkerhili_cultist_tt" text="一つの指輪の囁く恐怖を導き、呪われた矢に力を与える——8秒間、遠隔ダメージ+20%、引き絞り速度+20%、移動速度+15%。" />
     <string id="taom_ability_snaga_rider" text="忍び寄り" />
-    <string id="taom_ability_snaga_rider_tt" text="敵陣の影を縫うように駆け抜け、増幅された騎乗ダメージで側面を打ち、見えないまま離脱する。" />
+    <string id="taom_ability_snaga_rider_tt" text="敵の側面の影を縫って駆け抜ける——8秒間、突撃ダメージ+25%、騎乗速度+20%、近接ダメージ+10%。" />
     <string id="taom_ability_olog_hai_warchief" text="鎚撃" />
-    <string id="taom_ability_olog_hai_warchief_tt" text="戦鎚を巨人の力で叩きつけ、地面を揺らし、ダメージ軽減と部隊の耐性を大幅に向上させる。" />
+    <string id="taom_ability_olog_hai_warchief_tt" text="巨人のごとき力で戦鎚を叩きつける——10秒間、50m以内の味方の近接ダメージ+15%、被ダメージ軽減+10%。" />
     <string id="taom_ability_marksman_of_aldburg" text="軽矢羽" />
-    <string id="taom_ability_marksman_of_aldburg_tt" text="素早い軽量の矢を番え、短時間、射撃ダメージ、引き速度、移動速度を向上させる。" />
+    <string id="taom_ability_marksman_of_aldburg_tt" text="軽羽根の速矢を次々とつがえる——8秒間、遠隔ダメージ+20%、引き絞り速度+20%、移動速度+15%。" />
     <string id="taom_ability_eotheod_windrider" text="エオルの雄叫び" />
-    <string id="taom_ability_eotheod_windrider_tt" text="若きエオルの古の雄叫びを上げ、短時間、騎獣の速度、突撃ダメージ、近接ダメージを向上させる。" />
+    <string id="taom_ability_eotheod_windrider_tt" text="若きエオルの古き鬨の声を上げる——8秒間、突撃ダメージ+25%、騎乗速度+20%、近接ダメージ+10%。" />
     <string id="taom_ability_watchman_of_stangard" text="踏み留まれ" />
-    <string id="taom_ability_watchman_of_stangard_tt" text="鉄の決意で陣を固め、短時間、近くの味方全員の近接ダメージを20増加させる。" />
+    <string id="taom_ability_watchman_of_stangard_tt" text="鉄の決意で踏みとどまる — 8秒間、50m以内の味方の近接ダメージ+15%、被ダメージ軽減+10%。" />
     <string id="taom_ability_avanc_luth_raider" text="野蛮な突進" />
-    <string id="taom_ability_avanc_luth_raider_tt" text="咆哮する戦の突撃で乱戦に身を投じ、近接ダメージと移動速度を大幅に向上させるが、防御は犠牲になる。" />
+    <string id="taom_ability_avanc_luth_raider_tt" text="ダンランドの雄叫びを戦場に轟かせる — 8秒間、50m以内の味方の近接ダメージ+15%、被ダメージ軽減+10%。" />
     <string id="taom_ability_wolfskin_hunter" text="獲物の標定" />
-    <string id="taom_ability_wolfskin_hunter_tt" text="霧の中から標的を定め、対象への射撃ダメージを向上させ、仲間の追跡意識を高める。" />
+    <string id="taom_ability_wolfskin_hunter_tt" text="霧の向こうの標的を見定める — 8秒間、遠距離ダメージ+20%、引き絞り速度+20%、移動速度+15%。" />
     <string id="taom_ability_clanguard_rider" text="戦群突撃" />
-    <string id="taom_ability_clanguard_rider_tt" text="戦群を率いて協調した高速突撃を行い、騎乗ダメージと一団の移動速度を向上させながら敵の側面を攪乱する。" />
+    <string id="taom_ability_clanguard_rider_tt" text="戦狼の群れを率いて一斉突撃する — 8秒間、突撃ダメージ+25%、騎乗速度+20%、近接ダメージ+10%。" />
     <string id="taom_ability_blademaster_of_ren" text="双剣撃" />
-    <string id="taom_ability_blademaster_of_ren_tt" text="精密な双剣の連撃を繰り出し、振り速度と装甲貫通を大幅に向上させる。" />
+    <string id="taom_ability_blademaster_of_ren_tt" text="正確な双剣の連撃を放つ — 8秒間、50m以内の味方の近接ダメージ+15%、被ダメージ軽減+10%。" />
     <string id="taom_ability_steppe_bowmaster" text="矢の嵐" />
-    <string id="taom_ability_steppe_bowmaster_tt" text="高速で後退しながら持続的な矢の嵐を放ち、広範囲を斉射で飽和させる。" />
+    <string id="taom_ability_steppe_bowmaster_tt" text="鞍上から矢の嵐を絶え間なく浴びせる — 8秒間、遠距離ダメージ+20%、引き絞り速度+20%、移動速度+15%。" />
     <string id="taom_ability_chariot_warlord" text="鎌突撃" />
-    <string id="taom_ability_chariot_warlord_tt" text="鎌刃戦車で敵陣を突破し、広範囲に大規模な範囲突撃ダメージを与える。" />
+    <string id="taom_ability_chariot_warlord_tt" text="鎌刃の戦車で敵陣を突き破る — 8秒間、突撃ダメージ+25%、騎乗速度+20%、近接ダメージ+10%。" />
     <string id="taom_ability_tribesman_of_jelut" text="毒刃" />
-    <string id="taom_ability_tribesman_of_jelut_tt" text="武器に砂漠の毒を塗り、近接ダメージを増加させ、衰弱効果を与える。" />
+    <string id="taom_ability_tribesman_of_jelut_tt" text="武器に砂漠の毒を塗る — 8秒間、50m以内の味方の近接ダメージ+15%、被ダメージ軽減+10%。" />
     <string id="taom_ability_pezarsani_javelineer" text="太陽火斉射" />
-    <string id="taom_ability_pezarsani_javelineer_tt" text="燃え盛る投槍の弾幕を放ち、遠隔ダメージと移動速度を増加させる。" />
+    <string id="taom_ability_pezarsani_javelineer_tt" text="燃えるような投槍の弾幕を放つ — 8秒間、遠距離ダメージ+20%、引き絞り速度+20%、移動速度+15%。" />
     <string id="taom_ability_mahud_beast_rider" text="ムーマカンの残響" />
-    <string id="taom_ability_mahud_beast_rider_tt" text="ムーマカンの古き恐怖を呼び起こし、獣の突撃ダメージを増加させ、敵陣に恐怖を広げる。" />
+    <string id="taom_ability_mahud_beast_rider_tt" text="ムーマカンの古き恐怖を呼び起こす — 8秒間、突撃ダメージ+25%、騎乗速度+20%、近接ダメージ+10%。" />
     <string id="taom_ability_far_harad_halftroll" text="邪悪なる残虐性" />
-    <string id="taom_ability_far_harad_halftroll_tt" text="野蛮な残虐状態に入り、体力と抵抗力を大幅に増加させ、近くの敵を恐怖に陥れる。" />
+    <string id="taom_ability_far_harad_halftroll_tt" text="野蛮な狂暴状態に入る — 8秒間、50m以内の味方の近接ダメージ+15%、被ダメージ軽減+10%。" />
     <string id="taom_ability_codyan_legionaire" text="盾の壁" />
-    <string id="taom_ability_codyan_legionaire_tt" text="隊列で盾を固め、近くの味方全員の近接ダメージを短時間20増加させる。" />
+    <string id="taom_ability_codyan_legionaire_tt" text="軍団陣形で盾を組む — 8秒間、50m以内の味方の近接ダメージ+15%、被ダメージ軽減+10%。" />
     <string id="taom_ability_lokhas_drus_marksman" text="貫通斉射" />
-    <string id="taom_ability_lokhas_drus_marksman_tt" text="特殊硬化矢を放ち、短時間遠隔ダメージ、引き速度、移動速度を増加させる。" />
+    <string id="taom_ability_lokhas_drus_marksman_tt" text="特別に鍛えたルーンの矢を放つ — 8秒間、遠距離ダメージ+20%、引き絞り速度+20%、移動速度+15%。" />
     <string id="taom_ability_balchoth_kan" text="不屈" />
-    <string id="taom_ability_balchoth_kan_tt" text="バルホス族の鉄の規律を呼び起こし、短時間騎乗速度、突撃ダメージ、近接ダメージを増加させる。" />
+    <string id="taom_ability_balchoth_kan_tt" text="バルホスの鉄の規律を呼び起こす — 8秒間、突撃ダメージ+25%、騎乗速度+20%、近接ダメージ+10%。" />
     <string id="taom_ability_dale_guardsman" text="門の守護" />
-    <string id="taom_ability_dale_guardsman_tt" text="足を踏みしめて門を守り、静止中の体力と抵抗力を大幅に増加させる。" />
+    <string id="taom_ability_dale_guardsman_tt" text="足を踏みしめ門を守り抜く — 8秒間、50m以内の味方の近接ダメージ+15%、被ダメージ軽減+10%。" />
     <string id="taom_ability_dale_marksman" text="黒の矢" />
-    <string id="taom_ability_dale_marksman_tt" text="弓の名手バルドの遺産を呼び起こし、次の射撃のダメージと貫通力を大幅に増加させる。" />
+    <string id="taom_ability_dale_marksman_tt" text="弓の名手バルドの遺志を受け継ぐ — 8秒間、遠距離ダメージ+20%、引き絞り速度+20%、移動速度+15%。" />
     <string id="taom_ability_dale_outrider" text="交易路疾走" />
-    <string id="taom_ability_dale_outrider_tt" text="馴染みの道を馬で駆け抜け、速度と騎乗戦闘力が一時的に急上昇する。" />
+    <string id="taom_ability_dale_outrider_tt" text="慣れ親しんだ道を馬で駆け抜ける — 8秒間、突撃ダメージ+25%、騎乗速度+20%、近接ダメージ+10%。" />
     <string id="taom_ability_ironguard" text="ミスリルの砦" />
-    <string id="taom_ability_ironguard_tt" text="ドワーフの工芸の力を呼び起こし、近くの味方全員の近接ダメージを短時間20増加させる。" />
+    <string id="taom_ability_ironguard_tt" text="ドワーフの技の力を呼び起こす — 8秒間、50m以内の味方の近接ダメージ+15%、被ダメージ軽減+10%。" />
     <string id="taom_ability_crossbow_master" text="精密弾幕" />
-    <string id="taom_ability_crossbow_master_tt" text="名工のボルトを装填し、短時間遠隔ダメージ、引き速度、移動速度を増加させる。" />
+    <string id="taom_ability_crossbow_master_tt" text="ドワーフの名匠のボルトを装填する — 8秒間、遠距離ダメージ+20%、引き絞り速度+20%、移動速度+15%。" />
     <string id="taom_ability_ram_rider" text="山岳突撃" />
-    <string id="taom_ability_ram_rider_tt" text="軍用羊を前進させ、短時間騎乗速度、突撃ダメージ、近接ダメージを増加させる。" />
+    <string id="taom_ability_ram_rider_tt" text="戦羊を駆り立てて突き進む — 8秒間、突撃ダメージ+25%、騎乗速度+20%、近接ダメージ+10%。" />
     <string id="taom_ability_blade_dancer" text="星光の舞" />
-    <string id="taom_ability_blade_dancer_tt" text="優雅な戦闘状態に入り、攻撃を回避しながらエルフの精密さで打撃を与える。" />
+    <string id="taom_ability_blade_dancer_tt" text="優雅なノルドールの戦闘の境地に入る — 8秒間、50m以内の味方の近接ダメージ+15%、被ダメージ軽減+10%。" />
     <string id="taom_ability_elven_archer" text="エルフの眼" />
-    <string id="taom_ability_elven_archer_tt" text="古きエルフの知覚を集中させ、極限の射程で確実な精度を得る。" />
+    <string id="taom_ability_elven_archer_tt" text="古きエルフの知覚を研ぎ澄ます — 8秒間、遠距離ダメージ+20%、引き絞り速度+20%、移動速度+15%。" />
     <string id="taom_ability_rivendell_knight" text="最後の同盟" />
-    <string id="taom_ability_rivendell_knight_tt" text="最後の同盟の勇気と共に騎乗し、騎乗ダメージを増加させ、近くの味方全員を鼓舞する。" />
+    <string id="taom_ability_rivendell_knight_tt" text="最後の同盟の勇武とともに駆ける — 8秒間、突撃ダメージ+25%、騎乗速度+20%、近接ダメージ+10%。" />
     <string id="taom_ability_warden" text="ニムロデルの祝福" />
-    <string id="taom_ability_warden_tt" text="ニムロデルの水を呼び起こし、傷を癒し、短時間抵抗力を増加させる。" />
+    <string id="taom_ability_warden_tt" text="ニムロデルの水を呼び起こす — 8秒間、50m以内の味方の近接ダメージ+15%、被ダメージ軽減+10%。" />
     <string id="taom_ability_galadhrim_archer" text="銀の雨" />
-    <string id="taom_ability_galadhrim_archer_tt" text="銀の矢尻の矢を目も眩む速さで斉射し、敵陣を切り裂く。" />
+    <string id="taom_ability_galadhrim_archer_tt" text="銀の鏃の矢を一斉に放つ — 8秒間、遠距離ダメージ+20%、引き絞り速度+20%、移動速度+15%。" />
     <string id="taom_ability_sentinel" text="エラノールの迅速さ" />
-    <string id="taom_ability_sentinel_tt" text="黄金の森の優雅さを呼び起こし、超自然的な速度と精密さで前進する。" />
+    <string id="taom_ability_sentinel_tt" text="黄金の森の優美さを呼び起こす — 8秒間、突撃ダメージ+25%、騎乗速度+20%、近接ダメージ+10%。" />
     <string id="taom_ability_shadow_walker" text="森の外套" />
-    <string id="taom_ability_shadow_walker_tt" text="森の影に溶け込み、短時間の間、近くの味方全員の近接ダメージを20増加させる。" />
+    <string id="taom_ability_shadow_walker_tt" text="森の影に溶け込む — 8秒間、50m以内の味方の近接ダメージ+15%、被ダメージ軽減+10%。" />
     <string id="taom_ability_silvan_archer" text="樹冠の一撃" />
-    <string id="taom_ability_silvan_archer_tt" text="高所から射撃し、短時間の間、遠隔ダメージ、引き速度、移動速度を増加させる。" />
+    <string id="taom_ability_silvan_archer_tt" text="樹上の高所から射かける — 8秒間、遠距離ダメージ+20%、引き絞り速度+20%、移動速度+15%。" />
     <string id="taom_ability_elk_rider" text="角の突撃" />
-    <string id="taom_ability_elk_rider_tt" text="大きな角を下げて突撃し、短時間の間、騎乗速度、突撃ダメージ、近接ダメージを増加させる。" />
+    <string id="taom_ability_elk_rider_tt" text="大角を下げて突撃する — 8秒間、突撃ダメージ+25%、騎乗速度+20%、近接ダメージ+10%。" />
     <string id="taom_ability_uruk_berserker" text="血の狂乱" />
-    <string id="taom_ability_uruk_berserker_tt" text="狂戦士の狂乱状態に入り、痛みを無視しながらダメージと体力を大幅に増加させる。" />
+    <string id="taom_ability_uruk_berserker_tt" text="ウルク=ハイの狂戦状態に入る — 8秒間、50m以内の味方の近接ダメージ+15%、被ダメージ軽減+10%。" />
     <string id="taom_ability_uruk_crossbow" text="鉄の雨" />
-    <string id="taom_ability_uruk_crossbow_tt" text="アイゼンガルドで鍛えられた矢を壊滅的な貫通力と連射速度で放つ。" />
+    <string id="taom_ability_uruk_crossbow_tt" text="オルサンク製のボルトを雨あられと放つ — 8秒間、遠距離ダメージ+20%、引き絞り速度+20%、移動速度+15%。" />
     <string id="taom_ability_warg_scout" text="群れの咆哮" />
-    <string id="taom_ability_warg_scout_tt" text="恐ろしい咆哮を放ち、速度を増加させ、近くの敵に恐怖を与える。" />
-    <string id="taom_ability_cave_troll_master" text="トロールの狂乱" />
-    <string id="taom_ability_cave_troll_master_tt" text="トロールを狂乱状態に追い込み、体力と部隊のダメージを大幅に増加させる。" />
+    <string id="taom_ability_warg_scout_tt" text="恐ろしいワーグの遠吠えを放つ — 8秒間、突撃ダメージ+25%、騎乗速度+20%、近接ダメージ+10%。" />
+    <string id="taom_ability_cave_troll_master" text="グンダバドのバーサーカー" />
+    <string id="taom_ability_cave_troll_master_tt" text="鞭でトロルを狂乱させる — 8秒間、50m以内の味方の近接ダメージ+15%、被ダメージ軽減+10%。" />
     <string id="taom_ability_goblin_sniper" text="毒の矢" />
-    <string id="taom_ability_goblin_sniper_tt" text="洞窟のキノコ毒を弾に塗り、継続ダメージを与え、標的を減速させる。" />
+    <string id="taom_ability_goblin_sniper_tt" text="ボルトに洞窟菌の毒を塗る — 8秒間、遠距離ダメージ+20%、引き絞り速度+20%、移動速度+15%。" />
     <string id="taom_ability_warg_pack_leader" text="首領の咆哮" />
-    <string id="taom_ability_warg_pack_leader_tt" text="轟くような咆哮で支配力を示し、群れの速度と獰猛さを増加させる。" />
+    <string id="taom_ability_warg_pack_leader_tt" text="轟く群れの遠吠えで支配を示す — 8秒間、突撃ダメージ+25%、騎乗速度+20%、近接ダメージ+10%。" />
     <string id="taom_ability_shadow_warrior" text="魂の吸収" />
-    <string id="taom_ability_shadow_warrior_tt" text="近くの敵の生命力を吸い取り、自分を回復させ、敵の攻撃を弱体化させる。" />
+    <string id="taom_ability_shadow_warrior_tt" text="ドル・グルドゥアの影の力を引き出す — 8秒間、50m以内の味方の近接ダメージ+15%、被ダメージ軽減+10%。" />
     <string id="taom_ability_necromancer_acolyte" text="闇の矢" />
-    <string id="taom_ability_necromancer_acolyte_tt" text="死霊術のエネルギーを攻撃に込め、遠隔ダメージと防具貫通力を大幅に増加させる。" />
+    <string id="taom_ability_necromancer_acolyte_tt" text="射撃に死霊術の力を込める — 8秒間、遠距離ダメージ+20%、引き絞り速度+20%、移動速度+15%。" />
     <string id="taom_ability_fell_rider" text="恐怖の突撃" />
-    <string id="taom_ability_fell_rider_tt" text="影に包まれて突撃し、壊滅的なダメージを与えながら敵を恐怖で逃走させる。" />
+    <string id="taom_ability_fell_rider_tt" text="影をまとって突撃する — 8秒間、突撃ダメージ+25%、騎乗速度+20%、近接ダメージ+10%。" />
     <string id="taom_ability_corsair_boarder" text="乗船攻撃" />
-    <string id="taom_ability_corsair_boarder_tt" text="残忍な乗船攻撃を開始し、近接戦闘で近接ダメージと抵抗力を増加させる。" />
+    <string id="taom_ability_corsair_boarder_tt" text="苛烈な斬り込みを仕掛ける — 8秒間、50m以内の味方の近接ダメージ+15%、被ダメージ軽減+10%。" />
     <string id="taom_ability_corsair_crossbow" text="索具射撃" />
-    <string id="taom_ability_corsair_crossbow_tt" text="安定した位置から致命的な精度で射撃し、遠隔ダメージと命中率を大幅に増加させる。" />
+    <string id="taom_ability_corsair_crossbow_tt" text="海賊の安定した構えから射撃する——8秒間、遠距離ダメージ+20%、装填速度+20%、移動速度+15%。" />
     <string id="taom_ability_corsair_captain" text="略奪" />
-    <string id="taom_ability_corsair_captain_tt" text="略奪の約束で船員を奮い立たせ、速度、ダメージ、部隊の士気を増加させる。" />
+    <string id="taom_ability_corsair_captain_tt" text="略奪の約束で乗員を鼓舞する——8秒間、突撃ダメージ+25%、騎乗速度+20%、近接ダメージ+10%。" />
     <string id="taom_ranger_of_ithilien_root_desc" text="待ち伏せは+5%の遠隔ダメージを付与し、弓スキルに応じて持続時間が延びる。" />
     <string id="taom_roi_t1a_key" text="待ち伏せの範囲が拡大し、隠密状態から放たれた矢は追加ダメージを与える。" />
     <string id="taom_roi_t1a_p1" text="+8% 遠隔ダメージ。" />
@@ -216,11 +216,11 @@
     <string id="taom_roi_t1b_p1" text="+5% 抵抗力。" />
     <string id="taom_roi_t1b_p2" text="+5 最大体力。" />
     <string id="taom_roi_t1b_p3" text="+5% 部隊の偵察範囲。" />
-    <string id="taom_roi_t1b_p4" text="+5% ステルスボーナス。" />
+    <string id="taom_roi_t1b_p4" text="隠密ボーナス+10%。" />
     <string id="taom_roi_t2a_key" text="待ち伏せのチャージ要件が軽減され、より頻繁に発動する。" />
     <string id="taom_roi_t2a_p1" text="+10% パーティー探知範囲。" />
     <string id="taom_roi_t2a_p2" text="+10% 移動速度。" />
-    <string id="taom_roi_t2a_p3" text="+10% ステルスボーナス。" />
+    <string id="taom_roi_t2a_p3" text="隠密ボーナス+13%。" />
     <string id="taom_roi_t2a_p4" text="+10% 戦闘名声獲得量。" />
     <string id="taom_roi_t2b_key" text="待ち伏せ発動中、部隊の遠隔ダメージも増加する。" />
     <string id="taom_roi_t2b_p1" text="+12% 遠隔ダメージ。" />
@@ -278,17 +278,17 @@
     <string id="taom_kob_t1b_p1" text="耐性+8%。" />
     <string id="taom_kob_t1b_p2" text="最大体力+7。" />
     <string id="taom_kob_t1b_p3" text="馬の体力+10%。" />
-    <string id="taom_kob_t1b_p4" text="部隊耐性+5%。" />
+    <string id="taom_kob_t1b_p4" text="兵士の耐性+10%。" />
     <string id="taom_kob_t2a_key" text="スタンピードの突撃要件が軽減され、より頻繁に轟く突撃を行える。" />
-    <string id="taom_kob_t2a_p1" text="馬の突撃ダメージ+15%。" />
+    <string id="taom_kob_t2a_p1" text="馬の突撃ダメージ+13%。" />
     <string id="taom_kob_t2a_p2" text="近接ダメージ+12%。" />
     <string id="taom_kob_t2a_p3" text="移動速度+8%。" />
     <string id="taom_kob_t2a_p4" text="戦闘名声獲得+10%。" />
     <string id="taom_kob_t2b_key" text="スタンピードが発動中、部隊の耐性も強化する。" />
     <string id="taom_kob_t2b_p1" text="耐性+10%。" />
     <string id="taom_kob_t2b_p2" text="最大体力+8。" />
-    <string id="taom_kob_t2b_p3" text="馬の体力+15%。" />
-    <string id="taom_kob_t2b_p4" text="部隊耐性+8%。" />
+    <string id="taom_kob_t2b_p3" text="馬の体力+13%。" />
+    <string id="taom_kob_t2b_p4" text="兵士の耐性+13%。" />
     <string id="taom_kob_t3a_key" text="スタンピードが発動中、部隊士気を高め、ベルファラスの軍勢を鼓舞する。" />
     <string id="taom_kob_t3a_p1" text="部隊士気+15%。" />
     <string id="taom_kob_t3a_p2" text="パーティーサイズ+4。" />
@@ -297,8 +297,8 @@
     <string id="taom_kob_t3b_key" text="スタンピードの範囲と持続時間が最大化――ドル・アムロスの突撃は止められない。" />
     <string id="taom_kob_t3b_p1" text="耐性+15%。" />
     <string id="taom_kob_t3b_p2" text="最大体力+9。" />
-    <string id="taom_kob_t3b_p3" text="馬の突撃ダメージ+20%。" />
-    <string id="taom_kob_t3b_p4" text="部隊の耐性+12%。" />
+    <string id="taom_kob_t3b_p3" text="馬の突撃ダメージ+15%。" />
+    <string id="taom_kob_t3b_p4" text="兵士の耐性+15%。" />
     <string id="taom_buc_root_desc" text="暗黒の堅牢は体力+6を付与し、黒ウルクの戦闘狂気を奮い立たせる。" />
     <string id="taom_buc_t1_a_key" text="鉄の皮膚" />
     <string id="taom_buc_t1_a_key_desc" text="鍛冶場と戦争で鍛えられた皮膚が刃を弾く。血の狂気の範囲+3。" />
@@ -364,21 +364,21 @@
     <string id="taom_mc_t1_a_key" text="毒の矢じり" />
     <string id="taom_mc_t1_a_key_desc" text="お前の矢は邪悪な毒を帯びる。唯一なる者の声の範囲+3。" />
     <string id="taom_mc_t1_a_p1" text="暗黒の囁き" />
-    <string id="taom_mc_t1_a_p1_desc" text="お前の詠唱は敵を動揺させる。兵士の抵抗力+5%。" />
+    <string id="taom_mc_t1_a_p1_desc" text="あなたの詠唱が敵を動揺させる。兵士の耐性+10%。" />
     <string id="taom_mc_t1_a_p2" text="確実な狙い" />
     <string id="taom_mc_t1_a_p2_desc" text="忍耐強く正確に。遠隔ダメージ+6%。" />
     <string id="taom_mc_t1_a_p3" text="教団の熱狂" />
     <string id="taom_mc_t1_a_p3_desc" text="唯一なる者の祝福が信徒を守る。体力+5。" />
     <string id="taom_mc_t1_a_p4" text="影渡り" />
-    <string id="taom_mc_t1_a_p4_desc" text="お前は一斉射撃の合間に姿を消して移動する。隠密ボーナス+5%。" />
+    <string id="taom_mc_t1_a_p4_desc" text="斉射の合間を見られずに動く。隠密ボーナス+10%。" />
     <string id="taom_mc_t1_b_key" text="サウロンの囁き" />
     <string id="taom_mc_t1_b_key_desc" text="声はさらに遠くまで届く。唯一なる者の声の持続時間+4秒。" />
     <string id="taom_mc_t1_b_p1" text="闇の矢筒" />
-    <string id="taom_mc_t1_b_p1_desc" text="お前はより多くの黒い矢を携える。弾薬+3。" />
+    <string id="taom_mc_t1_b_p1_desc" text="黒い矢柄の矢をより多く携える。弾薬+10%。" />
     <string id="taom_mc_t1_b_p2" text="儀式の傷痕" />
     <string id="taom_mc_t1_b_p2_desc" text="ムルケルヒリの儀式による苦痛除け。体力+6。" />
     <string id="taom_mc_t1_b_p3" text="預言者の歩み" />
-    <string id="taom_mc_t1_b_p3_desc" text="サウロンの恩寵により素早く隠密に動ける。隠密ボーナス+4%。" />
+    <string id="taom_mc_t1_b_p3_desc" text="サウロンの恩寵があなたを迅速かつ隠密に保つ。隠密ボーナス+10%。" />
     <string id="taom_mc_t1_b_p4" text="闇の祝福" />
     <string id="taom_mc_t1_b_p4_desc" text="冥王の眼があなたを見守る。遠隔攻撃耐性+8%。" />
     <string id="taom_mc_t2_a_key" text="恐怖の集会" />
@@ -390,7 +390,7 @@
     <string id="taom_mc_t2_a_p3" text="狂信者の決意" />
     <string id="taom_mc_t2_a_p3_desc" text="真の信者にとって死は無意味。体力+6。" />
     <string id="taom_mc_t2_a_p4" text="教団の兵站" />
-    <string id="taom_mc_t2_a_p4_desc" text="教団の網が軍勢に補給を維持する。弾薬+5。" />
+    <string id="taom_mc_t2_a_p4_desc" text="教団の連絡網が軍に補給を絶やさない。弾薬+13%。" />
     <string id="taom_mc_t2_b_key" text="闇の説教" />
     <string id="taom_mc_t2_b_key_desc" text="あなたの祈りは戦場全体に及ぶ。「冥王の声」の持続時間+2秒。" />
     <string id="taom_mc_t2_b_p1" text="恐怖の真言" />
@@ -410,7 +410,7 @@
     <string id="taom_mc_t3_a_p3" text="集会の軍団" />
     <string id="taom_mc_t3_a_p3_desc" text="信者たちがあなたの旗の下に集う。部隊規模+4。" />
     <string id="taom_mc_t3_a_p4" text="祝福された矢筒" />
-    <string id="taom_mc_t3_a_p4_desc" text="サウロンの祝福があなたの矢を増やす。弾薬+8。" />
+    <string id="taom_mc_t3_a_p4_desc" text="サウロンの祝福があなたの矢を増やす。弾薬+15%。" />
     <string id="taom_mc_t3_b_key" text="闇の盟約" />
     <string id="taom_mc_t3_b_key_desc" text="「声」の発動に必要な犠牲が少なくなる。「声」のチャージコスト-30。" />
     <string id="taom_mc_t3_b_p1" text="眼の教団" />
@@ -425,9 +425,9 @@
     <string id="taom_sr_t1_a_key" text="影の疾走" />
     <string id="taom_sr_t1_a_key_desc" text="モルドールの闇に消え去る。忍び歩き範囲+3。" />
     <string id="taom_sr_t1_a_p1" text="ワーグの本能" />
-    <string id="taom_sr_t1_a_p1_desc" text="騎乗獣は己と同じく獰猛である。馬の突撃ダメージ+6%。" />
+    <string id="taom_sr_t1_a_p1_desc" text="あなたの乗騎はあなたと同じく獰猛だ。馬の突撃ダメージ+10%。" />
     <string id="taom_sr_t1_a_p2" text="忍び寄る側面攻撃者" />
-    <string id="taom_sr_t1_a_p2_desc" text="最も予期せぬ場所に姿を現す。隠密ボーナス+5%。" />
+    <string id="taom_sr_t1_a_p2_desc" text="最も予期されぬ場所に現れる。隠密ボーナス+10%。" />
     <string id="taom_sr_t1_a_p3" text="苛烈な騎行" />
     <string id="taom_sr_t1_a_p3_desc" text="肉体は最も過酷な騎行に耐える。体力+5。" />
     <string id="taom_sr_t1_a_p4" text="一撃離脱" />
@@ -435,7 +435,7 @@
     <string id="taom_sr_t1_b_key" text="夜の騎手" />
     <string id="taom_sr_t1_b_key_desc" text="闇がより長く護ってくれる。忍び歩き持続時間+4秒。" />
     <string id="taom_sr_t1_b_p1" text="痩躯の騎獣" />
-    <string id="taom_sr_t1_b_p1_desc" text="獣は最も厳しい戦いでも脚を保つ。馬の体力+5%。" />
+    <string id="taom_sr_t1_b_p1_desc" text="あなたの獣は最も過酷な戦いでも踏みとどまる。馬の体力+10%。" />
     <string id="taom_sr_t1_b_p2" text="略奪者の速度" />
     <string id="taom_sr_t1_b_p2_desc" text="いかなる追跡も振り切る。移動速度+5%。" />
     <string id="taom_sr_t1_b_p3" text="群れの戦術" />
@@ -445,7 +445,7 @@
     <string id="taom_sr_t2_a_key" text="奇襲突撃" />
     <string id="taom_sr_t2_a_key_desc" text="敵が気づく前に打ちかかる。忍び歩き突撃コスト-20。" />
     <string id="taom_sr_t2_a_p1" text="勢いを殺す者" />
-    <string id="taom_sr_t2_a_p1_desc" text="突撃は敵陣形を破壊する。馬の突撃ダメージ+8%。" />
+    <string id="taom_sr_t2_a_p1_desc" text="あなたの突撃が敵の陣形を破る。馬の突撃ダメージ+13%。" />
     <string id="taom_sr_t2_a_p2" text="容赦なき追跡" />
     <string id="taom_sr_t2_a_p2_desc" text="スナガの騎手から逃れられる者はいない。部隊移動速度+8%。" />
     <string id="taom_sr_t2_a_p3" text="略奪者の戦利品" />
@@ -457,7 +457,7 @@
     <string id="taom_sr_t2_b_p1" text="叫喚の降下" />
     <string id="taom_sr_t2_b_p1_desc" text="戦叫びは最も勇敢な者以外を挫く。部隊士気+6%。" />
     <string id="taom_sr_t2_b_p2" text="側面攻撃の達人" />
-    <string id="taom_sr_t2_b_p2_desc" text="精密に側面攻撃を指揮する。隠密ボーナス+10%。" />
+    <string id="taom_sr_t2_b_p2_desc" text="側面攻撃を精確に指揮する。隠密ボーナス+13%。" />
     <string id="taom_sr_t2_b_p3" text="略奪者の取り分" />
     <string id="taom_sr_t2_b_p3_desc" text="戦利品を分け合うことで群れの忠誠を保つ。部隊賃金-5%。" />
     <string id="taom_sr_t2_b_p4" text="鉄の鞍" />
@@ -465,7 +465,7 @@
     <string id="taom_sr_t3_a_key" text="影の猛進" />
     <string id="taom_sr_t3_a_key_desc" text="闇から騎兵の軍勢が実体化する。忍び寄り半径+5。" />
     <string id="taom_sr_t3_a_p1" text="死の突撃" />
-    <string id="taom_sr_t3_a_p1_desc" text="突撃が進路上のすべてを壊滅させる。騎馬突撃ダメージ+12%。" />
+    <string id="taom_sr_t3_a_p1_desc" text="あなたの突撃は行く手のすべてを蹂躙する。馬の突撃ダメージ+15%。" />
     <string id="taom_sr_t3_a_p2" text="ワーグ王の号令" />
     <string id="taom_sr_t3_a_p2_desc" text="巨大な群れが旗印の下に馳せる。部隊規模+4。" />
     <string id="taom_sr_t3_a_p3" text="永続する影" />
@@ -553,7 +553,7 @@
     <string id="taom_moa_t1_a_p3" text="アルドブルグの訓練" />
     <string id="taom_moa_t1_a_p3_desc" text="アルドブルグの射手は辺境最高の腕前を持つ。体力+5。" />
     <string id="taom_moa_t1_a_p4" text="満ちた矢筒" />
-    <string id="taom_moa_t1_a_p4_desc" text="あなたは誰よりも多く白羽根の矢を携える。弾薬+3。" />
+    <string id="taom_moa_t1_a_p4_desc" text="誰よりも多くの白羽の矢を携える。弾薬+10%。" />
     <string id="taom_moa_t1_b_key" text="不動の引き" />
     <string id="taom_moa_t1_b_key_desc" text="完璧な一射のため、引きを長く保つ。軽矢羽根持続時間+4秒。" />
     <string id="taom_moa_t1_b_p1" text="迅速な番え" />
@@ -563,17 +563,17 @@
     <string id="taom_moa_t1_b_p3" text="平原の斥候" />
     <string id="taom_moa_t1_b_p3_desc" text="あなたはローハンの平原を書物のように読む。パーティ索敵範囲+5%。" />
     <string id="taom_moa_t1_b_p4" text="ロヒアリムの規律" />
-    <string id="taom_moa_t1_b_p4_desc" text="あなたは射手たちに戦列を保つよう訓練する。部隊抵抗+3%。" />
+    <string id="taom_moa_t1_b_p4_desc" text="弓兵に戦列を保つよう訓練する。兵士の耐性+10%。" />
     <string id="taom_moa_t2_a_key" text="一斉射撃隊長" />
     <string id="taom_moa_t2_a_key_desc" text="あなたは壊滅的な集中射撃を指揮する。軽矢羽根チャージコスト-20。" />
     <string id="taom_moa_t2_a_p1" text="戦列を釘付け" />
-    <string id="taom_moa_t2_a_p1_desc" text="あなたの一斉射撃は敵の進軍を抑える。部隊抵抗+8%。" />
+    <string id="taom_moa_t2_a_p1_desc" text="あなたの斉射が敵の前進を抑える。兵士の耐性+13%。" />
     <string id="taom_moa_t2_a_p2" text="錐型矢尻" />
     <string id="taom_moa_t2_a_p2_desc" text="硬化した矢尻が鎖帷子と板金を貫く。装甲貫通+10%。" />
     <string id="taom_moa_t2_a_p3" text="戦場技術" />
-    <string id="taom_moa_t2_a_p3_desc" text="あなたは地形の起伏すべてを有利に使う。隠密ボーナス+8%。" />
+    <string id="taom_moa_t2_a_p3_desc" text="地形のあらゆる起伏を利用する。隠密ボーナス+13%。" />
     <string id="taom_moa_t2_a_p4" text="戦矢の備蓄" />
-    <string id="taom_moa_t2_a_p4_desc" text="事前配置された備蓄があなたの矢筒を満たし続ける。弾薬+5。" />
+    <string id="taom_moa_t2_a_p4_desc" text="事前に配した備蓄が矢筒を満たし続ける。弾薬+13%。" />
     <string id="taom_moa_t2_b_key" text="持続弾幕" />
     <string id="taom_moa_t2_b_key_desc" text="矢の雨は止むことがない。軽矢羽根持続時間+2秒。" />
     <string id="taom_moa_t2_b_p1" text="援護射撃" />
@@ -593,7 +593,7 @@
     <string id="taom_moa_t3_a_p3" text="戦軍の弓兵" />
     <string id="taom_moa_t3_a_p3_desc" text="汝の伝説が最も優れた射手たちを引き寄せる。部隊規模+4。" />
     <string id="taom_moa_t3_a_p4" text="無尽蔵の矢" />
-    <string id="taom_moa_t3_a_p4_desc" text="補給線が矢を絶やさず供給する。弾薬+8。" />
+    <string id="taom_moa_t3_a_p4_desc" text="補給線が矢を絶やさない。弾薬+15%。" />
     <string id="taom_moa_t3_b_key" text="反射的放矢" />
     <string id="taom_moa_t3_b_key_desc" text="弦につがえ放つことは純粋なる筋肉の記憶。軽矢羽のチャージコスト-30。" />
     <string id="taom_moa_t3_b_p1" text="矢の雨" />
@@ -604,13 +604,13 @@
     <string id="taom_moa_t3_b_p3_desc" text="汝の功績がアルドブルグに栄光をもたらす。戦闘名声獲得+12%。" />
     <string id="taom_moa_t3_b_p4" text="辺境領の軍" />
     <string id="taom_moa_t3_b_p4_desc" text="ローハンの最精鋭の弓兵たちが汝の旗の下に集いし。部隊規模+5。" />
-    <string id="taom_ew_root_desc" text="エオルの雄叫びは騎馬突撃ダメージ+5%を付与し、祖先の雷鳴を呼び覚ます。" />
+    <string id="taom_ew_root_desc" text="エオルの鬨の声は馬の突撃ダメージ+10%を与え、祖先の雷鳴を呼び起こす。" />
     <string id="taom_ew_t1_a_key" text="祖先の雷鳴" />
     <string id="taom_ew_t1_a_key_desc" text="雄叫びが平原に響き渡る。エオルの雄叫び範囲+3。" />
     <string id="taom_ew_t1_a_p1" text="先陣突撃" />
-    <string id="taom_ew_t1_a_p1_desc" text="汝が突撃を率い、誰も汝の速さに敵わず。騎馬突撃ダメージ+6%。" />
+    <string id="taom_ew_t1_a_p1_desc" text="あなたは突撃の先頭に立ち、その速さに並ぶ者はいない。馬の突撃ダメージ+10%。" />
     <string id="taom_ew_t1_a_p2" text="生来の騎手" />
-    <string id="taom_ew_t1_a_p2_desc" text="馬と騎手は一体なり。馬の体力+5%。" />
+    <string id="taom_ew_t1_a_p2_desc" text="馬と乗り手は一体である。馬の体力+10%。" />
     <string id="taom_ew_t1_a_p3" text="草原の耐久力" />
     <string id="taom_ew_t1_a_p3_desc" text="辺境領の平原を駆けることが汝を鍛えた。体力+5。" />
     <string id="taom_ew_t1_a_p4" text="奮起の雄叫び" />
@@ -624,11 +624,11 @@
     <string id="taom_ew_t1_b_p3" text="騎手の覚悟" />
     <string id="taom_ew_t1_b_p3_desc" text="どんな困難にも屈しない。体力+6。" />
     <string id="taom_ew_t1_b_p4" text="不屈の軍馬" />
-    <string id="taom_ew_t1_b_p4_desc" text="あなたの馬は戦いで鍛えられている。馬の体力+6%。" />
+    <string id="taom_ew_t1_b_p4_desc" text="あなたの馬は戦いに鍛えられている。馬の体力+10%。" />
     <string id="taom_ew_t2_a_key" text="エオルの遺産" />
     <string id="taom_ew_t2_a_key_desc" text="祖先は常にあなたと共に駆ける。雄叫びチャージコスト-20。" />
     <string id="taom_ew_t2_a_p1" text="止められぬ突撃" />
-    <string id="taom_ew_t2_a_p1_desc" text="ローハンの騎馬軍団の前には何も立ちはだかれない。馬の突撃ダメージ+10%。" />
+    <string id="taom_ew_t2_a_p1_desc" text="ローヒアリムの前に立ちはだかる者はいない。馬の突撃ダメージ+13%。" />
     <string id="taom_ew_t2_a_p2" text="盾の壁破り" />
     <string id="taom_ew_t2_a_p2_desc" text="あなたの突撃は盾の壁を粉砕する。近接ダメージ+8%。" />
     <string id="taom_ew_t2_a_p3" text="ローハンの士気" />
@@ -638,7 +638,7 @@
     <string id="taom_ew_t2_b_key" text="騎行の歌" />
     <string id="taom_ew_t2_b_key_desc" text="エオセオドの歌が騎手たちを前へと運ぶ。雄叫び持続時間+2秒。" />
     <string id="taom_ew_t2_b_p1" text="メアラスの血統" />
-    <string id="taom_ew_t2_b_p1_desc" text="あなたの馬にはメアラスの血が流れている。馬の体力+10%。" />
+    <string id="taom_ew_t2_b_p1_desc" text="あなたの馬にはメアラスの血が流れている。馬の体力+13%。" />
     <string id="taom_ew_t2_b_p2" text="平原の達人" />
     <string id="taom_ew_t2_b_p2_desc" text="あなたは辺境のあらゆる谷と尾根を知り尽くしている。部隊索敵範囲+8%。" />
     <string id="taom_ew_t2_b_p3" text="名誉の誓い" />
@@ -648,7 +648,7 @@
     <string id="taom_ew_t3_a_key" text="ローハンの騎馬軍団の突撃" />
     <string id="taom_ew_t3_a_key_desc" text="人間の時代における最も偉大な突撃。雄叫び範囲+5。" />
     <string id="taom_ew_t3_a_p1" text="ペレンノールの雷鳴" />
-    <string id="taom_ew_t3_a_p1_desc" text="ペレンノール野の戦いのように、あなたの突撃は誰にも止められない。馬の突撃ダメージ+14%。" />
+    <string id="taom_ew_t3_a_p1_desc" text="ペレンノール野のときのように、あなたの突撃は止められない。馬の突撃ダメージ+15%。" />
     <string id="taom_ew_t3_a_p2" text="辺境の王" />
     <string id="taom_ew_t3_a_p2_desc" text="最も優れた騎手たちがあなたに従う。体力+9。" />
     <string id="taom_ew_t3_a_p3" text="エオレド指揮官" />
@@ -685,11 +685,11 @@
     <string id="taom_ws_t1_b_p3" text="忠実な護衛" />
     <string id="taom_ws_t1_b_p3_desc" text="あなたの部下はほとんど給料を必要としない――義務で十分だ。部隊賃金-4%。" />
     <string id="taom_ws_t1_b_p4" text="河の領主の規律" />
-    <string id="taom_ws_t1_b_p4_desc" text="あなたの歩兵は他者が崩れる時も踏みとどまる。部隊抵抗力+3%。" />
+    <string id="taom_ws_t1_b_p4_desc" text="他が崩れてもあなたの歩兵は持ちこたえる。兵士の耐性+10%。" />
     <string id="taom_ws_t2_a_key" text="準備された渡河" />
     <string id="taom_ws_t2_a_key_desc" text="あなたはこの地を何年も偵察してきた。河川航行者チャージコスト-20。" />
     <string id="taom_ws_t2_a_p1" text="盾の列" />
-    <string id="taom_ws_t2_a_p1_desc" text="あなたの部下は難攻不落の壁を形成する。部隊抵抗力+8%。" />
+    <string id="taom_ws_t2_a_p1_desc" text="あなたの兵は難攻不落の壁を成す。兵士の耐性+13%。" />
     <string id="taom_ws_t2_a_p2" text="試された鋼" />
     <string id="taom_ws_t2_a_p2_desc" text="すべての武器はスタンガルドの鍛冶師によって研がれる。近接ダメージ+8%。" />
     <string id="taom_ws_t2_a_p3" text="ファンゴルンの警告" />
@@ -709,7 +709,7 @@
     <string id="taom_ws_t3_a_key" text="スタンガルドの砦" />
     <string id="taom_ws_t3_a_key_desc" text="汝は文明と闇の間に立つ最後の防壁なり。川の航行者の範囲+5。" />
     <string id="taom_ws_t3_a_p1" text="不破の陣列" />
-    <string id="taom_ws_t3_a_p1_desc" text="汝の盾の壁は決して崩れたことがない。部隊耐性+12%。" />
+    <string id="taom_ws_t3_a_p1_desc" text="あなたの盾の壁は一度も破られたことがない。兵士の耐性+15%。" />
     <string id="taom_ws_t3_a_p2" text="不死の守衛" />
     <string id="taom_ws_t3_a_p2_desc" text="見張りは決して終わらない。体力+9。" />
     <string id="taom_ws_t3_a_p3" text="守備隊指揮官" />
@@ -793,11 +793,11 @@
     <string id="taom_wh_t1_a_p1" text="狼の忍耐" />
     <string id="taom_wh_t1_a_p1_desc" text="汝は完璧な瞬間を待って襲う。遠距離ダメージ+6%。" />
     <string id="taom_wh_t1_a_p2" text="丘陵の忍び寄る者" />
-    <string id="taom_wh_t1_a_p2_desc" text="汝は音もなくドゥンランドの丘を移動する。隠密ボーナス+5%。" />
+    <string id="taom_wh_t1_a_p2_desc" text="ダンランドの丘を音もなく進む。隠密ボーナス+10%。" />
     <string id="taom_wh_t1_a_p3" text="狩人の持久力" />
     <string id="taom_wh_t1_a_p3_desc" text="汝は休むことなく何日も獲物を追う。体力+5。" />
     <string id="taom_wh_t1_a_p4" text="骨の矢筒" />
-    <string id="taom_wh_t1_a_p4_desc" text="ドゥンランドの矢羽根製作の伝統が汝の矢筒を満たす。弾薬+3。" />
+    <string id="taom_wh_t1_a_p4_desc" text="ダンランドの矢羽根作りの伝統が矢筒を満たす。弾薬+10%。" />
     <string id="taom_wh_t1_b_key" text="延長された狩り" />
     <string id="taom_wh_t1_b_key_desc" text="印は戦闘の混沌を通じて持続する。標的獲物の持続時間+4秒。" />
     <string id="taom_wh_t1_b_p1" text="素早い矢つがえ" />
@@ -817,11 +817,11 @@
     <string id="taom_wh_t2_a_p3" text="荒野の生存者" />
     <string id="taom_wh_t2_a_p3_desc" text="荒野が汝にあらゆることを生き抜く術を教えた。体力+6。" />
     <string id="taom_wh_t2_a_p4" text="深き矢筒" />
-    <string id="taom_wh_t2_a_p4_desc" text="あなたの一族は包囲戦に十分な矢を供給する。弾薬+5。" />
+    <string id="taom_wh_t2_a_p4_desc" text="あなたの氏族は攻城戦に十分な矢を供給する。矢弾+13%。" />
     <string id="taom_wh_t2_b_key" text="持続する刻印" />
     <string id="taom_wh_t2_b_key_desc" text="刻印は深く刻まれ、消えることはない。獲物の刻印の持続時間+2秒。" />
     <string id="taom_wh_t2_b_p1" text="待ち伏せの捕食者" />
-    <string id="taom_wh_t2_b_p1_desc" text="あなたは隠密から攻撃し、最大の効果を得る。隠密ボーナス+10%。" />
+    <string id="taom_wh_t2_b_p1_desc" text="物陰から襲いかかり最大の効果を得る。隠密ボーナス+13%。" />
     <string id="taom_wh_t2_b_p2" text="ドゥンランドの強靭さ" />
     <string id="taom_wh_t2_b_p2_desc" text="丘陵での厳しい生活があなたを不死身にする。近接耐性+10%。" />
     <string id="taom_wh_t2_b_p3" text="見えざる道" />
@@ -848,15 +848,15 @@
     <string id="taom_wh_t3_b_p3_desc" text="すべての戦利品があなたの恐るべき伝説に加わる。戦闘名声獲得+14%。" />
     <string id="taom_wh_t3_b_p4" text="大いなる群れ" />
     <string id="taom_wh_t3_b_p4_desc" text="ダンランドの全ての狼皮の狩人が汝と共に騎行す。部隊規模+6。" />
-    <string id="taom_cr_root_desc" text="戦群突撃は騎馬突撃ダメージに+5%を与え、敵陣を混乱に陥れる。" />
+    <string id="taom_cr_root_desc" text="ウォーパック突撃は騎馬突撃ダメージ+10%を与え、敵陣を混乱に陥れる。" />
     <string id="taom_cr_t1_a_key" text="一族の雷鳴" />
     <string id="taom_cr_t1_a_key_desc" text="騎手が降下すると大地が震える。戦群突撃の範囲+3。" />
     <string id="taom_cr_t1_a_p1" text="ドゥンランドの騎手" />
-    <string id="taom_cr_t1_a_p1_desc" text="あなたは馬と一体となって騎乗する。騎馬突撃ダメージ+6%。" />
+    <string id="taom_cr_t1_a_p1_desc" text="あなたは馬と一体となって駆ける。騎馬突撃ダメージ+10%。" />
     <string id="taom_cr_t1_a_p2" text="頑健な馬" />
-    <string id="taom_cr_t1_a_p2_desc" text="ドゥンランドの山地ポニーは鉄のように頑丈である。馬の体力+5%。" />
+    <string id="taom_cr_t1_a_p2_desc" text="ダンランドの山馬は鉄のように頑強だ。馬の体力+10%。" />
     <string id="taom_cr_t1_a_p3" text="一族の護衛" />
-    <string id="taom_cr_t1_a_p3_desc" text="騎兵が一族を危険から守る。部隊耐性+3%。" />
+    <string id="taom_cr_t1_a_p3_desc" text="あなたの騎手たちは氏族を害から守る。兵士の耐性+10%。" />
     <string id="taom_cr_t1_a_p4" text="鞍上の持久力" />
     <string id="taom_cr_t1_a_p4_desc" text="馬を降りることなく何日も騎行する。HP+5。" />
     <string id="taom_cr_t1_b_key" text="持続突撃" />
@@ -872,7 +872,7 @@
     <string id="taom_cr_t2_a_key" text="解き放たれた戦群" />
     <string id="taom_cr_t2_a_key_desc" text="群れは常に突撃の準備ができている。戦群突撃コスト-20。" />
     <string id="taom_cr_t2_a_p1" text="粉砕の衝撃" />
-    <string id="taom_cr_t2_a_p1_desc" text="突撃が敵陣形を粉砕する。騎馬突撃ダメージ+10%。" />
+    <string id="taom_cr_t2_a_p1_desc" text="あなたの突撃は敵の陣形を打ち砕く。騎馬突撃ダメージ+13%。" />
     <string id="taom_cr_t2_a_p2" text="迅速な追撃" />
     <string id="taom_cr_t2_a_p2_desc" text="誰も一族護衛隊から逃れられない。部隊移動速度+8%。" />
     <string id="taom_cr_t2_a_p3" text="略奪の名声" />
@@ -892,7 +892,7 @@
     <string id="taom_cr_t3_a_key" text="騎兵の一族" />
     <string id="taom_cr_t3_a_key_desc" text="ドゥンランドの全騎兵が汝の旗の下に馳せ参じる。戦群突撃の範囲+5。" />
     <string id="taom_cr_t3_a_p1" text="雪崩の突撃" />
-    <string id="taom_cr_t3_a_p1_desc" text="突撃は止められない。騎馬突撃ダメージ+14%。" />
+    <string id="taom_cr_t3_a_p1_desc" text="あなたの突撃は止められない。騎馬突撃ダメージ+15%。" />
     <string id="taom_cr_t3_a_p2" text="山岳生まれ" />
     <string id="taom_cr_t3_a_p2_desc" text="汝はこの鞍に生まれついた。HP+9。" />
     <string id="taom_cr_t3_a_p3" text="大戦群" />
@@ -943,7 +943,7 @@
     <string id="taom_steppe_bowmaster_root_desc" text="矢の嵐は+5% 遠隔ダメージを付与し、持続射撃を向上させる。" />
     <string id="taom_sb_t1a_key" text="矢の嵐の範囲が拡大し、一斉射撃がより広い地面を覆う。" />
     <string id="taom_sb_t1a_p1" text="+8% 遠隔ダメージ。" />
-    <string id="taom_sb_t1a_p2" text="+2 弾薬。" />
+    <string id="taom_sb_t1a_p2" text="矢弾+10%。" />
     <string id="taom_sb_t1a_p3" text="+7% 移動速度。" />
     <string id="taom_sb_t1a_p4" text="+5% 部隊視認範囲。" />
     <string id="taom_sb_t1b_key" text="矢の嵐の持続時間が延長され、容赦ない雹となる。" />
@@ -952,7 +952,7 @@
     <string id="taom_sb_t1b_p3" text="+3% 部隊ダメージ。" />
     <string id="taom_sb_t1b_p4" text="+5% 戦闘名声獲得。" />
     <string id="taom_sb_t2a_key" text="矢の嵐のチャージが短縮され、尽きることなき矢筒となる。" />
-    <string id="taom_sb_t2a_p1" text="+4 弾薬。" />
+    <string id="taom_sb_t2a_p1" text="矢弾+13%。" />
     <string id="taom_sb_t2a_p2" text="+10% 遠隔ダメージ。" />
     <string id="taom_sb_t2a_p3" text="+10% 移動速度。" />
     <string id="taom_sb_t2a_p4" text="+10% 部隊視認範囲。" />
@@ -963,7 +963,7 @@
     <string id="taom_sb_t2b_p4" text="+10% 戦闘名声獲得。" />
     <string id="taom_sb_t3a_key" text="矢の嵐の範囲が大幅に拡大し、逃れられぬ雨となる。" />
     <string id="taom_sb_t3a_p1" text="+15% 遠隔ダメージ。" />
-    <string id="taom_sb_t3a_p2" text="+6 弾薬。" />
+    <string id="taom_sb_t3a_p2" text="矢弾+15%。" />
     <string id="taom_sb_t3a_p3" text="+15% 戦闘名声獲得。" />
     <string id="taom_sb_t3a_p4" text="+15% 部隊視認範囲。" />
     <string id="taom_sb_t3b_key" text="矢の嵐のチャージが大幅に短縮され、絶え間ない一斉射撃となる。" />
@@ -971,34 +971,34 @@
     <string id="taom_sb_t3b_p2" text="+9 最大体力。" />
     <string id="taom_sb_t3b_p3" text="+7% 部隊ダメージ。" />
     <string id="taom_sb_t3b_p4" text="+5 部隊サイズ。" />
-    <string id="taom_chariot_warlord_root_desc" text="鎌突撃は+5% 騎馬突撃ダメージを付与し、騎乗戦士を鼓舞する。" />
+    <string id="taom_chariot_warlord_root_desc" text="薙ぎ払いの突撃は騎馬突撃ダメージ+10%を与え、騎乗戦士を鼓舞する。" />
     <string id="taom_cw_t1a_key" text="鎌突撃の範囲が拡大し、刃がより広い範囲を切り裂く。" />
-    <string id="taom_cw_t1a_p1" text="+7% 騎馬突撃ダメージ。" />
+    <string id="taom_cw_t1a_p1" text="騎馬突撃ダメージ+10%。" />
     <string id="taom_cw_t1a_p2" text="+8% 近接ダメージ。" />
     <string id="taom_cw_t1a_p3" text="+3% 部隊ダメージ。" />
     <string id="taom_cw_t1a_p4" text="部隊移動速度+5%。" />
     <string id="taom_cw_t1b_key" text="鎌突撃の持続時間が延長され、勢いが持続する。" />
-    <string id="taom_cw_t1b_p1" text="馬の体力+30。" />
+    <string id="taom_cw_t1b_p1" text="馬の体力+10%。" />
     <string id="taom_cw_t1b_p2" text="最大体力+5。" />
     <string id="taom_cw_t1b_p3" text="部隊士気+5%。" />
     <string id="taom_cw_t1b_p4" text="戦闘名声獲得+5%。" />
     <string id="taom_cw_t2a_key" text="鎌突撃のチャージが短縮され、車輪は決して止まらない。" />
-    <string id="taom_cw_t2a_p1" text="馬の突撃ダメージ+12%。" />
+    <string id="taom_cw_t2a_p1" text="騎馬突撃ダメージ+13%。" />
     <string id="taom_cw_t2a_p2" text="部隊移動速度+10%。" />
     <string id="taom_cw_t2a_p3" text="部隊士気+10%。" />
     <string id="taom_cw_t2a_p4" text="部隊サイズ+3。" />
     <string id="taom_cw_t2b_key" text="鎌突撃が突撃中の騎乗の回復力を強化する。" />
     <string id="taom_cw_t2b_p1" text="近接ダメージ+10%。" />
-    <string id="taom_cw_t2b_p2" text="馬の体力+60。" />
+    <string id="taom_cw_t2b_p2" text="馬の体力+13%。" />
     <string id="taom_cw_t2b_p3" text="部隊ダメージ+6%。" />
     <string id="taom_cw_t2b_p4" text="戦闘名声獲得+10%。" />
     <string id="taom_cw_t3a_key" text="鎌突撃の範囲が大幅に拡大され、止められない範囲攻撃となる。" />
-    <string id="taom_cw_t3a_p1" text="馬の突撃ダメージ+18%。" />
+    <string id="taom_cw_t3a_p1" text="騎馬突撃ダメージ+15%。" />
     <string id="taom_cw_t3a_p2" text="近接ダメージ+15%。" />
     <string id="taom_cw_t3a_p3" text="部隊ダメージ+7%。" />
     <string id="taom_cw_t3a_p4" text="戦闘名声獲得+15%。" />
     <string id="taom_cw_t3b_key" text="鎌突撃のチャージが大幅に短縮され、車輪は絶え間なく回り続ける。" />
-    <string id="taom_cw_t3b_p1" text="馬の体力+100。" />
+    <string id="taom_cw_t3b_p1" text="馬の体力+15%。" />
     <string id="taom_cw_t3b_p2" text="部隊移動速度+15%。" />
     <string id="taom_cw_t3b_p3" text="部隊士気+20%。" />
     <string id="taom_cw_t3b_p4" text="部隊サイズ+5。" />
@@ -1036,7 +1036,7 @@
     <string id="taom_pezarsani_javelineer_root_desc" text="陽光の斉射は+5% 遠隔ダメージを付与し、投げ槍の投擲を早める。" />
     <string id="taom_pj_t1a_key" text="陽光の斉射の範囲が拡大し、投げ槍がより広い地面を覆う。" />
     <string id="taom_pj_t1a_p1" text="+8% 遠隔ダメージ。" />
-    <string id="taom_pj_t1a_p2" text="+2 弾薬。" />
+    <string id="taom_pj_t1a_p2" text="矢弾+10%。" />
     <string id="taom_pj_t1a_p3" text="+7% 移動速度。" />
     <string id="taom_pj_t1a_p4" text="+5% 戦闘名声獲得量。" />
     <string id="taom_pj_t1b_key" text="陽光の斉射の持続時間が延長し、継続的な牽制射撃となる。" />
@@ -1045,7 +1045,7 @@
     <string id="taom_pj_t1b_p3" text="+3% 部隊ダメージ。" />
     <string id="taom_pj_t1b_p4" text="+5% 部隊索敵範囲。" />
     <string id="taom_pj_t2a_key" text="陽光の斉射のチャージ時間が短縮し、投げ槍が尽きることがない。" />
-    <string id="taom_pj_t2a_p1" text="+4 弾薬。" />
+    <string id="taom_pj_t2a_p1" text="矢弾+13%。" />
     <string id="taom_pj_t2a_p2" text="+10% 遠隔ダメージ。" />
     <string id="taom_pj_t2a_p3" text="+10% 移動速度。" />
     <string id="taom_pj_t2a_p4" text="+10% 戦闘名声獲得量。" />
@@ -1056,7 +1056,7 @@
     <string id="taom_pj_t2b_p4" text="+10% 部隊索敵範囲。" />
     <string id="taom_pj_t3a_key" text="陽光の斉射の範囲が大幅に拡大し、逃れられない弾幕となる。" />
     <string id="taom_pj_t3a_p1" text="+15% 遠隔ダメージ。" />
-    <string id="taom_pj_t3a_p2" text="弾薬+6。" />
+    <string id="taom_pj_t3a_p2" text="矢弾+15%。" />
     <string id="taom_pj_t3a_p3" text="戦闘名声獲得+15%。" />
     <string id="taom_pj_t3a_p4" text="移動速度+15%。" />
     <string id="taom_pj_t3b_key" text="太陽の炎の斉射のチャージが大幅に軽減、容赦なき嫌がらせ。" />
@@ -1064,34 +1064,34 @@
     <string id="taom_pj_t3b_p2" text="最大体力+9。" />
     <string id="taom_pj_t3b_p3" text="部隊ダメージ+7%。" />
     <string id="taom_pj_t3b_p4" text="部隊索敵範囲+15%。" />
-    <string id="taom_mahud_beast_rider_root_desc" text="ムーマキルの残響は馬突撃ダメージ+5%を付与し、恐怖を広げる。" />
+    <string id="taom_mahud_beast_rider_root_desc" text="ムーマカンの残響は騎馬突撃ダメージ+10%を与え、恐怖を広める。" />
     <string id="taom_mbr_t1a_key" text="ムーマキルの残響の範囲が拡大、恐怖がより遠くへ広がる。" />
-    <string id="taom_mbr_t1a_p1" text="馬突撃ダメージ+7%。" />
+    <string id="taom_mbr_t1a_p1" text="騎馬突撃ダメージ+10%。" />
     <string id="taom_mbr_t1a_p2" text="近接ダメージ+8%。" />
     <string id="taom_mbr_t1a_p3" text="部隊士気+5%。" />
     <string id="taom_mbr_t1a_p4" text="部隊移動速度+5%。" />
     <string id="taom_mbr_t1b_key" text="ムーマキルの残響の持続時間が延長、恐怖が残り続ける。" />
-    <string id="taom_mbr_t1b_p1" text="馬体力+30。" />
+    <string id="taom_mbr_t1b_p1" text="馬の体力+10%。" />
     <string id="taom_mbr_t1b_p2" text="部隊ダメージ+3%。" />
     <string id="taom_mbr_t1b_p3" text="戦闘名声獲得+5%。" />
     <string id="taom_mbr_t1b_p4" text="抵抗+5%。" />
     <string id="taom_mbr_t2a_key" text="ムーマキルの残響のチャージが軽減、恐怖は常に差し迫る。" />
-    <string id="taom_mbr_t2a_p1" text="馬突撃ダメージ+12%。" />
+    <string id="taom_mbr_t2a_p1" text="騎馬突撃ダメージ+13%。" />
     <string id="taom_mbr_t2a_p2" text="部隊士気+10%。" />
     <string id="taom_mbr_t2a_p3" text="部隊ダメージ+5%。" />
     <string id="taom_mbr_t2a_p4" text="戦闘名声獲得+10%。" />
     <string id="taom_mbr_t2b_key" text="ムーマキルの残響は突撃中に獣の強靭さを強化する。" />
     <string id="taom_mbr_t2b_p1" text="近接ダメージ+12%。" />
-    <string id="taom_mbr_t2b_p2" text="馬体力+60。" />
+    <string id="taom_mbr_t2b_p2" text="馬の体力+13%。" />
     <string id="taom_mbr_t2b_p3" text="部隊移動速度+10%。" />
     <string id="taom_mbr_t2b_p4" text="部隊サイズ+3。" />
     <string id="taom_mbr_t3a_key" text="ムーマキルの残響の範囲が大幅に拡大、大地そのものが揺れる。" />
-    <string id="taom_mbr_t3a_p1" text="馬突撃ダメージ+18%。" />
+    <string id="taom_mbr_t3a_p1" text="騎馬突撃ダメージ+15%。" />
     <string id="taom_mbr_t3a_p2" text="近接ダメージ+15%。" />
     <string id="taom_mbr_t3a_p3" text="部隊士気+20%。" />
     <string id="taom_mbr_t3a_p4" text="戦闘名声獲得+15%。" />
     <string id="taom_mbr_t3b_key" text="ムーマキルの残響のチャージが大幅に軽減、終わりなき恐怖。" />
-    <string id="taom_mbr_t3b_p1" text="馬体力+100。" />
+    <string id="taom_mbr_t3b_p1" text="馬の体力+15%。" />
     <string id="taom_mbr_t3b_p2" text="部隊移動速度+15%。" />
     <string id="taom_mbr_t3b_p3" text="部隊ダメージ+7%。" />
     <string id="taom_mbr_t3b_p4" text="最大体力+9。" />
@@ -1102,14 +1102,14 @@
     <string id="taom_fhh_t1a_p3" text="近接ダメージ+8%" />
     <string id="taom_fhh_t1a_p4" text="部隊士気+5%" />
     <string id="taom_fhh_t1b_key" text="邪悪なる残虐性の持続時間が延長され、トロルの怒りがより長く続く。" />
-    <string id="taom_fhh_t1b_p1" text="部隊耐性+8%" />
+    <string id="taom_fhh_t1b_p1" text="兵士の耐性+10%。" />
     <string id="taom_fhh_t1b_p2" text="部隊ダメージ+3%" />
     <string id="taom_fhh_t1b_p3" text="戦闘名声獲得+5%" />
     <string id="taom_fhh_t1b_p4" text="最大体力+5" />
     <string id="taom_fhh_t2a_key" text="邪悪なる残虐性のチャージが減少し、怒りがより速く点火する。" />
     <string id="taom_fhh_t2a_p1" text="耐性+12%" />
     <string id="taom_fhh_t2a_p2" text="最大体力+8" />
-    <string id="taom_fhh_t2a_p3" text="部隊耐性+12%" />
+    <string id="taom_fhh_t2a_p3" text="兵士の耐性+13%。" />
     <string id="taom_fhh_t2a_p4" text="部隊士気+10%" />
     <string id="taom_fhh_t2b_key" text="邪悪なる残虐性により、半トロルがさらに恐ろしくなる。" />
     <string id="taom_fhh_t2b_p1" text="最大体力+8" />
@@ -1129,16 +1129,16 @@
     <string id="taom_cl_root_desc" text="盾の壁により耐性+5%、隊列はあらゆる困難に対して堅固に持ちこたえる。" />
     <string id="taom_cl_t1_a_key" text="盾の壁の範囲が拡大され、より広い隊列を守る。" />
     <string id="taom_cl_t1_a_p1" text="耐性+8%" />
-    <string id="taom_cl_t1_a_p2" text="部隊耐性+5%" />
+    <string id="taom_cl_t1_a_p2" text="兵士の耐性+10%。" />
     <string id="taom_cl_t1_a_p3" text="最大体力+6" />
     <string id="taom_cl_t1_a_p4" text="部隊士気+5%" />
     <string id="taom_cl_t1_b_key" text="盾の壁の持続時間が延長され、最も長い攻撃にも耐える。" />
     <string id="taom_cl_t1_b_p1" text="近接ダメージ+8%" />
     <string id="taom_cl_t1_b_p2" text="最大体力+5" />
-    <string id="taom_cl_t1_b_p3" text="部隊耐性+5%" />
+    <string id="taom_cl_t1_b_p3" text="兵士の耐性+10%。" />
     <string id="taom_cl_t1_b_p4" text="+7% 振り速度。" />
     <string id="taom_cl_t2_a_key" text="シールドウォールのチャージ減少、より頻繁に盾の壁を立て直す。" />
-    <string id="taom_cl_t2_a_p1" text="+10% 部隊耐性。" />
+    <string id="taom_cl_t2_a_p1" text="兵士の耐性+13%。" />
     <string id="taom_cl_t2_a_p2" text="+2 パーティサイズ。" />
     <string id="taom_cl_t2_a_p3" text="+10% 耐性。" />
     <string id="taom_cl_t2_a_p4" text="-10% 部隊賃金。" />
@@ -1188,11 +1188,11 @@
     <string id="taom_ldm_t3_b_p2" text="遠隔ダメージ+15%" />
     <string id="taom_ldm_t3_b_p3" text="最大体力+9" />
     <string id="taom_ldm_t3_b_p4" text="部隊索敵範囲+10%" />
-    <string id="taom_bk_root_desc" text="不屈は、戦団が容赦なく駆ける中で馬の突撃ダメージに+5%を付与する。" />
+    <string id="taom_bk_root_desc" text="不屈は騎馬突撃ダメージ+10%を与え、あなたの戦団は容赦なく駆ける。" />
     <string id="taom_bk_t1_a_key" text="不屈の範囲が拡大され、より広範な騎馬の波を結集させる。" />
-    <string id="taom_bk_t1_a_p1" text="馬の突撃ダメージ+8%" />
+    <string id="taom_bk_t1_a_p1" text="騎馬突撃ダメージ+10%。" />
     <string id="taom_bk_t1_a_p2" text="部隊士気+5%" />
-    <string id="taom_bk_t1_a_p3" text="馬の体力+30" />
+    <string id="taom_bk_t1_a_p3" text="馬の体力+10%。" />
     <string id="taom_bk_t1_a_p4" text="近接ダメージ+5%" />
     <string id="taom_bk_t1_b_key" text="不屈の持続時間が延長され、恐れを知らぬ突撃を維持する。" />
     <string id="taom_bk_t1_b_p1" text="耐性+7%" />
@@ -1205,13 +1205,13 @@
     <string id="taom_bk_t2_a_p3" text="戦闘名声獲得+10%" />
     <string id="taom_bk_t2_a_p4" text="部隊賃金-10%" />
     <string id="taom_bk_t2_b_key" text="不屈は突撃中に騎馬を強化する。" />
-    <string id="taom_bk_t2_b_p1" text="馬の突撃ダメージ+12%" />
-    <string id="taom_bk_t2_b_p2" text="馬の体力+60" />
+    <string id="taom_bk_t2_b_p1" text="騎馬突撃ダメージ+13%。" />
+    <string id="taom_bk_t2_b_p2" text="馬の体力+13%。" />
     <string id="taom_bk_t2_b_p3" text="耐性+10%" />
     <string id="taom_bk_t2_b_p4" text="部隊士気+10%" />
     <string id="taom_bk_t3_a_key" text="不屈の範囲が大幅に拡大され、疾駆は止められない。" />
-    <string id="taom_bk_t3_a_p1" text="馬の突撃ダメージ+18%" />
-    <string id="taom_bk_t3_a_p2" text="馬の体力+100" />
+    <string id="taom_bk_t3_a_p1" text="騎馬突撃ダメージ+15%。" />
+    <string id="taom_bk_t3_a_p2" text="馬の体力+15%。" />
     <string id="taom_bk_t3_a_p3" text="部隊士気+15%" />
     <string id="taom_bk_t3_a_p4" text="部隊規模+4" />
     <string id="taom_bk_t3_b_key" text="不屈のチャージが大幅に減少し、常に存在し無慈悲となる。" />
@@ -1228,7 +1228,7 @@
     <string id="taom_dg2_t1_b_key" text="門の守りの持続時間が延長され、防御を強化する。" />
     <string id="taom_dg2_t1_b_p1" text="耐性+8%" />
     <string id="taom_dg2_t1_b_p2" text="部隊士気+5%" />
-    <string id="taom_dg2_t1_b_p3" text="部隊耐性+5%" />
+    <string id="taom_dg2_t1_b_p3" text="兵士の耐性 +10%。" />
     <string id="taom_dg2_t1_b_p4" text="兵士の生存率+5%。" />
     <string id="taom_dg2_t2_a_key" text="門の守りのチャージが減少し、より頻繁に発動する。" />
     <string id="taom_dg2_t2_a_p1" text="部隊士気+10%" />
@@ -1238,7 +1238,7 @@
     <string id="taom_dg2_t2_b_key" text="門の守りは発動中に追加の防御バフを付与する。" />
     <string id="taom_dg2_t2_b_p1" text="耐性+12%" />
     <string id="taom_dg2_t2_b_p2" text="最大体力+8" />
-    <string id="taom_dg2_t2_b_p3" text="部隊耐性+10%" />
+    <string id="taom_dg2_t2_b_p3" text="兵士の耐性 +13%。" />
     <string id="taom_dg2_t2_b_p4" text="部隊ダメージ+5%" />
     <string id="taom_dg2_t3_a_key" text="門の守りの範囲が大幅に拡大し、壊滅的な威力を発揮する。" />
     <string id="taom_dg2_t3_a_p1" text="近接ダメージ+15%" />
@@ -1247,7 +1247,7 @@
     <string id="taom_dg2_t3_a_p4" text="パーティサイズ+4" />
     <string id="taom_dg2_t3_b_key" text="門の守りのチャージが大幅に減少し、ほぼ常時使用可能となる。" />
     <string id="taom_dg2_t3_b_p1" text="耐性+18%" />
-    <string id="taom_dg2_t3_b_p2" text="体力再生+15%" />
+    <string id="taom_dg2_t3_b_p2" text="英雄の体力回復 +15%。" />
     <string id="taom_dg2_t3_b_p3" text="部隊士気+20%" />
     <string id="taom_dg2_t3_b_p4" text="兵士の生存率+15%。" />
     <string id="taom_dale_marksman_root_desc" text="黒き矢は弓の名手バルドを称え、+5%の遠距離ダメージを付与する。" />
@@ -1260,11 +1260,11 @@
     <string id="taom_dm_t1_b_p1" text="+5% 抵抗力" />
     <string id="taom_dm_t1_b_p2" text="+5 最大体力" />
     <string id="taom_dm_t1_b_p3" text="+5% 部隊索敵範囲" />
-    <string id="taom_dm_t1_b_p4" text="+5% 隠密ボーナス" />
+    <string id="taom_dm_t1_b_p4" text="隠密ボーナス +10%。" />
     <string id="taom_dm_t2_a_key" text="黒の矢のチャージ時間が短縮され、絶え間ない圧力を維持する。" />
     <string id="taom_dm_t2_a_p1" text="+10% 部隊索敵範囲" />
     <string id="taom_dm_t2_a_p2" text="+10% 移動速度" />
-    <string id="taom_dm_t2_a_p3" text="+10% 隠密ボーナス" />
+    <string id="taom_dm_t2_a_p3" text="隠密ボーナス +13%。" />
     <string id="taom_dm_t2_a_p4" text="+10% 戦闘名声獲得量" />
     <string id="taom_dm_t2_b_key" text="黒の矢が発動中、追加の貫通力を得る。" />
     <string id="taom_dm_t2_b_p1" text="+12% 射撃ダメージ" />
@@ -1284,11 +1284,11 @@
     <string id="taom_dale_outrider_root_desc" text="交易路疾駆により+5%近接ダメージを得て、馬が速くなる。" />
     <string id="taom_dor_t1_a_key" text="交易路疾駆の範囲が拡大され、より広い陣形を包む。" />
     <string id="taom_dor_t1_a_p1" text="+8% 近接ダメージ" />
-    <string id="taom_dor_t1_a_p2" text="+7% 馬突撃ダメージ" />
+    <string id="taom_dor_t1_a_p2" text="馬の突撃ダメージ +10%。" />
     <string id="taom_dor_t1_a_p3" text="+7% 振り速度" />
     <string id="taom_dor_t1_a_p4" text="+5% 部隊移動速度" />
     <string id="taom_dor_t1_b_key" text="交易路疾駆の持続時間が延長され、勢いを維持する。" />
-    <string id="taom_dor_t1_b_p1" text="+30 馬の体力" />
+    <string id="taom_dor_t1_b_p1" text="馬の体力 +10%。" />
     <string id="taom_dor_t1_b_p2" text="+5 最大体力" />
     <string id="taom_dor_t1_b_p3" text="-5% 部隊維持費" />
     <string id="taom_dor_t1_b_p4" text="+5% 抵抗力" />
@@ -1299,16 +1299,16 @@
     <string id="taom_dor_t2_a_p4" text="+10% 戦闘名声獲得。" />
     <string id="taom_dor_t2_b_key" text="交易路疾走が発動中、騎乗の耐久力を強化する。" />
     <string id="taom_dor_t2_b_p1" text="+12% 近接ダメージ。" />
-    <string id="taom_dor_t2_b_p2" text="+12% 騎馬突撃ダメージ。" />
-    <string id="taom_dor_t2_b_p3" text="+60 馬の体力。" />
+    <string id="taom_dor_t2_b_p2" text="馬の突撃ダメージ +13%。" />
+    <string id="taom_dor_t2_b_p3" text="馬の体力 +13%。" />
     <string id="taom_dor_t2_b_p4" text="+10% 振り速度。" />
     <string id="taom_dor_t3_a_key" text="交易路疾走の範囲が大幅拡大、阻止不能の衝撃。" />
     <string id="taom_dor_t3_a_p1" text="+18% 近接ダメージ。" />
-    <string id="taom_dor_t3_a_p2" text="+18% 騎馬突撃ダメージ。" />
+    <string id="taom_dor_t3_a_p2" text="馬の突撃ダメージ +15%。" />
     <string id="taom_dor_t3_a_p3" text="+15% 振り速度。" />
     <string id="taom_dor_t3_a_p4" text="+7% 部隊ダメージ。" />
     <string id="taom_dor_t3_b_key" text="交易路疾走の充填が大幅短縮、休むことなく疾駆する。" />
-    <string id="taom_dor_t3_b_p1" text="+100 馬の体力。" />
+    <string id="taom_dor_t3_b_p1" text="馬の体力 +15%。" />
     <string id="taom_dor_t3_b_p2" text="-15% 部隊賃金。" />
     <string id="taom_dor_t3_b_p3" text="+15% 部隊移動速度。" />
     <string id="taom_dor_t3_b_p4" text="+9 最大体力。" />
@@ -1321,7 +1321,7 @@
     <string id="taom_ig_t1_b_key" text="ミスリルの砦の持続時間が延長、防御を堅固にする。" />
     <string id="taom_ig_t1_b_p1" text="+8% 抵抗力。" />
     <string id="taom_ig_t1_b_p2" text="+5% 部隊士気。" />
-    <string id="taom_ig_t1_b_p3" text="+5% 部隊抵抗力。" />
+    <string id="taom_ig_t1_b_p3" text="兵士の耐性 +10%。" />
     <string id="taom_ig_t1_b_p4" text="兵士の生存率+5%。" />
     <string id="taom_ig_t2_a_key" text="ミスリルの砦の充填が短縮、より頻繁に発動する。" />
     <string id="taom_ig_t2_a_p1" text="+10% 部隊士気。" />
@@ -1331,7 +1331,7 @@
     <string id="taom_ig_t2_b_key" text="ミスリルの砦が発動中、追加の防御強化を付与する。" />
     <string id="taom_ig_t2_b_p1" text="+12% 抵抗力。" />
     <string id="taom_ig_t2_b_p2" text="+8 最大体力。" />
-    <string id="taom_ig_t2_b_p3" text="+10% 部隊抵抗力。" />
+    <string id="taom_ig_t2_b_p3" text="兵士の耐性 +13%。" />
     <string id="taom_ig_t2_b_p4" text="+5% 部隊ダメージ。" />
     <string id="taom_ig_t3_a_key" text="ミスリルの砦の範囲が大幅拡大、壊滅的な力。" />
     <string id="taom_ig_t3_a_p1" text="+15% 近接ダメージ。" />
@@ -1340,7 +1340,7 @@
     <string id="taom_ig_t3_a_p4" text="+4 パーティサイズ。" />
     <string id="taom_ig_t3_b_key" text="ミスリルの砦のチャージが大幅に減少し、ほぼ常に使用可能。" />
     <string id="taom_ig_t3_b_p1" text="+18% 抵抗力。" />
-    <string id="taom_ig_t3_b_p2" text="+15% 体力再生。" />
+    <string id="taom_ig_t3_b_p2" text="英雄の体力回復 +15%。" />
     <string id="taom_ig_t3_b_p3" text="+20% 部隊士気。" />
     <string id="taom_ig_t3_b_p4" text="兵士の生存率+15%。" />
     <string id="taom_crossbow_master_root_desc" text="精密弾幕により、名工のボルトで+5% 遠隔ダメージを獲得。" />
@@ -1353,11 +1353,11 @@
     <string id="taom_cbm_t1_b_p1" text="+5% 抵抗力。" />
     <string id="taom_cbm_t1_b_p2" text="+5 最大体力。" />
     <string id="taom_cbm_t1_b_p3" text="+5% パーティ索敵範囲。" />
-    <string id="taom_cbm_t1_b_p4" text="+5% 隠密ボーナス。" />
+    <string id="taom_cbm_t1_b_p4" text="隠密ボーナス +10%。" />
     <string id="taom_cbm_t2_a_key" text="精密弾幕のチャージが減少し、継続的な圧力を維持。" />
     <string id="taom_cbm_t2_a_p1" text="+10% パーティ索敵範囲。" />
     <string id="taom_cbm_t2_a_p2" text="+10% 移動速度。" />
-    <string id="taom_cbm_t2_a_p3" text="+10% 隠密ボーナス。" />
+    <string id="taom_cbm_t2_a_p3" text="隠密ボーナス +13%。" />
     <string id="taom_cbm_t2_a_p4" text="+10% 戦闘名声獲得。" />
     <string id="taom_cbm_t2_b_key" text="精密弾幕の発動中、追加の貫通力を獲得。" />
     <string id="taom_cbm_t2_b_p1" text="+12% 遠隔ダメージ。" />
@@ -1377,11 +1377,11 @@
     <string id="taom_ram_rider_root_desc" text="山岳突撃により+5% 近接ダメージを獲得、羊が角を下げる。" />
     <string id="taom_rr_t1_a_key" text="山岳突撃の範囲が拡大し、より広い陣形を薙ぎ払う。" />
     <string id="taom_rr_t1_a_p1" text="近接ダメージ+8%" />
-    <string id="taom_rr_t1_a_p2" text="馬の突撃ダメージ+7%" />
+    <string id="taom_rr_t1_a_p2" text="馬の突撃ダメージ +10%。" />
     <string id="taom_rr_t1_a_p3" text="振り速度+7%" />
     <string id="taom_rr_t1_a_p4" text="部隊移動速度+5%" />
     <string id="taom_rr_t1_b_key" text="山岳突撃の持続時間が延長され、勢いを維持する。" />
-    <string id="taom_rr_t1_b_p1" text="馬の体力+30" />
+    <string id="taom_rr_t1_b_p1" text="馬の体力 +10%。" />
     <string id="taom_rr_t1_b_p2" text="最大体力+5" />
     <string id="taom_rr_t1_b_p3" text="兵の維持費-5%" />
     <string id="taom_rr_t1_b_p4" text="抵抗力+5%" />
@@ -1392,16 +1392,16 @@
     <string id="taom_rr_t2_a_p4" text="戦闘名声獲得量+10%" />
     <string id="taom_rr_t2_b_key" text="山岳突撃が発動中に騎乗獣の耐久力を強化する。" />
     <string id="taom_rr_t2_b_p1" text="近接ダメージ+12%" />
-    <string id="taom_rr_t2_b_p2" text="馬の突撃ダメージ+12%" />
-    <string id="taom_rr_t2_b_p3" text="馬の体力+60" />
+    <string id="taom_rr_t2_b_p2" text="馬の突撃ダメージ +13%。" />
+    <string id="taom_rr_t2_b_p3" text="馬の体力 +13%。" />
     <string id="taom_rr_t2_b_p4" text="振り速度+10%" />
     <string id="taom_rr_t3_a_key" text="山岳突撃の範囲が大幅に拡大され、止められない衝撃を与える。" />
     <string id="taom_rr_t3_a_p1" text="近接ダメージ+18%" />
-    <string id="taom_rr_t3_a_p2" text="馬の突撃ダメージ+18%" />
+    <string id="taom_rr_t3_a_p2" text="馬の突撃ダメージ +15%。" />
     <string id="taom_rr_t3_a_p3" text="振り速度+15%" />
     <string id="taom_rr_t3_a_p4" text="兵のダメージ+7%" />
     <string id="taom_rr_t3_b_key" text="山岳突撃のチャージが大幅に短縮され、休むことなく駆ける。" />
-    <string id="taom_rr_t3_b_p1" text="馬の体力+100" />
+    <string id="taom_rr_t3_b_p1" text="馬の体力 +15%。" />
     <string id="taom_rr_t3_b_p2" text="兵の維持費-15%" />
     <string id="taom_rr_t3_b_p3" text="部隊移動速度+15%" />
     <string id="taom_rr_t3_b_p4" text="最大体力+9" />
@@ -1414,7 +1414,7 @@
     <string id="taom_bd_t1_b_key" text="星明りの織りなしの持続時間が延長され、防御を強固にする。" />
     <string id="taom_bd_t1_b_p1" text="抵抗力+8%" />
     <string id="taom_bd_t1_b_p2" text="兵の士気+5%" />
-    <string id="taom_bd_t1_b_p3" text="兵の抵抗力+5%" />
+    <string id="taom_bd_t1_b_p3" text="兵士の耐性 +10%。" />
     <string id="taom_bd_t1_b_p4" text="兵士の生存率+5%。" />
     <string id="taom_bd_t2_a_key" text="星光の織りのチャージが減少し、より頻繁に発動する。" />
     <string id="taom_bd_t2_a_p1" text="部隊士気+10%" />
@@ -1424,7 +1424,7 @@
     <string id="taom_bd_t2_b_key" text="星光の織りが発動中、追加の防御バフを付与する。" />
     <string id="taom_bd_t2_b_p1" text="耐性+12%" />
     <string id="taom_bd_t2_b_p2" text="最大体力+8" />
-    <string id="taom_bd_t2_b_p3" text="部隊耐性+10%" />
+    <string id="taom_bd_t2_b_p3" text="兵士の耐性 +13%。" />
     <string id="taom_bd_t2_b_p4" text="部隊ダメージ+5%" />
     <string id="taom_bd_t3_a_key" text="星光の織りの範囲が大幅に拡大し、破壊的な威力を発揮する。" />
     <string id="taom_bd_t3_a_p1" text="近接ダメージ+15%" />
@@ -1433,7 +1433,7 @@
     <string id="taom_bd_t3_a_p4" text="部隊規模+4" />
     <string id="taom_bd_t3_b_key" text="星光の織りのチャージが大幅に減少し、ほぼ常に使用可能になる。" />
     <string id="taom_bd_t3_b_p1" text="耐性+18%" />
-    <string id="taom_bd_t3_b_p2" text="体力回復+15%" />
+    <string id="taom_bd_t3_b_p2" text="英雄の体力回復 +15%。" />
     <string id="taom_bd_t3_b_p3" text="部隊士気+20%" />
     <string id="taom_bd_t3_b_p4" text="兵士の生存率+15%。" />
     <string id="taom_elven_archer_root_desc" text="エルフの眼は何世紀もの修練により遠隔ダメージ+5%を付与する。" />
@@ -1446,11 +1446,11 @@
     <string id="taom_elar_t1_b_p1" text="耐性+5%" />
     <string id="taom_elar_t1_b_p2" text="最大体力+5" />
     <string id="taom_elar_t1_b_p3" text="部隊索敵範囲+5%" />
-    <string id="taom_elar_t1_b_p4" text="隠密ボーナス+5%" />
+    <string id="taom_elar_t1_b_p4" text="隠密ボーナス +10%。" />
     <string id="taom_elar_t2_a_key" text="エルフの眼のチャージが減少し、絶え間ない圧力を維持する。" />
     <string id="taom_elar_t2_a_p1" text="部隊索敵範囲+10%" />
     <string id="taom_elar_t2_a_p2" text="移動速度+10%" />
-    <string id="taom_elar_t2_a_p3" text="隠密ボーナス+10%" />
+    <string id="taom_elar_t2_a_p3" text="隠密ボーナス +13%。" />
     <string id="taom_elar_t2_a_p4" text="戦闘名声獲得+10%" />
     <string id="taom_elar_t2_b_key" text="エルフの眼が発動中、追加の貫通力を獲得する。" />
     <string id="taom_elar_t2_b_p1" text="遠隔ダメージ+12%" />
@@ -1470,11 +1470,11 @@
     <string id="taom_rivendell_knight_root_desc" text="最後の同盟により近接ダメージ+5%、味方を鼓舞する。" />
     <string id="taom_rvk_t1_a_key" text="最後の同盟範囲が拡大、より広い陣形を包む。" />
     <string id="taom_rvk_t1_a_p1" text="近接ダメージ+8%。" />
-    <string id="taom_rvk_t1_a_p2" text="馬突撃ダメージ+7%。" />
+    <string id="taom_rvk_t1_a_p2" text="馬の突撃ダメージ +10%。" />
     <string id="taom_rvk_t1_a_p3" text="振り速度+7%。" />
     <string id="taom_rvk_t1_a_p4" text="部隊移動速度+5%。" />
     <string id="taom_rvk_t1_b_key" text="最後の同盟効果時間が延長、勢いを維持。" />
-    <string id="taom_rvk_t1_b_p1" text="馬の体力+30。" />
+    <string id="taom_rvk_t1_b_p1" text="馬の体力 +10%。" />
     <string id="taom_rvk_t1_b_p2" text="最大体力+5。" />
     <string id="taom_rvk_t1_b_p3" text="部隊維持費-5%。" />
     <string id="taom_rvk_t1_b_p4" text="抵抗力+5%。" />
@@ -1485,16 +1485,16 @@
     <string id="taom_rvk_t2_a_p4" text="戦闘名声獲得+10%。" />
     <string id="taom_rvk_t2_b_key" text="最後の同盟発動中、騎乗の耐久力を強化。" />
     <string id="taom_rvk_t2_b_p1" text="近接ダメージ+12%。" />
-    <string id="taom_rvk_t2_b_p2" text="馬突撃ダメージ+12%。" />
-    <string id="taom_rvk_t2_b_p3" text="馬の体力+60。" />
+    <string id="taom_rvk_t2_b_p2" text="馬の突撃ダメージ +13%。" />
+    <string id="taom_rvk_t2_b_p3" text="馬の体力 +13%。" />
     <string id="taom_rvk_t2_b_p4" text="振り速度+10%。" />
     <string id="taom_rvk_t3_a_key" text="最後の同盟範囲が大幅に拡大、止められぬ衝撃。" />
     <string id="taom_rvk_t3_a_p1" text="近接ダメージ+18%。" />
-    <string id="taom_rvk_t3_a_p2" text="馬突撃ダメージ+18%。" />
+    <string id="taom_rvk_t3_a_p2" text="馬の突撃ダメージ +15%。" />
     <string id="taom_rvk_t3_a_p3" text="振り速度+15%。" />
     <string id="taom_rvk_t3_a_p4" text="部隊ダメージ+7%。" />
     <string id="taom_rvk_t3_b_key" text="最後の同盟チャージが大幅に減少、休むことなく疾駆。" />
-    <string id="taom_rvk_t3_b_p1" text="馬の体力+100。" />
+    <string id="taom_rvk_t3_b_p1" text="馬の体力 +15%。" />
     <string id="taom_rvk_t3_b_p2" text="部隊維持費-15%。" />
     <string id="taom_rvk_t3_b_p3" text="部隊移動速度+15%。" />
     <string id="taom_rvk_t3_b_p4" text="最大体力+9。" />
@@ -1507,7 +1507,7 @@
     <string id="taom_wdn_t1_b_key" text="ニムロデルの祝福の持続時間が延長され、防御を強化する。" />
     <string id="taom_wdn_t1_b_p1" text="抵抗力+8%。" />
     <string id="taom_wdn_t1_b_p2" text="部隊士気+5%。" />
-    <string id="taom_wdn_t1_b_p3" text="部隊抵抗力+5%。" />
+    <string id="taom_wdn_t1_b_p3" text="兵士の耐性 +10%。" />
     <string id="taom_wdn_t1_b_p4" text="兵士の生存率+5%。" />
     <string id="taom_wdn_t2_a_key" text="ニムロデルの祝福のチャージが減少し、より頻繁に発動する。" />
     <string id="taom_wdn_t2_a_p1" text="部隊士気+10%。" />
@@ -1517,7 +1517,7 @@
     <string id="taom_wdn_t2_b_key" text="ニムロデルの祝福が発動中、追加の防御バフを付与する。" />
     <string id="taom_wdn_t2_b_p1" text="抵抗力+12%。" />
     <string id="taom_wdn_t2_b_p2" text="最大体力+8。" />
-    <string id="taom_wdn_t2_b_p3" text="部隊抵抗力+10%。" />
+    <string id="taom_wdn_t2_b_p3" text="兵士の耐性 +13%。" />
     <string id="taom_wdn_t2_b_p4" text="部隊ダメージ+5%。" />
     <string id="taom_wdn_t3_a_key" text="ニムロデルの祝福の範囲が大幅に拡大し、壊滅的な力を発揮する。" />
     <string id="taom_wdn_t3_a_p1" text="近接ダメージ+15%。" />
@@ -1526,7 +1526,7 @@
     <string id="taom_wdn_t3_a_p4" text="部隊規模+4。" />
     <string id="taom_wdn_t3_b_key" text="ニムロデルの祝福のチャージが大幅に減少し、ほぼ常時使用可能になる。" />
     <string id="taom_wdn_t3_b_p1" text="抵抗力+18%。" />
-    <string id="taom_wdn_t3_b_p2" text="体力回復+15%。" />
+    <string id="taom_wdn_t3_b_p2" text="英雄の体力回復 +15%。" />
     <string id="taom_wdn_t3_b_p3" text="部隊士気+20%。" />
     <string id="taom_wdn_t3_b_p4" text="兵士の生存率+15%。" />
     <string id="taom_galadhrim_archer_root_desc" text="シルヴァーレインにより遠距離ダメージ+5%、矢は星明りに包まれる。" />
@@ -1539,11 +1539,11 @@
     <string id="taom_gar_t1_b_p1" text="+5% 耐性" />
     <string id="taom_gar_t1_b_p2" text="+5 最大体力" />
     <string id="taom_gar_t1_b_p3" text="+5% 部隊の索敵範囲" />
-    <string id="taom_gar_t1_b_p4" text="+5% 隠密ボーナス" />
+    <string id="taom_gar_t1_b_p4" text="隠密ボーナス +10%。" />
     <string id="taom_gar_t2_a_key" text="銀の雨のチャージが減少し、絶え間ない圧力を維持。" />
     <string id="taom_gar_t2_a_p1" text="+10% 部隊の索敵範囲" />
     <string id="taom_gar_t2_a_p2" text="+10% 移動速度" />
-    <string id="taom_gar_t2_a_p3" text="+10% 隠密ボーナス" />
+    <string id="taom_gar_t2_a_p3" text="隠密ボーナス +13%。" />
     <string id="taom_gar_t2_a_p4" text="+10% 戦闘名声獲得" />
     <string id="taom_gar_t2_b_key" text="銀の雨が発動中に追加の貫通力を獲得。" />
     <string id="taom_gar_t2_b_p1" text="+12% 遠距離ダメージ" />
@@ -1563,11 +1563,11 @@
     <string id="taom_sentinel_root_desc" text="エラノールの迅速は+5%近接ダメージとエルフの優雅さを付与する。" />
     <string id="taom_snt_t1_a_key" text="エラノールの迅速の範囲が拡大し、より広い陣形を包む。" />
     <string id="taom_snt_t1_a_p1" text="+8% 近接ダメージ。" />
-    <string id="taom_snt_t1_a_p2" text="+7% 馬の突撃ダメージ。" />
+    <string id="taom_snt_t1_a_p2" text="馬の突撃ダメージ +10%。" />
     <string id="taom_snt_t1_a_p3" text="+7% 振り速度。" />
     <string id="taom_snt_t1_a_p4" text="+5% 部隊移動速度。" />
     <string id="taom_snt_t1_b_key" text="エラノールの迅速の持続時間が延長され、勢いを維持する。" />
-    <string id="taom_snt_t1_b_p1" text="+30 馬の体力。" />
+    <string id="taom_snt_t1_b_p1" text="馬の体力 +10%。" />
     <string id="taom_snt_t1_b_p2" text="+5 最大体力。" />
     <string id="taom_snt_t1_b_p3" text="-5% 兵士維持費。" />
     <string id="taom_snt_t1_b_p4" text="+5% 抵抗力。" />
@@ -1578,16 +1578,16 @@
     <string id="taom_snt_t2_a_p4" text="+10% 戦闘名声獲得。" />
     <string id="taom_snt_t2_b_key" text="エラノールの迅速が発動中、騎乗の耐久力を強化する。" />
     <string id="taom_snt_t2_b_p1" text="+12% 近接ダメージ。" />
-    <string id="taom_snt_t2_b_p2" text="+12% 馬の突撃ダメージ。" />
-    <string id="taom_snt_t2_b_p3" text="+60 馬の体力。" />
+    <string id="taom_snt_t2_b_p2" text="騎馬突撃ダメージ +13%。" />
+    <string id="taom_snt_t2_b_p3" text="馬の体力 +13%。" />
     <string id="taom_snt_t2_b_p4" text="+10% 振り速度。" />
     <string id="taom_snt_t3_a_key" text="エラノールの迅速の範囲が大幅に拡大し、止められぬ衝撃を与える。" />
     <string id="taom_snt_t3_a_p1" text="+18% 近接ダメージ。" />
-    <string id="taom_snt_t3_a_p2" text="+18% 馬の突撃ダメージ。" />
+    <string id="taom_snt_t3_a_p2" text="騎馬突撃ダメージ +15%。" />
     <string id="taom_snt_t3_a_p3" text="+15% 振り速度。" />
     <string id="taom_snt_t3_a_p4" text="+7% 兵士ダメージ。" />
     <string id="taom_snt_t3_b_key" text="エラノールの迅速のチャージが大幅に減少し、絶え間なく駆ける。" />
-    <string id="taom_snt_t3_b_p1" text="+100 馬の体力。" />
+    <string id="taom_snt_t3_b_p1" text="馬の体力 +15%。" />
     <string id="taom_snt_t3_b_p2" text="-15% 兵士維持費。" />
     <string id="taom_snt_t3_b_p3" text="+15% 部隊移動速度。" />
     <string id="taom_snt_t3_b_p4" text="+9 最大体力。" />
@@ -1600,7 +1600,7 @@
     <string id="taom_shw_t1_b_key" text="森の外套の持続時間が延長され、防御を強化する。" />
     <string id="taom_shw_t1_b_p1" text="+8% 抵抗力。" />
     <string id="taom_shw_t1_b_p2" text="+5% 部隊士気。" />
-    <string id="taom_shw_t1_b_p3" text="+5% 部隊抵抗力。" />
+    <string id="taom_shw_t1_b_p3" text="兵士の耐性 +10%。" />
     <string id="taom_shw_t1_b_p4" text="兵士の生存率+5%。" />
     <string id="taom_shw_t2_a_key" text="森の外套のチャージ時間短縮、より頻繁に発動。" />
     <string id="taom_shw_t2_a_p1" text="+10% 部隊士気。" />
@@ -1610,7 +1610,7 @@
     <string id="taom_shw_t2_b_key" text="森の外套が発動中、追加の防御バフを付与。" />
     <string id="taom_shw_t2_b_p1" text="+12% 抵抗力。" />
     <string id="taom_shw_t2_b_p2" text="+8 最大体力。" />
-    <string id="taom_shw_t2_b_p3" text="+10% 部隊抵抗力。" />
+    <string id="taom_shw_t2_b_p3" text="兵士の耐性 +13%。" />
     <string id="taom_shw_t2_b_p4" text="+5% 部隊ダメージ。" />
     <string id="taom_shw_t3_a_key" text="森の外套の範囲が大幅に拡大、壊滅的な威力。" />
     <string id="taom_shw_t3_a_p1" text="+15% 近接ダメージ。" />
@@ -1619,7 +1619,7 @@
     <string id="taom_shw_t3_a_p4" text="+4 部隊規模。" />
     <string id="taom_shw_t3_b_key" text="森の外套のチャージ時間を大幅短縮、ほぼ常時使用可能。" />
     <string id="taom_shw_t3_b_p1" text="+18% 抵抗力。" />
-    <string id="taom_shw_t3_b_p2" text="+15% 体力再生。" />
+    <string id="taom_shw_t3_b_p2" text="英雄の体力回復 +15%。" />
     <string id="taom_shw_t3_b_p3" text="+20% 部隊士気。" />
     <string id="taom_shw_t3_b_p4" text="兵士の生存率+15%。" />
     <string id="taom_silvan_archer_root_desc" text="樹上襲撃により樹冠から+5% 遠隔ダメージを付与。" />
@@ -1632,11 +1632,11 @@
     <string id="taom_sva_t1_b_p1" text="+5% 抵抗力。" />
     <string id="taom_sva_t1_b_p2" text="+5 最大体力。" />
     <string id="taom_sva_t1_b_p3" text="+5% 部隊索敵範囲。" />
-    <string id="taom_sva_t1_b_p4" text="+5% 隠密ボーナス。" />
+    <string id="taom_sva_t1_b_p4" text="隠密ボーナス +10%。" />
     <string id="taom_sva_t2_a_key" text="樹上襲撃のチャージ時間短縮、絶え間ない圧力を維持。" />
     <string id="taom_sva_t2_a_p1" text="+10% 部隊索敵範囲。" />
     <string id="taom_sva_t2_a_p2" text="+10% 移動速度。" />
-    <string id="taom_sva_t2_a_p3" text="+10% 隠密ボーナス。" />
+    <string id="taom_sva_t2_a_p3" text="隠密ボーナス +13%。" />
     <string id="taom_sva_t2_a_p4" text="+10% 戦闘名声獲得。" />
     <string id="taom_sva_t2_b_key" text="キャノピーストライクが発動中に追加の貫通力を得る。" />
     <string id="taom_sva_t2_b_p1" text="+12% 遠隔ダメージ。" />
@@ -1656,11 +1656,11 @@
     <string id="taom_elk_rider_root_desc" text="アントラークラッシュにより+5% 近接ダメージが付与され、大鹿が突撃する。" />
     <string id="taom_elk_t1_a_key" text="アントラークラッシュの範囲が拡大され、より広い陣形を薙ぎ払う。" />
     <string id="taom_elk_t1_a_p1" text="+8% 近接ダメージ。" />
-    <string id="taom_elk_t1_a_p2" text="+7% 騎乗突撃ダメージ。" />
+    <string id="taom_elk_t1_a_p2" text="騎馬突撃ダメージ +10%。" />
     <string id="taom_elk_t1_a_p3" text="+7% 振り速度。" />
     <string id="taom_elk_t1_a_p4" text="+5% 部隊移動速度。" />
     <string id="taom_elk_t1_b_key" text="アントラークラッシュの持続時間が延長され、勢いを維持する。" />
-    <string id="taom_elk_t1_b_p1" text="+30 騎乗体力。" />
+    <string id="taom_elk_t1_b_p1" text="馬の体力 +10%。" />
     <string id="taom_elk_t1_b_p2" text="+5 最大体力。" />
     <string id="taom_elk_t1_b_p3" text="-5% 部隊維持費。" />
     <string id="taom_elk_t1_b_p4" text="+5% 抵抗力。" />
@@ -1671,16 +1671,16 @@
     <string id="taom_elk_t2_a_p4" text="+10% 戦闘名声獲得。" />
     <string id="taom_elk_t2_b_key" text="アントラークラッシュの発動中、騎乗の耐久力が向上する。" />
     <string id="taom_elk_t2_b_p1" text="+12% 近接ダメージ。" />
-    <string id="taom_elk_t2_b_p2" text="+12% 騎乗突撃ダメージ。" />
-    <string id="taom_elk_t2_b_p3" text="+60 騎乗体力。" />
+    <string id="taom_elk_t2_b_p2" text="騎馬突撃ダメージ +13%。" />
+    <string id="taom_elk_t2_b_p3" text="馬の体力 +13%。" />
     <string id="taom_elk_t2_b_p4" text="+10% 振り速度。" />
     <string id="taom_elk_t3_a_key" text="アントラークラッシュの範囲が大幅に拡大され、止められない衝撃となる。" />
     <string id="taom_elk_t3_a_p1" text="+18% 近接ダメージ。" />
-    <string id="taom_elk_t3_a_p2" text="+18% 騎乗突撃ダメージ。" />
+    <string id="taom_elk_t3_a_p2" text="騎馬突撃ダメージ +15%。" />
     <string id="taom_elk_t3_a_p3" text="+15% 振り速度。" />
     <string id="taom_elk_t3_a_p4" text="+7% 部隊ダメージ。" />
     <string id="taom_elk_t3_b_key" text="角突進チャージが大幅に減少、休むことなく駆ける。" />
-    <string id="taom_elk_t3_b_p1" text="+100 馬の体力。" />
+    <string id="taom_elk_t3_b_p1" text="馬の体力 +15%。" />
     <string id="taom_elk_t3_b_p2" text="-15% 部隊維持費。" />
     <string id="taom_elk_t3_b_p3" text="+15% 部隊移動速度。" />
     <string id="taom_elk_t3_b_p4" text="+9 最大体力。" />
@@ -1693,7 +1693,7 @@
     <string id="taom_ub_t1_b_key" text="血の激怒の持続時間が延長、防御を強化する。" />
     <string id="taom_ub_t1_b_p1" text="+8% 抵抗力。" />
     <string id="taom_ub_t1_b_p2" text="+5% 部隊士気。" />
-    <string id="taom_ub_t1_b_p3" text="+5% 部隊抵抗力。" />
+    <string id="taom_ub_t1_b_p3" text="兵士の耐性 +10%。" />
     <string id="taom_ub_t1_b_p4" text="兵士の生存率+5%。" />
     <string id="taom_ub_t2_a_key" text="血の激怒のチャージが減少、より頻繁に発動する。" />
     <string id="taom_ub_t2_a_p1" text="+10% 部隊士気。" />
@@ -1703,7 +1703,7 @@
     <string id="taom_ub_t2_b_key" text="血の激怒は発動中、追加の防御バフを付与する。" />
     <string id="taom_ub_t2_b_p1" text="+12% 抵抗力。" />
     <string id="taom_ub_t2_b_p2" text="+8 最大体力。" />
-    <string id="taom_ub_t2_b_p3" text="+10% 部隊抵抗力。" />
+    <string id="taom_ub_t2_b_p3" text="兵士の耐性 +13%。" />
     <string id="taom_ub_t2_b_p4" text="+5% 部隊ダメージ。" />
     <string id="taom_ub_t3_a_key" text="血の激怒の範囲が大幅に拡大、壊滅的な力。" />
     <string id="taom_ub_t3_a_p1" text="+15% 近接ダメージ。" />
@@ -1712,7 +1712,7 @@
     <string id="taom_ub_t3_a_p4" text="+4 部隊規模。" />
     <string id="taom_ub_t3_b_key" text="血の激怒のチャージが大幅に減少、ほぼ常時利用可能。" />
     <string id="taom_ub_t3_b_p1" text="+18% 抵抗力。" />
-    <string id="taom_ub_t3_b_p2" text="+15% 体力再生。" />
+    <string id="taom_ub_t3_b_p2" text="英雄の体力回復 +15%。" />
     <string id="taom_ub_t3_b_p3" text="+20% 部隊士気。" />
     <string id="taom_ub_t3_b_p4" text="兵士の生存率+15%。" />
     <string id="taom_uruk_crossbow_root_desc" text="鉄の雨はオルサンクで鍛えられた矢で+5%遠距離ダメージを付与。" />
@@ -1725,11 +1725,11 @@
     <string id="taom_ucb_t1_b_p1" text="+5% 抵抗力。" />
     <string id="taom_ucb_t1_b_p2" text="+5 最大体力。" />
     <string id="taom_ucb_t1_b_p3" text="+5% 部隊索敵範囲。" />
-    <string id="taom_ucb_t1_b_p4" text="+5% 隠密ボーナス。" />
+    <string id="taom_ucb_t1_b_p4" text="隠密ボーナス +10%。" />
     <string id="taom_ucb_t2_a_key" text="アイアン・レインのチャージ短縮、絶え間ない圧力を維持。" />
     <string id="taom_ucb_t2_a_p1" text="+10% 部隊索敵範囲。" />
     <string id="taom_ucb_t2_a_p2" text="+10% 移動速度。" />
-    <string id="taom_ucb_t2_a_p3" text="+10% 隠密ボーナス。" />
+    <string id="taom_ucb_t2_a_p3" text="隠密ボーナス +13%。" />
     <string id="taom_ucb_t2_a_p4" text="+10% 戦闘名声獲得量。" />
     <string id="taom_ucb_t2_b_key" text="アイアン・レイン発動中、追加の貫通力を獲得。" />
     <string id="taom_ucb_t2_b_p1" text="+12% 遠隔ダメージ。" />
@@ -1749,11 +1749,11 @@
     <string id="taom_warg_scout_root_desc" text="パック・ハウルは+5%の近接ダメージを付与し、近くの敵を恐怖させる。" />
     <string id="taom_wsc_t1_a_key" text="パック・ハウルの範囲拡大、より広い陣形を包囲。" />
     <string id="taom_wsc_t1_a_p1" text="+8% 近接ダメージ。" />
-    <string id="taom_wsc_t1_a_p2" text="+7% 騎馬突撃ダメージ。" />
+    <string id="taom_wsc_t1_a_p2" text="騎馬突撃ダメージ +10%。" />
     <string id="taom_wsc_t1_a_p3" text="+7% 振り速度。" />
     <string id="taom_wsc_t1_a_p4" text="+5% 部隊移動速度。" />
     <string id="taom_wsc_t1_b_key" text="パック・ハウルの持続時間延長、勢いを維持。" />
-    <string id="taom_wsc_t1_b_p1" text="+30 騎馬体力。" />
+    <string id="taom_wsc_t1_b_p1" text="馬の体力 +10%。" />
     <string id="taom_wsc_t1_b_p2" text="+5 最大体力。" />
     <string id="taom_wsc_t1_b_p3" text="-5% 部隊賃金。" />
     <string id="taom_wsc_t1_b_p4" text="+5% 抵抗力。" />
@@ -1764,48 +1764,48 @@
     <string id="taom_wsc_t2_a_p4" text="戦闘での名声獲得+10%" />
     <string id="taom_wsc_t2_b_key" text="群れの遠吠えは発動中、騎乗の耐久力を強化する。" />
     <string id="taom_wsc_t2_b_p1" text="近接ダメージ+12%" />
-    <string id="taom_wsc_t2_b_p2" text="馬の突撃ダメージ+12%" />
-    <string id="taom_wsc_t2_b_p3" text="馬の体力+60" />
+    <string id="taom_wsc_t2_b_p2" text="騎馬突撃ダメージ +13%。" />
+    <string id="taom_wsc_t2_b_p3" text="馬の体力 +13%。" />
     <string id="taom_wsc_t2_b_p4" text="振り速度+10%" />
     <string id="taom_wsc_t3_a_key" text="群れの遠吠えの範囲が大幅に拡大し、止められぬ衝撃を放つ。" />
     <string id="taom_wsc_t3_a_p1" text="近接ダメージ+18%" />
-    <string id="taom_wsc_t3_a_p2" text="馬の突撃ダメージ+18%" />
+    <string id="taom_wsc_t3_a_p2" text="騎馬突撃ダメージ +15%。" />
     <string id="taom_wsc_t3_a_p3" text="振り速度+15%" />
     <string id="taom_wsc_t3_a_p4" text="兵士のダメージ+7%" />
     <string id="taom_wsc_t3_b_key" text="群れの遠吠えの充填が大幅に短縮され、休むことなく駆ける。" />
-    <string id="taom_wsc_t3_b_p1" text="馬の体力+100" />
+    <string id="taom_wsc_t3_b_p1" text="馬の体力 +15%。" />
     <string id="taom_wsc_t3_b_p2" text="兵士の賃金-15%" />
     <string id="taom_wsc_t3_b_p3" text="部隊移動速度+15%" />
     <string id="taom_wsc_t3_b_p4" text="最大体力+9" />
     <string id="taom_cave_troll_master_root_desc" text="トロールの狂乱は+5の体力を付与し、配下のトロールを狂戦士と化す。" />
-    <string id="taom_ctm_t1_a_key" text="トロールの狂乱の範囲が拡大し、より多くの戦士を強化する。" />
+    <string id="taom_ctm_t1_a_key" text="グンダバードの狂戦士の効果範囲が拡大し、より多くの戦士を鼓舞する。" />
     <string id="taom_ctm_t1_a_p1" text="近接ダメージ+8%" />
     <string id="taom_ctm_t1_a_p2" text="兵士のダメージ+3%" />
     <string id="taom_ctm_t1_a_p3" text="最大体力+6" />
     <string id="taom_ctm_t1_a_p4" text="振り速度+7%" />
-    <string id="taom_ctm_t1_b_key" text="トロールの狂乱の持続時間が延長され、防御を固める。" />
+    <string id="taom_ctm_t1_b_key" text="グンダバードの狂戦士の効果時間が延長され、防御が強化される。" />
     <string id="taom_ctm_t1_b_p1" text="耐性+8%" />
     <string id="taom_ctm_t1_b_p2" text="兵士の士気+5%" />
-    <string id="taom_ctm_t1_b_p3" text="兵士の耐性+5%" />
+    <string id="taom_ctm_t1_b_p3" text="兵士の耐性 +10%。" />
     <string id="taom_ctm_t1_b_p4" text="兵士の生存率+5%。" />
-    <string id="taom_ctm_t2_a_key" text="トロールの狂乱の充填が短縮され、より頻繁に発動する。" />
+    <string id="taom_ctm_t2_a_key" text="グンダバードの狂戦士のチャージ時間が短縮され、より頻繁に発動する。" />
     <string id="taom_ctm_t2_a_p1" text="兵士の士気+10%" />
     <string id="taom_ctm_t2_a_p2" text="部隊規模+2" />
     <string id="taom_ctm_t2_a_p3" text="戦闘での名声獲得+10%" />
     <string id="taom_ctm_t2_a_p4" text="兵士の賃金-10%" />
-    <string id="taom_ctm_t2_b_key" text="トロールの狂乱は発動中、追加の防御強化を付与する。" />
+    <string id="taom_ctm_t2_b_key" text="グンダバードの狂戦士は発動中、追加の防御強化を付与する。" />
     <string id="taom_ctm_t2_b_p1" text="耐性+12%" />
     <string id="taom_ctm_t2_b_p2" text="最大体力+8" />
-    <string id="taom_ctm_t2_b_p3" text="兵士の耐性+10%" />
+    <string id="taom_ctm_t2_b_p3" text="兵士の耐性 +13%。" />
     <string id="taom_ctm_t2_b_p4" text="兵士のダメージ+5%" />
-    <string id="taom_ctm_t3_a_key" text="トロールの狂乱の範囲が大幅に拡大、壊滅的な威力。" />
+    <string id="taom_ctm_t3_a_key" text="グンダバードの狂戦士の効果範囲が大幅に拡大し、絶大な力を発揮する。" />
     <string id="taom_ctm_t3_a_p1" text="近接ダメージ+15%。" />
     <string id="taom_ctm_t3_a_p2" text="最大体力+10。" />
     <string id="taom_ctm_t3_a_p3" text="部隊ダメージ+7%。" />
     <string id="taom_ctm_t3_a_p4" text="部隊規模+4。" />
-    <string id="taom_ctm_t3_b_key" text="トロールの狂乱のチャージが大幅に減少、ほぼ常時使用可能。" />
+    <string id="taom_ctm_t3_b_key" text="グンダバードの狂戦士のチャージ時間が大幅に短縮され、ほぼ常時使用可能となる。" />
     <string id="taom_ctm_t3_b_p1" text="抵抗力+18%。" />
-    <string id="taom_ctm_t3_b_p2" text="体力回復+15%。" />
+    <string id="taom_ctm_t3_b_p2" text="英雄の体力回復 +15%。" />
     <string id="taom_ctm_t3_b_p3" text="部隊士気+20%。" />
     <string id="taom_ctm_t3_b_p4" text="兵士の生存率+15%。" />
     <string id="taom_goblin_sniper_root_desc" text="毒の矢は洞窟の菌類毒素により遠隔ダメージ+5%を付与。" />
@@ -1818,11 +1818,11 @@
     <string id="taom_gbs_t1_b_p1" text="抵抗力+5%。" />
     <string id="taom_gbs_t1_b_p2" text="最大体力+5。" />
     <string id="taom_gbs_t1_b_p3" text="部隊探知範囲+5%。" />
-    <string id="taom_gbs_t1_b_p4" text="隠密ボーナス+5%。" />
+    <string id="taom_gbs_t1_b_p4" text="隠密ボーナス +10%。" />
     <string id="taom_gbs_t2_a_key" text="毒の矢のチャージが減少、絶え間ない圧力を維持。" />
     <string id="taom_gbs_t2_a_p1" text="部隊探知範囲+10%。" />
     <string id="taom_gbs_t2_a_p2" text="移動速度+10%。" />
-    <string id="taom_gbs_t2_a_p3" text="隠密ボーナス+10%。" />
+    <string id="taom_gbs_t2_a_p3" text="隠密ボーナス +13%。" />
     <string id="taom_gbs_t2_a_p4" text="戦闘名声獲得+10%。" />
     <string id="taom_gbs_t2_b_key" text="毒の矢は発動中に追加の貫通力を獲得。" />
     <string id="taom_gbs_t2_b_p1" text="遠隔ダメージ+12%。" />
@@ -1842,11 +1842,11 @@
     <string id="taom_warg_pack_leader_root_desc" text="アルファの咆哮は+5%近接ダメージを付与し、群れが狩りを行う。" />
     <string id="taom_wpl_t1_a_key" text="アルファの咆哮の範囲が拡大し、より広い陣形を包み込む。" />
     <string id="taom_wpl_t1_a_p1" text="+8% 近接ダメージ。" />
-    <string id="taom_wpl_t1_a_p2" text="+7% 騎馬突撃ダメージ。" />
+    <string id="taom_wpl_t1_a_p2" text="騎馬突撃ダメージ +10%。" />
     <string id="taom_wpl_t1_a_p3" text="+7% 振り速度。" />
     <string id="taom_wpl_t1_a_p4" text="+5% パーティー移動速度。" />
     <string id="taom_wpl_t1_b_key" text="アルファの咆哮の持続時間が延長され、勢いを維持する。" />
-    <string id="taom_wpl_t1_b_p1" text="+30 馬の体力。" />
+    <string id="taom_wpl_t1_b_p1" text="馬の体力 +10%。" />
     <string id="taom_wpl_t1_b_p2" text="+5 最大体力。" />
     <string id="taom_wpl_t1_b_p3" text="-5% 兵士賃金。" />
     <string id="taom_wpl_t1_b_p4" text="+5% 耐性。" />
@@ -1857,16 +1857,16 @@
     <string id="taom_wpl_t2_a_p4" text="+10% 戦闘名声獲得。" />
     <string id="taom_wpl_t2_b_key" text="アルファの咆哮が発動中、騎乗の耐久力を強化する。" />
     <string id="taom_wpl_t2_b_p1" text="+12% 近接ダメージ。" />
-    <string id="taom_wpl_t2_b_p2" text="+12% 騎馬突撃ダメージ。" />
-    <string id="taom_wpl_t2_b_p3" text="+60 馬の体力。" />
+    <string id="taom_wpl_t2_b_p2" text="騎馬突撃ダメージ +13%。" />
+    <string id="taom_wpl_t2_b_p3" text="馬の体力+13%。" />
     <string id="taom_wpl_t2_b_p4" text="+10% 振り速度。" />
     <string id="taom_wpl_t3_a_key" text="アルファの咆哮の範囲が大幅に拡大し、止められぬ衝撃をもたらす。" />
     <string id="taom_wpl_t3_a_p1" text="+18% 近接ダメージ。" />
-    <string id="taom_wpl_t3_a_p2" text="+18% 騎馬突撃ダメージ。" />
+    <string id="taom_wpl_t3_a_p2" text="馬の突撃ダメージ+15%。" />
     <string id="taom_wpl_t3_a_p3" text="+15% 振り速度。" />
     <string id="taom_wpl_t3_a_p4" text="+7% 兵士ダメージ。" />
     <string id="taom_wpl_t3_b_key" text="アルファの咆哮のチャージが大幅に短縮され、休むことなく駆ける。" />
-    <string id="taom_wpl_t3_b_p1" text="+100 馬の体力。" />
+    <string id="taom_wpl_t3_b_p1" text="馬の体力+15%。" />
     <string id="taom_wpl_t3_b_p2" text="-15% 兵士賃金。" />
     <string id="taom_wpl_t3_b_p3" text="+15% パーティー移動速度。" />
     <string id="taom_wpl_t3_b_p4" text="+9 最大体力。" />
@@ -1879,7 +1879,7 @@
     <string id="taom_swr_t1_b_key" text="魂の吸収の持続時間が延長され、防御を強化する。" />
     <string id="taom_swr_t1_b_p1" text="+8% 耐性。" />
     <string id="taom_swr_t1_b_p2" text="部隊士気+5%。" />
-    <string id="taom_swr_t1_b_p3" text="部隊耐性+5%。" />
+    <string id="taom_swr_t1_b_p3" text="兵士の耐性+10%。" />
     <string id="taom_swr_t1_b_p4" text="兵士の生存率+5%。" />
     <string id="taom_swr_t2_a_key" text="ソウル・ドレインのチャージが短縮され、より頻繁に発動する。" />
     <string id="taom_swr_t2_a_p1" text="部隊士気+10%。" />
@@ -1889,7 +1889,7 @@
     <string id="taom_swr_t2_b_key" text="ソウル・ドレイン発動中、追加の防御バフを付与する。" />
     <string id="taom_swr_t2_b_p1" text="耐性+12%。" />
     <string id="taom_swr_t2_b_p2" text="最大体力+8。" />
-    <string id="taom_swr_t2_b_p3" text="部隊耐性+10%。" />
+    <string id="taom_swr_t2_b_p3" text="兵士の耐性+13%。" />
     <string id="taom_swr_t2_b_p4" text="部隊ダメージ+5%。" />
     <string id="taom_swr_t3_a_key" text="ソウル・ドレインの範囲が大幅に拡大し、壊滅的な力を発揮する。" />
     <string id="taom_swr_t3_a_p1" text="近接ダメージ+15%。" />
@@ -1898,7 +1898,7 @@
     <string id="taom_swr_t3_a_p4" text="部隊規模+4。" />
     <string id="taom_swr_t3_b_key" text="ソウル・ドレインのチャージが大幅に短縮され、ほぼ常に使用可能となる。" />
     <string id="taom_swr_t3_b_p1" text="耐性+18%。" />
-    <string id="taom_swr_t3_b_p2" text="体力再生+15%。" />
+    <string id="taom_swr_t3_b_p2" text="英雄の体力回復+15%。" />
     <string id="taom_swr_t3_b_p3" text="部隊士気+20%。" />
     <string id="taom_swr_t3_b_p4" text="兵士の生存率+15%。" />
     <string id="taom_necromancer_acolyte_root_desc" text="ダーク・ボルトが死霊エネルギーで遠隔ダメージ+5%を付与する。" />
@@ -1911,11 +1911,11 @@
     <string id="taom_nca_t1_b_p1" text="耐性+5%。" />
     <string id="taom_nca_t1_b_p2" text="最大体力+5。" />
     <string id="taom_nca_t1_b_p3" text="部隊索敵範囲+5%。" />
-    <string id="taom_nca_t1_b_p4" text="隠密ボーナス+5%。" />
+    <string id="taom_nca_t1_b_p4" text="隠密ボーナス+10%。" />
     <string id="taom_nca_t2_a_key" text="ダーク・ボルトのチャージが短縮され、絶え間ない圧力を維持する。" />
     <string id="taom_nca_t2_a_p1" text="部隊索敵範囲+10%。" />
     <string id="taom_nca_t2_a_p2" text="移動速度+10%。" />
-    <string id="taom_nca_t2_a_p3" text="隠密ボーナス+10%。" />
+    <string id="taom_nca_t2_a_p3" text="隠密ボーナス+13%。" />
     <string id="taom_nca_t2_a_p4" text="戦闘名声獲得+10%。" />
     <string id="taom_nca_t2_b_key" text="ダーク・ボルト発動中、追加の貫通力を獲得する。" />
     <string id="taom_nca_t2_b_p1" text="+12% 遠距離ダメージ。" />
@@ -1935,11 +1935,11 @@
     <string id="taom_fell_rider_root_desc" text="恐怖の突撃は+5% 近接ダメージを付与し、影が騎乗獣を包み込む。" />
     <string id="taom_flr_t1_a_key" text="恐怖の突撃の範囲が拡大され、より広い陣形を薙ぎ払う。" />
     <string id="taom_flr_t1_a_p1" text="+8% 近接ダメージ。" />
-    <string id="taom_flr_t1_a_p2" text="+7% 馬突撃ダメージ。" />
+    <string id="taom_flr_t1_a_p2" text="馬の突撃ダメージ+10%。" />
     <string id="taom_flr_t1_a_p3" text="+7% 振り速度。" />
     <string id="taom_flr_t1_a_p4" text="+5% 部隊移動速度。" />
     <string id="taom_flr_t1_b_key" text="恐怖の突撃の持続時間が延長され、勢いを維持する。" />
-    <string id="taom_flr_t1_b_p1" text="+30 馬の体力。" />
+    <string id="taom_flr_t1_b_p1" text="馬の体力+10%。" />
     <string id="taom_flr_t1_b_p2" text="+5 最大体力。" />
     <string id="taom_flr_t1_b_p3" text="-5% 部隊給与。" />
     <string id="taom_flr_t1_b_p4" text="+5% 抵抗力。" />
@@ -1950,16 +1950,16 @@
     <string id="taom_flr_t2_a_p4" text="+10% 戦闘名声獲得。" />
     <string id="taom_flr_t2_b_key" text="恐怖の突撃は発動中、騎乗獣の耐久力を増強する。" />
     <string id="taom_flr_t2_b_p1" text="+12% 近接ダメージ。" />
-    <string id="taom_flr_t2_b_p2" text="+12% 馬突撃ダメージ。" />
-    <string id="taom_flr_t2_b_p3" text="+60 馬の体力。" />
+    <string id="taom_flr_t2_b_p2" text="馬の突撃ダメージ+13%。" />
+    <string id="taom_flr_t2_b_p3" text="馬の体力+13%。" />
     <string id="taom_flr_t2_b_p4" text="+10% 振り速度。" />
     <string id="taom_flr_t3_a_key" text="恐怖の突撃の範囲が大幅に拡大され、止められぬ衝撃となる。" />
     <string id="taom_flr_t3_a_p1" text="+18% 近接ダメージ。" />
-    <string id="taom_flr_t3_a_p2" text="+18% 馬突撃ダメージ。" />
+    <string id="taom_flr_t3_a_p2" text="馬の突撃ダメージ+15%。" />
     <string id="taom_flr_t3_a_p3" text="+15% 振り速度。" />
     <string id="taom_flr_t3_a_p4" text="+7% 部隊ダメージ。" />
     <string id="taom_flr_t3_b_key" text="恐怖の突撃のチャージが大幅に減少し、休むことなく駆け続ける。" />
-    <string id="taom_flr_t3_b_p1" text="+100 馬の体力。" />
+    <string id="taom_flr_t3_b_p1" text="馬の体力+15%。" />
     <string id="taom_flr_t3_b_p2" text="-15% 部隊維持費。" />
     <string id="taom_flr_t3_b_p3" text="+15% パーティ移動速度。" />
     <string id="taom_flr_t3_b_p4" text="+9 最大体力。" />
@@ -1972,7 +1972,7 @@
     <string id="taom_crb_t1_b_key" text="接舷戦闘の持続時間が延長され、防御が強化される。" />
     <string id="taom_crb_t1_b_p1" text="+8% 抵抗力。" />
     <string id="taom_crb_t1_b_p2" text="+5% 部隊士気。" />
-    <string id="taom_crb_t1_b_p3" text="+5% 部隊抵抗力。" />
+    <string id="taom_crb_t1_b_p3" text="兵士の耐性+10%。" />
     <string id="taom_crb_t1_b_p4" text="兵士の生存率+5%。" />
     <string id="taom_crb_t2_a_key" text="接舷戦闘のチャージが減少し、より頻繁に発動する。" />
     <string id="taom_crb_t2_a_p1" text="+10% 部隊士気。" />
@@ -1982,7 +1982,7 @@
     <string id="taom_crb_t2_b_key" text="接舷戦闘は発動中に追加の防御バフを付与する。" />
     <string id="taom_crb_t2_b_p1" text="+12% 抵抗力。" />
     <string id="taom_crb_t2_b_p2" text="+8 最大体力。" />
-    <string id="taom_crb_t2_b_p3" text="+10% 部隊抵抗力。" />
+    <string id="taom_crb_t2_b_p3" text="兵士の耐性+13%。" />
     <string id="taom_crb_t2_b_p4" text="+5% 部隊ダメージ。" />
     <string id="taom_crb_t3_a_key" text="接舷戦闘の範囲が大幅に拡大し、壊滅的な力を発揮する。" />
     <string id="taom_crb_t3_a_p1" text="+15% 近接ダメージ。" />
@@ -1991,7 +1991,7 @@
     <string id="taom_crb_t3_a_p4" text="+4 パーティサイズ。" />
     <string id="taom_crb_t3_b_key" text="接舷戦闘のチャージが大幅に減少し、ほぼ常に使用可能となる。" />
     <string id="taom_crb_t3_b_p1" text="+18% 抵抗力。" />
-    <string id="taom_crb_t3_b_p2" text="+15% 体力回復。" />
+    <string id="taom_crb_t3_b_p2" text="英雄の体力回復+15%。" />
     <string id="taom_crb_t3_b_p3" text="+20% 部隊士気。" />
     <string id="taom_crb_t3_b_p4" text="兵士の生存率+15%。" />
     <string id="taom_corsair_crossbow_root_desc" text="索具射撃は安定した狙いで+5%の遠隔ダメージを付与する。" />
@@ -2004,11 +2004,11 @@
     <string id="taom_crc_t1_b_p1" text="抵抗力+5%。" />
     <string id="taom_crc_t1_b_p2" text="最大体力+5。" />
     <string id="taom_crc_t1_b_p3" text="部隊索敵範囲+5%。" />
-    <string id="taom_crc_t1_b_p4" text="隠密ボーナス+5%。" />
+    <string id="taom_crc_t1_b_p4" text="隠密ボーナス+10%。" />
     <string id="taom_crc_t2_a_key" text="リギング・ショットのチャージ時間短縮、絶え間ない圧力を維持。" />
     <string id="taom_crc_t2_a_p1" text="部隊索敵範囲+10%。" />
     <string id="taom_crc_t2_a_p2" text="移動速度+10%。" />
-    <string id="taom_crc_t2_a_p3" text="隠密ボーナス+10%。" />
+    <string id="taom_crc_t2_a_p3" text="隠密ボーナス+13%。" />
     <string id="taom_crc_t2_a_p4" text="戦闘名声獲得+10%。" />
     <string id="taom_crc_t2_b_key" text="リギング・ショット発動中、追加貫通力を獲得。" />
     <string id="taom_crc_t2_b_p1" text="遠隔ダメージ+12%。" />
@@ -2028,11 +2028,11 @@
     <string id="taom_corsair_captain_root_desc" text="略奪により近接ダメージ+5%、乗組員を奮い立たせる。" />
     <string id="taom_crca_t1_a_key" text="略奪の範囲拡大、より広い陣形を薙ぎ払う。" />
     <string id="taom_crca_t1_a_p1" text="近接ダメージ+8%。" />
-    <string id="taom_crca_t1_a_p2" text="馬の突撃ダメージ+7%。" />
+    <string id="taom_crca_t1_a_p2" text="馬の突撃ダメージ+10%。" />
     <string id="taom_crca_t1_a_p3" text="振り速度+7%。" />
     <string id="taom_crca_t1_a_p4" text="部隊移動速度+5%。" />
     <string id="taom_crca_t1_b_key" text="略奪の持続時間延長、勢いを維持。" />
-    <string id="taom_crca_t1_b_p1" text="馬の体力+30。" />
+    <string id="taom_crca_t1_b_p1" text="馬の体力+10%。" />
     <string id="taom_crca_t1_b_p2" text="最大体力+5。" />
     <string id="taom_crca_t1_b_p3" text="部隊維持費-5%。" />
     <string id="taom_crca_t1_b_p4" text="抵抗力+5%。" />
@@ -2043,16 +2043,16 @@
     <string id="taom_crca_t2_a_p4" text="戦闘名声獲得+10%。" />
     <string id="taom_crca_t2_b_key" text="略奪発動中は騎乗動物の耐久力が強化される。" />
     <string id="taom_crca_t2_b_p1" text="近接ダメージ+12%。" />
-    <string id="taom_crca_t2_b_p2" text="馬の突撃ダメージ+12%。" />
-    <string id="taom_crca_t2_b_p3" text="馬の体力+60。" />
+    <string id="taom_crca_t2_b_p2" text="馬の突撃ダメージ+13%。" />
+    <string id="taom_crca_t2_b_p3" text="馬の体力+13%。" />
     <string id="taom_crca_t2_b_p4" text="振り速度+10%。" />
     <string id="taom_crca_t3_a_key" text="略奪範囲が大幅に拡大され、止められない衝撃力。" />
     <string id="taom_crca_t3_a_p1" text="近接ダメージ+18%。" />
-    <string id="taom_crca_t3_a_p2" text="馬の突撃ダメージ+18%。" />
+    <string id="taom_crca_t3_a_p2" text="馬の突撃ダメージ+15%。" />
     <string id="taom_crca_t3_a_p3" text="振り速度+15%。" />
     <string id="taom_crca_t3_a_p4" text="部隊ダメージ+7%。" />
     <string id="taom_crca_t3_b_key" text="略奪チャージが大幅に短縮され、休むことなく駆ける。" />
-    <string id="taom_crca_t3_b_p1" text="馬の体力+100。" />
+    <string id="taom_crca_t3_b_p1" text="馬の体力+15%。" />
     <string id="taom_crca_t3_b_p2" text="部隊維持費-15%。" />
     <string id="taom_crca_t3_b_p3" text="部隊移動速度+15%。" />
     <string id="taom_crca_t3_b_p4" text="最大体力+9。" />

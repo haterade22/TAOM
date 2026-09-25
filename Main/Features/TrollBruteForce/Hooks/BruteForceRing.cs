@@ -5,7 +5,7 @@ using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.TrollBruteForce.Hooks;
 
-internal readonly record struct BruteForceRingResult(int Hit, int KnockedDown, int Skipped);
+internal readonly record struct BruteForceRingResult(int Hit, int KnockedDown, int Skipped, float BodySize = 0f);
 
 /// <summary>
 /// Delivers the smash's ring: every enemy human within the scaled outer radius of the impact centre takes the
@@ -22,11 +22,13 @@ internal static class BruteForceRing
         if (!troll.IsActive() || !AgentSlotIdentity.IsCurrentOccupant(troll) || troll.Team == null)
             return default;
 
-        float scale = troll.AgentScale;
+        float scale = service.BodySize(troll.AgentScale, troll.Monster?.StandingEyeHeight ?? 0f);
+        // the scale the distances actually use (capped, a bad value read as 1), for the log line
+        float effectiveScale = service.OuterRadius(scale) / TrollBruteForceConfig.OuterRadius;
         Vec3 position = troll.Position;
         Vec3 look = troll.LookDirection;
         if (!service.TryGetImpactCentre(position.x, position.y, look.x, look.y, scale, out float cx, out float cy))
-            return default;
+            return new BruteForceRingResult(0, 0, 0, effectiveScale);
 
         var centre = new Vec2(cx, cy);
         Buffer.Clear();
@@ -63,6 +65,6 @@ internal static class BruteForceRing
             if (b.KnockDown) knockedDown++;
         }
 
-        return new BruteForceRingResult(hit, knockedDown, skipped);
+        return new BruteForceRingResult(hit, knockedDown, skipped, effectiveScale);
     }
 }

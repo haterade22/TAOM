@@ -49,19 +49,19 @@
     <string id="taom_lotr_issue_horses_soln" text="馬を連れてきます。" />
     <string id="taom_lotr_issue_horses_task" text="馬を届ける ({COUNT})" />
     <string id="taom_lotr_issue_recruits_title" text="一団への新しい血" />
-    <string id="taom_lotr_issue_recruits_desc" text="盗賊団の頭目が、捕らえた無法者を自分の配下に加えようとしている。" />
-    <string id="taom_lotr_issue_recruits_brief" text="一団の強さは数だけが頼りだが、我らの人数は少ない。法に愛想を尽かした捕虜を連れてこい、使い道がある。" />
+    <string id="taom_lotr_issue_recruits_desc" text="ならず者の頭目が、捕虜を自分の手下として使いたがっている。" />
+    <string id="taom_lotr_issue_recruits_brief" text="一味の強さは頭数次第だが、うちは手薄でな。誰でもいい、捕虜を連れてきてくれ。うまく使ってやる。" />
     <string id="taom_lotr_issue_recruits_accept" text="どんな捕虜だ?" />
-    <string id="taom_lotr_issue_recruits_expl" text="{COUNT}人の盗賊の捕虜を連れてこい。働かせてやる。報酬は払うし、詮索はせん。" />
+    <string id="taom_lotr_issue_recruits_expl" text="捕虜を{COUNT}人連れてきてくれ。こき使ってやるさ。礼金は出す、詮索は無用だ。" />
     <string id="taom_lotr_issue_recruits_soln" text="捕虜を連れてこよう。" />
-    <string id="taom_lotr_issue_recruits_task" text="盗賊の捕虜を引き渡す ({COUNT})" />
+    <string id="taom_lotr_issue_recruits_task" text="捕虜を引き渡す ({COUNT})" />
     <string id="taom_lotr_issue_laborers_title" text="鉱山の労働力" />
-    <string id="taom_lotr_issue_laborers_desc" text="地主が重労働のための人手を必要としており、捕らえた盗賊を引き取る。" />
-    <string id="taom_lotr_issue_laborers_brief" text="採掘場に労働者が必要だが、自由民はあそこには行きたがらん。鎖につないだ盗賊を連れてこい。つるはしで働かせてやる。" />
+    <string id="taom_lotr_issue_laborers_desc" text="地主が重労働のための屈強な人手を求めており、あなたが捕らえた捕虜なら誰でも引き取る。" />
+    <string id="taom_lotr_issue_laborers_brief" text="採掘場には働き手が要るが、自由民は誰も下りて行かん。鎖につないだ捕虜を連れてこい。つるはしで食い扶持を稼がせてやる。" />
     <string id="taom_lotr_issue_laborers_accept" text="囚人が欲しいのか?" />
-    <string id="taom_lotr_issue_laborers_expl" text="{COUNT}人の盗賊の捕虜を労働隊用に連れてこい。捕まえる手間賃は払おう。" />
+    <string id="taom_lotr_issue_laborers_expl" text="労役隊のために捕虜を{COUNT}人連れてきてくれ。捕らえる手間の分は払おう。" />
     <string id="taom_lotr_issue_laborers_soln" text="捕虜を連れてこよう。" />
-    <string id="taom_lotr_issue_laborers_task" text="盗賊の捕虜を引き渡す ({COUNT})" />
+    <string id="taom_lotr_issue_laborers_task" text="捕虜を引き渡す ({COUNT})" />
     <string id="taom_lotr_issue_banditbase_title" text="{ISSUE_SETTLEMENT}近くの隠れ家" />
     <string id="taom_lotr_issue_banditbase_desc" text="略奪者の巣が{ISSUE_SETTLEMENT}近くの街道を脅かしている。" />
     <string id="taom_lotr_issue_banditbase_brief" text="丘の中に奴らの汚い巣があるのだ、旅人よ。奴らは我々の物資と人々を奪っていく。だが守備隊は少なすぎて根絶やしにできん。" />
@@ -300,19 +300,24 @@
     <string id="taom_lotr_issue_common_task" text="物品の収集" />
     <string id="taom_lotr_issue_pers_expl" text="{COUNT}人の捕虜を連れてきてくれれば、良い報酬を払おう。" />
     <string id="taom_lotr_issue_pers_soln" text="捕虜を連れてこよう。" />
-    <string id="taom_lotr_issue_pers_accepted" text="{COUNT}人の盗賊の捕虜を{QUEST_SETTLEMENT}へ届けよ。" />
+    <string id="taom_lotr_issue_pers_accepted" text="{QUEST_SETTLEMENT}に捕虜を{COUNT}人届ける。" />
     <string id="taom_lotr_issue_pers_ready" text="十分な数の捕虜がいる。{QUEST_SETTLEMENT}へ戻って引き渡せ。" />
     <string id="taom_lotr_issue_pers_timeout" text="期限内に捕虜を届けることができなかった。" />
     <string id="taom_lotr_issue_pers_have" text="捕虜は連れてきたか?" />
     <string id="taom_lotr_issue_pers_thanks" text="うまくいきそうだ。感謝する。" />
     <string id="taom_lotr_issue_pers_turnin" text="ああ。ここにいる。" />
     <string id="taom_lotr_issue_pers_not_enough" text="まだ捕虜が足りない。" />
-    <string id="taom_lotr_issue_pers_task" text="盗賊の捕虜を捕える" />
+    <string id="taom_lotr_issue_pers_task" text="捕虜を捕らえる" />
     <string id="taom_lotr_issue_combat_expl" text="我らの敵を始末してくれれば、報酬を与えよう。" />
     <string id="taom_lotr_issue_combat_soln" text="始末してこよう。" />
     <string id="taom_lotr_issue_combat_task_capture" text="敵の領主を捕獲せよ ({COUNT})" />
     <string id="taom_lotr_issue_combat_task_tourney" text="トーナメントで勝利せよ ({COUNT})" />
     <string id="taom_lotr_issue_combat_task_defeat" text="略奪者を撃退せよ ({COUNT})" />
     <string id="taom_lotr_issue_combat_timeout" text="期限内に脅威を排除できなかった。" />
+    <string id="taom_lotr_issue_combat_fallback_desc" text="敵を始末せねばならない。" />
+    <string id="taom_lotr_issue_combat_fallback_brief" text="旅人よ、我らは敵に囲まれている。" />
+    <string id="taom_lotr_issue_combat_fallback_accept" text="何をすればいい?" />
+    <string id="taom_lotr_issue_pers_fallback_desc" text="捕虜の引き渡しを求める者がいる。" />
+    <string id="taom_lotr_issue_pers_fallback_brief" text="旅人よ、屈強な者の手が要るのだ。" />
   </strings>
 </base>

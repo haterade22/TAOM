@@ -61,8 +61,8 @@ public class DeliverPersonnelLotrIssue : IssueBase
     }
 
     public override TextObject Title => Tx(_def?.Text.TitleKey, "{=taom_lotr_issue_fallback_title}A Request for Aid");
-    public override TextObject Description => Tx(_def?.Text.DescriptionKey, "{=taom_lotr_issue_fallback_desc}Someone needs captives delivered.");
-    public override TextObject IssueBriefByIssueGiver => Tx(_def?.Text.BriefKey, "{=taom_lotr_issue_fallback_brief}I have need of strong backs, traveller.");
+    public override TextObject Description => Tx(_def?.Text.DescriptionKey, "{=taom_lotr_issue_pers_fallback_desc}Someone needs captives delivered.");
+    public override TextObject IssueBriefByIssueGiver => Tx(_def?.Text.BriefKey, "{=taom_lotr_issue_pers_fallback_brief}I have need of strong backs, traveller.");
     public override TextObject IssueAcceptByPlayer => Tx(_def?.Text.AcceptKey, "{=taom_lotr_issue_fallback_accept}How can I help?");
     public override TextObject IssueQuestSolutionExplanationByIssueGiver => Tx(_def?.Text.ExplanationKey, "{=taom_lotr_issue_pers_expl}Bring me {COUNT} captives and I will pay you well.");
     public override TextObject IssueQuestSolutionAcceptByPlayer => Tx(_def?.Text.SolutionAcceptKey, "{=taom_lotr_issue_pers_soln}I will bring you captives.");
@@ -307,7 +307,7 @@ public class DeliverPersonnelLotrIssueQuest : QuestBase
             .NpcLine(npcThanks)
             .Consequence(() => Campaign.Current.ConversationManager.ConversationEndOneShot += Success)
             .CloseDialog()
-            .PlayerOption(new TextObject("{=taom_lotr_issue_common_working}Not yet -- I'm working on it."))
+            .PlayerOption(new TextObject("{=taom_lotr_issue_common_working}Not yet — I'm working on it."))
             .NpcLine(npcAwait)
             .CloseDialog()
             .EndPlayerOptions()

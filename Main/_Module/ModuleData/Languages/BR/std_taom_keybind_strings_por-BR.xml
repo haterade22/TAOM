@@ -14,5 +14,8 @@
     <string id="taom_key_turbo_desc" text="Segure Ctrl junto com esta tecla para o maior multiplicador de velocidade do TAOM. Soltar qualquer uma das teclas restaura a velocidade anterior." />
     <string id="taom_key_career_ability" text="Habilidade de Carreira (TAOM)" />
     <string id="taom_key_career_ability_desc" text="Ativa sua habilidade de carreira durante uma batalha quando a barra de energia estiver cheia. Padrão: V." />
+    <string id="taom_aso_desc_invasion" text="A facção que domina a maior parte da Terra-média." />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} domina a imensa maioria da Terra-média." />
+    <string id="taom_aso_item_desc_randomized" text="Torna aleatório o estado inicial da Terra-média no grau que você escolher, dentro do razoável." />
   </strings>
 </base>

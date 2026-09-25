@@ -1404,7 +1404,7 @@
     <string id="taom_faction_goblins_of_blue_craig_bonus_3" text="+%20 birlik yiyecek tüketimi (Açgözlü Sürü)" />
     <string id="taom_faction_goblins_of_blue_craig_bonus_4" text="+%10 demircilik verimliliği (Ele Geçirilmiş Silah Deposu)" />
     <string id="taom_faction_goblins_of_blue_craig_bonus_5" text="+%10 yağma hasarı (Goblin Baskını)" />
-    <string id="taom_faction_goblins_of_blue_craig_desc" text="Mavi Kaya Goblinleri." />
+    <string id="taom_faction_goblins_of_blue_craig_desc" text="Uzak batıda, Lindon'un Gri Limanları'nın hemen yanında, Mavi Dağlar'ın (Ered Luin) kendine özgü bir goblin ordusu — Goblin Kasabası'ndaki Puslu Dağlar kuzenlerinden ayrı bir diyar. Aynı sayısız, kötü silahlanmış sürüler: tek başına zayıf, kitle halinde ezici ve yürüyüşte doymak bilmez. Batı kıyısının Elfleri'ni rahatsız ederler." />
     <string id="taom_faction_goblins_of_blue_craig_name" text="Mavi Kaya Goblinleri" />
     <string id="taom_faction_goblins_of_blue_craig_perk_0_desc" text="+%40 birlik büyüklüğü ve +%25 köy gönüllüsü yeniden doğma oranı — zayıf ama sayısız." />
     <string id="taom_faction_goblins_of_blue_craig_perk_0_name" text="Goblin Sürüsü" />
@@ -1435,7 +1435,7 @@
     <string id="taom_faction_goblins_of_goblin_town_bonus_3" text="+%20 birlik yiyecek tüketimi (Açgözlü Sürü)" />
     <string id="taom_faction_goblins_of_goblin_town_bonus_4" text="+%10 demircilik verimliliği (Ele Geçirilmiş Silah Deposu)" />
     <string id="taom_faction_goblins_of_goblin_town_bonus_5" text="+%10 yağma hasarı (Goblin Baskını)" />
-    <string id="taom_faction_goblins_of_goblin_town_desc" text="Sisli Dağlar'ın goblin istilasına uğramış tünelleri ve mağaraları. Bu Orklar yüksek geçitleri kontrol eder ve dağları geçmeye cesaret edenleri tehdit eder." />
+    <string id="taom_faction_goblins_of_goblin_town_desc" text="Puslu Dağlar'ın Yüce Geçit'inin altındaki kaynaşan goblin inleri. Büyük Goblin'in düşüşünden beri kabileler sayısızca çoğaldı — kötü silahlanmış devasa sürüler, sırf ağırlıklarıyla kazanır ve hiçbir düşmanın kırabileceğinden daha hızlı ürerler. Dağ yurtlarının karları üzerinde en hızlı koşarlar, ama böyle orduların açlığı hiç dinmez." />
     <string id="taom_faction_goblins_of_goblin_town_name" text="Goblin Kasabası Goblinleri" />
     <string id="taom_faction_goblins_of_goblin_town_perk_0_desc" text="+%40 birlik büyüklüğü ve +%25 köy gönüllüsü yeniden doğma oranı — goblinler zayıf ama sayısızdır." />
     <string id="taom_faction_goblins_of_goblin_town_perk_0_name" text="Goblin Sürüsü" />
@@ -1453,9 +1453,9 @@
     <string id="taom_faction_goblins_of_goblin_town_su_1_name" text="Mağara-gobleyni Çevik Savaşçısı" />
     <string id="taom_faction_goblins_of_goblin_town_su_2_desc" text="Derin inlerin daha ağır saldırı gobleyni." />
     <string id="taom_faction_goblins_of_goblin_town_su_2_name" text="Goblin Kabadayısı" />
-    <string id="taom_faction_goblins_of_goblin_town_trait_0" text="Goblin Tünelleri" />
-    <string id="taom_faction_goblins_of_goblin_town_trait_1" text="Dağ Geçitleri" />
-    <string id="taom_faction_goblins_of_goblin_town_trait_2" text="Warg Binicileri" />
+    <string id="taom_faction_goblins_of_goblin_town_trait_0" text="Goblin Kasabası İnleri" />
+    <string id="taom_faction_goblins_of_goblin_town_trait_1" text="Yüce Geçit'in Dölü" />
+    <string id="taom_faction_goblins_of_goblin_town_trait_2" text="Dağ Geçidi Pusucuları" />
     <string id="taom_faction_goblins_of_goblin_town_trait_3" text="Sayısız Sürüler" />
     <string id="taom_faction_goblins_of_goblin_town_weakness_0" text="Bireysel olarak zayıf birlikler" />
     <string id="taom_faction_goblins_of_goblin_town_weakness_1" text="Açgözlü — her ikmal hattını zorlar" />
@@ -1526,17 +1526,17 @@
     <string id="taom_faction_havens_of_umbar_weakness_1" text="Gondor tarafından nefret ediliyor" />
     <string id="taom_faction_havens_of_umbar_weakness_2" text="Kara ordusu donanmadan daha zayıf" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_0" text="+35% ordu nüfuz ödülü (Elf Bilgeliği)" />
-    <string id="taom_faction_high_kingdom_of_lindon_bonus_1" text="+20% köy ocak büyümesi (Son Huzurlu Ev)" />
+    <string id="taom_faction_high_kingdom_of_lindon_bonus_1" text="+%20 köy ocak büyümesi (Gri Limanlar)" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_2" text="Ormanda +10% grup hızı (Orman Zarafeti)" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_3" text="-15% grup yiyecek tüketimi (Elf Tutumluluğu)" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_4" text="Günlük +0.5 yerleşim sadakati" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_5" text="+25% ordu nüfuz maliyeti (Elf Gururu)" />
-    <string id="taom_faction_high_kingdom_of_lindon_desc" text="Orta Dünya'nın batı kıyılarındaki kadim Elf diyarı Lindon. Gil-galad'ın halefleri tarafından yönetilen bu topraklar, solan Elf ihtişamının ve Gri Limanların evidir." />
+    <string id="taom_faction_high_kingdom_of_lindon_desc" text="Mavi Dağlar'ın batısındaki yeşil ülke, Orta Dünya kıyılarındaki Yüce Elfler'in son diyarı. Mithlond'un Gri Limanları'ndan beyaz gemiler Batı'ya yelken açar. Eldar'ın en yaşlısı Gemici Círdan, Falathrim'in sönmekte olan ışığını korur — bilge, az sayıda ve her kılıcı yeri doldurulamaz. Lindon, Mithlond'un Falathrim gücünü paylaşır." />
     <string id="taom_faction_high_kingdom_of_lindon_name" text="Lindon Yüce Krallığı" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_0_desc" text="Ordu başarısında +35% verilen nüfuz — Bilgeler nasıl liderlik edileceğini bilir." />
     <string id="taom_faction_high_kingdom_of_lindon_perk_0_name" text="Elf Bilgeliği" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_1_desc" text="+20% köy ocak büyümesi ve -15% grup yiyecek tüketimi." />
-    <string id="taom_faction_high_kingdom_of_lindon_perk_1_name" text="Son Huzurlu Ev" />
+    <string id="taom_faction_high_kingdom_of_lindon_perk_1_name" text="Gri Limanlar" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_2_desc" text="Ormanda +10% grup hızı ve günlük +0.5 yerleşim sadakati." />
     <string id="taom_faction_high_kingdom_of_lindon_perk_2_name" text="Orman Zarafeti" />
     <string id="taom_faction_high_kingdom_of_lindon_strength_0" text="Efsanevi seçkin savaşçılar" />
@@ -1544,15 +1544,15 @@
     <string id="taom_faction_high_kingdom_of_lindon_strength_2" text="Tutumlu, kendi kendine yeterli birlikler" />
     <string id="taom_faction_high_kingdom_of_lindon_strength_3" text="Ocak zengini, sadık sığınaklar" />
     <string id="taom_faction_high_kingdom_of_lindon_su_0_desc" text="Eldar'ın efsanevi Birinci Çağ gazisi." />
-    <string id="taom_faction_high_kingdom_of_lindon_su_0_name" text="Noldor Kılıç Ustası" />
+    <string id="taom_faction_high_kingdom_of_lindon_su_0_name" text="Falathrim Kılıç Ustası" />
     <string id="taom_faction_high_kingdom_of_lindon_su_1_desc" text="Limanların Deniz-elf muhafızı." />
     <string id="taom_faction_high_kingdom_of_lindon_su_1_name" text="Falathrim Denizci-bekçisi" />
-    <string id="taom_faction_high_kingdom_of_lindon_su_2_desc" text="Gri Limanların ağır Noldor muhafızı." />
+    <string id="taom_faction_high_kingdom_of_lindon_su_2_desc" text="Gri Limanlar'ın ağır zırhlı Falathrim muhafızı." />
     <string id="taom_faction_high_kingdom_of_lindon_su_2_name" text="Mithlond Nöbetçisi" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_0" text="Gri Limanlar" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_1" text="Kadim Elf Diyarı" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_2" text="Valinor'a Gemiler" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_3" text="Gemiyapımcı Cirdan" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_0" text="Gemici Círdan" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_1" text="Gri Limanlar" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_2" text="Batı'ya Giden Gemiler" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_3" text="Yüce Elfler'in Sonuncuları" />
     <string id="taom_faction_high_kingdom_of_lindon_weakness_0" text="Elf Gururu nüfuz maliyetlerini artırır" />
     <string id="taom_faction_high_kingdom_of_lindon_weakness_1" text="Solan halk — az takviye" />
     <string id="taom_faction_khudorom_of_khand_bonus_0" text="Bozkırda +%10 grup hızı (Bozkır Savaş Arabacıları)" />
@@ -1778,8 +1778,8 @@
     <string id="taom_faction_kingdom_of_moria_bonus_4" text="+15% demircilik verimliliği (Yağmalanmış Demirhaneler)" />
     <string id="taom_faction_kingdom_of_moria_bonus_5" text="+15% baskın hasarı (Mağara Trollü Asker Toplama)" />
     <string id="taom_faction_kingdom_of_moria_bonus_6" text="-10% inşaat hızı (Yankılanan Salonlar)" />
-    <string id="taom_faction_kingdom_of_moria_desc" text="Moria Krallığı." />
-    <string id="taom_faction_kingdom_of_moria_name" text="Moria Krallığı" />
+    <string id="taom_faction_kingdom_of_moria_desc" text="Puslu Dağlar'ın derinliklerini elinde tutan ork ordusu — Cücelerden alınan Moria'nın kara kuyuları ve Caradhras'tan Methedras'a uzanan soğuk zirveler. Yüce Geçit'in goblin ayaktakımından daha kalabalık ve daha iyi silahlanmışlardır; neredeyse hiç nüfuz harcamadan devasa savaş orduları toplar, aç ama yorulmaz halde karlar boyunca yürürler." />
+    <string id="taom_faction_kingdom_of_moria_name" text="Puslu Dağlar Orkları" />
     <string id="taom_faction_kingdom_of_moria_perk_0_desc" text="Ordu toplama %40 daha az nüfuz maliyeti — ork ordusunun yürümek için mutabakata ihtiyacı yoktur." />
     <string id="taom_faction_kingdom_of_moria_perk_0_name" text="Ork Ordusu" />
     <string id="taom_faction_kingdom_of_moria_perk_1_desc" text="+30% müfreze boyutu ve kar üzerinde +10% hız — soğuk zirvelere alışık büyük savaş orduları." />
@@ -2643,9 +2643,6 @@
     <string id="taom_aso_kingdom.lindon" text="Lindon" />
     <string id="taom_aso_kingdom.bluecraig" text="Mavi Kaya Goblinleri" />
     <string id="taom_aso_item_name_randomized" text="Rastgele Orta Dünya" />
-    <string id="taom_aso_desc_invasion" text="Orta Dünya'nın büyük bölümünü yöneten hizip." />
-    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} Orta Dünya'nın çok büyük bir kısmına hükmediyor." />
-    <string id="taom_aso_item_desc_randomized" text="Orta Dünya'nın başlangıç durumunu, makul sınırlar içinde, istediğiniz ölçüde rastgeleleştirir." />
     <string id="taom_tactic.shield_wall" text="Planımız kalkanları kilitleyip yerimizi korumak." />
     <string id="taom_tactic.infantry_mass" text="Planımız sayımızla onların üzerine akın etmek." />
     <string id="taom_tactic.cavalry_dominance" text="Planımız onları atla ezmek ve atlıların başlattığını piyadenin bitirmesi." />
@@ -2662,22 +2659,22 @@
     <string id="taom_behavior.infantry_skirmish" text="Fırlatma mesafesine yaklaşın, fırlatın ve geri çekilin" />
     <string id="taom_behavior.cycle_charge" text="İçlerinden geçin, toplanın ve yeniden şarj edin" />
     <string id="taom_behavior.envelop_wing" text="Kanatlarını dolanın ve yandan vurun" />
-    <string id="taom_behavior.foot_charge" text="Charge their foot; square up if horse come at you" />
-    <string id="taom_behavior.archer_flank" text="Stand beside the wall and shoot; fall in behind it if they come for you" />
-    <string id="taom_behavior_f6.braced_defend" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are holding in a wall." />
-    <string id="taom_behavior_f6.braced_advance" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are advancing in a wall." />
-    <string id="taom_behavior_f6.infantry_skirmish" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are throwing and falling back." />
-    <string id="taom_behavior_f6.cycle_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging in cycles." />
-    <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are swinging round the flank." />
-    <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging the enemy foot." />
-    <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are taking the flank of the wall." />
+    <string id="taom_behavior.foot_charge" text="Piyadelerine saldırın; süvari üstünüze gelirse sıkı durun" />
+    <string id="taom_behavior.archer_flank" text="Duvarın yanında durup ok atın; üstünüze gelirlerse arkasına çekilin" />
+    <string id="taom_behavior_f6.braced_defend" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} ve {?}{\?}{TROOP_NAMES_END} bir duvar hâlinde tutunuyor." />
+    <string id="taom_behavior_f6.braced_advance" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} ve {?}{\?}{TROOP_NAMES_END} bir duvar hâlinde ilerliyor." />
+    <string id="taom_behavior_f6.infantry_skirmish" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} ve {?}{\?}{TROOP_NAMES_END} mızrak atıp geri çekiliyor." />
+    <string id="taom_behavior_f6.cycle_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} ve {?}{\?}{TROOP_NAMES_END} dalgalar hâlinde hücum ediyor." />
+    <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} ve {?}{\?}{TROOP_NAMES_END} kanattan dolanıyor." />
+    <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} ve {?}{\?}{TROOP_NAMES_END} düşman piyadesine hücum ediyor." />
+    <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} ve {?}{\?}{TROOP_NAMES_END} duvarın kanadını tutuyor." />
     <string id="taom_patch_apply_failed" text="TAOM: {PHASE} sırasında şu yama grupları uygulanamadı: {GROUPS}. Bu gruplardaki bazı düzeltmeler bu oturumda devre dışı; nedeni TAOM günlüğünde belirtiliyor." />
     <string id="taom_patch_apply_phase_startup" text="başlangıç" />
     <string id="taom_patch_apply_notice_title" text="TAOM" />
     <string id="taom_patch_apply_phase_game_init" text="oyun başlatma" />
     <string id="taom_patch_apply_phase_mission_start" text="görev başlangıcı" />
-    <string id="taom_oob_autoassign_done" text="Captains assigned: {COUNT}." />
-    <string id="taom_oob_autoassign_not_general" text="Only the general of this battle can assign heroes." />
-    <string id="taom_oob_autoassign_none" text="No hero suits an open captain slot." />
+    <string id="taom_oob_autoassign_done" text="Atanan yüzbaşılar: {COUNT}." />
+    <string id="taom_oob_autoassign_not_general" text="Bu savaşta kahraman atamasını yalnızca başkomutan yapabilir." />
+    <string id="taom_oob_autoassign_none" text="Boş yüzbaşı yerine uygun kahraman yok." />
   </strings>
 </base>

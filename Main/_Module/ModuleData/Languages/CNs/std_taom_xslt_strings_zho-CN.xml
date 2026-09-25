@@ -662,8 +662,8 @@
     <string id="aom_lord_1_155_name" text="戒灵,黑暗元帅" />
     <string id="aom_lord_1_16_name" text="戒灵,昂巴骑士" />
     <string id="aom_lord_1_17_name" text="索伦" />
-    <string id="aom_lord_1_177_name" text="霍诺拉图斯" />
-    <string id="aom_lord_1_18_name" text="贾西娅" />
+    <string id="aom_lord_1_177_name" text="科尔加斯" />
+    <string id="aom_lord_1_18_name" text="莫尔加" />
     <string id="aom_lord_1_21_name" text="红狼芬里克" />
     <string id="aom_lord_1_22_name" text="强臂比约恩里克" />
     <string id="aom_lord_1_23_name" text="卡拉德雯" />
@@ -672,7 +672,7 @@
     <string id="aom_lord_1_26_name" text="希尔贡" />
     <string id="aom_lord_1_27_name" text="毛格拉什" />
     <string id="aom_lord_1_28_name" text="戒灵,背叛者" />
-    <string id="aom_lord_1_29_name" text="萨尼昂" />
+    <string id="aom_lord_1_29_name" text="赫鲁玛斯" />
     <string id="aom_lord_1_31_name" text="黑牙扎尔萨" />
     <string id="aom_lord_1_32_name" text="野猪之歌埃尔德拉" />
     <string id="aom_lord_1_33_name" text="嚎叫者布丽吉德" />
@@ -681,14 +681,14 @@
     <string id="aom_lord_1_36_name" text="伊芙瑞妮尔" />
     <string id="aom_lord_1_37_name" text="戈尚克" />
     <string id="aom_lord_1_38_name" text="戒灵,不死者" />
-    <string id="aom_lord_1_39_name" text="黛芭娜" />
+    <string id="aom_lord_1_39_name" text="纳克萨里尔" />
     <string id="aom_lord_1_41_name" text="狼裔贝雷贡德" />
     <string id="aom_lord_1_411_name" text="铁牙格林沃夫" />
     <string id="aom_lord_1_42_name" text="铁皮赫罗德加" />
     <string id="aom_lord_1_43_name" text="牛胁戈尔蒙德" />
     <string id="aom_lord_1_44_name" text="尼莫斯" />
     <string id="aom_lord_1_47_name" text="乌尔博斯" />
-    <string id="aom_lord_1_49_name" text="奥布隆" />
+    <string id="aom_lord_1_49_name" text="斯卡尔纳克" />
     <string id="aom_lord_1_20_name" text="阿斯特丽德·熊爪" />
     <string id="aom_lord_1_64_name" text="索蒙德·灰熊劈" />
     <string id="aom_lord_1_50_name" text="科温·鸦眼" />
@@ -712,10 +712,10 @@
     <string id="aom_lord_1_55_name" text="马斯莫格" />
     <string id="aom_lord_1_63_name" text="高巴格，米那斯魔窟队长" />
     <string id="aom_lord_1_56_name" text="托蒙德，铁锤" />
-    <string id="aom_lord_1_68_name" text="萨罗斯" />
-    <string id="aom_lord_1_69_name" text="尼丰" />
+    <string id="aom_lord_1_68_name" text="戈尔萨克" />
+    <string id="aom_lord_1_69_name" text="格鲁卡什" />
     <string id="aom_lord_1_72_name" text="波格" />
-    <string id="aom_lord_1_74_name" text="扎卡尼斯" />
+    <string id="aom_lord_1_74_name" text="布尔兹纳克" />
     <string id="aom_lord_1_1_1_name" text="艾尔迪丝·灰爪" />
     <string id="aom_lord_1_1_2_name" text="希嘉·屠龙者" />
     <string id="aom_lord_1_1_3_name" text="希格伦·野猪牙" />
@@ -772,9 +772,9 @@
     <string id="aom_lord_1_74_1_name" text="泽娜" />
     <string id="aom_lord_2_1_name" text="巴德二世" />
     <string id="aom_lord_2_2_name" text="阿斯塔" />
-    <string id="aom_lord_2_3_name" text="索林三世·石盔" />
+    <string id="aom_lord_2_3_name" text="兰德" />
     <string id="aom_lord_2_4_name" text="西加" />
-    <string id="aom_lord_2_5_name" text="欧力" />
+    <string id="aom_lord_2_5_name" text="阿斯克" />
     <string id="aom_lord_2_6_name" text="埃尔塔" />
     <string id="aom_lord_2_7_name" text="西米尔" />
     <string id="aom_lord_2_8_name" text="乌里克" />
@@ -787,11 +787,11 @@
     <string id="aom_lord_2_13_name" text="维达尔" />
     <string id="aom_lord_2_14_name" text="伊斯万" />
     <string id="aom_lord_2_15_name" text="拉塔戈斯特" />
-    <string id="aom_lord_2_16_name" text="波佛" />
-    <string id="aom_lord_2_17_name" text="索林二世·橡木盾" />
-    <string id="aom_lord_2_18_name" text="葛罗音" />
-    <string id="aom_lord_2_19_name" text="德瓦林" />
-    <string id="aom_lord_2_20_name" text="欧音" />
+    <string id="aom_lord_2_16_name" text="豪克" />
+    <string id="aom_lord_2_17_name" text="斯泰因" />
+    <string id="aom_lord_2_18_name" text="乌尔夫" />
+    <string id="aom_lord_2_19_name" text="盖尔" />
+    <string id="aom_lord_2_20_name" text="瓦尔" />
     <string id="aom_lord_2_21_name" text="斯韦多恩" />
     <string id="aom_lord_2_22_name" text="拉绍内克" />
     <string id="aom_lord_2_23_name" text="加尔登" />
@@ -1025,7 +1025,7 @@
     <string id="aom_lord_NE9_s_name" text="咬牙鲁里克" />
     <string id="aom_lord_S8_u_name" text="加利克" />
     <string id="aom_lord_S9_c_name" text="佛林" />
-    <string id="aom_lord_S9_l_name" text="庞伯" />
+    <string id="aom_lord_S9_l_name" text="奥瓦尔" />
     <string id="aom_lord_S9_m_name" text="达基拉" />
     <string id="aom_lord_S9_u_name" text="查斯提米尔" />
     <string id="aom_lord_SE8_c_name" text="莎格拉拉" />
@@ -1035,7 +1035,7 @@
     <string id="aom_lord_SE9_s_name" text="约娜" />
     <string id="aom_lord_WE8_c_name" text="佩伦杜尔" />
     <string id="aom_lord_WE8_u_name" text="巴兰迪尔" />
-    <string id="aom_lord_WE9_l_name" text="杜因希尔" />
+    <string id="aom_lord_WE9_l_name" text="杜因希尔，摩尔松德领主" />
     <string id="aom_lord_WE9_u_name" text="杜林" />
     <string id="aom_lord_WE9_u2_name" text="罗斯芬" />
     <string id="TAOM_hero_dead_2_1" text="老者奥莱克在保卫河谷邦、抵御东夷袭掠者时阵亡。他的牺牲守住了山间隘口,王国各地的歌谣中都还铭记着他。" />
@@ -1156,31 +1156,31 @@
     <string id="TAOM_hero_1_48_1" text="污染者所到之处都传播腐化。" />
     <string id="TAOM_hero_1_48_2" text="北方人的阴影在寒冷之地猎杀。" />
     <string id="TAOM_hero_1_48_3" text="昂巴之影出没于南方海岸。" />
-    <string id="TAOM_hero_1_177" text="霍诺拉图斯在魔多军队中担任军官。" />
-    <string id="TAOM_hero_1_29" text="萨尼昂是一名指挥要塞的黑色努门诺尔队长。" />
-    <string id="TAOM_hero_1_17" text="伟大的索伦,魔多黑暗魔君。此条目仅用于展示他可怕的盔甲。" />
-    <string id="TAOM_hero_1_18" text="贾西娅在魔多的黑暗等级制度中效力。" />
-    <string id="TAOM_hero_1_39" text="德芭娜是阴影的仆从,精通黑暗技艺。" />
+    <string id="TAOM_hero_1_177" text="霍尔加斯是魔多军中的高阶将领，索伦之子，自幼被征召入战阵。他以一种深知「魔眼」始终注视着的冷酷耐心，驱使着麾下军团向人类的土地进发。" />
+    <string id="TAOM_hero_1_29" text="赫鲁玛斯是流着索伦血脉的黑努门诺尔人，镇守魔多边境的一座要塞。他冷酷而高傲，将古老的努门诺尔残暴与生养他的黑暗一同磨砺得锋利无比。" />
+    <string id="TAOM_hero_1_17" text="伟大的索伦——魔多的黑暗魔君、至尊魔戒之主——再度崛起。自巴拉多黑塔之上，他的魔眼扫视西方诸地，郭苟洛斯的军团在他的旗下集结。自由民族以为他已被击败，但黑暗只是在等待时机。如今他挥师而来，要击溃他们，将整个中洲缚于一统之下。让人类的王者绝望吧，索伦的时代已经降临。" />
+    <string id="TAOM_hero_1_18" text="莫尔加侍立于黑暗魔君身侧，是卢格布兹内层权阶的女主。她的话语承载着魔眼的分量，魔多的将领们畏惧她的谋划，一如畏惧索伦的震怒。" />
+    <string id="TAOM_hero_1_39" text="纳克萨瑞尔是黑暗魔君之女，深谙多古尔都与卢格布兹的黑暗法术。她行走于黑暗的隐秘小径，与她作对的人从此再无音讯。" />
     <string id="TAOM_hero_1_30" text="哥斯魔格,魔窟中尉,在帕兰诺平原指挥魔多军队。他是一名残暴而狡猾的半兽人,身先士卒。" />
     <string id="TAOM_hero_1_30_1" text="红牙斯瓦拉是哥斯魔格麾下的一名半兽人队长。" />
-    <string id="TAOM_hero_1_49" text="奥布隆率领一支魔多半兽人部队。" />
+    <string id="TAOM_hero_1_49" text="斯卡纳克统领一队魔多半兽人，是个残暴的头目，靠踩碎上位者一路爬升。鞭子与魔眼是他唯一遵守的律法。" />
     <string id="TAOM_hero_1_49_1" text="崔斯塔妮娅效力于黑暗势力。" />
     <string id="TAOM_hero_1_49_2" text="戈尔迪安娜居住在黑塔的阴影之下。" />
     <string id="TAOM_hero_1_30_2" text="莫格拉效忠于魔多的黑暗势力。" />
     <string id="TAOM_hero_1_30_3" text="斯纳加是阴影的仆从。" />
-    <string id="TAOM_hero_1_56_2" text="鲁斯蒂卡在黑暗军队中服役。" />
+    <string id="TAOM_hero_1_56_2" text="露丝蒂卡随父亲托尔蒙德一同出征，是氏族中凶悍的年轻战士。" />
     <string id="TAOM_hero_1_63_2" text="科马塔萨是为战争而生的半兽人。" />
     <string id="TAOM_hero_1_63_3" text="伊莉迪莉娅效力于黑暗等级制度。" />
     <string id="TAOM_hero_1_63" text="米那斯魔窟队长戈巴格率领这座死城的守军。即使以半兽人的标准来看,他也十分狡诈。" />
     <string id="TAOM_hero_1_63_1" text="瓦拉莉娅在死者之城堡中服役。" />
-    <string id="TAOM_hero_1_74" text="扎卡尼斯指挥一支半兽人军团。" />
+    <string id="TAOM_hero_1_74" text="布尔兹纳克统领一支魔多半兽人军团，是个骑兵头目，落伍者与逃兵都会被他一并踏平。" />
     <string id="TAOM_hero_1_74_1" text="泽娜效力于魔多的黑暗主人。" />
     <string id="TAOM_hero_1_54" text="西力斯昂哥队长夏格拉特守卫通往魔多的关隘。即使在半兽人中,他也以残忍而闻名。" />
     <string id="TAOM_hero_1_54_1" text="康斯塔莉娅在西力斯昂哥塔楼中服役。" />
-    <string id="TAOM_hero_1_68" text="萨罗斯是在关隘服役的半兽人队长。" />
+    <string id="TAOM_hero_1_68" text="戈尔萨克是一名半兽人头目，扼守通往魔多的高隘，警觉而无情，任何想躲过魔眼溜过去的人都别想活命。" />
     <string id="TAOM_hero_1_68_1" text="西尔维娜在蜘蛛关隘的守军中服役。" />
     <string id="TAOM_hero_1_69_2" text="朵拉希拉在黑暗军队中服役。" />
-    <string id="TAOM_hero_1_69" text="尼丰指挥魔多边境上的一座堡垒。" />
+    <string id="TAOM_hero_1_69" text="格鲁卡什统领魔多边境的一座要塞，是个戒备森严的黑暗边疆守将。" />
     <string id="TAOM_hero_1_69_1" text="阿瑞莉安娜在边境地区服役。" />
     <string id="TAOM_hero_1_55" text="马斯摩格是一位强大的强兽人战争首领。" />
     <string id="TAOM_hero_1_55_1" text="梅盖西娅效力于黑暗力量。" />
@@ -1201,13 +1201,13 @@
     <string id="TAOM_hero_2_7_1" text="米米尔是河谷国王室的王子。" />
     <string id="TAOM_hero_2_10" text="瓦拉是河谷国的公主,受训于外交与治国之术。" />
     <string id="TAOM_hero_2_13" text="维达尔是北方边境的领主,防御东方人的入侵。" />
-    <string id="TAOM_hero_2_3" text="山下之王索林三世·石盔统治着伊鲁伯的矮人。他维持着与河谷国的古老同盟,随时准备抵御阴影。" />
+    <string id="TAOM_hero_2_3" text="兰德是河谷邦的领主，东谷的守护者，维系着与埃瑞博矮人的古老盟约。" />
     <string id="TAOM_hero_2_4" text="西格是都灵家族的矮人女贵族。" />
     <string id="TAOM_hero_2_4_1" text="阿波拉妮娅是一位出身高贵的矮人少女。" />
     <string id="TAOM_hero_2_8" text="乌里克是埃尔伯王子,精通锻造工艺与战争之道。" />
     <string id="TAOM_hero_2_11" text="伊德伦是皇家卫队的矮人战士。" />
     <string id="TAOM_hero_2_111" text="罗日沃尔是守卫山门的矮人战士。" />
-    <string id="TAOM_hero_2_5" text="欧力是索林·橡木盾同伴后裔的矮人领主。他管理着埃尔伯与河谷城之间的贸易路线。" />
+    <string id="TAOM_hero_2_5" text="阿斯克是河谷邦的领主，掌管孤山与长湖之间的商路。" />
     <string id="TAOM_hero_2_6" text="埃尔塔是欧力的妻子,以宝石切割技艺闻名。" />
     <string id="TAOM_hero_2_9" text="莱克是欧力产业的继承人,在贸易和战斗方面都受过训练。" />
     <string id="TAOM_hero_2_12" text="斯瓦娜是贸易家族的女儿。" />
@@ -1216,18 +1216,18 @@
     <string id="TAOM_hero_2_14_1" text="瓦尔卡娃是伊斯万领主的妻子。" />
     <string id="TAOM_hero_2_14_2" text="扎韦列娜是东部领地的继承人。" />
     <string id="TAOM_hero_2_14_3" text="维日杜娜是东部边境的年轻贵族。" />
-    <string id="TAOM_hero_2_16" text="波佛是埃尔伯的矮人领主,传奇远征队的后裔。" />
-    <string id="TAOM_hero_2_16_1" text="蒂娅斯卡是波佛的妻子,精通医疗术。" />
+    <string id="TAOM_hero_2_16" text="豪克是河谷邦的领主，掌管集市大道与冬季商队。" />
+    <string id="TAOM_hero_2_16_1" text="提亚斯卡是豪克之妻，精通医术。" />
     <string id="TAOM_hero_2_21" text="斯韦多恩指挥长湖镇的守备军。" />
     <string id="TAOM_hero_2_21_1" text="伊兹登卡管理长湖镇的事务。" />
-    <string id="TAOM_hero_2_17" text="索林二世·橡木盾被铭记为从史矛革手中夺回埃尔伯的英雄。他的精神激励着他的后裔。" />
+    <string id="TAOM_hero_2_17" text="斯泰因是河谷邦的领主，因恶龙覆灭后的那些年里坚守北门而为人铭记。" />
     <string id="TAOM_hero_2_17_1" text="德拉查保存着老国王的记忆。" />
     <string id="TAOM_hero_2_22" text="拉绍内克指挥河谷城的战士。" />
     <string id="TAOM_hero_2_22_1" text="热涅娃是拉绍内克的妻子。" />
     <string id="TAOM_hero_2_24" text="阿尔瓦是河谷卫队的队长。" />
     <string id="TAOM_hero_2_24_1" text="佐丽娜是河谷城的贵族夫人。" />
-    <string id="TAOM_hero_2_18" text="葛罗因是埃尔伯的矮人领主,远征队成员金雳的父亲。" />
-    <string id="TAOM_hero_2_18_1" text="佐里卡是葛罗因的妻子,著名的金雳之母。" />
+    <string id="TAOM_hero_2_18" text="乌尔夫是河谷邦的领主，奔流河上河防队的队长。" />
+    <string id="TAOM_hero_2_18_1" text="佐莉卡是乌尔夫之妻，是他奔流河畔厅堂的女主人。" />
     <string id="TAOM_hero_2_23" text="加尔登指挥河谷城的南方守备军。" />
     <string id="TAOM_hero_2_23_1" text="兹拉特卡是加尔登的女儿。" />
     <string id="TAOM_hero_2_15" text="拉塔戈斯特是一位智慧的顾问,就国家大事向国王提供建议。" />
@@ -1235,10 +1235,10 @@
     <string id="TAOM_hero_2_15_2" text="米兰卡是宫廷的贵族女子。" />
     <string id="TAOM_hero_2_15_3" text="薇莉娜服务于王室家族。" />
     <string id="TAOM_hero_2_15_4" text="博万是河谷城的年轻贵族。" />
-    <string id="TAOM_hero_2_19" text="德瓦林是声名显赫的矮人战士,最初远征队的最后幸存者。" />
-    <string id="TAOM_hero_2_19_1" text="维托米拉与德瓦林并肩服务。" />
-    <string id="TAOM_hero_2_20" text="欧音是矮人长者,古老学识与医疗术的守护者。" />
-    <string id="TAOM_hero_2_20_1" text="基莎是欧音的妻子,精通草药学识。" />
+    <string id="TAOM_hero_2_19" text="盖尔是河谷邦声名显赫的战士，与吉瑞安的古老血脉有亲。" />
+    <string id="TAOM_hero_2_19_1" text="维托米拉与盖尔并肩效力。" />
+    <string id="TAOM_hero_2_20" text="瓦尔是河谷邦的长者，掌管传说学识与医术。" />
+    <string id="TAOM_hero_2_20_1" text="琪莎是瓦尔之妻，精通草药之学。" />
     <string id="TAOM_hero_S8_u" text="加利克是一位饱经风霜的老兵,守卫着山中厅堂。" />
     <string id="TAOM_hero_3_1" text="卡杜拉克是哈拉德的塔斯克拉尔,南方军队的最高统帅。他率领猛犸战象对抗他族人的敌人,与魔多结盟对抗刚铎。" />
     <string id="TAOM_hero_3_2" text="哈莉达是卡杜拉克之妻,地位尊贵的哈拉德贵妇。" />
@@ -1317,7 +1317,7 @@
     <string id="TAOM_hero_4_19" text="阿塞拉是一名守卫深谷的盾女。" />
     <string id="TAOM_hero_4_25" text="卢坎德指挥着东艾姆内特的骑士。" />
     <string id="TAOM_hero_4_25_1" text="贝特莉安娜是卢坎德的妻子。" />
-    <string id="TAOM_hero_4_21" text="奥德莱辛之子库斯雷德巡逻着东部边境。" />
+    <string id="TAOM_hero_4_21" text="库斯莱德·奥德拉辛巡守东部边境。" />
     <string id="TAOM_hero_4_20" text="瓦蒙德指挥着奥德堡守备队。" />
     <string id="TAOM_hero_4_20_1" text="因格特鲁德是瓦蒙德的妻子,奥德堡的女主人。" />
     <string id="TAOM_hero_4_22" text="塞尔蒙丁之子伍尔夫率领着北方山谷的骑士。" />
@@ -1337,8 +1337,8 @@
     <string id="TAOM_hero_4_21_1" text="西格贝尔特巡逻洛汗边境。" />
     <string id="TAOM_hero_4_26" text="佩里克指挥洛汗隘口沿线的骑兵。" />
     <string id="TAOM_hero_4_26_1" text="雷茵加尔达是隘口的盾女。" />
-    <string id="TAOM_hero_4_27" text="埃塞拉芬之子埃勒守卫褶地,抵御登兰德人的袭击。" />
-    <string id="TAOM_hero_4_27_1" text="韦尔堡是埃勒的妻子。" />
+    <string id="TAOM_hero_4_27" text="埃勒·埃塞拉芬守卫褶谷，抵御登兰德人的劫掠。" />
+    <string id="TAOM_hero_4_27_1" text="韦尔堡是埃勒之妻。" />
     <string id="TAOM_hero_V9_u" text="乌伦杜尔夫是位老练的骑手，为当地的领主出谋划策。" />
     <string id="TAOM_hero_4_28" text="莫卡加斯之子法斯特海姆指挥南方哨所。" />
     <string id="TAOM_hero_4_28_1" text="莫卡是法斯特海姆之子。" />

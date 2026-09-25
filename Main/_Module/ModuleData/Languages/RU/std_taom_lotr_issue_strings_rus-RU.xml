@@ -49,19 +49,19 @@
     <string id="taom_lotr_issue_horses_soln" text="Я пригоню вам коней." />
     <string id="taom_lotr_issue_horses_task" text="Доставить коней ({COUNT})" />
     <string id="taom_lotr_issue_recruits_title" text="Свежая кровь для банды" />
-    <string id="taom_lotr_issue_recruits_desc" text="Главарь банды хочет, чтобы пленённых разбойников приняли к нему на службу." />
-    <string id="taom_lotr_issue_recruits_brief" text="Банда сильна лишь числом, а у меня людей мало. Приведите мне пленников, которые не любят закон, и я найду им применение." />
+    <string id="taom_lotr_issue_recruits_desc" text="Главарь банды хочет заполучить пленников себе на службу." />
+    <string id="taom_lotr_issue_recruits_brief" text="Банда сильна лишь числом, а моё число невелико. Приведи мне пленников, кто бы они ни были, и я найду им применение." />
     <string id="taom_lotr_issue_recruits_accept" text="Какого рода пленники?" />
-    <string id="taom_lotr_issue_recruits_expl" text="Приведите мне {COUNT} пленных разбойников, и я заставлю их работать. За это вам заплатят, без лишних вопросов." />
+    <string id="taom_lotr_issue_recruits_expl" text="Приведи мне {COUNT} пленников, и я пристрою их к делу. Тебе за это будет монета, и без лишних вопросов." />
     <string id="taom_lotr_issue_recruits_soln" text="Я приведу вам пленников." />
-    <string id="taom_lotr_issue_recruits_task" text="Доставить пленных разбойников ({COUNT})" />
+    <string id="taom_lotr_issue_recruits_task" text="Доставить пленников ({COUNT})" />
     <string id="taom_lotr_issue_laborers_title" text="Рабочие руки для шахт" />
-    <string id="taom_lotr_issue_laborers_desc" text="Землевладельцу нужны сильные спины для тяжёлой работы, и он возьмёт пленных разбойников." />
-    <string id="taom_lotr_issue_laborers_brief" text="Копям нужны работники, а вольные люди туда не пойдут. Приведите мне разбойников в цепях, и они отработают свой хлеб киркой." />
+    <string id="taom_lotr_issue_laborers_desc" text="Землевладельцу нужны крепкие руки для тяжёлого труда, и он возьмёт любых пленников, которых ты захватил." />
+    <string id="taom_lotr_issue_laborers_brief" text="Копям нужны работники, а свободные люди туда не полезут. Приведи мне пленников в цепях, и они отработают свой хлеб киркой." />
     <string id="taom_lotr_issue_laborers_accept" text="Вам нужны узники?" />
-    <string id="taom_lotr_issue_laborers_expl" text="Приведите мне {COUNT} пленных разбойников для рабочих бригад, и я заплачу вам за труды по их поимке." />
+    <string id="taom_lotr_issue_laborers_expl" text="Приведи мне {COUNT} пленников для рабочих артелей, и я заплачу тебе за хлопоты." />
     <string id="taom_lotr_issue_laborers_soln" text="Я приведу вам пленников." />
-    <string id="taom_lotr_issue_laborers_task" text="Доставить пленных разбойников ({COUNT})" />
+    <string id="taom_lotr_issue_laborers_task" text="Доставить пленников ({COUNT})" />
     <string id="taom_lotr_issue_banditbase_title" text="Логово близ {ISSUE_SETTLEMENT}" />
     <string id="taom_lotr_issue_banditbase_desc" text="Гнездо налётчиков терроризирует дороги близ {ISSUE_SETTLEMENT}." />
     <string id="taom_lotr_issue_banditbase_brief" text="В холмах есть мерзкое гнездо, путник. Они забирают наше добро и наших людей, а стража слишком малочисленна, чтобы их выкурить." />
@@ -300,19 +300,24 @@
     <string id="taom_lotr_issue_common_task" text="Собрать товары" />
     <string id="taom_lotr_issue_pers_expl" text="Приведи мне {COUNT} пленников, и я щедро заплачу." />
     <string id="taom_lotr_issue_pers_soln" text="Я приведу вам пленников." />
-    <string id="taom_lotr_issue_pers_accepted" text="Доставить {COUNT} пленных разбойников в {QUEST_SETTLEMENT}." />
+    <string id="taom_lotr_issue_pers_accepted" text="Доставьте {COUNT} пленников в {QUEST_SETTLEMENT}." />
     <string id="taom_lotr_issue_pers_ready" text="У вас достаточно пленников. Возвращайтесь в {QUEST_SETTLEMENT}, чтобы передать их." />
     <string id="taom_lotr_issue_pers_timeout" text="Вы не успели доставить пленников вовремя." />
     <string id="taom_lotr_issue_pers_have" text="Вы привели пленников?" />
     <string id="taom_lotr_issue_pers_thanks" text="Они вполне подойдут. Примите мою благодарность." />
     <string id="taom_lotr_issue_pers_turnin" text="Да. Вот они." />
     <string id="taom_lotr_issue_pers_not_enough" text="У вас пока недостаточно пленников." />
-    <string id="taom_lotr_issue_pers_task" text="Взять в плен разбойников" />
+    <string id="taom_lotr_issue_pers_task" text="Захватить пленников" />
     <string id="taom_lotr_issue_combat_expl" text="Разберись с нашими врагами, и ты будешь вознаграждён." />
     <string id="taom_lotr_issue_combat_soln" text="Я разберусь с ними." />
     <string id="taom_lotr_issue_combat_task_capture" text="Пленить вражеских лордов ({COUNT})" />
     <string id="taom_lotr_issue_combat_task_tourney" text="Выиграть турниры ({COUNT})" />
     <string id="taom_lotr_issue_combat_task_defeat" text="Разгромить налётчиков ({COUNT})" />
     <string id="taom_lotr_issue_combat_timeout" text="Вы не успели справиться с угрозой вовремя." />
+    <string id="taom_lotr_issue_combat_fallback_desc" text="С врагом нужно разобраться." />
+    <string id="taom_lotr_issue_combat_fallback_brief" text="Нас одолевают враги, путник." />
+    <string id="taom_lotr_issue_combat_fallback_accept" text="Что нужно сделать?" />
+    <string id="taom_lotr_issue_pers_fallback_desc" text="Кому-то нужно доставить пленников." />
+    <string id="taom_lotr_issue_pers_fallback_brief" text="Мне нужны крепкие руки, путник." />
   </strings>
 </base>

@@ -7,27 +7,28 @@
   </tags>
   <strings>
     <string id="aom_aux_basic_name" text="[움바르] 보조병 신병" />
-    <string id="aom_balcoth_archer_name" text="[루운] 발코스 궁수" />
-    <string id="aom_balcoth_axeman_name" text="[루운] 발코스 도끼병" />
-    <string id="aom_balcoth_farshot_horse_archer_name" text="[루운] 발코스 원사 기마궁수" />
-    <string id="aom_balcoth_footman_name" text="[루운] 발코스 보병" />
-    <string id="aom_balcoth_horse_archer_name" text="[루운] 발코스 기마궁수" />
-    <string id="aom_balcoth_veteran_axeman_name" text="[루운] 발코스 역전의 도끼병" />
-    <string id="aom_balcoth_volunteer_name" text="[루운] 발코스 지원병" />
-    <string id="aom_battlemaster_of_the_first_age_name" text="[린돈] 제1시대의 전투장인" />
-    <string id="aom_black_sun_archer_name" text="[루운] 검은태양 궁수" />
-    <string id="aom_black_sun_chosen_marksman_name" text="[루운] 검은태양 선발 명사수" />
-    <string id="aom_black_sun_executioner_name" text="[루운] 검은태양 처형자" />
-    <string id="aom_black_sun_footman_name" text="[루운] 검은태양 보병" />
-    <string id="aom_black_sun_longbowman_name" text="[루운] 검은태양 장궁병" />
-    <string id="aom_black_sun_marksman_name" text="[루운] 검은태양 명사수" />
-    <string id="aom_black_sun_raider_name" text="[루운] 검은태양 약탈기병" />
-    <string id="aom_black_sun_reaver_name" text="[루운] 검은태양 습격자" />
-    <string id="aom_black_sun_scourge_name" text="[루운] 검은태양 재앙병" />
-    <string id="aom_black_sun_scout_name" text="[루운] 검은태양 정찰병" />
-    <string id="aom_black_sun_trainee_name" text="[루운] 검은태양 훈련병" />
+    <string id="aom_balcoth_archer_name" text="[룬] 발코스 궁수" />
+    <string id="aom_balcoth_axeman_name" text="[룬] 발코스 도끼병" />
+    <string id="aom_balcoth_farshot_horse_archer_name" text="[룬] 발코스 원사 기마궁수" />
+    <string id="aom_balcoth_footman_name" text="[룬] 발코스 보병" />
+    <string id="aom_balcoth_horse_archer_name" text="[룬] 발코스 기마궁수" />
+    <string id="aom_balcoth_veteran_axeman_name" text="[룬] 발코스 역전의 도끼병" />
+    <string id="aom_balcoth_volunteer_name" text="[룬] 발코스 지원병" />
+    <string id="aom_battlemaster_of_the_first_age_name" text="[깊은골] 제1시대의 전투대장" />
+    <string id="aom_lindon_battlemaster_of_the_first_age_name" text="[린돈] 제1시대의 전투장인" />
+    <string id="aom_black_sun_archer_name" text="[룬] 검은태양 궁수" />
+    <string id="aom_black_sun_chosen_marksman_name" text="[룬] 검은태양 선발 명사수" />
+    <string id="aom_black_sun_executioner_name" text="[룬] 검은태양 처형자" />
+    <string id="aom_black_sun_footman_name" text="[룬] 검은태양 보병" />
+    <string id="aom_black_sun_longbowman_name" text="[룬] 검은태양 장궁병" />
+    <string id="aom_black_sun_marksman_name" text="[룬] 검은태양 명사수" />
+    <string id="aom_black_sun_raider_name" text="[룬] 검은태양 약탈기병" />
+    <string id="aom_black_sun_reaver_name" text="[룬] 검은태양 습격자" />
+    <string id="aom_black_sun_scourge_name" text="[룬] 검은태양 재앙병" />
+    <string id="aom_black_sun_scout_name" text="[룬] 검은태양 정찰병" />
+    <string id="aom_black_sun_trainee_name" text="[룬] 검은태양 훈련병" />
     <string id="aom_bluecraig_bolgs_ironfang_name" text="[고블린] 스카르낙의 강철송곳니" />
-    <string id="aom_cave_troll_name" text="[아모르도르] 무장 트롤" />
+    <string id="aom_cave_troll_name" text="[모르도르] 무장 트롤" />
     <string id="aom_dale_black_arrow_marksman_name" text="[데일] 데일 바딩" />
     <string id="aom_dale_bowman_name" text="[데일] 데일 자영농병" />
     <string id="aom_dale_crossbowman_name" text="[데일] 데일 석궁병" />
@@ -57,23 +58,23 @@
     <string id="aom_dale_royal_crossbowman_name" text="[데일] 데일 석궁 명수" />
     <string id="aom_dale_royal_guard_name" text="[데일] 데일 검사" />
     <string id="aom_dale_running_river_warden_name" text="[데일] 데일 왕실 검사" />
-    <string id="aom_dale_shipman_name" text="[데일] 데일 뱃사람" />
+    <string id="aom_dale_shipman_name" text="[데일] 데일 뱃사공" />
     <string id="aom_dale_spearman_name" text="[데일] 호수마을 장창병" />
     <string id="aom_dale_squire_name" text="[데일] 데일 징집병" />
     <string id="aom_dale_veteran_crossbowman_name" text="[데일] 데일 고참 석궁병" />
     <string id="aom_dale_veteran_northman_scout_name" text="[데일] 데일 고참 북부인 척후병" />
     <string id="aom_dale_veteran_spearman_name" text="[데일] 호수마을 고참 장창병" />
-    <string id="aom_darkhun_cavalry_name" text="[루운] 다르훈 기병" />
-    <string id="aom_darkhun_cultist_knight_name" text="[루운] 다르훈 사교도 기사" />
-    <string id="aom_darkhun_footman_name" text="[루운] 다르훈 보병" />
-    <string id="aom_darkhun_guard_name" text="[루운] 다르훈 호위병" />
-    <string id="aom_darkhun_horseman_name" text="[루운] 다르훈 기마병" />
-    <string id="aom_darkhun_infantry_name" text="[루운] 다르훈 보병대" />
-    <string id="aom_darkhun_ironbound_name" text="[루운] 다르훈 철갑병" />
-    <string id="aom_darkhun_knight_name" text="[루운] 다르훈 기사" />
-    <string id="aom_darkhun_recruit_name" text="[루운] 다르훈 신병" />
-    <string id="aom_darkhun_veteran_cavalry_name" text="[루운] 다르훈 고참 기병" />
-    <string id="aom_darkhun_veteran_infantry_name" text="[루운] 다르훈 고참 보병" />
+    <string id="aom_darkhun_cavalry_name" text="[룬] 다르훈 기병" />
+    <string id="aom_darkhun_cultist_knight_name" text="[룬] 다르훈 사교도 기사" />
+    <string id="aom_darkhun_footman_name" text="[룬] 다르훈 보병" />
+    <string id="aom_darkhun_guard_name" text="[룬] 다르훈 호위병" />
+    <string id="aom_darkhun_horseman_name" text="[룬] 다르훈 기마병" />
+    <string id="aom_darkhun_infantry_name" text="[룬] 다르훈 보병대" />
+    <string id="aom_darkhun_ironbound_name" text="[룬] 다르훈 철갑병" />
+    <string id="aom_darkhun_knight_name" text="[룬] 다르훈 기사" />
+    <string id="aom_darkhun_recruit_name" text="[룬] 다르훈 신병" />
+    <string id="aom_darkhun_veteran_cavalry_name" text="[룬] 다르훈 고참 기병" />
+    <string id="aom_darkhun_veteran_infantry_name" text="[룬] 다르훈 고참 보병" />
     <string id="aom_dg_fell_warg_rider_name" text="[돌 굴두르] 흉포한 약탈자" />
     <string id="aom_dg_goblin_archer_name" text="[돌 굴두르] 고블린 궁수" />
     <string id="aom_dg_goblin_crawler_name" text="[돌 굴두르] 고블린 기어다니는 자" />
@@ -118,25 +119,25 @@
     <string id="aom_dg_uruk_skirmisher_name" text="[돌 굴두르] 우루크 척후병" />
     <string id="aom_dg_uruk_swordsman_name" text="[돌 굴두르] 우루크 검병" />
     <string id="aom_dg_uruk_veteran_warrior_name" text="[돌 굴두르] 우루크 전사" />
-    <string id="aom_dg_uruk_warrior_name" text="[돌 굴두르] 우루크 전사" />
+    <string id="aom_dg_uruk_warrior_name" text="[돌 굴두르] 우루크 투사" />
     <string id="aom_dg_warg_raider_name" text="[돌 굴두르] 와르그 기수" />
     <string id="aom_dg_warg_red_fang_name" text="[돌 굴두르] 와르그 송곳니" />
     <string id="aom_dg_warg_scout_name" text="[돌 굴두르] 와르그 추적자" />
     <string id="aom_dg_warg_skirmisher_name" text="[돌 굴두르] 와르그 약탈자" />
-    <string id="aom_dragon_wrath_acolyte_name" text="[루운] 용의 분노 수련자" />
-    <string id="aom_dragon_wrath_archer_name" text="[루운] 용의 분노 궁수" />
-    <string id="aom_dragon_wrath_ash_executioner_name" text="[루운] 용의 분노 재의 처형자" />
-    <string id="aom_dragon_wrath_ash_knight_name" text="[루운] 용의 분노 재의 기사" />
-    <string id="aom_dragon_wrath_ash_marksman_name" text="[루운] 용의 분노 재의 명사수" />
-    <string id="aom_dragon_wrath_ash_shieldguard_name" text="[루운] 용의 분노 재의 방패병" />
-    <string id="aom_dragon_wrath_disciple_name" text="[루운] 용의 분노 문도" />
-    <string id="aom_dragon_wrath_infantry_name" text="[루운] 용의 분노 보병" />
-    <string id="aom_dragon_wrath_lancer_name" text="[루운] 용의 분노 창기병" />
-    <string id="aom_dragon_wrath_longbowman_name" text="[루운] 용의 분노 장궁병" />
-    <string id="aom_dragon_wrath_obsidian_knight_name" text="[루운] 용의 분노 흑요석 기사" />
-    <string id="aom_dragon_wrath_obsidian_shieldmaster_name" text="[루운] 용의 분노 흑요석 방패장" />
-    <string id="aom_dragon_wrath_obsidian_war_reaver_name" text="[루운] 용의 분노 흑요석 전투 약탈자" />
-    <string id="aom_dragon_wrath_obsidian_warbow_name" text="[루운] 용의 분노 흑요석 전궁병" />
+    <string id="aom_dragon_wrath_acolyte_name" text="[룬] 용의 분노 수련자" />
+    <string id="aom_dragon_wrath_archer_name" text="[룬] 용의 분노 궁수" />
+    <string id="aom_dragon_wrath_ash_executioner_name" text="[룬] 용의 분노 재의 처형자" />
+    <string id="aom_dragon_wrath_ash_knight_name" text="[룬] 용의 분노 재의 기사" />
+    <string id="aom_dragon_wrath_ash_marksman_name" text="[룬] 용의 분노 재의 명사수" />
+    <string id="aom_dragon_wrath_ash_shieldguard_name" text="[룬] 용의 분노 재의 방패병" />
+    <string id="aom_dragon_wrath_disciple_name" text="[룬] 용의 분노 문도" />
+    <string id="aom_dragon_wrath_infantry_name" text="[룬] 용의 분노 보병" />
+    <string id="aom_dragon_wrath_lancer_name" text="[룬] 용의 분노 창기병" />
+    <string id="aom_dragon_wrath_longbowman_name" text="[룬] 용의 분노 장궁병" />
+    <string id="aom_dragon_wrath_obsidian_knight_name" text="[룬] 용의 분노 흑요석 기사" />
+    <string id="aom_dragon_wrath_obsidian_shieldmaster_name" text="[룬] 용의 분노 흑요석 방패장" />
+    <string id="aom_dragon_wrath_obsidian_war_reaver_name" text="[룬] 용의 분노 흑요석 전투 약탈자" />
+    <string id="aom_dragon_wrath_obsidian_warbow_name" text="[룬] 용의 분노 흑요석 전궁병" />
     <string id="aom_dunland_bear_berserker_name" text="[던랜드] 아르스루스 광전사" />
     <string id="aom_dunland_bear_chosen_name" text="[던랜드] 아르스루스 선택받은 자" />
     <string id="aom_dunland_bear_executioner_name" text="[던랜드] 아르스루스 처형자" />
@@ -223,16 +224,16 @@
     <string id="aom_erebor_reg_miner_name" text="[에레보르] 광부" />
     <string id="aom_erebor_reg_skirmisher_name" text="[에레보르] 척후병" />
     <string id="aom_erebor_reg_warrior_name" text="[에레보르] 전사" />
-    <string id="aom_far_rhun_cataphract_name" text="[루운] 극동 루운 철기병" />
-    <string id="aom_far_rhun_cavalry_name" text="[루운] 극동 루운 기병" />
-    <string id="aom_far_rhun_footman_name" text="[루운] 극동 루운 보병" />
-    <string id="aom_far_rhun_gate_guard_name" text="[루운] 극동 루운 성문 수비병" />
-    <string id="aom_far_rhun_horse_master_name" text="[루운] 극동 루운 마술사(馬術師)" />
-    <string id="aom_far_rhun_horseman_name" text="[루운] 극동 루운 기수" />
-    <string id="aom_far_rhun_infantry_name" text="[루운] 극동 루운 보병대" />
-    <string id="aom_far_rhun_iron_cataphract_name" text="[루운] 극동 루운 강철 철기병" />
-    <string id="aom_far_rhun_iron_legionary_name" text="[루운] 극동 루운 강철 군단병" />
-    <string id="aom_far_rhun_levy_name" text="[루운] 극동 루운 징집병" />
+    <string id="aom_far_rhun_cataphract_name" text="[룬] 극동 룬 철기병" />
+    <string id="aom_far_rhun_cavalry_name" text="[룬] 극동 룬 기병" />
+    <string id="aom_far_rhun_footman_name" text="[룬] 극동 룬 보병" />
+    <string id="aom_far_rhun_gate_guard_name" text="[룬] 극동 룬 성문 수비병" />
+    <string id="aom_far_rhun_horse_master_name" text="[룬] 극동 룬 기마대장" />
+    <string id="aom_far_rhun_horseman_name" text="[룬] 극동 룬 기수" />
+    <string id="aom_far_rhun_infantry_name" text="[룬] 극동 룬 보병대" />
+    <string id="aom_far_rhun_iron_cataphract_name" text="[룬] 극동 룬 강철 철기병" />
+    <string id="aom_far_rhun_iron_legionary_name" text="[룬] 극동 룬 강철 군단병" />
+    <string id="aom_far_rhun_levy_name" text="[룬] 극동 룬 징집병" />
     <string id="aom_gb_militia_archer" text="[군다바드] 민병 궁수" />
     <string id="aom_gb_militia_spear" text="[군다바드] 민병 창병" />
     <string id="aom_gb_militia_vet_archer" text="[군다바드] 민병 정예 궁수" />
@@ -301,9 +302,8 @@
     <string id="aom_gondor_bel_vet_infantry_name" text="[곤도르] 벨팔라스 노련한 보병" />
     <string id="aom_gondor_brv_archer_name" text="[곤도르] 검은뿌리 계곡 궁수" />
     <string id="aom_gondor_brv_bowman_name" text="[곤도르] 검은뿌리 계곡 활잡이" />
-    <string id="aom_gondor_brv_ranger_name" text="[곤도르] 검은뿌리 계곡 그림자활" />
     <string id="aom_gondor_brv_scout_name" text="[곤도르] 검은뿌리 계곡 정찰병" />
-    <string id="aom_gondor_brv_shadowbow_name" text="[곤도르] 검은뿌리 계곡 그림자사냥꾼" />
+    <string id="aom_gondor_brv_shadowbow_name" text="[곤도르] 검은뿌리 계곡 그림자활" />
     <string id="aom_gondor_brv_shadowhunter_name" text="[곤도르] 검은뿌리 계곡 선봉대" />
     <string id="aom_gondor_brv_vet_archer_name" text="[곤도르] 검은뿌리 계곡 노련한 궁수" />
     <string id="aom_gondor_ca_guard_name" text="[곤도르] 카이르 안드로스 경비병" />
@@ -371,14 +371,10 @@
     <string id="aom_gondor_lin_spearman_name" text="[곤도르] 린히르 창병" />
     <string id="aom_gondor_lin_vet_spearman_name" text="[곤도르] 린히르 정예 창병" />
     <string id="aom_gondor_loss_axe_thrower_name" text="[곤도르] 로사르나크 투부병" />
-    <string id="aom_gondor_loss_axebearer_name" text="[곤도르] 로사르나크 도끼병" />
+    <string id="aom_gondor_loss_axebearer_name" text="[곤도르] 로사르나크 도끼잡이" />
     <string id="aom_gondor_loss_guard_name" text="[곤도르] 로사르나크 수비병" />
     <string id="aom_gondor_loss_lumberman_name" text="[곤도르] 로사르나크 벌목꾼" />
-    <string id="aom_gondor_loss_noble_captain_name" text="[곤도르] 로사르나크 귀족 대장" />
     <string id="aom_gondor_loss_noble_name" text="[곤도르] 로사르나크 귀족" />
-    <string id="aom_gondor_loss_noble_sergeant_name" text="[곤도르] 로사르나크 귀족 부관" />
-    <string id="aom_gondor_loss_noble_veteran_name" text="[곤도르] 로사르나크 귀족 정예병" />
-    <string id="aom_gondor_loss_noble_warden_name" text="[곤도르] 로사르나크 귀족 수호병" />
     <string id="aom_gondor_loss_skirmisher_name" text="[곤도르] 로사르나크 척후병" />
     <string id="aom_gondor_loss_vet_axe_thrower_name" text="[곤도르] 로사르나크 정예 투부병" />
     <string id="aom_gondor_loss_vet_axebearer_name" text="[곤도르] 로사르나크 정예 도끼병" />
@@ -496,27 +492,40 @@
     <string id="aom_harad_swordfighter_name" text="[하라드] 검 전사" />
     <string id="aom_harad_vipereye_name" text="[하라드] 독사" />
     <string id="aom_harad_warlance_name" text="[하라드] 전투창기병" />
-    <string id="aom_imladris_archer_name" text="[린돈] 미슬론드 궁수" />
-    <string id="aom_imladris_blademaster_name" text="[린돈] 미슬론드 검술 대가" />
-    <string id="aom_imladris_bowman_name" text="[린돈] 미슬론드 활병" />
-    <string id="aom_imladris_guardsman_name" text="[린돈] 미슬론드 호위병" />
-    <string id="aom_imladris_horse_archer_name" text="[린돈] 미슬론드 기마 궁수" />
-    <string id="aom_imladris_infantry_name" text="[린돈] 미슬론드 보병" />
-    <string id="aom_imladris_marchwarden_name" text="[린돈] 미슬론드 변경 수호대장" />
-    <string id="aom_imladris_marksman_name" text="[린돈] 미슬론드 명사수" />
-    <string id="aom_imladris_nobleman_name" text="[린돈] 미슬론드 귀족" />
-    <string id="aom_imladris_outrider_name" text="[린돈] 미슬론드 기마 척후병" />
-    <string id="aom_imladris_recruit_name" text="[린돈] 미슬론드 신병" />
-    <string id="aom_imladris_swordguard_name" text="[린돈] 미슬론드 검 근위병" />
-    <string id="aom_imladris_warden_name" text="[린돈] 미슬론드 수호병" />
-    <string id="aom_iron_hills_reg_axe_warrior_name" text="[무쇠산] 도끼 전사" />
-    <string id="aom_iron_hills_reg_bowman_name" text="[무쇠산] 활병" />
-    <string id="aom_iron_hills_reg_company_name" text="[무쇠산] 중대병" />
-    <string id="aom_iron_hills_reg_fighter_name" text="[무쇠산] 투사" />
-    <string id="aom_iron_hills_reg_militia_name" text="[무쇠산] 민병" />
-    <string id="aom_iron_hills_reg_recruit_name" text="[무쇠산] 신병" />
-    <string id="aom_iron_hills_reg_skirmisher_name" text="[무쇠산] 척후병" />
-    <string id="aom_iron_hills_reg_warrior_name" text="[무쇠산] 전사" />
+    <string id="aom_imladris_archer_name" text="[깊은골] 임라드리스 궁수" />
+    <string id="aom_lindon_imladris_archer_name" text="[린돈] 미슬론드 궁수" />
+    <string id="aom_imladris_blademaster_name" text="[깊은골] 임라드리스 검술사범" />
+    <string id="aom_lindon_imladris_blademaster_name" text="[린돈] 미슬론드 검술 대가" />
+    <string id="aom_imladris_bowman_name" text="[깊은골] 임라드리스 활잡이" />
+    <string id="aom_lindon_imladris_bowman_name" text="[린돈] 미슬론드 활병" />
+    <string id="aom_imladris_guardsman_name" text="[깊은골] 임라드리스 경비병" />
+    <string id="aom_lindon_imladris_guardsman_name" text="[린돈] 미슬론드 호위병" />
+    <string id="aom_imladris_horse_archer_name" text="[깊은골] 임라드리스 궁기병" />
+    <string id="aom_lindon_imladris_horse_archer_name" text="[린돈] 미슬론드 기마 궁수" />
+    <string id="aom_imladris_infantry_name" text="[깊은골] 임라드리스 보병" />
+    <string id="aom_lindon_imladris_infantry_name" text="[린돈] 미슬론드 보병" />
+    <string id="aom_imladris_marchwarden_name" text="[깊은골] 임라드리스 국경수비대장" />
+    <string id="aom_lindon_imladris_marchwarden_name" text="[린돈] 미슬론드 변경 수호대장" />
+    <string id="aom_imladris_marksman_name" text="[깊은골] 임라드리스 명사수" />
+    <string id="aom_lindon_imladris_marksman_name" text="[린돈] 미슬론드 명사수" />
+    <string id="aom_imladris_nobleman_name" text="[깊은골] 임라드리스 귀족" />
+    <string id="aom_lindon_imladris_nobleman_name" text="[린돈] 미슬론드 귀족" />
+    <string id="aom_imladris_outrider_name" text="[깊은골] 임라드리스 기마 정찰병" />
+    <string id="aom_lindon_imladris_outrider_name" text="[린돈] 미슬론드 기마 척후병" />
+    <string id="aom_imladris_recruit_name" text="[깊은골] 임라드리스 신병" />
+    <string id="aom_lindon_imladris_recruit_name" text="[린돈] 미슬론드 신병" />
+    <string id="aom_imladris_swordguard_name" text="[깊은골] 임라드리스 검호위병" />
+    <string id="aom_lindon_imladris_swordguard_name" text="[린돈] 미슬론드 검 근위병" />
+    <string id="aom_imladris_warden_name" text="[깊은골] 임라드리스 수호대" />
+    <string id="aom_lindon_imladris_warden_name" text="[린돈] 미슬론드 수호병" />
+    <string id="aom_iron_hills_reg_axe_warrior_name" text="[강철산] 도끼 전사" />
+    <string id="aom_iron_hills_reg_bowman_name" text="[강철산] 활병" />
+    <string id="aom_iron_hills_reg_company_name" text="[강철산] 중대병" />
+    <string id="aom_iron_hills_reg_fighter_name" text="[강철산] 투사" />
+    <string id="aom_iron_hills_reg_militia_name" text="[강철산] 민병" />
+    <string id="aom_iron_hills_reg_recruit_name" text="[강철산] 신병" />
+    <string id="aom_iron_hills_reg_skirmisher_name" text="[강철산] 척후병" />
+    <string id="aom_iron_hills_reg_warrior_name" text="[강철산] 전사" />
     <string id="aom_ironpass_arbalest_name" text="[아이언패스] 강노병" />
     <string id="aom_ironpass_axeman_name" text="[아이언패스] 도부수" />
     <string id="aom_ironpass_goat_charger_name" text="[아이언패스] 산양 돌격병" />
@@ -551,14 +560,14 @@
     <string id="aom_isengard_orc_warrior_name" text="[아이센가드] 오르크 전사" />
     <string id="aom_kharaghul_ashkur_nokor_name" text="[룬] 카라굴 아쉬쿠르 노코르" />
     <string id="aom_kharaghul_horse_archer_name" text="[룬] 카라굴 궁기병" />
-    <string id="aom_kharaghul_horse_master_name" text="[룬] 카라굴 마술사장" />
+    <string id="aom_kharaghul_horse_master_name" text="[룬] 카라굴 기마대장" />
     <string id="aom_kharaghul_horse_scout_name" text="[룬] 카라굴 기마 정찰병" />
     <string id="aom_kharaghul_karash_keshig_name" text="[룬] 카라굴 카라쉬 케식" />
     <string id="aom_kharaghul_keshig_name" text="[룬] 카라굴 케식" />
     <string id="aom_kharaghul_nokor_name" text="[룬] 카라굴 노코르" />
     <string id="aom_kharaghul_raider_name" text="[룬] 카라굴 침략병" />
     <string id="aom_kharaghul_rider_name" text="[룬] 카라굴 기병" />
-    <string id="aom_kharaghul_youth_name" text="[루), 임시" />
+    <string id="aom_kharaghul_youth_name" text="[룬] 카라굴 청년" />
     <string id="aom_lindon_glorfindel_guard_name" text="[린돈] 로칸논 엘레나스" />
     <string id="aom_lindon_gondolin_battlemaster_name" text="[린돈] 메길-아란 엘레나스" />
     <string id="aom_lindon_high_captain_name" text="[린돈] 대장군" />
@@ -567,20 +576,20 @@
     <string id="aom_lindon_royal_guard_name" text="[린돈] 왕실 근위병" />
     <string id="aom_lindon_royal_knight_name" text="[린돈] 왕실 기사" />
     <string id="aom_lindon_warden_gondolin_name" text="[린돈] 아이게드림 엘레나스" />
-    <string id="aom_loke_rim_archer_name" text="[루운] 로케림 궁수" />
-    <string id="aom_loke_rim_bowman_name" text="[루운] 로케림 활잡이" />
-    <string id="aom_loke_rim_cataphract_name" text="[루운] 로케림 중장기병" />
-    <string id="aom_loke_rim_cavalry_name" text="[루운] 로케림 기병" />
-    <string id="aom_loke_rim_footman_name" text="[루운] 로케림 보병" />
-    <string id="aom_loke_rim_gilded_cataphract_name" text="[루운] 로케림 황금 중장기병" />
-    <string id="aom_loke_rim_gilded_champion_name" text="[루운] 로케림 황금 용사" />
-    <string id="aom_loke_rim_gilded_marksman_name" text="[루운] 로케림 황금 사수" />
-    <string id="aom_loke_rim_gilded_shieldguard_name" text="[루운] 로케림 황금 방패병" />
-    <string id="aom_loke_rim_infantry_name" text="[루운] 로케림 보병대" />
-    <string id="aom_loke_rim_initiate_name" text="[루운] 로케림 입문자" />
-    <string id="aom_loke_rim_maceman_name" text="[루운] 로케림 철퇴병" />
-    <string id="aom_loke_rim_marksman_name" text="[루운] 로케림 사수" />
-    <string id="aom_loke_rim_shieldguard_name" text="[루운] 로케림 방패병" />
+    <string id="aom_loke_rim_archer_name" text="[룬] 로케림 궁수" />
+    <string id="aom_loke_rim_bowman_name" text="[룬] 로케림 활잡이" />
+    <string id="aom_loke_rim_cataphract_name" text="[룬] 로케림 중장기병" />
+    <string id="aom_loke_rim_cavalry_name" text="[룬] 로케림 기병" />
+    <string id="aom_loke_rim_footman_name" text="[룬] 로케림 보병" />
+    <string id="aom_loke_rim_gilded_cataphract_name" text="[룬] 로케림 황금 중장기병" />
+    <string id="aom_loke_rim_gilded_champion_name" text="[룬] 로케림 황금 용사" />
+    <string id="aom_loke_rim_gilded_marksman_name" text="[룬] 로케림 황금 사수" />
+    <string id="aom_loke_rim_gilded_shieldguard_name" text="[룬] 로케림 황금 방패병" />
+    <string id="aom_loke_rim_infantry_name" text="[룬] 로케림 보병대" />
+    <string id="aom_loke_rim_initiate_name" text="[룬] 로케림 입문자" />
+    <string id="aom_loke_rim_maceman_name" text="[룬] 로케림 철퇴병" />
+    <string id="aom_loke_rim_marksman_name" text="[룬] 로케림 사수" />
+    <string id="aom_loke_rim_shieldguard_name" text="[룬] 로케림 방패병" />
     <string id="aom_merc_dg_orc_scout_name" text="[돌 굴두르] 고용된 오르크 정찰병" />
     <string id="aom_merc_erebor_oathsworn_name" text="[에레보르] 고용된 맹세 전사" />
     <string id="aom_merc_goblin_fighter_name" text="[고블린] 고용된 고블린 약탈자" />
@@ -590,7 +599,8 @@
     <string id="aom_merc_gundabad_fighter_name" text="[군다바드] 고용된 창백한 우루크 약탈자" />
     <string id="aom_merc_gundabad_scout_name" text="[군다바드] 고용된 정찰병" />
     <string id="aom_merc_harad_noble_name" text="[하라드] 고용된 뱀의 젊은 귀공자" />
-    <string id="aom_merc_imladris_bowman_name" text="[린돈] 고용된 미슬론드 활잡이" />
+    <string id="aom_merc_imladris_bowman_name" text="[깊은골] 고용된 임라드리스 활잡이" />
+    <string id="aom_lindon_imladris_bowman_merc_name" text="[린돈] 고용된 미슬론드 활잡이" />
     <string id="aom_merc_lindon_noble_name" text="[린돈] 고용된 귀족" />
     <string id="aom_merc_mirkwood_recruit_name" text="[어둠숲] 고용된 실반 징집병" />
     <string id="aom_merc_mordor_orc_hunter_name" text="[모르도르] 고용된 오르크 사냥꾼" />
@@ -598,7 +608,7 @@
     <string id="aom_merc_mordor_uruk_grunt_name" text="[모르도르] 고용된 검은 우루크 병졸" />
     <string id="aom_merc_mordor_warg_tamer_name" text="[모르도르] 고용된 누른 와르그 조련사" />
     <string id="aom_merc_orthanc_chosen_name" text="[아이센가드] 고용된 오르상크 정예병" />
-    <string id="aom_merc_rivendell_noble_name" text="[리븐델] 고용된 귀족" />
+    <string id="aom_merc_rivendell_noble_name" text="[깊은골] 고용된 귀족" />
     <string id="aom_merc_umbar_elite_name" text="[움바르] 고용된 아두나임 신병" />
     <string id="aom_merc_urukhai_scout_name" text="[아이센가드] 고용된 우루크하이 정찰병" />
     <string id="aom_merc_urukhai_warrior_name" text="[아이센가드] 고용된 우루크하이 전사" />
@@ -677,7 +687,8 @@
     <string id="aom_mordor_warg_reaver_name" text="[모르도르] 누른 와르그 약탈병" />
     <string id="aom_mordor_warg_rider_name" text="[모르도르] 누른 와르그 기수" />
     <string id="aom_mordor_warg_tamer_name" text="[모르도르] 누른 와르그 조련사" />
-    <string id="aom_noldorin_lancer_name" text="[린돈] 팔라스림 창기병" />
+    <string id="aom_noldorin_lancer_name" text="[깊은골] 놀도르 창기병" />
+    <string id="aom_lindon_noldorin_lancer_name" text="[린돈] 팔라스림 창기병" />
     <string id="aom_orc_warg_enforcer_name" text="[아이센가드] 오크 와르그 기수 집행자" />
     <string id="aom_orc_warg_lieutenant_name" text="[아이센가드] 오크 와르그 기수 부관" />
     <string id="aom_orc_warg_overseer_name" text="[아이센가드] 오크 와르그 기수 감독관" />
@@ -690,15 +701,16 @@
     <string id="aom_rhun_mil_spear_name" text="[룬] 민병 창병" />
     <string id="aom_rhun_mil_varch_name" text="[룬] 민병 숙련 궁수" />
     <string id="aom_rhun_mil_vspear_name" text="[룬] 민병 숙련 창병" />
-    <string id="aom_rider_of_himring_name" text="[린돈] 발라르의 기수" />
-    <string id="aom_rivendell_glorfindel_guard_name" text="[리븐델] 로칸논 엘레나스" />
-    <string id="aom_rivendell_gondolin_battlemaster_name" text="[리븐델] 메길아란 엘레나스" />
-    <string id="aom_rivendell_high_captain_name" text="[리븐델] 대장" />
-    <string id="aom_rivendell_knight_golden_flower_name" text="[리븐델] 메길 말렌로스" />
-    <string id="aom_rivendell_noble_name" text="[리븐델] 귀족" />
-    <string id="aom_rivendell_royal_guard_name" text="[리븐델] 왕실 근위병" />
-    <string id="aom_rivendell_royal_knight_name" text="[리븐델] 왕실 기사" />
-    <string id="aom_rivendell_warden_gondolin_name" text="[리븐델] 아이게드림 엘레나스" />
+    <string id="aom_rider_of_himring_name" text="[깊은골] 히므링의 기수" />
+    <string id="aom_lindon_rider_of_himring_name" text="[린돈] 발라르의 기수" />
+    <string id="aom_rivendell_glorfindel_guard_name" text="[깊은골] 로칸논 엘레나스" />
+    <string id="aom_rivendell_gondolin_battlemaster_name" text="[깊은골] 메길아란 엘레나스" />
+    <string id="aom_rivendell_high_captain_name" text="[깊은골] 대장" />
+    <string id="aom_rivendell_knight_golden_flower_name" text="[깊은골] 메길 말렌로스" />
+    <string id="aom_rivendell_noble_name" text="[깊은골] 귀족" />
+    <string id="aom_rivendell_royal_guard_name" text="[깊은골] 왕실 근위병" />
+    <string id="aom_rivendell_royal_knight_name" text="[깊은골] 왕실 기사" />
+    <string id="aom_rivendell_warden_gondolin_name" text="[깊은골] 아이게드림 엘레나스" />
     <string id="aom_rohan_eastemnet_elite_lancer_name" text="[로한] 동에뮈넷 정예 창기병" />
     <string id="aom_rohan_eastemnet_eorlingas_lancer_name" text="[로한] 동에뮈넷 에오를링가스 창기병" />
     <string id="aom_rohan_eastemnet_kings_own_lancer_name" text="[로한] 동에뮈넷 왕의 창기병" />
@@ -756,10 +768,14 @@
     <string id="aom_rohan_wold_recruit_name" text="[로한] 월드 신병" />
     <string id="aom_rohan_wold_scout_name" text="[로한] 월드 정찰병" />
     <string id="aom_rohan_wold_veteran_horse_archer_name" text="[로한] 월드 고참 기수" />
-    <string id="aom_rv_militia_archer" text="[린돈] 민병 궁수" />
-    <string id="aom_rv_militia_spear" text="[린돈] 민병 창병" />
-    <string id="aom_rv_militia_vet_archer" text="[린돈] 민병대 베테랑 궁수" />
-    <string id="aom_rv_militia_vet_spear" text="[린돈] 민병대 베테랑 창병" />
+    <string id="aom_rv_militia_archer" text="[깊은골] 민병 궁수" />
+    <string id="aom_lindon_militia_archer_name" text="[린돈] 민병 궁수" />
+    <string id="aom_rv_militia_spear" text="[깊은골] 민병 창병" />
+    <string id="aom_lindon_militia_spearman_name" text="[린돈] 민병 창병" />
+    <string id="aom_rv_militia_vet_archer" text="[깊은골] 민병 베테랑 궁수" />
+    <string id="aom_lindon_militia_veteran_archer_name" text="[린돈] 민병대 베테랑 궁수" />
+    <string id="aom_rv_militia_vet_spear" text="[깊은골] 민병 베테랑 창병" />
+    <string id="aom_lindon_militia_veteran_spearman_name" text="[린돈] 민병대 베테랑 창병" />
     <string id="aom_sagarun_arbalest_name" text="[룬] 사가룬 강노병" />
     <string id="aom_sagarun_crossbowman_name" text="[룬] 사가룬 석궁병" />
     <string id="aom_sagarun_deckhand_name" text="[룬] 사가룬 갑판수" />
@@ -842,5 +858,14 @@
     <string id="taom_mirkwood_stalkers_boss_name" text="[어둠숲] 추적자 대장" />
     <string id="taom_rhun_raiders_boss_name" text="[룬] 카라굴 군벌" />
     <string id="taom_umbar_corsairs_boss_name" text="[움바르] 해적 선장" />
+    <string id="aom_hill_troll_name" text="[모르도르] 산악 트롤" />
+    <string id="aom_gondor_brv_ranger_name" text="[곤도르] 검은뿌리 계곡 순찰자" />
+    <string id="aom_gondor_loss_noble_captain_name" text="[곤도르] 로사르나크 상급 도끼수호대" />
+    <string id="aom_gondor_loss_noble_sergeant_name" text="[곤도르] 로사르나크 도끼호위대" />
+    <string id="aom_gondor_loss_noble_veteran_name" text="[곤도르] 로사르나크 도끼병" />
+    <string id="aom_gondor_loss_noble_warden_name" text="[곤도르] 로사르나크 도끼수호대" />
+    <string id="aom_harad_howdah_crew_name" text="[하라드] 하우다 궁수" />
+    <string id="taom_test_animalia_elk_rider" text="[테스트] 아니말리아 엘크 기수" />
+    <string id="taom_test_animalia_moose_rider" text="[테스트] 아니말리아 무스 기수" />
   </strings>
 </base>

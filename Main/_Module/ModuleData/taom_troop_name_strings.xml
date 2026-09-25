@@ -10,7 +10,7 @@
 	<string id="aom_balcoth_horse_archer_name" text="{=aom_balcoth_horse_archer_name}[Rhûn] Balcoth Horse Archer" />
 	<string id="aom_balcoth_veteran_axeman_name" text="{=aom_balcoth_veteran_axeman_name}[Rhûn] Balcoth Veteran Axeman" />
 	<string id="aom_balcoth_volunteer_name" text="{=aom_balcoth_volunteer_name}[Rhûn] Balcoth Volunteer" />
-	<string id="aom_battlemaster_of_the_first_age_name" text="{=aom_battlemaster_of_the_first_age_name}[Lindon] Battlemaster of the First Age" />
+	<string id="aom_battlemaster_of_the_first_age_name" text="{=aom_battlemaster_of_the_first_age_name}[Rivendell] Battlemaster of the First Age" />
 	<string id="aom_black_sun_archer_name" text="{=aom_black_sun_archer_name}[Rhûn] Black Sun Archer" />
 	<string id="aom_black_sun_chosen_marksman_name" text="{=aom_black_sun_chosen_marksman_name}[Rhûn] Black Sun Chosen Marksman" />
 	<string id="aom_black_sun_executioner_name" text="{=aom_black_sun_executioner_name}[Rhûn] Black Sun Executioner" />
@@ -492,19 +492,20 @@
 	<string id="aom_harad_swordfighter_name" text="{=aom_harad_swordfighter_name}[Harad] Sword Fighter" />
 	<string id="aom_harad_vipereye_name" text="{=aom_harad_vipereye_name}[Harad] Viper" />
 	<string id="aom_harad_warlance_name" text="{=aom_harad_warlance_name}[Harad] Warlance" />
-	<string id="aom_imladris_archer_name" text="{=aom_imladris_archer_name}[Lindon] Mithlond Archer" />
-	<string id="aom_imladris_blademaster_name" text="{=aom_imladris_blademaster_name}[Lindon] Mithlond Blademaster" />
-	<string id="aom_imladris_bowman_name" text="{=aom_imladris_bowman_name}[Lindon] Mithlond Bowman" />
-	<string id="aom_imladris_guardsman_name" text="{=aom_imladris_guardsman_name}[Lindon] Mithlond Guardsman" />
-	<string id="aom_imladris_horse_archer_name" text="{=aom_imladris_horse_archer_name}[Lindon] Mithlond Horse Archer" />
-	<string id="aom_imladris_infantry_name" text="{=aom_imladris_infantry_name}[Lindon] Mithlond Infantry" />
-	<string id="aom_imladris_marchwarden_name" text="{=aom_imladris_marchwarden_name}[Lindon] Mithlond Marchwarden" />
-	<string id="aom_imladris_marksman_name" text="{=aom_imladris_marksman_name}[Lindon] Mithlond Marksman" />
-	<string id="aom_imladris_nobleman_name" text="{=aom_imladris_nobleman_name}[Lindon] Mithlond Nobleman" />
-	<string id="aom_imladris_outrider_name" text="{=aom_imladris_outrider_name}[Lindon] Mithlond Outrider" />
-	<string id="aom_imladris_recruit_name" text="{=aom_imladris_recruit_name}[Lindon] Mithlond Recruit" />
-	<string id="aom_imladris_swordguard_name" text="{=aom_imladris_swordguard_name}[Lindon] Mithlond Swordguard" />
-	<string id="aom_imladris_warden_name" text="{=aom_imladris_warden_name}[Lindon] Mithlond Warden" />
+	<string id="aom_hill_troll_name" text="{=aom_hill_troll_name}[AMordor] Hill Troll" />
+	<string id="aom_imladris_archer_name" text="{=aom_imladris_archer_name}[Rivendell] Imladris Archer" />
+	<string id="aom_imladris_blademaster_name" text="{=aom_imladris_blademaster_name}[Rivendell] Imladris Blademaster" />
+	<string id="aom_imladris_bowman_name" text="{=aom_imladris_bowman_name}[Rivendell] Imladris Bowman" />
+	<string id="aom_imladris_guardsman_name" text="{=aom_imladris_guardsman_name}[Rivendell] Imladris Guardsman" />
+	<string id="aom_imladris_horse_archer_name" text="{=aom_imladris_horse_archer_name}[Rivendell] Imladris Horse Archer" />
+	<string id="aom_imladris_infantry_name" text="{=aom_imladris_infantry_name}[Rivendell] Imladris Infantry" />
+	<string id="aom_imladris_marchwarden_name" text="{=aom_imladris_marchwarden_name}[Rivendell] Imladris Marchwarden" />
+	<string id="aom_imladris_marksman_name" text="{=aom_imladris_marksman_name}[Rivendell] Imladris Marksman" />
+	<string id="aom_imladris_nobleman_name" text="{=aom_imladris_nobleman_name}[Rivendell] Imladris Nobleman" />
+	<string id="aom_imladris_outrider_name" text="{=aom_imladris_outrider_name}[Rivendell] Imladris Outrider" />
+	<string id="aom_imladris_recruit_name" text="{=aom_imladris_recruit_name}[Rivendell] Imladris Recruit" />
+	<string id="aom_imladris_swordguard_name" text="{=aom_imladris_swordguard_name}[Rivendell] Imladris Swordguard" />
+	<string id="aom_imladris_warden_name" text="{=aom_imladris_warden_name}[Rivendell] Imladris Warden" />
 	<string id="aom_iron_hills_reg_axe_warrior_name" text="{=aom_iron_hills_reg_axe_warrior_name}[Iron Hills] Axe Warrior" />
 	<string id="aom_iron_hills_reg_bowman_name" text="{=aom_iron_hills_reg_bowman_name}[Iron Hills] Bowman" />
 	<string id="aom_iron_hills_reg_company_name" text="{=aom_iron_hills_reg_company_name}[Iron Hills] Company" />
@@ -555,11 +556,32 @@
 	<string id="aom_kharaghul_raider_name" text="{=aom_kharaghul_raider_name}[Rhûn] Kharaghûl Raider" />
 	<string id="aom_kharaghul_rider_name" text="{=aom_kharaghul_rider_name}[Rhûn] Kharaghûl Rider" />
 	<string id="aom_kharaghul_youth_name" text="{=aom_kharaghul_youth_name}[Rhûn] Kharaghûl Youth" />
+	<string id="aom_lindon_battlemaster_of_the_first_age_name" text="{=aom_lindon_battlemaster_of_the_first_age_name}[Lindon] Battlemaster of the First Age" />
 	<string id="aom_lindon_glorfindel_guard_name" text="{=aom_lindon_glorfindel_guard_name}[Lindon] Rochannon Elenath" />
 	<string id="aom_lindon_gondolin_battlemaster_name" text="{=aom_lindon_gondolin_battlemaster_name}[Lindon] Megil-Aran Elenath" />
 	<string id="aom_lindon_high_captain_name" text="{=aom_lindon_high_captain_name}[Lindon] High Captain" />
+	<string id="aom_lindon_imladris_archer_name" text="{=aom_lindon_imladris_archer_name}[Lindon] Mithlond Archer" />
+	<string id="aom_lindon_imladris_blademaster_name" text="{=aom_lindon_imladris_blademaster_name}[Lindon] Mithlond Blademaster" />
+	<string id="aom_lindon_imladris_bowman_merc_name" text="{=aom_lindon_imladris_bowman_merc_name}[Lindon] Hired Mithlond Bowman" />
+	<string id="aom_lindon_imladris_bowman_name" text="{=aom_lindon_imladris_bowman_name}[Lindon] Mithlond Bowman" />
+	<string id="aom_lindon_imladris_guardsman_name" text="{=aom_lindon_imladris_guardsman_name}[Lindon] Mithlond Guardsman" />
+	<string id="aom_lindon_imladris_horse_archer_name" text="{=aom_lindon_imladris_horse_archer_name}[Lindon] Mithlond Horse Archer" />
+	<string id="aom_lindon_imladris_infantry_name" text="{=aom_lindon_imladris_infantry_name}[Lindon] Mithlond Infantry" />
+	<string id="aom_lindon_imladris_marchwarden_name" text="{=aom_lindon_imladris_marchwarden_name}[Lindon] Mithlond Marchwarden" />
+	<string id="aom_lindon_imladris_marksman_name" text="{=aom_lindon_imladris_marksman_name}[Lindon] Mithlond Marksman" />
+	<string id="aom_lindon_imladris_nobleman_name" text="{=aom_lindon_imladris_nobleman_name}[Lindon] Mithlond Nobleman" />
+	<string id="aom_lindon_imladris_outrider_name" text="{=aom_lindon_imladris_outrider_name}[Lindon] Mithlond Outrider" />
+	<string id="aom_lindon_imladris_recruit_name" text="{=aom_lindon_imladris_recruit_name}[Lindon] Mithlond Recruit" />
+	<string id="aom_lindon_imladris_swordguard_name" text="{=aom_lindon_imladris_swordguard_name}[Lindon] Mithlond Swordguard" />
+	<string id="aom_lindon_imladris_warden_name" text="{=aom_lindon_imladris_warden_name}[Lindon] Mithlond Warden" />
 	<string id="aom_lindon_knight_golden_flower_name" text="{=aom_lindon_knight_golden_flower_name}[Lindon] Megil Mallenloth" />
+	<string id="aom_lindon_militia_archer_name" text="{=aom_lindon_militia_archer_name}[Lindon] Militia Archer" />
+	<string id="aom_lindon_militia_spearman_name" text="{=aom_lindon_militia_spearman_name}[Lindon] Militia Spearman" />
+	<string id="aom_lindon_militia_veteran_archer_name" text="{=aom_lindon_militia_veteran_archer_name}[Lindon] Militia Veteran Archer" />
+	<string id="aom_lindon_militia_veteran_spearman_name" text="{=aom_lindon_militia_veteran_spearman_name}[Lindon] Militia Veteran Spearman" />
 	<string id="aom_lindon_noble_name" text="{=aom_lindon_noble_name}[Lindon] Noble" />
+	<string id="aom_lindon_noldorin_lancer_name" text="{=aom_lindon_noldorin_lancer_name}[Lindon] Falathrim Lancer" />
+	<string id="aom_lindon_rider_of_himring_name" text="{=aom_lindon_rider_of_himring_name}[Lindon] Rider of Balar" />
 	<string id="aom_lindon_royal_guard_name" text="{=aom_lindon_royal_guard_name}[Lindon] Royal Guard" />
 	<string id="aom_lindon_royal_knight_name" text="{=aom_lindon_royal_knight_name}[Lindon] Royal Knight" />
 	<string id="aom_lindon_warden_gondolin_name" text="{=aom_lindon_warden_gondolin_name}[Lindon] Aegedhrim Elenath" />
@@ -586,7 +608,7 @@
 	<string id="aom_merc_gundabad_fighter_name" text="{=aom_merc_gundabad_fighter_name}[Gundabad] Hired Pale Uruk Raider" />
 	<string id="aom_merc_gundabad_scout_name" text="{=aom_merc_gundabad_scout_name}[Gundabad] Hired Scout" />
 	<string id="aom_merc_harad_noble_name" text="{=aom_merc_harad_noble_name}[Harad] Hired Youngblood of the Serpent" />
-	<string id="aom_merc_imladris_bowman_name" text="{=aom_merc_imladris_bowman_name}[Lindon] Hired Mithlond Bowman" />
+	<string id="aom_merc_imladris_bowman_name" text="{=aom_merc_imladris_bowman_name}[Rivendell] Hired Imladris Bowman" />
 	<string id="aom_merc_lindon_noble_name" text="{=aom_merc_lindon_noble_name}[Lindon] Hired Noble" />
 	<string id="aom_merc_mirkwood_recruit_name" text="{=aom_merc_mirkwood_recruit_name}[Mirkwood] Hired Silvan Levy" />
 	<string id="aom_merc_mordor_orc_hunter_name" text="{=aom_merc_mordor_orc_hunter_name}[Mordor] Hired Orc Hunter" />
@@ -673,7 +695,7 @@
 	<string id="aom_mordor_warg_reaver_name" text="{=aom_mordor_warg_reaver_name}[Mordor] Nurn Warg Reaver" />
 	<string id="aom_mordor_warg_rider_name" text="{=aom_mordor_warg_rider_name}[Mordor] Nurn Warg Rider" />
 	<string id="aom_mordor_warg_tamer_name" text="{=aom_mordor_warg_tamer_name}[Mordor] Nurn Warg Tamer" />
-	<string id="aom_noldorin_lancer_name" text="{=aom_noldorin_lancer_name}[Lindon] Falathrim Lancer" />
+	<string id="aom_noldorin_lancer_name" text="{=aom_noldorin_lancer_name}[Rivendell] Noldorin Lancer" />
 	<string id="aom_orc_warg_enforcer_name" text="{=aom_orc_warg_enforcer_name}[Isengard] Orc Warg-Rider Enforcer" />
 	<string id="aom_orc_warg_lieutenant_name" text="{=aom_orc_warg_lieutenant_name}[Isengard] Orc Warg-Rider Lieutenant" />
 	<string id="aom_orc_warg_overseer_name" text="{=aom_orc_warg_overseer_name}[Isengard] Orc Warg-Rider Overseer" />
@@ -686,7 +708,7 @@
 	<string id="aom_rhun_mil_spear_name" text="{=aom_rhun_mil_spear_name}[Rhûn] Militia Spearman" />
 	<string id="aom_rhun_mil_varch_name" text="{=aom_rhun_mil_varch_name}[Rhûn] Militia Veteran Archer" />
 	<string id="aom_rhun_mil_vspear_name" text="{=aom_rhun_mil_vspear_name}[Rhûn] Militia Veteran Spearman" />
-	<string id="aom_rider_of_himring_name" text="{=aom_rider_of_himring_name}[Lindon] Rider of Balar" />
+	<string id="aom_rider_of_himring_name" text="{=aom_rider_of_himring_name}[Rivendell] Rider of Himring" />
 	<string id="aom_rivendell_glorfindel_guard_name" text="{=aom_rivendell_glorfindel_guard_name}[Rivendell] Rochannon Elenath" />
 	<string id="aom_rivendell_gondolin_battlemaster_name" text="{=aom_rivendell_gondolin_battlemaster_name}[Rivendell] Megil-Aran Elenath" />
 	<string id="aom_rivendell_high_captain_name" text="{=aom_rivendell_high_captain_name}[Rivendell] High Captain" />
@@ -752,10 +774,10 @@
 	<string id="aom_rohan_wold_recruit_name" text="{=aom_rohan_wold_recruit_name}[Rohan] Wold Recruit" />
 	<string id="aom_rohan_wold_scout_name" text="{=aom_rohan_wold_scout_name}[Rohan] Wold Scout" />
 	<string id="aom_rohan_wold_veteran_horse_archer_name" text="{=aom_rohan_wold_veteran_horse_archer_name}[Rohan] Wold Veteran Horse Rider" />
-	<string id="aom_rv_militia_archer" text="{=aom_rv_militia_archer}[Lindon] Militia Archer" />
-	<string id="aom_rv_militia_spear" text="{=aom_rv_militia_spear}[Lindon] Militia Spearman" />
-	<string id="aom_rv_militia_vet_archer" text="{=aom_rv_militia_vet_archer}[Lindon] Militia Veteran Archer" />
-	<string id="aom_rv_militia_vet_spear" text="{=aom_rv_militia_vet_spear}[Lindon] Militia Veteran Spearman" />
+	<string id="aom_rv_militia_archer" text="{=aom_rv_militia_archer}[Rivendell] Militia Archer" />
+	<string id="aom_rv_militia_spear" text="{=aom_rv_militia_spear}[Rivendell] Militia Spearman" />
+	<string id="aom_rv_militia_vet_archer" text="{=aom_rv_militia_vet_archer}[Rivendell] Militia Veteran Archer" />
+	<string id="aom_rv_militia_vet_spear" text="{=aom_rv_militia_vet_spear}[Rivendell] Militia Veteran Spearman" />
 	<string id="aom_sagarun_arbalest_name" text="{=aom_sagarun_arbalest_name}[Rhûn] Sagarûn Arbalest" />
 	<string id="aom_sagarun_crossbowman_name" text="{=aom_sagarun_crossbowman_name}[Rhûn] Sagarûn Crossbowman" />
 	<string id="aom_sagarun_deckhand_name" text="{=aom_sagarun_deckhand_name}[Rhûn] Sagarûn Deckhand" />

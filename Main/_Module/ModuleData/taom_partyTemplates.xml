@@ -800,6 +800,7 @@
 			<PartyTemplateStack min_value="1" max_value="8" troop="NPCCharacter.morannon_heavy_infantry" />
 			<PartyTemplateStack min_value="0" max_value="6" troop="NPCCharacter.morannon_heavy_spearman" />
 			<PartyTemplateStack min_value="0" max_value="7" troop="NPCCharacter.cave_troll" />
+			<PartyTemplateStack min_value="0" max_value="7" troop="NPCCharacter.hill_troll" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -3474,7 +3475,7 @@
 
 	<MBPartyTemplate id="kingdom_hero_party_mordor_empire_south_5_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="44" troop="NPCCharacter.mordor_orc_impaler" />
+			<PartyTemplateStack min_value="1" max_value="40" troop="NPCCharacter.mordor_orc_impaler" />
 			<PartyTemplateStack min_value="0" max_value="6" troop="NPCCharacter.mordor_uruk_fighter" />
 			<PartyTemplateStack min_value="0" max_value="6" troop="NPCCharacter.mordor_uruk_warrior" />
 			<PartyTemplateStack min_value="0" max_value="6" troop="NPCCharacter.mordor_uruk_vanguard" />
@@ -3486,6 +3487,8 @@
 			<PartyTemplateStack min_value="1" max_value="44" troop="NPCCharacter.mordor_warg_reaver" />
 			<PartyTemplateStack min_value="0" max_value="42" troop="NPCCharacter.mordor_warg_ravager" />
 			<PartyTemplateStack min_value="0" max_value="44" troop="NPCCharacter.mordor_warg_beastmaster" />
+			<PartyTemplateStack min_value="0" max_value="2" troop="NPCCharacter.cave_troll" />
+			<PartyTemplateStack min_value="0" max_value="2" troop="NPCCharacter.hill_troll" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -4885,7 +4888,7 @@
 		<stacks>
 			<PartyTemplateStack min_value="0" max_value="6" troop="NPCCharacter.mordor_uruk_fighter" />
 			<PartyTemplateStack min_value="0" max_value="6" troop="NPCCharacter.mordor_uruk_warrior" />
-			<PartyTemplateStack min_value="1" max_value="44" troop="NPCCharacter.mordor_orc_infantry" />
+			<PartyTemplateStack min_value="1" max_value="40" troop="NPCCharacter.mordor_orc_infantry" />
 			<PartyTemplateStack min_value="0" max_value="6" troop="NPCCharacter.mordor_uruk_shieldguard" />
 			<PartyTemplateStack min_value="0" max_value="6" troop="NPCCharacter.mordor_uruk_captain" />
 			<PartyTemplateStack min_value="1" max_value="44" troop="NPCCharacter.mordor_orc_archer" />
@@ -4895,6 +4898,8 @@
 			<PartyTemplateStack min_value="1" max_value="44" troop="NPCCharacter.mordor_warg_reaver" />
 			<PartyTemplateStack min_value="0" max_value="42" troop="NPCCharacter.mordor_warg_ravager" />
 			<PartyTemplateStack min_value="0" max_value="44" troop="NPCCharacter.mordor_warg_beastmaster" />
+			<PartyTemplateStack min_value="0" max_value="2" troop="NPCCharacter.cave_troll" />
+			<PartyTemplateStack min_value="0" max_value="2" troop="NPCCharacter.hill_troll" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -4921,7 +4926,7 @@
 			<PartyTemplateStack min_value="2" max_value="23" troop="NPCCharacter.mordor_orc_recruit" />
 			<PartyTemplateStack min_value="2" max_value="23" troop="NPCCharacter.mordor_warg_tamer" />
 			<PartyTemplateStack min_value="2" max_value="23" troop="NPCCharacter.mordor_orc_lackey" />
-			<PartyTemplateStack min_value="1" max_value="24" troop="NPCCharacter.mordor_orc_infantry" />
+			<PartyTemplateStack min_value="1" max_value="20" troop="NPCCharacter.mordor_orc_infantry" />
 			<PartyTemplateStack min_value="0" max_value="3" troop="NPCCharacter.mordor_uruk_baraddurguard" />
 			<PartyTemplateStack min_value="0" max_value="23" troop="NPCCharacter.mordor_orc_reaver" />
 			<PartyTemplateStack min_value="2" max_value="23" troop="NPCCharacter.mordor_militia_archer" />
@@ -4931,6 +4936,8 @@
 			<PartyTemplateStack min_value="2" max_value="23" troop="NPCCharacter.mordor_warg_raider" />
 			<PartyTemplateStack min_value="1" max_value="23" troop="NPCCharacter.mordor_warg_reaver" />
 			<PartyTemplateStack min_value="0" max_value="22" troop="NPCCharacter.mordor_warg_ravager" />
+			<PartyTemplateStack min_value="0" max_value="2" troop="NPCCharacter.cave_troll" />
+			<PartyTemplateStack min_value="0" max_value="2" troop="NPCCharacter.hill_troll" />
 		</stacks>
 	</MBPartyTemplate>
 

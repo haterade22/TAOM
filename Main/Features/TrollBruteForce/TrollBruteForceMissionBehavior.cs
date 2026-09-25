@@ -10,8 +10,9 @@ using TaleWorlds.MountAndBlade;
 namespace TAOM.Features.TrollBruteForce;
 
 /// <summary>
-/// Mission boundary for the cave troll's Brute Force (#649): attaches a <see cref="TrollBruteForceBehaviorTree"/> to
-/// every agent whose Monster is <c>cave_troll</c> (the settlement and child Monsters never match). Elk's wiring:
+/// Mission boundary for the trolls' Brute Force (#649): attaches a <see cref="TrollBruteForceBehaviorTree"/> to
+/// every agent whose Monster is <c>cave_troll</c> or <c>hill_troll</c> (the settlement and child Monsters never
+/// match; <see cref="TrollBruteForceConfig.ActionSetsByMonster"/>). Elk's wiring:
 /// MUST be <c>: MissionLogic</c>, NEVER <c>: MissionBehavior</c> (rca-looter-battle-nre-2026-05-24.md, pinned by
 /// BehaviorTreeMissionLogicInheritanceTests). The trees tick from BehaviorTreeMissionLogic.OnMissionTick on the
 /// main thread; this behavior never ticks a tree itself.
@@ -32,7 +33,7 @@ public class TrollBruteForceMissionBehavior : MissionLogic
         _service = IoC.Resolve<ITrollBruteForceService>();
         _logger = IoC.Resolve<IModLogger>();
         _tracker = new CreatureTreeTracker(TreeName, "[TrollBruteForce]",
-            a => _service.IsCaveTroll(a.Monster?.StringId), _logger);
+            a => _service.IsBruteForceTroll(a.Monster?.StringId), _logger);
     }
 
     private void Initialize()
@@ -42,21 +43,24 @@ public class TrollBruteForceMissionBehavior : MissionLogic
         if (BTRegister.Logger == null)
             BTRegister.AddLogger(new TaomBTLogger());
 
-        // Drift guard: the action lives in the UNVERSIONED LOTRLOME_Armory (action_types.xml, and the binding in
-        // as_cave_troll_warrior), so a reinstall drops it. A missing action resolves to act_none silently; a declared
+        // Drift guard: the action lives in the UNVERSIONED LOTRLOME_Armory (action_types.xml, and a binding in each
+        // troll's standalone set), so a reinstall drops it. A missing action resolves to act_none silently; a declared
         // action whose binding or clip is gone resolves to a valid index and plays nothing.
         if (TrollBruteForceCombat.Action == ActionIndexCache.act_none)
             _logger.LogError($"[TrollBruteForce] {TrollBruteForceConfig.ActionName} resolved to act_none - " +
-                "LOTRLOME_Armory action_types drift? Cave trolls will not smash.");
+                "LOTRLOME_Armory action_types drift? Trolls will not smash.");
         else
         {
-            MBActionSet set = MBActionSet.GetActionSet(TrollBruteForceConfig.ActionSetId);
-            if (!set.IsValid)
-                _logger.LogError($"[TrollBruteForce] Action set {TrollBruteForceConfig.ActionSetId} not found - " +
-                    "LOTRLOME_Armory action_sets drift?");
-            else if (!MBActionSet.CheckActionAnimationClipExists(set, TrollBruteForceCombat.Action))
-                _logger.LogError($"[TrollBruteForce] {TrollBruteForceConfig.ActionName} has no clip in " +
-                    $"{TrollBruteForceConfig.ActionSetId} - the binding or its clip package is missing. The smash will play nothing.");
+            foreach (var pair in TrollBruteForceConfig.ActionSetsByMonster)
+            {
+                MBActionSet set = MBActionSet.GetActionSet(pair.Value);
+                if (!set.IsValid)
+                    _logger.LogError($"[TrollBruteForce] Action set {pair.Value} ({pair.Key}) not found - " +
+                        "LOTRLOME_Armory action_sets drift?");
+                else if (!MBActionSet.CheckActionAnimationClipExists(set, TrollBruteForceCombat.Action))
+                    _logger.LogError($"[TrollBruteForce] {TrollBruteForceConfig.ActionName} has no clip in " +
+                        $"{pair.Value} - the binding or its clip package is missing. The {pair.Key} smash will play nothing.");
+            }
         }
 
         _logger.LogInfo("[TrollBruteForce] Initialized");
@@ -72,7 +76,7 @@ public class TrollBruteForceMissionBehavior : MissionLogic
             {
                 _treesAdded = true;
                 int count = _tracker.AttachAll(Mission.Current.AllAgents);
-                _logger.LogInfo($"[TrollBruteForce] Attached behavior trees to {count} cave troll(s)");
+                _logger.LogInfo($"[TrollBruteForce] Attached behavior trees to {count} troll(s)");
             }
 
             _tracker.PruneDead();
@@ -97,7 +101,7 @@ public class TrollBruteForceMissionBehavior : MissionLogic
     {
         if (_treesAdded)
             _logger.LogInfo($"[TrollBruteForce] Mission end: {_tracker.LateAttachCount} tree(s) late-attached, " +
-                $"{_tracker.AliveCount} cave troll(s) alive at end");
+                $"{_tracker.AliveCount} troll(s) alive at end");
         _tracker.Clear();
         _loggedErrors.Clear();
         base.OnRemoveBehavior();

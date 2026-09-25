@@ -1526,17 +1526,17 @@
     <string id="taom_faction_havens_of_umbar_weakness_1" text="Znienawidzeni przez Gondor" />
     <string id="taom_faction_havens_of_umbar_weakness_2" text="Armia lądowa słabsza niż flota" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_0" text="+35% nagrody wpływów za armię (Elfia mądrość)" />
-    <string id="taom_faction_high_kingdom_of_lindon_bonus_1" text="+20% wzrostu ognisk w wioskach (Ostatni Przytulny Dom)" />
+    <string id="taom_faction_high_kingdom_of_lindon_bonus_1" text="+20% wzrostu ognisk domowych w wioskach (Szare Przystanie)" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_2" text="+10% szybkości drużyny w lasach (Leśna gracja)" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_3" text="-15% zużycia żywności przez drużynę (Elfia oszczędność)" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_4" text="+0,5 lojalności osady na dzień" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_5" text="+25% kosztu wpływów armii (Elfia duma)" />
-    <string id="taom_faction_high_kingdom_of_lindon_desc" text="Zielona kraina na zachód od Gór Błękitnych, ostatnie królestwo Wysokich Elfów na brzegach Śródziemia. Z Szarej Przystani w Mithlondzie białe okręty odpływają na Zachód. Círdan Okrętnik, najstarszy z Eldarów, strzeże gasnącego światła Noldorów — mądry, nielicznych, a każda klinga niezastąpiona. Lindon dzieli siłę Noldorów z Imladris." />
+    <string id="taom_faction_high_kingdom_of_lindon_desc" text="Zielona kraina na zachód od Gór Błękitnych, ostatnie królestwo Wysokich Elfów na brzegach Śródziemia. Z Szarych Przystani Mithlondu białe okręty odpływają na Zachód. Círdan Stoczniowiec, najstarszy z Eldarów, strzeże gasnącego światła Falathrimów — mądrych, nielicznych, z których każde ostrze jest niezastąpione. Lindon dzieli siłę Falathrimów z Mithlondu." />
     <string id="taom_faction_high_kingdom_of_lindon_name" text="Najwyższe Królestwo Lindonu" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_0_desc" text="+35% wpływów przyznawanych za sukcesy armii — Mądrzy wiedzą, jak przewodzić." />
     <string id="taom_faction_high_kingdom_of_lindon_perk_0_name" text="Elfia mądrość" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_1_desc" text="+20% wzrostu ognisk w wioskach i -15% zużycia żywności przez drużynę." />
-    <string id="taom_faction_high_kingdom_of_lindon_perk_1_name" text="Ostatni Przytulny Dom" />
+    <string id="taom_faction_high_kingdom_of_lindon_perk_1_name" text="Szare Przystanie" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_2_desc" text="+10% szybkości drużyny w lasach i +0,5 lojalności osady na dzień." />
     <string id="taom_faction_high_kingdom_of_lindon_perk_2_name" text="Leśna gracja" />
     <string id="taom_faction_high_kingdom_of_lindon_strength_0" text="Elitarni wojownicy z legend" />
@@ -1544,10 +1544,10 @@
     <string id="taom_faction_high_kingdom_of_lindon_strength_2" text="Oszczędne, samowystarczalne zastępy" />
     <string id="taom_faction_high_kingdom_of_lindon_strength_3" text="Bogate w ogniska, lojalne przystanie" />
     <string id="taom_faction_high_kingdom_of_lindon_su_0_desc" text="Legendarny weteran Pierwszej Ery spośród Eldarów." />
-    <string id="taom_faction_high_kingdom_of_lindon_su_0_name" text="Mistrz klingi Noldorów" />
+    <string id="taom_faction_high_kingdom_of_lindon_su_0_name" text="Mistrz miecza Falathrimów" />
     <string id="taom_faction_high_kingdom_of_lindon_su_1_desc" text="Morski elf, strażnik Przystani." />
     <string id="taom_faction_high_kingdom_of_lindon_su_1_name" text="Żeglarz-strażnik Falathrimów" />
-    <string id="taom_faction_high_kingdom_of_lindon_su_2_desc" text="Ciężkozbrojny obrońca Szarej Przystani spośród Noldorów." />
+    <string id="taom_faction_high_kingdom_of_lindon_su_2_desc" text="Ciężkozbrojny strażnik Falathrimów z Szarych Przystani." />
     <string id="taom_faction_high_kingdom_of_lindon_su_2_name" text="Wartownik Mithlondu" />
     <string id="taom_faction_high_kingdom_of_lindon_trait_0" text="Círdan Okrętnik" />
     <string id="taom_faction_high_kingdom_of_lindon_trait_1" text="Szara Przystań" />
@@ -2643,9 +2643,6 @@
     <string id="taom_aso_kingdom.lindon" text="Lindon" />
     <string id="taom_aso_kingdom.bluecraig" text="Gobliny z Błękitnej Skały" />
     <string id="taom_aso_item_name_randomized" text="Losowe Śródziemie" />
-    <string id="taom_aso_desc_invasion" text="Frakcja, która włada większością Śródziemia." />
-    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} panuje nad przeważającą częścią Śródziemia." />
-    <string id="taom_aso_item_desc_randomized" text="Losuje stan początkowy Śródziemia w wybranym przez ciebie stopniu, w granicach rozsądku." />
     <string id="taom_tactic.shield_wall" text="Naszym planem jest zewrzeć tarcze i utrzymać pozycję." />
     <string id="taom_tactic.infantry_mass" text="Naszym planem jest zalać ich naszą liczebnością." />
     <string id="taom_tactic.cavalry_dominance" text="Naszym planem jest stratować ich konnicą, a piechota dokończy to, co zaczną konie." />
@@ -2662,22 +2659,22 @@
     <string id="taom_behavior.infantry_skirmish" text="Zbliżyć się na odległość rzutu, rzucać i cofać się" />
     <string id="taom_behavior.cycle_charge" text="Przebić się, przeformować i szarżować ponownie" />
     <string id="taom_behavior.envelop_wing" text="Okrążyć ich skrzydło i uderzyć z boku" />
-    <string id="taom_behavior.foot_charge" text="Charge their foot; square up if horse come at you" />
-    <string id="taom_behavior.archer_flank" text="Stand beside the wall and shoot; fall in behind it if they come for you" />
-    <string id="taom_behavior_f6.braced_defend" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are holding in a wall." />
-    <string id="taom_behavior_f6.braced_advance" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are advancing in a wall." />
-    <string id="taom_behavior_f6.infantry_skirmish" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are throwing and falling back." />
-    <string id="taom_behavior_f6.cycle_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging in cycles." />
-    <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are swinging round the flank." />
-    <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging the enemy foot." />
-    <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are taking the flank of the wall." />
+    <string id="taom_behavior.foot_charge" text="Szarżuj na ich piechotę; zewrzyj szyk, gdy ruszy na was jazda" />
+    <string id="taom_behavior.archer_flank" text="Stań obok ściany tarcz i strzelaj; schowaj się za nią, jeśli po was przyjdą" />
+    <string id="taom_behavior_f6.braced_defend" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} i {?}{\?}{TROOP_NAMES_END} trzymają ścianę tarcz." />
+    <string id="taom_behavior_f6.braced_advance" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} i {?}{\?}{TROOP_NAMES_END} nacierają w ścianie tarcz." />
+    <string id="taom_behavior_f6.infantry_skirmish" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} i {?}{\?}{TROOP_NAMES_END} miotają pociski i cofają się." />
+    <string id="taom_behavior_f6.cycle_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} i {?}{\?}{TROOP_NAMES_END} szarżują cyklicznie." />
+    <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} i {?}{\?}{TROOP_NAMES_END} okrążają skrzydło." />
+    <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} i {?}{\?}{TROOP_NAMES_END} szarżują na piechotę wroga." />
+    <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} i {?}{\?}{TROOP_NAMES_END} zajmują skrzydło ściany tarcz." />
     <string id="taom_patch_apply_failed" text="TAOM: nie udało się zastosować grup poprawek podczas {PHASE}: {GROUPS}. Niektóre poprawki z tych grup są wyłączone w tej sesji; przyczynę podaje dziennik TAOM." />
     <string id="taom_patch_apply_phase_startup" text="uruchamiania" />
     <string id="taom_patch_apply_notice_title" text="TAOM" />
     <string id="taom_patch_apply_phase_game_init" text="inicjalizacji gry" />
     <string id="taom_patch_apply_phase_mission_start" text="rozpoczęcia misji" />
-    <string id="taom_oob_autoassign_done" text="Captains assigned: {COUNT}." />
-    <string id="taom_oob_autoassign_not_general" text="Only the general of this battle can assign heroes." />
-    <string id="taom_oob_autoassign_none" text="No hero suits an open captain slot." />
+    <string id="taom_oob_autoassign_done" text="Przydzieleni dowódcy: {COUNT}." />
+    <string id="taom_oob_autoassign_not_general" text="Tylko wódz tej bitwy może przydzielać bohaterów." />
+    <string id="taom_oob_autoassign_none" text="Żaden bohater nie pasuje do wolnego stanowiska dowódcy." />
   </strings>
 </base>

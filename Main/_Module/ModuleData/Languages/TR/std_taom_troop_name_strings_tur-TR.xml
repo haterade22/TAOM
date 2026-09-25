@@ -14,7 +14,8 @@
     <string id="aom_balcoth_horse_archer_name" text="[Rhûn] Balchoth Atlı Okçusu" />
     <string id="aom_balcoth_veteran_axeman_name" text="[Rhûn] Balchoth Kıdemli Baltacısı" />
     <string id="aom_balcoth_volunteer_name" text="[Rhûn] Balchoth Gönüllüsü" />
-    <string id="aom_battlemaster_of_the_first_age_name" text="[Lindon] Birinci Çağ Savaş Ustası" />
+    <string id="aom_battlemaster_of_the_first_age_name" text="[Ayrıkvadi] Birinci Çağ Savaş Ustası" />
+    <string id="aom_lindon_battlemaster_of_the_first_age_name" text="[Lindon] Birinci Çağ Savaş Ustası" />
     <string id="aom_black_sun_archer_name" text="[Rhûn] Kara Güneş Okçusu" />
     <string id="aom_black_sun_chosen_marksman_name" text="[Rhûn] Kara Güneş Seçkin Nişancısı" />
     <string id="aom_black_sun_executioner_name" text="[Rhûn] Kara Güneş Celladı" />
@@ -118,7 +119,7 @@
     <string id="aom_dg_uruk_skirmisher_name" text="[Dol Guldur] Uruk Avangar" />
     <string id="aom_dg_uruk_swordsman_name" text="[Dol Guldur] Uruk Kılıçlısı" />
     <string id="aom_dg_uruk_veteran_warrior_name" text="[Dol Guldur] Uruk Savaşçısı" />
-    <string id="aom_dg_uruk_warrior_name" text="[Dol Guldur] Uruk Savaşçısı" />
+    <string id="aom_dg_uruk_warrior_name" text="[Dol Guldur] Uruk Dövüşçüsü" />
     <string id="aom_dg_warg_raider_name" text="[Dol Guldur] Varg Binicisi" />
     <string id="aom_dg_warg_red_fang_name" text="[Dol Guldur] Varg Dişi" />
     <string id="aom_dg_warg_scout_name" text="[Dol Guldur] Varg İzcisi" />
@@ -278,7 +279,7 @@
     <string id="aom_gondor_ano_mt_heavy_cavalry_name" text="[Gondor] Anórien Ağır Süvarisi" />
     <string id="aom_gondor_ano_mt_knight_name" text="[Gondor] Anórien Şövalyesi" />
     <string id="aom_gondor_ano_peasant_name" text="[Gondor] Anórien Köylüsü" />
-    <string id="aom_gondor_ano_skirmisher_name" text="[Gondor] Anórien Avcı Eri" />
+    <string id="aom_gondor_ano_skirmisher_name" text="[Gondor] Anórien Avcısı" />
     <string id="aom_gondor_ano_vet_infantry_name" text="[Gondor] Anórien Kıdemli Piyadesi" />
     <string id="aom_gondor_arn_cavalry_name" text="[Gondor] Arndir Süvarisi" />
     <string id="aom_gondor_arn_foot_knight_name" text="[Gondor] Arndir Yaya Şövalyesi" />
@@ -301,9 +302,8 @@
     <string id="aom_gondor_bel_vet_infantry_name" text="[Gondor] Belfalas Kıdemli Piyadesi" />
     <string id="aom_gondor_brv_archer_name" text="[Gondor] Karakök Vadisi Okçusu" />
     <string id="aom_gondor_brv_bowman_name" text="[Gondor] Karakök Vadisi Yaycısı" />
-    <string id="aom_gondor_brv_ranger_name" text="[Gondor] Karakök Vadisi Gölgeyaycısı" />
     <string id="aom_gondor_brv_scout_name" text="[Gondor] Karakök Vadisi İzcisi" />
-    <string id="aom_gondor_brv_shadowbow_name" text="[Gondor] Karakök Vadisi Gölge Avcısı" />
+    <string id="aom_gondor_brv_shadowbow_name" text="[Gondor] Karakök Vadisi Gölgeyaycısı" />
     <string id="aom_gondor_brv_shadowhunter_name" text="[Gondor] Karakök Vadisi Öncüsü" />
     <string id="aom_gondor_brv_vet_archer_name" text="[Gondor] Karakök Vadisi Kıdemli Okçusu" />
     <string id="aom_gondor_ca_guard_name" text="[Gondor] Cair Andros Muhafızı" />
@@ -371,14 +371,10 @@
     <string id="aom_gondor_lin_spearman_name" text="[Gondor] Linhir Mızrakçısı" />
     <string id="aom_gondor_lin_vet_spearman_name" text="[Gondor] Linhir Kıdemli Mızrakçısı" />
     <string id="aom_gondor_loss_axe_thrower_name" text="[Gondor] Lossarnach Balta Atıcısı" />
-    <string id="aom_gondor_loss_axebearer_name" text="[Gondor] Lossarnach Baltacısı" />
+    <string id="aom_gondor_loss_axebearer_name" text="[Gondor] Lossarnach Balta Taşıyıcısı" />
     <string id="aom_gondor_loss_guard_name" text="[Gondor] Lossarnach Muhafızı" />
     <string id="aom_gondor_loss_lumberman_name" text="[Gondor] Lossarnach Oduncusu" />
-    <string id="aom_gondor_loss_noble_captain_name" text="[Gondor] Lossarnach Soylu Kaptanı" />
     <string id="aom_gondor_loss_noble_name" text="[Gondor] Lossarnach Soylusu" />
-    <string id="aom_gondor_loss_noble_sergeant_name" text="[Gondor] Lossarnach Soylu Çavuşu" />
-    <string id="aom_gondor_loss_noble_veteran_name" text="[Gondor] Lossarnach Soylu Kıdemlisi" />
-    <string id="aom_gondor_loss_noble_warden_name" text="[Gondor] Lossarnach Soylu Bekçisi" />
     <string id="aom_gondor_loss_skirmisher_name" text="[Gondor] Lossarnach Avcı Eri" />
     <string id="aom_gondor_loss_vet_axe_thrower_name" text="[Gondor] Lossarnach Kıdemli Balta Atıcısı" />
     <string id="aom_gondor_loss_vet_axebearer_name" text="[Gondor] Lossarnach Kıdemli Baltacısı" />
@@ -496,19 +492,32 @@
     <string id="aom_harad_swordfighter_name" text="[Harad] Kılıç Savaşçısı" />
     <string id="aom_harad_vipereye_name" text="[Harad] Engerek" />
     <string id="aom_harad_warlance_name" text="[Harad] Savaş Süngüsü" />
-    <string id="aom_imladris_archer_name" text="[Lindon] Mithlond Okçusu" />
-    <string id="aom_imladris_blademaster_name" text="[Lindon] Mithlond Kılıç Üstadı" />
-    <string id="aom_imladris_bowman_name" text="[Lindon] Mithlond Yaycısı" />
-    <string id="aom_imladris_guardsman_name" text="[Lindon] Mithlond Muhafızı" />
-    <string id="aom_imladris_horse_archer_name" text="[Lindon] Mithlond Atlı Okçusu" />
-    <string id="aom_imladris_infantry_name" text="[Lindon] Mithlond Piyadesi" />
-    <string id="aom_imladris_marchwarden_name" text="[Lindon] Mithlond Sınır Muhafızı" />
-    <string id="aom_imladris_marksman_name" text="[Lindon] Mithlond Keskin Nişancısı" />
-    <string id="aom_imladris_nobleman_name" text="[Lindon] Mithlond Soylusu" />
-    <string id="aom_imladris_outrider_name" text="[Lindon] Mithlond Öncü Süvarisi" />
-    <string id="aom_imladris_recruit_name" text="[Lindon] Mithlond Acemisi" />
-    <string id="aom_imladris_swordguard_name" text="[Lindon] Mithlond Kılıç Muhafızı" />
-    <string id="aom_imladris_warden_name" text="[Lindon] Mithlond Bekçisi" />
+    <string id="aom_imladris_archer_name" text="[Ayrıkvadi] Imladris Okçusu" />
+    <string id="aom_lindon_imladris_archer_name" text="[Lindon] Mithlond Okçusu" />
+    <string id="aom_imladris_blademaster_name" text="[Ayrıkvadi] Imladris Kılıç Ustası" />
+    <string id="aom_lindon_imladris_blademaster_name" text="[Lindon] Mithlond Kılıç Üstadı" />
+    <string id="aom_imladris_bowman_name" text="[Ayrıkvadi] Imladris Yaycısı" />
+    <string id="aom_lindon_imladris_bowman_name" text="[Lindon] Mithlond Yaycısı" />
+    <string id="aom_imladris_guardsman_name" text="[Ayrıkvadi] Imladris Muhafızı" />
+    <string id="aom_lindon_imladris_guardsman_name" text="[Lindon] Mithlond Muhafızı" />
+    <string id="aom_imladris_horse_archer_name" text="[Ayrıkvadi] Imladris Atlı Okçusu" />
+    <string id="aom_lindon_imladris_horse_archer_name" text="[Lindon] Mithlond Atlı Okçusu" />
+    <string id="aom_imladris_infantry_name" text="[Ayrıkvadi] Imladris Piyadesi" />
+    <string id="aom_lindon_imladris_infantry_name" text="[Lindon] Mithlond Piyadesi" />
+    <string id="aom_imladris_marchwarden_name" text="[Ayrıkvadi] Imladris Sınır Muhafızı" />
+    <string id="aom_lindon_imladris_marchwarden_name" text="[Lindon] Mithlond Sınır Muhafızı" />
+    <string id="aom_imladris_marksman_name" text="[Ayrıkvadi] Imladris Nişancısı" />
+    <string id="aom_lindon_imladris_marksman_name" text="[Lindon] Mithlond Keskin Nişancısı" />
+    <string id="aom_imladris_nobleman_name" text="[Ayrıkvadi] Imladris Soylusu" />
+    <string id="aom_lindon_imladris_nobleman_name" text="[Lindon] Mithlond Soylusu" />
+    <string id="aom_imladris_outrider_name" text="[Ayrıkvadi] Imladris Öncü Süvarisi" />
+    <string id="aom_lindon_imladris_outrider_name" text="[Lindon] Mithlond Öncü Süvarisi" />
+    <string id="aom_imladris_recruit_name" text="[Ayrıkvadi] Imladris Acemisi" />
+    <string id="aom_lindon_imladris_recruit_name" text="[Lindon] Mithlond Acemisi" />
+    <string id="aom_imladris_swordguard_name" text="[Ayrıkvadi] Imladris Kılıç Muhafızı" />
+    <string id="aom_lindon_imladris_swordguard_name" text="[Lindon] Mithlond Kılıç Muhafızı" />
+    <string id="aom_imladris_warden_name" text="[Ayrıkvadi] Imladris Bekçisi" />
+    <string id="aom_lindon_imladris_warden_name" text="[Lindon] Mithlond Bekçisi" />
     <string id="aom_iron_hills_reg_axe_warrior_name" text="[Demir Tepeler] Baltalı Savaşçı" />
     <string id="aom_iron_hills_reg_bowman_name" text="[Demir Tepeler] Yaycı" />
     <string id="aom_iron_hills_reg_company_name" text="[Demir Tepeler] Bölük" />
@@ -571,7 +580,7 @@
     <string id="aom_loke_rim_bowman_name" text="[Rhûn] Loke-Rim Yaycısı" />
     <string id="aom_loke_rim_cataphract_name" text="[Rhûn] Loke-Rim Kataphraktı" />
     <string id="aom_loke_rim_cavalry_name" text="[Rhûn] Loke-Rim Süvarisi" />
-    <string id="aom_loke_rim_footman_name" text="[Rhûn] Loke-Rim Piyadesi" />
+    <string id="aom_loke_rim_footman_name" text="[Rhûn] Loke-Rim Yaya Askeri" />
     <string id="aom_loke_rim_gilded_cataphract_name" text="[Rhûn] Loke-Rim Yalın Altın Kataphraktı" />
     <string id="aom_loke_rim_gilded_champion_name" text="[Rhûn] Loke-Rim Yalın Altın Şampiyonu" />
     <string id="aom_loke_rim_gilded_marksman_name" text="[Rhûn] Loke-Rim Yalın Altın Nişancısı" />
@@ -590,9 +599,10 @@
     <string id="aom_merc_gundabad_fighter_name" text="[Gundabad] Paralı Solgun Uruk Akıncısı" />
     <string id="aom_merc_gundabad_scout_name" text="[Gundabad] Paralı İzci" />
     <string id="aom_merc_harad_noble_name" text="[Harad] Paralı Yılan'ın Genç Kanı" />
-    <string id="aom_merc_imladris_bowman_name" text="[Lindon] Paralı Mithlond Yaycısı" />
+    <string id="aom_merc_imladris_bowman_name" text="[Ayrıkvadi] Kiralık Imladris Yaycısı" />
+    <string id="aom_lindon_imladris_bowman_merc_name" text="[Lindon] Paralı Mithlond Yaycısı" />
     <string id="aom_merc_lindon_noble_name" text="[Lindon] Paralı Soylu" />
-    <string id="aom_merc_mirkwood_recruit_name" text="[Mirkwood] Paralı Silvan Erbaşı" />
+    <string id="aom_merc_mirkwood_recruit_name" text="[Karanlıkorman] Paralı Silvan Erbaşı" />
     <string id="aom_merc_mordor_orc_hunter_name" text="[Mordor] Paralı Ork Avcısı" />
     <string id="aom_merc_mordor_orc_impaler_name" text="[Mordor] Paralı Ork Kazıkçısı" />
     <string id="aom_merc_mordor_uruk_grunt_name" text="[Mordor] Paralı Kara Uruk Erı" />
@@ -677,7 +687,8 @@
     <string id="aom_mordor_warg_reaver_name" text="[Mordor] Nurn Warg Yağmacısı" />
     <string id="aom_mordor_warg_rider_name" text="[Mordor] Nurn Warg Binicisi" />
     <string id="aom_mordor_warg_tamer_name" text="[Mordor] Nurn Warg Terbiyecisi" />
-    <string id="aom_noldorin_lancer_name" text="[Lindon] Falathrim Mızrakçı" />
+    <string id="aom_noldorin_lancer_name" text="[Ayrıkvadi] Noldor Mızraklı Süvarisi" />
+    <string id="aom_lindon_noldorin_lancer_name" text="[Lindon] Falathrim Mızrakçı" />
     <string id="aom_orc_warg_enforcer_name" text="[Isengard] Ork Varg Binicisi Zorbası" />
     <string id="aom_orc_warg_lieutenant_name" text="[Isengard] Ork Varg Binicisi Teğmeni" />
     <string id="aom_orc_warg_overseer_name" text="[Isengard] Ork Varg Binicisi Gözcübaşı" />
@@ -690,7 +701,8 @@
     <string id="aom_rhun_mil_spear_name" text="[Rhûn] Milis Mızrakçısı" />
     <string id="aom_rhun_mil_varch_name" text="[Rhûn] Kıdemli Milis Okçusu" />
     <string id="aom_rhun_mil_vspear_name" text="[Rhûn] Kıdemli Milis Mızrakçısı" />
-    <string id="aom_rider_of_himring_name" text="[Lindon] Balar Süvarisi" />
+    <string id="aom_rider_of_himring_name" text="[Ayrıkvadi] Himring Süvarisi" />
+    <string id="aom_lindon_rider_of_himring_name" text="[Lindon] Balar Süvarisi" />
     <string id="aom_rivendell_glorfindel_guard_name" text="[Ayrıkvadi] Rochannon Elenath" />
     <string id="aom_rivendell_gondolin_battlemaster_name" text="[Ayrıkvadi] Megil-Aran Elenath" />
     <string id="aom_rivendell_high_captain_name" text="[Ayrıkvadi] Yüce Kaptan" />
@@ -756,10 +768,14 @@
     <string id="aom_rohan_wold_recruit_name" text="[Rohan] Wold Acemisi" />
     <string id="aom_rohan_wold_scout_name" text="[Rohan] Wold İzcisi" />
     <string id="aom_rohan_wold_veteran_horse_archer_name" text="[Rohan] Wold Kıdemli Atlısı" />
-    <string id="aom_rv_militia_archer" text="[Lindon] Milis Okçusu" />
-    <string id="aom_rv_militia_spear" text="[Lindon] Milis Mızrakçısı" />
-    <string id="aom_rv_militia_vet_archer" text="[Lindon] Veteran Milis Okçusu" />
-    <string id="aom_rv_militia_vet_spear" text="[Lindon] Veteran Milis Mızraklısı" />
+    <string id="aom_rv_militia_archer" text="[Ayrıkvadi] Milis Okçusu" />
+    <string id="aom_lindon_militia_archer_name" text="[Lindon] Milis Okçusu" />
+    <string id="aom_rv_militia_spear" text="[Ayrıkvadi] Milis Mızrakçısı" />
+    <string id="aom_lindon_militia_spearman_name" text="[Lindon] Milis Mızrakçısı" />
+    <string id="aom_rv_militia_vet_archer" text="[Ayrıkvadi] Kıdemli Milis Okçusu" />
+    <string id="aom_lindon_militia_veteran_archer_name" text="[Lindon] Veteran Milis Okçusu" />
+    <string id="aom_rv_militia_vet_spear" text="[Ayrıkvadi] Kıdemli Milis Mızrakçısı" />
+    <string id="aom_lindon_militia_veteran_spearman_name" text="[Lindon] Veteran Milis Mızraklısı" />
     <string id="aom_sagarun_arbalest_name" text="[Rhûn] Sagarûn Arbaletçisi" />
     <string id="aom_sagarun_crossbowman_name" text="[Rhûn] Sagarûn Tatar Yaylısı" />
     <string id="aom_sagarun_deckhand_name" text="[Rhûn] Sagarûn Gemi Tayfası" />
@@ -789,7 +805,7 @@
     <string id="aom_urukhai_champion_name" text="[Isengard] Uruk-Hai Şampiyonu" />
     <string id="aom_urukhai_crossbowman_name" text="[Isengard] Uruk-Hai Tatar Yaylısı" />
     <string id="aom_urukhai_feller_name" text="[Isengard] Uruk-Hai Baltacısı" />
-    <string id="aom_urukhai_fighter_name" text="[Isengard] Uruk-Hai Savaşçısı" />
+    <string id="aom_urukhai_fighter_name" text="[Isengard] Uruk-Hai Dövüşçüsü" />
     <string id="aom_urukhai_infantry_name" text="[Isengard] Uruk-Hai Piyadesi" />
     <string id="aom_urukhai_nazg_hai_name" text="[Isengard] Uruk-Hai Nazg-hai" />
     <string id="aom_urukhai_pavise_name" text="[Isengard] Uruk-Hai Siper Kalkanlı Muhafızı" />
@@ -801,7 +817,7 @@
     <string id="aom_urukhai_slayer_name" text="[Isengard] Uruk-Hai Katili" />
     <string id="aom_urukhai_spearman_name" text="[Isengard] Uruk-Hai Mızrakçısı" />
     <string id="aom_urukhai_swordman_name" text="[Isengard] Uruk-Hai Kılıççısı" />
-    <string id="aom_urukhai_tracker_name" text="[Isengard] Uruk-Hai İzcisi" />
+    <string id="aom_urukhai_tracker_name" text="[Isengard] Uruk-Hai İz Sürücüsü" />
     <string id="aom_urukhai_veterancrossbowman_name" text="[Isengard] Kıdemli Uruk-Hai Arbaletçisi" />
     <string id="aom_urukhai_veteraninfantry_name" text="[Isengard] Ak El Şampiyonları" />
     <string id="aom_urukhai_veteranpikeman_name" text="[Isengard] Kıdemli Uruk-Hai Kargıcısı" />
@@ -839,8 +855,17 @@
     <string id="taom_gondor_soldiers_boss_name" text="[Gondor] Asker Yüzbaşısı" />
     <string id="taom_gundabad_raiders_boss_name" text="[Gundabad] Vadi Savaş Beyi" />
     <string id="taom_harad_raiders_boss_name" text="[Harad] Haradrim Savaş Beyi" />
-    <string id="taom_mirkwood_stalkers_boss_name" text="[Mirkwood] Sinsi Avcı Kaptanı" />
+    <string id="taom_mirkwood_stalkers_boss_name" text="[Karanlıkorman] Sinsi Avcı Kaptanı" />
     <string id="taom_rhun_raiders_boss_name" text="[Rhûn] Kharaghûl Savaş Beyi" />
     <string id="taom_umbar_corsairs_boss_name" text="[Umbar] Korsan Kaptanı" />
+    <string id="aom_hill_troll_name" text="[AMordor] Tepe Trolü" />
+    <string id="aom_gondor_brv_ranger_name" text="[Gondor] Karakök Vadisi Kolcusu" />
+    <string id="aom_gondor_loss_noble_captain_name" text="[Gondor] Lossarnach Yüce Balta Muhafızı" />
+    <string id="aom_gondor_loss_noble_sergeant_name" text="[Gondor] Lossarnach Balta Koruyucusu" />
+    <string id="aom_gondor_loss_noble_veteran_name" text="[Gondor] Lossarnach Baltacısı" />
+    <string id="aom_gondor_loss_noble_warden_name" text="[Gondor] Lossarnach Balta Muhafızı" />
+    <string id="aom_harad_howdah_crew_name" text="[Harad] Howdah Okçusu" />
+    <string id="taom_test_animalia_elk_rider" text="[Test] Animalia Geyik Binicisi" />
+    <string id="taom_test_animalia_moose_rider" text="[Test] Animalia Musgeyiği Binicisi" />
   </strings>
 </base>

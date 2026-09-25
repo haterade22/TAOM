@@ -1094,7 +1094,7 @@
   <Faction
 		id="clan_umbar_2"
 		initial_home_settlement="Settlement.town_U2"
-		name="{=aom_clan_umbar_1_name}House of Jarjâx"
+		name="{=aom_clan_umbar_2_name}House of Jarjâx"
 		tier="5"
 		owner="Hero.lord_U2_1"
 		culture="Culture.umbar"
@@ -1107,7 +1107,7 @@
   <Faction
 		id="clan_umbar_3"
 		initial_home_settlement="Settlement.castle_U1"
-		name="{=aom_clan_umbar_1_name}House of Heshlâ"
+		name="{=aom_clan_umbar_3_name}House of Heshlâ"
 		tier="4"
 		owner="Hero.lord_U3_1"
 		culture="Culture.umbar"
@@ -1120,7 +1120,7 @@
   <Faction
 		id="clan_umbar_4"
 		initial_home_settlement="Settlement.castle_U2"
-		name="{=aom_clan_umbar_1_name}House of Bel Inzûl"
+		name="{=aom_clan_umbar_4_name}House of Bel Inzûl"
 		tier="3"
 		owner="Hero.lord_U4_1"
 		culture="Culture.umbar"
@@ -1133,7 +1133,7 @@
   <Faction
 		id="clan_umbar_5"
 		initial_home_settlement="Settlement.castle_U4"
-		name="{=aom_clan_umbar_1_name}House of Halrax"
+		name="{=aom_clan_umbar_5_name}House of Halrax"
 		tier="2"
 		owner="Hero.lord_U5_1"
 		culture="Culture.umbar"
@@ -1146,7 +1146,7 @@
   <Faction
 		id="clan_umbar_6"
 		initial_home_settlement="Settlement.castle_U7"
-		name="{=aom_clan_umbar_1_name}House of Khatûg"
+		name="{=aom_clan_umbar_6_name}House of Khatûg"
 		tier="3"
 		owner="Hero.lord_U6_1"
 		culture="Culture.umbar"

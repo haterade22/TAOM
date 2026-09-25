@@ -1,0 +1,18 @@
+{
+ "_comment": "Hill troll clip names that would exceed the engine's fixed-size(64) string as anim_hill_troll_<vanilla clip>: progressive abbreviations (left_stance ls, unbalanced unb, continue cont, balanced bal, back_rise rise, ready_from rf, overswing ovs, slashright sr, slashleft sl, quick_ q_) applied until the name fits 63 chars. Consumed by gen_troll_anim_clips.ps1 -Renames and bind_hill_troll_action_set.py --renames. Kit warned on 15 clips, 2026-09-25.",
+ "quick_blocked_slashright_2h_balanced_left_stance": "anim_hill_troll_quick_blocked_slashright_2h_balanced_ls",
+ "quick_release_slashright_2h_balanced_left_stance": "anim_hill_troll_quick_release_slashright_2h_balanced_ls",
+ "ready_from_left_overswing_2h_unbalanced_left_stance": "anim_hill_troll_ready_from_left_overswing_2h_unbalanced_ls",
+ "ready_from_left_slashleft_2h_unbalanced_left_stance": "anim_hill_troll_ready_from_left_slashleft_2h_unbalanced_ls",
+ "ready_from_right_overswing_2h_unbalanced_left_stance": "anim_hill_troll_ready_from_right_overswing_2h_unbalanced_ls",
+ "ready_from_right_slashright_2h_unbalanced_left_stance": "anim_hill_troll_ready_from_right_slashright_2h_unbalanced_ls",
+ "ready_from_up_overswing_2h_unbalanced_left_stance": "anim_hill_troll_ready_from_up_overswing_2h_unbalanced_ls",
+ "ready_from_up_slashleft_2h_unbalanced_left_stance": "anim_hill_troll_ready_from_up_slashleft_2h_unbalanced_ls",
+ "ready_from_up_slashright_2h_unbalanced_left_stance": "anim_hill_troll_ready_from_up_slashright_2h_unbalanced_ls",
+ "strike_fall_front_back_rise_left_stance_continue": "anim_hill_troll_strike_fall_front_back_rise_ls_continue",
+ "strike_fall_left_back_rise_left_stance_alt_continue": "anim_hill_troll_strike_fall_left_back_rise_ls_alt_continue",
+ "strike_fall_left_heavy_back_rise_left_stance_continue": "anim_hill_troll_strike_fall_left_heavy_back_rise_ls_continue",
+ "strike_fall_right_back_rise_left_stance_alt_continue": "anim_hill_troll_strike_fall_right_back_rise_ls_alt_continue",
+ "strike_fall_right_back_rise_left_stance_continue": "anim_hill_troll_strike_fall_right_back_rise_ls_continue",
+ "strike_fall_right_heavy_back_rise_left_stance_continue": "anim_hill_troll_strike_fall_right_heavy_back_rise_ls_continue"
+}

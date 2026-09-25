@@ -42,10 +42,10 @@
     <string id="taom_fc_confirm_name" text="確認" />
     <string id="taom_fc_decline" text="暫且不要" />
     <string id="taom_fc_keep_name" text="保留原本的名字" />
-    <string id="taom_fc_no_room_body" text="目前沒有空位容納另一名同伴。{TROOP_NAME}的晉升將於日後再次提出。" />
-    <string id="taom_fc_offer_body" text="{TROOP_NAME}在戰場上表現卓越。是否晉升為同伴？" />
+    <string id="taom_fc_no_room_body" text="目前已無空位再容納一名同伴。{TROOP_NAME} 的晉升將於日後再次提出。" />
+    <string id="taom_fc_offer_body" text="{TROOP_NAME} 在戰鬥中表現卓越。要將其晉升為同伴嗎？" />
     <string id="taom_fc_offer_title" text="戰場晉升" />
-    <string id="taom_fc_rename_body" text="為{TROOP_NAME}取個名字，或保留他們帶上戰場的那個名字。" />
+    <string id="taom_fc_rename_body" text="為 {TROOP_NAME} 取個名字，或保留其征戰時所用的舊名。" />
     <string id="taom_fc_rename_title" text="為新同伴命名" />
     <string id="taom_fc_cancel" text="取消" />
     <string id="taom_fc_dismiss" text="你的委任到此為止。回到隊列中去吧。" />
@@ -101,7 +101,7 @@
     <string id="taom_enlist_section_sup" text="輜重隊" />
     <string id="taom_enlist_trust_known" text="略有名聲" />
     <string id="taom_enlist_trust_new" text="未經考驗" />
-    <string id="taom_enlist_trust_poor" text="聲名不佳" />
+    <string id="taom_enlist_trust_poor" text="風評不佳" />
     <string id="taom_enlist_trust_solid" text="頗受敬重" />
     <string id="taom_enlist_trust_trusted" text="深受信賴" />
     <string id="taom_enlist_grade_distinguished" text="功勳卓著" />
@@ -213,7 +213,7 @@
     <string id="taom_enlist_wait_board_v2" text="{ACTIVITY}{NEWLINE}{NEWLINE}軍階：{RANK} · {SECTION}{NEWLINE}服役天數：{DAYS} · 聲望：{TRUST}{NEWLINE}服役記錄：{XP} 經驗 · 每日薪資：{WAGE}{COIN}{LADDER}{ARREARS}{DUTY}" />
     <string id="taom_enlist_board_ladder" text="{NEWLINE}晉升至 {NEXT_RANK}：{REQUIREMENT}" />
     <string id="taom_enlist_req_days" text="服役 {COUNT} 天" />
-    <string id="taom_enlist_req_xp" text="{COUNT} 點служ役經驗" />
+    <string id="taom_enlist_req_xp" text="{COUNT} 點服役經驗" />
     <string id="taom_enlist_req_leadership" text="領導力 {COUNT}" />
     <string id="taom_enlist_req_duties" text="完成 {COUNT} 項任務" />
     <string id="taom_enlist_req_trust" text="你的指揮官的信任" />

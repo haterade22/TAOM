@@ -419,7 +419,7 @@
     <string id="taom_cc_taom_youth_khuzait_6_text" text="カラシュの一団と旅をした。" />
     <string id="taom_cc_taom_youth_khuzait_6_desc" text="東夷の正式な氏族構造の外で生き、軍隊に追従しその通過から利益を得るカラシュの一団と共に移動した。狡猾さと投擲武器が、大いなる東方の軍勢の周縁であなたを養った。" />
     <string id="taom_cc_taom_youth_goblin_1_text" text="高地の山道のワーグ群と共に駆けた。" />
-    <string id="taom_cc_taom_youth_goblin_1_desc" text="あなたは高地の山道のワーグ乗りと共に訓練し、険しい山道で獰猛な獣を操り、その背から槍や騎槍で discourse——突きかかる術を学んだ。" />
+    <string id="taom_cc_taom_youth_goblin_1_desc" text="あなたは高峠のワーグ乗りたちと共に訓練を積み、険しい山道を越えて獰猛な獣を御する術と、その背から騎槍と槍で敵を突き伏せる術を学んだ。" />
     <string id="taom_cc_taom_youth_goblin_2_text" text="ゴブリン町の坑道を守った。" />
     <string id="taom_cc_taom_youth_goblin_2_desc" text="あなたはゴブリン町の坑道で任に就き、弓と槍で鍛冶場や坑道を侵入者から守った。" />
     <string id="taom_cc_taom_youth_goblin_3_text" text="狂戦士と共に鍛えた。" />
@@ -965,7 +965,7 @@
     <string id="taom_cc_taom_education_lindon_2_text" text="キールダンの広間で技と伝承を学んだ。" />
     <string id="taom_cc_taom_education_lindon_2_desc" text="あなたは若き日々を、リンドンに伝わる工芸の技と歴史を学ぶことに費やし、名工や伝承の師たちと共に働いた。長い夜の語らいはあなたの弁舌と、世界の遠い過去への理解を鋭くした。" />
     <string id="taom_cc_taom_education_lindon_3_text" text="灰色港の庭園と果樹園を手入れした。" />
-    <string id="taom_cc_taom_education_lindon_3_desc" text="あなたはミスロンドの段々の庭園で働き、一つの時代にわたって同じ苗床を世話してきたエルフたちから忍耐と勤勉を学んだ。畝の合間には剣technique を稽古し、生き物を育てることが力の加減の勘を養うと知った。" />
+    <string id="taom_cc_taom_education_lindon_3_desc" text="あなたはミスロンドの段々畑で働き、一つの時代にわたって同じ花床を世話してきたエルフたちから忍耐と勤勉を学んだ。畝の間では剣術に励み、生きものを育てることが加減された力への直感を与えてくれると知った。" />
     <string id="taom_cc_taom_education_lindon_4_text" text="ミスロンドの国境警備を歩いた。" />
     <string id="taom_cc_taom_education_lindon_4_desc" text="あなたはエルフの守人たちに従い、谷の隠れ道を巡る長い巡回に加わり、森を読み、獲物に気づかれる前に矢を放つことを学んだ。谷の平安は苦労して得たものであり、あなたはそれを守る一助となった。" />
     <string id="taom_cc_taom_education_lindon_5_text" text="キールダンの館で癒しの術を学んだ。" />

@@ -102,12 +102,13 @@ public class TroopResourceCostDataTests
     /// <summary>
     /// The Black Numenorean rows shipped at 1.0 to 3.0 a day, ten to twenty times every other tree
     /// troop, and forty of them drained a top battle payout every day (#558). The tree-troop band
-    /// tops out at 0.4 (Gondor L51); only the three creatures sit above it by design.
+    /// tops out at 0.4 (Gondor L51); only the creatures sit above it by design: the elephant, the mumak, the
+    /// spiders and, since 2026-09-25, both trolls (Mike: a high cost, upkeep 4 to 5).
     /// </summary>
     [TestMethod]
     public void NoTreeTroopUpkeep_ExceedsTheBandCeiling()
     {
-        var creatures = new HashSet<string> { "harad_elephant_rider", "harad_mumakil_rider", "taom_spider_creature", "taom_spider_rider_brown", "taom_spider_rider_pale" };
+        var creatures = new HashSet<string> { "harad_elephant_rider", "harad_mumakil_rider", "taom_spider_creature", "taom_spider_rider_brown", "taom_spider_rider_pale", "cave_troll", "hill_troll" };
         var rows = CostRows().Where(r => r.DailyUpkeep > 0f && !creatures.Contains(r.TroopId)).ToList();
         Assert.IsTrue(rows.Count > 0, "no tree troop carries a daily_upkeep, so the ceiling gates nothing");
 

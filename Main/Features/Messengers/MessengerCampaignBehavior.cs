@@ -501,7 +501,7 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
             "taom_messenger_send_init",
             "hero_main_options",
             "taom_messenger_send_confirm",
-            "{=taom_messenger_dialog_init}I need to send you a message later. Can I dispatch a messenger to you?",
+            "{=taom_messenger_dialog_init}I may need to send you a message later. Can I dispatch a messenger to you?",
             DialogCondition_CanSend,
             null);
 
@@ -633,7 +633,7 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
                 text.SetTextVariable("HERO_NAME", target?.Name ?? new TextObject(""));
                 return text;
             case MessengerValidationResult.HeroFugitive:
-                text = new TextObject("{=taom_messenger_hero_fugitive}{HERO_NAME} is fugitive and cannot be found.");
+                text = new TextObject("{=taom_messenger_hero_fugitive}{HERO_NAME} is a fugitive and cannot be found.");
                 text.SetTextVariable("HERO_NAME", target?.Name ?? new TextObject(""));
                 return text;
             case MessengerValidationResult.HeroChild:

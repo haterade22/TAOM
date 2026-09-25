@@ -1404,7 +1404,7 @@
     <string id="taom_faction_goblins_of_blue_craig_bonus_3" text="+20% consumo de comida do grupo (Enxame Voraz)" />
     <string id="taom_faction_goblins_of_blue_craig_bonus_4" text="+10% eficiência de forja (Acervo de Armas Capturadas)" />
     <string id="taom_faction_goblins_of_blue_craig_bonus_5" text="+10% dano de saque (Emboscada Goblin)" />
-    <string id="taom_faction_goblins_of_blue_craig_desc" text="Os Goblins de Blue Craig." />
+    <string id="taom_faction_goblins_of_blue_craig_desc" text="Uma hoste distinta de gobelins das Montanhas Azuis (Ered Luin), no extremo oeste, bem perto dos Portos Cinzentos de Lindon — um reino à parte de seus primos das Montanhas Sombrias de Goblin Town. Os mesmos enxames incontáveis e mal armados: fracos sozinhos, avassaladores em massa e vorazes em marcha. Atormentam os Elfos da costa ocidental." />
     <string id="taom_faction_goblins_of_blue_craig_name" text="Goblins de Blue Craig" />
     <string id="taom_faction_goblins_of_blue_craig_perk_0_desc" text="+40% tamanho de grupo e +25% regeneração de voluntários de vila — fracos, mas incontáveis." />
     <string id="taom_faction_goblins_of_blue_craig_perk_0_name" text="Enxame Goblin" />
@@ -1435,7 +1435,7 @@
     <string id="taom_faction_goblins_of_goblin_town_bonus_3" text="+20% no consumo de alimentos do grupo (Enxame Voraz)" />
     <string id="taom_faction_goblins_of_goblin_town_bonus_4" text="+10% de eficiência na forja (Tesouro de Armas Capturadas)" />
     <string id="taom_faction_goblins_of_goblin_town_bonus_5" text="+10% de dano em saques (Emboscada Goblin)" />
-    <string id="taom_faction_goblins_of_goblin_town_desc" text="Os túneis e cavernas infestados de goblins das Montanhas Nebulosas. Esses Orcs controlam as passagens altas e ameaçam todos que ousam atravessar as montanhas." />
+    <string id="taom_faction_goblins_of_goblin_town_desc" text="Os fervilhantes túneis de gobelins sob o Passo Alto das Montanhas Sombrias. Desde a queda do Grande Gobelin, as tribos se multiplicaram sem conta — vastos enxames mal armados que vencem pelo puro peso e se reproduzem mais rápido do que qualquer inimigo consegue abater. Correm velozes sobre as neves de seu lar montanhês, mas tais hordas são sempre vorazes." />
     <string id="taom_faction_goblins_of_goblin_town_name" text="Goblins da Cidade Goblin" />
     <string id="taom_faction_goblins_of_goblin_town_perk_0_desc" text="+40% no tamanho do grupo e +25% no reaparecimento de voluntários da vila — goblins são fracos, mas incontáveis." />
     <string id="taom_faction_goblins_of_goblin_town_perk_0_name" text="Enxame Goblin" />
@@ -1453,9 +1453,9 @@
     <string id="taom_faction_goblins_of_goblin_town_su_1_name" text="Escaramuçador Goblin das Cavernas" />
     <string id="taom_faction_goblins_of_goblin_town_su_2_desc" text="Goblin de choque mais pesado das tocas profundas." />
     <string id="taom_faction_goblins_of_goblin_town_su_2_name" text="Brutamontes Goblin" />
-    <string id="taom_faction_goblins_of_goblin_town_trait_0" text="Túneis Goblin" />
-    <string id="taom_faction_goblins_of_goblin_town_trait_1" text="Passagens das Montanhas" />
-    <string id="taom_faction_goblins_of_goblin_town_trait_2" text="Cavaleiros de Warg" />
+    <string id="taom_faction_goblins_of_goblin_town_trait_0" text="Túneis de Goblin Town" />
+    <string id="taom_faction_goblins_of_goblin_town_trait_1" text="Cria do Passo Alto" />
+    <string id="taom_faction_goblins_of_goblin_town_trait_2" text="Emboscadores dos Passos da Montanha" />
     <string id="taom_faction_goblins_of_goblin_town_trait_3" text="Enxames Incontáveis" />
     <string id="taom_faction_goblins_of_goblin_town_weakness_0" text="Tropas individualmente fracas" />
     <string id="taom_faction_goblins_of_goblin_town_weakness_1" text="Vorazes — sobrecarrega todas as linhas de suprimento" />
@@ -1526,17 +1526,17 @@
     <string id="taom_faction_havens_of_umbar_weakness_1" text="Odiado por Gondor" />
     <string id="taom_faction_havens_of_umbar_weakness_2" text="Exército terrestre mais fraco que a marinha" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_0" text="+35% de recompensa de influência do exército (Sabedoria Élfica)" />
-    <string id="taom_faction_high_kingdom_of_lindon_bonus_1" text="+20% no crescimento do lar da vila (A Última Casa Acolhedora)" />
+    <string id="taom_faction_high_kingdom_of_lindon_bonus_1" text="+20% de crescimento de lares nas aldeias (Os Portos Cinzentos)" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_2" text="+10% de velocidade do grupo na floresta (Graça da Floresta)" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_3" text="-15% consumo de comida do grupo (Frugalidade Élfica)" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_4" text="+0.5 lealdade do assentamento por dia" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_5" text="+25% custo de influência do exército (Orgulho Élfico)" />
-    <string id="taom_faction_high_kingdom_of_lindon_desc" text="O antigo reino élfico de Lindon nas margens ocidentais da Terra-média. Governado pelos sucessores de Gil-galad, é uma terra de glória élfica em declínio e dos Portos Cinzentos." />
+    <string id="taom_faction_high_kingdom_of_lindon_desc" text="A terra verdejante a oeste das Montanhas Azuis, último reino dos Altos Elfos nas costas da Terra-média. Dos Portos Cinzentos de Mithlond os navios brancos zarpam para o Oeste. Círdan, o Armador, o mais antigo dos Eldar, guarda a luz minguante dos Falathrim — sábios, poucos, e cada lâmina insubstituível. Lindon compartilha a força Falathrim de Mithlond." />
     <string id="taom_faction_high_kingdom_of_lindon_name" text="Alto Reino de Lindon" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_0_desc" text="+35% influência concedida no sucesso do exército — os Sábios sabem como liderar." />
     <string id="taom_faction_high_kingdom_of_lindon_perk_0_name" text="Sabedoria Élfica" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_1_desc" text="+20% crescimento da lareira da vila e -15% consumo de comida do grupo." />
-    <string id="taom_faction_high_kingdom_of_lindon_perk_1_name" text="A Última Casa Acolhedora" />
+    <string id="taom_faction_high_kingdom_of_lindon_perk_1_name" text="Os Portos Cinzentos" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_2_desc" text="+10% velocidade do grupo na floresta e +0.5 lealdade do assentamento por dia." />
     <string id="taom_faction_high_kingdom_of_lindon_perk_2_name" text="Graça da Floresta" />
     <string id="taom_faction_high_kingdom_of_lindon_strength_0" text="Guerreiros de elite lendários" />
@@ -1544,15 +1544,15 @@
     <string id="taom_faction_high_kingdom_of_lindon_strength_2" text="Hostes frugais e autossuficientes" />
     <string id="taom_faction_high_kingdom_of_lindon_strength_3" text="Refúgios ricos em lareiras e leais" />
     <string id="taom_faction_high_kingdom_of_lindon_su_0_desc" text="Veterano lendário da Primeira Era dos Eldar." />
-    <string id="taom_faction_high_kingdom_of_lindon_su_0_name" text="Mestre da Espada Noldor" />
+    <string id="taom_faction_high_kingdom_of_lindon_su_0_name" text="Mestre-de-Lâminas Falathrim" />
     <string id="taom_faction_high_kingdom_of_lindon_su_1_desc" text="Guardião elfo do mar dos Portos." />
     <string id="taom_faction_high_kingdom_of_lindon_su_1_name" text="Guardião-Marinheiro Falathrim" />
-    <string id="taom_faction_high_kingdom_of_lindon_su_2_desc" text="Guardião Noldor pesado dos Portos Cinzentos." />
+    <string id="taom_faction_high_kingdom_of_lindon_su_2_desc" text="Guardião pesado Falathrim dos Portos Cinzentos." />
     <string id="taom_faction_high_kingdom_of_lindon_su_2_name" text="Sentinela de Mithlond" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_0" text="Portos Cinzentos" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_1" text="Antigo Reino Élfico" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_2" text="Navios para Valinor" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_3" text="Círdan o Construtor de Navios" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_0" text="Círdan, o Armador" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_1" text="Os Portos Cinzentos" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_2" text="Navios rumo ao Oeste" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_3" text="Últimos dos Altos Elfos" />
     <string id="taom_faction_high_kingdom_of_lindon_weakness_0" text="Orgulho Élfico aumenta custos de influência" />
     <string id="taom_faction_high_kingdom_of_lindon_weakness_1" text="Povo em declínio — poucos substitutos" />
     <string id="taom_faction_khudorom_of_khand_bonus_0" text="+10% de velocidade do grupo na estepe (Cocheiros da Estepe)" />
@@ -1778,8 +1778,8 @@
     <string id="taom_faction_kingdom_of_moria_bonus_4" text="+15% eficiência de forja (Forjas Saqueadas)" />
     <string id="taom_faction_kingdom_of_moria_bonus_5" text="+15% dano de saque (Recrutamento de Troll de Caverna)" />
     <string id="taom_faction_kingdom_of_moria_bonus_6" text="-10% velocidade de construção (Salões Ecoantes)" />
-    <string id="taom_faction_kingdom_of_moria_desc" text="O Reino de Moria." />
-    <string id="taom_faction_kingdom_of_moria_name" text="Reino de Moria" />
+    <string id="taom_faction_kingdom_of_moria_desc" text="A hoste de orcs que domina as profundezas das Montanhas Sombrias — os poços negros de Moria, tomados dos Anões, e os picos gelados de Caradhras a Methedras. Maiores e mais bem armados que a ralé gobelim do Passo Alto, reúnem vastas hostes de guerra por quase nenhuma influência e marcham famintos, mas incansáveis, pelas neves." />
+    <string id="taom_faction_kingdom_of_moria_name" text="Orcs das Montanhas Sombrias" />
     <string id="taom_faction_kingdom_of_moria_perk_0_desc" text="Recrutamento do exército custa 40% menos influência — a hoste orc não precisa de consenso para marchar." />
     <string id="taom_faction_kingdom_of_moria_perk_0_name" text="Horda Orc" />
     <string id="taom_faction_kingdom_of_moria_perk_1_desc" text="+30% tamanho do grupo e +10% velocidade na neve — grandes hostes de guerra criadas para os picos gelados." />
@@ -2643,9 +2643,6 @@
     <string id="taom_aso_kingdom.lindon" text="Lindon" />
     <string id="taom_aso_kingdom.bluecraig" text="Gobelins do Rochedo Azul" />
     <string id="taom_aso_item_name_randomized" text="Terra-média Aleatória" />
-    <string id="taom_aso_desc_invasion" text="A facção que domina a maior parte da Terra-média." />
-    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} domina a imensa maioria da Terra-média." />
-    <string id="taom_aso_item_desc_randomized" text="Torna aleatório o estado inicial da Terra-média no grau que você escolher, dentro do razoável." />
     <string id="taom_tactic.shield_wall" text="Nosso plano é travar os escudos e manter a posição." />
     <string id="taom_tactic.infantry_mass" text="Nosso plano é sufocá-los com nosso número." />
     <string id="taom_tactic.cavalry_dominance" text="Nosso plano é atropelá-los e deixar que a infantaria termine o que os cavalos começarem." />
@@ -2662,22 +2659,22 @@
     <string id="taom_behavior.infantry_skirmish" text="Aproximem-se para arremesso, atirem e recuem" />
     <string id="taom_behavior.cycle_charge" text="Carreguem através, reagrupem e carreguem de novo" />
     <string id="taom_behavior.envelop_wing" text="Contornem o flanco deles e ataquem pelo lado" />
-    <string id="taom_behavior.foot_charge" text="Charge their foot; square up if horse come at you" />
-    <string id="taom_behavior.archer_flank" text="Stand beside the wall and shoot; fall in behind it if they come for you" />
-    <string id="taom_behavior_f6.braced_defend" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are holding in a wall." />
-    <string id="taom_behavior_f6.braced_advance" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are advancing in a wall." />
-    <string id="taom_behavior_f6.infantry_skirmish" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are throwing and falling back." />
-    <string id="taom_behavior_f6.cycle_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging in cycles." />
-    <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are swinging round the flank." />
-    <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging the enemy foot." />
-    <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are taking the flank of the wall." />
+    <string id="taom_behavior.foot_charge" text="Ataquem a infantaria deles; firmem-se se a cavalaria vier sobre vocês" />
+    <string id="taom_behavior.archer_flank" text="Fiquem ao lado da muralha e atirem; recuem para trás dela se vierem atrás de vocês" />
+    <string id="taom_behavior_f6.braced_defend" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} e {?}{\?}{TROOP_NAMES_END} estão firmes em formação de muralha." />
+    <string id="taom_behavior_f6.braced_advance" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} e {?}{\?}{TROOP_NAMES_END} estão avançando em formação de muralha." />
+    <string id="taom_behavior_f6.infantry_skirmish" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} e {?}{\?}{TROOP_NAMES_END} estão arremessando e recuando." />
+    <string id="taom_behavior_f6.cycle_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} e {?}{\?}{TROOP_NAMES_END} estão atacando em ciclos." />
+    <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} e {?}{\?}{TROOP_NAMES_END} estão contornando o flanco." />
+    <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} e {?}{\?}{TROOP_NAMES_END} estão atacando a infantaria inimiga." />
+    <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} e {?}{\?}{TROOP_NAMES_END} estão tomando o flanco da muralha." />
     <string id="taom_patch_apply_failed" text="TAOM: os grupos de correções não foram aplicados durante {PHASE}: {GROUPS}. Algumas correções desses grupos estão desativadas nesta sessão; o log do TAOM indica a causa." />
     <string id="taom_patch_apply_phase_startup" text="a inicialização" />
     <string id="taom_patch_apply_notice_title" text="TAOM" />
     <string id="taom_patch_apply_phase_game_init" text="a inicialização do jogo" />
     <string id="taom_patch_apply_phase_mission_start" text="o início da missão" />
-    <string id="taom_oob_autoassign_done" text="Captains assigned: {COUNT}." />
-    <string id="taom_oob_autoassign_not_general" text="Only the general of this battle can assign heroes." />
-    <string id="taom_oob_autoassign_none" text="No hero suits an open captain slot." />
+    <string id="taom_oob_autoassign_done" text="Capitães designados: {COUNT}." />
+    <string id="taom_oob_autoassign_not_general" text="Apenas o general desta batalha pode designar heróis." />
+    <string id="taom_oob_autoassign_none" text="Nenhum herói se encaixa em um posto de capitão vago." />
   </strings>
 </base>

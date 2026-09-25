@@ -88,6 +88,20 @@ public class ShippedCombatMechanicsConfigTests
     }
 
     [TestMethod]
+    public void ShippedConfig_BothTrollsCarry200BaseHitPoints_AndNoOtherRaceDoes()
+    {
+        // Mike, 2026-09-25: the cave and the hill troll have 200 health. Custom Battle reads the Monster's
+        // hit_points; the campaign starts every troop at 100, so this row is what lifts a campaign troll.
+        var races = _sut.GetConfig().RaceModifiers;
+
+        Assert.AreEqual(200, races["cave_troll"].BaseHitPoints);
+        Assert.AreEqual(200, races["hill_troll"].BaseHitPoints);
+        foreach (var pair in races)
+            if (pair.Key != "cave_troll" && pair.Key != "hill_troll")
+                Assert.AreEqual(0, pair.Value.BaseHitPoints, pair.Key + " gained a base hit point row");
+    }
+
+    [TestMethod]
     public void ShippedConfig_ChargeDamage_MatchesMikesKingdomTable()
     {
         var m = _sut.GetConfig().ChargeDamage.CultureMultipliers;

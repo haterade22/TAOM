@@ -662,8 +662,8 @@
     <string id="aom_lord_1_155_name" text="Nazgûl, El Mariscal Oscuro" />
     <string id="aom_lord_1_16_name" text="Nazgûl, El Caballero de Umbar" />
     <string id="aom_lord_1_17_name" text="Sauron" />
-    <string id="aom_lord_1_177_name" text="Honoratus" />
-    <string id="aom_lord_1_18_name" text="Jathea" />
+    <string id="aom_lord_1_177_name" text="Khorgath" />
+    <string id="aom_lord_1_18_name" text="Morgha" />
     <string id="aom_lord_1_21_name" text="Fenrik el Lobo Rojo" />
     <string id="aom_lord_1_22_name" text="Bjornric Brazoforte" />
     <string id="aom_lord_1_23_name" text="Caladwen" />
@@ -672,7 +672,7 @@
     <string id="aom_lord_1_26_name" text="Hirgon" />
     <string id="aom_lord_1_27_name" text="Maugrash" />
     <string id="aom_lord_1_28_name" text="Nazgûl, El Traidor" />
-    <string id="aom_lord_1_29_name" text="Sanion" />
+    <string id="aom_lord_1_29_name" text="Herumarth" />
     <string id="aom_lord_1_31_name" text="Zrsa Colmillonegro" />
     <string id="aom_lord_1_32_name" text="Eldra Cantojabalí" />
     <string id="aom_lord_1_33_name" text="Brigid la Aullante" />
@@ -681,14 +681,14 @@
     <string id="aom_lord_1_36_name" text="Ivriniel" />
     <string id="aom_lord_1_37_name" text="Goshank" />
     <string id="aom_lord_1_38_name" text="Nazgûl, el Imperecedero" />
-    <string id="aom_lord_1_39_name" text="Debana" />
+    <string id="aom_lord_1_39_name" text="Naktharil" />
     <string id="aom_lord_1_41_name" text="Beregund Nacidolobo" />
     <string id="aom_lord_1_411_name" text="Grimwulf Colmillohierro" />
     <string id="aom_lord_1_42_name" text="Hrodgar Pieldehierro" />
     <string id="aom_lord_1_43_name" text="Gormund Flancobuey" />
     <string id="aom_lord_1_44_name" text="Nemos" />
     <string id="aom_lord_1_47_name" text="Ulbos" />
-    <string id="aom_lord_1_49_name" text="Obron" />
+    <string id="aom_lord_1_49_name" text="Skarnak" />
     <string id="aom_lord_1_20_name" text="Astrid Garraoso" />
     <string id="aom_lord_1_64_name" text="Thormund Cortapardo" />
     <string id="aom_lord_1_50_name" text="Corwyn Ojocuervo" />
@@ -712,10 +712,10 @@
     <string id="aom_lord_1_55_name" text="Mathmog" />
     <string id="aom_lord_1_63_name" text="Gorbag, Capitán de Minas Morgul" />
     <string id="aom_lord_1_56_name" text="Tormund, el Martillo" />
-    <string id="aom_lord_1_68_name" text="Tharos" />
-    <string id="aom_lord_1_69_name" text="Niphon" />
+    <string id="aom_lord_1_68_name" text="Gorthak" />
+    <string id="aom_lord_1_69_name" text="Grukhash" />
     <string id="aom_lord_1_72_name" text="Bolg" />
-    <string id="aom_lord_1_74_name" text="Zachanis" />
+    <string id="aom_lord_1_74_name" text="Bûrznak" />
     <string id="aom_lord_1_1_1_name" text="Eldith Garragris" />
     <string id="aom_lord_1_1_2_name" text="Sigga Matadrágones" />
     <string id="aom_lord_1_1_3_name" text="Sigrun Colmijabalí" />
@@ -772,9 +772,9 @@
     <string id="aom_lord_1_74_1_name" text="Zena" />
     <string id="aom_lord_2_1_name" text="Bardo II" />
     <string id="aom_lord_2_2_name" text="Asta" />
-    <string id="aom_lord_2_3_name" text="Thorin III Yelmo de Piedra" />
+    <string id="aom_lord_2_3_name" text="Rand" />
     <string id="aom_lord_2_4_name" text="Siga" />
-    <string id="aom_lord_2_5_name" text="Ori" />
+    <string id="aom_lord_2_5_name" text="Ask" />
     <string id="aom_lord_2_6_name" text="Erta" />
     <string id="aom_lord_2_7_name" text="Simir" />
     <string id="aom_lord_2_8_name" text="Urik" />
@@ -787,11 +787,11 @@
     <string id="aom_lord_2_13_name" text="Vidar" />
     <string id="aom_lord_2_14_name" text="Isvan" />
     <string id="aom_lord_2_15_name" text="Ratagost" />
-    <string id="aom_lord_2_16_name" text="Bofur" />
-    <string id="aom_lord_2_17_name" text="Thorin II Escudo de Roble" />
-    <string id="aom_lord_2_18_name" text="Glóin" />
-    <string id="aom_lord_2_19_name" text="Dwalin" />
-    <string id="aom_lord_2_20_name" text="Óin" />
+    <string id="aom_lord_2_16_name" text="Hauk" />
+    <string id="aom_lord_2_17_name" text="Stein" />
+    <string id="aom_lord_2_18_name" text="Ulf" />
+    <string id="aom_lord_2_19_name" text="Geir" />
+    <string id="aom_lord_2_20_name" text="Val" />
     <string id="aom_lord_2_21_name" text="Svedorn" />
     <string id="aom_lord_2_22_name" text="Lashonek" />
     <string id="aom_lord_2_23_name" text="Galden" />
@@ -1025,7 +1025,7 @@
     <string id="aom_lord_NE9_s_name" text="Rurik Muerdecolmillos" />
     <string id="aom_lord_S8_u_name" text="Galyk" />
     <string id="aom_lord_S9_c_name" text="Forim" />
-    <string id="aom_lord_S9_l_name" text="Bombur" />
+    <string id="aom_lord_S9_l_name" text="Orvar" />
     <string id="aom_lord_S9_m_name" text="Dakhila" />
     <string id="aom_lord_S9_u_name" text="Chastimir" />
     <string id="aom_lord_SE8_c_name" text="Shagrala" />
@@ -1035,7 +1035,7 @@
     <string id="aom_lord_SE9_s_name" text="Jonna" />
     <string id="aom_lord_WE8_c_name" text="Pelendur" />
     <string id="aom_lord_WE8_u_name" text="Barandil" />
-    <string id="aom_lord_WE9_l_name" text="Duinhir" />
+    <string id="aom_lord_WE9_l_name" text="Duinhir, Señor de Morthond" />
     <string id="aom_lord_WE9_u_name" text="Duilin" />
     <string id="aom_lord_WE9_u2_name" text="Rosfin" />
     <string id="TAOM_hero_dead_2_1" text="Olek el Viejo cayó defendiendo Valle contra los saqueadores orientales. Su sacrificio asguró los pasos de montaña y se recuerda en canciones por todo el reino." />
@@ -1156,31 +1156,31 @@
     <string id="TAOM_hero_1_48_1" text="El Mancillado esparce corrupción dondequiera que cabalga." />
     <string id="TAOM_hero_1_48_2" text="La Sombra de los Hombres del Norte caza en las tierras frías." />
     <string id="TAOM_hero_1_48_3" text="La Sombra de Umbar acecha las costas del sur." />
-    <string id="TAOM_hero_1_177" text="Honoratus sirve como oficial en los ejércitos de Mordor." />
-    <string id="TAOM_hero_1_29" text="Sanion es un capitán Númenóreano Negro que comanda una fortaleza." />
-    <string id="TAOM_hero_1_17" text="Sauron el Grande, Señor Oscuro de Mordor. Esta entrada existe solo para mostrar su terrible armadura." />
-    <string id="TAOM_hero_1_18" text="Jathea sirve en la oscura jerarquía de Mordor." />
-    <string id="TAOM_hero_1_39" text="Debana es una servidora de la Sombra, diestra en las artes oscuras." />
+    <string id="TAOM_hero_1_177" text="Khorgath sirve como alto oficial en los ejércitos de Mordor, un hijo de Sauron criado para la leva de la guerra. Conduce a sus legiones hacia las tierras de los Hombres con la fría paciencia de quien sabe que el Ojo siempre vigila." />
+    <string id="TAOM_hero_1_29" text="Herumarth, un Númenóreano Negro de la propia sangre de Sauron, comanda una fortaleza en las marcas de Mordor. Frío y orgulloso, mantiene afilada la vieja crueldad númenóreana por la Sombra que lo engendró." />
+    <string id="TAOM_hero_1_17" text="Sauron el Grande, Señor Oscuro de Mordor y Señor de los Anillos, se ha alzado de nuevo. Desde la torre negra de Barad-dûr su Ojo recorre las tierras del Oeste, y las legiones de Gorgoroth se reúnen bajo su estandarte. Los Pueblos Libres lo creyeron vencido, pero la Sombra solo aguardaba su momento. Ahora marcha para quebrarlos y someter toda la Tierra Media bajo un solo dominio. Que desesperen los reyes de los Hombres, pues ha llegado la era de Sauron." />
+    <string id="TAOM_hero_1_18" text="Morgha se halla al lado del Señor Oscuro, señora de la jerarquía interna de Lugbúrz. Su palabra lleva el peso del Ojo, y los capitanes de Mordor temen su consejo tanto como la ira de Sauron." />
+    <string id="TAOM_hero_1_39" text="Naktharil, hija del Señor Oscuro, está imbuida en las artes oscuras de Dol Guldur y Lugbúrz. Recorre los caminos ocultos de la Sombra, y de quienes se le cruzan nunca más se sabe." />
     <string id="TAOM_hero_1_30" text="Gothmog, Teniente de Morgul, comanda los ejércitos de Mordor en los Campos del Pelennor. Un Orco brutal y astuto, lidera desde el frente." />
     <string id="TAOM_hero_1_30_1" text="Svala Colmillo Rojo es un capitán Orco bajo el mando de Gothmog." />
-    <string id="TAOM_hero_1_49" text="Obron lidera una compañía de orcos de Mordor." />
+    <string id="TAOM_hero_1_49" text="Skarnak dirige una compañía de orcos de Mordor, un capitán brutal que se abre paso en la leva quebrando a los que están por encima de él. El látigo y el Ojo son las únicas leyes que acata." />
     <string id="TAOM_hero_1_49_1" text="Tristania sirve en las fuerzas oscuras." />
     <string id="TAOM_hero_1_49_2" text="Gordiana habita en la sombra de la Torre Oscura." />
     <string id="TAOM_hero_1_30_2" text="Mogra sirve a los poderes oscuros de Mordor." />
     <string id="TAOM_hero_1_30_3" text="Snaga es un siervo de la Sombra." />
-    <string id="TAOM_hero_1_56_2" text="Rustica sirve en los ejércitos de la oscuridad." />
+    <string id="TAOM_hero_1_56_2" text="Rustica cabalga a la guerra junto a su padre Tormund, una joven guerrera feroz del clan." />
     <string id="TAOM_hero_1_63_2" text="Comatasa es un orco criado para la guerra." />
     <string id="TAOM_hero_1_63_3" text="Elidilea sirve en la jerarquía oscura." />
     <string id="TAOM_hero_1_63" text="Gorbag, Capitán de Minas Morgul, lidera la guarnición de la ciudad muerta. Es astuto incluso para los estándares orcos." />
     <string id="TAOM_hero_1_63_1" text="Valaria sirve en la ciudadela de los muertos." />
-    <string id="TAOM_hero_1_74" text="Zachanis comanda un regimiento de orcos." />
+    <string id="TAOM_hero_1_74" text="Bûrznak comanda un regimiento de orcos de Mordor, un capitán montado que persigue por igual a rezagados y desertores." />
     <string id="TAOM_hero_1_74_1" text="Zena sirve a los amos oscuros de Mordor." />
     <string id="TAOM_hero_1_54" text="Shagrat, Capitán de Cirith Ungol, custodia el paso hacia Mordor. Es conocido por su crueldad incluso entre los orcos." />
     <string id="TAOM_hero_1_54_1" text="Constalia sirve en la torre de Cirith Ungol." />
-    <string id="TAOM_hero_1_68" text="Tharos es un capitán orco que sirve en el paso." />
+    <string id="TAOM_hero_1_68" text="Gorthak es un capitán orco que guarda el paso alto hacia Mordor, vigilante e implacable con quien intente escabullirse del Ojo." />
     <string id="TAOM_hero_1_68_1" text="Silvina sirve en la guarnición del paso de la araña." />
     <string id="TAOM_hero_1_69_2" text="Dorathila sirve en los ejércitos oscuros." />
-    <string id="TAOM_hero_1_69" text="Niphon comanda una fortaleza en las fronteras de Mordor." />
+    <string id="TAOM_hero_1_69" text="Grukhash comanda una fortaleza en las fronteras de Mordor, un cauteloso guardián de las marcas de la Sombra." />
     <string id="TAOM_hero_1_69_1" text="Areliana sirve en las tierras fronterizas." />
     <string id="TAOM_hero_1_55" text="Mathmog es un poderoso jefe de guerra uruk-hai." />
     <string id="TAOM_hero_1_55_1" text="Megethia sirve a los poderes oscuros." />
@@ -1201,13 +1201,13 @@
     <string id="TAOM_hero_2_7_1" text="Mimir es un príncipe de la casa real de Dale." />
     <string id="TAOM_hero_2_10" text="Valla es una princesa de Dale, entrenada en diplomacia y arte de gobernar." />
     <string id="TAOM_hero_2_13" text="Vidar es un señor de las marcas del norte, que custodia contra las incursiones de los orientales." />
-    <string id="TAOM_hero_2_3" text="Thorin III Yelmoderiedra, Rey bajo la Montaña, gobierna a los enanos de Erebor. Mantiene la antigua alianza con Dale y está listo para defender contra la Sombra." />
+    <string id="TAOM_hero_2_3" text="Rand es un señor de Valle, guardián de los valles orientales, que mantiene la vieja alianza con los Enanos de Erebor." />
     <string id="TAOM_hero_2_4" text="Siga es una enana noble del linaje de Durin." />
     <string id="TAOM_hero_2_4_1" text="Apolanea es una doncella enana de nacimiento noble." />
     <string id="TAOM_hero_2_8" text="Urik es un príncipe enano de Erebor, hábil en la forja y la guerra." />
     <string id="TAOM_hero_2_11" text="Idrun es una guerrera Enana de la guardia real." />
     <string id="TAOM_hero_2_111" text="Rozhivol es un guerrero Enano que custodia las puertas de la montaña." />
-    <string id="TAOM_hero_2_5" text="Ori es un señor Enano descendiente de uno de los compañeros de Thorin Escudo de Roble. Administra las rutas comerciales entre Erebor y Valle." />
+    <string id="TAOM_hero_2_5" text="Ask es un señor de Valle que administra las rutas comerciales entre la Montaña y el Lago Largo." />
     <string id="TAOM_hero_2_6" text="Erta es esposa de Ori, conocida por su habilidad en el tallado de gemas." />
     <string id="TAOM_hero_2_9" text="Lek es heredero de las propiedades de Ori, entrenado tanto en comercio como en combate." />
     <string id="TAOM_hero_2_12" text="Svana es una hija de la casa comerciante." />
@@ -1216,18 +1216,18 @@
     <string id="TAOM_hero_2_14_1" text="Valkava es esposa del Señor Isvan." />
     <string id="TAOM_hero_2_14_2" text="Zaverena es heredera de las propiedades orientales." />
     <string id="TAOM_hero_2_14_3" text="Vizhduna es una joven noble de las marcas orientales." />
-    <string id="TAOM_hero_2_16" text="Bofur es un señor Enano de Erebor, descendiente de la legendaria compañía." />
-    <string id="TAOM_hero_2_16_1" text="Tyaska es esposa de Bofur, hábil en las artes curativas." />
+    <string id="TAOM_hero_2_16" text="Hauk es un señor de Valle, maestro de los caminos de mercado y de las caravanas de invierno." />
+    <string id="TAOM_hero_2_16_1" text="Tyaska es la esposa de Hauk, diestra en las artes curativas." />
     <string id="TAOM_hero_2_21" text="Svedorn comanda la guarnición de la Ciudad del Lago." />
     <string id="TAOM_hero_2_21_1" text="Izdenka administra los asuntos de la Ciudad del Lago." />
-    <string id="TAOM_hero_2_17" text="Thorin II Escudo de Roble es recordado como el héroe que recuperó Erebor de Smaug. Su espíritu inspira a sus descendientes." />
+    <string id="TAOM_hero_2_17" text="Stein es un señor de Valle, recordado por defender la puerta norte en los años posteriores a la caída del dragón." />
     <string id="TAOM_hero_2_17_1" text="Dracha mantiene viva la memoria del viejo rey." />
     <string id="TAOM_hero_2_22" text="Lashonek comanda a los guerreros de Valle." />
     <string id="TAOM_hero_2_22_1" text="Zheneva es esposa de Lashonek." />
     <string id="TAOM_hero_2_24" text="Alvar es un capitán de la Guardia de Valle." />
     <string id="TAOM_hero_2_24_1" text="Zorina es una dama noble de Valle." />
-    <string id="TAOM_hero_2_18" text="Gloin es un señor Enano de Erebor, padre de Gimli de la Comunidad." />
-    <string id="TAOM_hero_2_18_1" text="Zorika es esposa de Gloin, madre del famoso Gimli." />
+    <string id="TAOM_hero_2_18" text="Ulf es un señor de Valle, capitán de la guardia fluvial sobre el Río Rápido." />
+    <string id="TAOM_hero_2_18_1" text="Zorika es la esposa de Ulf, y señora de su casa sobre el Río Rápido." />
     <string id="TAOM_hero_2_23" text="Galden comanda la guarnición del sur de Valle." />
     <string id="TAOM_hero_2_23_1" text="Zlatka es hija de Galden." />
     <string id="TAOM_hero_2_15" text="Ratagost es un sabio consejero que asesora al rey en asuntos de estado." />
@@ -1235,10 +1235,10 @@
     <string id="TAOM_hero_2_15_2" text="Milanka es una dama noble de la corte." />
     <string id="TAOM_hero_2_15_3" text="Velina sirve a la casa real." />
     <string id="TAOM_hero_2_15_4" text="Bovan es un joven noble de Valle." />
-    <string id="TAOM_hero_2_19" text="Dwalin es un guerrero Enano de gran renombre, último superviviente de la compañía original." />
-    <string id="TAOM_hero_2_19_1" text="Vitomira sirve junto a Dwalin." />
-    <string id="TAOM_hero_2_20" text="Oin es un anciano Enano, guardián de la sabiduría antigua y las artes curativas." />
-    <string id="TAOM_hero_2_20_1" text="Kisha es esposa de Oin, hábil en el conocimiento de las hierbas." />
+    <string id="TAOM_hero_2_19" text="Geir es un guerrero de Valle de gran renombre, pariente del antiguo linaje de Girion." />
+    <string id="TAOM_hero_2_19_1" text="Vitomira sirve junto a Geir." />
+    <string id="TAOM_hero_2_20" text="Val es un anciano de Valle, guardián del saber y de las artes curativas." />
+    <string id="TAOM_hero_2_20_1" text="Kisha es la esposa de Val, diestra en el saber de las hierbas." />
     <string id="TAOM_hero_S8_u" text="Galyk es un veterano curtido que guarda las salas de la montaña." />
     <string id="TAOM_hero_3_1" text="Khadurak es el Taskral de Harad, comandante supremo de los ejércitos del sur. Lidera los Mûmakil, los elefantes de guerra, contra los enemigos de su pueblo, aliado con Mordor contra Gondor." />
     <string id="TAOM_hero_3_2" text="Khalida es esposa de Khadurak, y una noble dama haradrim de alta alcurnia." />

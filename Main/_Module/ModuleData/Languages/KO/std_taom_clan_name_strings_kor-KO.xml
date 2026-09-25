@@ -121,5 +121,10 @@
     <string id="aom_clan_vlandia_20_name" text="모르카르가스 가문" />
     <string id="aom_clan_vlandia_21_name" text="할레스링 가문" />
     <string id="aom_clan_vlandia_22_name" text="룬가링 가문" />
+    <string id="aom_clan_umbar_2_name" text="자르작 가문" />
+    <string id="aom_clan_umbar_3_name" text="헤슐라 가문" />
+    <string id="aom_clan_umbar_4_name" text="벨 인주르 가문" />
+    <string id="aom_clan_umbar_5_name" text="할락스 가문" />
+    <string id="aom_clan_umbar_6_name" text="카투그 가문" />
   </strings>
 </base>

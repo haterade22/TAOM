@@ -662,8 +662,8 @@
     <string id="aom_lord_1_155_name" text="ナズグール、闇の司令官" />
     <string id="aom_lord_1_16_name" text="ナズグール、ウンバールの騎士" />
     <string id="aom_lord_1_17_name" text="サウロン" />
-    <string id="aom_lord_1_177_name" text="ホノラトゥス" />
-    <string id="aom_lord_1_18_name" text="ジャシーア" />
+    <string id="aom_lord_1_177_name" text="コルガス" />
+    <string id="aom_lord_1_18_name" text="モルガ" />
     <string id="aom_lord_1_21_name" text="フェンリック・ザ・レッドウルフ" />
     <string id="aom_lord_1_22_name" text="ビョルンリック・ストロングアーム" />
     <string id="aom_lord_1_23_name" text="カラドウェン" />
@@ -672,7 +672,7 @@
     <string id="aom_lord_1_26_name" text="ヒアゴン" />
     <string id="aom_lord_1_27_name" text="マウグラシュ" />
     <string id="aom_lord_1_28_name" text="ナズグール、裏切り者" />
-    <string id="aom_lord_1_29_name" text="サニオン" />
+    <string id="aom_lord_1_29_name" text="ヘルマルス" />
     <string id="aom_lord_1_31_name" text="ザルサ・ブラックファング" />
     <string id="aom_lord_1_32_name" text="エルドラ・ボアソング" />
     <string id="aom_lord_1_33_name" text="ブリギッド・ザ・ハウリング" />
@@ -681,14 +681,14 @@
     <string id="aom_lord_1_36_name" text="イヴリニエル" />
     <string id="aom_lord_1_37_name" text="ゴシャンク" />
     <string id="aom_lord_1_38_name" text="ナズグール、不死者" />
-    <string id="aom_lord_1_39_name" text="デバナ" />
+    <string id="aom_lord_1_39_name" text="ナクサリル" />
     <string id="aom_lord_1_41_name" text="ベレグンド・ウルフボーン" />
     <string id="aom_lord_1_411_name" text="グリムウルフ・アイアンファング" />
     <string id="aom_lord_1_42_name" text="フロドガル・アイアンハイド" />
     <string id="aom_lord_1_43_name" text="ゴルムンド・オックスフランク" />
     <string id="aom_lord_1_44_name" text="ネモス" />
     <string id="aom_lord_1_47_name" text="ウルボス" />
-    <string id="aom_lord_1_49_name" text="オブロン" />
+    <string id="aom_lord_1_49_name" text="スカルナク" />
     <string id="aom_lord_1_20_name" text="アストリッド・ベアクロウ" />
     <string id="aom_lord_1_64_name" text="ソルムンド・グリズリーヒュー" />
     <string id="aom_lord_1_50_name" text="コーウィン・レイヴンアイ" />
@@ -712,10 +712,10 @@
     <string id="aom_lord_1_55_name" text="マスモグ" />
     <string id="aom_lord_1_63_name" text="ゴルバグ、ミナス・モルグルの隊長" />
     <string id="aom_lord_1_56_name" text="トアムンド、鉄槌" />
-    <string id="aom_lord_1_68_name" text="サロス" />
-    <string id="aom_lord_1_69_name" text="ニフォン" />
+    <string id="aom_lord_1_68_name" text="ゴルサク" />
+    <string id="aom_lord_1_69_name" text="グルカシュ" />
     <string id="aom_lord_1_72_name" text="ボルグ" />
-    <string id="aom_lord_1_74_name" text="ザカニス" />
+    <string id="aom_lord_1_74_name" text="ブールズナク" />
     <string id="aom_lord_1_1_1_name" text="エルディス・グレイクロウ" />
     <string id="aom_lord_1_1_2_name" text="シッガ・ウィルムベイン" />
     <string id="aom_lord_1_1_3_name" text="シグルン・ボアファング" />
@@ -772,9 +772,9 @@
     <string id="aom_lord_1_74_1_name" text="ゼナ" />
     <string id="aom_lord_2_1_name" text="バルド2世" />
     <string id="aom_lord_2_2_name" text="アスタ" />
-    <string id="aom_lord_2_3_name" text="トーリン3世・ストーンヘルム" />
+    <string id="aom_lord_2_3_name" text="ランド" />
     <string id="aom_lord_2_4_name" text="シガ" />
-    <string id="aom_lord_2_5_name" text="オリ" />
+    <string id="aom_lord_2_5_name" text="アスク" />
     <string id="aom_lord_2_6_name" text="エルタ" />
     <string id="aom_lord_2_7_name" text="シミル" />
     <string id="aom_lord_2_8_name" text="ウリク" />
@@ -787,11 +787,11 @@
     <string id="aom_lord_2_13_name" text="ヴィダル" />
     <string id="aom_lord_2_14_name" text="イスヴァン" />
     <string id="aom_lord_2_15_name" text="ラタゴスト" />
-    <string id="aom_lord_2_16_name" text="ボフール" />
-    <string id="aom_lord_2_17_name" text="トーリン2世・オーケンシールド" />
-    <string id="aom_lord_2_18_name" text="グローイン" />
-    <string id="aom_lord_2_19_name" text="ドワーリン" />
-    <string id="aom_lord_2_20_name" text="オイン" />
+    <string id="aom_lord_2_16_name" text="ハウク" />
+    <string id="aom_lord_2_17_name" text="ステイン" />
+    <string id="aom_lord_2_18_name" text="ウルフ" />
+    <string id="aom_lord_2_19_name" text="ゲイル" />
+    <string id="aom_lord_2_20_name" text="ヴァル" />
     <string id="aom_lord_2_21_name" text="スヴェドルン" />
     <string id="aom_lord_2_22_name" text="ラショネク" />
     <string id="aom_lord_2_23_name" text="ガルデン" />
@@ -1025,7 +1025,7 @@
     <string id="aom_lord_NE9_s_name" text="牙削りのルリク" />
     <string id="aom_lord_S8_u_name" text="ガリク" />
     <string id="aom_lord_S9_c_name" text="フォリム" />
-    <string id="aom_lord_S9_l_name" text="ボンブール" />
+    <string id="aom_lord_S9_l_name" text="オルヴァル" />
     <string id="aom_lord_S9_m_name" text="ダキラ" />
     <string id="aom_lord_S9_u_name" text="チャスティミール" />
     <string id="aom_lord_SE8_c_name" text="シャグララ" />
@@ -1035,7 +1035,7 @@
     <string id="aom_lord_SE9_s_name" text="ヨンナ" />
     <string id="aom_lord_WE8_c_name" text="ペレンドゥア" />
     <string id="aom_lord_WE8_u_name" text="バランディル" />
-    <string id="aom_lord_WE9_l_name" text="ドゥインヒア" />
+    <string id="aom_lord_WE9_l_name" text="モルソンドの領主ドゥインヒア" />
     <string id="aom_lord_WE9_u_name" text="ドゥイリン" />
     <string id="aom_lord_WE9_u2_name" text="ロスフィン" />
     <string id="TAOM_hero_dead_2_1" text="老オレクは、東夷の襲撃者からデイルを守って戦死した。彼の犠牲によって山道は守られ、その名は王国中の歌に語り継がれている。" />
@@ -1156,31 +1156,31 @@
     <string id="TAOM_hero_1_48_1" text="汚れし者は騎行する先々に堕落を広める。" />
     <string id="TAOM_hero_1_48_2" text="北国人の影は寒冷の地で狩りをする。" />
     <string id="TAOM_hero_1_48_3" text="ウンバールの影は南方の海岸に出没する。" />
-    <string id="TAOM_hero_1_177" text="ホノラトゥスはモルドールの軍の将校を務めている。" />
-    <string id="TAOM_hero_1_29" text="サニオンは要塞を指揮する黒きヌーメノール人の隊長である。" />
-    <string id="TAOM_hero_1_17" text="偉大なるサウロン、モルドールの冥王。このエントリーは彼の恐るべき鎧を表示するためだけに存在する。" />
-    <string id="TAOM_hero_1_18" text="ジャセアはモルドールの闇の階層に仕える。" />
-    <string id="TAOM_hero_1_39" text="デバナは影の僕であり、闇の技に長けている。" />
+    <string id="TAOM_hero_1_177" text="コルガスはモルドールの軍において高位の将校を務め、戦のために育てられたサウロンの子である。目が常に見張っていることを知る者の冷たい忍耐をもって、彼は自らの軍団を人間の地へと進める。" />
+    <string id="TAOM_hero_1_29" text="ヘルマルスはサウロンの血を引く黒きヌーメノール人であり、モルドールの辺境の要塞を指揮している。冷酷にして高慢な彼は、己を生んだ影によって古きヌーメノールの残虐さを研ぎ澄ましている。" />
+    <string id="TAOM_hero_1_17" text="偉大なるサウロン、モルドールの冥王にして指輪の主が、再び立ち上がった。バラド=ドゥーアの黒き塔より、その目は西方の地を睨め回し、ゴルゴロスの軍団がその旗の下に集う。自由の民は彼を打ち破ったと思っていたが、影はただ時を待っていたにすぎぬ。今や彼は彼らを砕き、中つ国のすべてを一つの支配の下に縛るべく進軍する。人間の王たちよ、絶望せよ。サウロンの時代が来たのだ。" />
+    <string id="TAOM_hero_1_18" text="モルガは冥王の傍らに立ち、ルグブールズの内なる序列を司る者である。その言葉は目の重みを帯び、モルドールの隊長たちはサウロンの怒りと同じほどに彼女の進言を恐れる。" />
+    <string id="TAOM_hero_1_39" text="冥王の娘ナクサリルは、ドル・グルドゥアとルグブールズの闇の術に深く通じている。彼女は影の隠された道を歩み、彼女に逆らった者の消息は二度と聞かれぬ。" />
     <string id="TAOM_hero_1_30" text="モルグルの副官ゴスモグは、ペレンノール野の戦いでモルドールの軍勢を指揮する。残忍で狡猾なオークであり、最前線から指揮を執る。" />
     <string id="TAOM_hero_1_30_1" text="スヴァラ・レッドファングは、ゴスモグの指揮下にあるオークの隊長である。" />
-    <string id="TAOM_hero_1_49" text="オブロンはモルドールのオークの中隊を率いる。" />
+    <string id="TAOM_hero_1_49" text="スカルナクはモルドールのオーク隊を率いる残忍な隊長で、上の者を打ち倒して成り上がってきた。鞭と目だけが彼の守る掟である。" />
     <string id="TAOM_hero_1_49_1" text="トリスタニアは闇の軍勢に仕える。" />
     <string id="TAOM_hero_1_49_2" text="ゴルディアナは暗黒の塔の影に住まう。" />
     <string id="TAOM_hero_1_30_2" text="モグラはモルドールの暗き力に仕えている。" />
     <string id="TAOM_hero_1_30_3" text="スナガは影の下僕である。" />
-    <string id="TAOM_hero_1_56_2" text="ルスティカは闇の軍勢に仕える。" />
+    <string id="TAOM_hero_1_56_2" text="ルスティカは父トルムンドと共に戦へ赴く、氏族の若く猛々しい戦士である。" />
     <string id="TAOM_hero_1_63_2" text="コマタサは戦争のために生み出されたオークである。" />
     <string id="TAOM_hero_1_63_3" text="エリディレアは闇の階層に仕える。" />
     <string id="TAOM_hero_1_63" text="ミナス・モルグルの隊長ゴルバグは、死の都の守備隊を率いる。オークの中でも狡猾である。" />
     <string id="TAOM_hero_1_63_1" text="ヴァラリアは死者の城砦に仕える。" />
-    <string id="TAOM_hero_1_74" text="ザカニスはオークの連隊を指揮する。" />
+    <string id="TAOM_hero_1_74" text="ブールズナクはモルドールのオーク連隊を指揮する騎馬の隊長で、落伍者も脱走者も等しく馬で駆り立てて討つ。" />
     <string id="TAOM_hero_1_74_1" text="ゼナはモルドールの闇の主に仕える。" />
     <string id="TAOM_hero_1_54" text="キリス・ウンゴルの隊長シャグラトは、モルドールへの峠を守る。オークの間でも残虐さで知られている。" />
     <string id="TAOM_hero_1_54_1" text="コンスタリアはキリス・ウンゴルの塔に仕える。" />
-    <string id="TAOM_hero_1_68" text="タロスは峠に仕えるオークの隊長である。" />
+    <string id="TAOM_hero_1_68" text="ゴルサクはモルドールへ通じる高い峠を守るオークの隊長であり、目の前を抜けようとする者には油断なく容赦もない。" />
     <string id="TAOM_hero_1_68_1" text="シルヴィナは蜘蛛の峠の守備隊に仕える。" />
     <string id="TAOM_hero_1_69_2" text="ドラシラは闇の軍勢に仕える。" />
-    <string id="TAOM_hero_1_69" text="ニフォンはモルドールの国境の要塞を指揮する。" />
+    <string id="TAOM_hero_1_69" text="グルカシュはモルドール国境の要塞を指揮する、影の辺境の用心深い守り手である。" />
     <string id="TAOM_hero_1_69_1" text="アレリアナは国境地帯に仕える。" />
     <string id="TAOM_hero_1_55" text="マスモグは強力なウルク=ハイの戦長である。" />
     <string id="TAOM_hero_1_55_1" text="メゲシアは闇の力に仕える。" />
@@ -1201,13 +1201,13 @@
     <string id="TAOM_hero_2_7_1" text="ミミルは谷間の国の王家の王子である。" />
     <string id="TAOM_hero_2_10" text="ヴァラは谷間の国の王女であり、外交と統治術の訓練を受けている。" />
     <string id="TAOM_hero_2_13" text="ヴィダルは北方辺境の領主であり、東夷の侵入から守っている。" />
-    <string id="TAOM_hero_2_3" text="石兜のソリン三世は山の下の王であり、エレボールのドワーフを統治している。彼は谷間の国との古来の同盟を維持し、影に対抗する準備を整えている。" />
+    <string id="TAOM_hero_2_3" text="ランドは谷間の国の領主であり、東の谷々の守護者として、エレボールのドワーフとの古い同盟を保っている。" />
     <string id="TAOM_hero_2_4" text="シガはドゥリンの一族のドワーフ貴族の女性である。" />
     <string id="TAOM_hero_2_4_1" text="アポラネアは高貴な血筋のドワーフの乙女である。" />
     <string id="TAOM_hero_2_8" text="ウリクはエレボールのドワーフ王子であり、鍛冶術と戦術に優れている。" />
     <string id="TAOM_hero_2_11" text="イドルンは王室護衛のドワーフ戦士である。" />
     <string id="TAOM_hero_2_111" text="ロジヴォルは山の門を守るドワーフ戦士である。" />
-    <string id="TAOM_hero_2_5" text="オリはトーリン・オーケンシールドの仲間の一人の子孫であるドワーフの領主である。彼はエレボールと谷間の国の間の交易路を管理している。" />
+    <string id="TAOM_hero_2_5" text="アスクは谷間の国の領主で、はなれ山と長湖の間の交易路を取り仕切っている。" />
     <string id="TAOM_hero_2_6" text="エルタはオリの妻であり、宝石切削の技術で知られている。" />
     <string id="TAOM_hero_2_9" text="レクはオリの領地の後継者であり、交易と戦闘の両方で訓練を受けている。" />
     <string id="TAOM_hero_2_12" text="スヴァナは交易家の娘である。" />
@@ -1216,18 +1216,18 @@
     <string id="TAOM_hero_2_14_1" text="ヴァルカヴァはイスヴァン卿の妻である。" />
     <string id="TAOM_hero_2_14_2" text="ザヴェレナは東方領地の後継者である。" />
     <string id="TAOM_hero_2_14_3" text="ヴィジドゥナは東方辺境の若き貴族である。" />
-    <string id="TAOM_hero_2_16" text="ボフールはエレボールのドワーフ領主であり、伝説の一行の子孫である。" />
-    <string id="TAOM_hero_2_16_1" text="チャスカはボフールの妻であり、治癒術に優れている。" />
+    <string id="TAOM_hero_2_16" text="ハウクは谷間の国の領主で、市場街道と冬の隊商を統べる者である。" />
+    <string id="TAOM_hero_2_16_1" text="テュアスカはハウクの妻で、癒しの術に長けている。" />
     <string id="TAOM_hero_2_21" text="スヴェドルンは湖の町の守備隊を指揮している。" />
     <string id="TAOM_hero_2_21_1" text="イズデンカは湖の町の業務を管理している。" />
-    <string id="TAOM_hero_2_17" text="トーリン・オーケンシールド二世は竜のスマウグからエレボールを奪還した英雄として記憶されている。彼の精神は子孫を鼓舞している。" />
+    <string id="TAOM_hero_2_17" text="スタインは谷間の国の領主で、竜が倒れた後の年月に北の門を守り抜いたことで記憶されている。" />
     <string id="TAOM_hero_2_17_1" text="ドラチャは古き王の記憶を守り続けている。" />
     <string id="TAOM_hero_2_22" text="ラショネクは谷間の国の戦士たちを指揮している。" />
     <string id="TAOM_hero_2_22_1" text="ジェネヴァはラショネクの妻である。" />
     <string id="TAOM_hero_2_24" text="アルヴァルは谷間の国の守備隊の隊長である。" />
     <string id="TAOM_hero_2_24_1" text="ゾリナは谷間の国の貴族の女性である。" />
-    <string id="TAOM_hero_2_18" text="グローインはエレボールのドワーフ領主であり、旅の仲間のギムリの父である。" />
-    <string id="TAOM_hero_2_18_1" text="ゾリカはグローインの妻であり、有名なギムリの母である。" />
+    <string id="TAOM_hero_2_18" text="ウルフは谷間の国の領主であり、奔流川の川の見張りを率いる隊長である。" />
+    <string id="TAOM_hero_2_18_1" text="ゾリカはウルフの妻であり、奔流川のほとりの館の女主人である。" />
     <string id="TAOM_hero_2_23" text="ガルデンは谷間の国の南部守備隊を指揮している。" />
     <string id="TAOM_hero_2_23_1" text="ズラトカはガルデンの娘である。" />
     <string id="TAOM_hero_2_15" text="ラタゴストは賢明な助言者であり、国事について王に助言を行っている。" />
@@ -1235,10 +1235,10 @@
     <string id="TAOM_hero_2_15_2" text="ミランカは宮廷の貴族の女性である。" />
     <string id="TAOM_hero_2_15_3" text="ヴェリナは王家に仕えている。" />
     <string id="TAOM_hero_2_15_4" text="ボヴァンは谷間の国の若き貴族である。" />
-    <string id="TAOM_hero_2_19" text="ドワーリンは名高いドワーフ戦士であり、元の一行の最後の生き残りである。" />
-    <string id="TAOM_hero_2_19_1" text="ヴィトミラはドワーリンと共に仕えている。" />
-    <string id="TAOM_hero_2_20" text="オーインはドワーフの長老であり、古の知識と治癒術の守護者である。" />
-    <string id="TAOM_hero_2_20_1" text="キシャはオインの妻で、薬草の知識に長けている。" />
+    <string id="TAOM_hero_2_19" text="ガイルは大いに名高い谷間の国の戦士で、ギリオンの古き家系の血縁である。" />
+    <string id="TAOM_hero_2_19_1" text="ヴィトミラはガイルと共に仕えている。" />
+    <string id="TAOM_hero_2_20" text="ヴァルは谷間の国の長老で、伝承と癒しの術の守り手である。" />
+    <string id="TAOM_hero_2_20_1" text="キーシャはヴァルの妻で、薬草の知識に長けている。" />
     <string id="TAOM_hero_S8_u" text="ガリュクは山の広間を守る歴戦の古兵である。" />
     <string id="TAOM_hero_3_1" text="カドゥラクはハラドのタスクラルであり、南方軍の最高司令官である。彼はゴンドールに対抗してモルドールと同盟を結び、ムマキルの戦象を率いて民の敵と戦う。" />
     <string id="TAOM_hero_3_2" text="カリーダはカドゥラクの妻であり、高い地位にあるハラドリムの貴婦人である。" />
@@ -1317,7 +1317,7 @@
     <string id="TAOM_hero_4_19" text="アセラは深き谷を守る盾の乙女である。" />
     <string id="TAOM_hero_4_25" text="ルカンドは東エムネトの騎士たちを指揮する。" />
     <string id="TAOM_hero_4_25_1" text="ベルトリアナはルカンドの妻である。" />
-    <string id="TAOM_hero_4_21" text="オルドラキングのクスラエドは東の国境を巡回する。" />
+    <string id="TAOM_hero_4_21" text="クスレード・オルドラシングは東の国境を巡回している。" />
     <string id="TAOM_hero_4_20" text="ヴァルムンドはアルドブルグの守備隊を指揮する。" />
     <string id="TAOM_hero_4_20_1" text="インゲルトルドはヴァルムンドの妻であり、アルドブルグの貴婦人である。" />
     <string id="TAOM_hero_4_22" text="ウルフ・ケルムンディングは北の谷の騎兵を率いる。" />
@@ -1337,8 +1337,8 @@
     <string id="TAOM_hero_4_21_1" text="ジークベルフトはローハンの国境を巡察する。" />
     <string id="TAOM_hero_4_26" text="ペリックはローハンの隘路沿いの騎兵を指揮する。" />
     <string id="TAOM_hero_4_26_1" text="ライインガルダは隘路の盾乙女である。" />
-    <string id="TAOM_hero_4_27" text="エール・エゼルラフィングはダンランドの略奪からフォールドを守る。" />
-    <string id="TAOM_hero_4_27_1" text="ワエルブルグはエールの妻である。" />
+    <string id="TAOM_hero_4_27" text="エッレ・エセルラフィングはダンランド人の襲撃から谷間の牧地を守っている。" />
+    <string id="TAOM_hero_4_27_1" text="ウェールブルグはエッレの妻である。" />
     <string id="TAOM_hero_V9_u" text="ウルンドゥルフは熟練の騎士で、地元の領主に助言を与えている。" />
     <string id="TAOM_hero_4_28" text="ファストヘルム・モルカルガスは南の監視所を指揮する。" />
     <string id="TAOM_hero_4_28_1" text="モルカルはファストヘルムの息子である。" />
@@ -1468,7 +1468,7 @@
     <string id="TAOM_hero_1_27_bn" text="ウグルホールは、サウロンの口のためにモランノンの城壁の見張り道を守っている。彼は古き黒きヌーメノール人の血を引き、麾下のオークたちを兵ではなく道具と見なしている。" />
     <string id="TAOM_hero_1_27_1_bn" text="ヌールベスは暗黒の塔に仕える黒きヌーメノール人の女魔術師である。その名は古いアドゥーナイク語で「夜の言葉」を意味し、彼女自らが選んだ名である。" />
     <string id="TAOM_hero_1_27_2_bn" text="アガヌズィールは黒門の西へ駆ける襲撃隊を率いている。その名は「死を愛する者」を意味し、母は祝福としてこの名を与えた。" />
-    <string id="TAOM_hero_1_27_3_bn" text="ウグルフェルは兄の襲撃隊と共に馬を駆け、奪ったものすべての records を数え上げる。彼女は祖先が渡った海を一度も見たことがない。" />
+    <string id="TAOM_hero_1_27_3_bn" text="ウグルフェルは兄の略奪団と共に馬を駆り、奪ったものすべての数を記録している。彼女は祖先が渡った海をまだ見たことがない。" />
     <string id="TAOM_hero_1_37_bn" text="ドルグフェルはサウロンの口の娘だが、彼は父の名をとうに捨て去っている。彼女はカラハ・アングレンの騎兵を指揮し、その家が声に出して名を呼ばぬ術を学んでいる。" />
     <string id="TAOM_hero_1_47_bn" text="ウルバルはカラハ・アングレンの地下の鍛冶場と、そこへ送られる奴隷たちを管理している。その名は彼の民がヌーメノールから変わらぬまま持ち出したわずかな名の一つである。" />
     <string id="TAOM_hero_1_47_1_bn" text="ジムラベスは黒門にて夫の家のために語り、しかも夫よりはるかに巧みに語る。サウロンの口は彼女を幾度も役立つと見なしてきた。" />

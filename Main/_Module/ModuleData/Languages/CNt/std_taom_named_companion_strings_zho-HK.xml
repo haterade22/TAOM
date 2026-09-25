@@ -34,42 +34,42 @@
     <string id="nc_response_1.named_companion_swan_text" text="戰略頭腦與戰士之心。令人印象深刻。" />
     <string id="nc_response_2.named_companion_swan_text" text="地圖和劍?樣樣通,樣樣鬆?" />
     <string id="nc_backstory_d.named_companion_swan_text" text="實際上兩者皆精通。我的地圖曾引導軍隊走向勝利,而我的劍在需要時保衛他們。如果你既重視準備也重視能力,我願提供我的服務。" />
-    <string id="nc_backstory_a.named_companion_rcmcplayz_text" text="我是Rukumazig-khamîz,人稱鐵匠。我鍛造的不僅是金屬,更是透過我的技藝鑄造整個世界。" />
+    <string id="nc_backstory_a.named_companion_rcmcplayz_text" text="我是魯庫馬齊格-卡密茲，人稱鍛造者。我所鍛造的不只是金屬，更是以技藝打造出整個世界。" />
     <string id="nc_prebackstory.named_companion_rcmcplayz_text" text="一位遠離熔爐的鐵匠?是什麼將你帶到這裡?" />
     <string id="nc_backstory_b.named_companion_rcmcplayz_text" text="我的工作超越了鐵砧與錘子。我塑造場景與空間,以三維的方式鑄造記憶中的風景。" />
     <string id="nc_backstory_c.named_companion_rcmcplayz_text" text="每一座堡壘城牆、每一個村莊廣場、每一條山間隘口——我捕捉它們的精髓,並以完美的細節重建它們。有人稱之為藝術,我稱之為保存。" />
     <string id="nc_response_1.named_companion_rcmcplayz_text" text="一位鑄造世界的鐵匠?這是罕見的天賦。" />
     <string id="nc_response_2.named_companion_rcmcplayz_text" text="花俏的鍛造在戰鬥中幫不上忙,工匠。" />
     <string id="nc_backstory_d.named_companion_rcmcplayz_text" text="你會感到驚訝的。我對結構的洞察力能看出任何城牆的弱點,而我對空間的知識能提供戰術優勢。此外,這把錘子在戰鬥中和在創造中同樣有用。你願意接納我嗎?" />
-    <string id="nc_backstory_a.named_companion_leovsilva_text" text="我是森林精靈的Leovlas,形態與光影的大師工匠。我的藝術為數位領域注入生命。" />
+    <string id="nc_backstory_a.named_companion_leovsilva_text" text="我是西爾凡的雷歐弗拉斯，形體與光影的工匠大師。我的技藝為數位國度注入生命。" />
     <string id="nc_prebackstory.named_companion_leovsilva_text" text="一位森林精靈工匠?你們的族人以藝術造詣聞名於世。" />
     <string id="nc_backstory_b.named_companion_leovsilva_text" text="在我的族人之中,我學到真正的工藝超越了物質。我從虛無中塑造世界,雕琢出足以媲美自然的美麗。" />
     <string id="nc_backstory_c.named_companion_leovsilva_text" text="他們說我是這個領域中最優秀的工匠之一。每一個紋理、每一道陰影、每一個細節都必須完美——這就是森林精靈之道。我的作品是對奉獻精神所能成就之事的紀念碑。" />
     <string id="nc_response_1.named_companion_leovsilva_text" text="你的名聲早已傳開。這樣的技藝會為任何隊伍增光。" />
     <string id="nc_response_2.named_companion_leovsilva_text" text="精美的工藝固然不錯,但你能戰鬥嗎?" />
     <string id="nc_backstory_d.named_companion_leovsilva_text" text="引導我藝術的精準同樣引導著我的劍刃。大師工匠必須保衛自己的作品。再者,能創造如此美麗之物的人,也確切知道如何摧毀敵人。我可以加入你嗎?" />
-    <string id="nc_backstory_a.named_companion_yotthani_text" text="我是Thanor,代碼的編織者與系統的建築師。我透過古老的程式藝術為理念賦予生命。" />
+    <string id="nc_backstory_a.named_companion_yotthani_text" text="我是薩諾爾，編織程式碼者、系統的建築師。我以古老的程式之藝，讓構想獲得生命。" />
     <string id="nc_prebackstory.named_companion_yotthani_text" text="一位程式設計師?在這些土地上那可是強大的魔法。" />
     <string id="nc_backstory_b.named_companion_yotthani_text" text="他人夢想之事,我使之成真。我深入探索創造的本質結構,用純粹的邏輯與決心編織出功能。" />
     <string id="nc_backstory_c.named_companion_yotthani_text" text="給我一個概念,無論多複雜,我都會為它注入生命。每一個系統、每一個機制、每一項功能——我從虛無中創造它們,一行行地,直到它們活靈活現。" />
     <string id="nc_response_1.named_companion_yotthani_text" text="從虛無中創造的力量?確實令人印象深刻。" />
     <string id="nc_response_2.named_companion_yotthani_text" text="代碼和系統?你能揮舞真正的武器嗎?" />
     <string id="nc_backstory_d.named_companion_yotthani_text" text="心智才是最鋒利的武器。我能除錯他人甚至看不見的問題,而我的解決方案既優雅又致命。無論在戰鬥中還是在代碼中,精準就是一切。請允許我藉由加入你的事業來證明。" />
-    <string id="nc_backstory_a.named_companion_whitegoat_text" text="我是Whitegoat,尋路者。我引導旅人穿越最複雜的旅程——心智與機器之間的介面。" />
+    <string id="nc_backstory_a.named_companion_whitegoat_text" text="我是白山羊，探路者。我引領旅人穿越最複雜的旅程——心智與機器之間的界面。" />
     <string id="nc_prebackstory.named_companion_whitegoat_text" text="尋路者?這是個有趣的稱號。" />
     <string id="nc_backstory_b.named_companion_whitegoat_text" text="我打造所有人與我們世界互動的窗口。每一個按鈕、每一個選單、每一個顯示——我設計引領使用者到達目的地的路徑。" />
     <string id="nc_backstory_c.named_companion_whitegoat_text" text="如果你無法導航,美麗的風景便毫無意義。我確保每一個靈魂,從老兵到新手,都能優雅輕鬆地找到自己的路。這就是我的藝術——讓複雜變得簡單。" />
     <string id="nc_response_1.named_companion_whitegoat_text" text="數位領域的嚮導。這確實很有價值。" />
     <string id="nc_response_2.named_companion_whitegoat_text" text="選單和按鈕?這在戰鬥中有什麼用?" />
     <string id="nc_backstory_d.named_companion_whitegoat_text" text="戰略始於資訊,而資訊需要清晰。我能看見他人錯過的模式,將混亂組織成秩序。我的技能在戰術與後勤方面同樣適用。讓我與你一起找到通往勝利的道路。" />
-    <string id="nc_backstory_a.named_companion_igor_text" text="我是Igor Fahlun,被稱為迷失者。一位遠離沙漠之地的哈拉德人,在創造新世界中尋找目標。" />
+    <string id="nc_backstory_a.named_companion_igor_text" text="我是伊戈爾·法倫，人稱迷失者。一名遠離沙漠黃沙的哈拉德人，在打造新世界中尋得志業。" />
     <string id="nc_prebackstory.named_companion_igor_text" text="迷失者?對哈拉德人來說這是個不祥的稱號。" />
     <string id="nc_backstory_b.named_companion_igor_text" text="我離開家鄉尋找某種我無法說出名字的東西。在塑造三維視覺的藝術中,我找到了我從不知道自己在尋找的事物。" />
     <string id="nc_backstory_c.named_companion_igor_text" text="沙漠教會我在空無中看見美麗,從虛無中建造事物。現在我從虛空中雕刻整個領域,每一個創作都是我內心攜帶而非留在身後的家園的一部分。" />
     <string id="nc_response_1.named_companion_igor_text" text="有時我們必須迷失自己才能找到真正的道路。" />
     <string id="nc_response_2.named_companion_igor_text" text="一位哈拉德藝術家?這倒是出乎意料。" />
     <string id="nc_backstory_d.named_companion_igor_text" text="出乎意料之事往往證明最有價值。我的南方之眼能看見他人錯過的角度,我的沙漠傳承為北方土地帶來不同的視角。或許迷失只是被尋獲的開始。我可以與你同行嗎?" />
-    <string id="nc_backstory_a.named_companion_thyrell_text" text="我是金色的Thyrell,金花騎士團的騎士,瑞文戴爾古老殿堂的誓約守護者。" />
+    <string id="nc_backstory_a.named_companion_thyrell_text" text="我是金色的賽瑞爾，金花騎士，立誓守護瑞文戴爾古老殿堂之人。" />
     <string id="nc_prebackstory.named_companion_thyrell_text" text="金花騎士?那個騎士團有著傳奇的歷史。" />
     <string id="nc_backstory_b.named_companion_thyrell_text" text="我們將過去時代的光芒帶入這些日漸黑暗的時刻。從瑞文戴爾的圖書館到訓練場,我精通學識與劍術。" />
     <string id="nc_backstory_c.named_companion_thyrell_text" text="金花曾對抗最深重的黑暗並光榮隕落。我們現在承載他們名號的人必須確保他們的犧牲沒有白費。美麗、智慧與勇武——這些是我們的信條。" />

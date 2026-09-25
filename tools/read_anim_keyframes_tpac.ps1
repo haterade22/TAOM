@@ -90,7 +90,7 @@ if($ByClip){
     $sa=$byGuid["$($cl.Animation)"]
     if(-not $sa){ Write-Host ("  MISS master {0} for clip {1}" -f $cl.Animation, $ClipName); $miss++; continue }
     $index[$ClipName]=[ordered]@{ master=$sa.Name; master_guid="$($sa.Guid)"; source1=[double]$cl.Source1; source2=[double]$cl.Source2;
-      duration_s=[double]$cl.Duration; master_frames=[int]$sa.Duration }
+      duration_s=[double]$cl.Duration; master_root_keys=[int]$sa.Duration }
     if(-not $seen.ContainsKey($sa.Name)){ $seen[$sa.Name]=$true; $targets += $sa.Name }
   }
   ($index | ConvertTo-Json -Depth 4) | Set-Content -Path (Join-Path $OutDir "clips_index.json") -Encoding UTF8
@@ -115,3 +115,5 @@ foreach($ClipName in $targets){
   $ok++
 }
 Write-Host ("DONE: {0} written, {1} missing -> {2}" -f $ok, $miss, $OutDir)
+# a missing clip or master is a failed extraction, not a partial success a caller could read as done
+if($miss -gt 0){ exit 1 }

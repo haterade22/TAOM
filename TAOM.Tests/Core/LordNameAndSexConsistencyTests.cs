@@ -34,10 +34,8 @@ public class LordNameAndSexConsistencyTests
     /// </summary>
     private static readonly HashSet<string> AcceptedNameDifferences = new(StringComparer.Ordinal)
     {
-        // lords.xml has the fuller "Duinhir, Lord of Morthond"; the registry has the bare given
-        // name. English is the only locale that renders the literal, so syncing down would drop
-        // the title from the one place it shows.
-        "aom_lord_WE9_l_name",
+        // Empty since 2026-09-25: Duinhir's title ("Duinhir, Lord of Morthond") is registered and translated
+        // everywhere (Mike), so lords.xml and the registry agree again.
     };
 
     private static string FindRepoRoot()

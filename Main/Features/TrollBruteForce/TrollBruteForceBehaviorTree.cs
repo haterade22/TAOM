@@ -8,7 +8,7 @@ using TaleWorlds.MountAndBlade;
 namespace TAOM.Features.TrollBruteForce;
 
 /// <summary>
-/// Behavior tree for an AI cave troll on foot (#649): the Brute Force smash. Built per troll by
+/// Behavior tree for an AI troll on foot, cave or hill (#649): the Brute Force smash. Built per troll by
 /// <see cref="TrollBruteForceMissionBehavior"/> and ticked from <c>BehaviorTreeMissionLogic.OnMissionTick</c> on the
 /// main thread (#592). The first tree in TAOM on an agent with no rider, so it uses <see cref="IsAiAgentDecorator"/>,
 /// not the rider-based gates. Between smashes the engine's own melee AI fights as usual; a player-controlled troll

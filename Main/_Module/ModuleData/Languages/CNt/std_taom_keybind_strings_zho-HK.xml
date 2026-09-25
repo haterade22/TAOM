@@ -14,5 +14,8 @@
     <string id="taom_key_turbo_desc" text="同時按住 Ctrl 與此鍵，可獲得最高的 TAOM 速度倍率。放開任一按鍵即恢復先前的速度。" />
     <string id="taom_key_career_ability" text="職業能力（TAOM）" />
     <string id="taom_key_career_ability_desc" text="在戰鬥中當能量條蓄滿時啟動你的職業能力。預設按鍵為 V。" />
+    <string id="taom_aso_desc_invasion" text="統治中土世界大部分地區的派系。" />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} 支配著中土世界的絕大部分地區。" />
+    <string id="taom_aso_item_desc_randomized" text="在合理範圍內，依你選擇的程度隨機化中土世界的初始狀態。" />
   </strings>
 </base>

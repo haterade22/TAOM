@@ -324,7 +324,7 @@
         {
           "troop": "mordor_orc_infantry",
           "min": 1,
-          "max": 44
+          "max": 40
         },
         {
           "troop": "mordor_uruk_shieldguard",
@@ -370,6 +370,16 @@
           "troop": "mordor_warg_beastmaster",
           "min": 0,
           "max": 44
+        },
+        {
+          "troop": "cave_troll",
+          "min": 0,
+          "max": 2
+        },
+        {
+          "troop": "hill_troll",
+          "min": 0,
+          "max": 2
         }
       ],
       "template_id": "kingdom_hero_party_mordor_empire_south_13_template"
@@ -474,7 +484,7 @@
         {
           "troop": "mordor_orc_infantry",
           "min": 1,
-          "max": 24
+          "max": 20
         },
         {
           "troop": "mordor_uruk_baraddurguard",
@@ -520,6 +530,16 @@
           "troop": "mordor_warg_ravager",
           "min": 0,
           "max": 22
+        },
+        {
+          "troop": "cave_troll",
+          "min": 0,
+          "max": 2
+        },
+        {
+          "troop": "hill_troll",
+          "min": 0,
+          "max": 2
         }
       ],
       "template_id": "kingdom_hero_party_mordor_empire_south_15_template"
@@ -744,7 +764,7 @@
         {
           "troop": "mordor_orc_impaler",
           "min": 1,
-          "max": 44
+          "max": 40
         },
         {
           "troop": "mordor_uruk_fighter",
@@ -800,6 +820,16 @@
           "troop": "mordor_warg_beastmaster",
           "min": 0,
           "max": 44
+        },
+        {
+          "troop": "cave_troll",
+          "min": 0,
+          "max": 2
+        },
+        {
+          "troop": "hill_troll",
+          "min": 0,
+          "max": 2
         }
       ],
       "template_id": "kingdom_hero_party_mordor_empire_south_5_template"

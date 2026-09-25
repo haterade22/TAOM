@@ -544,31 +544,31 @@
     <string id="aom_response_2.spc_wanderer_rohan_9_text" text="백성들을 무방비 상태로 두고 떠나는 것은 무모해 보입니다." />
     <string id="aom_backstory_d.spc_wanderer_rohan_9_text" text="나는 리더마크의 모든 길과 여울을 알고 있으며, 내 말은 나를 실망시킨 적이 없습니다. 그것이 내가 가져올 수 있는 것입니다." />
     <string id="aom_prebackstory.spc_wanderer_rivendell_0_text" text="지식은 가장 진실한 무기이며, 나는 평생을 그것을 모으는 데 보냈습니다..." />
-    <string id="aom_backstory_a.spc_wanderer_rivendell_0_text" text="나는 이ム라드리스의 고대 기술을 연구했고, 엘론드 경의 기술자들로부터 건축과 공성전의 비밀을 배웠습니다. 우리 가족은 여러 세대에 걸쳐 건축가로 봉사하며 성벽을 쌓고 방어시설을 구축했습니다." />
+    <string id="aom_backstory_a.spc_wanderer_rivendell_0_text" text="나는 임라드리스의 오랜 기예를 익혔고, 엘론드 공의 축성 기술자들에게서 건축과 공성술의 비밀을 배웠다. 우리 가문은 대대로 건축가로 봉직하며 성벽을 쌓고 방어 시설을 만들어 왔다." />
     <string id="aom_backstory_b.spc_wanderer_rivendell_0_text" text="하지만 경쟁자가 내가 적을 위해 우리 방어시설을 약화시켰다고 고발했을 때, 나는 결백함에도 불구하고 추방당했습니다. 내가 세운 성벽은 여전히 서 있지만, 내 이름은 건축가 명부에서 지워졌습니다." />
     <string id="aom_backstory_c.spc_wanderer_rivendell_0_text" text="이제 나는 방랑하며, 정치보다 기술을 중시하는 이들에게 내 지식을 제공합니다. 어둠은 커지고 있으며, 엘다르는 그 어느 때보다 방어시설이 필요합니다." />
     <string id="aom_response_1.spc_wanderer_rivendell_0_text" text="건축가의 기술은 이 어두운 시대에 전사의 기술보다 더 가치가 있습니다." />
     <string id="aom_response_2.spc_wanderer_rivendell_0_text" text="돌담으로는 다가오는 것을 막을 수 없습니다." />
     <string id="aom_backstory_d.spc_wanderer_rivendell_0_text" text="싸우는 것만큼 건축도 할 수 있는 사람이 필요하시다면, 제가 봉사하겠습니다." />
-    <string id="aom_generic_backstory.spc_wanderer_rivendell_0_text" text="이ム라드리스 출신의 전승가로, 목적과 모험을 찾고 있습니다." />
+    <string id="aom_generic_backstory.spc_wanderer_rivendell_0_text" text="목적과 모험을 찾는 임라드리스 출신의 학자." />
     <string id="aom_prebackstory.spc_wanderer_rivendell_1_text" text="내 검은 많은 적의 피를 맛보았지만, 나는 계속 싸웁니다..." />
-    <string id="aom_backstory_a.spc_wanderer_rivendell_1_text" text="나는 이ム라드리스의 투사였으며, 어려서부터 전쟁의 기술을 배웠습니다. 검과 방패를 다루는 내 기술은 엘다르 사이에서 명성을 얻었고, 나는 엘론드 경을 흔들림 없는 충성으로 섬겼습니다." />
+    <string id="aom_backstory_a.spc_wanderer_rivendell_1_text" text="나는 임라드리스의 용사였으며, 어릴 적부터 전쟁의 기예를 익혔다. 검과 방패를 다루는 솜씨로 엘다르 사이에서 명성을 얻었고, 흔들림 없는 충성으로 엘론드 공을 섬겼다." />
     <string id="aom_backstory_b.spc_wanderer_rivendell_1_text" text="하지만 명예는 개인적 영광을 위해 병사들을 죽음으로 보낸 부패한 지휘관에게 도전할 것을 요구했습니다. 나는 결투에서 이겼지만 직위를 잃었습니다 - 그 지휘관은 나를 추방시킨 강력한 동맹자들이 있었습니다." />
     <string id="aom_backstory_c.spc_wanderer_rivendell_1_text" text="이제 나는 가치 있는 대의를 위해 내 검을 팝니다. 어둠의 세력은 날마다 더 대담해지고 있으며, 그들과 맞서 싸울 용기가 있는 이들에게는 전투가 부족하지 않습니다." />
     <string id="aom_response_1.spc_wanderer_rivendell_1_text" text="명예를 위해 싸우는 전사는 존경받을 자격이 있습니다." />
     <string id="aom_response_2.spc_wanderer_rivendell_1_text" text="아마도 당신은 전투를 선택하는 데 더 신중했어야 했을 것입니다." />
     <string id="aom_backstory_d.spc_wanderer_rivendell_1_text" text="원하신다면 내 검은 당신의 것입니다." />
-    <string id="aom_generic_backstory.spc_wanderer_rivendell_1_text" text="이ム라드리스 출신의 검가(劍歌)로, 목적과 모험을 찾고 있습니다." />
+    <string id="aom_generic_backstory.spc_wanderer_rivendell_1_text" text="목적과 모험을 찾는 임라드리스 출신의 검무사." />
     <string id="aom_prebackstory.spc_wanderer_rivendell_2_text" text="야생의 땅은 마을 사람들이 꿈도 꾸지 못할 비밀을 간직하고 있습니다..." />
-    <string id="aom_backstory_a.spc_wanderer_rivendell_2_text" text="나는 이ム라드리스에서 정찰병으로 복무하며, 위협을 감시하기 위해 우리 국경 너머로 멀리 돌아다녔습니다. 나는 리븐델 계곡의 모든 길을 알고 있으며 흐르는 물을 지나는 여우도 추적할 수 있습니다." />
+    <string id="aom_backstory_a.spc_wanderer_rivendell_2_text" text="나는 임라드리스의 정찰병으로 복무하며 국경 너머 먼 곳까지 나아가 위협을 살폈다. 깊은골 골짜기의 모든 길을 알고 있으며, 흐르는 물속으로 달아난 여우도 추적할 수 있다." />
     <string id="aom_backstory_b.spc_wanderer_rivendell_2_text" text="순찰 중에 우리 백성 사이의 음모를 발견했습니다 - 어둠의 세력과 협력하는 밀수업자들이었습니다. 이를 보고했을 때, 밀수업자들이 강력한 누군가로부터 보호를 받고 있다는 것을 알게 되었습니다. 나는 본 것을 잊으라는 말을 들었습니다." />
     <string id="aom_backstory_c.spc_wanderer_rivendell_2_text" text="나는 눈을 감기를 거부했고 대가를 치렀습니다. 이제 나는 혼자 떠돌며, 내 기술을 사용해 생존하고 내 길을 건너는 이들을 돕습니다. 야생은 위험하지만, 적어도 정직합니다." />
     <string id="aom_response_1.spc_wanderer_rivendell_2_text" text="진실은 어떤 대가를 치르더라도 가치가 있습니다." />
     <string id="aom_response_2.spc_wanderer_rivendell_2_text" text="때로는 생존을 위해 타협이 필요합니다." />
     <string id="aom_backstory_d.spc_wanderer_rivendell_2_text" text="내 눈, 내 활, 그리고 야생에 대한 내 지식을 제공합니다." />
-    <string id="aom_generic_backstory.spc_wanderer_rivendell_2_text" text="이ム라드리스 출신의 길잡이로, 목적과 모험을 찾고 있습니다." />
+    <string id="aom_generic_backstory.spc_wanderer_rivendell_2_text" text="목적과 모험을 찾는 임라드리스 출신의 길잡이." />
     <string id="aom_prebackstory.spc_wanderer_rivendell_3_text" text="나는 치유될 수 있었던 상처로 죽어가는 너무 많은 이들을 보았습니다..." />
-    <string id="aom_backstory_a.spc_wanderer_rivendell_3_text" text="나는 이ム라드리스에서 치유자로 훈련받았으며, 엘다르에게 알려진 모든 약초와 치료법의 특성을 배웠습니다. 나는 어둠의 세력과의 모든 교전 후 부상자들을 돌보며 수많은 생명을 구했습니다." />
+    <string id="aom_backstory_a.spc_wanderer_rivendell_3_text" text="나는 임라드리스에서 치유사로 수련하며 엘다르가 아는 모든 약초와 치료법의 성질을 배웠다. 어둠의 세력과의 전투가 끝날 때마다 부상자를 돌보아 수많은 목숨을 구했다." />
     <string id="aom_backstory_b.spc_wanderer_rivendell_3_text" text="하지만 귀족의 아들이 내 최선의 노력에도 불구하고 죽었을 때 - 그 상처는 어떤 치유자의 능력도 넘어서는 것이었습니다 - 그의 아버지는 나를 비난하며 처형을 요구했습니다. 나는 조작된 재판을 받기보다 도망쳤습니다." />
     <string id="aom_backstory_c.spc_wanderer_rivendell_3_text" text="이제 나는 할 수 있는 곳이면 어디서든 내 기술을 행하며, 충성과 상관없이 아프고 부상당한 이들을 돕습니다. 죽음은 차별하지 않으며, 치유 또한 차별해서는 안 됩니다." />
     <string id="aom_response_1.spc_wanderer_rivendell_3_text" text="치유사의 자비는 귀한 선물이지." />

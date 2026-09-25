@@ -655,7 +655,7 @@
     <string id="taom_precompile_shaders" text="셰이더 사전 컴파일" />
     <string id="taom_precompile_hint" text="병사 및 장비 셰이더를 미리 컴파일하여 첫 전투에서 끊김이나 멈춤이 발생하지 않도록 합니다. 모드 목록을 변경한 뒤에는 다시 실행하십시오. 모듈 목록이 바뀌면 게임이 컴파일된 셰이더를 삭제합니다." />
     <string id="taom_precompile_inquiry_title" text="셰이더 사전 컴파일" />
-    <string id="taom_precompile_inquiry_body" text="TAOM과 기본 게임의 병사, 영주, 전투 장비가 포함된 일련의 숨겨진 전투를 불러와, 각 문화권과의 첫 전투 도중이 아니라 지금 셰이더를 컴파일합니다.{newline}{newline}시간이 다소 걸립니다. 셰이더 캐시가 비어 있다면 20~70분 정도 예상하십시오. 게임을 켜 둔 채로 두고 다른 전투를 시작하지 마십시오. 진행 상황은 로딩 화면과 상태 표시줄에 나타납니다. 언제든 Ctrl+Shift+K를 누르고 있으면 취소됩니다.{newline}{newline}모듈 목록이 변경될 때마다 게임이 컴파일된 셰이더를 삭제하므로, 모드를 추가하거나 제거하거나 순서를 바꾼 뒤에는 다시 실행하십시오.{newline}{newline}장면 단계(TAOM 자체 전투 장면의 지형 및 대기 셰이더)는 일부 GPU에서 충돌을 일으키므로 기본적으로 꺼져 있습니다. 원하신다면 모드 옵션 &gt; TAOM &gt; 그래픽/셰이더 사전 컴파일에서 켜십시오.{newline}{newline}'Shader pre-compilation COMPLETE'가 표시되면 플레이하실 수 있습니다." />
+    <string id="taom_precompile_inquiry_body" text="TAOM과 기본 게임의 병사, 영주, 전투 장비가 포함된 일련의 숨겨진 전투를 불러와, 각 문화권과의 첫 전투 중이 아니라 지금 셰이더를 컴파일합니다.{newline}{newline}시간이 다소 걸립니다: 셰이더 캐시가 비어 있다면 20~70분 정도를 예상하십시오. 게임을 실행한 채로 두고 다른 전투를 시작하지 마십시오. 진행 상황은 로딩 화면과 상태 표시줄에 나타납니다. 언제든 Ctrl+Shift+K를 누르고 있으면 취소됩니다.{newline}{newline}모듈 목록이 변경될 때마다 게임은 컴파일된 셰이더를 지우므로, 모드를 추가·제거·재정렬한 후에는 다시 실행하십시오.{newline}{newline}장면 패스(TAOM 자체 전투 장면의 지형 및 대기 셰이더)는 일부 GPU에서 충돌을 일으키므로 기본적으로 꺼져 있습니다. 원하신다면 모드 옵션 &gt; TAOM &gt; 그래픽/셰이더 사전 컴파일에서 켜십시오.{newline}{newline}'셰이더 사전 컴파일 완료'라는 문구가 보이면 플레이하셔도 됩니다." />
     <string id="taom_main_menu_new_game" text="인간의 시대로" />
     <string id="taom_career_screen_title" text="직업" />
     <string id="taom_career_done" text="완료" />
@@ -851,7 +851,7 @@
     <string id="taom_career_grp_black_uruk_captain_t3_a" text="눈꺼풀 없는 눈의 분노" />
     <string id="taom_career_grp_black_uruk_captain_t3_b" text="검은 문의 대장" />
     <string id="taom_career_grp_blade_dancer_t1_a" text="별빛의 강철" />
-    <string id="taom_career_grp_blade_dancer_t1_b" text="이ム라드리스의 수호자" />
+    <string id="taom_career_grp_blade_dancer_t1_b" text="임라드리스의 수호대" />
     <string id="taom_career_grp_blade_dancer_t2_a" text="곤돌린의 춤" />
     <string id="taom_career_grp_blade_dancer_t2_b" text="숨겨진 골짜기의 수호자" />
     <string id="taom_career_grp_blade_dancer_t3_a" text="제1시대의 검" />
@@ -1404,7 +1404,7 @@
     <string id="taom_faction_goblins_of_blue_craig_bonus_3" text="+20% 부대 식량 소비 (탐욕스러운 무리)" />
     <string id="taom_faction_goblins_of_blue_craig_bonus_4" text="+10% 대장장이 효율 (노획 무기 저장고)" />
     <string id="taom_faction_goblins_of_blue_craig_bonus_5" text="+10% 약탈 피해 (고블린 매복)" />
-    <string id="taom_faction_goblins_of_blue_craig_desc" text="블루 크레이그의 고블린." />
+    <string id="taom_faction_goblins_of_blue_craig_desc" text="머나먼 서쪽 청색 산맥(에레드 루인)의 독자적인 고블린 무리로, 린돈의 회색항구 바로 곁에 자리한다. 고블린 마을의 안개산맥 사촌들과는 별개의 세력이다. 무수히 많고 무장은 형편없는 떼거리로, 홀로는 약하나 무리를 이루면 압도적이며 행군 중에는 늘 굶주린다. 서쪽 해안의 요정들을 괴롭힌다." />
     <string id="taom_faction_goblins_of_blue_craig_name" text="블루 크레이그의 고블린" />
     <string id="taom_faction_goblins_of_blue_craig_perk_0_desc" text="+40% 부대 규모 및 +25% 마을 지원병 재생성 — 약하지만 끝없이 늘어난다." />
     <string id="taom_faction_goblins_of_blue_craig_perk_0_name" text="고블린 무리" />
@@ -1435,7 +1435,7 @@
     <string id="taom_faction_goblins_of_goblin_town_bonus_3" text="+20% 부대 식량 소비 (탐욕스러운 무리)" />
     <string id="taom_faction_goblins_of_goblin_town_bonus_4" text="+10% 대장장이 효율 (노획 무기 저장고)" />
     <string id="taom_faction_goblins_of_goblin_town_bonus_5" text="+10% 약탈 피해 (고블린 매복)" />
-    <string id="taom_faction_goblins_of_goblin_town_desc" text="안개산맥의 고블린이 들끓는 터널과 동굴. 이 오크들은 높은 고갯길을 장악하고 산맥을 넘으려는 모든 이들을 위협한다." />
+    <string id="taom_faction_goblins_of_goblin_town_desc" text="안개산맥 높은 고개 아래 우글거리는 고블린 굴이다. 대고블린이 쓰러진 이래 부족들은 헤아릴 수 없이 불어났다. 무장은 형편없으나 그 무게만으로 승리하며, 어떤 적도 솎아낼 수 없을 만큼 빠르게 번식하는 거대한 떼거리다. 고향 산맥의 눈밭 위에서 가장 빠르게 달리지만, 그런 무리는 언제나 굶주려 있다." />
     <string id="taom_faction_goblins_of_goblin_town_name" text="고블린 타운의 고블린" />
     <string id="taom_faction_goblins_of_goblin_town_perk_0_desc" text="+40% 부대 규모 및 +25% 마을 지원병 재생성 — 고블린은 약하지만 끝없이 늘어난다." />
     <string id="taom_faction_goblins_of_goblin_town_perk_0_name" text="고블린 무리" />
@@ -1453,9 +1453,9 @@
     <string id="taom_faction_goblins_of_goblin_town_su_1_name" text="동굴 고블린 척후병" />
     <string id="taom_faction_goblins_of_goblin_town_su_2_desc" text="깊은 굴의 더 무거운 돌격 고블린." />
     <string id="taom_faction_goblins_of_goblin_town_su_2_name" text="고블린 난폭자" />
-    <string id="taom_faction_goblins_of_goblin_town_trait_0" text="고블린 터널" />
-    <string id="taom_faction_goblins_of_goblin_town_trait_1" text="산맥 고갯길" />
-    <string id="taom_faction_goblins_of_goblin_town_trait_2" text="와르그 기수" />
+    <string id="taom_faction_goblins_of_goblin_town_trait_0" text="고블린 마을의 굴" />
+    <string id="taom_faction_goblins_of_goblin_town_trait_1" text="높은 고개의 산란" />
+    <string id="taom_faction_goblins_of_goblin_town_trait_2" text="산길의 매복자" />
     <string id="taom_faction_goblins_of_goblin_town_trait_3" text="무수한 무리" />
     <string id="taom_faction_goblins_of_goblin_town_weakness_0" text="개별적으로 약한 병력" />
     <string id="taom_faction_goblins_of_goblin_town_weakness_1" text="탐욕스러움 — 모든 보급선에 부담" />
@@ -1526,17 +1526,17 @@
     <string id="taom_faction_havens_of_umbar_weakness_1" text="곤도르의 증오를 받음" />
     <string id="taom_faction_havens_of_umbar_weakness_2" text="육군이 해군보다 약함" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_0" text="군대 영향력 보상 +35% (엘프의 지혜)" />
-    <string id="taom_faction_high_kingdom_of_lindon_bonus_1" text="마을 화덕 성장 +20% (마지막 아늑한 집)" />
+    <string id="taom_faction_high_kingdom_of_lindon_bonus_1" text="+20% 마을 화덕 성장 (회색항구)" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_2" text="숲에서 부대 속도 +10% (숲의 우아함)" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_3" text="부대 식량 소비 -15% (엘프의 검소함)" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_4" text="하루당 정착지 충성도 +0.5" />
     <string id="taom_faction_high_kingdom_of_lindon_bonus_5" text="군대 영향력 비용 +25% (엘프의 자부심)" />
-    <string id="taom_faction_high_kingdom_of_lindon_desc" text="가운데땅 서쪽 해안의 고대 엘프 왕국 린돈. 길갈라드의 후계자들이 다스리며, 쇠퇴하는 엘프의 영광과 회색 항구가 있는 땅이다." />
+    <string id="taom_faction_high_kingdom_of_lindon_desc" text="청색 산맥 서쪽의 푸른 땅이며, 가운데땅 해안에 남은 높은요정들의 마지막 왕국이다. 미슬론드의 회색항구에서 흰 배들이 서녘으로 떠난다. 엘다르 중 가장 연로한 조선공 키르단이 팔라스림의 스러져가는 빛을 지킨다. 현명하고 수는 적으며, 칼 하나하나가 대체할 수 없는 존재다. 린돈은 미슬론드의 팔라스림의 힘을 함께 나눈다." />
     <string id="taom_faction_high_kingdom_of_lindon_name" text="린돈 고등 왕국" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_0_desc" text="군대 성공 시 영향력 보상 +35% — 현자는 어떻게 이끄는지 안다." />
     <string id="taom_faction_high_kingdom_of_lindon_perk_0_name" text="엘프의 지혜" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_1_desc" text="마을 화덕 성장 +20% 및 부대 식량 소비 -15%." />
-    <string id="taom_faction_high_kingdom_of_lindon_perk_1_name" text="마지막 아늑한 집" />
+    <string id="taom_faction_high_kingdom_of_lindon_perk_1_name" text="회색항구" />
     <string id="taom_faction_high_kingdom_of_lindon_perk_2_desc" text="숲에서 부대 속도 +10% 및 하루당 정착지 충성도 +0.5." />
     <string id="taom_faction_high_kingdom_of_lindon_perk_2_name" text="숲의 우아함" />
     <string id="taom_faction_high_kingdom_of_lindon_strength_0" text="전설적인 정예 전사" />
@@ -1544,15 +1544,15 @@
     <string id="taom_faction_high_kingdom_of_lindon_strength_2" text="검소하고 자급자족하는 군대" />
     <string id="taom_faction_high_kingdom_of_lindon_strength_3" text="화덕이 풍부하고 충성스러운 피난처" />
     <string id="taom_faction_high_kingdom_of_lindon_su_0_desc" text="엘다르의 전설적인 제1시대 참전용사." />
-    <string id="taom_faction_high_kingdom_of_lindon_su_0_name" text="놀도르 검술의 명인" />
+    <string id="taom_faction_high_kingdom_of_lindon_su_0_name" text="팔라스림 검술사범" />
     <string id="taom_faction_high_kingdom_of_lindon_su_1_desc" text="피난처의 바다엘프 수호자." />
     <string id="taom_faction_high_kingdom_of_lindon_su_1_name" text="팔라스림 항해-수호병" />
-    <string id="taom_faction_high_kingdom_of_lindon_su_2_desc" text="회색 항구의 중장갑 놀도르 수호자." />
+    <string id="taom_faction_high_kingdom_of_lindon_su_2_desc" text="회색항구의 중장 팔라스림 수호자." />
     <string id="taom_faction_high_kingdom_of_lindon_su_2_name" text="미스론드 파수병" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_0" text="회색 항구" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_1" text="고대 엘프 왕국" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_2" text="발리노르행 배" />
-    <string id="taom_faction_high_kingdom_of_lindon_trait_3" text="조선공 키르단" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_0" text="조선공 키르단" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_1" text="회색항구" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_2" text="서녘으로 가는 배들" />
+    <string id="taom_faction_high_kingdom_of_lindon_trait_3" text="높은요정의 마지막 후예" />
     <string id="taom_faction_high_kingdom_of_lindon_weakness_0" text="엘프의 자긍심으로 영향력 비용 증가" />
     <string id="taom_faction_high_kingdom_of_lindon_weakness_1" text="쇠퇴하는 민족 — 보충병이 거의 없음" />
     <string id="taom_faction_khudorom_of_khand_bonus_0" text="초원에서 부대 속도 +10% (초원 전차병)" />
@@ -1778,8 +1778,8 @@
     <string id="taom_faction_kingdom_of_moria_bonus_4" text="+15% 대장간 효율 (약탈한 용광로)" />
     <string id="taom_faction_kingdom_of_moria_bonus_5" text="+15% 약탈 피해 (동굴 트롤 징집)" />
     <string id="taom_faction_kingdom_of_moria_bonus_6" text="-10% 건설 속도 (울리는 전당)" />
-    <string id="taom_faction_kingdom_of_moria_desc" text="모리아 왕국." />
-    <string id="taom_faction_kingdom_of_moria_name" text="모리아 왕국" />
+    <string id="taom_faction_kingdom_of_moria_desc" text="안개산맥의 깊은 곳을 차지한 오르크 무리로, 난쟁이들에게서 빼앗은 모리아의 검은 구덩이와 카라드라스에서 메세드라스에 이르는 차가운 봉우리들을 지배한다. 높은 고개의 고블린 오합지졸보다 크고 잘 무장했으며, 거의 영향력 없이도 거대한 전쟁 무리를 소집하고 굶주린 채로도 지칠 줄 모르고 눈밭을 행군한다." />
+    <string id="taom_faction_kingdom_of_moria_name" text="안개산맥의 오르크" />
     <string id="taom_faction_kingdom_of_moria_perk_0_desc" text="군대 모집 비용이 영향력 40% 감소 — 오크 대군은 진군에 합의가 필요 없다." />
     <string id="taom_faction_kingdom_of_moria_perk_0_name" text="오크 대군" />
     <string id="taom_faction_kingdom_of_moria_perk_1_desc" text="+30% 부대 규모 및 눈 위에서 +10% 속도 — 차가운 봉우리에서 자란 대규모 전쟁 군세." />
@@ -2643,9 +2643,6 @@
     <string id="taom_aso_kingdom.lindon" text="린돈" />
     <string id="taom_aso_kingdom.bluecraig" text="푸른 암벽의 고블린" />
     <string id="taom_aso_item_name_randomized" text="무작위 가운데땅" />
-    <string id="taom_aso_desc_invasion" text="가운데땅의 대부분을 지배하는 세력입니다." />
-    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId}이(가) 가운데땅의 대부분을 지배합니다." />
-    <string id="taom_aso_item_desc_randomized" text="합리적인 범위 내에서, 원하는 정도만큼 가운데땅의 시작 상태를 무작위로 설정합니다." />
     <string id="taom_tactic.shield_wall" text="우리의 계획은 방패를 맞물려 진지를 지키는 것이다." />
     <string id="taom_tactic.infantry_mass" text="우리의 계획은 수로 밀어붙여 적을 덮치는 것이다." />
     <string id="taom_tactic.cavalry_dominance" text="우리의 계획은 기병으로 짓밟고, 기병이 시작한 일을 보병이 끝내는 것이다." />
@@ -2662,22 +2659,22 @@
     <string id="taom_behavior.infantry_skirmish" text="투척 거리까지 접근해 던지고 물러나라" />
     <string id="taom_behavior.cycle_charge" text="돌파하고 재정비한 뒤 다시 돌격하라" />
     <string id="taom_behavior.envelop_wing" text="적의 측면을 돌아 옆에서 타격하라" />
-    <string id="taom_behavior.foot_charge" text="Charge their foot; square up if horse come at you" />
-    <string id="taom_behavior.archer_flank" text="Stand beside the wall and shoot; fall in behind it if they come for you" />
+    <string id="taom_behavior.foot_charge" text="적 보병에게 돌격하라. 기병이 달려들면 맞서 대형을 갖춰라" />
+    <string id="taom_behavior.archer_flank" text="벽 옆에 서서 사격하라. 적이 덤벼들면 벽 뒤로 물러나라" />
     <string id="taom_behavior_f6.braced_defend" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} 및 {?}{\?}{TROOP_NAMES_END} 부대가 방벽을 이루어 버티고 있습니다." />
     <string id="taom_behavior_f6.braced_advance" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} 및 {?}{\?}{TROOP_NAMES_END} 부대가 방벽을 이루어 전진하고 있습니다." />
     <string id="taom_behavior_f6.infantry_skirmish" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} 및 {?}{\?}{TROOP_NAMES_END} 부대가 투척 후 물러나고 있습니다." />
     <string id="taom_behavior_f6.cycle_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} 및 {?}{\?}{TROOP_NAMES_END} 부대가 반복 돌격을 하고 있습니다." />
     <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} 및 {?}{\?}{TROOP_NAMES_END} 부대가 측면을 돌아 우회하고 있습니다." />
-    <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging the enemy foot." />
-    <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are taking the flank of the wall." />
+    <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} 및 {?}{\?}{TROOP_NAMES_END}이(가) 적 보병에게 돌격합니다." />
+    <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} 및 {?}{\?}{TROOP_NAMES_END}이(가) 벽의 측면을 맡습니다." />
     <string id="taom_patch_apply_failed" text="TAOM: {PHASE} 단계에서 패치 그룹 적용에 실패했습니다: {GROUPS}. 해당 그룹의 일부 수정 사항은 이번 세션에서 비활성화됩니다. 원인은 TAOM 로그에 기록되어 있습니다." />
     <string id="taom_patch_apply_phase_startup" text="시작" />
     <string id="taom_patch_apply_notice_title" text="TAOM" />
     <string id="taom_patch_apply_phase_game_init" text="게임 초기화" />
     <string id="taom_patch_apply_phase_mission_start" text="미션 시작" />
-    <string id="taom_oob_autoassign_done" text="Captains assigned: {COUNT}." />
-    <string id="taom_oob_autoassign_not_general" text="Only the general of this battle can assign heroes." />
-    <string id="taom_oob_autoassign_none" text="No hero suits an open captain slot." />
+    <string id="taom_oob_autoassign_done" text="지휘관 배정 완료: {COUNT}명." />
+    <string id="taom_oob_autoassign_not_general" text="이 전투의 총사령관만이 영웅을 배정할 수 있습니다." />
+    <string id="taom_oob_autoassign_none" text="빈 지휘관 자리에 적합한 영웅이 없습니다." />
   </strings>
 </base>

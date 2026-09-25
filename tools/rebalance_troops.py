@@ -57,6 +57,7 @@ SKIP_FILES = set()
 # the ladder cell like every other archer.
 SKIP_TROOP_IDS = {
     'cave_troll',
+    'hill_troll',   # the cave troll's bespoke skills, copied (2026-09-25)
     'harad_elephant_rider',
     'harad_mumakil_rider',
 }

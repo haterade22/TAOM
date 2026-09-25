@@ -14,5 +14,8 @@
     <string id="taom_key_turbo_desc" text="Mantén Ctrl junto con esta tecla para el multiplicador de velocidad más alto de TAOM. Al soltar cualquiera de las teclas se restaura la velocidad anterior." />
     <string id="taom_key_career_ability" text="Habilidad de carrera (TAOM)" />
     <string id="taom_key_career_ability_desc" text="Activa tu habilidad de carrera durante una batalla cuando su barra de energía esté llena. Por defecto: V." />
+    <string id="taom_aso_desc_invasion" text="La facción que gobierna la mayor parte de la Tierra Media." />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} domina la gran mayoría de la Tierra Media." />
+    <string id="taom_aso_item_desc_randomized" text="Aleatoriza el estado inicial de la Tierra Media en el grado que elijas, dentro de lo razonable." />
   </strings>
 </base>

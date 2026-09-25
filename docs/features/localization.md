@@ -86,6 +86,8 @@ Each language dir follows the same 3-file pattern.
 | `Main/_Module/ModuleData/Languages/{LANG}/language_data.xml` | Per-language manifest listing translation files |
 | `Main/_Module/ModuleData/Languages/{LANG}/std_taom_*.xml` | Community translation files (stub templates) |
 | `TAOM.Tests/Infrastructure/Localization/LanguageDataXmlTests.cs` | Structural contract tests |
+| `TAOM.Tests/Infrastructure/Localization/LocalizationKeyConsistencyTests.cs` | One key, one text: per language, per shared English key, inline default against registration, name keys |
+| `TAOM.Tests/Infrastructure/Localization/LanguageTextIntegrityTests.cs` | Decoding damage and wrong-script words in rows and in the translation cache |
 
 ## Dependencies
 
@@ -115,6 +117,21 @@ Each language dir follows the same 3-file pattern.
 | `AllTranslationFiles_StringEntries_HaveIdAndTextAttributes` | Any existing entries have both `id` and `text` |
 
 Run with: `dotnet test TAOM.Tests --filter "FullyQualifiedName~LanguageDataXml"`
+
+`TAOM.Tests/Infrastructure/Localization/LocalizationKeyConsistencyTests.cs` and `LanguageTextIntegrityTests.cs`
+(2026-09-25, the stale sweep's gates):
+
+| Test | What it guards |
+|------|----------------|
+| `EachLanguage_GivesAnIdOneText_AcrossAllItsRegisteredFiles` | Two files of one language never give one id two texts (the file loaded last wins in game) |
+| `EveryKeyTwoEnglishSourcesShare_HasOneEnglishText` | A key two English sources declare has one English text |
+| `EveryCSharpDefault_OfARegisteredTaomKey_MatchesTheRegisteredEnglish` | A C# `{=taom_*}Default` equals its registered English |
+| `EveryDataDefault_OfARegisteredKey_MatchesTheRegisteredEnglish` | The same for every data XML and XSLT `{=key}Default` |
+| `EveryNameKey_InTheNameGeneratorsSources_HasOneEnglishDefault` | Two characters never share a name key with different English |
+| `NoTranslatedString_ContainsAReplacementCharacterOrControlCode` | No U+FFFD or C0 control in a row |
+| `NoTranslatedString_MixesWritingSystems`, `NoCachedTranslation_MixesWritingSystems` | No word from another language's script in a row or in `tools/translation_cache/` |
+
+Run all of them with: `dotnet test TAOM.Tests --filter "FullyQualifiedName~Infrastructure.Localization"`
 
 ## How-To
 
@@ -168,6 +185,7 @@ No performance impact — translation files are loaded once at startup by the en
 
 ## Changelog
 
+- 2026-09-25: stale sweep. Stale translations re-translated across the three modules, the translator no longer seeds or translates a key another source owns, and two test classes gate the failure classes the sweep found (`LocalizationKeyConsistencyTests`, `LanguageTextIntegrityTests`; table under Tests). Detail: CHANGELOG `fix(loc)` of 2026-09-25 and [TRANSLATOR_GUIDE.md](../localization/TRANSLATOR_GUIDE.md).
 - 2026-09-17: Case B pipeline extension (#572 and the lord/clan/kingdom analogues). `tools/generate_name_localization_strings.py` extracts every `{=KEY}default` name/identity key from `troops/*.xml`, `characters/lords.xml`, `characters/clans.xml`, and `taom_spkingdoms.xml` that had no registered row anywhere in the pipeline, and writes four generated English master files wired into `SubModule.xml`, all 12 `language_data.xml` manifests, the translator's source list, and `LanguageDataXmlTests` (13 to 17 `LanguageFile` entries per language). 1,999 new keys (troop 836, lord 988, clan 115, kingdom 60) translated across all 12 languages. Hero biographies and female notable names are related but separate gaps, left open; see "What strings are NOT translatable through this system" above.
 - 2026-05-23 — Added the AI first-draft translation pipeline (`tools/translate_with_claude.py` + `tools/rebuild_translation_files.py`) with a 4-tier fallback chain (overrides → cache → LLM → English) and first-draft coverage across all 11 AI-translated languages.
 - 2026-04-29 — Code-side string localization (#96): wrapped Main Menu / CC Narrative / Career System literals with `{=KEY}default`, extracted `taom_cc_strings.xml` + `taom_career_strings.xml`, scaffolded per-language stubs, and bumped `LanguageDataXmlTests` from 3 to 5 LanguageFile entries.

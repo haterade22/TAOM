@@ -121,5 +121,10 @@
     <string id="aom_clan_vlandia_20_name" text="莫尔卡尔加斯家族" />
     <string id="aom_clan_vlandia_21_name" text="哈莱斯林家族" />
     <string id="aom_clan_vlandia_22_name" text="伦加林家族" />
+    <string id="aom_clan_umbar_2_name" text="雅尔雅克斯家族" />
+    <string id="aom_clan_umbar_3_name" text="赫什拉家族" />
+    <string id="aom_clan_umbar_4_name" text="贝尔因祖尔家族" />
+    <string id="aom_clan_umbar_5_name" text="哈尔拉克斯家族" />
+    <string id="aom_clan_umbar_6_name" text="卡图格家族" />
   </strings>
 </base>

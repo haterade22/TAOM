@@ -14,5 +14,8 @@
     <string id="taom_key_turbo_desc" text="按住 Ctrl 并同时按下此键，即可获得 TAOM 的最高速度倍率。松开任一按键即恢复之前的速度。" />
     <string id="taom_key_career_ability" text="职业能力（TAOM）" />
     <string id="taom_key_career_ability_desc" text="当能量条充满时，在战斗中激活你的职业技能。默认按键为 V。" />
+    <string id="taom_aso_desc_invasion" text="统治中洲大部分地区的阵营。" />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId}统治着中洲的绝大部分地区。" />
+    <string id="taom_aso_item_desc_randomized" text="在合理范围内，按你选择的程度随机化中洲的初始局势。" />
   </strings>
 </base>

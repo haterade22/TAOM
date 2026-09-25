@@ -101,7 +101,7 @@
     <string id="taom_enlist_section_sup" text="le train de bagages" />
     <string id="taom_enlist_trust_known" text="connu" />
     <string id="taom_enlist_trust_new" text="sans preuve" />
-    <string id="taom_enlist_trust_poor" text="en mauvaise odeur" />
+    <string id="taom_enlist_trust_poor" text="mal considéré" />
     <string id="taom_enlist_trust_solid" text="bien considéré" />
     <string id="taom_enlist_trust_trusted" text="de confiance" />
     <string id="taom_enlist_grade_distinguished" text="remarquable" />

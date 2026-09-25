@@ -121,5 +121,10 @@
     <string id="aom_clan_vlandia_20_name" text="Haus Morcargas" />
     <string id="aom_clan_vlandia_21_name" text="Haus Halethring" />
     <string id="aom_clan_vlandia_22_name" text="Haus Rungaring" />
+    <string id="aom_clan_umbar_2_name" text="Haus Jarjâx" />
+    <string id="aom_clan_umbar_3_name" text="Haus Heshlâ" />
+    <string id="aom_clan_umbar_4_name" text="Haus Bel Inzûl" />
+    <string id="aom_clan_umbar_5_name" text="Haus Halrax" />
+    <string id="aom_clan_umbar_6_name" text="Haus Khatûg" />
   </strings>
 </base>

@@ -110295,33 +110295,33 @@
 			<mouth_textures
 				group_id="4">
 				<mouth_texture
-					name="t_hilltroll_mouth"
-					lod_material="t_hilltroll_mouth"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture1,mouth_texture2"></mouth_texture>
 				<mouth_texture
-					name="t_hilltroll_mouth"
-					lod_material="t_hilltroll_mouth"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture3,mouth_texture4"></mouth_texture>
 				<mouth_texture
-					name="t_hilltroll_mouth"
-					lod_material="t_hilltroll_mouth"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture5,mouth_texture6"></mouth_texture>
 				<mouth_texture
-					name="t_hilltroll_mouth"
-					lod_material="t_hilltroll_mouth"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture7,mouth_texture8"></mouth_texture>
 				<mouth_texture
-					name="t_hilltroll_mouth"
-					lod_material="t_hilltroll_mouth"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture1,mouth_texture2"></mouth_texture>
 				<mouth_texture
-					name="t_hilltroll_mouth"
-					lod_material="t_hilltroll_mouth"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture7,mouth_texture8"></mouth_texture>
 			</mouth_textures>
@@ -111908,28 +111908,28 @@
 			<mouth_textures
 				group_id="4">
 				<mouth_texture
-					name="t_hilltroll_mouth"
-					lod_material="t_hilltroll_mouth"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture1,mouth_texture2"></mouth_texture>
 				<mouth_texture
-					name="t_hilltroll_mouth"
-					lod_material="t_hilltroll_mouth"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture3,mouth_texture4"></mouth_texture>
 				<mouth_texture
-					name="t_hilltroll_mouth"
-					lod_material="t_hilltroll_mouth"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture5,mouth_texture6"></mouth_texture>
 				<mouth_texture
-					name="t_hilltroll_mouth"
-					lod_material="t_hilltroll_mouth"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture7,mouth_texture8"></mouth_texture>
 				<mouth_texture
-					name="t_hilltroll_mouth"
-					lod_material="t_hilltroll_mouth"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture7,mouth_texture8"></mouth_texture>
 				<!--
@@ -113437,33 +113437,33 @@
 			<mouth_textures
 				group_id="4">
 				<mouth_texture
-					name="t_hilltroll_mouth"
-					lod_material="t_hilltroll_mouth"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture1,mouth_texture2"></mouth_texture>
 				<mouth_texture
-					name="t_hilltroll_mouth"
-					lod_material="t_hilltroll_mouth"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture3,mouth_texture4"></mouth_texture>
 				<mouth_texture
-					name="t_hilltroll_mouth"
-					lod_material="t_hilltroll_mouth"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture5,mouth_texture6"></mouth_texture>
 				<mouth_texture
-					name="t_hilltroll_mouth"
-					lod_material="t_hilltroll_mouth"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture7,mouth_texture8"></mouth_texture>
 				<mouth_texture
-					name="t_hilltroll_mouth"
-					lod_material="t_hilltroll_mouth"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture1,mouth_texture2"></mouth_texture>
 				<mouth_texture
-					name="t_hilltroll_mouth"
-					lod_material="t_hilltroll_mouth"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture7,mouth_texture8"></mouth_texture>
 			</mouth_textures>
@@ -114929,23 +114929,23 @@
 			<mouth_textures
 				group_id="4">
 				<mouth_texture
-					name="mouth_mat"
-					lod_material="mouth_mat"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture1,mouth_texture2"></mouth_texture>
 				<mouth_texture
-					name="mouth_mat_d"
-					lod_material="mouth_mat"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture3,mouth_texture4"></mouth_texture>
 				<mouth_texture
-					name="mouth_mat_c"
-					lod_material="mouth_mat"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture5,mouth_texture6"></mouth_texture>
 				<mouth_texture
-					name="mouth_mat_kid_b"
-					lod_material="mouth_mat"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture11,mouth_texture12"></mouth_texture>
 				<!--
@@ -116462,23 +116462,23 @@
 			<mouth_textures
 				group_id="4">
 				<mouth_texture
-					name="mouth_mat"
-					lod_material="mouth_mat"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture1,mouth_texture2"></mouth_texture>
 				<mouth_texture
-					name="mouth_mat_d"
-					lod_material="mouth_mat"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture3,mouth_texture4"></mouth_texture>
 				<mouth_texture
-					name="mouth_mat_c"
-					lod_material="mouth_mat"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture5,mouth_texture6"></mouth_texture>
 				<mouth_texture
-					name="mouth_mat_kid_b"
-					lod_material="mouth_mat"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture1,mouth_texture2"></mouth_texture>
 			</mouth_textures>
@@ -117962,23 +117962,23 @@
 			<mouth_textures
 				group_id="4">
 				<mouth_texture
-					name="mouth_mat"
-					lod_material="mouth_mat"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture1,mouth_texture2"></mouth_texture>
 				<mouth_texture
-					name="mouth_mat_d"
-					lod_material="mouth_mat"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture3,mouth_texture4"></mouth_texture>
 				<mouth_texture
-					name="mouth_mat_c"
-					lod_material="mouth_mat"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture5,mouth_texture6"></mouth_texture>
 				<mouth_texture
-					name="mouth_mat_kid_b"
-					lod_material="mouth_mat"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture7,mouth_texture8"></mouth_texture>
 				<!--
@@ -119477,23 +119477,23 @@
 			<mouth_textures
 				group_id="4">
 				<mouth_texture
-					name="mouth_mat"
-					lod_material="mouth_mat"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture1,mouth_texture2"></mouth_texture>
 				<mouth_texture
-					name="mouth_mat_d"
-					lod_material="mouth_mat"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture5,mouth_texture6"></mouth_texture>
 				<mouth_texture
-					name="mouth_mat_c"
-					lod_material="mouth_mat"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture3,mouth_texture4"></mouth_texture>
 				<mouth_texture
-					name="mouth_mat_kid_b"
-					lod_material="mouth_mat"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture3,mouth_texture4"></mouth_texture>
 			</mouth_textures>
@@ -120960,23 +120960,23 @@
 			<mouth_textures
 				group_id="4">
 				<mouth_texture
-					name="mouth_mat"
-					lod_material="mouth_mat"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture1,mouth_texture2"></mouth_texture>
 				<mouth_texture
-					name="mouth_mat_d"
-					lod_material="mouth_mat"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture3,mouth_texture4"></mouth_texture>
 				<mouth_texture
-					name="mouth_mat_c"
-					lod_material="mouth_mat"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture5,mouth_texture6"></mouth_texture>
 				<mouth_texture
-					name="mouth_mat_kid_b"
-					lod_material="mouth_mat"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture7,mouth_texture8"></mouth_texture>
 				<!--
@@ -122085,8 +122085,8 @@
 			<mouth_textures
 				group_id="4">
 				<mouth_texture
-					name="mouth_mat_kid_c"
-					lod_material="mouth_mat"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture1,mouth_texture2"></mouth_texture>
 			</mouth_textures>
@@ -123168,8 +123168,8 @@
 			<mouth_textures
 				group_id="4">
 				<mouth_texture
-					name="mouth_mat_kid_d"
-					lod_material="mouth_mat"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="mouth_texture1,mouth_texture2"></mouth_texture>
 			</mouth_textures>

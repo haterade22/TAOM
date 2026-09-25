@@ -11,7 +11,10 @@ param(
   [string]$ClipPrefix = 'anim_troll_',
   [double]$TravelScale = 0,
   [switch]$CloneByName,
-  [string]$ClipsIndex = ''
+  [string]$ClipsIndex = '',
+  [string]$Renames = '',
+  # the retarget run's retarget_report.json: -TravelScale is read from its one pelvis_scale value
+  [string]$RetargetReport = ''
 )
 <#
 Author the anim_troll_* AnimationClip tpacs for the Fab cave troll set (2026-09-17).
@@ -80,10 +83,25 @@ Human clips retargeted onto a custom skeleton (2026-09-24, the hill troll's mele
 `<ClipPrefix>X`; every clip in the index becomes `<ClipPrefix><clip>_anm.tpac`, a copy of its own vanilla clip with the
 master GUID re-pointed, Source1/Source2 + 1 (our rest frame 0), the facial id cleared and displacements times
 -TravelScale (the retarget report's pelvis_scale). Several clips share a master, as in vanilla. -Verify then checks
-the clips against the index (range and master), not the whole-master rule.
+the clips against the index (range and master), not the whole-master rule. A clip's Name is a fixed-size(64) engine
+string, 63 usable characters (the Kit warned on 15 hill troll clips, 2026-09-25): -Renames <json> maps the vanilla
+clip names that would run over to shorter troll names (tools/blender/hill_troll_clip_renames.json, shared with
+bind_hill_troll_action_set.py --renames); a name still over 63 is refused, never truncated. A clip whose vanilla range
+runs past its master (the Kit's frame count; aserai_mp_guard_idle_2hperk, 2026-09-25) is REFUSED BY DESIGN: listed,
+never written, and not counted as missing by -Apply or -Verify.
   powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\gen_troll_anim_clips.ps1 -CloneByName `
     -Masters '<Armory>\Assets\Race Test\Mordor\Trolls\animations' -ClipsIndex <human_json>\clips_index.json `
-    -SkeletonGuid 7516b03c-1c28-4b4a-87ab-8df6f047bf9c -ClipPrefix anim_hill_troll_ -TravelScale 1.8504 [-Apply|-Verify]
+    -Renames tools\blender\hill_troll_clip_renames.json -RetargetReport <retarget out>\retarget_report.json `
+    -SkeletonGuid 7516b03c-1c28-4b4a-87ab-8df6f047bf9c -ClipPrefix anim_hill_troll_ [-Apply|-Verify]
+-RetargetReport sets -TravelScale from the report's pelvis_scale and refuses a report holding more than one value or a
+typed -TravelScale that disagrees (the first Fab run's hand-typed 1.377 skated the feet by 12%).
+Every mode refuses a folder whose non-empty masters name a skeleton other than -SkeletonGuid: BoneNum cannot tell the
+28-bone troll_skeleton_a from human_skeleton, so the default GUID would otherwise wire a re-imported troll master to
+the human rig. That guard cannot see an EMPTY master (a fresh Kit import), so: the Fab path wires EMPTY masters in a
+folder other than the default only when -SkeletonGuid is passed explicitly, and -CloneByName (which never wires)
+lists each EMPTY master the index needs as UNWIRED, refuses to write, and fails -Verify; run
+wire_anim_master_skeletons.ps1 -SkeletonGuid <rig> -BoneNum 28 first. After -Apply the written clips are re-read and the item checksums fixed; any failure there, a wiring
+failure or python missing exits 1.
 #>
 $ErrorActionPreference = 'Stop'
 Add-Type -Path "$TpacBin\TpacTool.Lib.dll"
@@ -92,6 +110,45 @@ function Load($p) { [ChariotExtract.TolerantTpacLoader]::Load($p) }
 $EMPTY = '00000000-0000-0000-0000-000000000000'
 $SKEL = [Guid]$SkeletonGuid
 $FPS = 30.0
+
+if ($RetargetReport) {
+  $scales = New-Object 'System.Collections.Generic.HashSet[double]'   # doubles, not strings: a de-DE '1,8504' parses as 18504
+  function Find-PelvisScale($o) {
+    if ($o -is [System.Management.Automation.PSCustomObject]) {
+      foreach ($p in $o.PSObject.Properties) {
+        if ($p.Name -eq 'pelvis_scale') { [void]$scales.Add([math]::Round([double]$p.Value, 4)) } else { Find-PelvisScale $p.Value }
+      }
+    } elseif ($o -is [System.Collections.IEnumerable] -and $o -isnot [string]) { foreach ($x in $o) { Find-PelvisScale $x } }
+  }
+  Find-PelvisScale (Get-Content $RetargetReport -Raw | ConvertFrom-Json)
+  if ($scales.Count -ne 1) { throw ("-RetargetReport {0} holds {1} pelvis_scale values ({2}); want exactly one" -f $RetargetReport, $scales.Count, (@($scales) -join ', ')) }
+  $fromReport = @($scales)[0]
+  if ($TravelScale -gt 0 -and [math]::Abs($TravelScale - $fromReport) -gt 0.001) { throw ("-TravelScale {0} disagrees with the report's pelvis_scale {1}" -f $TravelScale, $fromReport) }
+  $TravelScale = $fromReport
+  Write-Output ("travel scale {0} from {1}" -f $TravelScale, $RetargetReport)
+}
+
+# Re-read every clip this prefix owns in the folder (each must hold an AnimationClip whose master is on disk), then fix
+# the item checksums TpacTool's Save leaves at zero. Messages go to the host so the return value is the failure count.
+function Confirm-WrittenClips {
+  $guids = New-Object 'System.Collections.Generic.HashSet[guid]'
+  foreach ($mm in $masterMap.Values) { [void]$guids.Add([guid]$mm.guid) }
+  $files = [IO.Directory]::GetFiles($Masters, ($ClipPrefix + '*_anm.tpac'))
+  $fail = 0
+  foreach ($f in $files) {
+    $cl = (Load $f).Package.Items | Where-Object { $_.GetType().Name -eq 'AnimationClip' } | Select-Object -First 1
+    if ($null -eq $cl -or -not $guids.Contains([guid]$cl.Animation)) { $fail++; Write-Host ("VERIFY FAIL {0}" -f $f) }
+  }
+  Write-Host ("verify: {0} files re-read, {1} bad" -f $files.Count, $fail)
+  $py = Get-Command python -ErrorAction SilentlyContinue
+  if ($py) {
+    & $py.Source "$PSScriptRoot\tpac_fix_item_checksums.py" $Masters --glob '*.tpac' --apply | Select-Object -Last 1 | ForEach-Object { Write-Host $_ }
+    if ($LASTEXITCODE -ne 0) { $fail++; Write-Host ("CHECKSUM FIX FAILED: tpac_fix_item_checksums.py exited {0}" -f $LASTEXITCODE) }
+  } else {
+    $fail++; Write-Host "python not on PATH: run  python tools/tpac_fix_item_checksums.py <masters dir> --glob *.tpac --apply"
+  }
+  return $fail
+}
 
 # ---- inputs
 $nameMap = @{}
@@ -120,6 +177,12 @@ foreach ($f in [IO.Directory]::GetFiles($Masters, '*_geo.tpac')) {
   }
 }
 Write-Output ("masters: {0}   skeleton-empty: {1}   packages without an animation: {2}" -f $masterMap.Count, (@($masterMap.Values | Where-Object { $_.skel -eq $EMPTY })).Count, $noAnim)
+# the rig check BoneNum cannot make: every wired master here must already be on -SkeletonGuid
+$foreign = @($masterMap.Values | Where-Object { $_.skel -ne $EMPTY -and ([guid]$_.skel) -ne $SKEL } | ForEach-Object { $_.skel } | Sort-Object -Unique)
+if ($foreign.Count -gt 0) {
+  Write-Output ("REFUSED: masters in this folder are on skeleton {0}, not -SkeletonGuid {1}; pass that GUID" -f ($foreign -join ', '), $SKEL)
+  exit 1
+}
 
 # ---- -CloneByName: masters retargeted from HUMAN clips (retarget_mannequin_to_human.py --source-json). Every clip the
 # index lists is a copy of ITS OWN vanilla AnimationClip (flags, priority, blends, hand poses, sounds, usages verbatim)
@@ -127,20 +190,47 @@ Write-Output ("masters: {0}   skeleton-empty: {1}   packages without an animatio
 # range such as blocked_slashright_2h 110..1 stays reversed), its facial id cleared (no facial rig on the troll), and
 # its loop or death displacement scaled by -TravelScale. Several clips share one master, as in vanilla. -Verify checks
 # the clips on disk against the index instead of the whole-master rule below.
+# ---- vanilla clip table: the templates both modes copy from
+$van = Load $Vanilla
+$vclips = @{}
+foreach ($it in $van.Package.Items) { if ($it.GetType().Name -eq 'AnimationClip') { $vclips[$it.Name] = $it } }
+
 if ($CloneByName) {
   if (-not $ClipsIndex) { throw "-CloneByName needs -ClipsIndex <clips_index.json written by read_anim_keyframes_tpac.ps1 -ByClip>" }
   $index = @{}
   (Get-Content $ClipsIndex -Raw | ConvertFrom-Json).PSObject.Properties | ForEach-Object { $index[$_.Name] = $_.Value }
   $ourMasterOf = @{}
   foreach ($clipName in $index.Keys) { $ourMasterOf[$clipName] = $ClipPrefix + ("$($index[$clipName].master)" -replace '^anim_', '') }
+  # An AnimationClip's Name is a fixed-size(64) string in the engine: 63 usable characters. The Kit warned "Could not
+  # set fixed-size(64) string" on 15 hill troll clips (2026-09-25). -Renames maps those vanilla clip names to shorter
+  # troll names (tools/blender/hill_troll_clip_renames.json); bind_hill_troll_action_set.py reads the same file.
+  $renameMap = @{}   # not $renames: PowerShell names are case-insensitive and that is the -Renames path
+  if ($Renames) { (Get-Content $Renames -Raw | ConvertFrom-Json).PSObject.Properties | Where-Object { $_.Name -notlike '_*' } | ForEach-Object { $renameMap[$_.Name] = $_.Value } }
+  $unrename = @{}
+  foreach ($k in $renameMap.Keys) { $unrename[$renameMap[$k]] = $k }
+  function ClipNameOf($clip) { if ($renameMap.ContainsKey($clip)) { return $renameMap[$clip] } else { return $ClipPrefix + $clip } }
+  # a clip whose vanilla range (shifted by our rest frame) runs past its master's last frame: -Apply refuses it by
+  # design, so neither mode counts it as missing
+  function IsRefusedByDesign($clip) {
+    $mm = $masterMap[$ourMasterOf[$clip]]
+    return ($null -ne $mm) -and ([math]::Max([double]$index[$clip].source1 + 1, [double]$index[$clip].source2 + 1) -gt $mm.frames - 1)
+  }
+  # this mode never wires masters: a Kit import leaves them with an EMPTY skeleton, and wire_anim_master_skeletons.ps1
+  # must put them on the rig first. The foreign-skeleton guard above cannot see an EMPTY master, so check here.
+  $unwired = @($index.Keys | ForEach-Object { $ourMasterOf[$_] } | Sort-Object -Unique |
+    Where-Object { $masterMap.ContainsKey($_) -and $masterMap[$_].skel -eq $EMPTY })
+  foreach ($u in $unwired) { Write-Output ("UNWIRED {0}: EMPTY skeleton; run wire_anim_master_skeletons.ps1 -SkeletonGuid {1} -BoneNum 28 first" -f $u, $SKEL) }
+  if ($unwired.Count -gt 0 -and -not $Verify) { Write-Output "REFUSED: masters are not wired to a skeleton"; exit 1 }
   if ($Verify) {
-    $ok = 0; $bad = 0; $other = 0; $byGuid = @{}
+    $ok = 0; $bad = 0; $other = 0; $byGuid = @{}; $seen = @{}
     foreach ($mm in $masterMap.Values) { $byGuid["$($mm.guid)"] = $mm }
     foreach ($f in ([IO.Directory]::GetFiles($Masters, ($ClipPrefix + '*_anm.tpac')) | Sort-Object)) {
       $cl = (Load $f).Package.Items | Where-Object { $_.GetType().Name -eq 'AnimationClip' } | Select-Object -First 1
-      $clipName = $cl.Name.Substring($ClipPrefix.Length)
+      $clipName = if ($unrename.ContainsKey($cl.Name)) { $unrename[$cl.Name] } else { $cl.Name.Substring($ClipPrefix.Length) }
       # the Fab set's clips share the folder (the hill troll's animations/ holds both pipelines' masters): not this mode's
       if (-not $index.ContainsKey($clipName)) { $other++; continue }
+      $seen[$clipName] = $true
+      if ($cl.Name.Length -gt 63) { $bad++; Write-Output ("TOO LONG {0} ({1} chars): the engine truncates a clip name past 63; add it to -Renames" -f $cl.Name, $cl.Name.Length); continue }
       $info = $index[$clipName]; $key = "$($cl.Animation)"
       if (-not $byGuid.ContainsKey($key)) { $bad++; Write-Output ("ORPHAN {0} -> master GUID {1} not on disk" -f $cl.Name, $key); continue }
       $mm = $byGuid[$key]
@@ -150,10 +240,13 @@ if ($CloneByName) {
       }
       $ok++
     }
-    Write-Output ("verify (clone-by-name): clips ok={0} bad={1} missing={2} of index {3}   other pipeline's clips skipped={4}" -f $ok, $bad, ($index.Count - $ok - $bad), $index.Count, $other)
-    if ($bad + $noAnim -gt 0 -or ($index.Count - $ok - $bad) -gt 0) { exit 1 } else { exit 0 }
+    $refused = @($index.Keys | Where-Object { -not $seen.ContainsKey($_) -and (IsRefusedByDesign $_) } | Sort-Object)
+    foreach ($r in $refused) { Write-Output ("REFUSED BY DESIGN {0}: its vanilla range runs past master {1}" -f $r, $ourMasterOf[$r]) }
+    $absent = $index.Count - $ok - $bad - $refused.Count
+    Write-Output ("verify (clone-by-name): clips ok={0} bad={1} missing={2} refused-by-design={3} unwired masters={4} of index {5}   other pipeline's clips skipped={6}" -f $ok, $bad, $absent, $refused.Count, $unwired.Count, $index.Count, $other)
+    if ($bad + $noAnim + $unwired.Count -gt 0 -or $absent -gt 0) { exit 1 } else { exit 0 }
   }
-  $rows = @(); $written = 0; $skipped = 0; $missing = 0
+  $rows = @(); $written = 0; $skipped = 0; $missing = 0; $refusedByDesign = 0
   foreach ($clipName in ($index.Keys | Sort-Object)) {
     $info = $index[$clipName]
     $ourMaster = $ourMasterOf[$clipName]
@@ -162,8 +255,9 @@ if ($CloneByName) {
     $tpl = $vclips[$clipName]
     if ($null -eq $tpl) { $missing++; Write-Output ("NO VANILLA CLIP {0}" -f $clipName); continue }
     $s1 = [double]$info.source1 + 1; $s2 = [double]$info.source2 + 1
-    if ([math]::Max($s1, $s2) -gt $m.frames - 1) { $missing++; Write-Output ("RANGE {0}: {1}..{2} outside master {3} frames {4}" -f $clipName, $s1, $s2, $ourMaster, $m.frames); continue }
-    $newName = $ClipPrefix + $clipName
+    if ([math]::Max($s1, $s2) -gt $m.frames - 1) { $refusedByDesign++; Write-Output ("REFUSED BY DESIGN {0}: {1}..{2} outside master {3} frames {4}" -f $clipName, $s1, $s2, $ourMaster, $m.frames); continue }
+    $newName = ClipNameOf $clipName
+    if ($newName.Length -gt 63) { $missing++; Write-Output ("TOO LONG {0} ({1} chars): the engine's clip name is a fixed-size(64) string; add it to -Renames" -f $newName, $newName.Length); continue }
     $out = Join-Path $Masters ($newName + '_anm.tpac')
     $c = $tpl
     $c.Name = $newName
@@ -197,18 +291,10 @@ if ($CloneByName) {
     }
   }
   $rows | ForEach-Object { Write-Output $_ }
-  Write-Output ("clips planned: {0}   unresolved: {1}   MODE = {2}   written={3} skipped-existing={4}" -f $rows.Count, $missing, $(if ($Apply) { 'APPLY' } else { 'DRY-RUN (no writes)' }), $written, $skipped)
-  if ($Apply) {
-    $bad = 0
-    foreach ($f in [IO.Directory]::GetFiles($Masters, ($ClipPrefix + '*_anm.tpac'))) {
-      $r = Load $f; $cl = $r.Package.Items | Where-Object { $_.GetType().Name -eq 'AnimationClip' } | Select-Object -First 1
-      if ($null -eq $cl -or -not $masterMap.Values.guid.Contains($cl.Animation)) { $bad++; Write-Output ("VERIFY FAIL {0}" -f $f) }
-    }
-    Write-Output ("verify: {0} files re-read, {1} bad" -f ([IO.Directory]::GetFiles($Masters, ($ClipPrefix + '*_anm.tpac'))).Count, $bad)
-    $py = Get-Command python -ErrorAction SilentlyContinue
-    if ($py) { & $py.Source "$PSScriptRoot\tpac_fix_item_checksums.py" $Masters --glob '*.tpac' --apply | Select-Object -Last 1 }
-  }
-  if ($missing -gt 0) { exit 1 } else { exit 0 }
+  Write-Output ("clips planned: {0}   unresolved: {1}   refused-by-design: {2}   MODE = {3}   written={4} skipped-existing={5}" -f $rows.Count, $missing, $refusedByDesign, $(if ($Apply) { 'APPLY' } else { 'DRY-RUN (no writes)' }), $written, $skipped)
+  $failed = 0
+  if ($Apply) { $failed = Confirm-WrittenClips }
+  if ($missing + $failed -gt 0) { exit 1 } else { exit 0 }
 }
 
 # ---- -Verify: read-only check of the clips already on disk, then exit
@@ -243,6 +329,13 @@ function Find-SkeletonField([byte[]]$bytes, [int]$frames) {
   }
   return $hits
 }
+# wiring an EMPTY master to the default (human) GUID is right only for the cave troll's own folder, the default
+# -Masters; any other folder must name its rig, because bone counts cannot tell troll_skeleton_a from human_skeleton
+$emptyCount = @($masterMap.Values | Where-Object { $_.skel -eq $EMPTY }).Count
+if ($emptyCount -gt 0 -and $PSBoundParameters.ContainsKey('Masters') -and -not $PSBoundParameters.ContainsKey('SkeletonGuid')) {
+  Write-Output ("REFUSED: {0} master(s) here have an EMPTY skeleton; pass -SkeletonGuid for this folder's rig" -f $emptyCount)
+  exit 1
+}
 $wired = 0; $wireFail = 0
 foreach ($mname in ($masterMap.Keys | Sort-Object)) {
   $m = $masterMap[$mname]
@@ -266,10 +359,7 @@ foreach ($mname in ($masterMap.Keys | Sort-Object)) {
 }
 Write-Output ("skeleton wiring: {0} masters {1}, {2} failed" -f $wired, $(if ($Apply) { 'patched + re-read OK' } else { 'would be patched (offset found)' }), $wireFail)
 
-# ---- vanilla templates
-$van = Load $Vanilla
-$vclips = @{}
-foreach ($it in $van.Package.Items) { if ($it.GetType().Name -eq 'AnimationClip') { $vclips[$it.Name] = $it } }
+# ---- vanilla templates (the clip table itself is loaded above the -CloneByName block, which needs it too)
 $TEMPLATE = @{
   walk = 'walk_forward_unarmed'; run = 'run_forward_unarmed'; turn = 'turn_unarmed'; idle = 'troop_stand_unarmed_1'
   hit = 'strike_chest_front'; death = 'death_fall_front'; attack = 'taunt_afraid'; emote = 'taunt_afraid'
@@ -389,14 +479,6 @@ $rows | ForEach-Object { Write-Output $_ }
 Write-Output ("clips planned: {0}   MODE = {1}   written={2} skipped-existing={3}   other pipeline's masters skipped={4}" -f $rows.Count, $(if ($Apply) { 'APPLY' } else { 'DRY-RUN (no writes)' }), $written, $skipped, $foreign)
 
 # ---- verify what was written
-if ($Apply) {
-  $bad = 0
-  foreach ($f in [IO.Directory]::GetFiles($Masters, ($ClipPrefix + '*_anm.tpac'))) {
-    $r = Load $f; $cl = $r.Package.Items | Where-Object { $_.GetType().Name -eq 'AnimationClip' } | Select-Object -First 1
-    if ($null -eq $cl -or -not $masterMap.Values.guid.Contains($cl.Animation)) { $bad++; Write-Output ("VERIFY FAIL {0}" -f $f) }
-  }
-  Write-Output ("verify: {0} files re-read, {1} bad" -f ([IO.Directory]::GetFiles($Masters, ($ClipPrefix + '*_anm.tpac'))).Count, $bad)
-  $py = Get-Command python -ErrorAction SilentlyContinue
-  if ($py) { & $py.Source "$PSScriptRoot\tpac_fix_item_checksums.py" $Masters --glob '*.tpac' --apply | Select-Object -Last 1 }
-  else { Write-Output "python not on PATH: run  python tools/tpac_fix_item_checksums.py <masters dir> --glob *.tpac --apply" }
-}
+$failed = 0
+if ($Apply) { $failed = Confirm-WrittenClips }
+if ($wireFail + $failed -gt 0) { exit 1 } else { exit 0 }

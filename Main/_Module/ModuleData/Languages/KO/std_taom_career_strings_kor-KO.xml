@@ -26,11 +26,11 @@
     <string id="taom_career_eotheod_windrider_desc" text="고대 에오테오드 마술사의 후손으로 대대로 이어진 전설의 천둥과 함께 달리며, 에오를 젊은이를 연상시키는 함성으로 아군을 고무하고 막을 수 없는 중기병의 발굽 아래 적들을 흩어지게 하는 자." />
     <string id="taom_career_watchman_of_stangard" text="스탄가르드의 감시병" />
     <string id="taom_career_watchman_of_stangard_desc" text="평저선과 도보로 안두인 강 도하지점을 순찰하며 인내심, 지역 지식, 그리고 경쟁 중인 땅에 대한 뱃사공의 집요한 장악력으로 로한의 동쪽 측면을 지키는 스탄가르드의 노련한 강 경비병." />
-    <string id="taom_career_avanc_luth_raider" text="아반크-루스 약탈자" />
+    <string id="taom_career_avanc_luth_raider" text="던랜드 용사" />
     <string id="taom_career_avanc_luth_raider_desc" text="무모한 공격성으로 근접전에 돌진하여 정밀한 수술보다 순수한 야만적인 힘을 선택함으로써 끊임없는 압박으로 상대를 압도하는 아반크-루스 부족의 피로 칠한 척후병." />
-    <string id="taom_career_wolfskin_hunter" text="늑대가죽 사냥꾼" />
+    <string id="taom_career_wolfskin_hunter" text="던랜드 궁수" />
     <string id="taom_career_wolfskin_hunter_desc" text="늑대 가죽을 입고 안개산맥 기슭을 유령처럼 움직이며 은신처에서 먹이를 표시한 뒤 희생자가 듣지도 못하는 정확한 화살을 날리는 인내심 있는 추적자." />
-    <string id="taom_career_clanguard_rider" text="부족수비 기병" />
+    <string id="taom_career_clanguard_rider" text="던랜드 척후기병" />
     <string id="taom_career_clanguard_rider_desc" text="신속한 기습 공격으로 적의 측면을 괴롭히며, 뛰어난 속도와 집단 협동으로 부족의 보병이 살육을 위해 접근하기 전에 대형을 와해시키는 빠른 급습 부족 기병." />
     <string id="taom_career_blademaster_of_ren" text="렌의 검술대가" />
     <string id="taom_career_blademaster_of_ren_desc" text="렌의 전사 궁정에서 온 정밀 결투사로 계산된 치명적인 검술로 적을 처치한다." />
@@ -52,11 +52,11 @@
     <string id="taom_career_lokhas_drus_marksman_desc" text="원거리에서 가장 두꺼운 판금갑옷을 뚫는 화살을 쏘는 훈련을 받은 로카스 드루스 군단의 갑옷 관통 전문가." />
     <string id="taom_career_balchoth_kan" text="발초스 칸" />
     <string id="taom_career_balchoth_kan_desc" text="막을 수 없는 기마 돌격을 이끌며 어떤 역경에도 강철 같은 사기를 유지하는 발초스의 중기병 지휘관." />
-    <string id="taom_career_dale_guardsman" text="데일 수비병" />
+    <string id="taom_career_dale_guardsman" text="데일 검술 명인" />
     <string id="taom_career_dale_guardsman_desc" text="방패와 창으로 모든 침입자에 맞서 성문을 지키는 재건된 데일 도시의 확고한 수호자." />
-    <string id="taom_career_dale_marksman" text="데일 명사수" />
+    <string id="taom_career_dale_marksman" text="바르드 명사수" />
     <string id="taom_career_dale_marksman_desc" text="스마우그를 죽인 선조들의 전통을 이어받아 정확무오한 사격술을 계승하는 데일의 전설적인 궁수." />
-    <string id="taom_career_dale_outrider" text="데일 외곽 기병" />
+    <string id="taom_career_dale_outrider" text="데일 기병" />
     <string id="taom_career_dale_outrider_desc" text="데일과 외로운 산 사이의 대상들을 호위하는 북부 교역로의 기마 순찰대." />
     <string id="taom_career_ironguard" text="철위병" />
     <string id="taom_career_ironguard_desc" text="미스릴로 제작된 판금 갑옷을 입고 오크와 용으로부터 에레보르의 깊은 곳을 지키는 정예 드워프 전사." />
@@ -64,11 +64,11 @@
     <string id="taom_career_crossbow_master_desc" text="각각의 화살이 정밀하게 제작된, 믿을 수 없는 저지력을 가진 명작 석궁을 다루는 드워프 기술자 전사." />
     <string id="taom_career_ram_rider" text="숫양 기수" />
     <string id="taom_career_ram_rider_desc" text="말이 갈 수 없는 좁은 산길을 거대한 전투 숫양에 올라타고 돌격하는 드워프 기병 전사." />
-    <string id="taom_career_blade_dancer" text="검무자" />
+    <string id="taom_career_blade_dancer" text="놀도르 검술 명인" />
     <string id="taom_career_blade_dancer_desc" text="제1시대에 단조된 고대의 검으로 흐르는 물처럼 전장을 가로지르는 우아한 엘프 전사." />
-    <string id="taom_career_elven_archer" text="엘프 궁수" />
-    <string id="taom_career_elven_archer_desc" text="수세기의 수련으로 인도된 화살이 광활한 거리를 가로질러 정확히 날아가는 이ム라드리스의 비할 데 없는 명사수." />
-    <string id="taom_career_rivendell_knight" text="리븐델 기사" />
+    <string id="taom_career_elven_archer" text="놀도르 파수병" />
+    <string id="taom_career_elven_archer_desc" text="수 세기에 걸친 수련으로 다듬어져, 아득히 먼 거리에서도 화살을 정확히 꽂아 넣는 임라드리스의 비할 데 없는 명사수." />
+    <string id="taom_career_rivendell_knight" text="놀도르 기사" />
     <string id="taom_career_rivendell_knight_desc" text="빠른 엘프 말을 타고 전쟁에 나아가는 엘론드 가문의 기마 전사로, 어둠에 맞서는 희망의 등불." />
     <string id="taom_career_warden" text="로리엔의 수호자" />
     <string id="taom_career_warden_desc" text="고대의 결의로 로스로리엔의 경계를 지키며 경고 없이 공격하는 황금 숲의 침묵하는 수호자." />
@@ -82,17 +82,17 @@
     <string id="taom_career_silvan_archer_desc" text="나무 꼭대기에서 치명적인 정확도로 공격하는 숲 왕국의 예리한 눈을 가진 사냥꾼." />
     <string id="taom_career_elk_rider" text="엘크 기수" />
     <string id="taom_career_elk_rider_desc" text="거대한 숲 엘크를 타고 전투에 나아가 덤불과 적을 모두 뚫고 돌진하는 스란두일 근위대의 기마 전사." />
-    <string id="taom_career_uruk_berserker" text="우르크 광전사" />
+    <string id="taom_career_uruk_berserker" text="우루크하이 광전사" />
     <string id="taom_career_uruk_berserker_desc" text="상처가 멈출 수 없는 분노를 부채질하면서 더 강해지며 전투에 맹렬히 돌진하는 우르크-하이." />
-    <string id="taom_career_uruk_crossbow" text="우르크 석궁수" />
+    <string id="taom_career_uruk_crossbow" text="우루크하이 석궁병" />
     <string id="taom_career_uruk_crossbow_desc" text="오르상크의 대장간에서 나온 사루만의 강철 석궁을 휘두르며 파괴적인 일제 사격을 가하는 훈련된 우르크 명사수." />
-    <string id="taom_career_warg_scout" text="와르그 정찰병" />
+    <string id="taom_career_warg_scout" text="와르그 기수" />
     <string id="taom_career_warg_scout_desc" text="빠른 와르그에 올라탄 교활한 우르크 기수로, 아이센가드 군대의 선봉에서 정찰하고 도망치는 먹이를 쫓는다." />
-    <string id="taom_career_cave_troll_master" text="동굴 트롤 지배자" />
-    <string id="taom_career_cave_troll_master_desc" text="채찍과 교활함으로 동굴 트롤을 전투에서 지휘하고 앞으로 몰아가는 잔혹한 오크 족장." />
-    <string id="taom_career_goblin_sniper" text="고블린 저격수" />
+    <string id="taom_career_cave_troll_master" text="군다바드 광전사" />
+    <string id="taom_career_cave_troll_master_desc" text="채찍과 교활함으로 동굴 트롤들을 전장으로 몰아붙이며 지휘하는, 잔혹한 군다바드의 오크 족장." />
+    <string id="taom_career_goblin_sniper" text="군다바드 오르크 사냥꾼" />
     <string id="taom_career_goblin_sniper_desc" text="산 협곡에 숨어서 독이 묻은 화살과 조잡한 활로 목표물을 저격하는 악의적인 고블린 명사수." />
-    <string id="taom_career_warg_pack_leader" text="와르그 무리 우두머리" />
+    <string id="taom_career_warg_pack_leader" text="군다바드 흉포한 와르그 무리 우두머리" />
     <string id="taom_career_warg_pack_leader_desc" text="무리에서 가장 큰 와르그를 타고 안개산맥을 누비며 야만적인 사냥을 이끄는 공포의 오크 우두머리입니다." />
     <string id="taom_career_shadow_warrior" text="그림자 전사" />
     <string id="taom_career_shadow_warrior_desc" text="사령술사의 마법으로 힘을 얻어 앞에 선 모든 이의 생명을 빨아들이는 돌 굴두르의 어둠의 투사." />
@@ -107,105 +107,105 @@
     <string id="taom_career_corsair_captain" text="해적 선장" />
     <string id="taom_career_corsair_captain_desc" text="선수에서 지휘하며 약탈과 영광의 약속으로 선원들에게 영감을 주는 노련한 함대 사령관." />
     <string id="taom_ability_ranger_of_ithilien" text="매복" />
-    <string id="taom_ability_ranger_of_ithilien_tt" text="치명적인 매복을 펼쳐 짧은 시간 동안 원거리 피해, 시위 당김 속도, 이동 속도를 증가시킵니다." />
+    <string id="taom_ability_ranger_of_ithilien_tt" text="치명적인 매복을 감행한다 — 8초간 원거리 피해 +20%, 활 당기는 속도 +20%, 이동 속도 +15%." />
     <string id="taom_ability_captain_of_osgiliath" text="전선 사수" />
-    <string id="taom_ability_captain_of_osgiliath_tt" text="강철 같은 규율로 병사들을 결집시켜 짧은 시간 동안 근처 모든 아군의 근접 피해를 20 증가시킵니다." />
+    <string id="taom_ability_captain_of_osgiliath_tt" text="강철 같은 규율로 병사들을 결집시킨다 — 8초간 50m 내 아군의 근접 피해 +15%, 피해 감소 +10%." />
     <string id="taom_ability_knight_of_belfalas" text="전력 돌격" />
-    <string id="taom_ability_knight_of_belfalas_tt" text="막을 수 없는 기병 돌격으로 천둥같이 전진하여 짧은 시간 동안 탈것 속도, 돌격 피해, 근접 피해를 증가시킵니다." />
+    <string id="taom_ability_knight_of_belfalas_tt" text="막을 수 없는 기병 돌격으로 진격한다 — 8초간 돌격 피해 +25%, 말 속도 +20%, 근접 피해 +10%." />
     <string id="taom_ability_black_uruk_captain" text="피의 광란" />
-    <string id="taom_ability_black_uruk_captain_tt" text="피에 굶주린 광기에 빠져 피해 저항과 근접 전투력을 극적으로 증가시키고 검은 우루크 부대에게 영감을 줍니다." />
+    <string id="taom_ability_black_uruk_captain_tt" text="피에 취한 광란에 빠져 주변의 검은 우루크들을 고무한다 — 8초간 50m 내 아군의 근접 피해 +15%, 피해 감소 +10%." />
     <string id="taom_ability_mulkerhili_cultist" text="유일자의 목소리" />
-    <string id="taom_ability_mulkerhili_cultist_tt" text="절대반지의 속삭이는 공포를 전장 전역에 퍼뜨려 적의 사기를 떨어뜨리고 저주받은 화살에 힘을 실어줍니다." />
+    <string id="taom_ability_mulkerhili_cultist_tt" text="절대반지가 속삭이는 공포를 끌어와 저주받은 화살에 힘을 불어넣는다 — 8초간 원거리 피해 +20%, 활 당기는 속도 +20%, 이동 속도 +15%." />
     <string id="taom_ability_snaga_rider" text="은밀한 습격" />
-    <string id="taom_ability_snaga_rider_tt" text="적 대형의 그림자 속을 질주하며 증폭된 기마 피해로 측면을 타격한 후 눈에 띄지 않게 빠져나갑니다." />
+    <string id="taom_ability_snaga_rider_tt" text="적 측면의 그림자 사이를 재빨리 내달린다 — 8초간 돌격 피해 +25%, 말 속도 +20%, 근접 피해 +10%." />
     <string id="taom_ability_olog_hai_warchief" text="망치 낙하" />
-    <string id="taom_ability_olog_hai_warchief_tt" text="거대한 힘으로 전쟁 망치를 내리쳐 땅을 흔들고 피해 경감과 부대 저항력을 크게 증가시킵니다." />
+    <string id="taom_ability_olog_hai_warchief_tt" text="거대한 힘으로 전쟁망치를 내리찍는다 — 10초간 50m 내 아군의 근접 피해 +15%, 피해 감소 +10%." />
     <string id="taom_ability_marksman_of_aldburg" text="경량 화살깃" />
-    <string id="taom_ability_marksman_of_aldburg_tt" text="빠른 경량 화살깃 화살을 시위에 거어 짧은 시간 동안 원거리 피해, 시위 당김 속도, 이동 속도를 증가시킵니다." />
+    <string id="taom_ability_marksman_of_aldburg_tt" text="가벼운 깃을 단 빠른 화살을 연달아 메긴다 — 8초간 원거리 피해 +20%, 활 당기는 속도 +20%, 이동 속도 +15%." />
     <string id="taom_ability_eotheod_windrider" text="에오를의 함성" />
-    <string id="taom_ability_eotheod_windrider_tt" text="젊은 에오를의 고대 함성을 외쳐 짧은 시간 동안 탈것 속도, 돌격 피해, 근접 피해를 증가시킵니다." />
+    <string id="taom_ability_eotheod_windrider_tt" text="청년왕 에오를의 옛 전투 함성을 외친다 — 8초간 돌격 피해 +25%, 말 속도 +20%, 근접 피해 +10%." />
     <string id="taom_ability_watchman_of_stangard" text="굳건히 서다" />
-    <string id="taom_ability_watchman_of_stangard_tt" text="강철 같은 결의로 진지를 고수하여 짧은 시간 동안 근처 모든 아군의 근접 피해를 20 증가시킵니다." />
+    <string id="taom_ability_watchman_of_stangard_tt" text="강철 같은 결의로 버텨라 — 8초 동안 50m 내 아군에게 근접 피해 +15%, 피해 감소 +10%를 부여합니다." />
     <string id="taom_ability_avanc_luth_raider" text="야만적 돌진" />
-    <string id="taom_ability_avanc_luth_raider_tt" text="울부짖는 전쟁 돌진으로 난전에 뛰어들어 근접 피해와 이동 속도를 대폭 증가시키지만 신중한 방어를 희생합니다." />
+    <string id="taom_ability_avanc_luth_raider_tt" text="던랜드의 전투 함성을 전장에 울려라 — 8초 동안 50m 내 아군에게 근접 피해 +15%, 피해 감소 +10%를 부여합니다." />
     <string id="taom_ability_wolfskin_hunter" text="표적 표시" />
-    <string id="taom_ability_wolfskin_hunter_tt" text="안개 속에서 목표를 표시하여 그들에 대한 원거리 피해를 증가시키고 일행에게 향상된 추적 인식을 부여합니다." />
+    <string id="taom_ability_wolfskin_hunter_tt" text="안개 너머의 표적을 노려라 — 8초 동안 원거리 피해 +20%, 시위 당기는 속도 +20%, 이동 속도 +15%를 부여합니다." />
     <string id="taom_ability_clanguard_rider" text="전쟁무리 돌격" />
-    <string id="taom_ability_clanguard_rider_tt" text="전쟁무리를 이끌고 조율된 신속 돌격을 펼쳐 기마 피해와 일행 이동 속도를 증가시키며 적의 측면을 교란합니다." />
+    <string id="taom_ability_clanguard_rider_tt" text="전투 무리를 이끌고 일제히 돌격하라 — 8초 동안 돌격 피해 +25%, 탈것 속도 +20%, 근접 피해 +10%를 부여합니다." />
     <string id="taom_ability_blademaster_of_ren" text="쌍검 강타" />
-    <string id="taom_ability_blademaster_of_ren_tt" text="정밀한 쌍검 연속 공격을 실행하여 휘두르기 속도와 방어구 관통력을 크게 증가시킵니다." />
+    <string id="taom_ability_blademaster_of_ren_tt" text="정확한 쌍검 연격을 펼쳐라 — 8초 동안 50m 내 아군에게 근접 피해 +15%, 피해 감소 +10%를 부여합니다." />
     <string id="taom_ability_steppe_bowmaster" text="화살 폭풍" />
-    <string id="taom_ability_steppe_bowmaster_tt" text="빠른 속도로 후퇴하면서 지속적인 화살 폭풍을 쏟아부어 넓은 지역을 일제 사격으로 포화시킵니다." />
+    <string id="taom_ability_steppe_bowmaster_tt" text="안장 위에서 끊임없는 화살 폭풍을 퍼부어라 — 8초 동안 원거리 피해 +20%, 시위 당기는 속도 +20%, 이동 속도 +15%를 부여합니다." />
     <string id="taom_ability_chariot_warlord" text="낫날 돌격" />
-    <string id="taom_ability_chariot_warlord_tt" text="낫날이 달린 전차로 적진을 돌파하여 넓은 범위에 막대한 광역 돌격 피해를 입힙니다." />
+    <string id="taom_ability_chariot_warlord_tt" text="낫날 전차로 적진을 꿰뚫어라 — 8초 동안 돌격 피해 +25%, 탈것 속도 +20%, 근접 피해 +10%를 부여합니다." />
     <string id="taom_ability_tribesman_of_jelut" text="독이 바른 칼날" />
-    <string id="taom_ability_tribesman_of_jelut_tt" text="무기에 사막의 독을 발라 근접 피해를 증가시키고 쇠약하게 만드는 소모 효과를 적용합니다." />
+    <string id="taom_ability_tribesman_of_jelut_tt" text="무기에 사막의 독을 바르라 — 8초 동안 50m 내 아군에게 근접 피해 +15%, 피해 감소 +10%를 부여합니다." />
     <string id="taom_ability_pezarsani_javelineer" text="태양불 일제사격" />
-    <string id="taom_ability_pezarsani_javelineer_tt" text="타오르는 투창 공세를 퍼부어 원거리 피해를 증가시키고 이동 속도를 향상시킵니다." />
+    <string id="taom_ability_pezarsani_javelineer_tt" text="타오르는 투창 세례를 퍼부어라 — 8초 동안 원거리 피해 +20%, 시위 당기는 속도 +20%, 이동 속도 +15%를 부여합니다." />
     <string id="taom_ability_mahud_beast_rider" text="무마킬의 메아리" />
-    <string id="taom_ability_mahud_beast_rider_tt" text="무마킬의 고대 공포를 불러일으켜 야수의 돌격 피해를 증가시키고 적 대열에 공포를 퍼뜨립니다." />
+    <string id="taom_ability_mahud_beast_rider_tt" text="무마칸의 오랜 공포를 불러내라 — 8초 동안 돌격 피해 +25%, 탈것 속도 +20%, 근접 피해 +10%를 부여합니다." />
     <string id="taom_ability_far_harad_halftroll" text="사악한 잔혹함" />
-    <string id="taom_ability_far_harad_halftroll_tt" text="야만적인 잔혹함 상태에 돌입하여 체력과 저항력을 대폭 증가시키고 주변 적들을 공포에 떨게 합니다." />
+    <string id="taom_ability_far_harad_halftroll_tt" text="야만적인 광포 상태에 돌입하라 — 8초 동안 50m 내 아군에게 근접 피해 +15%, 피해 감소 +10%를 부여합니다." />
     <string id="taom_ability_codyan_legionaire" text="방패벽" />
-    <string id="taom_ability_codyan_legionaire_tt" text="방패를 연결하여 진형을 구축하고, 짧은 시간 동안 주변 모든 아군의 근접 피해를 20 증가시킵니다." />
+    <string id="taom_ability_codyan_legionaire_tt" text="군단 대형으로 방패를 맞물려라 — 8초 동안 50m 내 아군에게 근접 피해 +15%, 피해 감소 +10%를 부여합니다." />
     <string id="taom_ability_lokhas_drus_marksman" text="관통 일제사격" />
-    <string id="taom_ability_lokhas_drus_marksman_tt" text="특수 강화된 화살을 발사하여 짧은 시간 동안 원거리 피해, 시위 당기는 속도, 이동 속도를 증가시킵니다." />
+    <string id="taom_ability_lokhas_drus_marksman_tt" text="특별히 단련된 룬의 화살을 날려라 — 8초 동안 원거리 피해 +20%, 시위 당기는 속도 +20%, 이동 속도 +15%를 부여합니다." />
     <string id="taom_ability_balchoth_kan" text="불굴" />
-    <string id="taom_ability_balchoth_kan_tt" text="발코스의 강철 같은 규율을 발동하여 짧은 시간 동안 탈것 속도, 돌격 피해, 근접 피해를 증가시킵니다." />
+    <string id="taom_ability_balchoth_kan_tt" text="발코스의 철의 규율을 불러내라 — 8초 동안 돌격 피해 +25%, 탈것 속도 +20%, 근접 피해 +10%를 부여합니다." />
     <string id="taom_ability_dale_guardsman" text="성문 사수" />
-    <string id="taom_ability_dale_guardsman_tt" text="발을 굳게 디디고 성문을 지키며, 정지 상태에서 체력과 저항력을 크게 증가시킵니다." />
+    <string id="taom_ability_dale_guardsman_tt" text="발을 굳게 딛고 성문을 지켜라 — 8초 동안 50m 내 아군에게 근접 피해 +15%, 피해 감소 +10%를 부여합니다." />
     <string id="taom_ability_dale_marksman" text="검은 화살" />
-    <string id="taom_ability_dale_marksman_tt" text="궁수 바르드의 유산을 불러일으켜 다음 사격의 피해와 관통력을 대폭 증가시킵니다." />
+    <string id="taom_ability_dale_marksman_tt" text="궁수 바르드의 유산을 이어받아라 — 8초 동안 원거리 피해 +20%, 시위 당기는 속도 +20%, 이동 속도 +15%를 부여합니다." />
     <string id="taom_ability_dale_outrider" text="교역로 질주" />
-    <string id="taom_ability_dale_outrider_tt" text="익숙한 길을 따라 말을 몰아 속도를 폭발적으로 높이고 기마 전투 능력을 향상시킵니다." />
+    <string id="taom_ability_dale_outrider_tt" text="익숙한 길 위로 말을 몰아라 — 8초 동안 돌격 피해 +25%, 탈것 속도 +20%, 근접 피해 +10%를 부여합니다." />
     <string id="taom_ability_ironguard" text="미스릴 요새" />
-    <string id="taom_ability_ironguard_tt" text="드워프 장인술의 힘을 발동하여 짧은 시간 동안 주변 모든 아군의 근접 피해를 20 증가시킵니다." />
+    <string id="taom_ability_ironguard_tt" text="난쟁이 장인의 힘을 불러내라 — 8초 동안 50m 내 아군에게 근접 피해 +15%, 피해 감소 +10%를 부여합니다." />
     <string id="taom_ability_crossbow_master" text="정밀 연사" />
-    <string id="taom_ability_crossbow_master_tt" text="명작 쇠뇌 화살을 장전하여 짧은 시간 동안 원거리 피해, 장전 속도, 이동 속도를 증가시킵니다." />
+    <string id="taom_ability_crossbow_master_tt" text="명공의 난쟁이 쇠뇌살을 장전하라 — 8초 동안 원거리 피해 +20%, 시위 당기는 속도 +20%, 이동 속도 +15%를 부여합니다." />
     <string id="taom_ability_ram_rider" text="산악 돌격" />
-    <string id="taom_ability_ram_rider_tt" text="전투 숫양을 전진시켜 짧은 시간 동안 탈것 속도, 돌격 피해, 근접 피해를 증가시킵니다." />
+    <string id="taom_ability_ram_rider_tt" text="전투용 숫양을 앞으로 몰아라 — 8초 동안 돌격 피해 +25%, 탈것 속도 +20%, 근접 피해 +10%를 부여합니다." />
     <string id="taom_ability_blade_dancer" text="별빛 무도" />
-    <string id="taom_ability_blade_dancer_tt" text="우아한 전투 황홀경에 빠져 공격을 회피하며 엘프의 정밀함으로 공격합니다." />
+    <string id="taom_ability_blade_dancer_tt" text="우아한 놀도르의 전투 무아지경에 들어라 — 8초 동안 50m 내 아군에게 근접 피해 +15%, 피해 감소 +10%를 부여합니다." />
     <string id="taom_ability_elven_archer" text="엘프의 시야" />
-    <string id="taom_ability_elven_archer_tt" text="고대 엘프의 지각을 집중하여 극한 거리에서도 정확무오한 명중률을 발휘합니다." />
+    <string id="taom_ability_elven_archer_tt" text="오랜 요정의 감각을 집중하라 — 8초 동안 원거리 피해 +20%, 시위 당기는 속도 +20%, 이동 속도 +15%를 부여합니다." />
     <string id="taom_ability_rivendell_knight" text="최후의 동맹" />
-    <string id="taom_ability_rivendell_knight_tt" text="최후의 동맹의 용맹과 함께 달려 기마 피해를 증가시키고 주변 모든 아군에게 영감을 불어넣습니다." />
+    <string id="taom_ability_rivendell_knight_tt" text="최후의 동맹의 용맹으로 달려라 — 8초 동안 돌격 피해 +25%, 탈것 속도 +20%, 근접 피해 +10%를 부여합니다." />
     <string id="taom_ability_warden" text="님로델의 축복" />
-    <string id="taom_ability_warden_tt" text="님로델의 물을 불러일으켜 상처를 치유하고 짧은 시간 동안 저항력을 증가시킵니다." />
+    <string id="taom_ability_warden_tt" text="님로델의 물결을 불러내라 — 8초 동안 50m 내 아군에게 근접 피해 +15%, 피해 감소 +10%를 부여합니다." />
     <string id="taom_ability_galadhrim_archer" text="은빛 비" />
-    <string id="taom_ability_galadhrim_archer_tt" text="은촉 화살을 눈부신 속도로 퍼부어 적 대열을 갈기갈기 찢습니다." />
+    <string id="taom_ability_galadhrim_archer_tt" text="은빛 촉의 화살을 일제히 날려라 — 8초 동안 원거리 피해 +20%, 시위 당기는 속도 +20%, 이동 속도 +15%를 부여합니다." />
     <string id="taom_ability_sentinel" text="엘라노르의 신속함" />
-    <string id="taom_ability_sentinel_tt" text="황금숲의 우아함을 불러일으켜 초자연적인 속도와 정밀함으로 전진합니다." />
+    <string id="taom_ability_sentinel_tt" text="황금숲의 우아함을 이끌어내라 — 8초 동안 돌격 피해 +25%, 탈것 속도 +20%, 근접 피해 +10%를 부여합니다." />
     <string id="taom_ability_shadow_walker" text="숲의 망토" />
-    <string id="taom_ability_shadow_walker_tt" text="숲의 그림자 속으로 녹아들어, 짧은 시간 동안 근처의 모든 아군의 근접 피해를 20 증가시킵니다." />
+    <string id="taom_ability_shadow_walker_tt" text="숲의 그림자 속으로 스며들어라 — 8초 동안 50m 내 아군에게 근접 피해 +15%, 피해 감소 +10%를 부여합니다." />
     <string id="taom_ability_silvan_archer" text="숲 위의 일격" />
-    <string id="taom_ability_silvan_archer_tt" text="높은 곳에서 사격하여, 짧은 시간 동안 원거리 피해, 장전 속도, 이동 속도를 증가시킵니다." />
+    <string id="taom_ability_silvan_archer_tt" text="높은 숲의 요충지에서 활을 쏘아라 — 8초 동안 원거리 피해 +20%, 시위 당기는 속도 +20%, 이동 속도 +15%를 부여합니다." />
     <string id="taom_ability_elk_rider" text="뿔의 돌진" />
-    <string id="taom_ability_elk_rider_tt" text="거대한 뿔을 낮추고 돌진하여, 짧은 시간 동안 탑승물 속도, 돌진 피해, 근접 피해를 증가시킵니다." />
+    <string id="taom_ability_elk_rider_tt" text="거대한 뿔을 낮추고 돌격하라 — 8초 동안 돌격 피해 +25%, 탈것 속도 +20%, 근접 피해 +10%를 부여합니다." />
     <string id="taom_ability_uruk_berserker" text="피의 광기" />
-    <string id="taom_ability_uruk_berserker_tt" text="광전사의 광란 상태에 돌입하여, 고통을 무시하면서 피해와 체력을 크게 증가시킵니다." />
+    <string id="taom_ability_uruk_berserker_tt" text="우루크하이의 광전사 광란에 빠져라 — 8초 동안 50m 내 아군에게 근접 피해 +15%, 피해 감소 +10%를 부여합니다." />
     <string id="taom_ability_uruk_crossbow" text="강철 비" />
-    <string id="taom_ability_uruk_crossbow_tt" text="오르상크에서 벼려진 화살을 압도적인 관통력과 연사 속도로 난사합니다." />
+    <string id="taom_ability_uruk_crossbow_tt" text="오르상크에서 벼려낸 쇠뇌살을 퍼부어라 — 8초 동안 원거리 피해 +20%, 시위 당기는 속도 +20%, 이동 속도 +15%를 부여합니다." />
     <string id="taom_ability_warg_scout" text="무리의 울부짖음" />
-    <string id="taom_ability_warg_scout_tt" text="공포스러운 울부짖음을 방출하여 속도를 증가시키고 근처의 적에게 공포를 심어줍니다." />
-    <string id="taom_ability_cave_troll_master" text="트롤 광란" />
-    <string id="taom_ability_cave_troll_master_tt" text="채찍으로 트롤들을 광란 상태로 몰아넣어, 체력과 부대 피해를 크게 증가시킵니다." />
+    <string id="taom_ability_warg_scout_tt" text="공포스러운 와르그의 울부짖음을 터뜨려라 — 8초 동안 돌격 피해 +25%, 탈것 속도 +20%, 근접 피해 +10%를 부여합니다." />
+    <string id="taom_ability_cave_troll_master" text="군다바드 광전사" />
+    <string id="taom_ability_cave_troll_master_tt" text="채찍으로 트롤들을 광란에 몰아넣어라 — 8초 동안 50m 내 아군에게 근접 피해 +15%, 피해 감소 +10%를 부여합니다." />
     <string id="taom_ability_goblin_sniper" text="독침" />
-    <string id="taom_ability_goblin_sniper_tt" text="발사체에 동굴 곰팡이 독소를 바르며, 지속 피해를 추가하고 대상의 속도를 느리게 합니다." />
+    <string id="taom_ability_goblin_sniper_tt" text="쇠뇌살에 동굴 균류 독을 발라라 — 8초 동안 원거리 피해 +20%, 시위 당기는 속도 +20%, 이동 속도 +15%를 부여합니다." />
     <string id="taom_ability_warg_pack_leader" text="우두머리의 울부짖음" />
-    <string id="taom_ability_warg_pack_leader_tt" text="우렁찬 울부짖음으로 지배력을 과시하여, 무리의 속도와 흉포함을 증가시킵니다." />
+    <string id="taom_ability_warg_pack_leader_tt" text="천둥 같은 무리의 울부짖음으로 군림하라 — 8초 동안 돌격 피해 +25%, 탈것 속도 +20%, 근접 피해 +10%를 부여합니다." />
     <string id="taom_ability_shadow_warrior" text="영혼 흡수" />
-    <string id="taom_ability_shadow_warrior_tt" text="근처 적의 생명력을 흡수하여 자신을 치유하고 적의 공격을 약화시킵니다." />
+    <string id="taom_ability_shadow_warrior_tt" text="돌 굴두르의 그림자를 끌어내라 — 8초 동안 50m 내 아군에게 근접 피해 +15%, 피해 감소 +10%를 부여합니다." />
     <string id="taom_ability_necromancer_acolyte" text="암흑의 화살" />
-    <string id="taom_ability_necromancer_acolyte_tt" text="공격에 강령술 에너지를 실어, 원거리 피해와 방어구 관통력을 크게 증가시킵니다." />
+    <string id="taom_ability_necromancer_acolyte_tt" text="사령술의 기운을 화살에 실어라 — 8초 동안 원거리 피해 +20%, 시위 당기는 속도 +20%, 이동 속도 +15%를 부여합니다." />
     <string id="taom_ability_fell_rider" text="공포의 돌격" />
-    <string id="taom_ability_fell_rider_tt" text="그림자에 휩싸여 돌격하여, 적이 공포에 질려 도망치게 하며 압도적인 피해를 입힙니다." />
+    <string id="taom_ability_fell_rider_tt" text="어둠을 두르고 돌격하라 — 8초 동안 돌격 피해 +25%, 탈것 속도 +20%, 근접 피해 +10%를 부여합니다." />
     <string id="taom_ability_corsair_boarder" text="선박 접근전" />
-    <string id="taom_ability_corsair_boarder_tt" text="잔혹한 접근전을 펼치며, 근접전에서 근접 피해와 저항력을 증가시킵니다." />
+    <string id="taom_ability_corsair_boarder_tt" text="잔혹한 승선 공격을 감행하라 — 8초 동안 50m 내 아군에게 근접 피해 +15%, 피해 감소 +10%를 부여합니다." />
     <string id="taom_ability_corsair_crossbow" text="돛줄 사격" />
-    <string id="taom_ability_corsair_crossbow_tt" text="안정된 위치에서 치명적인 정밀도로 사격하여, 원거리 피해와 정확도를 크게 증가시킵니다." />
+    <string id="taom_ability_corsair_crossbow_tt" text="안정된 코르세어 자세로 사격 — 8초 동안 원거리 피해 +20%, 장전 속도 +20%, 이동 속도 +15%." />
     <string id="taom_ability_corsair_captain" text="약탈" />
-    <string id="taom_ability_corsair_captain_tt" text="약탈의 약속으로 선원들을 독려하여, 속도, 피해, 부대 사기를 증가시킵니다." />
+    <string id="taom_ability_corsair_captain_tt" text="약탈의 약속으로 선원들을 결집 — 8초 동안 돌격 피해 +25%, 탈것 속도 +20%, 근접 피해 +10%." />
     <string id="taom_ranger_of_ithilien_root_desc" text="매복은 원거리 피해를 +5% 증가시키며, 활 숙련도에 따라 지속 시간이 증가합니다." />
     <string id="taom_roi_t1a_key" text="매복 범위가 증가하고, 은신 상태에서 발사한 화살이 추가 피해를 입힙니다." />
     <string id="taom_roi_t1a_p1" text="원거리 피해 +8%." />
@@ -216,11 +216,11 @@
     <string id="taom_roi_t1b_p1" text="저항력 +5%." />
     <string id="taom_roi_t1b_p2" text="최대 체력 +5." />
     <string id="taom_roi_t1b_p3" text="부대 탐지 범위 +5%." />
-    <string id="taom_roi_t1b_p4" text="+5% 은신 보너스." />
+    <string id="taom_roi_t1b_p4" text="은신 보너스 +10%." />
     <string id="taom_roi_t2a_key" text="매복 충전 요구량 감소, 더 자주 발동됨." />
     <string id="taom_roi_t2a_p1" text="+10% 부대 탐지 범위." />
     <string id="taom_roi_t2a_p2" text="+10% 이동 속도." />
-    <string id="taom_roi_t2a_p3" text="+10% 은신 보너스." />
+    <string id="taom_roi_t2a_p3" text="은신 보너스 +13%." />
     <string id="taom_roi_t2a_p4" text="+10% 전투 명성 획득." />
     <string id="taom_roi_t2b_key" text="매복이 활성화되는 동안 병력 원거리 피해도 증가." />
     <string id="taom_roi_t2b_p1" text="+12% 원거리 피해." />
@@ -278,17 +278,17 @@
     <string id="taom_kob_t1b_p1" text="+8% 저항력." />
     <string id="taom_kob_t1b_p2" text="+7 최대 체력." />
     <string id="taom_kob_t1b_p3" text="+10% 말 체력." />
-    <string id="taom_kob_t1b_p4" text="+5% 부대 저항력." />
+    <string id="taom_kob_t1b_p4" text="병사 저항력 +10%." />
     <string id="taom_kob_t2a_key" text="질주 돌격 요구사항이 감소하여 더 자주 천둥같은 돌격을 펼칩니다." />
-    <string id="taom_kob_t2a_p1" text="+15% 말 돌격 피해." />
+    <string id="taom_kob_t2a_p1" text="기마 돌격 피해 +13%." />
     <string id="taom_kob_t2a_p2" text="+12% 근접 피해." />
     <string id="taom_kob_t2a_p3" text="+8% 이동 속도." />
     <string id="taom_kob_t2a_p4" text="+10% 전투 명성 획득." />
     <string id="taom_kob_t2b_key" text="질주가 활성화되는 동안 부대 저항력도 증가시킵니다." />
     <string id="taom_kob_t2b_p1" text="+10% 저항력." />
     <string id="taom_kob_t2b_p2" text="+8 최대 체력." />
-    <string id="taom_kob_t2b_p3" text="+15% 말 체력." />
-    <string id="taom_kob_t2b_p4" text="+8% 부대 저항력." />
+    <string id="taom_kob_t2b_p3" text="말 체력 +13%." />
+    <string id="taom_kob_t2b_p4" text="병사 저항력 +13%." />
     <string id="taom_kob_t3a_key" text="질주가 활성화되는 동안 부대 사기를 부여하여 벨팔라스의 군대를 고무시킵니다." />
     <string id="taom_kob_t3a_p1" text="+15% 부대 사기." />
     <string id="taom_kob_t3a_p2" text="+4 부대 규모." />
@@ -297,8 +297,8 @@
     <string id="taom_kob_t3b_key" text="질주의 범위와 지속시간이 극대화됩니다 — 돌 아므로스의 돌격은 막을 수 없습니다." />
     <string id="taom_kob_t3b_p1" text="+15% 저항력." />
     <string id="taom_kob_t3b_p2" text="최대 체력 +9." />
-    <string id="taom_kob_t3b_p3" text="말 돌격 피해 +20%." />
-    <string id="taom_kob_t3b_p4" text="병력 저항력 +12%." />
+    <string id="taom_kob_t3b_p3" text="기마 돌격 피해 +15%." />
+    <string id="taom_kob_t3b_p4" text="병사 저항력 +15%." />
     <string id="taom_buc_root_desc" text="어둠의 불굴은 체력 +6를 부여하고 검은 우룩의 전투 분노를 고취시킨다." />
     <string id="taom_buc_t1_a_key" text="강철 가죽" />
     <string id="taom_buc_t1_a_key_desc" text="대장간과 전쟁으로 단련되어, 당신의 가죽은 칼날을 막아냅니다. 피의 격노 범위 +3." />
@@ -364,21 +364,21 @@
     <string id="taom_mc_t1_a_key" text="독이 묻은 촉" />
     <string id="taom_mc_t1_a_key_desc" text="당신의 화살은 사악한 독소를 담고 있다. 유일자의 목소리 반경 +3." />
     <string id="taom_mc_t1_a_p1" text="어두운 속삭임" />
-    <string id="taom_mc_t1_a_p1_desc" text="당신의 영창이 적을 불안하게 만든다. 병력 저항력 +5%." />
+    <string id="taom_mc_t1_a_p1_desc" text="당신의 성가가 적을 불안하게 한다. 병사 저항력 +10%." />
     <string id="taom_mc_t1_a_p2" text="확고한 조준" />
     <string id="taom_mc_t1_a_p2_desc" text="인내심 있고 정확하다. 원거리 피해 +6%." />
     <string id="taom_mc_t1_a_p3" text="광신의 열정" />
     <string id="taom_mc_t1_a_p3_desc" text="유일자의 축복이 신자들을 보호한다. 체력 +5." />
     <string id="taom_mc_t1_a_p4" text="그림자 발걸음" />
-    <string id="taom_mc_t1_a_p4_desc" text="연사 사이에 보이지 않게 움직인다. 은신 보너스 +5%." />
+    <string id="taom_mc_t1_a_p4_desc" text="일제 사격 사이로 보이지 않게 움직인다. 은신 보너스 +10%." />
     <string id="taom_mc_t1_b_key" text="사우론의 속삭임" />
     <string id="taom_mc_t1_b_key_desc" text="목소리가 더 멀리 전달된다. 유일자의 목소리 지속시간 +4초." />
     <string id="taom_mc_t1_b_p1" text="어둠의 화살통" />
-    <string id="taom_mc_t1_b_p1_desc" text="검은 화살을 더 많이 휴대한다. 탄약 +3." />
+    <string id="taom_mc_t1_b_p1_desc" text="검은 화살대의 볼트를 더 많이 지닌다. 탄약 +10%." />
     <string id="taom_mc_t1_b_p2" text="의식의 상흔" />
     <string id="taom_mc_t1_b_p2_desc" text="물케르힐리 의식의 고통 방어막. 체력 +6." />
     <string id="taom_mc_t1_b_p3" text="예언자의 발걸음" />
-    <string id="taom_mc_t1_b_p3_desc" text="사우론의 은총이 당신을 신속하고 은밀하게 지켜준다. 은신 보너스 +4%." />
+    <string id="taom_mc_t1_b_p3_desc" text="사우론의 은총이 당신을 빠르고 은밀하게 한다. 은신 보너스 +10%." />
     <string id="taom_mc_t1_b_p4" text="어둠의 축복" />
     <string id="taom_mc_t1_b_p4_desc" text="절대자의 눈이 당신을 지켜본다. 원거리 저항 +8%." />
     <string id="taom_mc_t2_a_key" text="공포의 회중" />
@@ -390,7 +390,7 @@
     <string id="taom_mc_t2_a_p3" text="광신도의 결의" />
     <string id="taom_mc_t2_a_p3_desc" text="진정한 신도에게 죽음은 아무것도 아니다. 체력 +6." />
     <string id="taom_mc_t2_a_p4" text="교단 병참" />
-    <string id="taom_mc_t2_a_p4_desc" text="교단의 네트워크가 군대에 보급품을 제공한다. 탄약 +5." />
+    <string id="taom_mc_t2_a_p4_desc" text="교단의 연락망이 군세에 보급을 유지한다. 탄약 +13%." />
     <string id="taom_mc_t2_b_key" text="어둠의 설교" />
     <string id="taom_mc_t2_b_key_desc" text="당신의 기도가 전장 전체로 확장된다. 절대자의 목소리 지속시간 +2초." />
     <string id="taom_mc_t2_b_p1" text="공포의 만트라" />
@@ -410,7 +410,7 @@
     <string id="taom_mc_t3_a_p3" text="회중의 군대" />
     <string id="taom_mc_t3_a_p3_desc" text="신도들이 당신의 깃발 아래로 모여든다. 부대 규모 +4." />
     <string id="taom_mc_t3_a_p4" text="축복받은 화살통" />
-    <string id="taom_mc_t3_a_p4_desc" text="사우론의 축복이 당신의 화살을 증식시킨다. 탄약 +8." />
+    <string id="taom_mc_t3_a_p4_desc" text="사우론의 축복이 당신의 화살을 불린다. 탄약 +15%." />
     <string id="taom_mc_t3_b_key" text="어둠의 계약" />
     <string id="taom_mc_t3_b_key_desc" text="목소리를 부르는 데 필요한 희생이 줄어든다. 목소리 충전 비용 -30." />
     <string id="taom_mc_t3_b_p1" text="눈의 교단" />
@@ -425,9 +425,9 @@
     <string id="taom_sr_t1_a_key" text="그림자 질주" />
     <string id="taom_sr_t1_a_key_desc" text="당신은 모르도르의 어둠 속으로 사라진다. 은밀한 기어가기 범위 +3." />
     <string id="taom_sr_t1_a_p1" text="와르그 본능" />
-    <string id="taom_sr_t1_a_p1_desc" text="당신의 탈것은 당신만큼이나 사납다. +6% 말 돌격 피해." />
+    <string id="taom_sr_t1_a_p1_desc" text="당신의 탈것은 당신만큼 사납다. 기마 돌격 피해 +10%." />
     <string id="taom_sr_t1_a_p2" text="기어가는 측면 공격자" />
-    <string id="taom_sr_t1_a_p2_desc" text="당신은 가장 예상치 못한 곳에 나타난다. +5% 은신 보너스." />
+    <string id="taom_sr_t1_a_p2_desc" text="가장 예상치 못한 곳에 나타난다. 은신 보너스 +10%." />
     <string id="taom_sr_t1_a_p3" text="가혹한 기승" />
     <string id="taom_sr_t1_a_p3_desc" text="당신의 몸은 가장 가혹한 기승을 견딘다. +5 체력." />
     <string id="taom_sr_t1_a_p4" text="일격 후 퇴각" />
@@ -435,7 +435,7 @@
     <string id="taom_sr_t1_b_key" text="밤의 기수" />
     <string id="taom_sr_t1_b_key_desc" text="어둠이 당신을 더 오래 보호한다. 은밀한 기어가기 지속시간 +4초." />
     <string id="taom_sr_t1_b_p1" text="질긴 탈것" />
-    <string id="taom_sr_t1_b_p1_desc" text="당신의 짐승은 가장 격렬한 전투에서도 다리를 유지한다. +5% 말 체력." />
+    <string id="taom_sr_t1_b_p1_desc" text="당신의 짐승은 가장 험한 전투에서도 쓰러지지 않는다. 말 체력 +10%." />
     <string id="taom_sr_t1_b_p2" text="약탈자의 속도" />
     <string id="taom_sr_t1_b_p2_desc" text="당신은 어떤 추격도 따돌린다. +5% 이동 속도." />
     <string id="taom_sr_t1_b_p3" text="무리 전술" />
@@ -445,7 +445,7 @@
     <string id="taom_sr_t2_a_key" text="매복 급습" />
     <string id="taom_sr_t2_a_key_desc" text="당신은 적이 당신이 있는지 알기도 전에 공격한다. 은밀한 기어가기 돌격 비용 -20." />
     <string id="taom_sr_t2_a_p1" text="기세 파괴자" />
-    <string id="taom_sr_t2_a_p1_desc" text="당신의 돌격은 적의 진형을 무너뜨린다. +8% 말 돌격 피해." />
+    <string id="taom_sr_t2_a_p1_desc" text="당신의 돌격이 적 대형을 무너뜨린다. 기마 돌격 피해 +13%." />
     <string id="taom_sr_t2_a_p2" text="끈질긴 추격" />
     <string id="taom_sr_t2_a_p2_desc" text="아무도 스나가 기수를 따돌리지 못한다. +8% 부대 이동 속도." />
     <string id="taom_sr_t2_a_p3" text="약탈자의 전리품" />
@@ -457,7 +457,7 @@
     <string id="taom_sr_t2_b_p1" text="비명 지르는 하강" />
     <string id="taom_sr_t2_b_p1_desc" text="당신의 전쟁 함성은 가장 용감한 자들을 제외한 모든 이들의 사기를 떨어뜨린다. +6% 부대 사기." />
     <string id="taom_sr_t2_b_p2" text="측면 공격 전문가" />
-    <string id="taom_sr_t2_b_p2_desc" text="정확한 측면 공격을 지휘합니다. +10% 은신 보너스." />
+    <string id="taom_sr_t2_b_p2_desc" text="측면 공격을 정밀하게 지휘한다. 은신 보너스 +13%." />
     <string id="taom_sr_t2_b_p3" text="약탈자의 몫" />
     <string id="taom_sr_t2_b_p3_desc" text="전리품 분배로 무리의 충성을 유지합니다. -5% 병력 급여." />
     <string id="taom_sr_t2_b_p4" text="강철 안장" />
@@ -465,7 +465,7 @@
     <string id="taom_sr_t3_a_key" text="그림자 질주" />
     <string id="taom_sr_t3_a_key_desc" text="어둠 속에서 기병 군단이 나타납니다. 은밀한 기습 범위 +5." />
     <string id="taom_sr_t3_a_p1" text="죽음의 돌격" />
-    <string id="taom_sr_t3_a_p1_desc" text="당신의 돌격은 모든 것을 파괴합니다. +12% 기마 돌격 피해." />
+    <string id="taom_sr_t3_a_p1_desc" text="당신의 돌격은 앞을 가로막는 모든 것을 파괴한다. 기마 돌격 피해 +15%." />
     <string id="taom_sr_t3_a_p2" text="와르그 군주의 명령" />
     <string id="taom_sr_t3_a_p2_desc" text="거대한 무리가 당신의 깃발 아래 모입니다. +4 부대 규모." />
     <string id="taom_sr_t3_a_p3" text="끝없는 그림자" />
@@ -553,7 +553,7 @@
     <string id="taom_moa_t1_a_p3" text="알드부르크 훈련" />
     <string id="taom_moa_t1_a_p3_desc" text="알드부르크 궁수는 로한에서 가장 뛰어나다. +5 생명력." />
     <string id="taom_moa_t1_a_p4" text="가득 찬 화살통" />
-    <string id="taom_moa_t1_a_p4_desc" text="당신은 다른 누구보다 많은 흰 깃털 화살을 지니고 있다. +3 탄약." />
+    <string id="taom_moa_t1_a_p4_desc" text="누구보다 많은 흰 깃 화살을 지니고 다닌다. 탄약 +10%." />
     <string id="taom_moa_t1_b_key" text="확고한 시위 당김" />
     <string id="taom_moa_t1_b_key_desc" text="당신은 완벽한 사격을 위해 시위를 더 오래 당긴다. 가벼운 깃털 지속시간 +4초." />
     <string id="taom_moa_t1_b_p1" text="신속한 시위 걸기" />
@@ -563,17 +563,17 @@
     <string id="taom_moa_t1_b_p3" text="벌판의 정찰병" />
     <string id="taom_moa_t1_b_p3_desc" text="당신은 로한의 평원을 책처럼 읽습니다. +5% 파티 탐지 범위." />
     <string id="taom_moa_t1_b_p4" text="로히림 규율" />
-    <string id="taom_moa_t1_b_p4_desc" text="당신은 궁수들에게 전열을 유지하도록 훈련시킵니다. +3% 병력 저항력." />
+    <string id="taom_moa_t1_b_p4_desc" text="궁수들이 전선을 지키도록 훈련시킨다. 병사 저항력 +10%." />
     <string id="taom_moa_t2_a_key" text="일제 사격 대장" />
     <string id="taom_moa_t2_a_key_desc" text="당신은 파괴적인 집중 사격을 조율합니다. 가벼운 화살 차지 비용 -20." />
     <string id="taom_moa_t2_a_p1" text="전선 고정" />
-    <string id="taom_moa_t2_a_p1_desc" text="당신의 일제 사격이 적의 진격을 제압합니다. +8% 병력 저항력." />
+    <string id="taom_moa_t2_a_p1_desc" text="당신의 일제 사격이 적의 전진을 억제한다. 병사 저항력 +13%." />
     <string id="taom_moa_t2_a_p2" text="보드킨 촉" />
     <string id="taom_moa_t2_a_p2_desc" text="강화된 촉이 사슬 갑옷과 판금 갑옷을 관통합니다. +10% 방어구 관통력." />
     <string id="taom_moa_t2_a_p3" text="야전 기술" />
-    <string id="taom_moa_t2_a_p3_desc" text="당신은 지형의 모든 굴곡을 유리하게 활용합니다. +8% 은신 보너스." />
+    <string id="taom_moa_t2_a_p3_desc" text="지형의 굴곡 하나하나를 이용한다. 은신 보너스 +13%." />
     <string id="taom_moa_t2_a_p4" text="전쟁 화살 비축" />
-    <string id="taom_moa_t2_a_p4_desc" text="사전에 배치된 비축물이 당신의 화살통을 가득 채웁니다. +5 탄약." />
+    <string id="taom_moa_t2_a_p4_desc" text="미리 배치한 보급품이 화살통을 채워 준다. 탄약 +13%." />
     <string id="taom_moa_t2_b_key" text="지속 공세" />
     <string id="taom_moa_t2_b_key_desc" text="화살비가 그치지 않습니다. 가벼운 화살 지속 시간 +2초." />
     <string id="taom_moa_t2_b_p1" text="엄호 사격" />
@@ -593,7 +593,7 @@
     <string id="taom_moa_t3_a_p3" text="전쟁 군단 궁수들" />
     <string id="taom_moa_t3_a_p3_desc" text="당신의 전설이 최고의 궁수들을 끌어들입니다. +4 파티 규모." />
     <string id="taom_moa_t3_a_p4" text="끝없는 화살" />
-    <string id="taom_moa_t3_a_p4_desc" text="당신의 보급선이 화살을 계속 날리게 합니다. +8 탄약." />
+    <string id="taom_moa_t3_a_p4_desc" text="당신의 보급선이 화살을 계속 날게 한다. 탄약 +15%." />
     <string id="taom_moa_t3_b_key" text="반사적 발사" />
     <string id="taom_moa_t3_b_key_desc" text="시위 걸기와 발사는 순수한 근육 기억입니다. 가벼운 화살 차지 비용 -30." />
     <string id="taom_moa_t3_b_p1" text="화살비" />
@@ -604,13 +604,13 @@
     <string id="taom_moa_t3_b_p3_desc" text="당신의 업적은 알드부르크에 영광을 가져다줍니다. +12% 전투 명성 획득." />
     <string id="taom_moa_t3_b_p4" text="마크의 군대" />
     <string id="taom_moa_t3_b_p4_desc" text="로한 최고의 궁수들이 당신의 깃발 아래 모여듭니다. +5 부대 규모." />
-    <string id="taom_ew_root_desc" text="에오를의 함성은 선조들의 천둥을 불러내며 +5% 말 돌격 피해를 부여합니다." />
+    <string id="taom_ew_root_desc" text="에오를의 전투 함성은 기마 돌격 피해 +10%를 부여하며, 선조들의 천둥을 불러온다." />
     <string id="taom_ew_t1_a_key" text="선조의 천둥" />
     <string id="taom_ew_t1_a_key_desc" text="함성이 평원을 가로질러 울려 퍼집니다. 에오를의 함성 범위 +3." />
     <string id="taom_ew_t1_a_p1" text="선봉 돌격" />
-    <string id="taom_ew_t1_a_p1_desc" text="당신이 돌격을 이끌며 누구도 당신의 속도를 따라올 수 없습니다. +6% 말 돌격 피해." />
+    <string id="taom_ew_t1_a_p1_desc" text="당신이 돌격을 이끌고, 누구도 그 속도를 따라올 수 없다. 기마 돌격 피해 +10%." />
     <string id="taom_ew_t1_a_p2" text="타고난 기수" />
-    <string id="taom_ew_t1_a_p2_desc" text="말과 기수가 하나가 됩니다. +5% 말 체력." />
+    <string id="taom_ew_t1_a_p2_desc" text="말과 기수가 하나다. 말 체력 +10%." />
     <string id="taom_ew_t1_a_p3" text="초원의 인내력" />
     <string id="taom_ew_t1_a_p3_desc" text="마크의 평원을 달리며 단련되었습니다. +5 체력." />
     <string id="taom_ew_t1_a_p4" text="결집의 함성" />
@@ -624,11 +624,11 @@
     <string id="taom_ew_t1_b_p3" text="기수의 결의" />
     <string id="taom_ew_t1_b_p3_desc" text="어떤 역경에도 꺾이지 않습니다. +6 체력." />
     <string id="taom_ew_t1_b_p4" text="충직한 애마" />
-    <string id="taom_ew_t1_b_p4_desc" text="당신의 말은 전투로 단련되었습니다. +6% 말 체력." />
+    <string id="taom_ew_t1_b_p4_desc" text="당신의 말은 전장에서 단련되었다. 말 체력 +10%." />
     <string id="taom_ew_t2_a_key" text="에오를의 유산" />
     <string id="taom_ew_t2_a_key_desc" text="선조들이 항상 당신과 함께 달립니다. 함성 충전 비용 -20." />
     <string id="taom_ew_t2_a_p1" text="무적의 돌격" />
-    <string id="taom_ew_t2_a_p1_desc" text="로히림 앞에 막을 자 없습니다. +10% 말 돌격 피해." />
+    <string id="taom_ew_t2_a_p1_desc" text="로히림 앞에 맞설 자는 없다. 기마 돌격 피해 +13%." />
     <string id="taom_ew_t2_a_p2" text="방패벽 파괴자" />
     <string id="taom_ew_t2_a_p2_desc" text="당신의 돌격은 방패벽을 산산조각냅니다. +8% 근접 피해." />
     <string id="taom_ew_t2_a_p3" text="로히림의 사기" />
@@ -638,7 +638,7 @@
     <string id="taom_ew_t2_b_key" text="기마의 노래" />
     <string id="taom_ew_t2_b_key_desc" text="에오테오드의 노래가 기수들을 앞으로 이끕니다. 함성 지속시간 +2초." />
     <string id="taom_ew_t2_b_p1" text="메아라스의 혈통" />
-    <string id="taom_ew_t2_b_p1_desc" text="당신의 말은 메아라스의 피가 흐릅니다. +10% 말 체력." />
+    <string id="taom_ew_t2_b_p1_desc" text="당신의 말에는 메아라스의 피가 흐른다. 말 체력 +13%." />
     <string id="taom_ew_t2_b_p2" text="평원의 달인" />
     <string id="taom_ew_t2_b_p2_desc" text="마크의 모든 계곡과 능선을 알고 있습니다. +8% 부대 탐지 범위." />
     <string id="taom_ew_t2_b_p3" text="명예의 맹세" />
@@ -648,7 +648,7 @@
     <string id="taom_ew_t3_a_key" text="로히림의 돌격" />
     <string id="taom_ew_t3_a_key_desc" text="인간 시대의 가장 위대한 돌격. 전투함성 범위 +5." />
     <string id="taom_ew_t3_a_p1" text="펠렌노르의 천둥" />
-    <string id="taom_ew_t3_a_p1_desc" text="펠렌노르 평원에서처럼, 당신의 돌격은 막을 수 없다. 기마 돌격 피해 +14%." />
+    <string id="taom_ew_t3_a_p1_desc" text="펠렌노르 평원에서처럼, 당신의 돌격은 막을 수 없다. 기마 돌격 피해 +15%." />
     <string id="taom_ew_t3_a_p2" text="마크의 군주" />
     <string id="taom_ew_t3_a_p2_desc" text="가장 위대한 기수들이 당신을 따른다. 체력 +9." />
     <string id="taom_ew_t3_a_p3" text="에오레드 지휘관" />
@@ -685,11 +685,11 @@
     <string id="taom_ws_t1_b_p3" text="충성스러운 수비대" />
     <string id="taom_ws_t1_b_p3_desc" text="당신의 부하들은 적은 급료를 필요로 합니다 -- 의무만으로 충분합니다. -4% 병력 임금." />
     <string id="taom_ws_t1_b_p4" text="강의 영주의 규율" />
-    <string id="taom_ws_t1_b_p4_desc" text="당신의 보병은 다른 이들이 무너질 때 확고히 버팁니다. +3% 병력 저항력." />
+    <string id="taom_ws_t1_b_p4_desc" text="남들이 무너질 때 당신의 보병은 굳게 버틴다. 병사 저항력 +10%." />
     <string id="taom_ws_t2_a_key" text="준비된 도하지" />
-    <string id="taom_ws_t2_a_key_desc" text="당신은 수년간 이 지형을 정찰해왔습니다. River Navigator 충전 비용 -20." />
+    <string id="taom_ws_t2_a_key_desc" text="당신은 수년간 이 땅을 정찰해 왔습니다. 강 항해자 충전 비용 -20." />
     <string id="taom_ws_t2_a_p1" text="방패 방진" />
-    <string id="taom_ws_t2_a_p1_desc" text="당신의 부하들은 뚫을 수 없는 벽을 형성합니다. +8% 병력 저항력." />
+    <string id="taom_ws_t2_a_p1_desc" text="당신의 병사들은 뚫을 수 없는 벽을 이룬다. 병사 저항력 +13%." />
     <string id="taom_ws_t2_a_p2" text="검증된 강철" />
     <string id="taom_ws_t2_a_p2_desc" text="모든 무기는 스탕가드 대장장이들에 의해 연마됩니다. +8% 근접 피해." />
     <string id="taom_ws_t2_a_p3" text="팡고른의 경고" />
@@ -697,7 +697,7 @@
     <string id="taom_ws_t2_a_p4" text="강철 같은 의지" />
     <string id="taom_ws_t2_a_p4_desc" text="스탕가드의 고립은 강철 같은 결의를 낳습니다. +6 체력." />
     <string id="taom_ws_t2_b_key" text="지칠 줄 모르는 순찰" />
-    <string id="taom_ws_t2_b_key_desc" text="당신은 멈춤이나 휴식 없이 순찰합니다. River Navigator 지속시간 +2초." />
+    <string id="taom_ws_t2_b_key_desc" text="당신은 쉼 없이 순찰합니다. 강 항해자 지속 시간 +2초." />
     <string id="taom_ws_t2_b_p1" text="엔트워시 요새" />
     <string id="taom_ws_t2_b_p1_desc" text="당신이 지키는 동안 어떤 적도 엔트워시를 건너지 못합니다. +8% 병력 사기." />
     <string id="taom_ws_t2_b_p2" text="강의 갑옷" />
@@ -707,9 +707,9 @@
     <string id="taom_ws_t2_b_p4" text="변경의 강철" />
     <string id="taom_ws_t2_b_p4_desc" text="변경에서의 혹독한 복무가 당신을 불멸로 만들었습니다. +7 체력." />
     <string id="taom_ws_t3_a_key" text="스탕가드의 보루" />
-    <string id="taom_ws_t3_a_key_desc" text="당신은 문명과 어둠 사이의 최후 방어선입니다. River Navigator 범위 +5." />
+    <string id="taom_ws_t3_a_key_desc" text="당신은 문명과 어둠 사이의 마지막 방벽입니다. 강 항해자 범위 +5." />
     <string id="taom_ws_t3_a_p1" text="불굴의 방진" />
-    <string id="taom_ws_t3_a_p1_desc" text="당신의 방패벽은 한 번도 무너진 적이 없습니다. +12% 병력 저항력." />
+    <string id="taom_ws_t3_a_p1_desc" text="당신의 방패벽은 한 번도 무너진 적이 없다. 병사 저항력 +15%." />
     <string id="taom_ws_t3_a_p2" text="불멸의 수호자" />
     <string id="taom_ws_t3_a_p2_desc" text="경비는 결코 끝나지 않습니다. +9 체력." />
     <string id="taom_ws_t3_a_p3" text="수비대 사령관" />
@@ -717,7 +717,7 @@
     <string id="taom_ws_t3_a_p4" text="수비자의 영광" />
     <string id="taom_ws_t3_a_p4_desc" text="방어 전투에서의 승리는 큰 명예를 가져옵니다. +12% 전투 명성 획득." />
     <string id="taom_ws_t3_b_key" text="끊임없는 경계" />
-    <string id="taom_ws_t3_b_key_desc" text="경비는 항상 유지됩니다. River Navigator 충전 비용 -30." />
+    <string id="taom_ws_t3_b_key_desc" text="경계는 언제나 유지됩니다. 강 항해자 충전 비용 -30." />
     <string id="taom_ws_t3_b_p1" text="로히림의 벽" />
     <string id="taom_ws_t3_b_p1_desc" text="당신의 보병은 하나로 싸웁니다. +6% 병력 피해." />
     <string id="taom_ws_t3_b_p2" text="부름에 신속히" />
@@ -793,11 +793,11 @@
     <string id="taom_wh_t1_a_p1" text="늑대의 인내" />
     <string id="taom_wh_t1_a_p1_desc" text="당신은 완벽한 순간을 기다려 공격한다. 원거리 피해 +6%." />
     <string id="taom_wh_t1_a_p2" text="언덕 추적자" />
-    <string id="taom_wh_t1_a_p2_desc" text="당신은 던렌딩 언덕을 소리 없이 이동한다. 은신 보너스 +5%." />
+    <string id="taom_wh_t1_a_p2_desc" text="던랜드의 언덕을 소리 없이 누빈다. 은신 보너스 +10%." />
     <string id="taom_wh_t1_a_p3" text="사냥꾼의 지구력" />
     <string id="taom_wh_t1_a_p3_desc" text="당신은 쉬지 않고 며칠 동안 먹이를 추적한다. 생명력 +5." />
     <string id="taom_wh_t1_a_p4" text="뼈 화살통" />
-    <string id="taom_wh_t1_a_p4_desc" text="던렌딩 화살 제작 전통이 당신의 화살통을 채운다. 탄약 +3." />
+    <string id="taom_wh_t1_a_p4_desc" text="던랜드의 화살 제작 전통이 당신의 화살통을 채운다. 탄약 +10%." />
     <string id="taom_wh_t1_b_key" text="연장된 사냥" />
     <string id="taom_wh_t1_b_key_desc" text="표식은 전투의 혼란 속에서도 지속된다. 표적 지정 지속시간 +4초." />
     <string id="taom_wh_t1_b_p1" text="빠른 시위 걸기" />
@@ -817,11 +817,11 @@
     <string id="taom_wh_t2_a_p3" text="황야의 생존자" />
     <string id="taom_wh_t2_a_p3_desc" text="황야가 당신에게 무엇이든 살아남는 법을 가르쳤다. 체력 +6." />
     <string id="taom_wh_t2_a_p4" text="깊은 화살통" />
-    <string id="taom_wh_t2_a_p4_desc" text="당신의 씨족은 포위전에도 충분한 화살을 제공한다. 탄약 +5." />
+    <string id="taom_wh_t2_a_p4_desc" text="당신의 씨족은 공성전에 충분한 화살을 공급합니다. 탄약 +13%." />
     <string id="taom_wh_t2_b_key" text="지속되는 표적" />
     <string id="taom_wh_t2_b_key_desc" text="표적은 깊이 새겨져 사라지지 않는다. 표적 지정 지속시간 +2초." />
     <string id="taom_wh_t2_b_p1" text="매복 포식자" />
-    <string id="taom_wh_t2_b_p1_desc" text="당신은 은폐 상태에서 공격하여 최대 효과를 낸다. 은신 보너스 +10%." />
+    <string id="taom_wh_t2_b_p1_desc" text="당신은 은신처에서 공격해 최대의 효과를 냅니다. 은신 보너스 +13%." />
     <string id="taom_wh_t2_b_p2" text="던렌드의 회복력" />
     <string id="taom_wh_t2_b_p2_desc" text="언덕의 고된 삶이 당신을 거의 죽일 수 없게 만든다. 근접 저항 +10%." />
     <string id="taom_wh_t2_b_p3" text="보이지 않는 길" />
@@ -848,15 +848,15 @@
     <string id="taom_wh_t3_b_p3_desc" text="모든 전리품이 당신의 무시무시한 전설에 더해집니다. +14% 전투 명성 획득." />
     <string id="taom_wh_t3_b_p4" text="거대한 무리" />
     <string id="taom_wh_t3_b_p4_desc" text="던랜드의 모든 늑대가죽 사냥꾼이 당신과 함께 합니다. +6 부대 규모." />
-    <string id="taom_cr_root_desc" text="전쟁무리 돌격은 +5% 말 돌격 피해를 부여하고 적진을 혼란에 빠뜨립니다." />
+    <string id="taom_cr_root_desc" text="전투단 돌격은 기마 돌격 피해 +10%를 부여하고 적진을 혼란에 빠뜨립니다." />
     <string id="taom_cr_t1_a_key" text="씨족의 천둥" />
     <string id="taom_cr_t1_a_key_desc" text="기병들이 내려올 때 대지가 흔들립니다. 전쟁무리 돌격 범위 +3." />
     <string id="taom_cr_t1_a_p1" text="던랜드 기병" />
-    <string id="taom_cr_t1_a_p1_desc" text="당신은 당신의 말과 하나가 되어 달립니다. +6% 말 돌격 피해량." />
+    <string id="taom_cr_t1_a_p1_desc" text="당신은 말과 한 몸이 되어 달립니다. 기마 돌격 피해 +10%." />
     <string id="taom_cr_t1_a_p2" text="강건한 말" />
-    <string id="taom_cr_t1_a_p2_desc" text="던랜드 산악 조랑말은 강철처럼 강인합니다. +5% 말 체력." />
+    <string id="taom_cr_t1_a_p2_desc" text="던랜드의 산악 조랑말은 무쇠처럼 강인합니다. 말 체력 +10%." />
     <string id="taom_cr_t1_a_p3" text="씨족 호위" />
-    <string id="taom_cr_t1_a_p3_desc" text="당신의 기병들이 씨족을 위험으로부터 지킵니다. +3% 부대 저항력." />
+    <string id="taom_cr_t1_a_p3_desc" text="당신의 기병들이 씨족을 위험에서 지킵니다. 병사 저항력 +10%." />
     <string id="taom_cr_t1_a_p4" text="안장 지구력" />
     <string id="taom_cr_t1_a_p4_desc" text="당신은 말에서 내리지 않고 며칠을 달립니다. +5 체력." />
     <string id="taom_cr_t1_b_key" text="지속 돌격" />
@@ -872,7 +872,7 @@
     <string id="taom_cr_t2_a_key" text="해방된 전쟁무리" />
     <string id="taom_cr_t2_a_key_desc" text="무리는 언제나 돌격할 준비가 되어 있습니다. 전쟁무리 돌격 비용 -20." />
     <string id="taom_cr_t2_a_p1" text="분쇄 충격" />
-    <string id="taom_cr_t2_a_p1_desc" text="당신의 돌격은 적의 대형을 산산조각냅니다. +10% 말 돌격 피해량." />
+    <string id="taom_cr_t2_a_p1_desc" text="당신의 돌격이 적의 대형을 산산조각 냅니다. 기마 돌격 피해 +13%." />
     <string id="taom_cr_t2_a_p2" text="신속한 추격" />
     <string id="taom_cr_t2_a_p2_desc" text="아무도 씨족 수비대를 따돌릴 수 없습니다. +8% 부대 이동 속도." />
     <string id="taom_cr_t2_a_p3" text="약탈 명성" />
@@ -892,7 +892,7 @@
     <string id="taom_cr_t3_a_key" text="기수의 씨족" />
     <string id="taom_cr_t3_a_key_desc" text="던랜드의 모든 기수가 당신의 깃발 아래 달린다. 전투무리 돌격 범위 +5." />
     <string id="taom_cr_t3_a_p1" text="눈사태 돌격" />
-    <string id="taom_cr_t3_a_p1_desc" text="당신의 돌격은 멈출 수 없다. 기마 돌격 피해 +14%." />
+    <string id="taom_cr_t3_a_p1_desc" text="당신의 돌격은 그 무엇도 막을 수 없습니다. 기마 돌격 피해 +15%." />
     <string id="taom_cr_t3_a_p2" text="산악 태생" />
     <string id="taom_cr_t3_a_p2_desc" text="당신은 이 안장에서 태어났다. 체력 +9." />
     <string id="taom_cr_t3_a_p3" text="대전투무리" />
@@ -943,7 +943,7 @@
     <string id="taom_steppe_bowmaster_root_desc" text="화살 폭풍이 +5% 원거리 피해를 부여하고 지속 사격을 향상시킵니다." />
     <string id="taom_sb_t1a_key" text="화살 폭풍 범위가 증가하여, 일제 사격이 더 넓은 지역을 덮습니다." />
     <string id="taom_sb_t1a_p1" text="+8% 원거리 피해." />
-    <string id="taom_sb_t1a_p2" text="+2 탄약." />
+    <string id="taom_sb_t1a_p2" text="탄약 +10%." />
     <string id="taom_sb_t1a_p3" text="+7% 이동 속도." />
     <string id="taom_sb_t1a_p4" text="+5% 부대 정찰 범위." />
     <string id="taom_sb_t1b_key" text="화살 폭풍 지속 시간이 연장되어, 끊임없는 우박을 쏟아냅니다." />
@@ -952,7 +952,7 @@
     <string id="taom_sb_t1b_p3" text="+3% 부대 피해." />
     <string id="taom_sb_t1b_p4" text="+5% 전투 명성 획득." />
     <string id="taom_sb_t2a_key" text="화살 폭풍 충전 시간이 감소하여, 끝없는 화살통을 제공합니다." />
-    <string id="taom_sb_t2a_p1" text="+4 탄약." />
+    <string id="taom_sb_t2a_p1" text="탄약 +13%." />
     <string id="taom_sb_t2a_p2" text="+10% 원거리 피해." />
     <string id="taom_sb_t2a_p3" text="+10% 이동 속도." />
     <string id="taom_sb_t2a_p4" text="+10% 부대 정찰 범위." />
@@ -963,7 +963,7 @@
     <string id="taom_sb_t2b_p4" text="+10% 전투 명성 획득." />
     <string id="taom_sb_t3a_key" text="화살 폭풍의 반경이 크게 확장되어 피할 수 없는 비가 됩니다." />
     <string id="taom_sb_t3a_p1" text="+15% 원거리 피해." />
-    <string id="taom_sb_t3a_p2" text="+6 탄약." />
+    <string id="taom_sb_t3a_p2" text="탄약 +15%." />
     <string id="taom_sb_t3a_p3" text="+15% 전투 명성 획득." />
     <string id="taom_sb_t3a_p4" text="+15% 부대 정찰 범위." />
     <string id="taom_sb_t3b_key" text="화살 폭풍의 충전 시간이 크게 감소하여 끊임없는 일제사격이 가능합니다." />
@@ -971,34 +971,34 @@
     <string id="taom_sb_t3b_p2" text="+9 최대 체력." />
     <string id="taom_sb_t3b_p3" text="+7% 병력 피해." />
     <string id="taom_sb_t3b_p4" text="+5 부대 규모." />
-    <string id="taom_chariot_warlord_root_desc" text="낫 돌격은 +5% 말 돌격 피해를 부여하고 기마 전사들에게 영감을 줍니다." />
+    <string id="taom_chariot_warlord_root_desc" text="낫 돌격은 기마 돌격 피해 +10%를 부여하고 기마 전사들을 고무합니다." />
     <string id="taom_cw_t1a_key" text="낫 돌격의 반경이 확장되어 칼날이 더 넓게 베어냅니다." />
-    <string id="taom_cw_t1a_p1" text="+7% 말 돌격 피해." />
+    <string id="taom_cw_t1a_p1" text="기마 돌격 피해 +10%." />
     <string id="taom_cw_t1a_p2" text="+8% 근접 피해." />
     <string id="taom_cw_t1a_p3" text="+3% 병력 피해." />
     <string id="taom_cw_t1a_p4" text="+5% 부대 이동 속도." />
     <string id="taom_cw_t1b_key" text="낫 돌격의 지속 시간이 연장되어 기세가 유지됩니다." />
-    <string id="taom_cw_t1b_p1" text="+30 말 체력." />
+    <string id="taom_cw_t1b_p1" text="말 체력 +10%." />
     <string id="taom_cw_t1b_p2" text="+5 최대 체력." />
     <string id="taom_cw_t1b_p3" text="+5% 병력 사기." />
     <string id="taom_cw_t1b_p4" text="+5% 전투 명성 획득." />
     <string id="taom_cw_t2a_key" text="낫 돌격의 충전 시간이 감소하여 수레바퀴가 멈추지 않습니다." />
-    <string id="taom_cw_t2a_p1" text="+12% 말 돌격 피해." />
+    <string id="taom_cw_t2a_p1" text="기마 돌격 피해 +13%." />
     <string id="taom_cw_t2a_p2" text="+10% 부대 이동 속도." />
     <string id="taom_cw_t2a_p3" text="+10% 병력 사기." />
     <string id="taom_cw_t2a_p4" text="+3 부대 규모." />
     <string id="taom_cw_t2b_key" text="낫 돌격이 돌격 중 탈것의 회복력을 강화합니다." />
     <string id="taom_cw_t2b_p1" text="+10% 근접 피해." />
-    <string id="taom_cw_t2b_p2" text="+60 말 체력." />
+    <string id="taom_cw_t2b_p2" text="말 체력 +13%." />
     <string id="taom_cw_t2b_p3" text="+6% 병력 피해." />
     <string id="taom_cw_t2b_p4" text="+10% 전투 명성 획득." />
     <string id="taom_cw_t3a_key" text="낫 돌격의 반경이 크게 확장되어 막을 수 없는 광역 휩쓸기가 됩니다." />
-    <string id="taom_cw_t3a_p1" text="+18% 말 돌격 피해." />
+    <string id="taom_cw_t3a_p1" text="기마 돌격 피해 +15%." />
     <string id="taom_cw_t3a_p2" text="+15% 근접 피해." />
     <string id="taom_cw_t3a_p3" text="+7% 병력 피해." />
     <string id="taom_cw_t3a_p4" text="+15% 전투 명성 획득." />
     <string id="taom_cw_t3b_key" text="낫 돌격의 충전 시간이 크게 감소하여 수레바퀴가 쉼없이 갈아댑니다." />
-    <string id="taom_cw_t3b_p1" text="+100 말 체력." />
+    <string id="taom_cw_t3b_p1" text="말 체력 +15%." />
     <string id="taom_cw_t3b_p2" text="+15% 부대 이동 속도." />
     <string id="taom_cw_t3b_p3" text="+20% 병력 사기." />
     <string id="taom_cw_t3b_p4" text="+5 부대 규모." />
@@ -1036,7 +1036,7 @@
     <string id="taom_pezarsani_javelineer_root_desc" text="태양불 일제사격은 +5% 원거리 피해를 부여하고 투창 투척을 빠르게 합니다." />
     <string id="taom_pj_t1a_key" text="태양불 일제사격 범위 증가, 투창이 더 넓은 지역을 덮습니다." />
     <string id="taom_pj_t1a_p1" text="+8% 원거리 피해." />
-    <string id="taom_pj_t1a_p2" text="+2 탄약." />
+    <string id="taom_pj_t1a_p2" text="탄약 +10%." />
     <string id="taom_pj_t1a_p3" text="+7% 이동 속도." />
     <string id="taom_pj_t1a_p4" text="+5% 전투 명성 획득." />
     <string id="taom_pj_t1b_key" text="태양불 일제사격 지속시간 연장, 지속적인 견제 사격." />
@@ -1045,7 +1045,7 @@
     <string id="taom_pj_t1b_p3" text="부대 피해량 +3%." />
     <string id="taom_pj_t1b_p4" text="부대 탐지 범위 +5%." />
     <string id="taom_pj_t2a_key" text="태양불꽃 일제사격 충전 시간 감소, 투창이 바닥나지 않음." />
-    <string id="taom_pj_t2a_p1" text="탄약 +4." />
+    <string id="taom_pj_t2a_p1" text="탄약 +13%." />
     <string id="taom_pj_t2a_p2" text="원거리 피해량 +10%." />
     <string id="taom_pj_t2a_p3" text="이동 속도 +10%." />
     <string id="taom_pj_t2a_p4" text="전투 명성 획득량 +10%." />
@@ -1056,7 +1056,7 @@
     <string id="taom_pj_t2b_p4" text="부대 탐지 범위 +10%." />
     <string id="taom_pj_t3a_key" text="태양불꽃 일제사격 범위 대폭 확대, 피할 수 없는 탄막." />
     <string id="taom_pj_t3a_p1" text="원거리 피해량 +15%." />
-    <string id="taom_pj_t3a_p2" text="탄약 +6." />
+    <string id="taom_pj_t3a_p2" text="탄약 +15%." />
     <string id="taom_pj_t3a_p3" text="전투 명성 획득량 +15%." />
     <string id="taom_pj_t3a_p4" text="이동 속도 +15%." />
     <string id="taom_pj_t3b_key" text="태양불꽃 일제사격 충전 시간 대폭 감소, 끊임없는 괴롭힘." />
@@ -1064,34 +1064,34 @@
     <string id="taom_pj_t3b_p2" text="최대 체력 +9." />
     <string id="taom_pj_t3b_p3" text="부대 피해량 +7%." />
     <string id="taom_pj_t3b_p4" text="부대 탐지 범위 +15%." />
-    <string id="taom_mahud_beast_rider_root_desc" text="무마킬의 메아리가 기병 돌격 피해량 +5%를 부여하고 공포를 확산시킴." />
+    <string id="taom_mahud_beast_rider_root_desc" text="무마칸의 메아리는 기마 돌격 피해 +10%를 부여하고 공포를 퍼뜨립니다." />
     <string id="taom_mbr_t1a_key" text="무마킬의 메아리 범위 확대, 공포가 더 멀리 퍼짐." />
-    <string id="taom_mbr_t1a_p1" text="기병 돌격 피해량 +7%." />
+    <string id="taom_mbr_t1a_p1" text="기마 돌격 피해 +10%." />
     <string id="taom_mbr_t1a_p2" text="근접 피해량 +8%." />
     <string id="taom_mbr_t1a_p3" text="부대 사기 +5%." />
     <string id="taom_mbr_t1a_p4" text="부대 이동 속도 +5%." />
     <string id="taom_mbr_t1b_key" text="무마킬의 메아리 지속 시간 연장, 공포가 오래 남음." />
-    <string id="taom_mbr_t1b_p1" text="말 체력 +30." />
+    <string id="taom_mbr_t1b_p1" text="말 체력 +10%." />
     <string id="taom_mbr_t1b_p2" text="부대 피해량 +3%." />
     <string id="taom_mbr_t1b_p3" text="전투 명성 획득량 +5%." />
     <string id="taom_mbr_t1b_p4" text="저항력 +5%." />
     <string id="taom_mbr_t2a_key" text="무마킬의 메아리 충전 시간 감소, 공포가 항상 임박함." />
-    <string id="taom_mbr_t2a_p1" text="기병 돌격 피해량 +12%." />
+    <string id="taom_mbr_t2a_p1" text="기마 돌격 피해 +13%." />
     <string id="taom_mbr_t2a_p2" text="부대 사기 +10%." />
     <string id="taom_mbr_t2a_p3" text="부대 피해량 +5%." />
     <string id="taom_mbr_t2a_p4" text="전투 명성 획득량 +10%." />
     <string id="taom_mbr_t2b_key" text="무마킬의 메아리가 돌격 중 야수의 회복력 증가." />
     <string id="taom_mbr_t2b_p1" text="+12% 근접 피해." />
-    <string id="taom_mbr_t2b_p2" text="+60 말 체력." />
+    <string id="taom_mbr_t2b_p2" text="말 체력 +13%." />
     <string id="taom_mbr_t2b_p3" text="+10% 부대 이동 속도." />
     <string id="taom_mbr_t2b_p4" text="+3 부대 규모." />
     <string id="taom_mbr_t3a_key" text="무마칸의 메아리 범위가 크게 확대되어, 대지 그 자체가 흔들린다." />
-    <string id="taom_mbr_t3a_p1" text="+18% 말 돌격 피해." />
+    <string id="taom_mbr_t3a_p1" text="기마 돌격 피해 +15%." />
     <string id="taom_mbr_t3a_p2" text="+15% 근접 피해." />
     <string id="taom_mbr_t3a_p3" text="+20% 병력 사기." />
     <string id="taom_mbr_t3a_p4" text="+15% 전투 명성 획득." />
     <string id="taom_mbr_t3b_key" text="무마칸의 메아리 충전이 크게 감소하여, 끝없는 공포를 선사한다." />
-    <string id="taom_mbr_t3b_p1" text="+100 말 체력." />
+    <string id="taom_mbr_t3b_p1" text="말 체력 +15%." />
     <string id="taom_mbr_t3b_p2" text="+15% 부대 이동 속도." />
     <string id="taom_mbr_t3b_p3" text="+7% 병력 피해." />
     <string id="taom_mbr_t3b_p4" text="+9 최대 체력." />
@@ -1102,14 +1102,14 @@
     <string id="taom_fhh_t1a_p3" text="+8% 근접 피해." />
     <string id="taom_fhh_t1a_p4" text="+5% 병력 사기." />
     <string id="taom_fhh_t1b_key" text="사악한 잔혹성 지속 시간이 연장되어, 트롤의 분노가 더 오래 지속된다." />
-    <string id="taom_fhh_t1b_p1" text="+8% 병력 저항력." />
+    <string id="taom_fhh_t1b_p1" text="병사 저항력 +10%." />
     <string id="taom_fhh_t1b_p2" text="+3% 병력 피해." />
     <string id="taom_fhh_t1b_p3" text="+5% 전투 명성 획득." />
     <string id="taom_fhh_t1b_p4" text="+5 최대 체력." />
     <string id="taom_fhh_t2a_key" text="사악한 잔혹성 충전이 감소하여, 분노가 더 빨리 점화된다." />
     <string id="taom_fhh_t2a_p1" text="+12% 저항력." />
     <string id="taom_fhh_t2a_p2" text="+8 최대 체력." />
-    <string id="taom_fhh_t2a_p3" text="+12% 병력 저항력." />
+    <string id="taom_fhh_t2a_p3" text="병사 저항력 +13%." />
     <string id="taom_fhh_t2a_p4" text="+10% 병력 사기." />
     <string id="taom_fhh_t2b_key" text="사악한 잔혹성이 반트롤을 훨씬 더 무시무시하게 만든다." />
     <string id="taom_fhh_t2b_p1" text="+8 최대 체력." />
@@ -1129,16 +1129,16 @@
     <string id="taom_cl_root_desc" text="방패벽이 +5% 저항력을 부여하며 당신의 대형은 모든 역경에도 굳건히 버틴다." />
     <string id="taom_cl_t1_a_key" text="방패벽 반경이 확장되어 더 넓은 대형을 보호한다." />
     <string id="taom_cl_t1_a_p1" text="+8% 저항력." />
-    <string id="taom_cl_t1_a_p2" text="+5% 부대 저항력." />
+    <string id="taom_cl_t1_a_p2" text="병사 저항력 +10%." />
     <string id="taom_cl_t1_a_p3" text="+6 최대 체력." />
     <string id="taom_cl_t1_a_p4" text="+5% 부대 사기." />
     <string id="taom_cl_t1_b_key" text="방패벽 지속시간이 연장되어 가장 긴 공격도 견뎌낸다." />
     <string id="taom_cl_t1_b_p1" text="+8% 근접 피해." />
     <string id="taom_cl_t1_b_p2" text="+5 최대 체력." />
-    <string id="taom_cl_t1_b_p3" text="+5% 부대 저항력." />
+    <string id="taom_cl_t1_b_p3" text="병사 저항력 +10%." />
     <string id="taom_cl_t1_b_p4" text="+7% 휘두르기 속도." />
     <string id="taom_cl_t2_a_key" text="방패벽 충전이 감소하여 방벽을 더 자주 집결시킨다." />
-    <string id="taom_cl_t2_a_p1" text="+10% 부대 저항력." />
+    <string id="taom_cl_t2_a_p1" text="병사 저항력 +13%." />
     <string id="taom_cl_t2_a_p2" text="+2 부대 규모." />
     <string id="taom_cl_t2_a_p3" text="+10% 저항력." />
     <string id="taom_cl_t2_a_p4" text="-10% 부대 급료." />
@@ -1188,11 +1188,11 @@
     <string id="taom_ldm_t3_b_p2" text="+15% 원거리 피해량." />
     <string id="taom_ldm_t3_b_p3" text="+9 최대 체력." />
     <string id="taom_ldm_t3_b_p4" text="+10% 부대 정찰 범위." />
-    <string id="taom_bk_root_desc" text="불굴은 +5% 말 돌격 피해량을 부여하며, 당신의 전단은 무자비하게 질주한다." />
+    <string id="taom_bk_root_desc" text="불굴은 당신의 전사단이 자비 없이 질주할 때 기마 돌격 피해 +10%를 부여합니다." />
     <string id="taom_bk_t1_a_key" text="불굴 범위 확대, 더 넓은 기병의 물결을 결집시킨다." />
-    <string id="taom_bk_t1_a_p1" text="+8% 말 돌격 피해량." />
+    <string id="taom_bk_t1_a_p1" text="기마 돌격 피해 +10%." />
     <string id="taom_bk_t1_a_p2" text="+5% 병력 사기." />
-    <string id="taom_bk_t1_a_p3" text="+30 말 체력." />
+    <string id="taom_bk_t1_a_p3" text="말 체력 +10%." />
     <string id="taom_bk_t1_a_p4" text="+5% 근접 피해량." />
     <string id="taom_bk_t1_b_key" text="불굴 지속시간 연장, 두려움 없는 돌격을 지속한다." />
     <string id="taom_bk_t1_b_p1" text="+7% 저항력." />
@@ -1205,13 +1205,13 @@
     <string id="taom_bk_t2_a_p3" text="전투 명성 획득 +10%." />
     <string id="taom_bk_t2_a_p4" text="병력 급료 -10%." />
     <string id="taom_bk_t2_b_key" text="불굴은 돌격 중 기마를 강화합니다." />
-    <string id="taom_bk_t2_b_p1" text="말 돌격 피해 +12%." />
-    <string id="taom_bk_t2_b_p2" text="말 체력 +60." />
+    <string id="taom_bk_t2_b_p1" text="기마 돌격 피해 +13%." />
+    <string id="taom_bk_t2_b_p2" text="말 체력 +13%." />
     <string id="taom_bk_t2_b_p3" text="저항력 +10%." />
     <string id="taom_bk_t2_b_p4" text="병력 사기 +10%." />
     <string id="taom_bk_t3_a_key" text="불굴의 범위가 크게 확장되어, 질주는 막을 수 없게 됩니다." />
-    <string id="taom_bk_t3_a_p1" text="말 돌격 피해 +18%." />
-    <string id="taom_bk_t3_a_p2" text="말 체력 +100." />
+    <string id="taom_bk_t3_a_p1" text="기마 돌격 피해 +15%." />
+    <string id="taom_bk_t3_a_p2" text="말 체력 +15%." />
     <string id="taom_bk_t3_a_p3" text="병력 사기 +15%." />
     <string id="taom_bk_t3_a_p4" text="부대 규모 +4." />
     <string id="taom_bk_t3_b_key" text="불굴의 충전이 크게 감소하여, 항상 존재하고 끈질기게 유지됩니다." />
@@ -1228,7 +1228,7 @@
     <string id="taom_dg2_t1_b_key" text="성문 사수의 지속 시간이 연장되어 방어를 강화합니다." />
     <string id="taom_dg2_t1_b_p1" text="저항력 +8%." />
     <string id="taom_dg2_t1_b_p2" text="병력 사기 +5%." />
-    <string id="taom_dg2_t1_b_p3" text="병력 저항력 +5%." />
+    <string id="taom_dg2_t1_b_p3" text="병사 저항력 +10%." />
     <string id="taom_dg2_t1_b_p4" text="병사 생존율 +5%." />
     <string id="taom_dg2_t2_a_key" text="성문 사수의 충전이 감소하여 더 자주 발동됩니다." />
     <string id="taom_dg2_t2_a_p1" text="병력 사기 +10%." />
@@ -1238,7 +1238,7 @@
     <string id="taom_dg2_t2_b_key" text="성문 사수가 활성화 중 추가 방어 효과를 부여합니다." />
     <string id="taom_dg2_t2_b_p1" text="저항력 +12%." />
     <string id="taom_dg2_t2_b_p2" text="최대 체력 +8." />
-    <string id="taom_dg2_t2_b_p3" text="병력 저항력 +10%." />
+    <string id="taom_dg2_t2_b_p3" text="병사 저항력 +13%." />
     <string id="taom_dg2_t2_b_p4" text="병력 피해 +5%." />
     <string id="taom_dg2_t3_a_key" text="성문 사수의 범위가 크게 확장되어 파괴적인 힘을 발휘합니다." />
     <string id="taom_dg2_t3_a_p1" text="근접 피해량 +15%." />
@@ -1247,7 +1247,7 @@
     <string id="taom_dg2_t3_a_p4" text="부대 규모 +4." />
     <string id="taom_dg2_t3_b_key" text="문 수호 충전 시간이 크게 감소하여 거의 항상 사용 가능." />
     <string id="taom_dg2_t3_b_p1" text="저항력 +18%." />
-    <string id="taom_dg2_t3_b_p2" text="체력 재생 +15%." />
+    <string id="taom_dg2_t3_b_p2" text="영웅 체력 재생 +15%." />
     <string id="taom_dg2_t3_b_p3" text="부대 사기 +20%." />
     <string id="taom_dg2_t3_b_p4" text="병사 생존율 +15%." />
     <string id="taom_dale_marksman_root_desc" text="검은 화살은 활잡이 바르드를 기리며 원거리 피해 +5%를 부여합니다." />
@@ -1260,11 +1260,11 @@
     <string id="taom_dm_t1_b_p1" text="저항력 +5%." />
     <string id="taom_dm_t1_b_p2" text="최대 체력 +5." />
     <string id="taom_dm_t1_b_p3" text="부대 정찰 범위 +5%." />
-    <string id="taom_dm_t1_b_p4" text="은신 보너스 +5%." />
+    <string id="taom_dm_t1_b_p4" text="은신 보너스 +10%." />
     <string id="taom_dm_t2_a_key" text="검은 화살의 충전 시간이 감소하여 지속적인 압박 유지." />
     <string id="taom_dm_t2_a_p1" text="부대 정찰 범위 +10%." />
     <string id="taom_dm_t2_a_p2" text="이동 속도 +10%." />
-    <string id="taom_dm_t2_a_p3" text="은신 보너스 +10%." />
+    <string id="taom_dm_t2_a_p3" text="은신 보너스 +13%." />
     <string id="taom_dm_t2_a_p4" text="전투 명성 획득 +10%." />
     <string id="taom_dm_t2_b_key" text="검은 화살이 활성화 중일 때 추가 관통력 획득." />
     <string id="taom_dm_t2_b_p1" text="원거리 피해량 +12%." />
@@ -1284,11 +1284,11 @@
     <string id="taom_dale_outrider_root_desc" text="무역로 질주는 근접 피해를 +5% 증가시키고 말의 속도를 높입니다." />
     <string id="taom_dor_t1_a_key" text="무역로 질주 범위 확장, 더 넓은 진형을 포괄합니다." />
     <string id="taom_dor_t1_a_p1" text="+8% 근접 피해." />
-    <string id="taom_dor_t1_a_p2" text="+7% 말 돌격 피해." />
+    <string id="taom_dor_t1_a_p2" text="기마 돌격 피해 +10%." />
     <string id="taom_dor_t1_a_p3" text="+7% 휘두르기 속도." />
     <string id="taom_dor_t1_a_p4" text="+5% 부대 이동 속도." />
     <string id="taom_dor_t1_b_key" text="무역로 질주 지속시간 연장, 기세를 유지합니다." />
-    <string id="taom_dor_t1_b_p1" text="+30 말 체력." />
+    <string id="taom_dor_t1_b_p1" text="말 체력 +10%." />
     <string id="taom_dor_t1_b_p2" text="+5 최대 체력." />
     <string id="taom_dor_t1_b_p3" text="-5% 병력 임금." />
     <string id="taom_dor_t1_b_p4" text="+5% 저항력." />
@@ -1299,16 +1299,16 @@
     <string id="taom_dor_t2_a_p4" text="+10% 전투 명성 획득." />
     <string id="taom_dor_t2_b_key" text="무역로 질주가 활성화 중 탈것의 회복력을 높입니다." />
     <string id="taom_dor_t2_b_p1" text="+12% 근접 피해." />
-    <string id="taom_dor_t2_b_p2" text="+12% 말 돌격 피해." />
-    <string id="taom_dor_t2_b_p3" text="+60 말 체력." />
+    <string id="taom_dor_t2_b_p2" text="기마 돌격 피해 +13%." />
+    <string id="taom_dor_t2_b_p3" text="말 체력 +13%." />
     <string id="taom_dor_t2_b_p4" text="+10% 휘두르기 속도." />
     <string id="taom_dor_t3_a_key" text="무역로 질주 범위 대폭 확장, 저지할 수 없는 충격." />
     <string id="taom_dor_t3_a_p1" text="+18% 근접 피해." />
-    <string id="taom_dor_t3_a_p2" text="+18% 말 돌격 피해." />
+    <string id="taom_dor_t3_a_p2" text="기마 돌격 피해 +15%." />
     <string id="taom_dor_t3_a_p3" text="+15% 휘두르기 속도." />
     <string id="taom_dor_t3_a_p4" text="+7% 병력 피해." />
     <string id="taom_dor_t3_b_key" text="무역로 질주 충전 대폭 감소, 쉬지 않고 달립니다." />
-    <string id="taom_dor_t3_b_p1" text="+100 말 체력." />
+    <string id="taom_dor_t3_b_p1" text="말 체력 +15%." />
     <string id="taom_dor_t3_b_p2" text="-15% 병력 임금." />
     <string id="taom_dor_t3_b_p3" text="+15% 부대 이동 속도." />
     <string id="taom_dor_t3_b_p4" text="+9 최대 체력." />
@@ -1321,7 +1321,7 @@
     <string id="taom_ig_t1_b_key" text="미스릴 요새 지속시간 연장, 방어를 강화합니다." />
     <string id="taom_ig_t1_b_p1" text="+8% 저항력." />
     <string id="taom_ig_t1_b_p2" text="+5% 병력 사기." />
-    <string id="taom_ig_t1_b_p3" text="+5% 병력 저항력." />
+    <string id="taom_ig_t1_b_p3" text="병사 저항력 +10%." />
     <string id="taom_ig_t1_b_p4" text="병사 생존율 +5%." />
     <string id="taom_ig_t2_a_key" text="미스릴 방벽 충전 시간 감소, 더 자주 발동." />
     <string id="taom_ig_t2_a_p1" text="+10% 병력 사기." />
@@ -1331,7 +1331,7 @@
     <string id="taom_ig_t2_b_key" text="미스릴 방벽 활성화 시 추가 방어 버프 부여." />
     <string id="taom_ig_t2_b_p1" text="+12% 저항력." />
     <string id="taom_ig_t2_b_p2" text="+8 최대 생명력." />
-    <string id="taom_ig_t2_b_p3" text="+10% 병력 저항력." />
+    <string id="taom_ig_t2_b_p3" text="병사 저항력 +13%." />
     <string id="taom_ig_t2_b_p4" text="+5% 병력 피해량." />
     <string id="taom_ig_t3_a_key" text="미스릴 방벽 범위 대폭 확장, 압도적인 위력." />
     <string id="taom_ig_t3_a_p1" text="+15% 근접 피해량." />
@@ -1340,7 +1340,7 @@
     <string id="taom_ig_t3_a_p4" text="+4 부대 규모." />
     <string id="taom_ig_t3_b_key" text="미스릴 방벽 충전 시간 대폭 감소, 거의 항상 사용 가능." />
     <string id="taom_ig_t3_b_p1" text="+18% 저항력." />
-    <string id="taom_ig_t3_b_p2" text="+15% 생명력 재생." />
+    <string id="taom_ig_t3_b_p2" text="영웅 체력 재생 +15%." />
     <string id="taom_ig_t3_b_p3" text="+20% 병력 사기." />
     <string id="taom_ig_t3_b_p4" text="병사 생존율 +15%." />
     <string id="taom_crossbow_master_root_desc" text="정밀 사격이 명작 볼트로 +5% 원거리 피해량 부여." />
@@ -1353,11 +1353,11 @@
     <string id="taom_cbm_t1_b_p1" text="+5% 저항력." />
     <string id="taom_cbm_t1_b_p2" text="+5 최대 생명력." />
     <string id="taom_cbm_t1_b_p3" text="+5% 부대 정찰 범위." />
-    <string id="taom_cbm_t1_b_p4" text="+5% 은신 보너스." />
+    <string id="taom_cbm_t1_b_p4" text="은신 보너스 +10%." />
     <string id="taom_cbm_t2_a_key" text="정밀 사격 충전 시간 감소, 지속적인 압박 유지." />
     <string id="taom_cbm_t2_a_p1" text="+10% 부대 정찰 범위." />
     <string id="taom_cbm_t2_a_p2" text="+10% 이동 속도." />
-    <string id="taom_cbm_t2_a_p3" text="+10% 은신 보너스." />
+    <string id="taom_cbm_t2_a_p3" text="은신 보너스 +13%." />
     <string id="taom_cbm_t2_a_p4" text="+10% 전투 명성 획득." />
     <string id="taom_cbm_t2_b_key" text="정밀 사격 활성화 시 추가 관통력 획득." />
     <string id="taom_cbm_t2_b_p1" text="+12% 원거리 피해량." />
@@ -1377,11 +1377,11 @@
     <string id="taom_ram_rider_root_desc" text="산양 돌격이 +5% 근접 피해량 부여, 양이 뿔을 낮춘다." />
     <string id="taom_rr_t1_a_key" text="산양 돌격 범위 확대, 더 넓은 진형을 휩쓴다." />
     <string id="taom_rr_t1_a_p1" text="+8% 근접 피해량." />
-    <string id="taom_rr_t1_a_p2" text="+7% 기마 돌격 피해량." />
+    <string id="taom_rr_t1_a_p2" text="기마 돌격 피해 +10%." />
     <string id="taom_rr_t1_a_p3" text="+7% 휘두르기 속도." />
     <string id="taom_rr_t1_a_p4" text="+5% 부대 이동 속도." />
     <string id="taom_rr_t1_b_key" text="산양 돌격 지속 시간 연장, 추진력 유지." />
-    <string id="taom_rr_t1_b_p1" text="+30 말 체력." />
+    <string id="taom_rr_t1_b_p1" text="말 체력 +10%." />
     <string id="taom_rr_t1_b_p2" text="+5 최대 체력." />
     <string id="taom_rr_t1_b_p3" text="-5% 부대 급료." />
     <string id="taom_rr_t1_b_p4" text="+5% 저항력." />
@@ -1392,16 +1392,16 @@
     <string id="taom_rr_t2_a_p4" text="+10% 전투 명성 획득량." />
     <string id="taom_rr_t2_b_key" text="산양 돌격 활성화 시 탈것 회복력 증가." />
     <string id="taom_rr_t2_b_p1" text="+12% 근접 피해량." />
-    <string id="taom_rr_t2_b_p2" text="+12% 기마 돌격 피해량." />
-    <string id="taom_rr_t2_b_p3" text="+60 말 체력." />
+    <string id="taom_rr_t2_b_p2" text="기마 돌격 피해 +13%." />
+    <string id="taom_rr_t2_b_p3" text="말 체력 +13%." />
     <string id="taom_rr_t2_b_p4" text="+10% 휘두르기 속도." />
     <string id="taom_rr_t3_a_key" text="산양 돌격 범위 크게 확대, 막을 수 없는 충격." />
     <string id="taom_rr_t3_a_p1" text="+18% 근접 피해량." />
-    <string id="taom_rr_t3_a_p2" text="+18% 기마 돌격 피해량." />
+    <string id="taom_rr_t3_a_p2" text="기마 돌격 피해 +15%." />
     <string id="taom_rr_t3_a_p3" text="+15% 휘두르기 속도." />
     <string id="taom_rr_t3_a_p4" text="+7% 부대 피해량." />
     <string id="taom_rr_t3_b_key" text="산양 돌격 충전 시간 크게 감소, 쉬지 않고 달린다." />
-    <string id="taom_rr_t3_b_p1" text="+100 말 체력." />
+    <string id="taom_rr_t3_b_p1" text="말 체력 +15%." />
     <string id="taom_rr_t3_b_p2" text="-15% 병력 급여." />
     <string id="taom_rr_t3_b_p3" text="+15% 부대 이동 속도." />
     <string id="taom_rr_t3_b_p4" text="+9 최대 체력." />
@@ -1414,7 +1414,7 @@
     <string id="taom_bd_t1_b_key" text="별빛 직조 지속 시간이 연장되어 방어를 강화합니다." />
     <string id="taom_bd_t1_b_p1" text="+8% 저항력." />
     <string id="taom_bd_t1_b_p2" text="+5% 병력 사기." />
-    <string id="taom_bd_t1_b_p3" text="+5% 병력 저항력." />
+    <string id="taom_bd_t1_b_p3" text="병사 저항력 +10%." />
     <string id="taom_bd_t1_b_p4" text="병사 생존율 +5%." />
     <string id="taom_bd_t2_a_key" text="별빛 직조 충전 시간이 감소하여 더 자주 발동됩니다." />
     <string id="taom_bd_t2_a_p1" text="+10% 병력 사기." />
@@ -1424,7 +1424,7 @@
     <string id="taom_bd_t2_b_key" text="별빛 직조가 활성화되는 동안 추가 방어 효과를 부여합니다." />
     <string id="taom_bd_t2_b_p1" text="+12% 저항력." />
     <string id="taom_bd_t2_b_p2" text="+8 최대 체력." />
-    <string id="taom_bd_t2_b_p3" text="+10% 병력 저항력." />
+    <string id="taom_bd_t2_b_p3" text="병사 저항력 +13%." />
     <string id="taom_bd_t2_b_p4" text="+5% 병력 공격력." />
     <string id="taom_bd_t3_a_key" text="별빛 직조 범위가 크게 확장되어 파괴적인 힘을 발휘합니다." />
     <string id="taom_bd_t3_a_p1" text="+15% 근접 공격력." />
@@ -1433,7 +1433,7 @@
     <string id="taom_bd_t3_a_p4" text="+4 부대 규모." />
     <string id="taom_bd_t3_b_key" text="별빛 직조 충전 시간이 크게 감소하여 거의 항상 사용 가능합니다." />
     <string id="taom_bd_t3_b_p1" text="+18% 저항력." />
-    <string id="taom_bd_t3_b_p2" text="+15% 체력 재생." />
+    <string id="taom_bd_t3_b_p2" text="영웅 체력 재생 +15%." />
     <string id="taom_bd_t3_b_p3" text="+20% 병력 사기." />
     <string id="taom_bd_t3_b_p4" text="병사 생존율 +15%." />
     <string id="taom_elven_archer_root_desc" text="엘프의 시야는 수 세기의 연마로 +5% 원거리 공격력을 부여합니다." />
@@ -1446,11 +1446,11 @@
     <string id="taom_elar_t1_b_p1" text="+5% 저항력." />
     <string id="taom_elar_t1_b_p2" text="+5 최대 체력." />
     <string id="taom_elar_t1_b_p3" text="+5% 부대 탐지 범위." />
-    <string id="taom_elar_t1_b_p4" text="+5% 은신 보너스." />
+    <string id="taom_elar_t1_b_p4" text="은신 보너스 +10%." />
     <string id="taom_elar_t2_a_key" text="엘프의 시야 충전시간 감소, 지속적인 압박 유지." />
     <string id="taom_elar_t2_a_p1" text="+10% 부대 탐지 범위." />
     <string id="taom_elar_t2_a_p2" text="+10% 이동 속도." />
-    <string id="taom_elar_t2_a_p3" text="+10% 은신 보너스." />
+    <string id="taom_elar_t2_a_p3" text="은신 보너스 +13%." />
     <string id="taom_elar_t2_a_p4" text="+10% 전투 명성 획득." />
     <string id="taom_elar_t2_b_key" text="엘프의 시야 활성화 중 관통력 추가 획득." />
     <string id="taom_elar_t2_b_p1" text="+12% 원거리 피해." />
@@ -1470,11 +1470,11 @@
     <string id="taom_rivendell_knight_root_desc" text="최후의 동맹은 +5% 근접 피해를 부여하고 아군을 고무시킵니다." />
     <string id="taom_rvk_t1_a_key" text="최후의 동맹 반경 확장, 더 넓은 대형 포괄." />
     <string id="taom_rvk_t1_a_p1" text="+8% 근접 피해." />
-    <string id="taom_rvk_t1_a_p2" text="+7% 기마 돌격 피해." />
+    <string id="taom_rvk_t1_a_p2" text="기마 돌격 피해 +10%." />
     <string id="taom_rvk_t1_a_p3" text="+7% 휘두르기 속도." />
     <string id="taom_rvk_t1_a_p4" text="+5% 부대 이동 속도." />
     <string id="taom_rvk_t1_b_key" text="최후의 동맹 지속시간 증가, 기세 유지." />
-    <string id="taom_rvk_t1_b_p1" text="+30 말 체력." />
+    <string id="taom_rvk_t1_b_p1" text="말 체력 +10%." />
     <string id="taom_rvk_t1_b_p2" text="+5 최대 체력." />
     <string id="taom_rvk_t1_b_p3" text="-5% 병력 유지비." />
     <string id="taom_rvk_t1_b_p4" text="+5% 저항력." />
@@ -1485,16 +1485,16 @@
     <string id="taom_rvk_t2_a_p4" text="+10% 전투 명성 획득." />
     <string id="taom_rvk_t2_b_key" text="최후의 동맹이 활성화되는 동안 탈것의 회복력을 증가시킵니다." />
     <string id="taom_rvk_t2_b_p1" text="+12% 근접 피해." />
-    <string id="taom_rvk_t2_b_p2" text="+12% 말 돌격 피해." />
-    <string id="taom_rvk_t2_b_p3" text="+60 말 체력." />
+    <string id="taom_rvk_t2_b_p2" text="기마 돌격 피해 +13%." />
+    <string id="taom_rvk_t2_b_p3" text="말 체력 +13%." />
     <string id="taom_rvk_t2_b_p4" text="+10% 휘두르기 속도." />
     <string id="taom_rvk_t3_a_key" text="최후의 동맹 범위가 크게 확장되고, 막을 수 없는 충격을 줍니다." />
     <string id="taom_rvk_t3_a_p1" text="+18% 근접 피해." />
-    <string id="taom_rvk_t3_a_p2" text="+18% 말 돌격 피해." />
+    <string id="taom_rvk_t3_a_p2" text="기마 돌격 피해 +15%." />
     <string id="taom_rvk_t3_a_p3" text="+15% 휘두르기 속도." />
     <string id="taom_rvk_t3_a_p4" text="+7% 부대 피해." />
     <string id="taom_rvk_t3_b_key" text="최후의 동맹 충전 시간이 크게 감소하여, 쉬지 않고 달립니다." />
-    <string id="taom_rvk_t3_b_p1" text="+100 말 체력." />
+    <string id="taom_rvk_t3_b_p1" text="말 체력 +15%." />
     <string id="taom_rvk_t3_b_p2" text="-15% 부대 급여." />
     <string id="taom_rvk_t3_b_p3" text="+15% 부대 이동 속도." />
     <string id="taom_rvk_t3_b_p4" text="+9 최대 체력." />
@@ -1507,7 +1507,7 @@
     <string id="taom_wdn_t1_b_key" text="님로델의 축복 지속 시간이 연장되어 방어를 강화합니다." />
     <string id="taom_wdn_t1_b_p1" text="+8% 저항." />
     <string id="taom_wdn_t1_b_p2" text="+5% 부대 사기." />
-    <string id="taom_wdn_t1_b_p3" text="+5% 부대 저항." />
+    <string id="taom_wdn_t1_b_p3" text="병사 저항력 +10%." />
     <string id="taom_wdn_t1_b_p4" text="병사 생존율 +5%." />
     <string id="taom_wdn_t2_a_key" text="님로델의 축복 충전 시간이 감소하여 더 자주 활성화됩니다." />
     <string id="taom_wdn_t2_a_p1" text="+10% 부대 사기." />
@@ -1517,7 +1517,7 @@
     <string id="taom_wdn_t2_b_key" text="님로델의 축복이 활성화되는 동안 추가 방어 효과를 부여합니다." />
     <string id="taom_wdn_t2_b_p1" text="+12% 저항." />
     <string id="taom_wdn_t2_b_p2" text="+8 최대 체력." />
-    <string id="taom_wdn_t2_b_p3" text="+10% 부대 저항." />
+    <string id="taom_wdn_t2_b_p3" text="병사 저항력 +13%." />
     <string id="taom_wdn_t2_b_p4" text="+5% 부대 피해." />
     <string id="taom_wdn_t3_a_key" text="님로델의 축복 범위가 크게 확장되어 파괴적인 힘을 발휘합니다." />
     <string id="taom_wdn_t3_a_p1" text="+15% 근접 피해." />
@@ -1526,7 +1526,7 @@
     <string id="taom_wdn_t3_a_p4" text="부대 규모 +4." />
     <string id="taom_wdn_t3_b_key" text="님로델의 축복 충전량이 크게 감소하여 거의 항상 사용 가능." />
     <string id="taom_wdn_t3_b_p1" text="저항력 +18%." />
-    <string id="taom_wdn_t3_b_p2" text="체력 재생 +15%." />
+    <string id="taom_wdn_t3_b_p2" text="영웅 체력 재생 +15%." />
     <string id="taom_wdn_t3_b_p3" text="부대 사기 +20%." />
     <string id="taom_wdn_t3_b_p4" text="병사 생존율 +15%." />
     <string id="taom_galadhrim_archer_root_desc" text="은빛 비는 원거리 피해량 +5%를 부여하며, 화살촉에는 별빛이 깃든다." />
@@ -1539,11 +1539,11 @@
     <string id="taom_gar_t1_b_p1" text="저항력 +5%." />
     <string id="taom_gar_t1_b_p2" text="최대 체력 +5." />
     <string id="taom_gar_t1_b_p3" text="부대 탐지 범위 +5%." />
-    <string id="taom_gar_t1_b_p4" text="은신 보너스 +5%." />
+    <string id="taom_gar_t1_b_p4" text="은신 보너스 +10%." />
     <string id="taom_gar_t2_a_key" text="은빛 비의 충전량이 감소하여 지속적인 압박 유지." />
     <string id="taom_gar_t2_a_p1" text="부대 탐지 범위 +10%." />
     <string id="taom_gar_t2_a_p2" text="이동 속도 +10%." />
-    <string id="taom_gar_t2_a_p3" text="은신 보너스 +10%." />
+    <string id="taom_gar_t2_a_p3" text="은신 보너스 +13%." />
     <string id="taom_gar_t2_a_p4" text="전투 명성 획득량 +10%." />
     <string id="taom_gar_t2_b_key" text="은빛 비가 활성화 중일 때 추가 관통력 획득." />
     <string id="taom_gar_t2_b_p1" text="원거리 피해량 +12%." />
@@ -1563,11 +1563,11 @@
     <string id="taom_sentinel_root_desc" text="엘라노르의 신속함은 근접 피해량 +5%와 요정의 우아함을 부여한다." />
     <string id="taom_snt_t1_a_key" text="엘라노르 신속함의 범위가 확장되어 더 넓은 진형을 휩쓸게 됩니다." />
     <string id="taom_snt_t1_a_p1" text="근접 피해 +8%" />
-    <string id="taom_snt_t1_a_p2" text="말 돌격 피해 +7%" />
+    <string id="taom_snt_t1_a_p2" text="기마 돌격 피해 +10%." />
     <string id="taom_snt_t1_a_p3" text="휘두르기 속도 +7%" />
     <string id="taom_snt_t1_a_p4" text="부대 이동 속도 +5%" />
     <string id="taom_snt_t1_b_key" text="엘라노르 신속함의 지속시간이 연장되어 기세를 유지합니다." />
-    <string id="taom_snt_t1_b_p1" text="말 체력 +30" />
+    <string id="taom_snt_t1_b_p1" text="말 체력 +10%." />
     <string id="taom_snt_t1_b_p2" text="최대 체력 +5" />
     <string id="taom_snt_t1_b_p3" text="병력 임금 -5%" />
     <string id="taom_snt_t1_b_p4" text="저항력 +5%" />
@@ -1578,16 +1578,16 @@
     <string id="taom_snt_t2_a_p4" text="전투 명성 획득 +10%" />
     <string id="taom_snt_t2_b_key" text="엘라노르 신속함이 활성화되어 있는 동안 탈것의 회복력을 증가시킵니다." />
     <string id="taom_snt_t2_b_p1" text="근접 피해 +12%" />
-    <string id="taom_snt_t2_b_p2" text="말 돌격 피해 +12%" />
-    <string id="taom_snt_t2_b_p3" text="말 체력 +60" />
+    <string id="taom_snt_t2_b_p2" text="말 돌격 피해 +13%." />
+    <string id="taom_snt_t2_b_p3" text="말 체력 +13%." />
     <string id="taom_snt_t2_b_p4" text="휘두르기 속도 +10%" />
     <string id="taom_snt_t3_a_key" text="엘라노르 신속함의 범위가 크게 확장되어 막을 수 없는 충격을 줍니다." />
     <string id="taom_snt_t3_a_p1" text="근접 피해 +18%" />
-    <string id="taom_snt_t3_a_p2" text="말 돌격 피해 +18%" />
+    <string id="taom_snt_t3_a_p2" text="말 돌격 피해 +15%." />
     <string id="taom_snt_t3_a_p3" text="휘두르기 속도 +15%" />
     <string id="taom_snt_t3_a_p4" text="병력 피해 +7%" />
     <string id="taom_snt_t3_b_key" text="엘라노르 신속함의 충전이 크게 감소하여 쉼 없이 달릴 수 있습니다." />
-    <string id="taom_snt_t3_b_p1" text="말 체력 +100" />
+    <string id="taom_snt_t3_b_p1" text="말 체력 +15%." />
     <string id="taom_snt_t3_b_p2" text="병력 임금 -15%" />
     <string id="taom_snt_t3_b_p3" text="부대 이동 속도 +15%" />
     <string id="taom_snt_t3_b_p4" text="최대 체력 +9" />
@@ -1600,7 +1600,7 @@
     <string id="taom_shw_t1_b_key" text="숲의 망토 지속시간이 연장되어 방어력을 강화합니다." />
     <string id="taom_shw_t1_b_p1" text="저항력 +8%" />
     <string id="taom_shw_t1_b_p2" text="병력 사기 +5%" />
-    <string id="taom_shw_t1_b_p3" text="병력 저항력 +5%" />
+    <string id="taom_shw_t1_b_p3" text="병사 저항력 +10%." />
     <string id="taom_shw_t1_b_p4" text="병사 생존율 +5%." />
     <string id="taom_shw_t2_a_key" text="숲의 망토 충전 시간 감소, 더 자주 발동." />
     <string id="taom_shw_t2_a_p1" text="+10% 병력 사기." />
@@ -1610,7 +1610,7 @@
     <string id="taom_shw_t2_b_key" text="숲의 망토 활성화 시 추가 방어 효과 부여." />
     <string id="taom_shw_t2_b_p1" text="+12% 저항력." />
     <string id="taom_shw_t2_b_p2" text="+8 최대 체력." />
-    <string id="taom_shw_t2_b_p3" text="+10% 병력 저항력." />
+    <string id="taom_shw_t2_b_p3" text="병사 저항력 +13%." />
     <string id="taom_shw_t2_b_p4" text="+5% 병력 피해." />
     <string id="taom_shw_t3_a_key" text="숲의 망토 범위 대폭 확장, 파괴적인 위력." />
     <string id="taom_shw_t3_a_p1" text="+15% 근접 피해." />
@@ -1619,7 +1619,7 @@
     <string id="taom_shw_t3_a_p4" text="+4 부대 규모." />
     <string id="taom_shw_t3_b_key" text="숲의 망토 충전 시간 대폭 감소, 거의 항상 사용 가능." />
     <string id="taom_shw_t3_b_p1" text="+18% 저항력." />
-    <string id="taom_shw_t3_b_p2" text="+15% 체력 재생." />
+    <string id="taom_shw_t3_b_p2" text="영웅 체력 재생 +15%." />
     <string id="taom_shw_t3_b_p3" text="+20% 병력 사기." />
     <string id="taom_shw_t3_b_p4" text="병사 생존율 +15%." />
     <string id="taom_silvan_archer_root_desc" text="나무 위 일격은 나뭇가지 위에서 +5% 원거리 피해 부여." />
@@ -1632,11 +1632,11 @@
     <string id="taom_sva_t1_b_p1" text="+5% 저항력." />
     <string id="taom_sva_t1_b_p2" text="+5 최대 체력." />
     <string id="taom_sva_t1_b_p3" text="+5% 부대 정찰 범위." />
-    <string id="taom_sva_t1_b_p4" text="+5% 은신 보너스." />
+    <string id="taom_sva_t1_b_p4" text="은신 보너스 +10%." />
     <string id="taom_sva_t2_a_key" text="나무 위 일격 충전 시간 감소, 지속적인 압박 유지." />
     <string id="taom_sva_t2_a_p1" text="+10% 부대 정찰 범위." />
     <string id="taom_sva_t2_a_p2" text="+10% 이동 속도." />
-    <string id="taom_sva_t2_a_p3" text="+10% 은신 보너스." />
+    <string id="taom_sva_t2_a_p3" text="은신 보너스 +13%." />
     <string id="taom_sva_t2_a_p4" text="+10% 전투 명성 획득." />
     <string id="taom_sva_t2_b_key" text="나무 위 일격 활성화 시 추가 관통력 획득." />
     <string id="taom_sva_t2_b_p1" text="+12% 원거리 피해." />
@@ -1656,11 +1656,11 @@
     <string id="taom_elk_rider_root_desc" text="뿔 돌진은 근접 피해량 +5%를 부여하며, 거대한 엘크가 돌격한다." />
     <string id="taom_elk_t1_a_key" text="뿔 돌진 범위 확장, 더 넓은 대형을 휩쓴다." />
     <string id="taom_elk_t1_a_p1" text="근접 피해량 +8%." />
-    <string id="taom_elk_t1_a_p2" text="기마 돌격 피해량 +7%." />
+    <string id="taom_elk_t1_a_p2" text="말 돌격 피해 +10%." />
     <string id="taom_elk_t1_a_p3" text="휘두르기 속도 +7%." />
     <string id="taom_elk_t1_a_p4" text="부대 이동 속도 +5%." />
     <string id="taom_elk_t1_b_key" text="뿔 돌진 지속시간 연장, 기세를 유지한다." />
-    <string id="taom_elk_t1_b_p1" text="말 체력 +30." />
+    <string id="taom_elk_t1_b_p1" text="말 체력 +10%." />
     <string id="taom_elk_t1_b_p2" text="최대 체력 +5." />
     <string id="taom_elk_t1_b_p3" text="부대 급료 -5%." />
     <string id="taom_elk_t1_b_p4" text="저항력 +5%." />
@@ -1671,16 +1671,16 @@
     <string id="taom_elk_t2_a_p4" text="전투 명성 획득 +10%." />
     <string id="taom_elk_t2_b_key" text="뿔 돌진이 활성화되는 동안 탈것의 회복력을 증가시킨다." />
     <string id="taom_elk_t2_b_p1" text="근접 피해량 +12%." />
-    <string id="taom_elk_t2_b_p2" text="기마 돌격 피해량 +12%." />
-    <string id="taom_elk_t2_b_p3" text="말 체력 +60." />
+    <string id="taom_elk_t2_b_p2" text="말 돌격 피해 +13%." />
+    <string id="taom_elk_t2_b_p3" text="말 체력 +13%." />
     <string id="taom_elk_t2_b_p4" text="휘두르기 속도 +10%." />
     <string id="taom_elk_t3_a_key" text="뿔 돌진 범위 대폭 확장, 막을 수 없는 충격." />
     <string id="taom_elk_t3_a_p1" text="근접 피해량 +18%." />
-    <string id="taom_elk_t3_a_p2" text="기마 돌격 피해량 +18%." />
+    <string id="taom_elk_t3_a_p2" text="말 돌격 피해 +15%." />
     <string id="taom_elk_t3_a_p3" text="휘두르기 속도 +15%." />
     <string id="taom_elk_t3_a_p4" text="부대 피해량 +7%." />
     <string id="taom_elk_t3_b_key" text="뿔 돌진 충전 시간 대폭 감소, 쉼 없이 달린다." />
-    <string id="taom_elk_t3_b_p1" text="말 체력 +100." />
+    <string id="taom_elk_t3_b_p1" text="말 체력 +15%." />
     <string id="taom_elk_t3_b_p2" text="-15% 병력 급여." />
     <string id="taom_elk_t3_b_p3" text="+15% 부대 이동 속도." />
     <string id="taom_elk_t3_b_p4" text="+9 최대 체력." />
@@ -1693,7 +1693,7 @@
     <string id="taom_ub_t1_b_key" text="피의 분노 지속 시간 연장, 방어력을 강화한다." />
     <string id="taom_ub_t1_b_p1" text="+8% 저항력." />
     <string id="taom_ub_t1_b_p2" text="+5% 병력 사기." />
-    <string id="taom_ub_t1_b_p3" text="+5% 병력 저항력." />
+    <string id="taom_ub_t1_b_p3" text="병사 저항력 +10%." />
     <string id="taom_ub_t1_b_p4" text="병사 생존율 +5%." />
     <string id="taom_ub_t2_a_key" text="피의 분노 충전 시간 감소, 더 자주 발동된다." />
     <string id="taom_ub_t2_a_p1" text="+10% 병력 사기." />
@@ -1703,7 +1703,7 @@
     <string id="taom_ub_t2_b_key" text="피의 분노 활성화 시 추가 방어 버프 부여." />
     <string id="taom_ub_t2_b_p1" text="+12% 저항력." />
     <string id="taom_ub_t2_b_p2" text="+8 최대 체력." />
-    <string id="taom_ub_t2_b_p3" text="+10% 병력 저항력." />
+    <string id="taom_ub_t2_b_p3" text="병사 저항력 +13%." />
     <string id="taom_ub_t2_b_p4" text="+5% 병력 피해." />
     <string id="taom_ub_t3_a_key" text="피의 분노 범위 대폭 확장, 파괴적인 힘." />
     <string id="taom_ub_t3_a_p1" text="+15% 근접 피해." />
@@ -1712,7 +1712,7 @@
     <string id="taom_ub_t3_a_p4" text="+4 부대 규모." />
     <string id="taom_ub_t3_b_key" text="피의 분노 충전 시간 대폭 감소, 거의 항상 사용 가능." />
     <string id="taom_ub_t3_b_p1" text="+18% 저항력." />
-    <string id="taom_ub_t3_b_p2" text="+15% 체력 재생." />
+    <string id="taom_ub_t3_b_p2" text="영웅 체력 재생 +15%." />
     <string id="taom_ub_t3_b_p3" text="+20% 병력 사기." />
     <string id="taom_ub_t3_b_p4" text="병사 생존율 +15%." />
     <string id="taom_uruk_crossbow_root_desc" text="철의 비는 오르상크에서 벼려진 화살로 +5% 원거리 피해를 부여한다." />
@@ -1721,91 +1721,91 @@
     <string id="taom_ucb_t1_a_p2" text="+5% 방어구 관통." />
     <string id="taom_ucb_t1_a_p3" text="+7% 이동 속도." />
     <string id="taom_ucb_t1_a_p4" text="+5% 전투 명성 획득." />
-    <string id="taom_ucb_t1_b_key" text="Iron Rain 지속시간 연장, 지속적인 포격." />
+    <string id="taom_ucb_t1_b_key" text="강철의 비 지속 시간 연장, 끊임없는 일제 사격." />
     <string id="taom_ucb_t1_b_p1" text="+5% 저항력." />
     <string id="taom_ucb_t1_b_p2" text="+5 최대 체력." />
     <string id="taom_ucb_t1_b_p3" text="+5% 부대 시야 범위." />
-    <string id="taom_ucb_t1_b_p4" text="+5% 은신 보너스." />
-    <string id="taom_ucb_t2_a_key" text="Iron Rain 재사용 대기시간 감소, 지속적인 압박 유지." />
+    <string id="taom_ucb_t1_b_p4" text="은신 보너스 +10%." />
+    <string id="taom_ucb_t2_a_key" text="강철의 비 충전 감소, 지속적인 압박 유지." />
     <string id="taom_ucb_t2_a_p1" text="+10% 부대 시야 범위." />
     <string id="taom_ucb_t2_a_p2" text="+10% 이동 속도." />
-    <string id="taom_ucb_t2_a_p3" text="+10% 은신 보너스." />
+    <string id="taom_ucb_t2_a_p3" text="은신 보너스 +13%." />
     <string id="taom_ucb_t2_a_p4" text="+10% 전투 명성 획득." />
-    <string id="taom_ucb_t2_b_key" text="Iron Rain 활성화 중 추가 관통력 획득." />
+    <string id="taom_ucb_t2_b_key" text="강철의 비가 활성화된 동안 추가 관통력을 얻습니다." />
     <string id="taom_ucb_t2_b_p1" text="+12% 원거리 피해." />
     <string id="taom_ucb_t2_b_p2" text="+10% 방어구 관통." />
     <string id="taom_ucb_t2_b_p3" text="+8 최대 체력." />
     <string id="taom_ucb_t2_b_p4" text="+3% 병력 피해." />
-    <string id="taom_ucb_t3_a_key" text="Iron Rain 반경 대폭 확장, 피할 수 없는 일제사격." />
+    <string id="taom_ucb_t3_a_key" text="강철의 비 범위 대폭 확장, 피할 수 없는 화살 세례." />
     <string id="taom_ucb_t3_a_p1" text="+18% 원거리 피해." />
     <string id="taom_ucb_t3_a_p2" text="+15% 방어구 관통." />
     <string id="taom_ucb_t3_a_p3" text="+15% 전투 명성 획득." />
     <string id="taom_ucb_t3_a_p4" text="+5% 병력 피해." />
-    <string id="taom_ucb_t3_b_key" text="Iron Rain 재사용 대기시간 대폭 감소, 끊임없는 사격." />
+    <string id="taom_ucb_t3_b_key" text="강철의 비 충전 대폭 감소, 가차 없는 사격." />
     <string id="taom_ucb_t3_b_p1" text="+15% 은신 보너스." />
     <string id="taom_ucb_t3_b_p2" text="+15% 이동 속도." />
     <string id="taom_ucb_t3_b_p3" text="+9 최대 체력." />
     <string id="taom_ucb_t3_b_p4" text="+15% 부대 시야 범위." />
-    <string id="taom_warg_scout_root_desc" text="Pack Howl은 +5% 근접 피해를 부여하고 주변 적에게 공포를 선사합니다." />
-    <string id="taom_wsc_t1_a_key" text="Pack Howl 반경 확장, 더 넓은 대형을 휩쓸음." />
+    <string id="taom_warg_scout_root_desc" text="무리의 울부짖음이 근접 피해량 +5%를 부여하고 인근의 적을 공포에 빠뜨립니다." />
+    <string id="taom_wsc_t1_a_key" text="무리의 울부짖음 범위 확장, 더 넓은 대형을 휩쓸어냅니다." />
     <string id="taom_wsc_t1_a_p1" text="+8% 근접 피해." />
-    <string id="taom_wsc_t1_a_p2" text="+7% 기마 돌격 피해." />
+    <string id="taom_wsc_t1_a_p2" text="말 돌격 피해 +10%." />
     <string id="taom_wsc_t1_a_p3" text="+7% 공격 속도." />
     <string id="taom_wsc_t1_a_p4" text="+5% 부대 이동 속도." />
-    <string id="taom_wsc_t1_b_key" text="Pack Howl 지속시간 연장, 기세 유지." />
-    <string id="taom_wsc_t1_b_p1" text="+30 탈것 체력." />
+    <string id="taom_wsc_t1_b_key" text="무리의 울부짖음 지속 시간 연장, 기세를 유지합니다." />
+    <string id="taom_wsc_t1_b_p1" text="말 체력 +10%." />
     <string id="taom_wsc_t1_b_p2" text="+5 최대 체력." />
     <string id="taom_wsc_t1_b_p3" text="-5% 병력 급료." />
     <string id="taom_wsc_t1_b_p4" text="+5% 저항력." />
-    <string id="taom_wsc_t2_a_key" text="Pack Howl 재사용 대기시간 감소, 더 빠른 활성화." />
+    <string id="taom_wsc_t2_a_key" text="무리의 울부짖음 충전 감소, 더 빠른 발동." />
     <string id="taom_wsc_t2_a_p1" text="+10% 부대 이동 속도." />
     <string id="taom_wsc_t2_a_p2" text="-10% 병력 급료." />
     <string id="taom_wsc_t2_a_p3" text="+10% 병력 사기." />
     <string id="taom_wsc_t2_a_p4" text="+10% 전투 명성 획득." />
     <string id="taom_wsc_t2_b_key" text="무리의 울부짖음이 활성화되는 동안 탈것의 회복력을 증가시킵니다." />
     <string id="taom_wsc_t2_b_p1" text="+12% 근접 피해." />
-    <string id="taom_wsc_t2_b_p2" text="+12% 말 돌격 피해." />
-    <string id="taom_wsc_t2_b_p3" text="+60 말 체력." />
+    <string id="taom_wsc_t2_b_p2" text="말 돌격 피해 +13%." />
+    <string id="taom_wsc_t2_b_p3" text="말 체력 +13%." />
     <string id="taom_wsc_t2_b_p4" text="+10% 휘두르기 속도." />
     <string id="taom_wsc_t3_a_key" text="무리의 울부짖음 범위가 크게 확장되고, 저지할 수 없는 충격을 줍니다." />
     <string id="taom_wsc_t3_a_p1" text="+18% 근접 피해." />
-    <string id="taom_wsc_t3_a_p2" text="+18% 말 돌격 피해." />
+    <string id="taom_wsc_t3_a_p2" text="말 돌격 피해 +15%." />
     <string id="taom_wsc_t3_a_p3" text="+15% 휘두르기 속도." />
     <string id="taom_wsc_t3_a_p4" text="+7% 부대 피해." />
     <string id="taom_wsc_t3_b_key" text="무리의 울부짖음 재사용 대기시간이 크게 감소하여, 쉬지 않고 달립니다." />
-    <string id="taom_wsc_t3_b_p1" text="+100 말 체력." />
+    <string id="taom_wsc_t3_b_p1" text="말 체력 +15%." />
     <string id="taom_wsc_t3_b_p2" text="-15% 부대 급료." />
     <string id="taom_wsc_t3_b_p3" text="+15% 부대 이동 속도." />
     <string id="taom_wsc_t3_b_p4" text="+9 최대 체력." />
     <string id="taom_cave_troll_master_root_desc" text="트롤 광란이 +5 체력을 부여하고 트롤들을 광전사로 만듭니다." />
-    <string id="taom_ctm_t1_a_key" text="트롤 광란 범위가 증가하여, 더 많은 전사들을 강화합니다." />
+    <string id="taom_ctm_t1_a_key" text="군다바드 광전사의 범위가 넓어져 더 많은 전사를 강화합니다." />
     <string id="taom_ctm_t1_a_p1" text="+8% 근접 피해." />
     <string id="taom_ctm_t1_a_p2" text="+3% 부대 피해." />
     <string id="taom_ctm_t1_a_p3" text="+6 최대 체력." />
     <string id="taom_ctm_t1_a_p4" text="+7% 휘두르기 속도." />
-    <string id="taom_ctm_t1_b_key" text="트롤 광란 지속시간이 연장되어, 방어를 강화합니다." />
+    <string id="taom_ctm_t1_b_key" text="군다바드 광전사의 지속 시간이 늘어나 방어를 강화합니다." />
     <string id="taom_ctm_t1_b_p1" text="+8% 저항력." />
     <string id="taom_ctm_t1_b_p2" text="+5% 부대 사기." />
-    <string id="taom_ctm_t1_b_p3" text="+5% 부대 저항력." />
+    <string id="taom_ctm_t1_b_p3" text="병사 저항력 +10%." />
     <string id="taom_ctm_t1_b_p4" text="병사 생존율 +5%." />
-    <string id="taom_ctm_t2_a_key" text="트롤 광란 재사용 대기시간이 감소하여, 더 자주 발동됩니다." />
+    <string id="taom_ctm_t2_a_key" text="군다바드 광전사의 충전 시간이 줄어 더 자주 발동합니다." />
     <string id="taom_ctm_t2_a_p1" text="+10% 부대 사기." />
     <string id="taom_ctm_t2_a_p2" text="+2 부대 규모." />
     <string id="taom_ctm_t2_a_p3" text="+10% 전투 명성 획득." />
     <string id="taom_ctm_t2_a_p4" text="-10% 부대 급료." />
-    <string id="taom_ctm_t2_b_key" text="트롤 광란이 활성화되는 동안 추가 방어 효과를 부여합니다." />
+    <string id="taom_ctm_t2_b_key" text="군다바드 광전사가 발동 중 추가 방어 효과를 부여합니다." />
     <string id="taom_ctm_t2_b_p1" text="+12% 저항력." />
     <string id="taom_ctm_t2_b_p2" text="+8 최대 체력." />
-    <string id="taom_ctm_t2_b_p3" text="+10% 부대 저항력." />
+    <string id="taom_ctm_t2_b_p3" text="병사 저항력 +13%." />
     <string id="taom_ctm_t2_b_p4" text="+5% 부대 피해." />
-    <string id="taom_ctm_t3_a_key" text="트롤 광란 범위가 크게 확장되어, 파괴적인 힘을 발휘합니다." />
+    <string id="taom_ctm_t3_a_key" text="군다바드 광전사의 범위가 크게 확장되어 압도적인 위력을 발휘합니다." />
     <string id="taom_ctm_t3_a_p1" text="+15% 근접 피해." />
     <string id="taom_ctm_t3_a_p2" text="+10 최대 체력." />
     <string id="taom_ctm_t3_a_p3" text="+7% 부대 피해량." />
     <string id="taom_ctm_t3_a_p4" text="+4 부대 규모." />
-    <string id="taom_ctm_t3_b_key" text="트롤 광폭화 충전 시간 대폭 감소, 거의 항상 사용 가능." />
+    <string id="taom_ctm_t3_b_key" text="군다바드 광전사의 충전 시간이 크게 줄어 거의 항상 사용할 수 있습니다." />
     <string id="taom_ctm_t3_b_p1" text="+18% 저항력." />
-    <string id="taom_ctm_t3_b_p2" text="+15% 체력 재생." />
+    <string id="taom_ctm_t3_b_p2" text="영웅 체력 재생 +15%." />
     <string id="taom_ctm_t3_b_p3" text="+20% 부대 사기." />
     <string id="taom_ctm_t3_b_p4" text="병사 생존율 +15%." />
     <string id="taom_goblin_sniper_root_desc" text="독 다트가 동굴 버섯 독소로 +5% 원거리 피해량 부여." />
@@ -1818,11 +1818,11 @@
     <string id="taom_gbs_t1_b_p1" text="+5% 저항력." />
     <string id="taom_gbs_t1_b_p2" text="+5 최대 체력." />
     <string id="taom_gbs_t1_b_p3" text="+5% 부대 정찰 범위." />
-    <string id="taom_gbs_t1_b_p4" text="+5% 은신 보너스." />
+    <string id="taom_gbs_t1_b_p4" text="은신 보너스 +10%." />
     <string id="taom_gbs_t2_a_key" text="독 다트 충전 시간 감소, 지속적인 압박 유지." />
     <string id="taom_gbs_t2_a_p1" text="+10% 부대 정찰 범위." />
     <string id="taom_gbs_t2_a_p2" text="+10% 이동 속도." />
-    <string id="taom_gbs_t2_a_p3" text="+10% 은신 보너스." />
+    <string id="taom_gbs_t2_a_p3" text="은신 보너스 +13%." />
     <string id="taom_gbs_t2_a_p4" text="+10% 전투 명성 획득량." />
     <string id="taom_gbs_t2_b_key" text="독 다트가 활성화 중일 때 추가 관통력 획득." />
     <string id="taom_gbs_t2_b_p1" text="+12% 원거리 피해량." />
@@ -1842,11 +1842,11 @@
     <string id="taom_warg_pack_leader_root_desc" text="우두머리의 울부짖음이 +5% 근접 피해량 부여, 무리가 사냥한다." />
     <string id="taom_wpl_t1_a_key" text="우두머리의 울부짖음 범위 확장, 더 넓은 진형 횡단." />
     <string id="taom_wpl_t1_a_p1" text="근접 피해 +8%." />
-    <string id="taom_wpl_t1_a_p2" text="말 돌격 피해 +7%." />
+    <string id="taom_wpl_t1_a_p2" text="말 돌격 피해 +10%." />
     <string id="taom_wpl_t1_a_p3" text="휘두르기 속도 +7%." />
     <string id="taom_wpl_t1_a_p4" text="부대 이동 속도 +5%." />
     <string id="taom_wpl_t1_b_key" text="알파 하울 지속시간 연장, 기세 유지." />
-    <string id="taom_wpl_t1_b_p1" text="말 체력 +30." />
+    <string id="taom_wpl_t1_b_p1" text="말 체력 +10%." />
     <string id="taom_wpl_t1_b_p2" text="최대 체력 +5." />
     <string id="taom_wpl_t1_b_p3" text="병력 급료 -5%." />
     <string id="taom_wpl_t1_b_p4" text="저항력 +5%." />
@@ -1857,16 +1857,16 @@
     <string id="taom_wpl_t2_a_p4" text="전투 명성 획득 +10%." />
     <string id="taom_wpl_t2_b_key" text="알파 하울 활성 중 탈것 회복력 증가." />
     <string id="taom_wpl_t2_b_p1" text="근접 피해 +12%." />
-    <string id="taom_wpl_t2_b_p2" text="말 돌격 피해 +12%." />
-    <string id="taom_wpl_t2_b_p3" text="말 체력 +60." />
+    <string id="taom_wpl_t2_b_p2" text="말 돌격 피해 +13%." />
+    <string id="taom_wpl_t2_b_p3" text="말 체력 +13%." />
     <string id="taom_wpl_t2_b_p4" text="휘두르기 속도 +10%." />
     <string id="taom_wpl_t3_a_key" text="알파 하울 범위 대폭 확장, 저지 불가능한 충격." />
     <string id="taom_wpl_t3_a_p1" text="근접 피해 +18%." />
-    <string id="taom_wpl_t3_a_p2" text="말 돌격 피해 +18%." />
+    <string id="taom_wpl_t3_a_p2" text="말 돌격 피해 +15%." />
     <string id="taom_wpl_t3_a_p3" text="휘두르기 속도 +15%." />
     <string id="taom_wpl_t3_a_p4" text="병력 피해 +7%." />
     <string id="taom_wpl_t3_b_key" text="알파 하울 충전 시간 대폭 감소, 끊임없는 질주." />
-    <string id="taom_wpl_t3_b_p1" text="말 체력 +100." />
+    <string id="taom_wpl_t3_b_p1" text="말 체력 +15%." />
     <string id="taom_wpl_t3_b_p2" text="병력 급료 -15%." />
     <string id="taom_wpl_t3_b_p3" text="부대 이동 속도 +15%." />
     <string id="taom_wpl_t3_b_p4" text="최대 체력 +9." />
@@ -1879,7 +1879,7 @@
     <string id="taom_swr_t1_b_key" text="영혼 흡수 지속시간 연장, 방어 강화." />
     <string id="taom_swr_t1_b_p1" text="저항력 +8%." />
     <string id="taom_swr_t1_b_p2" text="병력 사기 +5%." />
-    <string id="taom_swr_t1_b_p3" text="병력 저항력 +5%." />
+    <string id="taom_swr_t1_b_p3" text="병사 저항력 +10%." />
     <string id="taom_swr_t1_b_p4" text="병사 생존율 +5%." />
     <string id="taom_swr_t2_a_key" text="영혼 흡수 충전량 감소, 더 자주 발동됩니다." />
     <string id="taom_swr_t2_a_p1" text="병력 사기 +10%." />
@@ -1889,7 +1889,7 @@
     <string id="taom_swr_t2_b_key" text="영혼 흡수 발동 중 추가 방어 효과를 부여합니다." />
     <string id="taom_swr_t2_b_p1" text="저항력 +12%." />
     <string id="taom_swr_t2_b_p2" text="최대 생명력 +8." />
-    <string id="taom_swr_t2_b_p3" text="병력 저항력 +10%." />
+    <string id="taom_swr_t2_b_p3" text="병사 저항력 +13%." />
     <string id="taom_swr_t2_b_p4" text="병력 피해량 +5%." />
     <string id="taom_swr_t3_a_key" text="영혼 흡수 범위 대폭 확장, 파괴적인 위력." />
     <string id="taom_swr_t3_a_p1" text="근접 피해량 +15%." />
@@ -1898,7 +1898,7 @@
     <string id="taom_swr_t3_a_p4" text="부대 규모 +4." />
     <string id="taom_swr_t3_b_key" text="영혼 흡수 충전량 대폭 감소, 거의 항상 사용 가능." />
     <string id="taom_swr_t3_b_p1" text="저항력 +18%." />
-    <string id="taom_swr_t3_b_p2" text="생명력 재생 +15%." />
+    <string id="taom_swr_t3_b_p2" text="영웅 체력 재생 +15%." />
     <string id="taom_swr_t3_b_p3" text="병력 사기 +20%." />
     <string id="taom_swr_t3_b_p4" text="병사 생존율 +15%." />
     <string id="taom_necromancer_acolyte_root_desc" text="암흑 화살이 강령술 에너지로 원거리 피해량 +5%를 부여합니다." />
@@ -1911,11 +1911,11 @@
     <string id="taom_nca_t1_b_p1" text="저항력 +5%." />
     <string id="taom_nca_t1_b_p2" text="최대 생명력 +5." />
     <string id="taom_nca_t1_b_p3" text="부대 정찰 범위 +5%." />
-    <string id="taom_nca_t1_b_p4" text="은신 보너스 +5%." />
+    <string id="taom_nca_t1_b_p4" text="은신 보너스 +10%." />
     <string id="taom_nca_t2_a_key" text="암흑 화살 충전량 감소, 지속적인 압박 유지." />
     <string id="taom_nca_t2_a_p1" text="부대 정찰 범위 +10%." />
     <string id="taom_nca_t2_a_p2" text="이동 속도 +10%." />
-    <string id="taom_nca_t2_a_p3" text="은신 보너스 +10%." />
+    <string id="taom_nca_t2_a_p3" text="은신 보너스 +13%." />
     <string id="taom_nca_t2_a_p4" text="전투 명성 획득 +10%." />
     <string id="taom_nca_t2_b_key" text="암흑 화살 발동 중 추가 관통력을 획득합니다." />
     <string id="taom_nca_t2_b_p1" text="원거리 피해량 +12%." />
@@ -1935,11 +1935,11 @@
     <string id="taom_fell_rider_root_desc" text="공포의 돌격이 근접 피해량 +5%를 부여하며, 당신의 탈것을 그림자로 감쌉니다." />
     <string id="taom_flr_t1_a_key" text="공포의 돌격 범위가 확장되어 더 넓은 진형을 휩쓸 수 있습니다." />
     <string id="taom_flr_t1_a_p1" text="근접 피해량 +8%." />
-    <string id="taom_flr_t1_a_p2" text="말 돌격 피해량 +7%." />
+    <string id="taom_flr_t1_a_p2" text="말 돌격 피해 +10%." />
     <string id="taom_flr_t1_a_p3" text="휘두르기 속도 +7%." />
     <string id="taom_flr_t1_a_p4" text="부대 이동 속도 +5%." />
     <string id="taom_flr_t1_b_key" text="공포의 돌격 지속시간이 연장되어 기세를 유지합니다." />
-    <string id="taom_flr_t1_b_p1" text="말 체력 +30." />
+    <string id="taom_flr_t1_b_p1" text="말 체력 +10%." />
     <string id="taom_flr_t1_b_p2" text="최대 체력 +5." />
     <string id="taom_flr_t1_b_p3" text="병력 급여 -5%." />
     <string id="taom_flr_t1_b_p4" text="저항력 +5%." />
@@ -1950,16 +1950,16 @@
     <string id="taom_flr_t2_a_p4" text="전투 명성 획득량 +10%." />
     <string id="taom_flr_t2_b_key" text="공포의 돌격이 활성화되는 동안 탈것의 회복력을 증진시킵니다." />
     <string id="taom_flr_t2_b_p1" text="근접 피해량 +12%." />
-    <string id="taom_flr_t2_b_p2" text="말 돌격 피해량 +12%." />
-    <string id="taom_flr_t2_b_p3" text="말 체력 +60." />
+    <string id="taom_flr_t2_b_p2" text="말 돌격 피해 +13%." />
+    <string id="taom_flr_t2_b_p3" text="말 체력 +13%." />
     <string id="taom_flr_t2_b_p4" text="휘두르기 속도 +10%." />
     <string id="taom_flr_t3_a_key" text="공포의 돌격 범위가 크게 확장되어 막을 수 없는 충격을 가합니다." />
     <string id="taom_flr_t3_a_p1" text="근접 피해량 +18%." />
-    <string id="taom_flr_t3_a_p2" text="말 돌격 피해량 +18%." />
+    <string id="taom_flr_t3_a_p2" text="말 돌격 피해 +15%." />
     <string id="taom_flr_t3_a_p3" text="휘두르기 속도 +15%." />
     <string id="taom_flr_t3_a_p4" text="병력 피해량 +7%." />
     <string id="taom_flr_t3_b_key" text="공포의 돌격 충전 시간이 크게 감소하여 쉬지 않고 달립니다." />
-    <string id="taom_flr_t3_b_p1" text="말 체력 +100." />
+    <string id="taom_flr_t3_b_p1" text="말 체력 +15%." />
     <string id="taom_flr_t3_b_p2" text="병력 급여 -15%." />
     <string id="taom_flr_t3_b_p3" text="+15% 부대 이동 속도." />
     <string id="taom_flr_t3_b_p4" text="+9 최대 체력." />
@@ -1972,7 +1972,7 @@
     <string id="taom_crb_t1_b_key" text="접선 전투 지속시간 연장, 방어를 강화합니다." />
     <string id="taom_crb_t1_b_p1" text="+8% 저항력." />
     <string id="taom_crb_t1_b_p2" text="+5% 병력 사기." />
-    <string id="taom_crb_t1_b_p3" text="+5% 병력 저항력." />
+    <string id="taom_crb_t1_b_p3" text="병사 저항력 +10%." />
     <string id="taom_crb_t1_b_p4" text="병사 생존율 +5%." />
     <string id="taom_crb_t2_a_key" text="접선 전투 충전시간 감소, 더 자주 발동합니다." />
     <string id="taom_crb_t2_a_p1" text="+10% 병력 사기." />
@@ -1982,7 +1982,7 @@
     <string id="taom_crb_t2_b_key" text="접선 전투가 활성화되는 동안 추가 방어 효과를 부여합니다." />
     <string id="taom_crb_t2_b_p1" text="+12% 저항력." />
     <string id="taom_crb_t2_b_p2" text="+8 최대 체력." />
-    <string id="taom_crb_t2_b_p3" text="+10% 병력 저항력." />
+    <string id="taom_crb_t2_b_p3" text="병사 저항력 +13%." />
     <string id="taom_crb_t2_b_p4" text="+5% 병력 피해." />
     <string id="taom_crb_t3_a_key" text="접선 전투 범위 대폭 확장, 파괴적인 위력." />
     <string id="taom_crb_t3_a_p1" text="+15% 근접 피해." />
@@ -1991,7 +1991,7 @@
     <string id="taom_crb_t3_a_p4" text="+4 부대 규모." />
     <string id="taom_crb_t3_b_key" text="접선 전투 충전시간 대폭 감소, 거의 항상 사용 가능합니다." />
     <string id="taom_crb_t3_b_p1" text="+18% 저항력." />
-    <string id="taom_crb_t3_b_p2" text="+15% 체력 재생." />
+    <string id="taom_crb_t3_b_p2" text="영웅 체력 재생 +15%." />
     <string id="taom_crb_t3_b_p3" text="+20% 병력 사기." />
     <string id="taom_crb_t3_b_p4" text="병사 생존율 +15%." />
     <string id="taom_corsair_crossbow_root_desc" text="삭구 사격은 안정된 조준으로 +5% 원거리 피해를 부여합니다." />
@@ -2004,11 +2004,11 @@
     <string id="taom_crc_t1_b_p1" text="+5% 저항력." />
     <string id="taom_crc_t1_b_p2" text="+5 최대 체력." />
     <string id="taom_crc_t1_b_p3" text="+5% 부대 탐지 범위." />
-    <string id="taom_crc_t1_b_p4" text="+5% 은신 보너스." />
+    <string id="taom_crc_t1_b_p4" text="은신 보너스 +10%." />
     <string id="taom_crc_t2_a_key" text="삭구 사격 충전 시간 감소, 지속적인 압박 유지." />
     <string id="taom_crc_t2_a_p1" text="+10% 부대 탐지 범위." />
     <string id="taom_crc_t2_a_p2" text="+10% 이동 속도." />
-    <string id="taom_crc_t2_a_p3" text="+10% 은신 보너스." />
+    <string id="taom_crc_t2_a_p3" text="은신 보너스 +13%." />
     <string id="taom_crc_t2_a_p4" text="+10% 전투 명성 획득." />
     <string id="taom_crc_t2_b_key" text="삭구 사격 활성화 중 추가 관통력 획득." />
     <string id="taom_crc_t2_b_p1" text="+12% 원거리 피해." />
@@ -2028,11 +2028,11 @@
     <string id="taom_corsair_captain_root_desc" text="약탈 시 +5% 근접 피해를 부여하고 선원들을 결집시킵니다." />
     <string id="taom_crca_t1_a_key" text="약탈 범위 확대, 더 넓은 진형을 휩쓸다." />
     <string id="taom_crca_t1_a_p1" text="+8% 근접 피해." />
-    <string id="taom_crca_t1_a_p2" text="+7% 말 돌격 피해." />
+    <string id="taom_crca_t1_a_p2" text="말 돌격 피해 +10%." />
     <string id="taom_crca_t1_a_p3" text="+7% 휘두르기 속도." />
     <string id="taom_crca_t1_a_p4" text="+5% 부대 이동 속도." />
     <string id="taom_crca_t1_b_key" text="약탈 지속시간 연장, 기세 유지." />
-    <string id="taom_crca_t1_b_p1" text="+30 말 체력." />
+    <string id="taom_crca_t1_b_p1" text="말 체력 +10%." />
     <string id="taom_crca_t1_b_p2" text="+5 최대 체력." />
     <string id="taom_crca_t1_b_p3" text="-5% 병력 급여." />
     <string id="taom_crca_t1_b_p4" text="+5% 저항력." />
@@ -2043,16 +2043,16 @@
     <string id="taom_crca_t2_a_p4" text="+10% 전투 명성 획득." />
     <string id="taom_crca_t2_b_key" text="약탈이 활성화되어 있는 동안 탈것의 회복력을 증가시킵니다." />
     <string id="taom_crca_t2_b_p1" text="+12% 근접 피해." />
-    <string id="taom_crca_t2_b_p2" text="+12% 말 돌진 피해." />
-    <string id="taom_crca_t2_b_p3" text="+60 말 체력." />
+    <string id="taom_crca_t2_b_p2" text="말 돌격 피해 +13%." />
+    <string id="taom_crca_t2_b_p3" text="말 체력 +13%." />
     <string id="taom_crca_t2_b_p4" text="+10% 휘두르기 속도." />
     <string id="taom_crca_t3_a_key" text="약탈 범위가 크게 확장되고 막을 수 없는 충격을 가합니다." />
     <string id="taom_crca_t3_a_p1" text="+18% 근접 피해." />
-    <string id="taom_crca_t3_a_p2" text="+18% 말 돌진 피해." />
+    <string id="taom_crca_t3_a_p2" text="말 돌격 피해 +15%." />
     <string id="taom_crca_t3_a_p3" text="+15% 휘두르기 속도." />
     <string id="taom_crca_t3_a_p4" text="+7% 병력 피해." />
     <string id="taom_crca_t3_b_key" text="약탈 충전이 크게 감소하고 쉬지 않고 달립니다." />
-    <string id="taom_crca_t3_b_p1" text="+100 말 체력." />
+    <string id="taom_crca_t3_b_p1" text="말 체력 +15%." />
     <string id="taom_crca_t3_b_p2" text="-15% 병력 급료." />
     <string id="taom_crca_t3_b_p3" text="+15% 부대 이동 속도." />
     <string id="taom_crca_t3_b_p4" text="+9 최대 체력." />

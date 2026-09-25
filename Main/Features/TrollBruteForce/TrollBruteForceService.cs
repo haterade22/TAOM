@@ -8,8 +8,8 @@ namespace TAOM.Features.TrollBruteForce;
 /// <inheritdoc cref="ITrollBruteForceService"/>
 public sealed class TrollBruteForceService : ITrollBruteForceService
 {
-    public bool IsCaveTroll(string? monsterId) =>
-        string.Equals(monsterId, CaveTrollMonsterId, StringComparison.Ordinal);
+    public bool IsBruteForceTroll(string? monsterId) =>
+        monsterId is not null && ActionSetsByMonster.ContainsKey(monsterId);
 
     public bool IsOffCooldown(float? lastFired, float now)
     {
@@ -26,6 +26,11 @@ public sealed class TrollBruteForceService : ITrollBruteForceService
             && enemyDistance <= TriggerRange * Scale(bodyScale)
             && facingDot > FacingDot;
     }
+
+    public float BodySize(float agentScale, float standingEyeHeight) =>
+        FiniteFloatValidator.IsFinite(standingEyeHeight) && standingEyeHeight > 0f
+            ? agentScale * (standingEyeHeight / ReferenceEyeHeight)
+            : agentScale;
 
     public bool TryGetImpactCentre(float x, float y, float lookX, float lookY, float bodyScale, out float centreX, out float centreY)
     {

@@ -238,6 +238,12 @@ do" for a module it never looked at.
 > `tools/retune_career_health.py`. New keys are unaffected: an absent key always reaches the API.
 > The cache is only the second of two gates, and a stale row usually never even reaches it. See
 > "Changing English Text That Is Already Translated" below.
+>
+> **The mirror-image trap: a row deliberately kept identical to the English is "untranslated".** Discovery
+> matches `cur_text == eng_text`, so an Italian row holding `Dale` (the Italian editions keep the name) is
+> discovered on every run and rewritten from whatever the cache holds (`Valle`, 2026-09-25). A hand edit that
+> keeps the English cannot survive in the language file alone: pin it in
+> `tools/translation_overrides/<lang>.json` and put the same text in the cache.
 
 After running the API translator, run the rebuild step to inject the cached translations into the actual XML files:
 
@@ -330,6 +336,43 @@ than paying for a pass that would produce twelve slightly different renderings o
    the old wording back.
 4. Respect the file format while you do it: no BOM, and whichever line terminator that particular
    file already uses. See "Line endings and encoding" under **File Format** above.
+5. Check `tools/translation_overrides/<lang>.json` for the key. An override pins a translation of the
+   English it was written against and outranks everything, so it goes stale with the English
+   (`taom_precompile_hint` in Russian until 2026-09-25).
+
+### How much went stale before anyone looked (2026-09-25)
+
+The checklist above had been written for six weeks when a sweep compared every registered key's
+English history with its language rows. 351 keys had changed English while their rows kept the
+old translation, the oldest since May: renamed Mordor and Dale lords still showed their old names
+(Bofur for Hauk, Honoratus for Khorgath), 249 career ability tooltips showed their old numbers, and
+Lindon's and Moria's rewritten lore read as before. 329 keys (3,545 rows) were reset and re-translated;
+the rest were accent-only fixes the translation already carried. The method, so the next sweep is
+cheap: for each English source, walk `git log`, find the commit that last changed each key's text,
+and flag every language row that is byte-identical to its value at that commit's parent.
+
+### One key, one character
+
+The engine looks a translation up by key alone. A character copied from another with its
+`{=KEY}` left in place keeps its own English, because English reads the inline default, but in the
+other 12 languages it shows the original's name. Lindon's 21 troops were copied from Rivendell's
+that way, so every non-English player saw "Mithlond" on Rivendell troops; six Umbar clans shared
+`aom_clan_umbar_1_name`; and the Combat and Deliver Personnel quests reused Deliver Goods' fallback
+keys. Name a character's key after its id (`aom_<id>_name`) when you copy it, and re-run
+`tools/generate_name_localization_strings.py --apply --category <troop|clan|lord|kingdom>`. To split
+a shared key without paying twice, give the copy the new key, carry the existing translations onto
+it, then reset the old key's rows to its own English and translate only those.
+
+Two test classes in `TAOM.Tests/Infrastructure/Localization/` hold these rules since 2026-09-25.
+`LocalizationKeyConsistencyTests` fails when one id carries two texts in two files of one language
+(the engine keeps the file loaded last, so the translator skips a key another source owns and does
+not seed one another file of the language already carries), when two English sources give one key two
+texts, when a C# or data-XML `{=key}Default` differs from its registered English, and when a name key
+in the name generator's sources carries two English names. `LanguageTextIntegrityTests` fails when a
+row, or a value in `tools/translation_cache/` (which also holds the Armory's and TAOM_Map's
+translations), carries a word from the wrong writing system: the translator model returned Korean 돌진
+in Turkish and Latin letters inside Russian words, and the placeholder check cannot see either. After a translator run, reset any
+flagged row to its English, drop its cache entry and re-run, or fix row and cache together by hand.
 
 ---
 

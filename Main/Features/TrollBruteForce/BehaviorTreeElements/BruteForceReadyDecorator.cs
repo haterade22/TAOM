@@ -38,7 +38,7 @@ public class BruteForceReadyDecorator : BTReturnFalseDecorator, IBTBannerlordBas
             || troll.GetCurrentActionType(0) == TaleWorlds.MountAndBlade.Agent.ActionCodeType.Fall;
         if (busy) return false;
 
-        float scale = troll.AgentScale;
+        float scale = _service.BodySize(troll.AgentScale, troll.Monster?.StandingEyeHeight ?? 0f);
         Vec3 position = troll.Position;
         Vec3 look = troll.LookDirection;
 

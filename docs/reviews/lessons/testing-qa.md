@@ -1286,3 +1286,13 @@ planner's `score > 0` threshold was also unpinned: every test's chosen pair scor
   sits just above it.
 - **Source:** `docs/reviews/rca-order-of-battle-auto-assign-2026-09-24.md` rows 5, 8 and 9 (Standards, Completeness,
   Codex P3).
+
+### A tool test must run under CI's runner, not only the author's (2026-09-25)
+The hill troll binder's 13 tests were module-level pytest functions. CI runs `python -m unittest discover -s
+tools/tests -t .` with nothing installed, so the module failed to import there and unittest collected 0 tests
+locally, while pytest showed 13 green. Five older modules had the same shape.
+- **Why missed:** the author ran pytest and read the green.
+- **Prevent:** write tool tests as `unittest.TestCase` (`tempfile` for `tmp_path`, `contextlib.redirect_stdout`
+  for `capsys`), and run the unittest command before calling them done. `tools/tests/test_ci_runner_compat.py`
+  fails on any new module that imports pytest; its baseline only shrinks.
+- **Source:** `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 19.

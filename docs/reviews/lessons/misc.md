@@ -310,3 +310,12 @@ check.
   sentence once the edit lands. A plan author (`/improve`) cites the evidence for each claim it
   prescribes, or marks the sentence as a draft.
 - **Source:** `docs/reviews/rca-delete-unreachable-scaffolds-2026-09-24.md` F1, F2, F5, F7.
+
+### A creature behaviour extended to a second Monster: compare the Monsters' size fields, not only the sets (2026-09-25)
+The Brute Force tree scales its trigger range and ring by `AgentScale` only. The engine's reach is `Monster.ArmLength`
+times `AgentScale`: the cave troll's `arm_length` 0.9 at scale 1.9, the hill troll's 2.79 at 1.09, three times the reach
+per unit of scale, so one set of constants cannot fit both.
+- **Why missed:** the extension checked Monster ids, action sets and clips, not the fields the engine sizes a body by.
+- **Prevent:** when a tree or service gains a Monster, table `arm_length`, capsules, eye heights and the skin's scale
+  for every Monster it serves, and scale distances by what the engine scales reach by.
+- **Source:** `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 7.

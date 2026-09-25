@@ -49,19 +49,19 @@
     <string id="taom_lotr_issue_horses_soln" text="Je vous apporterai des chevaux." />
     <string id="taom_lotr_issue_horses_task" text="Livrer des chevaux ({COUNT})" />
     <string id="taom_lotr_issue_recruits_title" text="Du sang neuf pour la bande" />
-    <string id="taom_lotr_issue_recruits_desc" text="Un chef de bande veut que des hors-la-loi capturés soient enrôlés de force à son service." />
-    <string id="taom_lotr_issue_recruits_brief" text="Une bande n'est forte que par le nombre, et les miens sont maigres. Amenez-moi des captifs sans amour pour la loi et j'en ferai usage." />
+    <string id="taom_lotr_issue_recruits_desc" text="Un chef de bande veut des captifs contraints à le servir." />
+    <string id="taom_lotr_issue_recruits_brief" text="Une bande ne vaut que par son nombre, et le mien s'amenuise. Amène-moi des captifs, qui qu'ils soient, et j'en ferai usage." />
     <string id="taom_lotr_issue_recruits_accept" text="Quel genre de captifs ?" />
-    <string id="taom_lotr_issue_recruits_expl" text="Amenez-moi {COUNT} bandits captifs et je les ferai travailler. Il y a de la monnaie pour vous, sans questions." />
+    <string id="taom_lotr_issue_recruits_expl" text="Amène-moi {COUNT} captifs et je les mettrai au travail. Il y a de l'or pour toi, sans poser de questions." />
     <string id="taom_lotr_issue_recruits_soln" text="Je vous amènerai des captifs." />
-    <string id="taom_lotr_issue_recruits_task" text="Livrer des bandits captifs ({COUNT})" />
+    <string id="taom_lotr_issue_recruits_task" text="Livrer des captifs ({COUNT})" />
     <string id="taom_lotr_issue_laborers_title" text="Des bras pour les mines" />
-    <string id="taom_lotr_issue_laborers_desc" text="Un propriétaire terrien a besoin d'échines robustes pour le dur labeur et acceptera des bandits capturés." />
-    <string id="taom_lotr_issue_laborers_brief" text="Les fouilles ont besoin d'ouvriers et les hommes libres refusent d'y descendre. Amenez-moi des bandits enchaînés et ils gagneront leur pitance avec une pioche." />
+    <string id="taom_lotr_issue_laborers_desc" text="Un propriétaire terrien a besoin de bras solides pour des travaux pénibles et prendra tous les captifs que vous aurez faits." />
+    <string id="taom_lotr_issue_laborers_brief" text="Les fouilles manquent d'ouvriers et les hommes libres refusent d'y descendre. Amène-moi des captifs enchaînés et ils gagneront leur pain la pioche à la main." />
     <string id="taom_lotr_issue_laborers_accept" text="Vous voulez des prisonniers ?" />
-    <string id="taom_lotr_issue_laborers_expl" text="Amenez-moi {COUNT} bandits captifs pour les équipes de travail et je vous paierai pour la peine de les capturer." />
+    <string id="taom_lotr_issue_laborers_expl" text="Amène-moi {COUNT} captifs pour les corvées et je te paierai la peine de les avoir pris." />
     <string id="taom_lotr_issue_laborers_soln" text="Je vous amènerai des captifs." />
-    <string id="taom_lotr_issue_laborers_task" text="Livrer des bandits captifs ({COUNT})" />
+    <string id="taom_lotr_issue_laborers_task" text="Livrer des captifs ({COUNT})" />
     <string id="taom_lotr_issue_banditbase_title" text="Un repaire près de {ISSUE_SETTLEMENT}" />
     <string id="taom_lotr_issue_banditbase_desc" text="Un nid de pillards s'attaque aux routes près de {ISSUE_SETTLEMENT}." />
     <string id="taom_lotr_issue_banditbase_brief" text="Il y a un nid infâme dans les collines, voyageur. Ils prennent nos biens et nos gens, et la garde est trop peu nombreuse pour les extirper." />
@@ -300,19 +300,24 @@
     <string id="taom_lotr_issue_common_task" text="Collecter des marchandises" />
     <string id="taom_lotr_issue_pers_expl" text="Apportez-moi {COUNT} captifs et je vous paierai bien." />
     <string id="taom_lotr_issue_pers_soln" text="Je vous apporterai des captifs." />
-    <string id="taom_lotr_issue_pers_accepted" text="Livrer {COUNT} captifs bandits à {QUEST_SETTLEMENT}." />
+    <string id="taom_lotr_issue_pers_accepted" text="Livrez {COUNT} captifs à {QUEST_SETTLEMENT}." />
     <string id="taom_lotr_issue_pers_ready" text="Vous avez assez de captifs. Retournez à {QUEST_SETTLEMENT} pour les remettre." />
     <string id="taom_lotr_issue_pers_timeout" text="Vous avez échoué à livrer les captifs à temps." />
     <string id="taom_lotr_issue_pers_have" text="Avez-vous amené les captifs ?" />
     <string id="taom_lotr_issue_pers_thanks" text="Ils feront parfaitement l'affaire. Vous avez ma gratitude." />
     <string id="taom_lotr_issue_pers_turnin" text="Oui. Les voici." />
     <string id="taom_lotr_issue_pers_not_enough" text="Vous n'avez pas encore assez de captifs." />
-    <string id="taom_lotr_issue_pers_task" text="Capturer des bandits" />
+    <string id="taom_lotr_issue_pers_task" text="Faire des captifs" />
     <string id="taom_lotr_issue_combat_expl" text="Occupez-vous de nos ennemis et vous serez récompensé." />
     <string id="taom_lotr_issue_combat_soln" text="Je m'en occuperai." />
     <string id="taom_lotr_issue_combat_task_capture" text="Capturer des seigneurs ennemis ({COUNT})" />
     <string id="taom_lotr_issue_combat_task_tourney" text="Remporter des tournois ({COUNT})" />
     <string id="taom_lotr_issue_combat_task_defeat" text="Vaincre les pillards ({COUNT})" />
     <string id="taom_lotr_issue_combat_timeout" text="Vous avez échoué à traiter la menace à temps." />
+    <string id="taom_lotr_issue_combat_fallback_desc" text="Un ennemi doit être traité." />
+    <string id="taom_lotr_issue_combat_fallback_brief" text="Nous sommes assaillis par des ennemis, voyageur." />
+    <string id="taom_lotr_issue_combat_fallback_accept" text="Que faut-il faire ?" />
+    <string id="taom_lotr_issue_pers_fallback_desc" text="Quelqu'un a besoin qu'on lui livre des captifs." />
+    <string id="taom_lotr_issue_pers_fallback_brief" text="J'ai besoin de bras solides, voyageur." />
   </strings>
 </base>

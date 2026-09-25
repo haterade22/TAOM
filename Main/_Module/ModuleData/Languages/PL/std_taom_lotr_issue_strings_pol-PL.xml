@@ -49,19 +49,19 @@
     <string id="taom_lotr_issue_horses_soln" text="Przyprowadzę ci konie." />
     <string id="taom_lotr_issue_horses_task" text="Dostarcz konie ({COUNT})" />
     <string id="taom_lotr_issue_recruits_title" text="Świeża krew dla bandy" />
-    <string id="taom_lotr_issue_recruits_desc" text="Herszt bandy chce, by pojmanych zbójów wcielono do jego służby." />
-    <string id="taom_lotr_issue_recruits_brief" text="Banda jest tak silna, jak liczna, a moja przerzedziała. Przyprowadź mi jeńców, którzy nie miłują prawa, a znajdę dla nich zajęcie." />
+    <string id="taom_lotr_issue_recruits_desc" text="Herszt bandy chce zmusić jeńców do służby." />
+    <string id="taom_lotr_issue_recruits_brief" text="Banda jest silna tylko liczbą, a moja jest nieliczna. Przyprowadź mi jeńców, kimkolwiek są, a znajdę dla nich zastosowanie." />
     <string id="taom_lotr_issue_recruits_accept" text="Jakiego rodzaju jeńców?" />
-    <string id="taom_lotr_issue_recruits_expl" text="Przyprowadź mi {COUNT} pojmanych bandytów, a dopilnuję, by wzięli się do roboty. Będzie w tym grosz dla ciebie, bez zbędnych pytań." />
+    <string id="taom_lotr_issue_recruits_expl" text="Przyprowadź mi {COUNT} jeńców, a zagonię ich do roboty. Będzie z tego dla ciebie grosz, bez zbędnych pytań." />
     <string id="taom_lotr_issue_recruits_soln" text="Przyprowadzę ci jeńców." />
-    <string id="taom_lotr_issue_recruits_task" text="Dostarcz pojmanych bandytów ({COUNT})" />
+    <string id="taom_lotr_issue_recruits_task" text="Dostarcz jeńców ({COUNT})" />
     <string id="taom_lotr_issue_laborers_title" text="Ręce do kopalni" />
-    <string id="taom_lotr_issue_laborers_desc" text="Właściciel ziemski potrzebuje krzepkich grzbietów do ciężkiej pracy i przyjmie pojmanych bandytów." />
-    <string id="taom_lotr_issue_laborers_brief" text="Wykopy potrzebują robotników, a wolni ludzie tam nie zejdą. Przyprowadź mi bandytów w łańcuchach, a odpracują swój wikt kilofem." />
+    <string id="taom_lotr_issue_laborers_desc" text="Właściciel ziemski potrzebuje silnych rąk do ciężkiej pracy i przyjmie wszystkich pojmanych przez ciebie jeńców." />
+    <string id="taom_lotr_issue_laborers_brief" text="Wykopy potrzebują robotników, a wolni ludzie tam nie zejdą. Przyprowadź mi jeńców w łańcuchach, a odpracują swój wikt kilofem." />
     <string id="taom_lotr_issue_laborers_accept" text="Chcesz jeńców?" />
-    <string id="taom_lotr_issue_laborers_expl" text="Przyprowadź mi {COUNT} pojmanych bandytów do robociarskich drużyn, a zapłacę ci za trud ich schwytania." />
+    <string id="taom_lotr_issue_laborers_expl" text="Przyprowadź mi {COUNT} jeńców do drużyn roboczych, a zapłacę ci za trud ich pojmania." />
     <string id="taom_lotr_issue_laborers_soln" text="Przyprowadzę ci jeńców." />
-    <string id="taom_lotr_issue_laborers_task" text="Dostarcz pojmanych bandytów ({COUNT})" />
+    <string id="taom_lotr_issue_laborers_task" text="Dostarcz jeńców ({COUNT})" />
     <string id="taom_lotr_issue_banditbase_title" text="Kryjówka niedaleko {ISSUE_SETTLEMENT}" />
     <string id="taom_lotr_issue_banditbase_desc" text="Gniazdo rabusiów czyha na drogach w okolicy {ISSUE_SETTLEMENT}." />
     <string id="taom_lotr_issue_banditbase_brief" text="W tych wzgórzach jest ich plugawe gniazdo, podróżny. Zabierają nasze dobra i naszych ludzi, a straż jest zbyt szczupła, by ich wykurzyć." />
@@ -300,19 +300,24 @@
     <string id="taom_lotr_issue_common_task" text="Zbierz towary" />
     <string id="taom_lotr_issue_pers_expl" text="Przyprowadź mi {COUNT} jeńców, a dobrze cię wynagrodzę." />
     <string id="taom_lotr_issue_pers_soln" text="Przyprowadzę ci jeńców." />
-    <string id="taom_lotr_issue_pers_accepted" text="Dostarcz {COUNT} pojmanych bandytów do {QUEST_SETTLEMENT}." />
+    <string id="taom_lotr_issue_pers_accepted" text="Dostarcz {COUNT} jeńców do {QUEST_SETTLEMENT}." />
     <string id="taom_lotr_issue_pers_ready" text="Masz dość jeńców. Wróć do {QUEST_SETTLEMENT}, aby ich przekazać." />
     <string id="taom_lotr_issue_pers_timeout" text="Nie zdołałeś dostarczyć jeńców na czas." />
     <string id="taom_lotr_issue_pers_have" text="Przyprowadziłeś jeńców?" />
     <string id="taom_lotr_issue_pers_thanks" text="Ci się nadadzą. Masz moją wdzięczność." />
     <string id="taom_lotr_issue_pers_turnin" text="Tak. Oto oni." />
     <string id="taom_lotr_issue_pers_not_enough" text="Nie masz jeszcze dość jeńców." />
-    <string id="taom_lotr_issue_pers_task" text="Pojmij bandytów" />
+    <string id="taom_lotr_issue_pers_task" text="Bierz jeńców" />
     <string id="taom_lotr_issue_combat_expl" text="Rozpraw się z naszymi wrogami, a zostaniesz nagrodzony." />
     <string id="taom_lotr_issue_combat_soln" text="Rozprawię się z nimi." />
     <string id="taom_lotr_issue_combat_task_capture" text="Pojmij wrogich lordów ({COUNT})" />
     <string id="taom_lotr_issue_combat_task_tourney" text="Wygraj turnieje ({COUNT})" />
     <string id="taom_lotr_issue_combat_task_defeat" text="Pokonaj najeźdźców ({COUNT})" />
     <string id="taom_lotr_issue_combat_timeout" text="Nie zdołałeś zażegnać zagrożenia w czasie." />
+    <string id="taom_lotr_issue_combat_fallback_desc" text="Trzeba rozprawić się z wrogiem." />
+    <string id="taom_lotr_issue_combat_fallback_brief" text="Osaczają nas wrogowie, wędrowcze." />
+    <string id="taom_lotr_issue_combat_fallback_accept" text="Co trzeba zrobić?" />
+    <string id="taom_lotr_issue_pers_fallback_desc" text="Ktoś potrzebuje dostarczenia jeńców." />
+    <string id="taom_lotr_issue_pers_fallback_brief" text="Potrzebuję silnych rąk, wędrowcze." />
   </strings>
 </base>

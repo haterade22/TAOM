@@ -234,6 +234,18 @@ public class SettlementGuardServiceTests
     }
 
     [TestMethod]
+    public void IsRaceExcludedFromGuardDuty_HillTrollRace_ReturnsTrue()
+    {
+        // the hill troll became a Mordor troop on 2026-09-25, on its own skeleton; the same #346 leak applies
+        _raceManager.IsValidRaceId(8).Returns(true);
+        _raceManager.GetRaceNameFromId(8).Returns("hill_troll");
+
+        var result = _sut.IsRaceExcludedFromGuardDuty(8);
+
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
     public void IsRaceExcludedFromGuardDuty_HumanRace_ReturnsFalse()
     {
         _raceManager.IsValidRaceId(0).Returns(true);

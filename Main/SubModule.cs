@@ -1054,7 +1054,8 @@ public class SubModule : MBSubModuleBase
         var recruitmentService = IoC.Resolve<IVolunteerRecruitmentService>();
         var volunteerContextAdapter = IoC.Resolve<IVolunteerContextAdapter>();
         var recruitmentAlignment = IoC.Resolve<TAOM.Features.AlignmentRecruitment.IRecruitmentAlignmentService>();
-        campaignStarter.AddModel(new TaomCharacterStatsModel(careerPassives));
+        campaignStarter.AddModel(new TaomCharacterStatsModel(careerPassives,
+            IoC.Resolve<TAOM.Features.CombatMechanics.IRaceCombatModifiersResolver>()));
         campaignStarter.AddModel(new TaomPartyWageModel(costService, careerPassives, wageModifiers, aiPartySize));
         campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter, culturalFeats, recruitmentAlignment));
 

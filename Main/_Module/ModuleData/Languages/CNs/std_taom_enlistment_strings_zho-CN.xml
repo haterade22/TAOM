@@ -42,10 +42,10 @@
     <string id="taom_fc_confirm_name" text="确认" />
     <string id="taom_fc_decline" text="暂且不必" />
     <string id="taom_fc_keep_name" text="保留默认名字" />
-    <string id="taom_fc_no_room_body" text="目前没有位置再容纳一名同伴。{TROOP_NAME}的晋升将在日后再次提出。" />
-    <string id="taom_fc_offer_body" text="{TROOP_NAME}在战斗中表现出众。是否晋升为同伴？" />
+    <string id="taom_fc_no_room_body" text="目前没有空位再接纳一名同伴。{TROOP_NAME} 的晋升将在日后再次提出。" />
+    <string id="taom_fc_offer_body" text="{TROOP_NAME} 在战斗中表现出色。要将其晋升为同伴吗？" />
     <string id="taom_fc_offer_title" text="战场晋升" />
-    <string id="taom_fc_rename_body" text="为{TROOP_NAME}取一个名字，或保留其上阵时所用的名字。" />
+    <string id="taom_fc_rename_body" text="为 {TROOP_NAME} 取个名字，或者沿用其征战时的旧名。" />
     <string id="taom_fc_rename_title" text="为新同伴命名" />
     <string id="taom_fc_cancel" text="取消" />
     <string id="taom_fc_dismiss" text="你的任职到此结束。回到队列中去吧。" />
@@ -101,7 +101,7 @@
     <string id="taom_enlist_section_sup" text="辎重队" />
     <string id="taom_enlist_trust_known" text="略有名声" />
     <string id="taom_enlist_trust_new" text="未经考验" />
-    <string id="taom_enlist_trust_poor" text="声名不佳" />
+    <string id="taom_enlist_trust_poor" text="风评极差" />
     <string id="taom_enlist_trust_solid" text="颇受敬重" />
     <string id="taom_enlist_trust_trusted" text="深受信任" />
     <string id="taom_enlist_grade_distinguished" text="卓越" />

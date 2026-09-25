@@ -106,6 +106,11 @@
 	<string id="aom_clan_rivendell_2_name" text="{=aom_clan_rivendell_2_name}Nos Glorfindel" />
 	<string id="aom_clan_rivendell_3_name" text="{=aom_clan_rivendell_3_name}Elen-Nolmarë" />
 	<string id="aom_clan_umbar_1_name" text="{=aom_clan_umbar_1_name}House of Casîmirionî" />
+	<string id="aom_clan_umbar_2_name" text="{=aom_clan_umbar_2_name}House of Jarjâx" />
+	<string id="aom_clan_umbar_3_name" text="{=aom_clan_umbar_3_name}House of Heshlâ" />
+	<string id="aom_clan_umbar_4_name" text="{=aom_clan_umbar_4_name}House of Bel Inzûl" />
+	<string id="aom_clan_umbar_5_name" text="{=aom_clan_umbar_5_name}House of Halrax" />
+	<string id="aom_clan_umbar_6_name" text="{=aom_clan_umbar_6_name}House of Khatûg" />
 	<string id="aom_clan_vlandia_12_name" text="{=aom_clan_vlandia_12_name}House of Ælfwiging" />
 	<string id="aom_clan_vlandia_13_name" text="{=aom_clan_vlandia_13_name}House of Celmunding" />
 	<string id="aom_clan_vlandia_14_name" text="{=aom_clan_vlandia_14_name}House of Widmunding" />

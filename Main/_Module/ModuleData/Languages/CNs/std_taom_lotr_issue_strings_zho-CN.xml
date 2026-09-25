@@ -49,19 +49,19 @@
     <string id="taom_lotr_issue_horses_soln" text="我会给你带来马。" />
     <string id="taom_lotr_issue_horses_task" text="运送马匹 ({COUNT})" />
     <string id="taom_lotr_issue_recruits_title" text="帮派的新鲜血液" />
-    <string id="taom_lotr_issue_recruits_desc" text="一个帮派头目想要被俘的亡命之徒为他效力。" />
-    <string id="taom_lotr_issue_recruits_brief" text="帮派的强大取决于人数,而我这里人手不足。给我带来一些不守法的俘虏,我会好好利用他们。" />
+    <string id="taom_lotr_issue_recruits_desc" text="一名帮派头目想把俘虏强征入伙。" />
+    <string id="taom_lotr_issue_recruits_brief" text="帮派的强弱全看人数，而我的人手太单薄了。给我带俘虏来，管他是谁，我都能派上用场。" />
     <string id="taom_lotr_issue_recruits_accept" text="什么样的俘虏?" />
-    <string id="taom_lotr_issue_recruits_expl" text="给我带来{COUNT}名强盗俘虏,我会让他们干活。这事有报酬,不问缘由。" />
+    <string id="taom_lotr_issue_recruits_expl" text="给我带来 {COUNT} 名俘虏，我会让他们干活。你也有钱可拿，不问来路。" />
     <string id="taom_lotr_issue_recruits_soln" text="我会给你带来俘虏。" />
-    <string id="taom_lotr_issue_recruits_task" text="交付强盗俘虏({COUNT})" />
+    <string id="taom_lotr_issue_recruits_task" text="交付俘虏（{COUNT}）" />
     <string id="taom_lotr_issue_laborers_title" text="矿场的劳力" />
-    <string id="taom_lotr_issue_laborers_desc" text="一位地主需要强壮的劳力来干重活,愿意接收被俘的强盗。" />
-    <string id="taom_lotr_issue_laborers_brief" text="矿坑需要工人,自由民不愿下去。给我带来戴着镣铐的强盗,他们会用镐子挣口饭吃。" />
+    <string id="taom_lotr_issue_laborers_desc" text="一名地主需要壮劳力来做苦工，你抓到的任何俘虏他都要。" />
+    <string id="taom_lotr_issue_laborers_brief" text="矿坑需要工人，可自由人不肯下去。把戴着镣铐的俘虏带来，他们就用镐头挣自己的口粮。" />
     <string id="taom_lotr_issue_laborers_accept" text="你要囚犯?" />
-    <string id="taom_lotr_issue_laborers_expl" text="给我带来{COUNT}名强盗俘虏去劳工队,我会付你抓他们的辛苦钱。" />
+    <string id="taom_lotr_issue_laborers_expl" text="给我带来 {COUNT} 名俘虏充作劳役队，我会为你抓人的辛劳付酬。" />
     <string id="taom_lotr_issue_laborers_soln" text="我会给你带来俘虏。" />
-    <string id="taom_lotr_issue_laborers_task" text="交付强盗俘虏({COUNT})" />
+    <string id="taom_lotr_issue_laborers_task" text="交付俘虏（{COUNT}）" />
     <string id="taom_lotr_issue_banditbase_title" text="{ISSUE_SETTLEMENT}附近的巢穴" />
     <string id="taom_lotr_issue_banditbase_desc" text="一伙掠夺者在{ISSUE_SETTLEMENT}附近的道路上作恶。" />
     <string id="taom_lotr_issue_banditbase_brief" text="旅行者,山中有他们的污秽巢穴。他们抢走我们的货物和族人,而守卫太少,无法剿灭他们。" />
@@ -300,19 +300,24 @@
     <string id="taom_lotr_issue_common_task" text="收集物品" />
     <string id="taom_lotr_issue_pers_expl" text="给我带来{COUNT}个俘虏,我会付给你丰厚的报酬。" />
     <string id="taom_lotr_issue_pers_soln" text="我会给你带来俘虏。" />
-    <string id="taom_lotr_issue_pers_accepted" text="将{COUNT}个强盗俘虏送到{QUEST_SETTLEMENT}。" />
+    <string id="taom_lotr_issue_pers_accepted" text="将 {COUNT} 名俘虏送到 {QUEST_SETTLEMENT}。" />
     <string id="taom_lotr_issue_pers_ready" text="你已经有足够的俘虏了。返回{QUEST_SETTLEMENT}交付他们。" />
     <string id="taom_lotr_issue_pers_timeout" text="你未能及时交付俘虏。" />
     <string id="taom_lotr_issue_pers_have" text="你带来俘虏了吗?" />
     <string id="taom_lotr_issue_pers_thanks" text="很好。感谢你。" />
     <string id="taom_lotr_issue_pers_turnin" text="是的。他们在这里。" />
     <string id="taom_lotr_issue_pers_not_enough" text="你的俘虏还不够。" />
-    <string id="taom_lotr_issue_pers_task" text="抓捕强盗俘虏" />
+    <string id="taom_lotr_issue_pers_task" text="抓捕俘虏" />
     <string id="taom_lotr_issue_combat_expl" text="解决我们的敌人,你将得到奖赏。" />
     <string id="taom_lotr_issue_combat_soln" text="我会解决他们。" />
     <string id="taom_lotr_issue_combat_task_capture" text="俘获敌方领主({COUNT})" />
     <string id="taom_lotr_issue_combat_task_tourney" text="赢得比武大会({COUNT})" />
     <string id="taom_lotr_issue_combat_task_defeat" text="击败劫掠者({COUNT})" />
     <string id="taom_lotr_issue_combat_timeout" text="你未能及时解决威胁。" />
+    <string id="taom_lotr_issue_combat_fallback_desc" text="必须对付一个敌人。" />
+    <string id="taom_lotr_issue_combat_fallback_brief" text="旅人啊，我们正被敌人围困。" />
+    <string id="taom_lotr_issue_combat_fallback_accept" text="需要我做什么？" />
+    <string id="taom_lotr_issue_pers_fallback_desc" text="有人需要把俘虏押送过去。" />
+    <string id="taom_lotr_issue_pers_fallback_brief" text="旅人啊，我需要强壮的帮手。" />
   </strings>
 </base>

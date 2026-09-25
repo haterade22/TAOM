@@ -3687,7 +3687,7 @@
         race="elf"
         default_group="Cavalry"
         level="46"
-        name="{=aom_noldorin_lancer_name}[Rivendell] Nõldorin Lancer"
+        name="{=aom_noldorin_lancer_name}[Rivendell] Noldorin Lancer"
         occupation="Soldier"
         culture="Culture.rivendell">
         <face>

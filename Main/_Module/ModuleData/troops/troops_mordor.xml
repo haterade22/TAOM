@@ -1987,8 +1987,10 @@
     <!--Orc-->
     <!-- Re-enabled 2026-06-13: live Mordor troll race unit. is_basic_troop set false so vanilla
          DefaultVolunteerModel.GetBasicVolunteer cannot pick the L51 troll as a Mordor *basic*
-         volunteer (the sole concern behind the 2026-05-14 disable). The troll spawns via the Mordor
-         hero party template; to make it recruitable, add an explicit Mordor pool to
+         volunteer (the sole concern behind the 2026-05-14 disable). The troll sits in the Mordor
+         culture's hero party template (read by a companion clan founded on a Mordor settlement and by
+         the average wage) and, since 2026-09-25, in the Bolgrukig, Zarunik and Brughash templates
+         (`kingdom_hero_party_mordor_empire_south_{5,13,15}_template`); to make it a volunteer, add an explicit Mordor pool to
          VolunteerRecruitmentService instead of flipping is_basic_troop back to true. -->
     <NPCCharacter
         id="cave_troll"
@@ -2115,6 +2117,60 @@
                 <equipment
                     slot="Gloves"
                     id="Item.lotr_troll_bracers" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter
+        id="hill_troll"
+        race="hill_troll"
+        default_group="Infantry"
+        level="51"
+        is_basic_troop="false"
+        name="{=aom_hill_troll_name}[AMordor] Hill Troll"
+        occupation="Soldier"
+        culture="Culture.mordor">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_cave_troll" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="185" />
+            <skill
+                id="Riding"
+                value="35" />
+            <skill
+                id="OneHanded"
+                value="350" />
+            <skill
+                id="TwoHanded"
+                value="335" />
+            <skill
+                id="Polearm"
+                value="345" />
+            <skill
+                id="Bow"
+                value="35" />
+            <skill
+                id="Crossbow"
+                value="25" />
+            <skill
+                id="Throwing"
+                value="105" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_cave_troll_2h_mace_a" />
+            </EquipmentRoster>
+            <EquipmentRoster
+                civilian="true">
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_cave_troll_2h_mace_a" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
