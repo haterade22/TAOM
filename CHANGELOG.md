@@ -14,8 +14,17 @@ in the generated source), the new one finds the bounding box and writes the crop
 
 The external-repo vetting checklist (`docs/ai-includes/external-repo-adoption.md`) gains a grep
 for inline package credentials in any vendored drop before porting a file from it. Both changes
-are ported from the June branch `impl-005` (`4310aa6e`, `4bc520a1`). The vendored credential that
-prompted the grep is already gone from disk, and plan 005's MCP pinning moved to plan 016.
+are ported from the June branch `impl-005` (`4310aa6e`, `4bc520a1`). Plan 005's MCP pinning moved
+to plan 016.
+
+Review follow-ups: the credential is not gone. The extracted copy is, but the same
+`packageSourceCredentials` block still sits inside three gitignored, never-committed BUTR source
+archives under `Dependencies/.vendor-source/` (ButterLib 2.10.4, MCM 5.11.4, UIExtenderEx 2.13.2);
+a plain grep cannot see inside a `.tar.gz`, which is how the first check missed them. The checklist
+line now sweeps archives too, uses a `-E` pattern that also works in ripgrep, and names the harvest
+finding it came from. `tools/tests/test_process_faction_map.py` pins the path fix: a plain folder, a
+quote in the folder name, and Python text in the folder name (the last two fail on the pre-fix
+tool). Report: `docs/reviews/deep-review-005-security-hygiene-2026-09-24.md`.
 
 ## 2026-09-23
 

@@ -3803,3 +3803,36 @@ scratch copies. Final: `dotnet test` 10,313 passed, 0 failed; `pytest tools/test
 in-game checklist waits for a deploy. Root cause tables and the not-applied list:
 `docs/reviews/rca-animalia-2026-09-23.md`; seven new lessons (build-tooling-workflow, data-content-cultures,
 adapters-taleworlds-api) and a recurrence note, and one new check each in the Engine and Tooling lenses.
+
+## Review (improve/005, numbered at merge): plan 005 security hygiene, faction-map argv fix and vendored-credential checklist, 5-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+The June port (`4310aa6e`, `4bc520a1`) as commit `6b34fd00`: `tools/process_faction_map.py` passes
+paths to its two child `python -c` programs through `sys.argv` instead of pasting them into the
+source, and the external-repo checklist gains a credential grep. Five lenses (data flow, tooling,
+efficiency, completeness, design) and Codex in parallel.
+
+**The code was correct; the prose and its verification were not.** One HIGH, two MEDIUM, three LOW
+confirmed, all in the doc and CHANGELOG hunks or the missing test. The HIGH: the new checklist grep
+exits 1 on TAOM's vendored drops, which are `.tar.gz`; three BUTR archives still hold a
+`packageSourceCredentials` block (counted, never printed). The CHANGELOG called that credential
+"already gone from disk" on the strength of the same blind grep, run in a worktree where the ignored
+folder does not exist. The injection fix had no regression test; the plan relied on `py_compile`,
+which never parses the child programs. LOWs: an em dash, an ambiguous "SEC-02" reference, and a
+backslash-pipe pattern that ripgrep reads as a literal pipe.
+
+Codex found no implementation defect, one P3 plan defect (`py_compile` is neither read-only nor a
+check of the children; confirmed, pre-existing plan text), one P2 scope observation (MCP pinning
+moved to plan 016; not a defect), and marked the disk claim UNVERIFIED (it is false). It missed the
+archive blindness because it reviewed git objects only and the drops live in an ignored folder.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | Checklist grep blind to `.tar.gz` drops | Other: absence check blind to the stored form | June line written for an extracted tree, ported verbatim, never run on the real folder | Archive loop in the line; lesson in build-tooling-workflow |
+| 2 | "Gone from disk" claim false | Other: claim from a check that could not fail | Check ran in a worktree with a gzip-blind grep | CHANGELOG corrected; same lesson |
+| 3 | No regression test | Other: compile-only verification | Children are string literals; "untestable" not checked | `tools/tests/test_process_faction_map.py`; lesson |
+
+Fixed with the test first (RED on `a39a9c86`, GREEN on HEAD). Final: `dotnet test` 10,313 passed, 0
+failed; the new Python module 3 of 3. Needs Mike: the three tarballs (delete or repack, tell BUTR),
+the `6b34fd00` commit body's false sentence, and the missing GitHub issue. Report
+`docs/reviews/deep-review-005-security-hygiene-2026-09-24.md`, RCA
+`docs/reviews/rca-security-hygiene-2026-09-24.md`; three lessons in build-tooling-workflow.
