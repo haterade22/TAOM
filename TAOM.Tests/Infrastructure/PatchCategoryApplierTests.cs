@@ -93,6 +93,7 @@ public class PatchCategoryApplierTests
         CollectionAssert.AreEqual(new[] { "Patch_A", "Patch_C" }, _applied);
     }
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void TakeFailureSummary_WhenNothingFailed_ReturnsNull()
     {
@@ -106,6 +107,7 @@ public class PatchCategoryApplierTests
     // one stay patched: the summary must not claim the whole group is off. The summary is a
     // registered {=taom_...} TextObject so the player reads it in their language; the category
     // ids stay literal.
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void TakeFailureSummary_NamesThePhaseAndEveryFailedCategoryInOrder()
     {
@@ -124,6 +126,7 @@ public class PatchCategoryApplierTests
         Assert.AreEqual("Patch_B, Patch_D", Variable(summary, "GROUPS"));
     }
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void TakeFailureSummary_ClearsTheList_SoTheNextPhaseReportsOnlyItsOwnFailures()
     {

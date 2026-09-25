@@ -17,6 +17,7 @@ namespace TAOM.Tests.Features.CompanionTactics.FormationPresets;
 /// The OOB VM is a bare uninitialized object: its real constructor needs Game.Current, and
 /// the command only passes the reference through.
 /// </summary>
+[TestCategory("RequiresGame")]
 [TestClass]
 public class OOBButtonsVMTests
 {

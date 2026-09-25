@@ -29,6 +29,7 @@ public class WargTreeNodeInjectionTests
             RageAttackAmount = new BTBlackboardValue<int>(rage),
         };
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void WargAttackTask_Execute_AttacksWithTheInjectedServiceThroughTheInjectedFactory()
     {
@@ -60,6 +61,7 @@ public class WargTreeNodeInjectionTests
         Assert.AreEqual(2, task.RageAttackAmount.GetValue());
     }
 
+    [TestCategory("RequiresGame")]
     [DataTestMethod]
     [DataRow(true, false)]
     [DataRow(false, true)]

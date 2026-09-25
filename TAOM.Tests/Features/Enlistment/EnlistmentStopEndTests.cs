@@ -40,6 +40,7 @@ public class EnlistmentStopEndTests
             presenter);
     }
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void CommanderLeavesTheSettlement_EndsTheStop_BeforeTheReconcile()
     {
@@ -54,6 +55,7 @@ public class EnlistmentStopEndTests
             "the commander left the town and the offer's settlement latch was not cleared");
     }
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void AnotherPartyLeavesTheSettlement_DoesNotEndTheStop()
     {
@@ -66,6 +68,7 @@ public class EnlistmentStopEndTests
         presenter.DidNotReceive().OnStopEnded();
     }
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void OnACoopClient_TheCommanderLeaving_DoesNotEndTheStop()
     {

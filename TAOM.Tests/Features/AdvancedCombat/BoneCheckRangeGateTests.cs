@@ -15,6 +15,7 @@ namespace TAOM.Tests.Features.AdvancedCombat;
 /// live skeleton, so these tests drive CheckTargets directly with no attacker bones. The substitute's
 /// GetSkeleton returns null, so no native Skeleton is ever constructed here.
 /// </summary>
+[TestCategory("RequiresGame")]
 [TestClass]
 public class BoneCheckRangeGateTests
 {

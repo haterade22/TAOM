@@ -77,6 +77,7 @@ public class PatchCategoryIndexTests
 
     // The maintainer's decision (#653): one unreadable class is skipped and reported, and every
     // other category still applies.
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void TryApply_ThroughTheIndex_AppliesTheHealthyCategory_AndReportsOnlyTheBrokenClass()
     {

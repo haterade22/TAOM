@@ -51,6 +51,7 @@ public class LoadingWindowDisablePatchTests
         Assert.AreEqual(typeof(bool), parameters[0].ParameterType);
     }
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void Postfix_WhenTheWindowWasAlreadyDown_LogsNothing()
     {
@@ -59,6 +60,7 @@ public class LoadingWindowDisablePatchTests
         _logger.DidNotReceiveWithAnyArgs().LogInfo(default!);
     }
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void Postfix_WhenTheWindowWasUpAndIsNowDown_LogsOneLoweredLineWithCallers()
     {
@@ -77,6 +79,7 @@ public class LoadingWindowDisablePatchTests
             && !s.Contains("callers: LoadingWindow_Disable_Patch.")));
     }
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void PrefixThenPostfix_WhenTheWindowIsAlreadyDown_CapturesFalseAndLogsNothing()
     {

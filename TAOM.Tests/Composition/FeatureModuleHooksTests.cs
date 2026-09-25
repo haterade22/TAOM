@@ -20,6 +20,7 @@ namespace TAOM.Tests.Composition;
 /// module whose factory throws adds nothing, a Custom Battle starter gets no campaign behavior, the
 /// campaign-start step fails closed for a save owner, and startup faults wait for the main-menu inquiry.
 /// </summary>
+[TestCategory("RequiresGame")]
 [TestClass]
 public class FeatureModuleHooksTests
 {

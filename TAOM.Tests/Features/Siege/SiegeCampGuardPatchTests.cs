@@ -17,6 +17,7 @@ namespace TAOM.Tests.Features.Siege;
 /// CampWithSettlementAt sets only the members the prefix reads. Debug.DebugManager is a
 /// substitute so the prefix's log lines are observable (Debug.Print is a no-op without one).
 /// </summary>
+[TestCategory("RequiresGame")]
 [TestClass]
 public class SiegeCampGuardPatchTests
 {

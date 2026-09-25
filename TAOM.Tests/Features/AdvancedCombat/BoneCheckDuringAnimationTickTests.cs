@@ -94,6 +94,7 @@ public class BoneCheckDuringAnimationTickTests
         }
     }
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void Tick_WindUpBeforeTheHitWindow_KeepsTheCheckWithoutTouchingTheAttackerVisuals()
     {
@@ -106,6 +107,7 @@ public class BoneCheckDuringAnimationTickTests
         bite.Attacker.Received(1).GetCurrentActionProgress(0);
     }
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void Tick_ProgressAtTheWindowEnd_ExpiresWithoutTouchingTheAttackerVisuals()
     {
@@ -117,6 +119,7 @@ public class BoneCheckDuringAnimationTickTests
         bite.Attacker.Received(1).GetCurrentActionProgress(0);
     }
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void Tick_InTheHitWindowWithNoAttackerSkeleton_Expires()
     {
@@ -128,6 +131,7 @@ public class BoneCheckDuringAnimationTickTests
         bite.Attacker.Received(1).GetCurrentActionProgress(0);
     }
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void Tick_AtTheHitWindowStartWithNoAttackerVisuals_Expires()
     {
@@ -137,6 +141,7 @@ public class BoneCheckDuringAnimationTickTests
         Assert.AreEqual(1, bite.Expirations);
     }
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void Tick_NaNProgress_KeepsTheCheckWithoutAHitTest()
     {

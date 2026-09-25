@@ -12,6 +12,7 @@ namespace TAOM.Tests.Features.AdvancedCombat;
 /// native positions, so these tests drive the generic BuildCells / CollectInRadius helpers it
 /// delegates to, on plain points (plan 015).
 /// </summary>
+[TestCategory("RequiresGame")]
 [TestClass]
 public class SpatialGridQueryTests
 {

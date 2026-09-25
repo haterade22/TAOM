@@ -15,6 +15,7 @@ namespace TAOM.Tests.Features.SpecialResources;
 /// process, or a save whose behavior record lacks the balances key, must not keep the previous
 /// campaign's balances. Real storage, so the assertions read what the next campaign would see.
 /// </summary>
+[TestCategory("RequiresGame")]
 [TestClass]
 public class SpecialResourcesBehaviorSessionResetTests
 {

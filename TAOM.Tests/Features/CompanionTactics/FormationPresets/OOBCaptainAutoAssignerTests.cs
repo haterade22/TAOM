@@ -40,6 +40,7 @@ public class OOBCaptainAutoAssignerTests
         _planner.DidNotReceiveWithAnyArgs().PlanCaptains(default!, default!);
     }
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void AssignCaptains_PlayerNotGeneral_ReturnsNotGeneralWithoutPlanning()
     {

@@ -58,6 +58,7 @@ public class WandererAllegianceWiringTests
             + "default registration and Resolve throws at campaign start.");
     }
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void Module_RegistersTheServiceGraph_AndItsBehaviorDeclResolvesTheSingleton()
     {

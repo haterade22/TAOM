@@ -169,6 +169,7 @@ public class EnlistmentSessionResetTests
             playerParty ?? Substitute.For<IPlayerPartyAdapter>(), coop ?? Substitute.For<ICoopSessionProvider>(),
             maintenance, Substitute.For<IModLogger>());
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void NewCampaign_DropsTheSessionCaches_AndStillClearsTheStore()
     {
@@ -186,6 +187,7 @@ public class EnlistmentSessionResetTests
         store.Received(1).Clear();
     }
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void NewCampaign_AfterALoadingSyncData_StillResets_ButKeepsTheLoadedRecord()
     {
@@ -205,6 +207,7 @@ public class EnlistmentSessionResetTests
 
     private sealed class ReachedNormalizeArguments : System.Exception { }
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void GameLoad_OnTheHost_ResetsTheSessionCaches_BeforeNormalizing()
     {
@@ -230,6 +233,7 @@ public class EnlistmentSessionResetTests
         normalizer.DidNotReceiveWithAnyArgs().Normalize(default!, default);
     }
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void GameLoad_OnACoopClient_StillResetsTheSessionCaches_ButDoesNotNormalize()
     {
@@ -260,6 +264,7 @@ public class EnlistmentSessionResetTests
         return store;
     }
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void GameLoad_SaveWithNoEnlistmentData_ClearsThePreviousRecord_BeforeNormalizing()
     {
@@ -287,6 +292,7 @@ public class EnlistmentSessionResetTests
         Assert.IsNull(store.Record.CommanderHeroId);
     }
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void GameLoad_SaveWithNoEnlistmentData_OnACoopClient_ClearsThePreviousRecord()
     {
@@ -299,6 +305,7 @@ public class EnlistmentSessionResetTests
         Assert.IsNull(store.Record.CommanderHeroId);
     }
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void GameLoad_AfterALoadingSyncData_KeepsTheLoadedRecord()
     {
@@ -319,6 +326,7 @@ public class EnlistmentSessionResetTests
         store.DidNotReceive().Clear();
     }
 
+    [TestCategory("RequiresGame")]
     [TestMethod]
     public void GameLoad_AfterALoadingSyncData_OnACoopClient_KeepsTheLoadedRecord()
     {
