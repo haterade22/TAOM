@@ -4101,3 +4101,65 @@ Report `docs/reviews/deep-review-018-composition-root-first-steps-2026-09-24.md`
 `docs/reviews/rca-composition-root-first-steps-2026-09-24.md`. Owed: the GitHub issue, Mike's call
 on Patch37 and fail-closed at campaign start, the plan's precondition refresh, a convergence pass on
 the fix commit, and the in-game refusal check.
+## Review (plan 007; number assigned when the improve branches merge): PatchShield skips the callback shims, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+Plan 007 on `improve/007-patchshield-skip-callback-shims` (`7f02fc8d..0ad253d5`): PatchShield's
+hot-layer exclusion list gains `"ManagedCallbacks"` so pass 2 stops re-shielding the engine's 247
+callback shims, which Native2Managed crash capture already wraps; the shield-pass line gains elapsed
+time and ms per attach; the `OnGameInitializationFinished` docs stop saying "main menu". Codex
+gpt-6-astra at ultra, 177,288 tokens: **0 P0 / 0 P1 / 0 P2, 1 P3, confirmed, no false positive.**
+It quoted the shim types, the raise sites and Harmony 2.4.2's finalizer contract from the installed
+DLLs and disputed all ten Known Suspects with line evidence. Its P3: the new comment, `dr3` note and
+CHANGELOG said the Native2Managed finalizer swallows every exception while capture is on, when it
+hands the exception back on re-entry, an unresolved service or a handler failure. The data-flow lens
+found the same gap from the other side: the bridge is non-void, so on those paths Harmony rethrows
+with `throw` and the stack is reset, which PatchShield's finalizer used to prevent.
+
+The deep review added what Codex missed. The prefix reaches 88 classes in v1.5.3, not 3: 79
+managed-to-native `ScriptingInterfaceOf*` wrappers that Native2Managed does not wrap are now
+unshielded too (four lenses, independently, by listing the DLLs). The vendored ButterLib puts blank
+transpilers on three shims, so "carry only finalizers" was false. "30x between machines" was one
+desktop over time. A `v1.5.2-impact.md` row contradicted `diag.log`. Nothing pinned the namespace
+to the engine. 13 findings confirmed in all (2 MED, 11 LOW), 0 false positives; everything in the
+changed code was about claims, not behaviour. Fixed: comments, docs, CHANGELOG "Known limitation",
+and a `BindingVerification` test that selects the shims from the installed DLLs as
+Native2ManagedPatcher does (RED with the entry misspelt). Waiting on Mike: the GitHub issue, whether
+to narrow the prefix, and whether to preserve the stack on the fallback returns in
+`CrashReportPatchHelper` (plan 006's file). Full suite: 10243 passed, 2 skipped, 2 failed (the two
+live-Armory tests).
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|
+| 1 | Coverage claim reasoned from the normal path of the finalizer that stays | Other: stale coverage claim | Did not trace every return path of the remaining layer against what the removed layer did | `lessons/harmony-il.md`: "Removing one of two finalizers on a method..." |
+
+Report: `docs/reviews/deep-review-007-patchshield-skip-callback-shims-2026-09-24.md`. RCA:
+`docs/reviews/rca-patchshield-skip-callback-shims-2026-09-24.md`; two lessons in harmony-il, one in
+testing-qa. AGENTS.md lessons are listed in the report, pending the consolidated Phase 3h.
+
+## Review (plan 007 decisions; number assigned when the improve branches merge): PatchShield seen/attached split, 6-lens deep review + Codex gpt-6-astra second pass (2026-09-24)
+
+Plan 007's maintainer-decisions commit on `improve/007-patchshield-skip-callback-shims`
+(`31a31f16..0bf2409e`) answers the three items the entry above left waiting on Mike: the issue is
+#651, the whole `ManagedCallbacks` namespace stays excluded, and the fallback stack preservation is
+fixed on plan 006's branch (`42624b95`). It also splits PatchShield's one method set into seen and
+attached (`ShieldCoverage`), so `diag.log` stops counting skipped methods as shielded, and names the
+editor in the pass-2 label. Codex gpt-6-astra, 158,323 tokens: **0 P1 / 0 P2, 1 P3, confirmed, no
+false positive.** It tabled the six install-loop outcomes against the old set, proving the dedupe
+set unchanged, and disputed all ten Known Suspects with line evidence. Its P3: a `ShieldCoverageTests`
+message claimed the failed-attach retry, which the test cannot exercise.
+
+The deep review added what Codex missed, all text the change made stale: a test comment naming the
+renamed local, the `Dependencies/Foundation/` class count (18, now 19) in two docs, and a reword list
+for plan 006's merge that missed `dr3-maintenance.md:261` and two older lines. 6 findings confirmed
+(4 LOW, 1 INFO, 1 NIT), 4 false positives, 3 NEEDS MIKE (the 1.4.5 port, #651's stale body, filing
+the deferred follow-ups). All six fixed; one named-argument call applied as a preserving
+improvement. Full suite: 10247 passed, 2 skipped, 2 failed (the two live-Armory tests).
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|
+| 1 | Test message claims a retry the test cannot exercise | Other: test claims more than it proves | Message written from the production design, not the test body | Renamed, split, message narrowed; one-off |
+
+Report: `docs/reviews/deep-review-007-patchshield-skip-callback-shims-decisions-2026-09-24.md`. RCA:
+`docs/reviews/rca-patchshield-skip-callback-shims-decisions-2026-09-24.md`; one lesson in
+build-tooling-workflow. AGENTS.md lessons are listed in the report, pending the consolidated
+Phase 3h.
