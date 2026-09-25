@@ -1080,3 +1080,20 @@ never attached a tree, and the first-tick log reads "0 elk(s)" in a normal Custo
 - **Prevent:** pin such a constant against a literal once, and build the rows of the test that reads the live data
   from the constant, so the data check also proves the code names what the data declares.
 - **Source:** `docs/reviews/rca-animalia-2026-09-23.md` row 4.
+
+### A caching refactor's test puts a live object behind the cache and edits it afterwards (plan 003, 2026-09-24)
+The provider cache's tests pinned the null-path fallbacks and an IL rule that the getters never call
+`TaomSettings.Instance`. None ever put a real settings object behind the provider, because MCM is not
+initialised under MSTest. A constructor that snapshots the values into fields (the exact regression
+the plan forbade), a getter wired to the wrong setting, or a constructor that reads `Instance` and
+discards it, all passed every test.
+- **Why missed:** an IL rule proves WHERE a call happens and reads as full coverage; it cannot see
+  what value reaches the getter.
+- **Prevent:** for any cached read-through (an MCM reference, a config object, an adapter), add a
+  seam that injects a live object (an internal constructor, visible to `TAOM.Tests`), mutate every
+  property AFTER construction, each to its own distinct non-default value, and assert each getter.
+  That one test fails a snapshot, a cross-wired getter and a discarded reference. Keep the IL rule
+  for the cost claim only. When the seam is a second constructor on a DryIoc-registered type, also
+  resolve the type from a real container in a test.
+- **Source:** `docs/reviews/rca-hot-path-resolve-and-grid-caching-2026-09-24.md` row 2 (Codex P3,
+  lens 4 F1, lens 6).

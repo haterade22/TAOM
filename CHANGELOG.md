@@ -4,16 +4,41 @@
 
 ## 2026-09-24
 
+### fix(battlebalance): v2.0.30 - review follow-ups for plan 003
+
+Deep review (six lenses) and Codex on `7feca96b` found no runtime defect; the follow-ups close a
+latent start-up trap and the test gap behind it. `BattleBalanceSettingsProvider` now takes the
+`TaomSettings` reference lazily, on the first non-null read (`_settings ??= TaomSettings.Instance`,
+the `NameplateRelationSettingsProvider` pattern), not in its constructor. The constructor read was
+safe only because the one resolve runs at campaign start, after MCM sets
+`BaseSettingsProvider.Instance` in its `OnBeforeInitialModuleScreenSetAsRoot`; nothing enforced
+that, and a future resolve during `OnSubModuleLoad` would have pinned the compiled defaults for the
+whole session with no log line. On today's wiring the values read are identical. The hot-path
+comment now says how often the engine really calls it (per casualty, twice per XP-scored hit in
+live and simulated battles, and once per roster row in every strength sum).
+
+Tests, written first: the IL rule now requires the private lazy accessor, not a constructor, to
+read `Instance` (RED against the constructor form); a read-through test edits all twelve settings after the
+provider is built, each to its own non-default value, and checks every getter (it fails a snapshot
+or a getter wired to the wrong setting, proven by a Tier8-reads-Tier9 mutation); all twelve
+fallbacks are pinned against the `TaomSettings` compiled defaults; and the provider resolves from a
+real DryIoc container despite its new internal test constructor. `docs/features/battle-balance.md`
+and `docs/modding/file-catalogue.md` no longer describe a per-access proxy. Not verified in game:
+change a Battle Balance slider mid-campaign and check auto-resolve follows it. Reports:
+`docs/reviews/deep-review-003-hot-path-resolve-and-grid-caching-2026-09-24.md`,
+`docs/reviews/rca-hot-path-resolve-and-grid-caching-2026-09-24.md`.
+
 ### perf(battlebalance): v2.0.30 - read the MCM settings once per process (plan 003)
 
 `BattleBalanceSettingsProvider` resolved `TaomSettings.Instance` on every property read, and
-`GetDefaultTroopPower` reads up to seven of them per troop per simulation round. The provider now
+`GetDefaultTroopPower` reads up to seven of them per call. The provider now
 takes the reference once in its constructor and reads through it, so live MCM edits still apply
-(the same contract as `NameplateFadeSettingsProvider`). The one precondition, checked in code: the
+(the same contract as `NameplateFadeSettingsProvider`). The one precondition, verified by reading the wiring: the
 provider is first built at campaign start (`RegisterBattleBalanceAndTargeting` under
 `OnGameStart`), after MCM has created the settings; nothing in the `OnSubModuleLoad` eager pass
-resolves it, so it never caches a null. Ported from the June branch `impl-003` (`6eb5955c`); that
-branch's warg half is superseded by plan 015.
+resolves it, so it never caches a null. Ported from the June branch `impl-003` (`6eb5955c`); of that
+branch's other commits, the warg one (`4962f3ee`) is superseded by plan 015, the TroopWeight one
+(`463fccbc`) is stale, and the grid cadence one (`bdf18039`, PERF-01) still waits on a gate decision.
 
 Tests: the six no-MCM default pins from `6eb5955c` (green before and after) and a new IL rule,
 `Getters_NeverReadTaomSettingsInstance_TheConstructorDoes`, RED against the old provider. Full
