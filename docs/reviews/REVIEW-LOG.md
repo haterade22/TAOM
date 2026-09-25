@@ -4607,3 +4607,39 @@ needs the writers' keys) and the fake's save-side divergence.
 Report: `docs/reviews/deep-review-001-cross-campaign-singleton-resets-2026-09-24.md`. RCA:
 `docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md`; lessons in state-lifecycle-save,
 testing-qa (two) and misc.
+
+## Review 133 (number provisional: parallel improve branches): plan 025, delete two unreachable scaffolds, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+Branch `improve/025-delete-unreachable-scaffolds`, `1091f3b6..032481cc`: `IEditorSceneAdapter`
+(no implementation, no reference) and the EditorCacheRebuild `Caching/` path-reuse scaffold
+(registered, never resolved) deleted, with the two reserved config fields, 26 tests and the
+`TaleWorlds.Engine.PathReuseCache._store` binding row, which no engine assembly defines and which
+passed only through the gate's simple-name fallback onto TAOM's own class. Six `/deep-review`
+lenses ran in one wave; Codex reviewed the same range read-only from git objects.
+
+**Codex: 1 finding, 1 confirmed, 0 false positives** (P3, plan text): plan 025's prescribed
+status sentence contains the string its own done check requires to be absent. It also settled ten
+Known Suspects with quoted v1.5.3 code (`NavigationPath`, `NavigationCacheElement.Sort`,
+`CheckBeingNeighbor`) and a config cross-reference. **The lenses confirmed six more**, all LOW and
+none in runtime code: the rewritten performance paragraph kept a premise v1.5.3 does not support
+(Phase 1 keeps its `NavigationPath` local and pathfinds with multiplier 1, Phase 2 with 2), a
+recovery pointer naming the wrong commit for the binding row, two stale doc facts (a test count
+and a `NavigationPath` dependency), a CHANGELOG claim that the keys were never in the shipped JSON
+(they were, for three hours on 2026-05-12), and a permanent absence test that fails the simplicity
+criterion. All six are fixed on the branch; the full suite went from 10288 to 10287 passed (the
+absence test), 2 skipped, 0 failed. The plan finding is recorded, not edited. Two items wait for
+Mike: the public issue, and decision 21's scope (none of the six other reserved config fields has
+a runtime reader, contrary to FOR-MIKE.md).
+
+Codex did best at checking the plan's done criteria against the prose it prescribes. It missed
+every claim that needed history or an engine premise tested rather than quoted: it read the
+memoization sentence as support although its own excerpt shows the differing multiplier, and it
+checked no commit pointer or JSON history.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | Plan's prescribed status sentence contradicts its own done check | Other: plan self-contradiction | Plan checks written apart from the prose they check | Lesson in `lessons/misc.md` (a handoff plan's prescribed sentence is a draft) |
+
+Report: `docs/reviews/deep-review-025-delete-unreachable-scaffolds-2026-09-24.md`. RCA:
+`docs/reviews/rca-delete-unreachable-scaffolds-2026-09-24.md`; lessons in misc (one new, one
+recurrence note), testing-qa and adapters-taleworlds-api.

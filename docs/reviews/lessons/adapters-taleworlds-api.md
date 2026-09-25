@@ -713,3 +713,16 @@ The installed v1.5.3 `TaleWorlds.MountAndBlade.dll` declares `.class public sequ
 - **Why missed:** a static-constructor hazard was read as "the type cannot appear in a test" without reading the class header or trying `default`.
 - **Prevent:** before calling code untestable because an engine type's static constructor needs the engine, read the class header (`ilspycmd -il <dll> | grep "\.class.*<Type>$"`) and write the spike; a beforefieldinit type is safe while the path touches no static member. Re-check per engine version: the v1.4.7 lesson and this one disagree.
 - **Source:** `docs/reviews/rca-warg-tick-costs-decisions-2026-09-24.md` F2 (Agent 2 F1).
+
+### A binding gate's fallback must not let TAOM's own types satisfy an engine row (plan 025, 2026-09-24)
+The `ReflectionSiteBindingTests` row `TaleWorlds.Engine.PathReuseCache._store` named no engine type. It passed from
+`41258657` (2026-05-28) until plan 025 removed it, because `ResolveType`'s simple-name fallback
+(`ReflectionSiteBindingTests.cs:136-144`) searches every loaded assembly, TAOM.dll included, and found TAOM's own
+`PathReuseCache`.
+- **Why missed:** the fallback was written for engine namespace moves; nobody asked which assemblies it searches, and
+  a mislabelled row looks the same as a good one when it is green.
+- **Prevent:** restrict the fallback to engine assemblies (`TaleWorlds.*`, `SandBox*`, `StoryMode*` and the other
+  shipped modules) or fail when the resolved type lives in a TAOM assembly. Reflection on TAOM's own types belongs in
+  Category D of `reflection-sites.md`, never in this gate. Still open: the fix changes the gate's behaviour and is
+  pre-existing test code, so plan 025 did not apply it (plan 008 works on the same gate).
+- **Source:** `docs/reviews/rca-delete-unreachable-scaffolds-2026-09-24.md` F2 and FOLLOW-UP 1.

@@ -1,5 +1,4 @@
 using DryIoc;
-using TAOM.Features.EditorCacheRebuild.Caching;
 using TAOM.Features.EditorCacheRebuild.Checkpoint;
 using TAOM.Features.EditorCacheRebuild.Diff;
 using TAOM.Features.EditorCacheRebuild.Phase1;
@@ -13,8 +12,6 @@ public static class EditorCacheRebuildIoC
     public static void RegisterEditorCacheRebuildFeature(IContainer container)
     {
         container.Register<ICacheRebuildConfigProvider, CacheRebuildConfigProvider>(Reuse.Singleton);
-        container.Register<IPathReuseCache, PathReuseCache>(Reuse.Singleton);
-        container.Register<IPersistentPathCache, PersistentPathCache>(Reuse.Singleton);
         container.Register<SerialPhase1Builder>(Reuse.Singleton);
         container.Register<ParallelPhase1Builder>(Reuse.Singleton);
         container.Register<SerialPhase2Builder>(Reuse.Singleton);

@@ -66,7 +66,7 @@ internal static class GameAssemblies
 
             // Eagerly load every TaleWorlds.*.dll already copied into the test bin so simple-name
             // type resolution sees the full engine surface up front (otherwise lazily-referenced
-            // types like TaleWorlds.Engine's PathReuseCache aren't in GetAssemblies() until touched).
+            // engine types aren't in GetAssemblies() until touched).
             var baseDir = AppDomain.CurrentDomain.BaseDirectory;
             if (Directory.Exists(baseDir))
                 foreach (var dll in Directory.GetFiles(baseDir, "TaleWorlds.*.dll"))

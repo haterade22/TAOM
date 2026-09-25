@@ -975,6 +975,31 @@ throws, it is not null) and the test fake's save side (report
 `docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md`). Full suite: 10318 passed, 2
 skipped, 0 failed. Not smoked in game: start a second campaign in one session and check
 the map bar shows only the new culture's starting amount.
+### refactor(cache-rebuild): v2.0.30 - delete two unreachable scaffolds
+
+Two pieces of code that nothing ever called are gone. `Main/Adapters/IEditorSceneAdapter.cs` was
+an adapter interface with no implementation and no reference. `Main/Features/EditorCacheRebuild/Caching/`
+(`PathReuseCache`, `PersistentPathCache`, their interfaces, `NavigationPathCloner` and
+`SortedPathKey`) was a Phase 2 path-memoization scaffold that `EditorCacheRebuildIoC` registered
+but nothing resolved or injected. Both came in with `6a80bac6` on 2026-05-12 and never gained a
+caller. Also removed: the reserved `EnablePathReuse` and `EnablePersistentPathCache` config
+properties (never read; the shipped `cache_rebuild_config.json` carried them only from `6a80bac6`
+until `b5cb3018` the same day, before any release tag), the 26 tests in
+`TAOM.Tests/Features/EditorCacheRebuild/Caching/`, and the `ReflectionSiteBindingTests` row for
+`PathReuseCache._store`, which named a `TaleWorlds.Engine.PathReuseCache` that does not exist and
+only ever resolved to TAOM's own class. The distance-cache rebuild behaves exactly as before; a
+hand-edited config that still carries the two keys loads as before (new test). `6a80bac6` holds
+the scaffold, but it assumed Phase 1 paths that the engine keeps local, so path reuse would need a
+new design. Plan 025.
+
+Review follow-ups: a second new test that only pinned the deleted types' absence is removed
+(simplicity criterion). The binding catalogue now names the commit the retired row came from
+(`41258657`); the feature doc drops the stale `NavigationPath` dependency and the hand-kept test
+counts, and explains why Phase 1 paths cannot simply be reused in Phase 2. Review report:
+`docs/reviews/deep-review-025-delete-unreachable-scaffolds-2026-09-24.md`.
+
+Full suite in the worktree: 10287 passed, 2 skipped, 0 failed (10288 before the review
+follow-ups). Nothing smoked in game (no runtime path changed).
 
 ## 2026-09-23
 

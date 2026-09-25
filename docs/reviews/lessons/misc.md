@@ -201,6 +201,12 @@ new rule, across eleven files.
   and left the shipped config comment and the feature map calling the sound ElevenLabs-generated.
   Grep for pointers INTO a rewritten section (its heading text) as well as for its old facts.
   `docs/reviews/rca-nazgul-scream-2026-09-23.md` W3, W8.
+- **Recurred:** plan 025 (2026-09-24). Deleting the unwired path-reuse scaffold made the feature
+  doc's config-test count wrong (20, then 22 at `032481cc`) and left `NavigationPath` in its
+  Dependencies list, though the deleted files were its last users in the feature. The change dropped the doc's
+  "103+" total because nothing computes it, yet kept the per-bullet counts beside it. When a
+  deletion removes the last user of a type, grep the owning doc's Dependencies list for it, and
+  drop hand-kept counts rather than patching one. `docs/reviews/rca-delete-unreachable-scaffolds-2026-09-24.md` F3, F4.
 
 ### A claim found wrong is wrong everywhere it was written: grep for it before fixing the copy in front of you (#644, #645, 2026-09-23)
 
@@ -285,3 +291,22 @@ the other way round, so that build cannot see the test at all.
   `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter FullyQualifiedName~<Class>`
   and states the expected failure (a CS error in the test project, or a named failing assertion).
 - **Source:** `docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md` F8; Codex P3.
+### A handoff plan's prescribed sentence is a draft: re-derive its history and engine claims before committing it (plan 025, 2026-09-24)
+
+Plan 025 prescribed its doc and CHANGELOG text word for word, and the executor copied it. Four of
+those claims were wrong: the binding row's recovery commit (`6a80bac6`; `git log -S` finds
+`41258657`), "never in the shipped JSON" (the shipped config carried both keys from `6a80bac6` until
+`b5cb3018`), Phase 1 paths being reusable in Phase 2 (v1.5.3 keeps the path local, and Phase 2
+pathfinds with a different cost multiplier), and a citation said to end "one line further off" that
+the deletion made exact. Its "keep the rest of the line unchanged" also left "That alone is a 2-3x
+win" pointing at the deleted scaffold, and Codex found its Step 6 sentence contradicted its own done
+check.
+
+- **Why missed:** the plan was specific and cited commits, so its text read as verified; the
+  executor re-checked code facts but not the history and engine claims inside the prose.
+- **Prevent:** when executing a plan, treat each prescribed sentence as a new claim. Run
+  `git log -S` for every commit it names as an item's origin, `git log` the file behind any "never"
+  about history, check an engine claim against the installed DLL, and re-read the neighbouring
+  sentence once the edit lands. A plan author (`/improve`) cites the evidence for each claim it
+  prescribes, or marks the sentence as a draft.
+- **Source:** `docs/reviews/rca-delete-unreachable-scaffolds-2026-09-24.md` F1, F2, F5, F7.

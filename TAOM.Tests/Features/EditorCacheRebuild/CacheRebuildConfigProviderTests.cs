@@ -84,8 +84,6 @@ public class CacheRebuildConfigProviderTests
   ""forceVanilla"": false,
   ""parallelism"": 6,
   ""checkpointEvery"": 50,
-  ""enablePathReuse"": false,
-  ""enablePersistentPathCache"": false,
   ""enableIncremental"": false,
   ""incrementalMaxChanged"": 10,
   ""incrementalSpatialRadius"": 2.5,
@@ -103,8 +101,6 @@ public class CacheRebuildConfigProviderTests
         Assert.IsFalse(config.ForceVanilla);
         Assert.AreEqual(6, config.Parallelism);
         Assert.AreEqual(50, config.CheckpointEvery);
-        Assert.IsFalse(config.EnablePathReuse);
-        Assert.IsFalse(config.EnablePersistentPathCache);
         Assert.IsFalse(config.EnableIncremental);
         Assert.AreEqual(10, config.IncrementalMaxChanged);
         Assert.AreEqual(2.5f, config.IncrementalSpatialRadius, 0.0001f);
@@ -114,6 +110,19 @@ public class CacheRebuildConfigProviderTests
         Assert.AreEqual(0.001f, config.SmokeTestDistanceTolerance, 0.00001f);
         Assert.IsTrue(config.Phase1SkipReversePathfind);
         Assert.AreEqual("debug", config.LogVerbosity);
+    }
+
+    [TestMethod]
+    public void GetConfig_JsonWithRetiredPathCacheKeys_StillLoadsTheLiveFields()
+    {
+        // A hand-edited config written before the path-reuse scaffold was deleted must keep loading.
+        WriteConfig(@"{ ""parallelism"": 6, ""enablePathReuse"": false, ""enablePersistentPathCache"": false }");
+
+        var config = _sut.GetConfig();
+
+        Assert.AreEqual(6, config.Parallelism);
+        _logger.DidNotReceive().LogError(Arg.Any<string>());
+        _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("Loaded cache_rebuild_config.json")));
     }
 
     [TestMethod]
