@@ -1094,3 +1094,14 @@ two frames), `callers: <none>` or `callers: <unavailable>` all passed.
   patch class itself. Prove both with a mutant run (`__state = true`; a helper hop), per "If you
   didn't watch the test fail, mutate the code until it does".
 - **Source:** `docs/reviews/rca-loading-window-trace-per-frame-2026-09-24.md` findings 3 and 4 (lens 4, lens 5, Codex P3-1 and P3-2).
+### Every existence guard in a resolver gets a test that fails it (plan 008, 2026-09-24)
+`GameAssemblies.ResolveGameDir` checks three inputs: the override must hold `Bannerlord.exe`, the game dir must exist, and so must the build folder. Six tests covered each input's happy path. Deleting the override's `File.Exists` check, or the game dir's `Directory.Exists` check, left all six green. The change had also turned a set-but-missing `BANNERLORD_GAME_DIR` from a skip into a fallback, and no test pinned that.
+- **Why missed:** `tests.md` "Skip-Guard Exhaustion" asks for one test per guard in each direction, but it was read as a rule for skip guards, not for a resolver's guards. The plan's test table said "every cell" and counted inputs, not guards.
+- **Prevent:** for each guard in a resolution chain, write the test where that guard alone fails and the chain must fall through. Prove it by deleting the guard and watching exactly that test go red.
+- **Source:** `docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md` F3.
+
+### A test that reads a repo file uses `RepoPaths.RepoPath`, never a new private repo-root walker (plan 008, 2026-09-25)
+`BindingGateRunSettingsTests` added a private `FindRepoRoot` that walks up from the working directory to `TAOM.sln`, making it the 35th file in `TAOM.Tests` to search for `TAOM.sln`, while `TAOM.Tests/Infrastructure/RepoPaths.cs` resolves the root from `[CallerFilePath]` with no filesystem walk. This is the third review to fix the same duplication.
+- **Why missed:** a new test is modelled on its folder's neighbours, and most of them still carry the old walker, so copying looks like following convention.
+- **Prevent:** before writing a helper in a test, grep `TAOM.Tests/Infrastructure/` for one. A repo-file test imports `using static TAOM.Tests.Infrastructure.RepoPaths;` and calls `RepoPath("dir", "file")`. Because this is a repeat, the locator consolidation (TEST-L5-03) should end with a ratchet test that fails when the count of private `TAOM.sln` walkers grows.
+- **Source:** `docs/reviews/rca-binding-gate-no-silent-skips-decisions-2026-09-24.md` R8; earlier `rca-field-commission-races-2026-09-17.md` F3 and `rca-race-fertility-2026-09-19.md` F2.

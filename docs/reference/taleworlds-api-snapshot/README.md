@@ -43,7 +43,7 @@ Runs under `dotnet test`, no game launch. TAOM.Tests references the installed `T
 | `ReflectionSiteBindingTests` | The 32 auxiliary static-engine reflection members from `reflection-sites.md` Category B. | one `[DataRow]` per site |
 
 ```bash
-dotnet test TAOM.Tests/TAOM.Tests.csproj --filter "TestCategory=BindingVerification"
+dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true -p:ModuleId= --settings TAOM.Tests/binding-gate.runsettings --filter "TestCategory=BindingVerification"
 ```
 
 > **First run (2026-05-28) caught a real defect.** `HeroViewModel_FillFrom_Patch` used a name-only `[HarmonyPatch(typeof(HeroViewModel), "FillFrom")]`. `HeroViewModel` inherits two more `FillFrom` overloads from `CharacterViewModel`, so Harmony's `AccessTools.Method` resolution found 3 candidates and threw `AmbiguousMatchException` — the postfix silently never applied in v1.4.5 (hero-portrait clan colors broken). Fixed by pinning argument types. This is exactly the gap the compiler and the BUTR analyzer miss.
@@ -63,7 +63,7 @@ In short: the analyzer is compile-time existence checking against referenced met
 
 ## Maintenance
 
-- After a Bannerlord version bump (or any patch/GameModel change): `pwsh tools/snapshot_api_surface.ps1` to refresh the two generated files, then `dotnet test --filter "TestCategory=BindingVerification"`.
+- After a Bannerlord version bump (or any patch/GameModel change): `pwsh tools/snapshot_api_surface.ps1` to refresh the two generated files, then `dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true -p:ModuleId= --settings TAOM.Tests/binding-gate.runsettings --filter "TestCategory=BindingVerification"`.
 - When you add a reflection site against an engine member: add a row to `reflection-sites.md` Category B **and** a `[DataRow]` to `ReflectionSiteBindingTests`.
 - CI/local reproducibility check: `pwsh tools/snapshot_api_surface.ps1 -Check` (exits non-zero if the committed files don't reproduce).
 

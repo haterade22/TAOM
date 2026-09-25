@@ -181,8 +181,101 @@ screen list, the class summary, the gate's "unconditionally", the feature-map ro
 identifier were corrected, and the feature doc now says raise lines are traced per call. Report
 `docs/reviews/deep-review-012-loading-window-trace-per-frame-2026-09-24.md`, RCA
 `docs/reviews/rca-loading-window-trace-per-frame-2026-09-24.md`.
+## 2026-09-25
+
+### fix(binding-gate): v2.0.30 - review follow-ups for plan 008 (#652)
+
+- **The docs say what the strict settings fail.** The hooks catalog row and the decisions entry
+  below said `binding-gate.runsettings` fails a skipped test. It fails an `Assert.Inconclusive`
+  and a filter that matches no test; an `[Ignore]`d test still reports Skipped and exits 0, so
+  the catalog row now says a gate run is green only at `Skipped: 0`.
+- **A zero-match gate run is triaged by its command.** The verify-bindings skill's Step 2 said to
+  fix the filter. On the Step 1 command as written, a zero match is a finding: an MSTest
+  discovery warning above it means `/investigate` (`Unable to load types from the test source`:
+  some of the DLL's types did not load; `Failed to discover tests from assembly`: the DLL did
+  not load), and with neither the gate tests have most likely lost their category.
+- **`BindingGateRunSettingsTests` uses the shared `RepoPaths.RepoPath`** instead of its own
+  repo-root walker. It passes 2 of 2 before and after, and deleting `TreatNoTestsAsError` from
+  the settings still turns its row red.
+- **The review records match the decisions on #652.** The first RCA and report now say that F2,
+  the convergence fix D1 and the hook header correction all lapsed with the banner. F13 (the CI
+  `if:`) is recorded as moot, as #652 records: plan 010's hosted CI deletes that job. The change
+  is not ported to `bannerlord-1.4.5`. The three earlier plan 008 headings carry #652.
+- Review record: `docs/reviews/deep-review-008-binding-gate-no-silent-skips-decisions-2026-09-24.md`
+  and `docs/reviews/rca-binding-gate-no-silent-skips-decisions-2026-09-24.md`.
+
+### fix(bindings): v2.0.30 - apply maintainer decisions for plan 008 (#652)
+
+- **No skip banner.** The `PASSED WITH SKIPS` change to `notify-test-results.sh` is reverted to
+  its content before plan 008, and `tools/test_hooks.sh` section 7c goes with it. The banner went
+  to stderr from an exit-0 hook, so it only ever reached the debug log. The signal for a skipped
+  test is the `Skipped:` count in `dotnet test`'s own output, and for the binding gate it is
+  `binding-gate.runsettings`, which fails an `Assert.Inconclusive` instead of skipping it. The
+  hooks catalog row says so.
+- **A gate filter that matches nothing is red.** `binding-gate.runsettings` now sets
+  `TreatNoTestsAsError`. Under the strict settings a filter that matched no test exited 0 before
+  and exits 1 now; the real gate still passes 368 of 368 with 0 skipped.
+  `BindingGateRunSettingsTests` pins this setting and `MapInconclusiveToFailed` in the default
+  suite, so deleting either goes red. The verify-bindings skill's Step 2 names the zero-match
+  message as a command error.
+- **The resolver order stays as built:** the two environment variables first, the build's game
+  folder last.
+
+### fix(bindings): v2.0.30 - convergence fixes for plan 008 (#652)
+
+- **A failed or aborted run is never a pass.** The all-skipped branch added below also caught
+  `Test Run Failed.` (an error message with zero failed tests) and `Test Run Aborted.` when their
+  only count was `Skipped:`, and printed `PASSED WITH SKIPS`. With no `Passed:` count it now fires
+  only on `Test Run Successful.`, so those runs get the old `FAILED (counts unavailable)` or no
+  banner again (two new `tools/test_hooks.sh` 7c cases, red first). The whole banner change was
+  removed afterwards (the maintainer decisions entry above).
+- **The skill no longer claims a complete failure list.** verify-bindings Step 2 names
+  `Main/SubModule.cs not found` as a precondition to report, and says a failure matching no row is
+  still a finding. Two test comments now state the resolver's fallback exactly and drop the stale
+  model count.
+
+### fix(bindings): v2.0.30 - review follow-ups for plan 008 (#652)
+
+- **Both resolver guards are pinned.** Two tests cover the override that holds no `Bannerlord.exe`
+  and a `BANNERLORD_GAME_DIR` that names a missing folder; each goes red if its guard is deleted
+  (checked by deleting each guard and re-running).
+- **The skip banner no longer claims an audience.** `notify-test-results.sh` writes to stderr and
+  exits 0, which Claude Code sends to the debug log only, so the hooks catalog row and this
+  CHANGELOG no longer say Claude sees it. It now also names the skips of an all-skipped run at
+  normal verbosity, where vstest prints no `Passed:` line (`tools/test_hooks.sh` section 7c).
+  Delivering the banner to Claude was left for Mike, who chose to remove the banner change
+  instead (the maintainer decisions entry above).
+- **The docs match the gate.** The verify-bindings skill no longer says every gate test goes
+  Inconclusive without the game (33 bind only against the test bin's TaleWorlds DLLs and pass),
+  and its Step 2 now names the two red forms plan 008 added: no install resolved (an environment
+  fact) and a short discovery (a TAOM type-load failure). `reflection-sites.md` gives the strict
+  gate command, and the discovery-floor messages drop their stale expected counts.
+- Review record: `docs/reviews/deep-review-008-binding-gate-no-silent-skips-2026-09-24.md` and
+  `docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md`.
 
 ## 2026-09-23
+
+### test(bindings): v2.0.30 - make the binding gate fail loudly on skips (#652)
+
+- **The gate finds the game the build used.** `GameAssemblies` read the install only from the test
+  process's `BANNERLORD_OVERRIDE_DIR` and `BANNERLORD_GAME_DIR`, so a test DLL built against the
+  game but run without them (an IDE runner, `dotnet test --no-build` from a fresh shell) skipped most
+  of the binding suite and still exited green. `TAOM.Tests.csproj` now records the build's
+  `GameFolder` as `TaomGameFolder` assembly metadata, and `GameAssemblies` falls back to it after the
+  two variables.
+- **A skip in the gate is a failure.** `TAOM.Tests/binding-gate.runsettings` maps Inconclusive to
+  Failed. The verify-bindings skill, the docs that give the gate command and the CI job run the gate
+  with it. The default suite does not: a test there still skips when the game or the Armory is
+  absent, as decided. The discovery floors (fewer than 30 patch types, fewer than 20 GameModels) now
+  fail instead of skipping, since they only run once the game has loaded.
+- **The test banner names skips.** `notify-test-results.sh` printed `PASSED (33 tests)` for a run of
+  33 passes and 335 skips; it now prints `PASSED WITH SKIPS` with the count, and a red run carries its
+  skip count too. Pinned by `tools/test_hooks.sh` section 7c; `docs/reference/hooks-catalog.md`
+  lists the new banner. The banner reaches the debug log only, not Claude, and the 2026-09-24
+  maintainer decisions entry removes it again.
+- Applies to the binding gate the fix that the "`Assert.Inconclusive` is a pass" item in
+  `docs/reviews/rca-lord-identity-2026-08-29.md` asks for. That item names
+  `LordFamilyTransformTests`, which is not in the gate, so it stays open.
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)
 

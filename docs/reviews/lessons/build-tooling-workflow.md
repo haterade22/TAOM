@@ -2342,3 +2342,20 @@ backup and whatever state it held is gone. The run's own timestamped backup from
 - **Prevent:** every writer names its backup `<file>.bak-<topic>-<timestamp>` and refuses to overwrite one; when
   reusing an older tool on a live file, read its backup line before `--apply`.
 - **Source:** `tools/patch_dwarf_action_parity.py` (fixed 2026-09-24), `docs/reference/lotrlome-hill-troll-changes.md`.
+### An advisory hook's output must reach Claude: test the channel, not the text (plan 008, 2026-09-24)
+Plan 008 taught `notify-test-results.sh` to print `PASSED WITH SKIPS` for a gate that had skipped 335 of 368 tests. The banner went to stderr from a hook that exits 0, which Claude Code sends to the debug log only, so no agent ever saw it. The hooks catalog and the CHANGELOG described it as visible.
+- **Why missed:** the plan specified stderr, and `hook-authoring.md:128` still advises "write to stderr for an advisory hook", which contradicts `harness-facts.md` "Visibility". `tools/test_hooks.sh` 7c captured stderr with `2>&1 >/dev/null` and matched the text, which proves the string and not its delivery. This repeats #647, where gates printed a decision format the harness ignores.
+- **Prevent:** before writing an advisory hook, pick its channel from `harness-facts.md` "Visibility" and name it in the catalog row. For a PostToolUse hook, stderr with exit 0 reaches no one. A test pins what the harness reads (the JSON on stdout, or the exit code), and the first live tool call that should show the output is checked in the transcript. A doc says "shown" only after that check.
+- **Source:** `docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md` F1.
+
+### A change to how a gate behaves updates every doc that runs or reads it (plan 008, 2026-09-24)
+Plan 008 changed the binding gate's command and added two red forms. Three consumers were left behind. `reflection-sites.md` still gave the old command, because the sweep grepped only the `TestCategory=BindingVerification"` spelling. The skill's triage line still said "a red gate is a real finding, one of three classes". The skill claimed "every gate test" goes Inconclusive without the game, while the executor's own log showed 33 of 368 passing.
+- **Why missed:** each claim was checked against the diff, not against the files that consume the gate or the run that measured it.
+- **Prevent:** grep for the command's stem (`BindingVerification`, the test class names) rather than one filter spelling. When a change adds a failure message, update the table that tells an agent how to read a failure. Before writing a quantifier ("every", "all", "never") about a gate, check it against the measured counts in the run log.
+- **Source:** `docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md` F4, F5, F7.
+
+### A whole-file revert reverts every fix in the file: re-record each finding it touched (plan 008, 2026-09-25)
+Mike chose to drop plan 008's skip banner, and the commit restored `notify-test-results.sh` byte for byte to its state before the plan. The records then said only F11 lapsed. The same revert also undid F2 (the all-skipped normal-verbosity case), the convergence fix D1, and F1's correction to the hook header, which went back to "summarize dotnet test results prominently" beside a catalog row saying nobody sees the output. The same records called the CI `if:` "still open", while #652's Decisions section, written before the commit, called it moot.
+- **Why missed:** the resolution was written from the decision's headline ("drop the banner") and from the session's memory of the answers, not from the list of findings the file carried or from the issue where the decisions were written down.
+- **Prevent:** before writing the resolution of a revert, run `git log` on each reverted file since the target revision and list every finding those commits fixed; mark each one lapsed or kept. Copy each maintainer decision from the record where it was made (the issue or the question's answer), and record every decision, including a port.
+- **Source:** `docs/reviews/rca-binding-gate-no-silent-skips-decisions-2026-09-24.md` R3, R4, R6.

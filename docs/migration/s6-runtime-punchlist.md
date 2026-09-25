@@ -10,7 +10,7 @@ These ran as part of S6's intent and are now permanent `dotnet test` gates (`TAO
 - ✅ **All 39 GameModels are registered + override correctly** (`GameModelOverrideBindingTests`).
 - ✅ **32 auxiliary reflection members resolve** (`ReflectionSiteBindingTests`).
 
-Run before touching the items below: `dotnet test TAOM.Tests/TAOM.Tests.csproj --filter "TestCategory=BindingVerification"`.
+Run before touching the items below: `dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true -p:ModuleId= --settings TAOM.Tests/binding-gate.runsettings --filter "TestCategory=BindingVerification"`.
 
 ---
 

@@ -3831,3 +3831,87 @@ pass owed by the orchestrator.
 Report `docs/reviews/deep-review-012-loading-window-trace-per-frame-2026-09-24.md`, RCA
 `docs/reviews/rca-loading-window-trace-per-frame-2026-09-24.md`; lessons in harmony-il (one new, one repeat
 bullet), testing-qa (new) and build-tooling-workflow (repeat bullet). Not pushed, not deployed, not smoked.
+## Review 132 (number provisional: parallel improve branches): plan 008, the binding gate fails loudly instead of passing by skipping, 7-lens deep review + Codex adversarial (2026-09-24)
+
+Plan 008 (`7f02fc8d..8c89e042`, branch `improve/008-binding-gate-no-silent-skips`) points the gate
+at the build's game folder when the test process has no variables, adds an opt-in
+`binding-gate.runsettings` that maps Inconclusive to Failed, turns the discovery floors into
+failures, and teaches the test-results hook to name skips. Codex used 117,503 tokens and found
+**0 P1, 1 P2, 1 P3, both confirmed, no false positive.** It disputed or left unverified 8 of its 10
+Known Suspects, with reasons.
+
+The P2 matched two lenses: the new `PASSED WITH SKIPS` banner goes to stderr from an exit-0 hook,
+which Claude Code sends to the debug log only, so nobody sees it. It repeats #647. The P3 found
+that a response with two summaries loses the second's skips (`head -1`). The seven lenses found 11
+more confirmed defects (13 in all, 0 HIGH) and 1 false positive (a metadata assert that plan 010's
+empty `TaomGameFolder` needs to stay presence-only).
+
+Fixed on the branch:
+- two resolver guard tests, each proven by deleting its guard;
+- the hook's silence on an all-skipped normal-verbosity run (test first);
+- the skill's quantifier and its triage table, which now lists the two red forms plan 008 added;
+- a stale gate command in `reflection-sites.md` and stale counts in the floor messages;
+- the doc comment, the CHANGELOG date and an overclaimed RCA closure.
+
+Left for Mike: the banner's channel (with the P3), `TreatNoTestsAsError` (measured: a zero-match
+gate run goes from rc 0 to rc 1, and the gate is unchanged), `if: ${{ !cancelled() }}` on the CI
+step, build-folder-first resolution, and the GitHub issue.
+
+Mike's decisions (2026-09-24, #652): the banner change and 7c are removed (the `Skipped:` count in
+`dotnet test`'s output and the strict runsettings are the signal, so the P3 lapses with them);
+`TreatNoTestsAsError` is added to the gate settings; the resolver order stays variables first. The
+CI `if:` is moot (#652: plan 010's hosted CI deletes the job), and nothing is ported to
+`bannerlord-1.4.5`. Recorded in the deep-review report's maintainer decisions section.
+
+Codex did best by citing the vendor hook contract and building a two-summary counterexample. It
+missed every prose and test-adequacy finding. Before the decisions: full suite
+`Failed: 2, Passed: 10243, Skipped: 2`
+(the two known live-Armory tests); strict gate 368/0/0; `test_hooks.sh` 289 passed. After them:
+`Passed: 10245`, strict gate 368/0/0, `test_hooks.sh` 283 passed.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|---|---|---|---|
+| 1 | Skip banner never reaches Claude | Dead / no-op code | The plan specified stderr; `hook-authoring.md:128` advises it; 7c tested the text, not the delivery | Lesson in build-tooling-workflow; `hook-authoring.md:128` edit recommended |
+| 2 | Later summaries' skips dropped | Logic error | Every fixture held one summary | Deferred with 1: a two-summary fixture goes with the aggregation fix |
+
+Report: `docs/reviews/deep-review-008-binding-gate-no-silent-skips-2026-09-24.md`. RCA:
+`docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md`. Two lessons in
+build-tooling-workflow and one in testing-qa.
+
+## Review 133 (number provisional: parallel improve branches): plan 008 round two, the maintainer decisions follow-up, 7-lens deep review + Codex adversarial (2026-09-25)
+
+Codex (gpt-6-astra, ultra) reviewed `2ca0805b..37306bca`: the skip banner and `tools/test_hooks.sh`
+7c removed, `TreatNoTestsAsError` added to `binding-gate.runsettings` with a default-suite pin test,
+and the resolver order kept. It used 145,091 tokens and found **0 P1, 0 P2, 1 P3, confirmed, no
+false positive.** It disputed 5 of its 10 Known Suspects, confirmed one as a coverage boundary (the
+pin test proves the XML, not the runner), and left 4 unverified as historical executor behaviour.
+
+| # | Codex Severity | Our Severity | Agree? | Reason |
+|---|---|---|---|---|
+| 1 | P3 | LOW | Yes | `hooks-catalog.md:42` said the settings fail "a skipped test"; they map only Inconclusive, and MSTest 3.1.1 reports `[Ignore]` as Skipped regardless. Six lenses found the same line, and the CHANGELOG sentence beside it |
+
+The lenses confirmed seven more, all LOW or NIT and all in prose or the new test's locator: the
+zero-match triage sentence names one cause of three; the records missed that the revert also undid
+F2, D1 and F1's hook header fix; the report counted two unlabelled CHANGELOG headings, not three;
+the records called the CI `if:` open while #652 records it moot; REVIEW-LOG counts from before the
+decisions read as current; and the pin test added a private repo-root walker beside
+`RepoPaths.RepoPath` (the third review to fix that).
+
+Codex did best by citing the vendor docs for Inconclusive against `[Ignore]` and by walking the
+restored hook's five banner outcomes. It checked the F13 wording against the report, not against
+#652, and did not audit the records against the findings the revert lapsed.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|---|---|---|---|
+| 1 | Catalog says the strict settings fail every skip | Other: doc overclaim | Written from the gate's own skip; the first round's `[Ignore]` FOLLOW-UP was not re-read | Fixed; covered by the first round's "docs follow the gate" lesson |
+
+Fixed on the branch, test first where testable: both overclaims, the skill's zero-match triage, the
+records (F2, D1, header, F13 moot, no port), the three CHANGELOG headings, and the locator (2 of 2
+before and after, and a deleted `TreatNoTestsAsError` still turns its row red). Not applied: the
+header restore, since plan 013 anchors on the exact line. A zero-match strict run now has its
+`rc=1` on disk. Full suite `Failed: 2, Passed: 10245, Skipped: 2, Total: 10249` (the two known
+live-Armory tests).
+
+Report: `docs/reviews/deep-review-008-binding-gate-no-silent-skips-decisions-2026-09-24.md`. RCA:
+`docs/reviews/rca-binding-gate-no-silent-skips-decisions-2026-09-24.md`. One lesson in
+build-tooling-workflow and one in testing-qa.

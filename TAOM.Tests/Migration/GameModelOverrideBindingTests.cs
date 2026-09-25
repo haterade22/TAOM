@@ -11,7 +11,8 @@ using TAOM.Features.TroopProgression.Models;
 namespace TAOM.Tests.Migration;
 
 /// <summary>
-/// Binding-verification gate for TAOM's GameModel overrides (the ~37 <c>Taom*Model</c> classes).
+/// Binding-verification gate for TAOM's GameModel overrides (the <c>Taom*Model</c> classes;
+/// taleworlds-api-snapshot/gamemodel-bases.md has the current count).
 ///
 /// Scope note — what the C# compiler already covers vs. what this adds:
 /// the compiler enforces that every <c>override</c> matches a base <c>virtual</c> with the exact
@@ -49,8 +50,9 @@ public class GameModelOverrideBindingTests
             Assert.Inconclusive("Game assemblies not loaded: " + string.Join("; ", GameAssemblies.Diagnostics));
 
         var models = DiscoverGameModels();
+        // The game loaded, so a short discovery is a TAOM type-load failure: fail, never skip.
         if (models.Count < 20)
-            Assert.Inconclusive($"Only {models.Count} GameModel subclasses discovered (expected ~37) — assembly-load problem, not a genuine pass.");
+            Assert.Fail($"Only {models.Count} GameModel subclasses discovered (taleworlds-api-snapshot/gamemodel-bases.md has the current count) — assembly-load problem, not a genuine pass.");
 
         var subModule = ReadRepoFile("Main", "SubModule.cs");
         if (subModule == null)
@@ -76,8 +78,9 @@ public class GameModelOverrideBindingTests
             Assert.Inconclusive("Game assemblies not loaded: " + string.Join("; ", GameAssemblies.Diagnostics));
 
         var models = DiscoverGameModels();
+        // The game loaded, so a short discovery is a TAOM type-load failure: fail, never skip.
         if (models.Count < 20)
-            Assert.Inconclusive($"Only {models.Count} GameModel subclasses discovered — assembly-load problem.");
+            Assert.Fail($"Only {models.Count} GameModel subclasses discovered — assembly-load problem.");
 
         var problems = new List<string>();
         foreach (var model in models)
