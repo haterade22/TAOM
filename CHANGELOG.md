@@ -29,7 +29,7 @@ change a Battle Balance slider mid-campaign and check auto-resolve follows it. R
 `docs/reviews/deep-review-003-hot-path-resolve-and-grid-caching-2026-09-24.md`,
 `docs/reviews/rca-hot-path-resolve-and-grid-caching-2026-09-24.md`.
 
-### perf(battlebalance): v2.0.30 - read the MCM settings once per process (plan 003)
+### perf(battlebalance): v2.0.30 - read the MCM settings once per process (plan 003, #664)
 
 `BattleBalanceSettingsProvider` resolved `TaomSettings.Instance` on every property read, and
 `GetDefaultTroopPower` reads up to seven of them per call. The provider now
