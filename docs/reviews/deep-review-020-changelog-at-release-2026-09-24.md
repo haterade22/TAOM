@@ -33,7 +33,7 @@ commit, with the test named.
 
 | # | Sev | Finding | Reported by | Verdict | Resolution |
 |---|---|---|---|---|---|
-| C1 | MED | `session-start.sh` degraded banner says "four" python-only gates; there are five, and the one left out (`check-commit-subject-version`) produces the labels the generator groups by | Std F1, DF I2, Tool F2, Design P1 | CONFIRMED: the grep over `.claude/hooks/*.sh` for `taom_pybin_degraded` with no `jq` lists five files; the diff rewrote "Five" to "Four" by subtracting the retired gate from a list that was already one short | Fixed. Banner and comment name all five and carry no count. New `tools/test_hooks.sh` check 5b2 fails when a python-only gate is missing from the banner; it failed on the old banner (RED in the full suite run) and passes now |
+| C1 | MED | `session-start.sh` degraded banner says "four" python-only gates; there are five, and the one left out (`check-commit-subject-version`) produces the labels the generator groups by | Std F1, DF I2, Tool F2, Design P1 | CONFIRMED: the grep over `.claude/hooks/*.sh` for `taom_pybin_degraded` with no `jq` lists five files; the diff rewrote "Five" to "Four" by subtracting the retired gate from a list that was already one short | Fixed. Banner and comment name all five and carry no count. New `tools/test_hooks.sh` check 5b2 fails when a python-only gate is missing from the banner; it failed on the old banner (RED in the full suite run) and passes now. Correction: as committed in `6e4bfedb`, 5b2 matched the gate names in a source comment, not the printed lines (Convergence D3, below) |
 | C2 | MED | Lens 4 item 5 runs `git diff --name-only HEAD -- CHANGELOG.md`, which cannot see a committed hand edit; in this worktree it printed nothing although the range rewrote the file | Std F4, Compl F1, DF I3, Tool F1 (docs side), Design P4 | CONFIRMED: reran both commands in the worktree | Fixed. The lens diffs against the review base, with the `/release` and archive-roll exemptions. `/verify` Step 5 stays HEAD-based: it runs before a commit, where that is correct |
 | C3 | MED | A commit body line that reads as a Markdown heading lands verbatim in the generated file. A body showing `## v2.0.32 (` makes the later v2.0.32 run refuse as a duplicate; any `##` or `###` line in a body also adds a heading to the file's structure | Codex P2-1 | CONFIRMED: the new test fails with the duplicate `ValueError` on the old code | Fixed. `_contain` escapes body lines CommonMark reads as ATX headings (up to three spaces, one to six `#`, then a space or the line end). `#622: ...` issue references at a line start stay untouched, so output for both real ranges is byte-identical. Tests `test_render_escapes_a_body_line_that_would_be_a_heading`, `test_render_leaves_an_issue_reference_at_a_line_start_alone`, `test_insert_after_a_release_whose_body_showed_the_next_heading` |
 | C4 | MED | `/release` reads a moving `HEAD`: a commit landing between Phase 4 (generate) and Phase 7 (tag `HEAD`) ends up in the tag but in no generated section, this one or the next | DF G1 | CONFIRMED by reading `release/SKILL.md` Phases 4 to 7 and the generator's range code; that a concurrent commit lands mid-release is UNVERIFIED as a frequency, but `release-process.md` step 1 expects other sessions' edits | Fixed. The generator resolves `--until` to a SHA once, uses it for `describe` and `log`, and prints `ending at <sha>`. `/release` Phase 6 checks `HEAD` still equals it (else restore and regenerate); Phase 7 tags the release commit by SHA; `release-process.md` steps 7 and 8 match. Test `test_main_names_the_commit_the_range_ends_at` |
@@ -210,3 +210,25 @@ design points (C11).
 | 3 | Contract doc order contradicts the skill | Convention inconsistency | The step text was replaced in place without re-reading the step order | Fixed; covered by lesson 2 (a skill and its "Full contract" doc move together) |
 
 RCA: `docs/reviews/rca-changelog-at-release-2026-09-24.md`.
+
+## Convergence
+
+A convergence review of the review-fix commit `6e4bfedb` (range `ef5b7ff4..6e4bfedb`) reported
+three defects. Each was re-read against the worktree before any change; all three are CONFIRMED
+and fixed. No false positives.
+
+| # | Sev | Finding | Verdict | Resolution |
+|---|---|---|---|---|
+| D1 | MED | The generator docstring, the `tools/README.md` row and `/release` Phase 4 said `/release` tags the commit the range ends at. Phase 4 runs before the release commit exists, so that commit is the release commit's parent, and Phase 7 tags the Phase 6 commit with nothing tying the two together. A commit landing between the Phase 6 `HEAD` check and `git commit` still ended up in the tag and in no section | CONFIRMED: `changelog_from_commits.py` resolves `--until` (default `HEAD`) once; `release/SKILL.md` Phase 4 runs it before Phase 6 commits | Phase 7 (and `release-process.md` step 8) now first requires `git rev-parse <release commit sha>^` to print the Phase 4 SHA, and stops to ask when it does not. The docstring, the README row and Phase 4 say the range end must be the release commit's parent |
+| D2 | LOW | Phase 7's confirmation ran `git describe --tags --match 'v[0-9]*' HEAD`, which prints `vX.Y.Z-1-g<sha>` in exactly the case tagging by SHA exists for | CONFIRMED by reading Phase 7 | It describes `<release commit sha>` instead |
+| D3 | LOW | `test_hooks.sh` 5b2 grepped each gate name anywhere in `session-start.sh`. The echo lines used short names; the names matched only in a source comment, so an echo line could drop a gate while 5b2 stayed green. The jq-path skip matched the text `jq` anywhere in a hook | CONFIRMED: the corrected check, run against the old banner, failed all five gates | 5b2 reads only non-comment lines of `session-start.sh` and selects gates by the `taom_pybin_degraded` call site, skipping only those whose call passes `jq`. The banner prints the five hook file names. RED on the old banner (5 of 5 failed), green on the new one, and RED for `check-doc-config-drift` alone when that name is deleted from its echo line while the comment still carries it. The C1 row above, `rca-changelog-at-release-2026-09-24.md` C1 and the `lessons/misc.md` entry are corrected |
+
+**Verification (this pass):**
+
+- `bash tools/test_hooks.sh`: 373 passed, 0 failed. A first run failed only check 8
+  (`scan.sh` exit 124, its 60 s timeout); run alone, `scan.sh` exited 0 in 54 s, and the rerun
+  passed. No file this pass edits is read by `scan.sh`'s timing path.
+- `python tools/tests/test_changelog_from_commits.py`: 33 tests, OK.
+- `python tools/lint_docs.py --dash-base ef5b7ff4 --summary`: `ai_dashes: 0`.
+- `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`: Failed 0, Passed 10629,
+  Skipped 2, Total 10631.

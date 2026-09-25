@@ -34,12 +34,14 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh" 2>/dev/null || PYBIN=""
 # (check-claude-files-tracked, check-commit-subject-version, check-doc-config-drift,
 # check-moduledata-validation, check-native-dll-crt) call "$PYBIN" unconditionally, so they
 # die on a missing python whether jq is present or not. ANDing the two conditions hid
-# exactly that case. tools/test_hooks.sh 5b2 fails when a python-only gate is missing here.
+# exactly that case. tools/test_hooks.sh 5b2 fails when a python-only gate's file name is
+# missing from the echo lines below (it ignores comments, this one included).
 if [[ -z "${PYBIN:-}" ]]; then
     echo ""
     echo "!!! HOOK TOOLCHAIN DEGRADED: no safe python resolved. !!!"
-    echo "    The python-only gates are failing OPEN right now: claude-files-tracked,"
-    echo "    commit-subject version, doc-config-drift, moduledata-refs, native-DLL-CRT."
+    echo "    The python-only gates are failing OPEN right now: check-claude-files-tracked,"
+    echo "    check-commit-subject-version, check-doc-config-drift,"
+    echo "    check-moduledata-validation, check-native-dll-crt."
     if ! command -v jq >/dev/null 2>&1; then
         echo "    jq is absent too, so EVERY JSON-parsing gate is open, force-push included."
     fi

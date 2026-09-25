@@ -696,11 +696,14 @@ done
 #      list there once omitted check-commit-subject-version for ten days.
 # ---------------------------------------------------------------------------
 head2 "5b2. the degraded banner names every python-only gate"
+# Only the call site's third argument marks a jq path (_pybin.sh), and only non-comment lines
+# of session-start.sh print anything: a name in a comment there is not in the banner.
+SS_CODE=$(grep -v '^[[:space:]]*#' .claude/hooks/session-start.sh)
 for f in .claude/hooks/*.sh; do
     name=$(basename "$f" .sh)
-    grep -q 'taom_pybin_degraded' "$f" || continue
-    grep -q 'jq' "$f" && continue
-    if grep -q -- "$name" .claude/hooks/session-start.sh; then
+    grep -qE '^[[:space:]]*taom_pybin_degraded "' "$f" || continue
+    grep -qE '^[[:space:]]*taom_pybin_degraded .* jq( |$)' "$f" && continue
+    if grep -q -- "$name" <<<"$SS_CODE"; then
         ok "$name is named in the session-start degraded banner"
     else
         bad "$name has no jq path, so it fails open without python, but session-start.sh does not name it"

@@ -211,7 +211,10 @@ new rule, across eleven files.
   `session-start.sh` degraded banner from "five" to "four" by subtraction; the list had
   been one short since 2026-09-14, so five gates were open and the banner named four. The
   banner now carries no count, and `tools/test_hooks.sh` 5b2 derives the gate list from the
-  hooks. `docs/reviews/rca-changelog-at-release-2026-09-24.md` C1.
+  hooks. The first 5b2 grepped the whole of `session-start.sh` and passed on a source comment
+  while the printed lines used short names; it now reads only non-comment lines, and the
+  banner prints the hook file names. A presence check must read what is shown, not the file
+  that shows it. `docs/reviews/rca-changelog-at-release-2026-09-24.md` C1.
 
 ### A claim found wrong is wrong everywhere it was written: grep for it before fixing the copy in front of you (#644, #645, 2026-09-23)
 

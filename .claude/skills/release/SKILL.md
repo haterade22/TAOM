@@ -77,7 +77,8 @@ It reads every non-merge commit since the previous release tag
 and body verbatim, lists the commits without the version label in a last group, and inserts
 `## vX.Y.Z (<today>)` above the previous release's section. Read its stderr summary
 (`N commits, L with the version label, U without; ending at <sha>`), note that SHA for Phases 6
-and 7, and read the unlabelled group before writing the release note. Exit 2 means it refused;
+and 7 (the release commit's parent must be that commit), and read the unlabelled group before
+writing the release note. Exit 2 means it refused;
 show the user the message, and never delete a hand-written heading without their OK.
 
 ## Phase 5: release note
@@ -109,6 +110,10 @@ The label is the NEW version, the one this commit writes into `SubModule.xml`; t
 
 ## Phase 7 — Tag and push (the step that gets skipped)
 
+First, `git rev-parse <release commit sha>^` must print the SHA Phase 4 ended at. If it does not,
+a commit landed between the Phase 6 check and the commit, and it is in no section: stop and ask
+the user before tagging anything.
+
 ```bash
 git tag -a vX.Y.Z <release commit sha> -m "TAOM vX.Y.Z
 
@@ -123,7 +128,7 @@ refspec. Then confirm it landed:
 
 ```bash
 git ls-remote --tags origin | grep vX.Y.Z          # expect the ref and its ^{} peel
-git describe --tags --match 'v[0-9]*' HEAD         # expect vX.Y.Z
+git describe --tags --match 'v[0-9]*' <release commit sha>   # expect vX.Y.Z
 ```
 
 ## Gotchas
