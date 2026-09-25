@@ -45,9 +45,8 @@ commands in the developer quick start below.
 **Build & test**
 
 ```powershell
-git clone https://github.com/haterade22/TAOM      # lands on bannerlord-1.4.5
+git clone -b bannerlord-1.5.x https://github.com/haterade22/TAOM
 cd TAOM
-git switch bannerlord-1.5.x     # this branch: the v1.5.3 line
 
 .\setup-dev-env.ps1        # set BANNERLORD_GAME_DIR (asks for your install path)
 .\build.ps1                # build the mod
@@ -119,7 +118,7 @@ hand-kitbashed in the editor — see the [build reference](docs/kitbash/erebor/)
 
 ### Headline systems
 
-- **Career System** — Culture-specific careers; pick one at character creation, progress a
+- **Career System** — culture-specific careers; pick one at character creation, progress a
   tiered choice tree, unlock passive bonuses + an active battlefield ability (press **V**).
 - **Legendary War Beasts** — ride wargs, Harad **war elephants** (trample + tusk auto-attacks), and
   Dol Guldur **giant spiders** (auto-bite); each driven by behavior-tree AI and fielded as cavalry.

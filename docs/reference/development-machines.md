@@ -28,7 +28,7 @@ letter into new code.
 | `TAOM_DECOMPILE_ROOT` | Windows user env var | `tools/check_handbook_attributes.py`. Point it at the **category tree**, e.g. `C:\Decompiled_Bannerlord\_categories_v1.5.2` (the script's default is the desktop's `E:\Decompiled_Bannerlord\_categories_v1.5.2`) |
 | `TAOM_PYBIN` | `.claude/settings.json` env block | `.claude/hooks/_pybin.sh`. The same value works on both machines because Python lives at `C:\Python314` on each; a stale pin degrades to discovery rather than failing |
 
-**Two things ignore all of that** and need the path passed by hand:
+**Three things ignore all of that** and need the path passed by hand:
 
 - `tools/decompile_bannerlord.ps1` and `tools/decompile_to_folder.ps1` take `-Out` / `-GameBin` /
   `-Source` / `-Destination` parameters and honour no environment variable (this is already noted
@@ -37,10 +37,15 @@ letter into new code.
   `filesystem` server points at directories that do not exist and `taom-moduledata` invokes
   `E:/repos/TAOM/tools/taom_mcp_server.py`. Editing that file to suit one machine breaks the
   other. The fix is a local-scope MCP override in user config, not a change to the committed file.
+- `.codex/config.toml` hardcodes the same desktop `E:\` paths for Codex's `filesystem` server, with
+  the same consequence on the laptop.
 
-`.claude/settings.local.json` is per-user and untracked: each machine keeps its own copy (personal
-allow rules, `additionalDirectories`, `enabledMcpjsonServers`). Anything every clone needs, such
-as the MCP write-tool deny list, lives in the tracked `.claude/settings.json`.
+`.claude/settings.local.json` is per-user and untracked: each checkout, every worktree included,
+keeps its own copy (personal allow rules, `additionalDirectories`, `enabledMcpjsonServers`). A new
+worktree starts without one, so copy yours in. `bannerlord-1.4.5` still tracks the file, so
+switching a checkout to that branch overwrites your copy and switching back removes it; do 1.4.5
+work in its own worktree. Anything every clone needs, such as the MCP write-tool deny list, lives
+in the tracked `.claude/settings.json`.
 
 ## The trap: a red validator on the laptop is usually the laptop
 

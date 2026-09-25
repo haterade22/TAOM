@@ -4,7 +4,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "@modelcontextprotocol/server-filesystem",
+        "@modelcontextprotocol/server-filesystem@2026.8.31",
         "C:\\path\\to\\TAOM",
         "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules",
         "E:\\path\\to\\LOTRAOM\\Modules\\LOTRAOM\\ModuleData"
@@ -12,7 +12,7 @@
     },
     "git": {
       "command": "uvx",
-      "args": ["mcp-server-git"]
+      "args": ["mcp-server-git@2026.8.18"]
     },
     "ilspy": {
       "command": "python",

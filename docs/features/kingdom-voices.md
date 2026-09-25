@@ -401,7 +401,7 @@ record of what produced what and no way to resume from clip 700.
 "elevenlabs": {
   "type": "stdio",
   "command": "uvx",
-  "args": ["elevenlabs-mcp"],
+  "args": ["elevenlabs-mcp@0.12.2"],
   "env": {
     "ELEVENLABS_API_KEY": "${ELEVENLABS_API_KEY}",
     "ELEVENLABS_MCP_BASE_PATH": "${CLAUDE_PROJECT_DIR:-E:/repos/TAOM}/.voice-scratch",
@@ -414,7 +414,8 @@ record of what produced what and no way to resume from clip 700.
 - **`ELEVENLABS_MCP_BASE_PATH` is a sandbox.** The server rejects any path resolving outside it, so
   pointing it at the gitignored `.voice-scratch/` means auditions cannot land in `ModuleSounds/`.
   Promotion from audition to asset is a deliberate copy, never a side effect of a generate call.
-- Requires `uvx elevenlabs-mcp` installed and `ELEVENLABS_API_KEY` set in the environment. Both live
+- Requires `uvx` (it fetches the pinned `elevenlabs-mcp` on first launch; bump the pin per
+  [mcp-servers.md](../reference/mcp-servers.md)) and `ELEVENLABS_API_KEY` set in the environment. Both live
   outside the repo.
 - After any `.mcp.json` edit, run `python tools/audit_claude_config.py` (`/security-scan`).
 
