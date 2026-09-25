@@ -221,3 +221,13 @@ in the review records, both confirmed against the files and fixed:
 False positives: none. Full suite after the fixes (docs only, no code change):
 `Passed! - Failed: 0, Passed: 10707, Skipped: 2, Total: 10709`
 (`E:\repos\taom-improve\scratch\review-026-convergence\full-suite.log`).
+
+## Orchestrator follow-ups (2026-09-25)
+
+- The adversarial review's one P3 (the plan's RED steps 1, 7 and 13 required both `CS0115` and
+  `CS0122`, but the compiler printed only `CS0115`) was reported by the executor as a deviation in
+  its return to the orchestrator, not in a committed file. Recorded here: each of those RED builds
+  exited 1 with only `CS0115` in its own test file, a subset of the allowed codes, so no STOP
+  applied. The compiler reports the declaration error (`CS0115`) before it binds the method bodies
+  that would raise `CS0122`. The plan text is left as written (a historical record).
+- The adversarial review prompt is committed with this note.
