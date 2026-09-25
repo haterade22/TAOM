@@ -473,7 +473,7 @@ PY
 )
 # The gates whose prefilter is their own word rather than `git`: each must also skip
 # `git status`, `git diff` and `git log`.
-PF_NARROWED_LIST=(check-changelog-changed.sh check-claude-files-tracked.sh check-commit-subject-version.sh
+PF_NARROWED_LIST=(check-claude-files-tracked.sh check-commit-subject-version.sh
                   check-moduledata-validation.sh check-native-dll-crt.sh check-doc-config-drift.sh
                   validate-push.sh block-no-verify.sh)
 PF_NARROWED="${PF_NARROWED_LIST[*]}"
@@ -495,7 +495,7 @@ else
             [[ "$name" == mark-verification-run.sh ]] && triggers+=('cd /x\npwsh ./build.ps1 -RunTests')
         else
             # Each gate's own word (maintainer decision D39): validate-push.sh filters on
-            # `push`, block-no-verify.sh on `no-verify`, the six commit gates on `commit`,
+            # `push`, block-no-verify.sh on `no-verify`, the five commit gates on `commit`,
             # and the two confirm gates on `git`; a `git commit` row reaches the last two sets.
             case "$name" in
                 # validate-push.sh finds `push` by token, so `git -C <dir> push` is its trigger too.
@@ -557,12 +557,12 @@ fi
 
 # ---------------------------------------------------------------------------
 # 4d. An escaped letter cannot hide a blocked command. JSON allows `\u0063` for `c`, and
-#     the prefilters read the raw payload, so five of the ten blocking gates
+#     the prefilters read the raw payload, so five of the nine blocking gates
 #     (check-commit-subject-version.sh, validate-push.sh, block-no-verify.sh,
 #     block-dangerous-git.sh, block-broad-git-add.sh) are each fed their blocked command
 #     twice, plain and with the gated word's first letter escaped, and must answer both the
 #     same way (maintainer decision D40; Codex's counter-payload in the plan 013 review).
-#     The other five (check-changelog-changed.sh, check-claude-files-tracked.sh,
+#     The other four (check-claude-files-tracked.sh,
 #     check-moduledata-validation.sh, check-native-dll-crt.sh, check-doc-config-drift.sh)
 #     get 4c's escaped-word reach row only.
 # ---------------------------------------------------------------------------

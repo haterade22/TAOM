@@ -102,9 +102,8 @@ deep-review)
    it first, with a source.
 2. **Porting from an external suite:** follow `external-skill-ports.md`, which starts with
    `python tools/audit_claude_config.py --root <dir> --external`.
-3. **Committing `.claude/` changes:** `check-changelog-changed.sh` blocks unless CHANGELOG.md is in the
-   commit, amends included; `check-claude-files-tracked.sh` blocks if a file under
-   `.claude/{skills,agents,rules,hooks}/` is untracked or ignored. Both fire only on Claude-driven
+3. **Committing `.claude/` changes:** `check-claude-files-tracked.sh` blocks if a file under
+   `.claude/{skills,agents,rules,hooks}/` is untracked or ignored. It fires only on Claude-driven
    commits.
 4. **Review skills:** Phase 3e root-cause analysis applies to every confirmed bug, not only HIGH ones.
 5. **Writing a fact here:** cite a doc URL (DOC-BACKED) or an observation (EMPIRICAL: where, when).

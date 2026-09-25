@@ -30,15 +30,15 @@ echo "Branch: $BRANCH"
 # fail silent"). On 2026-08-31 the opposite failure cost ~20 minutes per Bash call:
 # `python3` resolved to a Microsoft Store App Execution Alias that never exits.
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh" 2>/dev/null || PYBIN=""
-# Two separate conditions, deliberately NOT ANDed. Five gates
-# (check-changelog-changed, check-claude-files-tracked, check-doc-config-drift,
+# Two separate conditions, deliberately NOT ANDed. Four gates
+# (check-claude-files-tracked, check-doc-config-drift,
 # check-moduledata-validation, check-native-dll-crt) have no jq path at all and call
 # "$PYBIN" unconditionally, so they die on a missing python whether jq is present or not.
 # ANDing the two conditions hid exactly that case.
 if [[ -z "${PYBIN:-}" ]]; then
     echo ""
     echo "!!! HOOK TOOLCHAIN DEGRADED: no safe python resolved. !!!"
-    echo "    The five python-only gates are failing OPEN right now: changelog-staged,"
+    echo "    The four python-only gates are failing OPEN right now:"
     echo "    claude-files-tracked, doc-config-drift, moduledata-refs, native-DLL-CRT."
     if ! command -v jq >/dev/null 2>&1; then
         echo "    jq is absent too, so EVERY JSON-parsing gate is open, force-push included."
@@ -194,15 +194,6 @@ fi
 echo ""
 echo "Recent commits:"
 git log --oneline -5 2>/dev/null || echo "  (no commits)"
-
-# Latest CHANGELOG entry (date + feature titles only)
-echo ""
-echo "Latest CHANGELOG:"
-if [[ -f CHANGELOG.md ]]; then
-  awk '/^## [0-9]/{if(found) exit; found=1; print; next} found && /^### /{print}' CHANGELOG.md
-else
-  echo "  (no CHANGELOG.md)"
-fi
 
 # Uncommitted changes count
 STAGED=$(git diff --cached --name-only 2>/dev/null | wc -l | tr -d ' ')

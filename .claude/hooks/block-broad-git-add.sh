@@ -118,7 +118,7 @@ while IFS= read -r seg; do
   elif [[ "$rest" =~ ^commit([[:space:]]|$) ]]; then
     after="${rest#commit}"
     # -a / --all, including bundled short flags like -am. Exclude --amend, which is a
-    # different thing entirely and is gated by check-changelog-changed.sh.
+    # different thing entirely.
     if [[ "$after" =~ (^|[[:space:]])--all([[:space:]]|$) ]]; then
       REASON="git commit --all stages every tracked modification before committing"
     elif [[ "$after" =~ (^|[[:space:]])-[a-zA-Z]*a[a-zA-Z]*([[:space:]]|$) ]]; then

@@ -43,7 +43,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
 taom_pybin_degraded "check-moduledata-validation" "ModuleData refs, landless cultures and duplicate ids" && { echo '{}'; exit 0; }
 
-# Extract the bash command from tool_input (mirrors check-changelog-changed.sh).
+# Extract the bash command from tool_input.
 COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
 import sys, json
 try:
