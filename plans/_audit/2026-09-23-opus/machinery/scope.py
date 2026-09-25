@@ -38,7 +38,9 @@ for spec in sys.argv[1:]:
         lenses |= {"3", "t"}
     if f["xml"]:
         lenses.add("7")
-    title = subprocess.run(["git", "-C", REPO, "show", f"{branch}:plans/{num}-{slug}.md"], capture_output=True, text=True, encoding="utf-8").stdout.splitlines()[0].lstrip("# ").strip()
+    # A branch slug can differ from its plan's slug (the June ports); the caller then fixes the title.
+    plan_lines = subprocess.run(["git", "-C", REPO, "show", f"{branch}:plans/{num}-{slug}.md"], capture_output=True, text=True, encoding="utf-8").stdout.splitlines()
+    title = plan_lines[0].lstrip("# ").strip() if plan_lines else slug
     items.append({
         "num": num, "slug": slug, "wt": wt, "branch": branch, "base": base, "head": head, "title": title,
         "lenses": sorted(lenses), "files": f,

@@ -43,7 +43,14 @@
 - **Depends on**: none
 - **Category**: perf
 - **Planned at**: commit `b2e387db`, 2026-09-23
-- **Issue**: create before implementation lands (orchestrator)
+- **Issue**: #659
+
+> **Amendment 2 (orchestrator, 2026-09-24, Mike's decision 32).** The node services are no longer
+> resolved in field initializers (Step 2's excerpts): `WargBehaviorTree.BuildTree` resolves
+> `IMissionAdapterFactory` and `IWargAttackService` once per tree and passes them to the node
+> constructors, so the four nodes hold no `IoC.Resolve` (commit `23f6f85b` on
+> `improve/015-warg-tick-costs`, reviewed again in its second review). Step 2's code shows what the first
+> execution did; the branch tip is the reference for a port.
 
 > **Amendment (orchestrator, 2026-09-24, after the first execution stopped at Step 8).** The claim
 > that a substitute returning null keeps the tests away from native code is wrong for any null test
@@ -1755,7 +1762,7 @@ Commit (paths: `Main/Features/AdvancedCombat/BoneCheck.cs`,
   ```markdown
   - **SpatialGrid**: cells are keyed on (x, y) only (the distance test stays 3D), so the 60 m "no enemy close" scan looks up 49 cells instead of 343; every warg node scans into a reused buffer through the zero-allocation overload.
   - **BoneCheck**: the attacker's bone positions reuse one list and its skeleton is fetched once per tick; a target's skeleton is fetched only inside the 20 square-metre gate (about 4.5 m), because `MBAgentVisuals.GetSkeleton()` builds a new finalizable native wrapper on every call.
-  - **IoC.Resolve in BT nodes**: resolved once per node when the tree is built, never per evaluation; `WargRiderHandManager.Tick` takes the factory `WargMissionBehavior` resolved in its constructor.
+  - **IoC.Resolve in BT nodes**: none; `WargBehaviorTree.BuildTree` resolves once per tree and injects the services through the node constructors (amendment 2); `WargRiderHandManager.Tick` reads `WargConfig.IsWargMonster` and resolves nothing.
   ```
 (b) `docs/features/advanced-combat.md`:
 - Line 50: replace `3D cell-hash grid for fast radius queries; singleton pattern` with
