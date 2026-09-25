@@ -1,6 +1,6 @@
 ---
 name: release
-description: "Cut a TAOM module release: bump the version fields, write the release note, commit, tag, and push. Enforces the #371 Dependencies pairing."
+description: "Use when cutting a player release: version bump, release note, commit, tag and push, then a rebuild at the tag and the packaged-DLL stamp gate. Enforces #371 pairing."
 argument-hint: [version, e.g. 2.0.19]
 ---
 
@@ -106,6 +106,49 @@ git ls-remote --tags origin | grep vX.Y.Z          # expect the ref and its ^{} 
 git describe --tags --match 'v[0-9]*' HEAD         # expect vX.Y.Z
 ```
 
+## Phase 8: Build and package at the tag
+
+The Phase 2 build ran before the release commit existed, so its DLL carries the parent commit's SHA.
+Rebuild at the tag before anything ships.
+
+1. `git status --porcelain` is empty and `git rev-parse HEAD` equals `git rev-parse vX.Y.Z^{commit}`.
+   Then run `./build.ps1`. If another session has started editing, do not build that tree: build a
+   clean worktree of the tag instead (`git worktree add ../taom-release-vX.Y.Z vX.Y.Z`, run
+   `./build.ps1` there, then `git worktree remove ../taom-release-vX.Y.Z`). `build.ps1` compiles and
+   deploys every file in the tree, committed or not.
+2. Gate the DLLs: `python tools/package_release.py --source "<game>/Modules" --dest <out> --require-build vX.Y.Z --dry-run`
+   must print `build stamp OK` and exit 0. It reads every `bin/<platform>/` copy of `TAOM.dll` and
+   `TAOM.Dependencies.dll` and refuses one whose stamp says `.dirty` or `nogit`, or names a commit
+   other than the tag's; a requested TAOM or TAOM.Dependencies missing from `--source`; and a tag whose
+   `Directory.Build.props` predates the `.dirty` flag (the 1.4.5 line until it is ported).
+   It proves the DLLs only. Deploys never delete, so the install also holds files from every
+   earlier deploy. Before packaging, prune only what neither the tag nor its build owns:
+   - **`<game>/Modules/TAOM/` outside `bin/`:** remove what `Main/_Module/` does not hold at the
+     tag (`git ls-tree -r --name-only vX.Y.Z -- Main/_Module`). Compare paths
+     case-insensitively, as Windows resolves them: the tag spells `GUI/PreFabs/`, the install
+     `GUI/Prefabs/`, and an exact comparison deletes every live prefab. Leave
+     `RuntimeDataCache*` alone: the packager already excludes it unless `--keep-rdc` asks for it.
+   - **`<game>/Modules/TAOM.Dependencies/` outside `bin/`:** prune nothing. MCM's UI assets
+     (`AssetPackages/`, `EmAssetPackages/`, `GUI/`, `ModuleData/Languages*/`) exist in the install
+     only, and no build step recreates them
+     ([module-dependencies.md](../../../docs/modding/module-dependencies.md), "Five folders").
+   - **`bin/<platform>/` of both modules:** keep a file whose name the tag tracks under
+     `_Module/bin/` (`git ls-tree -r --name-only vX.Y.Z -- Main/_Module/bin Dependencies/_Module/bin`:
+     2 files for TAOM, 44 for TAOM.Dependencies) or the tag's build writes. The build writes
+     `TAOM.dll`, `TAOM.pdb`, `DryIoc.dll`, `Newtonsoft.Json.dll` and
+     `System.Runtime.CompilerServices.Unsafe.dll` into TAOM, and `TAOM.Dependencies.dll`,
+     `TAOM.Dependencies.pdb`, `0Harmony.dll`, `Bannerlord.UIExtenderEx.dll`, `MCMv5.dll` and
+     `System.Runtime.CompilerServices.Unsafe.dll` into TAOM.Dependencies. That is each project's
+     `bin/Debug/net472/` output, every runtime DLL its packages bring in (the other packages are
+     compile-only or carry none). The build then mirrors `Win64_Shipping_Client` into `_Server` for
+     both modules, and into `_wEditor` for TAOM only. Remove any other file; `.pdb`, `.exp` and `.lib` may stay, since the packager
+     never ships them. A retired binary such as `BehaviorTreeWrapper.dll` would otherwise ship.
+3. Package: the same command without `--dry-run` (plus `--keep-rdc` or `--allow-unknown` if the dry
+   run's report calls for them).
+4. If the player package is assembled somewhere else (the editor package in
+   `E:\LOTRAOM_Releases\<channel>\Modules\`), run step 2's dry run with `--source` pointing at that
+   folder before uploading it.
+
 ## Gotchas
 
 - **Backfilling an old release?** Backdate the tagger date or it claims to have been cut today:
@@ -115,6 +158,9 @@ git describe --tags --match 'v[0-9]*' HEAD         # expect vX.Y.Z
 - **Never retag.** Moving a pushed tag leaves everyone who fetched it on the old target, silently.
   A wrong release gets a new version.
 - **Version ≠ build stamp.** `Directory.Build.props` stamps `InformationalVersion` per build
-  (`build.yyyyMMdd-HHmmssZ`) and freezes `AssemblyVersion` deliberately. The stamp identifies a
+  (`build.yyyyMMdd-HHmmssZ`) and freezes `AssemblyVersion` deliberately. The SDK appends
+  `+<commit SHA>`, and a build of a tree with uncommitted changes (untracked files included)
+  under `Main`, `Dependencies`, `Stubs`, `Directory.Build.props` or `GameReferences.targets`
+  appends `.dirty` after it (`nogit` or `.nogit` when git could not tell). The stamp identifies a
   build; the tag identifies a release.
 - GitHub Releases are deliberately **not** part of this flow — tag-only, by decision.

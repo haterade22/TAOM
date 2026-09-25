@@ -9,8 +9,9 @@ The version a player sees comes from one place: `<Version value="v2.0.18" />` in
 [`Main/_Module/SubModule.xml`](../../Main/_Module/SubModule.xml). At runtime
 [`IdentityCollector`](../../Main/Features/CrashReport/Collectors/IdentityCollector.cs) reads it via
 `ModuleHelper.GetModuleInfo("TAOM")?.Version` and stamps it into every crash bundle as
-`TaomVersion`. When a player reports a CTD, that string is the only link between their report and
-our source.
+`TaomVersion`. When a player reports a CTD, that string is the link between their report and our
+source (bundles written since plan 017 also carry the build stamp, which names the commit; see
+"Resolving a crash report to a commit" below).
 
 Until 2026-08-08 that link went nowhere. The repo had two tags, neither a release
 (`crafting-tool-v1.0`, `archive/master-pre-1.4.5-promotion`), and `git describe` read
@@ -59,14 +60,16 @@ bump one by hand.
 Assembly identity is separate and deliberately static: `Directory.Build.props` freezes
 `AssemblyVersion` (changing it alters binding identity for no benefit) and stamps
 `InformationalVersion` as `build.yyyyMMdd-HHmmssZ` per build, which both modules log at startup so a
-mismatched pair is one line in the log. That stamp identifies a *build*; the tag identifies a
+mismatched pair is one line in the log. The .NET SDK appends `+<commit SHA>` to that stamp, and a
+build of a tree with uncommitted changes to its inputs appends `.dirty` after the SHA (`nogit` or
+`.nogit` when git could not tell). That stamp identifies a *build*; the tag identifies a
 *release*. Both are needed.
 
 ## Cutting a release
 
 Use `/release`. It runs the sequence below and fails closed on the #371 pairing check.
 
-1. Tree clean (or, when another session's edits are present, every path staged explicitly and theirs left out),
+1. Tree clean (`git status --porcelain` empty; if another session's edits are present, stop, because `build.ps1` compiles and deploys every file in the tree, committed or not; git refuses a second worktree on a branch that is already checked out, so only the Phase 8 build moves to a detached worktree of the tag),
    on the release branch (`bannerlord-1.5.x` since v2.0.29; `bannerlord-1.4.5` for a 1.4.8 build), current version
    already tagged.
 2. `./build.ps1 -RunTests` green — no release on an unrun build.
@@ -81,6 +84,31 @@ Use `/release`. It runs the sequence below and fails closed on the #371 pairing 
    2026-09-13, hook `check-commit-subject-version.sh`), so between releases
    `git log --grep 'vX.Y.Z - '` lists the commits a build reporting that `TaomVersion` can contain.
 7. `git tag -a vX.Y.Z -m "…"` then `git push origin <release branch> vX.Y.Z`.
+8. Build at the tag and gate the DLLs: `python tools/package_release.py --source "<game>/Modules" --dest <out> --require-build vX.Y.Z --dry-run` must print `build stamp OK`, then package without `--dry-run` (the skill's Phase 8).
+   The gate reads every `bin/<platform>/` copy of `TAOM.dll` and `TAOM.Dependencies.dll` and
+   refuses a tag whose `Directory.Build.props` predates the `.dirty` flag (the 1.4.5 line until it
+   is ported). It proves the DLLs only. Deploys never delete, so the install also holds files from
+   every earlier deploy. Before packaging, prune only what neither the tag nor its build owns:
+   - **`<game>/Modules/TAOM/` outside `bin/`:** remove what `Main/_Module/` does not hold at the
+     tag (`git ls-tree -r --name-only vX.Y.Z -- Main/_Module`). Compare paths
+     case-insensitively, as Windows resolves them: the tag spells `GUI/PreFabs/`, the install
+     `GUI/Prefabs/`, and an exact comparison deletes every live prefab. Leave
+     `RuntimeDataCache*` alone: the packager already excludes it unless `--keep-rdc` asks for it.
+   - **`<game>/Modules/TAOM.Dependencies/` outside `bin/`:** prune nothing. MCM's UI assets
+     (`AssetPackages/`, `EmAssetPackages/`, `GUI/`, `ModuleData/Languages*/`) exist in the install
+     only, and no build step recreates them
+     ([module-dependencies.md](../modding/module-dependencies.md), "Five folders").
+   - **`bin/<platform>/` of both modules:** keep a file whose name the tag tracks under
+     `_Module/bin/` (`git ls-tree -r --name-only vX.Y.Z -- Main/_Module/bin Dependencies/_Module/bin`:
+     2 files for TAOM, 44 for TAOM.Dependencies) or the tag's build writes. The build writes
+     `TAOM.dll`, `TAOM.pdb`, `DryIoc.dll`, `Newtonsoft.Json.dll` and
+     `System.Runtime.CompilerServices.Unsafe.dll` into TAOM, and `TAOM.Dependencies.dll`,
+     `TAOM.Dependencies.pdb`, `0Harmony.dll`, `Bannerlord.UIExtenderEx.dll`, `MCMv5.dll` and
+     `System.Runtime.CompilerServices.Unsafe.dll` into TAOM.Dependencies. That is each project's
+     `bin/Debug/net472/` output, every runtime DLL its packages bring in (the other packages are
+     compile-only or carry none). The build then mirrors `Win64_Shipping_Client` into `_Server` for
+     both modules, and into `_wEditor` for TAOM only. Remove any other file; `.pdb`, `.exp` and `.lib` may stay, since the packager
+     never ships them. A retired binary such as `BehaviorTreeWrapper.dll` would otherwise ship.
 
 **The Armory ships in the same release when the TAOM build needs a file it did not have.** Players get
 `LOTRLOME_Armory` only from the editor package Mike builds into `E:\LOTRAOM_Releases\<channel>\Modules\`. Since #627
@@ -108,6 +136,13 @@ git describe --tags --match 'v[0-9]*' <sha>   # which release a given commit is 
 ```
 
 If the version is one of the five phantoms below, stop — there is nothing to find.
+
+A bundle's `report.txt` (Identity section, `Build:` line) and `manifest.txt` (`TAOM build:` line)
+also carry the build stamp, for example `v2.0.0.0 build.20260923-184249Z+c79a585218ad...`. That SHA
+is the commit the DLL was compiled from: `git show <sha>`. A `.dirty` suffix means the build also
+held uncommitted edits, so the commit is only the nearest known state; `nogit` means git could not
+tell. Bundles written before this field existed lack the line: read the `[BuildStamp]` line near the
+top of the bundled `taom_debug.log` instead.
 
 ## Historical record: the backfill (2026-08-08)
 

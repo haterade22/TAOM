@@ -2628,3 +2628,33 @@ Windows.
   failing test row the day it is found.
 - **Source:** `docs/reviews/rca-stop-reminders-and-trunk-guard-2026-09-24.md` F1, F3, F7, F9
   (repeat of `docs/reviews/rca-adr011-batch1-2026-09-23.md`, "Follow-ups not taken").
+### A release gate reads what the packager ships, and fails closed on every input it did not see (plan 017, 2026-09-24)
+`package_release.py --require-build` read one fixed path per module (`bin/Win64_Shipping_Client/<dll>`) while the
+packager copies every `bin/*/` DLL, so the Game Pass, server and Modding Kit copies shipped unread; the real patreon
+package's Dependencies server copy came from a third commit. The same gate skipped a module named `taom` (case), ran
+no check at all for `--require-build ""`, and certified the set after planning had silently dropped a requested module.
+- **Why missed:** the plan designed the gate from its inputs (a module name, a path, a rev string) and the tests built
+  only the one folder the gate expected. Nobody put the gate's read set beside the packager's copy set.
+- **Prevent:** derive a gate's input from the exact list the tool will act on (here `_copy_list`), validate the
+  requested set before any filtering drops members, casefold names that come from a Windows path, test an option with
+  `is not None`, and write one test per way the input can be smaller than what ships.
+- **Source:** `docs/reviews/rca-build-identity-dirty-flag-2026-09-24.md`, findings 1 to 4.
+
+### A missing marker proves nothing unless the producer could have written it (plan 017, 2026-09-24)
+The gate read "no `.dirty` suffix" as "built from a clean tree". A DLL built at a commit whose `Directory.Build.props`
+has no `TaomStampWorkingTreeState` target (the whole 1.4.5 line, every tag before plan 017) never writes the suffix, so
+a dirty build there passed as clean.
+- **Why missed:** the check tested for the bad marker and treated its absence as the good one.
+- **Prevent:** when a verdict rests on a marker being absent, first prove the producer at that revision could have
+  emitted it (here `git show <sha>:Directory.Build.props` contains the target), and refuse otherwise.
+- **Source:** `docs/reviews/rca-build-identity-dirty-flag-2026-09-24.md`, finding 5.
+
+### Pin every git option a gate's answer depends on (plan 017, 2026-09-24)
+The build stamp's `git status --porcelain` lists untracked files only under the default `status.showUntrackedFiles`.
+With that set to `no` (a common speed-up), a new untracked `.cs` under `Main` compiles into the DLL and stamps clean:
+reproduced with `GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=status.showUntrackedFiles GIT_CONFIG_VALUE_0=no`.
+- **Why missed:** `--porcelain` was read as a fixed format. It fixes the output shape, not which paths appear.
+- **Prevent:** a script or build step whose verdict comes from git output passes every option the verdict depends on
+  explicitly (`--untracked-files=normal`, `--no-optional-locks`), and its test runs once under a hostile config through
+  the `GIT_CONFIG_*` environment variables.
+- **Source:** `docs/reviews/rca-build-identity-dirty-flag-2026-09-24.md`, finding 6.

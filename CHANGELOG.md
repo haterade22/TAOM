@@ -1582,6 +1582,36 @@ equipment (it was a placeholder message). Roles come from what each hero spawned
 siege a companion who owns a horse is placed on a foot formation. Visible with Formation
 Presets enabled. Three new strings are registered with English rows in all 12 languages; the
 translator run is owed. Nothing smoked in game.
+### feat(build): v2.0.30 - dirty-tree flag in the build stamp, build field in crash bundles (plan 017, #658)
+
+A build stamp named HEAD's commit whatever the working tree held, so a DLL built from uncommitted
+edits looked like a clean build of that commit, and a release could ship one.
+
+- **Stamp**: a `TaomStampWorkingTreeState` target in `Directory.Build.props` runs
+  `git status --porcelain --untracked-files=normal` over `Main`, `Dependencies`, `Stubs`, the
+  props file and `GameReferences.targets` and appends `.dirty` to the SHA the SDK writes into
+  `InformationalVersion` (`nogit` or `.nogit` when git cannot tell). An untracked source file
+  counts even under a user's `status.showUntrackedFiles=no`. About 40 ms per project build.
+- **Crash bundles**: `report.txt` prints a `Build:` line in the Identity section, `manifest.txt` a
+  `TAOM build:` line, and `report.json` gains `TaomBuild`.
+- **Releases**: `tools/package_release.py --require-build <tag>` refuses a `TAOM.dll` or
+  `TAOM.Dependencies.dll` that is dirty, git-less or built at another commit; `/release` gains
+  Phase 8 (rebuild at the tag, then gate and package), and `release-process.md` no longer allows
+  releasing from a tree that holds another session's edits.
+- **Review follow-ups** (deep review and Codex): the gate reads every `bin/<platform>/` copy of
+  both DLLs, not only the Win64 one (the patreon package's server copy of `TAOM.Dependencies.dll`
+  is from another commit); matches module names case-insensitively; refuses an empty
+  `--require-build`, a requested TAOM or TAOM.Dependencies missing from `--source`, and a tag whose
+  `Directory.Build.props` predates the `.dirty` flag; and reports an unreadable DLL as a refusal.
+  The OK line lists every copy it read. Phase 8 and `release-process.md` say the gate proves the
+  DLLs only, since deploys never delete stale files from the install, and prune before packaging
+  only what neither the tag nor its build owns: `Modules/TAOM/` against `Main/_Module/`, compared
+  case-insensitively (the tag spells `GUI/PreFabs/`, the install `GUI/Prefabs/`; never
+  `RuntimeDataCache`), nothing in TAOM.Dependencies outside `bin/` (its MCM assets exist in the
+  install only), and in `bin/` whatever the tag neither tracks nor builds (today three retired
+  BehaviorTree DLLs).
+- Tests: 4 new C# (`BuildStampReportTests`, `PlainTextCrashReportRendererTests`,
+  `CrashBundleWriterTests`), 24 new Python (`test_package_release.py`).
 
 ## 2026-09-23
 

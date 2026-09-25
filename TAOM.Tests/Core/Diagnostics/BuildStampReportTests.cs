@@ -23,8 +23,8 @@ public class BuildStampReportTests
     public void TryParseStamp_RealBuildOutput_WithCommitShaSuffix_Parses()
     {
         // The ACTUAL string emitted by the build, read back off TAOM.dll with reflection.
-        // Bannerlord.BuildResources appends ".{commit-sha}" of its own accord, so the stamp is NOT
-        // at the end of the string. The first version of this parser did TrimEnd('Z') and failed on
+        // The .NET SDK appends the commit SHA ('.' here, because the string then began "+build."),
+        // so the stamp is NOT at the end of the string. The first version of this parser did TrimEnd('Z') and failed on
         // every real assembly while these tests passed — because they asserted the format the code
         // assumed rather than the one the build produces. This case is that format, verbatim.
         const string real = "build.20260802-013132Z.46ce6436e1b538a7734a23713ec818a23afec93d";
@@ -47,6 +47,30 @@ public class BuildStampReportTests
     {
         Assert.IsFalse(BuildStampReport.TryParseStamp("2.0.15+build.not-a-date", out _));
         Assert.IsFalse(BuildStampReport.TryParseStamp("2.0.15+build.", out _));
+    }
+
+    [TestMethod]
+    public void TryParseStamp_DirtyAndNoGitSuffixes_StillParse()
+    {
+        foreach (var s in new[]
+        {
+            "build.20260923-184249Z+0123456789abcdef0123456789abcdef01234567.dirty",
+            "build.20260923-184249Z+0123456789abcdef0123456789abcdef01234567.nogit",
+            "build.20260923-184249Z+nogit",
+        })
+        {
+            Assert.IsTrue(BuildStampReport.TryParseStamp(s, out var stamp), s);
+            Assert.AreEqual(new DateTime(2026, 9, 23, 18, 42, 49, DateTimeKind.Utc), stamp, s);
+        }
+    }
+
+    [TestMethod]
+    public void ReadInformationalVersion_TaomAssembly_CarriesTheBuildStamp()
+    {
+        string text = BuildStampReport.ReadInformationalVersion(typeof(BuildStampReport).Assembly);
+
+        StringAssert.StartsWith(text, "v");
+        Assert.IsTrue(BuildStampReport.TryParseStamp(text, out _), text);
     }
 
     // The three IsMismatched tests that used to sit here were deleted with the method itself:

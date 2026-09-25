@@ -1308,3 +1308,15 @@ run was green.
   `<Rule>Tests.cs` if its neighbours are tagged). When a plan adds tests to an existing class, it
   states the class's category and why the new tests belong under it.
 - **Source:** `docs/reviews/rca-seam-decision-logic-2026-09-24.md` S3 (Agents 1, 4 and 5).
+
+### Correction: the build stamp's commit suffix is the .NET SDK's, not Bannerlord.BuildResources' (plan 017, 2026-09-24)
+The "parser tested only against the format you invented" lesson above credits `Bannerlord.BuildResources` with the
+`.{commit-sha}`/`+{commit-sha}` suffix. Its 1.1.0.129 props and targets never mention `SourceRevisionId` or
+`InformationalVersion`. The SDK appends `+$(SourceRevisionId)` (`Microsoft.NET.GenerateAssemblyInfo.targets:70-71`),
+or `.` when the string already holds a `+`, which is why the 2026-08-02 sample read `Z.46ce6436`. The lesson's rule
+stands; its attribution does not. Plan 017 corrected the class summary and left the same claim in the parser comment
+and its test beside it.
+- **Why missed:** the correction was made where the plan pointed, and the claim was not grepped.
+- **Prevent:** when correcting a factual claim, `git grep` its distinctive words and fix or annotate every hit in the
+  same change; an archive entry gets an appended correction like this one, not an edit.
+- **Source:** `docs/reviews/rca-build-identity-dirty-flag-2026-09-24.md`, finding 10.
