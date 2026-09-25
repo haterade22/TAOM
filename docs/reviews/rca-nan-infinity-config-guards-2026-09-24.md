@@ -7,8 +7,8 @@ port of `MutationParams.GetFloat`'s finiteness guard. The guard is correct and c
 non-finite string net472's `Single.TryParse` accepts. The review confirmed seven LOW-to-MEDIUM
 findings and no HIGH: three fixed here (two untested guard branches, a missing calculator-author
 note, an overbroad CHANGELOG claim), two left for Mike (the missing GitHub issue, the silent
-fallback against config rule 5) and two plan-text errors left for the orchestrator. Every lens also
-flagged, as FOLLOW-UP, that a finite parameter can still overflow to Infinity inside a calculator,
+fallback against config rule 5) and two plan-text errors left for the orchestrator. Agents 1, 2, 5
+and 6 also flagged, as FOLLOW-UP, that a finite parameter can still overflow to Infinity inside a calculator,
 past the accessor guard, because `MutationService.ApplyMutation` has no exit gate. That is
 pre-existing and behaviour-changing, so it waits on Mike.
 
@@ -23,7 +23,7 @@ redundant.
 
 | # | Sev | Bug | Category | Why Missed | Preventive Action |
 |---|---|---|---|---|---|
-| 1 | LOW | `GetFloat`'s unparseable fallback and its negative finite pass-through had no test; narrowing the guard to `IsFiniteAtLeast(result, 0f)` passed all 5 tests | Test coverage | The June commit wrote one test per rejected value and none for the values the guard must still accept; the plan listed "negative values must pass" as a reviewer probe, not as a test | Two tests added, proved by a mutant; lesson in `lessons/testing-qa.md` |
+| 1 | LOW | `GetFloat`'s unparseable fallback and its negative finite pass-through had no test; narrowing the guard to `IsFiniteAtLeast(result, 0f)` passed all 5 tests | Test coverage | The June commit wrote one test per rejected value and none for the values the guard must still accept; the plan listed the probe that `GetFloat` "still returns legitimately negative finite values" (plan line 329) as a review question, not as a test; that mutant returns the default for a negative value, so a negative `flat` reduction would be silently dropped | Two tests added, proved by a mutant; lesson in `lessons/testing-qa.md` |
 | 2 | LOW | The rule "read calculator floats only through `GetFloat`" lived only in the plan's maintenance notes | Documentation | A plan's maintenance notes are not read by the next calculator author | One step added to `docs/features/career-system.md` "Add a new mutation calculator" |
 | 3 | LOW | CHANGELOG claimed "the same `FiniteFloatValidator` the other float loaders use"; `CareerConfigProvider.cs:448,476,516` use hand-written checks | Documentation accuracy | The claim was written from the TroopWeight comparison, not from a grep of the feature's own loader | Reworded; one-off, no rule |
 | 4 | MED (process) | No GitHub issue for the fix | Process | The plan assigned the issue to the orchestrator, and the port ran without it | Needs Mike (public action); CHANGELOG says so |
@@ -46,10 +46,10 @@ The implementing agent (the June `impl-002` builder, then this port) is the one 
 the review lenses caught all of them.
 
 - **Builder (June and port):** followed the plan's test list exactly; the plan's reviewer probe 2
-  ("negative values must still pass") was framed as a review question, so no test was written for
-  it. The port was byte-identical to `cfc47206` by design, so it inherited the gap.
+  (that `GetFloat` "still returns legitimately negative finite values", plan line 329) was framed
+  as a review question, so no test was written for it. The port was byte-identical to `cfc47206` by design, so it inherited the gap.
 - **Agent 2 (Engine) and Agent 3 (Efficiency):** their rule sets do not cover test completeness or
-  documentation; both still reported the overflow follow-up.
+  documentation. Agent 2 still reported the overflow follow-up; Agent 3 reported no issues.
 - **Codex:** traced the fallback of every calculator and noted that the accessor "does not ... prevent
   subsequent arithmetic overflow", then scoped it out as outside the literal-parsing contract
   instead of flagging it. It did not check the test set for pass-through cases.

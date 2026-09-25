@@ -425,6 +425,7 @@ Same fallback policy as the runtime grant: missing roster → log + leave the yo
 | MutationCalculatorRegistryTests | 8 | All 5 built-in calculators |
 | CareerPassiveServiceTests | 7 | Cache refresh + magnitude aggregation |
 | MutationServiceTests | 5 | Template cloning + mutation application |
+| MutationParamsTests | 7 | GetFloat: valid, missing key, unparseable, negative, NaN, ±Infinity |
 | CareerAbilityTests | 20 | Charge types + cooldown + activation + ReadyProgress01 |
 | CareerAbilityServiceTests | 10 | Force-CooldownOnly + configured cooldown duration + GetCooldownRemaining (hero present/absent) + IsAbilityReady transitions |
 | AbilityActivationControllerTests | 13 | V-key state machine — NoCareer no-op, JustBecameReady one-shot, simultaneous-flag emit, charging throttle window, Reset clears both flags |
@@ -443,7 +444,7 @@ Same fallback policy as the runtime grant: missing roster → log + leave the yo
 5. No C# changes required
 
 ### Add a new mutation calculator
-1. Add function to `BuiltInCalculators.RegisterAll()`. Read numeric parameters only through
+1. Add function to `BuiltInCalculators.RegisterAll()`. Read float parameters only through
    `MutationParams.GetFloat`, which returns the default for a missing, unparseable, NaN or
    Infinity value; a float read any other way needs its own `FiniteFloatValidator` guard.
 2. Reference by id in XML `<Mutation calculator="your_id" ... />`

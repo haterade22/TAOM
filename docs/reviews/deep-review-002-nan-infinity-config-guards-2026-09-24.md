@@ -109,7 +109,9 @@ FOLLOW-UP (pre-existing; no issues filed, since filing is public and needs Mike'
 - `docs/features/career-system.md:314`: the example uses `target=`; the loader reads `target_id`.
 - `FactionMap/Widgets/PolygonPointParser.cs:26-27`, `Siege/SiegeDefenseService.cs:253`: float parses
   with no finiteness check (impact UNVERIFIED).
-- `career-system.md` Tests table lists 14 of 35 CareerSystem test files.
+- `career-system.md` Tests table lists 14 of 42 CareerSystem test files (35 at the top level, 7
+  under `Abilities/`). One of the missing rows, `MutationParamsTests`, was this change's own and is
+  added in the convergence pass below; the other 27 are pre-existing.
 
 Convergence pass (Step 4.6): not launched; this delegate cannot spawn agents. The fix diff is two
 tests, one doc step and a CHANGELOG paragraph, with no production code change
@@ -168,3 +170,24 @@ Phase 3h is consolidated later for all branches. Proposed additions:
 - **Bugs Codex typically misses:** a guard's untested pass-through branch (a negative finite value a
   finite-only guard must still accept), and a result computed downstream of a guarded input that
   can still go non-finite (it noted the overflow and scoped it out instead of flagging it).
+
+## Convergence
+
+A convergence reviewer read `git diff 78889a85..96832589` (nine files, nothing under `Main/`) and
+reported five LOW defects, all in the records and docs that commit added. Each was re-checked
+against the worktree before fixing; all five are CONFIRMED, none a false positive. No code changed,
+so no test could go RED first.
+
+| # | Where | Defect | Evidence re-read | Fix |
+|---|---|---|---|---|
+| D1 | `docs/features/career-system.md` calculator step 1 | Said "numeric parameters"; `MutationParams.GetInt` exists (`MutationParams.cs:35-40`) and the plan leaves it untouched | `GetInt` read at HEAD | "float parameters" |
+| D2 | `lessons/testing-qa.md` plan 002 entry; RCA finding 1 and builder bullet | Claimed the over-constrained mutant would "zero" a negative `multiply` factor; it returns the default (`1f`, `BuiltInCalculators.cs:19-20`), dropping the mutation. Quoted "negative values must (still) pass", which is not in the plan | `grep` finds neither quote in `plans/002-...md`; its line 329 reads "still returns legitimately negative finite values" | Mechanism restated as a silent drop; plan line 329 quoted verbatim |
+| D3 | `LESSONS-LEARNED.md` index | Counts stale after the two appended lessons | `grep -c '^### '`: gamemodels-services 66, testing-qa 86, all 13 files 823; the index's per-file numbers now sum to 823 | 65 to 66, 85 to 86, 821 to 823 |
+| D4 | RCA summary and "Why each agent missed" | Said every lens, including Agent 3, flagged the calculator overflow; this report's details put it under Agents 1, 2, 5 (F1) and 6 only | Details section above; no raw lens output was saved, so this report is taken as the record | Named Agents 1, 2, 5 and 6; Agent 3 "reported no issues" |
+| D5 | `career-system.md` Tests table; FOLLOW-UP line above | This change's own `MutationParamsTests.cs` (added in `78889a85`, 7 tests) had no row, and the folder holds 42 test files, not 35 | `find TAOM.Tests/Features/CareerSystem -name '*.cs'` gives 42 (35 top level, 7 in `Abilities/`); 7 `[Fact]` in the file | Row added; FOLLOW-UP line corrected |
+
+The "Convergence pass (Step 4.6): not launched" line above predates this pass; it ran afterwards,
+driven by the review lead.
+
+Full suite after the fixes: `Passed! - Failed: 0, Passed: 10320, Skipped: 2, Total: 10322`. The
+branch is based on `a39a9c86`, so no failure was allowed, and none occurred.
