@@ -4,6 +4,23 @@
 
 ## 2026-09-25
 
+### fix(seams): v2.0.30 - review follow-ups for plan 026
+
+The deep review and Codex pass on the seam refactor found no reachable behaviour change; five small
+defects are fixed here (the missing issue is filed at merge, and a plan-text defect stays in the
+record). The refuge's per-row peace war check now keeps the prisoner when the
+refuge or its faction is missing, as the old walk did (it answered "release", which only the
+start-of-walk count guard prevented). The promotion's rename and enrol seams act on the hero the
+create seam returns (`MintedHero`, an id plus an opaque handle) instead of looking him up by id, so
+an engine change to hero registration can no longer consume a soldier for an unenrolled hero. The
+eight pure `FortificationSearch` tests moved to the untagged `FortificationSearchTests`, so hosted
+CI runs them; the raid scan sizes its list up front; two doc comments now say a dropped prison
+row's captor can be none; the Supply Lines and Field Camp feature docs name the new tests and
+types. Two new tests: the winner-only name render and the minted-hero hand-off. Report
+`docs/reviews/deep-review-026-seam-decision-logic-2026-09-24.md`, RCA
+`docs/reviews/rca-seam-decision-logic-2026-09-24.md`. Owed in game: the warden promotion smoke above
+now also covers the hand-off.
+
 ### refactor(seams): v2.0.30 - move decision logic out of nine seams
 
 Nine protected-virtual seams held TAOM decisions that no unit test could reach, because every

@@ -355,3 +355,15 @@ written, the next Standards pass would flag the exemplars the exception was writ
   class, including the private members its qualifying members call, and either narrow the claim to
   what passes or record the rest as known debt in the same text.
 - **Source:** `docs/reviews/rca-architecture-rule-amendments-2026-09-24.md` O1, O2 (Agents 1 and 5).
+
+### A plan's RED check names the diagnostics it needs, never the compiler's exact output (plan 026, 2026-09-24)
+Plan 026's three RED checks required "exactly two lines" of normalized diagnostics, one of them
+`CS0122` (the method under test still `protected`). The retained logs of all three runs contain only
+the intended `CS0115` missing-override errors, so an executor following the plan literally could not
+confirm RED, although the failures were exactly the ones the step wanted.
+- **Why missed:** the plan predicted the compiler's full diagnostic set instead of stating what
+  proves the test is RED.
+- **Prevent:** a RED check requires a nonzero exit, at least the intended diagnostic codes, and only
+  in the named test file; it permits other codes the same edit can cause and rejects any other file.
+  This extends the plan 001 lesson above (build the project that holds the test).
+- **Source:** `docs/reviews/rca-seam-decision-logic-2026-09-24.md` X1 (Codex P3).

@@ -885,7 +885,8 @@ public class RefugeService : IRefugeService, IRefugeBook
     /// row count is read once, then each row is read afresh from the last to the first, because
     /// a release takes its row out. The main hero is never released and never faction-checked;
     /// a prisoner the refuge itself holds is freed by the engine's peace action, and a row whose
-    /// captor is another party is only dropped. internal for TAOM.Tests (InternalsVisibleTo).</summary>
+    /// recorded captor is not the refuge (another party, or none) is only dropped. internal for
+    /// TAOM.Tests (InternalsVisibleTo).</summary>
     internal void ReleasePeacePrisoners(string partyId)
     {
         for (int i = RefugePrisonRosterCount(partyId) - 1; i >= 0; i--)
@@ -1177,14 +1178,18 @@ public class RefugeService : IRefugeService, IRefugeBook
         };
     }
 
-    /// <summary>True when the prisoner's map faction is at war with the refuge's; false when
-    /// either faction is missing. <c>Hero.MapFaction</c> can reach the unsafe
-    /// <c>MobileParty.MapFaction</c>, so the service calls this only after the main-hero filter,
-    /// as the source did.</summary>
+    /// <summary>True when the prisoner's map faction is at war with the refuge's, and true (keep
+    /// him) when the refuge or its faction is missing: the source captured the refuge's faction
+    /// once and released nobody without one, and a false answer here means an irreversible
+    /// release. False when the prisoner's own faction is missing, as in the source.
+    /// <c>Hero.MapFaction</c> can reach the unsafe <c>MobileParty.MapFaction</c>, so the service
+    /// calls this only after the main-hero filter, as the source did.</summary>
     protected virtual bool IsPrisonerAtWarWithRefuge(string partyId, RefugePrisoner prisoner)
     {
         var refugeFaction = FindParty(partyId)?.MapFaction;
-        if (refugeFaction == null || !(prisoner?.EngineHero is Hero hero))
+        if (refugeFaction == null)
+            return true;
+        if (!(prisoner?.EngineHero is Hero hero))
             return false;
         return hero.MapFaction != null && hero.MapFaction.IsAtWarWith(refugeFaction);
     }
@@ -1197,7 +1202,7 @@ public class RefugeService : IRefugeService, IRefugeBook
     }
 
     /// <summary>Drops the hero's row from the refuge's prison roster: a stale row whose recorded
-    /// captor is another party.</summary>
+    /// captor is not the refuge (another party, or none).</summary>
     protected virtual void RemoveFromRefugePrisonRoster(string partyId, RefugePrisoner prisoner)
     {
         var roster = FindParty(partyId)?.PrisonRoster;
@@ -1339,8 +1344,9 @@ public class RefugeService : IRefugeService, IRefugeBook
             return null;
 
         var position = refuge.GetPosition2D;
-        var candidates = new List<RaidCandidate>();
-        foreach (var party in MobileParty.All)
+        var parties = MobileParty.All;
+        var candidates = new List<RaidCandidate>(parties.Count);
+        foreach (var party in parties)
         {
             if (party == null)
                 continue;

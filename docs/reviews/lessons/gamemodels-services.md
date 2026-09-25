@@ -899,3 +899,19 @@ Career mutation attributes are copied into a string dictionary at load (`CareerC
 - **Why missed:** the fix was judged at the accessor alone; "chokepoint" was true for the parse and false for the value finally written.
 - **Prevent:** when a NaN sweep audits loaders, also grep for values stored raw and parsed at use (`Dictionary<string, string>` params, `GetFloat`-style accessors). Guard the parse, then gate the calculated result where the service writes it (`if (!FiniteFloatValidator.IsFinite(result)) { warn; keep current; }`, per `csharp-architecture.md` "gate the service's own EXIT"); the writer usually holds the logger and context the accessor lacks.
 - **Source:** `docs/reviews/rca-nan-infinity-config-guards-2026-09-24.md` finding 5 and the root-cause pattern; the exit gate is open, awaiting Mike.
+
+### Splitting a captured-once guard into per-call seams keeps its fail direction in every seam (plan 026, 2026-09-24)
+The old `RefugeService.ReleasePeacePrisoners` read the refuge's faction once and returned before
+the walk without one, so a missing faction released nobody. Plan 026 split it into a count seam
+(0 rows without a faction) and a per-row war-check seam that re-read the faction and answered
+`false`, which the service reads as "release", when it was missing. Unreachable today, but the rule
+that protects an irreversible action then lived only in the start-of-walk guard, and a later edit
+to that seam alone would have released every prisoner. The plan's maintenance note recorded the
+flip and accepted it as unreachable.
+- **Why missed:** parity was judged on the states the plan could reach; nobody asked which way each
+  new seam's missing-input default fails.
+- **Prevent:** when a refactor moves a guard that was checked once before a loop into a seam called
+  per item, write down what the old early return meant (usually "do nothing") and make every new
+  seam's missing-input answer mean the same thing to its caller. A predicate that gates an
+  irreversible write answers the safe way (keep, skip) when its context is missing.
+- **Source:** `docs/reviews/rca-seam-decision-logic-2026-09-24.md` S1 (Agents 1, 4 and 5).

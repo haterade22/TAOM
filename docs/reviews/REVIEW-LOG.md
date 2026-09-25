@@ -4706,3 +4706,29 @@ three LOW defects (ADR-008's CI grep, a CHANGELOG file list, this entry), fixed 
 as decisions 55 and 56 (`6a2ce8cb`); a final pass found three LOW record defects, fixed after it.
 The GitHub issue is covered by Mike's standing request (2026-09-24) to file an issue for every
 sprint plan: the orchestrator files it at merge. See the report's "Orchestrator follow-ups".
+
+## Review (plan 026, number assigned at merge): decision logic out of nine protected-virtual seams, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+`/review-codex` Phase 3 on branch `improve/026-seam-decision-logic` (`e452b0c7..af6329ea`, code
+commit `a3957541`), verified by the review lead alongside six `/deep-review` lenses. Codex reviewed
+`e452b0c7..af6329ea` (160,777 tokens): **0 P1 / 0 P2 / 1 P3, confirmed, no false positive.** It
+quoted the v1.5.3 dump for every engine boundary the moved code touches, traced ten decision paths
+and both moved catch boundaries, read the retained RED and final logs, and disputed nine of ten
+Known Suspects with evidence. P3: the plan's three RED checks require a `CS0122` the recorded runs
+do not emit; plan text only, not edited (the plan is a record). Codex missed what the lenses found:
+the per-row refuge war check failing toward release when the refuge's faction is missing (fixed),
+the pure `FortificationSearch` tests under a `RequiresGame` class (moved to an untagged class), a
+doc claim that a dropped prison row's captor is always another party (it can be none), two feature
+doc lines and an unpinned winner-only name render. Step 4 applied the `MintedHero` handle (rename
+and enrol act on the created hero, no id round trip) and a pre-sized raid-scan list; the
+`Town.AllFiefs` proposal waits for Mike. Full suite 10,707 passed, 2 skipped, 0 failed.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | RED check requires a diagnostic the compiler does not emit | Other: over-specified verification | The plan predicted the compiler's exact output instead of the diagnostics that prove RED | Lesson in `lessons/misc.md` |
+
+Report `docs/reviews/deep-review-026-seam-decision-logic-2026-09-24.md`; RCA
+`docs/reviews/rca-seam-decision-logic-2026-09-24.md`. The GitHub issue is filed by the orchestrator
+at merge (Mike's standing request); the convergence pass on the fix commit is owed to the
+orchestrator. Needs Mike: the ADR-007 reading of seam null guards (`ReadPromotionSource`), the
+`Town.AllFiefs` proposal, and the refund's volunteer-slot placement. Nothing merged or deployed.

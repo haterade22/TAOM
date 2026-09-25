@@ -40,6 +40,17 @@ public sealed class PromotionSource
     public string PlayerCultureId;
 }
 
+/// <summary>The hero a promotion just created, handed from the create seam to the rename and
+/// enrol seams so they act on that exact hero without a second lookup (the
+/// <see cref="RefugePrisoner"/> precedent).</summary>
+public sealed class MintedHero
+{
+    public string HeroId;
+
+    /// <summary>The engine <c>Hero</c>; null in tests, opaque to the decision logic.</summary>
+    public object EngineHero;
+}
+
 /// <summary>
 /// Warden lifecycle (port of the Refuge module's SoldierPromotion + the behavior's companion
 /// enumeration). Two deliberate departures from the source, both contract-mandated:
@@ -201,22 +212,22 @@ public class WardenService : IWardenService
         int age = (HeroComesOfAge() ?? DefaultComesOfAgeYears)
             + PromotedAgeBaseOffsetYears
             + NextRandomInt(PromotedAgeSpreadYears);
-        string heroId = CreatePromotedHero(templateId, age);
-        if (heroId == null)
+        var minted = CreatePromotedHero(templateId, age);
+        if (minted?.HeroId == null)
             return null;
 
         try
         {
             // The rename is cosmetic; a template-named hero is still a working warden, so a
             // localization hiccup here must not abort the promotion (source behaviour).
-            RenamePromotedHero(heroId, troopId);
+            RenamePromotedHero(minted, troopId);
         }
         catch (Exception ex)
         {
             _logger.LogWarning($"[Refuge] promoted-warden rename failed: {ex.Message}");
         }
-        EnrolPromotedHero(heroId);
-        return heroId;
+        EnrolPromotedHero(minted);
+        return minted.HeroId;
     }
 
     // --- campaign-static seams (the untested boundary sliver; overridden in tests) ---
@@ -320,36 +331,34 @@ public class WardenService : IWardenService
     protected virtual int NextRandomInt(int maxExclusive) => MBRandom.RandomInt(maxExclusive);
 
     /// <summary>Creates a special hero from the template into the player clan at the given age.
-    /// The hero's StringId, or null when the template or the clan is missing or the engine
-    /// refuses.</summary>
-    protected virtual string CreatePromotedHero(string templateId, int age)
+    /// The created hero with its StringId, or null when the template or the clan is missing or the
+    /// engine refuses.</summary>
+    protected virtual MintedHero CreatePromotedHero(string templateId, int age)
     {
         var template = FindTroop(templateId);
         var clan = Clan.PlayerClan;
         if (template == null || clan == null)
             return null;
         var hero = HeroCreator.CreateSpecialHero(template, bornSettlement: null, faction: clan, supporterOfClan: null, age: age);
-        return hero?.StringId;
+        return hero == null ? null : new MintedHero { HeroId = hero.StringId, EngineHero = hero };
     }
 
     /// <summary>Renames the hero after the troop he was. May throw; the caller tolerates it.</summary>
-    protected virtual void RenamePromotedHero(string heroId, string troopId)
+    protected virtual void RenamePromotedHero(MintedHero minted, string troopId)
     {
-        var hero = FindHero(heroId);
         var troop = FindTroop(troopId);
-        if (hero == null || troop == null)
+        if (!(minted?.EngineHero is Hero hero) || troop == null)
             return;
         hero.SetName(troop.Name, troop.Name);
     }
 
     /// <summary>Activates the hero, makes him a player-clan companion and puts him in the main
     /// party (the source's three engine calls, in order).</summary>
-    protected virtual void EnrolPromotedHero(string heroId)
+    protected virtual void EnrolPromotedHero(MintedHero minted)
     {
-        var hero = FindHero(heroId);
         var clan = Clan.PlayerClan;
         var mainParty = MobileParty.MainParty;
-        if (hero == null || clan == null || mainParty == null)
+        if (!(minted?.EngineHero is Hero hero) || clan == null || mainParty == null)
             return;
         hero.ChangeState(Hero.CharacterStates.Active);
         AddCompanionAction.Apply(clan, hero);

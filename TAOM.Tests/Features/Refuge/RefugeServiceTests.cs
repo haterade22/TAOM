@@ -225,8 +225,13 @@ public class RefugeServiceTests
             return !NotAtWar.Contains(candidate.PartyId);
         }
 
-        protected override string PartyDisplayName(RaidCandidate candidate) =>
-            Threat != null && candidate.PartyId == Threat.PartyId ? Threat.Name : "name:" + candidate.PartyId;
+        public readonly List<string> NamesRendered = new List<string>();
+
+        protected override string PartyDisplayName(RaidCandidate candidate)
+        {
+            NamesRendered.Add(candidate.PartyId);
+            return Threat != null && candidate.PartyId == Threat.PartyId ? Threat.Name : "name:" + candidate.PartyId;
+        }
 
         protected override void StartRaid(RaidThreat threat, string refugePartyId)
         {
@@ -1478,6 +1483,17 @@ public class RefugeServiceTests
         Assert.AreEqual("enemy", threat.PartyId);
         Assert.AreEqual("name:enemy", threat.Name, "the name is rendered only for the winner");
         Assert.AreSame(handle, threat.EngineParty, "StartRaid casts this handle back to the MobileParty");
+    }
+
+    [TestMethod]
+    public void FindNearestHostile_SeveralEligible_RendersOnlyTheWinnersName()
+    {
+        _sut.RaidCandidates = new List<RaidCandidate> { Hostile("a", 3f), Hostile("b", 1f), Hostile("c", 2f) };
+
+        _sut.FindNearestHostile("r1", 6f);
+
+        CollectionAssert.AreEqual(new[] { "b" }, _sut.NamesRendered,
+            "MobileParty.Name allocates, so the scan renders one name, the winner's");
     }
 
     // --- Map-event gating (manage/dismantle/enter) ---

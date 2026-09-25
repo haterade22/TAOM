@@ -89,20 +89,29 @@ public class WardenServiceTests
             return RandomIntResult;
         }
 
-        protected override string CreatePromotedHero(string templateId, int age)
+        public MintedHero LastMinted;
+        public readonly List<MintedHero> MintedHandedOn = new List<MintedHero>();
+
+        protected override MintedHero CreatePromotedHero(string templateId, int age)
         {
             MintSteps.Add("create:" + templateId + ":" + age);
-            return MintResult;
+            LastMinted = MintResult == null ? null : new MintedHero { HeroId = MintResult };
+            return LastMinted;
         }
 
-        protected override void RenamePromotedHero(string heroId, string troopId)
+        protected override void RenamePromotedHero(MintedHero minted, string troopId)
         {
-            MintSteps.Add("rename:" + heroId + ":" + troopId);
+            MintedHandedOn.Add(minted);
+            MintSteps.Add("rename:" + minted?.HeroId + ":" + troopId);
             if (RenameThrows)
                 throw new System.InvalidOperationException("text manager missing");
         }
 
-        protected override void EnrolPromotedHero(string heroId) => MintSteps.Add("enrol:" + heroId);
+        protected override void EnrolPromotedHero(MintedHero minted)
+        {
+            MintedHandedOn.Add(minted);
+            MintSteps.Add("enrol:" + minted?.HeroId);
+        }
 
         protected override bool RemoveOneTroopFromMainParty(string troopId)
         {
@@ -575,5 +584,15 @@ public class WardenServiceTests
         Assert.AreEqual("hero_minted", heroId, "the rename is cosmetic; the promotion goes on");
         Assert.AreEqual("enrol:hero_minted", _sut.MintSteps[_sut.MintSteps.Count - 1]);
         _logger.Received(1).LogWarning("[Refuge] promoted-warden rename failed: text manager missing");
+    }
+
+    [TestMethod]
+    public void MintCompanionFromTroop_CreatedHero_HandedToRenameAndEnrolAsIs()
+    {
+        _sut.MintCompanionFromTroop("troop_1");
+
+        Assert.AreEqual(2, _sut.MintedHandedOn.Count);
+        Assert.AreSame(_sut.LastMinted, _sut.MintedHandedOn[0], "the rename acts on the created hero, not a lookup");
+        Assert.AreSame(_sut.LastMinted, _sut.MintedHandedOn[1], "the enrol acts on the created hero, not a lookup");
     }
 }
