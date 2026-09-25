@@ -33,7 +33,7 @@ Engine migrations: [TRACKING.md](docs/migration/TRACKING.md), latest
 | **Preserve others' work** | Never stash, reset, clean, commit, deploy or push someone else's staged, unstaged or untracked changes, least of all to manufacture a clean tree or review. |
 | **Evidence, never invention** | State no file list, diff, count, hash, tool output, signature, model identity or test result you have not read this turn. "I don't know yet, checking" is fine; an invented fact never is. Read the proving output before writing the doc, CHANGELOG or commit. |
 | **TDD** | RED, GREEN, REFACTOR. Test first, always. |
-| **Architecture** | Patch, model or behavior → hook interface → service → adapter. Services take adapters, never sealed TaleWorlds types (ADR-007); entry points under 150 lines (ADR-002). |
+| **Architecture** | Patch, model or behavior → service (through a hook interface only when the patch needs a narrow seam or a test fake) → adapter. Services take adapters, never sealed TaleWorlds types (ADR-007); entry points under 150 lines (ADR-002). |
 | **Banned constructs** | No `#region` (ADR-003). No `[Obsolete]`: migrate every use in the same change (ADR-004). No `#if DEBUG` outside the IoC.cs registration (ADR-005). |
 | **Research first** | Never guess engine behaviour. Concepts: [docs/reference/engine/](docs/reference/engine/), then the decompile dump. Signatures: the installed DLLs only (`pwsh tools/taom-src.ps1 path <Type>`), because the dump can lag an engine bump. |
 | **Verify before reference** | Read `TAOMSpriteData.xml` before writing `Sprite="X"`. Decompile the vanilla target before a `PrefabExtension` injection. Cache `IoC.Resolve` lazily on a hot path. |

@@ -4669,3 +4669,40 @@ the issue, the badge, a rejection message). Full suite 10335 passed, 2 skipped, 
 
 Report `docs/reviews/deep-review-022-order-of-battle-auto-assign-2026-09-24.md`; RCA
 `docs/reviews/rca-order-of-battle-auto-assign-2026-09-24.md`. Convergence pass owed. Nothing merged or deployed.
+
+## Review (plan 021, number assigned at merge): architecture rule amendments (seams, service interfaces, hooks), 4-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+`/review-codex` Phase 3 on branch `improve/021-architecture-rule-amendments` (`bec0389d..7d1b7a54`,
+documentation only: 16 Markdown files, no code), verified by the review lead alongside the Standards,
+Completeness, Data flow and Design lenses. Codex reviewed `bec0389d..9c29d732` (233,952 tokens):
+**0 P1 / 3 P2 / 0 P3, all confirmed, no false positive.** It quoted the v1.5.3 declarations the new
+seam conditions rely on (`CampaignTime` and `Vec2` are structs, `GiveGoldAction` mutates gold) and
+the three patch targets behind the endorsed hook, and answered ten Known Suspects (two confirmed: the
+plan's stale worktree path and a proof script that checks substrings, not agreement). P2 1: the always-loaded `think-before-coding.md` forbade the
+one-implementation narrow hook that AGENTS.md and three rule files now allow; fixed on the branch.
+P2 2: ADR-008's exception allowed only a static read while ADR-007 allows the calls for one action;
+P2 3: ADR-002 migration step 4 always created a service interface; both fixed by the orchestrator in
+`7d1b7a54`. Codex missed the rest of the sweep, which the lenses found: the `→ IHook →` one-liner in
+`submodule-lifecycle-and-harmony.md`, the always-both-interfaces Phase 4 procedure, two audit prompts
+without the seam exception, the lens's "One exception" beside ADR-007's two, and ADR text listed for the orchestrator (O3,
+O5, O6: `CampaignTime` still listed as a sealed class, ADR-008 and ADR-002 checklists) and Mike (O1,
+O2: the ADR's own exemplar services breaking conditions 1 and 2 through private helpers and decision
+logic in seams).
+Full suite 10,629 passed, 2 skipped, 0 failed.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | General interface rule forbids the permitted hook case | Convention inconsistency | Specific and general rules edited in separate steps, each checked by a substring gate | Lesson in `lessons/misc.md` (a new permitted case amends every general rule it qualifies) |
+| 2 | ADR-008 exception narrower than ADR-007 | Convention inconsistency | Step 0 wording drafted before decision 49 chose the looser variant | Same lesson |
+| 3 | ADR-002 migration step still creates an interface | Other: incomplete sweep | Plan listed the guideline and checklist, not the procedure | Recurrence note on the misc "stale-claim grep is a floor" lesson |
+
+Report `docs/reviews/deep-review-021-architecture-rule-amendments-2026-09-24.md`; RCA
+`docs/reviews/rca-architecture-rule-amendments-2026-09-24.md`. ADR edits O3, O5 and O6 are owed by
+the orchestrator; O1 and O2 and the GitHub issue need Mike. Nothing merged or deployed.
+Update 2026-09-25: the orchestrator applied O3, O5 and O6 (`b22edd47`); Mike decided O1 (decision
+55, applied to ADR-007 and the Standards lens) and O2 (decision 56, new plan 026 moves the logic);
+O4 stays with Mike (it rewords decision 49). A convergence pass on the orchestrator commits found
+three LOW defects (ADR-008's CI grep, a CHANGELOG file list, this entry), fixed in the same commit
+as decisions 55 and 56 (`6a2ce8cb`); a final pass found three LOW record defects, fixed after it.
+The GitHub issue is covered by Mike's standing request (2026-09-24) to file an issue for every
+sprint plan: the orchestrator files it at merge. See the report's "Orchestrator follow-ups".

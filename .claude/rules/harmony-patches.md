@@ -50,7 +50,7 @@ ALWAYS decompile the target method with `ilspycmd` (`pwsh tools/taom-src.ps1 pat
 - **Finalizer**: runs after the original on every call, with a null `__exception` when nothing threw. `return null` swallows. Returning the exception makes Harmony `throw` it (whenever any finalizer on the method returns a value), which erases the throw site, so hand it back as `return RethrowStackPreserver.PreserveForRethrow(__exception, null);`. An observe-only finalizer should be `void`, which keeps Harmony's `rethrow` and the trace. Why: `lessons/harmony-il.md` "A value-returning finalizer that hands back its exception erases the throw site".
 
 ## Architecture Requirements
-- Patches are **thin entry points** — delegate ALL logic to services via `IHookInterface`
+- Patches are **thin entry points**: delegate ALL logic to a service, directly or through an `IOnXxx` hook interface when the patch needs a narrow seam or a test fake
 - Entry point files MUST be <150 lines (ADR-002)
 - Resolve services from IoC container, never instantiate directly
 - Use thread-local state pattern for multi-patch coordination

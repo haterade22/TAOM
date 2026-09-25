@@ -47,7 +47,7 @@ You are reviewing TAOM changes for architectural compliance. AGENTS.md describes
 FILES TO REVIEW: [list from Step 1, one per line]
 
 Focus on (in priority order):
-1. Adapter pattern violations (ADR-007) — sealed TaleWorlds types in service classes
+1. Adapter pattern violations (ADR-007): sealed TaleWorlds types in service classes, except a protected-virtual boundary seam that meets ADR-007 "Exceptions"
 2. Thin entry point violations (ADR-002) — entry points over 150 lines with business logic
 3. Harmony patch target signatures — verify method signatures exist in installed v1.5.2 DLLs (NOT the decompiled folder, which may have drifted)
 4. Test coverage gaps — services without corresponding test files

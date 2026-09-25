@@ -106,8 +106,10 @@ Services contain all business logic. They are 100% unit testable.
 **Rules for Services:**
 - All dependencies injected via constructor
 - Only use adapter interfaces, never sealed types (ADR-007)
+- TaleWorlds access outside an adapter, other than the value types, only through protected-virtual boundary seams (ADR-007 "Exceptions")
+- An `IXxxService` interface only when a test fakes it or a second implementation exists (ADR-002)
 - Single responsibility
-- Fully unit testable with mocked adapters
+- Fully unit testable with mocked adapters, or a test subclass that overrides its boundary seams
 
 ```csharp
 // Service interface
@@ -244,10 +246,12 @@ public ICultureAdapter Culture => _partyBase.MapFaction?.Culture != null
 ## Dependency Flow
 
 ```
-Entry Point → Hook Interface → Service → Engine → Adapter
-     ↓            ↓              ↓         ↓         ↓
-   Thin      Orchestrate      Logic     Algorithm   Wrap
+Entry Point → [Hook Interface] → Service → Engine → Adapter
+     ↓               ↓              ↓        ↓         ↓
+   Thin     Narrow seam (opt.)    Logic  Algorithm   Wrap
 ```
+
+The hook interface is optional: a patch uses one only when it needs a narrow seam or a test fake; most patches call their service directly.
 
 ### Example Flow: Damage Calculation
 

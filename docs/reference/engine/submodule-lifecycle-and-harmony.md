@@ -42,12 +42,13 @@ fixed points (load, pre-menu, game start, mission init, tick, unload). Inside th
 `MBSubModuleBase` is the only entry the engine calls — everything TAOM does hangs off its lifecycle. The split matters:
 patches that touch *type metadata only* go early (`OnSubModuleLoad`); registrations that need a `CampaignGameStarter` go
 in `OnGameStart`; patches that need a live `Mission` go in `OnMissionBehaviorInitialize`. Harmony lets TAOM modify
-*sealed/private* engine behavior without forking the engine (the foundation of the whole `[Patch]→IHook→Service→IAdapter`
+*sealed/private* engine behavior without forking the engine (the foundation of the whole `[Patch]→Service→IAdapter`
 architecture), while `AddModel`/`AddBehavior` are the *sanctioned* extension points (no patch needed) — preferred when
 they exist (Phase 7/9).
 
 ## TAOM relevance + gotchas
-- **The architecture one-liner is wired HERE:** `[HarmonyPatch/GameModel/CampaignBehavior] → IHook → Service → IAdapter`
+- **The architecture one-liner is wired HERE:** `[HarmonyPatch/GameModel/CampaignBehavior] → Service → IAdapter`
+  (an `IOnXxx` hook in between only when the patch needs a narrow seam or a test fake, AGENTS.md "Architecture")
   — the patch/model/behavior is the thin entry point (<150 lines, ADR-002) registered in this file; it delegates to a
   service. `Main/SubModule.cs` + `Main/IoC.cs` are **single-owner** (recommend edits, don't make them from subagents).
 - **Three registration mechanisms, choose the right one:** an engine method to intercept → **Harmony patch**; a vanilla
