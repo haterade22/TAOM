@@ -32,6 +32,7 @@ namespace TAOM.Tests.Infrastructure.Dependencies;
 /// Evidence: docs/research/bannerlordcoop-internals.md
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class AssemblyRedirectListTests
 {
     [TestMethod]

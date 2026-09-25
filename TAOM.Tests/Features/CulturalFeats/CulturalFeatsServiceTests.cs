@@ -18,6 +18,7 @@ namespace TAOM.Tests.Features.CulturalFeats;
 /// available in unit tests).
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class CulturalFeatsServiceTests
 {
     private ICulturalFeatsService _sut = null!;

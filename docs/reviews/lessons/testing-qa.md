@@ -1105,3 +1105,20 @@ two frames), `callers: <none>` or `callers: <unavailable>` all passed.
 - **Why missed:** a new test is modelled on its folder's neighbours, and most of them still carry the old walker, so copying looks like following convention.
 - **Prevent:** before writing a helper in a test, grep `TAOM.Tests/Infrastructure/` for one. A repo-file test imports `using static TAOM.Tests.Infrastructure.RepoPaths;` and calls `RepoPath("dir", "file")`. Because this is a repeat, the locator consolidation (TEST-L5-03) should end with a ratchet test that fails when the count of private `TAOM.sln` walkers grows.
 - **Source:** `docs/reviews/rca-binding-gate-no-silent-skips-decisions-2026-09-24.md` R8; earlier `rca-field-commission-races-2026-09-17.md` F3 and `rca-race-fertility-2026-09-19.md` F2.
+### A pin or guard test proves the identity its name claims, and is tested against the spellings it must reject (plan 010, 2026-09-24)
+`BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild` asserted only that the BUTR version starts with `1.5.3.`, while its name, the workflow header and the CHANGELOG said it pinned the Steam build. BUTR publishes several builds of one game version, so a same-label hotfix would have left CI on the old build with nothing red. Its sibling guard read only a `Reference`'s `Include` and `Exclude`, so the usual `<HintPath>$(GameFolder)\...</HintPath>` spelling passed.
+- **Why missed:** both tests were written from the current data (a one-part pin file, `%(Identity)` HintPaths) and the plan's prescribed assertions, not from the failure each was named after.
+- **Prevent:** before naming a pin test, write down what identity the consumer needs (here the engine changeset, `ApplicationVersion.DefaultChangeSet`) and assert that, not a label that only usually implies it. For a guard over project or data files, add one fixture test per spelling it must reject and prove it by mutation.
+- **Source:** `docs/reviews/rca-ci-on-hosted-windows-2026-09-24.md` F1, F2.
+
+### A rule's list of failure signatures comes from the run log, not from the expected failure (plan 010, 2026-09-24)
+`tests.md` told authors that an untagged game test fails on CI with a `NullReferenceException` from a TaleWorlds frame. The executor's own first stub run had also failed with `FileNotFoundException` for module assemblies, a `TypeInitializationException` wrapping one, and an NRE from a TaleWorlds attribute constructor. A future test failing the second way would not match the rule.
+- **Why missed:** the rule was drafted from the mechanism (stub bodies throw) before the run that measured it, and the log was not re-read afterwards.
+- **Prevent:** when a rule or doc lists how something fails, grep the run log for every distinct exception type (`grep -o "System\.[A-Za-z.]*Exception" | sort | uniq -c`) and list each one.
+- **Source:** `docs/reviews/rca-ci-on-hosted-windows-2026-09-24.md` F4.
+
+### A rule sentence keeps its decision's modality and is checked against the corpus it governs (plan 010, 2026-09-24)
+D45 let one test class carry `RequiresGame` on a single method. The sentence added to `tests.md` said "tag only the method that needs the game" whenever the class's other tests run on the stubs, which is true of every mixed class, so it ordered what the decision only allowed and contradicted the class-level tags already on every class whose other tests pass on the stubs.
+- **Why missed:** the sentence was written from its one example; nobody counted how many existing files it would mark as wrong.
+- **Prevent:** when a rule gains an exception, keep the decision's verb (allows, may) and run a quick count of the files the new sentence governs; if the count of files it would call wrong is not zero, the sentence is an order and needs a decision of its own.
+- **Source:** `docs/reviews/rca-ci-on-hosted-windows-decisions-2026-09-24.md` C2.

@@ -12,6 +12,7 @@ using TAOM.Features.CharacterCreation.Models;
 namespace TAOM.Tests.Features.CharacterCreation;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class CareerMenuServiceTests
 {
     private ICareerRegistry _registry;

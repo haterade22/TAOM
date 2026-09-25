@@ -44,6 +44,7 @@ public class PrefabCloneWidgetReferenceTests
         { "Native", "SandBoxCore", "SandBox", "StoryMode", "CustomBattle", "Multiplayer", "BirthAndDeath" };
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void EveryShadowedVanillaWidgetReference_SurvivesInTheTaomClone()
     {

@@ -73,6 +73,7 @@ public class CultureDoctrinePhaseCBindingTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void FormationAI_TickOnlyTicksTheActiveBehaviour_AndActivationCancelsTheOld()
     {
@@ -170,6 +171,7 @@ public class CultureDoctrinePhaseCBindingTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void MoraleModel_Seams_AndTheirCaller_StillExist()
     {
@@ -226,6 +228,7 @@ public class CultureDoctrinePhaseCBindingTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void TroopClassOverride_IsAFuncEvent_AndTheEngineConsultsItFirst()
     {
@@ -245,6 +248,7 @@ public class CultureDoctrinePhaseCBindingTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void SergeantBehaviourText_IsLookedUpByTypeName()
     {

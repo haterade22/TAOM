@@ -6,6 +6,7 @@ using TAOM.Features.StartupResources;
 namespace TAOM.Tests.Features.StartupResources;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class StartupResourcesBehaviorTests
 {
     private IStartupGoldService _goldService;

@@ -12,6 +12,7 @@ namespace TAOM.Tests.Features.SpecialResources;
 /// <c>Attributes</c>, never <c>ToString()</c>, which needs MBTextManager and a running Module.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class SpecialResourceMessagesTests
 {
     private static void AssertNoBakedNumber(TextObject message)

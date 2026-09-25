@@ -21,6 +21,7 @@ namespace TAOM.Tests.Features.Elephant;
 /// It deliberately does NOT touch <c>adod_wolf_target.xml</c>, which is out of scope and unexamined.
 /// </summary>
 [TestClass]
+[TestCategory("LiveInstall")]
 public class LegacyHowdahPrefabTests
 {
     private const string DefaultGameDir = @"E:\Steam\steamapps\common\Mount & Blade II Bannerlord";

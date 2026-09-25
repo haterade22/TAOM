@@ -94,6 +94,7 @@ public class CultureAggressionTests
 }
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class FormationRoutingTests
 {
     [TestMethod]

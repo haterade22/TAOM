@@ -21,6 +21,7 @@ namespace TAOM.Tests.Features.FieldCamp;
 /// ResetIfNoLoadedRecord is internal via InternalsVisibleTo.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class FieldCampBehaviorSessionResetTests
 {
     private ICampService _camps = null!;

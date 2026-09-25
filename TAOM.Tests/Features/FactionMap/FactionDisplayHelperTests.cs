@@ -4,6 +4,7 @@ using TAOM.Features.FactionMap;
 namespace TAOM.Tests.Features.FactionMap;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class FactionDisplayHelperTests
 {
     [TestMethod]

@@ -2359,3 +2359,20 @@ Mike chose to drop plan 008's skip banner, and the commit restored `notify-test-
 - **Why missed:** the resolution was written from the decision's headline ("drop the banner") and from the session's memory of the answers, not from the list of findings the file carried or from the issue where the decisions were written down.
 - **Prevent:** before writing the resolution of a revert, run `git log` on each reverted file since the target revision and list every finding those commits fixed; mark each one lapsed or kept. Copy each maintainer decision from the record where it was made (the issue or the question's answer), and record every decision, including a port.
 - **Source:** `docs/reviews/rca-binding-gate-no-silent-skips-decisions-2026-09-24.md` R3, R4, R6.
+### Run a documented recipe for an opt-in build mode as written, restore included (plan 010, 2026-09-24)
+`.ai/verification.md` told a reviewer without the game to "add `-p:TaomGameRefs=RefAsm` to build" after its usual `dotnet restore TAOM.sln`. The BUTR packages are `PackageDownload` items that exist only in RefAsm mode, so that restore fetched nothing and the `--no-restore` build stopped at an error that said "Restore first". The unfiltered test row would then have run the `RequiresGame` tests on stubs, and on a machine with the game the environment variables mix real module DLLs in.
+- **Why missed:** the executor replayed the CI commands, which build without `--no-restore`, and never ran the reviewer recipe; the plan's `NOGAME` prefix lived only in the plan.
+- **Prevent:** when a property gates restore-time items (`PackageDownload`, `PackageReference`), the doc puts it on the restore too, and the recipe is run once from a clean `obj` exactly as written before the doc lands. An error message names the step that fixes it, never the step that just failed.
+- **Source:** `docs/reviews/rca-ci-on-hosted-windows-2026-09-24.md` F5.
+
+### A CHANGELOG diff that removes a `###` heading replaced an entry: insert above it instead (plan 010, 2026-09-24)
+The commit applying plan 010's maintainer decisions wrote its heading over `### fix(ci): v2.0.30 - convergence fixes for plan 010`, so the previous commit's three bullets read as the new commit's work. The report's own "Other checks" line called it a "new entry". Five of six review lenses caught it; the executor's checks did not, because they proved the decisions, not the record.
+- **Why missed:** the entry was edited in place at the top of the day's section, and the diff was never read back for removed lines.
+- **Prevent:** before committing a CHANGELOG edit, `git diff -- CHANGELOG.md | grep '^-###'` prints nothing unless the commit deliberately merges or renames an entry and says so in its body.
+- **Source:** `docs/reviews/rca-ci-on-hosted-windows-decisions-2026-09-24.md` C1.
+
+### A decision applied to a tool's output is also applied to the tool's input, with its conditions (plan 010, 2026-09-24)
+D45 moved a `RequiresGame` attribute by hand, but the tagger manifest that generated it (`scratch/010/manifest.txt:142`) kept the class row, and the report told the next executor to re-run that tagger on the merged tree: the class tag would have come back with both CI steps green. The same commit dropped decision 44's condition (the 1.4.5 port re-checks SandBoxCore against 1.4.8) from every branch record.
+- **Why missed:** the executor verified each outcome where it lands (the test run, the reference snapshots). The manifest lives outside the repo, so no diff showed it, and the D44 row recorded the proof but not the condition.
+- **Prevent:** when a hand edit changes something a script generated, update the script's input in the same step, or name the input and its new row in the record that tells someone to re-run the script. Copy every condition from a decision row into the branch's report next to its outcome.
+- **Source:** `docs/reviews/rca-ci-on-hosted-windows-decisions-2026-09-24.md` C3, C4.

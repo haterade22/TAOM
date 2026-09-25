@@ -21,6 +21,7 @@ namespace TAOM.Tests.Features.Refuge;
 /// honest untested boundary sliver, exercised only in game.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class RefugeServiceTests
 {
     private sealed class TestableRefugeService : RefugeService

@@ -18,6 +18,7 @@ namespace TAOM.Tests.Features.CustomBattles;
 /// makes the dropdown cross-check the master list, this test breaks and tells us why.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class CuratedDropdownIndependenceTests
 {
     [TestMethod]

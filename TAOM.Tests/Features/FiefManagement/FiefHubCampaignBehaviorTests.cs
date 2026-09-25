@@ -19,6 +19,7 @@ namespace TAOM.Tests.Features.FiefManagement;
 // covered by the source-content pattern established in #191 — assert the production source contains
 // the required wiring lines. Reverting either line in production turns this test red.
 [TestClass]
+[TestCategory("RequiresGame")]
 public class FiefHubCampaignBehaviorTests
 {
     private IFiefHubMenuPresenter _presenter = null!;

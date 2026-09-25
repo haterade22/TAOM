@@ -18,6 +18,7 @@ namespace TAOM.Tests.Features.MountDespawn;
 /// behind, because a deleted agent's index is handed to the next agent built (#592).
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class MountDespawnOffThreadTests
 {
     private IDeadMountDespawnService _service = null!;

@@ -26,6 +26,7 @@ namespace TAOM.Tests.Features.BattleLoadDiagnostics;
 // tools/triage_battle_load.py (tests: tools/tests/test_triage_battle_load.py). Change one, change
 // all four: this literal, the Python PINNED_MEM_STATION_* constant, and both parse tests.
 [TestClass]
+[TestCategory("RequiresGame")]
 public class MemoryStationSamplerTests
 {
     private IModLogger _logger = null!;

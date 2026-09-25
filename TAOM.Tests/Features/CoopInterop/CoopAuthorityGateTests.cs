@@ -31,6 +31,7 @@ namespace TAOM.Tests.Features.CoopInterop;
 /// covers both directions because its handler goes through an injected adapter instead.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class CoopAuthorityGateTests
 {
     private static ICoopSessionProvider Client()

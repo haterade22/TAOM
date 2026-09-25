@@ -53,6 +53,7 @@ public class PrefabExtensionBindingTests
         { "Native", "SandBoxCore", "SandBox", "StoryMode", "CustomBattle", "Multiplayer" };
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void EveryPrefabExtension_XPath_ResolvesAgainstTheWinningPrefab()
     {

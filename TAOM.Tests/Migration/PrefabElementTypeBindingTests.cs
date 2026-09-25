@@ -46,6 +46,7 @@ public class PrefabElementTypeBindingTests
         { "Native", "SandBoxCore", "SandBox", "StoryMode", "CustomBattle", "Multiplayer" };
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void EveryPrefabElement_ResolvesToAWidgetTypeOrAPrefab()
     {

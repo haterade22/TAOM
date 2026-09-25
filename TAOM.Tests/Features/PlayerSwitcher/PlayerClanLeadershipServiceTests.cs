@@ -17,6 +17,7 @@ namespace TAOM.Tests.Features.PlayerSwitcher;
 /// takeover would have produced; every other state is a reason to stand still.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class PlayerClanLeadershipServiceTests
 {
     private const string Hero = "lord_1_75";

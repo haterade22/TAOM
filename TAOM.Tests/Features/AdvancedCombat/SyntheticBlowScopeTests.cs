@@ -17,6 +17,7 @@ namespace TAOM.Tests.Features.AdvancedCombat;
 /// (Codex review, 2026-09-23).
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class SyntheticBlowScopeTests
 {
     [TestMethod]

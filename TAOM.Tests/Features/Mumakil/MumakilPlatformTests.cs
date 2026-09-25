@@ -20,6 +20,7 @@ namespace TAOM.Tests.Features.Mumakil;
 /// The Armory is unversioned, so these read the repo snapshot and prove the installed copy matches it.
 /// </summary>
 [TestClass]
+[TestCategory("LiveInstall")]
 public class MumakilPlatformTests
 {
     // Deck heights in FINAL IN-GAME METRES above the beast's feet, which is the space the whole prefab is

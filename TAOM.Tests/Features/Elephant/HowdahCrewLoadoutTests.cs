@@ -14,6 +14,7 @@ namespace TAOM.Tests.Features.Elephant;
 /// nearest enemy is three metres below), so the crew get a dedicated troop instead of the line archer.
 /// </summary>
 [TestClass]
+[TestCategory("LiveInstall")]
 public class HowdahCrewLoadoutTests
 {
     private const string DefaultGameDir = @"E:\Steam\steamapps\common\Mount & Blade II Bannerlord";

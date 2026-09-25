@@ -222,6 +222,107 @@ identifier were corrected, and the feature doc now says raise lines are traced p
   folder last.
 
 ### fix(bindings): v2.0.30 - convergence fixes for plan 008 (#652)
+### fix(reviews): v2.0.30 - convergence fixes for plan 010
+
+- **The plan 010 decision records state only what was measured.** They no longer say the old
+  `tests.md` sentence contradicted all 102 class-level tags, since it governed only classes whose
+  other tests pass on the stubs and nobody counted those. They also say the Patch86 registration
+  check was outside both CI steps before D45 as well, so tagging it `BindingVerification` would
+  add a CI check, not restore one.
+- **Three citations corrected:** the `GameReferences.targets` lines (`:9-10`), a lesson title
+  quoted in the RCA, and the commit behind the two known live-Armory failures (`709649c3`, not
+  `a39a9c86`).
+
+### fix(tests): v2.0.30 - review follow-ups for plan 010
+
+- **The convergence entry has its heading back.** The previous commit wrote its own heading over
+  `fix(ci): v2.0.30 - convergence fixes for plan 010`, which credited that commit's three bullets
+  to the decisions commit.
+- **`.claude/rules/tests.md` permits a method tag instead of requiring one.** The sentence added
+  for D45 read as an order to tag only the game-bound method in every class that mixes the two,
+  which the class-level tags on classes whose other tests pass on the stubs contradict. A class tag
+  stays the default; a method tag is allowed when it returns checks worth running to CI.
+- **The decision records carry their conditions.** The `GameReferences.targets` header says the
+  empty SandBoxCore bin was checked on v1.5.3 only, and the review report's port item and D44 row
+  carry the 1.4.8 re-check that decision 44 attached. The report's merge-replay item now says the
+  Patch86 manifest row must be the method row, or the tagger restores the class tag.
+- Review: `docs/reviews/deep-review-010-ci-on-hosted-windows-decisions-2026-09-24.md`, RCA
+  `docs/reviews/rca-ci-on-hosted-windows-decisions-2026-09-24.md`.
+
+### fix(ci): v2.0.30 - apply maintainer decisions for plan 010 (#421)
+
+- **The empty SandBoxCore reference is gone.** `Main/TAOM.csproj` and `GameReferences.targets` no
+  longer name `Modules\SandBoxCore\bin`, which holds no DLL on v1.5.3 (BUTR publishes no
+  SandBoxCore package). The reference items of all three projects are identical before and after
+  in both modes (6 of 6 snapshots), the install build and the RefAsm build have 0 errors, and the
+  full suite is unchanged.
+- **Two Patch86 checks now run on CI.** `RequiresGame` moved from the
+  `Patch86HideoutBossFightBindingTests` class to its one game-bound method,
+  `PatchClasses_AreRegisteredInAllThreePlaces`, so the two IL checks on TAOM's own prefixes run in
+  the unit step (replayed: 8,220 total, 8,196 executed, 0 failed; the convergence replay recorded
+  8,218 and 8,194). `.claude/rules/tests.md` allows a method tag when the rest of the class runs
+  on the stubs.
+- **The unit step stays off `refasm-game`.** Pointed at it, the 24 unit skips executed but 10
+  failed on stub constructors (`Patch71FillTests`, `TeamCombatantSelectorTests`), so the change
+  was measured and reverted. #421 stays open for its Python half.
+
+### fix(ci): v2.0.30 - convergence fixes for plan 010
+
+- **The no-game recipe runs as written.** `.ai/verification.md` now sends the reader to the build,
+  unit and gate steps of `csharp.yml` exactly as written (all Debug, since the gate reads
+  `bin/Debug/net472/refasm-game`), and says to unset `BANNERLORD_GAME_DIR` and
+  `BANNERLORD_OVERRIDE_DIR` before the build: the build records the install in the test DLL and
+  the tests fall back to it. Replayed from a clean copy: unit 8,194 executed with 0 failures, gate
+  338 of 338.
+- **The reference guard has a failing test for each spelling it rejects.** Ten fixture rows cover
+  the four install properties, a lower-case `$(gameFolder)` and an import made conditional by its
+  own attribute, an `ImportGroup`, a `When` or an `Otherwise`. The guard now matches property
+  names without case and rejects those enclosing conditions.
+- `.claude/rules/tests.md` adds the `ReflectionTypeLoadException` from `Assembly.GetTypes()` to
+  the CI failure signatures. The review report's verdict is now set from the convergence pass.
+
+### fix(ci): v2.0.30 - review follow-ups for plan 010
+
+- **The BUTR pin now checks the build, not just the version.** `GameReferencesTargetsTests`
+  also compares the fourth part of `BannerlordRefAsmVersion` with the installed engine's
+  changeset (`ApplicationVersion.DefaultChangeSet`, 122374), so a same-label hotfix fails locally
+  instead of leaving CI on the old build. The reference check now reads the whole `Reference`
+  element (a `<HintPath>$(GameFolder)...` spelling no longer slips through), flags the other
+  install properties, and counts only an unconditional import.
+- **The binding gate fails on any check that did not execute**, not only on Inconclusive ones.
+- **Accurate text.** The workflow header names what it builds and runs; the missing-install error
+  names both bin layouts; the RefAsm error says to restore with `-p:TaomGameRefs=RefAsm`;
+  `.ai/verification.md` gives a no-game recipe that works; `.claude/rules/tests.md` lists every CI
+  failure signature and says `RequiresGame` only leaves the unit step. The feature map points at
+  `GameReferences.targets` and `csharp.yml`.
+- **Smaller.** The RefAsm game folder no longer copies the TaleWorlds stubs into its `bin`
+  (nothing reads them; the gate still executes 338 checks), and the package root is written once.
+- Review: `docs/reviews/deep-review-010-ci-on-hosted-windows-2026-09-24.md`, RCA
+  `docs/reviews/rca-ci-on-hosted-windows-2026-09-24.md`.
+
+### ci(tests): v2.0.30 - build and test C# on hosted Windows runners (#421)
+
+- **CI compiles C#, with no game and no workstation (#421, the C# half).** No job compiled TAOM on
+  any branch: the C# job needed a self-hosted runner that was never registered and ran only for
+  `bannerlord-1.4.5`. The new `.github/workflows/csharp.yml` runs on GitHub-hosted Windows for
+  every push and pull request on `bannerlord-1.5.x`, and on `bannerlord-1.4.5` once the file is
+  ported there. It builds against
+  BUTR's metadata-only reference assemblies for the pinned Steam build, runs the unit tests that
+  need no game (8,183 executed locally) and the binding gate against those assemblies laid out as a
+  game folder (338 checks, skips fail). The self-hosted job and its warning are gone.
+- **`GameReferences.targets` owns the game references.** `-p:TaomGameRefs=RefAsm` switches all
+  three projects to the reference assemblies; the default, `Install`, evaluates to exactly the
+  references the projects had before. A build with no install now stops with one error naming
+  `BANNERLORD_GAME_DIR` instead of hundreds of CS0246. `GameReferencesTargetsTests` pins the BUTR
+  build to `.claude/pinned-game-version.txt`: bump both on an engine bump. In RefAsm mode the
+  targets also copy the `System.Numerics.Vectors` package's `netstandard2.0` copy into the test
+  output, where install mode gets the game's own copy.
+- **Three test categories, used only by CI.** `RequiresGame` (103 classes that execute engine
+  code or load a game module assembly), `RequiresGameIL` (29 binding checks that need vanilla IL or data) and `LiveInstall` (10
+  classes that read the live Armory or the vanilla install). Local runs are unchanged;
+  `.claude/rules/tests.md` says when to add each.
+
+### fix(bindings): v2.0.30 - convergence fixes for plan 008
 
 - **A failed or aborted run is never a pass.** The all-skipped branch added below also caught
   `Test Run Failed.` (an error message with zero failed tests) and `Test Run Aborted.` when their

@@ -3915,3 +3915,94 @@ live-Armory tests).
 Report: `docs/reviews/deep-review-008-binding-gate-no-silent-skips-decisions-2026-09-24.md`. RCA:
 `docs/reviews/rca-binding-gate-no-silent-skips-decisions-2026-09-24.md`. One lesson in
 build-tooling-workflow and one in testing-qa.
+## Review 133 (number provisional: parallel improve branches): plan 010, C# on hosted Windows runners against BUTR reference assemblies, 6-lens deep review + Codex adversarial (2026-09-24)
+
+Plan 010 (`2ca0805b..b8c00045`, branch `improve/010-ci-on-hosted-windows`) adds
+`GameReferences.targets`, which switches all three projects between the install and BUTR's
+metadata-only reference assemblies (`-p:TaomGameRefs=RefAsm`), a hosted-Windows workflow
+(`csharp.yml`) that builds, runs the unit tests that need no game and runs the binding gate on the
+stubs, and three test categories on 122 test files. Codex (gpt-6-astra, ultra) used 129,699 tokens
+and found **0 P1, 0 P2, 2 P3, both confirmed, no false positive.** It disputed 6 of its 10 Known
+Suspects, partly confirmed 1 and left 3 unverified, with reasons.
+
+The first P3 was raised to MED: the pin test checked only that the BUTR version starts with
+`1.5.3.`, while its name, the workflow and the CHANGELOG claimed the Steam build, so a same-label
+BUTR build would have gone unnoticed. The second was the workflow header overclaiming what it
+builds and runs. The six lenses found 7 more confirmed defects (9 in all, 0 HIGH, 1 MED) and 1
+false positive (a STOP bypass the orchestrator had authorized as Amendment 2).
+
+Fixed on the branch:
+- the pin test also compares the changeset with `ApplicationVersion.DefaultChangeSet` (shown red
+  on a mutated version first);
+- the reference guard reads the whole element and only unconditional imports (fixture test red
+  first, import check proven by mutation);
+- the gate fails when any check did not execute;
+- the workflow header, both build errors, the `.ai/verification.md` recipe (replayed only with a
+  hand-added `-c Release` and no gate run; the convergence pass below fixed that), the `tests.md`
+  failure signatures, the CHANGELOG (#421) and the feature map.
+
+Applied improvements, both behaviour-preserving: one `_TaomNuGetRoot` property (9 of 9 reference
+snapshots identical) and no stub copies in the fake game's `bin` (gate still 338 of 338). Left for
+Mike: deleting the SandBoxCore reference (1.4.8 unchecked), a method-level tag on Patch86, and
+pointing the unit step at `refasm-game`.
+
+Codex did best by reading PE metadata to catch the plan's `net46` forwarding assembly. It missed
+every finding that needed the executor's logs or an executed recipe. Full suite `Failed: 2,
+Passed: 10246, Skipped: 2` (the two known live-Armory tests); CI replay unit 8,184 executed, gate
+338/0/0.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|---|---|---|---|
+| 1 | Pin test proves the version, not the build | Logic error | Assumed one BUTR build per game version; the plan prescribed the prefix | Changeset assertion; lesson in testing-qa |
+| 2 | Workflow header overclaims | Other: doc claim | Written from the goal, not read against `on:` and the filters | Repeat of the #647 `on:`-block lesson; fixed |
+
+Report: `docs/reviews/deep-review-010-ci-on-hosted-windows-2026-09-24.md`. RCA:
+`docs/reviews/rca-ci-on-hosted-windows-2026-09-24.md`. Two lessons in testing-qa and one in
+build-tooling-workflow.
+
+**Convergence pass** (one `deep-reviewer` on `b8c00045..a4b90e4d`): 5 LOW, 0 HIGH or MED, all
+confirmed and fixed. The no-game recipe now sends the reader to all three `csharp.yml` steps as
+written (all Debug; the gate's `refasm-game` path exists only for Debug) and says to unset the
+game variables before the build, since the build bakes the install into the test DLL's
+`TaomGameFolder`. `tests.md` adds the `ReflectionTypeLoadException` signature from `6b.log`. The
+reference guard gained one fixture row per rejected spelling (seven of ten rows red first, the
+Import's own `Condition` row proven by mutation), matches property names without case and rejects an import under a conditional
+`ImportGroup`, `When` or `Otherwise`. Replayed as written from a clean copy: unit
+`executed=8194 failed=0`, gate 338/0/0. Full suite `Failed: 2, Passed: 10256, Skipped: 2`.
+
+## Review 133b (number provisional: parallel improve branches): plan 010 maintainer decisions D44 to D46, 6-lens deep review + Codex adversarial (2026-09-24)
+
+Commit `c139bc50` (`2897fcca..c139bc50`, branch `improve/010-ci-on-hosted-windows`) applied the
+three items Review 133 left for Mike: D44 deleted the empty SandBoxCore reference, D45 moved
+`RequiresGame` from the Patch86 binding class to its one game-bound method, and D46 pointed the
+unit step at `refasm-game`, measured 10 failures on stub constructors and reverted. Codex used
+109,097 tokens and found **0 P1, 0 P2, 0 P3**, disputing 7 of 10 Known Suspects and leaving 3
+UNVERIFIED (snapshots, restore, compile: it ran nothing).
+
+The six lenses agreed the decisions are implemented as decided and found 5 confirmed defects, all
+LOW or INFO and all in text: the CHANGELOG hunk overwrote the convergence entry's heading; the
+`tests.md` sentence ordered a method tag the decision only allowed (the class-level tags on
+classes whose other tests pass on the stubs would break it); the tagger manifest in scratch still
+held the Patch86 class row, so the documented merge replay would restore it; decision 44's 1.4.8
+re-check was missing from every record; the replay description omitted its scratch NuGet and temp
+roots. All fixed on the branch. No false positive. Needs Mike: tag the Patch86 registration check
+`BindingVerification` so it runs on the hosted gate (338 to 339). It ran in no CI step before D45
+either (the class tag kept it out of both), so this adds a CI check rather than restoring one.
+
+Codex did best with a per-group selection table that showed the registration check falls
+outside both CI steps, but did not flag it. It missed all five text defects: it did not compare
+CHANGELOG headings with the base, read the rule sentence as a description rather than an order,
+and had no access to the scratch manifest or the decision rows. Full suite `Failed: 2, Passed:
+10256, Skipped: 2` (the two known live-Armory tests; branch based before `709649c3`).
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|---|---|---|---|
+| C1 | CHANGELOG heading overwritten | Other: record integrity | Edited in place, diff not read back for `-###` | Lesson in build-tooling-workflow |
+| C2 | Rule sentence stronger than the decision | Other: rule modality | Written from one example, not the classes it governs | Lesson in testing-qa |
+| C3 | Tagger manifest keeps the class row | Stale state: generator input | Output verified, input outside the repo | Lesson in build-tooling-workflow |
+| C4 | Decision 44's condition dropped | Other: record | Outcome recorded, condition not | Same lesson as C3 |
+| C5 | Replay description incomplete | Other: evidence record | Listed what matched CI, not every departure | One-off |
+
+Report: `docs/reviews/deep-review-010-ci-on-hosted-windows-decisions-2026-09-24.md`. RCA:
+`docs/reviews/rca-ci-on-hosted-windows-decisions-2026-09-24.md`. Two lessons in
+build-tooling-workflow and one in testing-qa. This closes Review 133's "Left for Mike" line.

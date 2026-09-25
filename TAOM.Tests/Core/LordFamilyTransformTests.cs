@@ -27,6 +27,7 @@ namespace TAOM.Tests.Core;
 /// It skips rather than fails when the game install is absent.
 /// </summary>
 [TestClass]
+[TestCategory("LiveInstall")]
 public class LordFamilyTransformTests
 {
     private const string DefaultGameDir = @"E:\Steam\steamapps\common\Mount & Blade II Bannerlord";

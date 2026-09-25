@@ -17,6 +17,7 @@ namespace TAOM.Tests.Features.AdvancedCombat;
 /// so a removal raised elsewhere waits for the next <c>ApplyPendingRemovals</c>.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class SpatialGridRemovalTests
 {
     private static Agent BareAgent() => (Agent)FormatterServices.GetUninitializedObject(typeof(Agent));

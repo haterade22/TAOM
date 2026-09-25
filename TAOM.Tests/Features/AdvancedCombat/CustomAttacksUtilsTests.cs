@@ -11,6 +11,7 @@ namespace TAOM.Tests.Features.AdvancedCombat;
 /// method.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class CustomAttacksUtilsTests
 {
     private static Vec3 FinitePos => new Vec3(10f, 20f, 1.7f);

@@ -10,6 +10,7 @@ using TAOM.Features.MixedFormations.Models;
 namespace TAOM.Tests.Features.MixedFormations;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class FormationLayoutServiceTests
 {
     private IMixedFormationsSettingsProvider _settings = null!;

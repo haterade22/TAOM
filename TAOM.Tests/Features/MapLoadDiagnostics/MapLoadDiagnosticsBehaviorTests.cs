@@ -5,6 +5,7 @@ using TAOM.Features.MapLoadDiagnostics;
 namespace TAOM.Tests.Features.MapLoadDiagnostics;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class MapLoadDiagnosticsBehaviorTests
 {
     [TestMethod]

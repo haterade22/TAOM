@@ -13,6 +13,7 @@ using TAOM.Features.EditorCacheRebuild;
 namespace TAOM.Tests.Features.EditorCacheRebuild;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class RuntimeCacheRebuildServiceTests
 {
     private IDistanceCacheBuilderService _builderService = null!;

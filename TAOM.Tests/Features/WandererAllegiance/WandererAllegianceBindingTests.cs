@@ -34,6 +34,7 @@ public class WandererAllegianceBindingTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void AddHeroGeneralConversations_StillEmitsTheCompanionHireToken()
     {

@@ -94,6 +94,7 @@ public class DoctrineSwitchInvariantTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void BehaviorWeightApplier_TargetsOnlyBehavioursTeamAIGeneralRegisters()
     {

@@ -18,6 +18,7 @@ namespace TAOM.Tests.Features.SupplyLines;
 /// first (InternalsVisibleTo).
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class SupplyLinesCampaignBehaviorTests
 {
     private ISupplyOrderService _orders;

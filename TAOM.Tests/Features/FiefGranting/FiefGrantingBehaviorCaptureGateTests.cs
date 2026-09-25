@@ -23,6 +23,7 @@ namespace TAOM.Tests.Features.FiefGranting;
 /// and therefore no clearing, so its record must not be kept.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class FiefGrantingBehaviorCaptureGateTests
 {
     // ---------------------------------------------------------------- which battles capture

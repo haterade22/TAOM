@@ -26,6 +26,7 @@ using TaleWorlds.MountAndBlade;
 namespace TAOM.Tests.Features.Warg;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class WargAttackServiceTests
 {
     private IMissionAdapterFactory _adapterFactory;

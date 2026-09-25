@@ -186,6 +186,7 @@ public class UncapturableHeroesBindingTests
     // ---- The premise the whole design rests on -----------------------------
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void MapEvent_StillFallsThroughToTheFugitiveAction()
     {

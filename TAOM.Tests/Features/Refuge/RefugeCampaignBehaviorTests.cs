@@ -20,6 +20,7 @@ namespace TAOM.Tests.Features.Refuge;
 /// two callers cannot double-wipe a book founded right after launch.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class RefugeCampaignBehaviorTests
 {
     private IRefugeService _refuges = null!;

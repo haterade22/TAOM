@@ -21,6 +21,7 @@ namespace TAOM.Tests.Features.FieldCamp;
 /// tests use the same defensive shape).</para>
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class FieldCampOverlayVMTests
 {
     private ICampService _camps = null!;

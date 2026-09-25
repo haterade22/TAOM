@@ -8,6 +8,7 @@ using TAOM.Features.Encyclopedia.Models;
 namespace TAOM.Tests.Features.Encyclopedia;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class TaomInformationRestrictionModelTests
 {
     [TestMethod]

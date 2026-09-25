@@ -8,6 +8,7 @@ using TAOM.Features.EditorCacheRebuild.Caching;
 namespace TAOM.Tests.Features.EditorCacheRebuild.Caching;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class PersistentPathCacheTests
 {
     private string _tempDir = null!;

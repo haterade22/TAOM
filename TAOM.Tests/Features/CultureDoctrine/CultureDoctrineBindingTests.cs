@@ -82,6 +82,7 @@ public class CultureDoctrineBindingTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void TacticCharge_IsTheTypeMakeDecisionFallsBackTo()
     {

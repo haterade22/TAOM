@@ -15,6 +15,7 @@ namespace TAOM.Tests.Features.MountDespawn;
 /// still green and the build clean.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class MountDespawnWiringTests
 {
     [TestMethod]

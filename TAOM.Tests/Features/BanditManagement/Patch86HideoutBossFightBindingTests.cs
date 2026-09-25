@@ -112,6 +112,7 @@ public class Patch86HideoutBossFightBindingTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void BossPhaseCap_StillFeedsTheCampaignTrim()
     {
@@ -177,6 +178,7 @@ public class Patch86HideoutBossFightBindingTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void AmbushPadding_StillDrawsFromTheTypeCache()
     {
@@ -211,6 +213,7 @@ public class Patch86HideoutBossFightBindingTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void PatchClasses_AreRegisteredInAllThreePlaces()
     {
         // Patch39 shipped missing its category attribute and every review agent missed it

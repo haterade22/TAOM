@@ -12,6 +12,7 @@ using TaleWorlds.MountAndBlade;
 namespace TAOM.Tests.Features.Spider;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class SpiderAttackServiceTests
 {
     private IMissionAdapterFactory _adapterFactory;

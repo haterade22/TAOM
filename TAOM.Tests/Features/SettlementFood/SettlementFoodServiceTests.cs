@@ -6,6 +6,7 @@ using TAOM.Features.SettlementFood;
 namespace TAOM.Tests.Features.SettlementFood;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class SettlementFoodServiceTests
 {
     private SettlementFoodService _sut = null!;

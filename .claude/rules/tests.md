@@ -95,5 +95,23 @@ Worked example, pinning culture party-template bindings across `spcultures.xslt`
 `spkingdoms.xslt` and `heroes.xslt`, none of which currently has output coverage; `lords.xslt` has it
 only for the Nine's race, age, face age and kit (`TAOM.Tests/Features/NazgulFamily/NazgulRaceDataTests.cs`, #644).
 
+## Test categories (hosted CI)
+
+`.github/workflows/csharp.yml` builds against metadata-only reference assemblies, where every
+engine method body throws. Tag the class `[TestCategory("RequiresGame")]` when a test executes
+engine code (constructing a `Vec2`, `TextObject`, `ExplainedNumber` or `CampaignBehaviorBase`
+counts, even through TAOM code), and `[TestCategory("LiveInstall")]` when it reads the live
+Armory or the vanilla install. A class tag is the default even when some of its tests would pass
+on the stubs; you may tag only the methods that need the game when that returns checks worth
+running to CI (`Patch86HideoutBossFightBindingTests`). `RequiresGame` only removes a test from
+the unit step: a `BindingVerification` test that executes engine code, or needs vanilla method
+IL or vanilla data, carries `RequiresGameIL` on the method. An untagged test that needs the game
+fails on CI with a `NullReferenceException` from a `TaleWorlds` frame (a TaleWorlds attribute
+constructor run by `GetCustomAttributes` included), a `TypeInitializationException` wrapping one, a
+`FileNotFoundException` for a module assembly (`SandBox*`, `StoryMode*`,
+`TaleWorlds.MountAndBlade.View`) or a game-bin dependency (`System.Management`, `Steamworks.NET`,
+`GalaxyCSharp`, `StbSharp`), or a `ReflectionTypeLoadException` from `Assembly.GetTypes()` on TAOM's
+assembly (the test output does not print its `LoaderExceptions`): tag it, never catch the exception.
+
 ## Test Organization
 Mirror source structure: `TAOM.Tests/Features/{FeatureName}/{ServiceName}Tests.cs`

@@ -8,6 +8,7 @@ using TaleWorlds.CampaignSystem;
 namespace TAOM.Tests.Features.HeroRace;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class RacePersistenceBehaviorTests
 {
     private RacePersistenceBehavior _sut;

@@ -13,6 +13,7 @@ namespace TAOM.Tests.Features.SpecialResources;
 /// is live-game.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class SpecialResourcesBehaviorPhaseGuardTests
 {
     private ISpecialResourceService _service;
