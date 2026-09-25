@@ -17,7 +17,7 @@ Two problems arise simultaneously:
 
 ### Solution Approach
 - `SpatialGrid` divides the map into 20-unit cells. `AdvancedCombatBehavior.OnMissionTick` rebuilds the grid every 2 seconds from `Mission.AllAgents`, keeping spatial lookups to O(agents-in-nearby-cells). Since #595 the rebuild replaces the map (never cleared in place under a reader), `OnAgentDeleted` evicts the deleted agent, and both the rebuild and the query carry the `MissionThreadGuard` tripwire: every reader is on the mission tick, and the third player freeze of 2026-09-13 had only warg trees reading this grid from the asynchronous tick while it was rebuilt.
-- `BoneCheck` and `BoneCheckDuringAnimation` hold references to attacker and target lists (via `IAgentAdapter`), fetch skeleton transforms each tick, and compare world-space bone positions against a configurable radius.
+- `BoneCheck` and `BoneCheckDuringAnimation` hold references to attacker and target lists (via `IAgentAdapter`), fetch skeleton transforms each tick (`BoneCheckDuringAnimation` only inside the action's hit window), and compare world-space bone positions against a configurable radius.
 - `CustomAttacksUtils` caches the `Mission.RegisterBlow` delegate at static construction. It also exposes `TakeDamage` which builds a full `Blow`/`AttackCollisionData`/`CombatLogData` struct and feeds it to the cached delegate. **The damage bypasses armor:** it sets `blow.InflictedDamage = damage` and `DamageCalculated = true`, so the engine applies the number as given (measured 2026-09-18: 976 war ram head-butts on Armored Trolls averaged 23.1, exactly the raw 18-28 roll). Every caller's damage band (elephant/mumakil trample, war ram head-butt, warg and spider bites, signature strikes) is therefore a post-armor number.
 - `AdvancedCombatBehavior` is a `MissionLogic` that owns the `BoneCollisionService`. External code (e.g., `WargMissionBehavior`) calls `AddBoneCheckComponent` to register an active check.
 
@@ -29,10 +29,11 @@ AdvancedCombatBehavior (MissionLogic)
   |     |-- ISpatialGridDebugService.RenderDebugVisualization()
   |     `-- IBoneCollisionService.TickBoneChecks(dt)
   |           `-- BoneCheck / BoneCheckDuringAnimation.Tick(dt)
-  |                 `-- CheckBoneCollision()
-  |                       `-- _onCollisionCallback(attacker, target, boneId)
-  |                             `-- CustomAttacksUtils.TakeDamage(...)
-  |                                   `-- cached Mission.RegisterBlow(...)
+  |                 `-- CheckBoneCollision(visuals, skeleton)   [skeleton fetched once per tick]
+  |                       `-- CheckTargets(...)                 [range gate before each target's skeleton]
+  |                             `-- _onCollisionCallback(attacker, target, boneId)
+  |                                   `-- CustomAttacksUtils.TakeDamage(...)
+  |                                         `-- cached Mission.RegisterBlow(...)
   |
   `-- AddBoneCheckComponent(BoneCheck)   <-- called by WargAttackService
 
@@ -47,7 +48,7 @@ None. Grid cell size is a hardcoded constant (`CellSize = 20f`) in `SpatialGrid.
 | File | Purpose |
 |------|---------|
 | `Main/Features/AdvancedCombat/AdvancedCombatBehavior.cs` | `MissionLogic` entry point; owns tick loop and grid rebuild |
-| `Main/Features/AdvancedCombat/SpatialGrid.cs` | 3D cell-hash grid for fast radius queries; singleton pattern |
+| `Main/Features/AdvancedCombat/SpatialGrid.cs` | Cell grid keyed on (x, y) for fast radius queries (the distance test stays 3D); singleton pattern |
 | `Main/Features/AdvancedCombat/BoneCheck.cs` | Time-limited bone collision check; fires callback on hit |
 | `Main/Features/AdvancedCombat/BoneCheckDuringAnimation.cs` | Subclass of `BoneCheck`; active only during a specific animation window |
 | `Main/Features/AdvancedCombat/CustomAttacksUtils.cs` | Reflection-cached `RegisterBlow` delegate; `TakeDamage` utility |
@@ -70,10 +71,13 @@ None. Grid cell size is a hardcoded constant (`CellSize = 20f`) in `SpatialGrid.
 ## Tests
 `TAOM.Tests/Features/AdvancedCombat/BoneCollisionServiceTests.cs` — 11 tests covering `IBoneCollisionService.CreateAnimationBoneCheck` / `CreateTimedBoneCheck` and the bone-tracking lifecycle via `IAgentAdapter` + `IAgentVisualsAdapter` substitutes.
 
+`SpatialGridQueryTests.cs` (9) runs the grid query through its generic helpers against a brute-force sphere scan, and pins column order and a point that moved since the rebuild. `BoneCheckRangeGateTests.cs` (10) drives `BoneCheck.CheckTargets`: the range gate, a NaN frame, and every per-target skip, singly and in a mixed list. `BoneCheckDuringAnimationTickTests.cs` (7) drives `BoneCheckDuringAnimation.Tick` with substitutes and `default(ActionIndexCache)`: a wind-up frame never touches the attacker's visuals, the window end and a missing skeleton or visuals in the window expire the check, and a NaN progress keeps it without a hit test. One IL rule, with a control fixture, pins a single progress read per tick.
+
 **Coverage gaps (tracked elsewhere):**
-- `SpatialGrid` and `CustomAttacksUtils` remain untested — these consume live `Skeleton` / `MatrixFrame` / sealed `Agent` types and need adapter work before they're unit-testable.
+- `CustomAttacksUtils` needs a live engine for most paths. `SpatialGrid`'s query logic is covered by `SpatialGridQueryTests.cs` through its generic helpers; its `Agent`-typed wrappers are not.
 - `SpatialGridDebugService.RenderDebugVisualization` is untested (audit issue #185).
-- `BoneCheck` itself uses live `Skeleton` matrices and is not directly unit-testable without the game runtime — coverage is achieved indirectly via `BoneCollisionService` orchestration tests.
+- `BoneCheck`'s bone math uses live `Skeleton` matrices and is not unit-testable; its per-target range gate is (`BoneCheckRangeGateTests.cs`).
+- `BoneCheckDuringAnimation.Tick`'s hit-window path with a live skeleton needs a real `Skeleton`, which a test cannot build; the owed in-game warg Custom Battle is the proof that bites still land and end as before (#659). The other paths are driven with substitutes: `ActionIndexCache` is beforefieldinit and its `!=` reads only `Index`, so `default(ActionIndexCache)` never runs its engine-backed static constructor.
 
 ## How to Add a New Bone-Based Attack
 1. Obtain an `IAgentAdapter` for the attacker and a `List<IAgentAdapter>` for targets (use `SpatialGrid.Instance.GetAgentsInRadius` to find nearby agents).
@@ -83,12 +87,14 @@ None. Grid cell size is a hardcoded constant (`CellSize = 20f`) in `SpatialGrid.
 5. The check runs automatically each tick until it expires or all targets are hit.
 
 ## Changelog
+- 2026-09-24 (#659, maintainer decision on the plan 015 review): `BoneCheckDuringAnimation.Tick` tests the action and the progress upper bound first, reads the progress once into a local, and fetches the attacker's skeleton only once the progress reaches the hit window; a null skeleton there ends the check. The one behaviour difference: a missing attacker skeleton no longer ends the bite during the wind-up; it ends it only if still missing at the first in-window tick, and one back by then lets the bite go on. Proof owed: the in-game warg Custom Battle (bites must still land and end as before).
+- 2026-09-24 (plan 015, #659): `SpatialGrid` keys cells on (x, y) behind the generic `BuildCells` / `CollectInRadius` helpers; `BoneCheck` fetches the attacker's skeleton once per tick, reuses its bone list and range-gates each target before fetching its skeleton (a positive requirement, so a NaN frame fails it). Review: `../reviews/deep-review-015-warg-tick-costs-2026-09-24.md`.
 - 2026-05-13 — Added `SpatialGridDebugServiceTests.cs` (2 minimum-coverage tests) for `#185`, and updated this doc's Tests section to reflect `BoneCollisionServiceTests.cs` (`#198`).
 - 2026-04-06 — Decoupled the bone-check tick from the 2-second spatial-grid update throttle.
 
 ## GitHub Issue
-- **Issue:** Unknown
-- **Status:** Unknown
+- **Issue:** Unknown for the original feature; the plan 015 tick-cost work is #659, [Warg battles: cut per-tick service lookups, scan allocations and skeleton wrappers](https://github.com/haterade22/TAOM/issues/659)
+- **Status:** #659 open (in-game warg Custom Battle owed)
 
 ---
 

@@ -696,3 +696,20 @@ failing test, and the recompute's absence was not even logged.
 - **Prevent:** every `AccessTools` / `GetMethod` / `GetField` / `TypeByName` by literal name lands with its DataRow and
   catalogue row (`/verify-bindings`); the engine-compatibility lens now reports a missing row.
 - **Source:** `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F3.
+### Fetch an engine NativeObject wrapper once per tick, and range-gate before fetching it (plan 015, 2026-09-24)
+`MBAgentVisuals.GetSkeleton()` returns a new managed `Skeleton` on every call (v1.5.3 `ScriptingInterfaceOfIMBAgentVisuals.cs:776-786`): a native ref-count increase, a process-wide lock, a `NativeObjectKeeper` and a `GCHandle` (`NativeObject.cs:32-43`), then a finalizer that calls native again (`:45-51`). `BoneCheck` fetched the attacker's skeleton twice per tick and every captured target's before testing the 4.5 m gate. Other `NativeObject` getters built through the scripting interface behave the same.
+- **Why missed:** a getter reads as a field read, and an adapter that passes straight through (`AgentVisualsAdapter.GetSkeleton`) hides the allocation.
+- **Prevent:** fetch a NativeObject wrapper once per tick and pass it down; run every cheap managed test (range, liveness) before the fetch.
+- **Source:** plan 015 Step 11; `docs/reviews/rca-warg-tick-costs-2026-09-24.md` F9.
+
+### Test a NativeObject reference with `is null` in code a unit test reaches (plan 015, 2026-09-24)
+`== null` on a `Skeleton` binds to `NativeObject.operator ==` (v1.5.3 `NativeObject.cs:221-232`), a static member, so the first call runs `NativeObject`'s static constructor, which calls `LibraryApplicationInterface.IManaged` (`:62-64`), null in the test host. The `TypeInitializationException` poisons `NativeObject` for the rest of the test run. In game the operator returns `(object)a == null` for a null right side, so `is null` gives the same result.
+- **Why missed:** the operator is invisible at the call site, and NSubstitute returns null for a sealed return type, so the null path looks test-safe.
+- **Prevent:** write `is null` / `is not null` for any `NativeObject` subclass (check the type's base with `taom-src`; `Skeleton` is one) on a line a unit test can reach.
+- **Source:** plan 015 orchestrator amendment, commit `7577894d`; `docs/reviews/rca-warg-tick-costs-2026-09-24.md` F9.
+
+### `default(ActionIndexCache)` needs no engine in v1.5.3: check the beforefieldinit header before calling a method untestable (plan 015 decisions, 2026-09-24)
+The installed v1.5.3 `TaleWorlds.MountAndBlade.dll` declares `.class public sequential ansi sealed beforefieldinit TaleWorlds.MountAndBlade.ActionIndexCache`, and its `!=` compares only the instance `Index`. A test can build a check with `default(ActionIndexCache)` and drive `Tick` through substitutes; the engine-backed static constructor runs only on a static member access (`Create`, an `act_*` field). Plan 015 wrote "no test can call `Tick`" from `BoneCollisionServiceTests.cs:202-208` and the v1.4.7 note in animation-skeleton ("not beforefieldinit"), and shipped a weaker IL test because of it.
+- **Why missed:** a static-constructor hazard was read as "the type cannot appear in a test" without reading the class header or trying `default`.
+- **Prevent:** before calling code untestable because an engine type's static constructor needs the engine, read the class header (`ilspycmd -il <dll> | grep "\.class.*<Type>$"`) and write the spike; a beforefieldinit type is safe while the path touches no static member. Re-check per engine version: the v1.4.7 lesson and this one disagree.
+- **Source:** `docs/reviews/rca-warg-tick-costs-decisions-2026-09-24.md` F2 (Agent 2 F1).
