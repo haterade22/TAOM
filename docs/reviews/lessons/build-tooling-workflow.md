@@ -2438,3 +2438,38 @@ Plan 019's follow-up made `SiegeDefenseConfig.KingdomMessages` a `Dictionary<str
 - **Why missed:** test-project nullable ids are warnings, so the build and the suite stay green; the executor verified the tier the change graduated and read the test run for its pass count only. One sat at an untouched Setup line; the other two were in the commit's own new test code, and nobody counted the test project.
 - **Prevent:** after any nullable annotation change (a `?` on a property, return, parameter or generic argument), build `TAOM.Tests` with `--no-incremental`, count its CS86xx (the plan's `count_cs86.py` with the `TAOM.Tests\` fragment) against the baseline, and quote that count next to Main's in the review record and the commit.
 - **Source:** `docs/reviews/rca-nullable-ratchet-decisions-2026-09-24.md` #1.
+### An absence check must run where the thing lives, in the form it is stored (plan 005, 2026-09-24)
+Plan 005's port reported a vendored BUTR credential "already gone from disk" after
+`grep -rln packageSourceCredentials Dependencies/` found nothing. The grep ran in a worktree, where
+the gitignored `Dependencies/.vendor-source/` does not exist, and grep cannot read inside the
+`.tar.gz` archives that folder actually holds; three of them still carry the block. The new
+checklist line shipped with the same blind spot.
+- **Why missed:** a "no match" was read as proof of absence, although the check could not have
+  matched: wrong tree, wrong file form. The sprint record (`plans/README.md:40`) already named the
+  three tarballs.
+- **Prevent:** before claiming something is absent, prove the check can see it: run it where the data
+  lives (the main checkout or the live install, not a worktree, for anything gitignored) and on the
+  stored form (`tar -xzOf <a> | grep`, `zgrep`, or extract a `.zip`/`.nupkg`). Seed a known hit when
+  you can. Cross-check the claim against the plan's own status row before writing it.
+- **Source:** `docs/reviews/rca-security-hygiene-2026-09-24.md`, findings 1 and 2.
+
+### Code carried in a string is only tested by running it (plan 005, 2026-09-24)
+`tools/process_faction_map.py` runs two child programs held in `"""..."""` literals. Plan 005
+verified its injection fix with `python -m py_compile`, which parses the outer file and never the
+children, and called a behaviour test "structurally untestable". A short stdlib test (a synthetic
+PNG under folders named `it's here` and `a'+...+'`) fails on the old tool and passes on the fix.
+- **Why missed:** "it deploys assets" was taken for the whole tool; the helpers write only to paths
+  they are given, so a temp folder isolates them.
+- **Prevent:** when a fix touches code built as a string (`python -c`, `eval`, templated SQL or
+  XSLT), the proof is a test that runs it, including the hostile input the fix targets. Before
+  writing "untestable" in a plan or a `Not-tested:` trailer, name the side effect that prevents a
+  temp-folder test.
+- **Source:** `docs/reviews/rca-security-hygiene-2026-09-24.md`, finding 3.
+
+### Write a documented search pattern in `-E` form (plan 005, 2026-09-24)
+The adoption checklist's `grep -rln "a\|b"` works in GNU grep, but ripgrep (the Grep tool) reads
+`\|` as a literal pipe, so the same pattern pasted there reports a clean tree.
+- **Why missed:** the command was written for one tool and read as portable.
+- **Prevent:** write alternation in documented commands as `grep -E 'a|b'`, which GNU grep, ripgrep
+  and the Grep tool read the same way.
+- **Source:** `docs/reviews/rca-security-hygiene-2026-09-24.md`, finding 6.

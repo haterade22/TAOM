@@ -909,6 +909,28 @@ branch's other commits, the warg one (`4962f3ee`) is superseded by plan 015, the
 Tests: the six no-MCM default pins from `6eb5955c` (green before and after) and a new IL rule,
 `Getters_NeverReadTaomSettingsInstance_TheConstructorDoes`, RED against the old provider. Full
 suite: 10320 passed, 2 skipped, 0 failed.
+### fix(tools): v2.0.30 - faction-map helpers take paths as arguments (plan 005)
+
+`tools/process_faction_map.py` ran two child Python scripts with each file path pasted into
+the script source as `r'<path>'`, so a path holding a quote broke the script and, worse, let the
+path's text run as code. Both children now read their paths and numbers from `sys.argv`. Probe
+on a PNG under a folder named `it's here`: the trunk version fails both calls (a `SyntaxError`
+in the generated source), the new one finds the bounding box and writes the crop.
+
+The external-repo vetting checklist (`docs/ai-includes/external-repo-adoption.md`) gains a grep
+for inline package credentials in any vendored drop before porting a file from it. Both changes
+are ported from the June branch `impl-005` (`4310aa6e`, `4bc520a1`). Plan 005's MCP pinning moved
+to plan 016.
+
+Review follow-ups: the credential is not gone. The extracted copy is, but the same
+`packageSourceCredentials` block still sits inside three gitignored, never-committed BUTR source
+archives under `Dependencies/.vendor-source/` (ButterLib 2.10.4, MCM 5.11.4, UIExtenderEx 2.13.2);
+the first check ran in a worktree, which has no copy of that ignored folder, and a plain grep
+cannot see inside a `.tar.gz` anyway. The checklist
+line now sweeps archives too, uses a `-E` pattern that also works in ripgrep, and names the harvest
+finding it came from. `tools/tests/test_process_faction_map.py` pins the path fix: a plain folder, a
+quote in the folder name, and Python text in the folder name (the last two fail on the pre-fix
+tool). Report: `docs/reviews/deep-review-005-security-hygiene-2026-09-24.md`.
 
 ## 2026-09-23
 
