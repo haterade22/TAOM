@@ -85,11 +85,12 @@ public static class PatchShieldPolicy
         "TaleWorlds.MountAndBlade.GauntletUI",
         // Plan 007 (2026-09-23, measured from diag.log): the engine's native-to-managed callback
         // shims, ManagedCallbacks.{Library,Core,Engine}CallbacksGenerated. TAOM's own
-        // Native2ManagedPatcher already wraps every one (247 in v1.5.3) with a finalizer that, on
-        // its normal path, swallows the exception (CrashReportPatchHelper.HandleAndSwallow). It hands
-        // the exception back unchanged when capture is off, on re-entry, or when the crash service
-        // is unresolved or throws; on those paths nothing on a shim now swallows the missing-API
-        // trinity or preserves the stack (a non-void finalizer makes Harmony rethrow with `throw`).
+        // Native2ManagedPatcher wraps the 16 allowlisted shims (plan 006, Native2ManagedTargets) with
+        // a finalizer that, on its normal path, swallows the exception
+        // (CrashReportPatchHelper.HandleAndSwallow). When capture is off, on re-entry, or when the
+        // crash service is unresolved or throws, it hands the exception back with its throw site
+        // kept (HandBack, RethrowStackPreserver). The other 231 shims carry no TAOM finalizer, so
+        // on those nothing swallows the missing-API trinity.
         // Shielding them again cost one Harmony.Patch each at the first game start (about 46 s of a
         // 69 s pass 2 on a machine paying 186 ms per Patch) and stacked an __originalMethod wrapper
         // on engine callback hot paths: the #331 hot-layer rationale. Rescue value is nil in
