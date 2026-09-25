@@ -21,18 +21,21 @@ public class SpecialResourcesBehaviorSessionResetTests
     private const string Key = "_taom_specialResources";
 
     private SpecialResourceStorageService _storage = null!;
+    private ISpecialResourceService _service = null!;
     private SpecialResourcesBehavior _sut = null!;
 
     [TestInitialize]
     public void Setup()
     {
         _storage = new SpecialResourceStorageService();
-        _sut = NewBehavior(_storage);
+        _service = Substitute.For<ISpecialResourceService>();
+        _sut = NewBehavior(_storage, _service);
     }
 
-    private static SpecialResourcesBehavior NewBehavior(ISpecialResourceStorageService storage) =>
+    private static SpecialResourcesBehavior NewBehavior(
+        ISpecialResourceStorageService storage, ISpecialResourceService service) =>
         new SpecialResourcesBehavior(
-            Substitute.For<ISpecialResourceService>(),
+            service,
             storage,
             Substitute.For<ISpecialResourceConfigProvider>(),
             Substitute.For<IModLogger>(),
@@ -42,7 +45,7 @@ public class SpecialResourcesBehaviorSessionResetTests
     private void LeavePriorCampaignBalances()
     {
         _storage.Set("main_hero", "war_spoils", 120f);
-        _storage.Set("main_hero", "castar", 0f);
+        _storage.Set("main_hero", "caster", 0f);
         _storage.Set("lord_1_1", "gems", 450f);
     }
 
@@ -51,32 +54,23 @@ public class SpecialResourcesBehaviorSessionResetTests
     {
         LeavePriorCampaignBalances();
 
-        // Outside a campaign Hero.MainHero is null, so this also pins that the wipe does not
-        // depend on the main hero existing yet.
+        // Outside a game Game.Current is null and reading Hero.MainHero throws, so passing also
+        // pins that the wipe reads no hero.
         _sut.OnNewGameCreated(null!);
 
         Assert.AreEqual(0, _storage.GetAllData().Count);
         Assert.IsFalse(_storage.Contains("main_hero", "war_spoils"));
-        Assert.IsFalse(_storage.Contains("main_hero", "castar"),
+        Assert.IsFalse(_storage.Contains("main_hero", "caster"),
             "a stale spent-to-zero pair would suppress the next campaign's legacy-save seed");
     }
 
     [TestMethod]
-    public void OnNewGameCreated_NoMainHeroYet_StillResetsTheServiceSessionState()
+    public void OnNewGameCreated_ReadsNoHero_StillResetsTheServiceSessionState()
     {
-        var service = Substitute.For<ISpecialResourceService>();
-        var sut = new SpecialResourcesBehavior(
-            service,
-            _storage,
-            Substitute.For<ISpecialResourceConfigProvider>(),
-            Substitute.For<IModLogger>(),
-            Substitute.For<ITroopWeightService>(),
-            Substitute.For<IDedicatedServerProvider>());
+        _sut.OnNewGameCreated(null!);
 
-        sut.OnNewGameCreated(null!);
-
-        service.Received(1).ResetSessionState();
-        service.DidNotReceive().InitializeHero(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+        _service.Received(1).ResetSessionState();
+        _service.DidNotReceive().InitializeHero(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
     }
 
     [TestMethod]
@@ -95,7 +89,7 @@ public class SpecialResourcesBehaviorSessionResetTests
     public void SyncData_SaveThenLoadIntoAnotherCampaign_RestoresExactlyTheSavedBalances()
     {
         _storage.Set("main_hero", "war_spoils", 123.25f);
-        _storage.Set("main_hero", "castar", 0f);
+        _storage.Set("main_hero", "caster", 0f);
         _storage.Set("lord_1_1", "gems", 600f);
         var expected = new Dictionary<string, float>(_storage.GetAllData());
         var store = new FakeDataStore { Mode = FakeDataStore.StoreMode.Saving };
@@ -105,7 +99,7 @@ public class SpecialResourcesBehaviorSessionResetTests
         var loadStorage = new SpecialResourceStorageService();
         loadStorage.Set("other_hero", "elven_wine", 77f);
         store.Mode = FakeDataStore.StoreMode.Loading;
-        NewBehavior(loadStorage).SyncData(store);
+        NewBehavior(loadStorage, Substitute.For<ISpecialResourceService>()).SyncData(store);
 
         var loaded = loadStorage.GetAllData();
         CollectionAssert.AreEquivalent(expected.Keys.ToList(), loaded.Keys.ToList());
@@ -128,14 +122,15 @@ public class SpecialResourcesBehaviorSessionResetTests
     }
 
     /// <summary>
-    /// Mirrors the engine's behavior data store: a load of a missing key returns false and leaves
-    /// the ref unchanged; a save records what it is handed.
+    /// Mirrors the engine's behavior data store (v1.5.3 <c>BehaviorSaveData.SyncData</c>): a load of
+    /// a missing key returns false and leaves the ref unchanged; a save records what it is handed,
+    /// null included, and a second save of the same key throws, as the engine's <c>Add</c> does.
     /// </summary>
     private class FakeDataStore : IDataStore
     {
         public enum StoreMode { Saving, Loading }
 
-        private readonly Dictionary<string, object> _data = new();
+        private readonly Dictionary<string, object?> _data = new();
 
         public StoreMode Mode { get; set; }
 
@@ -144,15 +139,15 @@ public class SpecialResourcesBehaviorSessionResetTests
             if (Mode == StoreMode.Loading)
             {
                 if (!_data.TryGetValue(key, out var stored)) return false;
-                data = (T)stored;
+                data = (T)stored!;
                 return true;
             }
 
-            if (data != null) _data[key] = data;
+            _data.Add(key, data);
             return true;
         }
 
-        public T GetSaved<T>(string key) => _data.TryGetValue(key, out var v) ? (T)v : default!;
+        public T GetSaved<T>(string key) => _data.TryGetValue(key, out var v) ? (T)v! : default!;
 
         public bool IsSaving => Mode == StoreMode.Saving;
         public bool IsLoading => Mode == StoreMode.Loading;

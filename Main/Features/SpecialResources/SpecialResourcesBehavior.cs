@@ -112,7 +112,9 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         }
 
         // Null-first on load: a missing key leaves the ref unchanged, so seeding it from the live
-        // singleton would hand the previous campaign's balances straight back (plan 001).
+        // singleton would hand the previous campaign's balances straight back (plan 001). A save
+        // with no record for this behavior never reaches SyncData at all; that load gap is still
+        // open (special-resources.md, SyncData persistence).
         Dictionary<string, float> data = null;
         dataStore.SyncData("_taom_specialResources", ref data);
         _storage.RestoreData(data);
@@ -124,8 +126,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         // cap belongs inside RestoreData/Set (keyed by resource), not here.
     }
 
-    // Internal for unit-test reach. Reads no hero: the resets below need none, and a new campaign
-    // must wipe the previous one's state whether or not Hero.MainHero is resolvable yet.
+    // Internal for unit-test reach. Reads no hero: neither reset below needs one.
     internal void OnNewGameCreated(CampaignGameStarter starter)
     {
         // Plan 001: the storage is a process-lifetime singleton and a new game never runs the

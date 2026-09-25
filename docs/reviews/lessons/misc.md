@@ -224,3 +224,14 @@ in `StrikeSoundPlayer`'s comment and `signature-strikes.md`, both committed.
   `lessons/adapters-taleworlds-api.md`, and the retracted cause in
   `rca-spider-directional-attacks-2026-06-15.md`. A correction re-reads every clause of the text it
   keeps, not only the one found wrong.
+
+### A plan's RED step builds the project that holds the test, and names the test filter (plan 001, 2026-09-24)
+Plan 001 said building `Main/TAOM.csproj` would fail because a new test calls a missing handler, and
+called that compile failure the RED state. The test lives in `TAOM.Tests`, which references `Main`, not
+the other way round, so that build cannot see the test at all.
+- **Why missed:** the plan reasoned from "the method is missing" without asking which project compiles
+  the call.
+- **Prevent:** a handoff plan's RED step runs
+  `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter FullyQualifiedName~<Class>`
+  and states the expected failure (a CS error in the test project, or a named failing assertion).
+- **Source:** `docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md` F8; Codex P3.

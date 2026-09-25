@@ -762,3 +762,19 @@ saved, but the great elk's lord wiring never shipped in a release, so every play
 - **Prevent:** when you describe what existing saves contain, read the value at the last release tag
   (`git show <tag>:<path>`) and name both cases if an unreleased build could have written something else.
 - **Source:** `docs/reviews/rca-animalia-2026-09-23.md` row 5.
+
+### A SyncData key-miss guard is not a no-record guard, and the reset goes before an OnGameLoaded seed (plan 001, 2026-09-24)
+Plan 001 made `SpecialResourcesBehavior.SyncData` load into a null local so a missing key cannot hand
+back the live singleton's dictionary, and described it as covering "a save predating the feature". It
+does not: v1.5.3 `CampaignBehaviorDataStore.LoadBehaviorData` calls `SyncData` only when a record
+matches the behavior's StringId or type name, so a save older than the behavior never reaches the
+guard, keeps the previous campaign's balances, and its `Contains`-gated legacy seed is skipped.
+- **Why missed:** the plan predates this file's session-reset rule and stated the engine path from
+  memory; the executor checked the plan's TAOM excerpts for drift but not its engine premises.
+- **Prevent:** for every per-campaign singleton, name both load cases separately: a record without the
+  key (the null-local guard) and no record at all (a `_syncedThisSession` flag the loading `SyncData`
+  sets, as in `FiefGrantingCampaignBehavior` and `FieldCampCampaignBehavior`). Where the behavior seeds
+  in `OnGameLoaded`, run the no-record reset as the first statement of `OnGameLoaded`, not in
+  `OnSessionLaunched`: `Campaign.cs:1685-1686` raises `OnGameLoaded` before `OnSessionStart`, so a
+  later reset would wipe the seed.
+- **Source:** `docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md` F1, F2.
