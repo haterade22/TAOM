@@ -68,6 +68,11 @@ feature map count 19 Foundation classes; the plan 007 review record lists every 
 once plan 006 lands. Full suite: 10247 passed, 2 skipped, 2 failed (the same two live-Armory
 tests). Report: `docs/reviews/deep-review-007-patchshield-skip-callback-shims-decisions-2026-09-24.md`.
 
+Convergence fixes (2026-09-24, review record only): the reword list gains its sixth text,
+`lessons/harmony-il.md:613`; the decisions report records the convergence pass before its verdict
+and corrects a lesson count, a line reference and the claim made for the named-argument call. No
+code changed. Full suite: 10247 passed, 2 skipped, 2 failed (the same two live-Armory tests).
+
 ## 2026-09-23
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)

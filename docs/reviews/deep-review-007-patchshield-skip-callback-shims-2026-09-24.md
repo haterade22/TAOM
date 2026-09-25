@@ -299,7 +299,9 @@ CHANGELOG, `dr3-maintenance.md`, the plan and the Codex prompt).
 preserves the stack on the fallback paths: the `PatchShieldPolicy.cs` comment on the
 `ManagedCallbacks` entry (lines 91-92), this branch's CHANGELOG ("Known limitation"),
 `docs/migration/dr3-maintenance.md:261` ("nothing on a shim now swallows the missing-API trinity or
-preserves the stack"), and two older lines this plan did not write, `dr3-maintenance.md:304` ("as do
+preserves the stack") and `docs/reviews/lessons/harmony-il.md:613` ("PatchShield's finalizer on the
+same method had swallowed the missing-API trinity and preserved the stack on exactly those paths.
+Nothing on a shim does either now."), and two older lines this plan did not write, `dr3-maintenance.md:304` ("as do
 the crash reporter's own ten on their fallback paths") and `docs/reviews/lessons/harmony-il.md:572`
 ("plus the crash reporter's ten on their fallback paths"). That is true on this branch alone;
 whichever of plans 006 and 007 merges second rewords the stack half of each (the trinity half stays
