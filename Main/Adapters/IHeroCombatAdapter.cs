@@ -13,6 +13,6 @@ public interface IHeroCombatAdapter
     bool HasMount { get; }
     bool HasShield { get; }
 
-    /// <summary>Snapshot of the hero's BattleEquipment at the time the adapter was created.</summary>
+    /// <summary>Snapshot of the equipment the adapter was built from (BattleEquipment by default).</summary>
     IBattleEquipmentSnapshot Equipment { get; }
 }

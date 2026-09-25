@@ -47,7 +47,7 @@ slot cleared under `AgentNoHorses`, stored by `InitializeSpawnEquipment`), `Sand
 | 9 | LOW: `score > 0` threshold unpinned (Agent 4 F3) and "Unknown scores 0 everywhere" wording | CONFIRMED | **Fixed:** two planner tests (Archer to class 5, HorseArcher to class 6); wording now "on every class Auto-Assign fills (1 to 6)" |
 | 10 | LOW: message arms untested, delegation-only oracle (Agent 4 F4, Codex 3) | CONFIRMED | `TextObject.ToString` catches and returns an error string. **Fixed:** one DataRow test per status asserting the shown text via `InformationManager.DisplayMessageInternal` |
 | 11 | LOW: new DI edge unpinned, resolved inside an empty catch every frame (Agent 3 #4, Agent 4 F5) | CONFIRMED | Registration line 30 is changed code. **Fixed:** `CompanionTacticsWiringTests` (DryIoc `Validate`) |
-| 12 | LOW: seeded language rows end in LF inside `\r\r\n` files (Agent 7 #1) | CONFIRMED | Byte count before: 2663 `\r\r\n` + 15 LF-only per file. **Fixed** by binary round-trip: now 2666 `\r\r\n` + 12 LF-only (the 12 older #608 rows, follow-up); all three ids still direct children of `<strings>` in all 12 files |
+| 12 | LOW: seeded language rows end in LF inside `\r\r\n` files (Agent 7 #1) | CONFIRMED | Byte count before: 2663 `\r\r\n` + 15 LF-only per file. **Fixed** by binary round-trip: now 2666 `\r\r\n` + 12 LF-only (the 12 older rows: 3 `taom_aso_*` rows from #604 and 9 `taom_behavior*` rows from #608, follow-up); all three ids still direct children of `<strings>` in all 12 files |
 | 13 | LOW: extra blank line before `</strings>` (Agent 7 #2) | CONFIRMED | **Fixed** (one line removed) |
 | 14 | LOW: "companions" wording narrower than the candidate set (Agent 2 nit, Agent 3 aside, Agent 5 FU4, Codex scenario table) | CONFIRMED (wording) | **Fixed** in CHANGELOG and feature doc. Whether to restrict the set is N4 below |
 | 15 | LOW: `NoneAssigned` covers "empty plan" and "vanilla rejected every pick" (Agent 5 T9) | NEEDS MIKE | Accurate. Simplicity criterion: tiny win (engine drift only, already logged as a warning) against a fourth status and a new string in 12 languages: Reject unless Mike wants it |
@@ -104,7 +104,8 @@ FOLLOW-UP (pre-existing code; no issue filed from here because `/issue` is publi
 - Break equal fits with vanilla `BattleCaptainModel` ratings (Agent 6 P6; Mike's call, D21 chose equipment scoring).
 - `translate_with_claude.py sync_missing_ids` misplaces rows in mixed-ending files; `LanguageFileCoverageTests` should
   read `base/strings/string` only (Agent 1 F1, Agent 7 FU1-FU2, Agent 4 FU1).
-- The 12 older `taom_behavior_f6.*` LF rows (#608) in the same language files (Agent 7 FU3).
+- The 12 older LF rows in the same language files: 3 `taom_aso_*` rows (#604, `10539c29`) and 9 `taom_behavior*`
+  rows (#608, last changed by `303bf2a7` and `75f1880a`) (Agent 7 FU3).
 - `harvest_literal_loc_keys.py insert_rows` adds a blank line every run (Agent 7 FU4).
 - `check_external_loc_coverage.py` FAIL on the live Armory and TAOM_Map installs, not caused by this diff (Agent 7 FU5).
 - `OOBButtonsVM.cs` 226 lines against the ADR-002 ceiling; extract the inquiry chain when #117 Load/Save lands
@@ -187,3 +188,25 @@ and vanilla's deployment-end persistence, and cross-referenced every string key,
 
 VERDICT: READY FOR COMMIT (review follow-ups committed on the branch; the Step 4.6 convergence pass and Mike's
 answers to N1 to N7 are still owed before merge)
+
+## Convergence
+
+Step 4.6 convergence pass on `66e3fd59..daeb127e` (the review-fix commit). It found no runtime defect and confirmed
+behaviour parity for the adapter overload, the spawn-equipment read, the role cache and the `bool[]` planner change.
+It raised four LOW defects, all wrong statements in comments and docs the fix added. Each was re-checked against the
+v1.5.3 decompile or the files before editing; all four are CONFIRMED and fixed, none was a false positive.
+
+| # | Defect | Evidence re-read | Fix |
+|---|---|---|---|
+| C1 | `IOOBCaptainAutoAssigner.cs` said `OrderOfBattleVM` "cannot be constructed outside a mission", and the clause made "because its only callers live at the boundary" read as the reason | `OrderOfBattleVM()` needs only `Game.Current` (it registers on `Game.Current.EventManager`); `RefreshValues` null-checks `_mission` | Comment now says the constructor needs a running `Game.Current`; "because ..." stays attached to "exposes" |
+| C2 | `IHeroCombatAdapter.Equipment` was documented as a snapshot of the hero's BattleEquipment | `HeroCombatAdapter(Hero, Equipment)` snapshots whatever it is given; Auto-Assign passes `Agent.SpawnEquipment` | "Snapshot of the equipment the adapter was built from (BattleEquipment by default)." |
+| C3 | The state-lifecycle-save lesson and RCA row 2 named the save key as `SyncData "_formationInfos"` | `SaveConfiguration` calls `SetFormationInfos(list, IsSiegeBattle, Army != null)` (`SPOrderOfBattleVM.cs:256`), which writes one of four lists (`OrderOfBattleCampaignBehavior.cs:161-180`); `_formationInfos` is the field-battle list only | Both now name `SetFormationInfos` and its four-way choice; the lesson notes a siege without an army writes `_siegeFormationInfos` |
+| C4 | Finding 12 and the follow-up list called the leftover LF rows "12 older #608 rows" / "`taom_behavior_f6.*`" | Byte scan of all 12 language files: 12 LF rows each, 3 `taom_aso_*` and 9 `taom_behavior*`; `git blame` on the DE file gives `10539c29` (#604) for the ASO rows and `303bf2a7` / `75f1880a` for the rest | Both places list 3 ASO rows (#604) and 9 `taom_behavior*` rows (#608) |
+
+No test applies: C1 and C2 are comments, C3 and C4 are docs. Verification after the edits:
+`dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` compiled `Main` and gave
+**Passed 10335, Skipped 2, Failed 0, Total 10337**, unchanged from the review-fix run. The branch is based after
+`a39a9c86`, so no known failure applies.
+
+CONVERGENCE: CLEAN after these fixes. The `IOrderOfBattleVMTracker.cs:8` "sealed" wording stays a follow-up, and
+Mike's answers to N1 to N7 are still owed before merge.
