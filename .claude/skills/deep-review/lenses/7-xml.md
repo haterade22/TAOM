@@ -41,7 +41,7 @@ installs are partial, so broken refs into them are environment gaps, not defects
    change (compare `git diff --stat` with the intended edit), no `--` inside an XML comment, no
    backup with an .xml extension left in a globbed folder.
 
-4. INTENT. Read the issue, feature doc or CHANGELOG entry the change serves and confirm the data
+4. INTENT. Read the issue, feature doc or commit body the change serves and confirm the data
    does what it says: the right troop in the right tree, the tier and stats the spec names,
    player-facing text wrapped as {=KEY} and registered for translation.
 

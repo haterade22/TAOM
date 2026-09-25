@@ -230,7 +230,7 @@ If any agent reports a HIGH-severity finding (Agent 7's CRITICAL counts, as does
 2. If the user explicitly chooses to defer, the deferral MUST be recorded in one of:
    - A GitHub issue (`gh issue create`) with the finding text
    - A commit trailer `Deferred: <reason>` on the commit that would have fixed it
-   - A CHANGELOG "Known limitation:" bullet
+   - A `Known limitation:` paragraph in the commit body (it becomes the release's CHANGELOG entry)
 
 What is NOT allowed: quietly proceeding past a HIGH finding on informal reasoning ("only matters in case X") without writing the decision down. Past experience: Career System P2 (ally buff overwrite) was flagged HIGH by Agent 5 and dismissed — Codex independently caught the same bug later. Memory: `feedback_dont_defer_high_review_findings.md`.
 

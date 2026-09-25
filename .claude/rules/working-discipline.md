@@ -17,7 +17,7 @@ With no fresh user prompt, continue established work; don't start new work.
   only when the work is done or genuinely blocked. Out of obvious steps, think harder first: re-read
   the transcript, recombine near-misses.
 - A trivial failure (typo, missing import, a flake): fix and retry. A fundamentally broken approach:
-  record the outcome (commit, CHANGELOG, log) and move on.
+  record the outcome (commit body, log) and move on.
 
 ## Edit scope
 

@@ -2658,3 +2658,44 @@ reproduced with `GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=status.showUntrackedFiles G
   explicitly (`--untracked-files=normal`, `--no-optional-locks`), and its test runs once under a hostile config through
   the `GIT_CONFIG_*` environment variables.
 - **Source:** `docs/reviews/rca-build-identity-dirty-flag-2026-09-24.md`, finding 6.
+### A generator that pastes free text into a file it later parses must escape that text's delimiters (plan 020, 2026-09-24)
+`tools/changelog_from_commits.py` copied commit bodies verbatim into `CHANGELOG.md` and then, on the
+next release, searched the whole file with `^## v…` to refuse a duplicate. A body that showed an
+example heading (`## v2.0.32 (2026-11-01)`, even inside a code fence) made the v2.0.32 run refuse,
+and any heading-shaped body line added structure to the file. Codex found it; six lenses did not.
+- **Why missed:** every fixture body was plain prose and every test ran one release. The design
+  lens dismissed escaping because none of 916 past bodies had a heading, which judges the defect
+  by history when the input is bodies not yet written.
+- **Prevent:** when a tool embeds text it does not control inside a format it will parse again,
+  escape the format's delimiters on the way in (here, lines CommonMark reads as ATX headings, which
+  leaves `#622:` alone) and write a test that runs the tool twice, the second run reading the
+  first run's output.
+- **Source:** `docs/reviews/rca-changelog-at-release-2026-09-24.md`, C3.
+
+### Retiring a duty: search for the duty, not for its phrases in the folders you expect (plan 020, 2026-09-24)
+Plan 020 retired the hand-written CHANGELOG. Its sweep grepped a fixed list of folders for fixed
+phrases, so eleven live instructions survived (`docs/features/` recipes, the feature-doc template,
+the `commit-split` routing row, two lens prompts), a rule still said a deleted hook enforced the
+duty, and `release-process.md` kept the old step order that `/release` had just reversed. The
+executor wrappers under `plans/` still ordered hand entries.
+- **Why missed:** a list of places is a guess about where the duty is written. Reworded
+  instructions ("Update CHANGELOG", "Add to CHANGELOG", "the CHANGELOG `Not-tested:` line") pass a
+  phrase grep. Repeat of "A structural refactor's leftover-reference sweep must cover living docs"
+  (2026-07-01).
+- **Prevent:** grep the whole repo, case-insensitive, for the artifact's name (`changelog`) with no
+  folder filter, then classify each hit as history (leave it) or instruction (fix it). When a skill
+  changes its step order, re-read the doc it calls its "Full contract" in the same change.
+- **Source:** `docs/reviews/rca-changelog-at-release-2026-09-24.md`, C5, C6, C13.
+
+### Anchor "was X changed" checks and release ranges to a fixed commit, not HEAD (plan 020, 2026-09-24)
+Two defects in one change. The completeness lens checked for a hand edit with
+`git diff --name-only HEAD -- CHANGELOG.md`, which sees only uncommitted edits, so on a branch
+that had rewritten the file it printed nothing. And `/release` generated the section from `HEAD`,
+then tagged `HEAD` phases later, so a commit landing in between was in the tag and in no section.
+- **Why missed:** each check was right at the moment its author pictured (`/verify` before a
+  commit; a single session cutting a release) and was reused where `HEAD` means something else.
+- **Prevent:** a review check diffs against the review's base (`HEAD` only for uncommitted work).
+  A multi-step procedure that reads a range resolves the end to a SHA once, prints it, checks it
+  before committing, tags by SHA and, before tagging, checks that the tagged commit's parent is
+  that SHA.
+- **Source:** `docs/reviews/rca-changelog-at-release-2026-09-24.md`, C2, C4, D1.

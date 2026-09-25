@@ -53,16 +53,16 @@ grep -rE 'TODO|FIXME' Main/ --include='*.cs' | wc -l
 
 Report count.
 
-## Step 5: CHANGELOG Check
+## Step 5: CHANGELOG.md untouched
 
-Check if `CHANGELOG.md` has been modified (staged or unstaged):
+Only `/release` writes `CHANGELOG.md` (generated from commit bodies). Check that this work did
+not edit it by hand:
 
 ```bash
-git diff --name-only -- CHANGELOG.md
-git diff --staged --name-only -- CHANGELOG.md
+git diff --name-only HEAD -- CHANGELOG.md
 ```
 
-If C# or XML files changed but CHANGELOG not updated, flag it.
+If it prints `CHANGELOG.md` outside a `/release` run, flag it: the entry belongs in the commit body.
 
 ## Output Format
 
@@ -75,7 +75,7 @@ Build:      [PASS/FAIL]
 Tests:      [X/Y passed, Z failed]
 Uncommitted: [X files modified, Y staged, Z untracked]
 TODOs:      [X in Main/]
-CHANGELOG:  [Updated/NOT UPDATED]
+CHANGELOG:  [Untouched/HAND-EDITED]
 
 Ready for commit: [YES/NO]
 

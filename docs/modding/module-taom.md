@@ -348,7 +348,7 @@ The full sequence, the Discord note, and the `/release` skill are in [`docs/refe
 2. `./build.ps1 -RunTests` green (`:70`).
 3. `pwsh tools/sweep_module_backups.ps1` reports 0 files; if not, `-Apply`. Backup sidecars must not ship (`:71-73`). The repo's `Main/_Module` tree is one of the roots it sweeps, because `CopyModule` would redeploy a sidecar left there (`docs/reference/module-backup-sweep.md:43-56`).
 4. Edit `<Version value="vX.Y.Z" />` at `Main/_Module/SubModule.xml:6`. If the Dependencies assembly changed, bump `Dependencies/_Module/SubModule.xml` too (`docs/reference/release-process.md:49-50`).
-5. Commit as `chore(release): TAOM vX.Y.Z`, staging the release paths explicitly; `git tag -a vX.Y.Z -m "..."`; `git push origin <branch> vX.Y.Z`. A plain `git push` does not push the tag (`:77-78, 85`).
+5. Commit as `chore(release): vX.Y.Z - TAOM vX.Y.Z`, staging the release paths explicitly; tag that commit by its SHA, not `HEAD`, with `git tag -a vX.Y.Z <release commit sha> -m "..."` (`docs/reference/release-process.md` steps 7 and 8); `git push origin <branch> vX.Y.Z`. A plain `git push` does not push the tag.
 6. `python tools/package_release.py --source "<game>/Modules" --dest <out> --dry-run` to see what would ship. It excludes `RuntimeDataCache`, `AssetSources`, `*.xml.bak`, the native debug artifacts and any `.vs` path (`tools/package_release.py:104-143`) and keeps `project.mbproj` (`:126-135`).
 
 Check: `pwsh tools/sweep_module_backups.ps1` and `./build.ps1 -RunTests`

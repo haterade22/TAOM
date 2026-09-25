@@ -96,12 +96,12 @@ Phase 4: CLOSE OUT
   11. Create/close GitHub issue with full details
         ↑ Issue must exist BEFORE the closing commit, not after.
           Codex review #28 caught us creating issue #92 retroactively for
-          b7e7188. The pre-commit hook only enforces CHANGELOG, not issue
-          creation — discipline is on the author. Pattern: open the issue
+          b7e7188. No hook enforces issue creation; discipline is on the
+          author. Pattern: open the issue
           when starting the work, reference it in commit messages, close
           it with the final commit.
   12. Write/update docs/features/<name>.md
-  13. Update CHANGELOG.md
+  13. Write the commit body as the changelog entry (/release generates CHANGELOG.md)
 ```
 
 **Do not skip any phase.** Phase 2 catches bugs Claude misses (43 found in codebase review). Phase 3 catches bugs in our fixes (already caught IsFemale field targeting wrong type, shaghana/abanissa alignment mismatch). Each phase exists because the previous one proved insufficient.

@@ -150,7 +150,7 @@ Civilian roster correctly tagged with `equipmentType="Civilian"` per the standal
 2. **Verify item IDs** — grep `LOTRLOME_Armory/ModuleData/LOTRLOME_items/<culture>/*.xml` for every `Item.id` referenced. Missing items cause the underwear bug.
 3. **Add settlement entries** in `VolunteerRecruitmentService.cs` `Initialize{Culture}Settlements()`. Three-arg overload: `(settlementId, regularTroop, regularWeight, notableTroop, notableWeight)`.
 4. **Write TDD tests** in `VolunteerRecruitmentServiceTests.cs` covering high-roll, low-roll, and region-specificity (settlement OUTSIDE the targeted area should NOT return the new troop).
-5. **Update CHANGELOG** with the feature, item IDs used, settlement allocation, and any save-compat notes.
+5. **Write the commit body** with the feature, item IDs used, settlement allocation, and any save-compat notes: it is the changelog entry.
 
 No code changes outside the service + tests + XML. `TaomVolunteerModel.MaxVolunteerTier = 6` does NOT block T9 troops from notable pools (only gates upgrade progression on slots with non-empty `UpgradeTargets`).
 

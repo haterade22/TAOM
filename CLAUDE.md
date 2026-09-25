@@ -54,7 +54,7 @@ instructions: follow its phases in order.
 | Before overriding, patching or adapting a TaleWorlds type | `/research`, `/taom-src` | always |
 | Before any commit touching C# or XML/XSLT, repo or live install | `/deep-review` | every such commit; skip only config and docs |
 | Before claiming done | `/verify` | always |
-| "Let's merge", "ready to PR" | `/ship` | runs `/verify`, `/deep-review`, `/review-codex`, then issue, docs, CHANGELOG |
+| "Let's merge", "ready to PR" | `/ship` | runs `/verify`, `/deep-review`, `/review-codex`, then issue and docs |
 | Versioning a build for players | `/release` | after `/ship`, never instead of it |
 | Game updated, or the GAME VERSION DRIFT banner | `/engine-bump` | before any build or test |
 | Armory sync or art drop, or the ARMORY ART DRIFT banner | `/armory-audit` | before any battle or tournament smoke |

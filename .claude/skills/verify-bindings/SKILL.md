@@ -72,4 +72,4 @@ The gate is offline-only. Patch *application*, prefab visual order, ruler equipm
 
 ## Output
 
-Report: gate result (pass/fail with the per-finding class for any failure), the run's `Skipped:` count (it must be 0), whether the snapshot reproduced (`-Check` exit code), and any open punch-list items the change implicates. Update `docs/migration/TRACKING.md` and `CHANGELOG.md` if bindings were fixed.
+Report: gate result (pass/fail with the per-finding class for any failure), the run's `Skipped:` count (it must be 0), whether the snapshot reproduced (`-Check` exit code), and any open punch-list items the change implicates. Update `docs/migration/TRACKING.md` if bindings were fixed, and say what changed in the commit body.

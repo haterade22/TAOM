@@ -474,7 +474,7 @@ PY
 )
 # The gates whose prefilter is their own word rather than `git`: each must also skip
 # `git status`, `git diff` and `git log`.
-PF_NARROWED_LIST=(check-changelog-changed.sh check-claude-files-tracked.sh check-commit-subject-version.sh
+PF_NARROWED_LIST=(check-claude-files-tracked.sh check-commit-subject-version.sh
                   check-moduledata-validation.sh check-native-dll-crt.sh check-doc-config-drift.sh
                   validate-push.sh block-no-verify.sh)
 PF_NARROWED="${PF_NARROWED_LIST[*]}"
@@ -496,7 +496,7 @@ else
             [[ "$name" == mark-verification-run.sh ]] && triggers+=('cd /x\npwsh ./build.ps1 -RunTests')
         else
             # Each gate's own word (maintainer decision D39): validate-push.sh filters on
-            # `push`, block-no-verify.sh on `no-verify`, the six commit gates on `commit`,
+            # `push`, block-no-verify.sh on `no-verify`, the five commit gates on `commit`,
             # and the two confirm gates on `git`; a `git commit` row reaches the last two sets.
             case "$name" in
                 # validate-push.sh finds `push` by token, so `git -C <dir> push` is its trigger too.
@@ -553,12 +553,12 @@ fi
 
 # ---------------------------------------------------------------------------
 # 4d. An escaped letter cannot hide a blocked command. JSON allows `\u0063` for `c`, and
-#     the prefilters read the raw payload, so five of the ten blocking gates
+#     the prefilters read the raw payload, so five of the nine blocking gates
 #     (check-commit-subject-version.sh, validate-push.sh, block-no-verify.sh,
 #     block-dangerous-git.sh, block-broad-git-add.sh) are each fed their blocked command
 #     twice, plain and with the gated word's first letter escaped, and must answer both the
 #     same way (maintainer decision D40; Codex's counter-payload in the plan 013 review).
-#     The other five (check-changelog-changed.sh, check-claude-files-tracked.sh,
+#     The other four (check-claude-files-tracked.sh,
 #     check-moduledata-validation.sh, check-native-dll-crt.sh, check-doc-config-drift.sh)
 #     get 4c's escaped-word reach row only.
 # ---------------------------------------------------------------------------
@@ -684,6 +684,32 @@ for name in $BLOCKING_BASH_GATES; do
         bad "$name has no taom_pybin_degraded branch: it will fail open SILENTLY when no JSON parser is available, which for a gate is indistinguishable from finding nothing"
     fi
 done
+
+# ---------------------------------------------------------------------------
+# 5b2. The degraded-toolchain banner names every python-only gate. A gate with no jq
+#      path dies whenever python is missing, and its exit-0 stderr never reaches Claude
+#      (harness-facts.md), so session-start.sh's banner is the only signal. A hand-kept
+#      list there once omitted check-commit-subject-version for ten days.
+# ---------------------------------------------------------------------------
+head2 "5b2. the degraded banner names every python-only gate"
+# Only the call site's third argument marks a jq path (_pybin.sh), and only non-comment lines
+# of session-start.sh print anything: a name in a comment there is not in the banner. Any
+# non-comment call counts, whatever precedes it (`if`, `&&`), and a run that selects no gate
+# fails, so the check cannot pass having checked nothing.
+SS_CODE=$(grep -v '^[[:space:]]*#' .claude/hooks/session-start.sh)
+n5b2=0
+for f in .claude/hooks/*.sh; do
+    name=$(basename "$f" .sh)
+    call=$(grep -v '^[[:space:]]*#' "$f" | grep 'taom_pybin_degraded[[:space:]]') || continue
+    grep -qE 'taom_pybin_degraded +"[^"]*" +"[^"]*" +jq( |$)' <<<"$call" && continue
+    n5b2=$((n5b2+1))
+    if grep -q -- "$name" <<<"$SS_CODE"; then
+        ok "$name is named in the session-start degraded banner"
+    else
+        bad "$name has no jq path, so it fails open without python, but session-start.sh does not name it"
+    fi
+done
+(( n5b2 > 0 )) || bad "5b2 found no python-only gate call site, so it checked nothing"
 
 # ---------------------------------------------------------------------------
 # 5c. Every PreToolUse gate prints its decision where Claude Code reads it.
@@ -1048,8 +1074,6 @@ stop_condition() {  # hook clear|set
         check-verification-evidence.sh:set) touch -d "@$((now + 3))" "$STOP_REPO/Main/Foo.cs" ;;
         check-deep-review.sh:clear)          git -C "$STOP_REPO" checkout -q -- Main/Foo.cs ;;
         check-deep-review.sh:set)            printf 'class Foo { int x; }\n' > "$STOP_REPO/Main/Foo.cs" ;;
-        check-changelog-updated.sh:clear)    printf -- '- entry\n' >> "$STOP_REPO/CHANGELOG.md" ;;
-        check-changelog-updated.sh:set)      git -C "$STOP_REPO" checkout -q -- CHANGELOG.md ;;
         check-version-tagged.sh:clear)       git -C "$STOP_REPO" tag v9.9.9 ;;
         check-version-tagged.sh:set)         git -C "$STOP_REPO" tag -d v9.9.9 >/dev/null 2>&1 ;;
         *) return 2 ;;

@@ -81,7 +81,7 @@ None. Tier values and wage tables are hardcoded in `VolunteerTierService` and `T
 2. Add `InitializeXxxSettlements()`, `InitializeXxxClans()`, and `InitializeXxxCulture()` private static methods in `VolunteerRecruitmentService.cs` following the existing pattern.
 3. Call them from the static constructor.
 4. Run tests to confirm GREEN.
-5. Update `CHANGELOG.md`.
+5. Describe the change in the commit body (`/release` builds `CHANGELOG.md` from it).
 
 ## Changelog
 - 2026-05-14 — Extracted `IWageModifierService`/`WageModifierService` from `TaomPartyWageModel`, moving inline garrison/party/Rohan wage-feat and recruitment-cost logic out of the override bodies (+22 tests); closes #180, partial #148.

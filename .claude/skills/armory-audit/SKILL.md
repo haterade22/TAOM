@@ -54,7 +54,7 @@ with `regen`, and `git diff docs/audits/armory-ref-audit.md` is the change log.
 ## Step 4: commit both files
 
 `docs/audits/armory-ref-audit.md` and `docs/reference/armory-catalogue/catalogue.tsv` go in the
-same commit as the ref repair. The Armory XML itself is unversioned here; say in the CHANGELOG
+same commit as the ref repair. The Armory XML itself is unversioned here; say in the commit body
 which files changed in the live install and the mirror.
 
 ## Gotchas

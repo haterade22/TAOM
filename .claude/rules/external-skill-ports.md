@@ -120,7 +120,7 @@ For every hardcoded constant the upstream uses (tool counts, file size caps, ver
 After porting:
 
 1. **Run `bash .claude/skills/context-budget/scan.sh --verbose`** — confirm the new skill appears with reasonable eager (frontmatter) and lazy (body) tokens. Description over 30 words gets flagged.
-2. **Update CHANGELOG.md** in the same commit. The pre-commit hook `check-changelog-changed.sh` enforces this for `.claude/` changes.
+2. **Describe the port in the commit body**: it is the changelog entry (`/release` generates `CHANGELOG.md` from commit bodies).
 3. **Commit + run `/codex-verify`** for any non-trivial port — Codex catches the lifecycle and load-semantic mistakes Claude tends to make on first port.
 4. **Re-run `/security-scan`** on TAOM's own tree after the port lands. The SkillSpector regex categories run advisory (INFO) on a self-audit; the loud, full-severity pass is the foreign-tree `--external` run you did in "Security-vet FIRST" above — don't conflate the two.
 
@@ -129,7 +129,7 @@ After porting:
 Three review passes found 19 issues total. The categories that recurred:
 
 - **6 wrong-API-assumption bugs** — `scan.sh` body counting, hook lifecycle, rule paths semantics, frontmatter schema. Now pinned in `harness-facts.md`.
-- **3 process violations** — CHANGELOG missed twice; counter math off by one. Now caught by pre-commit hook.
+- **3 process violations**: CHANGELOG missed twice; counter math off by one. The pre-commit hook that caught the CHANGELOG half retired when the commit body became the changelog entry.
 - **1 gitignore blast** (HIGH) — `bin/` swept up `check-freeze.sh`. Now caught by pre-commit hook + naming rule above.
 - **3 stale hardcoded values** — MCP filesystem 12→13, ilspy 8→4, descriptions creeping back to 31w. Now tagged EXACT vs HEURISTIC; description bloat lint added.
 

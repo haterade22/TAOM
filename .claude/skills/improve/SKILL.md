@@ -33,7 +33,7 @@ The economics: an expensive model does the part where intelligence compounds (un
 Map the territory before judging it. TAOM has an unusually rich intent layer — use it; a tradeoff recorded there is **by-design, not a finding**:
 
 - `CLAUDE.md` — the repo map: architecture, critical rules, feature inventory, GameModel/patch catalogs, key paths.
-- `docs/INDEX.md`, `docs/adrs/` (decided architecture), `docs/roadmap.md` (decided direction), `docs/migration/TRACKING.md` (migration state), recent `CHANGELOG.md` + `git log --oneline -30` (what's actively evolving vs frozen).
+- `docs/INDEX.md`, `docs/adrs/` (decided architecture), `docs/roadmap.md` (decided direction), `docs/migration/TRACKING.md` (migration state), recent commit bodies + `git log --oneline -30` (what's actively evolving vs frozen).
 - Standing calibrations that would otherwise read as findings, with their actual sources: fail-open hooks are *mandated* (`.claude/rules/harness-facts.md`); vendored DLLs in `Main/_Module/bin/` are *allowlisted* and `Main/_Module/ModuleData/settlements.xml` is a *known stale shadow* whose live copy is the external TAOM_Map module (both: the orientation.md trap index); LOTRLOME_Armory is *intentionally* absent from `<DependedModules>` (`docs/reviews/rca-morannon-2026-06-08.md`).
 - Verification commands (these go into every plan as gates): `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true`, `dotnet test TAOM.Tests -p:DisableModuleCopy=true`, `python tools/validate_moduledata.py`, `python tools/lint_docs.py`.
 - Conventions plans must tell executors to match: adapter pattern (ADR-007), thin entry points (ADR-002), TDD mandatory, no `#region`/`[Obsolete]`/`#if DEBUG`, 50/72 commits with no AI attribution.

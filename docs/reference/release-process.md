@@ -16,7 +16,7 @@ source (bundles written since plan 017 also carry the build stamp, which names t
 Until 2026-08-08 that link went nowhere. The repo had two tags, neither a release
 (`crafting-tool-v1.0`, `archive/master-pre-1.4.5-promotion`), and `git describe` read
 `crafting-tool-v1.0-492-gd9817f89`. Worse, five versions players ran were never committed at all —
-including `v2.0.12`, which appears in two crash reports in [`CHANGELOG.md`](../../CHANGELOG.md)
+including `v2.0.12`, which appears in two crash reports in [`CHANGELOG-2026-H2-handwritten.md`](../changelog-archive/CHANGELOG-2026-H2-handwritten.md)
 (a Rhûn notable CTD and the Nan Angren deserters CTD). Those reports cannot be pinned to a commit,
 or even to a range, because git has never seen the version they name.
 
@@ -77,14 +77,14 @@ Use `/release`. It runs the sequence below and fails closed on the #371 pairing 
    backup sidecars must not ship, because `.bak` breaks the Cloudflare distribution. The first run
    found 781 of them, 937 MB. See [module-backup-sweep](module-backup-sweep.md).
 4. Bump the version fields above.
-4. Write `docs/releases/vX.Y.Z-discord.md` (shape: [`v2.0.15-discord.md`](../releases/v2.0.15-discord.md)).
-5. CHANGELOG entry.
-6. Commit `chore(release): vX.Y.Z - TAOM vX.Y.Z`, staging release paths explicitly. Every other
+5. Generate the CHANGELOG section: `python tools/changelog_from_commits.py --version vX.Y.Z --write` (every non-merge commit since the previous tag, subject and body verbatim, grouped by type). Its summary names the commit the range ends at.
+6. Write `docs/releases/vX.Y.Z-discord.md` from that section (shape: [`v2.0.15-discord.md`](../releases/v2.0.15-discord.md)).
+7. Confirm `HEAD` is still the commit step 5 ended at (if not, restore `CHANGELOG.md` and repeat step 5), then commit `chore(release): vX.Y.Z - TAOM vX.Y.Z`, staging release paths explicitly. Every other
    commit carries the CURRENT version the same way (`<type>: vX.Y.Z - <description>`, user rule
    2026-09-13, hook `check-commit-subject-version.sh`), so between releases
    `git log --grep 'vX.Y.Z - '` lists the commits a build reporting that `TaomVersion` can contain.
-7. `git tag -a vX.Y.Z -m "…"` then `git push origin <release branch> vX.Y.Z`.
-8. Build at the tag and gate the DLLs: `python tools/package_release.py --source "<game>/Modules" --dest <out> --require-build vX.Y.Z --dry-run` must print `build stamp OK`, then package without `--dry-run` (the skill's Phase 8).
+8. Confirm `git rev-parse <release commit>^` prints the commit step 5 ended at (if not, stop and ask), then `git tag -a vX.Y.Z <release commit> -m "…"`, tagging the step 7 commit by SHA, then `git push origin <release branch> vX.Y.Z`.
+9. Build at the tag and gate the DLLs: `python tools/package_release.py --source "<game>/Modules" --dest <out> --require-build vX.Y.Z --dry-run` must print `build stamp OK`, then package without `--dry-run` (the skill's Phase 8).
    The gate reads every `bin/<platform>/` copy of `TAOM.dll` and `TAOM.Dependencies.dll` and
    refuses a tag whose `Directory.Build.props` predates the `.dirty` flag (the 1.4.5 line until it
    is ported). It proves the DLLs only. Deploys never delete, so the install also holds files from
@@ -117,7 +117,7 @@ package carrying it logs `not found` and spawns no howdah platform. Since the sa
 (`troops_harad.xml`) wears `sk_elephant_armor_howdah_elite`, an item only the Armory defines (`LOTRAOM_horses.xml`):
 without it the rider's elephant spawns with no harness, no howdah and no crew.
 
-**Step 7 is the one that gets skipped**, which is why
+**Step 8 is the one that gets skipped**, which is why
 [`check-version-tagged.sh`](../../.claude/hooks/check-version-tagged.sh) reminds at turn end
 whenever the version in `SubModule.xml` has no tag pointing at any commit. That single condition
 catches both a bump committed without a tag and a version that never entered git.

@@ -1,6 +1,6 @@
 ---
 name: finish-branch
-description: Integrate a merge-ready branch into the trunk — fast-forward check, merge, regenerate backlinks, CHANGELOG, delete branch (local+remote), push with confirmation. TAOM trunk-based, not Git Flow.
+description: Integrate a merge-ready branch into the trunk (fast-forward check, merge, regenerate backlinks, delete branch local and remote, push with confirmation). TAOM trunk-based, not Git Flow.
 argument-hint: "[branch] [base=bannerlord-1.4.5]"
 disable-model-invocation: true
 ---
@@ -30,14 +30,11 @@ Integrate a completed branch into TAOM's trunk (`bannerlord-1.4.5`, the de-facto
 - `python tools/build_backlinks.py` — the merge may have introduced docs whose `## Referenced by` footers drifted.
 - **Only stage footer changes for files the merged branch actually touched.** If `build_backlinks.py` also wants to update footers in *unrelated* docs (parallel-session work), that's not this branch's concern — leave those for the owning workstream. Commit the in-scope footer updates as `docs(backlinks): regenerate footers for <area>`.
 
-### 4. CHANGELOG
-- If the merged branch didn't already include a CHANGELOG entry, add one under today's date summarizing the landed work. Commit.
-
-### 5. Delete the merged branch
+### 4. Delete the merged branch
 - `git branch -d <branch>` — the `-d` (not `-D`) refuses if the branch isn't fully merged; that safety is intentional, don't override with `-D`.
 - `git push origin --delete <branch>` — only after local delete succeeds (confirms it was merged).
 
-### 6. Push the trunk
+### 5. Push the trunk
 - **Confirm with the user before pushing a trunk (`bannerlord-1.5.x` or `bannerlord-1.4.5`).** `validate-push.sh` refuses only a force push to one; a plain push is not gated, and its warning never reaches you. Do not auto-push: surface "ready to push N commits" and wait, unless the user pre-authorized the push for this run.
 
 ## Gotchas
@@ -45,11 +42,10 @@ Integrate a completed branch into TAOM's trunk (`bannerlord-1.4.5`, the de-facto
 - **FF vs real merge:** the step-1 check is the whole game. A clean FF is safe and trivially reversible (`git reset --hard <branch>@{1}`); a conflicting real merge needs human eyes. Surface, don't force.
 - **Parallel-work footer drift:** `build_backlinks.py` regenerates the *whole* tree. After a merge there are often footer updates in docs the branch never touched (another session's lord-skills/bandit work). Don't sweep those into this commit — `git add` only the docs in the branch's diff.
 - **`git branch -d` as a merge gate:** if it refuses, the branch isn't actually merged into the current base — investigate, don't `-D`.
-- **CHANGELOG hook:** if the branch touched `.claude/`, `CLAUDE.md`, or `AGENTS.md`, the pre-commit hook (`check-changelog-changed.sh`) requires CHANGELOG.md in the post-merge commit set — usually already satisfied by the branch's own CHANGELOG entry.
 - **Push is shared state:** the user has historically run trunk pushes themselves. Default to offering, not doing.
 
 ## See also
 
 - `.claude/skills/ship/SKILL.md` — the pre-merge completion gate this skill follows.
 - `tools/build_backlinks.py` — step-3 backlink regeneration.
-- `.claude/hooks/validate-push.sh` — the push guard referenced in step 6.
+- `.claude/hooks/validate-push.sh`: the push guard referenced in step 5.
