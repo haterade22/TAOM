@@ -3810,3 +3810,43 @@ convention) and called the `hero-race.md` catch point "supported".
 Report: `docs/reviews/deep-review-006-crash-capture-boot-cost-2026-09-24.md`. RCA:
 `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md`. Lessons: four in `testing-qa.md`, two in
 `harmony-il.md`, two in `misc.md`.
+
+## Review 133 (number provisional: parallel improve branches append here): plan 006 maintainer decisions, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+Branch `improve/006-crash-capture-boot-cost`, `70727529..8e6b0935`: the maintainer decisions on
+plan 006 (allowlist entry 6 becomes `RenderTargetComponent_OnPaintNeeded`, one preserving exit for
+the bridge, preserving hand-backs in `CrashReportPatchHelper`, an off-main-thread verdict for bridge
+captures from the crash hook's boot-time thread id, and the ten mission combat callbacks back on the
+allowlist, now 16). Six `/deep-review` lenses ran in one wave; Codex reviewed the same range
+read-only from git objects.
+
+**Codex: 3 findings, 3 confirmed, 0 false positives.** P2: the bridge's off-main verdict travelled
+only as a write to `Exception.Data` inside a swallowing catch, and the service read a missing mark as
+"main thread"; Codex decompiled the installed mscorlib to show `Data` is virtual and read-only for
+preallocated agile exceptions, so exactly those exceptions would run the Mission and Campaign
+collectors and the inquiry on a worker. Reproduced RED and fixed: the verdict is now a
+`HandleException` parameter from both the bridge and the AppDomain hook, and the `Data` mark is gone.
+Two P3 doc defects (a config row contradicting the preserving hand-back, and an owed probe whose
+"dropped callback" example had just been put back on the list). **The lenses confirmed 13 more**,
+none HIGH: no test ever reached the swallow path with a reachable service, so four mutations
+survived (now all six tried fail a test); the MCM hint and a reference doc still described six
+shims; an incomplete tableau caller list; missing `ref`/`out` and abandoned-remainder limits for
+swallowed combat callbacks; an unmeasured cost comparison; and the review record's D43/D47 labels
+swapped against the register. Full suite 10265 to 10271 passed (2 known live-Armory failures).
+Five items wait for Mike, chief among them that the preserving master-off hand-back (D26) clears
+the live frames ButterLib's BetterExceptionWindow finalizer reads on four Patch37 targets.
+
+Codex did best at finding the one input that defeats a guard, by reading the BCL rather than the
+game. It filed the untested swallow path as a "coverage limit" (Known Suspect 9) instead of a defect,
+and noted the stale MCM hint without counting it.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | Off-main verdict lost when `Exception.Data` is read-only | Other: safety decision in a best-effort side channel | Copied the AppDomain hook's mark, including its swallowing catch | Parameter instead of mark; RED test; lesson in `harmony-il.md` |
+| 2 | Config table stale after the preserving hand-back | Convention inconsistency (doc) | Did not re-read every sentence describing the changed path | Fixed; `misc.md` list-change lesson |
+| 3 | Probe example already on the allowlist | Other: verification gap | Example not re-checked after the list grew | Fixed; `misc.md` lesson |
+
+Report: `docs/reviews/deep-review-006-crash-capture-boot-cost-decisions-2026-09-24.md`. RCA:
+`docs/reviews/rca-crash-capture-boot-cost-decisions-2026-09-24.md`. Lessons: one each in
+`harmony-il.md`, `testing-qa.md` and `misc.md`. Summary and Metrics tables: pending consolidation
+with the other parallel branches.

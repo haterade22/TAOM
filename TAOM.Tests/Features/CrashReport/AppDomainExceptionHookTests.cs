@@ -35,4 +35,14 @@ public class AppDomainExceptionHookTests
             hook.Unsubscribe();
         }
     }
+
+    [TestMethod]
+    public void IsOffMainThread_IsFalseOnlyOnTheRecordedThread()
+    {
+        int current = Thread.CurrentThread.ManagedThreadId;
+
+        Assert.IsFalse(AppDomainExceptionHook.IsOffMainThread(current));
+        Assert.IsTrue(AppDomainExceptionHook.IsOffMainThread(current + 1));
+        Assert.IsTrue(AppDomainExceptionHook.IsOffMainThread(0), "an unset id counts as off-main, the safe direction");
+    }
 }

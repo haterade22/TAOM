@@ -274,16 +274,18 @@ live-Armory tests.
 
 The maintainer answered the NEEDS MIKE items on 2026-09-24. Each decision below was applied test
 first in the worktree at base `70727529`; the code and doc changes are in the commit that adds this
-section, `fix(crash-report): v2.0.30 - apply maintainer decisions for plan 006`. Issue: #650.
+section, `fix(crash-report): v2.0.30 - apply maintainer decisions for plan 006` (`42624b95`). Issue: #650.
+Register ids (D2 and so on) are the rows of the decision register,
+`plans/_audit/2026-09-23-opus/DECISIONS.md` (on the audit checkout, not on this branch).
 
 | # | Decision | Outcome | Evidence |
 |---|---|---|---|
 | 1 | NEEDS MIKE 1: cite #650 | APPLIED | CHANGELOG heading and a new "## GitHub Issue" section in `docs/features/crash-report.md` |
-| 2 | NEEDS MIKE 2: entry 6 becomes `RenderTargetComponent_OnPaintNeeded` | APPLIED | See "Decision: allowlist entry 6" |
-| 3 | NEEDS MIKE 4 (Agent 6 #1): one bridge exit that always preserves the throw site | APPLIED | See "Decision: bridge single exit" |
-| 4 | Plan 007 review: `HandleAndSwallow` fallback returns preserve the throw site | APPLIED | See "Decision: helper hand-backs" |
-| 5 | Mission combat callbacks back on the allowlist | NOT APPLIED in this pass: stopped as unsafe; APPLIED in the second pass as D43 and D47 | See "Decision: combat callbacks (stopped)" and "Second pass: decisions D43 and D47" |
-| 6 | NEEDS MIKE 5, 6, 7: no code change | RECORDED | Bridge stays at Harmony priority 400; the suppression log keeps its 1, 2, 10, 100 cadence with no time floor; capture stays ON by default and `EnableNativeToManagedCapture` stays as its toggle |
+| 2 | D3 (NEEDS MIKE 2): entry 6 becomes `RenderTargetComponent_OnPaintNeeded` | APPLIED | See "Decision: allowlist entry 6" |
+| 3 | D4 (NEEDS MIKE 4, Agent 6 #1): one bridge exit that always preserves the throw site | APPLIED | See "Decision: bridge single exit" |
+| 4 | D26 (plan 007 review): `HandleAndSwallow` fallback returns preserve the throw site | APPLIED | See "Decision: helper hand-backs" |
+| 5 | D24: mission combat callbacks back on the allowlist | NOT APPLIED in this pass: stopped as unsafe; APPLIED in the second pass as D43 and D47 | See "Decision: combat callbacks (stopped)" and "Second pass: decisions D43 and D47" |
+| 6 | D5, D6, D2 (NEEDS MIKE 5, 6, 7): no code change | RECORDED | Bridge stays at Harmony priority 400; the suppression log keeps its 1, 2, 10, 100 cadence with no time floor; capture stays ON by default and `EnableNativeToManagedCapture` stays as its toggle |
 | 7 | NEEDS MIKE 3: in-game probe | STILL OWED | Listed in the feature doc's GitHub Issue section |
 
 NEEDS MIKE 8 (the CHANGELOG date header at merge) is unchanged.
@@ -386,14 +388,20 @@ report rather than improvise when a decision proves unsafe on reading the code.
 The maintainer resolved the stopped combat-callback decision on 2026-09-24 with two binding
 decisions, applied in order, test first, in the worktree at base `42624b95`. The code, tests and
 docs are in the commit that adds this subsection,
-`fix(crash-report): v2.0.30 - apply maintainer decisions for plan 006`. Issue: #650.
+`fix(crash-report): v2.0.30 - apply maintainer decisions for plan 006` (`8e6b0935`; the same
+subject as `42624b95`). Issue: #650.
 
 | # | Decision | Outcome |
 |---|---|---|
-| D43 | Mark a bridge capture off-main from the main-thread id `AppDomainExceptionHook` records in `Subscribe()` at `OnSubModuleLoad`; an unset id marks | APPLIED |
-| D47 | Then add the ten traced combat callbacks, one literal pin each, and raise the cap to 16 | APPLIED |
+| D43 | Mark off-thread bridge captures, then add the ten traced combat callbacks (the register named `MissionThreadGuard.IsOnMainThread` as the reference) | APPLIED, with D47's reference |
+| D47 | Follows D43: use the boot-time main-thread id `AppDomainExceptionHook` records in `Subscribe()` instead, mark off-thread captures, then add the ten | APPLIED |
 
-#### D43: off-thread mark from the crash hook's boot-time id
+Treating an unset id (0) as off-main was the executor's choice, not part of either decision; the
+comment at `Native2ManagedPatcher.cs` gives the reason. (Relabelled by the decisions review,
+`deep-review-006-crash-capture-boot-cost-decisions-2026-09-24.md`: this table first filed the
+id under D43 and the ten entries under D47.)
+
+#### D43 and D47: off-thread mark from the crash hook's boot-time id
 
 - **Why this id:** `MissionThreadGuard.IsOnMainThread` returns true on every thread until
   `MarkMainThread` runs at the first mission tick (`MissionThreadGuard.cs:39`), so it cannot tell a
@@ -425,7 +433,7 @@ docs are in the commit that adds this subsection,
   takes the safe path`; `Failed: 3, Passed: 5, Total: 8`. The main-thread test passed at RED by
   construction; it guards against marking every capture. GREEN: `Passed: 8, Total: 8`.
 
-#### D47: the ten combat callbacks
+#### D43 and D47: the ten combat callbacks
 
 - **Engine check** (`pwsh tools/taom-src.ps1 path ManagedCallbacks.CoreCallbacksGenerated`,
   v1.5.3): all ten shims exist as single static methods in `ManagedCallbacks.CoreCallbacksGenerated`

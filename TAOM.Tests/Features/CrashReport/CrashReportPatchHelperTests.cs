@@ -1,3 +1,4 @@
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Dependencies.Foundation;
 using TAOM.Features.CrashReport.Hooks;
@@ -32,4 +33,48 @@ public class CrashReportPatchHelperTests
     {
         Assert.IsNull(CrashReportPatchHelper.HandleAndSwallow(null, "taom-006.test"));
     }
+
+    [TestMethod]
+    public void HandleAndSwallow_WhenTheServiceCaptures_SwallowsAndPassesTheOrigin()
+    {
+        var service = RecordingCrashService.Install();
+        var ex = RethrowProbe.CaughtFromTheSite();
+
+        Assert.IsNull(CrashReportPatchHelper.HandleAndSwallow(ex, "taom-006.test"), "a captured exception is swallowed");
+
+        Assert.AreEqual(1, service.Calls.Count);
+        Assert.AreSame(ex, service.Calls[0].Exception);
+        Assert.AreEqual("taom-006.test", service.Calls[0].Origin);
+    }
+
+    [TestMethod]
+    public void HandleAndSwallow_WhenTheServiceThrows_HandsBackTheOriginalWithItsThrowSite()
+    {
+        var service = RecordingCrashService.Install();
+        service.ThrowFromHandle = new InvalidOperationException("the service failed");
+        var ex = RethrowProbe.CaughtFromTheSite();
+
+        var handedBack = CrashReportPatchHelper.HandleAndSwallow(ex, "taom-006.test");
+
+        Assert.AreSame(ex, handedBack, "the original, never the service's own exception");
+        StringAssert.Contains(RethrowProbe.TraceAfterHarmonyRethrow(handedBack!), nameof(RethrowProbe.ThrowAtTheSite));
+    }
+
+    [TestMethod]
+    public void HandleAndSwallow_ReenteredFromInsideTheService_HandsBackTheInnerException()
+    {
+        var service = RecordingCrashService.Install();
+        var inner = RethrowProbe.CaughtFromTheSite();
+        Exception? innerResult = null;
+        service.During = () => innerResult = CrashReportPatchHelper.HandleAndSwallow(inner, "taom-006.inner");
+
+        Assert.IsNull(CrashReportPatchHelper.HandleAndSwallow(RethrowProbe.CaughtFromTheSite(), "taom-006.outer"));
+
+        Assert.AreSame(inner, innerResult, "a capture already on this thread's stack hands the new exception back");
+        Assert.AreEqual(1, service.Calls.Count, "the inner exception never reaches the service");
+        StringAssert.Contains(RethrowProbe.TraceAfterHarmonyRethrow(innerResult!), nameof(RethrowProbe.ThrowAtTheSite));
+    }
+
+    [TestCleanup]
+    public void DropTheInstalledService() => CrashReportPatchHelper.ResetForUnload();
 }

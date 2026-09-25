@@ -35,14 +35,14 @@ public static class Native2ManagedTargets
         // ThumbnailCreatorView.OnThumbnailRenderComplete: portrait and item thumbnail callbacks.
         (EngineAssembly, EngineCallbacks, "ThumbnailCreatorView_OnThumbnailRenderComplete"),
         // RenderTargetComponent.OnPaintNeeded: raises PaintNeeded, the render function every
-        // TableauView.AddTableau caller registers (CharacterTableau, ItemTableau, BannerTableau,
-        // MapConversationTableau). It replaced BannerlordTableauManager_RequestCharacterTableauSetup,
+        // TableauView.AddTableau caller registers (CharacterTableau, BasicCharacterTableau, ItemTableau,
+        // BannerTableau, BrightnessDemoTableau; MapConversationTableau in SandBox.View). It replaced BannerlordTableauManager_RequestCharacterTableauSetup,
         // whose RequestCallback nothing in v1.5.3 assigns (maintainer decision 2026-09-24, #650).
         (EngineAssembly, EngineCallbacks, "RenderTargetComponent_OnPaintNeeded"),
 
         // Mission combat callbacks with a traced path into TAOM code (maintainer decision
         // 2026-09-24, #650; the trace is in docs/features/crash-report.md). Several can arrive off
-        // the main thread, so Native2ManagedBridge marks those captures for the reduced path.
+        // the main thread, so Native2ManagedBridge sends those captures down the reduced path.
         // These five reach Mission.RegisterBlow, then Agent.HandleBlow: Mission.OnAgentHit (TAOM
         // OnAgentHit and OnScoreHit overrides), Agent.Die and Agent.HandleBlowAux (TAOM patches).
         (CoreAssembly, CoreCallbacks, "Mission_MeleeHitCallback"),

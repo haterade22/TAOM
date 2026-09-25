@@ -28,7 +28,7 @@ public sealed class CrashReportSettings : AttributeGlobalSettings<CrashReportSet
 
     [SettingPropertyGroup("Master")]
     [SettingPropertyBool("Enable Native-to-Managed Capture", Order = 2, RequireRestart = false,
-        HintText = "Logs and survives exceptions thrown inside a short list of native-to-managed callbacks (screen early, late and input ticks, scene-script ticks, thumbnail and character tableau callbacks) instead of crashing. When off, those exceptions pass straight through. Takes effect immediately. Default ON.")]
+        HintText = "Logs and survives exceptions thrown inside a short list of native-to-managed callbacks (screen early, late and input ticks, scene-script ticks, thumbnail and tableau rendering, and mission combat callbacks for hits, blocks, missiles, charges, falls and agent removal) instead of crashing. When off, those exceptions pass straight through. Takes effect immediately. Default ON.")]
     public bool EnableNativeToManagedCapture { get; set; } = true;
 
     // --- Bundle ---

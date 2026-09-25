@@ -75,7 +75,7 @@ public sealed class CrashReportService : ICrashReportService
         _throttle = throttle;
     }
 
-    public string? HandleException(Exception exception, string originatingPatchTarget)
+    public string? HandleException(Exception exception, string originatingPatchTarget, bool offMainThread = false)
     {
         if (_handling) return null;  // re-entry guard — never recurse
         _handling = true;
@@ -118,11 +118,10 @@ public sealed class CrashReportService : ICrashReportService
             }
 
             // Reduced-capture mode for off-main-thread captures (Codex review #46 MED-03).
-            // AppDomainExceptionHook tags off-main-thread exceptions on `ex.Data`; when set,
-            // skip Mission/Campaign reads (not thread-safe) and skip the UI inquiry (vanilla
-            // ShowInquiry invokes subscribers synchronously — unsafe from worker threads).
-            bool offMainThread = IsOffMainThread(exception);
-
+            // AppDomainExceptionHook and Native2ManagedBridge pass offMainThread when the throw
+            // arrived on another thread; then skip Mission/Campaign reads (not thread-safe) and
+            // skip the UI inquiry (vanilla ShowInquiry invokes subscribers synchronously, which is
+            // unsafe from worker threads).
             var failures = new List<CollectorFailure>();
             var context = ComposeContext(exception, originatingPatchTarget, failures, offMainThread);
 
@@ -159,18 +158,6 @@ public sealed class CrashReportService : ICrashReportService
         {
             _handling = false;
         }
-    }
-
-    private static bool IsOffMainThread(Exception ex)
-    {
-        try
-        {
-            return ex?.Data != null
-                && ex.Data.Contains(Hooks.AppDomainExceptionHook.OffMainThreadDataKey)
-                && ex.Data[Hooks.AppDomainExceptionHook.OffMainThreadDataKey] is bool b
-                && b;
-        }
-        catch { return false; }
     }
 
     private ExceptionContext ComposeContext(Exception exception, string originatingPatchTarget, List<CollectorFailure> failures, bool offMainThread)

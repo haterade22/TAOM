@@ -25,13 +25,15 @@ internal static class CrashReportPatchHelper
     // exception bubbles out so vanilla / BUTR can take over.
     //
     // Runtime-gate on the MCM master toggle (HIGH-02 fix): if EnableCrashCapture is
-    // off, we return the original exception so vanilla/BUTR can handle it. This
-    // honors the MCM hint text "When off, all Harmony Finalizers no-op".
+    // off, we return the original exception so vanilla/BUTR can handle it, as the
+    // toggle's hint says ("every TAOM crash finalizer passes exceptions straight through").
     //
     // Every hand-back goes through HandBack: the caller is a value-returning Finalizer, so
     // Harmony rethrows the result with `throw`, which would otherwise erase the throw site
     // (harmony-patches.md; maintainer decision 2026-09-24, #650).
-    public static Exception? HandleAndSwallow(Exception? exception, string originatingPatchTarget)
+    //
+    // offMainThread: the caller's own thread verdict, passed through to the service (#650).
+    public static Exception? HandleAndSwallow(Exception? exception, string originatingPatchTarget, bool offMainThread = false)
     {
         if (exception == null) return null;
         if (_onPatchStack) return HandBack(exception);
@@ -50,7 +52,7 @@ internal static class CrashReportPatchHelper
         {
             var svc = ResolveService();
             if (svc == null) return HandBack(exception);     // unreachable: let vanilla handle it
-            svc.HandleException(exception, originatingPatchTarget);
+            svc.HandleException(exception, originatingPatchTarget, offMainThread);
             return null;                                      // swallow: game keeps ticking
         }
         catch { return HandBack(exception); }

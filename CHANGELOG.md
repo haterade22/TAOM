@@ -55,6 +55,18 @@ agent removal, deletion and missile shots) are back on the allowlist, now 16 ent
 dismount and alarmed-state stay out. Their attach time is not measured yet. Full suite: 10265
 passed, 2 skipped, 2 failed (the same two).
 
+Review follow-ups for the decisions (deep review and Codex,
+`docs/reviews/deep-review-006-crash-capture-boot-cost-decisions-2026-09-24.md`): the off-main
+verdict now reaches the report service as a parameter from both the callback bridge and the
+unhandled-exception hook. Before, it travelled as a mark on the exception, which an exception
+with a read-only `Data` (the runtime's preallocated out-of-memory exception, for one) silently
+dropped, so a worker-thread capture would have read mission state and shown the notice there. The
+hook logs the main thread id it records, so one launch can confirm it is the game-loop thread.
+Tests now cover the swallow path with a reachable service. The native-capture MCM hint names the
+tableau and combat callbacks it now covers, and the docs drop stale counts and a probe that named
+a callback already on the list. Full suite: 10271
+passed, 2 skipped, 2 failed (the same two).
+
 ## 2026-09-23
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)

@@ -1095,3 +1095,9 @@ Plan 006's owed check for the live master toggle was "turn Enable Crash Capture 
 - **Why missed:** the step was written from the toggle's hint, not from the trigger's code; "nothing happened" reads as success.
 - **Prevent:** for a step that proves a gate is OFF, read the input's code and confirm it still produces the event with the gate off; if the input reads the same gate, the step proves nothing. Name which catch point each trigger reaches before claiming it covers a component.
 - **Source:** `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F4 (Codex and lenses 1, 4, 5 agree).
+
+### A hook that hands its work to a lazily resolved service needs one test with that service reachable
+Plan 006's bridge and `CrashReportPatchHelper` tests all ran with `IoC` unconfigured, so `HandleAndSwallow` always took its hand-back fallback. Four mutations survived the whole branch: the bridge returning the raw exception instead of the helper's result (it would never swallow), the off-main verdict computed after the capture or not at all, the helper's `return null` changed to a hand-back, and `Finalizer` passing 0 instead of the hook's recorded id. A hand-written `RecordingCrashService` put into the helper's private cache by reflection kills all four, plus the toggle-off guard.
+- **Why missed:** the review record called the swallow path "not reachable from a test", which was true only of the MCM read; the fallback tests were green, and green read as covered.
+- **Prevent:** for any static hook that resolves its service lazily (`IoC.Resolve` cached in a static), add a fake the test can install and clear (`[TestCleanup]`), and assert what the service received (arguments, and the state it observed at call time), not only what the hook returned. Run the mutation list from the review against the new tests before calling the gap closed.
+- **Source:** `docs/reviews/rca-crash-capture-boot-cost-decisions-2026-09-24.md` F2 (lens 4 M1, lens 1 LOW-4).

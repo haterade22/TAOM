@@ -43,9 +43,10 @@ public class Native2ManagedTargetsTests
     }
 
     [TestMethod]
-    public void All_IsExactlyTheSixteenReviewedShims()
+    public void All_IsExactlyTheReviewedShims()
     {
-        // Independent of the production list, so emptying or silently swapping an entry fails here.
+        // Independent of the production list, so emptying, adding, duplicating or silently swapping
+        // an entry fails here (AreEquivalent compares each element's number of occurrences).
         // Change this list only together with the entry's stated reason in Native2ManagedTargets.
         var expected = new[]
         {
@@ -74,7 +75,10 @@ public class Native2ManagedTargetsTests
 
         var actual = Native2ManagedTargets.All.Select(t => $"{t.AssemblyName}/{t.TypeName}.{t.MethodName}").ToList();
 
-        CollectionAssert.AreEquivalent(expected, actual);
+        CollectionAssert.AreEquivalent(expected, actual,
+            "each entry costs a harmony.Patch at boot plus a PatchShield attach at the first game start (about " +
+            "120 to 190 ms each on the maintainer's desktop, under 10 ms on player machines). Add an entry only " +
+            "with a stated reason.");
     }
 
     [TestMethod]
@@ -136,18 +140,6 @@ public class Native2ManagedTargetsTests
         StringAssert.Contains(missing[0], nameof(OverloadedCallbacks.Overloaded));
         Assert.AreEqual(1, resolved.Count);
         Assert.AreEqual(nameof(OverloadedCallbacks.Single), resolved[0].Name);
-    }
-
-    [TestMethod]
-    public void All_IsASmallDistinctAllowlist()
-    {
-        var all = Native2ManagedTargets.All;
-
-        Assert.AreEqual(all.Count, all.Distinct().Count(), "Native2ManagedTargets.All has a duplicate entry");
-        Assert.IsTrue(all.Count <= 16,
-            "each entry costs a harmony.Patch at boot plus a PatchShield attach at the first game start (about " +
-            "120 to 190 ms each on the maintainer's desktop, under 10 ms on player machines). Add an entry only " +
-            "with a stated reason.");
     }
 
     internal static class OverloadedCallbacks

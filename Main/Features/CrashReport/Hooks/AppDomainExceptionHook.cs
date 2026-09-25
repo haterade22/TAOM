@@ -14,13 +14,11 @@ namespace TAOM.Features.CrashReport.Hooks;
 //
 // Thread safety (Codex review #46 (2026-05-25) MED-03): unhandled exceptions can
 // fire on TaleWorlds worker threads (TWParallel.For agent ticks). The captured
-// main thread id is set at Subscribe() time — if OnUnhandled fires on a different
-// thread, we record a marker on the exception's Data dict so CrashReportService
-// can switch to reduced-capture mode (skip Mission/Campaign reads + skip UI inquiry).
+// main thread id is set at Subscribe() time; if OnUnhandled fires on a different
+// thread, it tells CrashReportService so, and the service switches to reduced-capture
+// mode (skip Mission/Campaign reads + skip UI inquiry).
 public sealed class AppDomainExceptionHook
 {
-    public const string OffMainThreadDataKey = "TAOM.CrashReport.OffMainThread";
-
     private readonly ICrashReportService _service;
     private readonly IModLogger _logger;
     private bool _subscribed;
@@ -28,9 +26,16 @@ public sealed class AppDomainExceptionHook
     // Static so Native2ManagedBridge reads the same boot-time id to mark its own off-thread
     // captures (maintainer decision 2026-09-24, #650). 0 until Subscribe() runs; managed thread
     // ids start at 1, so 0 never names a real thread.
-    private static int s_mainThreadId;
+    private static int _mainThreadId;
 
-    internal static int MainThreadId => Volatile.Read(ref s_mainThreadId);
+    internal static int MainThreadId => Volatile.Read(ref _mainThreadId);
+
+    // The one definition of "off the main thread" for every capture source that can run on a
+    // worker (this hook and Native2ManagedBridge). An unset id (0) never equals a real thread, so
+    // it counts as off-main: the safe direction, since a main-thread capture then loses only its
+    // Mission and Campaign sections and the inquiry.
+    internal static bool IsOffMainThread(int mainThreadId)
+        => Thread.CurrentThread.ManagedThreadId != mainThreadId;
 
     public AppDomainExceptionHook(ICrashReportService service, IModLogger logger)
     {
@@ -45,7 +50,9 @@ public sealed class AppDomainExceptionHook
         // Subscribe() is called from SubModule.OnSubModuleLoad on the main game thread,
         // so capturing the current managed thread id here is the right reference for
         // "main thread" comparisons inside OnUnhandled.
-        Volatile.Write(ref s_mainThreadId, Thread.CurrentThread.ManagedThreadId);
+        Volatile.Write(ref _mainThreadId, Thread.CurrentThread.ManagedThreadId);
+        // Lets one launch confirm the premise: compare with MissionThreadGuard's "main N" lines.
+        _logger.LogInfo($"[CrashReport] main thread id {_mainThreadId} recorded at Subscribe()");
         try { AppDomain.CurrentDomain.UnhandledException += OnUnhandled; }
         catch (Exception ex) { _logger.LogWarning($"[CrashReport] AppDomain.UnhandledException subscribe failed: {ex.GetType().Name}"); }
     }
@@ -68,13 +75,7 @@ public sealed class AppDomainExceptionHook
             var ex = args?.ExceptionObject as Exception;
             if (ex == null) return;
 
-            // Tag off-main-thread captures so the service can pick reduced-capture mode.
-            if (Thread.CurrentThread.ManagedThreadId != MainThreadId)
-            {
-                try { ex.Data[OffMainThreadDataKey] = true; } catch { /* exotic Exception types may have read-only Data */ }
-            }
-
-            _service.HandleException(ex, "AppDomain.UnhandledException");
+            _service.HandleException(ex, "AppDomain.UnhandledException", IsOffMainThread(MainThreadId));
         }
         catch { }
     }
