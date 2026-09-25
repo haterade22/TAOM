@@ -189,3 +189,30 @@ Not edited here (Phase 3h is consolidated across branches). Proposed:
 
 VERDICT: READY FOR COMMIT (Step 4 complete except the convergence pass, which is owed to the
 orchestrator; full suite green)
+
+## Convergence
+
+The convergence reviewer read the review-fix diff `8a638831..1ce8c370` and reported four LOW
+defects, all documentation, plus two uncounted wording issues. The lead re-read each against the
+worktree before changing anything.
+
+| # | Finding | Verdict | Evidence read this pass | Fix |
+|---|---|---|---|---|
+| C1 | `mcp-servers.md` says the deny list is "exactly the tools the pinned server versions annotate `readOnlyHint: false`", which is false for the pinned serena | CONFIRMED LOW | cached serena `949a27ef` (the `.mcp.json:8` pin): `src/serena/mcp.py:110` sets `readOnlyHint=not can_edit`; editing tools at `file_tools.py:173,218`, `symbol_tools.py:585,618,670`, `memory_tools.py:9`; `.serena/project.yml` has `read_only: false`, `excluded_tools: []`; none is among the nine denies in `.claude/settings.json` | Sentence scoped to the pinned `git` and `filesystem` versions; added that serena's editing tools are `readOnlyHint: false`, not denied, and an open decision for Mike (FU-S) |
+| C2 | "Every auto-fetched server runs an exact version" is false for the user-level servers named just above it | CONFIRMED LOW | `~/.claude/.mcp/user.json`: `@modelcontextprotocol/server-sequential-thinking` (no version) and `@upstash/context7-mcp@latest` | "Every auto-fetched project server (`.mcp.json`)"; added that the user-level servers are machine-local and not pinned |
+| C3 | `docs/INDEX.md` still lists two things that ignore the env vars; `development-machines.md` now lists three | CONFIRMED LOW | `development-machines.md:31-41` names the decompile scripts, `.mcp.json` and `.codex/config.toml` | INDEX line now names all three |
+| C4 | `LESSONS-LEARNED.md` counts stale after the fix added three lessons | CONFIRMED LOW | `grep -c '^### ' docs/reviews/lessons/*.md`: build-tooling-workflow 202, all thirteen files sum to 924 | 199 to 202, 921 to 924 |
+| W1 | `development-machines.md` says `.codex/config.toml` hardcodes "the same" `E:\` paths | CONFIRMED wording | `.codex/config.toml:17-22` list `E:\repos\TAOM`, the four module `ModuleData` folders and `E:\Decompiled_Bannerlord`; `.mcp.json:28-30` lists different ones | "its own list of desktop `E:\` paths" |
+| W2 | REVIEW-LOG says "the other nine confirmed findings" but lists eight (D4 missing) | CONFIRMED wording | the entry names D1, D2, D3, D5, D6, D7, D8, D9 | Added "a README capitalisation NIT" |
+
+**False positives:** none.
+
+**Verification after the fixes:**
+
+- `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` (branch contains `a39a9c86`,
+  so nothing may fail): `Passed! - Failed: 0, Passed: 10629, Skipped: 2, Total: 10631`, exit 0.
+- `python tools/lint_docs.py --summary --fail-on-drift --dash-base 1ce8c370`: exit 0,
+  `ai_dashes: 0`.
+- `python -m pytest -q tools/tests/test_ai_documentation.py`: 4 passed, 152 subtests passed.
+
+CONVERGENCE: CLEAN after these fixes (no runtime file changed).

@@ -25,8 +25,11 @@ Nine MCP write tools are listed under `permissions.deny` in the tracked `.claude
 `mcp__git__git_add` · `git_commit` · `git_reset` · `git_checkout` · `git_create_branch` ·
 `mcp__filesystem__write_file` · `edit_file` · `move_file` · `create_directory`
 
-The list is exactly the tools the pinned server versions annotate `readOnlyHint: false`. On a pin
-bump, re-derive it from the new version's annotations, so a newly added write tool is denied too.
+The list is exactly the tools the pinned `git` and `filesystem` versions annotate
+`readOnlyHint: false`. On a pin bump of either, re-derive it from the new version's annotations,
+so a newly added write tool is denied too. Serena's editing tools (`replace_content`,
+`replace_symbol_body`, `rename_symbol`, `write_memory` and the rest) are also `readOnlyHint: false`
+and are not denied yet; whether to deny them is an open decision for Mike.
 
 **Why:** every safety hook in this repo is registered against `matcher: "Bash"`, and
 `config-protection.sh` against `matcher: "Edit|Write"`. Nothing matches `mcp__*`. So the MCP
@@ -67,7 +70,7 @@ rg "GetCharacterWage" $(pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.G
 
 Project-level MCP servers (Serena, GitHub, filesystem, git, ilspy, taom-moduledata, imagine) are configured in `.mcp.json` at the project root and each developer trusts them in their own `.claude/settings.local.json → enabledMcpjsonServers`. That file is per-user and untracked: a tracked trust list would approve every server on every clone. (`taom-moduledata` is TAOM-authored — `tools/taom_mcp_server.py` — and requires the `mcp` Python SDK; a Claude restart is needed to pick up a newly-added server.) User-level servers (sequential-thinking, context7) are configured in `~/.claude/.mcp/user.json` and enabled globally.
 
-**Pins.** Every auto-fetched server runs an exact version: serena a commit SHA, the others a package version (`name@x.y.z`). A pin bump changes every copy of the launch string together: `.mcp.json`, `.codex/config.toml` (filesystem, git), `.vscode/mcp.json.example` and the snippet in `docs/features/kingdom-voices.md`. `tools/audit_claude_config.py` flags only an unpinned `npx -y` in `.mcp.json`, so an unpinned `uvx` server or a stale copy elsewhere goes unflagged.
+**Pins.** Every auto-fetched project server (`.mcp.json`) runs an exact version: serena a commit SHA, the others a package version (`name@x.y.z`). A pin bump changes every copy of the launch string together: `.mcp.json`, `.codex/config.toml` (filesystem, git), `.vscode/mcp.json.example` and the snippet in `docs/features/kingdom-voices.md`. `tools/audit_claude_config.py` flags only an unpinned `npx -y` in `.mcp.json`, so an unpinned `uvx` server or a stale copy elsewhere goes unflagged. The user-level servers in `~/.claude/.mcp/user.json` are machine-local and not pinned.
 
 ## Plugin overlap (routing disambiguation)
 

@@ -4683,7 +4683,7 @@ Codex missed the other nine confirmed findings, all LOW or NIT and all from the 
 unpinned copies of the launch strings (`.vscode/mcp.json.example`, a `kingdom-voices.md`
 snippet), a restore command that PowerShell 5.1 re-encodes as UTF-16 (proved), the branch-switch
 and new-worktree effects of the untrack, a stale recount, a stale lesson, the undocumented pin
-policy, and the CHANGELOG date and issue link. All fixed. Full suite 10629 passed, 2 skipped,
+policy, the CHANGELOG date and issue link, and a README capitalisation NIT. All fixed. Full suite 10629 passed, 2 skipped,
 0 failed; hook suite 392 passed.
 
 | # | Bug | Category | Why Missed | Preventive Action |

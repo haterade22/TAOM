@@ -37,8 +37,8 @@ letter into new code.
   `filesystem` server points at directories that do not exist and `taom-moduledata` invokes
   `E:/repos/TAOM/tools/taom_mcp_server.py`. Editing that file to suit one machine breaks the
   other. The fix is a local-scope MCP override in user config, not a change to the committed file.
-- `.codex/config.toml` hardcodes the same desktop `E:\` paths for Codex's `filesystem` server, with
-  the same consequence on the laptop.
+- `.codex/config.toml` hardcodes its own list of desktop `E:\` paths for Codex's `filesystem`
+  server, with the same consequence on the laptop.
 
 `.claude/settings.local.json` is per-user and untracked: each checkout, every worktree included,
 keeps its own copy (personal allow rules, `additionalDirectories`, `enabledMcpjsonServers`). A new
