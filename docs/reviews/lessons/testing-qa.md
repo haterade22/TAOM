@@ -1080,3 +1080,15 @@ never attached a tree, and the first-tick log reads "0 elk(s)" in a normal Custo
 - **Prevent:** pin such a constant against a literal once, and build the rows of the test that reads the live data
   from the constant, so the data check also proves the code names what the data declares.
 - **Source:** `docs/reviews/rca-animalia-2026-09-23.md` row 4.
+
+### A deletion's RED step lives in the log, not the suite: no permanent absence test (plan 025, 2026-09-24)
+Plan 025 added `RetiredPathReuseScaffold_IsGoneFromTheTaomAssembly`, asserting that seven deleted type names and two
+property names were absent from TAOM.dll. It was the RED step for a pure deletion. After the commit it tested no
+behaviour, kept nine dead identifiers greppable (the plan's own leftover-reference sweep needed a whitelist for it) and
+sat in the config provider's test class. It was removed under the simplicity criterion; the test that a config still
+carrying the retired keys loads stays, because that is behaviour a player's file depends on.
+- **Why missed:** "test first" was applied to a deletion, where the RED proof is a one-off run, and nothing asked
+  what the test would guard once the deletion landed.
+- **Prevent:** for a pure deletion, prove RED with a scratch run or the compile failure and keep it in the log. Add a
+  permanent test only for behaviour the deletion must preserve (a save field, a config key, a public contract).
+- **Source:** `docs/reviews/rca-delete-unreachable-scaffolds-2026-09-24.md` F6.

@@ -126,30 +126,6 @@ public class CacheRebuildConfigProviderTests
     }
 
     [TestMethod]
-    public void RetiredPathReuseScaffold_IsGoneFromTheTaomAssembly()
-    {
-        // Deleted unwired in plan 025 (added in 6a80bac6). Restore it from git history only
-        // together with a real caller, and delete this test in the same change.
-        var taom = typeof(CacheRebuildConfig).Assembly;
-        foreach (var typeName in new[]
-        {
-            "TAOM.Adapters.IEditorSceneAdapter",
-            "TAOM.Features.EditorCacheRebuild.Caching.IPathReuseCache",
-            "TAOM.Features.EditorCacheRebuild.Caching.PathReuseCache",
-            "TAOM.Features.EditorCacheRebuild.Caching.IPersistentPathCache",
-            "TAOM.Features.EditorCacheRebuild.Caching.PersistentPathCache",
-            "TAOM.Features.EditorCacheRebuild.Caching.NavigationPathCloner",
-            "TAOM.Features.EditorCacheRebuild.Caching.SortedPathKey",
-        })
-        {
-            Assert.IsNull(taom.GetType(typeName, throwOnError: false), typeName + " is unreachable scaffolding and was deleted.");
-        }
-
-        Assert.IsNull(typeof(CacheRebuildConfig).GetProperty("EnablePathReuse"), "EnablePathReuse had no reader and was deleted.");
-        Assert.IsNull(typeof(CacheRebuildConfig).GetProperty("EnablePersistentPathCache"), "EnablePersistentPathCache had no reader and was deleted.");
-    }
-
-    [TestMethod]
     public void GetConfig_ParallelismZero_RevertsToDefault()
     {
         WriteConfig(@"{ ""parallelism"": 0 }");

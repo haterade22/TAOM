@@ -110,20 +110,20 @@ All fields validated per `CLAUDE.md "Config Providers MUST Validate"` — invali
 - `IModLogger` (Core/Logging) — file logger
 - `ICampaignSessionAdapter` — wraps `Campaign.Current` readiness checks + `SandBoxNavigationCache` construction
 - MCMv5 (`Bannerlord.MBOptionScreen`) — `SettingPropertyButtonAttribute` for the MCM trigger
-- TaleWorlds: `Campaign.Current`, `Campaign.Current.MapSceneWrapper`, `Settlement.All`, `MobileParty.NavigationType`, `NavigationCache<Settlement>` via `SandBoxNavigationCache` (CampaignSystem.dll), `NavigationPath` (Library.dll), `InformationManager.DisplayMessage` + `Colors` (Library.dll)
+- TaleWorlds: `Campaign.Current`, `Campaign.Current.MapSceneWrapper`, `Settlement.All`, `MobileParty.NavigationType`, `NavigationCache<Settlement>` via `SandBoxNavigationCache` (CampaignSystem.dll), `InformationManager.DisplayMessage` + `Colors` (Library.dll)
 
 ## Tests
 
 `TAOM.Tests/Features/EditorCacheRebuild/` covers:
 
-- Config provider validation (NaN/Infinity/range guards) (20 tests)
-- Phase 1 serial + parallel builder mock-driven correctness (15 tests)
-- Phase 2 serial + parallel builder mock-driven correctness (12 tests)
-- Smoke test gate skip/pass/fail paths (8 tests)
-- Cache builder service mode selection + cancellation (5 tests)
-- Validation report writer round-trip + edge cases (5 tests)
-- Settlement diff + change filter (9 tests)
-- Runtime cache rebuild service: gate logic, Interlocked lock, path resolution, atomic write with `File.Replace`, round-trip verification result type, neighbor symmetric-storage doubling (18 tests)
+- Config provider validation (NaN/Infinity/range guards), plus a config that still carries the two retired path-cache keys
+- Phase 1 serial + parallel builder mock-driven correctness
+- Phase 2 serial + parallel builder mock-driven correctness
+- Smoke test gate skip/pass/fail paths
+- Cache builder service mode selection + cancellation
+- Validation report writer round-trip + edge cases
+- Settlement diff + change filter
+- Runtime cache rebuild service: gate logic, Interlocked lock, path resolution, atomic write with `File.Replace`, round-trip verification result type, neighbor symmetric-storage doubling
 
 **Live-test only:** `NavigationCacheAdapter` reflection plumbing against the real `NavigationCache<Settlement>` instance; the `RunBuild` end-to-end orchestration (covered by individual unit tests on `WriteOutputAtomically` and `VerifyOutputRoundTrip` but not as a single integration). Verified by in-game MCM-trigger runs producing byte-equivalent caches.
 
@@ -178,7 +178,7 @@ Edit `cache_rebuild_config.json`: `"forceVanilla": true` or `"enabled": false`. 
 | Resume after Phase-1-completed crash | Lose everything (5+ days of work) | ~5 min remaining (Phase 2 only) |
 | Navmesh edit + rebuild | ~108 hr (no detection) | Full ~7 min (CRC mismatch auto-detected, refuses stale incremental) |
 
-**Why ~30 min and not 5 min:** Phase 2's corridor scan (vanilla `CheckBeingNeighbor`) re-pathfinds every fortification pair. A future optimization would memoize Phase 1's paths for Phase 2 reuse. An unwired scaffold for it (`Caching/PathReuseCache.cs`, `PersistentPathCache.cs`) was deleted in 2026-09 (plan 025) and can be recovered from commit `6a80bac6`. That alone is a 2-3× win on top of the current 6-8× parallelism win.
+**Why ~30 min and not 5 min:** Phase 2's corridor scan (vanilla `CheckBeingNeighbor`) re-pathfinds every fortification pair, once per direction. Reusing Phase 1's paths there is not a wiring job. Phase 1 reaches the engine only through `GetRealDistanceAndLandRatioBetweenSettlements` (`NavigationCacheAdapter`), which returns a distance and keeps the `NavigationPath` it builds local, and v1.5.3 `SandBoxNavigationCache.CheckBeingNeighbor` builds its own path with an extra-cost multiplier of 2 where Phase 1 passes 1. A path cache would mean reimplementing the corridor scan and proving its verdicts match vanilla. An unwired scaffold for one (`Caching/PathReuseCache.cs`, `PersistentPathCache.cs`, commit `6a80bac6`) keyed paths by unordered pair; it was deleted in 2026-09 (plan 025).
 
 ## v1.4.8 verification (2026-08-10)
 
@@ -204,7 +204,7 @@ v1.4.8 also claims to fix "Settlement Distance Cache computation failing silentl
 
 ## Changelog
 
-- 2026-09-24: **Deleted the unwired path-reuse scaffold (plan 025).** `Caching/` (`PathReuseCache`, `PersistentPathCache`, their interfaces, `NavigationPathCloner`, `SortedPathKey`), the reserved `enablePathReuse` and `enablePersistentPathCache` fields, their 26 tests and the mislabelled `PathReuseCache._store` binding row are gone, along with the unused `Main/Adapters/IEditorSceneAdapter.cs`. None of it was ever resolved or called, so the rebuild behaves exactly as before. Recover it from `6a80bac6` if Phase 2 path memoization is ever built.
+- 2026-09-24: **Deleted the unwired path-reuse scaffold (plan 025).** `Caching/` (`PathReuseCache`, `PersistentPathCache`, their interfaces, `NavigationPathCloner`, `SortedPathKey`), the reserved `enablePathReuse` and `enablePersistentPathCache` fields, their 26 tests and the mislabelled `PathReuseCache._store` binding row are gone, along with the unused `Main/Adapters/IEditorSceneAdapter.cs`. None of it was ever resolved or called, so the rebuild behaves exactly as before. `6a80bac6` still holds the scaffold, but its design assumed Phase 1 paths the engine never hands back (see "Why ~30 min and not 5 min").
 - 2026-08-10 — **v1.4.8 engine bump: verified, no code change.** The engine's `NavigationCache<T>` speed rewrite touches two members (`GetClosestSettlementToPosition`'s dormant `useEarlyOut`, and an `i != j` self-pair guard in the `NavigationType.All` cache build); TAOM reflects on neither, all 16 catalogued reflection sites still resolve, and `Serialize`/`Deserialize` plus the whole `SandBoxNavigationCache` class are byte-identical — so the shipped cache stays valid and no rebuild is forced. Recorded two watch items for the first campaign load: the now-reported modded-map cache failure, and the `Naval`/`All` lookups a NavalDLC-active TAOM campaign performs against a `_Default.bin`-only `TAOM_Map`. See "v1.4.8 verification" above.
 - 2026-05-13 — Removed the legacy editor-mode integration: deleted the `Patch37_CacheBuildOverride` Harmony patch (never functioned in singleplayer; editor mode crashed third-party mods) and simplified the feature to the single in-game MCM-trigger path.
 - 2026-05-12 — Pivoted from editor-mode Harmony integration to an in-game MCM trigger: added `IRuntimeCacheRebuildService` + the `Map Tools / Distance Cache Rebuild` MCM button, building against the live campaign's `MapSceneWrapper` with atomic `.tmp → final` write and `.prev` backup.

@@ -696,3 +696,16 @@ failing test, and the recompute's absence was not even logged.
 - **Prevent:** every `AccessTools` / `GetMethod` / `GetField` / `TypeByName` by literal name lands with its DataRow and
   catalogue row (`/verify-bindings`); the engine-compatibility lens now reports a missing row.
 - **Source:** `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F3.
+
+### A binding gate's fallback must not let TAOM's own types satisfy an engine row (plan 025, 2026-09-24)
+The `ReflectionSiteBindingTests` row `TaleWorlds.Engine.PathReuseCache._store` named no engine type. It passed from
+`41258657` (2026-05-28) until plan 025 removed it, because `ResolveType`'s simple-name fallback
+(`ReflectionSiteBindingTests.cs:136-144`) searches every loaded assembly, TAOM.dll included, and found TAOM's own
+`PathReuseCache`.
+- **Why missed:** the fallback was written for engine namespace moves; nobody asked which assemblies it searches, and
+  a mislabelled row looks the same as a good one when it is green.
+- **Prevent:** restrict the fallback to engine assemblies (`TaleWorlds.*`, `SandBox*`, `StoryMode*` and the other
+  shipped modules) or fail when the resolved type lives in a TAOM assembly. Reflection on TAOM's own types belongs in
+  Category D of `reflection-sites.md`, never in this gate. Still open: the fix changes the gate's behaviour and is
+  pre-existing test code, so plan 025 did not apply it (plan 008 works on the same gate).
+- **Source:** `docs/reviews/rca-delete-unreachable-scaffolds-2026-09-24.md` F2 and FOLLOW-UP 1.
