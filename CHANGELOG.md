@@ -4,6 +4,22 @@
 
 ## 2026-09-24
 
+### fix(tests): v2.0.30 - review follow-ups for plan 010
+
+- **The convergence entry has its heading back.** The previous commit wrote its own heading over
+  `fix(ci): v2.0.30 - convergence fixes for plan 010`, which credited that commit's three bullets
+  to the decisions commit.
+- **`.claude/rules/tests.md` permits a method tag instead of requiring one.** The sentence added
+  for D45 read as an order to tag only the game-bound method in every class that mixes the two,
+  which the 102 class-level tags contradict. A class tag stays the default; a method tag is allowed
+  when it returns checks worth running to CI.
+- **The decision records carry their conditions.** The `GameReferences.targets` header says the
+  empty SandBoxCore bin was checked on v1.5.3 only, and the review report's port item and D44 row
+  carry the 1.4.8 re-check that decision 44 attached. The report's merge-replay item now says the
+  Patch86 manifest row must be the method row, or the tagger restores the class tag.
+- Review: `docs/reviews/deep-review-010-ci-on-hosted-windows-decisions-2026-09-24.md`, RCA
+  `docs/reviews/rca-ci-on-hosted-windows-decisions-2026-09-24.md`.
+
 ### fix(ci): v2.0.30 - apply maintainer decisions for plan 010 (#421)
 
 - **The empty SandBoxCore reference is gone.** `Main/TAOM.csproj` and `GameReferences.targets` no
@@ -20,6 +36,8 @@
 - **The unit step stays off `refasm-game`.** Pointed at it, the 24 unit skips executed but 10
   failed on stub constructors (`Patch71FillTests`, `TeamCombatantSelectorTests`), so the change
   was measured and reverted. #421 stays open for its Python half.
+
+### fix(ci): v2.0.30 - convergence fixes for plan 010
 
 - **The no-game recipe runs as written.** `.ai/verification.md` now sends the reader to the build,
   unit and gate steps of `csharp.yml` exactly as written (all Debug, since the gate reads

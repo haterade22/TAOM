@@ -6,7 +6,8 @@
 
     TaomGameRefs=Install (the default): the Bannerlord install that Directory.Build.props resolves
     into GameFolder. These are the paths the projects spelled out before this file existed, less
-    Modules\SandBoxCore\bin, which holds no DLL (BUTR publishes no SandBoxCore package either).
+    Modules\SandBoxCore\bin, which holds no DLL on v1.5.3 (BUTR publishes no SandBoxCore package
+    either). The 1.4.5 port re-checks it against a 1.4.8 install.
 
     TaomGameRefs=RefAsm: BUTR's stripped, metadata-only reference assemblies from nuget.org
     (Bannerlord.ReferenceAssemblies.*, generated from the Steam build named in their nuspec tags),

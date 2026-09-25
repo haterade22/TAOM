@@ -1089,3 +1089,9 @@ The first `HowdahPrefabTests` pinned the geometry the rebuild changed (moveable 
 - **Why missed:** the rule was drafted from the mechanism (stub bodies throw) before the run that measured it, and the log was not re-read afterwards.
 - **Prevent:** when a rule or doc lists how something fails, grep the run log for every distinct exception type (`grep -o "System\.[A-Za-z.]*Exception" | sort | uniq -c`) and list each one.
 - **Source:** `docs/reviews/rca-ci-on-hosted-windows-2026-09-24.md` F4.
+
+### A rule sentence keeps its decision's modality and is checked against the corpus it governs (plan 010, 2026-09-24)
+D45 let one test class carry `RequiresGame` on a single method. The sentence added to `tests.md` said "tag only the method that needs the game" whenever the class's other tests run on the stubs, which is true of every mixed class, so it ordered what the decision only allowed and contradicted the 102 class-level tags already in the suite.
+- **Why missed:** the sentence was written from its one example; nobody counted how many existing files it would mark as wrong.
+- **Prevent:** when a rule gains an exception, keep the decision's verb (allows, may) and run a quick count of the files the new sentence governs; if the count of files it would call wrong is not zero, the sentence is an order and needs a decision of its own.
+- **Source:** `docs/reviews/rca-ci-on-hosted-windows-decisions-2026-09-24.md` C2.

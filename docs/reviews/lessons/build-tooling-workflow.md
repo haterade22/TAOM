@@ -2275,3 +2275,15 @@ Plan 008 changed the binding gate's command and added two red forms. Three consu
 - **Why missed:** the executor replayed the CI commands, which build without `--no-restore`, and never ran the reviewer recipe; the plan's `NOGAME` prefix lived only in the plan.
 - **Prevent:** when a property gates restore-time items (`PackageDownload`, `PackageReference`), the doc puts it on the restore too, and the recipe is run once from a clean `obj` exactly as written before the doc lands. An error message names the step that fixes it, never the step that just failed.
 - **Source:** `docs/reviews/rca-ci-on-hosted-windows-2026-09-24.md` F5.
+
+### A CHANGELOG diff that removes a `###` heading replaced an entry: insert above it instead (plan 010, 2026-09-24)
+The commit applying plan 010's maintainer decisions wrote its heading over `### fix(ci): v2.0.30 - convergence fixes for plan 010`, so the previous commit's three bullets read as the new commit's work. The report's own "Other checks" line called it a "new entry". Five of six review lenses caught it; the executor's checks did not, because they proved the decisions, not the record.
+- **Why missed:** the entry was edited in place at the top of the day's section, and the diff was never read back for removed lines.
+- **Prevent:** before committing a CHANGELOG edit, `git diff -- CHANGELOG.md | grep '^-###'` prints nothing unless the commit deliberately merges or renames an entry and says so in its body.
+- **Source:** `docs/reviews/rca-ci-on-hosted-windows-decisions-2026-09-24.md` C1.
+
+### A decision applied to a tool's output is also applied to the tool's input, with its conditions (plan 010, 2026-09-24)
+D45 moved a `RequiresGame` attribute by hand, but the tagger manifest that generated it (`scratch/010/manifest.txt:142`) kept the class row, and the report told the next executor to re-run that tagger on the merged tree: the class tag would have come back with both CI steps green. The same commit dropped decision 44's condition (the 1.4.5 port re-checks SandBoxCore against 1.4.8) from every branch record.
+- **Why missed:** the executor verified each outcome where it lands (the test run, the reference snapshots). The manifest lives outside the repo, so no diff showed it, and the D44 row recorded the proof but not the condition.
+- **Prevent:** when a hand edit changes something a script generated, update the script's input in the same step, or name the input and its new row in the record that tells someone to re-run the script. Copy every condition from a decision row into the branch's report next to its outcome.
+- **Source:** `docs/reviews/rca-ci-on-hosted-windows-decisions-2026-09-24.md` C3, C4.

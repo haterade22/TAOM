@@ -73,12 +73,19 @@ verifiable claims are summarized here; everything not listed below matched the w
    files (`Animalia{AttackService,Config,Wiring}Tests`, `ElephantLikeReachTests`,
    `MonsterSize{Service,Wiring}Tests`) that were never run against RefAsm. Replay plan Step 6 (a)
    and (b) on the merged tree with the game variables unset and tag any that fail (Agent 4
-   follow-up 2; UNVERIFIED whether any fail).
+   follow-up 2; UNVERIFIED whether any fail). The executor's `scratch/010/manifest.txt:142` still
+   holds the class row for `Patch86HideoutBossFightBindingTests`; re-running the tagger from it
+   would restore the class tag that D45 moved. Replace that row with
+   `method|TAOM.Tests/Features/BanditManagement/Patch86HideoutBossFightBindingTests.cs|PatchClasses_AreRegisteredInAllThreePlaces|RequiresGame`
+   first.
 2. After the first hosted run: record its totals and checkout and restore times (hosted run
    UNVERIFIED). Keep #421 open for its Python half (`build.yml`'s python-tests job still triggers on
    `bannerlord-1.4.5` only).
 3. Port `csharp.yml` and `GameReferences.targets` to `bannerlord-1.4.5` with the 1.4.8 BUTR build
-   (the plan's Port note).
+   (the plan's Port note). Decision 44 attaches a check: confirm a 1.4.8 install's
+   `Modules\SandBoxCore\bin` holds no DLL before the port drops the SandBoxCore reference there
+   (UNVERIFIED on this desktop, which has no 1.4.x install; a missing type would fail the port build
+   with CS0246, not silently).
 
 ## IMPROVEMENTS (Step 4)
 
@@ -106,6 +113,8 @@ NOT APPLIED:
 - `csharp.yml` unit step: setting `BANNERLORD_GAME_DIR` to `refasm-game` could recover some of the
   24 skipped tests (Agent 5 trace 10, Agent 4 follow-up 7). Behaviour-changing and unmeasured:
   needs Mike.
+- Mike decided all three on 2026-09-24 (D44 to D46); outcomes are in "Maintainer decisions
+  applied" below.
 
 FOLLOW-UP (pre-existing code or text outside the diff; no issue filed, because these are one-line
 edits for whoever lands the branch, or belong to another plan):
@@ -234,13 +243,15 @@ Mike answered the three NOT APPLIED items above. All three outcomes are in one c
 below was measured in this worktree for this section (logs in `scratch/010/md/`), except the
 convergence figures named as recorded. The CI replay
 (`replay.py`) deleted the three projects' `bin` and `obj` folders and `TestResults`, removed
-`BANNERLORD_GAME_DIR` and `BANNERLORD_OVERRIDE_DIR` from the environment before anything ran, and
+`BANNERLORD_GAME_DIR` and `BANNERLORD_OVERRIDE_DIR` from the environment before anything ran,
+pointed `NUGET_PACKAGES`, `TEMP` and `TMP` at scratch folders on E: (C: is nearly full; the RefAsm
+snapshots passed the same root as `-p:NuGetPackageRoot`, which `_TaomNuGetRoot` reads), and
 executed the `run:` blocks of the `build`, `unit` and `gate` steps read from the worktree's
 `csharp.yml` under `pwsh`, in order, from the worktree root.
 
 | # | Decision | Outcome | Evidence |
 |---|---|---|---|
-| D44 | Delete the unused SandBoxCore reference | APPLIED | `Main/TAOM.csproj` Reference and both `TaomSandBoxCoreModuleBin` properties removed; the targets header now says the install paths leave out the empty `Modules\SandBoxCore\bin`. Normalized `-getItem:Reference` snapshots before and after: IDENTICAL for all three projects in install and RefAsm mode (6 of 6; Main 75, Dependencies 58, Tests 60 references). Install: `dotnet build Main/TAOM.csproj --no-incremental -p:DisableModuleCopy=true -p:ModuleId=` 0 errors; full suite `Failed: 2, Passed: 10256, Skipped: 2, Total: 10260`, the recorded totals, with the two known live-Armory failures. RefAsm replay build: `0 Error(s)`, no SandBoxCore type named |
+| D44 | Delete the unused SandBoxCore reference | APPLIED | `Main/TAOM.csproj` Reference and both `TaomSandBoxCoreModuleBin` properties removed; the targets header now says the install paths leave out the empty `Modules\SandBoxCore\bin`. Normalized `-getItem:Reference` snapshots before and after: IDENTICAL for all three projects in install and RefAsm mode (6 of 6; Main 75, Dependencies 58, Tests 60 references). Install: `dotnet build Main/TAOM.csproj --no-incremental -p:DisableModuleCopy=true -p:ModuleId=` 0 errors; full suite `Failed: 2, Passed: 10256, Skipped: 2, Total: 10260`, the recorded totals, with the two known live-Armory failures. RefAsm replay build: `0 Error(s)`, no SandBoxCore type named. The 1.4.8 check the decision attached moves to action item 3 |
 | D45 | Move `RequiresGame` from the Patch86 binding class to `PatchClasses_AreRegisteredInAllThreePlaces` | APPLIED | Replay unit step: `unit: total=8220 executed=8196 passed=8196 failed=0` (the convergence replay recorded 8,218 and 8,194); `AssaultPrefix_StillCallsPlanAssaultAndRemoveIf` and `AmbushPrefix_StillCallsPlanAmbush` both Passed on the reference assemblies. Gate `total=338 executed=338 passed=338 failed=0`. `.claude/rules/tests.md` now allows a method tag when the rest of the class runs on the stubs |
 | D46 | Point the unit step's `BANNERLORD_GAME_DIR` at `refasm-game` | MEASURED, REVERTED | Without it: total 8,220, 8,196 passed, 24 skipped (NotExecuted), 0 failed. With `$env:BANNERLORD_GAME_DIR = Join-Path $PWD 'TAOM.Tests/bin/Debug/net472/refasm-game'` (the gate's path) as the first line of the unit `run:` block: total 8,220, 8,210 passed, 0 skipped, **10 failed**, step exit 1. Skips dropped by 24 but 10 new failures appeared, so the edit was reverted and `csharp.yml` is unchanged |
 

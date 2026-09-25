@@ -3867,3 +3867,39 @@ reference guard gained one fixture row per rejected spelling (seven of ten rows 
 Import's own `Condition` row proven by mutation), matches property names without case and rejects an import under a conditional
 `ImportGroup`, `When` or `Otherwise`. Replayed as written from a clean copy: unit
 `executed=8194 failed=0`, gate 338/0/0. Full suite `Failed: 2, Passed: 10256, Skipped: 2`.
+
+## Review 133b (number provisional: parallel improve branches): plan 010 maintainer decisions D44 to D46, 6-lens deep review + Codex adversarial (2026-09-24)
+
+Commit `c139bc50` (`2897fcca..c139bc50`, branch `improve/010-ci-on-hosted-windows`) applied the
+three items Review 133 left for Mike: D44 deleted the empty SandBoxCore reference, D45 moved
+`RequiresGame` from the Patch86 binding class to its one game-bound method, and D46 pointed the
+unit step at `refasm-game`, measured 10 failures on stub constructors and reverted. Codex used
+109,097 tokens and found **0 P1, 0 P2, 0 P3**, disputing 7 of 10 Known Suspects and leaving 3
+UNVERIFIED (snapshots, restore, compile: it ran nothing).
+
+The six lenses agreed the decisions are implemented as decided and found 5 confirmed defects, all
+LOW or INFO and all in text: the CHANGELOG hunk overwrote the convergence entry's heading; the
+`tests.md` sentence ordered a method tag the decision only allowed (102 class-level tags would
+break it); the tagger manifest in scratch still held the Patch86 class row, so the documented
+merge replay would restore it; decision 44's 1.4.8 re-check was missing from every record; the
+replay description omitted its scratch NuGet and temp roots. All fixed on the branch. No false
+positive. Needs Mike: tag the Patch86 registration check `BindingVerification` so it runs on the
+hosted gate (338 to 339); after D45 it runs in no CI step.
+
+Codex did best with a per-group selection table that showed the registration check falls
+outside both CI steps, but did not flag it. It missed all five text defects: it did not compare
+CHANGELOG headings with the base, read the rule sentence as a description rather than an order,
+and had no access to the scratch manifest or the decision rows. Full suite `Failed: 2, Passed:
+10256, Skipped: 2` (the two known live-Armory tests; branch based before `a39a9c86`).
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|---|---|---|---|
+| C1 | CHANGELOG heading overwritten | Other: record integrity | Edited in place, diff not read back for `-###` | Lesson in build-tooling-workflow |
+| C2 | Rule sentence stronger than the decision | Other: rule modality | Written from one example, not the 102-class corpus | Lesson in testing-qa |
+| C3 | Tagger manifest keeps the class row | Stale state: generator input | Output verified, input outside the repo | Lesson in build-tooling-workflow |
+| C4 | Decision 44's condition dropped | Other: record | Outcome recorded, condition not | Same lesson as C3 |
+| C5 | Replay description incomplete | Other: evidence record | Listed what matched CI, not every departure | One-off |
+
+Report: `docs/reviews/deep-review-010-ci-on-hosted-windows-decisions-2026-09-24.md`. RCA:
+`docs/reviews/rca-ci-on-hosted-windows-decisions-2026-09-24.md`. Two lessons in
+build-tooling-workflow and one in testing-qa. This closes Review 133's "Left for Mike" line.
