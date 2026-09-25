@@ -25,7 +25,7 @@ TaleWorlds game classes are sealed, preventing:
 - **Location**: `Town`, `Village`, `Hideout`
 - **Combat**: `Agent`, `Mission`, `Formation`
 - **Static Actions**: `DestroyPartyAction`, `ChangeRelationAction`, `KillCharacterAction`
-- **Singletons**: `MBObjectManager`, `CampaignTime`
+- **Singletons**: `MBObjectManager`
 
 ### The Solution: Adapter Layer + Factory Pattern
 

@@ -300,7 +300,7 @@ Before merging code touching entry points, verify:
 - [ ] All complex logic delegated to services
 - [ ] Service is registered in IoC container
 - [ ] Service has an interface if a test fakes it or a second implementation exists (not otherwise)
-- [ ] Service has unit tests using mocked adapters
+- [ ] Service has unit tests using mocked adapters, or a test subclass that overrides its boundary seams
 - [ ] Entry point only contains orchestration logic
 - [ ] Game objects wrapped in adapters before passing to services
 - [ ] Services accept adapter interfaces, NOT sealed game types

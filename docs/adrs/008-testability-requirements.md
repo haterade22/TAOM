@@ -229,7 +229,7 @@ public class CasualtyCalculationService
 ## Enforcement
 
 ### Code Review Checklist
-- [ ] No direct `CampaignTime.X` calls in services
+- [ ] No direct `CampaignTime.X` calls in services outside a boundary seam (Rule 1 exception)
 - [ ] No direct `Utilities.GetBasePath()` calls
 - [ ] All new providers fully integrated
 - [ ] All test files updated
@@ -260,7 +260,7 @@ Hook runs: `./build.ps1 -RunTests -MinCoverage 80`
 
 ## Related ADRs
 - **ADR-007**: Adapter Pattern for Sealed Classes - Services use adapters, not sealed types
-- **ADR-002**: Thin Entry Points - Entry points may use static calls, but services cannot
+- **ADR-002**: Thin Entry Points - Entry points may use static calls; services only inside a boundary seam (ADR-007 "Exceptions")
 
 ## Examples from Codebase
 
