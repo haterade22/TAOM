@@ -2283,7 +2283,7 @@ The D39/D40 CHANGELOG said `git \u0063ommit -m "no label here"` passed the subje
 - **Source:** `docs/reviews/rca-bash-hook-prefilter-decisions-2026-09-24.md` R1, R2, R5.
 
 ### Build a coverage row that fails on the mutant it exists for: it holds no other copy of the filtered word (plan 013 decisions, 2026-09-24)
-Two new 4c rows passed on correct hooks and on the broken ones they were meant to catch. The escaped-word default row `git \u0063ommit` kept a literal `git`, so a `git`-filtered hook without the escape arm passed it through the word arm. The commit gates had no `git -C <dir> commit` row, so a filter narrowed to `git commit` stayed green. Planted mutants proved both: the committed suite caught neither.
+Two new 4c rows passed on correct hooks and on the broken ones they were meant to catch. The escaped-word default row `git \u0063ommit` kept a literal `git`, so a `git`-filtered hook without the escape arm passed it through the word arm. The commit gates had no `git -C <dir> commit` row, so a filter narrowed to `git commit` stayed green. Planted mutants proved both: the committed suite caught neither gap (its three failures were the other mutant's git-call rows).
 - **Why missed:** each row was checked green on the code, not red on its mutant, although the plan 013 lesson above says to delete the arm a row covers. A `*)` default row serves hooks it was not written for.
 - **Prevent:** before committing a coverage row, plant the one mutant it exists for and watch it fail. Build the payload so no other arm can admit it (here: escape every word any prefilter reads). Give each arm of the hook's own trigger, not only of its prefilter, a row.
 - **Source:** `docs/reviews/rca-bash-hook-prefilter-decisions-2026-09-24.md` R3, R4.

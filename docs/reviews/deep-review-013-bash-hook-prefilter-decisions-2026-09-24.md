@@ -187,3 +187,26 @@ evidence, and found no P1 or P2.
   asking Codex, for each new coverage row, which single-arm deletion the row would fail on.
 - Bugs Codex typically misses: a changelog or parity claim whose evidence ran on a different
   tree state than the one it describes.
+
+## Convergence
+
+One `deep-reviewer` pass on the review-fix diff `7aa658e3..6514fdfe` reported 3 LOW defects and
+confirmed the rest (hook edits comment-only, LF endings, 391/0 hook suite, both new 4c rows RED
+on their mutants). Each defect was re-checked against the code before any edit; all three are
+confirmed and fixed in `fix(hooks): v2.0.30 - convergence fixes for plan 013`. No false
+positives.
+
+| # | Sev | Defect | Verification | Fix |
+|---|---|---|---|---|
+| D1 | LOW | 4c had no `git -C <dir> push` row, although `validate-push.sh` finds `push` by token for that form; a prefilter narrowed to `git push` (keeping the `\u` arm) passed every validate-push row | Mutant `scratch\013\review\mutant-push.py` applied to the hook with the new row in place: 391 passed, 1 failed, the one failure being the new row (`mutant-push-run.txt`); hook restored from `HEAD` | `tools/test_hooks.sh` 4c: second validate-push trigger `cd /x\ngit -C /y push origin x` |
+| D2 | LOW | 4d header and catalog gave a reason for the five/five split that the code contradicts on both sides | `check-changelog-changed.sh:82-99` reads a ` -- ` pathspec off the command and `:133-136` denies with nothing staged; `check-commit-subject-version.sh:279-300` reads `Main/_Module/SubModule.xml` and allows when it cannot | Both places now name the five gates 4d covers and the five it leaves to 4c's escaped row, with no reason |
+| D3 | LOW | Lesson and REVIEW-LOG said the mutants passed the committed suite; REVIEW-LOG counted R8 as both fixed and for Mike (15 of 14) | `mutants-oldtests.txt`: 379 passed, 3 failed, all on `check-claude-files-tracked.sh` (mutant B) git-call rows; R8 row above reads "record fixed; NEEDS MIKE to confirm" | Both records use the RCA's "caught neither gap"; REVIEW-LOG reads 11 fixed, 1 annotated, 2 for Mike, plus Mike's confirmation of the R8 deviation. The `6514fdfe` commit body keeps the old sentence (history) |
+
+**Runs after the fixes** (files under `E:\repos\taom-improve\scratch\013\review\`):
+
+- `bash tools/test_hooks.sh`: 392 passed, 0 failed, exit 0 (`hooks-convergence.txt`).
+- `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`: Failed 2, Passed 10235,
+  Skipped 2, Total 10239: `TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+  `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, the two known live-Armory tests;
+  `git merge-base --is-ancestor a39a9c86 HEAD` confirms the branch predates `a39a9c86`
+  (`dotnet-convergence.txt`).

@@ -37,8 +37,9 @@
 > opens all twelve hooks: most often literal `\u` text in a command (a search for `\u2014`
 > arrives as `\\u2014`), and in the two PostToolUse hooks a tool response with colour codes
 > (`\u001b`). 4c feeds each of the twelve hooks its word with one letter escaped, and 4d checks
-> that the five blocking gates whose block needs no repository state answer the escaped form as
-> they answer the plain one. `suggest-compact.sh` keeps its `git`, `dotnet` and `build.ps1`
+> that five of the ten blocking gates (`check-commit-subject-version.sh`, `validate-push.sh`,
+> `block-no-verify.sh`, `block-dangerous-git.sh`, `block-broad-git-add.sh`) answer the escaped
+> form as they answer the plain one. `suggest-compact.sh` keeps its `git`, `dotnet` and `build.ps1`
 > filter without the escape rule, because plan 011 deletes it. After a Claude Code upgrade,
 > prove the gates under the real harness: a two-line `cd` then
 > `git commit --dry-run -m "no label here"` must still be denied.

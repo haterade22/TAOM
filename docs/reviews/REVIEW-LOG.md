@@ -3814,10 +3814,11 @@ Codex agree it is correct: a 408-case old-versus-new run changed only the eight 
 decisions, where the base filter missed an escaped letter.
 
 **14 findings, 0 false positives: 11 fixed, 1 annotated (the #661 citation waits for batch 3),
-3 for Mike** (confirming the D39 suggest-compact deviation, the escape arm's breadth, #661's body). No gate decision changes. The two that
+2 for Mike** (the escape arm's breadth, #661's body); Mike also confirms the D39 suggest-compact
+deviation, whose record is among the 11 fixed. No gate decision changes. The two that
 mattered were test rows that could not fail: the commit gates had no `git -C <dir> commit` row,
-and the default escaped row kept a literal `git`. Two planted mutants passed the committed suite
-(379 passed, 3 failed, all on the other mutant's git-call rows) and fail the new one (386 passed,
+and the default escaped row kept a literal `git`. With two planted mutants, the committed suite
+caught neither gap (379 passed, 3 failed, all on one mutant's git-call rows) and fail the new one (386 passed,
 5 failed). The rest: a CHANGELOG before-case taken from the RED intermediate rather than the
 base, a parity claim wider than its script, 4d coverage stated as every gate, a stale writer
 premise, a savings claim that ignored the description field, and "fail open" used for its

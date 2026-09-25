@@ -4,6 +4,18 @@
 
 ## 2026-09-24
 
+### fix(hooks): v2.0.30 - convergence fixes for plan 013
+
+- `tools/test_hooks.sh` 4c gives `validate-push.sh` a `git -C <dir> push` trigger row. The
+  hook finds `push` by token for exactly that form; a prefilter narrowed to `git push`
+  passed every earlier validate-push row and now fails this one.
+- The 4d header and the hooks catalog name the five gates 4d covers and the five it does
+  not, instead of a reason the code contradicted (`check-changelog-changed.sh` denies on a
+  command-line pathspec with nothing staged; the subject gate reads `SubModule.xml`).
+- The lesson and REVIEW-LOG entry say the committed suite caught neither gap, not that the
+  mutants passed it (it failed three rows on one mutant), and the REVIEW-LOG no longer
+  counts the suggest-compact finding as both fixed and for Mike.
+
 ### fix(hooks): v2.0.30 - decision review follow-ups for plan 013
 
 - `tools/test_hooks.sh` 4c gives the commit gates a `git -C <dir> commit` trigger row: a

@@ -498,7 +498,8 @@ else
             # `push`, block-no-verify.sh on `no-verify`, the six commit gates on `commit`,
             # and the two confirm gates on `git`; a `git commit` row reaches the last two sets.
             case "$name" in
-                validate-push.sh)   triggers=('cd /x\ngit push origin x') ;;
+                # validate-push.sh finds `push` by token, so `git -C <dir> push` is its trigger too.
+                validate-push.sh)   triggers=('cd /x\ngit push origin x' 'cd /x\ngit -C /y push origin x') ;;
                 block-no-verify.sh) triggers=('cd /x\ngit commit --no-verify -m x') ;;
                 # The commit gates also trigger on `git -C <dir> commit`, which holds `commit`
                 # but not `git commit`: its own row keeps a prefilter from narrowing to the latter.
@@ -556,11 +557,14 @@ fi
 
 # ---------------------------------------------------------------------------
 # 4d. An escaped letter cannot hide a blocked command. JSON allows `\u0063` for `c`, and
-#     the prefilters read the raw payload, so the five blocking gates whose block needs no
-#     repository state are each fed their blocked command twice, plain and with the gated
-#     word's first letter escaped, and must answer both the same way (maintainer decision
-#     D40; Codex's counter-payload in the plan 013 review). The other five, commit gates
-#     that block only on staged or untracked files, get 4c's escaped-word reach row only.
+#     the prefilters read the raw payload, so five of the ten blocking gates
+#     (check-commit-subject-version.sh, validate-push.sh, block-no-verify.sh,
+#     block-dangerous-git.sh, block-broad-git-add.sh) are each fed their blocked command
+#     twice, plain and with the gated word's first letter escaped, and must answer both the
+#     same way (maintainer decision D40; Codex's counter-payload in the plan 013 review).
+#     The other five (check-changelog-changed.sh, check-claude-files-tracked.sh,
+#     check-moduledata-validation.sh, check-native-dll-crt.sh, check-doc-config-drift.sh)
+#     get 4c's escaped-word reach row only.
 # ---------------------------------------------------------------------------
 head2 "4d. a blocking gate answers the same when its word arrives escaped"
 esc_verdict() {  # $1 hook, $2 project dir, $3 command already JSON-escaped: "rc=<n> <decision>"
