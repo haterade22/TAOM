@@ -6,7 +6,7 @@ This project follows three core patterns that work together to create a testable
 
 ### 1. Hook Pattern + Harmony Integration
 
-Separation between game integration and business logic.
+Separation between game integration and business logic. This layer is optional. Use it only when a patch needs a narrow seam over a wide service or a test fakes the hook; most patches call their service directly (AGENTS.md "Architecture").
 
 ```csharp
 // Hook Interface

@@ -18,7 +18,7 @@ Historical model names, patch counts and review totals are context, not live fac
 - Test files for coverage and correctness
 
 ### Severity Ratings
-- **CRITICAL**: ADR-007 (sealed type in service), ADR-002 (fat entry point), Harmony target method does not exist in the installed engine (v1.5.2)
+- **CRITICAL**: ADR-007 (sealed type in service; a protected-virtual boundary seam that meets ADR-007 "Exceptions" is not one), ADR-002 (fat entry point), Harmony target method does not exist in the installed engine (v1.5.2)
 - **HIGH**: Missing test coverage for service, incorrect base class for GameModel, XSLT dropping vanilla attributes
 - **MEDIUM**: Performance issue in hot path, missing IoC registration, interface not segregated
 - **LOW**: Style violation, missing comment explaining non-obvious behavior
@@ -212,7 +212,7 @@ HarmonyPatch / GameModel / CampaignBehavior   <-- THIN (<150 lines, no logic)
          TaleWorlds Engine (Hero, Agent...)    <-- sealed, never cross boundary
 ```
 
-**One-liner:** `[HarmonyPatch/GameModel/CampaignBehavior]` -> `IHookInterface` -> `Service` -> `IAdapter` (sealed types)
+**One-liner:** `[HarmonyPatch/GameModel/CampaignBehavior]` -> `Service` -> `IAdapter` (sealed types); an `IOnXxx` hook interface sits between patch and service only when the patch needs a narrow seam or a test fake
 
 ---
 
@@ -246,7 +246,8 @@ Review against that table; this reference adds reviewer-specific detail below.
 | Rule | Detail |
 |------|--------|
 | Entry points <150 lines | ADR-002: delegate immediately to service |
-| No sealed types in services | ADR-007: `ICareerHeroAdapter` not `Hero` |
+| No sealed types in services | ADR-007: `ICareerHeroAdapter` not `Hero`; the one exception is a protected-virtual boundary seam (ADR-007 "Exceptions") |
+| Interfaces that earn their file | Every adapter has one (ADR-007); a service gets one only when a test fakes it or a second class implements it (ADR-002) |
 | Constructor injection only | No service locator in services |
 | Convert at boundary | Adapt sealed types in the entry point, not deep in services |
 | `?.` for computed properties | TaleWorlds getters crash before your null check |
@@ -271,7 +272,7 @@ Review against that table; this reference adds reviewer-specific detail below.
 
 ```
 Main/Features/MyFeature/
-    IMyFeatureService.cs
+    IMyFeatureService.cs     <-- only if a test fakes it or a second class implements it
     MyFeatureService.cs
     MyFeatureIoC.cs          <-- Reuse.Singleton registrations
     Models/
@@ -325,7 +326,7 @@ ALWAYS decompile the target method before writing a patch. Verify:
 - **Transpiler** — Modifies IL instructions. Most fragile — use sparingly.
 
 ### Architecture Requirements
-- Patches are **thin entry points** — delegate ALL logic to services via `IHookInterface`
+- Patches are **thin entry points**: delegate ALL logic to a service, directly or through an `IOnXxx` hook interface when the patch needs a narrow seam or a test fake
 - Entry point files MUST be <150 lines (ADR-002)
 - Resolve services from IoC container, never instantiate directly
 - Use thread-local state pattern for multi-patch coordination
@@ -386,7 +387,9 @@ The current list, with each model's vanilla base and purpose, is
 
 ## C# Design Patterns
 
-### 1. Hook Pattern (Harmony -> Hook Interface -> Service)
+### 1. Hook Pattern (Harmony -> Hook Interface -> Service), optional
+
+Optional layer. Most patches resolve their service at the boundary and call it directly (`patch -> service -> adapter`). Add an `IOnXxx` hook interface only when the patch needs a narrow seam over a wide service or a test fakes the hook; a hook that only forwards one call is a deletion candidate when its files are next touched.
 
 ```
 HarmonyPatch (thin)

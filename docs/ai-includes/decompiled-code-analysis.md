@@ -96,7 +96,7 @@ namespace TAOM.Features.[FeatureName]
 Decompiled code → TAOM layers:
 
 Entry Point (Harmony Patch / GameModel / MissionLogic)
-    → Hook Interface (IOn[EventName])
+    → Hook Interface (IOn[EventName]), only when the patch needs a narrow seam or a test fake
         → Service (business logic)
             → Adapter (wraps sealed TaleWorlds types)
 ```
@@ -276,7 +276,7 @@ _logger.LogError($"Failed to process: {ex.Message}");
 4. How does it interact with TaleWorlds' existing systems?
 5. What could break if Bannerlord updates?
 6. How can we test this feature?
-7. Does it fit TAOM's architecture (patches -> hooks -> services -> adapters)?
+7. Does it fit TAOM's architecture (patches -> services -> adapters, with a hook interface only where a narrow seam or a test fake needs one)?
 
 ---
 
