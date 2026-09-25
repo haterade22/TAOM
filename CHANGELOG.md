@@ -4,6 +4,19 @@
 
 ## 2026-09-24
 
+### docs(readme): v2.0.30 - drop stale counts, fix version and test command
+
+The README on this branch now names Bannerlord v1.5.3 (it said v1.4.8 twice and v1.5.2 in the
+player install section), says development happens on `bannerlord-1.5.x`, and gives the
+non-deploying test command, `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`
+(the bare `dotnet test TAOM.Tests` builds Main and copies it into the game). The hand-kept
+engineering counts (feature modules, tests, GameModel overrides, Harmony categories, skills,
+agents, hooks, rules, MCP servers, reviews, ADRs, feature docs) are gone rather than refreshed,
+since nothing recomputes them; the career count said 50 against 67 in `taom_careers.xml`.
+`docs/ai-includes/agent-operating-manual.md` now passes `-p:ModuleId=` in its build and test
+rows, as its binding-gate row already did. The default branch `bannerlord-1.4.5` keeps its own
+README.
+
 ### chore(security): v2.0.30 - untrack local files and pin MCP servers
 
 Three tracked paths were never repo content, and four MCP servers ran whatever version their
