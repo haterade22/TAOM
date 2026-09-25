@@ -397,7 +397,7 @@ subject as `42624b95`). Issue: #650.
 | D47 | Follows D43: use the boot-time main-thread id `AppDomainExceptionHook` records in `Subscribe()` instead, mark off-thread captures, then add the ten | APPLIED |
 
 Treating an unset id (0) as off-main was the executor's choice, not part of either decision; the
-comment at `Native2ManagedPatcher.cs` gives the reason. (Relabelled by the decisions review,
+comment on `IsOffMainThread` in `AppDomainExceptionHook.cs` gives the reason. (Relabelled by the decisions review,
 `deep-review-006-crash-capture-boot-cost-decisions-2026-09-24.md`: this table first filed the
 id under D43 and the ten entries under D47.)
 

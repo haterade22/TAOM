@@ -40,8 +40,8 @@ public sealed class Native2ManagedPatcher
         {
             try
             {
-                // HandleAndSwallow takes (Exception, string), so it cannot be the Finalizer itself;
-                // the bridge wraps it. nameof makes a rename a build error, not a silent no-attach.
+                // HandleAndSwallow takes (Exception?, string, bool), not Harmony's __exception
+                // alone, so it cannot be the Finalizer itself; the bridge wraps it. nameof makes a rename a build error, not a silent no-attach.
                 harmony.Patch(m, finalizer: new HarmonyMethod(
                     typeof(Native2ManagedBridge), nameof(Native2ManagedBridge.Finalizer)));
                 patched++;

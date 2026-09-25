@@ -127,8 +127,9 @@ public class Native2ManagedBridgeTests
     [TestMethod]
     public void Finalizer_ComparesAgainstTheIdTheHookRecorded()
     {
-        // Pins the wiring from Finalizer to AppDomainExceptionHook.MainThreadId: passing any other
-        // id (0, say) would send every capture down the reduced path.
+        // Pins the wiring from Finalizer to AppDomainExceptionHook.MainThreadId in both directions:
+        // an unset id (0) would send every capture down the reduced path, and the current thread's
+        // own id would send every capture down the full path, worker threads included.
         var hook = new AppDomainExceptionHook(new RecordingCrashService(), NSubstitute.Substitute.For<TAOM.Core.Logging.IModLogger>());
         try
         {
@@ -136,9 +137,11 @@ public class Native2ManagedBridgeTests
             var service = RecordingCrashService.Install();
 
             Assert.IsNull(Native2ManagedBridge.Finalizer(ThrowAndCatch()));
+            RunOnWorkerThread(() => Assert.IsNull(Native2ManagedBridge.Finalizer(ThrowAndCatch())));
 
-            Assert.AreEqual(1, service.Calls.Count);
+            Assert.AreEqual(2, service.Calls.Count);
             Assert.IsFalse(service.Calls[0].OffMainThread, "the subscribing thread is the main thread");
+            Assert.IsTrue(service.Calls[1].OffMainThread, "a worker thread is not the thread the hook recorded");
         }
         finally
         {

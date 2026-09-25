@@ -8,7 +8,8 @@ namespace TAOM.Tests.Features.CrashReport;
 // The shared sink of the five Patch37 finalizers and the Native2Managed bridge. When it cannot
 // swallow, it hands the exception back and Harmony rethrows it, so the hand-back must preserve
 // the throw site (harmony-patches.md; maintainer decision 2026-09-24, #650). No test calls
-// IoC.Configure, so the service is unreachable here and the fallback path runs.
+// IoC.Configure, so the service is unreachable and the fallback path runs unless a test installs a
+// RecordingCrashService, which pins the swallow path.
 [TestClass]
 public class CrashReportPatchHelperTests
 {

@@ -184,9 +184,9 @@ FOLLOW-UP (pre-existing code; no issue filed, since /issue is public and never a
   "left out" line (lens 2 F1, lens 5 T16). Needs Mike.
 - crash-report.md:94 overstates ButterLib's Disable() (it removes BEW finalizers only when the
   BetterExceptionWindow module is loaded) (lens 5 F2).
-- Native2ManagedBridge lives in Native2ManagedPatcher.cs (class/file naming); OnUnhandled itself has
-  no test (its thread verdict now does); feature-map.md has no CrashReport row; the 1.4.5 port must
-  re-resolve all 16 names.
+- Native2ManagedBridge lives in Native2ManagedPatcher.cs (class/file naming); feature-map.md has no
+  CrashReport row; the 1.4.5 port must re-resolve all 16 names. (OnUnhandled's test gap moved out of
+  FOLLOW-UP: its line was touched, so the convergence pass fixed it; see Convergence below.)
 
 VERDICT: READY FOR COMMIT (Step 4 applied; the Step 4.6 convergence pass is owed to the orchestrator)
 ```
@@ -259,3 +259,30 @@ and harmony-il each gained one lesson here; the index counts were already behind
   `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`; the branch is based before `a39a9c86`.
 - `python tools/lint_docs.py --quick --fail-on-dead`: dead links 0. No em or en dash on any added line.
 - Nothing run in game.
+
+## Convergence
+
+One `deep-reviewer` pass (Standards lens plus a behaviour-parity check) over `8e6b0935..8c84fa20`
+reported five defects, all in comments, docs and tests; runtime parity held. Each was re-read
+against the code before fixing. None was a false positive.
+
+| # | Sev | Finding | Outcome |
+|---|---|---|---|
+| 1 | LOW | `AppDomainExceptionHook.IsOffMainThread` comment called itself the definition for "every" worker capture source, but `BattleLoadStallWatchdog` captures from a pool Timer without it | FIXED: the comment names the watchdog as the open follow-up |
+| 2 | LOW | The touched `OnUnhandled` line had no test, and `offMainThread` defaults to the unsafe `false`, so dropping the argument compiled silently | FIXED: `OnUnhandled` made `internal` (InternalsVisibleTo); new `OnUnhandled_TellsTheServiceWhetherItRanOnTheSubscribingThread` asserts `false` on the subscribing thread and `true` on a worker. The FOLLOW-UP line that filed it as pre-existing is corrected |
+| 3 | NIT | `Finalizer_ComparesAgainstTheIdTheHookRecorded` pinned only the id-0 direction | FIXED: the test also calls `Finalizer` on a worker and asserts off-main; its comment and the crash-report.md test line now state both directions |
+| 4 | NIT | Three stale comments: the `_mainThreadId` note ("mark"), the `HandleAndSwallow` arity in `Native2ManagedPatcher.cs`, the `CrashReportPatchHelperTests` header | FIXED: reworded |
+| 5 | NIT | The deep-review record pointed at a deleted `Native2ManagedPatcher.cs` comment; the crash-report.md config row said the AppDomain hook hands exceptions back when master is off (`OnUnhandled` just returns) | FIXED: repointed to `IsOffMainThread` in `AppDomainExceptionHook.cs`; the row now says the hook does nothing and limits the throw-site clause to the Patch37 finalizers |
+
+**RED evidence (mutation):** with the verdict dropped from `OnUnhandled` and `Finalizer` passing the
+current thread's id instead of `AppDomainExceptionHook.MainThreadId`, the filter
+`AppDomainExceptionHookTests|Native2ManagedBridgeTests` gave `Failed: 2, Passed: 11, Total: 13`
+(exactly the two new assertions). Both mutations were reverted before the fix run.
+
+**Full suite:** `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`:
+`Failed: 2, Passed: 10272, Skipped: 2, Total: 10276`. The two failures are the known live-Armory
+tests `TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`; the branch is based before `a39a9c86`.
+`python tools/lint_docs.py --quick --fail-on-dead`: dead links 0. No em or en dash on any added line.
+
+CONVERGENCE: all five fixed; no runtime behaviour changed beyond `OnUnhandled`'s visibility.

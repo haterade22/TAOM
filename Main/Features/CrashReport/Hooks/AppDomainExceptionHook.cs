@@ -23,15 +23,16 @@ public sealed class AppDomainExceptionHook
     private readonly IModLogger _logger;
     private bool _subscribed;
 
-    // Static so Native2ManagedBridge reads the same boot-time id to mark its own off-thread
-    // captures (maintainer decision 2026-09-24, #650). 0 until Subscribe() runs; managed thread
-    // ids start at 1, so 0 never names a real thread.
+    // Static so Native2ManagedBridge compares against the same boot-time id when it tells the
+    // service whether a capture is off-main (maintainer decision 2026-09-24, #650). 0 until
+    // Subscribe() runs; managed thread ids start at 1, so 0 never names a real thread.
     private static int _mainThreadId;
 
     internal static int MainThreadId => Volatile.Read(ref _mainThreadId);
 
-    // The one definition of "off the main thread" for every capture source that can run on a
-    // worker (this hook and Native2ManagedBridge). An unset id (0) never equals a real thread, so
+    // The definition of "off the main thread" shared by this hook and Native2ManagedBridge.
+    // BattleLoadStallWatchdog also captures from a worker (a thread-pool Timer) but does not use it
+    // yet: a known open follow-up (#650 decisions record). An unset id (0) never equals a real thread, so
     // it counts as off-main: the safe direction, since a main-thread capture then loses only its
     // Mission and Campaign sections and the inquiry.
     internal static bool IsOffMainThread(int mainThreadId)
@@ -64,7 +65,8 @@ public sealed class AppDomainExceptionHook
         _subscribed = false;
     }
 
-    private void OnUnhandled(object sender, UnhandledExceptionEventArgs args)
+    // internal so TAOM.Tests can raise it on a chosen thread (InternalsVisibleTo).
+    internal void OnUnhandled(object sender, UnhandledExceptionEventArgs args)
     {
         try
         {
