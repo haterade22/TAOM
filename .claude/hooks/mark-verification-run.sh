@@ -1,5 +1,5 @@
 #!/bin/bash
-# PostToolUse(Bash and PowerShell) hook: record that a build/test verification command ran.
+# PostToolUse and PostToolUseFailure (Bash and PowerShell) hook: record that a build/test verification command ran.
 #
 # Touches .claude/logs/.verification-ran so the check-verification-evidence Stop
 # hook can tell whether C# source was edited AFTER the most recent verification.
@@ -90,7 +90,8 @@ fi
 # verification evidence; you have the output). build.ps1 -RunTests, plain
 # dotnet build/test, and /verify all route through one of these substrings.
 # A command that exits non-zero raises PostToolUseFailure, not PostToolUse (Claude Code
-# 2.1.241), so the "fail" half holds only while this hook is registered on both events.
+# 2.1.241), so the "fail" half holds only while this hook is registered on both events
+# (tools/test_hooks.sh 7c checks both).
 #
 # Anchor the marker to the project, not the inherited cwd. A relative path here is how
 # a stray .claude/logs/ tree got written under .claude/hooks/ on 2026-08-31 when these

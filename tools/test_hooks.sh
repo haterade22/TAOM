@@ -1207,15 +1207,21 @@ done
 VP_REG=$("$HPY" - <<'PY'
 import json
 d = json.load(open('.claude/settings.json', encoding='utf-8'))
-def has(ev, hook):
-    return any('PowerShell' in g.get('matcher', '').split('|')
+def has(ev, hook, tool):
+    return any(tool in g.get('matcher', '').split('|')
                and any(h['command'].endswith(hook) for h in g.get('hooks', []))
                for g in d.get('hooks', {}).get(ev, []))
-print('ok' if has('PreToolUse', 'validate-push.sh') and has('PostToolUse', 'mark-verification-run.sh') else 'missing')
+# A command that exits non-zero raises PostToolUseFailure, not PostToolUse, so a failed build or
+# test marks only while mark-verification-run.sh is registered on both events (plan 011 review).
+need = [('PreToolUse', 'validate-push.sh'), ('PostToolUse', 'mark-verification-run.sh'),
+        ('PostToolUseFailure', 'mark-verification-run.sh')]
+gaps = [f'{hook} ({ev}, {tool})' for ev, hook in need for tool in ('Bash', 'PowerShell')
+        if not has(ev, hook, tool)]
+print('ok' if not gaps else 'missing: ' + '; '.join(gaps))
 PY
 )
-[[ "$VP_REG" == ok ]] && ok "validate-push (PreToolUse) and mark-verification-run (PostToolUse) are registered for PowerShell" \
-    || bad "settings.json lacks a PowerShell registration for validate-push.sh (PreToolUse) or mark-verification-run.sh (PostToolUse)"
+[[ "$VP_REG" == ok ]] && ok "validate-push (PreToolUse) and mark-verification-run (PostToolUse, PostToolUseFailure) are registered for Bash and PowerShell" \
+    || bad "settings.json registration $VP_REG"
 
 # ---------------------------------------------------------------------------
 head2 "7d. mark-verification-run marks the repo's own build and test commands, never a quoted mention"
@@ -1278,6 +1284,13 @@ S=$(date +%s%N)
 MS=$(( ($(date +%s%N) - S) / 1000000 ))
 [[ -f "$MVR_DIR/.claude/logs/.verification-ran" ]] && ok "mark-verification-run marks a 100 KB command in ${MS}ms" \
     || bad "mark-verification-run did not mark a 100 KB command inside its 5 s registration (${MS}ms)"
+# A failed test run arrives as PostToolUseFailure, with an `error` and no `tool_response`; it must
+# mark too, or the Stop hook nags after every red run (7c checks the registration).
+rm -rf "$MVR_DIR"; mkdir -p "$MVR_DIR"
+printf '%s' '{"tool_name":"PowerShell","tool_input":{"command":"dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId="},"hook_event_name":"PostToolUseFailure","error":"Exit code 1"}' \
+    | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$MVR_DIR" bash .claude/hooks/mark-verification-run.sh >/dev/null 2>&1
+[[ -f "$MVR_DIR/.claude/logs/.verification-ran" ]] && ok "mark-verification-run marks a PostToolUseFailure payload" \
+    || bad "mark-verification-run did not mark a PostToolUseFailure payload"
 rm -rf "$MVR_DIR"
 
 # ---------------------------------------------------------------------------

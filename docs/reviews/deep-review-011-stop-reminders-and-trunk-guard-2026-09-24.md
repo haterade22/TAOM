@@ -281,3 +281,8 @@ Suites after the last edit: `bash tools/test_hooks.sh` printed "501 passed, 0 fa
 printed "Failed: 0, Passed: 10629, Skipped: 2, Total: 10631"; `lint_docs.py --drift-only` rc 0.
 One intermediate hook run failed section 8 twice with exit 124: `scan.sh` took 58 s standalone
 against its 60 s bound under machine load, it is untouched by this diff, and the final run passed.
+
+The orchestrator then applied the required settings change (PostToolUseFailure, matcher
+`Bash|PowerShell`, `mark-verification-run.sh`, timeout 5); the 7c registration check fails against
+the previous `settings.json` and passes against the new one, a 7d row shows a failure payload marks,
+and `bash tools/test_hooks.sh` printed "506 passed, 0 failed".

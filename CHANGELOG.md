@@ -46,7 +46,12 @@ bannerlord-1.5.x` and `git push --force -o "ci.skip;x" origin bannerlord-1.5.x` 
 quote-blind one, which keeps `bash -c "git push ...; echo x"` refused, and one outside quotes only. A
 refspec glued to its redirection (`bannerlord-1.5.x>/dev/null`, `>&2`) now counts; it passed before and
 after plan 011. Three comments that called the JSON block the only Stop channel Claude reads, and the
-section 4 comment in `tools/test_hooks.sh`, now say what the code does. 7c gained eight rows.
+section 4 comment in `tools/test_hooks.sh`, now say what the code does. 7c gained eight rows. The
+orchestrator registered `mark-verification-run.sh` on PostToolUseFailure for Bash and PowerShell, since
+a command that exits non-zero never raises PostToolUse, so a failed build or test now records a
+verification run too; 7c checks the registration (red against the previous `settings.json`) and 7d
+feeds the hook a failure payload. The hooks catalog is recounted: 29 `settings.json` registrations, 34
+in total.
 
 ### feat(troll): v2.0.30 - human clips retargeted onto the hill troll's own rest pose
 

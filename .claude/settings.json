@@ -168,6 +168,16 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/mark-verification-run.sh",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "PreCompact": [
