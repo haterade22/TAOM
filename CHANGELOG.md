@@ -10,16 +10,16 @@ Three written rules disagreed with the code and with each other; sprint decision
 amends all three. ADR-007 now records the protected-virtual boundary seam that `RefugeService`,
 `CampService`, `SupplyOrderService` and `WardenService` use, with four conditions, and ADR-002 and
 ADR-008 point to it. The ADR text is in three orchestrator commits on this branch: `1cdf8eb0`, the
-wording Mike approved (decision 49); then, under the protected-file bypass Mike granted for plan 021,
-`7d1b7a54` after the Codex review (a seam may call the engine, not only read it, and ADR-002's
-migration step 4 creates a service interface only when one earns it) and a third after the deep
+wording Mike approved (decision 49); then, under the protected-file bypass Mike granted for plan
+021, `7d1b7a54` after the Codex review (a seam may call the engine, not only read it, and ADR-002's
+migration step 4 creates a service interface only when one earns it) and `b22edd47` after the deep
 review (`CampaignTime` left the sealed-class list, and the ADR-008 and ADR-002 checklists accept
-seams). A service now gets an interface only when a test fakes it or a second class implements it, while every adapter keeps one: the `/deep-review`
-Standards lens, `think-before-coding.md`, the `feature-builder` agent and `/new-feature` say so. The
-hook interface between a patch and its service is now conditional (a narrow seam or a test fake) in
-AGENTS.md, `.ai/review-reference.md`, `csharp-patterns.md`, `harmony-patches.md`,
-`csharp-architecture.md` and three `docs/ai-includes` guides (at `a39a9c86`, 24 of the 217 patch
-files used one).
+seams). A service now gets an interface only when a test fakes it or a second class implements it,
+while every adapter keeps one: the `/deep-review` Standards lens, `think-before-coding.md`, the
+`feature-builder` agent and `/new-feature` say so. The hook interface between a patch and its
+service is now conditional (a narrow seam or a test fake) in AGENTS.md, `.ai/review-reference.md`,
+`csharp-patterns.md`, `harmony-patches.md`, `csharp-architecture.md` and three `docs/ai-includes`
+guides (at `a39a9c86`, 24 of the 217 patch files used one).
 
 No code changed and nothing was deleted: single-implementation interfaces and one-call hooks go when
 their files are next touched. Verified: `lint_docs.py --fail-on-drift` exits 0 and its full report is
