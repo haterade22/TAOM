@@ -21,9 +21,11 @@ Each test maps to one part of the contract:
   - runtime state files (diag.log, last-good-modlist.txt) excluded; licences copied
   - unrecognised top-level entries are UNKNOWN -> reported, never copied
   - manifest byte arithmetic; --dry-run writes nothing; exit codes
+  - --require-build: a DLL whose stamp is dirty, git-less or from another commit is refused
 """
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -397,6 +399,105 @@ class TestCli(unittest.TestCase):
                      "--allow-unknown")
             self.assertEqual(r.returncode, 2)
             self.assertIn("not empty", (r.stderr + r.stdout).lower())
+
+
+# --------------------------------------------------------------------------- #
+# --require-build: only a clean build of the release commit may ship           #
+# --------------------------------------------------------------------------- #
+SHA = "0123456789abcdef0123456789abcdef01234567"
+STAMP = "build.20260923-184249Z"
+
+
+def _dll_bytes(stamp: str) -> bytes:
+    """A stand-in DLL: the stamp sits in the bytes the way the metadata stores it (UTF-8)."""
+    return b"MZ\x90\x00\x01\x00" + stamp.encode("ascii") + b"\x00\x00trailer"
+
+
+class TestBuildStamp(unittest.TestCase):
+    def _dll(self, td, stamp):
+        p = Path(td) / "TAOM.dll"
+        p.write_bytes(_dll_bytes(stamp))
+        return p
+
+    def test_reads_the_stamp_out_of_dll_bytes(self):
+        with tempfile.TemporaryDirectory() as td:
+            self.assertEqual(pr.read_build_stamp(self._dll(td, f"{STAMP}+{SHA}")), f"{STAMP}+{SHA}")
+
+    def test_reads_a_dirty_stamp_with_its_flag(self):
+        with tempfile.TemporaryDirectory() as td:
+            self.assertEqual(pr.read_build_stamp(self._dll(td, f"{STAMP}+{SHA}.dirty")),
+                             f"{STAMP}+{SHA}.dirty")
+
+    def test_no_stamp_reads_as_none(self):
+        with tempfile.TemporaryDirectory() as td:
+            p = Path(td) / "TAOM.dll"
+            p.write_bytes(b"\0" * 300)
+            self.assertIsNone(pr.read_build_stamp(p))
+
+    def test_clean_stamp_at_the_expected_commit_passes(self):
+        self.assertIsNone(pr.check_build_stamp(f"{STAMP}+{SHA}", SHA))
+
+    def test_older_dot_separator_passes(self):
+        self.assertIsNone(pr.check_build_stamp(f"{STAMP}.{SHA}", SHA))
+
+    def test_dirty_stamp_is_refused(self):
+        self.assertIn("uncommitted", pr.check_build_stamp(f"{STAMP}+{SHA}.dirty", SHA))
+
+    def test_nogit_stamps_are_refused(self):
+        for stamp in (f"{STAMP}+nogit", f"{STAMP}+{SHA}.nogit"):
+            self.assertIn("git could not", pr.check_build_stamp(stamp, SHA), stamp)
+
+    def test_stamp_from_another_commit_is_refused(self):
+        self.assertIn("built at ffffffffffff", pr.check_build_stamp(f"{STAMP}+{'f' * 40}", SHA))
+
+    def test_missing_stamp_is_refused(self):
+        self.assertIn("no single build stamp", pr.check_build_stamp(None, SHA))
+
+
+@unittest.skipUnless(shutil.which("git"), "git is not on PATH")
+class TestRequireBuildCli(unittest.TestCase):
+    def setUp(self):
+        self.head = subprocess.run(
+            ["git", "rev-parse", "HEAD"], cwd=TOOL.parent.parent,
+            capture_output=True, text=True, check=True,
+        ).stdout.strip()
+
+    def _modules(self, td, stamp):
+        src = Path(td) / "Modules"
+        dll = src / "TAOM/bin/Win64_Shipping_Client/TAOM.dll"
+        dll.parent.mkdir(parents=True)
+        dll.write_bytes(_dll_bytes(stamp))
+        return src
+
+    def _gate(self, src, td, rev="HEAD"):
+        return _run("--source", str(src), "--dest", str(Path(td) / "out"), "--modules", "TAOM",
+                    "--dry-run", "--require-build", rev)
+
+    def test_accepts_a_clean_dll_built_at_the_rev(self):
+        with tempfile.TemporaryDirectory() as td:
+            r = self._gate(self._modules(td, f"{STAMP}+{self.head}"), td)
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertIn("build stamp OK", r.stdout)
+
+    def test_refuses_a_dirty_dll(self):
+        with tempfile.TemporaryDirectory() as td:
+            r = self._gate(self._modules(td, f"{STAMP}+{self.head}.dirty"), td)
+            self.assertEqual(r.returncode, 2)
+            self.assertIn("uncommitted", r.stderr)
+
+    def test_refuses_when_the_dll_is_missing(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = Path(td) / "Modules"
+            _write(src, "TAOM/SubModule.xml", 10)
+            r = self._gate(src, td)
+            self.assertEqual(r.returncode, 2)
+            self.assertIn("is missing", r.stderr)
+
+    def test_refuses_an_unresolvable_rev(self):
+        with tempfile.TemporaryDirectory() as td:
+            r = self._gate(self._modules(td, f"{STAMP}+{self.head}"), td, rev="no-such-rev-017")
+            self.assertEqual(r.returncode, 2)
+            self.assertIn("cannot resolve", r.stderr)
 
 
 if __name__ == "__main__":

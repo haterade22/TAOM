@@ -30,8 +30,9 @@ Usage:
   python tools/package_release.py --source "<game>/Modules" --dest D:/taom-release \\
       --modules TAOM TAOM_Map LOTRLOME_Armory TAOM.Dependencies --allow-unknown
   python tools/package_release.py ... --exclude-candidate RACE_TEST --json manifest.json
+  python tools/package_release.py --source "<game>/Modules" --dest D:/taom-release --require-build v2.0.31 --dry-run
 
-Exit codes: 0 ok · 1 nothing to do · 2 bad input / unknown entries / non-empty destination.
+Exit codes: 0 ok · 1 nothing to do · 2 bad input / unknown entries / non-empty destination / failed --require-build.
 """
 from __future__ import annotations
 
@@ -40,6 +41,7 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path, PurePosixPath
@@ -98,6 +100,75 @@ BACKUP_SUFFIX_RE = re.compile(
 SCENE_BACKUP_PARENTS = frozenset({"SceneObj", "SceneEditData"})
 
 CANDIDATE_RULES = ("EM_ASSET_PACKAGES", "RACE_TEST")
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+
+# The two assemblies TAOM compiles. Each carries the build stamp from Directory.Build.props.
+SHIPPED_DLLS = {
+    "TAOM": "bin/Win64_Shipping_Client/TAOM.dll",
+    "TAOM.Dependencies": "bin/Win64_Shipping_Client/TAOM.Dependencies.dll",
+}
+
+# InformationalVersion as the assembly metadata stores it (UTF-8): build.<yyyyMMdd-HHmmss>Z, then
+# '+' ('.' on older builds), then the commit SHA or "nogit", then an optional .dirty or .nogit flag.
+STAMP_RE = re.compile(rb"build\.\d{8}-\d{6}Z[+.](?:[0-9a-f]{40}|nogit)(?:\.(?:dirty|nogit))?")
+STAMP_PARTS_RE = re.compile(r"Z[+.](?P<rev>[0-9a-f]{40}|nogit)(?:\.(?P<flag>dirty|nogit))?$")
+
+
+def read_build_stamp(dll: Path) -> str | None:
+    """The one build stamp in a compiled TAOM assembly; None when there is none or several."""
+    found = {m.group(0).decode("ascii") for m in STAMP_RE.finditer(dll.read_bytes())}
+    return found.pop() if len(found) == 1 else None
+
+
+def check_build_stamp(stamp: str | None, expected_sha: str) -> str | None:
+    """None when the stamp proves a clean build of expected_sha, otherwise why it does not."""
+    if stamp is None:
+        return "no single build stamp in the DLL (a pre-2026-08-01 build, or not a TAOM assembly)"
+    m = STAMP_PARTS_RE.search(stamp)
+    if m is None:
+        return f"unrecognised build stamp '{stamp}'"
+    if m["rev"] == "nogit" or m["flag"] == "nogit":
+        return f"built where git could not report the tree ({stamp})"
+    if m["flag"] == "dirty":
+        return f"built from a working tree with uncommitted changes ({stamp})"
+    if m["rev"] != expected_sha.lower():
+        return f"built at {m['rev'][:12]}, but the release is {expected_sha[:12]} ({stamp})"
+    return None
+
+
+def resolve_commit(rev: str) -> str | None:
+    """The full SHA of the commit `rev` names in this repository, or None."""
+    try:
+        r = subprocess.run(["git", "rev-parse", "--verify", "--quiet", f"{rev}^{{commit}}"],
+                           cwd=REPO_ROOT, capture_output=True, text=True)
+    except OSError:
+        return None
+    sha = r.stdout.strip()
+    return sha if r.returncode == 0 and sha else None
+
+
+def require_build(plans, rev: str) -> list:
+    """Every reason the planned TAOM assemblies are not a clean build of `rev` (empty: all good)."""
+    sha = resolve_commit(rev)
+    if sha is None:
+        return [f"cannot resolve '{rev}' to a commit in {REPO_ROOT}"]
+    problems, checked = [], 0
+    for p in plans:
+        rel = SHIPPED_DLLS.get(p.name)
+        if rel is None:
+            continue
+        dll = p.root / rel
+        if not dll.is_file():
+            problems.append(f"{p.name}: {rel} is missing")
+            continue
+        checked += 1
+        reason = check_build_stamp(read_build_stamp(dll), sha)
+        if reason:
+            problems.append(f"{p.name}: {reason}")
+    if checked == 0 and not problems:
+        problems.append("neither TAOM nor TAOM.Dependencies is in the module set; nothing to verify")
+    return problems
 
 
 @dataclass(frozen=True)
@@ -309,6 +380,9 @@ def main(argv=None) -> int:
                     help="proceed even though unrecognised entries were found (they are still not copied)")
     ap.add_argument("--dry-run", action="store_true", help="report only; writes nothing")
     ap.add_argument("--json", metavar="PATH", help="write the manifest as JSON")
+    ap.add_argument("--require-build", metavar="REV",
+                    help="refuse unless TAOM.dll and TAOM.Dependencies.dll are clean builds of "
+                         "this tag or commit (checked in --dry-run too)")
     args = ap.parse_args(argv)
 
     src = Path(args.source)
@@ -343,6 +417,16 @@ def main(argv=None) -> int:
                 print(f"  {p.name}/{rel}")
             if len(p.unknown) > 20:
                 print(f"  ... and {len(p.unknown) - 20} more in {p.name}")
+
+    if args.require_build:
+        problems = require_build(plans, args.require_build)
+        if problems:
+            print(f"\nERROR: not a clean build of {args.require_build}; refusing to package:",
+                  file=sys.stderr)
+            for msg in problems:
+                print(f"  {msg}", file=sys.stderr)
+            return 2
+        print(f"\nbuild stamp OK: every TAOM assembly is a clean build of {args.require_build}")
 
     if args.json:
         manifest = {
