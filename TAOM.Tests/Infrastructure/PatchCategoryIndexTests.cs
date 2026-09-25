@@ -26,13 +26,20 @@ public class PatchCategoryIndexTests
 {
     internal const string BrokenCategory = "Test_IndexProbe_Broken";
     internal const string HealthyCategory = "Test_IndexProbe_Healthy";
+    private const string MixedCategory = "Test_IndexProbe_Mixed";
     private const string BrokenClassName = "TaomIndexProbe.BrokenAttributeProbe";
     private const string HealthyClassName = "TaomIndexProbe.HealthyProbe";
+    private const string UncategorisedClassName = "TaomIndexProbe.UncategorisedProbe";
+    private const string MixedHealthyClassName = "TaomIndexProbe.MixedHealthyProbe";
+    private const string MixedUnresolvableClassName = "TaomIndexProbe.MixedUnresolvableProbe";
 
     private static readonly Lazy<Assembly> ProbeAssembly = new(EmitProbeAssembly);
 
     private static readonly MethodInfo Target =
         typeof(PatchCategoryIndexProbeTarget).GetMethod(nameof(PatchCategoryIndexProbeTarget.Probe))!;
+
+    private static readonly MethodInfo MixedTarget =
+        typeof(PatchCategoryIndexProbeTarget).GetMethod(nameof(PatchCategoryIndexProbeTarget.MixedProbe))!;
 
     private IModLogger _logger = null!;
     private Harmony _harmony = null!;
@@ -51,7 +58,7 @@ public class PatchCategoryIndexTests
     // another category has an unreadable attribute. If Harmony ever isolates this itself, this
     // fails and PatchCategoryIndex can go.
     [TestMethod]
-    public void RealHarmony_AnUnreadableAttribute_FailsEveryCategoryOfItsAssembly()
+    public void HarmonyPatchCategory_AnUnreadableAttributeInTheAssembly_ThrowsForAHealthyCategory()
     {
         Assert.ThrowsException<TypeLoadException>(
             () => _harmony.PatchCategory(ProbeAssembly.Value, HealthyCategory),
@@ -59,7 +66,7 @@ public class PatchCategoryIndexTests
     }
 
     [TestMethod]
-    public void Build_SkipsOnlyTheClassWhoseAttributesCannotBeRead()
+    public void Build_OneClassWithUnreadableAttributes_SkipsOnlyThatClass()
     {
         var index = PatchCategoryIndex.Build(ProbeAssembly.Value);
 
@@ -96,9 +103,37 @@ public class PatchCategoryIndexTests
         CollectionAssert.DoesNotContain(PostfixOwners(), _harmony.Id);
     }
 
+    // Parity with Harmony.BuildCategoryCache: a [HarmonyPatch] class with no category is neither
+    // indexed nor skipped. Without the null-category guard, Build would throw out of
+    // OnSubModuleLoad (Dictionary.TryGetValue(null)), outside the per-class catch.
+    [TestMethod]
+    public void Build_AClassWithNoCategory_IsNeitherSkippedNorApplied()
+    {
+        var index = PatchCategoryIndex.Build(ProbeAssembly.Value);
+        index.Apply(_harmony, HealthyCategory);
+
+        CollectionAssert.DoesNotContain(
+            index.SkippedClasses.Select(s => s.Key.FullName).ToArray(), UncategorisedClassName);
+        Assert.AreEqual(1, PostfixOwners().Count(owner => owner == _harmony.Id),
+            "only the healthy class patches the probe target; the uncategorised one is never applied");
+    }
+
+    // Parity with Harmony.PatchCategory, as Apply documents: the first class that cannot resolve
+    // its target throws, and the classes before it in assembly order stay patched.
+    [TestMethod]
+    public void Apply_ACategoryWhoseSecondClassCannotResolve_ThrowsAndKeepsTheFirstClassPatched()
+    {
+        var index = PatchCategoryIndex.Build(ProbeAssembly.Value);
+
+        Assert.ThrowsException<HarmonyException>(() => index.Apply(_harmony, MixedCategory));
+        CollectionAssert.Contains(PostfixOwners(MixedTarget), _harmony.Id);
+    }
+
     // Harmony keeps an empty patch record after an unpatch, so ask for owners, not for null.
-    private static string[] PostfixOwners()
-        => Harmony.GetPatchInfo(Target)?.Postfixes.Select(p => p.owner).ToArray() ?? Array.Empty<string>();
+    private static string[] PostfixOwners() => PostfixOwners(Target);
+
+    private static string[] PostfixOwners(MethodInfo target)
+        => Harmony.GetPatchInfo(target)?.Postfixes.Select(p => p.owner).ToArray() ?? Array.Empty<string>();
 
     private static Assembly EmitProbeAssembly()
     {
@@ -116,15 +151,27 @@ public class PatchCategoryIndexTests
             builder.SetCustomAttribute(new CustomAttributeBuilder(
                 typeof(HarmonyPatch).GetConstructor(new[] { typeof(Type), typeof(string) })!,
                 new object[] { typeof(PatchCategoryIndexProbeTarget), nameof(PatchCategoryIndexProbeTarget.Probe) })));
+        EmitPatchClass(module, UncategorisedClassName, category: null, harmonyPatch: builder =>
+            builder.SetCustomAttribute(TargetAttribute(nameof(PatchCategoryIndexProbeTarget.Probe))));
+        // Defined in this order, so the healthy class comes first in the category.
+        EmitPatchClass(module, MixedHealthyClassName, MixedCategory, harmonyPatch: builder =>
+            builder.SetCustomAttribute(TargetAttribute(nameof(PatchCategoryIndexProbeTarget.MixedProbe))));
+        EmitPatchClass(module, MixedUnresolvableClassName, MixedCategory, harmonyPatch: builder =>
+            builder.SetCustomAttribute(TargetAttribute("NoSuchMethod")));
         return assembly;
     }
 
-    private static void EmitPatchClass(ModuleBuilder module, string name, string category, Action<TypeBuilder> harmonyPatch)
+    private static CustomAttributeBuilder TargetAttribute(string method)
+        => new(typeof(HarmonyPatch).GetConstructor(new[] { typeof(Type), typeof(string) })!,
+            new object[] { typeof(PatchCategoryIndexProbeTarget), method });
+
+    private static void EmitPatchClass(ModuleBuilder module, string name, string? category, Action<TypeBuilder> harmonyPatch)
     {
         var type = module.DefineType(name,
             TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.Abstract | TypeAttributes.Sealed);
-        type.SetCustomAttribute(new CustomAttributeBuilder(
-            typeof(HarmonyPatchCategory).GetConstructor(new[] { typeof(string) })!, new object[] { category }));
+        if (category != null)
+            type.SetCustomAttribute(new CustomAttributeBuilder(
+                typeof(HarmonyPatchCategory).GetConstructor(new[] { typeof(string) })!, new object[] { category }));
         harmonyPatch(type);
         var postfix = type.DefineMethod("Postfix", MethodAttributes.Public | MethodAttributes.Static,
             typeof(void), Type.EmptyTypes);
@@ -149,9 +196,12 @@ public class PatchCategoryIndexTests
     }
 }
 
-/// <summary>The healthy probe's patch target. Nothing else patches it.</summary>
+/// <summary>The probe classes' patch targets. Nothing else patches them.</summary>
 public static class PatchCategoryIndexProbeTarget
 {
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int Probe() => 1;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int MixedProbe() => 2;
 }

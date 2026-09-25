@@ -59,6 +59,8 @@ internal sealed class PatchCategoryIndex
     /// <summary>
     /// Patches the category's classes in assembly order. Like Harmony, the first class that fails
     /// throws, and the classes before it stay patched; an unknown category applies nothing.
+    /// A class in SkippedClasses belongs to no category here, so its category applies the rest
+    /// without throwing: that class is reported only through SkippedClasses.
     /// </summary>
     internal void Apply(Harmony harmony, string category)
     {

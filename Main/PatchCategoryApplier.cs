@@ -30,7 +30,11 @@ internal sealed class PatchCategoryApplier
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    /// <summary>Applies the category; on a throw, logs it, records it and returns false.</summary>
+    /// <summary>
+    /// Applies the category; on a throw, logs it, records it and returns false. True does not
+    /// cover a class the index skipped (RecordSkippedClasses reports those), so a category that
+    /// lost a class that way still returns true.
+    /// </summary>
     internal bool TryApply(string category)
     {
         try

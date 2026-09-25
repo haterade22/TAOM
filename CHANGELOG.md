@@ -50,28 +50,42 @@ type the engine no longer has made all 84 categories fail. The new `PatchCategor
 (`GetTypesFromAssembly`, `GetFromType`, `HarmonyMethod.Merge`, `CreateClassProcessor`), skips a
 class whose attributes cannot be read, and applies each category's classes exactly as Harmony
 does. The skipped class is logged under `[PatchApply]` as SKIPPED with its cause and named in the
-startup inquiry; every other category still applies.
+startup inquiry; every other category still applies. Its category applies the classes left and
+reports success, so the character-preview log can say "applied OK" for a category that lost a
+class this way; the SKIPPED line and the inquiry are the report (whether such a category should
+count as failed is open for Mike).
 
 **The failure notice is localized** (maintainer decision on review finding 15): the summary, the
 three phase names and the inquiry title are registered `{=taom_patch_apply_*}` keys in
 `taom_module_strings.xml`, and the inquiry button reuses vanilla's own `{=oHaWR73d}Ok` row
 (`str_ok` in Native's `global_strings.xml`). The category ids in the notice stay literal.
 `PatchCategoryApplier.TakeFailureSummary` now returns the `TextObject` and `SubModule` renders it.
-The five keys are translated into all 12 languages (AI first drafts, placeholders checked).
+The five keys are translated into all 12 languages (AI first drafts, placeholders checked). The
+translator's seeding first put the 60 rows after `</strings>`, where
+`LocalizedTextManager.LoadLanguage` never reads them, and every check passed because each counts
+rows at any depth; `7eae4704` moved them inside, and
+`LanguageDataXmlTests.AllTranslationFiles_StringRowOutsideRootStrings_IsNeverPresent` now fails
+any row the engine would skip. The German phase names now carry their genitive article ("während
+des Starts"), and the French and Japanese sentences no longer read "lors de le démarrage" and
+"起動時中に".
 
 Tests: `PatchCategoryApplierTests` (14) covers the constructor guards, the try and catch paths,
 per-category isolation, the phase summary, real Harmony 2.4.2 through the index and the applier on
 an unresolvable target, a source gate that fails on any direct `.PatchCategory(` call in `Main` and
 pins the `PatchCategoryIndex` wiring in `SubModule`, and source-shape tests that keep the failure report out of
 `OnSubModuleLoad`, pin the Patch37, Patch77 and preview side effects, and pin the localized
-notice. Nine text tests that
-pinned the old call spelling now pin `TryPatchCategory(`. `PatchCategoryIndexTests` (4) emits a
-probe assembly at run time with one class whose `[HarmonyPatch]` names a missing type beside a
-healthy class in another category: through Harmony's own index both categories throw
-`TypeLoadException` (pinned as the premise); through `PatchCategoryIndex` only the broken class is
-skipped and reported, and the healthy one is patched. Full suite at `7912fdd8`: 10252 passed, 2 skipped,
-2 failed (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+notice. Nine text tests that pinned the old call spelling now pin `TryPatchCategory(`.
+`PatchCategoryIndexTests` (6) emits a probe assembly at run time with one class whose
+`[HarmonyPatch]` names a missing type beside a healthy class in another category: through
+Harmony's own index both categories throw `TypeLoadException` (pinned as the premise); through
+`PatchCategoryIndex` only the broken class is skipped and reported, and the healthy one is patched.
+It also pins that an uncategorised patch class is neither skipped nor applied, and that a category
+whose second class cannot resolve throws with its first class still patched. Full suite after the
+second review's follow-ups: 10256 passed, 2 skipped, 2 failed
+(`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
 `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, which fail the same way at the base).
+Second review: `docs/reviews/deep-review-009-guarded-patch-category-apply-decisions-2026-09-24.md`,
+RCA `docs/reviews/rca-guarded-patch-category-apply-decisions-2026-09-24.md`.
 Nothing smoked in game: the live apply path and both notices need a running game. Plan 009.
 
 ## 2026-09-23

@@ -6,6 +6,7 @@ Running scorecard of all reviews. **Reviews 1-99, 2026-04-05 to 2026-09-12.** 93
 
 | # | Date | Feature | Codex Verdict | Claude Verdict | Real Bugs | False Positives | Missed Bugs | Prompt Version |
 |---|------|---------|--------------|----------------|-----------|-----------------|-------------|----------------|
+| 132b | 2026-09-24 | Plan 009 maintainer decisions: class-by-class Harmony category index and the localized patch-failure notice | issues-found (0 P1, 1 P2, 1 P3) | agree (P2 fixed and gated, rated HIGH; P3 confirmed, decision owed to Mike) | 2 | 0 | 5 (the translator's seeding bug behind P2, DE/FR/JP fragment grammar, untested null-category guard, stale line refs, CHANGELOG test snapshot) | adversarial-xhigh |
 | 132 | 2026-09-24 | Plan 009, every Harmony patch category applied through `PatchCategoryApplier` (one drifted binding costs one category) | issues-found (0 P1, 1 P2, 1 P3) | agree (both fixed; P2 rated HIGH) | 2 | 0 | 4 (chat log cleared after the splash, assembly-wide category index, stale lens and lesson greps, Patch43 triage consumers) | adversarial-xhigh |
 | 109 | 2026-09-13 | Creature handles and threads (#592, #595): reference-keyed adapter cache, slot identity, trees on the mission tick, the nine-site audit, two deep-review passes | issues-found (0 P1, 1 P2, 3 P3, 3 observations) | agree (all fixed but one observation) | 1 P2 confirmed (`ForgetAgent` left the layout counters growing: replacements a row deeper, onto the other class's rows; vacancy reclaim per class) + 3 P3 (vanilla `CommonAIComponent.OnTick` raises `OnAgentPanicked` on the async tick, so the tree logic now defers off-thread callbacks; the howdah seat's own rider and `SpatialGrid` held ungated handles; five global listener loops outside the catch) + 2 observations fixed (atomic `GetOrAdd`; one warg attach helper) + the registration swap taken as a precaution. Disputed with evidence: 5 of 9 suspects, including the deletion-order objection that had held the swap back. One observation rejected (buff getters returning live objects). The player's third freeze the same evening (no spider, four wargs) folded into the RCA `rca-warg-clip-on-horse-2026-09-13.md` | 0 | 0 | v6 + 9 Known Suspects, gpt-6-astra at ultra |
 | 110 | 2026-09-13 | Nameplate relation MCM controls, second pass on commit fe266439 (#596): the four sliders composed with the #591 plate widget | issues-found (0 P1, 1 P2, 1 P3) | agree (both fixed) | 1 P2 confirmed (the text curve anchored on vanilla's 0.35 dimmed the name at close range for any opacity 10 to 34; now anchored on the plate's configured resting opacity) + 1 P3 (silent reversion of an invalid TAOM.json value; now one warning per property) + 2 RCA corrections (MCM's slider clamps; MCM raises a save-time event). Deep review before it: data flow found the same P2 independently, performance and compatibility clean | 0 | 0 | v6 + 8 Known Suspects, gpt-6-astra at ultra (explicit -c model/effort) |
@@ -3806,3 +3807,33 @@ Report `docs/reviews/deep-review-009-guarded-patch-category-apply-2026-09-24.md`
 `docs/reviews/rca-guarded-patch-category-apply-2026-09-24.md`. Owed: the GitHub issue, Mike's call
 on the assembly-wide index case, and an in-game smoke that breaks one module-load and one game-init
 target.
+
+## Review 132b: plan 009 maintainer decisions, 7-lens deep review + Codex adversarial (2026-09-24)
+
+Branch `improve/009-guarded-patch-category-apply`, `4c728dac..b6cb6ff5`: `PatchCategoryIndex`
+builds Harmony's category index class by class so one unreadable `[HarmonyPatch]` costs only its
+class, and the patch-failure notice is localized (five keys, 12 languages).
+
+**Codex: 2 findings, both confirmed, 0 false positives.** P2: all 60 translated rows sat after
+`</strings>`, where `LocalizedTextManager.LoadLanguage` never reads them (rated HIGH here: the
+decided change did nothing for any non-English player). `7eae4704` moved them;
+`LanguageDataXmlTests.AllTranslationFiles_StringRowOutsideRootStrings_IsNeverPresent` now gates
+placement (RED on the `b6cb6ff5` blobs). P3: a category that lost a class at index time returns
+success, so the preview log says "applied OK" beside the SKIPPED line; confirmed, documented, and
+the behaviour change left for Mike. Every deep-review lens also found P2; they added the root cause
+in `sync_missing_ids` (mixed `\r\r\n` and LF endings), the DE, FR and JP fragment grammar (fixed),
+an untested null-category guard (test added, mutation-checked), a multi-class parity test, and doc
+drift. Full suite 10256 passed, 2 skipped, 2 known live-Armory failures.
+
+Codex did best at quoting the installed loader loop to prove the rows unreachable and at tying
+every new id to its registration, XML row and cache entry in one table.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | Translated rows outside `<strings>` | Other: data written where the engine never reads | Trusted the seeding; every check counted rows at any depth | Placement gate; lesson in `lessons/localization-ui.md` |
+| 2 | A category that lost a class reports success | Logic error (result semantics) | Parity with Harmony, which has no skipped class | Semantic documented; decision to Mike |
+
+Report `docs/reviews/deep-review-009-guarded-patch-category-apply-decisions-2026-09-24.md`, RCA
+`docs/reviews/rca-guarded-patch-category-apply-decisions-2026-09-24.md`. Owed: Mike's call on P3
+and on the unguarded index build, the #653 body at `/ship`, the translator fix, and a German
+in-game check of the notice.

@@ -15728,7 +15728,7 @@
   "taom_ohw_t3_b_p3_desc": "あなたの武勇はモルドールの暗き広間で謳われる。戦闘名声獲得+14%。",
   "taom_ohw_t3_b_p4": "黒き軍勢",
   "taom_ohw_t3_b_p4_desc": "闇の軍勢は計り知れぬほどに膨張す。部隊規模+6。",
-  "taom_patch_apply_failed": "TAOM: {PHASE}中にパッチグループの適用に失敗しました: {GROUPS}。これらのグループの一部の修正は今回のセッションでは無効です。原因はTAOMのログに記録されています。",
+  "taom_patch_apply_failed": "TAOM: {PHASE}にパッチグループの適用に失敗しました: {GROUPS}。これらのグループの一部の修正は今回のセッションでは無効です。原因はTAOMのログに記録されています。",
   "taom_patch_apply_notice_title": "TAOM",
   "taom_patch_apply_phase_game_init": "ゲーム初期化時",
   "taom_patch_apply_phase_mission_start": "ミッション開始時",
