@@ -1179,6 +1179,11 @@ VP_CASES=(
   "2|git push --force origin bannerlord-1.5.x>/dev/null 2>&1"
   "2|git push -f origin bannerlord-1.4.5>nul"
   "2|git push --force origin bannerlord-1.5.x>&2"
+  # Plan 011 final convergence: an apostrophe in a comment or heredoc line opens a quote that
+  # never closes, gluing the later lines into its segment, so the push is anchored on the first
+  # `push` with a `git` before it, not on the first `push` word.
+  "2|# don't push to the trunk"$'\n'"git -C \"E:/R&D/TAOM\" push --force origin bannerlord-1.5.x"
+  "2|git commit -F - <<'EOF'"$'\n'"Don't push yet"$'\n'"EOF"$'\n'"git -C \"E:/R&D/TAOM\" push --force origin bannerlord-1.5.x"
   # Deliberately fail-safe: a gate cannot tell quoted or heredoc text from a command it runs
   # (bash -c "..." and bash <<EOF both run it), so a message that quotes a trunk force push is
   # refused. Write such a message with git commit -F <file>.
@@ -1191,19 +1196,45 @@ VP_CASES=(
   "0|git push --force-with-lease=bannerlord-1.5.x:abc origin feature"
   "0|echo push"
 )
-# The hook never reads tool_name, so PowerShell repeats one case to keep its path covered; the
-# PowerShell registration itself is checked below and live (plan 011 check B).
+# The table above holds no escape, so PowerShell repeats one case to keep its path covered; the
+# tool-tagged table below covers the one place the hook reads tool_name, and the PowerShell
+# registration itself is checked below and live (plan 011 check B).
+vp_run() {  # $1 tool, $2 command; returns the hook's rc
+    local payload
+    payload=$("$HPY" -c 'import json,sys; print(json.dumps({"tool_name":sys.argv[1],"tool_input":{"command":sys.argv[2]},"hook_event_name":"PreToolUse"}))' "$1" "$2")
+    printf '%s' "$payload" | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$SANDBOX" bash .claude/hooks/validate-push.sh >/dev/null 2>&1
+}
 for tool in Bash PowerShell; do
     for entry in "${VP_CASES[@]}"; do
         [[ "$tool" == PowerShell && "$entry" != "${VP_CASES[0]}" ]] && continue
         want="${entry%%|*}"; cmd="${entry#*|}"; shown="${cmd//$'\n'/\\n}"
-        payload=$("$HPY" -c 'import json,sys; print(json.dumps({"tool_name":sys.argv[1],"tool_input":{"command":sys.argv[2]},"hook_event_name":"PreToolUse"}))' "$tool" "$cmd")
-        printf '%s' "$payload" | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$SANDBOX" bash .claude/hooks/validate-push.sh >/dev/null 2>&1
-        got=$?
+        vp_run "$tool" "$cmd"; got=$?
         [[ "$got" == "$want" ]] && ok "validate-push [$tool] rc=$got for: $shown" \
             || bad "validate-push [$tool] expected rc=$want, got $got for: $shown"
     done
 done
+# The quote-aware split uses each shell's own escape, picked from tool_name (plan 011 final
+# convergence): PowerShell keeps a backslash literal, so "a\" closes its quote and the & in the
+# -C path stays quoted; Bash escapes the quote, so the value runs on to the next ". A hook that
+# used one escape for both tools passed every row above.
+VP_TOOL_CASES=(
+  'PowerShell|2|git -c "user.name=a\" -C "E:/R&D" push --force origin bannerlord-1.5.x'
+  'Bash|2|git -c "user.name=a\" b" -C "E:/R&D" push --force origin bannerlord-1.5.x'
+)
+for entry in "${VP_TOOL_CASES[@]}"; do
+    tool="${entry%%|*}"; rest="${entry#*|}"; want="${rest%%|*}"; cmd="${rest#*|}"
+    vp_run "$tool" "$cmd"; got=$?
+    [[ "$got" == "$want" ]] && ok "validate-push [$tool] rc=$got for: $cmd" \
+        || bad "validate-push [$tool] expected rc=$want, got $got for: $cmd"
+done
+# Every segment is judged under both splits, and a push with no refspec asks git for the current
+# branch: once per segment, 100 such lines took 7.9 s against the 5 s registration, and a killed
+# gate fails open. The branch is now resolved once per run and a repeated segment judged once.
+VP_LINES=""
+for i in $(seq 1 100); do VP_LINES+="git -C /x/r$i push origin"$'\n'; done
+S=$(date +%s%N); vp_run Bash "$VP_LINES"; got=$?; MS=$(( ($(date +%s%N) - S) / 1000000 ))
+[[ "$got" == 0 && $MS -lt 4000 ]] && ok "validate-push judges 100 no-refspec push lines in ${MS}ms" \
+    || bad "validate-push took ${MS}ms (rc=$got) on 100 no-refspec push lines; the limit is 4000ms"
 VP_REG=$("$HPY" - <<'PY'
 import json
 d = json.load(open('.claude/settings.json', encoding='utf-8'))

@@ -51,7 +51,10 @@ orchestrator registered `mark-verification-run.sh` on PostToolUseFailure for Bas
 a command that exits non-zero never raises PostToolUse, so a failed build or test now records a
 verification run too; 7c checks the registration (red against the previous `settings.json`) and 7d
 feeds the hook a failure payload. The hooks catalog is recounted: 29 `settings.json` registrations, 34
-in total.
+in total. Final convergence: an apostrophe in a comment or heredoc line (`# don't push`) glued the next
+line into its segment and hid a trunk force push behind it, so `validate-push.sh` now anchors on the
+first `push` with a `git` before it, 7c gained a row for each shell's quote escape, and the hook asks
+git for the current branch once per run, so 100 push lines no longer outrun the 5 s registration.
 
 ### feat(troll): v2.0.30 - human clips retargeted onto the hill troll's own rest pose
 

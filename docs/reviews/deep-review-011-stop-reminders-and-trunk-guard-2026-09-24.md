@@ -286,3 +286,34 @@ The orchestrator then applied the required settings change (PostToolUseFailure, 
 `Bash|PowerShell`, `mark-verification-run.sh`, timeout 5); the 7c registration check fails against
 the previous `settings.json` and passes against the new one, a 7d row shows a failure payload marks,
 and `bash tools/test_hooks.sh` printed "506 passed, 0 failed".
+
+## Final convergence
+
+A second convergence pass over `c80c4108..18961c1e` reported four defects, each proven against a
+patched copy of the hook. Three are applied; one is kept by decision.
+
+| # | Severity | Outcome | Proof and fix |
+|---|---|---|---|
+| D1 | MEDIUM | Applied | An apostrophe in a comment or heredoc line (`# don't push to the trunk`, `Don't push yet`) opened a quote that never closed, so the quoted split glued the next line into its segment, and `judge_command` anchored on the first `push` word, found no `git` before it and returned; a following `git -C "E:/R&D/TAOM" push --force origin bannerlord-1.5.x` passed (rc 0) under both tools. The jq-only fallback failed the same way (`echo push && git -C "E:/R&D/TAOM" push --force ...`). The hook now anchors on the first `push` token with a `git` token before it. Two 7c rows, rc 0 before the fix; the jq-only case checked by hand with a `jq` shim and no Python (rc 0 before, 2 after), since the suite has no jq-only mode. The hook comment and the catalog row no longer claim that whole lines or the quoted split cannot under-block. |
+| D2 | LOW | Kept | The same unclosed quote refuses a later, unrelated command (`# it's a feature branch`, then an ordinary push and a `git log` naming a trunk). It errs on the safe side, and the proposed fix (end a quote at a newline) would let a quoted value spanning lines cut `git` from `push` (`git -C "E:/R&D` newline `x" push --force ...` went from rc 2 to 0). The hook comment and the catalog row say so. |
+| D3 | LOW | Applied | 7c ran every row but one under Bash only, so a hook using one escape for both tools passed it. A tool-tagged table now holds a PowerShell row (`git -c "user.name=a\" -C "E:/R&D" push ...`) and a Bash row (`git -c "user.name=a\" b" -C "E:/R&D" push ...`); each fails against the matching mutant and passes at HEAD. The stale "The hook never reads tool_name" comment is replaced. |
+| D4 | LOW | Applied | Each segment was judged under both splits, and each push with no refspec spawned `git branch --show-current`, so 100 such lines took 7.9 s against the 5 s registration. The branch is now resolved once per run (and `CUR_BRANCH` is unset first, so the environment cannot preset it), and a segment already judged is skipped. A 7c timing row runs 100 distinct no-refspec push lines under a 4 s limit; HEAD's hook hit the row's 10 s kill (rc 124). |
+
+Parity: the reviewer's `diff_vp.py`, run over all nine corpora (`cases_all.py`, which holds the 49
+7c rows, and the other `cases_*.py`) under both tool names, compared HEAD's hook with the fixed
+one on 596 payloads. The only verdict changes are the two D1 payloads under each tool, rc 0 to 2
+(they appear in three corpora). `cases_cwd.py`, rerun from the trunk checkout, is unchanged.
+
+Moved to plan 027 (PowerShell and parsing gaps), all rc 0 before and after this diff: glob and
+DWIM refspecs (`'refs/heads/*'`, `'+refs/heads/*:refs/heads/*'`, `'refs/heads/bannerlord-*'`,
+`HEAD:heads/bannerlord-1.5.x`); PowerShell braces glued to the command (`if ($true) {git push
+...}`, `ForEach-Object {git ...}`); git named another way (`& 'C:\Program Files\Git\cmd\git.exe'`,
+`GIT push`); an option value taken as the remote (`git push --force -o ci.skip origin` on a trunk);
+Bash backtick substitution; the Bash `$'...'` quote the splitter does not model; the refusal of
+`git push --force origin feature # bannerlord-1.5.x later`; and the unverified question whether an
+interrupted `dotnet test` raises a PostToolUseFailure payload with `"is_interrupt": true` that marks.
+
+Suites after the last code edit: `bash tools/test_hooks.sh` printed "511 passed, 0 failed" (506
+before, five new 7c rows; the timing row took 419 ms); `dotnet test TAOM.Tests
+-p:DisableModuleCopy=true -p:ModuleId=` printed "Failed: 0, Passed: 10629, Skipped: 2, Total:
+10631"; `lint_docs.py --fail-on-drift` rc 0.

@@ -71,8 +71,15 @@ is_protected() {
 # heredoc text from a command that `bash -c` or `bash <<EOF` runs. Alone it under-blocks: a
 # separator inside a quoted value (`git -C "E:/R&D" push --force ...`, `-o "a;b"`) cut git
 # from push. So the command is also split at ; & | outside quotes only (QSEGS), with each
-# shell's own escape, the splitter mark-verification-run.sh uses. With jq and no Python, QSEGS
-# keeps whole lines, which over-block rather than under-block.
+# shell's own escape (picked from tool_name), the splitter mark-verification-run.sh uses. With
+# jq and no Python, QSEGS keeps whole lines. Neither a whole line nor a quoted split is safe on
+# its own: an apostrophe in a comment or heredoc line (`# don't push`) opens a quote that never
+# closes and glues the later lines into one segment, where the first `push` word is not the
+# push. judge_command therefore anchors on the first `push` with a `git` before it (plan 011
+# final convergence). The same glue can also refuse a later, unrelated command (`# it's a
+# feature branch`, then an ordinary push and a `git log` naming a trunk); that over-block stays,
+# since it errs on the safe side and ending a quote at a newline would let a quoted value that
+# spans lines cut git from push.
 COMMAND=${COMMAND//$'\r'/}
 COMMAND=${COMMAND//$'\\\n'/ }
 COMMAND=${COMMAND//$'`\n'/ }
@@ -133,20 +140,20 @@ judge_command() {
   CLEAN=${1//[\"\'()]/ }
   read -r -a TOKENS <<< "$CLEAN"
 
+  # Anchor on the first `push` with an actual `git` token before it, so `npm push` or a stray
+  # word cannot trip, and a `push` word that an unclosed quote glued in front (a comment or
+  # heredoc line such as "don't push") cannot hide the real push after it (plan 011 final
+  # convergence: anchoring on the first `push` word returned early there, and a trunk force
+  # push passed).
   PUSH_IDX=-1
-  for i in "${!TOKENS[@]}"; do
-    if [[ "${TOKENS[$i]}" == "push" && $i -gt 0 ]]; then PUSH_IDX=$i; break; fi
-  done
-  [[ $PUSH_IDX -lt 0 ]] && return 0
-
-  # Require an actual `git` invocation before it, so `npm push` or a stray word cannot trip.
   GIT_SEEN=0
-  for ((j = 0; j < PUSH_IDX; j++)); do
-    case "${TOKENS[$j]}" in
+  for i in "${!TOKENS[@]}"; do
+    case "${TOKENS[$i]}" in
       git | */git | git.exe | */git.exe) GIT_SEEN=1 ;;
+      push) if (( GIT_SEEN )); then PUSH_IDX=$i; break; fi ;;
     esac
   done
-  [[ $GIT_SEEN -eq 0 ]] && return 0
+  [[ $PUSH_IDX -lt 0 ]] && return 0
 
   # Split the push arguments into force flags and positionals. A redirection (2>, >, 2>/dev/null;
   # the & of 2>&1 was split off above) and its target are never refspecs, but a word glued to
@@ -201,7 +208,10 @@ judge_command() {
     ref="${ref##*:}"
     ref="${ref#refs/heads/}"
     if [[ -z "$ref" || "$ref" == "HEAD" || "$ref" == "@" ]]; then
-      ref=$(git branch --show-current 2>/dev/null)
+      # Asked once per run: a spawn per segment (about 28 ms) let 100 such lines outrun the
+      # 5 s registration, and a killed gate fails open (plan 011 final convergence).
+      [[ -n ${CUR_BRANCH+x} ]] || CUR_BRANCH=$(git branch --show-current 2>/dev/null)
+      ref=$CUR_BRANCH
     fi
     if is_protected "$ref"; then
       if [[ "$f" == true ]]; then BLOCK_TARGET="$ref"; return 0; fi
@@ -210,8 +220,14 @@ judge_command() {
   done
 }
 
+# Most segments appear in both splits; a verdict depends only on the segment, so each distinct
+# segment is judged once.
+declare -A JUDGED
+unset CUR_BRANCH
 while IFS= read -r SEG; do
   [[ "$SEG" == *push* ]] || continue
+  [[ -n ${JUDGED["$SEG"]+x} ]] && continue
+  JUDGED["$SEG"]=1
   judge_command "$SEG"
   [[ -n "$BLOCK_TARGET" ]] && break
 done <<< "$COMMAND"$'\n'"$QSEGS"
