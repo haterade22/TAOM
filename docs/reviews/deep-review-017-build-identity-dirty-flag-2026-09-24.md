@@ -288,8 +288,10 @@ fix. Each was re-checked before any change; all three held.
 | D-C | LOW | The `Directory.Build.props` comment left out assume-unchanged paths, which `git status --porcelain` also hides | This change's own finding 6 probe masked the props edit with `git update-index --assume-unchanged` and stamped clean | The comment reads "ignored files, and skip-worktree or assume-unchanged paths, do not" (orchestrator edit, protected file) |
 
 **Walk 1, `Modules/TAOM/` outside `bin/` under the new rule** (read-only, against HEAD's
-`Main/_Module`): 127 files not at HEAD, 115 of them under `RuntimeDataCache/` and left alone, so
-the rule removes these 12:
+`Main/_Module`, paths compared case-insensitively as the rule now says): 127 files not at HEAD,
+115 of them under `RuntimeDataCache/` and left alone, so the rule removes these 12. An exact,
+case-sensitive comparison instead flags 176 paths (61 outside `RuntimeDataCache/`), 49 of them the
+live `GUI/Prefabs/` files the tag spells `GUI/PreFabs/` (final convergence E-1):
 
 ```
 GUI/Prefabs/CareerSystem/AbilityHUD.xml
@@ -324,3 +326,12 @@ TAOM.Dependencies has 0 files outside its keep set of 50 names.
 **Verification:** `python tools/tests/test_package_release.py` ran 57 tests, OK.
 `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` passed 10317, skipped 2,
 failed 0. `python tools/lint_docs.py --fail-on-drift` exited 0.
+
+## Final convergence (after `3c747f4f`), orchestrator-applied
+
+| # | Severity | Defect | Fix |
+|---|---|---|---|
+| E-1 | HIGH | The TAOM prune rule did not say to compare paths case-insensitively; the tag spells `GUI/PreFabs/` and the install `GUI/Prefabs/`, so a literal comparison deletes all 49 live prefabs, and the "removes these 12" walk only held because it lowercased both sides | Both bullets now say to compare case-insensitively and why; Walk 1 states how it compared and what an exact comparison gives; the RCA row is corrected |
+| E-2 | LOW | "mirrors `Win64_Shipping_Client` into `_Server` and `_wEditor`" was true for TAOM only | Both files: `_Server` for both modules, `_wEditor` for TAOM only (`TAOM.Dependencies.csproj` mirrors to `_Server` alone) |
+
+Docs only; `test_package_release.py` 57 OK and `lint_docs --fail-on-drift` exit 0 after the edit. No further reviewer pass: the fix is the reviewer's own wording, applied verbatim.

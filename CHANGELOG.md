@@ -27,7 +27,8 @@ edits looked like a clean build of that commit, and a release could ship one.
   `Directory.Build.props` predates the `.dirty` flag; and reports an unreadable DLL as a refusal.
   The OK line lists every copy it read. Phase 8 and `release-process.md` say the gate proves the
   DLLs only, since deploys never delete stale files from the install, and prune before packaging
-  only what neither the tag nor its build owns: `Modules/TAOM/` against `Main/_Module/` (never
+  only what neither the tag nor its build owns: `Modules/TAOM/` against `Main/_Module/`, compared
+  case-insensitively (the tag spells `GUI/PreFabs/`, the install `GUI/Prefabs/`; never
   `RuntimeDataCache`), nothing in TAOM.Dependencies outside `bin/` (its MCM assets exist in the
   install only), and in `bin/` whatever the tag neither tracks nor builds (today three retired
   BehaviorTree DLLs).

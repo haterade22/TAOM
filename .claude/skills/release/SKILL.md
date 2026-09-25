@@ -124,8 +124,10 @@ Rebuild at the tag before anything ships.
    It proves the DLLs only. Deploys never delete, so the install also holds files from every
    earlier deploy. Before packaging, prune only what neither the tag nor its build owns:
    - **`<game>/Modules/TAOM/` outside `bin/`:** remove what `Main/_Module/` does not hold at the
-     tag (`git ls-tree -r --name-only vX.Y.Z -- Main/_Module`). Leave `RuntimeDataCache*` alone:
-     the packager already excludes it unless `--keep-rdc` asks for it.
+     tag (`git ls-tree -r --name-only vX.Y.Z -- Main/_Module`). Compare paths
+     case-insensitively, as Windows resolves them: the tag spells `GUI/PreFabs/`, the install
+     `GUI/Prefabs/`, and an exact comparison deletes every live prefab. Leave
+     `RuntimeDataCache*` alone: the packager already excludes it unless `--keep-rdc` asks for it.
    - **`<game>/Modules/TAOM.Dependencies/` outside `bin/`:** prune nothing. MCM's UI assets
      (`AssetPackages/`, `EmAssetPackages/`, `GUI/`, `ModuleData/Languages*/`) exist in the install
      only, and no build step recreates them
@@ -138,8 +140,8 @@ Rebuild at the tag before anything ships.
      `TAOM.Dependencies.pdb`, `0Harmony.dll`, `Bannerlord.UIExtenderEx.dll`, `MCMv5.dll` and
      `System.Runtime.CompilerServices.Unsafe.dll` into TAOM.Dependencies. That is each project's
      `bin/Debug/net472/` output, every runtime DLL its packages bring in (the other packages are
-     compile-only or carry none). The build then mirrors `Win64_Shipping_Client` into `_Server` and
-     `_wEditor`. Remove any other file; `.pdb`, `.exp` and `.lib` may stay, since the packager
+     compile-only or carry none). The build then mirrors `Win64_Shipping_Client` into `_Server` for
+     both modules, and into `_wEditor` for TAOM only. Remove any other file; `.pdb`, `.exp` and `.lib` may stay, since the packager
      never ships them. A retired binary such as `BehaviorTreeWrapper.dll` would otherwise ship.
 3. Package: the same command without `--dry-run` (plus `--keep-rdc` or `--allow-unknown` if the dry
    run's report calls for them).
