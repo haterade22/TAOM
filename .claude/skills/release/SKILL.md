@@ -144,7 +144,8 @@ Rebuild at the tag before anything ships.
   A wrong release gets a new version.
 - **Version ≠ build stamp.** `Directory.Build.props` stamps `InformationalVersion` per build
   (`build.yyyyMMdd-HHmmssZ`) and freezes `AssemblyVersion` deliberately. The SDK appends
-  `+<commit SHA>`, and a build of a tree with uncommitted changes under `Main`, `Dependencies`,
-  `Stubs` or `Directory.Build.props` appends `.dirty` after it (`nogit` or `.nogit` when git could
-  not tell). The stamp identifies a build; the tag identifies a release.
+  `+<commit SHA>`, and a build of a tree with uncommitted changes (untracked files included)
+  under `Main`, `Dependencies`, `Stubs`, `Directory.Build.props` or `GameReferences.targets`
+  appends `.dirty` after it (`nogit` or `.nogit` when git could not tell). The stamp identifies a
+  build; the tag identifies a release.
 - GitHub Releases are deliberately **not** part of this flow — tag-only, by decision.

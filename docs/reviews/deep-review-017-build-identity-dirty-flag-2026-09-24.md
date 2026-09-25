@@ -265,3 +265,13 @@ re-checked against the code before any change; all three held.
 **Verification:** `python tools/tests/test_package_release.py` ran 57 tests, OK.
 `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` passed 10317, skipped 2,
 failed 0. `python tools/lint_docs.py --dash-base db1a7166 --summary` exited 0 with no dash findings.
+
+## Orchestrator follow-ups
+
+| Item | What was done | Proof |
+|---|---|---|
+| Action item 1 (findings 6 and 7) | The orchestrator applied the `Directory.Build.props` edit under the bypass Mike granted for plan 017: `--untracked-files=normal`, `GameReferences.targets` in the pathspec, and the two comment lines. `SKILL.md` (Gotchas) and the CHANGELOG now name `GameReferences.targets`; the "Known limitation" bullet is gone | The finding 6 probe, with `status.showUntrackedFiles=no` injected through `GIT_CONFIG_COUNT` (process only, nothing written to git config) and the props edit masked with `git update-index --assume-unchanged` so it could not dirty the stamp itself: an untracked `Main/_probe017_untracked.cs` built `build.20260925-185259Z+d5033e4e897f3a0500ec5808ba495d8217211c42.dirty` (GREEN; RED above was clean). With the file deleted, the same build read `build.20260925-185313Z+d5033e4e897f3a0500ec5808ba495d8217211c42`. Both read from `TAOM.dll` `ProductVersion`. The flag was cleared afterwards and `git config --get status.showUntrackedFiles` exits 1 |
+
+**Verification:** `python tools/tests/test_package_release.py` ran 57 tests, OK.
+`dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` passed 10317, skipped 2,
+failed 0.

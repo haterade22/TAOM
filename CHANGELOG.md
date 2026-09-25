@@ -10,9 +10,10 @@ A build stamp named HEAD's commit whatever the working tree held, so a DLL built
 edits looked like a clean build of that commit, and a release could ship one.
 
 - **Stamp**: a `TaomStampWorkingTreeState` target in `Directory.Build.props` runs
-  `git status --porcelain` over `Main`, `Dependencies`, `Stubs` and the props file and appends
-  `.dirty` to the SHA the SDK writes into `InformationalVersion` (`nogit` or `.nogit` when git
-  cannot tell). About 40 ms per project build.
+  `git status --porcelain --untracked-files=normal` over `Main`, `Dependencies`, `Stubs`, the
+  props file and `GameReferences.targets` and appends `.dirty` to the SHA the SDK writes into
+  `InformationalVersion` (`nogit` or `.nogit` when git cannot tell). An untracked source file
+  counts even under a user's `status.showUntrackedFiles=no`. About 40 ms per project build.
 - **Crash bundles**: `report.txt` prints a `Build:` line in the Identity section, `manifest.txt` a
   `TAOM build:` line, and `report.json` gains `TaomBuild`.
 - **Releases**: `tools/package_release.py --require-build <tag>` refuses a `TAOM.dll` or
@@ -26,9 +27,6 @@ edits looked like a clean build of that commit, and a release could ship one.
   `Directory.Build.props` predates the `.dirty` flag; and reports an unreadable DLL as a refusal.
   The OK line lists every copy it read. Phase 8 and `release-process.md` say the gate proves the
   DLLs only, since deploys never delete stale files from the install.
-- **Known limitation:** the stamp's `git status` still honours a user's
-  `status.showUntrackedFiles=no`, which would hide a new untracked source file. The fix
-  (`--untracked-files=normal`) is in `Directory.Build.props`, which needs Mike's approval to edit.
 - Tests: 4 new C# (`BuildStampReportTests`, `PlainTextCrashReportRendererTests`,
   `CrashBundleWriterTests`), 24 new Python (`test_package_release.py`).
 
