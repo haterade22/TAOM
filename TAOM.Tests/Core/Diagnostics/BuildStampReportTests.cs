@@ -23,8 +23,8 @@ public class BuildStampReportTests
     public void TryParseStamp_RealBuildOutput_WithCommitShaSuffix_Parses()
     {
         // The ACTUAL string emitted by the build, read back off TAOM.dll with reflection.
-        // Bannerlord.BuildResources appends ".{commit-sha}" of its own accord, so the stamp is NOT
-        // at the end of the string. The first version of this parser did TrimEnd('Z') and failed on
+        // The .NET SDK appends the commit SHA ('.' here, because the string then began "+build."),
+        // so the stamp is NOT at the end of the string. The first version of this parser did TrimEnd('Z') and failed on
         // every real assembly while these tests passed — because they asserted the format the code
         // assumed rather than the one the build produces. This case is that format, verbatim.
         const string real = "build.20260802-013132Z.46ce6436e1b538a7734a23713ec818a23afec93d";

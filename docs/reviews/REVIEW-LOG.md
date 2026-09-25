@@ -3803,3 +3803,32 @@ scratch copies. Final: `dotnet test` 10,313 passed, 0 failed; `pytest tools/test
 in-game checklist waits for a deploy. Root cause tables and the not-applied list:
 `docs/reviews/rca-animalia-2026-09-23.md`; seven new lessons (build-tooling-workflow, data-content-cultures,
 adapters-taleworlds-api) and a recurrence note, and one new check each in the Engine and Tooling lenses.
+
+## Review (plan 017, number assigned at merge): build identity, the dirty-tree flag and the release DLL gate, 7-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+`/review-codex` Phase 3 on branch `improve/017-build-identity-dirty-flag` (`a39a9c86..ff84e1b8`,
+#658), verified by the review lead alongside seven deep-review lenses (standards, engine, data
+flow, tooling, efficiency, completeness, design). Codex: **0 P1 / 3 P2 / 1 P3 observation; no
+false positive.** It reviewed through git refs, quoted the SDK targets the stamp depends on, and
+compared the gate's read set with the packager's copy set. Its P2s: the gate read one of the
+four shipped DLL copies (the real patreon package's Dependencies server copy is from a third
+commit), `git status` honours `status.showUntrackedFiles=no`, and a requested module missing from
+`--source` was dropped before the gate. Codex missed the case-sensitive module lookup, the empty
+`--require-build`, pre-flag commits passing as clean, the orphan files an additive install ships,
+trunk's `GameReferences.targets`, the 1.4.5 line, and the doc and standards LOWs; it ran nothing,
+so the argv edge cases stayed invisible. The gate fixes landed with tests first (7 RED, then 57
+Python tests green); the `git status` fix is blocked by `config-protection.sh` on
+`Directory.Build.props` and waits for Mike, recorded as a CHANGELOG known limitation. Full suite
+10317 passed, 2 skipped, 0 failed.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| C1 | Gate reads one of four shipped copies | Logic error | Plan prescribed a fixed path per module; nobody compared read set and copy set | Lesson "A release gate reads what the packager ships" in build-tooling-workflow; regression tests |
+| C2 | Untracked files hidden by user git config | Assumed an API worked a certain way | `--porcelain` read as fixing which paths appear | Lesson "Pin every git option a gate's answer depends on"; fix pending Mike |
+| C3 | Requested module skipped before the gate | Missing null guard | Gate took the post-planning set | Covered by C1's lesson; regression test |
+
+Report `docs/reviews/deep-review-017-build-identity-dirty-flag-2026-09-24.md`; RCA
+`docs/reviews/rca-build-identity-dirty-flag-2026-09-24.md`; three lessons in
+build-tooling-workflow, one correction in testing-qa. Needs Mike: the `Directory.Build.props`
+edit (untracked-files flag and `GameReferences.targets`), the 1.4.5 port, the bare-stamp and
+`TAOM build:` label proposals. Convergence pass owed. Nothing merged or deployed.

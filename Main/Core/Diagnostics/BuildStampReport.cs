@@ -113,8 +113,9 @@ public static class BuildStampReport
         int i = informationalVersion!.IndexOf(StampMarker, StringComparison.Ordinal);
         if (i < 0) return false;
 
-        // Fixed-width slice, NOT a trim. Bannerlord.BuildResources appends its own ".{commit-sha}"
-        // suffix to InformationalVersion, so the real string is "build.20260802-013132Z.46ce6436…".
+        // Fixed-width slice, NOT a trim. The .NET SDK appends the commit SHA to InformationalVersion
+        // ("+{sha}", or ".{sha}" when the string already holds a '+', as the 2026-08-02 form did),
+        // so the real string is "build.20260802-013132Z.46ce6436…", now "build.…Z+{sha}[.dirty]".
         // An earlier version did Substring(marker).TrimEnd('Z'), which left the whole SHA attached
         // and failed to parse every real assembly — while the unit tests passed, because they
         // asserted against the format this code ASSUMED rather than the one the build emits.

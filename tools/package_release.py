@@ -103,21 +103,26 @@ CANDIDATE_RULES = ("EM_ASSET_PACKAGES", "RACE_TEST")
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
-# The two assemblies TAOM compiles. Each carries the build stamp from Directory.Build.props.
-SHIPPED_DLLS = {
-    "TAOM": "bin/Win64_Shipping_Client/TAOM.dll",
-    "TAOM.Dependencies": "bin/Win64_Shipping_Client/TAOM.Dependencies.dll",
-}
+# The two assemblies TAOM compiles, by module (keyed casefolded: "--modules taom" resolves on
+# Windows). Each carries the build stamp from Directory.Build.props. The build writes a copy into
+# every bin/<platform>/ folder (Steam, Game Pass, dedicated server, Modding Kit) and every copy
+# ships, so the gate reads them all; the Win64 client copy must exist.
+SHIPPED_DLLS = {"taom": "TAOM.dll", "taom.dependencies": "TAOM.Dependencies.dll"}
 
 # InformationalVersion as the assembly metadata stores it (UTF-8): build.<yyyyMMdd-HHmmss>Z, then
 # '+' ('.' on older builds), then the commit SHA or "nogit", then an optional .dirty or .nogit flag.
-STAMP_RE = re.compile(rb"build\.\d{8}-\d{6}Z[+.](?:[0-9a-f]{40}|nogit)(?:\.(?:dirty|nogit))?")
-STAMP_PARTS_RE = re.compile(r"Z[+.](?P<rev>[0-9a-f]{40}|nogit)(?:\.(?P<flag>dirty|nogit))?$")
+# The one definition of the format: read_build_stamp finds it, check_build_stamp parses it.
+STAMP_RE = re.compile(
+    r"build\.\d{8}-\d{6}Z[+.](?P<rev>[0-9a-f]{40}|nogit)(?:\.(?P<flag>dirty|nogit))?", re.ASCII)
+
+# The Directory.Build.props target that writes the .dirty flag. A commit without it stamps a bare
+# SHA whatever the tree held, so a clean-looking stamp from such a commit proves nothing.
+DIRTY_FLAG_TARGET = "TaomStampWorkingTreeState"
 
 
 def read_build_stamp(dll: Path) -> str | None:
     """The one build stamp in a compiled TAOM assembly; None when there is none or several."""
-    found = {m.group(0).decode("ascii") for m in STAMP_RE.finditer(dll.read_bytes())}
+    found = {m.group(0) for m in STAMP_RE.finditer(dll.read_bytes().decode("latin-1"))}
     return found.pop() if len(found) == 1 else None
 
 
@@ -125,7 +130,7 @@ def check_build_stamp(stamp: str | None, expected_sha: str) -> str | None:
     """None when the stamp proves a clean build of expected_sha, otherwise why it does not."""
     if stamp is None:
         return "no single build stamp in the DLL (a pre-2026-08-01 build, or not a TAOM assembly)"
-    m = STAMP_PARTS_RE.search(stamp)
+    m = STAMP_RE.fullmatch(stamp)
     if m is None:
         return f"unrecognised build stamp '{stamp}'"
     if m["rev"] == "nogit" or m["flag"] == "nogit":
@@ -137,38 +142,63 @@ def check_build_stamp(stamp: str | None, expected_sha: str) -> str | None:
     return None
 
 
-def resolve_commit(rev: str) -> str | None:
-    """The full SHA of the commit `rev` names in this repository, or None."""
+def _git(*args: str):
     try:
-        r = subprocess.run(["git", "rev-parse", "--verify", "--quiet", f"{rev}^{{commit}}"],
-                           cwd=REPO_ROOT, capture_output=True, text=True)
+        return subprocess.run(["git", *args], cwd=REPO_ROOT, capture_output=True, text=True)
     except OSError:
         return None
-    sha = r.stdout.strip()
-    return sha if r.returncode == 0 and sha else None
 
 
-def require_build(plans, rev: str) -> list:
-    """Every reason the planned TAOM assemblies are not a clean build of `rev` (empty: all good)."""
+def resolve_commit(rev: str) -> str | None:
+    """The full SHA of the commit `rev` names in this repository, or None."""
+    r = _git("rev-parse", "--verify", "--quiet", f"{rev}^{{commit}}")
+    sha = r.stdout.strip() if r else ""
+    return sha if r and r.returncode == 0 and sha else None
+
+
+def stamps_dirty_trees(sha: str) -> bool:
+    """True when the commit's Directory.Build.props carries the .dirty-flag target."""
+    r = _git("show", f"{sha}:Directory.Build.props")
+    return bool(r) and r.returncode == 0 and DIRTY_FLAG_TARGET in r.stdout
+
+
+def require_build(plans, rev: str, requested=()) -> tuple:
+    """(problems, checked): every reason the planned TAOM assemblies are not a clean build of
+    `rev` (empty: all good), and the module-relative path of every DLL copy read."""
     sha = resolve_commit(rev)
     if sha is None:
-        return [f"cannot resolve '{rev}' to a commit in {REPO_ROOT}"]
-    problems, checked = [], 0
+        return [f"cannot resolve '{rev}' to a commit in {REPO_ROOT}"], []
+    if not stamps_dirty_trees(sha):
+        return [f"{sha[:12]} predates the {DIRTY_FLAG_TARGET} target, so a DLL built there "
+                "cannot prove its tree was clean"], []
+    problems, checked = [], []
+    planned = {p.name.casefold() for p in plans}
+    for name in requested:
+        if name.casefold() in SHIPPED_DLLS and name.casefold() not in planned:
+            problems.append(f"{name}: requested but not present in the source")
     for p in plans:
-        rel = SHIPPED_DLLS.get(p.name)
-        if rel is None:
+        dll_name = SHIPPED_DLLS.get(p.name.casefold())
+        if dll_name is None:
             continue
-        dll = p.root / rel
-        if not dll.is_file():
-            problems.append(f"{p.name}: {rel} is missing")
-            continue
-        checked += 1
-        reason = check_build_stamp(read_build_stamp(dll), sha)
-        if reason:
-            problems.append(f"{p.name}: {reason}")
-    if checked == 0 and not problems:
+        copies = [rel for rel, _size in p._copy_list
+                  if rel.casefold().startswith("bin/")
+                  and PurePosixPath(rel).name.casefold() == dll_name.casefold()]
+        client = f"bin/Win64_Shipping_Client/{dll_name}"
+        if client.casefold() not in {rel.casefold() for rel in copies}:
+            problems.append(f"{p.name}: {client} is missing")
+        for rel in copies:
+            checked.append(f"{p.name}/{rel}")
+            try:
+                stamp = read_build_stamp(p.root / rel)
+            except OSError as e:
+                problems.append(f"{p.name}/{rel}: cannot read ({e})")
+                continue
+            reason = check_build_stamp(stamp, sha)
+            if reason:
+                problems.append(f"{p.name}/{rel}: {reason}")
+    if not checked and not problems:
         problems.append("neither TAOM nor TAOM.Dependencies is in the module set; nothing to verify")
-    return problems
+    return problems, checked
 
 
 @dataclass(frozen=True)
@@ -418,15 +448,18 @@ def main(argv=None) -> int:
             if len(p.unknown) > 20:
                 print(f"  ... and {len(p.unknown) - 20} more in {p.name}")
 
-    if args.require_build:
-        problems = require_build(plans, args.require_build)
+    if args.require_build is not None:
+        problems, checked = require_build(plans, args.require_build, names)
         if problems:
             print(f"\nERROR: not a clean build of {args.require_build}; refusing to package:",
                   file=sys.stderr)
             for msg in problems:
                 print(f"  {msg}", file=sys.stderr)
             return 2
-        print(f"\nbuild stamp OK: every TAOM assembly is a clean build of {args.require_build}")
+        print(f"\nbuild stamp OK: {len(checked)} TAOM assembly copies are clean builds of "
+              f"{args.require_build}:")
+        for rel in checked:
+            print(f"  {rel}")
 
     if args.json:
         manifest = {

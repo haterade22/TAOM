@@ -9,8 +9,9 @@ The version a player sees comes from one place: `<Version value="v2.0.18" />` in
 [`Main/_Module/SubModule.xml`](../../Main/_Module/SubModule.xml). At runtime
 [`IdentityCollector`](../../Main/Features/CrashReport/Collectors/IdentityCollector.cs) reads it via
 `ModuleHelper.GetModuleInfo("TAOM")?.Version` and stamps it into every crash bundle as
-`TaomVersion`. When a player reports a CTD, that string is the only link between their report and
-our source.
+`TaomVersion`. When a player reports a CTD, that string is the link between their report and our
+source (bundles written since plan 017 also carry the build stamp, which names the commit; see
+"Resolving a crash report to a commit" below).
 
 Until 2026-08-08 that link went nowhere. The repo had two tags, neither a release
 (`crafting-tool-v1.0`, `archive/master-pre-1.4.5-promotion`), and `git describe` read
@@ -59,14 +60,16 @@ bump one by hand.
 Assembly identity is separate and deliberately static: `Directory.Build.props` freezes
 `AssemblyVersion` (changing it alters binding identity for no benefit) and stamps
 `InformationalVersion` as `build.yyyyMMdd-HHmmssZ` per build, which both modules log at startup so a
-mismatched pair is one line in the log. The .NET SDK appends `+<commit SHA>` to that stamp, and a build of a tree with uncommitted changes to its inputs appends `.dirty` after the SHA (`nogit` or `.nogit` when git could not tell). That stamp identifies a *build*; the tag identifies a
+mismatched pair is one line in the log. The .NET SDK appends `+<commit SHA>` to that stamp, and a
+build of a tree with uncommitted changes to its inputs appends `.dirty` after the SHA (`nogit` or
+`.nogit` when git could not tell). That stamp identifies a *build*; the tag identifies a
 *release*. Both are needed.
 
 ## Cutting a release
 
 Use `/release`. It runs the sequence below and fails closed on the #371 pairing check.
 
-1. Tree clean (`git status --porcelain` empty; if another session's edits are present, stop, or cut the release from a clean worktree of the release branch, because `build.ps1` compiles and deploys every file in the tree, committed or not),
+1. Tree clean (`git status --porcelain` empty; if another session's edits are present, stop, because `build.ps1` compiles and deploys every file in the tree, committed or not; git refuses a second worktree on a branch that is already checked out, so only the Phase 8 build moves to a detached worktree of the tag),
    on the release branch (`bannerlord-1.5.x` since v2.0.29; `bannerlord-1.4.5` for a 1.4.8 build), current version
    already tagged.
 2. `./build.ps1 -RunTests` green — no release on an unrun build.
@@ -82,6 +85,11 @@ Use `/release`. It runs the sequence below and fails closed on the #371 pairing 
    `git log --grep 'vX.Y.Z - '` lists the commits a build reporting that `TaomVersion` can contain.
 7. `git tag -a vX.Y.Z -m "…"` then `git push origin <release branch> vX.Y.Z`.
 8. Build at the tag and gate the DLLs: `python tools/package_release.py --source "<game>/Modules" --dest <out> --require-build vX.Y.Z --dry-run` must print `build stamp OK`, then package without `--dry-run` (the skill's Phase 8).
+   The gate reads every `bin/<platform>/` copy of `TAOM.dll` and `TAOM.Dependencies.dll` and
+   refuses a tag whose `Directory.Build.props` predates the `.dirty` flag (the 1.4.5 line until it
+   is ported). It proves the DLLs only: deploys never delete, so the install also holds files from
+   every earlier deploy. Before packaging, compare the install with
+   `git ls-tree -r --name-only vX.Y.Z -- Main/_Module` and remove what the tag does not hold.
 
 **The Armory ships in the same release when the TAOM build needs a file it did not have.** Players get
 `LOTRLOME_Armory` only from the editor package Mike builds into `E:\LOTRAOM_Releases\<channel>\Modules\`. Since #627

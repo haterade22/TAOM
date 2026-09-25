@@ -4,7 +4,7 @@
 
 ## 2026-09-24
 
-### feat(build): v2.0.30 - dirty-tree flag in the build stamp, build field in crash bundles
+### feat(build): v2.0.30 - dirty-tree flag in the build stamp, build field in crash bundles (plan 017, #658)
 
 A build stamp named HEAD's commit whatever the working tree held, so a DLL built from uncommitted
 edits looked like a clean build of that commit, and a release could ship one.
@@ -19,8 +19,18 @@ edits looked like a clean build of that commit, and a release could ship one.
   `TAOM.Dependencies.dll` that is dirty, git-less or built at another commit; `/release` gains
   Phase 8 (rebuild at the tag, then gate and package), and `release-process.md` no longer allows
   releasing from a tree that holds another session's edits.
+- **Review follow-ups** (deep review and Codex): the gate reads every `bin/<platform>/` copy of
+  both DLLs, not only the Win64 one (the patreon package's server copy of `TAOM.Dependencies.dll`
+  is from another commit); matches module names case-insensitively; refuses an empty
+  `--require-build`, a requested module missing from `--source`, and a tag whose
+  `Directory.Build.props` predates the `.dirty` flag; and reports an unreadable DLL as a refusal.
+  The OK line lists every copy it read. Phase 8 and `release-process.md` say the gate proves the
+  DLLs only, since deploys never delete stale files from the install.
+- **Known limitation:** the stamp's `git status` still honours a user's
+  `status.showUntrackedFiles=no`, which would hide a new untracked source file. The fix
+  (`--untracked-files=normal`) is in `Directory.Build.props`, which needs Mike's approval to edit.
 - Tests: 4 new C# (`BuildStampReportTests`, `PlainTextCrashReportRendererTests`,
-  `CrashBundleWriterTests`), 13 new Python (`test_package_release.py`).
+  `CrashBundleWriterTests`), 24 new Python (`test_package_release.py`).
 
 ## 2026-09-23
 

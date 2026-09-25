@@ -1,6 +1,6 @@
 ---
 name: release
-description: "Cut a TAOM module release: bump the version fields, write the release note, commit, tag, and push. Enforces the #371 Dependencies pairing."
+description: "Use when cutting a player release: version bump, release note, commit, tag and push, then a rebuild at the tag and the packaged-DLL stamp gate. Enforces #371 pairing."
 argument-hint: [version, e.g. 2.0.19]
 ---
 
@@ -117,8 +117,13 @@ Rebuild at the tag before anything ships.
    `./build.ps1` there, then `git worktree remove ../taom-release-vX.Y.Z`). `build.ps1` compiles and
    deploys every file in the tree, committed or not.
 2. Gate the DLLs: `python tools/package_release.py --source "<game>/Modules" --dest <out> --require-build vX.Y.Z --dry-run`
-   must print `build stamp OK` and exit 0. It refuses a `TAOM.dll` or `TAOM.Dependencies.dll` whose
-   stamp says `.dirty` or `nogit`, or names a commit other than the tag's.
+   must print `build stamp OK` and exit 0. It reads every `bin/<platform>/` copy of `TAOM.dll` and
+   `TAOM.Dependencies.dll` and refuses one whose stamp says `.dirty` or `nogit`, or names a commit
+   other than the tag's; a requested module missing from `--source`; and a tag whose
+   `Directory.Build.props` predates the `.dirty` flag (the 1.4.5 line until it is ported).
+   It proves the DLLs only. Deploys never delete, so the install also holds files from every
+   earlier deploy: compare it with `git ls-tree -r --name-only vX.Y.Z -- Main/_Module` and remove
+   what the tag does not hold before packaging.
 3. Package: the same command without `--dry-run` (plus `--keep-rdc` or `--allow-unknown` if the dry
    run's report calls for them).
 4. If the player package is assembled somewhere else (the editor package in

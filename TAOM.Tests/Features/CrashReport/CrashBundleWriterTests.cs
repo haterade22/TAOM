@@ -63,7 +63,7 @@ public class CrashBundleWriterTests
     }
 
     [TestMethod]
-    public void BuildManifest_CarriesTheTaomBuildStamp()
+    public void BuildManifest_IdentityWithBuildStamp_PrintsTaomBuildLine()
     {
         var manifest = CrashBundleWriter.BuildManifest(MakeContext(null, EmptyLogs()), "report", "{}");
 

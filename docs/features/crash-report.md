@@ -300,6 +300,8 @@ Restart the game. Patch37 won't apply; the other mod's Finalizers take over.
 
 ## Changelog
 
+- 2026-09-24: **Added the TAOM build stamp to the Identity section** (plan 017, #658). `report.txt` prints a `Build:` line, `manifest.txt` a `TAOM build:` line and `report.json` gains `TaomBuild`: the assembly's `InformationalVersion`, which names the commit and carries `.dirty` or `nogit` when the build could not prove a clean tree. `TaomVersion` alone is shared by every commit since the last version bump.
+
 - 2026-09-01: **Added the System Memory section + the header memory verdict** (#385 follow-up). The bundle carried no commit or headroom figure, which is the exact number #385 was diagnosed by. Reuses `MemorySampleReader` and delegates the threshold to `MemoryPressureSampler.IsLowHeadroom` rather than copying its constants; the snapshot is a nullable sibling record so a failed read renders `(unavailable)` instead of zeros.
 
 - 2026-06-15 — Deduplicated crash bundle ZIPs: new session-scoped `CrashBundleThrottle` (dedup + ≤25/session cap + 30s cooldown) at the `HandleException` chokepoint so a per-tick recurring crash produces exactly one zip instead of hundreds; 10 throttle tests added.
