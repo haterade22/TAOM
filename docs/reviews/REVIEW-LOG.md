@@ -4699,3 +4699,8 @@ Full suite 10,629 passed, 2 skipped, 0 failed.
 Report `docs/reviews/deep-review-021-architecture-rule-amendments-2026-09-24.md`; RCA
 `docs/reviews/rca-architecture-rule-amendments-2026-09-24.md`. ADR edits O3, O5 and O6 are owed by
 the orchestrator; O1 and O2 and the GitHub issue need Mike. Nothing merged or deployed.
+Update 2026-09-25: the orchestrator applied O3, O5 and O6 (`b22edd47`); Mike decided O1 (decision
+55, applied to ADR-007 and the Standards lens) and O2 (decision 56, new plan 026 moves the logic);
+O4 stays with Mike (it rewords decision 49). A convergence pass on the orchestrator commits found
+three LOW defects (ADR-008's CI grep, a CHANGELOG file list, this entry), fixed in the same commit
+as decisions 55 and 56; see the report's "Orchestrator follow-ups".

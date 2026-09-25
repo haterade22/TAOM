@@ -252,11 +252,10 @@ Hook runs: `./build.ps1 -RunTests -MinCoverage 80`
   run: dotnet test --no-build --verbosity normal
 - name: Verify Coverage
   run: dotnet test /p:CollectCoverage=true /p:Threshold=80
-- name: Check for Static Calls
-  run: |
-    # Fail if services call CampaignTime.Now directly
-    git grep -n "CampaignTime\\.Now" Main/Features/*/Services/ && exit 1 || exit 0
 ```
+
+A text search for `CampaignTime.Now` cannot tell a violation from a boundary seam (the Rule 1
+exception), so static calls in services are a review check, not a CI grep.
 
 ## Related ADRs
 - **ADR-007**: Adapter Pattern for Sealed Classes - Services use adapters, not sealed types

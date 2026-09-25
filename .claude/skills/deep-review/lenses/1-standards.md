@@ -5,7 +5,7 @@ Review these files for TAOM project standards compliance. Read each file and che
 FILES: the list in your spawn prompt.
 
 CHECK ALL OF THESE:
-1. **Adapter Pattern (ADR-007):** Services NEVER reference TaleWorlds types directly (Hero, Clan, Kingdom, etc.). They use IXxxAdapter interfaces. Flag ANY direct TaleWorlds type usage in service classes. Two exceptions, both under ADR-007 "Exceptions": the value types in "Value Types Don't Need Adapters" (`Vec2`, `TextObject`, `ExplainedNumber`), and a `protected virtual` member of the service that meets the four conditions in "Protected-Virtual Boundary Seams" (a test subclass overrides it). Flag a seam that breaks a condition, and any other TaleWorlds use outside a seam.
+1. **Adapter Pattern (ADR-007):** Services NEVER reference TaleWorlds types directly (Hero, Clan, Kingdom, etc.). They use IXxxAdapter interfaces. Flag ANY direct TaleWorlds type usage in service classes. Two exceptions, both under ADR-007 "Exceptions": the value types in "Value Types Don't Need Adapters" (`Vec2`, `TextObject`, `ExplainedNumber`), and a `protected virtual` member of the service that meets the four conditions in "Protected-Virtual Boundary Seams" (a test subclass overrides it). Flag a seam that breaks a condition, and any other TaleWorlds use outside a seam or a private helper only seams call (part of the seam body, decision 55).
 2. **No #region (ADR-003):** Zero `#region` directives anywhere.
 3. **No [Obsolete] (ADR-004):** Zero `[Obsolete]` attributes.
 4. **No #if DEBUG (ADR-005):** Zero preprocessor directives except in IoC.cs.

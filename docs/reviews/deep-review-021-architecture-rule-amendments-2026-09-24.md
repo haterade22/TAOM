@@ -119,10 +119,14 @@ Complete ("END OF CODEX REVIEW" present). See CODEX REVIEW below.
 
 ## ACTION ITEMS
 
-1. Orchestrator: apply O3, O5 and O6 (one-line ADR contradictions) under the ADR bypass.
-2. Mike: decide O1 (private helpers in the seam body) and O2 (known-debt note or refactor).
-3. Mike: consent to a GitHub issue for plan 021, or waive it.
-4. Orchestrator: commit or drop the untracked Codex prompt file.
+1. Orchestrator: apply O3, O5 and O6 (one-line ADR contradictions) under the ADR bypass. DONE
+   `b22edd47` (2026-09-25).
+2. Mike: decide O1 (private helpers in the seam body) and O2 (known-debt note or refactor). DONE:
+   decision 55 (O1, applied) and decision 56 (O2, refactor in plan 026). O4 went to Mike as well,
+   because it rewords decision 49; still open.
+3. Mike: consent to a GitHub issue for plan 021, or waive it. Covered by Mike's standing request to
+   file an issue for every sprint plan; the orchestrator files it at merge.
+4. Orchestrator: commit or drop the untracked Codex prompt file. DONE `16e45bf8`.
 
 ## IMPROVEMENTS (Step 4)
 
@@ -169,6 +173,10 @@ needs consent):
 VERDICT: NEEDS FIXES. Every finding in an unprotected file is fixed and the full suite is green;
 three one-line ADR contradictions (O3, O5, O6) remain for the orchestrator, and O1 and O2 need
 Mike's wording.
+
+Update 2026-09-25 (orchestrator): O3, O5 and O6 are applied, O1 and O2 are decided and handled (see
+"Orchestrator follow-ups" at the end); the NEEDS FIXES items are resolved, subject to the final
+convergence pass recorded there.
 
 ## Verification run for this report
 
@@ -253,3 +261,30 @@ CONFIRMED. No false positives.
 
 No test pins this text; all four fixes are documentation, so there was no failing test to write
 first.
+
+## Orchestrator follow-ups (2026-09-25)
+
+The ADRs are protected, so their edits are the orchestrator's, under the bypass Mike granted for
+plan 021.
+
+| Commit | What |
+|---|---|
+| `b22edd47` | O3, O5 and O6 applied as the "ADR changes for the orchestrator" table gives them. O4 not applied: it rewords condition 1 as Mike chose it in decision 49, so it is his call |
+| `9dcf1a4d` | CHANGELOG entry rewrapped; the approval behind each ADR commit stated precisely (open item 1 of the Convergence section) |
+| `16e45bf8` | The Codex prompt file committed (ACTION ITEM 4) |
+| last commit | Decisions 55 and 56 plus the three defects of the convergence pass below |
+
+**Mike's decisions.** Decision 55 (O1): a private helper that only seams call is part of the seam
+body; one sentence in ADR-007 after condition 4, mirrored in the Standards lens check 1. Decision 56
+(O2): refactor the four seams that carry decision logic; that is new plan 026
+(`improve/026-seam-decision-logic`), and ADR-007's "Why" now names the four seams and the plan, and
+says "test subclasses" (RefugeServiceTests has two) instead of "one subclass".
+
+**Convergence pass on `e809f258..16e45bf8`** (one deep-reviewer): CONVERGENCE: DEFECTS 3, all LOW,
+all confirmed and fixed in the last commit.
+
+| # | Defect | Fix |
+|---|---|---|
+| C-D1 | O5 left ADR-008's recommended CI step grepping `CampaignTime.Now` in services with no seam exemption, contradicting the edited checklist line; no workflow runs it | Step removed; one sentence says static calls in services are a review check, because a grep cannot tell a seam from a violation |
+| C-D2 | CHANGELOG listed `csharp-architecture.md` among the files that made the hook interface conditional; it changed only interface and seam rows (from the plan's CHANGELOG template) | Moved into the interface sentence |
+| C-D3 | This report's ACTION ITEMS and VERDICT, and the REVIEW-LOG entry, still showed O3, O5 and O6 as owed and O4 with the orchestrator | ACTION ITEMS and VERDICT annotated, REVIEW-LOG entry updated, this section added |
