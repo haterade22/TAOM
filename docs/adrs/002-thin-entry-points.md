@@ -311,7 +311,7 @@ When refactoring existing code:
 1. Identify sealed game types in service signatures
 2. Create adapter interfaces for those types (or use existing)
 3. Implement adapters if needed (check `/Main/Adapters/` first)
-4. Create service interface with adapter parameters
+4. Give the service adapter parameters, behind an `IServiceName` interface only when a test fakes the service or a second implementation exists (Service Design Guideline 2)
 5. Extract logic to service implementation
 6. Register service and adapters in IoC
 7. Update entry point to use `IAdapterFactory` and delegate
