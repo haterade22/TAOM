@@ -519,6 +519,14 @@ agents independently falsified the same one.
   `MemberReference` metadata scan, not a text grep) rather than reasoning from where you found the
   method. If a comment describes a guard, open the call site and confirm the guard exists.
 - **Source:** docs/reviews/rca-stale-character-repair-2026-09-06.md findings 3-5.
+- **Repeat (plan 012, 2026-09-24):** "the engine calls `DisableGlobalLoadingWindow` on every frame of
+  the main menu, the party screen and character creation" shipped in a patch comment, a test
+  docstring, the feature doc and the CHANGELOG. The list came from the log's top callers, not a
+  caller census; the installed DLLs add at least the inventory, clan, kingdom, quests, character,
+  crafting, barber, face-generator and banner-editor ticks, and the review's own "full" list still
+  missed the barber and face generator (convergence pass). A plan's own prose is a claim too: when a plan quotes a call frequency
+  for the builder to copy, the census belongs in the plan's evidence, or the prose says "several
+  screens". Source: `docs/reviews/rca-loading-window-trace-per-frame-2026-09-24.md` finding 2.
 
 ### Campaign-event listener dispatch is LIFO: the LAST behaviour registered runs FIRST
 `MbEvent<T>.AddNonSerializedListener` (installed v1.4.8, :24-30) HEAD-INSERTS each listener into a singly-linked list, and `Invoke` :32-35 walks from the head. TAOM adds its campaign behaviours in `SubModule.OnGameStart`, deliberately after SandBox has added its own, so **every TAOM `CampaignEvents` handler runs BEFORE the vanilla handler for the same event.** Any TAOM handler that mutates shared engine state on a campaign event is therefore mutating it out from under vanilla's handler on that same dispatch. The intuition that "we load after them, so we run after them" is exactly backwards.
@@ -599,3 +607,19 @@ Patch91 first bracketed `Mission.OnTick`, the managed tick TAOM knows. Its calle
 - **Why missed:** the reporter was chosen for where its text lands (the player's log in the sessions that were read), not for which thread calls it; the logger slot's value depends on behavior order, which no test pins.
 - **Prevent:** any callback that can run off the main thread reports through `IModLogger` (`FileLogger` takes a lock) at WARNING, wrapped so a reporting failure can never throw into an engine callback. Never pass an on-screen or UI-backed logger as a report delegate.
 - **Source:** `docs/reviews/rca-offthread-agent-removed-2026-09-22.md` finding 7, #634.
+
+### When a postfix sees the same state after a real call and a no-op, capture the pre-call value in a Prefix through `__state`
+`LoadingWindow.DisableGlobalLoadingWindow()` sets `IsLoadingWindowActive = false` whenever a
+manager exists, whether or not the window was up, and the engine calls it every frame from most
+full-screen menus. A postfix alone therefore sees `false` after both a real lower and a no-op, and
+the v2.0.29 trace wrote one stack walk and one flushed line per rendered frame (84 MB in 35
+minutes, 1.16 GB in three hours on the main menu).
+- **Why missed:** the patch was written for "a handful" of transitions and assumed the target was
+  called only on transitions; nobody enumerated its callers or read that the clear sits outside
+  the `IsLoadingWindowActive` branch.
+- **Prevent:** before logging from a postfix on an engine setter-like method, read whether the
+  method writes its state unconditionally and list its per-frame callers. If it does, capture the
+  pre-call value with `Prefix(out T __state)` and decide in the Postfix from (before, after). Keep
+  the decision in a pure gate so the unreachable cells (a null manager, a skipped original) are
+  unit-testable, and keep the trace call directly in the Postfix when a tracer skips frames.
+- **Source:** plan 012, `docs/reviews/rca-loading-window-trace-per-frame-2026-09-24.md`, `LoadingWindowDisablePatchTests`, `LoadingWindowTraceGateTests`.

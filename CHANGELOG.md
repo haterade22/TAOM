@@ -153,6 +153,34 @@ Sources: both release branches since 12 Sep (156 commits, all at origin), the CH
 folders and the patreon release folder (v2.0.29). The two existing release notes for v2.0.29 and
 v2.0.30 were read first and nothing here contradicts them. Not fixed here: #619 and #620 are still
 open on GitHub although their fixes are in v2.0.30's CHANGELOG entries.
+### perf(map-load): v2.0.30 - log a loading-window lower only when it drops
+
+The map-load diagnostics no longer write a log line on every frame of the main menu and several
+campaign screens (party, inventory, clan, kingdom, quests, character and crafting among them), or
+of scene screens such as character creation, the barber, the face generator and the banner editor.
+The engine calls the loading-window lower on each of those frames
+even when the window is already down, and TAOM traced every call with a stack walk and a flushed
+write (84 MB in a 35-minute session, 1.16 GB with the main menu left open for three hours). A lower
+is now traced only when the window was actually up: `LoadingWindow_Disable_Patch` captures
+`IsLoadingWindowActive` in a Prefix through `__state`, and the Postfix asks
+`LoadingWindowTraceGate.IsRealLower` before calling `MapLoadTracer.TraceWithCallers`. Raises are
+traced as before. Plan 012.
+
+Nine new tests in `TAOM.Tests/Features/MapLoadDiagnostics/`. Full suite in the plan worktree:
+10244 passed, 2 skipped, 2 failed (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, which fail the same way without this
+change). Not smoked in game: the owed check is a minute on the main menu and the party screen, then
+a campaign load, with a single-digit `LOADING-WINDOW lowered` count in the new log.
+
+Reviewed: `/deep-review` (standards, engine, efficiency, completeness, data flow and design lenses)
+and a Codex gpt-6-astra ultra pass. No HIGH or MED code defect; the one MED is a process gap, since
+no GitHub issue is filed yet (Mike's call). The follow-ups add a test that runs the real Prefix (a
+Prefix hard-coded to `true` now fails it) and tighten the lowered trace test so a helper between the
+Postfix and `TraceWithCallers`, or a fallback caller chain, fails it; both mutants were run. The
+screen list, the class summary, the gate's "unconditionally", the feature-map row and a registry
+identifier were corrected, and the feature doc now says raise lines are traced per call. Report
+`docs/reviews/deep-review-012-loading-window-trace-per-frame-2026-09-24.md`, RCA
+`docs/reviews/rca-loading-window-trace-per-frame-2026-09-24.md`.
 
 ## 2026-09-23
 
