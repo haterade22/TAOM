@@ -2937,5 +2937,9 @@
 	<string id="taom_patch_apply_phase_game_init" text="{=taom_patch_apply_phase_game_init}game initialization" />
 	<string id="taom_patch_apply_phase_mission_start" text="{=taom_patch_apply_phase_mission_start}mission start" />
 
+	<!-- CompanionTactics -->
+	<string id="taom_oob_autoassign_done" text="{=taom_oob_autoassign_done}Captains assigned: {COUNT}." />
+	<string id="taom_oob_autoassign_not_general" text="{=taom_oob_autoassign_not_general}Only the general of this battle can assign heroes." />
+	<string id="taom_oob_autoassign_none" text="{=taom_oob_autoassign_none}No hero suits an open captain slot." />
 
 </strings>

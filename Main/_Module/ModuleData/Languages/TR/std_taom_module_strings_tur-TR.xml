@@ -2676,5 +2676,8 @@
     <string id="taom_patch_apply_notice_title" text="TAOM" />
     <string id="taom_patch_apply_phase_game_init" text="oyun başlatma" />
     <string id="taom_patch_apply_phase_mission_start" text="görev başlangıcı" />
+    <string id="taom_oob_autoassign_done" text="Captains assigned: {COUNT}." />
+    <string id="taom_oob_autoassign_not_general" text="Only the general of this battle can assign heroes." />
+    <string id="taom_oob_autoassign_none" text="No hero suits an open captain slot." />
   </strings>
 </base>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle;
 using TAOM.Core.Logging;
 using TAOM.Features.CompanionTactics.FormationPresets.Models;
@@ -19,6 +20,7 @@ public sealed class OOBButtonsVM : ViewModel
 {
     private readonly IFormationPresetService _presetService;
     private readonly IOrderOfBattleVMTracker _vmTracker;
+    private readonly IOOBCaptainAutoAssigner _captainAutoAssigner;
     private readonly IModLogger _logger;
 
     private bool _isVisible;
@@ -55,10 +57,12 @@ public sealed class OOBButtonsVM : ViewModel
     public OOBButtonsVM(
         IFormationPresetService presetService,
         IOrderOfBattleVMTracker vmTracker,
+        IOOBCaptainAutoAssigner captainAutoAssigner,
         IModLogger logger)
     {
         _presetService = presetService;
         _vmTracker = vmTracker;
+        _captainAutoAssigner = captainAutoAssigner;
         _logger = logger;
         UpdatePresetsButtonText();
         IsVisible = true;
@@ -78,15 +82,17 @@ public sealed class OOBButtonsVM : ViewModel
             DisplayMessage("No Order of Battle screen detected.", Colors.Red);
             return;
         }
-        // Phase-1 stub. Codex review #36 (2026-05-06) flagged this as P2 — the button
-        // surfaces the "Auto-Assign" intent but does NOT invoke HeroAutoAssigner against
-        // the live OrderOfBattleVM. Full implementation requires reflection on
-        // OrderOfBattleVM._allHeroes (private List<OrderOfBattleHeroItemVM>) and the per-
-        // formation Heroes collection on OrderOfBattleVM.Formations[N], plus a corresponding
-        // mutation path. Tracked as follow-up; until then, users see this message and can
-        // still drag heroes manually.
-        DisplayMessage("Auto-Assign is a Phase-1 stub — feature pending. See follow-up GitHub issue.", Colors.Yellow);
+        DisplayMessage(AutoAssignMessage(_captainAutoAssigner.AssignCaptains(vm)), Colors.Yellow);
     }
+
+    private static string AutoAssignMessage(AutoAssignResult result) => result?.Status switch
+    {
+        AutoAssignStatus.Assigned => new TextObject("{=taom_oob_autoassign_done}Captains assigned: {COUNT}.")
+            .SetTextVariable("COUNT", result.AssignedCount).ToString(),
+        AutoAssignStatus.NotGeneral => new TextObject(
+            "{=taom_oob_autoassign_not_general}Only the general of this battle can assign heroes.").ToString(),
+        _ => new TextObject("{=taom_oob_autoassign_none}No hero suits an open captain slot.").ToString(),
+    };
 
     public void ExecuteManagePresets()
     {

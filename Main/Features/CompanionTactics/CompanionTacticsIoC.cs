@@ -27,6 +27,7 @@ public static class CompanionTacticsIoC
         container.Register<IHeroAutoAssigner, HeroAutoAssigner>(Reuse.Singleton);
         container.Register<IOrderOfBattleVMTracker, OrderOfBattleVMTracker>(Reuse.Singleton);
         container.Register<IOOBOverlayService, OOBOverlayService>(Reuse.Singleton);
+        container.Register<IOOBCaptainAutoAssigner, OOBCaptainAutoAssigner>(Reuse.Singleton);
 
         // BattleActionBar
         container.Register<IBattleActionBarService, BattleActionBarService>(Reuse.Singleton);

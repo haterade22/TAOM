@@ -1272,3 +1272,17 @@ carrying the retired keys loads stays, because that is behaviour a player's file
 - **Prevent:** for a pure deletion, prove RED with a scratch run or the compile failure and keep it in the log. Add a
   permanent test only for behaviour the deletion must preserve (a save field, a config key, a public contract).
 - **Source:** `docs/reviews/rca-delete-unreachable-scaffolds-2026-09-24.md` F6.
+
+### A boundary's "untestable" waiver covers only the lines that need the engine; assert rendered text, not dispatch (plan 022, 2026-09-24)
+Plan 022 waived tests for `OOBCaptainAutoAssigner` as structurally untestable. That holds from the first vanilla
+handler call on, but its two early returns run on an uninitialized `OrderOfBattleVM` (`IsPlayerGeneral` is a plain
+field read). The overlay VM test asserted only that the command reached the assigner, and `TextObject.ToString`
+catches a localization failure and returns an "Error at id" string, so a broken message would have passed. The
+planner's `score > 0` threshold was also unpinned: every test's chosen pair scored 100.
+- **Why missed:** each test the plan listed was written; nothing checked what the list left out.
+- **Prevent:** narrow a waiver to the first line that needs live engine state and test every guard above it
+  (`FormatterServices.GetUninitializedObject` works when the getter reads a field). A test of player-facing text
+  captures it (`InformationManager.DisplayMessageInternal +=`) and asserts the string. A threshold gets one case that
+  sits just above it.
+- **Source:** `docs/reviews/rca-order-of-battle-auto-assign-2026-09-24.md` rows 5, 8 and 9 (Standards, Completeness,
+  Codex P3).

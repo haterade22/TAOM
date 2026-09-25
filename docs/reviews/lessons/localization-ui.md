@@ -700,3 +700,15 @@ The patch-failure notice builds "... during {PHASE} ..." and fills `{PHASE}` wit
 - **Why missed:** each key went to the translator on its own, and the check was that `{PHASE}` and `{GROUPS}` survived, not that the filled sentence reads.
 - **Prevent:** when a key's text is a fragment for another key's variable, send both to the translator together with the host sentence as context, and read the rendered sentence once per language for each fragment. Where the grammar cannot be made to agree, use one whole-sentence key per case. A hand fix goes into both the XML row and `tools/translation_cache/<lang>.json`: the translator re-translates only a row that still equals the English, so a fixed row stays fixed.
 - **Source:** `docs/reviews/rca-guarded-patch-category-apply-decisions-2026-09-24.md` finding 3.
+### A seeded language row takes its file's own terminator, and a placement gate reads what the engine reads (plan 022, 2026-09-24)
+Plan 022 seeded three rows into the 12 `std_taom_module_strings_*.xml` files, which use `\r\r\n`. The rows ended in
+a bare LF. `translate_with_claude.py sync_missing_ids` splits on one terminator, so a trailing run of LF lines fuses
+with `</strings>` into one "line" and the next seeded row lands after `</strings>`, where
+`LocalizedTextManager.LoadLanguage` never reads it. This branch's rows were misplaced that way and moved back by hand;
+the terminators were not restored. `LanguageFileCoverageTests` counts `string` rows anywhere in the file, so it passes
+a misplaced row.
+- **Why missed:** the hand fix checked placement, not bytes, and no gate reads rows the way the engine does.
+- **Prevent:** after any seeding, check the new lines' terminators against the file's (`git diff | cat -A`) and fix
+  them with a binary round-trip. Follow-ups: `sync_missing_ids` should insert before the `</strings>` token by
+  position, and the coverage test should read `base/strings/string` only.
+- **Source:** `docs/reviews/rca-order-of-battle-auto-assign-2026-09-24.md` row 11 (XML lens).
