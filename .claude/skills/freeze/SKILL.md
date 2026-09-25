@@ -94,7 +94,7 @@ The hook is silent on success and verbose only when blocking, so freeze adds zer
 | NotebookEdit | Blocked outside boundary |
 | Read, Glob, Grep | Always allowed (read-only) |
 | Bash | Always allowed — `sed`, `tee`, `>` etc. can still bypass freeze. **This is not a security boundary.** |
-| MCP server tools (Serena's `replace_content`, etc.) | Not blocked — these are separate tools. Use Edit/Write for changes you want freeze-protected. |
+| MCP server tools | Not checked by freeze; their write and edit tools are denied outright (`docs/reference/mcp-servers.md`), except Serena's memory tools. Use Edit/Write for changes you want freeze-protected. |
 
 ## Example session
 

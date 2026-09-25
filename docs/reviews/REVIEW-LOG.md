@@ -4706,3 +4706,33 @@ three LOW defects (ADR-008's CI grep, a CHANGELOG file list, this entry), fixed 
 as decisions 55 and 56 (`6a2ce8cb`); a final pass found three LOW record defects, fixed after it.
 The GitHub issue is covered by Mike's standing request (2026-09-24) to file an issue for every
 sprint plan: the orchestrator files it at merge. See the report's "Orchestrator follow-ups".
+
+## Review (plan 016, number assigned at merge): repo hygiene, MCP pins and README, 4-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+`/review-codex` Phase 3 on branch `improve/016-repo-hygiene-pins-readme` (`bec0389d..8a638831`,
+#657), verified by the review lead alongside four deep-review lenses (standards, completeness,
+data flow, design). Codex, 141,589 tokens: **0 P1 / 0 P2 / 1 P3, plus one P3 plan observation; no
+false positive.** It reviewed through git refs, cross-referenced every moved settings key against
+the base blob (the nine denies equal, in order), checked each pin against published registry
+metadata, and answered all ten Known Suspects (none a defect; #3 confirmed as plan drift). Its P3:
+the ModuleData MCP activation step still said the server was enabled for every clone; fixed.
+Codex missed the other nine confirmed findings, all LOW or NIT and all from the lenses: two
+unpinned copies of the launch strings (`.vscode/mcp.json.example`, a `kingdom-voices.md`
+snippet), a restore command that PowerShell 5.1 re-encodes as UTF-16 (proved), the branch-switch
+and new-worktree effects of the untrack, a stale recount, a stale lesson, the undocumented pin
+policy, the CHANGELOG date and issue link, and a README capitalisation NIT. All fixed. Full suite 10629 passed, 2 skipped,
+0 failed; hook suite 392 passed.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | Activation step claims per-user MCP enablement is done | Other: stale statement after a moved fact | Plan unlinked the filename and kept the sentence | Lesson "When a fact moves, grep every statement of it" in build-tooling-workflow |
+
+Report `docs/reviews/deep-review-016-repo-hygiene-pins-readme-2026-09-24.md`; RCA
+`docs/reviews/rca-repo-hygiene-pins-readme-2026-09-24.md`; three lessons in build-tooling-workflow.
+Needs Mike: the 1.4.5 port, serena write-tool denies, the managed crash cited as a native example.
+Convergence pass owed. Nothing merged or deployed.
+Update 2026-09-25: the 1.4.5 port is Mike's own (decision 59); the Serena write-tool denies are
+decided and applied (decision 58, 16 tools, memory tools kept); the Serena pin is main `7a296833`
+(decision 51). Convergence: the first pass found 4 LOW (fixed in `35f212c6`), the final pass 5 LOW
+(one missed tool, counts, the memory scope, a commit body, this entry, a freeze skill line), fixed
+by the orchestrator. The managed-crash example (N2) stays open.

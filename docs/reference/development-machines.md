@@ -37,8 +37,15 @@ letter into new code.
   `filesystem` server points at directories that do not exist and `taom-moduledata` invokes
   `E:/repos/TAOM/tools/taom_mcp_server.py`. Editing that file to suit one machine breaks the
   other. The fix is a local-scope MCP override in user config, not a change to the committed file.
-- `.claude/settings.local.json` is **tracked**, despite the name, so it is not a machine-local
-  slot either. Machine-specific values belong in Windows user environment variables.
+- `.codex/config.toml` hardcodes its own list of desktop `E:\` paths for Codex's `filesystem`
+  server, with the same consequence on the laptop.
+
+`.claude/settings.local.json` is per-user and untracked: each checkout, every worktree included,
+keeps its own copy (personal allow rules, `additionalDirectories`, `enabledMcpjsonServers`). A new
+worktree starts without one, so copy yours in. `bannerlord-1.4.5` still tracks the file, so
+switching a checkout to that branch overwrites your copy and switching back removes it; do 1.4.5
+work in its own worktree. Anything every clone needs, such as the MCP write-tool deny list, lives
+in the tracked `.claude/settings.json`.
 
 ## The trap: a red validator on the laptop is usually the laptop
 

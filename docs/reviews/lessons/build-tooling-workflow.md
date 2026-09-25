@@ -1826,7 +1826,7 @@ those tools, so the documented happy path was the bypass.
   a claim about the set of routes to an effect, and that set grows silently as tools are added.
 - **Prevent:** when a hook guards an EFFECT (a commit, a file write, a push), enumerate every
   tool that can produce it, not just the one you had in mind. Deny the alternatives you do not
-  intend to guard: nine write tools are now in `permissions.deny` in `.claude/settings.local.json`,
+  intend to guard: nine write tools are now in `permissions.deny` in `.claude/settings.local.json` (moved to the tracked `.claude/settings.json` by plan 016),
   and the read-only ones are untouched.
 - **Source:** 2026-08-31 audit, `docs/reviews/rca-hook-harness-hang-2026-08-31.md`.
 
@@ -2571,3 +2571,38 @@ unbound (`Unable to find material` in the rgl log).
   the new levels' slots to that name (`tools/lod_material_fixes.json`, `lod_fill_batch.py --materials`). Check the
   rebuilt package with the per-material `.0` / `.1` record names, not only the bare mesh name.
 - **Source:** `docs/reference/armory-guide.md` "LODs in the FBX sources".
+
+### When a fact moves, grep every statement of it (plan 016, 2026-09-24)
+Plan 016 moved the MCP deny list into the tracked `.claude/settings.json` and pinned four servers
+in `.mcp.json` and `.codex/config.toml`. The files the plan listed were right; four other places
+stayed stale: `.vscode/mcp.json.example` and a `.mcp.json` snippet in `kingdom-voices.md` kept the
+unpinned launch strings, a lesson's **Prevent:** still sent deny edits to the untracked file, and
+the ModuleData activation step still said the server was enabled for every clone.
+- **Why missed:** the plan's scope list was treated as the complete set of places the fact lives.
+  The audit reads only `.mcp.json`, so no gate saw the other copies.
+- **Prevent:** before committing a change that moves a file, renames a setting or pins a value,
+  `git grep` the old location and the old value across the repo (docs, lessons, templates,
+  examples) and fix or consciously leave each hit. A recount ("Three things" to "Two things")
+  re-derives the list rather than deleting one item.
+- **Source:** `docs/reviews/rca-repo-hygiene-pins-readme-2026-09-24.md`, findings D5, D6, D7, D10.
+
+### Give the command that writes the file itself (plan 016, 2026-09-24)
+The migration note told developers to restore their settings with
+`git show <sha>:<path> > <path>`. In Windows PowerShell 5.1 (installed on the desktop) `>` is
+`Out-File`, which wrote `FF FE` plus UTF-16LE; Git Bash and pwsh 7 write the bytes unchanged.
+- **Why missed:** the command was written and tested in Git Bash and read as portable.
+- **Prevent:** in a documented command that recreates a file, let the tool write it
+  (`git restore --source=<sha> -- <path>` writes the working tree only and leaves an ignored path
+  unstaged), or name the shell. Never rely on a shell redirect for a file another program parses.
+- **Source:** `docs/reviews/rca-repo-hygiene-pins-readme-2026-09-24.md`, finding D9.
+
+### Untracking a file another live branch tracks changes every switch and every new worktree (plan 016, 2026-09-24)
+Plan 016 untracked `.claude/settings.local.json` on `bannerlord-1.5.x` only. Its note covered merge
+and pull, but `bannerlord-1.4.5` still tracks the file: git silently overwrites an ignored file
+when a switch brings in a tracked one, and removes it on the way back. A worktree created after
+the untrack starts with no copy at all.
+- **Why missed:** the note traced one transition (merge or pull on one branch), not every way a
+  checkout's tree changes.
+- **Prevent:** when untracking a per-user file, list each live branch that still tracks it and
+  state in the migration note what a switch, a new worktree and a fresh clone do to the user's copy.
+- **Source:** `docs/reviews/rca-repo-hygiene-pins-readme-2026-09-24.md`, finding D8.

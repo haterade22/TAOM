@@ -600,6 +600,76 @@ identifier were corrected, and the feature doc now says raise lines are traced p
 `docs/reviews/rca-loading-window-trace-per-frame-2026-09-24.md`.
 ## 2026-09-25
 
+### fix(docs): v2.0.30 - review follow-ups for plan 016 (#657)
+
+The deep review and the Codex pass on plan 016 found only documentation defects; each is fixed
+here.
+
+- **The restore command works in every shell.** It is now `git restore --source=b2e387db -- ...`,
+  and the note says a new worktree starts without the per-user file and that switching to
+  `bannerlord-1.4.5` overwrites it (`CHANGELOG.md`, `docs/reference/development-machines.md`).
+- **Every copy of an MCP launch string carries the pin.** `.vscode/mcp.json.example` (filesystem,
+  git) and the `.mcp.json` snippet in `docs/features/kingdom-voices.md` (elevenlabs) were still
+  unpinned. `docs/reference/mcp-servers.md` now states the pin rule: bump all copies together,
+  re-derive the deny list from the new version's write tools, and know that the audit only
+  catches an unpinned `npx -y` in `.mcp.json`.
+- **Stale statements corrected.** The ModuleData MCP activation step no longer says the server is
+  already enabled for a fresh clone; `development-machines.md` counts `.codex/config.toml` among
+  the files that hardcode desktop paths; the MCP write-tool lesson points at the tracked
+  `.claude/settings.json`; the agent manual's Build row says both copy flags do work.
+- **README.** The clone step lands on `bannerlord-1.5.x` directly (`git clone -b`), and the career
+  bullet is lowercased like its siblings.
+- **Entries dated and linked.** Plan 016's two entries moved under 2026-09-25 and name #657.
+
+Report: `docs/reviews/deep-review-016-repo-hygiene-pins-readme-2026-09-24.md`; RCA:
+`docs/reviews/rca-repo-hygiene-pins-readme-2026-09-24.md`.
+
+### docs(readme): v2.0.30 - drop stale counts, fix version and test command (#657)
+
+The README on this branch now names Bannerlord v1.5.3 (it said v1.4.8 twice and v1.5.2 in the
+player install section), says development happens on `bannerlord-1.5.x`, and gives the
+non-deploying test command, `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`
+(the bare `dotnet test TAOM.Tests` builds Main and copies it into the game). The hand-kept
+engineering counts (feature modules, tests, GameModel overrides, Harmony categories, skills,
+agents, hooks, rules, MCP servers, reviews, ADRs, feature docs) are gone rather than refreshed,
+since nothing recomputes them; the career count said 50 against 67 in `taom_careers.xml`.
+`docs/ai-includes/agent-operating-manual.md` now passes `-p:ModuleId=` in its build and test
+rows, as its binding-gate row already did. The default branch `bannerlord-1.4.5` keeps its own
+README.
+
+### chore(security): v2.0.30 - untrack local files and pin MCP servers (#657)
+
+Three tracked paths were never repo content, and four MCP servers ran whatever version their
+registry served that day.
+
+- **Untracked and ignored**: `.claude/settings.local.json` (Claude Code's per-user settings:
+  personal allow rules, machine paths and the MCP trust list), `_taom_loc.pkl` (a 37 MB pickle
+  from a one-off localization session that nothing reads) and `crashz/` (an unpacked v1.4.7
+  player crash bundle). The blobs stay in history; the three docs that cite the crash report now
+  give `git show b2e387db:crashz/report.json`, and `moduledata-validation.md` no longer links to
+  the now-untracked settings file.
+- **Deny list moved**: the nine MCP write-tool denies (`mcp__git__git_add` and the rest) now live
+  in the tracked `.claude/settings.json`, so every clone keeps them. `enabledMcpjsonServers`
+  stays per-user on purpose: a tracked trust list would pre-approve seven servers on every clone.
+- **Pinned**: serena to its newest `main` commit `7a296833` (`serena-agent` 2.0.0.dev0, the code
+  sessions already ran unpinned; Mike's decision 51 chose it over the older v1.7.0 release),
+  `@modelcontextprotocol/server-filesystem@2026.8.31`, `mcp-server-git@2026.8.18` and
+  `elevenlabs-mcp@0.12.2`, in `.mcp.json` and (filesystem, git) `.codex/config.toml`.
+  `python tools/audit_claude_config.py` no longer reports `mcp-npx-unpinned`.
+- **Serena edits denied**: Serena's sixteen editing tools (its file and symbol editors and
+  `execute_shell_command`) join the deny list, because they went around every Edit, Write and Bash
+  hook; its memory tools stay allowed (decision 58). The list is in `docs/reference/mcp-servers.md`.
+
+**After merging or pulling this commit**, git deletes `.claude/settings.local.json`,
+`_taom_loc.pkl` and `crashz/` from that working tree. Restore your own settings file with
+`git restore --source=b2e387db -- .claude/settings.local.json` (or from a copy taken before the
+merge); it is ignored from now on. `git restore` writes the file itself and leaves it unstaged in
+any shell, where a Windows PowerShell 5.1 `>` redirect would re-encode it as UTF-16. Then restart
+Claude Code so it reloads the pinned servers. The file is per checkout: a worktree created after
+this commit starts without one, so copy yours in. `bannerlord-1.4.5` still tracks it, so switching
+a checkout to that branch overwrites your copy and switching back removes it; do 1.4.5 work in
+its own worktree.
+
 ### fix(binding-gate): v2.0.30 - review follow-ups for plan 008 (#652)
 
 - **The docs say what the strict settings fail.** The hooks catalog row and the decisions entry

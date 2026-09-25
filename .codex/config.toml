@@ -13,7 +13,7 @@ inherit = "all"
 command = "npx"
 args = [
   "-y",
-  "@modelcontextprotocol/server-filesystem",
+  "@modelcontextprotocol/server-filesystem@2026.8.31",
   "E:\\repos\\TAOM",
   "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\ModuleData",
   "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBoxCore\\ModuleData",
@@ -24,7 +24,7 @@ args = [
 
 [mcp_servers.git]
 command = "uvx"
-args = ["mcp-server-git"]
+args = ["mcp-server-git@2026.8.18"]
 
 [mcp_servers.ilspy]
 command = "python"

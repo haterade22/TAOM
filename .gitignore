@@ -234,3 +234,15 @@ id_ed25519
 _netrc
 secrets.json
 credentials.json
+
+# Per-user and generated files that were once tracked by mistake.
+# settings.local.json is Claude Code's per-user settings slot: personal allow rules,
+# machine paths and each developer's MCP trust list (enabledMcpjsonServers). Rules
+# every clone needs, such as the MCP write-tool deny list, go in settings.json.
+.claude/settings.local.json
+# Python pickles are never repo content, and loading one runs code. The only one
+# ever tracked was a one-off localization snapshot that nothing read.
+*.pkl
+# Player crash bundles unpacked for triage. The v1.4.7 report once tracked here
+# stays readable from history: git show b2e387db:crashz/report.json
+/crashz/

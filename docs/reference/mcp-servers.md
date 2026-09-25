@@ -11,7 +11,7 @@
 | **Serena** | Project | Symbolic code navigation (C# classes, methods, references) | `.mcp.json` |
 | **GitHub** | Project | PRs, issues, actions, code search (HTTP — needs auth; falls back to `gh` CLI when unauthenticated) | `.mcp.json` |
 | **filesystem** | Project | READ operations across TAOM, Bannerlord Modules, LOTRAOM assets. Its write tools are denied (see "Denied write tools" below); use Edit/Write, which `config-protection.sh` actually guards | `.mcp.json` |
-| **git** | Project | Read-only git queries (diff, log, show, status). No blame tool exists; use `git blame` via Bash. Write tools are denied in settings.local.json because the safety hooks match Bash only | `.mcp.json` |
+| **git** | Project | Read-only git queries (diff, log, show, status). No blame tool exists; use `git blame` via Bash. Write tools are denied in `.claude/settings.json` because the safety hooks match Bash only | `.mcp.json` |
 | **ilspy** | Project | Decompile TaleWorlds DLLs — fallback when `E:\Decompiled_Bannerlord\` doesn't have what you need | `.mcp.json` |
 | **taom-moduledata** | Project | Query TAOM ModuleData integrity (validate, item/troop/culture exists, find-references, list cultures/schemas) — wraps `tools/taom_query.py`. Needs the `mcp` SDK; restart Claude to load. See `docs/features/moduledata-validation.md`. | `.mcp.json` |
 | **imagine** | Project | AI image generation (`https://mcp.imagine.art`, HTTP — needs auth; unauthenticated sessions can't use it) | `.mcp.json` |
@@ -20,10 +20,28 @@
 
 ## Denied write tools (2026-08-31)
 
-Nine MCP write tools are listed under `permissions.deny` in `.claude/settings.local.json`:
+Twenty-five MCP write tools are listed under `permissions.deny` in the tracked `.claude/settings.json`, so every clone gets them (the first nine lived in `settings.local.json` until it was untracked):
 
 `mcp__git__git_add` · `git_commit` · `git_reset` · `git_checkout` · `git_create_branch` ·
 `mcp__filesystem__write_file` · `edit_file` · `move_file` · `create_directory`
+
+and sixteen Serena tools (2026-09-25, decision 58), `mcp__serena__` followed by:
+`create_text_file` · `replace_content` · `replace_in_files` · `delete_lines` · `replace_lines` ·
+`insert_at_line` · `replace_symbol_body` · `insert_after_symbol` · `insert_before_symbol` ·
+`rename_symbol` · `safe_delete_symbol` · `execute_shell_command` · `jet_brains_move` ·
+`jet_brains_safe_delete` · `jet_brains_rename` · `jet_brains_inline_symbol`
+
+The git and filesystem entries are exactly the tools the pinned `git` and `filesystem` versions
+annotate `readOnlyHint: false`. The Serena entries are every tool the pinned Serena commit marks
+can-edit (`ToolMarkerCanEdit` in `src/serena/tools/`) except its four memory tools, which Mike chose
+to keep (`write_memory`, `edit_memory`, `rename_memory`, `delete_memory` write only Serena's
+memory folders: the repo's `.serena/memories/` and, for a `global/` name,
+`~/.serena/memories/global/`). The can-edit rule includes classes whose names lack the usual
+`Tool` suffix (`SafeDeleteSymbol`, `JetBrainsInlineSymbol`), so derive the list from the class
+markers, not from names ending in `Tool`. `execute_shell_command` is among them because it would run a shell command
+past every Bash hook. The optional beta `serena_repl` is not marked can-edit and not enabled, so it
+is not listed. On a pin bump of any of the three servers, re-derive its entries from the new
+version, so a newly added write tool is denied too.
 
 **Why:** every safety hook in this repo is registered against `matcher: "Bash"`, and
 `config-protection.sh` against `matcher: "Edit|Write"`. Nothing matches `mcp__*`. So the MCP
@@ -62,7 +80,9 @@ rg "GetCharacterWage" $(pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.G
 
 ## Configuration
 
-Project-level MCP servers (Serena, GitHub, filesystem, git, ilspy, taom-moduledata, imagine) are configured in `.mcp.json` at the project root and must be listed in `.claude/settings.local.json → enabledMcpjsonServers` to be trusted. (`taom-moduledata` is TAOM-authored — `tools/taom_mcp_server.py` — and requires the `mcp` Python SDK; a Claude restart is needed to pick up a newly-added server.) User-level servers (sequential-thinking, context7) are configured in `~/.claude/.mcp/user.json` and enabled globally.
+Project-level MCP servers (Serena, GitHub, filesystem, git, ilspy, taom-moduledata, imagine) are configured in `.mcp.json` at the project root and each developer trusts them in their own `.claude/settings.local.json → enabledMcpjsonServers`. That file is per-user and untracked: a tracked trust list would approve every server on every clone. (`taom-moduledata` is TAOM-authored — `tools/taom_mcp_server.py` — and requires the `mcp` Python SDK; a Claude restart is needed to pick up a newly-added server.) User-level servers (sequential-thinking, context7) are configured in `~/.claude/.mcp/user.json` and enabled globally.
+
+**Pins.** Every auto-fetched project server (`.mcp.json`) runs an exact version: serena a commit SHA, the others a package version (`name@x.y.z`). A pin bump changes every copy of the launch string together: `.mcp.json`, `.codex/config.toml` (filesystem, git), `.vscode/mcp.json.example` and the snippet in `docs/features/kingdom-voices.md`. `tools/audit_claude_config.py` flags only an unpinned `npx -y` in `.mcp.json`, so an unpinned `uvx` server or a stale copy elsewhere goes unflagged. The user-level servers in `~/.claude/.mcp/user.json` are machine-local and not pinned.
 
 ## Plugin overlap (routing disambiguation)
 

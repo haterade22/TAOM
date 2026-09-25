@@ -683,7 +683,7 @@ python tools/validate_moduledata.py --game-modules /nonexistent
 
 **Activation** (one-time; the server can't be loaded mid-session — Claude reads MCP config at startup):
 1. Ensure the `mcp` Python SDK is installed (`python -c "import mcp.server.fastmcp"` — present in this environment).
-2. It is registered in [`.mcp.json`](../../.mcp.json) as the `taom-moduledata` stdio server and enabled in [`.claude/settings.local.json`](../../.claude/settings.local.json) → `enabledMcpjsonServers`.
+2. It is registered in [`.mcp.json`](../../.mcp.json) as the `taom-moduledata` stdio server; each developer enables it in their own untracked `.claude/settings.local.json` → `enabledMcpjsonServers`.
 3. **Restart Claude Code** to load it. Its tools then appear as `mcp__taom-moduledata__*` (deferred — schemas fetched via ToolSearch on demand).
 
 **Smoke-test standalone** (no restart needed): `python tools/taom_mcp_server.py` starts the stdio server; or verify in-process:

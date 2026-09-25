@@ -4,6 +4,35 @@
     "pr": "",
     "sessionUrl": false
   },
+  "permissions": {
+    "deny": [
+      "mcp__git__git_add",
+      "mcp__git__git_commit",
+      "mcp__git__git_reset",
+      "mcp__git__git_checkout",
+      "mcp__git__git_create_branch",
+      "mcp__filesystem__write_file",
+      "mcp__filesystem__edit_file",
+      "mcp__filesystem__move_file",
+      "mcp__filesystem__create_directory",
+      "mcp__serena__create_text_file",
+      "mcp__serena__replace_content",
+      "mcp__serena__replace_in_files",
+      "mcp__serena__delete_lines",
+      "mcp__serena__replace_lines",
+      "mcp__serena__insert_at_line",
+      "mcp__serena__replace_symbol_body",
+      "mcp__serena__insert_after_symbol",
+      "mcp__serena__insert_before_symbol",
+      "mcp__serena__rename_symbol",
+      "mcp__serena__safe_delete_symbol",
+      "mcp__serena__execute_shell_command",
+      "mcp__serena__jet_brains_move",
+      "mcp__serena__jet_brains_safe_delete",
+      "mcp__serena__jet_brains_rename",
+      "mcp__serena__jet_brains_inline_symbol"
+    ]
+  },
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "TAOM_PYBIN": "C:/Python314/python.exe"
