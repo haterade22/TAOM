@@ -81,7 +81,7 @@ Only fields that actually affect runtime behavior are shipped in the JSON. Reser
 
 All fields validated per `CLAUDE.md "Config Providers MUST Validate"` — invalid values revert to default with logged warning. NaN/Infinity rejected via `FiniteFloatValidator`.
 
-**Reserved fields (in `CacheRebuildConfig.cs`, not in shipped JSON):** `checkpointEvery`, `enablePathReuse`, `enablePersistentPathCache`, `incrementalSpatialRadius`, `enableDebugQualityCheck`, `enableUiOverlay`, `phase1SkipReversePathfind`, `logVerbosity` — all correspond to dropped phases (Phase 9 spatial index, Phase 12 path reuse, Phase 13 multi-pass quality check, UI overlay) or features whose scope is mod-wide rather than per-feature. They'll be wired into JSON when a future phase actually consumes them.
+**Reserved fields (in `CacheRebuildConfig.cs`, not in shipped JSON):** `checkpointEvery`, `incrementalSpatialRadius`, `enableDebugQualityCheck`, `enableUiOverlay`, `phase1SkipReversePathfind`, `logVerbosity`. They correspond to dropped phases (Phase 9 spatial index, Phase 13 multi-pass quality check, the UI overlay) or to concerns that are mod-wide rather than per-feature, and they will be wired into JSON when a future phase actually consumes them. The path-reuse pair (`enablePathReuse`, `enablePersistentPathCache`) was deleted with its scaffold in 2026-09 (plan 025).
 
 ## Key Files
 
@@ -101,8 +101,6 @@ All fields validated per `CLAUDE.md "Config Providers MUST Validate"` — invali
 | `Main/Features/EditorCacheRebuild/Checkpoint/CheckpointSerializer.cs` | Save / load / delete `.ckpt.bin` + `.ckpt.meta` between phases |
 | `Main/Features/EditorCacheRebuild/Diff/SettlementSnapshotStore.cs` | JSON sidecar with previous settlement positions for incremental diff |
 | `Main/Features/EditorCacheRebuild/Diff/SettlementDiffer.cs` | Compare snapshot vs current → `SettlementDiff{Added,Removed,Moved,ForcedFullRebuild}` |
-| `Main/Features/EditorCacheRebuild/Caching/PathReuseCache.cs` | In-memory `ConcurrentDictionary<SortedPathKey, NavigationPath>` (reserved for path-reuse v2) |
-| `Main/Features/EditorCacheRebuild/Caching/PersistentPathCache.cs` | On-disk `.paths.bin` sidecar with magic + version + CRC validation (reserved for path-reuse v2) |
 | `Main/Adapters/INavigationCacheAdapter.cs` + `NavigationCacheAdapter.cs` | Reflection bridge to private nested `SettlementRecord` and `NavigationCache<>` generic |
 | `Main/_Module/ModuleData/configs/cache_rebuild_config.json` | Default config |
 
@@ -116,10 +114,9 @@ All fields validated per `CLAUDE.md "Config Providers MUST Validate"` — invali
 
 ## Tests
 
-`TAOM.Tests/Features/EditorCacheRebuild/` — 103+ tests covering:
+`TAOM.Tests/Features/EditorCacheRebuild/` covers:
 
 - Config provider validation (NaN/Infinity/range guards) (20 tests)
-- Path cache + persistent sidecar (24 tests)
 - Phase 1 serial + parallel builder mock-driven correctness (15 tests)
 - Phase 2 serial + parallel builder mock-driven correctness (12 tests)
 - Smoke test gate skip/pass/fail paths (8 tests)
@@ -181,7 +178,7 @@ Edit `cache_rebuild_config.json`: `"forceVanilla": true` or `"enabled": false`. 
 | Resume after Phase-1-completed crash | Lose everything (5+ days of work) | ~5 min remaining (Phase 2 only) |
 | Navmesh edit + rebuild | ~108 hr (no detection) | Full ~7 min (CRC mismatch auto-detected, refuses stale incremental) |
 
-**Why ~30 min and not 5 min:** Phase 2's corridor scan (vanilla `CheckBeingNeighbor`) re-pathfinds every fortification pair. A future optimization would memoize Phase 1's paths for Phase 2 reuse (scaffold is in `Caching/PathReuseCache.cs` + `PersistentPathCache.cs`, not yet wired into the builders). That alone is a 2-3× win on top of the current 6-8× parallelism win.
+**Why ~30 min and not 5 min:** Phase 2's corridor scan (vanilla `CheckBeingNeighbor`) re-pathfinds every fortification pair. A future optimization would memoize Phase 1's paths for Phase 2 reuse. An unwired scaffold for it (`Caching/PathReuseCache.cs`, `PersistentPathCache.cs`) was deleted in 2026-09 (plan 025) and can be recovered from commit `6a80bac6`. That alone is a 2-3× win on top of the current 6-8× parallelism win.
 
 ## v1.4.8 verification (2026-08-10)
 
@@ -207,6 +204,7 @@ v1.4.8 also claims to fix "Settlement Distance Cache computation failing silentl
 
 ## Changelog
 
+- 2026-09-24: **Deleted the unwired path-reuse scaffold (plan 025).** `Caching/` (`PathReuseCache`, `PersistentPathCache`, their interfaces, `NavigationPathCloner`, `SortedPathKey`), the reserved `enablePathReuse` and `enablePersistentPathCache` fields, their 26 tests and the mislabelled `PathReuseCache._store` binding row are gone, along with the unused `Main/Adapters/IEditorSceneAdapter.cs`. None of it was ever resolved or called, so the rebuild behaves exactly as before. Recover it from `6a80bac6` if Phase 2 path memoization is ever built.
 - 2026-08-10 — **v1.4.8 engine bump: verified, no code change.** The engine's `NavigationCache<T>` speed rewrite touches two members (`GetClosestSettlementToPosition`'s dormant `useEarlyOut`, and an `i != j` self-pair guard in the `NavigationType.All` cache build); TAOM reflects on neither, all 16 catalogued reflection sites still resolve, and `Serialize`/`Deserialize` plus the whole `SandBoxNavigationCache` class are byte-identical — so the shipped cache stays valid and no rebuild is forced. Recorded two watch items for the first campaign load: the now-reported modded-map cache failure, and the `Naval`/`All` lookups a NavalDLC-active TAOM campaign performs against a `_Default.bin`-only `TAOM_Map`. See "v1.4.8 verification" above.
 - 2026-05-13 — Removed the legacy editor-mode integration: deleted the `Patch37_CacheBuildOverride` Harmony patch (never functioned in singleplayer; editor mode crashed third-party mods) and simplified the feature to the single in-game MCM-trigger path.
 - 2026-05-12 — Pivoted from editor-mode Harmony integration to an in-game MCM trigger: added `IRuntimeCacheRebuildService` + the `Map Tools / Distance Cache Rebuild` MCM button, building against the live campaign's `MapSceneWrapper` with atomic `.tmp → final` write and `.prev` backup.

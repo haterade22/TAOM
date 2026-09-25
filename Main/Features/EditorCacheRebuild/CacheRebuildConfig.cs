@@ -5,7 +5,7 @@ namespace TAOM.Features.EditorCacheRebuild;
 ///
 /// <para>
 /// Some fields here are <strong>not</strong> exposed in the shipped JSON because they correspond
-/// to scaffolding for unreleased phases (path-reuse v2, spatial-indexed Phase 2, multi-pass
+/// to scaffolding for unreleased phases (spatial-indexed Phase 2, multi-pass
 /// DEBUG quality check, in-editor UI overlay). They retain sensible defaults so the deserializer
 /// is happy and so future phases can wire them without an API change — but the JSON file is kept
 /// clean to avoid misleading users with knobs that silently do nothing. Codex review on 2026-05-12
@@ -38,12 +38,6 @@ public class CacheRebuildConfig
 
     /// <summary>Reserved. Checkpoint cadence in Phase-1-completed-indices between writes. Currently hardcoded.</summary>
     public int CheckpointEvery { get; set; } = 20;
-
-    /// <summary>Reserved for path-reuse v2 (Phase 12 of original design). PathReuseCache scaffolding exists in `Caching/`.</summary>
-    public bool EnablePathReuse { get; set; } = true;
-
-    /// <summary>Reserved for persistent path-cache sidecar (.paths.bin). PersistentPathCache scaffolding exists in `Caching/`.</summary>
-    public bool EnablePersistentPathCache { get; set; } = true;
 
     /// <summary>Reserved for spatial-index-driven incremental Phase 2 (Phase 9 of original design).</summary>
     public float IncrementalSpatialRadius { get; set; } = 5.0f;

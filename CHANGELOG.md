@@ -2,6 +2,26 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-24
+
+### refactor(cache-rebuild): v2.0.30 - delete two unreachable scaffolds
+
+Two pieces of code that nothing ever called are gone. `Main/Adapters/IEditorSceneAdapter.cs` was
+an adapter interface with no implementation and no reference. `Main/Features/EditorCacheRebuild/Caching/`
+(`PathReuseCache`, `PersistentPathCache`, their interfaces, `NavigationPathCloner` and
+`SortedPathKey`) was a Phase 2 path-memoization scaffold that `EditorCacheRebuildIoC` registered
+but nothing resolved or injected. Both came in with `6a80bac6` on 2026-05-12 and never gained a
+caller. Also removed: the reserved `EnablePathReuse` and `EnablePersistentPathCache` config
+properties (never in the shipped `cache_rebuild_config.json`, never read), the 26 tests in
+`TAOM.Tests/Features/EditorCacheRebuild/Caching/`, and the `ReflectionSiteBindingTests` row for
+`PathReuseCache._store`, which named a `TaleWorlds.Engine.PathReuseCache` that does not exist and
+only ever resolved to TAOM's own class. The distance-cache rebuild behaves exactly as before; a
+hand-edited config that still carries the two keys loads as before (new test). Recover the
+scaffold from `6a80bac6` if path reuse is ever built. Plan 025.
+
+Full suite in the worktree: 10288 passed, 2 skipped, 0 failed. Nothing smoked in game (no
+runtime path changed).
+
 ## 2026-09-23
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)

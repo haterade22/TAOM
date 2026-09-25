@@ -84,8 +84,6 @@ public class CacheRebuildConfigProviderTests
   ""forceVanilla"": false,
   ""parallelism"": 6,
   ""checkpointEvery"": 50,
-  ""enablePathReuse"": false,
-  ""enablePersistentPathCache"": false,
   ""enableIncremental"": false,
   ""incrementalMaxChanged"": 10,
   ""incrementalSpatialRadius"": 2.5,
@@ -103,8 +101,6 @@ public class CacheRebuildConfigProviderTests
         Assert.IsFalse(config.ForceVanilla);
         Assert.AreEqual(6, config.Parallelism);
         Assert.AreEqual(50, config.CheckpointEvery);
-        Assert.IsFalse(config.EnablePathReuse);
-        Assert.IsFalse(config.EnablePersistentPathCache);
         Assert.IsFalse(config.EnableIncremental);
         Assert.AreEqual(10, config.IncrementalMaxChanged);
         Assert.AreEqual(2.5f, config.IncrementalSpatialRadius, 0.0001f);
@@ -114,6 +110,43 @@ public class CacheRebuildConfigProviderTests
         Assert.AreEqual(0.001f, config.SmokeTestDistanceTolerance, 0.00001f);
         Assert.IsTrue(config.Phase1SkipReversePathfind);
         Assert.AreEqual("debug", config.LogVerbosity);
+    }
+
+    [TestMethod]
+    public void GetConfig_JsonWithRetiredPathCacheKeys_StillLoadsTheLiveFields()
+    {
+        // A hand-edited config written before the path-reuse scaffold was deleted must keep loading.
+        WriteConfig(@"{ ""parallelism"": 6, ""enablePathReuse"": false, ""enablePersistentPathCache"": false }");
+
+        var config = _sut.GetConfig();
+
+        Assert.AreEqual(6, config.Parallelism);
+        _logger.DidNotReceive().LogError(Arg.Any<string>());
+        _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("Loaded cache_rebuild_config.json")));
+    }
+
+    [TestMethod]
+    public void RetiredPathReuseScaffold_IsGoneFromTheTaomAssembly()
+    {
+        // Deleted unwired in plan 025 (added in 6a80bac6). Restore it from git history only
+        // together with a real caller, and delete this test in the same change.
+        var taom = typeof(CacheRebuildConfig).Assembly;
+        foreach (var typeName in new[]
+        {
+            "TAOM.Adapters.IEditorSceneAdapter",
+            "TAOM.Features.EditorCacheRebuild.Caching.IPathReuseCache",
+            "TAOM.Features.EditorCacheRebuild.Caching.PathReuseCache",
+            "TAOM.Features.EditorCacheRebuild.Caching.IPersistentPathCache",
+            "TAOM.Features.EditorCacheRebuild.Caching.PersistentPathCache",
+            "TAOM.Features.EditorCacheRebuild.Caching.NavigationPathCloner",
+            "TAOM.Features.EditorCacheRebuild.Caching.SortedPathKey",
+        })
+        {
+            Assert.IsNull(taom.GetType(typeName, throwOnError: false), typeName + " is unreachable scaffolding and was deleted.");
+        }
+
+        Assert.IsNull(typeof(CacheRebuildConfig).GetProperty("EnablePathReuse"), "EnablePathReuse had no reader and was deleted.");
+        Assert.IsNull(typeof(CacheRebuildConfig).GetProperty("EnablePersistentPathCache"), "EnablePersistentPathCache had no reader and was deleted.");
     }
 
     [TestMethod]
