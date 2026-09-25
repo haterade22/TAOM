@@ -11,9 +11,10 @@
   and a filter that matches no test; an `[Ignore]`d test still reports Skipped and exits 0, so
   the catalog row now says a gate run is green only at `Skipped: 0`.
 - **A zero-match gate run is triaged by its command.** The verify-bindings skill's Step 2 said to
-  fix the filter. On the Step 1 command as written, a zero match is a finding: MSTest's
-  `Unable to load types from the test source` warning above it means the test DLL did not load,
-  and without that warning the gate tests have lost their category.
+  fix the filter. On the Step 1 command as written, a zero match is a finding: an MSTest
+  discovery warning above it means `/investigate` (`Unable to load types from the test source`:
+  some of the DLL's types did not load; `Failed to discover tests from assembly`: the DLL did
+  not load), and with neither the gate tests have most likely lost their category.
 - **`BindingGateRunSettingsTests` uses the shared `RepoPaths.RepoPath`** instead of its own
   repo-root walker. It passes 2 of 2 before and after, and deleting `TreatNoTestsAsError` from
   the settings still turns its row red.

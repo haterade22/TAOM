@@ -52,7 +52,7 @@ reported the same defect, so they are merged below (R numbers as in the RCA).
 | R5 | LOW | The report says two CHANGELOG headings lack #652; three do | A1 #3, A4 #2, A5 #11, Tooling #4, A6 | CONFIRMED | `CHANGELOG.md:23`, `:36`, `:57` at `37306bca` |
 | R6 | LOW | Records call F13 "still open"; #652 records it moot, plus a no-port decision | A4 #1 | CONFIRMED | `gh issue view 652`: Decisions section ("The `if: ${{ !cancelled() }}` question is moot") and the 19:07Z comment ("no port to `bannerlord-1.4.5`") |
 | R7 | NIT | REVIEW-LOG shows pre-decision counts after the decisions paragraph | A1 #6, Tooling #4 | CONFIRMED | `REVIEW-LOG.md:3803-3811` at `37306bca` |
-| R8 | LOW | The pin test adds a private `FindRepoRoot` beside `RepoPaths.RepoPath` | A1 #2, A3 #1, A5 #12, Tooling #2 | CONFIRMED | `TAOM.Tests/Infrastructure/RepoPaths.cs:14`; `TAOM.Tests.csproj` sets no `PathMap`; 6 test files already use `RepoPaths` |
+| R8 | LOW | The pin test adds a private `FindRepoRoot` beside `RepoPaths.RepoPath` | A1 #2, A3 #1, A5 #12, Tooling #2 | CONFIRMED | `TAOM.Tests/Infrastructure/RepoPaths.cs:14`; `TAOM.Tests.csproj` sets no `PathMap`; 4 test files already use `RepoPaths` (5 with this one) |
 
 **False positives:** none. Two lens statements were observations, not defects: the strict gate's
 own filter does not run the pin test (A5 #4; the default suite does, by design), and the pin test
@@ -69,9 +69,11 @@ All are prose except R8.
   load the game) and a filter that matches no test. An `[Ignore]`d test still reports Skipped and
   exits 0, so a gate run is green only at `Skipped: 0`." The decisions CHANGELOG entry says "fails
   an `Assert.Inconclusive` instead of skipping it".
-- **R2:** Step 2 now says that on the Step 1 command as written a zero match is a finding (the
-  MSTest load warning means the DLL did not load, `/investigate`; otherwise the gate tests lost
-  their category), that a hand-written command gets its filter fixed, and never the settings.
+- **R2:** Step 2 now says that on the Step 1 command as written a zero match is a finding (an
+  MSTest discovery warning means `/investigate`: `Unable to load types from the test source` for
+  a partial type load, `Failed to discover tests from assembly` for a DLL that did not load; with
+  neither, the gate tests most likely lost their category), that a hand-written command gets its
+  filter fixed, and never the settings.
 - **R3, R4, R6:** the first RCA's resolution names F2, D1 and the header as lapsed, records F13 as
   moot per #652, and records the no-port decision. The first report's decisions row and its
   "still open" paragraph say the same.
@@ -147,7 +149,7 @@ auto-invoked and #652 carries the gate's open items):
 - Until plan 010 lands, a manual dispatch of `build.yml` skips the strict step whenever the default
   Test step fails, which it does on this runner (Agent 2). Moot by decision once plan 010 deletes
   the job.
-- The 35 private `TAOM.sln` walkers in `TAOM.Tests`: the locator consolidation (TEST-L5-03), ending
+- The 34 private `TAOM.sln` walkers in `TAOM.Tests`: the locator consolidation (TEST-L5-03), ending
   with a ratchet test (this RCA's R8 lesson).
 - `docs/reviews/LESSONS-LEARNED.md` per-category counts were not bumped: they already drift from
   `grep -c '^### '` (167 against 174 in build-tooling-workflow at `37306bca`), and every parallel
@@ -155,9 +157,8 @@ auto-invoked and #652 carries the gate's open items):
 - `hook-authoring.md:128` stderr advice, `.ai/verification.md` strict-step row: still open from
   round one.
 
-**Convergence pass:** not run. Step 4.6 asks for one `deep-reviewer` on the applied improvements;
-this review lead cannot spawn agents, so it is left to the orchestrator's second pass. The applied
-diff is a 13-line test simplification with a characterisation and a mutation proof, plus prose.
+**Convergence pass:** run by the orchestrator on `37306bca..aa59f68e`; four defects (one LOW, three
+NIT), all fixed. See the Convergence section at the end.
 
 ## CODEX REVIEW
 
@@ -208,3 +209,26 @@ Not edited here (Phase 3h is consolidated after all branches merge). Proposed li
 - Codex prompt: `docs/reviews/codex-adversarial-008-binding-gate-no-silent-skips-decisions-2026-09-24.prompt.md`
 
 VERDICT: READY FOR COMMIT
+
+## Convergence
+
+The orchestrator's convergence pass reviewed the fix diff `37306bca..aa59f68e` and reported one LOW
+and three NIT defects. Each was checked against the code or git before it was fixed; none was a
+false positive.
+
+| # | Sev | Defect | Verified | Fix |
+|---|---|---|---|---|
+| C1 | LOW | The R2 triage said MSTest's `Unable to load types from the test source` warning means the test DLL did not load, and that without it the gate tests lost their category | ilspycmd on the 3.1.1 `net462` adapter: `AssemblyEnumerator.GetTypes` catches `ReflectionTypeLoadException`, adds `TypeLoadFailed` and returns `ex.Types`, so discovery goes on with the types that loaded. A DLL that fails as a whole reaches `AssemblyEnumeratorWrapper.GetTests`, whose catches add `TestAssembly_AssemblyDiscoveryFailure` ("Failed to discover tests from assembly {0}. Reason:{1}"); its `BadImageFormatException` catch adds nothing | `verify-bindings/SKILL.md:42`, the CHANGELOG bullet, the R2 fix line above and the RCA's R2 row now name both warnings (partial type load, DLL not loaded), send either to `/investigate`, and say a run with neither has most likely lost its category |
+| C2 | NIT | R8's evidence said 6 test files already use `RepoPaths` | `git grep -l RepoPaths 37306bca -- TAOM.Tests`: 4 test files plus `RepoPaths.cs`; 5 plus the helper at `aa59f68e` | Now "4 test files already use `RepoPaths` (5 with this one)" |
+| C3 | NIT | The follow-ups said 35 private `TAOM.sln` walkers after R8 removed one | `git grep -l "TAOM.sln" HEAD -- TAOM.Tests`: 34 at `aa59f68e`, 35 at `37306bca` (the testing-qa lesson's "35th file" stays correct) | Now 34 |
+| C4 | NIT | REVIEW-LOG's "before the decisions" `test_hooks.sh` count was 287, the `549afffd` figure | The first report records 289 at the convergence commit `2ca0805b` (the decisions' parent) and 283 after the six 7c cases were removed | Now 289 |
+
+The "Convergence pass: not run" line in the follow-ups now points here.
+
+**Convergence verification:**
+- The full suite, `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`:
+  `Failed: 2, Passed: 10245, Skipped: 2, Total: 10249`. The two failures are the known live-Armory
+  tests `TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+  `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`; this branch is based before
+  `a39a9c86`.
+- The changes are prose only; no test pins the skill text, so there was no test to write first.

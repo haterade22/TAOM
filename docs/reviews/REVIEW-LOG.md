@@ -3809,7 +3809,7 @@ CI `if:` is moot (#652: plan 010's hosted CI deletes the job), and nothing is po
 Codex did best by citing the vendor hook contract and building a two-summary counterexample. It
 missed every prose and test-adequacy finding. Before the decisions: full suite
 `Failed: 2, Passed: 10243, Skipped: 2`
-(the two known live-Armory tests); strict gate 368/0/0; `test_hooks.sh` 287 passed. After them:
+(the two known live-Armory tests); strict gate 368/0/0; `test_hooks.sh` 289 passed. After them:
 `Passed: 10245`, strict gate 368/0/0, `test_hooks.sh` 283 passed.
 
 | # | Bug | Category | Why Missed | Preventive Action |
