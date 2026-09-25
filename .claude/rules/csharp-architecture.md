@@ -25,7 +25,8 @@ HarmonyPatch / GameModel / CampaignBehavior   ← THIN (<150 lines, no logic)
 | Rule | Detail |
 |------|--------|
 | Entry points <150 lines | ADR-002: delegate immediately to service |
-| No sealed types in services | ADR-007: `ICareerHeroAdapter` not `Hero` |
+| No sealed types in services | ADR-007: `ICareerHeroAdapter` not `Hero`; the one exception is a protected-virtual boundary seam (ADR-007 "Exceptions") |
+| Interfaces that earn their file | Every adapter has one (ADR-007); a service gets one only when a test fakes it or a second class implements it (ADR-002) |
 | Constructor injection only | No service locator in services |
 | Convert at boundary | Adapt sealed types in the entry point, not deep in services |
 | `?.` for computed properties | TaleWorlds getters crash before your null check — see `adapters.md` |
@@ -222,7 +223,7 @@ When a generic template instantiates **one** engine type for **many** logical co
 
 ```
 Main/Features/MyFeature/
-├── IMyFeatureService.cs
+├── IMyFeatureService.cs     ← only if a test fakes it or a second class implements it
 ├── MyFeatureService.cs
 ├── MyFeatureIoC.cs          ← Reuse.Singleton registrations
 ├── Models/
