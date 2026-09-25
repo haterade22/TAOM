@@ -3879,23 +3879,24 @@ UNVERIFIED (snapshots, restore, compile: it ran nothing).
 
 The six lenses agreed the decisions are implemented as decided and found 5 confirmed defects, all
 LOW or INFO and all in text: the CHANGELOG hunk overwrote the convergence entry's heading; the
-`tests.md` sentence ordered a method tag the decision only allowed (102 class-level tags would
-break it); the tagger manifest in scratch still held the Patch86 class row, so the documented
-merge replay would restore it; decision 44's 1.4.8 re-check was missing from every record; the
-replay description omitted its scratch NuGet and temp roots. All fixed on the branch. No false
-positive. Needs Mike: tag the Patch86 registration check `BindingVerification` so it runs on the
-hosted gate (338 to 339); after D45 it runs in no CI step.
+`tests.md` sentence ordered a method tag the decision only allowed (the class-level tags on
+classes whose other tests pass on the stubs would break it); the tagger manifest in scratch still
+held the Patch86 class row, so the documented merge replay would restore it; decision 44's 1.4.8
+re-check was missing from every record; the replay description omitted its scratch NuGet and temp
+roots. All fixed on the branch. No false positive. Needs Mike: tag the Patch86 registration check
+`BindingVerification` so it runs on the hosted gate (338 to 339). It ran in no CI step before D45
+either (the class tag kept it out of both), so this adds a CI check rather than restoring one.
 
 Codex did best with a per-group selection table that showed the registration check falls
 outside both CI steps, but did not flag it. It missed all five text defects: it did not compare
 CHANGELOG headings with the base, read the rule sentence as a description rather than an order,
 and had no access to the scratch manifest or the decision rows. Full suite `Failed: 2, Passed:
-10256, Skipped: 2` (the two known live-Armory tests; branch based before `a39a9c86`).
+10256, Skipped: 2` (the two known live-Armory tests; branch based before `709649c3`).
 
 | # | Bug | Category | Why Missed | Preventive Action |
 |---|---|---|---|---|
 | C1 | CHANGELOG heading overwritten | Other: record integrity | Edited in place, diff not read back for `-###` | Lesson in build-tooling-workflow |
-| C2 | Rule sentence stronger than the decision | Other: rule modality | Written from one example, not the 102-class corpus | Lesson in testing-qa |
+| C2 | Rule sentence stronger than the decision | Other: rule modality | Written from one example, not the classes it governs | Lesson in testing-qa |
 | C3 | Tagger manifest keeps the class row | Stale state: generator input | Output verified, input outside the repo | Lesson in build-tooling-workflow |
 | C4 | Decision 44's condition dropped | Other: record | Outcome recorded, condition not | Same lesson as C3 |
 | C5 | Replay description incomplete | Other: evidence record | Listed what matched CI, not every departure | One-off |

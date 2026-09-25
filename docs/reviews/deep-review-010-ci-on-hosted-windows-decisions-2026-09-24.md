@@ -112,7 +112,7 @@ APPLIED:
   day's `###` headings are, in order, this commit's, the decisions commit's, the convergence
   commit's, the review follow-ups' and the plan's. Docs only; the full suite is unchanged.
 - `.claude/rules/tests.md:104-110`: permissive wording and rewrap (C2). Docs only.
-- `GameReferences.targets:8-9`: the header says v1.5.3 and names the 1.4.8 re-check (C4). An XML
+- `GameReferences.targets:9-10`: the header says v1.5.3 and names the 1.4.8 re-check (C4). An XML
   comment; the full suite (which builds all three projects in install mode) is unchanged.
 - `docs/reviews/deep-review-010-ci-on-hosted-windows-2026-09-24.md`: action item 1 names the
   manifest row (C3), action item 3 and the D44 row carry decision 44's condition (C4), the replay
@@ -154,7 +154,7 @@ and path name against the workflow.
 | (none) | no finding | n/a | yes | Codex's no-defect verdict holds for the code and the workflow: every lens agrees D44 to D46 are implemented as decided |
 | KS3 | UNVERIFIED | verified | n/a | Lenses 2, 3, 5 and 6 compared the six raw snapshots with `cmp`: identical |
 | KS9 | DISPUTED | agree | yes | The two moved checks assert positive call names and have no Inconclusive path (`Patch86HideoutBossFightBindingTests.cs:200-213,258-267`) |
-| KS10 | DISPUTED | agree for the moved checks | partly | Right that no gate is unreachable by accident; its own selection table shows the registration check now runs in neither CI step, which it did not flag (N1) |
+| KS10 | DISPUTED | agree | yes | Right that no gate is unreachable by accident, and right that the registration check "remains excluded": it ran in neither CI step before D45 either (the class tag kept it out of the unit step, and it had no `BindingVerification`), so N1 would add a check, not restore one |
 
 - **Confirmed bugs:** none from Codex.
 - **False positives:** none.
@@ -190,9 +190,35 @@ Full suite in the worktree after the fixes, `TEMP`/`TMP` on E:,
 `Failed!  - Failed:     2, Passed: 10256, Skipped:     2, Total: 10260`. The two failures are the
 known live-Armory tests `TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
 `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`; this branch is based before
-`a39a9c86`. No C# changed in this pass, so no new test was written; every fix is text or an XML
-comment.
+`709649c3`, which rewrote both. No C# changed in this pass, so no new test was written; every
+fix is text or an XML comment.
 
 RCA: `docs/reviews/rca-ci-on-hosted-windows-decisions-2026-09-24.md`.
 
 VERDICT: READY FOR COMMIT (N1 waits for Mike and does not block)
+
+## Convergence
+
+A convergence pass on `c139bc50..2628c66c` found no code defect and five defects in the evidence
+the records state (2 LOW, 3 INFO). The review lead re-checked each against the code or git objects
+before fixing; all five were confirmed, none was a false positive.
+
+| # | Sev | Defect | Proof read by the review lead | Fix |
+|---|---|---|---|---|
+| V1 | LOW | The records said the old `tests.md` sentence contradicted all 102 class-level tags; it governed only classes whose other tests run on the stubs | Four class-tagged classes hold one test method each (`CuratedDropdownIndependenceTests`, `MapLoadDiagnosticsBehaviorTests`, `PlayerPossessionBehaviorPhaseGuardTests`, `SpecialResourcesBehaviorPhaseGuardTests`); the mixed classes were never counted | CHANGELOG, REVIEW-LOG, the RCA (C2, root-cause pattern) and the testing-qa lesson now name the classes it governed with no count; the C2 row above keeps 102 as a plain tag count |
+| V2 | LOW | Three records said the registration check left CI because of D45 | At `2897fcca` the Patch86 class carried `RequiresGame` (line 29) and the method (line 217) had no `BindingVerification`; `csharp.yml:67,83` excluded it from both steps, and no other workflow runs `dotnet test` | KS10 re-graded to agree; the RCA and REVIEW-LOG say N1 adds a CI check rather than restoring one |
+| V3 | INFO | `GameReferences.targets:8-9` cited | `git diff -U0 c139bc50..HEAD -- GameReferences.targets` gives `@@ -9 +9,2 @@` | Now `:9-10` |
+| V4 | INFO | The RCA misquoted a lesson title | `lessons/build-tooling-workflow.md:2285` reads "input, with its conditions" | Quote matches the heading |
+| V5 | INFO | The two known failures were blamed on `a39a9c86` | `a39a9c86` changes only `plans/`; `709649c3` renamed both tests; merge-base with trunk is `7f02fc8d` | Test evidence and REVIEW-LOG name `709649c3` |
+
+Not fixable here: commit `2628c66c`'s body repeats V1's count, and only an amend could change it;
+this section and the corrected records supersede it. Still open: `scratch/010/manifest.txt:142`
+holds the Patch86 class row (action item 2 above; outside this worktree). Older than this diff and
+not touched: `LESSONS-LEARNED.md:19,21` lesson counts are stale.
+
+No C# changed, so no test was written. Full suite after the fixes, `TEMP`/`TMP` on E:,
+`dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`:
+`Failed!  - Failed:     2, Passed: 10256, Skipped:     2, Total: 10260`, the two known live-Armory
+tests (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor`,
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`); the branch is based before
+`709649c3`.

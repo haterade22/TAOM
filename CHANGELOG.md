@@ -4,6 +4,17 @@
 
 ## 2026-09-24
 
+### fix(reviews): v2.0.30 - convergence fixes for plan 010
+
+- **The plan 010 decision records state only what was measured.** They no longer say the old
+  `tests.md` sentence contradicted all 102 class-level tags, since it governed only classes whose
+  other tests pass on the stubs and nobody counted those. They also say the Patch86 registration
+  check was outside both CI steps before D45 as well, so tagging it `BindingVerification` would
+  add a CI check, not restore one.
+- **Three citations corrected:** the `GameReferences.targets` lines (`:9-10`), a lesson title
+  quoted in the RCA, and the commit behind the two known live-Armory failures (`709649c3`, not
+  `a39a9c86`).
+
 ### fix(tests): v2.0.30 - review follow-ups for plan 010
 
 - **The convergence entry has its heading back.** The previous commit wrote its own heading over
@@ -11,8 +22,8 @@
   to the decisions commit.
 - **`.claude/rules/tests.md` permits a method tag instead of requiring one.** The sentence added
   for D45 read as an order to tag only the game-bound method in every class that mixes the two,
-  which the 102 class-level tags contradict. A class tag stays the default; a method tag is allowed
-  when it returns checks worth running to CI.
+  which the class-level tags on classes whose other tests pass on the stubs contradict. A class tag
+  stays the default; a method tag is allowed when it returns checks worth running to CI.
 - **The decision records carry their conditions.** The `GameReferences.targets` header says the
   empty SandBoxCore bin was checked on v1.5.3 only, and the review report's port item and D44 row
   carry the 1.4.8 re-check that decision 44 attached. The report's merge-replay item now says the
