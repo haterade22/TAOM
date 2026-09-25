@@ -576,6 +576,14 @@ hacking a mount (`FromHorseObj`) into a riderless fighter. The elephant is trivi
 *naturally a ridden mount that auto-attacks* — exactly the warg pattern. (If the spider is ever revived, the same
 insight applies: make it a **ridden mount**, not a detached agent.)
 
+> **Corrected 2026-09-25.** "A shape the engine doesn't have" overstates it. The engine has no native AI or roster
+> support for a riderless creature, but one is reachable: `Mission.SpawnMonster` builds it, and the public
+> `Agent.SetTeam` and `Formation` setter place it on a side after `Agent.Build` nulls its formation (v1.5.3
+> `Agent.cs:5207`, `2211`, `1128`). ADOD_Beasts ships riderless wolves that way, driven by managed code alone (its native hook DLL is imported
+> but never called).
+> The spider's June AV cause was refuted and never replaced, so it does not prove the shape impossible. The lesson
+> above stands on cost, not possibility. See [creature-bandits-roadmap.md](../research/creature-bandits-roadmap.md).
+
 ## The recipe (from ADOD_Beasts's working elephant)
 
 Extracted by ADOD_Beasts deep-dive (workflow `w21npmp7s`, 4 agents, 2026-06-05) — decompiled `ADOD_Beasts.dll`
@@ -819,6 +827,11 @@ different complaints:
   chain, both clavicles, three tail bones); no uncovered vertex is more than 5 cm from a capsule. Backup beside the package:
   `adod_elephant_geo.tpac.bak-hitcapsules-20260918-170039`. The Mumakil shares this skeleton (scaled 3x), so it gets
   the fit too.
+
+**The capsules survived a Kit re-import (2026-09-25).** The Armoury LOD pass added LOD1 to LOD5 to the elephant's
+body and armour and Mike re-imported the FBX, which regenerates the package's skeleton. Compared decompressed
+against the pre-import backup, both skeleton segments (bones, then capsules, bodies and ragdoll) are byte-identical.
+Check again after any future re-import ([armory-guide.md](../reference/armory-guide.md) "LODs in the FBX sources").
 
 ## Open items
 

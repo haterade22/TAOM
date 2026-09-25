@@ -161,6 +161,12 @@ along each bone: 57 of 60 bodies, and only 8.8% of the horses-and-cart skin sat 
 than the skin and never more than 20 cm proud of it, and patched `Assets/creature/chariot/mesh/chariot_correct_geo.tpac` in the live Armory (backup
 `chariot_correct_geo.tpac.bak-hitcapsules-20260918-201114`): 53 capsules refit, 98.0% of the skin now inside one. Both horses (legs, spine, neck, head, tail) are covered 97 to 100%. The cart is the exception: the cart body is a box skinned to one bone and the wheels are discs, which a round capsule cannot hug within the 20 cm limit, so the cart body kept its old capsule (27% of it covered) and the wheels reach about a third. Whether arrows striking the cart should damage the chariot at all is a design decision, left open. Read back through TpacTool.Lib with zero mismatches and every segment hash intact.
 Method and format: [bannerlord-skeleton-authoring.md](../reference/bannerlord-skeleton-authoring.md) "Hit capsules".
+
+**They survived a Kit re-import (2026-09-25).** The Armoury LOD pass re-imported `chariot_correct.fbx`, which
+regenerates `chariot_skeleton`. Compared decompressed against the pre-import backup, the capsule, body and ragdoll
+segment is byte-identical; the bone segment kept its order and parents and moved by at most 4e-6 (FBX round-off), so
+nothing was restored. Check again after any future re-import
+([armory-guide.md](../reference/armory-guide.md) "LODs in the FBX sources").
 **Owed:** load LOTRLOME_Armory in the Kit once (re-cooks the package's `.rdc`), then a Custom Battle hit test.
 
 ## Status / pending

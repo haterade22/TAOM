@@ -2560,3 +2560,14 @@ missing and exited 1 on the correct live folder, while troll-race.md recorded bo
   write "clean" in a doc only with the exit code in hand (`refused-by-design=1`, exit 0 now).
 - **Source:** `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 21.
 
+### A Kit re-import binds a NEW mesh name to its FBX material name (2026-09-25)
+The Armoury LOD pass added about 1,730 levels to FBX sources whose slots named materials the Kit does not have
+(`Material.023`, `t_cave_troll_set1.001`, `gondor_wood_shield_b`). The Kit kept each known mesh's old, hand-set
+binding, so every LOD0 still rendered, but each new `.lodN` bound to its slot's name and 269 records came in
+unbound (`Unable to find material` in the rgl log).
+- **Why missed:** the round-trip gate proved materials unchanged against the source FBX, and the source's names
+  were already wrong; the Kit's binding for the old names lives in the tpac, not the FBX.
+- **Prevent:** before adding mesh names to an FBX, read the Kit material each LOD0 is bound to in its tpac and set
+  the new levels' slots to that name (`tools/lod_material_fixes.json`, `lod_fill_batch.py --materials`). Check the
+  rebuilt package with the per-material `.0` / `.1` record names, not only the bare mesh name.
+- **Source:** `docs/reference/armory-guide.md` "LODs in the FBX sources".

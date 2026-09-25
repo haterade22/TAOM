@@ -1024,3 +1024,15 @@ action once, so the reused clip plays five seconds and stops.
   the reused master, as `gen_troll_anim_clips.ps1 -CloneByName` does.
 - **Source:** `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 45.
 
+### Compare a tpac skeleton after a Kit re-import by its decompressed segments, not its stored bytes (2026-09-25)
+After the Armoury LOD re-import, four of the five skeleton-carrying packages (chariot, hill troll, warg,
+`keyforce_dwarf`) looked changed, and the chariot's fitted hit capsules looked lost, because the stored segment
+bytes differed. Decompressed, the capsule, body and ragdoll segment was byte-identical in all five, and the bone
+segment kept order and parents with rest frames moved by at most 8.6e-5 (FBX round-off). The LZ4 output differs on
+every compile, so a stored-byte hash reports a change that is not there, and a restore on that evidence would have
+put the old bones under meshes just compiled against the new ones.
+- **Why missed:** the first check hashed the segments as stored in the file.
+- **Prevent:** compare `read_segment_data` output (`tools/tpac_skeleton_dump.py`); where the bone segment differs,
+  parse the rest frames and restore with `tpac_skeleton_swap.py` only past the bind-pose tolerance (axes 1e-3,
+  offsets 1e-4 of the rig extent) or on a changed bone order.
+- **Source:** `docs/reference/armory-guide.md` "LODs in the FBX sources".

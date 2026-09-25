@@ -1,0 +1,82 @@
+{
+ "_about": "Hand-decided fixes for the Armoury FBX naming defects tools/audit_fbx_lods.py lists (2026-09-25). Applied by tools/lod_fill_batch.py --fixes before it fills missing levels. A misnamed mesh whose triangle count sits in its chain's one gap takes that level; where the fill batch already generated that level, the generated copy is deleted first, so the artist's own mesh wins. A same-sized copy of LOD0 drawn on top of it is deleted. A differently shaped stray is a real extra part and gets a part name (letters, never digits: a digit suffix reads as a numbered LOD chain).",
+ "gondor_assets/lamedon/SK_GD_Lam_Chest_Nob_A.fbx": {
+  "delete": ["SK_GD_Lam_Nob_Chest_Heavy_A_slim.lod1"],
+  "renames": {"SK_GD_Lam_Nob_Chest_Heavy_A_slim.lod": "SK_GD_Lam_Nob_Chest_Heavy_A_slim.lod1"}},
+ "iron_hills_armors/SM_Dwarf_Iron_Bracers_A.fbx": {
+  "delete": ["SK_Dwarf_Iron_Bracer_Heavy_C5.lod3", "SK_Dwarf_Iron_Gloves_A.lod5"],
+  "renames": {"SK_Dwarf_Iron_Bracer_Heavy_C5.lod": "SK_Dwarf_Iron_Bracer_Heavy_C5.lod3",
+              "SK_Dwarf_Iron_Gloves_A.lod": "SK_Dwarf_Iron_Gloves_A.lod5"}},
+ "iron_hills_armors/SM_Dwarf_Iron_Chest_A.fbx": {
+  "delete": ["SK_Dwarf_Iron_Chest_Scale_A.lod4"],
+  "renames": {"SK_Dwarf_Iron_Chest_Scale_A.lod": "SK_Dwarf_Iron_Chest_Scale_A.lod4"}},
+ "iron_hills_armors/SM_Dwarf_Iron_Helmets_A.fbx": {
+  "delete": ["SK_Dwarf_Iron_Helmet_Elite_C1.lod5"],
+  "renames": {"SK_Dwarf_Iron_Helmet_Elite_C1.lod": "SK_Dwarf_Iron_Helmet_Elite_C1.lod5"}},
+ "Isengard/isengard_armors/SK_Uruk_Hai_Helmets_A.fbx": {
+  "delete": ["SK_Uruk_Hai_Helmet_Sword_Heavy_A3.lod5"],
+  "renames": {"SK_Uruk_Hai_Helmet_Sword_Heavy_A3.lod": "SK_Uruk_Hai_Helmet_Sword_Heavy_A3.lod5"}},
+ "rhun_armors/dragon/SK_RH_Drag_Chests_Spiky_A.fbx": {
+  "delete": ["SK_RH_Drag_Chest_Light_D.lod3"],
+  "renames": {"SK_RH_Drag_Chest_Light_D.lod": "SK_RH_Drag_Chest_Light_D.lod3"}},
+ "rhun_armors/dragon/SK_RH_Drag_Pauldrons_A.fbx": {
+  "delete": ["SK_RH_Drag_Pauldron_Light_C.lod5"],
+  "renames": {"SK_RH_Drag_Pauldron_Light_C.lod": "SK_RH_Drag_Pauldron_Light_C.lod5"}},
+ "rhun_armors/loke/SK_RH_Loke_Bracers_A.fbx": {
+  "delete": ["SK_RH_Loke_Bracer_Scale_Med_A.lod2"],
+  "renames": {"SK_RH_Loke_Bracer_Scale_Med_A.lod": "SK_RH_Loke_Bracer_Scale_Med_A.lod2"}},
+ "rhun_armors/loke/SK_RH_Loke_Chests_Scalemail_A.fbx": {
+  "delete": ["SK_RH_Loke_Scalemail_Elite_A.lod4"],
+  "renames": {"SK_RH_Loke_Scalemail_Elite_A.lod": "SK_RH_Loke_Scalemail_Elite_A.lod4"}},
+ "shield/Rohan/Rohan_Solus/wm_rohan_shields.fbx": {
+  "delete": ["wm_rohan_shield_a01_ggg.lod2"],
+  "renames": {"wm_rohan_shield_a01_ggg.od2": "wm_rohan_shield_a01_ggg.lod2"}},
+ "erebor_weapons/erebor_weapons/SM_Dwarf_Erebor_Weapons.fbx": {
+  "delete": ["SM_Dwarf_Erebor_Spear_Handle_B.lod2"],
+  "renames": {"SM_Dwarf_Erebor_Spear_Handle_B.lod52": "SM_Dwarf_Erebor_Spear_Handle_B.lod2"}},
+ "rhun_weapons/loke/SK_RH_Loke_Weapons_A.fbx": {
+  "delete": ["SM_RH_Loke_Axe_Blade_2H_D.lod4"],
+  "renames": {"SM_RH_Loke_Axe_Blade_2H_D.lod44": "SM_RH_Loke_Axe_Blade_2H_D.lod4"}},
+ "gundabad_armors/pale_uruk/SK_GB_Uruk_Pauldrons_A.fbx": {
+  "delete": ["SK_GB_Uruk_Cape_Pauldron_Elite_A.base.lod1", "SK_GB_Uruk_Cape_Pauldron_Elite_A.base.lod2",
+             "SK_GB_Uruk_Cape_Pauldron_Elite_A.base.lod3", "SK_GB_Uruk_Cape_Pauldron_Elite_A.base.lod4",
+             "SK_GB_Uruk_Cape_Pauldron_Elite_A.base.lod5"],
+  "renames": {"SK_GB_Uruk_Cape_Pauldron_Elite_A.base1": "SK_GB_Uruk_Cape_Pauldron_Elite_A.base.lod1",
+              "SK_GB_Uruk_Cape_Pauldron_Elite_A.base2": "SK_GB_Uruk_Cape_Pauldron_Elite_A.base.lod2",
+              "SK_GB_Uruk_Cape_Pauldron_Elite_A.base3": "SK_GB_Uruk_Cape_Pauldron_Elite_A.base.lod3",
+              "SK_GB_Uruk_Cape_Pauldron_Elite_A.base4": "SK_GB_Uruk_Cape_Pauldron_Elite_A.base.lod4",
+              "SK_GB_Uruk_Cape_Pauldron_Elite_A.base5": "SK_GB_Uruk_Cape_Pauldron_Elite_A.base.lod5"}},
+ "gondor_assets/lossarnach/SK_GD_Los_Chest_Nob_A.fbx": {
+  "delete": ["SK_GD_Los_Nob_Chainmail_A_slim.001"]},
+ "arnor_weapons/numenorean_swords_a.fbx": {
+  "renames": {"numenorean_sword_guard_b.001": "numenorean_sword_guard_b.centre"}},
+ "erebor_armor/SM_Dwarf_Erebor_Greaves_A.fbx": {
+  "renames": {"SK_Dwarf_Erebor_Greaves_Elite_A.006": "SK_Dwarf_Erebor_Greaves_Elite_A.toecap"}},
+ "creature/elephant/mesh/adod_elephant.fbx": {
+  "renames": {"SK_Elephant_Armor_A.pillow.001": "SK_Elephant_Armor_A.pillowtop"}},
+ "rohan_assets/rohan_noble/roh_nbl_gorg_tst_6.fbx": {
+  "renames": {"roh_nbl_gorg_tst_6.002": "roh_nbl_gorg_tst_6.b"}},
+ "rohan_assets/rohan_noble/roh_nbl_glv.fbx": {
+  "renames": {"roh_nbl_glv.lod0.001": "roh_nbl_glv.b.lod0", "roh_nbl_glv.lod1.001": "roh_nbl_glv.b.lod1",
+              "roh_nbl_glv.lod2.001": "roh_nbl_glv.b.lod2", "roh_nbl_glv.lod3.001": "roh_nbl_glv.b.lod3",
+              "roh_nbl_glv.lod4.001": "roh_nbl_glv.b.lod4", "roh_nbl_glv.lod5.001": "roh_nbl_glv.b.lod5"}},
+ "rohan_assets/rohan_noble/roh_nbl_shldr_cs.fbx": {
+  "renames": {"roh_nbl_shldr_cs.lod0.001": "roh_nbl_shldr_cs.b.lod0", "roh_nbl_shldr_cs.lod1.001": "roh_nbl_shldr_cs.b.lod1",
+              "roh_nbl_shldr_cs.lod2.001": "roh_nbl_shldr_cs.b.lod2", "roh_nbl_shldr_cs.lod3.001": "roh_nbl_shldr_cs.b.lod3",
+              "roh_nbl_shldr_cs.lod4.001": "roh_nbl_shldr_cs.b.lod4", "roh_nbl_shldr_cs.lod5.001": "roh_nbl_shldr_cs.b.lod5"}},
+ "rohan_assets/rohan_noble/roh_nbl_shldr_gs.fbx": {
+  "renames": {"roh_nbl_shldr_gs.lod0.001": "roh_nbl_shldr_gs.b.lod0", "roh_nbl_shldr_gs.lod1.001": "roh_nbl_shldr_gs.b.lod1",
+              "roh_nbl_shldr_gs.lod2.001": "roh_nbl_shldr_gs.b.lod2", "roh_nbl_shldr_gs.lod3.001": "roh_nbl_shldr_gs.b.lod3",
+              "roh_nbl_shldr_gs.lod4.001": "roh_nbl_shldr_gs.b.lod4", "roh_nbl_shldr_gs.lod5.001": "roh_nbl_shldr_gs.b.lod5"}},
+ "rohan_assets/rohan_noble/roh_nbl_shldr_gs_2.fbx": {
+  "renames": {"roh_nbl_shldr_gs_2.lod0.001": "roh_nbl_shldr_gs_2.b.lod0", "roh_nbl_shldr_gs_2.lod1.001": "roh_nbl_shldr_gs_2.b.lod1",
+              "roh_nbl_shldr_gs_2.lod2.001": "roh_nbl_shldr_gs_2.b.lod2", "roh_nbl_shldr_gs_2.lod3.001": "roh_nbl_shldr_gs_2.b.lod3",
+              "roh_nbl_shldr_gs_2.lod4.001": "roh_nbl_shldr_gs_2.b.lod4", "roh_nbl_shldr_gs_2.lod5.001": "roh_nbl_shldr_gs_2.b.lod5"}},
+ "rohan_assets/rohan_noble/roh_nbl_shldr_cgs_2.fbx": {
+  "renames": {"roh_nbl_shldr_cgs_2.lod0.001": "roh_nbl_shldr_cgs_2.b.lod0", "roh_nbl_shldr_cgs_2.lod1.001": "roh_nbl_shldr_cgs_2.b.lod1",
+              "roh_nbl_shldr_cgs_2.lod2.001": "roh_nbl_shldr_cgs_2.b.lod2", "roh_nbl_shldr_cgs_2.lod3.001": "roh_nbl_shldr_cgs_2.b.lod3",
+              "roh_nbl_shldr_cgs_2.lod4.001": "roh_nbl_shldr_cgs_2.b.lod4", "roh_nbl_shldr_cgs_2.lod5.001": "roh_nbl_shldr_cgs_2.b.lod5",
+              "roh_nbl_shldr_cgs_2.lod0.002": "roh_nbl_shldr_cgs_2.c.lod0", "roh_nbl_shldr_cgs_2.lod1.002": "roh_nbl_shldr_cgs_2.c.lod1",
+              "roh_nbl_shldr_cgs_2.lod2.002": "roh_nbl_shldr_cgs_2.c.lod2", "roh_nbl_shldr_cgs_2.lod3.002": "roh_nbl_shldr_cgs_2.c.lod3",
+              "roh_nbl_shldr_cgs_2.lod4.002": "roh_nbl_shldr_cgs_2.c.lod4", "roh_nbl_shldr_cgs_2.lod5.002": "roh_nbl_shldr_cgs_2.c.lod5"}}
+}

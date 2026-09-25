@@ -1267,7 +1267,7 @@
 					</style_tags>
 				</hair_mesh>
 				<hair_mesh
-				name="dwarf_hair_g"
+				name="dwarf_hair_i"
 				cover_type1="dwarf_hair_i"
 				cover_type2="dwarf_hair_i"
 				cover_type3="dwarf_hair_i"
@@ -1382,6 +1382,13 @@
 					cover_type2="sk_dwarf_beard_a_11"
 					cover_type3="sk_dwarf_beard_a_11"
 					cover_type4="sk_dwarf_beard_a_11">
+				</beard_mesh>
+				<beard_mesh
+					name="sk_dwarf_beard_a_12"
+					cover_type1="sk_dwarf_beard_a_12"
+					cover_type2="sk_dwarf_beard_a_12"
+					cover_type3="sk_dwarf_beard_a_12"
+					cover_type4="sk_dwarf_beard_a_12">
 				</beard_mesh>
 			</beard_meshes>
 			<tattoo_materials
@@ -3007,7 +3014,7 @@
 					</style_tags>
 				</hair_mesh>
 				<hair_mesh
-				name="dwarf_hair_g"
+				name="dwarf_hair_i"
 				cover_type1="dwarf_hair_i"
 				cover_type2="dwarf_hair_i"
 				cover_type3="dwarf_hair_i"
@@ -3125,6 +3132,13 @@
 					cover_type2="sk_dwarf_beard_a_11"
 					cover_type3="sk_dwarf_beard_a_11"
 					cover_type4="sk_dwarf_beard_a_11">
+				</beard_mesh>
+				<beard_mesh
+					name="sk_dwarf_beard_a_12"
+					cover_type1="sk_dwarf_beard_a_12"
+					cover_type2="sk_dwarf_beard_a_12"
+					cover_type3="sk_dwarf_beard_a_12"
+					cover_type4="sk_dwarf_beard_a_12">
 				</beard_mesh>
 			</beard_meshes>
 			<voice_types>
@@ -4795,7 +4809,7 @@
 					</style_tags>
 				</hair_mesh>
 				<hair_mesh
-				name="dwarf_hair_g"
+				name="dwarf_hair_i"
 				cover_type1="dwarf_hair_i"
 				cover_type2="dwarf_hair_i"
 				cover_type3="dwarf_hair_i"
@@ -4910,6 +4924,13 @@
 					cover_type2="sk_dwarf_beard_a_11"
 					cover_type3="sk_dwarf_beard_a_11"
 					cover_type4="sk_dwarf_beard_a_11">
+				</beard_mesh>
+				<beard_mesh
+					name="sk_dwarf_beard_a_12"
+					cover_type1="sk_dwarf_beard_a_12"
+					cover_type2="sk_dwarf_beard_a_12"
+					cover_type3="sk_dwarf_beard_a_12"
+					cover_type4="sk_dwarf_beard_a_12">
 				</beard_mesh>
 			</beard_meshes>
 			<tattoo_color_gradient_points>
@@ -6415,7 +6436,7 @@
 					</style_tags>
 				</hair_mesh>
 				<hair_mesh
-				name="dwarf_hair_g"
+				name="dwarf_hair_i"
 				cover_type1="dwarf_hair_i"
 				cover_type2="dwarf_hair_i"
 				cover_type3="dwarf_hair_i"
@@ -6530,6 +6551,13 @@
 					cover_type2="sk_dwarf_beard_a_11"
 					cover_type3="sk_dwarf_beard_a_11"
 					cover_type4="sk_dwarf_beard_a_11">
+				</beard_mesh>
+				<beard_mesh
+					name="sk_dwarf_beard_a_12"
+					cover_type1="sk_dwarf_beard_a_12"
+					cover_type2="sk_dwarf_beard_a_12"
+					cover_type3="sk_dwarf_beard_a_12"
+					cover_type4="sk_dwarf_beard_a_12">
 				</beard_mesh>
 			</beard_meshes>
 			<tattoo_color_gradient_points>

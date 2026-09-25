@@ -25,6 +25,8 @@ am_golden_flower_knight_pauldrons_a01	metamesh	-	rivendell	-	pauldron	-	a01	Rive
 am_golden_flower_knight_pauldrons_a02	metamesh	-	rivendell	-	pauldron	-	a02	Rivendell	Rivendell/Flower Knights/am_golden_knight_pauldrons_geo.tpac	Y	parsed
 am_golden_flower_knight_pauldrons_grey_a01	metamesh	-	rivendell	-	pauldron	-	a01	Rivendell	Rivendell/Flower Knights/am_golden_knight_pauldrons_geo.tpac	Y	parsed
 am_golden_flower_knight_pauldrons_grey_a02	metamesh	-	rivendell	-	pauldron	-	a02	Rivendell	Rivendell/Flower Knights/am_golden_knight_pauldrons_geo.tpac	Y	parsed
+animalia_elk_08	metamesh	-	unknown	-	unknown	-	08	creature	creature/elk/animalia_elk_08_geo.tpac	Y	parsed
+animalia_moose_big	metamesh	-	unknown	-	unknown	-	-	creature	creature/elk/animalia_moose_big_geo.tpac	Y	parsed
 bo__cap_wm_gondor_shield_a	physicsshape	bo	gondor	-	shield	-	a	shield	shield/Gondor/gondorsheilds2_geo.tpac	N	parsed
 bo_cap_cts_rohan_shield	physicsshape	bo	rohan	rohan	shield	-	-	shield	shield/Rohan/cts_rohan_shield_1_2_geo.tpac	Y	parsed
 bo_cap_dunland_caerdh_shield	physicsshape	bo	dunland	caerdh	shield	-	-	dunland_weapons	dunland_weapons/dunland_caerdh_shields_geo.tpac	Y	parsed
@@ -1075,6 +1077,11 @@ haradrim_boots	metamesh	-	harad	-	boots	-	-	harad	harad/harad_armor_01/hrad_geo.
 haradrim_gloves	metamesh	-	harad	-	bracer	-	-	harad	harad/harad_armor_01/hrad_geo.tpac	Y	parsed
 haradrim_head	metamesh	-	harad	-	body	-	-	harad	harad/harad_armor_01/hrad_geo.tpac	Y	parsed
 haradrim_torso	metamesh	-	harad	-	chest	-	-	harad	harad/harad_armor_01/hrad_geo.tpac	Y	parsed
+hill_troll_a_body	metamesh	-	creature	a	body	-	-	Race Test	Race Test/Mordor/Trolls/hill_troll_a/hill_troll_a_geo.tpac	Y	parsed
+hill_troll_a_hands	metamesh	-	creature	a	body	-	-	Race Test	Race Test/Mordor/Trolls/hill_troll_a/hill_troll_a_geo.tpac	Y	parsed
+hill_troll_a_head	metamesh	-	creature	a	body	-	-	Race Test	Race Test/Mordor/Trolls/hill_troll_a/hill_troll_a_geo.tpac	Y	parsed
+hill_troll_a_legs	metamesh	-	creature	a	body	-	-	Race Test	Race Test/Mordor/Trolls/hill_troll_a/hill_troll_a_geo.tpac	Y	parsed
+hill_troll_a_shoulder	metamesh	-	creature	a	body	-	-	Race Test	Race Test/Mordor/Trolls/hill_troll_a/hill_troll_a_geo.tpac	Y	parsed
 ithilien_boots	metamesh	-	gondor	-	boots	-	-	gondor_assets	gondor_assets/ithilien_rangers/ithilien_rangers_geo.tpac	Y	parsed
 ithilien_boots_heavy	metamesh	-	gondor	-	boots	heavy	-	gondor_assets	gondor_assets/ithilien_rangers/ithilien_rangers_geo.tpac	Y	parsed
 ithilien_bracers	metamesh	-	gondor	-	bracer	-	-	gondor_assets	gondor_assets/ithilien_rangers/ithilien_rangers_geo.tpac	Y	parsed
@@ -1175,10 +1182,10 @@ mkwd_inf3_vambrace_silver	metamesh	-	mirkwood	inf3	bracer	-	-	mirkwood_assets	mi
 mkwd_palace_t1_helmet_green_hc	metamesh	-	mirkwood	palace	helmet	t1	hc	mirkwood_assets	mirkwood_assets/Mirkwood_Armors/mkwd_helmets_geo.tpac	Y	parsed
 mkwd_palace_t2_helmet_green_hc	metamesh	-	mirkwood	palace	helmet	t2	hc	mirkwood_assets	mirkwood_assets/Mirkwood_Armors/mkwd_helmets_geo.tpac	Y	parsed
 mkwd_palace_t3_helmet_green_hc	metamesh	-	mirkwood	palace	helmet	t3	hc	mirkwood_assets	mirkwood_assets/Mirkwood_Armors/mkwd_helmets_geo.tpac	Y	parsed
-mordor_hill_troll	metamesh	-	mordor	hill	body	-	-	Race Test	Race Test/Mordor/Trolls/Hill Troll/hill_troll_body_game_geo.tpac	Y	parsed
-mordor_hill_troll_feet	metamesh	-	mordor	hill	body	-	-	Race Test	Race Test/Mordor/Trolls/Hill Troll/hill_troll_hands_game_geo.tpac	Y	parsed
-mordor_hill_troll_hands	metamesh	-	mordor	hill	body	-	-	Race Test	Race Test/Mordor/Trolls/Hill Troll/hill_troll_hands_game_geo.tpac	Y	parsed
-mordor_hill_troll_head	metamesh	-	mordor	hill	body	-	-	Race Test	Race Test/Mordor/Trolls/Hill Troll/hill_troll_head_game_geo.tpac	Y	parsed
+mordor_hill_troll	metamesh	-	mordor	hill	body	-	-	Race Test	Race Test/Mordor/Trolls/Hill Troll/hill_troll_body_game_geo.tpac	N	parsed
+mordor_hill_troll_feet	metamesh	-	mordor	hill	body	-	-	Race Test	Race Test/Mordor/Trolls/Hill Troll/hill_troll_hands_game_geo.tpac	N	parsed
+mordor_hill_troll_hands	metamesh	-	mordor	hill	body	-	-	Race Test	Race Test/Mordor/Trolls/Hill Troll/hill_troll_hands_game_geo.tpac	N	parsed
+mordor_hill_troll_head	metamesh	-	mordor	hill	body	-	-	Race Test	Race Test/Mordor/Trolls/Hill Troll/hill_troll_head_game_geo.tpac	N	parsed
 nazghul_body_male	metamesh	-	nazgul	-	body	-	-	Race Test	Race Test/Mordor/Nazgul/nazghul_geo.tpac	Y	parsed
 nazghul_feet_male_a	metamesh	-	nazgul	-	boots	-	a	Race Test	Race Test/Mordor/Nazgul/nazghul_geo.tpac	Y	parsed
 nazghul_hands_male	metamesh	-	nazgul	-	body	-	-	Race Test	Race Test/Mordor/Nazgul/nazghul_geo.tpac	Y	parsed

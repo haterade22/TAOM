@@ -428,6 +428,16 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
   16 tests then, 22 since the review); applied live and to the snapshot, 0 mentions left. The old `Assets/.../Trolls/Hill Troll/` folder
   (March meshes, `troll_skeleton*` packages, `m_hilltroll_*` materials) is unreferenced now; deleting it is a
   separate art-drop decision (`audit_deleted_mesh_impact.py` first).
+- **LOD1 to LOD5 on the hill troll (2026-09-25):** the Armoury rule is LOD0 through LOD5 on every mesh
+  (`docs/reference/armory-guide.md`, "LODs in the FBX sources"), and `hill_troll_a.fbx` had LOD0 only.
+  `tools/lod_fill_batch.py` added 35 levels to the seven parts (70/30/15/7/3%, neck and wrist seams locked,
+  bind pose unchanged) and installed it over the source. Mike re-imported it the same day.
+  **An `export_rig_for_kit.py` re-export from the `.blend` drops them**, so run
+  `python tools/lod_fill_batch.py --fbx "Race Test/Mordor/Trolls/hill_troll_a/hill_troll_a.fbx" --apply` after
+  every re-export. The package holds `troll_skeleton_a`, so its tpac was backed up first
+  (`E:\Bannerlord_Backups\lod_pass_20260925\originals\Assets\`). After that re-import, `troll_skeleton_a`
+  kept its capsule, body and ragdoll segment byte-identical (decompressed), with bone order and parents unchanged
+  and rest frames within 8.6e-5 (FBX round-off), so nothing was restored.
 - OK **LOME cave troll set RE-SKINNED (2026-09-18):** `tools/blender/reskin_to_human_skeleton.py` transferred
   TaleWorlds' body weights onto `lotr_troll_body/feet/hands/head` and `lotr_troll_armor/bracers/helmet` (42 meshes
   with LODs). Before: 115 un-normalised + 9 over-4-influence vertices on the body, 1,836 un-normalised on the head.

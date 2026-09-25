@@ -1,0 +1,48 @@
+{
+ "_about": "Hand-decided FBX material fixes (2026-09-25). A Kit re-import binds a mesh the Kit already knew to its old (often hand-set) material, but a NEW mesh name, such as a LOD the fill batch added, takes the material its FBX names; where the FBX names a material the Kit does not have (`t_cave_troll_set1.001`), the new LOD renders with none (the rgl log's `Unable to find material`, 269 records in 24 names on 2026-09-25). Each FBX slot below is renamed to the Kit material the part's LOD0 is bound to in the Kit today (read from the live and pre-reimport packages), so every LOD binds on every re-import. `slots` renames a slot on every object of the file; `chains` sets a whole LOD chain (`*` every slot, or per slot) where one FBX name must map differently per part. Applied by tools/lod_fill_batch.py --materials.",
+ "weapons/Mordor/troll/wm_cave_troll_ws_1.fbx": {
+  "slots": {"t_cave_troll_set1.001": "t_cave_troll_set1", "t_cave_troll_set2.001": "t_cave_troll_set2"}},
+ "weapons/Mirkwood/wm_mirkwood_weapon_set1.fbx": {
+  "slots": {"t_mirkwood_set1_b.003": "t_mirkwood_set1_b"}},
+ "arnor_weapons/SM_AR_Art_Poleaxe_A.fbx": {
+  "slots": {"M_Ar_Art_Weapon_Axe_A": "m_ar_art_axe_a"}},
+ "erebor_weapons/iron_hills_weapons/SM_Dwarf_Iron_Shields.fbx": {
+  "slots": {"M_Dwarf_Iron_Shield_B_Gold": "m_dwarf_iron_shield_b2", "M_Dwarf_Iron_Shield_Gold": "m_dwarf_iron_shield_a2"}},
+ "gondor_weapons/swords/wm_pelagir_set.fbx": {
+  "slots": {"t_pelagir_spear_flag": "t_pelagir_set"}},
+ "shield/Gondor/wm_gondor_shield_b.fbx": {
+  "slots": {"gondor_wood_shield_b": "wm_gondor_shield_b"}},
+ "shield/Gondor/wm_gondor_shield_c.fbx": {
+  "slots": {"gondor_wood_shield_c": "wm_gondor_shield_c"}},
+ "shield/Gondor/gondorsheilds2.fbx": {
+  "chains": {"wm_gondor_shield_aa": {"*": "wm_gondor_shield_b"},
+             "wm_gondor_shield_bb": {"*": "wm_gondor_shield_b1"},
+             "wm_gondor_shield_cc": {"*": "wm_gondor_shield_c1"},
+             "wm_gondor_shield_dd": {"*": "wm_gondor_shield_b1"}}},
+ "Race Test/keyforce_dwarf.fbx": {
+  "slots": {"M_Dwarf_Basemesh_Eye": "eye_mat"}},
+ "Race Test/Saruman/saruman_delivery_2026.03.16.fbx": {
+  "slots": {"aom_hair_long": "saruman_beard", "aom_beard_long.001": "saruman_beard"}},
+ "northern/SK_Northern_Pauldrons_A.fbx": {
+  "slots": {"M_Fur_Cards_Grey_A": "m_fur_cards_grey", "M_Fur_Tileable_A": "m_fur_tileable_grey"}},
+ "erebor_armor/Dain/SK_Dwarf_Dain_Helmets_A.fbx": {
+  "slots": {"M_Dwarf_Helmet_Plume_A_Brown": "m_dwarf_helmet_plume_a"}},
+ "Race Test/Dol Guldur/SK_DG_Guldur_Uruk_Basemesh_A.fbx": {
+  "_why": "The Kit has no Dol Guldur a4 (mouth) material and the mouth was never bound, not even before this pass; the pale uruk's mouth material is the stand-in until KEYforce supplies one.",
+  "slots": {"M_Uruk_Guldur_Basemesh_A4": "m_uruk_pale_basemesh_a4"}},
+ "rohan_assets/rohan_noble/roh_nbl_glv.fbx": {
+  "chains": {"roh_nbl_glv": {"*": "roh_nbl_arm_pads"}, "roh_nbl_glv.b": {"*": "noble_leather_gloves"}}},
+ "rohan_assets/rohan_noble/roh_nbl_gorg_tst_6.fbx": {
+  "chains": {"roh_nbl_gorg_tst_6": {"*": "roh_nbl_gorg"}, "roh_nbl_gorg_tst_6.b": {"*": "roh_nbl_arm_pads"}}},
+ "rohan_assets/rohan_noble/roh_nbl_shldr_cgs_2.fbx": {
+  "chains": {"roh_nbl_shldr_cgs_2": {"*": "roh_nbl_arm_pads"}, "roh_nbl_shldr_cgs_2.b": {"*": "roh_nbl_arm_pads"},
+             "roh_nbl_shldr_cgs_2.c": {"*": "roh_nbl_clk"}}},
+ "rohan_assets/rohan_noble/roh_nbl_shldr_cs.fbx": {
+  "_why": "The `.b` part uses two slots; its pre-reimport LOD0 held one record each: Material.006 the cloak (the same slot is the cloak in roh_nbl_clk_clo), Material.002 the arm pads.",
+  "chains": {"roh_nbl_shldr_cs": {"*": "roh_nbl_arm_pads"},
+             "roh_nbl_shldr_cs.b": {"Material.002": "roh_nbl_arm_pads", "Material.006": "roh_nbl_clk", "Material.021": "roh_nbl_arm_pads"}}},
+ "rohan_assets/rohan_noble/roh_nbl_shldr_gs.fbx": {
+  "chains": {"roh_nbl_shldr_gs": {"*": "roh_nbl_arm_pads"}, "roh_nbl_shldr_gs.b": {"*": "roh_nbl_arm_pads"}}},
+ "rohan_assets/rohan_noble/roh_nbl_shldr_gs_2.fbx": {
+  "chains": {"roh_nbl_shldr_gs_2": {"*": "roh_nbl_arm_pads"}, "roh_nbl_shldr_gs_2.b": {"*": "roh_nbl_arm_pads"}}}
+}

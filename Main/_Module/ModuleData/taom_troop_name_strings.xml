@@ -424,7 +424,6 @@
 	<string id="aom_gondor_ring_footman_name" text="{=aom_gondor_ring_footman_name}[Gondor] Ringlo Vale Footman" />
 	<string id="aom_gondor_ring_guardsman_name" text="{=aom_gondor_ring_guardsman_name}[Gondor] Ringlo Vale Guardsman" />
 	<string id="aom_gondor_ring_militia_name" text="{=aom_gondor_ring_militia_name}[Gondor] Ringlo Vale Militia" />
-	<string id="aom_gondor_ring_peasant_name" text="{=aom_gondor_ring_peasant_name}[Gondor] Ringlo Vale Peasant" />
 	<string id="aom_gondor_ring_spearman_name" text="{=aom_gondor_ring_spearman_name}[Gondor] Ringlo Vale Spearman" />
 	<string id="aom_gondor_ring_warden_name" text="{=aom_gondor_ring_warden_name}[Gondor] Ringlo Vale Warden" />
 	<string id="aom_gondor_ser_coastwarden_name" text="{=aom_gondor_ser_coastwarden_name}[Gondor] Serelond Coastwarden" />
@@ -473,6 +472,7 @@
 	<string id="aom_harad_footman_name" text="{=aom_harad_footman_name}[Harad] Footman" />
 	<string id="aom_harad_gildedfang_name" text="{=aom_harad_gildedfang_name}[Harad] Warrior of the Gilded Fang" />
 	<string id="aom_harad_horsearcher_name" text="{=aom_harad_horsearcher_name}[Harad] Rider of the Golden Veil" />
+	<string id="aom_harad_howdah_crew_name" text="{=aom_harad_howdah_crew_name}[Harad] Howdah Archer" />
 	<string id="aom_harad_levy_name" text="{=aom_harad_levy_name}[Harad] Levy" />
 	<string id="aom_harad_marksman_name" text="{=aom_harad_marksman_name}[Harad] Marksman" />
 	<string id="aom_harad_militia_archer_name" text="{=aom_harad_militia_archer_name}[Harad] Militia Archer" />
@@ -859,6 +859,8 @@
 	<string id="taom_harad_raiders_boss_name" text="{=taom_harad_raiders_boss_name}[Harad] Haradrim Warlord" />
 	<string id="taom_mirkwood_stalkers_boss_name" text="{=taom_mirkwood_stalkers_boss_name}[Mirkwood] Stalker Captain" />
 	<string id="taom_rhun_raiders_boss_name" text="{=taom_rhun_raiders_boss_name}[Rhûn] Kharaghûl Warlord" />
+	<string id="taom_test_animalia_elk_rider" text="{=taom_test_animalia_elk_rider}[Test] Animalia Elk Rider" />
+	<string id="taom_test_animalia_moose_rider" text="{=taom_test_animalia_moose_rider}[Test] Animalia Moose Rider" />
 	<string id="taom_umbar_corsairs_boss_name" text="{=taom_umbar_corsairs_boss_name}[Umbar] Corsair Captain" />
 
 </strings>

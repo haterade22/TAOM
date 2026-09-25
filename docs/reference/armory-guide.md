@@ -109,6 +109,59 @@ Four `lotraom-assets` commits removed 755 asset files. What that means for autho
 gloves, greaves or cape; Lossarnach and Pinnath Gelin ship no greaves. The generic
 lord-tier fallbacks are `sk_gd_sere_bracer_lord_a` and `sk_gd_sere_grvs_lord_a`.
 
+## LODs in the FBX sources
+
+**The rule (Mike, 2026-09-25): every mesh carries LOD0 through LOD5, with no gaps; `clo_` cloth
+meshes and `bo_` collision bodies need none.** A missing level is drawn as the level before it,
+so a gap costs as much as no LOD at that range. What still falls short is listed in
+[lod-audit.md](armory-catalogue/lod-audit.md) (`tools/audit_fbx_lods.py`, read from
+`AssetSources`); `python tools/lod_fill_batch.py --all --apply` fills every gap it can, one FBX
+at a time, and installs only what verifies.
+
+- **Naming.** LOD0 is the bare object name or `<name>_lod0`, LOD N is `<name>.lodN` or
+  `<name>_lodN`, and the Kit folds both into one metamesh (the catalogue holds only
+  `dwarf_hair_a` for `Dwarf_Hair_A_lod0` to `_lod3`). `<mesh>.<part>` is a sub-mesh with its
+  own chain, not a LOD. A name the Kit cannot fold (`.lod` with no number, `.lod2.001`, `.od2`)
+  or a family of numbered parts with falling triangle counts (`.base`, `.base1` to `.base5` on
+  `SK_GB_Uruk_Cape_Pauldron_Elite_A`) ships as extra sub-meshes drawn all at once.
+- **Only LOD0 carries morphs.** Every race head and hair has 101 face-morph channels on LOD0
+  and none below. A head with 100 (the goblin, until 2026-09-25) has every facegen slider one
+  morph off if the Kit maps them by order.
+- **Budgets.** The elf and dwarf basemeshes and dwarf hairs A to E run 70/30/15/7/3% of LOD0.
+  KEYforce's creature gear budgets (2026-09-25): warg fur 18k/11k/5k/2k/1k then a single hidden
+  plane; orc rider saddle 15k/10k/5k/2k/500/100 with the metal fittings dropped from LOD2 and
+  everything but the seat from LOD4.
+- **A missing level is filled by the one before it** (KEYforce's reading of the Kit: the warg
+  fur's L0, L1, L4, L6 chain drew 11k at LOD1 to 3). So a mesh that should vanish at range needs
+  an explicit last level, a single hidden plane, or it keeps drawing its last real LOD.
+- **Filling a chain.** A gap is filled geometrically between its two neighbours; below the last
+  level the standard step continues. The artist's own levels are never touched, and a level past
+  5 is left alone. Seams lock on the body parts a race skin stitches, never on hair.
+- **Re-import risk.** Five Armoury FBX carry a skeleton into their own tpac (the elephant, the
+  chariot, the warg, `keyforce_dwarf`, the hill troll). A Kit re-import regenerates that
+  package, and the elephant's and chariot's fitted hit capsules (#624) were patched straight into
+  it. Back the tpac up first (the fill batch does), compare the skeleton after, and restore it
+  with `tools/tpac_skeleton_swap.py` only if it really changed. Compare the DECOMPRESSED segments
+  (`read_segment_data` in `tools/tpac_skeleton_dump.py`): the LZ4 bytes differ on every compile.
+  On 2026-09-25 all five kept their capsule, body and ragdoll segment byte-for-byte, and the bone
+  segment moved only by FBX round-off (under 1e-4), which is no reason to restore.
+- **Materials on a re-import.** The Kit keeps the material already bound to a mesh name it knows,
+  so an old, hand-set binding survives. A NEW mesh name (every added LOD) binds to the material
+  its FBX slot names, and when the Kit has no material by that name the level renders unbound
+  (`MetaMesh( x.lod3 ) : Unable to find material ...` in the rgl log). Before adding levels, set
+  each new level's slot to the Kit material its LOD0 is bound to today
+  (`tools/lod_material_fixes.json`, `lod_fill_batch.py --materials`). A multi-material mesh
+  compiles to one record per material (`x.0`, `x.1`), so a binding check looks for those, not the
+  bare name.
+- **Authoring and proof.** `tools/blender/add_mesh_lods.py` writes the levels;
+  `audit_fbx_lods.py --diff <old> <new>` proves nothing else moved, bind pose included (a Blender
+  export rewrites the file's axis system, so raw bind matrices always differ; compare relative
+  to a reference bone). `audit_fbx_lods.py --check` fails once a reinstall reverts a pass.
+- **Known defect: `sk_dwarf_beard_a_10`.** The FBX is fine, but `SK_Dwarf_Beards_geo.tpac`
+  registers that metamesh with `_beard_a` replaced by eight NUL bytes, so the engine logs
+  `Meta mesh with name sk_dwarf_beard_a_10 cannot be found!` and a dwarf who rolls beard 10 has
+  none. A Kit re-import of `Race Test/Beards/SK_Dwarf_Beards.fbx` rewrites the name.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

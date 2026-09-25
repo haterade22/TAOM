@@ -4,6 +4,88 @@
 
 ## 2026-09-25
 
+### feat(armory): v2.0.30 - distance LODs for race and creature meshes, goblin head, dwarf skins
+
+Eight FBX sources in the live Armory (`AssetSources`), each rewritten through Blender and checked
+against its original with a reader that does not use Blender. Nothing ships until the Kit
+re-import; every original is in `E:\Bannerlord_Backups\lod_pass_20260925\originals\`.
+- **Dwarf hairs:** A to E gain `_lod4` and `_lod5` (7% and 3% of LOD0, hair A 1,279 and 548
+  tris), F to J gain `_lod3` to `_lod5` (15/7/3%). LOD0 keeps its 101 face morphs.
+- **Gundabad and Dol Guldur uruk basemeshes:** head, body, hands and legs get LOD1 to 5
+  (70/30/15/7/3%), eyes and mouth LOD1 to 4, and every neck, wrist and waist seam vertex is kept
+  so the stitched parts still meet at every LOD.
+- **Goblin head:** the skull was 6 to 12% wider and 10 to 20% deeper than the orc's above the
+  jaw. It is now shrunk to the orc's profile (X 0.913, Y 0.852, fitted on 2 cm slices) with the
+  neck and jaw untouched. The head also gains the empty `Basis_0` morph that the orc and every
+  other race head open with (101 channels, not 100), so each facegen slider drives its own morph
+  even if the Kit maps them by order.
+- **Warg fur (KEYforce's budget):** all four fur meshes get LOD2 5k, LOD3 2k and LOD4 1k (was
+  6.8k), LOD5 a single hidden quad, and lose the LOD6 fur. **Orc rider saddle:** LOD0 23k to
+  15k, a new LOD1 10k, then 5k and 2k with the 16 metal fittings dropped, and 500 and 100 with
+  only the seat left.
+- **Mumakil platform:** the four parts get LOD1 to 5 at 50/25/10/4/1.5% (the 300k `.platform`
+  ends at 4.5k). Parts under 2% of the platform's size (1,057 nails and fittings holding 185k
+  tris) are dropped from LOD2 and under 5% from LOD3. The ropes stop at 558 tris for LOD5 (their
+  12 tubes will not collapse further).
+- **Dwarf skins (`ModuleData/skins.xml`, snapshot updated):** in the man, woman and both teenage
+  skins the ninth hair was a second `dwarf_hair_g` pointing at `dwarf_hair_i`'s mesh, so hair I
+  was never offered; it is now `dwarf_hair_i`. Beard `sk_dwarf_beard_a_12`, in the FBX and the
+  compiled tpac but in no skin, is added to the same four.
+- **Found, not fixed:** `sk_dwarf_beard_a_10` is registered in `SK_Dwarf_Beards_geo.tpac` with
+  eight NUL bytes where `_beard_a` should be, so the engine cannot find it (12 `Meta mesh ...
+  cannot be found` lines in the rgl logs) and beard 10 shows nothing. A Kit re-import of the beard
+  FBX should rewrite the name.
+- **Every used mesh now carries LOD0 through LOD5** (Mike's rule; `clo_` cloth needs none). Before:
+  72 used meshes had LOD0 only and 888 used chains in 104 FBX skipped or lacked levels (`0,2,4,5`,
+  `0..3`, the Kit drawing the level before a gap). `tools/lod_fill_batch.py` added about 1,730
+  levels to 112 FBX (Dale boots, chests, gauntlets, helmets, shoulders; the elephant's body and armour;
+  the hill troll; the Isengard, elf and dwarf eyes, mouths and shoulders; Gondor, Rohan, Rhûn, Erebor,
+  Mordor, Isengard and Mirkwood weapons and shields): a gap filled geometrically between its
+  neighbours, the 70/30/15/7/3 step past the last level, the artist's levels never touched, seams
+  locked on race body parts. Each file was installed only after a Blender-free diff showed the
+  planned objects and nothing else, with the bind pose unchanged to round-off. The audit now lists 0
+  LOD0-only and 0 incomplete used chains.
+- **Naming defects fixed in 23 FBX** (`tools/lod_defect_fixes.json`, decided per case from triangle
+  counts and bounding boxes): ten `.lod` / `.od2` / `.lod52` / `.lod44` meshes moved into their
+  chain's one gap (the artist's mesh replacing the generated one), the Gundabad elite cape pauldron's
+  `.base1` to `.base5` renamed into one LOD chain (they drew all at once), the Rohan noble gloves,
+  gorget and shoulders' `.lodN.001` / `.002` chains renamed to `.b` / `.c` parts, four stray parts
+  named (`numenorean_sword_guard_b.centre`, the Erebor greave `.toecap`, the elephant `.pillowtop`,
+  the gorget `.b`), and a copy of the Lossarnach slim chainmail's LOD0 drawn on top of it deleted.
+  Left for KEYforce: `dunland_caerdh_bracer_medium_d.metal` has LOD1 to 5 and no LOD0.
+- **Materials on the new LODs (after Mike's first re-import):** the Kit kept each known mesh's old,
+  often hand-set material, but every new LOD took the material its FBX names, and 19 FBX name
+  materials the Kit does not have (`t_cave_troll_set1.001`, `M_Ar_Art_Weapon_Axe_A`,
+  `gondor_wood_shield_b`, `Material.023`...): 269 records unbound in the rgl log. Each slot was set
+  by hand (`tools/lod_material_fixes.json`) to the Kit material that part's LOD0 is bound to today,
+  per LOD chain where one name meant different parts (the Gondor shield set, the Rohan noble
+  pieces, whose own old LODs had drifted between arm pads, gorget and cloak). The Dol Guldur mouth
+  had never been bound and the Kit has no Dol Guldur mouth material, so it wears the pale uruk's
+  `m_uruk_pale_basemesh_a4` until one exists. Mike re-imported the 19. The rgl log's last
+  `Unable to find material` line is from before that import, and all 658 records in the 19 rebuilt
+  packages resolve to a Kit material (a multi-material mesh compiles to one `.0`, `.1` record per
+  material, so a checker must look for those, not the bare name).
+- **Skeletons survived the re-import:** five of these FBX carry a skeleton into their own tpac
+  (elephant, chariot, warg, `keyforce_dwarf`, hill troll), and the elephant's and chariot's fitted
+  hit capsules (#624) live in that tpac. After the re-import, compared decompressed against the
+  backups: the capsule, body and ragdoll segment is byte-identical in all five; the elephant's
+  bone segment is identical, and the other four keep bone order and parents, with rest frames moved
+  by at most 8.6e-5 on an axis and 4.5e-6 m on an offset (FBX round-off). Nothing was restored,
+  because swapping the old bones back would only mismatch the meshes just compiled against the new
+  ones. Compare the decompressed segments; the compressed bytes differ on every compile.
+- **After the re-import:** the catalogue holds no `*lodN` row (the Kit folded every new level), and
+  `gondorsheilds2` now also compiles four collision bodies its FBX already had
+  (`bo_wm_gondor_shield_a`/`_d`, `bo_cap_wm_gondor_shield_d`, and the misnamed
+  `bo__cap_wm_gondor_shield_a`), which no item references. `check_rdc_entries.py` finds seven
+  packages without an RDC entry, none of them from this pass.
+- **Tools:** `tools/audit_fbx_lods.py` reads every FBX in the Armory (about 40 s) into
+  `docs/reference/armory-catalogue/lod-audit.md` and is the gate (`--check` fails once a reinstall
+  reverts this pass; `--diff` compares two FBX per mesh and bind pose). `tools/lod_fill_batch.py` plans,
+  runs and verifies; `tools/blender/add_mesh_lods.py` writes the levels (ratio or absolute budgets,
+  planes, rebuilds, island filters, plans with renames); `tools/oneoff/blender_goblin_head_fix.py` did
+  the goblin; `tools/lod_material_fixes.json` holds the hand-decided slot materials (`--materials`).
+  88 unit tests.
+
 ### feat(gondor): v2.0.30 - KEYforce's Lamedon drop ported, noble ladders, Armory refs repaired
 
 KEYforce's lotraom-assets commit `429746b2` ("Fixes and Lamedon") re-kitted Gondor into new Lamedon and
@@ -83,6 +165,32 @@ Docs: `armor-balance.md`, `melee-damage-model.md` and `gondor-armor-revamp.md` r
 from live. `docs/reference/troop-rosters.html` and `tools/data/armor_roster_tiers.json` are derived from
 every troop file, so they are left for regeneration once the other sessions editing troops have committed. In-game checks owed after a deploying
 build: the #669 checklist.
+
+### docs(research): v2.0.30 - creature bandits feasibility and roadmap
+
+A player asked for creature bandits (spiders, wargs, elephants) that fight with an invisible rider or none.
+New `docs/research/creature-bandits-roadmap.md` records the engine facts read from the v1.5.3 decompile.
+A truly riderless creature is possible (`Mission.SpawnMonster` plus the public `SetTeam`, `Formation` and
+`Origin` setters, as the ADOD_Beasts wolves do). Mike's decision: build that (Design B) for hostile bandit
+parties only, never a recruitable troop, which drops recruitment, allied control and most mission types.
+The plan starts with a render gate (one riderless warg in Custom Battle, the check the June spider failed),
+then a fighting spike, then the feature. An invisible rider on a normal mounted troop (Design A) is the
+fallback if the gate fails.
+
+The Phase 0 research is answered in the same doc, from three decompile passes with the load-bearing lines
+re-read. The battle spawn loop ignores the agent `SpawnTroop` returns, so a prefix can hand back a creature.
+Giving the creature its troop's `PartyGroupAgentOrigin` makes casualties and battle end work with no extra
+patch, since `BattleAgentLogic.OnAgentRemoved` gates only on the origin and `IsSideDepleted` is count
+arithmetic. Setting `Agent.Character` to the troop avoids an NRE in `TroopUpgradeTracker.CheckUpgradedCount`
+on the first creature kill. Prisoners are gated in the existing `TaomBattleRewardModel`. The ADOD_Beasts
+wolves move with managed scripted positions; the native hook DLL is imported but never called. The June
+render crash was specific to `Mountable="false"`, since its warg stand-in rendered riderless, so creatures
+stay `Mountable="true"` behind the spider's mount lock. Enemy soldiers most likely ignore a riderless
+creature, as they do loose horses: the ADOD_Beasts wolf needed a destructible proxy entity and a
+controller on every AI human to be fought at all. The feature therefore needs its own targeting layer,
+`SetTargetAgent` first and the proxy approach as the fallback, both tested in the fighting spike.
+`elephant.md` gains a dated correction: its "a shape the engine doesn't have" is about cost, not possibility.
+Documentation only; nothing built.
 
 ## 2026-09-25
 
