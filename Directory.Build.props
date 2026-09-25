@@ -47,7 +47,8 @@
 	  InitializeSourceControlInformation sets SourceRevisionId and before
 	  AddSourceRevisionToInformationalVersion appends it, and marks it:
 	    <sha>.dirty   compiled or deployed inputs differ from HEAD (untracked files count, whatever
-	                  status.showUntrackedFiles says; ignored files and skip-worktree paths do not)
+	                  status.showUntrackedFiles says; ignored files, and skip-worktree or
+	                  assume-unchanged paths, do not)
 	    <sha>.nogit   the repository was found, but the git command failed
 	    nogit         no repository information at all (a source zip)
 	  tools/package_release.py (require-build) refuses any of the three for a release.

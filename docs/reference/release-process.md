@@ -88,12 +88,25 @@ Use `/release`. It runs the sequence below and fails closed on the #371 pairing 
    The gate reads every `bin/<platform>/` copy of `TAOM.dll` and `TAOM.Dependencies.dll` and
    refuses a tag whose `Directory.Build.props` predates the `.dirty` flag (the 1.4.5 line until it
    is ported). It proves the DLLs only. Deploys never delete, so the install also holds files from
-   every earlier deploy. Outside `bin/`, compare each module folder with the tag and remove what
-   the tag does not hold before packaging: `<game>/Modules/TAOM/` maps to `Main/_Module/` (list it
-   with `git ls-tree -r --name-only vX.Y.Z -- Main/_Module`), and `<game>/Modules/TAOM.Dependencies/`
-   maps to `Dependencies/_Module/`. Leave `bin/` out of the comparison: it holds build output and
-   NuGet runtime DLLs (`TAOM.dll`, `DryIoc.dll`, `0Harmony.dll`) that git never tracks, and the
-   gate covers the two stamped DLLs.
+   every earlier deploy. Before packaging, prune only what neither the tag nor its build owns:
+   - **`<game>/Modules/TAOM/` outside `bin/`:** remove what `Main/_Module/` does not hold at the
+     tag (`git ls-tree -r --name-only vX.Y.Z -- Main/_Module`). Leave `RuntimeDataCache*` alone:
+     the packager already excludes it unless `--keep-rdc` asks for it.
+   - **`<game>/Modules/TAOM.Dependencies/` outside `bin/`:** prune nothing. MCM's UI assets
+     (`AssetPackages/`, `EmAssetPackages/`, `GUI/`, `ModuleData/Languages*/`) exist in the install
+     only, and no build step recreates them
+     ([module-dependencies.md](../modding/module-dependencies.md), "Five folders").
+   - **`bin/<platform>/` of both modules:** keep a file whose name the tag tracks under
+     `_Module/bin/` (`git ls-tree -r --name-only vX.Y.Z -- Main/_Module/bin Dependencies/_Module/bin`:
+     2 files for TAOM, 44 for TAOM.Dependencies) or the tag's build writes. The build writes
+     `TAOM.dll`, `TAOM.pdb`, `DryIoc.dll`, `Newtonsoft.Json.dll` and
+     `System.Runtime.CompilerServices.Unsafe.dll` into TAOM, and `TAOM.Dependencies.dll`,
+     `TAOM.Dependencies.pdb`, `0Harmony.dll`, `Bannerlord.UIExtenderEx.dll`, `MCMv5.dll` and
+     `System.Runtime.CompilerServices.Unsafe.dll` into TAOM.Dependencies. That is each project's
+     `bin/Debug/net472/` output, every runtime DLL its packages bring in (the other packages are
+     compile-only or carry none). The build then mirrors `Win64_Shipping_Client` into `_Server` and
+     `_wEditor`. Remove any other file; `.pdb`, `.exp` and `.lib` may stay, since the packager
+     never ships them. A retired binary such as `BehaviorTreeWrapper.dll` would otherwise ship.
 
 **The Armory ships in the same release when the TAOM build needs a file it did not have.** Players get
 `LOTRLOME_Armory` only from the editor package Mike builds into `E:\LOTRAOM_Releases\<channel>\Modules\`. Since #627

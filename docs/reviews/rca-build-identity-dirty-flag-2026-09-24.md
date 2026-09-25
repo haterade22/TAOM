@@ -39,6 +39,12 @@ and nothing in the plan or its tests put the two side by side.
 | 16 | LOW | No crash-report changelog line | Convention inconsistency | Only the Identity table row was in the plan | Added |
 | 17 | LOW | CLI tests error outside git; gate branches untested | Other: test coverage | Tests written for the happy and one-refusal paths | 11 tests added; skip outside git |
 | 18 | LOW | Unreadable DLL exits 1 with a traceback | Missing null guard | `read_bytes` assumed to succeed | `cannot read` refusal |
+| D1 | MEDIUM | The orphan-removal step compared the whole install with `Main/_Module`, which lists no `bin/` build output (convergence 1) | Logic error | The step was written from what git tracks; nobody listed what a deploy puts in the install | Compare outside `bin/`; the rest of that fix was wrong and D-A and D-B replace it |
+| D2 | LOW | The shallow-history skip in `test_refuses_a_commit_that_predates_the_dirty_flag` could never fire (convergence 1) | Assumed an API worked a certain way | `git rev-parse <root>^` was assumed to fail with empty output; it exits 128 and echoes the argument to stdout | The test resolves the parent with `pr.resolve_commit` (`--verify --quiet`); proved in a `--depth 1` clone |
+| D3 | LOW | SKILL.md and CHANGELOG said the gate refuses any requested module missing from `--source` (convergence 1) | Other: overclaimed guarantee | The prose described the intent, not `require_build`, which refuses only names in `SHIPPED_DLLS` | Wording now matches `package_release.py:176-178` |
+| D-A | HIGH | The D1 fix pruned `TAOM.Dependencies` outside `bin/` against `Dependencies/_Module/`, which would delete 55 install-only MCM assets; the TAOM half also swept `RuntimeDataCache/` (final convergence) | Other: wrong premise carried forward | D1 counted "never compared `TAOM.Dependencies`" as a defect. Nobody walked the live module or read `module-dependencies.md:825-829`, and the same report's follow-up (an MCM allow-list) already contradicted it | Prune `Modules/TAOM/` only, leave `RuntimeDataCache*`, never prune TAOM.Dependencies outside `bin/`; a read-only walk of the live install proved the rule leaves exactly 12 TAOM leftovers |
+| D-B | MEDIUM | "Leave `bin/` out" rested on `bin/` holding only DLLs git never tracks (46 are tracked), and three retired BehaviorTree DLLs would ship (final convergence) | Other: wrong premise | The claim was written from memory of `.gitignore`, not from `git ls-files` | `bin/` keeps tracked names plus what the build writes (from `obj/project.assets.json` and the `bin/Debug/net472/` output); the walk found exactly those three DLLs to remove |
+| D-C | LOW | The props comment named ignored and skip-worktree paths but not assume-unchanged ones (final convergence) | Other: incomplete propagation | The comment listed the exclusions its author had in mind; the change's own probe relied on assume-unchanged | Comment now names both |
 
 ## Root-cause pattern
 
@@ -48,6 +54,12 @@ a fixed path, a rev string) instead of from the packager's output inward (every 
 the smallest set it reads; each of these was a set smaller than the one that ships. Findings 10 and
 15 are the second, familiar pattern: a corrected fact left standing elsewhere (the plan 016 RCA
 records the same shape).
+
+The convergence findings repeat the pattern one level down. D1, D-A and D-B each wrote a prune
+rule from what git tracks, when what legitimately sits in the install is three sets: tracked
+files, build output, and vendored MCM assets that only the install holds. D-A and D-B were fixes
+to D1; each rested on a premise that one `git ls-files` or one read-only walk of the live install
+would have refuted.
 
 ## Why each agent missed these
 

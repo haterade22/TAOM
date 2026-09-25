@@ -258,7 +258,7 @@ re-checked against the code before any change; all three held.
 
 | # | Severity | Defect | Proof this pass | Fix |
 |---|---|---|---|---|
-| D1 | MEDIUM | The orphan-removal step compared the whole install with `git ls-tree ... -- Main/_Module`, which never lists `bin/` build output, and never compared `TAOM.Dependencies` | The tag tracks no `TAOM.dll`; the live `Modules/TAOM.Dependencies/bin/Win64_Shipping_Client/` holds `0Harmony.dll`, which the tag does not track | Phase 8 step 2 and `release-process.md` step 8 now compare outside `bin/` only, state that `Modules/TAOM/` maps to `Main/_Module/` and `Modules/TAOM.Dependencies/` to `Dependencies/_Module/`, and say why `bin/` is left out |
+| D1 | MEDIUM | The orphan-removal step compared the whole install with `git ls-tree ... -- Main/_Module`, which never lists `bin/` build output. (This row first also counted "never compared `TAOM.Dependencies`" as a defect. That premise was wrong: its MCM assets exist in the install only, so the old step was right to leave it out. See D-A under Final convergence.) | The tag tracks no `TAOM.dll`; the live `Modules/TAOM.Dependencies/bin/Win64_Shipping_Client/` holds `0Harmony.dll`, which the tag does not track | Phase 8 step 2 and `release-process.md` step 8 now compare outside `bin/` only. The TAOM.Dependencies comparison and the "leave `bin/` out" reason this fix added were both wrong; D-A and D-B under Final convergence replace them |
 | D2 | LOW | The shallow-history skip in `test_refuses_a_commit_that_predates_the_dirty_flag` could never fire | `git rev-parse <root>^` exits 128 and prints the argument to stdout. A `git clone --depth 1` of the branch failed the test (`cannot resolve '<sha>^'`, 57 run, 1 failure) | The test resolves the parent with `pr.resolve_commit`, which uses `--verify --quiet`; the same clone now reports `skipped 'shallow history'`, 57 run, OK |
 | D3 | LOW | SKILL.md and CHANGELOG said the gate refuses any requested module missing from `--source` | `require_build` refuses a missing name only when it is in `SHIPPED_DLLS` (`tools/package_release.py:176-177`) | Both now say "a requested TAOM or TAOM.Dependencies missing from `--source`" |
 
@@ -275,3 +275,52 @@ failed 0. `python tools/lint_docs.py --dash-base db1a7166 --summary` exited 0 wi
 **Verification:** `python tools/tests/test_package_release.py` ran 57 tests, OK.
 `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` passed 10317, skipped 2,
 failed 0.
+
+## Final convergence
+
+A second convergence pass over `db1a7166..9cedb92d` raised three defects, two of them in the D1
+fix. Each was re-checked before any change; all three held.
+
+| # | Severity | Defect | Proof this pass | Fix |
+|---|---|---|---|---|
+| D-A | HIGH | The D1 fix pruned `Modules/TAOM.Dependencies/` outside `bin/` against `Dependencies/_Module/`, and the TAOM half swept `RuntimeDataCache/` | A read-only walk of the live module found 61 files outside `bin/`, 58 not at HEAD: 55 MCM UI assets (`AssetPackages/pack0.tpac`, `EmAssetPackages/GauntletUI/`, `GUI/Bannerlord.MBOptionScreenSpriteData.xml`, 26 under `ModuleData/Languages/`, 26 under `ModuleData/Languages_MCM/`) and 3 runtime logs. `module-dependencies.md:825-829` says no build step produces the MCM folders | Phase 8 step 2 and `release-process.md` step 8 prune `Modules/TAOM/` only, against `Main/_Module/`, leave `RuntimeDataCache*` to the packager, and prune nothing in TAOM.Dependencies outside `bin/`. D1's premise is corrected above |
+| D-B | MEDIUM | "Leave `bin/` out" said `bin/` holds only DLLs git never tracks, so retired binaries would ship | `git ls-files -- Main/_Module/bin Dependencies/_Module/bin` lists 46 DLLs (2 and 44). `classify` copies any `bin/` file that is not `.pdb`, `.exp` or `.lib` | `bin/<platform>/` keeps the names the tag tracks under `_Module/bin/` plus what the build writes: `TAOM.dll`, `TAOM.pdb`, `DryIoc.dll`, `Newtonsoft.Json.dll`, `System.Runtime.CompilerServices.Unsafe.dll` for TAOM; `TAOM.Dependencies.dll`, `TAOM.Dependencies.pdb`, `0Harmony.dll`, `Bannerlord.UIExtenderEx.dll`, `MCMv5.dll`, `System.Runtime.CompilerServices.Unsafe.dll` for TAOM.Dependencies. The list is the runtime assets in each project's `obj/project.assets.json`, and matches its `bin/Debug/net472/` output file for file. Everything else goes |
+| D-C | LOW | The `Directory.Build.props` comment left out assume-unchanged paths, which `git status --porcelain` also hides | This change's own finding 6 probe masked the props edit with `git update-index --assume-unchanged` and stamped clean | The comment reads "ignored files, and skip-worktree or assume-unchanged paths, do not" (orchestrator edit, protected file) |
+
+**Walk 1, `Modules/TAOM/` outside `bin/` under the new rule** (read-only, against HEAD's
+`Main/_Module`): 127 files not at HEAD, 115 of them under `RuntimeDataCache/` and left alone, so
+the rule removes these 12:
+
+```
+GUI/Prefabs/CareerSystem/AbilityHUD.xml
+GUI/Prefabs/Mission/AgentStatus.xml
+ModuleData/.gitkeep
+ModuleData/Languages/SP.zip
+ModuleData/troops/troops_bluecraig.xml
+ModuleData/troops/troops_mistymountainorcs.xml
+ModuleSounds/LOTR/Mordor/Nazgul/nazgul_scream_1.ogg
+ModuleSounds/LOTR/Mordor/Nazgul/nazgul_scream_2.ogg
+ModuleSounds/LOTR/Mordor/Nazgul/nazgul_scream_3.ogg
+NavMeshPrefabs/taom_mumakil_platform_navmesh.bin.kit-export
+Shaders/D3D11/compressed_shader_cache.sack
+Shaders/D3D11/shader_compile_report.log
+```
+
+`package_release.classify` returns `copy` for all 12 today, so each would ship without the prune.
+
+**Walk 2, `bin/` of both modules under the new rule:** TAOM has 13 files outside the keep set.
+Ten are `.pdb`, `.exp` or `.lib` (`BehaviorTreeWrapper.pdb` and the `TAOM.NativeSkinFixes`
+debug and link files in three platform folders), which the packager never ships. The rule removes
+the other three:
+
+```
+TAOM/bin/Gaming.Desktop.x64_Shipping_Client/BehaviorTreeWrapper.dll
+TAOM/bin/Win64_Shipping_wEditor/BehaviorTreeWrapper.dll
+TAOM/bin/Win64_Shipping_wEditor/BehaviorTrees.dll
+```
+
+TAOM.Dependencies has 0 files outside its keep set of 50 names.
+
+**Verification:** `python tools/tests/test_package_release.py` ran 57 tests, OK.
+`dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` passed 10317, skipped 2,
+failed 0. `python tools/lint_docs.py --fail-on-drift` exited 0.

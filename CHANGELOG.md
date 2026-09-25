@@ -26,7 +26,11 @@ edits looked like a clean build of that commit, and a release could ship one.
   `--require-build`, a requested TAOM or TAOM.Dependencies missing from `--source`, and a tag whose
   `Directory.Build.props` predates the `.dirty` flag; and reports an unreadable DLL as a refusal.
   The OK line lists every copy it read. Phase 8 and `release-process.md` say the gate proves the
-  DLLs only, since deploys never delete stale files from the install.
+  DLLs only, since deploys never delete stale files from the install, and prune before packaging
+  only what neither the tag nor its build owns: `Modules/TAOM/` against `Main/_Module/` (never
+  `RuntimeDataCache`), nothing in TAOM.Dependencies outside `bin/` (its MCM assets exist in the
+  install only), and in `bin/` whatever the tag neither tracks nor builds (today three retired
+  BehaviorTree DLLs).
 - Tests: 4 new C# (`BuildStampReportTests`, `PlainTextCrashReportRendererTests`,
   `CrashBundleWriterTests`), 24 new Python (`test_package_release.py`).
 
