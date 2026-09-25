@@ -1133,3 +1133,32 @@ PatchShield's `"ManagedCallbacks"` exclusion saves about 46 s of loading screen 
 - **Why missed:** the plan called the runtime namespace "structurally untestable", which is true only of the Harmony half (`GetAllPatchedMethods` needs a running game). The type half is reflection over DLLs the test bin already holds (`TAOM.Tests.csproj` copies `TaleWorlds.*.dll`).
 - **Prevent:** when a change hardcodes a namespace, type or member name that must match the engine, add a `[TestCategory("BindingVerification")]` test that loads the installed assembly, selects the targets the way the production code does, and asserts the hardcoded name still matches them; prove it RED by misspelling the name. `/verify-bindings` then re-runs it at every engine bump.
 - **Source:** `docs/reviews/rca-patchshield-skip-callback-shims-2026-09-24.md` finding 7; `PatchShieldPolicyTests.IsExcludedTargetNamespace_InstalledCallbackShimTypes_ReturnsTrue`.
+### A test that a finalizer preserves the throw site uses an exception that was actually thrown
+Plan 006's `Native2ManagedBridgeTests` checked the native-capture-off path with `new InvalidOperationException(...)` and asserted only `AreSame`. `RethrowStackPreserver.PreserveForRethrow` returns at once for an exception with no stack trace, so the test passed unchanged when the preserve call was mutated to a bare `return exception;`, the exact violation `harmony-patches.md` forbids. The fixed test throws and catches first and asserts `Data` holds `TAOM.ThrowSite`; the same mutation now fails it.
+- **Why missed:** the fixture was built to reach the branch, not to exercise the callee's precondition; `RethrowStackPreserverTests` already documents the unthrown no-op, and nobody read it against the new test.
+- **Prevent:** when a test's assertion depends on a helper's effect, read the helper's early returns and give the fixture the state that gets past them (a thrown exception, a non-empty list, a live frame). Then mutate the call away once and watch the test go red.
+- **Source:** `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F1, plan 006.
+
+### An allowlist pin names its members independently of the production list
+`Native2ManagedTargetsTests` resolved `Native2ManagedTargets.All` and compared the count with `All.Count`, and the size test checked only an upper bound, so an empty list passed every test while the patcher attached nothing (Codex, plan 006).
+- **Why missed:** the plan prescribed the self-referential check; a resolve-everything test reads as coverage.
+- **Prevent:** pair every "each entry resolves" test over a curated list with one that states the expected members literally (`CollectionAssert.AreEquivalent`), so removing or swapping an entry fails a test and the change has to be made in two places on purpose.
+- **Source:** `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F9.
+
+### A test that pins an engine name looked up by string carries `[TestCategory("BindingVerification")]`
+The two new plan 006 tests that resolve engine members (`Native2ManagedTargetsTests.All_ResolvesEveryShimAgainstTheInstalledEngine`, `Patch37TargetShapeTests`) had no category, so `/verify-bindings`, which an engine bump runs as `--filter TestCategory=BindingVerification`, skipped them; a renamed shim would have cost one warning line at launch and a quietly smaller capture list.
+- **Why missed:** the category is a convention (62 of the 73 test files that call `GameAssemblies.EnsureLoaded` carried it at `6fe83bca`), not a gate, and the reflection catalogue row was filed under the "not engine drift" category D.
+- **Prevent:** any test that resolves a TaleWorlds member by name gets the category, and its catalogue entry goes where engine reflection lives (`reflection-sites.md` category A or B), never category D.
+- **Source:** `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F6.
+
+### A smoke step for an off switch needs an input that still fires while the switch is off
+Plan 006's owed check for the live master toggle was "turn Enable Crash Capture off; the next dev-trigger throw is not captured". Both dev triggers return before throwing when that toggle is off, so the check passes whether the finalizer gate works or not. No trigger throws inside a callback shim either, so the native toggle had no in-game check at all, while the feature doc claimed dev-trigger coverage of the Native2Managed attach.
+- **Why missed:** the step was written from the toggle's hint, not from the trigger's code; "nothing happened" reads as success.
+- **Prevent:** for a step that proves a gate is OFF, read the input's code and confirm it still produces the event with the gate off; if the input reads the same gate, the step proves nothing. Name which catch point each trigger reaches before claiming it covers a component.
+- **Source:** `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F4 (Codex and lenses 1, 4, 5 agree).
+
+### A hook that hands its work to a lazily resolved service needs one test with that service reachable
+Plan 006's bridge and `CrashReportPatchHelper` tests all ran with `IoC` unconfigured, so `HandleAndSwallow` always took its hand-back fallback. Four mutations survived the whole branch: the bridge returning the raw exception instead of the helper's result (it would never swallow), the off-main verdict computed after the capture or not at all, the helper's `return null` changed to a hand-back, and `Finalizer` passing 0 instead of the hook's recorded id. A hand-written `RecordingCrashService` put into the helper's private cache by reflection kills all four, plus the toggle-off guard.
+- **Why missed:** the review record called the swallow path "not reachable from a test", which was true only of the MCM read; the fallback tests were green, and green read as covered.
+- **Prevent:** for any static hook that resolves its service lazily (`IoC.Resolve` cached in a static), add a fake the test can install and clear (`[TestCleanup]`), and assert what the service received (arguments, and the state it observed at call time), not only what the hook returned. Run the mutation list from the review against the new tests before calling the gap closed.
+- **Source:** `docs/reviews/rca-crash-capture-boot-cost-decisions-2026-09-24.md` F2 (lens 4 M1, lens 1 LOW-4).

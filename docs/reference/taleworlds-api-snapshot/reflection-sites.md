@@ -18,6 +18,8 @@ dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true -p:ModuleId= 
 
 Every `[HarmonyPatch(...)]` target — including patches whose target is resolved by a `TargetMethod()` / `TargetMethods()` body (e.g. SettlementGuards' manual patches, the `MapConversationTableau` / `CultureStageView` `TypeByName` lookups) — is **auto-discovered and resolved** by `TAOM.Tests/Migration/HarmonyPatchBindingTests.cs`. That suite enumerates all 110 `[HarmonyPatch]` / `TargetMethod`-bearing types in `TAOM.dll` and resolves each target exactly as Harmony does at `PatchAll` time. No manual catalogue is needed for them; do not duplicate them below.
 
+The one hand-attached exception: `CrashReport/Hooks/Native2ManagedTargets.cs` names the `ManagedCallbacks.*CallbacksGenerated` shims in `Native2ManagedTargets.All` by string (assembly, type and method) for `Native2ManagedPatcher` to `harmony.Patch`. They are engine members an update can rename, and they are gated by `TAOM.Tests/Features/CrashReport/Native2ManagedTargetsTests.cs` (`BindingVerification`), not by the suite above or by a Category B `[DataRow]`.
+
 > First run of that gate (2026-05-28) caught a real defect: `HeroViewModel_FillFrom_Patch` was name-only on an overloaded method (`HeroViewModel` inherits two more `FillFrom` overloads from `CharacterViewModel`), so Harmony's `AccessTools.Method` threw `AmbiguousMatchException` at patch time — the postfix never applied in v1.4.5. Fixed by pinning the argument types.
 
 ---
@@ -111,7 +113,7 @@ Reflection whose target is a TAOM-owned type or a dynamic member name. Not affec
 |---|---|---|
 | `Core/Infrastructure/Reflection/ReflectionService.cs` | caller-supplied `(Type, name)` keys | generic cached-reflection helper; targets are at the call sites (Category B/C above) |
 | `CareerSystem/Mutations/MutationService.cs:105` | `typeof(AbilityTemplateData).GetProperty(propertyName)` | `AbilityTemplateData` is a TAOM type; `propertyName` is data-driven |
-| `CrashReport/Hooks/Native2ManagedPatcher.cs:41,52` | `typeof(CrashReportPatchHelper)`, `typeof(Native2ManagedBridge)` | TAOM finalizer/bridge types |
+| `CrashReport/Hooks/Native2ManagedPatcher.cs` | `new HarmonyMethod(typeof(Native2ManagedBridge), nameof(Native2ManagedBridge.Finalizer))` | TAOM bridge type; `nameof` makes it compiler-verified. The engine shim names in `Native2ManagedTargets.cs` are engine reflection and are listed under Category A |
 | `CharacterSelection/Patches/RefreshCharacterEntityAuxPatch.cs:43` | `typeof(AgentVisualsData).GetMethod(nameof(AgentVisualsData.ActionSet))` | `nameof` → compiler-verified member; no string drift risk |
 
 ---

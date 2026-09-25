@@ -1,4 +1,5 @@
 using System;
+using TAOM.Dependencies.Foundation;
 using TAOM.Features.CrashReport;
 
 namespace TAOM.Features.CrashReport.Hooks;
@@ -24,19 +25,25 @@ internal static class CrashReportPatchHelper
     // exception bubbles out so vanilla / BUTR can take over.
     //
     // Runtime-gate on the MCM master toggle (HIGH-02 fix): if EnableCrashCapture is
-    // off, we return the original exception so vanilla/BUTR can handle it. This
-    // honors the MCM hint text "When off, all Harmony Finalizers no-op".
-    public static Exception? HandleAndSwallow(Exception? exception, string originatingPatchTarget)
+    // off, we return the original exception so vanilla/BUTR can handle it, as the
+    // toggle's hint says ("every TAOM crash finalizer passes exceptions straight through").
+    //
+    // Every hand-back goes through HandBack: the caller is a value-returning Finalizer, so
+    // Harmony rethrows the result with `throw`, which would otherwise erase the throw site
+    // (harmony-patches.md; maintainer decision 2026-09-24, #650).
+    //
+    // offMainThread: the caller's own thread verdict, passed through to the service (#650).
+    public static Exception? HandleAndSwallow(Exception? exception, string originatingPatchTarget, bool offMainThread = false)
     {
         if (exception == null) return null;
-        if (_onPatchStack) return exception;
+        if (_onPatchStack) return HandBack(exception);
 
         // MCM master toggle. Default true so a missing/uninitialised settings instance
         // does not silently disable the feature.
         try
         {
             if (CrashReportSettings.Instance != null && !CrashReportSettings.Instance.EnableCrashCapture)
-                return exception;
+                return HandBack(exception);
         }
         catch { /* settings read failure should not affect the capture path */ }
 
@@ -44,13 +51,17 @@ internal static class CrashReportPatchHelper
         try
         {
             var svc = ResolveService();
-            if (svc == null) return exception;     // unreachable — let vanilla handle it
-            svc.HandleException(exception, originatingPatchTarget);
-            return null;                            // swallow — game keeps ticking
+            if (svc == null) return HandBack(exception);     // unreachable: let vanilla handle it
+            svc.HandleException(exception, originatingPatchTarget, offMainThread);
+            return null;                                      // swallow: game keeps ticking
         }
-        catch { return exception; }
+        catch { return HandBack(exception); }
         finally { _onPatchStack = false; }
     }
+
+    // The Finalizer's original method is not passed down, so the marker line names none.
+    private static Exception? HandBack(Exception exception)
+        => RethrowStackPreserver.PreserveForRethrow(exception, null);
 
     // Module-unload lifecycle hook. Clears the cached service reference so the next
     // module load resolves a fresh CrashReportService graph from the new IoC container.

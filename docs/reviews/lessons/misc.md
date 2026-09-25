@@ -224,3 +224,21 @@ in `StrikeSoundPlayer`'s comment and `signature-strikes.md`, both committed.
   `lessons/adapters-taleworlds-api.md`, and the retracted cause in
   `rca-spider-directional-attacks-2026-06-15.md`. A correction re-reads every clause of the text it
   keeps, not only the one found wrong.
+
+### A performance claim names the machine that measured it, and the player figure when one exists
+Plan 006's CHANGELOG line said crash capture "no longer costs about 30 s of every boot". The 30 s was the maintainer's desktop (about 186 ms per Harmony attach there); the audit committed in the same range measured the same 247-attach sweep at 0 to 1 s on 11 player processes. The CHANGELOG feeds the player-facing release post, so the overclaim would have reached players.
+- **Why missed:** the plan quoted desktop log gaps as "every launch", and the comment, test message, feature doc and CHANGELOG each copied the number without its scope.
+- **Prevent:** a measured cost or saving in a CHANGELOG, comment or doc says where it was measured; when the machine is known to be atypical (`plans/_audit/2026-09-23-opus/followup-patch-tax.md`), give the player figure next to it or leave the number out of player-facing text.
+- **Source:** `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F2.
+
+### Text that promises a switch "takes effect immediately" names every side effect the switch cannot undo
+Plan 006 made the crash-capture master toggle live and rewrote the hint and how-to to say the game's handler "(or BUTR)" takes over without a restart. `CrashReportService` calls ButterLib's `Disable()` on every capture while Suspend BUTR is on, and TAOM has no path that re-enables it, so after any capture in the session BUTR stays off until the player re-enables it on ButterLib's page or restarts. The old text ("Restart the game") had been true by accident.
+- **Why missed:** the rewrite traced the toggle's own reads, not the state earlier captures had already changed.
+- **Prevent:** before writing "live" or "no restart" for a toggle, list what the feature did while the toggle was on (suspended handlers, installed hooks, persisted state) and say which of those turning it off does not reverse.
+- **Source:** `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F3.
+
+### A change to a list's membership re-reads every text that describes the list: counts, "left out" examples and player-facing hints
+D47 took the crash-capture allowlist from 6 to 16 entries. The same commit left the MCM hint describing only the original six ("character tableau callbacks", no combat), two reference-doc lines saying "six", and an owed in-game probe whose example of a *dropped* callback (`OnAgentRemoved`) was one of the entries just added, so the probe could no longer fail. This repeats the 2026-09-23 lesson above ("A change that deletes or moves data invalidates numbers and line refs elsewhere"), this time for additions.
+- **Why missed:** the executor updated the texts that name the list's members and grepped for the class name, but not for the count word, and did not re-check examples chosen to lie outside the list.
+- **Prevent:** after changing a list's members, grep the old count spelled both ways ("six", "6 of 6"), every "for example" that points inside or outside the list, and the hint of the toggle that governs it. A player-facing hint is part of that set even when the file is outside the diff.
+- **Source:** `docs/reviews/rca-crash-capture-boot-cost-decisions-2026-09-24.md` F3 to F5 (lenses 1, 2, 4, 5, 6 and Codex P3).

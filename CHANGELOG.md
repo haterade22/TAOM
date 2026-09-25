@@ -571,6 +571,68 @@ Convergence fixes (2026-09-24, review record only): the reword list gains its si
 `lessons/harmony-il.md:613`; the decisions report records the convergence pass before its verdict
 and corrects a lesson count, a line reference and the claim made for the named-argument call. No
 code changed. Full suite: 10247 passed, 2 skipped, 2 failed (the same two live-Armory tests).
+### perf(crash-report): v2.0.30 - crash capture boot cost and live toggles (plan 006, #650)
+
+Crash capture no longer patches every engine callback at boot: the native-to-managed sweep patched
+all 247 engine callback methods (the gap between `[SaveDefiners]` and the attach line was 29 to 33 s
+on 30 of 30 launches on the maintainer's desktop, but 0 to 1 s on 11 player processes, and it never
+captured an exception) and now patches an allowlist of six in the new `Native2ManagedTargets`, each
+chosen to cover managed work no other crash finalizer wraps. The attach line now reports its own
+time. Four Patch37 finalizers that could never fire were removed: they sat on empty or assert-only
+base virtuals (`MissionBehavior.OnMissionTick`, `MBSubModuleBase.OnSubModuleLoad`,
+`MissionView.OnMissionScreenTick`, `ScriptComponentBehavior.OnTick`), and a finalizer on a base
+method never runs for an override. `Patch37TargetShapeTests` refuses that shape from now on.
+
+Both crash-capture MCM toggles now work live without a restart. Before, `OnSubModuleLoad` read them
+at a point where MCM's settings instance is always null, so the game ignored them at launch; they
+are now read when an exception arrives, and the native-to-managed toggle hands the exception back
+with its throw site intact when off. Defaults stay ON. A crash that repeats every frame now logs its
+suppression line at occurrences 1, 2, 10, 100 and so on instead of every frame. The crash-report,
+MCM, hero-race, Gauntlet screen, patch registry and API snapshot docs now say what the code does.
+
+Full suite in the plan worktree: 10254 passed, 2 skipped, 2 failed
+(`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, which fail the same way at the base).
+Nothing smoked in game: the boot time, the allowlist attach and live MCM toggling are owed.
+
+Review follow-ups (deep review and Codex,
+`docs/reviews/deep-review-006-crash-capture-boot-cost-2026-09-24.md`): the bridge test now throws
+for real and checks the recorded throw site, the allowlist is pinned to its six names, every skip
+path in `Native2ManagedTargets.Resolve` has a test, both engine-binding tests run under
+`BindingVerification`, and the shape test shares `HarmonyPatchBindingTests`' resolver. The bridge
+is attached by `nameof`. The docs no longer claim priority 800 for the bridge, dev-trigger coverage
+of the callback shims, a restart-free return to BUTR after a capture, or a 30 s saving for players,
+and they list the callbacks the allowlist no longer covers. Full suite after the follow-ups: 10258
+passed, 2 skipped, 2 failed (the same two).
+
+Maintainer decisions (#650): the sixth allowlisted callback is now the tableau render callback
+`RenderTargetComponent_OnPaintNeeded` (character, item, banner and map-conversation tableaus), in
+place of a tableau-setup callback nothing in v1.5.3 arms. Every exception the crash capture hands
+back to Harmony, from the callback bridge or from `CrashReportPatchHelper.HandleAndSwallow` when
+capture is off, the service is unreachable or a capture is already running, now keeps its throw
+site through the rethrow. Bridge priority 400, the powers-of-ten suppression log and capture on by
+default all stay. Full suite: 10261 passed, 2 skipped, 2 failed (the same two).
+
+Then the mission combat callbacks (#650). A capture by the callback bridge on any thread other than
+the one the crash hook records at module load (or before it records one) is now marked off the
+main thread, so the report skips its mission and campaign sections and the on-screen notice there,
+as an unhandled-exception capture already did. With that in place, the ten combat callbacks traced
+into TAOM code (melee, missile, charge, fall and area damage, blocked hits, defend collisions, and
+agent removal, deletion and missile shots) are back on the allowlist, now 16 entries; mount,
+dismount and alarmed-state stay out. Their attach time is not measured yet. Full suite: 10265
+passed, 2 skipped, 2 failed (the same two).
+
+Review follow-ups for the decisions (deep review and Codex,
+`docs/reviews/deep-review-006-crash-capture-boot-cost-decisions-2026-09-24.md`): the off-main
+verdict now reaches the report service as a parameter from both the callback bridge and the
+unhandled-exception hook. Before, it travelled as a mark on the exception, which an exception
+with a read-only `Data` (the runtime's preallocated out-of-memory exception, for one) silently
+dropped, so a worker-thread capture would have read mission state and shown the notice there. The
+hook logs the main thread id it records, so one launch can confirm it is the game-loop thread.
+Tests now cover the swallow path with a reachable service. The native-capture MCM hint names the
+tableau and combat callbacks it now covers, and the docs drop stale counts and a probe that named
+a callback already on the list. Full suite: 10271
+passed, 2 skipped, 2 failed (the same two).
 
 ## 2026-09-23
 
