@@ -452,6 +452,118 @@ public class SupplyOrderService : ISupplyOrderService
         }
     }
 
+    /// <summary>
+    /// Takes the player's gold and credits the source its share (the goods and troops at their
+    /// quoted prices), matching vanilla purchases where the town or lord is paid. The port
+    /// previously destroyed the whole payment while real stock and soldiers left the source, a
+    /// one-way economy sink the #317 town ledger would show as unexplained (review round B).
+    /// Transport and guard fees ARE destroyed, deliberately: they pay the carriers, who are not
+    /// economy actors, exactly like vanilla mercenary wages. An unreachable payee's share is
+    /// destroyed with a warning. internal for TAOM.Tests (InternalsVisibleTo); the three gold
+    /// seams below only move gold.
+    /// </summary>
+    internal void ChargePlayer(SupplySourceInfo source, SupplyQuote quote)
+    {
+        int sourceShare = quote.Goods + quote.Troops;
+        int fees = quote.Transport + quote.Guard;
+
+        if (sourceShare > 0)
+        {
+            if (!string.IsNullOrEmpty(source.HeroId))
+            {
+                if (!PayLord(source.HeroId, sourceShare))
+                {
+                    _logger.LogWarning($"[SupplyLines] charge: lord '{source.HeroId}' unreachable, his share is destroyed");
+                    DestroyPlayerGold(sourceShare);
+                }
+            }
+            else if (!PaySettlement(source.SettlementId, sourceShare))
+            {
+                _logger.LogWarning($"[SupplyLines] charge: settlement '{source.SettlementId}' unreachable, its share is destroyed");
+                DestroyPlayerGold(sourceShare);
+            }
+        }
+
+        if (fees > 0)
+            DestroyPlayerGold(fees);
+    }
+
+    /// <summary>
+    /// Puts a consumption back where it came from after a failed placement: lord troops to the
+    /// lord's party roster; otherwise goods to the settlement roster and volunteers into empty
+    /// notable slots. Best effort; a partial refund is logged rather than thrown because the
+    /// player has not been charged. Only positive counts move. Recruits beyond the free volunteer
+    /// slots are dropped silently (source behaviour). internal for TAOM.Tests
+    /// (InternalsVisibleTo); the six refund seams below each do one engine read or write.
+    /// </summary>
+    internal void RefundConsumption(SupplySourceInfo source, SupplyConsumption consumption)
+    {
+        try
+        {
+            if (!string.IsNullOrEmpty(source.HeroId))
+            {
+                if (!CanReturnTroopsToLord(source.HeroId))
+                {
+                    _logger.LogWarning($"[SupplyLines] refund: lord '{source.HeroId}' unreachable, troops not restored");
+                    return;
+                }
+                foreach (var pair in consumption.Troops)
+                {
+                    if (pair.Value > 0)
+                        ReturnTroopsToLord(source.HeroId, pair.Key, pair.Value);
+                }
+                return;
+            }
+
+            if (!CanReturnStockToSettlement(source.SettlementId))
+            {
+                _logger.LogWarning($"[SupplyLines] refund: settlement '{source.SettlementId}' unreachable, stock not restored");
+                return;
+            }
+            foreach (var pair in consumption.Goods)
+            {
+                if (pair.Value > 0)
+                    ReturnGoodsToSettlement(source.SettlementId, pair.Key, pair.Value);
+            }
+            foreach (var pair in consumption.Troops)
+            {
+                if (pair.Value <= 0)
+                    continue;
+                RestoreVolunteerSlots(source.SettlementId, pair.Key, pair.Value);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"[SupplyLines] refund after failed order placement threw: {ex.Message}");
+        }
+    }
+
+    /// <summary>Fills the first empty volunteer slots, notable by notable, until
+    /// <paramref name="count"/> recruits are placed; recruits beyond the free slots are dropped
+    /// (source behaviour). Reads the slots afresh for every troop type, so one type never lands
+    /// on a slot another type just filled.</summary>
+    private void RestoreVolunteerSlots(string settlementId, string troopId, int count)
+    {
+        var notables = ReadEmptyVolunteerSlots(settlementId);
+        if (notables == null)
+            return;
+        int remaining = count;
+        for (int n = 0; n < notables.Count && remaining > 0; n++)
+        {
+            var empty = notables[n];
+            if (empty == null)
+                continue;
+            for (int i = 0; i < empty.Length && remaining > 0; i++)
+            {
+                if (empty[i])
+                {
+                    FillVolunteerSlot(settlementId, n, i, troopId);
+                    remaining--;
+                }
+            }
+        }
+    }
+
     // --- campaign-static seams (the untested boundary sliver; overridden in tests) ---
 
     protected virtual int PlayerGold => Hero.MainHero?.Gold ?? 0;
@@ -466,52 +578,31 @@ public class SupplyOrderService : ISupplyOrderService
 
     protected virtual float ElapsedFractionOf(SupplyOrder order) => order.ElapsedFraction();
 
-    /// <summary>
-    /// Takes the player's gold and credits the source its share (the goods and troops at their
-    /// quoted prices), matching vanilla purchases where the town or lord is paid. The port
-    /// previously destroyed the whole payment while real stock and soldiers left the source, a
-    /// one-way economy sink the #317 town ledger would show as unexplained (review round B).
-    /// Transport and guard fees ARE destroyed, deliberately: they pay the carriers, who are not
-    /// economy actors, exactly like vanilla mercenary wages.
-    /// </summary>
-    protected virtual void ChargePlayer(SupplySourceInfo source, SupplyQuote quote)
+    /// <summary>Credits a lord his share of an order, main hero to lord. False when the lord
+    /// cannot be found; then no gold moves.</summary>
+    protected virtual bool PayLord(string heroId, int amount)
     {
-        int sourceShare = quote.Goods + quote.Troops;
-        int fees = quote.Transport + quote.Guard;
-
-        if (sourceShare > 0)
-        {
-            if (!string.IsNullOrEmpty(source.HeroId))
-            {
-                var lord = FindHero(source.HeroId);
-                if (lord != null)
-                {
-                    GiveGoldAction.ApplyBetweenCharacters(Hero.MainHero, lord, sourceShare, disableNotification: true);
-                }
-                else
-                {
-                    _logger.LogWarning($"[SupplyLines] charge: lord '{source.HeroId}' unreachable, his share is destroyed");
-                    GiveGoldAction.ApplyBetweenCharacters(Hero.MainHero, null, sourceShare, disableNotification: true);
-                }
-            }
-            else
-            {
-                var settlement = Settlement.Find(source.SettlementId);
-                if (settlement != null)
-                {
-                    GiveGoldAction.ApplyForCharacterToSettlement(Hero.MainHero, settlement, sourceShare, disableNotification: true);
-                }
-                else
-                {
-                    _logger.LogWarning($"[SupplyLines] charge: settlement '{source.SettlementId}' unreachable, its share is destroyed");
-                    GiveGoldAction.ApplyBetweenCharacters(Hero.MainHero, null, sourceShare, disableNotification: true);
-                }
-            }
-        }
-
-        if (fees > 0)
-            GiveGoldAction.ApplyBetweenCharacters(Hero.MainHero, null, fees, disableNotification: true);
+        var lord = FindHero(heroId);
+        if (lord == null)
+            return false;
+        GiveGoldAction.ApplyBetweenCharacters(Hero.MainHero, lord, amount, disableNotification: true);
+        return true;
     }
+
+    /// <summary>Credits a settlement its share of an order. False when the settlement cannot be
+    /// found; then no gold moves.</summary>
+    protected virtual bool PaySettlement(string settlementId, int amount)
+    {
+        var settlement = Settlement.Find(settlementId);
+        if (settlement == null)
+            return false;
+        GiveGoldAction.ApplyForCharacterToSettlement(Hero.MainHero, settlement, amount, disableNotification: true);
+        return true;
+    }
+
+    /// <summary>Takes gold from the main hero and gives it to nobody (a null recipient).</summary>
+    protected virtual void DestroyPlayerGold(int amount) =>
+        GiveGoldAction.ApplyBetweenCharacters(Hero.MainHero, null, amount, disableNotification: true);
 
     // Heroes register with CampaignObjectManager only (Hero.cs:1467-1480, verified 1.4.8);
     // MBObjectManager.GetObject<Hero> reads XML type records and misses runtime heroes.
@@ -571,79 +662,75 @@ public class SupplyOrderService : ISupplyOrderService
         }
     }
 
-    /// <summary>
-    /// Puts a consumption back where it came from after a failed placement: goods to the settlement
-    /// roster, volunteers into empty notable slots, lord troops to the lord's roster. Best effort;
-    /// a partial refund is logged rather than thrown because the player has not been charged.
-    /// </summary>
-    protected virtual void RefundConsumption(SupplySourceInfo source, SupplyConsumption consumption)
-    {
-        try
-        {
-            if (!string.IsNullOrEmpty(source.HeroId))
-            {
-                var roster = FindHero(source.HeroId)?.PartyBelongedTo?.MemberRoster;
-                if (roster == null)
-                {
-                    _logger.LogWarning($"[SupplyLines] refund: lord '{source.HeroId}' unreachable, troops not restored");
-                    return;
-                }
-                foreach (var pair in consumption.Troops)
-                {
-                    var troop = MBObjectManager.Instance.GetObject<CharacterObject>(pair.Key);
-                    if (troop != null && pair.Value > 0)
-                        roster.AddToCounts(troop, pair.Value);
-                }
-                return;
-            }
+    /// <summary>True when the lord can be found and rides in a party with a member roster, the
+    /// place a refund returns his troops to.</summary>
+    protected virtual bool CanReturnTroopsToLord(string heroId) =>
+        FindHero(heroId)?.PartyBelongedTo?.MemberRoster != null;
 
-            var settlement = Settlement.Find(source.SettlementId);
-            if (settlement == null)
-            {
-                _logger.LogWarning($"[SupplyLines] refund: settlement '{source.SettlementId}' unreachable, stock not restored");
-                return;
-            }
-            foreach (var pair in consumption.Goods)
-            {
-                var item = MBObjectManager.Instance.GetObject<ItemObject>(pair.Key);
-                if (item != null && pair.Value > 0)
-                    settlement.ItemRoster?.AddToCounts(item, pair.Value);
-            }
-            foreach (var pair in consumption.Troops)
-            {
-                var troop = MBObjectManager.Instance.GetObject<CharacterObject>(pair.Key);
-                if (troop == null || pair.Value <= 0)
-                    continue;
-                RestoreVolunteerSlots(settlement, troop, pair.Value);
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"[SupplyLines] refund after failed order placement threw: {ex.Message}");
-        }
+    /// <summary>Adds troops back to the lord's party roster. No-op when the lord, his roster or
+    /// the troop id cannot be found.</summary>
+    protected virtual void ReturnTroopsToLord(string heroId, string troopId, int count)
+    {
+        var roster = FindHero(heroId)?.PartyBelongedTo?.MemberRoster;
+        var troop = MBObjectManager.Instance.GetObject<CharacterObject>(troopId);
+        if (roster == null || troop == null)
+            return;
+        roster.AddToCounts(troop, count);
     }
 
-    private static void RestoreVolunteerSlots(Settlement settlement, CharacterObject troop, int count)
+    /// <summary>True when the settlement can be found.</summary>
+    protected virtual bool CanReturnStockToSettlement(string settlementId) =>
+        Settlement.Find(settlementId) != null;
+
+    /// <summary>Adds goods back to the settlement's item roster. No-op when the settlement, its
+    /// roster or the item id cannot be found.</summary>
+    protected virtual void ReturnGoodsToSettlement(string settlementId, string itemId, int count)
     {
-        if (settlement.Notables == null)
+        var settlement = Settlement.Find(settlementId);
+        var item = MBObjectManager.Instance.GetObject<ItemObject>(itemId);
+        if (settlement == null || item == null)
             return;
-        int remaining = count;
-        foreach (var notable in settlement.Notables)
+        settlement.ItemRoster?.AddToCounts(item, count);
+    }
+
+    /// <summary>The settlement's volunteer slots, one entry per notable in notable order, true for
+    /// an empty slot. An entry is null for a null notable or one without a slot array; the list is
+    /// null when the settlement or its notables list is missing. A fresh snapshot per call.</summary>
+    protected virtual IReadOnlyList<bool[]> ReadEmptyVolunteerSlots(string settlementId)
+    {
+        var notables = Settlement.Find(settlementId)?.Notables;
+        if (notables == null)
+            return null;
+        var result = new List<bool[]>(notables.Count);
+        foreach (var notable in notables)
         {
             var slots = notable?.VolunteerTypes;
             if (slots == null)
-                continue;
-            for (int i = 0; i < slots.Length && remaining > 0; i++)
             {
-                if (slots[i] == null)
-                {
-                    slots[i] = troop;
-                    remaining--;
-                }
+                result.Add(null);
+                continue;
             }
-            if (remaining <= 0)
-                return;
+            var empty = new bool[slots.Length];
+            for (int i = 0; i < slots.Length; i++)
+                empty[i] = slots[i] == null;
+            result.Add(empty);
         }
+        return result;
+    }
+
+    /// <summary>Puts the troop into one volunteer slot of the settlement's notable at
+    /// <paramref name="notableIndex"/>. No-op when the settlement, the notable, the slot or the
+    /// troop id cannot be found.</summary>
+    protected virtual void FillVolunteerSlot(string settlementId, int notableIndex, int slotIndex, string troopId)
+    {
+        var notables = Settlement.Find(settlementId)?.Notables;
+        var troop = MBObjectManager.Instance.GetObject<CharacterObject>(troopId);
+        if (notables == null || troop == null || notableIndex < 0 || notableIndex >= notables.Count)
+            return;
+        var slots = notables[notableIndex]?.VolunteerTypes;
+        if (slots == null || slotIndex < 0 || slotIndex >= slots.Length)
+            return;
+        slots[slotIndex] = troop;
     }
 
     protected virtual void ShowMessage(TextObject text, bool error)

@@ -30,12 +30,24 @@ public class SupplyOrderServiceTests
         public double NowHours;
 
         public readonly List<string> CallSequence = new List<string>();
-        public readonly List<(SupplySourceInfo Source, SupplyQuote Quote)> Charges =
-            new List<(SupplySourceInfo, SupplyQuote)>();
+        // Every gold move a charge makes, in order: "lord:<heroId>:<amount>",
+        // "settlement:<settlementId>:<amount>", "destroy:<amount>".
+        public readonly List<string> Charges = new List<string>();
+        public readonly HashSet<string> UnreachablePayees = new HashSet<string>();
         public readonly List<SupplyOrder> Delivered = new List<SupplyOrder>();
         public IReadOnlyDictionary<string, int> LastDeliveredGoods;
         public IReadOnlyDictionary<string, int> LastDeliveredRecruits;
-        public readonly List<SupplyConsumption> Refunds = new List<SupplyConsumption>();
+        // Every refund step, in order: "source:<id>" (the reachability check),
+        // "lord:<heroId>:<troopId>:<count>", "goods:<settlementId>:<itemId>:<count>",
+        // "volunteer:<settlementId>:<notable>:<slot>:<troopId>".
+        public readonly List<string> Refunds = new List<string>();
+        public readonly HashSet<string> UnreachableSources = new HashSet<string>();
+
+        // Per notable, true for an empty volunteer slot; a null entry is a notable without a slot
+        // array, a null list a settlement without notables. A fill writes back here, like the engine.
+        public List<bool[]> VolunteerSlots = new List<bool[]> { new[] { true, true, true } };
+        public int VolunteerSlotReads;
+        public bool GoodsRefundThrows;
 
         public TestableSupplyOrderService(
             ISupplySourceService sources,
@@ -58,10 +70,24 @@ public class SupplyOrderServiceTests
 
         protected override float ElapsedFractionOf(SupplyOrder order) => ElapsedFraction;
 
-        protected override void ChargePlayer(SupplySourceInfo source, SupplyQuote quote)
+        protected override bool PayLord(string heroId, int amount)
         {
             CallSequence.Add("charge");
-            Charges.Add((source, quote));
+            Charges.Add("lord:" + heroId + ":" + amount);
+            return !UnreachablePayees.Contains(heroId);
+        }
+
+        protected override bool PaySettlement(string settlementId, int amount)
+        {
+            CallSequence.Add("charge");
+            Charges.Add("settlement:" + settlementId + ":" + amount);
+            return !UnreachablePayees.Contains(settlementId);
+        }
+
+        protected override void DestroyPlayerGold(int amount)
+        {
+            CallSequence.Add("charge");
+            Charges.Add("destroy:" + amount);
         }
 
         protected override string PickCompanionEscortId() => CompanionId;
@@ -83,10 +109,40 @@ public class SupplyOrderServiceTests
             LastDeliveredRecruits = recruits;
         }
 
-        protected override void RefundConsumption(SupplySourceInfo source, SupplyConsumption consumption)
+        protected override bool CanReturnTroopsToLord(string heroId)
         {
-            CallSequence.Add("refund");
-            Refunds.Add(consumption);
+            Refunds.Add("source:" + heroId);
+            return !UnreachableSources.Contains(heroId);
+        }
+
+        protected override void ReturnTroopsToLord(string heroId, string troopId, int count) =>
+            Refunds.Add("lord:" + heroId + ":" + troopId + ":" + count);
+
+        protected override bool CanReturnStockToSettlement(string settlementId)
+        {
+            Refunds.Add("source:" + settlementId);
+            return !UnreachableSources.Contains(settlementId);
+        }
+
+        protected override void ReturnGoodsToSettlement(string settlementId, string itemId, int count)
+        {
+            if (GoodsRefundThrows)
+                throw new System.InvalidOperationException("roster locked");
+            Refunds.Add("goods:" + settlementId + ":" + itemId + ":" + count);
+        }
+
+        protected override IReadOnlyList<bool[]> ReadEmptyVolunteerSlots(string settlementId)
+        {
+            VolunteerSlotReads++;
+            // A fresh copy per read, like the engine snapshot: the service sees its own earlier
+            // fills only by reading again.
+            return VolunteerSlots?.ConvertAll(slots => slots == null ? null : (bool[])slots.Clone());
+        }
+
+        protected override void FillVolunteerSlot(string settlementId, int notableIndex, int slotIndex, string troopId)
+        {
+            VolunteerSlots[notableIndex][slotIndex] = false;
+            Refunds.Add("volunteer:" + settlementId + ":" + notableIndex + ":" + slotIndex + ":" + troopId);
         }
 
         protected override void ShowMessage(TextObject text, bool error)
@@ -234,7 +290,9 @@ public class SupplyOrderServiceTests
 
         Assert.IsNull(result);
         Assert.IsNotNull(reason);
-        Assert.AreSame(consumption, _sut.Refunds.Single());
+        CollectionAssert.AreEqual(
+            new[] { "source:town_G1", "goods:town_G1:grain:5", "volunteer:town_G1:0:0:troop_a", "volunteer:town_G1:0:1:troop_a" },
+            _sut.Refunds, "the consumed grain and recruits go back to the source");
         Assert.AreEqual(0, _sut.Charges.Count);
         _caravans.DidNotReceiveWithAnyArgs().Spawn(default);
     }
@@ -249,7 +307,9 @@ public class SupplyOrderServiceTests
 
         Assert.IsNull(result);
         Assert.IsNotNull(reason);
-        Assert.AreSame(consumption, _sut.Refunds.Single());
+        CollectionAssert.AreEqual(
+            new[] { "source:town_G1", "goods:town_G1:grain:5", "volunteer:town_G1:0:0:troop_a", "volunteer:town_G1:0:1:troop_a" },
+            _sut.Refunds, "the consumed grain and recruits go back to the source");
         Assert.AreEqual(0, _sut.Charges.Count);
         Assert.AreEqual(0, _sut.ActiveOrders.Count, "a failed order must not enter the book");
     }
@@ -265,11 +325,12 @@ public class SupplyOrderServiceTests
         Assert.IsNotNull(result);
         Assert.IsNull(reason);
         CollectionAssert.AreEqual(
-            new[] { "consume", "spawn", "charge" }, _sut.CallSequence,
+            new[] { "consume", "spawn", "charge", "charge" }, _sut.CallSequence,
             "the charge must land only after the caravan exists (the source module charged first)");
-        Assert.AreEqual(170, _sut.Charges.Single().Quote.Total);
-        Assert.AreSame(_townSource, _sut.Charges.Single().Source,
-            "the charge carries the source so its share can be credited (round B: payments were a pure sink)");
+        CollectionAssert.AreEqual(
+            new[] { "settlement:town_G1:150", "destroy:20" }, _sut.Charges,
+            "the source is credited its share (round B: payments were a pure sink) and the 20 "
+            + "transport fee is destroyed: 150 + 20 is the 170 total");
         Assert.AreEqual(170, result.TotalPaid);
         Assert.AreEqual(1, _sut.ActiveOrders.Count);
     }
@@ -818,5 +879,272 @@ public class SupplyOrderServiceTests
         Assert.AreEqual(0, counter, "the order counter is per-campaign");
         Assert.AreEqual(0, _sut.ActiveOrders.Count);
         _caravans.Received(1).ClearTrackers();
+    }
+
+    // --- ChargePlayer (payee routing; the three gold seams only move gold) ---
+
+    [TestMethod]
+    public void ChargePlayer_SettlementSource_CreditsSettlementThenDestroysFees()
+    {
+        _sut.ChargePlayer(_townSource, new SupplyQuote(goods: 100, troops: 50, transport: 20, guard: 5));
+
+        CollectionAssert.AreEqual(new[] { "settlement:town_G1:150", "destroy:25" }, _sut.Charges);
+    }
+
+    [TestMethod]
+    public void ChargePlayer_LordSource_CreditsLordThenDestroysFees()
+    {
+        var lord = new SupplySourceInfo { HeroId = "lord_1" };
+
+        _sut.ChargePlayer(lord, new SupplyQuote(goods: 0, troops: 80, transport: 10, guard: 0));
+
+        CollectionAssert.AreEqual(new[] { "lord:lord_1:80", "destroy:10" }, _sut.Charges);
+    }
+
+    [TestMethod]
+    public void ChargePlayer_HeroIdAndSettlementIdBothSet_PaysTheLord()
+    {
+        var source = new SupplySourceInfo { HeroId = "lord_1", SettlementId = "town_G1" };
+
+        _sut.ChargePlayer(source, new SupplyQuote(goods: 100, troops: 0, transport: 0, guard: 0));
+
+        CollectionAssert.AreEqual(new[] { "lord:lord_1:100" }, _sut.Charges);
+    }
+
+    [TestMethod]
+    public void ChargePlayer_EmptyHeroId_PaysTheSettlement()
+    {
+        var source = new SupplySourceInfo { HeroId = "", SettlementId = "town_G1" };
+
+        _sut.ChargePlayer(source, new SupplyQuote(goods: 100, troops: 0, transport: 0, guard: 0));
+
+        CollectionAssert.AreEqual(new[] { "settlement:town_G1:100" }, _sut.Charges);
+    }
+
+    [TestMethod]
+    public void ChargePlayer_LordUnreachable_DestroysHisShareAndWarns()
+    {
+        _sut.UnreachablePayees.Add("lord_1");
+
+        _sut.ChargePlayer(new SupplySourceInfo { HeroId = "lord_1" },
+            new SupplyQuote(goods: 0, troops: 80, transport: 10, guard: 0));
+
+        CollectionAssert.AreEqual(new[] { "lord:lord_1:80", "destroy:80", "destroy:10" }, _sut.Charges);
+        _logger.Received(1).LogWarning("[SupplyLines] charge: lord 'lord_1' unreachable, his share is destroyed");
+    }
+
+    [TestMethod]
+    public void ChargePlayer_SettlementUnreachable_DestroysItsShareAndWarns()
+    {
+        _sut.UnreachablePayees.Add("town_G1");
+
+        _sut.ChargePlayer(_townSource, new SupplyQuote(goods: 100, troops: 50, transport: 20, guard: 0));
+
+        CollectionAssert.AreEqual(new[] { "settlement:town_G1:150", "destroy:150", "destroy:20" }, _sut.Charges);
+        _logger.Received(1).LogWarning("[SupplyLines] charge: settlement 'town_G1' unreachable, its share is destroyed");
+    }
+
+    [TestMethod]
+    public void ChargePlayer_ReachablePayee_LogsNothing()
+    {
+        _sut.ChargePlayer(_townSource, new SupplyQuote(goods: 100, troops: 50, transport: 20, guard: 0));
+
+        _logger.DidNotReceiveWithAnyArgs().LogWarning(default);
+    }
+
+    [TestMethod]
+    public void ChargePlayer_NoSourceShare_OnlyDestroysFees()
+    {
+        _sut.ChargePlayer(_townSource, new SupplyQuote(goods: 0, troops: 0, transport: 20, guard: 5));
+
+        CollectionAssert.AreEqual(new[] { "destroy:25" }, _sut.Charges);
+    }
+
+    [TestMethod]
+    public void ChargePlayer_NoFees_DestroysNothing()
+    {
+        _sut.ChargePlayer(_townSource, new SupplyQuote(goods: 100, troops: 0, transport: 0, guard: 0));
+
+        CollectionAssert.AreEqual(new[] { "settlement:town_G1:100" }, _sut.Charges);
+    }
+
+    [TestMethod]
+    public void ChargePlayer_NonPositiveAmounts_MoveNoGold()
+    {
+        _sut.ChargePlayer(_townSource, new SupplyQuote(goods: -5, troops: 0, transport: -1, guard: 0));
+
+        Assert.AreEqual(0, _sut.Charges.Count, "only a positive share or fee moves gold");
+    }
+
+    // --- RefundConsumption (route, count filter and the volunteer-slot walk; the six refund seams each read or write once) ---
+
+    private static SupplyConsumption Consumed(
+        Dictionary<string, int> goods = null, Dictionary<string, int> troops = null) =>
+        new SupplyConsumption
+        {
+            Goods = goods ?? new Dictionary<string, int>(),
+            Troops = troops ?? new Dictionary<string, int>(),
+        };
+
+    [TestMethod]
+    public void RefundConsumption_SettlementSource_ReturnsGoodsThenVolunteers()
+    {
+        _sut.RefundConsumption(_townSource, Consumed(
+            goods: new Dictionary<string, int> { ["grain"] = 5, ["wine"] = 2 },
+            troops: new Dictionary<string, int> { ["troop_a"] = 1 }));
+
+        CollectionAssert.AreEqual(
+            new[] { "source:town_G1", "goods:town_G1:grain:5", "goods:town_G1:wine:2", "volunteer:town_G1:0:0:troop_a" },
+            _sut.Refunds);
+        _logger.DidNotReceiveWithAnyArgs().LogWarning(default);
+        _logger.DidNotReceiveWithAnyArgs().LogError(default);
+    }
+
+    [TestMethod]
+    public void RefundConsumption_EmptyHeroId_UsesTheSettlement()
+    {
+        var source = new SupplySourceInfo { HeroId = "", SettlementId = "town_G1" };
+
+        _sut.RefundConsumption(source, Consumed(goods: new Dictionary<string, int> { ["grain"] = 1 }));
+
+        CollectionAssert.AreEqual(new[] { "source:town_G1", "goods:town_G1:grain:1" }, _sut.Refunds);
+    }
+
+    [TestMethod]
+    public void RefundConsumption_LordSource_ReturnsOnlyTroopsToHisParty()
+    {
+        var source = new SupplySourceInfo { HeroId = "lord_1", SettlementId = "town_G1" };
+
+        _sut.RefundConsumption(source, Consumed(
+            goods: new Dictionary<string, int> { ["grain"] = 5 },
+            troops: new Dictionary<string, int> { ["troop_a"] = 3, ["troop_b"] = 1 }));
+
+        CollectionAssert.AreEqual(
+            new[] { "source:lord_1", "lord:lord_1:troop_a:3", "lord:lord_1:troop_b:1" }, _sut.Refunds,
+            "a lord source takes back troops only; its settlement id and any goods are ignored");
+        Assert.AreEqual(0, _sut.VolunteerSlotReads);
+    }
+
+    [TestMethod]
+    public void RefundConsumption_LordUnreachable_WarnsAndReturnsNothing()
+    {
+        _sut.UnreachableSources.Add("lord_1");
+
+        _sut.RefundConsumption(new SupplySourceInfo { HeroId = "lord_1" },
+            Consumed(troops: new Dictionary<string, int> { ["troop_a"] = 3 }));
+
+        CollectionAssert.AreEqual(new[] { "source:lord_1" }, _sut.Refunds);
+        _logger.Received(1).LogWarning("[SupplyLines] refund: lord 'lord_1' unreachable, troops not restored");
+    }
+
+    [TestMethod]
+    public void RefundConsumption_SettlementUnreachable_WarnsAndReturnsNothing()
+    {
+        _sut.UnreachableSources.Add("town_G1");
+
+        _sut.RefundConsumption(_townSource, Consumed(
+            goods: new Dictionary<string, int> { ["grain"] = 5 },
+            troops: new Dictionary<string, int> { ["troop_a"] = 1 }));
+
+        CollectionAssert.AreEqual(new[] { "source:town_G1" }, _sut.Refunds);
+        Assert.AreEqual(0, _sut.VolunteerSlotReads);
+        _logger.Received(1).LogWarning("[SupplyLines] refund: settlement 'town_G1' unreachable, stock not restored");
+    }
+
+    [TestMethod]
+    public void RefundConsumption_SettlementNonPositiveCounts_Skipped()
+    {
+        _sut.RefundConsumption(_townSource, Consumed(
+            goods: new Dictionary<string, int> { ["grain"] = 0, ["wine"] = -1 },
+            troops: new Dictionary<string, int> { ["troop_a"] = 0, ["troop_b"] = -2 }));
+
+        CollectionAssert.AreEqual(new[] { "source:town_G1" }, _sut.Refunds);
+        Assert.AreEqual(0, _sut.VolunteerSlotReads, "a non-positive recruit count never walks the slots");
+    }
+
+    [TestMethod]
+    public void RefundConsumption_LordNonPositiveCounts_Skipped()
+    {
+        _sut.RefundConsumption(new SupplySourceInfo { HeroId = "lord_1" }, Consumed(
+            troops: new Dictionary<string, int> { ["troop_a"] = 0, ["troop_b"] = -1, ["troop_c"] = 2 }));
+
+        CollectionAssert.AreEqual(new[] { "source:lord_1", "lord:lord_1:troop_c:2" }, _sut.Refunds);
+    }
+
+    [TestMethod]
+    public void RefundConsumption_Volunteers_FillTheFirstEmptySlotsInNotableOrder()
+    {
+        _sut.VolunteerSlots = new List<bool[]> { new[] { false, true, false, true }, new[] { true, true } };
+
+        _sut.RefundConsumption(_townSource, Consumed(troops: new Dictionary<string, int> { ["troop_a"] = 3 }));
+
+        CollectionAssert.AreEqual(
+            new[] { "source:town_G1", "volunteer:town_G1:0:1:troop_a", "volunteer:town_G1:0:3:troop_a", "volunteer:town_G1:1:0:troop_a" },
+            _sut.Refunds);
+    }
+
+    [TestMethod]
+    public void RefundConsumption_NotableWithoutSlots_Skipped()
+    {
+        _sut.VolunteerSlots = new List<bool[]> { null, new[] { true } };
+
+        _sut.RefundConsumption(_townSource, Consumed(troops: new Dictionary<string, int> { ["troop_a"] = 1 }));
+
+        CollectionAssert.AreEqual(new[] { "source:town_G1", "volunteer:town_G1:1:0:troop_a" }, _sut.Refunds);
+    }
+
+    [TestMethod]
+    public void RefundConsumption_MoreRecruitsThanFreeSlots_ExtraDroppedSilently()
+    {
+        _sut.VolunteerSlots = new List<bool[]> { new[] { true, false }, new[] { true } };
+
+        _sut.RefundConsumption(_townSource, Consumed(troops: new Dictionary<string, int> { ["troop_a"] = 5 }));
+
+        CollectionAssert.AreEqual(
+            new[] { "source:town_G1", "volunteer:town_G1:0:0:troop_a", "volunteer:town_G1:1:0:troop_a" },
+            _sut.Refunds, "the source drops recruits beyond the free slots without a word");
+        _logger.DidNotReceiveWithAnyArgs().LogWarning(default);
+        _logger.DidNotReceiveWithAnyArgs().LogError(default);
+    }
+
+    [TestMethod]
+    public void RefundConsumption_SecondTroopType_ReadsTheSlotsAgain()
+    {
+        _sut.VolunteerSlots = new List<bool[]> { new[] { true, true, true } };
+
+        _sut.RefundConsumption(_townSource, Consumed(
+            troops: new Dictionary<string, int> { ["troop_a"] = 2, ["troop_b"] = 2 }));
+
+        CollectionAssert.AreEqual(
+            new[] { "source:town_G1", "volunteer:town_G1:0:0:troop_a", "volunteer:town_G1:0:1:troop_a", "volunteer:town_G1:0:2:troop_b" },
+            _sut.Refunds, "troop_b never lands on a slot troop_a just filled");
+        Assert.AreEqual(2, _sut.VolunteerSlotReads);
+    }
+
+    [TestMethod]
+    public void RefundConsumption_NoNotables_ReturnsGoodsOnly()
+    {
+        _sut.VolunteerSlots = null;
+
+        _sut.RefundConsumption(_townSource, Consumed(
+            goods: new Dictionary<string, int> { ["grain"] = 1 },
+            troops: new Dictionary<string, int> { ["troop_a"] = 2 }));
+
+        CollectionAssert.AreEqual(new[] { "source:town_G1", "goods:town_G1:grain:1" }, _sut.Refunds);
+        _logger.DidNotReceiveWithAnyArgs().LogWarning(default);
+    }
+
+    [TestMethod]
+    public void RefundConsumption_SeamThrows_LogsErrorAndStops()
+    {
+        _sut.GoodsRefundThrows = true;
+
+        _sut.RefundConsumption(_townSource, Consumed(
+            goods: new Dictionary<string, int> { ["grain"] = 1 },
+            troops: new Dictionary<string, int> { ["troop_a"] = 1 }));
+
+        CollectionAssert.AreEqual(new[] { "source:town_G1" }, _sut.Refunds, "nothing after the throw runs");
+        Assert.AreEqual(0, _sut.VolunteerSlotReads);
+        _logger.Received(1).LogError("[SupplyLines] refund after failed order placement threw: roster locked");
     }
 }

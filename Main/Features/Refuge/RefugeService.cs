@@ -33,6 +33,60 @@ public sealed class RaidThreat
 }
 
 /// <summary>
+/// One map party the raid scan is weighing, read at the campaign boundary. The raid-target
+/// decision in <see cref="RefugeService"/> reads only the plain fields; <see cref="EngineParty"/>
+/// rides along as an opaque handle (the <see cref="RaidThreat"/> and AmbushCandidate precedent).
+/// </summary>
+public sealed class RaidCandidate
+{
+    public string PartyId;
+    public bool IsMainParty;
+    public bool IsActive;
+    public bool InMapEvent;
+
+    /// <summary>True when the party is itself a refuge (its component is RefugePartyComponent).</summary>
+    public bool IsRefuge;
+
+    public int TotalManCount;
+
+    /// <summary>Straight-line distance from the refuge; a raid trigger needs no pathfinding.</summary>
+    public float StraightLineDistance;
+
+    /// <summary>The engine <c>MobileParty</c>; null in tests, opaque to the decision logic.</summary>
+    public object EngineParty;
+}
+
+/// <summary>One raid scan around a refuge: every map party as a <see cref="RaidCandidate"/>, and
+/// the refuge's faction as an opaque handle for the war check.</summary>
+public sealed class RaidScan
+{
+    /// <summary>The refuge's engine <c>IFaction</c>; null in tests, opaque to the decision logic.</summary>
+    public object RefugeFaction;
+
+    public IReadOnlyList<RaidCandidate> Candidates;
+}
+
+/// <summary>
+/// One hero row of a refuge's prison roster, read at the campaign boundary for the peace
+/// release. The release decision in <see cref="RefugeService"/> reads only the plain fields;
+/// <see cref="EngineHero"/> rides along as an opaque handle (the <see cref="RaidThreat"/>
+/// precedent) so the release seams act on this exact hero without a second lookup.
+/// </summary>
+public sealed class RefugePrisoner
+{
+    public string HeroId;
+
+    /// <summary>True for <c>Hero.MainHero</c>.</summary>
+    public bool IsMainHero;
+
+    /// <summary>True when the hero's <c>PartyBelongedToAsPrisoner</c> is the refuge's own party.</summary>
+    public bool HeldByRefuge;
+
+    /// <summary>The engine <c>Hero</c>; null in tests, opaque to the decision logic.</summary>
+    public object EngineHero;
+}
+
+/// <summary>
 /// The refuge book and its lifecycle (port of the Refuge module's RefugeManager + the
 /// campaign-behavior guts). Owns the persisted dictionary; the campaign behavior hands it through
 /// LoadFrom/SaveInto at SyncData time and pumps the tick methods.
@@ -784,6 +838,84 @@ public class RefugeService : IRefugeService, IRefugeBook
         return hours;
     }
 
+    /// <summary>Nearest active hostile party with at least one soldier inside range, or null.
+    /// Straight-line distance, like the source; a raid trigger does not need pathfinding. The
+    /// filters run in the source's order, and the war check (which reads the engine's
+    /// MapFaction) runs only for parties that passed the first four. Strict less-than from
+    /// <paramref name="range"/>: the first party found wins a tie, a party exactly at range is
+    /// out, and a NaN distance never wins. internal for TAOM.Tests (InternalsVisibleTo).</summary>
+    internal RaidThreat FindNearestHostile(string refugePartyId, float range)
+    {
+        var scan = ScanForRaiders(refugePartyId);
+        if (scan?.Candidates == null)
+            return null;
+
+        RaidCandidate best = null;
+        float bestDistance = range;
+        foreach (var candidate in scan.Candidates)
+        {
+            if (candidate == null || candidate.IsMainParty || !candidate.IsActive || candidate.InMapEvent)
+                continue;
+            if (candidate.IsRefuge)
+                continue;
+            if (!IsAtWarWithRefuge(scan, candidate))
+                continue;
+            if (candidate.TotalManCount < 1)
+                continue;
+            if (candidate.StraightLineDistance < bestDistance)
+            {
+                bestDistance = candidate.StraightLineDistance;
+                best = candidate;
+            }
+        }
+        if (best == null)
+            return null;
+        return new RaidThreat
+        {
+            PartyId = best.PartyId,
+            Name = PartyDisplayName(best),
+            EngineParty = best.EngineParty,
+        };
+    }
+
+    /// <summary>Releases the refuge's hero prisoners who are no longer at war with the refuge's
+    /// faction, mirroring vanilla PrisonerReleaseCampaignBehavior.ReleasePartyPrisoners (which
+    /// only enumerates caravans, war parties, villages and garrisons - never a custom
+    /// component). Called after a peace involving the player's faction. The source's walk: the
+    /// row count is read once, then each row is read afresh from the last to the first, because
+    /// a release takes its row out. The main hero is never released and never faction-checked;
+    /// a prisoner the refuge itself holds is freed by the engine's peace action, and a row whose
+    /// recorded captor is not the refuge (another party, or none) is only dropped. internal for
+    /// TAOM.Tests (InternalsVisibleTo).</summary>
+    internal void ReleasePeacePrisoners(string partyId)
+    {
+        for (int i = RefugePrisonRosterCount(partyId) - 1; i >= 0; i--)
+        {
+            var prisoner = ReadRefugePrisonerAt(partyId, i);
+            if (prisoner == null || prisoner.IsMainHero)
+                continue;
+            if (IsPrisonerAtWarWithRefuge(partyId, prisoner))
+                continue;
+            if (prisoner.HeldByRefuge)
+                ReleasePrisonerByPeace(prisoner);
+            else
+                RemoveFromRefugePrisonRoster(partyId, prisoner);
+        }
+    }
+
+    /// <summary>Straight-line distance from the main party to the nearest town or castle;
+    /// float.MaxValue when there is none or no main party. The rule is
+    /// <see cref="FortificationSearch.NearestDistance"/>, shared with CampService.
+    /// internal for TAOM.Tests (InternalsVisibleTo).</summary>
+    internal float DistanceToNearestFortification() =>
+        FortificationSearch.NearestDistance(SettlementSitesFromMainParty());
+
+    /// <summary>The same distance measured from the given party (a refuge weighing its
+    /// stronghold upgrade); float.MaxValue when the party cannot be found. internal for
+    /// TAOM.Tests (InternalsVisibleTo).</summary>
+    internal float DistanceToNearestFortificationFrom(string partyId) =>
+        FortificationSearch.NearestDistance(SettlementSitesFrom(partyId));
+
     // --- campaign-static seams (the untested boundary sliver; overridden in tests) ---
 
     protected virtual string MainPartyId() => MobileParty.MainParty?.StringId;
@@ -827,30 +959,32 @@ public class RefugeService : IRefugeService, IRefugeBook
     protected virtual Vec2 PartyPosition(string partyId) =>
         FindParty(partyId)?.GetPosition2D ?? default;
 
-    protected virtual float DistanceToNearestFortification()
+    /// <summary>Every settlement with its kind and its straight-line distance from the main
+    /// party; empty when there is no main party.</summary>
+    protected virtual IEnumerable<SettlementSite> SettlementSitesFromMainParty()
     {
         var main = MobileParty.MainParty;
-        return main == null ? float.MaxValue : DistanceToNearestFortificationFromPosition(main.GetPosition2D);
+        return main == null ? Array.Empty<SettlementSite>() : SettlementSitesAround(main.GetPosition2D);
     }
 
-    protected virtual float DistanceToNearestFortificationFrom(string partyId)
+    /// <summary>Every settlement with its kind and its straight-line distance from the party;
+    /// empty when the party cannot be found.</summary>
+    protected virtual IEnumerable<SettlementSite> SettlementSitesFrom(string partyId)
     {
         var party = FindParty(partyId);
-        return party == null ? float.MaxValue : DistanceToNearestFortificationFromPosition(party.GetPosition2D);
+        return party == null ? Array.Empty<SettlementSite>() : SettlementSitesAround(party.GetPosition2D);
     }
 
-    private static float DistanceToNearestFortificationFromPosition(Vec2 position)
+    // Part of the two seams above (decision 55): one lazy read of the campaign's settlement list,
+    // no filter, and no list built per call (the keep-outs run as menu-option conditions).
+    private static IEnumerable<SettlementSite> SettlementSitesAround(Vec2 position)
     {
-        float nearest = float.MaxValue;
         foreach (var settlement in Settlement.All)
         {
-            if (settlement == null || (!settlement.IsTown && !settlement.IsCastle))
+            if (settlement == null)
                 continue;
-            float distance = position.Distance(settlement.GetPosition2D);
-            if (distance < nearest)
-                nearest = distance;
+            yield return new SettlementSite(settlement.IsTown, settlement.IsCastle, position.Distance(settlement.GetPosition2D));
         }
-        return nearest;
     }
 
     /// <summary>
@@ -1016,29 +1150,64 @@ public class RefugeService : IRefugeService, IRefugeBook
         }
     }
 
-    /// <summary>Releases the refuge's hero prisoners who are no longer at war with the refuge's
-    /// faction, mirroring vanilla PrisonerReleaseCampaignBehavior.ReleasePartyPrisoners (which
-    /// only enumerates caravans, war parties, villages and garrisons - never a custom
-    /// component). Called after a peace involving the player's faction.</summary>
-    protected virtual void ReleasePeacePrisoners(string partyId)
+    /// <summary>The number of rows in the refuge's prison roster; 0 when the refuge or its faction
+    /// is missing, so the release then does nothing, as before.</summary>
+    protected virtual int RefugePrisonRosterCount(string partyId)
     {
         var refuge = FindParty(partyId);
-        var refugeFaction = refuge?.MapFaction;
-        if (refuge == null || refugeFaction == null)
-            return;
-        var roster = refuge.PrisonRoster;
-        for (int i = roster.Count - 1; i >= 0; i--)
+        if (refuge == null || refuge.MapFaction == null)
+            return 0;
+        return refuge.PrisonRoster.Count;
+    }
+
+    /// <summary>The hero on row <paramref name="index"/> of the refuge's prison roster; null for a
+    /// row without a hero or when the refuge is gone. Past the roster's end it throws, exactly as
+    /// <c>TroopRoster.GetCharacterAtIndex</c> does.</summary>
+    protected virtual RefugePrisoner ReadRefugePrisonerAt(string partyId, int index)
+    {
+        var refuge = FindParty(partyId);
+        var hero = refuge?.PrisonRoster.GetCharacterAtIndex(index)?.HeroObject;
+        if (hero == null)
+            return null;
+        return new RefugePrisoner
         {
-            var hero = roster.GetCharacterAtIndex(i)?.HeroObject;
-            if (hero == null || hero == Hero.MainHero)
-                continue;
-            if (hero.MapFaction != null && hero.MapFaction.IsAtWarWith(refugeFaction))
-                continue;
-            if (hero.PartyBelongedToAsPrisoner == refuge.Party)
-                EndCaptivityAction.ApplyByPeace(hero);
-            else
-                roster.RemoveTroop(hero.CharacterObject);
-        }
+            HeroId = hero.StringId,
+            IsMainHero = hero == Hero.MainHero,
+            HeldByRefuge = hero.PartyBelongedToAsPrisoner == refuge.Party,
+            EngineHero = hero,
+        };
+    }
+
+    /// <summary>True when the prisoner's map faction is at war with the refuge's, and true (keep
+    /// him) when the refuge or its faction is missing: the source captured the refuge's faction
+    /// once and released nobody without one, and a false answer here means an irreversible
+    /// release. False when the prisoner's own faction is missing, as in the source.
+    /// <c>Hero.MapFaction</c> can reach the unsafe <c>MobileParty.MapFaction</c>, so the service
+    /// calls this only after the main-hero filter, as the source did.</summary>
+    protected virtual bool IsPrisonerAtWarWithRefuge(string partyId, RefugePrisoner prisoner)
+    {
+        var refugeFaction = FindParty(partyId)?.MapFaction;
+        if (refugeFaction == null)
+            return true;
+        if (!(prisoner?.EngineHero is Hero hero))
+            return false;
+        return hero.MapFaction != null && hero.MapFaction.IsAtWarWith(refugeFaction);
+    }
+
+    /// <summary>Ends the hero's captivity by peace (the engine action frees him from the refuge).</summary>
+    protected virtual void ReleasePrisonerByPeace(RefugePrisoner prisoner)
+    {
+        if (prisoner?.EngineHero is Hero hero)
+            EndCaptivityAction.ApplyByPeace(hero);
+    }
+
+    /// <summary>Drops the hero's row from the refuge's prison roster: a stale row whose recorded
+    /// captor is not the refuge (another party, or none).</summary>
+    protected virtual void RemoveFromRefugePrisonRoster(string partyId, RefugePrisoner prisoner)
+    {
+        var roster = FindParty(partyId)?.PrisonRoster;
+        if (roster != null && prisoner?.EngineHero is Hero hero)
+            roster.RemoveTroop(hero.CharacterObject);
     }
 
     protected virtual void DestroyRefugeParty(string partyId)
@@ -1163,9 +1332,11 @@ public class RefugeService : IRefugeService, IRefugeBook
     protected virtual bool IsPartyInMapEvent(string partyId) =>
         FindParty(partyId)?.MapEvent != null;
 
-    /// <summary>Nearest active hostile party with at least one soldier inside range, or null.
-    /// Straight-line distance, like the source; a raid trigger does not need pathfinding.</summary>
-    protected virtual RaidThreat FindNearestHostile(string refugePartyId, float range)
+    /// <summary>Snapshots every map party for the raid-target pick around a refuge. Null when the
+    /// refuge or its faction is missing. Reads only members that are safe on any party; the
+    /// faction read waits for <see cref="IsAtWarWithRefuge"/>, which the service calls only
+    /// for parties that passed the cheap filters.</summary>
+    protected virtual RaidScan ScanForRaiders(string refugePartyId)
     {
         var refuge = FindParty(refugePartyId);
         var refugeFaction = refuge?.MapFaction;
@@ -1173,35 +1344,40 @@ public class RefugeService : IRefugeService, IRefugeBook
             return null;
 
         var position = refuge.GetPosition2D;
-        MobileParty best = null;
-        float bestDistance = range;
-        foreach (var party in MobileParty.All)
+        var parties = MobileParty.All;
+        var candidates = new List<RaidCandidate>(parties.Count);
+        foreach (var party in parties)
         {
-            if (party == null || party.IsMainParty || !party.IsActive || party.MapEvent != null)
+            if (party == null)
                 continue;
-            if (party.PartyComponent is RefugePartyComponent)
-                continue;
-            var faction = party.MapFaction;
-            if (faction == null || !faction.IsAtWarWith(refugeFaction))
-                continue;
-            if ((party.MemberRoster?.TotalManCount ?? 0) < 1)
-                continue;
-            float distance = position.Distance(party.GetPosition2D);
-            if (distance < bestDistance)
+            candidates.Add(new RaidCandidate
             {
-                bestDistance = distance;
-                best = party;
-            }
+                PartyId = party.StringId,
+                IsMainParty = party.IsMainParty,
+                IsActive = party.IsActive,
+                InMapEvent = party.MapEvent != null,
+                IsRefuge = party.PartyComponent is RefugePartyComponent,
+                TotalManCount = party.MemberRoster?.TotalManCount ?? 0,
+                StraightLineDistance = position.Distance(party.GetPosition2D),
+                EngineParty = party,
+            });
         }
-        if (best == null)
-            return null;
-        return new RaidThreat
-        {
-            PartyId = best.StringId,
-            Name = best.Name?.ToString(),
-            EngineParty = best,
-        };
+        return new RaidScan { RefugeFaction = refugeFaction, Candidates = candidates };
     }
+
+    /// <summary>True when the candidate's map faction is at war with the refuge's; false when
+    /// either faction is missing.</summary>
+    protected virtual bool IsAtWarWithRefuge(RaidScan scan, RaidCandidate candidate)
+    {
+        if (!(scan?.RefugeFaction is IFaction refugeFaction) || !(candidate?.EngineParty is MobileParty party))
+            return false;
+        var faction = party.MapFaction;
+        return faction != null && faction.IsAtWarWith(refugeFaction);
+    }
+
+    /// <summary>The party's display name; rendered only for the chosen raider, never per scanned party.</summary>
+    protected virtual string PartyDisplayName(RaidCandidate candidate) =>
+        (candidate?.EngineParty as MobileParty)?.Name?.ToString();
 
     protected virtual void StartRaid(RaidThreat threat, string refugePartyId)
     {

@@ -377,6 +377,46 @@ line endings when it deletes a line, and refuses a Monster present under both id
 reports failures, the keyframe reader exits 1 on a miss, the hill troll shares `fighter_cave_troll` instead of a
 byte-identical copy, and the ledger's reinstall path now names every step. RCA:
 `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md`, findings 18 to 37.
+### fix(seams): v2.0.30 - review follow-ups for plan 026
+
+The deep review and Codex pass on the seam refactor found no reachable behaviour change; five small
+defects are fixed here (the missing issue is filed at merge, and a plan-text defect stays in the
+record). The refuge's per-row peace war check now keeps the prisoner when the
+refuge or its faction is missing, as the old walk did (it answered "release", which only the
+start-of-walk count guard prevented). The promotion's rename and enrol seams act on the hero the
+create seam returns (`MintedHero`, an id plus an opaque handle) instead of looking him up by id, so
+an engine change to hero registration can no longer consume a soldier for an unenrolled hero. The
+eight pure `FortificationSearch` tests moved to the untagged `FortificationSearchTests`, so hosted
+CI runs them; the raid scan sizes its list up front; two doc comments now say a dropped prison
+row's captor can be none; the Supply Lines and Field Camp feature docs name the new tests and
+types. Two new tests: the winner-only name render and the minted-hero hand-off. Report
+`docs/reviews/deep-review-026-seam-decision-logic-2026-09-24.md`, RCA
+`docs/reviews/rca-seam-decision-logic-2026-09-24.md`. Owed in game: the warden promotion smoke in the
+refactor entry below now also covers the hand-off.
+
+### refactor(seams): v2.0.30 - move decision logic out of nine seams
+
+Nine protected-virtual seams held TAOM decisions that no unit test could reach, because every
+test subclass overrides its seams: the supply-order payee routing and the refund after a failed
+placement (`SupplyOrderService.ChargePlayer`, `RefundConsumption`), the refuge raid-target pick and
+the peace release of refuge-held prisoners (`RefugeService.FindNearestHostile`,
+`ReleasePeacePrisoners`), the warden companion filter and companion minting
+(`WardenService.CompanionsInMainParty`, `MintCompanionFromTroop`), and the nearest town-or-castle
+search behind the camp and refuge keep-out distances (`CampService.DistanceToNearestFortification`,
+`RefugeService.DistanceToNearestFortification` and `DistanceToNearestFortificationFrom`), whose two
+identical copies now share one rule, `FortificationSearch.NearestDistance`. Each decision now lives
+in its service, and each seam is one engine operation: pay a lord, pay a settlement or destroy gold;
+check a refund source, return troops or goods, read or fill volunteer slots; scan the map, check a
+war or render a name; count, read, war-check, release or drop one prisoner row; read the roster;
+read the troop, draw a template, read the coming-of-age, draw the age, create, rename or enrol the
+hero; list the settlements around a party. That is the ADR-007 seam rule (plan 021, decisions 49,
+55, 56 and 57). Behaviour is unchanged: amounts, notification flags, log lines, filter order, the
+strict comparisons, the first-found tie-break, the RNG draws, the silent drop of recruits beyond the
+free volunteer slots and the backwards prisoner walk are as before, and the war checks still read
+the engine's factions only where the old code did. 76 new tests pin the moved logic. Owed in game: a
+supply order from a town and from a lord, and one that fails and refunds; a soldier promoted to
+warden; a raid with raids enabled; a peace that frees a refuge-held lord; the town keep-out when
+pitching a camp, founding a refuge and upgrading it to a stronghold.
 
 ## 2026-09-24
 

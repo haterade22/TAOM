@@ -1296,3 +1296,15 @@ locally, while pytest showed 13 green. Five older modules had the same shape.
   for `capsys`), and run the unittest command before calling them done. `tools/tests/test_ci_runner_compat.py`
   fails on any new module that imports pytest; its baseline only shrinks.
 - **Source:** `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 19.
+### A pure rule's tests go in an untagged class, even when the rule lives in an engine-bound file (plan 026, 2026-09-24)
+Plan 026 extracted `FortificationSearch.NearestDistance`, a pure function behind the camp, refuge
+and stronghold keep-outs, and put its eight tests in `CampServiceTests` because the rule is declared
+in `CampService.cs`. That class is tagged `RequiresGame`, and hosted CI runs
+`TestCategory!=RequiresGame`, so the one rule written to be CI-testable never ran there. Every local
+run was green.
+- **Why missed:** the test location followed the source file, and nobody read the class's category
+  tag; a local run cannot show the CI filter.
+- **Prevent:** a test that touches no engine member goes in an untagged class (a new
+  `<Rule>Tests.cs` if its neighbours are tagged). When a plan adds tests to an existing class, it
+  states the class's category and why the new tests belong under it.
+- **Source:** `docs/reviews/rca-seam-decision-logic-2026-09-24.md` S3 (Agents 1, 4 and 5).

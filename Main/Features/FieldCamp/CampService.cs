@@ -36,6 +36,55 @@ public sealed class AmbushCandidate
     public object EngineParty;
 }
 
+/// <summary>
+/// One settlement as the fortification search sees it, read at the campaign boundary: its kind
+/// and its straight-line distance from the searching party. Pure data, so
+/// <see cref="FortificationSearch"/> runs in unit tests.
+/// </summary>
+public readonly struct SettlementSite
+{
+    public SettlementSite(bool isTown, bool isCastle, float distance)
+    {
+        IsTown = isTown;
+        IsCastle = isCastle;
+        Distance = distance;
+    }
+
+    public bool IsTown { get; }
+    public bool IsCastle { get; }
+
+    /// <summary>Straight-line distance from the searching party.</summary>
+    public float Distance { get; }
+}
+
+/// <summary>
+/// The nearest-fortification rule shared by <see cref="CampService"/> (the camp keep-out) and
+/// RefugeService (the refuge and stronghold keep-outs): only towns and castles count, and the
+/// nearest wins. Pure, so both services' tests run it; each service's seam only lists the
+/// settlements around a party.
+/// </summary>
+internal static class FortificationSearch
+{
+    /// <summary>Straight-line distance to the nearest town or castle among
+    /// <paramref name="sites"/>; float.MaxValue when there is none or <paramref name="sites"/> is
+    /// null. Strict less-than from float.MaxValue, as in the source loops, so a NaN distance
+    /// never wins.</summary>
+    internal static float NearestDistance(IEnumerable<SettlementSite> sites)
+    {
+        float nearest = float.MaxValue;
+        if (sites == null)
+            return nearest;
+        foreach (var site in sites)
+        {
+            if (!site.IsTown && !site.IsCastle)
+                continue;
+            if (site.Distance < nearest)
+                nearest = site.Distance;
+        }
+        return nearest;
+    }
+}
+
 /// <summary>What kind of move order the player had issued when the move guard interrupted it.</summary>
 public enum CapturedMoveKind
 {
@@ -656,6 +705,13 @@ public class CampService : ICampService
             camp.VisualShown = true;
     }
 
+    /// <summary>Straight-line distance from the main party to the nearest town or castle;
+    /// float.MaxValue when there is none or no main party. The rule is
+    /// <see cref="FortificationSearch.NearestDistance"/>, shared with RefugeService.
+    /// internal for TAOM.Tests (InternalsVisibleTo).</summary>
+    internal float DistanceToNearestFortification() =>
+        FortificationSearch.NearestDistance(SettlementSitesFromMainParty());
+
     // --- campaign-static seams (the untested boundary sliver; overridden in tests) ---
 
     protected virtual string MainPartyId() => MobileParty.MainParty?.StringId;
@@ -742,22 +798,22 @@ public class CampService : ICampService
         return mapScene.GetFaceTerrainType(party.CurrentNavigationFace);
     }
 
-    protected virtual float DistanceToNearestFortification()
+    /// <summary>Every settlement with its kind and its straight-line distance from the main
+    /// party, in the campaign's settlement-list order; empty when there is no main party.
+    /// Yielded lazily: the keep-out check runs as a menu-option condition, so it builds no list
+    /// of the campaign's settlements per call.</summary>
+    protected virtual IEnumerable<SettlementSite> SettlementSitesFromMainParty()
     {
         var party = MobileParty.MainParty;
         if (party == null)
-            return float.MaxValue;
+            yield break;
         var position = party.GetPosition2D;
-        float nearest = float.MaxValue;
         foreach (var settlement in Settlement.All)
         {
-            if (settlement == null || (!settlement.IsTown && !settlement.IsCastle))
+            if (settlement == null)
                 continue;
-            float distance = position.Distance(settlement.GetPosition2D);
-            if (distance < nearest)
-                nearest = distance;
+            yield return new SettlementSite(settlement.IsTown, settlement.IsCastle, position.Distance(settlement.GetPosition2D));
         }
-        return nearest;
     }
 
     protected virtual int PlayerGold => Hero.MainHero?.Gold ?? 0;

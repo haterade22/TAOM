@@ -111,7 +111,7 @@ stripped install degrades instead of breaking; the fallback is exercised by rena
 | File | Purpose |
 |---|---|
 | `Domain/CampState.cs` + `FieldCampSaveDefiner.cs` | Persisted camp record; definer base 726901101 |
-| `CampService.cs` | State machine; campaign statics behind protected virtuals (CampServiceTests) |
+| `CampService.cs` | State machine; campaign statics behind protected virtuals (CampServiceTests). Also declares `SettlementSite` and `FortificationSearch`, the nearest town-or-castle rule RefugeService shares for its keep-outs (FortificationSearchTests) |
 | `CampTerrainService.cs` / `CampAmbushService.cs` | Pure policy and odds |
 | `CampVisualService.cs` + `Visuals/CampLayoutBuilder.cs` | Entities, wind ticker (500 ms throttle), fallback chain |
 | `LookoutSpottingContributor.cs` | The sight bonus through the model seam |

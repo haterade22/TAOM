@@ -238,7 +238,9 @@ complete so cargo is never stranded by a toggle.
 | `UI/GauntletSupplyOrderScreen.cs` + `SupplyOrderScreenVM.cs` + row VMs | The order screen (attribute path, focus layer, latched teardown); the VM owns the search state, the lazy catalogue and the hit pick |
 | `Main/_Module/GUI/PreFabs/SupplyLines/TaomSupplyOrderScreen.xml` | Ported prefab, `{=taom_sl_*}` texts. Text brushes are `Popup.Description.Text` / `Popup.Button.Text` (Native/GUI/Brushes/Popup.xml, grep-verified on the installed 1.4.8) with per-site `Brush.FontSize`; the port originally shipped `Popup.Text.Medium`/`.Small`, which exist in NO brush file anywhere and silently rendered 22 widgets with the engine default brush (round B critic). The search box is an `EditableTextWidget` on `Encyclopedia.Search.TextBox`, declared in TAOM's own Encyclopedia brush clone; the left column is a vertical StackLayout whose settlement and hit wrappers toggle on `IsSearchActive` (`IsHidden` on one, `IsVisible` on the other) so exactly one StretchToParent child is visible |
 
-Tests: pricing, engine verdicts (incl. the 1.5x force-deliver pin), the order book (reset,
+Tests: pricing, engine verdicts (incl. the 1.5x force-deliver pin), the payee routing and the
+failed-order refund (`ChargePlayer`, `RefundConsumption`: lord or settlement, the unreachable-payee
+fallback, the volunteer-slot walk), the order book (reset,
 cancel-camp, live-cargo, counter derivation, destroy-event loss recording,
 status-before-destroy ordering, dispatch-message branch), cargo/provision maths
 (`SupplyCaravanCargoMathTests`), order POCO incl. dispatch origin, behavior session-reset
