@@ -51,7 +51,7 @@ TAOM.Features.CompanionTactics/
 │   ├── IOrderOfBattleVMTracker → OrderOfBattleVMTracker  (captures VM ref from ctor postfix)
 │   ├── IOOBOverlayService → OOBOverlayService            (GauntletLayer + LoadMovie)
 │   ├── IOOBCaptainAutoAssigner → OOBCaptainAutoAssigner  (boundary: applies PlanCaptains through vanilla's accept-captain path)
-│   ├── UI/OOBButtonsVM                                   (Save/Load/Delete inquiry chain)
+│   ├── UI/OOBButtonsVM                                   (Save/Load/Delete inquiry chain; Assign Heroes command)
 │   ├── Models/HoNFormationPreset                          ([SaveableField] BaseId 726900601 / class 101)
 │   ├── Models/FormationPresetSaveableTypeDefiner
 │   └── Hooks/                                             (5 Harmony patches)
@@ -96,17 +96,17 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 
 ### Auto-Assign (Assign Heroes button)
 
-The overlay's Assign Heroes button places companions as captains of the open formations that suit their equipment. `OOBButtonsVM.ExecuteAssignCharacters` hands the live `OrderOfBattleVM` to `OOBCaptainAutoAssigner`, which builds the candidate and slot lists and asks `HeroAutoAssigner.PlanCaptains` for the matching.
+The overlay's Assign Heroes button places the player's team heroes as captains of the open formations that suit their equipment. Candidates are every hero vanilla lists on this screen except the player: companions, family members and any other hero vanilla puts on the player's team. `OOBButtonsVM.ExecuteAssignCharacters` hands the live `OrderOfBattleVM` to `OOBCaptainAutoAssigner`, which builds the candidate and slot lists and asks `HeroAutoAssigner.PlanCaptains` for the matching.
 
 - **General only.** When `OrderOfBattleVM.IsPlayerGeneral` is false the button reports "Only the general of this battle can assign heroes." and changes nothing.
 - **Open slots:** every formation with a troop class set (`HasFormation`) and no captain, in formation-index order. A formation whose class is `Unset` is never filled.
-- **Candidates:** heroes in `UnassignedHeroes` and in each formation's `HeroTroops`. The player's own hero is never placed, a hero already leading a formation is never moved, and disabled items and agents that do not resolve to a campaign `Hero` are skipped.
-- **Matching:** a global greedy on the `HeroAutoAssigner` score. Every (hero, slot) pair scoring above 0 is sorted by score, ties going to the lower formation index and then the earlier hero; a pair is taken when neither its hero nor its slot is used yet. A hero with no recognised role (`Unknown`) scores 0 everywhere and is not placed.
+- **Candidates:** heroes in `UnassignedHeroes` and in each formation's `HeroTroops`. The player's own hero is never placed, a hero already leading a formation is never moved, and disabled items and agents that do not resolve to a campaign `Hero` are skipped. A candidate's role comes from its agent's spawn equipment (`Agent.SpawnEquipment`, falling back to `Hero.BattleEquipment`), not the campaign gear: in a siege assault vanilla spawns every agent without a horse, so a companion who owns one is placed by weapons on a foot formation, the only classes a siege offers.
+- **Matching:** a global greedy on the `HeroAutoAssigner` score. Every (hero, slot) pair scoring above 0 is sorted by score, ties going to the lower formation index and then the earlier hero; a pair is taken when neither its hero nor its slot is used yet. A hero with no recognised role (`Unknown`) scores 0 on every class Auto-Assign fills (1 to 6) and is not placed.
 - **Applying:** each pick runs vanilla's own manual-drag path (clear the selection, `OrderOfBattleHeroItemVM.OnHeroSelection`, then `OrderOfBattleFormationItemVM.ExecuteAcceptCaptain`), so the result equals a manual drag and vanilla keeps every side effect. A pick counts only when the slot's `Captain` is the hero afterwards; a miss logs a `[FormationPresets] Auto-Assign: vanilla did not accept` warning. Captains already placed are kept. No reflection.
 - **Messages:** "Captains assigned: {COUNT}." or "No hero suits an open captain slot." (localized, keys `taom_oob_autoassign_*`).
 - **Visibility:** the overlay attaches only while `EnableFormationPresets` is on (default off).
-- **Co-op:** no gate. The action mutates only the local mission's OOB view model through vanilla's public handlers, nothing campaign-side or save-backed.
-- **Save data:** none. No `[SaveableField]`, no `SyncData`, no MCM setting.
+- **Co-op:** no gate. The button is local player input through vanilla's public OOB handlers, exactly like a manual drag. Those handlers change live mission state (`agent.Formation`, `Formation.Captain`, the formation banner). Whether BannerlordCoop syncs OOB choices is unverified; this change adds nothing a manual drag does not already do.
+- **Save data:** TAOM adds none (no `[SaveableField]`, no `SyncData`, no MCM setting). Vanilla still persists the final layout, auto-assigned captains included: `SPOrderOfBattleVM.SaveConfiguration` writes it to `OrderOfBattleCampaignBehavior` when deployment ends, as it does for a manual layout, and restores it next battle.
 - **Formation class numbering** is vanilla `TaleWorlds.Core.DeploymentFormationClass`: 0=Unset, 1=Infantry, 2=Ranged, 3=Cavalry, 4=HorseArcher, 5=InfantryAndRanged, 6=CavalryAndHorseArcher. Class 5 prefers melee heroes and accepts ranged ones; class 6 prefers cavalry and accepts horse archers.
 
 ## Configuration
@@ -143,13 +143,14 @@ The overlay's Assign Heroes button places companions as captains of the open for
 | `Main/Features/CompanionTactics/FormationPresets/FormationPresetService.cs` | CRUD with `MaxFormationPresets` enforcement |
 | `Main/Features/CompanionTactics/FormationPresets/Models/HoNFormationPreset.cs` | `[SaveableField]` POCO; 5 fields (ids 1,2,4,5,6 — id 3 retired, was unserializable `DateTime`) |
 | `Main/Features/CompanionTactics/FormationPresets/Models/FormationPresetSaveableTypeDefiner.cs` | BaseId 726900601, class 101 |
+| `Main/Features/CompanionTactics/FormationPresets/OOBCaptainAutoAssigner.cs` | Auto-Assign boundary: builds open slots and candidates from the live `OrderOfBattleVM`, applies `PlanCaptains` through vanilla's select-then-accept path. Recheck on every engine bump |
 | `Main/Features/CompanionTactics/FormationPresets/OOBOverlayService.cs` | Cached-FieldInfo reflection on `_dataSource`, `_isActive`; `GauntletLayer` lifecycle |
 | `Main/Features/CompanionTactics/FormationPresets/Hooks/FormationPresetCampaignBehavior.cs` | `SyncData` with try/catch — guards the LOAD/ref path only (NOT the off-thread save write); degrades to empty on BaseId collision |
 | `Main/Features/CompanionTactics/FormationPresets/Hooks/Patch35_Mission_OnTick.cs` | **HOT PATH** — toggle check + lazy-cached service call, zero allocations |
 | `Main/Features/CompanionTactics/BattleActionBar/Hooks/BattleActionBarMissionView.cs` | MissionView; field-battle-only `GauntletLayer` attach + 0.5s refresh + 1–9 hotkey input |
 | `Main/Features/CompanionTactics/BattleActionBar/Hooks/Patch35_Formation_SetMovementOrder.cs` | Implements `CancelStanceOnMove`. Belongs to shared `Patch_MissionTime_SetMovementOrder` category (applied once from `OnMissionBehaviorInitialize` because `MovementOrder.cctor` reads `Mission.Current.CurrentTime`). |
 | `Main/Adapters/{I,}BattleEquipmentSnapshot.cs` | Equipment value-object snapshot (no sealed `Equipment` leak) |
-| `Main/Adapters/{I,}HeroCombatAdapter.cs` | Campaign-time `Hero` wrapper |
+| `Main/Adapters/{I,}HeroCombatAdapter.cs` | `Hero` wrapper; classifies from `BattleEquipment`, or from a given `Equipment` (Auto-Assign passes the agent's spawn equipment) |
 | `Main/Adapters/{I,}AgentCombatAdapter.cs` | Mission-time `Agent` wrapper |
 | `Main/Adapters/IFormationAdapter.cs` (EXTENDED) | Adds `FormationIndex` + 4 unit-count properties |
 | `Main/Adapters/FormationAdapter.cs` (EXTENDED) | TTL-cached polearm/shield count scan |
@@ -161,19 +162,21 @@ The overlay's Assign Heroes button places companions as captains of the open for
 - `ICompanionTacticsSettingsProvider` — typed read from `TaomSettings.Instance` (testable seam).
 - `IModLogger` (TAOM core) — file logger; gated HUD output via Debug toggles.
 - `IFormationAdapter`, `IHeroCombatAdapter`, `IAgentCombatAdapter`, `IBattleEquipmentSnapshot` — sealed-type wrappers per ADR-007.
-- TaleWorlds types used: `Hero`, `Equipment`, `WeaponClass`, `EquipmentIndex`, `Formation`, `Mission`, `MissionMode`, `OrderOfBattleVM`, `OrderOfBattleHeroItemVM`, `MissionGauntletOrderOfBattleUIHandler`, `GauntletLayer`, `MissionScreen`, `MBBindingList<T>`, `MultiSelectionInquiryData`, `TextInquiryData`.
+- TaleWorlds types used: `Hero`, `Equipment`, `WeaponClass`, `EquipmentIndex`, `Formation`, `Mission`, `MissionMode`, `OrderOfBattleVM`, `OrderOfBattleHeroItemVM`, `OrderOfBattleFormationItemVM`, `DeploymentFormationClass`, `Agent`, `CharacterObject`, `MissionGauntletOrderOfBattleUIHandler`, `GauntletLayer`, `MissionScreen`, `MBBindingList<T>`, `MultiSelectionInquiryData`, `TextInquiryData`.
 
 ## Tests
 
-97 tests across 9 files in `TAOM.Tests/Features/CompanionTactics/`:
+103 tests across 11 files in `TAOM.Tests/Features/CompanionTactics/`, plus `TAOM.Tests/Adapters/HeroCombatAdapterTests.cs` (2 tests; the equipment overload Auto-Assign uses):
 
 - `Roles/CompanionRoleServiceTests.cs` — 25 tests; one per role + edge cases (no equipment; mounted+ranged → HorseArcher; mounted+melee → Cavalry; cache hit/miss; null hero / null equipment).
 - `BattleActionBar/FormationCompositionAnalyzerTests.cs` — 10 tests; HasRanged / HasPolearm / HasShield / HasCavalry positive + negative; ratio thresholds.
 - `BattleActionBar/BattleActionBarServiceTests.cs` — 10 tests; composition→buttons mapping; `EnableVolleyFire = false` removes Volley button; feature-disabled returns empty.
 - `BattleActionBar/TroopStanceManagerTests.cs`: 9 tests; per-formationIndex isolation; ClearAllStances; SetStance toggle behavior.
 - `FormationPresets/FormationPresetServiceTests.cs` — 14 tests; SaveResult.LimitReached path; missing-hero pruning on load; OnGameLoaded; OnMissionEnd state reset; SaveableType round-trip.
-- `FormationPresets/HeroAutoAssignerTests.cs`: 17 tests; role scoring per class plus the `PlanCaptains` cells (empty and null inputs, matching class, tie-break, unknown role, Unset class, global-over-local choice, one use per hero and slot, null hero).
-- `FormationPresets/OOBButtonsVMTests.cs`: 2 tests; the Assign Heroes command delegates to `IOOBCaptainAutoAssigner` and does nothing without a screen.
+- `FormationPresets/HeroAutoAssignerTests.cs`: 19 tests; role scoring per class plus the `PlanCaptains` cells (empty and null inputs, matching class, tie-break, unknown role, Unset class, global-over-local choice, one use per hero and slot, null hero, the two 50-point mixed-slot fits).
+- `FormationPresets/OOBButtonsVMTests.cs`: 3 tests; the Assign Heroes command delegates to `IOOBCaptainAutoAssigner`, does nothing without a screen, and shows the right message for each result.
+- `FormationPresets/OOBCaptainAutoAssignerTests.cs`: 2 tests; the null-VM and not-general early returns never reach the planner.
+- `CompanionTacticsWiringTests.cs`: 1 test; the overlay's DI graph (with `IOOBCaptainAutoAssigner`) resolves.
 - `FormationPresets/HoNFormationPresetSerializationTests.cs` — 5 tests; every `[SaveableField]` must be a save-serializable type (the DateTime save-corruption regression guard, allowlist fails closed on unknown types); every container field's exact closed type is allowlisted; ids unique; retired id 3 not reused; definer registers only the mod-specific container (no duplicate-of-engine registrations).
 - `SharedMovementOrderPostfixTests.cs` — 5 tests; shared `Formation.SetMovementOrder` postfix dispatch (SmartCavalry + CancelStanceOnMove) ordering/guards.
 
@@ -200,7 +203,8 @@ The overlay's Assign Heroes button places companions as captains of the open for
 
 - **FormationPresets is WIP and ships off by default (`EnableFormationPresets = false`).** Saving a preset works, but loading one back is not yet wired (the Load path is a stub). The toggle was flipped to off after a save-corruption CTD (see below); opt in via MCM "Battle Tactics/Formation Presets" to try the save side.
 - **History — DateTime save-corruption CTD (fixed 2026-06-21).** `HoNFormationPreset` used to carry a `[SaveableField(3)] DateTime _createdAt`. `System.DateTime` is not a TaleWorlds-serializable type, so once a preset was persisted, **every** campaign save crashed: the engine left a null serialized buffer that NRE'd in `GameData.Write` on the async save thread → `AggregateException` CTD (crash bundle `taom_crash_20260621_200427_8754f009`). The field was vestigial; it was removed (id 3 retired) and pinned by `HoNFormationPresetSerializationTests`. **Player recovery:** because the save *write* failed, no post-preset save file ever completed, so a player's last valid save predates the preset — loading any existing save and continuing works (self-healing, no migration). The `try/catch` in `SyncData` did **not** and **cannot** catch this class of bug: byte serialization runs later on the `AsyncFileSaveDriver` background thread, outside that block. The fix belongs in the saveable model (keep every `[SaveableField]` serializable), not in a behavior-level catch.
-- Auto-Assign places captains only. It does not move hero-troops between formations, does not use presets, and needs an in-game check on each engine bump because it drives vanilla's OOB handlers (`OrderOfBattleHeroItemVM.OnHeroSelection`, `OrderOfBattleFormationItemVM.ExecuteAcceptCaptain`).
+- Auto-Assign places captains only. It never adds hero-troops; a hero already placed as a hero-troop is still a candidate, so it can be made captain of another formation and leaves the first one. It does not use presets, and needs an in-game check on each engine bump because it drives vanilla's OOB handlers (`OrderOfBattleHeroItemVM.OnHeroSelection`, `OrderOfBattleFormationItemVM.ExecuteAcceptCaptain`).
+- **The OOB role badge still reads campaign gear.** `RoleTooltipDecorator` classifies from `Hero.BattleEquipment`, so in a siege assault it can show `[CAV]` for a companion on foot whom Auto-Assign places on a foot formation. Outside sieges the two agree.
 - **Stances are display-only.** Pressing 1–9 in the action bar updates the stance dict and highlights the button, but the formation behavior is unchanged. The original developer's mod was the same — TAOM Phase 1 ports verbatim. Real stance enforcement (firing-order changes, tightened spacing, brace-pose triggers) requires APIs not exposed by the engine and is deferred to a follow-up feature.
 - **`CompanionRoleService._cache` does not evict dead heroes.** Cache is keyed by Hero.StringId. When a hero dies or is removed mid-campaign, the cache entry leaks for the rest of the session. The leak is bounded (one entry per Hero ever inspected) and small — a pathological 1000-hero campaign leaks ~50KB. A follow-up could subscribe to `OnHeroKilled` to evict, but it's not blocking.
 - **Hot-path role detection uses `Agent.SpawnEquipment`, not current battle equipment.** `FormationAdapter.EnsurePolearmShieldCounts` reads each agent's spawn-time equipment to compute polearm + shield counts. If a hero swaps weapons mid-battle, the action bar composition does not update until next mission. Tooltip role detection (campaign-time) uses `Hero.BattleEquipment` and is current.
@@ -222,6 +226,7 @@ The overlay's Assign Heroes button places companions as captains of the open for
 
 ## Changelog
 
+- 2026-09-24 (plan 022): the Assign Heroes button places captains through `HeroAutoAssigner.PlanCaptains` and vanilla's accept-captain path (it was a placeholder message). Review follow-up: roles come from the agent's spawn equipment, so horse owners are placed in sieges. No issue filed yet; in-game check owed.
 - 2026-09-13 (#595): `TroopStanceManager` takes a lock. Patch35 clears a stance from `Formation.SetMovementOrder`,
   which the engine calls on its asynchronous agent tick for the PLAYER's team whenever its formations are
   AI-controlled (`Team.Tick`'s retreat branch, `Formation.Tick`'s substitute orders), so the existing team filter

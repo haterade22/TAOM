@@ -2934,5 +2934,4 @@
 	<string id="taom_oob_autoassign_not_general" text="{=taom_oob_autoassign_not_general}Only the general of this battle can assign heroes." />
 	<string id="taom_oob_autoassign_none" text="{=taom_oob_autoassign_none}No hero suits an open captain slot." />
 
-
 </strings>

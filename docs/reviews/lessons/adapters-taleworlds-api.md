@@ -696,3 +696,18 @@ failing test, and the recompute's absence was not even logged.
 - **Prevent:** every `AccessTools` / `GetMethod` / `GetField` / `TypeByName` by literal name lands with its DataRow and
   catalogue row (`/verify-bindings`); the engine-compatibility lens now reports a missing row.
 - **Source:** `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F3.
+
+### A mission-time decision about what a hero carries or rides reads the agent's spawn equipment, not `Hero.BattleEquipment` (plan 022, 2026-09-24)
+The OOB Auto-Assign boundary classified each candidate from `new HeroCombatAdapter(hero)`, the campaign
+`BattleEquipment`. In a siege assault vanilla spawns every agent without a horse (`SandBoxSiegeMissionSpawnHandler`
+sets `SetSpawnHorses(false)`; `Mission.DecideAgentSpawnEquipment` clears the Horse slot of a clone, v1.5.3
+`Mission.cs:4114-4118`), so a companion who owns a horse fought on foot but read as Cavalry, scored 0 on every class a
+siege offers, and was never placed.
+- **Why missed:** repeat of the #627 lesson above ("In OnAgentBuild the gear an agent wears is `agent.SpawnEquipment`"),
+  which was scoped to one callback. The plan copied the party-screen badge's adapter call for "parity", and the test
+  plan named a field battle, where campaign and spawn gear agree.
+- **Prevent:** any decision made while a mission runs (a UI handler, a behaviour, a patch) about what an agent
+  carries or rides reads `agent.SpawnEquipment` (or `agent.HasMount`), falling back to campaign gear only when it is
+  null. When a smoke list covers a mission feature, name a siege assault as well as a field battle.
+- **Source:** `docs/reviews/rca-order-of-battle-auto-assign-2026-09-24.md` row 1 (Engine, Data flow, Design lenses and
+  Codex P2).

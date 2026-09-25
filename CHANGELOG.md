@@ -6,8 +6,10 @@
 
 ### feat(tactics): v2.0.30 - wire OOB Auto-Assign to HeroAutoAssigner
 
-Order of Battle: the Assign Heroes button now places your companions as captains of the
-formations that suit their equipment (it was a placeholder message). Visible with Formation
+Order of Battle: the Assign Heroes button now places the heroes on your team (companions and
+any other hero the screen lists, never you) as captains of the formations that suit their
+equipment (it was a placeholder message). Roles come from what each hero spawned with, so in a
+siege a companion who owns a horse is placed on a foot formation. Visible with Formation
 Presets enabled. Three new strings are registered with English rows in all 12 languages; the
 translator run is owed. Nothing smoked in game.
 

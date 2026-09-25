@@ -2671,8 +2671,8 @@
     <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are swinging round the flank." />
     <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging the enemy foot." />
     <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are taking the flank of the wall." />
-    <string id="taom_oob_autoassign_done" text="Captains assigned: {COUNT}." />
-    <string id="taom_oob_autoassign_not_general" text="Only the general of this battle can assign heroes." />
-    <string id="taom_oob_autoassign_none" text="No hero suits an open captain slot." />
+    <string id="taom_oob_autoassign_done" text="Captains assigned: {COUNT}." />
+    <string id="taom_oob_autoassign_not_general" text="Only the general of this battle can assign heroes." />
+    <string id="taom_oob_autoassign_none" text="No hero suits an open captain slot." />
   </strings>
 </base>

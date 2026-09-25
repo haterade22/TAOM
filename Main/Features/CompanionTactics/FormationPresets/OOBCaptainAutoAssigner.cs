@@ -95,11 +95,14 @@ public sealed class OOBCaptainAutoAssigner : IOOBCaptainAutoAssigner
         var hero = ResolveAgentHero(item.Agent);
         if (hero == null) return;
         items.Add(item);
-        heroes.Add(new HeroCombatAdapter(hero));
+        // Classify from what the agent spawned with, not the campaign BattleEquipment: in a siege
+        // assault vanilla spawns every agent without a horse, so a companion who owns one fights
+        // on foot and must be able to lead a foot formation (the only classes a siege offers).
+        heroes.Add(new HeroCombatAdapter(hero, item.Agent.SpawnEquipment ?? hero.BattleEquipment));
     }
 
-    // Same resolution as RoleTooltipDecorator.ResolveAgentHero, so the role Auto-Assign uses is
-    // the role the OOB tooltip badge shows.
+    // Same resolution as RoleTooltipDecorator.ResolveAgentHero. Outside sieges the spawn
+    // equipment is a clone of the hero's BattleEquipment, so the role matches the OOB badge.
     private static Hero ResolveAgentHero(Agent agent)
     {
         if (agent == null) return null;

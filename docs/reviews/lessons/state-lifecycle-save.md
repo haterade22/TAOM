@@ -762,3 +762,14 @@ saved, but the great elk's lord wiring never shipped in a release, so every play
 - **Prevent:** when you describe what existing saves contain, read the value at the last release tag
   (`git show <tag>:<path>`) and name both cases if an unreleased build could have written something else.
 - **Source:** `docs/reviews/rca-animalia-2026-09-23.md` row 5.
+
+### "No save data" means no TAOM save data; say what vanilla persists of what the feature changed (plan 022, 2026-09-24)
+`companion-tactics.md` said OOB Auto-Assign changes "nothing campaign-side or save-backed" and used that as the reason
+for no co-op gate. The accept path writes `Formation.Captain`, `agent.Formation` and the banner, and at deployment end
+`SPOrderOfBattleVM.SaveConfiguration` persists the captains to `OrderOfBattleCampaignBehavior` (`SyncData
+"_formationInfos"`).
+- **Why missed:** the plan stated it, and "TAOM adds no `[SaveableField]`" was read as "nothing is saved".
+- **Prevent:** a feature that drives a vanilla handler traces that handler to the end of its lifecycle (mission end,
+  save) before a doc says what is or is not persisted, and a gating decision cites that trace, not the absence of
+  TAOM fields.
+- **Source:** `docs/reviews/rca-order-of-battle-auto-assign-2026-09-24.md` row 2 (Engine, Data flow, Codex P3).

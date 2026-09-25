@@ -682,3 +682,16 @@ The 49 Advanced Starting Options rows went into `taom_module_strings.xml` and th
 - **Prevent:** when a generator changes ids, decide per id whether it is new or renamed. For a rename, carry the existing translation across by construction (`tools/sync_ranged_ladder_translations.py` derives each tier name from the retired band row the same donor produced) and remove the retired rows in the same pass; reserve the machine translator for genuinely new text. Run `python tools/check_external_loc_coverage.py` before committing any generator that writes loc rows.
 - **Source:** #617 deep review, `docs/reviews/rca-ranged-rebalance-2026-09-18.md` item 1.
 - **Second half, found by the second review:** the fix moved the rows and left `tools/translation_cache/<lang>.json` keyed on the retired ids, so `rebuild_translation_files.py` (override, then cache, then English) would still have written English over all 1,476 carried names. `docs/reference/localization-map.md` already said a tool that rewrites translated text must update the cache; it was not read, because nothing loads it when a tool is written. A rename moves the rows AND the cache in one pass, and the tool's `--verify` checks both. `docs/reviews/rca-ranged-rebalance-second-review-2026-09-18.md` finding 2.
+
+### A seeded language row takes its file's own terminator, and a placement gate reads what the engine reads (plan 022, 2026-09-24)
+Plan 022 seeded three rows into the 12 `std_taom_module_strings_*.xml` files, which use `\r\r\n`. The rows ended in
+a bare LF. `translate_with_claude.py sync_missing_ids` splits on one terminator, so a trailing run of LF lines fuses
+with `</strings>` into one "line" and the next seeded row lands after `</strings>`, where
+`LocalizedTextManager.LoadLanguage` never reads it. This branch's rows were misplaced that way and moved back by hand;
+the terminators were not restored. `LanguageFileCoverageTests` counts `string` rows anywhere in the file, so it passes
+a misplaced row.
+- **Why missed:** the hand fix checked placement, not bytes, and no gate reads rows the way the engine does.
+- **Prevent:** after any seeding, check the new lines' terminators against the file's (`git diff | cat -A`) and fix
+  them with a binary round-trip. Follow-ups: `sync_missing_ids` should insert before the `</strings>` token by
+  position, and the coverage test should read `base/strings/string` only.
+- **Source:** `docs/reviews/rca-order-of-battle-auto-assign-2026-09-24.md` row 11 (XML lens).

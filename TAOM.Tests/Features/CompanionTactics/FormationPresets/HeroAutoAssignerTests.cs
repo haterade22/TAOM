@@ -215,4 +215,26 @@ public class HeroAutoAssignerTests
 
         CollectionAssert.AreEqual(new List<CaptainAssignment> { new(1, 0) }, result);
     }
+
+    // The two 50-point fits (companion-tactics.md "Auto-Assign"): with nothing better open, a
+    // mixed formation still takes the hero it only partly suits. Pins the `score > 0` threshold.
+    [TestMethod]
+    public void PlanCaptains_ArcherWithOnlyMixedInfantrySlot_LeadsIt()
+    {
+        var heroes = new List<IHeroCombatAdapter> { Hero("a", CombatRole.Archer) };
+
+        var result = Plan(_sut, heroes, 5);
+
+        CollectionAssert.AreEqual(new List<CaptainAssignment> { new(0, 0) }, result);
+    }
+
+    [TestMethod]
+    public void PlanCaptains_HorseArcherWithOnlyMixedCavalrySlot_LeadsIt()
+    {
+        var heroes = new List<IHeroCombatAdapter> { Hero("a", CombatRole.HorseArcher) };
+
+        var result = Plan(_sut, heroes, 6);
+
+        CollectionAssert.AreEqual(new List<CaptainAssignment> { new(0, 0) }, result);
+    }
 }

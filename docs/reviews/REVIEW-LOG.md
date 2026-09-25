@@ -3803,3 +3803,29 @@ scratch copies. Final: `dotnet test` 10,313 passed, 0 failed; `pytest tools/test
 in-game checklist waits for a deploy. Root cause tables and the not-applied list:
 `docs/reviews/rca-animalia-2026-09-23.md`; seven new lessons (build-tooling-workflow, data-content-cultures,
 adapters-taleworlds-api) and a recurrence note, and one new check each in the Engine and Tooling lenses.
+
+## Review (plan 022, number assigned at merge): OOB Auto-Assign through HeroAutoAssigner, 7-lens deep review + Codex adversarial (2026-09-24)
+
+`/review-codex` Phase 3 on branch `improve/022-order-of-battle-auto-assign` (`1091f3b6..66e3fd59`), verified by the
+review lead alongside the seven deep-review lenses. Codex, 128,428 tokens: **0 P1 / 1 P2 / 2 P3, all confirmed, no
+false positive.** It quoted installed-DLL code for every OOB member it relied on, cross-referenced every string key,
+setting and registration, and answered the ten Known Suspects (all disputed or UNVERIFIED build-history items). P2:
+the new boundary classified candidates from campaign `Hero.BattleEquipment`, but a siege assault spawns every agent
+without a horse (`SandBoxSiegeMissionSpawnHandler` `SetSpawnHorses(false)`, `Mission.DecideAgentSpawnEquipment`), so a
+companion who owns a horse read as Cavalry, scored 0 on the only classes a siege offers, and was never placed; the
+Engine, Data flow and Design lenses found it too. Fixed with a `HeroCombatAdapter(Hero, Equipment)` overload fed the
+agent's `SpawnEquipment`, RED first. P3: the feature doc denied the vanilla persistence of auto-assigned captains
+(`SPOrderOfBattleVM.SaveConfiguration`), and the VM test asserted dispatch while `TextObject.ToString` swallows
+localization failures; both fixed. Codex missed the LF seeded rows (which make `sync_missing_ids` misplace the next
+row), the untested early returns and threshold, the unpinned DI edge and the stale reflection labels, all from the
+lenses and all fixed. Seven questions to Mike (tie-break, empty formations, hero-troop and non-companion candidates,
+the issue, the badge, a rejection message). Full suite 10335 passed, 2 skipped, 0 failed.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|---|---|---|---|
+| 1 | Siege horse owners never placed | Assumed an API worked a certain way | Plan assumed campaign gear describes the mission agent; test plan named a field battle only | Adapter overload + boundary fix, `HeroCombatAdapterTests`; lesson broadened in adapters-taleworlds-api (repeat of #627) |
+| 2 | Doc denies vanilla persistence | Other: unverified plan premise | Lifecycle not traced to deployment end | Doc fixed; lesson in state-lifecycle-save |
+| 3 | Delegation-only VM test | Other: test oracle | Plan's gate named delegation | Message tests per status; lesson in testing-qa |
+
+Report `docs/reviews/deep-review-022-order-of-battle-auto-assign-2026-09-24.md`; RCA
+`docs/reviews/rca-order-of-battle-auto-assign-2026-09-24.md`. Convergence pass owed. Nothing merged or deployed.

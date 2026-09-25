@@ -62,10 +62,11 @@ public sealed class HeroAutoAssigner : IHeroAutoAssigner
         var pairs = new List<(int Score, int Slot, int Hero)>();
         for (var slot = 0; slot < formationClasses.Count; slot++)
         {
-            if (formationClasses[slot] == UnsetFormationClass) continue;
+            var formationClass = formationClasses[slot];
+            if (formationClass == UnsetFormationClass) continue;
             for (var hero = 0; hero < heroes.Count; hero++)
             {
-                var score = ScoreHeroForFormation(heroes[hero], formationClasses[slot]);
+                var score = ScoreHeroForFormation(heroes[hero], formationClass);
                 if (score > 0) pairs.Add((score, slot, hero));
             }
         }
@@ -74,13 +75,12 @@ public sealed class HeroAutoAssigner : IHeroAutoAssigner
             : a.Slot != b.Slot ? a.Slot.CompareTo(b.Slot)
             : a.Hero.CompareTo(b.Hero));
 
-        var usedHeroes = new HashSet<int>();
-        var usedSlots = new HashSet<int>();
+        var usedHeroes = new bool[heroes.Count];
+        var usedSlots = new bool[formationClasses.Count];
         foreach (var pair in pairs)
         {
-            if (usedHeroes.Contains(pair.Hero) || usedSlots.Contains(pair.Slot)) continue;
-            usedHeroes.Add(pair.Hero);
-            usedSlots.Add(pair.Slot);
+            if (usedHeroes[pair.Hero] || usedSlots[pair.Slot]) continue;
+            usedHeroes[pair.Hero] = usedSlots[pair.Slot] = true;
             plan.Add(new CaptainAssignment(pair.Hero, pair.Slot));
         }
         return plan;
