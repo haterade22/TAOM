@@ -106,8 +106,8 @@ APPLIED:
 NOT APPLIED:
 - None of the changed-code proposals was left out. No behaviour-changing improvement to changed
   code remained after the defect fixes, so no question to Mike was needed.
-- Step 4.6 convergence pass: not run here (this delegate cannot spawn agents). The applied diff is
-  one doc line, one CHANGELOG paragraph and one test file; the orchestrator may run it.
+- Step 4.6 convergence pass: not run by this delegate (it cannot spawn agents). The orchestrator
+  ran it on `6b34fd00..a0fa3cff`; see "Convergence" below.
 
 FOLLOW-UP (pre-existing code, no issue filed: filing is public and needs Mike's word):
 - FU1 `tools/process_faction_map.py:265-273, 529-532, 574, 614`: a failed bbox child is reported as
@@ -172,5 +172,35 @@ Not edited here; for the consolidated Phase 3h pass:
   refused to call an unprovable disk claim true.
 - False positive pattern: none new.
 
-VERDICT: READY FOR COMMIT (defects fixed, final suite green; the four NEEDS MIKE items are
-decisions, not code defects)
+VERDICT: READY FOR COMMIT after the convergence fixes below (defects fixed, final suite green; the
+four NEEDS MIKE items are decisions, not code defects)
+
+## Convergence
+
+Step 4.6 pass on `6b34fd00..a0fa3cff` (the review-fix commit). No runtime code changed in that
+range. It raised six LOW defects; I re-read each at `a0fa3cff`, and all six are CONFIRMED. None is a
+false positive.
+
+| # | Where | Defect | Evidence I ran | Fix |
+|---|---|---|---|---|
+| C1 | `docs/ai-includes/external-repo-adoption.md:25` | The archive loop `for a in <vendor-dir>/*.tar.gz` reads only top-level `.tar.gz` files; a `.tgz` or a nested archive is read by neither command | Seeded a scratch folder with the same marker in `top.tar.gz`, `nested/deep.tar.gz` and `x.tgz`: the old loop printed only `top.tar.gz`, the new one all three; an empty folder prints nothing | The loop is fed by `find <vendor-dir> -type f \( -name '*.tar.gz' -o -name '*.tgz' \)`. Run on `E:\repos\TAOM\Dependencies\.vendor-source` (six archives) it prints exactly the three BUTR archives, as before |
+| C2 | `CHANGELOG.md:23` | Named gzip as the only reason the first check missed the credential; the RCA and lesson say it ran in a worktree | `Dependencies/.vendor-source` does not exist in this worktree | The sentence names both causes |
+| C3 | `rca-security-hygiene-2026-09-24.md` table and summary | Left out report finding #8 (no GitHub issue, MED, sprint-wide) | Report table row 8; `plans/005-security-hygiene.md:26` assigns filing to the orchestrator | Row 8 added (why missed, repeat across four plans, preventive action); the old row 8 is now 9, matching the report; summary qualified |
+| C4 | `rca-security-hygiene-2026-09-24.md:20` | Quoted the lesson title wrongly | The heading in `lessons/build-tooling-workflow.md` reads "Write a documented search pattern in `-E` form" | Title corrected |
+| C5 | `LESSONS-LEARNED.md:11, :19` | Counts stale after the three new lessons | `grep -c '^### '`: 181 in build-tooling-workflow, 824 across `lessons/*.md` | 824 and 181 |
+| C6 | This report's verdict and `REVIEW-LOG.md` heading | READY FOR COMMIT stood with Step 4.6 unrun | IMPROVEMENTS recorded it as not run | IMPROVEMENTS now points here, the heading gains "+ convergence", and the verdict rests on this pass |
+
+Observed and not changed: Git Bash's GNU `tar` reads a drive-letter path such as `E:/...` as a
+remote host and fails loudly ("Cannot connect to E: resolve failed"), so the sweep runs with a
+relative `<vendor-dir>`. The failure is an error, not a silent clean result.
+
+After the fixes:
+
+- `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` (worktree, TEMP on E:):
+  `Passed! - Failed: 0, Passed: 10313, Skipped: 2, Total: 10315`.
+- `python -m unittest tools.tests.test_process_faction_map -v`: 3 of 3 pass.
+- `python tools/lint_docs.py --dash-base 6b34fd00`: 0 dead links; 6 dashes, all in the untracked
+  `docs/reviews/codex-adversarial-005-security-hygiene-2026-09-24.prompt.md`, which is outside the
+  commit.
+
+CONVERGENCE: 6 LOW confirmed, 6 fixed, 0 false positives. The verdict above stands.

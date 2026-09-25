@@ -3804,7 +3804,7 @@ in-game checklist waits for a deploy. Root cause tables and the not-applied list
 `docs/reviews/rca-animalia-2026-09-23.md`; seven new lessons (build-tooling-workflow, data-content-cultures,
 adapters-taleworlds-api) and a recurrence note, and one new check each in the Engine and Tooling lenses.
 
-## Review (improve/005, numbered at merge): plan 005 security hygiene, faction-map argv fix and vendored-credential checklist, 5-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+## Review (improve/005, numbered at merge): plan 005 security hygiene, faction-map argv fix and vendored-credential checklist, 5-lens deep review + Codex gpt-6-astra ultra + convergence (2026-09-24)
 
 The June port (`4310aa6e`, `4bc520a1`) as commit `6b34fd00`: `tools/process_faction_map.py` passes
 paths to its two child `python -c` programs through `sys.argv` instead of pasting them into the
@@ -3836,3 +3836,9 @@ failed; the new Python module 3 of 3. Needs Mike: the three tarballs (delete or 
 the `6b34fd00` commit body's false sentence, and the missing GitHub issue. Report
 `docs/reviews/deep-review-005-security-hygiene-2026-09-24.md`, RCA
 `docs/reviews/rca-security-hygiene-2026-09-24.md`; three lessons in build-tooling-workflow.
+
+Convergence pass on `a0fa3cff`: six LOW, none with runtime impact, all fixed. The checklist's
+archive loop read only top-level `.tar.gz` files (now a `find` over `.tar.gz` and `.tgz` at any
+depth), the CHANGELOG named gzip as the only cause of the missed check (the worktree was the other),
+the RCA left out the missing-issue finding and misquoted a lesson title, the lesson index counts
+were stale (824 and 181), and the verdict stood without the convergence pass.

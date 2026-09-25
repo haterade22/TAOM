@@ -20,7 +20,8 @@ to plan 016.
 Review follow-ups: the credential is not gone. The extracted copy is, but the same
 `packageSourceCredentials` block still sits inside three gitignored, never-committed BUTR source
 archives under `Dependencies/.vendor-source/` (ButterLib 2.10.4, MCM 5.11.4, UIExtenderEx 2.13.2);
-a plain grep cannot see inside a `.tar.gz`, which is how the first check missed them. The checklist
+the first check ran in a worktree, which has no copy of that ignored folder, and a plain grep
+cannot see inside a `.tar.gz` anyway. The checklist
 line now sweeps archives too, uses a `-E` pattern that also works in ripgrep, and names the harvest
 finding it came from. `tools/tests/test_process_faction_map.py` pins the path fix: a plain folder, a
 quote in the folder name, and Python text in the folder name (the last two fail on the pre-fix
