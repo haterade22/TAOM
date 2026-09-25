@@ -254,12 +254,15 @@ in one commit on top of `2ca0805b`: `fix(bindings): v2.0.30 - apply maintainer d
 
 | # | Action item | Decision | Applied |
 |---|---|---|---|
-| 1 | The skip banner's channel (with Codex P3) | Option (a): drop the banner change. The signal is the `Skipped:` count in `dotnet test`'s own output plus the strict gate runsettings | `.claude/hooks/notify-test-results.sh` restored to its content at `7f02fc8d` and `tools/test_hooks.sh` section 7c removed (`git diff 7f02fc8d` on both is empty). The hooks catalog row now says the hook reports no skips and names the two signals. The CHANGELOG, the RCA (a resolution section) and REVIEW-LOG note the removal. Codex P3 (F11) lapses with the banner. |
+| 1 | The skip banner's channel (with Codex P3) | Option (a): drop the banner change. The signal is the `Skipped:` count in `dotnet test`'s own output plus the strict gate runsettings | `.claude/hooks/notify-test-results.sh` restored to its content at `7f02fc8d` and `tools/test_hooks.sh` section 7c removed (`git diff 7f02fc8d` on both is empty). The hooks catalog row now says the hook reports no skips and names the two signals. The CHANGELOG, the RCA (a resolution section) and REVIEW-LOG note the removal. Codex P3 (F11) lapses with the banner, and so do F2, the convergence fix D1 and F1's correction to the hook header (`:5` again reads "prominently"). |
 | 2 | `TreatNoTestsAsError` | Add it to `binding-gate.runsettings` | Added under `<RunConfiguration>`. Test first: `BindingGateRunSettingsTests` failed with `Assert.AreEqual failed. Expected:<true>. Actual:<(null)>. binding-gate.runsettings must set <RunConfiguration><TreatNoTestsAsError>true</TreatNoTestsAsError></RunConfiguration>`, then passed (2 of 2; the second row pins `MapInconclusiveToFailed`). The verify-bindings skill's Step 2 names the zero-match message. |
 | 4 | Build folder first (Agent 6 P1) | Keep the order as built: `BANNERLORD_OVERRIDE_DIR`, then `BANNERLORD_GAME_DIR`, then the build's `TaomGameFolder` | No code change. |
 
-Still open: action item 3 (`if: ${{ !cancelled() }}` on the CI step, F13) was not among the
-decisions. Action item 5's issue is #652; the two earlier CHANGELOG headings do not yet carry it.
+Action item 3 (`if: ${{ !cancelled() }}` on the CI step, F13) is moot, as the decisions on #652
+record: plan 010's hosted CI deletes this job. A #652 comment records no port to
+`bannerlord-1.4.5`. Action item 5's issue is #652; the three earlier plan 008 CHANGELOG headings
+carry it since the round-two follow-ups
+(`deep-review-008-binding-gate-no-silent-skips-decisions-2026-09-24.md`).
 
 **Verification of the decisions:**
 - A filter that matches no test under the strict settings,

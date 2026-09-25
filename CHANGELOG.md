@@ -2,6 +2,28 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-25
+
+### fix(binding-gate): v2.0.30 - review follow-ups for plan 008 (#652)
+
+- **The docs say what the strict settings fail.** The hooks catalog row and the decisions entry
+  below said `binding-gate.runsettings` fails a skipped test. It fails an `Assert.Inconclusive`
+  and a filter that matches no test; an `[Ignore]`d test still reports Skipped and exits 0, so
+  the catalog row now says a gate run is green only at `Skipped: 0`.
+- **A zero-match gate run is triaged by its command.** The verify-bindings skill's Step 2 said to
+  fix the filter. On the Step 1 command as written, a zero match is a finding: MSTest's
+  `Unable to load types from the test source` warning above it means the test DLL did not load,
+  and without that warning the gate tests have lost their category.
+- **`BindingGateRunSettingsTests` uses the shared `RepoPaths.RepoPath`** instead of its own
+  repo-root walker. It passes 2 of 2 before and after, and deleting `TreatNoTestsAsError` from
+  the settings still turns its row red.
+- **The review records match the decisions on #652.** The first RCA and report now say that F2,
+  the convergence fix D1 and the hook header correction all lapsed with the banner. F13 (the CI
+  `if:`) is recorded as moot, as #652 records: plan 010's hosted CI deletes that job. The change
+  is not ported to `bannerlord-1.4.5`. The three earlier plan 008 headings carry #652.
+- Review record: `docs/reviews/deep-review-008-binding-gate-no-silent-skips-decisions-2026-09-24.md`
+  and `docs/reviews/rca-binding-gate-no-silent-skips-decisions-2026-09-24.md`.
+
 ## 2026-09-24
 
 ### fix(bindings): v2.0.30 - apply maintainer decisions for plan 008 (#652)
@@ -10,7 +32,8 @@
   its content before plan 008, and `tools/test_hooks.sh` section 7c goes with it. The banner went
   to stderr from an exit-0 hook, so it only ever reached the debug log. The signal for a skipped
   test is the `Skipped:` count in `dotnet test`'s own output, and for the binding gate it is
-  `binding-gate.runsettings`, which fails the skip. The hooks catalog row says so.
+  `binding-gate.runsettings`, which fails an `Assert.Inconclusive` instead of skipping it. The
+  hooks catalog row says so.
 - **A gate filter that matches nothing is red.** `binding-gate.runsettings` now sets
   `TreatNoTestsAsError`. Under the strict settings a filter that matched no test exited 0 before
   and exits 1 now; the real gate still passes 368 of 368 with 0 skipped.
@@ -20,7 +43,7 @@
 - **The resolver order stays as built:** the two environment variables first, the build's game
   folder last.
 
-### fix(bindings): v2.0.30 - convergence fixes for plan 008
+### fix(bindings): v2.0.30 - convergence fixes for plan 008 (#652)
 
 - **A failed or aborted run is never a pass.** The all-skipped branch added below also caught
   `Test Run Failed.` (an error message with zero failed tests) and `Test Run Aborted.` when their
@@ -33,7 +56,7 @@
   still a finding. Two test comments now state the resolver's fallback exactly and drop the stale
   model count.
 
-### fix(bindings): v2.0.30 - review follow-ups for plan 008
+### fix(bindings): v2.0.30 - review follow-ups for plan 008 (#652)
 
 - **Both resolver guards are pinned.** Two tests cover the override that holds no `Bannerlord.exe`
   and a `BANNERLORD_GAME_DIR` that names a missing folder; each goes red if its guard is deleted
@@ -54,7 +77,7 @@
 
 ## 2026-09-23
 
-### test(bindings): v2.0.30 - make the binding gate fail loudly on skips
+### test(bindings): v2.0.30 - make the binding gate fail loudly on skips (#652)
 
 - **The gate finds the game the build used.** `GameAssemblies` read the install only from the test
   process's `BANNERLORD_OVERRIDE_DIR` and `BANNERLORD_GAME_DIR`, so a test DLL built against the

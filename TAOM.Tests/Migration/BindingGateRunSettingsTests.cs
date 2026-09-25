@@ -1,6 +1,6 @@
-using System.IO;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static TAOM.Tests.Infrastructure.RepoPaths;
 
 namespace TAOM.Tests.Migration;
 
@@ -14,22 +14,13 @@ namespace TAOM.Tests.Migration;
 [TestClass]
 public class BindingGateRunSettingsTests
 {
-    private static string FindRepoRoot()
-    {
-        var dir = new DirectoryInfo(Directory.GetCurrentDirectory());
-        while (dir != null && !File.Exists(Path.Combine(dir.FullName, "TAOM.sln")))
-            dir = dir.Parent;
-        return dir?.FullName ?? throw new FileNotFoundException("TAOM.sln not found walking upward from cwd");
-    }
-
     [DataTestMethod]
     [DataRow("MSTest", "MapInconclusiveToFailed")]
     [DataRow("RunConfiguration", "TreatNoTestsAsError")]
     public void BindingGateRunSettings_StrictSetting_IsTrue(string section, string setting)
     {
         // Arrange
-        var path = Path.Combine(FindRepoRoot(), "TAOM.Tests", "binding-gate.runsettings");
-        var doc = XDocument.Load(path);
+        var doc = XDocument.Load(RepoPath("TAOM.Tests", "binding-gate.runsettings"));
 
         // Act
         var value = doc.Root?.Element(section)?.Element(setting)?.Value;

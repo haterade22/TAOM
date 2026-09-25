@@ -101,4 +101,17 @@ missed them, and each lens's blind spots.
   lapses with the banner.
 - **F12:** fixed. `binding-gate.runsettings` sets `TreatNoTestsAsError`; a zero-match filter under
   it now exits 1, and `BindingGateRunSettingsTests` pins the setting.
-- **F13:** not among the decisions; still open.
+- **F2 and the convergence fix D1:** lapse with the banner. The restored hook is again silent on
+  an all-skipped run at normal verbosity, prints `FAILED (counts unavailable)` for
+  `Test Run Failed.` and nothing for `Test Run Aborted.`, as it did before plan 008. Its output
+  reaches only the debug log either way.
+- **F1's correction to the hook header:** reverted with the file. `notify-test-results.sh:5`
+  again reads "summarize dotnet test results prominently". It stays byte-identical to
+  `7f02fc8d` because plan 013 Step 4 anchors on that line; plan 013's replacement block is where
+  to correct it.
+- **F13:** moot, as the decisions on #652 record: plan 010's hosted CI (#421) deletes this
+  self-hosted job, and its workflow guards both test steps with `!cancelled()`. Until then the
+  workflow runs only for `bannerlord-1.4.5` and manual dispatch, and a #652 comment records that
+  this change is not ported to `bannerlord-1.4.5`.
+- **Round two:** the review of these decisions is
+  `rca-binding-gate-no-silent-skips-decisions-2026-09-24.md`.
