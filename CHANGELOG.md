@@ -2,6 +2,26 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-24
+
+### feat(build): v2.0.30 - dirty-tree flag in the build stamp, build field in crash bundles
+
+A build stamp named HEAD's commit whatever the working tree held, so a DLL built from uncommitted
+edits looked like a clean build of that commit, and a release could ship one.
+
+- **Stamp**: a `TaomStampWorkingTreeState` target in `Directory.Build.props` runs
+  `git status --porcelain` over `Main`, `Dependencies`, `Stubs` and the props file and appends
+  `.dirty` to the SHA the SDK writes into `InformationalVersion` (`nogit` or `.nogit` when git
+  cannot tell). About 40 ms per project build.
+- **Crash bundles**: `report.txt` prints a `Build:` line in the Identity section, `manifest.txt` a
+  `TAOM build:` line, and `report.json` gains `TaomBuild`.
+- **Releases**: `tools/package_release.py --require-build <tag>` refuses a `TAOM.dll` or
+  `TAOM.Dependencies.dll` that is dirty, git-less or built at another commit; `/release` gains
+  Phase 8 (rebuild at the tag, then gate and package), and `release-process.md` no longer allows
+  releasing from a tree that holds another session's edits.
+- Tests: 4 new C# (`BuildStampReportTests`, `PlainTextCrashReportRendererTests`,
+  `CrashBundleWriterTests`), 13 new Python (`test_package_release.py`).
+
 ## 2026-09-23
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)

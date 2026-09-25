@@ -59,14 +59,14 @@ bump one by hand.
 Assembly identity is separate and deliberately static: `Directory.Build.props` freezes
 `AssemblyVersion` (changing it alters binding identity for no benefit) and stamps
 `InformationalVersion` as `build.yyyyMMdd-HHmmssZ` per build, which both modules log at startup so a
-mismatched pair is one line in the log. That stamp identifies a *build*; the tag identifies a
+mismatched pair is one line in the log. The .NET SDK appends `+<commit SHA>` to that stamp, and a build of a tree with uncommitted changes to its inputs appends `.dirty` after the SHA (`nogit` or `.nogit` when git could not tell). That stamp identifies a *build*; the tag identifies a
 *release*. Both are needed.
 
 ## Cutting a release
 
 Use `/release`. It runs the sequence below and fails closed on the #371 pairing check.
 
-1. Tree clean (or, when another session's edits are present, every path staged explicitly and theirs left out),
+1. Tree clean (`git status --porcelain` empty; if another session's edits are present, stop, or cut the release from a clean worktree of the release branch, because `build.ps1` compiles and deploys every file in the tree, committed or not),
    on the release branch (`bannerlord-1.5.x` since v2.0.29; `bannerlord-1.4.5` for a 1.4.8 build), current version
    already tagged.
 2. `./build.ps1 -RunTests` green — no release on an unrun build.
@@ -81,6 +81,7 @@ Use `/release`. It runs the sequence below and fails closed on the #371 pairing 
    2026-09-13, hook `check-commit-subject-version.sh`), so between releases
    `git log --grep 'vX.Y.Z - '` lists the commits a build reporting that `TaomVersion` can contain.
 7. `git tag -a vX.Y.Z -m "…"` then `git push origin <release branch> vX.Y.Z`.
+8. Build at the tag and gate the DLLs: `python tools/package_release.py --source "<game>/Modules" --dest <out> --require-build vX.Y.Z --dry-run` must print `build stamp OK`, then package without `--dry-run` (the skill's Phase 8).
 
 **The Armory ships in the same release when the TAOM build needs a file it did not have.** Players get
 `LOTRLOME_Armory` only from the editor package Mike builds into `E:\LOTRAOM_Releases\<channel>\Modules\`. Since #627
@@ -108,6 +109,13 @@ git describe --tags --match 'v[0-9]*' <sha>   # which release a given commit is 
 ```
 
 If the version is one of the five phantoms below, stop — there is nothing to find.
+
+A bundle's `report.txt` (Identity section, `Build:` line) and `manifest.txt` (`TAOM build:` line)
+also carry the build stamp, for example `v2.0.0.0 build.20260923-184249Z+c79a585218ad...`. That SHA
+is the commit the DLL was compiled from: `git show <sha>`. A `.dirty` suffix means the build also
+held uncommitted edits, so the commit is only the nearest known state; `nogit` means git could not
+tell. Bundles written before this field existed lack the line: read the `[BuildStamp]` line near the
+top of the bundled `taom_debug.log` instead.
 
 ## Historical record: the backfill (2026-08-08)
 

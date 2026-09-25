@@ -106,6 +106,25 @@ git ls-remote --tags origin | grep vX.Y.Z          # expect the ref and its ^{} 
 git describe --tags --match 'v[0-9]*' HEAD         # expect vX.Y.Z
 ```
 
+## Phase 8: Build and package at the tag
+
+The Phase 2 build ran before the release commit existed, so its DLL carries the parent commit's SHA.
+Rebuild at the tag before anything ships.
+
+1. `git status --porcelain` is empty and `git rev-parse HEAD` equals `git rev-parse vX.Y.Z^{commit}`.
+   Then run `./build.ps1`. If another session has started editing, do not build that tree: build a
+   clean worktree of the tag instead (`git worktree add ../taom-release-vX.Y.Z vX.Y.Z`, run
+   `./build.ps1` there, then `git worktree remove ../taom-release-vX.Y.Z`). `build.ps1` compiles and
+   deploys every file in the tree, committed or not.
+2. Gate the DLLs: `python tools/package_release.py --source "<game>/Modules" --dest <out> --require-build vX.Y.Z --dry-run`
+   must print `build stamp OK` and exit 0. It refuses a `TAOM.dll` or `TAOM.Dependencies.dll` whose
+   stamp says `.dirty` or `nogit`, or names a commit other than the tag's.
+3. Package: the same command without `--dry-run` (plus `--keep-rdc` or `--allow-unknown` if the dry
+   run's report calls for them).
+4. If the player package is assembled somewhere else (the editor package in
+   `E:\LOTRAOM_Releases\<channel>\Modules\`), run step 2's dry run with `--source` pointing at that
+   folder before uploading it.
+
 ## Gotchas
 
 - **Backfilling an old release?** Backdate the tagger date or it claims to have been cut today:
@@ -115,6 +134,8 @@ git describe --tags --match 'v[0-9]*' HEAD         # expect vX.Y.Z
 - **Never retag.** Moving a pushed tag leaves everyone who fetched it on the old target, silently.
   A wrong release gets a new version.
 - **Version ≠ build stamp.** `Directory.Build.props` stamps `InformationalVersion` per build
-  (`build.yyyyMMdd-HHmmssZ`) and freezes `AssemblyVersion` deliberately. The stamp identifies a
-  build; the tag identifies a release.
+  (`build.yyyyMMdd-HHmmssZ`) and freezes `AssemblyVersion` deliberately. The SDK appends
+  `+<commit SHA>`, and a build of a tree with uncommitted changes under `Main`, `Dependencies`,
+  `Stubs` or `Directory.Build.props` appends `.dirty` after it (`nogit` or `.nogit` when git could
+  not tell). The stamp identifies a build; the tag identifies a release.
 - GitHub Releases are deliberately **not** part of this flow — tag-only, by decision.

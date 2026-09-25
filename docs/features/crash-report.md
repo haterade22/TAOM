@@ -114,7 +114,7 @@ Each section is gathered by a dedicated collector. Any collector that throws is 
 
 | Section | Source |
 |---|---|
-| Identity | `Native` + `TAOM` module versions, Bannerlord.exe FileVersion, TAOM.dll SHA1, language code |
+| Identity | `Native` + `TAOM` module versions, Bannerlord.exe FileVersion, TAOM.dll SHA1, TAOM build stamp (`InformationalVersion`: build time, commit SHA, `.dirty` or `nogit` flag; also in `manifest.txt`), language code |
 | Exception | Type, message, source, HResult, target site, stack trace, `Exception.Data` dictionary, full inner chain (≤10 deep) |
 | Stack Frames | Per-frame method, declaring type/assembly, file/line (when PDB present), IL offset |
 | Harmony Correlation | Patches affecting **every** frame in the stack, plus full inventory (every patched method grouped by owner). Harmony replacement frames (`Foo_PatchN`) are resolved back to their original method via `Harmony.GetOriginalMethodFromStackframe` before the patch lookup — without this every patched frame printed `(no patches)`, exactly the frames that matter (#339, fixed 2026-07-13) |
