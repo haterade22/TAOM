@@ -11,6 +11,35 @@ using Helpers;
 
 namespace TAOM.Features.Refuge;
 
+/// <summary>One hero in the main party's member roster, read at the campaign boundary. Pure data:
+/// the warden eligibility filter in <see cref="WardenService"/> reads only these fields.</summary>
+public sealed class PartyHeroInfo
+{
+    public string HeroId;
+    public string DisplayName;
+
+    /// <summary>True for <c>Hero.MainHero</c>.</summary>
+    public bool IsMainHero;
+
+    /// <summary>True when the hero's <c>CompanionOf</c> is the player clan; false when there is
+    /// no player clan.</summary>
+    public bool IsPlayerClanCompanion;
+}
+
+/// <summary>What a promotion needs to know about the troop and the player, read at the campaign
+/// boundary. The seam returns null instead when the troop, the player clan or the main party is
+/// missing.</summary>
+public sealed class PromotionSource
+{
+    public bool TroopIsHero;
+
+    /// <summary>The troop's culture StringId, or null.</summary>
+    public string TroopCultureId;
+
+    /// <summary>The main hero's culture StringId, or null.</summary>
+    public string PlayerCultureId;
+}
+
 /// <summary>
 /// Warden lifecycle (port of the Refuge module's SoldierPromotion + the behavior's companion
 /// enumeration). Two deliberate departures from the source, both contract-mandated:
@@ -34,6 +63,9 @@ public class WardenService : IWardenService
     /// <summary>Random spread on a minted companion's age above coming-of-age (source value).</summary>
     private const int PromotedAgeSpreadYears = 14;
     private const int PromotedAgeBaseOffsetYears = 4;
+
+    /// <summary>Coming-of-age when the campaign has no AgeModel (source value).</summary>
+    private const int DefaultComesOfAgeYears = 18;
 
     private readonly IModLogger _logger;
 
@@ -123,28 +155,92 @@ public class WardenService : IWardenService
             $"[Refuge] founding failed after promotion; unwound minted warden '{wardenHeroId}' and refunded one '{promotedFromTroopId}'.");
     }
 
-    // --- campaign-static seams (the untested boundary sliver; overridden in tests) ---
-
-    protected virtual IReadOnlyList<WardenCandidate> CompanionsInMainParty()
+    /// <summary>The player clan's companions riding in the main party, in roster order: every
+    /// hero except the main hero whose CompanionOf is the player clan. A visiting noble or quest
+    /// hero is never a candidate. internal for TAOM.Tests (InternalsVisibleTo).</summary>
+    internal IReadOnlyList<WardenCandidate> CompanionsInMainParty()
     {
         var result = new List<WardenCandidate>();
-        var roster = MobileParty.MainParty?.MemberRoster;
-        var clan = Clan.PlayerClan;
-        if (roster == null || clan == null)
-            return result;
-        for (int i = 0; i < roster.Count; i++)
+        foreach (var hero in HeroesInMainParty())
         {
-            var character = roster.GetCharacterAtIndex(i);
-            var hero = character?.HeroObject;
-            if (hero == null || hero == Hero.MainHero)
+            if (hero == null || hero.IsMainHero)
                 continue;
-            if (hero.CompanionOf != clan)
+            if (!hero.IsPlayerClanCompanion)
                 continue;
             result.Add(new WardenCandidate
             {
-                Id = hero.StringId,
-                DisplayName = hero.Name?.ToString(),
+                Id = hero.HeroId,
+                DisplayName = hero.DisplayName,
                 IsCompanion = true,
+            });
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Mints a companion hero from a troop: culture-matched companion template,
+    /// HeroCreator.CreateSpecialHero into the player clan, renamed to the troop so "a Rohan
+    /// Spearman became Captain-of-sorts" reads on screen, activated, AddCompanionAction, and
+    /// placed in the main party so the founding flow can then move him into the refuge.
+    /// Returns the hero StringId, or null when any engine step refuses. The step order is the
+    /// source's (template draw, then the age draw), so the campaign RNG is consumed as before.
+    /// internal for TAOM.Tests (InternalsVisibleTo).
+    /// </summary>
+    internal string MintCompanionFromTroop(string troopId)
+    {
+        var source = ReadPromotionSource(troopId);
+        if (source == null || source.TroopIsHero)
+            return null;
+
+        // Culture-matched template first; any companion template when the culture has none.
+        string cultureId = source.TroopCultureId ?? source.PlayerCultureId;
+        string templateId = RandomCompanionTemplateId(cultureId) ?? RandomCompanionTemplateId(null);
+        if (templateId == null)
+            return null;
+
+        int age = (HeroComesOfAge() ?? DefaultComesOfAgeYears)
+            + PromotedAgeBaseOffsetYears
+            + NextRandomInt(PromotedAgeSpreadYears);
+        string heroId = CreatePromotedHero(templateId, age);
+        if (heroId == null)
+            return null;
+
+        try
+        {
+            // The rename is cosmetic; a template-named hero is still a working warden, so a
+            // localization hiccup here must not abort the promotion (source behaviour).
+            RenamePromotedHero(heroId, troopId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning($"[Refuge] promoted-warden rename failed: {ex.Message}");
+        }
+        EnrolPromotedHero(heroId);
+        return heroId;
+    }
+
+    // --- campaign-static seams (the untested boundary sliver; overridden in tests) ---
+
+    /// <summary>Every hero in the main party's member roster, in roster order, with the two facts
+    /// the companion filter reads. Empty when there is no main party roster.</summary>
+    protected virtual IReadOnlyList<PartyHeroInfo> HeroesInMainParty()
+    {
+        var result = new List<PartyHeroInfo>();
+        var roster = MobileParty.MainParty?.MemberRoster;
+        var clan = Clan.PlayerClan;
+        if (roster == null)
+            return result;
+        for (int i = 0; i < roster.Count; i++)
+        {
+            var hero = roster.GetCharacterAtIndex(i)?.HeroObject;
+            if (hero == null)
+                continue;
+            result.Add(new PartyHeroInfo
+            {
+                HeroId = hero.StringId,
+                DisplayName = hero.Name?.ToString(),
+                IsMainHero = hero == Hero.MainHero,
+                IsPlayerClanCompanion = clan != null && hero.CompanionOf == clan,
             });
         }
         return result;
@@ -190,48 +286,74 @@ public class WardenService : IWardenService
         return roster.GetTroopCount(troop);
     }
 
-    /// <summary>
-    /// Mints a companion hero from a troop: culture-matched companion template,
-    /// HeroCreator.CreateSpecialHero into the player clan, renamed to the troop so "a Rohan
-    /// Spearman became Captain-of-sorts" reads on screen, activated, AddCompanionAction, and
-    /// placed in the main party so the founding flow can then move him into the refuge.
-    /// Returns the hero StringId, or null when any engine step refuses.
-    /// </summary>
-    protected virtual string MintCompanionFromTroop(string troopId)
+    /// <summary>Reads the promotion inputs: the troop's hero flag and culture, and the player's
+    /// culture. Null when the troop, the player clan or the main party is missing.</summary>
+    protected virtual PromotionSource ReadPromotionSource(string troopId)
     {
         var troop = FindTroop(troopId);
+        if (troop == null || Clan.PlayerClan == null || MobileParty.MainParty == null)
+            return null;
+        return new PromotionSource
+        {
+            TroopIsHero = troop.IsHero,
+            TroopCultureId = troop.Culture?.StringId,
+            PlayerCultureId = Hero.MainHero?.Culture?.StringId,
+        };
+    }
+
+    /// <summary>One random wanderer companion template: of the given culture, or of any culture
+    /// when <paramref name="cultureId"/> is null. Its StringId, or null when none matches. Draws
+    /// from the campaign RNG.</summary>
+    protected virtual string RandomCompanionTemplateId(string cultureId)
+    {
+        var template = cultureId == null
+            ? CharacterHelper.GetRandomCompanionTemplateWithPredicate()
+            : CharacterHelper.GetRandomCompanionTemplateWithPredicate(
+                c => string.Equals(c.Culture?.StringId, cultureId, StringComparison.Ordinal));
+        return template?.StringId;
+    }
+
+    /// <summary>The campaign AgeModel's coming-of-age, or null when there is no model.</summary>
+    protected virtual int? HeroComesOfAge() => Campaign.Current?.Models?.AgeModel?.HeroComesOfAge;
+
+    /// <summary>One campaign RNG draw in [0, <paramref name="maxExclusive"/>).</summary>
+    protected virtual int NextRandomInt(int maxExclusive) => MBRandom.RandomInt(maxExclusive);
+
+    /// <summary>Creates a special hero from the template into the player clan at the given age.
+    /// The hero's StringId, or null when the template or the clan is missing or the engine
+    /// refuses.</summary>
+    protected virtual string CreatePromotedHero(string templateId, int age)
+    {
+        var template = FindTroop(templateId);
+        var clan = Clan.PlayerClan;
+        if (template == null || clan == null)
+            return null;
+        var hero = HeroCreator.CreateSpecialHero(template, bornSettlement: null, faction: clan, supporterOfClan: null, age: age);
+        return hero?.StringId;
+    }
+
+    /// <summary>Renames the hero after the troop he was. May throw; the caller tolerates it.</summary>
+    protected virtual void RenamePromotedHero(string heroId, string troopId)
+    {
+        var hero = FindHero(heroId);
+        var troop = FindTroop(troopId);
+        if (hero == null || troop == null)
+            return;
+        hero.SetName(troop.Name, troop.Name);
+    }
+
+    /// <summary>Activates the hero, makes him a player-clan companion and puts him in the main
+    /// party (the source's three engine calls, in order).</summary>
+    protected virtual void EnrolPromotedHero(string heroId)
+    {
+        var hero = FindHero(heroId);
         var clan = Clan.PlayerClan;
         var mainParty = MobileParty.MainParty;
-        if (troop == null || troop.IsHero || clan == null || mainParty == null)
-            return null;
-
-        var culture = troop.Culture ?? Hero.MainHero?.Culture;
-        var template = CharacterHelper.GetRandomCompanionTemplateWithPredicate(
-                c => culture == null || c.Culture == culture)
-            ?? CharacterHelper.GetRandomCompanionTemplateWithPredicate();
-        if (template == null)
-            return null;
-
-        int comesOfAge = Campaign.Current?.Models?.AgeModel?.HeroComesOfAge ?? 18;
-        int age = comesOfAge + PromotedAgeBaseOffsetYears + MBRandom.RandomInt(PromotedAgeSpreadYears);
-        var hero = HeroCreator.CreateSpecialHero(template, bornSettlement: null, faction: clan, supporterOfClan: null, age: age);
-        if (hero == null)
-            return null;
-
-        try
-        {
-            // The rename is cosmetic; a template-named hero is still a working warden, so a
-            // localization hiccup here must not abort the promotion (source behaviour).
-            hero.SetName(troop.Name, troop.Name);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogWarning($"[Refuge] promoted-warden rename failed: {ex.Message}");
-        }
+        if (hero == null || clan == null || mainParty == null)
+            return;
         hero.ChangeState(Hero.CharacterStates.Active);
         AddCompanionAction.Apply(clan, hero);
         AddHeroToPartyAction.Apply(hero, mainParty, showNotification: false);
-        return hero.StringId;
     }
 
     protected virtual bool RemoveOneTroopFromMainParty(string troopId)

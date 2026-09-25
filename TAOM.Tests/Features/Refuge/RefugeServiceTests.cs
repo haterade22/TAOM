@@ -54,6 +54,12 @@ public class RefugeServiceTests
         public readonly HashSet<string> PartiesInMapEvent = new HashSet<string>();
         public RaidThreat Threat;
         public int ThreatSearches;
+        // The raid tests above the FindNearestHostile section arrange one eligible hostile through
+        // Threat; the FindNearestHostile tests arrange the whole map scan through RaidCandidates.
+        public List<RaidCandidate> RaidCandidates;
+        public bool RaidScanUnavailable;
+        public readonly HashSet<string> NotAtWar = new HashSet<string>();
+        public readonly List<string> WarChecks = new List<string>();
         public readonly List<string> RaidsStarted = new List<string>();
         public readonly List<string> MergedParties = new List<string>();
         public readonly List<string> DestroyedParties = new List<string>();
@@ -99,8 +105,26 @@ public class RefugeServiceTests
             DistancesFromMain.TryGetValue(partyId, out var distance) ? distance : float.MaxValue;
 
         protected override Vec2 PartyPosition(string partyId) => default;
-        protected override float DistanceToNearestFortification() => FortDistance;
-        protected override float DistanceToNearestFortificationFrom(string partyId) => FortDistanceFromRefuge;
+
+        // Existing tests set FortDistance and FortDistanceFromRefuge (one town at that distance);
+        // the fortification tests arrange every settlement through the two site lists.
+        public List<SettlementSite> SitesFromMain;
+        public List<SettlementSite> SitesFromParty;
+        public readonly List<string> SiteReads = new List<string>();
+
+        protected override IEnumerable<SettlementSite> SettlementSitesFromMainParty()
+        {
+            SiteReads.Add("main");
+            return SitesFromMain
+                ?? new List<SettlementSite> { new SettlementSite(isTown: true, isCastle: false, distance: FortDistance) };
+        }
+
+        protected override IEnumerable<SettlementSite> SettlementSitesFrom(string partyId)
+        {
+            SiteReads.Add("party:" + partyId);
+            return SitesFromParty
+                ?? new List<SettlementSite> { new SettlementSite(isTown: true, isCastle: false, distance: FortDistanceFromRefuge) };
+        }
 
         protected override string SpawnRefugeParty(string stringId, string wardenHeroId)
         {
@@ -172,11 +196,37 @@ public class RefugeServiceTests
 
         protected override bool IsPartyInMapEvent(string partyId) => PartiesInMapEvent.Contains(partyId);
 
-        protected override RaidThreat FindNearestHostile(string refugePartyId, float range)
+        protected override RaidScan ScanForRaiders(string refugePartyId)
         {
             ThreatSearches++;
-            return Threat;
+            if (RaidScanUnavailable)
+                return null;
+            var candidates = RaidCandidates;
+            if (candidates == null)
+            {
+                candidates = new List<RaidCandidate>();
+                if (Threat != null)
+                {
+                    candidates.Add(new RaidCandidate
+                    {
+                        PartyId = Threat.PartyId,
+                        IsActive = true,
+                        TotalManCount = 1,
+                        StraightLineDistance = 0f,
+                    });
+                }
+            }
+            return new RaidScan { Candidates = candidates };
         }
+
+        protected override bool IsAtWarWithRefuge(RaidScan scan, RaidCandidate candidate)
+        {
+            WarChecks.Add(candidate.PartyId);
+            return !NotAtWar.Contains(candidate.PartyId);
+        }
+
+        protected override string PartyDisplayName(RaidCandidate candidate) =>
+            Threat != null && candidate.PartyId == Threat.PartyId ? Threat.Name : "name:" + candidate.PartyId;
 
         protected override void StartRaid(RaidThreat threat, string refugePartyId)
         {
@@ -186,8 +236,44 @@ public class RefugeServiceTests
 
         public readonly List<string> PeaceReleasedParties = new List<string>();
 
-        protected override void ReleasePeacePrisoners(string partyId) =>
+        // Prison rosters for the ReleasePeacePrisoners tests, by refuge party id; a null row holds
+        // no hero. A release or a removal takes the row out, like the engine, so a forward walk
+        // would skip rows or run past the end.
+        public readonly Dictionary<string, List<RefugePrisoner>> PrisonRows =
+            new Dictionary<string, List<RefugePrisoner>>();
+        public readonly HashSet<string> PrisonersAtWar = new HashSet<string>();
+        public readonly List<string> PrisonerEvents = new List<string>();
+
+        protected override int RefugePrisonRosterCount(string partyId)
+        {
             PeaceReleasedParties.Add(partyId);
+            return PrisonRows.TryGetValue(partyId, out var rows) ? rows.Count : 0;
+        }
+
+        protected override RefugePrisoner ReadRefugePrisonerAt(string partyId, int index)
+        {
+            PrisonerEvents.Add("read:" + index);
+            return PrisonRows[partyId][index];
+        }
+
+        protected override bool IsPrisonerAtWarWithRefuge(string partyId, RefugePrisoner prisoner)
+        {
+            PrisonerEvents.Add("war:" + prisoner.HeroId);
+            return PrisonersAtWar.Contains(prisoner.HeroId);
+        }
+
+        protected override void ReleasePrisonerByPeace(RefugePrisoner prisoner)
+        {
+            PrisonerEvents.Add("release:" + prisoner.HeroId);
+            foreach (var rows in PrisonRows.Values)
+                rows.Remove(prisoner);
+        }
+
+        protected override void RemoveFromRefugePrisonRoster(string partyId, RefugePrisoner prisoner)
+        {
+            PrisonerEvents.Add("remove:" + prisoner.HeroId);
+            PrisonRows[partyId].Remove(prisoner);
+        }
 
         protected override void ShowMessage(TextObject text, bool error) => Messages.Add(error);
     }
@@ -1221,6 +1307,179 @@ public class RefugeServiceTests
             "the MapEventStarted callback for the raid battle must see MilitiaAdded != 0 and skip");
     }
 
+    // --- FindNearestHostile (the raid-target pick; the scan seams only read the map) ---
+
+    private static RaidCandidate Hostile(string id, float distance) => new RaidCandidate
+    {
+        PartyId = id,
+        IsActive = true,
+        TotalManCount = 5,
+        StraightLineDistance = distance,
+    };
+
+    [TestMethod]
+    public void FindNearestHostile_RefugeOrItsFactionMissing_ReturnsNull()
+    {
+        _sut.RaidScanUnavailable = true;
+
+        Assert.IsNull(_sut.FindNearestHostile("r1", 6f));
+    }
+
+    [TestMethod]
+    public void FindNearestHostile_NoParties_ReturnsNull()
+    {
+        _sut.RaidCandidates = new List<RaidCandidate>();
+
+        Assert.IsNull(_sut.FindNearestHostile("r1", 6f));
+    }
+
+    [TestMethod]
+    public void FindNearestHostile_NullEntry_Skipped()
+    {
+        _sut.RaidCandidates = new List<RaidCandidate> { null, Hostile("enemy", 2f) };
+
+        Assert.AreEqual("enemy", _sut.FindNearestHostile("r1", 6f)?.PartyId);
+    }
+
+    [TestMethod]
+    public void FindNearestHostile_MainParty_Skipped()
+    {
+        var main = Hostile("main_party", 1f);
+        main.IsMainParty = true;
+        _sut.RaidCandidates = new List<RaidCandidate> { main };
+
+        Assert.IsNull(_sut.FindNearestHostile("r1", 6f));
+    }
+
+    [TestMethod]
+    public void FindNearestHostile_InactiveParty_Skipped()
+    {
+        var idle = Hostile("idle", 1f);
+        idle.IsActive = false;
+        _sut.RaidCandidates = new List<RaidCandidate> { idle };
+
+        Assert.IsNull(_sut.FindNearestHostile("r1", 6f));
+    }
+
+    [TestMethod]
+    public void FindNearestHostile_PartyInMapEvent_Skipped()
+    {
+        var fighting = Hostile("fighting", 1f);
+        fighting.InMapEvent = true;
+        _sut.RaidCandidates = new List<RaidCandidate> { fighting };
+
+        Assert.IsNull(_sut.FindNearestHostile("r1", 6f));
+    }
+
+    [TestMethod]
+    public void FindNearestHostile_OtherRefuge_Skipped()
+    {
+        var refuge = Hostile("refuge_2", 1f);
+        refuge.IsRefuge = true;
+        _sut.RaidCandidates = new List<RaidCandidate> { refuge };
+
+        Assert.IsNull(_sut.FindNearestHostile("r1", 6f));
+    }
+
+    [TestMethod]
+    public void FindNearestHostile_PartyNotAtWar_Skipped()
+    {
+        _sut.NotAtWar.Add("neighbour");
+        _sut.RaidCandidates = new List<RaidCandidate> { Hostile("neighbour", 1f) };
+
+        Assert.IsNull(_sut.FindNearestHostile("r1", 6f));
+    }
+
+    [TestMethod]
+    public void FindNearestHostile_PartyWithNoSoldiers_Skipped()
+    {
+        var empty = Hostile("empty", 1f);
+        empty.TotalManCount = 0;
+        _sut.RaidCandidates = new List<RaidCandidate> { empty };
+
+        Assert.IsNull(_sut.FindNearestHostile("r1", 6f));
+    }
+
+    [TestMethod]
+    public void FindNearestHostile_WarCheck_RunsOnlyAfterTheFourCheapFilters()
+    {
+        var main = Hostile("main", 1f);
+        main.IsMainParty = true;
+        var idle = Hostile("idle", 1f);
+        idle.IsActive = false;
+        var fighting = Hostile("fighting", 1f);
+        fighting.InMapEvent = true;
+        var refuge = Hostile("refuge_2", 1f);
+        refuge.IsRefuge = true;
+        var empty = Hostile("empty", 1f);
+        empty.TotalManCount = 0;
+        _sut.RaidCandidates = new List<RaidCandidate> { main, idle, fighting, refuge, empty, Hostile("enemy", 2f) };
+
+        var threat = _sut.FindNearestHostile("r1", 6f);
+
+        Assert.AreEqual("enemy", threat?.PartyId);
+        CollectionAssert.AreEqual(new[] { "empty", "enemy" }, _sut.WarChecks,
+            "the war check reads MobileParty.MapFaction, which can throw on odd parties; the source "
+            + "read it only after the main-party, active, map-event and refuge filters, and before "
+            + "the soldier count");
+    }
+
+    [TestMethod]
+    public void FindNearestHostile_SeveralInRange_PicksTheNearest()
+    {
+        _sut.RaidCandidates = new List<RaidCandidate> { Hostile("a", 3f), Hostile("b", 1f), Hostile("c", 2f) };
+
+        Assert.AreEqual("b", _sut.FindNearestHostile("r1", 6f)?.PartyId);
+    }
+
+    [TestMethod]
+    public void FindNearestHostile_EqualDistances_FirstFoundWins()
+    {
+        _sut.RaidCandidates = new List<RaidCandidate> { Hostile("first", 2f), Hostile("second", 2f) };
+
+        Assert.AreEqual("first", _sut.FindNearestHostile("r1", 6f)?.PartyId);
+    }
+
+    [TestMethod]
+    public void FindNearestHostile_PartyExactlyAtRange_Excluded()
+    {
+        _sut.RaidCandidates = new List<RaidCandidate> { Hostile("edge", 6f) };
+
+        Assert.IsNull(_sut.FindNearestHostile("r1", 6f), "the range comparison is strict, as in the source");
+    }
+
+    [TestMethod]
+    public void FindNearestHostile_PartyJustInsideRange_Picked()
+    {
+        _sut.RaidCandidates = new List<RaidCandidate> { Hostile("inside", 5.9f) };
+
+        Assert.AreEqual("inside", _sut.FindNearestHostile("r1", 6f)?.PartyId);
+    }
+
+    [TestMethod]
+    public void FindNearestHostile_NaNDistance_NeverWins()
+    {
+        _sut.RaidCandidates = new List<RaidCandidate> { Hostile("corrupt", float.NaN), Hostile("b", 5f) };
+
+        Assert.AreEqual("b", _sut.FindNearestHostile("r1", 6f)?.PartyId,
+            "NaN < bestDistance is false, so a corrupt position can never become the raider");
+    }
+
+    [TestMethod]
+    public void FindNearestHostile_Result_CarriesIdNameAndEngineHandle()
+    {
+        var handle = new object();
+        var enemy = Hostile("enemy", 2f);
+        enemy.EngineParty = handle;
+        _sut.RaidCandidates = new List<RaidCandidate> { enemy };
+
+        var threat = _sut.FindNearestHostile("r1", 6f);
+
+        Assert.AreEqual("enemy", threat.PartyId);
+        Assert.AreEqual("name:enemy", threat.Name, "the name is rendered only for the winner");
+        Assert.AreSame(handle, threat.EngineParty, "StartRaid casts this handle back to the MobileParty");
+    }
+
     // --- Map-event gating (manage/dismantle/enter) ---
 
     [TestMethod]
@@ -1345,6 +1604,139 @@ public class RefugeServiceTests
         _sut.OnPeaceMade();
 
         CollectionAssert.AreEquivalent(new[] { "r1", "r2" }, _sut.PeaceReleasedParties);
+    }
+
+    // --- ReleasePeacePrisoners (the release decisions; each prison seam reads or acts on one row) ---
+
+    private static RefugePrisoner Prisoner(string heroId, bool heldByRefuge = true, bool mainHero = false) =>
+        new RefugePrisoner { HeroId = heroId, HeldByRefuge = heldByRefuge, IsMainHero = mainHero };
+
+    [TestMethod]
+    public void ReleasePeacePrisoners_NoRosterRows_ReadsNothing()
+    {
+        _sut.ReleasePeacePrisoners("r1");
+
+        CollectionAssert.AreEqual(new[] { "r1" }, _sut.PeaceReleasedParties);
+        Assert.AreEqual(0, _sut.PrisonerEvents.Count,
+            "a missing refuge or faction reports no rows, and the release does nothing (source behaviour)");
+    }
+
+    [TestMethod]
+    public void ReleasePeacePrisoners_HeldByTheRefuge_EndsCaptivityByPeace()
+    {
+        _sut.PrisonRows["r1"] = new List<RefugePrisoner> { Prisoner("lord_a") };
+
+        _sut.ReleasePeacePrisoners("r1");
+
+        CollectionAssert.AreEqual(new[] { "read:0", "war:lord_a", "release:lord_a" }, _sut.PrisonerEvents);
+    }
+
+    [TestMethod]
+    public void ReleasePeacePrisoners_HeldByAnotherCaptor_OnlyDropsTheRow()
+    {
+        _sut.PrisonRows["r1"] = new List<RefugePrisoner> { Prisoner("lord_a", heldByRefuge: false) };
+
+        _sut.ReleasePeacePrisoners("r1");
+
+        CollectionAssert.AreEqual(new[] { "read:0", "war:lord_a", "remove:lord_a" }, _sut.PrisonerEvents);
+    }
+
+    [TestMethod]
+    public void ReleasePeacePrisoners_StillAtWar_Kept()
+    {
+        _sut.PrisonRows["r1"] = new List<RefugePrisoner> { Prisoner("lord_a") };
+        _sut.PrisonersAtWar.Add("lord_a");
+
+        _sut.ReleasePeacePrisoners("r1");
+
+        CollectionAssert.AreEqual(new[] { "read:0", "war:lord_a" }, _sut.PrisonerEvents);
+        Assert.AreEqual(1, _sut.PrisonRows["r1"].Count);
+    }
+
+    [TestMethod]
+    public void ReleasePeacePrisoners_MainHero_NeverReleasedAndNeverWarChecked()
+    {
+        _sut.PrisonRows["r1"] = new List<RefugePrisoner> { Prisoner("main_hero", mainHero: true) };
+
+        _sut.ReleasePeacePrisoners("r1");
+
+        CollectionAssert.AreEqual(new[] { "read:0" }, _sut.PrisonerEvents,
+            "the source skipped the main hero before it read any faction");
+    }
+
+    [TestMethod]
+    public void ReleasePeacePrisoners_RowWithoutAHero_Skipped()
+    {
+        _sut.PrisonRows["r1"] = new List<RefugePrisoner> { null };
+
+        _sut.ReleasePeacePrisoners("r1");
+
+        CollectionAssert.AreEqual(new[] { "read:0" }, _sut.PrisonerEvents);
+    }
+
+    [TestMethod]
+    public void ReleasePeacePrisoners_WalksFromTheLastRowToTheFirst()
+    {
+        _sut.PrisonRows["r1"] = new List<RefugePrisoner> { Prisoner("a"), Prisoner("b"), Prisoner("c") };
+
+        _sut.ReleasePeacePrisoners("r1");
+
+        CollectionAssert.AreEqual(
+            new[] { "read:2", "war:c", "release:c", "read:1", "war:b", "release:b", "read:0", "war:a", "release:a" },
+            _sut.PrisonerEvents,
+            "a release removes its row; walking backwards keeps every unread row at its index");
+        Assert.AreEqual(0, _sut.PrisonRows["r1"].Count);
+    }
+
+    [TestMethod]
+    public void ReleasePeacePrisoners_MixedRoster_EachRowGetsItsOwnVerdict()
+    {
+        _sut.PrisonRows["r1"] = new List<RefugePrisoner>
+        {
+            Prisoner("a"), null, Prisoner("main_hero", mainHero: true), Prisoner("b"), Prisoner("c", heldByRefuge: false),
+        };
+        _sut.PrisonersAtWar.Add("b");
+
+        _sut.ReleasePeacePrisoners("r1");
+
+        CollectionAssert.AreEqual(
+            new[] { "read:4", "war:c", "remove:c", "read:3", "war:b", "read:2", "read:1", "read:0", "war:a", "release:a" },
+            _sut.PrisonerEvents);
+        Assert.AreEqual(3, _sut.PrisonRows["r1"].Count, "the empty row, the main hero and the enemy stay");
+    }
+
+    // --- The keep-out distances (FortificationSearch.NearestDistance, shared with CampService) ---
+
+    private static SettlementSite TownSite(float distance) =>
+        new SettlementSite(isTown: true, isCastle: false, distance: distance);
+
+    private static SettlementSite VillageSite(float distance) =>
+        new SettlementSite(isTown: false, isCastle: false, distance: distance);
+
+    [TestMethod]
+    public void DistanceToNearestFortification_MeasuresFromTheMainParty()
+    {
+        _sut.SitesFromMain = new List<SettlementSite> { VillageSite(1f), TownSite(12f) };
+
+        Assert.AreEqual(12f, _sut.DistanceToNearestFortification());
+        CollectionAssert.AreEqual(new[] { "main" }, _sut.SiteReads);
+    }
+
+    [TestMethod]
+    public void DistanceToNearestFortificationFrom_MeasuresFromThatParty()
+    {
+        _sut.SitesFromParty = new List<SettlementSite> { TownSite(30f), VillageSite(2f) };
+
+        Assert.AreEqual(30f, _sut.DistanceToNearestFortificationFrom("r1"));
+        CollectionAssert.AreEqual(new[] { "party:r1" }, _sut.SiteReads);
+    }
+
+    [TestMethod]
+    public void CanFound_OnlyAVillageInsideMinTownDistance_DoesNotBlock()
+    {
+        _sut.SitesFromMain = new List<SettlementSite> { VillageSite(1f) };
+
+        Assert.AreEqual(RefugeBlockReason.None, _sut.CanFound());
     }
 
     // --- ResetForNewSession (the singleton-leak fix) ---

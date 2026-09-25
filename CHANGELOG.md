@@ -2,6 +2,32 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-25
+
+### refactor(seams): v2.0.30 - move decision logic out of nine seams
+
+Nine protected-virtual seams held TAOM decisions that no unit test could reach, because every
+test subclass overrides its seams: the supply-order payee routing and the refund after a failed
+placement (`SupplyOrderService.ChargePlayer`, `RefundConsumption`), the refuge raid-target pick and
+the peace release of refuge-held prisoners (`RefugeService.FindNearestHostile`,
+`ReleasePeacePrisoners`), the warden companion filter and companion minting
+(`WardenService.CompanionsInMainParty`, `MintCompanionFromTroop`), and the nearest town-or-castle
+search behind the camp and refuge keep-out distances (`CampService.DistanceToNearestFortification`,
+`RefugeService.DistanceToNearestFortification` and `DistanceToNearestFortificationFrom`), whose two
+identical copies now share one rule, `FortificationSearch.NearestDistance`. Each decision now lives
+in its service, and each seam is one engine operation: pay a lord, pay a settlement or destroy gold;
+check a refund source, return troops or goods, read or fill volunteer slots; scan the map, check a
+war or render a name; count, read, war-check, release or drop one prisoner row; read the roster;
+read the troop, draw a template, read the coming-of-age, draw the age, create, rename or enrol the
+hero; list the settlements around a party. That is the ADR-007 seam rule (plan 021, decisions 49,
+55, 56 and 57). Behaviour is unchanged: amounts, notification flags, log lines, filter order, the
+strict comparisons, the first-found tie-break, the RNG draws, the silent drop of recruits beyond the
+free volunteer slots and the backwards prisoner walk are as before, and the war checks still read
+the engine's factions only where the old code did. 76 new tests pin the moved logic. Owed in game: a
+supply order from a town and from a lord, and one that fails and refunds; a soldier promoted to
+warden; a raid with raids enabled; a peace that frees a refuge-held lord; the town keep-out when
+pitching a camp, founding a refuge and upgrading it to a stronghold.
+
 ## 2026-09-24
 
 ### docs(rules): v2.0.30 - align three architecture rules with the code

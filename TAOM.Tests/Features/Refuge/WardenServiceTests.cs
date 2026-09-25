@@ -33,7 +33,17 @@ public class WardenServiceTests
         {
         }
 
-        protected override IReadOnlyList<WardenCandidate> CompanionsInMainParty() => Companions;
+        // Existing tests list eligible companions in Companions; the CompanionsInMainParty tests
+        // arrange the raw roster heroes in PartyHeroes.
+        public List<PartyHeroInfo> PartyHeroes;
+
+        protected override IReadOnlyList<PartyHeroInfo> HeroesInMainParty() =>
+            PartyHeroes ?? Companions.ConvertAll(c => c == null ? null : new PartyHeroInfo
+            {
+                HeroId = c.Id,
+                DisplayName = c.DisplayName,
+                IsPlayerClanCompanion = true,
+            });
 
         protected override bool HasCompanionSlotFree() => SlotFree;
 
@@ -42,11 +52,57 @@ public class WardenServiceTests
         protected override int TroopCountInMainParty(string troopId) =>
             TroopCounts.TryGetValue(troopId, out var count) ? count : 0;
 
-        protected override string MintCompanionFromTroop(string troopId)
+        public PromotionSource Source = new PromotionSource
+        {
+            TroopCultureId = "culture_troop",
+            PlayerCultureId = "culture_player",
+        };
+        public string CultureTemplate = "template_culture"; // returned for any non-null culture id
+        public string AnyTemplate = "template_any";         // returned for a null culture id
+        public int? ComesOfAge = 18;
+        public int RandomIntResult = 7;
+        public bool RenameThrows;
+        public readonly List<string> MintSteps = new List<string>();
+
+        protected override PromotionSource ReadPromotionSource(string troopId)
         {
             MintCalls++;
+            MintSteps.Add("source:" + troopId);
+            return Source;
+        }
+
+        protected override string RandomCompanionTemplateId(string cultureId)
+        {
+            MintSteps.Add("template:" + (cultureId ?? "<any>"));
+            return cultureId == null ? AnyTemplate : CultureTemplate;
+        }
+
+        protected override int? HeroComesOfAge()
+        {
+            MintSteps.Add("comesOfAge");
+            return ComesOfAge;
+        }
+
+        protected override int NextRandomInt(int maxExclusive)
+        {
+            MintSteps.Add("rng:" + maxExclusive);
+            return RandomIntResult;
+        }
+
+        protected override string CreatePromotedHero(string templateId, int age)
+        {
+            MintSteps.Add("create:" + templateId + ":" + age);
             return MintResult;
         }
+
+        protected override void RenamePromotedHero(string heroId, string troopId)
+        {
+            MintSteps.Add("rename:" + heroId + ":" + troopId);
+            if (RenameThrows)
+                throw new System.InvalidOperationException("text manager missing");
+        }
+
+        protected override void EnrolPromotedHero(string heroId) => MintSteps.Add("enrol:" + heroId);
 
         protected override bool RemoveOneTroopFromMainParty(string troopId)
         {
@@ -72,11 +128,13 @@ public class WardenServiceTests
     }
 
     private TestableWardenService _sut;
+    private IModLogger _logger;
 
     [TestInitialize]
     public void Setup()
     {
-        _sut = new TestableWardenService(Substitute.For<IModLogger>());
+        _logger = Substitute.For<IModLogger>();
+        _sut = new TestableWardenService(_logger);
     }
 
     private static WardenCandidate Companion(string id) =>
@@ -310,5 +368,212 @@ public class WardenServiceTests
         _sut.ReleaseWarden("", promoted: false);
 
         Assert.AreEqual(0, _sut.MovedToMainParty.Count);
+    }
+
+    // --- CompanionsInMainParty (the eligibility filter; the roster seam only reads) ---
+
+    private static PartyHeroInfo PartyHero(string id, bool companion = true, bool mainHero = false) =>
+        new PartyHeroInfo
+        {
+            HeroId = id,
+            DisplayName = "Name of " + id,
+            IsPlayerClanCompanion = companion,
+            IsMainHero = mainHero,
+        };
+
+    [TestMethod]
+    public void CompanionsInMainParty_MainHero_Excluded()
+    {
+        _sut.PartyHeroes = new List<PartyHeroInfo> { PartyHero("main_hero", companion: true, mainHero: true) };
+
+        Assert.AreEqual(0, _sut.CompanionsInMainParty().Count);
+    }
+
+    [TestMethod]
+    public void CompanionsInMainParty_HeroNotAPlayerClanCompanion_Excluded()
+    {
+        _sut.PartyHeroes = new List<PartyHeroInfo> { PartyHero("visiting_lord", companion: false) };
+
+        Assert.AreEqual(0, _sut.CompanionsInMainParty().Count,
+            "a visiting noble or quest hero must never be strandable in a refuge");
+    }
+
+    [TestMethod]
+    public void CompanionsInMainParty_NullEntry_Skipped()
+    {
+        _sut.PartyHeroes = new List<PartyHeroInfo> { null, PartyHero("companion_1") };
+
+        var companions = _sut.CompanionsInMainParty();
+
+        Assert.AreEqual(1, companions.Count);
+        Assert.AreEqual("companion_1", companions[0].Id);
+    }
+
+    [TestMethod]
+    public void CompanionsInMainParty_MapsEachCompanionInRosterOrder()
+    {
+        _sut.PartyHeroes = new List<PartyHeroInfo> { PartyHero("companion_2"), PartyHero("companion_1") };
+
+        var companions = _sut.CompanionsInMainParty();
+
+        Assert.AreEqual(2, companions.Count);
+        Assert.AreEqual("companion_2", companions[0].Id);
+        Assert.AreEqual("Name of companion_2", companions[0].DisplayName);
+        Assert.IsTrue(companions[0].IsCompanion);
+        Assert.AreEqual(0, companions[0].Tier);
+        Assert.AreEqual("companion_1", companions[1].Id);
+    }
+
+    [TestMethod]
+    public void Candidates_ListsOnlyEligibleCompanionsFromTheRoster()
+    {
+        _sut.SlotFree = false;
+        _sut.PartyHeroes = new List<PartyHeroInfo>
+        {
+            PartyHero("main_hero", mainHero: true),
+            PartyHero("visiting_lord", companion: false),
+            PartyHero("companion_1"),
+        };
+
+        var candidates = _sut.Candidates();
+
+        Assert.AreEqual(1, candidates.Count);
+        Assert.AreEqual("companion_1", candidates[0].Id);
+    }
+
+    // --- MintCompanionFromTroop (culture, template, age and rename policy; the seams do one engine step each) ---
+
+    [TestMethod]
+    public void MintCompanionFromTroop_Default_RunsTheEngineStepsInSourceOrder()
+    {
+        var heroId = _sut.MintCompanionFromTroop("troop_1");
+
+        Assert.AreEqual("hero_minted", heroId);
+        CollectionAssert.AreEqual(
+            new[]
+            {
+                "source:troop_1",
+                "template:culture_troop",
+                "comesOfAge",
+                "rng:14",
+                "create:template_culture:29",
+                "rename:hero_minted:troop_1",
+                "enrol:hero_minted",
+            },
+            _sut.MintSteps,
+            "the template draw and the age draw use the campaign RNG in the source's order");
+        _logger.DidNotReceiveWithAnyArgs().LogWarning(default);
+    }
+
+    [TestMethod]
+    public void MintCompanionFromTroop_NoPromotionSource_MintsNothing()
+    {
+        _sut.Source = null;
+
+        Assert.IsNull(_sut.MintCompanionFromTroop("troop_1"));
+        CollectionAssert.AreEqual(new[] { "source:troop_1" }, _sut.MintSteps);
+    }
+
+    [TestMethod]
+    public void MintCompanionFromTroop_TroopIsAHero_MintsNothing()
+    {
+        _sut.Source.TroopIsHero = true;
+
+        Assert.IsNull(_sut.MintCompanionFromTroop("troop_1"));
+        CollectionAssert.AreEqual(new[] { "source:troop_1" }, _sut.MintSteps);
+    }
+
+    [TestMethod]
+    public void MintCompanionFromTroop_TroopWithoutCulture_UsesThePlayerCulture()
+    {
+        _sut.Source.TroopCultureId = null;
+
+        _sut.MintCompanionFromTroop("troop_1");
+
+        Assert.AreEqual("template:culture_player", _sut.MintSteps[1]);
+        Assert.AreEqual("create:template_culture:29", _sut.MintSteps[4]);
+    }
+
+    [TestMethod]
+    public void MintCompanionFromTroop_NoCultureAnywhere_AsksForAnyTemplateOnce()
+    {
+        _sut.Source.TroopCultureId = null;
+        _sut.Source.PlayerCultureId = null;
+
+        _sut.MintCompanionFromTroop("troop_1");
+
+        Assert.AreEqual("template:<any>", _sut.MintSteps[1]);
+        Assert.AreEqual("comesOfAge", _sut.MintSteps[2]);
+        Assert.AreEqual("create:template_any:29", _sut.MintSteps[4]);
+    }
+
+    [TestMethod]
+    public void MintCompanionFromTroop_NoTemplateForTheCulture_FallsBackToAnyTemplate()
+    {
+        _sut.CultureTemplate = null;
+
+        _sut.MintCompanionFromTroop("troop_1");
+
+        Assert.AreEqual("template:culture_troop", _sut.MintSteps[1]);
+        Assert.AreEqual("template:<any>", _sut.MintSteps[2]);
+        Assert.AreEqual("create:template_any:29", _sut.MintSteps[5]);
+    }
+
+    [TestMethod]
+    public void MintCompanionFromTroop_NoTemplateAtAll_StopsBeforeTheRandomDraw()
+    {
+        _sut.CultureTemplate = null;
+        _sut.AnyTemplate = null;
+
+        Assert.IsNull(_sut.MintCompanionFromTroop("troop_1"));
+        CollectionAssert.AreEqual(
+            new[] { "source:troop_1", "template:culture_troop", "template:<any>" }, _sut.MintSteps);
+    }
+
+    [TestMethod]
+    public void MintCompanionFromTroop_Age_IsComesOfAgePlusFourPlusOneDrawBelowFourteen()
+    {
+        _sut.ComesOfAge = 16;
+        _sut.RandomIntResult = 13;
+
+        _sut.MintCompanionFromTroop("troop_1");
+
+        CollectionAssert.Contains(_sut.MintSteps, "create:template_culture:33");
+        Assert.AreEqual(1, _sut.MintSteps.FindAll(s => s.StartsWith("rng:", System.StringComparison.Ordinal)).Count,
+            "exactly one RandomInt draw per mint");
+        CollectionAssert.Contains(_sut.MintSteps, "rng:14");
+    }
+
+    [TestMethod]
+    public void MintCompanionFromTroop_NoAgeModel_ComesOfAgeDefaultsTo18()
+    {
+        _sut.ComesOfAge = null;
+        _sut.RandomIntResult = 0;
+
+        _sut.MintCompanionFromTroop("troop_1");
+
+        CollectionAssert.Contains(_sut.MintSteps, "create:template_culture:22");
+    }
+
+    [TestMethod]
+    public void MintCompanionFromTroop_CreationRefused_NoRenameNoEnrol()
+    {
+        _sut.MintResult = null;
+
+        Assert.IsNull(_sut.MintCompanionFromTroop("troop_1"));
+        Assert.AreEqual(5, _sut.MintSteps.Count);
+        Assert.AreEqual("create:template_culture:29", _sut.MintSteps[4]);
+    }
+
+    [TestMethod]
+    public void MintCompanionFromTroop_RenameThrows_WarnsAndStillEnrols()
+    {
+        _sut.RenameThrows = true;
+
+        var heroId = _sut.MintCompanionFromTroop("troop_1");
+
+        Assert.AreEqual("hero_minted", heroId, "the rename is cosmetic; the promotion goes on");
+        Assert.AreEqual("enrol:hero_minted", _sut.MintSteps[_sut.MintSteps.Count - 1]);
+        _logger.Received(1).LogWarning("[Refuge] promoted-warden rename failed: text manager missing");
     }
 }
