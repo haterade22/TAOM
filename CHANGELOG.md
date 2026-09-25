@@ -22,7 +22,7 @@ edits looked like a clean build of that commit, and a release could ship one.
 - **Review follow-ups** (deep review and Codex): the gate reads every `bin/<platform>/` copy of
   both DLLs, not only the Win64 one (the patreon package's server copy of `TAOM.Dependencies.dll`
   is from another commit); matches module names case-insensitively; refuses an empty
-  `--require-build`, a requested module missing from `--source`, and a tag whose
+  `--require-build`, a requested TAOM or TAOM.Dependencies missing from `--source`, and a tag whose
   `Directory.Build.props` predates the `.dirty` flag; and reports an unreadable DLL as a refusal.
   The OK line lists every copy it read. Phase 8 and `release-process.md` say the gate proves the
   DLLs only, since deploys never delete stale files from the install.

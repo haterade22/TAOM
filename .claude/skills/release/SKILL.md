@@ -119,11 +119,15 @@ Rebuild at the tag before anything ships.
 2. Gate the DLLs: `python tools/package_release.py --source "<game>/Modules" --dest <out> --require-build vX.Y.Z --dry-run`
    must print `build stamp OK` and exit 0. It reads every `bin/<platform>/` copy of `TAOM.dll` and
    `TAOM.Dependencies.dll` and refuses one whose stamp says `.dirty` or `nogit`, or names a commit
-   other than the tag's; a requested module missing from `--source`; and a tag whose
+   other than the tag's; a requested TAOM or TAOM.Dependencies missing from `--source`; and a tag whose
    `Directory.Build.props` predates the `.dirty` flag (the 1.4.5 line until it is ported).
    It proves the DLLs only. Deploys never delete, so the install also holds files from every
-   earlier deploy: compare it with `git ls-tree -r --name-only vX.Y.Z -- Main/_Module` and remove
-   what the tag does not hold before packaging.
+   earlier deploy. Outside `bin/`, compare each module folder with the tag and remove what the tag
+   does not hold before packaging: `<game>/Modules/TAOM/` maps to `Main/_Module/` (list it with
+   `git ls-tree -r --name-only vX.Y.Z -- Main/_Module`), and `<game>/Modules/TAOM.Dependencies/`
+   maps to `Dependencies/_Module/`. Leave `bin/` out of the comparison: it holds build output and
+   NuGet runtime DLLs (`TAOM.dll`, `DryIoc.dll`, `0Harmony.dll`) that git never tracks, and the
+   gate covers the two stamped DLLs.
 3. Package: the same command without `--dry-run` (plus `--keep-rdc` or `--allow-unknown` if the dry
    run's report calls for them).
 4. If the player package is assembled somewhere else (the editor package in

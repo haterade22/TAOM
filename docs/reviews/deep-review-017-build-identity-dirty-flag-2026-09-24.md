@@ -250,3 +250,18 @@ traced nine scenarios and ten known suspects, and ran nothing.
 - **What Codex does well:** compared the gate's read set with the packager's copy set, and traced
   a module dropped by planning before validation.
 - **False positives:** none new.
+
+## Convergence
+
+A convergence pass over the review-fix diff `ff84e1b8..db1a7166` raised three defects. Each was
+re-checked against the code before any change; all three held.
+
+| # | Severity | Defect | Proof this pass | Fix |
+|---|---|---|---|---|
+| D1 | MEDIUM | The orphan-removal step compared the whole install with `git ls-tree ... -- Main/_Module`, which never lists `bin/` build output, and never compared `TAOM.Dependencies` | The tag tracks no `TAOM.dll`; the live `Modules/TAOM.Dependencies/bin/Win64_Shipping_Client/` holds `0Harmony.dll`, which the tag does not track | Phase 8 step 2 and `release-process.md` step 8 now compare outside `bin/` only, state that `Modules/TAOM/` maps to `Main/_Module/` and `Modules/TAOM.Dependencies/` to `Dependencies/_Module/`, and say why `bin/` is left out |
+| D2 | LOW | The shallow-history skip in `test_refuses_a_commit_that_predates_the_dirty_flag` could never fire | `git rev-parse <root>^` exits 128 and prints the argument to stdout. A `git clone --depth 1` of the branch failed the test (`cannot resolve '<sha>^'`, 57 run, 1 failure) | The test resolves the parent with `pr.resolve_commit`, which uses `--verify --quiet`; the same clone now reports `skipped 'shallow history'`, 57 run, OK |
+| D3 | LOW | SKILL.md and CHANGELOG said the gate refuses any requested module missing from `--source` | `require_build` refuses a missing name only when it is in `SHIPPED_DLLS` (`tools/package_release.py:176-177`) | Both now say "a requested TAOM or TAOM.Dependencies missing from `--source`" |
+
+**Verification:** `python tools/tests/test_package_release.py` ran 57 tests, OK.
+`dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` passed 10317, skipped 2,
+failed 0. `python tools/lint_docs.py --dash-base db1a7166 --summary` exited 0 with no dash findings.

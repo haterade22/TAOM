@@ -577,9 +577,10 @@ class TestRequireBuildCli(unittest.TestCase):
         ).stdout.split()
         if not first:
             self.skipTest("history does not reach the commit that added the target")
-        parent = subprocess.run(["git", "rev-parse", f"{first[0]}^"], cwd=root,
-                                capture_output=True, text=True).stdout.strip()
-        if not parent:
+        # rev-parse without --verify echoes an unresolvable argument to stdout, so a depth-1
+        # clone (CI's checkout) must be detected by resolve_commit, not an empty string.
+        parent = pr.resolve_commit(f"{first[0]}^")
+        if parent is None:
             self.skipTest("shallow history")
         with tempfile.TemporaryDirectory() as td:
             r = self._gate(self._modules(td, f"{STAMP}+{parent}"), td, rev=parent)
