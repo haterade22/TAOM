@@ -6,6 +6,7 @@ using System.Reflection;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.Diplomacy.Hooks;
+using TAOM.Tests.Infrastructure;
 using TAOM.Tests.Migration;
 
 namespace TAOM.Tests.Features.Diplomacy;
@@ -289,22 +290,12 @@ public class Patch80KingdomVoteDeadlockBindingTests
         // The third of the three places a TAOM patch must be registered. The attribute above and the
         // string here are matched by text only, so a rename on either side silently orphans all three
         // seams — Harmony applies nothing for an empty category and reports nothing.
-        var repoRoot = FindRepoRoot();
-        var subModule = Path.Combine(repoRoot, "Main", "SubModule.cs");
-        Assert.IsTrue(File.Exists(subModule), "Main/SubModule.cs not found at " + subModule);
+        var subModule = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
         StringAssert.Contains(
-            File.ReadAllText(subModule),
+            subModule,
             "TryPatchCategory(\"" + Category + "\")",
             "SubModule.cs never applies " + Category + " — all three seams would be dead code.");
-    }
-
-    private static string FindRepoRoot()
-    {
-        var dir = new DirectoryInfo(Directory.GetCurrentDirectory());
-        while (dir != null && !File.Exists(Path.Combine(dir.FullName, "TAOM.sln")))
-            dir = dir.Parent;
-        return dir?.FullName ?? throw new FileNotFoundException("TAOM.sln not found walking upward from cwd");
     }
 
     [TestMethod]
@@ -368,7 +359,7 @@ public class Patch80KingdomVoteDeadlockBindingTests
     [TestMethod]
     public void SubModule_InitializesSeamsDAndE()
     {
-        var subModule = File.ReadAllText(Path.Combine(FindRepoRoot(), "Main", "SubModule.cs"));
+        var subModule = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
         StringAssert.Contains(
             subModule,
             "KingdomDecisionsVM_RefreshWith_AutoResolved_Patch.Initialize(",

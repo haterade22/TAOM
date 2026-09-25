@@ -5,6 +5,7 @@ using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.SignatureStrikes.Domain;
 using TAOM.Features.SignatureStrikes.Hooks;
+using TAOM.Tests.Infrastructure;
 using TAOM.Tests.Migration;
 
 namespace TAOM.Tests.Features.SignatureStrikes;
@@ -28,9 +29,6 @@ public class SignatureStrikesBindingTests
         if (!_gameLoaded)
             Assert.Inconclusive("Game assemblies not loaded: " + string.Join("; ", GameAssemblies.Diagnostics));
     }
-
-    private static string RepoRoot => Path.GetFullPath(
-        Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\.."));
 
     [TestMethod]
     [TestCategory("BindingVerification")]
@@ -203,11 +201,7 @@ public class SignatureStrikesBindingTests
     {
         // The model's two signature params are OPTIONAL (null = feature absent), so forgetting to
         // pass them compiles clean and silently drops the guaranteed knockdown. Pin the call site.
-        var path = Path.Combine(RepoRoot, "Main", "SubModule.cs");
-        if (!File.Exists(path))
-            Assert.Inconclusive("Main/SubModule.cs not found; run from the repo checkout.");
-
-        var source = File.ReadAllText(path);
+        var source = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
         StringAssert.Contains(source, "new Features.SignatureStrikes.Hooks.SignatureStrikesMissionLogic(");
         StringAssert.Contains(source, "Features.SignatureStrikes.ISignatureStrikeService");

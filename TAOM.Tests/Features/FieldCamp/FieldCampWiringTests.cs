@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.FieldCamp.UI;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.FieldCamp;
 
@@ -177,7 +178,7 @@ public class FieldCampWiringTests
     [TestMethod]
     public void SubModule_AddsTheFieldCampBehavior()
     {
-        var src = ReadSource("Main", "SubModule.cs");
+        var src = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
         StringAssert.Contains(src, "new Features.FieldCamp.Hooks.FieldCampCampaignBehavior(",
             "SubModule.cs no longer adds FieldCampCampaignBehavior; menus, SyncData and every tick "
@@ -187,7 +188,7 @@ public class FieldCampWiringTests
     [TestMethod]
     public void SubModule_AppliesThePatch74Category()
     {
-        var src = ReadSource("Main", "SubModule.cs");
+        var src = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
         StringAssert.Contains(src, "TryPatchCategory(\"Patch74_FieldCampNameplateIcon\")",
             "SubModule.cs no longer applies Patch74_FieldCampNameplateIcon, so Harmony is never "

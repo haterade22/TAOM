@@ -1122,3 +1122,8 @@ D45 let one test class carry `RequiresGame` on a single method. The sentence add
 - **Why missed:** the sentence was written from its one example; nobody counted how many existing files it would mark as wrong.
 - **Prevent:** when a rule gains an exception, keep the decision's verb (allows, may) and run a quick count of the files the new sentence governs; if the count of files it would call wrong is not zero, the sentence is an order and needs a decision of its own.
 - **Source:** `docs/reviews/rca-ci-on-hosted-windows-decisions-2026-09-24.md` C2.
+### A guard test needs an input that makes it fire
+Three checks in plan 018 could not fail: the kernel test pinned both runner calls but not `Modules = modules;`, the one hand-off between them, so deleting it kept the suite green while every hook returned early; the `OwnsSaveData` IL check ran only over a behavior with an empty `SyncData`; and the reader's LF test read a repo file that is already LF on this working copy, so removing the CRLF normalisation changed nothing.
+- **Why missed:** each test was written from the code it guards, not from the mutation it must catch; a null guard, an empty input set and an already-normal input all turn a missing behaviour into a pass.
+- **Prevent:** for every new guard test, name the one-line mutation it must catch (delete the hand-off, give the set a persisting member, feed CRLF), and run that mutation once before committing. When the real input set has no member that trips the check, add a positive control from elsewhere in the codebase (`FieldCampCampaignBehavior` for the IL check).
+- **Source:** `docs/reviews/rca-composition-root-first-steps-2026-09-24.md` findings 3, 15 and 16; lens 4 and Codex P3 (plan 018).

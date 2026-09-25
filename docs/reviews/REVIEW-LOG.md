@@ -7,6 +7,7 @@ Running scorecard of all reviews. **Reviews 1-99, 2026-04-05 to 2026-09-12.** 93
 | # | Date | Feature | Codex Verdict | Claude Verdict | Real Bugs | False Positives | Missed Bugs | Prompt Version |
 |---|------|---------|--------------|----------------|-----------|-----------------|-------------|----------------|
 | 132b | 2026-09-24 | Plan 009 maintainer decisions: class-by-class Harmony category index and the localized patch-failure notice | issues-found (0 P1, 1 P2, 1 P3) | agree (P2 fixed and gated, rated HIGH; P3 confirmed, decision owed to Mike) | 2 | 0 | 5 (the translator's seeding bug behind P2, DE/FR/JP fragment grammar, untested null-category guard, stale line refs, CHANGELOG test snapshot) | adversarial-xhigh |
+| 133 | 2026-09-24 | Plan 018, the feature-module composition root (contract, `ModuleRunner`, hooks) and the WandererAllegiance pilot | issues-found (0 P1, 1 P2, 3 P3) | agree (P2 and one P3 fixed; plan P3 left to the orchestrator; doc P3 pre-existing) | 3 | 0 | 6 (Patch37 swallows the fail-closed throw, untested `Modules` hand-off, untested hooks, wrong "after every hand-wired block" claim, parked save owners, vacuous IL check) | adversarial-xhigh |
 | 132 | 2026-09-24 | Plan 009, every Harmony patch category applied through `PatchCategoryApplier` (one drifted binding costs one category) | issues-found (0 P1, 1 P2, 1 P3) | agree (both fixed; P2 rated HIGH) | 2 | 0 | 4 (chat log cleared after the splash, assembly-wide category index, stale lens and lesson greps, Patch43 triage consumers) | adversarial-xhigh |
 | 109 | 2026-09-13 | Creature handles and threads (#592, #595): reference-keyed adapter cache, slot identity, trees on the mission tick, the nine-site audit, two deep-review passes | issues-found (0 P1, 1 P2, 3 P3, 3 observations) | agree (all fixed but one observation) | 1 P2 confirmed (`ForgetAgent` left the layout counters growing: replacements a row deeper, onto the other class's rows; vacancy reclaim per class) + 3 P3 (vanilla `CommonAIComponent.OnTick` raises `OnAgentPanicked` on the async tick, so the tree logic now defers off-thread callbacks; the howdah seat's own rider and `SpatialGrid` held ungated handles; five global listener loops outside the catch) + 2 observations fixed (atomic `GetOrAdd`; one warg attach helper) + the registration swap taken as a precaution. Disputed with evidence: 5 of 9 suspects, including the deletion-order objection that had held the swap back. One observation rejected (buff getters returning live objects). The player's third freeze the same evening (no spider, four wargs) folded into the RCA `rca-warg-clip-on-horse-2026-09-13.md` | 0 | 0 | v6 + 9 Known Suspects, gpt-6-astra at ultra |
 | 110 | 2026-09-13 | Nameplate relation MCM controls, second pass on commit fe266439 (#596): the four sliders composed with the #591 plate widget | issues-found (0 P1, 1 P2, 1 P3) | agree (both fixed) | 1 P2 confirmed (the text curve anchored on vanilla's 0.35 dimmed the name at close range for any opacity 10 to 34; now anchored on the plate's configured resting opacity) + 1 P3 (silent reversion of an invalid TAOM.json value; now one warning per property) + 2 RCA corrections (MCM's slider clamps; MCM raises a save-time event). Deep review before it: data flow found the same P2 independently, performance and compatibility clean | 0 | 0 | v6 + 8 Known Suspects, gpt-6-astra at ultra (explicit -c model/effort) |
@@ -4069,3 +4070,34 @@ Report `docs/reviews/deep-review-009-guarded-patch-category-apply-decisions-2026
 `docs/reviews/rca-guarded-patch-category-apply-decisions-2026-09-24.md`. Owed: Mike's call on P3
 and on the unguarded index build, the #653 body at `/ship`, the translator fix, and a German
 in-game check of the notice.
+## Review 133 (number provisional): plan 018, feature-module composition root, 6-lens deep review + Codex adversarial (2026-09-24)
+
+Branch `improve/018-composition-root-first-steps`, `4c728dac..44045b34`: `Main/Composition` adds the
+module contract, `ModuleRunner` and the engine-facing hooks, the wiring tests read `SubModule.cs` and
+`IoC.cs` through one comment-stripping reader, and WandererAllegiance becomes the first feature
+module.
+
+**Codex: 4 findings, 3 confirmed, 1 pre-existing and partly verified, 0 false positives.** P2: the
+runner skipped an already-faulted module before its fail-closed check, so a save owner that faulted
+in a fail-open step, or on a retried campaign start, was left out of the campaign silently (lenses 2,
+5 and 6 found the same). P3: the plan's preconditions expect five `ReportPatchFailures(` calls where
+there are four. P3: the reader's LF test passes without normalising on an LF checkout (proved by
+mutation). P3, pre-existing: the feature doc's Dunland alignment. The deep review found 14 more,
+including two Codex missed that matter: TAOM's own Patch37 finalizer swallows the fail-closed throw
+(Mike's decision), and nothing tested the `Modules = modules;` hand-off whose loss silences every
+module. All code findings fixed with RED or mutation runs; four design proposals applied (the
+single-implementation interface and the `FeatureState` enum deleted). Full suite 10289 passed,
+2 skipped, 2 known live-Armory failures.
+
+Codex did best at turning the documented fail-closed invariant into two concrete call sequences
+that break it.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | Faulted save owner skipped at campaign start | Logic error | Two rules tested one at a time; the campaign-start test passed `failClosed: false` | Sequence tests, `RunCampaignStart`; lesson in `lessons/state-lifecycle-save.md` |
+| 3 | LF test passes without normalising | Other: vacuous test | Input needed no normalising on this checkout | Explicit CRLF probe; lesson in `lessons/testing-qa.md` |
+
+Report `docs/reviews/deep-review-018-composition-root-first-steps-2026-09-24.md`, RCA
+`docs/reviews/rca-composition-root-first-steps-2026-09-24.md`. Owed: the GitHub issue, Mike's call
+on Patch37 and fail-closed at campaign start, the plan's precondition refresh, a convergence pass on
+the fix commit, and the in-game refusal check.
