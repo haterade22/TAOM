@@ -4487,3 +4487,27 @@ counts as empty. Full suite: 10,258 total, only the two live-Armory failures.
 Report: `docs/reviews/deep-review-019-nullable-ratchet-decisions-2026-09-24.md`; RCA:
 `docs/reviews/rca-nullable-ratchet-decisions-2026-09-24.md`; lessons in build-tooling-workflow,
 testing-qa, and a Recurred line in misc.
+
+## Review (plan 002, number assigned at merge): NaN and Infinity in career mutation floats, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+Branch `improve/002-nan-guards`, diff `a39a9c86..78889a85`: `MutationParams.GetFloat` rejects NaN
+and plus or minus Infinity through `FiniteFloatValidator`, ported byte for byte from `cfc47206`.
+Codex, read-only against git refs, found no P1 or P2 and two P3 observations on the plan text (a
+stale TroopWeight scope, command recipes missing `-p:ModuleId=`); both confirmed and left to the
+orchestrator. Codex traced every calculator's fallback and the boot, save, mission and co-op paths,
+and noted the calculator overflow past the accessor guard but scoped it out rather than flagging it.
+It missed the two untested guard branches the lenses caught.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|---|---|---|---|
+| P3-1 | Plan text stale against its base | Other: plan drift | Plan written against a June base; scope shrank at execution | Orchestrator refreshes the plan |
+| P3-2 | Plan recipes omit `-p:ModuleId=` | Convention inconsistency | Plan template predates the requirement | Plans quote `.ai/verification.md` verbatim |
+
+Lens findings fixed with tests: two `MutationParamsTests` (unparseable fallback, negative finite
+pass-through, both proved by a mutant), one calculator-author step in `career-system.md`, one
+CHANGELOG claim reworded. Open for Mike: the GitHub issue, the silent fallback against config rule
+5, and a finiteness gate on the calculated value in `MutationService.ApplyMutation`. Full suite
+10,320 passed, 2 skipped, 0 failed. Report:
+`docs/reviews/deep-review-002-nan-infinity-config-guards-2026-09-24.md`; RCA:
+`docs/reviews/rca-nan-infinity-config-guards-2026-09-24.md`; two lessons (testing-qa,
+gamemodels-services).
