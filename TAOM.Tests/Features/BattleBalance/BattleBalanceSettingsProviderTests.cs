@@ -50,30 +50,36 @@ public class BattleBalanceSettingsProviderTests
             Assert.AreEqual(typeof(TaomSettings).GetProperty(p.Name).GetValue(mcm), p.GetValue(provider), p.Name);
     }
 
-    // Read THROUGH, never snapshotted: MCM edits its one registered TaomSettings in place, so a value
-    // changed after the provider is built must reach the matching getter. Each setting gets its own
-    // non-default value, so a getter wired to the wrong setting fails too.
+    // Read THROUGH, never snapshotted or cached on first read: MCM edits its one registered
+    // TaomSettings in place, so a setting changed after the provider is built, and after every getter
+    // has been read once, must reach its own getter and no other. One setting is edited per pass on a
+    // fresh TaomSettings, because three bools share the default true and flipping them all together
+    // cannot tell them apart: a getter wired to another setting fails the pass that edits either one,
+    // and a getter that caches its first read fails the pass that edits its own setting.
     [TestMethod]
     public void Getters_ReadThroughTheSettings_SoLiveMcmEditsApply()
     {
-        var mcm = new TaomSettings();
-        var provider = new BattleBalanceSettingsProvider(mcm);
         var props = typeof(IBattleBalanceSettingsProvider).GetProperties();
-        for (int i = 0; i < props.Length; i++)
+        foreach (var edited in props)
         {
-            var setting = typeof(TaomSettings).GetProperty(props[i].Name);
-            object edited = setting.PropertyType == typeof(bool)
-                ? !(bool)setting.GetValue(mcm)
-                : (object)((float)setting.GetValue(mcm) + 1f + i * 0.125f);
-            setting.SetValue(mcm, edited);
-        }
+            var mcm = new TaomSettings();
+            var provider = new BattleBalanceSettingsProvider(mcm);
+            foreach (var p in props)
+                Assert.AreEqual(typeof(TaomSettings).GetProperty(p.Name).GetValue(mcm), p.GetValue(provider), p.Name + " before any edit");
 
-        foreach (var p in props)
-            Assert.AreEqual(typeof(TaomSettings).GetProperty(p.Name).GetValue(mcm), p.GetValue(provider), p.Name);
+            var setting = typeof(TaomSettings).GetProperty(edited.Name);
+            setting.SetValue(mcm, setting.PropertyType == typeof(bool)
+                ? !(bool)setting.GetValue(mcm)
+                : (object)((float)setting.GetValue(mcm) + 1f));
+
+            foreach (var p in props)
+                Assert.AreEqual(typeof(TaomSettings).GetProperty(p.Name).GetValue(mcm), p.GetValue(provider), p.Name + " after editing " + edited.Name);
+        }
     }
 
     // The internal test constructor must not break DryIoc's constructor selection: a second PUBLIC
-    // constructor throws UnableToSelectSinglePublicConstructorFromMultiple at resolve time in game.
+    // constructor throws UnableToSelectSinglePublicConstructorFromMultiple at registration (IoC.cs:127,
+    // the container build), before any resolve.
     [TestMethod]
     public void Provider_ResolvesFromARealContainer()
     {

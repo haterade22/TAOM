@@ -1090,9 +1090,12 @@ discards it, all passed every test.
 - **Why missed:** an IL rule proves WHERE a call happens and reads as full coverage; it cannot see
   what value reaches the getter.
 - **Prevent:** for any cached read-through (an MCM reference, a config object, an adapter), add a
-  seam that injects a live object (an internal constructor, visible to `TAOM.Tests`), mutate every
-  property AFTER construction, each to its own distinct non-default value, and assert each getter.
-  That one test fails a snapshot, a cross-wired getter and a discarded reference. Keep the IL rule
+  seam that injects a live object (an internal constructor, visible to `TAOM.Tests`), read every
+  getter once, then mutate ONE property per pass on a fresh object and assert every getter after
+  each mutation. Mutating all of them together misses a cross-wired pair whose values coincide (two
+  bools that both default to `true` and both flip to `false`), and skipping the first read misses a
+  getter that caches its first value (convergence pass, plan 003). The test then fails a snapshot,
+  a first-read cache, a cross-wired getter and a discarded reference. Keep the IL rule
   for the cost claim only. When the seam is a second constructor on a DryIoc-registered type, also
   resolve the type from a real container in a test.
 - **Source:** `docs/reviews/rca-hot-path-resolve-and-grid-caching-2026-09-24.md` row 2 (Codex P3,

@@ -18,9 +18,10 @@ comment now says how often the engine really calls it (per casualty, twice per X
 live and simulated battles, and once per roster row in every strength sum).
 
 Tests, written first: the IL rule now requires the private lazy accessor, not a constructor, to
-read `Instance` (RED against the constructor form); a read-through test edits all twelve settings after the
-provider is built, each to its own non-default value, and checks every getter (it fails a snapshot
-or a getter wired to the wrong setting, proven by a Tier8-reads-Tier9 mutation); all twelve
+read `Instance` (RED against the constructor form); a read-through test reads every getter once,
+then edits one setting per pass on a fresh `TaomSettings` and checks all twelve getters (it fails
+a snapshot, a getter that caches its first read, and a getter wired to the wrong setting, including
+two bools that share the default `true`; each shape proven by a mutation); all twelve
 fallbacks are pinned against the `TaomSettings` compiled defaults; and the provider resolves from a
 real DryIoc container despite its new internal test constructor. `docs/features/battle-balance.md`
 and `docs/modding/file-catalogue.md` no longer describe a per-access proxy. Not verified in game:

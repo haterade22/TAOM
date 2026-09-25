@@ -98,7 +98,7 @@ reach a runtime read, the fallbacks equal the MCM defaults, and there is no stat
 
 | # | Proposal | Verdict |
 |---|---|---|
-| D1 | IL rule: each getter calls the `TaomSettings` getter of its own name; count from the interface | Count from the interface APPLIED. The same-name IL check NOT APPLIED: superseded by the behavioural read-through test, which catches everything it would (snapshot, wrong mapping) and also Codex's counterexample (a constructor that discards the reference), which an IL check cannot see |
+| D1 | IL rule: each getter calls the `TaomSettings` getter of its own name; count from the interface | Count from the interface APPLIED. The same-name IL check NOT APPLIED: superseded by the behavioural read-through test, which catches everything it would (snapshot, wrong mapping) and also Codex's counterexample (a constructor that discards the reference), which an IL check cannot see. The convergence pass disproved this reason for the first version of the test; it holds for the rewritten test (see "Convergence") |
 | D2 | `EveryFallback_EqualsTheMcmCompiledDefault` over all twelve | APPLIED; the six literal pins stay (they pin balance numbers, not only agreement) |
 | D3 | Lazy `_settings ??= TaomSettings.Instance` behind a private accessor | APPLIED as behaviour-PRESERVING: on the only current path (resolve at `OnGameStart`, after MCM initialises) the first read returns the same object the constructor did. Trade-off, recorded for Agent 2's objection: if MCM ran but never registered `TaomSettings`, every read would repeat the lookup and its per-miss warning, which is the pre-`7feca96b` behaviour and the same for the other ~100 per-read getters |
 
@@ -138,7 +138,8 @@ APPLIED:
   simulation round" and "warg half" corrected.
 
 NOT APPLIED:
-- Agent 6 D1 same-name IL check: superseded by the behavioural read-through test (strictly stronger).
+- Agent 6 D1 same-name IL check: superseded by the behavioural read-through test. The first version
+  was not strictly stronger (see "Convergence"); the rewritten one is.
 - Agent 1 S3 and S5 (commit subject wording, 76-character body line on `7feca96b`): need a history
   rewrite, which this assignment forbids.
 - Agent 2's alternative (keep the constructor form, comment only): the lazy form removes the
@@ -217,3 +218,33 @@ Phase 3h is consolidated later for all branches. Proposed entries:
   start-up order as an "UNVERIFIED lifecycle contingency"; TAOM treats a silent session-long pin of
   defaults as a confirmed latent defect when the class of resolve (eager, in `OnSubModuleLoad`) is a
   common pattern in the codebase.
+
+## Convergence
+
+A convergence `deep-reviewer` pass on `02157b18` (diff `7feca96b..02157b18`, 10 files) found no
+runtime defect: the only resolve is still `SubModule.cs:1144` under `OnGameStart`, so the lazy first
+read returns the object the constructor read did. It raised three LOW defects in the tests and the
+docs. All three were re-checked against the code before any fix, and all three are CONFIRMED.
+
+| # | Sev | Finding | Verification | Fix |
+|---|---|---|---|---|
+| V1 | LOW | The read-through test cannot catch a getter wired to the wrong bool setting: `EnableCustomTroopPower`, `EnableCustomCasualtyRatios` and `EnableCulturalSurvivalBonuses` all default to `true` (`TaomSettings.cs:271,313,328`) and the test flipped all three to `false` together. Five docs claimed that coverage, and D1 was rejected on it | Mutant `EnableCustomCasualtyRatios => Settings?.EnableCustomTroopPower ?? true` run against a temporary copy of the old test: the old test PASSED, the new one FAILED with "Expected:<True>. Actual:<False>. EnableCustomCasualtyRatios after editing EnableCustomTroopPower" | The test now edits ONE setting per pass on a fresh `TaomSettings` and asserts all twelve getters after each edit. Claims corrected in `CHANGELOG.md`, `battle-balance.md` (Tests), `lessons/testing-qa.md`, the RCA row 2 and D1 above |
+| V2 | LOW | The test never read a getter before the edit, so a getter that caches its first read passed | Mutant `private float? _t7; public float Tier7Power => _t7 ??= Settings?.Tier7Power ?? 2.91f;`: the old test copy PASSED, the new one FAILED with "Expected:<3.91>. Actual:<2.91>. Tier7Power after editing Tier7Power" | Each pass reads and asserts all twelve getters before its edit. The lesson now says "read every getter once, then mutate one property per pass" |
+| V3 | LOW | The DryIoc comment said the two-public-constructor error fires "at resolve time in game" | A temporary test registering a type with two public constructors caught `ContainerException` "Error.UnableToSelectSinglePublicConstructorFromMultiple" from `container.Register`, before any resolve | Comment now says "at registration (IoC.cs:127, the container build), before any resolve". `IoC.cs:127` is the `RegisterBattleBalanceFeature` call |
+
+**D1 re-accounted.** The NOT APPLIED reason ("strictly stronger") was false for the first version of
+the read-through test, which V1's mutant proves: a same-name IL check would have failed it. With the
+one-setting-per-pass rewrite, any getter that reads another setting fails the pass that edits that
+other setting (its value moves while its own setting does not), which covers everything the IL check
+would, plus a snapshot, a first-read cache and a discarded reference. D1 stays NOT APPLIED on that
+reason.
+
+**False positives:** none.
+
+**Not in scope:** `docs/reviews/codex-adversarial-003-hot-path-resolve-and-grid-caching-2026-09-24.prompt.md`
+is untracked in this worktree; it is outside the reviewed diff and left for the orchestrator.
+
+**Final verification.** Both mutants and the probe were reverted before the run (the provider is
+byte-identical to `02157b18`). `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`:
+`Passed! - Failed: 0, Passed: 10323, Skipped: 2, Total: 10325`. The count is unchanged because the
+read-through test was rewritten in place.
