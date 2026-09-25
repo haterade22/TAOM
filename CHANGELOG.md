@@ -4,7 +4,7 @@
 
 ## 2026-09-24
 
-### fix(config): v2.0.30 - reject NaN and Infinity in career mutation floats (plan 002)
+### fix(config): v2.0.30 - reject NaN and Infinity in career mutation floats (plan 002, #663)
 
 `MutationParams.GetFloat` now returns the default when a mutation parameter parses to NaN or
 plus or minus Infinity, through `FiniteFloatValidator` (the helper `TroopWeightXmlLoader` and
@@ -13,7 +13,7 @@ most other float loaders use; `CareerConfigProvider` still checks NaN by hand). 
 since NaN compares false both ways. Ported from the June branch `impl-002` (`cfc47206`); that
 commit's troop-weight half already landed on trunk in `bee07b48`, so only the mutation half is
 new. `MutationParamsTests` (5): three RED without the guard (NaN, plus and minus Infinity), all
-GREEN with it. No issue filed yet (plan 002; filing waits on Mike).
+GREEN with it. Tracked in #663.
 
 Review follow-ups: two more `MutationParamsTests` pin the unparseable fallback and a negative
 finite value passing through (both went RED against a mutant that accepted any parse and
