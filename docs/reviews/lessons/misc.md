@@ -202,8 +202,8 @@ new rule, across eleven files.
   Grep for pointers INTO a rewritten section (its heading text) as well as for its old facts.
   `docs/reviews/rca-nazgul-scream-2026-09-23.md` W3, W8.
 - **Recurred:** plan 025 (2026-09-24). Deleting the unwired path-reuse scaffold made the feature
-  doc's config-test count wrong (20, now 22) and left `NavigationPath` in its Dependencies list,
-  though the deleted files were its last users in the feature. The change dropped the doc's
+  doc's config-test count wrong (20, then 22 at `032481cc`) and left `NavigationPath` in its
+  Dependencies list, though the deleted files were its last users in the feature. The change dropped the doc's
   "103+" total because nothing computes it, yet kept the per-bullet counts beside it. When a
   deletion removes the last user of a type, grep the owning doc's Dependencies list for it, and
   drop hand-kept counts rather than patching one. `docs/reviews/rca-delete-unreachable-scaffolds-2026-09-24.md` F3, F4.

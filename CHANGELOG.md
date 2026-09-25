@@ -22,9 +22,9 @@ the scaffold, but it assumed Phase 1 paths that the engine keeps local, so path 
 new design. Plan 025.
 
 Review follow-ups: a second new test that only pinned the deleted types' absence is removed
-(simplicity criterion). The feature doc and the binding catalogue now name the commit the retired
-row came from (`41258657`), drop the stale `NavigationPath` dependency and the hand-kept test
-counts, and explain why Phase 1 paths cannot simply be reused in Phase 2. Review report:
+(simplicity criterion). The binding catalogue now names the commit the retired row came from
+(`41258657`); the feature doc drops the stale `NavigationPath` dependency and the hand-kept test
+counts, and explains why Phase 1 paths cannot simply be reused in Phase 2. Review report:
 `docs/reviews/deep-review-025-delete-unreachable-scaffolds-2026-09-24.md`.
 
 Full suite in the worktree: 10287 passed, 2 skipped, 0 failed (10288 before the review

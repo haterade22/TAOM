@@ -173,3 +173,23 @@ v1.5.3 DLLs, a config cross-reference table, all ten known suspects answered. No
   contradicts it; and history claims ("never shipped", "recover from commit X") are not checked
   with `git log`.
 - "What Codex does well": cross-checking a plan's done criteria against the prose it prescribes.
+
+## Convergence
+
+A convergence pass over the review-fix diff `032481cc..76f22e11` found no runtime or standards
+defect (the only C# change removes one test) and two LOW text defects, both confirmed and fixed.
+
+| # | Finding | Verdict | Fix |
+|---|---|---|---|
+| C1 | `lessons/misc.md:205` said the config-test count went "(20, now 22)"; the same commit removed one of those tests, so HEAD has 21 (`grep -c "\[TestMethod\]"` on `CacheRebuildConfigProviderTests.cs` gives 21, no `[DataRow]`) | CONFIRMED | Reworded to "(20, then 22 at `032481cc`)" |
+| C2 | `CHANGELOG.md:25-27` credited the `41258657` provenance to both the feature doc and the binding catalogue; `grep -c 41258657` gives 0 in `editor-cache-rebuild.md` and 1 in `reflection-sites.md`, and the other two changes are in the feature doc only | CONFIRMED | Sentence split: the catalogue names `41258657`; the feature doc drops `NavigationPath` and the counts and explains the Phase 1 premise |
+
+- **False positives:** none.
+- **Left UNVERIFIED:** the FOR-MIKE.md "have readers and stay" wording lives in the main
+  checkout's uncommitted copy, which this worktree pass does not read. The substance (no runtime
+  reader of the six reserved fields) was confirmed by the convergence reviewer with `git grep -lw`.
+- **Not changed:** the RCA's F3 row ("the change made it 22") and this report's Agent 1 row
+  ("class now has 22") describe `032481cc`, the commit they reviewed, so they stay as written.
+- **Tests:** doc-only fixes, nothing to test first. Full suite at the fix:
+  `Failed: 0, Passed: 10287, Skipped: 2, Total: 10289` (the skips are the two `WargAttack_*`
+  tests; the branch is based after `a39a9c86`, so no live-Armory failure is expected).
