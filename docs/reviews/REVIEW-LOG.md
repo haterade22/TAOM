@@ -4301,3 +4301,76 @@ ran no mutant, so the two rows that pass through another arm looked sound to it.
 Report: `docs/reviews/deep-review-013-bash-hook-prefilter-decisions-2026-09-24.md`; RCA:
 `docs/reviews/rca-bash-hook-prefilter-decisions-2026-09-24.md`; three lessons in
 build-tooling-workflow.
+## Review 132 (plan 014): Enlistment session reset on load and new campaign, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+Plan 014 (branch `improve/014-enlistment-session-scope`, `7f02fc8d..d1221b7f`) made
+`ServiceMaintenanceService.ResetSessionCaches` also clear the settlement-dwell anchor, the
+arrival-offer latch and cooldown, and the per-hour army-rhythm snapshot, and called it from
+`EnlistmentBehavior.OnNewGameCreated` as well as the load hook. Six lenses (Standards, Engine,
+Efficiency, Completeness, Data flow, Design; XML and Tooling not in scope) and Codex found no
+runtime defect. **11 confirmed findings, 0 false positives, all fixed:** three overclaims (the
+CHANGELOG's "every per-session value", the doc's "on both lifecycle edges", a comment filing the
+rhythm cache under the wrong hazard), a test comment the change made false, the untested load edge,
+an unpinned plan decision, two missing comments, a dwell arithmetic slip, a backwards verb and a
+CS8625. Design's fold of `InvalidateCommanderCache` into the attachment service's reset was applied
+(RED test first). No GitHub issue exists for the plan (needs Mike).
+
+**Codex (gpt-6-astra, ultra): P1 0, P2 0, two P3.** It decompiled the load and new-campaign order
+from the installed DLL, walked five concrete paths, cross-referenced the test settlement ids and
+string keys against ModuleData, and disputed ten suspects with line evidence. O1: the load hook's
+reset had no test, and it proposed the seam (a sentinel thrown from `GetMainHeroId()`, evaluated
+before `CampaignTime.Now`), now `GameLoad_OnTheHost_ResetsTheSessionCaches_BeforeNormalizing`. O2:
+"every per-session value" is false (`_lossAnnouncedFor`). Codex missed the stale test comment (it
+checked the file the plan named), the arithmetic slip and the rhythm comment.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|
+| O1 | Load hook's reset untested | Test gap | Hook judged untestable because of `CampaignTime.Now` | Sentinel test; lesson in `lessons/testing-qa.md` |
+| O2 | "Every per-session value" overclaim | Unverified enumeration (REPEAT) | Written from the plan's three latches | Narrowed; lesson in `lessons/state-lifecycle-save.md` |
+| L1 | Stale "OnGameLoaded only" test comment | Correction not propagated (REPEAT) | Plan grep scoped to one file, phrase split across lines | Fixed; lesson in `lessons/misc.md` |
+
+Needs Mike: the GitHub issue; resetting before the authority gate in `OnGameLoaded`;
+`_lossAnnouncedFor` (clear on reset and discharge, or delete); normalizing a stale record when the
+save has no Enlistment data; a `SubModule.OnGameEnd` teardown call. Full suite 10246 passed, 2
+skipped, 2 failed (the known live-Armory tests). Report
+[deep-review-014-enlistment-session-scope-2026-09-24.md](deep-review-014-enlistment-session-scope-2026-09-24.md),
+RCA [rca-enlistment-session-scope-2026-09-24.md](rca-enlistment-session-scope-2026-09-24.md), prompt
+[codex-adversarial-014-enlistment-session-scope-2026-09-24.prompt.md](codex-adversarial-014-enlistment-session-scope-2026-09-24.prompt.md).
+Owed: the convergence pass on the fix diff, the in-game load and second-campaign smokes. The review
+number may need renumbering at merge (parallel plan branches).
+
+## Review 133 (plan 014): Enlistment session scope, maintainer decisions (#656), 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+The commit applying Mike's six decisions for plan 014 (branch `improve/014-enlistment-session-scope`,
+`41754a03..a67792c4`) was reviewed by six lenses (Standards, Engine, Efficiency, Completeness, Data
+flow, Design; XML and Tooling not in scope) and Codex. **18 confirmed findings, 0 false positives;
+16 fixed, 2 need Mike** (the ADR-002 split issue for `EnlistmentMenuBehavior`, now 162 lines, and
+the stale #656 body). The one behaviour defect: decision 6 cleared the arrival offer's settlement
+latch only in the exit sweep, which a shore-leave pass suspends, so an accepted offer never re-armed
+the town. `EnlistmentMaintenanceBehavior` now ends the stop on the commander's settlement-left edge
+(RED test first, `EnlistmentStopEndTests`). The rest was a heap-release overclaim, a reversed
+teardown-order comment, a source pin that passed on a commented-out call, stale reset docs and three
+test gaps. Design's `RepoPath` reuse was applied; deleting `ColumnLeftSettlement` and
+`_lossAnnouncedFor` wait for Mike.
+
+**Codex (gpt-6-astra, ultra, 144,802 tokens): P1 0, P2 1, P3 2, all confirmed.** It traced vanilla's
+town Leave consequence through `PlayerEncounter.LeaveSettlement` to `LeaveSettlementAction` to show
+the pass route bypasses TAOM's exit sweep, with a numbered hour-100 to hour-130 reproduction, and it
+caught that the source pin passes on a commented-out call. Its proposed fix (the main party's
+departure) was replaced by the commander's departure, which cannot re-ask inside one running stop.
+It missed the CHANGELOG and doc versions of the heap-release claim, the stale interface docs, the
+untested wiring and co-op cells, and the line growth over the ADR-002 ceiling (it disputed that
+suspect as existing debt).
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|
+| 1 | Stop end signalled only by the exit sweep | Stale state / lifecycle | Stop end identified with one exit; tests called the handler directly | `EnlistmentStopEndTests`; lesson in `lessons/state-lifecycle-save.md` |
+| 2 | Source pin passes on a commented-out call | Test oracle | Substring search over source | Comment lines filtered, test renamed; second lesson |
+| 3 | Teardown order reversed in a comment | Assumed API order (REPEAT) | `Game.Destroy` not opened | Corrected; second lesson in `lessons/state-lifecycle-save.md` |
+
+Full suite 10266 passed, 2 skipped, 2 failed (the known live-Armory tests), total 10270. Report
+[deep-review-014-enlistment-session-scope-decisions-2026-09-24.md](deep-review-014-enlistment-session-scope-decisions-2026-09-24.md),
+RCA [rca-enlistment-session-scope-decisions-2026-09-24.md](rca-enlistment-session-scope-decisions-2026-09-24.md),
+raw output `raw/codex-adversarial-014-enlistment-session-scope-decisions-2026-09-24.md`. Owed: the
+convergence pass on the fix diff and the in-game smokes. The review number may need renumbering at
+merge (parallel plan branches).

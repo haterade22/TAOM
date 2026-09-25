@@ -9,7 +9,8 @@ public interface IArmyRhythmSnapshotService
     /// <summary>Snapshot for the given campaign time; cached per game hour (one probe per hour, 11 donor call sites shared it).</summary>
     ArmyRhythmSnapshot GetSnapshot(double nowDays, double hourOfDay);
 
-    void Invalidate();
+    /// <summary>Drop the cached snapshot. Session reset only (a load, a new campaign or game end).</summary>
+    void ResetForNewSession();
 }
 
 public class ArmyRhythmSnapshotService : IArmyRhythmSnapshotService
@@ -64,7 +65,7 @@ public class ArmyRhythmSnapshotService : IArmyRhythmSnapshotService
         return snapshot;
     }
 
-    public void Invalidate()
+    public void ResetForNewSession()
     {
         _cached = null;
         _cachedHourStamp = double.MinValue;

@@ -767,3 +767,58 @@ saved, but the great elk's lord wiring never shipped in a release, so every play
 - **Why missed:** the rules were written and tested one at a time, and the rethrow was traced up the engine's call chain to "no managed catch" without asking whether TAOM patches a frame on that chain.
 - **Prevent:** when a guard can both skip and throw, test the SEQUENCE where both apply (fault in step A, then the fail-closed step B, then a retry of B), and let the class that documents the rule own the flag rather than a literal at the call site. Before relying on an exception to stop the game, grep `harmony-patch-registry.md` for a finalizer on every TAOM-reachable frame above the throw (`Module.OnApplicationTick`, `ScriptComponentBehavior.OnTick`, `MissionView.OnMissionScreenTick`).
 - **Source:** `docs/reviews/rca-composition-root-first-steps-2026-09-24.md` findings 1, 2 and 12; Codex P2 and lenses 2, 5 and 6 (plan 018).
+### "Every per-session value is reset" is an enumeration: sweep the singletons' mutable fields before writing it (plan 014, 2026-09-24)
+
+Plan 014 reset three campaign-clock latches, and its CHANGELOG said "Both paths now clear every
+per-session value". `EnlistmentReconciler._lossAnnouncedFor`, a shown-flag on the same singleton, is
+per-session and no reset clears it (so a reloaded or repeated loss of the same commander can go
+unannounced), and `FieldDutyRuntime` keeps a real-time pace estimate. The feature doc's bold claim
+("on both lifecycle edges") sat one line below its own note that a co-op client's load skips the
+reset.
+
+- **Why missed:** the summary was written from the plan's list of three latches, not from the code.
+  The architecture rule names shown-flags explicitly, but nobody swept for them.
+- **Prevent:** before writing "every" about session state, list the fields not marked `readonly` on
+  every `Reuse.Singleton` the feature and its adapters register, and mark each reset or not. Write the claim from that list, and name the values left out. State
+  the edges exactly: a load gated on co-op authority is "a host's load".
+- **Source:** `docs/reviews/rca-enlistment-session-scope-2026-09-24.md` findings 2 and 3.
+
+### A state that ends "when the stop ends" is cleared on the stop's own edge, not on one way the player leaves (plan 014 decisions, 2026-09-24)
+
+Decision 6 said the shore-leave offer's settlement latch clears when the column's stop ends. The
+code cleared it in `ServiceAttachmentService.ExitSettlementForService`, the sweep that walks the
+player out when the commander has gone. The offer grants a pass, and a pass suspends that sweep
+(#512), so the route every accepted offer takes (the player walks out later through vanilla's Leave
+option) never cleared it, and the next stop in the same town stayed silent. The feature doc called
+"once per stop" literal. Four review lenses and Codex found it.
+
+- **Why missed:** the stop's end was identified with one of the player's exits instead of with the
+  event that ends a stop (the commander leaving the town). The `TownLeavePolicy` class doc still
+  said a pass dies when the commander leaves, and the new tests called the handler directly, so no
+  test went through a real route.
+- **Prevent:** before wiring an "X ended" clear, list every way X can end and every way the player
+  can leave it (sweep, pass, discharge, battle, load), and prefer the edge owned by X itself (here
+  the commander's `OnSettlementLeft`, already routed and filtered) over any one exit. Test through
+  the edge that raises the clear, not the handler it calls.
+- **Source:** `docs/reviews/rca-enlistment-session-scope-decisions-2026-09-24.md` finding 1.
+
+### "Released at game end" is a reachability claim, and "runs after X" is an ordering claim: trace both before writing them (plan 014 decisions, 2026-09-24)
+
+`SubModule.OnGameEnd` was made to call Enlistment's session reset, and the CHANGELOG said the
+finished campaign's commander party and army "are released at the main menu". The reset nulls two
+handles, but `EnlistmentBehavior._lastSessionStarter` (a singleton field holding the finished
+`CampaignGameStarter`, with every behavior and model) and `CommanderLordAdapter._lastSeenMapEvent`
+still reference that campaign. The same change's comment said the reset runs "after the Game is
+gone"; `Game.Destroy` calls `GameManager.OnGameEnd` before `GameType.OnDestroy` and before
+`Game.Current = null`. A source-level test named `..._SoTheDeadCampaignsObjectsAreReleased` passed
+on a commented-out call.
+
+- **Why missed:** the outcome the call was meant to have was written down as the outcome it has.
+  No one listed the other roots, and the teardown order was assumed rather than read (a recurrence
+  of the "open its caller" lesson on `MBSubModuleBase` virtuals above).
+- **Prevent:** a release claim names every root the feature's singletons hold into the object graph
+  (grep the fields that are not `readonly` on every `Reuse.Singleton`, behaviors included) or says
+  "handles dropped, heap effect unmeasured"; only a heap snapshot supports "released". Read the
+  caller of a teardown virtual before writing when it runs. Name a source-presence test for what it
+  proves, and make it ignore comment lines.
+- **Source:** `docs/reviews/rca-enlistment-session-scope-decisions-2026-09-24.md` findings 2 to 4.

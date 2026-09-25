@@ -1162,3 +1162,19 @@ Plan 006's bridge and `CrashReportPatchHelper` tests all ran with `IoC` unconfig
 - **Why missed:** the review record called the swallow path "not reachable from a test", which was true only of the MCM read; the fallback tests were green, and green read as covered.
 - **Prevent:** for any static hook that resolves its service lazily (`IoC.Resolve` cached in a static), add a fake the test can install and clear (`[TestCleanup]`), and assert what the service received (arguments, and the state it observed at call time), not only what the hook returned. Run the mutation list from the review against the new tests before calling the gap closed.
 - **Source:** `docs/reviews/rca-crash-capture-boot-cost-decisions-2026-09-24.md` F2 (lens 4 M1, lens 1 LOW-4).
+### A hook that cannot finish outside a campaign is testable up to its first engine read: throw a sentinel from the argument before it (plan 014, 2026-09-24)
+
+`EnlistmentBehavior.OnGameLoaded` calls `_normalizer.Normalize(_playerParty.GetMainHeroId(),
+CampaignTime.Now.ToDays)`, and `CampaignTime.Now` needs a live campaign, so plan 014 declared the
+load hook untestable and pinned only the new-campaign hook. The load edge, the one the CHANGELOG led
+with, had no test. C# evaluates arguments left to right, so a substitute whose `GetMainHeroId()`
+throws a private sentinel exception stops the hook after the reset and before the engine read.
+`GameLoad_OnTheHost_ResetsTheSessionCaches_BeforeNormalizing` asserts the sentinel, the reset, and
+their order with `Received.InOrder`.
+
+- **Why missed:** "calls the engine" was read as "cannot be unit tested", for the whole method.
+- **Prevent:** before calling a hook untestable, find the first statement that touches the engine
+  and ask what an adapter call evaluated just before it can do: throw a sentinel there and assert
+  everything that ran first. Prefer this to reflection or to moving an engine read.
+- **Source:** Codex review of plan 014 (gpt-6-astra, ultra), observation 1;
+  `docs/reviews/rca-enlistment-session-scope-2026-09-24.md` finding 4.

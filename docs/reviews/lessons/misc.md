@@ -242,3 +242,18 @@ D47 took the crash-capture allowlist from 6 to 16 entries. The same commit left 
 - **Why missed:** the executor updated the texts that name the list's members and grepped for the class name, but not for the count word, and did not re-check examples chosen to lie outside the list.
 - **Prevent:** after changing a list's members, grep the old count spelled both ways ("six", "6 of 6"), every "for example" that points inside or outside the list, and the hint of the toggle that governs it. A player-facing hint is part of that set even when the file is outside the diff.
 - **Source:** `docs/reviews/rca-crash-capture-boot-cost-decisions-2026-09-24.md` F3 to F5 (lenses 1, 2, 4, 5, 6 and Codex P3).
+### A plan's stale-claim grep is a floor: search the whole repo, tests included, by distinctive words (plan 014, 2026-09-24)
+
+Plan 014 rewrote the claim "ResetSessionCaches is wired to OnGameLoaded only" and its Step 7 gate
+grepped `EnlistmentReconciler.cs` for it. The executor ran the gate as written and it passed, while
+the same claim sat in `EnlistmentReconcilerTests.cs:835-836`, split across two lines so no phrase
+grep could have matched it. Four review lenses caught it; Codex, which checked the same file the
+plan named, did not.
+
+- **Why missed:** the gate was scoped to the file the plan changed, and it searched for a phrase. A
+  test comment is a copy of the claim too, and a line break splits a phrase.
+- **Prevent:** after rewriting a claim, grep the whole repo (`Main`, `TAOM.Tests`, `docs`) for one or
+  two of its distinctive words (`OnGameLoaded only`, `wired to`), never for the full sentence, and
+  treat a plan's narrower grep as the minimum, not the check. Recurrence of the #644 and #645 lesson
+  above.
+- **Source:** `docs/reviews/rca-enlistment-session-scope-2026-09-24.md` finding 1.
