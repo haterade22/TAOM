@@ -21,6 +21,7 @@ namespace TAOM.Tests.Features.AiPartySize;
 /// are one atomic change.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class CaravanPartySizeTests
 {
     private const float Tolerance = 0.01f;

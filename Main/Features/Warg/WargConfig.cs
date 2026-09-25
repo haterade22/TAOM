@@ -9,8 +9,9 @@ public static class WargConfig
     /// <summary>
     /// Every Monster id the warg behaviour tree treats as a warg.
     ///
-    /// <c>AgentAdapter.IsWarg()</c> gates the bite attack (<c>WargMissionBehavior</c>) and rider
-    /// hand posing (<c>WargRiderHandManager</c>). It was <c>StringId == "warg"</c>, so any second
+    /// <see cref="IsWargMonster"/> gates the warg tree (<c>WargMissionBehavior</c>) and rider
+    /// hand posing (<c>WargRiderHandManager</c>), both on the agent's own Monster. It was
+    /// <c>StringId == "warg"</c>, so any second
     /// warg-family Monster silently got neither, with no crash and no log line. The fell warg reuses
     /// skeleton_warg and as_warg but carries its own Monster for weight (which drives the
     /// charge-knockdown model) and base hit points, so it has to be named here.

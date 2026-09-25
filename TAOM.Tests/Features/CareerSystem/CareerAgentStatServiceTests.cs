@@ -16,6 +16,7 @@ namespace TAOM.Tests.Features.CareerSystem;
 // acceptance per the task brief). Tests reset the static state via TestInitialize so
 // methods that read both passive-cache + buff-tracker can be exercised in isolation.
 [TestClass]
+[TestCategory("RequiresGame")]
 public class CareerAgentStatServiceTests
 {
     private CareerAgentStatService _sut = null!;

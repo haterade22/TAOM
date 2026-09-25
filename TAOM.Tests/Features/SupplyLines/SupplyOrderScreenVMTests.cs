@@ -14,6 +14,7 @@ namespace TAOM.Tests.Features.SupplyLines;
 /// distinguishable quote fields so every text line pins which argument reached the service.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class SupplyOrderScreenVMTests
 {
     private ISupplySourceService _sourceService = null!;

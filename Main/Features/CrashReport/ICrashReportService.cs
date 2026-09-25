@@ -15,7 +15,10 @@ public interface ICrashReportService
     // Capture + persist + notify. Returns the path to the report ZIP, or null if
     // even the report could not be written. Never throws — the caller is a
     // Finalizer that must not propagate diagnostic failures into the main exception.
-    string? HandleException(Exception exception, string originatingPatchTarget);
+    // offMainThread: the caller saw the throw on a thread other than the main game thread, so the
+    // capture skips the Mission and Campaign collectors and the inquiry (#650; the caller's own
+    // verdict, never a mark on the exception, which a read-only Exception.Data would drop).
+    string? HandleException(Exception exception, string originatingPatchTarget, bool offMainThread = false);
 
     // Returns true while a HandleException invocation is on the current call stack —
     // Harmony Finalizers should consult this to break re-entry loops.

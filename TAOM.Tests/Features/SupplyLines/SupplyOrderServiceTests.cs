@@ -16,6 +16,7 @@ namespace TAOM.Tests.Features.SupplyLines;
 /// virtual bodies are the honest untested boundary sliver, exercised only in game.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class SupplyOrderServiceTests
 {
     private sealed class TestableSupplyOrderService : SupplyOrderService

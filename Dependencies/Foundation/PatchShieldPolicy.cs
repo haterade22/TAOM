@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace TAOM.Dependencies.Foundation;
 
 /// <summary>
-/// The two pure decisions behind <see cref="PatchShield"/>'s rescue path, extracted so they can be
-/// tested without Harmony or a running game. PatchShield keeps the plumbing; this keeps the policy.
+/// The pure decisions behind <see cref="PatchShield"/> (which targets to skip, which owners never
+/// to unpatch, when to install, and the shield-pass log line), extracted so they can be tested
+/// without Harmony or a running game. PatchShield keeps the plumbing; this keeps the policy.
 /// </summary>
 public static class PatchShieldPolicy
 {
@@ -61,6 +63,75 @@ public static class PatchShieldPolicy
         "Coop.BootFix",
         "CoopAutoRegistryFactory",
     };
+
+    // Issue #331 round 2 (2026-07-09, measured): NEVER shield the Gauntlet/2D UI layer.
+    // A shield finalizer binds __originalMethod, so Harmony's generated wrapper pays a
+    // MethodBase.GetMethodFromHandle + try/catch on EVERY CALL (~50µs). The Gauntlet
+    // prefab system contains per-widget-recursion methods that UIExtenderEx patches
+    // (WidgetFactory.IsCustomType prefix, WidgetTemplate.OnRelease blank-transpiler);
+    // a tournament's accumulated template tree calls them ~2 MILLION times at release,
+    // so the shield tax amplified a milliseconds-scale teardown into a measured 104-109s
+    // frozen exit (+8,276 gen0 GCs, invariant across sessions; stack-sampled proof in
+    // docs/reviews/rca-tournament-exit-hang-2026-07-06.md round 2). Shield value there
+    // is nil anyway: the only patcher of that layer is BUTR's own UIExtenderEx.
+    public static readonly IReadOnlyList<string> ExcludedTargetNamespacePrefixes = new[]
+    {
+        "TaleWorlds.GauntletUI",
+        "TaleWorlds.TwoDimension",
+        // Round-2 compat review (2026-07-10): TAOM's own Patch38 target
+        // (SettlementNameplateWidget.DetermineTargetAlphaValue, ~3000 calls/sec on the
+        // campaign map) lives here and was silently paying the shield tax every frame.
+        // Same rationale as above: hot widget/view layer, shield value nil.
+        "TaleWorlds.MountAndBlade.GauntletUI",
+        // Plan 007 (2026-09-23, measured from diag.log): the engine's native-to-managed callback
+        // shims, ManagedCallbacks.{Library,Core,Engine}CallbacksGenerated. TAOM's own
+        // Native2ManagedPatcher wraps the 16 allowlisted shims (plan 006, Native2ManagedTargets) with
+        // a finalizer that, on its normal path, swallows the exception
+        // (CrashReportPatchHelper.HandleAndSwallow). When capture is off, on re-entry, or when the
+        // crash service is unresolved or throws, it hands the exception back with its throw site
+        // kept (HandBack, RethrowStackPreserver). The other 231 shims carry no TAOM finalizer, so
+        // on those nothing swallows the missing-API trinity.
+        // Shielding them again cost one Harmony.Patch each at the first game start (about 46 s of a
+        // 69 s pass 2 on a machine paying 186 ms per Patch) and stacked an __originalMethod wrapper
+        // on engine callback hot paths: the #331 hot-layer rationale. Rescue value is nil in
+        // practice: the known patches on the shims are TAOM's finalizers and ButterLib BEW's blank
+        // transpilers on three tick shims (a protected owner); a third-party prefix, postfix or
+        // transpiler on a shim loses the rescue.
+        // The prefix is the whole namespace, not only the three shims: it also holds the engine's
+        // 79 managed-to-native ScriptingInterfaceOf* wrappers plus CallbackManager and
+        // ScriptingInterfaceObjects (88 classes in v1.5.3), which Native2Managed does NOT wrap.
+        // They are excluded on the #331 per-call rationale alone, so a third-party patch on one of
+        // them gets no shield. PatchShieldPolicyTests pins the shim half against the installed DLLs.
+        "ManagedCallbacks",
+    };
+
+    /// <summary>Whether a patch target's declaring namespace is on the hot-layer exclusion list (ordinal prefix match).</summary>
+    public static bool IsExcludedTargetNamespace(string? targetNamespace)
+    {
+        if (string.IsNullOrEmpty(targetNamespace)) return false;
+        foreach (var prefix in ExcludedTargetNamespacePrefixes)
+        {
+            if (targetNamespace!.StartsWith(prefix, StringComparison.Ordinal)) return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// The diag.log line for one shield pass. "seen" counts every method the passes so far decided on,
+    /// skipped ones included; "attached" counts the methods carrying PatchShield's finalizer, the
+    /// real coverage (they were one conflated "total" before 2026-09-24). The timing
+    /// suffix exists because diag.log ships in every crash bundle, and the per-attach cost of
+    /// Harmony.Patch is not stable: one desktop has logged both about 5 to 10 ms and about 186 ms per
+    /// attach (diag.log, 2026-06 to 2026-09), a 30x swing that decides whether a pass costs about a
+    /// second or tens of seconds of a player's loading screen.
+    /// </summary>
+    public static string FormatShieldPassSummary(int added, int alreadySeen, int skipped, int seenTotal, int attachedTotal, long elapsedMs)
+    {
+        var line = $"shield pass: +{added} new, {alreadySeen} already-seen, {skipped} skipped (seen: {seenTotal}, attached: {attachedTotal}) in {elapsedMs} ms";
+        return added > 0
+            ? line + " (" + ((double)elapsedMs / added).ToString("F1", CultureInfo.InvariantCulture) + " ms/attach)"
+            : line + " (no new attaches)";
+    }
 
     /// <summary>
     /// Unions the compiled defaults with any extra prefixes from <c>coop-modules.txt</c>. Union

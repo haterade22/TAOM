@@ -17,6 +17,7 @@ namespace TAOM.Tests.Adapters;
 /// so nothing here reaches the engine's static initializers.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class MissionAdapterFactoryTests
 {
     private static MissionAdapterFactory NewFactory() =>

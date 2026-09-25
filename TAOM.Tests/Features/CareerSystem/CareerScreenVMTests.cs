@@ -12,6 +12,7 @@ using TAOM.Features.CareerSystem.UI;
 namespace TAOM.Tests.Features.CareerSystem;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class CareerScreenVMTests
 {
     private CareerDataService _dataService;

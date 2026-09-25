@@ -13,6 +13,7 @@ namespace TAOM.Tests.Features.AutoResolveDiagnostics;
 /// emit) is covered by <see cref="AutoResolveLogWriterTests"/>.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class AutoResolveDiagnosticsBehaviorTests
 {
     private IMapEventBattleLogAdapter _adapter = null!;

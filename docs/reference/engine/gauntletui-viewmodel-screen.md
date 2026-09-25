@@ -108,8 +108,11 @@ What that means when you debug this path:
   before `TickVisuals()`, then reads `_agentVisuals[0].GetEquipment()` on the next statement with no
   check. `OnFinalize` sets `_agentVisuals = null` without clearing `_isEnabled`. The widget's `Data`
   setter flips `IsEnabled` in the same call on every normal path, so it needs a
-  `MapConversationTextureProvider.Clear` on a provider that is still ticking. TAOM's
-  `Native2ManagedPatcher` finalizers would log and swallow such a throw rather than crash.
+  `MapConversationTextureProvider.Clear` on a provider that is still ticking. That tick runs inside
+  `ScreenManager.Tick` (`GauntletLayer.Tick` → `UIContext.Update` → `EventManager.Update` →
+  `Widget.Update` → `TextureWidget.OnUpdate` → `MapConversationTextureProvider.Tick` →
+  `MapConversationTableau.OnTick`, v1.5.3), so TAOM's Patch37 finalizer on `ScreenManager.Tick`
+  would log and swallow such a throw rather than crash.
 - **TAOM patches on this path:** `MapConversationTableau.SpawnOpponentLeader` /
   `SpawnOpponentBodyguardCharacter` postfixes (BannerColorPersistence, manual) call
   `AgentVisuals.Refresh` a second time to push clan colours. The hero page carries the Messengers

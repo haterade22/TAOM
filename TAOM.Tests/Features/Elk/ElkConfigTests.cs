@@ -16,6 +16,7 @@ using TAOM.Features.WarRam;
 namespace TAOM.Tests.Features.Elk;
 
 [TestClass]
+[TestCategory("LiveInstall")]
 public class ElkConfigTests
 {
     /// <summary>The ram's compiled master act_war_ram_butt: clip frames 1..105 at 30 fps, butt plus the head-down hold.</summary>

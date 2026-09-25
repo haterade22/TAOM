@@ -7,6 +7,7 @@ using TAOM.Features.QuickActions.Hooks;
 namespace TAOM.Tests.Features.QuickActions;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class InventorySearchCampaignBehaviorTests
 {
     private IQuickActionsSettingsProvider _settings = null!;

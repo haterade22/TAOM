@@ -1,8 +1,11 @@
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TaleWorlds.Core;
 using TAOM.Adapters;
 using TAOM.Features.CompanionTactics.FormationPresets;
+using TAOM.Features.CompanionTactics.FormationPresets.Models;
 using TAOM.Features.CompanionTactics.Roles;
 using TAOM.Features.CompanionTactics.Roles.Models;
 
@@ -28,7 +31,18 @@ public class HeroAutoAssignerTests
         return hero;
     }
 
-    // formationClass: 1=Infantry, 2=Ranged, 3=Cavalry, 4=HorseArcher, 5=HeavyInfantry, 6=LightCavalry
+    private IHeroCombatAdapter Hero(string id, CombatRole role)
+    {
+        var hero = MakeHero(id);
+        _roles.GetPrimaryRole(hero).Returns(role);
+        return hero;
+    }
+
+    private static List<CaptainAssignment> Plan(HeroAutoAssigner sut,
+        IReadOnlyList<IHeroCombatAdapter> heroes, params int[] classes)
+        => sut.PlanCaptains(heroes, classes).ToList();
+
+    // formationClass (DeploymentFormationClass): 0=Unset, 1=Infantry, 2=Ranged, 3=Cavalry, 4=HorseArcher, 5=InfantryAndRanged, 6=CavalryAndHorseArcher
 
     [TestMethod]
     public void ScoreRoleForFormation_ShieldInfantryToInfantry_HighScore()
@@ -89,5 +103,138 @@ public class HeroAutoAssignerTests
 
         Assert.AreEqual(100, s);
         _roles.Received(1).GetPrimaryRole(hero);
+    }
+
+    [TestMethod]
+    public void PlanCaptains_NoHeroes_ReturnsEmpty()
+    {
+        var result = Plan(_sut, new List<IHeroCombatAdapter>(), 1);
+
+        Assert.AreEqual(0, result.Count);
+    }
+
+    [TestMethod]
+    public void PlanCaptains_NoSlots_ReturnsEmpty()
+    {
+        var heroes = new List<IHeroCombatAdapter> { Hero("a", CombatRole.ShieldInfantry) };
+
+        var result = Plan(_sut, heroes);
+
+        Assert.AreEqual(0, result.Count);
+    }
+
+    [TestMethod]
+    public void PlanCaptains_NullLists_ReturnEmpty()
+    {
+        var nullHeroes = _sut.PlanCaptains(null!, new[] { 1 });
+        var nullClasses = _sut.PlanCaptains(new[] { Hero("a", CombatRole.Archer) }, null!);
+
+        Assert.AreEqual(0, nullHeroes.Count);
+        Assert.AreEqual(0, nullClasses.Count);
+    }
+
+    [TestMethod]
+    public void PlanCaptains_ArcherAndShieldInfantry_EachLeadsTheMatchingFormation()
+    {
+        var heroes = new List<IHeroCombatAdapter>
+        {
+            Hero("a", CombatRole.Archer),
+            Hero("b", CombatRole.ShieldInfantry),
+        };
+
+        var result = Plan(_sut, heroes, 1, 2);
+
+        CollectionAssert.AreEqual(new List<CaptainAssignment> { new(1, 0), new(0, 1) }, result);
+    }
+
+    [TestMethod]
+    public void PlanCaptains_TwoCavalryOneCavalrySlot_FirstCandidateLeads()
+    {
+        var heroes = new List<IHeroCombatAdapter>
+        {
+            Hero("a", CombatRole.Cavalry),
+            Hero("b", CombatRole.Cavalry),
+        };
+
+        var result = Plan(_sut, heroes, 3);
+
+        CollectionAssert.AreEqual(new List<CaptainAssignment> { new(0, 0) }, result);
+    }
+
+    [TestMethod]
+    public void PlanCaptains_UnknownRole_IsNeverPlaced()
+    {
+        var heroes = new List<IHeroCombatAdapter> { Hero("a", CombatRole.Unknown) };
+
+        var result = Plan(_sut, heroes, 1, 2, 3, 4, 5, 6);
+
+        Assert.AreEqual(0, result.Count);
+    }
+
+    [TestMethod]
+    public void PlanCaptains_UnsetFormationClass_IsNeverFilled()
+    {
+        var heroes = new List<IHeroCombatAdapter> { Hero("a", CombatRole.ShieldInfantry) };
+
+        var result = Plan(_sut, heroes, 0);
+
+        Assert.AreEqual(0, result.Count);
+    }
+
+    [TestMethod]
+    public void PlanCaptains_ArcherWithMixedAndRangedSlots_TakesTheRangedSlot()
+    {
+        var heroes = new List<IHeroCombatAdapter> { Hero("a", CombatRole.Archer) };
+
+        var result = Plan(_sut, heroes, 5, 2);
+
+        CollectionAssert.AreEqual(new List<CaptainAssignment> { new(0, 1) }, result);
+    }
+
+    [TestMethod]
+    public void PlanCaptains_ThreeMeleeHeroesTwoSlots_EachHeroAndSlotUsedOnce()
+    {
+        var heroes = new List<IHeroCombatAdapter>
+        {
+            Hero("a", CombatRole.TwoHanded),
+            Hero("b", CombatRole.OneHanded),
+            Hero("c", CombatRole.Polearm),
+        };
+
+        var result = Plan(_sut, heroes, 1, 0, 5);
+
+        CollectionAssert.AreEqual(new List<CaptainAssignment> { new(0, 0), new(1, 2) }, result);
+    }
+
+    [TestMethod]
+    public void PlanCaptains_NullHeroEntry_IsSkipped()
+    {
+        var heroes = new List<IHeroCombatAdapter> { null!, Hero("b", CombatRole.Cavalry) };
+
+        var result = Plan(_sut, heroes, 3);
+
+        CollectionAssert.AreEqual(new List<CaptainAssignment> { new(1, 0) }, result);
+    }
+
+    // The two 50-point fits (companion-tactics.md "Auto-Assign"): with nothing better open, a
+    // mixed formation still takes the hero it only partly suits. Pins the `score > 0` threshold.
+    [TestMethod]
+    public void PlanCaptains_ArcherWithOnlyMixedInfantrySlot_LeadsIt()
+    {
+        var heroes = new List<IHeroCombatAdapter> { Hero("a", CombatRole.Archer) };
+
+        var result = Plan(_sut, heroes, 5);
+
+        CollectionAssert.AreEqual(new List<CaptainAssignment> { new(0, 0) }, result);
+    }
+
+    [TestMethod]
+    public void PlanCaptains_HorseArcherWithOnlyMixedCavalrySlot_LeadsIt()
+    {
+        var heroes = new List<IHeroCombatAdapter> { Hero("a", CombatRole.HorseArcher) };
+
+        var result = Plan(_sut, heroes, 6);
+
+        CollectionAssert.AreEqual(new List<CaptainAssignment> { new(0, 0) }, result);
     }
 }

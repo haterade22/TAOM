@@ -5,6 +5,7 @@ using TaleWorlds.Library;
 namespace TAOM.Tests.Features.CultureDoctrine;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class EnvelopGeometryTests
 {
     private static readonly Vec2 Centre = new Vec2(0f, 0f);
@@ -55,6 +56,7 @@ public class EnvelopGeometryTests
 }
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class CavalryThreatTests
 {
     private static readonly Vec2 Wall = new Vec2(0f, 0f);

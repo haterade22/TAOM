@@ -8,6 +8,7 @@ using TAOM.Core.Logging;
 using TAOM.Features.Messengers;
 using TaleWorlds.CampaignSystem;
 using TAOM.Features.CoopInterop;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.Messengers;
 
@@ -24,6 +25,7 @@ namespace TAOM.Tests.Features.Messengers;
 // catalog. This test class closes that gap with two regression-grade source-file assertions
 // (catch the exact #121 class) plus DryIoc + lifecycle checks for the behavior itself.
 [TestClass]
+[TestCategory("RequiresGame")]
 public class MessengerCampaignBehaviorTests
 {
     // --- Wiring catalog regression tests ---
@@ -31,9 +33,7 @@ public class MessengerCampaignBehaviorTests
     [TestMethod]
     public void MainIoCConfigure_IncludesMessengerFeatureRegistration()
     {
-        var iocSource = ReadProjectSource("Main", "IoC.cs");
-        if (iocSource == null)
-            Assert.Inconclusive("Main/IoC.cs not found — run from repo root or check working directory");
+        var iocSource = RepoPaths.ReadSource("Main/IoC.cs", stripComments: true);
 
         StringAssert.Contains(iocSource, "MessengerIoC.RegisterMessengerFeature(container);",
             "Main/IoC.cs::Configure must call MessengerIoC.RegisterMessengerFeature(container). " +
@@ -44,9 +44,7 @@ public class MessengerCampaignBehaviorTests
     [TestMethod]
     public void MainSubModule_AddsMessengerCampaignBehavior()
     {
-        var subModuleSource = ReadProjectSource("Main", "SubModule.cs");
-        if (subModuleSource == null)
-            Assert.Inconclusive("Main/SubModule.cs not found — run from repo root or check working directory");
+        var subModuleSource = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
         // Both `AddBehavior(...IoC.Resolve<MessengerCampaignBehavior>...)` and the namespace-qualified
         // form `Features.Messengers.MessengerCampaignBehavior` are accepted; the key invariant is that
@@ -118,20 +116,5 @@ public class MessengerCampaignBehaviorTests
             Substitute.For<ICoopSessionProvider>());
 
         Assert.IsInstanceOfType(behavior, typeof(CampaignBehaviorBase));
-    }
-
-    // --- Helpers ---
-
-    private static string ReadProjectSource(params string[] relativeParts)
-    {
-        var dir = Directory.GetCurrentDirectory();
-        while (dir != null)
-        {
-            var candidate = Path.Combine(new[] { dir }.Concat(relativeParts).ToArray());
-            if (File.Exists(candidate))
-                return File.ReadAllText(candidate);
-            dir = Directory.GetParent(dir)?.FullName;
-        }
-        return null;
     }
 }

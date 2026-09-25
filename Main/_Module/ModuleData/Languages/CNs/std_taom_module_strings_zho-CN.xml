@@ -2671,5 +2671,13 @@
     <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are swinging round the flank." />
     <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging the enemy foot." />
     <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are taking the flank of the wall." />
+    <string id="taom_patch_apply_failed" text="TAOM：在{PHASE}期间，以下补丁组应用失败：{GROUPS}。本次游戏中这些组内的部分修复将不会生效；具体原因请查看 TAOM 日志。" />
+    <string id="taom_patch_apply_phase_startup" text="启动" />
+    <string id="taom_patch_apply_notice_title" text="TAOM" />
+    <string id="taom_patch_apply_phase_game_init" text="游戏初始化" />
+    <string id="taom_patch_apply_phase_mission_start" text="任务开始" />
+    <string id="taom_oob_autoassign_done" text="Captains assigned: {COUNT}." />
+    <string id="taom_oob_autoassign_not_general" text="Only the general of this battle can assign heroes." />
+    <string id="taom_oob_autoassign_none" text="No hero suits an open captain slot." />
   </strings>
 </base>

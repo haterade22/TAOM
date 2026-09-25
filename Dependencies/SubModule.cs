@@ -265,15 +265,20 @@ public class SubModule : MBSubModuleBase
     }
 
     /// <summary>
-    /// Called when the main menu has rendered — signals the crash-loop detector that
-    /// this session reached menu (deletes the launch marker, snapshots modlist as
-    /// last-good). Override of MBSubModuleBase.OnGameInitializationFinished, the
-    /// closest TaleWorlds lifecycle hook to "we made it past load."
+    /// Runs at the end of every game initialisation, NOT at the main menu: the engine's
+    /// MBGameManager.OnGameInitializationFinished fans out to every submodule from
+    /// Campaign.OnInitialize (new or loaded campaign), CustomGame (custom battle) and EditorGame (the
+    /// editor), inside that game's loading screen. Marks the launch successful (deletes the
+    /// crash-loop marker and snapshots last-good-modlist.txt; a process that quits from the main
+    /// menu without starting a game therefore leaves the marker behind, a known gap), then runs
+    /// PatchShield pass 2, which the player waits through on that loading screen. Pass 2 reruns at
+    /// every game start and attaches only what was patched since the last pass (at a second start,
+    /// TAOM's late batch, about +140 attaches).
     /// </summary>
     public override void OnGameInitializationFinished(Game game)
     {
         base.OnGameInitializationFinished(game);
-        DiagLog.Log("Dependencies", "OnGameInitializationFinished: entered (main menu reached)");
+        DiagLog.Log("Dependencies", "OnGameInitializationFinished: entered (game start: campaign, custom battle or editor)");
 
         try { DiagLog.Log("Dependencies", "OnGameInitializationFinished: → MarkSessionLaunchSuccessful"); IncompatibleModDetector.MarkSessionLaunchSuccessful(); }
         catch (Exception ex) { DiagLog.LogCaught("Dependencies", "MarkSessionLaunchSuccessful", ex); EarlyLog.Error($"[TAOM.Dependencies] MarkSessionLaunchSuccessful failed: {ex.Message}"); }

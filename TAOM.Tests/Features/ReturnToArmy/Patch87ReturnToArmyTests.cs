@@ -5,6 +5,7 @@ using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.ReturnToArmy;
 using TAOM.Features.ReturnToArmy.Hooks;
+using TAOM.Tests.Infrastructure;
 using TAOM.Tests.Migration;
 
 namespace TAOM.Tests.Features.ReturnToArmy;
@@ -164,6 +165,7 @@ public class Patch87ReturnToArmyTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void VanillaConsequence_StillReachesTheWaitMenuSwitchAndTheVillageLeave()
     {
@@ -249,11 +251,8 @@ public class Patch87ReturnToArmyTests
         CollectionAssert.Contains(categories, "Patch87_ReturnToArmy",
             "Patch87_ReturnToArmy lost its [HarmonyPatchCategory]; SubModule's PatchCategory call would apply nothing.");
 
-        var subModule = Path.Combine(FindRepoRoot(), "Main", "SubModule.cs");
-        Assert.IsTrue(File.Exists(subModule), $"SubModule.cs not found at {subModule}");
-
-        var source = File.ReadAllText(subModule);
-        StringAssert.Contains(source, "_harmony.PatchCategory(\"Patch87_ReturnToArmy\")",
+        var source = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
+        StringAssert.Contains(source, "TryPatchCategory(\"Patch87_ReturnToArmy\")",
             "SubModule.cs no longer applies Patch87_ReturnToArmy; the patch is dead code.");
         StringAssert.Contains(source, "Patch87_ReturnToArmy.Initialize(",
             "SubModule.cs no longer initialises Patch87; the prefix runs without a logger and its diagnostics vanish.");
@@ -290,13 +289,5 @@ public class Patch87ReturnToArmyTests
 
         Assert.AreNotEqual(0, names.Count, method.Name + " resolved no calls; the scan failed, not the method.");
         return names;
-    }
-
-    private static string FindRepoRoot()
-    {
-        var dir = new DirectoryInfo(Directory.GetCurrentDirectory());
-        while (dir != null && !File.Exists(Path.Combine(dir.FullName, "TAOM.sln")))
-            dir = dir.Parent;
-        return dir?.FullName ?? throw new FileNotFoundException("TAOM.sln not found walking upward from cwd");
     }
 }

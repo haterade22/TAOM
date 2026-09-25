@@ -31,10 +31,20 @@
 
 set -uo pipefail
 
+INPUT=$(cat)
+
+# Prefilter: every decision below needs the text `git` in the command, and Claude Code never
+# escapes an ASCII letter, so a raw payload without it cannot concern this gate. Exiting
+# here skips the _pybin.sh probe and the parse (two Python starts) on most Bash calls.
+# Match the raw text, never a token regex: a newline before `git` arrives as \n.
+# tools/test_hooks.sh 4c checks both directions.
+# Never skip on an escape: JSON writes a letter either literally or as a \u escape,
+# so a payload holding any \u takes the full parse, and the raw test is safe
+# whatever writes the payload.
+[[ "$INPUT" == *git* || "$INPUT" == *'\u'* ]] || { echo '{}'; exit 0; }
+
 # Resolve a safe Python (never a Microsoft Store alias — those hang forever).
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
-
-INPUT=$(cat)
 
 # Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
 taom_pybin_degraded "block-dangerous-git" "destructive git commands" jq && { echo '{}'; exit 0; }

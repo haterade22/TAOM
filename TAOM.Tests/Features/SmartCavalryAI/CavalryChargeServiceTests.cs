@@ -17,6 +17,7 @@ namespace TAOM.Tests.Features.SmartCavalryAI;
 /// plane (25 m by default, so x=125 for a head-on charge).
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class CavalryChargeServiceTests
 {
     private static readonly Vec2 East = new(1f, 0f);

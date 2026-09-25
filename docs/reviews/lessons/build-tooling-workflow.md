@@ -2104,6 +2104,11 @@ the total. The tool's tests assert behaviour, so they stayed green.
   that file (and its tests and its README row) for the old value as a bare literal (`50`, `16 bandit`)
   and re-derive each hit. Same class as REVIEW-LOG 90 and 91, where unverified counts rode into prose.
 - **Source:** #564 deep-review, `docs/reviews/rca-hideout-boss-fight-2026-09-11.md` finding 1.
+- **Repeat (plan 012, 2026-09-24):** the change narrowed "every raise and lower of the loading
+  window" in the feature doc and the registry, and left the same phrase in `feature-map.md:34` and
+  in the class summary one paragraph above the paragraph it rewrote. The plan's file list scoped the
+  edit, and neither place was on it. Grep the whole repo for the old phrase, not only the files a
+  plan names. Source: `docs/reviews/rca-loading-window-trace-per-frame-2026-09-24.md` finding 1.
 
 ### A generator whose input its own next step rewrites must re-derive its plan from the rewritten state
 `generate_starter_kit.py` read the donor ids out of the player-start rosters; `wire_starter_kit_rosters.py` then rewrote those rosters to the `starter_` ids, which the donor scan skipped. The first `--apply` and its idempotency check both ran before the wiring, so the second run was a genuine no-op at that moment and looked like proof. Once wired, a re-run planned 0 clones, and `--apply` would have emptied the crafting-pieces marker block (39 blades), every stylesheet marker block and every generated item file, while `--verify` reported no drift because it checked only the plan's own entries.
@@ -2337,3 +2342,134 @@ backup and whatever state it held is gone. The run's own timestamped backup from
 - **Prevent:** every writer names its backup `<file>.bak-<topic>-<timestamp>` and refuses to overwrite one; when
   reusing an older tool on a live file, read its backup line before `--apply`.
 - **Source:** `tools/patch_dwarf_action_parity.py` (fixed 2026-09-24), `docs/reference/lotrlome-hill-troll-changes.md`.
+### An advisory hook's output must reach Claude: test the channel, not the text (plan 008, 2026-09-24)
+Plan 008 taught `notify-test-results.sh` to print `PASSED WITH SKIPS` for a gate that had skipped 335 of 368 tests. The banner went to stderr from a hook that exits 0, which Claude Code sends to the debug log only, so no agent ever saw it. The hooks catalog and the CHANGELOG described it as visible.
+- **Why missed:** the plan specified stderr, and `hook-authoring.md:128` still advises "write to stderr for an advisory hook", which contradicts `harness-facts.md` "Visibility". `tools/test_hooks.sh` 7c captured stderr with `2>&1 >/dev/null` and matched the text, which proves the string and not its delivery. This repeats #647, where gates printed a decision format the harness ignores.
+- **Prevent:** before writing an advisory hook, pick its channel from `harness-facts.md` "Visibility" and name it in the catalog row. For a PostToolUse hook, stderr with exit 0 reaches no one. A test pins what the harness reads (the JSON on stdout, or the exit code), and the first live tool call that should show the output is checked in the transcript. A doc says "shown" only after that check.
+- **Source:** `docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md` F1.
+
+### A change to how a gate behaves updates every doc that runs or reads it (plan 008, 2026-09-24)
+Plan 008 changed the binding gate's command and added two red forms. Three consumers were left behind. `reflection-sites.md` still gave the old command, because the sweep grepped only the `TestCategory=BindingVerification"` spelling. The skill's triage line still said "a red gate is a real finding, one of three classes". The skill claimed "every gate test" goes Inconclusive without the game, while the executor's own log showed 33 of 368 passing.
+- **Why missed:** each claim was checked against the diff, not against the files that consume the gate or the run that measured it.
+- **Prevent:** grep for the command's stem (`BindingVerification`, the test class names) rather than one filter spelling. When a change adds a failure message, update the table that tells an agent how to read a failure. Before writing a quantifier ("every", "all", "never") about a gate, check it against the measured counts in the run log.
+- **Source:** `docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md` F4, F5, F7.
+
+### A whole-file revert reverts every fix in the file: re-record each finding it touched (plan 008, 2026-09-25)
+Mike chose to drop plan 008's skip banner, and the commit restored `notify-test-results.sh` byte for byte to its state before the plan. The records then said only F11 lapsed. The same revert also undid F2 (the all-skipped normal-verbosity case), the convergence fix D1, and F1's correction to the hook header, which went back to "summarize dotnet test results prominently" beside a catalog row saying nobody sees the output. The same records called the CI `if:` "still open", while #652's Decisions section, written before the commit, called it moot.
+- **Why missed:** the resolution was written from the decision's headline ("drop the banner") and from the session's memory of the answers, not from the list of findings the file carried or from the issue where the decisions were written down.
+- **Prevent:** before writing the resolution of a revert, run `git log` on each reverted file since the target revision and list every finding those commits fixed; mark each one lapsed or kept. Copy each maintainer decision from the record where it was made (the issue or the question's answer), and record every decision, including a port.
+- **Source:** `docs/reviews/rca-binding-gate-no-silent-skips-decisions-2026-09-24.md` R3, R4, R6.
+### Run a documented recipe for an opt-in build mode as written, restore included (plan 010, 2026-09-24)
+`.ai/verification.md` told a reviewer without the game to "add `-p:TaomGameRefs=RefAsm` to build" after its usual `dotnet restore TAOM.sln`. The BUTR packages are `PackageDownload` items that exist only in RefAsm mode, so that restore fetched nothing and the `--no-restore` build stopped at an error that said "Restore first". The unfiltered test row would then have run the `RequiresGame` tests on stubs, and on a machine with the game the environment variables mix real module DLLs in.
+- **Why missed:** the executor replayed the CI commands, which build without `--no-restore`, and never ran the reviewer recipe; the plan's `NOGAME` prefix lived only in the plan.
+- **Prevent:** when a property gates restore-time items (`PackageDownload`, `PackageReference`), the doc puts it on the restore too, and the recipe is run once from a clean `obj` exactly as written before the doc lands. An error message names the step that fixes it, never the step that just failed.
+- **Source:** `docs/reviews/rca-ci-on-hosted-windows-2026-09-24.md` F5.
+
+### A CHANGELOG diff that removes a `###` heading replaced an entry: insert above it instead (plan 010, 2026-09-24)
+The commit applying plan 010's maintainer decisions wrote its heading over `### fix(ci): v2.0.30 - convergence fixes for plan 010`, so the previous commit's three bullets read as the new commit's work. The report's own "Other checks" line called it a "new entry". Five of six review lenses caught it; the executor's checks did not, because they proved the decisions, not the record.
+- **Why missed:** the entry was edited in place at the top of the day's section, and the diff was never read back for removed lines.
+- **Prevent:** before committing a CHANGELOG edit, `git diff -- CHANGELOG.md | grep '^-###'` prints nothing unless the commit deliberately merges or renames an entry and says so in its body.
+- **Source:** `docs/reviews/rca-ci-on-hosted-windows-decisions-2026-09-24.md` C1.
+
+### A decision applied to a tool's output is also applied to the tool's input, with its conditions (plan 010, 2026-09-24)
+D45 moved a `RequiresGame` attribute by hand, but the tagger manifest that generated it (`scratch/010/manifest.txt:142`) kept the class row, and the report told the next executor to re-run that tagger on the merged tree: the class tag would have come back with both CI steps green. The same commit dropped decision 44's condition (the 1.4.5 port re-checks SandBoxCore against 1.4.8) from every branch record.
+- **Why missed:** the executor verified each outcome where it lands (the test run, the reference snapshots). The manifest lives outside the repo, so no diff showed it, and the D44 row recorded the proof but not the condition.
+- **Prevent:** when a hand edit changes something a script generated, update the script's input in the same step, or name the input and its new row in the record that tells someone to re-run the script. Copy every condition from a decision row into the branch's report next to its outcome.
+- **Source:** `docs/reviews/rca-ci-on-hosted-windows-decisions-2026-09-24.md` C3, C4.
+### Renaming a convention or deleting a log line: grep the review harness and the tools for the old text (plan 009, 2026-09-24)
+Plan 009 replaced every `_harmony.PatchCategory("X")` with `TryPatchCategory("X")` and collapsed nine catch blocks. The Data Flow lens (`lenses/5-data-flow.md`) and the Harmony lesson still told reviewers to grep for the old spelling and flag its absence HIGH, so every later patch review would raise a false HIGH. `tools/triage_battle_load.py` and `battle-load-diagnostics.md` still sent triagers to the deleted "Patch43 diagnostics failed to apply" warning.
+- **Why missed:** the plan's maintenance notes named the one rule line it knew about; nobody grepped `.claude/`, `docs/reviews/lessons/` and `tools/` for the old text, and no build or test reads them.
+- **Prevent:** when a change renames a call convention or deletes a log message, grep the whole repo for the old literal (code, `.claude/`, `docs/reviews/lessons/`, `tools/`, `plans/`, feature docs) and update every consumer that acts on it in the same change; list the rest as follow-ups.
+- **Source:** `docs/reviews/rca-guarded-patch-category-apply-2026-09-24.md` findings 4 and 5.
+### A change's sweep has two halves: readers of what changed, and text that states it (plan 007, 2026-09-24)
+The plan 007 decisions commit renamed a local (`alreadyShielded` to `alreadySeen`), added a class to `Dependencies/Foundation/` and wrote a "reword when plan 006 lands" list. Its sweep grepped for code that reads the old log format and the removed `ShieldedCount` (both clean) and stopped. A test comment kept the old local's name, two docs kept the folder's old class count (18, now 19), and the reword list missed two lines on the same branch that make the same claim (the review fix found one; its convergence pass found the other, a past-tense "preserved the stack" the fix's search terms did not match). Two of the three repeat lessons above ("After a whole-word identifier rename sweep", "When a change alters what an artifact CONTAINS").
+- **Why missed:** "who reads this?" was answered; "what text describes this?" was never asked. A reword list written from memory of the decision covers the files the decision touched, not every file that states the claim.
+- **Prevent:** before the commit, `git grep -n <old identifier>` over the whole repo for every rename, comments included; `git grep -n -e "<N> classes" -e "<N>-class"` (or the folder name) for every file added to or removed from a folder a doc counts; and build any "reword when X lands" list by grepping the claim's own words with every inflection (here `git grep -n -i -E "preserv[a-z]* (the|its) stack|stack preservation|fallback path"`) across `docs/`, `CHANGELOG.md` and the code comments, then read every hit and list each one that states the claim.
+- **Source:** `docs/reviews/rca-patchshield-skip-callback-shims-decisions-2026-09-24.md` findings 1, 3 and 4.
+### A test oracle must not sit downstream of anything the code under test can swap out (plan 013, 2026-09-24)
+`tools/test_hooks.sh` 4c proved "this hook starts no Python" by counting starts of a fake interpreter pinned through `TAOM_PYBIN`. `_pybin.sh` probes the pin under a 0.8 s timeout and silently falls back to the real `python` when it misses, which counts nothing. Under load the check read 0 starts and blamed a prefilter byte-identical to seven that passed; the same fallback could pass a hook that does start Python. The builder saw the false failure, reran, got green, and did not record it.
+- **Why missed:** the counter was designed without reading the resolver's fallback, and its premise check ran once, before the rows, so it could not see a later probe miss. A zero count looks exactly like success (repeat of "A zero you did not prove is not a zero", above).
+- **Prevent:** observe the decision itself, not a side effect behind a timed or fallible step: 4c reads a `bash -x` trace for the `source` of `_pybin.sh`. When a test flakes once, find the mechanism before rerunning; a green rerun is not evidence the red one was noise.
+- **Source:** `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md` F1.
+
+### An early exit moves every existing test off the path behind it: re-point the payloads and give each filter arm a row (plan 013, 2026-09-24)
+After the prefilter landed, none of section 4's contract payloads held `git`, `dotnet` or `build.ps1`, so the exit-code and JSON contract stopped at every Bash hook's first line, and nine hooks had no committed check on their parse path. 4c's positive rows also covered one arm of `suggest-compact.sh`'s three-arm filter. A planted `exit 3` after the `source` and a deleted filter arm both kept the suite green.
+- **Why missed:** the plan listed section 4 as "must stay green" and it did; nobody asked which path its payloads now reached. Rows were chosen per event, not per filter arm.
+- **Prevent:** when a change adds a fast path, list which existing tests now take it and add a payload that reaches the slow path. Give every alternative of a filter its own trigger row, and prove each row by deleting the arm it covers.
+- **Source:** `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md` F2, F3.
+
+### State a payload premise as the producer's behaviour, with its re-check, not as a property of the format (plan 013, 2026-09-24)
+The ten git gates now skip parsing when the raw payload lacks `git`, which is safe only because Claude Code writes ASCII letters literally. The comments said "JSON never escapes an ASCII letter", which is false (`\u0067` is valid JSON for `g`), and the instruction to re-prove it after a Claude Code upgrade lived only in the plan.
+- **Why missed:** the plan's caveat did not reach the comment text it prescribed.
+- **Prevent:** name the producer and the evidence ("Claude Code writes letters literally; raw UTF-8 seen in #647"), and put the re-check where the next upgrade will find it (`docs/reference/hooks-catalog.md`, and `harness-facts.md` once free).
+- **Source:** `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md` F5.
+
+### Prove a before-case against the committed base, not the RED intermediate (plan 013 decisions, 2026-09-24)
+The D39/D40 CHANGELOG said `git \u0063ommit -m "no label here"` passed the subject gate before the change. It passed only in the builder's intermediate tree (D39 applied, D40 not yet); the committed base, still filtering on `git`, denied it. The real base hole was `\u0067it commit`. The same entry reused a "240 cases, no changed decision" parity sentence whose script held no escaped payload, next to a bullet describing a changed decision, and two docs said 4d covers "each blocking gate" when its table has five rows.
+- **Why missed:** the example came from the nearest RED log, not from a run on the base commit, and the counts came from intent, not from the table or the run.
+- **Prevent:** for any "before the change, X happened" claim, run X on the parent commit's file (`git show <base>:<path>`) and quote that result. When a claim is reused after a further change, restate it against what the evidence can see. Count the rows before writing "each" or "every".
+- **Source:** `docs/reviews/rca-bash-hook-prefilter-decisions-2026-09-24.md` R1, R2, R5.
+
+### Build a coverage row that fails on the mutant it exists for: it holds no other copy of the filtered word (plan 013 decisions, 2026-09-24)
+Two new 4c rows passed on correct hooks and on the broken ones they were meant to catch. The escaped-word default row `git \u0063ommit` kept a literal `git`, so a `git`-filtered hook without the escape arm passed it through the word arm. The commit gates had no `git -C <dir> commit` row, so a filter narrowed to `git commit` stayed green. Planted mutants proved both: the committed suite caught neither gap (its three failures were the other mutant's git-call rows).
+- **Why missed:** each row was checked green on the code, not red on its mutant, although the plan 013 lesson above says to delete the arm a row covers. A `*)` default row serves hooks it was not written for.
+- **Prevent:** before committing a coverage row, plant the one mutant it exists for and watch it fail. Build the payload so no other arm can admit it (here: escape every word any prefilter reads). Give each arm of the hook's own trigger, not only of its prefilter, a row.
+- **Source:** `docs/reviews/rca-bash-hook-prefilter-decisions-2026-09-24.md` R3, R4.
+
+### When a fix removes a premise, retire it from the argument (plan 013 decisions, 2026-09-24)
+Superseded in part: "State a payload premise as the producer's behaviour" above. After D39 only the two confirm gates filter on `git`, and after D40 a payload holding any `\u` escape takes the full parse, so the prefilters are safe under any JSON writer: JSON writes a letter literally or as `\uXXXX`. The catalog still argued safety from Claude Code's writer, and the twelve hook comments called the escape arm "fail open", the house term for allow.
+- **Why missed:** D40 was added as one more arm; the surrounding prose was edited around it, not re-derived.
+- **Prevent:** when a change closes the hole a premise guarded, rewrite the argument from the new rule and move the premise to what it still affects (here: cost, and `suggest-compact.sh` until plan 011 deletes it).
+- **Source:** `docs/reviews/rca-bash-hook-prefilter-decisions-2026-09-24.md` R6, R9.
+### Turning a warning into an error makes every skill's fix advice for it live: fix that advice in the same change (plan 019, 2026-09-24)
+Plan 019 set the seven nullable ids to `error` in `Main/Features/Siege`. CLAUDE.md sends every `error CS####` to `/build-fix`, whose table said "CS8602: Add null check or `!` operator" and whose smallest-change rule picks `!`. The row had never fired for `Main` (the ids sat in `<NoWarn>`, and the skill reads only `error` lines); the change made it the first advice a builder would get, and `!` silences exactly the error the ratchet exists to raise.
+- **Why missed:** the plan scoped itself to the compiler configuration and the docs describing it, and never followed the new error to the skill a builder is routed to. No lens checks harness advice against a newly enforced rule.
+- **Prevent:** when a change promotes a diagnostic (a warning to error, a new analyzer, a gate's new exit code), grep `.claude/skills/`, `.claude/rules/` and `docs/ai-includes/` for its id and fix any advice that contradicts the rule the promotion enforces, in the same change.
+- **Source:** `docs/reviews/rca-nullable-ratchet-2026-09-24.md` #1.
+
+### Text an `/improve` plan supplies (comments, doc lines, test oracles, "untestable") is a draft the executor verifies (plan 019, 2026-09-24)
+Six of the twelve confirmed findings on plan 019 were written into the plan and executed faithfully: the DTO comment promising a "" fallback its own later step contradicted, the feature-doc wording Step 8 told the executor to keep (stale since April), the camp-2 test's length-only oracle, "structurally untestable" for a path five tests now cover, a no-op `<NoWarn>$(NoWarn)</NoWarn>` kept for a reason MSBuild does not support (a project's property cannot reach another project), and the no-settlement comment describing a defer by its control flow.
+- **Why missed:** the executor treats the plan as the specification, and the plan's author wrote those lines without re-reading the code or engine they describe. Review of the plan checked its steps, not its prose.
+- **Prevent:** an `/improve` plan marks supplied comment and doc text as a draft, and its done criteria include "every supplied comment, doc line and test oracle re-checked against the code it describes". An executor that finds plan text wrong fixes the text and says so in the commit body, rather than copying it.
+- **Source:** `docs/reviews/rca-nullable-ratchet-2026-09-24.md`, "Root-cause pattern".
+
+### An annotation change re-counts the test project's warnings, not only the tier it targets (plan 019, 2026-09-24)
+Plan 019's follow-up made `SiegeDefenseConfig.KingdomMessages` a `Dictionary<string, KingdomSiegeMessages?>`. Main stayed at 0 CS86xx, the suite passed, and the review record quoted both. The test project went from 2,256 to 2,259 nullable warnings: CS8619 at an unchanged Setup line that still built the old dictionary type, CS8601 from Newtonsoft's `T? DeserializeObject<T>`, CS8602 on an indexer that now yields `T?`. The plan's Done criterion requires the test count to stay at its baseline, and the CHANGELOG said "test-project warnings untouched".
+- **Why missed:** test-project nullable ids are warnings, so the build and the suite stay green; the executor verified the tier the change graduated and read the test run for its pass count only. One sat at an untouched Setup line; the other two were in the commit's own new test code, and nobody counted the test project.
+- **Prevent:** after any nullable annotation change (a `?` on a property, return, parameter or generic argument), build `TAOM.Tests` with `--no-incremental`, count its CS86xx (the plan's `count_cs86.py` with the `TAOM.Tests\` fragment) against the baseline, and quote that count next to Main's in the review record and the commit.
+- **Source:** `docs/reviews/rca-nullable-ratchet-decisions-2026-09-24.md` #1.
+### An absence check must run where the thing lives, in the form it is stored (plan 005, 2026-09-24)
+Plan 005's port reported a vendored BUTR credential "already gone from disk" after
+`grep -rln packageSourceCredentials Dependencies/` found nothing. The grep ran in a worktree, where
+the gitignored `Dependencies/.vendor-source/` does not exist, and grep cannot read inside the
+`.tar.gz` archives that folder actually holds; three of them still carry the block. The new
+checklist line shipped with the same blind spot.
+- **Why missed:** a "no match" was read as proof of absence, although the check could not have
+  matched: wrong tree, wrong file form. The sprint record (`plans/README.md:40`) already named the
+  three tarballs.
+- **Prevent:** before claiming something is absent, prove the check can see it: run it where the data
+  lives (the main checkout or the live install, not a worktree, for anything gitignored) and on the
+  stored form (`tar -xzOf <a> | grep`, `zgrep`, or extract a `.zip`/`.nupkg`). Seed a known hit when
+  you can. Cross-check the claim against the plan's own status row before writing it.
+- **Source:** `docs/reviews/rca-security-hygiene-2026-09-24.md`, findings 1 and 2.
+
+### Code carried in a string is only tested by running it (plan 005, 2026-09-24)
+`tools/process_faction_map.py` runs two child programs held in `"""..."""` literals. Plan 005
+verified its injection fix with `python -m py_compile`, which parses the outer file and never the
+children, and called a behaviour test "structurally untestable". A short stdlib test (a synthetic
+PNG under folders named `it's here` and `a'+...+'`) fails on the old tool and passes on the fix.
+- **Why missed:** "it deploys assets" was taken for the whole tool; the helpers write only to paths
+  they are given, so a temp folder isolates them.
+- **Prevent:** when a fix touches code built as a string (`python -c`, `eval`, templated SQL or
+  XSLT), the proof is a test that runs it, including the hostile input the fix targets. Before
+  writing "untestable" in a plan or a `Not-tested:` trailer, name the side effect that prevents a
+  temp-folder test.
+- **Source:** `docs/reviews/rca-security-hygiene-2026-09-24.md`, finding 3.
+
+### Write a documented search pattern in `-E` form (plan 005, 2026-09-24)
+The adoption checklist's `grep -rln "a\|b"` works in GNU grep, but ripgrep (the Grep tool) reads
+`\|` as a literal pipe, so the same pattern pasted there reports a clean tree.
+- **Why missed:** the command was written for one tool and read as portable.
+- **Prevent:** write alternation in documented commands as `grep -E 'a|b'`, which GNU grep, ripgrep
+  and the Grep tool read the same way.
+- **Source:** `docs/reviews/rca-security-hygiene-2026-09-24.md`, finding 6.

@@ -12,6 +12,7 @@ namespace TAOM.Tests.Features.SupplyLines;
 /// total) is pinned here so a change in the engine shows up as a red test, not a confused player.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class SupplyGoodsSearchTests
 {
     private static SupplySourceInfo Source(string id, string name)

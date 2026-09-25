@@ -6,15 +6,15 @@
 		<PathMap>$(MSBuildProjectDirectory)=/_/</PathMap>
 		<ModuleId>TAOM.Dependencies</ModuleId>
 		<ModuleName>TAOM.Dependencies</ModuleName>
-		<NoWarn>$(NoWarn);8600;8601;8602;8603;8604;8618;8625;8374;8174</NoWarn>
+		<NoWarn>$(NoWarn);8374;8174</NoWarn>
 		<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<LangVersion>preview</LangVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Reference Include="$(GameFolder)\bin\$(GameBinariesFolder)\TaleWorlds.*.dll"
-				   Exclude="$(GameFolder)\bin\$(GameBinariesFolder)\TaleWorlds.Native.dll;$(GameFolder)\bin\$(GameBinariesFolder)\TaleWorlds.CampaignSystem.dll">
+		<Reference Include="$(TaomGameBin)\TaleWorlds.*.dll"
+				   Exclude="$(TaomGameBin)\TaleWorlds.Native.dll;$(TaomGameBin)\TaleWorlds.CampaignSystem.dll">
 			<HintPath>%(Identity)</HintPath>
 			<Private>False</Private>
 		</Reference>
@@ -123,4 +123,5 @@
 		<Message Importance="high" Text="TAOM.Dependencies: mirrored @(_TaomDepsServerMirrorFiles->Count()) files Win64_Shipping_Client -&gt; Win64_Shipping_Server in $(GameFolder)\Modules\$(ModuleId)\bin\" />
 	</Target>
 
+	<Import Project="..\GameReferences.targets" />
 </Project>

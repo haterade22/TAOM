@@ -32,11 +32,22 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Reference Include="$(GameFolder)\bin\$(GameBinariesFolder)\TaleWorlds.*.dll" Exclude="$(GameFolder)\bin\$(GameBinariesFolder)\TaleWorlds.Native.dll">
+		<Reference Include="$(TaomGameBin)\TaleWorlds.*.dll" Exclude="$(TaomGameBin)\TaleWorlds.Native.dll">
 			<HintPath>%(Identity)</HintPath>
 			<Private>True</Private>
 		</Reference>
 	</ItemGroup>
 
+	<!-- The game folder this test DLL was compiled against. GameAssemblies falls back to it when the
+	     test process has neither BANNERLORD_OVERRIDE_DIR nor BANNERLORD_GAME_DIR, so the binding
+	     gate loads the install the build referenced instead of skipping. -->
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+			<_Parameter1>TaomGameFolder</_Parameter1>
+			<_Parameter2>$(GameFolder)</_Parameter2>
+		</AssemblyAttribute>
+	</ItemGroup>
 
+
+	<Import Project="..\GameReferences.targets" />
 </Project>

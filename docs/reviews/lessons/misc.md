@@ -201,6 +201,12 @@ new rule, across eleven files.
   and left the shipped config comment and the feature map calling the sound ElevenLabs-generated.
   Grep for pointers INTO a rewritten section (its heading text) as well as for its old facts.
   `docs/reviews/rca-nazgul-scream-2026-09-23.md` W3, W8.
+- **Recurred:** plan 025 (2026-09-24). Deleting the unwired path-reuse scaffold made the feature
+  doc's config-test count wrong (20, then 22 at `032481cc`) and left `NavigationPath` in its
+  Dependencies list, though the deleted files were its last users in the feature. The change dropped the doc's
+  "103+" total because nothing computes it, yet kept the per-bullet counts beside it. When a
+  deletion removes the last user of a type, grep the owning doc's Dependencies list for it, and
+  drop hand-kept counts rather than patching one. `docs/reviews/rca-delete-unreachable-scaffolds-2026-09-24.md` F3, F4.
 
 ### A claim found wrong is wrong everywhere it was written: grep for it before fixing the copy in front of you (#644, #645, 2026-09-23)
 
@@ -224,3 +230,83 @@ in `StrikeSoundPlayer`'s comment and `signature-strikes.md`, both committed.
   `lessons/adapters-taleworlds-api.md`, and the retracted cause in
   `rca-spider-directional-attacks-2026-06-15.md`. A correction re-reads every clause of the text it
   keeps, not only the one found wrong.
+
+### A performance claim names the machine that measured it, and the player figure when one exists
+Plan 006's CHANGELOG line said crash capture "no longer costs about 30 s of every boot". The 30 s was the maintainer's desktop (about 186 ms per Harmony attach there); the audit committed in the same range measured the same 247-attach sweep at 0 to 1 s on 11 player processes. The CHANGELOG feeds the player-facing release post, so the overclaim would have reached players.
+- **Why missed:** the plan quoted desktop log gaps as "every launch", and the comment, test message, feature doc and CHANGELOG each copied the number without its scope.
+- **Prevent:** a measured cost or saving in a CHANGELOG, comment or doc says where it was measured; when the machine is known to be atypical (`plans/_audit/2026-09-23-opus/followup-patch-tax.md`), give the player figure next to it or leave the number out of player-facing text.
+- **Source:** `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F2.
+
+### Text that promises a switch "takes effect immediately" names every side effect the switch cannot undo
+Plan 006 made the crash-capture master toggle live and rewrote the hint and how-to to say the game's handler "(or BUTR)" takes over without a restart. `CrashReportService` calls ButterLib's `Disable()` on every capture while Suspend BUTR is on, and TAOM has no path that re-enables it, so after any capture in the session BUTR stays off until the player re-enables it on ButterLib's page or restarts. The old text ("Restart the game") had been true by accident.
+- **Why missed:** the rewrite traced the toggle's own reads, not the state earlier captures had already changed.
+- **Prevent:** before writing "live" or "no restart" for a toggle, list what the feature did while the toggle was on (suspended handlers, installed hooks, persisted state) and say which of those turning it off does not reverse.
+- **Source:** `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F3.
+
+### A change to a list's membership re-reads every text that describes the list: counts, "left out" examples and player-facing hints
+D47 took the crash-capture allowlist from 6 to 16 entries. The same commit left the MCM hint describing only the original six ("character tableau callbacks", no combat), two reference-doc lines saying "six", and an owed in-game probe whose example of a *dropped* callback (`OnAgentRemoved`) was one of the entries just added, so the probe could no longer fail. This repeats the 2026-09-23 lesson above ("A change that deletes or moves data invalidates numbers and line refs elsewhere"), this time for additions.
+- **Why missed:** the executor updated the texts that name the list's members and grepped for the class name, but not for the count word, and did not re-check examples chosen to lie outside the list.
+- **Prevent:** after changing a list's members, grep the old count spelled both ways ("six", "6 of 6"), every "for example" that points inside or outside the list, and the hint of the toggle that governs it. A player-facing hint is part of that set even when the file is outside the diff.
+- **Source:** `docs/reviews/rca-crash-capture-boot-cost-decisions-2026-09-24.md` F3 to F5 (lenses 1, 2, 4, 5, 6 and Codex P3).
+### A plan's stale-claim grep is a floor: search the whole repo, tests included, by distinctive words (plan 014, 2026-09-24)
+
+Plan 014 rewrote the claim "ResetSessionCaches is wired to OnGameLoaded only" and its Step 7 gate
+grepped `EnlistmentReconciler.cs` for it. The executor ran the gate as written and it passed, while
+the same claim sat in `EnlistmentReconcilerTests.cs:835-836`, split across two lines so no phrase
+grep could have matched it. Four review lenses caught it; Codex, which checked the same file the
+plan named, did not.
+
+- **Why missed:** the gate was scoped to the file the plan changed, and it searched for a phrase. A
+  test comment is a copy of the claim too, and a line break splits a phrase.
+- **Prevent:** after rewriting a claim, grep the whole repo (`Main`, `TAOM.Tests`, `docs`) for one or
+  two of its distinctive words (`OnGameLoaded only`, `wired to`), never for the full sentence, and
+  treat a plan's narrower grep as the minimum, not the check. Recurrence of the #644 and #645 lesson
+  above.
+- **Source:** `docs/reviews/rca-enlistment-session-scope-2026-09-24.md` finding 1.
+### A scope word in a claim is checked by a grep over that scope; a behaviour difference is stated as the condition the code tests (plan 015 decisions, 2026-09-24)
+The decisions commit said "no node is a service locator" while the same `BuildTree` built three `LogTask`s that resolve per Execute (the first review had already corrected the same `LogTask` overclaim in the feature doc). It also said a skeleton missing during the wind-up "ends the bite when the hit window opens", but the code tests the skeleton at the first in-window tick, so one that is back by then lets the bite go on and hit.
+- **Why missed:** both were written from intent (the decision, the scenario pictured) and not from the code: no grep over every node the tree builds, no read of the condition.
+- **Prevent:** before writing "no", "every", "all" or "none" about a set, grep the whole set it names and quote the count; scope the claim to what the grep covered. State a behaviour difference as the condition the code evaluates and when it evaluates it, then list the cases it allows, not only the one expected.
+- **Source:** `docs/reviews/rca-warg-tick-costs-decisions-2026-09-24.md` F3 and F6 (Agents 1, 4, 5, 6; Codex P3-2).
+- **Recurred:** plan 019's maintainer decisions (2026-09-24). Decision 2 closed the no-settlement
+  fallback, and the commit recorded that in `siege.md`, but `harmony-patch-registry.md`, the
+  crash-triage entry point, still called it "an open decision". The same commit set the Key Files
+  test count to 30 while the Tests section of the same file kept "17 tests", although the first
+  review had named both lines. A closed decision or a new count is a claim: grep for the old
+  wording ("open decision", the plan section's name, the old number) before committing
+  (`rca-nullable-ratchet-decisions-2026-09-24.md` #2, #3).
+
+### A pointer to a procedure points at the knowledge base, never at a plan (plan 019, 2026-09-24)
+Plan 019's CHANGELOG said the procedure for graduating the next folder was in `code-quality.md`, "How nullable is enforced". That paragraph held the mechanism only; the steps, the fix rules (no `!` on an engine value, `= null!` only with an owner comment) and the hotfix escape lived only in the plan's "Maintenance notes", and both `.editorconfig` comments cited "plan 019". `plans/README.md` calls plans a working backlog, not a knowledge base.
+- **Why missed:** the plan's docs step added only the mechanism to `code-quality.md`, and nobody opened the pointer's target to find the promised text. Five of the six review lenses flagged it afterwards.
+- **Prevent:** when a plan's maintenance notes hold a procedure later work must follow, the executing change moves it where ADR-011 routes it and points every comment and CHANGELOG line there. Before committing a pointer, open its target and find the promised text.
+- **Source:** `docs/reviews/rca-nullable-ratchet-2026-09-24.md` #4.
+### A plan's RED step builds the project that holds the test, and names the test filter (plan 001, 2026-09-24)
+Plan 001 said building `Main/TAOM.csproj` would fail because a new test calls a missing handler, and
+called that compile failure the RED state. The test lives in `TAOM.Tests`, which references `Main`, not
+the other way round, so that build cannot see the test at all.
+- **Why missed:** the plan reasoned from "the method is missing" without asking which project compiles
+  the call.
+- **Prevent:** a handoff plan's RED step runs
+  `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter FullyQualifiedName~<Class>`
+  and states the expected failure (a CS error in the test project, or a named failing assertion).
+- **Source:** `docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md` F8; Codex P3.
+### A handoff plan's prescribed sentence is a draft: re-derive its history and engine claims before committing it (plan 025, 2026-09-24)
+
+Plan 025 prescribed its doc and CHANGELOG text word for word, and the executor copied it. Four of
+those claims were wrong: the binding row's recovery commit (`6a80bac6`; `git log -S` finds
+`41258657`), "never in the shipped JSON" (the shipped config carried both keys from `6a80bac6` until
+`b5cb3018`), Phase 1 paths being reusable in Phase 2 (v1.5.3 keeps the path local, and Phase 2
+pathfinds with a different cost multiplier), and a citation said to end "one line further off" that
+the deletion made exact. Its "keep the rest of the line unchanged" also left "That alone is a 2-3x
+win" pointing at the deleted scaffold, and Codex found its Step 6 sentence contradicted its own done
+check.
+
+- **Why missed:** the plan was specific and cited commits, so its text read as verified; the
+  executor re-checked code facts but not the history and engine claims inside the prose.
+- **Prevent:** when executing a plan, treat each prescribed sentence as a new claim. Run
+  `git log -S` for every commit it names as an item's origin, `git log` the file behind any "never"
+  about history, check an engine claim against the installed DLL, and re-read the neighbouring
+  sentence once the edit lands. A plan author (`/improve`) cites the evidence for each claim it
+  prescribes, or marks the sentence as a draft.
+- **Source:** `docs/reviews/rca-delete-unreachable-scaffolds-2026-09-24.md` F1, F2, F5, F7.

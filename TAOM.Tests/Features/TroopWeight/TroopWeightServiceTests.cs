@@ -8,6 +8,7 @@ using TAOM.Features.TroopWeight;
 namespace TAOM.Tests.Features.TroopWeight;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class TroopWeightServiceTests
 {
     private TroopWeightService _sut;

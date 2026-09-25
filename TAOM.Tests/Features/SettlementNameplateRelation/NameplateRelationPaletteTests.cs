@@ -6,6 +6,7 @@ using TAOM.Features.SettlementNameplateRelation;
 namespace TAOM.Tests.Features.SettlementNameplateRelation;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class NameplateRelationPaletteTests
 {
     private static void AssertColor(string expectedHex, Color actual, string what)

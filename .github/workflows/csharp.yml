@@ -1,0 +1,99 @@
+name: C# build and tests (no game)
+
+# Compiles TAOM.Tests, Main and Dependencies and runs the tests the two steps below select, on a
+# GitHub-hosted Windows VM, for pushes and pull requests on the two release branches below (a
+# branch runs it once this file exists there). There is no game on the runner, so the build uses
+# BUTR's metadata-only reference assemblies (-p:TaomGameRefs=RefAsm, see GameReferences.targets)
+# for the engine build that GameReferencesTargetsTests pins to .claude/pinned-game-version.txt and
+# the installed changeset.
+# Class-level RequiresGame tags also drop some methods that would pass here, and tests that need
+# GameAssemblies skip in the unit step; the full suite runs only on a machine with the game.
+#
+# Two test steps:
+#   Unit tests: excludes RequiresGame (the test executes engine code, and every method body in a
+#   reference assembly throws), LiveInstall (reads the live Armory or the vanilla install) and
+#   BindingVerification (the next step runs those strictly).
+#   Binding gate: the reference assemblies laid out as a game folder (refasm-game, written by the
+#   RefAsm build) with binding-gate.runsettings, so a skipped check fails. RequiresGameIL checks
+#   need vanilla method bodies or vanilla data, which metadata cannot give; they run only on a
+#   machine with the game (the verify-bindings skill).
+#
+# Why not a self-hosted runner: the repository is public and contributor branches live in it, and
+# a guard in this file cannot protect a runner from a branch that edits this file. A hosted VM is
+# discarded after each run. .ai/policy.md forbids untrusted code on the personal game workstation.
+#
+# dotnet test exits 0 when a filter matches nothing, so each test step asserts a floor on the
+# number of tests it executed. The floors were set about 5% below a local run of these exact
+# steps on 2026-09-24.
+
+on:
+  push:
+    branches: [bannerlord-1.5.x, bannerlord-1.4.5]
+  pull_request:
+    branches: [bannerlord-1.5.x, bannerlord-1.4.5]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  csharp:
+    name: C# build and tests (reference assemblies)
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Build against reference assemblies
+        id: build
+        shell: pwsh
+        run: |
+          dotnet build TAOM.Tests -p:TaomGameRefs=RefAsm -p:DisableModuleCopy=true -p:ModuleId=
+          exit $LASTEXITCODE
+
+      - name: Unit tests (no game)
+        id: unit
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        shell: pwsh
+        run: |
+          dotnet test TAOM.Tests --no-build -p:TaomGameRefs=RefAsm -p:DisableModuleCopy=true -p:ModuleId= --filter "TestCategory!=RequiresGame&TestCategory!=LiveInstall&TestCategory!=BindingVerification" --logger "trx;LogFileName=unit.trx" --results-directory TestResults
+          $rc = $LASTEXITCODE
+          $c = ([xml](Get-Content -Raw TestResults/unit.trx)).TestRun.ResultSummary.Counters
+          Write-Host "unit: total=$($c.total) executed=$($c.executed) passed=$($c.passed) failed=$($c.failed)"
+          $floor = 7700
+          if ([int]$c.executed -lt $floor) { Write-Host "::error::Only $($c.executed) unit tests executed, expected at least $floor. A filter or discovery problem is not a pass."; exit 1 }
+          exit $rc
+
+      - name: Binding gate on reference assemblies (a skip fails)
+        id: gate
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        shell: pwsh
+        run: |
+          $game = Join-Path $PWD 'TAOM.Tests/bin/Debug/net472/refasm-game'
+          if (-not (Test-Path (Join-Path $game 'bin/Win64_Shipping_Client/Bannerlord.exe'))) { Write-Host "::error::$game was not written by the RefAsm build (GameReferences.targets, TaomWriteRefAsmGameFolder)."; exit 1 }
+          $env:BANNERLORD_GAME_DIR = $game
+          dotnet test TAOM.Tests --no-build -p:TaomGameRefs=RefAsm -p:DisableModuleCopy=true -p:ModuleId= --settings TAOM.Tests/binding-gate.runsettings --filter "TestCategory=BindingVerification&TestCategory!=RequiresGameIL&TestCategory!=LiveInstall" --logger "trx;LogFileName=gate.trx" --results-directory TestResults
+          $rc = $LASTEXITCODE
+          $c = ([xml](Get-Content -Raw TestResults/gate.trx)).TestRun.ResultSummary.Counters
+          Write-Host "gate: total=$($c.total) executed=$($c.executed) passed=$($c.passed) failed=$($c.failed)"
+          $floor = 320
+          if ([int]$c.executed -lt $floor) { Write-Host "::error::Only $($c.executed) binding checks executed, expected at least $floor. A filter or discovery problem is not a pass."; exit 1 }
+          # The runsettings turn Inconclusive into a failure; an [Ignore]d check is NotExecuted instead.
+          if ([int]$c.total -ne [int]$c.executed) { Write-Host "::error::$([int]$c.total - [int]$c.executed) binding checks did not execute. A skipped binding check is not a pass."; exit 1 }
+          exit $rc
+
+      - name: Keep the test results
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults/*.trx
+          if-no-files-found: ignore

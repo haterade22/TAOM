@@ -696,3 +696,48 @@ failing test, and the recompute's absence was not even logged.
 - **Prevent:** every `AccessTools` / `GetMethod` / `GetField` / `TypeByName` by literal name lands with its DataRow and
   catalogue row (`/verify-bindings`); the engine-compatibility lens now reports a missing row.
 - **Source:** `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F3.
+### Fetch an engine NativeObject wrapper once per tick, and range-gate before fetching it (plan 015, 2026-09-24)
+`MBAgentVisuals.GetSkeleton()` returns a new managed `Skeleton` on every call (v1.5.3 `ScriptingInterfaceOfIMBAgentVisuals.cs:776-786`): a native ref-count increase, a process-wide lock, a `NativeObjectKeeper` and a `GCHandle` (`NativeObject.cs:32-43`), then a finalizer that calls native again (`:45-51`). `BoneCheck` fetched the attacker's skeleton twice per tick and every captured target's before testing the 4.5 m gate. Other `NativeObject` getters built through the scripting interface behave the same.
+- **Why missed:** a getter reads as a field read, and an adapter that passes straight through (`AgentVisualsAdapter.GetSkeleton`) hides the allocation.
+- **Prevent:** fetch a NativeObject wrapper once per tick and pass it down; run every cheap managed test (range, liveness) before the fetch.
+- **Source:** plan 015 Step 11; `docs/reviews/rca-warg-tick-costs-2026-09-24.md` F9.
+
+### Test a NativeObject reference with `is null` in code a unit test reaches (plan 015, 2026-09-24)
+`== null` on a `Skeleton` binds to `NativeObject.operator ==` (v1.5.3 `NativeObject.cs:221-232`), a static member, so the first call runs `NativeObject`'s static constructor, which calls `LibraryApplicationInterface.IManaged` (`:62-64`), null in the test host. The `TypeInitializationException` poisons `NativeObject` for the rest of the test run. In game the operator returns `(object)a == null` for a null right side, so `is null` gives the same result.
+- **Why missed:** the operator is invisible at the call site, and NSubstitute returns null for a sealed return type, so the null path looks test-safe.
+- **Prevent:** write `is null` / `is not null` for any `NativeObject` subclass (check the type's base with `taom-src`; `Skeleton` is one) on a line a unit test can reach.
+- **Source:** plan 015 orchestrator amendment, commit `7577894d`; `docs/reviews/rca-warg-tick-costs-2026-09-24.md` F9.
+
+### `default(ActionIndexCache)` needs no engine in v1.5.3: check the beforefieldinit header before calling a method untestable (plan 015 decisions, 2026-09-24)
+The installed v1.5.3 `TaleWorlds.MountAndBlade.dll` declares `.class public sequential ansi sealed beforefieldinit TaleWorlds.MountAndBlade.ActionIndexCache`, and its `!=` compares only the instance `Index`. A test can build a check with `default(ActionIndexCache)` and drive `Tick` through substitutes; the engine-backed static constructor runs only on a static member access (`Create`, an `act_*` field). Plan 015 wrote "no test can call `Tick`" from `BoneCollisionServiceTests.cs:202-208` and the v1.4.7 note in animation-skeleton ("not beforefieldinit"), and shipped a weaker IL test because of it.
+- **Why missed:** a static-constructor hazard was read as "the type cannot appear in a test" without reading the class header or trying `default`.
+- **Prevent:** before calling code untestable because an engine type's static constructor needs the engine, read the class header (`ilspycmd -il <dll> | grep "\.class.*<Type>$"`) and write the spike; a beforefieldinit type is safe while the path touches no static member. Re-check per engine version: the v1.4.7 lesson and this one disagree.
+- **Source:** `docs/reviews/rca-warg-tick-costs-decisions-2026-09-24.md` F2 (Agent 2 F1).
+
+### A binding gate's fallback must not let TAOM's own types satisfy an engine row (plan 025, 2026-09-24)
+The `ReflectionSiteBindingTests` row `TaleWorlds.Engine.PathReuseCache._store` named no engine type. It passed from
+`41258657` (2026-05-28) until plan 025 removed it, because `ResolveType`'s simple-name fallback
+(`ReflectionSiteBindingTests.cs:136-144`) searches every loaded assembly, TAOM.dll included, and found TAOM's own
+`PathReuseCache`.
+- **Why missed:** the fallback was written for engine namespace moves; nobody asked which assemblies it searches, and
+  a mislabelled row looks the same as a good one when it is green.
+- **Prevent:** restrict the fallback to engine assemblies (`TaleWorlds.*`, `SandBox*`, `StoryMode*` and the other
+  shipped modules) or fail when the resolved type lives in a TAOM assembly. Reflection on TAOM's own types belongs in
+  Category D of `reflection-sites.md`, never in this gate. Still open: the fix changes the gate's behaviour and is
+  pre-existing test code, so plan 025 did not apply it (plan 008 works on the same gate).
+- **Source:** `docs/reviews/rca-delete-unreachable-scaffolds-2026-09-24.md` F2 and FOLLOW-UP 1.
+
+### A mission-time decision about what a hero carries or rides reads the agent's spawn equipment, not `Hero.BattleEquipment` (plan 022, 2026-09-24)
+The OOB Auto-Assign boundary classified each candidate from `new HeroCombatAdapter(hero)`, the campaign
+`BattleEquipment`. In a siege assault vanilla spawns every agent without a horse (`SandBoxSiegeMissionSpawnHandler`
+sets `SetSpawnHorses(false)`; `Mission.DecideAgentSpawnEquipment` clears the Horse slot of a clone, v1.5.3
+`Mission.cs:4114-4118`), so a companion who owns a horse fought on foot but read as Cavalry, scored 0 on every class a
+siege offers, and was never placed.
+- **Why missed:** repeat of the #627 lesson above ("In OnAgentBuild the gear an agent wears is `agent.SpawnEquipment`"),
+  which was scoped to one callback. The plan copied the party-screen badge's adapter call for "parity", and the test
+  plan named a field battle, where campaign and spawn gear agree.
+- **Prevent:** any decision made while a mission runs (a UI handler, a behaviour, a patch) about what an agent
+  carries or rides reads `agent.SpawnEquipment` (or `agent.HasMount`), falling back to campaign gear only when it is
+  null. When a smoke list covers a mission feature, name a siege assault as well as a field battle.
+- **Source:** `docs/reviews/rca-order-of-battle-auto-assign-2026-09-24.md` row 1 (Engine, Data flow, Design lenses and
+  Codex P2).

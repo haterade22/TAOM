@@ -7,6 +7,7 @@ using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.AutoResolveDiagnostics;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.AutoResolveDiagnostics;
 
@@ -21,6 +22,7 @@ namespace TAOM.Tests.Features.AutoResolveDiagnostics;
 ///     reads as "no battles happened" rather than "the logger was never wired".
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class AutoResolveDiagnosticsWiringTests
 {
     private static IContainer BuildContainer()
@@ -90,12 +92,7 @@ public class AutoResolveDiagnosticsWiringTests
     [TestMethod]
     public void IoC_RegistersTheFeature()
     {
-        var source = ReadProjectSource(Path.Combine("Main", "IoC.cs"));
-        if (source == null)
-        {
-            Assert.Inconclusive("Main/IoC.cs not found from the test working directory.");
-            return;
-        }
+        var source = RepoPaths.ReadSource("Main/IoC.cs", stripComments: true);
 
         StringAssert.Contains(source,
             "AutoResolveDiagnosticsIoC.RegisterAutoResolveDiagnosticsFeature(container)",
@@ -105,28 +102,10 @@ public class AutoResolveDiagnosticsWiringTests
     [TestMethod]
     public void SubModule_AddsTheBehaviorToTheCampaign()
     {
-        var source = ReadProjectSource(Path.Combine("Main", "SubModule.cs"));
-        if (source == null)
-        {
-            Assert.Inconclusive("Main/SubModule.cs not found from the test working directory.");
-            return;
-        }
+        var source = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
         StringAssert.Contains(source, "AutoResolveDiagnosticsBehavior>()",
             "the behavior must be added via campaignStarter.AddBehavior or it never subscribes " +
             "to MapEventEnded, and the log stays empty with no error");
-    }
-
-    private static string? ReadProjectSource(string relativePath)
-    {
-        var dir = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
-        while (dir != null)
-        {
-            var candidate = Path.Combine(dir.FullName, relativePath);
-            if (File.Exists(candidate))
-                return File.ReadAllText(candidate);
-            dir = dir.Parent;
-        }
-        return null;
     }
 }

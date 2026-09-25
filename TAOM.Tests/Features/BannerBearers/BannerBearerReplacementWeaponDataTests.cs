@@ -21,6 +21,7 @@ namespace TAOM.Tests.Features.BannerBearers;
 /// docs/reviews/rca-banner-bearers-reinforcement-av-2026-07-25.md).
 /// </summary>
 [TestClass]
+[TestCategory("LiveInstall")]
 public class BannerBearerReplacementWeaponDataTests
 {
     private static string ModuleDataPath => Path.GetFullPath(

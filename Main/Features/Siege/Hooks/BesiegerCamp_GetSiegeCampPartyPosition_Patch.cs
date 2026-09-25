@@ -43,6 +43,17 @@ public class BesiegerCamp_GetSiegeCampPartyPosition_Patch
                 return true;
             }
 
+            // Defensive only: both engine callers (v1.5.3) read the besieged settlement before
+            // calling, so vanilla never reaches this. With no settlement there is no gate to ring,
+            // so defer; vanilla then throws on the empty camp-1 array, as it did after the catch.
+            if (settlement == null)
+            {
+                Debug.Print(
+                    "TAOM: No besieged settlement and no siege camp frames; deferring to vanilla",
+                    0, Debug.DebugColor.Red, 17592186044416uL);
+                return true;
+            }
+
             Debug.Print(
                 $"TAOM: No siege camp frames at all for '{settlementId}', generating positions around gate",
                 0, Debug.DebugColor.Red, 17592186044416uL);

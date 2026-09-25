@@ -1,0 +1,108 @@
+<Project>
+  <!--
+    Where every TAOM project finds the Bannerlord assemblies it compiles against. Imported at the
+    end of Main/TAOM.csproj, Dependencies/TAOM.Dependencies.csproj and TAOM.Tests/TAOM.Tests.csproj,
+    whose game Reference items name only the properties below (GameReferencesTargetsTests).
+
+    TaomGameRefs=Install (the default): the Bannerlord install that Directory.Build.props resolves
+    into GameFolder. These are the paths the projects spelled out before this file existed, less
+    Modules\SandBoxCore\bin, which holds no DLL on v1.5.3 (BUTR publishes no SandBoxCore package
+    either). The 1.4.5 port re-checks it against a 1.4.8 install.
+
+    TaomGameRefs=RefAsm: BUTR's stripped, metadata-only reference assemblies from nuget.org
+    (Bannerlord.ReferenceAssemblies.*, generated from the Steam build named in their nuspec tags),
+    plus System.Management and System.Numerics.Vectors from their NuGet packages at the assembly
+    versions the game ships (4.0.1.0 and 4.1.3.0). For a machine with no game: the GitHub-hosted
+    job in .github/workflows/csharp.yml. Every method body in these assemblies throws, so a test
+    that executes engine code carries [TestCategory("RequiresGame")] and that job filters it out.
+    The packages are downloaded at restore and never committed.
+
+    BannerlordRefAsmVersion is the BUTR build of the version in .claude/pinned-game-version.txt,
+    and its fourth part is the engine changeset (TaleWorlds.Library.ApplicationVersion
+    .DefaultChangeSet). GameReferencesTargetsTests fails when either disagrees with the install. On
+    an engine bump, change both.
+  -->
+  <PropertyGroup>
+    <TaomGameRefs Condition="'$(TaomGameRefs)' == ''">Install</TaomGameRefs>
+    <BannerlordRefAsmVersion>1.5.3.122374-beta</BannerlordRefAsmVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TaomGameRefs)' == 'Install'">
+    <TaomGameBin>$(GameFolder)\bin\$(GameBinariesFolder)</TaomGameBin>
+    <TaomNativeModuleBin>$(GameFolder)\Modules\Native\bin\$(GameBinariesFolder)</TaomNativeModuleBin>
+    <TaomSandBoxModuleBin>$(GameFolder)\Modules\SandBox\bin\$(GameBinariesFolder)</TaomSandBoxModuleBin>
+    <TaomCustomBattleModuleBin>$(GameFolder)\Modules\CustomBattle\bin\$(GameBinariesFolder)</TaomCustomBattleModuleBin>
+    <TaomSystemManagementDll>$(TaomGameBin)\System.Management.dll</TaomSystemManagementDll>
+    <TaomSystemNumericsVectorsDll>$(TaomGameBin)\System.Numerics.Vectors.dll</TaomSystemNumericsVectorsDll>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TaomGameRefs)' == 'RefAsm'">
+    <_TaomNuGetRoot>$([MSBuild]::EnsureTrailingSlash('$(NuGetPackageRoot)'))</_TaomNuGetRoot>
+    <TaomGameBin>$(_TaomNuGetRoot)bannerlord.referenceassemblies.core\$(BannerlordRefAsmVersion)\ref\net472</TaomGameBin>
+    <TaomNativeModuleBin>$(_TaomNuGetRoot)bannerlord.referenceassemblies.native\$(BannerlordRefAsmVersion)\ref\net472</TaomNativeModuleBin>
+    <TaomSandBoxModuleBin>$(_TaomNuGetRoot)bannerlord.referenceassemblies.sandbox\$(BannerlordRefAsmVersion)\ref\net472</TaomSandBoxModuleBin>
+    <TaomCustomBattleModuleBin>$(_TaomNuGetRoot)bannerlord.referenceassemblies.custombattle\$(BannerlordRefAsmVersion)\ref\net472</TaomCustomBattleModuleBin>
+    <TaomStoryModeModuleBin>$(_TaomNuGetRoot)bannerlord.referenceassemblies.storymode\$(BannerlordRefAsmVersion)\ref\net472</TaomStoryModeModuleBin>
+    <TaomSystemManagementDll>$(_TaomNuGetRoot)system.management\4.7.0\lib\netstandard2.0\System.Management.dll</TaomSystemManagementDll>
+    <!-- netstandard2.0, not net46: the net46 copy only forwards Vector2 to System.Numerics, and the
+         SNV extern alias in PolygonWidget.cs cannot follow a forward (CS1069). This copy defines the
+         types, with the same identity as the game's (4.1.3.0). -->
+    <TaomSystemNumericsVectorsDll>$(_TaomNuGetRoot)system.numerics.vectors\4.4.0\lib\netstandard2.0\System.Numerics.Vectors.dll</TaomSystemNumericsVectorsDll>
+  </PropertyGroup>
+
+  <!-- Download only: the Reference items above point at the package folders themselves, which keeps
+       Private and the per-project exclusions exactly as in install mode. -->
+  <ItemGroup Condition="'$(TaomGameRefs)' == 'RefAsm'">
+    <PackageDownload Include="Bannerlord.ReferenceAssemblies.Core" Version="[$(BannerlordRefAsmVersion)]" />
+    <PackageDownload Include="Bannerlord.ReferenceAssemblies.Native" Version="[$(BannerlordRefAsmVersion)]" />
+    <PackageDownload Include="Bannerlord.ReferenceAssemblies.SandBox" Version="[$(BannerlordRefAsmVersion)]" />
+    <PackageDownload Include="Bannerlord.ReferenceAssemblies.CustomBattle" Version="[$(BannerlordRefAsmVersion)]" />
+    <PackageDownload Include="Bannerlord.ReferenceAssemblies.StoryMode" Version="[$(BannerlordRefAsmVersion)]" />
+    <PackageDownload Include="System.Management" Version="[4.7.0]" />
+    <PackageDownload Include="System.Numerics.Vectors" Version="[4.4.0]" />
+  </ItemGroup>
+
+  <!-- RefAsm, test project only: in install mode System.Numerics.Vectors reaches the test output
+       because it sits in the game's bin beside the Private TaleWorlds references. BUTR's ref/net472
+       holds no copy and Main references it with Private False, so copy the package's copy here or
+       every test that touches a type using Vector2 fails to load it. -->
+  <ItemGroup Condition="'$(TaomGameRefs)' == 'RefAsm' AND '$(MSBuildProjectName)' == 'TAOM.Tests'">
+    <None Include="$(TaomSystemNumericsVectorsDll)" Link="System.Numerics.Vectors.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+  </ItemGroup>
+
+  <!-- One clear error instead of hundreds of CS0246 when the references cannot resolve. -->
+  <Target Name="TaomCheckGameReferences" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="'$(TaomGameRefs)' != 'Install' AND '$(TaomGameRefs)' != 'RefAsm'"
+           Text="TAOM: TaomGameRefs is '$(TaomGameRefs)'; use Install (the default) or RefAsm." />
+    <Error Condition="'$(TaomGameRefs)' == 'Install' AND '$(GameBinariesFolder)' == ''"
+           Text="TAOM: no Bannerlord install found. GameFolder is '$(GameFolder)'; BANNERLORD_GAME_DIR (or BANNERLORD_OVERRIDE_DIR) must name a folder holding bin\Win64_Shipping_Client\Bannerlord.exe (or bin\Gaming.Desktop.x64_Shipping_Client\Bannerlord.exe for BANNERLORD_GAME_DIR). To build without the game, pass -p:TaomGameRefs=RefAsm." />
+    <Error Condition="'$(TaomGameRefs)' == 'RefAsm' AND !Exists('$(TaomGameBin)\TaleWorlds.Library.dll')"
+           Text="TAOM: TaomGameRefs=RefAsm but $(TaomGameBin)\TaleWorlds.Library.dll does not exist. Restore with -p:TaomGameRefs=RefAsm (a restore without it downloads no reference assembly), or build without --no-restore." />
+  </Target>
+
+  <!-- RefAsm, test project only: lay the BUTR module assemblies out the way GameAssemblies expects
+       a game folder (bin\Win64_Shipping_Client\Bannerlord.exe, which may be empty, plus
+       Modules\<module>\bin\Win64_Shipping_Client), so the binding gate can run with no game. The CI
+       binding step points BANNERLORD_GAME_DIR at this folder for that one run. -->
+  <Target Name="TaomWriteRefAsmGameFolder" AfterTargets="Build"
+          Condition="'$(TaomGameRefs)' == 'RefAsm' AND '$(MSBuildProjectName)' == 'TAOM.Tests'">
+    <PropertyGroup>
+      <_TaomRefAsmGame>$(TargetDir)refasm-game</_TaomRefAsmGame>
+    </PropertyGroup>
+    <ItemGroup>
+      <_TaomRefAsmNative Include="$(TaomNativeModuleBin)\*.dll" />
+      <_TaomRefAsmSandBox Include="$(TaomSandBoxModuleBin)\*.dll" />
+      <_TaomRefAsmCustomBattle Include="$(TaomCustomBattleModuleBin)\*.dll" />
+      <_TaomRefAsmStoryMode Include="$(TaomStoryModeModuleBin)\*.dll" />
+    </ItemGroup>
+    <!-- The bin folder needs only the Bannerlord.exe marker: GameAssemblies loads TaleWorlds.* and
+         System.Numerics.Vectors from the test output, where this build already puts them. -->
+    <MakeDir Directories="$(_TaomRefAsmGame)\bin\Win64_Shipping_Client" />
+    <Touch Files="$(_TaomRefAsmGame)\bin\Win64_Shipping_Client\Bannerlord.exe" AlwaysCreate="true" />
+    <Copy SourceFiles="@(_TaomRefAsmNative)" DestinationFolder="$(_TaomRefAsmGame)\Modules\Native\bin\Win64_Shipping_Client" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(_TaomRefAsmSandBox)" DestinationFolder="$(_TaomRefAsmGame)\Modules\SandBox\bin\Win64_Shipping_Client" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(_TaomRefAsmCustomBattle)" DestinationFolder="$(_TaomRefAsmGame)\Modules\CustomBattle\bin\Win64_Shipping_Client" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(_TaomRefAsmStoryMode)" DestinationFolder="$(_TaomRefAsmGame)\Modules\StoryMode\bin\Win64_Shipping_Client" SkipUnchangedFiles="true" />
+    <Message Importance="high" Text="TAOM: reference-assembly game folder for the binding gate: $(_TaomRefAsmGame)" />
+  </Target>
+</Project>

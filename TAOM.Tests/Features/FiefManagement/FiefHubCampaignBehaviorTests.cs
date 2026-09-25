@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Features.FiefManagement;
 using TAOM.Features.FiefManagement.Hooks;
+using TAOM.Tests.Infrastructure;
 using TaleWorlds.CampaignSystem;
 
 namespace TAOM.Tests.Features.FiefManagement;
@@ -19,6 +20,7 @@ namespace TAOM.Tests.Features.FiefManagement;
 // covered by the source-content pattern established in #191 — assert the production source contains
 // the required wiring lines. Reverting either line in production turns this test red.
 [TestClass]
+[TestCategory("RequiresGame")]
 public class FiefHubCampaignBehaviorTests
 {
     private IFiefHubMenuPresenter _presenter = null!;
@@ -129,9 +131,7 @@ public class FiefHubCampaignBehaviorTests
     [TestMethod]
     public void MainSubModule_AddsFiefHubCampaignBehavior()
     {
-        var source = ReadProjectSource("Main", "SubModule.cs");
-        if (source == null)
-            Assert.Inconclusive("Main/SubModule.cs not found");
+        var source = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
         StringAssert.Contains(source, "new FiefHubCampaignBehavior(",
             "Main/SubModule.cs::OnGameStart must add a FiefHubCampaignBehavior via " +

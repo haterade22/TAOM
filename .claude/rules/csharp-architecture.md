@@ -132,6 +132,8 @@ if (!(momentumRemaining > 0f)) return false;
 if (float.IsNaN(speedFactor) || float.IsNaN(context.VictimKnockDownResistance)) return null;
 ```
 
+**A moved, extracted or reordered gate is a new gate:** it gets its NaN test in the same commit, whichever polarity it keeps; when parity keeps an inverted form, the test pins that NaN behaviour and the comment says it is deliberate ([testing-qa](../../docs/reviews/lessons/testing-qa.md), plan 015 twice).
+
 **Third category — float→int CASTS feeding an integer guard.** `(int)float.NaN` and `(int)float.PositiveInfinity` are BOTH `int.MinValue` (net472/x64), and `int.MinValue - 1` underflows (unchecked) to `int.MaxValue`. So an integer guard computed AFTER a subtraction reads a poisoned input as the largest possible budget:
 
 ```csharp

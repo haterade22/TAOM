@@ -42,11 +42,21 @@ underneath, and `activeState` alone would read `MapState` and look healthy.
 
 **A lifecycle trace**, each line carrying a sequence number and a millisecond offset so the log reads
 as a timeline: every game-state push, pop, clean and initialize with the resulting stack; the map
-state and map screen seams bracketed ENTER/EXIT; the first completed map frame; and every raise and
-lower of the global loading window **with its managed caller chain**.
+state and map screen seams bracketed ENTER/EXIT; the first completed map frame; and every raise of
+the global loading window, and every lower that actually took it down, **with its managed caller
+chain**.
 
-The caller chain is what solved it. It is affordable because those transitions fire a handful of
-times, unlike the per-frame work around them.
+The caller chain is what solved it. It is affordable because real transitions fire a handful of
+times. The engine also calls `LoadingWindow.DisableGlobalLoadingWindow()` on every frame of the main
+menu and several campaign screens (party, inventory, clan, kingdom, quests, character and crafting
+among them), and of scene screens such as character creation, the barber, the face generator and
+the banner editor once their scene is ready, whether or not the window is
+up, so the Disable patch captures `IsLoadingWindowActive` in a Prefix and traces only a
+true-to-false change (`LoadingWindowTraceGate`). Raise lines are still traced per call, not per
+transition: a healthy new-campaign load can log two raises (the map screen, then character creation
+finalizing) and one lower, so do not pair each raise with its own lower. In v2.0.29 and v2.0.30,
+before this guard, those no-op lowers wrote one line per rendered frame (up to about 360 a second):
+84 MB in a 35-minute session, 1.16 GB with the main menu left open for three hours.
 
 ## What it found
 

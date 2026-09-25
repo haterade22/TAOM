@@ -1284,8 +1284,8 @@ so whatever it holds survives every reload.
   absolute campaign day left behind by a campaign that ended while latched makes the recovery fire
   instantly on the next later save.
   It lives there, not in `EnlistmentBehavior`, because that method is the one place that knows the
- lifetime of the feature's per-session state, the same reason `InvalidateCommanderCache` is called
-  from it.
+ lifetime of the feature's per-session state, the same reason the adapter's cached commander party
+  is dropped from it (through `IServiceAttachmentService.ResetForNewSession`).
 - `CreateArmyLedBy` disbands any prior created army before raising another, so a missed `LeaveArmy`
   cannot orphan one by overwriting the handle.
 
@@ -1313,7 +1313,11 @@ before the field) unwinds as previous builds did, so nobody mid-service is stran
 stop the "Word from the column" inquiry repeating every hour *within* one grace episode, but it was
 never cleared when the commander recovered, so a lord who was captured, ransomed, and later lost his
 party again took the player into a second silent grace: visible and alone on the map, with the
-message that explains it suppressed. It is now re-armed alongside `GraceEndsAtDay = null`.
+message that explains it suppressed. It is now re-armed alongside `GraceEndsAtDay = null`, and
+(plan 014, #656) also on every discharge, through a `DischargeService.EnlistmentEnded`
+subscription in the reconciler's constructor, and on a session reset
+(`EnlistmentReconciler.ResetForNewSession`). Without those two, a later term or a loaded save under
+the same lord lost him in silence.
 
 **Two gates naming one condition.** `GetDailyWage()` (the wallet projection) gated on `IsEnlisted`,
 five states; `EnlistmentDailyService.RunDailyTick` skips `PayDailyWage` in `CommanderUnavailable`.
@@ -1374,6 +1378,19 @@ Gating: host-only, once per settlement stop (in-memory, deliberately not persist
 re-asking is harmless and persisting it would buy save-compat surface for nothing), only when
 `CanTakeTownLeave()` already agrees, and behind the MCM toggle `OfferLeaveOnArrival` (default ON,
 classified `PlayerLocal` for co-op because the pass it offers is host-gated anyway).
+
+"Once per stop" (plan 014, #656): the settlement-id latch is cleared when the stop ends, which is
+the commander leaving the town. `EnlistmentMaintenanceBehavior` routes the commander's
+settlement-left edge to `IEnlistmentWaitMenuPresenter.OnStopEnded` before its re-attach pass, so
+the latch clears however the player leaves: walked out by the exit sweep, or on foot later from a
+shore-leave pass. A pass suspends the exit sweep, so an accepted offer never reached it; the first
+cut cleared the latch only there (`ServiceAttachmentService.ExitSettlementForService` raising
+`ColumnLeftSettlement`, which `EnlistmentMenuBehavior` still routes to the same handler), and the
+review of that cut found the pass route uncovered. Before plan 014 the latch held until a different
+settlement was offered or the session ended, so a later stop in the same town was not offered
+until then. The 24-hour cooldown is not cleared by the stop's end, so a commander dipping straight
+back in still gets one modal a day at most. A discharge inside the town still leaves the latch
+set until the next stop elsewhere or a session reset.
 
 `TownLeavePolicy.ShouldRevokeLeave` is unchanged: it already revokes exactly when the player is no
 longer inside the settlement, which is the wanted behaviour. Only the exit sweep needed teaching.
@@ -1689,14 +1706,58 @@ player turns out to be in a map event after all. Like R2c, R1c enforces its own
 that ends while latched leaves a finite value behind; load a later save and the elapsed time is
 enormous, so the recovery fires on the very first latched tick and finishes what may be a genuine loot
 screen with no real waiting at all. That is the destructive `Finish` R1b exists to prevent, committed
-by the safety net written to prevent it. Two guards, because they cover different paths.
-`IEnlistmentReconciler.ResetForNewSession` covers the load path, dropped from
-`ServiceMaintenanceService.ResetSessionCaches` (the feature's one place that knows this lifetime,
-which is also why the army handle is dropped there rather than from the load hook). A backwards-clock
-re-anchor inside `BreakStaleBattleLatch` covers a brand-new campaign, which never reaches
-`ResetSessionCaches` at all because it is wired to `OnGameLoaded` only: a new campaign starts at a low
-day count, so the leftover anchor sits in its future, and a clock that ran backwards cannot be one
-continuous episode. Found by the `/deep-review` data-flow agent, not by the tests, which all passed.
+by the safety net written to prevent it. Two guards. `IEnlistmentReconciler.ResetForNewSession` is
+called from `ServiceMaintenanceService.ResetSessionCaches` (the feature's one place that knows this
+lifetime, which is also why the army handle is dropped there rather than from the load hook), and
+that reset now runs on a load and on a new campaign. A backwards-clock re-anchor inside
+`BreakStaleBattleLatch` is the second, self-contained guard. When it was written,
+`ResetSessionCaches` ran from `OnGameLoaded` only, so a brand-new campaign never reached it; a new
+campaign starts at a low day count, so the leftover anchor sat in its future, and a clock that ran
+backwards cannot be one continuous episode. Found by the `/deep-review` data-flow agent, not by the
+tests, which all passed. `EnlistmentBehavior.OnNewGameCreated` now runs the reset too, the load hook
+runs it on every peer (above the co-op authority gate), and the re-anchor stays as a self-contained
+guard for any path that skips the reset.
+
+**Every campaign-clock latch on an Enlistment singleton is reset on every peer's load, on a new
+campaign and at game end.** `EnlistmentBehavior.OnGameLoaded` calls `ResetSessionCaches` before its
+co-op authority gate, so a co-op client drops its session state too; only the normalization, which
+discharges and parks, stays host-only. Every callee is an in-memory field clear, which is what makes
+the ungated call safe. `SubModule.OnGameEnd` calls it as well, so the cached commander
+`MobileParty` and `Army` handles no longer point into the finished campaign (plan 014, #656). Other
+roots can still hold that campaign at the main menu (`CommanderLordAdapter._lastSeenMapEvent`, and
+the singleton behaviors' `_lastSessionStarter`), so the heap benefit is unmeasured and not claimed. `ResetSessionCaches` also clears the settlement-dwell anchor and the adapter's cached
+commander party (`IServiceAttachmentService.ResetForNewSession`), the arrival-offer settlement id
+and 24-hour cooldown (`IEnlistmentWaitMenuPresenter.ResetForNewSession`) and the per-hour
+army-rhythm snapshot (`IArmyRhythmSnapshotService.ResetForNewSession`). The dwell anchor and the
+offer cooldown held an absolute campaign hour. Before this, loading an earlier save left those
+stamps in the future, which the code read as "a moment ago": the exit sweep held the player in a
+town the commander had left until the new clock passed the old stamp plus 6 hours, and the
+shore-leave offer stayed silent until it passed the old stamp plus a day. The rhythm snapshot is
+keyed on an equal hour stamp, so a reload inside the same campaign hour served the previous
+world's snapshot. The reconciler's reset also clears the commander-loss modal's shown-once latch
+(`_lossAnnouncedFor`), which discharge clears as well.
+
+**A save with no Enlistment data loads with no record.** The engine calls a behavior's `SyncData`
+only when the save holds an entry for it (`CampaignBehaviorDataStore.LoadBehaviorData`), and the
+store is otherwise cleared only in `OnSessionLaunched`, which runs after `OnGameLoaded`. So a save
+made without this feature used to reach the load normalizer still holding the previous session's
+term, which could discharge or park a player this save never enlisted. `OnGameLoaded` now clears
+the store first when no loading `SyncData` ran this load (`_justLoadedFromSave` is false), on every
+peer, and the host then normalizes the empty record (the ownerless-parked rescue still applies).
+
+The tests are `EnlistmentSessionResetTests` (the load hook's routing and order, the co-op client's
+reset, the no-data clear, and a source check that `SubModule.OnGameEnd` reaches the reset), the
+`ResetSessionCaches_*` tests in `ServiceMaintenanceServiceTests`, the latch tests in
+`CommanderLossAnnouncementTests`, and the stop-end tests in `EnlistmentWaitMenuPresenterTests`,
+`SettlementFollowingTests` and `EnlistmentStopEndTests`.
+
+Not every per-session value is reset yet. `FieldDutyRuntime`'s real-time pace estimate survives a session
+change (cosmetic: the first duty after a load can fold its assignment toast into the result).
+`BattleMeritAccumulator._pending`, the pending battle-merit sample, is cleared only by `Consume`
+(reachability across a session change unverified). `CommanderLordAdapter`'s one-slot `MapEvent`
+cache (`_lastSeenMapEvent`) is never cleared, so it keeps one finished battle referenced. These are
+follow-ups, not part of this reset, and the list comes from the review's field sweep, so it may
+not be complete.
 
 ### The engine backstop, and the bundle that was suppressed
 

@@ -13,6 +13,7 @@ namespace TAOM.Tests.Features.TimeAcceleration;
 /// MainCategoryId hides the keys from the Keybindings screen entirely.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class TaomTimeControlHotKeyCategoryTests
 {
     private TaomTimeControlHotKeyCategory _sut;

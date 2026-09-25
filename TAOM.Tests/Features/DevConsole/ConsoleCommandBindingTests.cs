@@ -36,6 +36,7 @@ namespace TAOM.Tests.Features.DevConsole;
 ///   non-deterministic is worse to debug than loud, hence <see cref="ConsoleCommands_AllAttributedMethods_HaveUniqueQualifiedNames"/>.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class ConsoleCommandBindingTests
 {
     // The attribute scan below resolves every attribute type on every static method in Main, and

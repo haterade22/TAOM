@@ -40,6 +40,7 @@ public class LordInlineSkillParityTests
     private static readonly string[] VanillaModules = { "Native", "SandBoxCore", "SandBox", "StoryMode" };
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void EveryInlineSkillBlockBesideATemplate_MatchesThatSkillSet()
     {

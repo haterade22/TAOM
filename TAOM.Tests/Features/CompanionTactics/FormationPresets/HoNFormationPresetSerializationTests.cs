@@ -29,6 +29,7 @@ namespace TAOM.Tests.Features.CompanionTactics.FormationPresets;
 /// type is registered (and extend the allowlist) before it can ship. Pure-managed (no live engine).
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class HoNFormationPresetSerializationTests
 {
     // Engine basic value/string types — TaleWorlds.SaveSystem.SaveableBasicTypeDefiner.DefineBasicTypes()

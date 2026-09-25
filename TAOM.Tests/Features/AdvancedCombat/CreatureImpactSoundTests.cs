@@ -19,6 +19,7 @@ namespace TAOM.Tests.Features.AdvancedCombat;
 /// the engine's block and replay it with the charge sound. Engine calls, so the pins read the IL.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class CreatureImpactSoundTests
 {
     [TestMethod]

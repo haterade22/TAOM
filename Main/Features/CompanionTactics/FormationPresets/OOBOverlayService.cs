@@ -27,6 +27,7 @@ public sealed class OOBOverlayService : IOOBOverlayService
     private readonly IFormationPresetService _presetService;
     private readonly IOrderOfBattleVMTracker _vmTracker;
     private readonly ICompanionTacticsSettingsProvider _settings;
+    private readonly IOOBCaptainAutoAssigner _captainAutoAssigner;
 
     private FieldInfo _isActiveField;
     private FieldInfo _dataSourceField;
@@ -42,12 +43,14 @@ public sealed class OOBOverlayService : IOOBOverlayService
         IModLogger logger,
         IFormationPresetService presetService,
         IOrderOfBattleVMTracker vmTracker,
-        ICompanionTacticsSettingsProvider settings)
+        ICompanionTacticsSettingsProvider settings,
+        IOOBCaptainAutoAssigner captainAutoAssigner)
     {
         _logger = logger;
         _presetService = presetService;
         _vmTracker = vmTracker;
         _settings = settings;
+        _captainAutoAssigner = captainAutoAssigner;
     }
 
     private void EnsureInitialized()
@@ -110,7 +113,7 @@ public sealed class OOBOverlayService : IOOBOverlayService
             var missionScreen = (handler as MissionView)?.MissionScreen;
             if (missionScreen == null) return;
 
-            _vm = new OOBButtonsVM(_presetService, _vmTracker, _logger);
+            _vm = new OOBButtonsVM(_presetService, _vmTracker, _captainAutoAssigner, _logger);
             _layer = new GauntletLayer("GauntletLayer", 200, false);
             // Required: without InputRestrictions the layer renders but never registers with the
             // MissionScreen's input dispatcher — buttons paint, clicks pass through. Same bug

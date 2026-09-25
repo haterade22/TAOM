@@ -13,6 +13,7 @@ namespace TAOM.Tests.Features.AiPartySize;
 /// in game.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class AiPartySizeScalingTests
 {
     private const float Tolerance = 0.01f;
@@ -156,6 +157,7 @@ public class AiPartySizeScalingTests
 }
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class AiPartySizeReliefTests
 {
     private const float Tolerance = 0.01f;
@@ -350,6 +352,7 @@ public class AiPartySizeReliefTests
 }
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class AiPartySizeGatingTests
 {
     [TestMethod]
@@ -392,6 +395,7 @@ public class AiPartySizeGatingTests
 /// party size travels to the player: the food and wage relief must not.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class AiPartySizePlayerClanGatingTests
 {
     private const bool TakenOver = true;
@@ -473,6 +477,7 @@ public class AiPartySizePlayerClanGatingTests
 /// is pinned here rather than left as a bare string literal in the service.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class AiPartySizeTakeoverDetectionTests
 {
     [TestMethod]
@@ -503,6 +508,7 @@ public class AiPartySizeTakeoverDetectionTests
 /// the known set cannot silently select a different branch.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class AiPartySizeScalingModeTests
 {
     [TestMethod]
@@ -546,6 +552,7 @@ public class AiPartySizeScalingModeTests
 /// EnlistmentFeatureToggleTests.ResolveEnabled_DefaultMatchesTheCompiledSettingDefault.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class AiPartySizeShippedDefaultsTests
 {
     private const float Tolerance = 0.01f;

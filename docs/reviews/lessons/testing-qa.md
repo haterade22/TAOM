@@ -1080,3 +1080,209 @@ never attached a tree, and the first-tick log reads "0 elk(s)" in a normal Custo
 - **Prevent:** pin such a constant against a literal once, and build the rows of the test that reads the live data
   from the constant, so the data check also proves the code names what the data declares.
 - **Source:** `docs/reviews/rca-animalia-2026-09-23.md` row 4.
+### A Harmony state pair needs one test through the real Prefix, and a trace test must reject the fallback text
+Plan 012's Prefix/Postfix pair was pinned by a reflection test of the Prefix's signature and by
+Postfix tests fed a hand-made `__state`. A Prefix hard-coded to `true` (the per-frame flood back)
+or to `false` (every real lower silenced) passed all eight tests. The lowered-line test accepted
+any `callers:` text, so a helper between the Postfix and `TraceWithCallers` (which skips exactly
+two frames), `callers: <none>` or `callers: <unavailable>` all passed.
+- **Why missed:** the tests were written from the plan's test list, which named the Prefix test
+  after what the Prefix should do while asserting only its shape. Nobody ran a mutant.
+- **Prevent:** for every `__state` pair, add one test that calls the real Prefix and passes its
+  output to the Postfix, in whatever engine state the test host can reach. For a trace or log
+  assertion, also assert the fallback strings are absent and that the first caller is not the
+  patch class itself. Prove both with a mutant run (`__state = true`; a helper hop), per "If you
+  didn't watch the test fail, mutate the code until it does".
+- **Source:** `docs/reviews/rca-loading-window-trace-per-frame-2026-09-24.md` findings 3 and 4 (lens 4, lens 5, Codex P3-1 and P3-2).
+### Every existence guard in a resolver gets a test that fails it (plan 008, 2026-09-24)
+`GameAssemblies.ResolveGameDir` checks three inputs: the override must hold `Bannerlord.exe`, the game dir must exist, and so must the build folder. Six tests covered each input's happy path. Deleting the override's `File.Exists` check, or the game dir's `Directory.Exists` check, left all six green. The change had also turned a set-but-missing `BANNERLORD_GAME_DIR` from a skip into a fallback, and no test pinned that.
+- **Why missed:** `tests.md` "Skip-Guard Exhaustion" asks for one test per guard in each direction, but it was read as a rule for skip guards, not for a resolver's guards. The plan's test table said "every cell" and counted inputs, not guards.
+- **Prevent:** for each guard in a resolution chain, write the test where that guard alone fails and the chain must fall through. Prove it by deleting the guard and watching exactly that test go red.
+- **Source:** `docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md` F3.
+
+### A test that reads a repo file uses `RepoPaths.RepoPath`, never a new private repo-root walker (plan 008, 2026-09-25)
+`BindingGateRunSettingsTests` added a private `FindRepoRoot` that walks up from the working directory to `TAOM.sln`, making it the 35th file in `TAOM.Tests` to search for `TAOM.sln`, while `TAOM.Tests/Infrastructure/RepoPaths.cs` resolves the root from `[CallerFilePath]` with no filesystem walk. This is the third review to fix the same duplication.
+- **Why missed:** a new test is modelled on its folder's neighbours, and most of them still carry the old walker, so copying looks like following convention.
+- **Prevent:** before writing a helper in a test, grep `TAOM.Tests/Infrastructure/` for one. A repo-file test imports `using static TAOM.Tests.Infrastructure.RepoPaths;` and calls `RepoPath("dir", "file")`. Because this is a repeat, the locator consolidation (TEST-L5-03) should end with a ratchet test that fails when the count of private `TAOM.sln` walkers grows.
+- **Source:** `docs/reviews/rca-binding-gate-no-silent-skips-decisions-2026-09-24.md` R8; earlier `rca-field-commission-races-2026-09-17.md` F3 and `rca-race-fertility-2026-09-19.md` F2.
+### A pin or guard test proves the identity its name claims, and is tested against the spellings it must reject (plan 010, 2026-09-24)
+`BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild` asserted only that the BUTR version starts with `1.5.3.`, while its name, the workflow header and the CHANGELOG said it pinned the Steam build. BUTR publishes several builds of one game version, so a same-label hotfix would have left CI on the old build with nothing red. Its sibling guard read only a `Reference`'s `Include` and `Exclude`, so the usual `<HintPath>$(GameFolder)\...</HintPath>` spelling passed.
+- **Why missed:** both tests were written from the current data (a one-part pin file, `%(Identity)` HintPaths) and the plan's prescribed assertions, not from the failure each was named after.
+- **Prevent:** before naming a pin test, write down what identity the consumer needs (here the engine changeset, `ApplicationVersion.DefaultChangeSet`) and assert that, not a label that only usually implies it. For a guard over project or data files, add one fixture test per spelling it must reject and prove it by mutation.
+- **Source:** `docs/reviews/rca-ci-on-hosted-windows-2026-09-24.md` F1, F2.
+
+### A rule's list of failure signatures comes from the run log, not from the expected failure (plan 010, 2026-09-24)
+`tests.md` told authors that an untagged game test fails on CI with a `NullReferenceException` from a TaleWorlds frame. The executor's own first stub run had also failed with `FileNotFoundException` for module assemblies, a `TypeInitializationException` wrapping one, and an NRE from a TaleWorlds attribute constructor. A future test failing the second way would not match the rule.
+- **Why missed:** the rule was drafted from the mechanism (stub bodies throw) before the run that measured it, and the log was not re-read afterwards.
+- **Prevent:** when a rule or doc lists how something fails, grep the run log for every distinct exception type (`grep -o "System\.[A-Za-z.]*Exception" | sort | uniq -c`) and list each one.
+- **Source:** `docs/reviews/rca-ci-on-hosted-windows-2026-09-24.md` F4.
+
+### A rule sentence keeps its decision's modality and is checked against the corpus it governs (plan 010, 2026-09-24)
+D45 let one test class carry `RequiresGame` on a single method. The sentence added to `tests.md` said "tag only the method that needs the game" whenever the class's other tests run on the stubs, which is true of every mixed class, so it ordered what the decision only allowed and contradicted the class-level tags already on every class whose other tests pass on the stubs.
+- **Why missed:** the sentence was written from its one example; nobody counted how many existing files it would mark as wrong.
+- **Prevent:** when a rule gains an exception, keep the decision's verb (allows, may) and run a quick count of the files the new sentence governs; if the count of files it would call wrong is not zero, the sentence is an order and needs a decision of its own.
+- **Source:** `docs/reviews/rca-ci-on-hosted-windows-decisions-2026-09-24.md` C2.
+### A guard test needs an input that makes it fire
+Three checks in plan 018 could not fail: the kernel test pinned both runner calls but not `Modules = modules;`, the one hand-off between them, so deleting it kept the suite green while every hook returned early; the `OwnsSaveData` IL check ran only over a behavior with an empty `SyncData`; and the reader's LF test read a repo file that is already LF on this working copy, so removing the CRLF normalisation changed nothing.
+- **Why missed:** each test was written from the code it guards, not from the mutation it must catch; a null guard, an empty input set and an already-normal input all turn a missing behaviour into a pass.
+- **Prevent:** for every new guard test, name the one-line mutation it must catch (delete the hand-off, give the set a persisting member, feed CRLF), and run that mutation once before committing. When the real input set has no member that trips the check, add a positive control from elsewhere in the codebase (`FieldCampCampaignBehavior` for the IL check).
+- **Source:** `docs/reviews/rca-composition-root-first-steps-2026-09-24.md` findings 3, 15 and 16; lens 4 and Codex P3 (plan 018).
+### An engine fact a hardcoded name depends on gets a `BindingVerification` test against the installed DLLs, not a one-time STOP check (plan 007, 2026-09-24)
+
+PatchShield's `"ManagedCallbacks"` exclusion saves about 46 s of loading screen only while the engine's callback shims live in that namespace. The plan checked it once, by hand, as a STOP condition, and its one test asserted the literal string. An engine bump that moved the shims would have brought the cost back with every test green. A `ReflectionSiteBindingTests` row would not have caught it either: its `ResolveType` falls back to a simple-name search that tolerates a namespace move.
+- **Why missed:** the plan called the runtime namespace "structurally untestable", which is true only of the Harmony half (`GetAllPatchedMethods` needs a running game). The type half is reflection over DLLs the test bin already holds (`TAOM.Tests.csproj` copies `TaleWorlds.*.dll`).
+- **Prevent:** when a change hardcodes a namespace, type or member name that must match the engine, add a `[TestCategory("BindingVerification")]` test that loads the installed assembly, selects the targets the way the production code does, and asserts the hardcoded name still matches them; prove it RED by misspelling the name. `/verify-bindings` then re-runs it at every engine bump.
+- **Source:** `docs/reviews/rca-patchshield-skip-callback-shims-2026-09-24.md` finding 7; `PatchShieldPolicyTests.IsExcludedTargetNamespace_InstalledCallbackShimTypes_ReturnsTrue`.
+### A test that a finalizer preserves the throw site uses an exception that was actually thrown
+Plan 006's `Native2ManagedBridgeTests` checked the native-capture-off path with `new InvalidOperationException(...)` and asserted only `AreSame`. `RethrowStackPreserver.PreserveForRethrow` returns at once for an exception with no stack trace, so the test passed unchanged when the preserve call was mutated to a bare `return exception;`, the exact violation `harmony-patches.md` forbids. The fixed test throws and catches first and asserts `Data` holds `TAOM.ThrowSite`; the same mutation now fails it.
+- **Why missed:** the fixture was built to reach the branch, not to exercise the callee's precondition; `RethrowStackPreserverTests` already documents the unthrown no-op, and nobody read it against the new test.
+- **Prevent:** when a test's assertion depends on a helper's effect, read the helper's early returns and give the fixture the state that gets past them (a thrown exception, a non-empty list, a live frame). Then mutate the call away once and watch the test go red.
+- **Source:** `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F1, plan 006.
+
+### An allowlist pin names its members independently of the production list
+`Native2ManagedTargetsTests` resolved `Native2ManagedTargets.All` and compared the count with `All.Count`, and the size test checked only an upper bound, so an empty list passed every test while the patcher attached nothing (Codex, plan 006).
+- **Why missed:** the plan prescribed the self-referential check; a resolve-everything test reads as coverage.
+- **Prevent:** pair every "each entry resolves" test over a curated list with one that states the expected members literally (`CollectionAssert.AreEquivalent`), so removing or swapping an entry fails a test and the change has to be made in two places on purpose.
+- **Source:** `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F9.
+
+### A test that pins an engine name looked up by string carries `[TestCategory("BindingVerification")]`
+The two new plan 006 tests that resolve engine members (`Native2ManagedTargetsTests.All_ResolvesEveryShimAgainstTheInstalledEngine`, `Patch37TargetShapeTests`) had no category, so `/verify-bindings`, which an engine bump runs as `--filter TestCategory=BindingVerification`, skipped them; a renamed shim would have cost one warning line at launch and a quietly smaller capture list.
+- **Why missed:** the category is a convention (62 of the 73 test files that call `GameAssemblies.EnsureLoaded` carried it at `6fe83bca`), not a gate, and the reflection catalogue row was filed under the "not engine drift" category D.
+- **Prevent:** any test that resolves a TaleWorlds member by name gets the category, and its catalogue entry goes where engine reflection lives (`reflection-sites.md` category A or B), never category D.
+- **Source:** `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F6.
+
+### A smoke step for an off switch needs an input that still fires while the switch is off
+Plan 006's owed check for the live master toggle was "turn Enable Crash Capture off; the next dev-trigger throw is not captured". Both dev triggers return before throwing when that toggle is off, so the check passes whether the finalizer gate works or not. No trigger throws inside a callback shim either, so the native toggle had no in-game check at all, while the feature doc claimed dev-trigger coverage of the Native2Managed attach.
+- **Why missed:** the step was written from the toggle's hint, not from the trigger's code; "nothing happened" reads as success.
+- **Prevent:** for a step that proves a gate is OFF, read the input's code and confirm it still produces the event with the gate off; if the input reads the same gate, the step proves nothing. Name which catch point each trigger reaches before claiming it covers a component.
+- **Source:** `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F4 (Codex and lenses 1, 4, 5 agree).
+
+### A hook that hands its work to a lazily resolved service needs one test with that service reachable
+Plan 006's bridge and `CrashReportPatchHelper` tests all ran with `IoC` unconfigured, so `HandleAndSwallow` always took its hand-back fallback. Four mutations survived the whole branch: the bridge returning the raw exception instead of the helper's result (it would never swallow), the off-main verdict computed after the capture or not at all, the helper's `return null` changed to a hand-back, and `Finalizer` passing 0 instead of the hook's recorded id. A hand-written `RecordingCrashService` put into the helper's private cache by reflection kills all four, plus the toggle-off guard.
+- **Why missed:** the review record called the swallow path "not reachable from a test", which was true only of the MCM read; the fallback tests were green, and green read as covered.
+- **Prevent:** for any static hook that resolves its service lazily (`IoC.Resolve` cached in a static), add a fake the test can install and clear (`[TestCleanup]`), and assert what the service received (arguments, and the state it observed at call time), not only what the hook returned. Run the mutation list from the review against the new tests before calling the gap closed.
+- **Source:** `docs/reviews/rca-crash-capture-boot-cost-decisions-2026-09-24.md` F2 (lens 4 M1, lens 1 LOW-4).
+### A hook that cannot finish outside a campaign is testable up to its first engine read: throw a sentinel from the argument before it (plan 014, 2026-09-24)
+
+`EnlistmentBehavior.OnGameLoaded` calls `_normalizer.Normalize(_playerParty.GetMainHeroId(),
+CampaignTime.Now.ToDays)`, and `CampaignTime.Now` needs a live campaign, so plan 014 declared the
+load hook untestable and pinned only the new-campaign hook. The load edge, the one the CHANGELOG led
+with, had no test. C# evaluates arguments left to right, so a substitute whose `GetMainHeroId()`
+throws a private sentinel exception stops the hook after the reset and before the engine read.
+`GameLoad_OnTheHost_ResetsTheSessionCaches_BeforeNormalizing` asserts the sentinel, the reset, and
+their order with `Received.InOrder`.
+
+- **Why missed:** "calls the engine" was read as "cannot be unit tested", for the whole method.
+- **Prevent:** before calling a hook untestable, find the first statement that touches the engine
+  and ask what an adapter call evaluated just before it can do: throw a sentinel there and assert
+  everything that ran first. Prefer this to reflection or to moving an engine read.
+- **Source:** Codex review of plan 014 (gpt-6-astra, ultra), observation 1;
+  `docs/reviews/rca-enlistment-session-scope-2026-09-24.md` finding 4.
+### A gate moved into new code is new code: re-check its NaN polarity where it lands (plan 015, 2026-09-24)
+Plan 015 moved `BoneCheck`'s range gate from `FindBoneInRange` into `CheckTargets` so it runs before the native `GetSkeleton` fetch. The line came across as it was, `if (LengthSquared > _maxRangeForCheck) continue;`, an inverted early exit that a NaN visuals frame passes, so a corrupt frame paid the very wrapper the move was meant to save. This is the fourth shipping of the NaN-gate category (see "Write engine-float decision gates as positive requirements" above).
+- **Why missed:** a relocated line reads as already reviewed, and the NaN sweep is framed around gates a change writes.
+- **Prevent:** when a change moves, extracts or reorders a comparison on an engine float, treat it as a new gate: rewrite it as a positive requirement (`if (!(d <= gate)) continue;`) and add the NaN test for it in the same commit.
+- **Repeat, same branch, same day:** the decisions commit reordered `BoneCheckDuringAnimation.Tick`'s window-end gate and shipped it with no NaN test. Where the positive form would change behaviour, parity may keep the inverted form, but the NaN test is still owed. Promoted to one line in `.claude/rules/csharp-architecture.md`, because this lesson did not load while the C# was edited.
+- **Source:** `docs/reviews/rca-warg-tick-costs-2026-09-24.md` F1; repeat `docs/reviews/rca-warg-tick-costs-decisions-2026-09-24.md` F8.
+
+### An IL rule test fails on a body it cannot read, and ships a control it must reject (plan 015, 2026-09-24)
+`WargTickCostTests` scanned per-tick methods for `IoC.Resolve` one level down, but caught `FileNotFoundException` and returned no calls, so a helper whose locals named a `TaleWorlds.MountAndBlade.View` type was never scanned in a filtered run. Its "scans into a reused buffer" tests checked only the overload's arity, which `GetNearAliveAgentsInRange(60, agent, new List<Agent>())` satisfies. Both could not fail for the regression they were named after. Same family as "An audit query that reports zero found needs a positive control".
+- **Why missed:** "cannot read" was treated as "nothing to find", and each test pinned the old code's symptom (the two-argument overload) instead of the property (no allocation per call).
+- **Prevent:** an IL or reflection rule test loads what it needs (`GameAssemblies.EnsureLoaded()` in `[ClassInitialize]`). An IL rule test also fails on an unreadable body in scope (inconclusive only when no game install resolves) and carries a small fixture class the rule must reject, asserted in its own test; a plain `GetFields` or `GetMethods` check has no body read that can fail open.
+- **Source:** `docs/reviews/rca-warg-tick-costs-2026-09-24.md` F2 and F3 (Codex P3s).
+
+### An equivalence test for a periodically rebuilt index queries it stale (plan 015, 2026-09-24)
+Plan 015 dropped `SpatialGrid`'s z cells and claimed every scan returns the same set. That holds only for a grid built from the positions being queried; the production grid is rebuilt every 2 s and queried with live positions, so a column now returns an agent that moved up or down into the sphere since the rebuild, which the old z cell was never probed for. The brute-force test rebuilt the grid before every query and could not see it.
+- **Why missed:** the proof and the test both modelled a fresh index; build-time cells against query-time positions was never a case.
+- **Prevent:** when a change alters how a cached or periodically rebuilt structure is keyed, test it build, then mutate, then query without rebuilding, against the base version's result, and state any difference in the CHANGELOG.
+- **Source:** `docs/reviews/rca-warg-tick-costs-2026-09-24.md` F4 (Codex P2).
+
+### Try a substitute-driven test before an IL rule, and name an IL rule for what a call list shows (plan 015 decisions, 2026-09-24)
+Plan 015's decision 5 moved `BoneCheckDuringAnimation.Tick`'s skeleton fetch inside the hit window. The builder wrote "no test can call `Tick`" and pinned the change with an IL rule, `Tick_BeforeTheHitWindow_FetchesTheAttackerSkeletonOnlyAfterTheProgressTests`, which compared call positions. `IlCallScanner` yields calls, not comparisons or branches, so a `Tick` that read the progress, fetched the skeleton, then tested the bounds passed it; a mutation run confirmed it. A one-line spike then showed `Tick` runs fine with `default(ActionIndexCache)` and substitutes. The companion no-resolve rule matched `IoC.Resolve` only, so `IoC.ResolveAll` escaped it. Third shipping of this class (harmony-il "An IL call-presence test does not pin control flow"; this branch's first-review F3).
+- **Why missed:** the untestable claim was inherited and never tried, which left the IL scan as the only tool; the test was then named for the goal (the branch) instead of what it checks (the order), and its predicate was written from the call the old code made.
+- **Prevent:** before settling for an IL rule, write the substitute-driven test and run it; only a real failure (the exception text) justifies the IL route. An IL rule's name and summary say only what a call list can show (present, absent, count, order), never "inside the branch"; if the property is a branch, the test must execute it. Match the whole lookup surface a rule forbids (`Resolve` and `ResolveAll`), with a control for each.
+- **Source:** `docs/reviews/rca-warg-tick-costs-decisions-2026-09-24.md` F1 and F4 (Codex P3-1, all six lenses).
+### "Structurally untestable" is a claim to try before writing: most engine prefixes run on uninitialized objects
+Plan 019 called Patch8's settlement path untestable, so the patch's main purpose (the ring around the gate) and the proceeds side of its new guard had no test, and the camp-2 test asserted array lengths, which a copy that dropped the frames' transforms would also pass (Codex). `FormatterServices.GetUninitializedObject` plus the private setters of `Settlement.GatePosition`, `Settlement.Party`, `BesiegerCamp.SiegeEvent` and the readonly field `SiegeEvent.BesiegedSettlement` reached all five paths in five tests.
+- **Why missed:** the claim came from the old feature doc ("not feasible without the game runtime") and was never tried; the oracle checked the shape of the result, not what was handed over.
+- **Prevent:** before calling a prefix untestable, list the engine members it reads and check in the decompile that each has a setter or field reflection can reach and that no static constructor needs the engine; if so, write the test. When the code under test hands over a reference, assert `AreSame`, not a length.
+- **Source:** `docs/reviews/rca-nullable-ratchet-2026-09-24.md` #7 and #9.
+
+### A "never hands out the shared object" test mutates the result of the path that could return it, and a mutant proves the test (plan 019, 2026-09-24)
+`SiegeDefenseService.GetMessages` promises a fresh copy, never the static `DefaultMessages`. Its test mutated only the result for a configured entry, which any plausible implementation copies; `if (configured is null) return DefaultMessages;` passed it and every other `GetMessages` test. The known-faction test asserted two of five fields, so reading `AcceptMessage` from `AcceptButton` passed too (Codex found the first; the data-flow lens both).
+- **Why missed:** the test was written from the RED it had to produce (the config-entry mutation), and its "defaults unchanged" asserts looked like coverage of the static without ever mutating a defaults result.
+- **Prevent:** for an isolation claim, mutate the result of every path that could hand out the shared object (the fallback, the empty id, the null entry) and read it back; add `AreNotSame` between two results. For a field-by-field mapping, assert every field with a distinct value. Then prove the test with a mutant: write the plausible regression, watch the test fail, restore.
+- **Source:** `docs/reviews/rca-nullable-ratchet-decisions-2026-09-24.md` #5 and #6.
+
+### Test the values a validation guard must still accept, not only the ones it rejects (plan 002, 2026-09-24)
+`MutationParams.GetFloat` gained a finiteness guard with one test per rejected value (NaN, plus and minus Infinity), a valid value and a missing key. Nothing pinned the unparseable fallback or a negative finite value passing through, so narrowing the guard to `IsFiniteAtLeast(result, 0f)` passed all five tests. That mutant returns the caller's default for any negative value, so a negative `flat` reduction or `multiply` factor would be silently dropped. The plan named the probe (that `GetFloat` "still returns legitimately negative finite values") as a reviewer question, not as a test.
+- **Why missed:** the test list was written from the bug (what must be rejected), not from the guard's full contract.
+- **Prevent:** for every validation guard, write one test per rejection condition AND one per boundary the guard must keep (a negative, a zero, the edge of the range), and one for each pre-existing fallback branch the edited expression shares. Prove the keep-tests with a mutant that over-constrains the guard. A reviewer probe in a plan becomes a test in the same change.
+- **Source:** `docs/reviews/rca-nan-infinity-config-guards-2026-09-24.md` finding 1.
+
+### A caching refactor's test puts a live object behind the cache and edits it afterwards (plan 003, 2026-09-24)
+The provider cache's tests pinned the null-path fallbacks and an IL rule that the getters never call
+`TaomSettings.Instance`. None ever put a real settings object behind the provider, because MCM is not
+initialised under MSTest. A constructor that snapshots the values into fields (the exact regression
+the plan forbade), a getter wired to the wrong setting, or a constructor that reads `Instance` and
+discards it, all passed every test.
+- **Why missed:** an IL rule proves WHERE a call happens and reads as full coverage; it cannot see
+  what value reaches the getter.
+- **Prevent:** for any cached read-through (an MCM reference, a config object, an adapter), add a
+  seam that injects a live object (an internal constructor, visible to `TAOM.Tests`), read every
+  getter once, then mutate ONE property per pass on a fresh object and assert every getter after
+  each mutation. Mutating all of them together misses a cross-wired pair whose values coincide (two
+  bools that both default to `true` and both flip to `false`), and skipping the first read misses a
+  getter that caches its first value (convergence pass, plan 003). The test then fails a snapshot,
+  a first-read cache, a cross-wired getter and a discarded reference. Keep the IL rule
+  for the cost claim only. When the seam is a second constructor on a DryIoc-registered type, also
+  resolve the type from a real container in a test.
+- **Source:** `docs/reviews/rca-hot-path-resolve-and-grid-caching-2026-09-24.md` row 2 (Codex P3,
+  lens 4 F1, lens 6).
+
+### Outside a game Hero.MainHero throws; a test must not describe it as null (plan 001, 2026-09-24)
+A test comment said `Hero.MainHero` is null outside a campaign, and a test was named for a "no main
+hero yet" state. In v1.5.3 `MainHero => CharacterObject.PlayerCharacter.HeroObject` and
+`PlayerCharacter` reads `Game.Current`, which is null in the test host, so the getter throws a
+`NullReferenceException`. The test still passed for the right reason (any hero read fails it), but the
+explanation was false and the doc repeated it.
+- **Why missed:** the plan's excerpt said "null in the test harness" and nobody read `Hero.cs:958`.
+- **Prevent:** when a test relies on an engine static being unusable in the harness, read the getter
+  and say what it does (throws, or returns null); name the test for what it pins ("reads no hero").
+- **Source:** `docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md` F5.
+
+### A test fixture's content id comes from the shipped config's `id`, never its display name (plan 001, 2026-09-24)
+The plan 001 tests wrote Gondor's resource as `castar`; the id in
+`special_resources_config.xml` is `caster` and "Castar" is only the display name. Storage keys are
+opaque, so no assertion could fail, but the fixture's message tied the pair to the seed gate, which
+keys on `resource.Id`.
+- **Why missed:** docs and the CHANGELOG say "Castar"; the executor typed the name it had read most.
+- **Prevent:** copy a content id into a fixture from the config file (or the `taom-moduledata` MCP),
+  not from prose. Codex's config cross-reference table is the check that caught it.
+- **Source:** `docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md` F6; Codex P3.
+
+### A deletion's RED step lives in the log, not the suite: no permanent absence test (plan 025, 2026-09-24)
+Plan 025 added `RetiredPathReuseScaffold_IsGoneFromTheTaomAssembly`, asserting that seven deleted type names and two
+property names were absent from TAOM.dll. It was the RED step for a pure deletion. After the commit it tested no
+behaviour, kept nine dead identifiers greppable (the plan's own leftover-reference sweep needed a whitelist for it) and
+sat in the config provider's test class. It was removed under the simplicity criterion; the test that a config still
+carrying the retired keys loads stays, because that is behaviour a player's file depends on.
+- **Why missed:** "test first" was applied to a deletion, where the RED proof is a one-off run, and nothing asked
+  what the test would guard once the deletion landed.
+- **Prevent:** for a pure deletion, prove RED with a scratch run or the compile failure and keep it in the log. Add a
+  permanent test only for behaviour the deletion must preserve (a save field, a config key, a public contract).
+- **Source:** `docs/reviews/rca-delete-unreachable-scaffolds-2026-09-24.md` F6.
+
+### A boundary's "untestable" waiver covers only the lines that need the engine; assert rendered text, not dispatch (plan 022, 2026-09-24)
+Plan 022 waived tests for `OOBCaptainAutoAssigner` as structurally untestable. That holds from the first vanilla
+handler call on, but its two early returns run on an uninitialized `OrderOfBattleVM` (`IsPlayerGeneral` is a plain
+field read). The overlay VM test asserted only that the command reached the assigner, and `TextObject.ToString`
+catches a localization failure and returns an "Error at id" string, so a broken message would have passed. The
+planner's `score > 0` threshold was also unpinned: every test's chosen pair scored 100.
+- **Why missed:** each test the plan listed was written; nothing checked what the list left out.
+- **Prevent:** narrow a waiver to the first line that needs live engine state and test every guard above it
+  (`FormatterServices.GetUninitializedObject` works when the getter reads a field). A test of player-facing text
+  captures it (`InformationManager.DisplayMessageInternal +=`) and asserts the string. A threshold gets one case that
+  sits just above it.
+- **Source:** `docs/reviews/rca-order-of-battle-auto-assign-2026-09-24.md` rows 5, 8 and 9 (Standards, Completeness,
+  Codex P3).

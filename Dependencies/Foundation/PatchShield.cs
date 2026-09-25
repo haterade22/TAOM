@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -36,7 +37,7 @@ public static class PatchShield
     private const string HarmonyId = "TAOM.Dependencies.Foundation.PatchShield";
     private const string DisableFlagName = "patchshield-disabled.flag";
 
-    private static readonly HashSet<MethodBase> _shielded = new();
+    private static readonly ShieldCoverage _coverage = new();
     private static readonly HashSet<string> _unpatched = new();
     private static readonly HashSet<string> _withheld = new();
     private static readonly object _lock = new();
@@ -47,40 +48,12 @@ public static class PatchShield
     // prefixes from coop-modules.txt — union only, so a bad config edit can never unprotect the
     // BUTR/MCM stack. Built once per unpatch attempt in TryUnpatchOffendingPatches.
 
-    // Issue #331 round 2 (2026-07-09, measured): NEVER shield the Gauntlet/2D UI layer.
-    // A shield finalizer binds __originalMethod, so Harmony's generated wrapper pays a
-    // MethodBase.GetMethodFromHandle + try/catch on EVERY CALL (~50µs). The Gauntlet
-    // prefab system contains per-widget-recursion methods that UIExtenderEx patches
-    // (WidgetFactory.IsCustomType prefix, WidgetTemplate.OnRelease blank-transpiler);
-    // a tournament's accumulated template tree calls them ~2 MILLION times at release,
-    // so the shield tax amplified a milliseconds-scale teardown into a measured 104-109s
-    // frozen exit (+8,276 gen0 GCs, invariant across sessions — stack-sampled proof in
-    // docs/reviews/rca-tournament-exit-hang-2026-07-06.md round 2). Shield value there
-    // is nil anyway: the only patcher of that layer is BUTR's own UIExtenderEx.
-    private static readonly string[] ExcludedTargetNamespacePrefixes =
-    {
-        "TaleWorlds.GauntletUI",
-        "TaleWorlds.TwoDimension",
-        // Round-2 compat review (2026-07-10): TAOM's own Patch38 target
-        // (SettlementNameplateWidget.DetermineTargetAlphaValue, ~3000 calls/sec on the
-        // campaign map) lives here and was silently paying the shield tax every frame.
-        // Same rationale as above: hot widget/view layer, shield value nil.
-        "TaleWorlds.MountAndBlade.GauntletUI",
-    };
+    // The hot-layer target exclusion list lives in PatchShieldPolicy.ExcludedTargetNamespacePrefixes (#331).
 
     private static bool IsExcludedTarget(MethodBase method)
     {
-        try
-        {
-            var ns = method.DeclaringType?.Namespace ?? string.Empty;
-            foreach (var prefix in ExcludedTargetNamespacePrefixes)
-            {
-                if (ns.StartsWith(prefix, StringComparison.Ordinal))
-                    return true;
-            }
-        }
-        catch { /* fail open — an unreadable type just gets shielded as before */ }
-        return false;
+        try { return PatchShieldPolicy.IsExcludedTargetNamespace(method.DeclaringType?.Namespace); }
+        catch { return false; /* fail open: an unreadable type just gets shielded as before */ }
     }
 
     private static readonly Dictionary<string, int> _ownerCounts =
@@ -98,7 +71,11 @@ public static class PatchShield
     // summary prints it.
     private static long _rethrown;
 
-    public static int ShieldedCount { get { lock (_lock) return _shielded.Count; } }
+    /// <summary>Methods carrying PatchShield's finalizer.</summary>
+    public static int AttachedCount { get { lock (_lock) return _coverage.AttachedCount; } }
+
+    /// <summary>Patched methods the passes examined and decided on, skipped ones included.</summary>
+    public static int SeenCount { get { lock (_lock) return _coverage.SeenCount; } }
     public static int UnpatchedCount { get { lock (_lock) return _unpatched.Count; } }
 
     /// <summary>Targets where the rescue unpatch was suppressed because a co-op module is active.</summary>
@@ -159,6 +136,7 @@ public static class PatchShield
                 return;
             }
 
+            var stopwatch = Stopwatch.StartNew();
             List<MethodBase> patched;
             try
             {
@@ -170,13 +148,13 @@ public static class PatchShield
                 return;
             }
 
-            int added = 0, skipped = 0, alreadyShielded = 0;
+            int added = 0, skipped = 0, alreadySeen = 0, seenTotal, attachedTotal;
             lock (_lock)
             {
                 foreach (var method in patched)
                 {
                     if (method == null) { skipped++; continue; }
-                    if (_shielded.Contains(method)) { alreadyShielded++; continue; }
+                    if (_coverage.HasSeen(method)) { alreadySeen++; continue; }
 
                     // Don't shield our own methods.
                     try
@@ -184,19 +162,20 @@ public static class PatchShield
                         var declAsm = method.DeclaringType?.Assembly.GetName().Name ?? string.Empty;
                         if (declAsm.StartsWith("TAOM", StringComparison.OrdinalIgnoreCase))
                         {
-                            _shielded.Add(method);
+                            _coverage.RecordSkipped(method);
                             skipped++;
                             continue;
                         }
                     }
                     catch { }
 
-                    // Never shield hot UI-layer targets — a per-call __originalMethod
-                    // finalizer on the Gauntlet prefab system froze tournament exits for
-                    // ~107s (#331 round 2). See ExcludedTargetNamespacePrefixes.
+                    // Never shield the excluded hot layers: the Gauntlet/2D UI (#331 round 2: a
+                    // per-call __originalMethod finalizer froze tournament exits for ~107s) and the
+                    // engine's ManagedCallbacks boundary, whose callback shims Native2Managed crash
+                    // capture already wraps (plan 007). See PatchShieldPolicy.ExcludedTargetNamespacePrefixes.
                     if (IsExcludedTarget(method))
                     {
-                        _shielded.Add(method);
+                        _coverage.RecordSkipped(method);
                         skipped++;
                         continue;
                     }
@@ -209,7 +188,7 @@ public static class PatchShield
                     // broader exception set on those methods, so we add nothing by shielding them.
                     if (SaveShield.IsShielding(method))
                     {
-                        _shielded.Add(method);
+                        _coverage.RecordSkipped(method);
                         skipped++;
                         continue;
                     }
@@ -221,7 +200,7 @@ public static class PatchShield
                         var finalizer = isVoid ? voidFinalizer : resultFinalizer;
                         harmony.Patch(method, prefix: null, postfix: null, transpiler: null,
                             finalizer: new HarmonyMethod(finalizer));
-                        _shielded.Add(method);
+                        _coverage.RecordAttached(method);
                         added++;
                     }
                     catch (Exception ex)
@@ -230,11 +209,16 @@ public static class PatchShield
                         DiagLog.LogCaught(Tag, $"shielding {method.DeclaringType?.FullName}.{method.Name}", ex);
                     }
                 }
+
+                seenTotal = _coverage.SeenCount;
+                attachedTotal = _coverage.AttachedCount;
             }
 
-            if (added > 0 || alreadyShielded == 0)
+            if (added > 0 || alreadySeen == 0)
             {
-                DiagLog.Log(Tag, $"shield pass: +{added} new, {alreadyShielded} already-shielded, {skipped} skipped (total: {_shielded.Count})");
+                DiagLog.Log(Tag, PatchShieldPolicy.FormatShieldPassSummary(
+                    added: added, alreadySeen: alreadySeen, skipped: skipped,
+                    seenTotal: seenTotal, attachedTotal: attachedTotal, elapsedMs: stopwatch.ElapsedMilliseconds));
             }
         }
         catch (Exception ex)
@@ -436,7 +420,7 @@ public static class PatchShield
             }
             var withheld = WithheldCount;
             DiagLog.Log(Tag,
-                $"SESSION SUMMARY: shielded {ShieldedCount} method(s), unpatched {UnpatchedCount} target(s)" +
+                $"SESSION SUMMARY: shielded {AttachedCount} of {SeenCount} patched method(s) seen, unpatched {UnpatchedCount} target(s)" +
                 (withheld > 0 ? $", withheld {withheld} target(s) (co-op active)" : string.Empty) + ", " +
                 $"swallowed {SwallowedTotal} exception(s) " +
                 $"(MissingMethod {SwallowedMissingMethod}, MissingField {SwallowedMissingField}, " +

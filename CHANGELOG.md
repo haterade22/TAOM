@@ -153,8 +153,885 @@ Sources: both release branches since 12 Sep (156 commits, all at origin), the CH
 folders and the patreon release folder (v2.0.29). The two existing release notes for v2.0.29 and
 v2.0.30 were read first and nothing here contradicts them. Not fixed here: #619 and #620 are still
 open on GitHub although their fixes are in v2.0.30's CHANGELOG entries.
+### perf(map-load): v2.0.30 - log a loading-window lower only when it drops
+
+The map-load diagnostics no longer write a log line on every frame of the main menu and several
+campaign screens (party, inventory, clan, kingdom, quests, character and crafting among them), or
+of scene screens such as character creation, the barber, the face generator and the banner editor.
+The engine calls the loading-window lower on each of those frames
+even when the window is already down, and TAOM traced every call with a stack walk and a flushed
+write (84 MB in a 35-minute session, 1.16 GB with the main menu left open for three hours). A lower
+is now traced only when the window was actually up: `LoadingWindow_Disable_Patch` captures
+`IsLoadingWindowActive` in a Prefix through `__state`, and the Postfix asks
+`LoadingWindowTraceGate.IsRealLower` before calling `MapLoadTracer.TraceWithCallers`. Raises are
+traced as before. Plan 012.
+
+Nine new tests in `TAOM.Tests/Features/MapLoadDiagnostics/`. Full suite in the plan worktree:
+10244 passed, 2 skipped, 2 failed (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, which fail the same way without this
+change). Not smoked in game: the owed check is a minute on the main menu and the party screen, then
+a campaign load, with a single-digit `LOADING-WINDOW lowered` count in the new log.
+
+Reviewed: `/deep-review` (standards, engine, efficiency, completeness, data flow and design lenses)
+and a Codex gpt-6-astra ultra pass. No HIGH or MED code defect; the one MED is a process gap, since
+no GitHub issue is filed yet (Mike's call). The follow-ups add a test that runs the real Prefix (a
+Prefix hard-coded to `true` now fails it) and tighten the lowered trace test so a helper between the
+Postfix and `TraceWithCallers`, or a fallback caller chain, fails it; both mutants were run. The
+screen list, the class summary, the gate's "unconditionally", the feature-map row and a registry
+identifier were corrected, and the feature doc now says raise lines are traced per call. Report
+`docs/reviews/deep-review-012-loading-window-trace-per-frame-2026-09-24.md`, RCA
+`docs/reviews/rca-loading-window-trace-per-frame-2026-09-24.md`.
+## 2026-09-25
+
+### fix(binding-gate): v2.0.30 - review follow-ups for plan 008 (#652)
+
+- **The docs say what the strict settings fail.** The hooks catalog row and the decisions entry
+  below said `binding-gate.runsettings` fails a skipped test. It fails an `Assert.Inconclusive`
+  and a filter that matches no test; an `[Ignore]`d test still reports Skipped and exits 0, so
+  the catalog row now says a gate run is green only at `Skipped: 0`.
+- **A zero-match gate run is triaged by its command.** The verify-bindings skill's Step 2 said to
+  fix the filter. On the Step 1 command as written, a zero match is a finding: an MSTest
+  discovery warning above it means `/investigate` (`Unable to load types from the test source`:
+  some of the DLL's types did not load; `Failed to discover tests from assembly`: the DLL did
+  not load), and with neither the gate tests have most likely lost their category.
+- **`BindingGateRunSettingsTests` uses the shared `RepoPaths.RepoPath`** instead of its own
+  repo-root walker. It passes 2 of 2 before and after, and deleting `TreatNoTestsAsError` from
+  the settings still turns its row red.
+- **The review records match the decisions on #652.** The first RCA and report now say that F2,
+  the convergence fix D1 and the hook header correction all lapsed with the banner. F13 (the CI
+  `if:`) is recorded as moot, as #652 records: plan 010's hosted CI deletes that job. The change
+  is not ported to `bannerlord-1.4.5`. The three earlier plan 008 headings carry #652.
+- Review record: `docs/reviews/deep-review-008-binding-gate-no-silent-skips-decisions-2026-09-24.md`
+  and `docs/reviews/rca-binding-gate-no-silent-skips-decisions-2026-09-24.md`.
+
+### fix(bindings): v2.0.30 - apply maintainer decisions for plan 008 (#652)
+
+- **No skip banner.** The `PASSED WITH SKIPS` change to `notify-test-results.sh` is reverted to
+  its content before plan 008, and `tools/test_hooks.sh` section 7c goes with it. The banner went
+  to stderr from an exit-0 hook, so it only ever reached the debug log. The signal for a skipped
+  test is the `Skipped:` count in `dotnet test`'s own output, and for the binding gate it is
+  `binding-gate.runsettings`, which fails an `Assert.Inconclusive` instead of skipping it. The
+  hooks catalog row says so.
+- **A gate filter that matches nothing is red.** `binding-gate.runsettings` now sets
+  `TreatNoTestsAsError`. Under the strict settings a filter that matched no test exited 0 before
+  and exits 1 now; the real gate still passes 368 of 368 with 0 skipped.
+  `BindingGateRunSettingsTests` pins this setting and `MapInconclusiveToFailed` in the default
+  suite, so deleting either goes red. The verify-bindings skill's Step 2 names the zero-match
+  message as a command error.
+- **The resolver order stays as built:** the two environment variables first, the build's game
+  folder last.
+
+### fix(bindings): v2.0.30 - convergence fixes for plan 008 (#652)
+### fix(reviews): v2.0.30 - convergence fixes for plan 010
+
+- **The plan 010 decision records state only what was measured.** They no longer say the old
+  `tests.md` sentence contradicted all 102 class-level tags, since it governed only classes whose
+  other tests pass on the stubs and nobody counted those. They also say the Patch86 registration
+  check was outside both CI steps before D45 as well, so tagging it `BindingVerification` would
+  add a CI check, not restore one.
+- **Three citations corrected:** the `GameReferences.targets` lines (`:9-10`), a lesson title
+  quoted in the RCA, and the commit behind the two known live-Armory failures (`709649c3`, not
+  `a39a9c86`).
+
+### fix(tests): v2.0.30 - review follow-ups for plan 010
+
+- **The convergence entry has its heading back.** The previous commit wrote its own heading over
+  `fix(ci): v2.0.30 - convergence fixes for plan 010`, which credited that commit's three bullets
+  to the decisions commit.
+- **`.claude/rules/tests.md` permits a method tag instead of requiring one.** The sentence added
+  for D45 read as an order to tag only the game-bound method in every class that mixes the two,
+  which the class-level tags on classes whose other tests pass on the stubs contradict. A class tag
+  stays the default; a method tag is allowed when it returns checks worth running to CI.
+- **The decision records carry their conditions.** The `GameReferences.targets` header says the
+  empty SandBoxCore bin was checked on v1.5.3 only, and the review report's port item and D44 row
+  carry the 1.4.8 re-check that decision 44 attached. The report's merge-replay item now says the
+  Patch86 manifest row must be the method row, or the tagger restores the class tag.
+- Review: `docs/reviews/deep-review-010-ci-on-hosted-windows-decisions-2026-09-24.md`, RCA
+  `docs/reviews/rca-ci-on-hosted-windows-decisions-2026-09-24.md`.
+
+### fix(ci): v2.0.30 - apply maintainer decisions for plan 010 (#421)
+
+- **The empty SandBoxCore reference is gone.** `Main/TAOM.csproj` and `GameReferences.targets` no
+  longer name `Modules\SandBoxCore\bin`, which holds no DLL on v1.5.3 (BUTR publishes no
+  SandBoxCore package). The reference items of all three projects are identical before and after
+  in both modes (6 of 6 snapshots), the install build and the RefAsm build have 0 errors, and the
+  full suite is unchanged.
+- **Two Patch86 checks now run on CI.** `RequiresGame` moved from the
+  `Patch86HideoutBossFightBindingTests` class to its one game-bound method,
+  `PatchClasses_AreRegisteredInAllThreePlaces`, so the two IL checks on TAOM's own prefixes run in
+  the unit step (replayed: 8,220 total, 8,196 executed, 0 failed; the convergence replay recorded
+  8,218 and 8,194). `.claude/rules/tests.md` allows a method tag when the rest of the class runs
+  on the stubs.
+- **The unit step stays off `refasm-game`.** Pointed at it, the 24 unit skips executed but 10
+  failed on stub constructors (`Patch71FillTests`, `TeamCombatantSelectorTests`), so the change
+  was measured and reverted. #421 stays open for its Python half.
+
+### fix(ci): v2.0.30 - convergence fixes for plan 010
+
+- **The no-game recipe runs as written.** `.ai/verification.md` now sends the reader to the build,
+  unit and gate steps of `csharp.yml` exactly as written (all Debug, since the gate reads
+  `bin/Debug/net472/refasm-game`), and says to unset `BANNERLORD_GAME_DIR` and
+  `BANNERLORD_OVERRIDE_DIR` before the build: the build records the install in the test DLL and
+  the tests fall back to it. Replayed from a clean copy: unit 8,194 executed with 0 failures, gate
+  338 of 338.
+- **The reference guard has a failing test for each spelling it rejects.** Ten fixture rows cover
+  the four install properties, a lower-case `$(gameFolder)` and an import made conditional by its
+  own attribute, an `ImportGroup`, a `When` or an `Otherwise`. The guard now matches property
+  names without case and rejects those enclosing conditions.
+- `.claude/rules/tests.md` adds the `ReflectionTypeLoadException` from `Assembly.GetTypes()` to
+  the CI failure signatures. The review report's verdict is now set from the convergence pass.
+
+### fix(ci): v2.0.30 - review follow-ups for plan 010
+
+- **The BUTR pin now checks the build, not just the version.** `GameReferencesTargetsTests`
+  also compares the fourth part of `BannerlordRefAsmVersion` with the installed engine's
+  changeset (`ApplicationVersion.DefaultChangeSet`, 122374), so a same-label hotfix fails locally
+  instead of leaving CI on the old build. The reference check now reads the whole `Reference`
+  element (a `<HintPath>$(GameFolder)...` spelling no longer slips through), flags the other
+  install properties, and counts only an unconditional import.
+- **The binding gate fails on any check that did not execute**, not only on Inconclusive ones.
+- **Accurate text.** The workflow header names what it builds and runs; the missing-install error
+  names both bin layouts; the RefAsm error says to restore with `-p:TaomGameRefs=RefAsm`;
+  `.ai/verification.md` gives a no-game recipe that works; `.claude/rules/tests.md` lists every CI
+  failure signature and says `RequiresGame` only leaves the unit step. The feature map points at
+  `GameReferences.targets` and `csharp.yml`.
+- **Smaller.** The RefAsm game folder no longer copies the TaleWorlds stubs into its `bin`
+  (nothing reads them; the gate still executes 338 checks), and the package root is written once.
+- Review: `docs/reviews/deep-review-010-ci-on-hosted-windows-2026-09-24.md`, RCA
+  `docs/reviews/rca-ci-on-hosted-windows-2026-09-24.md`.
+
+### ci(tests): v2.0.30 - build and test C# on hosted Windows runners (#421)
+
+- **CI compiles C#, with no game and no workstation (#421, the C# half).** No job compiled TAOM on
+  any branch: the C# job needed a self-hosted runner that was never registered and ran only for
+  `bannerlord-1.4.5`. The new `.github/workflows/csharp.yml` runs on GitHub-hosted Windows for
+  every push and pull request on `bannerlord-1.5.x`, and on `bannerlord-1.4.5` once the file is
+  ported there. It builds against
+  BUTR's metadata-only reference assemblies for the pinned Steam build, runs the unit tests that
+  need no game (8,183 executed locally) and the binding gate against those assemblies laid out as a
+  game folder (338 checks, skips fail). The self-hosted job and its warning are gone.
+- **`GameReferences.targets` owns the game references.** `-p:TaomGameRefs=RefAsm` switches all
+  three projects to the reference assemblies; the default, `Install`, evaluates to exactly the
+  references the projects had before. A build with no install now stops with one error naming
+  `BANNERLORD_GAME_DIR` instead of hundreds of CS0246. `GameReferencesTargetsTests` pins the BUTR
+  build to `.claude/pinned-game-version.txt`: bump both on an engine bump. In RefAsm mode the
+  targets also copy the `System.Numerics.Vectors` package's `netstandard2.0` copy into the test
+  output, where install mode gets the game's own copy.
+- **Three test categories, used only by CI.** `RequiresGame` (103 classes that execute engine
+  code or load a game module assembly), `RequiresGameIL` (29 binding checks that need vanilla IL or data) and `LiveInstall` (10
+  classes that read the live Armory or the vanilla install). Local runs are unchanged;
+  `.claude/rules/tests.md` says when to add each.
+
+### fix(bindings): v2.0.30 - convergence fixes for plan 008
+
+- **A failed or aborted run is never a pass.** The all-skipped branch added below also caught
+  `Test Run Failed.` (an error message with zero failed tests) and `Test Run Aborted.` when their
+  only count was `Skipped:`, and printed `PASSED WITH SKIPS`. With no `Passed:` count it now fires
+  only on `Test Run Successful.`, so those runs get the old `FAILED (counts unavailable)` or no
+  banner again (two new `tools/test_hooks.sh` 7c cases, red first). The whole banner change was
+  removed afterwards (the maintainer decisions entry above).
+- **The skill no longer claims a complete failure list.** verify-bindings Step 2 names
+  `Main/SubModule.cs not found` as a precondition to report, and says a failure matching no row is
+  still a finding. Two test comments now state the resolver's fallback exactly and drop the stale
+  model count.
+
+### fix(bindings): v2.0.30 - review follow-ups for plan 008 (#652)
+
+- **Both resolver guards are pinned.** Two tests cover the override that holds no `Bannerlord.exe`
+  and a `BANNERLORD_GAME_DIR` that names a missing folder; each goes red if its guard is deleted
+  (checked by deleting each guard and re-running).
+- **The skip banner no longer claims an audience.** `notify-test-results.sh` writes to stderr and
+  exits 0, which Claude Code sends to the debug log only, so the hooks catalog row and this
+  CHANGELOG no longer say Claude sees it. It now also names the skips of an all-skipped run at
+  normal verbosity, where vstest prints no `Passed:` line (`tools/test_hooks.sh` section 7c).
+  Delivering the banner to Claude was left for Mike, who chose to remove the banner change
+  instead (the maintainer decisions entry above).
+- **The docs match the gate.** The verify-bindings skill no longer says every gate test goes
+  Inconclusive without the game (33 bind only against the test bin's TaleWorlds DLLs and pass),
+  and its Step 2 now names the two red forms plan 008 added: no install resolved (an environment
+  fact) and a short discovery (a TAOM type-load failure). `reflection-sites.md` gives the strict
+  gate command, and the discovery-floor messages drop their stale expected counts.
+- Review record: `docs/reviews/deep-review-008-binding-gate-no-silent-skips-2026-09-24.md` and
+  `docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md`.
+### fix(harmony): v2.0.30 - apply every patch category through one guard (#653)
+### refactor(composition): v2.0.30 - start the feature-module composition root (#662)
+
+Every feature is wired by hand into `Main/SubModule.cs` and `Main/IoC.cs`, the two single-owner
+files, so most feature commits have to edit one of them and parallel sessions collide there. Plan
+018 lays the first three pieces of the fix, in three commits.
+
+**One source reader for the wiring tests.** The 26 test files that assert on `SubModule.cs` or
+`IoC.cs` text now read both through `RepoPaths.ReadSource` with comments stripped (lengths and line
+breaks kept), and a missing file fails the test instead of going Inconclusive. No assertion
+changed. The switch exposed one false pass: `GameModelOverrideBindingTests` counted the parked
+`TaomPartyNavigationModel` as registered only because a commented-out `AddModel` line named it. The
+parked model is now an explicit `ParkedModels` entry with its reason, and a new test keeps that list
+honest in both directions.
+
+**The feature-module runner.** `Main/Composition` adds the module contract (the abstract
+`TaomFeatureModule` with empty defaults), declarations for patch categories, campaign
+behaviors, game models and mission behaviors, the ordered `FeatureModules.All` list, and
+`ModuleRunner`. The runner visits modules in list order; a module that throws is logged under
+`[Module]` and skipped for the rest of the session while the next module still runs, except that a
+module owning save data fails closed during registration, static initialisation and campaign start,
+including when it faulted in an earlier step. Module patch categories go through plan 009's
+`TryPatchCategory`, so a failed category is reported by `ReportPatchFailures` and does not fault the
+module. Module faults from startup are held for one main-menu inquiry; in-game faults get a red chat
+line. `IoC.Configure` and each `SubModule` phase call the runner once, after the phase's feature
+block, and `FeatureModulesTests` pins each call between its anchors. Four hand-wired blocks still
+run after the module call: the main-menu work after the once-only MainMenu block,
+`ManualPatchApplicator.ApplyAll` and the co-op Harmony census after the GameInit phase, and the
+kernel tail of mission behaviors. The
+trade-off: five small files (11 types) and one runner call per phase in the two kernel files before
+a second module uses them, in return for every later migration only deleting lines from the two
+single-owner files.
+
+**Review follow-ups.** The deep review and the Codex review found one real gap, dormant because no
+module owns save data yet: the runner skipped an already-faulted module before its fail-closed
+check, so a save owner that faulted in a fail-open step (a main-menu phase, a mission start) would
+have been left out of the next campaign silently, and that campaign's next save would have dropped
+its data. It now throws instead, on the first campaign start and on any retry. A parked save owner
+no longer fails closed (its behavior never runs). The single-implementation `ITaomFeatureModule`
+interface and the `FeatureState` enum are gone (a parked module is one with a `ParkedReason`), the
+engine-facing hooks have tests against real `CampaignGameStarter` and `BasicGameStarter` instances,
+and new guards pin the `Modules = modules;` hand-off, keep `AddGameStartContent` outside the campaign
+branch, prove the `OwnsSaveData` IL check fires, and keep `IoC.Resolver` inside the hooks. Reports:
+`docs/reviews/deep-review-018-composition-root-first-steps-2026-09-24.md`,
+`docs/reviews/rca-composition-root-first-steps-2026-09-24.md`.
+
+Known limitation: TAOM's own `Patch37_CrashReport` finalizer on `Module.OnApplicationTick` swallows
+exceptions while crash capture is on (the default), and the engine then re-runs the same loading
+step on the next tick. Because a faulted save owner throws on every retry, the load never finishes:
+the player is stuck on the loading screen, but no campaign runs without the save owner, so its data
+is never dropped. A new campaign rebuilds its Campaign and Game on each retry. With crash capture
+off, the exception reaches the engine instead. This end state is traced through the code, not seen
+in game. No module owns save data today, so nothing reaches this path. The choice (that hang, a
+silent loss of the module's data, or something better such as an inquiry and a return to the menu)
+is Mike's call before the first save-owning module migrates.
+
+**The pilot: WandererAllegiance.** `WandererAllegianceModule` now registers the feature's services
+and declares its dialog behavior, and its lines are gone from `IoC.cs` and `SubModule.cs`. The
+behavior is still a container singleton and is now added after every hand-wired behavior, which is
+order-free: its two lines are the only TAOM lines on `companion_hire` and outrank vanilla's reply by
+priority. Generic tests over the module list catch a type that is declared by a module and still
+wired by hand, a slot or category declared twice, and a behavior that persists data without
+`OwnsSaveData`.
+
+Owed: an in-game check that a Free-aligned player still gets the refusal from an Evil-culture
+wanderer, with no `[Module]` line in the log.
+
+### fix(harmony): v2.0.30 - apply every patch category through one guard
+
+`Main/SubModule.cs` applied TAOM's Harmony patches one category at a time with bare
+`_harmony.PatchCategory("PatchNN_X")` calls, 64 of 84 with no guard at all. Harmony 2.4.2 has no
+catch around a category, so one patch class whose target no longer resolves (an engine rename after
+a Steam bump) threw straight out of the SubModule hook. In `OnSubModuleLoad` the engine logs it and
+throws a new exception, so the game would not start with TAOM enabled. In
+`OnGameInitializationFinished` the once-per-process flag is set before the batch, so the throw
+skipped every later category (the Patch65, Patch82 and Patch84 crash guards among them), the three
+watchdogs, `ManualPatchApplicator.ApplyAll` and the Harmony census.
+
+Every category now goes through `TryPatchCategory`, backed by the new `PatchCategoryApplier`
+(`Main/PatchCategoryApplier.cs`). A failure is logged at Error under `[PatchApply]` with its full
+cause, stops that category at its failing class (Harmony keeps the classes it applied before it),
+and every other category still applies. The failures are named in one notice per phase: startup
+(an inquiry at the first main menu, covering `OnSubModuleLoad` and Patch55), then a red chat line
+for game initialization and for mission start. Three hand-guarded sites keep their side
+effects: the crash-report hooks subscribe only when Patch37 applied, the character-preview log says
+FAILED rather than "applied OK" on a failure, and a Patch77 failure still disables the Player
+Switcher for the session. Nine per-category try/catch blocks collapsed into the helper. One
+deliberate behaviour change: a failed Patch61 or Patch89 main category no longer skips its three
+sub-categories.
+
+The comment above the Patch37 attach claimed its finalizers covered the rest of `OnSubModuleLoad`;
+they cannot (the finalizer patches the base method, and TAOM's override is already running). The
+comment, `docs/features/crash-report.md` and
+`docs/reference/engine/submodule-lifecycle-and-harmony.md` now say so and name the guard.
+
+**Review follow-ups** (`docs/reviews/deep-review-009-guarded-patch-category-apply-2026-09-24.md`,
+RCA `docs/reviews/rca-guarded-patch-category-apply-2026-09-24.md`): the first version reported the
+module-load failures at the end of `OnSubModuleLoad`, where `InformationManager.DisplayMessage` has
+no subscriber and the list was cleared into nothing; a main-menu chat line would have been cleared
+by the initial screen after the splash video. Both now go into the startup inquiry. The summary no
+longer claims a failed group is wholly off. `tools/triage_battle_load.py` and
+`docs/features/battle-load-diagnostics.md` pointed triagers at the deleted Patch43 warning; they
+now name the `[PatchApply]` line. The Data Flow lens and the Harmony lesson still told reviewers to
+grep for the old `_harmony.PatchCategory("...")` spelling and flag its absence HIGH.
+
+**One broken class no longer fails every category** (maintainer decision on review finding 3):
+Harmony's `PatchCategory` builds its category index once per assembly from every type's
+attributes, with no catch, and does not cache a build that threw, so one `[HarmonyPatch]` naming a
+type the engine no longer has made all 84 categories fail. The new `PatchCategoryIndex`
+(`Main/PatchCategoryIndex.cs`) builds the same index class by class from Harmony's public API
+(`GetTypesFromAssembly`, `GetFromType`, `HarmonyMethod.Merge`, `CreateClassProcessor`), skips a
+class whose attributes cannot be read, and applies each category's classes exactly as Harmony
+does. The skipped class is logged under `[PatchApply]` as SKIPPED with its cause and named in the
+startup inquiry; every other category still applies. Its category applies the classes left and
+reports success, so the character-preview log can say "applied OK" for a category that lost a
+class this way; the SKIPPED line and the inquiry are the report (whether such a category should
+count as failed is open for Mike).
+
+**The failure notice is localized** (maintainer decision on review finding 15): the summary, the
+three phase names and the inquiry title are registered `{=taom_patch_apply_*}` keys in
+`taom_module_strings.xml`, and the inquiry button reuses vanilla's own `{=oHaWR73d}Ok` row
+(`str_ok` in Native's `global_strings.xml`). The category ids in the notice stay literal.
+`PatchCategoryApplier.TakeFailureSummary` now returns the `TextObject` and `SubModule` renders it.
+The five keys are translated into all 12 languages (AI first drafts, placeholders checked). The
+translator's seeding first put the 60 rows after `</strings>`, where
+`LocalizedTextManager.LoadLanguage` never reads them, and every check passed because each counts
+rows at any depth; `7eae4704` moved them inside, and
+`LanguageDataXmlTests.AllTranslationFiles_StringRowOutsideRootStrings_IsNeverPresent` now fails
+any row the engine would skip. The German phase names now carry their genitive article ("während
+des Starts"), and the French and Japanese sentences no longer read "lors de le démarrage" and
+"起動時中に".
+
+Tests: `PatchCategoryApplierTests` (14) covers the constructor guards, the try and catch paths,
+per-category isolation, the phase summary, real Harmony 2.4.2 through the index and the applier on
+an unresolvable target, a source gate that fails on any direct `.PatchCategory(` call in `Main` and
+pins the `PatchCategoryIndex` wiring in `SubModule`, and source-shape tests that keep the failure report out of
+`OnSubModuleLoad`, pin the Patch37, Patch77 and preview side effects, and pin the localized
+notice. Nine text tests that pinned the old call spelling now pin `TryPatchCategory(`.
+`PatchCategoryIndexTests` (6) emits a probe assembly at run time with one class whose
+`[HarmonyPatch]` names a missing type beside a healthy class in another category: through
+Harmony's own index both categories throw `TypeLoadException` (pinned as the premise); through
+`PatchCategoryIndex` only the broken class is skipped and reported, and the healthy one is patched.
+It also pins that an uncategorised patch class is neither skipped nor applied, and that a category
+whose second class cannot resolve throws with its first class still patched. Full suite after the
+second review's follow-ups: 10256 passed, 2 skipped, 2 failed
+(`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, which fail the same way at the base).
+Second review: `docs/reviews/deep-review-009-guarded-patch-category-apply-decisions-2026-09-24.md`,
+RCA `docs/reviews/rca-guarded-patch-category-apply-decisions-2026-09-24.md`.
+Nothing smoked in game: the live apply path and both notices need a running game. Plan 009.
+### perf(patchshield): v2.0.30 - skip the ManagedCallbacks callback shims (#651)
+
+PatchShield no longer re-shields the engine's 247 native-to-managed callback shims
+(`ManagedCallbacks.{Library,Core,Engine}CallbacksGenerated`), which TAOM's Native2Managed crash
+capture already wraps with a finalizer that swallows the exception on its normal path. Pass 2 runs
+inside the loading screen of every game start (campaign, custom battle or editor), not at the main menu;
+on a machine paying about 186 ms per Harmony patch this takes about 46 s off the first game
+start's loading screen. A later start's pass attaches only what was patched since the last pass
+(TAOM's late batch, about +140 at a second start) and does not shrink. The hot-layer exclusion list moved from `PatchShield` into
+`PatchShieldPolicy.ExcludedTargetNamespacePrefixes` behind a tested `IsExcludedTargetNamespace`,
+and the three #331 entries are unchanged.
+
+The `shield pass` line in `diag.log` now ends with the pass's elapsed time and ms per attach, so a
+crash bundle shows what pass 2 cost that player. The
+`OnGameInitializationFinished` doc comment, its log label, `docs/migration/dr3-maintenance.md` and
+`docs/migration/v1.5.2-impact.md` now say pass 2 and the crash-loop marker delete happen at game
+start; a session that quits from the main menu without starting a game still leaves the marker
+behind (documented, not changed).
+
+Plan 007. Seven new `PatchShieldPolicyTests` (23 pass). Full suite: 10242 passed, 2 skipped, 2
+failed (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, which read the live Armory and fail the
+same way without this change). Not tested in game: the live pass-2 attach count and timing need a
+custom battle start, then the last `shield pass` line in `Modules/TAOM.Dependencies/diag.log`
+should read about `+125 new` instead of `+372 new`.
+
+**Known limitation:** the exclusion is the whole `ManagedCallbacks` namespace (88 classes in
+v1.5.3), so it also skips the engine's 79 managed-to-native `ScriptingInterfaceOf*` wrappers, which
+Native2Managed does not wrap; a third-party patch on one of them gets no shield. On the shims,
+when crash capture is off, re-entered, or its service is unresolved or throws, the exception now
+leaves with no trinity swallow and no stack preservation. Both are recorded in
+`docs/migration/dr3-maintenance.md`. The maintainer kept the whole-namespace exclusion
+(2026-09-24); the lost stack preservation is fixed on plan 006's branch (`42624b95`,
+`CrashReportPatchHelper.HandleAndSwallow` hands every exception back through
+`RethrowStackPreserver`), not here.
+
+Review follow-ups (deep review and Codex, 2026-09-24): the policy comment, the loop comment, the
+`dr3-maintenance.md` note and this entry now state the exclusion's real reach and the coverage
+given up; the timing comment says the 30x swing was seen on one machine over time, not between
+machines; the `v1.5.2-impact.md` row now says pass 2 started at 20:11:39, when the game
+initialised; the `dr3-maintenance.md` log sample shows both passes in write order. New
+`BindingVerification` test `IsExcludedTargetNamespace_InstalledCallbackShimTypes_ReturnsTrue` loads
+the three installed AutoGenerated DLLs, selects the shims the way Native2ManagedPatcher does and
+fails if an engine bump moves them out of the excluded namespace (RED with the entry misspelt).
+`PatchShieldPolicyTests`: 24 pass. Full suite: 10243 passed, 2 skipped, 2 failed (the same two
+live-Armory tests). Report: `docs/reviews/deep-review-007-patchshield-skip-callback-shims-2026-09-24.md`.
+
+Maintainer decisions (2026-09-24): the `diag.log` counts now separate the methods PatchShield
+examined from the ones it shielded. One set used to hold both, so the pass line's `total` and the
+session summary's "shielded N" counted every skipped method (TAOM's own, the excluded hot layers,
+SaveShield's targets) as shielded. The pass line now reads `+P new, S already-seen, Q skipped
+(seen: N, attached: A)` and the summary `shielded A of N patched method(s) seen`; which methods get
+a finalizer is unchanged. The bookkeeping moved into `ShieldCoverage`, pinned by three new
+`ShieldCoverageTests` (RED on the old single set: attached 3, expected 1). The pass-2 entry label
+now names every start that reaches it: `game start: campaign, custom battle or editor`.
+Full suite: 10246 passed, 2 skipped, 2 failed (the same two live-Armory tests).
+
+Decisions review follow-ups (deep review and Codex, 2026-09-24): a test comment names the renamed
+`alreadySeen`; the `ShieldCoverageTests` names follow the house convention and one test is split
+(4 tests); the `FormatShieldPassSummary` call passes named arguments; `dr3-maintenance.md` and the
+feature map count 19 Foundation classes; the plan 007 review record lists every text to reword
+once plan 006 lands. Full suite: 10247 passed, 2 skipped, 2 failed (the same two live-Armory
+tests). Report: `docs/reviews/deep-review-007-patchshield-skip-callback-shims-decisions-2026-09-24.md`.
+
+Convergence fixes (2026-09-24, review record only): the reword list gains its sixth text,
+`lessons/harmony-il.md:613`; the decisions report records the convergence pass before its verdict
+and corrects a lesson count, a line reference and the claim made for the named-argument call. No
+code changed. Full suite: 10247 passed, 2 skipped, 2 failed (the same two live-Armory tests).
+### perf(crash-report): v2.0.30 - crash capture boot cost and live toggles (plan 006, #650)
+
+Crash capture no longer patches every engine callback at boot: the native-to-managed sweep patched
+all 247 engine callback methods (the gap between `[SaveDefiners]` and the attach line was 29 to 33 s
+on 30 of 30 launches on the maintainer's desktop, but 0 to 1 s on 11 player processes, and it never
+captured an exception) and now patches an allowlist of six in the new `Native2ManagedTargets`, each
+chosen to cover managed work no other crash finalizer wraps. The attach line now reports its own
+time. Four Patch37 finalizers that could never fire were removed: they sat on empty or assert-only
+base virtuals (`MissionBehavior.OnMissionTick`, `MBSubModuleBase.OnSubModuleLoad`,
+`MissionView.OnMissionScreenTick`, `ScriptComponentBehavior.OnTick`), and a finalizer on a base
+method never runs for an override. `Patch37TargetShapeTests` refuses that shape from now on.
+
+Both crash-capture MCM toggles now work live without a restart. Before, `OnSubModuleLoad` read them
+at a point where MCM's settings instance is always null, so the game ignored them at launch; they
+are now read when an exception arrives, and the native-to-managed toggle hands the exception back
+with its throw site intact when off. Defaults stay ON. A crash that repeats every frame now logs its
+suppression line at occurrences 1, 2, 10, 100 and so on instead of every frame. The crash-report,
+MCM, hero-race, Gauntlet screen, patch registry and API snapshot docs now say what the code does.
+
+Full suite in the plan worktree: 10254 passed, 2 skipped, 2 failed
+(`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+`AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, which fail the same way at the base).
+Nothing smoked in game: the boot time, the allowlist attach and live MCM toggling are owed.
+
+Review follow-ups (deep review and Codex,
+`docs/reviews/deep-review-006-crash-capture-boot-cost-2026-09-24.md`): the bridge test now throws
+for real and checks the recorded throw site, the allowlist is pinned to its six names, every skip
+path in `Native2ManagedTargets.Resolve` has a test, both engine-binding tests run under
+`BindingVerification`, and the shape test shares `HarmonyPatchBindingTests`' resolver. The bridge
+is attached by `nameof`. The docs no longer claim priority 800 for the bridge, dev-trigger coverage
+of the callback shims, a restart-free return to BUTR after a capture, or a 30 s saving for players,
+and they list the callbacks the allowlist no longer covers. Full suite after the follow-ups: 10258
+passed, 2 skipped, 2 failed (the same two).
+
+Maintainer decisions (#650): the sixth allowlisted callback is now the tableau render callback
+`RenderTargetComponent_OnPaintNeeded` (character, item, banner and map-conversation tableaus), in
+place of a tableau-setup callback nothing in v1.5.3 arms. Every exception the crash capture hands
+back to Harmony, from the callback bridge or from `CrashReportPatchHelper.HandleAndSwallow` when
+capture is off, the service is unreachable or a capture is already running, now keeps its throw
+site through the rethrow. Bridge priority 400, the powers-of-ten suppression log and capture on by
+default all stay. Full suite: 10261 passed, 2 skipped, 2 failed (the same two).
+
+Then the mission combat callbacks (#650). A capture by the callback bridge on any thread other than
+the one the crash hook records at module load (or before it records one) is now marked off the
+main thread, so the report skips its mission and campaign sections and the on-screen notice there,
+as an unhandled-exception capture already did. With that in place, the ten combat callbacks traced
+into TAOM code (melee, missile, charge, fall and area damage, blocked hits, defend collisions, and
+agent removal, deletion and missile shots) are back on the allowlist, now 16 entries; mount,
+dismount and alarmed-state stay out. Their attach time is not measured yet. Full suite: 10265
+passed, 2 skipped, 2 failed (the same two).
+
+Review follow-ups for the decisions (deep review and Codex,
+`docs/reviews/deep-review-006-crash-capture-boot-cost-decisions-2026-09-24.md`): the off-main
+verdict now reaches the report service as a parameter from both the callback bridge and the
+unhandled-exception hook. Before, it travelled as a mark on the exception, which an exception
+with a read-only `Data` (the runtime's preallocated out-of-memory exception, for one) silently
+dropped, so a worker-thread capture would have read mission state and shown the notice there. The
+hook logs the main thread id it records, so one launch can confirm it is the game-loop thread.
+Tests now cover the swallow path with a reachable service. The native-capture MCM hint names the
+tableau and combat callbacks it now covers, and the docs drop stale counts and a probe that named
+a callback already on the list. Full suite: 10271
+passed, 2 skipped, 2 failed (the same two).
+### fix(hooks): v2.0.30 - convergence fixes for plan 013
+
+- `tools/test_hooks.sh` 4c gives `validate-push.sh` a `git -C <dir> push` trigger row. The
+  hook finds `push` by token for exactly that form; a prefilter narrowed to `git push`
+  passed every earlier validate-push row and now fails this one.
+- The 4d header and the hooks catalog name the five gates 4d covers and the five it does
+  not, instead of a reason the code contradicted (`check-changelog-changed.sh` denies on a
+  command-line pathspec with nothing staged; the subject gate reads `SubModule.xml`).
+- The lesson and REVIEW-LOG entry say the committed suite caught neither gap, not that the
+  mutants passed it (it failed three rows on one mutant), and the REVIEW-LOG no longer
+  counts the suggest-compact finding as both fixed and for Mike.
+
+### fix(hooks): v2.0.30 - decision review follow-ups for plan 013
+
+- `tools/test_hooks.sh` 4c gives the commit gates a `git -C <dir> commit` trigger row: a
+  prefilter narrowed to `git commit` skipped that form and the suite stayed green. Its
+  default escaped row is now `\u0067it \u0063ommit`, which holds neither word, so a hook
+  filtering on `git` without the escape rule fails it; the old row kept a literal `git`.
+- The twelve hook comments call the escape rule "never skip", not "fail open" (which means
+  allow), and give the JSON reason it is safe; the commit gates name `git -C <dir> commit`.
+  The catalog's escape paragraph drops the writer premise, names literal `\u` text in a
+  command as the common cost, and says 4d covers five blocking gates, not each one.
+- The entry below had a wrong before-case and parity claim; both are corrected in place.
+- Report: `docs/reviews/deep-review-013-bash-hook-prefilter-decisions-2026-09-24.md`; RCA:
+  `docs/reviews/rca-bash-hook-prefilter-decisions-2026-09-24.md`.
+
+### fix(hooks): v2.0.30 - apply maintainer decisions for plan 013
+
+- Each narrowed gate now prefilters on the word it gates instead of `git` (D39): the six
+  commit gates on `commit`, `validate-push.sh` on `push`, `block-no-verify.sh` on
+  `no-verify`. `git status`, `git diff` and `git log` start no Python in them any more,
+  unless the call's description holds the word.
+  The two confirm gates keep `git`; `suggest-compact.sh` is unchanged, as plan 011 deletes
+  it. Behaviour change: with no usable Python, those gates print their degraded warning
+  only on a call holding their word.
+- A payload holding any JSON `\u` escape takes the full parse in the twelve prefiltered
+  hooks (D40), so an escaped letter can no longer hide the gated word. Before the change,
+  `\u0067it commit -m "no label here"` passed the subject gate that denies the plain form
+  (the old `git` filter never saw the escaped `g`). `tools/test_hooks.sh` 4c feeds each
+  of the twelve hooks its word escaped, and the new 4d checks that five blocking gates answer
+  the escaped form as they answer the plain one.
+- `tools/test_hooks.sh` sections 4 and 5 carry the new words in their payloads. An
+  old-versus-new run over 240 unescaped payload cases (stdout and exit code) found no
+  changed decision; the escaped forms the old filter skipped are now judged (4d).
+
+### fix(hooks): v2.0.30 - review follow-ups for plan 013
+
+- `tools/test_hooks.sh` 4c flaked under load: it counted starts of a fake interpreter,
+  and `_pybin.sh` drops a pin that misses its 0.8 s probe and runs the real `python`,
+  which counted nothing. It now reads a `bash -x` trace for the `source` of `_pybin.sh`,
+  which does not depend on timing. It also gives `suggest-compact.sh` its `dotnet` and
+  `build.ps1` trigger rows and finds Bash hooks by regex matcher, as the harness does.
+- Section 4 gains a Bash payload holding `git` and `dotnet`, so the exit-code and JSON
+  contract covers each Bash hook's parse path again; `echo hi` stops at every prefilter.
+- The prefilter premise is Claude Code's payload, not JSON (JSON allows `\u0067`
+  for `g`). The hook comments and `docs/reference/hooks-catalog.md` say so, and the
+  catalog names the re-check after a Claude Code upgrade.
+- Report: `docs/reviews/deep-review-013-bash-hook-prefilter-2026-09-24.md`; RCA:
+  `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md`.
+
+### perf(hooks): v2.0.30 - skip Python in Bash hooks on non-git calls (#661)
+
+Every Bash call ran 13 hook scripts, and each one started Python twice (the `_pybin.sh`
+probe, then a JSON parse) before it looked at the command: 256 to 451 ms per hook on
+an `ls`. Each Bash hook now tests the raw payload for its trigger text first (`git` for
+the ten PreToolUse gates, `dotnet` for `notify-test-results.sh`, `dotnet` or `build.ps1`
+for `mark-verification-run.sh`, any of the three for `suggest-compact.sh`) and allows
+without starting Python when it is absent: 60 to 150 ms per hook. Claude Code writes
+ASCII letters unescaped in the payload (JSON itself would allow `\u0067` for `g`),
+so the raw test is a superset of every hook's own trigger; an old-versus-new run over
+156 payload cases found no changed decision. A token regex was rejected: a newline
+before `git` arrives as `\n` and would have skipped a multi-line commit.
+`tools/test_hooks.sh` 4c checks both directions.
+### fix(enlistment): v2.0.30 - session reset covers load and new campaign (#656, plan 014)
+
+Enlistment no longer carries clocks from one campaign into the next. Loading an earlier save could
+hold you inside a town your commander had already left, and silence the shore-leave offer for up to
+the rest of the playthrough, because both remembered a campaign hour from the session before.
+Starting a new campaign without restarting the game also skipped Enlistment's cache reset entirely.
+Both paths now clear those remembered hours, the cached commander party and the army handle.
+
+`ServiceMaintenanceService.ResetSessionCaches`, the feature's one reset point, now also clears the
+settlement-dwell anchor, the arrival-offer settlement id and its 24-hour cooldown, and the per-hour
+army-rhythm snapshot (the rhythm service's uncalled `Invalidate` is renamed `ResetForNewSession`).
+`EnlistmentBehavior.OnNewGameCreated` now calls the reset too, so the cached commander party, the
+army handle and the stale-battle anchor no longer leak into a second campaign in one process. The
+reset only nulls in-memory fields: no save-format change. Accepted trade-off: the maintenance
+service now depends on the wait-menu presenter's interface so the reset point stays single.
+
+Review follow-ups (report `docs/reviews/deep-review-014-enlistment-session-scope-2026-09-24.md`):
+the attachment service's reset now also drops the adapter's cached commander party, so its
+separate `InvalidateCommanderCache` pass-through is deleted; a test pins the load hook's reset and
+its order before normalizing; comments and docs that overclaimed the reset are narrowed. Still not
+reset, and tracked as follow-ups: the duty runtime's real-time pace estimate; the pending
+battle-merit sample (`BattleMeritAccumulator._pending`, reachability unverified); and
+`CommanderLordAdapter`'s one-slot `MapEvent` cache, which keeps one finished battle referenced.
+This list comes from the review's field sweep and may not be complete.
+
+Maintainer decisions applied (2026-09-24). The commander-loss modal is announced again for a later
+loss under the same lord after a discharge or in a new session: its shown-once latch
+(`EnlistmentReconciler._lossAnnouncedFor`) is now cleared by the session reset and by every
+discharge. The load reset runs on every peer, a co-op client included, above the authority gate;
+only the normalization stays host-only. A save with no Enlistment data now loads with no record
+instead of normalizing the previous session's term (which could discharge or park a player that
+save never enlisted). The shore-leave offer is once per stop, not once per session: the commander
+leaving the town re-arms it for that town, however you leave (the 24-hour cooldown stays).
+`SubModule.OnGameEnd` calls the reset, so Enlistment's cached commander party and army handles
+no longer point into the finished campaign; other roots can still hold it, and the heap effect is
+unmeasured.
+
+Review follow-ups for the decisions (report
+`docs/reviews/deep-review-014-enlistment-session-scope-decisions-2026-09-24.md`, RCA
+`docs/reviews/rca-enlistment-session-scope-decisions-2026-09-24.md`): the first cut cleared the
+offer latch only when the exit sweep walked the player out, which a shore-leave pass suspends, so
+an accepted offer never re-armed. `EnlistmentMaintenanceBehavior` now also ends the stop on the
+commander's settlement-left edge (it takes the presenter). The game-end test is renamed to what it
+proves (a source-presence pin that ignores comment lines) and uses the shared `RepoPath` helper;
+comments that reversed the teardown order or overclaimed a heap release are corrected.
+
+Tests: `EnlistmentSessionResetTests` (15), `EnlistmentStopEndTests` (4), two
+`ServiceMaintenanceServiceTests`, two `CommanderLossAnnouncementTests`, three
+`EnlistmentWaitMenuPresenterTests`, four `SettlementFollowingTests` and one
+`EnlistmentContainerWiringTests`. Full suite in the plan worktree after the review follow-ups: 10266
+passed, 2 skipped, 2 failed, total 10270 (the two live-Armory tests that fail without this change).
+Not smoked in game: load an earlier save while enlisted, start a second campaign in one process,
+load a save made without Enlistment data after serving, a co-op client load, the loss popup after
+re-enlisting under the same lord, and the arrival offer at a town the column returns to after you
+took shore leave there.
+### perf(warg): v2.0.30 - warg battles do less work per frame (plan 015, #659)
+
+Warg battles do less work per frame. The warg behaviour tree no longer looks services up in the
+IoC container on every tick, its three enemy scans reuse buffers instead of allocating a list each
+call, the spatial grid looks up 49 cells for a 60 m scan instead of 343, and a live bite no longer
+builds a native skeleton wrapper for every agent within 20 m on every frame, only for those within
+reach. Two results can differ. Agents in one 20 m column come back in rebuild order, so when two
+targets are in reach on the same frame, which one takes a bite can differ (and which of two
+equidistant victims a spider engages). And between grid rebuilds (every 2 s) a scan can now return
+an agent that has moved up or down into range since the rebuild, which the old z cells missed.
+
+- **Tree nodes:** `WargBehaviorTree.BuildTree` resolves `IMissionAdapterFactory` and
+  `IWargAttackService` once per tree and passes them to the constructors of
+  `PeriodicallyCheckIfCanAttackAnyone`, `CheckOnceIfCanAttackEnemy`,
+  `WargAiControlledIsNotFacingEnemy` and `WargAttackTask`, which keep them in instance fields and
+  never call `IoC.Resolve` (maintainer decision); `WargRiderHandManager.Tick` reads the mount's `Monster`
+  with `WargConfig.IsWargMonster` instead of resolving a factory. The scans use the buffer overload
+  of `SpatialGrid.GetNearAliveAgentsInRange`, and the attack checks look up the warg's adapter only
+  once a candidate passes the filters.
+- **SpatialGrid:** cells are keyed on (x, y); the distance test stays 3D. Agents in one 20 m column
+  now come back in rebuild order rather than lower height band first.
+- **BoneCheck:** the attacker's skeleton is fetched once per tick and its bone positions reuse one
+  list; a target's skeleton is fetched only inside the existing 20 square-metre gate, and a target
+  outside it stays for a later frame. The gate is a positive requirement, so a NaN frame fails it.
+  The changed skeleton null tests are `is null`, because `== null` on a `NativeObject` runs that
+  class's native static constructor in the test host.
+- **BoneCheckDuringAnimation (maintainer decision):** `Tick` tests the action and the progress
+  upper bound first, reads the action progress once per tick, and fetches the attacker's skeleton
+  only once the progress reaches the hit window, so a wind-up frame (the standing bite's; the
+  running bite's window opens at 0) builds no native wrapper. One behaviour difference: a
+  missing attacker skeleton no longer ends the bite during the wind-up. It ends the bite only if
+  it is still missing at the first in-window tick; a skeleton that is back by then lets the bite
+  go on and hit (whether an active agent's skeleton is ever briefly missing is unverified). Tests
+  drive `Tick` with substitutes (`ActionIndexCache` is beforefieldinit and its `!=` reads only
+  `Index`, so `default` needs no engine); the owed in-game Custom Battle below is still the proof
+  for a live skeleton in the hit window.
+- **Grid widening kept:** the maintainer kept the wider scan results between grid rebuilds
+  described above; no z buckets are restored.
+- **Tests:** `WargTickCostTests` (17: IL scans with control fixtures, no `IoC.Resolve` or
+  `IoC.ResolveAll` in any body of the five warg nodes that scan or hold a service, one resolve
+  per service in `BuildTree`, and no static service or buffer field),
+  `BoneCheckDuringAnimationTickTests` (7:
+  `Tick` driven with substitutes through the wind-up, the window end, a missing skeleton or
+  visuals in the window and a NaN progress, plus one IL rule, one progress read per tick, with
+  its control), `WargTreeNodeInjectionTests` (3: the attack task and the facing decorator use
+  their injected services), `SpatialGridQueryTests` (9: brute-force sphere comparison,
+  column order, a point moved since the rebuild) and `BoneCheckRangeGateTests` (10: the gate, a
+  NaN frame, every per-target skip). Full suite in the plan's worktree after the review of the
+  maintainer decisions: 10282 passed, 2 skipped, 2 failed (`TheElkItem_DeclaresTheScaleTheReachIsTunedFor` and
+  `AnimaliaActionSets_BindOnlyHorseActions_ToClipsThatExist`, which read the live Armory).
+- **Review:** six-lens deep review and Codex (gpt-6-astra, ultra), no HIGH finding:
+  `docs/reviews/deep-review-015-warg-tick-costs-2026-09-24.md`, RCA
+  `docs/reviews/rca-warg-tick-costs-2026-09-24.md`. The maintainer decisions had their own deep
+  review and Codex pass, no HIGH finding:
+  `docs/reviews/deep-review-015-warg-tick-costs-decisions-2026-09-24.md`, RCA
+  `docs/reviews/rca-warg-tick-costs-decisions-2026-09-24.md`.
+- **Owed:** an in-game Custom Battle with warg riders on both sides (bites land and still whiff,
+  bites end as before, standing bites included, the rider hand pose holds, no
+  `[Warg] Tree build failed` line). Nothing
+  smoked in game; label #659 `triage-needs-ingame` at close.
+### fix(siege): v2.0.30 - nullable warnings graduate folder by folder, Siege first (#660)
+
+The seven main nullable warnings (CS8600 to CS8604, CS8618, CS8625) were thrown away by
+`<NoWarn>` in both production csproj files, and `/nowarn` beats any `.editorconfig`, so no
+folder could turn them back on (2,028 were hidden at `b2e387db`). They now live in the root
+`.editorconfig` as `none` for `Main/` and `Dependencies/` (build output unchanged; test-project
+warnings untouched), and `Main/Features/Siege` is the first folder at `error`.
+
+- **Siege is null-clean**: the siege-camp guard (Patch8) now has an explicit branch for a camp
+  with no settlement instead of throwing and catching its own NRE (same outcome, defer to
+  vanilla); `KingdomSiegeMessages` is nullable because a partial JSON entry leaves a key null.
+- **New tests**: `SiegeCampGuardPatchTests` (5, one per path through the prefix) and
+  `NullableRatchetGateTests` (9), which fails if a ratchet id, in any separator the compiler
+  accepts, or the `nullable` alias goes back into a production `<NoWarn>`.
+- **Procedure for the next folder**: `docs/ai-includes/code-quality.md`, "How nullable is
+  enforced" (steps, fix rules, hotfix escape).
+- **Review follow-ups** (deep review and Codex,
+  `docs/reviews/deep-review-019-nullable-ratchet-2026-09-24.md`): `/build-fix` no longer
+  recommends `!` for the nullable ids a graduated folder turns into errors; the Patch8 comment,
+  `siege.md` and the registry entry now say that the no-settlement path hands vanilla an array
+  it throws on, and that vanilla cannot reach that path; the no-op `<NoWarn>$(NoWarn)</NoWarn>`
+  in `Main/TAOM.csproj` is gone. The graduation procedure's build command no longer deploys into
+  the game install, and `siege.md` says the catch also hands vanilla an array it throws on.
+- **Siege defense popup text falls back per field** (maintainer decision): a kingdom's
+  `KingdomMessages` entry in `siege_defense_config.json` that leaves `Title`, `Body`,
+  `AcceptButton`, `AcceptMessage` or `RewardMessage` missing or `""` now takes that field from
+  `SiegeDefenseService`'s defaults, so the accept button is never missing its label; an entry
+  that is JSON `null` gets every default instead of a null that suppressed the popup (the NRE was
+  caught and logged as "ShowInquiry unavailable") and threw in the reward path. The static
+  defaults and the config entry are never written to. 5 new `SiegeDefenseServiceTests`, and
+  the test project's nullable warning count stays at 2,256.
+### fix(config): v2.0.30 - reject NaN and Infinity in career mutation floats (plan 002, #663)
+
+`MutationParams.GetFloat` now returns the default when a mutation parameter parses to NaN or
+plus or minus Infinity, through `FiniteFloatValidator` (the helper `TroopWeightXmlLoader` and
+most other float loaders use; `CareerConfigProvider` still checks NaN by hand). A
+`"NaN"` in a career mutation's XML used to parse fine and then poison every comparison it met,
+since NaN compares false both ways. Ported from the June branch `impl-002` (`cfc47206`); that
+commit's troop-weight half already landed on trunk in `bee07b48`, so only the mutation half is
+new. `MutationParamsTests` (5): three RED without the guard (NaN, plus and minus Infinity), all
+GREEN with it. Tracked in #663.
+
+Review follow-ups: two more `MutationParamsTests` pin the unparseable fallback and a negative
+finite value passing through (both went RED against a mutant that accepted any parse and
+rejected negatives), and `docs/features/career-system.md` now tells calculator authors to read
+floats only through `GetFloat`. Report:
+`docs/reviews/deep-review-002-nan-infinity-config-guards-2026-09-24.md`. Full suite: 10320
+passed, 2 skipped, 0 failed.
+### fix(battlebalance): v2.0.30 - review follow-ups for plan 003
+
+Deep review (six lenses) and Codex on `7feca96b` found no runtime defect; the follow-ups close a
+latent start-up trap and the test gap behind it. `BattleBalanceSettingsProvider` now takes the
+`TaomSettings` reference lazily, on the first non-null read (`_settings ??= TaomSettings.Instance`,
+the `NameplateRelationSettingsProvider` pattern), not in its constructor. The constructor read was
+safe only because the one resolve runs at campaign start, after MCM sets
+`BaseSettingsProvider.Instance` in its `OnBeforeInitialModuleScreenSetAsRoot`; nothing enforced
+that, and a future resolve during `OnSubModuleLoad` would have pinned the compiled defaults for the
+whole session with no log line. On today's wiring the values read are identical. The hot-path
+comment now says how often the engine really calls it (per casualty, twice per XP-scored hit in
+live and simulated battles, and once per roster row in every strength sum).
+
+Tests, written first: the IL rule now requires the private lazy accessor, not a constructor, to
+read `Instance` (RED against the constructor form); a read-through test reads every getter once,
+then edits one setting per pass on a fresh `TaomSettings` and checks all twelve getters (it fails
+a snapshot, a getter that caches its first read, and a getter wired to the wrong setting, including
+two bools that share the default `true`; each shape proven by a mutation); all twelve
+fallbacks are pinned against the `TaomSettings` compiled defaults; and the provider resolves from a
+real DryIoc container despite its new internal test constructor. `docs/features/battle-balance.md`
+and `docs/modding/file-catalogue.md` no longer describe a per-access proxy. Not verified in game:
+change a Battle Balance slider mid-campaign and check auto-resolve follows it. Reports:
+`docs/reviews/deep-review-003-hot-path-resolve-and-grid-caching-2026-09-24.md`,
+`docs/reviews/rca-hot-path-resolve-and-grid-caching-2026-09-24.md`.
+
+### perf(battlebalance): v2.0.30 - read the MCM settings once per process (plan 003, #664)
+
+`BattleBalanceSettingsProvider` resolved `TaomSettings.Instance` on every property read, and
+`GetDefaultTroopPower` reads up to seven of them per call. The provider now
+takes the reference once in its constructor and reads through it, so live MCM edits still apply
+(the same contract as `NameplateFadeSettingsProvider`). The one precondition, verified by reading the wiring: the
+provider is first built at campaign start (`RegisterBattleBalanceAndTargeting` under
+`OnGameStart`), after MCM has created the settings; nothing in the `OnSubModuleLoad` eager pass
+resolves it, so it never caches a null. Ported from the June branch `impl-003` (`6eb5955c`); of that
+branch's other commits, the warg one (`4962f3ee`) is superseded by plan 015, the TroopWeight one
+(`463fccbc`) is stale, and the grid cadence one (`bdf18039`, PERF-01) still waits on a gate decision.
+
+Tests: the six no-MCM default pins from `6eb5955c` (green before and after) and a new IL rule,
+`Getters_NeverReadTaomSettingsInstance_TheConstructorDoes`, RED against the old provider. Full
+suite: 10320 passed, 2 skipped, 0 failed.
+### fix(tools): v2.0.30 - faction-map helpers take paths as arguments (plan 005)
+
+`tools/process_faction_map.py` ran two child Python scripts with each file path pasted into
+the script source as `r'<path>'`, so a path holding a quote broke the script and, worse, let the
+path's text run as code. Both children now read their paths and numbers from `sys.argv`. Probe
+on a PNG under a folder named `it's here`: the trunk version fails both calls (a `SyntaxError`
+in the generated source), the new one finds the bounding box and writes the crop.
+
+The external-repo vetting checklist (`docs/ai-includes/external-repo-adoption.md`) gains a grep
+for inline package credentials in any vendored drop before porting a file from it. Both changes
+are ported from the June branch `impl-005` (`4310aa6e`, `4bc520a1`). Plan 005's MCP pinning moved
+to plan 016.
+
+Review follow-ups: the credential is not gone. The extracted copy is, but the same
+`packageSourceCredentials` block still sits inside three gitignored, never-committed BUTR source
+archives under `Dependencies/.vendor-source/` (ButterLib 2.10.4, MCM 5.11.4, UIExtenderEx 2.13.2);
+the first check ran in a worktree, which has no copy of that ignored folder, and a plain grep
+cannot see inside a `.tar.gz` anyway. The checklist
+line now sweeps archives too, uses a `-E` pattern that also works in ripgrep, and names the harvest
+finding it came from. `tools/tests/test_process_faction_map.py` pins the path fix: a plain folder, a
+quote in the folder name, and Python text in the folder name (the last two fail on the pre-fix
+tool). Report: `docs/reviews/deep-review-005-security-hygiene-2026-09-24.md`.
+### docs(rules): v2.0.30 - new patches need no ResetForUnload
+
+`.claude/rules/harmony-patches.md` now records that nothing reloads TAOM inside one process: the
+engine calls `OnSubModuleUnloaded` only from `Module.FinalizeModule` at shutdown, and a rebuild
+means restarting the game. A new patch that caches a service statically therefore needs no
+`ResetForUnload()`. The existing 14 stay until their class is next touched, and
+`ResetForUnloadSweepTests` still checks that every one that exists is called. Mike's decision 22
+(sprint finding COMP-05).
+### chore(debug): v2.0.30 - managed-only default launch profile, mixed kept
+
+The Visual Studio `Bannerlord` launch profile (`Main/Properties/launchSettings.json`) now attaches
+the managed debugger only; a new `Bannerlord (mixed native debugger)` profile keeps the old
+managed plus native attach for native crash work. The Opus review sprint found this desktop's
+Harmony patching about 20 to 40 times slower than players' (PatchShield pass 2 about 69 s on the
+first game start against 0 to 1 s in player logs) and named the mixed debugger the likely cause,
+UNVERIFIED. The profile name is unchanged, so the saved selection keeps working. The next Play is
+the test: the `shield pass` line in `diag.log` should fall to a few seconds. Mike's decision 23.
+### fix(specres): v2.0.30 - a new campaign no longer keeps the old balances
+
+Special resource balances live in a storage service that lasts for the whole game process, not one
+campaign. Starting a second campaign without restarting the game kept every balance the first
+campaign had written (War Spoils, Castar, Gems and the rest, for every hero the player had
+controlled), and the new campaign's first save then wrote them into its own save file.
+`OnNewGameCreated` now wipes the storage before the character-creation finalize seeds the new
+hero, and runs the session-state reset without reading `Hero.MainHero`, which the two resets never
+used. The SyncData load now reads into a null local instead of the live dictionary, a defensive
+change: the engine leaves the ref unchanged when a key is missing, so a behavior record without the
+balances key now loads empty (no TAOM build has written such a record). Saving is unchanged, and a
+save that carries the key round-trips exactly.
+
+Known limitation: a save older than SpecialResources (before 2026-04-07) has no record for this
+behavior, so the engine never calls its SyncData. Loaded after another campaign in the same process,
+it still inherits that campaign's balances. The load-path reset is a follow-up awaiting Mike's call
+(review report `docs/reviews/deep-review-001-cross-campaign-singleton-resets-2026-09-24.md`).
+
+Plan 001 (the SpecialResources half; the CareerSystem half landed earlier as `f4273639`). Five new
+tests in `SpecialResourcesBehaviorSessionResetTests`, against real storage. A six-lens deep review
+and Codex found no CRITICAL or HIGH; the follow-up commit fixes the prose above, a fixture that used
+the display name `castar` for the id `caster`, a test comment (outside a game `Hero.MainHero`
+throws, it is not null) and the test fake's save side (report
+`docs/reviews/deep-review-001-cross-campaign-singleton-resets-2026-09-24.md`, RCA
+`docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md`). Full suite: 10318 passed, 2
+skipped, 0 failed. Not smoked in game: start a second campaign in one session and check
+the map bar shows only the new culture's starting amount.
+### refactor(cache-rebuild): v2.0.30 - delete two unreachable scaffolds
+
+Two pieces of code that nothing ever called are gone. `Main/Adapters/IEditorSceneAdapter.cs` was
+an adapter interface with no implementation and no reference. `Main/Features/EditorCacheRebuild/Caching/`
+(`PathReuseCache`, `PersistentPathCache`, their interfaces, `NavigationPathCloner` and
+`SortedPathKey`) was a Phase 2 path-memoization scaffold that `EditorCacheRebuildIoC` registered
+but nothing resolved or injected. Both came in with `6a80bac6` on 2026-05-12 and never gained a
+caller. Also removed: the reserved `EnablePathReuse` and `EnablePersistentPathCache` config
+properties (never read; the shipped `cache_rebuild_config.json` carried them only from `6a80bac6`
+until `b5cb3018` the same day, before any release tag), the 26 tests in
+`TAOM.Tests/Features/EditorCacheRebuild/Caching/`, and the `ReflectionSiteBindingTests` row for
+`PathReuseCache._store`, which named a `TaleWorlds.Engine.PathReuseCache` that does not exist and
+only ever resolved to TAOM's own class. The distance-cache rebuild behaves exactly as before; a
+hand-edited config that still carries the two keys loads as before (new test). `6a80bac6` holds
+the scaffold, but it assumed Phase 1 paths that the engine keeps local, so path reuse would need a
+new design. Plan 025.
+
+Review follow-ups: a second new test that only pinned the deleted types' absence is removed
+(simplicity criterion). The binding catalogue now names the commit the retired row came from
+(`41258657`); the feature doc drops the stale `NavigationPath` dependency and the hand-kept test
+counts, and explains why Phase 1 paths cannot simply be reused in Phase 2. Review report:
+`docs/reviews/deep-review-025-delete-unreachable-scaffolds-2026-09-24.md`.
+
+Full suite in the worktree: 10287 passed, 2 skipped, 0 failed (10288 before the review
+follow-ups). Nothing smoked in game (no runtime path changed).
+### feat(tactics): v2.0.30 - wire OOB Auto-Assign to HeroAutoAssigner
+
+Order of Battle: the Assign Heroes button now places the heroes on your team (companions and
+any other hero the screen lists, never you) as captains of the formations that suit their
+equipment (it was a placeholder message). Roles come from what each hero spawned with, so in a
+siege a companion who owns a horse is placed on a foot formation. Visible with Formation
+Presets enabled. Three new strings are registered with English rows in all 12 languages; the
+translator run is owed. Nothing smoked in game.
 
 ## 2026-09-23
+
+### test(bindings): v2.0.30 - make the binding gate fail loudly on skips (#652)
+
+- **The gate finds the game the build used.** `GameAssemblies` read the install only from the test
+  process's `BANNERLORD_OVERRIDE_DIR` and `BANNERLORD_GAME_DIR`, so a test DLL built against the
+  game but run without them (an IDE runner, `dotnet test --no-build` from a fresh shell) skipped most
+  of the binding suite and still exited green. `TAOM.Tests.csproj` now records the build's
+  `GameFolder` as `TaomGameFolder` assembly metadata, and `GameAssemblies` falls back to it after the
+  two variables.
+- **A skip in the gate is a failure.** `TAOM.Tests/binding-gate.runsettings` maps Inconclusive to
+  Failed. The verify-bindings skill, the docs that give the gate command and the CI job run the gate
+  with it. The default suite does not: a test there still skips when the game or the Armory is
+  absent, as decided. The discovery floors (fewer than 30 patch types, fewer than 20 GameModels) now
+  fail instead of skipping, since they only run once the game has loaded.
+- **The test banner names skips.** `notify-test-results.sh` printed `PASSED (33 tests)` for a run of
+  33 passes and 335 skips; it now prints `PASSED WITH SKIPS` with the count, and a red run carries its
+  skip count too. Pinned by `tools/test_hooks.sh` section 7c; `docs/reference/hooks-catalog.md`
+  lists the new banner. The banner reaches the debug log only, not Claude, and the 2026-09-24
+  maintainer decisions entry removes it again.
+- Applies to the binding gate the fix that the "`Assert.Inconclusive` is a pass" item in
+  `docs/reviews/rca-lord-identity-2026-08-29.md` asks for. That item names
+  `LordFamilyTransformTests`, which is not in the gate, so it stays open.
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)
 

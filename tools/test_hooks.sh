@@ -341,8 +341,13 @@ PY
 PRE_GATES="$PRE_GATES check-freeze.sh"
 is_pre_gate() { [[ " $PRE_GATES " == *" $1 "* ]]; }
 
+# bash-trigger holds every Bash hook's prefilter text (git, dotnet, commit, push, no-verify)
+# but matches no hook's trigger (`committed` and `pushed` are not the subcommands, and
+# `no-verify` lacks its `--`), so the contract covers the parse path behind each prefilter;
+# `echo hi` alone now stops at the prefilter in every Bash hook (review of plan 013).
 PAYLOADS=(
   'bash|{"tool_name":"Bash","tool_input":{"command":"echo hi"},"hook_event_name":"PreToolUse"}'
+  'bash-trigger|{"tool_name":"Bash","tool_input":{"command":"git status && dotnet --info && echo committed pushed no-verify"},"hook_event_name":"PreToolUse"}'
   'edit|{"tool_name":"Edit","tool_input":{"file_path":"'"$SANDBOX"'/Main/Thing.cs"},"hook_event_name":"PreToolUse"}'
   'mcp|{"tool_name":"mcp__serena__find_symbol","tool_input":{},"hook_event_name":"PreToolUse"}'
   'session|{"hook_event_name":"SessionStart","session_id":"test","source":"startup"}'
@@ -414,6 +419,179 @@ PYEOF
 done
 
 # ---------------------------------------------------------------------------
+# 4c. A Bash call that cannot concern a hook starts no Python in it.
+#     Every Bash-path hook used to source _pybin.sh (one Python start, the probe) and
+#     parse the payload (a second) before it looked at the command: 256 to 451 ms per
+#     hook on an `ls`, for 13 hooks on every Bash call. Each now tests the RAW payload
+#     for its trigger text first. Each row runs the hook under `bash -x` and reads the
+#     trace for its `source` of _pybin.sh, the only road to Python in these hooks. The
+#     first oracle counted starts of a fake interpreter pinned through TAOM_PYBIN, and
+#     it flaked under load: _pybin.sh drops a pin that misses its 0.8 s probe and finds
+#     the real python, which counted nothing (review of plan 013). The trace does not
+#     depend on timing; the fake stays to keep the parse cheap, and its count is a
+#     second witness on the negative row. The trigger rows are multi-line on purpose: a
+#     newline before `git` arrives as the two characters \n, which is how a token regex
+#     over the raw JSON would have skipped a real commit. Hooks are discovered from
+#     settings.json, so a new Bash hook that sources _pybin.sh before it filters fails.
+# ---------------------------------------------------------------------------
+head2 "4c. the Bash hooks start no Python on a payload that cannot concern them"
+PF="$SANDBOX/prefilter"
+mkdir -p "$PF"
+FAKEPY="$PF/fakepy"
+printf '#!/bin/sh\necho started >> "%s/starts"\nprintf taompy\n' "$PF" > "$FAKEPY"
+chmod +x "$FAKEPY" 2>/dev/null
+pf_payload() {  # $1 event, $2 command already JSON-escaped; printf %s keeps its backslashes
+    printf '{"tool_name":"Bash","session_id":"taom-prefilter-test","hook_event_name":"%s","tool_input":{"command":"%s","description":"prefilter probe"},"tool_response":{"stdout":"ok","stderr":""}}' "$1" "$2"
+}
+pf_run() {      # $1 hook file name, $2 payload; prints "<times _pybin.sh was sourced> <fake starts>"
+    rm -f "$PF/starts" "$PF/trace"
+    printf '%s' "$2" | timeout -k 2 10 env PS4='+ ' CLAUDE_PROJECT_DIR="$SANDBOX" TAOM_PYBIN="$FAKEPY" \
+        bash -x ".claude/hooks/$1" >/dev/null 2>"$PF/trace"
+    local s n=0
+    s=$(grep -cE '^\++ (source|\.) .*_pybin\.sh$' "$PF/trace" 2>/dev/null)
+    [[ -f "$PF/starts" ]] && n=$(grep -c . "$PF/starts")
+    echo "${s:-0} $n"
+}
+PF_ROWS=$("$HPY" - <<'PY'
+import json, re
+d = json.load(open('.claude/settings.json', encoding='utf-8'))
+def matches_bash(m):  # the harness treats a matcher as a regex; '' and '*' mean every tool
+    if m in ('', '*'):
+        return True
+    try:
+        return re.fullmatch(m, 'Bash') is not None
+    except re.error:
+        return False
+rows = set()
+for ev in ('PreToolUse', 'PostToolUse', 'PostToolUseFailure'):
+    for g in d.get('hooks', {}).get(ev, []):
+        if matches_bash(g.get('matcher', '')):
+            for h in g.get('hooks', []):
+                rows.add(ev + ':' + h['command'].rsplit('/', 1)[-1])
+print(' '.join(sorted(rows)))
+PY
+)
+# The gates whose prefilter is their own word rather than `git`: each must also skip
+# `git status`, `git diff` and `git log`.
+PF_NARROWED_LIST=(check-changelog-changed.sh check-claude-files-tracked.sh check-commit-subject-version.sh
+                  check-moduledata-validation.sh check-native-dll-crt.sh check-doc-config-drift.sh
+                  validate-push.sh block-no-verify.sh)
+PF_NARROWED="${PF_NARROWED_LIST[*]}"
+PF_U='\'u    # the two characters backslash and u: a JSON escape prefix, as the raw payload holds it
+if [[ -z "$PF_ROWS" ]]; then
+    bad "4c discovery found no Bash-matched hooks in settings.json; the check is broken"
+else
+    for row in $PF_ROWS; do
+        ev="${row%%:*}"; name="${row#*:}"
+        [[ -f ".claude/hooks/$name" ]] || { bad "4c: $name is registered but missing from .claude/hooks/"; continue; }
+        read -r s n <<< "$(pf_run "$name" "$(pf_payload "$ev" 'ls docs')")"
+        if [[ "$s" == 0 && "$n" == 0 ]]; then
+            ok "$name [$ev] no interpreter on a non-trigger payload"
+        else
+            bad "$name [$ev] reached _pybin.sh ($s source, $n start) on a payload that cannot concern it (ls docs): test the raw payload before sourcing _pybin.sh"
+        fi
+        if [[ "$ev" == PostToolUse* ]]; then
+            triggers=('cd /x\ndotnet test TAOM.Tests')
+            [[ "$name" == mark-verification-run.sh ]] && triggers+=('cd /x\npwsh ./build.ps1 -RunTests')
+        else
+            # Each gate's own word (maintainer decision D39): validate-push.sh filters on
+            # `push`, block-no-verify.sh on `no-verify`, the six commit gates on `commit`,
+            # and the two confirm gates on `git`; a `git commit` row reaches the last two sets.
+            case "$name" in
+                # validate-push.sh finds `push` by token, so `git -C <dir> push` is its trigger too.
+                validate-push.sh)   triggers=('cd /x\ngit push origin x' 'cd /x\ngit -C /y push origin x') ;;
+                block-no-verify.sh) triggers=('cd /x\ngit commit --no-verify -m x') ;;
+                # The commit gates also trigger on `git -C <dir> commit`, which holds `commit`
+                # but not `git commit`: its own row keeps a prefilter from narrowing to the latter.
+                *)                  triggers=('cd /x\ngit commit -m x' 'cd /x\ngit -C /y commit -m x') ;;
+            esac
+            # suggest-compact.sh also reads build and test boundaries (its `dotnet` and `build.ps1` arms).
+            [[ "$name" == suggest-compact.sh ]] && triggers+=('cd /x\ndotnet test TAOM.Tests' 'cd /x\n./build.ps1 -RunTests')
+        fi
+        for cmd in "${triggers[@]}"; do
+            read -r s n <<< "$(pf_run "$name" "$(pf_payload "$ev" "$cmd")")"
+            if [[ "$s" -ge 1 ]]; then
+                ok "$name [$ev] reaches _pybin.sh on a multi-line trigger payload [$cmd]"
+            else
+                bad "$name [$ev] never reached _pybin.sh on a trigger payload [$cmd]: the prefilter is narrower than the hook's own trigger"
+            fi
+        done
+        # The hook's word spelled with a JSON \u escape must still reach the parser
+        # (maintainer decision D40): the raw test cannot read an escaped letter, so a
+        # payload holding any \u takes the full path. suggest-compact.sh is left as it
+        # was, pending its deletion in plan 011.
+        esc=""
+        case "$name" in
+            validate-push.sh)       esc="cd /x\ngit ${PF_U}0070ush origin x" ;;
+            block-no-verify.sh)     esc="cd /x\ngit commit --${PF_U}006eo-verify -m x" ;;
+            notify-test-results.sh | mark-verification-run.sh)
+                                    esc="cd /x\n${PF_U}0064otnet test TAOM.Tests" ;;
+            suggest-compact.sh)     ;;
+            # The commit gates, the two confirm gates and any new Bash hook: the row holds no
+            # literal `git` or `commit`, so a hook filtering on either word without the
+            # escape arm skips it and fails here.
+            *)                      esc="cd /x\n${PF_U}0067it ${PF_U}0063ommit -m x" ;;
+        esac
+        if [[ -n "$esc" ]]; then
+            read -r s n <<< "$(pf_run "$name" "$(pf_payload "$ev" "$esc")")"
+            if [[ "$s" -ge 1 ]]; then
+                ok "$name [$ev] reaches _pybin.sh when its word is escaped [$esc]"
+            else
+                bad "$name [$ev] never reached _pybin.sh when its word is escaped [$esc]: an escaped letter hid the gated word from the prefilter"
+            fi
+        fi
+        # A gate narrowed to its own word starts no Python on a git call it does not judge.
+        if [[ " $PF_NARROWED " == *" $name "* ]]; then
+            for cmd in 'git status --short' 'git diff --stat' 'git log --oneline -5'; do
+                read -r s n <<< "$(pf_run "$name" "$(pf_payload "$ev" "$cmd")")"
+                if [[ "$s" == 0 && "$n" == 0 ]]; then
+                    ok "$name [$ev] no interpreter on a git call it does not gate [$cmd]"
+                else
+                    bad "$name [$ev] reached _pybin.sh ($s source, $n start) on a git call it does not gate [$cmd]: prefilter on the gate's own word, not \`git\`"
+                fi
+            done
+        fi
+    done
+    rm -f /tmp/claude-tool-count-taom-prefilter-test /tmp/claude-last-boundary-taom-prefilter-test
+fi
+
+# ---------------------------------------------------------------------------
+# 4d. An escaped letter cannot hide a blocked command. JSON allows `\u0063` for `c`, and
+#     the prefilters read the raw payload, so five of the ten blocking gates
+#     (check-commit-subject-version.sh, validate-push.sh, block-no-verify.sh,
+#     block-dangerous-git.sh, block-broad-git-add.sh) are each fed their blocked command
+#     twice, plain and with the gated word's first letter escaped, and must answer both the
+#     same way (maintainer decision D40; Codex's counter-payload in the plan 013 review).
+#     The other five (check-changelog-changed.sh, check-claude-files-tracked.sh,
+#     check-moduledata-validation.sh, check-native-dll-crt.sh, check-doc-config-drift.sh)
+#     get 4c's escaped-word reach row only.
+# ---------------------------------------------------------------------------
+head2 "4d. a blocking gate answers the same when its word arrives escaped"
+esc_verdict() {  # $1 hook, $2 project dir, $3 command already JSON-escaped: "rc=<n> <decision>"
+    local out rc
+    out=$(printf '{"tool_name":"Bash","tool_input":{"command":"%s"},"hook_event_name":"PreToolUse"}' "$3" \
+          | timeout -k 2 30 env CLAUDE_PROJECT_DIR="$2" bash ".claude/hooks/$1" 2>/dev/null)
+    rc=$?
+    echo "rc=$rc $(decision_of "$out")"
+}
+for row in "check-commit-subject-version.sh|$REPO|rc=0 deny|cd /x\ngit commit -m \\\"no label here\\\"|cd /x\ngit ${PF_U}0063ommit -m \\\"no label here\\\"" \
+           "validate-push.sh|$SANDBOX|rc=2 allow|git push --force origin master|git ${PF_U}0070ush --force origin master" \
+           "block-no-verify.sh|$SANDBOX|rc=2 allow|git commit --no-verify -m x|git commit --${PF_U}006eo-verify -m x" \
+           "block-dangerous-git.sh|$SANDBOX|rc=0 ask|cd /x\ngit reset --hard|cd /x\n${PF_U}0067it reset --hard" \
+           "block-broad-git-add.sh|$SANDBOX|rc=0 ask|git add -A|${PF_U}0067it add -A"; do
+    IFS='|' read -r hook dir want plain escaped <<< "$row"
+    got_plain=$(esc_verdict "$hook" "$dir" "$plain")
+    got_esc=$(esc_verdict "$hook" "$dir" "$escaped")
+    if [[ "$got_plain" != "$want" ]]; then
+        bad "$hook answered '$got_plain' to its plain blocked command [$plain], expected '$want': the row no longer proves anything"
+    elif [[ "$got_esc" == "$want" ]]; then
+        ok "$hook blocks [$escaped] as it blocks [$plain] ($want)"
+    else
+        bad "$hook answered '$got_esc' to [$escaped] but '$want' to [$plain]: an escaped letter got past the prefilter"
+    fi
+done
+
+# ---------------------------------------------------------------------------
 # 5. Starved environment: no jq, no python at all.
 #    Every hook must still terminate promptly and must NOT block. This is the
 #    fail-open mandate in .claude/rules/harness-facts.md, tested rather than assumed.
@@ -470,7 +648,9 @@ for hookfile in .claude/hooks/*.sh .claude/skills/freeze/check-freeze.sh; do
     [[ "$name" == "_pybin.sh" ]] && continue
     S=$(date +%s%N)
     ERRFILE=$(mktemp 2>/dev/null) || ERRFILE="$SANDBOX/stderr.$$"
-    OUT=$(printf '%s' '{"tool_name":"Bash","tool_input":{"command":"git push --force origin master"},"hook_event_name":"PreToolUse"}' \
+    # The payload holds every gate's prefilter word (commit, push, no-verify, git), so each
+    # blocking gate gets past its prefilter and must reach its taom_pybin_degraded branch.
+    OUT=$(printf '%s' '{"tool_name":"Bash","tool_input":{"command":"git push --force origin master && git commit --no-verify -m x"},"hook_event_name":"PreToolUse"}' \
           | timeout -k 2 10 env PATH="$STARVED_PATH" CLAUDE_PROJECT_DIR="$SANDBOX" TAOM_PYBIN= bash "$hookfile" 2>"$ERRFILE")
     RC=$?
     ERR=$(cat "$ERRFILE" 2>/dev/null); rm -f "$ERRFILE"

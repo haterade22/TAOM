@@ -9,6 +9,7 @@ using TAOM.SceneScripts.Roads;
 namespace TAOM.Tests.SceneScripts.Roads;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class RoadGeometryBuilderTests
 {
     private static RoadSampleFrame Sample(float x, float distance)

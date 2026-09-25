@@ -26,7 +26,7 @@ A fourth wrinkle: `TaomPartyHealingModel` integrates the [career system](career-
 Standard GameModel override (see [.claude/rules/gamemodels.md](../../.claude/rules/gamemodels.md)) for each of the three vanilla models. Two providers fan in the data:
 
 - [IBattleBalanceConfigProvider](../../Main/Features/BattleBalance/IBattleBalanceConfigProvider.cs) — wraps `battle_balance_config.json` deserialization, single-pass cached, falls back to baked-in defaults if the file is missing or malformed.
-- [IBattleBalanceSettingsProvider](../../Main/Features/BattleBalance/IBattleBalanceSettingsProvider.cs) — exposes MCM switches and float properties, falling back to compile-time defaults if `TaomSettings.Instance` is null.
+- [IBattleBalanceSettingsProvider](../../Main/Features/BattleBalance/IBattleBalanceSettingsProvider.cs): exposes MCM switches and float properties, falling back to compile-time defaults while `TaomSettings.Instance` is null. It caches the settings reference on the first non-null read (never in the constructor, so an early resolve cannot pin the defaults) and reads every value through it.
 
 Both providers register as `Reuse.Singleton`. The cache means JSON edits require a full Bannerlord process restart — see Configuration > Reload Scope below.
 
@@ -100,7 +100,7 @@ TaomMilitaryPowerModel       TaomCombatSimulationModel       TaomPartyHealingMod
 
 ### Reload scope
 
-Both providers register `Reuse.Singleton` — the JSON file is cached for the entire Bannerlord process. **JSON edits require a full Bannerlord restart**, not a save-load and not a new campaign. MCM switches **do** apply live (each model reads `IBattleBalanceSettingsProvider` properties on every call, and the provider proxies to `TaomSettings.Instance` per access).
+Both providers register `Reuse.Singleton`, so the JSON file is cached for the entire Bannerlord process. **JSON edits require a full Bannerlord restart**, not a save-load and not a new campaign. MCM switches **do** apply live (each model reads `IBattleBalanceSettingsProvider` properties on every call, and the provider reads each value through its cached `TaomSettings` reference, which is the one object MCM edits in place, including on reset and preset).
 
 ## Key Files
 
@@ -131,6 +131,7 @@ Both providers register `Reuse.Singleton` — the JSON file is cached for the en
 - [TAOM.Tests/Features/BattleBalance/TaomMilitaryPowerModelTests.cs](../../TAOM.Tests/Features/BattleBalance/TaomMilitaryPowerModelTests.cs) — **10 tests**: T7-T10 configured values, T6 vanilla/override fallback, T11+ formula extension, low-tier override behavior.
 - [TAOM.Tests/Features/BattleBalance/TaomCombatSimulationModelTests.cs](../../TAOM.Tests/Features/BattleBalance/TaomCombatSimulationModelTests.cs) — **5 tests**: player vs AI blunt-chance routing, fallback to vanilla when `EnableCustomCasualtyRatios=false`.
 - [TAOM.Tests/Features/BattleBalance/TaomPartyHealingModelTests.cs](../../TAOM.Tests/Features/BattleBalance/TaomPartyHealingModelTests.cs) — **13 tests**: cultural bonus zero / positive / negative, boundary clamping (0..1), career passive multiplier integration, null-safety paths.
+- [TAOM.Tests/Features/BattleBalance/BattleBalanceSettingsProviderTests.cs](../../TAOM.Tests/Features/BattleBalance/BattleBalanceSettingsProviderTests.cs): **10 tests**: the no-MCM fallbacks (six literal pins, and all twelve against the `TaomSettings` compiled defaults), read-through (one setting edited per pass, after every getter has been read once, reaches its own getter and no other), resolution from a real DryIoc container, and an IL rule that no getter or constructor calls `TaomSettings.Instance`, only the private lazy accessor (PERF-04).
 
 The models themselves test the static helpers (`CalculateTierPower`, `CalculateBluntChance`, `ApplyCulturalSurvivalBonus`) — the `override`-method paths that touch `IoC.Resolve` and live game state are exercised in-game.
 
@@ -147,6 +148,7 @@ Use the MCM panel: **TAOM → Troop Power → Tier7Power / Tier8Power / Tier9Pow
 
 ## Changelog
 
+- 2026-09-24: plan 003 (PERF-04): `BattleBalanceSettingsProvider` stops resolving `TaomSettings.Instance` on every read; it caches the reference lazily on the first non-null read and reads through it, so MCM edits still apply live.
 - 2026-05-13 — Phase 9b: `BattleBalanceConfigProvider` now validates per-key (TierPower T0-T10 finite + > 0, CulturalSurvivalBonuses finite + [-1, +1]); invalid values revert to compiled default with a warning (partial closes #140).
 - 2026-05-07 — Feature doc `battle-balance.md` created (backfilled one of 5 missing feature docs flagged by `detect-docs-gaps.sh`).
 - 2026-04-06 — Config key fixes (`rohan`→`vlandia`, `dol_guldur`→`dolguldur`) plus test DataRows, from the full-codebase adversarial review.

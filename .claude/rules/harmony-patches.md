@@ -71,6 +71,7 @@ houses Patch31_SmartCavalryAI (+ its Patch31b sibling on `Formation.SetTargetFor
 - Null handling — TaleWorlds often expects `TextObject.Empty` not `null`
 - Event timing — verify when events fire vs when state changes
 - Static state — avoid unless using thread-local pattern
+- **No `ResetForUnload()` needed for a new patch.** Nothing reloads TAOM inside one process: the engine's only caller of `OnSubModuleUnloaded` is `Module.FinalizeModule` at shutdown (v1.5.3 `Module.cs:242-248,1296-1314`), and a rebuild means stopping the game and pressing Play again (Mike, 2026-09-24). A static service cache in a patch class therefore lives exactly as long as the process. The existing `ResetForUnload()` methods stay until their class is next touched, and `ResetForUnloadSweepTests` still requires every one that exists to be called from `OnSubModuleUnloaded`. A reload tool appearing later would change this; then the three once-per-process flags in `SubModule.cs` need resetting too (sprint finding COMP-05).
 - **Reflection in hot paths** — `AccessTools.Method` / `AccessTools.Field` lookups MUST be cached in a static field during `Initialize()`, never resolved inside `Prefix()`/`Postfix()`. Guard spawning calls the patch ~20x per settlement visit; uncached reflection means ~20 redundant lookups per entry.
 
 ## Static State Machines: Sentinel-Collision Check (MANDATORY)

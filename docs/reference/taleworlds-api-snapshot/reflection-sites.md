@@ -7,7 +7,7 @@ It also exists so that an agent working on TAOM does not need the external decom
 **How the gate uses this.** Each row in [Category B](#category-b--auxiliary-static-engine-reflection-gated) is a `[DataRow]` in `ReflectionSiteBindingTests`. The test resolves the type (full name, then simple-name fallback) and asserts the member exists on the installed engine. Run it with:
 
 ```
-dotnet test TAOM.Tests/TAOM.Tests.csproj --filter "FullyQualifiedName~ReflectionSiteBindingTests"
+dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true -p:ModuleId= --settings TAOM.Tests/binding-gate.runsettings --filter "FullyQualifiedName~ReflectionSiteBindingTests"
 ```
 
 **Maintenance.** When you add a reflection site against an engine member, add a row to Category B *and* a `[DataRow]` to the test. When you change a site, update both. When an engine update removes a member, the gate goes red here before the silent breakage ships.
@@ -17,6 +17,8 @@ dotnet test TAOM.Tests/TAOM.Tests.csproj --filter "FullyQualifiedName~Reflection
 ## Category A — Harmony patch targets (gated elsewhere, not catalogued here)
 
 Every `[HarmonyPatch(...)]` target — including patches whose target is resolved by a `TargetMethod()` / `TargetMethods()` body (e.g. SettlementGuards' manual patches, the `MapConversationTableau` / `CultureStageView` `TypeByName` lookups) — is **auto-discovered and resolved** by `TAOM.Tests/Migration/HarmonyPatchBindingTests.cs`. That suite enumerates all 110 `[HarmonyPatch]` / `TargetMethod`-bearing types in `TAOM.dll` and resolves each target exactly as Harmony does at `PatchAll` time. No manual catalogue is needed for them; do not duplicate them below.
+
+The one hand-attached exception: `CrashReport/Hooks/Native2ManagedTargets.cs` names the `ManagedCallbacks.*CallbacksGenerated` shims in `Native2ManagedTargets.All` by string (assembly, type and method) for `Native2ManagedPatcher` to `harmony.Patch`. They are engine members an update can rename, and they are gated by `TAOM.Tests/Features/CrashReport/Native2ManagedTargetsTests.cs` (`BindingVerification`), not by the suite above or by a Category B `[DataRow]`.
 
 > First run of that gate (2026-05-28) caught a real defect: `HeroViewModel_FillFrom_Patch` was name-only on an overloaded method (`HeroViewModel` inherits two more `FillFrom` overloads from `CharacterViewModel`), so Harmony's `AccessTools.Method` threw `AmbiguousMatchException` at patch time — the postfix never applied in v1.4.5. Fixed by pinning the argument types.
 
@@ -30,8 +32,8 @@ Reflection against engine members performed *outside* a patch's target resolutio
 |---|---|---|---|---|
 | `…ViewModelCollection.Inventory.SPInventoryVM` | `_currentCharacter` | field | `InventoryScreenAdapter.cs:29` | EquipPresets active hero |
 | `…ViewModelCollection.Inventory.SPInventoryVM` | `_inventoryLogic` | field | `InventoryScreenAdapter.cs:32` | EquipPresets transfer commands |
-| `…GauntletUI.Mission.Singleplayer.MissionGauntletOrderOfBattleUIHandler` | `_isActive` | field | `OOBOverlayService.cs:57` | CompanionTactics OOB overlay attach |
-| `…MissionGauntletOrderOfBattleUIHandler` | `_dataSource` | field | `OOBOverlayService.cs:58` | CompanionTactics OOB overlay data |
+| `…GauntletUI.Mission.Singleplayer.MissionGauntletOrderOfBattleUIHandler` | `_isActive` | field | `OOBOverlayService.cs:60` | CompanionTactics OOB overlay attach |
+| `…MissionGauntletOrderOfBattleUIHandler` | `_dataSource` | field | `OOBOverlayService.cs:61` | CompanionTactics OOB overlay data |
 | `…ViewModelCollection.Party.PartyCharacterVM` | `TypeIconData` | property | `RoleTooltipDecorator.cs:40` | Companion role tooltip |
 | `…ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM` | `_cachedTooltipProperties` | field | `RoleTooltipDecorator.cs:41` | Companion role tooltip cache bust |
 | `…OrderOfBattleHeroItemVM` | `GetCaptainTooltip` | method | `SubModule.cs:503` (manual patch) | Captain tooltip role hint |
@@ -47,7 +49,6 @@ Reflection against engine members performed *outside* a patch's target resolutio
 | `SandBox.GauntletUI.BannerEditor.BannerEditorView` | `RefreshShieldAndCharacter` | method | `BannerEditorView_OnTick_Patch.cs:21` | Banner paste refresh |
 | `…Party.PartyScreenLogic+PartyCommand` | `TotalNumber` | member | `PartyScreenLogic_AddCommand_Patch.cs:71` | SpecialResources transactional spend |
 | `…ViewModelCollection.Encyclopedia.Items.EncyclopediaUnitVM` | `_character` | field (private) | `EncyclopediaUnitBadgeMixin.cs:31` | SpecialResources encyclopedia troop badge (#590). The unit VM keeps the troop only here, so the badge reads its `StringId` once at construction; a null read hides the badge |
-| `TaleWorlds.Engine.PathReuseCache` | `_store` | field | `PersistentPathCache.cs:149` | EditorCacheRebuild path-cache extract |
 | `…Map.DistanceCache.NavigationCache`1` | `_settlementToSettlementDistanceWithLandRatio` | field | `NavigationCacheAdapter.cs:71` | Distance cache rebuild |
 | `…NavigationCache`1` | `_fortificationNeighbors` | field | `NavigationCacheAdapter.cs:73` | Neighbor cache |
 | `…NavigationCache`1` | `_navigationType` | property | `NavigationCacheAdapter.cs:76` | Nav type (property, not field, in v1.4.5) |
@@ -79,6 +80,7 @@ Reflection against engine members performed *outside* a patch's target resolutio
 | `…DecisionItemBaseVM` | `_onDecisionOver` | field (private readonly, `Action`) | `KingdomVoteDeadlockBinding.cs` | Kingdom vote deadlock (#547). Seam B's close path on a CANCELLED election, where `ExecuteDone` would NRE |
 | `…DecisionItemBaseVM` | `ExecuteDone` | method (protected) | `KingdomVoteDeadlockBinding.cs` | Kingdom vote deadlock (#550). Seam D runs vanilla's own close on a window whose election concluded inside the view model's constructor; safe there because `_chosenOutcome` is set |
 
+Status (2026-09-24): the `PathReuseCache._store` row (added in `41258657`) is removed together with the unwired path-reuse scaffold it covered (plan 025). It was never engine reflection: no installed engine assembly defines a `PathReuseCache` type, and the row passed only through the simple-name fallback, which found TAOM's own class. The scaffold is in `6a80bac6`; if it is ever restored, its `_store` self-reflection belongs in Category D, not in this gate.
 Status (2026-09-15): Patch80 seam D (#550) adds `DecisionItemBaseVM.ExecuteDone`, and the four members `KingdomVoteDeadlockBinding` has cached since #547 are catalogued at the same time; they had only ever been pinned by `Patch80KingdomVoteDeadlockBindingTests`. All five resolve against installed v1.5.3.
 Status (2026-09-14): v1.5.2 engine bump (branch `bannerlord-1.5.x`). Every gate row still resolves against the installed v1.5.2 DLLs (`BindingVerification` green inside the 9,173-test run at `bc5b5d71`). The member-level body diff read the six reflection targets: five unchanged, and the `PartyCharacterVM.TypeIconData` getter and setter are byte-identical to v1.4.8. Hygiene, not drift: `RoleTooltipDecorator` resolves that `PropertyInfo` and never reads or writes it (it decorates `vm.Name`), so this row pins a binding nothing depends on; recorded in `docs/migration/v1.5.2-impact.md` as outstanding.
 Status (2026-09-11): Hideout boss fight (#564) adds three `HideoutAmbushMissionController` field rows, all three injected by `Patch86_HideoutAmbushBossFight` and pinned by the `ReflectionSiteBindingTests` rows plus a field-TYPE assertion in `Patch86HideoutBossFightBindingTests`; **all resolve against installed v1.4.8** (`BindingVerification` filtered run green, see the CHANGELOG entry).
@@ -111,7 +113,7 @@ Reflection whose target is a TAOM-owned type or a dynamic member name. Not affec
 |---|---|---|
 | `Core/Infrastructure/Reflection/ReflectionService.cs` | caller-supplied `(Type, name)` keys | generic cached-reflection helper; targets are at the call sites (Category B/C above) |
 | `CareerSystem/Mutations/MutationService.cs:105` | `typeof(AbilityTemplateData).GetProperty(propertyName)` | `AbilityTemplateData` is a TAOM type; `propertyName` is data-driven |
-| `CrashReport/Hooks/Native2ManagedPatcher.cs:41,52` | `typeof(CrashReportPatchHelper)`, `typeof(Native2ManagedBridge)` | TAOM finalizer/bridge types |
+| `CrashReport/Hooks/Native2ManagedPatcher.cs` | `new HarmonyMethod(typeof(Native2ManagedBridge), nameof(Native2ManagedBridge.Finalizer))` | TAOM bridge type; `nameof` makes it compiler-verified. The engine shim names in `Native2ManagedTargets.cs` are engine reflection and are listed under Category A |
 | `CharacterSelection/Patches/RefreshCharacterEntityAuxPatch.cs:43` | `typeof(AgentVisualsData).GetMethod(nameof(AgentVisualsData.ActionSet))` | `nameof` → compiler-verified member; no string drift risk |
 
 ---

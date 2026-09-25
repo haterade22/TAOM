@@ -5,6 +5,7 @@ using TAOM.Features.CareerSystem.UI;
 namespace TAOM.Tests.Features.CareerSystem;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class CareerChoiceObjectVMTests
 {
     private static CareerChoiceDefinition Choice() => new CareerChoiceDefinition(

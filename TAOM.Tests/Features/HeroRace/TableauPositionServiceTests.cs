@@ -18,6 +18,7 @@ namespace TAOM.Tests.Features.HeroRace;
 // shipped data: cave_troll has a plain row with Zoom -4.0 and no mount row, so place-based selection
 // would have pushed a horse four metres away and left the troll unframed.
 [TestClass]
+[TestCategory("RequiresGame")]
 public class TableauPositionServiceTests
 {
     private const int DwarfRaceId = 3;

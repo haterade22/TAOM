@@ -1,0 +1,10 @@
+# Nullable ratchet: this folder is null-clean. Keep it that way. Procedure and fix rules:
+# docs/ai-includes/code-quality.md, "How nullable is enforced".
+[*.cs]
+dotnet_diagnostic.CS8600.severity = error
+dotnet_diagnostic.CS8601.severity = error
+dotnet_diagnostic.CS8602.severity = error
+dotnet_diagnostic.CS8603.severity = error
+dotnet_diagnostic.CS8604.severity = error
+dotnet_diagnostic.CS8618.severity = error
+dotnet_diagnostic.CS8625.severity = error

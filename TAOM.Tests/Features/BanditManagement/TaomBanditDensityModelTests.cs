@@ -11,6 +11,7 @@ namespace TAOM.Tests.Features.BanditManagement;
 /// points and not unit-tested per ADR-008.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class TaomBanditDensityModelTests
 {
     [TestMethod]

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
@@ -10,6 +11,7 @@ using TAOM.Features.Siege.Models;
 namespace TAOM.Tests.Features.Siege;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class SiegeDefenseServiceTests
 {
     private ISiegeDefenseConfigProvider _configProvider;
@@ -35,7 +37,7 @@ public class SiegeDefenseServiceTests
         var config = new SiegeDefenseConfig
         {
             WatchedSettlementIds = new List<string> { "town_special" },
-            KingdomMessages = new Dictionary<string, KingdomSiegeMessages>
+            KingdomMessages = new Dictionary<string, KingdomSiegeMessages?>
             {
                 ["gondor"] = new KingdomSiegeMessages
                 {
@@ -360,7 +362,10 @@ public class SiegeDefenseServiceTests
 
         // Assert
         Assert.AreEqual("Gondor Calls For Aid!", msgs.Title);
+        Assert.AreEqual("{attacker} besieges {settlement}! You have {days} days.", msgs.Body);
         Assert.AreEqual("For Gondor!", msgs.AcceptButton);
+        Assert.AreEqual("Ride to {settlement}!", msgs.AcceptMessage);
+        Assert.AreEqual("Gondor remembers! +{influence} influence, +{relation} relation.", msgs.RewardMessage);
     }
 
     [TestMethod]
@@ -370,7 +375,7 @@ public class SiegeDefenseServiceTests
         var msgs = _sut.GetMessages("unknown_faction");
 
         // Assert
-        Assert.IsTrue(msgs.Title.Contains("{attacker}"));
+        StringAssert.Contains(msgs.Title, "{attacker}");
         Assert.AreEqual("Help Defend", msgs.AcceptButton);
     }
 
@@ -382,6 +387,122 @@ public class SiegeDefenseServiceTests
 
         // Assert
         Assert.AreEqual("Help Defend", msgs.AcceptButton);
+    }
+
+    // --- GetMessages: partial or null entries in siege_defense_config.json (#660) ---
+
+    private SiegeDefenseService CreateSutFromJson(string json, out SiegeDefenseConfig config)
+    {
+        // Same deserializer SiegeDefenseConfigProvider uses, so a missing key arrives as null.
+        config = JsonConvert.DeserializeObject<SiegeDefenseConfig>(json)
+            ?? throw new AssertFailedException("test JSON deserialized to null");
+        var provider = Substitute.For<ISiegeDefenseConfigProvider>();
+        provider.LoadConfig().Returns(config);
+        return new SiegeDefenseService(provider, _settings, _playerContext, _logger, _coopSession);
+    }
+
+    [TestMethod]
+    public void GetMessages_EntryWithMissingKeys_FallsBackPerFieldToDefaults()
+    {
+        // Arrange
+        var sut = CreateSutFromJson(
+            "{\"KingdomMessages\":{\"rohan\":{\"Title\":\"Rohan Rides!\",\"Body\":\"The horns of {settlement}.\"}}}",
+            out _);
+
+        // Act
+        var msgs = sut.GetMessages("rohan");
+
+        // Assert
+        Assert.AreEqual("Rohan Rides!", msgs.Title);
+        Assert.AreEqual("The horns of {settlement}.", msgs.Body);
+        Assert.AreEqual("Help Defend", msgs.AcceptButton);
+        Assert.AreEqual("You have pledged to defend {settlement}. Ride now!", msgs.AcceptMessage);
+        Assert.AreEqual("You answered the call! +{influence} influence, +{relation} relation.", msgs.RewardMessage);
+    }
+
+    [TestMethod]
+    public void GetMessages_EntryWithEmptyStrings_FallsBackPerFieldToDefaults()
+    {
+        // Arrange
+        var sut = CreateSutFromJson(
+            "{\"KingdomMessages\":{\"rohan\":{\"Title\":\"\",\"Body\":\"\",\"AcceptButton\":\"\"," +
+            "\"AcceptMessage\":\"\",\"RewardMessage\":\"Rohan remembers.\"}}}",
+            out _);
+
+        // Act
+        var msgs = sut.GetMessages("rohan");
+
+        // Assert
+        Assert.AreEqual("{attacker} is besieging {settlement}!", msgs.Title);
+        Assert.AreEqual("Will you answer the call to defend? You have {days} days to reach the settlement.", msgs.Body);
+        Assert.AreEqual("Help Defend", msgs.AcceptButton);
+        Assert.AreEqual("You have pledged to defend {settlement}. Ride now!", msgs.AcceptMessage);
+        Assert.AreEqual("Rohan remembers.", msgs.RewardMessage);
+    }
+
+    [TestMethod]
+    public void GetMessages_EntryIsJsonNull_ReturnsDefaults()
+    {
+        // Arrange
+        var sut = CreateSutFromJson("{\"KingdomMessages\":{\"rohan\":null}}", out _);
+
+        // Act
+        var msgs = sut.GetMessages("rohan");
+
+        // Assert
+        Assert.IsNotNull(msgs);
+        Assert.AreEqual("{attacker} is besieging {settlement}!", msgs.Title);
+        Assert.AreEqual("Help Defend", msgs.AcceptButton);
+        Assert.AreEqual("You answered the call! +{influence} influence, +{relation} relation.", msgs.RewardMessage);
+    }
+
+    [TestMethod]
+    public void GetMessages_PartialEntryResultMutatedByCaller_DefaultsAndConfigEntryUnchanged()
+    {
+        // Arrange
+        var sut = CreateSutFromJson("{\"KingdomMessages\":{\"rohan\":{\"Title\":\"Rohan Rides!\"}}}", out var config);
+
+        // Act
+        var merged = sut.GetMessages("rohan");
+        merged.AcceptButton = "mutated by a caller";
+        var defaults = sut.GetMessages("unknown_faction");
+        var again = sut.GetMessages("rohan");
+
+        // Assert
+        Assert.AreEqual("{attacker} is besieging {settlement}!", defaults.Title);
+        Assert.AreEqual("Help Defend", defaults.AcceptButton);
+        Assert.AreEqual("Help Defend", again.AcceptButton);
+        var entry = config.KingdomMessages["rohan"];
+        Assert.IsNotNull(entry);
+        Assert.IsNull(entry.AcceptButton);
+    }
+
+    [TestMethod]
+    public void GetMessages_DefaultsResultMutatedByCaller_LaterLookupsStillGetDefaults()
+    {
+        // Arrange: an unknown kingdom, a JSON-null entry and an empty id all take the defaults-only path
+        var sut = CreateSutFromJson("{\"KingdomMessages\":{\"rohan\":null}}", out _);
+
+        // Act
+        var unknown = sut.GetMessages("unknown_faction");
+        unknown.Title = "mutated by a caller";
+        unknown.AcceptButton = "mutated by a caller";
+        var nullEntry = sut.GetMessages("rohan");
+        nullEntry.RewardMessage = "mutated by a caller";
+        var unknownAgain = sut.GetMessages("unknown_faction");
+        var nullEntryAgain = sut.GetMessages("rohan");
+        var emptyId = _sut.GetMessages("");
+        emptyId.AcceptButton = "mutated by a caller";
+        var otherService = _sut.GetMessages("");
+
+        // Assert
+        Assert.AreNotSame(unknown, unknownAgain);
+        Assert.AreEqual("{attacker} is besieging {settlement}!", unknownAgain.Title);
+        Assert.AreEqual("Help Defend", unknownAgain.AcceptButton);
+        Assert.AreEqual("Help Defend", nullEntryAgain.AcceptButton);
+        Assert.AreEqual("You answered the call! +{influence} influence, +{relation} relation.", nullEntryAgain.RewardMessage);
+        Assert.AreNotSame(emptyId, otherService);
+        Assert.AreEqual("Help Defend", otherService.AcceptButton);
     }
 
     // Phase 9b #132 — Reset + Snapshot/Restore for save-load + R1 singleton reset

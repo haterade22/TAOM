@@ -23,6 +23,7 @@ namespace TAOM.Tests.Features.HeroRace;
 /// resolving) is on the in-game checklist in issue #502.</para>
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class LiveTableauRefTests
 {
     [TestInitialize]

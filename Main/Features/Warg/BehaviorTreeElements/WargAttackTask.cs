@@ -14,6 +14,18 @@ public class WargAttackTask : BTTask, IBTBannerlordBase, IBTWargBlackboard
     BTBlackboardValue<int> _rageAttackAmount;
     BTBlackboardValue<DateTime?> _rageAttackStartTime;
     BTBlackboardValue<bool> _firstAttack;
+    // Passed in by WargBehaviorTree.BuildTree, resolved once per tree, not on every attack.
+    // IWargAttackService is registered Transient, but WargAttackService keeps no per-call state, so
+    // one instance shared by a tree's attack tasks is equivalent.
+    private readonly IMissionAdapterFactory _adapterFactory;
+    private readonly IWargAttackService _attackService;
+
+    public WargAttackTask(IMissionAdapterFactory adapterFactory, IWargAttackService attackService)
+    {
+        _adapterFactory = adapterFactory;
+        _attackService = attackService;
+    }
+
     public BTBlackboardValue<Agent> Agent { get => agent; set => agent = value; }
     public BTBlackboardValue<Agent> AgentHitBy { get => _agentHitBy; set => _agentHitBy = value; }
     public BTBlackboardValue<int> RageAttackAmount { get => _rageAttackAmount; set => _rageAttackAmount = value; }
@@ -27,8 +39,8 @@ public class WargAttackTask : BTTask, IBTBannerlordBase, IBTWargBlackboard
         if (warg != null)
         {
             // Boundary: wrap sealed Agent into adapter before crossing into service (ADR-007).
-            var wargAdapter = IoC.Resolve<IMissionAdapterFactory>().GetAgentAdapter(warg);
-            IoC.Resolve<IWargAttackService>().WargAttack(wargAdapter);
+            var wargAdapter = _adapterFactory.GetAgentAdapter(warg);
+            _attackService.WargAttack(wargAdapter);
         }
         return BTTaskStatus.FinishedWithTrue;
     }

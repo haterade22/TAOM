@@ -3,11 +3,13 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Features.HeroRace;
+using TAOM.Tests.Infrastructure;
 using TaleWorlds.CampaignSystem;
 
 namespace TAOM.Tests.Features.HeroRace;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class RacePersistenceBehaviorTests
 {
     private RacePersistenceBehavior _sut;
@@ -99,10 +101,8 @@ public class RacePersistenceBehaviorTests
     [TestMethod]
     public void MainSubModule_AndIoC_RegisterRacePersistenceBehavior()
     {
-        var subModuleSource = ReadProjectSource("Main", "SubModule.cs");
-        var iocSource = ReadProjectSource("Main", "IoC.cs");
-        if (subModuleSource == null || iocSource == null)
-            Assert.Inconclusive("Main/IoC.cs or SubModule.cs not found — run from repo root");
+        var subModuleSource = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
+        var iocSource = RepoPaths.ReadSource("Main/IoC.cs", stripComments: true);
 
         // Behavior wiring catches the Messengers-class regression — dropping AddBehavior breaks
         // the entire HeroRace cross-feature contract silently.

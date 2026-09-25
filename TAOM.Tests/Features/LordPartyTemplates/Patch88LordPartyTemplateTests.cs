@@ -6,6 +6,7 @@ using System.Reflection;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.LordPartyTemplates.Hooks;
+using TAOM.Tests.Infrastructure;
 using TAOM.Tests.Migration;
 
 namespace TAOM.Tests.Features.LordPartyTemplates;
@@ -98,6 +99,7 @@ public class Patch88LordPartyTemplateTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void BothVanillaReads_StillGoThroughTheClanGetter()
     {
@@ -158,9 +160,9 @@ public class Patch88LordPartyTemplateTests
     [TestMethod]
     public void SubModule_AppliesTheCategory_InitializesThePatch_AndResetsItOnUnload()
     {
-        var source = File.ReadAllText(Path.Combine(FindRepoRoot(), "Main", "SubModule.cs"));
+        var source = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
-        StringAssert.Contains(source, "_harmony.PatchCategory(\"" + Category + "\")",
+        StringAssert.Contains(source, "TryPatchCategory(\"" + Category + "\")",
             "SubModule.cs never applies " + Category + "; all three patches are dead code.");
         StringAssert.Contains(source, "Patch88_LordPartyTemplate.Initialize(",
             "SubModule.cs never hands the patch its service; the postfix would return on every call.");
@@ -226,13 +228,5 @@ public class Patch88LordPartyTemplateTests
 
         Assert.AreNotEqual(0, names.Count, method.Name + " resolved no calls; the scan failed, not the method.");
         return names;
-    }
-
-    private static string FindRepoRoot()
-    {
-        var dir = new DirectoryInfo(Directory.GetCurrentDirectory());
-        while (dir != null && !File.Exists(Path.Combine(dir.FullName, "TAOM.sln")))
-            dir = dir.Parent;
-        return dir?.FullName ?? throw new FileNotFoundException("TAOM.sln not found walking upward from cwd");
     }
 }

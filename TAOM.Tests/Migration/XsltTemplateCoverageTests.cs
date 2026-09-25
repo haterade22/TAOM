@@ -45,6 +45,7 @@ public class XsltTemplateCoverageTests
         { "@*|node()", "node()|@*", "/", "@*", "node()", "*" };
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void EveryXsltTemplate_MatchesSomethingInTheVanillaFileItTransforms()
     {

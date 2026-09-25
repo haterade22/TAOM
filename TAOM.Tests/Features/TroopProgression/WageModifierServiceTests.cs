@@ -6,6 +6,7 @@ using TAOM.Features.TroopProgression;
 namespace TAOM.Tests.Features.TroopProgression;
 
 [TestClass]
+[TestCategory("RequiresGame")]
 public class WageModifierServiceTests
 {
     private ITroopCostService _costService;

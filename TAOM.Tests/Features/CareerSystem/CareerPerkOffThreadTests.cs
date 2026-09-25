@@ -16,6 +16,7 @@ namespace TAOM.Tests.Features.CareerSystem;
 /// the next mission tick instead of emptying the list the tick iterates from another thread.
 /// </summary>
 [TestClass]
+[TestCategory("RequiresGame")]
 public class CareerPerkOffThreadTests
 {
     private const string HeroId = "main_hero";

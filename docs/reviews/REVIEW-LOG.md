@@ -6,6 +6,10 @@ Running scorecard of all reviews. **Reviews 1-99, 2026-04-05 to 2026-09-12.** 93
 
 | # | Date | Feature | Codex Verdict | Claude Verdict | Real Bugs | False Positives | Missed Bugs | Prompt Version |
 |---|------|---------|--------------|----------------|-----------|-----------------|-------------|----------------|
+| 132b | 2026-09-24 | Plan 009 maintainer decisions: class-by-class Harmony category index and the localized patch-failure notice | issues-found (0 P1, 1 P2, 1 P3) | agree (P2 fixed and gated, rated HIGH; P3 confirmed, decision owed to Mike) | 2 | 0 | 5 (the translator's seeding bug behind P2, DE/FR/JP fragment grammar, untested null-category guard, stale line refs, CHANGELOG test snapshot) | adversarial-xhigh |
+| 133 | 2026-09-24 | Plan 018, the feature-module composition root (contract, `ModuleRunner`, hooks) and the WandererAllegiance pilot | issues-found (0 P1, 1 P2, 3 P3) | agree (P2 and one P3 fixed; plan P3 left to the orchestrator; doc P3 pre-existing) | 3 | 0 | 6 (Patch37 swallows the fail-closed throw, untested `Modules` hand-off, untested hooks, wrong "after every hand-wired block" claim, parked save owners, vacuous IL check) | adversarial-xhigh |
+| 132 | 2026-09-24 | Plan 009, every Harmony patch category applied through `PatchCategoryApplier` (one drifted binding costs one category) | issues-found (0 P1, 1 P2, 1 P3) | agree (both fixed; P2 rated HIGH) | 2 | 0 | 4 (chat log cleared after the splash, assembly-wide category index, stale lens and lesson greps, Patch43 triage consumers) | adversarial-xhigh |
+| 133 | 2026-09-24 | Plan 003 (PERF-04, decision 17 port of `6eb5955c`): `BattleBalanceSettingsProvider` takes the MCM settings reference once instead of per read | issues-found (0 P1, 0 P2, 2 P3) | agree | 1 P3 confirmed (no test put a live settings object behind the cache; fixed with a read-through test) + 1 P3 plan observation (cadence 20x, not 6x; follow-up) | 0 | 3 (stale feature doc and file catalogue; undercounted hot path; the constructor null pin rated only a contingency) | adversarial-ultra |
 | 109 | 2026-09-13 | Creature handles and threads (#592, #595): reference-keyed adapter cache, slot identity, trees on the mission tick, the nine-site audit, two deep-review passes | issues-found (0 P1, 1 P2, 3 P3, 3 observations) | agree (all fixed but one observation) | 1 P2 confirmed (`ForgetAgent` left the layout counters growing: replacements a row deeper, onto the other class's rows; vacancy reclaim per class) + 3 P3 (vanilla `CommonAIComponent.OnTick` raises `OnAgentPanicked` on the async tick, so the tree logic now defers off-thread callbacks; the howdah seat's own rider and `SpatialGrid` held ungated handles; five global listener loops outside the catch) + 2 observations fixed (atomic `GetOrAdd`; one warg attach helper) + the registration swap taken as a precaution. Disputed with evidence: 5 of 9 suspects, including the deletion-order objection that had held the swap back. One observation rejected (buff getters returning live objects). The player's third freeze the same evening (no spider, four wargs) folded into the RCA `rca-warg-clip-on-horse-2026-09-13.md` | 0 | 0 | v6 + 9 Known Suspects, gpt-6-astra at ultra |
 | 110 | 2026-09-13 | Nameplate relation MCM controls, second pass on commit fe266439 (#596): the four sliders composed with the #591 plate widget | issues-found (0 P1, 1 P2, 1 P3) | agree (both fixed) | 1 P2 confirmed (the text curve anchored on vanilla's 0.35 dimmed the name at close range for any opacity 10 to 34; now anchored on the plate's configured resting opacity) + 1 P3 (silent reversion of an invalid TAOM.json value; now one warning per property) + 2 RCA corrections (MCM's slider clamps; MCM raises a save-time event). Deep review before it: data flow found the same P2 independently, performance and compatibility clean | 0 | 0 | v6 + 8 Known Suspects, gpt-6-astra at ultra (explicit -c model/effort) |
 | 108 | 2026-09-13 | Nameplate relation MCM controls (#596): colour toggle, tint strength, neutral and coloured plate opacity, live through a validated settings provider, a static on the plate widget and the Patch38 postfix | (no Codex pass) | 5-agent deep review, ready | 1 LOW fixed (the alpha service interface's doc comment still described the #591 raise-only contract) | 1 (a dirty-check reorder that still read the settings on every frame; the per-frame read is the live-apply mechanism, MCM raises no event) | 0 | deep-review v5 |
@@ -3803,3 +3807,865 @@ scratch copies. Final: `dotnet test` 10,313 passed, 0 failed; `pytest tools/test
 in-game checklist waits for a deploy. Root cause tables and the not-applied list:
 `docs/reviews/rca-animalia-2026-09-23.md`; seven new lessons (build-tooling-workflow, data-content-cultures,
 adapters-taleworlds-api) and a recurrence note, and one new check each in the Engine and Tooling lenses.
+## Review 132 (number provisional: parallel improve branches): plan 012, the loading-window lower traced only on a real drop, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+`/deep-review` (Standards, Engine, Efficiency, Completeness, Data flow, Design) and `/review-codex` on branch
+`improve/012-loading-window-trace-per-frame`, diff `7f02fc8d..6f7ddd39`: `LoadingWindow_Disable_Patch` captures
+`IsLoadingWindowActive` in a Prefix through `__state` and traces a lower only on a true-to-false change
+(`LoadingWindowTraceGate`), ending the one-line-per-frame flood (84 MB in 35 minutes, 1.16 GB in three hours on the
+main menu). Codex gpt-6-astra at ultra, 110,352 tokens: **0 P1 / 0 P2, 2 P3 coverage observations, both confirmed by
+mutant runs, no false positive.** It decompiled the installed engine fresh, qualified the briefing's
+"unconditionally" against the manager guard, and answered ten Known Suspects (5 disputed, 4 unverified as
+historical, 1 partly confirmed). Lenses: no HIGH, no engine incompatibility (10 verified), no efficiency issue.
+Confirmed: 1 MED process gap (no GitHub issue; needs Mike) and 4 LOW, all fixed in the review follow-up commit: the
+stale "every raise and lower" phrase in `feature-map.md` and the class summary; the incomplete screen list (the
+engine also lowers every frame from inventory, clan, kingdom, quests, character, crafting, the barber, the face
+generator and the banner editor, among others) and
+the gate doc's "unconditionally"; no test ran the real Prefix (a `__state = true` mutant passed all eight tests,
+now fails the new round-trip test); the lowered-trace test accepted a fallback or helper-shifted caller chain (a
+helper-hop mutant now fails it). Codex missed the stale phrase outside the diff and the screen list beyond the three
+it was handed. Full suite 10244 passed, 2 skipped, 2 failed (the two known live-Armory tests). Step 4.6 convergence
+pass owed by the orchestrator.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| P3-1 | Prefix test proves shape, not capture | Other: shape assertion under a behaviour name | The plan's test list prescribed it; no mutant run | Round-trip test; testing-qa lesson "A Harmony state pair needs one test through the real Prefix" |
+| P3-2 | Trace test accepts fallback or helper-shifted caller chain | Other: assertion weaker than the constraint it guards | The two-frame skip constraint had no test | Assertions tightened; same lesson |
+
+Report `docs/reviews/deep-review-012-loading-window-trace-per-frame-2026-09-24.md`, RCA
+`docs/reviews/rca-loading-window-trace-per-frame-2026-09-24.md`; lessons in harmony-il (one new, one repeat
+bullet), testing-qa (new) and build-tooling-workflow (repeat bullet). Not pushed, not deployed, not smoked.
+## Review 132 (number provisional: parallel improve branches): plan 008, the binding gate fails loudly instead of passing by skipping, 7-lens deep review + Codex adversarial (2026-09-24)
+
+Plan 008 (`7f02fc8d..8c89e042`, branch `improve/008-binding-gate-no-silent-skips`) points the gate
+at the build's game folder when the test process has no variables, adds an opt-in
+`binding-gate.runsettings` that maps Inconclusive to Failed, turns the discovery floors into
+failures, and teaches the test-results hook to name skips. Codex used 117,503 tokens and found
+**0 P1, 1 P2, 1 P3, both confirmed, no false positive.** It disputed or left unverified 8 of its 10
+Known Suspects, with reasons.
+
+The P2 matched two lenses: the new `PASSED WITH SKIPS` banner goes to stderr from an exit-0 hook,
+which Claude Code sends to the debug log only, so nobody sees it. It repeats #647. The P3 found
+that a response with two summaries loses the second's skips (`head -1`). The seven lenses found 11
+more confirmed defects (13 in all, 0 HIGH) and 1 false positive (a metadata assert that plan 010's
+empty `TaomGameFolder` needs to stay presence-only).
+
+Fixed on the branch:
+- two resolver guard tests, each proven by deleting its guard;
+- the hook's silence on an all-skipped normal-verbosity run (test first);
+- the skill's quantifier and its triage table, which now lists the two red forms plan 008 added;
+- a stale gate command in `reflection-sites.md` and stale counts in the floor messages;
+- the doc comment, the CHANGELOG date and an overclaimed RCA closure.
+
+Left for Mike: the banner's channel (with the P3), `TreatNoTestsAsError` (measured: a zero-match
+gate run goes from rc 0 to rc 1, and the gate is unchanged), `if: ${{ !cancelled() }}` on the CI
+step, build-folder-first resolution, and the GitHub issue.
+
+Mike's decisions (2026-09-24, #652): the banner change and 7c are removed (the `Skipped:` count in
+`dotnet test`'s output and the strict runsettings are the signal, so the P3 lapses with them);
+`TreatNoTestsAsError` is added to the gate settings; the resolver order stays variables first. The
+CI `if:` is moot (#652: plan 010's hosted CI deletes the job), and nothing is ported to
+`bannerlord-1.4.5`. Recorded in the deep-review report's maintainer decisions section.
+
+Codex did best by citing the vendor hook contract and building a two-summary counterexample. It
+missed every prose and test-adequacy finding. Before the decisions: full suite
+`Failed: 2, Passed: 10243, Skipped: 2`
+(the two known live-Armory tests); strict gate 368/0/0; `test_hooks.sh` 289 passed. After them:
+`Passed: 10245`, strict gate 368/0/0, `test_hooks.sh` 283 passed.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|---|---|---|---|
+| 1 | Skip banner never reaches Claude | Dead / no-op code | The plan specified stderr; `hook-authoring.md:128` advises it; 7c tested the text, not the delivery | Lesson in build-tooling-workflow; `hook-authoring.md:128` edit recommended |
+| 2 | Later summaries' skips dropped | Logic error | Every fixture held one summary | Deferred with 1: a two-summary fixture goes with the aggregation fix |
+
+Report: `docs/reviews/deep-review-008-binding-gate-no-silent-skips-2026-09-24.md`. RCA:
+`docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md`. Two lessons in
+build-tooling-workflow and one in testing-qa.
+
+## Review 133 (number provisional: parallel improve branches): plan 008 round two, the maintainer decisions follow-up, 7-lens deep review + Codex adversarial (2026-09-25)
+
+Codex (gpt-6-astra, ultra) reviewed `2ca0805b..37306bca`: the skip banner and `tools/test_hooks.sh`
+7c removed, `TreatNoTestsAsError` added to `binding-gate.runsettings` with a default-suite pin test,
+and the resolver order kept. It used 145,091 tokens and found **0 P1, 0 P2, 1 P3, confirmed, no
+false positive.** It disputed 5 of its 10 Known Suspects, confirmed one as a coverage boundary (the
+pin test proves the XML, not the runner), and left 4 unverified as historical executor behaviour.
+
+| # | Codex Severity | Our Severity | Agree? | Reason |
+|---|---|---|---|---|
+| 1 | P3 | LOW | Yes | `hooks-catalog.md:42` said the settings fail "a skipped test"; they map only Inconclusive, and MSTest 3.1.1 reports `[Ignore]` as Skipped regardless. Six lenses found the same line, and the CHANGELOG sentence beside it |
+
+The lenses confirmed seven more, all LOW or NIT and all in prose or the new test's locator: the
+zero-match triage sentence names one cause of three; the records missed that the revert also undid
+F2, D1 and F1's hook header fix; the report counted two unlabelled CHANGELOG headings, not three;
+the records called the CI `if:` open while #652 records it moot; REVIEW-LOG counts from before the
+decisions read as current; and the pin test added a private repo-root walker beside
+`RepoPaths.RepoPath` (the third review to fix that).
+
+Codex did best by citing the vendor docs for Inconclusive against `[Ignore]` and by walking the
+restored hook's five banner outcomes. It checked the F13 wording against the report, not against
+#652, and did not audit the records against the findings the revert lapsed.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|---|---|---|---|
+| 1 | Catalog says the strict settings fail every skip | Other: doc overclaim | Written from the gate's own skip; the first round's `[Ignore]` FOLLOW-UP was not re-read | Fixed; covered by the first round's "docs follow the gate" lesson |
+
+Fixed on the branch, test first where testable: both overclaims, the skill's zero-match triage, the
+records (F2, D1, header, F13 moot, no port), the three CHANGELOG headings, and the locator (2 of 2
+before and after, and a deleted `TreatNoTestsAsError` still turns its row red). Not applied: the
+header restore, since plan 013 anchors on the exact line. A zero-match strict run now has its
+`rc=1` on disk. Full suite `Failed: 2, Passed: 10245, Skipped: 2, Total: 10249` (the two known
+live-Armory tests).
+
+Report: `docs/reviews/deep-review-008-binding-gate-no-silent-skips-decisions-2026-09-24.md`. RCA:
+`docs/reviews/rca-binding-gate-no-silent-skips-decisions-2026-09-24.md`. One lesson in
+build-tooling-workflow and one in testing-qa.
+## Review 133 (number provisional: parallel improve branches): plan 010, C# on hosted Windows runners against BUTR reference assemblies, 6-lens deep review + Codex adversarial (2026-09-24)
+
+Plan 010 (`2ca0805b..b8c00045`, branch `improve/010-ci-on-hosted-windows`) adds
+`GameReferences.targets`, which switches all three projects between the install and BUTR's
+metadata-only reference assemblies (`-p:TaomGameRefs=RefAsm`), a hosted-Windows workflow
+(`csharp.yml`) that builds, runs the unit tests that need no game and runs the binding gate on the
+stubs, and three test categories on 122 test files. Codex (gpt-6-astra, ultra) used 129,699 tokens
+and found **0 P1, 0 P2, 2 P3, both confirmed, no false positive.** It disputed 6 of its 10 Known
+Suspects, partly confirmed 1 and left 3 unverified, with reasons.
+
+The first P3 was raised to MED: the pin test checked only that the BUTR version starts with
+`1.5.3.`, while its name, the workflow and the CHANGELOG claimed the Steam build, so a same-label
+BUTR build would have gone unnoticed. The second was the workflow header overclaiming what it
+builds and runs. The six lenses found 7 more confirmed defects (9 in all, 0 HIGH, 1 MED) and 1
+false positive (a STOP bypass the orchestrator had authorized as Amendment 2).
+
+Fixed on the branch:
+- the pin test also compares the changeset with `ApplicationVersion.DefaultChangeSet` (shown red
+  on a mutated version first);
+- the reference guard reads the whole element and only unconditional imports (fixture test red
+  first, import check proven by mutation);
+- the gate fails when any check did not execute;
+- the workflow header, both build errors, the `.ai/verification.md` recipe (replayed only with a
+  hand-added `-c Release` and no gate run; the convergence pass below fixed that), the `tests.md`
+  failure signatures, the CHANGELOG (#421) and the feature map.
+
+Applied improvements, both behaviour-preserving: one `_TaomNuGetRoot` property (9 of 9 reference
+snapshots identical) and no stub copies in the fake game's `bin` (gate still 338 of 338). Left for
+Mike: deleting the SandBoxCore reference (1.4.8 unchecked), a method-level tag on Patch86, and
+pointing the unit step at `refasm-game`.
+
+Codex did best by reading PE metadata to catch the plan's `net46` forwarding assembly. It missed
+every finding that needed the executor's logs or an executed recipe. Full suite `Failed: 2,
+Passed: 10246, Skipped: 2` (the two known live-Armory tests); CI replay unit 8,184 executed, gate
+338/0/0.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|---|---|---|---|
+| 1 | Pin test proves the version, not the build | Logic error | Assumed one BUTR build per game version; the plan prescribed the prefix | Changeset assertion; lesson in testing-qa |
+| 2 | Workflow header overclaims | Other: doc claim | Written from the goal, not read against `on:` and the filters | Repeat of the #647 `on:`-block lesson; fixed |
+
+Report: `docs/reviews/deep-review-010-ci-on-hosted-windows-2026-09-24.md`. RCA:
+`docs/reviews/rca-ci-on-hosted-windows-2026-09-24.md`. Two lessons in testing-qa and one in
+build-tooling-workflow.
+
+**Convergence pass** (one `deep-reviewer` on `b8c00045..a4b90e4d`): 5 LOW, 0 HIGH or MED, all
+confirmed and fixed. The no-game recipe now sends the reader to all three `csharp.yml` steps as
+written (all Debug; the gate's `refasm-game` path exists only for Debug) and says to unset the
+game variables before the build, since the build bakes the install into the test DLL's
+`TaomGameFolder`. `tests.md` adds the `ReflectionTypeLoadException` signature from `6b.log`. The
+reference guard gained one fixture row per rejected spelling (seven of ten rows red first, the
+Import's own `Condition` row proven by mutation), matches property names without case and rejects an import under a conditional
+`ImportGroup`, `When` or `Otherwise`. Replayed as written from a clean copy: unit
+`executed=8194 failed=0`, gate 338/0/0. Full suite `Failed: 2, Passed: 10256, Skipped: 2`.
+
+## Review 133b (number provisional: parallel improve branches): plan 010 maintainer decisions D44 to D46, 6-lens deep review + Codex adversarial (2026-09-24)
+
+Commit `c139bc50` (`2897fcca..c139bc50`, branch `improve/010-ci-on-hosted-windows`) applied the
+three items Review 133 left for Mike: D44 deleted the empty SandBoxCore reference, D45 moved
+`RequiresGame` from the Patch86 binding class to its one game-bound method, and D46 pointed the
+unit step at `refasm-game`, measured 10 failures on stub constructors and reverted. Codex used
+109,097 tokens and found **0 P1, 0 P2, 0 P3**, disputing 7 of 10 Known Suspects and leaving 3
+UNVERIFIED (snapshots, restore, compile: it ran nothing).
+
+The six lenses agreed the decisions are implemented as decided and found 5 confirmed defects, all
+LOW or INFO and all in text: the CHANGELOG hunk overwrote the convergence entry's heading; the
+`tests.md` sentence ordered a method tag the decision only allowed (the class-level tags on
+classes whose other tests pass on the stubs would break it); the tagger manifest in scratch still
+held the Patch86 class row, so the documented merge replay would restore it; decision 44's 1.4.8
+re-check was missing from every record; the replay description omitted its scratch NuGet and temp
+roots. All fixed on the branch. No false positive. Needs Mike: tag the Patch86 registration check
+`BindingVerification` so it runs on the hosted gate (338 to 339). It ran in no CI step before D45
+either (the class tag kept it out of both), so this adds a CI check rather than restoring one.
+
+Codex did best with a per-group selection table that showed the registration check falls
+outside both CI steps, but did not flag it. It missed all five text defects: it did not compare
+CHANGELOG headings with the base, read the rule sentence as a description rather than an order,
+and had no access to the scratch manifest or the decision rows. Full suite `Failed: 2, Passed:
+10256, Skipped: 2` (the two known live-Armory tests; branch based before `709649c3`).
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|---|---|---|---|
+| C1 | CHANGELOG heading overwritten | Other: record integrity | Edited in place, diff not read back for `-###` | Lesson in build-tooling-workflow |
+| C2 | Rule sentence stronger than the decision | Other: rule modality | Written from one example, not the classes it governs | Lesson in testing-qa |
+| C3 | Tagger manifest keeps the class row | Stale state: generator input | Output verified, input outside the repo | Lesson in build-tooling-workflow |
+| C4 | Decision 44's condition dropped | Other: record | Outcome recorded, condition not | Same lesson as C3 |
+| C5 | Replay description incomplete | Other: evidence record | Listed what matched CI, not every departure | One-off |
+
+Report: `docs/reviews/deep-review-010-ci-on-hosted-windows-decisions-2026-09-24.md`. RCA:
+`docs/reviews/rca-ci-on-hosted-windows-decisions-2026-09-24.md`. Two lessons in
+build-tooling-workflow and one in testing-qa. This closes Review 133's "Left for Mike" line.
+## Review 132: plan 009, guarded patch-category apply, 6-lens deep review + Codex adversarial (2026-09-24)
+
+Branch `improve/009-guarded-patch-category-apply`, `7f02fc8d..9da9b5b9`: all 84 `PatchCategory`
+calls in `SubModule.cs` go through `PatchCategoryApplier`, which logs a failure under
+`[PatchApply]`, records it and returns false, so one binding that no longer resolves no longer
+fails the module load or the rest of the game-init batch.
+
+**Codex: 2 findings, both confirmed, 0 false positives.** P2: the module-load failure notice was
+sent from `OnSubModuleLoad`, where `InformationManager.DisplayMessage` has no subscriber, and the
+list was cleared as it was sent (rated HIGH here: the change's promise that a dead crash guard is
+never silent did not hold for 28 categories). P3: the summary said a failed group was off, but
+Harmony keeps the classes it applied before the failing one. The deep review found 11 more,
+including two Codex missed that matter: the initial screen clears the chat log after the splash
+video, so Codex's suggested fix (report at the main-menu hook) would still have shown nothing, and
+Harmony's category index is built once per assembly, so an attribute naming a vanished type fails
+every category (a product decision for Mike). All code findings fixed with RED tests first: the
+startup failures now go into an inquiry at the first main menu. Full suite 10248 passed, 2 skipped,
+2 known live-Armory failures.
+
+Codex did best at quoting the runtime Harmony 2.4.2 class loop to disprove the "off this session"
+wording, and at tracing the subscriber order from the installed Native GauntletUI DLL.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | Module-load notice sent to no subscriber, list cleared | Dead / no-op code | Assumed an API worked a certain way; copied the "TAOM loaded successfully!" line as precedent | `SubModuleSource_OnSubModuleLoad_DoesNotReportPatchFailures`; lesson in `lessons/localization-ui.md` |
+| 2 | Summary claims a failed group is wholly off | Other (library semantics) | Assumed `PatchCategory` is atomic | Wording test; lesson in `lessons/harmony-il.md` |
+
+Report `docs/reviews/deep-review-009-guarded-patch-category-apply-2026-09-24.md`, RCA
+`docs/reviews/rca-guarded-patch-category-apply-2026-09-24.md`. Owed: the GitHub issue, Mike's call
+on the assembly-wide index case, and an in-game smoke that breaks one module-load and one game-init
+target.
+
+## Review 132b: plan 009 maintainer decisions, 7-lens deep review + Codex adversarial (2026-09-24)
+
+Branch `improve/009-guarded-patch-category-apply`, `4c728dac..b6cb6ff5`: `PatchCategoryIndex`
+builds Harmony's category index class by class so one unreadable `[HarmonyPatch]` costs only its
+class, and the patch-failure notice is localized (five keys, 12 languages).
+
+**Codex: 2 findings, both confirmed, 0 false positives.** P2: all 60 translated rows sat after
+`</strings>`, where `LocalizedTextManager.LoadLanguage` never reads them (rated HIGH here: the
+decided change did nothing for any non-English player). `7eae4704` moved them;
+`LanguageDataXmlTests.AllTranslationFiles_StringRowOutsideRootStrings_IsNeverPresent` now gates
+placement (RED on the `b6cb6ff5` blobs). P3: a category that lost a class at index time returns
+success, so the preview log says "applied OK" beside the SKIPPED line; confirmed, documented, and
+the behaviour change left for Mike. Every deep-review lens also found P2; they added the root cause
+in `sync_missing_ids` (mixed `\r\r\n` and LF endings), the DE, FR and JP fragment grammar (fixed),
+an untested null-category guard (test added, mutation-checked), a multi-class parity test, and doc
+drift. Full suite 10256 passed, 2 skipped, 2 known live-Armory failures.
+
+Codex did best at quoting the installed loader loop to prove the rows unreachable and at tying
+every new id to its registration, XML row and cache entry in one table.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | Translated rows outside `<strings>` | Other: data written where the engine never reads | Trusted the seeding; every check counted rows at any depth | Placement gate; lesson in `lessons/localization-ui.md` |
+| 2 | A category that lost a class reports success | Logic error (result semantics) | Parity with Harmony, which has no skipped class | Semantic documented; decision to Mike |
+
+Report `docs/reviews/deep-review-009-guarded-patch-category-apply-decisions-2026-09-24.md`, RCA
+`docs/reviews/rca-guarded-patch-category-apply-decisions-2026-09-24.md`. Owed: Mike's call on P3
+and on the unguarded index build, the #653 body at `/ship`, the translator fix, and a German
+in-game check of the notice.
+## Review 133 (number provisional): plan 018, feature-module composition root, 6-lens deep review + Codex adversarial (2026-09-24)
+
+Branch `improve/018-composition-root-first-steps`, `4c728dac..44045b34`: `Main/Composition` adds the
+module contract, `ModuleRunner` and the engine-facing hooks, the wiring tests read `SubModule.cs` and
+`IoC.cs` through one comment-stripping reader, and WandererAllegiance becomes the first feature
+module.
+
+**Codex: 4 findings, 3 confirmed, 1 pre-existing and partly verified, 0 false positives.** P2: the
+runner skipped an already-faulted module before its fail-closed check, so a save owner that faulted
+in a fail-open step, or on a retried campaign start, was left out of the campaign silently (lenses 2,
+5 and 6 found the same). P3: the plan's preconditions expect five `ReportPatchFailures(` calls where
+there are four. P3: the reader's LF test passes without normalising on an LF checkout (proved by
+mutation). P3, pre-existing: the feature doc's Dunland alignment. The deep review found 14 more,
+including two Codex missed that matter: TAOM's own Patch37 finalizer swallows the fail-closed throw
+(Mike's decision), and nothing tested the `Modules = modules;` hand-off whose loss silences every
+module. All code findings fixed with RED or mutation runs; four design proposals applied (the
+single-implementation interface and the `FeatureState` enum deleted). Full suite 10289 passed,
+2 skipped, 2 known live-Armory failures.
+
+Codex did best at turning the documented fail-closed invariant into two concrete call sequences
+that break it.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | Faulted save owner skipped at campaign start | Logic error | Two rules tested one at a time; the campaign-start test passed `failClosed: false` | Sequence tests, `RunCampaignStart`; lesson in `lessons/state-lifecycle-save.md` |
+| 3 | LF test passes without normalising | Other: vacuous test | Input needed no normalising on this checkout | Explicit CRLF probe; lesson in `lessons/testing-qa.md` |
+
+Report `docs/reviews/deep-review-018-composition-root-first-steps-2026-09-24.md`, RCA
+`docs/reviews/rca-composition-root-first-steps-2026-09-24.md`. Owed: the GitHub issue, Mike's call
+on Patch37 and fail-closed at campaign start, the plan's precondition refresh, a convergence pass on
+the fix commit, and the in-game refusal check.
+## Review (plan 007; number assigned when the improve branches merge): PatchShield skips the callback shims, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+Plan 007 on `improve/007-patchshield-skip-callback-shims` (`7f02fc8d..0ad253d5`): PatchShield's
+hot-layer exclusion list gains `"ManagedCallbacks"` so pass 2 stops re-shielding the engine's 247
+callback shims, which Native2Managed crash capture already wraps; the shield-pass line gains elapsed
+time and ms per attach; the `OnGameInitializationFinished` docs stop saying "main menu". Codex
+gpt-6-astra at ultra, 177,288 tokens: **0 P0 / 0 P1 / 0 P2, 1 P3, confirmed, no false positive.**
+It quoted the shim types, the raise sites and Harmony 2.4.2's finalizer contract from the installed
+DLLs and disputed all ten Known Suspects with line evidence. Its P3: the new comment, `dr3` note and
+CHANGELOG said the Native2Managed finalizer swallows every exception while capture is on, when it
+hands the exception back on re-entry, an unresolved service or a handler failure. The data-flow lens
+found the same gap from the other side: the bridge is non-void, so on those paths Harmony rethrows
+with `throw` and the stack is reset, which PatchShield's finalizer used to prevent.
+
+The deep review added what Codex missed. The prefix reaches 88 classes in v1.5.3, not 3: 79
+managed-to-native `ScriptingInterfaceOf*` wrappers that Native2Managed does not wrap are now
+unshielded too (four lenses, independently, by listing the DLLs). The vendored ButterLib puts blank
+transpilers on three shims, so "carry only finalizers" was false. "30x between machines" was one
+desktop over time. A `v1.5.2-impact.md` row contradicted `diag.log`. Nothing pinned the namespace
+to the engine. 13 findings confirmed in all (2 MED, 11 LOW), 0 false positives; everything in the
+changed code was about claims, not behaviour. Fixed: comments, docs, CHANGELOG "Known limitation",
+and a `BindingVerification` test that selects the shims from the installed DLLs as
+Native2ManagedPatcher does (RED with the entry misspelt). Waiting on Mike: the GitHub issue, whether
+to narrow the prefix, and whether to preserve the stack on the fallback returns in
+`CrashReportPatchHelper` (plan 006's file). Full suite: 10243 passed, 2 skipped, 2 failed (the two
+live-Armory tests).
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|
+| 1 | Coverage claim reasoned from the normal path of the finalizer that stays | Other: stale coverage claim | Did not trace every return path of the remaining layer against what the removed layer did | `lessons/harmony-il.md`: "Removing one of two finalizers on a method..." |
+
+Report: `docs/reviews/deep-review-007-patchshield-skip-callback-shims-2026-09-24.md`. RCA:
+`docs/reviews/rca-patchshield-skip-callback-shims-2026-09-24.md`; two lessons in harmony-il, one in
+testing-qa. AGENTS.md lessons are listed in the report, pending the consolidated Phase 3h.
+
+## Review (plan 007 decisions; number assigned when the improve branches merge): PatchShield seen/attached split, 6-lens deep review + Codex gpt-6-astra second pass (2026-09-24)
+
+Plan 007's maintainer-decisions commit on `improve/007-patchshield-skip-callback-shims`
+(`31a31f16..0bf2409e`) answers the three items the entry above left waiting on Mike: the issue is
+#651, the whole `ManagedCallbacks` namespace stays excluded, and the fallback stack preservation is
+fixed on plan 006's branch (`42624b95`). It also splits PatchShield's one method set into seen and
+attached (`ShieldCoverage`), so `diag.log` stops counting skipped methods as shielded, and names the
+editor in the pass-2 label. Codex gpt-6-astra, 158,323 tokens: **0 P1 / 0 P2, 1 P3, confirmed, no
+false positive.** It tabled the six install-loop outcomes against the old set, proving the dedupe
+set unchanged, and disputed all ten Known Suspects with line evidence. Its P3: a `ShieldCoverageTests`
+message claimed the failed-attach retry, which the test cannot exercise.
+
+The deep review added what Codex missed, all text the change made stale: a test comment naming the
+renamed local, the `Dependencies/Foundation/` class count (18, now 19) in two docs, and a reword list
+for plan 006's merge that missed `dr3-maintenance.md:261` and two older lines. 6 findings confirmed
+(4 LOW, 1 INFO, 1 NIT), 4 false positives, 3 NEEDS MIKE (the 1.4.5 port, #651's stale body, filing
+the deferred follow-ups). All six fixed; one named-argument call applied as a preserving
+improvement. Full suite: 10247 passed, 2 skipped, 2 failed (the two live-Armory tests).
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|
+| 1 | Test message claims a retry the test cannot exercise | Other: test claims more than it proves | Message written from the production design, not the test body | Renamed, split, message narrowed; one-off |
+
+Report: `docs/reviews/deep-review-007-patchshield-skip-callback-shims-decisions-2026-09-24.md`. RCA:
+`docs/reviews/rca-patchshield-skip-callback-shims-decisions-2026-09-24.md`; one lesson in
+build-tooling-workflow. AGENTS.md lessons are listed in the report, pending the consolidated
+Phase 3h.
+## Review 132 (number provisional: parallel improve branches append here): plan 006 crash capture boot cost, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+Branch `improve/006-crash-capture-boot-cost`, `7f02fc8d..6fe83bca`: the Native2Managed sweep cut
+from 247 patched callback shims to an allowlist of six, four Patch37 finalizers on empty base
+virtuals deleted, both crash-capture MCM toggles read at capture time, and suppression lines logged
+at occurrences 1, 2, 10, 100. Six `/deep-review` lenses ran in one wave; Codex reviewed the same
+range read-only from git objects.
+
+**Codex: 3 findings, 3 confirmed, 0 false positives** (all P3): the allowlist tests passed on an
+empty list; the plan's owed smoke for the master toggle cannot fail, because both dev triggers
+return before throwing when capture is off, and the doc claimed trigger coverage of the shims; and
+two rewritten docs gave the hand-attached bridge priority 800 where Harmony runs it at 400. It also
+settled ten Known Suspects with quoted engine, MCM and Harmony code. **The lenses confirmed 19
+more**, none HIGH: a bridge test that could not fail (unthrown exception), a boot saving of "about
+30 s" measured only on the maintainer's desktop (players: 0 to 1 s), hint text promising a
+restart-free return to BUTR that TAOM had already disabled, a wrong catch point in `hero-race.md`,
+engine-name tests outside `BindingVerification`, and doc and date drift. All 22 are fixed on the
+branch with tests where testable; the full suite went from 10254 to 10258 passed (2 known
+live-Armory failures). Eight decisions wait for Mike, among them the public issue, whether the
+never-armed tableau-setup callback should give its slot to `RenderTargetComponent_OnPaintNeeded`,
+and an in-game probe for throws in the 241 dropped callbacks.
+
+Codex did best at refusing to trust the plan: it named three places where the plan itself was wrong
+and advised against changing a runtime priority just to match a doc. It missed the claims that
+needed data outside the diff (the audit's player timings, ButterLib's `Disable()`, the test-category
+convention) and called the `hero-race.md` catch point "supported".
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | Allowlist tests pass on an empty list | Logic error (test) | The plan prescribed a self-referential check | Literal six-name pin; lesson in `testing-qa.md` |
+| 2 | Owed master-toggle smoke cannot fail; doc claims trigger coverage of the shims | Other: verification gap | Step written from the hint, not the trigger code | Doc corrected, redesigned check for Mike; lesson in `testing-qa.md` |
+| 3 | Bridge priority documented as 800 | Convention inconsistency | Category text reused for a hand-attached patch | Lesson in `harmony-il.md` |
+
+Report: `docs/reviews/deep-review-006-crash-capture-boot-cost-2026-09-24.md`. RCA:
+`docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md`. Lessons: four in `testing-qa.md`, two in
+`harmony-il.md`, two in `misc.md`.
+
+## Review 133 (number provisional: parallel improve branches append here): plan 006 maintainer decisions, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+Branch `improve/006-crash-capture-boot-cost`, `70727529..8e6b0935`: the maintainer decisions on
+plan 006 (allowlist entry 6 becomes `RenderTargetComponent_OnPaintNeeded`, one preserving exit for
+the bridge, preserving hand-backs in `CrashReportPatchHelper`, an off-main-thread verdict for bridge
+captures from the crash hook's boot-time thread id, and the ten mission combat callbacks back on the
+allowlist, now 16). Six `/deep-review` lenses ran in one wave; Codex reviewed the same range
+read-only from git objects.
+
+**Codex: 3 findings, 3 confirmed, 0 false positives.** P2: the bridge's off-main verdict travelled
+only as a write to `Exception.Data` inside a swallowing catch, and the service read a missing mark as
+"main thread"; Codex decompiled the installed mscorlib to show `Data` is virtual and read-only for
+preallocated agile exceptions, so exactly those exceptions would run the Mission and Campaign
+collectors and the inquiry on a worker. Reproduced RED and fixed: the verdict is now a
+`HandleException` parameter from both the bridge and the AppDomain hook, and the `Data` mark is gone.
+Two P3 doc defects (a config row contradicting the preserving hand-back, and an owed probe whose
+"dropped callback" example had just been put back on the list). **The lenses confirmed 13 more**,
+none HIGH: no test ever reached the swallow path with a reachable service, so four mutations
+survived (now all six tried fail a test); the MCM hint and a reference doc still described six
+shims; an incomplete tableau caller list; missing `ref`/`out` and abandoned-remainder limits for
+swallowed combat callbacks; an unmeasured cost comparison; and the review record's D43/D47 labels
+swapped against the register. Full suite 10265 to 10271 passed (2 known live-Armory failures).
+Five items wait for Mike, chief among them that the preserving master-off hand-back (D26) clears
+the live frames ButterLib's BetterExceptionWindow finalizer reads on four Patch37 targets.
+
+Codex did best at finding the one input that defeats a guard, by reading the BCL rather than the
+game. It filed the untested swallow path as a "coverage limit" (Known Suspect 9) instead of a defect,
+and noted the stale MCM hint without counting it.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | Off-main verdict lost when `Exception.Data` is read-only | Other: safety decision in a best-effort side channel | Copied the AppDomain hook's mark, including its swallowing catch | Parameter instead of mark; RED test; lesson in `harmony-il.md` |
+| 2 | Config table stale after the preserving hand-back | Convention inconsistency (doc) | Did not re-read every sentence describing the changed path | Fixed; `misc.md` list-change lesson |
+| 3 | Probe example already on the allowlist | Other: verification gap | Example not re-checked after the list grew | Fixed; `misc.md` lesson |
+
+Report: `docs/reviews/deep-review-006-crash-capture-boot-cost-decisions-2026-09-24.md`. RCA:
+`docs/reviews/rca-crash-capture-boot-cost-decisions-2026-09-24.md`. Lessons: one each in
+`harmony-il.md`, `testing-qa.md` and `misc.md`. Summary and Metrics tables: pending consolidation
+with the other parallel branches.
+## Review 132 (renumber at merge): plan 013, the Bash hook prefilter, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+Plan 013 put a raw-text test in front of the Python start-up in all 13 Bash hooks, cutting a
+non-git Bash call from 256 to 451 ms per hook to 60 to 150 ms. Six lenses and Codex agree the
+prefilters are correct; two parity runs (156 and 300 cases, the second comparing stderr and the
+marker file too) found no changed decision.
+
+**9 findings: 7 confirmed and fixed, 1 false positive, 1 for Mike.** The one MED that mattered:
+the new test section 4c counted starts of a pinned fake interpreter, and `_pybin.sh` drops a pin
+that misses its 0.8 s probe, so under load the check blamed a correct prefilter (it had already
+done so once in the builder's logs, a plan STOP condition that went unrecorded). It now reads a
+`bash -x` trace for the `source` of `_pybin.sh`. The second MED: section 4's contract payloads no
+longer reached any Bash hook's parse path; a `git status && dotnet --info` payload restores it.
+The first was proven by a fake interpreter slowed to 1 s, under which the counter read 0 starts
+while the trace showed the `source`; the second by a planted `exit 3` that passed the committed
+suite and fails the new one (a planted removal of suggest-compact's two arms did the same). The
+LOWs: suggest-compact's missing trigger rows, 4c's matcher discovery, the premise stated as a JSON
+property rather than Claude Code's, and a misplaced catalog paragraph. The false positive: the
+parity claim, whose evidence was unsaved but which reruns confirmed. For Mike: the plan's GitHub
+issue, two narrower-literal proposals, and the pre-existing multi-line force-push gap.
+
+Codex found 2 of the 7 (both P3, both confirmed, 0 false positives). It missed the flake because
+it read git refs only and never saw the run log; the lenses that caught it read the scratch logs.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| C1 | suggest-compact filter arms with no trigger row; oracle weaker than its label | Other: filter arm without a row | Rows chosen per event, parity excluded the hook | Lesson "An early exit moves every existing test off the path behind it" |
+| C2 | Serializer premise written as a JSON guarantee | Assumed an API behaviour | Plan caveat did not reach the prescribed comment | Lesson "State a payload premise as the producer's behaviour" |
+
+Report: `docs/reviews/deep-review-013-bash-hook-prefilter-2026-09-24.md`; RCA:
+`docs/reviews/rca-bash-hook-prefilter-2026-09-24.md`; three lessons in build-tooling-workflow.
+
+## Review 133 (renumber at merge): plan 013 maintainer decisions D39 and D40, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+The follow-up narrowed eight Bash hook prefilters to the word each gate needs (D39) and sent any
+payload holding a JSON `\u` escape down the full parse in twelve hooks (D40). Six lenses and
+Codex agree it is correct: a 408-case old-versus-new run changed only the eight intended D40
+decisions, where the base filter missed an escaped letter.
+
+**14 findings, 0 false positives: 11 fixed, 1 annotated (the #661 citation waits for batch 3),
+2 for Mike** (the escape arm's breadth, #661's body); Mike also confirms the D39 suggest-compact
+deviation, whose record is among the 11 fixed. No gate decision changes. The two that
+mattered were test rows that could not fail: the commit gates had no `git -C <dir> commit` row,
+and the default escaped row kept a literal `git`. With two planted mutants, the committed suite
+caught neither gap (379 passed, 3 failed, all on one mutant's git-call rows) and fail the new one (386 passed,
+5 failed). The rest: a CHANGELOG before-case taken from the RED intermediate rather than the
+base, a parity claim wider than its script, 4d coverage stated as every gate, a stale writer
+premise, a savings claim that ignored the description field, and "fail open" used for its
+opposite. Final: hook suite 391 passed, 0 failed; dotnet 10235 passed, 2 known live-Armory
+failures (branch predates `a39a9c86`).
+
+Codex found 2 of the 11 (both P3, both confirmed, 0 false positives). It read git refs only and
+ran no mutant, so the two rows that pass through another arm looked sound to it.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | CHANGELOG before-case describes the D39-only intermediate, not the base | Other: evidence from the wrong revision | Example lifted from `red-d40.txt` | Lesson "Prove a before-case against the committed base" |
+| 2 | 4d stated as covering each blocking gate; it covers five | Other: coverage claim not counted | Prose written from intent | Same lesson |
+
+Report: `docs/reviews/deep-review-013-bash-hook-prefilter-decisions-2026-09-24.md`; RCA:
+`docs/reviews/rca-bash-hook-prefilter-decisions-2026-09-24.md`; three lessons in
+build-tooling-workflow.
+## Review 132 (plan 014): Enlistment session reset on load and new campaign, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+Plan 014 (branch `improve/014-enlistment-session-scope`, `7f02fc8d..d1221b7f`) made
+`ServiceMaintenanceService.ResetSessionCaches` also clear the settlement-dwell anchor, the
+arrival-offer latch and cooldown, and the per-hour army-rhythm snapshot, and called it from
+`EnlistmentBehavior.OnNewGameCreated` as well as the load hook. Six lenses (Standards, Engine,
+Efficiency, Completeness, Data flow, Design; XML and Tooling not in scope) and Codex found no
+runtime defect. **11 confirmed findings, 0 false positives, all fixed:** three overclaims (the
+CHANGELOG's "every per-session value", the doc's "on both lifecycle edges", a comment filing the
+rhythm cache under the wrong hazard), a test comment the change made false, the untested load edge,
+an unpinned plan decision, two missing comments, a dwell arithmetic slip, a backwards verb and a
+CS8625. Design's fold of `InvalidateCommanderCache` into the attachment service's reset was applied
+(RED test first). No GitHub issue exists for the plan (needs Mike).
+
+**Codex (gpt-6-astra, ultra): P1 0, P2 0, two P3.** It decompiled the load and new-campaign order
+from the installed DLL, walked five concrete paths, cross-referenced the test settlement ids and
+string keys against ModuleData, and disputed ten suspects with line evidence. O1: the load hook's
+reset had no test, and it proposed the seam (a sentinel thrown from `GetMainHeroId()`, evaluated
+before `CampaignTime.Now`), now `GameLoad_OnTheHost_ResetsTheSessionCaches_BeforeNormalizing`. O2:
+"every per-session value" is false (`_lossAnnouncedFor`). Codex missed the stale test comment (it
+checked the file the plan named), the arithmetic slip and the rhythm comment.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|
+| O1 | Load hook's reset untested | Test gap | Hook judged untestable because of `CampaignTime.Now` | Sentinel test; lesson in `lessons/testing-qa.md` |
+| O2 | "Every per-session value" overclaim | Unverified enumeration (REPEAT) | Written from the plan's three latches | Narrowed; lesson in `lessons/state-lifecycle-save.md` |
+| L1 | Stale "OnGameLoaded only" test comment | Correction not propagated (REPEAT) | Plan grep scoped to one file, phrase split across lines | Fixed; lesson in `lessons/misc.md` |
+
+Needs Mike: the GitHub issue; resetting before the authority gate in `OnGameLoaded`;
+`_lossAnnouncedFor` (clear on reset and discharge, or delete); normalizing a stale record when the
+save has no Enlistment data; a `SubModule.OnGameEnd` teardown call. Full suite 10246 passed, 2
+skipped, 2 failed (the known live-Armory tests). Report
+[deep-review-014-enlistment-session-scope-2026-09-24.md](deep-review-014-enlistment-session-scope-2026-09-24.md),
+RCA [rca-enlistment-session-scope-2026-09-24.md](rca-enlistment-session-scope-2026-09-24.md), prompt
+[codex-adversarial-014-enlistment-session-scope-2026-09-24.prompt.md](codex-adversarial-014-enlistment-session-scope-2026-09-24.prompt.md).
+Owed: the convergence pass on the fix diff, the in-game load and second-campaign smokes. The review
+number may need renumbering at merge (parallel plan branches).
+
+## Review 133 (plan 014): Enlistment session scope, maintainer decisions (#656), 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+The commit applying Mike's six decisions for plan 014 (branch `improve/014-enlistment-session-scope`,
+`41754a03..a67792c4`) was reviewed by six lenses (Standards, Engine, Efficiency, Completeness, Data
+flow, Design; XML and Tooling not in scope) and Codex. **18 confirmed findings, 0 false positives;
+16 fixed, 2 need Mike** (the ADR-002 split issue for `EnlistmentMenuBehavior`, now 162 lines, and
+the stale #656 body). The one behaviour defect: decision 6 cleared the arrival offer's settlement
+latch only in the exit sweep, which a shore-leave pass suspends, so an accepted offer never re-armed
+the town. `EnlistmentMaintenanceBehavior` now ends the stop on the commander's settlement-left edge
+(RED test first, `EnlistmentStopEndTests`). The rest was a heap-release overclaim, a reversed
+teardown-order comment, a source pin that passed on a commented-out call, stale reset docs and three
+test gaps. Design's `RepoPath` reuse was applied; deleting `ColumnLeftSettlement` and
+`_lossAnnouncedFor` wait for Mike.
+
+**Codex (gpt-6-astra, ultra, 144,802 tokens): P1 0, P2 1, P3 2, all confirmed.** It traced vanilla's
+town Leave consequence through `PlayerEncounter.LeaveSettlement` to `LeaveSettlementAction` to show
+the pass route bypasses TAOM's exit sweep, with a numbered hour-100 to hour-130 reproduction, and it
+caught that the source pin passes on a commented-out call. Its proposed fix (the main party's
+departure) was replaced by the commander's departure, which cannot re-ask inside one running stop.
+It missed the CHANGELOG and doc versions of the heap-release claim, the stale interface docs, the
+untested wiring and co-op cells, and the line growth over the ADR-002 ceiling (it disputed that
+suspect as existing debt).
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|
+| 1 | Stop end signalled only by the exit sweep | Stale state / lifecycle | Stop end identified with one exit; tests called the handler directly | `EnlistmentStopEndTests`; lesson in `lessons/state-lifecycle-save.md` |
+| 2 | Source pin passes on a commented-out call | Test oracle | Substring search over source | Comment lines filtered, test renamed; second lesson |
+| 3 | Teardown order reversed in a comment | Assumed API order (REPEAT) | `Game.Destroy` not opened | Corrected; second lesson in `lessons/state-lifecycle-save.md` |
+
+Full suite 10266 passed, 2 skipped, 2 failed (the known live-Armory tests), total 10270. Report
+[deep-review-014-enlistment-session-scope-decisions-2026-09-24.md](deep-review-014-enlistment-session-scope-decisions-2026-09-24.md),
+RCA [rca-enlistment-session-scope-decisions-2026-09-24.md](rca-enlistment-session-scope-decisions-2026-09-24.md),
+raw output `raw/codex-adversarial-014-enlistment-session-scope-decisions-2026-09-24.md`. Owed: the
+convergence pass on the fix diff and the in-game smokes. The review number may need renumbering at
+merge (parallel plan branches).
+## Review (plan 015, number assigned at merge): warg tick costs, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+`/review-codex` Phase 3 on `improve/015-warg-tick-costs`, diff `7f02fc8d..66a85b08`: the warg tree
+resolves its services once per node, its scans reuse buffers, `SpatialGrid` keys cells on (x, y)
+and a live bite fetches a target's skeleton only inside the range gate. Codex gpt-6-astra at ultra:
+**0 P1, 1 P2, 2 P3, all confirmed, no false positive.** It decompiled 11 engine types fresh from the
+installed DLLs, answered all ten Known Suspects and cross-referenced every constant. The P2 was a
+worked counterexample (build, move, query) showing that dropping z cells changes scan membership
+between the 2 s rebuilds, against the plan's "same set" claim; I graded it LOW because every extra
+agent is inside the live sphere, corrected the claims, pinned the behaviour with a test and put
+keep-or-restore to Mike. The P3s were test oracles that could not fail: a `FileNotFoundException`
+catch that skipped an unreadable helper, and a buffer test an allocating call satisfied; both now
+fail properly, each with a control fixture. The six lenses found what Codex missed: the moved
+range gate kept its inverted NaN polarity (fixed test first), the `CheckTargets` skip guards and
+column order were untested, and the empty-scan adapter lookup the hoist added. Step 4 removed the
+factory plumbing into `WargRiderHandManager.Tick`. Suite 10266 passed, 2 skipped, 2 failed (the
+live-Armory pair). Root cause table: `docs/reviews/rca-warg-tick-costs-2026-09-24.md`; three
+lessons in testing-qa, two in adapters-taleworlds-api. Report:
+`docs/reviews/deep-review-015-warg-tick-costs-2026-09-24.md`. Nothing deployed or smoked.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | "Every scan returns the same set" false between grid rebuilds | Stale state / lifecycle | Proof and test used a grid built from the queried positions | Stale-query test; lesson in testing-qa |
+| 2 | IL resolve test skipped a helper it could not load | Other: test oracle fails open | "Cannot read" treated as "nothing to find"; no positive control | `EnsureLoaded`, hard failure, control fixture; lesson in testing-qa |
+| 3 | Buffer test satisfied by `new List<Agent>()` through the buffer overload | Other: test checks a proxy | Pinned the old symptom (arity), not the property | Constructor check and negative control; same lesson |
+
+
+## Review (plan 015 decisions, number assigned at merge): warg tick costs, maintainer decisions, 6-lens deep review + Codex gpt-6-astra (2026-09-24)
+
+`/review-codex` Phase 3 on `improve/015-warg-tick-costs`, diff `56eb4bc8..23f6f85b`: the node
+services are resolved once in `WargBehaviorTree.BuildTree` and injected, and
+`BoneCheckDuringAnimation.Tick` reads the progress once and fetches the attacker skeleton only
+inside the hit window. Codex gpt-6-astra: **0 P1, 0 P2, 2 P3, both confirmed, no false positive.**
+It decompiled seven engine types fresh, traced ten bite scenarios and answered the ten Known
+Suspects; it could not read #659. P3-1: the new IL order test proved call order, not the branch;
+running Codex's counterexample as a mutant left both IL tests green, so the test was replaced by
+five substitute-driven `Tick` tests, which went RED on the mutant. P3-2: the docs said a skeleton
+missing in the wind-up ends the bite at the window, but one back by then lets it continue; wording
+fixed. The lenses found what Codex missed: "no test can call `Tick`" was false (the installed
+`ActionIndexCache` is beforefieldinit; a spike ran `Tick` on `default`), `LogTask` still resolves
+per Execute against a "no node is a service locator" comment, `IoC.ResolveAll` escaped the resolve
+rule, the injected nodes had no fake-driven test, and `IsWarg` was still in the doc. Root cause
+table: `docs/reviews/rca-warg-tick-costs-decisions-2026-09-24.md`; lessons in testing-qa,
+adapters-taleworlds-api and misc. Report:
+`docs/reviews/deep-review-015-warg-tick-costs-decisions-2026-09-24.md`. Nothing deployed or smoked.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | IL order test accepted a skeleton fetch on every wind-up frame | Other: test checks a proxy (repeat) | "No test can call `Tick`" was never tried, and the test was named for the goal, not for what a call list shows | Substitute-driven `Tick` tests, mutation-checked; lesson in testing-qa |
+| 2 | Behaviour-difference text omitted skeleton recovery | Logic error (claim) | Written from the scenario pictured, not the condition the code tests | Wording fixed; lesson in misc |
+## Review (plan 019, number assigned at merge): nullable ratchet, Siege graduated to errors, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+Plan 019 moved the seven nullable ids (CS8600 to CS8604, CS8618, CS8625) out of both production
+`<NoWarn>` lists into the root `.editorconfig` and set them to `error` in `Main/Features/Siege`
+(`7f02fc8d..19ca72d3`). Six lenses and Codex found no runtime defect: the Main build is still
+2 warnings and 0 CS86xx, the test project's 2,256 CS86xx are unchanged, and every engine member was
+checked against the installed v1.5.3 DLLs.
+
+**Codex: 2 findings, 2 confirmed (both P3), 0 false positives.** The camp-2 test asserted array
+lengths, which a copy dropping the frames would pass (now `Assert.AreSame`), and the new DTO
+comment promised a "" fallback that `AcceptButton` does not get. Codex's two observations (the
+stale `GatePosition` wording, "without throwing" describing the prefix rather than the outcome)
+matched deep-review findings. Codex missed the MED one: `/build-fix` still told a builder to fix
+CS8602 with `!`, advice the ratchet made live for the first time, in a skill file outside the git
+refs its prompt scoped it to. It also missed the CHANGELOG pointer to a procedure that lived only in
+the plan, the missing NoWarn gate, path coverage and the missing GitHub issue.
+
+**12 confirmed across both reviews, 1 false positive, 0 HIGH.** Eleven fixed in the follow-up
+commit, with three more prefix tests (every path now covered, including the gate ring built on
+uninitialized engine objects the plan had called untestable) and `NullableRatchetGateTests`, shown
+failing on a leaked id. The GitHub issue is left to Mike. Six findings came from text the plan
+itself supplied; one repeats the harmony-il "defer describes control flow" lesson, whose own example
+had named Patch8 as a safe defer (corrected). Full suite: 10,246 total, only the two live-Armory
+failures.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| C1 | Camp-2 test's length-only oracle | Other: weak test oracle | Plan-prescribed oracle copied | `AreSame`; `lessons/testing-qa.md` |
+| C2 | DTO comment overstates the "" fallback | Convention inconsistency | Plan-supplied comment contradicted the plan's own step | Comment fixed; plan-text lesson in `lessons/build-tooling-workflow.md` |
+
+Report: `docs/reviews/deep-review-019-nullable-ratchet-2026-09-24.md`; RCA:
+`docs/reviews/rca-nullable-ratchet-2026-09-24.md`; lessons in build-tooling-workflow (2),
+testing-qa, misc, and a Recurred line in harmony-il.
+
+## Review (plan 019 decisions, number assigned at merge): per-field KingdomMessages fallback and the Siege follow-ups, 6-lens deep review + Codex second round (2026-09-24)
+
+The maintainer-decisions commit on plan 019 (`de288136..503b933e`): `GetMessages` fills each
+missing or empty `KingdomMessages` field, and a JSON `null` entry, from the defaults as a fresh
+copy; the no-settlement siege-camp path is recorded as closed (#660). No runtime defect: both
+consumers go through the fallback, and every engine call it reaches was checked against v1.5.3.
+
+**Codex: 2 findings, 2 confirmed (both P3), 0 false positives; 1 observation that is not a
+defect.** It found the test-project nullable warnings (two of the three sites) and that the
+fresh-copy test could not catch a `return DefaultMessages` shortcut, naming that exact mutant.
+Its config table flagged the synthetic test key `rohan` (not a defect). It missed the patch
+registry still calling decision 2 open (outside the diff's files, as in the first round), the
+stale test count and token table in `siege-defense.md`, the unpinned `AcceptMessage` mapping and
+the silent-fallback design question.
+
+**11 confirmed across both reviews (5 LOW, 6 NIT), 1 false positive, 0 HIGH, 2 for Mike.** All
+11 fixed in the review follow-up: the test project's nullable warning count is back to 2,256, and the two strengthened tests
+were shown failing under both mutants. Mike decides whether an incomplete entry logs a warning
+(`csharp-architecture.md` "Config Providers MUST Validate") and whether a value of only spaces
+counts as empty. Full suite: 10,258 total, only the two live-Armory failures.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| C1 | Three new test-project nullable warnings | Other: annotation change reaches unchanged consumers | Verified Main's count only; warnings keep the build green | Fixed; `lessons/build-tooling-workflow.md` |
+| C2 | Fresh-copy test blind to the defaults path | Other: weak test oracle | Test written from the RED it had to produce | New test, mutant-proven; `lessons/testing-qa.md` |
+
+Report: `docs/reviews/deep-review-019-nullable-ratchet-decisions-2026-09-24.md`; RCA:
+`docs/reviews/rca-nullable-ratchet-decisions-2026-09-24.md`; lessons in build-tooling-workflow,
+testing-qa, and a Recurred line in misc.
+
+## Review (plan 002, number assigned at merge): NaN and Infinity in career mutation floats, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+Branch `improve/002-nan-guards`, diff `a39a9c86..78889a85`: `MutationParams.GetFloat` rejects NaN
+and plus or minus Infinity through `FiniteFloatValidator`, ported byte for byte from `cfc47206`.
+Codex, read-only against git refs, found no P1 or P2 and two P3 observations on the plan text (a
+stale TroopWeight scope, command recipes missing `-p:ModuleId=`); both confirmed and left to the
+orchestrator. Codex traced every calculator's fallback and the boot, save, mission and co-op paths,
+and noted the calculator overflow past the accessor guard but scoped it out rather than flagging it.
+It missed the two untested guard branches the lenses caught.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|---|---|---|---|
+| P3-1 | Plan text stale against its base | Other: plan drift | Plan written against a June base; scope shrank at execution | Orchestrator refreshes the plan |
+| P3-2 | Plan recipes omit `-p:ModuleId=` | Convention inconsistency | Plan template predates the requirement | Plans quote `.ai/verification.md` verbatim |
+
+Lens findings fixed with tests: two `MutationParamsTests` (unparseable fallback, negative finite
+pass-through, both proved by a mutant), one calculator-author step in `career-system.md`, one
+CHANGELOG claim reworded. Open for Mike: the GitHub issue, the silent fallback against config rule
+5, and a finiteness gate on the calculated value in `MutationService.ApplyMutation`. Full suite
+10,320 passed, 2 skipped, 0 failed. Report:
+`docs/reviews/deep-review-002-nan-infinity-config-guards-2026-09-24.md`; RCA:
+`docs/reviews/rca-nan-infinity-config-guards-2026-09-24.md`; two lessons (testing-qa,
+gamemodels-services).
+
+## Review 133: plan 003, the BattleBalanceSettingsProvider cache (PERF-04), 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+The decision-17 port of the June commit `6eb5955c` as `7feca96b` on
+`improve/003-battlebalance-settings-cache`: the provider stopped resolving `TaomSettings.Instance` on
+every read. Codex returned 0 P1 and 0 P2. Its P3 (the tests only ever ran the null path, so a
+constructor that snapshots or discards the reference passes) was confirmed and matched lenses 4 and 6
+independently; its counterexample (a constructor that reads `Instance` and throws it away) is one an
+IL rule cannot see. Its second P3 (plan 003 says a 0.1 s grid rebuilds about 6x as often as 2 s; it is
+20x) is pre-existing plan text and goes to the orchestrator. It disputed eight of the ten suspects
+correctly and rated the constructor null pin an UNVERIFIED contingency; three lenses treated it as a
+latent defect, and the follow-up removed it with the lazy `??=` accessor. Codex missed the two docs
+the change made stale and the live-battle XP path that makes this hotter than "simulation only".
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | No read-through test behind the cache | Other (test proves call location, not value) | MCM is not initialised under MSTest and no seam injected a live object; the IL rule read as full coverage | Internal test constructor and a mutate-after-construction test; lesson in `lessons/testing-qa.md` |
+| 2 | Plan cadence arithmetic | Logic error (plan) | Reasoned from frames, not the two intervals | Follow-up to the plan owner |
+
+Final: `dotnet test` 10,323 passed, 2 skipped, 0 failed. Reports:
+`docs/reviews/deep-review-003-hot-path-resolve-and-grid-caching-2026-09-24.md`,
+`docs/reviews/rca-hot-path-resolve-and-grid-caching-2026-09-24.md`; two lessons (state-lifecycle-save,
+testing-qa). Owed: a GitHub issue (Mike) and an in-game slider check.
+
+## Review (improve/005, numbered at merge): plan 005 security hygiene, faction-map argv fix and vendored-credential checklist, 5-lens deep review + Codex gpt-6-astra ultra + convergence (2026-09-24)
+
+The June port (`4310aa6e`, `4bc520a1`) as commit `6b34fd00`: `tools/process_faction_map.py` passes
+paths to its two child `python -c` programs through `sys.argv` instead of pasting them into the
+source, and the external-repo checklist gains a credential grep. Five lenses (data flow, tooling,
+efficiency, completeness, design) and Codex in parallel.
+
+**The code was correct; the prose and its verification were not.** One HIGH, two MEDIUM, three LOW
+confirmed, all in the doc and CHANGELOG hunks or the missing test. The HIGH: the new checklist grep
+exits 1 on TAOM's vendored drops, which are `.tar.gz`; three BUTR archives still hold a
+`packageSourceCredentials` block (counted, never printed). The CHANGELOG called that credential
+"already gone from disk" on the strength of the same blind grep, run in a worktree where the ignored
+folder does not exist. The injection fix had no regression test; the plan relied on `py_compile`,
+which never parses the child programs. LOWs: an em dash, an ambiguous "SEC-02" reference, and a
+backslash-pipe pattern that ripgrep reads as a literal pipe.
+
+Codex found no implementation defect, one P3 plan defect (`py_compile` is neither read-only nor a
+check of the children; confirmed, pre-existing plan text), one P2 scope observation (MCP pinning
+moved to plan 016; not a defect), and marked the disk claim UNVERIFIED (it is false). It missed the
+archive blindness because it reviewed git objects only and the drops live in an ignored folder.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | Checklist grep blind to `.tar.gz` drops | Other: absence check blind to the stored form | June line written for an extracted tree, ported verbatim, never run on the real folder | Archive loop in the line; lesson in build-tooling-workflow |
+| 2 | "Gone from disk" claim false | Other: claim from a check that could not fail | Check ran in a worktree with a gzip-blind grep | CHANGELOG corrected; same lesson |
+| 3 | No regression test | Other: compile-only verification | Children are string literals; "untestable" not checked | `tools/tests/test_process_faction_map.py`; lesson |
+
+Fixed with the test first (RED on `a39a9c86`, GREEN on HEAD). Final: `dotnet test` 10,313 passed, 0
+failed; the new Python module 3 of 3. Needs Mike: the three tarballs (delete or repack, tell BUTR),
+the `6b34fd00` commit body's false sentence, and the missing GitHub issue. Report
+`docs/reviews/deep-review-005-security-hygiene-2026-09-24.md`, RCA
+`docs/reviews/rca-security-hygiene-2026-09-24.md`; three lessons in build-tooling-workflow.
+
+Convergence pass on `a0fa3cff`: six LOW, none with runtime impact, all fixed. The checklist's
+archive loop read only top-level `.tar.gz` files (now a `find` over `.tar.gz` and `.tgz` at any
+depth), the CHANGELOG named gzip as the only cause of the missed check (the worktree was the other),
+the RCA left out the missing-issue finding and misquoted a lesson title, the lesson index counts
+were stale (824 and 181), and the verdict stood without the convergence pass.
+
+## Review 133 (number provisional: parallel improve branches): plan 001, the SpecialResources new-campaign reset, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+Branch `improve/001-specialresources-reset`, `a39a9c86..4263535a`: a new campaign wipes the
+process-lifetime balance storage in `OnNewGameCreated` (no hero read) before the character-creation
+seed, and the SyncData load reads into a null local instead of the live dictionary. The June port of
+plan 001's SpecialResources half, rewritten against today's code (decision 17); the CareerSystem half
+landed earlier in `f4273639`. Six `/deep-review` lenses ran; Codex reviewed the same range read-only
+from git objects.
+
+**Codex: 3 findings, 3 confirmed, 0 false positives.** P2, pre-existing: a save with no behavior record
+never reaches `SyncData` (v1.5.3 `LoadBehaviorData`), so a pre-feature save loaded after another
+campaign still inherits its balances; the plan deferred it and the fix is behaviour-changing, so it
+waits for Mike and is recorded as a known limitation. P3: a fixture used the display name `castar` for
+the id `caster` (fixed). P3: the plan's RED step builds the wrong project (recorded). It settled ten
+Known Suspects with quoted engine code. **The lenses confirmed five more**, all LOW or NIT and none in
+runtime code: the CHANGELOG and doc overclaimed the key-miss fix and said balances leaked "for every
+lord", a test comment said `Hero.MainHero` is null outside a game (it throws), the test fake diverged
+from the engine on the save side, and no GitHub issue exists (for Mike). Suite before and after the
+fixes: 10318 passed, 2 skipped, 0 failed.
+
+Codex did best at separating the engine's "no record" path from "missing key" by quoting
+`LoadBehaviorData`, and at the config cross-reference. It missed the scope claim ("every lord", which
+needs the writers' keys) and the fake's save-side divergence.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 2 | Fixture id `castar` for `caster` | Config ID mismatch | Display name typed from prose; opaque keys cannot fail an assertion | Lesson in `lessons/testing-qa.md` |
+| 3 | Plan RED step builds `Main/TAOM.csproj` | Other: plan procedure | Reasoned from the missing method, not from which project holds the test | Lesson in `lessons/misc.md` |
+
+Report: `docs/reviews/deep-review-001-cross-campaign-singleton-resets-2026-09-24.md`. RCA:
+`docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md`; lessons in state-lifecycle-save,
+testing-qa (two) and misc.
+
+## Review 133 (number provisional: parallel improve branches): plan 025, delete two unreachable scaffolds, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+Branch `improve/025-delete-unreachable-scaffolds`, `1091f3b6..032481cc`: `IEditorSceneAdapter`
+(no implementation, no reference) and the EditorCacheRebuild `Caching/` path-reuse scaffold
+(registered, never resolved) deleted, with the two reserved config fields, 26 tests and the
+`TaleWorlds.Engine.PathReuseCache._store` binding row, which no engine assembly defines and which
+passed only through the gate's simple-name fallback onto TAOM's own class. Six `/deep-review`
+lenses ran in one wave; Codex reviewed the same range read-only from git objects.
+
+**Codex: 1 finding, 1 confirmed, 0 false positives** (P3, plan text): plan 025's prescribed
+status sentence contains the string its own done check requires to be absent. It also settled ten
+Known Suspects with quoted v1.5.3 code (`NavigationPath`, `NavigationCacheElement.Sort`,
+`CheckBeingNeighbor`) and a config cross-reference. **The lenses confirmed six more**, all LOW and
+none in runtime code: the rewritten performance paragraph kept a premise v1.5.3 does not support
+(Phase 1 keeps its `NavigationPath` local and pathfinds with multiplier 1, Phase 2 with 2), a
+recovery pointer naming the wrong commit for the binding row, two stale doc facts (a test count
+and a `NavigationPath` dependency), a CHANGELOG claim that the keys were never in the shipped JSON
+(they were, for three hours on 2026-05-12), and a permanent absence test that fails the simplicity
+criterion. All six are fixed on the branch; the full suite went from 10288 to 10287 passed (the
+absence test), 2 skipped, 0 failed. The plan finding is recorded, not edited. Two items wait for
+Mike: the public issue, and decision 21's scope (none of the six other reserved config fields has
+a runtime reader, contrary to FOR-MIKE.md).
+
+Codex did best at checking the plan's done criteria against the prose it prescribes. It missed
+every claim that needed history or an engine premise tested rather than quoted: it read the
+memoization sentence as support although its own excerpt shows the differing multiplier, and it
+checked no commit pointer or JSON history.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | Plan's prescribed status sentence contradicts its own done check | Other: plan self-contradiction | Plan checks written apart from the prose they check | Lesson in `lessons/misc.md` (a handoff plan's prescribed sentence is a draft) |
+
+Report: `docs/reviews/deep-review-025-delete-unreachable-scaffolds-2026-09-24.md`. RCA:
+`docs/reviews/rca-delete-unreachable-scaffolds-2026-09-24.md`; lessons in misc (one new, one
+recurrence note), testing-qa and adapters-taleworlds-api.
+
+## Review (plan 022, number assigned at merge): OOB Auto-Assign through HeroAutoAssigner, 7-lens deep review + Codex adversarial (2026-09-24)
+
+`/review-codex` Phase 3 on branch `improve/022-order-of-battle-auto-assign` (`1091f3b6..66e3fd59`), verified by the
+review lead alongside the seven deep-review lenses. Codex, 128,428 tokens: **0 P1 / 1 P2 / 2 P3, all confirmed, no
+false positive.** It quoted installed-DLL code for every OOB member it relied on, cross-referenced every string key,
+setting and registration, and answered the ten Known Suspects (all disputed or UNVERIFIED build-history items). P2:
+the new boundary classified candidates from campaign `Hero.BattleEquipment`, but a siege assault spawns every agent
+without a horse (`SandBoxSiegeMissionSpawnHandler` `SetSpawnHorses(false)`, `Mission.DecideAgentSpawnEquipment`), so a
+companion who owns a horse read as Cavalry, scored 0 on the only classes a siege offers, and was never placed; the
+Engine, Data flow and Design lenses found it too. Fixed with a `HeroCombatAdapter(Hero, Equipment)` overload fed the
+agent's `SpawnEquipment`, RED first. P3: the feature doc denied the vanilla persistence of auto-assigned captains
+(`SPOrderOfBattleVM.SaveConfiguration`), and the VM test asserted dispatch while `TextObject.ToString` swallows
+localization failures; both fixed. Codex missed the LF seeded rows (which make `sync_missing_ids` misplace the next
+row), the untested early returns and threshold, the unpinned DI edge and the stale reflection labels, all from the
+lenses and all fixed. Seven questions to Mike (tie-break, empty formations, hero-troop and non-companion candidates,
+the issue, the badge, a rejection message). Full suite 10335 passed, 2 skipped, 0 failed.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|---|---|---|---|
+| 1 | Siege horse owners never placed | Assumed an API worked a certain way | Plan assumed campaign gear describes the mission agent; test plan named a field battle only | Adapter overload + boundary fix, `HeroCombatAdapterTests`; lesson broadened in adapters-taleworlds-api (repeat of #627) |
+| 2 | Doc denies vanilla persistence | Other: unverified plan premise | Lifecycle not traced to deployment end | Doc fixed; lesson in state-lifecycle-save |
+| 3 | Delegation-only VM test | Other: test oracle | Plan's gate named delegation | Message tests per status; lesson in testing-qa |
+
+Report `docs/reviews/deep-review-022-order-of-battle-auto-assign-2026-09-24.md`; RCA
+`docs/reviews/rca-order-of-battle-auto-assign-2026-09-24.md`. Convergence pass owed. Nothing merged or deployed.

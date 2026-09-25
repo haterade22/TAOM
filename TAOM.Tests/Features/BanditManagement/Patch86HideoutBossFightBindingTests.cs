@@ -6,6 +6,7 @@ using System.Reflection;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.BanditManagement.Hooks;
+using TAOM.Tests.Infrastructure;
 using TAOM.Tests.Migration;
 
 namespace TAOM.Tests.Features.BanditManagement;
@@ -112,6 +113,7 @@ public class Patch86HideoutBossFightBindingTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void BossPhaseCap_StillFeedsTheCampaignTrim()
     {
@@ -177,6 +179,7 @@ public class Patch86HideoutBossFightBindingTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void AmbushPadding_StillDrawsFromTheTypeCache()
     {
@@ -211,6 +214,7 @@ public class Patch86HideoutBossFightBindingTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void PatchClasses_AreRegisteredInAllThreePlaces()
     {
         // Patch39 shipped missing its category attribute and every review agent missed it
@@ -232,10 +236,8 @@ public class Patch86HideoutBossFightBindingTests
 
         Assert.AreEqual("Patch86_HideoutBossFight", Patch86_HideoutBossFight.Category, "the category literal moved — update SubModule.cs and the registry.");
 
-        var subModule = Path.Combine(FindRepoRoot(), "Main", "SubModule.cs");
-        Assert.IsTrue(File.Exists(subModule), $"SubModule.cs not found at {subModule}");
-        var source = File.ReadAllText(subModule);
-        StringAssert.Contains(source, "_harmony.PatchCategory(\"Patch86_HideoutBossFight\")",
+        var source = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
+        StringAssert.Contains(source, "TryPatchCategory(\"Patch86_HideoutBossFight\")",
             "SubModule.cs no longer applies Patch86_HideoutBossFight — both prefixes are dead code.");
         StringAssert.Contains(source, "Patch86_HideoutBossFight.Initialize(",
             "SubModule.cs no longer initialises Patch86 — the prefixes would have no service and defer to vanilla forever.");
@@ -262,13 +264,5 @@ public class Patch86HideoutBossFightBindingTests
 
         Assert.AreNotEqual(0, names.Count, method.Name + " resolved no calls — the scan failed, not the method.");
         return names;
-    }
-
-    private static string FindRepoRoot()
-    {
-        var dir = new DirectoryInfo(Directory.GetCurrentDirectory());
-        while (dir != null && !File.Exists(Path.Combine(dir.FullName, "TAOM.sln")))
-            dir = dir.Parent;
-        return dir?.FullName ?? throw new FileNotFoundException("TAOM.sln not found walking upward from cwd");
     }
 }

@@ -44,6 +44,7 @@ public class TranspilerSiteBindingTests
     public static void Init(TestContext _) => _gameLoaded = GameAssemblies.EnsureLoaded();
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void BannerColorTranspiler_FindsBothFactionColourSites_InInstalledEngine()
     {
@@ -73,6 +74,7 @@ public class TranspilerSiteBindingTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void PartyIconScale_IconSites_StillResolve_InInstalledEngine()
     {
@@ -92,6 +94,7 @@ public class TranspilerSiteBindingTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
     public void PartyIconScale_RelocatedPeopleSite_StillResolves_InInstalledEngine()
     {

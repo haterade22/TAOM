@@ -37,8 +37,8 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Inventory.SPInventoryVM", "SPInventoryVM", "_currentCharacter", "Field", "InventoryScreenAdapter.cs:29")]
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Inventory.SPInventoryVM", "SPInventoryVM", "_inventoryLogic", "Field", "InventoryScreenAdapter.cs:32")]
     // --- CompanionTactics formation-preset overlay (OOBOverlayService.cs) ---
-    [DataRow("TaleWorlds.MountAndBlade.GauntletUI.Mission.Singleplayer.MissionGauntletOrderOfBattleUIHandler", "MissionGauntletOrderOfBattleUIHandler", "_isActive", "Field", "OOBOverlayService.cs:57")]
-    [DataRow("TaleWorlds.MountAndBlade.GauntletUI.Mission.Singleplayer.MissionGauntletOrderOfBattleUIHandler", "MissionGauntletOrderOfBattleUIHandler", "_dataSource", "Field", "OOBOverlayService.cs:58")]
+    [DataRow("TaleWorlds.MountAndBlade.GauntletUI.Mission.Singleplayer.MissionGauntletOrderOfBattleUIHandler", "MissionGauntletOrderOfBattleUIHandler", "_isActive", "Field", "OOBOverlayService.cs:60")]
+    [DataRow("TaleWorlds.MountAndBlade.GauntletUI.Mission.Singleplayer.MissionGauntletOrderOfBattleUIHandler", "MissionGauntletOrderOfBattleUIHandler", "_dataSource", "Field", "OOBOverlayService.cs:61")]
     // --- CompanionTactics role tooltips (RoleTooltipDecorator.cs) + manual patch (SubModule.cs) ---
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Party.PartyCharacterVM", "PartyCharacterVM", "TypeIconData", "Property", "RoleTooltipDecorator.cs:40")]
     [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM", "OrderOfBattleHeroItemVM", "_cachedTooltipProperties", "Field", "RoleTooltipDecorator.cs:41")]
@@ -61,8 +61,6 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.CampaignSystem.Party.PartyScreenLogic+PartyCommand", "PartyCommand", "TotalNumber", "Member", "PartyScreenLogic_AddCommand_Patch.cs:71")]
     // --- SpecialResources encyclopedia troop badge (EncyclopediaUnitBadgeMixin.cs, #590) ---
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Items.EncyclopediaUnitVM", "EncyclopediaUnitVM", "_character", "Field", "EncyclopediaUnitBadgeMixin.cs:31")]
-    // --- EditorCacheRebuild path cache (PersistentPathCache.cs) ---
-    [DataRow("TaleWorlds.Engine.PathReuseCache", "PathReuseCache", "_store", "Field", "PersistentPathCache.cs:149")]
     // --- EditorCacheRebuild distance-cache reflection web (NavigationCacheAdapter.cs) ---
     [DataRow("TaleWorlds.CampaignSystem.Map.DistanceCache.NavigationCache`1", "NavigationCache`1", "_settlementToSettlementDistanceWithLandRatio", "Field", "NavigationCacheAdapter.cs:71")]
     [DataRow("TaleWorlds.CampaignSystem.Map.DistanceCache.NavigationCache`1", "NavigationCache`1", "_fortificationNeighbors", "Field", "NavigationCacheAdapter.cs:73")]
