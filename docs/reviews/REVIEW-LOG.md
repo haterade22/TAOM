@@ -4684,9 +4684,10 @@ P2 2: ADR-008's exception allowed only a static read while ADR-007 allows the ca
 P2 3: ADR-002 migration step 4 always created a service interface; both fixed by the orchestrator in
 `7d1b7a54`. Codex missed the rest of the sweep, which the lenses found: the `→ IHook →` one-liner in
 `submodule-lifecycle-and-harmony.md`, the always-both-interfaces Phase 4 procedure, two audit prompts
-without the seam exception, the lens's "One exception" beside ADR-007's two, and ADR text for Mike
-(`CampaignTime` still listed as a sealed class, ADR-008 and ADR-002 checklists, and the ADR's own
-exemplar services breaking conditions 1 and 2 through private helpers and decision logic in seams).
+without the seam exception, the lens's "One exception" beside ADR-007's two, and ADR text listed for the orchestrator (O3,
+O5, O6: `CampaignTime` still listed as a sealed class, ADR-008 and ADR-002 checklists) and Mike (O1,
+O2: the ADR's own exemplar services breaking conditions 1 and 2 through private helpers and decision
+logic in seams).
 Full suite 10,629 passed, 2 skipped, 0 failed.
 
 | # | Bug | Category | Why Missed | Preventive Action |

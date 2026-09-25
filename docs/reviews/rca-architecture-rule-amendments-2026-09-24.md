@@ -56,11 +56,11 @@ and Codex ran afterwards and between them found every item above.
 - **Agent 1 (Standards):** found C1, C2, C3 (as a follow-up), C6, C7, C8, O1, O3, O4, O5, O6;
   missed C4, C5, C9 and O2 because its harness checks (H1 to H6) read the changed lines and their
   budget, not unchanged files that restate the rule or the seam bodies behind the cited services.
-- **Agent 4 (Completeness):** found C1, C3, C5, C6, C7, C8, O3, O5, O6; missed C2, C4, O1 and O2,
+- **Agent 4 (Completeness):** found C1, C3, C5, C6, C7, C8, O3, O5, O6; missed C2, C4, C9, O1 and O2,
   which need the ADR's Exceptions section and the seam bodies read against each condition.
 - **Agent 5 (Data flow):** found all but C6 and C9; its consumer trace is what reached the audit
   prompts (C5) and the Phase 4 procedure (C4).
-- **Agent 6 (Design):** found C1, C9 and the "engine" wording; it reviews changed units, so the
+- **Agent 6 (Design):** found C1, C6, C9 and the "engine" wording; it reviews changed units, so the
   sweep gaps were outside its lens.
 - **Codex:** found C1 and the two ADR items; it compared the sentences the plan prescribed and did
   not sweep the repo for other statements of the rules (see the report's "Things Codex missed").

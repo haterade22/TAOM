@@ -229,3 +229,27 @@ For the consolidated Phase 3h edit, not made here:
   sentence and what they build), and quoting the engine declarations a rule relies on.
 
 RCA: `docs/reviews/rca-architecture-rule-amendments-2026-09-24.md`.
+
+## Convergence
+
+Convergence pass on `d4e6273a` (`git diff 7d1b7a54..HEAD`, 14 Markdown files, no C#, XML, XSLT or
+hook file). Four LOW defects reported; each was re-read against the worktree and all four are
+CONFIRMED. No false positives.
+
+| # | Sev | Finding | Verification | Fix |
+|---|---|---|---|---|
+| V1 | LOW | `docs/ai-includes/architecture.md:109` (Agent 6 KEEP 2) allowed TaleWorlds access outside an adapter only through seams, so it forbade the value types ADR-007 "Exceptions" lists (`Vec2`, `Vec3`, `TextObject`, `ExplainedNumber`, ADR-007:554-560), which the Standards lens (`1-standards.md:8`) accepts | `RefugeService.Dismantle` (`RefugeService.cs:283`) is public, not a seam, and builds `new TextObject(...)` at `:305` | Mirrors the lens: "other than the value types, only through protected-virtual boundary seams" |
+| V2 | LOW | `docs/ai-includes/decompiled-code-analysis.md:155`, the Phase 4 patch sample, still resolved `IFeatureService`, while `:107` now registers only `FeatureService` by default and `:131` makes the interface optional | `IoC.Resolve<T>` is `_container.Resolve<T>()` (`Main/IoC.cs:257-259`) on a plain `new Container()` (`:92`); an unregistered interface throws and the sample's empty `catch` (`:158`) swallows it | The sample resolves `FeatureService`; the `:108` comment says the interface registration replaces `:107` rather than sitting beside it |
+| V3 | LOW | `CHANGELOG.md:32` and `REVIEW-LOG.md:4687` said the ADR wording was listed for Mike; this report assigns O3, O5 and O6 to the orchestrator (ACTION ITEMS 1) and only O1 and O2 to Mike (item 2) | Report "ADR changes for the orchestrator" table and ACTION ITEMS read this pass | Both now say orchestrator (O3, O5, O6) and Mike (O1, O2) |
+| V4 | LOW | `rca-architecture-rule-amendments-2026-09-24.md`: Agent 4's missed list omitted C9 (Source "A6 note" only) and Agent 6's found list omitted C6 (Source includes "A6 note") | C6 and C9 rows of the CONFIRMED table above | C9 added to Agent 4's missed list, C6 to Agent 6's found list |
+
+**Not changed (open for the orchestrator):**
+
+- `CHANGELOG.md:11` says both orchestrator commits were "made on Mike's approval". The `1cdf8eb0`
+  body says so; the `7d1b7a54` body cites only the protected-file bypass. The approval for
+  `7d1b7a54` is not in any file this pass read, so the line was left as is: confirm or narrow it.
+- `.claude/skills/codex-verify/SKILL.md:52` still says "installed v1.5.2 DLLs" (pre-existing, outside
+  the fix lines); add it to the FOLLOW-UP list of stale v1.5.2 references.
+
+No test pins this text; all four fixes are documentation, so there was no failing test to write
+first.

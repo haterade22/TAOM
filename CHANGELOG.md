@@ -29,7 +29,8 @@ Review follow-ups (deep review plus Codex): `think-before-coding.md` no longer f
 hook interface the other rules allow, the Standards lens names both ADR-007 exceptions (value types
 and seams), and the old `→ IHook →` one-liner, the always-both-interfaces steps in
 `decompiled-code-analysis.md` Phase 4 and two audit prompts without the seam exception are brought in
-line. ADR wording the review found still inconsistent is listed for Mike in
+line. ADR wording the review found still inconsistent is listed for the orchestrator (O3, O5,
+O6) and Mike (O1, O2) in
 `docs/reviews/deep-review-021-architecture-rule-amendments-2026-09-24.md`.
 
 ### feat(troll): v2.0.30 - human clips retargeted onto the hill troll's own rest pose

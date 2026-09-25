@@ -106,7 +106,7 @@ Services contain all business logic. They are 100% unit testable.
 **Rules for Services:**
 - All dependencies injected via constructor
 - Only use adapter interfaces, never sealed types (ADR-007)
-- TaleWorlds access outside an adapter only through protected-virtual boundary seams (ADR-007 "Exceptions")
+- TaleWorlds access outside an adapter, other than the value types, only through protected-virtual boundary seams (ADR-007 "Exceptions")
 - An `IXxxService` interface only when a test fakes it or a second implementation exists (ADR-002)
 - Single responsibility
 - Fully unit testable with mocked adapters, or a test subclass that overrides its boundary seams

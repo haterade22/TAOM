@@ -105,7 +105,8 @@ Entry Point (Harmony Patch / GameModel / MissionLogic)
 ```csharp
 // In feature-specific IoC file (e.g., HeroRaceIoC.cs)
 container.Register<FeatureService>(Reuse.Singleton);
-// only when a test fakes the service or a second implementation exists (ADR-002):
+// only when a test fakes the service or a second implementation exists (ADR-002);
+// this replaces the line above, never sits beside it:
 // container.Register<IFeatureService, FeatureService>(Reuse.Singleton);
 // only when the patch needs a narrow seam or a test fakes the hook:
 // container.Register<IOnSomeEvent, FeatureHook>(Reuse.Transient);
@@ -152,7 +153,7 @@ public class TargetClass_TargetMethod_Patch
     {
         try
         {
-            var service = IoC.Resolve<IFeatureService>();
+            var service = IoC.Resolve<FeatureService>();
             service.HandleEvent(__instance, ref __result);
         }
         catch (Exception) { }
