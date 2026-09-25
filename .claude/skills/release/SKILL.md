@@ -1,6 +1,6 @@
 ---
 name: release
-description: "Cut a TAOM module release: bump the version fields, write the release note, commit, tag, and push. Enforces the #371 Dependencies pairing."
+description: "Cut a TAOM module release: bump the version fields, generate the CHANGELOG section, write the release note, commit, tag, and push. Enforces the #371 Dependencies pairing."
 argument-hint: [version, e.g. 2.0.19]
 ---
 
@@ -76,10 +76,9 @@ It reads every non-merge commit since the previous release tag
 (`git describe --tags --abbrev=0 --match 'v[0-9]*'`), groups the labelled ones by type with subject
 and body verbatim, lists the commits without the version label in a last group, and inserts
 `## vX.Y.Z (<today>)` above the previous release's section. Read its stderr summary
-(`N commits, L with the version label, U without`) and read the unlabelled group before writing the
-release note. Exit 2 means it refused: a section for vX.Y.Z already exists, or someone hand-wrote a
-section above the releases. Show the user the message; never delete a hand-written section without
-their OK.
+(`N commits, L with the version label, U without; ending at <sha>`), note that SHA for Phases 6
+and 7, and read the unlabelled group before writing the release note. Exit 2 means it refused;
+show the user the message, and never delete a hand-written heading without their OK.
 
 ## Phase 5: release note
 
@@ -88,9 +87,15 @@ headers, player-facing framing (what changed for them, not which class was refac
 explicit ⚠️ line whenever MCM-persisted settings mean **existing players keep old values** and must
 reset them by hand.
 
-Source the content from the section Phase 4 just wrote into `CHANGELOG.md`.
+Source the content from the section Phase 4 just wrote into `CHANGELOG.md`. It runs to thousands
+of lines, so list it first: `awk '/^## v/{n++} n==1 && /^###/' CHANGELOG.md` prints its group and
+subject lines only. Open the bodies you need (`git show -s --format=%b <sha>`), and grep the
+section for `MCM` before writing the persisted-settings line.
 
 ## Phase 6 — Commit
+
+First, `git rev-parse HEAD` must print the SHA Phase 4 ended at. If another commit landed since,
+the section misses it: `git checkout -- CHANGELOG.md` and run Phase 4 again.
 
 Stage **explicitly** with `git add <paths>`, never `-A`: the Phase 3 version files, `CHANGELOG.md`
 (Phase 4) and the release note (Phase 5). A shared file routinely holds two sessions' edits.
@@ -105,12 +110,14 @@ The label is the NEW version, the one this commit writes into `SubModule.xml`; t
 ## Phase 7 — Tag and push (the step that gets skipped)
 
 ```bash
-git tag -a vX.Y.Z -m "TAOM vX.Y.Z
+git tag -a vX.Y.Z <release commit sha> -m "TAOM vX.Y.Z
 
 <one-line summary>. Release notes: docs/releases/vX.Y.Z-discord.md"
 git push origin <release branch> vX.Y.Z
 ```
 
+Tag the Phase 6 commit by its SHA, not `HEAD`: a commit another session lands after it belongs
+to the next release's section, and tagging it here would drop it from both.
 Annotated (`-a`), never lightweight. **`git push` does not push tags** — the tag needs its own
 refspec. Then confirm it landed:
 

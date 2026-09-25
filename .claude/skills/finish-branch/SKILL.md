@@ -1,6 +1,6 @@
 ---
 name: finish-branch
-description: Integrate a merge-ready branch into the trunk — fast-forward check, merge, regenerate backlinks, delete branch (local+remote), push with confirmation. TAOM trunk-based, not Git Flow.
+description: Integrate a merge-ready branch into the trunk (fast-forward check, merge, regenerate backlinks, delete branch local and remote, push with confirmation). TAOM trunk-based, not Git Flow.
 argument-hint: "[branch] [base=bannerlord-1.4.5]"
 disable-model-invocation: true
 ---
@@ -48,4 +48,4 @@ Integrate a completed branch into TAOM's trunk (`bannerlord-1.4.5`, the de-facto
 
 - `.claude/skills/ship/SKILL.md` — the pre-merge completion gate this skill follows.
 - `tools/build_backlinks.py` — step-3 backlink regeneration.
-- `.claude/hooks/validate-push.sh` — the push guard referenced in step 5.
+- `.claude/hooks/validate-push.sh`: the push guard referenced in step 5.

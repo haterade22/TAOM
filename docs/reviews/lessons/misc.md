@@ -207,6 +207,11 @@ new rule, across eleven files.
   "103+" total because nothing computes it, yet kept the per-bullet counts beside it. When a
   deletion removes the last user of a type, grep the owning doc's Dependencies list for it, and
   drop hand-kept counts rather than patching one. `docs/reviews/rca-delete-unreachable-scaffolds-2026-09-24.md` F3, F4.
+- **Recurred:** plan 020 (2026-09-24). Retiring one python-only gate, the change edited the
+  `session-start.sh` degraded banner from "five" to "four" by subtraction; the list had
+  been one short since 2026-09-14, so five gates were open and the banner named four. The
+  banner now carries no count, and `tools/test_hooks.sh` 5b2 derives the gate list from the
+  hooks. `docs/reviews/rca-changelog-at-release-2026-09-24.md` C1.
 
 ### A claim found wrong is wrong everywhere it was written: grep for it before fixing the copy in front of you (#644, #645, 2026-09-23)
 

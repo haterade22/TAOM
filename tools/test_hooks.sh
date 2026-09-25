@@ -690,6 +690,24 @@ for name in $BLOCKING_BASH_GATES; do
 done
 
 # ---------------------------------------------------------------------------
+# 5b2. The degraded-toolchain banner names every python-only gate. A gate with no jq
+#      path dies whenever python is missing, and its exit-0 stderr never reaches Claude
+#      (harness-facts.md), so session-start.sh's banner is the only signal. A hand-kept
+#      list there once omitted check-commit-subject-version for ten days.
+# ---------------------------------------------------------------------------
+head2 "5b2. the degraded banner names every python-only gate"
+for f in .claude/hooks/*.sh; do
+    name=$(basename "$f" .sh)
+    grep -q 'taom_pybin_degraded' "$f" || continue
+    grep -q 'jq' "$f" && continue
+    if grep -q -- "$name" .claude/hooks/session-start.sh; then
+        ok "$name is named in the session-start degraded banner"
+    else
+        bad "$name has no jq path, so it fails open without python, but session-start.sh does not name it"
+    fi
+done
+
+# ---------------------------------------------------------------------------
 # 5c. Every PreToolUse gate prints its decision where Claude Code reads it.
 #     Static, because most deny and ask paths need staged files or the game install
 #     to reach at runtime. Claude Code ignores a top-level {"permissionDecision": ...}:

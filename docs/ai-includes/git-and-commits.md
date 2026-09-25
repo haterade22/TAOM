@@ -64,7 +64,7 @@ If the tree holds another session's edits, leave them unstaged and say so: don't
 tidy them. If Mike asks for both sessions' work to land, commit theirs as its own commit, attributed
 in the message and verified green first, never folded into yours.
 
-Watch for the inverse tell: a CHANGELOG entry in `HEAD` whose code is absent means the documentation
+Watch for the inverse tell: a feature doc or commit body in `HEAD` describing code the commit lacks means the documentation
 half of a change was committed and the code half was not.
 
 More incidents and the reasoning behind these rules:

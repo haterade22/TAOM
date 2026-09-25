@@ -159,7 +159,7 @@ A sprite has two independent failure modes. Check both; they are diagnosed diffe
 - A sprite-capable widget — `Widget`, `ImageWidget`, and `ButtonWidget` all render `Sprite=`.
 - Prefab `Sprite="..."` name exactly matches the registered `<Name>` (case + backslashes, no module prefix) — see `.claude/rules/gui-ui.md`.
 
-Static review (including `/deep-review` + Codex) can confirm bake *shape* but **cannot confirm a sprite renders**. Always flag new-sprite rendering as in-game-only in the CHANGELOG `Not-tested:` line; never let a CLEAN review imply a sprite will display.
+Static review (including `/deep-review` + Codex) can confirm bake *shape* but **cannot confirm a sprite renders**. Always flag new-sprite rendering as in-game-only in the commit's `Not-tested:` trailer; never let a CLEAN review imply a sprite will display.
 
 ### Deploying a prefab/sprite change for in-game testing
 

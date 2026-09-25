@@ -26,7 +26,7 @@ THEN CHECK:
 - The right hook: a Harmony patch where a GameModel override or a campaign event does the same
   job with less risk; a prefix where a postfix suffices.
 - Effectiveness: does the code actually achieve its stated intent across every case the feature
-  doc or CHANGELOG promises, or does a different approach cover a case this one misses?
+  doc, issue or commit body promises, or does a different approach cover a case this one misses?
 - Names that mislead the next reader about what the code does.
 - For XML: an existing roster, template or item reused instead of a clone; an XSLT patch
   instead of a copied vanilla file (or the reverse, once the stylesheet has outgrown the file);

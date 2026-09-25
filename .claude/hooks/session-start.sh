@@ -30,16 +30,16 @@ echo "Branch: $BRANCH"
 # fail silent"). On 2026-08-31 the opposite failure cost ~20 minutes per Bash call:
 # `python3` resolved to a Microsoft Store App Execution Alias that never exits.
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh" 2>/dev/null || PYBIN=""
-# Two separate conditions, deliberately NOT ANDed. Four gates
-# (check-claude-files-tracked, check-doc-config-drift,
-# check-moduledata-validation, check-native-dll-crt) have no jq path at all and call
-# "$PYBIN" unconditionally, so they die on a missing python whether jq is present or not.
-# ANDing the two conditions hid exactly that case.
+# Two separate conditions, deliberately NOT ANDed. The gates with no jq path
+# (check-claude-files-tracked, check-commit-subject-version, check-doc-config-drift,
+# check-moduledata-validation, check-native-dll-crt) call "$PYBIN" unconditionally, so they
+# die on a missing python whether jq is present or not. ANDing the two conditions hid
+# exactly that case. tools/test_hooks.sh 5b2 fails when a python-only gate is missing here.
 if [[ -z "${PYBIN:-}" ]]; then
     echo ""
     echo "!!! HOOK TOOLCHAIN DEGRADED: no safe python resolved. !!!"
-    echo "    The four python-only gates are failing OPEN right now:"
-    echo "    claude-files-tracked, doc-config-drift, moduledata-refs, native-DLL-CRT."
+    echo "    The python-only gates are failing OPEN right now: claude-files-tracked,"
+    echo "    commit-subject version, doc-config-drift, moduledata-refs, native-DLL-CRT."
     if ! command -v jq >/dev/null 2>&1; then
         echo "    jq is absent too, so EVERY JSON-parsing gate is open, force-push included."
     fi

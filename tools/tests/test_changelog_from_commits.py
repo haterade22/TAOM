@@ -7,7 +7,10 @@ Run:  python tools/tests/test_changelog_from_commits.py
 Pure stdlib. The parse, render and insert functions are tested on fixture `git log` text;
 the EndToEndTests build a throwaway git repository in a temp directory and run the script.
 """
+import contextlib
+import io
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -36,20 +39,20 @@ DIAG = record("d" * 40, "diag(boot): v2.0.30 - an uncommon type")
 PLAIN = record("e" * 40, "Add unit tests for Animalia armory writer functionality",
                "Body of an IDE commit.\n")
 NO_VERSION = record("f" * 40, "feat: Implement career kit generation from troop data (#629)")
+HEADING_BODY = record("7" * 40, "docs(release): v2.0.30 - show the next heading",
+                      "Example:\n\n```markdown\n## v2.0.32 (2026-11-01)\n  ### Fixes\n```\n")
 
 
 class ParseLogTests(unittest.TestCase):
-    def test_parse_log_reads_type_scope_version_and_description(self):
+    def test_parse_log_reads_sha_subject_and_type(self):
         (c,) = cfc.parse_log(FEAT)
         self.assertEqual(c.sha, "a" * 40)
+        self.assertEqual(c.subject, "feat(nazgul): v2.0.30 - the Nine scream (#645)")
         self.assertEqual(c.type, "feat")
-        self.assertEqual(c.scope, "nazgul")
-        self.assertEqual(c.version, "v2.0.30")
-        self.assertEqual(c.description, "the Nine scream (#645)")
 
     def test_parse_log_reads_a_subject_with_no_scope(self):
         (c,) = cfc.parse_log(DOCS)
-        self.assertEqual((c.type, c.scope, c.version), ("docs", None, "v2.0.30"))
+        self.assertEqual(c.type, "docs")
 
     def test_parse_log_marks_subjects_without_the_label_as_unlabelled(self):
         commits = cfc.parse_log(PLAIN + NO_VERSION)
@@ -107,6 +110,53 @@ class RenderSectionTests(unittest.TestCase):
         self.assertNotIn("### Commits without the version label", text)
         self.assertTrue(text.endswith("One paragraph.\n"))
 
+    def test_render_orders_other_types_alphabetically(self):
+        text = self.render(DIAG + record("1" * 40, "ci: v2.0.30 - x"))
+        self.assertLess(text.index("### ci"), text.index("### diag"))
+
+    def test_render_escapes_a_body_line_that_would_be_a_heading(self):
+        text = self.render(HEADING_BODY)
+        body_lines = text[text.index("`77777777`"):].splitlines()[1:]
+        self.assertFalse([line for line in body_lines if line.lstrip(" ").startswith("#")],
+                         text)
+        self.assertIn("\\## v2.0.32 (2026-11-01)", text)
+        self.assertIn("  \\### Fixes", text)
+
+    def test_render_leaves_an_issue_reference_at_a_line_start_alone(self):
+        text = self.render(record("8" * 40, "fix: v2.0.30 - x", "#622: the gate was dead.\n"))
+        self.assertIn("\n#622: the gate was dead.\n", text)
+
+
+class LabelParityTests(unittest.TestCase):
+    """LABEL_RE must accept exactly what the commit-subject gate accepts."""
+
+    SUBJECTS = [
+        ("feat(nazgul): v2.0.30 - the Nine scream", True),
+        ("fix!: v2.0.30 - breaking", True),
+        ("docs: v2.0.30.1 - a four-part version", True),
+        ("chore(release): v2.0.31 - TAOM v2.0.31", True),
+        ("Feat: v2.0.30 - capital type", False),
+        ("feat: 2.0.30 - no v", False),
+        ("feat: v2.0.30 -  leading space in the description", False),
+        ("feat: v2.0 - two-part version", False),
+        ("feat(): v2.0.30 - empty scope", False),
+        ("Add a test from an IDE", False),
+    ]
+
+    def hook_pattern(self):
+        hook = (Path(__file__).resolve().parents[2] / ".claude" / "hooks"
+                / "check-commit-subject-version.sh").read_text(encoding="utf-8")
+        m = re.search(r'^pat = re\.compile\(r"(.+)"\)$', hook, re.M)
+        self.assertIsNotNone(m, "the hook's subject pattern moved; update this test")
+        return re.compile(m.group(1))
+
+    def test_label_re_matches_the_subject_gate_in_both_directions(self):
+        gate = self.hook_pattern()
+        for subject, expected in self.SUBJECTS:
+            with self.subTest(subject=subject):
+                self.assertEqual(bool(gate.match(subject)), expected)
+                self.assertEqual(bool(cfc.LABEL_RE.match(subject)), expected)
+
 
 class InsertSectionTests(unittest.TestCase):
     HEADER = "# CHANGELOG\n\n> Generated.\n"
@@ -132,6 +182,23 @@ class InsertSectionTests(unittest.TestCase):
         with self.assertRaises(ValueError) as ctx:
             cfc.insert_section(old, self.SECTION, "v2.0.31")
         self.assertIn("## 2026-10-02", str(ctx.exception))
+
+    def test_insert_refuses_a_hand_written_subheading_above_the_releases(self):
+        for old in (self.HEADER + "\n### fix: by hand\n",
+                    self.HEADER + "\n#### fix: by hand\n\n## v2.0.30 (2026-09-18)\n"):
+            with self.subTest(old=old), self.assertRaises(ValueError):
+                cfc.insert_section(old, self.SECTION, "v2.0.31")
+
+    def test_insert_after_a_release_whose_body_showed_the_next_heading(self):
+        commits = cfc.parse_log(HEADING_BODY)
+        first = cfc.insert_section(self.HEADER, cfc.render_section(
+            "v2.0.31", "2026-10-01", "v2.0.30", commits), "v2.0.31")
+        second = cfc.insert_section(first, cfc.render_section(
+            "v2.0.32", "2026-11-01", "v2.0.31", commits), "v2.0.32")
+        self.assertLess(second.index("## v2.0.32 (2026-11-01)\n\nCommits since"),
+                        second.index("## v2.0.31 (2026-10-01)"))
+        with self.assertRaises(ValueError):
+            cfc.insert_section(second, self.SECTION, "v2.0.31")
 
     def test_insert_does_not_confuse_a_longer_version(self):
         old = self.HEADER + "\n## v2.0.310 (2027-01-01)\n\nx\n"
@@ -204,6 +271,41 @@ class EndToEndTests(unittest.TestCase):
     def test_main_refuses_an_empty_range(self):
         self.git("tag", "v2.0.31")
         self.assertEqual(self.run_tool("--version", "v2.0.32").returncode, 2)
+
+    def test_main_rejects_a_version_with_a_trailing_newline(self):
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err):
+            rc = cfc.main(["--version", "v2.0.31\n", "--repo", str(self.repo), "--write"])
+        self.assertEqual(rc, 2)
+        self.assertIn("--version must look like", err.getvalue())
+        self.assertEqual((self.repo / "CHANGELOG.md").read_text(encoding="utf-8"),
+                         "# CHANGELOG\n\n> Generated.\n")
+
+    def test_main_names_the_commit_the_range_ends_at(self):
+        head = self.git("rev-parse", "HEAD").strip()
+        proc = self.run_tool("--version", "v2.0.31", "--write")
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertIn(("ending at " + head).encode("ascii"), proc.stderr)
+
+    def test_main_refuses_a_repo_with_no_release_tag(self):
+        self.git("tag", "-d", "v2.0.30")
+        proc = self.run_tool("--version", "v2.0.31")
+        self.assertEqual(proc.returncode, 2)
+        self.assertIn(b"describe", proc.stderr)
+
+    def test_main_reads_a_bom_and_writes_without_one_keeping_crlf(self):
+        (self.repo / "CHANGELOG.md").write_bytes(b"\xef\xbb\xbf# CHANGELOG\r\n\r\n> Generated.\r\n")
+        proc = self.run_tool("--version", "v2.0.31", "--date", "2026-10-01", "--write")
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        data = (self.repo / "CHANGELOG.md").read_bytes()
+        self.assertTrue(data.startswith(b"# CHANGELOG\r\n"), data[:20])
+        self.assertNotIn(b"\n", data.replace(b"\r\n", b""))
+
+    def test_main_prints_non_ascii_bodies_as_utf8(self):
+        self.commit("fix(rhun): v2.0.30 - Rhûn notables", "Ségwën keeps the ’quote’.")
+        proc = self.run_tool("--version", "v2.0.31")
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertIn("Ségwën keeps the ’quote’.".encode("utf-8"), proc.stdout)
 
 
 if __name__ == "__main__":

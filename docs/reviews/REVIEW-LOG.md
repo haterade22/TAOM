@@ -4669,3 +4669,29 @@ the issue, the badge, a rejection message). Full suite 10335 passed, 2 skipped, 
 
 Report `docs/reviews/deep-review-022-order-of-battle-auto-assign-2026-09-24.md`; RCA
 `docs/reviews/rca-order-of-battle-auto-assign-2026-09-24.md`. Convergence pass owed. Nothing merged or deployed.
+
+## Review (plan 020, number assigned at merge): CHANGELOG generated at release, 6-lens deep review + Codex adversarial (2026-09-24)
+
+`/review-codex` Phase 3 on branch `improve/020-changelog-at-release` (`bec0389d..ef5b7ff4`), verified by the review
+lead alongside six deep-review lenses (Standards, Efficiency, Completeness, Data flow, Design, Tooling). Codex, 95,017
+tokens, read the git objects only: **0 P1 / 2 P2 / 1 P3, all confirmed, no false positive.** It answered the ten Known
+Suspects and cross-checked the settings registrations, the label pattern against the subject gate, the archive blob
+and the module versions. P2: a commit body is pasted verbatim into `CHANGELOG.md`, and the next run's duplicate check
+scans the whole file, so a body showing `## v2.0.32 (` (fenced or not) makes the v2.0.32 release refuse; no lens saw
+it, because every test ran one release. Fixed by escaping heading-shaped body lines, with a two-release test; output
+for both real ranges stays byte-identical. P2: live `docs/features/` recipes still order CHANGELOG edits, because the
+plan's sweep omitted that folder; the lenses found eight more such lines, all fixed except `elephant.md` (another
+session's uncommitted edits). P3: `release-process.md` wrote the release note before generating its source. Codex
+missed the degraded banner's wrong gate count, the lens check blind to committed edits (`git diff HEAD`), the release
+range read from a moving `HEAD` and tagged later, the `###` hand entry the refusal let through, and the executor
+wrappers that still order hand entries. Four questions to Mike (a since-tag edit guard, the `--version` default, the
+1.4.5 line, plan 011's blocking Stop hook). Full suite 10629 passed, 2 skipped, 0 failed.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|---|---|---|---|
+| 1 | Body heading blocks a later release | Other: unescaped free text in a parsed file | Plan prescribed verbatim bodies and a whole-file regex; one-release tests | `_contain` + two-release test; lesson in build-tooling-workflow |
+| 2 | Live recipes still order CHANGELOG edits | Convention inconsistency | Sweep by folder list and fixed phrases (repeat of 2026-07-01) | Lines fixed; lesson in build-tooling-workflow |
+| 3 | Contract doc order contradicts `/release` | Convention inconsistency | Step replaced in place, order not re-read | Fixed; same lesson |
+
+Report `docs/reviews/deep-review-020-changelog-at-release-2026-09-24.md`; RCA
+`docs/reviews/rca-changelog-at-release-2026-09-24.md`. Convergence pass owed. Nothing merged or deployed.

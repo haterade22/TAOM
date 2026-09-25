@@ -129,7 +129,7 @@ After porting:
 Three review passes found 19 issues total. The categories that recurred:
 
 - **6 wrong-API-assumption bugs** — `scan.sh` body counting, hook lifecycle, rule paths semantics, frontmatter schema. Now pinned in `harness-facts.md`.
-- **3 process violations** — CHANGELOG missed twice; counter math off by one. Now caught by pre-commit hook.
+- **3 process violations**: CHANGELOG missed twice; counter math off by one. The pre-commit hook that caught the CHANGELOG half retired when the commit body became the changelog entry.
 - **1 gitignore blast** (HIGH) — `bin/` swept up `check-freeze.sh`. Now caught by pre-commit hook + naming rule above.
 - **3 stale hardcoded values** — MCP filesystem 12→13, ilspy 8→4, descriptions creeping back to 31w. Now tagged EXACT vs HEURISTIC; description bloat lint added.
 
