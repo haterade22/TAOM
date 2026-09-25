@@ -422,7 +422,6 @@ And the patterns visible in the Dale generator code (clone these explicitly for 
 | **Tests** | `TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs` | modified (+ low/high/fallthrough tests) |
 | **Validator** | `tools/validate_all_troop_refs.py` | modified (add culture to list in main()) |
 | **Feature doc** | `docs/features/<culture>.md` | new |
-| **CHANGELOG** | `CHANGELOG.md` | modified (per-iteration entries) |
 | **RCA (if any Codex findings)** | `docs/reviews/rca-<culture>-<date>.md` | new |
 
 If you author a sub-culture line (e.g., crossbowmen as a parallel to bowmen, or Riverman line as a new royal-tier branch), add to the relevant generator and re-run; the existing wiring (XSLT, party templates) usually doesn't need changes unless you add new entry-tier troops the XSLT references (`basic_troop` / militia / etc.).

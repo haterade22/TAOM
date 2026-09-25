@@ -63,24 +63,37 @@ BUTR/BLSE launchers read `DependedModuleMetadatas`; the vanilla launcher does no
 new TAOM load against an old Dependencies, Harmony/UIExtenderEx types fail at the member level, and
 every character renders in bind pose — with a file timestamp as the only evidence.
 
-## Phase 4 — Release note
+## Phase 4: generate the CHANGELOG section
+
+`CHANGELOG.md` is written here and nowhere else; the commit body is the changelog entry (AGENTS.md
+"Documentation duty"). With the version fields bumped but not yet committed, run:
+
+```bash
+python tools/changelog_from_commits.py --version vX.Y.Z --write
+```
+
+It reads every non-merge commit since the previous release tag
+(`git describe --tags --abbrev=0 --match 'v[0-9]*'`), groups the labelled ones by type with subject
+and body verbatim, lists the commits without the version label in a last group, and inserts
+`## vX.Y.Z (<today>)` above the previous release's section. Read its stderr summary
+(`N commits, L with the version label, U without`) and read the unlabelled group before writing the
+release note. Exit 2 means it refused: a section for vX.Y.Z already exists, or someone hand-wrote a
+section above the releases. Show the user the message; never delete a hand-written section without
+their OK.
+
+## Phase 5: release note
 
 `docs/releases/vX.Y.Z-discord.md`, following `docs/releases/v2.0.15-discord.md`: emoji section
 headers, player-facing framing (what changed for them, not which class was refactored), and an
 explicit ⚠️ line whenever MCM-persisted settings mean **existing players keep old values** and must
 reset them by hand.
 
-Source the content from CHANGELOG entries since the previous tag:
-`git log <previous-tag>..HEAD --format='%s'`.
-
-## Phase 5 — CHANGELOG
-
-Entry under today's date. Mandatory (AGENTS.md "Documentation duty").
+Source the content from the section Phase 4 just wrote into `CHANGELOG.md`.
 
 ## Phase 6 — Commit
 
-Stage **explicitly** — `git add <paths>`, never `-A`. A shared file routinely holds two sessions'
-edits.
+Stage **explicitly** with `git add <paths>`, never `-A`: the Phase 3 version files, `CHANGELOG.md`
+(Phase 4) and the release note (Phase 5). A shared file routinely holds two sessions' edits.
 
 ```
 chore(release): vX.Y.Z - TAOM vX.Y.Z

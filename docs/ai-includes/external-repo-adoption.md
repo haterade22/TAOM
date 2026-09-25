@@ -31,7 +31,7 @@ The user shares a repo or article "to see what we can adopt into our own project
 5. **Implement (on approval).** Port reviewed text into TAOM-owned files, calibrated to TAOM. Author new skills per [external-skill-ports.md](../../.claude/rules/external-skill-ports.md) (description = *when to use*, ≤30 words; thin entry point that points to a doc).
 6. **Adversarial review.** Run a `Workflow` find→verify over the changeset (dimensions: correctness/robustness, consistency, simplicity/coherence). Verify each finding against the files before acting ([evidence-over-claims.md](../../.claude/rules/evidence-over-claims.md)).
 7. **Fix confirmed findings + RCA.** If a finding shares a root cause with past ones, write an RCA (`docs/reviews/rca-*.md`) and institutionalize prevention in an always-load rule + a memory.
-8. **Commit MINE only.** Stage only the files this work produced. Leave shared/community files (`CLAUDE.md`, `AGENTS.md`) for the user's batch unless told otherwise — they're pushed last. Respect concurrent writers: re-read a shared file (`CHANGELOG.md`) immediately before editing it; the pre-commit hook requires `CHANGELOG.md` staged alongside any `.claude/` change. No AI attribution in commit messages (CLAUDE.md convention).
+8. **Commit MINE only.** Stage only the files this work produced. Leave shared/community files (`CLAUDE.md`, `AGENTS.md`) for the user's batch unless told otherwise — they're pushed last. Respect concurrent writers: re-read a shared file (`docs/INDEX.md`, `docs/reference/feature-map.md`) immediately before editing it. No AI attribution in commit messages (CLAUDE.md convention).
 9. **Push.** Current feature branch only; never force-push a protected branch; never `--no-verify`.
 
 ## Gotchas (accumulated)

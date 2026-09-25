@@ -77,7 +77,9 @@ automatically.
   An in-game check still owed at close is the label `triage-needs-ingame` on the closed issue
   (a decision still owed: `triage-blocked-decision`); the label query is the backlog.
 - Every completed feature gets `docs/features/<name>.md` (from `TEMPLATE.md`) and its
-  [feature-map](docs/reference/feature-map.md) row. CHANGELOG.md is updated every session.
+  [feature-map](docs/reference/feature-map.md) row.
+- The commit body is the changelog entry: write it for a reader of the release note. `/release`
+  generates `CHANGELOG.md` from commit subjects and bodies; never edit that file by hand.
 - Knowledge goes where [ADR-011](docs/adrs/011-knowledge-delivery-tiers.md) routes it. Durable
   knowledge lives in the repo, never only in one client's private memory.
 - The completion sequence and issue templates:

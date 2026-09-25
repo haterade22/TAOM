@@ -1,6 +1,6 @@
 ---
 name: ship
-description: Orchestrate the mandatory completion sequence before merging a C# or XML feature (/verify, /deep-review, fix findings, /review-codex), then close the issue and update docs + CHANGELOG.
+description: Orchestrate the mandatory completion sequence before merging a C# or XML feature (/verify, /deep-review, fix findings, /review-codex), then close the issue and update the docs.
 argument-hint: [feature-name]
 ---
 
@@ -31,7 +31,7 @@ Run the **mandatory** completion sequence from [completion-workflow.md](../../..
 7. `/verify` — final build + tests green.
 8. The GitHub issue must **already exist** (open it when work started, per `/issue`). Close it with the final commit — do NOT create it retroactively.
 9. Write/update `docs/features/<name>.md`.
-10. Update `CHANGELOG.md`.
+10. Write the commit body as the changelog entry; `/release` generates `CHANGELOG.md` from it.
 
 ## Gotchas
 - `/review-codex` and `/codex-verify` cost real money — confirm with the user before Phase 2 unless they already authorized the ship.

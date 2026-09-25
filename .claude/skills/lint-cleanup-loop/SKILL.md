@@ -123,7 +123,7 @@ The loop runs on `taom-lint/<tag>` — isolated branch, no risk to `bannerlord-1
 
 - Don't run `/lint-docs` and stop — that's diagnostic, not action. This skill DOES the fixes.
 - Don't fix C# build errors, test failures, or feature bugs — this is a docs-only loop. If a fix would require touching Main/, skip the finding.
-- Don't update CHANGELOG mid-loop — wait until the branch is ready and let the user write one batch entry.
+- Don't edit CHANGELOG.md: `/release` generates it from commit bodies, so each commit body in the loop is the entry.
 - Don't pause to ask "is this fix correct?" — the metric is the judge. If it improved, keep. If not, reset.
 - Don't go off-script — if you want to ALSO regenerate backlinks, ALSO run `/verify`, ALSO update docs/INDEX.md, that's scope creep. One loop, one metric, one category.
 

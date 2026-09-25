@@ -163,7 +163,7 @@ TAOM is developed with a structured, AI-assisted engineering pipeline.
   instructions live in [AGENTS.md](AGENTS.md).
 - **Mandatory completion workflow** — every C# feature passes a 4-phase gate before merge:
   build + internal `/deep-review` → Codex adversarial review → self-review of the fixes →
-  closeout (issue, feature doc, CHANGELOG).
+  closeout (issue, feature doc, commit body as the changelog entry).
 
 ## Installing to Play (non-developers)
 

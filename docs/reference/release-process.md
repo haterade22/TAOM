@@ -75,7 +75,7 @@ Use `/release`. It runs the sequence below and fails closed on the #371 pairing 
    found 781 of them, 937 MB. See [module-backup-sweep](module-backup-sweep.md).
 4. Bump the version fields above.
 4. Write `docs/releases/vX.Y.Z-discord.md` (shape: [`v2.0.15-discord.md`](../releases/v2.0.15-discord.md)).
-5. CHANGELOG entry.
+5. Generate the CHANGELOG section: `python tools/changelog_from_commits.py --version vX.Y.Z --write` (every commit since the previous tag, subject and body verbatim, grouped by type).
 6. Commit `chore(release): vX.Y.Z - TAOM vX.Y.Z`, staging release paths explicitly. Every other
    commit carries the CURRENT version the same way (`<type>: vX.Y.Z - <description>`, user rule
    2026-09-13, hook `check-commit-subject-version.sh`), so between releases

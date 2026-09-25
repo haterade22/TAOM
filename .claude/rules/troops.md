@@ -19,7 +19,7 @@ Update ALL of the following (checklist):
 | 4. Recruitment code | `Main/Features/TroopProgression/VolunteerRecruitmentService.cs` | Add/update settlement, clan, and culture fallback pools |
 | 5. Recruitment tests | `TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs` | TDD: write tests FIRST, then implement |
 | 6. NPC references | `Main/_Module/ModuleData/characters/npcs_{culture}.xml` | Check villager upgrade_targets, caravan guard references |
-| 7. CHANGELOG | `CHANGELOG.md` | Document the changes |
+| 7. Commit body | the commit message | Describe the changes; `/release` builds `CHANGELOG.md` from it |
 
 ## Equipment sets are mixed PER SLOT, not chosen whole (MANDATORY before editing any troop roster)
 

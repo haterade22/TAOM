@@ -120,7 +120,7 @@ For every hardcoded constant the upstream uses (tool counts, file size caps, ver
 After porting:
 
 1. **Run `bash .claude/skills/context-budget/scan.sh --verbose`** — confirm the new skill appears with reasonable eager (frontmatter) and lazy (body) tokens. Description over 30 words gets flagged.
-2. **Update CHANGELOG.md** in the same commit. The pre-commit hook `check-changelog-changed.sh` enforces this for `.claude/` changes.
+2. **Describe the port in the commit body**: it is the changelog entry (`/release` generates `CHANGELOG.md` from commit bodies).
 3. **Commit + run `/codex-verify`** for any non-trivial port — Codex catches the lifecycle and load-semantic mistakes Claude tends to make on first port.
 4. **Re-run `/security-scan`** on TAOM's own tree after the port lands. The SkillSpector regex categories run advisory (INFO) on a self-audit; the loud, full-severity pass is the foreign-tree `--external` run you did in "Security-vet FIRST" above — don't conflate the two.
 

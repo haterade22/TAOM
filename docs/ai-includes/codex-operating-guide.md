@@ -154,7 +154,8 @@ fixture writes and test discovery. Do not rerun a test against shared files with
 broader privileges merely because it failed on permissions. Report actual
 commands, totals, skips and scope limits, not stale suite counts.
 
-Update the relevant feature doc, index and changelog when the task warrants it.
+Update the relevant feature doc and index when the task warrants it; the commit
+body is the changelog entry.
 Keep documentation grounded in the checked source. Do not automatically create
 or close an issue, publish a branch, or commit a shared worktree on the strength
 of a legacy completion checklist.
