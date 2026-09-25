@@ -153,7 +153,7 @@ public class FeatureModulesTests
         // Before 009's startup inquiry, so a module category that fails at MainMenu is in it.
         AssertOnceBetween(code, "TryPatchCategory(\"Patch55_BasicTableauRaceGuard\");",
             "FeatureModuleHooks.RunPhase(ApplyPhase.MainMenu, TryPatchCategory);",
-            "ReportPatchFailures(\"startup\", persistent: true);");
+            "ReportPatchFailures(new TextObject(\"{=taom_patch_apply_phase_startup}startup\"), persistent: true);");
         AssertOnceBetween(code, "RegisterCampaignLifeBehaviors(campaignStarter);",
             "FeatureModuleHooks.AddGameStartContent(gameStarterObject);", "public override void OnGameLoaded(");
         // Outside the CampaignGameStarter branch (lens 5 F4): inside it, a Custom Battle starter never
@@ -163,9 +163,9 @@ public class FeatureModulesTests
         StringAssert.Contains(code.Substring(lifeAt, hookAt - lifeAt), "}",
             "AddGameStartContent must follow the close of the CampaignGameStarter branch in OnGameStart.");
         AssertOnceBetween(code, "TryPatchCategory(\"Patch69_TournamentEndGuard\");",
-            "FeatureModuleHooks.RunPhase(ApplyPhase.GameInit, TryPatchCategory);", "ReportPatchFailures(\"game initialization\");");
+            "FeatureModuleHooks.RunPhase(ApplyPhase.GameInit, TryPatchCategory);", "ReportPatchFailures(new TextObject(\"{=taom_patch_apply_phase_game_init}game initialization\"));");
         AssertOnceBetween(code, "TryPatchCategory(\"Patch_MissionTime_SetMovementOrder\");",
-            "FeatureModuleHooks.RunPhase(ApplyPhase.FirstMission, TryPatchCategory);", "ReportPatchFailures(\"mission start\");");
+            "FeatureModuleHooks.RunPhase(ApplyPhase.FirstMission, TryPatchCategory);", "ReportPatchFailures(new TextObject(\"{=taom_patch_apply_phase_mission_start}mission start\"));");
         AssertOnceBetween(code, "new AgentColorStoreCleanupBehavior(colorStore)",
             "FeatureModuleHooks.AddMissionBehaviors(mission, AddTaomBehavior);", "new Features.MissionDiagnostic.Hooks.MissionDiagnosticBehavior(");
     }
