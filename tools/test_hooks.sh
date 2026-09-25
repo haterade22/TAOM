@@ -697,18 +697,23 @@ done
 # ---------------------------------------------------------------------------
 head2 "5b2. the degraded banner names every python-only gate"
 # Only the call site's third argument marks a jq path (_pybin.sh), and only non-comment lines
-# of session-start.sh print anything: a name in a comment there is not in the banner.
+# of session-start.sh print anything: a name in a comment there is not in the banner. Any
+# non-comment call counts, whatever precedes it (`if`, `&&`), and a run that selects no gate
+# fails, so the check cannot pass having checked nothing.
 SS_CODE=$(grep -v '^[[:space:]]*#' .claude/hooks/session-start.sh)
+n5b2=0
 for f in .claude/hooks/*.sh; do
     name=$(basename "$f" .sh)
-    grep -qE '^[[:space:]]*taom_pybin_degraded "' "$f" || continue
-    grep -qE '^[[:space:]]*taom_pybin_degraded .* jq( |$)' "$f" && continue
+    call=$(grep -v '^[[:space:]]*#' "$f" | grep 'taom_pybin_degraded[[:space:]]') || continue
+    grep -qE 'taom_pybin_degraded +"[^"]*" +"[^"]*" +jq( |$)' <<<"$call" && continue
+    n5b2=$((n5b2+1))
     if grep -q -- "$name" <<<"$SS_CODE"; then
         ok "$name is named in the session-start degraded banner"
     else
         bad "$name has no jq path, so it fails open without python, but session-start.sh does not name it"
     fi
 done
+(( n5b2 > 0 )) || bad "5b2 found no python-only gate call site, so it checked nothing"
 
 # ---------------------------------------------------------------------------
 # 5c. Every PreToolUse gate prints its decision where Claude Code reads it.

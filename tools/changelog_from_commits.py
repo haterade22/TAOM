@@ -15,8 +15,8 @@ Exit codes: 0 success; 2 refused (bad version, no commits in range, no previous 
 failure, or CHANGELOG.md already has this version's section or a hand-written heading above
 the release sections). The stderr summary names the commit the range ends at. /release runs
 this before its release commit exists, so that commit must be the release commit's parent;
-/release checks that before it tags the release commit, so a commit landing mid-release falls
-into the next section instead of none.
+/release checks that before it tags the release commit, so no commit that lands mid-release is
+left out of every section.
 """
 import argparse
 import datetime

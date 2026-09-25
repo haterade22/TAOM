@@ -2512,5 +2512,6 @@ then tagged `HEAD` phases later, so a commit landing in between was in the tag a
   commit; a single session cutting a release) and was reused where `HEAD` means something else.
 - **Prevent:** a review check diffs against the review's base (`HEAD` only for uncommitted work).
   A multi-step procedure that reads a range resolves the end to a SHA once, prints it, checks it
-  before committing, and tags by SHA.
-- **Source:** `docs/reviews/rca-changelog-at-release-2026-09-24.md`, C2, C4.
+  before committing, tags by SHA and, before tagging, checks that the tagged commit's parent is
+  that SHA.
+- **Source:** `docs/reviews/rca-changelog-at-release-2026-09-24.md`, C2, C4, D1.
