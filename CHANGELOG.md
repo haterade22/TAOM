@@ -9,7 +9,9 @@
 Three written rules disagreed with the code and with each other; sprint decision 19 (2026-09-24)
 amends all three. ADR-007 now records the protected-virtual boundary seam that `RefugeService`,
 `CampService`, `SupplyOrderService` and `WardenService` use, with four conditions, and ADR-002 and
-ADR-008 point to it (Mike's commit on this branch). A service now gets an interface only when a
+ADR-008 point to it (two orchestrator commits on this branch, made on Mike's approval: `1cdf8eb0`,
+and `7d1b7a54` after the Codex review, which lets a seam call the engine rather than only read it
+and makes ADR-002's migration step 4 create a service interface only when one earns it). A service now gets an interface only when a
 test fakes it or a second class implements it, while every adapter keeps one: the `/deep-review`
 Standards lens, `think-before-coding.md`, the `feature-builder` agent and `/new-feature` say so. The
 hook interface between a patch and its service is now conditional (a narrow seam or a test fake) in
@@ -22,6 +24,13 @@ their files are next touched. Verified: `lint_docs.py --fail-on-drift` exits 0 a
 unchanged once numbers are stripped (the same 7 path-scoped size warnings), the reviewctl and
 ai_documentation tests pass (47, OK), `test_hooks.sh` reports 392 passed and 0 failed, and the test
 suite reports 10,629 passed, 2 skipped, 0 failed (plan 021).
+
+Review follow-ups (deep review plus Codex): `think-before-coding.md` no longer forbids the narrow
+hook interface the other rules allow, the Standards lens names both ADR-007 exceptions (value types
+and seams), and the old `→ IHook →` one-liner, the always-both-interfaces steps in
+`decompiled-code-analysis.md` Phase 4 and two audit prompts without the seam exception are brought in
+line. ADR wording the review found still inconsistent is listed for Mike in
+`docs/reviews/deep-review-021-architecture-rule-amendments-2026-09-24.md`.
 
 ### feat(troll): v2.0.30 - human clips retargeted onto the hill troll's own rest pose
 

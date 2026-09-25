@@ -104,8 +104,11 @@ Entry Point (Harmony Patch / GameModel / MissionLogic)
 **DryIoc registration:**
 ```csharp
 // In feature-specific IoC file (e.g., HeroRaceIoC.cs)
-container.Register<IFeatureService, FeatureService>(Reuse.Singleton);
-container.Register<IOnSomeEvent, FeatureHook>(Reuse.Transient);
+container.Register<FeatureService>(Reuse.Singleton);
+// only when a test fakes the service or a second implementation exists (ADR-002):
+// container.Register<IFeatureService, FeatureService>(Reuse.Singleton);
+// only when the patch needs a narrow seam or a test fakes the hook:
+// container.Register<IOnSomeEvent, FeatureHook>(Reuse.Transient);
 ```
 
 **Configuration** (if user-configurable):
@@ -123,9 +126,9 @@ var config = RacePositionConfig.LoadConfig("FeatureName");
 Main/Features/[FeatureName]/
 ├── Hooks/
 │   ├── [TargetClass]_[Method]_Patch.cs
-│   └── IOn[EventName].cs
+│   └── IOn[EventName].cs (only for a narrow seam or a test fake)
 ├── Services/
-│   ├── I[Feature]Service.cs
+│   ├── I[Feature]Service.cs (only if a test fakes it or a second class implements it)
 │   └── [Feature]Service.cs
 ├── Configuration/
 │   └── [Feature]Config.cs (if needed)
@@ -136,7 +139,7 @@ Main/Features/[FeatureName]/
 ```
 TAOM.Tests/Features/[FeatureName]/
 ├── [Feature]ServiceTests.cs
-└── [Feature]HookTests.cs
+└── [Feature]HookTests.cs (when there is a hook class)
 ```
 
 3. **Implement Harmony patches** (thin entry points, ADR-002):

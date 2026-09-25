@@ -18,7 +18,7 @@ Historical model names, patch counts and review totals are context, not live fac
 - Test files for coverage and correctness
 
 ### Severity Ratings
-- **CRITICAL**: ADR-007 (sealed type in service; a protected-virtual boundary seam that meets ADR-007 "Exceptions" is not one), ADR-002 (fat entry point), Harmony target method does not exist in the installed engine (v1.5.2)
+- **CRITICAL**: ADR-007 (sealed type in service; a protected-virtual boundary seam that meets ADR-007 "Exceptions" is not one), ADR-002 (fat entry point), Harmony target method does not exist in the installed engine (the version pinned in `.claude/pinned-game-version.txt`)
 - **HIGH**: Missing test coverage for service, incorrect base class for GameModel, XSLT dropping vanilla attributes
 - **MEDIUM**: Performance issue in hot path, missing IoC registration, interface not segregated
 - **LOW**: Style violation, missing comment explaining non-obvious behavior

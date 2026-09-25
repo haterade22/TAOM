@@ -65,7 +65,7 @@ The goal is not a percentage — it's *which untested code is dangerous*. TDD is
 
 The house rules make violations crisp — cite the ADR/rule in the finding:
 
-- Adapter violations: services touching `Hero`/`Settlement`/`MobileParty` etc. directly instead of `I*Adapter` (ADR-007).
+- Adapter violations: services touching `Hero`/`Settlement`/`MobileParty` etc. directly instead of `I*Adapter` (ADR-007); a protected-virtual boundary seam that meets ADR-007 "Exceptions" is not one.
 - Fat entry points: Harmony patch classes / behaviors / VMs >150 lines or holding logic that belongs in a service (ADR-002); inline branching in GameModel overrides (extract to service — house rule).
 - Service-locator creep: `IoC.Resolve` inside services/engines (constructor injection is the rule; boundary classes only).
 - Duplication: the same logic re-implemented in 3+ features (per-culture lookups, config loaders, validation helpers); divergent copies that have drifted.

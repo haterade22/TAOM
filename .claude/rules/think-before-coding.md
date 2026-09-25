@@ -31,4 +31,5 @@ one.
 2. An existing TAOM service or adapter already does it (ADR-002, ADR-007).
 3. A one-line delegation into that service would do.
 4. Only then write the minimum: no interface unless it wraps an engine type (an adapter), a test
-   fakes it or a second class implements it; no plumbing "for later" (`simplicity-criterion.md`).
+   fakes it, a second class implements it, or it narrows a wide service for a patch (a hook,
+   AGENTS.md "Architecture"); no plumbing "for later" (`simplicity-criterion.md`).

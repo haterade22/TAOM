@@ -10,7 +10,7 @@ Quick reference for the three core patterns. Full details: `docs/ai-includes/pat
 
 ## 1. Hook Pattern (optional: Harmony → Hook Interface → Service)
 
-Optional layer. Most patches resolve their service at the boundary and call it directly (patch → service → adapter, AGENTS.md "Architecture"). Add an `IOnXxx` hook only when the patch needs a narrow seam over a wide service (`PartyUpgradeResourceCheckHook` narrows `ISpecialResourceService` for three patches) or a test fakes the hook; a hook that forwards one call adds a file and hides nothing.
+Optional layer. Most patches resolve their service at the boundary and call it directly (patch → service → adapter, AGENTS.md "Architecture"). Add an `IOnXxx` hook only when the patch needs a narrow seam over a wide service (`PartyUpgradeResourceCheckHook` narrows `ISpecialResourceService` for the party-upgrade patches) or a test fakes the hook; a hook that forwards one call adds a file and hides nothing.
 
 ```
 HarmonyPatch (thin)
