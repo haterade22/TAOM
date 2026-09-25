@@ -1,6 +1,13 @@
 # For Mike: what is waiting on you (2026-09-24 night)
 
-## 1. Protected-file edits for plans 011, 016 and 017 (your D1 approval)
+**Update 2026-09-25:** 19 reviewed branches are merged into `bannerlord-1.5.x` and pushed
+(`e9b28e2a`; your other session then merged on top as `bec0389d`); the first hosted C# CI run is
+green; 11 issues are closed. With your bypass approval the protected edits for 011, 016, 017, 020
+and 021 are done (021 with the looser seam wording, D49), and those five are executing. Section 1
+below is kept for the record. Still open for you: 005's held issue and the vendored credential,
+the design questions in section 2, and the in-game checks on the closed issues.
+
+## 1. Protected-file edits for plans 011, 016 and 017 (your D1 approval) (DONE 2026-09-25)
 
 You approved these edits on the plans' own branches. When I tried to make them, the auto-mode
 classifier refused to let me create the config-protection override marker
