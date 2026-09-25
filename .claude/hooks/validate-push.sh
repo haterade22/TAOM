@@ -1,7 +1,7 @@
 #!/bin/bash
 # PreToolUse hook: Warn before git push to protected branches.
 # Hard-blocks force pushes to protected branches (AGENTS.md "Git and commits").
-# Non-blocking warning for regular pushes to master/main.
+# Non-blocking stderr warning (which Claude does not see) for a plain push to a protected branch.
 
 INPUT=$(cat)
 
@@ -46,96 +46,127 @@ except Exception:
 ' 2>/dev/null)
 fi
 
-# Locate the `push` subcommand by TOKEN, not by the substring "git push".
-#
-# The old substring test missed `git -C <dir> push` and `git -c k=v push` entirely: those
-# never contain "git" adjacent to "push", so the hook exited 0 and the gate was blind to
-# them. Verified 2026-08-31: `git -C /e/repos/TAOM push --force origin master` returned
-# rc=0, silently. Quotes are flattened first so a wrapped form (bash -c "git push ...")
-# still tokenises; that also preserves the old behaviour of matching a quoted mention.
-CLEAN=${COMMAND//\"/ }
-CLEAN=${CLEAN//\'/ }
-read -r -a TOKENS <<< "$CLEAN"
-
-PUSH_IDX=-1
-for i in "${!TOKENS[@]}"; do
-  if [[ "${TOKENS[$i]}" == "push" && $i -gt 0 ]]; then PUSH_IDX=$i; break; fi
-done
-[[ $PUSH_IDX -lt 0 ]] && exit 0
-
-# Require an actual `git` invocation before it, so `npm push` or a stray word cannot trip.
-GIT_SEEN=0
-for ((j = 0; j < PUSH_IDX; j++)); do
-  case "${TOKENS[$j]}" in
-    git | */git | git.exe | */git.exe) GIT_SEEN=1 ;;
-  esac
-done
-[[ $GIT_SEEN -eq 0 ]] && exit 0
-
-# Split the push arguments into force flags and positionals.
-FORCE=false
-POSITIONAL=()
-for tok in "${TOKENS[@]:PUSH_IDX+1}"; do
-  case "$tok" in
-    --force | --force-with-lease | --force-with-lease=* | --force-if-includes | -f)
-      FORCE=true; continue ;;
-    -*f | -f*)
-      # A bundled short flag such as -fu. Still a force push.
-      case "$tok" in --*) ;; *) FORCE=true ;; esac
-      continue ;;
-    -*) continue ;;
-  esac
-  POSITIONAL+=("$tok")
-done
-
-# `git push <remote> <refspec>`: the refspec is the last positional. With fewer than two,
-# git pushes the current branch.
-if [[ ${#POSITIONAL[@]} -ge 2 ]]; then
-  TARGET="${POSITIONAL[${#POSITIONAL[@]} - 1]}"
-else
-  TARGET=""
-fi
-
-# Strip surrounding quotes. `git push origin "master" --force` is a legal invocation and
-# the token arrives here as literal "master", quotes included, so the comparisons below
-# silently failed to match and the force-push block did not fire.
-TARGET="${TARGET%\"}"; TARGET="${TARGET#\"}"
-TARGET="${TARGET%\'}"; TARGET="${TARGET#\'}"
-
-# Normalise the refspec. Every form below reached is_protected unmatched before
-# 2026-08-31 and so passed silently:
-#   +branch          a leading + IS force, with no flag anywhere on the line
-#   src:dst          only the destination matters
-#   refs/heads/x     fully-qualified destination
-#   HEAD / @         resolve to the branch actually checked out
-case "$TARGET" in
-  +*) FORCE=true; TARGET="${TARGET#+}" ;;
-esac
-TARGET="${TARGET##*:}"
-TARGET="${TARGET#refs/heads/}"
-if [[ -z "$TARGET" || "$TARGET" == "HEAD" || "$TARGET" == "@" ]]; then
-  TARGET=$(git branch --show-current 2>/dev/null)
-fi
-
-# Protected branches. bannerlord-1.4.5 is this repo's actual trunk and was missing until
-# 2026-08-20, so a force push to the branch everyone works on passed unchallenged while
-# master and main, which this repo does not use, were the only names guarded.
+# Protected branches: master and main (unused here, kept) and exactly the two live trunks.
+# bannerlord-1.4.5 was missing until 2026-08-20, and when the release tags moved to
+# bannerlord-1.5.x (v2.0.29 and v2.0.30 are on it) the list did not follow, so a force push
+# to it passed unchallenged until plan 011. Named, not a bannerlord-* pattern (maintainer
+# decision D30): a port branch such as bannerlord-1.5.0-port stays force-pushable.
 is_protected() {
   case "$1" in
-    master|main|bannerlord-1.4.5) return 0 ;;
+    master|main|bannerlord-1.4.5|bannerlord-1.5.x) return 0 ;;
     *) return 1 ;;
   esac
 }
 
+# Judge every line (maintainer decision D38). `read -a` below takes one line, and until plan
+# 011 it took only the command's first, so a `cd <dir>` line hid a force push on the next.
+# A continued line (a trailing \ in bash, a trailing ` in PowerShell) is one command, so the
+# continuations are joined first; CR goes too, since a PowerShell command may use CRLF.
+COMMAND=${COMMAND//$'\r'/}
+COMMAND=${COMMAND//$'\\\n'/ }
+COMMAND=${COMMAND//$'`\n'/ }
+
+BLOCK_TARGET=""
+WARN_TARGET=""
+
+# Judges one line. Sets BLOCK_TARGET on a force push to a protected branch, and WARN_TARGET on
+# a plain push to one.
+judge_line() {
+  local CLEAN PUSH_IDX GIT_SEEN FORCE TARGET i j tok
+  local -a TOKENS POSITIONAL
+
+  # Locate the `push` subcommand by TOKEN, not by the substring "git push".
+  #
+  # The old substring test missed `git -C <dir> push` and `git -c k=v push` entirely: those
+  # never contain "git" adjacent to "push", so the hook exited 0 and the gate was blind to
+  # them. Verified 2026-08-31: `git -C /e/repos/TAOM push --force origin master` returned
+  # rc=0, silently. Quotes are flattened first so a wrapped form (bash -c "git push ...")
+  # still tokenises; that also preserves the old behaviour of matching a quoted mention.
+  CLEAN=${1//\"/ }
+  CLEAN=${CLEAN//\'/ }
+  read -r -a TOKENS <<< "$CLEAN"
+
+  PUSH_IDX=-1
+  for i in "${!TOKENS[@]}"; do
+    if [[ "${TOKENS[$i]}" == "push" && $i -gt 0 ]]; then PUSH_IDX=$i; break; fi
+  done
+  [[ $PUSH_IDX -lt 0 ]] && return 0
+
+  # Require an actual `git` invocation before it, so `npm push` or a stray word cannot trip.
+  GIT_SEEN=0
+  for ((j = 0; j < PUSH_IDX; j++)); do
+    case "${TOKENS[$j]}" in
+      git | */git | git.exe | */git.exe) GIT_SEEN=1 ;;
+    esac
+  done
+  [[ $GIT_SEEN -eq 0 ]] && return 0
+
+  # Split the push arguments into force flags and positionals.
+  FORCE=false
+  POSITIONAL=()
+  for tok in "${TOKENS[@]:PUSH_IDX+1}"; do
+    case "$tok" in
+      --force | --force-with-lease | --force-with-lease=* | --force-if-includes | -f)
+        FORCE=true; continue ;;
+      -*f | -f*)
+        # A bundled short flag such as -fu. Still a force push.
+        case "$tok" in --*) ;; *) FORCE=true ;; esac
+        continue ;;
+      -*) continue ;;
+    esac
+    POSITIONAL+=("$tok")
+  done
+
+  # `git push <remote> <refspec>`: the refspec is the last positional. With fewer than two,
+  # git pushes the current branch.
+  if [[ ${#POSITIONAL[@]} -ge 2 ]]; then
+    TARGET="${POSITIONAL[${#POSITIONAL[@]} - 1]}"
+  else
+    TARGET=""
+  fi
+
+  # Strip surrounding quotes. `git push origin "master" --force` is a legal invocation and
+  # the token arrives here as literal "master", quotes included, so the comparisons below
+  # silently failed to match and the force-push block did not fire.
+  TARGET="${TARGET%\"}"; TARGET="${TARGET#\"}"
+  TARGET="${TARGET%\'}"; TARGET="${TARGET#\'}"
+
+  # Normalise the refspec. Every form below reached is_protected unmatched before
+  # 2026-08-31 and so passed silently:
+  #   +branch          a leading + IS force, with no flag anywhere on the line
+  #   src:dst          only the destination matters
+  #   refs/heads/x     fully-qualified destination
+  #   HEAD / @         resolve to the branch actually checked out
+  case "$TARGET" in
+    +*) FORCE=true; TARGET="${TARGET#+}" ;;
+  esac
+  TARGET="${TARGET##*:}"
+  TARGET="${TARGET#refs/heads/}"
+  if [[ -z "$TARGET" || "$TARGET" == "HEAD" || "$TARGET" == "@" ]]; then
+    TARGET=$(git branch --show-current 2>/dev/null)
+  fi
+
+  if [[ "$FORCE" == true ]] && is_protected "$TARGET"; then
+    BLOCK_TARGET="$TARGET"
+  elif is_protected "$TARGET"; then
+    WARN_TARGET="$TARGET"
+  fi
+}
+
+while IFS= read -r LINE; do
+  judge_line "$LINE"
+  [[ -n "$BLOCK_TARGET" ]] && break
+done <<< "$COMMAND"
+
 # Hard-block force push to a protected branch
-if [[ "$FORCE" == true ]] && is_protected "$TARGET"; then
-  echo "BLOCKED: force push to '$TARGET' is not allowed. Do not retry with --no-verify or as a plain push; explain the block and ask the user whether to push to a non-protected branch." >&2
+if [[ -n "$BLOCK_TARGET" ]]; then
+  echo "BLOCKED: force push to '$BLOCK_TARGET' is not allowed. Do not retry with --no-verify or as a plain push; explain the block and ask the user whether to push to a non-protected branch." >&2
   exit 2
 fi
 
 # Warn on any push touching a protected branch
-if is_protected "$TARGET"; then
-  echo "WARNING: pushing to protected branch '$TARGET'. Confirm this is intentional." >&2
+if [[ -n "$WARN_TARGET" ]]; then
+  echo "WARNING: pushing to protected branch '$WARN_TARGET'. Confirm this is intentional." >&2
 fi
 
 exit 0

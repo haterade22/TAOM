@@ -3,8 +3,11 @@
 # since the last source edit. Enforces the "verification before done" half of
 # .claude/rules/evidence-over-claims.md.
 #
-# Mirrors check-deep-review.sh conventions: reads git state (NOT stdin), emits a
-# soft reminder to stderr, always exits 0 (non-blocking — never traps a Stop).
+# Channel: one JSON {"decision":"block","reason":...} on stdout per unbuilt streak, through
+# _stop_reminder.sh, the only Stop output Claude reads (exit-0 stderr goes to the debug log;
+# until plan 011 this hook wrote there and nothing arrived). Silent when stop_hook_active is
+# true. Detection reads git state; stdin is read only for that flag. Always exits 0, and any
+# internal failure exits 0 with no output (fail open).
 #
 # Signal: a dirty *.cs file is NEWER than .claude/logs/.verification-ran (touched
 # by mark-verification-run.sh when dotnet build/test or build.ps1 runs). If the
@@ -17,6 +20,13 @@
 # "already reminded"; it is cleared the moment there is nothing left to verify
 # (a build ran, or the edits were reverted), which re-arms the reminder for the
 # next fresh edit.
+
+source "$(dirname "${BASH_SOURCE[0]}")/_stop_reminder.sh" 2>/dev/null || exit 0
+INPUT=$(cat)
+taom_stop_hook_active "$INPUT" && exit 0
+# Anchor to the project, not the inherited cwd: mark-verification-run.sh writes its marker
+# under CLAUDE_PROJECT_DIR, and tools/test_hooks.sh runs this hook against sandboxes.
+cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" 2>/dev/null || exit 0
 
 MARKER=".claude/logs/.verification-ran"
 REMINDED=".claude/logs/.verification-reminded"
@@ -43,12 +53,12 @@ done <<< "$ALL_FILES"
 
 if [[ $NEEDS_REMINDER -eq 1 ]]; then
   if [[ ! -f "$REMINDED" ]]; then
-    echo "REMINDER: C# source changed but no build/test has run since your last edit. Per .claude/rules/evidence-over-claims.md (verification before \"done\"), run ./build.ps1 -RunTests (or dotnet build Main/TAOM.csproj + dotnet test TAOM.Tests) and read the output before claiming the work complete. A subagent's self-report does not count as verification." >&2
+    taom_stop_block "check-verification-evidence: a C# file in this tree changed after the last recorded build or test (nothing newer in .claude/logs/.verification-ran). Before calling the work done, run dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId= or dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= and read the output (.claude/rules/evidence-over-claims.md); a subagent's report does not count. If the changed files belong to another session, or you are not claiming the work is done, say so in one line. This fires once per unbuilt streak."
     mkdir -p .claude/logs 2>/dev/null
     touch "$REMINDED" 2>/dev/null || true
   fi
 else
-  # Nothing left to verify (built since the edit, or edits reverted) — re-arm the
+  # Nothing left to verify (built since the edit, or edits reverted): re-arm the
   # reminder for the next fresh edit.
   rm -f "$REMINDED" 2>/dev/null || true
 fi

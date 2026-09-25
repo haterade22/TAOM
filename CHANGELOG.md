@@ -4,6 +4,28 @@
 
 ## 2026-09-24
 
+### fix(hooks): v2.0.30 - Stop reminders reach Claude, both trunks guarded against force pushes
+
+Plan 011. The four Stop reminders were silent: `check-verification-evidence.sh`, `check-deep-review.sh`,
+`check-version-tagged.sh` and `check-changelog-updated.sh` printed to stderr and exited 0, which Claude Code sends
+to the debug log only, so no reminder ever reached Claude and each one-shot marker was spent on nothing. They now
+print `{"decision":"block","reason":...}` through the new `.claude/hooks/_stop_reminder.sh`, stay silent when
+`stop_hook_active` is true, and still fire once per streak. `check-deep-review.sh` gained the streak marker it
+never had (`.deep-review-reminded`); without it a visible reminder would block every turn in a dirty tree. The
+verification reason now names the non-deploying build and test commands. `validate-push.sh` protected
+`bannerlord-1.4.5` but not `bannerlord-1.5.x`, where the release tags live; it now names both trunks, not a
+`bannerlord-*` pattern (maintainer decision D30), and judges every line of a multi-line command, joining a line
+continued with a backslash or a PowerShell backtick, where it used to read only the first line, so a `cd` line
+hid a force push (D38). It and `mark-verification-run.sh` are registered for the PowerShell tool too.
+`mark-verification-run.sh` now marks the repo's own `dotnet test TAOM.Tests -p:DisableModuleCopy=true
+-p:ModuleId=`, which its env-prefix strip read as an assignment and dropped, and it splits a command outside
+quotes only, so a quoted mention such as `grep "x; dotnet test"` no longer marks (D41). `suggest-compact.sh` and
+`notify-test-results.sh` are deleted with their registrations, test rows and catalog rows (D42): both printed to
+stderr on exit 0, which reached no one. `tools/test_hooks.sh` 7a, 7c and 7d pin all of it; the docs follow (hooks
+catalog, `harness-facts.md` Visibility, `hook-authoring.md`, the CLAUDE.md hooks bullet). No GitHub ruleset
+(D29). Owed: Mike's live check that a Stop reminder arrives and that a PowerShell force push to
+`bannerlord-1.5.x` is refused.
+
 ### feat(troll): v2.0.30 - human clips retargeted onto the hill troll's own rest pose
 
 Mike's Kit look after the re-import: the hill troll's own clips were right, but the cave troll's `anim_troll_*`

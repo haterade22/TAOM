@@ -90,21 +90,21 @@
         ]
       },
       {
-        "matcher": "Edit|Write",
+        "matcher": "PowerShell",
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/config-protection.sh",
+            "command": ".claude/hooks/validate-push.sh",
             "timeout": 5
           }
         ]
       },
       {
-        "matcher": "",
+        "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/suggest-compact.sh",
+            "command": ".claude/hooks/config-protection.sh",
             "timeout": 5
           }
         ]
@@ -142,9 +142,14 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/notify-test-results.sh",
+            "command": ".claude/hooks/mark-verification-run.sh",
             "timeout": 5
-          },
+          }
+        ]
+      },
+      {
+        "matcher": "PowerShell",
+        "hooks": [
           {
             "type": "command",
             "command": ".claude/hooks/mark-verification-run.sh",

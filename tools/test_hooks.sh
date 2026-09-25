@@ -356,7 +356,7 @@ PAYLOADS=(
 
 for hookfile in .claude/hooks/*.sh .claude/skills/freeze/check-freeze.sh; do
     name=$(basename "$hookfile")
-    [[ "$name" == "_pybin.sh" ]] && continue
+    [[ "$name" == _*.sh ]] && continue
     for entry in "${PAYLOADS[@]}"; do
         label="${entry%%|*}"; payload="${entry#*|}"
         S=$(date +%s%N)
@@ -505,8 +505,6 @@ else
                 # but not `git commit`: its own row keeps a prefilter from narrowing to the latter.
                 *)                  triggers=('cd /x\ngit commit -m x' 'cd /x\ngit -C /y commit -m x') ;;
             esac
-            # suggest-compact.sh also reads build and test boundaries (its `dotnet` and `build.ps1` arms).
-            [[ "$name" == suggest-compact.sh ]] && triggers+=('cd /x\ndotnet test TAOM.Tests' 'cd /x\n./build.ps1 -RunTests')
         fi
         for cmd in "${triggers[@]}"; do
             read -r s n <<< "$(pf_run "$name" "$(pf_payload "$ev" "$cmd")")"
@@ -518,15 +516,13 @@ else
         done
         # The hook's word spelled with a JSON \u escape must still reach the parser
         # (maintainer decision D40): the raw test cannot read an escaped letter, so a
-        # payload holding any \u takes the full path. suggest-compact.sh is left as it
-        # was, pending its deletion in plan 011.
+        # payload holding any \u takes the full path.
         esc=""
         case "$name" in
             validate-push.sh)       esc="cd /x\ngit ${PF_U}0070ush origin x" ;;
             block-no-verify.sh)     esc="cd /x\ngit commit --${PF_U}006eo-verify -m x" ;;
-            notify-test-results.sh | mark-verification-run.sh)
+            mark-verification-run.sh)
                                     esc="cd /x\n${PF_U}0064otnet test TAOM.Tests" ;;
-            suggest-compact.sh)     ;;
             # The commit gates, the two confirm gates and any new Bash hook: the row holds no
             # literal `git` or `commit`, so a hook filtering on either word without the
             # escape arm skips it and fails here.
@@ -552,7 +548,6 @@ else
             done
         fi
     done
-    rm -f /tmp/claude-tool-count-taom-prefilter-test /tmp/claude-last-boundary-taom-prefilter-test
 fi
 
 # ---------------------------------------------------------------------------
@@ -599,7 +594,7 @@ done
 head2 "5. fail-open with no jq and no python on PATH"
 # The never-fail-silent assertion below applies only to hooks that can actually BLOCK a
 # Bash call: registered PreToolUse against a Bash-matching matcher, and carrying a deny or
-# exit-2 path. Advisory hooks (notify-*, suggest-compact, mark-verification-run) and hooks
+# exit-2 path. Advisory hooks (notify-*, mark-verification-run) and hooks
 # matched on other tools legitimately produce nothing for this payload, and demanding
 # output from them would make the check noise rather than signal.
 BLOCKING_BASH_GATES=$("$HPY" - <<'PYEOF'
@@ -645,7 +640,7 @@ done
 
 for hookfile in .claude/hooks/*.sh .claude/skills/freeze/check-freeze.sh; do
     name=$(basename "$hookfile")
-    [[ "$name" == "_pybin.sh" ]] && continue
+    [[ "$name" == _*.sh ]] && continue
     S=$(date +%s%N)
     ERRFILE=$(mktemp 2>/dev/null) || ERRFILE="$SANDBOX/stderr.$$"
     # The payload holds every gate's prefilter word (commit, push, no-verify, git), so each
@@ -930,8 +925,10 @@ cdr_log() {
         | CLAUDE_PROJECT_DIR="$CDR_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/log-agent.sh" >/dev/null 2>&1
 }
 cdr_reminds() {
-    ( cd "$CDR_REPO" && timeout -k 2 10 bash "$REPO/.claude/hooks/check-deep-review.sh" </dev/null 2>&1 >/dev/null ) \
-        | grep -q 'REMINDER: Run /deep-review'
+    rm -f "$CDR_REPO/.claude/logs/.deep-review-reminded"
+    printf '%s' '{"hook_event_name":"Stop","session_id":"t","stop_hook_active":false}' \
+        | CLAUDE_PROJECT_DIR="$CDR_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/check-deep-review.sh" 2>/dev/null \
+        | grep -q '"decision":"block".*/deep-review'
 }
 cdr_log Explore
 if cdr_reminds; then
@@ -945,6 +942,93 @@ if cdr_reminds; then
 else
     ok "a deep-reviewer run logged by log-agent.sh mutes the reminder"
 fi
+
+# ---------------------------------------------------------------------------
+head2 "7a. Stop reminders reach Claude: one JSON block per streak, never bare stderr"
+# Claude Code sends a Stop hook's exit-0 stderr and its plain stdout to the debug log only. The
+# four reminders wrote there until plan 011 and none ever arrived. The one Stop channel Claude
+# reads is {"decision":"block","reason":...} on stdout (hooks docs, "Stop decision control").
+STOP_HOOKS=$("$HPY" - <<'PY'
+import json
+d = json.load(open('.claude/settings.json', encoding='utf-8'))
+print(' '.join(sorted({h['command'].rsplit('/', 1)[-1]
+                       for g in d.get('hooks', {}).get('Stop', [])
+                       for h in g.get('hooks', [])})))
+PY
+)
+[[ -z "$STOP_HOOKS" ]] && bad "no Stop registrations found in settings.json; the 7a discovery is broken"
+for name in $STOP_HOOKS; do
+    f=".claude/hooks/$name"
+    [[ -f "$f" ]] || { bad "$name is registered on Stop but missing from .claude/hooks/"; continue; }
+    hit=$(grep -n '>&2' "$f" | grep -vE '^[0-9]+:[[:space:]]*#' | head -1 | cut -d: -f1)
+    if [[ -n "$hit" ]]; then
+        bad "$name:$hit writes to stderr, which Claude never sees from a Stop hook; use taom_stop_block"
+    else
+        ok "$name writes nothing to stderr"
+    fi
+done
+
+# The helper: JSON-escapes the reason, and the loop guard reads only the real key.
+STOP_SAMPLE='quote " and backslash \ end'
+HELPER_OUT=$(bash -c 'source .claude/hooks/_stop_reminder.sh && taom_stop_block "$1"' _ "$STOP_SAMPLE" 2>/dev/null)
+if printf '%s' "$HELPER_OUT" | "$HPY" -c 'import json,sys; d=json.loads(sys.stdin.read()); sys.exit(0 if d.get("decision")=="block" and d.get("reason")==sys.argv[1] else 1)' "$STOP_SAMPLE" 2>/dev/null; then
+    ok "taom_stop_block emits valid JSON and keeps quotes and backslashes"
+else
+    bad "taom_stop_block output is not a valid block with the reason intact: $(printf '%s' "$HELPER_OUT" | head -c 120)"
+fi
+for pair in '0|{"stop_hook_active":true}' '0|{"stop_hook_active": true}' \
+            '1|{"stop_hook_active":false}' \
+            '1|{"last_assistant_message":"x \"stop_hook_active\":true","stop_hook_active":false}'; do
+    want="${pair%%|*}"; js="${pair#*|}"
+    bash -c 'source .claude/hooks/_stop_reminder.sh && taom_stop_hook_active "$1"' _ "$js" 2>/dev/null
+    got=$?
+    [[ "$got" == "$want" ]] && ok "taom_stop_hook_active $want for $js" || bad "taom_stop_hook_active returned $got, expected $want, for $js"
+done
+
+# Each hook against a sandbox repo that triggers all four: a tracked, modified .cs, an untagged
+# version, an untouched CHANGELOG, no build marker, no logged review.
+STOP_REPO="$SANDBOX/stop-repo"
+mkdir -p "$STOP_REPO/.claude/logs" "$STOP_REPO/Main/_Module"
+git -C "$STOP_REPO" init -q 2>/dev/null
+printf 'class Foo {}\n' > "$STOP_REPO/Main/Foo.cs"
+printf '<Module>\n  <Version value="v9.9.9" />\n</Module>\n' > "$STOP_REPO/Main/_Module/SubModule.xml"
+printf '# CHANGELOG\n' > "$STOP_REPO/CHANGELOG.md"
+git -C "$STOP_REPO" add Main CHANGELOG.md 2>/dev/null
+git -C "$STOP_REPO" -c user.name=t -c user.email=t@example.invalid commit -qm init 2>/dev/null
+printf 'class Foo { int x; }\n' > "$STOP_REPO/Main/Foo.cs"
+stop_run() {
+    printf '%s' "$2" | CLAUDE_PROJECT_DIR="$STOP_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/$1" 2>"$SANDBOX/stop.err"
+}
+stop_shape() {
+    printf '%s' "$1" | "$HPY" -c '
+import json, sys
+raw = sys.stdin.read().strip()
+if not raw:
+    print("silent"); sys.exit()
+try:
+    d = json.loads(raw)
+except Exception:
+    print("invalid"); sys.exit()
+ok = isinstance(d, dict) and d.get("decision") == "block" and isinstance(d.get("reason"), str) and d["reason"].strip()
+print("block" if ok else "BADSHAPE")'
+}
+STOP_LIVE='{"hook_event_name":"Stop","session_id":"t","stop_hook_active":false}'
+STOP_LOOP='{"hook_event_name":"Stop","session_id":"t","stop_hook_active":true}'
+for name in check-verification-evidence.sh check-deep-review.sh check-version-tagged.sh check-changelog-updated.sh; do
+    rm -f "$STOP_REPO"/.claude/logs/.*-reminded "$STOP_REPO/.claude/logs/agent-audit.log"
+    got=$(stop_shape "$(stop_run "$name" "$STOP_LOOP")")
+    [[ "$got" == silent ]] && ok "$name is silent when stop_hook_active is true" \
+        || bad "$name answered '$got' with stop_hook_active true: a reminder could loop"
+    got=$(stop_shape "$(stop_run "$name" "$STOP_LIVE")")
+    if [[ "$got" == block && ! -s "$SANDBOX/stop.err" ]]; then
+        ok "$name reminds through a JSON block"
+    else
+        bad "$name gave '$got' on a triggering tree (stderr: $(head -c 100 "$SANDBOX/stop.err" 2>/dev/null)); expected a JSON block and no stderr"
+    fi
+    got=$(stop_shape "$(stop_run "$name" "$STOP_LIVE")")
+    [[ "$got" == silent ]] && ok "$name mutes after one reminder" \
+        || bad "$name reminded twice in one streak ('$got')"
+done
 
 # ---------------------------------------------------------------------------
 head2 "7b. check-claude-files-tracked: denies with a valid decision, inside its registration"
@@ -975,6 +1059,86 @@ if [[ "$(decision_of "$OUT")" == allow ]]; then
 else
     bad "check-claude-files-tracked still objects to a clean tree: $(printf '%s' "$OUT" | head -c 160)"
 fi
+
+# ---------------------------------------------------------------------------
+head2 "7c. validate-push refuses a force push to either trunk, on any line, from either shell tool"
+# The protected list named only master, main and bannerlord-1.4.5 while the release tags moved to
+# bannerlord-1.5.x, and the hook was registered for Bash only (plan 011). It names exactly the two
+# trunks, not bannerlord-* (maintainer decision D30), so a port branch stays force-pushable. It
+# also read only the first line of the command, so a `cd` line before the push hid a force push
+# (D38); a continued line (a trailing \ in bash, ` in PowerShell) is one command.
+VP_CASES=(
+  "2|git push --force origin bannerlord-1.5.x"
+  "2|git push origin +bannerlord-1.5.x"
+  "2|git push --force-with-lease origin bannerlord-1.5.x"
+  "2|git push -f origin bannerlord-1.4.5"
+  "2|git push --force origin main"
+  "2|cd /x"$'\n'"git push --force origin bannerlord-1.5.x"
+  "2|git status"$'\n'"git push origin feature"$'\n'"git push -f origin bannerlord-1.4.5"
+  "2|git push --force \\"$'\n'"  origin bannerlord-1.5.x"
+  "2|git push --force \`"$'\n'"  origin bannerlord-1.5.x"
+  "0|git push origin bannerlord-1.5.x"
+  "0|git push --force origin bannerlord-1.6.x"
+  "0|git push --force origin bannerlord-1.5.0-port"
+  "0|git push --force origin improve/011-stop-reminders-and-trunk-guard"
+  "0|cd /x"$'\n'"git push --force origin improve/011-stop-reminders-and-trunk-guard"
+)
+for tool in Bash PowerShell; do
+    for entry in "${VP_CASES[@]}"; do
+        want="${entry%%|*}"; cmd="${entry#*|}"; shown="${cmd//$'\n'/\\n}"
+        payload=$("$HPY" -c 'import json,sys; print(json.dumps({"tool_name":sys.argv[1],"tool_input":{"command":sys.argv[2]},"hook_event_name":"PreToolUse"}))' "$tool" "$cmd")
+        printf '%s' "$payload" | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$SANDBOX" bash .claude/hooks/validate-push.sh >/dev/null 2>&1
+        got=$?
+        [[ "$got" == "$want" ]] && ok "validate-push [$tool] rc=$got for: $shown" \
+            || bad "validate-push [$tool] expected rc=$want, got $got for: $shown"
+    done
+done
+VP_REG=$("$HPY" - <<'PY'
+import json
+d = json.load(open('.claude/settings.json', encoding='utf-8'))
+def has(ev, hook):
+    return any('PowerShell' in g.get('matcher', '').split('|')
+               and any(h['command'].endswith(hook) for h in g.get('hooks', []))
+               for g in d.get('hooks', {}).get(ev, []))
+print('ok' if has('PreToolUse', 'validate-push.sh') and has('PostToolUse', 'mark-verification-run.sh') else 'missing')
+PY
+)
+[[ "$VP_REG" == ok ]] && ok "validate-push (PreToolUse) and mark-verification-run (PostToolUse) are registered for PowerShell" \
+    || bad "settings.json lacks a PowerShell registration for validate-push.sh (PreToolUse) or mark-verification-run.sh (PostToolUse)"
+
+# ---------------------------------------------------------------------------
+head2 "7d. mark-verification-run marks the repo's own build and test commands, never a quoted mention"
+# Its env-prefix strip read `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` as an
+# assignment (a word, then `=`, then a space) and dropped `dotnet`, so the repo's canonical test
+# command never marked; and it split on ; & | and newlines inside quotes, so a quoted mention
+# marked (maintainer decision D41). A case is "1" for marked, "0" for not.
+MVR_DIR="$SANDBOX/mvr"
+MVR_CASES=(
+  "1|dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId="
+  "1|dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId="
+  "1|TEMP=E:/t TMP=E:/t dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId="
+  "1|cd \"E:/repos/x\" && dotnet test TAOM.Tests"
+  "1|dotnet test TAOM.Tests --filter \"FullyQualifiedName~A|FullyQualifiedName~B\""
+  "1|pwsh ./build.ps1 -RunTests"
+  "1|echo start; dotnet build Main/TAOM.csproj"
+  "0|grep -rn \"dotnet test\" docs/"
+  "0|grep -rn \"x; dotnet test\" docs/"
+  "0|echo 'a | dotnet build'"
+  "0|git commit -m \"first line"$'\n'"dotnet test TAOM.Tests\""
+  "0|DOTNET_NOLOGO=1 echo dotnet test"
+)
+for tool in Bash PowerShell; do
+    for entry in "${MVR_CASES[@]}"; do
+        want="${entry%%|*}"; cmd="${entry#*|}"; shown="${cmd//$'\n'/\\n}"
+        rm -rf "$MVR_DIR"; mkdir -p "$MVR_DIR"
+        payload=$("$HPY" -c 'import json,sys; print(json.dumps({"tool_name":sys.argv[1],"tool_input":{"command":sys.argv[2]},"hook_event_name":"PostToolUse","tool_response":{"stdout":"ok"}}))' "$tool" "$cmd")
+        printf '%s' "$payload" | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$MVR_DIR" bash .claude/hooks/mark-verification-run.sh >/dev/null 2>&1
+        got=0; [[ -f "$MVR_DIR/.claude/logs/.verification-ran" ]] && got=1
+        [[ "$got" == "$want" ]] && ok "mark-verification-run [$tool] marked=$got for: $shown" \
+            || bad "mark-verification-run [$tool] expected marked=$want, got $got for: $shown"
+    done
+done
+rm -rf "$MVR_DIR"
 
 # ---------------------------------------------------------------------------
 head2 "8. /context-budget scan.sh runs under set -u and measures the launch load"

@@ -2,9 +2,10 @@
 # Stop hook: Warn if the module version in Main/_Module/SubModule.xml has no git tag.
 # This is a soft reminder, not a hard block.
 #
-# Mirrors check-changelog-updated.sh / check-verification-evidence.sh conventions: reads
-# git state (NOT stdin), emits a soft reminder to stderr, always exits 0 (non-blocking),
-# and mutes itself after one reminder per streak.
+# Mirrors check-verification-evidence.sh: one JSON {"decision":"block","reason":...} on
+# stdout through _stop_reminder.sh (the only Stop output Claude reads; until plan 011 this
+# hook wrote to stderr and nothing arrived), silent when stop_hook_active is true, always
+# exits 0, and mutes itself after one reminder per version.
 #
 # Why: the version in that file is what IdentityCollector stamps into every crash bundle as
 # TaomVersion, and it is the only link between a player's report and our source. Five versions
@@ -22,9 +23,12 @@
 REMINDED=".claude/logs/.version-tag-reminded"
 SUBMODULE="Main/_Module/SubModule.xml"
 
+source "$(dirname "${BASH_SOURCE[0]}")/_stop_reminder.sh" 2>/dev/null || exit 0
+INPUT=$(cat)
+taom_stop_hook_active "$INPUT" && exit 0
 cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" 2>/dev/null || exit 0
 
-# Not a TAOM checkout (or the file moved) — nothing to assert.
+# Not a TAOM checkout (or the file moved): nothing to assert.
 [[ -f "$SUBMODULE" ]] || exit 0
 
 # The module version. Anchored on `<Version value=` so the DependedModuleMetadata
@@ -32,7 +36,7 @@ cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" 2>/dev/null || exit 0
 VERSION=$(grep -o '<Version value="[^"]*"' "$SUBMODULE" 2>/dev/null \
           | head -1 | sed 's/.*"\(.*\)"/\1/')
 
-# Unreadable or unexpected shape — fail open.
+# Unreadable or unexpected shape: fail open.
 [[ -n "$VERSION" ]] || exit 0
 
 # Tag present: the release is anchored. Clear the marker so the next bump re-arms.
@@ -41,12 +45,12 @@ if git rev-parse -q --verify "refs/tags/$VERSION" >/dev/null 2>&1; then
   exit 0
 fi
 
-# Already reminded about THIS version — stay quiet.
+# Already reminded about THIS version: stay quiet.
 if [[ -f "$REMINDED" ]] && [[ "$(cat "$REMINDED" 2>/dev/null)" == "$VERSION" ]]; then
   exit 0
 fi
 
-echo "REMINDER: module version $VERSION in $SUBMODULE has no git tag. A version with no tag cannot be resolved from a player's crash report — that is how v2.0.12 became unresolvable. Tag the release commit (git tag -a $VERSION -m '...') and push it (git push origin $VERSION). See docs/reference/release-process.md; /release runs the full sequence." >&2
+taom_stop_block "check-version-tagged: module version $VERSION in $SUBMODULE has no git tag, so a player's crash report naming $VERSION cannot be traced to a commit (that is how v2.0.12 became unresolvable). Tagging and pushing need the user's go-ahead: ask whether to tag the release commit (git tag -a $VERSION -m 'Release $VERSION') and push the tag (git push origin $VERSION); /release runs the full sequence (docs/reference/release-process.md). If the bump is not committed yet, say so in one line. This fires once per version."
 
 mkdir -p .claude/logs 2>/dev/null
 echo "$VERSION" > "$REMINDED" 2>/dev/null || true

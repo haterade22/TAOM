@@ -1,5 +1,5 @@
 #!/bin/bash
-# PostToolUse(Bash) hook: record that a build/test verification command ran.
+# PostToolUse(Bash and PowerShell) hook: record that a build/test verification command ran.
 #
 # Touches .claude/logs/.verification-ran so the check-verification-evidence Stop
 # hook can tell whether C# source was edited AFTER the most recent verification.
@@ -62,14 +62,46 @@ LOGDIR="${CLAUDE_PROJECT_DIR:-$(pwd)}/.claude/logs"
 # verification for `grep -rn "dotnet test" docs/`, which mutes the reminder that backs
 # evidence-over-claims.md. Split on shell separators and inspect each segment's leading
 # token, the same shape block-dangerous-git.sh already uses.
+#
+# The split honours quotes (maintainer decision D41): splitting on ; & | with `tr` cut
+# `grep "x; dotnet test" docs/` into a segment that starts with dotnet, so a mention marked.
+# A newline inside quotes (a commit message) becomes a space, so it cannot start a segment
+# either, and a backslash outside single quotes keeps the next character. Byte-wise under
+# LC_ALL=C and linear: about 0.4 s for a 20 KB command.
+split_segments() {
+  local LC_ALL=C
+  local s="$1" out="" q="" c i n=${#1}
+  for ((i = 0; i < n; i++)); do
+    c="${s:i:1}"
+    if [[ "$c" == "\\" && "$q" != "'" ]]; then
+      out+="$c${s:i+1:1}"; i=$((i + 1)); continue
+    fi
+    if [[ -n "$q" ]]; then
+      [[ "$c" == "$q" ]] && q=""
+      [[ "$c" == $'\n' ]] && c=" "
+      out+="$c"; continue
+    fi
+    case "$c" in
+      \" | \') q="$c"; out+="$c" ;;
+      ';' | '&' | '|' | $'\n') out+=$'\n' ;;
+      *) out+="$c" ;;
+    esac
+  done
+  printf '%s\n' "$out"
+}
+
 MARK=0
 while IFS= read -r seg; do
   seg="${seg#"${seg%%[![:space:]]*}"}"          # left-trim
-  while :; do                                    # drop env-var prefixes: FOO=bar cmd
-    case "$seg" in
-      [A-Za-z_]*=*\ *) seg="${seg#* }"; seg="${seg#"${seg%%[![:space:]]*}"}" ;;
-      *) break ;;
-    esac
+  # Drop env-var prefixes (FOO=bar cmd), and only a word that IS an assignment. The old
+  # pattern took any word with an `=` and a space somewhere after it, so it read
+  # `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`, the repo's canonical
+  # test command, as a prefix and dropped `dotnet`: that command never marked (D41).
+  while :; do
+    word="${seg%%[[:space:]]*}"
+    [[ "$word" == "$seg" ]] && break             # a lone word is the command itself
+    [[ "$word" =~ ^[A-Za-z_][A-Za-z0-9_]*= ]] || break
+    seg="${seg#"$word"}"; seg="${seg#"${seg%%[![:space:]]*}"}"
   done
   first="${seg%% *}"
   case "$first" in
@@ -80,7 +112,7 @@ while IFS= read -r seg; do
     pwsh | powershell | powershell.exe)
       case "$seg" in *build.ps1*) MARK=1 ;; esac ;;
   esac
-done <<< "$(printf '%s' "$COMMAND" | tr ';&|' '\n')"
+done <<< "$(split_segments "$COMMAND")"
 
 if [[ $MARK -eq 1 ]]; then
   mkdir -p "$LOGDIR" 2>/dev/null

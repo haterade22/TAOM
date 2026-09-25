@@ -19,6 +19,7 @@ When you add a hook to an existing category (a Stop reminder, a PreToolUse gate,
 | **Muting / idempotency** (early-exit when already-handled) | `check-deep-review.sh` checks the audit log before re-reminding | `check-verification-evidence.sh` shipped without muting → re-nagged on every Stop while `.cs` stayed dirty (MED) |
 | **I/O preamble** (`INPUT=$(cat)` etc.) | copy a sibling's verbatim | `mark-verification-run.sh` hand-wrote `cat 2>/dev/null` + `printf`, diverging from 13 siblings (LOW) |
 | Exit semantics (`exit 0` non-blocking vs `exit 2`/JSON `deny`) | the sibling in the same event | (got this right) |
+| **Output channel** (what Claude actually reads) | Stop: `_stop_reminder.sh`; PreToolUse: `block-dangerous-git.sh` (`hookSpecificOutput`) | the four Stop reminders wrote to stderr, which Claude never sees, until plan 011 |
 
 **Root cause** (RCA `docs/reviews/rca-superpowers-enforcement-2026-05-29.md`): treating a sibling as a *detection* template instead of a *full behavioral* template — same shape as the C++-port hot-path miss (`feedback_native_port_hot_path_audit.md`). The fix is a pre-flight pass over the sibling's whole body, not just the lines you need.
 
@@ -38,7 +39,7 @@ When writing a PreToolUse(Bash) hook that filters on git subcommands, enumerate 
 | `git commit-tree` | Plumbing — DIFFERENT command, must NOT match | YES (false positive) — needs explicit `*"git commit-"*` rejection |
 | `git commit-graph` | Plumbing — same | YES (false positive) — same |
 
-**Reference pattern** (used by `check-changelog-changed.sh`, `check-claude-files-tracked.sh`, and `suggest-compact.sh`):
+**Reference pattern** (used by `check-changelog-changed.sh` and `check-claude-files-tracked.sh`):
 
 ```bash
 case "$COMMAND" in
@@ -125,7 +126,7 @@ Measured on 2026-08-31, after a well-intentioned pass added timeouts to all 27 r
 |---|---|
 | **Time the hook's slow path before you pick a number.** `time <the exact command the hook runs>` | The fast path is the path you will not be debugging. A guess here is a dead gate. |
 | **Bound external work INSIDE the script**, under the registered timeout: `timeout -k 2 45 "$PY" tools/x.py` | Keeps the overrun inside the hook, where it can still print something. The registered timeout becomes a backstop, not the budget. |
-| **Handle rc 124 explicitly, and never as a pass.** Emit an `ask` decision under `hookSpecificOutput` (`harness-facts.md` "PreToolUse output contract"), or write to stderr for an advisory hook | An overrun is an infrastructure fault. Fail open (never hard-block on your own bug) but say so, per the fail-open-not-fail-silent rule above. |
+| **Handle rc 124 explicitly, and never as a pass.** Emit an `ask` decision under `hookSpecificOutput` (`harness-facts.md` "PreToolUse output contract"), or, for an advisory hook, use its event's visible channel (`harness-facts.md` "Visibility"; exit-0 stderr reaches no one) | An overrun is an infrastructure fault. Fail open (never hard-block on your own bug) but say so, per the fail-open-not-fail-silent rule above. |
 | **Use `-k`.** Bare `timeout N` sends SIGTERM and then WAITS | Against a process that ignores SIGTERM (exactly the Store-alias case) the guard itself hangs. |
 | **Check skill-frontmatter registrations too** | The 2026-08-31 pass covered all 27 in `settings.json` and missed all 5 in `freeze/SKILL.md` + `investigate/SKILL.md`, which inherit the **600 s** default. |
 
