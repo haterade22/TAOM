@@ -4,7 +4,7 @@
 # .claude/rules/evidence-over-claims.md.
 #
 # Channel: one JSON {"decision":"block","reason":...} on stdout per unbuilt streak, through
-# _stop_reminder.sh, the only Stop output Claude reads (exit-0 stderr goes to the debug log;
+# _stop_reminder.sh, the Stop channel TAOM uses (exit-0 stderr goes to the debug log;
 # until plan 011 this hook wrote there and nothing arrived). Silent when stop_hook_active is
 # true, which only withholds the reminder: the marker still clears when a build ran during that
 # continuation, or the next streak would stay muted. Detection reads git state; stdin is read

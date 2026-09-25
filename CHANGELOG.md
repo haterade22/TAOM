@@ -39,6 +39,15 @@ shell's escape: the bash loop took 9.5 s on a 100 KB command, past its 5 s regis
 checks exit status, stderr, marker clearing and re-arming for every Stop hook; 7c and 7d gained the
 shapes above. Report: `docs/reviews/deep-review-011-stop-reminders-and-trunk-guard-2026-09-24.md`.
 
+Convergence fixes (2026-09-25). Splitting at `;`, `&` and `|` without regard to quotes let a trunk
+force push through when a quoted value held one: `git -C "E:/R&D/TAOM" push --force origin
+bannerlord-1.5.x` and `git push --force -o "ci.skip;x" origin bannerlord-1.5.x` returned rc 0, where
+43e6780e refused them. `validate-push.sh` now judges two splits and blocks when either does: the
+quote-blind one, which keeps `bash -c "git push ...; echo x"` refused, and one outside quotes only. A
+refspec glued to its redirection (`bannerlord-1.5.x>/dev/null`, `>&2`) now counts; it passed before and
+after plan 011. Three comments that called the JSON block the only Stop channel Claude reads, and the
+section 4 comment in `tools/test_hooks.sh`, now say what the code does. 7c gained eight rows.
+
 ### feat(troll): v2.0.30 - human clips retargeted onto the hill troll's own rest pose
 
 Mike's Kit look after the re-import: the hill troll's own clips were right, but the cave troll's `anim_troll_*`

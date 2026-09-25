@@ -308,10 +308,11 @@ cp .claude/hooks/_pybin.sh "$SANDBOX/.claude/hooks/" 2>/dev/null
 cleanup() { rm -rf "$SANDBOX"; }
 trap cleanup EXIT
 
-# Only PreToolUse / PostToolUse hooks speak the PreToolUse decision protocol. SessionStart,
-# PreCompact, PostCompact, SubagentStart and SessionEnd hooks print plain text, and Stop hooks
-# print a top-level {"decision":"block"} (section 7a checks it). Applying the PreToolUse rule to
-# those would be a false positive, so classify from settings.json first.
+# Only PreToolUse, PostToolUse and PostToolUseFailure hooks must print JSON (PreToolUse under
+# hookSpecificOutput, PRE_GATES below). SessionStart, PreCompact, PostCompact, SubagentStart and
+# SessionEnd hooks print plain text, and Stop hooks print a top-level {"decision":"block"}
+# (section 7a checks it). Applying the JSON rule to the plain-text hooks would be a false
+# positive, so classify from settings.json first.
 GATE_HOOKS=$("$HPY" - <<'PY'
 import json
 d = json.load(open('.claude/settings.json', encoding='utf-8'))
@@ -946,8 +947,8 @@ fi
 # ---------------------------------------------------------------------------
 head2 "7a. Stop reminders reach Claude: one JSON block per streak, never bare stderr"
 # Claude Code sends a Stop hook's exit-0 stderr and its plain stdout to the debug log only. The
-# four reminders wrote there until plan 011 and none ever arrived. The one Stop channel Claude
-# reads is {"decision":"block","reason":...} on stdout (hooks docs, "Stop decision control").
+# four reminders wrote there until plan 011 and none ever arrived. The Stop channel TAOM uses is
+# {"decision":"block","reason":...} on stdout (hooks docs, "Stop decision control").
 STOP_HOOKS=$("$HPY" - <<'PY'
 import json
 d = json.load(open('.claude/settings.json', encoding='utf-8'))
@@ -1168,6 +1169,16 @@ VP_CASES=(
   "2|git push --mirror origin"
   "2|git push --force origin bannerlord-1.4.5 # note"
   "2|git push --force origin bannerlord-1.5.x"$'\n'"echo done"
+  # Plan 011 convergence: a quote-blind split at ; & | cut a quoted -C, -c or -o value that
+  # held one, separating git from push; and a refspec glued to its redirection was dropped.
+  "2|git push --force -o \"ci.skip;x\" origin bannerlord-1.5.x"
+  "2|git -C \"E:/R&D/TAOM\" push --force origin bannerlord-1.5.x"
+  "2|git -c \"credential.helper=!f() { echo x; }; f\" push --force origin bannerlord-1.5.x"
+  "2|git -C \"E:\\a;b\" push -f origin bannerlord-1.4.5"
+  "2|git push --force origin bannerlord-1.5.x>/dev/null"
+  "2|git push --force origin bannerlord-1.5.x>/dev/null 2>&1"
+  "2|git push -f origin bannerlord-1.4.5>nul"
+  "2|git push --force origin bannerlord-1.5.x>&2"
   # Deliberately fail-safe: a gate cannot tell quoted or heredoc text from a command it runs
   # (bash -c "..." and bash <<EOF both run it), so a message that quotes a trunk force push is
   # refused. Write such a message with git commit -F <file>.

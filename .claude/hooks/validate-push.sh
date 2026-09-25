@@ -64,12 +64,53 @@ is_protected() {
 # so every non-final line of a multi-line command ends in one. A continued line (a trailing \ in
 # bash, a trailing ` in PowerShell) is one command, so the continuations are joined. Then each
 # command on a line is split out at ; & |: judging a whole line took its last word as the
-# refspec, so `git push --force origin bannerlord-1.5.x 2>&1 | tail -5` passed. The split
-# ignores quotes on purpose, as the tokeniser below flattens them: a gate cannot tell quoted or
-# heredoc text from a command that `bash -c` or `bash <<EOF` runs, so it over-blocks there.
+# refspec, so `git push --force origin bannerlord-1.5.x 2>&1 | tail -5` passed.
+#
+# Two splits are judged, and either one blocks (plan 011 convergence). The quote-blind split
+# (COMMAND) keeps `bash -c "git push ...; echo x"` refused, since a gate cannot tell quoted or
+# heredoc text from a command that `bash -c` or `bash <<EOF` runs. Alone it under-blocks: a
+# separator inside a quoted value (`git -C "E:/R&D" push --force ...`, `-o "a;b"`) cut git
+# from push. So the command is also split at ; & | outside quotes only (QSEGS), with each
+# shell's own escape, the splitter mark-verification-run.sh uses. With jq and no Python, QSEGS
+# keeps whole lines, which over-block rather than under-block.
 COMMAND=${COMMAND//$'\r'/}
 COMMAND=${COMMAND//$'\\\n'/ }
 COMMAND=${COMMAND//$'`\n'/ }
+QSEGS=$COMMAND
+if [ -n "$PYBIN" ]; then
+  Q=$(printf '%s' "$INPUT" | "$PYBIN" -c '
+import sys, json
+try:
+    d = json.loads(sys.stdin.read())
+    cmd = (d.get("tool_input") or {}).get("command") or ""
+    esc = "`" if d.get("tool_name") == "PowerShell" else "\\"
+except Exception:
+    sys.exit()
+cmd = cmd.replace("\r", "")
+out, q, i, n = [], "", 0, len(cmd)
+while i < n:
+    c = cmd[i]
+    if c == esc and q != "\x27":
+        nxt = cmd[i + 1:i + 2]
+        out.append(" " if nxt == "\n" else c + nxt)
+        i += 2
+        continue
+    if q:
+        if c == q:
+            q = ""
+        out.append(" " if c == "\n" else c)
+    elif c in "\"\x27":
+        q = c
+        out.append(c)
+    elif c in ";&|\n":
+        out.append("\n")
+    else:
+        out.append(c)
+    i += 1
+sys.stdout.buffer.write(("".join(out) + "\n").encode("utf-8"))
+' 2>/dev/null)
+  [ -n "$Q" ] && QSEGS=$Q
+fi
 COMMAND=${COMMAND//[;&|]/$'\n'}
 
 BLOCK_TARGET=""
@@ -108,16 +149,21 @@ judge_command() {
   [[ $GIT_SEEN -eq 0 ]] && return 0
 
   # Split the push arguments into force flags and positionals. A redirection (2>, >, 2>/dev/null;
-  # the & of 2>&1 was split off above) and its target are never refspecs.
+  # the & of 2>&1 was split off above) and its target are never refspecs, but a word glued to
+  # its front is (`bannerlord-1.5.x>/dev/null` hands git the bare branch), unless it is an fd
+  # number or PowerShell's `*`. A token ending in < or > takes the next token as its target.
   FORCE=false
   ALL=false
   POSITIONAL=()
   skip=0
   for tok in "${TOKENS[@]:PUSH_IDX+1}"; do
     if (( skip )); then skip=0; continue; fi
+    if [[ "$tok" == *[\<\>]* ]]; then
+      [[ "$tok" == *[\<\>] ]] && skip=1
+      tok=${tok%%[\<\>]*}
+      [[ -z "$tok" || "$tok" =~ ^[0-9]+$ || "$tok" == '*' ]] && continue
+    fi
     case "$tok" in
-      *[\<\>]) skip=1; continue ;;
-      *[\<\>]*) continue ;;
       --force | --force-with-lease | --force-with-lease=* | --force-if-includes | -f)
         FORCE=true; continue ;;
       --all | --branches) ALL=true; continue ;;
@@ -168,7 +214,7 @@ while IFS= read -r SEG; do
   [[ "$SEG" == *push* ]] || continue
   judge_command "$SEG"
   [[ -n "$BLOCK_TARGET" ]] && break
-done <<< "$COMMAND"
+done <<< "$COMMAND"$'\n'"$QSEGS"
 
 # Hard-block force push to a protected branch
 if [[ -n "$BLOCK_TARGET" ]]; then

@@ -3,7 +3,7 @@
 # A reminder, not a gate: it cannot stop a commit.
 #
 # Mirrors check-verification-evidence.sh: one JSON {"decision":"block","reason":...} on
-# stdout through _stop_reminder.sh (the only Stop output Claude reads; until plan 011 this
+# stdout through _stop_reminder.sh (the Stop channel TAOM uses; until plan 011 this
 # hook wrote to stderr and nothing arrived), silent when stop_hook_active is true (a tag made
 # in that continuation still clears the marker), always
 # exits 0, and mutes itself after one reminder per version.

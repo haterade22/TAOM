@@ -257,3 +257,27 @@ Final suites, run after the last edit: `bash tools/test_hooks.sh` printed "493 p
 "Failed: 0, Passed: 10629, Skipped: 2, Total: 10631" (base `bec0389d` contains `a39a9c86`).
 `lint_docs.py --dash-base bec0389d`: 0 new dashes, 0 dead links; `--drift-only` rc 0;
 `audit_claude_config.py --min MED`: HIGH 1, MED 1, the two known findings.
+
+## Convergence
+
+One reviewer over the review-fix commit `c80c4108` (`43e6780e..c80c4108`) reported four defects.
+The review lead's second pass checked each against the code; all four held, none was a false
+positive.
+
+| # | Severity | Verdict | Proof and fix |
+|---|---|---|---|
+| D1 | MEDIUM | Confirmed | The quote-blind split at `;`, `&` and `\|` cut a quoted `-C`, `-c` or `-o` value holding one, separating `git` from `push`. Four new 7c rows (`-o "ci.skip;x"`, `-C "E:/R&D/TAOM"`, a `-c` helper with `;`, `-C "E:\a;b"`) failed with rc 0 before the fix. `validate-push.sh` now judges both the quote-blind segments and segments split outside quotes only (the `mark-verification-run.sh` splitter, escape chosen by `tool_name`), and blocks when either blocks. With jq and no Python the second view keeps whole lines, which over-block. Comment, catalog row and lesson corrected. |
+| D2 | LOW | Confirmed | A token holding `<` or `>` was discarded whole, so `bannerlord-1.5.x>/dev/null` and `>&2` passed (also at `43e6780e`). The text before the first `<` or `>` is now judged as a normal argument unless it is empty, an fd number or `*`; a token ending in `<` or `>` still skips its target. Four 7c rows added, all rc 0 before the fix. |
+| D3 | LOW | Confirmed | `check-verification-evidence.sh:7`, `check-version-tagged.sh:6` and `tools/test_hooks.sh` 7a still said the JSON block is the only Stop output Claude reads. Reworded to "the Stop channel TAOM uses", as `_stop_reminder.sh:8` does. |
+| D4 | LOW | Confirmed | The section 4 comment said PreToolUse and PostToolUse hooks speak the PreToolUse protocol; the classification only requires valid JSON, covers PostToolUseFailure, and the `hookSpecificOutput` rule is `PRE_GATES`. Reworded to match. |
+
+Ad hoc checks after the fix: the four D1 shapes, `bannerlord-1.5.x>$null` and
+`bannerlord-1.5.x *>$null` return rc 2 under the PowerShell tool name; `git push --force origin
+feature *>$null` and `... feature 2>&1 | Out-Null` return rc 0. A 130 KB payload with 10,000
+segments took 2.7 s against 2.2 s for `c80c4108`, under the 5 s registration.
+
+Suites after the last edit: `bash tools/test_hooks.sh` printed "501 passed, 0 failed" (493 before,
+8 new 7c rows, all RED first); `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`
+printed "Failed: 0, Passed: 10629, Skipped: 2, Total: 10631"; `lint_docs.py --drift-only` rc 0.
+One intermediate hook run failed section 8 twice with exit 124: `scan.sh` took 58 s standalone
+against its 60 s bound under machine load, it is untouched by this diff, and the final run passed.

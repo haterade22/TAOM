@@ -2490,7 +2490,9 @@ Windows.
   real shapes: a trailing `2>&1 | tail -5` or `| Out-Null`, `;` and `&&` chains, two refspecs or
   arguments, a quoted path ending in the shell's escape, and the command on a middle line. Split a
   line into commands before judging it. Choose the escape from `tool_name`. For a gate, over-block
-  quoted text rather than open a `bash -c` bypass. A known bypass recorded as a follow-up gets a
+  quoted text rather than open a `bash -c` bypass, but a quote-blind split alone also under-blocks
+  (a `;` or `&` inside a quoted `-C` path cuts `git` from `push`): judge both splits, block on
+  either, and test a separator inside a quoted value. A known bypass recorded as a follow-up gets a
   failing test row the day it is found.
 - **Source:** `docs/reviews/rca-stop-reminders-and-trunk-guard-2026-09-24.md` F1, F3, F7, F9
   (repeat of `docs/reviews/rca-adr011-batch1-2026-09-23.md`, "Follow-ups not taken").
