@@ -2671,10 +2671,10 @@
     <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are swinging round the flank." />
     <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging the enemy foot." />
     <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are taking the flank of the wall." />
-  </strings>
     <string id="taom_patch_apply_failed" text="TAOM: Patch-Gruppen konnten während {PHASE} nicht angewendet werden: {GROUPS}. Einige Korrekturen in diesen Gruppen sind in dieser Sitzung deaktiviert; das TAOM-Protokoll nennt die Ursache." />
     <string id="taom_patch_apply_phase_startup" text="Start" />
     <string id="taom_patch_apply_notice_title" text="TAOM" />
     <string id="taom_patch_apply_phase_game_init" text="Spielinitialisierung" />
     <string id="taom_patch_apply_phase_mission_start" text="Missionsbeginn" />
+  </strings>
 </base>

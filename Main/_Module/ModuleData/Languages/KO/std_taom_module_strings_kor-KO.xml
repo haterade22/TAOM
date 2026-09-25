@@ -2671,10 +2671,10 @@
     <string id="taom_behavior_f6.envelop_wing" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} 및 {?}{\?}{TROOP_NAMES_END} 부대가 측면을 돌아 우회하고 있습니다." />
     <string id="taom_behavior_f6.foot_charge" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging the enemy foot." />
     <string id="taom_behavior_f6.archer_flank" text="{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are taking the flank of the wall." />
-  </strings>
     <string id="taom_patch_apply_failed" text="TAOM: {PHASE} 단계에서 패치 그룹 적용에 실패했습니다: {GROUPS}. 해당 그룹의 일부 수정 사항은 이번 세션에서 비활성화됩니다. 원인은 TAOM 로그에 기록되어 있습니다." />
     <string id="taom_patch_apply_phase_startup" text="시작" />
     <string id="taom_patch_apply_notice_title" text="TAOM" />
     <string id="taom_patch_apply_phase_game_init" text="게임 초기화" />
     <string id="taom_patch_apply_phase_mission_start" text="미션 시작" />
+  </strings>
 </base>
