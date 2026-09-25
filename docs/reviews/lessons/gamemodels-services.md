@@ -893,3 +893,9 @@ earlier (Codex review 114 F2) and fixed it with a private name-only parser nobod
   a comma list, not only a typo.
 - **Source:** `docs/reviews/rca-nazgul-scream-2026-09-23.md` "Follow-ups to Review 130" F2;
   `rca-signature-strikes-2026-09-16.md` C2.
+
+### A guard on a lazily parsed parameter is not the service-exit gate (plan 002, 2026-09-24)
+Career mutation attributes are copied into a string dictionary at load (`CareerConfigProvider.ParseChoice`) and parsed only when an ability fires (`MutationParams.GetFloat`), so issue #128's loader-side NaN sweep never saw them. Plan 002 guarded `GetFloat` and called it "the single chokepoint", but a finite parameter still overflows inside a calculator (`multiply` by `1e38` gives +Infinity) and `MutationService.ApplyMutation` writes the result unchecked. The same plan ruled out the rule-5 warning because the accessor has no logger, without looking at the two layers that do.
+- **Why missed:** the fix was judged at the accessor alone; "chokepoint" was true for the parse and false for the value finally written.
+- **Prevent:** when a NaN sweep audits loaders, also grep for values stored raw and parsed at use (`Dictionary<string, string>` params, `GetFloat`-style accessors). Guard the parse, then gate the calculated result where the service writes it (`if (!FiniteFloatValidator.IsFinite(result)) { warn; keep current; }`, per `csharp-architecture.md` "gate the service's own EXIT"); the writer usually holds the logger and context the accessor lacks.
+- **Source:** `docs/reviews/rca-nan-infinity-config-guards-2026-09-24.md` finding 5 and the root-cause pattern; the exit gate is open, awaiting Mike.

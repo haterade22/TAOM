@@ -1080,3 +1080,9 @@ never attached a tree, and the first-tick log reads "0 elk(s)" in a normal Custo
 - **Prevent:** pin such a constant against a literal once, and build the rows of the test that reads the live data
   from the constant, so the data check also proves the code names what the data declares.
 - **Source:** `docs/reviews/rca-animalia-2026-09-23.md` row 4.
+
+### Test the values a validation guard must still accept, not only the ones it rejects (plan 002, 2026-09-24)
+`MutationParams.GetFloat` gained a finiteness guard with one test per rejected value (NaN, plus and minus Infinity), a valid value and a missing key. Nothing pinned the unparseable fallback or a negative finite value passing through, so narrowing the guard to `IsFiniteAtLeast(result, 0f)` (which would silently zero every negative `multiply` factor) passed all five tests. The plan named "negative values must still pass" as a reviewer probe, not as a test.
+- **Why missed:** the test list was written from the bug (what must be rejected), not from the guard's full contract.
+- **Prevent:** for every validation guard, write one test per rejection condition AND one per boundary the guard must keep (a negative, a zero, the edge of the range), and one for each pre-existing fallback branch the edited expression shares. Prove the keep-tests with a mutant that over-constrains the guard. A reviewer probe in a plan becomes a test in the same change.
+- **Source:** `docs/reviews/rca-nan-infinity-config-guards-2026-09-24.md` finding 1.

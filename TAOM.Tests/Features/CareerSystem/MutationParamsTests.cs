@@ -23,6 +23,19 @@ public class MutationParamsTests
     }
 
     [TestMethod]
+    public void GetFloat_UnparseableValue_ReturnsDefault()
+    {
+        Assert.AreEqual(-99f, Make("value", "6s").GetFloat("value", -99f));
+    }
+
+    [TestMethod]
+    public void GetFloat_NegativeFiniteValue_ReturnsParsed()
+    {
+        // A negative factor is a legitimate authoring choice: the guard rejects only non-finite values.
+        Assert.AreEqual(-2.5f, Make("value", "-2.5").GetFloat("value", -99f));
+    }
+
+    [TestMethod]
     public void GetFloat_NaN_ReturnsDefault()
     {
         Assert.AreEqual(-99f, Make("value", "NaN").GetFloat("value", -99f));

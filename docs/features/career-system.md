@@ -443,7 +443,9 @@ Same fallback policy as the runtime grant: missing roster → log + leave the yo
 5. No C# changes required
 
 ### Add a new mutation calculator
-1. Add function to `BuiltInCalculators.RegisterAll()`
+1. Add function to `BuiltInCalculators.RegisterAll()`. Read numeric parameters only through
+   `MutationParams.GetFloat`, which returns the default for a missing, unparseable, NaN or
+   Infinity value; a float read any other way needs its own `FiniteFloatValidator` guard.
 2. Reference by id in XML `<Mutation calculator="your_id" ... />`
 
 ### Add a new PassiveEffectType
