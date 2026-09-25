@@ -7,11 +7,12 @@ INPUT=$(cat)
 
 # Prefilter: a push is only judged at a `push` token (below), and Claude Code never escapes an
 # ASCII letter, so a raw payload without the text `push` cannot concern this gate. Exiting
-# here skips the _pybin.sh probe and the parse on every Bash call but a push, other git
+# here skips the _pybin.sh probe and the parse on every Bash call without the word, other git
 # calls included. Match the raw text, never a token regex: a newline before a command
 # arrives as \n. tools/test_hooks.sh 4c checks it.
-# Fail open on escapes: a payload holding any JSON \u escape takes the full parse,
-# because an escaped letter would hide the word from this raw test.
+# Never skip on an escape: JSON writes a letter either literally or as a \u escape,
+# so a payload holding any \u takes the full parse, and the raw test is safe
+# whatever writes the payload.
 [[ "$INPUT" == *push* || "$INPUT" == *'\u'* ]] || exit 0
 
 # Resolve a safe Python interpreter. Never a Microsoft Store alias: those hang forever.

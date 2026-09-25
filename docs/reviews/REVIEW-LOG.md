@@ -3805,3 +3805,33 @@ it read git refs only and never saw the run log; the lenses that caught it read 
 
 Report: `docs/reviews/deep-review-013-bash-hook-prefilter-2026-09-24.md`; RCA:
 `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md`; three lessons in build-tooling-workflow.
+
+## Review 133 (renumber at merge): plan 013 maintainer decisions D39 and D40, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+The follow-up narrowed eight Bash hook prefilters to the word each gate needs (D39) and sent any
+payload holding a JSON `\u` escape down the full parse in twelve hooks (D40). Six lenses and
+Codex agree it is correct: a 408-case old-versus-new run changed only the eight intended D40
+decisions, where the base filter missed an escaped letter.
+
+**14 findings, 0 false positives: 11 fixed, 1 annotated (the #661 citation waits for batch 3),
+3 for Mike** (confirming the D39 suggest-compact deviation, the escape arm's breadth, #661's body). No gate decision changes. The two that
+mattered were test rows that could not fail: the commit gates had no `git -C <dir> commit` row,
+and the default escaped row kept a literal `git`. Two planted mutants passed the committed suite
+(379 passed, 3 failed, all on the other mutant's git-call rows) and fail the new one (386 passed,
+5 failed). The rest: a CHANGELOG before-case taken from the RED intermediate rather than the
+base, a parity claim wider than its script, 4d coverage stated as every gate, a stale writer
+premise, a savings claim that ignored the description field, and "fail open" used for its
+opposite. Final: hook suite 391 passed, 0 failed; dotnet 10235 passed, 2 known live-Armory
+failures (branch predates `a39a9c86`).
+
+Codex found 2 of the 11 (both P3, both confirmed, 0 false positives). It read git refs only and
+ran no mutant, so the two rows that pass through another arm looked sound to it.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| 1 | CHANGELOG before-case describes the D39-only intermediate, not the base | Other: evidence from the wrong revision | Example lifted from `red-d40.txt` | Lesson "Prove a before-case against the committed base" |
+| 2 | 4d stated as covering each blocking gate; it covers five | Other: coverage claim not counted | Prose written from intent | Same lesson |
+
+Report: `docs/reviews/deep-review-013-bash-hook-prefilter-decisions-2026-09-24.md`; RCA:
+`docs/reviews/rca-bash-hook-prefilter-decisions-2026-09-24.md`; three lessons in
+build-tooling-workflow.

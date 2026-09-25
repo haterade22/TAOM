@@ -500,7 +500,9 @@ else
             case "$name" in
                 validate-push.sh)   triggers=('cd /x\ngit push origin x') ;;
                 block-no-verify.sh) triggers=('cd /x\ngit commit --no-verify -m x') ;;
-                *)                  triggers=('cd /x\ngit commit -m x') ;;
+                # The commit gates also trigger on `git -C <dir> commit`, which holds `commit`
+                # but not `git commit`: its own row keeps a prefilter from narrowing to the latter.
+                *)                  triggers=('cd /x\ngit commit -m x' 'cd /x\ngit -C /y commit -m x') ;;
             esac
             # suggest-compact.sh also reads build and test boundaries (its `dotnet` and `build.ps1` arms).
             [[ "$name" == suggest-compact.sh ]] && triggers+=('cd /x\ndotnet test TAOM.Tests' 'cd /x\n./build.ps1 -RunTests')
@@ -521,12 +523,13 @@ else
         case "$name" in
             validate-push.sh)       esc="cd /x\ngit ${PF_U}0070ush origin x" ;;
             block-no-verify.sh)     esc="cd /x\ngit commit --${PF_U}006eo-verify -m x" ;;
-            block-dangerous-git.sh | block-broad-git-add.sh)
-                                    esc="cd /x\n${PF_U}0067it commit -m x" ;;
             notify-test-results.sh | mark-verification-run.sh)
                                     esc="cd /x\n${PF_U}0064otnet test TAOM.Tests" ;;
             suggest-compact.sh)     ;;
-            *)                      esc="cd /x\ngit ${PF_U}0063ommit -m x" ;;
+            # The commit gates, the two confirm gates and any new Bash hook: the row holds no
+            # literal `git` or `commit`, so a hook filtering on either word without the
+            # escape arm skips it and fails here.
+            *)                      esc="cd /x\n${PF_U}0067it ${PF_U}0063ommit -m x" ;;
         esac
         if [[ -n "$esc" ]]; then
             read -r s n <<< "$(pf_run "$name" "$(pf_payload "$ev" "$esc")")"
@@ -553,9 +556,11 @@ fi
 
 # ---------------------------------------------------------------------------
 # 4d. An escaped letter cannot hide a blocked command. JSON allows `\u0063` for `c`, and
-#     the prefilters read the raw payload, so each blocking gate is fed its blocked command
-#     twice, plain and with the gated word's first letter escaped, and must answer both the
-#     same way (maintainer decision D40; Codex's counter-payload in the plan 013 review).
+#     the prefilters read the raw payload, so the five blocking gates whose block needs no
+#     repository state are each fed their blocked command twice, plain and with the gated
+#     word's first letter escaped, and must answer both the same way (maintainer decision
+#     D40; Codex's counter-payload in the plan 013 review). The other five, commit gates
+#     that block only on staged or untracked files, get 4c's escaped-word reach row only.
 # ---------------------------------------------------------------------------
 head2 "4d. a blocking gate answers the same when its word arrives escaped"
 esc_verdict() {  # $1 hook, $2 project dir, $3 command already JSON-escaped: "rc=<n> <decision>"

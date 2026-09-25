@@ -4,20 +4,38 @@
 
 ## 2026-09-24
 
+### fix(hooks): v2.0.30 - decision review follow-ups for plan 013
+
+- `tools/test_hooks.sh` 4c gives the commit gates a `git -C <dir> commit` trigger row: a
+  prefilter narrowed to `git commit` skipped that form and the suite stayed green. Its
+  default escaped row is now `\u0067it \u0063ommit`, which holds neither word, so a hook
+  filtering on `git` without the escape rule fails it; the old row kept a literal `git`.
+- The twelve hook comments call the escape rule "never skip", not "fail open" (which means
+  allow), and give the JSON reason it is safe; the commit gates name `git -C <dir> commit`.
+  The catalog's escape paragraph drops the writer premise, names literal `\u` text in a
+  command as the common cost, and says 4d covers five blocking gates, not each one.
+- The entry below had a wrong before-case and parity claim; both are corrected in place.
+- Report: `docs/reviews/deep-review-013-bash-hook-prefilter-decisions-2026-09-24.md`; RCA:
+  `docs/reviews/rca-bash-hook-prefilter-decisions-2026-09-24.md`.
+
 ### fix(hooks): v2.0.30 - apply maintainer decisions for plan 013
 
 - Each narrowed gate now prefilters on the word it gates instead of `git` (D39): the six
   commit gates on `commit`, `validate-push.sh` on `push`, `block-no-verify.sh` on
-  `no-verify`. `git status`, `git diff` and `git log` start no Python in them any more.
+  `no-verify`. `git status`, `git diff` and `git log` start no Python in them any more,
+  unless the call's description holds the word.
   The two confirm gates keep `git`; `suggest-compact.sh` is unchanged, as plan 011 deletes
-  it. Visible change: with no usable Python, those gates print their degraded warning
+  it. Behaviour change: with no usable Python, those gates print their degraded warning
   only on a call holding their word.
 - A payload holding any JSON `\u` escape takes the full parse in the twelve prefiltered
   hooks (D40), so an escaped letter can no longer hide the gated word. Before the change,
-  `git \u0063ommit -m "no label here"` passed the subject gate that denies the plain form;
-  `tools/test_hooks.sh` 4c and the new 4d now feed every hook its word escaped.
+  `\u0067it commit -m "no label here"` passed the subject gate that denies the plain form
+  (the old `git` filter never saw the escaped `g`). `tools/test_hooks.sh` 4c feeds each
+  of the twelve hooks its word escaped, and the new 4d checks that five blocking gates answer
+  the escaped form as they answer the plain one.
 - `tools/test_hooks.sh` sections 4 and 5 carry the new words in their payloads. An
-  old-versus-new run over 240 payload cases found no changed decision.
+  old-versus-new run over 240 unescaped payload cases (stdout and exit code) found no
+  changed decision; the escaped forms the old filter skipped are now judged (4d).
 
 ### fix(hooks): v2.0.30 - review follow-ups for plan 013
 

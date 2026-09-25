@@ -24,20 +24,23 @@
 > (maintainer decision D39, 2026-09-24): `*commit*` for the six commit gates, `*push*` for
 > `validate-push.sh`, `*no-verify*` for `block-no-verify.sh`, `*git*` only for the two confirm
 > gates, which judge several git subcommands, and `*dotnet*` or `*build.ps1*` for a build or test
-> hook. A commit gate then starts no Python on `git status`, `git diff` or `git log` either.
+> hook. A commit gate then starts no Python on `git status`, `git diff` or `git log` either,
+> unless the call's description holds `commit`: the raw test reads the whole payload.
 > `tools/test_hooks.sh` 4c fails a Bash hook that sources `_pybin.sh` on a payload without its
 > word, and a narrowed gate that does so on any of those three git calls.
 >
-> The raw test rests on how Claude Code writes the payload, not on JSON: JSON allows `\u0067`
-> for `g`, while Claude Code writes letters literally (it sent raw UTF-8 in #647; the live proof
-> for plan 013 is still owed). So every prefiltered hook also sends a payload holding any `\u`
-> escape down the full parse (maintainer decision D40): an escaped letter can cost a parse but
-> can never hide the gated word. JSON has no short escape for a control character such as ESC,
-> so a tool response with colour codes (`\u001b`) takes the parse in the two PostToolUse hooks;
-> that costs time only. 4c feeds each hook its word with one letter escaped, and 4d checks that
-> each blocking gate answers the escaped form as it answers the plain one. `suggest-compact.sh`
-> keeps its `git`, `dotnet` and `build.ps1` filter without the escape rule, because plan 011
-> deletes it. Re-prove the premise after a Claude Code upgrade: a two-line `cd` then
+> JSON writes a letter either literally or as a `\uXXXX` escape (its short escapes stand only for
+> `"`, `\`, `/` and five control characters), so every prefiltered hook also sends a payload
+> holding any `\u` escape down the full parse (maintainer decision D40): an escaped letter can
+> cost a parse but can never hide the gated word, whatever writes the payload. How Claude Code
+> writes it now decides cost only; it writes letters literally (raw UTF-8 in #647). Any `\u`
+> opens all twelve hooks: most often literal `\u` text in a command (a search for `\u2014`
+> arrives as `\\u2014`), and in the two PostToolUse hooks a tool response with colour codes
+> (`\u001b`). 4c feeds each of the twelve hooks its word with one letter escaped, and 4d checks
+> that the five blocking gates whose block needs no repository state answer the escaped form as
+> they answer the plain one. `suggest-compact.sh` keeps its `git`, `dotnet` and `build.ps1`
+> filter without the escape rule, because plan 011 deletes it. After a Claude Code upgrade,
+> prove the gates under the real harness: a two-line `cd` then
 > `git commit --dry-run -m "no label here"` must still be denied.
 
 | Hook | Event | Purpose |

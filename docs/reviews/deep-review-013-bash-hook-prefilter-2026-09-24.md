@@ -202,11 +202,12 @@ Verification after the fixes, in the worktree:
 Applied on `improve/013-bash-hook-prefilter` over base `5dcef67a`, in one commit:
 `fix(hooks): v2.0.30 - apply maintainer decisions for plan 013`, the commit that adds this
 section (its hash is the branch head that carries it). No GitHub issue is cited: plan 013's
-issue is not filed yet (F7).
+issue is not filed yet (F7). (Later: it was filed as #661 twelve minutes after this commit;
+the citation is added when batch 3 is done with this worktree.)
 
 | Decision | Review item it answers | What changed | Commit |
 |---|---|---|---|
-| D39 | NOT APPLIED: Design P2 / Efficiency F1 and Design P3 | Each gate prefilters on the word it gates: the six commit gates on `*commit*`, `validate-push.sh` on `*push*`, `block-no-verify.sh` on `*no-verify*`. `block-dangerous-git.sh` and `block-broad-git-add.sh` keep `*git*`, `suggest-compact.sh` is untouched (D42) | `fix(hooks): v2.0.30 - apply maintainer decisions for plan 013` |
+| D39 | NOT APPLIED: Design P2 / Efficiency F1 and Design P3 | Each gate prefilters on the word it gates: the six commit gates on `*commit*`, `validate-push.sh` on `*push*`, `block-no-verify.sh` on `*no-verify*`. `block-dangerous-git.sh` and `block-broad-git-add.sh` keep `*git*`, `suggest-compact.sh` is untouched (D42). D39's text also named `suggest-compact.sh`; it was left out because a `*commit*` filter would drop its `git push`, `dotnet` and `build.ps1` boundaries and D42 deletes it (for Mike to confirm) | `fix(hooks): v2.0.30 - apply maintainer decisions for plan 013` |
 | D40 | Phase 3d row 2, Codex's alternative | A payload holding any `\u` escape takes the full parse: `\|\| "$INPUT" == *'\u'*` on the prefilter line of the twelve prefiltered hooks | same commit |
 | D38 | FOLLOW-UP HIGH: `validate-push.sh` reads only the first line | Handled in plan 011, which executes on top of this branch; nothing here | none |
 | D41 | FOLLOW-UP MED: `mark-verification-run.sh` never marks the canonical test command | Handled in plan 011; nothing here | none |
@@ -239,7 +240,7 @@ gates their blocked command plain and escaped (`git \u0063ommit -m "no label her
 `git \u0070ush --force origin master`, `git commit --\u006eo-verify -m x`, `\u0067it reset --hard`,
 `\u0067it add -A`) and requires the same verdict. Section 4's `bash-trigger` payload and section
 5's starved payload gained the new words, so the contract and the degraded branch still reach
-every gate's parse path; with the old section 5 payload, `check-changelog-changed.sh` and
+every gate's parse path; with the old section 5 payload, the six commit gates and
 `block-no-verify.sh` printed no degraded warning after D39.
 
 | Run | Result | File under `E:\repos\taom-improve\scratch\013\apply\` |

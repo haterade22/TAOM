@@ -2275,3 +2275,21 @@ The ten git gates now skip parsing when the raw payload lacks `git`, which is sa
 - **Why missed:** the plan's caveat did not reach the comment text it prescribed.
 - **Prevent:** name the producer and the evidence ("Claude Code writes letters literally; raw UTF-8 seen in #647"), and put the re-check where the next upgrade will find it (`docs/reference/hooks-catalog.md`, and `harness-facts.md` once free).
 - **Source:** `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md` F5.
+
+### Prove a before-case against the committed base, not the RED intermediate (plan 013 decisions, 2026-09-24)
+The D39/D40 CHANGELOG said `git \u0063ommit -m "no label here"` passed the subject gate before the change. It passed only in the builder's intermediate tree (D39 applied, D40 not yet); the committed base, still filtering on `git`, denied it. The real base hole was `\u0067it commit`. The same entry reused a "240 cases, no changed decision" parity sentence whose script held no escaped payload, next to a bullet describing a changed decision, and two docs said 4d covers "each blocking gate" when its table has five rows.
+- **Why missed:** the example came from the nearest RED log, not from a run on the base commit, and the counts came from intent, not from the table or the run.
+- **Prevent:** for any "before the change, X happened" claim, run X on the parent commit's file (`git show <base>:<path>`) and quote that result. When a claim is reused after a further change, restate it against what the evidence can see. Count the rows before writing "each" or "every".
+- **Source:** `docs/reviews/rca-bash-hook-prefilter-decisions-2026-09-24.md` R1, R2, R5.
+
+### Build a coverage row that fails on the mutant it exists for: it holds no other copy of the filtered word (plan 013 decisions, 2026-09-24)
+Two new 4c rows passed on correct hooks and on the broken ones they were meant to catch. The escaped-word default row `git \u0063ommit` kept a literal `git`, so a `git`-filtered hook without the escape arm passed it through the word arm. The commit gates had no `git -C <dir> commit` row, so a filter narrowed to `git commit` stayed green. Planted mutants proved both: the committed suite caught neither.
+- **Why missed:** each row was checked green on the code, not red on its mutant, although the plan 013 lesson above says to delete the arm a row covers. A `*)` default row serves hooks it was not written for.
+- **Prevent:** before committing a coverage row, plant the one mutant it exists for and watch it fail. Build the payload so no other arm can admit it (here: escape every word any prefilter reads). Give each arm of the hook's own trigger, not only of its prefilter, a row.
+- **Source:** `docs/reviews/rca-bash-hook-prefilter-decisions-2026-09-24.md` R3, R4.
+
+### When a fix removes a premise, retire it from the argument (plan 013 decisions, 2026-09-24)
+Superseded in part: "State a payload premise as the producer's behaviour" above. After D39 only the two confirm gates filter on `git`, and after D40 a payload holding any `\u` escape takes the full parse, so the prefilters are safe under any JSON writer: JSON writes a letter literally or as `\uXXXX`. The catalog still argued safety from Claude Code's writer, and the twelve hook comments called the escape arm "fail open", the house term for allow.
+- **Why missed:** D40 was added as one more arm; the surrounding prose was edited around it, not re-derived.
+- **Prevent:** when a change closes the hole a premise guarded, rewrite the argument from the new rule and move the premise to what it still affects (here: cost, and `suggest-compact.sh` until plan 011 deletes it).
+- **Source:** `docs/reviews/rca-bash-hook-prefilter-decisions-2026-09-24.md` R6, R9.
