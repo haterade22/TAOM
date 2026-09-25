@@ -70,3 +70,14 @@ and Codex ran afterwards and between them found every item above.
 None beyond the lessons entries: the three themes are covered by `lessons/misc.md` (a new lesson
 for the first, a recurrence note for the second, a new lesson for the third). The AGENTS.md "Lessons From Prior Reviews" items are
 listed in the report under "AGENTS.md lessons (pending)".
+
+## Convergence rounds
+
+Three convergence passes ran after the review (the report's "Convergence" and "Orchestrator
+follow-ups" sections give each fix). All findings were LOW; none touched behaviour.
+
+| Round | Diff | Found | Why the earlier step missed it | Preventive action |
+|---|---|---|---|---|
+| V1 to V4 | `7d1b7a54..d4e6273a` (review follow-ups; fixed in `e809f258`) | A guide bullet that recreated the lens conflict, a Phase 4 sample resolving an interface the new default no longer registers, two record inconsistencies | The fix edited one statement of a rule without re-reading its siblings and its code samples | Same lesson as C1: a new permitted case amends every statement of the rule it qualifies, samples included |
+| C-D1 to C-D3 | `e809f258..16e45bf8` (orchestrator ADR commits; fixed in `6a2ce8cb`) | ADR-008's CI grep left contradicting the edited checklist; a file list copied from the plan's CHANGELOG template; stale owed items in the records | The orchestrator applied the report's table row by row and did not read the rest of each ADR section it edited | Read the whole section around an edited line, not just the line |
+| F-D1 to F-D3 | `16e45bf8..6a2ce8cb` (decisions 55, 56) | A commit credited with another commit's change, an issue status missing from the log, a dropped follow-up | Records written from memory of the commits instead of from `git show` | Write a commit table from `git show --stat` of each hash |

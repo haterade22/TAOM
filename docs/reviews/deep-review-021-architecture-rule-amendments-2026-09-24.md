@@ -165,7 +165,8 @@ needs consent):
 - ADR-008 Rule 3 providers that were never built (Agent 6 KEEP 4).
 - No Standards check for a new hook that only forwards one call (A1, A5).
 - `PartyUpgradeResourceCheckHook` has no tests (A5).
-- Stale v1.5.2 at `feature-builder.md:36`, `review-reference.md:321`, `:559`; `feature-builder.md:87`
+- Stale v1.5.2 at `feature-builder.md:36`, `review-reference.md:321`, `:559`,
+  `.claude/skills/codex-verify/SKILL.md:52` (added by the convergence pass); `feature-builder.md:87`
   names `./build.ps1 -RunTests` for a subagent; `new-feature/SKILL.md:3` description form;
   `IoC.Resolve` inside GameModel override examples (`csharp-patterns.md:64`,
   `review-reference.md:364`); ADR-007 `:789` missing test file (A1).
@@ -269,10 +270,11 @@ plan 021.
 
 | Commit | What |
 |---|---|
-| `b22edd47` | O3, O5 and O6 applied as the "ADR changes for the orchestrator" table gives them. O4 not applied: it rewords condition 1 as Mike chose it in decision 49, so it is his call |
-| `9dcf1a4d` | CHANGELOG entry rewrapped; the approval behind each ADR commit stated precisely (open item 1 of the Convergence section) |
+| `b22edd47` | O3, O5 and O6 applied as the "ADR changes for the orchestrator" table gives them; the CHANGELOG now states the approval behind each ADR commit (open item 1 of the Convergence section). O4 not applied: it rewords condition 1 as Mike chose it in decision 49, so it is his call |
+| `9dcf1a4d` | CHANGELOG entry rewrapped at 100 columns, and "a third" named `b22edd47` |
 | `16e45bf8` | The Codex prompt file committed (ACTION ITEM 4) |
-| last commit | Decisions 55 and 56 plus the three defects of the convergence pass below |
+| `6a2ce8cb` | Decisions 55 and 56 plus the three defects of the convergence pass below |
+| the record commit after `6a2ce8cb` | The three record defects of the final convergence pass below, and the ADR-007 wording "the plan 021 review found four seams" |
 
 **Mike's decisions.** Decision 55 (O1): a private helper that only seams call is part of the seam
 body; one sentence in ADR-007 after condition 4, mirrored in the Standards lens check 1. Decision 56
@@ -281,10 +283,28 @@ body; one sentence in ADR-007 after condition 4, mirrored in the Standards lens 
 says "test subclasses" (RefugeServiceTests has two) instead of "one subclass".
 
 **Convergence pass on `e809f258..16e45bf8`** (one deep-reviewer): CONVERGENCE: DEFECTS 3, all LOW,
-all confirmed and fixed in the last commit.
+all confirmed and fixed in `6a2ce8cb`.
 
 | # | Defect | Fix |
 |---|---|---|
 | C-D1 | O5 left ADR-008's recommended CI step grepping `CampaignTime.Now` in services with no seam exemption, contradicting the edited checklist line; no workflow runs it | Step removed; one sentence says static calls in services are a review check, because a grep cannot tell a seam from a violation |
 | C-D2 | CHANGELOG listed `csharp-architecture.md` among the files that made the hook interface conditional; it changed only interface and seam rows (from the plan's CHANGELOG template) | Moved into the interface sentence |
 | C-D3 | This report's ACTION ITEMS and VERDICT, and the REVIEW-LOG entry, still showed O3, O5 and O6 as owed and O4 with the orchestrator | ACTION ITEMS and VERDICT annotated, REVIEW-LOG entry updated, this section added |
+
+**Final convergence pass on `16e45bf8..6a2ce8cb`** (one deep-reviewer): the ADR-007, lens and
+ADR-008 edits match the commit and add no contradiction; CONVERGENCE: DEFECTS 3, all LOW and all in
+the review records, confirmed and fixed in the record commit after `6a2ce8cb`.
+
+| # | Defect | Fix |
+|---|---|---|
+| F-D1 | The table above credited `9dcf1a4d` with the approval wording that `b22edd47` wrote, and named `6a2ce8cb` "last commit" | Rows corrected, hashes named |
+| F-D2 | REVIEW-LOG's update did not say how the GitHub issue is settled | Update sentence names it |
+| F-D3 | The first pass's open item 2 (`codex-verify/SKILL.md:52` still says v1.5.2) was dropped without a record | Added to the FOLLOW-UP bullet of stale v1.5.2 references |
+
+The same pass noted that ADR-007 presented "four seams" as a complete list, while three more seams
+hold similar filter or routing logic (`SupplyOrderService.RefundConsumption`,
+`RefugeService.ReleasePeacePrisoners`, `CampService.DistanceToNearestFortification`). ADR-007 now
+says the review found four and that a seam breaking condition 2 is a finding wherever it is; whether
+plan 026 takes the other three is a question for Mike. These last edits are records and one ADR
+sentence, checked by the orchestrator directly (text, hashes, dashes, line endings); no further
+reviewer pass was run, because each pass over review records produces new records to review.

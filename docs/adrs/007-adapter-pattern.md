@@ -604,10 +604,12 @@ tested through test subclasses (for example `RefugeService.MainPartyId()` and `T
 in `RefugeServiceTests.cs`); the 2026-09-23 audit counted 94 seam members
 (`plans/_audit/2026-09-23-opus/verify-a-batch-02.md`, ARCH-05). The adapter route for the same
 coverage would need several new adapter interfaces per service for no behaviour gain. The cost is
-that seam bodies are untested engine code inside a service, so they stay thin. Four seams written
-before this rule carried decision logic against condition 2 (`SupplyOrderService.ChargePlayer`,
-`RefugeService.FindNearestHostile`, `WardenService.CompanionsInMainParty` and
-`WardenService.MintCompanionFromTroop`); plan 026 moves that logic into the services (decision 56).
+that seam bodies are untested engine code inside a service, so they stay thin. The plan 021
+review found four seams, written before this rule, that carry decision logic against condition 2
+(`SupplyOrderService.ChargePlayer`, `RefugeService.FindNearestHostile`,
+`WardenService.CompanionsInMainParty` and `WardenService.MintCompanionFromTroop`); plan 026 moves
+that logic into the services (decision 56). A seam that breaks condition 2 is a finding wherever it
+is found, not only in this list.
 
 Reviewers: a seam that meets these conditions is not an ADR-007 violation. A seam that breaks one,
 or engine use in a service outside a seam, still is. This exception also qualifies ADR-002 Service

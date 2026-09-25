@@ -4703,4 +4703,6 @@ Update 2026-09-25: the orchestrator applied O3, O5 and O6 (`b22edd47`); Mike dec
 55, applied to ADR-007 and the Standards lens) and O2 (decision 56, new plan 026 moves the logic);
 O4 stays with Mike (it rewords decision 49). A convergence pass on the orchestrator commits found
 three LOW defects (ADR-008's CI grep, a CHANGELOG file list, this entry), fixed in the same commit
-as decisions 55 and 56; see the report's "Orchestrator follow-ups".
+as decisions 55 and 56 (`6a2ce8cb`); a final pass found three LOW record defects, fixed after it.
+The GitHub issue is covered by Mike's standing request (2026-09-24) to file an issue for every
+sprint plan: the orchestrator files it at merge. See the report's "Orchestrator follow-ups".
