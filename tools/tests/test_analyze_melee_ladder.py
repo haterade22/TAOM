@@ -473,3 +473,16 @@ def test_mode_choice_agrees_between_damage_and_dps():
     assert p.swing_usage.description == "Hard"
     assert p.swing_dps == pytest.approx(slow_hard.swing_dps())
     assert fast_soft.swing_dps() > p.swing_dps  # the disagreement this test exists to detect
+
+
+def test_a_noble_line_troop_is_judged_and_anchors_one_tier_up(monkeypatch):
+    """Nobles wear better kit than regular troops of their level (Mike, 2026-09-25): the melee
+    ladder judges a noble-line troop one tier up, and a weapon a noble carries is priced from
+    that raised tier, so a noble's poleaxe does not drag the shared blade to the tier below."""
+    monkeypatch.setattr(ml, "NOBLE_TROOPS", frozenset({"noble"}))
+    noble, regular = troop("noble", 16, "x", {"w"}), troop("regular", 16, "x", {"w"})
+    assert (noble.tier, regular.tier) == (4, 3)
+    assert troop("noble", 51, "x", {"w"}).tier == 10   # capped at the top tier
+    placement = ml.Placement("w", [noble])
+    assert placement.anchor_tier == 4
+    assert ml.Placement("w", [noble, regular]).anchor_tier == 3

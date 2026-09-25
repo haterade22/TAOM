@@ -40,7 +40,12 @@ sys.path.insert(0, str(REPO / "tools"))
 
 import melee_catalogue as mc  # noqa: E402
 import melee_damage as md  # noqa: E402
-from ranged_ladder import TIER_NUMERAL, TIER_NUMERAL_RE, engine_tier  # noqa: E402
+from ranged_ladder import MAX_TIER, TIER_NUMERAL, TIER_NUMERAL_RE, engine_tier  # noqa: E402
+import taom_schema as _ts  # noqa: E402
+
+# Noble-line troops are judged and anchor one tier up (Mike, 2026-09-25): nobles carry better kit
+# than regular troops of their level. The validator's set, so armour and melee agree on who is noble.
+NOBLE_TROOPS = frozenset(_ts.Validator._NOBLE_LINE_TROOPS)
 
 try:
     from lxml import etree as LET
@@ -112,7 +117,8 @@ class Troop:
 
     @property
     def tier(self) -> int:
-        return engine_tier(self.level)
+        tier = engine_tier(self.level)
+        return min(tier + 1, MAX_TIER) if self.id in NOBLE_TROOPS else tier
 
 
 def load_troops(root: Path) -> list[Troop]:
@@ -331,11 +337,11 @@ class Placement:
         Same rule `tools/derive_armor_tiers.py` established for armour. A weapon handed to one
         level-6 militiaman is a tier-1 weapon however many elites also carry it.
         """
-        return engine_tier(self.min_level)
+        return min(t.tier for t in self.wearers)
 
     @property
     def span(self) -> int:
-        return engine_tier(self.max_level) - self.anchor_tier
+        return max(t.tier for t in self.wearers) - self.anchor_tier
 
 
 def place(priced: dict[str, mc.Priced], troops: list[Troop]) -> dict[str, Placement]:

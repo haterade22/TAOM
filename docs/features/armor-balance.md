@@ -63,7 +63,9 @@ wearer (`level_to_band`: light to 13, medium 14 to 18, heavy 19 to 30, elite 31 
 `--tier-source roster-first`; an id keyword decides only for kit no troop wears, and kit with
 neither is left alone. Civilian sets never anchor, and the ladder-exempt troops
 (`taom_schema.Validator._ARMOUR_LADDER_EXEMPT`: the Ithilien ranger, the troll, the Harad mount
-riders) wear their kit without anchoring it, so the ranger's hood stays a hood.
+riders) wear their kit without anchoring it, so the ranger's hood stays a hood. Since 2026-09-25
+two narrower mechanisms sit beside it: noble-line troops anchor a band up, and a `(troop, item)`
+pair excuses one piece (see the 2026-09-25 subsection below).
 
 Sub-lines that share a folder are routed by id prefix (`LINE_PREFIXES`): `sk_md_num_` and
 `sm_md_num_` to the Black Numenorean cap, `sk_uruk_mordor_` to the Black Uruk cap, `sk_md_mor_`,
@@ -573,6 +575,57 @@ kit and add the troop to `_ARMOUR_LADDER_EXEMPT` with a reason, or move the troo
 | erebor | `ironpass_infantry` | L21 | Body | `sk_dwarf_iron_chest_heavy_b` | heavy | medium |
 | erebor | `ironpass_infantry` | L21 | Body | `sk_dwarf_iron_chest_heavy_c` | heavy | medium |
 | erebor | `ironpass_ram_rider` | L21 | Body | `sk_dwarf_iron_chest_heavy_c` | heavy | medium |
+
+### 2026-09-25: Gondor after KEYforce's Lamedon drop, and the noble-line rule
+
+KEYforce's drop (lotraom-assets `429746b2`) re-kitted Gondor into new Lamedon and Ringlo Vale
+armour. His spec (`tools/gondor_armors_and_troops.md` in the mirror) splits each Gondor region into
+a regular line and one or more "Noble" lines, and dresses the nobles in their own `_nob_` kit from
+the first tier. Mike's rule (2026-09-25): **nobles wear better armour than regular troops of their
+level.** It is implemented in the tools, not as exemptions:
+
+- **`taom_schema.Validator._NOBLE_LINE_TROOPS`** names the 92 noble troops at engine tier 2 to 7
+  (level 11 to 36) of the spec's sixteen noble lines. Tier 8+ nobles already sit on the elite and
+  lord rows.
+- **The mesh gate and fixer judge a noble one tier up:** `rebalance_armor.allowed_mesh_tiers(level,
+  noble=True)` adds the tier above the level's ceiling, so the level-11 Ringlo militia may wear the
+  heavy Anorien helmet KEYforce gave it.
+- **A noble anchors an item a stat band up, never below the item's own tier:**
+  `rebalance_armor.noble_anchor_level(level, item_id)`, read by `derive_armor_tiers.py` and
+  `fix_armour_mesh_ladder.line_anchors`. The floor matters: without it the level-11 militia
+  anchored the regular Anorien heavy helmet at the medium band and dragged it from 43 to 33 for
+  every regular troop wearing it (the lowest at level 26). An elite-band noble (level 31 and 36)
+  anchors at its own level: elite is the top band.
+- Nobles stay judged by every gate and stay in the cross-kingdom cells. The first attempt put them
+  in `_ARMOUR_LADDER_EXEMPT` instead; that stopped them anchoring at all, so their `_med_` pieces
+  priced by the id keyword and most landed below a regular of the same level (Ithil Guard armour 57
+  to 36 on a level-31 noble), while the gates stopped seeing Gondor's tier 3 to 7. Deep review
+  wave 2 caught it the same day.
+
+**Hand decisions are (troop, item) pairs:** `_ARMOUR_LADDER_EXEMPT_ITEMS` holds the 18 regular
+troops' over-dressed pieces whose line ships no lower-tier variant (Anorien infantry helmets at
+level 6, Lamedon and Lossarnach heavy pauldron-capes, Anfalas, Anorien cavalry and Pinnath Gelin
+heavy helmets, Anorien and Osgiliath elite pauldron-capes). Only that item is excused on that troop:
+it is not judged there and does not anchor its price, and the troop's other slots stay on the
+ladder. Whole-troop exemption had repriced slots nobody decided on (the Osgiliath chest 63 to 47).
+
+The roster-first restat ran for Gondor (`--keep-weights --keep-material-type`) three times while
+this was built. Against KEYforce's typed stats the net is 91 items up, 67 down and 216 unchanged.
+Noble medians now sit above regulars at every tier (level 16: 185 against 124; 21: 204 against 144;
+26: 241 against 207; 31: 246 against 217; 36: 250 against 218), and the Gondor lord template reads
+215 (202 before). Seven noble troops stay under the regular median by their kit, not their pricing: the Cair
+Andros and Osgiliath first tiers, the Tolfalas arbalest and crossbowman, the Methir noble, the
+Pelargir skirmisher, and the Blackroot archer by one point. Backups in the
+live Armory: `LOTRLOME_items/gondor/*.bak-noble-restat-2026-09-25` (KEYforce's stats),
+`*.bak-noble-band-2026-09-25`, `*.bak-noble-floor-2026-09-25`. Validator after:
+`ARMOUR_MESH_TIER_LADDER` 1,330 against 1,348 at `HEAD`, `CROSS_CULTURE_ARMOUR_INVERSION` 7
+(unchanged), `UPGRADE_ARMOUR_REGRESSION` 4 against 6, none of them Gondor.
+
+The restat lives only in the unversioned Armory, and the mirror still holds KEYforce's stats by
+Mike's rule, so a re-sync reverts it silently. Re-run the restat after any Gondor sync:
+`python tools/derive_armor_tiers.py`, then
+`python tools/rebalance_armor.py --dry-run --tier-source roster-first --keep-weights
+--keep-material-type --cultures gondor`; a clean tree reports `Changed: 0`.
 
 **Not fixed here, known:** the inherited-ratio secondaries (#583, Codex review 104): the medium
 chest's arm armour (41) still reads above the lord chest's (25) in the tooltip, because secondaries

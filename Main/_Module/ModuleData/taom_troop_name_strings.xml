@@ -274,7 +274,7 @@
 	<string id="aom_gondor_ano_mt_heavy_cavalry_name" text="{=aom_gondor_ano_mt_heavy_cavalry_name}[Gondor] Anórien Heavy Cavalry" />
 	<string id="aom_gondor_ano_mt_knight_name" text="{=aom_gondor_ano_mt_knight_name}[Gondor] Anórien Knight" />
 	<string id="aom_gondor_ano_peasant_name" text="{=aom_gondor_ano_peasant_name}[Gondor] Anórien Peasant" />
-	<string id="aom_gondor_ano_skirmisher_name" text="{=aom_gondor_ano_skirmisher_name}[Gondor] Anorien Skirmisher" />
+	<string id="aom_gondor_ano_skirmisher_name" text="{=aom_gondor_ano_skirmisher_name}[Gondor] Anórien Skirmisher" />
 	<string id="aom_gondor_ano_vet_infantry_name" text="{=aom_gondor_ano_vet_infantry_name}[Gondor] Anórien Veteran Infantry" />
 	<string id="aom_gondor_arn_cavalry_name" text="{=aom_gondor_arn_cavalry_name}[Gondor] Arndir Cavalry" />
 	<string id="aom_gondor_arn_foot_knight_name" text="{=aom_gondor_arn_foot_knight_name}[Gondor] Arndir Foot-Knight" />
@@ -297,9 +297,9 @@
 	<string id="aom_gondor_bel_vet_infantry_name" text="{=aom_gondor_bel_vet_infantry_name}[Gondor] Belfalas Veteran Infantry" />
 	<string id="aom_gondor_brv_archer_name" text="{=aom_gondor_brv_archer_name}[Gondor] Blackroot Vale Archer" />
 	<string id="aom_gondor_brv_bowman_name" text="{=aom_gondor_brv_bowman_name}[Gondor] Blackroot Vale Bowman" />
-	<string id="aom_gondor_brv_ranger_name" text="{=aom_gondor_brv_ranger_name}[Gondor] Blackroot Vale Shadowbow" />
+	<string id="aom_gondor_brv_ranger_name" text="{=aom_gondor_brv_ranger_name}[Gondor] Blackroot Vale Ranger" />
 	<string id="aom_gondor_brv_scout_name" text="{=aom_gondor_brv_scout_name}[Gondor] Blackroot Vale Scout" />
-	<string id="aom_gondor_brv_shadowbow_name" text="{=aom_gondor_brv_shadowbow_name}[Gondor] Blackroot Vale Shadowhunter" />
+	<string id="aom_gondor_brv_shadowbow_name" text="{=aom_gondor_brv_shadowbow_name}[Gondor] Blackroot Vale Shadowbow" />
 	<string id="aom_gondor_brv_shadowhunter_name" text="{=aom_gondor_brv_shadowhunter_name}[Gondor] Blackroot Vale Vanguard" />
 	<string id="aom_gondor_brv_vet_archer_name" text="{=aom_gondor_brv_vet_archer_name}[Gondor] Blackroot Vale Veteran Archer" />
 	<string id="aom_gondor_ca_guard_name" text="{=aom_gondor_ca_guard_name}[Gondor] Cair Andros Guard" />
@@ -370,11 +370,11 @@
 	<string id="aom_gondor_loss_axebearer_name" text="{=aom_gondor_loss_axebearer_name}[Gondor] Lossarnach Axebearer" />
 	<string id="aom_gondor_loss_guard_name" text="{=aom_gondor_loss_guard_name}[Gondor] Lossarnach Guard" />
 	<string id="aom_gondor_loss_lumberman_name" text="{=aom_gondor_loss_lumberman_name}[Gondor] Lossarnach Lumberman" />
-	<string id="aom_gondor_loss_noble_captain_name" text="{=aom_gondor_loss_noble_captain_name}[Gondor] Lossarnach Noble Captain" />
+	<string id="aom_gondor_loss_noble_captain_name" text="{=aom_gondor_loss_noble_captain_name}[Gondor] Lossarnach High Axewarden" />
 	<string id="aom_gondor_loss_noble_name" text="{=aom_gondor_loss_noble_name}[Gondor] Lossarnach Noble" />
-	<string id="aom_gondor_loss_noble_sergeant_name" text="{=aom_gondor_loss_noble_sergeant_name}[Gondor] Lossarnach Noble Sergeant" />
-	<string id="aom_gondor_loss_noble_veteran_name" text="{=aom_gondor_loss_noble_veteran_name}[Gondor] Lossarnach Noble Veteran" />
-	<string id="aom_gondor_loss_noble_warden_name" text="{=aom_gondor_loss_noble_warden_name}[Gondor] Lossarnach Noble Warden" />
+	<string id="aom_gondor_loss_noble_sergeant_name" text="{=aom_gondor_loss_noble_sergeant_name}[Gondor] Lossarnach Axeguard" />
+	<string id="aom_gondor_loss_noble_veteran_name" text="{=aom_gondor_loss_noble_veteran_name}[Gondor] Lossarnach Axeman" />
+	<string id="aom_gondor_loss_noble_warden_name" text="{=aom_gondor_loss_noble_warden_name}[Gondor] Lossarnach Axewarden" />
 	<string id="aom_gondor_loss_skirmisher_name" text="{=aom_gondor_loss_skirmisher_name}[Gondor] Lossarnach Skirmisher" />
 	<string id="aom_gondor_loss_vet_axe_thrower_name" text="{=aom_gondor_loss_vet_axe_thrower_name}[Gondor] Lossarnach Veteran Axe-Thrower" />
 	<string id="aom_gondor_loss_vet_axebearer_name" text="{=aom_gondor_loss_vet_axebearer_name}[Gondor] Lossarnach Veteran Axebearer" />

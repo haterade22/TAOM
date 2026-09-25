@@ -306,6 +306,28 @@ cycle does not depend on the factor, so **DPS is exactly linear in it** and the 
 `target / current`. Both factors scale together, which moves the weapon's power without
 changing its character.
 
+**Noble lines are judged one tier up (2026-09-25).** `analyze_melee_ladder.Troop.tier` adds one
+tier for a troop in `taom_schema.Validator._NOBLE_LINE_TROOPS` (Mike: nobles carry better kit
+than regular troops of their level), and a weapon's anchor tier is its lowest wearer's *tier*
+rather than its level, so the gate, `fix_melee_ladder.py`, `restat_melee_blades.py` and the report
+all see the noble band. Without it the Lossarnach nobles' poleaxes dragged the shared blades
+down: the level-16 noble anchored the medium blade (`sm_ar_art_poleaxe_blade_b`) at tier 3 for
+the Ringlo guardsman, and the level-26 sergeant anchored the heavy blade (`_blade_a`) at tier 5,
+under the Ringlo spearman and warden at tier 6 and 7. The set stops at tier 7 (Mike kept it
+there), so a tier-7 noble is judged at tier 8, level with its tier-8 promotion: twelve Gondor
+upgrade edges (the Arndir, Ithil, Minas Tirith, Dol Amroth and Pelargir captains among them) no
+longer raise the melee target.
+
+**A roster pass can reach for a blade another line depends on.** On the Gondor run after
+KEYforce's Lamedon drop, pass 1 offered the tier-4 and tier-5 Pinnath Gelin archers the
+Numenorean poleaxe as a sidearm; they became its lowest wearers and pass 2 dropped the blade from
+80 to 71 DPS for the Ringlo nobles. The swap was reverted by hand and the blade restored. Read pass
+1's plan for weapons that belong to another line before `--apply` (the gate's own repair line
+still suggests the reverted archer swaps), and stop the loop when it
+starts trading the same blades back and forth: ten such suggestions were left unapplied that day,
+6 of them "upgrades" from the elite to the medium Numenorean bastard sword that only score higher
+because their blades are anchored by different wearers.
+
 **The two passes iterate.** A weapon's tier anchor is its lowest wearer, so a restat moves the
 anchors and a roster pass then finds new options, which moves them again. Four rounds of
 restat, roster, regenerate career kits:

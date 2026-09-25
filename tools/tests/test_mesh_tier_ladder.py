@@ -88,6 +88,78 @@ class SubstituteTier(unittest.TestCase):
         self.assertEqual(ra.substitute_mesh_tiers(41), ('lord', 'elite'))
 
 
+class NobleLines(unittest.TestCase):
+    """A noble line wears a band above a regular troop of its level (Mike, 2026-09-25): the
+    gate allows one mesh tier above the level's ceiling, and the curve prices the noble's kit
+    as if the wearer stood in the next stat band."""
+
+    def test_nobles_may_wear_one_tier_above_the_levels_ceiling(self):
+        expected = {
+            11: {'light', 'medium', 'heavy'}, 16: {'light', 'medium', 'heavy'},
+            21: {'medium', 'heavy'},
+            26: {'heavy', 'elite'},
+            31: {'heavy', 'elite', 'lord'},
+            36: {'elite', 'lord'},
+            41: {'elite', 'lord'},   # nothing above lord
+        }
+        for level, tiers in expected.items():
+            self.assertEqual(ra.allowed_mesh_tiers(level, noble=True), frozenset(tiers), level)
+
+    def test_a_noble_anchors_at_the_first_level_of_the_next_band(self):
+        # level_to_band: light to 13, medium 14-18, heavy 19-30, elite from 31.
+        for level, anchored in {6: 14, 11: 14, 16: 19, 21: 31, 26: 31, 31: 31, 36: 36, 46: 46}.items():
+            self.assertEqual(ra.noble_anchor_level(level), anchored, level)
+        for level in (11, 21, 26):
+            self.assertEqual(ra.MESH_TIER_ORDER.index(ra.level_to_band(ra.noble_anchor_level(level))),
+                             ra.MESH_TIER_ORDER.index(ra.level_to_band(level)) + 1, level)
+
+    def test_a_noble_never_anchors_an_item_below_the_tier_in_its_id(self):
+        # The level-11 Ringlo militia wears the regular Anorien heavy helmet; a band up is only
+        # medium, and anchoring there dragged the helmet from 43 to 33 for every regular troop
+        # wearing it. A noble may raise an item's price, never lower it below its own tier.
+        self.assertEqual(ra.noble_anchor_level(11, 'sk_x_helmet_heavy_a'), 19)
+        self.assertEqual(ra.noble_anchor_level(11, 'sk_x_helmet_med_a'), 14)
+        self.assertEqual(ra.noble_anchor_level(26, 'sk_x_chest_lord_a'), 31)
+        self.assertEqual(ra.noble_anchor_level(26, 'sk_x_chest_med_a'), 31)   # a band up wins
+        self.assertEqual(ra.noble_anchor_level(11, 'sk_dale_chest_a03'), 14)  # no tier token
+
+    def test_a_nobles_substitute_is_priced_off_its_raised_band(self):
+        # L21 noble: allowed medium/heavy; its band is elite, so heavy comes first.
+        self.assertEqual(ra.substitute_mesh_tiers(21, noble=True), ('heavy', 'medium'))
+        self.assertEqual(ra.substitute_mesh_tiers(21), ('medium',))
+
+    def test_the_gate_judges_a_noble_one_tier_up(self):
+        troops = {
+            'noble': _troop(21, {'Body': 'sk_x_chest_heavy_a', 'Head': 'sk_x_helmet_elite_a',
+                                 'Leg': 'sk_x_grvs_light_a'}),
+        }
+        hits = ra.mesh_ladder_violations(troops, noble={'noble'})
+        self.assertEqual([(h['item'], h['direction']) for h in hits],
+                         [('sk_x_helmet_elite_a', 'over'), ('sk_x_grvs_light_a', 'under')])
+        self.assertEqual(hits[0]['allowed'], ('medium', 'heavy'))
+        # The same troop judged as a regular also flags the heavy chest.
+        self.assertIn('sk_x_chest_heavy_a', [h['item'] for h in ra.mesh_ladder_violations(troops)])
+
+
+    def test_a_level_16_nobles_substitutes_start_at_its_raised_heavy_band(self):
+        # Level 16 is the medium band; a noble is priced in the heavy band and may wear heavy.
+        self.assertEqual(ra.substitute_mesh_tiers(16, noble=True), ('heavy', 'medium', 'light'))
+        self.assertEqual(ra.substitute_mesh_tiers(16), ('medium', 'light'))
+
+
+class PairExemption(unittest.TestCase):
+    def test_an_exempt_troop_item_pair_is_skipped_and_nothing_else(self):
+        troops = {'snaga': _troop(11, {'Body': 'sk_x_chest_lord_a', 'Head': 'sk_x_helmet_lord_a'})}
+        hits = ra.mesh_ladder_violations(troops, exempt_items={('snaga', 'sk_x_chest_lord_a')})
+        self.assertEqual([h['item'] for h in hits], ['sk_x_helmet_lord_a'])
+
+    def test_the_pair_is_keyed_on_the_troop_as_well_as_the_item(self):
+        troops = {'snaga': _troop(11, {'Body': 'sk_x_chest_lord_a'}),
+                  'grunt': _troop(11, {'Body': 'sk_x_chest_lord_a'})}
+        hits = ra.mesh_ladder_violations(troops, exempt_items={('snaga', 'sk_x_chest_lord_a')})
+        self.assertEqual([h['troop'] for h in hits], ['grunt'])
+
+
 def _troop(level, *sets, **extra):
     rec = {'level': level, 'sets': list(sets), 'file': 'troops/troops_x.xml', 'line': 1}
     rec.update(extra)

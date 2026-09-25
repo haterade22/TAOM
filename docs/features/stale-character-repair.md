@@ -49,6 +49,12 @@ The actual mechanism, and it is provable rather than merely plausible:
    `Deserialize` on the existing object.
 3. A character whose id is no longer in ModuleData is never reached by step 2.
 
+> **Open question (2026-09-25, #670):** a code reading during the #669 review found that
+> `Campaign.cs:1457` unregisters every not-ready object during `OnInitialize`, before this
+> patch's `PreAfterLoad` sweep reads `GetObjectTypeList<BasicCharacterObject>()`, which returns
+> registered objects only. If that ordering holds, a character deleted from ModuleData is gone
+> from the list before Patch83 looks. Unverified in game; #670 tracks the `/investigate`.
+
 The bundle's own timestamps show the two passes eight seconds apart (`[SaveLoad] ObjectsInitialized`
 at 20:16:48; `spnpccharacters.xml` opened at 20:16:56). The save was written by TAOM v2.0.18 on
 Bannerlord v1.4.7 and loaded by TAOM v2.0.27 on v1.4.8: nine versions of troop-XML churn.

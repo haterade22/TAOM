@@ -16,7 +16,9 @@ troops get the right armor; the higher ones accept a compromise).
 Tier signal precedence per item (anchor first since the kingdom-cap curve, #583, 2026-09-13; it
 was keyword first before, which is how the Fountain Guard's `_heavy_` helmet, worn only at level
 46, stayed at 33):
-  1. roster anchor band (lowest BATTLE wearer level, ladder-exempt troops never anchor)
+  1. roster anchor band (lowest BATTLE wearer level, ladder-exempt troops and exempt (troop, item)
+     pairs never anchor; a noble-line wearer is recorded at rebalance_armor.noble_anchor_level,
+     so `level` in the map can be above the troop's own)
   2. explicit tier keyword in the id (_light_/_med_/_heavy_/_elite_/_lord_, _civ_) for kit no troop wears
   3. unworn and keyword-less: roster cannot tier it (falls back to name/value detection)
 The writer's --tier-source roster-first applies the same precedence, so the map's tier, target
@@ -86,13 +88,14 @@ def line_suffix(item_id):
 
 # Troops whose kit is off the ladder by design (the light Ithilien ranger at level 51, the troll,
 # the Harad mount riders): they wear their kit, but they do not ANCHOR it. One source, the
-# validator's allowlist, so the map and the CROSS_CULTURE_ARMOUR_INVERSION gate agree.
-try:
-    import taom_schema as _ts
-    LADDER_EXEMPT_TROOPS = frozenset(_ts.Validator._ARMOUR_LADDER_EXEMPT)
-except Exception:  # a bare checkout without the schema JSONs still gets the ids
-    LADDER_EXEMPT_TROOPS = frozenset({'cave_troll', 'harad_elephant_rider', 'harad_mumakil_rider',
-                                      'gondor_ithilien_ranger'})
+# validator's allowlist, so the map and the CROSS_CULTURE_ARMOUR_INVERSION gate agree. A noble-line
+# troop anchors a band up (rebalance_armor.noble_anchor_level); an exempt (troop, item) pair does
+# not anchor that one item. No fallback copy: taom_schema imports only the stdlib, and a silent
+# fallback would let every exempt and noble troop anchor on the next restat.
+import taom_schema as _ts  # noqa: E402
+LADDER_EXEMPT_TROOPS = frozenset(_ts.Validator._ARMOUR_LADDER_EXEMPT)
+NOBLE_TROOPS = frozenset(_ts.Validator._NOBLE_LINE_TROOPS)
+LADDER_EXEMPT_ITEMS = frozenset(_ts.Validator._ARMOUR_LADDER_EXEMPT_ITEMS)
 
 
 def _is_civilian_roster(elem):
@@ -134,10 +137,11 @@ def parse_rosters():
                         continue
                     raw = eq.get('id', '')
                     item_id = raw.split('.', 1)[1] if raw.startswith('Item.') else raw
-                    if not item_id or (item_id, slot) in seen:
+                    if not item_id or (item_id, slot) in seen or (tid, item_id) in LADDER_EXEMPT_ITEMS:
                         continue
                     seen.add((item_id, slot))
-                    wearers[item_id].append({'troop': tid, 'culture': culture, 'level': level, 'slot': slot})
+                    anchor = ra.noble_anchor_level(level, item_id) if tid in NOBLE_TROOPS else level
+                    wearers[item_id].append({'troop': tid, 'culture': culture, 'level': anchor, 'slot': slot})
     return wearers
 
 

@@ -177,7 +177,7 @@
 				</Traits>
 				<Equipments>
 				<EquipmentRoster>
-					<equipment slot="Item0" id="Item.wm_gondor_swanknight_speara" />
+					<equipment slot="Item0" id="Item.wm_gondor_spear_b_swan" />
 					<equipment slot="Item1"	id="Item.gond_shield_two_swan" />
 					<equipment slot="Item2" 	id="Item.wm_swan_knight_sworda" />
 					<equipment slot="Body" id="Item.sk_gd_dol_chest_elite_a" />
@@ -187,7 +187,7 @@
 					<equipment slot="Cape" id="Item.sk_gd_dol_pauld_cape_noble_elite_a" />
 				</EquipmentRoster>
 				<EquipmentRoster civilian="true">
-					<equipment slot="Item0" id="Item.wm_gondor_swanknight_speara" />
+					<equipment slot="Item0" id="Item.wm_gondor_spear_b_swan" />
 					<equipment slot="Item1"	id="Item.gond_shield_two_swan" />
 					<equipment slot="Item2" 	id="Item.wm_swan_knight_sworda" />
 					<equipment slot="Body" id="Item.sk_gd_dol_chest_elite_a" />

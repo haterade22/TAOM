@@ -420,7 +420,7 @@ public class VolunteerRecruitmentServiceTests
     [DataRow("town_EW9",    "gondor_lam_clansman")]
     [DataRow("town_EW10",   "gondor_anf_levy")]
     [DataRow("town_EW11",   "gondor_har_conscript")]
-    [DataRow("castle_EW2",  "gondor_ring_peasant")]
+    [DataRow("castle_EW2",  "gondor_ring_militia")]
     [DataRow("castle_EW3",  "gondor_bel_recruit")]
     [DataRow("castle_EW4",  "gondor_ca_noble")]
     [DataRow("castle_EW6",  "gondor_brv_bowman")]

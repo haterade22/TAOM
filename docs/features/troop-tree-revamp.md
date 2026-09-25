@@ -233,7 +233,7 @@ Branches off `gondor_pg_spearman.upgrade_target` (now expands to `vet_spearman |
 ### Item resolution highlights
 
 - **"Gondor One-Handed I-X"** = `wm_gondor_sword_a01..a10` (verified against LOTRLOME_Armory display names).
-- **"Gondor Banner Spear I/II"** = `wm_gondor_gondorknight_speara/speara` (not `wm_gondor_swanknight_*`, which is the Belfalas/Dol Amroth variant).
+- **"Gondor Banner Spear I/II"** = `wm_gondor_gondorknight_speara/speara` (not `wm_gondor_swanknight_*`, which is the Belfalas/Dol Amroth variant). *2026-09-25: KEYforce's Lamedon drop retired all six banner spears (`wm_gondor_{gondorknight,swanknight,pg}_spear{a,b}`); the replacements are `wm_gondor_spear_b_{gondor,swan,pg,cardolan}` and `wm_gondor_light_spear_{gondor,swan,pg,cardolan}`.*
 - **"Lebennin 1h sword"** = `wm_pelargir_sword_a01/a02` (the Pelargir item line is the canonical Lebennin sword family).
 - **No LOTRLOME Gondor variant exists for crossbow / bolt / javelin** — used vanilla `Item.crossbow_b–g`, `Item.bolt_b/c/d`, `Item.imperial_throwing_spear_1_t4`. Empire-themed vanilla items are intentional Gondor stand-ins (Bannerlord ships Empire as Gondor's aesthetic match; TAOM XSLT remaps Empire→Gondor culture).
 

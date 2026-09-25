@@ -198,6 +198,58 @@ class Plan(unittest.TestCase):
         self.assertEqual([(c['troop'], c['new'], c['anchor_note']) for c in changes],
                          [('fighter', 'sk_x_chest_med_a', 'anchor L16, a band below')])
 
+    def test_the_fixer_reads_the_validators_sets(self):
+        import taom_schema as ts
+        self.assertEqual(fx.EXEMPT_TROOPS, frozenset(ts.Validator._ARMOUR_LADDER_EXEMPT)
+                         | frozenset(ts.Validator._BODYLESS_BY_DESIGN))
+        self.assertEqual(fx.NOBLE_TROOPS, frozenset(ts.Validator._NOBLE_LINE_TROOPS))
+        self.assertEqual(fx.EXEMPT_ITEMS, frozenset(ts.Validator._ARMOUR_LADDER_EXEMPT_ITEMS))
+
+    def test_a_noble_one_tier_up_stays_and_its_anchor_is_raised(self):
+        old = (fx.NOBLE_TROOPS, fx.EXEMPT_ITEMS)
+        try:
+            fx.NOBLE_TROOPS = frozenset({'noble'})
+            fx.EXEMPT_ITEMS = frozenset({('grunt', 'sk_x_chest_elite_a')})
+            troops = {
+                'noble': _troop('noble', 21, {'Body': 'sk_x_chest_heavy_a'}),
+                'grunt': _troop('grunt', 16, {'Body': 'sk_x_chest_elite_a'}),
+            }
+            changes, unresolved, _ = fx.plan(troops, ITEMS)
+            self.assertEqual((changes, unresolved), ([], []))
+            # The noble anchors heavy_a at 31 (a band up); the exempt pair anchors nothing.
+            self.assertEqual(fx.line_anchors(fx.in_scope(troops)), {'sk_x_chest_heavy_a': 31})
+        finally:
+            fx.NOBLE_TROOPS, fx.EXEMPT_ITEMS = old
+
+    def test_an_over_dressed_noble_is_swapped_within_its_one_tier_up_allowance(self):
+        old = fx.NOBLE_TROOPS
+        try:
+            fx.NOBLE_TROOPS = frozenset({'noble'})
+            troops = {'noble': _troop('noble', 16, {'Body': 'sk_x_chest_elite_a'})}
+            changes, _, _ = fx.plan(troops, ITEMS)
+            self.assertEqual([(c['troop'], c['new']) for c in changes], [('noble', 'sk_x_chest_heavy_a')])
+        finally:
+            fx.NOBLE_TROOPS = old
+
+    def test_an_exempt_pair_leaves_the_troops_other_items_anchoring(self):
+        old = fx.EXEMPT_ITEMS
+        try:
+            fx.EXEMPT_ITEMS = frozenset({('grunt', 'sk_x_chest_elite_a')})
+            troops = {'grunt': _troop('grunt', 16, {'Body': 'sk_x_chest_elite_a', 'Cape': 'sk_x_pauld_med_a'})}
+            self.assertEqual(fx.line_anchors(fx.in_scope(troops)), {'sk_x_pauld_med_a': 16})
+        finally:
+            fx.EXEMPT_ITEMS = old
+
+    def test_a_noble_ranks_a_candidate_at_the_level_it_will_be_placed_at(self):
+        # A level-11 noble falling through to heavy is placed at 19 (the heavy floor), so the
+        # heavy variant already anchored in the heavy band is the one at its band, not the one
+        # anchored at 16 (deep review wave 3, 2026-09-25).
+        items = _items(('sk_y_chest_elite_a', 'body_armors.xml', 49),
+                       ('sk_y_chest_heavy_a', 'body_armors.xml', 41), ('sk_y_chest_heavy_c', 'body_armors.xml', 41))
+        anchors = {'sk_y_chest_heavy_a': 16, 'sk_y_chest_heavy_c': 19}
+        self.assertEqual(fx.pick_substitute('sk_y_chest_elite_a', 11, items, fx.build_line_index(items),
+                                            anchors, noble=True), ('sk_y_chest_heavy_c', 'heavy'))
+
     def test_scope_is_troops_files_with_a_level_minus_the_exempt(self):
         troops = {
             'villager_x': _troop('villager_x', 6, {'Body': 'sk_x_chest_lord_a'},

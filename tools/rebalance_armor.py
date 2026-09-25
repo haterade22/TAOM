@@ -304,12 +304,32 @@ MESH_TIER_LADDER = (
 MESH_LADDER_SLOTS = ('Head', 'Body', 'Cape', 'Gloves', 'Leg')
 
 
-def allowed_mesh_tiers(level):
-    """The mesh tiers a troop of this level may wear, as a frozenset."""
-    for bound, tiers in MESH_TIER_LADDER:
-        if level <= bound:
-            return frozenset(tiers)
-    return frozenset(MESH_TIER_LADDER[-1][1])
+def allowed_mesh_tiers(level, noble=False):
+    """The mesh tiers a troop of this level may wear, as a frozenset. A noble-line troop may
+    also wear the one tier above the level's ceiling (Mike, 2026-09-25: nobles wear better
+    armour than regular troops of their level)."""
+    row = next((r for bound, r in MESH_TIER_LADDER if level <= bound), MESH_TIER_LADDER[-1][1])
+    tiers = frozenset(row)
+    if noble:
+        top = max(MESH_TIER_ORDER.index(t) for t in tiers)
+        tiers = tiers | frozenset(MESH_TIER_ORDER[top + 1:top + 2])
+    return tiers
+
+
+# The first level of each stat band after light (level_to_band's bounds plus one), and of the
+# band each mesh tier prices in (lord prices as elite).
+_NEXT_BAND_FIRST_LEVEL = {'light': 14, 'medium': 19, 'heavy': 31}
+_TIER_BAND_FIRST_LEVEL = {'medium': 14, 'heavy': 19, 'elite': 31, 'lord': 31}
+
+
+def noble_anchor_level(level, item_id=None):
+    """The level a noble-line wearer anchors an item at: the first level of the next stat band,
+    so the kingdom-cap curve prices noble kit a band above a regular troop of the same level
+    (the elite band is the top, so an elite-band noble stays put). Never below the band of the
+    tier in the item's own id: a noble may raise a shared piece's price, never drag a regular
+    heavy helmet down to its own band (the level-11 Ringlo militia in the Anorien heavy helmet)."""
+    raised = max(level, _NEXT_BAND_FIRST_LEVEL.get(level_to_band(level), level))
+    return max(raised, _TIER_BAND_FIRST_LEVEL.get(mesh_tier_of(item_id), 0))
 
 
 def mesh_tier_of(item_id):
@@ -328,24 +348,25 @@ def mesh_tier_of(item_id):
     return None
 
 
-def substitute_mesh_tiers(level):
+def substitute_mesh_tiers(level, noble=False):
     """The tiers to swap an over-dressed troop's item to, best first: every allowed tier that is
     not above the troop's STAT band (`level_to_band`), highest first, then the allowed tiers
     above the band, lowest first. A level-11 troop may wear medium, but its band is light, and
     a snaga put in `_med_a` anchors that medium variant to the light band, which is the bug
     this ladder exists to stop; so light comes first. Medium stays on the list because a line
     with no light variant still has a ladder-legal swap, and a medium mesh dragged to the
-    light band beats a heavy one left there."""
-    band = level_to_band(level)
+    light band beats a heavy one left there. A noble is judged at its raised band and its
+    one-tier-up allowance."""
+    band = level_to_band(noble_anchor_level(level) if noble else level)
     # The lord band prices as the elite band (BAND_RATIO), so lord kit is not above it.
     ceiling = MESH_TIER_ORDER.index('lord' if band == 'elite' else band)
-    allowed = allowed_mesh_tiers(level)
+    allowed = allowed_mesh_tiers(level, noble)
     below = [t for t in reversed(MESH_TIER_ORDER) if t in allowed and MESH_TIER_ORDER.index(t) <= ceiling]
     above = [t for t in MESH_TIER_ORDER if t in allowed and MESH_TIER_ORDER.index(t) > ceiling]
     return tuple(below + above)
 
 
-def mesh_ladder_violations(troops, exempt=()):
+def mesh_ladder_violations(troops, exempt=(), noble=(), exempt_items=()):
     """Every (troop, slot, item) where a battle set wears a tier the troop's level does not allow.
 
     `troops` is {id: {'level': int|None, 'sets': [{slot: item_id}], ...}}, the shape both the
@@ -354,7 +375,8 @@ def mesh_ladder_violations(troops, exempt=()):
     so are civilian-token and token-less items and non-armour slots. One row per distinct
     (troop, slot, item) with the number of sets wearing it; 'over' means the tier is above the
     highest allowed (it drags the mesh's stats down for every troop above), 'under' below the
-    lowest (cosmetic). Sorted by troop, slot, item.
+    lowest (cosmetic). Sorted by troop, slot, item. `noble` troops are judged one tier up
+    (allowed_mesh_tiers); an `exempt_items` (troop, item) pair is skipped and nothing else.
     """
     rows = []
     for tid in sorted(troops):
@@ -362,7 +384,7 @@ def mesh_ladder_violations(troops, exempt=()):
         level = rec.get('level')
         if level is None or tid in exempt:
             continue
-        allowed = allowed_mesh_tiers(int(level))
+        allowed = allowed_mesh_tiers(int(level), tid in noble)
         order = [MESH_TIER_ORDER.index(t) for t in allowed]
         lo, hi = min(order), max(order)
         seen = {}
@@ -372,7 +394,7 @@ def mesh_ladder_violations(troops, exempt=()):
                 if not iid:
                     continue
                 tier = mesh_tier_of(iid)
-                if tier is None or tier == 'civilian' or tier in allowed:
+                if tier is None or tier == 'civilian' or tier in allowed or (tid, iid) in exempt_items:
                     continue
                 key = (slot, iid)
                 if key in seen:

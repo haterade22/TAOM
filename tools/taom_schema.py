@@ -1524,6 +1524,88 @@ class Validator:
         "taom_test_animalia_moose_rider": "#646 Custom Battle test rider, not a kingdom's troop (troops_animalia_test.xml)",
     }
 
+    # Gondor noble lines at engine tier 2 to 7 (level 11 to 36), from the "<Region> Noble" troop
+    # trees of KEYforce's spec (lotraom-assets tools/gondor_armors_and_troops.md). Mike, 2026-09-25:
+    # nobles wear better armour than regular troops of their level. The mesh gate and fixer allow
+    # them one tier above their level's ceiling, and they anchor an item a stat band up
+    # (rebalance_armor.allowed_mesh_tiers / noble_anchor_level). Unlike _ARMOUR_LADDER_EXEMPT they
+    # stay judged and stay in the cross-kingdom cells. Tier 8+ nobles already sit on elite/lord.
+    _NOBLE_LINE_TROOPS = (
+        # Osgiliath
+        "gondor_osg_veteran", "gondor_osg_skirmisher", "gondor_osg_guard", "gondor_osg_dome_guard",
+        "gondor_osg_longbowman", "gondor_osg_archer", "gondor_osg_infantry",
+        # Cair Andros
+        "gondor_ca_noble", "gondor_ca_veteran", "gondor_ca_spearman", "gondor_ca_pikeman",
+        "gondor_ca_pikewarden", "gondor_ca_infantry", "gondor_ca_guard", "gondor_ca_warden",
+        # Minas Ithil
+        "gondor_ith_watcher", "gondor_ith_veteran", "gondor_ith_sergeant", "gondor_ith_longbowman",
+        # Minas Tirith
+        "gondor_mt_trainee", "gondor_mt_veteran", "gondor_mt_sergeant", "gondor_mt_longbowman",
+        # Lossarnach
+        "gondor_loss_noble", "gondor_loss_noble_sergeant", "gondor_loss_noble_warden",
+        "gondor_loss_noble_captain", "gondor_loss_noble_veteran",
+        # Arndir (Pinnath Gelin)
+        "gondor_arn_noble", "gondor_arn_noble_t4", "gondor_arn_cavalry", "gondor_arn_knight",
+        "gondor_arn_vet_knight", "gondor_arn_infantry", "gondor_arn_vet_infantry",
+        "gondor_arn_foot_knight",
+        # Blackroot Vale
+        "gondor_brv_bowman", "gondor_brv_scout", "gondor_brv_archer", "gondor_brv_vet_archer",
+        "gondor_brv_ranger", "gondor_brv_shadowhunter",
+        # Serelond
+        "gondor_ser_pikeman", "gondor_ser_pikewarden", "gondor_ser_phalanx", "gondor_ser_maceman",
+        "gondor_ser_vet_maceman", "gondor_ser_coastwarden", "gondor_ser_noble",
+        "gondor_ser_veteran",
+        # Lond-Galen
+        "gondor_lg_noble", "gondor_lg_crossbowman", "gondor_lg_pavise_crossbowman",
+        "gondor_lg_pavise_guard",
+        # Dol Amroth
+        "gondor_da_noble", "gondor_da_footman", "gondor_da_squire", "gondor_da_cavalry",
+        "gondor_da_knight", "gondor_da_infantry", "gondor_da_vet_infantry", "gondor_da_foot_knight",
+        # Linhir
+        "gondor_lin_noble", "gondor_lin_footman", "gondor_lin_spearman", "gondor_lin_vet_spearman",
+        "gondor_lin_high_guard",
+        # Tolfalas
+        "gondor_tol_arbalest", "gondor_tol_crossbowman", "gondor_tol_vet_crossbowman",
+        "gondor_tol_marksman", "gondor_tol_sharpshooter",
+        # Calembel (Lamedon)
+        "gondor_cal_noble", "gondor_cal_swordsman", "gondor_cal_heavy_swordsman",
+        "gondor_cal_sergeant",
+        # Ringlo Vale (Lamedon)
+        "gondor_ring_militia", "gondor_ring_spearman", "gondor_ring_warden", "gondor_ring_footman",
+        "gondor_ring_guardsman",
+        # Methir (Harondor)
+        "gondor_met_noble", "gondor_met_glaiveman", "gondor_met_glaive_guard",
+        "gondor_met_sun_warden", "gondor_met_archer", "gondor_met_vet_archer",
+        "gondor_met_composite_archer",
+        # Pelargir (Lebennin)
+        "gondor_pel_skirmisher", "gondor_pel_veteran", "gondor_pel_infantry",
+        "gondor_pel_vet_infantry",
+    )
+    # One (troop, item) pair each: a regular troop wearing a piece above its level where the
+    # armour line ships no lower-tier variant (fix_armour_mesh_ladder's hand decisions after the
+    # KEYforce drop, Mike 2026-09-25). Only that item is excused on that troop: it is not judged
+    # there and does not anchor its price; every other slot of the troop stays on the ladder.
+    _ARMOUR_LADDER_EXEMPT_ITEMS = {
+        ("gondor_anf_cavalry", "sk_gd_anf_cav_helmet_heavy_a"): "L21 wears heavy; the line has no medium variant",
+        ("gondor_anf_cavalry", "sk_gd_anf_cav_helmet_heavy_b"): "L21 wears heavy; the line has no medium variant",
+        ("gondor_anf_vet_cavalry", "sk_gd_ano_pauld_cape_inf_elite_a"): "L26 wears elite; the line has no heavy variant",
+        ("gondor_ano_mt_cavalry", "sk_gd_ano_cav_helmet_heavy_a"): "L21 wears heavy; the line has no medium variant",
+        ("gondor_ano_peasant", "sk_gd_ano_inf_helmet_med_a"): "L6 wears medium; the line has no light variant",
+        ("gondor_bel_recruit_merc", "sk_gd_ano_inf_helmet_med_a"): "L6 wears medium; the line has no light variant",
+        ("gondor_lam_swordman", "sk_gd_lam_pauld_cape_heavy_a"): "L16 wears heavy; the line has no light/medium variant",
+        ("gondor_lam_swordman", "sk_gd_lam_pauld_cape_heavy_b"): "L16 wears heavy; the line has no light/medium variant",
+        ("gondor_loss_axe_thrower", "sk_gd_los_pauld_inf_heavy_a"): "L21 wears heavy; the line has no medium variant",
+        ("gondor_loss_axebearer", "sk_gd_los_pauld_inf_heavy_a"): "L16 wears heavy; the line has no light/medium variant",
+        ("gondor_loss_lumberman_merc", "sk_gd_ano_inf_helmet_med_a"): "L6 wears medium; the line has no light variant",
+        ("gondor_loss_skirmisher", "sk_gd_los_pauld_inf_heavy_a"): "L16 wears heavy; the line has no light/medium variant",
+        ("gondor_loss_vet_axebearer", "sk_gd_los_pauld_inf_heavy_a"): "L21 wears heavy; the line has no medium variant",
+        ("gondor_pg_archer", "sk_gd_pin_arc_helmet_heavy_a"): "L21 wears heavy; the line has no medium variant",
+        ("gondor_pg_archer", "sk_gd_pin_arc_helmet_heavy_b"): "L21 wears heavy; the line has no medium variant",
+        ("gondor_pg_cavalry", "sk_gd_osg_pauld_cape_inf_elite_a"): "L26 wears elite; the line has no heavy variant",
+        ("gondor_pg_spearman", "sk_gd_pin_spear_helmet_heavy_a"): "L21 wears heavy; the line has no medium variant",
+        ("gondor_pg_spearman", "sk_gd_pin_spear_helmet_heavy_b"): "L21 wears heavy; the line has no medium variant",
+    }
+
     def _cross_culture_armour_inversions(self) -> list:
         armour = getattr(self.reg, "item_armour", None) or {}
         if not armour:
@@ -1594,7 +1676,9 @@ class Validator:
             scoped[tid] = rec
         exempt = set(self._ARMOUR_LADDER_EXEMPT) | set(self._BODYLESS_BY_DESIGN)
         issues = []
-        for hit in ra.mesh_ladder_violations(scoped, exempt=exempt):
+        for hit in ra.mesh_ladder_violations(scoped, exempt=exempt,
+                                             noble=set(self._NOBLE_LINE_TROOPS),
+                                             exempt_items=set(self._ARMOUR_LADDER_EXEMPT_ITEMS)):
             over = hit["direction"] == "over"
             issues.append(Issue(
                 severity=Severity.WARNING, code="ARMOUR_MESH_TIER_LADDER",

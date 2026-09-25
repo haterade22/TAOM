@@ -2427,6 +2427,24 @@ Plan 019 set the seven nullable ids to `error` in `Main/Features/Siege`. CLAUDE.
 - **Prevent:** when a change promotes a diagnostic (a warning to error, a new analyzer, a gate's new exit code), grep `.claude/skills/`, `.claude/rules/` and `docs/ai-includes/` for its id and fix any advice that contradicts the rule the promotion enforces, in the same change.
 - **Source:** `docs/reviews/rca-nullable-ratchet-2026-09-24.md` #1.
 
+### A transform checked by a tool that shares its assumption is not checked (#669, 2026-09-25)
+The slot-level merge of KEYforce's troop files mapped each of his fanned-out rosters to base roster `i mod n`, and its self-check re-ran an analyzer with the same mapping: 208 fields restored, 0 left, verified. Matching rosters by content showed 34 rosters laid out `[r0, r0, r1, r1]` and 16 of our fields never restored.
+- **Why missed:** the checker and the transform were one idea written twice.
+- **Prevent:** verify a data transform with a method that does not share its central assumption (content matching for a positional mapping, an independent parser for a regex rewrite), and mutation-check new rules: break each rule in memory and confirm a test fails (seven of the noble and pair rules passed every test until this was done).
+- **Source:** `docs/reviews/rca-keyforce-lamedon-port-2026-09-25.md` findings 2 and 7.
+
+### Take a mesh name from the catalogue or the tpac scanner, never from `strings` (#669, 2026-09-25)
+`strings` on `SK_GD_Lam_Helmets_Nob_A_geo.tpac` printed `sk_gd_lam_nob_helmet_lord_az`, and an item was repointed to it. The package holds only `lord_a`, `lord_b`, `lord_c`: the name is stored length-prefixed and `z` is the next field's byte (`lord_bS`, `lord_cS` show the same artifact). The audit caught it as a new `MISSING_MESH`.
+- **Why missed:** a printable run looked like an id.
+- **Prevent:** list a package's meshes with `validate_mesh_refs.scan_tpac_metameshes(path).metamesh_names` or read `docs/reference/armory-catalogue/catalogue.tsv`; re-run `audit_armory_refs.py` after any repoint.
+- **Source:** `docs/reviews/rca-keyforce-lamedon-port-2026-09-25.md` finding 12.
+
+### A reviewer brief names the tools that write by default (#669, 2026-09-25)
+A read-only deep-review lens ran `rebalance_ranged_ladders.py` without `--apply` to read its report; the tool rewrote the tracked `docs/reference/ranged-troops.html` and three report files anyway. Others that write on a plain run: `derive_armor_tiers.py` (the tracked tier map) and `audit_armory_refs.py` (the tracked audit report; `--report -` prints only).
+- **Why missed:** "no `--apply`" reads as "no writes", which holds for the fixers but not for the report generators.
+- **Prevent:** the spawn prompt for a read-only reviewer lists the write-by-default tools and their print-only form, or points them at a scratch output directory.
+- **Source:** `docs/reviews/rca-keyforce-lamedon-port-2026-09-25.md` finding 14.
+
 ### Text an `/improve` plan supplies (comments, doc lines, test oracles, "untestable") is a draft the executor verifies (plan 019, 2026-09-24)
 Six of the twelve confirmed findings on plan 019 were written into the plan and executed faithfully: the DTO comment promising a "" fallback its own later step contradicted, the feature-doc wording Step 8 told the executor to keep (stale since April), the camp-2 test's length-only oracle, "structurally untestable" for a path five tests now cover, a no-op `<NoWarn>$(NoWarn)</NoWarn>` kept for a reason MSBuild does not support (a project's property cannot reach another project), and the no-settlement comment describing a defer by its control flow.
 - **Why missed:** the executor treats the plan as the specification, and the plan's author wrote those lines without re-reading the code or engine they describe. Review of the plan checked its steps, not its prose.

@@ -1667,6 +1667,27 @@ class CrossCultureArmourInversionTests(unittest.TestCase):
         for tid, reason in ts.Validator._ARMOUR_LADDER_EXEMPT.items():
             self.assertTrue(reason.strip(), f"{tid} is exempt without a stated reason")
 
+    def test_noble_lines_and_exempt_pairs_still_exist_in_the_shipped_troops(self):
+        """A noble id or an exempt (troop, item) pair that no longer matches the data rots
+        silently: the troop would lose its noble band, or a renamed item its excuse."""
+        troops = Path(__file__).resolve().parents[2] / "Main" / "_Module" / "ModuleData" / "troops"
+        if not troops.is_dir():
+            self.skipTest("troop data not present")
+        worn = {}
+        for f in troops.glob("troops_*.xml"):
+            text = f.read_text(encoding="utf-8-sig", errors="ignore")
+            for m in re.finditer(r'<NPCCharacter[^>]*?\sid="([^"]+)"(.*?)</NPCCharacter>', text, re.S):
+                worn[m.group(1)] = set(re.findall(r'id="Item\.([^"]+)"', m.group(2)))
+        self.assertGreater(len(worn), 100, "the scan is broken, not the allowlist")
+        nobles = ts.Validator._NOBLE_LINE_TROOPS
+        self.assertEqual(len(nobles), len(set(nobles)), "a noble id is listed twice")
+        self.assertEqual(sorted(t for t in nobles if t not in worn), [], "noble troops no longer exist")
+        self.assertEqual(sorted(set(nobles) & set(ts.Validator._ARMOUR_LADDER_EXEMPT)), [],
+                         "a troop is both exempt and noble; exempt wins and the noble band is lost")
+        for (tid, item), reason in ts.Validator._ARMOUR_LADDER_EXEMPT_ITEMS.items():
+            self.assertIn(item, worn.get(tid, set()), f"exempt pair ({tid}, {item}) is not worn")
+            self.assertTrue(reason.strip(), f"({tid}, {item}) is exempt without a stated reason")
+
 
 class ArmourMeshTierLadderTests(unittest.TestCase):
     """ARMOUR_MESH_TIER_LADDER (#609): a troop wears only the artist mesh tiers its level
@@ -1722,6 +1743,17 @@ class ArmourMeshTierLadderTests(unittest.TestCase):
         self.assertEqual(self._run(11, "sk_x_chest_med_a"), [])
         self.assertEqual(self._run(6, "sk_x_civ_heavy_coat_a"), [])
         self.assertEqual(self._run(6, "sk_dale_chest_a03"), [])
+
+    def test_the_gate_passes_the_noble_set_and_the_pairs(self):
+        old = (ts.Validator._NOBLE_LINE_TROOPS, ts.Validator._ARMOUR_LADDER_EXEMPT_ITEMS)
+        try:
+            ts.Validator._NOBLE_LINE_TROOPS = ("x_noble",)
+            ts.Validator._ARMOUR_LADDER_EXEMPT_ITEMS = {("x_paired", "sk_x_chest_heavy_a"): "test"}
+            self.assertEqual(self._run(21, "sk_x_chest_heavy_a", tid="x_noble"), [])
+            self.assertEqual(self._run(21, "sk_x_chest_heavy_a", tid="x_paired"), [])
+            self.assertEqual(len(self._run(21, "sk_x_chest_heavy_a", tid="x_regular")), 1)
+        finally:
+            ts.Validator._NOBLE_LINE_TROOPS, ts.Validator._ARMOUR_LADDER_EXEMPT_ITEMS = old
 
     def test_exempt_troops_and_villagers_are_left_out(self):
         exempt = sorted(ts.Validator._ARMOUR_LADDER_EXEMPT)[0]

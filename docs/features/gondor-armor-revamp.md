@@ -57,8 +57,13 @@ apply_gondor_troop_revamp.py  --apply  -->  Main/_Module/ModuleData/troops/troop
 
 The artist's authoritative guide. Two halves:
 
-1. **Item lists by region** (lines 1–313): every item id the artist produced, grouped by region and slot.
-2. **Per-region armor + weapon guides** (lines 314–1288): unit tree, "low → high" progression for each slot, and weapon loadout per tier.
+1. **Item lists by region**: every item id the artist produced, grouped by region and slot.
+2. **Per-region armor + weapon guides**: unit tree, "low → high" progression for each slot, and weapon loadout per tier.
+
+Since the Lamedon drop (lotraom-assets `429746b2`, 2026-09-25) the guide runs past line 1,800 and gives
+each region a regular line and one or more **Noble** lines (sixteen in all). Those noble troops at tier
+2 to 7 are `taom_schema.Validator._NOBLE_LINE_TROOPS`, judged and priced one band above a regular troop
+of their level ([armor-balance.md](armor-balance.md), 2026-09-25 subsection).
 
 When the artist ships new gear, this file is updated and the two phase-2 scripts can be extended/re-run.
 
@@ -139,9 +144,11 @@ Item defs (#358) and troop *equipment* wiring are separate steps. Current state:
 | Arndir (Pinnath noble) | `gondor_arn_*` | `sk_gd_pin_noble_*` | ✅ equipped (20/21; `pin_nob_chest_elite_b` lord-only idle) |
 | Blackroot Vale | `gondor_brv_*` | `sk_gd_vale_*` | ✅ equipped (0 idle) |
 | Pinnath Gelin (regular) | `gondor_pg_*` | `sk_gd_pin_*` | ✅ equipped (pre-existing) |
-| Lamedon | `gondor_lam_*` | `sk_gd_lam_*` | ✅ full variety — all 17 helms + 7 chests (lord pieces on `hill_warden`, balance-flagged) |
+| Lamedon | `gondor_lam_*` | `sk_gd_lam_*` | ✅ full variety — all 17 helms + 7 chests (lord pieces on `hill_warden`, balance-flagged); re-kitted by the 2026-09-25 drop |
+| Calembel (Lamedon noble) | `gondor_cal_*` | `sk_gd_lam_nob_*` | ✅ equipped by the 2026-09-25 drop; `lam_nob_helmet_lord_d` has no mesh yet and borrows `lord_c` (#672) |
+| Ringlo Vale (Lamedon noble) | `gondor_ring_*` (militia T2 to warden T7) | `sk_gd_rin_nob_*` + Anórien | ✅ equipped by the 2026-09-25 drop; guardsman, spearman and warden fight with the two-handed Numenorean poleaxe, no shield |
 | Lossarnach | `gondor_loss_*` | `sk_gd_los_*` | ✅ all 26 pieces used |
-| Belfalas | `gondor_bel_*` | `sk_gd_bel_*` (body) + Anórien | ✅ spec-complete (3 capes un-modelled — KEYforce to-do) |
+| Belfalas | `gondor_bel_*` | `sk_gd_bel_*` (body) + Anórien | ✅ spec-complete; the 3 Belfalas cape items exist but ship no mesh, borrow Osgiliath and Lamedon cape meshes, and are worn by no troop until the art lands (#672) |
 | Lebennin | `gondor_leb_*` | `sk_gd_leb_*` (chest) + Anórien | ✅ complete (chest-only region by design) |
 | **Linhir** | `gondor_lin_*` (5 troops) | `sk_gd_lin_*` + DA helmet fallback | ✅ equipped — full self-modelled set; T3/T4 helmet = `sk_gd_dol_helmet_med_a`; 5 lord/cape pieces reserved (DRAFT guide) |
 | **Lond-Galen** | `gondor_lg_*` (5 troops) | `sk_gd_lon_*` + Serelond fallback | ✅ equipped — Head/Body `sk_gd_lon_*`, Cape/Gloves/Leg `sk_gd_sere_*` per guide; `chest_lord_a` lord-only |
@@ -154,6 +161,7 @@ Item defs (#358) and troop *equipment* wiring are separate steps. Current state:
 
 ## Changelog
 
+- 2026-09-25 (#669): **KEYforce's Lamedon drop** (lotraom-assets `429746b2`) ported: Lamedon, Calembel and Ringlo Vale re-kitted, the banner spears renamed (`wm_gondor_spear_b_{gondor,swan,pg,cardolan}`, `wm_gondor_light_spear_*`), `gondor_ring_peasant` deleted (save break accepted). The troop files were merged per slot against the mirror revision he edited from, because a verbatim copy reverted #609, #617 and #631. Noble lines now sit a band above regulars on armour and melee; the Gondor armour and blades were restatted in the live Armory. Full account: CHANGELOG and `docs/reviews/rca-keyforce-lamedon-port-2026-09-25.md`.
 - 2026-07-24 — **Capital-Gondor armour polish** (Anórien pool + Minas Tirith — beyond the #358 southern revamp; equipment-only, save-safe, validators PASS). Homed idle *own-region* pieces onto the capstones that lacked them: **Osgiliath** Guard + Dome Guard → own `sk_gd_osg_bracer_noble_elite_a` (chosen so `med_a`/`heavy_a` stay used — no new idle); **Minas Ithil** Captain + Sharpshooter → own `sk_gd_ith_noble_helmet_heavy_b`, so all three top Ithil troops wear Ithil's own helm; **Minas Tirith** Fountain Guard → own **elite** Fountain chest `sk_gd_mns_fount_chest_elite_a` + a masked-helm variant, Veteran → masked noble-helm variant. Decisions honoured: Ithil keeps its own look (7 plain `ano_pauld_noble_*` stay idle), Anórien-Regular chest ladder left as-is, Fountain/Citadel Guard use their own `mns_` armour (no `osg_`; osg lord chest reserved). Anórien pool idle 15→13 (rest reserved/deferred by design); `mns_` set 10/11 used (lone idle = the surplus heavy Fountain chest).
 - 2026-07-24 (#358) — **Linhir spear line equipped — LAST greenfield Gondor noble line** (equipment-only, save-safe, 187 NPCCharacters unchanged, mesh-exact, validators PASS, adversarially verified). 5 `gondor_lin_*` (T3 Noble → T7 High Guard) refit from generic Anórien to the near-complete self-modelled `sk_gd_lin_*` set per the **DRAFT** Armor Guide; only fallback is the T3/T4 medium helmet → Dol-Amroth `sk_gd_dol_helmet_med_a` (Linhir models no med helmet). Two variant rosters each (bracer `_a/_b` on T3/T4, helmet `_a/_b` on T5–T7). **Lord/cape pieces reserved off the troops** per spec (`chest_elite_a` "Linhir Lord Armour", `helmet_lord_a/b`, both `pauld_cape_noble_*`) → 17/22 used, 5 reserved-idle. Weapons preserved (spear+shield; the draft's sword+tower-shield weapon guide is a separate pass). Leg caps at `grvs_heavy` (no elite greave exists). **All southern + capital Gondor noble lines are now equipped; Minas Tirith `gondor_mt_` remains an optional separate audit.**
 - 2026-07-24 (#358) — **Lond-Galen crossbow line equipped + Anfalas idle-fix** (troop-wiring follow-up; equipment-only, save-safe, 187 NPCCharacters unchanged, all refs mesh-exact, `validate_gondor_refs` + `validate_moduledata` PASS):

@@ -1096,7 +1096,7 @@
     </EquipmentRoster>
     <EquipmentRoster id="enlist_gondor_cavalry_veteran" culture="Culture.gondor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gondor_pg_speara" />
+            <Equipment slot="Item0" id="Item.wm_gondor_spear_b" />
             <Equipment slot="Item1" id="Item.wm_gondor_sword_a01" />
             <Equipment slot="Item2" id="Item.gond_shield_three_green" />
             <Equipment slot="Item3" id="Item.western_javelin_2_t3" />
@@ -1145,7 +1145,7 @@
     </EquipmentRoster>
     <EquipmentRoster id="enlist_gondor_cavalry_sergeant" culture="Culture.gondor">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gondor_pg_spearb" />
+            <Equipment slot="Item0" id="Item.wm_gondor_spear_b_pg" />
             <Equipment slot="Item1" id="Item.wm_gondor_sword_a03" />
             <Equipment slot="Item2" id="Item.gond_shield_three_green" />
             <Equipment slot="Item3" id="Item.western_javelin_3_t4" />

@@ -2,6 +2,88 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-25
+
+### feat(gondor): v2.0.30 - KEYforce's Lamedon drop ported, noble ladders, Armory refs repaired
+
+KEYforce's lotraom-assets commit `429746b2` ("Fixes and Lamedon") re-kitted Gondor into new Lamedon and
+Ringlo Vale armour and renamed the Gondor banner spears in the Armory. Its TAOM side is now in the repo
+(#669). The four kit and pool files (`taom_enlistment_equipment.xml`, `taom_equipment_sets_gondor.xml`,
+`named_companions.xml`, `recruitment_pools/gondor.json`) and the troop-name strings take his edits as
+written. Seven troops show new names: the Lossarnach nobles become Axeman, Axeguard, Axewarden and High
+Axewarden, `gondor_brv_ranger` is now "Ranger", `gondor_brv_shadowbow` is "Shadowbow" (formerly
+"Shadowhunter"), and the Anorien skirmisher gains its accent.
+
+`troops_gondor.xml` and `troops_umbar.xml` could not be copied: he edited them from the mirror's
+2026-09-15 copy, so a plain copy undid #609, #617 and the #631 roster swaps. They were merged field by
+field against that copy, matching each of his fanned-out rosters to the roster it was copied from: 935
+of his fields kept, 224 later fields of ours restored (the 18 Bow and Crossbow skills among them; a few
+since re-chosen by the ladder fixers), and
+where both sides changed a slot (105, all equipment) his value wins, as Mike decided. Umbar is our file
+plus his four spear swaps and 20 sword swaps from the melee fixer.
+
+On top of the merge:
+- The Ringlo Vale guardsman, spearman and warden fight with their two-handed Numenorean poleaxe in
+  `Item0`, the sword in `Item1` and no shield (the poleaxe is `requires_no_shield`, and the engine
+  wields the first main-hand item at spawn).
+- The Belfalas veteran archer and coastguard keep their previous capes until the Belfalas cape art
+  exists (#672).
+- Glanhir's hand-written pool follows the JSON (Ringlo militia and footman), and the retired
+  `generate_gondor_troops.py` names the replacement spears, so `check_generator_item_refs.py` passes.
+
+**Noble lines carry better kit than regular troops of their level (Mike).** `taom_schema` gains
+`_NOBLE_LINE_TROOPS`, the 92 tier-2 to tier-7 troops of the sixteen "Noble" lines in KEYforce's spec.
+The armour gate and fixer allow a noble one mesh tier above its level's ceiling; a noble anchors an
+item's price a stat band up where one exists (elite is the top) and never below the item's own tier
+(`rebalance_armor.noble_anchor_level`); the melee ladder judges and anchors a noble one tier up
+(`analyze_melee_ladder.Troop.tier`), so a tier-7 noble now equals its tier-8 promotion on melee
+(Mike kept the set at tiers 2 to 7). The
+fixer's 29 hand decisions are now 18 `(troop, item)` pairs in `_ARMOUR_LADDER_EXEMPT_ITEMS`, which
+excuse only that piece. Noble medians now sit above regulars at every tier (level 26: 241 against 207).
+Nineteen new tool tests cover the rules, each proven to fail when its rule is broken. The first attempt exempted the nobles outright; wave 2 of the deep
+review showed that priced most noble kit below a regular of the same level, and it was replaced.
+
+**Live Armory (unversioned; nothing in the mirror changed, by Mike's rule).**
+- *Mesh refs:* the drop left 58 dead refs, none a collision body, so no load hang but invisible items.
+  25 elven and Mirkwood arrows and two starter arrows now use the new `wm_elven_quiver_v{1..4}_{a,b}`
+  (texture mapping to confirm, #672); `sk_gd_lam_nob_helmet_lord_d` borrows `lord_c`; the three Belfalas
+  cape items borrow the Osgiliath and Lamedon cape meshes. Files: `LOTRLOME_items/LOTRAOM_weapons.xml`,
+  `rivendell/starter_kit.xml`, `mirkwood/starter_kit.xml`, `gondor/head_armors.xml`,
+  `gondor/shoulder_armors.xml`; originals in `E:\Bannerlord_Backups\armory-ref-repair-2026-09-25\`.
+  `audit_armory_refs.py` reads CLEAN and the catalogue is regenerated.
+- *Armour restat:* the roster-first restat for Gondor, against KEYforce's typed stats, raised 91
+  items, lowered 67 and left 216 (`gondor/{arm,body,head,leg,shoulder}_armors.xml`, backups
+  `*.bak-noble-restat-2026-09-25` and later). The Gondor lord template reads 215 (202 before).
+- *Blade restat:* 13 Gondor blade pieces in `LOTRLOME_crafting_pieces.xml` moved onto the melee ladder
+  (and one unworn Erebor axe blade by a rounding step)
+  in three converging runs (backups `*.bak-20260925-134050`, `-134252`, `-134331`).
+
+Validator against `HEAD`: 0 errors (28 at `HEAD`, all refs the Armory had already renamed);
+`MELEE_LADDER_INVERSION` 129 (154); `RANGED_LADDER_INVERSION` 0 (0); `ARMOUR_MESH_TIER_LADDER` 1,330
+(1,348); `UPGRADE_ARMOUR_REGRESSION` 4 (6), none of them Gondor. Ten melee pass-1 suggestions were left
+unapplied because the roster pass and the blade restat had begun trading the same shared blades back
+and forth (`docs/features/melee-damage-model.md`); the gate still lists the Pinnath Gelin archers as
+under-armed, and its repair line would re-apply the reverted poleaxe swap.
+
+**Known limitation: saves holding `gondor_ring_peasant` break.** KEYforce deleted the troop and Mike
+accepted the break. It sat at 50% in the Glanhir, Upper Ringlo and Vale Village pools since v2.0.29. On
+load the engine unregisters the character and leaves hollow entries in rosters and volunteer slots,
+which vanilla's daily upgrade and volunteer ticks read. Patch83 appears to run too late to catch it
+(#670).
+
+**Known, by decision:** four Dol Amroth troops (`da_infantry`, `da_vet_infantry`, `da_foot_knight`,
+`da_swan_guard`) keep a swan shield beside a two-handed greatsword the AI will not draw while shielded.
+
+**Known:** 48 of the drop's 51 new Armory items have no loc rows in any language (#671); nothing in
+the repo notices if the live restats revert, and an XML-only Armory drop does not raise the art-drift
+banner, so run `/armory-audit` and the restat dry runs by hand after a sync (#673).
+
+Docs: `armor-balance.md`, `melee-damage-model.md` and `gondor-armor-revamp.md` record the noble rule,
+`ranged-troops.html` is regenerated, and the Armory snapshot's `weapon_descriptions.xslt` is re-copied
+from live. `docs/reference/troop-rosters.html` and `tools/data/armor_roster_tiers.json` are derived from
+every troop file, so they are left for regeneration once the other sessions editing troops have committed. In-game checks owed after a deploying
+build: the #669 checklist.
+
 ## 2026-09-24
 
 ### feat(troll): v2.0.30 - human clips retargeted onto the hill troll's own rest pose

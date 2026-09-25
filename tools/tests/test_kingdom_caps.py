@@ -229,6 +229,47 @@ class AnchorTests(unittest.TestCase):
     def test_exempt_set_is_the_validators(self):
         import taom_schema as ts
         self.assertEqual(dat.LADDER_EXEMPT_TROOPS, frozenset(ts.Validator._ARMOUR_LADDER_EXEMPT))
+        self.assertEqual(dat.NOBLE_TROOPS, frozenset(ts.Validator._NOBLE_LINE_TROOPS))
+        self.assertEqual(dat.LADDER_EXEMPT_ITEMS, frozenset(ts.Validator._ARMOUR_LADDER_EXEMPT_ITEMS))
+
+    def test_a_noble_anchors_one_band_up_and_an_exempt_pair_does_not_anchor(self):
+        old = (dat.NOBLE_TROOPS, dat.LADDER_EXEMPT_ITEMS)
+        try:
+            dat.NOBLE_TROOPS = frozenset({"alpha_t3"})
+            dat.LADDER_EXEMPT_ITEMS = frozenset({("alpha_t9", "a_chest")})
+            w = dat.parse_rosters()
+            # alpha_t3 is level 16 (medium band); as a noble it anchors at 19, the heavy band.
+            self.assertEqual([(x["troop"], x["level"]) for x in w["a_hood"]], [("alpha_t3", 19)])
+            self.assertNotIn("a_chest", w)
+        finally:
+            dat.NOBLE_TROOPS, dat.LADDER_EXEMPT_ITEMS = old
+
+    def test_an_exempt_pair_leaves_the_troops_other_items_anchoring_and_a_noble_is_floored(self):
+        tmp = tempfile.TemporaryDirectory()
+        troops = Path(tmp.name) / "troops"
+        troops.mkdir()
+        troops.joinpath("troops_beta.xml").write_text(
+            "<NPCCharacters>"
+            '<NPCCharacter id="beta_grunt" level="21"><Equipments><EquipmentRoster>'
+            '<equipment slot="Body" id="Item.b_chest_elite_a" /><equipment slot="Head" id="Item.b_helmet_med_a" />'
+            "</EquipmentRoster></Equipments></NPCCharacter>"
+            '<NPCCharacter id="beta_noble" level="11"><Equipments><EquipmentRoster>'
+            '<equipment slot="Head" id="Item.b_helm_heavy_a" /><equipment slot="Leg" id="Item.b_grvs_med_a" />'
+            "</EquipmentRoster></Equipments></NPCCharacter>"
+            "</NPCCharacters>", encoding="utf-8")
+        old = (dat.TROOPS_DIR, dat.NOBLE_TROOPS, dat.LADDER_EXEMPT_ITEMS)
+        try:
+            dat.TROOPS_DIR = str(troops)
+            dat.NOBLE_TROOPS = frozenset({"beta_noble"})
+            dat.LADDER_EXEMPT_ITEMS = frozenset({("beta_grunt", "b_chest_elite_a")})
+            w = dat.parse_rosters()
+            self.assertNotIn("b_chest_elite_a", w)                                  # the pair
+            self.assertEqual([x["level"] for x in w["b_helmet_med_a"]], [21])       # the troop's other slot
+            self.assertEqual([x["level"] for x in w["b_helm_heavy_a"]], [19])       # floored at heavy
+            self.assertEqual([x["level"] for x in w["b_grvs_med_a"]], [14])         # a band up
+        finally:
+            dat.TROOPS_DIR, dat.NOBLE_TROOPS, dat.LADDER_EXEMPT_ITEMS = old
+            tmp.cleanup()
 
     def test_keyword_detector_knows_civilian_kit(self):
         self.assertEqual(dat.id_keyword_tier("sk_gd_civ_heavy_coat_a"), "civilian")

@@ -61,13 +61,12 @@ import fix_upgrade_armour_regressions as fu  # noqa: E402
 import rebalance_armor as ra  # noqa: E402
 import rebalance_troops as rb  # noqa: E402
 
-try:
-    import taom_schema as _ts
-    EXEMPT_TROOPS = frozenset(_ts.Validator._ARMOUR_LADDER_EXEMPT) | frozenset(_ts.Validator._BODYLESS_BY_DESIGN)
-except Exception:  # the schema module needs its JSON schemas; a bare checkout still gets the ids
-    EXEMPT_TROOPS = frozenset({'cave_troll', 'harad_elephant_rider', 'harad_mumakil_rider',
-                               'gondor_ithilien_ranger', 'dg_goblin_slave', 'urukhai_champion',
-                               'urukhai_berserker'})
+# The validator's sets, no fallback copy (taom_schema imports only the stdlib, and a silent
+# fallback would let --apply re-kit every exempt and noble troop).
+import taom_schema as _ts  # noqa: E402
+EXEMPT_TROOPS = frozenset(_ts.Validator._ARMOUR_LADDER_EXEMPT) | frozenset(_ts.Validator._BODYLESS_BY_DESIGN)
+NOBLE_TROOPS = frozenset(_ts.Validator._NOBLE_LINE_TROOPS)
+EXEMPT_ITEMS = frozenset(_ts.Validator._ARMOUR_LADDER_EXEMPT_ITEMS)
 
 # The token that spells each tier inside an id, bounded by underscores or the end of the id.
 _TOKEN_PATTERNS = {'lord': 'lord', 'elite': 'elite', 'heavy': 'heavy', 'medium': 'medium|med', 'light': 'light'}
@@ -119,18 +118,26 @@ def _suffix_distance(a, b):
 
 def line_anchors(troops):
     """{item id: lowest level of an in-scope troop wearing it in a battle set}, the anchor the
-    kingdom-cap curve prices the item by (derive_armor_tiers does the same over the same sets)."""
+    kingdom-cap curve prices the item by (derive_armor_tiers does the same over the same sets):
+    a noble anchors a band up, an exempt (troop, item) pair not at all."""
     anchors = {}
-    for rec in troops.values():
+    for tid, rec in troops.items():
         level = rec.get('level')
         if level is None:
             continue
         for st in rec.get('sets') or ():
             for slot in ra.MESH_LADDER_SLOTS:
                 iid = st.get(slot)
-                if iid and (iid not in anchors or int(level) < anchors[iid]):
-                    anchors[iid] = int(level)
+                if not iid or (tid, iid) in EXEMPT_ITEMS:
+                    continue
+                at = _anchor_level(tid, int(level), iid)
+                if iid not in anchors or at < anchors[iid]:
+                    anchors[iid] = at
     return anchors
+
+
+def _anchor_level(tid, level, item_id=None):
+    return ra.noble_anchor_level(level, item_id) if tid in NOBLE_TROOPS else level
 
 
 def _band_index(level):
@@ -152,7 +159,7 @@ def _anchor_rank(cand, level, anchors):
     return (abs(diff), 1 if diff > 0 else 0)
 
 
-def pick_substitute(item_id, level, items, index, anchors=None):
+def pick_substitute(item_id, level, items, index, anchors=None, noble=False):
     """The same line's item at the best substitute tier for the level, or None when the line
     has nothing at any of them. Among a tier's variants the one whose current anchor band is
     nearest the troop's band wins (see _anchor_rank), then the nearest variant suffix, then
@@ -163,11 +170,14 @@ def pick_substitute(item_id, level, items, index, anchors=None):
     stem, _, suffix = parts
     slot_file = items[item_id].get('file')
     anchors = anchors or {}
-    for tier in ra.substitute_mesh_tiers(level):
+    # A noble is placed at its floored anchor (noble_anchor_level with the candidate's own
+    # tier), so each candidate is ranked at the level it would actually anchor at.
+    placed = (lambda c: ra.noble_anchor_level(level, c)) if noble else (lambda c: level)
+    for tier in ra.substitute_mesh_tiers(level, noble):
         cands = index.get((stem, slot_file, tier))
         if not cands:
             continue
-        best = min(cands, key=lambda c: (_anchor_rank(c, level, anchors),
+        best = min(cands, key=lambda c: (_anchor_rank(c, placed(c), anchors),
                                           _suffix_distance(suffix, split_id(c)[2]), c))
         return best, tier
     return None
@@ -201,7 +211,8 @@ def plan(troops, items, cultures=None):
     # lowest wearer wherever that wearer's file is.
     anchors = line_anchors(in_scope(troops))
     changes, unresolved = [], []
-    hits = [dict(h, culture=scoped[h['troop']]['culture']) for h in ra.mesh_ladder_violations(scoped)]
+    hits = [dict(h, culture=scoped[h['troop']]['culture'])
+            for h in ra.mesh_ladder_violations(scoped, noble=NOBLE_TROOPS, exempt_items=EXEMPT_ITEMS)]
     under = [h for h in hits if h['direction'] == 'under']
     # Lowest troops place first, and each pick moves the anchor it lands on, so a higher troop
     # placed later sees the variant a lower one just took and prefers one still at its own
@@ -209,17 +220,19 @@ def plan(troops, items, cultures=None):
     # see each other and the higher one was priced a band low (deep review, 2026-09-16).
     for hit in sorted((h for h in hits if h['direction'] == 'over'),
                       key=lambda h: (h['level'], h['troop'], h['slot'], h['item'])):
-        pick = pick_substitute(hit['item'], hit['level'], items, index, anchors)
+        noble = hit['troop'] in NOBLE_TROOPS
+        pick = pick_substitute(hit['item'], hit['level'], items, index, anchors, noble)
         if pick is None:
             unresolved.append(hit)
             continue
         new, tier = pick
-        distance, above = _anchor_rank(new, hit['level'], anchors)
+        placed = _anchor_level(hit['troop'], hit['level'], new)
+        distance, above = _anchor_rank(new, placed, anchors)
         note = ''
         if distance:
             note = 'anchor L%d, %s band%s %s' % (anchors[new], 'a' if distance == 1 else str(distance),
                                                  '' if distance == 1 else 's', 'above' if above else 'below')
-        anchors[new] = min(anchors.get(new, hit['level']), hit['level'])
+        anchors[new] = min(anchors.get(new, placed), placed)
         changes.append({
             'troop': hit['troop'], 'file': hit['file'], 'culture': hit['culture'],
             'level': hit['level'], 'slot': hit['slot'],
