@@ -66,9 +66,11 @@ an `action_set` (combat/movement), a `skin` (skeleton + meshes), a `BodyProperty
 troop with `race="<id>"`. The race string→int id comes from the engine's `FaceGen.GetRaceNames()`;
 TAOM's `RaceManager` caches it (no C# change needed to add a race the engine already lists).
 
-LOTRLOME_Armory already ships **`hill_troll`** (`skeleton="troll_skeleton"`, mesh `mordor_hill_troll`)
-and **`cave_troll`** (`skeleton="human_skeleton"`, mesh `lotr_troll_body`) — both `monster_usage="human"`
-with action sets `base_set="as_human_warrior"` (they *inherit* human clips for free). TAOM has a
+LOTRLOME_Armory already ships **`hill_troll`** (since 2026-09-24 `skeleton="troll_skeleton_a"`, KEYForce's
+`hill_troll_a_*` meshes and a standalone `as_hill_troll_warrior`; before that `troll_skeleton` and
+`mordor_hill_troll`) and **`cave_troll`** (`skeleton="human_skeleton"`, mesh `lotr_troll_body`), both
+`monster_usage="human"`; the cave troll's action set has `base_set="as_human_warrior"` (it *inherits*
+human clips for free), the hill troll's is a filled copy of it. TAOM has a
 `cave_troll` troop + `BodyProperty.fighter_cave_troll`, currently **disabled** (2026-05-14) — that is the
 ready-made template for the race data (see [troll-race.md](../features/troll-race.md)).
 
@@ -86,6 +88,15 @@ movement — pick by how different the motion must be:
   bones need not match human, with a *full* compiled clip set (no `base_set` fallback → unbound codes T-pose).
   Frees the skeleton but costs every clip + multiple Kit hand-offs. The B→C→D pipeline below is this path;
   for a humanoid whose attacks are engine-driven anyway it rarely pays off.
+- **Own skeleton with the HUMAN's bone names and axes (what the hill troll took on 2026-09-24, no ARP).** The
+  artist's rig is turned to the human's anatomical bone axes on export (`tpac_skeleton_copy_physics.py --reframe`,
+  `export_rig_for_kit.py --bone-frames`), which makes human clips bend about the right axes. But a clip stores
+  parent-relative rotations, so on the troll's hunched rest every human clip still pitched the head up 45 to 65
+  deg and twisted the wrists (2026-09-24): the actions the troll plays are retargeted from the human masters too
+  (`retarget_mannequin_to_human.py --source-json --source-rig human`, sources from
+  `read_anim_keyframes_tpac.ps1 -ByClip`), with the Fab clips reused for the rest. The action set is a standalone
+  copy of `as_human_warrior` with those clips swapped in. Record: [troll-race.md](../features/troll-race.md)
+  (the 2026-09-24 entries), physics: [bannerlord-skeleton-authoring.md](../reference/bannerlord-skeleton-authoring.md).
 
 > **Asset gate:** authored animation FBXs are exported to a NON-Armory staging folder
 > (`E:\LOTRAOMAssets\troll_clips_to_import\`); the user imports them into LOTRLOME_Armory + Kit-compiles
@@ -229,7 +240,11 @@ ge_export(<out.fbx>, rest_pose_only=False)                     # troll clip -> K
 | troll_defend_up / _left / _right | anim_defend_(up\|left\|right)_1h_active |
 
 A bespoke skeleton has NO `base_set` fallback (its bones differ from human), so unbound `act_*` codes
-T-pose — extend the set as needed; the loop above is mechanical per clip. (`troll_walk_forward` +
+T-pose: extend the set as needed; the loop above is mechanical per clip. A skeleton that keeps the human's
+bone names, order and axes (`troll_skeleton_a` after its re-frame) is half an exception: unbound codes fall back
+to the human clip instead of a T-pose, but that clip keeps the human's rest relations and bends a hunched rest
+wrong, so its standalone set is `as_human_warrior`'s 4,700 actions with the clips the troll actually plays
+retargeted and swapped in. (`troll_walk_forward` +
 `troll_run_forward` already produced + exported to the Hill Troll race-test `clips/` folder.)
 
 ## Proven prototype (2026-06-13)
@@ -242,6 +257,10 @@ T-pose — extend the set as needed; the loop above is mechanical per clip. (`tr
 
 - `tools/blender/retarget_mannequin_to_human.py` (2026-09-17/18): UE4-Mannequin clips onto `human_skeleton`,
   engine-frame target rig, pose-baked root yaw, per-export engine check; `tools/blender/human_skeleton_engine.json`.
+  Since 2026-09-24 also onto a custom humanoid skeleton's engine dump (`troll_skeleton_a_engine.json`), with the
+  twist helpers mapped, delta-only feet, a two-bone leg IK anchored on the source's stance, and the root's height
+  kept (the UE export parks pelvis height above bind on the root); `ue-to-bannerlord-asset-pipeline.md` § The
+  retarget stage.
 - `tools/gen_troll_anim_clips.ps1` + `tools/blender/fab_cave_troll_clip_names.json`: `_anm.tpac` clips from
   vanilla templates; `tools/bind_troll_action_set.py`: the `as_cave_troll_warrior` overrides.
 - `tools/blender/reskin_to_human_skeleton.py`: re-weight a human_skeleton mesh from the vanilla body.

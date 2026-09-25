@@ -93,8 +93,8 @@ def ensure_exists(path, what="the Bannerlord install"):
 def game_or_kit_running():
     """True when the game or the Modding Kit runs, and also when the check itself could not
     run: a writer that guards on this refuses to write rather than risk racing a live process
-    (fail-closed, `.claude/rules/environment-failures.md`). Called by apply_animalia_armory.py and
-    skeleton_hit_capsules.py; the two Animalia .ps1 writers carry a PowerShell equivalent (a process-name
+    (fail-closed, `.claude/rules/environment-failures.md`). Called by apply_animalia_armory.py,
+    skeleton_hit_capsules.py and tpac_skeleton_copy_physics.py; the two Animalia .ps1 writers carry a PowerShell equivalent (a process-name
     prefix match through Get-Process). tpac_fix_item_checksums.py does not guard yet.
 
     tasklist writes the OEM code page, not the ANSI one a text-mode read assumes, so the output is read as

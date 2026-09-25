@@ -18,7 +18,10 @@ The skin export comes from Blender, headless (read-only on the FBX):
     blender -b -P tools/blender/export_skin_for_capsules.py -- <skin.json> <creature.fbx>
 
 Fit, per body: the bone's skin is the vertices whose largest weight is that bone. The axis runs along the
-skin's principal direction when it is elongated (else the bone's local x, the Kit default), through the
+skin's principal direction when it is elongated, else along the bone (toward the child lying most along the
+skeleton's bone axis, which is detected: +X on human-style rigs, +Y on a Blender rig exported primary Y such as
+troll_skeleton_a, where a fixed local x lay across every limb). --axis bone always takes the bone's line, for
+a humanoid whose short, fat or cloth-weighted limbs skew the skin's. The axis passes through the
 middle of the skin's cross-section; the ends sit at the p2..p98 extent along it, or pulled in by half or all
 of the radius, whichever covers most of the bone's skin. The radius grows until it
 covers --pct of the skin plus --margin, and stops early where the capsule would stand out more than --limit
@@ -125,10 +128,14 @@ def parse_bones(data):
 
 
 def world_matrices(bones):
-    """TpacTool SkeletonDefinitionData.CreateBoneMatrices: world = rest * parent world (row vectors)."""
+    """TpacTool SkeletonDefinitionData.CreateBoneMatrices: world = rest * parent world (row vectors). The fourth
+    column is taken as (0, 0, 0, 1): Kit output stores that, but TaleWorlds' own human.tpac stores 0 under the
+    translation (and stray denormals above it), which a plain 4x4 product reads as "drop the parent's position"."""
     world = []
     for b in bones:
-        world.append(b["rest"] @ world[b["parent"]] if b["parent"] >= 0 else b["rest"].copy())
+        m = b["rest"].copy()
+        m[:, 3] = (0.0, 0.0, 0.0, 1.0)
+        world.append(m @ world[b["parent"]] if b["parent"] >= 0 else m)
     return world
 
 
@@ -195,6 +202,46 @@ def patch_bodies(raw, changes, skeleton=None):
     return tcm.serialize(pkg.package_guid, pkg.items, pkg.version)
 
 
+def bone_axis(bones, world):
+    """(axis index, sign, share): the bone-local axis most parent-to-child offsets lie along. +X on the Kit's
+    human-style rigs (human_skeleton), +Y on a rig exported from Blender with primary bone axis Y
+    (troll_skeleton_a). A skeleton with no offset to vote gets +X, the Kit's default capsule axis."""
+    votes = {}
+    for b, m in zip(bones, world):
+        if b["parent"] < 0:
+            continue
+        pm = world[b["parent"]]
+        off = pm[:3, :3] @ (m[3, :3] - pm[3, :3])  # rows of a world matrix are the bone's axes
+        if np.linalg.norm(off) < 1e-6:
+            continue
+        i = int(np.argmax(np.abs(off)))
+        key = (i, 1.0 if off[i] > 0 else -1.0)
+        votes[key] = votes.get(key, 0) + 1
+    if not votes:
+        return 0, 1.0, 0.0
+    key = max(votes, key=votes.get)
+    return key[0], key[1], votes[key] / sum(votes.values())
+
+
+def bone_directions(bones, world):
+    """{bone name, stripped: unit world direction}: toward the child lying most along the skeleton's bone axis, or
+    along that axis for a leaf. The line a limb's capsule follows, whatever roll convention the rig uses."""
+    ax, sign, _ = bone_axis(bones, world)
+    out = {}
+    for i, (b, m) in enumerate(zip(bones, world)):
+        axis = m[ax, :3] * sign / np.linalg.norm(m[ax, :3])
+        best = None
+        for c, cm in zip(bones, world):
+            v = cm[3, :3] - m[3, :3]
+            if c["parent"] != i or np.linalg.norm(v) < 1e-6:
+                continue
+            cos = float(v @ axis) / np.linalg.norm(v)
+            if best is None or cos > best[0]:
+                best = (cos, v / np.linalg.norm(v))
+        out[b["name"].strip()] = best[1] if best else axis
+    return out
+
+
 def find_axis_map(blender_heads, engine_heads, tolerance=0.01):
     """The signed axis permutation taking Blender world positions to engine positions, from shared bones."""
     names = sorted(set(blender_heads) & set(engine_heads))
@@ -220,8 +267,10 @@ def _seg_dist(p, a, c):
     return np.linalg.norm(p - (a + np.outer(t, ab)), axis=1)
 
 
-def fit_capsules(skel, verts, normals, owners, limit=0.20, pct=95.0, margin=0.03, min_verts=15, seed=7):
-    """Engine-space skin (verts, normals, owning bone per vertex, names stripped) -> per-body fit + coverage."""
+def fit_capsules(skel, verts, normals, owners, limit=0.20, pct=95.0, margin=0.03, min_verts=15, seed=7,
+                 axis="skin"):
+    """Engine-space skin (verts, normals, owning bone per vertex, names stripped) -> per-body fit + coverage.
+    axis "skin": the skin's principal direction where it is elongated, else the bone's; "bone": always the bone's."""
     from scipy.spatial import cKDTree
     tree = cKDTree(verts)
     rng = np.random.default_rng(seed)
@@ -236,6 +285,7 @@ def fit_capsules(skel, verts, normals, owners, limit=0.20, pct=95.0, margin=0.03
         return float(np.percentile(np.where(outside, dist, 0.0), 90))
 
     world = {b["name"].strip(): np.asarray(m) for b, m in zip(skel["bones"], skel["world"])}
+    bone_dir = bone_directions(skel["bones"], [np.asarray(m) for m in skel["world"]])
     bodies, old_caps, new_caps = [], [], []
     for body in skel["bodies"]:
         name = body["bone"].strip()
@@ -254,7 +304,7 @@ def fit_capsules(skel, verts, normals, owners, limit=0.20, pct=95.0, margin=0.03
             continue
         centre = own.mean(axis=0)
         ev, evec = np.linalg.eigh(np.cov((own - centre).T))
-        u = evec[:, 2] if ev[2] > 1.5 * ev[1] else m[0, :3] / np.linalg.norm(m[0, :3])
+        u = evec[:, 2] if axis == "skin" and ev[2] > 1.5 * ev[1] else bone_dir[name]
         e1 = np.cross(u, [0.0, 0.0, 1.0]) if abs(u[2]) < 0.9 else np.cross(u, [1.0, 0.0, 0.0])
         e1 /= np.linalg.norm(e1)
         e2 = np.cross(u, e1)
@@ -308,7 +358,7 @@ def fit_capsules(skel, verts, normals, owners, limit=0.20, pct=95.0, margin=0.03
             inside |= _seg_dist(verts, a, c) <= r
         return float(inside.mean())
 
-    return {"params": {"limit": limit, "pct": pct, "margin": margin, "min_verts": min_verts},
+    return {"params": {"limit": limit, "pct": pct, "margin": margin, "min_verts": min_verts, "axis": axis},
             "coverage": {"old": union(old_caps), "new": union(new_caps)}, "bodies": bodies}
 
 
@@ -353,7 +403,7 @@ def _cmd_show(args):
 def _cmd_fit(args):
     sk = read_skeleton(_read(args.tpac), args.skeleton)
     verts, normals, owners, (perm, signs, err) = load_skin(args.skin, set(args.mesh), sk)
-    res = fit_capsules(sk, verts, normals, owners, args.limit, args.pct, args.margin, args.min_verts)
+    res = fit_capsules(sk, verts, normals, owners, args.limit, args.pct, args.margin, args.min_verts, axis=args.axis)
     res.update(tpac=os.path.abspath(args.tpac), skeleton=sk["name"], meshes=args.mesh,
                axis_map={"perm": list(perm), "signs": list(signs), "max_error_m": err})
     with open(args.out, "w", encoding="utf-8") as fh:
@@ -439,6 +489,8 @@ def main(argv=None):
             p.add_argument("--pct", type=float, default=95.0, help="percent of a bone's skin to enclose")
             p.add_argument("--margin", type=float, default=0.03, help="extra radius past that, m")
             p.add_argument("--min-verts", type=int, default=15)
+            p.add_argument("--axis", choices=("skin", "bone"), default="skin",
+                           help="capsule axis: the skin's principal direction where elongated (skin), or the bone's")
         if name == "patch":
             p.add_argument("--fit", required=True)
             p.add_argument("--apply", action="store_true")

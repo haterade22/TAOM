@@ -27,9 +27,14 @@ Method, per target FBX:
   5. export the target FBX with the ORIGINAL armature and orientation, only the weights changed: the
      Kit already accepts this exact file shape (it is the shipping asset), object_types ARMATURE+MESH,
      Y/X bone axes, no leaf bones, no animation
+  3b. head meshes: the skull above the neck joint and the jaw in front of it ride `head` 100%, eyes and mouth
+     parts too, and every other weight on a head mesh becomes `neck`, so a head mesh carries head and neck only.
+     A troll's jaw hangs at or below the neck joint's height, where the nearest human surface is the chest: left
+     to the transfer, its chin rode `spine2` and stayed behind when the head moved (the stretched mouth,
+     2026-09-24). The report counts head-mesh vertices with any other weight, and `.DONE` says "fail" if any remain.
   6. QA (needs --engine-skeleton): duplicates of the OLD-weight and NEW-weight LOD0 meshes plus the matching
      DONOR part are turned into engine space and bound to a rig built from the engine rest frames; six
-     standard single-joint bends (thigh, knee, shoulder, elbow, spine, neck) are applied and the worst and
+     standard single-joint bends (thigh, knee, shoulder, elbow, spine, a neck nod each way) are applied and the worst and
      99th-percentile edge stretch deformed/rest is measured on all three, the donor (TaleWorlds skinning)
      being the quality bar; old vs new are rendered on the combined pose from the front. Candy-wrapper
      twists and stretched armpits show up as max ratios well over 2 where the donor stays near 1.5
@@ -183,6 +188,36 @@ def rigid_skull(obj, arm_world_of_bone_head, margin=0.03):
     return n
 
 
+# Characters in these exports face Blender -Y (FixBoneForBlender), so a vertex's distance in front of a joint is
+# joint.y - vertex.y. The cave troll's jaw underside lies 16 to 32 cm in front of the neck joint and its throat
+# 4 to 12 cm (measured 2026-09-24), so 14 cm separates them; a human chin is above the neck joint, in rigid_skull.
+JAW_FORWARD_MIN_M = 0.14
+
+
+def rigid_jaw(obj, arm_world_of_bone_head, forward_min=JAW_FORWARD_MIN_M):
+    """Head meshes: every vertex more than `forward_min` in front of the neck joint belongs 100% to `head`. The
+    jaw is part of the skull (the skeleton has no jaw bone), but a creature's can hang below the neck joint's
+    height, out of rigid_skull's reach, where a nearest-surface transfer gives it chest weight."""
+    if "head" not in obj.vertex_groups:
+        obj.vertex_groups.new(name="head")
+    y_neck = arm_world_of_bone_head("neck").y
+    head_g = obj.vertex_groups["head"]
+    n = 0
+    for v in obj.data.vertices:
+        if y_neck - (obj.matrix_world @ v.co).y >= forward_min:
+            for g in list(v.groups):
+                obj.vertex_groups[g.group].remove([v.index])
+            head_g.add([v.index], 1.0, "REPLACE")
+            n += 1
+    return n
+
+
+def non_head_neck_verts(obj):
+    """Vertices of a head mesh with any weight on a bone other than head or neck (must be 0)."""
+    allowed = {obj.vertex_groups[n].index for n in ("head", "neck") if n in obj.vertex_groups}
+    return sum(1 for v in obj.data.vertices if any(g.group not in allowed and g.weight > 1e-4 for g in v.groups))
+
+
 def reassign_groups(obj, from_names, to_name):
     """Move all weight of the `from_names` groups onto `to_name` (creating it), then re-tidy."""
     if to_name not in obj.vertex_groups:
@@ -284,6 +319,8 @@ QA_POSES = {
     "elbow_70": [("l_foretwist", "Y", 70), ("r_foretwist", "Y", 70)],
     "spine_30": [("spine", "Y", 15), ("spine1", "Y", 15)],
     "neck_40": [("neck", "Y", 20), ("head", "Y", 20)],
+    # the other way: a chin pinned below the head stretches here (the 2026-09-18 troll passed neck_40 at 2.05x)
+    "neck_back_40": [("neck", "Y", -20), ("head", "Y", -20)],
 }
 
 
@@ -322,7 +359,7 @@ def qa_render(triples, arm, out_dir, label):
             _apply_pose(arm, spec)
             dg = bpy.context.evaluated_depsgraph_get()
             results[key][pose_name] = {tag: _edge_stretch(ob, dg) for tag, ob in (("donor", donor), ("old", old), ("new", new)) if ob is not None}
-        for pose_name in ("shoulder_60", "knee_60", "neck_40"):
+        for pose_name in ("shoulder_60", "knee_60", "neck_40", "neck_back_40"):
             _apply_pose(arm, QA_POSES[pose_name])
             for tag, ob in (("old", old), ("new", new)):
                 for m in all_meshes:
@@ -383,11 +420,18 @@ def process_target(target_fbx, donor_full_fn, out_dir, args, report):
             if "helmet" in name:
                 tidy["rigid_skull_verts"] = rigid_skull(m, bone_head, margin=-10.0)     # a helmet is rigid: all head
             elif "head" in name:
-                # skull rigid above the neck joint, then smoothing blends the line into the transferred neck weights;
-                # eyes and mouth are separate material parts inside the skull, they ride the head 100%
+                # skull rigid above the neck joint and jaw rigid in front of it; eyes and mouth are separate
+                # material parts inside the skull, they ride the head 100% (pinned before the smoothing too, so the
+                # lips do not average in the transfer's weights from the mouth interior); everything else on a
+                # head mesh follows the neck, never the chest; smoothing then blends the skull and jaw edges into it
                 tidy["rigid_skull_verts"] = rigid_skull(m, bone_head)
+                tidy["rigid_jaw_verts"] = rigid_jaw(m, bone_head)
+                rigid_subparts(m, "head", keep_material_index=0)
+                others = [vg.name for vg in m.vertex_groups if vg.name not in ("head", "neck")]
+                tidy["reassigned_to_neck"] = reassign_groups(m, others, "neck")
                 tidy["smoothed"] = smooth_weights(m, factor=0.5, iterations=3)
                 tidy["rigid_subparts_verts"] = rigid_subparts(m, "head", keep_material_index=0)
+                tidy["non_head_neck_verts"] = non_head_neck_verts(m)
             elif "armor" in name or "armour" in name:
                 # torso plate: the gorget must ride the torso, not the head; move head/neck weight onto spine2
                 tidy["reassigned_to_spine2"] = reassign_groups(m, ("head", "neck"), "spine2")
@@ -498,7 +542,10 @@ def main():
             report["targets"][os.path.basename(t)] = {"error": traceback.format_exc()}
         with open(os.path.join(args.out, "reskin_report.json"), "w") as fh:
             json.dump(report, fh, indent=1)
-    open(os.path.join(args.out, "reskin_report.json.DONE"), "w").write("done\n")
+    bad = [name for name, e in report["targets"].items() if "error" in e]
+    bad += ["%s/%s" % (name, mesh) for name, e in report["targets"].items() for mesh, me in e.get("meshes", {}).items()
+            if me.get("tidy", {}).get("non_head_neck_verts", 0) > 0]
+    open(os.path.join(args.out, "reskin_report.json.DONE"), "w").write(("fail: " + ", ".join(bad) if bad else "done") + "\n")
 
 
 if __name__ == "__main__":

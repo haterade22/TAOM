@@ -22,6 +22,13 @@
 #>
 param(
   [Parameter(Mandatory=$true)][string[]]$Clips,
+  # -ByClip: the names are AnimationClip names as an action set binds them (stand_2h, ready_slashright_2h), resolved
+  # through animation_clips.tpac to the SkeletalAnimation master each points at (its .Animation GUID); one JSON per
+  # distinct master, plus clips_index.json (clip -> master, Source1, Source2, Duration) so a generator can re-cut the
+  # sub-range on the retargeted master. Without it the names are master names (anim_run_forward_unarmed), and a
+  # master named like a clip can be an EMPTY shell (jump_loop: 0 frames, 2026-09-24).
+  [switch]$ByClip,
+  [string]$ClipsPackage = "AssetPackages\animation_clips.tpac",
   [string]$OutDir      = "E:\LOTRAOMAssets\_troll_extract\json",
   [string]$Skeleton    = "human_skeleton",
   # Package holding the Skeleton asset. Defaults to human, which is where the troll/spider work
@@ -71,7 +78,25 @@ $anPkg=[Activator]::CreateInstance($APt,[object[]]@([string](Join-Path $NativeDi
 $am=[Activator]::CreateInstance($AMt); $am.AddPackage($anPkg); $am.SetAsDefaultGlobalResolver()
 
 $ok=0; $miss=0
-foreach($ClipName in $Clips){
+$targets=@()
+if($ByClip){
+  $clPkg=[Activator]::CreateInstance($APt,[object[]]@([string](Join-Path $NativeDir $ClipsPackage),$true,$false))
+  $byName=@{}; foreach($it in $clPkg.Items){ if($it.GetType().Name -eq "AnimationClip"){ $byName[$it.Name]=$it } }
+  $byGuid=@{}; foreach($it in $anPkg.Items){ if($it.GetType().Name -eq "SkeletalAnimation"){ $byGuid["$($it.Guid)"]=$it } }
+  $index=[ordered]@{}; $seen=@{}
+  foreach($ClipName in $Clips){
+    $cl=$byName[$ClipName]
+    if(-not $cl){ Write-Host ("  MISS clip {0}" -f $ClipName); $miss++; continue }
+    $sa=$byGuid["$($cl.Animation)"]
+    if(-not $sa){ Write-Host ("  MISS master {0} for clip {1}" -f $cl.Animation, $ClipName); $miss++; continue }
+    $index[$ClipName]=[ordered]@{ master=$sa.Name; master_guid="$($sa.Guid)"; source1=[double]$cl.Source1; source2=[double]$cl.Source2;
+      duration_s=[double]$cl.Duration; master_frames=[int]$sa.Duration }
+    if(-not $seen.ContainsKey($sa.Name)){ $seen[$sa.Name]=$true; $targets += $sa.Name }
+  }
+  ($index | ConvertTo-Json -Depth 4) | Set-Content -Path (Join-Path $OutDir "clips_index.json") -Encoding UTF8
+  Write-Host ("resolved {0} clips -> {1} masters (clips_index.json)" -f $index.Count, $targets.Count)
+} else { $targets=$Clips }
+foreach($ClipName in $targets){
   $clipObj=@($anPkg.Items|Where-Object{$_.GetType().Name -eq "SkeletalAnimation" -and $_.Name -eq $ClipName})[0]
   if(-not $clipObj){ Write-Host ("  MISS {0}" -f $ClipName); $miss++; continue }
   $ad=$clipObj.Definition.Data

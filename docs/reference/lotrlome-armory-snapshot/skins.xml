@@ -108729,13 +108729,13 @@
 			uses_stitching="true"
 			body_mesh_suffix=""
 			min_scale="1.09"
-			skeleton="troll_skeleton"
-			body_meta_mesh="mordor_hill_troll"
-			body_meta_mesh_shoulders="body_male_a_sh"
+			skeleton="troll_skeleton_a"
+			body_meta_mesh="hill_troll_a_body"
+			body_meta_mesh_shoulders="hill_troll_a_shoulder"
 			body_meta_mesh_upperbody="box_a"
-			legs_mesh="mordor_hill_troll_feet"
-			hands_mesh="mordor_hill_troll_hands"
-			face_meta_mesh="mordor_hill_troll_head"
+			legs_mesh="hill_troll_a_legs"
+			hands_mesh="hill_troll_a_hands"
+			face_meta_mesh="hill_troll_a_head"
 			underwear_bottom_mesh=""
 			underwear_top_mesh="">
 			<deform_keys>
@@ -110248,23 +110248,23 @@
 			<face_textures
 				group_id="1">
 				<face_texture
-					name="mordor_hill_troll_head"
-					lod_material="mordor_hill_troll_head"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="face_texture1,face_texture2"></face_texture>
 				<face_texture
-					name="mordor_hill_troll_head"
-					lod_material="mordor_hill_troll_head"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="face_texture3,face_texture4"></face_texture>
 				<face_texture
-					name="mordor_hill_troll_head"
-					lod_material="mordor_hill_troll_head"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="face_texture5,face_texture6,face_texture7"></face_texture>
 				<face_texture
-					name="mordor_hill_troll_head"
-					lod_material="mordor_hill_troll_head"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="face_texture8,face_texture9,face_texture10"></face_texture>
 				<!-- <face_texture name="head_male_e" lod_material="head_male_e" color="0xFFFFFFFF" tags="face_texture1,face_texture2,face_texture3">
@@ -110354,13 +110354,13 @@
 			uses_stitching="true"
 			body_mesh_suffix="_fem"
 			min_scale="1.06"
-			skeleton="human_skeleton"
-			body_meta_mesh="mordor_hill_troll"
-			body_meta_mesh_shoulders="body_female_a_sh"
+			skeleton="troll_skeleton_a"
+			body_meta_mesh="hill_troll_a_body"
+			body_meta_mesh_shoulders="hill_troll_a_shoulder"
 			body_meta_mesh_upperbody="box_a"
-			legs_mesh="mordor_hill_troll_feet"
-			hands_mesh="mordor_hill_troll_hands"
-			face_meta_mesh="mordor_hill_troll_head"
+			legs_mesh="hill_troll_a_legs"
+			hands_mesh="hill_troll_a_hands"
+			face_meta_mesh="hill_troll_a_head"
 			underwear_bottom_mesh=""
 			underwear_top_mesh="">
 			<deform_keys>
@@ -111497,261 +111497,24 @@
 			</deform_keys>
 			<hair_meshes
 				group_id="7">
-				<!--<hair_mesh name="hair_female_a" tags="turkisi,uzun" />
-<hair_mesh name="hair_female_b" tags="turkisi,toplu" />
-<hair_mesh name="hair_female_c" tags="turkisi,kisa"/>
-<hair_mesh name="hair_female_d" tags="turkisi,daginik"/>
-<hair_mesh name="hair_female_e" tags="turkisi,orgulu"/>
-<hair_mesh name="hair_female_f" tags="turkisi,bobhair"/>
-<hair_mesh name="hair_female_g" tags="turkisi,bobhair"/>
-<hair_mesh name="hair_female_h" tags="turkisi,bun"/>
-<hair_mesh name="hair_female_i" tags="turkisi,longmessy"/>
-<hair_mesh name="hair_female_j" tags="turkisi,sidebraid"/>
-<hair_mesh name="hair_female_k" tags="turkisi,halfupdo"/>>-->
 				<hair_mesh>
 					<style_tags>
 						<style_tag
 							name="Bald" />
 					</style_tags>
 				</hair_mesh>
-				<hair_mesh
-					name="female_hair_l"
-					cover_type1="female_hair_l_type1"
-					cover_type2="female_hair_l_type2"
-					cover_type3="female_hair_l_type3"
-					cover_type4="female_hair_l_type4">
-					<style_tags>
-						<style_tag
-							name="LongOvershoulder" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_m"
-					cover_type1="female_hair_m_type1"
-					cover_type2="female_hair_m_type2"
-					cover_type3="female_hair_m_type2"
-					cover_type4="female_hair_m">
-					<style_tags>
-						<style_tag
-							name="TiedLongOverShoulder" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_n"
-					cover_type1="female_hair_n_type1"
-					cover_type2="female_hair_n_type2"
-					cover_type3="female_hair_n_type3"
-					cover_type4="female_hair_n">
-					<style_tags>
-						<style_tag
-							name="AboveShoulderLength" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_o"
-					cover_type1="female_hair_o_type1"
-					cover_type2="female_hair_o_type2"
-					cover_type3="female_hair_o_type3"
-					cover_type4="female_hair_o_type4">
-					<style_tags>
-						<style_tag
-							name="TiedInBack" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_p"
-					cover_type1="female_hair_p_type1"
-					cover_type2="female_hair_p_type2"
-					cover_type3="female_hair_p_type3"
-					cover_type4="female_hair_p">
-					<style_tags>
-						<style_tag
-							name="BraidedInBack" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_r"
-					cover_type1="female_hair_r_type1"
-					cover_type2="female_hair_r_type2"
-					cover_type3="female_hair_r_type3"
-					cover_type4="female_hair_r">
-					<style_tags>
-						<style_tag
-							name="ShoulderLengthTied" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_s"
-					cover_type1="female_hair_s_type1"
-					cover_type2="female_hair_s_type2"
-					cover_type3="female_hair_s_type2"
-					cover_type4="female_hair_s">
-					<style_tags>
-						<style_tag
-							name="Short" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_t"
-					cover_type1="female_hair_t_a"
-					cover_type2="female_hair_t_b"
-					cover_type3="female_hair_t_c"
-					cover_type4="female_hair_t">
-					<style_tags>
-						<style_tag
-							name="Cornrows" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_u"
-					cover_type1="female_hair_u_a"
-					cover_type2="female_hair_u_c"
-					cover_type3="female_hair_u_c"
-					cover_type4="female_hair_u">
-					<style_tags>
-						<style_tag
-							name="CornrowMohawk" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_v"
-					cover_type1="female_hair_o_type1"
-					cover_type2="female_hair_o_type2"
-					cover_type3="female_hair_o_type3"
-					cover_type4="female_hair_v_type4">
-					<style_tags>
-						<style_tag
-							name="BraidedAboveEars" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_y"
-					cover_type1="female_hair_r_type1"
-					cover_type2="female_hair_r_type2"
-					cover_type3="female_hair_r_type3"
-					cover_type4="female_hair_y">
-					<style_tags>
-						<style_tag
-							name="Ukrainian" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z"
-					cover_type1="female_hair_s_type1"
-					cover_type2="female_hair_s_type2"
-					cover_type3="female_hair_s_type2"
-					cover_type4="female_hair_z">
-					<style_tags>
-						<style_tag
-							name="VeryShort" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_a"
-					cover_type1="female_hair_l_type1"
-					cover_type2="female_hair_l_type2"
-					cover_type3="female_hair_l_type3"
-					cover_type4="female_hair_z_a">
-					<style_tags>
-						<style_tag
-							name="RestingOnShoulders" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_b"
-					cover_type1="female_hair_l_type1"
-					cover_type2="female_hair_l_type2"
-					cover_type3="female_hair_l_type3"
-					cover_type4="female_hair_z_b">
-					<style_tags>
-						<style_tag
-							name="Bobbed" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_c_type4"
-					cover_type1="female_hair_z_c_type1"
-					cover_type2="female_hair_z_c_type2"
-					cover_type3="female_hair_z_c_type2"
-					cover_type4="female_hair_z_c_type4">
-					<style_tags>
-						<style_tag
-							name="Native Braids" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_d"
-					cover_type1="female_hair_m_type1"
-					cover_type2="female_hair_m_type2"
-					cover_type3="female_hair_m_type2"
-					cover_type4="female_hair_z_d">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_e"
-					cover_type1="female_hair_z_e_a"
-					cover_type2="female_hair_z_e_b"
-					cover_type4="female_hair_z_e">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_f"
-					cover_type1="female_hair_z_f_a"
-					cover_type2="female_hair_z_f_b"
-					cover_type4="female_hair_z_f">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_g"
-					cover_type1="female_hair_z_g_a"
-					cover_type4="female_hair_z_g">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_h"
-					cover_type1="female_hair_z_h_a"
-					cover_type4="female_hair_z_h">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_i"
-					cover_type1="female_hair_z_i_a"
-					cover_type4="female_hair_z_i">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-					name="female_eyebrow_2" />
-				<eyebrow_mesh
-					name="female_eyebrow_3" />
-				<eyebrow_mesh
-					name="female_eyebrow_4" />
-				<eyebrow_mesh
-					name="female_eyebrow_6" />
-				<eyebrow_mesh
-					name="female_eyebrow_7" />
+					name="" />
 			</eyebrow_meshes>
 			<beard_meshes>
-				<beard_mesh />
+				<beard_mesh>
+					<style_tags>
+						<style_tag
+							name="Cleanshaven" />
+					</style_tags>
+				</beard_mesh>
 			</beard_meshes>
 			<tattoo_materials
 				group_id="8"
@@ -112052,23 +111815,23 @@
 			</eye_color_gradient_points>
 			<face_textures>
 				<face_texture
-					name="mordor_hill_troll_head"
-					lod_material="mordor_hill_troll_head"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFCAD3E0"
 					tags="face_texture2"></face_texture>
 				<face_texture
-					name="mordor_hill_troll_head"
-					lod_material="mordor_hill_troll_head"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFCAD3E0"
 					tags="face_texture2"></face_texture>
 				<face_texture
-					name="mordor_hill_troll_head"
-					lod_material="mordor_hill_troll_head"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFCAD3E0"
 					tags="face_texture3"></face_texture>
 				<face_texture
-					name="mordor_hill_troll_head"
-					lod_material="mordor_hill_troll_head"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFCAD3E0"
 					tags="face_texture4"></face_texture>
 				<!--       <face_texture name="head_female_c" lod_material="head_female_a.lod" color="0xFFCAD3E0" tags="face_texture2">
@@ -112214,14 +111977,14 @@
 			uses_stitching="true"
 			body_mesh_suffix=""
 			min_scale="0.94"
-			skeleton="human_skeleton"
-			body_meta_mesh="mordor_hill_troll"
-			body_meta_mesh_shoulders="body_male_a_sh"
+			skeleton="troll_skeleton_a"
+			body_meta_mesh="hill_troll_a_body"
+			body_meta_mesh_shoulders="hill_troll_a_shoulder"
 			body_meta_mesh_upperbody="box_a"
-			legs_mesh="mordor_hill_troll_feet"
-			hands_mesh="mordor_hill_troll_hands"
-			face_meta_mesh="mordor_hill_troll_head"
-			underwear_bottom_mesh="underwear_male"
+			legs_mesh="hill_troll_a_legs"
+			hands_mesh="hill_troll_a_hands"
+			face_meta_mesh="hill_troll_a_head"
+			underwear_bottom_mesh=""
 			underwear_top_mesh="">
 			<deform_keys>
 				<deform_key
@@ -113423,319 +113186,10 @@
 							name="Bald" />
 					</style_tags>
 				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_a"
-					cover_type1="hair_male_g_a_type1"
-					cover_type2="hair_male_g_a_type2"
-					cover_type4="hair_male_g_a_type4">
-					<style_tags>
-						<style_tag
-							name="Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_b"
-					cover_type1="hair_male_g_b_type1"
-					cover_type2="hair_male_g_b_type2"
-					cover_type3="hair_male_g_b_type3"
-					cover_type4="hair_male_g_b">
-					<style_tags>
-						<style_tag
-							name="LongAndBushy" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_c"
-					cover_type1="hair_male_g_c_type1"
-					cover_type2="hair_male_g_c_type2"
-					cover_type4="hair_male_g_c_type4">
-					<style_tags>
-						<style_tag
-							name="TiedAcrossBack" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_d"
-					cover_type1="hair_male_g_d_type1"
-					cover_type4="hair_male_g_d">
-					<style_tags>
-						<style_tag
-							name="SlickedLong" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_e"
-					cover_type1="hair_male_g_e_type1"
-					cover_type4="hair_male_g_e">
-					<style_tags>
-						<style_tag
-							name="PartedAndCombedBack" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_f"
-					cover_type1="hair_male_g_f_type1"
-					cover_type4="hair_male_g_f">
-					<style_tags>
-						<style_tag
-							name="Tousled" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_g"
-					cover_type1="hair_male_g_g_a"
-					cover_type2="hair_male_g_g_b"
-					cover_type3="hair_male_g_g_c"
-					cover_type4="hair_male_g_g">
-					<style_tags>
-						<style_tag
-							name="BraidedAndLong" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_h"
-					cover_type1="hair_male_g_h_type1"
-					cover_type4="hair_male_g_h">
-					<style_tags>
-						<style_tag
-							name="Short" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_i"
-					cover_type1="hair_male_g_a_type1"
-					cover_type2="hair_male_g_a_type2"
-					cover_type4="hair_male_g_i">
-					<style_tags>
-						<style_tag
-							name="HighPonytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_j"
-					cover_type1="hair_male_g_j_a"
-					cover_type2="hair_male_g_j_b"
-					cover_type3="hair_male_g_j_c"
-					cover_type4="hair_male_g_j">
-					<style_tags>
-						<style_tag
-							name="Mohawk" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_k"
-					cover_type1="hair_male_g_k_a"
-					cover_type2="hair_male_g_k_b"
-					cover_type3="hair_male_g_k_b"
-					cover_type4="hair_male_g_k">
-					<style_tags>
-						<style_tag
-							name="PageBoy" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_l"
-					cover_type4="hair_male_g_l">
-					<style_tags>
-						<style_tag
-							name="Bowl" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_m"
-					cover_type4="hair_male_g_m">
-					<style_tags>
-						<style_tag
-							name="ShortAndThin" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_n"
-					cover_type4="hair_male_g_n">
-					<style_tags>
-						<style_tag
-							name="SlickedShort" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_o"
-					cover_type4="hair_male_g_o">
-					<style_tags>
-						<style_tag
-							name="ShortWavy" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_p"
-					cover_type1="hair_male_g_p_type1"
-					cover_type2="hair_male_g_p_type2"
-					cover_type3="hair_male_g_p_type2"
-					cover_type4="hair_male_g_p_type4">
-					<style_tags>
-						<style_tag
-							name="Native Braids" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_r"
-					cover_type1="hair_male_g_r"
-					cover_type2="hair_male_g_r"
-					cover_type3="hair_male_g_r"
-					cover_type4="hair_male_g_r_type4">
-					<style_tags>
-						<style_tag
-							name="Mongol Hair" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_v"
-					cover_type1="hair_male_g_v_a"
-					cover_type4="hair_male_g_v">
-					<style_tags>
-						<style_tag
-							name="Bandit Hair 1" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_u"
-					cover_type1="hair_male_g_u_a"
-					cover_type4="hair_male_g_u">
-					<style_tags>
-						<style_tag
-							name="Bandit Hair 2" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_s"
-					cover_type1="hair_male_g_s_a"
-					cover_type2="hair_male_g_s_b"
-					cover_type4="hair_male_g_s">
-					<style_tags>
-						<style_tag
-							name="Bandit Hair 3" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_y"
-					cover_type1="hair_male_g_y_a"
-					cover_type2="hair_male_g_y_b"
-					cover_type4="hair_male_g_y">
-					<style_tags>
-						<style_tag
-							name="Afro Hair" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_z"
-					cover_type1="hair_male_g_z_a"
-					cover_type2="hair_male_g_z_b"
-					cover_type4="hair_male_g_z">
-					<style_tags>
-						<style_tag
-							name="Afro Hair 1" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_a"
-					cover_type1="hair_male_h_a_a"
-					cover_type4="hair_male_h_a">
-					<style_tags>
-						<style_tag
-							name="Afro Hair 2" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_b"
-					cover_type1="hair_male_h_b_a"
-					cover_type4="hair_male_h_b">
-					<style_tags>
-						<style_tag
-							name="Afro Hair 3" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_c"
-					cover_type1="hair_male_h_c_a"
-					cover_type4="hair_male_h_c">
-					<style_tags>
-						<style_tag
-							name="Afro Hair 4" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_d"
-					cover_type1="hair_male_h_d_a"
-					cover_type2="hair_male_h_d_b"
-					cover_type4="hair_male_h_d">
-					<style_tags>
-						<style_tag
-							name="Afro Hair 5" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_e"
-					cover_type1="hair_male_h_e_a"
-					cover_type4="hair_male_h_e">
-					<style_tags>
-						<style_tag
-							name="Viking Hair" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_f"
-					cover_type4="hair_male_h_f">
-					<style_tags>
-						<style_tag
-							name="Monk Hair" />
-					</style_tags>
-				</hair_mesh>
-				<!-- <hair_mesh name="hair_male_f_m" tags="hair1" cover_type1="hair_male_f_m_a" />
-<hair_mesh name="hair_male_f_l" tags="hair1" cover_type1="hair_male_f_l_a" cover_type2="hair_male_f_l_b" />
-<hair_mesh name="hair_male_f_j" tags="hair1" cover_type1="hair_male_f_j_a" />
-<hair_mesh name="hair_male_f_i" tags="hair1" cover_type1="hair_male_f_i_a" />
-<hair_mesh name="hair_male_f_h" tags="hair1" />
-<hair_mesh name="hair_male_f_g" tags="hair1" />
-<hair_mesh name="hair_male_f_f" tags="hair1" cover_type1="hair_male_f_f_a" />
-<hair_mesh name="hair_male_f_e" tags="hair1" cover_type1="hair_male_f_e_a" />
-<hair_mesh name="hair_male_f_d" tags="hair1" cover_type1="hair_male_f_d_a" cover_type2="hair_male_f_d_b" cover_type3="hair_male_f_d_c" />
-<hair_mesh name="hair_male_f_c" tags="hair1" />
-<hair_mesh name="hair_male_f_b" tags="hair1" cover_type1="hair_male_f_b_a" />
-<hair_mesh name="hair_male_f_a" tags="hair1" cover_type1="hair_male_f_a_a" /> -->
-				<!--       <hair_mesh name="hair_male_a" tags="hair1" />
-<hair_mesh name="hair_male_f" tags="hair1" />
-<hair_mesh name="hair_male_b" tags="hair1" />
-<hair_mesh name="hair_male_c_a" tags="hair1" />
-<hair_mesh name="hair_male_c_b" tags="hair1" />
-<hair_mesh name="hair_male_d" tags="hair1" />
-<hair_mesh name="hair_male_c" tags="hair1" />
-<hair_mesh name="hair_male_c_d" tags="hair2,hair3" />
-<hair_mesh name="short_a_test" tags="hair1,hair2" />
-<hair_mesh name="hair_male_e" tags="hair1,hair3" />
-<hair_mesh name="hair_male_e_b" tags="hair3" />
-<hair_mesh name="hair_male_c_c" tags="hair1" />
-<hair_mesh name="hair_male_g" tags="hair1" /> -->
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-					name="male_eyebrow_1" />
-				<eyebrow_mesh
-					name="male_eyebrow_2" />
-				<eyebrow_mesh
-					name="male_eyebrow_3" />
-				<eyebrow_mesh
-					name="male_eyebrow_4" />
-				<eyebrow_mesh
-					name="male_eyebrow_5" />
-				<eyebrow_mesh
-					name="male_eyebrow_7" />
-				<eyebrow_mesh
-					name="male_eyebrow_8" />
-				<eyebrow_mesh
-					name="male_eyebrow_9" />
-				<eyebrow_mesh
-					name="male_eyebrow_10" />
-				<eyebrow_mesh
-					name="male_eyebrow_6" />
+					name="" />
 			</eyebrow_meshes>
 			<beard_meshes>
 				<beard_mesh>
@@ -113744,33 +113198,6 @@
 							name="Cleanshaven" />
 					</style_tags>
 				</beard_mesh>
-				<beard_mesh
-					name="beards_d_aa"
-					cover_type1="beards_d_aa"
-					cover_type2="beards_d_aa"
-					cover_type3="beards_d_aa"></beard_mesh>
-				<!--             <beard_mesh name="beards_b_a" tags="beard1" />
-<beard_mesh name="beards_b_b" tags="beard1" />
-<beard_mesh name="beards_b_c" tags="beard1" />
-<beard_mesh name="beard_a" tags="beard1" />
-<beard_mesh name="beard_b" tags="beard2" />
-<beard_mesh name="beard_c" tags="beard2" />
-<beard_mesh name="beard_d" tags="beard2" />
-<beard_mesh name="beard_e" tags="beard2" />
-<beard_mesh name="beard_f" tags="beard2" />
-<beard_mesh name="beard_g" tags="beard2" />
-<beard_mesh name="beard_h" tags="beard2" />
-<beard_mesh name="beard_i" tags="beard2" />
-<beard_mesh name="beard_j" tags="beard2" />
-<beard_mesh name="beard_k" tags="beard2" />
-<beard_mesh name="beard_l" tags="beard2" />
-<beard_mesh name="beard_m" tags="beard2" />
-<beard_mesh name="beard_n" tags="beard2" />
-<beard_mesh name="beard_o" tags="beard2" />
-<beard_mesh name="beard_p" tags="beard2" />
-<beard_mesh name="beard_r" tags="beard2" />
-<beard_mesh name="beard_s" tags="beard2" />
-<beard_mesh name="beard_t" tags="beard2" /> -->
 			</beard_meshes>
 			<tattoo_color_gradient_points>
 				<tattoo_color_gradient_point
@@ -113963,23 +113390,23 @@
 			<face_textures
 				group_id="1">
 				<face_texture
-					name="mordor_hill_troll_head"
-					lod_material="mordor_hill_troll_head"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="face_texture1,face_texture2"></face_texture>
 				<face_texture
-					name="mordor_hill_troll_head"
-					lod_material="mordor_hill_troll_head"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="face_texture3,face_texture4"></face_texture>
 				<face_texture
-					name="mordor_hill_troll_head"
-					lod_material="mordor_hill_troll_head"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="face_texture5,face_texture6,face_texture7"></face_texture>
 				<face_texture
-					name="mordor_hill_troll_head"
-					lod_material="mordor_hill_troll_head"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="face_texture8,face_texture9,face_texture10"></face_texture>
 				<!-- <face_texture name="head_male_e" lod_material="head_male_e" color="0xFFFFFFFF" tags="face_texture1,face_texture2,face_texture3">
@@ -114069,15 +113496,15 @@
 			uses_stitching="true"
 			body_mesh_suffix="_fem"
 			min_scale="0.93"
-			skeleton="human_skeleton"
-			body_meta_mesh="body_female_a"
-			body_meta_mesh_shoulders="body_female_a_sh"
+			skeleton="troll_skeleton_a"
+			body_meta_mesh="hill_troll_a_body"
+			body_meta_mesh_shoulders="hill_troll_a_shoulder"
 			body_meta_mesh_upperbody="box_a"
-			legs_mesh="feet_female_a"
-			hands_mesh="hands_female_a"
-			face_meta_mesh="head_female_a"
-			underwear_bottom_mesh="underwear_female"
-			underwear_top_mesh="underwear_female_top">
+			legs_mesh="hill_troll_a_legs"
+			hands_mesh="hill_troll_a_hands"
+			face_meta_mesh="hill_troll_a_head"
+			underwear_bottom_mesh=""
+			underwear_top_mesh="">
 			<deform_keys>
 				<deform_key
 					id="face_width"
@@ -115207,248 +114634,16 @@
 			</deform_keys>
 			<hair_meshes
 				group_id="7">
-
 				<hair_mesh>
 					<style_tags>
 						<style_tag
 							name="Bald" />
 					</style_tags>
 				</hair_mesh>
-				<hair_mesh
-					name="female_hair_l"
-					cover_type1="female_hair_l_type1"
-					cover_type2="female_hair_l_type2"
-					cover_type3="female_hair_l_type3"
-					cover_type4="female_hair_l_type4">
-					<style_tags>
-						<style_tag
-							name="LongOvershoulder" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_m"
-					cover_type1="female_hair_m_type1"
-					cover_type2="female_hair_m_type2"
-					cover_type3="female_hair_m_type2"
-					cover_type4="female_hair_m">
-					<style_tags>
-						<style_tag
-							name="TiedLongOverShoulder" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_n"
-					cover_type1="female_hair_n_type1"
-					cover_type2="female_hair_n_type2"
-					cover_type3="female_hair_n_type3"
-					cover_type4="female_hair_n">
-					<style_tags>
-						<style_tag
-							name="AboveShoulderLength" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_o"
-					cover_type1="female_hair_o_type1"
-					cover_type2="female_hair_o_type2"
-					cover_type3="female_hair_o_type3"
-					cover_type4="female_hair_o_type4">
-					<style_tags>
-						<style_tag
-							name="TiedInBack" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_p"
-					cover_type1="female_hair_p_type1"
-					cover_type2="female_hair_p_type2"
-					cover_type3="female_hair_p_type3"
-					cover_type4="female_hair_p">
-					<style_tags>
-						<style_tag
-							name="BraidedInBack" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_r"
-					cover_type1="female_hair_r_type1"
-					cover_type2="female_hair_r_type2"
-					cover_type3="female_hair_r_type3"
-					cover_type4="female_hair_r">
-					<style_tags>
-						<style_tag
-							name="ShoulderLengthTied" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_s"
-					cover_type1="female_hair_s_type1"
-					cover_type2="female_hair_s_type2"
-					cover_type3="female_hair_s_type2"
-					cover_type4="female_hair_s">
-					<style_tags>
-						<style_tag
-							name="Short" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_t"
-					cover_type1="female_hair_t_a"
-					cover_type2="female_hair_t_b"
-					cover_type3="female_hair_t_c"
-					cover_type4="female_hair_t">
-					<style_tags>
-						<style_tag
-							name="Cornrows" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_u"
-					cover_type1="female_hair_u_a"
-					cover_type2="female_hair_u_c"
-					cover_type3="female_hair_u_c"
-					cover_type4="female_hair_u">
-					<style_tags>
-						<style_tag
-							name="CornrowMohawk" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_v"
-					cover_type1="female_hair_o_type1"
-					cover_type2="female_hair_o_type2"
-					cover_type3="female_hair_o_type3"
-					cover_type4="female_hair_v_type4">
-					<style_tags>
-						<style_tag
-							name="BraidedAboveEars" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_y"
-					cover_type1="female_hair_r_type1"
-					cover_type2="female_hair_r_type2"
-					cover_type3="female_hair_r_type3"
-					cover_type4="female_hair_y">
-					<style_tags>
-						<style_tag
-							name="Ukrainian" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z"
-					cover_type1="female_hair_s_type1"
-					cover_type2="female_hair_s_type2"
-					cover_type3="female_hair_s_type2"
-					cover_type4="female_hair_z">
-					<style_tags>
-						<style_tag
-							name="VeryShort" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_a"
-					cover_type1="female_hair_l_type1"
-					cover_type2="female_hair_l_type2"
-					cover_type3="female_hair_l_type3"
-					cover_type4="female_hair_z_a">
-					<style_tags>
-						<style_tag
-							name="RestingOnShoulders" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_b"
-					cover_type1="female_hair_l_type1"
-					cover_type2="female_hair_l_type2"
-					cover_type3="female_hair_l_type3"
-					cover_type4="female_hair_z_b">
-					<style_tags>
-						<style_tag
-							name="Bobbed" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_c_type4"
-					cover_type1="female_hair_z_c_type1"
-					cover_type2="female_hair_z_c_type2"
-					cover_type3="female_hair_z_c_type2"
-					cover_type4="female_hair_z_c_type4">
-					<style_tags>
-						<style_tag
-							name="Native Braids" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_d"
-					cover_type1="female_hair_m_type1"
-					cover_type2="female_hair_m_type2"
-					cover_type3="female_hair_m_type2"
-					cover_type4="female_hair_z_d">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_e"
-					cover_type1="female_hair_z_e_a"
-					cover_type2="female_hair_z_e_b"
-					cover_type4="female_hair_z_e">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_f"
-					cover_type1="female_hair_z_f_a"
-					cover_type2="female_hair_z_f_b"
-					cover_type4="female_hair_z_f">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_g"
-					cover_type1="female_hair_z_g_a"
-					cover_type4="female_hair_z_g">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_h"
-					cover_type1="female_hair_z_h_a"
-					cover_type4="female_hair_z_h">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_i"
-					cover_type1="female_hair_z_i_a"
-					cover_type4="female_hair_z_i">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-					name="female_eyebrow_2" />
-				<eyebrow_mesh
-					name="female_eyebrow_3" />
-				<eyebrow_mesh
-					name="female_eyebrow_4" />
-				<eyebrow_mesh
-					name="female_eyebrow_6" />
-				<eyebrow_mesh
-					name="female_eyebrow_7" />
+					name="" />
 			</eyebrow_meshes>
 			<beard_meshes />
 			<tattoo_color_gradient_points>
@@ -115641,23 +114836,23 @@
 			</eye_color_gradient_points>
 			<face_textures>
 				<face_texture
-					name="head_female_a"
-					lod_material="head_female_a.lod"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFCAD3E0"
 					tags="face_texture2"></face_texture>
 				<face_texture
-					name="head_female_e"
-					lod_material="head_female_a.lod"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFCAD3E0"
 					tags="face_texture2"></face_texture>
 				<face_texture
-					name="head_female_b"
-					lod_material="head_female_a.lod"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFCAD3E0"
 					tags="face_texture3"></face_texture>
 				<face_texture
-					name="head_female_c"
-					lod_material="head_female_a.lod"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFCAD3E0"
 					tags="face_texture4"></face_texture>
 				<!--       <face_texture name="head_female_c" lod_material="head_female_a.lod" color="0xFFCAD3E0" tags="face_texture2">
@@ -115799,14 +114994,14 @@
 			uses_stitching="true"
 			body_mesh_suffix=""
 			min_scale="0.78"
-			skeleton="human_skeleton"
-			body_meta_mesh="body_male_a_kid"
-			body_meta_mesh_shoulders="body_female_a_sh"
+			skeleton="troll_skeleton_a"
+			body_meta_mesh="hill_troll_a_body"
+			body_meta_mesh_shoulders="hill_troll_a_shoulder"
 			body_meta_mesh_upperbody="box_a"
-			legs_mesh="feet_female_a"
-			hands_mesh="hands_female_a"
-			face_meta_mesh="head_male_a"
-			underwear_bottom_mesh="underwear_male_teen"
+			legs_mesh="hill_troll_a_legs"
+			hands_mesh="hill_troll_a_hands"
+			face_meta_mesh="hill_troll_a_head"
+			underwear_bottom_mesh=""
 			underwear_top_mesh="">
 			<deform_keys>
 				<deform_key
@@ -117028,301 +116223,11 @@
 							name="Bald" />
 					</style_tags>
 				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_b"
-					cover_type1="hair_male_g_b_type1"
-					cover_type2="hair_male_g_b_type2"
-					cover_type3="hair_male_g_b_type3"
-					cover_type4="hair_male_g_b">
-					<style_tags>
-						<style_tag
-							name="Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_b"
-					cover_type1="hair_male_g_b_type1"
-					cover_type2="hair_male_g_b_type2"
-					cover_type3="hair_male_g_b_type3"
-					cover_type4="hair_male_g_b">
-					<style_tags>
-						<style_tag
-							name="LongAndBushy" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_b"
-					cover_type1="hair_male_g_b_type1"
-					cover_type2="hair_male_g_b_type2"
-					cover_type3="hair_male_g_b_type3"
-					cover_type4="hair_male_g_b">
-					<style_tags>
-						<style_tag
-							name="TiedAcrossBack" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_e"
-					cover_type1="hair_male_g_e_type1"
-					cover_type4="hair_male_g_e">
-					<style_tags>
-						<style_tag
-							name="SlickedLong" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_e"
-					cover_type1="hair_male_g_e_type1"
-					cover_type4="hair_male_g_e">
-					<style_tags>
-						<style_tag
-							name="PartedAndCombedBack" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_f"
-					cover_type1="hair_male_g_f_type1"
-					cover_type4="hair_male_g_f">
-					<style_tags>
-						<style_tag
-							name="Tousled" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_g"
-					cover_type1="hair_male_g_g_a"
-					cover_type2="hair_male_g_g_b"
-					cover_type3="hair_male_g_g_c"
-					cover_type4="hair_male_g_g">
-					<style_tags>
-						<style_tag
-							name="BraidedAndLong" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_h"
-					cover_type1="hair_male_g_h_type1"
-					cover_type4="hair_male_g_h">
-					<style_tags>
-						<style_tag
-							name="Short" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_i"
-					cover_type1="hair_male_g_a_type1"
-					cover_type2="hair_male_g_a_type2"
-					cover_type4="hair_male_g_i">
-					<style_tags>
-						<style_tag
-							name="HighPonytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_j"
-					cover_type1="hair_male_g_j_a"
-					cover_type2="hair_male_g_j_b"
-					cover_type3="hair_male_g_j_c"
-					cover_type4="hair_male_g_j">
-					<style_tags>
-						<style_tag
-							name="Mohawk" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_k"
-					cover_type1="hair_male_g_k_a"
-					cover_type2="hair_male_g_k_b"
-					cover_type3="hair_male_g_k_b"
-					cover_type4="hair_male_g_k">
-					<style_tags>
-						<style_tag
-							name="PageBoy" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_l"
-					cover_type4="hair_male_g_l">
-					<style_tags>
-						<style_tag
-							name="Bowl" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_m"
-					cover_type4="hair_male_g_m">
-					<style_tags>
-						<style_tag
-							name="ShortAndThin" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_n"
-					cover_type4="hair_male_g_n">
-					<style_tags>
-						<style_tag
-							name="SlickedShort" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_o"
-					cover_type4="hair_male_g_o">
-					<style_tags>
-						<style_tag
-							name="ShortWavy" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_p"
-					cover_type1="hair_male_g_p_type1"
-					cover_type2="hair_male_g_p_type2"
-					cover_type3="hair_male_g_p_type2"
-					cover_type4="hair_male_g_p_type4">
-					<style_tags>
-						<style_tag
-							name="Native Braids" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_r"
-					cover_type1="hair_male_g_r"
-					cover_type2="hair_male_g_r"
-					cover_type3="hair_male_g_r"
-					cover_type4="hair_male_g_r_type4">
-					<style_tags>
-						<style_tag
-							name="Mongol Hair" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_v"
-					cover_type1="hair_male_g_v_a"
-					cover_type4="hair_male_g_v">
-					<style_tags>
-						<style_tag
-							name="Bandit Hair 1" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_u"
-					cover_type1="hair_male_g_u_a"
-					cover_type4="hair_male_g_u">
-					<style_tags>
-						<style_tag
-							name="Bandit Hair 2" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_s"
-					cover_type1="hair_male_g_s_a"
-					cover_type2="hair_male_g_s_b"
-					cover_type4="hair_male_g_s">
-					<style_tags>
-						<style_tag
-							name="Bandit Hair 3" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_y"
-					cover_type1="hair_male_g_y_a"
-					cover_type2="hair_male_g_y_b"
-					cover_type4="hair_male_g_y">
-					<style_tags>
-						<style_tag
-							name="Afro Hair" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_z"
-					cover_type1="hair_male_g_z_a"
-					cover_type2="hair_male_g_z_b"
-					cover_type4="hair_male_g_z">
-					<style_tags>
-						<style_tag
-							name="Afro Hair 1" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_a"
-					cover_type1="hair_male_h_a_a"
-					cover_type4="hair_male_h_a">
-					<style_tags>
-						<style_tag
-							name="Afro Hair 2" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_b"
-					cover_type1="hair_male_h_b_a"
-					cover_type4="hair_male_h_b">
-					<style_tags>
-						<style_tag
-							name="Afro Hair 3" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_c"
-					cover_type1="hair_male_h_c_a"
-					cover_type4="hair_male_h_c">
-					<style_tags>
-						<style_tag
-							name="Afro Hair 4" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_d"
-					cover_type1="hair_male_h_d_a"
-					cover_type2="hair_male_h_d_b"
-					cover_type4="hair_male_h_d">
-					<style_tags>
-						<style_tag
-							name="Afro Hair 5" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_e"
-					cover_type1="hair_male_h_e_a"
-					cover_type4="hair_male_h_e">
-					<style_tags>
-						<style_tag
-							name="Viking Hair" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_f"
-					cover_type4="hair_male_h_f">
-					<style_tags>
-						<style_tag
-							name="Monk Hair" />
-					</style_tags>
-				</hair_mesh>
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-					name="male_eyebrow_1" />
-				<eyebrow_mesh
-					name="male_eyebrow_2" />
-				<eyebrow_mesh
-					name="male_eyebrow_3" />
-				<eyebrow_mesh
-					name="male_eyebrow_4" />
-				<eyebrow_mesh
-					name="male_eyebrow_5" />
-				<eyebrow_mesh
-					name="male_eyebrow_7" />
-				<eyebrow_mesh
-					name="male_eyebrow_8" />
-				<eyebrow_mesh
-					name="male_eyebrow_9" />
-				<eyebrow_mesh
-					name="male_eyebrow_10" />
-				<eyebrow_mesh
-					name="male_eyebrow_6" />
+					name="" />
 			</eyebrow_meshes>
-			<default_beard_meshes
-				cover_type1="beards_c_a"
-				cover_type2="beards_c_b"
-				cover_type3="beards_c_c" />
 			<beard_meshes />
 			<tattoo_color_gradient_points>
 				<tattoo_color_gradient_point
@@ -117515,18 +116420,18 @@
 			<face_textures
 				group_id="1">
 				<face_texture
-					name="head_male_e"
-					lod_material="head_male_a.lod"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="face_texture1,face_texture2"></face_texture>
 				<face_texture
-					name="head_male_e"
-					lod_material="head_male_a.lod"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="face_texture3,face_texture4"></face_texture>
 				<face_texture
-					name="head_male_e"
-					lod_material="head_male_a.lod"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="face_texture5,face_texture6,face_texture7"></face_texture>
 				<!-- <face_texture name="head_male_e" lod_material="head_male_e" color="0xFFFFFFFF" tags="face_texture1,face_texture2,face_texture3">
@@ -117609,14 +116514,14 @@
 			uses_stitching="true"
 			body_mesh_suffix="_fem"
 			min_scale="0.78"
-			skeleton="human_skeleton"
-			body_meta_mesh="body_female_a_kid"
-			body_meta_mesh_shoulders="body_female_a_sh"
+			skeleton="troll_skeleton_a"
+			body_meta_mesh="hill_troll_a_body"
+			body_meta_mesh_shoulders="hill_troll_a_shoulder"
 			body_meta_mesh_upperbody="box_a"
-			legs_mesh="feet_female_a"
-			hands_mesh="hands_female_a"
-			face_meta_mesh="head_female_a"
-			underwear_bottom_mesh="underwear_female_teen"
+			legs_mesh="hill_troll_a_legs"
+			hands_mesh="hill_troll_a_hands"
+			face_meta_mesh="hill_troll_a_head"
+			underwear_bottom_mesh=""
 			underwear_top_mesh="">
 			<deform_keys>
 				<deform_key
@@ -118762,258 +117667,16 @@
 			</deform_keys>
 			<hair_meshes
 				group_id="7">
-				<!--<hair_mesh name="hair_female_a" tags="turkisi,uzun" />
-<hair_mesh name="hair_female_b" tags="turkisi,toplu" />
-<hair_mesh name="hair_female_c" tags="turkisi,kisa"/>
-<hair_mesh name="hair_female_d" tags="turkisi,daginik"/>
-<hair_mesh name="hair_female_e" tags="turkisi,orgulu"/>
-<hair_mesh name="hair_female_f" tags="turkisi,bobhair"/>
-<hair_mesh name="hair_female_g" tags="turkisi,bobhair"/>
-<hair_mesh name="hair_female_h" tags="turkisi,bun"/>
-<hair_mesh name="hair_female_i" tags="turkisi,longmessy"/>
-<hair_mesh name="hair_female_j" tags="turkisi,sidebraid"/>
-<hair_mesh name="hair_female_k" tags="turkisi,halfupdo"/>>-->
 				<hair_mesh>
 					<style_tags>
 						<style_tag
 							name="Bald" />
 					</style_tags>
 				</hair_mesh>
-				<hair_mesh
-					name="female_hair_l"
-					cover_type1="female_hair_l_type1"
-					cover_type2="female_hair_l_type2"
-					cover_type3="female_hair_l_type3"
-					cover_type4="female_hair_l_type4">
-					<style_tags>
-						<style_tag
-							name="LongOvershoulder" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_m"
-					cover_type1="female_hair_m_type1"
-					cover_type2="female_hair_m_type2"
-					cover_type3="female_hair_m_type2"
-					cover_type4="female_hair_m">
-					<style_tags>
-						<style_tag
-							name="TiedLongOverShoulder" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_n"
-					cover_type1="female_hair_n_type1"
-					cover_type2="female_hair_n_type2"
-					cover_type3="female_hair_n_type3"
-					cover_type4="female_hair_n">
-					<style_tags>
-						<style_tag
-							name="AboveShoulderLength" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_o"
-					cover_type1="female_hair_o_type1"
-					cover_type2="female_hair_o_type2"
-					cover_type3="female_hair_o_type3"
-					cover_type4="female_hair_o_type4">
-					<style_tags>
-						<style_tag
-							name="TiedInBack" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_p"
-					cover_type1="female_hair_p_type1"
-					cover_type2="female_hair_p_type2"
-					cover_type3="female_hair_p_type3"
-					cover_type4="female_hair_p">
-					<style_tags>
-						<style_tag
-							name="BraidedInBack" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_r"
-					cover_type1="female_hair_r_type1"
-					cover_type2="female_hair_r_type2"
-					cover_type3="female_hair_r_type3"
-					cover_type4="female_hair_r">
-					<style_tags>
-						<style_tag
-							name="ShoulderLengthTied" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_s"
-					cover_type1="female_hair_s_type1"
-					cover_type2="female_hair_s_type2"
-					cover_type3="female_hair_s_type2"
-					cover_type4="female_hair_s">
-					<style_tags>
-						<style_tag
-							name="Short" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_t"
-					cover_type1="female_hair_t_a"
-					cover_type2="female_hair_t_b"
-					cover_type3="female_hair_t_c"
-					cover_type4="female_hair_t">
-					<style_tags>
-						<style_tag
-							name="Cornrows" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_u"
-					cover_type1="female_hair_u_a"
-					cover_type2="female_hair_u_c"
-					cover_type3="female_hair_u_c"
-					cover_type4="female_hair_u">
-					<style_tags>
-						<style_tag
-							name="CornrowMohawk" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_v"
-					cover_type1="female_hair_o_type1"
-					cover_type2="female_hair_o_type2"
-					cover_type3="female_hair_o_type3"
-					cover_type4="female_hair_v_type4">
-					<style_tags>
-						<style_tag
-							name="BraidedAboveEars" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_y"
-					cover_type1="female_hair_r_type1"
-					cover_type2="female_hair_r_type2"
-					cover_type3="female_hair_r_type3"
-					cover_type4="female_hair_y">
-					<style_tags>
-						<style_tag
-							name="Ukrainian" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z"
-					cover_type1="female_hair_s_type1"
-					cover_type2="female_hair_s_type2"
-					cover_type3="female_hair_s_type2"
-					cover_type4="female_hair_z">
-					<style_tags>
-						<style_tag
-							name="VeryShort" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_a"
-					cover_type1="female_hair_l_type1"
-					cover_type2="female_hair_l_type2"
-					cover_type3="female_hair_l_type3"
-					cover_type4="female_hair_z_a">
-					<style_tags>
-						<style_tag
-							name="RestingOnShoulders" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_b"
-					cover_type1="female_hair_l_type1"
-					cover_type2="female_hair_l_type2"
-					cover_type3="female_hair_l_type3"
-					cover_type4="female_hair_z_b">
-					<style_tags>
-						<style_tag
-							name="Bobbed" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_c_type4"
-					cover_type1="female_hair_z_c_type1"
-					cover_type2="female_hair_z_c_type2"
-					cover_type3="female_hair_z_c_type2"
-					cover_type4="female_hair_z_c_type4">
-					<style_tags>
-						<style_tag
-							name="Native Braids" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_d"
-					cover_type1="female_hair_m_type1"
-					cover_type2="female_hair_m_type2"
-					cover_type3="female_hair_m_type2"
-					cover_type4="female_hair_z_d">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_e"
-					cover_type1="female_hair_z_e_a"
-					cover_type2="female_hair_z_e_b"
-					cover_type4="female_hair_z_e">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_f"
-					cover_type1="female_hair_z_f_a"
-					cover_type2="female_hair_z_f_b"
-					cover_type4="female_hair_z_f">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_g"
-					cover_type1="female_hair_z_g_a"
-					cover_type4="female_hair_z_g">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_h"
-					cover_type1="female_hair_z_h_a"
-					cover_type4="female_hair_z_h">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_i"
-					cover_type1="female_hair_z_i_a"
-					cover_type4="female_hair_z_i">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-					name="female_eyebrow_2" />
-				<eyebrow_mesh
-					name="female_eyebrow_3" />
-				<eyebrow_mesh
-					name="female_eyebrow_4" />
-				<eyebrow_mesh
-					name="female_eyebrow_6" />
-				<eyebrow_mesh
-					name="female_eyebrow_7" />
+					name="" />
 			</eyebrow_meshes>
 			<beard_meshes />
 			<tattoo_color_gradient_points>
@@ -119206,23 +117869,23 @@
 			</eye_color_gradient_points>
 			<face_textures>
 				<face_texture
-					name="head_female_a"
-					lod_material="head_female_a.lod"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFCAD3E0"
 					tags="face_texture2"></face_texture>
 				<face_texture
-					name="head_female_e"
-					lod_material="head_female_a.lod"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFCAD3E0"
 					tags="face_texture2"></face_texture>
 				<face_texture
-					name="head_female_b"
-					lod_material="head_female_a.lod"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFCAD3E0"
 					tags="face_texture3"></face_texture>
 				<face_texture
-					name="head_female_c"
-					lod_material="head_female_a.lod"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFCAD3E0"
 					tags="face_texture4"></face_texture>
 				<!--       <face_texture name="head_female_c" lod_material="head_female_a.lod" color="0xFFCAD3E0" tags="face_texture2">
@@ -119358,14 +118021,14 @@
 			uses_stitching="true"
 			body_mesh_suffix=""
 			min_scale="0.64"
-			skeleton="human_skeleton"
-			body_meta_mesh="body_male_a_kid"
-			body_meta_mesh_shoulders="body_female_a_sh"
+			skeleton="troll_skeleton_a"
+			body_meta_mesh="hill_troll_a_body"
+			body_meta_mesh_shoulders="hill_troll_a_shoulder"
 			body_meta_mesh_upperbody="box_a"
-			legs_mesh="feet_female_a"
-			hands_mesh="hands_female_a"
-			face_meta_mesh="head_male_a"
-			underwear_bottom_mesh="underwear_male_teen"
+			legs_mesh="hill_troll_a_legs"
+			hands_mesh="hill_troll_a_hands"
+			face_meta_mesh="hill_troll_a_head"
+			underwear_bottom_mesh=""
 			underwear_top_mesh="">
 			<deform_keys>
 				<deform_key
@@ -120586,285 +119249,20 @@
 							name="Bald" />
 					</style_tags>
 				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_b"
-					cover_type1="hair_male_g_b_type1"
-					cover_type2="hair_male_g_b_type2"
-					cover_type3="hair_male_g_b_type3"
-					cover_type4="hair_male_g_b">
-					<style_tags>
-						<style_tag
-							name="Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_b"
-					cover_type1="hair_male_g_b_type1"
-					cover_type2="hair_male_g_b_type2"
-					cover_type3="hair_male_g_b_type3"
-					cover_type4="hair_male_g_b">
-					<style_tags>
-						<style_tag
-							name="LongAndBushy" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_b"
-					cover_type1="hair_male_g_b_type1"
-					cover_type2="hair_male_g_b_type2"
-					cover_type3="hair_male_g_b_type3"
-					cover_type4="hair_male_g_b">
-					<style_tags>
-						<style_tag
-							name="TiedAcrossBack" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_e"
-					cover_type1="hair_male_g_e_type1"
-					cover_type4="hair_male_g_e">
-					<style_tags>
-						<style_tag
-							name="SlickedLong" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_e"
-					cover_type1="hair_male_g_e_type1"
-					cover_type4="hair_male_g_e">
-					<style_tags>
-						<style_tag
-							name="PartedAndCombedBack" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_f"
-					cover_type1="hair_male_g_f_type1"
-					cover_type4="hair_male_g_f">
-					<style_tags>
-						<style_tag
-							name="Tousled" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_g"
-					cover_type1="hair_male_g_g_a"
-					cover_type2="hair_male_g_g_b"
-					cover_type3="hair_male_g_g_c"
-					cover_type4="hair_male_g_g">
-					<style_tags>
-						<style_tag
-							name="BraidedAndLong" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_h"
-					cover_type1="hair_male_g_h_type1"
-					cover_type4="hair_male_g_h">
-					<style_tags>
-						<style_tag
-							name="Short" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_i"
-					cover_type1="hair_male_g_a_type1"
-					cover_type2="hair_male_g_a_type2"
-					cover_type4="hair_male_g_i">
-					<style_tags>
-						<style_tag
-							name="HighPonytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_j"
-					cover_type1="hair_male_g_j_a"
-					cover_type2="hair_male_g_j_b"
-					cover_type3="hair_male_g_j_c"
-					cover_type4="hair_male_g_j">
-					<style_tags>
-						<style_tag
-							name="Mohawk" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_k"
-					cover_type1="hair_male_g_k_a"
-					cover_type2="hair_male_g_k_b"
-					cover_type3="hair_male_g_k_b"
-					cover_type4="hair_male_g_k">
-					<style_tags>
-						<style_tag
-							name="PageBoy" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_l"
-					cover_type4="hair_male_g_l">
-					<style_tags>
-						<style_tag
-							name="Bowl" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_m"
-					cover_type4="hair_male_g_m">
-					<style_tags>
-						<style_tag
-							name="ShortAndThin" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_n"
-					cover_type4="hair_male_g_n">
-					<style_tags>
-						<style_tag
-							name="SlickedShort" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_o"
-					cover_type4="hair_male_g_o">
-					<style_tags>
-						<style_tag
-							name="ShortWavy" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_p"
-					cover_type1="hair_male_g_p_type1"
-					cover_type2="hair_male_g_p_type2"
-					cover_type3="hair_male_g_p_type2"
-					cover_type4="hair_male_g_p_type4">
-					<style_tags>
-						<style_tag
-							name="Native Braids" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_r"
-					cover_type1="hair_male_g_r"
-					cover_type2="hair_male_g_r"
-					cover_type3="hair_male_g_r"
-					cover_type4="hair_male_g_r_type4">
-					<style_tags>
-						<style_tag
-							name="Mongol Hair" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_v"
-					cover_type1="hair_male_g_v_a"
-					cover_type4="hair_male_g_v">
-					<style_tags>
-						<style_tag
-							name="Bandit Hair 1" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_u"
-					cover_type1="hair_male_g_u_a"
-					cover_type4="hair_male_g_u">
-					<style_tags>
-						<style_tag
-							name="Bandit Hair 2" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_s"
-					cover_type1="hair_male_g_s_a"
-					cover_type2="hair_male_g_s_b"
-					cover_type4="hair_male_g_s">
-					<style_tags>
-						<style_tag
-							name="Bandit Hair 3" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_y"
-					cover_type1="hair_male_g_y_a"
-					cover_type2="hair_male_g_y_b"
-					cover_type4="hair_male_g_y">
-					<style_tags>
-						<style_tag
-							name="Afro Hair" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_z"
-					cover_type1="hair_male_g_z_a"
-					cover_type2="hair_male_g_z_b"
-					cover_type4="hair_male_g_z">
-					<style_tags>
-						<style_tag
-							name="Afro Hair 1" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_a"
-					cover_type1="hair_male_h_a_a"
-					cover_type4="hair_male_h_a">
-					<style_tags>
-						<style_tag
-							name="Afro Hair 2" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_b"
-					cover_type1="hair_male_h_b_a"
-					cover_type4="hair_male_h_b">
-					<style_tags>
-						<style_tag
-							name="Afro Hair 3" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_c"
-					cover_type1="hair_male_h_c_a"
-					cover_type4="hair_male_h_c">
-					<style_tags>
-						<style_tag
-							name="Afro Hair 4" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_d"
-					cover_type1="hair_male_h_d_a"
-					cover_type2="hair_male_h_d_b"
-					cover_type4="hair_male_h_d">
-					<style_tags>
-						<style_tag
-							name="Afro Hair 5" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_e"
-					cover_type1="hair_male_h_e_a"
-					cover_type4="hair_male_h_e">
-					<style_tags>
-						<style_tag
-							name="Viking Hair" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_f"
-					cover_type4="hair_male_h_f">
-					<style_tags>
-						<style_tag
-							name="Monk Hair" />
-					</style_tags>
-				</hair_mesh>
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-					name="male_eyebrow_1" />
+					name="" />
 			</eyebrow_meshes>
-			<default_beard_meshes
-				cover_type1="beards_c_a"
-				cover_type2="beards_c_b"
-				cover_type3="beards_c_c" />
 			<beard_meshes
-				zero_probability="5"></beard_meshes>
+				zero_probability="5">
+				<beard_mesh>
+					<style_tags>
+						<style_tag
+							name="Cleanshaven" />
+					</style_tags>
+				</beard_mesh>
+			</beard_meshes>
 			<tattoo_color_gradient_points>
 				<tattoo_color_gradient_point
 					point="0.33, 0.00, 0.00" />
@@ -121056,23 +119454,23 @@
 			<face_textures
 				group_id="1">
 				<face_texture
-					name="head_male_e"
-					lod_material="head_male_a.lod"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="face_texture1,face_texture2"></face_texture>
 				<face_texture
-					name="head_male_e"
-					lod_material="head_male_a.lod"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="face_texture3,face_texture4"></face_texture>
 				<face_texture
-					name="head_male_e"
-					lod_material="head_male_a.lod"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="face_texture5,face_texture6,face_texture7"></face_texture>
 				<face_texture
-					name="head_male_e"
-					lod_material="head_male_a.lod"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="face_texture8,face_texture9,face_texture10"></face_texture>
 			</face_textures>
@@ -121131,14 +119529,14 @@
 			uses_stitching="true"
 			body_mesh_suffix="_fem"
 			min_scale="0.64"
-			skeleton="human_skeleton"
-			body_meta_mesh="body_female_a_kid"
-			body_meta_mesh_shoulders="body_female_a_sh"
+			skeleton="troll_skeleton_a"
+			body_meta_mesh="hill_troll_a_body"
+			body_meta_mesh_shoulders="hill_troll_a_shoulder"
 			body_meta_mesh_upperbody="box_a"
-			legs_mesh="feet_female_a"
-			hands_mesh="hands_female_a"
-			face_meta_mesh="head_female_a"
-			underwear_bottom_mesh="underwear_female_teen"
+			legs_mesh="hill_troll_a_legs"
+			hands_mesh="hill_troll_a_hands"
+			face_meta_mesh="hill_troll_a_head"
+			underwear_bottom_mesh=""
 			underwear_top_mesh="">
 			<deform_keys>
 				<deform_key
@@ -122280,257 +120678,18 @@
 					name="Age"
 					group_id="0" />
 			</deform_keys>
-			<default_hair_meshes
-				cover_type1="hair_female_a"
-				cover_type2="hair_female_b"
-				cover_type3="hair_female_c"
-				cover_type4="hair_female_c" />
 			<hair_meshes
 				group_id="7">
-				<!--<hair_mesh name="hair_female_a" tags="turkisi,uzun" />
-<hair_mesh name="hair_female_b" tags="turkisi,toplu" />
-<hair_mesh name="hair_female_c" tags="turkisi,kisa"/>
-<hair_mesh name="hair_female_d" tags="turkisi,daginik"/>
-<hair_mesh name="hair_female_e" tags="turkisi,orgulu"/>
-<hair_mesh name="hair_female_f" tags="turkisi,bobhair"/>
-<hair_mesh name="hair_female_g" tags="turkisi,bobhair"/>
-<hair_mesh name="hair_female_h" tags="turkisi,bun"/>
-<hair_mesh name="hair_female_i" tags="turkisi,longmessy"/>
-<hair_mesh name="hair_female_j" tags="turkisi,sidebraid"/>
-<hair_mesh name="hair_female_k" tags="turkisi,halfupdo"/>>-->
 				<hair_mesh>
 					<style_tags>
 						<style_tag
 							name="Bald" />
 					</style_tags>
 				</hair_mesh>
-				<hair_mesh
-					name="female_hair_l"
-					cover_type1="female_hair_l_type1"
-					cover_type2="female_hair_l_type2"
-					cover_type3="female_hair_l_type3"
-					cover_type4="female_hair_l_type4">
-					<style_tags>
-						<style_tag
-							name="LongOvershoulder" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_m"
-					cover_type1="female_hair_m_type1"
-					cover_type2="female_hair_m_type2"
-					cover_type3="female_hair_m_type2"
-					cover_type4="female_hair_m">
-					<style_tags>
-						<style_tag
-							name="TiedLongOverShoulder" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_n"
-					cover_type1="female_hair_n_type1"
-					cover_type2="female_hair_n_type2"
-					cover_type3="female_hair_n_type3"
-					cover_type4="female_hair_n">
-					<style_tags>
-						<style_tag
-							name="AboveShoulderLength" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_o"
-					cover_type1="female_hair_o_type1"
-					cover_type2="female_hair_o_type2"
-					cover_type3="female_hair_o_type3"
-					cover_type4="female_hair_o_type4">
-					<style_tags>
-						<style_tag
-							name="TiedInBack" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_p"
-					cover_type1="female_hair_p_type1"
-					cover_type2="female_hair_p_type2"
-					cover_type3="female_hair_p_type3"
-					cover_type4="female_hair_p">
-					<style_tags>
-						<style_tag
-							name="BraidedInBack" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_r"
-					cover_type1="female_hair_r_type1"
-					cover_type2="female_hair_r_type2"
-					cover_type3="female_hair_r_type3"
-					cover_type4="female_hair_r">
-					<style_tags>
-						<style_tag
-							name="ShoulderLengthTied" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_s"
-					cover_type1="female_hair_s_type1"
-					cover_type2="female_hair_s_type2"
-					cover_type3="female_hair_s_type2"
-					cover_type4="female_hair_s">
-					<style_tags>
-						<style_tag
-							name="Short" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_t"
-					cover_type1="female_hair_t_a"
-					cover_type2="female_hair_t_b"
-					cover_type3="female_hair_t_c"
-					cover_type4="female_hair_t">
-					<style_tags>
-						<style_tag
-							name="Cornrows" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_u"
-					cover_type1="female_hair_u_a"
-					cover_type2="female_hair_u_c"
-					cover_type3="female_hair_u_c"
-					cover_type4="female_hair_u">
-					<style_tags>
-						<style_tag
-							name="CornrowMohawk" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_v"
-					cover_type1="female_hair_o_type1"
-					cover_type2="female_hair_o_type2"
-					cover_type3="female_hair_o_type3"
-					cover_type4="female_hair_v_type4">
-					<style_tags>
-						<style_tag
-							name="BraidedAboveEars" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_y"
-					cover_type1="female_hair_r_type1"
-					cover_type2="female_hair_r_type2"
-					cover_type3="female_hair_r_type3"
-					cover_type4="female_hair_y">
-					<style_tags>
-						<style_tag
-							name="Ukrainian" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z"
-					cover_type1="female_hair_s_type1"
-					cover_type2="female_hair_s_type2"
-					cover_type3="female_hair_s_type2"
-					cover_type4="female_hair_z">
-					<style_tags>
-						<style_tag
-							name="VeryShort" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_a"
-					cover_type1="female_hair_l_type1"
-					cover_type2="female_hair_l_type2"
-					cover_type3="female_hair_l_type3"
-					cover_type4="female_hair_z_a">
-					<style_tags>
-						<style_tag
-							name="RestingOnShoulders" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_b"
-					cover_type1="female_hair_l_type1"
-					cover_type2="female_hair_l_type2"
-					cover_type3="female_hair_l_type3"
-					cover_type4="female_hair_z_b">
-					<style_tags>
-						<style_tag
-							name="Bobbed" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_c_type4"
-					cover_type1="female_hair_z_c_type1"
-					cover_type2="female_hair_z_c_type2"
-					cover_type3="female_hair_z_c_type2"
-					cover_type4="female_hair_z_c_type4">
-					<style_tags>
-						<style_tag
-							name="Native Braids" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_d"
-					cover_type1="female_hair_m_type1"
-					cover_type2="female_hair_m_type2"
-					cover_type3="female_hair_m_type2"
-					cover_type4="female_hair_z_d">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_e"
-					cover_type1="female_hair_z_e_a"
-					cover_type2="female_hair_z_e_b"
-					cover_type4="female_hair_z_e">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_f"
-					cover_type1="female_hair_z_f_a"
-					cover_type2="female_hair_z_f_b"
-					cover_type4="female_hair_z_f">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_g"
-					cover_type1="female_hair_z_g_a"
-					cover_type4="female_hair_z_g">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_h"
-					cover_type1="female_hair_z_h_a"
-					cover_type4="female_hair_z_h">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_i"
-					cover_type1="female_hair_z_i_a"
-					cover_type4="female_hair_z_i">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-					name="female_eyebrow_6" />
+					name="" />
 			</eyebrow_meshes>
 			<beard_meshes />
 			<tattoo_color_gradient_points>
@@ -122723,8 +120882,8 @@
 			</eye_color_gradient_points>
 			<face_textures>
 				<face_texture
-					name="head_female_e"
-					lod_material="head_female_a.lod"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFCAD3E0"
 					tags="face_texture2"></face_texture>
 				<!--       <face_texture name="head_female_c" lod_material="head_female_a.lod" color="0xFFCAD3E0" tags="face_texture2">
@@ -122851,14 +121010,14 @@
 			uses_stitching="true"
 			body_mesh_suffix=""
 			min_scale="0.52"
-			skeleton="human_skeleton"
-			body_meta_mesh="body_female_a_kid3"
-			body_meta_mesh_shoulders="body_male_a_sh"
+			skeleton="troll_skeleton_a"
+			body_meta_mesh="hill_troll_a_body"
+			body_meta_mesh_shoulders="hill_troll_a_shoulder"
 			body_meta_mesh_upperbody="box_a"
-			legs_mesh="feet_female_kid3"
-			hands_mesh="hands_female_kid3"
-			face_meta_mesh="head_male_a"
-			underwear_bottom_mesh="underwear_baby"
+			legs_mesh="hill_troll_a_legs"
+			hands_mesh="hill_troll_a_hands"
+			face_meta_mesh="hill_troll_a_head"
+			underwear_bottom_mesh=""
 			underwear_top_mesh="">
 			<deform_keys>
 				<deform_key
@@ -123683,303 +121842,26 @@
 			</deform_keys>
 			<hair_meshes
 				group_id="7">
-				<!--<hair_mesh name="hair_female_a" tags="turkisi,uzun" />
-<hair_mesh name="hair_female_b" tags="turkisi,toplu" />
-<hair_mesh name="hair_female_c" tags="turkisi,kisa"/>
-<hair_mesh name="hair_female_d" tags="turkisi,daginik"/>
-<hair_mesh name="hair_female_e" tags="turkisi,orgulu"/>
-<hair_mesh name="hair_female_f" tags="turkisi,bobhair"/>
-<hair_mesh name="hair_female_g" tags="turkisi,bobhair"/>
-<hair_mesh name="hair_female_h" tags="turkisi,bun"/>
-<hair_mesh name="hair_female_i" tags="turkisi,longmessy"/>
-<hair_mesh name="hair_female_j" tags="turkisi,sidebraid"/>
-<hair_mesh name="hair_female_k" tags="turkisi,halfupdo"/>-->
 				<hair_mesh>
 					<style_tags>
 						<style_tag
 							name="Bald" />
 					</style_tags>
 				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_b"
-					cover_type1="hair_male_g_b_type1"
-					cover_type2="hair_male_g_b_type2"
-					cover_type3="hair_male_g_b_type3"
-					cover_type4="hair_male_g_b">
-					<style_tags>
-						<style_tag
-							name="Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_b"
-					cover_type1="hair_male_g_b_type1"
-					cover_type2="hair_male_g_b_type2"
-					cover_type3="hair_male_g_b_type3"
-					cover_type4="hair_male_g_b">
-					<style_tags>
-						<style_tag
-							name="LongAndBushy" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_b"
-					cover_type1="hair_male_g_b_type1"
-					cover_type2="hair_male_g_b_type2"
-					cover_type3="hair_male_g_b_type3"
-					cover_type4="hair_male_g_b">
-					<style_tags>
-						<style_tag
-							name="TiedAcrossBack" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_e"
-					cover_type1="hair_male_g_e_type1"
-					cover_type4="hair_male_g_e">
-					<style_tags>
-						<style_tag
-							name="SlickedLong" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_e"
-					cover_type1="hair_male_g_e_type1"
-					cover_type4="hair_male_g_e">
-					<style_tags>
-						<style_tag
-							name="PartedAndCombedBack" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_f"
-					cover_type1="hair_male_g_f_type1"
-					cover_type4="hair_male_g_f">
-					<style_tags>
-						<style_tag
-							name="Tousled" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_g"
-					cover_type1="hair_male_g_g_a"
-					cover_type2="hair_male_g_g_b"
-					cover_type3="hair_male_g_g_c"
-					cover_type4="hair_male_g_g">
-					<style_tags>
-						<style_tag
-							name="BraidedAndLong" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_h"
-					cover_type1="hair_male_g_h_type1"
-					cover_type4="hair_male_g_h">
-					<style_tags>
-						<style_tag
-							name="Short" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_i"
-					cover_type1="hair_male_g_a_type1"
-					cover_type2="hair_male_g_a_type2"
-					cover_type4="hair_male_g_i">
-					<style_tags>
-						<style_tag
-							name="HighPonytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_j"
-					cover_type1="hair_male_g_j_a"
-					cover_type2="hair_male_g_j_b"
-					cover_type3="hair_male_g_j_c"
-					cover_type4="hair_male_g_j">
-					<style_tags>
-						<style_tag
-							name="Mohawk" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_k"
-					cover_type1="hair_male_g_k_a"
-					cover_type2="hair_male_g_k_b"
-					cover_type3="hair_male_g_k_b"
-					cover_type4="hair_male_g_k">
-					<style_tags>
-						<style_tag
-							name="PageBoy" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_l"
-					cover_type4="hair_male_g_l">
-					<style_tags>
-						<style_tag
-							name="Bowl" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_m"
-					cover_type4="hair_male_g_m">
-					<style_tags>
-						<style_tag
-							name="ShortAndThin" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_n"
-					cover_type4="hair_male_g_n">
-					<style_tags>
-						<style_tag
-							name="SlickedShort" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_o"
-					cover_type4="hair_male_g_o">
-					<style_tags>
-						<style_tag
-							name="ShortWavy" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_p"
-					cover_type1="hair_male_g_p_type1"
-					cover_type2="hair_male_g_p_type2"
-					cover_type3="hair_male_g_p_type2"
-					cover_type4="hair_male_g_p_type4">
-					<style_tags>
-						<style_tag
-							name="Native Braids" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_r"
-					cover_type1="hair_male_g_r"
-					cover_type2="hair_male_g_r"
-					cover_type3="hair_male_g_r"
-					cover_type4="hair_male_g_r_type4">
-					<style_tags>
-						<style_tag
-							name="Mongol Hair" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_v"
-					cover_type1="hair_male_g_v_a"
-					cover_type4="hair_male_g_v">
-					<style_tags>
-						<style_tag
-							name="Bandit Hair 1" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_u"
-					cover_type1="hair_male_g_u_a"
-					cover_type4="hair_male_g_u">
-					<style_tags>
-						<style_tag
-							name="Bandit Hair 2" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_s"
-					cover_type1="hair_male_g_s_a"
-					cover_type2="hair_male_g_s_b"
-					cover_type4="hair_male_g_s">
-					<style_tags>
-						<style_tag
-							name="Bandit Hair 3" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_y"
-					cover_type1="hair_male_g_y_a"
-					cover_type2="hair_male_g_y_b"
-					cover_type4="hair_male_g_y">
-					<style_tags>
-						<style_tag
-							name="Afro Hair" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_g_z"
-					cover_type1="hair_male_g_z_a"
-					cover_type2="hair_male_g_z_b"
-					cover_type4="hair_male_g_z">
-					<style_tags>
-						<style_tag
-							name="Afro Hair 1" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_a"
-					cover_type1="hair_male_h_a_a"
-					cover_type4="hair_male_h_a">
-					<style_tags>
-						<style_tag
-							name="Afro Hair 2" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_b"
-					cover_type1="hair_male_h_b_a"
-					cover_type4="hair_male_h_b">
-					<style_tags>
-						<style_tag
-							name="Afro Hair 3" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_c"
-					cover_type1="hair_male_h_c_a"
-					cover_type2="hair_male_h_c_b"
-					cover_type4="hair_male_h_c">
-					<style_tags>
-						<style_tag
-							name="Afro Hair 4" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_d"
-					cover_type1="hair_male_h_d_a"
-					cover_type2="hair_male_h_d_b"
-					cover_type4="hair_male_h_d">
-					<style_tags>
-						<style_tag
-							name="Afro Hair 5" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_e"
-					cover_type1="hair_male_h_e_a"
-					cover_type4="hair_male_h_e">
-					<style_tags>
-						<style_tag
-							name="Viking Hair" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="hair_male_h_f"
-					cover_type4="hair_male_h_f">
-					<style_tags>
-						<style_tag
-							name="Monk Hair" />
-					</style_tags>
-				</hair_mesh>
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-					name="male_eyebrow_1" />
+					name="" />
 			</eyebrow_meshes>
-			<default_beard_meshes
-				cover_type1="beards_c_a"
-				cover_type2="beards_c_b"
-				cover_type3="beards_c_c" />
 			<beard_meshes
-				zero_probability="5"></beard_meshes>
+				zero_probability="5">
+				<beard_mesh>
+					<style_tags>
+						<style_tag
+							name="Cleanshaven" />
+					</style_tags>
+				</beard_mesh>
+			</beard_meshes>
 			<tattoo_color_gradient_points>
 				<tattoo_color_gradient_point
 					point="0.33, 0.00, 0.00" />
@@ -124171,8 +122053,8 @@
 			<face_textures
 				group_id="1">
 				<face_texture
-					name="head_male_g"
-					lod_material="head_male_a.lod"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFFFFFFF"
 					tags="face_texture1,face_texture2"></face_texture>
 				<!-- <face_texture name="head_male_e" lod_material="head_male_e" color="0xFFFFFFFF" tags="face_texture1,face_texture2,face_texture3">
@@ -124244,14 +122126,14 @@
 			uses_stitching="true"
 			body_mesh_suffix=""
 			min_scale="0.52"
-			skeleton="human_skeleton"
-			body_meta_mesh="body_female_a_kid4"
-			body_meta_mesh_shoulders="body_male_a_sh"
+			skeleton="troll_skeleton_a"
+			body_meta_mesh="hill_troll_a_body"
+			body_meta_mesh_shoulders="hill_troll_a_shoulder"
 			body_meta_mesh_upperbody="box_a"
-			legs_mesh="feet_female_kid3"
-			hands_mesh="hands_female_kid3"
-			face_meta_mesh="head_female_a"
-			underwear_bottom_mesh="underwear_baby"
+			legs_mesh="hill_troll_a_legs"
+			hands_mesh="hill_troll_a_hands"
+			face_meta_mesh="hill_troll_a_head"
+			underwear_bottom_mesh=""
 			underwear_top_mesh="">
 			<deform_keys>
 				<deform_key
@@ -125074,257 +122956,18 @@
 				<!-- the last key is used from the application for post modifications, do not delete the entry 
 <deform_key id="skinkey_post_edit" key_time_point="10" key_min="0" key_max="1" name="Post-Edit" group_id="4" />-->
 			</deform_keys>
-			<default_hair_meshes
-				cover_type1="hair_female_a"
-				cover_type2="hair_female_b"
-				cover_type3="hair_female_c"
-				cover_type4="hair_female_c" />
 			<hair_meshes
 				group_id="7">
-				<!--<hair_mesh name="hair_female_a" tags="turkisi,uzun" />
-<hair_mesh name="hair_female_b" tags="turkisi,toplu" />
-<hair_mesh name="hair_female_c" tags="turkisi,kisa"/>
-<hair_mesh name="hair_female_d" tags="turkisi,daginik"/>
-<hair_mesh name="hair_female_e" tags="turkisi,orgulu"/>
-<hair_mesh name="hair_female_f" tags="turkisi,bobhair"/>
-<hair_mesh name="hair_female_g" tags="turkisi,bobhair"/>
-<hair_mesh name="hair_female_h" tags="turkisi,bun"/>
-<hair_mesh name="hair_female_i" tags="turkisi,longmessy"/>
-<hair_mesh name="hair_female_j" tags="turkisi,sidebraid"/>
-<hair_mesh name="hair_female_k" tags="turkisi,halfupdo"/>>-->
 				<hair_mesh>
 					<style_tags>
 						<style_tag
 							name="Bald" />
 					</style_tags>
 				</hair_mesh>
-				<hair_mesh
-					name="female_hair_s"
-					cover_type1="female_hair_s_type1"
-					cover_type2="female_hair_s_type2"
-					cover_type3="female_hair_s_type2"
-					cover_type4="female_hair_s">
-					<style_tags>
-						<style_tag
-							name="LongOvershoulder" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_r"
-					cover_type1="female_hair_r_type1"
-					cover_type2="female_hair_r_type2"
-					cover_type3="female_hair_r_type3"
-					cover_type4="female_hair_r">
-					<style_tags>
-						<style_tag
-							name="TiedLongOverShoulder" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z"
-					cover_type1="female_hair_s_type1"
-					cover_type2="female_hair_s_type2"
-					cover_type3="female_hair_s_type2"
-					cover_type4="female_hair_z">
-					<style_tags>
-						<style_tag
-							name="AboveShoulderLength" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_p"
-					cover_type1="female_hair_p_type1"
-					cover_type2="female_hair_p_type2"
-					cover_type3="female_hair_p_type3"
-					cover_type4="female_hair_p">
-					<style_tags>
-						<style_tag
-							name="TiedInBack" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_p"
-					cover_type1="female_hair_p_type1"
-					cover_type2="female_hair_p_type2"
-					cover_type3="female_hair_p_type3"
-					cover_type4="female_hair_p">
-					<style_tags>
-						<style_tag
-							name="BraidedInBack" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_r"
-					cover_type1="female_hair_r_type1"
-					cover_type2="female_hair_r_type2"
-					cover_type3="female_hair_r_type3"
-					cover_type4="female_hair_r">
-					<style_tags>
-						<style_tag
-							name="ShoulderLengthTied" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_s"
-					cover_type1="female_hair_s_type1"
-					cover_type2="female_hair_s_type2"
-					cover_type3="female_hair_s_type2"
-					cover_type4="female_hair_s">
-					<style_tags>
-						<style_tag
-							name="Short" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_t"
-					cover_type1="female_hair_t_a"
-					cover_type2="female_hair_t_b"
-					cover_type3="female_hair_t_c"
-					cover_type4="female_hair_t">
-					<style_tags>
-						<style_tag
-							name="Cornrows" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_u"
-					cover_type1="female_hair_u_a"
-					cover_type2="female_hair_u_c"
-					cover_type3="female_hair_u_c"
-					cover_type4="female_hair_u">
-					<style_tags>
-						<style_tag
-							name="CornrowMohawk" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_v"
-					cover_type1="female_hair_o_type1"
-					cover_type2="female_hair_o_type2"
-					cover_type3="female_hair_o_type3"
-					cover_type4="female_hair_v_type4">
-					<style_tags>
-						<style_tag
-							name="BraidedAboveEars" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_y"
-					cover_type1="female_hair_r_type1"
-					cover_type2="female_hair_r_type2"
-					cover_type3="female_hair_r_type3"
-					cover_type4="female_hair_y">
-					<style_tags>
-						<style_tag
-							name="Ukrainian" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z"
-					cover_type1="female_hair_s_type1"
-					cover_type2="female_hair_s_type2"
-					cover_type3="female_hair_s_type2"
-					cover_type4="female_hair_z">
-					<style_tags>
-						<style_tag
-							name="VeryShort" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z"
-					cover_type1="female_hair_s_type1"
-					cover_type2="female_hair_s_type2"
-					cover_type3="female_hair_s_type2"
-					cover_type4="female_hair_z">
-					<style_tags>
-						<style_tag
-							name="RestingOnShoulders" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_b"
-					cover_type1="female_hair_l_type1"
-					cover_type2="female_hair_l_type2"
-					cover_type3="female_hair_l_type3"
-					cover_type4="female_hair_z_b">
-					<style_tags>
-						<style_tag
-							name="Bobbed" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_c_type4"
-					cover_type1="female_hair_z_c_type1"
-					cover_type2="female_hair_z_c_type2"
-					cover_type3="female_hair_z_c_type2"
-					cover_type4="female_hair_z_c_type4">
-					<style_tags>
-						<style_tag
-							name="Native Braids" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_d"
-					cover_type1="female_hair_m_type1"
-					cover_type2="female_hair_m_type2"
-					cover_type3="female_hair_m_type2"
-					cover_type4="female_hair_z_d">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_e"
-					cover_type1="female_hair_z_e_a"
-					cover_type2="female_hair_z_e_b"
-					cover_type4="female_hair_z_e">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_f"
-					cover_type1="female_hair_z_f_a"
-					cover_type2="female_hair_z_f_b"
-					cover_type4="female_hair_z_f">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_g"
-					cover_type1="female_hair_z_g_a"
-					cover_type4="female_hair_z_g">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_h"
-					cover_type1="female_hair_z_h_a"
-					cover_type4="female_hair_z_h">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
-				<hair_mesh
-					name="female_hair_z_i"
-					cover_type1="female_hair_z_i_a"
-					cover_type4="female_hair_z_i">
-					<style_tags>
-						<style_tag
-							name="High Ponytail" />
-					</style_tags>
-				</hair_mesh>
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-					name="female_eyebrow_6" />
+					name="" />
 			</eyebrow_meshes>
 			<beard_meshes />
 			<tattoo_color_gradient_points>
@@ -125517,8 +123160,8 @@
 			</eye_color_gradient_points>
 			<face_textures>
 				<face_texture
-					name="head_female_f"
-					lod_material="head_female_a.lod"
+					name="t_tr_hill_troll_head_a"
+					lod_material="t_tr_hill_troll_head_a"
 					color="0xFFCAD3E0"
 					tags="face_texture2"></face_texture>
 			</face_textures>

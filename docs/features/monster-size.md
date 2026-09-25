@@ -67,7 +67,9 @@ path, and that dictionary is filled only from the game's own `XmlSchemas` folder
 after Native's. **Accepted cost:** the engine validates the Armory's Monster files against its own `Monsters.xsd`,
 which does not declare `taom_body_length`, so it prints one red "The 'taom_body_length' attribute is not declared"
 line per sized Monster at load. `MBObjectManager.ValidationEventHandler` only prints (`MBObjectManager.cs:1320-1337`)
-and the file loads. TAOM's `tools/validate_xml_schemas.py` accepts the attribute through an explicit allowlist.
+and the file loads. The Modding Kit shows the same lines as warnings every time it opens (three today: 110, 100,
+150); Mike saw them on 2026-09-24 and chose to leave them rather than move the sizes into a TAOM-owned file or
+patch the message away. TAOM's `tools/validate_xml_schemas.py` accepts the attribute through an explicit allowlist.
 
 ### Component Diagram
 

@@ -749,8 +749,253 @@ The troll retarget (`retarget_mannequin_to_human.py`) swings each target bone's 
 - **Prevent:** before reusing a retarget, ask what the target mesh's rest is. If the mesh was fitted to the target skeleton, retarget through the same fit (the reskin exports its rotations: `bone_transforms` returns them). Check with a side-by-side render of the retarget and the source clip at the same frames.
 - **Source:** `docs/features/animalia-elk-moose.md` "Solution Approach", `tools/blender/retarget_animalia_to_horse.py` docstring.
 
+### A rigid-skull rule keyed on the neck joint's height misses a jaw that hangs below it (2026-09-24)
+The cave troll's re-skin (2026-09-18) made a head mesh's vertices rigid on `head` only above the neck joint's height.
+A troll's jaw hangs forward at or below that height, so its underside kept the nearest-human-surface weights, the
+chest (`spine2`), and the mouth tore open whenever the head moved (Mike's screenshots). The QA passed it: its one
+neck bend nodded forward, the chin compressed rather than stretched, and nothing judged compression.
+- **Why missed:** the rule was written for a human head, where everything in front of the neck is above it; the
+  QA was a set of numbers nobody failed on, and the worst of them (2.05 against the donor's 1.77) read as close.
+- **Prevent:** on a creature on a human rig, a head mesh carries only `head` and `neck` weight; the tool asserts it
+  and fails its completion flag otherwise. Nod the head both ways in QA, and look at the jaw in the Kit before
+  calling a re-skin done.
+- **Source:** `docs/features/troll-race.md` "Cave troll jaw fix (2026-09-24)".
+
 ### Every animation the Modding Kit imports may name no skeleton: census the masters after each import
 The Kit imported all 97 Animalia masters (2026-09-23) with their Skeleton reference EMPTY: the 16 zero bytes before BoneNum and Duration in the SkeletalAnimation metadata. The troll's 52 masters (2026-09-17) and the war ram's re-import (2026-09-18, a `.001` take) came in the same way. Nothing in the Kit or its log says so, every clip still plays in the Kit's viewer, and a master that names no skeleton is not tied to the rig its action set plays it on.
 - **Why missed:** each time it was found by reading a master back with TpacTool while chasing something else, and fixed by a one-off patch inside a pack-specific generator (`gen_troll_anim_clips.ps1`, `wire_anim_master_clip.ps1`), so there was no step in the workflow that looked for it.
 - **Prevent:** after every animation import, run `powershell.exe -File tools\wire_anim_master_skeletons.ps1 -Masters <Assets folder>` (census: ok / EMPTY / WRONG RIG / OTHER, plus packages with no animation and stray Skeleton copies), then `-Apply` with the Kit closed, which patches EMPTY in place and re-reads each file. It is stage 7 of `docs/ai-includes/quadruped-pack-to-horse-skeleton-workflow.md`.
 - **Source:** #646, `docs/features/animalia-elk-moose.md` "Owed" item 1; the troll and ram notes in the headers of `tools/gen_troll_anim_clips.ps1` and `tools/wire_anim_master_clip.ps1`.
+
+### Copy a human's physics onto a Blender-authored rig through the bone frames, never verbatim (2026-09-24)
+The dwarf's physics is `human_skeleton`'s byte for byte (28 bodies, 34 joints), and that works because its bones keep
+the human's axes. KEYForce's `troll_skeleton_a` runs every bone along +Y instead of +X, rolled 180 to 280 deg off the
+human's: a verbatim copy would lay each capsule across its limb and hinge each joint about the wrong axis, and nothing
+would say so before a corpse fell wrong in game.
+- **Why missed:** not shipped; caught before the copy by measuring both skeletons' bone axes from the rest frames.
+  The dwarf precedent reads as "copy the human's", which holds only for a rig with the human's frames.
+- **Prevent:** before copying physics between skeletons, compare the local axis the child offsets lie along and the
+  rolls; when they differ, use `tools/tpac_skeleton_copy_physics.py`, then check in world space that each joint keeps
+  the donor's angle to its bone and each capsule sits at the same fraction along its bone.
+- **Source:** `docs/reference/bannerlord-skeleton-authoring.md` "Ragdoll, IK and hit capsules for a humanoid on its
+  own skeleton".
+
+### TaleWorlds' own packages store 0 under a rest frame's translation: never multiply rest frames as a raw 4x4 (2026-09-24)
+`human.tpac` stores (x, y, z, 0) in each rest frame's translation row, with stray denormals above it; Kit output (the
+troll, the dwarf, the elephant) stores 1. `skeleton_hit_capsules.world_matrices` multiplied the raw 4x4, so on
+`human.tpac` every parent's position dropped out and the head landed at 0.107 m. It had only ever read Kit output, so
+nothing it wrote was wrong.
+- **Why missed:** its tests built rest frames with 1 there, and every package it had read came from the Kit.
+- **Prevent:** compose rest frames as a rotation plus an offset, or force the fourth column to (0, 0, 0, 1), as
+  `world_matrices` does since (a test pins the 0 case). The copy tool's geometry gate (head above pelvis, toes
+  ahead of feet) caught it on first contact: give any tool that reads a new source of skeletons such a gate.
+- **Source:** `tools/skeleton_hit_capsules.py` `world_matrices`; `check_facing` in `tools/tpac_skeleton_copy_physics.py`.
+
+### A "Kit default" axis is a rig convention: a fixed local x lies across every limb of a +Y rig (2026-09-24)
+The hit-capsule fitter fell back to the bone's local x, "the Kit default", wherever a bone's skin was not elongated.
+On `troll_skeleton_a`, whose bones run along +Y, that laid the capsules of the left thigh, the calves, the upper arms,
+the forearms and the hands exactly 90.0 deg across their limbs; the left thigh covered 83% of its skin, 95% once the
+fallback followed the bone.
+- **Why missed:** the skeletons it had fitted (elephant, chariot, spider) have mostly elongated skins, so the
+  fallback rarely fired, and no check compared a fitted capsule's axis with its bone's direction.
+- **Prevent:** take a bone's direction from its child's position along the skeleton's detected bone axis
+  (`bone_axis`, `bone_directions`), never from a fixed local axis; after a fit, compare each capsule's axis with its
+  bone's. For a humanoid, `--axis bone` pins every capsule to its bone.
+- **Source:** `tools/skeleton_hit_capsules.py`; `docs/reference/bannerlord-skeleton-authoring.md`.
+
+### An FBX material name that matches an older Kit material anywhere in the module binds to it silently (2026-09-24)
+The Kit binds each imported mesh to the material its FBX names, lowercased, looked up across the whole module. The
+new hill troll's FBX named `M_HillTroll_Body_A`, `_Cloth_A`, `_Eye_A` and `_Head_A`; the old hill troll's March
+materials `m_hilltroll_*_a` still sit in `Trolls\Hill Troll\textures\`, so the new meshes bound to them and wore
+the old textures (the head's showed at the mouth), while the `t_tr_hill_troll_*_a` materials made for the model went
+unused. A name with no match warns "Unable to find material"; a name with a stale match warns nothing.
+- **Why missed:** the import raised no warning, and the check after it looked at the skeleton, never at which
+  material each metamesh names.
+- **Prevent:** export with the Kit material's exact name (`export_rig_for_kit.py --material OLD=NEW`,
+  `fbx_remap_materials.py` for an existing FBX), and after any import read the material names the metamesh items
+  carry against the materials meant for them.
+- **Source:** `docs/features/troll-race.md` "Materials (2026-09-24 pm)".
+
+### The Kit makes a named sub-mesh per FBX object `<mesh>.<part>`: never join a head's eyes and mouth into one object (2026-09-24)
+A race head needs its parts as separate sub-meshes, each tagged in the Kit: the dwarf's FBX carries
+`SM_Dwarf_Basemesh_A1_head`, `_head.eye` and `_head.mouth`, and its package tags them `face_base_mesh`,
+`face_eye_mesh` and `face_mouth_mesh`. The hill troll's export joined KEYForce's `head.base`, `head.eyes` and
+`head.mouth` into one object, so the Kit split it by material into `head.0` and `head.1`: the mouth, sharing the
+head's material, vanished into `head.0` and could not be tagged.
+- **Why missed:** the export gate checked bones, weights and slot names, and the one-mesh-per-skin-slot rule was
+  read as one OBJECT per slot, when a slot is one metamesh that may hold several named objects.
+- **Prevent:** export a head as `<mesh>`, `<mesh>.eye`, `<mesh>.mouth` (`export_rig_for_kit.py --slot` per part),
+  and after the import compare the metamesh's sub-mesh names with the dwarf's.
+- **Source:** `docs/features/troll-race.md` "Materials (2026-09-24 pm)".
+
+### A fit over a package fitted before keeps most bodies: take the kept capsules too, or the copy undoes the fit (2026-09-24)
+`skeleton_hit_capsules.py fit` keeps a body whose existing capsule already covers more of its skin. Run over the hill
+troll's package after its first fit, it refit 2 bodies and kept 26, and `tpac_skeleton_copy_physics.py --fit` took
+capsules only from refit bodies, so applying it would have written the thin height-scaled copy over 26 fitted hit
+capsules. Caught in the dry run's counts ("2 refit, 26 kept") before any write.
+- **Why missed:** both tools were first run on a Kit-fresh package, where every body with skin gets refit, so
+  "refit" and "sized by the fit" were the same set.
+- **Prevent:** the copy takes every body the fit sized (refit, or kept with a real capsule) and falls back to the
+  copy only for a kept body without one; re-measure coverage on a scratch copy before applying (99.5% held).
+- **Source:** `tools/tpac_skeleton_copy_physics.py` docstring, `test_a_fit_writes_hit_capsules_and_sizes_the_ragdoll_radius`.
+
+### A helper bone carried by the donor's proportions can miss the target's anatomy: check it against the skin (2026-09-24)
+The hill troll's grip bones (`r_finger0`, `l_finger0`) were carried from the human hand scaled by the height ratio,
+0.19 m from the wrist. A troll's fist hangs far below its wrist: the hand's own skin centres 0.17 to 0.19 m below
+that point, and KEYForce put the grips 0.22 m lower (`--offset`).
+- **Why missed:** the carry checks only that the bone keeps the donor's frame relative to its parent; nothing
+  compared the result with the mesh the bone serves.
+- **Prevent:** after carrying a bone that must sit inside the mesh (a grip, a mount point), compare it with the
+  centroid of the skin its parent drives, and let the artist place it where proportions differ.
+- **Source:** `docs/reference/lotrlome-hill-troll-changes.md`, `tools/tpac_skeleton_copy_physics.py` `--offset`.
+
+### A custom skeleton's bone rolls twist every human clip: the engine plays joint rotations as they are (2026-09-24)
+Human clips store each bone's rotation relative to its parent. On `troll_skeleton_a`, whose bones were rolled 180 to
+280 deg off the human's, `guard_up_2h` twisted the arms, shoulders and head in the Kit; the dwarf gets away with the
+human set because its bones are within about 35 deg. Proportions do not matter, frames do.
+- **Why missed:** "keep the artist's frames" was decided on the plan to author troll clips, before anyone checked
+  what the inherited human clips (every action the Fab set does not cover) would do on those frames.
+- **Prevent:** before binding human clips to a custom skeleton, preview one in the Kit. For a humanoid, re-frame the
+  rig to the human's axes on export (`tpac_skeleton_copy_physics.py --reframe`, `export_rig_for_kit.py
+  --bone-frames`); positions stay, so the mesh and weights need nothing.
+- **Source:** `docs/features/troll-race.md` "Re-framed to the human's axes".
+
+### A rule that re-derives a mapping from the rig can disagree with how the rig was built (2026-09-24)
+After the re-frame every troll bone maps from the human by the identity by construction, but re-running the
+physics copy re-derived the maps with its axis-child rule: the hands, leaves when re-framed, now had grip children
+KEYForce had moved 0.22 m off their axis, so the rule aimed them 24 to 30 deg away and would have turned the wrist
+joints. Caught by checking the maps before the write.
+- **Why missed:** the rule was right on every rig it had seen; nothing recorded that this rig was built by a
+  re-frame, so the tool could not know its own earlier answer.
+- **Prevent:** a tool that builds a rig writes a record of it, and the tool that reads the rig later checks against
+  that record and uses the construction's answer (`--reframed <record>`) instead of re-deriving it.
+- **Source:** `tools/tpac_skeleton_copy_physics.py` `bone_maps(identity=...)`, `--reframed`.
+
+### Map the source's twist helpers: an unmapped forearm twist leaves the whole roll at the wrist (2026-09-24)
+The Fab danger run turns the right hand 136 to 178 deg about the forearm, 89 of them on `lowerarm_twist_01_r`. With
+the twist bones unmapped, the human `*_foretwist1` stayed at rest and the hand took the whole roll against it: the
+hill troll's wrist twisted into a ribbon in the Kit (Mike). Mapped, the wrist carries 82 deg and the forearm 90, the
+source's own split.
+- **Why missed:** the map was written from the anatomical chain (upper arm, forearm, hand); helpers sit in no
+  chain, and the previews render a mid frame where the roll is small.
+- **Prevent:** map every helper the source animates to the target's equivalent, and measure the twist per joint
+  (swing-twist decomposition) against the source before calling a retarget done.
+- **Source:** `tools/blender/retarget_mannequin_to_human.py` `MANNEQUIN_TO_HUMAN`; `docs/features/troll-race.md`
+  "Fab clips re-retargeted".
+
+### A UE FBX export can park pelvis height above bind on the root node: an in-place retarget must keep the root's height (2026-09-24)
+The Fab export clamps the pelvis at its bind height (1.181 m) and moves any height above it onto the root:
+`danger_run_0` holds the pelvis at 1.181 for six frames while the root rises 6.5 cm, `danger_attack_1` 12.9 cm, 21 of
+52 clips. Dropping the root with the travel cut the top of every bob and sank the body by the cut on those frames;
+the leg IK then put the feet 8 cm under, exactly as asked.
+- **Why missed:** "root motion" was read as travel and turn; the height component was never scanned, and the feet
+  probe measured the source in world space, where the clamp is invisible, against the target in armature space.
+- **Prevent:** scan the source object's Z per frame before retargeting; keep the root's height in the source pose
+  (`_root_height_matrix`) and drop only its horizontal travel and yaw.
+- **Source:** `tools/blender/retarget_mannequin_to_human.py` `_root_height_matrix`;
+  `docs/reference/ue-to-bannerlord-asset-pipeline.md` "The retarget stage".
+
+### Anchor a retarget's foot goals on the source's stance from the target's hip, never on the target's own rest foot (2026-09-24)
+The hill troll's bind pose stands its feet 35 cm in front of its hips; the Fab troll's stand 19 cm behind (at
+hill-troll scale). Goals built as "the troll's rest ankle plus the Fab ankle's scaled move" kept the troll's stance
+and added the Fab's stride, so a forward step asked the leg for 19% more than its length and the IK missed by up to
+37 cm. Anchored on the Fab stance from the troll's hip (`_stance_ankle`), the misses fell to 0 to 5 cm and the IK's
+corrections from 48 to 89 deg to 5 to 23.
+- **Why missed:** the rest-relative anchor is exact for planted feet (no slide) and right when both rests share a
+  stance; nobody compared the two bind stances.
+- **Prevent:** print both rigs' hip-to-ankle rest vectors (scaled) before wiring an IK; a difference is a stance,
+  and the source's stance is the one the animation was made for.
+- **Source:** `tools/blender/retarget_mannequin_to_human.py` `_stance_ankle`.
+
+### Take a two-bone IK's bend plane from a rest pole carried by the thigh, never from the retargeted knee (2026-09-24)
+The knee's offset from the hip-to-goal line shrinks to nothing as the leg straightens and its direction then flips
+frame to frame: `run_to_heavy_attack`'s left thigh and calf jumped 58 and 63 deg in one frame where the source moved
+13 and 15, `hit_right1` 28 against 14. The rest knee's forward offset, kept in the thigh's frame and turned with the
+retargeted thigh, is a plane that holds; carrying the calf with the thigh's correction before aiming it keeps the
+knee a hinge.
+- **Why missed:** the IK was judged on the feet, which it fixed, and on mid-frame previews; per-frame rotation
+  steps were not compared with the source's until the seam probe ran.
+- **Prevent:** after any IK, compare each bone's largest per-frame world rotation step with the source's; a step
+  well above the source's is a solver artefact, whatever the still frames show.
+- **Source:** `tools/blender/retarget_mannequin_to_human.py` `_knee_pole`, `_leg_ik`.
+
+### A foot's rest pitch is its stance: no swing alignment for feet (2026-09-24)
+Both rigs stand flat-footed in bind, but the Fab foot bone points 41 deg down from ankle to ball and the hill troll's
+21 (a low ankle and a long foot). Aligned to the Fab's line the troll's toes pitched down and sank 9 to 17 cm while
+its ankles held. Delta-only (`NO_ALIGN`), the toes stay where the troll's own rest puts them.
+- **Why missed:** alignment was applied to every chain bone alike; a foot was treated as a limb segment rather than
+  a stance.
+- **Prevent:** measure feet per bone (ankle and toe) against the clip's first frame; a toe that sinks under a held
+  ankle is a pitch problem, not a height problem.
+- **Source:** `tools/blender/retarget_mannequin_to_human.py` `NO_ALIGN`.
+
+### A clip generator's travel scale is the retarget's stride scale, read from its report, never a ratio picked by hand (2026-09-24)
+`gen_troll_anim_clips.ps1 -TravelScale` sizes each loop's displacement; the planted foot slides back by exactly the
+factor the retarget scaled the stride (`pelvis_scale` in its report, 1.5578 for the hill troll, the thigh + calf
+ratio). The first run used the pelvis height ratio 1.377, 12% short, which would have skated the feet by that much:
+the planted foot travels 2.71 m per `combat_walk1` loop against the source's 1.74, ratio 1.558.
+- **Why missed:** the two numbers were the same while the retarget scaled by pelvis height; the retarget changed its
+  scale and the generator's documented value did not follow.
+- **Prevent:** the generator's header names the report field; measure the planted foot's travel per loop in the
+  exported clip and divide by the source's before writing clips.
+- **Source:** `tools/gen_troll_anim_clips.ps1` header; `docs/features/troll-race.md` "Fab clips re-retargeted".
+
+### Measure an exported clip against its own rest frame: an armature-only FBX re-import has no bind pose (2026-09-24)
+Blender re-imports an armature-only FBX with the pose at the export-time current frame as `matrix_local`, so
+heights measured against `head_local` were offsets from a mid-clip preview frame: "rest calf 58.8 deg from
+vertical" and the first foot numbers were artefacts. The exports open on the engine rest at frame 0 (pelvis
+1.6266 m), which is the reference.
+- **Why missed:** with a meshed FBX the bind pose survives, and the source clips are measured that way; the exports
+  differ only in having no mesh.
+- **Prevent:** for an armature-only export, set the frame to the clip's first frame and take rest positions from
+  `pose.bones[].head` there, never from `data.bones[].head_local`.
+- **Source:** `docs/features/troll-race.md` "Fab clips re-retargeted" (the probes in
+  `E:\LOTRAOMAssets\_hill_troll_a_export\review_20260924b\`).
+
+### A re-framed rig matches a clip's bone AXES, not its rest RELATIONS: another rest pose's clips still land each bone at the donor's orientation turned by its parent's rest difference (2026-09-24)
+The hill troll's rig was re-framed to the human's bone axes, so human clips bent its joints the right way and the
+Fab clips retargeted onto it looked right. But every `human_skeleton` clip (the cave troll's `anim_troll_*`, and
+every vanilla action the Fab set does not cover, the engine's melee attacks and blocks among them) put the head 45
+to 65 deg up and twisted the wrists 20 deg. A clip stores parent-relative rotations, and the troll's hunched rest
+keeps its own relations (spine2 54 deg and neck 45 off the human's, the hand 20), so each bone lands at (parent's
+rest difference) x (the human's world orientation).
+- **Why missed:** the re-frame was judged on the Fab retarget, which compensates for rest differences, while the
+  human `guard_up_2h` preview stayed owed; "clip = relations" was never written against "re-frame = axes".
+- **Prevent:** before binding another skeleton's clips to a re-framed rig, print both rigs' rest bone directions and
+  orientations per bone; pairs beyond a few degrees mean those clips need a retarget (or the rig needs the donor's
+  rest relations, which gives it the donor's posture on those clips). The hill troll takes the retarget route:
+  `retarget_mannequin_to_human.py --source-json --source-rig human`.
+- **Source:** `docs/features/troll-race.md` "Human clips for the hill troll".
+
+### An action set names AnimationClip definitions, and a master named like a clip can be an empty shell: resolve clip names through animation_clips.tpac (2026-09-24)
+`stand_2h`, `ready_slashright_2h` and the rest of `as_human_warrior`'s `animation=` values are AnimationClip names in
+`animation_clips.tpac`; their SkeletalAnimation masters carry other names (`stand_right_twohanded`,
+`anim_twohanded_slashright_ready`), several clips share one master by sub-range (`blocked_slashright_2h` plays
+`anim_twohanded_slashright_unbalanced` backward, 110 to 1), and a master that happens to carry a clip's name can be a
+0-frame shell (`jump_loop`). Looking masters up by clip name found one of six.
+- **Why missed:** the 2026-06-14 extraction used master names that happened to match, and the cave troll's clips were
+  named by us.
+- **Prevent:** `read_anim_keyframes_tpac.ps1 -ByClip` resolves clip names through the clips package to the master GUID
+  and writes `clips_index.json` (master, Source1, Source2) for `gen_troll_anim_clips.ps1 -CloneByName`.
+- **Source:** `tools/read_anim_keyframes_tpac.ps1` header.
+
+### Vanilla masters key sparsely and their Duration is the root track's key count: sample by interpolation and take the length from the last key (2026-09-24)
+`anim_kick_stanceswitch_right` keys frames 0 to 182 and then 195 (a hold), `anim_jump_loop` about 100 keys over 600
+frames, and its `Duration` reads 5, the number of root position keys. Stepping to the nearest key and trusting
+`Duration` would have frozen holds into steps and cut the jump to five frames.
+- **Why missed:** the Fab masters are dense (one key per frame) and Kit-written masters store the frame count in
+  `Duration`, so both assumptions held on every master seen before.
+- **Prevent:** length = last key + 1 over every track; slerp and lerp between the bracketing keys
+  (`key_source_from_json`); on a new source, compare keys per bone and the last key time with `Duration` first.
+- **Source:** `tools/blender/retarget_mannequin_to_human.py` `key_source_from_json`.
+
+### Blender's FBX importer lands an export's frame 0 on the action's first frame: address frames from `action.frame_range[0]` (2026-09-24)
+Our exports carry the rest at frame 0; re-imported, that key sits on Blender frame 1. A probe comparing "frame 0"
+with "frame 1" compared the rest with itself and reported every trunk unchanged, and the tool's posture reader made
+the same mistake and returned the rest as the posture, so a run meant to change the hunch changed nothing (a pixel
+diff of the previews showed a few hundred pixels).
+- **Why missed:** `measure_feet_f0.py` already used `frame_range[0]` for the rest; two later probes and the posture
+  reader hard-coded 0 and 1.
+- **Prevent:** every read of an exported clip takes `f0 = action.frame_range[0]` and addresses frames as `f0 + n`;
+  when two runs are expected to differ, pixel-diff the previews before drawing a conclusion.
+- **Source:** `posture_from_clip` in `tools/blender/retarget_mannequin_to_human.py`.

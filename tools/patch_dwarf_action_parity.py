@@ -32,6 +32,7 @@ import re
 import shutil
 import sys
 import xml.etree.ElementTree as ET
+from datetime import datetime
 from pathlib import Path
 
 DEFAULT_NATIVE = (
@@ -167,7 +168,10 @@ def main() -> None:
     line_start = text.rfind("\n", 0, close) + 1  # start of the line holding </action_set>
     new_text = text[:line_start] + insertion + text[line_start:]
 
-    backup = target_path.with_suffix(target_path.suffix + ".bak")
+    # write-once and timestamped: a fixed ".bak" overwrote an older backup of the live file on 2026-09-24
+    backup = target_path.with_name(target_path.name + ".bak-parity-" + datetime.now().strftime("%Y%m%d-%H%M%S"))
+    if backup.exists():
+        sys.exit(f"ERROR: backup {backup} already exists; nothing written")
     shutil.copy2(target_path, backup)
     target_path.write_bytes((bom if has_bom else b"") + new_text.encode("utf-8"))
     print(f"\nInserted {len(to_add)} action entries into {args.set_id}.")

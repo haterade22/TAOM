@@ -129,6 +129,15 @@ class ReadTests(unittest.TestCase):
         self.assertAlmostEqual(sk["bodies"][0]["cr"], 0.047, places=6)
         self.assertAlmostEqual(sk["bodies"][1]["cp2"][1], 0.24, places=6)
 
+    def test_a_translation_row_stored_with_w_zero_still_carries_the_parent(self):
+        # TaleWorlds' human.tpac stores (x, y, z, 0) where Kit output stores (x, y, z, 1)
+        bones = [{"name": "root", "parent": -1, "rest": np.array(_identity(0, 0, 1.0), dtype=float).reshape(4, 4)},
+                 {"name": "tip", "parent": 0, "rest": np.array(_identity(0.5, 0, 0), dtype=float).reshape(4, 4)}]
+        for b in bones:
+            b["rest"][3, 3] = 0.0
+        world = shc.world_matrices(bones)
+        self.assertEqual(list(world[1][3, :3]), [0.5, 0.0, 1.0])
+
     def test_every_segment_hash_is_xxh64_of_its_data(self):
         raw = _package()
         self.assertEqual(len(tcm.parse(raw).items), 2)
@@ -349,6 +358,45 @@ class FitTests(unittest.TestCase):
         v, n = v[:5], n[:5]
         res = shc.fit_capsules(self._skeleton(), v, n, np.array(["b"] * len(v)), min_verts=15)
         self.assertEqual(res["bodies"][0]["action"], "kept")
+
+    @staticmethod
+    def _plus_y_skeleton():
+        """Bone b at the origin running along +Y to its child c (a Blender rig exported primary Y)."""
+        child = np.eye(4)
+        child[3, :3] = (0.0, 1.0, 0.0)
+        return {"name": "s", "bones": [{"name": " b", "parent": -1}, {"name": " c", "parent": 0}],
+                "world": [np.eye(4), child],
+                "bodies": [{"bone": " b", "cp1": (0.1, 0, 0), "cp2": (0.2, 0, 0), "cr": 0.05, "cmax": 0.05}]}
+
+    @staticmethod
+    def _axis_of(body):
+        d = np.subtract(body["new"]["cp2"], body["new"]["cp1"])
+        return d / np.linalg.norm(d), float(np.linalg.norm(d))
+
+    def test_bone_axis_is_detected_from_child_offsets(self):
+        sk = self._plus_y_skeleton()
+        self.assertEqual(shc.bone_axis(sk["bones"], sk["world"])[:2], (1, 1.0))
+        x = np.eye(4)
+        x[3, :3] = (1.0, 0.0, 0.0)
+        self.assertEqual(shc.bone_axis(sk["bones"], [np.eye(4), x])[:2], (0, 1.0))
+
+    def test_a_stubby_skin_falls_back_to_the_bone_not_local_x(self):
+        # a troll's thigh: shorter than it is wide, so the skin has no principal direction to follow
+        v, n = _cylinder(radius=0.5, length=1.3)
+        v, n = v[:, [1, 0, 2]], n[:, [1, 0, 2]]  # the cylinder along +Y, the bone's direction
+        res = shc.fit_capsules(self._plus_y_skeleton(), v, n, np.array(["b"] * len(v)))
+        u, length = self._axis_of(res["bodies"][0])
+        self.assertGreater(length, 0.1)
+        self.assertGreater(abs(u[1]), 0.99, "capsule along the bone, got %s" % u)
+
+    def test_axis_bone_overrides_an_elongated_skin_at_an_angle(self):
+        v, n = _cylinder(radius=0.3, length=2.0)  # elongated along +X, across the +Y bone
+        owners = np.array(["b"] * len(v))
+        skin_u, _ = self._axis_of(shc.fit_capsules(self._plus_y_skeleton(), v, n, owners)["bodies"][0])
+        self.assertGreater(abs(skin_u[0]), 0.99)
+        res = shc.fit_capsules(self._plus_y_skeleton(), v, n, owners, axis="bone")
+        bone_u, length = self._axis_of(res["bodies"][0])
+        self.assertGreater(abs(bone_u[1]), 0.99, "capsule along the bone, got %s" % bone_u)
 
     def test_axis_map_found_from_bone_positions(self):
         engine = {"a": np.array([0.0, -2.47, 2.175]), "b": np.array([0.3, 1.1, 2.4]), "c": np.array([-0.7, -1.0, 0.3])}

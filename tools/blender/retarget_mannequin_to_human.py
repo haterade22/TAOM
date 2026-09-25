@@ -9,6 +9,11 @@ Headless:
         [--name-map tools/blender/fab_cave_troll_clip_names.json] [--keep-root-yaw]
         [--only walk_0 attack_0] [--limit 3] [--strip-prefix cave_troll_]
 
+Human clips as the source (2026-09-24, the hill troll): --source-json <tools/read_anim_keyframes_tpac.ps1 output>
+--source-rig human [--no-align spine spine1 spine2 neck head]: the source rig is built from the JSON's own skeleton
+dump and keyed from its bone animations (no FBX, no assimp), the bone map is the identity, and the trunk kept
+delta-only lets a hunched target keep its hunch while its limbs and hands follow the human's.
+
 Clip names: --name-map (source stem -> anim_troll_<what>, the Kit names the resource after the FBX
 take, which is the action name at export, so a rename is a re-export); unmapped stems fall back to
 troll_<stem minus --strip-prefix>.
@@ -26,9 +31,12 @@ Method (plain bpy, no Auto-Rig Pro): world-space rotation-delta transfer with re
   zeroes the root position track at frame 0, so a clip opening on a pose loses its pelvis offset (feet
   skating, Artem 2026-09-18); vanilla masters open on a rest frame and their clips start at Source1 = 1.
   Bone heads follow the HUMAN hierarchy rigidly (human proportions kept), the pelvis translation
-  is the source pelvis delta scaled by the pelvis rest-height ratio, and the source armature
+  is the source pelvis delta scaled by the thigh + calf length ratio (pelvis_scale in the report;
+  the clip generator's -TravelScale must match it), the legs are then re-aimed by a two-bone IK
+  so each ankle follows the source ankle's path at that scale (--no-leg-ik for the A/B), and the source armature
   OBJECT's animation (UE root motion lives on the "root" node the importer turns into the object)
-  is ignored, which makes every clip in-place. Unmapped human bones (the *_twist1 helpers and
+  loses its travel and turn, which makes every clip in-place, but keeps its height: the export parks
+  any pelvis height above bind on the root. Unmapped human bones (the *_twist1 helpers and
   *_finger0) stay at rest under their parent. Quaternion sign is kept continuous between frames.
   A world-space delta transfer does not depend on either rig's bone-axis convention (Mannequin
   tails point along UE X, Bannerlord's along Y), which is why no bone re-orientation is needed.
@@ -62,12 +70,19 @@ MANNEQUIN_TO_HUMAN = {
     "clavicle_r": "r_clavicle", "upperarm_r": "r_upperarm_twist", "lowerarm_r": "r_foretwist", "hand_r": "r_hand",
     "thigh_l": "l_thigh", "calf_l": "l_calf", "foot_l": "l_foot", "ball_l": "l_toe0",
     "thigh_r": "r_thigh", "calf_r": "r_calf", "foot_r": "r_foot", "ball_r": "r_toe0",
+    # The mannequin's twist bones onto the human twist helpers, so a forearm shares the hand's roll as the source
+    # does. Unmapped, *_foretwist1 stayed at rest and the whole roll landed at the wrist: the Fab danger run turns the
+    # right hand 136 to 178 deg about its forearm with lowerarm_twist_01_r taking up to 89 of it, and the hill troll's
+    # wrist twisted into a ribbon in the Kit (Mike, 2026-09-24).
+    "upperarm_twist_01_l": "l_upperarm_twist1", "lowerarm_twist_01_l": "l_foretwist1",
+    "upperarm_twist_01_r": "r_upperarm_twist1", "lowerarm_twist_01_r": "r_foretwist1",
 }
 # anatomical "chain child" used for rest alignment (head -> child head direction); end bones absent
 TARGET_CHAIN_CHILD = {
     "pelvis": "spine", "spine": "spine1", "spine1": "spine2", "spine2": "neck", "neck": "head",
     "l_clavicle": "l_upperarm_twist", "l_upperarm_twist": "l_foretwist", "l_foretwist": "l_hand",
     "r_clavicle": "r_upperarm_twist", "r_upperarm_twist": "r_foretwist", "r_foretwist": "r_hand",
+    "l_upperarm_twist1": "l_foretwist", "l_foretwist1": "l_hand", "r_upperarm_twist1": "r_foretwist", "r_foretwist1": "r_hand",
     "l_thigh": "l_calf", "l_calf": "l_foot", "l_foot": "l_toe0",
     "r_thigh": "r_calf", "r_calf": "r_foot", "r_foot": "r_toe0",
 }
@@ -75,12 +90,21 @@ SOURCE_CHAIN_CHILD = {
     "pelvis": "spine_01", "spine_01": "spine_02", "spine_02": "spine_03", "spine_03": "neck_01", "neck_01": "head",
     "clavicle_l": "upperarm_l", "upperarm_l": "lowerarm_l", "lowerarm_l": "hand_l",
     "clavicle_r": "upperarm_r", "upperarm_r": "lowerarm_r", "lowerarm_r": "hand_r",
+    "upperarm_twist_01_l": "lowerarm_l", "lowerarm_twist_01_l": "hand_l",
+    "upperarm_twist_01_r": "lowerarm_r", "lowerarm_twist_01_r": "hand_r",
     "thigh_l": "calf_l", "calf_l": "foot_l", "foot_l": "ball_l",
     "thigh_r": "calf_r", "calf_r": "foot_r", "foot_r": "ball_r",
 }
 PELVIS_T, PELVIS_S = "pelvis", "pelvis"
-# bones whose rest DIRECTION is skeleton layout rather than stance: no swing alignment, delta only
-NO_ALIGN = {"pelvis", "l_clavicle", "r_clavicle"}
+# bones whose rest DIRECTION is skeleton layout rather than stance: no swing alignment, delta only. The feet stand
+# flat in both bind poses, so the foot's own rest is its stance: aligned to the Fab foot's steeper ankle-to-ball
+# line, the hill troll's (ankle 0.19 m up, long foot) pitched toe-down and its toes sank up to 17 cm (2026-09-24).
+NO_ALIGN = {"pelvis", "l_clavicle", "r_clavicle", "l_foot", "r_foot"}
+# target bone -> world direction (bone head to chain child) the bone takes at the source's reference pose, in place
+# of its own rest direction or the source's: --posture-clip. Human clips on the hill troll take the trunk posture
+# the approved Fab idle gave it (KEYForce's rest bends spine2 54 deg and the neck 45 from vertical; the human's
+# upright stance would unbend it entirely, its own rest doubles it over).
+POSTURE = {}
 # source bones whose reference pose comes from --ref-clip instead of the bind pose: the trunk and
 # head, where the bind pose says nothing about where the character looks. Limbs stay on the bind
 # pose: an idle frame has arms doing something (frame 1 of free_idle_0 holds the right forearm
@@ -207,7 +231,7 @@ def build_engine_rig(json_path, name="human_skeleton_notused"):
     locals (measured 2026-09-17: 27 of 28 bones at 0.0 deg, the root off by the armature object's own
     rotation), so authoring on this rig makes the exported clip engine-exact by construction. Bones look
     sideways in Blender (the engine's bone axis is X, Blender draws Y): cosmetic. Returns the object."""
-    with open(json_path) as fh:
+    with open(json_path, encoding="utf-8-sig") as fh:   # the keyframe reader's JSON carries a BOM
         spec = json.load(fh)
     bones = spec["bones"]
     world = _engine_rest_world(bones)
@@ -249,6 +273,154 @@ def build_engine_rig(json_path, name="human_skeleton_notused"):
     return arm
 
 
+def key_source_from_json(arm, spec, action_name):
+    """Key `arm` (built by build_engine_rig from the same JSON, so matrix_local == engine world rest) with the clip's
+    per-bone local frames, JSON t = 0..duration-1 onto Blender frames 1..duration. A bone's local is
+    Translation(pos) @ Rotation(quat) in the parent's frame, the engine's own composition (the quaternion needs no
+    axis swap or conjugate; rebuild_anim_from_json.py, 2026-06-14). The pose is written as matrix_basis from the
+    accumulated armature-space matrices, so no per-bone depsgraph update is needed."""
+    bones = spec["bones"]
+    order = [b["name"] for b in bones]
+    parent = {b["name"]: b["parent"] for b in bones}
+    rest_local = {}
+    for b in bones:
+        m = b["rest"]
+        rest_local[b["name"]] = Matrix(((m[0], m[4], m[8], m[12]), (m[1], m[5], m[9], m[13]),
+                                        (m[2], m[6], m[10], m[14]), (0.0, 0.0, 0.0, 1.0)))
+    rest_w = {b.name: b.matrix_local.copy() for b in arm.data.bones}
+    anim = {a["bone"]: a for a in spec["boneAnims"]}
+    # the root bone's translation lives in RootPositionFrames as a delta from rest (anim_run_forward_unarmed: z
+    # -0.084 to +0.019, the bob; its own PositionFrames are empty), so it is added to the rest offset
+    root_pos = (spec.get("root") or {}).get("pos") or []
+    # Key times are integer frames but SPARSE where a bone holds (anim_kick_stanceswitch_right keys 0..182 and then
+    # 195; anim_jump_loop about 100 keys over 600 frames), and the master's Duration field is the root track's key
+    # COUNT, not its length (anim_jump_loop: 5). So the length is the last key plus one, and every frame is sampled by
+    # linear interpolation (slerp for rotations) between its bracketing keys, as the engine plays it.
+    last = 0.0
+    for a in anim.values():
+        for tr in (a["rot"], a["pos"]):
+            if tr:
+                last = max(last, tr[-1]["t"])
+    if root_pos:
+        last = max(last, root_pos[-1]["t"])
+    dur = int(round(last)) + 1
+
+    def bracket(frames, t):
+        lo, hi = 0, len(frames) - 1
+        if t <= frames[0]["t"]:
+            return frames[0], frames[0], 0.0
+        if t >= frames[hi]["t"]:
+            return frames[hi], frames[hi], 0.0
+        while hi - lo > 1:
+            mid = (lo + hi) // 2
+            if frames[mid]["t"] <= t:
+                lo = mid
+            else:
+                hi = mid
+        a, b = frames[lo], frames[hi]
+        span = b["t"] - a["t"]
+        return a, b, ((t - a["t"]) / span if span > 1e-9 else 0.0)
+
+    def sample_rot(frames, t):
+        a, b, u = bracket(frames, t)
+        qa = Quaternion((a["w"], a["x"], a["y"], a["z"]))
+        if u <= 0.0:
+            return qa
+        return qa.slerp(Quaternion((b["w"], b["x"], b["y"], b["z"])), u)
+
+    def sample_vec(frames, t):
+        a, b, u = bracket(frames, t)
+        va = Vector((a["x"], a["y"], a["z"]))
+        if u <= 0.0:
+            return va
+        return va.lerp(Vector((b["x"], b["y"], b["z"])), u)
+
+    for pb in arm.pose.bones:
+        pb.rotation_mode = "QUATERNION"
+    act = bpy.data.actions.new(action_name)
+    ad = arm.animation_data or arm.animation_data_create()
+    ad.action = act
+    try:
+        slot = act.slots.new(id_type="OBJECT", name=arm.name)
+        ad.action_slot = slot
+    except Exception:
+        pass
+    worst = 0.0
+    for fi in range(dur):
+        armmat = {}
+        for bn in order:
+            a = anim.get(bn)
+            q = sample_rot(a["rot"], fi) if a and a["rot"] else rest_local[bn].to_quaternion()
+            loc = sample_vec(a["pos"], fi) if a and a["pos"] else rest_local[bn].to_translation()
+            par = parent[bn]
+            if not par and root_pos:
+                loc = loc + sample_vec(root_pos, fi)
+            local = Matrix.Translation(loc) @ q.to_matrix().to_4x4()
+            armmat[bn] = (armmat[par] @ local) if par else local
+            if bn not in arm.pose.bones:
+                continue
+            # Blender: pose = parent_pose @ parent_rest^-1 @ rest @ basis
+            rel = (rest_w[par].inverted() @ rest_w[bn]) if par else rest_w[bn]
+            pp = armmat[par] if par else Matrix.Identity(4)
+            pb = arm.pose.bones[bn]
+            pb.matrix_basis = rel.inverted() @ pp.inverted() @ armmat[bn]
+            pb.keyframe_insert("rotation_quaternion", frame=fi + 1)
+            pb.keyframe_insert("location", frame=fi + 1)
+    # prove the keying on the last frame: the evaluated pose must reproduce the JSON's armature-space matrices
+    bpy.context.scene.frame_set(dur)
+    bpy.context.view_layer.update()
+    for bn in order:
+        if bn in arm.pose.bones:
+            diff = arm.pose.bones[bn].matrix - armmat[bn]
+            worst = max(worst, max(abs(v) for row in diff for v in row))
+    if worst > 1e-3:
+        raise RuntimeError("JSON source keying deviates from the clip by %.2e" % worst)
+    return act, dur
+
+
+def posture_from_clip(path, frame, tgt, bones=("pelvis", "spine", "spine1", "spine2", "neck")):
+    """World bone directions (head to chain child) of `bones` at `frame` of an exported target clip FBX, in the
+    target's own frame. The export turns the character 180 deg about Z for the Kit, so the flip is detected by
+    matching the FBX's frame-0 rest directions against the target rig's and undone."""
+    objs, arm = _import_fbx(path)
+    if arm is None:
+        raise SystemExit("no armature in --posture-clip")
+    _assign_slot(arm)
+    # the importer lands the export's frame 0 (the rest) on the action's first frame, usually Blender frame 1
+    f0 = int(round(arm.animation_data.action.frame_range[0])) if arm.animation_data and arm.animation_data.action else 0
+
+    def dirs(f):
+        f = f0 + f
+        bpy.context.scene.frame_set(f)
+        out = {}
+        for b in bones:
+            c = TARGET_CHAIN_CHILD.get(b)
+            if b in arm.pose.bones and c in arm.pose.bones:
+                d = arm.matrix_world @ arm.pose.bones[c].head - arm.matrix_world @ arm.pose.bones[b].head
+                if d.length > 1e-6:
+                    out[b] = d.normalized()
+        return out
+    rest_fbx = dirs(0)
+    flip = Matrix.Rotation(math.pi, 4, "Z")
+    err_plain = err_flip = 0.0
+    for b, d in rest_fbx.items():
+        dt = _rest_dir(tgt.rest_w, TARGET_CHAIN_CHILD, b)
+        if dt is not None:
+            err_plain += (d - dt).length
+            err_flip += ((flip @ d) - dt).length
+    posed = dirs(frame)
+    act = arm.animation_data.action if arm.animation_data else None
+    _delete_objects(objs)
+    if act is not None:
+        try:
+            bpy.data.actions.remove(act)
+        except Exception:
+            pass
+    turn = flip if err_flip < err_plain else Matrix.Identity(4)
+    return {b: (turn @ d).normalized() for b, d in posed.items()}, {"flipped": err_flip < err_plain,
+                                                                     "rest_match_m": round(min(err_plain, err_flip), 4)}
+
+
 def source_reference(src_arm, frame=None):
     """bone -> world 4x4 of the source at its reference pose: the bind pose (frame None) or the
     evaluated pose at `frame` (e.g. frame 1 of the pack's calm idle). A clip-derived reference
@@ -262,10 +434,109 @@ def source_reference(src_arm, frame=None):
     return {pb.name: M_fix @ pb.matrix for pb in src_arm.pose.bones}
 
 
+def _root_height_matrix(src_arm):
+    """The source OBJECT's world height (the UE root node's Z) as a lift. The Fab export clamps the pelvis at its bind
+    height (1.181 m) and moves any height above it onto the root: danger_run_0 holds the pelvis at 1.181 for six
+    frames while the root rises 6.5 cm, danger_attack_1 by 12.9 cm. Dropped with the rest of the root motion, every
+    bob lost its top and the body sank by the clipped amount on those frames (2026-09-24)."""
+    return Matrix.Translation((0.0, 0.0, src_arm.matrix_world.translation.z))
+
+
 def _yaw_matrix(src_arm, yaw0):
     """World Z rotation of the source OBJECT relative to its first frame: UE root-motion turns."""
     yaw = src_arm.matrix_world.to_euler().z - yaw0
     return Matrix.Rotation(yaw, 4, "Z")
+
+
+LEGS = (("l_thigh", "l_calf", "l_foot"), ("r_thigh", "r_calf", "r_foot"))
+
+
+def _ground_reference(tgt, src_rest_w, align, inv_map):
+    """(dz, k_leg, ankles): how far to raise the target pelvis so that, with every mapped bone turned by its alignment
+    (the source's reference directions, or the posture), no ankle sits below its own rest height; the target's thigh
+    + calf length over the source's; and where that reference pose puts each ankle (before the lift), the anchor the
+    leg IK's goals hang from. The FK mirrors retarget_clip's (mapped bones by rotation, positions down the target
+    chain)."""
+    Mw = {}
+    for t in tgt.order:
+        par = tgt.parent[t]
+        if t in align:
+            R = align[t].to_matrix() @ _rot(tgt.rest_w[t])
+        elif par is not None:
+            R = _rot(Mw[par]) @ (_rot(tgt.rest_w[par]).inverted() @ _rot(tgt.rest_w[t]))
+        else:
+            R = _rot(tgt.rest_w[t])
+        head = (tgt.rest_w[t].translation.copy() if par is None
+                else Mw[par] @ (tgt.rest_w[par].inverted() @ tgt.rest_w[t].translation))
+        M = R.to_4x4()
+        M.translation = head
+        Mw[t] = M
+    sinks, lt, ls, ankles = [], 0.0, 0.0, {}
+    for thigh, calf, foot in LEGS:
+        if not all(b in Mw for b in (thigh, calf, foot)):
+            continue
+        ankles[foot] = Mw[foot].translation.copy()
+        sinks.append(tgt.rest_w[foot].translation.z - Mw[foot].translation.z)
+        lt += (tgt.rest_w[calf].translation - tgt.rest_w[thigh].translation).length
+        lt += (tgt.rest_w[foot].translation - tgt.rest_w[calf].translation).length
+        s = [inv_map.get(b) for b in (thigh, calf, foot)]
+        if all(x in src_rest_w for x in s):
+            ls += (src_rest_w[s[1]].translation - src_rest_w[s[0]].translation).length
+            ls += (src_rest_w[s[2]].translation - src_rest_w[s[1]].translation).length
+    return (max(sinks) if sinks else 0.0), (lt / ls if ls > 1e-6 else None), ankles
+
+
+LEG_IK = True   # --no-leg-ik turns it off (A/B)
+
+
+def _knee_pole(rest_w, thigh, calf, foot):
+    """The way the knee points at rest, square to the hip-to-ankle line, in the thigh's rest frame: carried by the
+    thigh's retargeted rotation it gives the IK a bend plane that holds when the leg straightens."""
+    H, K, A = (rest_w[b].translation for b in (thigh, calf, foot))
+    line = (A - H).normalized()
+    out = (K - H) - line * (K - H).dot(line)
+    return _rot(rest_w[thigh]).transposed() @ out.normalized()
+
+
+def _leg_ik(Mw, legs, src_arm, M_f, k, root_world_yaw, stats):
+    """Two-bone IK per leg on this frame's pose. The ankle goes to its stance reference plus the source ankle's move
+    from its bind position, scaled like the pelvis (and turned with the root); the knee bends toward its rest pole
+    turned with the retargeted thigh, the calf follows the thigh's correction before it is aimed (the knee stays a
+    hinge), the foot keeps its world orientation. Copying joint angles alone sank the hill troll's feet 19 to 29 cm:
+    its thigh and calf are not the Fab troll's scaled evenly, so the same angles end the ankle elsewhere. The bend
+    plane once came from the retargeted knee itself, which flips as the leg straightens: run_to_heavy_attack's left
+    leg jumped 58 to 63 deg in one frame where the source moved 15 (2026-09-24)."""
+    for leg in legs:
+        th, ca, fo = leg["t"]
+        H, K0, A0 = Mw[th].translation.copy(), Mw[ca].translation.copy(), Mw[fo].translation.copy()
+        G = leg["A_ref"] + (M_f @ src_arm.pose.bones[leg["s_foot"]].head - leg["A_s_rest"]) * k
+        if root_world_yaw is not None:
+            G = root_world_yaw @ G
+        a, b = leg["a"], leg["b"]
+        dv = G - H
+        d = dv.length
+        if d < 1e-6:
+            continue
+        u = dv / d
+        dc = min(max(d, abs(a - b) + 1e-4), a + b - 1e-4)
+        pole = _rot(Mw[th]) @ leg["pole"]
+        v = pole - u * pole.dot(u)
+        if v.length < 1e-6:
+            continue
+        v.normalize()
+        alpha = math.acos(max(-1.0, min(1.0, (a * a + dc * dc - b * b) / (2.0 * a * dc))))
+        K = H + (u * math.cos(alpha) + v * math.sin(alpha)) * a
+        reach = H + u * dc
+        q1 = (K0 - H).rotation_difference(K - H)
+        q2 = (q1 @ (A0 - K0)).rotation_difference(reach - K)
+        M = (q1.to_matrix() @ _rot(Mw[th])).to_4x4()
+        M.translation = H
+        Mw[th] = M
+        M = (q2.to_matrix() @ q1.to_matrix() @ _rot(Mw[ca])).to_4x4()
+        M.translation = K
+        Mw[ca] = M
+        stats["max_turn_deg"] = max(stats["max_turn_deg"], math.degrees(q1.angle), math.degrees((q2 @ q1).angle))
+        stats["max_unreached_m"] = max(stats["max_unreached_m"], (G - reach).length)
 
 
 def retarget_clip(tgt, src_arm, action_name, report, src_ref=None, keep_root_yaw=False, root_world_yaw=None):
@@ -286,7 +557,9 @@ def retarget_clip(tgt, src_arm, action_name, report, src_ref=None, keep_root_yaw
     for t, s in inv_map.items():
         dt = _rest_dir(tgt.rest_w, TARGET_CHAIN_CHILD, t)
         ds = _rest_dir(src_rest_w, SOURCE_CHAIN_CHILD, s)
-        if t in NO_ALIGN or dt is None or ds is None:
+        if t in POSTURE and dt is not None:
+            align[t] = dt.rotation_difference(POSTURE[t])
+        elif t in NO_ALIGN or dt is None or ds is None:
             align[t] = Quaternion()
         else:
             align[t] = dt.rotation_difference(ds)
@@ -298,6 +571,16 @@ def retarget_clip(tgt, src_arm, action_name, report, src_ref=None, keep_root_yaw
     k = tgt.rest_w[PELVIS_T].translation.z / src_rest_w[PELVIS_S].translation.z
     p_s_rest = src_rest_w[PELVIS_S].translation.copy()
     p_t_rest = tgt.rest_w[PELVIS_T].translation.copy()
+    # Ground the reference. The target's legs take the source's reference leg directions (align), so its pelvis must
+    # sit where THOSE legs put its ankles at their rest height, not at its own rest height: the hill troll's rest
+    # crouches (calf 58.8 deg from vertical against the Fab troll's 21.7), and with the pelvis left there the Fab's
+    # straighter legs sank its feet up to 0.46 m into the ground (2026-09-24). Pelvis motion then scales by the leg
+    # length ratio, the length the legs actually swing with.
+    dz, k_leg, ankles_ref = _ground_reference(tgt, src_rest_w, align, inv_map)
+    p_t_rest.z += dz
+    k = k_leg or k
+    report["pelvis_ground_dz_m"] = round(dz, 4)
+    report["pelvis_scale"] = round(k, 4)
 
     # fresh target action
     act = bpy.data.actions.new(action_name)
@@ -332,9 +615,23 @@ def retarget_clip(tgt, src_arm, action_name, report, src_ref=None, keep_root_yaw
         pb.keyframe_insert("rotation_quaternion", frame=0)
         if tgt.parent[t] is None:
             pb.keyframe_insert("location", frame=0)
+    leg_ik = [] if not LEG_IK else [
+        {"t": (th, ca, fo), "s_foot": inv_map[fo],
+         "a": (tgt.rest_w[ca].translation - tgt.rest_w[th].translation).length,
+         "b": (tgt.rest_w[fo].translation - tgt.rest_w[ca].translation).length,
+         # the ankle where the lifted reference pose puts it: the goal at the reference is that pose's own foot, so
+         # it is reachable by construction whatever stance, posture or pelvis tilt the reference carries (anchoring
+         # on the target's rest ankle added the source's stride to the wrong stance, up to 37 cm out of reach; on
+         # the rest hip plus the scaled source leg it missed by 7 cm once the pelvis took the Fab idle's tilt)
+         "A_ref": ankles_ref[fo] + Vector((0.0, 0.0, dz)),
+         "A_s_rest": src_rest_w[inv_map[fo]].translation.copy(),
+         "pole": _knee_pole(tgt.rest_w, th, ca, fo)}
+        for th, ca, fo in LEGS
+        if all(b in tgt.rest_w for b in (th, ca, fo)) and inv_map.get(fo) in src_rest_w and fo in ankles_ref]
+    ik_stats = {"max_turn_deg": 0.0, "max_unreached_m": 0.0}
     for f in range(f0, f1 + 1):
         scn.frame_set(f)
-        M_f = (_yaw_matrix(src_arm, yaw0) @ M_fix) if keep_root_yaw else M_fix
+        M_f = _root_height_matrix(src_arm) @ ((_yaw_matrix(src_arm, yaw0) @ M_fix) if keep_root_yaw else M_fix)
         Mw = {}      # target world pose 4x4 this frame
         Marm = {}    # armature-space pose 4x4 this frame
         for t in tgt.order:
@@ -369,7 +666,15 @@ def retarget_clip(tgt, src_arm, action_name, report, src_ref=None, keep_root_yaw
             M = R_t.to_4x4()
             M.translation = head
             Mw[t] = M
-            Marm[t] = Hw_inv @ M
+        if leg_ik:
+            _leg_ik(Mw, leg_ik, src_arm, M_f, k, root_world_yaw, ik_stats)
+            for t in tgt.order:   # positions follow the re-aimed legs down the chain
+                par = tgt.parent[t]
+                if par is not None:
+                    Mw[t].translation = Mw[par] @ (tgt.rest_w[par].inverted() @ tgt.rest_w[t].translation)
+        for t in tgt.order:
+            par = tgt.parent[t]
+            Marm[t] = Hw_inv @ Mw[t]
             bone = tgt.arm.data.bones[t]
             if par is None:
                 basis = bone.matrix_local.inverted() @ Marm[t]
@@ -393,6 +698,8 @@ def retarget_clip(tgt, src_arm, action_name, report, src_ref=None, keep_root_yaw
     report["pelvis_world_first_mid_last"] = [pelvis_travel[0], pelvis_travel[len(pelvis_travel) // 2], pelvis_travel[-1]]
     report["pelvis_z_min_max"] = [min(p[2] for p in pelvis_travel), max(p[2] for p in pelvis_travel)]
     report["align_deg"] = {t: round(math.degrees(q.angle), 1) for t, q in align.items()}
+    if leg_ik:
+        report["leg_ik"] = {kk: round(v, 4) for kk, v in ik_stats.items()}
     return act, f0, f1
 
 
@@ -551,7 +858,10 @@ def render_pair(tgt, src_arm, src_meshes, frame, out_png, hide_target_meshes_for
         for o in meshes:
             o.hide_render = False
         pel = arm.matrix_world @ arm.pose.bones["pelvis"].head if "pelvis" in arm.pose.bones else arm.matrix_world.translation
-        height = 1.9 if label == "human" else 3.2
+        height = 3.2
+        if label == "human":  # a target taller than a human (the 3.6 m hill troll) is framed by its own bounds
+            tops = [(o.matrix_world @ Vector(c)).z for o in meshes for c in o.bound_box]
+            height = max(1.9, max(tops) * 1.05) if tops else 1.9
         target = Vector((pel.x, pel.y, height * 0.5))
         # the human faces engine +Y on the engine rig, else Blender -Y; the Fab source always faces -Y in the
         # scene (the flip is applied in the retarget math, not to the object)
@@ -593,7 +903,17 @@ def main():
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     ap = argparse.ArgumentParser()
     ap.add_argument("--human", required=True)
-    ap.add_argument("--clips", required=True, nargs="+", help="FBX files or directories")
+    ap.add_argument("--clips", nargs="+", default=[], help="FBX files or directories")
+    ap.add_argument("--source-json", nargs="+", default=[],
+                    help="keyframe JSON files or directories from tools/read_anim_keyframes_tpac.ps1 (human clips read "
+                         "straight out of the game's tpac, no FBX); the source rig is built from each file's skeleton dump")
+    ap.add_argument("--source-rig", choices=("mannequin", "human"), default="mannequin",
+                    help="'human': the source is human_skeleton (identity bone map, engine space, no facing flip), as "
+                         "for --source-json clips")
+    ap.add_argument("--clip-prefix", default="troll_", help="prefix for clip names the --name-map does not cover")
+    ap.add_argument("--no-align", nargs="*", default=[],
+                    help="target bones added to NO_ALIGN (delta only, no swing to the source's rest direction): the "
+                         "trunk and head when a hunched target should keep its hunch under upright human clips")
     ap.add_argument("--out", required=True)
     ap.add_argument("--preview", default=None)
     ap.add_argument("--only", nargs="*", default=None, help="substrings; a clip is kept if any matches")
@@ -602,6 +922,14 @@ def main():
     ap.add_argument("--save-blend", default=None)
     ap.add_argument("--ref-clip", default=None, help="FBX whose --ref-frame pose is the source reference (default: bind pose)")
     ap.add_argument("--ref-frame", type=int, default=1)
+    ap.add_argument("--posture-clip", default=None,
+                    help="an exported TARGET clip FBX whose --posture-frame gives the trunk (pelvis to neck) the "
+                         "directions it stands in at the source's reference pose: the approved Fab idle for the hill "
+                         "troll, so human clips keep that hunch instead of the human's upright stance or the rig's rest")
+    ap.add_argument("--posture-frame", type=int, default=1)
+    ap.add_argument("--ref-json", default=None,
+                    help="keyframe JSON whose --ref-frame pose is the source reference for the trunk and head (the "
+                         "--source-json counterpart of --ref-clip; the two-handed stance master for the hill troll)")
     ap.add_argument("--name-map", default=None, help="JSON {source stem (lowercase): clip name}; unmapped stems fall back to troll_<stem minus prefix>")
     ap.add_argument("--engine-skeleton", default=None,
                     help="engine skeleton dump JSON (tools/blender/human_skeleton_engine.json): build the target rig from the "
@@ -611,7 +939,17 @@ def main():
                          "180 deg about world Z in the keyed data (armature node stays identity; default), 'object' rotates the "
                          "armature object for the export only (the node transform then rides into the Kit's Geometry item)")
     ap.add_argument("--keep-root-yaw", action="store_true", help="fold UE root-motion yaw into the clip (turn clips turn in place); actions get a _rootyaw suffix")
+    ap.add_argument("--no-leg-ik", action="store_true",
+                    help="copy leg angles only, without the two-bone IK that keeps the ankles on the source's path")
+    ap.add_argument("--armature-name", default=None,
+                    help="in --engine-skeleton mode, the exported armature's name (default: the --human FBX's armature); "
+                         "a clip FBX names <skeleton>_notused, never the skeleton itself, which the Kit would register "
+                         "as a skeleton (troll_skeleton_a_notused for the hill troll, 2026-09-24)")
     args = ap.parse_args(argv)
+    global LEG_IK
+    LEG_IK = not args.no_leg_ik
+    if not args.clips and not args.source_json:
+        ap.error("give --clips (FBX) or --source-json (keyframe JSON)")
 
     name_map = {}
     if args.name_map:
@@ -622,6 +960,12 @@ def main():
     for c in args.clips:
         if os.path.isdir(c):
             clips.extend(sorted(os.path.join(c, f) for f in os.listdir(c) if f.lower().endswith(".fbx")))
+        else:
+            clips.append(c)
+    for c in args.source_json:
+        if os.path.isdir(c):
+            clips.extend(sorted(os.path.join(c, f) for f in os.listdir(c)
+                                if f.lower().endswith(".json") and f.lower() != "clips_index.json"))
         else:
             clips.append(c)
     if args.only:
@@ -663,7 +1007,7 @@ def main():
         SOURCE_FLIP = Matrix.Rotation(math.pi, 4, "Z")
         ROOT_YAW_MODE = args.root_yaw_mode
         fbx_arm = human_arm
-        human_arm = build_engine_rig(args.engine_skeleton, name=fbx_arm.name)
+        human_arm = build_engine_rig(args.engine_skeleton, name=args.armature_name or fbx_arm.name)
         turn = Matrix.Rotation(math.pi, 4, "Z")
         for o in body_meshes:
             mw = o.matrix_world.copy()
@@ -676,10 +1020,35 @@ def main():
             o.matrix_world = turn @ mw
         _delete_objects([fbx_arm])
     tgt = HumanTarget(human_arm)
+    if args.source_rig == "human":
+        # the source IS the target's bone set (human_skeleton names), already in engine space and facing the engine's +Y
+        global MANNEQUIN_TO_HUMAN, SOURCE_CHAIN_CHILD, PELVIS_S, CLIP_REF_BONES
+        MANNEQUIN_TO_HUMAN = {n: n for n in tgt.order}
+        SOURCE_CHAIN_CHILD = dict(TARGET_CHAIN_CHILD)
+        PELVIS_S = PELVIS_T
+        CLIP_REF_BONES = {"spine", "spine1", "spine2", "neck", "head"}
+        SOURCE_FLIP = Matrix.Identity(4)
+    NO_ALIGN.update(args.no_align)
+    posture_note = None
+    if args.posture_clip:
+        posture, posture_note = posture_from_clip(args.posture_clip, args.posture_frame, tgt)
+        POSTURE.update(posture)
+        posture_note["bones"] = sorted(posture)
 
     src_ref = None
-    if args.ref_clip:
-        ref_objs, ref_arm = _import_fbx(args.ref_clip)
+    if args.ref_clip or args.ref_json:
+        if args.ref_json:
+            # a keyframe JSON as the reference: the trunk's deltas are then measured from THIS pose (frame 1 of the
+            # two-handed stance master for the hill troll), so the target shows exactly its own rest hunch in the
+            # stance and adds only what the clip does beyond it; from the bind pose the human's combat lean
+            # stacked on the troll's 54 deg hunch and bent it near double (2026-09-24)
+            with open(args.ref_json, encoding="utf-8-sig") as fh:
+                ref_spec = json.load(fh)
+            ref_arm = build_engine_rig(args.ref_json, name="src_ref")
+            key_source_from_json(ref_arm, ref_spec, "ref_src")
+            ref_objs = [ref_arm]
+        else:
+            ref_objs, ref_arm = _import_fbx(args.ref_clip)
         if ref_arm is None:
             raise SystemExit("no armature in --ref-clip")
         clip_ref = source_reference(ref_arm, args.ref_frame)
@@ -697,14 +1066,23 @@ def main():
                 pass
 
     report = {"human": args.human, "human_armature": human_arm.name, "keep_root_yaw": args.keep_root_yaw,
-              "source_reference": (args.ref_clip, args.ref_frame) if args.ref_clip else "bind pose", "clips": {}}
+              "source_reference": ((args.ref_clip or args.ref_json), args.ref_frame) if (args.ref_clip or args.ref_json) else "bind pose",
+              "posture": posture_note, "clips": {}}
     for path in clips:
         stem = os.path.splitext(os.path.basename(path))[0].lower()
         name = stem[len(args.strip_prefix):] if stem.startswith(args.strip_prefix) else stem
-        action_name = name_map.get(stem, "troll_" + name) + ("_rootyaw" if args.keep_root_yaw else "")
+        action_name = name_map.get(stem, args.clip_prefix + name) + ("_rootyaw" if args.keep_root_yaw else "")
         entry = {"source": path, "action": action_name}
         try:
-            new_objs, src_arm = _import_fbx(path)
+            if path.lower().endswith(".json"):
+                with open(path, encoding="utf-8-sig") as fh:
+                    spec = json.load(fh)
+                src_arm = build_engine_rig(path, name="src_" + stem[:48])
+                new_objs = [src_arm]
+                src_act, src_dur = key_source_from_json(src_arm, spec, stem + "_src")
+                entry["source_frames"] = src_dur
+            else:
+                new_objs, src_arm = _import_fbx(path)
             if src_arm is None or not (src_arm.animation_data and src_arm.animation_data.action):
                 raise RuntimeError("source has no armature/action")
             src_meshes = [o for o in new_objs if o.type == "MESH"]

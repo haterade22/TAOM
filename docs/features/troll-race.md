@@ -38,7 +38,9 @@ LOTRLOME_Armory already ships two troll races — **the ready-made data template
 - `cave_troll`: Monster `monster_usage="human"`, `action_set="as_cave_troll_warrior"`
   (`base_set="as_human_warrior"`), `skin skeleton="human_skeleton"`, mesh `lotr_troll_body`
   (+ feet/hands/head). Reuses human clips directly.
-- `hill_troll`: same pattern but `skeleton="troll_skeleton"`, mesh `mordor_hill_troll`.
+- `hill_troll`: since 2026-09-24 on its own skeleton `troll_skeleton_a` with KEYForce's `hill_troll_a_*` meshes
+  and a standalone `as_hill_troll_warrior`, the dwarf's layout (the 2026-09-24 entries below). Before that
+  `skeleton="troll_skeleton"`, mesh `mordor_hill_troll`.
 - TAOM has a `cave_troll` NPCCharacter (`troops_mordor.xml`) + `BodyProperty.fighter_cave_troll`
   (`TAOM_bodyproperties.xml`), **currently disabled** (2026-05-14).
 
@@ -60,6 +62,14 @@ PARKED.** It works in principle (ARP retarget → `ge_export`; see the workflow 
 set + multiple Kit hand-offs for a humanoid whose attacks are engine-driven regardless. Revisit only if
 the troll ever needs movement that human-skeleton overrides can't express.
 
+**The hill troll took the own-skeleton route after all (2026-09-24), without ARP:** KEYForce's rig
+`troll_skeleton_a` (the human's 28 bone names) is turned to the human's bone axes on export, so every human clip
+bends it correctly; the human ragdoll, IK joints and hit capsules are copied through the bone frames; and the 52
+Fab clips are retargeted onto its engine dump with a two-bone leg IK. A human clip on it bends about the right
+axes but keeps the human's rest relations, so the head pitches up and the wrists twist (a clip stores
+parent-relative rotations); the actions the troll plays are therefore retargeted from the human masters as well,
+with the Fab clips reused for the rest. The entries dated 2026-09-24 under Track 1 are the record.
+
 **2026-09-18: the flavour source is the Fab "Cave Troll Lightweight" pack, not hand-authored lumber clips.**
 All 52 of its clips are retargeted onto `human_skeleton` by `tools/blender/retarget_mannequin_to_human.py`, and the
 two facts that made them play correctly in the Kit (author on the engine's own bone frames; the Kit turns the
@@ -70,10 +80,18 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
 
 ## Race-authoring recipe
 
-1. **Skeleton** — Kit-import the troll deform-skeleton FBX (ARP GE export of `troll_rig_01`) → the
-   troll's game skeleton tpac. (Or reuse `human_skeleton` for the `cave_troll` fallback.)
-2. **Meshes** — Kit-import `troll_hill_body_a` + cloth, skinned to that skeleton → `_geo.tpac` + materials.
-3. **Animations** — retarget the human set → troll (workflow doc) → compile each → `_anm.tpac`.
+1. **Skeleton:** Kit-import the skeleton WITH its skinned meshes as one FBX
+   (`tools/blender/export_rig_for_kit.py --bone-frames <reframe JSON>`, the artist's bones turned to the
+   human's axes by `tpac_skeleton_copy_physics.py --reframe`, grip bones added), then copy the human
+   physics into the package (`tpac_skeleton_copy_physics.py --reframed <JSON> --fit`). The hill troll is
+   the worked example. (Or reuse `human_skeleton` for the `cave_troll` fallback.)
+2. **Meshes:** in that same FBX, one object per skin slot, a head as `<mesh>` / `.eye` / `.mouth`, materials
+   under the Kit's exact names → `_geo.tpac`.
+3. **Animations:** retarget a clip set onto the skeleton's engine dump
+   (`retarget_mannequin_to_human.py --engine-skeleton <json> --armature-name <skeleton>_notused`), Kit-import
+   the FBX, wire the masters (`wire_anim_master_skeletons.ps1`), then `gen_troll_anim_clips.ps1` with
+   `-TravelScale` = the retarget report's `pelvis_scale` → `_anm.tpac`. Human clips need no retarget on a
+   re-framed rig.
 4. **Action set** (`action_sets.xml`, LOTRLOME_Armory): `as_troll_warrior` (+ female / child / villager
    variants) with `skeleton="<troll skeleton>"`, `movement_system="bipedal"`, binding each standard
    human `act_*` to the troll clip. **No `quad_movement`, no mount/`act_horse_*` codes.**
@@ -97,6 +115,9 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
 | Lumber clips (SUPERSEDED 2026-09-18, authored on the mesh rig, would fold in the Kit) | `E:\LOTRAOMAssets\troll_clips_to_import\troll_{walk,run}_lumber.fbx` |
 | Fab clip masters + clips (LIVE) | `LOTRLOME_Armory\Assets\creature\troll\animations\` (`troll_*_geo.tpac` masters on `human_skeleton`, `anim_troll_*_anm.tpac` clips); sources `AssetSources\creature\troll\animations\*.fbx` |
 | Fab retarget tooling | `tools/blender/retarget_mannequin_to_human.py`, `tools/blender/human_skeleton_engine.json`, `tools/blender/fab_cave_troll_clip_names.json`, `tools/blender/fab_cave_troll_clip_measure.json`, `tools/blender/measure_fab_clip_roots.py` |
+| Hill troll rig (LIVE) | `LOTRLOME_Armory\AssetSources\Race Test\Mordor\Trolls\hill_troll_a\hill_troll_a.fbx` (from KEYForce's `troll_rig_base_01.blend` via `tools/blender/export_rig_for_kit.py`), package `Assets\...\hill_troll_a\hill_troll_a_geo.tpac` (skeleton `troll_skeleton_a`); ledger [lotrlome-hill-troll-changes.md](../reference/lotrlome-hill-troll-changes.md) |
+| Hill troll clip masters + clips (LIVE) | `LOTRLOME_Armory\Assets\Race Test\Mordor\Trolls\animations\` (`anim_hill_troll_*_geo.tpac` masters on `troll_skeleton_a`, `anim_hill_troll_*_anm.tpac` clips); sources `AssetSources\Race Test\Mordor\Trolls\animations\*.fbx`, staged from `E:\LOTRAOMAssets\troll_clips_to_import\fab_hill_troll_v5\` |
+| Hill troll retarget inputs | `tools/blender/troll_skeleton_a_engine.json` (engine dump of the re-framed skeleton), `tools/blender/fab_hill_troll_clip_names.json`; physics and re-frame: `tools/tpac_skeleton_copy_physics.py`, `tools/skeleton_hit_capsules.py`; race wiring `tools/wire_hill_troll_race.py` |
 | Clip + action-set tooling | `tools/gen_troll_anim_clips.ps1`, `tools/tpac_fix_item_checksums.py`, `tools/check_rdc_entries.py`, `tools/bind_troll_action_set.py` |
 | Retarget work scene | `E:\LOTRAOMAssets\_export\cave_troll_lightweight\cave_troll_retarget_WORK.blend` (all 52 actions on the engine rig) + `retarget_preview\` renders |
 | Re-skinned LOME meshes | `LOTRLOME_Armory\AssetSources\Race Test\Mordor\Trolls\Cave Troll\LOME_troll.fbx`, `LOME_troll_armor.fbx`; QA renders `E:\LOTRAOMAssets\_troll_rig_out_20260918\preview\`; originals `E:\LOTRAOMAssets\_troll_rig_backup_20260918\` |
@@ -168,6 +189,162 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
   `E:\LOTRAOMAssets\_troll_clips_backup_20260918_1112\`, `-Apply` wrote 52 new ones, `-Verify` prints
   `ok=52 stale=0 orphan=0`, checksums 0 stale. All 104 troll packages lack RDC entries until the next Kit save.
 
+- **Cave troll jaw fix (2026-09-24), Kit reimport owed:** Mike saw the mouth and the skin around it stretched open
+  in the Kit ("Seems like the mouth is rigged to a neck bone?"). Measured in the re-skinned FBX: 201 skin vertices
+  of `lotr_troll_head`, the underside of the jaw 16 to 32 cm in front of the neck joint, were dominated by `spine2`
+  (up to 0.75), and nothing on the head or body followed `neck`. `rigid_skull` made only vertices ABOVE the neck
+  joint's height rigid on `head`; a troll's jaw hangs at or below it, and the nearest human surface there is the
+  chest, so the chin stayed with the chest when the head moved. The 2026-09-18 QA passed it: its one neck bend
+  nodded forward (max stretch 2.05 against the donor's 1.77) and nothing judged compression. The tool now makes the
+  jaw rigid too (`rigid_jaw`, 14 cm in front of the neck joint) and gives a head mesh only `head` and `neck` weight,
+  QA nods both ways, and `.DONE` says "fail" if a head mesh keeps any other weight. Re-run from the original FBX:
+  the head carries 7,131 vertices on `head` and 18 throat vertices on `neck`, none on the chest; nod QA max 1.66
+  forward and 1.36 back (donor 1.77); body, hands and feet identical to the 2026-09-18 weights. Head material
+  remapped again (`fbx_remap_materials.py`). Output `E:\LOTRAOMAssets\_troll_rig_out_20260924\LOME_troll.fbx`,
+  copied over `AssetSources\Race Test\Mordor\Trolls\Cave Troll\LOME_troll.fbx` at 11:58 (Mike: "You can update
+  the FBX file in the folder"; the old one is `LOME_troll.fbx.bak-jawfix-20260924` beside it). OWED: Mike reimports
+  it in the Kit and checks the jaw. Still unexplained in the same screenshots: a pale, bald patch at the back and top of the
+  skull, not part of the head mesh's three materials.
+- **Hill troll moved onto its own skeleton, `troll_skeleton_a` (2026-09-24), the dwarf model:** KEYForce's final
+  delivery (`E:\LOTRAOMAssets\drive-download-20260924T173959Z-1-001\`, `troll_rig_base_01.blend` plus textures) is a
+  3.6 m troll skinned to `troll_skeleton_a`: 26 bones with the human's names and order (no `l_finger0`/`r_finger0`),
+  each bone along its local +Y, rolled 180 to 280 deg off `human_skeleton`'s, 1.8 to 4.9 times as long. Mike's calls:
+  keep the artist's frames (clips get authored for this skeleton, human ones reused where none exist), one mesh per
+  skin slot, copy the dwarf, textures at 1K. `tools/blender/export_rig_for_kit.py` wrote `hill_troll_a.fbx` (armature
+  under its real name; slots `hill_troll_a_body` 5,562 vertices, `_head` 2,099, `_hands` 1,136, `_legs` 2,094; bones
+  back from the round trip within 0.001 mm and 0 deg); six 2048 maps went to 1024 (originals under
+  `E:\taom-texture-backup-2026-09-13\`). Mike imported it into `LOTRLOME_Armory\Assets\Race Test\Mordor\Trolls\hill_troll_a\`
+  (`hill_troll_a_geo.tpac`, source `AssetSources\...\Trolls\hill_troll_a\`), with Kit materials
+  `t_tr_hill_troll_{body,eye,head,cloth,hammer}_a_mtl`. The import left the skeleton `Usage` `other`, 26 empty
+  bodies, no joints. `tools/tpac_skeleton_copy_physics.py` then carried the human's physics through the bone frames
+  (a verbatim copy, the dwarf's way, would have laid every capsule across its limb) with hit capsules fitted to the
+  skin (`skeleton_hit_capsules.py fit --axis bone`) and ragdoll radii sized from them: `Usage` `human`, 26 bodies,
+  34 joints (15 d6, 19 ik), 99.3% of the skin inside a hit capsule, every joint at the human's angle to its bone
+  except the ankle's ik twist (17 deg off the leg against 6). Checked on a scratch copy first, with the old dump
+  parser, a world-space comparison and the coverage re-measure; the live package is byte-identical to that copy
+  (backup `hill_troll_a_geo.tpac.bak-physics-20260924-135228`). Procedure and the three engine facts behind it:
+  [bannerlord-skeleton-authoring.md](../reference/bannerlord-skeleton-authoring.md) "Ragdoll, IK and hit capsules
+  for a humanoid on its own skeleton".
+  **Materials (2026-09-24 pm):** the first import bound the meshes to `m_hilltroll_{body,cloth,eye,head}_a`, the
+  lowercased FBX names, and materials by those names already existed: the OLD hill troll's, from March, in
+  `Trolls\Hill Troll\textures\`, on the old `T_HillTroll_*` textures. So the new model wore old textures with no
+  warning, and the `t_tr_hill_troll_*_a` materials made for it went unused. KEYForce's second `.blend`
+  (`E:\LOTRAOMAssets\drive-download-20260924T190230Z-1-001\`) renamed `M_HillTroll_Head_A` to `M_HillTroll_Mouth_A`
+  (same `T_HillTroll_Head_A_*` textures, head base and mouth) and deleted 11 unused materials; geometry, weights and
+  every bone's rest are unchanged. The re-export names the Kit materials directly
+  (`export_rig_for_kit.py --material`: Body to `t_tr_hill_troll_body_a`, Cloth to `_cloth_a`, Mouth to `_head_a`, Eye to
+  `_eye_a`), same vertex counts, bones within 0.001 mm; installed over the Armory source (old one
+  `hill_troll_a.fbx.bak-kitmaterials-20260924`). Mike re-imported it at 14:29: every metamesh now names a
+  `t_tr_hill_troll_*_a` material, and the skeleton physics came through byte-identical, so nothing was re-run. But
+  the head came in as `head.0` (head base plus mouth, one material) and `head.1` (eyes), with no mouth sub-mesh to
+  tag. The Kit makes one named sub-mesh per FBX object called `<mesh>.<part>` (the dwarf's `_head`, `_head.eye`,
+  `_head.mouth`, tagged `face_base_mesh`, `face_eye_mesh`, `face_mouth_mesh`) and `.0`/`.1` only for one object with two
+  materials; the export had joined the three head objects. Re-exported at 14:38 as `hill_troll_a_head` (962
+  vertices), `hill_troll_a_head.eye` (194) and `hill_troll_a_head.mouth` (943, on the head material, as KEYForce set
+  it), installed over the source (previous one `.bak-mouthsplit-20260924`). Mike re-imported, tagged and saved (14:39): the head
+  metamesh holds `hill_troll_a_head` (`face_base_mesh`), `.eye` (`face_eye_mesh`) and `.mouth` (`face_mouth_mesh`),
+  every mesh names its `t_tr_hill_troll_*_a` material, the skeleton physics is still byte-identical to the 13:52
+  write, and the package has a fresh `.rdc` (14:38, a minute before the tag save). Mike's look in the Kit's
+  skeleton view: ragdoll capsules inside the body, hit capsules around it, IK joints present, "Looking good". The
+  in-game checks still owed are a hit test and a corpse falling. Next: the race wiring (skin on `troll_skeleton_a`, Monster, a standalone
+  action set naming it), clips retargeted onto `troll_skeleton_a`, the hammer as an item, then the cave troll.
+- **Hill troll race wired to `troll_skeleton_a` (2026-09-24 pm), step 2:** Mike: point the existing `hill_troll`
+  race at the new skeleton and meshes, like the dwarf; Monster resized, no riding; all ten skins; grip bones added.
+  The rig had no `l_finger0`/`r_finger0`, the bones the Monster hangs held items on (clips do not need them;
+  weapons do), so the export adds them, carried from the human hand and lowered 0.22 m by KEYForce to sit in the
+  fist. KEYForce's shoulder piece duplicates the body's surface (every vertex 0 mm from it): it is the
+  `body_meta_mesh_shoulders` mesh and now exports as `hill_troll_a_shoulder` instead of doubling the shoulders
+  inside the body. Physics re-run over the 28-bone skeleton (99.5% of the skin in a hit capsule). Live
+  `skins.xml`, `monsters.xml` and `action_sets.xml` edited by the new `tools/wire_hill_troll_race.py` plus
+  `patch_dwarf_action_parity.py` (4,700 actions in a standalone `as_hill_troll_warrior`); the Monster's four
+  variants renamed to the `hill_troll_*` ids the engine looks up. Validators: engine XSD pass on `monsters.xml`,
+  `audit_action_set_parity.py` 0 gaps over 1,304 humanoid sets (the hill troll root now counted), ModuleData 0
+  errors. Every edit, backup and redo step: [lotrlome-hill-troll-changes.md](../reference/lotrlome-hill-troll-changes.md);
+  the tracked Armory snapshot carries them. OWED: Mike re-imports the FBX with the lowered grips, I re-check the
+  physics, a Kit save for the `.rdc`, then the first in-game look (the troll plays human clips on its own skeleton
+  until step 3).
+- **Re-framed to the human's axes, and the 52 Fab clips retargeted (2026-09-24 evening), step 3:** Mike previewed
+  the human `guard_up_2h` on the hill troll in the Kit: arms, shoulders and head twisted. The engine plays a clip's
+  joint rotations on a skeleton as they are, and `troll_skeleton_a`'s bones were rolled 180 to 280 deg off the
+  human's (the dwarf's are within about 35). Mike chose to re-frame on export over retargeting every human clip:
+  `tpac_skeleton_copy_physics.py --reframe` turns every bone to the human's anatomical axes, heads kept (the mesh
+  and weights need nothing), and `export_rig_for_kit.py --bone-frames` applies it with the grips (KEYForce's -0.22 m).
+  The 16:03 Kit import matches the record exactly (0.000 deg, 0.16 mm), 28 bones in human order, bone axis +X.
+  Physics re-run with `--reframed` (maps by the identity; the plain rule would have turned the wrists 24 to 30
+  deg because the hands now have off-axis grip children): 99.4% of the skin in a hit capsule, all 34 joints within
+  0.03 deg of the human's. `retarget_mannequin_to_human.py` onto `tools/blender/troll_skeleton_a_engine.json`
+  (`--armature-name troll_skeleton_a_notused`, `--ref-clip Cave_Troll_free_idle_0.fbx`): all 52 Fab clips as
+  `anim_hill_troll_*` in `E:\LOTRAOMAssets\troll_clips_to_import\fab_hill_troll\`, every frame 0 at rest (0.0 deg),
+  previews matching the Fab troll pose for pose (idle, attack, walk, hit, run start; the first death crouches a
+  little less than the source). Mike imported the 52 into `LOTRLOME_Armory\Assets\Race Test\Mordor\Trolls\animations\`
+  (52 masters, all with an EMPTY skeleton); `wire_anim_master_skeletons.ps1 -SkeletonGuid 7516b03c-...
+  -BoneNum 28` pointed all 52 at `troll_skeleton_a` (the folder holds only these, since the human is 28 bones too;
+  `.bak-preskel` beside each). `gen_troll_anim_clips.ps1` (new `-SkeletonGuid`, `-ClipPrefix`, `-TravelScale`; the
+  cave troll's dry run byte-identical after the change) wrote the 52 `anim_hill_troll_*_anm.tpac` clips, strides at
+  troll size (walk 2.73 m per loop, 1.74 m/s; run 5.34 m); `-Verify` 52 ok, 0 stale, 0 orphan; checksums refreshed.
+  OWED: a Kit load and save (the 52 clips have no `.rdc` entry yet), a Kit preview of a Fab clip and of a human one
+  on the re-framed troll, binding into `as_hill_troll_warrior`, then the in-game look.
+- **Fab clips re-retargeted: wrists, feet, root height, leg IK (2026-09-24, late):** Mike saw a twisted wrist on
+  `run1` and `walk_to_run` in the Kit and asked for a loop over the animations. Four fixes to
+  `retarget_mannequin_to_human.py`, each kept only on measurements against the Fab source (the probes live in
+  `E:\LOTRAOMAssets\_hill_troll_a_export\review_20260924b\`: feet per bone against the clip's first frame, per-frame
+  world rotation steps, loop seams, planted-foot travel, root height per frame). (1) The Mannequin twist bones drive
+  the human `*_twist1` helpers: `run1`'s wrist twist fell from 172 to 82 deg with 90 on the forearm, the source's
+  own split. (2) The feet keep their own rest pitch (`NO_ALIGN`): aligned to the Fab foot's steeper ankle-to-ball
+  line (41 deg down against the troll's 21) they pitched toe-down and the toes sank up to 17 cm under held ankles.
+  (3) A two-bone leg IK (`--no-leg-ik` for the A/B) puts each ankle on the source ankle's path scaled by the thigh +
+  calf ratio 1.5578, anchored on the Fab's bind stance from the troll's hip: the troll's rest feet stand 35 cm in
+  front of its hips and the Fab's 19 cm behind at scale, so anchored on the troll's own rest ankle a forward step
+  asked 19% more than the leg's length and the IK missed by up to 37 cm; the knee bends toward its rest pole
+  carried by the thigh and the calf follows the thigh's correction before it is aimed (the retargeted knee's plane
+  flipped near a straight leg: 63 deg one-frame jumps in `run_to_heavy_attack`, 28 in `hit_right1`, against the
+  source's 15 and 14). (4) The UE export clamps the pelvis at its bind height 1.181 m and parks the excess on the
+  root node (`danger_run_0` holds the pelvis flat for six frames while the root rises 6.5 cm; `danger_attack_1`
+  12.9 cm; 21 of 52 clips), so an in-place retarget that drops root motion flattens every bob and sinks the body by
+  the cut: `_root_height_matrix` keeps the root's Z and drops only travel and yaw. Over all 52: feet within 2 cm of
+  the source's scaled lowest point (they were 19 to 29 cm under, 21 cm even in idle), no single-frame step beyond
+  the source's own, the six loops close at 0 deg and 0 m, frame 0 at rest, the mid-frame previews pose for pose.
+  The v5 FBX set replaced the Armory sources in `AssetSources\Race Test\Mordor\Trolls\animations\` (the approved
+  first set is backed up at `E:\LOTRAOMAssets\_hill_troll_a_export\anim_fbx_backup_20260924_1610\`). The clip
+  generator's `-TravelScale` must be the report's `pelvis_scale`: the planted foot slides 2.71 m per `combat_walk1`
+  loop against the source's 1.74, ratio 1.558, so the first run's 1.377 would have skated the feet 12%, and the 52
+  `_anm.tpac` clips are regenerated at 1.5578 after the re-import. OWED: Mike's Kit re-import and save,
+  `wire_anim_master_skeletons.ps1` (masters may come back EMPTY), delete and regenerate the clips, `-Verify`, the
+  Kit look at wrists and feet. The cave troll's shipped Fab set came from the older tool and carries the same
+  clipped bobs: a separate decision, not made here.
+- **Human clips for the hill troll (2026-09-24, later):** after the re-import Mike found the wrists still twisted
+  and a neck "straight up": on the cave troll's `anim_troll_*` clips, which are `human_skeleton` clips. Measured
+  against `human_skeleton_engine.json`: the troll's rest bone DIRECTIONS sit 54 deg (spine2), 45 (neck) and 42
+  (thigh) off the human's and its head and hand rest ORIENTATIONS 65 and 20 deg off. The re-frame matched axes,
+  not relations, and a clip stores parent-relative rotations, so every human clip lands each bone at the human's
+  world orientation turned by its parent's rest difference: head up 45 to 65 deg, wrists twisted 20. That is every
+  action the Fab set lacks, including the engine's melee. Mike's decision: create the clips the troll needs and
+  reuse the Fab clips for specific actions, not 4,700. The pipeline: `read_anim_keyframes_tpac.ps1 -ByClip`
+  resolves the action set's clip names through `animation_clips.tpac` to masters (16 prototype clips were 15
+  masters; `blocked_slashright_2h` plays `anim_twohanded_slashright_unbalanced` backward 110 to 1; a master named
+  `jump_loop` is a 0-frame shell) and writes `clips_index.json`; `retarget_mannequin_to_human.py --source-json
+  --source-rig human` builds the source rig from each JSON's skeleton dump and keys it (sparse integer-frame keys
+  with holds, `Duration` = the root track's key count, the pelvis bob in `root.pos`), maps by identity, keeps the
+  trunk delta-only (`--no-align`), takes the trunk's reference from frame 1 of the two-handed stance
+  (`--ref-json`) and its posture from the approved Fab idle (`--posture-clip`: spine2 17 deg, neck 92, pelvis 15,
+  where the rig's rest has 52, 53 and 6; two probes and the first posture read compared the rest with itself
+  because Blender's importer lands our frame 0 on frame 1, caught by a pixel diff of the previews), and anchors
+  the leg IK on the reference pose's own feet (the Fab set re-run this way is within 6 mm of v5, so v5 stays).
+  Fifteen prototype masters (`stand_right_twohanded`, `anim_guard_up_twohanded`, the slashright and overswing
+  ready and release masters, defend up, `anim_2handedbash`, `anim_2h_stand_idle_1`, kick, jump, strike, turn,
+  run) export with every IK goal within 2 cm and frame 0 at rest, and are staged in
+  `LOTRLOME_Armory\AssetSources\Race Test\Mordor\Trolls\animations_human\` for Mike's Kit look.
+  `gen_troll_anim_clips.ps1 -CloneByName -ClipsIndex ... -TravelScale 1.8504` will cut each clip as a copy of its
+  own vanilla definition on the new master (range shifted by the rest frame, facial id cleared, displacements
+  scaled), and the new `tools/bind_hill_troll_action_set.py` (10 tests) regenerates the standalone set from
+  Native's 4,700 active nodes: Fab clip where the cave troll rules bind one (213), retargeted human clip where an
+  index lists it (439 with batch 1), the human clip inherited otherwise (4,048). Batch 1 is the two-handed group
+  without crouches plus strikes, staggers, falls, jumps and kicks: 429 clips on 255 masters
+  (`review_20260924b/batch1_clips.txt`), retargeted in one background run (53,652 frames, 255 of 255 exported,
+  frame 0 at rest everywhere, IK misses under 7.3 cm with six clips over 5 cm, all falls, knockbacks and quick
+  swings; the 15 prototype masters came out pixel-identical to the prototype run) and staged, all 255, in the
+  `animations_human` source folder. OWED: Mike's Kit import of that folder, the clips, the bind, the parity
+  audit, the in-game fight.
 - OK **LOME cave troll set RE-SKINNED (2026-09-18):** `tools/blender/reskin_to_human_skeleton.py` transferred
   TaleWorlds' body weights onto `lotr_troll_body/feet/hands/head` and `lotr_troll_armor/bracers/helmet` (42 meshes
   with LODs). Before: 115 un-normalised + 9 over-4-influence vertices on the body, 1,836 un-normalised on the head.
@@ -179,6 +356,8 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
   human rest, so it stays on `troll_skeleton` unless Mike accepts a conformed silhouette; Fab troll on its own
   proportions is a separate job. The hill troll's head and mouth materials are missing in the Kit
   (`mordor_hill_troll_head`, `t_hilltroll_mouth`, "Unable to find material" in every Kit session of 2026-09-18).
+  (Superseded on 2026-09-24: KEYForce delivered the hill troll on its own `troll_skeleton_a`, with its own
+  materials; the entries above.)
   **In game (2026-09-18, 15:47):** cave trolls fought on `as_cave_troll_warrior`, 2,982 blows taken, 19 deaths, no
   clip or material warning; Mike confirmed the Fab animations play.
   **Materials (2026-09-18 pm):** the reimport of `LOME_troll.fbx` warned "Unable to find material lotr_troll_head"
@@ -229,8 +408,10 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
 > **Game skeletons have NO IK joints.** IK lives only in the Blender ARP authoring rig
 > (`troll_rig_01.blend`: `c_foot_ik.l`, `c_hand_ik`, …) and is baked into the animation on export;
 > ARP GE export strips control/IK bones, leaving a deform-only skeleton. `cave_troll` uses the stock
-> `human_skeleton` (no custom troll skeleton); `hill_troll` references a custom `troll_skeleton`
-> (deform skeleton; bone structure not yet inspected).
+> `human_skeleton` (no custom troll skeleton); `hill_troll` referenced a custom `troll_skeleton` until
+> 2026-09-24 and runs on `troll_skeleton_a` since. One correction to "no IK joints": a game skeleton's
+> `SkeletonUserData` does carry `ik`-typed joints (the human has 19 beside 15 `d6`), but they are ragdoll
+> constraints, not animation IK; `tpac_skeleton_copy_physics.py` copies them.
 
 ## See also
 - [troll-race-arp-retargeting-workflow.md](../ai-includes/troll-race-arp-retargeting-workflow.md) — the HOW.
@@ -238,6 +419,17 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
 
 ## Changelog
 
+- 2026-09-24, `fix(troll)`: the Fab clips re-retargeted with twist bones, flat feet, leg IK on the Fab stance and
+  the root's height kept; feet within 2 cm of the source over all 52; `-TravelScale` is the report's `pelvis_scale`.
+- 2026-09-24, `feat(troll)`: `troll_skeleton_a` re-framed to the human's axes on export (human clips bend it right),
+  physics re-run, and the 52 Fab clips retargeted onto it as `anim_hill_troll_*` (staged for the Kit).
+- 2026-09-24, `feat(troll)`: the `hill_troll` race on `troll_skeleton_a` (all ten skins, standalone action set,
+  Monster sized to the model, grip bones, separate shoulder mesh; `wire_hill_troll_race.py`).
+- 2026-09-24, `feat(troll)`: the hill troll on KEYForce's `troll_skeleton_a` (`export_rig_for_kit.py`, Kit import by
+  Mike), with the human's ragdoll, IK and skin-fitted hit capsules carried through its bone frames
+  (`tpac_skeleton_copy_physics.py`).
+- 2026-09-24, `fix(troll)`: the cave troll's jaw rides its head instead of its chest (`reskin_to_human_skeleton.py`
+  jaw rule, head meshes on head and neck only, a nod each way in QA).
 - 2026-09-18, `feat(troll-anim)`: the Fab clips play in the Kit (author on the engine frames + pose-baked root yaw, three measured Kit rounds), `bind_troll_action_set.py` wrote 213 `as_cave_troll_warrior` overrides, `gen_troll_anim_clips.ps1` authored the 52 `anim_troll_*` clips from vanilla templates, LOME cave troll set re-skinned from TaleWorlds' weights (`reskin_to_human_skeleton.py`). Hill troll measured (19.5 cm joint offsets) and left on `troll_skeleton`.
 - 2026-09-17, `feat(troll-anim)`: Fab "Cave Troll Lightweight" pack exported from UE 5.4 (`ue_export_cave_troll.py`), all 52 clips retargeted onto `human_skeleton` (`retarget_mannequin_to_human.py`), staged for Kit import.
 - 2026-06-15 — `fix(troll-anim)`: fixed `rebuild_from_json` bone-offset collapse, authored first-pass lumbering walk/run, reverted the cave_troll skins back to `human_skeleton` + `lotr_troll_*` meshes.

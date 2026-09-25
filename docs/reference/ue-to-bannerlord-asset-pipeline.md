@@ -217,10 +217,49 @@ How it works, and the three decisions that made it match:
   doing something (that frame holds the right forearm raised 133 degrees), and using it for the
   limbs baked a bent elbow into the walk. Hence `CLIP_REF_BONES` = spine chain + neck + head only.
 - Root motion lives on the UE `root` node, which the FBX importer turns into the armature OBJECT;
-  ignoring the object's animation gives in-place clips. Pelvis bob is scaled by the pelvis
-  rest-height ratio (0.915 / 1.181). `--keep-root-yaw` folds the object's Z rotation back in for
-  the turn clips (pelvis rotates 90/180 in place); which flavour the engine's turn codes want is
-  the in-game test's call, so both sets are staged.
+  dropping the object's travel and yaw gives in-place clips. **Its height is kept** (2026-09-24): the
+  export clamps the pelvis at its bind height (1.181 m) and parks any height above it on the root,
+  so `danger_run_0` holds the pelvis flat for six frames while the root rises 6.5 cm and
+  `danger_attack_1` 12.9 cm (21 of 52 clips). Dropped with the travel, every bob lost its top and
+  the body sank by the cut on those frames; the cave troll's shipped set still carries that. Pelvis
+  bob is scaled by the thigh + calf length ratio (`pelvis_scale` in the report; it was the pelvis
+  height ratio 0.915 / 1.181 for the cave troll). `--keep-root-yaw` folds the object's Z rotation
+  back in for the turn clips (pelvis rotates 90/180 in place); which flavour the engine's turn codes
+  want is the in-game test's call, so both sets are staged.
+- **Onto a custom humanoid skeleton (2026-09-24, the hill troll on `troll_skeleton_a`):**
+  `--engine-skeleton` takes that skeleton's engine dump (`tools/blender/troll_skeleton_a_engine.json`,
+  the re-framed rig), `--human` the FBX the Kit imported (its mesh gives the preview its height),
+  `--armature-name <skeleton>_notused`. Four more decisions, each kept on measurements against the
+  Fab source (`docs/features/troll-race.md` "Fab clips re-retargeted" has the numbers): the
+  Mannequin's twist bones drive the human `*_twist1` helpers, or the whole forearm roll lands at the
+  wrist; the feet are delta-only (`NO_ALIGN`), their rest pitch being their stance; a two-bone leg
+  IK keeps each ankle on the source ankle's path at the leg scale, anchored on the SOURCE's bind
+  stance from the target's hip (the two rigs' stances differed by 54 cm at scale; anchored on the
+  target's own rest foot a forward step overshot the leg by 19%), with the knee bending toward its
+  rest pole carried by the thigh (`--no-leg-ik` for the A/B); and the clip generator's `-TravelScale`
+  is the report's `pelvis_scale`, the factor the stride was scaled by, never a ratio picked by hand.
+  Probes worth reusing sit in `E:\LOTRAOMAssets\_hill_troll_a_export\review_20260924b\`: feet per
+  bone against the clip's first frame (an armature-only re-import has no bind pose), per-frame
+  world rotation steps against the source's (an IK flip shows there and nowhere in a still),
+  loop seams, planted-foot travel per loop, root height per frame.
+- **Human clips as the source (2026-09-24, later).** A re-framed rig takes a human clip's joint AXES
+  right but not its rest RELATIONS: a clip stores parent-relative rotations, so on a hunched rest
+  every human clip still lands the head 45 to 65 deg up and the wrists 20 deg twisted. The clips the
+  race plays are therefore retargeted too. `tools/read_anim_keyframes_tpac.ps1 -ByClip` takes the
+  action set's clip names, resolves each through `Native/AssetPackages/animation_clips.tpac` to its
+  SkeletalAnimation master (the names differ: `stand_2h` is `stand_right_twohanded`; several clips
+  share one master by sub-range; a master carrying a clip's name can be an empty shell), dumps one
+  JSON per master and `clips_index.json`. Then `--source-json <that folder> --source-rig human`:
+  the source rig is built from the JSON's skeleton dump and keyed from its bone tracks (integer-frame
+  keys, sparse with a hold at the end; the master's `Duration` field is the root track's key count,
+  so the length is the last key plus one; the pelvis bob is the root track, added to the pelvis),
+  the bone map is the identity, `--no-align spine spine1 spine2 neck head` keeps the trunk
+  delta-only, `--ref-json <the stance master> --ref-frame 1` makes the stance the trunk's reference,
+  and `--posture-clip <an approved exported clip> --posture-frame 1` gives the trunk the directions
+  that clip stands in (the hill troll's Fab idle: spine2 17 deg, neck horizontal). The leg IK anchors
+  its goals on the reference pose's own feet. Clips: `gen_troll_anim_clips.ps1 -CloneByName` (each
+  clip a copy of its own vanilla definition on the new master, range + 1 for the rest frame); the
+  set: `bind_hill_troll_action_set.py`.
 - Verification is the side-by-side Workbench render per clip in
   `_export\cave_troll_lightweight\retarget_preview\` (human body left, troll right, middle frame);
   an fcurve count is not a check. Round trip of the exported FBX: 28-bone
@@ -370,14 +409,16 @@ Cave troll (2026-09-18): 52 masters + 52 clips live in the Armory, playing corre
 `as_cave_troll_warrior` overrides bound; LOME meshes re-skinned and in the Armory sources. Open: Kit
 reimport of `LOME_troll.fbx` + import of `LOME_troll_armor.fbx` (both done 2026-09-18 pm; the masters needed
 no RDC entry after all, `tools/check_rdc_entries.py --under creature/troll` prints 0), Custom Battle smoke, the junk
-`human_skeleton_notused.00x` skeletons to delete, the hill
-troll decision (stay on `troll_skeleton` + bind the clips, or conform the mesh), and the Fab troll on its
-own proportions as a separate job. The cave trolls fought in a Custom Battle on 2026-09-18 (15:47) on
-`as_cave_troll_warrior`, 2,982 blows taken and 19 deaths, no clip or material warning; Mike confirmed the
-animations. Two Kit warnings stay open, both present in every Kit session that day and neither caused by this
-work: the hill troll's materials `mordor_hill_troll_head` and `t_hilltroll_mouth` do not exist, and an assertion
-`rglBuffer.cpp:899` ("Potential read/write miss match for rglVec3") fires 17 ms after the Kit starts loading
-`LOTRLOME_Armory/Assets`, in no game session; the log names no file.
+`human_skeleton_notused.00x` skeletons to delete, and the Fab troll on its
+own proportions as a separate job. The hill troll decision was made on 2026-09-24: KEYForce's model on its own
+`troll_skeleton_a`, re-framed to the human's axes, with the 52 Fab clips retargeted onto it (ledger
+`lotrlome-hill-troll-changes.md`, record `troll-race.md`); the same retarget pass found the root-height clamp
+above, which the cave troll's shipped set still carries (a separate decision). The cave trolls fought in a Custom
+Battle on 2026-09-18 (15:47) on `as_cave_troll_warrior`, 2,982 blows taken and 19 deaths, no clip or material
+warning; Mike confirmed the animations. Two Kit warnings were open that day, neither caused by this work: the old
+hill troll's materials `mordor_hill_troll_head` and `t_hilltroll_mouth` did not exist (moot since the new model),
+and an assertion `rglBuffer.cpp:899` ("Potential read/write miss match for rglVec3") fires 17 ms after the Kit
+starts loading `LOTRLOME_Armory/Assets`, in no game session; the log names no file.
 
 Rivendell modular kit + 204 materials + textures: done and imported-ready. Tents: meshes + 10 sets
 done; Wide/On_Sticks textures pending user re-download. Open: foliage material shader flags (need

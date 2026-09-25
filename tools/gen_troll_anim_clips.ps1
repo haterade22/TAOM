@@ -6,7 +6,12 @@ param(
   [string]$Measure = "$PSScriptRoot\blender\fab_cave_troll_clip_measure.json",
   [string]$Vanilla = 'E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\Native\AssetPackages\animation_clips.tpac',
   [string]$TpacBin = 'E:\Bannerlord_Art\TpacTool_0.4.0\TpacTool\bin',
-  [string]$Loader = 'E:\LOTRAOMAssets\_auto_workspace\chariot\TolerantTpacLoader.cs'
+  [string]$Loader = 'E:\LOTRAOMAssets\_auto_workspace\chariot\TolerantTpacLoader.cs',
+  [string]$SkeletonGuid = 'dd7f3586-10ea-47d5-880e-a0c263862217',
+  [string]$ClipPrefix = 'anim_troll_',
+  [double]$TravelScale = 0,
+  [switch]$CloneByName,
+  [string]$ClipsIndex = ''
 )
 <#
 Author the anim_troll_* AnimationClip tpacs for the Fab cave troll set (2026-09-17).
@@ -58,19 +63,42 @@ chariot's 24 shipped clips all carry zeros and load), and the in-place skeleton 
 master's checksum stale. -Apply ends by running tools/tpac_fix_item_checksums.py --apply over the
 folder (xxHash64 over the metadata, the Kit's own formula), so every file matches Kit output.
 Dry run by default. -Apply never overwrites an existing _anm.tpac (delete it first, on purpose).
+Another skeleton (2026-09-24, the hill troll on troll_skeleton_a): -SkeletonGuid is the rig EMPTY masters are wired
+to and checked against (default human_skeleton), -ClipPrefix the clip names' prefix (default anim_troll_), and
+-TravelScale, when above 0, sizes LoopDisplacement and the death displacement as the Fab troll's own travel
+(travel_forward_troll_m) times that scale instead of the human-scale value. It must be the retarget's pelvis_scale
+(retarget_report.json), the factor the stride was scaled by: the planted foot slides back by exactly that multiple of
+the Fab's, so any other value skates the feet. For the hill troll that is the thigh + calf length ratio, 1.5578
+(2026-09-24; the pelvis height ratio 1.377 the first run used was 12% short). A master the Kit named after its clip
+(a retarget run with --name-map) keeps that name for its clip, as the spider's do, and finds its measurements
+through the name map read backwards.
+  powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\gen_troll_anim_clips.ps1 `
+    -Masters '<Armory>\Assets\Race Test\Mordor\Trolls\animations' -Names tools\blender\fab_hill_troll_clip_names.json `
+    -SkeletonGuid 7516b03c-1c28-4b4a-87ab-8df6f047bf9c -ClipPrefix anim_hill_troll_ -TravelScale 1.5578 [-Apply]
+Human clips retargeted onto a custom skeleton (2026-09-24, the hill troll's melee set): -CloneByName with -ClipsIndex
+<clips_index.json from read_anim_keyframes_tpac.ps1 -ByClip>. The master for vanilla master `anim_X` (or `X`) is
+`<ClipPrefix>X`; every clip in the index becomes `<ClipPrefix><clip>_anm.tpac`, a copy of its own vanilla clip with the
+master GUID re-pointed, Source1/Source2 + 1 (our rest frame 0), the facial id cleared and displacements times
+-TravelScale (the retarget report's pelvis_scale). Several clips share a master, as in vanilla. -Verify then checks
+the clips against the index (range and master), not the whole-master rule.
+  powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\gen_troll_anim_clips.ps1 -CloneByName `
+    -Masters '<Armory>\Assets\Race Test\Mordor\Trolls\animations_human' -ClipsIndex <human_json>\clips_index.json `
+    -SkeletonGuid 7516b03c-1c28-4b4a-87ab-8df6f047bf9c -ClipPrefix anim_hill_troll_ -TravelScale 1.8504 [-Apply|-Verify]
 #>
 $ErrorActionPreference = 'Stop'
 Add-Type -Path "$TpacBin\TpacTool.Lib.dll"
 Add-Type -Path $Loader -ReferencedAssemblies @("$TpacBin\TpacTool.Lib.dll", 'System.dll', 'System.Core.dll')
 function Load($p) { [ChariotExtract.TolerantTpacLoader]::Load($p) }
 $EMPTY = '00000000-0000-0000-0000-000000000000'
-$HUMAN = [Guid]'dd7f3586-10ea-47d5-880e-a0c263862217'
+$SKEL = [Guid]$SkeletonGuid
 $FPS = 30.0
 
 # ---- inputs
 $nameMap = @{}
 (Get-Content $Names -Raw | ConvertFrom-Json).PSObject.Properties | Where-Object { $_.Name -notlike '_*' } | ForEach-Object { $nameMap[$_.Name] = $_.Value }
 $measTable = @{}
+$clipStem = @{}   # clip name -> source stem, for masters the Kit named after their clip
+foreach ($k in $nameMap.Keys) { $clipStem[$nameMap[$k]] = $k }
 (Get-Content $Measure -Raw | ConvertFrom-Json).PSObject.Properties | ForEach-Object { $measTable[$_.Name] = $_.Value }
 
 # ---- masters
@@ -93,12 +121,101 @@ foreach ($f in [IO.Directory]::GetFiles($Masters, '*_geo.tpac')) {
 }
 Write-Output ("masters: {0}   skeleton-empty: {1}   packages without an animation: {2}" -f $masterMap.Count, (@($masterMap.Values | Where-Object { $_.skel -eq $EMPTY })).Count, $noAnim)
 
+# ---- -CloneByName: masters retargeted from HUMAN clips (retarget_mannequin_to_human.py --source-json). Every clip the
+# index lists is a copy of ITS OWN vanilla AnimationClip (flags, priority, blends, hand poses, sounds, usages verbatim)
+# re-pointed at our master, its Source1/Source2 shifted by one for the rest frame our masters open on (a reversed
+# range such as blocked_slashright_2h 110..1 stays reversed), its facial id cleared (no facial rig on the troll), and
+# its loop or death displacement scaled by -TravelScale. Several clips share one master, as in vanilla. -Verify checks
+# the clips on disk against the index instead of the whole-master rule below.
+if ($CloneByName) {
+  if (-not $ClipsIndex) { throw "-CloneByName needs -ClipsIndex <clips_index.json written by read_anim_keyframes_tpac.ps1 -ByClip>" }
+  $index = @{}
+  (Get-Content $ClipsIndex -Raw | ConvertFrom-Json).PSObject.Properties | ForEach-Object { $index[$_.Name] = $_.Value }
+  $ourMasterOf = @{}
+  foreach ($clipName in $index.Keys) { $ourMasterOf[$clipName] = $ClipPrefix + ("$($index[$clipName].master)" -replace '^anim_', '') }
+  if ($Verify) {
+    $ok = 0; $bad = 0; $byGuid = @{}
+    foreach ($mm in $masterMap.Values) { $byGuid["$($mm.guid)"] = $mm }
+    foreach ($f in ([IO.Directory]::GetFiles($Masters, ($ClipPrefix + '*_anm.tpac')) | Sort-Object)) {
+      $cl = (Load $f).Package.Items | Where-Object { $_.GetType().Name -eq 'AnimationClip' } | Select-Object -First 1
+      $clipName = $cl.Name.Substring($ClipPrefix.Length)
+      if (-not $index.ContainsKey($clipName)) { $bad++; Write-Output ("NOT IN INDEX {0}" -f $cl.Name); continue }
+      $info = $index[$clipName]; $key = "$($cl.Animation)"
+      if (-not $byGuid.ContainsKey($key)) { $bad++; Write-Output ("ORPHAN {0} -> master GUID {1} not on disk" -f $cl.Name, $key); continue }
+      $mm = $byGuid[$key]
+      $want1 = [double]$info.source1 + 1; $want2 = [double]$info.source2 + 1
+      if ([math]::Abs([double]$cl.Source1 - $want1) -gt 0.01 -or [math]::Abs([double]$cl.Source2 - $want2) -gt 0.01 -or [math]::Max($want1, $want2) -gt $mm.frames - 1) {
+        $bad++; Write-Output ("RANGE  {0} -> {1}..{2}, want {3}..{4} within master frames {5}" -f $cl.Name, $cl.Source1, $cl.Source2, $want1, $want2, $mm.frames); continue
+      }
+      $ok++
+    }
+    Write-Output ("verify (clone-by-name): clips ok={0} bad={1}   index clips={2}" -f $ok, $bad, $index.Count)
+    if ($bad + $noAnim -gt 0) { exit 1 } else { exit 0 }
+  }
+  $rows = @(); $written = 0; $skipped = 0; $missing = 0
+  foreach ($clipName in ($index.Keys | Sort-Object)) {
+    $info = $index[$clipName]
+    $ourMaster = $ourMasterOf[$clipName]
+    if (-not $masterMap.ContainsKey($ourMaster)) { $missing++; Write-Output ("NO MASTER {0} for clip {1} (vanilla master {2})" -f $ourMaster, $clipName, $info.master); continue }
+    $m = $masterMap[$ourMaster]
+    $tpl = $vclips[$clipName]
+    if ($null -eq $tpl) { $missing++; Write-Output ("NO VANILLA CLIP {0}" -f $clipName); continue }
+    $s1 = [double]$info.source1 + 1; $s2 = [double]$info.source2 + 1
+    if ([math]::Max($s1, $s2) -gt $m.frames - 1) { $missing++; Write-Output ("RANGE {0}: {1}..{2} outside master {3} frames {4}" -f $clipName, $s1, $s2, $ourMaster, $m.frames); continue }
+    $newName = $ClipPrefix + $clipName
+    $out = Join-Path $Masters ($newName + '_anm.tpac')
+    $c = $tpl
+    $c.Name = $newName
+    $c.Guid = [Guid]::NewGuid()
+    $c.Animation = [Guid]$m.guid
+    $c.Source1 = [float]$s1
+    $c.Source2 = [float]$s2
+    $c.FacialAnimationId = ''
+    $c.ClipSource1Name = ''; $c.ClipSource2Name = ''; $c.UnknownClipName = ''
+    $usageNote = ''
+    if ($TravelScale -gt 0) {
+      foreach ($u in $c.ClipUsages) {
+        if ($u.GetType().Name -eq 'BipMovIkUsage') { $u.LoopDisplacement = [float]([double]$u.LoopDisplacement * $TravelScale); $usageNote = ('loop={0}' -f $u.LoopDisplacement) }
+        elseif ($u.GetType().Name -eq 'DisplacementUsage') {
+          $v = $u.DisplacementVector
+          $u.DisplacementVector = New-Object System.Numerics.Vector3 -ArgumentList @([float]($v.X * $TravelScale), [float]($v.Y * $TravelScale), [float]($v.Z * $TravelScale))
+          $usageNote = ('disp={0}' -f $u.DisplacementVector)
+        }
+      }
+    }
+    $flags = ($c.Flags | ForEach-Object { "$_" }) -join ','
+    $rows += ("{0,-44} <- {1,-44} s={2}..{3} dur={4,-5} pri={5,-3} {6} flags=[{7}]" -f $newName, $ourMaster, $c.Source1, $c.Source2, $c.Duration, $c.Priority, $usageNote, $flags)
+    if ($Apply) {
+      if (Test-Path $out) { $skipped++; continue }
+      $c.TypelessDataSegments.Clear(); $c.UnknownDependences.Clear()
+      $pkg = New-Object TpacTool.Lib.AssetPackage
+      $pkg.Guid = [Guid]::NewGuid()
+      $pkg.Items.Add($c)
+      $pkg.Save($out, 2)
+      $written++
+    }
+  }
+  $rows | ForEach-Object { Write-Output $_ }
+  Write-Output ("clips planned: {0}   unresolved: {1}   MODE = {2}   written={3} skipped-existing={4}" -f $rows.Count, $missing, $(if ($Apply) { 'APPLY' } else { 'DRY-RUN (no writes)' }), $written, $skipped)
+  if ($Apply) {
+    $bad = 0
+    foreach ($f in [IO.Directory]::GetFiles($Masters, ($ClipPrefix + '*_anm.tpac'))) {
+      $r = Load $f; $cl = $r.Package.Items | Where-Object { $_.GetType().Name -eq 'AnimationClip' } | Select-Object -First 1
+      if ($null -eq $cl -or -not $masterMap.Values.guid.Contains($cl.Animation)) { $bad++; Write-Output ("VERIFY FAIL {0}" -f $f) }
+    }
+    Write-Output ("verify: {0} files re-read, {1} bad" -f ([IO.Directory]::GetFiles($Masters, ($ClipPrefix + '*_anm.tpac'))).Count, $bad)
+    $py = Get-Command python -ErrorAction SilentlyContinue
+    if ($py) { & $py.Source "$PSScriptRoot\tpac_fix_item_checksums.py" $Masters --glob '*.tpac' --apply | Select-Object -Last 1 }
+  }
+  if ($missing -gt 0) { exit 1 } else { exit 0 }
+}
+
 # ---- -Verify: read-only check of the clips already on disk, then exit
 if ($Verify) {
   $byGuid = @{}
   foreach ($m in $masterMap.Values) { $byGuid["$($m.guid)"] = $m }
   $ok = 0; $stale = 0; $orphan = 0
-  foreach ($f in ([IO.Directory]::GetFiles($Masters, 'anim_troll_*_anm.tpac') | Sort-Object)) {
+  foreach ($f in ([IO.Directory]::GetFiles($Masters, ($ClipPrefix + '*_anm.tpac')) | Sort-Object)) {
     $cl = (Load $f).Package.Items | Where-Object { $_.GetType().Name -eq 'AnimationClip' } | Select-Object -First 1
     $key = "$($cl.Animation)"
     if ($null -eq $cl -or -not $byGuid.ContainsKey($key)) { $orphan++; Write-Output ("ORPHAN {0,-40} -> master GUID {1} not on disk" -f [IO.Path]::GetFileName($f), $key); continue }
@@ -132,14 +249,14 @@ foreach ($mname in ($masterMap.Keys | Sort-Object)) {
   if ($Apply) {
     $bak = $m.file + '.bak-preskel'
     if (-not (Test-Path $bak)) { Copy-Item $m.file $bak }
-    [Array]::Copy($HUMAN.ToByteArray(), 0, $bytes, $hits[0], 16)
+    [Array]::Copy($SKEL.ToByteArray(), 0, $bytes, $hits[0], 16)
     [IO.File]::WriteAllBytes($m.file, $bytes)
     $chk = Load $m.file
     $sa = $chk.Package.Items | Where-Object { $_.GetType().Name -eq 'SkeletalAnimation' } | Select-Object -First 1
-    if ($null -eq $sa -or $sa.Skeleton -ne $HUMAN -or $sa.Duration -ne $m.frames -or $sa.Name -ne $mname) {
+    if ($null -eq $sa -or $sa.Skeleton -ne $SKEL -or $sa.Duration -ne $m.frames -or $sa.Name -ne $mname) {
       $wireFail++; Write-Output ("WIRE VERIFY FAIL {0}: skel={1} dur={2}" -f $mname, $sa.Skeleton, $sa.Duration); continue
     }
-    $m.skel = "$HUMAN"
+    $m.skel = "$SKEL"
   }
   $wired++
 }
@@ -161,7 +278,7 @@ foreach ($k in @($TEMPLATE.Keys)) {
 }
 
 function TypeOf($clip) {
-  $n = $clip -replace '^anim_troll_', ''
+  $n = $clip -replace ('^' + [regex]::Escape($ClipPrefix)), ''
   if ($n -match 'death') { return 'death' }
   if ($n -match 'hit_') { return 'hit' }
   if ($n -match 'attack') { return 'attack' }
@@ -172,6 +289,12 @@ function TypeOf($clip) {
   if ($n -match 'run') { return 'run' }
   if ($n -match 'walk') { return 'walk' }
   return 'emote'   # idle_to_combat, combat_to_idle: stance transitions, one-shot, lock_movement
+}
+
+function Travel($m) {
+  # root travel per loop at the target's scale (see -TravelScale in the header)
+  if ($TravelScale -gt 0) { return [float]([double]$m.travel_forward_troll_m * $TravelScale) }
+  return [float]$m.travel_forward_human_m
 }
 
 function StepPoints($m) {
@@ -195,8 +318,9 @@ $rows = @(); $written = 0; $skipped = 0
 foreach ($mname in ($masterMap.Keys | Sort-Object)) {
   $m = $masterMap[$mname]
   $stem = 'cave_' + $mname            # troll_free_idle_0 -> cave_troll_free_idle_0
-  if (-not $nameMap.ContainsKey($stem)) { Write-Output ("NO NAME for master {0}" -f $mname); continue }
-  $clipName = $nameMap[$stem]
+  if ($nameMap.ContainsKey($stem)) { $clipName = $nameMap[$stem] }
+  elseif ($clipStem.ContainsKey($mname)) { $clipName = $mname; $stem = $clipStem[$mname] }   # named after its clip
+  else { Write-Output ("NO NAME for master {0}" -f $mname); continue }
   $type = TypeOf $clipName
   $tpl = $vclips[$TEMPLATE[$type]]
   if ($null -eq $tpl) { Write-Output ("NO TEMPLATE for {0} ({1})" -f $clipName, $type); continue }
@@ -231,7 +355,7 @@ foreach ($mname in ($masterMap.Keys | Sort-Object)) {
   if ($type -in @('walk', 'run', 'turn')) {
     foreach ($u in $c.ClipUsages) {
       if ($u.GetType().Name -eq 'BipMovIkUsage' -and $type -ne 'turn') {
-        $u.LoopDisplacement = [float]$meas.travel_forward_human_m
+        $u.LoopDisplacement = Travel $meas
         $usageNote = ('loop={0}' -f $u.LoopDisplacement)
       }
     }
@@ -240,7 +364,7 @@ foreach ($mname in ($masterMap.Keys | Sort-Object)) {
   elseif ($type -eq 'death') {
     foreach ($u in $c.ClipUsages) {
       if ($u.GetType().Name -eq 'DisplacementUsage') {
-        $u.DisplacementVector = New-Object System.Numerics.Vector3 -ArgumentList @([float]0, [float]$meas.travel_forward_human_m, [float]0)
+        $u.DisplacementVector = New-Object System.Numerics.Vector3 -ArgumentList @([float]0, (Travel $meas), [float]0)
         $usageNote = ('disp={0}' -f $u.DisplacementVector)
       }
     }
@@ -263,11 +387,11 @@ Write-Output ("clips planned: {0}   MODE = {1}   written={2} skipped-existing={3
 # ---- verify what was written
 if ($Apply) {
   $bad = 0
-  foreach ($f in [IO.Directory]::GetFiles($Masters, 'anim_troll_*_anm.tpac')) {
+  foreach ($f in [IO.Directory]::GetFiles($Masters, ($ClipPrefix + '*_anm.tpac'))) {
     $r = Load $f; $cl = $r.Package.Items | Where-Object { $_.GetType().Name -eq 'AnimationClip' } | Select-Object -First 1
     if ($null -eq $cl -or -not $masterMap.Values.guid.Contains($cl.Animation)) { $bad++; Write-Output ("VERIFY FAIL {0}" -f $f) }
   }
-  Write-Output ("verify: {0} files re-read, {1} bad" -f ([IO.Directory]::GetFiles($Masters, 'anim_troll_*_anm.tpac')).Count, $bad)
+  Write-Output ("verify: {0} files re-read, {1} bad" -f ([IO.Directory]::GetFiles($Masters, ($ClipPrefix + '*_anm.tpac'))).Count, $bad)
   $py = Get-Command python -ErrorAction SilentlyContinue
   if ($py) { & $py.Source "$PSScriptRoot\tpac_fix_item_checksums.py" $Masters --glob '*.tpac' --apply | Select-Object -Last 1 }
   else { Write-Output "python not on PATH: run  python tools/tpac_fix_item_checksums.py <masters dir> --glob *.tpac --apply" }

@@ -1,0 +1,317 @@
+#!/usr/bin/env python3
+"""Point the hill troll race at troll_skeleton_a and its hill_troll_a meshes in the LIVE LOTRLOME_Armory, the
+dwarf's layout (docs/features/troll-race.md "Hill troll moved onto its own skeleton").
+
+    python tools/wire_hill_troll_race.py            # dry run: what would change in each file
+    python tools/wire_hill_troll_race.py --apply    # write; refused while the game or the Kit runs
+    then: python tools/patch_dwarf_action_parity.py --target <Armory>/ModuleData/action_sets.xml
+              --set-id as_hill_troll_warrior --apply
+
+skins.xml, inside <race id="hill_troll"> only: every skin (adult, teen, child, toddler; the dwarf puts all ten on its
+own skeleton) gets skeleton troll_skeleton_a, the hill_troll_a body / shoulder / legs / hands / head meshes and no
+underwear meshes; every skin's hair, eyebrow and beard lists become the adult male's (bald, no brow, clean-shaven),
+because a human hair mesh on this skeleton would hang at a human head's height (an empty `<beard_meshes />` stays);
+the children's default_hair_meshes / default_beard_meshes (human hair and beards shown under a helmet) go, as
+neither the dwarf nor the adult male troll has them; every face texture outside a comment names the troll head
+material.
+monsters.xml: Monster hill_troll takes the sizes measured from the 3.6 m model (eye centre 3.58 m; the eyes in
+the head bone's frame; arm length 0.9 x the shoulder-to-wrist ratio 3.10; body capsules and crouch x the height
+ratio 2.215), CanRide off; its four variants get the <race>_<suffix> names FaceGen.GetMonsterWithSuffix looks up
+(TaleWorlds.MountAndBlade/FaceGen.cs:44; `troll_settlement` handed a settlement or conversation spawn null), the
+child's sizes scaled like the adult's. main_hand_item_bone stays r_finger0: the export adds the grip bones.
+action_sets.xml: as_hill_troll_warrior becomes standalone on troll_skeleton_a (bipedal), as as_dwarf_warrior is,
+because an agent's skeleton comes from its action set (MBActionSet.GetSkeletonName) and no Armory set that
+inherits a base set changes its skeleton. The set is empty until patch_dwarf_action_parity.py fills it from
+Native's as_human_warrior: run that next, before any load.
+
+Each edit is computed on the file's own text and applied back to front, byte-faithful otherwise (BOM, CRLF,
+comments, other races and sets untouched); the result must parse and pass a read-back check of every value, or
+nothing is written. Idempotent; a missing anchor is refused. --apply writes <file>.bak-hilltroll-race-<time> first.
+Exit codes: 0 done (or dry run), 1 refused, 2 the game or the Kit runs.
+"""
+import argparse
+import datetime
+import os
+import re
+import shutil
+import sys
+import xml.etree.ElementTree as ET
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _gamedir import game_dir, game_or_kit_running  # noqa: E402
+
+ARMORY = os.path.join(game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"),
+                      "Modules", "LOTRLOME_Armory", "ModuleData")
+RACE = "hill_troll"
+SKIN_ATTRS = {"skeleton": "troll_skeleton_a", "body_meta_mesh": "hill_troll_a_body",
+              "body_meta_mesh_shoulders": "hill_troll_a_shoulder", "legs_mesh": "hill_troll_a_legs",
+              "hands_mesh": "hill_troll_a_hands", "face_meta_mesh": "hill_troll_a_head",
+              "underwear_bottom_mesh": "", "underwear_top_mesh": ""}
+FACE_MATERIAL = "t_tr_hill_troll_head_a"
+HEAD_LISTS = ("hair_meshes", "eyebrow_meshes", "beard_meshes")
+HELMET_DEFAULTS = ("default_hair_meshes", "default_beard_meshes")  # human hair shown under a helmet
+MONSTER_ATTRS = {"standing_eye_height": "3.58", "crouch_eye_height": "2.32",
+                 "eye_offset_wrt_head": "-0.069, 0.421, 0.0",
+                 "first_person_camera_offset_wrt_head": "-0.069, 0.434, 0.0", "arm_length": "2.79"}
+CAPSULES = {"body_capsule": {"radius": "0.82", "pos1": "0.0, 0.0, 3.43", "pos2": "0.0, 0, 1.77"},
+            "crouched_body_capsule": {"radius": "0.82", "pos1": "0.0, 0.0, 3.43", "pos2": "0.0, 0, 1.33"}}
+RENAMES = {"troll_child": "hill_troll_child", "troll_settlement": "hill_troll_settlement",
+           "troll_settlement_slow": "hill_troll_settlement_slow",
+           "troll_settlement_fast": "hill_troll_settlement_fast"}
+CHILD_ATTRS = {"standing_eye_height": "2.53", "crouch_eye_height": "1.47", "arm_length": "1.86"}
+NO_RIDING = ("hill_troll", "hill_troll_settlement")
+ACTION_SET = "as_hill_troll_warrior"
+ACTION_SET_HEADER = '<action_set id="as_hill_troll_warrior" skeleton="troll_skeleton_a" movement_system="bipedal">'
+
+
+class Refused(Exception):
+    pass
+
+
+def _comments(text):
+    return [m.span() for m in re.finditer(r"<!--.*?-->", text, re.S)]
+
+
+def _outside(pos, comments):
+    return not any(a <= pos < b for a, b in comments)
+
+
+def _set_attr(tag, attr, value):
+    """One attribute's value in a start tag; the attribute must be there exactly once."""
+    pat = re.compile(r'(\s%s=")[^"]*(")' % re.escape(attr))
+    if len(pat.findall(tag)) != 1:
+        raise Refused("attribute %s is not in %s exactly once" % (attr, tag[:80]))
+    return pat.sub(lambda m: m.group(1) + value + m.group(2), tag)
+
+
+def _apply(text, edits):
+    """edits: (start, end, new) on text, disjoint; applied back to front. -> (text, number that changed)."""
+    edits = sorted(e for e in edits if text[e[0]:e[1]] != e[2])
+    for (a, b, _), (c, _, _) in zip(edits, edits[1:]):
+        if c < b:
+            raise Refused("two edits overlap at %d" % c)
+    for a, b, new in reversed(edits):
+        text = text[:a] + new + text[b:]
+    return text, len(edits)
+
+
+def _parse(text):
+    try:
+        return ET.fromstring(text.lstrip("\ufeff").encode("utf-8"))
+    except ET.ParseError as exc:
+        raise Refused("the edited file no longer parses: %s" % exc)
+
+
+def _start_tags(text, name, start, end, comments):
+    return [m for m in re.finditer(r"<%s\b[^>]*>" % name, text[start:end])
+            if _outside(start + m.start(), comments)]
+
+
+def edit_skins(text):
+    race = re.search(r'<race\s+id="%s"\s*>' % RACE, text)
+    if not race:
+        raise Refused('no <race id="%s"> in skins.xml' % RACE)
+    start, end = race.end(), text.find("</race>", race.end())
+    comments = _comments(text)
+    skins = _start_tags(text, "skin", start, end, comments)
+    if not skins:
+        raise Refused("the %s race has no skin" % RACE)
+    edits, spans = [], []
+    for i, m in enumerate(skins):
+        a = start + m.start()
+        b = start + skins[i + 1].start() if i + 1 < len(skins) else end
+        tag = m.group(0)
+        for attr, value in SKIN_ATTRS.items():
+            tag = _set_attr(tag, attr, value)
+        edits.append((a, a + len(m.group(0)), tag))
+        spans.append((a, b, tag))
+    man = [s for s in spans if 'gender="0"' in s[2] and 'name="man"' in s[2]]
+    if len(man) != 1:
+        raise Refused("expected one adult male skin in the %s race, found %d" % (RACE, len(man)))
+
+    def lists(a, b):
+        found = {}
+        for name in HEAD_LISTS:
+            ms = _start_tags(text, name, a, b, comments)
+            if len(ms) > 1:
+                raise Refused("a %s skin has %d %s lists" % (RACE, len(ms), name))
+            if ms and not ms[0].group(0).endswith("/>"):  # <beard_meshes />: an empty list, left alone
+                inner_start = a + ms[0].end()
+                inner_end = text.find("</%s>" % name, inner_start)
+                if inner_end == -1 or inner_end > b:
+                    raise Refused("an unclosed %s in the %s race" % (name, RACE))
+                found[name] = (inner_start, inner_end)
+        return found
+
+    source = lists(man[0][0], man[0][1])
+    missing = [n for n in HEAD_LISTS if n not in source]
+    if missing:
+        raise Refused("the adult male skin has no %s to copy" % missing)
+    bald = {n: text[s:e] for n, (s, e) in source.items()}
+    for a, b, _ in spans:
+        for name, (s, e) in lists(a, b).items():
+            edits.append((s, e, bald[name]))
+    for m in _start_tags(text, "face_texture", start, end, comments):
+        tag = _set_attr(_set_attr(m.group(0), "name", FACE_MATERIAL), "lod_material", FACE_MATERIAL)
+        edits.append((start + m.start(), start + m.end(), tag))
+    for name in HELMET_DEFAULTS:
+        for m in _start_tags(text, name, start, end, comments):
+            if not m.group(0).endswith("/>"):
+                raise Refused("%s in the %s race is not self-closing" % (name, RACE))
+            line = text.rfind("\n", 0, start + m.start())
+            edits.append((line, start + m.end(), ""))
+    new, changes = _apply(text, edits)
+    _check_skins(new)
+    return new, {"changes": changes, "skins": len(skins)}
+
+
+def _check_skins(text):
+    race = [r for r in _parse(text).iter("race") if r.get("id") == RACE][0]
+    skins = race.findall("skin")
+    man = [s for s in skins if s.get("gender") == "0" and s.get("name") == "man"][0]
+    for s in skins:
+        for attr, value in SKIN_ATTRS.items():
+            if s.get(attr) != value:
+                raise Refused("read-back: skin %s %s=%r" % (s.get("name"), attr, s.get(attr)))
+        for name in HEAD_LISTS:
+            el = s.find(name)
+            if el is not None and len(el) and [ET.tostring(c) for c in el] != [ET.tostring(c) for c in man.find(name)]:
+                raise Refused("read-back: skin %s %s is not the adult male's" % (s.get("name"), name))
+        for t in s.iter("face_texture"):
+            if (t.get("name"), t.get("lod_material")) != (FACE_MATERIAL, FACE_MATERIAL):
+                raise Refused("read-back: skin %s face texture %s" % (s.get("name"), t.get("name")))
+        for name in HELMET_DEFAULTS:
+            if s.find(name) is not None:
+                raise Refused("read-back: skin %s still has %s" % (s.get("name"), name))
+
+
+def _monster_tag(text, mid, comments):
+    ms = [m for m in re.finditer(r'<Monster\s+id="%s"[^>]*>' % re.escape(mid), text) if _outside(m.start(), comments)]
+    if len(ms) > 1:
+        raise Refused("Monster %s is defined %d times" % (mid, len(ms)))
+    return ms[0] if ms else None
+
+
+def _element_end(text, tag_match):
+    return tag_match.end() if tag_match.group(0).endswith("/>") else text.find("</Monster>", tag_match.end())
+
+
+def edit_monsters(text):
+    comments = _comments(text)
+    edits = []
+    main = _monster_tag(text, "hill_troll", comments)
+    if not main:
+        raise Refused("no Monster hill_troll in monsters.xml")
+    tag = main.group(0)
+    for attr, value in MONSTER_ATTRS.items():
+        tag = _set_attr(tag, attr, value)
+    edits.append((main.start(), main.end(), tag))
+    end = _element_end(text, main)
+    for cap, attrs in CAPSULES.items():
+        found = _start_tags(text, cap, main.end(), end, comments)
+        if len(found) != 1:
+            raise Refused("Monster hill_troll has %d %s" % (len(found), cap))
+        t = found[0].group(0)
+        for attr, value in attrs.items():
+            t = _set_attr(t, attr, value)
+        edits.append((main.end() + found[0].start(), main.end() + found[0].end(), t))
+    variants = {}
+    for old, new in RENAMES.items():
+        m = _monster_tag(text, old, comments) or _monster_tag(text, new, comments)
+        if not m:
+            raise Refused("neither Monster %s nor %s exists" % (old, new))
+        t = _set_attr(m.group(0), "id", new)
+        if new == "hill_troll_child":
+            for attr, value in CHILD_ATTRS.items():
+                t = _set_attr(t, attr, value)
+        edits.append((m.start(), m.end(), t))
+        variants[new] = m
+    for mid in NO_RIDING:
+        m = main if mid == "hill_troll" else variants[mid]
+        for f in _start_tags(text, "Flags", m.end(), _element_end(text, m), comments):
+            if re.search(r'\sCanRide="', f.group(0)):
+                edits.append((m.end() + f.start(), m.end() + f.end(), _set_attr(f.group(0), "CanRide", "false")))
+    new_text, changes = _apply(text, edits)
+    _check_monsters(new_text)
+    return new_text, {"changes": changes}
+
+
+def _check_monsters(text):
+    by_id = {m.get("id"): m for m in _parse(text).iter("Monster")}
+    m = by_id.get("hill_troll")
+    if m is None or any(m.get(a) != v for a, v in MONSTER_ATTRS.items()):
+        raise Refused("read-back: Monster hill_troll sizes")
+    for cap, attrs in CAPSULES.items():
+        if any(m.find("Capsules/" + cap).get(a) != v for a, v in attrs.items()):
+            raise Refused("read-back: Monster hill_troll %s" % cap)
+    for old, new in RENAMES.items():
+        if new not in by_id or old in by_id:
+            raise Refused("read-back: Monster %s / %s" % (old, new))
+    for mid in NO_RIDING:
+        f = by_id[mid].find("Flags")
+        if f is not None and f.get("CanRide") not in (None, "false"):
+            raise Refused("read-back: %s can still ride" % mid)
+
+
+def edit_action_sets(text):
+    comments = _comments(text)
+    old = [m for m in re.finditer(r'<action_set\s+id="%s"\s+base_set="as_human_warrior"\s*>' % ACTION_SET, text)
+           if _outside(m.start(), comments)]
+    done = re.search(r'<action_set\s+id="%s"\s+skeleton="troll_skeleton_a"\s+movement_system="bipedal"\s*>'
+                     % ACTION_SET, text)
+    if len(old) == 1:
+        new, changes = _apply(text, [(old[0].start(), old[0].end(), ACTION_SET_HEADER)])
+    elif not old and done:
+        new, changes = text, 0
+    else:
+        raise Refused("%s is neither the inheriting set nor the standalone one (%d inheriting headers)"
+                      % (ACTION_SET, len(old)))
+    s = [a for a in _parse(new).iter("action_set") if a.get("id") == ACTION_SET]
+    if len(s) != 1 or s[0].get("skeleton") != "troll_skeleton_a" or s[0].get("base_set") is not None:
+        raise Refused("read-back: %s is not standalone on troll_skeleton_a" % ACTION_SET)
+    return new, {"changes": changes, "actions_now": len(s[0].findall("action"))}
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    ap.add_argument("--armory", default=ARMORY, help="the LOTRLOME_Armory ModuleData folder")
+    ap.add_argument("--apply", action="store_true")
+    args = ap.parse_args(argv)
+    plan = []
+    try:
+        for name, fn in (("skins.xml", edit_skins), ("monsters.xml", edit_monsters),
+                         ("action_sets.xml", edit_action_sets)):
+            path = os.path.join(args.armory, name)
+            with open(path, "rb") as fh:
+                raw = fh.read()
+            new, report = fn(raw.decode("utf-8"))
+            plan.append((path, raw, new.encode("utf-8"), report))
+            print("%-16s %s" % (name, report))
+    except Refused as exc:
+        print("REFUSED: %s" % exc)
+        return 1
+    if not args.apply:
+        print("dry run: nothing written (add --apply)")
+        return 0
+    if game_or_kit_running():
+        print("REFUSED: Bannerlord or the Modding Kit is running; close it and re-run")
+        return 2
+    stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    for path, raw, new, _ in plan:
+        if new == raw:
+            continue
+        shutil.copy2(path, "%s.bak-hilltroll-race-%s" % (path, stamp))
+        with open(path, "wb") as fh:
+            fh.write(new)
+        with open(path, "rb") as fh:
+            if fh.read() != new:
+                print("ERROR: %s differs from what was written; restore its .bak-hilltroll-race-%s" % (path, stamp))
+                return 1
+        print("wrote %s (backup .bak-hilltroll-race-%s)" % (path, stamp))
+    print("NEXT, before any load: python tools/patch_dwarf_action_parity.py --target \"%s\" --set-id %s --apply"
+          % (os.path.join(args.armory, "action_sets.xml"), ACTION_SET))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -2,6 +2,158 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-24
+
+### feat(troll): v2.0.30 - human clips retargeted onto the hill troll's own rest pose
+
+Mike's Kit look after the re-import: the hill troll's own clips were right, but the cave troll's `anim_troll_*`
+clips, which are `human_skeleton` clips, played on it with the head 45 to 65 degrees up and the wrists twisted 20.
+Measured cause: the re-frame matched the human's bone axes, not its rest relations; the troll's spine2 and neck sit
+54 and 45 degrees off the human's, and a clip stores parent-relative rotations, so every bone lands at the human's
+orientation turned by its parent's rest difference. That covers every action the Fab set does not, the engine's
+melee attacks and blocks among them. Mike's decision: author the clips the troll actually plays, reuse the Fab
+clips where they fit, not 4,700 animations. `retarget_mannequin_to_human.py` gained a human source:
+`--source-json` builds the source rig from a clip's keyframe JSON and keys it (sparse integer-frame keys with a
+hold at the end, interpolated; the master's Duration field is the root track's key count, so the length is the
+last key plus one; the pelvis bob sits in the root track), `--source-rig human` (identity map, engine space),
+`--ref-json` (the two-handed stance as the trunk's reference) and `--posture-clip` (the trunk directions the
+approved Fab idle gives the troll: spine2 17 degrees and the neck horizontal, against the rig's 52 and 53), and
+its leg IK now anchors on the reference pose's own feet, which the Fab set reproduces within 6 mm.
+`read_anim_keyframes_tpac.ps1 -ByClip` resolves action-set clip names through `animation_clips.tpac` to their
+masters (`stand_2h` is `stand_right_twohanded`; `blocked_slashright_2h` plays its master backward; a master named
+`jump_loop` is an empty shell) and writes `clips_index.json`; `gen_troll_anim_clips.ps1 -CloneByName` copies
+each clip's own vanilla definition onto the new master with the range shifted for the rest frame; the new
+`bind_hill_troll_action_set.py` (10 tests) regenerates the standalone set from Native's 4,700 active nodes, Fab
+first, retargeted human clip second, the human clip inherited last (dry run: 213, 439, 4,048). The first batch, 429
+two-handed and reaction clips on 255 masters (53,652 frames), retargeted with every frame 0 at rest and every IK
+goal within 7.3 cm, its contact sheets read pose for pose, and the 255 FBX are staged in
+`AssetSources\...\Trolls\animations_human\` for one Kit import. Owed: that import, the clips, the bind, the parity
+audit, the in-game fight. Four lessons in
+animation-skeleton.
+
+### fix(troll): v2.0.30 - the hill troll's Fab clips keep their feet and wrists
+
+Mike saw a twisted wrist on `anim_hill_troll_run1` and `walk_to_run` in the Kit and asked for a loop over the
+animations. Four defects in `retarget_mannequin_to_human.py`, each measured against the Fab source before and
+after. The Mannequin's forearm and upper-arm twist bones were unmapped, so the whole roll landed at the wrist (the
+run turns the hand 136 to 178 degrees, 89 of them on the twist bone); they now drive the human `*_twist1` helpers.
+The feet were aligned to the Fab foot's steeper ankle-to-ball line and pitched toe-down (toes 17 cm under); they
+keep their own rest pitch now. Copying leg angles alone sank the feet 19 to 29 cm, because the troll's thigh and calf
+are not the Fab's scaled evenly: a two-bone IK now puts each ankle on the source ankle's path at the leg-length
+scale, anchored on the Fab's stance from the troll's hip (the troll's bind feet stand 35 cm in front of its hips,
+the Fab's 19 cm behind; the first anchor asked a forward step for 19% more than the leg), the knee bending toward
+its rest pole carried by the thigh (the retargeted knee's plane flipped as the leg straightened: 63 degree
+one-frame jumps in `run_to_heavy_attack`). And the UE export clamps the pelvis at its bind height and parks any
+height above it on the root node, which the in-place retarget threw away with the travel: 21 of 52 clips lost the
+top of every bob, up to 12.9 cm, and sank by that much. Root height is kept now. Over all 52 clips: feet within 2 cm
+of the source's scaled lowest point (were up to 29 cm under), no single-frame step beyond the source's, every loop
+closing at 0, frame 0 at rest. The stride scale is the leg ratio 1.5578, so `gen_troll_anim_clips.ps1 -TravelScale`
+takes that (the 1.377 of the first run would have skated the feet 12%). The new FBX set replaced the Armory sources
+(backup `E:\LOTRAOMAssets\_hill_troll_a_export\anim_fbx_backup_20260924_1610\`). Owed: Mike's Kit re-import, the
+masters re-wired, the clips regenerated at the new scale, the Kit look. Seven lessons in animation-skeleton.
+
+### feat(troll): v2.0.30 - the hill troll takes human clips and the Fab set
+
+A human clip previewed on the hill troll in the Kit twisted its arms, shoulders and head: the engine plays a clip's
+joint rotations as they are, and `troll_skeleton_a`'s bones were rolled 180 to 280 degrees off the human's. Mike
+chose to re-frame the rig on export over retargeting every human clip. `tpac_skeleton_copy_physics.py --reframe`
+turns every bone to the human's anatomical axes with its position kept (the mesh and weights need nothing), and
+`export_rig_for_kit.py --bone-frames` applies it; the Kit import matches the record to 0.000 degrees. The physics was
+re-run with the new `--reframed` mode, which checks the package against that record and maps by the identity: the
+plain rule would have turned the wrists 24 to 30 degrees, because the hands now have grip children placed off their
+axis. 99.4% of the skin sits in a hit capsule and all 34 joints match the human's within 0.03 degrees. The 52 Fab
+cave troll clips were retargeted onto the re-framed skeleton (`retarget_mannequin_to_human.py`, new
+`--armature-name`, previews framed by the target's own height) as `anim_hill_troll_*`, every frame 0 exactly at
+rest, the previews matching the Fab troll pose for pose. After Mike's Kit import, all 52 masters were pointed at
+`troll_skeleton_a` and `gen_troll_anim_clips.ps1`, given `-SkeletonGuid`, `-ClipPrefix` and `-TravelScale` (the cave
+troll's run unchanged byte for byte), wrote the 52 `anim_hill_troll_*` clips with troll-sized strides; its verify
+gate reads 52 ok. Inputs added:
+`tools/blender/troll_skeleton_a_engine.json`, `tools/blender/fab_hill_troll_clip_names.json`. Owed: a Kit save for the clips'
+cache entries, binding into `as_hill_troll_warrior`, the first in-game look. Two lessons in
+animation-skeleton.
+
+### feat(troll): v2.0.30 - the hill troll race runs on its own skeleton
+
+The existing `hill_troll` race now uses `troll_skeleton_a` and KEYForce's meshes, the dwarf's layout. In the live
+Armory, `tools/wire_hill_troll_race.py` puts all ten skins (adults, teens, children, toddlers) on the new skeleton
+and meshes, bald like the adult male, with face textures on the troll head material; sizes the Monster from the
+3.6 m model (eyes at 3.58 m, arm length 2.79, body capsule radius 0.82) with riding off; and renames its four
+variants to the `hill_troll_*` ids the engine looks up, which it could not find before. `as_hill_troll_warrior` is
+standalone on the troll skeleton, filled with the human set's 4,700 actions by `patch_dwarf_action_parity.py`. The
+rig had no grip bones, the bones the Monster hangs held weapons on, so the export adds `l_finger0`/`r_finger0`
+(`tpac_skeleton_copy_physics.py --missing-bones`, `export_rig_for_kit.py --bone-frames`), carried from the human
+hand and lowered 0.22 m by KEYForce into the fist. KEYForce's shoulder piece is the skin's shoulders-only mesh, not
+more body, and now exports as `hill_troll_a_shoulder`. The physics was re-run over 28 bones (99.5% of the skin in a
+hit capsule); a fit over an already fitted package now keeps its capsules instead of undoing them. The action-set
+audit counts the new root (1,304 humanoid sets, 0 gaps); ModuleData validation reports 0 errors. The parity tool's
+fixed `.bak` had overwritten an older backup; its backups are timestamped now. The tracked Armory snapshot carries
+the edits. Owed: Mike's Kit re-import of the lowered grips, a Kit save, the first in-game look. Docs: the ledger
+`docs/reference/lotrlome-hill-troll-changes.md`, `docs/features/troll-race.md`, `tools/README.md`, three lessons.
+
+### fix(troll): v2.0.30 - the hill troll's FBX names its own Kit materials
+
+The first Kit import bound the new hill troll's meshes to `m_hilltroll_{body,cloth,eye,head}_a` (the FBX's
+`M_HillTroll_*` names, lowercased), and materials by those names already existed: the old hill troll's, from
+March, on its old textures. The new model therefore wore the old textures with no warning, which is what the mouth
+looked like. KEYForce's second file renamed the head material to `M_HillTroll_Mouth_A` and dropped unused ones;
+geometry, weights and the skeleton are unchanged. `tools/blender/export_rig_for_kit.py` gained `--material
+OLD=NEW`, and the re-export names the materials made for this model (`t_tr_hill_troll_{body,cloth,head,eye}_a`,
+the mouth material on the head one). Mike's re-import bound every mesh to its `t_tr_` material, and the skeleton
+physics survived it byte for byte, but the head came in as `head.0` and `head.1` with no mouth sub-mesh to tag: the
+Kit makes a named sub-mesh per FBX object called `<mesh>.<part>` (the dwarf's `_head`, `_head.eye`,
+`_head.mouth`), and the export had joined the three. The head now exports as `hill_troll_a_head`,
+`hill_troll_a_head.eye` and `hill_troll_a_head.mouth` (the exporter's re-import check had cut names at the first
+dot and is fixed); installed over the Armory source with a backup, and Mike's re-import gave the head its three sub-meshes, tagged
+`face_base_mesh`, `face_eye_mesh` and `face_mouth_mesh`, with the physics again intact. Docs: `docs/features/troll-race.md`, `tools/README.md`, a lesson
+in animation-skeleton.
+
+### feat(troll): v2.0.30 - the hill troll's skeleton gets ragdoll and IK
+
+The hill troll moves onto KEYForce's `troll_skeleton_a`, the way the dwarf has its own skeleton. The new
+`tools/blender/export_rig_for_kit.py` exported his rig and meshes as one FBX for the Kit (26 bones back within
+0.001 mm, one mesh per skin slot, at most four influences); the textures went to 1K; Mike imported it into the Armory
+(`Race Test\Mordor\Trolls\hill_troll_a`). The import left the skeleton `Usage` `other` with empty bodies and no
+joints. The dwarf copies the human's physics verbatim, which works only because its bones keep the human's axes; the
+troll's run along +Y, rolled 180 to 280 degrees and up to 4.9 times as long, so a verbatim copy would lay every
+capsule across its limb. The new `tools/tpac_skeleton_copy_physics.py` carries each capsule and joint through the
+rest pose into the troll's bone frames (the joint quaternions' order and direction read from TaleWorlds'
+`Quaternion` and checked against the human knee and elbow), takes the hit capsules from a fit to the skin and sizes
+the ragdoll from them. Result in the live package: `Usage` `human`, 26 bodies, 34 joints (15 d6, 19 ik), 99.3% of the
+skin inside a hit capsule, each joint at the human's angle to its bone except the ankle's IK twist (17 degrees off
+the leg against the human's 6). Two defects in `tools/skeleton_hit_capsules.py` surfaced on the way and are fixed
+with tests: `world_matrices` dropped every parent's position on TaleWorlds' own `human.tpac` (it stores 0 where Kit
+output stores 1), and the fit's fallback axis was a fixed local x, which lies across every limb of a +Y rig (now the
+bone's direction, plus `--axis bone`). The copy tool has 10 tests. Owed: a Kit load and save to re-cook the
+package's `.rdc`, the material binding check, then the race wiring and clips. Docs: `docs/features/troll-race.md`,
+`docs/reference/bannerlord-skeleton-authoring.md` (the procedure), `tools/README.md`, three lessons in
+animation-skeleton.
+
+### fix(troll): v2.0.30 - the cave troll's jaw rides its head, not its chest
+
+Mike saw the cave troll's mouth and the skin around it stretched open in the Kit. Measured in the re-skinned FBX:
+the underside of the jaw (201 skin vertices, 16 to 32 cm in front of the neck joint) followed `spine2`, the chest,
+because `tools/blender/reskin_to_human_skeleton.py` made the skull rigid only above the neck joint's height and a
+troll's jaw hangs below it; nothing followed the neck. The tool now makes the jaw rigid too, gives a head mesh only
+`head` and `neck` weight, nods the head both ways in its QA and fails its `.DONE` if a head mesh keeps other weight.
+Re-run from the original `LOME_troll.fbx`: head 7,131 vertices on `head`, 18 on `neck`, 0 on the chest; nod stretch
+1.66 and 1.36 against the human donor's 1.77; body, hands and feet unchanged; the head material remapped again. The
+new FBX replaced the Armory source `LOME_troll.fbx` (backup `.bak-jawfix-20260924`); a Kit reimport is owed. Docs:
+`docs/features/troll-race.md`, `tools/README.md`, a lesson in animation-skeleton.
+
+### docs(release): v2.0.30 - the 12 to 24 September changelog, written for Discord
+
+`docs/releases/2026-09-24-since-v2.0.28-discord.md` is the exhaustive player-facing account of the window as the
+v2.0.31 changelog, in three paste-ready messages under the 4,000 character cap. Items are grouped
+by category (engine, creatures, combat, troops and armour, campaign, map and Armoury, translations,
+open), not by build, at Mike's direction: v2.0.29 (14 Sep, Bannerlord 1.5.2) and v2.0.30 (18 Sep,
+1.5.3) went out on the beta, and v2.0.31 carries all of it for Patreons; the table under the post
+still names the build each bullet first shipped in. It supersedes the two-day post of 13 September.
+Sources: both release branches since 12 Sep (156 commits, all at origin), the CHANGELOG entries, the
+85 issues opened and 88 closed in the window, the ten `lotraom-assets` commits, the live module
+folders and the patreon release folder (v2.0.29). The two existing release notes for v2.0.29 and
+v2.0.30 were read first and nothing here contradicts them. Not fixed here: #619 and #620 are still
+open on GitHub although their fixes are in v2.0.30's CHANGELOG entries.
+
 ## 2026-09-23
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)

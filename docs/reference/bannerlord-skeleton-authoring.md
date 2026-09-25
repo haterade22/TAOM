@@ -375,6 +375,76 @@ command sweeping rays across a creature can show which bones answer where; the s
 distance-to-bone-origin checks for scripted creature strikes, which miss the body between two joints. TAOM
 calls it nowhere yet.
 
+## Ragdoll, IK and hit capsules for a humanoid on its own skeleton (2026-09-24, the hill troll)
+
+A humanoid race on its own skeleton follows the dwarf: `Usage` `human`, the human's bodies (ragdoll capsule, hit
+capsule, mass, body type, zone) and its 34 joints (15 `d6` ragdoll joints, 19 `ik` joints). The Kit import gives a
+new skeleton `Usage` `other`, a body per bone with no capsule and no joints (the `creature-mount-authoring.md`
+gotcha 8 wipe). The dwarf's copy is verbatim, 28 of 28 bodies and 34 of 34 joints byte-identical to
+`human_skeleton`'s, and that works only because `dwarf_skeleton_a` keeps the human's bone axes. A rig authored in
+Blender and exported primary Y does not: `troll_skeleton_a` runs each bone along its local +Y (the human along +X),
+rolled 180 to 280 deg off the human's, 1.8 to 4.9 times as long. Copied verbatim, every capsule would lie across its
+limb and every joint would hinge about the wrong axis.
+
+`tools/tpac_skeleton_copy_physics.py` carries each record through the rest pose instead. Per bone it builds the world
+rotation that takes the human's bone direction (toward the child along the bone axis) and its front onto the
+troll's, and turns bone-local points and joint frames through it; ends scale by the bone's length ratio along the
+bone and by the height ratio across it. Masses, zones, limits and lock modes copy unchanged, as the dwarf's do.
+Three engine facts it rests on, all read on 2026-09-24:
+
+- **A joint's `rot` is a quaternion stored W, X, Y, Z** (`TaleWorlds.Library.Quaternion`'s field order) that turns
+  the CHILD bone's (`bone1`'s) axes into the joint's, the way `Quaternion.Mat3FromQuaternion` builds a frame (its
+  `s`, `f`, `u` rows are the columns of the standard rotation matrix). The human knee and elbow decide the direction:
+  read this way their cone centres sit 55 and 65 deg off the bone, leaning backward and forward, the sides each one
+  flexes to; the conjugate reading leans both the wrong way. `pos` is (0, 0, 0, 1), the child's origin. Whether
+  the engine builds the parent's half of a joint from the rest pose (so rest sits at the cone's centre) is
+  UNVERIFIED; the in-game ragdoll is the check.
+- **TaleWorlds' own `human.tpac` stores 0 under each rest frame's translation**, where Kit output stores 1. A plain
+  4x4 product then drops every parent's position (the head lands at 0.107 m); `skeleton_hit_capsules.world_matrices`
+  takes the fourth column as (0, 0, 0, 1) since.
+- **The fitter's fallback axis was a fixed local x**, which lies across every limb of a +Y rig; it now follows the
+  bone, and `--axis bone` pins every capsule to its bone.
+
+Thickness is the one thing a copy cannot supply. The height ratio gave the troll's pelvis and spine hit capsules
+0.27 and 0.24 m where its skin needs 0.66 and 0.76, so the copied capsules held 5.8% of the skin and a corpse on
+ragdoll capsules that thin would sink into the ground. So the hit capsules come from the skin, and the ragdoll
+radii from those, at the human's ratio of ragdoll radius to largest hit radius (pelvis 0.08 of 0.17, thigh 0.07 of
+0.13). The procedure, game and Kit closed:
+
+1. `blender -b -P tools/blender/export_skin_for_capsules.py -- skin.json <the FBX the Kit imported>`
+2. `python tools/skeleton_hit_capsules.py fit --tpac <geo.tpac> --skeleton <name> --skin skin.json --mesh <each
+   slot> --axis bone --out fit.json` (read-only)
+3. `python tools/tpac_skeleton_copy_physics.py --tpac <geo.tpac> --skeleton <name> --fit fit.json`, read the dry run,
+   then `--apply` (writes `.bak-physics-*` first)
+4. Open the module in the Kit and save, so it re-cooks the package's `.rdc`
+5. After any re-import of the FBX, run `python tools/tpac_skeleton_dump.py <geo.tpac> <name>`: empty bodies and no
+   joints mean repeat 1 to 4. A re-import whose skeleton was unchanged kept the physics byte for byte (the hill
+   troll's material fix, 2026-09-24 14:29); a changed skeleton is the documented wipe (`creature-mount-authoring.md`
+   gotcha 8).
+
+Hill troll result, first pass: `Usage` `human`, 26 bodies, 34 joints (the human's `l_finger0` and `r_finger0`
+carry no capsule and no joint; the artist's rig had neither bone), 99.3% of its skin inside a hit capsule, every
+joint at the human's angle to its bone. The one place that result departed from the human: the ankle's `ik` twist
+axis sat 17 deg off the leg against the human's 6, because the troll's foot meets its calf at 77 deg (the human's
+at 58) and the copy keeps the joint's angle to the toe.
+
+**Re-framed (the same day):** a human clip previewed on the rig twisted it, because the engine plays a clip's joint
+rotations as they are and the artist's rolls were 180 to 280 deg off the human's. `tpac_skeleton_copy_physics.py
+--reframe OUT.json` writes every bone turned to the human's axes with its head kept, plus the missing grip bones
+(`--missing-bones`, an artist `--offset` allowed); `export_rig_for_kit.py --bone-frames OUT.json` applies it, the
+mesh and weights needing nothing. After the Kit import, run the physics with `--reframed OUT.json`: it checks the
+package against the record (0.5 deg, 1 mm) and maps by the identity, since the axis-child rule would aim a hand
+that gained an off-axis grip child 24 to 30 deg away. Final hill troll result: 28 bodies, 34 joints all within 0.03
+deg of the human's, 99.4% of the skin in a hit capsule. Clips for such a rig: the re-frame makes a human clip's
+joints bend about the right axes, but a clip stores parent-relative rotations, and on a rest pose unlike the
+human's (the troll's spine2 54 deg and neck 45 off it) every human clip still lands the head 45 to 65 deg up and
+twists the wrists 20 deg (measured on the cave troll's `anim_troll_*` clips in the Kit, 2026-09-24). So the clips the
+race plays are retargeted onto the rig, the human masters included: `retarget_mannequin_to_human.py --source-json`
+over `read_anim_keyframes_tpac.ps1 -ByClip` output, `--clips` for a pack
+([ue-to-bannerlord-asset-pipeline.md](ue-to-bannerlord-asset-pipeline.md) § The retarget stage, "Onto a custom
+humanoid skeleton"), then `gen_troll_anim_clips.ps1` (`-CloneByName` for human-sourced masters) with `-TravelScale`
+set to the report's `pelvis_scale`.
+
 ## Related
 
 - [lotrlome-war-ram-changes.md](lotrlome-war-ram-changes.md): the external-module ledger for the ram.

@@ -66,6 +66,9 @@ and the gate.
 | Mount size | A Monster with `taom_body_length` overrides every item's `body_length`: resize on the Monster | [monster size](../features/monster-size.md) |
 | Animation | Author on the engine skeleton: engine frames, rest pose at frame 0, list-order hierarchy | [skeleton](../reference/bannerlord-skeleton-authoring.md) |
 | Kit clip rename | Corrupts the clip: keep the name, close the Kit, run `rename_anim_clip_tpac.py` | [tools](../../tools/README.md) |
+| Own-skeleton humanoid | A clip stores parent-relative rotations: re-framing fixes axes only; retarget the clips too | [skeleton](../reference/bannerlord-skeleton-authoring.md) |
+| UE clip export | The root node carries pelvis height above bind; keep root height, drop only travel and yaw | [pipeline](../reference/ue-to-bannerlord-asset-pipeline.md) |
+| Kit FBX materials | Bound by name module-wide, reset on every re-import; a same-named older material wins silently | [troll](../features/troll-race.md) |
 | Player start kits | Defaults are `starter_<donor>` twins, careers take troop gear; override the roster, never a set | [start kits](../features/starting-equipment-tuning.md) |
 | Troop bows | Generated `ladder_*` items in the unversioned Armory: `generate_ranged_ladder_items.py --verify` | [ladders](../features/ranged-ladders.md) |
 | Stop order | `StandGround` never forms a line; shape a formation with a Move | [cavalry](../features/smart-cavalry-ai.md) |

@@ -842,12 +842,12 @@
 			   crouch_walking_speed_limit="1.8"
 			   jump_acceleration="5.0"
 			   sound_and_collision_info_class="human"
-			   standing_eye_height="1.70"
-			   crouch_eye_height="1.10"
+			   standing_eye_height="3.58"
+			   crouch_eye_height="2.32"
 			   mounted_eye_height="0.75"
-			   eye_offset_wrt_head="0.13, 0.1, 0.0"
-			   first_person_camera_offset_wrt_head="0.136, 0.1, 0.0"
-			   arm_length="0.9"
+			   eye_offset_wrt_head="-0.069, 0.421, 0.0"
+			   first_person_camera_offset_wrt_head="-0.069, 0.434, 0.0"
+			   arm_length="2.79"
 			   arm_weight="5.0"
 			   jump_speed_limit="0"
 			   family_type="0"
@@ -918,12 +918,12 @@
 			   left_foot_ik_tip_bone="l_toe0"
 			   foot_num_bones_for_ik="3">
 		<Capsules>
-			<body_capsule radius="0.37"
-						  pos1="0.0, 0.0, 1.55"
-						  pos2="0.0, 0, 0.8" />
-			<crouched_body_capsule radius="0.37"
-								   pos1="0.0, 0.0, 1.55"
-								   pos2="0.0, 0, 0.6" />
+			<body_capsule radius="0.82"
+						  pos1="0.0, 0.0, 3.43"
+						  pos2="0.0, 0, 1.77" />
+			<crouched_body_capsule radius="0.82"
+								   pos1="0.0, 0.0, 3.43"
+								   pos2="0.0, 0, 1.33" />
 		</Capsules>
 		<Flags CanAttack="true"
 			   CanDefend="true"
@@ -933,22 +933,22 @@
 			   CanBeInGroup="true"
 			   CanSprint="true"
 			   IsHumanoid="true"
-			   CanRide="true"
+			   CanRide="false"
 			   CanWieldWeapon="true"
 			   CanCrouch="true"
 			   CanRetreat="true" />
 		<!-- flag name="CanGetAlarmed" /-->
 	</Monster>
-	<Monster id="troll_child"
+	<Monster id="hill_troll_child"
 			 base_monster="hill_troll"
 			 action_set="as_hill_troll_child"
 			 weight="30"
 			 walking_speed_limit="1.6"
-			 standing_eye_height="1.20"
-			 crouch_eye_height="0.70"
-			 arm_length="0.6"
+			 standing_eye_height="2.53"
+			 crouch_eye_height="1.47"
+			 arm_length="1.86"
 			 arm_weight="2.4" />
-	<Monster id="troll_settlement"
+	<Monster id="hill_troll_settlement"
 			 base_monster="hill_troll"
 			 hit_points="40"
 			 walking_speed_limit="1.4">
@@ -959,14 +959,14 @@
 			   CanBeInGroup="true"
 			   CanSprint="true"
 			   IsHumanoid="true"
-			   CanRide="true"
+			   CanRide="false"
 			   CanWieldWeapon="true"
 			   CanCrouch="true" />
 	</Monster>
-	<Monster id="troll_settlement_slow"
+	<Monster id="hill_troll_settlement_slow"
 			 base_monster="hill_troll"
 			 walking_speed_limit="1.1" />
-	<Monster id="troll_settlement_fast"
+	<Monster id="hill_troll_settlement_fast"
 			 base_monster="hill_troll"
 			 walking_speed_limit="1.6" />
 

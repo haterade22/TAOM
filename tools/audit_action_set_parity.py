@@ -10,7 +10,8 @@ merges same-id `<action_set>` nodes across Native + LOTRLOME; see Module.cs
 `as_human_warrior` active type set.
 
 Only HUMANOID sets are expected to carry the human combat surface. A set is humanoid
-if its standalone root resolves to `as_human_warrior` or `as_dwarf_warrior`. Creature
+if its standalone root resolves to `as_human_warrior`, `as_dwarf_warrior` or `as_hill_troll_warrior` (a race
+on its own skeleton, standalone since 2026-09-24). Creature
 sets (root = `as_spider` / `as_elephant` / `as_chariot`) use creature movement systems
 and are reported separately — they must NOT be force-fed human actions.
 
@@ -35,7 +36,7 @@ DEFAULT_LIVE = (
     r"\Modules\LOTRLOME_Armory\ModuleData\action_sets.xml"
 )
 
-HUMANOID_ROOTS = {"as_human_warrior", "as_dwarf_warrior"}
+HUMANOID_ROOTS = {"as_human_warrior", "as_dwarf_warrior", "as_hill_troll_warrior"}
 CREATURE_ROOTS = {"as_spider", "as_elephant", "as_chariot"}
 
 
@@ -162,7 +163,7 @@ def main() -> None:
 
     print(f"Reference: Native as_human_warrior = {len(reference)} active action types")
     print(f"Total action_sets (merged Native+LOTRLOME): {len(universe)}")
-    print(f"  humanoid (root as_human_warrior/as_dwarf_warrior): {len(humanoid_ok) + len(humanoid_gaps)}")
+    print(f"  humanoid (root as_human_warrior/as_dwarf_warrior/as_hill_troll_warrior): {len(humanoid_ok) + len(humanoid_gaps)}")
     print(f"  creature (root spider/elephant/chariot):           {len(creature)}")
     print(f"  other root:                                        {len(other)}")
     print()

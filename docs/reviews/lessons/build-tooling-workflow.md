@@ -2327,3 +2327,13 @@ the workflow doc and the CHANGELOG, none of which `/release` reads.
 - **Prevent:** a "must happen before a release" item becomes a mechanical pre-flight line in
   `.claude/skills/release/SKILL.md` (here `git grep -l taom_test_ -- Main/_Module` prints nothing).
 - **Source:** `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F7.
+
+### A fixed-name backup overwrites the last one: backups are timestamped and write-once (2026-09-24)
+`tools/patch_dwarf_action_parity.py` backed up the live Armory `action_sets.xml` to `action_sets.xml.bak`, a name an
+earlier run had already used (reviews list it as far back as 2026-08-28), so the hill troll run replaced that older
+backup and whatever state it held is gone. The run's own timestamped backup from the race tool kept the current state.
+- **Why missed:** the tool dates from the first dwarf parity fix, before write-once backups became the convention
+  (`.claude/rules/moduledata-validation.md`), and nobody re-read its write path since.
+- **Prevent:** every writer names its backup `<file>.bak-<topic>-<timestamp>` and refuses to overwrite one; when
+  reusing an older tool on a live file, read its backup line before `--apply`.
+- **Source:** `tools/patch_dwarf_action_parity.py` (fixed 2026-09-24), `docs/reference/lotrlome-hill-troll-changes.md`.

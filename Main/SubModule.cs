@@ -1968,6 +1968,7 @@ public class SubModule : MBSubModuleBase
         AddTaomBehavior(new Features.WarRam.WarRamMissionBehavior());
         AddTaomBehavior(new Features.Elk.ElkMissionBehavior());
         AddTaomBehavior(new Features.Animalia.AnimaliaMissionBehavior());
+        AddTaomBehavior(new Features.TrollBruteForce.TrollBruteForceMissionBehavior());
         AddTaomBehavior(new SiegeDismountMissionBehavior());
         // Registered unconditionally; gates internally on its MCM toggle (off by default).
         AddTaomBehavior(new Features.SiegePropDiagnostics.Hooks.SiegePropDiagnosticsMissionBehavior());
