@@ -2928,5 +2928,11 @@
   <string id="str_formation_ai_behavior_text.BehaviorEnvelopWing" text="{=taom_behavior_f6.envelop_wing}{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are swinging round the flank." />
   <string id="str_formation_ai_behavior_text.BehaviorFootCharge" text="{=taom_behavior_f6.foot_charge}{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are charging the enemy foot." />
   <string id="str_formation_ai_behavior_text.BehaviorArcherFlank" text="{=taom_behavior_f6.archer_flank}{TROOP_NAMES_BEGIN}{?IS_PLURAL} and {?}{\?}{TROOP_NAMES_END} are taking the flank of the wall." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- CompanionTactics -->
+	<string id="taom_oob_autoassign_done" text="{=taom_oob_autoassign_done}Captains assigned: {COUNT}." />
+	<string id="taom_oob_autoassign_not_general" text="{=taom_oob_autoassign_not_general}Only the general of this battle can assign heroes." />
+	<string id="taom_oob_autoassign_none" text="{=taom_oob_autoassign_none}No hero suits an open captain slot." />
+
 
 </strings>
