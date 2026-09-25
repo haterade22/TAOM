@@ -2386,3 +2386,38 @@ The plan 007 decisions commit renamed a local (`alreadyShielded` to `alreadySeen
 - **Why missed:** "who reads this?" was answered; "what text describes this?" was never asked. A reword list written from memory of the decision covers the files the decision touched, not every file that states the claim.
 - **Prevent:** before the commit, `git grep -n <old identifier>` over the whole repo for every rename, comments included; `git grep -n -e "<N> classes" -e "<N>-class"` (or the folder name) for every file added to or removed from a folder a doc counts; and build any "reword when X lands" list by grepping the claim's own words with every inflection (here `git grep -n -i -E "preserv[a-z]* (the|its) stack|stack preservation|fallback path"`) across `docs/`, `CHANGELOG.md` and the code comments, then read every hit and list each one that states the claim.
 - **Source:** `docs/reviews/rca-patchshield-skip-callback-shims-decisions-2026-09-24.md` findings 1, 3 and 4.
+### A test oracle must not sit downstream of anything the code under test can swap out (plan 013, 2026-09-24)
+`tools/test_hooks.sh` 4c proved "this hook starts no Python" by counting starts of a fake interpreter pinned through `TAOM_PYBIN`. `_pybin.sh` probes the pin under a 0.8 s timeout and silently falls back to the real `python` when it misses, which counts nothing. Under load the check read 0 starts and blamed a prefilter byte-identical to seven that passed; the same fallback could pass a hook that does start Python. The builder saw the false failure, reran, got green, and did not record it.
+- **Why missed:** the counter was designed without reading the resolver's fallback, and its premise check ran once, before the rows, so it could not see a later probe miss. A zero count looks exactly like success (repeat of "A zero you did not prove is not a zero", above).
+- **Prevent:** observe the decision itself, not a side effect behind a timed or fallible step: 4c reads a `bash -x` trace for the `source` of `_pybin.sh`. When a test flakes once, find the mechanism before rerunning; a green rerun is not evidence the red one was noise.
+- **Source:** `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md` F1.
+
+### An early exit moves every existing test off the path behind it: re-point the payloads and give each filter arm a row (plan 013, 2026-09-24)
+After the prefilter landed, none of section 4's contract payloads held `git`, `dotnet` or `build.ps1`, so the exit-code and JSON contract stopped at every Bash hook's first line, and nine hooks had no committed check on their parse path. 4c's positive rows also covered one arm of `suggest-compact.sh`'s three-arm filter. A planted `exit 3` after the `source` and a deleted filter arm both kept the suite green.
+- **Why missed:** the plan listed section 4 as "must stay green" and it did; nobody asked which path its payloads now reached. Rows were chosen per event, not per filter arm.
+- **Prevent:** when a change adds a fast path, list which existing tests now take it and add a payload that reaches the slow path. Give every alternative of a filter its own trigger row, and prove each row by deleting the arm it covers.
+- **Source:** `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md` F2, F3.
+
+### State a payload premise as the producer's behaviour, with its re-check, not as a property of the format (plan 013, 2026-09-24)
+The ten git gates now skip parsing when the raw payload lacks `git`, which is safe only because Claude Code writes ASCII letters literally. The comments said "JSON never escapes an ASCII letter", which is false (`\u0067` is valid JSON for `g`), and the instruction to re-prove it after a Claude Code upgrade lived only in the plan.
+- **Why missed:** the plan's caveat did not reach the comment text it prescribed.
+- **Prevent:** name the producer and the evidence ("Claude Code writes letters literally; raw UTF-8 seen in #647"), and put the re-check where the next upgrade will find it (`docs/reference/hooks-catalog.md`, and `harness-facts.md` once free).
+- **Source:** `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md` F5.
+
+### Prove a before-case against the committed base, not the RED intermediate (plan 013 decisions, 2026-09-24)
+The D39/D40 CHANGELOG said `git \u0063ommit -m "no label here"` passed the subject gate before the change. It passed only in the builder's intermediate tree (D39 applied, D40 not yet); the committed base, still filtering on `git`, denied it. The real base hole was `\u0067it commit`. The same entry reused a "240 cases, no changed decision" parity sentence whose script held no escaped payload, next to a bullet describing a changed decision, and two docs said 4d covers "each blocking gate" when its table has five rows.
+- **Why missed:** the example came from the nearest RED log, not from a run on the base commit, and the counts came from intent, not from the table or the run.
+- **Prevent:** for any "before the change, X happened" claim, run X on the parent commit's file (`git show <base>:<path>`) and quote that result. When a claim is reused after a further change, restate it against what the evidence can see. Count the rows before writing "each" or "every".
+- **Source:** `docs/reviews/rca-bash-hook-prefilter-decisions-2026-09-24.md` R1, R2, R5.
+
+### Build a coverage row that fails on the mutant it exists for: it holds no other copy of the filtered word (plan 013 decisions, 2026-09-24)
+Two new 4c rows passed on correct hooks and on the broken ones they were meant to catch. The escaped-word default row `git \u0063ommit` kept a literal `git`, so a `git`-filtered hook without the escape arm passed it through the word arm. The commit gates had no `git -C <dir> commit` row, so a filter narrowed to `git commit` stayed green. Planted mutants proved both: the committed suite caught neither gap (its three failures were the other mutant's git-call rows).
+- **Why missed:** each row was checked green on the code, not red on its mutant, although the plan 013 lesson above says to delete the arm a row covers. A `*)` default row serves hooks it was not written for.
+- **Prevent:** before committing a coverage row, plant the one mutant it exists for and watch it fail. Build the payload so no other arm can admit it (here: escape every word any prefilter reads). Give each arm of the hook's own trigger, not only of its prefilter, a row.
+- **Source:** `docs/reviews/rca-bash-hook-prefilter-decisions-2026-09-24.md` R3, R4.
+
+### When a fix removes a premise, retire it from the argument (plan 013 decisions, 2026-09-24)
+Superseded in part: "State a payload premise as the producer's behaviour" above. After D39 only the two confirm gates filter on `git`, and after D40 a payload holding any `\u` escape takes the full parse, so the prefilters are safe under any JSON writer: JSON writes a letter literally or as `\uXXXX`. The catalog still argued safety from Claude Code's writer, and the twelve hook comments called the escape arm "fail open", the house term for allow.
+- **Why missed:** D40 was added as one more arm; the surrounding prose was edited around it, not re-derived.
+- **Prevent:** when a change closes the hole a premise guarded, rewrite the argument from the new rule and move the premise to what it still affects (here: cost, and `suggest-compact.sh` until plan 011 deletes it).
+- **Source:** `docs/reviews/rca-bash-hook-prefilter-decisions-2026-09-24.md` R6, R9.

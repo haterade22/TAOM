@@ -8,10 +8,19 @@
 # Non-blocking; always exits 0. Concurrent invocations are safe: mkdir -p and
 # touch are idempotent and the hook never blocks.
 
+INPUT=$(cat)
+
+# Prefilter: a mark needs `dotnet` or `build.ps1` in the command (the segment loop below),
+# and Claude Code never escapes an ASCII letter, so a raw payload with neither cannot concern this
+# hook. Exiting here skips the _pybin.sh probe and the parse on most Bash calls
+# (tools/test_hooks.sh 4c).
+# Never skip on an escape: JSON writes a letter either literally or as a \u escape,
+# so a payload holding any \u takes the full parse, and the raw test is safe
+# whatever writes the payload.
+[[ "$INPUT" == *dotnet* || "$INPUT" == *build.ps1* || "$INPUT" == *'\u'* ]] || exit 0
+
 # Resolve a safe Python interpreter. Never a Microsoft Store alias: those hang forever.
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
-
-INPUT=$(cat)
 
 # Parse the command field precisely. jq if present, else "$PYBIN".
 #

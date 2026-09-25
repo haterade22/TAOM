@@ -1,9 +1,18 @@
 #!/bin/bash
 
-# Resolve a safe Python (never a Microsoft Store alias — those hang forever).
-source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # PostToolUse hook: summarize dotnet test results prominently
 INPUT=$(cat)
+
+# Prefilter: the summary below needs `dotnet test` in the command, and Claude Code never escapes
+# an ASCII letter, so a raw payload without the text `dotnet` cannot concern this hook.
+# Exiting here skips the _pybin.sh probe and the parse on most Bash calls (test_hooks.sh 4c).
+# Never skip on an escape: JSON writes a letter either literally or as a \u escape,
+# so a payload holding any \u takes the full parse, and the raw test is safe
+# whatever writes the payload.
+[[ "$INPUT" == *dotnet* || "$INPUT" == *'\u'* ]] || exit 0
+
+# Resolve a safe Python (never a Microsoft Store alias — those hang forever).
+source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 
 # Extract tool_input.command and tool_response. Prefer jq; fall back to python3 for
 # robust JSON. jq is NOT on PATH in this Git Bash install (verified 2026-08-20), so

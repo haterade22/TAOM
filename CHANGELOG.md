@@ -633,6 +633,79 @@ Tests now cover the swallow path with a reachable service. The native-capture MC
 tableau and combat callbacks it now covers, and the docs drop stale counts and a probe that named
 a callback already on the list. Full suite: 10271
 passed, 2 skipped, 2 failed (the same two).
+### fix(hooks): v2.0.30 - convergence fixes for plan 013
+
+- `tools/test_hooks.sh` 4c gives `validate-push.sh` a `git -C <dir> push` trigger row. The
+  hook finds `push` by token for exactly that form; a prefilter narrowed to `git push`
+  passed every earlier validate-push row and now fails this one.
+- The 4d header and the hooks catalog name the five gates 4d covers and the five it does
+  not, instead of a reason the code contradicted (`check-changelog-changed.sh` denies on a
+  command-line pathspec with nothing staged; the subject gate reads `SubModule.xml`).
+- The lesson and REVIEW-LOG entry say the committed suite caught neither gap, not that the
+  mutants passed it (it failed three rows on one mutant), and the REVIEW-LOG no longer
+  counts the suggest-compact finding as both fixed and for Mike.
+
+### fix(hooks): v2.0.30 - decision review follow-ups for plan 013
+
+- `tools/test_hooks.sh` 4c gives the commit gates a `git -C <dir> commit` trigger row: a
+  prefilter narrowed to `git commit` skipped that form and the suite stayed green. Its
+  default escaped row is now `\u0067it \u0063ommit`, which holds neither word, so a hook
+  filtering on `git` without the escape rule fails it; the old row kept a literal `git`.
+- The twelve hook comments call the escape rule "never skip", not "fail open" (which means
+  allow), and give the JSON reason it is safe; the commit gates name `git -C <dir> commit`.
+  The catalog's escape paragraph drops the writer premise, names literal `\u` text in a
+  command as the common cost, and says 4d covers five blocking gates, not each one.
+- The entry below had a wrong before-case and parity claim; both are corrected in place.
+- Report: `docs/reviews/deep-review-013-bash-hook-prefilter-decisions-2026-09-24.md`; RCA:
+  `docs/reviews/rca-bash-hook-prefilter-decisions-2026-09-24.md`.
+
+### fix(hooks): v2.0.30 - apply maintainer decisions for plan 013
+
+- Each narrowed gate now prefilters on the word it gates instead of `git` (D39): the six
+  commit gates on `commit`, `validate-push.sh` on `push`, `block-no-verify.sh` on
+  `no-verify`. `git status`, `git diff` and `git log` start no Python in them any more,
+  unless the call's description holds the word.
+  The two confirm gates keep `git`; `suggest-compact.sh` is unchanged, as plan 011 deletes
+  it. Behaviour change: with no usable Python, those gates print their degraded warning
+  only on a call holding their word.
+- A payload holding any JSON `\u` escape takes the full parse in the twelve prefiltered
+  hooks (D40), so an escaped letter can no longer hide the gated word. Before the change,
+  `\u0067it commit -m "no label here"` passed the subject gate that denies the plain form
+  (the old `git` filter never saw the escaped `g`). `tools/test_hooks.sh` 4c feeds each
+  of the twelve hooks its word escaped, and the new 4d checks that five blocking gates answer
+  the escaped form as they answer the plain one.
+- `tools/test_hooks.sh` sections 4 and 5 carry the new words in their payloads. An
+  old-versus-new run over 240 unescaped payload cases (stdout and exit code) found no
+  changed decision; the escaped forms the old filter skipped are now judged (4d).
+
+### fix(hooks): v2.0.30 - review follow-ups for plan 013
+
+- `tools/test_hooks.sh` 4c flaked under load: it counted starts of a fake interpreter,
+  and `_pybin.sh` drops a pin that misses its 0.8 s probe and runs the real `python`,
+  which counted nothing. It now reads a `bash -x` trace for the `source` of `_pybin.sh`,
+  which does not depend on timing. It also gives `suggest-compact.sh` its `dotnet` and
+  `build.ps1` trigger rows and finds Bash hooks by regex matcher, as the harness does.
+- Section 4 gains a Bash payload holding `git` and `dotnet`, so the exit-code and JSON
+  contract covers each Bash hook's parse path again; `echo hi` stops at every prefilter.
+- The prefilter premise is Claude Code's payload, not JSON (JSON allows `\u0067`
+  for `g`). The hook comments and `docs/reference/hooks-catalog.md` say so, and the
+  catalog names the re-check after a Claude Code upgrade.
+- Report: `docs/reviews/deep-review-013-bash-hook-prefilter-2026-09-24.md`; RCA:
+  `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md`.
+
+### perf(hooks): v2.0.30 - skip Python in Bash hooks on non-git calls (#661)
+
+Every Bash call ran 13 hook scripts, and each one started Python twice (the `_pybin.sh`
+probe, then a JSON parse) before it looked at the command: 256 to 451 ms per hook on
+an `ls`. Each Bash hook now tests the raw payload for its trigger text first (`git` for
+the ten PreToolUse gates, `dotnet` for `notify-test-results.sh`, `dotnet` or `build.ps1`
+for `mark-verification-run.sh`, any of the three for `suggest-compact.sh`) and allows
+without starting Python when it is absent: 60 to 150 ms per hook. Claude Code writes
+ASCII letters unescaped in the payload (JSON itself would allow `\u0067` for `g`),
+so the raw test is a superset of every hook's own trigger; an old-versus-new run over
+156 payload cases found no changed decision. A token regex was rejected: a newline
+before `git` arrives as `\n` and would have skipped a multi-line commit.
+`tools/test_hooks.sh` 4c checks both directions.
 
 ## 2026-09-23
 

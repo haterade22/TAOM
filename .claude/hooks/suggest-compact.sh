@@ -74,7 +74,9 @@ fi
 # Everything below this point (sourcing _pybin.sh, spawning Python) used to run on every
 # Read and every Grep for a field those payloads do not even have.
 COMMAND=""
-if [ "$TOOL_NAME" = "Bash" ]; then
+# The raw-text test skips the probe and the parse when no boundary signal below could
+# match: each one needs `git`, `dotnet` or `build.ps1` in the command (test_hooks.sh 4c).
+if [ "$TOOL_NAME" = "Bash" ] && [[ "$INPUT" == *git* || "$INPUT" == *dotnet* || "$INPUT" == *build.ps1* ]]; then
   # Resolve a safe Python interpreter. Never a Microsoft Store alias: those hang forever.
   source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
   if [ -n "$PYBIN" ]; then
