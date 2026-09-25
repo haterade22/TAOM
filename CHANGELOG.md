@@ -2,6 +2,15 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-24
+
+### feat(tactics): v2.0.30 - wire OOB Auto-Assign to HeroAutoAssigner
+
+Order of Battle: the Assign Heroes button now places your companions as captains of the
+formations that suit their equipment (it was a placeholder message). Visible with Formation
+Presets enabled. Three new strings are registered with English rows in all 12 languages; the
+translator run is owed. Nothing smoked in game.
+
 ## 2026-09-23
 
 ### feat(nazgul): v2.0.30 - the Nine's scream is the clip Mike supplied (#645)
