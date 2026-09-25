@@ -27,7 +27,7 @@ each clip's own vanilla definition onto the new master with the range shifted fo
 first, retargeted human clip second, the human clip inherited last (dry run: 213, 439, 4,048). The first batch, 429
 two-handed and reaction clips on 255 masters (53,652 frames), retargeted with every frame 0 at rest and every IK
 goal within 7.3 cm, its contact sheets read pose for pose, and the 255 FBX are staged in
-`AssetSources\...\Trolls\animations_human\` for one Kit import. Owed: that import, the clips, the bind, the parity
+`AssetSources\...\Trolls\animations\`, beside the 52 Fab masters, for one Kit import. Owed: that import, the clips, the bind, the parity
 audit, the in-game fight. Four lessons in
 animation-skeleton.
 

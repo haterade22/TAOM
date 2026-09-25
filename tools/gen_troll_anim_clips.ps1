@@ -82,7 +82,7 @@ master GUID re-pointed, Source1/Source2 + 1 (our rest frame 0), the facial id cl
 -TravelScale (the retarget report's pelvis_scale). Several clips share a master, as in vanilla. -Verify then checks
 the clips against the index (range and master), not the whole-master rule.
   powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\gen_troll_anim_clips.ps1 -CloneByName `
-    -Masters '<Armory>\Assets\Race Test\Mordor\Trolls\animations_human' -ClipsIndex <human_json>\clips_index.json `
+    -Masters '<Armory>\Assets\Race Test\Mordor\Trolls\animations' -ClipsIndex <human_json>\clips_index.json `
     -SkeletonGuid 7516b03c-1c28-4b4a-87ab-8df6f047bf9c -ClipPrefix anim_hill_troll_ -TravelScale 1.8504 [-Apply|-Verify]
 #>
 $ErrorActionPreference = 'Stop'
@@ -134,12 +134,13 @@ if ($CloneByName) {
   $ourMasterOf = @{}
   foreach ($clipName in $index.Keys) { $ourMasterOf[$clipName] = $ClipPrefix + ("$($index[$clipName].master)" -replace '^anim_', '') }
   if ($Verify) {
-    $ok = 0; $bad = 0; $byGuid = @{}
+    $ok = 0; $bad = 0; $other = 0; $byGuid = @{}
     foreach ($mm in $masterMap.Values) { $byGuid["$($mm.guid)"] = $mm }
     foreach ($f in ([IO.Directory]::GetFiles($Masters, ($ClipPrefix + '*_anm.tpac')) | Sort-Object)) {
       $cl = (Load $f).Package.Items | Where-Object { $_.GetType().Name -eq 'AnimationClip' } | Select-Object -First 1
       $clipName = $cl.Name.Substring($ClipPrefix.Length)
-      if (-not $index.ContainsKey($clipName)) { $bad++; Write-Output ("NOT IN INDEX {0}" -f $cl.Name); continue }
+      # the Fab set's clips share the folder (the hill troll's animations/ holds both pipelines' masters): not this mode's
+      if (-not $index.ContainsKey($clipName)) { $other++; continue }
       $info = $index[$clipName]; $key = "$($cl.Animation)"
       if (-not $byGuid.ContainsKey($key)) { $bad++; Write-Output ("ORPHAN {0} -> master GUID {1} not on disk" -f $cl.Name, $key); continue }
       $mm = $byGuid[$key]
@@ -149,8 +150,8 @@ if ($CloneByName) {
       }
       $ok++
     }
-    Write-Output ("verify (clone-by-name): clips ok={0} bad={1}   index clips={2}" -f $ok, $bad, $index.Count)
-    if ($bad + $noAnim -gt 0) { exit 1 } else { exit 0 }
+    Write-Output ("verify (clone-by-name): clips ok={0} bad={1} missing={2} of index {3}   other pipeline's clips skipped={4}" -f $ok, $bad, ($index.Count - $ok - $bad), $index.Count, $other)
+    if ($bad + $noAnim -gt 0 -or ($index.Count - $ok - $bad) -gt 0) { exit 1 } else { exit 0 }
   }
   $rows = @(); $written = 0; $skipped = 0; $missing = 0
   foreach ($clipName in ($index.Keys | Sort-Object)) {
@@ -214,16 +215,19 @@ if ($CloneByName) {
 if ($Verify) {
   $byGuid = @{}
   foreach ($m in $masterMap.Values) { $byGuid["$($m.guid)"] = $m }
-  $ok = 0; $stale = 0; $orphan = 0
+  $ok = 0; $stale = 0; $orphan = 0; $other = 0
   foreach ($f in ([IO.Directory]::GetFiles($Masters, ($ClipPrefix + '*_anm.tpac')) | Sort-Object)) {
     $cl = (Load $f).Package.Items | Where-Object { $_.GetType().Name -eq 'AnimationClip' } | Select-Object -First 1
+    # clone-by-name clips (human-sourced masters) share the folder and keep sub-ranges: not this rule's
+    if ($null -ne $cl -and -not ($nameMap.Values -contains $cl.Name)) { $other++; continue }
     $key = "$($cl.Animation)"
     if ($null -eq $cl -or -not $byGuid.ContainsKey($key)) { $orphan++; Write-Output ("ORPHAN {0,-40} -> master GUID {1} not on disk" -f [IO.Path]::GetFileName($f), $key); continue }
     $m = $byGuid[$key]
     if ([int]$cl.Source2 -ne $m.frames - 1) { $stale++; Write-Output ("STALE  {0,-40} -> Source2={1}, master Duration={2} (want {3})" -f $cl.Name, $cl.Source2, $m.frames, ($m.frames - 1)) }
     else { $ok++ }
   }
-  Write-Output ("verify: clips ok={0} stale={1} orphan={2}   masters without a clip={3}" -f $ok, $stale, $orphan, ($masterMap.Count - $ok - $stale))
+  $mine = @($masterMap.Keys | Where-Object { $nameMap.ContainsKey('cave_' + $_) -or $clipStem.ContainsKey($_) }).Count
+  Write-Output ("verify: clips ok={0} stale={1} orphan={2}   masters without a clip={3}   other pipeline's clips skipped={4}" -f $ok, $stale, $orphan, ($mine - $ok - $stale), $other)
   if ($stale + $orphan + $noAnim -gt 0) { exit 1 } else { exit 0 }
 }
 
@@ -314,13 +318,13 @@ function Set-Flags($clip, [string[]]$names) {
     if ($elem -eq [string]) { $list.Add($n) } else { $list.Add([Enum]::Parse($elem, $n)) }
   }
 }
-$rows = @(); $written = 0; $skipped = 0
+$rows = @(); $written = 0; $skipped = 0; $foreign = 0
 foreach ($mname in ($masterMap.Keys | Sort-Object)) {
   $m = $masterMap[$mname]
   $stem = 'cave_' + $mname            # troll_free_idle_0 -> cave_troll_free_idle_0
   if ($nameMap.ContainsKey($stem)) { $clipName = $nameMap[$stem] }
   elseif ($clipStem.ContainsKey($mname)) { $clipName = $mname; $stem = $clipStem[$mname] }   # named after its clip
-  else { Write-Output ("NO NAME for master {0}" -f $mname); continue }
+  else { $foreign++; continue }   # a clone-by-name master (human-sourced) sharing the folder: not this mode's
   $type = TypeOf $clipName
   $tpl = $vclips[$TEMPLATE[$type]]
   if ($null -eq $tpl) { Write-Output ("NO TEMPLATE for {0} ({1})" -f $clipName, $type); continue }
@@ -382,7 +386,7 @@ foreach ($mname in ($masterMap.Keys | Sort-Object)) {
   }
 }
 $rows | ForEach-Object { Write-Output $_ }
-Write-Output ("clips planned: {0}   MODE = {1}   written={2} skipped-existing={3}" -f $rows.Count, $(if ($Apply) { 'APPLY' } else { 'DRY-RUN (no writes)' }), $written, $skipped)
+Write-Output ("clips planned: {0}   MODE = {1}   written={2} skipped-existing={3}   other pipeline's masters skipped={4}" -f $rows.Count, $(if ($Apply) { 'APPLY' } else { 'DRY-RUN (no writes)' }), $written, $skipped, $foreign)
 
 # ---- verify what was written
 if ($Apply) {

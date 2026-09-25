@@ -333,7 +333,9 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
   Fifteen prototype masters (`stand_right_twohanded`, `anim_guard_up_twohanded`, the slashright and overswing
   ready and release masters, defend up, `anim_2handedbash`, `anim_2h_stand_idle_1`, kick, jump, strike, turn,
   run) export with every IK goal within 2 cm and frame 0 at rest, and are staged in
-  `LOTRLOME_Armory\AssetSources\Race Test\Mordor\Trolls\animations_human\` for Mike's Kit look.
+  `LOTRLOME_Armory\AssetSources\Race Test\Mordor\Trolls\animations\` beside the 52 Fab masters (a first
+  `animations_human` folder was named after the SOURCE and read as human animations, so Mike had it folded into
+  the troll's folder before importing) for Mike's Kit look.
   `gen_troll_anim_clips.ps1 -CloneByName -ClipsIndex ... -TravelScale 1.8504` will cut each clip as a copy of its
   own vanilla definition on the new master (range shifted by the rest frame, facial id cleared, displacements
   scaled), and the new `tools/bind_hill_troll_action_set.py` (10 tests) regenerates the standalone set from
@@ -343,7 +345,8 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
   (`review_20260924b/batch1_clips.txt`), retargeted in one background run (53,652 frames, 255 of 255 exported,
   frame 0 at rest everywhere, IK misses under 7.3 cm with six clips over 5 cm, all falls, knockbacks and quick
   swings; the 15 prototype masters came out pixel-identical to the prototype run) and staged, all 255, in the
-  `animations_human` source folder. OWED: Mike's Kit import of that folder, the clips, the bind, the parity
+  `animations` source folder beside the Fab set (307 FBX, no name collisions; the generator's two modes each skip
+  the other's clips and masters). OWED: Mike's Kit import of that folder, the clips, the bind, the parity
   audit, the in-game fight.
 - OK **LOME cave troll set RE-SKINNED (2026-09-18):** `tools/blender/reskin_to_human_skeleton.py` transferred
   TaleWorlds' body weights onto `lotr_troll_body/feet/hands/head` and `lotr_troll_armor/bracers/helmet` (42 meshes
