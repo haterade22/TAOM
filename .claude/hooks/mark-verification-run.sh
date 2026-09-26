@@ -19,6 +19,14 @@ INPUT=$(cat)
 # whatever writes the payload.
 [[ "$INPUT" == *dotnet* || "$INPUT" == *build.ps1* || "$INPUT" == *'\u'* ]] || exit 0
 
+# PostToolUseFailure carries "is_interrupt": true when the tool call was aborted: the build or test
+# never finished, so there is no result to count, and marking would mute the Stop reminder with
+# nothing in hand (plan 027). Claude Code 2.1.241 sets it from the thrown error being an abort;
+# whether a timed-out command sets it is UNVERIFIED, so a timeout still marks. Inside a JSON string
+# a quote is escaped, so a command that merely mentions the field cannot match.
+IRQ='"is_interrupt"[[:space:]]*:[[:space:]]*true'
+[[ "$INPUT" =~ $IRQ ]] && exit 0
+
 # Resolve a safe Python interpreter. Never a Microsoft Store alias: those hang forever.
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 
@@ -45,45 +53,14 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # `grep "x; dotnet test" docs/` into a segment that starts with dotnet, so a mention marked. A
 # newline inside quotes (a commit message) becomes a space, so it cannot start a segment.
 #
-# The split runs in Python (plan 011 review): a per-character bash loop was quadratic (9.5 s for
-# a 100 KB command, past the 5 s registration), and it read `\` as the escape in PowerShell,
-# where the escape is a backtick, so `Write-Output "x`"; dotnet test"` marked and
-# `Set-Location "E:\x\"; dotnet test` did not. An escaped newline is a continuation, so it joins.
-# CR goes: Python's print writes CRLF on Windows, which hid a command on a non-final line.
-# Output is written as bytes, LF only.
+# The split is _shellwords.py segments (plan 027), shared with validate-push.sh: the command is
+# first read as POSIX-shell text (a PowerShell command as the Bash text of the same command), then
+# split outside quotes with \ as the escape, in time linear in its length (a per-character bash
+# loop took 9.5 s on a 100 KB command, plan 011 review), and a # comment is dropped. An escaped
+# newline joins its lines, and the output is bytes with LF only, so a CR never hides a command.
 SEGMENTS=""
 if [ -n "$PYBIN" ]; then
-  SEGMENTS=$(printf '%s' "$INPUT" | "$PYBIN" -c '
-import sys, json
-try:
-    d = json.loads(sys.stdin.read())
-    cmd = (d.get("tool_input") or {}).get("command") or ""
-    esc = "`" if d.get("tool_name") == "PowerShell" else "\\"
-except Exception:
-    sys.exit()
-cmd = cmd.replace("\r", "")
-out, q, i, n = [], "", 0, len(cmd)
-while i < n:
-    c = cmd[i]
-    if c == esc and q != "\x27":
-        nxt = cmd[i + 1:i + 2]
-        out.append(" " if nxt == "\n" else c + nxt)
-        i += 2
-        continue
-    if q:
-        if c == q:
-            q = ""
-        out.append(" " if c == "\n" else c)
-    elif c in "\"\x27":
-        q = c
-        out.append(c)
-    elif c in ";&|\n":
-        out.append("\n")
-    else:
-        out.append(c)
-    i += 1
-sys.stdout.buffer.write(("".join(out) + "\n").encode("utf-8"))
-' 2>/dev/null)
+  SEGMENTS=$(printf '%s' "$INPUT" | "$PYBIN" "$TAOM_HOOKS_DIR/_shellwords.py" segments 2>/dev/null)
 fi
 
 # Touch on any build/test invocation (pass OR fail: a failed build is still
@@ -113,6 +90,7 @@ while IFS= read -r seg; do
     seg="${seg#"$word"}"; seg="${seg#"${seg%%[![:space:]]*}"}"
   done
   first="${seg%% *}"
+  first=${first//\'/}                            # the reader quotes a word holding \ (plan 027)
   case "$first" in
     dotnet)
       case "$seg" in "dotnet build"* | "dotnet test"*) MARK=1 ;; esac ;;

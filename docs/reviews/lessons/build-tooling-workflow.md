@@ -2714,3 +2714,60 @@ global layer.
   history or living text (the "Retiring a duty" lesson above prescribes the same sweep). Re-check
   every engine or library claim the template's comments make before copying them.
 - **Source:** `docs/reviews/rca-shader-precompile-repark-2026-09-25.md`, findings 1 to 3.
+### A gate change that refuses less anywhere must be run against the old gate, not argued from examples (plan 027, 2026-09-24)
+Plan 027 made `validate-push.sh` refuse less on purpose in two places: a trunk named only in a
+trailing `#` comment, and an option value (`-o ci.skip`) taken for the remote. Each relaxation
+consumed text that another stage had already reinterpreted. The comment strip ran on the
+quote-blind split, so a quoted ` #` after a heredoc line holding one quote, or inside PowerShell's
+typographic quotes, hid the push. The value skip ran on quote-flattened tokens, so a lost empty
+value (`-o ""`) made it skip the remote. Eight shapes the old hook refused passed, under a comment
+that promised the gate "never refuses less than before".
+- **Why missed:** the plan and both cold reviews checked the named examples and wrote the promise
+  as a property; no test fed the old hook and the new one the same inputs.
+- **Prevent:** before merging any gate change that relaxes a shape, run a differential sweep: the
+  old hook from `git show <base>:<path>` beside the new one over prefixes (heredoc lines with one
+  quote, comments, `cd x;`), bodies and suffixes, under both tool names and on a trunk and a
+  feature branch, and treat every refused-then-allowed row as blocking unless it is the named
+  relaxation. A stage that drops or skips text must do it where the quotes and argument boundaries
+  are still known, or judge both readings (with and without the drop) and block if either does.
+- **Source:** `docs/reviews/rca-powershell-gate-coverage-2026-09-24.md`, findings 1 to 4.
+
+### A translator between two shells must cover the target grammar's statement forms, checked with its own parser (plan 027, 2026-09-24)
+`_shellwords.py` read every PowerShell form in the plan's parser table and none outside it: an
+assignment (`$r = git commit ...`), the `.` operator, `${env:X}`, the typographic quotes, a quoted
+word closing its token, and a string or variable standing alone as a value. The assignment alone
+let an unlabelled commit and an unconfirmed `reset --hard` through two gates. The same loss of the
+literal-versus-command distinction made the commit gate read `pbpaste` as a commit subject.
+- **Why missed:** the reader was written from a list of forms to support, not from the grammar of
+  where a command can start; `[System.Management.Automation.Language.Parser]::ParseInput` was run
+  only on the listed inputs.
+- **Prevent:** for a reader that decides "is this a command", list every statement head the shell
+  has (assignment, call operators, value statements, pipelines, blocks) and pin each with the
+  shell's own parser output in the unit tests. Interpret a producer's output only when it can be
+  computed (a literal echo, `printf '%s'`); anything else stays unknown, as before.
+- **Source:** `docs/reviews/rca-powershell-gate-coverage-2026-09-24.md`, findings 5 to 7 and 11.
+
+### Time a hook on one long segment and on a 1 MB payload, not only on many short ones (plan 027, 2026-09-24)
+The fork-free quote strip in `block-broad-git-add.sh` beat `sed` on 100 short segments and lost
+badly on one 100 KB segment (2.5 s, quadratic). `validate-push.sh` started Python three times and
+ran a bash split over the raw text twice, which took a 1 MB PowerShell command to 3.5 to 4.8 s of
+its 5 s registration; a killed gate fails open.
+- **Why missed:** the timing rows measured the shape the change optimised for.
+- **Prevent:** a hook's timing rows cover many short segments, one long segment and a 1 MB payload
+  under each tool, and a text transform in bash names its complexity in a comment.
+- **Source:** `docs/reviews/rca-powershell-gate-coverage-2026-09-24.md`, findings 8 and 9.
+
+### A differential sweep proves only the classes in its corpus; seed it from the fix's own mechanism (plan 027 convergence, 2026-09-26)
+The review fix for the quoted ` #` checked for a quote only inside each piece of the quote-blind
+split, and a 5,896-shape sweep came back clean. The convergence pass then put the separator inside
+the quoted value (`X="a;b #c" git push --force origin <trunk>` after a heredoc line holding one
+quote): the split cut inside the value, the piece holding the push began at the `#`, and its
+opening quote sat in the piece before. 28 of 612 shapes the base gate refused passed. The same pass
+found the assignment fix covered two left-side spellings of the five `ParseInput` accepts.
+- **Why missed:** the sweep's bodies came from the findings being fixed, so it tested the fix's
+  examples; nothing in it attacked the fix's own assumption (that a piece holds its own quotes).
+- **Prevent:** after a fix, name the assumption it rests on and add sweep bodies that break it (for
+  a split, put every separator inside a quoted value on both sides of the checked character); for a
+  grammar fix, list every form the parser's AST type admits (Variable, Convert, Member, Index,
+  ArrayLiteral) and pin each.
+- **Source:** `docs/reviews/rca-powershell-gate-coverage-2026-09-24.md`, findings 16 and 18.

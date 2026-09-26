@@ -25,7 +25,7 @@ When you add a hook to an existing category (a Stop reminder, a PreToolUse gate,
 
 ## Git invocation forms hooks must handle
 
-When writing a PreToolUse(Bash) hook that filters on git subcommands, enumerate explicitly which invocation forms it must catch — substring matching `*"git commit"*` MISSES the following real-world forms (Codex review 2026-04-26 found this gap):
+When writing a PreToolUse hook that filters on git subcommands, enumerate explicitly which invocation forms it must catch: substring matching `*"git commit"*` MISSES the following real-world forms (Codex review 2026-04-26 found this gap):
 
 | Form | Purpose | Handled by `*"git commit"*` substring? |
 |------|---------|----------------------------------------|
@@ -54,6 +54,14 @@ esac
 **MANDATORY for any new hook that detects git commits.** Codex review #29 found a bare `*"git commit"*` matcher in a hook shipped in `79350f2` (since deleted), after review #28 had codified the rule.
 
 When you write a NEW hook (or add commit detection to an existing one), grep for `git commit` substring matches in the diff before commit. If you find one that's NOT using the two-stage pattern above, that's a regression — fix before shipping. The `/skill-stocktake` checklist now includes this check.
+
+**Both shell tools (plan 027).** Register a git gate in the `Bash|PowerShell` matcher group and
+read its command with `COMMAND=$(taom_hook_command posix <gate>)` (`_pybin.sh`), never from
+`tool_input.command` alone: it hands PowerShell back as Bash text, so the forms above cover both
+shells, and it names git `git` when it is called by a path or in capitals. The PowerShell forms it
+resolves are listed in `docs/reference/hooks-catalog.md` "Both shell tools" and pinned by
+`tools/tests/test_shellwords.py`; `tools/test_hooks.sh` 7e fails a listed gate that does not read
+through it.
 
 ## Amend exemptions in pre-commit hooks (recursion-risk pattern)
 

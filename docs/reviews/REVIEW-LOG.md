@@ -4842,3 +4842,34 @@ wrappers that still order hand entries. Four questions to Mike (a since-tag edit
 
 Report `docs/reviews/deep-review-020-changelog-at-release-2026-09-24.md`; RCA
 `docs/reviews/rca-changelog-at-release-2026-09-24.md`. Convergence pass owed. Nothing merged or deployed.
+
+
+## Review (plan 027, number assigned at merge): PowerShell gate coverage, 6-lens deep review + Codex gpt-6-astra ultra (2026-09-24)
+
+`/review-codex` Phase 3 on branch `improve/027-powershell-gate-coverage` (`96afb6fb..05dbc0d4`), verified by
+the review lead alongside the Standards, Efficiency, Completeness, Data flow, Design and Tooling lenses. Codex,
+239,839 tokens, static traces only: **1 P1 / 2 P2 / 1 P3; 4 confirmed (one in part), no false positive.** P1:
+`git push --force -o "" origin HEAD:<trunk>` passed `validate-push.sh`, which refused it at base: the new `-o`
+value skip ran on quote-flattened tokens and took the remote. Fixed by judging the positionals with and without
+the skip and adding a quote-aware variant. P2: the commit gate read `printf` arguments and command names as
+the piped message and denied on invented text; fixed. P2: a quoted `'.\build.ps1'` marked verification; fixed,
+while an assigned script block still marks (needs Mike). P3: 7e's gate inventory came from the settings under
+test; fixed. Codex missed the larger regression class the lenses found by running the old hook beside the new
+one: a quoted ` #` after a heredoc quote or inside PowerShell typographic quotes, and a separator inside a quoted
+path with a parenthesised refspec, each hid a trunk force push. It also missed the PowerShell assignment, `.`
+and `${}` forms that let git past three gates, and every timing finding. A base-versus-fixed sweep of 5,896
+payloads found 0 refused-then-allowed; the convergence pass found one more class (a quoted value the
+quote-blind split cuts inside, 28 of 612 shapes) and three LOW defects, all fixed (report, Convergence).
+Metrics not recomputed here (parallel branches).
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|---|---|---|---|
+| 1 | Empty `-o ""` value lost, skip takes the remote, trunk force push passes | Logic error (regression) | Skip written for named examples on flattened tokens | Dual judging, boundary-kept variant, 7c rows; lesson in build-tooling-workflow |
+| 2 | Piped producer's output invented as the commit message | Logic error | Producer modelled by position, not by what it prints | Only computable producers read; section 6 and 7e rows; same file, second lesson |
+| 3 | Quoted PowerShell path alone marks verification | Logic error | Reader lost the value-versus-command distinction | `echo <value>` rewrite; 7d rows |
+| 4 | Registration test inventory derived from the config under test | Other: test oracle | Self-derived oracle | Fixed list of nine |
+
+Report `docs/reviews/deep-review-027-powershell-gate-coverage-2026-09-24.md`; RCA
+`docs/reviews/rca-powershell-gate-coverage-2026-09-24.md`. Convergence pass done; its one timing follow-up
+(a long message holding `push` judged before the short force push) closed by returning the push lines
+shortest first: 400 KB went from 5,178 ms to 294 ms.

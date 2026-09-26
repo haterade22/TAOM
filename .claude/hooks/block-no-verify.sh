@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# PreToolUse(Bash): refuse any git command carrying --no-verify.
+# PreToolUse (Bash and PowerShell): refuse any git command carrying --no-verify.
 #
 # WHY THIS IS NOT ALSO A BUILD GATE
 # This shipped as check-build-before-commit.sh and ran `dotnet build` before every
@@ -40,19 +40,10 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
 taom_pybin_degraded "block-no-verify" "the --no-verify ban" jq && { echo '{}'; exit 0; }
 
-# Prefer jq; fall back to python3 for robust JSON (handles escaped quotes).
-# Mirrors block-dangerous-git.sh.
-if command -v jq >/dev/null 2>&1; then
-  COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
-else
-  COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
-import sys, json
-try:
-    print(json.loads(sys.stdin.read()).get("tool_input", {}).get("command", ""))
-except Exception:
-    pass
-' 2>/dev/null)
-fi
+# The command as POSIX-shell text (plan 027): _pybin.sh taom_hook_command hands a PowerShell
+# command back as the Bash text of the same command and names git `git` wherever it is the
+# command (`GIT`, `git.exe`, a path). Without Python it reads the raw command with jq, as Bash text.
+COMMAND=$(taom_hook_command posix block-no-verify)
 
 # Fail-open: nothing to inspect -> allow.
 [[ -z "${COMMAND:-}" ]] && exit 0

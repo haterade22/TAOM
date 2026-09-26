@@ -98,7 +98,7 @@ the lock.
 | [tools/tests/test_graphify_taom.py](../../tools/tests/test_graphify_taom.py) | Out root, commands, stamp and staleness on a temp git repo, lock, contamination, the gate's command table |
 | [.claude/hooks/check-graphify-usage.sh](../../.claude/hooks/check-graphify-usage.sh) | PreToolUse gate on Bash and PowerShell |
 | [.claude/hooks/session-start.sh](../../.claude/hooks/session-start.sh) | Prints the graph's freshness at startup |
-| [tools/test_hooks.sh](../../tools/test_hooks.sh) | Section 7e, plus the 4c, 4d and 5 rows for the gate |
+| [tools/test_hooks.sh](../../tools/test_hooks.sh) | Section 7f, plus the 4c, 4d and 5 rows for the gate |
 
 ## Where the workflow reads it
 
@@ -114,7 +114,7 @@ the lock.
 ## Tests
 
 - `python -m unittest discover -s tools/tests -p "test_graphify_taom.py"`: 38 tests, hermetic.
-- `bash tools/test_hooks.sh`: section 7e runs the gate through the real hook on both shells.
+- `bash tools/test_hooks.sh`: section 7f runs the gate through the real hook on both shells.
 
 ## How to use it
 
