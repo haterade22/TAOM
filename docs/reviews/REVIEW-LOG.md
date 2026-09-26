@@ -4870,6 +4870,7 @@ Metrics not recomputed here (parallel branches).
 | 4 | Registration test inventory derived from the config under test | Other: test oracle | Self-derived oracle | Fixed list of nine |
 
 Report `docs/reviews/deep-review-027-powershell-gate-coverage-2026-09-24.md`; RCA
-`docs/reviews/rca-powershell-gate-coverage-2026-09-24.md`. Convergence pass done; its one timing follow-up
-(a long message holding `push` judged before the short force push) closed by returning the push lines
-shortest first: 400 KB went from 5,178 ms to 294 ms.
+`docs/reviews/rca-powershell-gate-coverage-2026-09-24.md`. Convergence pass done; its timing follow-up (a
+long message holding `push` judged before the short force push) was closed by ordering the push lines, and
+a second convergence on that change and the merge (6 LOW) is recorded in the report's last section. One
+timing window stays open for the maintainer: 300 KB or more inside the push command itself.

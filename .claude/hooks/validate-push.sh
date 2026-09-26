@@ -233,7 +233,8 @@ judge_command() {
 }
 
 # The splits repeat most segments; a verdict depends only on the segment, so each distinct
-# segment is judged once.
+# segment is judged once. The loop stops at the first refused segment, and _shellwords.py push
+# orders them for that: lines that could force first, shortest first within each group.
 declare -A JUDGED
 unset CUR_BRANCH
 while IFS= read -r SEG; do

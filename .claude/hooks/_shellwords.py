@@ -342,6 +342,12 @@ def _blind_pieces(text):
     return out
 
 
+# validate-push.sh refuses a line only when the push can force: a short option holding f (-f,
+# -vfu), --force*, --mirror, or a +refspec. push_lines orders by this hint, so it only moves a line
+# earlier or later: every line is still judged, and over-matching (`self-fix`) costs nothing.
+FORCE_HINT = re.compile(r"-\S*f|--mirror|\+")
+
+
 # Only a segment this short is re-split with argument boundaries: shlex builds each word one
 # character at a time, quadratic in its length (400 KB of quoted text holding `push` took 1.7 s of
 # validate-push's 5 s registration, and a killed gate fails open). The shapes the pass exists for,
@@ -373,8 +379,10 @@ def push_lines(cmd, tool):
        kept;
     3. the raw command split outside quotes with the tool's own escape, the split validate-push ran
        before plan 027, so reading PowerShell never loses a push the raw text showed.
-    Shortest first: validate-push stops at the first refused line, so a short force push is judged
-    before a long message holding `push`, whose every word it would read as a refspec."""
+    Lines that could force (FORCE_HINT) first, shortest first within each group: validate-push
+    stops at the first refused line, so a short force push is judged before a long message holding
+    `push`, whose every word it would read as a refspec, and a long force push never waits behind
+    lines that cannot be refused."""
     def unfold(t):
         return t.replace("\r", "").replace("\\\n", " ").replace("`\n", " ")
     posix = to_posix(cmd, tool)
@@ -391,7 +399,7 @@ def push_lines(cmd, tool):
         if "push" in line and line not in seen:
             seen.add(line)
             keep.append(line)
-    return "\n".join(sorted(keep, key=len))
+    return "\n".join(sorted(keep, key=lambda line: (not FORCE_HINT.search(line), len(line))))
 
 
 def read_payload(raw):

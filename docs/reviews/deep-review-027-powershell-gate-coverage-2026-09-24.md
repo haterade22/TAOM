@@ -286,22 +286,6 @@ quoted segment holding the word `push`, where the base gate finished inside its 
 and the fixed gate does not (a killed gate fails open). Base itself fails from about 450 KB. Not
 fixed in the convergence pass (no new design work there); FOLLOW-UP for the orchestrator.
 
-**Follow-up, closed by the orchestrator.** `_shellwords.py push` now returns its lines shortest
-first. `validate-push.sh` stops at the first refused line, so the short force push is judged
-before the long message whose every word would be read as a refspec. The verdict is unchanged
-(any line blocks); only the stop comes earlier. Unit test `test_shortest_line_first`, red first
-(the 6 KB commit line came first). Same payload, median of 3, rc 2 in every run:
-
-| Size | base `96afb6fb` | `747b6dae` | sorted |
-|---|---|---|---|
-| 300 KB | 2,737 ms | 4,012 ms | 295 ms |
-| 400 KB | 3,588 ms | 5,178 ms | 294 ms |
-| 800 KB | 7,264 ms | 11,361 ms | 358 ms |
-
-PowerShell gives the same picture (423 ms sorted at 800 KB). One long segment that holds both
-the `push` word and the real push (`git -c x="<long text holding push>" push --force ...`) still
-walks every word; base did the same, so that is no regression.
-
 **Final runs** (worktree, after every fix):
 - `python -B -m unittest tools.tests.test_shellwords`: Ran 58 tests, OK (53 before).
 - `bash tools/test_hooks.sh`: 798 passed, 0 failed (773 before; 8 7c rows, 2 typographic escape
@@ -311,3 +295,43 @@ walks every word; base did the same, so that is no regression.
   Skipped 2 (the branch contains a39a9c86, so no failure was allowed).
 
 CONVERGENCE VERDICT: 4 of 4 defects fixed; one timing window recorded as FOLLOW-UP.
+
+## After the convergence pass (orchestrator, 2026-09-26)
+
+**The timing follow-up.** `5f256f70` made `_shellwords.py push` return its lines shortest first,
+so the short force push after a long commit message is judged, and ends the loop, before the
+message whose every word `judge_command` reads as a refspec (unit test `test_shortest_line_first`,
+red first).
+
+**Second convergence** (deep-reviewer on `5f256f70` and the merge `35bdf96d`, which resolved plan
+027 against the graphify gate): no verdict change in 5,640 reader cases and 1,280 hook runs
+against `747b6dae`; six LOW findings.
+
+| # | Finding | Action |
+|---|---|---|
+| 1 | "Base did the same, so that is no regression" was wrong: with the long text inside the push command itself (shape A), base walked it at about 70% of the cost | Corrected; left open for the maintainer (below) |
+| 2 | "Only the stop comes earlier" was wrong: a long refused push line waited behind shorter long messages holding `push` (shape D) and passed 5 s at about 250 KB | Fixed: lines that could force (`FORCE_HINT`: a short option holding f, `--force*`, `--mirror`, a `+refspec`) come first, shortest first within each group; unit tests `test_a_line_that_could_force_comes_before_one_that_cannot` (red first) and `test_force_hint_spellings` |
+| 3 | `hooks-catalog.md` explained the recount by a group that, after the merge, had held two hooks | Fixed |
+| 4 | `hooks-catalog.md` 4c and 4d counts predated the graphify gate | Fixed: eleven hooks, twelve 4c rows, six of the ten blocking gates |
+| 5 | 7f accepted a duplicate registration, and 7e's `own` comment would admit a git gate | Fixed: 7f requires one registration per tool; `own` is for shell hooks that are not git gates |
+| 6 | The graphify catalog row read as a deny-list and missed the `ask` on overrun | Fixed |
+
+**Timing after the fix** (`validate-push.sh`, median of 3, Bash tool, rc 2 in every run; the
+PowerShell medians are within 10% of every multi-second figure except where noted, and under 0.5 s
+wherever Bash is):
+
+| Shape | Size | base `96afb6fb` | `747b6dae` | shortest first `35bdf96d` | could-force first |
+|---|---|---|---|---|---|
+| C: `git commit -m "<text>" && git push --force origin <trunk>` | 250 KB | 2,495 ms | 3,483 ms | 404 ms | 405 ms |
+| C | 400 KB | 3,733 ms | 5,490 ms | 281 ms | 418 ms |
+| D: A, then two shorter commit lines holding `push` | 250 KB | 2,358 ms | 3,436 ms | 6,287 ms (PowerShell 9,409) | 3,351 ms |
+| D | 400 KB | 3,567 ms | 5,407 ms | 10,781 ms (PowerShell 16,920) | 5,322 ms |
+| A: `git -c x="<text>" push --force origin <trunk>` | 250 KB | 2,296 ms | 3,285 ms | 3,278 ms | 3,269 ms |
+| A | 400 KB | 3,460 ms | 5,205 ms | 5,244 ms | 5,201 ms |
+
+**Open, for the maintainer.** Shapes A and D are back to the `747b6dae` cost, which is about 1.5
+times base: `judge_command`'s per-word loop grew in the review fixes (two positional lists, cluster
+and prefix handling). Between roughly 300 and 450 KB of text inside one push command, base finished
+inside the 5 s registration and this gate does not, and a killed gate fails open. No realistic
+command carries that much text inside the push itself. The fix, if wanted: bound the positionals
+`judge_command` walks, or anchor `push` outside quoted text.

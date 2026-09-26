@@ -323,6 +323,27 @@ class PushLinesTests(unittest.TestCase):
         self.assertEqual(lines[0].strip(), "git push --force origin T")
         self.assertEqual([len(line) for line in lines], sorted(len(line) for line in lines))
 
+    # A line that cannot force a push cannot be refused, so it waits even when shorter: shortest
+    # first alone made a long refused push wait behind two shorter long messages holding `push`
+    # (convergence of 5f256f70: 250 KB took 6.3 s, where the order before it took under 3 s).
+    def test_a_line_that_could_force_comes_before_one_that_cannot(self):
+        long_push = 'git -c x="' + "push the thing " * 800 + '" push --force origin T'
+        msg = 'git commit -m "' + "push the thing " * 300 + '"'
+        lines = sw.push_lines(f"{msg}; {msg} again; {long_push}", "Bash").split("\n")
+        self.assertIn("--force origin T", lines[0])
+        forced = [bool(sw.FORCE_HINT.search(line)) for line in lines]
+        self.assertEqual(forced, sorted(forced, reverse=True))
+
+    def test_force_hint_spellings(self):
+        for line in ("git push --force o T", "git push -f o T", "git push -vfu o T",
+                     "git push --force-with-lease o T", "git push --mirror o", "git push o +T",
+                     "git push '--force' o T"):
+            with self.subTest(line=line):
+                self.assertIsNotNone(sw.FORCE_HINT.search(line))
+        for line in ("git push o T", "git push -u o T", "git push -o ci.skip o T"):
+            with self.subTest(line=line):
+                self.assertIsNone(sw.FORCE_HINT.search(line))
+
 
 class CliTests(unittest.TestCase):
     def test_posix_mode_writes_utf8_with_lf_only(self):

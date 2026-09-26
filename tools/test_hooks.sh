@@ -1529,9 +1529,10 @@ head2 "7e. the git gates read a PowerShell command as they read its Bash twin"
 BT='`'; NL=$'\n'; V=${CSV_VER:-v0.0.0}
 # The nine gates are named here, never read from the settings under test: a list derived from the
 # Bash registrations lost a gate that moved to a PowerShell-only group, and its parity row with it
-# (Codex review of plan 027). A tenth Bash gate fails until it is added here. A hook that reads
-# its command itself is listed in `own` instead: check-graphify-usage.sh splits both shells in
-# tools/graphify_taom.py, and 7f checks its registration and its rows on both tools.
+# (Codex review of plan 027). A tenth Bash gate fails until it is added here. `own` lists shell
+# hooks that are not git gates and read their command themselves: check-graphify-usage.sh splits
+# both shells in tools/graphify_taom.py, and 7f checks it. A git gate never goes in `own`; it reads
+# through taom_hook_command (hook-authoring.md).
 G7E_GATES=$("$HPY" - <<'PY' | tr -d '\r'
 import json
 d = json.load(open('.claude/settings.json', encoding='utf-8'))
@@ -1841,14 +1842,17 @@ done
 GU_REG=$("$HPY" - <<'PY'
 import json
 d = json.load(open('.claude/settings.json', encoding='utf-8'))
-tools = {t for g in d.get('hooks', {}).get('PreToolUse', [])
+tools = [t for g in d.get('hooks', {}).get('PreToolUse', [])
          if any(h['command'].endswith('check-graphify-usage.sh') for h in g.get('hooks', []))
-         for t in g.get('matcher', '').split('|')}
-print('ok' if {'Bash', 'PowerShell'} <= tools else 'missing: ' + ', '.join(sorted({'Bash', 'PowerShell'} - tools)))
+         for t in g.get('matcher', '').split('|')]
+nb, np = tools.count('Bash'), tools.count('PowerShell')
+print('ok' if (nb, np) == (1, 1) else f'Bash {nb}x, PowerShell {np}x')
 PY
 )
-[[ "$GU_REG" == ok ]] && ok "check-graphify-usage is registered for Bash and PowerShell" \
-    || bad "check-graphify-usage settings.json registration $GU_REG"
+# Once per tool, as 7e requires of the git gates: a leftover PowerShell-only group beside the
+# Bash|PowerShell one would run the gate twice on every PowerShell call.
+[[ "$GU_REG" == ok ]] && ok "check-graphify-usage is registered once for Bash and once for PowerShell" \
+    || bad "check-graphify-usage settings.json registration: $GU_REG, expected once each"
 
 # ---------------------------------------------------------------------------
 head2 "8. /context-budget scan.sh runs under set -u and measures the launch load"
