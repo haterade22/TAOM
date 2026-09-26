@@ -75,7 +75,11 @@ esac
 # Only run when the commit touches a surface the drift checks care about: a feature doc, a
 # shipped ModuleData JSON, a version marker, or a file the ADR-011 context budget measures.
 RELEVANT=0
-while IFS= read -r f; do
+# Split into an array under set -f, never a here-string: Git Bash 5.3 hangs forever on one of
+# 65,537 to 65,664 bytes, and a name list that size is reachable (#681). An empty line is dropped,
+# which is harmless: it matches no case arm.
+set -f; IFS=$'\n'; STAGED_LIST=($STAGED); IFS=$' \t\n'; set +f
+for f in "${STAGED_LIST[@]}"; do
     case "$f" in
         docs/features/*.md) RELEVANT=1; break ;;
         Main/_Module/ModuleData/*.json) RELEVANT=1; break ;;
@@ -84,7 +88,7 @@ while IFS= read -r f; do
         .claude/rules/*.md) RELEVANT=1; break ;;
         docs/reference/taleworlds-api-snapshot/*.md) RELEVANT=1; break ;;
     esac
-done <<< "$STAGED"
+done
 [[ $RELEVANT -eq 0 ]] && { echo '{}'; exit 0; }
 
 # Locate python (fail open if absent).

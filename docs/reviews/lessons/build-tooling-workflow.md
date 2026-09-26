@@ -2891,3 +2891,25 @@ stop. Nothing shipped wrong: the tool ran against a package with the exact names
   `bo_` body). Test such a check with a package holding only the near-miss name (`bo_..._head_a`), which it must refuse.
 - **Source:** 2026-09-26 tooling review, finding F1; `tools/oneoff/add_hill_troll_hammer_items.py` package check;
   `tools/validate_mesh_refs.py` `scan_tpac_metameshes`.
+
+### A here-string of 65,537 to 65,664 bytes hangs Git Bash forever, and a killed gate fails open (#681, 2026-09-26)
+On the desktop's Git Bash (bash 5.3.15), a here-string or here-document whose text is 65,537 to 65,664 bytes never
+returns: up to 65,536 bytes bash feeds it through a pipe, from 65,665 through a temp file, and in between it blocks
+writing into its own pipe before any reader exists. Every form built on that redirection hangs (`<<<`, `read -a <<<`,
+`mapfile <<<`, an expanding `<<EOF`, even `: <<<` with no reader). Ten hook sites fed a payload or a git name list
+through `<<<`, so a force push to a trunk, a `reset --hard` or a broad `add` padded into the window hung
+`validate-push.sh`, `block-dangerous-git.sh` and `block-broad-git-add.sh` until the harness killed them, and a killed
+gate allows. The staged-name sites are reachable too: four commits in TAOM history list over 64 KiB of paths. The
+issue proposed `done < <(printf '%s\n' "$X")`, which never hangs but forks on every call (22 ms each) and makes bash
+read a pipe one byte at a time: 2,155 ms for a 400 KB loop against 585 ms for the here-string and 22 ms for an
+array split, which would have pushed `validate-push.sh` past its 5 s registration on a large command (#680).
+- **Why missed:** a here-string reads as an in-memory string, so nobody sized it, and every test payload was either
+  small or far above the window; a hang only 128 bytes wide is invisible to a test that doesn't aim for it.
+- **Prevent:** split hook text without a redirection: `set -f; IFS=$'\n'; A=($X); IFS=$' \t\n'; set +f` and a `for`
+  loop (no fork, empty lines dropped, variables set in the loop stay visible), or `set -f; T=($X); set +f` for words;
+  keep `set -f`, `set +f` and the IFS restore on one line. `tools/test_hooks.sh` 4e refuses a here-string or an
+  expanding here-document in any script a hook registration runs, and 7h sends payloads sized into the window
+  through the gates. Measure an alternative's cost on large text before proposing it as a fix.
+- **Source:** issue #681; `.claude/hooks/validate-push.sh`, `block-dangerous-git.sh`, `block-broad-git-add.sh`,
+  `mark-verification-run.sh`, `check-doc-config-drift.sh`, `check-moduledata-validation.sh`,
+  `check-native-dll-crt.sh`, `check-verification-evidence.sh`, `detect-docs-gaps.sh`; `.claude/rules/hook-authoring.md`.

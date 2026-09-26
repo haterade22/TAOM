@@ -74,11 +74,15 @@ esac
 # with #626: lords.xslt carries 364 of the templated lords SKILL_TEMPLATE_MISMATCH judges, and a
 # commit staging only it used to run no validator at all.
 HAS_MD=0
-while IFS= read -r f; do
+# Split into an array under set -f, never a here-string: Git Bash 5.3 hangs forever on one of
+# 65,537 to 65,664 bytes, and a name list that size is reachable (#681). An empty line is dropped,
+# which is harmless: it matches no case arm.
+set -f; IFS=$'\n'; STAGED_LIST=($STAGED); IFS=$' \t\n'; set +f
+for f in "${STAGED_LIST[@]}"; do
     case "$f" in
         Main/_Module/ModuleData/*.xml|Main/_Module/ModuleData/*.xslt) HAS_MD=1; break ;;
     esac
-done <<< "$STAGED"
+done
 [[ $HAS_MD -eq 0 ]] && { echo '{}'; exit 0; }
 
 # Locate python (fail open if absent).

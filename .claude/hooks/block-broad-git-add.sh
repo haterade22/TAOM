@@ -74,7 +74,11 @@ REASON=""
 # own git invocation, never as text inside a quoted arg or a pipe target.
 SEGMENTS=$(printf '%s' "$COMMAND" | sed -E 's/&&|\|\||;|\|/\n/g')
 
-while IFS= read -r seg; do
+# Split into an array under set -f, never a here-string: Git Bash 5.3 hangs forever on one of
+# 65,537 to 65,664 bytes, and a killed gate fails open (#681). An empty segment is dropped,
+# which is harmless: it is no git invocation.
+set -f; IFS=$'\n'; SEG_LIST=($SEGMENTS); IFS=$' \t\n'; set +f
+for seg in "${SEG_LIST[@]}"; do
   [[ -n "$REASON" ]] && break
   seg="${seg#"${seg%%[![:space:]]*}"}"                       # ltrim
   # strip leading env-var assignments: VAR=value ...
@@ -134,7 +138,7 @@ while IFS= read -r seg; do
       REASON="git commit -a stages every tracked modification before committing"
     fi
   fi
-done <<< "$SEGMENTS"
+done
 
 # Not a broad-staging form → allow.
 [[ -z "$REASON" ]] && { echo '{}'; exit 0; }

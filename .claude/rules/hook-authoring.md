@@ -149,6 +149,10 @@ it, not a test read the hook's output. Nine gates passed every test for months w
 ignored their top-level `permissionDecision` (`harness-facts.md` "PreToolUse output contract").
 Test the inputs that go missing too: a non-ASCII command, a multi-line one.
 
+## Never feed hook text through a here-string (EMPIRICAL: TAOM 2026-09-26, #681)
+
+Never feed unbounded text through `<<<` or an expanding here-document (Git Bash 5.3 hangs forever on 65,537 to 65,664 bytes, and a killed gate fails open): split it under `set -f` with `set -f; IFS=$'\n'; A=($X); IFS=$' \t\n'; set +f` and a `for` loop, or `set -f; T=($X); set +f` for words, never `< <(printf ...)`, which forks per call; `tools/test_hooks.sh` 4e enforces it.
+
 ## Never spell it `python3` (EMPIRICAL: TAOM 2026-08-31)
 
 On the dev machine `python3` resolves only to

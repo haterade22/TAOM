@@ -24,6 +24,10 @@ pascal_to_kebab() {
 
 # Build flat list of existing doc basenames (without .md)
 EXISTING_DOCS=$(find docs/features -maxdepth 1 -name '*.md' -not -name 'TEMPLATE.md' 2>/dev/null | sed 's|.*/||; s|\.md$||')
+# Split once into an array under set -f, never a here-string per feature: Git Bash 5.3 hangs
+# forever on one of 65,537 to 65,664 bytes (#681). Globbing is back on before the
+# Main/Features/*/ loop below needs it.
+set -f; IFS=$'\n'; DOC_LIST=($EXISTING_DOCS); IFS=$' \t\n'; set +f
 
 MISSING=()
 for feature_dir in Main/Features/*/; do
@@ -34,13 +38,13 @@ for feature_dir in Main/Features/*/; do
   # Match if any existing doc basename contains the kebab root or vice-versa
   # (handles variants: RaceAge → race-age-system, Warg → warg-combat, TroopWeight → troop-weight-system)
   found=false
-  while IFS= read -r doc; do
+  for doc in "${DOC_LIST[@]}"; do
     [[ -z "$doc" ]] && continue
     if [[ "$doc" == "$kebab" || "$doc" == "${kebab}-system" || "$doc" == "${kebab}"* || "$kebab" == *"$doc"* ]]; then
       found=true
       break
     fi
-  done <<< "$EXISTING_DOCS"
+  done
 
   [[ "$found" == false ]] && MISSING+=("$name → docs/features/${kebab}.md")
 done

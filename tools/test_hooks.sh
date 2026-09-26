@@ -593,6 +593,76 @@ for row in "check-commit-subject-version.sh|$REPO|rc=0 deny|cd /x\ngit commit -m
 done
 
 # ---------------------------------------------------------------------------
+# 4e. No here-string, and no expanding here-document, in any script a hook registration runs (#681).
+#     Git Bash 5.3 on the desktop hangs forever writing a here-string or here-document of 65,537 to
+#     65,664 bytes into its own pipe (a smaller one fits the 64 KiB pipe, a larger one goes to a temp
+#     file), and a killed gate fails open. Split text with `set -f; IFS=$'\n'; A=($X); IFS=$' \t\n';
+#     set +f` (no fork; drops empty lines) or word-split it under set -f; never `< <(printf ...)` on a
+#     payload, which forks and reads a pipe a byte at a time (1 MB took 5.5 s). A quoted here-document
+#     (<<'PY') is static text; its body must stay at or under 65,536 bytes. Full-line comments and
+#     here-document bodies are skipped. The self-test file proves the scan still sees each form.
+# ---------------------------------------------------------------------------
+head2 "4e. no here-string or expanding here-document in a hook script (#681)"
+HS_SELF="$SANDBOX/herestring-selftest.sh"
+printf '%s\n' '# a comment naming <<< is not code' 'done <<< "$X"' '"$PY" - <<'"'"'PY'"'" \
+    'print("<<< in a quoted body is not shell")' 'PY' 'cat <<EOF' '$X' 'EOF' > "$HS_SELF"
+HS_OUT=$("$HPY" - "$HS_SELF" <<'PY'
+import pathlib, re, sys
+PIPE_MAX = 65536
+HEREDOC = re.compile(r"(?<!<)<<(?!<)(-?)[ \t]*(\\?)(['\"]?)([A-Za-z_][A-Za-z0-9_]*)\3")
+SCRIPT_REF = re.compile(r"\.claude/[^\s\"']+\.sh")
+root = pathlib.Path('.')
+found = set((root / '.claude' / 'hooks').glob('*.sh'))
+for src in [root / '.claude' / 'settings.json'] + list((root / '.claude' / 'skills').glob('*/SKILL.md')):
+    text = src.read_text(encoding='utf-8', errors='replace')
+    if src.name == 'SKILL.md':
+        text = text.split('\n---', 1)[0] if text.startswith('---') else ''
+    found |= {root / m.group(0) for m in SCRIPT_REF.finditer(text) if (root / m.group(0)).is_file()}
+def scan(path):
+    out, pending, body = [], [], None
+    for i, line in enumerate(path.read_text(encoding='utf-8', errors='replace').split('\n'), 1):
+        if body:
+            delim, strip, quoted, start, size = body
+            if (line.lstrip('\t') if strip else line).rstrip('\r') == delim:
+                if quoted and size > PIPE_MAX:
+                    out.append(f'{path.as_posix()}:{start}: static here-document body of {size} bytes (over {PIPE_MAX})')
+                body = pending.pop(0) if pending else None
+            else:
+                body = (delim, strip, quoted, start, size + len(line.encode('utf-8')) + 1)
+            continue
+        if line.lstrip().startswith('#'):
+            continue
+        if '<<<' in line:
+            out.append(f'{path.as_posix()}:{i}: here-string: {line.strip()[:90]}')
+        for m in HEREDOC.finditer(line):
+            quoted = bool(m.group(2) or m.group(3))
+            if not quoted:
+                out.append(f'{path.as_posix()}:{i}: expanding here-document <<{m.group(4)}: {line.strip()[:90]}')
+            pending.append((m.group(4), m.group(1) == '-', quoted, i, 0))
+        if pending:
+            body = pending.pop(0)
+    if body:
+        out.append(f'{path.as_posix()}:{body[3]}: here-document <<{body[0]} never closes')
+    return out
+self_hits = [h.split(': ', 1)[0].rsplit(':', 1)[1] for h in scan(pathlib.Path(sys.argv[1]))]
+print('SELF ' + ' '.join(self_hits))
+for p in sorted(found):
+    for h in scan(p):
+        print(h)
+PY
+)
+HS_SELFLINE=$(printf '%s\n' "$HS_OUT" | grep '^SELF ')
+HS_HITS=$(printf '%s\n' "$HS_OUT" | grep -v '^SELF ')
+if [[ "$HS_SELFLINE" != "SELF 2 6" ]]; then
+    bad "4e's scan no longer sees a here-string and an expanding here-document (self-test found: ${HS_SELFLINE#SELF })"
+elif [[ -n "$HS_HITS" ]]; then
+    bad "here-string or expanding here-document in a hook script (#681: Git Bash hangs on 65,537 to 65,664 bytes, and a killed gate fails open):"
+    printf '%s\n' "$HS_HITS" | sed 's/^/       /'
+else
+    ok "no hook script feeds text through a here-string or an expanding here-document"
+fi
+
+# ---------------------------------------------------------------------------
 # 5. Starved environment: no jq, no python at all.
 #    Every hook must still terminate promptly and must NOT block. This is the
 #    fail-open mandate in .claude/rules/harness-facts.md, tested rather than assumed.
@@ -1884,6 +1954,75 @@ for entry in "${CP_CASES[@]}"; do
     [[ "$got" == "$want" ]] && ok "config-protection rc=$got for: $path" \
         || bad "config-protection expected rc=$want, got $got for: $path"
 done
+
+# ---------------------------------------------------------------------------
+# 7h. A payload in Git Bash's here-string hang window still gets its answer (#681).
+#     Git Bash 5.3 hangs forever on a here-string or here-document of 65,537 to 65,664 bytes, and a
+#     killed gate fails open. Each row sizes its command so the text a hook split with a here-string
+#     before #681 lands in that window (lengths measured against _shellwords.py at 74942227; the one
+#     line reaches validate-push once per tool as $LINES and as a judged segment, and PowerShell hands
+#     back two lines, so it needs half the length to fill $LINES). 4e keeps the construct out; these
+#     rows prove the gates still answer, inside 80% of each registration.
+# ---------------------------------------------------------------------------
+head2 "7h. hooks answer inside 80% of their registration on a payload in the here-string hang window (#681)"
+hw_payload() {  # $1 kind, $2 tool, $3 command length: writes $SANDBOX/hw.json
+    "$HPY" - "$1" "$2" "$3" > "$SANDBOX/hw.json" <<'PY'
+import json, sys
+kind, tool, n = sys.argv[1], sys.argv[2], int(sys.argv[3])
+head, tail = {"push": ('git -c x="', '" push --force origin bannerlord-1.5.x'),
+              "reset": ('echo "', '"; git reset --hard'),
+              "addall": ('echo "', '"; git add -A'),
+              "test": ('echo "', '"; dotnet test TAOM.Tests')}[kind]
+k = n - len(head) - len(tail)
+cmd = head + ("abc def " * (k // 8 + 1))[:k] + tail
+assert len(cmd) == n
+event = "PostToolUse" if kind == "test" else "PreToolUse"
+p = {"tool_name": tool, "tool_input": {"command": cmd}, "hook_event_name": event}
+if event == "PostToolUse":
+    p["tool_response"] = {"stdout": "ok", "stderr": ""}
+sys.stdout.write(json.dumps(p))
+PY
+}
+hw_reg() {  # $1 event, $2 hook: its registered timeout in seconds
+    "$HPY" -c 'import json, sys
+d = json.load(open(".claude/settings.json", encoding="utf-8"))
+print(next((h.get("timeout", 600) for g in d["hooks"].get(sys.argv[1], []) for h in g["hooks"]
+            if h["command"].endswith(sys.argv[2])), 0))' "$1" "$2" | tr -d '\r'
+}
+for row in "validate-push.sh|push|Bash|65536|rc2" "validate-push.sh|push|Bash|65600|rc2" \
+           "validate-push.sh|push|Bash|65663|rc2" "validate-push.sh|push|PowerShell|32768|rc2" \
+           "validate-push.sh|push|PowerShell|32831|rc2" "validate-push.sh|push|PowerShell|65548|rc2" \
+           "block-dangerous-git.sh|reset|Bash|65548|ask" "block-dangerous-git.sh|reset|PowerShell|65548|ask" \
+           "block-broad-git-add.sh|addall|Bash|65548|ask" "block-broad-git-add.sh|addall|PowerShell|65548|ask" \
+           "mark-verification-run.sh|test|Bash|65548|mark" "mark-verification-run.sh|test|PowerShell|65548|mark"; do
+    IFS='|' read -r hook kind tool len want <<< "$row"
+    event=PreToolUse; [[ $want == mark ]] && event=PostToolUse
+    REG=$(hw_reg "$event" "$hook")
+    hw_payload "$kind" "$tool" "$len"
+    rm -rf "$SANDBOX/hw-proj"; mkdir -p "$SANDBOX/hw-proj"
+    S=$(date +%s%N)
+    out=$(timeout -k 2 10 env CLAUDE_PROJECT_DIR="$SANDBOX/hw-proj" bash ".claude/hooks/$hook" < "$SANDBOX/hw.json" 2>/dev/null)
+    rc=$?
+    MS=$(( ($(date +%s%N) - S) / 1000000 ))
+    case $want in
+        rc2)  got="rc=$rc"; [[ $rc == 2 ]] ;;
+        ask)  got=$(decision_of "$out"); [[ $got == ask ]] ;;
+        mark) got="rc=$rc, marker $([[ -f "$SANDBOX/hw-proj/.claude/logs/.verification-ran" ]] && echo set || echo unset)"
+              [[ $got == *"marker set" ]] ;;
+    esac
+    answered=$?
+    label="$hook [$tool] on a ${len}-character $kind command"
+    if (( rc == 124 )); then
+        bad "$label hung until the 10 s bound (a harness kill fails open): here-string hang window, #681"
+    elif (( answered != 0 )); then
+        bad "$label answered $got, expected $want"
+    elif (( MS * 10 >= REG * 1000 * 8 )); then
+        bad "$label took ${MS}ms against its ${REG}s registration"
+    else
+        ok "$label: $got in ${MS}ms of ${REG}s"
+    fi
+done
+rm -rf "$SANDBOX/hw-proj" "$SANDBOX/hw.json"
 
 # ---------------------------------------------------------------------------
 head2 "8. /context-budget scan.sh runs under set -u and measures the launch load"

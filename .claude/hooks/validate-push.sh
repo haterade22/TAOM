@@ -42,7 +42,7 @@ is_protected() {
   return 1
 }
 
-# Judge every command (maintainer decision D38, widened by the plan 011 review). `read -a`
+# Judge every command (maintainer decision D38, widened by the plan 011 review). The judge
 # below takes one line, and until plan 011 it took only the command's first, so a `cd <dir>`
 # line hid a force push on the next. A continued line (a trailing \ in bash, a trailing ` in
 # PowerShell) is one command, so the continuations are joined. Then each command on a line is
@@ -153,7 +153,10 @@ judge_command() {
   # escaped (\}): a bare } there ends ${...} early, bash -n still passes, and every call then
   # prints "}: command not found" with CLEAN empty, which allows every force push.
   CLEAN=${1//[\"\'(){\}\`]/ }
-  read -r -a TOKENS <<< "$CLEAN"
+  # A word split under set -f, never a here-string: Git Bash 5.3 hangs forever on one of 65,537
+  # to 65,664 bytes, and a killed gate fails open (#681). CLEAN holds no newline, so this reads
+  # the words the old `read -a` did; set -f keeps a refspec glob such as refs/heads/* whole.
+  set -f; TOKENS=($CLEAN); set +f
 
   # Anchor on the first `push` with an actual `git` token before it, so `npm push` or a stray
   # word cannot trip, and a `push` word that an unclosed quote glued in front (a comment or
@@ -235,15 +238,19 @@ judge_command() {
 # The splits repeat most segments; a verdict depends only on the segment, so each distinct
 # segment is judged once. The loop stops at the first refused segment, and _shellwords.py push
 # orders them for that: lines that could force first, shortest first within each group.
+# The lines are split into an array, never read from a here-string (#681, see judge_command). An
+# empty line is dropped, which is harmless since it holds no `push`. IFS is restored on the same
+# line, so judge_command's word split still splits at spaces.
 declare -A JUDGED
 unset CUR_BRANCH
-while IFS= read -r SEG; do
+set -f; IFS=$'\n'; SEGS=($LINES); IFS=$' \t\n'; set +f
+for SEG in "${SEGS[@]}"; do
   [[ "$SEG" == *push* ]] || continue
   [[ -n ${JUDGED["$SEG"]+x} ]] && continue
   JUDGED["$SEG"]=1
   judge_command "$SEG"
   [[ -n "$BLOCK_TARGET" ]] && break
-done <<< "$LINES"
+done
 
 # Hard-block force push to a protected branch
 if [[ -n "$BLOCK_TARGET" ]]; then
