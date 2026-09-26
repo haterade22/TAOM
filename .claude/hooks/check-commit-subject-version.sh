@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # check-commit-subject-version.sh
-# PreToolUse(Bash) hook: every `git commit` subject must read
+# PreToolUse (Bash and PowerShell) hook: every `git commit` subject must read
 #
 #     <type>[(scope)][!]: vX.Y.Z - <description>
 #
@@ -47,15 +47,10 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
 taom_pybin_degraded "check-commit-subject-version" "the commit-subject version label" && { echo '{}'; exit 0; }
 
-# Extract the bash command from tool_input.
-COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
-import sys, json
-try:
-    d = json.loads(sys.stdin.read())
-    print(d.get("tool_input", {}).get("command", ""))
-except Exception:
-    pass
-' 2>/dev/null)
+# The command as POSIX-shell text (plan 027): _pybin.sh taom_hook_command hands a PowerShell
+# command back as the Bash text of the same command and names git `git` wherever it is the
+# command (`GIT`, `git.exe`, a path), so the two-stage matcher below reads both shells.
+COMMAND=$(taom_hook_command posix check-commit-subject-version)
 
 # Detect `git commit` invocations including `git -C <dir> commit` and
 # `git -c <key>=<val> commit`. Reject `git commit-tree`, `commit-graph`, etc.
@@ -125,15 +120,36 @@ SEP = set(";|&\n()")
 GIT_OPTS_WITH_VALUE = {"-C", "-c", "--git-dir", "--work-tree", "--namespace", "--exec-path",
                        "--config-env"}
 
+def piped_text(group):
+    """What a command that only prints one word hands the next command through a pipe: the word
+    itself (a PowerShell string or here-string alone), echo or Write-Output with one word, or
+    printf with a format and one word. None for anything else."""
+    if len(group) == 1:
+        return group[0]
+    name = os.path.basename(group[0]).lower() if group else ""
+    if len(group) == 2 and name in ("echo", "write-output"):
+        return group[1]
+    if len(group) == 3 and name == "printf":
+        return group[2]
+    return None
+
 def commit_arg_lists(s, depth=0):
-    """The argument list after `commit` of every git commit invocation in s."""
+    """The argument list after `commit` of every git commit invocation in s. A commit whose stdin
+    is piped from a command that only prints one word (a PowerShell here-string piped to
+    `git commit -F -`, plan 027) gets that word first as a heredoc placeholder, so `-F -` reads it."""
     found = []
-    group = []
+    group, prev, sep = [], [], ""
     for t in tokens(s) + [";"]:
         if t and set(t) <= SEP:
             if group:
-                found.extend(_commit_args(group, depth))
-            group = []
+                lists = _commit_args(group, depth)
+                piped = piped_text(prev) if sep == "|" else None
+                if piped is not None:
+                    bodies.append(piped)
+                    mark = ["<<", "__TAOM_HEREDOC_%d__" % (len(bodies) - 1)]
+                    lists = [mark + args for args in lists]
+                found.extend(lists)
+            prev, group, sep = group, [], t
         else:
             group.append(t)
     return found

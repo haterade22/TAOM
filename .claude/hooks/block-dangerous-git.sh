@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # block-dangerous-git.sh
-# PreToolUse(Bash) hook: prompt for confirmation before a git command that can
+# PreToolUse (Bash and PowerShell) hook: prompt for confirmation before a git command that can
 # PERMANENTLY DISCARD uncommitted / unpushed work. Emits permissionDecision
 # "ask" (confirm), NOT "deny" — a legitimate revert is still possible, you just
 # have to approve it. Allows everything else with `{}`.
@@ -41,7 +41,8 @@ INPUT=$(cat)
 # Never skip on an escape: JSON writes a letter either literally or as a \u escape,
 # so a payload holding any \u takes the full parse, and the raw test is safe
 # whatever writes the payload.
-[[ "$INPUT" == *git* || "$INPUT" == *'\u'* ]] || { echo '{}'; exit 0; }
+# git in any case (plan 027): the reader reads GIT as git, so the raw test must let it through.
+[[ "$INPUT" == *[Gg][Ii][Tt]* || "$INPUT" == *'\u'* ]] || { echo '{}'; exit 0; }
 
 # Resolve a safe Python (never a Microsoft Store alias — those hang forever).
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
@@ -49,19 +50,14 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
 taom_pybin_degraded "block-dangerous-git" "destructive git commands" jq && { echo '{}'; exit 0; }
 
-# Extract tool_input.command. Prefer jq; fall back to python3 for robust JSON
-# (handles escaped quotes — the grep+sed fallback truncated those). Mirrors the
-# parser in check-claude-files-tracked.sh.
-if command -v jq >/dev/null 2>&1; then
-  COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
+# The command as POSIX-shell text (plan 027): _pybin.sh taom_hook_command hands a PowerShell
+# command back as the Bash text of the same command and names git `git` wherever it is the
+# command (`GIT`, `git.exe`, a path). Python first, so the CI runner (which has jq) reads
+# PowerShell too; jq only without Python, reading the raw command as Bash text.
+if [[ -n "${PYBIN:-}" ]]; then
+  COMMAND=$(taom_hook_command posix block-dangerous-git)
 else
-  COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
-import sys, json
-try:
-    print(json.loads(sys.stdin.read()).get("tool_input", {}).get("command", ""))
-except Exception:
-    pass
-' 2>/dev/null)
+  COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
 fi
 
 # Fail-open: nothing to inspect → allow.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # block-broad-git-add.sh
-# PreToolUse(Bash) hook: confirm before a git command that stages EVERYTHING in the
+# PreToolUse (Bash and PowerShell) hook: confirm before a git command that stages EVERYTHING in the
 # working tree, rather than the paths you actually touched. Emits permissionDecision
 # "ask" (confirm), NOT "deny" — a deliberate sweep is still possible, you just have to
 # approve it after reading what it would take. Allows everything else with `{}`.
@@ -51,7 +51,8 @@ INPUT=$(cat)
 # Never skip on an escape: JSON writes a letter either literally or as a \u escape,
 # so a payload holding any \u takes the full parse, and the raw test is safe
 # whatever writes the payload.
-[[ "$INPUT" == *git* || "$INPUT" == *'\u'* ]] || { echo '{}'; exit 0; }
+# git in any case (plan 027): the reader reads GIT as git, so the raw test must let it through.
+[[ "$INPUT" == *[Gg][Ii][Tt]* || "$INPUT" == *'\u'* ]] || { echo '{}'; exit 0; }
 
 # Resolve a safe Python (never a Microsoft Store alias — those hang forever).
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
@@ -59,18 +60,14 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
 taom_pybin_degraded "block-broad-git-add" "blanket git add / commit -a" jq && { echo '{}'; exit 0; }
 
-# Extract tool_input.command. Prefer jq; fall back to python3 for robust JSON
-# (handles escaped quotes). Mirrors block-dangerous-git.sh.
-if command -v jq >/dev/null 2>&1; then
-  COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
+# The command as POSIX-shell text (plan 027): _pybin.sh taom_hook_command hands a PowerShell
+# command back as the Bash text of the same command and names git `git` wherever it is the
+# command (`GIT`, `git.exe`, a path). Python first, so the CI runner (which has jq) reads
+# PowerShell too; jq only without Python, reading the raw command as Bash text.
+if [[ -n "${PYBIN:-}" ]]; then
+  COMMAND=$(taom_hook_command posix block-broad-git-add)
 else
-  COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
-import sys, json
-try:
-    print(json.loads(sys.stdin.read()).get("tool_input", {}).get("command", ""))
-except Exception:
-    pass
-' 2>/dev/null)
+  COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
 fi
 
 # Fail-open: nothing to inspect → allow.
@@ -103,7 +100,18 @@ while IFS= read -r seg; do
   # Strip quoted spans before looking at flags, so a MESSAGE that contains a flag is
   # never read as one: `git commit -m "fix: add -a flag"` must not trip the -a branch.
   # Segment-splitting alone does not cover this — the quote is inside the segment.
-  rest=$(printf '%s' "$rest" | sed -E "s/\"[^\"]*\"//g; s/'[^']*'//g")
+  # Without a fork (plan 027): the sed this replaces ran once per git segment, and 100 git
+  # segments took over 5 s on a loaded machine, past the 5 s registration (a killed gate allows).
+  # Same result as sed -E "s/\"[^\"]*\"//g; s/'[^']*'//g": double-quoted spans, then single.
+  for q in '"' "'"; do
+    kept=""
+    while [[ "$rest" == *"$q"*"$q"* ]]; do
+      kept+=${rest%%"$q"*}
+      rest=${rest#*"$q"}
+      rest=${rest#*"$q"}
+    done
+    rest=$kept$rest
+  done
 
   if [[ "$rest" =~ ^add([[:space:]]|$) ]]; then
     after="${rest#add}"

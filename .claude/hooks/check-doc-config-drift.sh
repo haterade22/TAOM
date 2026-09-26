@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # check-doc-config-drift.sh
-# PreToolUse(Bash) hook: when `git commit` is about to run touching a feature doc,
+# PreToolUse (Bash and PowerShell) hook: when `git commit` is about to run touching a feature doc,
 # a shipped ModuleData JSON config, or a game-version marker, run the doc-linter's
 # drift checks and BLOCK the commit if they find:
 #   - config-example drift: a docs/features/*.md ```json example whose values disagree
@@ -45,15 +45,10 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
 taom_pybin_degraded "check-doc-config-drift" "doc/config drift and the context budget" && { echo '{}'; exit 0; }
 
-# Extract the bash command from tool_input (mirrors check-moduledata-validation.sh).
-COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
-import sys, json
-try:
-    d = json.loads(sys.stdin.read())
-    print(d.get("tool_input", {}).get("command", ""))
-except Exception:
-    pass
-' 2>/dev/null)
+# The command as POSIX-shell text (plan 027): _pybin.sh taom_hook_command hands a PowerShell
+# command back as the Bash text of the same command and names git `git` wherever it is the
+# command (`GIT`, `git.exe`, a path), so the two-stage matcher below reads both shells.
+COMMAND=$(taom_hook_command posix check-doc-config-drift)
 
 # Two-stage git-commit matcher: handle `git -C/-c ... commit`; reject
 # `git commit-tree` / `commit-graph`. Per .claude/rules/hook-authoring.md "Git invocation forms hooks must handle".

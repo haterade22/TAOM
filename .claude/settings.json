@@ -61,7 +61,7 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Bash",
+        "matcher": "Bash|PowerShell",
         "hooks": [
           {
             "type": "command",
@@ -110,16 +110,6 @@
             "command": ".claude/hooks/check-doc-config-drift.sh",
             "statusMessage": "Linting docs for config drift, version, and budget…",
             "timeout": 30
-          }
-        ]
-      },
-      {
-        "matcher": "PowerShell",
-        "hooks": [
-          {
-            "type": "command",
-            "command": ".claude/hooks/validate-push.sh",
-            "timeout": 5
           }
         ]
       },

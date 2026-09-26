@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # check-claude-files-tracked.sh
-# PreToolUse(Bash) hook: when `git commit` is about to run, check whether
+# PreToolUse (Bash and PowerShell) hook: when `git commit` is about to run, check whether
 # any file under .claude/skills/, .claude/agents/, or .claude/rules/ exists
 # on disk but is gitignored. If so, refuse to commit — the file would silently
 # not be shipped, defeating its purpose.
@@ -33,14 +33,10 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
 taom_pybin_degraded "check-claude-files-tracked" "untracked or gitignored files under .claude/" && { echo '{}'; exit 0; }
 
-COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
-import sys, json
-try:
-    d = json.loads(sys.stdin.read())
-    print(d.get("tool_input", {}).get("command", ""))
-except Exception:
-    pass
-' 2>/dev/null)
+# The command as POSIX-shell text (plan 027): _pybin.sh taom_hook_command hands a PowerShell
+# command back as the Bash text of the same command and names git `git` wherever it is the
+# command (`GIT`, `git.exe`, a path), so the two-stage matcher below reads both shells.
+COMMAND=$(taom_hook_command posix check-claude-files-tracked)
 
 # Detect `git commit` invocations including `git -C <dir> commit` and
 # `git -c <key>=<val> commit`. Reject `git commit-tree`, `commit-graph`, etc.
@@ -81,7 +77,7 @@ fi
 PROBLEMS=$(
     { printf '%s\n' "$IGNORED" | sed '/^$/d; s/$/ (gitignored: will not commit)/'
       printf '%s\n' "$UNTRACKED" | sed '/^$/d; s/$/ (untracked and unstaged)/'
-    } | grep -E '\.(md|sh|json|ya?ml) \(' | sed 's/^/  - /'
+    } | grep -E '\.(md|sh|py|json|ya?ml) \(' | sed 's/^/  - /'
 )
 
 if [[ -z "$PROBLEMS" ]]; then

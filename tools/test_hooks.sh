@@ -346,9 +346,11 @@ is_pre_gate() { [[ " $PRE_GATES " == *" $1 "* ]]; }
 # but matches no hook's trigger (`committed` and `pushed` are not the subcommands, and
 # `no-verify` lacks its `--`), so the contract covers the parse path behind each prefilter;
 # `echo hi` alone now stops at the prefilter in every Bash hook (review of plan 013).
+# powershell-trigger runs the same parse paths through the PowerShell reader (plan 027).
 PAYLOADS=(
   'bash|{"tool_name":"Bash","tool_input":{"command":"echo hi"},"hook_event_name":"PreToolUse"}'
   'bash-trigger|{"tool_name":"Bash","tool_input":{"command":"git status && dotnet --info && echo committed pushed no-verify"},"hook_event_name":"PreToolUse"}'
+  'powershell-trigger|{"tool_name":"PowerShell","tool_input":{"command":"git status; dotnet --info; Write-Output committed pushed no-verify"},"hook_event_name":"PreToolUse"}'
   'edit|{"tool_name":"Edit","tool_input":{"file_path":"'"$SANDBOX"'/Main/Thing.cs"},"hook_event_name":"PreToolUse"}'
   'mcp|{"tool_name":"mcp__serena__find_symbol","tool_input":{},"hook_event_name":"PreToolUse"}'
   'session|{"hook_event_name":"SessionStart","session_id":"test","source":"startup"}'
@@ -441,8 +443,8 @@ mkdir -p "$PF"
 FAKEPY="$PF/fakepy"
 printf '#!/bin/sh\necho started >> "%s/starts"\nprintf taompy\n' "$PF" > "$FAKEPY"
 chmod +x "$FAKEPY" 2>/dev/null
-pf_payload() {  # $1 event, $2 command already JSON-escaped; printf %s keeps its backslashes
-    printf '{"tool_name":"Bash","session_id":"taom-prefilter-test","hook_event_name":"%s","tool_input":{"command":"%s","description":"prefilter probe"},"tool_response":{"stdout":"ok","stderr":""}}' "$1" "$2"
+pf_payload() {  # $1 event, $2 command already JSON-escaped, $3 tool (default Bash); printf %s keeps its backslashes
+    printf '{"tool_name":"%s","session_id":"taom-prefilter-test","hook_event_name":"%s","tool_input":{"command":"%s","description":"prefilter probe"},"tool_response":{"stdout":"ok","stderr":""}}' "${3:-Bash}" "$1" "$2"
 }
 pf_run() {      # $1 hook file name, $2 payload; prints "<times _pybin.sh was sourced> <fake starts>"
     rm -f "$PF/starts" "$PF/trace"
@@ -898,6 +900,9 @@ EOF"
       "fixup|allow|git commit --fixup=abc1234"
       "git -C form|allow|git -C $REPO commit -m \"test: $CSV_VER - harness case\""
       "git -C form unlabelled|deny|git -C $REPO commit -m \"test: harness case\""
+      "git in capitals|deny|GIT commit -m \"docs: no label\""
+      "one word piped to -F -, unlabelled|deny|echo \"docs: no label\" | git commit -F -"
+      "one word piped to -F -, labelled|allow|printf '%s\n' \"docs: $CSV_VER - x\" | git commit -F -"
       "commit-tree is not a commit|allow|git commit-tree HEAD^{tree} -m \"x\""
       "not git|allow|echo hi"
     )
@@ -1130,17 +1135,18 @@ git -C "$CFT_REPO" init -q 2>/dev/null
 printf 'bin/\n' > "$CFT_REPO/.gitignore"
 printf '# demo\n' > "$CFT_REPO/.claude/skills/demo/SKILL.md"
 printf 'echo hi\n' > "$CFT_REPO/.claude/hooks/bin/check.sh"
+printf 'x = 1\n' > "$CFT_REPO/.claude/hooks/_helper.py"
 cft_run() {
     printf '%s' '{"tool_name":"Bash","tool_input":{"command":"git commit -m x"},"hook_event_name":"PreToolUse"}' \
         | CLAUDE_PROJECT_DIR="$CFT_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/check-claude-files-tracked.sh" 2>/dev/null
 }
 S=$(date +%s%N); OUT=$(cft_run); MS=$(( ($(date +%s%N) - S) / 1000000 ))
-if [[ "$(decision_of "$OUT")" == deny ]] && grep -q 'SKILL.md (untracked' <<< "$OUT" && grep -q 'check.sh (gitignored' <<< "$OUT"; then
-    ok "denies an untracked and a gitignored harness file in ${MS}ms"
+if [[ "$(decision_of "$OUT")" == deny ]] && grep -q 'SKILL.md (untracked' <<< "$OUT" && grep -q 'check.sh (gitignored' <<< "$OUT" && grep -q '_helper.py (untracked' <<< "$OUT"; then
+    ok "denies an untracked and a gitignored harness file, a .py helper included, in ${MS}ms"
 else
     bad "check-claude-files-tracked did not deny both files with a valid decision: $(printf '%s' "$OUT" | head -c 160)"
 fi
-git -C "$CFT_REPO" add .claude/skills/demo/SKILL.md 2>/dev/null
+git -C "$CFT_REPO" add .claude/skills/demo/SKILL.md .claude/hooks/_helper.py 2>/dev/null
 rm -rf "$CFT_REPO/.claude/hooks/bin"
 OUT=$(cft_run)
 if [[ "$(decision_of "$OUT")" == allow ]]; then
@@ -1347,6 +1353,231 @@ printf '%s' '{"tool_name":"PowerShell","tool_input":{"command":"dotnet test TAOM
 [[ -f "$MVR_DIR/.claude/logs/.verification-ran" ]] && ok "mark-verification-run marks a PostToolUseFailure payload" \
     || bad "mark-verification-run did not mark a PostToolUseFailure payload"
 rm -rf "$MVR_DIR"
+
+# ---------------------------------------------------------------------------
+head2 "7e. the git gates read a PowerShell command as they read its Bash twin"
+# Maintainer decision 61 (plan 027): eight PreToolUse gates were registered for the Bash tool only,
+# so a git command run through the PowerShell tool skipped them, and every gate read its command as
+# Bash text (a labelled PowerShell here-string commit read as the subject `@` and was denied). One
+# `Bash|PowerShell` group now registers all nine, and each gate reads its command through _pybin.sh
+# taom_hook_command, which runs _shellwords.py: PowerShell comes back as the Bash text of the same
+# command, and a git named by a path or in capitals comes back as `git` in both shells.
+BT='`'; NL=$'\n'; V=${CSV_VER:-v0.0.0}
+G7E_GATES=$("$HPY" - <<'PY' | tr -d '\r'
+import json
+d = json.load(open('.claude/settings.json', encoding='utf-8'))
+pre = d.get('hooks', {}).get('PreToolUse', [])
+names = sorted({h['command'].rsplit('/', 1)[-1] for g in pre
+                if 'Bash' in g.get('matcher', '').split('|') for h in g.get('hooks', [])})
+for n in names:
+    tools = [t for g in pre if any(h['command'].endswith('/' + n) for h in g.get('hooks', []))
+             for t in g.get('matcher', '').split('|')]
+    print(n, tools.count('Bash'), tools.count('PowerShell'))
+PY
+)
+[[ -z "$G7E_GATES" ]] && bad "7e found no PreToolUse hook registered for Bash; the discovery is broken"
+G7E_NAMES=""
+while read -r name nb np; do
+    [[ -z "$name" ]] && continue
+    G7E_NAMES+="$name "
+    if [[ "$nb" == 1 && "$np" == 1 ]]; then
+        ok "$name is registered once for Bash and once for PowerShell"
+    else
+        bad "$name is registered for Bash ${nb}x and for PowerShell ${np}x; a git gate needs one Bash|PowerShell registration"
+    fi
+done <<< "$G7E_GATES"
+
+# The prefilter reads the raw payload whatever the tool: a PowerShell call without the gate's word
+# starts no Python, and one holding it reaches the parse.
+for name in $G7E_NAMES; do
+    read -r s n <<< "$(pf_run "$name" "$(pf_payload PreToolUse 'Get-ChildItem docs | Select-Object -First 3' PowerShell)")"
+    if [[ "$s" == 0 && "$n" == 0 ]]; then
+        ok "$name [PowerShell] no interpreter on a non-trigger payload"
+    else
+        bad "$name [PowerShell] reached _pybin.sh ($s source, $n start) on Get-ChildItem docs"
+    fi
+    case "$name" in
+        validate-push.sh)   trig='git push origin x' ;;
+        block-no-verify.sh) trig='git commit --no-verify -m x' ;;
+        block-dangerous-git.sh | block-broad-git-add.sh) trig='git status' ;;
+        *)                  trig="git commit -m @'\\nx\\n'@" ;;
+    esac
+    read -r s n <<< "$(pf_run "$name" "$(pf_payload PreToolUse "$trig" PowerShell)")"
+    if [[ "$s" -ge 1 ]]; then
+        ok "$name [PowerShell] reaches _pybin.sh on [$trig]"
+    else
+        bad "$name [PowerShell] never reached _pybin.sh on [$trig]"
+    fi
+done
+
+g7e_verdict() {  # $1 hook, $2 tool, $3 project dir, $4 command: "rc=<n> <decision>"
+    local payload out rc
+    payload=$("$HPY" -c 'import json,sys; print(json.dumps({"tool_name":sys.argv[1],"tool_input":{"command":sys.argv[2]},"hook_event_name":"PreToolUse"}))' "$2" "$4")
+    out=$(printf '%s' "$payload" | timeout -k 2 30 env CLAUDE_PROJECT_DIR="$3" bash "$REPO/.claude/hooks/$1" 2>/dev/null)
+    rc=$?
+    echo "rc=$rc $(decision_of "$out")"
+}
+G7E_OKFILE=${CSV_MSGFILE:-}; G7E_BADFILE=${CSV_BADFILE:-}
+if command -v cygpath >/dev/null 2>&1; then
+    G7E_OKFILE=$(cygpath -w "$G7E_OKFILE"); G7E_BADFILE=$(cygpath -w "$G7E_BADFILE")
+fi
+# hook|tool|project (S sandbox, R repo)|expected "rc=<n> <decision>"|command
+G7E_ROWS=(
+  # block-no-verify.sh blocks with exit 2 and prints no decision
+  "block-no-verify.sh|PowerShell|S|rc=2 allow|git commit --no-verify -m \"x\""
+  "block-no-verify.sh|PowerShell|S|rc=2 allow|GIT commit --no-verify -m x"
+  "block-no-verify.sh|PowerShell|S|rc=2 allow|& 'C:\\Program Files\\Git\\cmd\\git.exe' push --no-verify origin feature"
+  # A known gap, pinned (see Out of scope): the raw prefilter never sees the text no-verify here.
+  "block-no-verify.sh|PowerShell|S|rc=0 allow|git commit --no-verif''y -m x"
+  "block-no-verify.sh|PowerShell|S|rc=2 allow|git status; git commit ${BT}${NL}  --no-verify -m x"
+  "block-no-verify.sh|PowerShell|S|rc=0 allow|npm publish --no-verify"
+  "block-no-verify.sh|Bash|S|rc=2 allow|GIT commit --no-verify -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git commit --no-verify -m x"
+  # block-dangerous-git.sh confirms (ask) a command that can destroy work
+  "block-dangerous-git.sh|PowerShell|S|rc=0 ask|git reset --hard"
+  "block-dangerous-git.sh|PowerShell|S|rc=0 ask|& git reset --hard HEAD~1"
+  "block-dangerous-git.sh|PowerShell|S|rc=0 ask|GIT clean -fd"
+  "block-dangerous-git.sh|PowerShell|S|rc=0 ask|& 'C:\\Program Files\\Git\\cmd\\git.exe' stash drop"
+  "block-dangerous-git.sh|PowerShell|S|rc=0 ask|if (\$true) { git stash clear }"
+  "block-dangerous-git.sh|PowerShell|S|rc=0 ask|1..1 | ForEach-Object {git checkout -- .}"
+  "block-dangerous-git.sh|PowerShell|S|rc=0 ask|git fetch; git reset --hard origin/feature"
+  "block-dangerous-git.sh|PowerShell|S|rc=0 ask|git fetch && git reset --hard origin/feature"
+  "block-dangerous-git.sh|PowerShell|S|rc=0 ask|git fetch || git clean -f"
+  "block-dangerous-git.sh|PowerShell|S|rc=0 ask|git reset ${BT}${NL}  --hard"
+  "block-dangerous-git.sh|PowerShell|S|rc=0 ask|git -C \"E:\\repos\\x\" reset --hard"
+  "block-dangerous-git.sh|PowerShell|S|rc=0 allow|git restore --staged a.txt"
+  "block-dangerous-git.sh|PowerShell|S|rc=0 allow|Write-Output \"git reset --hard\""
+  "block-dangerous-git.sh|PowerShell|S|rc=0 allow|git commit -m \"docs: say why git reset --hard is gated\""
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|GIT reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|\"/c/Program Files/Git/cmd/git.exe\" clean -fd"
+  # block-broad-git-add.sh confirms (ask) a command that stages everything
+  "block-broad-git-add.sh|PowerShell|S|rc=0 ask|git add -A"
+  "block-broad-git-add.sh|PowerShell|S|rc=0 ask|& git add --all"
+  "block-broad-git-add.sh|PowerShell|S|rc=0 ask|GIT add ."
+  "block-broad-git-add.sh|PowerShell|S|rc=0 ask|git status; git add -u"
+  "block-broad-git-add.sh|PowerShell|S|rc=0 ask|git commit -am \"docs: x\""
+  "block-broad-git-add.sh|PowerShell|S|rc=0 ask|if (\$true) {git add -A}"
+  "block-broad-git-add.sh|PowerShell|S|rc=0 ask|git add ${BT}${NL}  -A"
+  "block-broad-git-add.sh|PowerShell|S|rc=0 ask|& 'C:\\Program Files\\Git\\cmd\\git.exe' commit -a -m 'x'"
+  "block-broad-git-add.sh|PowerShell|S|rc=0 allow|git add a.txt b.txt"
+  "block-broad-git-add.sh|PowerShell|S|rc=0 allow|git commit -m \"fix: add -a flag\""
+  "block-broad-git-add.sh|PowerShell|S|rc=0 allow|git commit -m @'${NL}fix: add -A handling${NL}'@"
+  "block-broad-git-add.sh|Bash|S|rc=0 ask|GIT add -A"
+  # check-commit-subject-version.sh denies an unlabelled subject or an AI attribution line
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 allow|git commit -m @'${NL}feat(hooks): $V - here-string subject${NL}${NL}Body line.${NL}'@"
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 deny|git commit -m @'${NL}feat(hooks): here-string subject${NL}'@"
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 deny|git commit -m @'${NL}feat(hooks): $V - x${NL}${NL}Co-Authored-By: Claude <noreply@anthropic.com>${NL}'@"
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 allow|git commit -m @\"${NL}feat(hooks): $V - expandable here-string${NL}\"@"
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 allow|git commit -m \"docs: $V - x\""
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 deny|git commit -m \"docs: no label\""
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 allow|git commit -m 'docs: $V - Mike''s harbor ships'"
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 deny|git commit -m \"docs: $V - x\" -m \"Body${BT}n${BT}nCo-Authored-By: Claude <noreply@anthropic.com>\""
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 deny|GIT commit -m \"docs: no label\""
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 deny|& 'C:\\Program Files\\Git\\cmd\\git.exe' commit -m \"docs: no label\""
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 deny|git add a.txt; git commit -m \"docs: no label\""
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 allow|git add a.txt && git commit -m \"docs: $V - x\""
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 deny|git commit ${BT}${NL}  -m \"docs: no label\""
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 deny|if (\$true) { git commit -m \"docs: no label\" }"
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 deny|@'${NL}docs: no label${NL}'@ | git commit -F -"
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 allow|@'${NL}docs: $V - piped here-string${NL}'@ | git commit -F -"
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 allow|git commit -F '$G7E_OKFILE'"
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 deny|git commit -F '$G7E_BADFILE'"
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 allow|git commit -m \"docs: $V - x\" # a trailing comment"
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 allow|Write-Output 'git commit -m \"docs: no label\"'"
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 allow|git commit-tree HEAD^{tree} -m \"x\""
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 allow|git commit --amend --no-edit"
+)
+for entry in "${G7E_ROWS[@]}"; do
+    hook="${entry%%|*}"; rest="${entry#*|}"
+    tool="${rest%%|*}"; rest="${rest#*|}"
+    dirkey="${rest%%|*}"; rest="${rest#*|}"
+    want="${rest%%|*}"; cmd="${rest#*|}"
+    dir=$SANDBOX; [[ "$dirkey" == R ]] && dir=$REPO
+    got=$(g7e_verdict "$hook" "$tool" "$dir" "$cmd")
+    shown="${cmd//$'\n'/\\n}"
+    if [[ "$got" == "$want" ]]; then
+        ok "$hook [$tool] $got for: $shown"
+    else
+        bad "$hook [$tool] expected '$want', got '$got' for: $shown"
+    fi
+done
+
+# The four gates that judge what is staged only need to know a commit is coming. Each reaches its
+# `cd` to the project only past its two-stage commit test, so a bash -x trace shows the answer.
+g7e_reaches() {  # $1 hook, $2 tool, $3 command: 1 when the gate got past its commit test
+    local payload
+    payload=$("$HPY" -c 'import json,sys; print(json.dumps({"tool_name":sys.argv[1],"tool_input":{"command":sys.argv[2]},"hook_event_name":"PreToolUse"}))' "$2" "$3")
+    printf '%s' "$payload" | timeout -k 2 60 env PS4='+ ' CLAUDE_PROJECT_DIR="$SANDBOX" bash -x "$REPO/.claude/hooks/$1" >/dev/null 2>"$SANDBOX/g7e.trace"
+    if grep -qE '^\+ cd ' "$SANDBOX/g7e.trace"; then echo 1; else echo 0; fi
+}
+G7E_REACH=(
+  "PowerShell|1|GIT commit -m x"
+  "PowerShell|1|& 'C:\\Program Files\\Git\\cmd\\git.exe' commit -m x"
+  "PowerShell|1|git commit -m @'${NL}docs: x${NL}'@"
+  "PowerShell|1|if (\$true) { git -C \"E:\\repos\\x\" commit --amend }"
+  "PowerShell|0|git commit-tree HEAD -m x"
+  "PowerShell|0|git log --grep commit"
+  "Bash|1|GIT commit -m x"
+)
+for hook in check-claude-files-tracked.sh check-moduledata-validation.sh check-native-dll-crt.sh check-doc-config-drift.sh; do
+    for entry in "${G7E_REACH[@]}"; do
+        tool="${entry%%|*}"; rest="${entry#*|}"; want="${rest%%|*}"; cmd="${rest#*|}"
+        got=$(g7e_reaches "$hook" "$tool" "$cmd")
+        shown="${cmd//$'\n'/\\n}"
+        if [[ "$got" == "$want" ]]; then
+            ok "$hook [$tool] commit test $got for: $shown"
+        else
+            bad "$hook [$tool] commit test expected $want, got $got for: $shown"
+        fi
+    done
+done
+G7E_CFT="$SANDBOX/g7e-cft"
+mkdir -p "$G7E_CFT/.claude/skills/demo"
+git -C "$G7E_CFT" init -q 2>/dev/null
+printf '# demo\n' > "$G7E_CFT/.claude/skills/demo/SKILL.md"
+got=$(g7e_verdict check-claude-files-tracked.sh PowerShell "$G7E_CFT" "git commit -m @'${NL}docs: x${NL}'@")
+if [[ "$got" == "rc=0 deny" ]]; then
+    ok "check-claude-files-tracked denies a PowerShell here-string commit over an untracked skill"
+else
+    bad "check-claude-files-tracked answered '$got' to a PowerShell commit over an untracked skill; expected 'rc=0 deny'"
+fi
+
+# Large payloads under both tools stay inside 80% of each gate's registration (the plan 011 review
+# saw a 5 s registration crossed under load, and a killed gate fails open).
+for kind in ps-big ps-lines bash-big; do
+    "$HPY" - "$kind" > "$SANDBOX/g7e-$kind.json" <<'PY'
+import json, sys
+big = "x" * 100000
+kind = sys.argv[1]
+if kind == "ps-big":
+    tool, cmd = "PowerShell", "Write-Output '" + big + "'; git status --no-verify; git push origin feature; git commit -m @'\ndocs: no label\n'@"
+elif kind == "ps-lines":
+    tool, cmd = "PowerShell", "\n".join('git -C E:\\x\\r%d commit -m "docs: no label"' % i for i in range(100))
+else:
+    tool, cmd = "Bash", "echo '" + big + "'; git status --no-verify; git push origin feature; git commit -m \"docs: no label\""
+sys.stdout.write(json.dumps({"tool_name": tool, "tool_input": {"command": cmd}, "hook_event_name": "PreToolUse"}))
+PY
+done
+for name in $G7E_NAMES; do
+    REG=$("$HPY" - "$name" <<'PYEOF'
+import json, sys
+d = json.load(open('.claude/settings.json', encoding='utf-8'))
+print(next((h.get('timeout', 600) for g in d['hooks'].get('PreToolUse', []) for h in g['hooks']
+            if h['command'].endswith(sys.argv[1])), 0))
+PYEOF
+)
+    REG=${REG%$'\r'}
+    for kind in ps-big ps-lines bash-big; do
+        S=$(date +%s%N)
+        timeout -k 2 65 env CLAUDE_PROJECT_DIR="$REPO" bash ".claude/hooks/$name" < "$SANDBOX/g7e-$kind.json" >/dev/null 2>&1
+        MS=$(( ($(date +%s%N) - S) / 1000000 ))
+        if (( MS * 10 >= REG * 1000 * 8 )); then
+            bad "$name took ${MS}ms on the $kind payload against its ${REG}s registration: the harness kills it (silently) under load"
+        else
+            ok "$name ${MS}ms of ${REG}s on the $kind payload"
+        fi
+    done
+done
 
 # ---------------------------------------------------------------------------
 head2 "8. /context-budget scan.sh runs under set -u and measures the launch load"
