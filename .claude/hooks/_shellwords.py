@@ -344,8 +344,11 @@ def _blind_pieces(text):
 
 # validate-push.sh refuses a line only when the push can force: a short option holding f (-f,
 # -vfu), --force*, --mirror, or a +refspec. push_lines orders by this hint, so it only moves a line
-# earlier or later: every line is still judged, and over-matching (`self-fix`) costs nothing.
-FORCE_HINT = re.compile(r"-\S*f|--mirror|\+")
+# earlier or later: every line is still judged. It over-matches prose (`trade-off`, `C++`), and
+# such a message sorts with the force lines, so it can still delay a longer refused line. The
+# class stops at a dash, which keeps the match linear (`-\S*f` backtracked from every dash of a run
+# and took 11 s on 64 KB of them); it matches exactly where `-\S*f` did.
+FORCE_HINT = re.compile(r"-[^\s-]*f|--mirror|\+")
 
 
 # Only a segment this short is re-split with argument boundaries: shlex builds each word one
@@ -381,8 +384,8 @@ def push_lines(cmd, tool):
        before plan 027, so reading PowerShell never loses a push the raw text showed.
     Lines that could force (FORCE_HINT) first, shortest first within each group: validate-push
     stops at the first refused line, so a short force push is judged before a long message holding
-    `push`, whose every word it would read as a refspec, and a long force push never waits behind
-    lines that cannot be refused."""
+    `push`, whose every word it would read as a refspec, and a long force push waits only behind
+    shorter lines the hint also matches."""
     def unfold(t):
         return t.replace("\r", "").replace("\\\n", " ").replace("`\n", " ")
     posix = to_posix(cmd, tool)

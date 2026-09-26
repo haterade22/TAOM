@@ -310,10 +310,10 @@ against `747b6dae`; six LOW findings.
 | # | Finding | Action |
 |---|---|---|
 | 1 | "Base did the same, so that is no regression" was wrong: with the long text inside the push command itself (shape A), base walked it at about 70% of the cost | Corrected; left open for the maintainer (below) |
-| 2 | "Only the stop comes earlier" was wrong: a long refused push line waited behind shorter long messages holding `push` (shape D) and passed 5 s at about 250 KB | Fixed: lines that could force (`FORCE_HINT`: a short option holding f, `--force*`, `--mirror`, a `+refspec`) come first, shortest first within each group; unit tests `test_a_line_that_could_force_comes_before_one_that_cannot` (red first) and `test_force_hint_spellings` |
+| 2 | "Only the stop comes earlier" was wrong: a long refused push line waited behind shorter long messages holding `push` (shape D) and passed 5 s at about 250 KB | Partly fixed: lines that could force (`FORCE_HINT`: a short option holding f, `--force*`, `--mirror`, a `+refspec`) come first, shortest first within each group; unit tests `test_a_line_that_could_force_comes_before_one_that_cannot` (red first) and `test_force_hint_spellings`. The hint is unanchored, so a message holding force-like text (`sign-off`, `C++`, a literal `--force`) still sorts with the force lines (shape E, open below) |
 | 3 | `hooks-catalog.md` explained the recount by a group that, after the merge, had held two hooks | Fixed |
 | 4 | `hooks-catalog.md` 4c and 4d counts predated the graphify gate | Fixed: eleven hooks, twelve 4c rows, six of the ten blocking gates |
-| 5 | 7f accepted a duplicate registration, and 7e's `own` comment would admit a git gate | Fixed: 7f requires one registration per tool; `own` is for shell hooks that are not git gates |
+| 5 | 7f accepted a duplicate registration, and 7e's `own` comment would admit a git gate | Fixed: 7f requires one matcher group per tool (a gate listed twice inside one group still passes, in 7e too: open below); `own` is for shell hooks that are not git gates |
 | 6 | The graphify catalog row read as a deny-list and missed the `ask` on overrun | Fixed |
 
 **Timing after the fix** (`validate-push.sh`, median of 3, Bash tool, rc 2 in every run; the
@@ -329,9 +329,33 @@ wherever Bash is):
 | A: `git -c x="<text>" push --force origin <trunk>` | 250 KB | 2,296 ms | 3,285 ms | 3,278 ms | 3,269 ms |
 | A | 400 KB | 3,460 ms | 5,205 ms | 5,244 ms | 5,201 ms |
 
-**Open, for the maintainer.** Shapes A and D are back to the `747b6dae` cost, which is about 1.5
-times base: `judge_command`'s per-word loop grew in the review fixes (two positional lists, cluster
-and prefix handling). Between roughly 300 and 450 KB of text inside one push command, base finished
-inside the 5 s registration and this gate does not, and a killed gate fails open. No realistic
-command carries that much text inside the push itself. The fix, if wanted: bound the positionals
-`judge_command` walks, or anchor `push` outside quoted text.
+**Third review** (two lenses on `dad9b169`): no verdict change (0 exit-code differences in 2,880
+hook runs per ref against `5f256f70`, 9,240 reader cases). It found:
+- **MED, introduced by `dad9b169`, fixed in the next commit:** `FORCE_HINT` (`-\S*f`) backtracked
+  from every dash of a run, so a commit message of 40 to 72 KB of dashes took the gate to 2.2 to
+  14.4 s (fails open), where `5f256f70` took 0.2 s. Now `-[^\s-]*f`, which matches exactly where the
+  old pattern did (0 disagreements on 100,000 random strings) and is linear: 72 KB 405 ms on the
+  PowerShell tool. Unit test `test_force_hint_is_linear_on_a_run_of_dashes`, red first (11 s).
+- **MED, present at base too, tracked for the maintainer:** this machine's Git Bash (5.3.15) hangs
+  on a here-string of 65,536 to about 65,700 bytes (65,535 and 65,800 return in about 0.2 s), and
+  `validate-push.sh` feeds its lines and each judged segment through here-strings, so a force push
+  of that exact size hangs until the 5 s kill and fails open.
+- LOW doc slips (the recount, the window bounds, the over-match cost, a figure in the lesson),
+  corrected in the next commit.
+
+**Open, for the maintainer** (the maintainer chose to ship and track these, 2026-09-26):
+- **Shape A:** shapes A and D are back to the `747b6dae` cost, about 1.5 times base:
+  `judge_command`'s per-word loop grew in the review fixes (two positional lists, cluster and prefix
+  handling). The third review measured shape A (Bash, median of 3, on a loaded machine): this gate
+  4,067 ms at 300 KB and 5,869 ms at 450 KB; base 3,940 ms at 450 KB and 4,766 ms at 550 KB. So
+  from roughly 400 KB of text inside one push command this gate runs past its 5 s registration
+  while base does not, up to somewhere past 550 KB, and a killed gate fails open.
+- **Shape E:** shape D where the shorter messages hold force-like text (`sign-off`, `C++`): the
+  unanchored `FORCE_HINT` puts them in the force group, so they are judged first again; the third
+  review measured 6,106 ms at 250 KB (`747b6dae` 3,506 ms). Anchoring the hint at a word start, as
+  `judge_command` tokenises, would narrow it; any ordering can be beaten by some content.
+- **7e and 7f** count matcher groups, not registrations, so a gate listed twice inside one group
+  passes.
+- No realistic command carries 250 KB of text. The root fix: make `judge_command` cheap per word
+  (bound the positionals it walks, or anchor `push` outside quoted text), after which the order
+  matters little.

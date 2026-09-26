@@ -7,6 +7,7 @@ import os
 import shlex
 import subprocess
 import sys
+import time
 import unittest
 
 HOOKS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".claude", "hooks")
@@ -325,7 +326,7 @@ class PushLinesTests(unittest.TestCase):
 
     # A line that cannot force a push cannot be refused, so it waits even when shorter: shortest
     # first alone made a long refused push wait behind two shorter long messages holding `push`
-    # (convergence of 5f256f70: 250 KB took 6.3 s, where the order before it took under 3 s).
+    # (convergence of 5f256f70: 250 KB took 6.3 s, where the order before it took 3.4 s).
     def test_a_line_that_could_force_comes_before_one_that_cannot(self):
         long_push = 'git -c x="' + "push the thing " * 800 + '" push --force origin T'
         msg = 'git commit -m "' + "push the thing " * 300 + '"'
@@ -333,6 +334,15 @@ class PushLinesTests(unittest.TestCase):
         self.assertIn("--force origin T", lines[0])
         forced = [bool(sw.FORCE_HINT.search(line)) for line in lines]
         self.assertEqual(forced, sorted(forced, reverse=True))
+
+    # `-\S*f` backtracked from every dash of a long run, so a commit message of 64 KB of dashes took
+    # push_lines seconds and validate-push past its 5 s registration (third review of plan 027).
+    def test_force_hint_is_linear_on_a_run_of_dashes(self):
+        cmd = 'git commit -m "push log ' + "-" * 65536 + '" && git push --force origin T'
+        start = time.perf_counter()
+        lines = sw.push_lines(cmd, "PowerShell").split("\n")
+        self.assertLess(time.perf_counter() - start, 1.0)
+        self.assertEqual(lines[0].strip(), "git push --force origin T")
 
     def test_force_hint_spellings(self):
         for line in ("git push --force o T", "git push -f o T", "git push -vfu o T",

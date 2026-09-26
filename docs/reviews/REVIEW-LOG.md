@@ -4872,5 +4872,6 @@ Metrics not recomputed here (parallel branches).
 Report `docs/reviews/deep-review-027-powershell-gate-coverage-2026-09-24.md`; RCA
 `docs/reviews/rca-powershell-gate-coverage-2026-09-24.md`. Convergence pass done; its timing follow-up (a
 long message holding `push` judged before the short force push) was closed by ordering the push lines, and
-a second convergence on that change and the merge (6 LOW) is recorded in the report's last section. One
-timing window stays open for the maintainer: 300 KB or more inside the push command itself.
+a second convergence on that change and the merge (6 LOW) and a third review are recorded in the report's
+last section. Timing windows stay open for the maintainer (shipped and tracked by his choice): from roughly
+400 KB of text inside one push command, or 250 KB split so that force-like message text is judged first.

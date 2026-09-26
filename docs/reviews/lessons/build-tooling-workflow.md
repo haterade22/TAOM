@@ -2775,14 +2775,16 @@ found the assignment fix covered two left-side spellings of the five `ParseInput
 
 ### Reordering work so an early exit fires sooner can starve the case the old order favoured (plan 027, 2026-09-26)
 `validate-push.sh` stops at the first refused line. Sorting the reader's lines shortest first put a
-short force push ahead of a long commit message holding `push` (400 KB: 5.2 s to 0.3 s). The next
+short force push ahead of a long commit message holding `push` (400 KB: 5.5 s to 0.3 s). The next
 convergence found the mirror case: a long refused push line now waited behind two shorter long
 messages and passed the 5 s registration at about 250 KB, where the old order had judged it first.
 The unit test and the timing rows covered only the shape the sort was written for.
 - **Why missed:** an ordering change was reasoned about as "the verdict is unchanged", which is
   true, and its cost was measured only where it helps.
 - **Prevent:** when a change reorders work in front of an early exit, time the shape where the item
-  that ends the loop is the largest one as well as the smallest, and order by what can end the loop
-  (here: a line that could force) before ordering by cost.
+  that ends the loop is the largest one as well as the smallest. Ordering by what can end the loop
+  (here: a line that could force) helped, but the next review beat that key too (`sign-off` in the
+  messages): any order can be beaten by some content, so the durable fix is a cheap judge per
+  item, and an ordering is only a speed-up on top of it.
 - **Source:** `docs/reviews/deep-review-027-powershell-gate-coverage-2026-09-24.md`, section "After
   the convergence pass".
