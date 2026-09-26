@@ -29,21 +29,16 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # hook-authoring.md warns about ("mirror the sibling's FULL convention set").
 taom_pybin_degraded "validate-push" "this push against the protected-branch policy" jq && exit 0
 
-# Prefer jq; fall back to "$PYBIN" for robust JSON. The grep+sed fallback this used to
-# carry truncated the command at the first escaped quote, and since jq is NOT on PATH in
-# this Git Bash install (verified 2026-08-20) that fallback was the only path ever taken.
-# A truncated command can drop a trailing --force, which is what this gate exists to catch.
-# Mirrors block-dangerous-git.sh.
-if command -v jq >/dev/null 2>&1; then
-  COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
+# The command as POSIX-shell text (plan 027): _pybin.sh taom_hook_command hands a PowerShell
+# command back as the Bash text of the same command (braces, the & call operator, comments and
+# backtick escapes resolved) and names git `git` wherever it is the command (`GIT`, `git.exe`, a
+# path). Python first, so the CI runner (which has jq) reads PowerShell too; with jq and no Python
+# the raw command is judged as Bash text. The grep+sed fallback this once carried truncated the
+# command at the first escaped quote, which could drop a trailing --force.
+if [ -n "$PYBIN" ]; then
+  COMMAND=$(taom_hook_command posix validate-push)
 else
-  COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
-import sys, json
-try:
-    print(json.loads(sys.stdin.read()).get("tool_input", {}).get("command", ""))
-except Exception:
-    pass
-' 2>/dev/null)
+  COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
 fi
 
 # Protected branches: master and main (unused here, kept) and exactly the two live trunks.
@@ -51,11 +46,11 @@ fi
 # bannerlord-1.5.x (v2.0.29 and v2.0.30 are on it) the list did not follow, so a force push
 # to it passed unchallenged until plan 011. Named, not a bannerlord-* pattern (maintainer
 # decision D30): a port branch such as bannerlord-1.5.0-port stays force-pushable.
+PROTECTED=(master main bannerlord-1.4.5 bannerlord-1.5.x)
 is_protected() {
-  case "$1" in
-    master|main|bannerlord-1.4.5|bannerlord-1.5.x) return 0 ;;
-    *) return 1 ;;
-  esac
+  local p
+  for p in "${PROTECTED[@]}"; do [[ "$1" == "$p" ]] && return 0; done
+  return 1
 }
 
 # Judge every command (maintainer decision D38, widened by the plan 011 review). `read -a`
@@ -70,55 +65,54 @@ is_protected() {
 # (COMMAND) keeps `bash -c "git push ...; echo x"` refused, since a gate cannot tell quoted or
 # heredoc text from a command that `bash -c` or `bash <<EOF` runs. Alone it under-blocks: a
 # separator inside a quoted value (`git -C "E:/R&D" push --force ...`, `-o "a;b"`) cut git
-# from push. So the command is also split at ; & | outside quotes only (QSEGS), with each
-# shell's own escape (picked from tool_name), the splitter mark-verification-run.sh uses. With
-# jq and no Python, QSEGS keeps whole lines. Neither a whole line nor a quoted split is safe on
-# its own: an apostrophe in a comment or heredoc line (`# don't push`) opens a quote that never
-# closes and glues the later lines into one segment, where the first `push` word is not the
-# push. judge_command therefore anchors on the first `push` with a `git` before it (plan 011
-# final convergence). The same glue can also refuse a later, unrelated command (`# it's a
-# feature branch`, then an ordinary push and a `git log` naming a trunk); that over-block stays,
-# since it errs on the safe side and ending a quote at a newline would let a quoted value that
-# spans lines cut git from push.
+# from push. So the command is also split at ; & | outside quotes only (QSEGS): _shellwords.py
+# segments, shared with mark-verification-run.sh, over the command already read as POSIX-shell
+# text, so its escape is always \ (plan 027). With jq and no Python, QSEGS keeps whole lines.
+# The quote-blind split reads both that POSIX text and the raw command (plan 027 review), so
+# reading PowerShell never makes this gate refuse less than it did before.
+# Neither a whole line nor a quoted split is safe on its own: an apostrophe in a heredoc line
+# (`Don't push`) opens a quote that never closes and glues the later lines into one segment,
+# where the first `push` word is not the push (a # comment is dropped from both splits since plan
+# 027, so a comment's apostrophe no longer does this). judge_command therefore anchors on the
+# first `push` with a `git` before it (plan 011 final convergence). The same glue can also refuse
+# a later, unrelated command after such a heredoc line; that over-block stays, since it errs on
+# the safe side and ending a quote at a newline would let a quoted value spanning lines cut git
+# from push.
 COMMAND=${COMMAND//$'\r'/}
 COMMAND=${COMMAND//$'\\\n'/ }
 COMMAND=${COMMAND//$'`\n'/ }
 QSEGS=$COMMAND
+RAW=""
 if [ -n "$PYBIN" ]; then
-  Q=$(printf '%s' "$INPUT" | "$PYBIN" -c '
+  Q=$(printf '%s' "$INPUT" | "$PYBIN" "$TAOM_HOOKS_DIR/_shellwords.py" segments 2>/dev/null)
+  [ -n "$Q" ] && QSEGS=$Q
+  # The raw command too, read as before plan 027 (CR dropped, continued lines joined). The
+  # reader turns PowerShell ( ) into statement breaks and keeps a comma list in one word, so on
+  # its text alone a Start-Process argument list ('push','--force',...), `& ("git") push ...` or
+  # a refspec in parentheses passed, and all of them were refused before (plan 027 review).
+  # Judging the raw text as well means reading PowerShell never makes this gate refuse less.
+  RAW=$(printf '%s' "$INPUT" | "$PYBIN" -c '
 import sys, json
 try:
-    d = json.loads(sys.stdin.read())
-    cmd = (d.get("tool_input") or {}).get("command") or ""
-    esc = "`" if d.get("tool_name") == "PowerShell" else "\\"
+    d = json.loads(sys.stdin.buffer.read().decode("utf-8", "replace"))
+    c = str((d.get("tool_input") or {}).get("command") or "")
+    c = c.replace("\r", "").replace("\\\n", " ").replace("`\n", " ")
+    sys.stdout.buffer.write(c.encode("utf-8", "replace"))
 except Exception:
-    sys.exit()
-cmd = cmd.replace("\r", "")
-out, q, i, n = [], "", 0, len(cmd)
-while i < n:
-    c = cmd[i]
-    if c == esc and q != "\x27":
-        nxt = cmd[i + 1:i + 2]
-        out.append(" " if nxt == "\n" else c + nxt)
-        i += 2
-        continue
-    if q:
-        if c == q:
-            q = ""
-        out.append(" " if c == "\n" else c)
-    elif c in "\"\x27":
-        q = c
-        out.append(c)
-    elif c in ";&|\n":
-        out.append("\n")
-    else:
-        out.append(c)
-    i += 1
-sys.stdout.buffer.write(("".join(out) + "\n").encode("utf-8"))
+    pass
 ' 2>/dev/null)
-  [ -n "$Q" ] && QSEGS=$Q
+  [[ "$RAW" == "$COMMAND" ]] && RAW=""
 fi
-COMMAND=${COMMAND//[;&|]/$'\n'}
+# The quote-blind split: both texts are cut at every ; & | first, and only then is a # comment
+# dropped, per segment. A # that starts a word opens a comment in both shells, so a trunk named
+# only in a trailing comment (`git push --force origin feature # bannerlord-1.5.x later`) is no
+# longer refused (plan 027). Never strip per line before the split: a # inside a quoted value
+# (`git log --grep "fix #1"; git push ...`) would delete every later command on its line, and
+# after a heredoc line holding an apostrophe the quoted split cannot back that up. One tr and one
+# sed over the whole text keep it linear (a bash read loop over both texts of a 1 MB PowerShell
+# command took over 5 s). A command that is only a comment leaves the segments output empty, so
+# QSEGS keeps the whole text and a trunk named there is still refused: a harmless over-block.
+COMMAND=$(printf '%s\n%s\n' "$COMMAND" "$RAW" | tr ';&|' '\n\n\n' | sed -E 's/^#.*//; s/[[:space:]]#.*//')
 
 BLOCK_TARGET=""
 WARN_TARGET=""
@@ -126,7 +120,7 @@ WARN_TARGET=""
 # Judges one command. Sets BLOCK_TARGET on a force push to a protected branch, and WARN_TARGET
 # on a plain push to one.
 judge_command() {
-  local CLEAN PUSH_IDX GIT_SEEN FORCE ALL f ref i j tok skip
+  local CLEAN PUSH_IDX GIT_SEEN FORCE ALL f ref i j tok skip p
   local -a TOKENS POSITIONAL REFS
 
   # Locate the `push` subcommand by TOKEN, not by the substring "git push".
@@ -137,7 +131,11 @@ judge_command() {
   # rc=0, silently. Quotes are flattened first so a wrapped form (bash -c "git push ...")
   # still tokenises; that also preserves the old behaviour of matching a quoted mention.
   # Parentheses go too, so a subshell `(git push ...)` still shows its `git`.
-  CLEAN=${1//[\"\'()]/ }
+  # Braces and backticks go too (plan 027): PowerShell's `{git push ...}` and bash's
+  # `` x=`git push ...` `` still show their `git` token. The closing brace in the bracket is
+  # escaped (\}): a bare } there ends ${...} early, bash -n still passes, and every call then
+  # prints "}: command not found" with CLEAN empty, which allows every force push.
+  CLEAN=${1//[\"\'(){\}\`]/ }
   read -r -a TOKENS <<< "$CLEAN"
 
   # Anchor on the first `push` with an actual `git` token before it, so `npm push` or a stray
@@ -148,10 +146,14 @@ judge_command() {
   PUSH_IDX=-1
   GIT_SEEN=0
   for i in "${!TOKENS[@]}"; do
-    case "${TOKENS[$i]}" in
-      git | */git | git.exe | */git.exe) GIT_SEEN=1 ;;
-      push) if (( GIT_SEEN )); then PUSH_IDX=$i; break; fi ;;
+    tok=${TOKENS[$i]}
+    # git in any case and by any path is git (`GIT`, `git.exe`, C:\...\git.exe). The reader names it
+    # `git` already; this keeps the jq-only fallback honest (plan 027). The subcommand stays exact:
+    # git rejects `PUSH`.
+    case "${tok,,}" in
+      git | */git | *\\git | git.exe | */git.exe | *\\git.exe) GIT_SEEN=1; continue ;;
     esac
+    if [[ "$tok" == push ]] && (( GIT_SEEN )); then PUSH_IDX=$i; break; fi
   done
   [[ $PUSH_IDX -lt 0 ]] && return 0
 
@@ -175,6 +177,10 @@ judge_command() {
         FORCE=true; continue ;;
       --all | --branches) ALL=true; continue ;;
       --mirror) ALL=true; FORCE=true; continue ;;   # --mirror force-updates every ref
+      -o | --push-option | --repo | --receive-pack | --exec)
+        # The next word is this option's value, never the remote: `-o ci.skip origin` on a trunk
+        # took ci.skip for the remote and origin for the refspec, and passed (plan 027).
+        skip=1; continue ;;
       -*f | -f*)
         # A bundled short flag such as -fu. Still a force push.
         case "$tok" in --*) ;; *) FORCE=true ;; esac
@@ -206,12 +212,21 @@ judge_command() {
     f=$FORCE
     case "$ref" in +*) f=true; ref="${ref#+}" ;; esac
     ref="${ref##*:}"
-    ref="${ref#refs/heads/}"
+    ref="${ref#refs/}"
+    ref="${ref#heads/}"     # git reads a destination `heads/x` as refs/heads/x (plan 027)
     if [[ -z "$ref" || "$ref" == "HEAD" || "$ref" == "@" ]]; then
       # Asked once per run: a spawn per segment (about 28 ms) let 100 such lines outrun the
       # 5 s registration, and a killed gate fails open (plan 011 final convergence).
       [[ -n ${CUR_BRANCH+x} ]] || CUR_BRANCH=$(git branch --show-current 2>/dev/null)
       ref=$CUR_BRANCH
+    fi
+    if [[ "$ref" == *'*'* ]]; then
+      # A pattern refspec (refs/heads/*, refs/heads/bannerlord-*) updates every branch it matches,
+      # so it is judged as each protected name it matches (plan 027).
+      for p in "${PROTECTED[@]}"; do
+        # shellcheck disable=SC2053  # $ref is the refspec's glob, matched as a pattern on purpose
+        if [[ "$p" == $ref ]]; then ref=$p; break; fi
+      done
     fi
     if is_protected "$ref"; then
       if [[ "$f" == true ]]; then BLOCK_TARGET="$ref"; return 0; fi

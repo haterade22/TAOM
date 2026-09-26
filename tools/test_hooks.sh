@@ -1225,6 +1225,20 @@ VP_CASES=(
   "0|git push --all origin"
   "0|git push --force-with-lease=bannerlord-1.5.x:abc origin feature"
   "0|echo push"
+  # Plan 027: a pattern or DWIM refspec, git by path or in capitals, a bash backtick
+  # substitution, a trunk named only in a trailing comment, and a push option's value.
+  "2|git push --force origin 'refs/heads/*'"
+  "2|git push origin '+refs/heads/*:refs/heads/*'"
+  "2|git push --force origin 'refs/heads/bannerlord-*'"
+  "2|git push --force origin HEAD:heads/bannerlord-1.5.x"
+  "2|git push --prune --force origin 'refs/heads/*:refs/heads/*'"
+  "0|git push --force origin 'refs/heads/feature-*'"
+  "0|git push --force origin refs/tags/v1"
+  "2|GIT push --force origin bannerlord-1.5.x"
+  "2|\"/c/Program Files/Git/cmd/git.exe\" push --force origin bannerlord-1.5.x"
+  "2|x=\`git push --force origin bannerlord-1.5.x\`"
+  "0|git push --force origin feature # bannerlord-1.5.x later"
+  "0|git push --force -o bannerlord-1.5.x origin feature"
 )
 # The table above holds no escape, so PowerShell repeats one case to keep its path covered; the
 # tool-tagged table below covers the one place the hook reads tool_name, and the PowerShell
@@ -1250,12 +1264,71 @@ done
 VP_TOOL_CASES=(
   'PowerShell|2|git -c "user.name=a\" -C "E:/R&D" push --force origin bannerlord-1.5.x'
   'Bash|2|git -c "user.name=a\" b" -C "E:/R&D" push --force origin bannerlord-1.5.x'
+  # Plan 027: PowerShell braces, the call operator, capitals, escapes and comments.
+  'PowerShell|2|if ($true) {git push --force origin bannerlord-1.5.x}'
+  'PowerShell|2|1..1 | ForEach-Object {git push --force origin bannerlord-1.5.x}'
+  "PowerShell|2|& 'C:\\Program Files\\Git\\cmd\\git.exe' push --force origin bannerlord-1.5.x"
+  'PowerShell|2|GIT push --force origin bannerlord-1.5.x'
+  'PowerShell|2|git push --force origin bannerlord-1.5`.x'
+  'PowerShell|2|$(git push --force origin bannerlord-1.5.x)'
+  "PowerShell|2|git push --force origin 'refs/heads/*'"
+  "PowerShell|2|git push \`"$'\n'"  --force origin bannerlord-1.5.x"
+  'PowerShell|0|git push --force origin feature # bannerlord-1.5.x later'
+  'PowerShell|2|git push --force origin bannerlord-1.4.5 # note'
+  "PowerShell|0|git commit -m @'"$'\n'"Don't force push the trunk"$'\n'"'@; git push origin feature"
+  'PowerShell|0|git push --force -o ci.skip origin feature'
+  # Plan 027 review: refused before plan 027 and still refused. A # inside a quoted value after a
+  # heredoc apostrophe must not hide the push, and PowerShell shapes the reader alone would miss
+  # (a comma argument list, a parenthesised command) are judged on the raw command too.
+  "Bash|2|echo \$'it\\'s'; echo \"a #b\"; git push --force origin bannerlord-1.5.x; echo done"
+  "Bash|2|cat <<EOF"$'\n'"it's"$'\n'"EOF"$'\n'"echo \"a #b\"; git push --force origin bannerlord-1.5.x; echo done"
+  "Bash|2|git commit -F - <<'EOF'"$'\n'"Don't stop"$'\n'"EOF"$'\n'"git log --grep \"fix #1\"; git push --force origin bannerlord-1.5.x; git log -1"
+  "Bash|2|cat <<EOF"$'\n'"it's"$'\n'"EOF"$'\n'"git commit -m \"x"$'\n'"#1\"; git push --force origin bannerlord-1.5.x; echo"
+  "PowerShell|2|Start-Process git -ArgumentList 'push','--force','origin','bannerlord-1.5.x' -Wait"
+  "PowerShell|2|Start-Process git -ArgumentList 'push', '--force', 'origin', 'bannerlord-1.5.x'"
+  "PowerShell|2|[Diagnostics.Process]::Start('git', 'push --force origin bannerlord-1.5.x')"
+  "PowerShell|2|& (\"git\") push --force origin bannerlord-1.5.x"
+  "PowerShell|2|& (Get-Command git) push --force origin bannerlord-1.5.x"
 )
 for entry in "${VP_TOOL_CASES[@]}"; do
     tool="${entry%%|*}"; rest="${entry#*|}"; want="${rest%%|*}"; cmd="${rest#*|}"
+    shown="${cmd//$'\n'/\\n}"
     vp_run "$tool" "$cmd"; got=$?
-    [[ "$got" == "$want" ]] && ok "validate-push [$tool] rc=$got for: $cmd" \
-        || bad "validate-push [$tool] expected rc=$want, got $got for: $cmd"
+    [[ "$got" == "$want" ]] && ok "validate-push [$tool] rc=$got for: $shown" \
+        || bad "validate-push [$tool] expected rc=$want, got $got for: $shown"
+done
+# A push with no refspec pushes the checked-out branch, so a push option's value (-o ci.skip) must
+# never be taken for the remote: run on a trunk, `git push --force -o ci.skip origin` passed
+# (plan 027). The hook asks git for the branch in its own directory, so these run in scratch repos.
+VP_TRUNK="$SANDBOX/vp-trunk"; VP_FEAT="$SANDBOX/vp-feature"
+for pair in "$VP_TRUNK|bannerlord-1.5.x" "$VP_FEAT|feature"; do
+    d="${pair%%|*}"; b="${pair#*|}"
+    git init -q -b "$b" "$d" 2>/dev/null
+    git -C "$d" -c user.name=t -c user.email=t@example.invalid commit -q --allow-empty -m init 2>/dev/null
+done
+vp_run_in() {  # $1 directory to run in, $2 tool, $3 command; returns the hook's rc
+    local payload
+    payload=$("$HPY" -c 'import json,sys; print(json.dumps({"tool_name":sys.argv[1],"tool_input":{"command":sys.argv[2]},"hook_event_name":"PreToolUse"}))' "$2" "$3")
+    ( cd "$1" && printf '%s' "$payload" | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$SANDBOX" bash "$REPO/.claude/hooks/validate-push.sh" >/dev/null 2>&1 )
+}
+VP_BRANCH_CASES=(
+  "$VP_TRUNK|2|git push --force -o ci.skip origin"
+  "$VP_TRUNK|2|git push --force --push-option ci.skip origin"
+  "$VP_TRUNK|2|git push --force origin"
+  "$VP_TRUNK|0|git push -o ci.skip origin"
+  "$VP_FEAT|0|git push --force -o ci.skip origin"
+  # Plan 027 review: a trunk refspec in parentheses. The reader makes ( ) a statement break, so
+  # its text alone holds a push with no refspec, which is the feature branch here.
+  "$VP_FEAT|2|git push --force origin (\"bannerlord-1.5.x\")"
+  "$VP_FEAT|2|git push --force origin \$(\"bannerlord-1.5.x\")"
+)
+for tool in Bash PowerShell; do
+    for entry in "${VP_BRANCH_CASES[@]}"; do
+        dir="${entry%%|*}"; rest="${entry#*|}"; want="${rest%%|*}"; cmd="${rest#*|}"
+        vp_run_in "$dir" "$tool" "$cmd"; got=$?
+        [[ "$got" == "$want" ]] && ok "validate-push [$tool] rc=$got on branch ${dir##*/} for: $cmd" \
+            || bad "validate-push [$tool] expected rc=$want, got $got on branch ${dir##*/} for: $cmd"
+    done
 done
 # Every segment is judged under both splits, and a push with no refspec asks git for the current
 # branch: once per segment, 100 such lines took 7.9 s against the 5 s registration, and a killed
