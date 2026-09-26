@@ -62,13 +62,8 @@ taom_pybin_degraded "block-broad-git-add" "blanket git add / commit -a" jq && { 
 
 # The command as POSIX-shell text (plan 027): _pybin.sh taom_hook_command hands a PowerShell
 # command back as the Bash text of the same command and names git `git` wherever it is the
-# command (`GIT`, `git.exe`, a path). Python first, so the CI runner (which has jq) reads
-# PowerShell too; jq only without Python, reading the raw command as Bash text.
-if [[ -n "${PYBIN:-}" ]]; then
-  COMMAND=$(taom_hook_command posix block-broad-git-add)
-else
-  COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
-fi
+# command (`GIT`, `git.exe`, a path). Without Python it reads the raw command with jq, as Bash text.
+COMMAND=$(taom_hook_command posix block-broad-git-add)
 
 # Fail-open: nothing to inspect → allow.
 [[ -z "${COMMAND:-}" ]] && { echo '{}'; exit 0; }
@@ -103,15 +98,21 @@ while IFS= read -r seg; do
   # Without a fork (plan 027): the sed this replaces ran once per git segment, and 100 git
   # segments took over 5 s on a loaded machine, past the 5 s registration (a killed gate allows).
   # Same result as sed -E "s/\"[^\"]*\"//g; s/'[^']*'//g": double-quoted spans, then single.
-  for q in '"' "'"; do
-    kept=""
-    while [[ "$rest" == *"$q"*"$q"* ]]; do
-      kept+=${rest%%"$q"*}
-      rest=${rest#*"$q"}
-      rest=${rest#*"$q"}
+  # The loop is quadratic in one segment's length (a 100 KB commit message took 2.5 s), so a long
+  # segment takes the one sed instead, which is linear (deep review of plan 027).
+  if (( ${#rest} > 4096 )); then
+    rest=$(printf '%s' "$rest" | sed -E "s/\"[^\"]*\"//g; s/'[^']*'//g")
+  else
+    for q in '"' "'"; do
+      kept=""
+      while [[ "$rest" == *"$q"*"$q"* ]]; do
+        kept+=${rest%%"$q"*}
+        rest=${rest#*"$q"}
+        rest=${rest#*"$q"}
+      done
+      rest=$kept$rest
     done
-    rest=$kept$rest
-  done
+  fi
 
   if [[ "$rest" =~ ^add([[:space:]]|$) ]]; then
     after="${rest#add}"

@@ -57,18 +57,11 @@ When you write a NEW hook (or add commit detection to an existing one), grep for
 
 **Both shell tools (plan 027).** Register a git gate in the `Bash|PowerShell` matcher group and
 read its command with `COMMAND=$(taom_hook_command posix <gate>)` (`_pybin.sh`), never from
-`tool_input.command` directly: it hands PowerShell back as Bash text, so the forms above cover both
-shells, and it names git `git` when it is called by a path or in capitals. What it resolves, each
-with a `tools/test_hooks.sh` 7e row under both tool names:
-
-| PowerShell form | Reads as |
-|---|---|
-| `@'`...`'@` and `@"`...`"@` here-strings | one quoted word |
-| `'it''s'`, `"a""b"`, a backtick escape | `it's`, `a"b`, the escaped character |
-| a trailing backtick | the next line joined |
-| `& git`, `& 'C:\...\git.exe'`, `GIT`, `git.exe` | `git` |
-| `if ($x) { git ... }`, `ForEach-Object {git ...}`, `$(git ...)` | a separate command |
-| `# ...`, `<# ... #>` | dropped |
+`tool_input.command` alone: it hands PowerShell back as Bash text, so the forms above cover both
+shells, and it names git `git` when it is called by a path or in capitals. The PowerShell forms it
+resolves are listed in `docs/reference/hooks-catalog.md` "Both shell tools" and pinned by
+`tools/tests/test_shellwords.py`; `tools/test_hooks.sh` 7e fails a listed gate that does not read
+through it.
 
 ## Amend exemptions in pre-commit hooks (recursion-risk pattern)
 

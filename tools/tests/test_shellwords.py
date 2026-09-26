@@ -75,9 +75,34 @@ class PowerShellQuotingTests(unittest.TestCase):
                          [["git", "fetch", "origin", "trunk-1.5.x"]])
 
     def test_unreadable_text_comes_back_unchanged(self):
-        for text in ("git commit -m 'unclosed", "git commit -m @'\nno end", "git status <# no end"):
+        for text in ("git commit -m 'unclosed", "git commit -m @'\nno end", "git status <# no end",
+                     "git commit -m @'\nx '@\n", "git -C ${env:X"):
             with self.subTest(text=text):
                 self.assertEqual(sw.to_posix(text, "PowerShell"), text)
+
+    # Plan 027 review: PowerShell 7.6.6's parser, read on each input below.
+    def test_typographic_quotes_are_quotes(self):
+        self.assertEqual(ps("git push -o \u2018ci #1\u2019 origin x"),
+                         [["git", "push", "-o", "ci #1", "origin", "x"]])
+        self.assertEqual(ps("tool \u2018a #b' c"), [["tool", "a #b", "c"]])
+        self.assertEqual(ps("git commit -m \u201ca b\u201d"), [["git", "commit", "-m", "a b"]])
+
+    def test_a_word_that_opens_with_a_quote_ends_at_its_close(self):
+        self.assertEqual(ps("git reset 'HEAD'--hard"), [["git", "reset", "HEAD", "--hard"]])
+
+    def test_braced_variable_is_one_word(self):
+        self.assertEqual(ps("git -C ${env:USERPROFILE}\\repo commit -m x"),
+                         [["git", "-C", "${env:USERPROFILE}\\repo", "commit", "-m", "x"]])
+
+    def test_unicode_escape_takes_one_to_six_hex_digits(self):
+        self.assertEqual(ps('x "a' + BT + 'u{2192}b"'), [["x", "a\u2192b"]])
+        self.assertEqual(ps('x "' + BT + 'u{0000041}"'), [["x", "u{0000041}"]])
+
+    def test_no_break_space_separates_words(self):
+        self.assertEqual(ps("git\u00a0status"), [["git", "status"]])
+
+    def test_empty_argument_is_kept(self):
+        self.assertEqual(ps('git commit -m ""'), [["git", "commit", "-m", ""]])
 
 
 class PowerShellStatementTests(unittest.TestCase):
@@ -94,7 +119,7 @@ class PowerShellStatementTests(unittest.TestCase):
 
     def test_braces_and_parentheses_separate_commands(self):
         self.assertEqual(ps("if ($true) {git fetch origin t}"),
-                         [["if"], ["$true"], ["git", "fetch", "origin", "t"]])
+                         [["if"], ["echo", "$true"], ["git", "fetch", "origin", "t"]])
         self.assertEqual(ps("1..1 | ForEach-Object {git fetch origin t}"),
                          [["1..1"], ["ForEach-Object"], ["git", "fetch", "origin", "t"]])
         self.assertEqual(ps("$(git fetch origin x)"), [["git", "fetch", "origin", "x"]])
@@ -124,6 +149,34 @@ class PowerShellStatementTests(unittest.TestCase):
         self.assertEqual(ps("git log --% --format=%H; git status"),
                          [["git", "log", "--%", "--format=%H;", "git", "status"]])
 
+    def test_stop_parsing_ends_at_a_pipe(self):
+        # Compared as text: argvs() would read a quoted '|' word as a separator too.
+        self.assertEqual(sw.to_posix("git log --% a | git status", "PowerShell"), "git log --% a | git status")
+
+    def test_subexpression_runs_its_commands(self):
+        self.assertEqual(ps("@(git status)"), [["git", "status"]])
+
+    # Plan 027 review: an assignment runs the command on its right.
+    def test_assignment_runs_the_command(self):
+        self.assertEqual(ps("$r = git commit -m x"), [["$r", "="], ["git", "commit", "-m", "x"]])
+        self.assertEqual(ps("$null=GIT reset --hard"), [["$null", "="], ["git", "reset", "--hard"]])
+        self.assertEqual(ps("[string]$y += git log"), [["[string]$y", "+="], ["git", "log"]])
+
+    def test_dot_source_operator_runs_the_command(self):
+        self.assertEqual(ps(". git commit -m x"), [["git", "commit", "-m", "x"]])
+        self.assertEqual(ps(". .\\build.ps1"), [[".\\build.ps1"]])
+
+    # A string or variable that opens a statement is a value PowerShell prints, never a command
+    # (a quoted path with no & is a parse error), so it reads as `echo <value>`.
+    def test_a_value_alone_is_echoed(self):
+        self.assertEqual(ps("'.\\build.ps1'"), [["echo", ".\\build.ps1"]])
+        self.assertEqual(ps("& '.\\build.ps1'"), [[".\\build.ps1"]])
+        self.assertEqual(ps("'docs: x' | git commit -F -"), [["echo", "docs: x"], ["git", "commit", "-F", "-"]])
+        self.assertEqual(ps("$msg | git commit -F -"), [["echo", "$msg"], ["git", "commit", "-F", "-"]])
+        self.assertEqual(ps("@'\ndocs: x\n'@ | git commit -F -"),
+                         [["echo", "docs: x"], ["git", "commit", "-F", "-"]])
+        self.assertEqual(ps("'git' reset --hard"), [["echo", "git", "reset", "--hard"]])
+
     def test_braces_inside_a_word_split_it(self):
         # PowerShell reads HEAD^{tree} as HEAD^ followed by a script block.
         self.assertEqual(ps('git commit-tree HEAD^{tree} -m "x"')[0], ["git", "commit-tree", "HEAD^"])
@@ -148,7 +201,11 @@ class GitWordTests(unittest.TestCase):
                               ("  Git.EXE status", "  git status"),
                               ("x=$(GIT rev-parse HEAD)", "x=$(git rev-parse HEAD)"),
                               ("(GIT stash drop)", "(git stash drop)"),
-                              ("git status\nGIT reset --hard", "git status\ngit reset --hard")):
+                              ("git status\nGIT reset --hard", "git status\ngit reset --hard"),
+                              # Plan 027 review: after environment assignments, and quoted.
+                              ("GIT_TRACE=0 GIT commit -m x", "GIT_TRACE=0 git commit -m x"),
+                              ("cd x; A=1 B=2 Git.exe status", "cd x; A=1 B=2 git status"),
+                              ("'git' reset --hard", "git reset --hard")):
             with self.subTest(before=before):
                 self.assertEqual(sw.to_posix(before, "Bash"), after)
 
@@ -179,6 +236,43 @@ class SegmentsTests(unittest.TestCase):
         text = sw.to_posix('Set-Location "E:\\repos\\TAOM\\"; dotnet test', "PowerShell")
         self.assertEqual(sw.segments(text), "Set-Location 'E:\\repos\\TAOM\\' \n dotnet test")
 
+    def test_raw_powershell_split_takes_the_backtick_escape(self):
+        self.assertEqual(sw.segments('Write-Output "x' + BT + '"; dotnet test"', BT),
+                         'Write-Output "x' + BT + '"; dotnet test"')
+        self.assertEqual(sw.segments('Set-Location "E:\\x\\"; dotnet test', BT),
+                         'Set-Location "E:\\x\\"\n dotnet test')
+
+
+class PushLinesTests(unittest.TestCase):
+    """validate-push.sh's candidate lines (plan 027 review): each shape below was refused before
+    plan 027, so a line that still shows the push must come back."""
+
+    def test_only_lines_holding_push(self):
+        self.assertEqual(sw.push_lines("git status; echo hi", "Bash"), "")
+
+    def test_raw_command_split_with_its_own_escape(self):
+        cmd = 'git -C "E:\\R&D" push --force origin ("bannerlord-1.5.x")'
+        self.assertIn(cmd, sw.push_lines(cmd, "PowerShell").split("\n"))
+
+    def test_quoted_hash_after_a_heredoc_quote_keeps_the_push(self):
+        cmd = 'cat <<EOF\nsay "hi\nEOF\ngit -c "user.name=a #b" push --force origin T'
+        self.assertIn('git -c "user.name=a #b" push --force origin T', sw.push_lines(cmd, "Bash").split("\n"))
+
+    def test_typographic_quote_keeps_the_push(self):
+        cmd = "if (\u2018a #' -ne 'x\u2019) { git push --force origin T }"
+        self.assertTrue(any("git push --force origin T" in line
+                            for line in sw.push_lines(cmd, "PowerShell").split("\n")))
+
+    def test_trailing_comment_is_dropped(self):
+        for tool in ("Bash", "PowerShell"):
+            with self.subTest(tool=tool):
+                self.assertNotIn("T", sw.push_lines("git push --force origin feature # T later", tool))
+
+    def test_argument_boundaries_are_kept_once(self):
+        lines = sw.push_lines('git push -o "ci variable" origin; git push -o "" x y', "Bash").split("\n")
+        self.assertIn("git push -o ci\x1fvariable origin", lines)
+        self.assertIn("git push -o \x1e x y", lines)
+
 
 class CliTests(unittest.TestCase):
     def test_posix_mode_writes_utf8_with_lf_only(self):
@@ -193,9 +287,18 @@ class CliTests(unittest.TestCase):
         payload = json.dumps({"tool_name": "Bash", "tool_input": {"command": "a; b"}})
         self.assertEqual(run_cli("segments", payload.encode("ascii")).stdout, b"a\n b\n")
 
+    def test_push_mode(self):
+        payload = json.dumps({"tool_name": "Bash", "tool_input": {"command": "git push origin x; ls"}})
+        self.assertEqual(run_cli("push", payload.encode("ascii")).stdout, b"git push origin x\n")
+
     def test_bad_json_prints_an_empty_line(self):
         r = run_cli("posix", b'{"tool_name":')
         self.assertEqual((r.returncode, r.stdout), (0, b"\n"))
+
+    def test_payload_of_the_wrong_shape_reads_as_no_command(self):
+        for raw in ("[1]", '{"tool_input": {"command": 5}}', '{"tool_input": "git status"}'):
+            with self.subTest(raw=raw):
+                self.assertEqual(sw.read_payload(raw), ("", ""))
 
     def test_unknown_mode_exits_2(self):
         self.assertEqual(run_cli("bogus", b"{}").returncode, 2)

@@ -121,17 +121,20 @@ GIT_OPTS_WITH_VALUE = {"-C", "-c", "--git-dir", "--work-tree", "--namespace", "-
                        "--config-env"}
 
 def piped_text(group):
-    """What a command that only prints one word hands the next command through a pipe: the word
-    itself (a PowerShell string or here-string alone), echo or Write-Output with one word, or
-    printf with a format and one word. None for anything else."""
-    if len(group) == 1:
-        return group[0]
+    """What a command that only prints one literal word hands the next command through a pipe:
+    echo or Write-Output with one word (the reader writes a PowerShell string or here-string that
+    stands alone as `echo <word>`), or printf with the format %s or %s\\n and one word. None for
+    anything else, so the commit is judged as it was before plan 027: a lone word is a command
+    (pbpaste), a word holding $ is a variable nobody here can read, and any other printf format
+    changes the text (deep review of plan 027)."""
     name = os.path.basename(group[0]).lower() if group else ""
     if len(group) == 2 and name in ("echo", "write-output"):
-        return group[1]
-    if len(group) == 3 and name == "printf":
-        return group[2]
-    return None
+        word = group[1]
+    elif len(group) == 3 and name == "printf" and group[1] in ("%s", "%s\\n"):
+        word = group[2]
+    else:
+        return None
+    return None if "$" in word else word
 
 def commit_arg_lists(s, depth=0):
     """The argument list after `commit` of every git commit invocation in s. A commit whose stdin

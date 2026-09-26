@@ -11,7 +11,7 @@
 | **Serena** | Project | Symbolic code navigation (C# classes, methods, references) | `.mcp.json` |
 | **GitHub** | Project | PRs, issues, actions, code search (HTTP — needs auth; falls back to `gh` CLI when unauthenticated) | `.mcp.json` |
 | **filesystem** | Project | READ operations across TAOM, Bannerlord Modules, LOTRAOM assets. Its write tools are denied (see "Denied write tools" below); use Edit/Write, which `config-protection.sh` actually guards | `.mcp.json` |
-| **git** | Project | Read-only git queries (diff, log, show, status). No blame tool exists; use `git blame` via Bash. Write tools are denied in `.claude/settings.json` because the safety hooks match Bash only | `.mcp.json` |
+| **git** | Project | Read-only git queries (diff, log, show, status). No blame tool exists; use `git blame` via Bash. Write tools are denied in `.claude/settings.json` because the safety hooks match only the Bash and PowerShell tools | `.mcp.json` |
 | **ilspy** | Project | Decompile TaleWorlds DLLs — fallback when `E:\Decompiled_Bannerlord\` doesn't have what you need | `.mcp.json` |
 | **taom-moduledata** | Project | Query TAOM ModuleData integrity (validate, item/troop/culture exists, find-references, list cultures/schemas) — wraps `tools/taom_query.py`. Needs the `mcp` SDK; restart Claude to load. See `docs/features/moduledata-validation.md`. | `.mcp.json` |
 | **imagine** | Project | AI image generation (`https://mcp.imagine.art`, HTTP — needs auth; unauthenticated sessions can't use it) | `.mcp.json` |

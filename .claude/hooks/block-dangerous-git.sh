@@ -52,13 +52,8 @@ taom_pybin_degraded "block-dangerous-git" "destructive git commands" jq && { ech
 
 # The command as POSIX-shell text (plan 027): _pybin.sh taom_hook_command hands a PowerShell
 # command back as the Bash text of the same command and names git `git` wherever it is the
-# command (`GIT`, `git.exe`, a path). Python first, so the CI runner (which has jq) reads
-# PowerShell too; jq only without Python, reading the raw command as Bash text.
-if [[ -n "${PYBIN:-}" ]]; then
-  COMMAND=$(taom_hook_command posix block-dangerous-git)
-else
-  COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
-fi
+# command (`GIT`, `git.exe`, a path). Without Python it reads the raw command with jq, as Bash text.
+COMMAND=$(taom_hook_command posix block-dangerous-git)
 
 # Fail-open: nothing to inspect → allow.
 [[ -z "${COMMAND:-}" ]] && { echo '{}'; exit 0; }

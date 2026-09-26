@@ -26,6 +26,7 @@
 #   source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 #   [ -n "$PYBIN" ] || { echo '{}'; exit 0; }   # fail OPEN, never block
 #   ... | "$PYBIN" -c '...'
+#   COMMAND=$(taom_hook_command posix <gate>)   # a PreToolUse git gate's command, both shells
 #
 # The guard on line 2 of that snippet is the hook's job, not this file's: a helper
 # that exits on the caller's behalf would turn a missing interpreter into a killed
@@ -165,9 +166,14 @@ case "$TAOM_HOOKS_DIR" in /* | [A-Za-z]:*) ;; *) TAOM_HOOKS_DIR="$PWD/$TAOM_HOOK
 # command, and names git `git` wherever it is the command (`GIT`, `git.exe`, a path) in both shells.
 # $1 is the reader's mode (posix), $2 the gate's name for the stderr note; it reads the hook's
 # $INPUT. If the reader fails, the raw command comes back, read as Bash text as every gate read it
-# before plan 027, and the gate says so rather than go quiet.
+# before plan 027, with a note on stderr (which reaches Claude only from a gate that exits 2). With
+# no Python (a gate that passed taom_pybin_degraded ... jq), jq reads the raw command.
 taom_hook_command() {
     local out
+    if [ -z "${PYBIN:-}" ]; then
+        printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null
+        return 0
+    fi
     if out=$(printf '%s' "$INPUT" | "$PYBIN" "$TAOM_HOOKS_DIR/_shellwords.py" "$1" 2>/dev/null); then
         printf '%s' "$out"
         return 0
