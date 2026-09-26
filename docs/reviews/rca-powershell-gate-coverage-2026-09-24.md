@@ -12,7 +12,8 @@ quotes had been flattened away. Beside those, the reader missed PowerShell state
 git (an assignment, the `.` operator, `${name}`), the commit gate invented message text for piped
 producers it could not evaluate, and a quadratic loop and three Python starts put two gates close to
 their 5 s kill (lesson 3). All were fixed on the branch with a failing row first; a base-versus-fixed sweep of
-5,896 combined shapes found no other refused-then-allowed case.
+5,896 combined shapes found no other refused-then-allowed case. The convergence pass then found
+one more class that corpus lacked (findings 16 to 19), also fixed on the branch.
 
 ## Findings
 
@@ -33,6 +34,10 @@ their 5 s kill (lesson 3). All were fixed on the branch with a failing row first
 | 13 | LOW | A quoted path alone (`'.\build.ps1'`) marked verification (Codex P2) | Logic error | The mark hook strips quotes from the first word, and the reader lost that PowerShell prints a quoted value | Covered by the `echo <value>` rewrite; 7d rows. `$v = { dotnet test }` still marks: known limitation, needs Mike |
 | 14 | LOW | 7e's registration inventory came from the settings under test (Codex P3); the reader fallback had no test; 7e did not check that a gate reads through `taom_hook_command` | Other: test oracle | Self-derived oracle; the fallback proved only by hand | Fixed list of nine; fallback rows; grep row per gate |
 | 15 | LOW | Docs: hook-authoring and the catalog claimed 7e rows "under both tool names" that do not exist, the catalog still said to prefer jq and to prefilter on `*git*`, `mcp-servers.md` said the hooks match Bash only, `harness-facts.md` kept its old verified date | Other: stale docs | Written from the plan, not from the tests | Corrected |
+| 16 | HIGH | Convergence: `validate-push.sh` still dropped a push when the quote-blind split cut inside a quoted value (`X="a;b #c" git push --force origin <trunk>`, `env "X=a;b #c"`, `X="l1<newline>#2"`, `X="a\|#c"`, `X="a&#c"`) after an earlier line left a quote open: 28 of 612 shapes rc 2 at base, rc 0 after the review fixes | Logic error (regression) | Finding 1's fix looked for a quote only inside the piece, and the piece holding the push began at the `#` with its opening quote in the piece before | A comment is dropped only when no quote occurs anywhere earlier in the whole text; unit test and seven 7c rows; the same 612-shape sweep now loses only the named relaxation |
+| 17 | LOW | Convergence: the argument-boundary pass ran `shlex.split` (quadratic in a word's length) on every quoted segment holding `push`, so a 400 KB message holding the word took validate-push to 6.1 s (base 3.6 s) | Other: timing | The timing rows never put `push` inside the long segment | Pass limited to segments up to 4 KB; `push-big` timing row for all nine gates |
+| 18 | LOW | Convergence: `$null =git`, `[int] $x = git`, `$a.b=git`, `$a[0]=git`, `$x, $y = git` still hid git (ParseInput reads each as an assignment) | Missing vanilla gate (grammar) | Finding 5's fix covered a variable target and a glued cast only | Assignment head read as ParseInput reads a left side (variable, cast, member, index, comma list, operator glued to its right side); unit tests and six 7e rows |
+| 19 | LOW | Convergence: a 7c comment said the typographic rows were sent as JSON escapes; they were literal characters | Other: stale docs | Written from intent | Both spellings now sent |
 
 ## Root-cause pattern
 

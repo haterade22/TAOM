@@ -4858,7 +4858,9 @@ test; fixed. Codex missed the larger regression class the lenses found by runnin
 one: a quoted ` #` after a heredoc quote or inside PowerShell typographic quotes, and a separator inside a quoted
 path with a parenthesised refspec, each hid a trunk force push. It also missed the PowerShell assignment, `.`
 and `${}` forms that let git past three gates, and every timing finding. A base-versus-fixed sweep of 5,896
-payloads found 0 refused-then-allowed. Metrics not recomputed here (parallel branches).
+payloads found 0 refused-then-allowed; the convergence pass found one more class (a quoted value the
+quote-blind split cuts inside, 28 of 612 shapes) and three LOW defects, all fixed (report, Convergence).
+Metrics not recomputed here (parallel branches).
 
 | # | Bug | Category | Why Missed | Preventive Action |
 |---|---|---|---|---|

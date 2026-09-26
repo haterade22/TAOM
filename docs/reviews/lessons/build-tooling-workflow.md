@@ -2742,3 +2742,18 @@ its 5 s registration; a killed gate fails open.
 - **Prevent:** a hook's timing rows cover many short segments, one long segment and a 1 MB payload
   under each tool, and a text transform in bash names its complexity in a comment.
 - **Source:** `docs/reviews/rca-powershell-gate-coverage-2026-09-24.md`, findings 8 and 9.
+
+### A differential sweep proves only the classes in its corpus; seed it from the fix's own mechanism (plan 027 convergence, 2026-09-26)
+The review fix for the quoted ` #` checked for a quote only inside each piece of the quote-blind
+split, and a 5,896-shape sweep came back clean. The convergence pass then put the separator inside
+the quoted value (`X="a;b #c" git push --force origin <trunk>` after a heredoc line holding one
+quote): the split cut inside the value, the piece holding the push began at the `#`, and its
+opening quote sat in the piece before. 28 of 612 shapes the base gate refused passed. The same pass
+found the assignment fix covered two left-side spellings of the five `ParseInput` accepts.
+- **Why missed:** the sweep's bodies came from the findings being fixed, so it tested the fix's
+  examples; nothing in it attacked the fix's own assumption (that a piece holds its own quotes).
+- **Prevent:** after a fix, name the assumption it rests on and add sweep bodies that break it (for
+  a split, put every separator inside a quoted value on both sides of the checked character); for a
+  grammar fix, list every form the parser's AST type admits (Variable, Convert, Member, Index,
+  ArrayLiteral) and pin each.
+- **Source:** `docs/reviews/rca-powershell-gate-coverage-2026-09-24.md`, findings 16 and 18.

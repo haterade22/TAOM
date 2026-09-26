@@ -1307,6 +1307,17 @@ VP_TOOL_CASES=(
   "Bash|2|cat <<EOF"$'\n'"Don't stop"$'\n'"EOF"$'\n'"git push --force -o 'ci #1' origin bannerlord-1.5.x"
   "Bash|2|echo \$'it\\'s'"$'\n'"git push --force -o 'ci #1' origin bannerlord-1.5.x"
   "Bash|0|git push --force origin \"feature\""
+  # Convergence of plan 027: refused at 96afb6fb, passed after the review fixes. The blind split cuts
+  # inside the quoted value, so the piece holding the push starts at the # and its opening quote
+  # sits in the piece before; a comment is now dropped only when no quote comes anywhere before it.
+  "Bash|2|cat <<EOF"$'\n'"say \"hi"$'\n'"EOF"$'\n'"X=\"a;b #c\" git push --force origin bannerlord-1.5.x"
+  "Bash|2|cat <<EOF"$'\n'"say \"hi"$'\n'"EOF"$'\n'"env \"X=a;b #c\" git push --force origin bannerlord-1.5.x"
+  "Bash|2|cat <<EOF"$'\n'"say \"hi"$'\n'"EOF"$'\n'"X=\"l1"$'\n'"#2\" git push --force origin bannerlord-1.5.x"
+  "Bash|2|cat <<EOF"$'\n'"say \"hi"$'\n'"EOF"$'\n'"X=\"a|#c\" git push --force origin bannerlord-1.5.x"
+  "Bash|2|cat <<EOF"$'\n'"say \"hi"$'\n'"EOF"$'\n'"X=\"a&#c\" git push --force origin bannerlord-1.5.x"
+  "Bash|2|cat <<EOF"$'\n'"Don't stop"$'\n'"EOF"$'\n'"X='a;b #c' git push --force origin bannerlord-1.5.x"
+  "Bash|2|echo \$'it\\'s'"$'\n'"X='a;b #c' git push --force origin bannerlord-1.5.x"
+  "Bash|2|git commit -m \"x\"; git push --force origin feature # bannerlord-1.5.x later"
 )
 for entry in "${VP_TOOL_CASES[@]}"; do
     tool="${entry%%|*}"; rest="${entry#*|}"; want="${rest%%|*}"; cmd="${rest#*|}"
@@ -1315,10 +1326,13 @@ for entry in "${VP_TOOL_CASES[@]}"; do
     [[ "$got" == "$want" ]] && ok "validate-push [$tool] rc=$got for: $shown" \
         || bad "validate-push [$tool] expected rc=$want, got $got for: $shown"
 done
-# PowerShell's typographic quotes, sent as the JSON escapes ‘ and ’ (deep review of plan
-# 027): read as ASCII text, the ` #` inside them was taken for a comment and the push was dropped.
+# PowerShell's typographic quotes (deep review of plan 027): read as ASCII text, the ` #` inside
+# them was taken for a comment and the push was dropped. Each shape is sent twice: with the literal
+# U+2018 and U+2019 characters, and with the JSON escapes \u2018 and \u2019 (convergence).
 for cmd in 'if (‘a #'\'' -ne '\''x’) { git push --force origin bannerlord-1.5.x }' \
-           'git push --force -o ‘ci #1’ origin bannerlord-1.5.x'; do
+           'git push --force -o ‘ci #1’ origin bannerlord-1.5.x' \
+           'if (\u2018a #'\'' -ne '\''x\u2019) { git push --force origin bannerlord-1.5.x }' \
+           'git push --force -o \u2018ci #1\u2019 origin bannerlord-1.5.x'; do
     printf '{"tool_name":"PowerShell","tool_input":{"command":"%s"},"hook_event_name":"PreToolUse"}' "$cmd" \
         | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$SANDBOX" bash .claude/hooks/validate-push.sh >/dev/null 2>&1
     got=$?
@@ -1670,6 +1684,13 @@ G7E_ROWS=(
   "block-dangerous-git.sh|Bash|S|rc=0 ask|GIT_TRACE=0 GIT reset --hard"
   "block-dangerous-git.sh|Bash|S|rc=0 ask|'git' reset --hard"
   "block-broad-git-add.sh|PowerShell|S|rc=0 ask|\$out = git add -A"
+  # Convergence of plan 027: ParseInput reads each as an assignment that runs git.
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 deny|\$r =git commit -m \"docs: no label\""
+  "check-commit-subject-version.sh|PowerShell|R|rc=0 deny|\$x, \$y = git commit -m \"docs: no label\""
+  "block-dangerous-git.sh|PowerShell|S|rc=0 ask|\$null =git reset --hard"
+  "block-dangerous-git.sh|PowerShell|S|rc=0 ask|[int] \$x = git reset --hard"
+  "block-dangerous-git.sh|PowerShell|S|rc=0 ask|\$a.b=git reset --hard"
+  "block-dangerous-git.sh|PowerShell|S|rc=0 ask|\$a[0]=git reset --hard"
 )
 for entry in "${G7E_ROWS[@]}"; do
     hook="${entry%%|*}"; rest="${entry#*|}"
@@ -1747,7 +1768,9 @@ rm -rf "$NOREADER"
 
 # Large payloads under both tools stay inside 80% of each gate's registration (the plan 011 review
 # saw a 5 s registration crossed under load, and a killed gate fails open).
-for kind in ps-big ps-lines bash-big; do
+# push-big puts `push` inside the long quoted segment, which the timing rows above never did
+# (convergence of plan 027: validate-push re-split such a segment with a quadratic shlex).
+for kind in ps-big ps-lines bash-big push-big; do
     "$HPY" - "$kind" > "$SANDBOX/g7e-$kind.json" <<'PY'
 import json, sys
 big = "x" * 100000
@@ -1756,6 +1779,8 @@ if kind == "ps-big":
     tool, cmd = "PowerShell", "Write-Output '" + big + "'; git status --no-verify; git push origin feature; git commit -m @'\ndocs: no label\n'@"
 elif kind == "ps-lines":
     tool, cmd = "PowerShell", "\n".join('git -C E:\\x\\r%d commit -m "docs: no label"' % i for i in range(100))
+elif kind == "push-big":
+    tool, cmd = "Bash", "git commit -m \"" + "push the thing " * 7000 + "\" && git push --force origin feature"
 else:
     tool, cmd = "Bash", "echo '" + big + "'; git status --no-verify; git push origin feature; git commit -m \"docs: no label\""
 sys.stdout.write(json.dumps({"tool_name": tool, "tool_input": {"command": cmd}, "hook_event_name": "PreToolUse"}))
@@ -1770,7 +1795,7 @@ print(next((h.get('timeout', 600) for g in d['hooks'].get('PreToolUse', []) for 
 PYEOF
 )
     REG=${REG%$'\r'}
-    for kind in ps-big ps-lines bash-big; do
+    for kind in ps-big ps-lines bash-big push-big; do
         S=$(date +%s%N)
         timeout -k 2 65 env CLAUDE_PROJECT_DIR="$REPO" bash ".claude/hooks/$name" < "$SANDBOX/g7e-$kind.json" >/dev/null 2>&1
         MS=$(( ($(date +%s%N) - S) / 1000000 ))

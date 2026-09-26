@@ -36,7 +36,16 @@ SQ = "'\u2018\u2019\u201a\u201b"
 DQ = '"\u201c\u201d\u201e'
 BLANK = " \t\u00a0"
 ASSIGN = {"=", "+=", "-=", "*=", "/=", "%=", "??="}
-GLUED_ASSIGN = re.compile(r"(\$[\w:?]+|\$\{[^}]*\})(\?\?=|[-+*/%]?=)(.*)", re.S)
+# An assignment's left side, as ParseInput reads one (convergence of plan 027): a variable, cast
+# ([int]$x, or [int] $x spaced), member ($a.b), index ($a[0]) or a comma list of them ($x, $y).
+_VAR = r"(?:\$[\w:?]+|\$\{[^}]*\})"
+_CAST = r"\[[\w.]+(?:\[\])?\]"
+_ONE = rf"(?:{_CAST})*{_VAR}(?:\.\w+|\[[^\]]*\])*"
+_TARGET = rf"(?:,?{_ONE}(?:,(?:{_ONE})?)*|,|{_CAST})"
+_OP = r"\?\?=|[-+*/%]?="
+TARGET = re.compile(_TARGET)
+TARGET_OP = re.compile(rf"({_TARGET})({_OP})(.*)", re.S)          # $r=git, $a.b=git, $x,$y=
+BARE_OP = re.compile(rf"({_OP})(.*)", re.S)                       # the =git of `$null =git`
 # Environment assignments may come before the command (`GIT_TRACE=0 GIT commit`, plan 027 review).
 BASH_GIT = re.compile(r"""((?:^|[;&|(){}`\n])[ \t]*(?:[A-Za-z_]\w*=[^\s;&|(){}`]*[ \t]+)*|\$\([ \t]*)"""
                       r"""("[^"\n]*"|'[^'\n]*'|[^\s;&|(){}'"`<>]+)""")
@@ -200,6 +209,27 @@ def quote(word):
     return "'" + word.replace("'", "'\\''") + "'"
 
 
+def _assignment_head(toks, j):
+    """(targets, operator, index after the operator, text glued after it) when the statement that
+    opens at toks[j] is an assignment, whose right side PowerShell runs; else None."""
+    targets = []
+    while j < len(toks) and toks[j][0] in ("w", "e"):
+        text = toks[j][1]
+        if targets and text in ASSIGN:
+            return targets, text, j + 1, ""
+        m = BARE_OP.fullmatch(text) if targets else None
+        if m:
+            return targets, m.group(1), j + 1, m.group(2)
+        m = TARGET_OP.fullmatch(text)
+        if m:
+            return targets + [m.group(1)], m.group(2), j + 1, m.group(3)
+        if not TARGET.fullmatch(text):
+            return None
+        targets.append(text)
+        j += 1
+    return None
+
+
 def ps_to_posix(s):
     toks = ps_tokens(s)
     # command_position: the next word names a command. called: an & or . operator ran it, so even
@@ -210,17 +240,13 @@ def ps_to_posix(s):
         i += 1
         if kind in ("w", "e"):
             if command_position and not called:
-                nxt = toks[i] if i < len(toks) else ("", "")
-                if text[:1] and text[0] in "$[" and nxt[0] == "w" and nxt[1] in ASSIGN:  # $r = git ...
-                    parts += [quote(text), nxt[1], ";"]
-                    i += 1
-                    continue
-                m = GLUED_ASSIGN.fullmatch(text)
-                if m:                                                          # $r=git commit ...
-                    parts += [quote(m.group(1)), m.group(2), ";"]
-                    if m.group(3):
+                head = _assignment_head(toks, i - 1)                           # $r = git ...
+                if head:
+                    targets, op, i, rest = head
+                    parts += [quote(t) for t in targets] + [op, ";"]
+                    if rest:
                         i -= 1
-                        toks[i] = ("w", m.group(3))
+                        toks[i] = ("w", rest)
                     continue
                 if kind == "w" and text == ".":                               # . git commit ...
                     called = True
@@ -294,23 +320,42 @@ def segments(text, esc="\\"):
     return "".join(out)
 
 
-# A quote before a # means the # may be quoted text, so the quote-blind split never drops what
-# follows it (plan 027 review: `git -c "user.name=a #b" push --force ...` after a heredoc line
-# holding one ", and a typographic quote, both hid the push).
-FIRST_QUOTE_OR_HASH = re.compile("['\"`\u2018-\u201e#]")
+# A quote anywhere before a # means the # may be quoted text, so the quote-blind split never drops
+# what follows it. Plan 027 review: `git -c "user.name=a #b" push --force ...` after a heredoc line
+# holding one ", and a typographic quote, both hid the push. Its convergence: judging only the
+# piece was not enough, since the blind split cuts inside a quoted value (`X="a;b #c" git push`),
+# and the piece holding the push then starts at the # with its opening quote in the piece before.
+QUOTE = re.compile("['\"`\u2018-\u201e]")
+WORD_HASH = re.compile(r"(?:^|(?<=[ \t]))#")
 
 
-def _drop_comment(piece):
-    m = FIRST_QUOTE_OR_HASH.search(piece)
-    if m and m.group() == "#" and (m.start() == 0 or piece[m.start() - 1] in " \t"):
-        return piece[:m.start()]
-    return piece
+def _blind_pieces(text):
+    """text cut at every ; & | and newline whatever the quotes, a # that starts a word dropped with
+    the rest of its piece only when no quote occurs anywhere in text before it. Linear."""
+    q = QUOTE.search(text)
+    limit = q.start() if q else len(text)
+    out, start = [], 0
+    for piece in re.split(r"[;&|\n]", text):
+        m = WORD_HASH.search(piece) if start < limit else None
+        out.append(piece[:m.start()] if m and start + m.start() < limit else piece)
+        start += len(piece) + 1
+    return out
+
+
+# Only a segment this short is re-split with argument boundaries: shlex builds each word one
+# character at a time, quadratic in its length (400 KB of quoted text holding `push` took 1.7 s of
+# validate-push's 5 s registration, and a killed gate fails open). The shapes the pass exists for,
+# -o "" and -o "ci skip", are short, and without it the positionals are still judged unskipped.
+WORDS_KEPT_MAX = 4096
 
 
 def _words_kept(seg):
     """One quote-aware segment with each argument's boundary kept: a blank inside an argument
     becomes \\x1f, and an empty argument \\x1e, so `-o "ci skip" origin` and `-o "" origin` still
-    hand validate-push the value as one word. None when it does not parse as POSIX words."""
+    hand validate-push the value as one word. None when it does not parse as POSIX words or is
+    longer than WORDS_KEPT_MAX."""
+    if len(seg) > WORDS_KEPT_MAX:
+        return None
     try:
         words = shlex.split(seg, comments=False, posix=True)
     except ValueError:
@@ -321,9 +366,11 @@ def _words_kept(seg):
 def push_lines(cmd, tool):
     """validate-push.sh's candidate lines, only those holding `push`, each once:
     1. the posix text and the raw command, cut at every ; & | and newline whatever the quotes, a #
-       comment dropped only where no quote comes before it (bash -c "git push ..." stays judged);
+       comment dropped only where no quote comes anywhere before it (bash -c "git push ..." stays
+       judged);
     2. the posix text split outside quotes (a separator inside a quoted value keeps git and push
-       together), and each such segment again with its argument boundaries kept;
+       together), and each such segment up to WORDS_KEPT_MAX again with its argument boundaries
+       kept;
     3. the raw command split outside quotes with the tool's own escape, the split validate-push ran
        before plan 027, so reading PowerShell never loses a push the raw text showed."""
     def unfold(t):
@@ -332,7 +379,7 @@ def push_lines(cmd, tool):
     texts = [unfold(posix)]
     if unfold(cmd) != texts[0]:
         texts.append(unfold(cmd))
-    lines = [_drop_comment(p) for t in texts for p in re.split(r"[;&|\n]", t)]
+    lines = [p for t in texts for p in _blind_pieces(t)]
     quoted = segments(posix).split("\n")
     lines += quoted
     lines += [w for w in (_words_kept(q) for q in quoted if "push" in q) if w]

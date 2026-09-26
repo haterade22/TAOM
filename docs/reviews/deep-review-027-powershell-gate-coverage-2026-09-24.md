@@ -97,7 +97,7 @@ both tool names. PowerShell grammar claims were checked with PowerShell 7's
 
 | # | Sev | Finding | Verdict | Action |
 |---|---|---|---|---|
-| F1 | HIGH | Quoted ` #` hides a push: PowerShell typographic quotes (`if (‘a #' -ne 'x’) {...}`, `-o ‘ci #1’`), Bash heredoc `Don't stop` then `-o 'ci #1'`, `echo $'it\'s'` then the same | CONFIRMED, all four base rc 2, 05dbc0d4 rc 0 | Fixed: quote-aware comment drop in the blind split, typographic quotes in the reader; 7c rows (typographic ones sent as JSON `\u2018` escapes) |
+| F1 | HIGH | Quoted ` #` hides a push: PowerShell typographic quotes (`if (‘a #' -ne 'x’) {...}`, `-o ‘ci #1’`), Bash heredoc `Don't stop` then `-o 'ci #1'`, `echo $'it\'s'` then the same | CONFIRMED, all four base rc 2, 05dbc0d4 rc 0 | Fixed: quote-aware comment drop in the blind split, typographic quotes in the reader; 7c rows (typographic ones sent as literal characters; their JSON `\u2018` escape twins were added at convergence) |
 | F2 | HIGH | `git push -fo ci.skip origin` on a trunk passes | CONFIRMED (also at base) | Fixed |
 | F4 | HIGH | PowerShell assignment hides git from three gates | CONFIRMED (ParseInput runs the command) | Fixed: `$x = `, `$x=`, `[type]$x +=` end the statement head |
 | F3 | MED | `piped_text` false denies | CONFIRMED | Fixed (see Codex 2) |
@@ -126,7 +126,7 @@ both tool names. PowerShell grammar claims were checked with PowerShell 7's
 
 `validate-push.sh` now reads every candidate line from one `_shellwords.py push` run: the POSIX
 text and the raw command cut quote-blind (a `#` comment dropped only where no ASCII or typographic
-quote comes before it in the segment), the POSIX text split outside quotes plus each such segment
+quote comes before it; since the convergence pass, anywhere before it in the command), the POSIX text split outside quotes plus each such segment
 with argument boundaries kept (`-o "ci skip"`, `-o ""`), and the raw command split outside quotes
 with the tool's own escape (the pre-027 split). `judge_command` judges the positionals with and
 without an option-value skip and blocks if either does. Without Python or when the reader fails, it
@@ -135,7 +135,8 @@ judges the raw command as before plan 027, comments included.
 A differential sweep (`fuzz_vp.py`) fed the `96afb6fb` hook and the fixed hook 5,896 payloads (22
 push bodies by 11 prefixes by 6 suffixes, plus `bash -c` wraps, each under both tool names on a
 trunk and a feature branch): **0 refused at base and allowed now**, 190 newly refused, the rest
-equal. The one deliberate relaxation, a trunk named only in a trailing comment, is not in that
+equal. That corpus lacked one class, a quoted value the blind split cuts inside: the convergence
+pass found it and it is fixed (see Convergence). The one deliberate relaxation, a trunk named only in a trailing comment, is not in that
 corpus; it stays allowed when no quote comes before the `#`, and a quoted refspec before it
 (`git push --force origin "feature" # bannerlord-1.5.x later`) is refused again, the safe side.
 
@@ -243,3 +244,55 @@ Final runs, in the worktree after every fix:
 
 VERDICT: READY FOR COMMIT (Step 4 complete; the convergence pass is owed to the orchestrator,
 since this lead cannot spawn a reviewer).
+
+## Convergence
+
+A convergence reviewer read the staged review fixes (`git diff --cached 05dbc0d4`) and ran the
+base (`96afb6fb`), pre-fix (`05dbc0d4`) and fixed hooks side by side: hook suite 773 passed,
+reader tests 53 OK, gate inventory and parity checks clean, and four defects. The review lead's
+second pass re-checked each against the code before changing anything; all four were confirmed,
+none was a false positive.
+
+| # | Sev | Defect | Verified | Fix |
+|---|---|---|---|---|
+| C1 | HIGH | `validate-push.sh` dropped a push when the quote-blind split cut inside a quoted value holding `;`, `\|`, `&` or a newline before a `#` (`X="a;b #c" git push --force origin bannerlord-1.5.x`, `X='a;b #c'`, `env "X=a;b #c"`, `X="l1<newline>#2"`, `X="a\|#c"`, `X="a&#c"`) after an earlier line left a quote open | CONFIRMED: of the 18 prefix and value shapes rerun, all 18 rc 2 at base, 7 rc 0 on the staged hook (the others were caught by another split) | `_shellwords.py _blind_pieces`: a `#` comment is dropped only when no quote (ASCII, typographic or backtick) occurs anywhere earlier in the whole text, not just in its piece. Unit test `test_blind_split_inside_a_quoted_value_keeps_the_push` (18 subtests, red first), `test_comment_after_any_quote_is_judged`; eight 7c rows |
+| C2 | LOW | `_words_kept` ran `shlex.split` (quadratic in a word's length) on every quoted segment holding `push` | CONFIRMED by timing | Only segments up to 4 KB (`WORDS_KEPT_MAX`) are re-split; the shapes it exists for are short, and without it the positionals are still judged unskipped. Unit test `test_argument_boundaries_skip_a_long_segment`; a `push-big` 7e timing payload for all nine gates |
+| C3 | LOW | `$null =git`, `[int] $x = git`, `$a.b=git`, `$a[0]=git`, `$x, $y = git` hid git from the gates | CONFIRMED: `ParseInput` (PowerShell 7.6.6) returns an `AssignmentStatementAst` for each, left side Variable, Convert, Member, Index and ArrayLiteral; the staged hooks allowed all six new 7e rows | `_assignment_head` reads the left side as ParseInput does (variable, cast glued or spaced, member, index, comma list, an operator glued to its right side). Unit tests for each plus the non-assignments `$x -eq 1`, `$x \| git push`, `[int] 5`, `[Console]::WriteLine('x')`; six 7e rows (commit gate and `block-dangerous-git`) |
+| C4 | LOW | A 7c comment said the typographic rows were sent as JSON escapes; the bytes were literal U+2018 and U+2019 | CONFIRMED | Both spellings are now sent (literal and `\u2018`/`\u2019` escape text), comment reworded; F1's row above corrected |
+
+**Statements corrected.** The "never hides" claims in `validate-push.sh`, `hooks-catalog.md`
+(`validate-push.sh` row), this report's regression summary, and the RCA summary; the RCA gains
+rows 16 to 19.
+
+**Differential sweep after the fixes** (`validate-push.sh` at `96afb6fb` against the working tree,
+a feature-branch scratch repo, 17 push bodies by 9 prefixes by 4 suffixes = 612 shapes per tool
+name, the reviewer's classes included): under Bash and under PowerShell alike, 8 refused at base
+and allowed now, all 8 the named relaxation (`git push --force origin feature # bannerlord-1.5.x
+later`, alone or after `cd /x`, with any suffix); 1 newly refused; no other exit code.
+
+**Timing** (`git commit -m "<N KB of 'push the thing '>" && git push --force origin
+bannerlord-1.5.x`, Bash tool, median of 3):
+
+| Size | base | staged | fixed |
+|---|---|---|---|
+| 300 KB | 2,933 ms | 4,406 ms | 3,966 ms |
+| 400 KB | 3,555 ms | 6,082 ms | 5,233 ms |
+
+The reader itself now takes 59 ms on the 400 KB payload. The rest is bash judging the 400 KB
+`git commit -m "push ..."` line as a push with about 27,000 positionals (4,072 ms at base, 5,189 ms
+fixed on that line alone): `judge_command`'s longer per-token loop from the review fixes (two
+positional lists, cluster and prefix handling). So a window remains, roughly 350 to 450 KB of one
+quoted segment holding the word `push`, where the base gate finished inside its 5 s registration
+and the fixed gate does not (a killed gate fails open). Base itself fails from about 450 KB. Not
+fixed here (no new design work in a convergence pass); FOLLOW-UP for the orchestrator: bound the
+positionals `judge_command` walks, or anchor `push` outside quoted text.
+
+**Final runs** (worktree, after every fix):
+- `python -B -m unittest tools.tests.test_shellwords`: Ran 58 tests, OK (53 before).
+- `bash tools/test_hooks.sh`: 798 passed, 0 failed (773 before; 8 7c rows, 2 typographic escape
+  rows, 6 7e rows, 9 `push-big` timing rows added). `validate-push.sh` took 1,554 ms of 5 s on
+  `push-big` (105 KB).
+- `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`: Passed 10767, Failed 0,
+  Skipped 2 (the branch contains a39a9c86, so no failure was allowed).
+
+CONVERGENCE VERDICT: 4 of 4 defects fixed; one timing window recorded as FOLLOW-UP.

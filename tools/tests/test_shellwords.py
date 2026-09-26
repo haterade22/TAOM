@@ -162,6 +162,24 @@ class PowerShellStatementTests(unittest.TestCase):
         self.assertEqual(ps("$null=GIT reset --hard"), [["$null", "="], ["git", "reset", "--hard"]])
         self.assertEqual(ps("[string]$y += git log"), [["[string]$y", "+="], ["git", "log"]])
 
+    # Convergence of plan 027: ParseInput (PowerShell 7.6.6) reads each of these as an assignment
+    # whose right side runs git; the reader read them as a value it prints.
+    def test_every_assignment_target_ends_the_statement_head(self):
+        reset = ["git", "reset", "--hard"]
+        self.assertEqual(ps("$null =git reset --hard"), [["$null", "="], reset])
+        self.assertEqual(ps("[int] $x = git reset --hard"), [["[int]", "$x", "="], reset])
+        self.assertEqual(ps("$a.b=git reset --hard"), [["$a.b", "="], reset])
+        self.assertEqual(ps("$a[0]=git reset --hard"), [["$a[0]", "="], reset])
+        self.assertEqual(ps("$x, $y = git reset --hard"), [["$x,", "$y", "="], reset])
+        self.assertEqual(ps("$x,$y=git reset --hard"), [["$x,$y", "="], reset])
+        self.assertEqual(ps('$r =git commit -m "docs: x"'), [["$r", "="], ["git", "commit", "-m", "docs: x"]])
+
+    def test_a_value_that_is_not_assigned_stays_a_value(self):
+        self.assertEqual(ps("$x -eq 1"), [["echo", "$x", "-eq", "1"]])
+        self.assertEqual(ps("$x | git push"), [["echo", "$x"], ["git", "push"]])
+        self.assertEqual(ps("[int] 5"), [["[int]", "5"]])
+        self.assertEqual(ps("[Console]::WriteLine('x')"), [["[Console]::WriteLine"], ["echo", "x"]])
+
     def test_dot_source_operator_runs_the_command(self):
         self.assertEqual(ps(". git commit -m x"), [["git", "commit", "-m", "x"]])
         self.assertEqual(ps(". .\\build.ps1"), [[".\\build.ps1"]])
@@ -267,6 +285,29 @@ class PushLinesTests(unittest.TestCase):
         for tool in ("Bash", "PowerShell"):
             with self.subTest(tool=tool):
                 self.assertNotIn("T", sw.push_lines("git push --force origin feature # T later", tool))
+
+    # Convergence of plan 027: the blind split cuts inside a quoted value, so the piece holding the
+    # push can start at a # whose opening quote sits in the piece before it. Each was refused at
+    # 96afb6fb and passed after the review fixes.
+    def test_blind_split_inside_a_quoted_value_keeps_the_push(self):
+        for pre in ('cat <<EOF\nsay "hi\nEOF\n', "cat <<EOF\nDon't stop\nEOF\n", "echo $'it\\'s'\n"):
+            for value in ('X="a;b #c"', "X='a;b #c'", 'env "X=a;b #c"', 'X="l1\n#2"', 'X="a|#c"', 'X="a&#c"'):
+                cmd = pre + value + " git push --force origin T"
+                with self.subTest(cmd=cmd):
+                    self.assertTrue(any("git push --force origin T" in line
+                                        for line in sw.push_lines(cmd, "Bash").split("\n")))
+
+    def test_comment_after_any_quote_is_judged(self):
+        # The safe side: a quote anywhere before the # may open the value the # sits in.
+        self.assertIn("T", sw.push_lines('git commit -m "x"; git push --force origin feature # T later', "Bash"))
+
+    # A long quoted segment holding `push` is not re-split with argument boundaries: shlex is
+    # quadratic in one word's length (400 KB took 1.7 s of the 5 s registration).
+    def test_argument_boundaries_skip_a_long_segment(self):
+        cmd = 'git commit -m "' + "push the thing " * 400 + '" && git push -o "ci skip" origin'
+        lines = sw.push_lines(cmd, "Bash").split("\n")
+        self.assertIn("git push -o ci\x1fskip origin", lines)
+        self.assertFalse(any("push\x1fthe" in line for line in lines))
 
     def test_argument_boundaries_are_kept_once(self):
         lines = sw.push_lines('git push -o "ci variable" origin; git push -o "" x y', "Bash").split("\n")

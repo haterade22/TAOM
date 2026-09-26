@@ -54,10 +54,11 @@ is_protected() {
 #   - the quote-blind split, of both the command read as POSIX-shell text and the raw command. It
 #     keeps `bash -c "git push ...; echo x"` refused, since a gate cannot tell quoted or heredoc
 #     text from a command that `bash -c` or `bash <<EOF` runs. A # comment is dropped from a
-#     segment only where no quote comes before it, so a trunk named only in a trailing comment
-#     (`git push --force origin feature # bannerlord-1.5.x later`) is not refused, while a quoted
-#     value holding ` #` never hides the push after it (a heredoc line with one " or ' flips
-#     every quote after it; a PowerShell typographic quote is a quote).
+#     segment only where no quote comes anywhere before it in the command, so a trunk named only
+#     in a trailing comment (`git push --force origin feature # bannerlord-1.5.x later`) is not
+#     refused, while a quoted value holding ` #` never hides the push after it, even where this
+#     split cuts inside the value (`X="a;b #c" git push ...`; a heredoc line with one " or '
+#     flips every quote after it; a PowerShell typographic quote is a quote).
 #   - the split at ; & | outside quotes of the POSIX text, and of each such segment again with
 #     its argument boundaries kept (-o "" and -o "ci skip" stay one word). Alone the blind split
 #     under-blocks: a separator inside a quoted value (`git -C "E:/R&D" push --force ...`) cut git
