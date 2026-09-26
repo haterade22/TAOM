@@ -23,6 +23,7 @@ public sealed class FormationAdapter : IFormationAdapter
     public Vec2 Direction => _formation.Direction;
     public float Width => _formation.Width;
     public float Interval => _formation.Interval;
+    public float UnitDiameter => _formation.UnitDiameter;
 
     public IReadOnlyList<FormationUnit> Units =>
         _formation.UnitsWithoutLooseDetachedOnes

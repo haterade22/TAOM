@@ -163,6 +163,8 @@ TAOM ships zero banner items of its own; custom LOTR meshes can be added later a
 
 `cave_troll`, `hill_troll`, `nazghul`, `saruman`, `sauron` never carry a standard. Trolls are beasts; the named races are heroes anyway (`!IsHero` already excludes them) and are listed belt-and-braces. This mirrors the cave-troll guard exclusion in [#346](https://github.com/haterade22/TAOM/issues/346).
 
+The gate holds in Custom Battle too. `TaomBattleBannerBearersModel` goes on the campaign starter only, and Custom Battle builds `CustomBattleBannerBearersModel` off a `BasicGameStarter`, so until 2026-09-25 the vanilla gate alone ran there and hill trolls raised standards in the troll smoke. `TaomCustomBattleBannerBearersModel` (registered in `SubModule.RegisterCustomBattleModels`) adds only this race gate over Custom Battle's own model; its bearer count, tiers and formation rules stay vanilla.
+
 `IsRaceAllowed` **validates before lookup**: `RaceManager.GetRaceNameFromId` coerces unknown ids to `"human"`, which is not on the exclusion list, so a lookup-first check would silently admit corrupt race ids. Invalid ids fail closed.
 
 ### Infantry-only gate
@@ -229,7 +231,7 @@ This is the feature's one real gap. Both reviews are static; the failure mode it
 - A looter / `sea_raiders` warband → **no banner at all** (the fail-closed default).
 - **MixedFormations enabled + banners** → bearers stand in the engine's banner positions, not scattered through the ranks (verifies the Patch30 fall-through).
 - A mixed-culture allied army → each formation flies its **majority** culture's standard.
-- Shader-precompile walk → no NRE, no hang.
+- Shader-precompile walk → no NRE, no hang (skip while the walk is parked, since 2026-09-25).
 - Master toggle off → identical to pre-feature behaviour.
 
 ## Gotchas

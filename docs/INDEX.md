@@ -159,7 +159,7 @@ Codex, Claude, Kimi and other models use the same policy and evidence records.
 - [fief-granting](features/fief-granting.md): who gets a captured town or castle (Patch70 decision swap, siege participation record, ten MCM knobs; #458, #565)
 - [arena](features/arena.md) — TaomTournamentModel with culture armor + prize pools
 - [messengers](features/messengers.md) — paid messenger dispatch + travel arrival inquiry
-- [shader-precompilation](features/shader-precompilation.md): pre-compile shaders menu option (Patch21): every character in batches, scene passes an MCM opt-in
+- [shader-precompilation](features/shader-precompilation.md): pre-compile shaders menu option (Patch21), parked 2026-09-25: every character in batches, scene passes an MCM opt-in
 - [time-acceleration](features/time-acceleration.md) — campaign time scale knobs
 - [atmosphere-persistence](features/atmosphere-persistence.md) — forced-atmosphere scenes (Patch16); exonerated as the `_forceatmo` battle-load crash cause (2026-06-19)
 - [weather-bounds-guard](features/weather-bounds-guard.md) — weather bounds clamp (Patch10)

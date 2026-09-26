@@ -279,4 +279,93 @@ public class TrollBruteForceServiceTests
         Assert.IsTrue(_service.ShouldEngage(5.5f, 1f, size, busy: false), "an enemy 5.5 m ahead is in reach of a 3.6 m troll");
         Assert.IsFalse(_service.ShouldEngage(5.5f, 1f, 1.09f, busy: false), "AgentScale alone kept it out of reach");
     }
+
+    // Formation spacing: the engine spaces every foot unit for a 0.76 m human (Formation.UnitDiameter is
+    // BipedalRadius x 2 whatever the Monster), so trolls stood inside each other. Vanilla spaces a whole formation
+    // for horses once riders are a tenth of it (CalculateHasSignificantNumberOfMounted); trolls follow that rule,
+    // spaced for the widest troll's measured shoulders times its AgentScale.
+
+    [TestMethod]
+    public void TrollWidth_HillTroll_IsItsMeasuredShouldersTimesItsScale()
+    {
+        Assert.AreEqual(2.43f * 1.11f, _service.TrollWidth("hill_troll", 1.11f), 1e-5f);
+    }
+
+    [TestMethod]
+    public void TrollWidth_CaveTroll_IsItsMeasuredShouldersTimesItsScale()
+    {
+        Assert.AreEqual(0.75f * 1.9f, _service.TrollWidth("cave_troll", 1.9f), 1e-5f);
+    }
+
+    [DataTestMethod]
+    [DataRow(null)]
+    [DataRow("human")]
+    [DataRow("cave_troll_settlement")]
+    public void TrollWidth_NotATroll_IsZero(string? monsterId)
+    {
+        Assert.AreEqual(0f, _service.TrollWidth(monsterId, 1.5f));
+    }
+
+    [DataTestMethod]
+    [DataRow(float.NaN)]
+    [DataRow(float.PositiveInfinity)]
+    [DataRow(0f)]
+    [DataRow(-1f)]
+    public void TrollWidth_BadScale_IsZero(float scale)
+    {
+        Assert.AreEqual(0f, _service.TrollWidth("hill_troll", scale));
+    }
+
+    [TestMethod]
+    public void FormationUnitDiameter_AllTrolls_SpacesForTheWidestTroll()
+    {
+        Assert.AreEqual(2.7f, _service.FormationUnitDiameter(0.76f, 11, 11, 2.7f)!.Value, 1e-5f);
+    }
+
+    [TestMethod]
+    public void FormationUnitDiameter_ATenthTrolls_WidensLikeVanillaCavalry()
+    {
+        Assert.IsNotNull(_service.FormationUnitDiameter(0.76f, 100, 10, 1.43f));
+    }
+
+    [TestMethod]
+    public void FormationUnitDiameter_UnderATenthTrolls_KeepsVanilla()
+    {
+        Assert.IsNull(_service.FormationUnitDiameter(0.76f, 100, 9, 1.43f));
+    }
+
+    [DataTestMethod]
+    [DataRow(0, 0)]
+    [DataRow(10, 0)]
+    [DataRow(-1, 1)]
+    public void FormationUnitDiameter_NoTrollsOrNoUnits_KeepsVanilla(int units, int trolls)
+    {
+        Assert.IsNull(_service.FormationUnitDiameter(0.76f, units, trolls, 2f));
+    }
+
+    [TestMethod]
+    public void FormationUnitDiameter_CapsTheWidth()
+    {
+        Assert.AreEqual(TrollBruteForceConfig.MaxFormationUnitWidth,
+            _service.FormationUnitDiameter(0.76f, 5, 5, 40f)!.Value, 1e-5f);
+    }
+
+    [DataTestMethod]
+    [DataRow(float.NaN)]
+    [DataRow(float.PositiveInfinity)]
+    [DataRow(0.76f)]
+    [DataRow(0.5f)]
+    public void FormationUnitDiameter_NoWiderThanAHuman_KeepsVanilla(float widest)
+    {
+        Assert.IsNull(_service.FormationUnitDiameter(0.76f, 5, 5, widest));
+    }
+
+    [DataTestMethod]
+    [DataRow(float.NaN)]
+    [DataRow(0f)]
+    [DataRow(-0.76f)]
+    public void FormationUnitDiameter_BadVanillaDiameter_KeepsVanilla(float vanilla)
+    {
+        Assert.IsNull(_service.FormationUnitDiameter(vanilla, 5, 5, 2f));
+    }
 }

@@ -122,6 +122,22 @@ public class FormationLayoutServiceTests
         Assert.IsTrue(result.Value.x is > 90f and < 110f, $"Expected near 100, got {result.Value.x}");
     }
 
+    [DataTestMethod]
+    [DataRow(0.76f, 2f)]     // a human keeps the one-metre pitch: interval 1 + 1
+    [DataRow(1.75f, 2.75f)]  // a hill troll formation (Patch92): interval 1 + its width
+    public void ComputeUnitPlanePosition_NeighbouringSlots_AreSpacedByTheWiderOfOneMetreAndTheUnitWidth(
+        float unitDiameter, float expectedPitch)
+    {
+        var f = MakeFormation(8, 6);
+        f.UnitDiameter.Returns(unitDiameter);
+        _sut.SetLayout(f, FormationLayoutType.InfantryFrontRangedBack);
+
+        var first = _sut.ComputeUnitPlanePosition(f, agentIndex: 0, agentIsRanged: false)!.Value;
+        var second = _sut.ComputeUnitPlanePosition(f, agentIndex: 1, agentIsRanged: false)!.Value;
+
+        Assert.AreEqual(expectedPitch, (second - first).Length, 1e-4f);
+    }
+
     // -------- Layout get/set/cycle --------
 
     [TestMethod]

@@ -411,15 +411,24 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     // have reached it. MCM's json2 reader fills only the properties the class currently declares, so the
     // orphaned key is ignored on load and dropped by the next save. Rule for the next time: rename,
     // never flip, a persisted MCM default.
+    //
+    // PARKED again 2026-09-25 with the main-menu option (SubModule.cs): both attribute stacks are
+    // commented out so the group does not show. The PROPERTIES stay: ShaderPrecompileRunner.Begin()
+    // reads the scene-pass one, and SettingsFingerprintTests pins the reflected-property count.
+    // While parked, MCM neither loads nor saves them (its json2 converter handles only properties
+    // carrying a SettingProperty value attribute). The first Mod Options save that changes any TAOM
+    // setting drops their stored values, and un-parking then starts both at compiled defaults; an
+    // install that saves nothing meanwhile gets its stored values back.
+    // Un-parking = uncomment the attributes.
 
-    [SettingPropertyGroup("Graphics/Shader Precompilation", GroupOrder = 15)]
-    [SettingPropertyBool("Enable Shader Precompilation", Order = 0, RequireRestart = false,
-        HintText = "Master toggle for the main-menu 'Pre-compile Shaders' option. When off, the option is hidden so no NEW walk can be started (a walk already in progress finishes; it is not aborted mid-flight). Takes effect immediately, no relaunch. Default: on.")]
+    // [SettingPropertyGroup("Graphics/Shader Precompilation", GroupOrder = 15)]
+    // [SettingPropertyBool("Enable Shader Precompilation", Order = 0, RequireRestart = false,
+    //     HintText = "Master toggle for the main-menu 'Pre-compile Shaders' option. When off, the option is hidden so no NEW walk can be started (a walk already in progress finishes; it is not aborted mid-flight). Takes effect immediately, no relaunch. Default: on.")]
     public bool EnableShaderPrecompilation { get; set; } = true;
 
-    [SettingPropertyGroup("Graphics/Shader Precompilation")]
-    [SettingPropertyBool("Include Scene Passes (can crash some GPUs)", Order = 1, RequireRestart = false,
-        HintText = "Off by default. When on, the walk also loads each TAOM battle, siege and village scene to pre-compile its terrain and atmosphere shaders. These scene loads hard-crash some GPUs (pbr_terrain, #287) and are not needed for the troop and equipment pass. A scene that crashes is auto-skipped on the next run. Default: off.")]
+    // [SettingPropertyGroup("Graphics/Shader Precompilation")]
+    // [SettingPropertyBool("Include Scene Passes (can crash some GPUs)", Order = 1, RequireRestart = false,
+    //     HintText = "Off by default. When on, the walk also loads each TAOM battle, siege and village scene to pre-compile its terrain and atmosphere shaders. These scene loads hard-crash some GPUs (pbr_terrain, #287) and are not needed for the troop and equipment pass. A scene that crashes is auto-skipped on the next run. Default: off.")]
     public bool EnableShaderPrecompileScenePasses { get; set; } = false;
 
     // --- Battle Tactics / Siege Dismount ---

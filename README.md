@@ -141,7 +141,7 @@ hand-kitbashed in the editor — see the [build reference](docs/kitbash/erebor/)
 
 …and dozens more systems (castle recruitment, culture marketplace, troop-weight balancing,
 messengers, quick-action inventory, banner color persistence, settlement guards, custom battles,
-siege defense, tournament armor, shader precompilation, and more). Each is documented under
+siege defense, tournament armor, and more). Each is documented under
 [`docs/features/`](docs/features/). LOTR rules are enforced through GameModel overrides and
 Harmony patches, both catalogued in [harmony-patch-registry.md](docs/reference/harmony-patch-registry.md) and [gamemodel-registry.md](docs/reference/gamemodel-registry.md).
 

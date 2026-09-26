@@ -2699,3 +2699,18 @@ then tagged `HEAD` phases later, so a commit landing in between was in the tag a
   before committing, tags by SHA and, before tagging, checks that the tagged commit's parent is
   that SHA.
 - **Source:** `docs/reviews/rca-changelog-at-release-2026-09-24.md`, C2, C4, D1.
+
+### Reversing a toggle again: sweep every commit since the template, and re-verify its claims (2026-09-25)
+Shader Pre-compilation was parked (`5ae02f08`), re-enabled (`1e654021` and `1700156b`, #560) and
+parked again. The second park replayed the first one's file list and comments. Docs the re-enable
+commits had rewritten as live were not on that list, and a copied comment said the Patch21 postfix
+ran "per loading-screen frame"; vanilla calls `LoadingWindowViewModel.Update` every frame from a
+global layer.
+- **Why missed:** the older template looked complete because it once was; everything changed
+  between it and today was invisible to a replay.
+- **Prevent:** when undoing a change that was itself an undo, list files from every commit since
+  the template (`git log --stat <template>..HEAD --grep='#<issue>'`, not just the headline commit),
+  then grep the whole repo for the feature doc's slug and issue number and classify each hit as
+  history or living text (the "Retiring a duty" lesson above prescribes the same sweep). Re-check
+  every engine or library claim the template's comments make before copying them.
+- **Source:** `docs/reviews/rca-shader-precompile-repark-2026-09-25.md`, findings 1 to 3.

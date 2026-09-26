@@ -46,4 +46,19 @@ public interface ITrollBruteForceService
 
     /// <summary>The ring's scaled outer radius, for the agent query.</summary>
     float OuterRadius(float bodyScale);
+
+    /// <summary>
+    /// A troll's width in formation: its Monster's <see cref="TrollBruteForceConfig.ShoulderWidthByMonster"/> times
+    /// <paramref name="agentScale"/>. Zero for any other Monster or a non-finite or non-positive scale.
+    /// </summary>
+    float TrollWidth(string? monsterId, float agentScale);
+
+    /// <summary>
+    /// The unit width a formation is spaced for once trolls make up <see cref="TrollBruteForceConfig.FormationShare"/>
+    /// of it: the widest troll's <see cref="TrollWidth"/>, capped at
+    /// <see cref="TrollBruteForceConfig.MaxFormationUnitWidth"/>. Null keeps vanilla: too few trolls, none wider than
+    /// <paramref name="vanillaDiameter"/> (the engine's human width), or a non-finite input. Vanilla's rule for horses,
+    /// <c>Formation.CalculateHasSignificantNumberOfMounted</c>.
+    /// </summary>
+    float? FormationUnitDiameter(float vanillaDiameter, int unitCount, int trollCount, float widestTroll);
 }

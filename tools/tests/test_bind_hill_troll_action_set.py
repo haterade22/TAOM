@@ -76,8 +76,9 @@ class BindHillTests(unittest.TestCase):
         self.assertEqual(bh.bind_hill(a["type"], a, HUMAN, FAB), ("anim_hill_troll_combat_hit_front1", "fab"))
 
     def test_retargeted_human_clip_when_the_index_has_it(self):
-        a = {"type": "act_ready_slashright_2h", "animation": "ready_slashright_2h"}
-        self.assertEqual(bh.bind_hill(a["type"], a, HUMAN, FAB), ("anim_hill_troll_ready_slashright_2h", "human"))
+        a = {"type": "act_stagger_forward_2h", "animation": "stagger_forward_2h"}
+        human = HUMAN | {"anim_hill_troll_stagger_forward_2h"}
+        self.assertEqual(bh.bind_hill(a["type"], a, human, FAB), ("anim_hill_troll_stagger_forward_2h", "human"))
 
     def test_fab_armed_idle_beats_the_retargeted_human_idle(self):
         a = {"type": "act_idle_2h_1", "animation": "troop_stand_2h_1", "alternative_group": "idle_2h"}
@@ -90,6 +91,36 @@ class BindHillTests(unittest.TestCase):
     def test_fab_rule_without_the_fab_clip_falls_through(self):
         a = {"type": "act_walk_forward_unarmed", "animation": "walk_forward_unarmed"}
         self.assertEqual(bh.bind_hill(a["type"], a, HUMAN, set()), ("walk_forward_unarmed", "inherited"))
+
+    # Melee is engine pose-blend: a swing plays the engine's per-clip pose data, keyed by the vanilla clip's index.
+    # A retargeted clip on act_release_overswing_2h was missing from that table and the first swing crashed
+    # (TaleWorlds.Native.dll +0x6590B9, key 6511 = anim_hill_troll_release_overswing_2h, 2026-09-25).
+    def test_a_swing_keeps_the_vanilla_clip_even_when_a_retargeted_one_exists(self):
+        human = HUMAN | {"anim_hill_troll_release_overswing_2h"}
+        a = {"type": "act_release_overswing_2h", "animation": "release_overswing_2h"}
+        self.assertEqual(bh.bind_hill(a["type"], a, human, FAB), ("release_overswing_2h", "pose-blend"))
+
+    def test_a_quick_swing_keeps_the_vanilla_clip_too(self):
+        human = HUMAN | {"anim_hill_troll_quick_release_overswing_2h_left_stance"}
+        a = {"type": "act_quick_release_overswing_2h_left_stance",
+             "animation": "quick_release_overswing_2h_left_stance"}
+        self.assertEqual(bh.bind_hill(a["type"], a, human, FAB),
+                         ("quick_release_overswing_2h_left_stance", "pose-blend"))
+
+    # The swings alone were not enough: with them vanilla, the next crash came with only the wind-up
+    # (anim_hill_troll_ready_overswing_2h) playing among the troll clips. The whole melee exchange keeps vanilla.
+    def test_every_melee_exchange_code_keeps_the_vanilla_clip(self):
+        for code in ("act_ready_slashright_2h", "act_quick_ready_overswing_2h", "act_blocked_slashright_2h",
+                     "act_parried_overswing_2h", "act_defend_up_2h_passive", "act_guard_up_2h",
+                     "act_kick_right", "act_2h_bash", "act_2h_bash_left_stance"):
+            vanilla = code[len("act_"):]
+            human = HUMAN | {"anim_hill_troll_" + vanilla}
+            self.assertEqual(bh.bind_hill(code, {"type": code, "animation": vanilla}, human, FAB),
+                             (vanilla, "pose-blend"), code)
+
+    def test_hit_reactions_staggers_and_falls_keep_their_troll_clips(self):
+        for code in ("act_stagger_forward_2h", "act_fall_back_heavy", "act_jump", "act_strike_chest_front"):
+            self.assertIsNone(bh.POSE_BLEND.match(code), code)
 
 
 class ReuseTests(unittest.TestCase):
@@ -137,7 +168,7 @@ class BodyTests(unittest.TestCase):
         self.assertIn('blend_in_period="0.3"', inventory)
         self.assertNotIn("act_disabled_thing", " ".join(lines))   # commented out in Native: not an active code
         # no brute-force clip in FAB: the extra is left out
-        self.assertEqual(counts, {"fab": 4, "human": 2, "reuse": 2, "inherited": 1})
+        self.assertEqual(counts, {"fab": 4, "pose-blend": 2, "reuse": 2, "inherited": 1})
 
     def test_the_brute_force_action_is_appended_when_its_clip_exists(self):
         lines, counts = bh.build_body(actions(), HUMAN, FAB | {"anim_hill_troll_attack1"})
@@ -219,7 +250,7 @@ class ClipDiscoveryTests(unittest.TestCase):
         long = "ready_from_right_slashright_2h_unbalanced_left_stance"
         renames = {long: "anim_hill_troll_ready_from_right_slashright_2h_unbalanced_ls"}
         self.assertTrue(len("anim_hill_troll_" + long) > 63 and len(renames[long]) <= 63)
-        a = {"type": "act_ready_from_right_slashright_2h_unbalanced_left_stance", "animation": long}
+        a = {"type": "act_stagger_from_right_2h_unbalanced_left_stance", "animation": long}
         human = {renames[long]}
         self.assertEqual(bh.bind_hill(a["type"], a, human, set(), renames), (renames[long], "human"))
         # without the map the long name is unknown

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Hides the "New Campaign" button (vanilla story mode) and renames "Sandbox" to "Enter The Age Of Men" on the Bannerlord main screen. "Saved Games" and "Continue Campaign" remain visible so players can load existing saves. Also guards the "Pre-compile Shaders" button against duplicate registration when returning from a game session.
+Hides the "New Campaign" button (vanilla story mode) and renames "Sandbox" to "Enter The Age Of Men" on the Bannerlord main screen. "Saved Games" and "Continue Campaign" remain visible so players can load existing saves. Also guards the "Pre-compile Shaders" button against duplicate registration when returning from a game session (that registration is parked, commented out, since 2026-09-25).
 
 ## Why This Exists
 
@@ -16,7 +16,7 @@ Hides the "New Campaign" button (vanilla story mode) and renames "Sandbox" to "E
 Enter The Age Of Men    ← SandBoxNewGame (renamed)
 Saved Games             ← CampaignResumeGame (kept)
 Continue Campaign       ← ContinueCampaign (kept)
-Pre-compile Shaders     ← TaomPrecompileShaders (guarded, single instance)
+Pre-compile Shaders     ← TaomPrecompileShaders (PARKED 2026-09-25: not registered)
 Custom Battle
 Host Co-op
 Join Co-op
@@ -39,7 +39,7 @@ Bannerlord's initial menu options are managed by `Module.CurrentModule` as a lis
 
 ### Solution Approach
 
-Override `MBSubModuleBase.OnBeforeInitialModuleScreenSetAsRoot()` — fires after all module options are registered, before the UI renders. The `MainMenuCustomizerService` overrides options via the adapter on each visit (idempotent). The Pre-compile Shaders option uses a null-guard to add only once.
+Override `MBSubModuleBase.OnBeforeInitialModuleScreenSetAsRoot()`: it fires after all module options are registered, before the UI renders. The `MainMenuCustomizerService` overrides options via the adapter on each visit (idempotent). The Pre-compile Shaders option uses a null-guard to add only once (parked 2026-09-25, commented out in `SubModule.cs`).
 
 Constraint 3 is answered by deduping the **logging only** — the customization still runs on every call, because the engine can rebuild the initial-state options between screen-root sets and skipping the work would silently drop the rename on a real client. That reasoning is pinned by `CustomizeMenu_ManyCalls_StillAppliesEveryTime`.
 
@@ -58,7 +58,7 @@ SubModule.OnBeforeInitialModuleScreenSetAsRoot()  [fires every menu visit]
     │               false → warn once per option id      (HashSet<string> _reportedMisses)
     │               both true → "applied" once per session (_appliedLogged)
     │
-    └── if GetInitialStateOptionWithId("TaomPrecompileShaders") == null  [guard]
+    └── [PARKED 2026-09-25, commented out] if GetInitialStateOptionWithId("TaomPrecompileShaders") == null  [guard]
             → AddInitialStateOption("TaomPrecompileShaders", ...)
 ```
 
@@ -75,7 +75,7 @@ No configuration file. Option IDs and the rename text are hardcoded — these ar
 | `"StoryModeNewGame"` | New Campaign | StoryMode.View | **Hidden** |
 | `"SandBoxNewGame"` | SandBox | SandBox.View | **Renamed** |
 | `"Multiplayer"` | Multiplayer | Multiplayer module (orderIndex 9997) | Kept |
-| `"TaomPrecompileShaders"` | Pre-compile Shaders | TAOM (SubModule.cs) | Guarded add |
+| `"TaomPrecompileShaders"` | Pre-compile Shaders | TAOM (SubModule.cs) | Guarded add, **parked 2026-09-25** (commented out) |
 
 ## Key Files
 

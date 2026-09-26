@@ -276,8 +276,8 @@ attributing a rendering fault to RDC, enumerate everything that changed on the m
 an engine bump invalidates the shader cache, and that failure is silent too.**
 
 **Blocking the timing half:** the shader sacks were deleted, so the next loads pay full shader
-compilation. Comparing them to the 67.4 s baseline would charge that cost to RDC. Run
-*Pre-compile Shaders*, or let two launches settle, **then** measure.
+compilation. Comparing them to the 67.4 s baseline would charge that cost to RDC. Let two
+launches settle (the *Pre-compile Shaders* option is parked since 2026-09-25), **then** measure.
 
 **Owed to close Phase 1:** campaign map (TAOM_Map is 13,577 of 23,329 ops — the menu only exercised
 TAOM's 1,801), a 250v250 on `battle_terrain_biome_040` with warm shaders, and the cloth/animation

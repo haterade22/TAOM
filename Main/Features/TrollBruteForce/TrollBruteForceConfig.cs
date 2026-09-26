@@ -67,6 +67,28 @@ public static class TrollBruteForceConfig
     public const float MaxBodyScale = 3f;
 
     /// <summary>
+    /// Trolls at this share of a formation space the whole formation for the largest troll, the share at which vanilla
+    /// spaces a formation for horses (<c>Formation.CalculateHasSignificantNumberOfMounted</c>, 0.1).
+    /// </summary>
+    public const float FormationShare = 0.1f;
+
+    /// <summary>
+    /// Each troll's shoulder width at <c>AgentScale</c> 1: the widest band of its LOD0 mesh at shoulder height, arms
+    /// excluded, measured in Blender on 2026-09-25 (<c>LOME_troll.fbx</c> 0.75 m at 1.5 m height;
+    /// <c>hill_troll_a.fbx</c> 2.43 m at 3.25 m). A troll is spaced for this times its <c>AgentScale</c>: about 1.43 m
+    /// for a cave troll at 1.9, 2.7 m for a hill troll at 1.11. A scaled human (0.76 m times body size) left the hill
+    /// troll, twice as broad for its height, standing inside its neighbours.
+    /// </summary>
+    public static readonly IReadOnlyDictionary<string, float> ShoulderWidthByMonster = new Dictionary<string, float>
+    {
+        [CaveTrollMonsterId] = 0.75f,
+        [HillTrollMonsterId] = 2.43f,
+    };
+
+    /// <summary>The widest unit a formation is ever spaced for, whatever a Monster or a scale says.</summary>
+    public const float MaxFormationUnitWidth = 4f;
+
+    /// <summary>
     /// The human Monster's <c>standing_eye_height</c>, which the cave troll's Monster keeps: its size is all
     /// <c>AgentScale</c> (human skeleton, <c>min_scale</c> 1.9). The hill troll's size is in its own skeleton (eye
     /// height 3.58 at a scale near 1.09), so body size is <c>AgentScale</c> times eye height over this (Mike,

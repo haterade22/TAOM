@@ -94,7 +94,7 @@ public sealed class FormationLayoutService : IFormationLayoutService
 
         // Convert slot (row, file) to local-space offset, then transform by formation direction
         // and add formation order position to get the final plane position. Pure math; lock-free.
-        var unitInterval = System.Math.Max(1f, formation.Interval + 1f);
+        var unitInterval = LayoutPositioner.UnitPitch(formation);
         var localOffset = new Vec2(slot.file * unitInterval, -slot.row * unitInterval);
         var direction = formation.Direction;
         var rotated = direction.TransformToParentUnitF(localOffset);

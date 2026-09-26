@@ -13,9 +13,16 @@ namespace TAOM.Features.MixedFormations;
 /// </summary>
 public sealed class LayoutPositioner : ILayoutPositioner
 {
+    /// <summary>
+    /// Centre-to-centre distance between slots: the interval plus one metre, or plus the unit width when that is
+    /// wider (a troll formation, Patch92). A human's 0.76 m keeps the one metre.
+    /// </summary>
+    internal static float UnitPitch(IFormationAdapter formation) =>
+        Math.Max(1f, formation.Interval + Math.Max(1f, formation.UnitDiameter));
+
     public SlotAssignment BuildInitialAssignment(IFormationAdapter formation, FormationLayoutType layout)
     {
-        var unitInterval = Math.Max(1f, formation.Interval + 1f);
+        var unitInterval = UnitPitch(formation);
         var filesPerRow = formation.Width > 1f
             ? Math.Max(1, (int)Math.Round(formation.Width / unitInterval))
             : Math.Max(1, (int)Math.Ceiling(Math.Sqrt(Math.Max(1, formation.CountOfUnits))));

@@ -1036,3 +1036,28 @@ put the old bones under meshes just compiled against the new ones.
   parse the rest frames and restore with `tpac_skeleton_swap.py` only past the bind-pose tolerance (axes 1e-3,
   offsets 1e-4 of the rig extent) or on a changed bone order.
 - **Source:** `docs/reference/armory-guide.md` "LODs in the FBX sources".
+
+### A race head with no face morph channels crashes the first agent built from it (2026-09-25)
+KEYForce's hill troll head, eye and mouth carried no shape keys. The Kit imported them, every Kit look
+passed, and the first Custom Battle with a hill troll crashed to desktop at `TaleWorlds.Native.dll`
++0x57070C: the engine's static face morph read a null morph buffer (address 0x168C, row 962, the head's
+vertex count), because the Kit gives such a mesh an empty morph record that slips past its null check.
+- **Why missed:** the wiring copied the dwarf's skin layout and the face tags, not the dwarf's shape keys;
+  the Kit preview never runs a face morph, and no hill troll had spawned in a mission before.
+- **Prevent:** a new race head gets the 101 LOD0 channels every working head carries before its first
+  battle (`tools/blender/add_face_morph_channels.py` when the art has none); read a native crash's dump
+  for the faulting address, which named the mesh by its vertex count here.
+- **Source:** `docs/features/troll-race.md` "Face morph channels, the first Custom Battle CTD".
+
+### A melee release bound to a custom clip crashes the first swing (2026-09-25)
+The hill troll's generated set bound 32 `act_release_*` and `act_quick_release_*` codes to human clips
+retargeted onto its skeleton. Every Kit look passed; the first swing in battle crashed to desktop at
+`TaleWorlds.Native.dll` +0x6590B9. Melee is engine pose-blend: the swing plays per-clip pose data looked up
+by the vanilla clip's index, and a new clip has none, so the lookup returned a null entry.
+- **Why missed:** the pose-blend fact was written down (`troll-race.md`, the clip-flags reference) as "custom
+  attack clips cannot drive melee", a visual limit, not as a crash; the retarget batch then took the
+  two-handed group by name, releases included, and no gate knew which codes the engine drives itself.
+- **Prevent:** a swing code keeps the vanilla clip (`bind_hill_troll_action_set.py` rule 0, tested); for a
+  native crash that is a hash-map miss, read the key register from the dump and resolve it in game (the
+  trace's clip-index scan named the clip in one run).
+- **Source:** `docs/features/troll-race.md` "The swing CTD, retargeted melee releases".

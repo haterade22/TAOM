@@ -35,7 +35,7 @@ and the gate.
 | Prefab entity cap | The 131,072 queue is global across modules; `check_prefab_budget.py` counts TAOM_Map only | [module map](../modding/module-map.md) |
 | Unversioned modules | A fix in the live Armory or TAOM_Map reverts on reinstall; land an in-repo gate with it | [coverage](../features/moduledata-validation.md) |
 | Artist commit ports | His base is the mirror revision nearest his file, not his commit's parent; merge from it | [lesson](../reviews/lessons/data-content-cultures.md) |
-| Parked features | NavalTravel and NativeSkinFixes are disabled at the `SubModule.cs` wiring | [naval](../features/naval-travel.md), [skin](../features/native-skin-fixes.md) |
+| Parked features | NavalTravel, NativeSkinFixes, ShaderPrecompilation: off in `SubModule.cs`; sweep every file the last toggle touched | [map](../reference/feature-map.md) |
 | Persisted MCM defaults | json2 keeps the old value, so rename a setting to change its default, never flip it | [shaders](../features/shader-precompilation.md) |
 | Moving platforms | Agents need a navmesh riding the entity, plus physics; teleporting fails. Crew stand inside the deck | [mumakil](../features/mumakil.md) |
 | Vendored DLLs | `Main/_Module/bin/Win64_Shipping_Client/` ships only `MinHook.x64.dll` and `TAOM.NativeSkinFixes.dll`; never MCMv5 | [deps](../modding/module-dependencies.md) |
@@ -68,6 +68,7 @@ and the gate.
 | Animation | Author on the engine skeleton: engine frames, rest pose at frame 0, list-order hierarchy | [skeleton](../reference/bannerlord-skeleton-authoring.md) |
 | Kit clip rename | Corrupts the clip: keep the name, close the Kit, run `rename_anim_clip_tpac.py` | [tools](../../tools/README.md) |
 | Own-skeleton humanoid | A clip stores parent-relative rotations: re-framing fixes axes only; retarget the clips too | [skeleton](../reference/bannerlord-skeleton-authoring.md) |
+| New race rigs | LOD0 head, eye, mouth need 101 morphs (`add_face_morph_channels.py`); `act_release_*` swings keep vanilla clips. Else CTD | [troll](../features/troll-race.md) |
 | UE clip export | The root node carries pelvis height above bind; keep root height, drop only travel and yaw | [pipeline](../reference/ue-to-bannerlord-asset-pipeline.md) |
 | Kit FBX materials | Bound by name module-wide, reset on every re-import; a same-named older material wins silently | [troll](../features/troll-race.md) |
 | Player start kits | Defaults are `starter_<donor>` twins, careers take troop gear; override the roster, never a set | [start kits](../features/starting-equipment-tuning.md) |

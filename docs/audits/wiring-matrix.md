@@ -135,7 +135,7 @@ Lifecycle correctness across the 6 early-phase categories (`OnSubModuleLoad`):
 | Patch25_LocalizationOverride | `MBTextManager` | None (stateless dictionary lookup) | ✅ |
 | Patch18_CulturalFeats | `Campaign` (Postfix on `InitializeDefaultCampaignObjects`) | None (Campaign.Current is guaranteed non-null at that postfix point) | ✅ |
 | Patch19_CustomBattles | `BannerlordMissions` etc. | None (Mission is the postfix `__result`, not read from `Mission.Current`) | ✅ |
-| Patch21_ShaderPrecompilation | `LoadingWindowViewModel` | None (UI VM, no engine state reads at JIT prep) | ✅ |
+| Patch21_ShaderPrecompilation | `LoadingWindowViewModel` | None (UI VM, no engine state reads at JIT prep) | ✅ (not applied while parked, since 2026-09-25) |
 | Patch22_ArmyTargeting | `AiMilitaryBehavior` | None (Settlement/MobileParty explicit params) | ✅ |
 | Patch30_MixedFormations | `Formation` | ⚠ Patch reads `Mission.Current?.Scene` (line 35) and `unit?.Mission ?? Mission.Current` (line 49). Null-coalesces correctly — no crash — but the lifecycle assumption is fuzzy. Could be deferred to `OnMissionBehaviorInitialize` (like `Patch_MissionTime_SetMovementOrder`) for clarity. Cosmetic-only. | ⚠ P3 |
 

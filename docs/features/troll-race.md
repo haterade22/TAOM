@@ -87,7 +87,9 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
    physics into the package (`tpac_skeleton_copy_physics.py --reframed <JSON> --fit`). The hill troll is
    the worked example. (Or reuse `human_skeleton` for the `cave_troll` fallback.)
 2. **Meshes:** in that same FBX, one object per skin slot, a head as `<mesh>` / `.eye` / `.mouth`, materials
-   under the Kit's exact names → `_geo.tpac`.
+   under the Kit's exact names → `_geo.tpac`. The LOD0 head, eye and mouth each carry the 101 face morph
+   channels every race head has (`tools/blender/add_face_morph_channels.py` when the art has none): without
+   them the first agent built crashes the engine's static face morph (the hill troll, 2026-09-25).
 3. **Animations:** retarget a clip set onto the skeleton's engine dump
    (`retarget_mannequin_to_human.py --engine-skeleton <json> --armature-name <skeleton>_notused`), Kit-import
    the FBX, wire the masters (`wire_anim_master_skeletons.ps1`), then `gen_troll_anim_clips.ps1` with
@@ -421,6 +423,27 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
   trolls reach companion clans; the cave troll's `TroopWeight` row is still commented out (1.0 against the hill
   troll's 4.0); a Free-culture player pays the recruit cost in their own resource and loses the troll to alignment
   desertion the next day.
+- **Face morph channels, the first Custom Battle CTD (2026-09-25):** a hill troll crashed the game about a
+  second into deployment: an access violation in `TaleWorlds.Native.dll` at +0x57070C, the engine's static
+  face morph (its string: "No morph data found for face mesh. Can not do static morph."). The dump read address
+  0x168C, a null morph buffer at row 962, the head's vertex count. KEYForce's head, eye and mouth had no shape
+  keys; every working race head has 101 on LOD0 (dwarf, uruks, goblin; the cave troll 100). The Kit builds an
+  empty morph record for such a mesh, which slips past the engine's null check. Fixed in the source with
+  `tools/blender/add_face_morph_channels.py` (101 zero-offset channels, `shape_01` to `shape_101`, so face
+  sliders move nothing on the troll). OWED: Mike's Kit re-import of `hill_troll_a.fbx`, then check the
+  skeleton's physics survived (it did on every earlier skeleton-preserving re-import) and a Custom Battle.
+- **The swing CTD, retargeted melee releases (2026-09-25):** with the face fixed, the game crashed on the hill
+  trolls' first swing: an access violation at `TaleWorlds.Native.dll` +0x6590B9, reading address 0x8. The trace
+  (`TrollActionTrace`) showed every wind-up (`act_ready_*`, 23 of them over two runs) and never a release, and no
+  enemy within 8 m, so the swing itself crashed, not the hit. The crashing function is a hash lookup whose miss
+  leaves a null entry; the missing key sat in `r9` in all three dumps: 6511 twice and 6462 once, which the trace's
+  key scan resolved to the clip indices of `anim_hill_troll_release_overswing_2h` and
+  `anim_hill_troll_quick_release_overswing_2h_left_stance`. Battle melee is engine pose-blend (the vanilla attack
+  clips are 0-keyframe shells): a swing plays the engine's per-clip pose data, keyed by the vanilla clip's index
+  and sampled by swing progress, and a retargeted clip has no entry. `tools/bind_hill_troll_action_set.py` now binds
+  every `act_release_*` and `act_quick_release_*` to the vanilla clip (rule 0, `pose-blend`); the 32 retargeted
+  swings went back to vanilla (human 438 to 406), backup `action_sets.xml.bak-hilltroll-bind-20260925-180817`.
+  The wind-ups, guards and blocks keep their retargeted clips. OWED: the Custom Battle that proves it.
 - **Mouth textures (2026-09-25):** Mike asked where `t_hilltroll_mouth` lived. Not in any package or FBX: every
   `hill_troll` skin's `<mouth_textures>` named it (17 entries of the OLD troll's material, the kids the human
   `mouth_mat*`), and the engine puts that material on the head's `face_mouth_mesh`, so the new head's mouth would

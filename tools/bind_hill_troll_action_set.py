@@ -6,6 +6,13 @@ itself. This tool regenerates the whole body from the vanilla human set's code l
 action_sets.xml, the full definition: code names, their _left_stance twins and alternative_group values are the
 engine's, not typed by hand), binding each code by the first rule that has a clip on disk:
 
+  0. the melee exchange keeps the vanilla clip, always: wind-ups, quick attacks, releases, blocked, parried,
+     defends, guards, kicks and bashes (POSE_BLEND). Battle melee is engine pose-blend: the engine plays per-clip
+     pose data looked up by the vanilla clip's index and sampled by attack progress, and a retargeted clip has no
+     entry, so the lookup returns null and the game crashes (TaleWorlds.Native.dll +0x6590B9, reading 0x8). The
+     missing key in three dumps was the clip index of anim_hill_troll_release_overswing_2h and of a quick-release
+     twin (2026-09-25); with the releases vanilla the same crash came back with only the wind-up among the troll
+     clips in play, so the rule covers the whole exchange. Hit reactions, staggers, falls and jumps keep rule 2;
   1. the Fab clip the cave troll rules choose (tools/bind_troll_action_set.py: walk_forward, run_forward, idle,
      strike, death_fall), renamed anim_troll_* -> anim_hill_troll_* (the hill troll's 52, from
      tools/blender/fab_hill_troll_clip_names.json): the troll's own gait, idles, hit reactions and deaths;
@@ -79,6 +86,9 @@ ATTR_RE = cave.ATTR_RE
 # behaviour tree plays (#649); the hill troll swings the Fab heavy attack retargeted onto its own rig.
 EXTRA_BINDINGS = (("act_troll_brute_force", "anim_hill_troll_attack1"),)
 
+# Rule 0: the melee exchange the engine drives by pose-blend, bound to the vanilla clip whatever else exists.
+POSE_BLEND = re.compile(r"^act_(quick_|ready_|release_|blocked_|parried_|defend_|guard_|kick_|(\w+_)?bash)")
+
 # Rule 3: codes that reuse one of the troll's own idles, tried after the Fab and retargeted-human rules so a clip
 # authored later for one of these codes still wins. A numbered code picks from its tuple by number, so cheer_1 and
 # cheer_2 play different idles.
@@ -132,7 +142,9 @@ def reuse_clip(code, fab_clips):
 
 
 def bind_hill(code, attrs, human_clips, fab_clips, renames=None):
-    """(clip, source) for an act_* code: source is 'fab', 'human', 'reuse' or 'inherited'."""
+    """(clip, source) for an act_* code: source is 'pose-blend', 'fab', 'human', 'reuse' or 'inherited'."""
+    if POSE_BLEND.match(code):
+        return attrs.get("animation", ""), "pose-blend"
     fab = cave.bind(code, attrs)
     if fab:
         name = PREFIX + fab[len(CAVE_PREFIX):] if fab.startswith(CAVE_PREFIX) else fab
@@ -241,7 +253,8 @@ def main(argv=None) -> int:
     lines, counts = build_body(actions, human_clips, fab_clips, renames=renames)
     print("human codes read: %d; set body planned: %d codes  (%s)" % (
         len(actions), len(lines),
-        ", ".join("%s %d" % (k, counts[k]) for k in ("fab", "human", "reuse", "inherited", "extra") if k in counts)))
+        ", ".join("%s %d" % (k, counts[k]) for k in ("pose-blend", "fab", "human", "reuse", "inherited", "extra")
+                  if k in counts)))
 
     raw = open(args.live, "rb").read()
     bom = raw.startswith(b"\xef\xbb\xbf")

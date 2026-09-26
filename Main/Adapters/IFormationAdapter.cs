@@ -20,6 +20,9 @@ public interface IFormationAdapter
     float Width { get; }
     float Interval { get; }
 
+    /// <summary>The width each unit is spaced for (<c>Formation.UnitDiameter</c>): 0.76 m for a human, wider for trolls (Patch92).</summary>
+    float UnitDiameter { get; }
+
     /// <summary>Snapshot of every live unit in the formation as <c>(Index, IsRanged)</c>.
     /// Consumers may iterate freely without retaining engine references. Used by
     /// MixedFormations layout assignment and IsMixedFormation classification.</summary>

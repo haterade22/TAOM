@@ -105,7 +105,9 @@ public class SubModule : MBSubModuleBase
     private UIExtender? _uiExtender;
     private ITimeAccelerationService? _timeAccelerationService;
     private static float _shaderTickAccumulator;
-    private static ShaderPrecompileRunner _shaderRunner;
+    // Null unless the Patch21 wiring in OnSubModuleLoad resolves it (commented out while
+    // ShaderPrecompilation is parked); the explicit initializer keeps CS0649 quiet meanwhile.
+    private static ShaderPrecompileRunner _shaderRunner = null;
     private static bool _missionTimePatchesApplied;
     private static bool _gameInitPatchesApplied;
     private static bool _basicTableauGuardApplied;
@@ -524,12 +526,14 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<ISideCommanderFilter>(),
             logger);
 
-        // Patch21_ShaderPrecompilation (re-enabled 2026-09-11, #560): mirrors the shader walk's status
-        // line onto the loading screen (LoadingWindowViewModel.Update); the postfix returns immediately
-        // unless a walk is active.
-        TryPatchCategory("Patch21_ShaderPrecompilation");
-        _shaderRunner = IoC.Resolve<ShaderPrecompileRunner>();
-        ShaderPrecompilationIoC.InitializeHooks(logger, _shaderRunner);
+        // Patch21_ShaderPrecompilation: PARKED 2026-09-25 with the main-menu option (see
+        // OnBeforeInitialModuleScreenSetAsRoot). Its only member postfixes LoadingWindowViewModel.Update
+        // to copy a running walk's status line into DescriptionText; vanilla calls Update every frame
+        // from a global layer's OnLateTick, so with no walk reachable it would run every frame for nothing.
+        // _shaderRunner stays null; OnApplicationTick null-guards it.
+        // TryPatchCategory("Patch21_ShaderPrecompilation");
+        // _shaderRunner = IoC.Resolve<ShaderPrecompileRunner>();
+        // ShaderPrecompilationIoC.InitializeHooks(logger, _shaderRunner);
 
         TryPatchCategory("Patch22_ArmyTargeting");
         // Patch49: Finalizer guarding vanilla Army.FindBestGatheringSettlementAndMoveTheLeader,
@@ -558,6 +562,9 @@ public class SubModule : MBSubModuleBase
         // with it. A read-only instrument must never be able to disable gameplay patches.
         TryPatchCategory("Patch68_EconomyDiagnostics");
         TryPatchCategory("Patch30_MixedFormations");
+        // Patch92: troll formations spaced for trolls (Formation.UnitDiameter getter postfix, fed by
+        // TrollBruteForceMissionBehavior). Inert until a formation is at least a tenth trolls.
+        TryPatchCategory("Patch92_TrollFormationSpacing");
         // Patch63 — guarded reimplementation of BannerBearerLogic.SpawnBannerBearer (issue #360):
         // the engine's reinforcement bearer spawn reads the new agent's ExtraWeaponSlot native
         // entity with no check and AVs when the banner never made it into the slot (validating
@@ -736,35 +743,38 @@ public class SubModule : MBSubModuleBase
         //     IoC.Resolve<IModLogger>().LogInfo(
         //         "[NativeSkinFixes] disabled (MCM 'Enable Native Skin Fixes' is off) — engine rendering is vanilla");
 
-        // Pre-compile Shaders (re-enabled 2026-09-11, #560; parked 2026-08-20 to 2026-09-11): this
-        // AddInitialStateOption call is the feature's ONLY entry point into ShaderPrecompileRunner.Begin().
-        // Registered once per process. The walk is the character batches by default; scene passes are
-        // the MCM opt-in read inside Begin(). See docs/features/shader-precompilation.md.
-        if (Module.CurrentModule.GetInitialStateOptionWithId("TaomPrecompileShaders") == null)
-        {
-            Module.CurrentModule.AddInitialStateOption(new InitialStateOption(
-                id:                  "TaomPrecompileShaders",
-                name:                new TextObject("{=taom_precompile_shaders}Pre-compile Shaders"),
-                orderIndex:          100,
-                action:              () => InformationManager.ShowInquiry(new InquiryData(
-                    new TextObject("{=taom_precompile_inquiry_title}Shader Pre-compilation").ToString(),
-                    // {newline} is a GameTexts variable bound only once a Game has initialized; at the cold
-                    // main menu it would expand to nothing, so it is bound here before ToString().
-                    new TextObject("{=taom_precompile_inquiry_body}Loads a series of hidden battles containing the troops, lords and battle equipment of TAOM and the base game, so their shaders are compiled now instead of during your first battle against each culture.{newline}{newline}This takes a while: expect 20 to 70 minutes on a fresh shader cache. Leave the game running and do not start another battle; progress shows on the loading screen and as a status line. Hold Ctrl+Shift+K at any time to cancel.{newline}{newline}The game clears its compiled shaders whenever your module list changes, so run this again after adding, removing or reordering mods.{newline}{newline}Scene passes (terrain and atmosphere shaders for TAOM's own battle scenes) are off by default because they crash some GPUs. Turn them on under Mod Options, TAOM, Graphics/Shader Precompilation if you want them.{newline}{newline}When you see 'Shader pre-compilation COMPLETE', you can play.")
-                        .SetTextVariable("newline", "\n").ToString(),
-                    true, true, "Start", "Cancel",
-                    () =>
-                    {
-                        _shaderTickAccumulator = 0f;
-                        _shaderRunner?.Begin();
-                    },
-                    () => InformationManager.HideInquiry())),
-                isDisabledAndReason: () => (false, new TextObject("")),
-                enabledHint:         new TextObject("{=taom_precompile_hint}Pre-compiles the troop and equipment shaders so first battles do not stutter or stall. Re-run after any change to your mod list: the game clears its compiled shaders when the module list changes."),
-                // Hidden live when the MCM master toggle is off (no relaunch needed). Defaults to shown
-                // if settings aren't resolvable yet. The scene-pass toggle is read inside Begin().
-                isHidden:            () => !(Features.TaomSettings.Instance?.EnableShaderPrecompilation ?? true)));
-        }
+        // Pre-compile Shaders: PARKED again 2026-09-25 (more problems than it is worth for now; earlier
+        // park 2026-08-20 to 2026-09-11, #560). This AddInitialStateOption call is the feature's ONLY
+        // entry point into ShaderPrecompileRunner.Begin(), so with it commented out no walk can start.
+        // Re-enabling: uncomment this block, the Patch21 wiring in OnSubModuleLoad, and the
+        // two MCM attribute stacks in TaomSettings.cs. The MCM master toggle cannot do the park on its
+        // own: TaomSettings persists as json2, so existing installs keep true on disk.
+        // See docs/features/shader-precompilation.md.
+        // if (Module.CurrentModule.GetInitialStateOptionWithId("TaomPrecompileShaders") == null)
+        // {
+        //     Module.CurrentModule.AddInitialStateOption(new InitialStateOption(
+        //         id:                  "TaomPrecompileShaders",
+        //         name:                new TextObject("{=taom_precompile_shaders}Pre-compile Shaders"),
+        //         orderIndex:          100,
+        //         action:              () => InformationManager.ShowInquiry(new InquiryData(
+        //             new TextObject("{=taom_precompile_inquiry_title}Shader Pre-compilation").ToString(),
+        //             // {newline} is a GameTexts variable bound only once a Game has initialized; at the cold
+        //             // main menu it would expand to nothing, so it is bound here before ToString().
+        //             new TextObject("{=taom_precompile_inquiry_body}Loads a series of hidden battles containing the troops, lords and battle equipment of TAOM and the base game, so their shaders are compiled now instead of during your first battle against each culture.{newline}{newline}This takes a while: expect 20 to 70 minutes on a fresh shader cache. Leave the game running and do not start another battle; progress shows on the loading screen and as a status line. Hold Ctrl+Shift+K at any time to cancel.{newline}{newline}The game clears its compiled shaders whenever your module list changes, so run this again after adding, removing or reordering mods.{newline}{newline}Scene passes (terrain and atmosphere shaders for TAOM's own battle scenes) are off by default because they crash some GPUs. Turn them on under Mod Options, TAOM, Graphics/Shader Precompilation if you want them.{newline}{newline}When you see 'Shader pre-compilation COMPLETE', you can play.")
+        //                 .SetTextVariable("newline", "\n").ToString(),
+        //             true, true, "Start", "Cancel",
+        //             () =>
+        //             {
+        //                 _shaderTickAccumulator = 0f;
+        //                 _shaderRunner?.Begin();
+        //             },
+        //             () => InformationManager.HideInquiry())),
+        //         isDisabledAndReason: () => (false, new TextObject("")),
+        //         enabledHint:         new TextObject("{=taom_precompile_hint}Pre-compiles the troop and equipment shaders so first battles do not stutter or stall. Re-run after any change to your mod list: the game clears its compiled shaders when the module list changes."),
+        //         // Hidden live when the MCM master toggle is off (no relaunch needed). Defaults to shown
+        //         // if settings aren't resolvable yet. The scene-pass toggle is read inside Begin().
+        //         isHidden:            () => !(Features.TaomSettings.Instance?.EnableShaderPrecompilation ?? true)));
+        // }
     }
 
     public override void OnGameEnd(Game game)
@@ -1264,8 +1274,9 @@ public class SubModule : MBSubModuleBase
         // BannerBearers: the engine's BannerBearerLogic already runs in every field battle,
         // sally-out and siege — this model supplies TAOM's policy (bearers per formation, the
         // race gate, an unarmed-bearer backstop). Resolved through MissionGameModels, which
-        // takes the LAST registered model, so ours wins over SandBox's. Campaign-only: Custom
-        // Battle builds CustomBattleBannerBearersModel off a BasicGameStarter and is unaffected.
+        // takes the LAST registered model, so ours wins over SandBox's. Custom Battle builds
+        // CustomBattleBannerBearersModel off a BasicGameStarter; RegisterCustomBattleModels adds the
+        // race gate there (TaomCustomBattleBannerBearersModel), so no troll carries a standard.
         campaignStarter.AddModel<BattleBannerBearersModel>(new TaomBattleBannerBearersModel(
             IoC.Resolve<Features.BannerBearers.IBannerBearerService>()));
         // Enlistment (#576): the #443 army join makes MapEvent.IsPlayerSergeant() true, which is
@@ -1285,8 +1296,8 @@ public class SubModule : MBSubModuleBase
     /// Custom Battle (and the editor's test battle) hand a BasicGameStarter here after the game
     /// type has added its own models (CustomGame.OnInitialize: InitializeGameModels, then
     /// GameManager.OnGameStart), so a model added now is the one MissionGameModels resolves.
-    /// Only the culture doctrine's mission-side models are mirrored: they are what the Custom
-    /// Battle A/B measures. Every other TAOM model stays campaign-only.
+    /// Mirrored: the culture doctrine's mission-side models (what the Custom Battle A/B measures)
+    /// and the banner bearers' race gate. Every other TAOM model stays campaign-only.
     /// </summary>
     private static void RegisterCustomBattleModels(IGameStarter gameStarterObject)
     {
@@ -1296,6 +1307,9 @@ public class SubModule : MBSubModuleBase
         // CombatMechanics (#610): the Custom Battle slot carries the mount charge multiplier too.
         basicStarter.AddModel<AgentStatCalculateModel>(new TaomCustomBattleAgentStatCalculateModel(
             IoC.Resolve<ICultureAggressionService>(), IoC.Resolve<Features.CombatMechanics.IChargeDamageService>()));
+        // BannerBearers: trolls never carry a standard, in Custom Battle too (race gate only).
+        basicStarter.AddModel<BattleBannerBearersModel>(new TaomCustomBattleBannerBearersModel(
+            IoC.Resolve<Features.BannerBearers.IBannerBearerService>()));
     }
 
     // Campaign-life behaviors: startup resources, companions, inventory/equipment QoL, fief +

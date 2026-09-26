@@ -131,7 +131,7 @@ The rest of the module is one folder per feature. Two of those folders carry eng
 | `named_companions/named_companions.xml` | `SubModule.xml:781`, id `NPCCharacters` | `CharacterObject`; resolved by `NamedCompanionService` | the named lore companions ([wanderers-and-named-companions](wanderers-and-named-companions.md)) | hand | repo |
 | `named_companions/named_companion_strings.xml` | `SubModule.xml:890`, id `GameText` | `GameTextManager` | their names and bios | the translation pipeline | repo |
 | `VoiceDefinitions/LOTR/lotr_warg_voice_def.xml` | `project.mbproj`, id `soln_voice_definitions` | native voice loader | warg voice-line set | hand | repo |
-| `shader_precompilation/precompile_scenes.txt` | C#: `PrecompileSceneProvider.cs:16` | `PrecompileSceneProvider` | the scene list the shader walk opens when the MCM opt-in `EnableShaderPrecompileScenePasses` is on; off by default, the character batches need no scene list ([shader-precompilation](../features/shader-precompilation.md)) | hand | repo |
+| `shader_precompilation/precompile_scenes.txt` | C#: `PrecompileSceneProvider.cs:16` | `PrecompileSceneProvider` | the scene list the shader walk would open when the MCM opt-in `EnableShaderPrecompileScenePasses` is on; the feature is parked and disabled at the wiring level ([shader-precompilation](../features/shader-precompilation.md)) | hand | repo, parked |
 
 ### Languages/
 

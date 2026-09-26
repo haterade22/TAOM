@@ -27,6 +27,21 @@ public sealed class TrollBruteForceService : ITrollBruteForceService
             && facingDot > FacingDot;
     }
 
+    public float TrollWidth(string? monsterId, float agentScale)
+    {
+        if (monsterId is null || !ShoulderWidthByMonster.TryGetValue(monsterId, out float shoulders)) return 0f;
+        if (!FiniteFloatValidator.IsFinite(agentScale) || !(agentScale > 0f)) return 0f;
+        return shoulders * agentScale;
+    }
+
+    public float? FormationUnitDiameter(float vanillaDiameter, int unitCount, int trollCount, float widestTroll)
+    {
+        if (unitCount <= 0 || trollCount <= 0 || !((float)trollCount / unitCount >= FormationShare)) return null;
+        if (!FiniteFloatValidator.IsFinite(vanillaDiameter) || !(vanillaDiameter > 0f)) return null;
+        if (!FiniteFloatValidator.IsFinite(widestTroll) || !(widestTroll > vanillaDiameter)) return null;
+        return Math.Min(widestTroll, MaxFormationUnitWidth);
+    }
+
     public float BodySize(float agentScale, float standingEyeHeight) =>
         FiniteFloatValidator.IsFinite(standingEyeHeight) && standingEyeHeight > 0f
             ? agentScale * (standingEyeHeight / ReferenceEyeHeight)

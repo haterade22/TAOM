@@ -284,7 +284,7 @@ Two things came out of it:
 
 Cause, not symptom: the shader cache is what makes this rare or constant, and v1.4.8 deletes the
 local cache after **any** module-list change. See [shader-precompilation.md](shader-precompilation.md):
-this bundle is the counter-evidence that un-parked the walk (#560, 2026-09-11).
+this bundle is the counter-evidence that un-parked the walk (#560, 2026-09-11). The walk was parked again 2026-09-25, so do not point a player at it.
 
 ### The loading window + stall watchdog
 
@@ -340,7 +340,7 @@ thread-pool thread. `BattleLoadLoadingWindow.Enter()` resets the probe, so a sta
 previous mission cannot defer the next one. A fired bundle's message now carries `shaders=N`, so the
 reading the decision was made on is in the artifact.
 
-**Precompile suppression.** The watchdog honors a static `SuppressStallDetection` flag (`BattleLoadStallWatchdog.cs:38`): `Poll` early-returns while it is set (line 67), because a shader-precompile walk intentionally drives multi-minute cold-cache loads that would otherwise trip the 300 s threshold and emit a spurious crash bundle (false-positive found in a user's cold run, 2026-06-18). The flag is raised for the duration of a precompile walk; see [shader-precompilation.md](shader-precompilation.md).
+**Precompile suppression.** The watchdog honors a static `SuppressStallDetection` flag (`BattleLoadStallWatchdog.cs`): `Poll` early-returns while it is set, because a shader-precompile walk intentionally drives multi-minute cold-cache loads that would otherwise trip the 300 s threshold and emit a spurious crash bundle (false-positive found in a user's cold run, 2026-06-18). The flag is raised for the duration of a precompile walk; while the walk is parked (since 2026-09-25) nothing raises it. See [shader-precompilation.md](shader-precompilation.md).
 
 ### Scope: instruments ALL mission loads, by design
 
