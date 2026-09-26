@@ -103,6 +103,25 @@ folder other than the default only when -SkeletonGuid is passed explicitly, and 
 lists each EMPTY master the index needs as UNWIRED, refuses to write, and fails -Verify; run
 wire_anim_master_skeletons.ps1 -SkeletonGuid <rig> -BoneNum 28 first. After -Apply the written clips are re-read and the item checksums fixed; any failure there, a wiring
 failure or python missing exits 1.
+The melee attack table key (2026-09-26): a release or blocked action on a clip with no row in the engine's melee attack
+table crashes (TaleWorlds.Native.dll +0x6590B9). A clip gets a row only when its Kit "Blends with animation" box
+(TpacTool UnknownClipName, engine +0xD8) holds its own name, or through the ten blend children the Kit generates toward
+a _balanced twin (docs/features/troll-race.md, "The swing CTD"). So a clone of a KEYED vanilla template (UnknownClipName
+set, self-keyed or twin-keyed, or ClipSource1Name set, a generated child) is written SELF-KEYED: UnknownClipName = the
+clone's own name, "Blends with action" (BlendsWithAction) empty as on all 175 vanilla self-keyed clips, ClipSource1Name
+and ClipSource2Name blank, GeneratedIndex -1. A troll clip never names a vanilla parent or twin: a generated child fills
+a slot of its parent's row, so that would change every human's attack. Both paths refuse a clone name over 63
+characters as TOO LONG before keying it, never truncated: the name is the row key, and both are 64-byte buffers. A
+clone of an unkeyed template keeps UnknownClipName, ClipSource1Name and ClipSource2Name blank, as before. Both paths
+apply the rule (Set-ClipKey, which only sets the fields), read a template's keying from the vanilla table as loaded
+(the Fab path mutates one shared template per clip type), and mark a keyed clip KEYED in the dry-run rows. Both
+-Verify modes fail a clip as KEY when it breaks the rule (Get-ClipKeyFault).
+It is the edit tools/set_clip_balance_name.py made by hand to the 30 two-handed release and blocked hill troll clips on
+2026-09-26, so a re-cut keeps it. A re-cut still writes each package with a fresh GUID and NO RuntimeDataCache entry,
+which the engine skips until the Kit saves it, and which set_clip_balance_name.keyed_clips (the binder's rule 0 and
+wire_hill_troll_race.py --check) does not count as keyed: after -Apply, save each new package in the Kit, then run
+python tools/check_rdc_entries.py --under "Race Test/Mordor/Trolls". Tests: tools/tests/test_gen_troll_anim_clips.py
+(the rule's functions, lifted out of this file by the PowerShell parser).
 #>
 $ErrorActionPreference = 'Stop'
 Add-Type -Path "$TpacBin\TpacTool.Lib.dll"
@@ -191,10 +210,51 @@ if ($foreign.Count -gt 0) {
 # range such as blocked_slashright_2h 110..1 stays reversed), its facial id cleared (no facial rig on the troll), and
 # its loop or death displacement scaled by -TravelScale. Several clips share one master, as in vanilla. -Verify checks
 # the clips on disk against the index instead of the whole-master rule below.
-# ---- vanilla clip table: the templates both modes copy from
+# ---- the melee attack table key (see header)
+function Test-KeyedTemplate($tpl) { return [bool]($tpl.UnknownClipName -or $tpl.ClipSource1Name) }
+# keys the clone $c as $newName; only sets fields. Both callers refuse a name over 63 characters first (the name is the key)
+function Set-ClipKey($c, [string]$newName, [bool]$keyed) {
+  if ($keyed) { $c.UnknownClipName = $newName; $c.BlendsWithAction = ''; $c.GeneratedIndex = [sbyte]-1 }
+  else { $c.UnknownClipName = '' }
+  $c.ClipSource1Name = ''; $c.ClipSource2Name = ''
+}
+# -Verify's half: '' when a clip on disk carries the key its template calls for, else what is wrong
+function Get-ClipKeyFault($cl, [bool]$keyed) {
+  if ($keyed) {
+    if ($cl.UnknownClipName -cne $cl.Name) { return ("keyed template, but UnknownClipName is '{0}' (want its own name)" -f $cl.UnknownClipName) }
+    if ($cl.BlendsWithAction -or $cl.ClipSource1Name -or $cl.ClipSource2Name -or $cl.GeneratedIndex -ne -1) {
+      return ("self-keyed, but BlendsWithAction '{0}' ClipSource1Name '{1}' ClipSource2Name '{2}' GeneratedIndex {3} (want blank, blank, blank, -1)" -f $cl.BlendsWithAction, $cl.ClipSource1Name, $cl.ClipSource2Name, $cl.GeneratedIndex)
+    }
+  } elseif ($cl.UnknownClipName -or $cl.ClipSource1Name -or $cl.ClipSource2Name) {
+    return ("unkeyed template, but UnknownClipName '{0}' ClipSource1Name '{1}' ClipSource2Name '{2}' (want all blank)" -f $cl.UnknownClipName, $cl.ClipSource1Name, $cl.ClipSource2Name)
+  }
+  return ''
+}
+
+# ---- vanilla clip table: the templates both modes copy from, and each one's keying as loaded
 $van = Load $Vanilla
 $vclips = @{}
-foreach ($it in $van.Package.Items) { if ($it.GetType().Name -eq 'AnimationClip') { $vclips[$it.Name] = $it } }
+$vkeyed = @{}
+foreach ($it in $van.Package.Items) { if ($it.GetType().Name -eq 'AnimationClip') { $vclips[$it.Name] = $it; $vkeyed[$it.Name] = Test-KeyedTemplate $it } }
+
+# ---- the Fab path's vanilla templates (clip type -> vanilla clip); its -Verify needs them too
+$TEMPLATE = @{
+  walk = 'walk_forward_unarmed'; run = 'run_forward_unarmed'; turn = 'turn_unarmed'; idle = 'troop_stand_unarmed_1'
+  hit = 'strike_chest_front'; death = 'death_fall_front'; attack = 'taunt_afraid'; emote = 'taunt_afraid'
+}
+function TypeOf($clip) {
+  $n = $clip -replace ('^' + [regex]::Escape($ClipPrefix)), ''
+  if ($n -match 'death') { return 'death' }
+  if ($n -match 'hit_') { return 'hit' }
+  if ($n -match 'attack') { return 'attack' }
+  if ($n -match 'interactive') { return 'emote' }
+  if ($n -match '^(combat_)?idle\d$') { return 'idle' }
+  if ($n -match 'walk_turn') { return 'walk' }
+  if ($n -match 'turn_') { return 'turn' }
+  if ($n -match 'run') { return 'run' }
+  if ($n -match 'walk') { return 'walk' }
+  return 'emote'   # idle_to_combat, combat_to_idle: stance transitions, one-shot, lock_movement
+}
 
 if ($CloneByName) {
   if (-not $ClipsIndex) { throw "-CloneByName needs -ClipsIndex <clips_index.json written by read_anim_keyframes_tpac.ps1 -ByClip>" }
@@ -223,7 +283,7 @@ if ($CloneByName) {
   foreach ($u in $unwired) { Write-Output ("UNWIRED {0}: EMPTY skeleton; run wire_anim_master_skeletons.ps1 -SkeletonGuid {1} -BoneNum 28 first" -f $u, $SKEL) }
   if ($unwired.Count -gt 0 -and -not $Verify) { Write-Output "REFUSED: masters are not wired to a skeleton"; exit 1 }
   if ($Verify) {
-    $ok = 0; $bad = 0; $other = 0; $byGuid = @{}; $seen = @{}
+    $ok = 0; $bad = 0; $other = 0; $selfKeyed = 0; $byGuid = @{}; $seen = @{}
     foreach ($mm in $masterMap.Values) { $byGuid["$($mm.guid)"] = $mm }
     foreach ($f in ([IO.Directory]::GetFiles($Masters, ($ClipPrefix + '*_anm.tpac')) | Sort-Object)) {
       $cl = (Load $f).Package.Items | Where-Object { $_.GetType().Name -eq 'AnimationClip' } | Select-Object -First 1
@@ -239,15 +299,19 @@ if ($CloneByName) {
       if ([math]::Abs([double]$cl.Source1 - $want1) -gt 0.01 -or [math]::Abs([double]$cl.Source2 - $want2) -gt 0.01 -or [math]::Max($want1, $want2) -gt $mm.frames - 1) {
         $bad++; Write-Output ("RANGE  {0} -> {1}..{2}, want {3}..{4} within master frames {5}" -f $cl.Name, $cl.Source1, $cl.Source2, $want1, $want2, $mm.frames); continue
       }
+      $keyed = [bool]$vkeyed[$clipName]
+      $why = Get-ClipKeyFault $cl $keyed
+      if ($why) { $bad++; Write-Output ("KEY    {0} -> {1}" -f $cl.Name, $why); continue }
+      if ($keyed) { $selfKeyed++ }
       $ok++
     }
     $refused = @($index.Keys | Where-Object { -not $seen.ContainsKey($_) -and (IsRefusedByDesign $_) } | Sort-Object)
     foreach ($r in $refused) { Write-Output ("REFUSED BY DESIGN {0}: its vanilla range runs past master {1}" -f $r, $ourMasterOf[$r]) }
     $absent = $index.Count - $ok - $bad - $refused.Count
-    Write-Output ("verify (clone-by-name): clips ok={0} bad={1} missing={2} refused-by-design={3} unwired masters={4} of index {5}   other pipeline's clips skipped={6}" -f $ok, $bad, $absent, $refused.Count, $unwired.Count, $index.Count, $other)
+    Write-Output ("verify (clone-by-name): clips ok={0} (self-keyed={7}) bad={1} missing={2} refused-by-design={3} unwired masters={4} of index {5}   other pipeline's clips skipped={6}" -f $ok, $bad, $absent, $refused.Count, $unwired.Count, $index.Count, $other, $selfKeyed)
     if ($bad + $noAnim + $unwired.Count -gt 0 -or $absent -gt 0) { exit 1 } else { exit 0 }
   }
-  $rows = @(); $written = 0; $skipped = 0; $missing = 0; $refusedByDesign = 0
+  $rows = @(); $written = 0; $skipped = 0; $missing = 0; $refusedByDesign = 0; $keyedPlanned = 0
   foreach ($clipName in ($index.Keys | Sort-Object)) {
     $info = $index[$clipName]
     $ourMaster = $ourMasterOf[$clipName]
@@ -261,13 +325,15 @@ if ($CloneByName) {
     if ($newName.Length -gt 63) { $missing++; Write-Output ("TOO LONG {0} ({1} chars): the engine's clip name is a fixed-size(64) string; add it to -Renames" -f $newName, $newName.Length); continue }
     $out = Join-Path $Masters ($newName + '_anm.tpac')
     $c = $tpl
+    $keyed = [bool]$vkeyed[$clipName]
+    Set-ClipKey $c $newName $keyed
+    if ($keyed) { $keyedPlanned++ }
     $c.Name = $newName
     $c.Guid = [Guid]::NewGuid()
     $c.Animation = [Guid]$m.guid
     $c.Source1 = [float]$s1
     $c.Source2 = [float]$s2
     $c.FacialAnimationId = ''
-    $c.ClipSource1Name = ''; $c.ClipSource2Name = ''; $c.UnknownClipName = ''
     $usageNote = ''
     if ($TravelScale -gt 0) {
       foreach ($u in $c.ClipUsages) {
@@ -280,7 +346,7 @@ if ($CloneByName) {
       }
     }
     $flags = ($c.Flags | ForEach-Object { "$_" }) -join ','
-    $rows += ("{0,-44} <- {1,-44} s={2}..{3} dur={4,-5} pri={5,-3} {6} flags=[{7}]" -f $newName, $ourMaster, $c.Source1, $c.Source2, $c.Duration, $c.Priority, $usageNote, $flags)
+    $rows += ("{0,-44} <- {1,-44} s={2}..{3} dur={4,-5} pri={5,-3} {6} flags=[{7}]{8}" -f $newName, $ourMaster, $c.Source1, $c.Source2, $c.Duration, $c.Priority, $usageNote, $flags, $(if ($keyed) { ' KEYED' } else { '' }))
     if ($Apply) {
       if (Test-Path $out) { $skipped++; continue }
       $c.TypelessDataSegments.Clear(); $c.UnknownDependences.Clear()
@@ -292,7 +358,7 @@ if ($CloneByName) {
     }
   }
   $rows | ForEach-Object { Write-Output $_ }
-  Write-Output ("clips planned: {0}   unresolved: {1}   refused-by-design: {2}   MODE = {3}   written={4} skipped-existing={5}" -f $rows.Count, $missing, $refusedByDesign, $(if ($Apply) { 'APPLY' } else { 'DRY-RUN (no writes)' }), $written, $skipped)
+  Write-Output ("clips planned: {0} (self-keyed: {6})   unresolved: {1}   refused-by-design: {2}   MODE = {3}   written={4} skipped-existing={5}" -f $rows.Count, $missing, $refusedByDesign, $(if ($Apply) { 'APPLY' } else { 'DRY-RUN (no writes)' }), $written, $skipped, $keyedPlanned)
   $failed = 0
   if ($Apply) { $failed = Confirm-WrittenClips }
   if ($missing + $failed -gt 0) { exit 1 } else { exit 0 }
@@ -302,7 +368,7 @@ if ($CloneByName) {
 if ($Verify) {
   $byGuid = @{}
   foreach ($m in $masterMap.Values) { $byGuid["$($m.guid)"] = $m }
-  $ok = 0; $stale = 0; $orphan = 0; $other = 0
+  $ok = 0; $stale = 0; $orphan = 0; $other = 0; $keyBad = 0
   foreach ($f in ([IO.Directory]::GetFiles($Masters, ($ClipPrefix + '*_anm.tpac')) | Sort-Object)) {
     $cl = (Load $f).Package.Items | Where-Object { $_.GetType().Name -eq 'AnimationClip' } | Select-Object -First 1
     # clone-by-name clips (human-sourced masters) share the folder and keep sub-ranges: not this rule's
@@ -310,12 +376,14 @@ if ($Verify) {
     $key = "$($cl.Animation)"
     if ($null -eq $cl -or -not $byGuid.ContainsKey($key)) { $orphan++; Write-Output ("ORPHAN {0,-40} -> master GUID {1} not on disk" -f [IO.Path]::GetFileName($f), $key); continue }
     $m = $byGuid[$key]
+    $why = Get-ClipKeyFault $cl ([bool]$vkeyed[$TEMPLATE[(TypeOf $cl.Name)]])
+    if ($why) { $keyBad++; Write-Output ("KEY    {0,-40} -> {1}" -f $cl.Name, $why); continue }
     if ([int]$cl.Source2 -ne $m.frames - 1) { $stale++; Write-Output ("STALE  {0,-40} -> Source2={1}, master Duration={2} (want {3})" -f $cl.Name, $cl.Source2, $m.frames, ($m.frames - 1)) }
     else { $ok++ }
   }
   $mine = @($masterMap.Keys | Where-Object { $nameMap.ContainsKey('cave_' + $_) -or $clipStem.ContainsKey($_) }).Count
-  Write-Output ("verify: clips ok={0} stale={1} orphan={2}   masters without a clip={3}   other pipeline's clips skipped={4}" -f $ok, $stale, $orphan, ($mine - $ok - $stale), $other)
-  if ($stale + $orphan + $noAnim -gt 0) { exit 1 } else { exit 0 }
+  Write-Output ("verify: clips ok={0} stale={1} orphan={2} key={5}   masters without a clip={3}   other pipeline's clips skipped={4}" -f $ok, $stale, $orphan, ($mine - $ok - $stale - $keyBad), $other, $keyBad)
+  if ($stale + $orphan + $keyBad + $noAnim -gt 0) { exit 1 } else { exit 0 }
 }
 
 # ---- skeleton wiring (in-place 16-byte patch, see header)
@@ -360,30 +428,12 @@ foreach ($mname in ($masterMap.Keys | Sort-Object)) {
 }
 Write-Output ("skeleton wiring: {0} masters {1}, {2} failed" -f $wired, $(if ($Apply) { 'patched + re-read OK' } else { 'would be patched (offset found)' }), $wireFail)
 
-# ---- vanilla templates (the clip table itself is loaded above the -CloneByName block, which needs it too)
-$TEMPLATE = @{
-  walk = 'walk_forward_unarmed'; run = 'run_forward_unarmed'; turn = 'turn_unarmed'; idle = 'troop_stand_unarmed_1'
-  hit = 'strike_chest_front'; death = 'death_fall_front'; attack = 'taunt_afraid'; emote = 'taunt_afraid'
-}
+# ---- vanilla templates ($TEMPLATE and TypeOf are defined above the -CloneByName block, beside the clip table)
 foreach ($k in @($TEMPLATE.Keys)) {
   if (-not $vclips.ContainsKey($TEMPLATE[$k])) {
     $alt = $vclips.Keys | Where-Object { $_ -like ($TEMPLATE[$k].Split('_')[0] + '*') } | Sort-Object | Select-Object -First 1
     Write-Output ("TEMPLATE MISSING {0} -> {1}; nearest: {2}" -f $k, $TEMPLATE[$k], $alt)
   }
-}
-
-function TypeOf($clip) {
-  $n = $clip -replace ('^' + [regex]::Escape($ClipPrefix)), ''
-  if ($n -match 'death') { return 'death' }
-  if ($n -match 'hit_') { return 'hit' }
-  if ($n -match 'attack') { return 'attack' }
-  if ($n -match 'interactive') { return 'emote' }
-  if ($n -match '^(combat_)?idle\d$') { return 'idle' }
-  if ($n -match 'walk_turn') { return 'walk' }
-  if ($n -match 'turn_') { return 'turn' }
-  if ($n -match 'run') { return 'run' }
-  if ($n -match 'walk') { return 'walk' }
-  return 'emote'   # idle_to_combat, combat_to_idle: stance transitions, one-shot, lock_movement
 }
 
 function Travel($m) {
@@ -409,7 +459,7 @@ function Set-Flags($clip, [string[]]$names) {
     if ($elem -eq [string]) { $list.Add($n) } else { $list.Add([Enum]::Parse($elem, $n)) }
   }
 }
-$rows = @(); $written = 0; $skipped = 0; $foreign = 0
+$rows = @(); $written = 0; $skipped = 0; $foreign = 0; $tooLong = 0
 foreach ($mname in ($masterMap.Keys | Sort-Object)) {
   $m = $masterMap[$mname]
   $stem = 'cave_' + $mname            # troll_free_idle_0 -> cave_troll_free_idle_0
@@ -422,8 +472,11 @@ foreach ($mname in ($masterMap.Keys | Sort-Object)) {
   $meas = $measTable[$stem]
   $out = Join-Path $Masters ($clipName + '_anm.tpac')
 
+  if ($clipName.Length -gt 63) { $tooLong++; Write-Output ("TOO LONG {0} ({1} chars): the engine's clip name is a fixed-size(64) string; shorten it in -Names" -f $clipName, $clipName.Length); continue }
   # clone by reloading is expensive; mutate the shared template and save immediately (gen.ps1 pattern)
   $c = $tpl
+  $keyed = [bool]$vkeyed[$TEMPLATE[$type]]
+  Set-ClipKey $c $clipName $keyed
   $c.Name = $clipName
   $c.Guid = [Guid]::NewGuid()
   $c.Animation = [Guid]$m.guid
@@ -433,7 +486,6 @@ foreach ($mname in ($masterMap.Keys | Sort-Object)) {
   $c.LeftHandPose = 3; $c.RightHandPose = 3
   if ($type -eq 'attack') { Set-Flags $c @('client_prediction', 'lock_movement', 'enforce_all'); $c.Priority = 60; $c.BlendInPeriod = [float]0.3; $c.BlendOutPeriod = [float]0.3 }
   elseif ($type -eq 'emote') { Set-Flags $c @('lock_movement'); $c.Priority = 64; $c.BlendInPeriod = [float]0.3; $c.BlendOutPeriod = [float]0.3 }
-  $c.ClipSource1Name = ''; $c.ClipSource2Name = ''; $c.UnknownClipName = ''
   # template strings that belong to the human, not the troll: facial ids (no facial rig on the troll
   # head), the emote's 'Fear' voice line and 'afraid' foley, the idle's soldier-armour foley
   $c.FacialAnimationId = ''; $c.VoiceCode = ''; $c.SoundCode = ''
@@ -465,7 +517,7 @@ foreach ($mname in ($masterMap.Keys | Sort-Object)) {
     }
   }
   $flags = ($c.Flags | ForEach-Object { "$_" }) -join ','
-  $rows += ("{0,-38} <- {1,-40} s2={2,-4} dur={3,-5} type={4,-6} pri={5,-3} step=<{6}> {7} cp='{9}' flags=[{8}]" -f $clipName, $mname, $c.Source2, $c.Duration, $type, $c.Priority, $c.StepPoints, $usageNote, $flags, $c.CombatParameterId)
+  $rows += ("{0,-38} <- {1,-40} s2={2,-4} dur={3,-5} type={4,-6} pri={5,-3} step=<{6}> {7} cp='{9}' flags=[{8}]{10}" -f $clipName, $mname, $c.Source2, $c.Duration, $type, $c.Priority, $c.StepPoints, $usageNote, $flags, $c.CombatParameterId, $(if ($keyed) { ' KEYED' } else { '' }))
   if ($Apply) {
     if (Test-Path $out) { $skipped++; continue }
     $c.TypelessDataSegments.Clear(); $c.UnknownDependences.Clear()
@@ -477,9 +529,9 @@ foreach ($mname in ($masterMap.Keys | Sort-Object)) {
   }
 }
 $rows | ForEach-Object { Write-Output $_ }
-Write-Output ("clips planned: {0}   MODE = {1}   written={2} skipped-existing={3}   other pipeline's masters skipped={4}" -f $rows.Count, $(if ($Apply) { 'APPLY' } else { 'DRY-RUN (no writes)' }), $written, $skipped, $foreign)
+Write-Output ("clips planned: {0}   names too long: {5}   MODE = {1}   written={2} skipped-existing={3}   other pipeline's masters skipped={4}" -f $rows.Count, $(if ($Apply) { 'APPLY' } else { 'DRY-RUN (no writes)' }), $written, $skipped, $foreign, $tooLong)
 
 # ---- verify what was written
 $failed = 0
 if ($Apply) { $failed = Confirm-WrittenClips }
-if ($wireFail + $failed -gt 0) { exit 1 } else { exit 0 }
+if ($wireFail + $failed + $tooLong -gt 0) { exit 1 } else { exit 0 }

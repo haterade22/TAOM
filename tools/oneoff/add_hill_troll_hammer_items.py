@@ -25,8 +25,9 @@ must never land before the art does.
 
 Byte-faithful (tools/README.md XML I/O convention): binary read, BOM and line endings kept, every file parsed before it
 is written, a timestamped `.bak-hillhammer-<stamp>` beside each (never an .xml extension), idempotent (a file that
-already carries the hammer's ids is left alone). Dry run by default; `--apply` also refuses while the game or the Kit
-runs.
+already carries the hammer's ids is left alone, except a head weight other than HEAD_WEIGHT, which is a change: a
+restored older backup brings back 1.23 and the Armory is unversioned). Dry run by default; `--apply` also refuses
+while the game or the Kit runs.
 
     python tools/oneoff/add_hill_troll_hammer_items.py            # dry run: what would change
     python tools/oneoff/add_hill_troll_hammer_items.py --apply    # after the Kit import
@@ -131,10 +132,18 @@ def plan():
         nl = "\r\n" if text.count("\r\n") * 2 > text.count("\n") else "\n"
         return path, raw, text, nl
 
-    # 1. crafting pieces: the head after the cave head, the handle after the cave handle
+    # 1. crafting pieces: the head after the cave head, the handle after the cave handle. Once they exist, the head
+    # weight is still read: a restored older backup carries the cave head's 1.23 (23 Blunt, speed 12), and the Armory
+    # is unversioned, so this is the only place that notices
     path, raw, text, nl = load("LOTRLOME_crafting_pieces.xml")
     if 'id="%s"' % HEAD in text:
-        out.append((path, raw, None, "already has the hammer pieces"))
+        start, end, cur = block(text, "CraftingPiece", HEAD)
+        fixed = sub_attr(cur, "weight", HEAD_WEIGHT)
+        if fixed == cur:
+            out.append((path, raw, None, "already has the hammer pieces"))
+        else:
+            old = re.search(r'\bweight="([^"]*)"', cur).group(1)
+            out.append((path, raw, text[:start] + fixed + text[end:], "head weight %s -> %s" % (old, HEAD_WEIGHT)))
     else:
         end_h, head = head_block(text)
         end_g, handle = handle_block(text)

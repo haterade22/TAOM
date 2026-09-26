@@ -313,13 +313,16 @@ class MainTests(unittest.TestCase):
         os.mkdir(self.clips)
         for n in HUMAN | FAB:
             write(os.path.join(self.clips, n + "_anm.tpac"), "x")
+        self.module = tmp                          # rule 0 reads each clip's RuntimeDataCache entry under it
+        os.mkdir(os.path.join(tmp, "RuntimeDataCache"))
 
     def tearDown(self):
         self._tmp.cleanup()
 
     def run_main(self, *extra):
         argv = ["--live", self.live, "--native", self.native, "--clips-index", self.idx,
-                "--fab-names", self.names, "--clips-dir", self.clips, "--renames", ""] + list(extra)
+                "--fab-names", self.names, "--clips-dir", self.clips, "--renames", "",
+                "--module", self.module] + list(extra)
         out, err = io.StringIO(), io.StringIO()
         with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
             rc = bh.main(argv)
@@ -378,15 +381,36 @@ class MainTests(unittest.TestCase):
         self.assertIn("no retargeted clip", err)
         self.assertEqual(self.read_live(), before)
 
-    def test_a_self_keyed_package_on_disk_binds_its_release_code(self):
+    def _put_keyed(self, **kw):
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-        import test_set_clip_balance_name as tp
+        import test_set_clip_balance_name as tp   # skips this test where xxhash is missing
         name = "anim_hill_troll_blocked_slashright_2h"
-        with open(os.path.join(self.clips, name + "_anm.tpac"), "wb") as fh:
-            fh.write(tp.package(name=name, m=tp.meta(field=name, blends_action="")))
+        tp.put(self.clips, self.module, name, tp.meta(field=name, blends_action=""), **kw)
+
+    def test_a_self_keyed_package_the_kit_saved_binds_its_release_code(self):
+        self._put_keyed()
         rc, out, _ = self.run_main()
         self.assertEqual(rc, 0)
         self.assertIn("melee-keyed 1", out)
+
+    def test_a_self_keyed_package_with_no_runtime_data_cache_entry_keeps_the_vanilla_clip(self):
+        # a re-cut writes fresh packages with no entry, and the engine skips those until a Kit save
+        self._put_keyed(entry=False)
+        rc, out, _ = self.run_main()
+        self.assertEqual(rc, 0)
+        self.assertNotIn("melee-keyed", out)
+        self.assertIn("melee-table 1", out)
+
+    def test_a_module_without_a_runtime_data_cache_is_refused(self):
+        # every clip would read as unkeyed and every troll swing would go back to vanilla in a run that reads as clean
+        bare = os.path.join(self._tmp.name, "bare")
+        os.mkdir(bare)
+        before = self.read_live()
+        with mock.patch.object(bh, "game_or_kit_running", return_value=False):
+            rc, _, err = self.run_main("--module", bare, "--apply")
+        self.assertEqual(rc, 2)
+        self.assertIn("RuntimeDataCache", err)
+        self.assertEqual(self.read_live(), before)
 
     def test_apply_refuses_while_the_game_or_kit_runs(self):
         before = self.read_live()

@@ -126,8 +126,10 @@ class GateTests(_Armory):
         # the FBX reader raises struct.error on a cut file and zlib.error on a damaged array: neither is a ValueError
         import struct
         good = self.meshes
+        seen = []
 
         def reader(path):
+            seen.append(os.path.basename(path))
             if path.endswith("hill_troll_a.fbx"):
                 raise struct.error("unpack requires a buffer of 4 bytes")
             return good[DWARF]
@@ -135,6 +137,7 @@ class GateTests(_Armory):
             rc = c.main(["--armory", self.armory], reader=reader)
         self.assertEqual(rc, 1, out.getvalue())
         self.assertIn("hill_troll_a.fbx cannot be read (error)", out.getvalue())
+        self.assertEqual(sorted(seen), ["hill_troll_a.fbx", "sk_dwarf_bm_f1.fbx"], "both FBX were read")
         self.assertNotIn("sk_dwarf_bm_f1", out.getvalue())   # the dwarf was checked and matched
 
     def test_an_unreadable_fbx_fails(self):

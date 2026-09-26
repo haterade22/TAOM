@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using TAOM.Core.Validation;
 using TAOM.Features.SignatureStrikes;
 using static TAOM.Features.TrollBruteForce.TrollBruteForceConfig;
@@ -78,6 +80,14 @@ public sealed class TrollBruteForceService : ITrollBruteForceService
     }
 
     public float OuterRadius(float bodyScale) => TrollBruteForceConfig.OuterRadius * Scale(bodyScale);
+
+    public IReadOnlyList<int> NearestRingVictims(IReadOnlyList<float> distances, int cap) =>
+        Enumerable.Range(0, distances.Count)
+            // float.CompareTo sorts NaN below every number, so a bad distance is dropped here rather than read as nearest.
+            .Where(i => FiniteFloatValidator.IsFiniteAtLeast(distances[i], 0f))
+            .OrderBy(i => distances[i])   // stable: an equal distance keeps the scan order
+            .Take(cap)                    // a cap below 1 takes none
+            .ToList();
 
     // A NaN, infinite, zero or negative scale reads as 1; a huge one is capped so a bad value cannot make the ring
     // swallow the battlefield.

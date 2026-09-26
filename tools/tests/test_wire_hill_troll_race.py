@@ -6,7 +6,9 @@ Pins: every hill_troll skin gets the troll skeleton and meshes and the adult mal
 lists; face textures outside comments point at the troll head material; nothing outside the race changes; the
 Monster gets the measured sizes, CanRide off, and its variants the <race>_<suffix> names the engine looks up;
 the warrior action set becomes standalone on the troll skeleton; a second run changes nothing; a missing anchor is
-refused; --check also fails an empty set, a set the binder never bound and one without the Brute Force binding.
+refused; --check also fails an empty set, a set the binder never bound and one without the Brute Force binding, and a
+troll clip on a melee attack-table code unless its package is self-keyed and Kit-saved; a run that could read no clip
+key says UNVERIFIED (exit 2) instead of claiming a crash.
 """
 import contextlib
 import io
@@ -108,6 +110,14 @@ ACTION_SETS = """<?xml version="1.0" encoding="utf-8"?>
 \t</action_set>
 </action_sets>
 """
+
+
+def _tp():
+    """The clip package builders of test_set_clip_balance_name; importing it skips the calling test where xxhash
+    is missing."""
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import test_set_clip_balance_name as tp
+    return tp
 
 
 def _skin(root, name):
@@ -261,13 +271,30 @@ class CheckModeTests(unittest.TestCase):
             with open(os.path.join(d, name), "wb") as fh:
                 fh.write(text.encode("utf-8"))
 
-    def _check(self, **kw):
+    def _check(self, clips=None, rdc=True, **kw):
+        """A temp module laid out as the install's: ModuleData/ (the --armory folder), RuntimeDataCache/ and the
+        default clips folder, so the derived defaults stay inside it. clips: {clip name: (metadata, has an RDC
+        entry)} written as packages; None leaves the clips folder out."""
         import tempfile
-        with tempfile.TemporaryDirectory() as d:
-            self._armory(d, **kw)
+        with tempfile.TemporaryDirectory() as module:
+            armory = os.path.join(module, "ModuleData")
+            os.mkdir(armory)
+            self._armory(armory, **kw)
+            if rdc:
+                os.mkdir(os.path.join(module, "RuntimeDataCache"))
+            if clips is not None:
+                tp = _tp()
+                folder = os.path.join(module, "Assets", "Race Test", "Mordor", "Trolls", "animations")
+                os.makedirs(folder)
+                for name, (m, entry) in clips.items():
+                    tp.put(folder, module, name, m, entry=entry)
             with contextlib.redirect_stdout(io.StringIO()) as out:
-                rc = w.main(["--armory", d, "--check"])
+                rc = w.main(["--armory", armory, "--check"])
         return rc, out.getvalue()
+
+    @staticmethod
+    def _keyed_meta(name):
+        return _tp().meta(field=name, blends_action="")
 
     def test_check_passes_on_a_wired_armory(self):
         rc, out = self._check(wired=True)
@@ -292,16 +319,55 @@ class CheckModeTests(unittest.TestCase):
         self.assertEqual(rc, 1)
         self.assertIn("bound 0 times", out)
 
-    # The crash invariant: the engine's melee attack table has rows only for vanilla clips, so a release, quick
-    # release, blocked or quick blocked code bound to a troll clip crashes the first swing (+0x6590B9, 2026-09-25).
-    def test_check_fails_when_a_release_code_plays_a_troll_clip(self):
-        body = self.BOUND + ('\t\t<action type="act_release_overswing_2h" '
-                             'animation="anim_hill_troll_release_overswing_2h" />\n')
-        rc, out = self._check(wired=True, body=body)
+    # The crash invariant: the engine's melee attack table has a row only for a clip whose "Blends with animation"
+    # holds its own name (or through the Kit's blend children toward a _balanced twin), so a release, quick release,
+    # blocked or quick blocked code bound to a troll clip that is not self-keyed crashes the first swing (+0x6590B9,
+    # 2026-09-25). The gate reads the keys from the clip packages and their RuntimeDataCache entries.
+    RELEASE = "anim_hill_troll_release_overswing_2h"
+    RELEASE_BODY = BOUND + '\t\t<action type="act_release_overswing_2h" animation="%s" />\n' % RELEASE
+
+    def test_check_fails_when_a_release_code_plays_an_unkeyed_troll_clip(self):
+        rc, out = self._check(wired=True, body=self.RELEASE_BODY, clips={self.RELEASE: (_tp().meta(), True)})
         self.assertEqual(rc, 1, out)
         self.assertIn("'melee_troll_clips': 1", out)
         self.assertIn("+0x6590B9", out)
         self.assertIn("bind_hill_troll_action_set.py --apply", out)
+
+    def test_check_passes_a_self_keyed_troll_clip_the_kit_saved(self):
+        rc, out = self._check(wired=True, body=self.RELEASE_BODY,
+                              clips={self.RELEASE: (self._keyed_meta(self.RELEASE), True)})
+        self.assertEqual(rc, 0, out)
+        self.assertIn("self-keyed troll clips on melee attack-table codes (they have a row): 1", out)
+
+    def test_check_fails_a_self_keyed_troll_clip_with_no_runtime_data_cache_entry(self):
+        # a re-cut writes fresh packages with no entry; the engine skips those until a Kit save
+        rc, out = self._check(wired=True, body=self.RELEASE_BODY,
+                              clips={self.RELEASE: (self._keyed_meta(self.RELEASE), False)})
+        self.assertEqual(rc, 1, out)
+        self.assertIn("RuntimeDataCache", out)
+
+    def test_check_without_the_clips_folder_is_unverified_not_a_crash_claim(self):
+        # the tracked snapshot's derived clips folder does not exist: nothing was read, so nothing is claimed
+        rc, out = self._check(wired=True, body=self.RELEASE_BODY)
+        self.assertEqual(rc, 2, out)
+        self.assertIn("UNVERIFIED", out)
+        self.assertNotIn("+0x6590B9", out)
+
+    def test_check_without_the_runtime_data_cache_folder_is_unverified(self):
+        rc, out = self._check(wired=True, body=self.RELEASE_BODY, rdc=False,
+                              clips={self.RELEASE: (self._keyed_meta(self.RELEASE), False)})
+        self.assertEqual(rc, 2, out)
+        self.assertIn("UNVERIFIED", out)
+        self.assertNotIn("+0x6590B9", out)
+
+    def test_an_unverified_check_still_fails_an_unfilled_set(self):
+        # no keys read, but the XML gaps are still facts
+        body = self.RELEASE_BODY.replace(
+            '\t\t<action type="act_troll_brute_force" animation="anim_hill_troll_attack1" />\n', "")
+        rc, out = self._check(wired=True, body=body)
+        self.assertEqual(rc, 1, out)
+        self.assertIn("UNVERIFIED", out)
+        self.assertIn("bound 0 times", out)
 
     def test_check_passes_when_a_release_code_keeps_the_vanilla_clip(self):
         body = self.BOUND + '\t\t<action type="act_quick_release_overswing_2h" animation="quick_release_overswing_2h" />\n'

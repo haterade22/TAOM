@@ -36,10 +36,15 @@ nothing is written. Idempotent; a missing anchor is refused. --apply writes <fil
 --check also requires the set's body the two follow-up steps write: at least one action, at least one
 anim_hill_troll_* clip and exactly one act_troll_brute_force binding (audit_action_set_parity.py covers the codes);
 and it fails any as_hill_troll_* set that binds a release, quick release, blocked or quick blocked code (the
-binder's MELEE_TABLE) to an anim_* clip, because the engine's melee attack table has rows only for vanilla clips
-and a troll clip there crashes the first swing (TaleWorlds.Native.dll +0x6590B9).
-Exit codes: 0 done (or dry run, or wired), 1 refused (or --check found drift or an unfilled set), 2 the game or the
-Kit runs (or a file is missing).
+binder's MELEE_TABLE) to an anim_* clip that is not self-keyed with a current RuntimeDataCache entry
+(set_clip_balance_name.keyed_clips, reading the packages in --clips-dir and the entries under --module). The engine's
+melee attack table has a row only for a clip whose "Blends with animation" holds its own name, or through the Kit's
+blend children toward a _balanced twin, so an unkeyed troll clip there crashes the first swing
+(TaleWorlds.Native.dll +0x6590B9), and the engine skips a package the Kit has not saved since a re-cut. When troll
+clips sit on those codes but the clips folder or the RuntimeDataCache folder is not there (the tracked snapshot
+without --module), no key was read: it says UNVERIFIED and exits 2, never a crash claim.
+Exit codes: 0 done (or dry run, or wired), 1 refused (or --check found drift, an unfilled set or a troll clip that
+is not self-keyed), 2 the game or the Kit runs, a file is missing, or --check could not read the clip keys.
 """
 import argparse
 import datetime
@@ -320,7 +325,8 @@ def unfilled(report, keyed=frozenset()):
     """The --check findings on the action sets: the standalone set empty, never bound by the binder, or without
     exactly one Brute Force binding (a reinstall that kept the wiring but lost the binder's work reads as wired
     otherwise), and any as_hill_troll_* set binding a melee attack-table code to a troll clip that is not self-keyed
-    (a crash). `keyed` is the self-keyed clips on disk (set_clip_balance_name.keyed_clips): those have a row."""
+    (a crash). `keyed` is the self-keyed, Kit-saved clips on disk (set_clip_balance_name.keyed_clips): those have a
+    row."""
     found = []
     unkeyed = sum(1 for clip in report.get("_melee_clips", ()) if clip not in keyed)
     if not report["actions_now"]:
@@ -333,11 +339,13 @@ def unfilled(report, keyed=frozenset()):
                          % (BRUTE_FORCE_ACTION, report["brute_force"]))
     if unkeyed:
         found.append("%d release, quick release, blocked or quick blocked code(s) in the as_hill_troll_* sets play a "
-                     "troll clip that is not self-keyed: it has no row in the engine's melee attack table, so the "
-                     "first swing crashes (TaleWorlds.Native.dll +0x6590B9). Self-key the clip "
-                     "(tools/set_clip_balance_name.py), or run bind_hill_troll_action_set.py --apply, which keeps "
-                     "the vanilla clip there in %s; in any other set put the vanilla clip back by hand"
-                     % (unkeyed, ACTION_SET))
+                     "troll clip that is not self-keyed, or not saved in the Kit since it was cut (no current "
+                     "RuntimeDataCache entry): an unkeyed clip has no row in the engine's melee attack table, so the "
+                     "first swing crashes (TaleWorlds.Native.dll +0x6590B9), and the engine skips an unsaved package. "
+                     "Self-key the clip (tools/set_clip_balance_name.py) and save it in the Kit "
+                     "(tools/check_rdc_entries.py lists unsaved packages), or run bind_hill_troll_action_set.py "
+                     "--apply, which keeps the vanilla clip there in %s; in any other set put the vanilla clip back "
+                     "by hand" % (unkeyed, ACTION_SET))
     return found
 
 
@@ -345,16 +353,21 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--armory", default=ARMORY, help="the LOTRLOME_Armory ModuleData folder")
     ap.add_argument("--apply", action="store_true")
+    ap.add_argument("--module", default=None,
+                    help="the module root holding the clip packages and RuntimeDataCache/, read by --check "
+                         "(default: the folder above --armory; a run on the tracked snapshot passes the install's "
+                         "LOTRLOME_Armory here)")
     ap.add_argument("--clips-dir", default=None,
                     help="the hill troll clip packages, read by --check to clear self-keyed clips on melee codes "
-                         "(default: <armory>/../Assets/Race Test/Mordor/Trolls/animations)")
+                         "(default: <module>/Assets/Race Test/Mordor/Trolls/animations)")
     ap.add_argument("--check", action="store_true",
                     help="exit 1 if the live Armory is not wired (a reinstall reverts it), 0 if it is, 2 if a "
-                         "file is missing; writes nothing")
+                         "file is missing or the clip keys could not be read; writes nothing")
     args = ap.parse_args(argv)
+    if args.module is None:
+        args.module = os.path.dirname(os.path.abspath(args.armory))
     if args.clips_dir is None:
-        args.clips_dir = os.path.join(os.path.dirname(os.path.abspath(args.armory)), "Assets", "Race Test", "Mordor",
-                                      "Trolls", "animations")
+        args.clips_dir = os.path.join(args.module, "Assets", "Race Test", "Mordor", "Trolls", "animations")
     plan = []
     try:
         for name, fn in (("skins.xml", edit_skins), ("monsters.xml", edit_monsters),
@@ -377,7 +390,17 @@ def main(argv=None):
             print("DRIFT: %s needs %d change(s); the hill troll race is not wired (re-run with --apply)"
                   % (name, changes))
         report = plan[-1][3]
-        keyed = scbn.keyed_clips(args.clips_dir, set(report.get("_melee_clips", ())))
+        melee = set(report.get("_melee_clips", ()))
+        rdc_dir = os.path.join(args.module, "RuntimeDataCache")
+        if melee and not (os.path.isdir(args.clips_dir) and os.path.isdir(rdc_dir)):
+            print("UNVERIFIED: %d troll clip(s) on melee attack-table codes, but %s is not there, so their keys and "
+                  "RuntimeDataCache entries were not read (pass --module, the install's LOTRLOME_Armory)"
+                  % (len(melee), args.clips_dir if not os.path.isdir(args.clips_dir) else rdc_dir))
+            gaps = [] if drift else unfilled(report, melee)   # melee passed as keyed: only the XML gaps count here
+            for gap in gaps:
+                print("UNFILLED: %s" % gap)
+            return 1 if drift or gaps else 2
+        keyed = scbn.keyed_clips(args.clips_dir, melee, args.module)
         if keyed:
             print("self-keyed troll clips on melee attack-table codes (they have a row): %d" % len(keyed))
         gaps = [] if drift else unfilled(report, keyed)

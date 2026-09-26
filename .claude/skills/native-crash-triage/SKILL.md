@@ -95,8 +95,13 @@ and the caller chain with each caller's strings. `--dump` first prints the excep
 and a return-address stack scan of the faulting thread (locating the stack through MemoryList
 when the per-thread descriptor Rva is 0, which is what TW's CrashDumper writes), then chains
 into this same pipeline when the faulting module matches `--dll` — otherwise it prints the
-module + RVA and the rerun hint (`--dll` pointing at a local copy of that module). Hand-decode the few instructions around the
-crash row (the tool shows them); the common patterns:
+module + RVA and the rerun hint (`--dll` pointing at a local copy of that module). Then decompile
+the function with `python tools/native_decompile.py --rva 0x<fault_offset>` (the triage output ends
+with the exact line, also when the RVA is in a leaf function that has no `.pdata` entry, which
+triage cannot bound; `--callers 1` adds the callers' C; the first run on a new binary analyses it
+for minutes, once: [ghidra-native-decompile.md](../../../docs/features/ghidra-native-decompile.md)).
+Read the crash row against the C, and hand-decode the instructions only when Ghidra is absent. The
+common patterns:
 - `cmp [reg+disp], imm` with reg=0 → **null + field-offset** (missing data surface)
 - chain-walk loop (`cmp r10d,[rax]` / `mov rax,[rax+8]`) ending in a deref → **hash-map miss
   dereferencing its end-sentinel** (asserts compiled out of shipping) → a DATA TABLE is missing
@@ -105,8 +110,9 @@ crash row (the tool shows them); the common patterns:
   (the melee-table miss at +0x6590B9 keeps its clip index in `r9`). An in-game enumeration names it:
   log every action whose `MBActionSet.GetAnimationIndexOfAction` equals the key (the removed
   `TrollActionTrace.LogCrashKeys`, `git show 25995dc9:Main/Features/TrollBruteForce/TrollActionTrace.cs`,
-  line 96). Then read the table's BUILDER before changing any data: xref the table global, name the
-  owning class from its vtable's RTTI, and read the insert's condition. It gives the data rule in one
+  line 96). Then read the table's BUILDER before changing any data: xref the table global and name
+  the owning class from its vtable's RTTI (`tools/native_sig_author.py xref` / `rtti`), then read the
+  insert's condition in the builder's C (`native_decompile.py --rva <builder>`). It gives the data rule in one
   read, where crash-by-crash guessing does not (the melee table's rule, the Kit's "Blends with
   animation" box, TpacTool's `UnknownClipName`:
   [bannerlord-animation-system-map.md](../../../docs/reference/bannerlord-animation-system-map.md) section 3).

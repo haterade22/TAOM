@@ -2891,3 +2891,42 @@ stop. Nothing shipped wrong: the tool ran against a package with the exact names
   `bo_` body). Test such a check with a package holding only the near-miss name (`bo_..._head_a`), which it must refuse.
 - **Source:** 2026-09-26 tooling review, finding F1; `tools/oneoff/add_hill_troll_hammer_items.py` package check;
   `tools/validate_mesh_refs.py` `scan_tpac_metameshes`.
+
+### A JVM hosted inside the Microsoft Store Python writes into the Store's sandbox, not AppData (2026-09-26)
+PyGhidra runs Ghidra's JVM inside the Python process through JPype. The only Python 3.13 on the desktop is the Store
+build, which redirects writes under `AppData` into
+`AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_...\LocalCache\`, and that redirection applies to the
+JVM as well. Ghidra's settings and cache landed there, and its OSGi bundle host (Felix) then refused its own data
+file ("The data file must be inside the data dir") and threw a `NullPointerException` on the first analysis. A bare
+`pyghidra.start()` had passed, because it never touches the bundle host.
+- **Why missed:** the Store build looks like any other CPython (`py -3.13` runs it), and nothing in the error names
+  the redirection. Only a listing of the Store package folder showed where the files had gone.
+- **Prevent:** give any in-process runtime that keeps state (a JVM, an embedded database) absolute directories
+  outside `AppData`; for Ghidra, the `application.settingsdir`, `cachedir` and `tempdir` `VMARGS` in
+  `support\launch.properties`, now `E:\ghidra\user\`. Smoke a new install with the call that does the real work
+  (an analysis), not only the start-up call.
+- **Source:** #688; `docs/reviews/adopt-ghidra-hindsight-2026-09-26.md` install trap 2;
+  `docs/reference/development-machines.md` "Ghidra, desktop only".
+
+### A JVM left with a non-daemon thread keeps its Python host alive after the traceback (2026-09-26)
+The failed first run above printed its Python traceback and then never exited: it sat at 1.5 GB until killed, and
+its background task never reported. A `jstack` dump showed one non-daemon Java thread besides `main`,
+`FelixDispatchQueue`, left by the half-started OSGi framework, and the JVM will not let the process end while one
+lives. A run that succeeds releases the bundle host and exits normally, so only the failure path hangs.
+- **Why missed:** a traceback reads as "the process ended". Only the missing `exit=` line from the wrapper showed it
+  had not.
+- **Prevent:** a tool that starts a JVM in-process leaves through `os._exit` once the JVM is up, after closing
+  what it opened (`tools/native_decompile.py` `exit_process`, tested both ways). When a run prints a traceback but its
+  task never completes, take a thread dump before killing it: the non-daemon threads name the culprit.
+- **Source:** #688; `docs/reviews/adopt-ghidra-hindsight-2026-09-26.md` install trap 3.
+
+### A test fake returns the text shape you imagine; Ghidra's C carries CRLF on Windows (2026-09-26)
+`native_decompile.py` printed every decompiled line ending in CR CR LF: Ghidra's `getC()` already uses CRLF on
+Windows, and Python's text-mode stdout added a CR to each LF. Redirected to a file the output doubled its line count
+(3,781 lines for about 1,900), and viewers show a blank line under every line of C. The 22 unit tests stayed green,
+because their fake backend returns `\n` text.
+- **Why missed:** the fake encoded the shape the author expected rather than the one the real API returns, the same
+  blind spot as the fixture lesson at the top of this file.
+- **Prevent:** normalise line endings where text crosses from a foreign runtime into Python's stdout, and assert on
+  the raw bytes in the integration test (`assertNotIn(b"\r\r\n", ...)`), where universal newlines cannot hide it.
+- **Source:** #688; `tools/tests/test_native_decompile.py` `GhidraIntegrationTests`.

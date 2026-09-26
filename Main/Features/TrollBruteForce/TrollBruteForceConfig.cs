@@ -57,6 +57,17 @@ public static class TrollBruteForceConfig
     public const float BlowMagnitude = 60f;
 
     /// <summary>
+    /// Each smash rolls how many enemies it may hit, uniformly from <see cref="RingMinTargets"/> to
+    /// <see cref="RingMaxTargets"/> (<c>MBRandom.RandomInt</c> in <c>BruteForceRing</c>), and hits that many of the
+    /// eligible enemies nearest the impact centre; the rest are untouched. Mike, 2026-09-26: one swing was clearing
+    /// a whole infantry block, so at most five.
+    /// </summary>
+    public const int RingMinTargets = 1;
+
+    /// <inheritdoc cref="RingMinTargets"/>
+    public const int RingMaxTargets = 5;
+
+    /// <summary>
     /// Clip progress (0 to 1) at which the weapon lands. For the prototype on the Fab <c>anim_troll_attack1</c>
     /// (source <c>troll_danger_attack_0.fbx</c>, 73 frames at 30 fps): the right hand peaks overhead at frame
     /// index 27 (1.90 m) and bottoms out at 42 (0.65 m), 42/72 = 0.58, measured in Blender 2026-09-24. Re-measure

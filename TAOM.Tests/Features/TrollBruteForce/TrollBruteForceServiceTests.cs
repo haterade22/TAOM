@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.TrollBruteForce;
 
@@ -367,5 +368,62 @@ public class TrollBruteForceServiceTests
     public void FormationUnitDiameter_BadVanillaDiameter_KeepsVanilla(float vanilla)
     {
         Assert.IsNull(_service.FormationUnitDiameter(vanilla, 5, 5, 2f));
+    }
+
+    // ── The ring's target cap (Mike, 2026-09-26): one swing was clearing a whole infantry block. Each smash rolls
+    // a cap from 1 to 5 at the boundary (MBRandom.RandomInt in BruteForceRing) and hits only that many of the
+    // nearest eligible enemies.
+
+    [TestMethod]
+    public void NearestRingVictims_MoreEligibleThanTheCap_ChoosesTheNearestNearestFirst()
+    {
+        var distances = new[] { 3.0f, 0.5f, 2.5f, 1.0f, 3.4f, 0.2f, 2.0f };
+
+        var chosen = _service.NearestRingVictims(distances, 3);
+
+        CollectionAssert.AreEqual(new[] { 5, 1, 3 }, chosen.ToArray());
+    }
+
+    [TestMethod]
+    public void NearestRingVictims_FewerEligibleThanTheCap_ChoosesEveryOne()
+    {
+        var chosen = _service.NearestRingVictims(new[] { 2f, 1f }, 5);
+
+        CollectionAssert.AreEqual(new[] { 1, 0 }, chosen.ToArray());
+    }
+
+    [TestMethod]
+    public void NearestRingVictims_EqualDistances_KeepTheScanOrder()
+    {
+        var chosen = _service.NearestRingVictims(new[] { 1f, 1f, 1f, 1f }, 2);
+
+        CollectionAssert.AreEqual(new[] { 0, 1 }, chosen.ToArray());
+    }
+
+    [TestMethod]
+    public void NearestRingVictims_NoEligible_ChoosesNone()
+    {
+        Assert.AreEqual(0, _service.NearestRingVictims(new float[0], 5).Count);
+    }
+
+    [DataTestMethod]
+    [DataRow(0)]
+    [DataRow(-1)]
+    public void NearestRingVictims_CapBelowOne_ChoosesNone(int cap)
+    {
+        Assert.AreEqual(0, _service.NearestRingVictims(new[] { 1f, 2f }, cap).Count);
+    }
+
+    [DataTestMethod]
+    [DataRow(float.NaN)]
+    [DataRow(float.PositiveInfinity)]
+    [DataRow(float.NegativeInfinity)]
+    [DataRow(-0.5f)]
+    public void NearestRingVictims_BadDistance_IsNeverChosen(float bad)
+    {
+        // float.CompareTo sorts NaN below every number: unguarded, a NaN distance would count as the nearest.
+        var chosen = _service.NearestRingVictims(new[] { 2f, bad, 1f }, 5);
+
+        CollectionAssert.AreEqual(new[] { 2, 0 }, chosen.ToArray());
     }
 }

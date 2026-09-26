@@ -284,8 +284,7 @@ def borrowed_body_issues(game_modules: Path, moduledata: Path) -> list:
     Skipped, never faked, without the install. Reuses validate_mesh_refs.py for the ref
     extraction and the TOC scan, like missing_collision_body_issues."""
     import validate_mesh_refs as vmr
-    armory_root = str(game_modules / "LOTRLOME_Armory")
-    tpacs = [p for p in _loaded_tpacs(game_modules) if str(p).startswith(armory_root)]
+    tpacs = vmr.module_tpacs(Path(game_modules) / "LOTRLOME_Armory", "LOTRLOME_Armory")
     if not tpacs:
         return [ts.Issue(
             severity=ts.Severity.ERROR, code=BORROWED_BODY_CODE, file="", line=0, entry_id="",

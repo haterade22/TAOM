@@ -50,10 +50,13 @@ class BorrowedBodyTests(unittest.TestCase):
         vanilla = vmr.TpacScanResult(path=VANILLA_TPAC, physicsshape_names=set(vanilla_bodies),
                                      parsed_ok=True)
         by_path = {ARMORY_TPAC: armory, VANILLA_TPAC: vanilla}
-        with mock.patch.object(vm, "_loaded_tpacs", return_value=[Path(ARMORY_TPAC), Path(VANILLA_TPAC)]), \
+        # the pass lists only the Armory's own packs, so a vanilla pack never reaches `bodies`
+        with mock.patch.object(vmr, "module_tpacs", return_value=[Path(ARMORY_TPAC)]) as listed, \
              mock.patch.object(vmr, "scan_tpac_metameshes", side_effect=lambda p: by_path[str(p)]), \
              mock.patch.object(vmr, "extract_refs", return_value=list(refs)):
-            return vm.borrowed_body_issues(GAME, Path("does/not/exist"))
+            issues = vm.borrowed_body_issues(GAME, Path("does/not/exist"))
+        listed.assert_called_once_with(GAME / "LOTRLOME_Armory", "LOTRLOME_Armory")
+        return issues
 
     def test_another_kits_twin_is_an_error(self):
         """The #633 shape: a Rhun bow on the elven bow's body."""
@@ -145,13 +148,13 @@ class BorrowedBodyTests(unittest.TestCase):
 
     def test_no_armory_packs_is_reported_not_silently_clean(self):
         """"every body missing" filtered to nothing reads exactly like a clean run."""
-        with mock.patch.object(vm, "_loaded_tpacs", return_value=[Path(VANILLA_TPAC)]):
+        with mock.patch.object(vmr, "module_tpacs", return_value=[]):
             issues = vm.borrowed_body_issues(GAME, Path("does/not/exist"))
         self.assertEqual([i.code for i in issues], [vm.BORROWED_BODY_CODE])
         self.assertIn("NOT verified", issues[0].message)
 
     def test_a_scan_that_raises_is_reported(self):
-        with mock.patch.object(vm, "_loaded_tpacs", return_value=[Path(ARMORY_TPAC)]), \
+        with mock.patch.object(vmr, "module_tpacs", return_value=[Path(ARMORY_TPAC)]), \
              mock.patch.object(vmr, "build_present_set", side_effect=OSError("disk gone")):
             issues = vm.borrowed_body_issues(GAME, Path("does/not/exist"))
         self.assertEqual([i.code for i in issues], [vm.BORROWED_BODY_CODE])

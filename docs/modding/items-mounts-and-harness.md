@@ -493,8 +493,8 @@ Code: No code changes needed unless a feature names the id. The war ram's is pin
   `act_horse_strike_front` and `_back` play the horse's own hit reactions (their type, 52, sits just outside
   the band the engine reads as BEING struck). The vanilla horse rig's only attack clip is the kick,
   `act_horse_kick`
-  ([custom_creature_xml](../community/bannerlordmodding-lt/guides/custom_creature_xml.md), lines
-  326-366).
+  ([custom_creature_xml](../community/bannerlordmodding-lt/guides/custom_creature_xml.md), "The reskin
+  trap", lines 354-383).
 - **A harness can take team colours.** `<Flags UseTeamColor="true" />` on a `HorseHarness` item makes the engine
   tint the harness mesh with the rider's two clothing colours (`MountVisualCreator`, missions and the preview
   tableau), which suits greyscale cloth. Vanilla uses it on none of its 58 harness items; TAOM's eight war ram

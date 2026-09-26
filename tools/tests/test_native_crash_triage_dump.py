@@ -449,8 +449,24 @@ class RvaCliRegressionTests(unittest.TestCase):
             self.assertIn("strings referenced in crash function (1):", out)
             self.assertIn("  'monster_usage.cpp'", out)
             self.assertIn("L1 callers of 0x1040: 1 site(s)", out)
+            self.assertIn(
+                f'decompile: python tools/native_decompile.py --rva 0x1050 --dll "{pe_path}"', out)
             self.assertNotIn("dump:", out)
             self.assertNotIn("exception:", out)
+
+    def test_rva_outside_pdata_still_prints_the_decompile_hint(self):
+        # x64 leaf functions carry no .pdata entry, and a null-`this` accessor is one; the
+        # decompiler still names the function, so the hint matters most here.
+        with tempfile.TemporaryDirectory() as d:
+            pe_path = Path(d) / "fake.dll"
+            pe_path.write_bytes(_build_pe())
+            r = subprocess.run(
+                [sys.executable, str(TOOL), "--rva", "0x1010", "--dll", str(pe_path)],
+                capture_output=True, text=True)
+            self.assertEqual(r.returncode, 1, r.stdout + r.stderr)
+            self.assertIn("leaf function", r.stderr)
+            self.assertIn(
+                f'decompile: python tools/native_decompile.py --rva 0x1010 --dll "{pe_path}"', r.stderr)
 
 
 class MalformedDumpTests(unittest.TestCase):

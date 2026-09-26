@@ -432,8 +432,8 @@ class TpacModuleFallbackTests(unittest.TestCase):
         self.assertEqual(got, ["pack0.tpac"])
 
     def test_module_tpacs_keeps_the_callers_path(self):
-        # validate_moduledata passes its own Modules path; rebuilding "<parent>/Modules" dropped a lowercase
-        # "modules" spelling out of the borrowed-body filter, which compares path prefixes
+        # validate_moduledata passes its own Modules path; rebuilding "<parent>/Modules" from it once dropped a
+        # lowercase "modules" spelling out of the borrowed-body pass
         mods = self.game / "mods"
         (mods / "LOTRLOME_Armory" / "Assets").mkdir(parents=True)
         (mods / "LOTRLOME_Armory" / "Assets" / "a.tpac").write_bytes(b"x")

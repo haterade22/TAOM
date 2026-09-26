@@ -111,9 +111,10 @@ class Drift(_SyntheticRepo):
 
     def test_the_second_count_shape_is_also_checked(self):
         # ".claude/rules/gamemodels.md" states its total twice, in two different sentences.
-        # Catching only the first would leave the table heading permanently wrong. The real
-        # heading carries a breakdown after a colon, which the first regex never matched, so
-        # a heading claiming 50 sat beside 51 classes with the check green.
+        # Catching only the first would leave the table heading permanently wrong. The heading
+        # once carried a breakdown after a colon, which the first regex never matched, so a
+        # heading claiming 50 sat beside 51 classes with the check green. It now reads
+        # "(51 total)"; both shapes stay checked.
         for heading in ("## Existing Overrides (34 total)",
                         "## Existing Overrides (34 total: 32 registered, 1 parked, 1 abstract base)"):
             with self.subTest(heading=heading):

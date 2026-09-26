@@ -291,9 +291,13 @@ pose-blend, is refuted).
   that vanilla has no standalone melee clip, is wrong: a swing plays real clips through the engine's melee
   attack table. A clip has a row there only through the clip inspector's "Blends with animation" box
   (TpacTool calls it `UnknownClipName`; no clip flag sets it): its own name self-keys the clip, and a balanced
-  twin's name makes the Kit generate ten blend children between the two on save. This generator blanks the box
-  (with `ClipSource1Name` and `ClipSource2Name`) on every clip it makes, so run `tools/set_clip_balance_name.py`
-  on any clip a release or blocked code will bind, after every re-cut
+  twin's name makes the Kit generate ten blend children between the two on save. Since 2026-09-26 this generator
+  writes a clone of a keyed vanilla template self-keyed (`Set-ClipKey`: its own name in `UnknownClipName`,
+  `BlendsWithAction` empty, `ClipSource1Name` and `ClipSource2Name` blank, `GeneratedIndex` -1) and a clone of an
+  unkeyed one blank, and `-Verify` reports a clip that breaks the rule as `KEY`
+  (`tools/tests/test_gen_troll_anim_clips.py`). So a re-cut keeps the key, but its packages have no
+  RuntimeDataCache entry until a Kit save, and the binder accepts a self-keyed clip only once its RDC stamp
+  matches. After an Armory reinstall, re-key with `tools/set_clip_balance_name.py`
   ([troll-race.md](../features/troll-race.md), "The swing CTD";
   [bannerlord-animation-system-map.md](bannerlord-animation-system-map.md), section 3).
 - `Source2 = master Duration - 1` (walk master 38 -> clip 1..37, run 26 -> 1..25); Duration in

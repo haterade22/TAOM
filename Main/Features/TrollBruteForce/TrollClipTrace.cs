@@ -9,10 +9,13 @@ namespace TAOM.Features.TrollBruteForce;
 /// <summary>
 /// Feeds <see cref="TrollClipLog"/>: twice a second it lists the active trolls, and every tick it reads each one's
 /// channel 0 and 1 actions, resolving an action's bound clip (<c>MBActionSet.GetActionAnimationName</c>) only when
-/// the pair changed, so the cost is two native reads per troll per tick. Much lighter than the removed crash trace,
-/// which scanned every agent twice per troll per frame. A held agent is read only while
-/// <see cref="AgentSlotIdentity.IsCurrentOccupant"/> says the slot is still its own (#592).
+/// the pair changed. A held agent is read only while <see cref="AgentSlotIdentity.IsCurrentOccupant"/> says the slot
+/// is still its own (#592). So the cost per troll per tick is that slot check, one interop call
+/// (<c>Mission.FindAgentWithIndex</c>), plus the liveness and two channel reads.
 /// Main thread only (OnMissionTick). Boundary code (raw Agent); game-tested per ADR-008.
+/// Temporary: it serves the hill troll clip tuning pass. Once that pass ends, delete this file,
+/// <see cref="TrollClipLog"/>, TrollClipLogTests.cs and the four wiring lines in
+/// <see cref="TrollBruteForceMissionBehavior"/>.
 /// </summary>
 public sealed class TrollClipTrace
 {

@@ -364,6 +364,10 @@ class Minidump:
         return hits, source
 
 
+def decompile_hint(args):
+    return f'decompile: python tools/native_decompile.py --rva 0x{args.rva:X} --dll "{args.dll}"'
+
+
 def run_rva(args):
     """The original pipeline: name the site inside --dll at --rva."""
     pe = Pe(args.dll)
@@ -371,7 +375,8 @@ def run_rva(args):
 
     fs, fe = pe.func_of(args.rva)
     if fs is None:
-        sys.exit(f"RVA 0x{args.rva:X} not inside any .pdata function - check the base/offset math")
+        sys.exit(f"RVA 0x{args.rva:X} not inside any .pdata function: a leaf function (no unwind "
+                 f"entry) or wrong base/offset math\n{decompile_hint(args)}")
     print(f"\ncrash function: 0x{fs:X} .. 0x{fe:X} (size 0x{fe - fs:X}, crash at +0x{args.rva - fs:X})")
 
     print("\nhexdump around crash:")
@@ -400,6 +405,8 @@ def run_rva(args):
         frontier = nxt
         if not frontier:
             break
+
+    print(f"\n{decompile_hint(args)}")
 
 
 def run_dump(args):

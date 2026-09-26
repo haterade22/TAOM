@@ -87,6 +87,8 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Cave Troll Lightweight (Fab) | `Cave Troll Lightweight` `cave_troll_lightweight` | purchased-asset, code terms informal | data-port | `tools/oneoff/ue_export_cave_troll.py` `tools/blender/retarget_mannequin_to_human.py`; the retargeted `anim_troll_*` clips in `LOTRLOME_Armory` (live, outside the repo) | cleared |
 | Animalia - Elk (male), Animalia - Moose (male) (Fab) | `Animalia` `Elk_M` `Moose_M` `animalia_elk` `animalia_moose` | purchased-asset, code terms informal | data-port | `tools/blender/reskin_animalia_to_horse.py` `tools/blender/retarget_animalia_to_horse.py` `tools/blender/animalia_to_horse_map.json` `tools/blender/measure_animalia_clips.py` `tools/blender/animalia_elk_clip_measure.json` `tools/blender/animalia_moose_clip_measure.json` `tools/gen_animalia_anim_clips.ps1` `docs/features/animalia-elk-moose.md`; meshes, clips and textures in `LOTRLOME_Armory/AssetSources/creature/elk/` and their Kit packages in `LOTRLOME_Armory/Assets/creature/elk/` (live, outside the repo) | cleared |
 | Yotthani DualWield handoff, MithrilForge | `MithrilForge` `DualWield` `Bannerlord_Animation_Handoff` `TpacTool-bannerlord` | MIT (MithrilForge); the handoff document was shared with the maintainer by its author, no licence stated | comparison-only | (none) | cleared |
+| Ghidra | `Ghidra` `NationalSecurityAgency/ghidra` `pyghidra` | Apache-2.0 | interop-only | `tools/native_decompile.py` runs the installed tool (see detail) | cleared |
+| Hindsight | `Hindsight` `vectorize-io/hindsight` | MIT | comparison-only | (none) | cleared |
 
 <!-- provenance-register-end -->
 
@@ -495,6 +497,24 @@ maintainer-owned and are not covered by this row.
 **Explicitly excluded: the neo-Khuzdul written by David Salo for the Peter Jackson films.** It is his
 creative work, TAOM derives nothing from it, and the lexicon carries a standing rule forbidding its
 import. There is no row for it because there is nothing to declare, and that is the intended state.
+
+### Ghidra
+
+Upstream: https://github.com/NationalSecurityAgency/ghidra · Apache-2.0. Installed 2026-09-26 as
+12.1.4 at `E:\Tools\ghidra_12.1.4_PUBLIC`, with the PyGhidra 3.1.0 it bundles in a venv at
+`E:\Tools\ghidra-venv` (#688). `tools/native_decompile.py` drives the installed tool through
+PyGhidra's public API and copies no Ghidra code; PyGhidra's `api.py` and `core.py` were read only to
+choose the calls. Nothing from Ghidra ships in a TAOM release, so no `THIRD-PARTY-LICENSES.txt` entry
+is owed. Remove with the two `E:\Tools` folders; the tool then exits 2 naming the setup doc. Adoption
+record: [`docs/reviews/adopt-ghidra-hindsight-2026-09-26.md`](../reviews/adopt-ghidra-hindsight-2026-09-26.md).
+
+### Hindsight
+
+Upstream: https://github.com/vectorize-io/hindsight · MIT. Evaluated on 2026-09-26 and rejected: it
+conflicts with ADR-011's rule that durable knowledge lives in the repository, and its Claude Code
+plugin injects recalled text into every prompt and spends an auto-detected LLM key. Its hook scripts
+were read for the security pass; nothing was installed or ported. Record:
+[`docs/reviews/adopt-ghidra-hindsight-2026-09-26.md`](../reviews/adopt-ghidra-hindsight-2026-09-26.md).
 
 ---
 

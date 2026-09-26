@@ -606,7 +606,7 @@ public class BannerBearerServiceTests
         Assert.IsFalse(_sut.IsReinforcementBearerAllowed(UnknownId, FormationClass.Infantry));
     }
 
-    // ---- PassesRaceGate (custom battle CanAgentPickUpAnyBanner gate, 2026-09-26) -----------------
+    // ---- PassesRaceGate (CanAgentPickUpAnyBanner gate in both battle models, 2026-09-26) ---------
     // Used by CanAgentPickUpAnyBanner in both battle models and by Custom Battle's
     // CanAgentBecomeBannerBearer: a troll must never carry OR pick up a dropped banner (Mike: "Cave
     // trolls nor hill trolls should carry a banner"). Same toggle-fold shape as

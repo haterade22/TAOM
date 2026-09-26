@@ -27,6 +27,8 @@ letter into new code.
 | `BANNERLORD_GAME_DIR` | Windows user env var (`setup-dev-env.ps1` writes it) | `tools/_gamedir.py`, so every validator and data tool; `Directory.Build.props`, so the build |
 | `TAOM_DECOMPILE_ROOT` | Windows user env var | `tools/check_handbook_attributes.py`. Point it at the **category tree**, e.g. `C:\Decompiled_Bannerlord\_categories_v1.5.2` (the script's default is the desktop's `E:\Decompiled_Bannerlord\_categories_v1.5.2`) |
 | `TAOM_PYBIN` | `.claude/settings.json` env block | `.claude/hooks/_pybin.sh`. The same value works on both machines because Python lives at `C:\Python314` on each; a stale pin degrades to discovery rather than failing |
+| `GHIDRA_INSTALL_DIR` | Windows user env var, desktop only | `tools/native_decompile.py` and PyGhidra (see "Ghidra" below) |
+| `TAOM_GHIDRA_PYTHON` | optional; unset on the desktop | `tools/native_decompile.py`: the interpreter that has PyGhidra, default `E:\Tools\ghidra-venv\Scripts\python.exe` |
 
 **Three things ignore all of that** and need the path passed by hand:
 
@@ -91,6 +93,23 @@ Known gaps on the laptop, both deliberate:
   with a stale registry key. The Fab purchases and their UE projects live under `E:\LOTRAOMAssets\`
   (`Troll_Animation_5_4`), and `E:\Bannerlord_Art\TpacTool_0.4.0` is the TpacTool the tpac tools load.
   Pipeline: [ue-to-bannerlord-asset-pipeline.md](ue-to-bannerlord-asset-pipeline.md).
+- **Ghidra** is desktop-only (below). On the laptop `tools/native_decompile.py` exits 2 naming this
+  page, and `/native-crash-triage` falls back to hand-decoding the disassembly.
+
+## Ghidra, desktop only (installed 2026-09-26, #688)
+
+`tools/native_decompile.py` needs all of this; the procedure it serves is `/native-crash-triage`.
+
+| Piece | Where | Why it is set up this way |
+|---|---|---|
+| Ghidra 12.1.4 | `E:\Tools\ghidra_12.1.4_PUBLIC` (zip, SHA-256 checked); user env `GHIDRA_INSTALL_DIR` points here | 12.1.4 patches the three advisories an analyst can reach ([review](../reviews/adopt-ghidra-hindsight-2026-09-26.md)) |
+| Temurin JDK 25.0.4.1 | `E:\Tools\jdk-25.0.4.1+1` (zip) | Ghidra needs 25. Selected by `JAVA_HOME_OVERRIDE` in `support\launch.properties`; the machine's Java 8 stays first on PATH, and `JAVA_HOME` is untouched |
+| PyGhidra 3.1.0 with JPype 1.5.2 | venv `E:\Tools\ghidra-venv`, made with `py -3.13 -m venv`, installed offline with `pip install --no-index -f <ghidra>\Ghidra\Features\PyGhidra\pypkg\dist pyghidra` | PyGhidra pins JPype 1.5.2, which has no wheel for the system Python 3.14. The tool re-runs itself under this venv, so the command stays `python tools/native_decompile.py` |
+| Ghidra's settings, cache and temp directories | `E:\ghidra\user\{settings,cache,temp}`, set by three `VMARGS` lines in `support\launch.properties` | The 3.13 is the Microsoft Store build, which redirects `AppData` writes into its package folder; the JVM runs inside that process, and Ghidra's OSGi bundle host fails on the redirected paths |
+| Analysed projects | `E:\ghidra\TAOM\<build folder>-<sha256[:16]>` | One per distinct binary. The v1.5.3 client DLL (14 MB): 213 s to analyse once, a 212 MB project, then 3.4 s per run |
+
+A reinstall of Ghidra has to repeat the four `launch.properties` edits (`JAVA_HOME_OVERRIDE` and the
+three directory lines).
 
 ## Writing docs and tools on either machine
 

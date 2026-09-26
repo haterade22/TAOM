@@ -1152,6 +1152,11 @@ codes only when it reads as self-keyed (32 codes, applied 14:13).
   attack. Read a TpacTool `Unknown*` field's Kit label before deciding what it does.
 - **Source:** `docs/features/troll-race.md` "The swing CTD"; `docs/reference/bannerlord-animation-system-map.md`
   section 3; `tools/set_clip_balance_name.py` docstring.
+- **Note (2026-09-26, later):** the generator no longer blanks the key. A clone of a keyed vanilla template is
+  written self-keyed (`Set-ClipKey`), `-Verify` fails a clip that breaks the rule as `KEY`, and
+  `tools/tests/test_gen_troll_anim_clips.py` pins it, so "re-run that after every re-cut" now applies only after an
+  Armory reinstall. A re-cut still needs a Kit save for each package's RuntimeDataCache entry, and the binder's rule
+  0 and `wire_hill_troll_race.py --check` accept a self-keyed clip only once its RDC stamp matches.
 
 ### A gate that runs after the fix it checks can never fail (2026-09-26)
 `transfer_hand_morphs.py` pins the wrist seam (every seam vertex that moves gets weight 0, and only moving vertices

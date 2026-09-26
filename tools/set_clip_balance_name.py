@@ -25,9 +25,12 @@ fields, so nothing else moves. The metadata version, the Kit's user-data entries
 they were. A clip already self-keyed is left alone.
 
 REFUSES a package that is not one version-2 AnimationClip item, a TOC size that does not match the file, a
-segment, metadata version 0, a "Blends with animation" that names ANOTHER clip, a generated blend child
-(parent names set or a child index other than -1), a name over the engine's 63-character row buffer or not ASCII,
-a name missing or duplicated in the folder, and a package with no RDC entry.
+segment, a metadata version below 5 (TpacTool AnimationClip.ReadMetadata: the three key strings arrive in version 4
+and the generated child index in 5, so an older layout is not the one this parser walks; the live clips are 5 and
+6), a "Blends with animation" that names ANOTHER clip, a generated blend child (parent names set or a child index
+other than -1), a name over the engine's 63-character row buffer or not ASCII, a name missing in the folder or
+carried by two packages there, a package with no RDC entry, and an RDC entry that belongs to another item. Every
+refusal comes from the plan, so the dry run reports it and --apply refuses before writing anything.
 
     python tools/set_clip_balance_name.py --clip anim_hill_troll_release_slashleft_2h ...     # dry run
     python tools/set_clip_balance_name.py --clips-file names.txt --apply                     # write
@@ -35,7 +38,9 @@ a name missing or duplicated in the folder, and a package with no RDC entry.
 --apply refuses while the game or the Kit runs, backs each package and RDC entry up to `<file>.bak-balancename-
 <stamp>` (never a .tpac or .rdc extension, so no scanner picks it up), writes, re-reads and verifies, and restores
 both on any failure. A self-keyed clip is harmless until an action binds it; the binder
-(tools/bind_hill_troll_action_set.py) decides that.
+(tools/bind_hill_troll_action_set.py) decides that, through keyed_clips().
+Only self_key and checksum_ok hash (xxhash); parse, keyed_clips and the binder and wire gate that import this file
+need nothing outside the standard library.
 """
 import argparse
 import datetime as dt
@@ -44,9 +49,8 @@ import os
 import struct
 import sys
 import uuid
+from collections import namedtuple
 from dataclasses import dataclass, field as dc_field
-
-import xxhash
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _gamedir import game_dir, game_or_kit_running  # noqa: E402
@@ -63,6 +67,11 @@ class ClipError(Exception):
     pass
 
 
+def _xxh64(data):
+    import xxhash      # only self_key and checksum_ok hash; parse and keyed_clips stay standard library
+    return xxhash.xxh64(data, seed=0).intdigest()
+
+
 @dataclass
 class Clip:
     name: str
@@ -73,8 +82,10 @@ class Clip:
     ck_at: int
     meta_version: int
     blends_action_at: int
+    blends_action_end: int      # the raw end of the string, so an edit never re-measures decoded text
     blends_with_action: str
     field_at: int
+    field_end: int
     field: str
     src1: str
     src2: str
@@ -119,19 +130,22 @@ def parse(buf):
     end = ck_at
     p = m0
     version = struct.unpack_from("<I", buf, p)[0]
-    if version < 1:
-        raise ClipError("metadata version %d has no Blends with animation field" % version)
+    if version < 5:
+        raise ClipError("metadata version %d predates the generated child index (version 5); this tool reads the "
+                        "version 5 and later layout" % version)
     p += 4 + 28 + 16 + 16                     # version, 6 floats + int, animation guid, step points
     for _ in range(3):                         # sound, voice, facial
         _, p = _str(buf, p, end)
     blends_action_at = p
     blends_action, p = _str(buf, p, end)
+    blends_action_end = p
     _, p = _str(buf, p, end)                   # continue to action
     p += 8                                     # hand poses
     _, p = _str(buf, p, end)                   # combat parameter id
     p += 4 + 4 + 1 + 4                         # blend in, blend out, do not interpolate, int
     field_at = p
     fld, p = _str(buf, p, end)
+    field_end = p
     src1, p = _str(buf, p, end)
     src2, p = _str(buf, p, end)
     gen = struct.unpack_from("<b", buf, p)[0]
@@ -143,8 +157,18 @@ def parse(buf):
         f, p = _str(buf, p, end)
         flags.append(f)
     usages = struct.unpack_from("<i", buf, p)[0]
-    return Clip(name, buf[8:24], buf[52:68], mlen_at, m0, ck_at, version, blends_action_at, blends_action,
-                field_at, fld, src1, src2, gen, flags, usages, ud)
+    return Clip(name=name, package_guid=buf[8:24], item_guid=buf[52:68], mlen_at=mlen_at, m0=m0, ck_at=ck_at,
+                meta_version=version, blends_action_at=blends_action_at, blends_action_end=blends_action_end,
+                blends_with_action=blends_action, field_at=field_at, field_end=field_end, field=fld, src1=src1,
+                src2=src2, gen_index=gen, flags=flags, usages=usages, userdata=ud)
+
+
+def is_self_keyed(c, name):
+    """The one definition of self-keyed: the package's item is `name`, its "Blends with animation" holds that name,
+    its "Blends with action" is empty and it is not a generated child. The shape self_key() and the Kit edit write,
+    and the only one proven in game (2026-09-26). keyed_clips() and --check both ask this."""
+    return (c.name == name and c.field == name and c.blends_with_action == ""
+            and not c.src1 and not c.src2 and c.gen_index == -1)
 
 
 def _check_name(name):
@@ -164,19 +188,17 @@ def self_key(buf):
     if c.field == c.name and c.blends_with_action == "":
         return buf, False
     own = c.name.encode("ascii")
-    old_action_len = 4 + len(c.blends_with_action.encode("utf-8"))
-    old_field_len = 4 + len(c.field.encode("utf-8"))
     new = bytearray()
     new += buf[:c.blends_action_at] + struct.pack("<i", 0)
-    new += buf[c.blends_action_at + old_action_len:c.field_at]
+    new += buf[c.blends_action_end:c.field_at]
     new += struct.pack("<i", len(own)) + own
-    new += buf[c.field_at + old_field_len:]
+    new += buf[c.field_end:]
     delta = len(new) - len(buf)
     mlen = struct.unpack_from("<q", buf, c.mlen_at)[0] + delta
     struct.pack_into("<q", new, c.mlen_at, mlen)
     struct.pack_into("<Q", new, 28, len(new) - HEADER)
     ck_at = c.ck_at + delta
-    new[ck_at:ck_at + 8] = struct.pack("<Q", xxhash.xxh64(bytes(new[c.mlen_at:ck_at]), seed=0).intdigest())
+    new[ck_at:ck_at + 8] = struct.pack("<Q", _xxh64(bytes(new[c.mlen_at:ck_at])))
     new = bytes(new)
     after = parse(new)
     if (after.field, after.blends_with_action) != (c.name, "") or \
@@ -188,7 +210,7 @@ def self_key(buf):
 
 def checksum_ok(buf):
     c = parse(buf)
-    return buf[c.ck_at:c.ck_at + 8] == struct.pack("<Q", xxhash.xxh64(buf[c.mlen_at:c.ck_at], seed=0).intdigest())
+    return buf[c.ck_at:c.ck_at + 8] == struct.pack("<Q", _xxh64(buf[c.mlen_at:c.ck_at]))
 
 
 def rdc_path(module, package_guid):
@@ -203,19 +225,32 @@ def stamp_rdc(entry, item_guid, checksum):
     return entry[:0x68] + bytes(checksum) + entry[0x70:]
 
 
-def keyed_clips(folder, names):
-    """The subset of `names` whose `<name>_anm.tpac` in `folder` is self-keyed: the item is that clip, its "Blends
-    with animation" holds its own name and it is not a generated child. Those clips have a melee attack table row, so
-    a swing or blocked code may play them (the binder's rule 0 and wire_hill_troll_race.py --check read this). A
-    missing or unreadable package counts as unkeyed."""
+def rdc_current(entry, c, buf):
+    """True when `entry` is this item's RuntimeDataCache entry and its stamp is the package's stored checksum: the
+    state a Kit save leaves and --check certifies. No hashing: the stored checksum is compared as bytes."""
+    return (len(entry) >= 0x70 and entry[:4] == b"RDC0" and entry[0x14:0x24] == c.item_guid
+            and entry[0x24:0x34] == c.item_guid and entry[0x68:0x70] == buf[c.ck_at:c.ck_at + 8])
+
+
+def keyed_clips(folder, names, module):
+    """The subset of `names` whose `<name>_anm.tpac` in `folder` is self-keyed (is_self_keyed) and has a current
+    RuntimeDataCache entry under `module` (rdc_current). Those clips have a melee attack table row, so a swing or
+    blocked code may play them (the binder's rule 0 and wire_hill_troll_race.py --check read this). The engine skips
+    a package with no entry (tools/check_rdc_entries.py), and a re-cut writes fresh packages without one, so a clip
+    the Kit has not saved since does not count. A missing or unreadable package or entry counts as unkeyed."""
     out = set()
     for name in names:
         try:
             with open(os.path.join(folder, name + "_anm.tpac"), "rb") as fh:
-                c = parse(fh.read())
+                buf = fh.read()
+            c = parse(buf)
+            if not is_self_keyed(c, name):
+                continue
+            with open(rdc_path(module, c.package_guid), "rb") as fh:
+                entry = fh.read(0x70)
         except (OSError, ClipError, struct.error):
             continue
-        if c.name == name and c.field == name and not c.src1 and not c.src2 and c.gen_index == -1:
+        if rdc_current(entry, c, buf):
             out.add(name)
     return out
 
@@ -225,73 +260,94 @@ def index_clips(folder):
     out = {}
     for path in glob.glob(os.path.join(folder, "**", "*_anm.tpac"), recursive=True):
         try:
-            name = parse(open(path, "rb").read()).name
-        except ClipError:
+            with open(path, "rb") as fh:
+                name = parse(fh.read()).name
+        except (OSError, ClipError, struct.error):
             continue
         out.setdefault(name, []).append(path)
     return out
 
 
+Row = namedtuple("Row", "name path buf new changed rdc entry new_entry")
+
+
 def plan(names, folder, module):
+    """One Row per distinct name with everything --apply would write already computed (the self-keyed package and
+    its restamped RDC entry), so every refusal happens here: the dry run reports it and --apply writes nothing."""
     index = index_clips(folder)
     rows = []
-    for name in names:
+    for name in dict.fromkeys(names):
         paths = index.get(name, [])
         if len(paths) != 1:
             raise ClipError("%s: %d packages carry that clip under %s" % (name, len(paths), folder))
-        buf = open(paths[0], "rb").read()
+        with open(paths[0], "rb") as fh:
+            buf = fh.read()
         new, changed = self_key(buf)
         rdc = rdc_path(module, parse(buf).package_guid)
         if not os.path.isfile(rdc):
             raise ClipError("%s: no RuntimeDataCache entry %s; save the package in the Kit first" % (name, rdc))
-        rows.append((name, paths[0], buf, new, changed, rdc))
+        with open(rdc, "rb") as fh:
+            entry = fh.read()
+        new_entry = entry
+        if changed:
+            n = parse(new)
+            try:
+                new_entry = stamp_rdc(entry, n.item_guid, new[n.ck_at:n.ck_at + 8])
+            except ClipError as exc:
+                raise ClipError("%s: %s (%s)" % (name, exc, rdc))
+        rows.append(Row(name, paths[0], buf, new, changed, rdc, entry, new_entry))
     return rows
 
 
 def check(rows):
     bad = 0
-    for name, path, buf, _new, _changed, rdc in rows:
-        c = parse(buf)
-        stamp = open(rdc, "rb").read()[0x68:0x70]
-        ok = c.field == name and c.blends_with_action == "" and checksum_ok(buf) and stamp == buf[c.ck_at:c.ck_at + 8]
+    for r in rows:
+        c = parse(r.buf)
+        keyed, summed, stamped = is_self_keyed(c, r.name), checksum_ok(r.buf), rdc_current(r.entry, c, r.buf)
+        ok = keyed and summed and stamped
         bad += not ok
-        print("%-6s %-58s field=%r action=%r checksum=%s stamp=%s" % ("OK" if ok else "STALE", name, c.field,
-              c.blends_with_action, checksum_ok(buf), stamp == buf[c.ck_at:c.ck_at + 8]))
+        print("%-6s %-58s field=%r action=%r checksum=%s stamp=%s" % ("OK" if ok else "STALE", r.name, c.field,
+              c.blends_with_action, summed, stamped))
     return 1 if bad else 0
 
 
 def apply(rows):
     stamp = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
-    for name, path, buf, new, changed, rdc in rows:
-        if not changed:
-            continue
-        entry = open(rdc, "rb").read()
-        new_entry = stamp_rdc(entry, parse(new).item_guid, new[parse(new).ck_at:parse(new).ck_at + 8])
-        backups = [(path, buf, path + ".bak-balancename-" + stamp), (rdc, entry, rdc + ".bak-balancename-" + stamp)]
-        for _src, _data, bak in backups:
-            if os.path.exists(bak):
-                raise ClipError("backup exists: " + bak)
-        for _src, data, bak in backups:
-            open(bak, "wb").write(data)
+    todo = [r for r in rows if r.changed]
+    backups = [[(r.path, r.buf, r.path + ".bak-balancename-" + stamp),
+                (r.rdc, r.entry, r.rdc + ".bak-balancename-" + stamp)] for r in todo]
+    for _src, _data, bak in (b for pair in backups for b in pair):
+        if os.path.exists(bak):
+            raise ClipError("backup exists: " + bak)
+    for r, pair in zip(todo, backups):
+        for _src, data, bak in pair:
+            with open(bak, "wb") as fh:
+                fh.write(data)
         try:
-            open(path, "wb").write(new)
-            open(rdc, "wb").write(new_entry)
-            if open(path, "rb").read() != new or open(rdc, "rb").read() != new_entry:
+            with open(r.path, "wb") as fh:
+                fh.write(r.new)
+            with open(r.rdc, "wb") as fh:
+                fh.write(r.new_entry)
+            with open(r.path, "rb") as fh:
+                pkg_back = fh.read()
+            with open(r.rdc, "rb") as fh:
+                rdc_back = fh.read()
+            if pkg_back != r.new or rdc_back != r.new_entry:
                 raise ClipError("read-back differs")
-            got = parse(new)
-            if got.field != name or not checksum_ok(new):
-                raise ClipError("the written package does not verify")
+            if not is_self_keyed(parse(r.new), r.name) or not checksum_ok(r.new):
+                raise ClipError("%s: the written package does not verify" % r.name)
         except Exception:
-            for src, data, _bak in backups:
-                open(src, "wb").write(data)
+            for src, data, _bak in pair:
+                with open(src, "wb") as fh:
+                    fh.write(data)
             raise
-        print("written %s (+ its RDC stamp), backups .bak-balancename-%s" % (name, stamp))
+        print("written %s (+ its RDC stamp), backups .bak-balancename-%s" % (r.name, stamp))
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--clip", action="append", default=[], help="clip item name (repeatable)")
-    ap.add_argument("--clips-file", help="a file with one clip item name per line")
+    ap.add_argument("--clips-file", help="a file with one clip item name per line (a BOM is fine)")
     ap.add_argument("--clips-dir", default=CLIPS_DIR)
     ap.add_argument("--module", default=MODULE, help="the module root holding RuntimeDataCache/")
     ap.add_argument("--apply", action="store_true")
@@ -299,16 +355,18 @@ def main(argv=None):
     args = ap.parse_args(argv)
     names = list(args.clip)
     if args.clips_file:
-        names += [l.strip() for l in open(args.clips_file, encoding="utf-8") if l.strip() and not l.startswith("#")]
+        with open(args.clips_file, encoding="utf-8-sig") as fh:
+            names += [l.strip() for l in fh if l.strip() and not l.startswith("#")]
     if not names:
         ap.error("name at least one clip")
     try:
         rows = plan(names, args.clips_dir, args.module)
         if args.check:
             return check(rows)
-        for name, _p, buf, new, changed, _r in rows:
-            print("%-58s %s" % (name, "self-key (%d -> %d bytes)" % (len(buf), len(new)) if changed else "already self-keyed"))
-        if not any(r[4] for r in rows):
+        for r in rows:
+            print("%-58s %s" % (r.name, "self-key (%d -> %d bytes)" % (len(r.buf), len(r.new)) if r.changed
+                                else "already self-keyed"))
+        if not any(r.changed for r in rows):
             print("no change")
             return 0
         if not args.apply:

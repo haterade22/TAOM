@@ -373,7 +373,7 @@ Written for a content author editing the XML without writing C#: attribute table
 TAOM knowledge written up for the wider modding community and hosted elsewhere. Source of truth
 lives here; the published copy is downstream.
 
-- [community/bannerlordmodding-lt/](community/bannerlordmodding-lt/): **Custom Creatures**, a six-page guide on adding creatures and mounts to Bannerlord (skeleton, animation clips, XML, troubleshooting, reference tables). LIVE on [docs.bannerlordmodding.lt](https://docs.bannerlordmodding.lt/guides/custom_creatures/) since 2026-09-01, with its own nav section. Covers the gap between that wiki's human-rigging page and its C# animation page, where nothing existed. Read the directory README before editing: the site's GitHub repo is a **daily mirror**, so corrections go to the maintainer, not to a PR against a repo that lags the live site
+- [community/bannerlordmodding-lt/](community/bannerlordmodding-lt/): **Custom Creatures**, a ten-page guide on adding creatures, mounts and humanoid races to Bannerlord (skeleton, animation clips, XML, troubleshooting, reference tables; new: humanoid race, clip inspector, melee attacks, in battle), plus an update pack listing every change to the six older pages, prepared 2026-09-26 for v1.5.3. Six pages LIVE on [docs.bannerlordmodding.lt](https://docs.bannerlordmodding.lt/guides/custom_creatures/) since 2026-09-01, with their own nav section; the four new pages and the refresh are NOT sent yet. Covers the gap between that wiki's human-rigging page and its C# animation page, where nothing existed. Read the directory README before editing: the site's GitHub repo is a **daily mirror**, so corrections go to the maintainer, not to a PR against a repo that lags the live site
 
 ## Conventions
 

@@ -15,9 +15,11 @@ engine's, not typed by hand), binding each code by the first rule that has a cli
      families. The generated troll clips had the box empty, so the lookup missed and read a null row (+0x6590B9,
      reading 0x8; keys 6511 and 6462 in the dumps were anim_hill_troll_release_overswing_2h and a quick-release twin,
      2026-09-25). tools/set_clip_balance_name.py self-keys a clip (own name in the box, "Blends with action" empty,
-     the shape the Kit writes), and this rule reads the package (set_clip_balance_name.keyed_clips) so an unkeyed
-     clip can never reach a table code. The "_balanced" codes stay vanilla: vanilla's own _balanced clips have no
-     row either. Wind-ups, defends, guards, kicks, bashes and parries never reach that table and keep rule 2;
+     the shape the Kit writes), and this rule reads the package and its RuntimeDataCache entry under --module
+     (set_clip_balance_name.keyed_clips) so an unkeyed clip, or one the Kit has not saved since a re-cut (the engine
+     skips a package with no entry), can never reach a table code. The "_balanced" codes stay vanilla: vanilla's own
+     _balanced clips have no row either. Wind-ups, defends, guards, kicks, bashes and parries never reach that table
+     and keep rule 2;
   1. the Fab clip the cave troll rules choose (tools/bind_troll_action_set.py: walk_forward, run_forward, idle,
      strike, death_fall), renamed anim_troll_* -> anim_hill_troll_* (the hill troll's 52, from
      tools/blender/fab_hill_troll_clip_names.json): the troll's own gait, idles, hit reactions and deaths;
@@ -39,7 +41,9 @@ with ElementTree before it is written, and only the body between this set's open
 set's bound clip names are replaced, so re-running is idempotent and the cave troll's set (another session's)
 is untouched. A code is bound to a clip only if its <clip>_anm.tpac is in --clips-dir, which defaults to the
 hill troll's animations folder in the install and must exist and hold at least one Fab clip (an empty folder would
-unbind every troll clip); at least one --clips-index is required for the same reason. Dry run by default; --apply
+unbind every troll clip); at least one --clips-index is required for the same reason, and --module (default the
+install's LOTRLOME_Armory) must hold a RuntimeDataCache folder (without one every rule 0 clip would read as unkeyed
+and every troll swing would go back to vanilla). Dry run by default; --apply
 writes, and refuses while the game or the Kit runs, or when the process list cannot be read.
 
     python tools/bind_hill_troll_action_set.py --clips-index <human_json>/clips_index.json [--clips-index ...]
@@ -60,9 +64,10 @@ import set_clip_balance_name as scbn  # noqa: E402  (which clips are self-keyed:
 from _gamedir import game_dir, game_or_kit_running  # noqa: E402
 
 GAME = os.path.join(game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"), "Modules")
-LIVE = os.path.join(GAME, "LOTRLOME_Armory", "ModuleData", "action_sets.xml")
+MODULE = os.path.join(GAME, "LOTRLOME_Armory")
+LIVE = os.path.join(MODULE, "ModuleData", "action_sets.xml")
 NATIVE = os.path.join(GAME, "Native", "ModuleData", "action_sets.xml")
-CLIPS_DIR = os.path.join(GAME, "LOTRLOME_Armory", "Assets", "Race Test", "Mordor", "Trolls", "animations")
+CLIPS_DIR = os.path.join(MODULE, "Assets", "Race Test", "Mordor", "Trolls", "animations")
 SET_ID = "as_hill_troll_warrior"
 POSES_ID = "as_hill_troll_poses"
 PREFIX = "anim_hill_troll_"
@@ -257,11 +262,18 @@ def main(argv=None) -> int:
     ap.add_argument("--renames", default=RENAMES,
                     help="JSON of vanilla clip name to shorter troll clip name for names over the engine's 63 characters "
                          "(the generator's -Renames file); '' for none")
+    ap.add_argument("--module", default=MODULE,
+                    help="the module root holding RuntimeDataCache/, read by rule 0 for each self-keyed clip's entry "
+                         "(default: the install's LOTRLOME_Armory)")
     args = ap.parse_args(argv)
 
     if not os.path.isdir(args.clips_dir):
         # without the folder every code would fall back to the human clip and read as a clean run
         print("ERROR: clips folder not found: %s (pass --clips-dir)" % args.clips_dir, file=sys.stderr)
+        return 2
+    if not os.path.isdir(os.path.join(args.module, "RuntimeDataCache")):
+        # every rule 0 clip would read as unkeyed and every troll swing would go back to vanilla in a clean-looking run
+        print("ERROR: no RuntimeDataCache folder in %s (pass --module, the module root)" % args.module, file=sys.stderr)
         return 2
     renames = load_renames(args.renames)
     human_clips, fab_clips = available_clips(args.clips_index, args.fab_names, args.clips_dir, renames)
@@ -284,7 +296,7 @@ def main(argv=None) -> int:
     actions = human_actions(native_text)
     candidates = {human_clip_name(a["animation"], renames) for a in actions
                   if MELEE_TABLE.match(a.get("type", "")) and a.get("animation")} & human_clips
-    keyed = scbn.keyed_clips(args.clips_dir, candidates)
+    keyed = scbn.keyed_clips(args.clips_dir, candidates, args.module)
     lines, counts = build_body(actions, human_clips, fab_clips, renames=renames, keyed=keyed)
     print("human codes read: %d; set body planned: %d codes  (%s)" % (
         len(actions), len(lines),

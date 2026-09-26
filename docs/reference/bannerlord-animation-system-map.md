@@ -112,7 +112,7 @@ that 0x591C30 builds (vector 0xDB00C8, indexed through the remap array 0xDB00A8)
 | **Priority** | `+0x20`, i32 shown as a float; the setter truncates | W7 | Low byte ORed into the runtime flag word `+0x1D0` (0x591CAB) [Certain] (R-Fields, R-Flags); the priority gate 0x658E80 | Channel arbitration: a request below the current priority is rejected, a tie wins (section 8) | Kit 0..100. TaleWorlds' own metadata dump labels this field "param_3", a copy-paste bug [Certain] (R-Kit). A request with a nonzero priority byte replaces it. Managed bands (`AnimFlags.cs:10-32`): attack 10, defend 14, parry, blocked and throw 15, kick 33, reload 60, mount 64, equip 70, striked 80, die 95 [Certain]. A clip left at the Kit default 0 plays in the viewer and loses in battle (lessons, "A mount's clip needs a priority") |
 | **Randomization weight** | `+0x40`, i32 (`randomization_weight`; TpacTool's `UnknownInt`) | W21 | Bits 60..63 of `+0x1D0` (0x591CB9, `shl 0x3c`) [Certain] (R-Fields, R-Flags) | Weight in the action's `alternative_group` pick (0x655310) | Kit 0..15; a larger value would wrap mod 16. A group whose weights sum to 0 plays the requested action. R-Kit left the packing UNVERIFIED; both client-side reports read it at 0x591CB9. Vanilla: all 526 clips in the 111 groups have weight 1 or more [Certain] |
 | **Step points X Y Z W** | `+0x44`, 4 x f32 (`step_points`) | W9 | Runtime `+0x6C..+0x78`: each value v of 0 or more becomes min(v, 0.99), a negative one becomes -1.0 [Certain]; step events 0x5F8FD0; footsteps 0x6D9C00 | Progress points for events: the clip sound at index 0 or 1, the voice at a step with no sound or index 2 or more, the bodyfall sound with `make_bodyfall_sound`, footsteps with `make_walk_sound` | Single selection only, range -1..1. `use_last_step_point_as_data` silences index 3. The progress comparator itself is UNVERIFIED. Step points are not only sound triggers (section 11) |
-| **Sound code** | `+0x58`, string (`sound_code`) | W10 | Runtime `+0x7C` (int16) through the sound manager. A miss logs "Sound not found: %s. It is used for animation: %s" and stores -1 [Certain] | FMOD event played at step 0 or 1 | 1,547 vanilla clips use 133 events |
+| **Sound code** | `+0x58`, string (`sound_code`) | W10 | Runtime `+0x7C` (int16) through the sound manager. A miss logs "Sound not found: %s." and "It is used for animation: %s" (two separate strings in the client DLL) and stores -1 [Certain] | FMOD event played at step 0 or 1 | 1,547 vanilla clips use 133 events |
 | **Voice code** | `+0x78`, string | W11 | Runtime `+0x1F4` (int16) from the voice-type table (0x637BB0); unknown gives -1 [Certain] | Voice type from `voice_definitions.xml` `<voice_type>` | 134 vanilla clips, 15 types |
 | **Facial animation id** | `+0x98`, string (`facial_anim_id`) | W12 | Runtime `+0x1B0` (copy) and `+0x1F8` (index, 0x594AE0). A miss logs "Could not find face animation record with name: %s" [Certain]. Applied only by `Human_anim_system` (0x63EFA0), looping when the clip is `cyclic` | Plays a face animation record | Ids are `face_animation_record` entries in `Native/ModuleData/voices.xml` (246). Which monsters run `Human_anim_system` is UNVERIFIED |
 | **Blends with action** | `+0xB8`, string | W13 | Runtime `+0x1EC` (action code). Empty or `act_none` gives -1, and so does an unknown name, silently [Certain]. Read by 0x655480, 0x655F90, 0x678310, 0x6820B0 | Runtime two-layer blend with the partner action's clip at a factor (section 8) | Required by `blends_according_to_look_slope`: the load validator strips the flag without it. All 175 vanilla self-keyed swings leave it empty |
@@ -216,7 +216,10 @@ never reaches the runtime clip [Certain] (R-Fields).
 **The table** [Certain] (R-Life, R-Fields): a hash table at 0xDB0360 keyed by clip index. A row holds the i32 key at
 `+0`, a second i32 index at `+8` [Likely], 10 clip pointers at `+0x10..+0x58` and the next pointer at `+0x60`
 (0x5682B0 stores a child at `row + 0x10 + 8 x slot`; 0x659030 reads the same address). At package load, clip item slot 5 (0x58BEA0)
-inserts through 0x5682B0, which copies the key name into a 64-byte buffer, so 63 characters are usable.
+inserts through 0x5682B0, which copies the key name with `strcpy_s(buf, 64, name)` (the call at 0x568342 goes
+through the import `strcpy_s`, size 0x40 in `edx`), so 63 characters are usable. A longer name does not truncate: it
+takes the CRT's invalid-parameter path, and what the game does then is UNVERIFIED. `gen_troll_anim_clips.ps1`
+refusing any clip name over 63 characters (the `-Renames` map shortens the long ones) is the guard.
 
 | The clip's metadata | What 0x58BEA0 does |
 |---|---|
@@ -266,8 +269,8 @@ fields empty.
 
 | Way | How | Caveats |
 |---|---|---|
-| Bind the vanilla clip (the hill troll's current data) | `tools/bind_hill_troll_action_set.py` rule 0 (`MELEE_TABLE`) binds the four families to vanilla clips; every other action keeps the troll clip | The troll swings with human motion |
-| Self-key the race clip | In the Kit, type the clip's own name (63 characters at most) into Blends with animation, leave Blends with action empty, keep the parent fields empty and the child index -1, and Save. `tools/set_clip_balance_name.py` (untracked on 2026-09-26) makes the same edit offline, rewrites the item checksum and the RDC stamp, and refuses while the Kit or the game runs | Every weapon balance plays the one clip. Check Loading Type first (below). Since 14:12 on 2026-09-26 the troll binder's rule 0 and `wire_hill_troll_race.py --check` read the packages and accept a self-keyed clip (section 9) |
+| Bind the vanilla clip (all 618 hill troll melee codes from 09:15 to 14:13 on 2026-09-26; 586 of them since) | `tools/bind_hill_troll_action_set.py` rule 0 (`MELEE_TABLE`) binds the four families to vanilla clips unless the troll clip is self-keyed; every other action keeps the troll clip | The troll swings with human motion |
+| Self-key the race clip | In the Kit, type the clip's own name (63 characters at most) into Blends with animation, leave Blends with action empty, keep the parent fields empty and the child index -1, and Save. `tools/set_clip_balance_name.py` makes the same edit offline, rewrites the item checksum and the RDC stamp, and refuses while the Kit or the game runs; `gen_troll_anim_clips.ps1` writes a clone of a keyed vanilla template this way | Every weapon balance plays the one clip. Check Loading Type (below). The troll binder's rule 0 and `wire_hill_troll_race.py --check` read the packages and accept a clip only when it is self-keyed and its RDC stamp matches its checksum (section 9) |
 | Author a `_balanced` twin | Author a second clip for the balanced end, name it in Blends with animation and Save; the Kit generates the 10 children | Never name a vanilla clip, and never give a race clip a vanilla parent name: a child fills a slot of the parent's row, which would change every human's attack (troll-race.md) |
 
 **Check Loading Type before binding a self-keyed troll clip.** Two readings of the same byte disagree, and both
@@ -281,8 +284,21 @@ say the value matters:
 - **Both agree on the data** [Certain] (R-Life; re-read by the checker at 14:24): 48 of the 62 troll release and
   blocked clips are at 2 with 0 segments, including the self-keyed `anim_hill_troll_release_overswing_2h`; the other
   418 troll clips (outside the four families) are all at 0, and so were all 299 troll clips bound before the 14:13
-  rebind. What the engine plays for a self-keyed row whose clip is at 2 is UNVERIFIED. Setting Loading Type to Always
-  keep in memory (0) before binding is the conservative choice [Likely]; a Custom Battle proves it.
+  rebind.
+- **Loading Type 2 does not stop a directly bound clip from playing** [Likely] (R-Fields' `vanilla_full.tsv` joined
+  with Native's `action_sets.xml`, comments stripped, 2026-09-26 evening). Of vanilla's 574 clips at 2, 347 are
+  unkeyed base clips; the rest are the 107 twin-keyed parents and 120 generated children of the flail swings. 254 of
+  the 347 are bound directly, by 320 live nodes over 267 action codes in `as_human_warrior`, `as_cat`, `as_dog` and
+  `as_human_hideout_bandit`: 98 `act_conversation_*` gestures, `act_sit_and_drink_idle`
+  (`anim_sit_idle_tavern_drink1`), the cat and dog gaits, jumps and deaths, and the dog's inventory idle. No melee
+  table stands between those actions and their clips, and they animate in vanilla play, so the null keyframe set
+  built at load does not leave a clip motionless; where its keyframes come from later is UNVERIFIED. (The rider
+  falls, `act_fall_rider_left` to `fall_rider_left` and its kin, are commented out in Native and prove nothing.)
+- **The self-keyed row at 2 in game:** the 15:40 Custom Battle (troll-race.md "The swing CTD") entered the 12 quick
+  release and quick blocked codes for overswing and both slashes, all on troll clips at 2, with no crash. Its
+  `[TrollClips]` trace reads the set's binding, not the keyframes, so what a self-keyed row plays at 2 stays
+  UNVERIFIED until someone watches a hill troll's quick overswing; the risk is low. Setting Always keep in memory
+  (0) before binding remains the conservative choice.
 
 **The troll today** (read by the checker at 14:24 on 2026-09-26; this data was changing during the session)
 [Certain]:
@@ -296,8 +312,11 @@ say the value matters:
   `action_sets.xml.bak-hilltroll-bind-20260926-141305`), and `as_hill_troll_warrior` now binds 32 of its 618 melee
   codes to those 30 clips (both thrust blocked clips also serve the quick blocked thrust codes). The other 586 use
   vanilla clips.
-- **24 of the 30 bound clips are at Loading Type 2**, the reading above that says no keyframes load; only the six
-  thrust clips are at 0. Whether they play correctly is UNVERIFIED until a Custom Battle.
+- **24 of the 30 bound clips are at Loading Type 2** (every overswing and slash clip); only the six thrust clips are
+  at 0. The 15:40 Custom Battle entered 12 of the 32 codes (the quick release and quick blocked codes for overswing
+  and both slashes, each stance, all on clips at 2) with no crash; the full release and blocked codes did not run,
+  and the thrust codes are out of reach with the hill troll's hammer. Whether the swings visibly animate is
+  UNVERIFIED; the census above makes it [Likely].
 
 That the Kit edits were Mike's comes from the `set_clip_balance_name.py` docstring [Likely]; who ran the 13:28 and
 14:13 changes is not recorded here.
@@ -349,7 +368,8 @@ enforce_weapon_tip_with_rope_stretched, enforce_weapon_tip_with_rope_relaxed, di
 switch_item_between_hands, attach_sound_to_agent, spawn_particle [Certain] (R-Kit).
 
 **Runtime map, by bit.** Vanilla counts come from R-Flags' parser over all 6,177 vanilla clips. Managed file:line
-references point at the ilspycmd decompile. For which flags a clip *type* needs, the recipe stays in
+references point at the taom-src cache `C:/Users/mikew/.taom-src/v1.5.3/`, like sections 7 and 8 (re-cited on
+2026-09-26 from a first draft that quoted a scratch decompile). For which flags a clip *type* needs, the recipe stays in
 [bannerlord-animation-clip-flags.md](bannerlord-animation-clip-flags.md); section 11 lists where that recipe conflicts
 with this map.
 
@@ -371,20 +391,20 @@ with this map.
 | `blends_according_to_look_slope` | 20 (`0x100000`) | blend | Blend factor with the Blends-with-action partner from look pitch, level look = Param 1 (0x65697B); validator rule 5 | clips with an up and down look partner, such as the shield defends (151, 123 with Param 1 set) | [Certain] |
 | `synch_with_horse` | 21 (`0x200000`) | sync | Progress set from the tick's 4th argument (0x65690E); resync mask | 143 | [Certain] |
 | `use_left_hand_during_attack` | 22 (`0x400000`) | item | Tested at 0x5F7D88 | 26 | test [Certain], effect UNVERIFIED |
-| `lock_camera` | 23 (`0x800000`) | camera | Managed: camera bearing from the pose (`MissionScreen.cs:1070`), first-person look skipped (`:2070`); validator rule 1 | 247 | [Certain] |
-| `lock_movement` | 24 (`0x1000000`) | movement | On start the agent's movement target resets to its current value (0x5EDE59, 0x5EDEB3); managed bearing clamp (`MissionScreen.cs:3224`); seven more native tests UNVERIFIED | 721 | tests [Certain], freeze [Likely] |
+| `lock_camera` | 23 (`0x800000`) | camera | Managed: camera bearing from the pose (`MissionScreen.cs:2288`), first-person look skipped (`:3175`); validator rule 1 | 247 | [Certain] |
+| `lock_movement` | 24 (`0x1000000`) | movement | On start the agent's movement target resets to its current value (0x5EDE59, 0x5EDEB3); managed bearing clamp (`MissionScreen.cs:4749`); seven more native tests UNVERIFIED | 721 | tests [Certain], freeze [Likely] |
 | `synch_with_movement` | 25 (`0x2000000`) | sync | Progress comes from the movement-phase provider (Human 0x640950, Horse 0x6426E0), the agent's own or another agent's (the mount [Likely]) (0x656B62, 0x656D03, 0x656DC9); resync mask | rider and head-turn overlays (65); 0 of 435 human gait clips | [Certain] code |
 | `enable_hand_spring_ik` | 26 (`0x4000000`) | IK | Tested at 0x66B9C9 | 278 | test [Certain], effect UNVERIFIED |
 | `enable_hand_blend_ik` | 27 (`0x8000000`) | IK | On start, captures the current hand-bone frames, gated by `enforce_all` or an empty channel 1 (0x5EDEF5); IK mask (0x63F8CD) | 200 | [Certain] tests |
-| `synch_with_ladder_movement` | 28 (`0x10000000`) | sync | Action speed forced to 0 (0x655629), progress from ladder position (0x656E87), auto-increment cleared; managed `AgentVictoryLogic.cs:204, :323`, `MissionScreen.cs:3224` | ladder clips (1) | [Certain] |
+| `synch_with_ladder_movement` | 28 (`0x10000000`) | sync | Action speed forced to 0 (0x655629), progress from ladder position (0x656E87), auto-increment cleared; managed `AgentVictoryLogic.cs:204, :323`, `MissionScreen.cs:4749` | ladder clips (1) | [Certain] |
 | `do_not_keep_track_of_sound` | 29 (`0x20000000`) | sound | The sound plays without a tracking handle (0x5F913A) | 19 | [Certain] |
-| `reset_camera_height` | 30 (`0x40000000`) | camera | Managed only: camera height 0.5 on channel 0 (`MissionScreen.cs:1258`) | 215 | [Certain] |
+| `reset_camera_height` | 30 (`0x40000000`) | camera | Managed only: camera height 0.5 on channel 0 (`MissionScreen.cs:1977`) | 215 | [Certain] |
 | `disable_alternative_randomization` | 31 (`0x80000000`) | alternatives | Not a Kit flag: skips the alternatives pick when passed as `SetActionChannel` additional flags (0x655480) | pass it from code, never on a clip | [Certain] |
 | `disable_auto_increment_progress` | 32 (`0x100000000`) | playback | Clears the rgl auto-increment bit (0x6412C0, 0x6FB33F, 0x63DD26) | 37 | [Certain] packing |
 | `switch_item_between_hands` | 33 (`0x200000000`) | item | Channel 1: between switch_progress and switch_back_progress the weapon moves to the other hand bone, offset by weapon_displacement (0x6C61EF). **Needs a hand_switch usage** | 0 | [Certain] |
 | `attach_sound_to_agent` | 34 (`0x400000000`) | sound | While playing, the sound position follows the agent (0x5F91D0) | 20 | [Likely] |
 | `spawn_particle` | 35 (`0x800000000`) | particle | Spawns `particle_name` at `bone_index` when progress crosses `particle_start_progress` (0x65652C). **Needs a particle usage** | 0 | [Certain] |
-| `enforce_lowerbody` | 36 (`0x1000000000`), layer 0 | body | Picks which channel owns the footsteps (0x6D9C00, mask 0x3000000000); managed conversation check (`MissionConversationLogic.cs:300`); other sites UNVERIFIED | 376; every vanilla horse clip read, including hit reactions (lessons) | [Certain] tests |
+| `enforce_lowerbody` | 36 (`0x1000000000`), layer 0 | body | Picks which channel owns the footsteps (0x6D9C00, mask 0x3000000000); managed conversation check (`MissionConversationLogic.cs:397`); other sites UNVERIFIED | 376; every vanilla horse clip read, including hit reactions (lessons) | [Certain] tests |
 | `enforce_all` | 37 (`0x2000000000`), layer 1 | body | On channel 0: rejects channel-1 requests unless `ignorePriority` (0x655659) and clears channel 1 on start (0x655A0F); passive-usage conditions fail (0x6746A0); channel-0 strike checks (0x5F08BD, 0x6A1F3D); hand-blend-IK gate (0x5EDF1A) | 584 | [Certain] tests |
 | `cyclic` | 38 (`0x4000000000`), layer 2 | lifecycle | At clip end, replays the action with the priority byte stripped (0x656366); facial animation loops (0x63F009); validator rules 2, 4, 7; other tests (0x5F9A3D, 0x675333, 0x676954) UNVERIFIED | 1,411; 0 of 435 human gait clips, 48 of 142 quad clips | [Certain] |
 | `enforce_root_rotation` | 39 (`0x8000000000`), layer 3 | root | Managed conversation check only; native consumer not found | 2,528 | UNVERIFIED native |
@@ -394,7 +414,7 @@ with this map.
 | `update_bounding_volume` | 43 (`0x80000000000`), layer 7 | render | rgl sets the update-bound byte `+0x1043` (0x49E3A4) | 715 | [Certain] test |
 | `align_with_ground` | 44 (`0x100000000000`), layer 8 | root | Human: the ground-alignment weight ramps over the blend usage's start to end (0x6585B0). **Needs a blend usage**; NavalDLC reads and sets it | 171, all with a blend usage | code [Certain], ramp [Likely] |
 | `ignore_slope` | 45 (`0x200000000000`), layer 9 | root | Not found | 29 | UNVERIFIED |
-| `displace_position` | 46 (`0x400000000000`), layer 10 | root | Moves the agent by the displacement usage's vector, linear up to its end progress (channel 0 per tick 0x655E00; rgl root accumulators 0x49DEB0); managed `AnimationPoint.cs:248-250`. **Needs a displacement usage** | 337, all with a displacement usage | [Certain] |
+| `displace_position` | 46 (`0x400000000000`), layer 10 | root | Moves the agent by the displacement usage's vector, linear up to its end progress (channel 0 per tick 0x655E00; rgl root accumulators 0x49DEB0); managed `AnimationPoint.cs:305` (the arrive action's clip flags) and `:732` (channel 0's current flags). **Needs a displacement usage** | 337, all with a displacement usage | [Certain] |
 | `enable_left_hand_ik` | 47 (`0x800000000000`), layer 11 | IK | 0x66BDFD, 0x66BE77; rgl bone indices `+0x50`/`+0x51` (0x49E042) | 1,056 | [Certain] tests |
 | `ignore_scale_on_root_position` | 48 (`0x1000000000000`), layer 12 | root | Not found | 125 | UNVERIFIED |
 | `blend_main_item_bone_entitially` | 49 (`0x2000000000000`), layer 13 | item | rgl keeps the main-item bone's entitial frame across sampling (0x49DFAC, 0x49DFE7) | 204 | test [Certain], meaning [Likely] |
@@ -511,7 +531,9 @@ asset directory in module folders" and "Loading done..."; the client carries the
 `DsAssetPackages` and `EmAssetPackages` [Certain]. The selection rule is not traced: UNVERIFIED. The Kit session
 `rgl_log_11008` loaded `Native/EmAssetPackages`, `SandBox/EmAssetPackages` and `LOTRLOME_Armory/Assets` [Certain]; for
 the game client, loose `Assets` wins even where cooked packs exist ([armory-guide.md](armory-guide.md) "Two asset
-trees", from logs of 2026-09-01 and 2026-09-26; no game rgl log survives on disk today). Per module on 2026-09-26,
+trees", from logs of 2026-09-01 and 2026-09-26). Two game sessions' logs survive: `rgl_log_19864` (14:34) and
+`rgl_log_88052` (15:40) on 2026-09-26 each log `Loading packages $BASE/Modules/LOTRLOME_Armory/Assets...`, beside
+`Native/AssetPackages` [Certain]. Per module on 2026-09-26,
 tpacs counted recursively [Certain] (R-Life, recounted by the checker at 14:30):
 
 | Module | Loose `Assets` tpacs | `AssetPackages` tpacs | `EmAssetPackages` tpacs | `RuntimeDataCache` `.rdc` files |
@@ -525,8 +547,9 @@ tpacs counted recursively [Certain] (R-Life, recounted by the checker at 14:30):
 - Registration (0x58F4C0) hashes the clip name with FNV-1a-64 into the map at 0xDB0070 and stores a running index at
   clip `+0x68`. A second clip with the same name is refused: "Unable to register animation clip %s. Another clip with
   same name already exist". Lookup (0x58F6F0) returns -1 on a miss.
-- The client copies a clip name into a 64-byte buffer before a table lookup (0x5682B0), so keep names to 63
-  characters; the Kit has "Could not set fixed-size(%d) string to: %s". The hill troll's 15 over-long names are
+- The client copies a clip name into a 64-byte buffer with `strcpy_s` before a table lookup (0x5682B0), so keep
+  names to 63 characters: a longer one takes the CRT's invalid-parameter path, not a truncation (section 3). The Kit
+  has "Could not set fixed-size(%d) string to: %s". The hill troll's 15 over-long names are
   mapped in `tools/blender/hill_troll_clip_renames.json`.
 - Never rename a clip in the Kit: the orientation trap "Kit clip rename" and `tools/rename_anim_clip_tpac.py`.
 
@@ -544,7 +567,9 @@ and resolve), logging "Unable to read animation clip data for %s" on failure [Ce
 2. That applies the module's `<name>.xsl(t)` to the accumulated document (the Armory's `action_sets.xslt` injects the
    elephant rider actions into `as_human_warrior`), then `MergeElements` merges keyed by the XSD's unique attributes
    (`action_set@id`, `action@type`).
-3. `CreateProcessedActionSetsXMLForNative` removes the remaining duplicate ids and hands the XML to native.
+3. `CreateProcessedActionSetsXMLForNative` walks every `action_set`, keyed by its first attribute's text; a later
+   set with the same key has its `Descendants()` added to the first one and is then removed (`Module.cs:1424-1429`),
+   so a duplicate id is folded into the first, not dropped. The result goes to native.
 4. Live contributors are Native and the Armory only. TAOM_Map's `project.mbproj` uses `<Module>` elements, which
    `XmlResource.GetMbprojxmls` ignores because it selects `base/file` (`XmlResource.cs:219`), and its files do not
    exist.
@@ -584,8 +609,9 @@ not find animation", 0 "undefined action" and 0 "default action set" lines [Cert
   (stride 0x1B0) linearly; a miss logs "get_monster_usage_set_index failed %s." and returns -1.
 - Bone attributes resolve through the action set's skeleton: `GetBoneIndexWithId(ActionSetCode, bone)`
   (`Monster.cs:646`, `MBActionSet.cs:80`).
-- Suffixed sets (`_villager`, `_map`) come from `MBGlobals.GetActionSetWithSuffix` (`MBGlobals.cs:28-40`, a
-  `FailedAssert` when missing). `ActionIndexCache.Create(name)` resolves through `MBAnimation.GetActionCodeWithName`.
+- Suffixed sets (`_villager`, `_map`) come from `MBGlobals.GetActionSetWithSuffix` (`MBGlobals.cs:28`), which calls
+  `GetActionSet`; a missing set there is a `FailedAssert` and then `throw new Exception("Invalid action set code")`
+  (`MBGlobals.cs:40-41`). `ActionIndexCache.Create(name)` resolves through `MBAnimation.GetActionCodeWithName`.
 - The usage tables themselves and their crash rules: [creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md)
   Phase 5.
 
@@ -667,8 +693,8 @@ lookup (always 0 from managed, 0x6E1BD0).
 | `MBActionSet.GetActionBlendOutStartProgress` | 0x6EA760 | `1 - (+0x1E8)/(+0x188)` |
 | `MBActionSet.GetActionAnimationFlags` | 0x6E9F10 | the whole `+0x1D0` |
 | `MBActionSet.GetActionAnimationContinueToAction` | 0x6EA3F0 | `+0x1F0` |
-| `SkeletonExtensions.DoesActionContinueWithCurrentActionAtChannel` | 0x6FB520 | clip `+0x1F0` against the channel's current action |
-| `SkeletonExtensions.SetAnimationAtChannel` | 0x6FB290 | a negative blend-in uses `+0x1E4` |
+| `MBSkeletonExtensions.DoesActionContinueWithCurrentActionAtChannel` | 0x6FB520 | clip `+0x1F0` against the channel's current action |
+| `MBSkeletonExtensions.SetAnimationAtChannel` | 0x6FB290 | a negative blend-in uses `+0x1E4` |
 | `Agent.GetCurrentAnimationFlag` | 0x6E1990 -> 0x605F90 | effective flags |
 
 Vanilla managed callers include the crosshair reload phases (Param 2 and the continue chain), NavalDLC machines (Param
@@ -684,8 +710,8 @@ and `enforce_all` triggers the channel-1 rules above [Certain] (R-Flags). See
 
 | Symptom | Cause | Doc | Gate | Gap |
 |---|---|---|---|---|
-| AV at `+0x6590B9` reading 0x8 to 0x50 (0x8 observed) on the first swing or blocked recoil | A release or blocked clip with no melee-table row, or an action the set does not bind (-1) reaching 0x659030 through 0x6825C0 or 0x683290 [Certain] | Section 3; [troll-race.md](../features/troll-race.md) "The swing CTD"; lessons, "A melee release bound to a custom clip crashes the first swing" | `bind_hill_troll_action_set.py` rule 0 (`MELEE_TABLE`, unit tested); `wire_hill_troll_race.py --check`; `set_clip_balance_name.py --check` (all three uncommitted on 2026-09-26) | Covers `as_hill_troll_*` only, with no general gate. R-Life found the rule-0 and `--check` logic failing any `anim_*` clip on a release or blocked code; the versions edited at 14:11 and 14:12 read the packages (`set_clip_balance_name.keyed_clips`) and accept a self-keyed clip [Certain for the code; the gates' unit tests not run here] |
-| AV at `+0x57070C` about a second into deployment | A race head, eye or mouth on LOD0 with no face morph channels: the Kit writes an empty morph record, and 0x570550's null check covers only the record pointer, not its buffer [Certain] | troll-race.md "Face morph channels"; [armory-guide.md](armory-guide.md) "Only LOD0 carries morphs" | `check_race_morph_channels.py` (untracked) | Its spec covers only the hill troll and dwarf f1 FBX sources, not compiled tpacs |
+| AV at `+0x6590B9` reading 0x8 to 0x50 (0x8 observed) on the first swing or blocked recoil | A release or blocked clip with no melee-table row, or an action the set does not bind (-1) reaching 0x659030 through 0x6825C0 or 0x683290 [Certain] | Section 3; [troll-race.md](../features/troll-race.md) "The swing CTD"; lessons, "A melee release bound to a custom clip crashes the first swing" | `bind_hill_troll_action_set.py` rule 0 (`MELEE_TABLE`, unit tested); `wire_hill_troll_race.py --check`; `set_clip_balance_name.py --check` (all three in commit `30abf550`) | Covers `as_hill_troll_*` only, with no general gate. R-Life found the rule-0 and `--check` logic failing any `anim_*` clip on a release or blocked code; the versions edited at 14:11 and 14:12 read the packages (`set_clip_balance_name.keyed_clips`) and accept a self-keyed clip, and since the evening of 2026-09-26 only one whose RDC stamp also matches its checksum [Certain for the code; the gates' unit tests not run here]. Only `/armory-audit` lists the `--check` as a step after an Armory sync; nothing runs it automatically |
+| AV at `+0x57070C` about a second into deployment | A race head, eye or mouth on LOD0 with no face morph channels: the Kit writes an empty morph record, and 0x570550's null check covers only the record pointer, not its buffer [Certain] | troll-race.md "Face morph channels"; [armory-guide.md](armory-guide.md) "Only LOD0 carries morphs" | `check_race_morph_channels.py` | Its spec covers only the hill troll and dwarf f1 FBX sources, not compiled tpacs |
 | Null read at `+0x18`, `+8` or `+0x2C` while a clip plays | A flag without its usage: `displace_position` without displacement (0x655E9C, 0x49DEF8); `align_with_ground` without blend (0x65868D); `spawn_particle` without particle (0x65658B or 0x6565AC); `switch_item_between_hands` without hand_switch (0x6C6230) [Certain from the code; not reproduced] | Section 5 | none; the installed clips pass a one-off scratch check | No committed gate |
 | AV in a mount context at `+8`, `+0xC` or `+0x10` | A horse movement-table clip without `quad_movement`: 10 unchecked sites, one reachable through `WalkingSpeedLimitOfMountable` (0x6E4C80, `+0x10`) [Certain for the sites] | [creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md) Phase 1 and "The ways a re-export breaks a working mount" | `verify_mount_assets.py` CHECK 2 | Only the creatures in its config. The 1.5.3 crash offset has not been observed (R-Life) |
 | AV in human locomotion | A human locomotion-table clip without `bip_mov_ik`: 36 unchecked sites [Certain for the sites] | Section 5 | none | Not observed; vanilla-derived sets inherit valid clips |
@@ -716,8 +742,10 @@ rewrites seven flag combinations (section 4).
    falls bind like any other clip (section 3).
 2. **Give each clip bound to those families a row.** Self-key it (Blends with animation = its own name, Blends with
    action empty, parents empty, child index -1) or author a `_balanced` twin. Never name a vanilla clip.
-3. **Set Loading Type to Always keep in memory** before binding [Likely]; the 2 on 48 troll release and blocked clips
-   is untested, and 24 of them are bound since 14:13 on 2026-09-26 (section 3).
+3. **Loading Type:** Always keep in memory (0) is the conservative choice before binding. A 2 is [Likely] fine:
+   vanilla binds 254 unkeyed clips at 2 directly to actions that animate, and 24 self-keyed hill troll clips at 2 are
+   bound since 14:13 on 2026-09-26, 12 of them entered in the 15:40 battle with no crash; what their row plays stays
+   UNVERIFIED until someone watches one (section 3).
 4. **Combat parameter id:** give the swing an id with a collision window. `hit_bone_index` is a raw bone index into the
    agent's skeleton [Certain], so on a race skeleton confirm the index lands on the weapon hand [Likely].
 5. **Param 1 = reach:** run Compute Reach with the race's skeleton model in the Skeleton combo; the reach cluster reads
@@ -727,8 +755,8 @@ rewrites seven flag combinations (section 4).
 7. **Save in the Kit,** or run `python tools/set_clip_balance_name.py --clips-file names.txt --apply` then `--check`
    with the Kit and the game closed. Confirm the RDC entry (`check_rdc_entries.py`).
 8. **Bind and run the gates.** Bind the clips in the race's set. For the hill troll, the binder's rule 0 and
-   `wire_hill_troll_race.py --check` accept a self-keyed clip since 14:12 on 2026-09-26 (section 9); a new race needs
-   the same rule in its own binder.
+   `wire_hill_troll_race.py --check` accept a clip that is self-keyed and whose RDC stamp matches its checksum
+   (section 9); a new race needs the same rule in its own binder.
 9. **Smoke:** a Custom Battle with a light and a heavy weapon (balance slot 0 against slot 9), then read the rgl log
    (10.3).
 
@@ -741,8 +769,10 @@ rewrites seven flag combinations (section 4).
    name no skeleton"). Re-importing a rig resets hand-bound materials and can drop the skeleton
    ([armory-guide.md](armory-guide.md), creature-mount-authoring.md).
 3. **Create the clips,** in the Kit or from vanilla templates with `tools/gen_troll_anim_clips.ps1`
-   (ue-to-bannerlord-asset-pipeline.md "The clip stage"). A template copy carries the vanilla clip's Blends with
-   animation, Blends with action and Loading Type: check all three.
+   (ue-to-bannerlord-asset-pipeline.md "The clip stage"). The generator rewrites Blends with animation and Blends
+   with action (a clone of a keyed template is written self-keyed, of an unkeyed one blank, `Set-ClipKey`); of the
+   three key-coupled fields, only Loading Type carries over from the vanilla clip unchanged, so check it (step 3 of
+   10.1). A generated package has no RDC entry until the Kit saves it.
 4. **Fill each clip:** Animation source, Duration, Source 1 and 2 (the Sample Rate display should match the master),
    flags and priority from the recipe, the usages its flags need (`displace_position` with displacement,
    `align_with_ground` with blend, locomotion tables with `bip_mov_ik` or `quad_movement`), a Continue to action the
@@ -764,7 +794,7 @@ rewrites seven flag combinations (section 4).
 | `python tools/verify_mount_assets.py` | Creature clips: `quad_movement` (CHECK 2) and bound clips that exist (CHECK 3) |
 | `python tools/audit_action_set_parity.py` | Root-level `<action>` (exit 1) and inheritance parity |
 | `python tools/audit_mount_parity.py` | Monster usage coverage (report only; always exits 0) |
-| `python tools/wire_hill_troll_race.py --check` | Hill troll wiring, including no unkeyed troll clip on a melee-table code (uncommitted on 2026-09-26) |
+| `python tools/wire_hill_troll_race.py --check` | Hill troll wiring, including no troll clip on a melee-table code unless it is self-keyed with a matching RDC stamp |
 | `python tools/set_clip_balance_name.py --clips-file <names> --check` | Self-keyed clips have the right bytes, checksum and RDC stamp |
 | `python tools/validate_moduledata.py` | Items, troops and cultures across the three modules |
 
@@ -794,7 +824,7 @@ These docs were read and not edited here; each line is a finding from the report
 | Doc | Claim | Finding |
 |---|---|---|
 | [bannerlord-animation-clip-flags.md](bannerlord-animation-clip-flags.md) "Where the flags live" | The clip is recompiled with the flag bitfield | Flags are saved as a list of names; a bit with no name is dropped (section 4) [Certain] (R-Kit) |
-| same, Cat 1 line 128 | Only two flags are bit-tested in managed C# | Seven managed files test nine flags; `AnimationPoint.cs:305` is `:248`/`:543` in the 1.5.3 decompile [Certain] (R-Flags) |
+| same, Cat 1 line 128 | Only two flags are bit-tested in managed C# | Seven managed files test nine flags [Certain] (R-Flags). Its `AnimationPoint.cs:305` cite (the `anf_displace_position` row) is right in the taom-src cache: the `displace_position` test on the arrive action, with a second one on channel 0 at `:732` (a first draft of this row read a scratch decompile's line numbers) |
 | same, lines 26, 93, 101, 150 | `synch_with_movement` is the anti-skate flag for gaits | 0 of 435 human gait clips carry it; it drives progress from the movement phase and sits on 65 rider and head-turn overlays [Certain] (R-Flags) |
 | same, line 171 | `cyclic` is required on all locomotion | 0 of 435 bipedal and 48 of 142 quadrupedal clips are cyclic; the movement system drives gait progress [Likely] (R-Flags) |
 | same, lines 103, 151 | `use_last_step_point_as_data` marks the stride reference | It sits on 62 equip-type clips and silences step index 3; `*_stand_for_movement_data` clips carry no flags and a `quad_movement` usage [Certain] (R-Flags) |
@@ -831,7 +861,8 @@ Everything below is UNVERIFIED. Grouped by where it sits.
 - The hand pose names, and whether pairs map one to one onto the 26 hand-pose channels [Likely].
 
 **Clip fields at runtime**
-- What plays for a clip at Loading Type 2 when bound directly or through a self-keyed row.
+- What plays through a self-keyed row whose clip is at Loading Type 2 (a directly bound clip at 2 plays [Likely],
+  section 3), and where a Loading Type 2 clip's keyframes come from after the null set built at load.
 - Param 1 on reload, blocked and ready clips; Param 2 and Param 3 outside reload and death; what the death hand-off
   time means (ragdoll or body-down).
 - Consumers of Do not interpolate and Do not optimize outside 0x460000..0x600000.

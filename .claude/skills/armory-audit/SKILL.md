@@ -29,6 +29,7 @@ thing to run after an Armory sync so that class is caught on the desk, not in a 
 ```bash
 python tools/audit_armory_refs.py                    # check
 python tools/audit_armory_refs.py --regen-catalogue  # regen
+python tools/wire_hill_troll_race.py --check         # both modes: the only gate that catches an unkeyed troll clip on a melee-table code (the +0x6590B9 swing CTD)
 ```
 
 About 15 s against the live install. Writes `docs/audits/armory-ref-audit.md` and prints

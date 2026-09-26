@@ -61,8 +61,10 @@ code crashes the swing unless the engine's melee attack table has a row for it. 
 The key is the clip inspector's "Blends with animation" box (TpacTool calls it `UnknownClipName`): the clip's own
 name there self-keys it (vanilla's 175 self-keyed swings all leave "Blends with action" empty), and its balanced
 twin's name there makes the Kit generate ten blend children between the two on save, which fill the row.
-`gen_troll_anim_clips.ps1` blanks the box on every clip it makes, so a generated race clip has no row until the Kit
-or `tools/set_clip_balance_name.py` self-keys it ([troll-race.md](../features/troll-race.md), "The swing CTD";
+Since 2026-09-26 `gen_troll_anim_clips.ps1` writes a clone of a keyed vanilla template self-keyed (and a clone of
+an unkeyed one blank), so a re-cut keeps the key; each new package still needs a Kit save for its RuntimeDataCache
+entry, and an Armory reinstall still drops the key until the Kit or `tools/set_clip_balance_name.py` self-keys the
+clip again ([troll-race.md](../features/troll-race.md), "The swing CTD";
 [bannerlord-animation-system-map.md](bannerlord-animation-system-map.md), section 3). The note that stood here
 until 2026-09-26 (melee is an engine pose-blend, so a race's attack clip can only play from script) is refuted:
 vanilla swings play real clips.

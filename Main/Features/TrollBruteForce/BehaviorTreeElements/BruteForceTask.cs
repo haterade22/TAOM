@@ -57,7 +57,8 @@ public class BruteForceTask : BTTask, IBTBannerlordBase, IBTTrollBruteForceBlack
 
         BruteForceRingResult ring = BruteForceRing.Deliver(mission, troll, _service);
         _logger.LogInfo($"[TrollBruteForce] Brute Force by {troll.Name} at progress {progress:0.00}: " +
-            $"ring={ring.Hit} hit, {ring.KnockedDown} knocked down, {ring.Skipped} skipped (body size {ring.BodySize:0.00}).");
+            $"ring={ring.Hit}/{ring.Cap} hit (rolled cap), {ring.Spared} spared by the cap, {ring.KnockedDown} knocked down, " +
+            $"{ring.Skipped} skipped (body size {ring.BodySize:0.00}).");
         return Finish(BTTaskStatus.FinishedWithTrue);
     }
 

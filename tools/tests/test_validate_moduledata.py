@@ -2198,8 +2198,8 @@ class MissingCollisionBodyTests(unittest.TestCase):
     remembering a second command (the MCP tool and /verify do not yet, #623)."""
 
     def test_loaded_tpacs_keeps_the_modules_path_it_was_given(self):
-        # rebuilding "<parent>/Modules" dropped a lowercase "modules" spelling out of the borrowed-body filter,
-        # which keeps packages whose path starts with the given Modules folder + "LOTRLOME_Armory"
+        # rebuilding "<parent>/Modules" from another spelling of the folder ("mods", a lowercase "modules") would
+        # list packages under a path the caller never gave
         import tempfile
         with tempfile.TemporaryDirectory() as d:
             mods = Path(d) / "mods"
@@ -2207,7 +2207,6 @@ class MissingCollisionBodyTests(unittest.TestCase):
             (mods / "LOTRLOME_Armory" / "Assets" / "a.tpac").write_bytes(b"x")
             got = vm._loaded_tpacs(mods)
             self.assertEqual(got, [mods / "LOTRLOME_Armory" / "Assets" / "a.tpac"])
-            self.assertTrue(all(str(p).startswith(str(mods / "LOTRLOME_Armory")) for p in got))
 
     def _fake_tier_c(self, codes):
         import validate_mesh_refs as vmr

@@ -145,6 +145,33 @@ class EndToEndTests(unittest.TestCase):
             self.assertIn('id="wm_hill_troll_2h_hammer_head"', pieces)
             self.assertEqual(pieces.count('weight="0.875"'), 1)
 
+    def test_a_restored_backup_with_the_old_head_weight_is_a_change(self):
+        # the pieces exist, but a restored .bak-hillhammer (or a copy from before 14:07) carries the cave head's 1.23,
+        # which prices the hammer at 23 Blunt and speed 12: the dry run must report it and --apply put 0.875 back
+        import tempfile
+        from unittest import mock
+        with tempfile.TemporaryDirectory() as md:
+            for rel, text in self.FILES.items():
+                path = os.path.join(md, *rel.split("/"))
+                os.makedirs(os.path.dirname(path), exist_ok=True)
+                open(path, "wb").write(text.encode("utf-8"))
+            pieces_path = os.path.join(md, "LOTRLOME_crafting_pieces.xml")
+            with mock.patch.object(h, "MD", md), mock.patch.object(h, "package_gaps", return_value=[]), \
+                    mock.patch.object(h, "game_or_kit_running", return_value=False):
+                self.assertEqual(h.main(["--apply"]), 0)
+                added = open(pieces_path, "rb").read()
+                reverted = added.replace(b'weight="0.875"', b'weight="1.23"', 1)
+                self.assertEqual(reverted.count(b'weight="1.23"'), 2, "the cave head and the reverted hill head")
+                open(pieces_path, "wb").write(reverted)
+                rows = {os.path.basename(p): (new, note) for p, _raw, new, note in h.plan()}
+                new, note = rows["LOTRLOME_crafting_pieces.xml"]
+                self.assertIsNotNone(new, "the old head weight must be a change")
+                self.assertIn("1.23", note)
+                self.assertEqual(sum(n is not None for n, _ in rows.values()), 1, "nothing else changes")
+                self.assertEqual(h.main(["--apply"]), 0)
+                self.assertEqual(open(pieces_path, "rb").read(), added, "0.875 back, every other byte kept")
+                self.assertTrue(all(new is None for _p, _r, new, _n in h.plan()))
+
 
 if __name__ == "__main__":
     unittest.main()

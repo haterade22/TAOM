@@ -429,7 +429,8 @@ _WARNED_EMPTY_MODULES: set = set()
 
 def module_tpacs(mod_dir: Path, name: str) -> list:
     """The *.tpac of one module folder, as tpac_paths_for_modules chooses them, under the path the caller gave
-    (callers filter on path prefixes, so rebuilding it from another spelling of Modules/ would drop them)."""
+    (never rebuilt from another spelling of Modules/; validate_moduledata's borrowed-body pass lists the Armory
+    this way)."""
     mod_dir = Path(mod_dir)
     loose = sorted((mod_dir / "Assets").rglob("*.tpac"))
     if loose:

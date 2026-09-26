@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TAOM.Features.AdvancedCombat;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
@@ -5,12 +6,17 @@ using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.TrollBruteForce.Hooks;
 
-internal readonly record struct BruteForceRingResult(int Hit, int KnockedDown, int Skipped, float BodySize = 0f);
+/// <param name="Cap">The smash's rolled target cap (<see cref="TrollBruteForceConfig.RingMinTargets"/> to <see cref="TrollBruteForceConfig.RingMaxTargets"/>); 0 when no ring was cast.</param>
+/// <param name="Spared">Eligible enemies the cap left untouched.</param>
+internal readonly record struct BruteForceRingResult(int Hit, int KnockedDown, int Skipped, float BodySize = 0f, int Cap = 0, int Spared = 0);
 
 /// <summary>
-/// Delivers the smash's ring: every enemy human within the scaled outer radius of the impact centre takes the
-/// service's blow (Blunt, knock-back, knockdown unless shield-blocking) through <see cref="CustomAttacksUtils.TakeDamage"/>,
-/// the troll owning it. The victim filter is the signature strikes' (SignatureStrikeRunner). Main thread only.
+/// Delivers the smash's ring. Every enemy human within the scaled outer radius of the impact centre that the service
+/// gives a blow is eligible; the smash rolls a cap of <see cref="TrollBruteForceConfig.RingMinTargets"/> to
+/// <see cref="TrollBruteForceConfig.RingMaxTargets"/>, and only that many of the eligible, nearest the centre first,
+/// take the blow (Blunt, knock-back, knockdown unless shield-blocking) through
+/// <see cref="CustomAttacksUtils.TakeDamage"/>, the troll owning it. The rest are untouched. The victim filter is the
+/// signature strikes' (SignatureStrikeRunner). Main thread only.
 /// </summary>
 internal static class BruteForceRing
 {
@@ -34,7 +40,10 @@ internal static class BruteForceRing
         Buffer.Clear();
         mission.GetNearbyEnemyAgents(centre, service.OuterRadius(scale), troll.Team, Buffer);
 
-        int hit = 0, knockedDown = 0, skipped = 0;
+        // Every enemy the ring could hit, with its blow, and its distance from the centre for the cap's nearest-first pick.
+        var eligible = new List<(Agent Victim, BruteForceBlow Blow)>(Buffer.Count);
+        var distances = new List<float>(Buffer.Count);
+        int skipped = 0;
         foreach (Agent victim in Buffer)
         {
             if (victim == null
@@ -58,13 +67,24 @@ internal static class BruteForceRing
                 continue;
             }
 
-            CustomAttacksUtils.TakeDamage(victim, troll, b.Damage, TrollBruteForceConfig.BlowMagnitude,
-                knockDown: b.KnockDown, extraFlags: BlowFlags.KnockBack, damageType: DamageTypes.Blunt,
-                chargeImpactSound: true);
-            hit++;
-            if (b.KnockDown) knockedDown++;
+            eligible.Add((victim, b));
+            distances.Add(distance);
         }
 
-        return new BruteForceRingResult(hit, knockedDown, skipped, effectiveScale);
+        // The roll is taken here, at the boundary, so the service stays deterministic (Mike, 2026-09-26: 1 to 5 a smash).
+        // MBRandom.RandomInt(min, max) is MBFastRandom.Next: uniform over [min, max), max exclusive, hence the + 1.
+        int cap = MBRandom.RandomInt(TrollBruteForceConfig.RingMinTargets, TrollBruteForceConfig.RingMaxTargets + 1);
+        int hit = 0, knockedDown = 0;
+        foreach (int i in service.NearestRingVictims(distances, cap))
+        {
+            (Agent victim, BruteForceBlow blow) = eligible[i];
+            CustomAttacksUtils.TakeDamage(victim, troll, blow.Damage, TrollBruteForceConfig.BlowMagnitude,
+                knockDown: blow.KnockDown, extraFlags: BlowFlags.KnockBack, damageType: DamageTypes.Blunt,
+                chargeImpactSound: true);
+            hit++;
+            if (blow.KnockDown) knockedDown++;
+        }
+
+        return new BruteForceRingResult(hit, knockedDown, skipped, effectiveScale, cap, eligible.Count - hit);
     }
 }

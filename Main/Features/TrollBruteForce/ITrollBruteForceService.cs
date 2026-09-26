@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace TAOM.Features.TrollBruteForce;
 
 /// <summary>What one enemy in the Brute Force ring takes.</summary>
@@ -46,6 +48,13 @@ public interface ITrollBruteForceService
 
     /// <summary>The ring's scaled outer radius, for the agent query.</summary>
     float OuterRadius(float bodyScale);
+
+    /// <summary>
+    /// Which eligible enemies the ring hits: the indices into <paramref name="distances"/> (each enemy's distance
+    /// from the impact centre) of the <paramref name="cap"/> nearest, nearest first, an equal distance kept in scan
+    /// order. A non-finite or negative distance is never chosen; a cap below 1 chooses none.
+    /// </summary>
+    IReadOnlyList<int> NearestRingVictims(IReadOnlyList<float> distances, int cap);
 
     /// <summary>
     /// A troll's width in formation: its Monster's <see cref="TrollBruteForceConfig.ShoulderWidthByMonster"/> times

@@ -3,9 +3,11 @@
 ## Overview
 
 Both battle trolls (`cave_troll`, `hill_troll`) get one area attack, Brute Force (#649): when an enemy is close and
-in front, the troll plays a two-handed smash, and at the moment the weapon lands every enemy human inside a ring
-ahead of it takes a Blunt blow, is knocked back and, unless blocking with a shield, knocked down. A per-troll
-behaviour tree drives it; the rest of the troll's fighting is the engine's ordinary melee.
+in front, the troll plays a two-handed smash, and at the moment the weapon lands up to five enemy humans inside a
+ring ahead of it take a Blunt blow, are knocked back and, unless blocking with a shield, knocked down. Each smash
+rolls how many it may hit, 1 to 5, and hits that many of the enemies nearest the impact; the rest of the ring is
+untouched (Mike, 2026-09-26: one swing was clearing a whole infantry block). A per-troll behaviour tree drives it;
+the rest of the troll's fighting is the engine's ordinary melee.
 
 ## Why This Exists
 
@@ -27,9 +29,14 @@ The creature behaviour-tree pattern (the elephant's and warg's): `TrollBruteForc
 `TrollBruteForceConfig.ActionSetsByMonster`; `BehaviorTreeMissionLogic.OnMissionTick` ticks the trees on the main
 thread. `BruteForceReadyDecorator` passes when the smash is off cooldown, the troll is free and an enemy is in
 reach and in front; `BruteForceTask` plays `act_troll_brute_force` on channel 0 and, once the clip's progress
-reaches `ImpactFraction`, calls `BruteForceRing.Deliver`, which applies `CustomAttacksUtils.TakeDamage` to each
-enemy human in the ring. Every decision (cooldown, engagement, impact centre, falloff, shield handling, body size)
-is in the pure `TrollBruteForceService` (floats in, no TaleWorlds types, ADR-007; a NaN or infinity fails closed).
+reaches `ImpactFraction`, calls `BruteForceRing.Deliver`. The ring gathers every enemy human the service gives a
+blow, draws the smash's cap at the boundary with `MBRandom.RandomInt(RingMinTargets, RingMaxTargets + 1)`, a
+uniform 1 to 5 (`MBFastRandom.Next`'s upper bound is exclusive in the v1.5.3 decompile), and applies
+`CustomAttacksUtils.TakeDamage` only to the victims the service's `NearestRingVictims(distances, cap)` returns: the
+cap's worth nearest the impact centre, nearest first, never one at a non-finite or negative distance. The log line
+reports hits over the cap and how many the cap spared. Every decision (cooldown, engagement, impact centre, falloff,
+shield handling, body size, who the cap picks) is in the pure `TrollBruteForceService` (floats in, no TaleWorlds
+types, ADR-007; a NaN or infinity fails closed); only the roll is taken outside it.
 Each held agent handle is checked with `AgentSlotIdentity.IsCurrentOccupant` before it touches native state.
 
 **Body size.** Every distance is multiplied by the troll's body size, `AgentScale` times its Monster's standing eye
@@ -81,6 +88,7 @@ Custom Battle smoke). Distances are metres at body size 1.
 | `InnerRadius`, `OuterRadius` | 1.5, 3.5 | Full damage inside, the engine's area falloff to the edge |
 | `CentreDamage` | 40 | Blunt, falling to about a ninth at the edge |
 | `ShieldBlockedMultiplier` | 0.5 | A shield-blocking victim takes half and is not floored |
+| `RingMinTargets`, `RingMaxTargets` | 1, 5 | Each smash draws a cap uniformly from these, both included, and hits only that many of the enemies nearest the impact |
 | `ImpactFraction` | 0.58 | Clip progress at which the weapon lands (measured on the Fab heavy attack) |
 | `MaxBodyScale` | 3 | Cap on body size |
 | `ReferenceEyeHeight` | 1.70 | The human Monster's eye height |
@@ -101,35 +109,52 @@ troll's set is missing, or when a set has no clip for the action (a reinstall dr
 |---|---|
 | `Main/Features/TrollBruteForce/TrollBruteForceConfig.cs` | Constants, Monster ids, `ActionSetsByMonster` |
 | `Main/Features/TrollBruteForce/ITrollBruteForceService.cs`, `TrollBruteForceService.cs` | Pure decisions |
-| `Main/Features/TrollBruteForce/TrollBruteForceMissionBehavior.cs` | Attaches the trees; start-up drift guard; ticks the spacing tracker |
+| `Main/Features/TrollBruteForce/TrollBruteForceMissionBehavior.cs` | Attaches the trees; start-up drift guard; ticks the spacing tracker and the clip trace |
+| `Main/Features/TrollBruteForce/TrollClipTrace.cs`, `TrollClipLog.cs` | The temporary `[TrollClips]` trace for the animation tuning pass: the trace reads each troll's channel 0 and 1 actions every tick and the action set's bound clip when they change; the pure log formats one line per Monster and action. To be deleted, with `TrollClipLogTests`, once the tuning pass ends |
 | `Main/Features/TrollBruteForce/TrollFormationSpacingTracker.cs` | Counts trolls per formation, stores the width, rebuilds the slots, replays the mass-transfer tail during deployment |
 | `Main/Features/TrollBruteForce/TrollFormationSpacingStore.cs` | The per-formation width (reference-keyed concurrent map) and the thread-static layout scope |
 | `Main/Features/TrollBruteForce/Hooks/Patch92_TrollFormationSpacing.cs` | `UnitDiameter` postfix and the simulation-copy scope |
 | `Main/Features/TrollBruteForce/TrollBruteForceBehaviorTree.cs`, `BehaviorTreeElements/` | The tree, decorator and task |
-| `Main/Features/TrollBruteForce/Hooks/BruteForceRing.cs` | Delivers the ring |
+| `Main/Features/TrollBruteForce/Hooks/BruteForceRing.cs` | Delivers the ring; draws the smash's target cap (`MBRandom.RandomInt`) and hits the victims `NearestRingVictims` picks |
 | `Main/Features/TrollBruteForce/TrollBruteForceIoC.cs` | Singleton service registration |
 
 ## Tests
 
 `TAOM.Tests/Features/TrollBruteForce/`: `TrollBruteForceServiceTests` (every decision, NaN and bad-scale gates,
-body size, the formation width and its gates), `TrollFormationSpacingStoreTests` (set, change and removal, a layout
+body size, the formation width and its gates, and the cap's pick: `NearestRingVictims_*` for nearest first, fewer
+victims than the cap, ties in scan order, none eligible, a cap below 1, and NaN, infinite or negative distances),
+`TrollFormationSpacingStoreTests` (set, change and removal, a layout
 copy borrowing the scoped formation's width, the scope nesting and staying per thread), `Patch92BindingTests` (the
 four layout entry points resolve against the installed engine, and `Formation.Team` is still a public field),
-`TrollBruteForceConfigTests`, and `TrollBruteForceWiringTests` (`LiveInstall`: each Monster names its
+`TrollBruteForceConfigTests` (`RingTargets_AtLeastOne_MinNoMoreThanMax_AndAtMostFive` among them), `TrollClipLogTests`
+(one line per Monster and action, troll against vanilla clips, the melee-table family tag, a mission clear), and
+`TrollBruteForceWiringTests` (`LiveInstall`: each Monster names its
 set, the action is declared once and untyped, each set binds it once to its own troll's clip, the cave troll keeps
-the human eye height).
+the human eye height). The cap's draw itself (`RandomInt` with the exclusive `+ 1`) is boundary code, checked in
+game by the ring line below.
 
 ## How to verify in game
 
-A Custom Battle with both trolls against infantry: the log's `[TrollBruteForce]` lines give the progress at which
-the ring fired, the hits and knockdowns, and the body size the distances used. `[TrollSpacing]` lines give each
+A Custom Battle with both trolls against infantry. Each smash logs `[TrollBruteForce] Brute Force by <troll> at
+progress P: ring=<Hit>/<Cap> hit (rolled cap), <Spared> spared by the cap, <KnockedDown> knocked down, <Skipped>
+skipped (body size X).` Pass: Hit <= Cap <= 5 on every line (Cap 0 means no ring was cast), P near
+`ImpactFraction`, and X the troll's body size. `[TrollSpacing]` lines give each
 troll formation's troll count and its unit width (`vanilla -> new m`, or `back to vanilla`); the trolls should
 stand apart in the line, already on the deployment screen in a battle that opens on one.
 
+`[TrollClips] <monster>: <action> -> <clip or -> (<troll clip|vanilla clip|no clip>[, melee-table family])` is
+logged once per Monster and action a mission (the 15:40 build printed `, melee table`). It names the clip the
+troll's action set binds to the action the troll entered (`MBActionSet.GetActionAnimationName` takes no agent), so
+it proves the action was entered and which clip it is bound to, not that the clip's keyframes played. The
+melee-table family tag marks the release and blocked codes, quick or not ([troll-race.md](troll-race.md) "The
+swing CTD").
+
 ## Known limitations
 
-- The tuning is first guesses on the cave troll; the hill troll's reach follows its eye height and is unverified
-  until the smoke reads its ring.
+- The tuning is first guesses on the cave troll. The hill troll's ring was read in the 2026-09-26 15:40 smoke
+  (`taom_debug_2026-09-26_15-40-34.log`): 24 rings at body size 2.34, hitting up to 84 enemies (84, 78, 73, 70 at
+  the top), before the cap existed. The cap is not yet seen in game: the next smoke should show every ring line
+  within Hit <= Cap <= 5.
 - Only enemy humans are hit; mounts are skipped.
 - Below a tenth trolls nothing widens: a formation of 11 with one troll (9%) keeps human spacing around it.
 - Past that share every unit in the formation is spaced at troll width, orcs beside trolls included; no separate
@@ -144,6 +169,11 @@ stand apart in the line, already on the deployment screen in a battle that opens
 
 ## Changelog
 
+- 2026-09-26: each smash hits at most a drawn cap of 1 to 5 enemies, the nearest to the impact first
+  (`RingMinTargets`, `RingMaxTargets`, `NearestRingVictims`; Mike: one swing was clearing a whole infantry block),
+  and the ring line reports hits over the cap and how many it spared.
+- 2026-09-26: the `[TrollClips]` trace, one line per troll Monster and action with the clip its set binds, for the
+  animation tuning pass; temporary, to be deleted with its tests when that pass ends.
 - 2026-09-26: formation spacing for both trolls (Patch92, measured shoulder widths); a temporary action trace used
   to find the swing crash was removed.
 - 2026-09-25: extended to the hill troll (`ActionSetsByMonster`, `IsBruteForceTroll`); distances scale with body

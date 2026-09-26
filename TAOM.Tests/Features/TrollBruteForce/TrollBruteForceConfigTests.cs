@@ -70,4 +70,13 @@ public class TrollBruteForceConfigTests
         Assert.IsTrue(TrollBruteForceConfig.CentreDamage > 0);
         Assert.IsTrue(TrollBruteForceConfig.BlowMagnitude > 0f);
     }
+
+    [TestMethod]
+    public void RingTargets_AtLeastOne_MinNoMoreThanMax_AndAtMostFive()
+    {
+        // Mike, 2026-09-26: one smash was clearing a whole infantry block; a smash hits at most five.
+        Assert.IsTrue(TrollBruteForceConfig.RingMinTargets >= 1);
+        Assert.IsTrue(TrollBruteForceConfig.RingMinTargets <= TrollBruteForceConfig.RingMaxTargets);
+        Assert.IsTrue(TrollBruteForceConfig.RingMaxTargets <= 5);
+    }
 }

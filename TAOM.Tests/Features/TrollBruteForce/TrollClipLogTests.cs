@@ -4,9 +4,10 @@ using TAOM.Features.TrollBruteForce;
 namespace TAOM.Tests.Features.TrollBruteForce;
 
 /// <summary>
-/// The [TrollClips] line: once per Monster and action in a mission, which clip the action played and whether it is
-/// one of TAOM's troll clips or a vanilla one. It exists to show in game that the self-keyed troll swings play
-/// (2026-09-26): a crash-free battle proves only that their melee attack table rows exist.
+/// The [TrollClips] line: once per Monster and action in a mission, the clip the troll's action set binds to the
+/// action it entered, and whether it is one of TAOM's troll clips or a vanilla one. It proves the troll entered the
+/// action and names the bound clip; it cannot prove the clip's keyframes play, because the lookup
+/// (MBActionSet.GetActionAnimationName) takes no agent and reads the set's static binding.
 /// </summary>
 [TestClass]
 public class TrollClipLogTests
@@ -19,7 +20,7 @@ public class TrollClipLogTests
         string? line = log.FirstPlay("hill_troll", "act_release_overswing_2h", "anim_hill_troll_release_overswing_2h");
 
         Assert.AreEqual("[TrollClips] hill_troll: act_release_overswing_2h -> anim_hill_troll_release_overswing_2h " +
-            "(troll clip, melee table)", line);
+            "(troll clip, melee-table family)", line);
     }
 
     [TestMethod]
@@ -47,7 +48,7 @@ public class TrollClipLogTests
 
         string? line = log.FirstPlay("cave_troll", "act_quick_blocked_slashleft_2h", "quick_blocked_slashleft_2h");
 
-        StringAssert.EndsWith(line, "(vanilla clip, melee table)");
+        StringAssert.EndsWith(line, "(vanilla clip, melee-table family)");
     }
 
     [TestMethod]

@@ -15,7 +15,8 @@ A slot named <mesh>.<part> becomes a named sub-mesh of <mesh> in the Kit, the dw
 (SM_Dwarf_Basemesh_A1_head, _head.eye, _head.mouth, which the Kit tags face_base_mesh, face_eye_mesh and
 face_mouth_mesh); one object carrying two materials comes in as <mesh>.0 and <mesh>.1 instead, with no mouth part.
 
-Pre-Kit gates (docs/community/bannerlordmodding-lt/guides/custom_creature_skeleton.md, creature-mount-authoring.md):
+Pre-Kit gates (creature-mount-authoring.md; the one-FBX rule and the export's axes, leaf bones, animation and
+armature name follow docs/community/bannerlordmodding-lt/guides/custom_creature_skeleton.md, "Exporting the rig"):
   - a vertex group that is not a bone of --armature is dropped when it carries no weight, and refused when it does
     (its vertices would lose that share in the Kit);
   - at most 4 influences per vertex (the engine's limit: the Kit drops the rest, so the game would bend the mesh

@@ -146,7 +146,10 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
 | Resource costs, party templates at 260, guard exclusion, face coverage | `TroopResourceCostDataTests`, `ShippedLordPartyTemplateTests`, `SettlementGuardServiceTests`, `CharacterFaceCoverageTests` |
 | Armory race wiring (reinstall gate) | `python tools/wire_hill_troll_race.py --check`; `tools/tests/test_wire_hill_troll_race.py` |
 | Action set body and the reused idles | `tools/tests/test_bind_hill_troll_action_set.py`; `python tools/audit_action_set_parity.py` |
-| Clips on disk | `gen_troll_anim_clips.ps1 -Verify` and `-CloneByName -Verify` (no unit harness) |
+| Clips on disk, and the melee attack table key the generator writes | `gen_troll_anim_clips.ps1 -Verify` and `-CloneByName -Verify` (a clip that breaks the key rule fails as `KEY`); `tools/tests/test_gen_troll_anim_clips.py` (the key rule's functions, lifted out of the script); `python tools/set_clip_balance_name.py --clips-file <names> --check`, `tools/tests/test_set_clip_balance_name.py` |
+| Race morph channels (head, eye and mouth 101, hands 26) | `python tools/check_race_morph_channels.py`; `tools/tests/test_check_race_morph_channels.py` |
+| Hand pose morph transfer (seam pin and gate, palm mirror check, arguments) | `tools/tests/test_transfer_hand_morphs.py` (the pure parts; skips without numpy) |
+| The war hammer items (package check, head weight, line endings, a second apply changes nothing) | `tools/tests/test_add_hill_troll_hammer_items.py` |
 
 ## Status / pending (updated 2026-06-14)
 
@@ -483,11 +486,31 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
   stuck-dagger follow-ups. `python tools/wire_hill_troll_race.py --check` now flags only an UNKEYED troll clip on
   those codes, and it passes (30 self-keyed). A self-keyed clip plays at every weapon balance. Never give a troll
   clip a vanilla parent name: a generated child fills a slot of its parent's row, so it would change every human's
-  attack. A re-cut with `gen_troll_anim_clips.ps1` blanks the box again (its lines 270 and 436), so re-run
-  `set_clip_balance_name.py` after one. OWED: the in-game check of the troll's swings and blocked recoils (a Custom
-  Battle, then the rgl log). UNVERIFIED: the animation map reads Loading Type 2 ("Never load", no segment) on 48 of
-  the 62 troll release and blocked clips, `anim_hill_troll_release_overswing_2h` among them, and what the engine
-  plays for a self-keyed row whose clip is at 2 is not known; that smoke answers it.
+  attack. Since about 16:00 on 2026-09-26 `gen_troll_anim_clips.ps1` writes a clone of a keyed vanilla template
+  self-keyed (`Set-ClipKey`: own name, "Blends with action" empty, no parent names, child index -1), so a re-cut
+  keeps the key, and both `-Verify` modes fail a clip that breaks the rule as `KEY`
+  (`tools/tests/test_gen_troll_anim_clips.py`). A re-cut still writes packages with no RuntimeDataCache entry, so
+  each needs a Kit save: rule 0 binds a troll clip to those codes only when it is self-keyed and its RDC stamp
+  matches its checksum (so an unsaved re-cut gets the vanilla clip), and `wire_hill_troll_race.py --check` fails a
+  bound troll clip that is not. An Armory reinstall still
+  drops the keys: re-run `set_clip_balance_name.py` (dry run first), then the binder.
+  **Battle smoke 2026-09-26 15:40** (Custom Battle, `taom_debug_2026-09-26_15-40-34.log`, game session
+  `rgl_log_88052`): the `[TrollClips]` trace ([troll-brute-force.md](troll-brute-force.md)) wrote 56 lines, all
+  `hill_troll`. 12 are on the melee-table family, `act_quick_release_*` and `act_quick_blocked_*` for overswing,
+  slash left and slash right, each with its `_left_stance` twin, and each names its self-keyed troll clip. No crash
+  (the mission ended normally at 15:44:29) and no error line. No full `act_release_*` or `act_blocked_*` code ran, and
+  no thrust code (the hammer's `twohanded:axe` usage has no thrust). A trace line names the clip the action set binds
+  to the action the troll entered; it does not prove the keyframes played. OWED: a battle that logs the full release
+  and blocked codes, `anim_hill_troll_release_overswing_2h` (the 2026-09-25 crash key) among them; a
+  player-controlled hill troll that holds its attack through the wind-up and gets blocked should reach them
+  [Likely].
+  **Loading Type 2:** 24 of the 30 bound clips (every overswing and slash clip; the six thrust clips are at 0) are
+  at Loading Type 2, "Never load", which the client builds with a null keyframe set at load. That does not make a
+  clip motionless: vanilla binds 254 of its 347 unkeyed Loading Type 2 clips directly to actions that animate in
+  play, the conversation gestures, the cat and dog gaits and tavern drinking among them [Likely]
+  ([bannerlord-animation-system-map.md](../reference/bannerlord-animation-system-map.md), section 3), and the 12
+  quick codes above ran on such clips without a crash. What a self-keyed row plays at 2 stays UNVERIFIED until
+  someone watches a hill troll's quick overswing; the risk is low.
 - **Hand pose morphs (2026-09-26):** every race's LOD0 arm or hand mesh carries 26 hand-pose channels (the human
   skeleton has no finger bones, so a grip or a fist is shape keys; the uruk, pale uruk and dwarf all have them, on
   LOD0 only). `hill_troll_a_hands` had none, so the troll's fingers never closed on its weapon; nothing crashes
@@ -643,6 +666,14 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
 
 ## Changelog
 
+- 2026-09-26: the hill troll's swing CTD traced to the engine's melee attack table (a release or blocked clip needs
+  its own name in "Blends with animation"); the 30 two-handed release and blocked troll clips self-keyed and bound on
+  32 codes, the rest of the four families on vanilla clips (`bind_hill_troll_action_set.py` rule 0,
+  `set_clip_balance_name.py`); `gen_troll_anim_clips.ps1` keeps the key on a re-cut; the hand pose morphs redone
+  from the pale uruk's hand; KEYForce's war hammer as the hill troll's weapon, reweighted to price with the cave
+  troll's mace; the Monster's body capsule 1.2; formation spacing and the Brute Force target cap
+  ([troll-brute-force.md](troll-brute-force.md)); the `[TrollClips]` trace, whose 15:40 smoke saw the quick swings
+  and blocks on troll clips with no crash.
 - 2026-09-25, `feat(troll)`: 200 health for both trolls, special-resource costs, troll stacks in three Mordor
   clans' templates, Brute Force reach scaled by eye height, the hill troll's idles reused for inventory,
   conversation, cheers and the bodyguard pose.
