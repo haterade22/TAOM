@@ -89,11 +89,12 @@ MixedFormations Patch30 falls through for `unit.Banner != null`
 |---|---|
 | [Main/IoC.cs](../../Main/IoC.cs) | `BannerBearersIoC.RegisterBannerBearersFeature(container)` — both services `Reuse.Singleton` |
 | [Main/SubModule.cs](../../Main/SubModule.cs) `OnGameStart` | `campaignStarter.AddModel<BattleBannerBearersModel>(new TaomBattleBannerBearersModel(...))` |
+| [Main/SubModule.cs](../../Main/SubModule.cs) `RegisterCustomBattleModels` (called from `OnGameStart`, `BasicGameStarter` only) | `basicStarter.AddModel<BattleBannerBearersModel>(new TaomCustomBattleBannerBearersModel(...))`: Custom Battle and the editor's test battle |
 | [Main/SubModule.cs](../../Main/SubModule.cs) `OnMissionBehaviorInitialize` | `AddTaomBehavior(new BannerBearerAssignmentMissionLogic())` — unconditional, gates internally |
 
 `MissionGameModels` resolves the slot in its constructor via `GameModelsManager.GetGameModel<T>()`, which iterates **backwards** — last registered wins. TAOM's `OnGameStart` runs after SandBox's `InitializeGameStarter`, so TAOM's model wins. This is the same seam `TaomCombatMechanicsModel` (`AgentApplyDamageModel`) already uses.
 
-**Campaign-only.** Custom Battle builds `CustomBattleBannerBearersModel` off a `BasicGameStarter` and is unaffected.
+**Custom Battle gets the race gate only.** Custom Battle builds `CustomBattleBannerBearersModel` off a `BasicGameStarter`, so the campaign model never runs there. `TaomCustomBattleBannerBearersModel` subclasses Custom Battle's model and adds only the race gate (see "Race gate" below); the bearer count, the infantry-only gate and the culture banners stay campaign-only.
 
 ### Why subclass `SandboxBattleBannerBearersModel` rather than decorate `MBGameModel.BaseModel`
 
@@ -165,6 +166,10 @@ TAOM ships zero banner items of its own; custom LOTR meshes can be added later a
 
 The gate holds in Custom Battle too. `TaomBattleBannerBearersModel` goes on the campaign starter only, and Custom Battle builds `CustomBattleBannerBearersModel` off a `BasicGameStarter`, so until 2026-09-25 the vanilla gate alone ran there and hill trolls raised standards in the troll smoke. `TaomCustomBattleBannerBearersModel` (registered in `SubModule.RegisterCustomBattleModels`) adds only this race gate over Custom Battle's own model; its bearer count, tiers and formation rules stay vanilla.
 
+The gate covers a dropped banner as well as a new bearer. `BannerBearerLogic.FindBestSearcherForBanner` sends the nearest formation member that passes `CanAgentPickUpAnyBanner` to fetch a banner lying on the ground, and never asks `CanAgentBecomeBannerBearer`; vanilla's `CanAgentPickUpAnyBanner` checks only `IsHuman` (the humanoid flag), an empty banner slot, scripted-movement availability, no panic and no important combat action, so a troll could pick one up. Both models therefore override it as `base.CanAgentPickUpAnyBanner(agent) && _service.PassesRaceGate(race)`. `BannerBearerService.PassesRaceGate` folds the master toggle (disabled returns `true`, vanilla parity) and otherwise defers to `IsRaceAllowed`. The Custom Battle model uses it for `CanAgentBecomeBannerBearer` too; the campaign model's `CanAgentBecomeBannerBearer` keeps its own toggle branch and adds the infantry-only gate. A missing character reads as race `-1`, which fails closed while the feature is on.
+
+A second pickup path never asks the gate, and only the troll kits keep it shut. `HumanAIComponent.ItemPickupTick` walks an agent to a nearby dropped item, and `DefaultItemPickupModel` scores the agent's own formation banner at 120 (`GetItemScoreForAgent`, v1.5.3 `DefaultItemPickupModel.cs:14-16`) and accepts it into an empty slot (`IsItemAvailableForAgent`, `:76-77`), without calling `CanAgentPickUpAnyBanner`. The tick runs only for an agent `IsAgentEquipmentSuitableForPickUpAvailability` passes (`:82-101`): one that has lost the shield it spawned with (`Agent.HasLostShield`), one holding a consumable stack at half or less, or a banner searcher, which the gate above already filtered. No troll kit carries a shield or a consumable today (`troops_mordor.xml`: the cave troll's maces and spear, the hill troll's hammer, all melee-only), so no troll reaches the tick. **A troll kit that gains a shield or throwables (any consumable, arrows included) reopens this path**; that change needs a race check on the item pickup as well.
+
 `IsRaceAllowed` **validates before lookup**: `RaceManager.GetRaceNameFromId` coerces unknown ids to `"human"`, which is not on the exclusion list, so a lookup-first check would silently admit corrupt race ids. Invalid ids fail closed.
 
 ### Infantry-only gate
@@ -203,11 +208,11 @@ The 8 bandit cultures (`dunland_raiders`, `rhun_raiders`, `harad_raiders`, `gund
 
 ## Testing
 
-107 tests: `TAOM.Tests/Features/BannerBearers/`.
+111 tests: `TAOM.Tests/Features/BannerBearers/`.
 
 | File | Covers |
 |---|---|
-| `BannerBearerServiceTests.cs` (61) | Density curve (disabled, below/at minimum, scaling, engine cap, per-class ratios, negative counts); race gate (trolls/named excluded, all playable races allowed, **invalid id fails closed**, case-insensitivity, null entries); banner resolution; **majority-culture vote** (mixed formation ignores slot 0, tie is order-independent, null/empty entries); **unknown-excluded-race warning fires once**; **infantry-only gate** (Infantry allowed by default, Ranged/Cavalry/HorseArcher not, configurable, case-insensitive, empty/null/unknown handling, disabled → nothing). |
+| `BannerBearerServiceTests.cs` (65) | `PassesRaceGate` (disabled admits a troll; enabled denies both trolls and an invalid id, admits a human); density curve (disabled, below/at minimum, scaling, engine cap, per-class ratios, negative counts); race gate (trolls/named excluded, all playable races allowed, **invalid id fails closed**, case-insensitivity, null entries); banner resolution; **majority-culture vote** (mixed formation ignores slot 0, tie is order-independent, null/empty entries); **unknown-excluded-race warning fires once**; **infantry-only gate** (Infantry allowed by default, Ranged/Cavalry/HorseArcher not, configurable, case-insensitive, empty/null/unknown handling, disabled → nothing). |
 | `BannerBearerConfigProviderTests.cs` (29) | Missing file, malformed JSON, full parse, `ObjectCreationHandling.Replace` on both collections, one test per validation rule, summary-warning behaviour, `Lazy<T>` caching; **`AllowedFormationGroups` validation** (valid parse; unknown, numeric and combined names dropped + warned; padded names and aliases stored as the enum prints them; all-invalid/empty/null revert to Infantry); blank `ExcludedRaces` entries dropped + warned and padded ones trimmed. |
 | `ShippedBannerBearerConfigTests.cs` (13) | The **shipped** config parses with zero rejections; trolls excluded, ordinary races not; every banner id is a real vanilla item; **allows infantry only**. Plus the 2026-07-16 regression pins: **every culture key is a real StringId**, **no LOTR display name is used as a key**, **every bannered culture declares replacement weapons**, **the default stays empty**, **vanilla leftover cultures stay unmapped**. |
 
@@ -221,7 +226,7 @@ This is the feature's one real gap. Both reviews are static; the failure mode it
 
 - Field battle, both sides, 2+ cultures → bearers present **and moving** (watch a bearer specifically — this is the freeze check).
 - **An orc/dwarf/elf formation's bearer is still an orc/dwarf/elf.** The headline requirement.
-- No troll ever raises a banner.
+- No troll ever raises a banner or picks up a dropped one, in the campaign or in Custom Battle.
 - Reinforcement wave → new bearers spawn, no freeze. **Post-#360:** bearers carry a 1H sidearm + banner; no `[BannerBearers] Patch63 ANOMALY` WARN in `Logs/taom_debug_*.log` (an anomaly line names the drop mechanism — either outcome is signal, record it in the RCA).
 - Feature toggled OFF + a vanilla hero-captain-armed formation loses its bearer mid-battle → a replacement bearer still spawns (Patch63 vanilla-parity check, deep-review Flow-4).
 - Player Order-of-Battle deploy → finish → bearers unpause with everyone else.

@@ -161,4 +161,4 @@ text contains `graphify` or a JSON escape.
 ## GitHub Issue
 
 - **Issue:** [#677](https://github.com/haterade22/TAOM/issues/677): Wire graphify into the workflow
-- **Status:** Open
+- **Status:** Closed (resolved in b8833474)

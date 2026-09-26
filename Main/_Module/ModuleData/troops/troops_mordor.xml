@@ -2164,13 +2164,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_cave_troll_2h_mace_a" />
+                    id="Item.wm_hill_troll_2h_hammer_a" />
             </EquipmentRoster>
             <EquipmentRoster
                 civilian="true">
                 <equipment
                     slot="Item0"
-                    id="Item.wm_cave_troll_2h_mace_a" />
+                    id="Item.wm_hill_troll_2h_hammer_a" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>

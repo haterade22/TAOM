@@ -20,14 +20,18 @@ Two tools came out of it:
 
 ## Why this exists: the stale-pack trap
 
-> **Superseded for this module as of 2026-09-01.** `LOTRLOME_Armory/AssetPackages/` no
-> longer exists (0 cooked packs, 4,364 loose `Assets/**/*.tpac`), so the trap described
-> here is currently unreachable in the Armory and `Assets/` is the only source of truth.
-> The section is kept because it still holds wherever a cooked tree exists, and because it
-> is the reasoning behind both tools. See [armory-guide.md](../reference/armory-guide.md)
-> "Two asset trees".
+> **Superseded 2026-09-26: the game reads `Assets/`, and so do the tools.** The engine loads
+> a module's loose `Assets/**/*.tpac` in preference to a cooked `AssetPackages/` tree it also
+> ships, and the Armory ships both again since a cook at 07:36 on 2026-09-26 (the game still
+> logged `Loading packages $BASE/Modules/LOTRLOME_Armory/Assets...`). So art deleted from
+> `Assets/` breaks in-game at once, whatever a stale pack holds, and art imported after a cook
+> renders at once. This section and the table below describe what a tool reading the packs
+> saw, not what the game does. `validate_mesh_refs.tpac_paths_for_modules` now reads the loose
+> tree first and the packs only for a module with none (Native). The section is kept as the
+> 2026-08-28 record and the reasoning behind both tools. See
+> [armory-guide.md](../reference/armory-guide.md) "Two asset trees".
 
-`tools/validate_mesh_refs.py` resolves every mesh reference against the **cooked** packs,
+On 2026-08-28 `tools/validate_mesh_refs.py` resolved every mesh reference against the **cooked** packs,
 `LOTRLOME_Armory/AssetPackages/pack0-9.tpac`. Those are rebuilt only when someone
 re-cooks them. Delete art from `Assets/` or `AssetSources/` and the packs keep shipping
 the old meshes, so:

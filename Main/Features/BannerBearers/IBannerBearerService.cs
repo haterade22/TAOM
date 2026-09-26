@@ -56,4 +56,14 @@ public interface IBannerBearerService
     // reinforcement path applies no per-agent policy either). Enabled: the same race +
     // formation-group policy the deployment gate applies via CanAgentBecomeBannerBearer.
     bool IsReinforcementBearerAllowed(int raceId, FormationClass formationClass);
+
+    // The race half of the toggle-folded gate above, shared by every seam that must keep a race off
+    // banners without touching a formation-group question: disabled == vanilla parity (true), enabled
+    // defers to IsRaceAllowed. Used by CanAgentPickUpAnyBanner in both battle models and by the Custom
+    // Battle model's CanAgentBecomeBannerBearer; the campaign model's CanAgentBecomeBannerBearer folds
+    // the toggle itself and adds the formation-group rule. BannerBearerLogic.FindBestSearcherForBanner
+    // picks a dropped banner's carrier by CanAgentPickUpAnyBanner alone, so a troll left out of that
+    // gate could still pick one up off the ground (Mike: "Cave trolls nor hill trolls should carry a
+    // banner").
+    bool PassesRaceGate(int raceId);
 }

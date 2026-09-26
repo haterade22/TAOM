@@ -287,11 +287,7 @@ def build_summary(game: Path, module: str, consumers: Path, generators: bool) ->
     refs = vm.extract_refs(armory_md)
     if consumers.exists():
         refs += vm.extract_refs(consumers)
-    tpacs = []
-    for m in (module, "Native", "SandBoxCore", "SandBox"):
-        mod = game / "Modules" / m
-        cooked = sorted((mod / "AssetPackages").glob("*.tpac"))
-        tpacs += cooked if cooked else sorted((mod / "Assets").rglob("*.tpac"))
+    tpacs = vm.tpac_paths_for_modules(game, [module, "Native", "SandBoxCore", "SandBox"])
     present = vm.build_present_set(tpacs)
     issues = vm.classify(refs, present, None, scan_bodies=True, body_tpac_paths=tpacs)
     # 1: catalogue drift, flagged by the live refs

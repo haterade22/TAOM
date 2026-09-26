@@ -21,6 +21,11 @@ public class TaomCustomBattleBannerBearersModel : CustomBattleBannerBearersModel
     // Same polarity as the campaign model: the disabled feature defers to vanilla, and -1 (no character) is an
     // invalid race id, which the service fails closed.
     public override bool CanAgentBecomeBannerBearer(Agent agent) =>
-        base.CanAgentBecomeBannerBearer(agent)
-            && (!_service.IsEnabled || _service.IsRaceAllowed(agent?.Character?.Race ?? -1));
+        base.CanAgentBecomeBannerBearer(agent) && _service.PassesRaceGate(agent?.Character?.Race ?? -1);
+
+    // BannerBearerLogic.FindBestSearcherForBanner picks the nearest formation member passing ONLY this
+    // check to fetch a banner dropped on the ground; CanAgentBecomeBannerBearer is never consulted for
+    // that path, so without this override a troll could still pick up a dropped standard.
+    public override bool CanAgentPickUpAnyBanner(Agent agent) =>
+        base.CanAgentPickUpAnyBanner(agent) && _service.PassesRaceGate(agent?.Character?.Race ?? -1);
 }

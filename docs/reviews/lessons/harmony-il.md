@@ -661,3 +661,26 @@ Plan 006's D43 and D47 made the Native2Managed bridge tell `CrashReportService` 
 - **Why missed:** the new capture source copied the existing source's mechanism, and the catch around the write was read as "tolerating" a read-only `Data` rather than as the place the safety decision was lost. Every test used a writable `Data` and an unreachable service, so none observed what the service was told.
 - **Prevent:** when a caller decides something the callee must obey for safety (thread, authority, reduced mode), pass it as a parameter the callee cannot miss; an annotation on a shared object is diagnostic only. A catch that swallows the failure to record a safety decision fails in the unsafe direction by construction: make the fallback the safe path or remove the side channel. Every capture source that can run off the main thread passes the verdict (`BattleLoadStallWatchdog` still does not: follow-up).
 - **Source:** `docs/reviews/rca-crash-capture-boot-cost-decisions-2026-09-24.md` F1 (Codex P2, 2026-09-24; the mark dates from Codex review #46 MED-03, `rca-crash-report-codex-2026-05-25.md` C-M3).
+
+### PatchShield wraps TAOM's own patch on an engine method: exclude a hot target in the same change (2026-09-26)
+Patch92 patches `Formation.get_UnitDiameter`, which runs per unit per formation-positioning query (the AI thread and
+the TWParallel workers included), and the layout calls `GetUnitPositionWithIndexAccordingToNewOrder` (three overloads)
+and `GetUnitSpawnFrameWithIndex`, which walk every unit of a formation. PatchShield's second pass
+(`OnGameInitializationFinished`) attaches a finalizer to every method patched by then, and its "don't shield our own
+methods" skip reads the declaring assembly of the TARGET, here `TaleWorlds.MountAndBlade`, not the patch's owner. So
+on any run where PatchShield installs, all five TAOM-patched members (the getter, the three overloads, the spawn-frame
+method) took its finalizer, which binds `__originalMethod`: a `MethodBase.GetMethodFromHandle` plus a try/catch on
+every call. The 2026-09-26 review found it; `PatchShieldPolicy.ExcludedTargetMethods` now lists
+the three names and `PatchShield.IsExcludedTarget` checks it beside the namespace list.
+- **Why missed:** a recurrence of the #331 per-call tax (this file's first lesson, "Blanket-patching infrastructure must
+  cost its per-call overhead against the hottest conceivable target", and its co-op sequel), and the second time on a TAOM
+  patch's own target: Patch38's `SettlementNameplateWidget.DetermineTargetAlphaValue` paid it every frame until the
+  2026-07-10 compat review, which fixed it by namespace and recorded it only in a `PatchShieldPolicy` comment, so no
+  lesson reached the next patch author. Both of those lessons frame the tax as other mods' patches or hot
+  namespaces; `TaleWorlds.MountAndBlade` is far too broad to exclude by namespace.
+- **Prevent:** when a TAOM patch targets an engine method called per unit, per agent or per frame, add
+  `<FullTypeName>.<MethodName>` to `PatchShieldPolicy.ExcludedTargetMethods` in the same change (one entry covers every
+  overload) and a `BindingVerification` test that walks the patch's real targets through `IsExcludedTargetMethod`, so
+  a renamed or added target cannot slip off the list; exclude by namespace only when the whole namespace is hot.
+- **Source:** `Dependencies/Foundation/PatchShieldPolicy.cs` `ExcludedTargetMethods`; `Dependencies/Foundation/PatchShield.cs`
+  `Install`; `Patch92BindingTests.EveryPatch92Target_IsOnPatchShieldsHotMethodList`.

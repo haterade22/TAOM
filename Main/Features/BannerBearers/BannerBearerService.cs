@@ -168,6 +168,8 @@ public sealed class BannerBearerService : IBannerBearerService
         return IsRaceAllowed(raceId) && IsFormationGroupAllowed(formationClass);
     }
 
+    public bool PassesRaceGate(int raceId) => !IsEnabled || IsRaceAllowed(raceId);
+
     public Domain.BearerSlotVerdict EvaluateSpawnedBearerSlot(string? slot4ItemId, string? expectedBannerItemId)
     {
         // Empty slot dominates WrongItem: the anomaly log must name the missing native weapon

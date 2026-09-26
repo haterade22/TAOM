@@ -58,6 +58,10 @@ def _mdstring(text):
     return struct.pack("<I", len(b)) + b + b"\x00\x00"
 
 
+GPR_ORDER = ("rax", "rcx", "rdx", "rbx", "rsp", "rbp", "rsi", "rdi",
+             "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15", "rip")
+
+
 class DumpBuilder:
     """Minimal MDMP writer: 16-byte header + payload chunks + trailing stream directory.
 
@@ -86,11 +90,22 @@ class DumpBuilder:
                         + struct.pack("<I", name_rva) + b"\x00" * 84)
         self.add_stream(4, struct.pack("<I", len(mods)) + entries)
 
-    def add_exception(self, tid, code, addr, params):
+    def add_exception(self, tid, code, addr, params, regs=None, cx=None, cx_rva=None):
+        """regs: {name: value} laid out by GPR_ORDER; cx: raw CONTEXT bytes instead (e.g. _context's, whose
+        offsets are independent of GPR_ORDER); cx_rva: the location's rva, overriding where the bytes went."""
         padded = list(params) + [0] * (15 - len(params))
         rec = (struct.pack("<IIQQII", code, 0, 0, addr, len(params), 0)
                + struct.pack("<15Q", *padded))
-        self.add_stream(6, struct.pack("<II", tid, 0) + rec)
+        loc = b""
+        if regs is not None:
+            # MINIDUMP_EXCEPTION_STREAM.ThreadContext: the faulting thread's CONTEXT, GPRs from 0x78 (rax .. r15, rip)
+            cx = bytearray(0x100)
+            for name, value in regs.items():
+                struct.pack_into("<Q", cx, 0x78 + 8 * GPR_ORDER.index(name), value)
+        if cx is not None:
+            rva = self.add(bytes(cx))
+            loc = struct.pack("<II", len(cx), rva if cx_rva is None else cx_rva)
+        self.add_stream(6, struct.pack("<II", tid, 0) + rec + loc)
 
     def _context(self, rsp, rip):
         cx = bytearray(0x100)
@@ -101,7 +116,7 @@ class DumpBuilder:
     def add_threads(self, threads):
         entries = b""
         for t in threads:
-            cx_rva = self.add(self._context(t["rsp"], t.get("rip", 0)))
+            cx_rva = t["cx_rva"] if "cx_rva" in t else self.add(self._context(t["rsp"], t.get("rip", 0)))
             entries += struct.pack(
                 "<IIIIQQIIII", t["tid"], 0, 0, 0, 0,
                 t.get("stack_start", 0), t.get("stack_size", 0),
@@ -242,6 +257,46 @@ class MinidumpParseTests(unittest.TestCase):
         self.assertEqual(addr, MOD_BASE + FAULT_RVA)
         self.assertEqual(tuple(params), (0, 0x24C))
 
+    def test_exception_registers_absent_without_a_thread_context(self):
+        self.assertIsNone(self.md.exception_registers())
+
+    def test_exception_registers_read_the_faulting_threads_context(self):
+        # a hash-map miss keeps its key in a register: +0x6590B9's missing clip index sat in r9 (2026-09-25)
+        b = DumpBuilder()
+        b.add_modules([(MOD_BASE, MOD_SIZE, "TaleWorlds.Native.dll")])
+        b.add_exception(TID, 0xC0000005, MOD_BASE + FAULT_RVA, (0, 8), regs={"r9": 6511, "r10": 0, "rdx": 409})
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, "ctx.dmp")
+            b.write(path)
+            with nct.Minidump(path) as md:
+                regs = md.exception_registers()
+        self.assertEqual((regs["r9"], regs["r10"], regs["rdx"]), (6511, 0, 409))
+        self.assertEqual(len(regs), 17)
+
+    def test_exception_registers_order_matches_the_context_layout(self):
+        # _context writes Rsp at 0x98 and Rip at 0xF8 by fixed offset, so this checks the reader's register order
+        # without going through GPR_ORDER, which mirrors the reader's own table
+        b = DumpBuilder()
+        b.add_modules([(MOD_BASE, MOD_SIZE, MOD_NAME)])
+        b.add_exception(TID, 0xC0000005, MOD_BASE + FAULT_RVA, (0, 8), cx=b._context(RSP, MOD_BASE + FAULT_RVA))
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, "ctx.dmp")
+            b.write(path)
+            with nct.Minidump(path) as md:
+                regs = md.exception_registers()
+        self.assertEqual((regs["rsp"], regs["rip"]), (RSP, MOD_BASE + FAULT_RVA))
+
+    def test_exception_registers_absent_when_the_context_rva_is_zero(self):
+        # a location of rva 0 points at the file header, not a CONTEXT: reading it would print garbage registers
+        b = DumpBuilder()
+        b.add_modules([(MOD_BASE, MOD_SIZE, MOD_NAME)])
+        b.add_exception(TID, 0xC0000005, MOD_BASE + FAULT_RVA, (0, 8), regs={"r9": 6511}, cx_rva=0)
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, "zero.dmp")
+            b.write(path)
+            with nct.Minidump(path) as md:
+                self.assertIsNone(md.exception_registers())
+
     def test_commit_summary_buckets_only_committed_regions(self):
         nent, tot, img, priv, mapped = self.md.commit_summary()
         self.assertEqual(nent, 5)
@@ -256,6 +311,17 @@ class MinidumpParseTests(unittest.TestCase):
         self.assertEqual(rip, MOD_BASE + FAULT_RVA)
         self.assertEqual((s_start, s_size, s_rva), (0x14E000, 0x2000, 0))
         self.assertIsNone(self.md.thread_rsp(999))
+
+    def test_thread_rsp_absent_when_the_context_rva_is_zero(self):
+        # the same guard exception_registers has: rva 0 is the file header, whose bytes would read as rsp and rip
+        b = DumpBuilder()
+        b.add_modules([(MOD_BASE, MOD_SIZE, MOD_NAME)])
+        b.add_threads([{"tid": TID, "rsp": RSP, "cx_rva": 0}])
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, "zero_thread.dmp")
+            b.write(path)
+            with nct.Minidump(path) as md:
+                self.assertIsNone(md.thread_rsp(TID))
 
     def test_stack_scan_rva0_falls_back_to_memory_list(self):
         rsp, _rip, s_start, s_size, s_rva = self.md.thread_rsp(TID)
@@ -343,6 +409,19 @@ class DumpCliTests(unittest.TestCase):
                 "crash function: 0x1040 .. 0x1080 (size 0x40, crash at +0x10)", out)
             self.assertIn("'monster_usage.cpp'", out)
             self.assertIn("L1 callers of 0x1040: 1 site(s)", out)
+
+    def test_dump_prints_the_exception_registers(self):
+        # the +0x6590B9 melee-table miss kept its clip index in r9: 6511 is anim_hill_troll_release_overswing_2h
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "regs.dmp"
+            b = DumpBuilder()
+            b.add_modules([(MOD_BASE, MOD_SIZE, MOD_NAME)])
+            b.add_exception(TID, 0xC0000005, MOD_BASE + FAULT_RVA, (0, 8), regs={"r9": 6511, "rdx": 409})
+            b.write(p)
+            r = self._run(["--dump", str(p)])
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+            self.assertIn("r9=0x196F", r.stdout)
+            self.assertIn("rdx=0x199", r.stdout)
 
     def test_dump_missing_file_exits_nonzero(self):
         with tempfile.TemporaryDirectory() as d:

@@ -124,7 +124,8 @@ public class FormationLayoutServiceTests
 
     [DataTestMethod]
     [DataRow(0.76f, 2f)]     // a human keeps the one-metre pitch: interval 1 + 1
-    [DataRow(1.75f, 2.75f)]  // a hill troll formation (Patch92): interval 1 + its width
+    [DataRow(1.75f, 2.75f)]  // a troll-width formation (Patch92): interval 1 + its width
+    [DataRow(1.6f, 2.6f)]    // at least a tenth mounted and not ordered to dismount: QuadrupedalRadius 0.8 x 2
     public void ComputeUnitPlanePosition_NeighbouringSlots_AreSpacedByTheWiderOfOneMetreAndTheUnitWidth(
         float unitDiameter, float expectedPitch)
     {

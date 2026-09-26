@@ -247,6 +247,40 @@ class Minidump:
         params = struct.unpack_from("<15Q", rec, 32)[:min(nparams, 15)]
         return tid, code, addr, params
 
+    GPRS = ("rax", "rcx", "rdx", "rbx", "rsp", "rbp", "rsi", "rdi",
+            "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15", "rip")
+
+    @classmethod
+    def _gprs(cls, cx):
+        """The general registers of an x64 CONTEXT: rax at 0x78, then 8 bytes each in GPRS order (rsp 0x98, rip
+        0xF8). Raises struct.error on a context shorter than 0x100 bytes."""
+        return {name: struct.unpack_from("<Q", cx, 0x78 + 8 * i)[0] for i, name in enumerate(cls.GPRS)}
+
+    def _context_regs(self, cx_size, cx_rva):
+        """The general registers of the CONTEXT at (cx_size, cx_rva), or None for a location of rva 0 (the file header,
+        whose bytes would read as registers), a size under 0x100 or a short read."""
+        if not cx_rva or cx_size < 0x100:
+            return None
+        self.f.seek(cx_rva)
+        cx = self.f.read(cx_size)
+        if len(cx) < 0x100:
+            return None
+        return self._gprs(cx)
+
+    def exception_registers(self):
+        """The faulting thread's general registers from the exception stream's own ThreadContext (x64 CONTEXT, rax at
+        0x78), or None when the stream carries none. A hash-map miss keeps its key in a register: the missing clip
+        index of the +0x6590B9 melee-table crash sat in r9 (2026-09-25)."""
+        st = self._stream(self.EXCEPTION)
+        if st is None:
+            return None
+        size, rva = st
+        if size < 8 + 152 + 8:
+            return None
+        self.f.seek(rva + 8 + 152)
+        cx_size, cx_rva = struct.unpack("<II", self.f.read(8))
+        return self._context_regs(cx_size, cx_rva)
+
     def commit_summary(self):
         """(regions, total, image, private, mapped) committed bytes, or None if no stream 16."""
         st = self._stream(self.MEMORY_INFO_LIST)
@@ -289,13 +323,10 @@ class Minidump:
             (t, _susp, _pc, _pr, _teb, s_start, s_size, s_rva,
              cx_size, cx_rva) = struct.unpack("<IIIIQQIIII", self.f.read(48))
             if t == tid:
-                if cx_size < 0x100:
+                regs = self._context_regs(cx_size, cx_rva)
+                if regs is None:
                     return None
-                self.f.seek(cx_rva)
-                cx = self.f.read(cx_size)
-                rsp = struct.unpack_from("<Q", cx, 0x98)[0]
-                rip = struct.unpack_from("<Q", cx, 0xF8)[0]
-                return rsp, rip, s_start, s_size, s_rva
+                return regs["rsp"], regs["rip"], s_start, s_size, s_rva
         return None
 
     def _stack_bytes(self, rsp, s_start, s_size, s_rva):
@@ -397,6 +428,11 @@ def run_dump(args):
                 params[0], f"op{params[0]}")
             note = f"  ({kind} of 0x{params[1]:X})"
         print(f"  parameters: [{', '.join(f'0x{p:X}' for p in params)}]{note}")
+        regs = md.exception_registers()
+        if regs:
+            names = [n for n in Minidump.GPRS if n != "rip"]
+            for row in (names[:8], names[8:]):
+                print("  " + "  ".join(f"{n}=0x{regs[n]:X}" for n in row))
 
         fault = md.module_of(addr)
         if fault:

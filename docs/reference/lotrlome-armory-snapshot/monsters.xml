@@ -918,12 +918,12 @@
 			   left_foot_ik_tip_bone="l_toe0"
 			   foot_num_bones_for_ik="3">
 		<Capsules>
-			<body_capsule radius="0.82"
-						  pos1="0.0, 0.0, 3.43"
-						  pos2="0.0, 0, 1.77" />
-			<crouched_body_capsule radius="0.82"
-								   pos1="0.0, 0.0, 3.43"
-								   pos2="0.0, 0, 1.33" />
+			<body_capsule radius="1.2"
+						  pos1="0.0, 0.0, 3.05"
+						  pos2="0.0, 0, 2.15" />
+			<crouched_body_capsule radius="1.2"
+								   pos1="0.0, 0.0, 3.05"
+								   pos2="0.0, 0, 1.71" />
 		</Capsules>
 		<Flags CanAttack="true"
 			   CanDefend="true"

@@ -204,6 +204,46 @@ attribute is authoritative for one kind of character and inert for the other.
 
 ---
 
+### `Formation.GetHashCode` dereferences its Team: key engine types by reference, and a hot getter's postfix must not throw (2026-09-26)
+Patch92's store keyed `Formation` in a `ConcurrentDictionary` with the default comparer. `Formation.GetHashCode` is
+`Team.TeamIndex * 10 + FormationIndex`, and the order preview lays formations out on `new Formation(null, -1)`
+copies, so the first time the player dragged the troll line the `UnitDiameter` postfix threw a
+NullReferenceException inside `OrderTroopPlacer.OnMissionScreenTick` (Mike's debugger caught it).
+- **Why missed:** a class that overrides nothing looked safe as a key, and nobody opened `GetHashCode`; the
+  simulation copies were not known to exist.
+- **Prevent:** key a map of engine objects with a reference comparer unless you have read the type's `GetHashCode`
+  and `Equals`: `ReferenceIdentity.Instance` (`Main/Core/Collections/ReferenceIdentity.cs`, `ReferenceEquals` plus
+  `RuntimeHelpers.GetHashCode`) is the shared one, and `TrollFormationSpacingStore` and `TrollFormationSpacingTracker`
+  key on it (the Patch92-private `FormationIdentity` is gone). A postfix on a getter the engine calls from its UI, AI
+  and worker threads must not throw, so build it only from reads that cannot: since the 2026-09-26 review Patch92's
+  postfix reads the reference-keyed concurrent map and the public readonly `Formation.Team` field, and carries no
+  try/catch.
+- **Source:** `docs/reference/harmony-patch-registry.md` Patch92; `Main/Core/Collections/ReferenceIdentity.cs`;
+  `Main/Features/TrollBruteForce/TrollFormationSpacingStore.cs`.
+
+### A formation's unit width reaches its slots only through three more doors: the preview copies, the slot cache, the deployment teleport (2026-09-26)
+Raising `Formation.UnitDiameter` for trolls (Patch92) took four rounds in game. The width was stored and the layout
+read it (flank 17.5 m to 40.8 m), yet every troll stood 1.6 m from its neighbour, their capsules touching:
+(1) the order preview and the spawn frames lay a formation out on a team-less copy
+(`GetUnitPositionWithIndexAccordingToNewOrder`, `GetUnitSpawnFrameWithIndex`), which had no width;
+(2) `LineFormation` rebuilds its cached slots (`_cachedOrderedLocalPositions`, then `_globalPositions`) only inside
+`BatchUnitPositionAvailabilities`, which a frame change runs and a re-issued Move to the same position does not, so
+the tracker calls `formation.OnUnitAddedOrRemoved()` and `Arrangement.OnFormationFrameChanged(updateCachedOrderedLocalPositions: true)`
+when a width changes; (3) the units had been placed before the width was known, and in deployment nothing walks
+them, so while `Mission.IsTeleportingAgents` is on the tracker replays vanilla's end-of-mass-transfer tail
+(`Formation.OnMassUnitTransferEnd`, v1.5.3 `Formation.cs:1958-1966`): `ForceUpdateCachedAndFormationValues` on each
+unit, then `SetHasPendingUnitPositions(false)`. Until then the tracker re-deployed through the Deploy button's handler
+instead (`DeploymentHandler.OrderController_OnOrderIssued_Aux(Move)`), and the 2026-09-26 review replaced it: that
+path's `ForcePositioning` hands `Formation.SetPositioning` the position and facing the formation already holds, which
+returns without a frame change (`Formation.cs:870, 892, 904`), so the unit snap that follows lands on the stale
+human-width slot cache. The tracker's comment records the same thing in game: re-ordering a formation onto its own
+position left every troll on the old slots (2026-09-25).
+- **Why missed:** each fix was checked against the log line it changed (the width), not against where the agents
+  actually stood; the trace's nearest-neighbour distance was the evidence that finally showed it.
+- **Prevent:** when you change a formation's geometry, measure the agents (neighbour distances), not the
+  formation's numbers, and cover the simulation copy, the slot cache and deployment in the same change.
+- **Source:** `docs/reference/harmony-patch-registry.md` Patch92; `Main/Features/TrollBruteForce/TrollFormationSpacingTracker.cs`.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

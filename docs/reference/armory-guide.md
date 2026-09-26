@@ -58,10 +58,19 @@
 > still describes the authoring-vs-cooked distinction correctly; what it got wrong was which one
 > the running game reads.
 >
+> **Re-confirmed 2026-09-26: the Armory now ships BOTH trees, and loose still wins.** A cook
+> wrote `AssetPackages/pack0-9.tpac` at 07:36; the 08:41 game session still logged
+> `Loading packages $BASE/Modules/LOTRLOME_Armory/Assets...`. The live `Assets/` folder is
+> the single source of truth (Mike, 2026-09-26). The tools had preferred a cooked tree
+> wherever one existed, so from 07:36 they read the stale packs: the hill troll hammer,
+> imported at 11:39, reported `MISSING_COLLISION_BODY`, which would have blocked the commit hook.
+>
 > Two consequences, both now handled in the tools:
-> - `validate_mesh_refs.py` falls back to `Assets/**` for any module shipping no cooked
->   packs, and warns when it does. Before that fix its default module list resolved to
->   Native alone, which reported thousands of false `MISSING_MESH`.
+> - `validate_mesh_refs.tpac_paths_for_modules` scans a module's loose `Assets/**` whenever it
+>   has one and falls back to cooked packs only for a module with no loose tree (Native);
+>   `validate_moduledata.py` and `audit_armory_refs.py` call it rather than choosing a tree
+>   themselves. Before the first fix its default module list resolved to Native alone,
+>   which reported thousands of false `MISSING_MESH`.
 > - `audit_deleted_mesh_impact.py` no longer exits 2 on the absent `AssetPackages`. With no
 >   cooked side to diff against it derives "gone" from the reference side instead, which is
 >   a narrower question: it cannot see art deleted while nothing referenced it.
@@ -70,14 +79,19 @@ The Armory carries the same art twice, and they can disagree:
 
 | Tree | What it is | Read by |
 |---|---|---|
-| `AssetPackages/pack0-9.tpac` | the **cooked** packs the running game loads | `tools/validate_mesh_refs.py` |
-| `Assets/**/*.tpac` | the **authoring** tree, one tpac per asset | `tools/audit_deleted_mesh_impact.py` |
+| `AssetPackages/pack0-9.tpac` | the **cooked** packs; the game ignores them while `Assets/` exists (above) | only `tools/audit_deleted_mesh_impact.py`, which diffs them against `Assets/`; no validator resolves refs against them since 2026-09-26 |
+| `Assets/**/*.tpac` | the **authoring** tree, one tpac per asset, and what the game loads | `tools/validate_mesh_refs.py`, `tools/audit_deleted_mesh_impact.py` |
 
-Packs are rebuilt only on an explicit re-cook. **Art deleted from `Assets/` keeps shipping
-from a stale pack, so `validate_mesh_refs.py` returns `PASS` while the source tree is
-already broken.** The reverse also happens: art imported after the last cook exists for the
-editor and not for the game, and renders naked in-game right now. Check both directions
-before trusting either. Full case: [`docs/features/armoury-mesh-cleanup.md`](../features/armoury-mesh-cleanup.md).
+Packs are rebuilt only on an explicit re-cook, so they go stale, but the game does not read
+them while `Assets/` exists. **Art deleted from `Assets/` is broken in-game at once, whatever a
+stale pack still holds, and art imported after the last cook renders at once.** The hill troll
+hammer, imported at 11:39 on 2026-09-26, was in the troll's hand in the 12:18 battle although
+the 07:36 packs do not hold it. A stale pack misleads only a tool that reads it: until
+2026-09-26 `validate_mesh_refs.py` did, so it could `PASS` over art already gone from
+`Assets/`, and it reported the new hammer's body as missing. It now reads `Assets/` first, so a
+`PASS` is against the tree the game loads. The packs matter only for a module with no `Assets/`
+tree, which loads them instead (Native does). The 2026-08-28 case, from when the tools read the
+packs: [`docs/features/armoury-mesh-cleanup.md`](../features/armoury-mesh-cleanup.md).
 
 ## Deleted on 2026-08-28 (do not re-reference)
 

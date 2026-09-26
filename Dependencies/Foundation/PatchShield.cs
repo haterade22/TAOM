@@ -48,11 +48,17 @@ public static class PatchShield
     // prefixes from coop-modules.txt — union only, so a bad config edit can never unprotect the
     // BUTR/MCM stack. Built once per unpatch attempt in TryUnpatchOffendingPatches.
 
-    // The hot-layer target exclusion list lives in PatchShieldPolicy.ExcludedTargetNamespacePrefixes (#331).
+    // The hot-layer target exclusion lists live in PatchShieldPolicy: by namespace
+    // (ExcludedTargetNamespacePrefixes, #331) and by declaring-type+method (ExcludedTargetMethods,
+    // Patch92's five per-unit Formation members, whose declaring type is not hot enough to exclude by namespace).
 
     private static bool IsExcludedTarget(MethodBase method)
     {
-        try { return PatchShieldPolicy.IsExcludedTargetNamespace(method.DeclaringType?.Namespace); }
+        try
+        {
+            return PatchShieldPolicy.IsExcludedTargetNamespace(method.DeclaringType?.Namespace)
+                || PatchShieldPolicy.IsExcludedTargetMethod(method.DeclaringType?.FullName, method.Name);
+        }
         catch { return false; /* fail open: an unreadable type just gets shielded as before */ }
     }
 
@@ -170,9 +176,11 @@ public static class PatchShield
                     catch { }
 
                     // Never shield the excluded hot layers: the Gauntlet/2D UI (#331 round 2: a
-                    // per-call __originalMethod finalizer froze tournament exits for ~107s) and the
+                    // per-call __originalMethod finalizer froze tournament exits for ~107s), the
                     // engine's ManagedCallbacks boundary, whose callback shims Native2Managed crash
-                    // capture already wraps (plan 007). See PatchShieldPolicy.ExcludedTargetNamespacePrefixes.
+                    // capture already wraps (plan 007), and Patch92's per-unit Formation members. See
+                    // PatchShieldPolicy.ExcludedTargetNamespacePrefixes and ExcludedTargetMethods; the
+                    // skip applies to every owner, so another mod's patch on those targets is unshielded too.
                     if (IsExcludedTarget(method))
                     {
                         _coverage.RecordSkipped(method);

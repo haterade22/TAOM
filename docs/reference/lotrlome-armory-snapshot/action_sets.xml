@@ -41730,7 +41730,9 @@
 		     tools/bind_hill_troll_action_set.py, which owns this body: edit the rules there, not here.
 		     Fab clips for gait, idles, hits and deaths; human clips retargeted onto the troll where a
 		     clips_index lists them; the troll's idles reused for inventory, conversation and cheers;
-		     the human clip itself (bends the hunched rest wrong) for the rest. -->
+		     the human clip itself (bends the hunched rest wrong) for the rest.
+		     The release, quick release, blocked and quick blocked codes keep the vanilla clip unless the troll clip is self-keyed
+		     (its Blends with animation holds its own name: tools/set_clip_balance_name.py): a troll clip with no melee attack table row crashes the first swing. -->
 		<action type="act_troop_cavalry_sword" animation="pose_cavalry_sword" />
 		<action type="act_inventory_idle_start" animation="anim_hill_troll_idle1" />
 		<action type="act_inventory_idle" animation="anim_hill_troll_idle1" />
@@ -43907,74 +43909,74 @@
 		<action type="act_ready_from_right_slashright_2h" animation="anim_hill_troll_ready_from_right_slashright_2h" />
 		<action type="act_ready_from_right_slashright_2h_unbalanced" animation="anim_hill_troll_ready_from_right_slashright_2h_unbalanced" />
 		<action type="act_quick_release_slashright_2h" animation="anim_hill_troll_quick_release_slashright_2h" />
-		<action type="act_quick_release_slashright_2h_balanced" animation="anim_hill_troll_quick_release_slashright_2h_balanced" />
+		<action type="act_quick_release_slashright_2h_balanced" animation="quick_release_slashright_2h_balanced" />
 		<action type="act_release_slashright_2h" animation="anim_hill_troll_release_slashright_2h" />
-		<action type="act_release_slashright_2h_balanced" animation="anim_hill_troll_release_slashright_2h_balanced" />
+		<action type="act_release_slashright_2h_balanced" animation="release_slashright_2h_balanced" />
 		<action type="act_quick_blocked_slashright_2h" animation="anim_hill_troll_quick_blocked_slashright_2h" />
-		<action type="act_quick_blocked_slashright_2h_balanced" animation="anim_hill_troll_quick_blocked_slashright_2h_balanced" />
+		<action type="act_quick_blocked_slashright_2h_balanced" animation="quick_blocked_slashright_2h_balanced" />
 		<action type="act_blocked_slashright_2h" animation="anim_hill_troll_blocked_slashright_2h" />
-		<action type="act_blocked_slashright_2h_balanced" animation="anim_hill_troll_blocked_slashright_2h_balanced" />
+		<action type="act_blocked_slashright_2h_balanced" animation="blocked_slashright_2h_balanced" />
 		<action type="act_ready_slashright_2h_left_stance" animation="anim_hill_troll_ready_slashright_2h_left_stance" />
 		<action type="act_ready_from_up_slashright_2h_left_stance" animation="anim_hill_troll_ready_from_up_slashright_2h_left_stance" />
 		<action type="act_ready_from_up_slashright_2h_unbalanced_left_stance" animation="anim_hill_troll_ready_from_up_slashright_2h_unbalanced_ls" />
 		<action type="act_ready_from_right_slashright_2h_left_stance" animation="anim_hill_troll_ready_from_right_slashright_2h_left_stance" />
 		<action type="act_ready_from_right_slashright_2h_unbalanced_left_stance" animation="anim_hill_troll_ready_from_right_slashright_2h_unbalanced_ls" />
 		<action type="act_quick_release_slashright_2h_left_stance" animation="anim_hill_troll_quick_release_slashright_2h_left_stance" />
-		<action type="act_quick_release_slashright_2h_balanced_left_stance" animation="anim_hill_troll_quick_release_slashright_2h_balanced_ls" />
+		<action type="act_quick_release_slashright_2h_balanced_left_stance" animation="quick_release_slashright_2h_balanced_left_stance" />
 		<action type="act_release_slashright_2h_left_stance" animation="anim_hill_troll_release_slashright_2h_left_stance" />
-		<action type="act_release_slashright_2h_balanced_left_stance" animation="anim_hill_troll_release_slashright_2h_balanced_left_stance" />
+		<action type="act_release_slashright_2h_balanced_left_stance" animation="release_slashright_2h_balanced_left_stance" />
 		<action type="act_quick_blocked_slashright_2h_left_stance" animation="anim_hill_troll_quick_blocked_slashright_2h_left_stance" />
-		<action type="act_quick_blocked_slashright_2h_balanced_left_stance" animation="anim_hill_troll_quick_blocked_slashright_2h_balanced_ls" />
+		<action type="act_quick_blocked_slashright_2h_balanced_left_stance" animation="quick_blocked_slashright_2h_balanced_left_stance" />
 		<action type="act_blocked_slashright_2h_left_stance" animation="anim_hill_troll_blocked_slashright_2h_left_stance" />
-		<action type="act_blocked_slashright_2h_balanced_left_stance" animation="anim_hill_troll_blocked_slashright_2h_balanced_left_stance" />
+		<action type="act_blocked_slashright_2h_balanced_left_stance" animation="blocked_slashright_2h_balanced_left_stance" />
 		<action type="act_ready_slashleft_2h" animation="anim_hill_troll_ready_slashleft_2h" />
 		<action type="act_ready_from_up_slashleft_2h" animation="anim_hill_troll_ready_from_up_slashleft_2h" />
 		<action type="act_ready_from_up_slashleft_2h_unbalanced" animation="anim_hill_troll_ready_from_up_slashleft_2h_unbalanced" />
 		<action type="act_ready_from_left_slashleft_2h" animation="anim_hill_troll_ready_from_left_slashleft_2h" />
 		<action type="act_ready_from_left_slashleft_2h_unbalanced" animation="anim_hill_troll_ready_from_left_slashleft_2h_unbalanced" />
 		<action type="act_quick_release_slashleft_2h" animation="anim_hill_troll_quick_release_slashleft_2h" />
-		<action type="act_quick_release_slashleft_2h_balanced" animation="anim_hill_troll_quick_release_slashleft_2h_balanced" />
+		<action type="act_quick_release_slashleft_2h_balanced" animation="quick_release_slashleft_2h_balanced" />
 		<action type="act_release_slashleft_2h" animation="anim_hill_troll_release_slashleft_2h" />
-		<action type="act_release_slashleft_2h_balanced" animation="anim_hill_troll_release_slashleft_2h_balanced" />
+		<action type="act_release_slashleft_2h_balanced" animation="release_slashleft_2h_balanced" />
 		<action type="act_quick_blocked_slashleft_2h" animation="anim_hill_troll_quick_blocked_slashleft_2h" />
-		<action type="act_quick_blocked_slashleft_2h_balanced" animation="anim_hill_troll_quick_blocked_slashleft_2h_balanced" />
+		<action type="act_quick_blocked_slashleft_2h_balanced" animation="quick_blocked_slashleft_2h_balanced" />
 		<action type="act_blocked_slashleft_2h" animation="anim_hill_troll_blocked_slashleft_2h" />
-		<action type="act_blocked_slashleft_2h_balanced" animation="anim_hill_troll_blocked_slashleft_2h_balanced" />
+		<action type="act_blocked_slashleft_2h_balanced" animation="blocked_slashleft_2h_balanced" />
 		<action type="act_ready_slashleft_2h_left_stance" animation="anim_hill_troll_ready_slashleft_2h_left_stance" />
 		<action type="act_ready_from_up_slashleft_2h_left_stance" animation="anim_hill_troll_ready_from_up_slashleft_2h_left_stance" />
 		<action type="act_ready_from_up_slashleft_2h_unbalanced_left_stance" animation="anim_hill_troll_ready_from_up_slashleft_2h_unbalanced_ls" />
 		<action type="act_ready_from_left_slashleft_2h_left_stance" animation="anim_hill_troll_ready_from_left_slashleft_2h_left_stance" />
 		<action type="act_ready_from_left_slashleft_2h_unbalanced_left_stance" animation="anim_hill_troll_ready_from_left_slashleft_2h_unbalanced_ls" />
 		<action type="act_quick_release_slashleft_2h_left_stance" animation="anim_hill_troll_quick_release_slashleft_2h_left_stance" />
-		<action type="act_quick_release_slashleft_2h_balanced_left_stance" animation="anim_hill_troll_quick_release_slashleft_2h_balanced_left_stance" />
+		<action type="act_quick_release_slashleft_2h_balanced_left_stance" animation="quick_release_slashleft_2h_balanced_left_stance" />
 		<action type="act_release_slashleft_2h_left_stance" animation="anim_hill_troll_release_slashleft_2h_left_stance" />
-		<action type="act_release_slashleft_2h_balanced_left_stance" animation="anim_hill_troll_release_slashleft_2h_balanced_left_stance" />
+		<action type="act_release_slashleft_2h_balanced_left_stance" animation="release_slashleft_2h_balanced_left_stance" />
 		<action type="act_quick_blocked_slashleft_2h_left_stance" animation="anim_hill_troll_quick_blocked_slashleft_2h_left_stance" />
-		<action type="act_quick_blocked_slashleft_2h_balanced_left_stance" animation="anim_hill_troll_quick_blocked_slashleft_2h_balanced_left_stance" />
+		<action type="act_quick_blocked_slashleft_2h_balanced_left_stance" animation="quick_blocked_slashleft_2h_balanced_left_stance" />
 		<action type="act_blocked_slashleft_2h_left_stance" animation="anim_hill_troll_blocked_slashleft_2h_left_stance" />
-		<action type="act_blocked_slashleft_2h_balanced_left_stance" animation="anim_hill_troll_blocked_slashleft_2h_balanced_left_stance" />
+		<action type="act_blocked_slashleft_2h_balanced_left_stance" animation="blocked_slashleft_2h_balanced_left_stance" />
 		<action type="act_ready_thrust_2h" animation="anim_hill_troll_ready_thrust_2h" />
 		<action type="act_quick_release_thrust_2h" animation="anim_hill_troll_quick_release_thrust_2h" />
-		<action type="act_quick_release_thrust_2h_balanced" animation="anim_hill_troll_quick_release_thrust_2h_balanced" />
+		<action type="act_quick_release_thrust_2h_balanced" animation="quick_release_thrust_2h_balanced" />
 		<action type="act_release_thrust_2h" animation="anim_hill_troll_release_thrust_2h" />
-		<action type="act_release_thrust_2h_balanced" animation="anim_hill_troll_release_thrust_2h_balanced" />
+		<action type="act_release_thrust_2h_balanced" animation="release_thrust_2h_balanced" />
 		<action type="act_stuck_thrust_2h" animation="anim_hill_troll_stuck_thrust_2h" />
 		<action type="act_stuck_quick_thrust_2h" animation="anim_hill_troll_stuck_quick_thrust_2h" />
 		<action type="act_stuck_thrust_2h_left_stance" animation="anim_hill_troll_stuck_thrust_2h_left_stance" />
 		<action type="act_stuck_quick_thrust_2h_left_stance" animation="anim_hill_troll_stuck_quick_thrust_2h_left_stance" />
 		<action type="act_quick_blocked_thrust_2h" animation="anim_hill_troll_blocked_thrust_2h" />
-		<action type="act_quick_blocked_thrust_2h_balanced" animation="anim_hill_troll_blocked_thrust_2h_balanced" />
+		<action type="act_quick_blocked_thrust_2h_balanced" animation="blocked_thrust_2h_balanced" />
 		<action type="act_blocked_thrust_2h" animation="anim_hill_troll_blocked_thrust_2h" />
-		<action type="act_blocked_thrust_2h_balanced" animation="anim_hill_troll_blocked_thrust_2h_balanced" />
+		<action type="act_blocked_thrust_2h_balanced" animation="blocked_thrust_2h_balanced" />
 		<action type="act_ready_thrust_2h_left_stance" animation="anim_hill_troll_ready_thrust_2h_left_stance" />
 		<action type="act_quick_release_thrust_2h_left_stance" animation="anim_hill_troll_quick_release_thrust_2h_left_stance" />
-		<action type="act_quick_release_thrust_2h_balanced_left_stance" animation="anim_hill_troll_quick_release_thrust_2h_balanced_left_stance" />
+		<action type="act_quick_release_thrust_2h_balanced_left_stance" animation="quick_release_thrust_2h_balanced_left_stance" />
 		<action type="act_release_thrust_2h_left_stance" animation="anim_hill_troll_release_thrust_2h_left_stance" />
-		<action type="act_release_thrust_2h_balanced_left_stance" animation="anim_hill_troll_release_thrust_2h_balanced_left_stance" />
+		<action type="act_release_thrust_2h_balanced_left_stance" animation="release_thrust_2h_balanced_left_stance" />
 		<action type="act_quick_blocked_thrust_2h_left_stance" animation="anim_hill_troll_blocked_thrust_2h_left_stance" />
-		<action type="act_quick_blocked_thrust_2h_balanced_left_stance" animation="anim_hill_troll_blocked_thrust_2h_balanced_left_stance" />
+		<action type="act_quick_blocked_thrust_2h_balanced_left_stance" animation="blocked_thrust_2h_balanced_left_stance" />
 		<action type="act_blocked_thrust_2h_left_stance" animation="anim_hill_troll_blocked_thrust_2h_left_stance" />
-		<action type="act_blocked_thrust_2h_balanced_left_stance" animation="anim_hill_troll_blocked_thrust_2h_balanced_left_stance" />
+		<action type="act_blocked_thrust_2h_balanced_left_stance" animation="blocked_thrust_2h_balanced_left_stance" />
 		<action type="act_ready_overswing_2h" animation="anim_hill_troll_ready_overswing_2h" />
 		<action type="act_ready_from_up_overswing_2h" animation="anim_hill_troll_ready_from_up_overswing_2h" />
 		<action type="act_ready_from_up_overswing_2h_unbalanced" animation="anim_hill_troll_ready_from_up_overswing_2h_unbalanced" />
@@ -43983,13 +43985,13 @@
 		<action type="act_ready_from_right_overswing_2h" animation="anim_hill_troll_ready_from_right_overswing_2h" />
 		<action type="act_ready_from_right_overswing_2h_unbalanced" animation="anim_hill_troll_ready_from_right_overswing_2h_unbalanced" />
 		<action type="act_quick_release_overswing_2h" animation="anim_hill_troll_quick_release_overswing_2h" />
-		<action type="act_quick_release_overswing_2h_balanced" animation="anim_hill_troll_quick_release_overswing_2h_balanced" />
+		<action type="act_quick_release_overswing_2h_balanced" animation="quick_release_overswing_2h_balanced" />
 		<action type="act_release_overswing_2h" animation="anim_hill_troll_release_overswing_2h" />
-		<action type="act_release_overswing_2h_balanced" animation="anim_hill_troll_release_overswing_2h_balanced" />
+		<action type="act_release_overswing_2h_balanced" animation="release_overswing_2h_balanced" />
 		<action type="act_blocked_overswing_2h" animation="anim_hill_troll_blocked_overswing_2h" />
-		<action type="act_blocked_overswing_2h_balanced" animation="anim_hill_troll_blocked_overswing_2h_balanced" />
+		<action type="act_blocked_overswing_2h_balanced" animation="blocked_overswing_2h_balanced" />
 		<action type="act_quick_blocked_overswing_2h" animation="anim_hill_troll_quick_blocked_overswing_2h" />
-		<action type="act_quick_blocked_overswing_2h_balanced" animation="anim_hill_troll_quick_blocked_overswing_2h_balanced" />
+		<action type="act_quick_blocked_overswing_2h_balanced" animation="quick_blocked_overswing_2h_balanced" />
 		<action type="act_ready_overswing_2h_left_stance" animation="anim_hill_troll_ready_overswing_2h_left_stance" />
 		<action type="act_ready_from_up_overswing_2h_left_stance" animation="anim_hill_troll_ready_from_up_overswing_2h_left_stance" />
 		<action type="act_ready_from_up_overswing_2h_unbalanced_left_stance" animation="anim_hill_troll_ready_from_up_overswing_2h_unbalanced_ls" />
@@ -43998,13 +44000,13 @@
 		<action type="act_ready_from_right_overswing_2h_left_stance" animation="anim_hill_troll_ready_from_right_overswing_2h_left_stance" />
 		<action type="act_ready_from_right_overswing_2h_unbalanced_left_stance" animation="anim_hill_troll_ready_from_right_overswing_2h_unbalanced_ls" />
 		<action type="act_quick_release_overswing_2h_left_stance" animation="anim_hill_troll_quick_release_overswing_2h_left_stance" />
-		<action type="act_quick_release_overswing_2h_balanced_left_stance" animation="anim_hill_troll_quick_release_overswing_2h_balanced_left_stance" />
+		<action type="act_quick_release_overswing_2h_balanced_left_stance" animation="quick_release_overswing_2h_balanced_left_stance" />
 		<action type="act_release_overswing_2h_left_stance" animation="anim_hill_troll_release_overswing_2h_left_stance" />
-		<action type="act_release_overswing_2h_balanced_left_stance" animation="anim_hill_troll_release_overswing_2h_balanced_left_stance" />
+		<action type="act_release_overswing_2h_balanced_left_stance" animation="release_overswing_2h_balanced_left_stance" />
 		<action type="act_quick_blocked_overswing_2h_left_stance" animation="anim_hill_troll_quick_blocked_overswing_2h_left_stance" />
-		<action type="act_quick_blocked_overswing_2h_balanced_left_stance" animation="anim_hill_troll_quick_blocked_overswing_2h_balanced_left_stance" />
+		<action type="act_quick_blocked_overswing_2h_balanced_left_stance" animation="quick_blocked_overswing_2h_balanced_left_stance" />
 		<action type="act_blocked_overswing_2h_left_stance" animation="anim_hill_troll_blocked_overswing_2h_left_stance" />
-		<action type="act_blocked_overswing_2h_balanced_left_stance" animation="anim_hill_troll_blocked_overswing_2h_balanced_left_stance" />
+		<action type="act_blocked_overswing_2h_balanced_left_stance" animation="blocked_overswing_2h_balanced_left_stance" />
 		<action type="act_ready_thrust_2h_horseback" animation="ready_thrust_2h_horseback" />
 		<action type="act_quick_release_thrust_2h_horseback" animation="quick_release_thrust_2h_horseback" />
 		<action type="act_quick_release_thrust_2h_horseback_balanced" animation="release_thrust_2h_balanced_horseback" />

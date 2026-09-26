@@ -1100,7 +1100,8 @@ MODEL_CLASS_RE = re.compile(
 MODEL_MENTION_RE = re.compile(r"`(Taom\w*Model)`")
 MODEL_COUNT_CLAIM_RES = (
     re.compile(r"TAOM has (\d+) GameModel overrides"),
-    re.compile(r"Existing Overrides \((\d+) total\)"),
+    # "(N total)" or the real heading's "(N total: 49 registered, ...)"; the colon form never matched before
+    re.compile(r"Existing Overrides \((\d+) total[):]"),
 )
 
 

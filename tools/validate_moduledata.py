@@ -152,19 +152,14 @@ def generator_item_ref_issues(items: set) -> list:
 
 BODY_CODE = "MISSING_COLLISION_BODY"
 MESH_CODE = "MISSING_VISUAL_MESH"
-# Every module whose packs the client loads for item art. The Armory ships loose
-# Assets/**/*.tpac and no cooked AssetPackages (2026-09); the vanilla three ship
-# cooked packs. validate_mesh_refs falls back the same way.
+# Every module whose packs the client loads for item art; which tree of each the
+# engine reads is validate_mesh_refs.tpac_paths_for_modules's to decide.
 _ART_MODULES = ("LOTRLOME_Armory", "Native", "SandBoxCore", "SandBox")
 
 
 def _loaded_tpacs(game_modules: Path) -> list:
-    out = []
-    for name in _ART_MODULES:
-        mod = game_modules / name
-        cooked = sorted((mod / "AssetPackages").glob("*.tpac"))
-        out += cooked if cooked else sorted((mod / "Assets").rglob("*.tpac"))
-    return out
+    import validate_mesh_refs as vmr
+    return [p for m in _ART_MODULES for p in vmr.module_tpacs(Path(game_modules) / m, m)]
 
 
 def missing_collision_body_issues(game_modules: Path, moduledata: Path) -> list:

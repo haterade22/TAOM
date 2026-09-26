@@ -25,8 +25,9 @@ which has no face rig to move. An object that already has exactly `--count` chan
 dwarf `sk_dwarf_bm_f1_head`: head and mouth had 101, only `.eye` had none); any other existing count is refused.
 
 SAFETY (the tools/blender/add_mesh_lods.py shape): a staged `<stem>.facemorphs.fbx` is written and
-re-imported; every object must come back with its vertex, polygon, UV, material and parent counts, the
-targets with exactly the new channels and every other object's keys untouched. `--apply` writes a write-once
+re-imported, and `add_mesh_lods.compare(rekeyed=)` checks it: every object must come back with its vertex,
+polygon, UV, material, parent, size and location state, the targets with exactly the new channels, every
+other object's keys untouched and no object new. `--apply` writes a write-once
 `<fbx>.bak-facemorphs` first. Check without Blender: `python tools/audit_fbx_lods.py --diff <old> <new>`.
 
     "%LOCALAPPDATA%\\Microsoft\\WindowsApps\\blender-launcher.exe" -b --factory-startup ^
@@ -93,7 +94,9 @@ def add_channels(obj, names):
     if not obj.data.shape_keys:
         obj.shape_key_add(name="Basis", from_mix=False)
     for n in names:
-        obj.shape_key_add(name=n, from_mix=False)      # a copy of the reference: zero offsets
+        # a copy of the reference: zero offsets. Weight 0 as the artist files carry it: Blender 5.2 adds a key at
+        # 1.0 and the export writes that as DeformPercent (transfer_hand_morphs.add_channels shipped all 26 applied)
+        obj.shape_key_add(name=n, from_mix=False).value = 0.0
     return [k.name for k in obj.data.shape_keys.key_blocks]
 
 
@@ -129,22 +132,7 @@ def main():
         aml.export(staged)
         save("re-importing")
         aml.load(staged)
-        after = aml.fingerprint()
-        for name, b in before.items():
-            a = after.get(name)
-            if a is None:
-                report["diffs"].append("lost %s" % name)
-                continue
-            if b["type"] != "MESH":
-                continue
-            for k in ("verts", "polys", "uv_layers", "materials", "parent"):
-                if b[k] != a[k]:
-                    report["diffs"].append("%s: %s %r -> %r" % (name, k, b[k], a[k]))
-            want = expected.get(name, b["shape_keys"])
-            # the FBX importer names the reference key itself; compare the channels after it
-            if list(a["shape_keys"][1:]) != list(want[1:]):
-                report["diffs"].append("%s: channels %d -> %d (first %s)" % (
-                    name, max(len(want) - 1, 0), max(len(a["shape_keys"]) - 1, 0), a["shape_keys"][1:3]))
+        report["diffs"] = aml.compare(before, aml.fingerprint(), {}, rekeyed=expected)
         report["ok"] = not report["diffs"]
         if report["ok"] and args["apply"]:
             backup = fbx + ".bak-facemorphs"

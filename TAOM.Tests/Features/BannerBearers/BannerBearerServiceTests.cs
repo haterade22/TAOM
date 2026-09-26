@@ -605,4 +605,38 @@ public class BannerBearerServiceTests
         // Fail closed on invalid ids only while the feature owns the policy.
         Assert.IsFalse(_sut.IsReinforcementBearerAllowed(UnknownId, FormationClass.Infantry));
     }
+
+    // ---- PassesRaceGate (custom battle CanAgentPickUpAnyBanner gate, 2026-09-26) -----------------
+    // Used by CanAgentPickUpAnyBanner in both battle models and by Custom Battle's
+    // CanAgentBecomeBannerBearer: a troll must never carry OR pick up a dropped banner (Mike: "Cave
+    // trolls nor hill trolls should carry a banner"). Same toggle-fold shape as
+    // IsReinforcementBearerAllowed: disabled == vanilla parity.
+
+    [TestMethod]
+    public void PassesRaceGate_FeatureDisabled_AllowsATrollRace()
+    {
+        _config.Enabled = false;
+
+        Assert.IsTrue(_sut.PassesRaceGate(CaveTrollId));
+    }
+
+    [TestMethod]
+    public void PassesRaceGate_Enabled_TrollRaces_Deny()
+    {
+        Assert.IsFalse(_sut.PassesRaceGate(CaveTrollId), "cave troll");
+        Assert.IsFalse(_sut.PassesRaceGate(HillTrollId), "hill troll");
+    }
+
+    [TestMethod]
+    public void PassesRaceGate_Enabled_HumanRace_Allows()
+    {
+        Assert.IsTrue(_sut.PassesRaceGate(HumanId));
+    }
+
+    [TestMethod]
+    public void PassesRaceGate_Enabled_InvalidRaceId_Denies()
+    {
+        // -1 (no character) is an invalid id, and validation-before-lookup fails it closed.
+        Assert.IsFalse(_sut.PassesRaceGate(-1));
+    }
 }
