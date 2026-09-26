@@ -71,7 +71,7 @@ internal static class {FeatureName}IoC
 When exploring the codebase for patterns or related code, use progressive refinement:
 
 1. **Cycle 1 (Broad):** Search for similar features in `Main/Features/` to understand patterns.
-2. **Cycle 2 (Focused):** Read the specific interfaces, adapters, and services relevant to your feature.
+2. **Cycle 2 (Focused):** Read the specific interfaces, adapters, and services relevant to your feature. Before you change any existing TAOM type, map it (mandatory, #677): `python tools/graphify_taom.py refresh --if-stale`, then `python tools/graphify_taom.py affected "<Type>" --depth 2` for its dependents and `explain "<Type>"` for its dependencies. On "Ambiguous", rerun with the repo-relative `.cs` path it lists. Never run `graphify` itself; a hook denies its write verbs. Report the dependents you checked.
 3. **Cycle 3 (Targeted):** Check how existing features wire into IoC.cs and SubModule.cs.
 
 Stop when you have enough context. Don't read everything — 3 high-relevance files beats 10 shallow reads.

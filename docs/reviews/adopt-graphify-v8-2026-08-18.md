@@ -3,6 +3,7 @@
 **Date:** 2026-08-18
 **Source:** [github.com/Graphify-Labs/graphify](https://github.com/Graphify-Labs/graphify), branch `v8`, PyPI `graphifyy` 0.9.46 (released 2026-08-17), Apache-2.0
 **Disposition:** Keep installed as an ad-hoc C# analysis tool. Reject as the cross-domain graph and as a `doc_graph.py` replacement, because it fails TAOM's XML and XSLT requirement. No harness wiring.
+**Superseded in part (2026-09-26):** the "no harness wiring" half is reversed by [ADR-012](../adrs/012-graphify-code-graph-in-the-workflow.md) (#677). graphify is now run only through `tools/graphify_taom.py` and read at fixed workflow points; see [graphify-code-graph.md](../features/graphify-code-graph.md). The rejections as cross-domain graph and as a `doc_graph.py` replacement stand.
 **Supersedes:** [adopt-graphify-2026-06-08.md](./adopt-graphify-2026-06-08.md), which reviewed the predecessor repo `safishamsi/graphify` under MIT.
 
 ## Why this was re-opened
@@ -276,6 +277,28 @@ cannot produce above the 5,000-node viz limit.
 
 So: to keep the code graph current, re-run `extract --code-only` (100 seconds, zero tokens) rather
 than `update`, unless you specifically want the aggregated HTML and do not care about external types.
+
+**The commands, since 2026-09-26.** Do not type any of the above by hand: a hook now denies raw
+graphify write verbs, and `tools/graphify_taom.py` runs the correct sequence.
+
+```bash
+python tools/graphify_taom.py refresh --if-stale   # extract --code-only + cluster-only --no-label --no-viz into E:\graphify\TAOM
+python tools/graphify_taom.py status               # fresh / STALE / MISSING, against the build's stamp
+python tools/graphify_taom.py affected "X" --depth 2
+```
+
+What the wrapper runs underneath, for reference (with `GRAPHIFY_OUT` set to the absolute
+`E:\graphify\TAOM\graphify-out`):
+
+```powershell
+graphify extract E:\repos\TAOM --code-only --out E:\graphify\TAOM
+graphify cluster-only E:\graphify\TAOM --no-label --no-viz
+```
+
+`--out` alone is not enough. On 2026-09-26 an incremental re-run with `--out` still wrote
+`graphify-out/cache/stat-index.json` into the repo, because graphify's `cache.py` fixes that file's
+location from its first caller; the absolute `GRAPHIFY_OUT` pins it. The stray file 8318e346
+committed may have come the same way rather than from a missing `--out`.
 
 **Do not repeat the full semantic pass.** It cost 18.2M input tokens, produced an identical god-node
 ranking to the free code-only run, and 58% of the nodes it added arrived weakly connected (5,744 to

@@ -35,6 +35,7 @@ Engine migrations: [TRACKING.md](docs/migration/TRACKING.md), latest
 | **TDD** | RED, GREEN, REFACTOR. Test first, always. |
 | **Architecture** | Patch, model or behavior → service (through a hook interface only when the patch needs a narrow seam or a test fake) → adapter. Services take adapters, never sealed TaleWorlds types (ADR-007); entry points under 150 lines (ADR-002). |
 | **Banned constructs** | No `#region` (ADR-003). No `[Obsolete]`: migrate every use in the same change (ADR-004). No `#if DEBUG` outside the IoC.cs registration (ADR-005). |
+| **Blast radius first** | Before changing a TAOM C# type: `python tools/graphify_taom.py affected "<Type>" --depth 2`, after `refresh --if-stale`. Never raw `graphify` ([code graph](docs/features/graphify-code-graph.md)). |
 | **Research first** | Never guess engine behaviour. Concepts: [docs/reference/engine/](docs/reference/engine/), then the decompile dump. Signatures: the installed DLLs only (`pwsh tools/taom-src.ps1 path <Type>`), because the dump can lag an engine bump. |
 | **Verify before reference** | Read `TAOMSpriteData.xml` before writing `Sprite="X"`. Decompile the vanilla target before a `PrefabExtension` injection. Cache `IoC.Resolve` lazily on a hot path. |
 | **Human prose** | Commit bodies, CHANGELOG, issues, PRs, docs and RCAs read as human writing. No em or en dash in prose: use a comma, colon, semicolon, parentheses or a new sentence. Hyphens in flags, paths and versions are fine. |

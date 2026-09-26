@@ -58,7 +58,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | BetterExceptionWindow | `BetterExceptionWindow` `BEW` | AGPL-3.0 | comparison-only | (none) | cleared |
 | TpacTool | `TpacTool` `szszss/TpacTool` | MIT | behavioural-port | `tools/tpac_skeleton_scan.py` `tools/tpac_clipinfo.py` | cleared |
 | NVIDIA SkillSpector | `SkillSpector` `NVIDIA/SkillSpector` | Apache-2.0 | behavioural-port | `tools/audit_claude_config.py` | cleared |
-| graphify | `graphify` `graphifyy` `Graphify-Labs` `safishamsi/graphify` | Apache-2.0 (MIT when ported, see detail) | behavioural-port | `tools/doc_graph.py` `tools/graph_query.py` | cleared |
+| graphify | `graphify` `graphifyy` `Graphify-Labs` `safishamsi/graphify` | Apache-2.0 (MIT when ported, see detail) | behavioural-port | `tools/doc_graph.py` `tools/graph_query.py`; `tools/graphify_taom.py` runs the CLI (interop-only, see detail) | cleared |
 | MinHook | `MinHook` `MinHook.x64.dll` | BSD-2-Clause | redistributed | `Main/_Module/bin/Win64_Shipping_Client/MinHook.x64.dll` `Dependencies/NativeSkinFixes.NativeHooks/MinHook/**` | cleared |
 | Lib.Harmony | `0Harmony.dll` `Lib.Harmony` | MIT | redistributed | (build-acquired, `Dependencies/TAOM.Dependencies.csproj` PackageReference) | cleared |
 | BUTR stack | `ButterLib` `UIExtenderEx` `MBOptionScreen` `MCMv5` `BUTR.CrashReport` | MIT | redistributed | `Dependencies/_Module/bin/Win64_Shipping_Client/{Bannerlord,MCM,BUTR}*.dll` | cleared |
@@ -193,18 +193,18 @@ isolated `uv` venv (pinned Python 3.12, because the `leiden` extra pulls in `gra
 measured against TAOM, including a full multimodal pass at 18.2M input tokens. Nothing was adopted,
 and no repo code or config changed.
 
-**It remains installed on the maintainer's machine and wired into nothing:** no hook, no CI job, no
-MCP registration, and no `graphify * install` subcommand was ever run (those write into CLAUDE.md,
-AGENTS.md and a PreToolUse hook in `.claude/settings.json`; note `config-protection.sh` guards only
-`Directory.Build.props` and the two settings files, and cannot intercept a CLI subprocess anyway, so
-not running them is the actual containment). It is a personal ad-hoc C# analysis aid,
-not a TAOM tool, which is why it appears in no `tools/` table. Remove with
-`uv tool uninstall graphifyy`.
+**Part of the workflow since 2026-09-26** ([ADR-012](../adrs/012-graphify-code-graph-in-the-workflow.md),
+#677), reversing the trial's "wired into nothing". `tools/graphify_taom.py` runs the installed CLI
+as a subprocess and `.claude/hooks/check-graphify-usage.sh` denies its raw write verbs; that wrapper
+is `interop-only`: it copies no graphify code, and graphify's `cache.py` was read only to find where
+its stat-index cache is written. Still no MCP registration, no CI job, and no `graphify * install`
+subcommand (the gate now denies those). Nothing from graphify ships in a TAOM release, so the
+license position above is unchanged. Remove with `uv tool uninstall graphifyy`; the wrapper then
+exits 3 and every workflow step records the blast radius as UNCHECKED.
 
-Nothing in this repo derives from it beyond the June concept port recorded above, so the derivation
-stays `behavioural-port` and the trial itself adds nothing. Usage guidance, the three verbs and one generated report worth
-running, the cases where it must not be used, and why it is deliberately absent from CLAUDE.md:
-[`docs/reviews/adopt-graphify-v8-2026-08-18.md`](../reviews/adopt-graphify-v8-2026-08-18.md).
+The derivation of `tools/doc_graph.py` stays `behavioural-port`. Usage:
+[`docs/features/graphify-code-graph.md`](../features/graphify-code-graph.md); the trial's
+measurements: [`docs/reviews/adopt-graphify-v8-2026-08-18.md`](../reviews/adopt-graphify-v8-2026-08-18.md).
 
 ### MinHook
 

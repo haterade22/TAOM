@@ -22,6 +22,10 @@ test, implement, then verify and refactor. Use the shared non-deploying commands
 do not invoke a Claude slash command as though it were a Codex capability.
 
 Inspect unchanged consumers and missing configuration rows as well as the diff.
+Find the consumers of every TAOM type you change with
+`python tools/graphify_taom.py affected "<Type>" --depth 2`, after
+`python tools/graphify_taom.py refresh --if-stale`; never run `graphify` itself
+([code graph](../../../docs/features/graphify-code-graph.md)).
 Update feature documentation and actual test evidence when the task warrants
 them; the commit body is the changelog entry (`/release` writes CHANGELOG.md).
 Report unavailable engine/runtime verification explicitly.

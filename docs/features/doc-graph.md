@@ -147,10 +147,10 @@ hub), is deterministic and offline, and models `.md` nodes only. **graphify is f
 (blast radius, architectural hubs). Its **parser** mints no markdown file node at all, so it cannot
 model doc-to-doc topology or answer an orphan question. The 27 `.md`-labelled nodes in its full graph
 are every one `_origin: null`, invented by the semantic layer from prose rather than parsed, which is
-the same caveat that applies to its 13 XML-looking nodes. graphify is also installed but wired into nothing, and
-its node citations are not reliable. Reach for it via
-[adopt-graphify-v8-2026-08-18.md](../reviews/adopt-graphify-v8-2026-08-18.md) "How to actually use
-it"; reach for this tool via `/doc-graph`.
+the same caveat that applies to its 13 XML-looking nodes. Since 2026-09-26 graphify is part of the
+workflow as a code-only graph ([ADR-012](../adrs/012-graphify-code-graph-in-the-workflow.md)).
+Reach for it via `python tools/graphify_taom.py` ([graphify-code-graph.md](graphify-code-graph.md));
+reach for this tool via `/doc-graph`.
 
 ### Raised by the 2026-08-18 graphify v8 trial
 

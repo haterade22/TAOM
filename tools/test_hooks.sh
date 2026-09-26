@@ -476,7 +476,7 @@ PY
 # `git status`, `git diff` and `git log`.
 PF_NARROWED_LIST=(check-claude-files-tracked.sh check-commit-subject-version.sh
                   check-moduledata-validation.sh check-native-dll-crt.sh check-doc-config-drift.sh
-                  validate-push.sh block-no-verify.sh)
+                  validate-push.sh block-no-verify.sh check-graphify-usage.sh)
 PF_NARROWED="${PF_NARROWED_LIST[*]}"
 PF_U='\'u    # the two characters backslash and u: a JSON escape prefix, as the raw payload holds it
 if [[ -z "$PF_ROWS" ]]; then
@@ -502,6 +502,7 @@ else
                 # validate-push.sh finds `push` by token, so `git -C <dir> push` is its trigger too.
                 validate-push.sh)   triggers=('cd /x\ngit push origin x' 'cd /x\ngit -C /y push origin x') ;;
                 block-no-verify.sh) triggers=('cd /x\ngit commit --no-verify -m x') ;;
+                check-graphify-usage.sh) triggers=('cd /x\ngraphify update /y' 'echo a; graphify extract .') ;;
                 # The commit gates also trigger on `git -C <dir> commit`, which holds `commit`
                 # but not `git commit`: its own row keeps a prefilter from narrowing to the latter.
                 *)                  triggers=('cd /x\ngit commit -m x' 'cd /x\ngit -C /y commit -m x') ;;
@@ -522,6 +523,7 @@ else
         case "$name" in
             validate-push.sh)       esc="cd /x\ngit ${PF_U}0070ush origin x" ;;
             block-no-verify.sh)     esc="cd /x\ngit commit --${PF_U}006eo-verify -m x" ;;
+            check-graphify-usage.sh) esc="cd /x\n${PF_U}0067raphify update /y" ;;
             mark-verification-run.sh)
                                     esc="cd /x\n${PF_U}0064otnet test TAOM.Tests" ;;
             # The commit gates, the two confirm gates and any new Bash hook: the row holds no
@@ -553,9 +555,9 @@ fi
 
 # ---------------------------------------------------------------------------
 # 4d. An escaped letter cannot hide a blocked command. JSON allows `\u0063` for `c`, and
-#     the prefilters read the raw payload, so five of the nine blocking gates
+#     the prefilters read the raw payload, so six of the ten blocking gates
 #     (check-commit-subject-version.sh, validate-push.sh, block-no-verify.sh,
-#     block-dangerous-git.sh, block-broad-git-add.sh) are each fed their blocked command
+#     block-dangerous-git.sh, block-broad-git-add.sh, check-graphify-usage.sh) are each fed their blocked command
 #     twice, plain and with the gated word's first letter escaped, and must answer both the
 #     same way (maintainer decision D40; Codex's counter-payload in the plan 013 review).
 #     The other four (check-claude-files-tracked.sh,
@@ -574,7 +576,8 @@ for row in "check-commit-subject-version.sh|$REPO|rc=0 deny|cd /x\ngit commit -m
            "validate-push.sh|$SANDBOX|rc=2 allow|git push --force origin master|git ${PF_U}0070ush --force origin master" \
            "block-no-verify.sh|$SANDBOX|rc=2 allow|git commit --no-verify -m x|git commit --${PF_U}006eo-verify -m x" \
            "block-dangerous-git.sh|$SANDBOX|rc=0 ask|cd /x\ngit reset --hard|cd /x\n${PF_U}0067it reset --hard" \
-           "block-broad-git-add.sh|$SANDBOX|rc=0 ask|git add -A|${PF_U}0067it add -A"; do
+           "block-broad-git-add.sh|$SANDBOX|rc=0 ask|git add -A|${PF_U}0067it add -A" \
+           "check-graphify-usage.sh|$SANDBOX|rc=0 deny|graphify update x|${PF_U}0067raphify update x"; do
     IFS='|' read -r hook dir want plain escaped <<< "$row"
     got_plain=$(esc_verdict "$hook" "$dir" "$plain")
     got_esc=$(esc_verdict "$hook" "$dir" "$escaped")
@@ -644,9 +647,9 @@ for hookfile in .claude/hooks/*.sh .claude/skills/freeze/check-freeze.sh; do
     [[ "$name" == _*.sh ]] && continue
     S=$(date +%s%N)
     ERRFILE=$(mktemp 2>/dev/null) || ERRFILE="$SANDBOX/stderr.$$"
-    # The payload holds every gate's prefilter word (commit, push, no-verify, git), so each
-    # blocking gate gets past its prefilter and must reach its taom_pybin_degraded branch.
-    OUT=$(printf '%s' '{"tool_name":"Bash","tool_input":{"command":"git push --force origin master && git commit --no-verify -m x"},"hook_event_name":"PreToolUse"}' \
+    # The payload holds every gate's prefilter word (commit, push, no-verify, git, graphify), so
+    # each blocking gate gets past its prefilter and must reach its taom_pybin_degraded branch.
+    OUT=$(printf '%s' '{"tool_name":"Bash","tool_input":{"command":"git push --force origin master && git commit --no-verify -m x && graphify update x"},"hook_event_name":"PreToolUse"}' \
           | timeout -k 2 10 env PATH="$STARVED_PATH" CLAUDE_PROJECT_DIR="$SANDBOX" TAOM_PYBIN= bash "$hookfile" 2>"$ERRFILE")
     RC=$?
     ERR=$(cat "$ERRFILE" 2>/dev/null); rm -f "$ERRFILE"
@@ -1347,6 +1350,43 @@ printf '%s' '{"tool_name":"PowerShell","tool_input":{"command":"dotnet test TAOM
 [[ -f "$MVR_DIR/.claude/logs/.verification-ran" ]] && ok "mark-verification-run marks a PostToolUseFailure payload" \
     || bad "mark-verification-run did not mark a PostToolUseFailure payload"
 rm -rf "$MVR_DIR"
+
+# ---------------------------------------------------------------------------
+head2 "7e. check-graphify-usage denies raw graphify writes and allows queries, from either shell tool"
+# Every graphify write goes through tools/graphify_taom.py (#677). The judge's full case table is
+# tools/tests/test_graphify_taom.py; these rows prove the hook wiring end to end: prefilter, the
+# judge's path relative to the hook, the nested decision, and both shell tools.
+GU_CASES=(
+  "Bash|deny|graphify update E:/graphify/TAOM"
+  "Bash|deny|cd /x"$'\n'"graphify extract E:/repos/TAOM --code-only"
+  "Bash|deny|graphify claude install"
+  "Bash|deny|bash -c \"graphify update x\""
+  "Bash|allow|graphify affected \"IModLogger\" --depth 2 --graph g.json"
+  "Bash|allow|python tools/graphify_taom.py refresh --if-stale"
+  "Bash|allow|git commit -m \"docs: graphify update drops external nodes\""
+  "PowerShell|deny|& \"C:\\Users\\mikew\\.local\\bin\\graphify.exe\" update x"
+  "PowerShell|deny|graphify extract E:\\repos\\TAOM --code-only 2>&1 | Select-Object -Last 5"
+  "PowerShell|allow|graphify god-nodes --top 15 --graph E:\\graphify\\TAOM\\graphify-out\\graph.json"
+)
+for entry in "${GU_CASES[@]}"; do
+    tool="${entry%%|*}"; rest="${entry#*|}"; want="${rest%%|*}"; cmd="${rest#*|}"; shown="${cmd//$'\n'/\\n}"
+    payload=$("$HPY" -c 'import json,sys; print(json.dumps({"tool_name":sys.argv[1],"tool_input":{"command":sys.argv[2]},"hook_event_name":"PreToolUse"}))' "$tool" "$cmd")
+    OUT=$(printf '%s' "$payload" | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$SANDBOX" bash .claude/hooks/check-graphify-usage.sh 2>/dev/null)
+    got=$(decision_of "$OUT")
+    [[ "$got" == "$want" ]] && ok "check-graphify-usage [$tool] $got for: $shown" \
+        || bad "check-graphify-usage [$tool] expected $want, got $got for: $shown"
+done
+GU_REG=$("$HPY" - <<'PY'
+import json
+d = json.load(open('.claude/settings.json', encoding='utf-8'))
+tools = {t for g in d.get('hooks', {}).get('PreToolUse', [])
+         if any(h['command'].endswith('check-graphify-usage.sh') for h in g.get('hooks', []))
+         for t in g.get('matcher', '').split('|')}
+print('ok' if {'Bash', 'PowerShell'} <= tools else 'missing: ' + ', '.join(sorted({'Bash', 'PowerShell'} - tools)))
+PY
+)
+[[ "$GU_REG" == ok ]] && ok "check-graphify-usage is registered for Bash and PowerShell" \
+    || bad "check-graphify-usage settings.json registration $GU_REG"
 
 # ---------------------------------------------------------------------------
 head2 "8. /context-budget scan.sh runs under set -u and measures the launch load"

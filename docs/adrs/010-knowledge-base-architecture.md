@@ -46,6 +46,11 @@ This is the adopted-and-scoped subset of the external [graphify](https://github.
 
 ### Amendment (2026-08-18): graphify v8 re-evaluated by trial install, nothing further adopted
 
+> **Superseded in part on 2026-09-26** by [ADR-012](./012-graphify-code-graph-in-the-workflow.md): graphify
+> is now part of the workflow as a code-only C# graph. The two findings below, and the rejection of
+> graphify as the cross-domain graph and as a `doc_graph.py` replacement, still stand. See the
+> 2026-09-26 amendment.
+
 graphify has since moved to `Graphify-Labs/graphify` (branch `v8`, PyPI `graphifyy`), relicensed from
 MIT to Apache-2.0, and grown roughly 24 tree-sitter languages, Leiden clustering, an MCP server and a
 `merge-graphs` verb. That is enough change to make the June rejection worth re-testing, so it was
@@ -80,6 +85,23 @@ should be revisited, not silently ignored, when the phase is written.
 This ADR organises the knowledge under `docs/`. How that knowledge, and the harness's own rules,
 reach an agent's context (CLAUDE.md, AGENTS.md, path rules, skills, memory, hooks) is decided in
 [ADR-011](./011-knowledge-delivery-tiers.md).
+
+### Amendment (2026-09-26): graphify's code graph is in the workflow, as ADR-012
+
+The 2026-08-18 amendment kept graphify installed but wired into nothing, and recorded that so the
+question would not be reopened. The maintainer reopened it deliberately on 2026-09-26 (#677): five
+weeks on, nothing had used it and the only graph built had been lost with its session scratchpad, the
+same decay Phase 5 showed before its CI ratchet. [ADR-012](./012-graphify-code-graph-in-the-workflow.md)
+now makes graphify's **code-only C# graph** a standing workflow step (the blast radius of a change,
+read by `/deep-review`, `/investigate`, `/new-feature`, `/research` and the builder agents), run only
+through `tools/graphify_taom.py` and enforced by a PreToolUse gate.
+
+**What this does not change here.** The knowledge-base architecture above is untouched:
+`tools/doc_graph.py` stays the doc-topology tool, markdown links stay the link syntax, and there is
+still no RAG layer, viz export or MCP server. Both 2026-08-18 findings still hold (no XML or XSLT, no
+cross-domain edges), so graphify is still not the cross-domain graph, and the in-house join that
+amendment pointed at is still the direction for XML and XSLT. The code graph lives outside the repo
+(`E:\graphify\TAOM`) and is not part of `docs/`.
 
 ## Consequences
 
@@ -188,6 +210,7 @@ A `tools/search_docs.py` (Karpathy's "naive search engine") is **deferred indefi
 - [docs/INDEX.md](../INDEX.md) — Phase 1 deliverable, shipped alongside this ADR
 - [docs/features/TEMPLATE.md](../features/TEMPLATE.md) — the existing feature-doc template this ADR builds on, not replaces
 - [docs/reviews/REVIEW-GUIDE.md](../reviews/REVIEW-GUIDE.md) — adversarial review process this ADR integrates with (Phase 2 linter is a CI/skill counterpart)
+- [ADR-012](./012-graphify-code-graph-in-the-workflow.md): the graphify code graph in the workflow, which supersedes part of the 2026-08-18 amendment
 
 ---
 

@@ -11,7 +11,11 @@ Read the [policy](../../../.ai/policy.md),
 Use [development machines](../../../docs/reference/development-machines.md) to
 resolve the actual game and dump locations rather than assuming desktop paths.
 
-State the engine question and the TAOM caller or failure it affects. Read the
+State the engine question and the TAOM caller or failure it affects. Size the
+TAOM side with `python tools/graphify_taom.py affected "<TaomType>" --depth 2`;
+engine types are one graph node per referencing file there, so find TAOM uses
+of an engine type by search instead
+([code graph](../../../docs/features/graphify-code-graph.md)). Read the
 relevant [engine process document](../../../docs/reference/engine/) first for the
 conceptual path. Then verify the exact type, signature, getter, enum value or
 raise site in the installed assembly. Trace base calls and native boundaries too.

@@ -44,6 +44,8 @@ Gather context before forming any hypothesis.
 
 2. **Read the code.** Trace from symptom back. Use `Grep`/`find_symbol` (Serena MCP) to find references; `Read` to understand logic.
 
+2a. **Map the failing type's neighbourhood from the code graph (mandatory when the trace or symptom names a TAOM type, #677).** `python tools/graphify_taom.py refresh --if-stale` (background when stale), then `python tools/graphify_taom.py explain "<Type>"` for what it inherits, injects and calls, and `python tools/graphify_taom.py affected "<Type>" --depth 2` for everything that reaches it. That is the candidate list for Phase 3's pattern match. It is a lead list: open each file before it shapes a hypothesis. Engine types are not in the graph (use `/research`), and neither is XML.
+
 2b. **Map a stack trace to its owning patch (crash-to-owner in one step).** If the trace names a TaleWorlds type or a TAOM patch, grep it in [`docs/reference/harmony-patch-registry.md`](../../../docs/reference/harmony-patch-registry.md) FIRST — the registry maps a failing type to its owning `PatchNN` category, exact target method, and status (active / DISABLED / PARKED) before you trace further. (This is where the former CLAUDE.md "Harmony Patch Categories" table now lives.)
 
 3. **Check recent changes.**

@@ -40,7 +40,7 @@ if [[ -z "${PYBIN:-}" ]]; then
     echo ""
     echo "!!! HOOK TOOLCHAIN DEGRADED: no safe python resolved. !!!"
     echo "    The python-only gates are failing OPEN right now: check-claude-files-tracked,"
-    echo "    check-commit-subject-version, check-doc-config-drift,"
+    echo "    check-commit-subject-version, check-doc-config-drift, check-graphify-usage,"
     echo "    check-moduledata-validation, check-native-dll-crt."
     if ! command -v jq >/dev/null 2>&1; then
         echo "    jq is absent too, so EVERY JSON-parsing gate is open, force-push included."
@@ -133,6 +133,24 @@ else
     echo "!!!   tournament smoke, and repoint every MISSING_BODY row it names. A missing collision body"
     echo "!!!   is the #352 infinite load (#599)."
   fi
+fi
+
+# graphify code-graph freshness (#677). The graph lives outside the repo and each workflow step
+# that reads it runs `refresh --if-stale` first, but a session that queries it ad hoc would
+# answer from old code without knowing. One bounded status call (about 0.3 s); fail open, never
+# silent, so an overrun or a missing interpreter says "unchecked" rather than nothing.
+if [[ -n "${PYBIN:-}" && -f tools/graphify_taom.py ]]; then
+  GRAPH_STATUS=$(timeout -k 1 4 "$PYBIN" tools/graphify_taom.py status --brief 2>/dev/null)
+  GRAPH_RC=$?
+  echo ""
+  if [[ $GRAPH_RC -eq 124 || $GRAPH_RC -eq 137 || -z "$GRAPH_STATUS" ]]; then
+    echo "NOTE: graphify code graph freshness UNCHECKED this session (status overran 4 s or printed nothing)."
+  else
+    printf '%s\n' "$GRAPH_STATUS"
+  fi
+else
+  echo ""
+  echo "NOTE: graphify code graph freshness UNCHECKED this session (no safe python or no tools/graphify_taom.py)."
 fi
 
 # Stale-worktree visibility. Parallel-agent worktrees under .claude/worktrees/ are

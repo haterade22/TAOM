@@ -17,6 +17,7 @@ Quick reference index for TAOM ADRs. See individual files for complete details w
 | [009](./009-self-documenting-code.md) | Self-Documenting Code Standards | No inline comments, ELI5 summaries, code reads like English | Accepted | Standard |
 | [010](./010-knowledge-base-architecture.md) | Knowledge-Base Architecture | `docs/INDEX.md` + linter + backlinks + `raw/research/` layers; keep markdown links over Obsidian wikilinks | Accepted | Standard |
 | [011](./011-knowledge-delivery-tiers.md) | Knowledge Delivery Tiers | One home per fact, chosen by the narrowest trigger that reaches it: AGENTS.md for every AI, CLAUDE.md for Claude's harness, path rules carry area lessons, memory holds only resume cards | Accepted | Standard |
+| [012](./012-graphify-code-graph-in-the-workflow.md) | graphify Code Graph in the Workflow | Map a TAOM type's dependents before changing or reviewing it; graphify runs only through `tools/graphify_taom.py`, and a hook denies its raw write verbs. Supersedes part of ADR-010's 2026-08-18 amendment | Accepted | Standard |
 
 ## Quick Rules Reference
 
@@ -28,6 +29,7 @@ Quick reference index for TAOM ADRs. See individual files for complete details w
 - No `#if DEBUG` in application code (ADR-005) - Only in IoC.cs
 - No comments inside methods (ADR-009)
 - XML summaries must be ELI5-simple (ADR-009)
+- Check a TAOM type's dependents before changing it: `python tools/graphify_taom.py affected "<Type>" --depth 2`; never run `graphify` directly (ADR-012)
 
 **Mod Services:**
 - Services MUST use adapter interfaces (ICareerHeroAdapter, etc.) (ADR-007)
@@ -41,6 +43,7 @@ Quick reference index for TAOM ADRs. See individual files for complete details w
 - **Refactoring**: Read [ADR-003](./003-no-regions.md), [ADR-004](./004-no-obsolete.md)
 - **XML Configuration**: Read [ADR-001](./001-xml-config.md)
 - **Service Design**: Read [ADR-007](./007-adapter-pattern.md) (adapter pattern), [ADR-005](./005-no-preprocessor-directives.md) (environment handling)
+- **Changing, reviewing or debugging an existing type**: Read [ADR-012](./012-graphify-code-graph-in-the-workflow.md) (map its dependents with the code graph first)
 
 ---
 

@@ -20,7 +20,11 @@ or produce an evidence-complete packet. Record what was actually examined.
 For a blind first pass, do not read other findings or the builder's explanation.
 Attempt counterexamples from the acceptance criteria. Trace callers, lifecycle
 raise sites, base methods, contested patches, configuration omissions and test
-oracles. Read relevant historical lessons without accepting their conclusions
+oracles. Start the caller trace from
+`python tools/graphify_taom.py affected "<Type>" --depth 2` for each changed
+public type: a lead list to read, not evidence. A stale graph needs
+`refresh --if-stale`, which writes only outside the repo; record either in
+coverage ([code graph](../../../docs/features/graphify-code-graph.md)). Read relevant historical lessons without accepting their conclusions
 as current evidence. Verify engine claims against installed DLLs.
 
 Keep implementation unchanged. Only run authorized checks after inspecting their

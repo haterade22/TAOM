@@ -47,3 +47,5 @@ Decompile and analyze: `$ARGUMENTS`
    - Any v1.3.12-specific changes observed
 
 5. **Provide recommendations** for how to safely integrate with the analyzed class.
+
+6. **Size the TAOM side of the recommendation (mandatory, #677).** Name the TAOM types the integration would change (the adapter wrapping this class, a service, a GameModel, a patch) and run `python tools/graphify_taom.py affected "<TaomType>" --depth 2` on each, after `python tools/graphify_taom.py refresh --if-stale`. List the callers in the recommendation. On "Ambiguous", rerun with the repo-relative `.cs` path it lists. Engine types are NOT single nodes in the graph (graphify mints one per referencing file: 54 `MobileParty` nodes), so "which TAOM code already uses this engine type" stays a Grep or Serena question.

@@ -52,6 +52,8 @@ Determine what to review:
 - Otherwise, use `git diff --name-only` and `git ls-files --others --exclude-standard` to find all changed/new files
 - **Add every live `TAOM_Map` or `LOTRLOME_Armory` file changed since the last review.** They are unversioned, so git cannot list them, and a live edit missing from the list is an edit nobody reviews, including one a script made in an earlier session. Before launching anything, take the time of the last review OF THIS CHANGE (its RCA or report date), else the start of the work in scope. **Not** the last `agent_type=deep-reviewer` line in `.claude/logs/agent-audit.log` on its own: every session writes to that log, so its latest line can be another session's review of other files (2026-09-18: using it would have dropped a session's whole morning of live edits). Then run `find "<game>/Modules/TAOM_Map/ModuleData" "<game>/Modules/LOTRLOME_Armory/ModuleData" "<game>/Modules/LOTRLOME_Armory/SubModule.xml" "<game>/Modules/TAOM_Map/SubModule.xml" "<game>/Modules/TAOM_Map/Assets" "<game>/Modules/LOTRLOME_Armory/Assets" -type f -newermt "<that time>" ! -name "*.bak*"`. Include each file with its absolute path, or name it NOT IN SCOPE in the report; never drop one. Concurrent sessions edit the same live modules, so attribute each file (this change's, or another session's and out of scope) before it goes to a lens. **Binary packages** (`Assets/**/*.tpac`) are in scope too, though no lens reads their bytes: list each with the tool or Kit step that wrote it and its backup, and give the writing script to the Tooling lens.
 
+**Map the blast radius from the code graph (mandatory when C# or a script is in scope, #677).** Start `python tools/graphify_taom.py refresh --if-stale` in the background as soon as the scope is known (about 2.5 minutes when stale; it extracts the working tree, so the change under review is in the graph). Then, for every public type, interface or member the change adds, renames, re-signs or alters in behaviour, run `python tools/graphify_taom.py affected "<Type>" --depth 2`. Each consumer it names that is not in the changed-file list is a caller outside the diff: pass those to Agents 4 and 5 in SCOPE NOTES, and read a few yourself before launching. graphify reads no XML or XSLT, so an XML-only change skips this step. Exit 3 means graphify is missing on this machine: write BLAST RADIUS: UNCHECKED in the report and do not install it.
+
 Collect the list of changed files for the agents, split into **C# / C++**; **XML / XSLT** (ModuleData, stylesheets, GUI prefabs, `SubModule.xml`, `project.mbproj`, language files, repo and live); **scripts** (`tools/**`, `.claude/hooks/**`); **harness** (`.claude/**`, `CLAUDE.md`, `AGENTS.md`, `.ai/**`); and **docs**. The split decides which lenses launch in Step 2. A module's `SubModule.xml` sits at its root, outside `ModuleData/`, which is why the sweep above names both (#619's edit to TAOM_Map's was invisible to a `ModuleData`-only sweep).
 
 ## Step 2: Launch the Review Lenses
@@ -84,7 +86,7 @@ Decide from the Step 1 split. Every changeset shape is covered; a lens with noth
 ```
 Lens: Agent <N> <name>. Read .claude/skills/deep-review/lenses/<file> first; it is your whole task and its output format.
 FILES: <the Step 1 list for this lens; absolute paths for live-install files>
-SCOPE NOTES: <the change's intent; in shared files, which hunks are this change's; earlier waves' CRITICAL/HIGH findings>
+SCOPE NOTES: <the change's intent; in shared files, which hunks are this change's; for Agents 4 and 5 the Step 1 callers outside the diff; earlier waves' CRITICAL/HIGH findings>
 ```
 
 Add only what the lens cannot know. The agent definition already carries the operating-manual briefing and the read-only rules.
@@ -126,6 +128,7 @@ Feature: [name or "uncommitted changes"]
 Date: [today]
 
 Scope:   [C#/C++, XML/XSLT, scripts, harness, docs; live files swept since <time>]
+Blast radius: [N types checked with graphify affected, M callers outside the diff / UNCHECKED (why) / NOT IN SCOPE (XML only)]
 Waves:   [which agents ran in which wave]
 
 STANDARDS:     [PASS/FAIL — N violations / NOT IN SCOPE]

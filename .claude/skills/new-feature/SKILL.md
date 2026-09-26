@@ -10,6 +10,10 @@ Create a new feature module following TAOM architecture from @docs/ai-includes/a
 
 ## Feature Name: `$ARGUMENTS`
 
+## Map what the feature touches first (mandatory, #677)
+
+Before the first file, run `python tools/graphify_taom.py refresh --if-stale` (background when stale, about 2.5 minutes), then for every existing TAOM service, adapter, interface or GameModel the feature will call, extend or change: `python tools/graphify_taom.py explain "<Type>"` (what it injects and calls) and `python tools/graphify_taom.py affected "<Type>" --depth 2` (who depends on it). A type with many dependents is one to extend, not modify. On "Ambiguous", rerun with the repo-relative `.cs` path it lists; on no result for a type name, retry with its file path before concluding nothing uses it (an IoC registration shows as a file import). graphify reads no XML: data refs go through the taom-moduledata MCP or `python tools/validate_moduledata.py`.
+
 ## Required Structure
 
 Create the following files under `Main/Features/$ARGUMENTS/`:
@@ -46,6 +50,7 @@ Create under `TAOM.Tests/Features/$ARGUMENTS/`:
 Before scaffolding, suggest `/freeze` to the user with the new feature dir as the boundary — prevents drift into adjacent code while the feature is taking shape. Widen the boundary (or `/unfreeze`) only when wiring `Main/IoC.cs` or `Main/SubModule.cs` for integration.
 
 ## Checklist
+- [ ] Touched TAOM types mapped with `tools/graphify_taom.py explain` / `affected` before the first file
 - [ ] Tests written first (RED state verified)
 - [ ] All services use adapter interfaces, not sealed types
 - [ ] IoC registered in `Main/IoC.cs`
