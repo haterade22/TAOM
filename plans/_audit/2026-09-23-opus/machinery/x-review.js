@@ -56,7 +56,7 @@ Read first: E:\\repos\\TAOM\\.claude\\skills\\deep-review\\SKILL.md (Steps 3, 3e
 INPUTS
 1. The deep-review lens reports, verbatim, below.
 2. The Codex adversarial review, if it has finished: ${it.codexOut}. It is complete only if it contains the line "END OF CODEX REVIEW". If the file is missing or incomplete, record "Codex pending" in the report and continue without it (the orchestrator will run a second pass).
-
+${it.note ? '3. ORCHESTRATOR NOTE (binding, overrides the instructions below where they conflict): ' + it.note + '\n' : ''}
 YOUR JOB
 A. Verify every finding (lens and Codex) against the code in the worktree before acting on it (evidence-over-claims: a finding is a hypothesis). Classify each: CONFIRMED, FALSE POSITIVE (say why), or NEEDS MIKE (design or product decision).
 B. Fix every CONFIRMED defect in the changed code, TDD (a failing test first where the defect is testable). HIGH findings are fixed by default; if one truly cannot be fixed here, record it with a 'Deferred: <reason>' trailer and in the report.

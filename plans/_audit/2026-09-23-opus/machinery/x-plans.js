@@ -9,8 +9,13 @@ export const meta = {
 // args: { plans: [{ num, slug, title, priority, category, depends_on, brief }] }
 // brief = the orchestrator's verified summary of the finding(s): claim, evidence with file:line,
 // verification verdicts, fix direction, and which lane/verify files hold the full text.
-const RUN = 'E:\\repos\\TAOM\\plans\\_audit\\2026-09-23-opus'
+const RUN = (args && args.run) || 'E:\\repos\\TAOM\\plans\\_audit\\2026-09-23-opus'
 const BRIEF = `${RUN}\\BRIEF.md`
+// Optional: write plans and reviews into a worktree instead of E:\repos\TAOM, and read code there.
+const PLANS_DIR = (args && args.plansDir) || 'E:\\repos\\TAOM\\plans'
+const REVIEW_DIR = (args && args.reviewDir) || RUN
+const ROOT = (args && args.root) || ''
+const ROOT_RULE = ROOT ? `CODE LOCATION (binding): read every repository file from the worktree ${ROOT} (checked out at the planning commit), never from E:\\repos\\TAOM, whose working tree holds another session's uncommitted edits. Paths you write into the plan stay repo-relative.\n` : ''
 const TEMPLATE = 'E:\\repos\\TAOM\\.claude\\skills\\improve\\references\\plan-template.md'
 const MODEL = 'claude-opus-5-5'
 const PLANS = (args && args.plans) || []
@@ -18,7 +23,7 @@ const BASE = (args && args.base) || 'b2e387db'
 const DATE = (args && args.date) || '2026-09-23'
 const BRIEFS = (args && args.briefs) || `${RUN}\\plan-briefs.json`
 const BASELINE = (args && args.baseline) || 'Baseline at b2e387db: 10,239 tests, 10,235 pass, 2 fail (live Armory), 2 ignored.'
-const planPath = p => `E:\\repos\\TAOM\\plans\\${p.num}-${p.slug}.md`
+const planPath = p => `${PLANS_DIR}\\${p.num}-${p.slug}.md`
 
 const REVIEW_SCHEMA = {
   type: 'object',
@@ -41,7 +46,7 @@ Never ./build.ps1. ${BASELINE}`
 
 const DISK = `DISK RULE (binding): the C: drive is nearly full. NEVER create git-archive exports, clones or copies of the repository (read any revision with git show <ref>:<path> or git grep <ref>). Any scratch file goes under E:\\repos\\taom-improve\\scratch\\plans\\<plan number>, never in a temp or scratchpad folder on C:.`
 const writePrompt = p => `${DISK}
-Read ${BRIEF} first (you are no longer an auditor: in this task you WRITE ONE PLAN FILE, and that file is your only writable path). Then read the plan template ${TEMPLATE} completely and follow it exactly, including its "TAOM additions" and "Quality bar".
+${ROOT_RULE}Read ${BRIEF} first (you are no longer an auditor: in this task you WRITE ONE PLAN FILE, and that file is your only writable path). Then read the plan template ${TEMPLATE} completely and follow it exactly, including its "TAOM additions" and "Quality bar".
 
 PLAN ${p.num}: ${p.title}
 Priority ${p.priority}; category ${p.category}; depends on ${p.depends_on || 'none'}.
@@ -65,17 +70,17 @@ ${COMMANDS}
 Write the plan to ${planPath(p)} (create it). That is your only writable path. Return a 3-line summary: path, step count, and the riskiest assumption.`
 
 const reviewPrompt = p => `${DISK}
-You are a cold reviewer with NO context beyond what you read now. Read the plan template ${TEMPLATE} (especially "Quality bar"), then read the plan ${planPath(p)} as if you were the weakest plausible executor who has never seen this repository's history.
+${ROOT_RULE}You are a cold reviewer with NO context beyond what you read now. Read the plan template ${TEMPLATE} (especially "Quality bar"), then read the plan ${planPath(p)} as if you were the weakest plausible executor who has never seen this repository's history.
 Check, and cite line numbers of the plan for each issue:
 1. Could a model execute it with only the plan and the repo? List every place that needs knowledge the plan does not give.
 2. Does every step end in a command with an expected result (not a judgment)?
 3. Do the "Current state" excerpts match the code at commit ${BASE}? Open each cited file and compare (for Main/SubModule.cs and Main/IoC.cs use git show ${BASE}:<path>). List mismatches exactly.
 4. TDD order for C#, issue-first note, binding ADRs named, single-owner files handled, STOP conditions specific, done criteria machine-checkable, planned-at SHA and drift-check paths consistent with Scope, non-deploying commands with -p:ModuleId=.
 5. No em or en dashes in prose; no secret values.
-Blocking = would make a weak executor fail or do harm. Write your review to ${RUN}\\plan-review-${p.num}.md (your only writable path) and return the structured result. Do not edit the plan.`
+Blocking = would make a weak executor fail or do harm. Write your review to ${REVIEW_DIR}\\plan-review-${p.num}.md (your only writable path) and return the structured result. Do not edit the plan.`
 
 const revisePrompt = (p, review) => `${DISK}
-Read ${BRIEF} first. You revise ONE plan file: ${planPath(p)} (your only writable path). Read the plan template ${TEMPLATE} and the cold review ${RUN}\\plan-review-${p.num}.md.
+${ROOT_RULE}Read ${BRIEF} first. You revise ONE plan file: ${planPath(p)} (your only writable path). Read the plan template ${TEMPLATE} and the cold review ${REVIEW_DIR}\\plan-review-${p.num}.md.
 Structured review: ${JSON.stringify(review)}
 Fix every blocking item and every excerpt mismatch (re-read the code at ${BASE} yourself; for Main/SubModule.cs and Main/IoC.cs use git show). Apply non-blocking items where they make the plan clearer without making it longer for no gain. Keep it self-contained, keep the template structure, no em or en dashes in prose.
 ${COMMANDS}
