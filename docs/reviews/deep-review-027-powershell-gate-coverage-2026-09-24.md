@@ -284,8 +284,23 @@ fixed on that line alone): `judge_command`'s longer per-token loop from the revi
 positional lists, cluster and prefix handling). So a window remains, roughly 350 to 450 KB of one
 quoted segment holding the word `push`, where the base gate finished inside its 5 s registration
 and the fixed gate does not (a killed gate fails open). Base itself fails from about 450 KB. Not
-fixed here (no new design work in a convergence pass); FOLLOW-UP for the orchestrator: bound the
-positionals `judge_command` walks, or anchor `push` outside quoted text.
+fixed in the convergence pass (no new design work there); FOLLOW-UP for the orchestrator.
+
+**Follow-up, closed by the orchestrator.** `_shellwords.py push` now returns its lines shortest
+first. `validate-push.sh` stops at the first refused line, so the short force push is judged
+before the long message whose every word would be read as a refspec. The verdict is unchanged
+(any line blocks); only the stop comes earlier. Unit test `test_shortest_line_first`, red first
+(the 6 KB commit line came first). Same payload, median of 3, rc 2 in every run:
+
+| Size | base `96afb6fb` | `747b6dae` | sorted |
+|---|---|---|---|
+| 300 KB | 2,737 ms | 4,012 ms | 295 ms |
+| 400 KB | 3,588 ms | 5,178 ms | 294 ms |
+| 800 KB | 7,264 ms | 11,361 ms | 358 ms |
+
+PowerShell gives the same picture (423 ms sorted at 800 KB). One long segment that holds both
+the `push` word and the real push (`git -c x="<long text holding push>" push --force ...`) still
+walks every word; base did the same, so that is no regression.
 
 **Final runs** (worktree, after every fix):
 - `python -B -m unittest tools.tests.test_shellwords`: Ran 58 tests, OK (53 before).

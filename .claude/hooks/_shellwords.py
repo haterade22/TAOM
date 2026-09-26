@@ -372,7 +372,9 @@ def push_lines(cmd, tool):
        together), and each such segment up to WORDS_KEPT_MAX again with its argument boundaries
        kept;
     3. the raw command split outside quotes with the tool's own escape, the split validate-push ran
-       before plan 027, so reading PowerShell never loses a push the raw text showed."""
+       before plan 027, so reading PowerShell never loses a push the raw text showed.
+    Shortest first: validate-push stops at the first refused line, so a short force push is judged
+    before a long message holding `push`, whose every word it would read as a refspec."""
     def unfold(t):
         return t.replace("\r", "").replace("\\\n", " ").replace("`\n", " ")
     posix = to_posix(cmd, tool)
@@ -389,7 +391,7 @@ def push_lines(cmd, tool):
         if "push" in line and line not in seen:
             seen.add(line)
             keep.append(line)
-    return "\n".join(keep)
+    return "\n".join(sorted(keep, key=len))
 
 
 def read_payload(raw):

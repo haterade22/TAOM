@@ -314,6 +314,15 @@ class PushLinesTests(unittest.TestCase):
         self.assertIn("git push -o ci\x1fvariable origin", lines)
         self.assertIn("git push -o \x1e x y", lines)
 
+    # validate-push stops at the first refused line, and judge_command reads every word after a
+    # `push` as a refspec, so a long message holding `push` judged first could outrun the 5 s
+    # registration before the short force push after it (plan 027 convergence: 400 KB took 5.2 s).
+    def test_shortest_line_first(self):
+        cmd = 'git commit -m "' + "push the thing " * 400 + '" && git push --force origin T'
+        lines = sw.push_lines(cmd, "Bash").split("\n")
+        self.assertEqual(lines[0].strip(), "git push --force origin T")
+        self.assertEqual([len(line) for line in lines], sorted(len(line) for line in lines))
+
 
 class CliTests(unittest.TestCase):
     def test_posix_mode_writes_utf8_with_lf_only(self):
