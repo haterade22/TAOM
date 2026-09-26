@@ -43,7 +43,7 @@ past every Bash hook. The optional beta `serena_repl` is not marked can-edit and
 is not listed. On a pin bump of any of the three servers, re-derive its entries from the new
 version, so a newly added write tool is denied too.
 
-**Why:** every safety hook in this repo is registered against `matcher: "Bash"`, and
+**Why:** every git safety hook in this repo is registered against `matcher: "Bash|PowerShell"` (plan 027), and
 `config-protection.sh` against `matcher: "Edit|Write"`. Nothing matches `mcp__*`. So the MCP
 write tools went straight past the force-push block, the CHANGELOG-staged gate, the
 `.claude/`-tracked-files gate, the ModuleData ref gate and the settings/ADR protection, all
