@@ -60,6 +60,12 @@ public class TaomBattleBannerBearersModel : SandboxBattleBannerBearersModel
                 && _service.IsRaceAllowed(agent?.Character?.Race ?? -1)
                 && _service.IsFormationGroupAllowed(agent?.Character?.DefaultFormationClass ?? FormationClass.NumberOfAllFormations);
 
+    // BannerBearerLogic.FindBestSearcherForBanner picks the nearest formation member passing ONLY this
+    // check to fetch a banner dropped on the ground; CanAgentBecomeBannerBearer (above) is never
+    // consulted for that path, so without this override a troll could still pick up a dropped standard.
+    public override bool CanAgentPickUpAnyBanner(Agent agent) =>
+        base.CanAgentPickUpAnyBanner(agent) && _service.PassesRaceGate(agent?.Character?.Race ?? -1);
+
     public override int GetDesiredNumberOfBannerBearersForFormation(Formation formation) =>
         !_service.IsEnabled
             ? base.GetDesiredNumberOfBannerBearersForFormation(formation)

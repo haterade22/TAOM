@@ -27,7 +27,10 @@ protocol has produced was DATA (XML) or a routing patch — never a blind retry.
    ```
    The `Fault offset` IS the RVA. **Compare offsets across runs** — identical offset = same
    site (discriminates "my fix didn't work" from "a different crash"); this is how Patch47 was
-   exonerated. Caveat: a crash held by a debugger never reaches WER — no Event Log entry.
+   exonerated. Caveat: a crash held by a debugger never reaches WER: no Event Log entry. That
+   includes Visual Studio (Detach All at the exception, never Stop, or the process dies unrecorded;
+   its `$exception._ip` still gives the offset) and TaleWorlds' own `Watchdog.exe -p <pid>`, which
+   the launcher starts and which blocks procdump from attaching.
 2. **Player crash bundles (no reporter Event Log):** TW's CrashDumper drops a minidump
    (`dump.dmp`) in the crash-report bundle. `python tools/native_crash_triage.py --dump
    <bundle>/dump.dmp` names the faulting module + RVA and the commit split (total / image /
@@ -98,6 +101,15 @@ crash row (the tool shows them); the common patterns:
 - chain-walk loop (`cmp r10d,[rax]` / `mov rax,[rax+8]`) ending in a deref → **hash-map miss
   dereferencing its end-sentinel** (asserts compiled out of shipping) → a DATA TABLE is missing
   a key. Fix: make the table TOTAL (see `feedback_engine_lookup_total_key_coverage` memory)
+  **The missing key is usually still in a register:** `--dump` prints the faulting thread's registers
+  (the melee-table miss at +0x6590B9 keeps its clip index in `r9`). An in-game enumeration names it:
+  log every action whose `MBActionSet.GetAnimationIndexOfAction` equals the key (the removed
+  `TrollActionTrace.LogCrashKeys`, `git show 25995dc9:Main/Features/TrollBruteForce/TrollActionTrace.cs`,
+  line 96). Then read the table's BUILDER before changing any data: xref the table global, name the
+  owning class from its vtable's RTTI, and read the insert's condition. It gives the data rule in one
+  read, where crash-by-crash guessing does not (the melee table's rule, the Kit's "Blends with
+  animation" box, TpacTool's `UnknownClipName`:
+  [bannerlord-animation-system-map.md](../../../docs/reference/bannerlord-animation-system-map.md) section 3).
 - faulting address ≈ heap, or an index register holding float bits → **corrupted record**
   consumed downstream; check binding targets (phantom-animation sweep) and route around if
   engine-internal (Patch47 pattern)

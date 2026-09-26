@@ -15,7 +15,8 @@ public sealed class LayoutPositioner : ILayoutPositioner
 {
     /// <summary>
     /// Centre-to-centre distance between slots: the interval plus one metre, or plus the unit width when that is
-    /// wider (a troll formation, Patch92). A human's 0.76 m keeps the one metre.
+    /// wider (a troll formation, Patch92, or a formation at least a tenth mounted and not ordered to dismount,
+    /// whose <c>UnitDiameter</c> is 1.6 m: interval + 1.6). A human's 0.76 m keeps the one metre.
     /// </summary>
     internal static float UnitPitch(IFormationAdapter formation) =>
         Math.Max(1f, formation.Interval + Math.Max(1f, formation.UnitDiameter));

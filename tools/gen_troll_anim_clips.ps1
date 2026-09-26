@@ -40,8 +40,9 @@ Templates (vanilla clip -> troll clip types):
   troop_stand_unarmed_1 -> idles (priority 1, allow_head_movement)
   strike_chest_front    -> the 8 hit reactions (priority 80, restart + root rotation + bounding volume)
   death_fall_front      -> deaths (priority 95, the full fall flag set, blend + displacement usages)
-  taunt_afraid + flags  -> attacks: vanilla has no standalone melee clip (melee is engine pose-blend), so the
-                           emote base gets client_prediction + lock_movement + enforce_all at priority 60
+  taunt_afraid + flags  -> attacks, played from script and never bound to a release or blocked code (those need a clip in
+                           the engine's melee attack table, see troll-race.md); the emote base gets client_prediction +
+                           lock_movement + enforce_all at priority 60
   taunt_afraid          -> interactive / emotes and the stance transitions (priority 64, lock_movement)
 
 Runs under Windows PowerShell 5.1 (TolerantTpacLoader.cs compiles against .NET Framework):

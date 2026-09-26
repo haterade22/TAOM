@@ -284,6 +284,69 @@ class IslandFilterTests(unittest.TestCase):
         self.assertEqual(aml.target_tris(10, 0.03), 4)   # never below a sliver of a mesh
 
 
+def fp(verts=10, keys=(), parent="Armature", mats=("m",), dims=(1.0, 2.0, 3.0), loc=(0.0, 0.0, 0.0)):
+    """A fingerprint() entry."""
+    return {"type": "MESH", "verts": verts, "polys": verts - 2, "tris": verts - 2, "dims": list(dims),
+            "loc": list(loc), "uv_layers": 1, "materials": list(mats), "shape_keys": list(keys),
+            "parent": parent}
+
+
+class CompareRekeyedTests(unittest.TestCase):
+    """compare(rekeyed=): the round-trip check add_face_morph_channels.py and transfer_hand_morphs.py share."""
+    CHANNELS = ["Basis", "shape_01", "shape_02"]
+
+    def setUp(self):
+        self.before = {"Armature": {"type": "ARMATURE"}, "hands": fp(),
+                       "head": fp(keys=["Basis", "face_01"])}
+
+    def after(self, **changes):
+        out = {"Armature": {"type": "ARMATURE"}, "hands": fp(keys=self.CHANNELS),
+               "head": fp(keys=["Basis", "face_01"])}
+        out.update(changes)
+        return out
+
+    def run_compare(self, after):
+        return aml.compare(self.before, after, {}, rekeyed={"hands": self.CHANNELS})
+
+    def test_expected_channels_pass(self):
+        self.assertEqual(self.run_compare(self.after()), [])
+
+    def test_the_importer_may_name_the_reference_key(self):
+        self.assertEqual(self.run_compare(self.after(hands=fp(keys=["Key", "shape_01", "shape_02"]))), [])
+
+    def test_a_missing_channel_fails(self):
+        diffs = self.run_compare(self.after(hands=fp(keys=["Basis", "shape_01"])))
+        self.assertEqual(len(diffs), 1)
+        self.assertIn("hands: channels expected 2, re-imported 1", diffs[0])
+
+    def test_an_extra_object_fails(self):
+        diffs = self.run_compare(self.after(handmorph_source=fp()))
+        self.assertEqual(diffs, ["unexpected new objects: handmorph_source"])
+
+    def test_changed_keys_on_an_untouched_object_fail(self):
+        diffs = self.run_compare(self.after(head=fp(keys=["Basis"])))
+        self.assertEqual(len(diffs), 1)
+        self.assertIn("head: shape_keys", diffs[0])
+
+    def test_a_rekeyed_object_keeps_its_geometry(self):
+        for changed, key in ((fp(verts=11, keys=self.CHANNELS), "verts"),
+                             (fp(keys=self.CHANNELS, parent=None), "parent"),
+                             (fp(keys=self.CHANNELS, dims=(1.0, 2.5, 3.0)), "dims")):
+            diffs = self.run_compare(self.after(hands=changed))
+            self.assertTrue(any(d.startswith("hands: %s" % key) for d in diffs), (key, diffs))
+
+    def test_a_lost_object_fails(self):
+        after = self.after()
+        del after["head"]
+        self.assertEqual(self.run_compare(after), ["objects lost in the round trip: head"])
+
+    def test_without_rekeyed_a_new_key_is_a_change(self):
+        """The add_mesh_lods callers pass no `rekeyed`: every key change still fails, as before."""
+        diffs = aml.compare(self.before, self.after(), {})
+        self.assertEqual(len(diffs), 1)
+        self.assertIn("hands: shape_keys", diffs[0])
+
+
 class BoundaryTests(unittest.TestCase):
     def test_closed_quad_strip_edges(self):
         # two quads sharing edge (1,2): the outer ring is boundary, the shared edge is not

@@ -19,8 +19,10 @@ names the troll head material (the engine puts the skin's mouth material on the 
 which carries the head material in KEYForce's model; the old `t_hilltroll_mouth` never existed in the Kit and
 warned "Unable to find material" every session, 2026-09-25).
 monsters.xml: Monster hill_troll takes the sizes measured from the 3.6 m model (eye centre 3.58 m; the eyes in
-the head bone's frame; arm length 0.9 x the shoulder-to-wrist ratio 3.10; body capsules and crouch x the height
-ratio 2.215), CanRide off; its four variants get the <race>_<suffix> names FaceGen.GetMonsterWithSuffix looks up
+the head bone's frame; arm length 0.9 x the shoulder-to-wrist ratio 3.10; crouch x the height ratio 2.215; body
+capsules of radius 1.2, half the LOD0 mesh's 2.43 m shoulder width, over the extent the human's capsule scaled by
+2.215 gave, standing 0.95 to 4.25 m and crouched 0.51 to 4.25 m: the scaled human radius 0.82 let neighbours press
+into each other's shoulders, Mike 2026-09-26), CanRide off; its four variants get the <race>_<suffix> names FaceGen.GetMonsterWithSuffix looks up
 (TaleWorlds.MountAndBlade/FaceGen.cs:44; `troll_settlement` handed a settlement or conversation spawn null), the
 child's sizes scaled like the adult's. main_hand_item_bone stays r_finger0: the export adds the grip bones.
 action_sets.xml: as_hill_troll_warrior becomes standalone on troll_skeleton_a (bipedal), as as_dwarf_warrior is,
@@ -32,7 +34,10 @@ Each edit is computed on the file's own text and applied back to front, byte-fai
 comments, other races and sets untouched); the result must parse and pass a read-back check of every value, or
 nothing is written. Idempotent; a missing anchor is refused. --apply writes <file>.bak-hilltroll-race-<time> first.
 --check also requires the set's body the two follow-up steps write: at least one action, at least one
-anim_hill_troll_* clip and exactly one act_troll_brute_force binding (audit_action_set_parity.py covers the codes).
+anim_hill_troll_* clip and exactly one act_troll_brute_force binding (audit_action_set_parity.py covers the codes);
+and it fails any as_hill_troll_* set that binds a release, quick release, blocked or quick blocked code (the
+binder's MELEE_TABLE) to an anim_* clip, because the engine's melee attack table has rows only for vanilla clips
+and a troll clip there crashes the first swing (TaleWorlds.Native.dll +0x6590B9).
 Exit codes: 0 done (or dry run, or wired), 1 refused (or --check found drift or an unfilled set), 2 the game or the
 Kit runs (or a file is missing).
 """
@@ -46,6 +51,8 @@ import xml.etree.ElementTree as ET
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _gamedir import game_dir, game_or_kit_running  # noqa: E402
+from bind_hill_troll_action_set import MELEE_TABLE  # noqa: E402  (the binder's rule 0, one pattern for both)
+import set_clip_balance_name as scbn  # noqa: E402  (which troll clips are self-keyed)
 
 ARMORY = os.path.join(game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"),
                       "Modules", "LOTRLOME_Armory", "ModuleData")
@@ -60,8 +67,8 @@ HELMET_DEFAULTS = ("default_hair_meshes", "default_beard_meshes")  # human hair 
 MONSTER_ATTRS = {"standing_eye_height": "3.58", "crouch_eye_height": "2.32",
                  "eye_offset_wrt_head": "-0.069, 0.421, 0.0",
                  "first_person_camera_offset_wrt_head": "-0.069, 0.434, 0.0", "arm_length": "2.79"}
-CAPSULES = {"body_capsule": {"radius": "0.82", "pos1": "0.0, 0.0, 3.43", "pos2": "0.0, 0, 1.77"},
-            "crouched_body_capsule": {"radius": "0.82", "pos1": "0.0, 0.0, 3.43", "pos2": "0.0, 0, 1.33"}}
+CAPSULES = {"body_capsule": {"radius": "1.2", "pos1": "0.0, 0.0, 3.05", "pos2": "0.0, 0, 2.15"},
+            "crouched_body_capsule": {"radius": "1.2", "pos1": "0.0, 0.0, 3.05", "pos2": "0.0, 0, 1.71"}}
 RENAMES = {"troll_child": "hill_troll_child", "troll_settlement": "hill_troll_settlement",
            "troll_settlement_slow": "hill_troll_settlement_slow",
            "troll_settlement_fast": "hill_troll_settlement_fast"}
@@ -290,28 +297,47 @@ def edit_action_sets(text):
     else:
         raise Refused("%s is neither the inheriting set nor the standalone one (%d inheriting headers)"
                       % (ACTION_SET, len(old)))
-    s = [a for a in _parse(new).iter("action_set") if a.get("id") == ACTION_SET]
+    root = _parse(new)
+    s = [a for a in root.iter("action_set") if a.get("id") == ACTION_SET]
     if len(s) != 1 or s[0].get("skeleton") != "troll_skeleton_a" or s[0].get("base_set") is not None:
         raise Refused("read-back: %s is not standalone on troll_skeleton_a" % ACTION_SET)
     actions = s[0].findall("action")
+    # the crash invariant, in every as_hill_troll_* set: a melee attack-table code (release, quick release, blocked,
+    # quick blocked) on a custom clip. Native binds none of those codes to an anim_* clip, so that prefix marks a
+    # troll clip there without reading Native; unfilled() then clears the self-keyed ones, which have a row
+    melee = [a.get("animation") for st in root.iter("action_set") if (st.get("id") or "").startswith("as_hill_troll_")
+             for a in st.findall("action")
+             if MELEE_TABLE.match(a.get("type") or "") and (a.get("animation") or "").startswith("anim_")]
     # what the two fill steps leave behind, for --check: the parity tool fills the body with human clips, the
     # binder puts the troll's own clips and the Brute Force binding in
     return new, {"changes": changes, "actions_now": len(actions),
                  "troll_clips": sum(1 for a in actions if (a.get("animation") or "").startswith("anim_hill_troll_")),
-                 "brute_force": sum(1 for a in actions if a.get("type") == BRUTE_FORCE_ACTION)}
+                 "brute_force": sum(1 for a in actions if a.get("type") == BRUTE_FORCE_ACTION),
+                 "melee_troll_clips": len(melee), "_melee_clips": tuple(melee)}
 
 
-def unfilled(report):
-    """The --check findings on the standalone set's body: empty, never bound by the binder, or without exactly one
-    Brute Force binding. A reinstall that kept the wiring but lost the binder's work reads as wired otherwise."""
-    if not report["actions_now"]:
-        return ["the set has no actions: run patch_dwarf_action_parity.py, then bind_hill_troll_action_set.py"]
+def unfilled(report, keyed=frozenset()):
+    """The --check findings on the action sets: the standalone set empty, never bound by the binder, or without
+    exactly one Brute Force binding (a reinstall that kept the wiring but lost the binder's work reads as wired
+    otherwise), and any as_hill_troll_* set binding a melee attack-table code to a troll clip that is not self-keyed
+    (a crash). `keyed` is the self-keyed clips on disk (set_clip_balance_name.keyed_clips): those have a row."""
     found = []
-    if not report["troll_clips"]:
-        found.append("the set binds no anim_hill_troll_* clip: run bind_hill_troll_action_set.py --apply")
-    if report["brute_force"] != 1:
-        found.append("%s is bound %d times, not once: run bind_hill_troll_action_set.py --apply"
-                     % (BRUTE_FORCE_ACTION, report["brute_force"]))
+    unkeyed = sum(1 for clip in report.get("_melee_clips", ()) if clip not in keyed)
+    if not report["actions_now"]:
+        found.append("the set has no actions: run patch_dwarf_action_parity.py, then bind_hill_troll_action_set.py")
+    else:
+        if not report["troll_clips"]:
+            found.append("the set binds no anim_hill_troll_* clip: run bind_hill_troll_action_set.py --apply")
+        if report["brute_force"] != 1:
+            found.append("%s is bound %d times, not once: run bind_hill_troll_action_set.py --apply"
+                         % (BRUTE_FORCE_ACTION, report["brute_force"]))
+    if unkeyed:
+        found.append("%d release, quick release, blocked or quick blocked code(s) in the as_hill_troll_* sets play a "
+                     "troll clip that is not self-keyed: it has no row in the engine's melee attack table, so the "
+                     "first swing crashes (TaleWorlds.Native.dll +0x6590B9). Self-key the clip "
+                     "(tools/set_clip_balance_name.py), or run bind_hill_troll_action_set.py --apply, which keeps "
+                     "the vanilla clip there in %s; in any other set put the vanilla clip back by hand"
+                     % (unkeyed, ACTION_SET))
     return found
 
 
@@ -319,10 +345,16 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--armory", default=ARMORY, help="the LOTRLOME_Armory ModuleData folder")
     ap.add_argument("--apply", action="store_true")
+    ap.add_argument("--clips-dir", default=None,
+                    help="the hill troll clip packages, read by --check to clear self-keyed clips on melee codes "
+                         "(default: <armory>/../Assets/Race Test/Mordor/Trolls/animations)")
     ap.add_argument("--check", action="store_true",
                     help="exit 1 if the live Armory is not wired (a reinstall reverts it), 0 if it is, 2 if a "
                          "file is missing; writes nothing")
     args = ap.parse_args(argv)
+    if args.clips_dir is None:
+        args.clips_dir = os.path.join(os.path.dirname(os.path.abspath(args.armory)), "Assets", "Race Test", "Mordor",
+                                      "Trolls", "animations")
     plan = []
     try:
         for name, fn in (("skins.xml", edit_skins), ("monsters.xml", edit_monsters),
@@ -335,7 +367,7 @@ def main(argv=None):
                 raw = fh.read()
             new, report = fn(raw.decode("utf-8"))
             plan.append((path, raw, new.encode("utf-8"), report))
-            print("%-16s %s" % (name, report))
+            print("%-16s %s" % (name, {k: v for k, v in report.items() if not k.startswith("_")}))
     except Refused as exc:
         print("REFUSED: %s" % exc)
         return 1
@@ -344,7 +376,11 @@ def main(argv=None):
         for name, changes in drift:
             print("DRIFT: %s needs %d change(s); the hill troll race is not wired (re-run with --apply)"
                   % (name, changes))
-        gaps = [] if drift else unfilled(plan[-1][3])
+        report = plan[-1][3]
+        keyed = scbn.keyed_clips(args.clips_dir, set(report.get("_melee_clips", ())))
+        if keyed:
+            print("self-keyed troll clips on melee attack-table codes (they have a row): %d" % len(keyed))
+        gaps = [] if drift else unfilled(report, keyed)
         for gap in gaps:
             print("UNFILLED: %s" % gap)
         if not drift and not gaps:

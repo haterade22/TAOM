@@ -292,6 +292,56 @@ class CheckModeTests(unittest.TestCase):
         self.assertEqual(rc, 1)
         self.assertIn("bound 0 times", out)
 
+    # The crash invariant: the engine's melee attack table has rows only for vanilla clips, so a release, quick
+    # release, blocked or quick blocked code bound to a troll clip crashes the first swing (+0x6590B9, 2026-09-25).
+    def test_check_fails_when_a_release_code_plays_a_troll_clip(self):
+        body = self.BOUND + ('\t\t<action type="act_release_overswing_2h" '
+                             'animation="anim_hill_troll_release_overswing_2h" />\n')
+        rc, out = self._check(wired=True, body=body)
+        self.assertEqual(rc, 1, out)
+        self.assertIn("'melee_troll_clips': 1", out)
+        self.assertIn("+0x6590B9", out)
+        self.assertIn("bind_hill_troll_action_set.py --apply", out)
+
+    def test_check_passes_when_a_release_code_keeps_the_vanilla_clip(self):
+        body = self.BOUND + '\t\t<action type="act_quick_release_overswing_2h" animation="quick_release_overswing_2h" />\n'
+        rc, out = self._check(wired=True, body=body)
+        self.assertEqual(rc, 0, out)
+        self.assertIn("'melee_troll_clips': 0", out)
+
+    def test_a_troll_clip_on_a_blocked_code_in_any_hill_troll_set_counts(self):
+        # not only the warrior set: an as_hill_troll_* set's own override crashes the same way
+        sets = w.edit_action_sets(ACTION_SETS)[0].replace(
+            w.ACTION_SET_HEADER + "\n", w.ACTION_SET_HEADER + "\n" + self.BOUND, 1).replace(
+            '<action_set id="as_hill_troll_female_warrior" base_set="as_hill_troll_warrior" />',
+            '<action_set id="as_hill_troll_female_warrior" base_set="as_hill_troll_warrior">\n'
+            '\t\t<action type="act_quick_blocked_thrust_2h_left_stance" animation="anim_troll_blocked_a" />\n'
+            '\t\t<action type="act_ready_overswing_2h" animation="anim_hill_troll_ready_overswing_2h" />\n'
+            '\t</action_set>')
+        _, report = w.edit_action_sets(sets)
+        self.assertEqual(report["melee_troll_clips"], 1, "the wind-up is not a melee-table code")
+        gaps = w.unfilled(report)
+        self.assertEqual(len(gaps), 1, gaps)
+        self.assertIn("the first swing crashes (TaleWorlds.Native.dll +0x6590B9)", gaps[0])
+
+    def test_a_self_keyed_troll_clip_on_a_release_code_is_not_a_crash(self):
+        # "Blends with animation" = its own name gives the clip a table row (tools/set_clip_balance_name.py)
+        sets = w.edit_action_sets(ACTION_SETS)[0].replace(
+            w.ACTION_SET_HEADER + "\n", w.ACTION_SET_HEADER + "\n" + self.BOUND +
+            '\t\t<action type="act_release_overswing_2h" animation="anim_hill_troll_release_overswing_2h" />\n'
+            '\t\t<action type="act_blocked_overswing_2h" animation="anim_hill_troll_blocked_overswing_2h" />\n', 1)
+        _, report = w.edit_action_sets(sets)
+        self.assertEqual(report["melee_troll_clips"], 2)
+        keyed = {"anim_hill_troll_release_overswing_2h"}
+        gaps = w.unfilled(report, keyed)
+        self.assertEqual(len(gaps), 1, gaps)                       # the unkeyed blocked clip still crashes
+        self.assertIn("1 release, quick release, blocked or quick blocked code", gaps[0])
+        self.assertEqual(w.unfilled(report, keyed | {"anim_hill_troll_blocked_overswing_2h"}), [])
+
+    def test_the_melee_table_pattern_is_the_binders(self):
+        import bind_hill_troll_action_set as bh
+        self.assertIs(w.MELEE_TABLE, bh.MELEE_TABLE)
+
     def test_check_fails_when_a_reinstall_reverted_the_race(self):
         import tempfile
         with tempfile.TemporaryDirectory() as d:

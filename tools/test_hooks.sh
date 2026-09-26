@@ -1855,6 +1855,37 @@ PY
     || bad "check-graphify-usage settings.json registration: $GU_REG, expected once each"
 
 # ---------------------------------------------------------------------------
+head2 "7g. config-protection blocks ADR and config edits whatever the path spelling"
+# The ADR guard matched `*"/docs/adrs/"*`, but the Edit and Write tools pass a Windows path
+# (E:\repos\TAOM\docs\adrs\x.md), so it never fired on the dev machine: ADR-012 and two ADR edits
+# went through unchallenged on 2026-09-26 (#677). A case is "2" for blocked, "0" for allowed. The
+# session id is unique so a leftover override flag from a real session cannot mask a case.
+CP_CASES=(
+  '2|E:\repos\TAOM\docs\adrs\012-graphify-code-graph-in-the-workflow.md'
+  '2|E:/repos/TAOM/docs/adrs/010-knowledge-base-architecture.md'
+  '2|/e/repos/TAOM/docs/adrs/README.md'
+  '2|docs/adrs/011-knowledge-delivery-tiers.md'
+  '2|docs\adrs\011-knowledge-delivery-tiers.md'
+  '2|E:\repos\TAOM\Docs\ADRs\012-Graphify.MD'
+  '2|E:\repos\TAOM\.claude\settings.json'
+  '2|E:\repos\TAOM\.claude\Settings.Local.json'
+  '2|E:\repos\TAOM\Directory.Build.props'
+  '0|E:\repos\TAOM\docs\features\graphify-code-graph.md'
+  '0|E:\repos\TAOM\docs\adrs-notes\draft.md'
+  '0|E:\repos\TAOM\docs\adrs\diagram.png'
+  '0|E:\repos\TAOM\docs\reviews\adrs\summary.md'
+)
+for entry in "${CP_CASES[@]}"; do
+    want="${entry%%|*}"; path="${entry#*|}"
+    payload=$("$HPY" -c 'import json,sys; print(json.dumps({"tool_name":"Edit","tool_input":{"file_path":sys.argv[1]},"hook_event_name":"PreToolUse"}))' "$path")
+    printf '%s' "$payload" | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$SANDBOX" CLAUDE_SESSION_ID="taom-hooktest-$$" \
+        bash .claude/hooks/config-protection.sh >/dev/null 2>&1
+    got=$?
+    [[ "$got" == "$want" ]] && ok "config-protection rc=$got for: $path" \
+        || bad "config-protection expected rc=$want, got $got for: $path"
+done
+
+# ---------------------------------------------------------------------------
 head2 "8. /context-budget scan.sh runs under set -u and measures the launch load"
 # Nothing else runs this script, and it reads the budget from tools/lint_docs.py: an unbound
 # variable or a broken JSON handshake would otherwise surface only when someone runs the skill.

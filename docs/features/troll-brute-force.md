@@ -47,6 +47,27 @@ TrollBruteForceBehaviorTree -> BruteForceReadyDecorator -> BruteForceTask
                                      BruteForceRing -> CustomAttacksUtils.TakeDamage
 ```
 
+## Formation spacing (Patch92, 2026-09-26)
+
+The engine spaces every foot unit for a 0.76 m human (`Formation.UnitDiameter` is `BipedalRadius` times two,
+whatever the Monster), so trolls stood inside each other. Once trolls are a tenth of a formation, the share at
+which vanilla spaces a formation for horses, the formation is spaced for its widest troll: the Monster's measured
+shoulder width (`ShoulderWidthByMonster`: cave troll 0.75, hill troll 2.43, from the LOD0 meshes) times
+`AgentScale`, about 1.43 m and 2.7 m, capped at 4 m. `TrollFormationSpacingTracker` counts the formations twice a
+second on the main thread and writes the width to `TrollFormationSpacingStore`, a concurrent map keyed by reference
+through `ReferenceIdentity` (`Formation.GetHashCode` reads its Team, which is null on a layout copy); the
+`Formation.UnitDiameter` postfix reads it from any thread. A changed width calls `Formation.OnUnitAddedOrRemoved()`
+and `Arrangement.OnFormationFrameChanged(updateCachedOrderedLocalPositions: true)`, which rebuilds the cached slot
+positions. While the field is deploying (`Mission.IsTeleportingAgents`), the tracker also replays the tail of
+vanilla's `Formation.OnMassUnitTransferEnd`, so the trolls, placed at human width before their width was known, jump
+onto the wider slots; after deployment they walk there. A prefix and finalizer on the layout entry points
+(`GetUnitPositionWithIndexAccordingToNewOrder`, `GetUnitSpawnFrameWithIndex`) name the real formation for the
+length of the call, so the team-less copy formations of the order preview, the deployment placement and the spawn
+frames take its width. PatchShield skips all five patched methods (`PatchShieldPolicy.ExcludedTargetMethods`),
+because a shield finalizer would add a `GetMethodFromHandle` to every per-unit call. MixedFormations spaces its
+slots by the same width through `IFormationAdapter.UnitDiameter`. Registry:
+[Patch92](../reference/harmony-patch-registry.md).
+
 ## Configuration
 
 Compiled constants in `Main/Features/TrollBruteForce/TrollBruteForceConfig.cs` (first guesses, to be tuned in the
@@ -63,6 +84,9 @@ Custom Battle smoke). Distances are metres at body size 1.
 | `ImpactFraction` | 0.58 | Clip progress at which the weapon lands (measured on the Fab heavy attack) |
 | `MaxBodyScale` | 3 | Cap on body size |
 | `ReferenceEyeHeight` | 1.70 | The human Monster's eye height |
+| `FormationShare` | 0.1 | Trolls at this share of a formation space the whole formation for its widest troll |
+| `ShoulderWidthByMonster` | 0.75, 2.43 | Cave and hill troll shoulder width in metres at `AgentScale` 1 (LOD0 meshes); times `AgentScale` gives the unit width |
+| `MaxFormationUnitWidth` | 4 | The widest unit width a formation is ever spaced for, in metres |
 
 The action and its bindings live in the UNVERSIONED `LOTRLOME_Armory`: `act_troll_brute_force` (untyped) in
 `action_types.xml`, bound in `as_cave_troll_warrior` by `tools/bind_troll_action_set.py` and in
@@ -77,7 +101,10 @@ troll's set is missing, or when a set has no clip for the action (a reinstall dr
 |---|---|
 | `Main/Features/TrollBruteForce/TrollBruteForceConfig.cs` | Constants, Monster ids, `ActionSetsByMonster` |
 | `Main/Features/TrollBruteForce/ITrollBruteForceService.cs`, `TrollBruteForceService.cs` | Pure decisions |
-| `Main/Features/TrollBruteForce/TrollBruteForceMissionBehavior.cs` | Attaches the trees; start-up drift guard |
+| `Main/Features/TrollBruteForce/TrollBruteForceMissionBehavior.cs` | Attaches the trees; start-up drift guard; ticks the spacing tracker |
+| `Main/Features/TrollBruteForce/TrollFormationSpacingTracker.cs` | Counts trolls per formation, stores the width, rebuilds the slots, replays the mass-transfer tail during deployment |
+| `Main/Features/TrollBruteForce/TrollFormationSpacingStore.cs` | The per-formation width (reference-keyed concurrent map) and the thread-static layout scope |
+| `Main/Features/TrollBruteForce/Hooks/Patch92_TrollFormationSpacing.cs` | `UnitDiameter` postfix and the simulation-copy scope |
 | `Main/Features/TrollBruteForce/TrollBruteForceBehaviorTree.cs`, `BehaviorTreeElements/` | The tree, decorator and task |
 | `Main/Features/TrollBruteForce/Hooks/BruteForceRing.cs` | Delivers the ring |
 | `Main/Features/TrollBruteForce/TrollBruteForceIoC.cs` | Singleton service registration |
@@ -85,23 +112,40 @@ troll's set is missing, or when a set has no clip for the action (a reinstall dr
 ## Tests
 
 `TAOM.Tests/Features/TrollBruteForce/`: `TrollBruteForceServiceTests` (every decision, NaN and bad-scale gates,
-body size), `TrollBruteForceConfigTests`, and `TrollBruteForceWiringTests` (`LiveInstall`: each Monster names its
+body size, the formation width and its gates), `TrollFormationSpacingStoreTests` (set, change and removal, a layout
+copy borrowing the scoped formation's width, the scope nesting and staying per thread), `Patch92BindingTests` (the
+four layout entry points resolve against the installed engine, and `Formation.Team` is still a public field),
+`TrollBruteForceConfigTests`, and `TrollBruteForceWiringTests` (`LiveInstall`: each Monster names its
 set, the action is declared once and untyped, each set binds it once to its own troll's clip, the cave troll keeps
 the human eye height).
 
 ## How to verify in game
 
 A Custom Battle with both trolls against infantry: the log's `[TrollBruteForce]` lines give the progress at which
-the ring fired, the hits and knockdowns, and the body size the distances used.
+the ring fired, the hits and knockdowns, and the body size the distances used. `[TrollSpacing]` lines give each
+troll formation's troll count and its unit width (`vanilla -> new m`, or `back to vanilla`); the trolls should
+stand apart in the line, already on the deployment screen in a battle that opens on one.
 
 ## Known limitations
 
 - The tuning is first guesses on the cave troll; the hill troll's reach follows its eye height and is unverified
   until the smoke reads its ring.
 - Only enemy humans are hit; mounts are skipped.
+- Below a tenth trolls nothing widens: a formation of 11 with one troll (9%) keeps human spacing around it.
+- Past that share every unit in the formation is spaced at troll width, orcs beside trolls included; no separate
+  troll formation is built.
+- The custom-width order preview measures its copy's occupation width through
+  `Formation.GetLastSimulatedFormationsOccupationWidthIfLesserThanActualWidth`, which
+  `OrderController.SimulateNewCustomWidthOrder` calls outside the Patch92 scope, so that one read is at human
+  width and the preview can disagree with the width the order produces (unverified in game).
+- The deployment plan sizes each formation's spawn area with the static `Formation.GetDefaultUnitDiameter`
+  (`DefaultDeploymentPlan.GetFormationSpawnWidthAndDepth`), which Patch92 does not patch, so a troll formation's
+  planned spawn area is sized for humans.
 
 ## Changelog
 
+- 2026-09-26: formation spacing for both trolls (Patch92, measured shoulder widths); a temporary action trace used
+  to find the swing crash was removed.
 - 2026-09-25: extended to the hill troll (`ActionSetsByMonster`, `IsBruteForceTroll`); distances scale with body
   size (eye height); the log reports the scale the distances use.
 - 2026-09-24: the prototype on the cave troll (#649).

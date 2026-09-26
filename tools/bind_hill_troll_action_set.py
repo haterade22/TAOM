@@ -6,13 +6,18 @@ itself. This tool regenerates the whole body from the vanilla human set's code l
 action_sets.xml, the full definition: code names, their _left_stance twins and alternative_group values are the
 engine's, not typed by hand), binding each code by the first rule that has a clip on disk:
 
-  0. the melee exchange keeps the vanilla clip, always: wind-ups, quick attacks, releases, blocked, parried,
-     defends, guards, kicks and bashes (POSE_BLEND). Battle melee is engine pose-blend: the engine plays per-clip
-     pose data looked up by the vanilla clip's index and sampled by attack progress, and a retargeted clip has no
-     entry, so the lookup returns null and the game crashes (TaleWorlds.Native.dll +0x6590B9, reading 0x8). The
-     missing key in three dumps was the clip index of anim_hill_troll_release_overswing_2h and of a quick-release
-     twin (2026-09-25); with the releases vanilla the same crash came back with only the wind-up among the troll
-     clips in play, so the rule covers the whole exchange. Hit reactions, staggers, falls and jumps keep rule 2;
+  0. a melee attack-table code (releases, quick releases, blocked and quick blocked: MELEE_TABLE) plays the troll
+     clip only when that clip is SELF-KEYED, and the vanilla clip otherwise. The engine keeps per-clip attack data in
+     a map filled when a clip's package loads, keyed by clip index, and a clip gets a row only when its "Blends with
+     animation" (the Modding Kit's clip inspector box; in-memory +0xD8) holds its own name, or through the ten blend
+     children the Kit generates toward a "_balanced" twin (TaleWorlds.Native.dll 0x58BEA0 -> 0x5682B0; 175 vanilla
+     clips are self-keyed, 107 twin-keyed). Every as_human_warrior action bound to a keyed clip (296) is in these four
+     families. The generated troll clips had the box empty, so the lookup missed and read a null row (+0x6590B9,
+     reading 0x8; keys 6511 and 6462 in the dumps were anim_hill_troll_release_overswing_2h and a quick-release twin,
+     2026-09-25). tools/set_clip_balance_name.py self-keys a clip (own name in the box, "Blends with action" empty,
+     the shape the Kit writes), and this rule reads the package (set_clip_balance_name.keyed_clips) so an unkeyed
+     clip can never reach a table code. The "_balanced" codes stay vanilla: vanilla's own _balanced clips have no
+     row either. Wind-ups, defends, guards, kicks, bashes and parries never reach that table and keep rule 2;
   1. the Fab clip the cave troll rules choose (tools/bind_troll_action_set.py: walk_forward, run_forward, idle,
      strike, death_fall), renamed anim_troll_* -> anim_hill_troll_* (the hill troll's 52, from
      tools/blender/fab_hill_troll_clip_names.json): the troll's own gait, idles, hit reactions and deaths;
@@ -33,8 +38,9 @@ action_sets.xml.bak-hilltroll-bind-<stamp> (never a .xml extension: the folder i
 with ElementTree before it is written, and only the body between this set's open and close tags and the pose
 set's bound clip names are replaced, so re-running is idempotent and the cave troll's set (another session's)
 is untouched. A code is bound to a clip only if its <clip>_anm.tpac is in --clips-dir, which defaults to the
-hill troll's animations folder in the install and must exist. Dry run by default; --apply writes, and refuses
-while the game or the Kit runs, or when the process list cannot be read.
+hill troll's animations folder in the install and must exist and hold at least one Fab clip (an empty folder would
+unbind every troll clip); at least one --clips-index is required for the same reason. Dry run by default; --apply
+writes, and refuses while the game or the Kit runs, or when the process list cannot be read.
 
     python tools/bind_hill_troll_action_set.py --clips-index <human_json>/clips_index.json [--clips-index ...]
     python tools/bind_hill_troll_action_set.py --clips-index ... --apply
@@ -50,6 +56,7 @@ import xml.etree.ElementTree as ET
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import bind_troll_action_set as cave  # noqa: E402  (the cave troll's rules, reused read-only)
+import set_clip_balance_name as scbn  # noqa: E402  (which clips are self-keyed: rule 0)
 from _gamedir import game_dir, game_or_kit_running  # noqa: E402
 
 GAME = os.path.join(game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"), "Modules")
@@ -86,8 +93,8 @@ ATTR_RE = cave.ATTR_RE
 # behaviour tree plays (#649); the hill troll swings the Fab heavy attack retargeted onto its own rig.
 EXTRA_BINDINGS = (("act_troll_brute_force", "anim_hill_troll_attack1"),)
 
-# Rule 0: the melee exchange the engine drives by pose-blend, bound to the vanilla clip whatever else exists.
-POSE_BLEND = re.compile(r"^act_(quick_|ready_|release_|blocked_|parried_|defend_|guard_|kick_|(\w+_)?bash)")
+# Rule 0: the codes whose clips the engine looks up in its melee attack table; the troll clip only when self-keyed.
+MELEE_TABLE = re.compile(r"^act_(quick_)?(release|blocked)_")
 
 # Rule 3: codes that reuse one of the troll's own idles, tried after the Fab and retargeted-human rules so a clip
 # authored later for one of these codes still wins. A numbered code picks from its tuple by number, so cheer_1 and
@@ -141,10 +148,15 @@ def reuse_clip(code, fab_clips):
     return None
 
 
-def bind_hill(code, attrs, human_clips, fab_clips, renames=None):
-    """(clip, source) for an act_* code: source is 'pose-blend', 'fab', 'human', 'reuse' or 'inherited'."""
-    if POSE_BLEND.match(code):
-        return attrs.get("animation", ""), "pose-blend"
+def bind_hill(code, attrs, human_clips, fab_clips, renames=None, keyed=frozenset()):
+    """(clip, source) for an act_* code: source is 'melee-keyed', 'melee-table', 'fab', 'human', 'reuse' or
+    'inherited'. `keyed` is the self-keyed troll clips on disk (set_clip_balance_name.keyed_clips)."""
+    if MELEE_TABLE.match(code):
+        vanilla = attrs.get("animation", "")
+        troll = human_clip_name(vanilla, renames) if vanilla else ""
+        if troll in keyed and troll in human_clips:
+            return troll, "melee-keyed"
+        return vanilla, "melee-table"
     fab = cave.bind(code, attrs)
     if fab:
         name = PREFIX + fab[len(CAVE_PREFIX):] if fab.startswith(CAVE_PREFIX) else fab
@@ -161,7 +173,7 @@ def bind_hill(code, attrs, human_clips, fab_clips, renames=None):
     return vanilla, "inherited"
 
 
-def build_body(actions, human_clips, fab_clips, indent="\t\t", renames=None):
+def build_body(actions, human_clips, fab_clips, indent="\t\t", renames=None, keyed=frozenset()):
     """One <action/> line per active Native node (alternative-group twins included), its other attributes
     verbatim, animation rebound."""
     lines, counts = [], {}
@@ -169,7 +181,7 @@ def build_body(actions, human_clips, fab_clips, indent="\t\t", renames=None):
         code = a.get("type")
         if not code:
             continue
-        clip, source = bind_hill(code, a, human_clips, fab_clips, renames)
+        clip, source = bind_hill(code, a, human_clips, fab_clips, renames, keyed)
         attrs = ['type="%s"' % code, 'animation="%s"' % clip]
         attrs += ['%s="%s"' % (k, v) for k, v in a.items() if k not in ("type", "animation")]
         lines.append("%s<action %s />" % (indent, " ".join(attrs)))
@@ -195,8 +207,12 @@ def replace_body(text, lines, nl):
               "%s\t\t     tools/bind_hill_troll_action_set.py, which owns this body: edit the rules there, not here."
               "%s\t\t     Fab clips for gait, idles, hits and deaths; human clips retargeted onto the troll where a"
               "%s\t\t     clips_index lists them; the troll's idles reused for inventory, conversation and cheers;"
-              "%s\t\t     the human clip itself (bends the hunched rest wrong) for the rest. -->"
-              % (nl, nl, nl, nl, nl))
+              "%s\t\t     the human clip itself (bends the hunched rest wrong) for the rest."
+              "%s\t\t     The release, quick release, blocked and quick blocked codes keep the vanilla clip unless"
+              " the troll clip is self-keyed"
+              "%s\t\t     (its Blends with animation holds its own name: tools/set_clip_balance_name.py): a troll clip"
+              " with no melee attack table row crashes the first swing. -->"
+              % (nl, nl, nl, nl, nl, nl, nl))
     new_body = header + nl + nl.join(lines) + nl + "\t"
     return text[:open_m.end()] + new_body + text[close_i:], len(ACTION_RE.findall(old_body))
 
@@ -230,9 +246,10 @@ def main(argv=None) -> int:
     ap.add_argument("--apply", action="store_true")
     ap.add_argument("--live", default=LIVE)
     ap.add_argument("--native", default=NATIVE)
-    ap.add_argument("--clips-index", action="append", default=[],
-                    help="clips_index.json from read_anim_keyframes_tpac.ps1 -ByClip (repeatable); its keys are the "
-                         "vanilla clips retargeted as anim_hill_troll_<clip>")
+    ap.add_argument("--clips-index", action="append", required=True,
+                    help="clips_index.json from read_anim_keyframes_tpac.ps1 -ByClip (repeatable, at least one); its "
+                         "keys are the vanilla clips retargeted as anim_hill_troll_<clip>. Required: without one every "
+                         "retargeted clip would unbind in a run that reads as clean")
     ap.add_argument("--fab-names", default=FAB_NAMES, help="the hill troll's Fab clip name map")
     ap.add_argument("--clips-dir", default=CLIPS_DIR,
                     help="the folder holding the <clip>_anm.tpac files; a clip is bound only if it is on disk there "
@@ -248,13 +265,31 @@ def main(argv=None) -> int:
         return 2
     renames = load_renames(args.renames)
     human_clips, fab_clips = available_clips(args.clips_index, args.fab_names, args.clips_dir, renames)
+    if not fab_clips:
+        # an empty or wrong folder would unbind every troll clip and put the whole set back on the human clips
+        print("ERROR: no Fab anim_hill_troll_* clip (<clip>_anm.tpac from %s) in %s; refusing to rebind the set "
+              "(pass the hill troll's animations folder as --clips-dir)" % (os.path.basename(args.fab_names),
+                                                                             args.clips_dir), file=sys.stderr)
+        return 2
+    for p in args.clips_index:
+        with open(p, encoding="utf-8-sig") as fh:
+            listed = {human_clip_name(k, renames) for k in json.load(fh)}
+        print("clips index %s: %d listed, %d on disk" % (p, len(listed), len(listed & human_clips)))
+    if not human_clips:
+        # an index for another folder or skeleton would unbind every retargeted clip in a run that reads as clean
+        print("ERROR: no retargeted clip the --clips-index lists is on disk in %s; refusing to rebind the set"
+              % args.clips_dir, file=sys.stderr)
+        return 2
     native_text = open(args.native, "rb").read().decode("utf-8-sig")
     actions = human_actions(native_text)
-    lines, counts = build_body(actions, human_clips, fab_clips, renames=renames)
+    candidates = {human_clip_name(a["animation"], renames) for a in actions
+                  if MELEE_TABLE.match(a.get("type", "")) and a.get("animation")} & human_clips
+    keyed = scbn.keyed_clips(args.clips_dir, candidates)
+    lines, counts = build_body(actions, human_clips, fab_clips, renames=renames, keyed=keyed)
     print("human codes read: %d; set body planned: %d codes  (%s)" % (
         len(actions), len(lines),
-        ", ".join("%s %d" % (k, counts[k]) for k in ("pose-blend", "fab", "human", "reuse", "inherited", "extra")
-                  if k in counts)))
+        ", ".join("%s %d" % (k, counts[k]) for k in ("melee-keyed", "melee-table", "fab", "human", "reuse",
+                                                     "inherited", "extra") if k in counts)))
 
     raw = open(args.live, "rb").read()
     bom = raw.startswith(b"\xef\xbb\xbf")

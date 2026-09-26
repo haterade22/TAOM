@@ -242,6 +242,27 @@ public class PatchShieldPolicyTests
         }
     }
 
+    // --- IsExcludedTargetMethod: Patch92's per-unit Formation hot members -------------------------
+    // The positive case is Patch92BindingTests.EveryPatch92Target_IsOnPatchShieldsHotMethodList, which walks
+    // Patch92's real targets instead of repeating the list's strings.
+
+    [TestMethod]
+    public void IsExcludedTargetMethod_AnotherFormationMethod_ReturnsFalse()
+    {
+        // The exclusion is per-method, not per-type: Formation stays a normally-shielded type otherwise.
+        Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod("TaleWorlds.MountAndBlade.Formation", "SetMovementOrder"));
+    }
+
+    [TestMethod]
+    public void IsExcludedTargetMethod_NullOrEmptyParts_ReturnsFalse()
+    {
+        Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod(null, "get_UnitDiameter"));
+        Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod("TaleWorlds.MountAndBlade.Formation", null));
+        Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod(null, null));
+        Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod(string.Empty, "get_UnitDiameter"));
+        Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod("TaleWorlds.MountAndBlade.Formation", string.Empty));
+    }
+
     // --- FormatShieldPassSummary: the diag.log shield-pass line ----------------------------------
 
     [TestMethod]

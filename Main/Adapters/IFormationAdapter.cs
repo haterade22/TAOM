@@ -20,7 +20,10 @@ public interface IFormationAdapter
     float Width { get; }
     float Interval { get; }
 
-    /// <summary>The width each unit is spaced for (<c>Formation.UnitDiameter</c>): 0.76 m for a human, wider for trolls (Patch92).</summary>
+    /// <summary>The width each unit is spaced for (<c>Formation.UnitDiameter</c>): 0.76 m for a human, wider for
+    /// trolls (Patch92), and 1.6 m for a formation at least a tenth mounted and not ordered to dismount
+    /// (vanilla's own <c>QuadrupedalRadius</c> x 2, <c>Formation.CalculateHasSignificantNumberOfMounted</c>
+    /// and <c>RidingOrderDismount</c>, v1.5.3 <c>Formation.cs:220</c>).</summary>
     float UnitDiameter { get; }
 
     /// <summary>Snapshot of every live unit in the formation as <c>(Index, IsRanged)</c>.

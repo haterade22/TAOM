@@ -54,9 +54,10 @@ LOTRLOME_Armory already ships two troll races — **the ready-made data template
 `as_cave_troll_warrior` (`base_set="as_human_warrior"`) — it inherits the full human animation set
 (walk/run/attacks/death) for free, confirmed working in battle. Troll *flavor* is layered on top as
 **movement overrides only**: lumbering walk/run clips authored on `human_skeleton` (so they play directly
-— NO ARP retarget) and bound to the cave_troll's forward walk/run `act_*` codes. Attacks stay
-engine-driven — Bannerlord battle melee is pose-blend, not standalone clips (the vanilla 2h attack clips
-extract as 0-keyframe shells) — so custom clips can only ever change *movement*.
+with NO ARP retarget) and bound to the cave_troll's forward walk/run `act_*` codes. Attacks stayed on the
+human clips. (The reason given here in June, that battle melee is an engine pose-blend with no standalone clips,
+is refuted: a swing plays real clips, and a release or blocked code needs a clip with a row in the engine's melee
+attack table. See "The swing CTD" entry under Track 1.)
 
 **The bespoke OWN-skeleton path (`skeleton_troll` + a full retargeted clip set, decided 2026-06-13) is
 PARKED.** It works in principle (ARP retarget → `ge_export`; see the workflow doc) but adds a large clip
@@ -171,7 +172,8 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
   `E:\LOTRAOMAssets\troll_clips_to_import\fab_cave_troll\` (`troll_<clip>.fbx`, in place) plus
   `fab_cave_troll_rootyaw\` (the 12 turn clips turning in place). Walk, run, two idles, 8 hit reactions,
   3 deaths, 8 turns, transitions and 6 roars are bindable to `as_cave_troll_warrior` codes; the 6 attack
-  clips are not (melee is engine pose-blend). Visual check: side-by-side renders in
+  clips stay off the melee codes (the reason first given, engine pose-blend, is refuted: see "The swing CTD" below).
+  Visual check: side-by-side renders in
   `_export\cave_troll_lightweight\retarget_preview\`. Method and gotchas:
   [ue-to-bannerlord-asset-pipeline.md](../reference/ue-to-bannerlord-asset-pipeline.md) § The retarget stage.
 
@@ -432,18 +434,124 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
   `tools/blender/add_face_morph_channels.py` (101 zero-offset channels, `shape_01` to `shape_101`, so face
   sliders move nothing on the troll). OWED: Mike's Kit re-import of `hill_troll_a.fbx`, then check the
   skeleton's physics survived (it did on every earlier skeleton-preserving re-import) and a Custom Battle.
-- **The swing CTD, retargeted melee releases (2026-09-25):** with the face fixed, the game crashed on the hill
-  trolls' first swing: an access violation at `TaleWorlds.Native.dll` +0x6590B9, reading address 0x8. The trace
-  (`TrollActionTrace`) showed every wind-up (`act_ready_*`, 23 of them over two runs) and never a release, and no
+- **The swing CTD, retargeted melee releases (2026-09-25, cause found 2026-09-26):** with the face fixed, the
+  game crashed on the hill trolls' first swing: an access violation at `TaleWorlds.Native.dll` +0x6590B9, reading
+  address 0x8. A temporary trace (removed 2026-09-26) showed 23 wind-ups (`act_ready_*`), never a release, and no
   enemy within 8 m, so the swing itself crashed, not the hit. The crashing function is a hash lookup whose miss
-  leaves a null entry; the missing key sat in `r9` in all three dumps: 6511 twice and 6462 once, which the trace's
-  key scan resolved to the clip indices of `anim_hill_troll_release_overswing_2h` and
-  `anim_hill_troll_quick_release_overswing_2h_left_stance`. Battle melee is engine pose-blend (the vanilla attack
-  clips are 0-keyframe shells): a swing plays the engine's per-clip pose data, keyed by the vanilla clip's index
-  and sampled by swing progress, and a retargeted clip has no entry. `tools/bind_hill_troll_action_set.py` now binds
-  every `act_release_*` and `act_quick_release_*` to the vanilla clip (rule 0, `pose-blend`); the 32 retargeted
-  swings went back to vanilla (human 438 to 406), backup `action_sets.xml.bak-hilltroll-bind-20260925-180817`.
-  The wind-ups, guards and blocks keep their retargeted clips. OWED: the Custom Battle that proves it.
+  leaves a null row; the missing key sat in `r9` in three dumps, 6511 twice and 6462 once, the clip indices of
+  `anim_hill_troll_release_overswing_2h` and `anim_hill_troll_quick_release_overswing_2h_left_stance`.
+  **Cause (reverse-engineered 2026-09-26; the whole path is in
+  [bannerlord-animation-system-map.md](../reference/bannerlord-animation-system-map.md), section 3):** the engine
+  keeps a melee attack table, keyed by clip index, with ten clip slots per row that it picks by the weapon's
+  balance. The table is filled while a clip's package loads (`Animation_clip_item` at 0x58BEA0, inserting through
+  0x5682B0). The key is the Modding Kit clip inspector's "Blends with animation" box (editor name
+  `blends_with_animation_`, in memory at +0xD8; TpacTool calls it `UnknownClipName`). A clip whose box holds its own
+  name is self-keyed: its row points all ten slots at itself. A clip whose box names its balanced twin
+  (`release_overswing_2h` names `release_overswing_2h_balanced`) makes the Kit generate ten FNV-hashed blend
+  children between the two on save (`parent_animation_1_`, `parent_animation_2_` and `child_index_` set, none of
+  them shown in the UI), and those children fill the row. Vanilla has 175 self-keyed swings, every one with
+  "Blends with action" empty, and 107 twin-keyed clips. No clip flag sets the key. Every `as_human_warrior` action
+  bound to a keyed clip, 296 of them, is a release, quick release, blocked or quick blocked action.
+  `gen_troll_anim_clips.ps1` blanked the box on all 480 hill troll clips, so none had a row, and a release or a
+  blocked attack bound to one crashed. The earlier "melee is engine pose-blend, the attack clips are 0-keyframe
+  shells" was only partly right: the swing plays real clips, chosen per weapon balance.
+  **Fix in the data:** `tools/bind_hill_troll_action_set.py` rule 0 (`MELEE_TABLE`; 618 codes) binds those four
+  families to the vanilla clip unless the troll clip is self-keyed (below), and everything else keeps its troll clip (wind-ups, defends, guards, kicks, bashes, parries, hit
+  reactions, staggers, falls). History: the swings alone went vanilla on 2026-09-25 (backup
+  `action_sets.xml.bak-hilltroll-bind-20260925-180817`); a blocked attack crashed again, and the rule was widened to
+  the whole melee exchange (`-20260926-083155`); after the cause was found it was narrowed to the four table families
+  (`-20260926-091511`, retargeted bindings 271 to 374). Battle smoke 2026-09-26 08:41: 275 swings, 117 deaths, no
+  crash. That session ran on the WIDENED rule and the old 0.82 body capsule: it predates the capsule change (08:55,
+  `monsters.xml` backup `-20260926-085539`) and the narrowed rule (09:15), so it did not test the final data. Those
+  four backups are no longer beside the live files: the 09:53 backup sweep moved them to
+  `E:\Bannerlord_Backups\module_bak_sweep_2026-09-26\LOTRLOME_Armory\ModuleData\`, and its `MANIFEST.csv` lists
+  each with its hash. The final-data smoke ran 12:18 to 12:25 (Custom Battle, session `rgl_log_76280`, after the
+  12:17 build and the 12:01 re-import of `hill_troll_a.fbx`): no crash, formation spacing right, the hammer in hand,
+  the hand morphs fine, no troll carrying a banner (Mike). From 09:15 to 14:13 all 618 codes played the vanilla
+  clip.
+  **The troll's own swings (2026-09-26 afternoon):** Mike self-keyed `anim_hill_troll_release_overswing_2h` and
+  `anim_hill_troll_blocked_overswing_2h` in the Kit at 13:21 (own name in "Blends with animation", "Blends with
+  action" emptied). `tools/set_clip_balance_name.py` (16 tests in `tools/tests/test_set_clip_balance_name.py`) made
+  the same edit offline to the other 28 of the 30 two-handed release and blocked troll clips at 13:28: the clip's
+  own name in the box, "Blends with action" emptied as the Kit does, the item checksum and the RuntimeDataCache stamp
+  rewritten (backups `.bak-balancename-20260926-132826` beside each package and RDC entry). Rule 0 now binds a troll
+  clip to one of the four families only when `set_clip_balance_name.keyed_clips` reads it as self-keyed, and the
+  vanilla clip otherwise. Applied live at 14:13 (backup `action_sets.xml.bak-hilltroll-bind-20260926-141305`): 32
+  codes on the 30 self-keyed troll clips (`melee-keyed`), 586 on vanilla clips (`melee-table`). The `_balanced`
+  codes stay vanilla, because vanilla's own `_balanced` clips have no row either: of vanilla's 322 release and
+  blocked codes on rowless clips, 280 are `_balanced`, 17 are ranged or thrown releases and 25 are thrown stones and
+  stuck-dagger follow-ups. `python tools/wire_hill_troll_race.py --check` now flags only an UNKEYED troll clip on
+  those codes, and it passes (30 self-keyed). A self-keyed clip plays at every weapon balance. Never give a troll
+  clip a vanilla parent name: a generated child fills a slot of its parent's row, so it would change every human's
+  attack. A re-cut with `gen_troll_anim_clips.ps1` blanks the box again (its lines 270 and 436), so re-run
+  `set_clip_balance_name.py` after one. OWED: the in-game check of the troll's swings and blocked recoils (a Custom
+  Battle, then the rgl log). UNVERIFIED: the animation map reads Loading Type 2 ("Never load", no segment) on 48 of
+  the 62 troll release and blocked clips, `anim_hill_troll_release_overswing_2h` among them, and what the engine
+  plays for a self-keyed row whose clip is at 2 is not known; that smoke answers it.
+- **Hand pose morphs (2026-09-26):** every race's LOD0 arm or hand mesh carries 26 hand-pose channels (the human
+  skeleton has no finger bones, so a grip or a fist is shape keys; the uruk, pale uruk and dwarf all have them, on
+  LOD0 only). `hill_troll_a_hands` had none, so the troll's fingers never closed on its weapon; nothing crashes
+  without them (the cave troll's hands have none either). The first transfer failed twice over. Its reference, the
+  Isengard uruk's arms mesh, still moves at mid-forearm, so it pulled the troll's wrist seam by up to 16% of the
+  channel peak (a torn wrist). And it wrote all 26 channels at weight 1.0: Blender 5.2's `Object.shape_key_add`
+  creates a key at value 1.0 and the FBX exporter writes that weight as `DeformPercent`, so the torn file
+  re-imported with every pose applied at once (hands up to 9.27 units off rest). **The redo**
+  (`tools/blender/transfer_hand_morphs.py`) takes the pale uruk's hand, `SK_Pale_Uruk_BM_A_Hand` in
+  `AssetSources/Race Test/Gundabad/SK_GB_Pale_Uruk_Basemesh_A.fbx`: each hand framed by geometry (wrist to knuckles;
+  the palm side from the thumb, because the troll's re-framed hand bone points about 50 degrees off its fingers),
+  fitted per axis and bound with Surface Deform so the thick troll fingers turn rather than shear, `--smooth 6`,
+  the wrist seam pinned over three rings (`--seam-rings 3`) and gated at 2% of the channel peak, exactly 26
+  channels, the two palms checked as mirror images (dot at least 0.5), previews of both hands, and every channel
+  written at weight 0. Live apply 11:45:28: 40 seam vertices, palm mirror dot 0.993, and a reported "seam max 0.0"
+  against the limit 0.01035 (peak 0.5175) that proves nothing (below); `audit_fbx_lods.py --diff` shows only
+  `hill_troll_a_hands: channels 0 -> 26`, bind pose drift 5.2e-06 on the axes and 2.7e-05 on the offsets. Backups
+  beside the live FBX: `hill_troll_a.fbx.bak-handmorphs` (clean, before any hand morph) and `.bak-handmorphs-torn`.
+  Mike's Kit re-import (12:01:24) kept the physics (`Usage` `human`, 28 bones, 28 bodies, 34 constraints) and bound
+  every mesh to `t_tr_hill_troll_{body,cloth,head,eye}_a`. `add_face_morph_channels.py` now writes its channels at
+  weight 0 too and checks its round trip with `add_mesh_lods.compare(rekeyed=)`; `python
+  tools/check_race_morph_channels.py` gates the counts (hill troll head, eye and mouth 101, hands 26; the dwarf f1's
+  head, eye and mouth 101, arms 26). Seen in game 2026-09-26 12:18 to 12:25: the morphs fine, the wrist "way
+  better" than the torn cut (Mike).
+  **The seam gate as written can never fail** (tools review, 2026-09-26): the tool pins the seam first (every seam
+  vertex that moves gets weight 0, and only moving vertices are written), then reads the seam back from the
+  written keys, so it reads 0.0 whatever the reference. Fed the torn run's numbers (seam 0.089 against a peak of
+  0.552), it passes; so would the Isengard arms mesh that tore the wrist. "Seam max 0.0" is not evidence of a clean
+  wrist. The real checks were the `--preview` renders and Mike's look in game. OWED (follow-up): a gate on the raw
+  seam movement before the pin, plus a check that the pin held.
+  **Channel weights:** the hands' 26 channels sit at `DeformPercent` 0, but the head, `.eye` and `.mouth` channels
+  (101 each), written by the face run on 2026-09-25 before the weight fix, still carry `DeformPercent` 100 (read
+  from the live FBX 2026-09-26). They hold no offsets, so the geometry is unaffected; whether the Kit or the engine
+  applies `DeformPercent` at all is unverified. Nothing gates the weights: `check_race_morph_channels.py` counts
+  channels, `audit_fbx_lods.py` reads names only, and `add_face_morph_channels.py` leaves an object that already
+  has 101 channels alone, so it cannot rewrite them. OWED (follow-up): record and gate the weights, and a face
+  re-run at weight 0 with a Kit re-import.
+- **The war hammer (2026-09-26):** KEYForce's `troll_rig_base_01.blend` carried the troll's hammer as
+  `SM_TR_Hammer_Blade_A`, `SM_TR_Hammer_Handle_A` and `bo_SM_TR_Hammer_Blade_A`. `tools/oneoff/export_hill_troll_hammer.py`
+  exported them renamed (`wm_hill_troll_2h_hammer_head.lod0`, `wm_hill_troll_2h_hammer_handle.lod0`,
+  `bo_wm_hill_troll_2h_hammer_head`; material `t_tr_hill_troll_hammer_a`, the body on `metal_iron`) to
+  `LOTRLOME_Armory/AssetSources/weapons/Mordor/troll/wm_hill_troll_ws_1.fbx`, and `tools/blender/add_mesh_lods.py
+  --levels 1,2,3,4,5 --ratios 0.7,0.3,0.15,0.07,0.03` added LOD1 to LOD5 (the head 1,010 triangles down to 29 at
+  LOD5, the handle 672 to 20). Mike imported and saved it in the Kit at 11:39:
+  `Assets/weapons/Mordor/troll/wm_hill_troll_ws_1_geo.tpac` holds the head and handle metameshes and the
+  `bo_wm_hill_troll_2h_hammer_head` physics shape, every LOD on `t_tr_hill_troll_hammer_a`, with its runtime-data
+  entry. `tools/oneoff/add_hill_troll_hammer_items.py --apply` (11:40:55; it refuses until that package holds all
+  three names, because a `body_name` no package ships hangs the preload, #352) cloned the cave troll's two-handed
+  mace into two crafting pieces (head `length` and `blade_length` 69.63, handle `length` 350.96 and `piece_offset`
+  95), their `TwoHandedMace` registrations and the crafted item `wm_hill_troll_2h_hammer_a`, "[Mordor] Hill Troll War
+  Hammer I", with English names only; the six live files and their backups are in the
+  [ledger](../reference/lotrlome-hill-troll-changes.md). The `hill_troll` troop's battle and civilian `Item0` now
+  name it instead of `wm_cave_troll_2h_mace_a`. Gates after the apply: `validate_moduledata.py` exit 0,
+  `validate_mesh_refs.py --scan-bodies` 0 missing meshes and bodies, `validate_xml_schemas.py` PASS,
+  `check_external_xslt.py` 17 clean. Seen in game 2026-09-26 12:18 to 12:25: in the troll's hands, head at the far
+  end (Mike). The head's `distance_to_previous_piece` 0 is dead data: when a piece has a `length`, the engine sets
+  both distances to half of it (`TaleWorlds.Core.CraftingPiece`), so the head's base sits flush on the handle's end.
+  **Weight (14:07):** the clone did not keep the mace's damage. The engine stores no damage for a crafted weapon; it
+  simulates swing speed and damage from each piece's geometry and weight (`TaleWorlds.Core.Crafting`), and the
+  longer, heavier hammer priced at swing speed 12 and 23 Blunt against the cave mace's 28 and 86. The head's
+  `weight` went from 1.23 to 0.875 (backup `LOTRLOME_crafting_pieces.xml.bak-hammerweight-20260926-140745`), and
+  the engine port (`tools/melee_catalogue.price`, read 2026-09-26) now prices the hammer at 86 Blunt, swing speed
+  28, reach 3.40 m (the cave mace: 86, 28, 3.08 m). OWED: the names in the other languages (#679); the swing speed and
+  damage read from an in-game tooltip against the cave mace; the troll's own swings in game (the swing CTD entry).
 - **Mouth textures (2026-09-25):** Mike asked where `t_hilltroll_mouth` lived. Not in any package or FBX: every
   `hill_troll` skin's `<mouth_textures>` named it (17 entries of the OLD troll's material, the kids the human
   `mouth_mat*`), and the engine puts that material on the head's `face_mouth_mesh`, so the new head's mouth would

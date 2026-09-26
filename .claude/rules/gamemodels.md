@@ -6,7 +6,7 @@ paths:
 
 # GameModel Override Rules
 
-TAOM has 51 GameModel overrides (50 registered + 1 abstract base). All follow the same pattern.
+TAOM has 51 GameModel overrides, the parked and abstract ones included (`tools/lint_docs.py` checks the total). All follow the same pattern.
 
 ## Pattern
 
@@ -59,7 +59,7 @@ protected override void OnGameStart(Game game, IGameStarter gameStarter)
 }
 ```
 
-## Existing Overrides (50 total: 49 registered + 1 abstract base)
+## Existing Overrides (51 total)
 
 | Model | Base | Feature |
 |-------|------|---------|

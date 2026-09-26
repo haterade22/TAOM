@@ -103,7 +103,7 @@ Pure-class formations (only melee or only ranged) and tiny formations are left a
 
 ### Two MCM settings the original developer shipped were dead code — removed on port
 
-The original `MixedFormations` module exposed `InfantryRowDepth` (1–10, default 3) and `RangedRowDepth` (1–10, default 2) settings with HintText promising "Rows of infantry when infantry is in front" — but no code in the module ever read either field. The actual `filesPerRow` is computed from formation `Width / (Interval + 1)`. Per the memory rule `feedback_user_facing_promise_must_match_code`, the dead settings were removed on port rather than ship a mismatch.
+The original `MixedFormations` module exposed `InfantryRowDepth` (1 to 10, default 3) and `RangedRowDepth` (1 to 10, default 2) settings with HintText promising "Rows of infantry when infantry is in front", but no code in the module ever read either field. The actual `filesPerRow` is computed from formation `Width / (Interval + 1)`, or `Width / (Interval + UnitDiameter)` when the unit is wider than a metre (`LayoutPositioner.UnitPitch`, 2026-09-26): a troll formation through Patch92, or a formation at least a tenth mounted, whose vanilla `UnitDiameter` is 1.6 m (`QuadrupedalRadius` times two, `IFormationAdapter.UnitDiameter`). Per the memory rule `feedback_user_facing_promise_must_match_code`, the dead settings were removed on port rather than ship a mismatch.
 
 ## Key Files
 

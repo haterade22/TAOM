@@ -617,6 +617,18 @@ Skipped, never faked, without the install; a run that finds no Armory packs is i
 About 3.5 s, almost all of it `validate_mesh_refs.extract_refs` (the TOC scan is 0.2 s). Tests:
 `tools/tests/test_collision_body_borrowed.py` (14, synthetic, no install needed).
 
+**Which packs count as shipped.** This gate, `MISSING_COLLISION_BODY` and `MISSING_VISUAL_MESH`
+take their tpac list from `validate_mesh_refs.tpac_paths_for_modules`, as `audit_armory_refs.py`
+does: per module, the loose `Assets/**/*.tpac` when it has any, and the cooked
+`AssetPackages/*.tpac` only for a module with no loose tree (Native). The loose tree is what the
+engine loads. Until 2026-09-26 the validator, `validate_mesh_refs.py` and `audit_armory_refs.py`
+preferred a cooked tree whenever one existed. A cook at 07:36 that day wrote the Armory's
+`AssetPackages/pack0-9.tpac`, the 08:41 game session still logged `Loading packages
+$BASE/Modules/LOTRLOME_Armory/Assets...`, and from 07:36 the gates read stale packs: the new hill
+troll hammer read MISSING (its commit would have been blocked) and art deleted from `Assets/` would
+have passed. Test: `test_loose_assets_win_when_both_trees_exist` in
+`tools/tests/test_validate_mesh_refs.py`.
+
 ## Key Files
 
 | File | Purpose |
@@ -828,6 +840,11 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
 
 ## Changelog
 
+- 2026-09-26: `MISSING_COLLISION_BODY`, `MISSING_VISUAL_MESH` and `COLLISION_BODY_BORROWED` read
+  the loose `Assets/` tree first, through `validate_mesh_refs.tpac_paths_for_modules`, instead of
+  preferring a cooked `AssetPackages/` tree. A cook that morning left stale Armory packs beside the
+  loose tree the engine loads, and the cooked-first order read the hill troll hammer as MISSING.
+  See "Which packs count as shipped" above.
 - 2026-09-21: `COLLISION_BODY_BORROWED` added (#633). `MISSING_COLLISION_BODY` asks whether a
   body resolves; a borrowed body does, as another mesh's twin, so three Rhun longbows shipped on
   the elven bow's `bo_wm_elven_bow_a03` while every gate read CLEAN. This asks whether the body is

@@ -92,35 +92,52 @@ class BindHillTests(unittest.TestCase):
         a = {"type": "act_walk_forward_unarmed", "animation": "walk_forward_unarmed"}
         self.assertEqual(bh.bind_hill(a["type"], a, HUMAN, set()), ("walk_forward_unarmed", "inherited"))
 
-    # Melee is engine pose-blend: a swing plays the engine's per-clip pose data, keyed by the vanilla clip's index.
-    # A retargeted clip on act_release_overswing_2h was missing from that table and the first swing crashed
-    # (TaleWorlds.Native.dll +0x6590B9, key 6511 = anim_hill_troll_release_overswing_2h, 2026-09-25).
+    # The melee attack table: the engine keeps per-clip attack data in a map filled when a clip's package loads, and a
+    # clip gets a row only when its metadata UnknownClipName equals its own name (TaleWorlds.Native.dll 0x58BEA0 ->
+    # 0x5682B0; 175 vanilla clips do). Every as_human_warrior action bound to a keyed clip (296) is a release, quick
+    # release, blocked or quick blocked action; a retargeted clip there was looked up, missed and crashed at +0x6590B9
+    # (keys 6511 and 6462, 2026-09-25). The other melee codes never reach that table and keep their troll clips.
     def test_a_swing_keeps_the_vanilla_clip_even_when_a_retargeted_one_exists(self):
         human = HUMAN | {"anim_hill_troll_release_overswing_2h"}
         a = {"type": "act_release_overswing_2h", "animation": "release_overswing_2h"}
-        self.assertEqual(bh.bind_hill(a["type"], a, human, FAB), ("release_overswing_2h", "pose-blend"))
+        self.assertEqual(bh.bind_hill(a["type"], a, human, FAB), ("release_overswing_2h", "melee-table"))
 
-    def test_a_quick_swing_keeps_the_vanilla_clip_too(self):
-        human = HUMAN | {"anim_hill_troll_quick_release_overswing_2h_left_stance"}
-        a = {"type": "act_quick_release_overswing_2h_left_stance",
-             "animation": "quick_release_overswing_2h_left_stance"}
-        self.assertEqual(bh.bind_hill(a["type"], a, human, FAB),
-                         ("quick_release_overswing_2h_left_stance", "pose-blend"))
-
-    # The swings alone were not enough: with them vanilla, the next crash came with only the wind-up
-    # (anim_hill_troll_ready_overswing_2h) playing among the troll clips. The whole melee exchange keeps vanilla.
-    def test_every_melee_exchange_code_keeps_the_vanilla_clip(self):
-        for code in ("act_ready_slashright_2h", "act_quick_ready_overswing_2h", "act_blocked_slashright_2h",
-                     "act_parried_overswing_2h", "act_defend_up_2h_passive", "act_guard_up_2h",
-                     "act_kick_right", "act_2h_bash", "act_2h_bash_left_stance"):
+    def test_every_attack_table_family_keeps_the_vanilla_clip(self):
+        for code in ("act_release_overswing_2h", "act_quick_release_overswing_2h_left_stance",
+                     "act_blocked_slashright_2h", "act_quick_blocked_thrust_2h_left_stance"):
             vanilla = code[len("act_"):]
             human = HUMAN | {"anim_hill_troll_" + vanilla}
             self.assertEqual(bh.bind_hill(code, {"type": code, "animation": vanilla}, human, FAB),
-                             (vanilla, "pose-blend"), code)
+                             (vanilla, "melee-table"), code)
 
-    def test_hit_reactions_staggers_and_falls_keep_their_troll_clips(self):
-        for code in ("act_stagger_forward_2h", "act_fall_back_heavy", "act_jump", "act_strike_chest_front"):
-            self.assertIsNone(bh.POSE_BLEND.match(code), code)
+    # A troll clip whose "Blends with animation" holds its own name has a table row, exactly as vanilla's 175
+    # self-keyed swings do (tools/set_clip_balance_name.py writes it; the Kit writes the same shape).
+    def test_a_self_keyed_troll_swing_takes_the_code(self):
+        human = HUMAN | {"anim_hill_troll_release_overswing_2h"}
+        a = {"type": "act_release_overswing_2h", "animation": "release_overswing_2h"}
+        self.assertEqual(bh.bind_hill(a["type"], a, human, FAB, keyed={"anim_hill_troll_release_overswing_2h"}),
+                         ("anim_hill_troll_release_overswing_2h", "melee-keyed"))
+
+    def test_a_keyed_clip_the_index_does_not_list_keeps_the_vanilla_clip(self):
+        a = {"type": "act_release_overswing_2h", "animation": "release_overswing_2h"}
+        self.assertEqual(bh.bind_hill(a["type"], a, HUMAN, FAB, keyed={"anim_hill_troll_release_overswing_2h"}),
+                         ("release_overswing_2h", "melee-table"))
+
+    def test_the_balanced_code_keeps_vanilla_when_only_the_base_clip_is_keyed(self):
+        human = HUMAN | {"anim_hill_troll_release_overswing_2h", "anim_hill_troll_release_overswing_2h_balanced"}
+        a = {"type": "act_release_overswing_2h_balanced", "animation": "release_overswing_2h_balanced"}
+        self.assertEqual(bh.bind_hill(a["type"], a, human, FAB, keyed={"anim_hill_troll_release_overswing_2h"}),
+                         ("release_overswing_2h_balanced", "melee-table"))
+
+    def test_wind_ups_guards_defends_kicks_and_bashes_keep_their_troll_clips(self):
+        for code in ("act_ready_overswing_2h", "act_quick_ready_overswing_2h", "act_defend_up_2h_passive",
+                     "act_guard_up_2h", "act_kick_right", "act_2h_bash", "act_parried_overswing_2h",
+                     "act_stagger_forward_2h", "act_strike_chest_front"):
+            self.assertIsNone(bh.MELEE_TABLE.match(code), code)
+
+    def test_the_wind_up_takes_the_retargeted_clip(self):
+        a = {"type": "act_ready_slashright_2h", "animation": "ready_slashright_2h"}
+        self.assertEqual(bh.bind_hill(a["type"], a, HUMAN, FAB), ("anim_hill_troll_ready_slashright_2h", "human"))
 
 
 class ReuseTests(unittest.TestCase):
@@ -168,7 +185,7 @@ class BodyTests(unittest.TestCase):
         self.assertIn('blend_in_period="0.3"', inventory)
         self.assertNotIn("act_disabled_thing", " ".join(lines))   # commented out in Native: not an active code
         # no brute-force clip in FAB: the extra is left out
-        self.assertEqual(counts, {"fab": 4, "pose-blend": 2, "reuse": 2, "inherited": 1})
+        self.assertEqual(counts, {"fab": 4, "human": 1, "melee-table": 1, "reuse": 2, "inherited": 1})
 
     def test_the_brute_force_action_is_appended_when_its_clip_exists(self):
         lines, counts = bh.build_body(actions(), HUMAN, FAB | {"anim_hill_troll_attack1"})
@@ -197,6 +214,17 @@ class BodyTests(unittest.TestCase):
         once, _ = bh.replace_body(LIVE, lines, "\r\n")
         twice, _ = bh.replace_body(once, lines, "\r\n")
         self.assertEqual(once, twice)
+
+    def test_the_header_states_the_melee_table_rule(self):
+        # whoever reads the live XML sees why the release and blocked codes play human clips on purpose
+        lines, _ = bh.build_body(actions(), HUMAN, FAB)
+        new_text, _ = bh.replace_body(LIVE, lines, "\r\n")
+        root = ET.fromstring(new_text.lstrip("﻿").encode("utf-8"))   # still one well-formed comment
+        self.assertEqual(len([s for s in root if s.get("id") == "as_hill_troll_warrior"]), 1)
+        header = new_text[new_text.index("GENERATED by"):new_text.index("-->", new_text.index("GENERATED by"))]
+        self.assertIn("release, quick release, blocked and quick blocked codes keep the vanilla clip unless", header)
+        self.assertIn("Blends with animation", header)
+        self.assertIn("crashes the first swing", header)
 
 
 class PosesTests(unittest.TestCase):
@@ -316,6 +344,49 @@ class MainTests(unittest.TestCase):
         self.assertEqual(rc, 2)
         self.assertIn("clips folder not found", err)
         self.assertEqual(self.read_live(), before)
+
+    def test_an_empty_clips_folder_is_refused(self):
+        # an empty folder would unbind every troll clip and put the whole set back on the human clips
+        empty = os.path.join(self._tmp.name, "empty")
+        os.mkdir(empty)
+        before = self.read_live()
+        with mock.patch.object(bh, "game_or_kit_running", return_value=False):
+            rc, _, err = self.run_main("--clips-dir", empty, "--apply")
+        self.assertEqual(rc, 2)
+        self.assertIn("ERROR", err)
+        self.assertIn("no Fab anim_hill_troll_* clip", err)
+        self.assertEqual(self.read_live(), before)
+
+    def test_the_clips_index_is_required(self):
+        # without an index every retargeted human clip unbinds, which reads as a clean dry run
+        argv = ["--live", self.live, "--native", self.native, "--fab-names", self.names,
+                "--clips-dir", self.clips, "--renames", ""]
+        before = self.read_live()
+        with contextlib.redirect_stderr(io.StringIO()) as err, self.assertRaises(SystemExit) as cm:
+            bh.main(argv)
+        self.assertEqual(cm.exception.code, 2)
+        self.assertIn("--clips-index", err.getvalue())
+        self.assertEqual(self.read_live(), before)
+
+    def test_an_index_that_matches_no_clip_on_disk_is_refused(self):
+        # every retargeted binding would fall back to the human clip in a run that reads as clean
+        write(self.idx, json.dumps({"no_such_clip": {}, "nor_this": {}}))
+        before = self.read_live()
+        with mock.patch.object(bh, "game_or_kit_running", return_value=False):
+            rc, _, err = self.run_main("--apply")
+        self.assertEqual(rc, 2)
+        self.assertIn("no retargeted clip", err)
+        self.assertEqual(self.read_live(), before)
+
+    def test_a_self_keyed_package_on_disk_binds_its_release_code(self):
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import test_set_clip_balance_name as tp
+        name = "anim_hill_troll_blocked_slashright_2h"
+        with open(os.path.join(self.clips, name + "_anm.tpac"), "wb") as fh:
+            fh.write(tp.package(name=name, m=tp.meta(field=name, blends_action="")))
+        rc, out, _ = self.run_main()
+        self.assertEqual(rc, 0)
+        self.assertIn("melee-keyed 1", out)
 
     def test_apply_refuses_while_the_game_or_kit_runs(self):
         before = self.read_live()

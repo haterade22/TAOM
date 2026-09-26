@@ -504,12 +504,16 @@ def export(path):
         use_mesh_modifiers=False, path_mode="AUTO")
 
 
-def compare(before, after, built, deleted=(), renamed=None, remapped=None):
+def compare(before, after, built, deleted=(), renamed=None, remapped=None, rekeyed=None):
     """Every object this run did not rebuild, rename or delete must come back as it was; every
     rebuilt or new one as built; every renamed one as it was under its old name; every deleted
-    one not at all (unless a rename took its name)."""
+    one not at all (unless a rename took its name). `rekeyed` maps an object that only gained
+    shape keys to its expected full key list: its geometry must come back as it was and its
+    channels exactly as expected after the reference key, which the FBX importer names itself
+    (add_face_morph_channels.py, transfer_hand_morphs.py)."""
     renamed = renamed or {}
     remapped = remapped or {}
+    rekeyed = rekeyed or {}
     diffs = []
     lost = sorted(set(before) - set(after) - set(deleted))
     if lost:
@@ -531,6 +535,11 @@ def compare(before, after, built, deleted=(), renamed=None, remapped=None):
             if key in ("dims", "loc"):
                 if not same_vector(b[key], a[key]):
                     diffs.append("%s: %s %r -> %r" % (name, key, b[key], a[key]))
+            elif key == "shape_keys" and name in rekeyed:
+                want = list(rekeyed[name])
+                if list(a[key][1:]) != want[1:]:
+                    diffs.append("%s: channels expected %d, re-imported %d (first %s)"
+                                 % (name, max(len(want) - 1, 0), max(len(a[key]) - 1, 0), a[key][1:3]))
             elif key == "materials" and name in remapped:
                 # the export folds two slots naming one material, so compare the names as sets
                 if set(a[key]) != set(remapped[name]):

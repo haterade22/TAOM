@@ -117,6 +117,40 @@ public static class PatchShieldPolicy
     }
 
     /// <summary>
+    /// Method-level hot-target exclusion list: "&lt;FullTypeName&gt;.&lt;MethodName&gt;" entries for engine
+    /// members whose declaring TYPE is not hot enough to exclude by namespace (Patch92's own targets sit
+    /// in the otherwise-ordinary <c>TaleWorlds.MountAndBlade</c> namespace) but whose own call frequency
+    /// makes a per-call <c>__originalMethod</c> finalizer tax unacceptable: <c>Formation.get_UnitDiameter</c>
+    /// runs per unit per formation-positioning query, and the order preview, the deployment placement and
+    /// the spawn frames all walk every unit through <c>GetUnitPositionWithIndexAccordingToNewOrder</c>
+    /// (three overloads, one entry covers all of them) and <c>GetUnitSpawnFrameWithIndex</c>. Same rationale
+    /// as the namespace list's #331 (Gauntlet UI) and Patch38 (SettlementNameplateWidget) entries, applied
+    /// at method granularity instead of namespace granularity.
+    ///
+    /// PatchShield skips an excluded method for every owner, so a third-party patch on one of these methods
+    /// also loses the rescue. Patch92BindingTests walks Patch92's real targets through
+    /// <see cref="IsExcludedTargetMethod"/>, so a new or renamed target fails there rather than being shielded.
+    /// </summary>
+    public static readonly IReadOnlyList<string> ExcludedTargetMethods = new[]
+    {
+        "TaleWorlds.MountAndBlade.Formation.get_UnitDiameter",
+        "TaleWorlds.MountAndBlade.Formation.GetUnitPositionWithIndexAccordingToNewOrder",
+        "TaleWorlds.MountAndBlade.Formation.GetUnitSpawnFrameWithIndex",
+    };
+
+    /// <summary>Whether a patch target's declaring type + method name is on the hot-method exclusion list.</summary>
+    public static bool IsExcludedTargetMethod(string? declaringType, string? name)
+    {
+        if (string.IsNullOrEmpty(declaringType) || string.IsNullOrEmpty(name)) return false;
+        var key = declaringType + "." + name;
+        foreach (var entry in ExcludedTargetMethods)
+        {
+            if (string.Equals(entry, key, StringComparison.Ordinal)) return true;
+        }
+        return false;
+    }
+
+    /// <summary>
     /// The diag.log line for one shield pass. "seen" counts every method the passes so far decided on,
     /// skipped ones included; "attached" counts the methods carrying PatchShield's finalizer, the
     /// real coverage (they were one conflated "total" before 2026-09-24). The timing

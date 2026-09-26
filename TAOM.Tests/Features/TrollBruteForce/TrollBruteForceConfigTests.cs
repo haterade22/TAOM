@@ -22,6 +22,15 @@ public class TrollBruteForceConfigTests
     }
 
     [TestMethod]
+    public void ShoulderWidthByMonster_KeySet_MatchesActionSetsByMonster()
+    {
+        // The formation tracker asks IsBruteForceTroll (the action-set table) before TrollWidth (the width
+        // table): a Monster in the width table alone would never widen its formation.
+        CollectionAssert.AreEquivalent(TrollBruteForceConfig.ActionSetsByMonster.Keys.ToList(),
+            TrollBruteForceConfig.ShoulderWidthByMonster.Keys.ToList());
+    }
+
+    [TestMethod]
     public void Ring_HasAPositiveInnerRadiusInsideTheOuter()
     {
         Assert.IsTrue(TrollBruteForceConfig.InnerRadius > 0f);

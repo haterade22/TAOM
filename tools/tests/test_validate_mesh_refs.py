@@ -372,9 +372,10 @@ class KnownDeadMeshProductionDataTests(unittest.TestCase):
 
 
 class TpacModuleFallbackTests(unittest.TestCase):
-    """A module with no cooked packs must fall back to Assets/, not vanish from
-    the present-set. LOTRLOME_Armory has been in that state since v2.0.23, and
-    without the fallback every mesh it owns read as MISSING."""
+    """Which tree each module contributes: the loose Assets/ tree the engine loads
+    whenever it has one, the cooked AssetPackages/ only for a module without one
+    (Native), and a module with neither announced, never silently dropped (every
+    mesh it owns would read as MISSING)."""
 
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -386,23 +387,33 @@ class TpacModuleFallbackTests(unittest.TestCase):
         m.mkdir(parents=True, exist_ok=True)
         return m
 
-    def test_cooked_packs_are_preferred_when_present(self):
-        m = self._module("Cooked")
+    def test_loose_assets_win_when_both_trees_exist(self):
+        # The engine loads Assets/ over a cooked tree it also has (rgl_log "Loading packages
+        # $BASE/Modules/LOTRLOME_Armory/Assets..." after the 2026-09-26 cook), so a cooked pack
+        # is stale evidence: it hid a new hammer and would pass art deleted from Assets/.
+        m = self._module("Both")
         (m / "AssetPackages").mkdir()
         (m / "AssetPackages" / "pack0.tpac").write_bytes(b"x")
         (m / "Assets" / "sub").mkdir(parents=True)
         (m / "Assets" / "sub" / "loose.tpac").write_bytes(b"x")
+        got = [p.name for p in vm.tpac_paths_for_modules(self.game, ["Both"])]
+        self.assertEqual(got, ["loose.tpac"])
+
+    def test_cooked_packs_serve_a_module_with_no_loose_tree(self):
+        m = self._module("Cooked")
+        (m / "AssetPackages").mkdir()
+        (m / "AssetPackages" / "pack0.tpac").write_bytes(b"x")
         got = [p.name for p in vm.tpac_paths_for_modules(self.game, ["Cooked"])]
         self.assertEqual(got, ["pack0.tpac"])
 
-    def test_falls_back_to_loose_assets_when_no_cooked_tree(self):
+    def test_a_module_with_only_a_loose_tree_uses_it(self):
         m = self._module("Loose")
         (m / "Assets" / "sub").mkdir(parents=True)
         (m / "Assets" / "sub" / "loose.tpac").write_bytes(b"x")
         got = [p.name for p in vm.tpac_paths_for_modules(self.game, ["Loose"])]
         self.assertEqual(got, ["loose.tpac"])
 
-    def test_empty_cooked_dir_still_falls_back(self):
+    def test_an_empty_cooked_dir_does_not_hide_the_loose_tree(self):
         m = self._module("EmptyCooked")
         (m / "AssetPackages").mkdir()
         (m / "Assets").mkdir()
@@ -410,9 +421,39 @@ class TpacModuleFallbackTests(unittest.TestCase):
         got = [p.name for p in vm.tpac_paths_for_modules(self.game, ["EmptyCooked"])]
         self.assertEqual(got, ["loose.tpac"])
 
+    def test_an_assets_folder_holding_no_tpac_leaves_the_cooked_packs(self):
+        # NavalDLC's layout: an Assets/ folder with no packages, the packages cooked
+        m = self._module("Naval")
+        (m / "Assets").mkdir()
+        (m / "Assets" / "readme.txt").write_bytes(b"x")
+        (m / "AssetPackages").mkdir()
+        (m / "AssetPackages" / "pack0.tpac").write_bytes(b"x")
+        got = [p.name for p in vm.tpac_paths_for_modules(self.game, ["Naval"])]
+        self.assertEqual(got, ["pack0.tpac"])
+
+    def test_module_tpacs_keeps_the_callers_path(self):
+        # validate_moduledata passes its own Modules path; rebuilding "<parent>/Modules" dropped a lowercase
+        # "modules" spelling out of the borrowed-body filter, which compares path prefixes
+        mods = self.game / "mods"
+        (mods / "LOTRLOME_Armory" / "Assets").mkdir(parents=True)
+        (mods / "LOTRLOME_Armory" / "Assets" / "a.tpac").write_bytes(b"x")
+        got = vm.module_tpacs(mods / "LOTRLOME_Armory", "LOTRLOME_Armory")
+        self.assertEqual(got, [mods / "LOTRLOME_Armory" / "Assets" / "a.tpac"])
+
     def test_module_with_no_tpac_at_all_contributes_nothing(self):
         self._module("Bare")
         self.assertEqual(vm.tpac_paths_for_modules(self.game, ["Bare"]), [])
+
+    def test_a_module_with_neither_tree_is_announced_once_per_process(self):
+        import contextlib
+        import io
+        self._module("Silent")
+        vm._WARNED_EMPTY_MODULES.discard("Silent")
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err):
+            vm.tpac_paths_for_modules(self.game, ["Silent"])
+            vm.tpac_paths_for_modules(self.game, ["Silent"])
+        self.assertEqual(err.getvalue().count("'Silent' contributes no .tpac"), 1)
 
     def test_missing_module_is_not_an_error(self):
         self.assertEqual(vm.tpac_paths_for_modules(self.game, ["Absent"]), [])

@@ -529,6 +529,40 @@ set then named a clip that did not exist; an in-game hit on that code would have
 - **Source:** `tools/bind_hill_troll_action_set.py` `available_clips`; `docs/features/troll-race.md` "Human clips for
   the hill troll".
 
+### No Windows dump while a debugger holds the game: Visual Studio, or TaleWorlds' own Watchdog (2026-09-26)
+Three troll crashes in a row left no Event Log entry and no dump: Visual Studio was attached, so the access
+violation stopped in the debugger, and ending the session killed the process before Windows saw it. procdump
+`-e -w` then refused with "The process is already being debugged": the launcher starts `Watchdog.exe -p <pid> -dd
+...\crashes`, TaleWorlds' crash catcher, which attaches as a debugger itself.
+- **Why missed:** the earlier crashes of the day had produced dumps, so their absence read as a different crash
+  rather than a changed setup.
+- **Prevent:** reproduce a native crash with no debugger attached; if Visual Studio is attached, Detach All at the
+  exception, never Stop. Only one debugger can hold the process, so procdump cannot attach while the Watchdog runs;
+  a debugger's `$exception` still gives `_ip` and `_target`, enough to match the fault offset.
+- **Source:** `docs/features/troll-race.md` "The swing CTD".
+
+### A native hash-map miss names its missing key in a register: read it from the dump, resolve it in game (2026-09-25)
+The +0x6590B9 crash was a chained hash lookup whose miss left a null row. The missing key stayed in `r9` in the
+exception context of all three dumps (6511, 6511, 6462); a one-off in-game scan of every action's clip index named
+it `anim_hill_troll_release_overswing_2h`. After that, reading the table's builder in the disassembly (RTTI named the
+owning class, the insert call named the rule) replaced three rounds of guessing the scope from crashes.
+- **Why missed:** the crash had been treated as unreadable because the dump holds no heap; the register needed no
+  heap.
+- **Prevent:** `python tools/native_crash_triage.py --dump <dmp>` now prints the faulting thread's registers; for a
+  lookup miss, find which register holds the key in the disassembly, then name it in game. Before widening a data
+  rule to dodge a native crash, find the code that fills the table.
+- **Source:** `docs/features/troll-race.md` "The swing CTD"; `tools/native_crash_triage.py`.
+
+### Blender Surface Deform with a shape-keyed target moves half the mesh: drive the target's vertices instead (2026-09-26)
+`transfer_hand_morphs.py` first played each uruk hand pose through shape keys on the fitted uruk hand that Surface
+Deform follows. With one key at 1, even a key identical to its basis, half the troll hand jumped 4.8 m, while the
+fitted hand itself evaluated exactly. Writing each pose into the fitted mesh's own vertex positions gives exact
+results (rest error 2.8e-6 m).
+- **Why missed:** shape keys are the natural way to hold 26 poses, and the fitted mesh's own evaluation was right.
+- **Prevent:** drive a Surface Deform target through its vertex coordinates (`foreach_set("co", ...)`), not shape
+  keys, and check a no-op pose moves nothing before trusting any other.
+- **Source:** `tools/blender/transfer_hand_morphs.py`.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by
@@ -2788,3 +2822,72 @@ The unit test and the timing rows covered only the shape the sort was written fo
   item, and an ordering is only a speed-up on top of it.
 - **Source:** `docs/reviews/deep-review-027-powershell-gate-coverage-2026-09-24.md`, section "After
   the convergence pass".
+
+### A gate that prefers a cooked asset tree reads stale art (2026-09-26)
+A cook at 07:36 on 2026-09-26 wrote the Armory's `AssetPackages/pack0-9.tpac`. `validate_mesh_refs.py`,
+`validate_moduledata.py` (`MISSING_COLLISION_BODY`) and `audit_armory_refs.py` preferred a cooked tree wherever one
+existed, so from 07:36 they read those packs: the hill troll hammer, saved in the Kit at 11:39, read MISSING and would
+have blocked the commit hook, and art deleted from `Assets/` would have passed. The game never read that tree: the
+08:41 session still logged `Loading packages $BASE/Modules/LOTRLOME_Armory/Assets...`.
+- **Why missed:** a recurrence of "A mesh validator that resolves against cooked packs cannot see art deleted after
+  the last cook" (`data-content-cultures.md`, 2026-08-28). The 2026-09-01 correction in `armory-guide.md` proved from
+  the engine log that the loose tree wins, then called the stale-pack trap unreachable because the Armory had no
+  cooked tree, and the tools kept their cooked-first order. The first cook made the trap live again.
+- **Prevent:** a gate reads the tree the engine's own `Loading packages` line names, never the one that looks more
+  final. The mesh and body gates (`validate_mesh_refs`, `validate_moduledata`, `audit_armory_refs`,
+  `audit_gender_variation_flags`) take their present-set from `validate_mesh_refs.tpac_paths_for_modules` (a module's loose
+  `Assets/**` when it has one, cooked packs only for a module without one, Native), pinned by
+  `test_loose_assets_win_when_both_trees_exist`. When a doc calls a trap unreachable because of how the data happens
+  to look today, fix the code anyway or add a check that fails when the data changes.
+- **Source:** `docs/reference/armory-guide.md` "Two asset trees, and why a clean validator run can lie";
+  `tools/validate_mesh_refs.py` `tpac_paths_for_modules`; `tools/tests/test_validate_mesh_refs.py`.
+
+### A line anchor ending in `.*` splits a CRLF line: the insert lands between `\r` and `\n` (2026-09-26)
+`tools/oneoff/add_hill_troll_hammer_items.py` found its anchor with `^([ \t]*).*anchor.*$` under `re.M` and inserted
+at the match end. On a CRLF line `.*` takes the `\r` and `$` stops before the `\n`, so the hammer lines went in
+between the two: three live Armory files (`weapon_descriptions.xslt`, `crafting_templates.xslt`,
+`Languages/loc_LOTRAOM_weapons.xml`) gained one `\r\r\n` and one bare `\n`, and the tracked snapshot copy of
+`weapon_descriptions.xslt` inherited them. Every gate passed, because the files still parse; the docs-pass checker
+found it by counting terminators.
+- **Why missed:** the tool detected the file's terminator and emitted it for every line it wrote, and read that as
+  byte-faithful. The parse-before-write check, which the XML I/O convention mandates, cannot see a terminator. No
+  test covered the insert helper on CRLF text.
+- **Prevent:** match a line body with `[^\r\n]*` and end it with `(?=\r?\n|\Z)`, never `.*$`. Give any helper that
+  splices text into a file a CRLF test case (`tools/tests/test_add_hill_troll_hammer_items.py`). When checking a
+  write, compare the counts of `\r\r\n` and bare `\n` before and after, as well as parsing.
+- **Source:** `tools/oneoff/add_hill_troll_hammer_items.py` `insert_after_line`; `tools/README.md` "XML I/O
+  convention"; `docs/reference/lotrlome-hill-troll-changes.md`.
+
+### A path gate written with forward slashes never fires on Windows (2026-09-26)
+`config-protection.sh` guarded ADRs with `[[ "$FILE_PATH" == *"/docs/adrs/"* ]]`, but the Edit and Write tools
+pass `E:\repos\TAOM\docs\adrs\x.md`. The pattern never matched, so the ADR guard was dead on the only machine it
+runs on: ADR-012 was created and ADR-010 and the ADR index edited on 2026-09-26 without a challenge (#677), while
+the same hook's `settings.json` check fired, because that one compared `basename`, which splits on both
+separators. An earlier pass had fixed this hook's JSON decoding of Windows paths and left the pattern alone.
+- **Why missed:** the guard was never tested with the path the harness actually sends; every mental check used a
+  forward-slash repo path. A guard that allows is indistinguishable from one that looked and found nothing.
+- **Prevent:** normalise a path before any pattern match in a hook (`${p//\\//}`, then `${p,,}` because NTFS
+  ignores case), and cover the backslash, forward-slash, MSYS, relative and mixed-case spellings in a test
+  (`tools/test_hooks.sh` 7f). Prove a path gate live with a real Edit or Write the harness must refuse.
+- **Source:** `.claude/hooks/config-protection.sh`; `docs/reference/hooks-catalog.md`; `.claude/rules/hook-authoring.md`
+  "Prove a gate live".
+
+### A package check by substring passes the wrong art: the head mesh name is inside the body name (2026-09-26)
+`tools/oneoff/add_hill_troll_hammer_items.py` refuses `--apply` until the hammer's package holds its three names, and
+it tested each one with `name.encode() in blob`. `wm_hill_troll_2h_hammer_head` is a substring of
+`bo_wm_hill_troll_2h_hammer_head`, so the head check passes whenever the body is there, and a body exported as
+`bo_wm_hill_troll_2h_hammer_head_a` passes the body check as well: a package holding only that body and the handle
+clears all three. A `body_name` no package ships is the #352 infinite mission load, the failure the check exists to
+stop. Nothing shipped wrong: the tool ran against a package with the exact names, and `validate_moduledata.py` and
+`audit_armory_refs.py` report a missing body as an ERROR.
+- **Why missed:** a recurrence. `.claude/rules/moduledata-validation.md` already requires "exact-token comparison
+  rather than substring containment" for a script that writes outside the repo, and "Substring keyword matching on
+  names false-matches" is an earlier lesson in this file. The rule is worded for deriving a target set from a report
+  or index, and a presence check on a binary package did not read as the same question. TAOM's art names nest by
+  construction (a body is `bo_` plus its mesh name, LODs add `.lodN`, variants add `_a`), so a substring presence test
+  over them passes on a neighbour.
+- **Prevent:** check a package through its table of contents, by exact name: `validate_mesh_refs.scan_tpac_metameshes`
+  returns the metamesh and physics-shape name sets (on the real hammer package, the head and handle meshes and the one
+  `bo_` body). Test such a check with a package holding only the near-miss name (`bo_..._head_a`), which it must refuse.
+- **Source:** 2026-09-26 tooling review, finding F1; `tools/oneoff/add_hill_troll_hammer_items.py` package check;
+  `tools/validate_mesh_refs.py` `scan_tpac_metameshes`.

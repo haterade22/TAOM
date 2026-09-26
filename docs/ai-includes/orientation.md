@@ -68,7 +68,7 @@ and the gate.
 | Animation | Author on the engine skeleton: engine frames, rest pose at frame 0, list-order hierarchy | [skeleton](../reference/bannerlord-skeleton-authoring.md) |
 | Kit clip rename | Corrupts the clip: keep the name, close the Kit, run `rename_anim_clip_tpac.py` | [tools](../../tools/README.md) |
 | Own-skeleton humanoid | A clip stores parent-relative rotations: re-framing fixes axes only; retarget the clips too | [skeleton](../reference/bannerlord-skeleton-authoring.md) |
-| New race rigs | LOD0 head, eye, mouth need 101 morphs (`add_face_morph_channels.py`); `act_release_*` swings keep vanilla clips. Else CTD | [troll](../features/troll-race.md) |
+| New race rigs | LOD0 head/eye/mouth: 101 morphs (`add_face_morph_channels.py`); release/blocked codes: vanilla or self-keyed clip. Else CTD | [troll](../features/troll-race.md) |
 | UE clip export | The root node carries pelvis height above bind; keep root height, drop only travel and yaw | [pipeline](../reference/ue-to-bannerlord-asset-pipeline.md) |
 | Kit FBX materials | Bound by name module-wide, reset on every re-import; a same-named older material wins silently | [troll](../features/troll-race.md) |
 | Player start kits | Defaults are `starter_<donor>` twins, careers take troop gear; override the roster, never a set | [start kits](../features/starting-equipment-tuning.md) |

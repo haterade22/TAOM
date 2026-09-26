@@ -1504,6 +1504,8 @@
 			<AvailablePiece id="sm_dwarf_erebor_axe_pommel_2h_b2"/>
 			<AvailablePiece id="wm_cave_troll_2h_mace_head"/>
 			<AvailablePiece id="wm_cave_troll_2h_mace_handle"/>
+			<AvailablePiece id="wm_hill_troll_2h_hammer_head"/>
+			<AvailablePiece id="wm_hill_troll_2h_hammer_handle"/>
 			<AvailablePiece id="sm_dwarf_iron_hammer_blade_a"/>
 			<AvailablePiece id="sm_dwarf_iron_hammer_blade_b"/>
 			<AvailablePiece id="sm_dwarf_iron_hammer_blade_c"/>

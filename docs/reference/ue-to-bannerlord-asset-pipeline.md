@@ -270,8 +270,10 @@ Blender 5.2.2 note: `Action.fcurves` is gone (layered actions); read
 
 Owed after this stage (hand steps, `troll-race.md` Track 1): Kit import + compile of the staged
 FBX, `_anm.tpac` clip metadata, `as_cave_troll_warrior` `act_*` overrides, Custom Battle smoke.
-The six attack clips cannot drive melee (engine pose-blend), so bind movement, idle, hit-reaction
-and death codes first.
+Bind movement, idle, hit-reaction and death codes first: a troll clip on a release or blocked code
+crashes the swing unless the engine's melee attack table has a row for it, which a clip gets only through its
+"Blends with animation" box (the clip stage below; [troll-race.md](../features/troll-race.md), "The swing CTD"; the older reason, engine
+pose-blend, is refuted).
 
 ### The clip stage: `_anm.tpac` metadata from vanilla templates (2026-09-17)
 
@@ -284,9 +286,16 @@ and death codes first.
   `make_walk_sound` + `BipMovIkUsage`; idle priority 1 + `allow_head_movement`; strike priority 80
   with `restart` + `enforce_root_rotation` + `update_bounding_volume` and the direction as
   `CombatParameterId` (`strike_front/back/left/right`); death priority 95 with the fall flag set plus
-  `BlendUsage` + `DisplacementUsage`; taunts priority 64 + `lock_movement`. Vanilla has no standalone
-  melee clip (melee is engine pose-blend), so attacks get `enforce_all` + `lock_movement` +
-  `client_prediction` at priority 60.
+  `BlendUsage` + `DisplacementUsage`; taunts priority 64 + `lock_movement`. Attacks get `enforce_all` +
+  `lock_movement` + `client_prediction` at priority 60 on the taunt's base. The reason first written here,
+  that vanilla has no standalone melee clip, is wrong: a swing plays real clips through the engine's melee
+  attack table. A clip has a row there only through the clip inspector's "Blends with animation" box
+  (TpacTool calls it `UnknownClipName`; no clip flag sets it): its own name self-keys the clip, and a balanced
+  twin's name makes the Kit generate ten blend children between the two on save. This generator blanks the box
+  (with `ClipSource1Name` and `ClipSource2Name`) on every clip it makes, so run `tools/set_clip_balance_name.py`
+  on any clip a release or blocked code will bind, after every re-cut
+  ([troll-race.md](../features/troll-race.md), "The swing CTD";
+  [bannerlord-animation-system-map.md](bannerlord-animation-system-map.md), section 3).
 - `Source2 = master Duration - 1` (walk master 38 -> clip 1..37, run 26 -> 1..25); Duration in
   seconds is the playback length, span / 30 for these.
 - A Kit reimport of the FBX KEEPS the master's GUID (51 of 52 on 2026-09-18) WHILE THE TAKE NAME MATCHES:
@@ -372,7 +381,8 @@ codes: forward walks (unarmed to `anim_troll_walk1`, armed to `combat_walk1`), f
 (unarmed `idle1`; armed alternate `combat_idle1`/`2` by code number), the directional strikes to
 `combat_hit_<dir>1`, and the fall deaths (back to `death1`, front/left to `death2`, front_heavy/right to
 `death3`). Left alone on the human clips: the `_adder` additive overlays, turns, strafes, backward walks,
-the knock-down-and-rise strikes, arrow/fire deaths, and every attack (melee is engine pose-blend).
+the knock-down-and-rise strikes, arrow/fire deaths, and every attack (a release or blocked code needs a
+clip with a row in the engine's melee attack table: [troll-race.md](../features/troll-race.md), "The swing CTD").
 `tools/audit_action_set_parity.py` passes afterwards and the repo snapshot
 `docs/reference/lotrlome-armory-snapshot/action_sets.xml` is refreshed from the live file.
 

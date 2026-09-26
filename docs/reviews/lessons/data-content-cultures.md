@@ -1658,3 +1658,27 @@ culture's template too.
 - **Why missed:** the claim was built from the shipped data, not from the callers of `DefaultPartyTemplate`.
 - **Prevent:** before calling a template, list or setting unused, list every engine caller that can reach it.
 - **Source:** `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 46.
+
+### A cloned crafting piece does not keep the damage: the engine simulates damage and speed from piece geometry (2026-09-26)
+The hill troll hammer copied the cave troll mace's two crafting pieces and changed only ids, names, meshes, body and
+lengths, and its tool said "flags, materials and damage stay the proven ones" (`tools/oneoff/add_hill_troll_hammer_items.py`).
+They did not. A crafted weapon stores no damage or speed; `Crafting` simulates both from each piece's weight, length and
+centre of mass. The longer haft (3.51 m against the mace's 2.59 m) moved the centre of mass from 2.41 to 2.90 and the
+inertia around the shoulder from 12.19 to 16.81, and that crossed a threshold in `CalculateSwingSpeed` (v1.5.3
+`Crafting.cs:298-325`). For a two-handed weapon without `WideGrip` the second and third torque layers are
+max(1, 19.5 - (inertia + 1.9)) and max(1, 16.8 - (inertia + 1.9)): 5.41 and 2.71 for the mace, both floored at 1 for
+the hammer. The repo's port (`tools/melee_catalogue.py` over `melee_damage.py`) priced the hammer's swing at 23 Blunt
+and speed 12, against the mace's 86 and 28. Setting the
+head `weight` from 1.23 to 0.875 (live Armory, 2026-09-26 14:07) brings the shoulder inertia to 12.04 and the price
+back to 86 Blunt and speed 28, at 3.40 m reach against the mace's 3.08 m. In-game numbers are still owed.
+- **Why missed:** the copy read as a mesh swap with no balance effect, so nobody priced it, and the gate that prices
+  every troop's melee kit was blind: `tools/melee_ladders.json` exempts `hill_troll` from `MELEE_LADDER_INVERSION`
+  because it "carries the cave troll's two-handed mace", which stopped being true when the roster took the hammer. An
+  exemption whose reason names the troop's weapon outlives the weapon silently.
+- **Prevent:** after cloning or editing a crafting piece, price the item before and after
+  (`python tools/analyze_melee_ladder.py --stdout`, or `melee_catalogue.price`) and put swing damage, swing speed and
+  reach in the commit body; a cloned piece keeps its numbers only if the assembled weight, length and centre of mass
+  are unchanged. When a troop's weapon changes, re-read its ladder exemption. "Rebuilding a crafted weapon from
+  surviving parts is a balance change, not just a repair", above, is the same rule for re-pointed pieces.
+- **Source:** 2026-09-26 review, lens 7 H1 and lens 4; live `LOTRLOME_crafting_pieces.xml`
+  `wm_hill_troll_2h_hammer_head` (backup `.bak-hammerweight-20260926-140745`); `tools/melee_ladders.json` `exempt_troops`.

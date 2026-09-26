@@ -503,6 +503,70 @@ FixBone WORLD space (facing -Y); unparenting keeps that, and only a 180 degree t
 you built yourself, with everything at rest during the transfer. A metric that reads 1.000 on every mesh is
 a bind that did not evaluate, not a perfect skin.
 
+### A race's hand mesh needs the 26 hand-pose channels, and a re-framed rig's hand bone cannot align them (2026-09-26)
+The human skeleton has no finger bones below finger0, so every grip and fist is 26 shape keys on the LOD0 arm or
+hand mesh (uruk, pale uruk, dwarf). KEYForce's hill troll hands had none, so the fingers never closed on the mace.
+They were transferred from the pale uruk's hand (the first cut, from the Isengard uruk's arms, tore the wrist seam;
+see the seam lesson below): the troll's hand bone points about 50 degrees off its fingers (its re-framing),
+so each hand is framed by geometry, and the palm side comes from the thumb, because a flat rest hand (the uruk's)
+reads a fingertip-curl test backwards. Copying displacements sheared thick troll fingers flat; Surface Deform turns
+them.
+- **Why missed:** the head's morph crash made the head the checklist; a missing hand channel does not crash (the
+  cave troll has none either), it only looks wrong.
+- **Prevent:** a new race's LOD0 hands carry the 26 channels before the art ships (`transfer_hand_morphs.py` from a
+  reference race when the art has none); frame by geometry, never by a re-framed bone.
+- **Source:** `docs/features/troll-race.md` "Hand pose morphs".
+
+### Take hand channels from a hand mesh, and pin and gate the wrist seam: an arms mesh's channels tear it (2026-09-26)
+The first hill troll transfer took the Isengard uruk's `SK_Uruk_Hai_BM_A_Arms`. Its `<side>_hand` weight region ends
+mid-forearm, where its channels still move, so the transfer moved the troll's wrist seam (40 open-boundary vertices
+that sit on `hill_troll_a_body`) by up to 16% of the channel peak: a torn wrist. Artist hands move their seam under 2%
+(the pale uruk's hand 0.9%). The redo took the Gundabad pale uruk's `SK_Pale_Uruk_BM_A_Hand`
+(`AssetSources/Race Test/Gundabad/SK_GB_Pale_Uruk_Basemesh_A.fbx`) with `--smooth 6` and pins the seam: every
+open-boundary vertex plus every moved vertex beside an unmoved one stays put, and each channel fades in over
+`--seam-rings 3` edge rings. A seam gate reads the largest seam offset back from the written keys and refuses
+`--apply` above 2% of the largest channel peak; the tool also requires exactly 26 reference channels and a palm
+mirror dot of at least 0.5. The live apply at 11:45:28 reported 40 seam vertices, seam max 0.0 against a limit of
+0.01035 (peak 0.5175) and a palm mirror dot of 0.993; `audit_fbx_lods.py --diff` showed only
+`hill_troll_a_hands: channels 0 -> 26`, and Mike's Kit re-import at 12:01:24 kept the physics and every material
+binding. **Correction (tools review, same day):** that seam gate can never fail. It reads the seam after the pin
+has given every moving seam vertex weight 0, and only moving vertices are written, so it reads 0.0 for any
+reference, the torn one included; "seam max 0.0" is not evidence. The wrist was cleared by the `--preview` renders
+and Mike's look in game (lesson below, "A gate that runs after the fix it checks can never fail").
+- **Why missed:** nothing measured the vertices the hand mesh shares with the body. A reference's `<side>_hand` weight
+  region is not a hand mesh's boundary: on an arms mesh it runs up the forearm, where the channels still move.
+- **Prevent:** take hand channels from a HAND mesh; gate the raw seam movement of the smoothed field BEFORE the pin
+  (that is what a wrong reference changes), and separately check that the pin held in the written keys; check both
+  hands' `--preview` renders with the meshes stitched to the hand visible. The raw gate is a follow-up; today only
+  the previews guard against a wrong reference. `python tools/check_race_morph_channels.py` gates the channel counts
+  (hill troll and dwarf f1: head, eye and mouth 101 each, hands or arms 26), not their weights.
+- **Source:** `tools/blender/transfer_hand_morphs.py` docstring, "THE REFERENCE" and "THE SEAM GATE"; backups
+  `hill_troll_a.fbx.bak-handmorphs` (before any hand morph) and `hill_troll_a.fbx.bak-handmorphs-torn`.
+
+### Blender 5.2's `shape_key_add` makes a key at weight 1.0, and the FBX export ships that weight as DeformPercent (2026-09-26)
+The torn hand file had a second fault: all 26 channels were written at weight 1.0. `Object.shape_key_add` creates a
+key at value 1.0 in Blender 5.2, and the FBX exporter writes a key's weight as its DeformPercent, so the file
+re-imported with every pose applied at once (hands up to 9.27 units off rest). The artist files carry every channel
+at 0.
+- **Why missed:** a key's weight is not part of its shape. The tool wrote each key's positions and name and left
+  the value at Blender's default, which is not the artist files' convention.
+- **Prevent:** set `.value = 0.0` on every shape key a tool adds, as `transfer_hand_morphs.py` and
+  `add_face_morph_channels.py` both do now, and look at a re-import at rest before it ships: a mesh whose keys all
+  sit at 0 matches its basis. No gate reads `DeformPercent` yet, and the hill troll's head, eye and mouth channels,
+  written before the fix, still sit at 100 (no offsets, so no visible change; a follow-up owes the gate and a
+  re-run).
+- **Source:** `tools/blender/transfer_hand_morphs.py` `add_channels` docstring; `tools/blender/add_face_morph_channels.py`.
+
+### Size a broad creature from its mesh, not from a scaled human (2026-09-26)
+The hill troll's movement capsule (radius 0.82) and its first formation width (1.78 m) were the human's scaled by
+height. KEYForce's troll is about twice as broad for its height: 2.43 m across the shoulders at scale 1, 2.7 m in
+game, so neighbours stood inside each other. The capsule is now 1.2 (half the measured shoulders, same vertical
+extent) and the formation width the measured shoulders times `AgentScale`.
+- **Why missed:** the height ratio was the only number measured; width was assumed to follow it.
+- **Prevent:** for any creature whose silhouette is not human, measure the LOD0 mesh's width in height bands
+  (shoulders, hips) and size the capsule, formation width and reach from those.
+- **Source:** `docs/reference/lotrlome-hill-troll-changes.md` `monsters.xml` row; `TrollBruteForceConfig.ShoulderWidthByMonster`.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by
@@ -1052,12 +1116,55 @@ vertex count), because the Kit gives such a mesh an empty morph record that slip
 ### A melee release bound to a custom clip crashes the first swing (2026-09-25)
 The hill troll's generated set bound 32 `act_release_*` and `act_quick_release_*` codes to human clips
 retargeted onto its skeleton. Every Kit look passed; the first swing in battle crashed to desktop at
-`TaleWorlds.Native.dll` +0x6590B9. Melee is engine pose-blend: the swing plays per-clip pose data looked up
-by the vanilla clip's index, and a new clip has none, so the lookup returned a null entry.
+`TaleWorlds.Native.dll` +0x6590B9. The engine's melee attack table has a row per clip only when the clip's
+"Blends with animation" box holds its own name (or it fills another clip's row as a generated balance variant);
+every retargeted clip had the box empty, so the lookup returned a null row.
 - **Why missed:** the pose-blend fact was written down (`troll-race.md`, the clip-flags reference) as "custom
   attack clips cannot drive melee", a visual limit, not as a crash; the retarget batch then took the
   two-handed group by name, releases included, and no gate knew which codes the engine drives itself.
-- **Prevent:** a swing code keeps the vanilla clip (`bind_hill_troll_action_set.py` rule 0, tested); for a
+- **Prevent:** release, quick release, blocked and quick blocked codes keep the vanilla clip
+  (`bind_hill_troll_action_set.py` rule 0, tested) unless the troll clip is self-keyed (next lesson); guessing
+  the scope from crashes took three rounds (swings, then the whole exchange, then the four families once the
+  table's builder was read in the disassembly); for a
   native crash that is a hash-map miss, read the key register from the dump and resolve it in game (the
   trace's clip-index scan named the clip in one run).
 - **Source:** `docs/features/troll-race.md` "The swing CTD, retargeted melee releases".
+
+### The melee attack table key is the Kit's "Blends with animation" box: self-key a race swing clip, no flag does it (2026-09-26)
+The field TpacTool calls `UnknownClipName` is the Modding Kit clip inspector's "Blends with animation" box (editor
+name `blends_with_animation_`, +0xD8 in memory). It names a clip, and the engine reads it once, at load, to build
+the melee attack table. The clip's own name there self-keys it: a row whose ten slots all point at the clip (vanilla
+has 175 such swings, every one with "Blends with action" empty). The name of its balanced twin there
+(`release_overswing_2h` names `release_overswing_2h_balanced`) makes the Kit generate, on save, ten FNV-hashed blend
+children between the two (`parent_animation_1_`, `parent_animation_2_`, `child_index_`, none of them in the UI),
+which fill the row by weapon balance (vanilla: 107 twin-keyed clips, 1,070 children). No clip flag sets it.
+`gen_troll_anim_clips.ps1` blanked the box on every clip it cut, so none of the 480 hill troll clips had a row.
+Mike self-keyed two swing clips in the Kit at 13:21; `tools/set_clip_balance_name.py` made the same edit to the
+other 28 two-handed release and blocked clips at 13:28, and the binder's rule 0 now puts a troll clip on those
+codes only when it reads as self-keyed (32 codes, applied 14:13).
+- **Why missed:** the field reached us only under TpacTool's placeholder name, which says nothing about its job, and
+  the generator blanked it with the two parent names when it cloned vanilla metadata (`gen_troll_anim_clips.ps1`
+  lines 270 and 436); the Kit preview never builds the table, so nothing looked wrong until a battle.
+- **Prevent:** before a race clip goes on an `act_(quick_)(release|blocked)_*` code, give it its own name in
+  "Blends with animation" and an empty "Blends with action" (in the Kit, or `set_clip_balance_name.py --apply`
+  then `--check`), and re-run that after every re-cut; never type a vanilla clip's name there or give a race clip a
+  vanilla parent name, since a generated child fills a slot of its parent's row and would change every human's
+  attack. Read a TpacTool `Unknown*` field's Kit label before deciding what it does.
+- **Source:** `docs/features/troll-race.md` "The swing CTD"; `docs/reference/bannerlord-animation-system-map.md`
+  section 3; `tools/set_clip_balance_name.py` docstring.
+
+### A gate that runs after the fix it checks can never fail (2026-09-26)
+`transfer_hand_morphs.py` pins the wrist seam (every seam vertex that moves gets weight 0, and only moving vertices
+are written), then its seam gate reads the seam back from the written keys. Every seam vertex is either unwritten
+or written at weight 0, so the gate reads 0.0 for any reference: fed the torn Isengard run's numbers (seam 0.089,
+peak 0.552), it passed. The live report's "seam max 0.0 against the limit 0.01035" was quoted in three docs as
+proof of a clean wrist; the real guard was the `--preview` render and Mike's look.
+- **Why missed:** the hand-channel lesson's own rule, "gate it from the keys actually written", is what emptied the
+  gate once the pin ran before it; the gate's unit test fed the gate function numbers the pipeline can no longer
+  produce, so it stayed green.
+- **Prevent:** gate the quantity the fault changes, before the step that masks it (here the raw seam movement of the
+  smoothed field, before the pin), and check the masking step separately (the pin held: written seam offsets 0).
+  Test a gate by running the real pipeline on a known-bad input and watching it fail, not by feeding the gate
+  function a number.
+- **Source:** tools review 2026-09-26 (Blender tooling lens, M1); `tools/blender/transfer_hand_morphs.py`
+  `seam_weights`, `seam_offsets`, `seam_gate`; `docs/features/troll-race.md` "Hand pose morphs".

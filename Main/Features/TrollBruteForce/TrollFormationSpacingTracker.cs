@@ -1,26 +1,24 @@
-using System;
 using System.Collections.Generic;
+using TAOM.Core.Collections;
 using TAOM.Core.Logging;
-using TAOM.Features.TrollBruteForce.Hooks;
-using TaleWorlds.Core;
-using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.TrollBruteForce;
 
 /// <summary>
 /// Feeds Patch92: twice a second, counts each formation's units and trolls and asks the service for the width the
-/// formation is spaced for (<see cref="ITrollBruteForceService.FormationUnitDiameter"/>). When a width changes it
-/// re-forms the formation the way vanilla does when a unit joins (<c>Formation.OnUnitAddedOrRemoved</c>, which
-/// reapplies the form order) and marks the arrangement's cached slot positions dirty: <c>LineFormation</c> rebuilds
-/// them from the width only when something asks (<c>BatchUnitPositionAvailabilities</c>), so without it the slots kept
-/// the human-width positions (2026-09-25, every troll 1.6 m from its neighbour after the width was stored). The
-/// layout it ends up with is logged on change. During deployment the trolls have already been placed at human width
-/// and nothing walks them, so a changed formation is re-deployed the way the Deploy button does it
-/// (<c>DeploymentHandler.OrderController_OnOrderIssued_Aux(Move)</c>: re-position, then every unit re-reads its
-/// slot); <c>Mission.IsTeleportingAgents</c> is on for the whole field deployment (<c>BattleDeploymentMissionController
-/// .OnSetupTeamsFinished</c>), so they jump onto the wider slots. After deployment they walk there. Main thread only
-/// (OnMissionTick). Boundary code (raw Agent/Formation); game-tested per ADR-008.
+/// formation is spaced for (<see cref="ITrollBruteForceService.FormationUnitDiameter"/>). When a width changes, it
+/// rebuilds the formation's slot positions (<c>Formation.OnUnitAddedOrRemoved</c> plus
+/// <c>Arrangement.OnFormationFrameChanged(updateCachedOrderedLocalPositions: true)</c>, the flag
+/// <c>LineFormation.UpdateLocalPositionErrors</c> passes; the engine's own frame change passes false): with true,
+/// <c>BatchUnitPositionAvailabilities</c> recomputes the cached local slot positions from the current unit width and
+/// then <c>_globalPositions</c> from them. A re-issued Move order to the same position recomputes neither, so simply
+/// re-ordering the formation onto its own slot left every troll on the old human-width positions (2026-09-25).
+/// While the field is deploying, the trolls have already been placed at human width and nothing else walks them
+/// there, so once the width changes the tick also replays vanilla's own
+/// end-of-mass-transfer tail (<c>Formation.OnMassUnitTransferEnd</c>, v1.5.3 <c>Formation.cs:1958-1966</c>) so they
+/// jump onto the wider slots the moment <c>Mission.IsTeleportingAgents</c> is on; after deployment they simply walk
+/// there. Main thread only (OnMissionTick). Boundary code (raw Agent/Formation); game-tested per ADR-008.
 /// </summary>
 public sealed class TrollFormationSpacingTracker
 {
@@ -28,12 +26,9 @@ public sealed class TrollFormationSpacingTracker
 
     private readonly ITrollBruteForceService _service;
     private readonly IModLogger _logger;
-    private readonly Dictionary<Formation, (int Units, int Trolls, float Widest)> _counts = new(FormationIdentity.Instance);
+    private readonly Dictionary<Formation, (int Units, int Trolls, float Widest)> _counts =
+        new(ReferenceIdentity.Instance);
     private readonly List<Formation> _gone = new();
-    private readonly Dictionary<Formation, string> _lastLayout = new(FormationIdentity.Instance);
-    // widened before the engine switched deployment teleporting on (the first refresh can precede
-    // BattleDeploymentMissionController.OnSetupTeamsFinished): re-deployed as soon as it is on
-    private readonly HashSet<Formation> _pendingRedeploy = new(FormationIdentity.Instance);
     private float _nextRefresh;
 
     public TrollFormationSpacingTracker(ITrollBruteForceService service, IModLogger logger)
@@ -44,7 +39,6 @@ public sealed class TrollFormationSpacingTracker
 
     public void Tick(Mission mission)
     {
-        RedeployPending(mission);
         if (mission.CurrentTime < _nextRefresh) return;
         _nextRefresh = mission.CurrentTime + RefreshSeconds;
 
@@ -55,7 +49,9 @@ public sealed class TrollFormationSpacingTracker
             if (formation == null) continue;
             _counts.TryGetValue(formation, out var c);
             c.Units++;
-            float width = _service.TrollWidth(agent.Monster?.StringId, agent.AgentScale);
+            // Only trolls pay for the native AgentScale read: the Monster id check is a managed lookup.
+            string? id = agent.Monster?.StringId;
+            float width = _service.IsBruteForceTroll(id) ? _service.TrollWidth(id, agent.AgentScale) : 0f;
             if (width > 0f)
             {
                 c.Trolls++;
@@ -65,8 +61,8 @@ public sealed class TrollFormationSpacingTracker
         }
 
         _gone.Clear();
-        foreach (Formation formation in TrollFormationSpacingStore.Formations)
-            if (!_counts.ContainsKey(formation)) _gone.Add(formation);
+        foreach (object stored in TrollFormationSpacingStore.Keys)
+            if (stored is Formation formation && !_counts.ContainsKey(formation)) _gone.Add(formation);
         foreach (Formation formation in _gone)
             TrollFormationSpacingStore.Set(formation, null);   // emptied: nothing left to re-form
 
@@ -75,55 +71,35 @@ public sealed class TrollFormationSpacingTracker
         {
             var (units, trolls, widest) = pair.Value;
             float? diameter = _service.FormationUnitDiameter(vanilla, units, trolls, widest);
-            if (trolls > 0) LogLayout(pair.Key);
             if (!TrollFormationSpacingStore.Set(pair.Key, diameter)) continue;
 
-            pair.Key.OnUnitAddedOrRemoved();
-            pair.Key.Arrangement.AreLocalPositionsDirty = true;
-            if (mission.Mode == MissionMode.Deployment) _pendingRedeploy.Add(pair.Key);
-            _logger.LogInfo($"[TrollSpacing] team {pair.Key.Team?.TeamIndex} formation {pair.Key.FormationIndex}: " +
+            Formation formation = pair.Key;
+            formation.OnUnitAddedOrRemoved();
+            // updateCachedOrderedLocalPositions: true is what actually rebuilds LineFormation's cached
+            // slots from the new width; it sets Arrangement.AreLocalPositionsDirty internally, so no
+            // separate dirty-flag write is needed.
+            formation.Arrangement.OnFormationFrameChanged(updateCachedOrderedLocalPositions: true);
+            if (mission.IsTeleportingAgents)
+            {
+                // Vanilla's own OnMassUnitTransferEnd tail: the trolls were placed at human width before
+                // their width was known, and nothing else walks them mid-deployment, so replay it now
+                // that the width is stored and the slots rebuilt.
+                formation.ApplyActionOnEachUnit(a =>
+                    a.ForceUpdateCachedAndFormationValues(updateOnlyMovement: true, arrangementChangeAllowed: false));
+                formation.SetHasPendingUnitPositions(hasPendingUnitPositions: false);
+            }
+
+            _logger.LogInfo($"[TrollSpacing] team {formation.Team?.TeamIndex} formation {formation.FormationIndex}: " +
                 $"{trolls} troll(s) of {units}, unit width " +
                 (diameter is float d ? $"{vanilla:0.00} -> {d:0.00} m" : "back to vanilla") +
-                $" (mode {mission.Mode}, teleporting {mission.IsTeleportingAgents})");
+                $" (teleporting {mission.IsTeleportingAgents})");
         }
-    }
-
-    private void RedeployPending(Mission mission)
-    {
-        if (_pendingRedeploy.Count == 0) return;
-        if (mission.Mode != MissionMode.Deployment)
-        {
-            _pendingRedeploy.Clear();   // the battle started: they walk to the new slots
-            return;
-        }
-        if (!mission.IsTeleportingAgents) return;
-        foreach (Formation formation in _pendingRedeploy)
-        {
-            if (formation.CountOfUnits == 0) continue;
-            DeploymentHandler.OrderController_OnOrderIssued_Aux(OrderType.Move, new MBList<Formation> { formation });
-            _logger.LogInfo($"[TrollSpacing] team {formation.Team?.TeamIndex} formation {formation.FormationIndex}: " +
-                "re-deployed onto the new slots");
-        }
-        _pendingRedeploy.Clear();
-    }
-
-    // Diagnostic: proves whether the arrangement took the width (rank count, flank width) in the next smoke.
-    private void LogLayout(Formation formation)
-    {
-        var arrangement = formation.Arrangement;
-        string layout = $"{arrangement.GetType().Name} flank={arrangement.FlankWidth:0.0} ranks={arrangement.RankCount} " +
-            $"unitWidth={formation.UnitDiameter:0.00} interval={formation.Interval:0.00} units={formation.CountOfUnits}";
-        if (_lastLayout.TryGetValue(formation, out string last) && last == layout) return;
-        _lastLayout[formation] = layout;
-        _logger.LogInfo($"[TrollSpacing] team {formation.Team?.TeamIndex} formation {formation.FormationIndex} layout: {layout}");
     }
 
     public void Clear()
     {
         _counts.Clear();
         _gone.Clear();
-        _lastLayout.Clear();
-        _pendingRedeploy.Clear();
         _nextRefresh = 0f;
         TrollFormationSpacingStore.Clear();
     }

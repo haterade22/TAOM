@@ -189,6 +189,18 @@ A memo keyed on a service method's *input* is only correct if that input determi
 - **Prevent:** when a comment, doc, or agent report cites a precedent, sibling, or "existing pattern" as justification, open the cited file before relying on it — the same evidence-over-claims discipline applied to review findings. When writing such a comment, cite the specific file and member you actually read.
 - **Source:** WotR phase-day deep review 2026-07-30. RCA: `docs/reviews/rca-wotr-phase-ordering-2026-07-30.md`
 
+### A campaign-only GameModel leaves Custom Battle on the vanilla model (2026-09-26)
+`TaomBattleBannerBearersModel`, which keeps trolls from carrying standards, was added on the campaign starter only;
+Custom Battle builds `CustomBattleBannerBearersModel` off a `BasicGameStarter`, so the vanilla gate alone ran there
+and hill trolls raised banners in every troll smoke. The registration comment even said "Custom Battle ... is
+unaffected", which was true of the density policy and false of the race gate.
+- **Why missed:** the model was written for the campaign policy, and the race gate rode along without anyone asking
+  which game types it had to cover.
+- **Prevent:** for every model rule, ask whether it must hold in Custom Battle too; if it must, add a Custom Battle
+  subclass in `SubModule.RegisterCustomBattleModels` (the morale, agent-stat and now banner models are the shape),
+  carrying only that rule.
+- **Source:** `docs/features/banner-bearers.md` "Race gate".
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

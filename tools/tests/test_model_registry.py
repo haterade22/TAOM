@@ -111,10 +111,20 @@ class Drift(_SyntheticRepo):
 
     def test_the_second_count_shape_is_also_checked(self):
         # ".claude/rules/gamemodels.md" states its total twice, in two different sentences.
-        # Catching only the first would leave the table heading permanently wrong.
-        _write(ld.MODEL_RULES_DOC, "## Existing Overrides (34 total)\n\n"
+        # Catching only the first would leave the table heading permanently wrong. The real
+        # heading carries a breakdown after a colon, which the first regex never matched, so
+        # a heading claiming 50 sat beside 51 classes with the check green.
+        for heading in ("## Existing Overrides (34 total)",
+                        "## Existing Overrides (34 total: 32 registered, 1 parked, 1 abstract base)"):
+            with self.subTest(heading=heading):
+                _write(ld.MODEL_RULES_DOC, heading + "\n\n"
+                       + "\n".join(f"| `{n}` |" for n in self.MODELS) + "\n")
+                self.assertEqual(1, self.kinds().count("model-count"))
+
+    def test_a_correct_heading_with_a_breakdown_is_silent(self):
+        _write(ld.MODEL_RULES_DOC, "## Existing Overrides (2 total: 1 registered, 1 abstract base)\n\n"
                + "\n".join(f"| `{n}` |" for n in self.MODELS) + "\n")
-        self.assertEqual(1, self.kinds().count("model-count"))
+        self.assertEqual(0, self.kinds().count("model-count"))
 
     def test_a_correct_count_is_silent(self):
         self.write_catalogues(self.MODELS, count=2)

@@ -89,7 +89,8 @@ DEFAULT_GAME = Path(
 # body-aware the whole time, just pointed one directory too narrow.
 DEFAULT_ITEMS = DEFAULT_GAME / "Modules" / "LOTRLOME_Armory" / "ModuleData"
 # Shared meshes live outside the Armory (Native/SandBoxCore), so the present-set
-# is the UNION across these modules' AssetPackages.
+# is the UNION across these modules' packages (each module's loose Assets/ tree,
+# else its AssetPackages/: tpac_paths_for_modules).
 DEFAULT_TPAC_MODULES = ["LOTRLOME_Armory", "Native", "SandBoxCore"]
 DEFAULT_RGL_LOG_DIR = Path(r"C:\ProgramData\Mount and Blade II Bannerlord\logs")
 
@@ -423,44 +424,48 @@ class PresentSet:
         return not self.unparsed
 
 
+_WARNED_EMPTY_MODULES: set = set()
+
+
+def module_tpacs(mod_dir: Path, name: str) -> list:
+    """The *.tpac of one module folder, as tpac_paths_for_modules chooses them, under the path the caller gave
+    (callers filter on path prefixes, so rebuilding it from another spelling of Modules/ would drop them)."""
+    mod_dir = Path(mod_dir)
+    loose = sorted((mod_dir / "Assets").rglob("*.tpac"))
+    if loose:
+        return loose
+    cooked = sorted((mod_dir / "AssetPackages").glob("*.tpac"))
+    if not cooked and mod_dir.exists() and name not in _WARNED_EMPTY_MODULES:
+        _WARNED_EMPTY_MODULES.add(name)
+        print(f"WARNING: module {name!r} contributes no .tpac at all (neither "
+              f"AssetPackages/ nor Assets/), so every mesh it owns reads "
+              f"as MISSING.", file=sys.stderr)
+    return cooked
+
+
 def tpac_paths_for_modules(game_dir: Path, modules: list) -> list:
-    """All *.tpac for each module m, preferring the cooked packs.
+    """All *.tpac the engine can load for each module m: the loose tree when it has one.
 
-    A module normally ships cooked `AssetPackages/*.tpac` and the running game
-    loads those. Some modules ship no cooked tree at all and are loaded from the
-    loose authoring tree instead: `LOTRLOME_Armory` is in that state as of
-    v2.0.23 (0 cooked packs, 4,364 loose ones), and so are `SandBoxCore` and
-    `SandBox`.
+    The engine loads a module's loose `Assets/**/*.tpac` in preference to a
+    cooked `AssetPackages/` tree it also ships; its own log names the tree
+    (`Loading packages $BASE/Modules/LOTRLOME_Armory/Assets...`, and the same
+    for TAOM_Map and TAOM, which carry both; docs/reference/armory-guide.md
+    "Two asset trees"). The Armory gained a cooked tree on 2026-09-26 and the
+    game still logged `Assets`. Scanning the cooked packs instead hid art added
+    since the cook (the hill troll hammer read as MISSING) and would pass art
+    deleted from `Assets/` that a stale pack still holds, the #352 hang.
 
-    Without a fallback, a named module that contributes zero packs silently
-    drops out of the present-set and every mesh it owns reads as MISSING. With
-    the default module list that is two modules of three, which turns a real run
-    into thousands of false positives. That failure mode is indistinguishable
-    from catastrophe, so it gets ignored, which is worse than an error.
-
-    So: fall back to `Assets/**/*.tpac`, and say so loudly. Preferring the
-    cooked tree keeps the documented "art deleted from Assets/ keeps shipping
-    from a stale pack" trap observable wherever a cooked tree still exists.
+    So: the loose tree, and the cooked packs only for a module with no loose
+    tree (Native). A named module that contributes neither is announced, once
+    per process, never dropped silently: every mesh it owns would read as
+    MISSING. "Can load": the engine also skips a package that has no
+    RuntimeDataCache entry (tools/check_rdc_entries.py lists those), and this
+    list still counts it.
     """
     game_dir = Path(game_dir)
     out = []
     for m in modules:
-        mod = game_dir / "Modules" / m
-        cooked = sorted((mod / "AssetPackages").glob("*.tpac"))
-        if cooked:
-            out.extend(cooked)
-            continue
-        loose = sorted((mod / "Assets").rglob("*.tpac"))
-        if loose:
-            print(f"WARNING: module {m!r} ships no cooked AssetPackages/*.tpac. "
-                  f"Falling back to {len(loose):,} loose Assets/**/*.tpac. The "
-                  f"stale-pack trap cannot be observed for this module.",
-                  file=sys.stderr)
-            out.extend(loose)
-        elif mod.exists():
-            print(f"WARNING: module {m!r} contributes no .tpac at all (neither "
-                  f"AssetPackages/ nor Assets/), so every mesh it owns reads "
-                  f"as MISSING.", file=sys.stderr)
+        out.extend(module_tpacs(game_dir / "Modules" / m, m))
     return out
 
 
@@ -1066,10 +1071,11 @@ def main() -> int:
     ap.add_argument("--items", default=str(DEFAULT_ITEMS),
                     help="Root dir of item XML to scan (default: LOTRLOME_items)")
     ap.add_argument("--game", default=str(DEFAULT_GAME),
-                    help="Bannerlord install dir (for --tpac-modules AssetPackages)")
+                    help="Bannerlord install dir (for the --tpac-modules packages)")
     ap.add_argument("--tpac-modules", nargs="+", default=DEFAULT_TPAC_MODULES,
-                    help="Module names whose AssetPackages/*.tpac form the "
-                         "present-set (default: LOTRLOME_Armory Native SandBoxCore)")
+                    help="Module names whose packages form the present-set: each "
+                         "module's loose Assets/**/*.tpac, else its AssetPackages/*.tpac "
+                         "(default: LOTRLOME_Armory Native SandBoxCore)")
     ap.add_argument("--rgl-log", default=None,
                     help="Path to an rgl_log[_errors].txt for Tier A (default: "
                          "auto-discover the newest under the ProgramData logs dir)")
@@ -1137,7 +1143,7 @@ def main() -> int:
     if not args.no_tier_b:
         if not game_dir.exists():
             print(f"WARNING: game dir not found: {game_dir} — Tier B/C skipped "
-                  f"(need AssetPackages). Ref extraction + Tier A still run.",
+                  f"(need the modules' packages). Ref extraction + Tier A still run.",
                   file=sys.stderr)
         else:
             tpac_paths = tpac_paths_for_modules(game_dir, args.tpac_modules)

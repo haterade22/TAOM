@@ -110,7 +110,7 @@
   ],
   "exempt_troops": {
     "cave_troll": "A troll is a monster, not a soldier. Its weapons are scenery-scale and deliberately slow, and the creature's threat comes from its own attacks and its mass rather than from its kit sustaining tier-10 DPS.",
-    "hill_troll": "The same monster rule as the cave troll: the hill troll carries the cave troll's two-handed mace on its own 3.6 m skeleton (2026-09-25).",
+    "hill_troll": "The same monster rule as the cave troll: the hill troll carries its own war hammer (wm_hill_troll_2h_hammer_a; head weight 0.875, set 2026-09-26 so the engine prices it at the cave mace's 86 Blunt and swing speed 28) on its own 3.6 m skeleton.",
     "taom_test_animalia_elk_rider": "#646 Custom Battle test rider for the Animalia elk (troops/troops_animalia_test.xml, CustomGame only), carrying mirkwood_rochenlas's kit; not a kingdom's troop. Remove with the file.",
     "taom_test_animalia_moose_rider": "#646 Custom Battle test rider for the Animalia moose (troops/troops_animalia_test.xml, CustomGame only), carrying mirkwood_rochenlas's kit; not a kingdom's troop. Remove with the file."
   }

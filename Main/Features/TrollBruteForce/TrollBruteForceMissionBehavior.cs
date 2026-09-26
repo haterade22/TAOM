@@ -25,8 +25,8 @@ public class TrollBruteForceMissionBehavior : MissionLogic
     private readonly IModLogger _logger;
     private readonly HashSet<string> _loggedErrors = new();
     private readonly CreatureTreeTracker _tracker;
-    private readonly TrollActionTrace _trace;
     private readonly TrollFormationSpacingTracker _spacing;
+    private readonly TrollClipTrace _clips;
     private bool _initialized;
     private bool _treesAdded;
 
@@ -36,8 +36,8 @@ public class TrollBruteForceMissionBehavior : MissionLogic
         _logger = IoC.Resolve<IModLogger>();
         _tracker = new CreatureTreeTracker(TreeName, "[TrollBruteForce]",
             a => _service.IsBruteForceTroll(a.Monster?.StringId), _logger);
-        _trace = new TrollActionTrace(a => _service.IsBruteForceTroll(a.Monster?.StringId), _logger);
         _spacing = new TrollFormationSpacingTracker(_service, _logger);
+        _clips = new TrollClipTrace(_service, _logger);
     }
 
     private void Initialize()
@@ -67,7 +67,6 @@ public class TrollBruteForceMissionBehavior : MissionLogic
             }
         }
 
-        _trace.LogCrashKeys();
         _logger.LogInfo("[TrollBruteForce] Initialized");
     }
 
@@ -82,13 +81,11 @@ public class TrollBruteForceMissionBehavior : MissionLogic
                 _treesAdded = true;
                 int count = _tracker.AttachAll(Mission.Current.AllAgents);
                 _logger.LogInfo($"[TrollBruteForce] Attached behavior trees to {count} troll(s)");
-                foreach (Agent a in Mission.Current.AllAgents)
-                    _trace.Track(a);
             }
 
             _tracker.PruneDead();
             _spacing.Tick(Mission.Current);
-            _trace.Tick(Mission.Current.AllAgents);   // diagnostic last: a throw here must not skip the spacing
+            _clips.Tick(Mission.Current);   // diagnostic last: a throw here must not skip the spacing
         }
         catch (Exception ex)
         {
@@ -103,10 +100,7 @@ public class TrollBruteForceMissionBehavior : MissionLogic
         base.OnAgentBuild(agent, banner);
         // Late-spawn attach: only after Initialize registered the tree (first OnMissionTick).
         if (_treesAdded)
-        {
             _tracker.TryLateAttach(agent);
-            _trace.Track(agent);
-        }
     }
 
     public override void OnRemoveBehavior()
@@ -115,8 +109,8 @@ public class TrollBruteForceMissionBehavior : MissionLogic
             _logger.LogInfo($"[TrollBruteForce] Mission end: {_tracker.LateAttachCount} tree(s) late-attached, " +
                 $"{_tracker.AliveCount} troll(s) alive at end");
         _tracker.Clear();
-        _trace.Clear();
         _spacing.Clear();
+        _clips.Clear();
         _loggedErrors.Clear();
         base.OnRemoveBehavior();
     }

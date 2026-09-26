@@ -43,8 +43,15 @@ if [[ -f "$OVERRIDE_FILE" ]]; then
   exit 0
 fi
 
-# Extract basename for matching
-BASENAME=$(basename "$FILE_PATH")
+# Normalise before matching. The Edit and Write tools pass a Windows path
+# (E:\repos\TAOM\docs\adrs\x.md), so a forward-slash pattern never matched it and the ADR guard
+# below was dead on the dev machine: ADR-012 and two ADR edits went through unchallenged on
+# 2026-09-26 (#677). Separators become /, and case folds because NTFS ignores it
+# (Settings.Local.json is the same file). tools/test_hooks.sh 7g holds every spelling.
+NORM_PATH=${FILE_PATH//\\//}
+NORM_PATH=${NORM_PATH,,}
+BASENAME=${FILE_PATH//\\//}
+BASENAME=${BASENAME##*/}
 
 # Protected files list
 # CLAUDE.md removed 2026-07-02 by explicit user decision (solo developer; the agent keeps
@@ -58,7 +65,7 @@ PROTECTED_FILES=(
 )
 
 for PROTECTED in "${PROTECTED_FILES[@]}"; do
-  if [[ "$BASENAME" == "$PROTECTED" ]]; then
+  if [[ "${BASENAME,,}" == "${PROTECTED,,}" ]]; then
     echo "BLOCKED: Modifying $BASENAME is not allowed without explicit user request." >&2
     echo "Fix the source code to satisfy the rules, not the config." >&2
     echo "If this is a legitimate change, ask the user first." >&2
@@ -67,7 +74,7 @@ for PROTECTED in "${PROTECTED_FILES[@]}"; do
 done
 
 # Also protect ADR files from accidental weakening
-if [[ "$FILE_PATH" == *"/docs/adrs/"* && "$BASENAME" == *.md ]]; then
+if [[ ( "$NORM_PATH" == */docs/adrs/* || "$NORM_PATH" == docs/adrs/* ) && "$NORM_PATH" == *.md ]]; then
   echo "BLOCKED: Modifying ADR $BASENAME is not allowed without explicit user request." >&2
   echo "ADRs are architectural decisions — changing them requires deliberate review." >&2
   exit 2
