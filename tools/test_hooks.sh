@@ -1400,6 +1400,12 @@ MVR_TOOL_CASES=(
   'Bash|0|echo "a\"; dotnet test"'
   "Bash|1|cd E:/x"$'\n'"./build.ps1"$'\n'"echo done"
   "PowerShell|1|cd E:/x"$'\n'"./build.ps1"$'\n'"echo done"
+  # Plan 027: the PowerShell reader splits a script block and drops a comment.
+  'PowerShell|1|if ($true) { dotnet test TAOM.Tests }'
+  "PowerShell|0|Write-Output @'"$'\n'"dotnet test TAOM.Tests"$'\n'"'@"
+  'PowerShell|1|git status; dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId= # built here'
+  # The reader quotes a word holding \, so PowerShell's everyday .\build.ps1 arrives as '.\build.ps1'.
+  'PowerShell|1|.\build.ps1 -RunTests'
 )
 for entry in "${MVR_TOOL_CASES[@]}"; do
     tool="${entry%%|*}"; rest="${entry#*|}"; want="${rest%%|*}"; cmd="${rest#*|}"; shown="${cmd//$'\n'/\\n}"
@@ -1425,6 +1431,23 @@ printf '%s' '{"tool_name":"PowerShell","tool_input":{"command":"dotnet test TAOM
     | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$MVR_DIR" bash .claude/hooks/mark-verification-run.sh >/dev/null 2>&1
 [[ -f "$MVR_DIR/.claude/logs/.verification-ran" ]] && ok "mark-verification-run marks a PostToolUseFailure payload" \
     || bad "mark-verification-run did not mark a PostToolUseFailure payload"
+# PostToolUseFailure carries "is_interrupt": true when the tool call was aborted, so there is no
+# result to count (plan 027; Claude Code 2.1.241 sets it from an abort error). A command that only
+# mentions the field still marks: inside a JSON string its quotes are escaped.
+for pair in '0|true' '1|false'; do
+    want="${pair%%|*}"; irq="${pair#*|}"
+    rm -rf "$MVR_DIR"; mkdir -p "$MVR_DIR"
+    printf '{"tool_name":"PowerShell","tool_input":{"command":"dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId="},"hook_event_name":"PostToolUseFailure","error":"Interrupted","is_interrupt":%s}' "$irq" \
+        | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$MVR_DIR" bash .claude/hooks/mark-verification-run.sh >/dev/null 2>&1
+    got=0; [[ -f "$MVR_DIR/.claude/logs/.verification-ran" ]] && got=1
+    [[ "$got" == "$want" ]] && ok "mark-verification-run marked=$got for a PostToolUseFailure with is_interrupt $irq" \
+        || bad "mark-verification-run expected marked=$want, got $got for a PostToolUseFailure with is_interrupt $irq"
+done
+rm -rf "$MVR_DIR"; mkdir -p "$MVR_DIR"
+"$HPY" -c 'import json; print(json.dumps({"tool_name":"Bash","tool_input":{"command":"dotnet test TAOM.Tests; echo \"is_interrupt\":true"},"hook_event_name":"PostToolUse"}))' \
+    | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$MVR_DIR" bash .claude/hooks/mark-verification-run.sh >/dev/null 2>&1
+[[ -f "$MVR_DIR/.claude/logs/.verification-ran" ]] && ok "mark-verification-run still marks a command that mentions is_interrupt" \
+    || bad "mark-verification-run did not mark a command whose text mentions is_interrupt"
 rm -rf "$MVR_DIR"
 
 # ---------------------------------------------------------------------------
