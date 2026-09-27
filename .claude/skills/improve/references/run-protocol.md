@@ -222,7 +222,8 @@ merge" below).
    - **Exit 2**: the merge is left in progress with the listed paths for you. Resolve them by hand
      (single-owner files line by line, language files with row placement parsed, generated files
      regenerated, never merged), stage those paths and commit the same way.
-   - Any other exit is an unexpected error: stop and report its message.
+   - **Exit 3**, or any other exit: an unexpected error. Stop, report its message, and read `git status`
+     first, since a merge may be in progress.
 6. **Verify after each merge**, each as its own call, compared with step 4: the dotnet suite; the Python
    failure set; `python tools/lint_docs.py --fail-on-drift --dash-base <the step 4 SHA>` (the default
    base, HEAD, sees nothing once the merge is committed); `validate_moduledata.py` when ModuleData
