@@ -31,7 +31,7 @@ owner. Default map (the orchestrator may re-cut it and records the cut in BRIEF.
 | Lane | Owns |
 |---|---|
 | A Correctness and resilience | 1 Correctness, 2 Security (code) |
-| B Architecture and composition | 5 Tech debt, 6 Dependencies |
+| B Architecture and composition | 5 Tech debt & architecture, 6 Dependencies & migrations |
 | C Performance | 3 Performance |
 | D Tests and CI | 4 Test coverage, the CI half of 7 |
 | E Harness, repo and docs | 7 DX, 8 Docs, 2 Security (config, through `/security-scan`) |
@@ -134,7 +134,7 @@ The question is which untested code is dangerous, not a percentage.
 - The structurally untestable (live Harmony invocation, engine calls) is named in `Not-tested:`
   trailers and kept behind thin boundaries; logic growing in a boundary class is the finding.
 
-## 5. Tech Debt and Architecture
+## 5. Tech Debt & Architecture
 
 Cite the ADR or rule in each finding (AGENTS.md "Architecture"):
 
@@ -164,7 +164,7 @@ Cite the ADR or rule in each finding (AGENTS.md "Architecture"):
 - Python tools: near-identical generators and validators that could share a library (`taom_schema.py`
   is the precedent).
 
-## 6. Dependencies and Migrations
+## 6. Dependencies & Migrations
 
 - BUTR stack (Harmony, UIExtenderEx, ButterLib, MCM): pinning against
   `docs/migration/dr3-maintenance.md`; stub-module `vX.Y.99.0` rows behind a bumped minor.
@@ -177,7 +177,7 @@ Cite the ADR or rule in each finding (AGENTS.md "Architecture"):
 - For each migration candidate, the blast radius (files touched) drives effort and whether to
   recommend it.
 
-## 7. DX and Tooling
+## 7. DX & Tooling
 
 - The build and test entry points: `./build.ps1 -RunTests` deploys, so an audit never runs it; check
   green with the non-deploying `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId=`
