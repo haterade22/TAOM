@@ -17,8 +17,11 @@ Record each result in PROGRESS.md. A broken environment is reported, not fixed
 - A gate proven live this session: an observed deny, or a headless probe ("Live probe" below).
 - `gh auth status` when issues are in scope; `codex login status` when the maintainer asked for Codex.
 - The run's date (`date +%F`), version (`<Version value=...>` in `Main/_Module/SubModule.xml`) and
-  worktree root (`TAOM_IMPROVE_ROOT`, a folder outside the repo). No script or prompt carries a typed
-  date, version, hash or drive path; `improve_ctl.py args` derives them.
+  worktree root `<root>` (a folder outside the repo and off C:, holding the worktrees, `<root>\scratch`
+  and `<root>\scratch\tmp`), written into the PROGRESS.md header so a resumed run has it. No script or
+  prompt carries a typed date, version, hash or drive path: `improve_ctl.py args` derives the date and
+  version, and takes the root as `--scratch <root>\scratch --tmp <root>\scratch\tmp` (or from
+  `TAOM_IMPROVE_ROOT`; without either it exits 2).
 
 ## Run folder
 
@@ -35,7 +38,9 @@ plans/NNN-<slug>.md and plans/README.md
 ```
 
 Run files are committed with the plans: stage the explicit `plans/` paths, then
-`git commit -F <message file> -- plans/`, which leaves another session's staged files out of the commit.
+`git commit -F <message file> -- <each plans/ path this run wrote>`. Naming each path leaves another
+session's staged files out of the commit; a bare `-- plans/` would sweep in its unstaged edits under
+`plans/`.
 
 ## BRIEF.md
 
@@ -54,8 +59,9 @@ copy them.
 ```
 # PROGRESS: <date>-<tag>
 
-Baseline `<sha>` on `<trunk>`, <date>. Models: every role `claude-opus-5-5` unless listed here.
-Pool 4. Codex: <asked | not asked>. Second Codex pass on fix diffs: <run | replaced by convergence>.
+Baseline `<sha>` on `<trunk>`, <date>. Root `<root>` (worktrees; scratch `<root>\scratch`, temp
+`<root>\scratch\tmp`). Models: every role `claude-opus-5-5` unless listed here. Pool 4.
+Codex: <asked | not asked>. Second Codex pass on fix diffs: <run | replaced by convergence>.
 
 ## Authorizations
 | Date | The maintainer's words | Scope | Until |
@@ -93,9 +99,14 @@ The orchestrator owns every baseline build. Create a detached worktree at the pi
 (`git worktree add --detach <root>\wt-baseline <sha>`), then record: build warnings; dotnet suite totals
 and the names of failing tests; the Python suite's failure set
 (`python -B -m unittest discover -s tools/tests -t .`); `python tools/validate_moduledata.py` error and
-warning counts; `python tools/lint_docs.py --fail-on-drift` exit; the hook suite's totals
-(`timeout 1500 bash tools/test_hooks.sh > <log> 2>&1`); each command's wall time. Later checks compare
-failure sets by name, never against zero. Remove the worktree when done.
+warning counts; `python tools/lint_docs.py --fail-on-drift` exit; the hook suite's totals, run with
+`run_in_background` because it outlasts a foreground Bash call (the suite runs in the checkout that
+holds it), then the Summary line read from the log when it finishes:
+
+`CLAUDE_PROJECT_DIR="<root>\wt-baseline" timeout 1500 bash "<root>\wt-baseline\tools\test_hooks.sh" > <log> 2>&1`
+
+and each command's wall time. Later checks compare failure sets by name, never against zero. Remove the
+worktree when done.
 
 ## REPORT.md
 
@@ -112,23 +123,30 @@ After compaction, a usage limit, a session end or a restart:
 3. A RUNNING row with a run id: read its journal. A run that ended early resumes with the same
    `scriptPath` and `resumeFromRunId`; finished agents replay from cache. A staged build that died
    resumes after its last committed stage.
-4. A Codex raw output without the final line `END OF CODEX REVIEW` is running or died; re-dispatch only
-   when its process is gone.
+4. A Codex output under `<root>\scratch\codex\` without the final line `END OF CODEX REVIEW` is running
+   or died; re-dispatch only when its process is gone.
 5. Never re-launch a phase whose output exists. Continue at the first row not DONE.
 6. Tell the maintainer in one short status what was running, what survived and what resumes.
 
 ## Liveness watch
 
-A hook "ask" stops an agent's tool call before it starts, so no TIMEOUT catches it. While any workflow
+A hook "ask" stops an agent's tool call before it starts, so no TIMEOUT catches it. While any agent
 runs, and whenever you check on one:
 
-`python tools/improve_ctl.py watch --dir <transcript dir> --stale-min 20`
+`python tools/improve_ctl.py watch --dir <transcript dir> [--stale-min N]` (N defaults to 30)
 
-The transcript dir is the workflow's folder under the session's `subagents\workflows\` directory (or the
-session's `subagents` folder for direct spawns). Exit 1 names an agent silent past the limit with no
-result: read the tail of its transcript. A tool call with no result is most likely a pending ask; tell
-the maintainer at once, in one line, with the agent and the first words of the command. You cannot
-answer it, and stopping the workflow kills its other agents.
+Point it at the running workflow's own folder, `<session>\subagents\workflows\<run id>\`, or for direct
+spawns at the session's `subagents` folder. Never point it at a folder holding a killed workflow: its
+unfinished agents stay "running" in its journal and read as stale forever. Exit 1 on either flag:
+
+- **STALLED-ASK**: the agent's latest PreToolUse hook attachment with permissionDecision "ask" has no
+  later tool result for that tool call, so it waits on the maintainer. This works in both folders
+  (direct spawns have no journal). Tell him at once, in one line, with the agent and the first words
+  of the command. You cannot answer it, and stopping the workflow kills its other agents.
+- **STALE**: a running agent's transcript is older than N minutes; read its tail. Only a workflow's
+  `journal.jsonl` says which agents are running (an agent whose journal key was started again later is
+  "superseded", not running), so in a direct-spawn folder only STALLED-ASK and the age column tell you
+  anything.
 
 ## Live probe
 
@@ -184,27 +202,46 @@ merge" below).
 3. **Trunk moved?** `git fetch origin`, then `git rev-list --left-right --count origin/<trunk>...HEAD`;
    a nonzero left count means merge the trunk in first (`merge(improve): <version> - trunk <sha> into
    ...`) and re-run the suites.
-4. **Baseline on the integration tip**: dotnet totals and failing tests, the Python failure set, the hook
-   suite totals, the lint exit.
-5. **Per branch**: `python tools/integrate_branch.py --worktree <wt-integrate> --message-file <file>
-   --dry-run <branch>` to see the conflict set, then without `--dry-run`. The message file's subject is
-   `merge(improve): <version> - <what>` and its body names the issues and what conflicted. Exit 0: merged,
-   with lessons and REVIEW-LOG unioned. Exit 2: resolve the listed paths by hand (single-owner files
-   line by line, language files with row placement parsed, generated files regenerated, never merged),
-   then stage those paths and commit. A fix that makes the merged tree green is its own commit.
+4. **Baseline on the integration tip**: record its SHA, dotnet totals and failing tests, the Python
+   failure set, the hook suite totals (run as in "Baseline" above, `CLAUDE_PROJECT_DIR` set to the
+   integration worktree), the lint exit.
+5. **Per branch**: write the message file first. Its subject is `merge(improve): <version> - <what>`,
+   at most 72 characters; its body names the issues and what conflicted; check it with
+   `python tools/check_public_text.py <file>`. Then `python tools/integrate_branch.py --worktree
+   <wt-integrate> --message-file <file> --dry-run <branch>` shows the conflict set, and the same without
+   `--dry-run` merges. The tool never commits, and its leftover-marker check runs on every file of
+   every merge. A fix that makes the merged tree green is its own commit.
+   - **Exit 0**: merged and staged, with lessons and REVIEW-LOG unioned. The union takes a conflict
+     block only when both sides start with the common base lines (it keeps ours, then theirs' lines
+     after the base); any other block sends its path to exit 2. It prints
+     `ready to commit: git commit -F "<message file>"`: run that commit yourself through Bash, as
+     `git -C "<wt-integrate>" commit -F "<message file>"`, so every PreToolUse commit gate judges it
+     (a gate that judged the main checkout: execute-and-review "Commit gates in worktrees").
+   - **Exit 1**: refused, for example the main checkout, a dirty tree, a merge already in progress, or
+     a message file that fails `check_public_text.py`. Read the reason.
+   - **Exit 2**: the merge is left in progress with the listed paths for you. Resolve them by hand
+     (single-owner files line by line, language files with row placement parsed, generated files
+     regenerated, never merged), stage those paths and commit the same way.
+   - Any other exit is an unexpected error: stop and report its message.
 6. **Verify after each merge**, each as its own call, compared with step 4: the dotnet suite; the Python
-   failure set; lint; `validate_moduledata.py` when ModuleData changed; the hook suite when `.claude/`
-   or `tools/test_hooks.sh` changed; the CI replay (`.ai/verification.md`, the three `csharp.yml` steps)
-   when C# or tests changed. When a plan adds a CI gate, replay it on every in-flight branch before
-   merging any of them. Stop at the first new failure.
+   failure set; `python tools/lint_docs.py --fail-on-drift --dash-base <the step 4 SHA>` (the default
+   base, HEAD, sees nothing once the merge is committed); `validate_moduledata.py` when ModuleData
+   changed; the hook suite when `.claude/` or `tools/test_hooks.sh` changed; the CI replay
+   (`.ai/verification.md`, the three `csharp.yml` steps) when C# or tests changed. When a plan adds a
+   CI gate, replay it on every in-flight branch before merging any of them. Stop at the first new
+   failure.
 7. **Push**: fetch and repeat step 3, then a plain fast-forward `git push origin HEAD:<trunk>`. Never a
    force push. Record the range.
 8. **CI**: `gh run list --branch <trunk> --limit 5`, then `timeout 900 gh run watch <id> --exit-status`
    until done; record run ids and totals.
 9. **Issues**: close per "Issues" above, naming the merge.
-10. **Cleanup**: `git branch --merged origin/<trunk> --list "improve/*" "integrate/*"`, delete exactly
-    those with `git branch -d`, `git worktree remove` each merged worktree, then `git worktree prune`.
-    Query, never a hand list.
+10. **Cleanup**, in this order, from a query, never a hand list: list the merged branches with
+    `git branch --merged origin/<trunk> --list "improve/*" "integrate/*"`; `git worktree remove` each
+    worktree that has one of them checked out (`git worktree list`), the integration worktree
+    included, since `git branch -d` refuses a branch checked out in a linked worktree; then delete
+    exactly the listed branches with `git branch -d`; then `git worktree prune`. A removed worktree
+    takes its gitignored files with it, so nothing a run still needs (a Codex output above all) may
+    live in one.
 11. **Record**: a PROGRESS row with hashes, totals and run ids; `improve_ctl.py status` per plan row.
 
 ## After a merge: the maintainer's actions

@@ -256,7 +256,9 @@ and **Confidence** is how grounded the evidence is. Their plans are usually desi
 - **The critic** reads the lanes and verdicts for coverage gaps (folders no lane cited, categories only
   partly covered, backlog issues that overlap findings) and asks at most one question whose answer could
   change the top ten; one follow-up agent answers it.
-- Both run through `fanout.js` (its `checker` stage), each writing its own file.
+- Both run through `fanout.js`, each writing its own file: refuters as its items, the critic as its
+  checker. The checker rides in an items object, `{"items": [...], "checker": {...}}`; a plain items
+  array runs no checker (the script's header comment lists the fields).
 
 ## Finding format
 

@@ -28,19 +28,23 @@ the review loop with its stop rule, stopped plans, decisions, and reconciling th
 ## Worktrees and branches
 
 - The orchestrator creates them; agents never do:
-  `git worktree add -b improve/NNN-<slug> <root>\wt-NNN <base>`, where `<root>` is the machine's
-  worktree root outside the repo (`TAOM_IMPROVE_ROOT`).
+  `git worktree add -b improve/NNN-<slug> <root>\wt-NNN <base>`, where `<root>` is the run's worktree
+  root outside the repo, recorded in the PROGRESS.md header.
 - A plan never names a worktree or branch: the executor works where it is put.
 - After a branch's review, `git worktree remove <root>\wt-NNN` keeps the branch and frees the disk;
-  re-create the worktree for a follow-up.
+  re-create the worktree for a follow-up. It deletes the worktree's gitignored files without a word
+  (`docs/reviews/raw/` among them), so no Codex output lives in a worktree (Stage 2 step 3).
 
 ## The executor
 
 1. Items file: one entry per plan, `{num, slug, wt, branch, base, contract, decisions?, stages?, note?,
    issue?}`, with `contract` one of `plan`, `decisions` (a follow-up) or `stages` (ordered, a commit per
    stage, stopping at the first stage not DONE).
-2. `python tools/improve_ctl.py args execute --items <items.json> --run-root <run folder> --out <args.json>`,
-   then the Workflow tool on `.claude/skills/improve/workflows/execute.js` with that args JSON.
+2. `python tools/improve_ctl.py args execute --items <items.json> --run-root <run folder>
+   --scratch <root>\scratch --tmp <root>\scratch\tmp --out <args.json>`, then the Workflow tool on
+   `.claude/skills/improve/workflows/execute.js` with that args JSON. Top-level fields such as
+   `knownFailures` ride in an items object, `{"items": [...], "knownFailures": [...]}` (the script's
+   header comment lists them).
 3. Each result: `status` DONE, BLOCKED or PARTIAL, with the commit, tests, RED evidence, deviations, stop
    reason and what is owed. A null result is a failure: report it, then resume the run
    ([run-protocol.md](run-protocol.md) "Resume").
@@ -52,7 +56,7 @@ the review loop with its stop rule, stopped plans, decisions, and reconciling th
 ## Stage 1: the spec check (you)
 
 The executor's report is a claim, not evidence ([evidence-over-claims](../../../rules/evidence-over-claims.md)
-§B). Before any quality review ([agent-teams.md](../../../../docs/ai-includes/agent-teams.md) "Subagent
+section B). Before any quality review ([agent-teams.md](../../../../docs/ai-includes/agent-teams.md) "Subagent
 review ordering"):
 
 1. Re-run every done criterion in the worktree.
@@ -80,19 +84,28 @@ maintainer with both reasons. Set the index row to STOPPED with the reason while
 
 ## Stage 2: the review
 
-1. **Blast radius** (deep-review Step 1): `python tools/graphify_taom.py refresh --if-stale`, then
-   `python tools/graphify_taom.py affected "<Type>" --depth 2` for each C# type the branch changes; put
-   callers outside the diff in the item's `note`.
+1. **Blast radius** (deep-review Step 1), with the worktree's own copy so it reads the branch's code:
+   `python <root>\wt-NNN\tools\graphify_taom.py refresh --if-stale`, then
+   `python <root>\wt-NNN\tools\graphify_taom.py affected "<Type>" --depth 2` for each C# type the branch
+   changes (a relative `tools/...` from the main checkout builds and reads the main checkout's graph);
+   put callers outside the diff in the item's `note`.
 2. **Args**: `python tools/improve_ctl.py args review --items <items.json> --run-root <run folder>
-   --max-rounds 2 --out <args.json>`. It adds each item's files by kind and its lenses per
-   `.claude/skills/deep-review/SKILL.md` Step 2, from `git diff --name-only base..head`.
+   --scratch <root>\scratch --tmp <root>\scratch\tmp --max-rounds 2 --out <args.json>`. Each item
+   gains its changed files by kind and the lenses `.claude/skills/deep-review/SKILL.md` Step 2 routes
+   by file type, from `git diff --name-only base..head` in its worktree, unioned with any `lenses` the
+   item already lists. File types cannot show changed text that states engine behaviour, so list lens
+   2 in the item yourself for that. An item whose `base..head` changes no file is refused, and every
+   revision is checked as a revision, never read as a git option. In an items object, a field such
+   as `pool`, `model` or `maxRounds` stands unless you pass its flag.
 3. **Codex, only when the maintainer asked for it this run**:
    `python tools/improve_ctl.py codex-prompt --branch improve/NNN-<slug> --base <base> [--tag <tag>] --out <prompt file>`,
    dispatched from the main checkout (the trusted path that loads the repo's Codex pin) per
-   `/review-codex` Phase 2e, in the background, output under the branch worktree's `docs/reviews/raw/`.
-   It is done when its last line is `END OF CODEX REVIEW`. Pass the output file as the item's
-   `codexOut`. Without Codex, the convergence rounds stand in for the completion workflow's second Codex
-   pass; PROGRESS.md records which ran.
+   `/review-codex` Phase 2e, in the background. The prompt file and the output go under
+   `<root>\scratch\codex\`, never into a worktree: `docs/reviews/raw/` is gitignored, and removing the
+   worktree would delete the output, a running Codex's included. It is done when its last line is
+   `END OF CODEX REVIEW`. Pass the output file as the item's `codexOut`. Without Codex, the
+   convergence rounds stand in for the completion workflow's second Codex pass; PROGRESS.md records
+   which ran.
 4. **`review.js`**: lenses as `deep-reviewer` (never with `model`), waves of four, defect lenses first;
    then a lead who reads deep-review Steps 3, 3e and 4 and review-codex Phase 3 from the skill files,
    verifies every lens and Codex finding in the worktree (CONFIRMED, FALSE POSITIVE with the reason, or
@@ -110,7 +123,10 @@ maintainer with both reasons. Set the index row to STOPPED with the reason while
    second convergence reviewer reads that fix diff. `maxRounds` is 2.
 3. **Residual findings** after the last round go to the maintainer, never to a third round unasked:
    **Ship now, track it (Recommended)**, with an issue or FOR-MIKE line per finding, or **One more
-   round**. A residual LOW in a record or doc (not code, not a gate) you may fix yourself without a
+   round**. For a residual HIGH (a CRITICAL or a Codex P1 counts), recommend one more round instead;
+   if he ships it, record the deferral the way deep-review's "HIGH findings" section requires (an
+   issue, a `Deferred:` trailer or a `Known limitation:` paragraph in the commit body), never only in
+   FOR-MIKE.md. A residual LOW in a record or doc (not code, not a gate) you may fix yourself without a
    round.
 4. **Behaviour-changing proposals** are never applied unattended; they go to DECISIONS.md or FOR-MIKE.md.
 5. **A gate change** (hook, validator, CI step): the lead or fix pass runs a differential sweep of the
