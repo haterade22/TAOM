@@ -302,6 +302,20 @@ class ArgsTests(FixtureRepo):
         self.assertEqual(proc.returncode, 2)
         self.assertIn(b"--run-root", proc.stderr)
 
+    def test_a_path_flag_that_is_not_absolute_is_refused(self):
+        # Git Bash turns an unquoted E:\root\scratch into E:rootscratch, a drive-relative path that
+        # abspath would quietly resolve against the current folder.
+        for flag in ("--run-root", "--scratch", "--tmp"):
+            for value in ("E:rootscratch", "relative/scratch"):
+                proc = self.run_args("fanout", "--items", self.items, flag, value,
+                                     run_root=flag != "--run-root")
+                self.assertEqual(proc.returncode, 2, (flag, value, proc.stderr))
+                self.assertIn(f"{flag} '{value}' is not an absolute path".encode(), proc.stderr)
+        proc = self.run_tool("args", "fanout", "--items", self.items, "--run-root", self.run_root,
+                             env=dict(self.env, TAOM_IMPROVE_ROOT="E:improveroot"))
+        self.assertEqual(proc.returncode, 2, proc.stderr)
+        self.assertIn(b"TAOM_IMPROVE_ROOT 'E:improveroot' is not an absolute path", proc.stderr)
+
     def test_an_unknown_model_role_is_refused(self):
         proc = self.run_args("review", "--items", self.items, "--model", "reveiwer=x")
         self.assertEqual(proc.returncode, 2)
@@ -633,8 +647,9 @@ class WatchTests(unittest.TestCase):
         os.utime(path, (mtime, mtime))
 
     def watch(self, *extra, directory=None):
+        """watch on the workflow's own folder unless a directory is given."""
         return subprocess.run([sys.executable, "-B", str(TOOL), "watch", "--dir",
-                               str(directory or self.dir), *extra], capture_output=True)
+                               str(directory or self.wf), *extra], capture_output=True)
 
     def flagged(self, proc, flag):
         return [line for line in proc.stdout.decode("utf-8").splitlines() if line.startswith(flag + " ")]
@@ -647,8 +662,7 @@ class WatchTests(unittest.TestCase):
         self.assertEqual(len(stale), 1, lines)
         self.assertIn("agent-a1.jsonl", stale[0])
         self.assertIn("review-011", stale[0])
-        self.assertTrue(any("agent-plain.jsonl" in line for line in lines))
-        self.assertEqual(len([line for line in lines if ".jsonl" in line]), 8)
+        self.assertEqual(len([line for line in lines if ".jsonl" in line]), 7)
 
     def test_finished_failed_superseded_and_fresh_agents_are_not_stale(self):
         (self.wf / "agent-a1.jsonl").unlink()
@@ -669,6 +683,17 @@ class WatchTests(unittest.TestCase):
 
     def test_a_missing_folder_is_an_error(self):
         self.assertEqual(self.watch(directory=self.dir / "absent").returncode, 2)
+
+    def test_a_session_folder_is_watched_without_its_workflows_folder(self):
+        # self.dir is a session's subagents folder: a direct spawn beside workflows/wf_1, whose
+        # journal leaves a1 running and silent. A killed workflow's journal says the same forever,
+        # so watch never recurses into a workflows folder; a workflow is watched by its own folder.
+        proc = self.watch(directory=self.dir)
+        self.assertEqual(proc.returncode, 0, proc.stdout)
+        listed = [line for line in proc.stdout.decode("utf-8").splitlines() if ".jsonl" in line]
+        self.assertEqual(len(listed), 1, listed)
+        self.assertIn("agent-plain.jsonl", listed[0])
+        self.assertEqual(self.watch(directory=self.wf).returncode, 1)
 
     def test_the_recorded_hook_ask_stalls_are_flagged_in_a_direct_spawn_folder(self):
         spawns = self.dir / "spawns"
@@ -700,6 +725,19 @@ class WatchTests(unittest.TestCase):
         proc = self.watch()
         self.assertEqual(proc.returncode, 0, proc.stdout)
         self.assertNotIn(b"STALLED-ASK", proc.stdout)
+
+    def test_a_tool_result_for_another_call_leaves_the_ask_pending(self):
+        # Two tool calls in one turn: the one the hook did not stop comes back, the asked one waits.
+        spawns = self.dir / "spawns"
+        spawns.mkdir()
+        other = {"type": "user", "message": {"role": "user", "content": [
+            {"tool_use_id": "toolu_OTHER", "type": "tool_result", "content": "done", "is_error": False}]}}
+        asked = ask_transcript("toolu_A", ".claude/hooks/block-dangerous-git.sh", "still waiting", ())
+        self.transcript(spawns / "agent-s.jsonl", 1, asked + json.dumps(other) + "\n")
+        proc = self.watch(directory=spawns)
+        self.assertEqual(proc.returncode, 1, proc.stdout)
+        (line,) = self.flagged(proc, "STALLED-ASK")
+        self.assertIn("still waiting", line)
 
     def test_only_the_latest_ask_counts(self):
         spawns = self.dir / "spawns"

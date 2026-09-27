@@ -185,6 +185,12 @@ def cmd_args(a) -> int:
             raise Fail(f"--model {pair}: expected role=id, role one of {', '.join(ROLES)}")
         model = model or {}
         model[role] = model_id
+    # Git Bash turns an unquoted E:\root\scratch into the drive-relative E:rootscratch.
+    for name, value in (("--run-root", a.run_root), ("--scratch", a.scratch), ("--tmp", a.tmp),
+                        ("TAOM_IMPROVE_ROOT", os.environ.get("TAOM_IMPROVE_ROOT"))):
+        if value and not os.path.isabs(value):
+            raise Fail(f"{name} {value!r} is not an absolute path; quote a Windows path in Git Bash, "
+                       "which drops its backslashes")
     # A flag wins; without one, a field the items object carries stands; otherwise the default.
     flags = {"rules": a.rules and read_text(a.rules), "repo": a.repo and os.path.abspath(a.repo),
              "runRoot": a.run_root and os.path.abspath(a.run_root),
@@ -495,15 +501,25 @@ def pending_ask(path: Path):
     return pending[1] if pending else None
 
 
+def transcripts(root: Path) -> list:
+    """Every agent transcript under root, never inside a folder named workflows below it: a
+    session's subagents folder keeps every workflow it ran, and a killed one's journal leaves its
+    unfinished agents running forever. A workflow is watched by pointing at its own folder."""
+    found = []
+    for folder, subfolders, files in os.walk(root):
+        subfolders[:] = [name for name in subfolders if name != "workflows"]
+        found += [Path(folder) / name for name in files
+                  if name.endswith(".jsonl") and name != "journal.jsonl"]
+    return sorted(found)
+
+
 def cmd_watch(a) -> int:
     root = Path(a.dir)
     if not root.is_dir():
         raise Fail(f"no such folder: {root}")
     now, journals = time.time(), {}
     counts = {"total": 0, "running": 0, "stale": 0, "asking": 0}
-    for transcript in sorted(root.rglob("*.jsonl")):
-        if transcript.name == "journal.jsonl":
-            continue
+    for transcript in transcripts(root):
         if transcript.parent not in journals:
             journals[transcript.parent] = journal_states(transcript.parent / "journal.jsonl")
         states = journals[transcript.parent]
@@ -537,13 +553,15 @@ def build_parser() -> argparse.ArgumentParser:
                        "lenses for git diff --name-only base..head, unioned with any lenses it "
                        "carries; a range that changes no file is refused. An items file may be an "
                        "array, or an object whose other fields are top-level args: each stands "
-                       "unless a flag is given for it (pool, model and maxRounds included).")
+                       "unless a flag is given for it (pool, model and maxRounds included). "
+                       "--run-root, --scratch, --tmp and TAOM_IMPROVE_ROOT must be absolute: quote "
+                       "a Windows path in Git Bash, which drops its backslashes.")
     p.add_argument("workflow", choices=WORKFLOWS)
     p.add_argument("--items", required=True, help="JSON file: the items array (or {items, ...})")
     p.add_argument("--repo", help="main checkout (default: the parent of git's common dir)")
     p.add_argument("--run-root", help="the run folder, absolute (required)")
-    p.add_argument("--scratch", help="scratch root (default: $TAOM_IMPROVE_ROOT/scratch)")
-    p.add_argument("--tmp", help="temp root (default: $TAOM_IMPROVE_ROOT/scratch/tmp)")
+    p.add_argument("--scratch", help="scratch root, absolute (default: $TAOM_IMPROVE_ROOT/scratch)")
+    p.add_argument("--tmp", help="temp root, absolute (default: $TAOM_IMPROVE_ROOT/scratch/tmp)")
     p.add_argument("--date", help="YYYY-MM-DD (default: today)")
     p.add_argument("--version", help=f"vX.Y.Z (default: <Version value> in {SUBMODULE_XML})")
     p.add_argument("--model", nargs="+", metavar="ROLE=ID",
@@ -586,12 +604,14 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("watch", help="list agent transcripts; exit 1 on a stalled or silent agent",
                        description="List every agent transcript (*.jsonl) under DIR (the running "
                        "workflow's transcript folder or a session's subagents folder) with its last "
-                       "write age. STALLED-ASK: the transcript's latest PreToolUse hook ask has no "
-                       "later tool_result for its tool call, so the agent waits on a prompt nobody "
-                       "sees (direct spawns included, which have no journal). STALE: a running "
-                       "agent silent for over --stale-min minutes. In a workflow folder, an agent "
-                       "whose journal key was started again later is superseded, not running. "
-                       "Exit 1 on any STALLED-ASK or STALE.")
+                       "write age, never looking inside a folder named workflows below DIR: a "
+                       "killed workflow's journal leaves its agents running forever, so a workflow "
+                       "is watched by pointing DIR at its own folder. STALLED-ASK: the transcript's "
+                       "latest PreToolUse hook ask has no later tool_result for its tool call, so "
+                       "the agent waits on a prompt nobody sees (direct spawns included, which have "
+                       "no journal). STALE: a running agent silent for over --stale-min minutes. In "
+                       "a workflow folder, an agent whose journal key was started again later is "
+                       "superseded, not running. Exit 1 on any STALLED-ASK or STALE.")
     p.add_argument("--dir", required=True)
     p.add_argument("--stale-min", type=float, default=30.0, help="minutes (default 30)")
     p.set_defaults(func=cmd_watch)
