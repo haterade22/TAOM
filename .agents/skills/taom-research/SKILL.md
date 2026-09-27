@@ -19,6 +19,9 @@ of an engine type by search instead
 relevant [engine process document](../../../docs/reference/engine/) first for the
 conceptual path. Then verify the exact type, signature, getter, enum value or
 raise site in the installed assembly. Trace base calls and native boundaries too.
+A native boundary (an `[EngineMethod]` call, data the engine parses itself) is read,
+not guessed: `python tools/native_decompile.py --engine-method <name>` or
+`--string <text>` (desktop only; setup in development machines).
 
 Use available file/shell tools, `tools/taom-src.ps1`, `ilspycmd` or an actually
 connected ILSpy MCP tool. Discover the tool and inspect its arguments before

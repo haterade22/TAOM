@@ -52,6 +52,7 @@ Status:         FIXED | FIXED_WITH_CONCERNS | BLOCKED
 ## When NOT to invoke
 
 - TAOM C# bugs → `/investigate`
+- A native engine crash or a game hang → `/native-crash-triage` (tooling bugs in `tools/native_*.py` themselves stay here)
 - Build errors → `/build-fix` first; escalate to this agent if `/build-fix` retry budget exhausts
 - Agent-loop / context-drift problems → `/agent-introspection-debugging`
 - Performance issues → use the existing `performance-optimizer:performance-engineer` plugin agent

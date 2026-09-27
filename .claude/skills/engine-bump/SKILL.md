@@ -31,6 +31,15 @@ misattributed crashes) or we migrate deliberately. The session-start hook warns 
    triaged against a local binary.
 3. `taom-src` auto-detects the new version (fresh cache under `~/.taom-src/v<new>/`) — old
    caches remain but are unused.
+4. **Warm the native decompiler, and read its map check.** Each new binary gets a fresh Ghidra
+   project, so run `python tools/native_decompile.py --engine-method get_current_action_type`
+   once for the client and once with `--dll` on the wEditor DLL: the first crash then decompiles in
+   seconds, not minutes. Any `WARNING: engine-method map:` line means the map is incomplete for that
+   binary, most likely because the registration sweep met an instruction form it does not read:
+   `--engine-method` refuses that assembly and the project is not seeded until `tools/native_engine_methods.py`
+   reads every id. Fix the sweep before trusting native answers for that build. Native offsets quoted in
+   docs and RCAs belong to their old binary; re-derive one by engine method or string, not by
+   offset ([ghidra-native-decompile.md](../../../docs/features/ghidra-native-decompile.md)).
 
 ## Phase 2 — Preserve the baseline, THEN regenerate
 

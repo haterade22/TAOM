@@ -85,6 +85,13 @@ When researching a class, use progressive refinement (max 3 cycles):
 
 Stop when you have enough context to answer the research question. Don't decompile everything — 3 high-relevance classes beats 10 shallow reads.
 
+**When the trail ends at an `[EngineMethod]`** (an `MBAPI.IMB*`, `EngineApplicationInterface.I*` or
+`LibraryApplicationInterface.I*` call) or at data the engine parses
+itself, the behaviour is native: run `python tools/native_decompile.py --engine-method <name>` or
+`--string <text>` and report the C with its RVA and engine version, never an inference from the
+method's name. Method: [taleworlds-research-guide.md](../../docs/ai-includes/taleworlds-research-guide.md)
+"Native engine code".
+
 ## Decompilation Fallback Chain
 
 When decompilation fails, escalate through this chain before giving up:

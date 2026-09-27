@@ -42,6 +42,10 @@ Gather context before forming any hypothesis.
 
 1. **Collect symptoms.** Read error messages, stack traces, save-load logs, Bannerlord crash dumps. If the user hasn't given enough context, ask ONE question at a time via `AskUserQuestion`.
 
+   **A native crash or a hang takes a detour first.** An access violation in `TaleWorlds.Native.dll`, a
+   CTD with no managed culprit, or a freeze: run `/native-crash-triage` to name the site and read it as C
+   (its hang section covers a freeze), then come back here with that site as the symptom.
+
 2. **Read the code.** Trace from symptom back. Use `Grep`/`find_symbol` (Serena MCP) to find references; `Read` to understand logic.
 
 2a. **Map the failing type's neighbourhood from the code graph (mandatory when the trace or symptom names a TAOM type, #677).** `python tools/graphify_taom.py refresh --if-stale` (background when stale), then `python tools/graphify_taom.py explain "<Type>"` for what it inherits, injects and calls, and `python tools/graphify_taom.py affected "<Type>" --depth 2` for everything that reaches it. That is the candidate list for Phase 3's pattern match. It is a lead list: open each file before it shapes a hypothesis. Engine types are not in the graph (use `/research`), and neither is XML.
@@ -109,6 +113,8 @@ Check whether the bug matches a known TAOM/Bannerlord failure pattern before wri
 | **Race / culture XML wiring** | Custom culture characters appear vanilla | XSLT didn't pass through new attribute, or XML missing required field |
 | **Collection-API self-inclusion** | OffByOne in counts, suspicious behavior near 'self' | TaleWorlds collection iter includes the caller. See `feedback_collection_api_inclusion.md` |
 | **Engine-scale property** | `AgentDrivenProperties` change has no effect or wrong magnitude | Missed downstream consumer / clamp / multiplier. See `feedback_engine_scale_research.md` |
+| **Native CTD** | Access violation in `TaleWorlds.Native.dll`, no managed frame to blame | `/native-crash-triage`: name the site, decompile it; the output names the engine method when the site implements one |
+| **Behaviour below an `[EngineMethod]`** | The managed trace ends in an engine interface call (`MBAPI.IMB*`, `EngineApplicationInterface.I*`, `LibraryApplicationInterface.I*`), or data the engine parses natively misbehaves | Decompile the native side: `python tools/native_decompile.py --engine-method <name>` / `--string <attribute>`. Never infer it from the method name |
 
 Also check:
 - `git log --all --oneline -- <file>` for prior fixes in the same area — **recurring bugs in the same files are an architectural smell**, not coincidence

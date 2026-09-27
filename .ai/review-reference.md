@@ -537,6 +537,7 @@ Engine concepts come from the process docs; signatures come only from the instal
 | 1. **`pwsh tools/taom-src.ps1 path <Type>`** | Decompiles the installed DLLs (version auto-detected) | Authoritative signatures; the dump can lag an engine bump |
 | 2. **Read decompiled source** | Read or search `E:\Decompiled_Bannerlord\` | Browsing namespaces and patterns |
 | 3. **ILSpy MCP** | `mcp__ilspy__decompile_assembly` / `mcp__ilspy__list_types` | Only if the type is in neither |
+| 4. **`python tools/native_decompile.py`** | `--engine-method <name>`, `--string <text>` or `--rva <offset>`: native engine code as C | When the managed trail ends at an `[EngineMethod]` or in natively parsed data. A native claim with no decompile behind it is UNVERIFIED |
 
 > ⚠️ **The decompiled source at `E:\Decompiled_Bannerlord\` is the SHIPPING-CLIENT build — it strips editor-only code.** Editor-only types (`MBEditor`, `AnimalSpawnSettings`, FBX-import / animation authoring) exist ONLY in `Win64_Shipping_wEditor` DLLs. "Absent from the dump" ≠ "doesn't exist." If a class is missing, check the editor build at `E:\Decompiled_Bannerlord\_editor_build\` before concluding it's native. See [bannerlord-engine-and-toolchain.md](../docs/reference/bannerlord-engine-and-toolchain.md).
 

@@ -104,9 +104,9 @@ Known gaps on the laptop, both deliberate:
 |---|---|---|
 | Ghidra 12.1.4 | `E:\Tools\ghidra_12.1.4_PUBLIC` (zip, SHA-256 checked); user env `GHIDRA_INSTALL_DIR` points here | 12.1.4 patches the three advisories an analyst can reach ([review](../reviews/adopt-ghidra-hindsight-2026-09-26.md)) |
 | Temurin JDK 25.0.4.1 | `E:\Tools\jdk-25.0.4.1+1` (zip) | Ghidra needs 25. Selected by `JAVA_HOME_OVERRIDE` in `support\launch.properties`; the machine's Java 8 stays first on PATH, and `JAVA_HOME` is untouched |
-| PyGhidra 3.1.0 with JPype 1.5.2 | venv `E:\Tools\ghidra-venv`, made with `py -3.13 -m venv`, installed offline with `pip install --no-index -f <ghidra>\Ghidra\Features\PyGhidra\pypkg\dist pyghidra` | PyGhidra pins JPype 1.5.2, which has no wheel for the system Python 3.14. The tool re-runs itself under this venv, so the command stays `python tools/native_decompile.py` |
+| PyGhidra 3.1.0 with JPype 1.5.2, and capstone 5.0.9 | venv `E:\Tools\ghidra-venv`, made with `py -3.13 -m venv`, installed offline with `pip install --no-index -f <ghidra>\Ghidra\Features\PyGhidra\pypkg\dist pyghidra`; capstone from its `py3-none-win_amd64` wheel | PyGhidra pins JPype 1.5.2, which has no wheel for the system Python 3.14. The tool re-runs itself under this venv, so the command stays `python tools/native_decompile.py`; the engine-method map needs capstone there too |
 | Ghidra's settings, cache and temp directories | `E:\ghidra\user\{settings,cache,temp}`, set by three `VMARGS` lines in `support\launch.properties` | The 3.13 is the Microsoft Store build, which redirects `AppData` writes into its package folder; the JVM runs inside that process, and Ghidra's OSGi bundle host fails on the redirected paths |
-| Analysed projects | `E:\ghidra\TAOM\<build folder>-<sha256[:16]>` | One per distinct binary. The v1.5.3 client DLL (14 MB): 213 s to analyse once, a 212 MB project, then 3.4 s per run |
+| Analysed projects | `E:\ghidra\TAOM\<build folder>-<sha256[:16]>`, with `<key>.engine-methods.json` beside each | One per distinct binary. The v1.5.3 client DLL (14 MB): 213 s to analyse once, a 212 MB project, then 3 to 5 s per run |
 
 A reinstall of Ghidra has to repeat the four `launch.properties` edits (`JAVA_HOME_OVERRIDE` and the
 three directory lines).

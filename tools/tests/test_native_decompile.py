@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-"""Unit tests for native_decompile.py (headless Ghidra decompile of a native RVA).
+"""Unit tests for native_decompile.py (headless Ghidra decompile of native engine code).
 
 Run:  python -m unittest tools.tests.test_native_decompile
   or:  python tools/tests/test_native_decompile.py
 
 The unit tests need no Ghidra: report() and main() take a fake backend with the same
-three calls the real one answers (function_at, decompile, callers). The real backend is
-covered by one opt-in integration test, which runs only with GHIDRA_INSTALL_DIR set and
-TAOM_GHIDRA_IT=1 because the first analysis of a binary takes minutes. It checks the
-function entry Ghidra reports against the .pdata start native_crash_triage.py reports
-for the same RVA: two independent readings of the same binary.
+calls the real one answers (function_at, decompile, callers, referencing_functions,
+thunk_target), and the real backend's thunk logic is tested against a mocked program.
+The real backend runs in opt-in integration tests (GHIDRA_INSTALL_DIR set and
+TAOM_GHIDRA_IT=1), because the first analysis of a binary takes minutes. One checks the
+function entry Ghidra reports against the .pdata start native_crash_triage.py reports for
+the same RVA, two independent readings of the same binary; the others pin v1.5.3 answers
+of each mode and skip on any other engine.
 """
 import contextlib
 import io
@@ -24,17 +26,22 @@ from pathlib import Path
 from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import native_decompile as nd  # noqa: E402
+import native_engine_methods as nem  # noqa: E402
+from test_native_crash_triage_dump import _build_pe  # noqa: E402
 
 
 class FakeBackend:
     """Stands in for GhidraBackend: functions by entry RVA, C text and callers by entry."""
 
-    def __init__(self, functions, code=None, callers=None):
+    def __init__(self, functions, code=None, callers=None, refs=None, thunks=None):
         self.functions = functions            # [nd.Function]
         self.code = code or {}                # entry_rva -> C text
         self.caller_map = callers or {}       # entry_rva -> [entry_rva]
+        self.refs = refs or {}                # data rva -> [entry_rva of referencing functions]
+        self.thunks = thunks or {}            # thunk entry_rva -> the entry_rva it jumps to
         self.entered = False
 
     def __enter__(self):
@@ -59,14 +66,28 @@ class FakeBackend:
     def callers(self, fn):
         return [self._by_entry(e) for e in self.caller_map.get(fn.entry_rva, [])]
 
+    def referencing_functions(self, rva):
+        return [self._by_entry(e) for e in self.refs.get(rva, [])]
 
-def _run_main(argv, backend=None, env=None):
-    """main() with captured streams; returns (exit code, stdout, stderr)."""
+    def thunk_target(self, fn):
+        target = self.thunks.get(fn.entry_rva)
+        return None if target is None else self._by_entry(target)
+
+
+def _run_main(argv, backend=None, env=None, engine_map=None, map_error=None):
+    """main() with captured streams; returns (exit code, stdout, stderr). Without engine_map
+    or map_error the real map loader runs, and finds no managed DLLs beside a fake DLL."""
     out, err = io.StringIO(), io.StringIO()
     factory = (lambda *a, **k: backend) if backend is not None else None
+    map_factory = None
+    if engine_map is not None or map_error is not None:
+        def map_factory(*_a):
+            if map_error is not None:
+                raise nem.EngineMapError(map_error)
+            return engine_map
     with mock.patch.dict(os.environ, env or {}, clear=False), \
             contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
-        code = nd.main(argv, backend_factory=factory)
+        code = nd.main(argv, backend_factory=factory, map_factory=map_factory)
     return code, out.getvalue(), err.getvalue()
 
 
@@ -234,7 +255,7 @@ class MainTests(unittest.TestCase):
         # Ghidra's ProjectLocator refuses a relative path.
         seen = {}
 
-        def factory(dll, project_dir, key):
+        def factory(dll, project_dir, key, **_kw):
             seen["project_dir"] = project_dir
             return FakeBackend([ReportTests.CRASH])
 
@@ -307,6 +328,246 @@ class MainTests(unittest.TestCase):
         self.assertIn("pyghidra", err)
 
 
+ENGINE_MAP = nem.EngineMethodMap([
+    nem.Resolved("MountAndBlade", 69, "IMBAgent", "GetCurrentActionType", "get_current_action_type", 0x1040),
+    nem.Resolved("MountAndBlade", 5, "IMBMission", "GetName", "get_name", 0x2000),
+    nem.Resolved("Engine", 2, "IScene", "GetName", "get_name", 0x3000),
+])
+
+
+class EngineMethodModeTests(unittest.TestCase):
+    def setUp(self):
+        self._dir = tempfile.TemporaryDirectory()
+        self.dll = Path(self._dir.name) / "Win64_Shipping_Client" / "TaleWorlds.Native.dll"
+        self.dll.parent.mkdir()
+        self.dll.write_bytes(b"MZ fake")
+
+    def tearDown(self):
+        self._dir.cleanup()
+
+    def _run(self, *args, backend=None, **kw):
+        argv = ["--dll", str(self.dll), "--project-dir", str(Path(self._dir.name) / "p"), *args]
+        return _run_main(argv, backend or FakeBackend([ReportTests.CRASH]), **kw)
+
+    def test_resolves_the_implementation_and_decompiles_it(self):
+        code, out, err = self._run("--engine-method", "IMBAgent.GetCurrentActionType", engine_map=ENGINE_MAP)
+        self.assertEqual(code, 0, err)
+        self.assertIn("resolved 'IMBAgent.GetCurrentActionType' -> 0x1040", out)
+        self.assertIn("function: FUN_180001040  entry 0x1040", out)
+        self.assertIn("engine method: IMBAgent.GetCurrentActionType = get_current_action_type "
+                      "(MountAndBlade id 69)", out)
+
+    def test_a_blank_name_exits_2(self):
+        code, _, err = self._run("--engine-method", " ", engine_map=ENGINE_MAP)
+        self.assertEqual(code, 2)
+        self.assertIn("empty", err)
+
+    def test_a_problem_in_another_assembly_does_not_refuse(self):
+        partial = nem.EngineMethodMap(ENGINE_MAP.methods, ["DotNet: 1 managed id(s) not registered"])
+        code, out, err = self._run("--engine-method", "IMBAgent.GetCurrentActionType", engine_map=partial)
+        self.assertEqual(code, 0, err)
+        self.assertIn("-> 0x1040", out)
+
+    def test_a_thunk_is_followed_to_the_code_it_jumps_to(self):
+        # 100 single-owner implementations are thunks; their own C is one jump.
+        target = nd.Function("FUN_180002000", 0x2000, 0x80)
+        backend = FakeBackend([ReportTests.CRASH, target], thunks={0x1040: 0x2000},
+                              code={0x2000: "void FUN_180002000(void)\n{\n  preload();\n}\n"})
+        code, out, err = self._run("--engine-method", "IMBAgent.GetCurrentActionType", backend=backend,
+                                   engine_map=ENGINE_MAP)
+        self.assertEqual(code, 0, err)
+        self.assertIn("thunk to: FUN_180002000  entry 0x2000", out)
+        self.assertIn("preload();", out)
+
+    def test_an_assembly_whose_map_is_incomplete_is_refused(self):
+        # A partial sweep is an unverified answer; exiting 0 with it is the failure to avoid.
+        partial = nem.EngineMethodMap(ENGINE_MAP.methods, ["MountAndBlade: 1 managed id(s) not registered"])
+        code, _, err = self._run("--engine-method", "IMBAgent.GetCurrentActionType", engine_map=partial)
+        self.assertEqual(code, 2)
+        self.assertIn("incomplete", err)
+
+    def test_any_map_failure_leaves_rva_working(self):
+        def broken(*_a):
+            raise ValueError("Expecting value: line 1 column 41")
+
+        argv = ["--dll", str(self.dll), "--project-dir", str(Path(self._dir.name) / "p"), "--rva", "0x1050"]
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            code = nd.main(argv, backend_factory=lambda *a, **k: FakeBackend([ReportTests.CRASH]),
+                           map_factory=broken)
+        self.assertEqual(code, 0, err.getvalue())
+        self.assertIn("engine methods: unavailable (ValueError: Expecting value", out.getvalue())
+
+    def test_a_name_on_two_interfaces_exits_2_naming_both(self):
+        code, _, err = self._run("--engine-method", "get_name", engine_map=ENGINE_MAP)
+        self.assertEqual(code, 2)
+        self.assertIn("IMBMission.GetName", err)
+        self.assertIn("IScene.GetName", err)
+
+    def test_an_unknown_name_exits_2_with_suggestions(self):
+        code, _, err = self._run("--engine-method", "current_action", engine_map=ENGINE_MAP)
+        self.assertEqual(code, 2)
+        self.assertIn("IMBAgent.GetCurrentActionType (get_current_action_type)", err)
+
+    def test_the_mode_needs_the_map(self):
+        code, _, err = self._run("--engine-method", "get_name", map_error="ilspycmd is not on PATH")
+        self.assertEqual(code, 2)
+        self.assertIn("ilspycmd is not on PATH", err)
+
+    def test_an_rva_in_a_registered_implementation_is_named(self):
+        code, out, _ = self._run("--rva", "0x1050", engine_map=ENGINE_MAP)
+        self.assertEqual(code, 0)
+        self.assertIn("engine method: IMBAgent.GetCurrentActionType = get_current_action_type "
+                      "(MountAndBlade id 69)", out)
+
+    def test_an_rva_without_a_map_still_decompiles(self):
+        code, out, _ = self._run("--rva", "0x1050", map_error="no AutoGenerated DLLs here")
+        self.assertEqual(code, 0)
+        self.assertIn("engine methods: unavailable (no AutoGenerated DLLs here)", out)
+        self.assertIn("function: FUN_180001040", out)
+
+    def test_the_backend_receives_the_map_to_seed_its_project(self):
+        seen = {}
+
+        def factory(dll, project_dir, key, engine_map=None):
+            seen["map"] = engine_map
+            return FakeBackend([ReportTests.CRASH])
+
+        argv = ["--dll", str(self.dll), "--project-dir", str(Path(self._dir.name) / "p"), "--rva", "0x1050"]
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            nd.main(argv, backend_factory=factory, map_factory=lambda *_a: ENGINE_MAP)
+        self.assertIs(seen["map"], ENGINE_MAP)
+
+    def test_rva_engine_method_and_string_are_exclusive(self):
+        with self.assertRaises(SystemExit):
+            with contextlib.redirect_stderr(io.StringIO()):
+                nd.main(["--rva", "0x10", "--string", "x"])
+
+
+class StringModeTests(unittest.TestCase):
+    """_build_pe() holds 'monster_usage.cpp' at .rdata rva 0x2000; a UTF-16 string is added."""
+
+    def setUp(self):
+        self._dir = tempfile.TemporaryDirectory()
+        self.dll = Path(self._dir.name) / "Win64_Shipping_Client" / "TaleWorlds.Native.dll"
+        self.dll.parent.mkdir()
+        pe = bytearray(_build_pe())
+        wide = "IMono_Test::probe".encode("utf-16-le") + b"\x00\x00"
+        pe[0x420:0x420 + len(wide)] = wide
+        self.dll.write_bytes(bytes(pe))
+
+    def tearDown(self):
+        self._dir.cleanup()
+
+    def _run(self, text, refs=None):
+        backend = FakeBackend([ReportTests.CRASH], refs=refs or {})
+        argv = ["--dll", str(self.dll), "--project-dir", str(Path(self._dir.name) / "p"), "--string", text]
+        return _run_main(argv, backend, map_error="none")
+
+    def test_an_ascii_string_reports_and_decompiles_its_referencing_functions(self):
+        code, out, err = self._run("monster_usage.cpp", refs={0x2000: [0x1040]})
+        self.assertEqual(code, 0, err)
+        self.assertIn("string 'monster_usage.cpp' at 0x2000 (ascii): 1 referencing function(s)", out)
+        self.assertIn("--- FUN_180001040  entry 0x1040 ---", out)
+
+    def test_a_substring_reports_the_whole_string(self):
+        _, out, _ = self._run("usage", refs={0x2000: [0x1040]})
+        self.assertIn("string 'monster_usage.cpp' at 0x2000 (ascii)", out)
+
+    def test_utf16_strings_are_found(self):
+        _, out, _ = self._run("probe")
+        self.assertIn("string 'IMono_Test::probe' at 0x2020 (utf-16)", out)
+
+    def test_a_string_no_code_references_says_so(self):
+        _, out, _ = self._run("monster_usage.cpp")
+        self.assertIn("no code references", out)
+
+    def test_text_absent_from_the_dll_exits_2(self):
+        code, _, err = self._run("not in this binary")
+        self.assertEqual(code, 2)
+        self.assertIn("not found", err)
+
+    def test_empty_text_exits_2_instead_of_matching_everything(self):
+        code, _, err = self._run("")
+        self.assertEqual(code, 2)
+        self.assertIn("empty", err)
+
+    def test_callers_with_string_is_refused_not_ignored(self):
+        backend = FakeBackend([ReportTests.CRASH])
+        argv = ["--dll", str(self.dll), "--project-dir", str(Path(self._dir.name) / "p"),
+                "--string", "usage", "--callers", "1"]
+        code, _, err = _run_main(argv, backend, map_error="none")
+        self.assertEqual(code, 2)
+        self.assertIn("--callers", err)
+
+
+class SeedTests(unittest.TestCase):
+    def test_only_an_address_one_method_owns_gets_a_name(self):
+        # 108 methods share one v1.5.3 stub; naming it after any of them mislabels every caller.
+        m = nem.EngineMethodMap([
+            nem.Resolved("MountAndBlade", 1, "IMBAgent", "GetName", "get_name", 0x100),
+            nem.Resolved("Engine", 7, "IDebug", "GetShowDebugInfo", "get_show_debug_info", 0x200),
+            nem.Resolved("Engine", 8, "IUtil", "GetBuildNumber", "get_build_number", 0x200),
+        ])
+        self.assertEqual(nd.seed_names(m), {0x100: "IMBAgent_GetName"})
+
+    def test_seeding_waits_for_a_complete_map_and_an_older_seed(self):
+        clean = nem.EngineMethodMap(ENGINE_MAP.methods)
+        partial = nem.EngineMethodMap(ENGINE_MAP.methods, ["DotNet: no managed ids parsed"])
+        self.assertTrue(nd.should_seed(clean, applied=0))
+        self.assertFalse(nd.should_seed(clean, applied=nd.SEED_VERSION))
+        self.assertFalse(nd.should_seed(partial, applied=0))
+        self.assertFalse(nd.should_seed(None, applied=0))
+
+
+class ThunkTests(unittest.TestCase):
+    """GhidraBackend.thunk_target against a mocked program: no Ghidra needed."""
+
+    def _backend(self, target):
+        jfn = mock.Mock()
+        jfn.isThunk.return_value = True
+        jfn.getThunkedFunction.return_value = target
+        program = mock.Mock()
+        program.getFunctionManager.return_value.getFunctionAt.return_value = jfn
+        backend = nd.GhidraBackend.__new__(nd.GhidraBackend)
+        backend.program = program
+        return backend
+
+    def test_a_thunk_to_an_import_has_no_target_to_decompile(self):
+        # jmp [__imp_AcquireSRWLockShared]: the target is EXTERNAL, and its address cannot be
+        # subtracted from the image base (the crash seen on --rva 0x9DB690).
+        target = mock.Mock()
+        target.isExternal.return_value = True
+        self.assertIsNone(self._backend(target).thunk_target(nd.Function("stub", 0x9DB690, 7)))
+
+    def test_a_thunk_to_code_in_the_binary_returns_it(self):
+        target = mock.Mock()
+        target.isExternal.return_value = False
+        target.getName.return_value = "FUN_180153850"
+        target.getEntryPoint.return_value.subtract.return_value = 0x153850
+        target.getBody.return_value.getNumAddresses.return_value = 0x40
+        got = self._backend(target).thunk_target(nd.Function("thunk", 0x4A0CF0, 5))
+        self.assertEqual(got, nd.Function("FUN_180153850", 0x153850, 0x40))
+
+    def test_a_thunk_target_is_not_printed_again_as_a_caller(self):
+        target = nd.Function("FUN_180002000", 0x2000, 0x80)
+        backend = FakeBackend([ReportTests.CRASH, target], thunks={0x1040: 0x2000}, callers={0x1040: [0x2000]})
+        lines = []
+        nd.report(backend, 0x1050, 1, out=lines.append)
+        self.assertNotIn("--- FUN_180002000", "\n".join(lines))
+
+
+class CallerLabelTests(unittest.TestCase):
+    def test_a_caller_that_implements_an_engine_method_is_labelled(self):
+        caller = nd.Function("FUN_180002000", 0x2000, 0x80)
+        backend = FakeBackend([ReportTests.CRASH, caller], callers={0x1040: [0x2000]})
+        lines = []
+        nd.report(backend, 0x1050, 1, out=lines.append, engine_map=ENGINE_MAP)
+        text = "\n".join(lines)
+        self.assertIn("--- FUN_180002000  entry 0x2000 ---\nengine method: IMBMission.GetName = get_name", text)
+
+
 class ExitTests(unittest.TestCase):
     """A failure part-way through Ghidra's OSGi start leaves a non-daemon FelixDispatchQueue
     thread running, and the JVM then never lets the process end (thread dump, 2026-09-26)."""
@@ -369,6 +630,46 @@ class GhidraIntegrationTests(unittest.TestCase):
                 self.assertIsNotNone(m, out)
                 self.assertEqual(int(m.group(1), 16), pe.func_of(rva)[0], out)
                 self.assertIn("{", out[m.end():], "no decompiled body")
+
+    def _cli_v153(self, *args):
+        """The CLI on the installed client, for tests that pin v1.5.3 addresses."""
+        import native_crash_triage as nct
+        dll = Path(nct.DEFAULT_DLL)
+        if not dll.is_file() or nd.engine_version(dll) != "v1.5.3":
+            self.skipTest("pins v1.5.3 client addresses; re-pin them at an engine bump")
+        r = subprocess.run([sys.executable, nd.__file__, *args], capture_output=True, timeout=3600)
+        return r.returncode, r.stdout.decode("utf-8", errors="replace"), r.stderr.decode("utf-8", errors="replace")
+
+    def test_an_engine_method_resolves_to_its_registered_implementation(self):
+        code, out, err = self._cli_v153("--engine-method", "IMBAgent.SetAttackState")
+        self.assertEqual(code, 0, out + err)
+        self.assertIn("-> 0x6DF670", out)
+        self.assertIn("function: IMBAgent_SetAttackState  entry 0x6DF670", out)
+
+    def test_a_string_leads_to_the_function_the_id_map_predicts(self):
+        # Two independent paths agree: the assert text the function holds, and its registration id.
+        code, out, err = self._cli_v153("--string", "IMono_MBAgent::weapon_equipped")
+        self.assertEqual(code, 0, out + err)
+        self.assertIn("--- IMBAgent_WeaponEquipped  entry 0x6E0100 ---", out)
+        self.assertIn("engine method: IMBAgent.WeaponEquipped = weapon_equipped (MountAndBlade id 252)", out)
+
+    def test_a_thunked_engine_method_shows_the_code_it_jumps_to(self):
+        code, out, err = self._cli_v153("--engine-method", "IPhysicsShape.ProcessPreloadQueue")
+        self.assertEqual(code, 0, out + err)
+        self.assertIn("function: IPhysicsShape_ProcessPreloadQueue  entry 0x4A0CF0", out)
+        self.assertIn("thunk to: FUN_180153850  entry 0x153850", out)
+
+    def test_a_stub_that_jumps_to_an_import_does_not_crash(self):
+        code, out, err = self._cli_v153("--rva", "0x9DB690")
+        self.assertEqual(code, 0, out + err)
+        self.assertNotIn("thunk to:", out)
+
+    def test_a_site_inside_a_registered_only_function_decompiles(self):
+        # 0x6E19B0 is reached only through the registration table: analysis alone found no
+        # function there, so a crash inside it failed to decompile until the project was seeded.
+        code, out, err = self._cli_v153("--rva", "0x6E19B4")
+        self.assertEqual(code, 0, out + err)
+        self.assertIn("function: IMBAgent_GetCurrentActionType  entry 0x6E19B0", out)
 
     def test_a_lone_gpr_marker_exits_2_with_the_cleanup_advice(self):
         # Deleting only the big .rep folder to free disk leaves a .gpr that Ghidra's

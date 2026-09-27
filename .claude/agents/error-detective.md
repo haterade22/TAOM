@@ -40,6 +40,9 @@ Fixed tool allowlist (Read/Grep/Glob/Bash, read-only); you **cannot invoke skill
    - Same Harmony patch order (priority conflicts)
    - Same data file (XML config, JSON tuning)
    - Same C# layer (adapter, service, GameModel)
+   - Same native crash site (one `TaleWorlds.Native.dll` offset, or one engine method, across reports):
+     name it once with `python tools/native_crash_triage.py --rva 0x<offset>` and read it as C with
+     `python tools/native_decompile.py --rva 0x<offset>`, then recommend `/native-crash-triage`
 
 3. **Hypothesis: single root cause.** If all symptoms share one dimension, that dimension is the suspect. Test by tracing one symptom to the suspect, then verifying the others come from the same place.
 

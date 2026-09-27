@@ -2930,3 +2930,24 @@ because their fake backend returns `\n` text.
 - **Prevent:** normalise line endings where text crosses from a foreign runtime into Python's stdout, and assert on
   the raw bytes in the integration test (`assertNotIn(b"\r\r\n", ...)`), where universal newlines cannot hide it.
 - **Source:** #688; `tools/tests/test_native_decompile.py` `GhidraIntegrationTests`.
+
+### A decompiler's auto-analysis misses functions reached only through a registration table (2026-09-26)
+Ghidra's analysis of the v1.5.3 client found no function at 947 of the 2,093 addresses the engine registers for its
+2,282 `[EngineMethod]` implementations, `get_current_action_type` at `0x6E19B0` among them. Nothing calls them directly:
+the only reference is a `lea` in the registration function, handed to managed code as a pointer. So
+`native_decompile.py --rva` inside one of them failed with "not inside any function", and those are exactly the
+engine calls TAOM makes. A byte pattern for the registration sites had the same kind of hole: it read 2,278 of the
+2,282, missing the site where `mov rcx,rbx` sits between the `lea` and the id, both tail calls, and DotNet's id 0.
+- **Why missed:** the first tests used addresses Ghidra already knew (crash sites with `.pdata`, a leaf it found
+  through a call). A green decompile of one function says nothing about the functions analysis never created.
+- **Prevent:** when a tool depends on a function table the binary builds at run time, enumerate the table and create
+  the functions from it (`GhidraBackend._seed`), then pin one table-only address in an integration test
+  (`test_a_site_inside_a_registered_only_function_decompiles`). Read instruction sequences with a register-tracking
+  sweep, not a byte pattern, and check the count against the other side (688, 1,561 and 33 managed ids).
+- **Second trap, same table:** 33 of those addresses are shared (one `return false` stub serves 35 methods, another
+  108), so naming a shared address after any one method mislabels every caller of the stub, and a seeded name is
+  never revisited. Name only addresses one method owns, and seed only from a map with no one-sided ids: the first
+  join ranked candidates by shared ids, and Engine's function, which holds every MountAndBlade id, would have taken
+  MountAndBlade's place after a single missed site (about 1,400 wrong answers, exit 0).
+- **Source:** #688; `tools/native_engine_methods.py` `registration_sites`, `assign`; `tools/native_decompile.py`
+  `_seed`, `seed_names`; the 2026-09-26 deep review findings F1 and F2.

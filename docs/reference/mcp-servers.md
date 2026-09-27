@@ -68,6 +68,7 @@ did; they were documented across nine sites until 2026-08-31. The real names are
 | 1. **`pwsh tools/taom-src.ps1 path <Type>`** | One command — decompiles the installed (v1.4.7) DLL on cache miss, returns absolute path | **For signature verification** (Harmony patch, GameModel override, adapter, API call) — authoritative; run after you understand the process conceptually |
 | 2. **Browse `E:\Decompiled_Bannerlord\`** | `Read` / `Grep` / `find` against the dump | Finding which DLL a class lives in, exploring a namespace tree |
 | 3. **ILSpy MCP** | `mcp__ilspy__decompile_assembly` / `mcp__ilspy__list_types` | Fallback if `taom-src` fails (e.g., need a full DLL type listing) |
+| 4. **`python tools/native_decompile.py`** | `--engine-method <name>`, `--string <text>` or `--rva <offset>`: native engine code as C, through headless Ghidra | When the managed trail ends at an `[EngineMethod]`, or the engine parses the data itself. [ghidra-native-decompile.md](../features/ghidra-native-decompile.md) |
 
 See `.claude/skills/taom-src/SKILL.md` for full usage. Composes with standard tools:
 ```bash

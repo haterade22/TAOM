@@ -10,6 +10,7 @@
 | Change a clan's colours, or work out why troop armour is the wrong colour | [features/clan-heraldry.md](../features/clan-heraldry.md) (data side) + [features/banner-color-persistence.md](../features/banner-color-persistence.md) (Patch23, the code that makes clan colour beat kingdom colour). The specs are synced FROM the live files (`tools/sync_clan_specs_from_live.py`, #589); re-applying them is a no-op |
 | Write tests / TDD workflow | [tdd-enforcement.md](../../docs/ai-includes/tdd-enforcement.md) |
 | Research TaleWorlds mechanics | [taleworlds-research-guide.md](../../docs/ai-includes/taleworlds-research-guide.md) |
+| Read what the native engine does (below an `[EngineMethod]`, natively parsed data, a native crash or hang frame) | [ghidra-native-decompile.md](../features/ghidra-native-decompile.md): `tools/native_decompile.py --engine-method` / `--string` / `--rva`; crashes and hangs go through `/native-crash-triage` |
 | Debug / iterate on problem | [iterative-problem-solving.md](../../docs/ai-includes/iterative-problem-solving.md) |
 | Compare multiple approaches | [multi-approach-validation.md](../../docs/ai-includes/multi-approach-validation.md) |
 | Understand architecture | [architecture.md](../../docs/ai-includes/architecture.md) |

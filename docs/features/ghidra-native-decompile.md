@@ -2,120 +2,179 @@
 
 ## Overview
 
-`tools/native_decompile.py` prints the native function at an RVA in `TaleWorlds.Native.dll` as
-decompiled C, and optionally its callers, using headless Ghidra 12.1 through PyGhidra. It is the
-decompiler step of `/native-crash-triage`: `native_crash_triage.py` names the crash site and ends
-its report with the exact `native_decompile.py` command for it. Issue
-[#688](https://github.com/haterade22/TAOM/issues/688); adoption record
+`tools/native_decompile.py` prints native engine code from `TaleWorlds.Native.dll` as decompiled C,
+using headless Ghidra 12.1 through PyGhidra. It answers three questions, one flag each:
+
+| Flag | Question | Used by |
+|---|---|---|
+| `--rva 0x<offset>` | what does the code at this address do (a crash site, a hang frame) | `/native-crash-triage`, `/investigate` |
+| `--engine-method <name>` | what does this managed `[EngineMethod]` call really do | `/research`, the `taleworlds-researcher` agent, the deep-review engine lens |
+| `--string <text>` | which native code uses this attribute, file name or assert text | `/research`, `/new-creature-mount` |
+
+Every printed function that implements engine methods is labelled with each of them, callers
+included. Issue [#688](https://github.com/haterade22/TAOM/issues/688); adoption record
 [adopt-ghidra-hindsight-2026-09-26.md](../reviews/adopt-ghidra-hindsight-2026-09-26.md).
 
 ## Why This Exists
 
 - **Before:** TAOM's native tooling (`native_crash_triage.py`, `native_sig_author.py`) is capstone
   and pefile. It finds function bounds, strings, callers, RTTI, vtables and xrefs, but it cannot say
-  what a function does. The skill told the reader to hand-decode the instructions around the crash
-  row, and to read a lookup table's builder the same way.
-- **The need:** the native CTDs TAOM has fixed were decided by the logic around the fault: a hash
-  map probe that falls off its end, an index read from a record. That logic is a screen of C and
-  pages of assembly.
-- **Without it:** every native investigation spends its longest step reconstructing control flow by
-  hand, and a wrong reading sends the fix to the wrong data table.
+  what a function does. The crash skill said to hand-decode instructions, and research stopped at
+  every `[EngineMethod]`: `bannerlord-engine-and-toolchain.md` told readers to describe native
+  behaviour "from behavior/naming".
+- **The need:** the native CTDs TAOM has fixed were decided by the logic around the fault (a hash map
+  probe that falls off its end, an index read from a record), and the data rules for action sets,
+  monster usage and skins are enforced natively.
+- **Without it:** control flow is reconstructed by hand, and native behaviour is inferred from names.
 
 ## Architecture
 
-### Design challenge
+### Design challenges
 
-- Auto-analysing a 14 MB DLL takes minutes, and a native offset is only valid for the exact binary
-  it came from. The wEditor build updates on its own Steam schedule, and Steam overwrites both builds
-  in place (`/native-crash-triage` Phase 1, steps 6 and 7).
-- PyGhidra pins a JPype with no wheel for the system Python 3.14, and the only Python 3.13 on the
-  desktop is the Microsoft Store build, which redirects `AppData` writes.
+- Auto-analysing a 14 MB DLL takes minutes, and a native offset holds only for the exact binary it
+  came from. The wEditor build updates on its own Steam schedule; Steam overwrites both in place.
+- The shipping DLL keeps almost none of the engine-method names (on v1.5.3, 53 of 2,282 survive
+  inside `IMono_<Class>::<name>` assert strings; `get_current_action_type` is not among them), so a
+  managed call cannot be found reliably by string.
+- Ghidra's analysis never finds many engine-method implementations: nothing calls them directly, the
+  registration table is their only reference. On v1.5.3 it had missed 947 of the 2,093 addresses
+  registered for 2,282 methods, including `get_current_action_type`'s at `0x6E19B0`.
+- 33 of those addresses are shared (a `return false` stub at `0x28F10` serves 35 methods), so a label
+  taken from any one method would be wrong for the rest.
+- PyGhidra pins a JPype with no wheel for the system Python 3.14; the only 3.13 on the desktop is
+  the Microsoft Store build, which redirects `AppData` writes.
 
 ### Solution approach
 
 ```
-python tools/native_decompile.py --rva 0x6590B9 [--callers 1] [--dll <path>]
-        |  checks the DLL and $GHIDRA_INSTALL_DIR
-        |  no pyghidra here? re-run under $TAOM_GHIDRA_PYTHON (default E:\Tools\ghidra-venv)
+python tools/native_decompile.py --rva X | --engine-method NAME | --string TEXT  [--dll D] [--callers N]
+        |  checks the DLL and $GHIDRA_INSTALL_DIR; no pyghidra here? re-run under the E: venv
         v
-key = <build folder>-<sha256[:16]>          e.g. Win64_Shipping_Client-45be32c57c451f78
+key = <build folder>-<sha256[:16]>                     e.g. Win64_Shipping_Client-45be32c57c451f78
         |
+engine-method map  <- native_engine_methods.py, cached as <key>.engine-methods.json
+        |   managed: generated enum + SetFunctionPointer switch from the installed AutoGenerated DLLs
+        |   native:  capstone sweep of the three registration functions (id -> implementation)
         v
-E:\ghidra\TAOM\<key>  exists with the program?  --no-->  import + auto-analyse + save (once)
-        |  yes: open it read-only
+E:\ghidra\TAOM\<key>: import + analyse (once) -> seed (once, from a complete map): a function at
+        |   every registered implementation, named when one method owns it -> saved; later runs
+        |   open it read-only
         v
-function containing imageBase + rva  ->  DecompInterface C  ->  N levels of callers, as C
+--rva: function containing X    --engine-method: the registered implementation    --string: every
+function referencing a string that contains TEXT (outside .text)  ->  C, callers, engine-method labels
 ```
 
-The hash key is what makes a stale answer impossible: new bytes get a new project, whatever path they
-sit at. The program is saved only after analysis completes, so a killed first run leaves nothing
-half-analysed behind, and the next run imports again. Two runs on one binary at once collide on
-Ghidra's project lock, and the second exits 2 saying so (tested 2026-09-26). Once the JVM is up the
-tool leaves through `os._exit`: a failure part-way through Ghidra's OSGi start leaves a non-daemon
-`FelixDispatchQueue` thread alive, and without it the process never ends
-([review](../reviews/adopt-ghidra-hindsight-2026-09-26.md), install trap 3). A `.gpr` left without
-its `.rep`, or two first runs racing on a new binary, exit 2 with the files to delete.
+**The engine-method map** (`tools/native_engine_methods.py`, no Ghidra needed): each AutoGenerated
+assembly numbers its methods in a generated enum, and `SetFunctionPointer`'s switch pairs every number
+with its C# interface and method. Engine names do not derive from C# names (`create_with_function` is
+`CreateWithDelegate`), so the pairing is read, never guessed. Natively, one registration function per
+assembly passes each number with its implementation's address, in two call forms and either register
+order (the MountAndBlade and Engine functions make their last registration in a tail call); a register-tracking sweep reads all
+of them, where a byte pattern misses the edges. Each assembly pairs with the function whose ids differ
+least from its own: a candidate must share at least half of both sides' ids, and the closest pairings
+across all assemblies claim their functions first. Engine's function holds every MountAndBlade id, so
+it must never win after a missed site, nor stand in when MountAndBlade's own function was not found. Any id on one side only, or an assembly whose enum parses to nothing, is
+printed as `WARNING: engine-method map:`; `--engine-method` then refuses that assembly, the project is
+not seeded from the map, and the map is not cached, so a fix to the sweep takes effect on the next run.
+Background:
+[bannerlord-engine-and-toolchain.md](../reference/bannerlord-engine-and-toolchain.md) section 4.
 
-**Leaf functions.** A frameless x64 leaf function (no calls, no stack allocation) needs no unwind
-data, so it has no `.pdata` entry and `native_crash_triage.py` cannot bound it. Triage then exits 1
-saying so and still prints the `decompile:` line, and Ghidra names the function: on v1.5.3,
-`0x404B17` is inside `FUN_180404b10`, a 0x23-byte `this->field` accessor, the shape of a null-`this`
-crash.
+**Seeding** creates a function at every registered implementation Ghidra missed, and names each
+address one method owns after it (`IMBAgent_GetCurrentActionType`), thunks included; a shared address
+keeps Ghidra's name and the output lists every method there. A thunk's output is followed by the C of
+the function it jumps to, since the thunk itself is one jump (`IPhysicsShape.ProcessPreloadQueue`). The applied seed version is a Ghidra program option, so
+a re-created project is seeded again, and a newer seed version re-seeds. A seeded name is never
+revisited, which is why seeding waits for a complete map.
+
+**Staleness and safety.** New bytes get a new project and a new map, whatever path they sit at. The
+program is saved only after analysis, and the map cache is written to a temporary file and moved into
+place, so a killed run leaves nothing half-written; a cache that does not parse is rebuilt. A map that
+cannot be built (no `ilspycmd`, no capstone, a timeout, any other error) prints
+`engine methods: unavailable (...)` and leaves `--rva` and `--string` working. A second run on a locked
+project exits 2 saying so; a `.gpr` without its `.rep` exits 2 naming the files to delete. Once the JVM
+is up the tool leaves through `os._exit`, because a failed OSGi start leaves a non-daemon
+`FelixDispatchQueue` thread that would hold the process open
+([review](../reviews/adopt-ghidra-hindsight-2026-09-26.md), install trap 3).
+
+**Leaf functions.** A frameless x64 leaf function needs no unwind data, so `native_crash_triage.py`
+cannot bound it; triage says so and still prints the `decompile:` line, and Ghidra names the function
+(`0x404B17` is inside a 0x23-byte `this->field` accessor on v1.5.3).
 
 **Upgrade note.** `GhidraProject.importProgram(File)`, used only on a first run, is deprecated for
-removal since Ghidra 12.0. At the next Ghidra upgrade, move the import to
-`ProgramLoader.builder()...load()`, which returns the program without saving it.
-
-`GhidraBackend` answers three calls (`function_at`, `decompile`, `callers`); `report()` and `main()`
-take any object with the same calls, which is how the unit tests run without Ghidra.
+removal since Ghidra 12.0; at the next Ghidra upgrade move the import to `ProgramLoader.builder()`.
 
 ## Configuration
 
-No TAOM config. The machine setup (Ghidra, the JDK, the PyGhidra venv, the four
+No TAOM config. The machine setup (Ghidra, the JDK, the PyGhidra venv with capstone, the four
 `support\launch.properties` edits) is in
 [development-machines.md](../reference/development-machines.md) "Ghidra, desktop only". The laptop
-has none of it; the tool exits 2 there naming that page.
+has none of it; the tool exits 2 there naming that page. The map also needs `ilspycmd` on PATH.
 
 ## Key Files
 
 | File | Purpose |
 |------|---------|
-| `tools/native_decompile.py` | the tool: cache key, venv re-run, Ghidra backend, report |
+| `tools/native_decompile.py` | the tool: modes, cache key, venv re-run, Ghidra backend, seeding, report |
+| `tools/native_engine_methods.py` | the engine-method map: enum parse, registration sweep, join, cache |
 | `tools/native_crash_triage.py` | prints the `native_decompile.py` line after naming a site |
-| `.claude/skills/native-crash-triage/SKILL.md` | Phase 2 uses it |
-| `tools/tests/test_native_decompile.py` | unit tests plus one opt-in integration test |
+| `.claude/skills/native-crash-triage/SKILL.md`, `.claude/skills/research/SKILL.md`, `.claude/skills/investigate/SKILL.md` | the processes that call it |
+| `tools/tests/test_native_decompile.py`, `tools/tests/test_native_engine_methods.py` | unit tests plus opt-in integration tests |
 
 ## Dependencies
 
 - Ghidra 12.1.4 and Temurin JDK 25 under `E:\Tools` (neither ships with TAOM)
-- PyGhidra 3.1.0 and JPype 1.5.2, from Ghidra's own `pypkg\dist`
-- `native_crash_triage.DEFAULT_DLL` for the default binary
+- PyGhidra 3.1.0 and JPype 1.5.2 from Ghidra's own `pypkg\dist`, and capstone 5.0.9, in the venv
+- `ilspycmd` for the managed half of the map; `native_crash_triage.Pe` for PE parsing
 
 ## Tests
 
-- `tools/tests/test_native_decompile.py`, 27 unit tests: the cache key (stable, changes with the
-  bytes, differs between Client and wEditor, safe for any folder name), `Version.xml` reading, the
-  report (offset, C text, caller levels, the caller cap, a shared caller and recursion printed once,
-  an RVA outside every function), the CLI (header, an absolute project dir, exit 2 for a missing
-  DLL, install or PyGhidra, the venv re-run and its no-second-re-run marker), and the hard exit once
-  the JVM is up.
-- Two integration tests, skipped unless `GHIDRA_INSTALL_DIR` is set and `TAOM_GHIDRA_IT=1`. One
-  checks three functions spread across the client DLL's `.pdata` (`0x289D00`, `0x568BC0`,
-  `0x87BF90` on v1.5.3): the entry Ghidra reports must equal the start `native_crash_triage.py` reads
-  from `.pdata`, two independent readings of the same binary. It runs the whole CLI, venv re-run
-  included, and fails on CR CR LF output (Ghidra's C carries CRLF on Windows). The other leaves a
-  lone `.gpr` in a scratch project dir and expects exit 2 with the cleanup advice. About 13 s for
-  both once the binary is analysed.
-- `tools/tests/test_native_crash_triage_dump.py` pins the hint line, including on the no-`.pdata`
-  path.
+- `tools/tests/test_native_engine_methods.py`: the registration sweep over the exact v1.5.3
+  instruction bytes (both call forms, both register orders, the `xor` id 0, both tail calls, a
+  clobbered register), candidate-function scanning, enum parsing (explicit and ordinal values, the
+  switch pairing, a member without a case), the join (exact matches, a partial sweep never losing to a
+  superset function, a superset function never standing in for a missing one, a function sharing under
+  half the ids, an assembly with no parsed ids, the mismatch report), every accepted spelling,
+  ambiguity, suggestions, reverse lookup, the cache (built once, rebuilt when a managed DLL changes, the
+  file is cut short or its format is older, never written for a map with problems, an error naming a
+  missing DLL), and a missing capstone or an `ilspycmd` timeout as a map error. The sweep tests skip
+  without capstone, since CI runs `tools/tests` with no `pip install`.
+- `tools/tests/test_native_decompile.py`: the cache key, `Version.xml`, the report (callers, the cap,
+  shared callers, recursion, labels on callers, a thunk followed to its target), the CLI (header, exit 2
+  paths, the venv re-run and its marker, the hard exit), the engine-method mode (resolution, ambiguity,
+  suggestions, a blank name, the map's absence, refusal for an incomplete assembly but not for a
+  problem in another one), any map failure leaving `--rva` working, the seeding rules (only
+  single-owner addresses are named; no seed from a map with problems or at the current version), and
+  the string mode (ASCII, UTF-16, a substring, no references, text not in the DLL, empty text,
+  `--callers` refused).
+- Opt-in integration (`GHIDRA_INSTALL_DIR` and `TAOM_GHIDRA_IT=1`; the address pins skip on any engine
+  but v1.5.3, the map's completeness check does not): Ghidra's entries equal `.pdata` starts for three
+  functions; a lone `.gpr` exits 2; the map resolves all 688 + 1,561 + 33 ids with no problem and three
+  known addresses;
+  `IMBAgent.SetAttackState` decompiles at `0x6DF670`; the string `IMono_MBAgent::weapon_equipped`
+  leads to `IMBAgent_WeaponEquipped` at `0x6E0100`, the function the id map predicts; and
+  `--rva 0x6E19B4` decompiles inside a function only seeding created. About 30 s for all six.
 
-## How to decompile a crash site
+## How to use it
 
-1. Name the site: `python tools/native_crash_triage.py --rva 0x<fault_offset>` (or `--dump`).
-2. Run the `decompile:` line it prints last. Add `--callers 1` to see who passed the bad value in.
-3. For the builder of a lookup table: `python tools/native_sig_author.py xref <table rva>`, then
-   `native_decompile.py --rva <builder rva>`.
-4. For an editor crash, pass the wEditor DLL with `--dll`; it gets its own project.
+**A crash site.** `python tools/native_crash_triage.py --rva 0x<fault_offset>` (or `--dump`), then
+run the `decompile:` line it prints. `--callers 1` shows who passed the bad value in. For a lookup
+table's builder: `python tools/native_sig_author.py xref <table rva>`, then `--rva <builder>`.
+
+**A managed engine call.** `python tools/native_decompile.py --engine-method IMBAgent.GetCurrentActionType`.
+Also accepted: the engine name (`get_current_action_type`), `GetCurrentActionType`,
+`MBAgent.get_current_action_type`, a namespace-qualified interface
+(`TaleWorlds.MountAndBlade.IMBAgent.GetCurrentActionType`, `MBAPI.IMBAgent.GetCurrentActionType`), the
+enum member (`enm_IMono_MBAgent_get_current_action_type`) and the assert form
+(`IMono_MBAgent::get_current_action_type`, as `--string` prints it). A name on several interfaces lists
+them; an unknown one suggests near names.
+
+**Data the engine parses.** `python tools/native_decompile.py --string <attribute or file name>`
+decompiles every function referencing a string that contains the text (ASCII or UTF-16; at most 8
+strings and 8 functions each, the rest counted).
+
+**An editor crash.** Pass the wEditor DLL with `--dll`; it gets its own project and map.
+
+Cite native findings with the RVA and engine version: they hold for that binary only.
 
 ## Performance
 
@@ -123,17 +182,24 @@ Measured 2026-09-26 on the desktop, v1.5.3 client DLL (14,209,376 bytes):
 
 | Run | Time | Notes |
 |---|---|---|
-| First run on a binary | 213 s analysis, 217 s wall | once per distinct binary; writes a 212 MB project |
-| Any later run | 3.4 s wall | venv re-run, JVM start, open the saved project read-only, decompile |
-| `--callers 1` on a lookup helper | about 1,900 lines of output | the four callers of `0x659030` are large; at most 8 callers are decompiled per function per level |
+| First run on a binary | 213 s analysis, 217 s wall | once per distinct binary; a 212 MB project |
+| Building the engine-method map | about 4 s | once per binary, then read from JSON |
+| Seeding an analysed project | the whole seeding run took 8.5 s | 947 functions created, 1,960 addresses named, 2,282 methods mapped; naming the 100 single-owner thunks later took one more re-seed |
+| Any later run, any mode | 3 to 5 s wall, with load | venv re-run, JVM start, read-only open, decompile |
+| `--callers 1` on a lookup helper | about 1,900 lines of output | at most 8 callers per function per level |
 
-The first real target was the `+0x6590B9` melee-table crash from `/native-crash-triage`: 26 lines
-of C show the bucket-chain walk and the null record pointer it returns on a miss, the pattern the
-skill describes as "hash-map miss dereferencing its end-sentinel".
+The first real target was the `+0x6590B9` melee-table crash from `/native-crash-triage`: 26 lines of
+C show the bucket-chain walk and the null record pointer it returns on a miss, the pattern the skill
+describes as "hash-map miss dereferencing its end-sentinel".
 
 ## Changelog
 
-- 2026-09-26: added (#688).
+- 2026-09-26: `--engine-method` and `--string`, the engine-method map, seeding, and the wiring into
+  `/research`, `/investigate`, `/native-crash-triage` (with a hang procedure), `/engine-bump`, the
+  review lens and the lookup tables (#688). Review fixes before commit: the join no longer lets a
+  superset function win, shared addresses stay unnamed, the seed version lives in the program, the map
+  cannot abort `--rva`, and a partial map refuses rather than answers.
+- 2026-09-26: added, `--rva` only (#688).
 
 ## GitHub Issue
 

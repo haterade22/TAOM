@@ -1,6 +1,6 @@
 ---
 name: native-crash-triage
-description: Root-cause native Bannerlord CTDs (AccessViolation in TaleWorlds.Native.dll) via Event Log offsets, offline disassembly, and live debugger forensics. No symbols needed.
+description: Root-cause native Bannerlord CTDs (AccessViolation in TaleWorlds.Native.dll) and hangs, via Event Log offsets, hang dumps, Ghidra decompile and live debugger forensics. No symbols needed.
 ---
 
 # Native Crash Triage
@@ -100,7 +100,9 @@ the function with `python tools/native_decompile.py --rva 0x<fault_offset>` (the
 with the exact line, also when the RVA is in a leaf function that has no `.pdata` entry, which
 triage cannot bound; `--callers 1` adds the callers' C; the first run on a new binary analyses it
 for minutes, once: [ghidra-native-decompile.md](../../../docs/features/ghidra-native-decompile.md)).
-Read the crash row against the C, and hand-decode the instructions only when Ghidra is absent. The
+Read the crash row against the C, and hand-decode the instructions only when Ghidra is absent. When
+the site implements a managed engine call, the output says which (`engine method: IMBAgent.X = x`):
+that is the managed call TAOM can see, and `/research` can follow it from there. The
 common patterns:
 - `cmp [reg+disp], imm` with reg=0 → **null + field-offset** (missing data surface)
 - chain-walk loop (`cmp r10d,[rax]` / `mov rax,[rax+8]`) ending in a deref → **hash-map miss
@@ -119,6 +121,29 @@ common patterns:
 - faulting address ≈ heap, or an index register holding float bits → **corrupted record**
   consumed downstream; check binding targets (phantom-animation sweep) and route around if
   engine-internal (Patch47 pattern)
+
+## Phase 2b: A hang (the game spins, nothing crashes)
+
+No exception means no Event Log offset and no stream `--dump` can decode, so take the stack from a
+full dump (proven on #599):
+
+1. **Spot the spin.** `Get-Process Bannerlord` kept `Responding` true through a game-loop spin
+   (#599), so do not wait for "Not Responding". Sample `Threads[].TotalProcessorTime` twice, 2 to 3 s apart: the game-loop thread holds
+   nearly all the lifetime CPU and is still climbing. `[MemSample]` lines prove nothing (a timer).
+2. **Dump.** `procdump -accepteula -ma <pid> E:\<dir>\hang.dmp` (Sysinternals, on PATH; about 11 GB).
+3. **Stack.** `WinDbgX -z <dmp> -c '$$><E:\<dir>\stack.wds'`, where the script (written with the Write
+   tool, never a heredoc) opens with `.logopen <log>`, runs `~~[0x<tid>]s; k 60; .loadby sos clr;
+   !clrstack -a` and ends `.logclose; q`. Poll the log, then `Stop-Process DbgX.Shell` (the window
+   outlives `q`). Never put a quoted `.printf` on the `-c` line: WinDbgX splits its own command line
+   on the quotes. Set `_NT_SYMBOL_PATH=srv*E:\symcache*https://msdl.microsoft.com/download/symbols`
+   for ntdll and kernel frames (caches live on E:, never C:).
+4. **Read the native frames as C.** Each `TaleWorlds_Native+0x<off>` frame's offset is an RVA:
+   `python tools/native_decompile.py --rva 0x<off>`. Read the stuck loop's exit condition in the C,
+   then find what should have set it.
+
+Heap values from the same log: `!do <obj>` for fields, `!DumpArray -details -length 3` for a struct
+array's layout, and `da poi(<address>)` to print the ASCII text a pointer stored at `<address>`
+points to.
 
 ## Phase 3 — Live debugger forensics (when a repro is available)
 

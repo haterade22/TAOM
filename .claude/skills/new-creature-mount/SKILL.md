@@ -66,7 +66,9 @@ reaction, is the problem. Worked example: [docs/features/war-ram.md](../../../do
    `as_human_warrior` **at the TOP of the file** (base_set snapshots at definition).
 5. **monster_usage_sets** (Phase 5): all 10 verb attrs; per-pace `direction="none"` reference
    rows; **jump table TOTAL — all 9 directions × all states = 45 rows** (a missing lookup key
-   CRASHES on 1.4.6; an extra row is inert); warg-exact falls + strikes matrices. Registration
+   CRASHES on 1.4.6; an extra row is inert; after an engine bump, read the native lookups again
+   before trusting that: `python tools/native_decompile.py --string monster_usage.cpp`); warg-exact
+   falls + strikes matrices. Registration
    = `project.mbproj` standard `soln_*` ids ONLY (subfolder XML copies are dead decoys).
 6. **Item + troop** (Phase 6), then **C#** (Phase 7): clone the elephant's
    MissionBehavior/BT wiring (attach keyed on `Monster.StringId`, never character id); pure

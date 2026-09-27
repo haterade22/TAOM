@@ -49,7 +49,7 @@ instructions: follow its phases in order.
 | When | Invoke | Gate |
 |---|---|---|
 | Crash, exception, "why is this broken" | `/investigate` | always; never debug ad hoc |
-| Native AV in `TaleWorlds.Native.dll`, CTD with no managed culprit | `/native-crash-triage` | always; never blind-retry |
+| Native AV in `TaleWorlds.Native.dll`, CTD with no managed culprit, a hang | `/native-crash-triage` | always; never blind-retry |
 | `error CS####`, build won't compile | `/build-fix` | always; missing TaleWorlds type: `/research`; retries spent: `/investigate` |
 | Before overriding, patching or adapting a TaleWorlds type | `/research`, `/taom-src` | always |
 | Before any commit touching C# or XML/XSLT, repo or live install | `/deep-review` | every such commit; skip only config and docs |
