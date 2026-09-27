@@ -26,3 +26,8 @@ docs/reference/ranged-troops.html text eol=lf
 # The howdah prefab snapshot must stay byte-identical to the live LOTRLOME_Armory copy (LF);
 # HowdahPrefabTests compares the bytes, so a CRLF checkout would fail it (#627).
 docs/reference/lotrlome-armory-snapshot/Prefabs/*.xml text eol=lf
+
+# The /improve Workflow scripts: the Workflow tool refuses a script holding a CR ("control
+# characters that would be hidden in the approval dialog"). Scoped to that folder, not *.js:
+# tracked tools/*.js files are CRLF in the worktree and would churn. test_improve_workflows.py.
+.claude/skills/improve/workflows/*.js text eol=lf
