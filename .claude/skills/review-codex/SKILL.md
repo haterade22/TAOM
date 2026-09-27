@@ -32,7 +32,7 @@ cd "<repo-root>" && codex exec -c project_doc_max_bytes=65536 - < "<prompt-file-
 - Output (stdout + stderr) goes to `docs/reviews/raw/codex-adversarial-{feature}-{date}.md`.
 - Wrap with `run_in_background: true` on the Bash tool call — Codex with `model_reasoning_effort = "max"` typically runs 10-45 minutes. The harness notifies when the background job completes.
 - Model + reasoning effort come from the repo's `.codex/config.toml` (`model = "gpt-6-astra"`, `model_reasoning_effort = "ultra"`, set 2026-09-11; the ladder this CLI reports for the model is low, medium, high, xhigh, max, ultra, read from `~/.codex/models_cache.json`, and `ultra` is its top; the pin was `gpt-5.6-sol` at `max` from 2026-09-05), but ONLY on a machine whose `~/.codex/config.toml` trusts this checkout path (`[projects.'E:\repos\TAOM'] trust_level = "trusted"`). Until 2026-09-05 the user config trusted the old `c:\users\mikew\source\repos\taom` path only, so the repo pin was inert and `codex doctor` reported `MCP servers 0`; after trusting the path it reports 3. On a new laptop, add the trust entry first, then `codex doctor` must show `MCP servers 3`. Do NOT override the model unless the user asks.
-- Codex reads project rules from `AGENTS.md`, **but truncates it at `project_doc_max_bytes` (default 32768). AGENTS.md exceeds that, so the `-c project_doc_max_bytes=65536` override is REQUIRED** — without it Codex reviews without TAOM's Critical Rules, ADR rules, and commit conventions (they live past the cut). The project `.codex/config.toml` also sets the key, but a project config is read only when the checkout path is trusted in `~/.codex/config.toml` (see the model bullet below); keep passing the flag so a review on an untrusted machine still gets the whole file. Confirm with `codex debug prompt-input "hi"` (no API call): the rendered input must contain "Non-Negotiable ADR Rules". The project-declared `filesystem`/`git`/`ilspy` MCP servers load under the same trust rule, and the filesystem server now also reaches the live `TAOM_Map` and `LOTRLOME_Armory` ModuleData.
+- Codex reads project rules from `AGENTS.md`, truncated at `project_doc_max_bytes` (default 32768). AGENTS.md stays under 8,192 bytes (`tools/reviewctl.py` fails it above that), so it fits; TAOM's detailed review rules (Critical Rules, "Non-Negotiable ADR Rules", commit conventions) live in `.ai/review-reference.md`, which AGENTS.md "Start here" tells Codex to read. Keep passing `-c project_doc_max_bytes=65536` as margin: the project `.codex/config.toml` also sets the key, but a project config is read only when the checkout path is trusted in `~/.codex/config.toml` (see the model bullet above). Confirm with `codex debug prompt-input "hi"` (no API call): the rendered input must contain AGENTS.md's "Evidence, never invention" rule. The project-declared `filesystem`/`git`/`ilspy` MCP servers load under the same trust rule, and the filesystem server now also reaches the live `TAOM_Map` and `LOTRLOME_Armory` ModuleData.
 
 **When the background job notifies completion:**
 1. Read the output file. Confirm it's a real Codex review (starts with review structure, not an error message).
@@ -96,11 +96,7 @@ Use flat formatting — NO indented continuation lines (triggers backslash-escap
 The prompt must include:
 
 1. Feature description (1-2 lines)
-2. TAOM ID CHEATSHEET:
-Kingdom IDs: empire_w=Gondor, empire_s=Mordor, empire=Dunland, vlandia=Rohan, battania=Khand, aserai=Harad, khuzait=Easterlings, sturgia=Dale/North, erebor=Erebor, rivendell=Rivendell, lothlorien=Lothlorien, mirkwood=Mirkwood, isengard=Isengard, gundabad=Gundabad, dolguldur=DolGuldur, umbar=Umbar, shaghana=Shaghana, abanissa=Abanissa
-Culture IDs (custom): gondor, mordor, erebor, rivendell, lothlorien, mirkwood, isengard, gundabad, dolguldur, umbar
-Culture IDs (XSLT/vanilla): vlandia=Rohan, empire=Dunland, empire_w=Gondor, empire_s=Mordor, battania=Khand, aserai=Harad, khuzait=Easterlings, sturgia=Dale
-NOTE: "rohan" is NOT a valid ID. Rohan uses "vlandia". "dol_guldur" is NOT valid -- use "dolguldur".
+2. The TAOM ID CHEATSHEET block from [references/prompt-fixed.md](references/prompt-fixed.md), as written there
 3. READ FIRST section (feature docs, config files)
 4. Known Suspects section (from 2c)
 5. File lists grouped by category
@@ -110,9 +106,7 @@ NOTE: "rohan" is NOT a valid ID. Rohan uses "vlandia". "dol_guldur" is NOT valid
    - CONFIG CROSS-REFERENCE
    - FINDINGS OR OBSERVATIONS
 7. QUALITY GATES
-8. Prior review lessons:
-   SUCCESSES: Config ID cross-ref caught rohan/dol_guldur mismatches. Vanilla decompilation caught missing gates. Lifecycle tracing caught stale caches.
-   FAILURES: Codex assumed empire=Rohan (it is Dunland). Codex flagged vanilla-matching code as bugs. Codex skipped hard sections.
+8. The Prior review lessons block from [references/prompt-fixed.md](references/prompt-fixed.md), as written there
 9. Output: return the full report as your FINAL MESSAGE. The dispatcher redirects stdout into docs/reviews/raw/codex-adversarial-{feature}-{date}.md; tell Codex NOT to write that path itself (2026-09-13: it assembled its report into the same file the transcript was streaming into and the transcript won; the report had to be rebuilt from its part files).
 
 ### 2e: Dispatch Codex directly
@@ -236,19 +230,26 @@ Do NOT skip this step. The point is not just to fix bugs — it's to make the sa
 
 For each confirmed bug:
 1. Make the code change
-2. `dotnet build TAOM.Tests` — must compile
-3. `dotnet test TAOM.Tests` — must pass
+2. `dotnet build TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`: must compile
+3. `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`: must pass (both flags on both commands, or the build deploys into the game install)
 4. Update tests if behavior changed
 5. Add any preventive tests identified in 3e
 
-### 3h: Update Codex Instructions (AGENTS.md)
+### 3h: Update the Codex lessons (`.ai/review-reference.md`)
 
-Codex learns from us through `AGENTS.md`. After each review, update the "Lessons From Prior Reviews" section:
+Codex learns from us through the "Lessons From Prior Reviews" section of `.ai/review-reference.md`,
+which AGENTS.md "Start here" sends every reviewer to (the section left AGENTS.md so that file stays under
+its 8 KB cap). After each review:
 
-1. If Codex produced a **new false positive pattern** not already listed, add it to "False positives Codex has produced"
-2. If Codex **missed a bug category** that Claude caught, add it to "Bugs Codex typically misses"
-3. If Codex did something **particularly well** in this review, add it to "What Codex does well"
-4. Update the "Last updated" date
+1. Add this review's essay, starting `Last updated: <date> (<review>`, at the top of
+   `docs/reviews/codex-track-record.md`, and move the sixth-oldest essay to
+   `docs/reviews/agents-md-review-lessons-archive.md` (the track record's convention).
+2. If Codex did something **particularly well**, add it to "What Codex does especially well"; if it
+   **missed a bug category** Claude caught, to "Look harder here"; if it produced a **new false positive
+   pattern**, to the false-positive list the section points at. Harvest any durable pattern into
+   `docs/reviews/lessons/<category>.md` too.
+3. In an `/improve` run the review lead lists these instead of writing them, and the orchestrator
+   consolidates them once at wrap-up.
 
 This creates a feedback loop: Claude's findings improve Codex's next review. Over time, Codex's accuracy improves and the gap between what Codex finds and what Claude catches shrinks.
 

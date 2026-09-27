@@ -16,16 +16,21 @@ Run comprehensive verification on current codebase state.
 ## Step 1: Build Check
 
 ```bash
-dotnet build Main --no-restore 2>&1
+dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId= 2>&1
 ```
+
+Both flags, on this and on Step 2: without them the build copies into the game install, and fails
+while Bannerlord is running (AGENTS.md "Commands"). Never `./build.ps1` here.
 
 If it fails, report errors and **STOP** (no point running tests on broken build).
 
 ## Step 2: Test Suite
 
 ```bash
-dotnet test TAOM.Tests --no-build 2>&1
+dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= 2>&1
 ```
+
+No `--no-build`: Step 1 builds `Main` only, so skipping the build here would test a stale test DLL.
 
 Report:
 - Total tests
