@@ -21,8 +21,8 @@ where missing; no such heading duplicated by the merge. It stages the paths it r
 `ready to commit: git commit -F "<message file>"`. It never commits: the orchestrator runs that
 command through Bash, so every commit gate judges the merge.
 
-Exit 0: merged and staged, not committed. Exit 1: refused, or git failed before a merge started,
-so no merge is in progress. Exit 2: the merge is left in progress for a hand resolution (a
+Exit 0: merged and staged, not committed. Exit 1: refused, or git failed before this run started
+a merge; it started none (a merge already in progress is refused and left as it was). Exit 2: the merge is left in progress for a hand resolution (a
 conflict outside the append-only set, a union it could not do, a duplicated heading or a leftover
 marker); every problem is listed. Exit 3: git failed after the merge started, or an unexpected
 error; a merge may be in progress, so read git status first. It runs only non-destructive git

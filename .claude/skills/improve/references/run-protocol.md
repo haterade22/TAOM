@@ -137,7 +137,8 @@ runs, and whenever you check on one:
 
 `python tools/improve_ctl.py watch --dir "<transcript dir>" [--stale-min N]` (N defaults to 30)
 
-Point it at the running workflow's own folder, `<session>\subagents\workflows\<run id>\`, or for direct
+Point it at the running workflow's own folder, `<session>\subagents\workflows\<run id>` (no trailing
+backslash, which would escape the closing quote), or for direct
 spawns at the session's `subagents` folder. It never looks inside a folder named `workflows` below
 `--dir`: a killed workflow's unfinished agents stay "running" in its journal and would read as stale
 forever, so the session's folder shows only its direct spawns, and each workflow is watched through its
@@ -225,8 +226,9 @@ merge" below).
      `ready to commit: git commit -F "<message file>"`: run that commit yourself through Bash, as
      `git -C "<wt-integrate>" commit -F "<message file>"`, so every PreToolUse commit gate judges it
      (a gate that judged the main checkout: execute-and-review "Commit gates in worktrees").
-   - **Exit 1**: refused before any merge started, for example the main checkout, a dirty tree, a merge
-     already in progress, or a message file that fails `check_public_text.py`. Read the reason.
+   - **Exit 1**: refused before this run started a merge, for example the main checkout, a dirty tree,
+     a message file that fails `check_public_text.py`, or a merge already in progress (refused and left
+     as it was). Read the reason.
    - **Exit 2**: the merge is left in progress with the listed paths for you. Resolve them by hand
      (single-owner files line by line, language files with row placement parsed, generated files
      regenerated, never merged) and stage those paths. Before the commit, run

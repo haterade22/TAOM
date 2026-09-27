@@ -44,7 +44,7 @@ when the maintainer asks, drive execution, review and merge through agents. The 
 
 ## The run folder
 
-`plans/_audit/<date>-<tag>/`, dated from `date +%F` at run start: `BRIEF.md`, `PROGRESS.md` (status
+`plans/_audit/<date>-<tag>/` (pass it to tools as an absolute path), dated from `date +%F` at run start: `BRIEF.md`, `PROGRESS.md` (status
 table, authorizations, log, next, blockers), `baseline.md`, one file per agent, `REPORT.md`,
 `DECISIONS.md`, `FOR-MIKE.md`. Plans are `plans/NNN-<slug>.md`, indexed in `plans/README.md`. Shapes and
 checklists: [references/run-protocol.md](references/run-protocol.md).

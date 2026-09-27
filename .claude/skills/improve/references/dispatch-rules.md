@@ -23,7 +23,8 @@ says whether you edit or are read-only.
    that match the files you touch, from your worktree.
 3. Disk. Scratch files go under <scratch>\<your label>\ and temporary build output under <tmp>; both come
    from the run, and on this machine they are on the E: drive. Prefix every dotnet command with
-   TEMP=<tmp> TMP=<tmp> (create the folder first). Nothing large on C:.
+   TEMP="<tmp>" TMP="<tmp>" (create the folder first; quoted, since Git Bash strips the backslashes of
+   an unquoted Windows path). Nothing large on C:.
 4. TIMEOUT. No single shell call may run longer than 15 minutes. Prefix anything that could hang (a
    script driving bash or pwsh, a hook run, a test suite, git over a large range) with timeout 900, or
    set the tool's timeout. The one exception is the hook suite (about 12 minutes, longer than a
@@ -89,7 +90,7 @@ short: read git log and git status and continue from there, never reset.
     '<type>(<scope>): <version> - <description>', at most 72 characters; body wrapped at 72 saying what
     changed and why, written for a reader of the release note (it is the changelog entry); no
     Co-Authored-By or other AI attribution; a Not-tested: trailer for what cannot be tested. Write the
-    message to a file and run git commit -F <file>. Never --no-verify. If a hook denies, read its reason
+    message to a file and run git commit -F "<file>". Never --no-verify. If a hook denies, read its reason
     and fix the cause if it is yours; if the hook judged the main checkout rather than your worktree,
     stop and return BLOCKED with its text. For staged work, commit once per stage.
 11. Shared files. Do not edit CHANGELOG.md (generated at /release) or plans/README.md (the
