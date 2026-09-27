@@ -13,10 +13,14 @@ export const meta = {
 //     prompt is the task text; out is the one file the agent appends to as it goes; wt, when set,
 //     is a worktree holding the code under study; schema defaults to a summary schema.
 //   checker (optional): { prompt, out?, schema?, selectFrom?, effort?, model?, label? }
-//     selectFrom: { field, match? } takes the rows of each item's result[field]; a row is taken when
-//     it equals every key of any one match object (an array value lists the allowed values).
-//     Without selectFrom the checker gets each item's whole result. The checker is held back when
-//     any item returned nothing, so it never judges a partial set.
+//     selectFrom: { field, match? } takes the rows of each item's result[field]. field must be an
+//     array in every item's schema, and match an array of objects: a row is taken when it equals
+//     every key of any one match object (an array value lists the allowed values); anything else is
+//     refused before any agent starts. Without selectFrom the checker gets each item's whole
+//     result. The checker is held back when any item returned nothing or a result without the
+//     selected array (each counts as a failure), so it never judges a partial set. Each row carries
+//     its item's key as "from" and its out file as "file", over any such keys the row had.
+//   The checker rides in an items object: --items takes { "items": [...], "checker": { ... } }.
 // Returns { lanes: [{ key, out, ok, result | failure }], checker, failures }.
 
 // Every value that changes between runs comes from args. The standing rules for dispatched agents
@@ -41,7 +45,19 @@ ITEMS.forEach((it, i) => need(it, ['key', 'prompt', 'out'], `fanout.js items[${i
 const keys = ITEMS.map(it => String(it.key))
 const dup = keys.find((k, i) => keys.indexOf(k) !== i)
 if (dup !== undefined) throw new Error(`fanout.js: two items share the key ${dup}`)
-if (args.checker) need(args.checker, ['prompt'], 'fanout.js checker')
+if (args.checker) {
+  need(args.checker, ['prompt'], 'fanout.js checker')
+  const sel = args.checker.selectFrom
+  if (sel !== undefined) {
+    if (!sel || typeof sel.field !== 'string' || !sel.field) throw new Error('fanout.js checker.selectFrom needs a field name')
+    const objects = Array.isArray(sel.match) && sel.match.every(m => m !== null && typeof m === 'object' && !Array.isArray(m))
+    if (sel.match !== undefined && !objects) throw new Error('fanout.js checker.selectFrom.match must be an array of objects: a row is taken when it equals every key of any one')
+    ITEMS.forEach((it, i) => {
+      const prop = it.schema && it.schema.properties && it.schema.properties[sel.field]
+      if (!prop || prop.type !== 'array') throw new Error(`fanout.js items[${i}]: checker.selectFrom.field "${sel.field}" is not an array in this item's schema`)
+    })
+  }
+}
 
 const modelFor = role => (args.model && typeof args.model[role] === 'string' && args.model[role]) || DEFAULT_MODEL
 
@@ -165,19 +181,21 @@ function matches(row, match) {
   return match.some(m => Object.keys(m).every(k => (Array.isArray(m[k]) ? m[k].includes(row[k]) : row[k] === m[k])))
 }
 
+// The selected rows, and a failure for each result without the selected array.
 function pick(lanes, sel) {
   const rows = []
+  const missing = []
   for (const l of lanes) {
-    const list = sel && sel.field ? l.result[sel.field] : [l.result]
+    const list = sel ? l.result[sel.field] : [l.result]
     if (!Array.isArray(list)) {
-      log(`checker: ${l.key}'s result has no array "${sel.field}", so it gives the checker no rows`)
+      missing.push(`${l.key}: its result has no "${sel.field}" array, so the checker would miss its rows`)
       continue
     }
     for (const row of list) {
-      if (row && typeof row === 'object' && matches(row, sel && sel.match)) rows.push({ from: l.key, file: l.out, ...row })
+      if (row && typeof row === 'object' && matches(row, sel && sel.match)) rows.push({ ...row, from: l.key, file: l.out })
     }
   }
-  return rows
+  return { rows, missing }
 }
 
 phase('Fan out')
@@ -196,8 +214,11 @@ if (args.checker) {
   if (failures.length) {
     checker = { ok: false, skipped: `held back: ${failures.length} agent(s) returned nothing, so the checker would judge a partial set; resume the run` }
   } else {
-    const rows = pick(lanes, c.selectFrom)
-    if (!rows.length) {
+    const { rows, missing } = pick(lanes, c.selectFrom)
+    if (missing.length) {
+      failures.push(...missing)
+      checker = { ok: false, skipped: `held back: ${missing.length} result(s) lack the selected array, so the checker would judge a partial set` }
+    } else if (!rows.length) {
       checker = { ok: true, skipped: 'no row matched checker.selectFrom', rows: 0 }
     } else {
       phase('Check')

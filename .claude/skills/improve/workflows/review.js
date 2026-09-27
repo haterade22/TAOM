@@ -15,12 +15,18 @@ export const meta = {
 //     lenses: the deep-review routing improve_ctl.py computed ('1' to '7', 'tooling'); files: the
 //     changed files grouped by kind, repo-relative; head: the branch tip the lenses review; tag: a
 //     suffix for a second review (for example decisions); ref: how commits name the work (default
-//     "plan <num>"); note: binding orchestrator text for every agent of the item.
-// Returns one entry per item: { num, branch, status: CLEAN | RESIDUAL | FAILED, verdict, report,
-//   lenses, lead, rounds: [{ round, fromRef, convergence, fix }], residual, needs_mike, failures }.
-//   residual holds every finding the loop did not close: the last round's findings when rounds ran
-//   out, and what a fix pass left unfixed. Nothing is dropped; the orchestrator takes them to the
-//   maintainer ("ship and track" is the recommended option).
+//     "plan <num>"); note: binding orchestrator text for every agent of the item. num plus tag names
+//     an item (its labels and scratch folders), so a repeated pair is refused.
+//   A top-level field rides in an items object: --items takes { "items": [...], "maxRounds": 1 } as
+//   well as a plain array (--max-rounds does the same).
+// Returns one entry per item: { num, branch, status: CLEAN | RESIDUAL | BLOCKED | FAILED, verdict,
+//   report, lenses, lead, rounds: [{ round, fromRef, convergence, fix }], residual, needs_mike,
+//   failures }. CLEAN only when the lead was READY FOR COMMIT and a convergence round returned CLEAN
+//   with no finding. residual holds every finding the loop did not close: the last round's findings
+//   when rounds ran out, what a fix pass left unfixed, a lead verdict other than READY FOR COMMIT,
+//   and a DEFECTS verdict that listed no finding. BLOCKED: the lead or a fix pass stopped (its reason
+//   is in needs_mike or not_fixed); a lead or fix pass that committed nothing is FAILED. Nothing is
+//   dropped; the orchestrator takes residual findings to the maintainer.
 
 // Every value that changes between runs comes from args. The standing rules for dispatched agents
 // (references/dispatch-rules.md) arrive verbatim as args.rules, because a Workflow script cannot
@@ -52,14 +58,19 @@ const LENSES = {
 }
 const WAVES = [['1', '2', '5', '7'], ['tooling', '3', '4', '6']]
 
+const tagOf = it => (it.tag ? `-${String(it.tag).split('-').filter(Boolean).join('-')}` : '')
+// num plus tag: it names the item's labels, and so its scratch folders.
+const idOf = it => `${it.num}${tagOf(it)}`
+
 need(args, ['repo', 'runRoot', 'scratch', 'tmp', 'date', 'version'], 'review.js args')
 if (!ITEMS.length) throw new Error('review.js: args.items is empty')
 ITEMS.forEach((it, i) => {
   const where = `review.js items[${i}]`
   need(it, ['num', 'planSlug', 'branch', 'wt', 'base', 'head', 'title', 'lenses'], where)
   if (!Array.isArray(it.lenses) || !it.lenses.length) throw new Error(`${where}: lenses must be a non-empty list`)
-  const unknown = it.lenses.map(String).filter(k => !LENSES[k])
+  const unknown = it.lenses.map(String).filter(k => !Object.prototype.hasOwnProperty.call(LENSES, k))
   if (unknown.length) throw new Error(`${where}: unknown lens ${unknown.map(k => `"${k}"`).join(', ')}; the lens ids are ${Object.keys(LENSES).join(', ')}`)
+  if (ITEMS.findIndex(o => idOf(o) === idOf(it)) !== i) throw new Error(`${where}: item ${idOf(it)} is listed twice; give a second review of the same num a tag`)
 })
 const rounds = Math.floor(Number(args.maxRounds))
 const MAX_ROUNDS = args.maxRounds !== undefined && rounds >= 0 ? rounds : 2
@@ -134,7 +145,7 @@ function runLens(text, o) {
 const LEAD_SCHEMA = {
   type: 'object',
   properties: {
-    verdict: { type: 'string', enum: ['READY FOR COMMIT', 'NEEDS FIXES'] },
+    verdict: { type: 'string', enum: ['READY FOR COMMIT', 'NEEDS FIXES', 'BLOCKED'] },
     confirmed: { type: 'number' },
     false_positives: { type: 'number' },
     needs_mike: { type: 'array', items: { type: 'string' } },
@@ -174,6 +185,7 @@ const CONVERGENCE_SCHEMA = {
 const FIX_SCHEMA = {
   type: 'object',
   properties: {
+    status: { type: 'string', enum: ['DONE', 'BLOCKED'] },
     commit: { type: 'string' },
     fixed: { type: 'array', items: { type: 'string' } },
     false_positives: { type: 'array', items: { type: 'string' } },
@@ -181,12 +193,11 @@ const FIX_SCHEMA = {
     suite_totals: { type: 'string' },
     sweep: { type: 'string' },
   },
-  required: ['commit', 'fixed', 'false_positives', 'not_fixed', 'suite_totals', 'sweep'],
+  required: ['status', 'commit', 'fixed', 'false_positives', 'not_fixed', 'suite_totals', 'sweep'],
 }
 
 const SKILLS = join(args.repo, '.claude', 'skills')
 const refOf = it => String(it.ref || `plan ${it.num}`)
-const tagOf = it => (it.tag ? `-${String(it.tag).split('-').filter(Boolean).join('-')}` : '')
 const reportOf = it => `docs/reviews/deep-review-${it.num}-${it.planSlug}${tagOf(it)}-${args.date}.md`
 const rcaOf = it => `docs/reviews/rca-${it.planSlug}${tagOf(it)}-${args.date}.md`
 const planFile = it => join(it.wt, 'plans', `${it.num}-${it.planSlug}.md`)
@@ -229,13 +240,17 @@ ${fileList(it)}
 SCOPE NOTES: this change is "${it.title}" (${refOf(it)}) on branch ${it.branch} in the worktree ${it.wt}. The diff under review: git -C "${it.wt}" diff ${it.base}..${it.head} . Its intent, scope and STOP conditions are in ${planFile(it)} when that file exists, otherwise in that range's commit messages. ${secondReview(it)}Only the changed hunks are in scope for defects; pre-existing issues you notice go under FOLLOW-UP. Path-scoped rules do not load for files outside the main checkout: read the relevant ones from ${join(it.wt, '.claude', 'rules')} yourself. Engine signatures: pwsh tools/taom-src.ps1 path <Type> (run it from ${args.repo}; it only reads).
 ${high}${noteOf(it)}`
 
-const leadPrompt = (it, reports) => `ROLE: the REVIEW LEAD for "${it.title}" (${refOf(it)}) on branch ${it.branch} in the worktree ${it.wt} (diff ${it.base}..${it.head}). You act as the /deep-review orchestrator's delegate for Steps 3, 3e and 4, and as /review-codex Phase 3.
+// deep-review Step 2b: a CRITICAL violation from Agent 1 calls for one more, adversarial reviewer,
+// which only the orchestrator can start; the lead confirms the finding and asks for it.
+const ESCALATE = 'ADVERSARIAL ESCALATION: the Agent 1 Standards report has a line naming CRITICAL. If it reports a CRITICAL violation (deep-review Step 2b: a sealed TaleWorlds type in a service, a Harmony patch touching game state without an adapter, an entry point over 150 lines doing business logic), deep-review runs one more deep-reviewer on the offending files with lenses/adversarial.md, which this workflow cannot start: make your first needs_mike line "ADVERSARIAL ESCALATION: <the violation and its files>" so the orchestrator runs it.\n'
+
+const leadPrompt = (it, reports, critical) => `ROLE: the REVIEW LEAD for "${it.title}" (${refOf(it)}) on branch ${it.branch} in the worktree ${it.wt} (diff ${it.base}..${it.head}). You act as the /deep-review orchestrator's delegate for Steps 3, 3e and 4, and as /review-codex Phase 3.
 Read first: ${join(SKILLS, 'deep-review', 'SKILL.md')} (Steps 3, 3e, 4 and "HIGH findings") and ${join(SKILLS, 'review-codex', 'SKILL.md')} (Phase 3).
 
 INPUTS
 1. The deep-review lens reports, verbatim, below.
 2. The Codex adversarial review: ${it.codexOut ? `${it.codexOut}. It is complete only if it holds the line "END OF CODEX REVIEW". If the file is missing or incomplete, record "Codex pending" in the report and continue without it.` : 'none was run for this item; record "Codex not run" in the report.'}
-${noteOf(it)}
+${noteOf(it)}${critical ? ESCALATE : ''}
 YOUR JOB
 A. Verify every finding (lens and Codex) against the code in the worktree before acting on it: a finding is a hypothesis. Classify each as CONFIRMED, FALSE POSITIVE (say why) or NEEDS MIKE (a design or product decision).
 B. Fix every CONFIRMED defect in the changed code, test first where it is testable. HIGH findings are fixed by default; one that truly cannot be fixed here gets a 'Deferred: <reason>' trailer and a line in the report.
@@ -247,7 +262,7 @@ F. Commit on the branch (standing rule "Commit"): subject 'fix(<scope>): ${args.
 LENS REPORTS:
 ${reports}
 
-Return the structured result: the verdict, the counts, every NEEDS MIKE item (one line each), the commit (the branch HEAD after your last commit), the final full-suite totals line, the gate sweep result, and whether Codex was included, pending or not run.`
+Return the structured result: the verdict, the counts, every NEEDS MIKE item (one line each), the commit (the branch HEAD after your last commit), the final full-suite totals line, the gate sweep result, and whether Codex was included, pending or not run. The verdict is READY FOR COMMIT when every confirmed defect is fixed and committed, NEEDS FIXES when one is left open, and BLOCKED when you had to stop (a STOP rule, a refused commit): then put the reason first in needs_mike and return the commit you reached, or an empty one.`
 
 const convergePrompt = (it, round, fromRef, earlier) => `ROLE: convergence reviewer, round ${round} of at most ${MAX_ROUNDS} (deep-review Step 4 item 6) for "${it.title}" (${refOf(it)}). You write no repository file.
 Read ${join(SKILLS, 'deep-review', 'SKILL.md')} Step 4 first.
@@ -263,14 +278,16 @@ ${noteOf(it)}
 CONVERGENCE FINDINGS:
 ${findings.map(f => `- ${JSON.stringify(f)}`).join('\n')}
 
-Return the structured result: the commit (the branch HEAD after your commit), what you fixed, what was a false positive and why, what you did not fix and why, the final full-suite totals line, and the gate sweep result.`
+Return the structured result: the status (DONE, or BLOCKED when you had to stop before committing, with the reason in not_fixed), the commit (the branch HEAD after your commit), what you fixed, what was a false positive and why, what you did not fix and why, the final full-suite totals line, and the gate sweep result.`
 
 async function reviewOne(it) {
+  const id = idOf(it)
   const res = {
     num: it.num, branch: it.branch, status: '', verdict: '', report: reportOf(it), lenses: [], lead: null,
     rounds: [], residual: [], needs_mike: [], failures: [],
   }
-  const fail = failure => { res.failures.push(failure); res.status = 'FAILED'; return res }
+  const stop = (status, failure) => { res.failures.push(failure); res.status = status; return res }
+  const fail = failure => stop('FAILED', failure)
 
   // Lenses, wave by wave; a dead lens stops the item before the lead, whose review would be partial.
   const reports = []
@@ -280,7 +297,7 @@ async function reviewOne(it) {
     if (!keys.length) continue
     const got = await Promise.all(keys.map(async key => ({
       key,
-      r: await runLens(lensPrompt(it, key, high), { label: `lens-${it.num}-${key}`, phase: 'Lenses', worktree: it.wt, base: it.base }),
+      r: await runLens(lensPrompt(it, key, high), { label: `lens-${id}-${key}`, phase: 'Lenses', worktree: it.wt, base: it.base }),
     })))
     const waveReports = []
     for (const g of got) {
@@ -293,24 +310,29 @@ async function reviewOne(it) {
     high += highLines(waveReports)
   }
 
-  const lead = await runAgent('lead', leadPrompt(it, reports.map(r => `===== ${LENSES[r.key][0]} =====\n${r.text}`).join('\n\n')), {
-    label: `lead-${it.num}`, phase: 'Lead', schema: LEAD_SCHEMA, editing: true, worktree: it.wt, base: it.base,
+  const critical = reports.some(r => r.key === '1' && r.text.includes('CRITICAL'))
+  const lead = await runAgent('lead', leadPrompt(it, reports.map(r => `===== ${LENSES[r.key][0]} =====\n${r.text}`).join('\n\n'), critical), {
+    label: `lead-${id}`, phase: 'Lead', schema: LEAD_SCHEMA, editing: true, worktree: it.wt, base: it.base,
   })
   if (!lead.ok) return fail(lead.failure)
   res.lead = lead.value
   res.verdict = lead.value.verdict
   res.needs_mike = lead.value.needs_mike || []
+  // A lead that stopped, or committed nothing, leaves nothing for convergence to review.
+  if (lead.value.verdict === 'BLOCKED') return stop('BLOCKED', `lead-${id}: the lead stopped (BLOCKED); its reason is first in needs_mike`)
+  if (!lead.value.commit) return fail(`lead-${id}: the lead returned no commit, so its fixes and records are not on the branch`)
+  if (lead.value.verdict !== 'READY FOR COMMIT') res.residual.push({ note: `the lead's verdict is ${lead.value.verdict}, not READY FOR COMMIT: its report lists what it left open` })
 
   // Convergence: each round reviews what the previous step committed. A fix pass runs only when a
   // later round will review it, so no fix ships unreviewed; findings still open when the rounds run
   // out, and what a fix pass left unfixed, go to residual.
   let fromRef = it.head
-  let reviewedTo = lead.value.commit || ''
+  let reviewedTo = lead.value.commit
   let earlier = []
   if (MAX_ROUNDS === 0) res.residual.push({ note: `no convergence round ran (maxRounds 0): the lead's fixes in ${it.head}..HEAD are unreviewed` })
   for (let round = 1; round <= MAX_ROUNDS; round++) {
     const conv = await runAgent('convergence', convergePrompt(it, round, fromRef, earlier), {
-      label: `converge-${it.num}-r${round}`, phase: 'Converge', schema: CONVERGENCE_SCHEMA, effort: 'xhigh', worktree: it.wt, base: it.base,
+      label: `converge-${id}-r${round}`, phase: 'Converge', schema: CONVERGENCE_SCHEMA, effort: 'max', worktree: it.wt, base: it.base,
     })
     if (!conv.ok) {
       res.residual.push({ round, note: `convergence round ${round} did not run: ${fromRef}..HEAD is unreviewed` })
@@ -320,23 +342,33 @@ async function reviewOne(it) {
     res.rounds.push(entry)
     const findings = conv.value.findings || []
     if (conv.value.verdict === 'CLEAN' && !findings.length) break
+    // A verdict other than CLEAN with nothing to fix gives a fix pass nothing to act on.
+    if (!findings.length) {
+      res.residual.push({ round, note: `convergence round ${round} returned verdict ${conv.value.verdict} with no findings listed: read its evidence_summary` })
+      break
+    }
     if (round === MAX_ROUNDS) {
       res.residual.push(...findings.map(f => ({ round, ...f })))
       break
     }
     const fix = await runAgent('fix', fixPrompt(it, round, fromRef, findings), {
-      label: `fix-${it.num}-r${round}`, phase: 'Converge', schema: FIX_SCHEMA, editing: true, worktree: it.wt, base: it.base,
+      label: `fix-${id}-r${round}`, phase: 'Converge', schema: FIX_SCHEMA, editing: true, worktree: it.wt, base: it.base,
     })
     if (!fix.ok) {
       res.residual.push(...findings.map(f => ({ round, ...f })))
       return fail(fix.failure)
     }
     entry.fix = fix.value
+    if (fix.value.status === 'BLOCKED' || !fix.value.commit) {
+      res.residual.push(...findings.map(f => ({ round, ...f })))
+      return fix.value.status === 'BLOCKED'
+        ? stop('BLOCKED', `fix-${id}-r${round}: the fix pass stopped (BLOCKED); its reason is in not_fixed`)
+        : fail(`fix-${id}-r${round}: the fix pass returned no commit, so its fixes are not on the branch`)
+    }
     res.residual.push(...(fix.value.not_fixed || []).map(nf => ({ round, not_fixed: nf })))
-    // The next round reviews only this fix pass. Without a commit hash to start from, it reviews
-    // everything since the branch tip the lenses saw, which is wider but never misses a change.
-    fromRef = reviewedTo || it.head
-    reviewedTo = fix.value.commit || ''
+    // The next round reviews only this fix pass.
+    fromRef = reviewedTo
+    reviewedTo = fix.value.commit
     earlier = findings
   }
   res.status = res.residual.length ? 'RESIDUAL' : 'CLEAN'
@@ -344,7 +376,10 @@ async function reviewOne(it) {
 }
 
 phase('Lenses')
-const results = await Promise.all(ITEMS.map(it => reviewOne(it)))
+// One item's exception (a result that breaks its schema) fails that item only.
+const results = await Promise.all(ITEMS.map(it => reviewOne(it).catch(e => ({
+  num: it.num, branch: it.branch, status: 'FAILED', rounds: [], residual: [], failures: [`review of ${idOf(it)} threw: ${String(e)}`],
+}))))
 for (const r of results) {
   log(`${r.num}: ${r.status}${r.verdict ? `, lead ${r.verdict}` : ''}, ${r.rounds.length} convergence round(s), ${r.residual.length} residual${r.failures.length ? `; ${r.failures.join('; ')}` : ''}`)
 }

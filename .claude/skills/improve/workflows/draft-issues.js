@@ -12,7 +12,8 @@ export const meta = {
 //   items: [{ num, title, template: 'bug'|'feature', label, slug?, branch?, base?, tip?, blocked?, related?, note? }]
 //     With branch, base and tip the work is implemented on a local branch; with blocked it is not
 //     implemented and blocked says why; with neither it is planned and awaits execution (issues are
-//     filed before execution).
+//     filed before execution). A repeated num is refused (both drafts would write one file).
+//   outDir rides in an items object: --items takes { "items": [...], "outDir": "<folder>" }.
 // Each draft starts with 'TITLE: ...' and 'LABEL: ...' lines, then a blank line and the body, the
 // shape python tools/improve_ctl.py file-issue reads. Before anything is filed (on the maintainer's
 // word only), the orchestrator runs python tools/check_public_text.py on every draft.
@@ -41,6 +42,7 @@ ITEMS.forEach((it, i) => {
   need(it, ['num', 'title', 'template', 'label'], where)
   if (!['bug', 'feature'].includes(it.template)) throw new Error(`${where}: template must be bug or feature, not ${it.template}`)
   if (it.branch) need(it, ['base', 'tip'], where)
+  if (ITEMS.findIndex(o => String(o.num) === String(it.num)) !== i) throw new Error(`${where}: num ${it.num} is listed twice`)
 })
 
 const modelFor = role => (args.model && typeof args.model[role] === 'string' && args.model[role]) || DEFAULT_MODEL

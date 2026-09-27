@@ -4,7 +4,9 @@ Claude Code's Workflow tool runs these scripts, and CI cannot run that tool, so 
 what can fail without it. Each check answers a failure of the first review sprint that used them:
 
 - CRLF scripts were refused by the Workflow approval check ("control characters that would be
-  hidden in the approval dialog"), so every script must be LF with no hidden character.
+  hidden in the approval dialog"), so every script must be LF and printable ASCII only.
+- Each script's header comment lists its args and item fields; top-level fields a script needs
+  beyond the common ones ride in an items object (`python tools/improve_ctl.py args`).
 - Run data was hard-coded (report dates, the version label, a baseline commit, drive paths), so a
   later run wrote wrong labels. Every value that changes between runs now arrives in `args`; a
   literal date, version label, commit hash or drive path in a script fails here.
@@ -51,9 +53,6 @@ RUN_DATA = {
     # A run of 7 to 40 hex characters holding a digit (English words such as "defaced" hold none).
     "a commit hash": re.compile(r"(?<![0-9A-Za-z_])(?=[0-9a-f]*[0-9])[0-9a-f]{7,40}(?![0-9A-Za-z_])"),
 }
-# C0 controls other than tab and LF, DEL, and the invisible or direction-changing code points the
-# approval dialog would hide.
-HIDDEN = re.compile("[\x00-\x08\x0b-\x1f\x7f​-‏‪-‮⁠-⁤﻿]")
 GUARD = re.compile(r"^if \((?P<cond>[^\n]*\bargs\.rules\b[^\n]*)\) \{\n[ \t]+throw new Error\(", re.M)
 AGENT_CALL = re.compile(r"(?<![\w$.])agent\s*\(")
 
@@ -296,15 +295,28 @@ class StaticChecks(unittest.TestCase):
     def test_the_five_workflows_exist(self):
         self.assertEqual([p.name for p in scripts()], EXPECTED)
 
-    def test_lf_only_and_no_hidden_characters(self):
+    def test_lf_and_printable_ascii_only(self):
+        # A CR, a tab, a control, an invisible or a direction-changing code point would be hidden
+        # in the approval dialog, and the Workflow approval check refuses a CRLF script.
         for path in scripts():
             with self.subTest(path.name):
                 raw = path.read_bytes()
-                cr = raw.find(b"\r")
-                line = raw.count(b"\n", 0, cr) + 1
-                self.assertEqual(cr, -1, f"a CR byte on line {line}: the Workflow approval check refuses the script")
-                bad = HIDDEN.search(raw.decode("utf-8"))
-                self.assertIsNone(bad, f"a hidden character {bad.group() if bad else ''!r}")
+                bad = [(raw.count(b"\n", 0, k) + 1, hex(b)) for k, b in enumerate(raw)
+                       if b != 0x0A and not 0x20 <= b <= 0x7E]
+                self.assertEqual(bad[:5], [], "(line, byte) outside LF and printable ASCII")
+
+    def test_the_header_comment_lists_the_args_and_item_fields(self):
+        for path in scripts():
+            with self.subTest(path.name):
+                text = path.read_text(encoding="utf-8")
+                after_meta = text[close_of(mask_js(text), text.index("{")) + 1:].lstrip("\n")
+                header = "\n".join(re.findall(r"^//(.*)$", after_meta.split("\n\n", 1)[0], re.M))
+                self.assertIn("items object", header, "the header does not say how top-level fields ride")
+                named = re.findall(r"\bneed\((?:args|it|p|st|args\.checker), \[([^\]]*)\]", text)
+                fields = {f for group in named for f in re.findall(r"'([^']+)'", group)}
+                self.assertTrue(fields, "no need(...) field list found")
+                missing = sorted(f for f in fields if not re.search(rf"\b{re.escape(f)}\b", header))
+                self.assertEqual(missing, [], "required fields the header comment does not list")
 
     def test_meta_is_a_pure_literal(self):
         for path in scripts():
@@ -387,13 +399,14 @@ class DispatchRulesFile(unittest.TestCase):
             self.assertIn("## " + heading, lines)
         self.assertIn("HOOK-ASK", text)
         self.assertIn("TIMEOUT", text)
-        self.assertNotIn("—", text)
-        self.assertNotIn("–", text)
+        self.assertNotIn("\u2014", text)
+        self.assertNotIn("\u2013", text)
 
 
 # A stub of the Workflow runtime: runs a script's body as an async function, records every agent()
-# call, answers from a scenario, and throws where the real runtime throws (Date.now(), Math.random(),
-# new Date() without arguments).
+# call, answers from a scenario, and behaves where the real runtime does: Date.now(), Math.random()
+# and new Date() without arguments throw, and parallel() never rejects (a thunk that throws gives
+# null).
 HARNESS = r"""
 'use strict'
 const fs = require('fs')
@@ -416,7 +429,7 @@ async function agent(prompt, opts) {
   const o = opts || {}
   inFlight++
   maxInFlight = Math.max(maxInFlight, inFlight)
-  calls.push({ label: o.label, prompt, keys: Object.keys(o), model: o.model, agentType: o.agentType, schema: !!o.schema })
+  calls.push({ label: o.label, prompt, keys: Object.keys(o), model: o.model, effort: o.effort, agentType: o.agentType, schema: !!o.schema, schemaValue: o.schema || null })
   for (let i = 0; i < 5; i++) await new Promise(r => setImmediate(r))
   inFlight--
   const r = reply(o.label)
@@ -431,7 +444,7 @@ const StrictMath = Object.create(Math)
 StrictMath.random = () => { throw new Error('Math.random()') }
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor
 const run = new AsyncFunction('args', 'agent', 'parallel', 'pipeline', 'phase', 'log', 'Date', 'Math', source)
-const parallel = thunks => Promise.all(thunks.map(t => t()))
+const parallel = thunks => Promise.all(thunks.map(t => Promise.resolve().then(t).catch(() => null)))
 const pipeline = () => { throw new Error('pipeline() is not stubbed') }
 const out = o => process.stdout.write(JSON.stringify({ ...o, calls, logs, maxInFlight }))
 run(scenario.args, agent, parallel, pipeline, () => {}, m => logs.push(String(m)), StrictDate, StrictMath)
@@ -439,11 +452,23 @@ run(scenario.args, agent, parallel, pipeline, () => {}, m => logs.push(String(m)
 """
 
 RULES = "STANDING RULES FIXTURE (HOOK-ASK, TIMEOUT)"
+# A distinct model id per role, so a script that ignores args.model or passes one role's model for
+# another fails the contract check.
+ROLE_MODELS = {role: "M-" + role for role in sorted(ROLES)}
+LABEL_ROLES = (("write-", "writer"), ("extend-", "writer"), ("review-", "reviewer"),
+               ("revise-", "reviser"), ("exec-", "executor"), ("decide-", "executor"),
+               ("stage-", "executor"), ("lead-", "lead"), ("converge-", "convergence"),
+               ("fix-", "fix"), ("draft-", "drafter"), ("checker", "checker"))
+
+
+def role_of(label):
+    return next((role for prefix, role in LABEL_ROLES if label.startswith(prefix)), "lane")
 
 
 def run_args(**extra):
     args = {"rules": RULES, "repo": "/w/repo", "runRoot": "/w/run", "scratch": "/w/scratch",
-            "tmp": "/w/tmp", "date": "DATE-X", "version": "VERSION-X", "model": {}, "pool": 2}
+            "tmp": "/w/tmp", "date": "DATE-X", "version": "VERSION-X", "model": dict(ROLE_MODELS),
+            "pool": 2}
     args.update(extra)
     return args
 
@@ -453,6 +478,7 @@ class StubRuntime(unittest.TestCase):
     """Each script run against the stub runtime, one scenario per behaviour the contract pins."""
 
     def run_script(self, name, scenario):
+        self.models = scenario["args"].get("model") or {}
         with tempfile.TemporaryDirectory() as tmp:
             harness = Path(tmp) / "harness.js"
             harness.write_text(HARNESS, encoding="utf-8")
@@ -465,12 +491,12 @@ class StubRuntime(unittest.TestCase):
 
     EDITING_LABELS = ("lead-", "fix-", "exec-", "decide-", "stage-")
 
-    def assert_contract(self, out, models=None):
+    def assert_contract(self, out, overrides=None):
         """Every call opens with the rules, then states its role (which rules sections bind it);
-        deep-reviewer calls carry no model key; every other call carries its role's model and a
-        schema; the pool bound held."""
+        deep-reviewer calls carry no model key; every other call carries its role's model from
+        args.model (or the pinned default) and a schema; the pool bound held."""
         self.assertTrue(out["ok"], out.get("error"))
-        models = models or {}
+        overrides = overrides or {}
         for call in out["calls"]:
             with self.subTest(call=call["label"]):
                 self.assertTrue(call["prompt"].startswith(RULES), "the prompt does not open with args.rules")
@@ -481,32 +507,57 @@ class StubRuntime(unittest.TestCase):
                     self.assertNotIn("model", call["keys"])
                 else:
                     self.assertTrue(call["schema"], "an acted-on agent has no schema")
-                    self.assertEqual(call.get("model"), models.get(call["label"], DEFAULT_MODEL))
+                    wanted = overrides.get(call["label"], self.models.get(role_of(call["label"]), DEFAULT_MODEL))
+                    self.assertEqual(call.get("model"), wanted)
         self.assertLessEqual(out["maxInFlight"], 2)
 
     def labels(self, out):
         return [c["label"] for c in out["calls"]]
+
+    def prompt_of(self, out, label):
+        (prompt,) = [c["prompt"] for c in out["calls"] if c["label"] == label]
+        return prompt
+
+    def assert_refused(self, name, args, *needles):
+        out = self.run_script(name, {"args": args})
+        self.assertFalse(out["ok"])
+        for needle in needles:
+            self.assertIn(needle, out["error"])
+        self.assertEqual(out["calls"], [])
 
     def test_every_script_refuses_to_run_without_rules(self):
         for name in EXPECTED:
             with self.subTest(name):
                 args = run_args(items=[{"num": "001"}])
                 del args["rules"]
-                out = self.run_script(name, {"args": args})
-                self.assertFalse(out["ok"])
-                self.assertIn("args.rules", out["error"])
-                self.assertEqual(out["calls"], [])
+                self.assert_refused(name, args, "args.rules")
+
+    def test_every_script_refuses_to_run_without_a_common_arg(self):
+        for name in EXPECTED:
+            for field in ("repo", "scratch", "tmp", "date", "version"):
+                with self.subTest(name, field=field):
+                    args = run_args(items=[{"num": "001"}])
+                    del args[field]
+                    self.assert_refused(name, args, field)
+
+    def test_every_role_defaults_to_the_pinned_model(self):
+        out = self.run_script("review.js", {"args": run_args(items=[self.review_item()], model={}), "replies": {
+            "lead-050": self.LEAD, "converge-050-r1": self.CLEAN}, "prefixes": [["lens-", "LENS REPORT"]]})
+        self.assert_contract(out)
+        self.assertEqual({c["model"] for c in out["calls"] if c.get("agentType") != "deep-reviewer"}, {DEFAULT_MODEL})
 
     # fanout.js ---------------------------------------------------------------------------------
 
-    def fanout_args(self, **extra):
+    def fanout_args(self, checker=None, **extra):
         return run_args(
-            model={"lane": "LANE-MODEL"},
-            items=[{"key": "a", "prompt": "TASK A", "out": "/w/run/a.md"},
-                   {"key": "b", "prompt": "TASK B", "out": "/w/run/b.md"},
-                   {"key": "c", "prompt": "TASK C", "out": "/w/run/c.md"}],
-            checker={"prompt": "RECHECK", "selectFrom": {"field": "verdicts", "match": [{"verdict": "REFUTED"}]}},
+            items=[{"key": "a", "prompt": "TASK A", "out": "/w/run/a.md", "schema": self.VERDICTS},
+                   {"key": "b", "prompt": "TASK B", "out": "/w/run/b.md", "schema": self.VERDICTS},
+                   {"key": "c", "prompt": "TASK C", "out": "/w/run/c.md", "schema": self.VERDICTS}],
+            checker=checker or {"prompt": "RECHECK", "selectFrom": {"field": "verdicts", "match": [{"verdict": "REFUTED"}]}},
             **extra)
+
+    VERDICTS = {"type": "object", "properties": {"verdicts": {"type": "array", "items": {"type": "object"}}},
+                "required": ["verdicts"]}
 
     def test_fanout_sends_only_the_selected_rows_to_the_checker(self):
         out = self.run_script("fanout.js", {"args": self.fanout_args(), "replies": {
@@ -514,7 +565,7 @@ class StubRuntime(unittest.TestCase):
             "b": {"verdicts": [{"id": "B1", "verdict": "FIXED"}]},
             "c": {"verdicts": []},
             "checker": {"checks": [], "summary": "ok"}}})
-        self.assert_contract(out, {"a": "LANE-MODEL", "b": "LANE-MODEL", "c": "LANE-MODEL"})
+        self.assert_contract(out)
         self.assertEqual(self.labels(out)[-1], "checker")
         checker = out["calls"][-1]["prompt"]
         self.assertIn('"A1"', checker)
@@ -525,10 +576,49 @@ class StubRuntime(unittest.TestCase):
     def test_fanout_reports_a_dead_lane_and_holds_the_checker(self):
         out = self.run_script("fanout.js", {"args": self.fanout_args(), "replies": {
             "a": {"verdicts": [{"id": "A1", "verdict": "REFUTED"}]}, "b": None, "c": {"verdicts": []}}})
-        self.assert_contract(out, {"a": "LANE-MODEL", "b": "LANE-MODEL", "c": "LANE-MODEL"})
+        self.assert_contract(out)
         self.assertNotIn("checker", self.labels(out))
         self.assertEqual(len(out["result"]["failures"]), 1)
         self.assertIn("b", out["result"]["failures"][0])
+
+    def test_fanout_reports_a_dead_checker(self):
+        out = self.run_script("fanout.js", {"args": self.fanout_args(), "replies": {
+            "a": {"verdicts": [{"id": "A1", "verdict": "REFUTED"}]}, "b": {"verdicts": []},
+            "c": {"verdicts": []}, "checker": None}})
+        self.assert_contract(out)
+        self.assertEqual(self.labels(out)[-1], "checker")
+        self.assertFalse(out["result"]["checker"]["ok"])
+        self.assertEqual(len(out["result"]["failures"]), 1)
+        self.assertIn("checker", out["result"]["failures"][0])
+
+    def test_fanout_counts_a_lane_result_without_the_selected_array_as_a_failure(self):
+        out = self.run_script("fanout.js", {"args": self.fanout_args(), "replies": {
+            "a": {"verdicts": [{"id": "A1", "verdict": "REFUTED"}]}, "b": {"summary": "no array"},
+            "c": {"verdicts": []}}})
+        self.assert_contract(out)
+        self.assertNotIn("checker", self.labels(out))
+        self.assertEqual(len(out["result"]["failures"]), 1)
+        self.assertIn("verdicts", out["result"]["failures"][0])
+
+    def test_fanout_refuses_a_misconfigured_selection(self):
+        match_object = {"prompt": "R", "selectFrom": {"field": "verdicts", "match": {"verdict": "REFUTED"}}}
+        self.assert_refused("fanout.js", self.fanout_args(checker=match_object), "match")
+        unknown_field = {"prompt": "R", "selectFrom": {"field": "verdict"}}
+        self.assert_refused("fanout.js", self.fanout_args(checker=unknown_field), '"verdict"')
+        no_schema = run_args(items=[{"key": "a", "prompt": "P", "out": "o"}],
+                             checker={"prompt": "R", "selectFrom": {"field": "verdicts"}})
+        self.assert_refused("fanout.js", no_schema, '"verdicts"')
+
+    def test_fanout_rows_keep_their_attribution_and_items_their_own_model(self):
+        args = self.fanout_args(checker={"prompt": "R", "selectFrom": {"field": "verdicts"}})
+        args["items"][0]["model"] = "ITEM-MODEL"
+        out = self.run_script("fanout.js", {"args": args, "replies": {
+            "a": {"verdicts": [{"id": "A1", "from": "forged", "file": "forged.md"}]},
+            "b": {"verdicts": []}, "c": {"verdicts": []}, "checker": {"checks": [], "summary": "ok"}}})
+        self.assert_contract(out, {"a": "ITEM-MODEL"})
+        rows = self.prompt_of(out, "checker").split("THE ROWS TO CHECK (JSON, one per line):\n")[1]
+        row = json.loads(rows.split("\n")[0])
+        self.assertEqual((row["from"], row["file"], row["id"]), ("a", "/w/run/a.md", "A1"))
 
     # plans.js ----------------------------------------------------------------------------------
 
@@ -542,42 +632,90 @@ class StubRuntime(unittest.TestCase):
         return run_args(base="BASE-REF", baseline="BASELINE LINE", planDir="/w/repo/plans",
                         items=list(items), **extra)
 
+    WRITTEN = {"status": "WRITTEN", "path": "/w/repo/plans/031-thing.md", "steps": 3,
+               "riskiest_assumption": "", "not_planned_reason": ""}
+    BLOCKING = {"blocking": ["step 3 has no expected output"], "non_blocking": [],
+                "excerpt_mismatches": [], "executable_by_weak_model": False}
+    CLEAN_PLAN = {"blocking": [], "non_blocking": [], "excerpt_mismatches": [], "executable_by_weak_model": True}
+
     def test_plans_stops_at_not_planned(self):
         out = self.run_script("plans.js", {"args": self.plans_args(self.plan_item()), "replies": {
-            "write-031": {"status": "NOT_PLANNED", "path": "/w/repo/plans/031-thing.md"}}})
+            "write-031": dict(self.WRITTEN, status="NOT_PLANNED")}})
         self.assert_contract(out)
         self.assertEqual(self.labels(out), ["write-031"])
         self.assertEqual(out["result"][0]["status"], "NOT_PLANNED")
 
     def test_plans_revises_after_blocking_items_and_stops_when_clean(self):
-        blocking = {"blocking": ["step 3 has no expected output"], "non_blocking": [],
-                    "excerpt_mismatches": [], "executable_by_weak_model": False}
-        clean = {"blocking": [], "non_blocking": [], "excerpt_mismatches": [], "executable_by_weak_model": True}
         out = self.run_script("plans.js", {"args": self.plans_args(self.plan_item(), reviewRounds=2), "replies": {
-            "write-031": {"status": "WRITTEN", "path": "/w/repo/plans/031-thing.md"},
-            "review-031-r1": blocking,
-            "revise-031-r1": {"summary": "fixed step 3", "not_fixed": []},
-            "review-031-r2": clean}})
+            "write-031": self.WRITTEN, "review-031-r1": self.BLOCKING,
+            "revise-031-r1": {"summary": "fixed step 3", "not_fixed": []}, "review-031-r2": self.CLEAN_PLAN}})
         self.assert_contract(out)
         self.assertEqual(self.labels(out), ["write-031", "review-031-r1", "revise-031-r1", "review-031-r2"])
         self.assertEqual(out["result"][0]["status"], "CLEAN")
 
     def test_plans_reports_what_the_last_revision_left_unreviewed(self):
-        blocking = {"blocking": ["x"], "non_blocking": [], "excerpt_mismatches": [], "executable_by_weak_model": False}
         out = self.run_script("plans.js", {"args": self.plans_args(self.plan_item()), "replies": {
-            "write-031": {"status": "WRITTEN", "path": "p"}, "review-031-r1": blocking,
+            "write-031": self.WRITTEN, "review-031-r1": self.BLOCKING,
             "revise-031-r1": {"summary": "s", "not_fixed": ["y: needs the maintainer"]}}})
         self.assert_contract(out)
         result = out["result"][0]
         self.assertEqual(result["status"], "REVISED")
         self.assertEqual(result["residual"], ["y: needs the maintainer"])
 
-    def test_plans_reports_a_dead_reviewer(self):
-        out = self.run_script("plans.js", {"args": self.plans_args(self.plan_item()), "replies": {
-            "write-031": {"status": "WRITTEN", "path": "p"}, "review-031-r1": None}})
+    def test_plans_keeps_every_round_s_unfixed_items(self):
+        out = self.run_script("plans.js", {"args": self.plans_args(self.plan_item(), reviewRounds=2), "replies": {
+            "write-031": self.WRITTEN, "review-031-r1": self.BLOCKING,
+            "revise-031-r1": {"summary": "s", "not_fixed": ["Y: needs the maintainer"]},
+            "review-031-r2": dict(self.BLOCKING, blocking=["Z"]),
+            "revise-031-r2": {"summary": "s", "not_fixed": []}}})
+        self.assert_contract(out)
+        self.assertEqual((out["result"][0]["status"], out["result"][0]["residual"]),
+                         ("REVISED", ["Y: needs the maintainer"]))
+
+    def test_plans_gives_a_safety_gate_plan_two_rounds_by_default(self):
+        out = self.run_script("plans.js", {"args": self.plans_args(self.plan_item(mode="review", safetyGate=True)),
+                                           "replies": {"review-031-r1": self.BLOCKING,
+                                                       "revise-031-r1": {"summary": "s", "not_fixed": []},
+                                                       "review-031-r2": self.CLEAN_PLAN}})
+        self.assert_contract(out)
+        self.assertEqual(self.labels(out), ["review-031-r1", "revise-031-r1", "review-031-r2"])
+        self.assertIn("SAFETY GATE", self.prompt_of(out, "review-031-r1"))
+
+    def test_plans_reports_a_dead_writer_reviewer_or_reviser(self):
+        for dead in ("write-031", "review-031-r1", "revise-031-r1"):
+            with self.subTest(dead=dead):
+                replies = {"write-031": self.WRITTEN, "review-031-r1": self.BLOCKING,
+                           "revise-031-r1": {"summary": "s", "not_fixed": []}}
+                replies[dead] = None
+                out = self.run_script("plans.js", {"args": self.plans_args(self.plan_item()), "replies": replies})
+                self.assert_contract(out)
+                self.assertEqual(out["result"][0]["status"], "FAILED")
+                self.assertIn(dead, out["result"][0]["failures"][0])
+                self.assertEqual(self.labels(out)[-1], dead)
+
+    def test_plans_never_calls_a_review_without_its_lists_clean(self):
+        out = self.run_script("plans.js", {"args": self.plans_args(self.plan_item(mode="review")),
+                                           "replies": {"review-031-r1": {}}})
         self.assert_contract(out)
         self.assertEqual(out["result"][0]["status"], "FAILED")
-        self.assertNotIn("revise-031-r1", self.labels(out))
+        self.assertIn("review-031-r1", out["result"][0]["failures"][0], "the failure must name the review")
+
+    def test_plans_keeps_other_items_when_one_throws(self):
+        # A reviser whose not_fixed is no list breaks that item only.
+        out = self.run_script("plans.js", {"args": self.plans_args(self.plan_item(), self.plan_item(num="032")),
+                                           "replies": {"revise-031-r1": {"summary": "s", "not_fixed": 5}},
+                                           "prefixes": [["write-", self.WRITTEN], ["review-031", self.BLOCKING],
+                                                        ["review-032", self.CLEAN_PLAN]]})
+        self.assertTrue(out["ok"], out.get("error"))
+        self.assertEqual([r["status"] for r in out["result"]], ["FAILED", "CLEAN"])
+
+    def test_plans_bounds_the_pool_and_refuses_a_repeated_num(self):
+        items = [self.plan_item(num=n) for n in ("031", "032", "033")]
+        out = self.run_script("plans.js", {"args": self.plans_args(*items), "prefixes": [
+            ["write-", self.WRITTEN], ["review-", self.CLEAN_PLAN]]})
+        self.assert_contract(out)
+        self.assertEqual(out["maxInFlight"], 2)
+        self.assert_refused("plans.js", self.plans_args(self.plan_item(), self.plan_item()), "031")
 
     # execute.js --------------------------------------------------------------------------------
 
@@ -591,12 +729,13 @@ class StubRuntime(unittest.TestCase):
         return {"status": "DONE", "base_before": "B", "commit": "C-" + summary, "summary": summary,
                 "files_changed": [], "red_evidence": "", "tests": "T", "stop_reason": "", "deviations": "", "owed": ""}
 
+    STAGES = [{"key": "one", "prompt": "STAGE ONE"}, {"key": "two", "prompt": "STAGE TWO"},
+              {"key": "three", "prompt": "STAGE THREE"}]
+
     def test_execute_stops_stages_at_the_first_that_is_not_done(self):
-        stages = [{"key": "one", "prompt": "STAGE ONE"}, {"key": "two", "prompt": "STAGE TWO"},
-                  {"key": "three", "prompt": "STAGE THREE"}]
         blocked = dict(self.done("second"), status="BLOCKED", stop_reason="a STOP fired")
         out = self.run_script("execute.js", {
-            "args": run_args(items=[self.exec_item("040", contract="stages", stages=stages)]),
+            "args": run_args(items=[self.exec_item("040", contract="stages", stages=self.STAGES)]),
             "replies": {"stage-040-one": self.done("first stage summary"), "stage-040-two": blocked}})
         self.assert_contract(out)
         self.assertEqual(self.labels(out), ["stage-040-one", "stage-040-two"])
@@ -604,15 +743,28 @@ class StubRuntime(unittest.TestCase):
         result = out["result"][0]
         self.assertEqual((result["status"], result["stoppedAt"], result["notRun"]), ("BLOCKED", "two", ["three"]))
 
+    def test_execute_stops_at_a_dead_stage(self):
+        out = self.run_script("execute.js", {
+            "args": run_args(items=[self.exec_item("040", contract="stages", stages=self.STAGES)]),
+            "replies": {"stage-040-one": self.done("first"), "stage-040-two": None}})
+        self.assert_contract(out)
+        result = out["result"][0]
+        self.assertEqual((result["status"], result["stoppedAt"], result["notRun"]), ("FAILED", "two", ["three"]))
+        self.assertIn("stage-040-two", result["stages"][1]["failure"])
+
     def test_execute_reports_a_dead_executor_and_bounds_the_pool(self):
         items = [self.exec_item(n) for n in ("041", "042", "043", "044")]
         items.append(self.exec_item("045", contract="decisions", decisions=["DECISION ONE"]))
         out = self.run_script("execute.js", {"args": run_args(items=items), "replies": {"exec-042": None},
                                              "prefixes": [["exec-", self.done("ok")], ["decide-", self.done("ok")]]})
         self.assert_contract(out)
+        self.assertEqual(out["maxInFlight"], 2)
         status = {r["num"]: r["status"] for r in out["result"]}
         self.assertEqual(status, {"041": "DONE", "042": "FAILED", "043": "DONE", "044": "DONE", "045": "DONE"})
-        self.assertIn("DECISION ONE", [c for c in out["calls"] if c["label"] == "decide-045"][0]["prompt"])
+        self.assertIn("DECISION ONE", self.prompt_of(out, "decide-045"))
+
+    def test_execute_refuses_a_repeated_num(self):
+        self.assert_refused("execute.js", run_args(items=[self.exec_item("042"), self.exec_item("042")]), "042")
 
     # review.js ---------------------------------------------------------------------------------
 
@@ -624,18 +776,24 @@ class StubRuntime(unittest.TestCase):
         return item
 
     LEAD = {"verdict": "READY FOR COMMIT", "confirmed": 1, "false_positives": 0, "needs_mike": ["N1"],
-            "applied": 0, "not_applied": 0, "commit": "LEAD-COMMIT", "suite_totals": "T", "codex": "not run"}
+            "applied": 0, "not_applied": 0, "commit": "LEAD-COMMIT", "suite_totals": "T", "sweep": "",
+            "codex": "not run"}
     DEFECT = {"findings": [{"severity": "LOW", "location": "a:1", "claim": "C", "proof": "P", "fix": "F"}],
               "evidence_summary": "E", "verdict": "DEFECTS"}
     CLEAN = {"findings": [], "evidence_summary": "E", "verdict": "CLEAN"}
+    FIX = {"status": "DONE", "commit": "FIX-COMMIT", "fixed": ["C"], "false_positives": [], "not_fixed": [],
+           "suite_totals": "T", "sweep": ""}
+    LENSES = [["lens-", "LENS REPORT"]]
+
+    def review(self, replies, items=None, **extra):
+        return self.run_script("review.js", {"args": run_args(items=items or [self.review_item()], **extra),
+                                             "replies": replies, "prefixes": self.LENSES})
 
     def test_review_runs_waves_then_a_bounded_convergence_loop_and_keeps_residuals(self):
         second = dict(self.DEFECT, findings=[dict(self.DEFECT["findings"][0], claim="STILL THERE")])
-        out = self.run_script("review.js", {"args": run_args(items=[self.review_item()]), "replies": {
-            "lead-050": self.LEAD, "converge-050-r1": self.DEFECT,
-            "fix-050-r1": {"commit": "FIX-COMMIT", "fixed": ["C"], "false_positives": [],
-                           "not_fixed": ["NF: needs the maintainer"], "suite_totals": "T"},
-            "converge-050-r2": second}, "prefixes": [["lens-", "LENS REPORT"]]})
+        out = self.review({"lead-050": self.LEAD, "converge-050-r1": self.DEFECT,
+                           "fix-050-r1": dict(self.FIX, not_fixed=["NF: needs the maintainer"]),
+                           "converge-050-r2": second})
         self.assert_contract(out)
         labels = self.labels(out)
         self.assertEqual(labels[0], "lens-050-1")
@@ -643,6 +801,7 @@ class StubRuntime(unittest.TestCase):
         self.assertEqual(labels[3:], ["lead-050", "converge-050-r1", "fix-050-r1", "converge-050-r2"])
         self.assertIn("HEAD-REF..HEAD", out["calls"][4]["prompt"])
         self.assertIn("LEAD-COMMIT..HEAD", out["calls"][6]["prompt"])
+        self.assertEqual({c["effort"] for c in out["calls"] if c["label"].startswith("converge-")}, {"max"})
         result = out["result"][0]
         self.assertEqual(result["status"], "RESIDUAL")
         self.assertEqual(result["needs_mike"], ["N1"])
@@ -651,37 +810,147 @@ class StubRuntime(unittest.TestCase):
         self.assertIn("NF: needs the maintainer", text)
 
     def test_review_stops_when_convergence_is_clean(self):
-        out = self.run_script("review.js", {"args": run_args(items=[self.review_item()]), "replies": {
-            "lead-050": self.LEAD, "converge-050-r1": self.CLEAN}, "prefixes": [["lens-", "LENS REPORT"]]})
+        out = self.review({"lead-050": self.LEAD, "converge-050-r1": self.CLEAN})
         self.assert_contract(out)
         self.assertNotIn("fix-050-r1", self.labels(out))
         self.assertEqual((out["result"][0]["status"], out["result"][0]["residual"]), ("CLEAN", []))
 
+    def test_review_passes_earlier_waves_high_lines_on(self):
+        out = self.review({"lens-050-1": "intro\nHIGH: the adapter leaks a sealed type\nend",
+                           "lead-050": self.LEAD, "converge-050-r1": self.CLEAN})
+        self.assert_contract(out)
+        self.assertIn("HIGH: the adapter leaks a sealed type", self.prompt_of(out, "lens-050-tooling"))
+        self.assertNotIn("ADVERSARIAL ESCALATION", self.prompt_of(out, "lead-050"))
+
+    def test_review_asks_the_lead_to_escalate_a_critical_standards_finding(self):
+        out = self.review({"lens-050-1": "CRITICAL: a service holds a sealed TaleWorlds type",
+                           "lead-050": self.LEAD, "converge-050-r1": self.CLEAN})
+        self.assert_contract(out)
+        self.assertIn("ADVERSARIAL ESCALATION", self.prompt_of(out, "lead-050"))
+
     def test_review_stops_an_item_whose_lens_died(self):
-        out = self.run_script("review.js", {"args": run_args(items=[self.review_item()]), "replies": {
-            "lens-050-1": None}, "prefixes": [["lens-", "LENS REPORT"]]})
+        out = self.review({"lens-050-1": None})
         self.assert_contract(out)
         self.assertEqual(self.labels(out), ["lens-050-1"])
         self.assertEqual(out["result"][0]["status"], "FAILED")
         self.assertIn("lens-050-1", out["result"][0]["failures"][0])
 
-    def test_review_refuses_an_unknown_lens(self):
-        out = self.run_script("review.js", {"args": run_args(items=[self.review_item(lenses=["4", "t"])])})
-        self.assertFalse(out["ok"])
-        self.assertIn('unknown lens "t"', out["error"])
-        self.assertEqual(out["calls"], [])
+    def test_review_reports_a_dead_lead_convergence_or_fix_as_failed(self):
+        for dead in ("lead-050", "converge-050-r1", "fix-050-r1", "converge-050-r2"):
+            with self.subTest(dead=dead):
+                replies = {"lead-050": self.LEAD, "converge-050-r1": self.DEFECT, "fix-050-r1": self.FIX,
+                           "converge-050-r2": self.CLEAN}
+                replies[dead] = None
+                out = self.review(replies)
+                self.assert_contract(out)
+                result = out["result"][0]
+                self.assertEqual(result["status"], "FAILED")
+                self.assertEqual(self.labels(out)[-1], dead)
+                self.assertIn(dead, result["failures"][0])
+                if dead != "lead-050":
+                    self.assertTrue(result["residual"], "the unreviewed or unfixed work is not in residual")
+
+    def test_review_with_no_round_reports_the_lead_fixes_unreviewed(self):
+        out = self.review({"lead-050": self.LEAD}, maxRounds=0)
+        self.assert_contract(out)
+        self.assertEqual(self.labels(out)[-1], "lead-050")
+        self.assertEqual(out["result"][0]["status"], "RESIDUAL")
+        self.assertIn("maxRounds 0", json.dumps(out["result"][0]["residual"]))
+
+    def test_review_never_reads_defects_without_findings_as_clean(self):
+        empty = dict(self.CLEAN, verdict="DEFECTS")
+        for rounds in (1, 2):
+            with self.subTest(maxRounds=rounds):
+                out = self.review({"lead-050": self.LEAD, "converge-050-r1": empty}, maxRounds=rounds)
+                self.assert_contract(out)
+                self.assertEqual(self.labels(out)[-1], "converge-050-r1", "no blind fix pass")
+                self.assertEqual(out["result"][0]["status"], "RESIDUAL")
+                self.assertIn("no findings listed", json.dumps(out["result"][0]["residual"]))
+
+    def test_review_stops_a_lead_that_blocked_or_committed_nothing(self):
+        for lead, status in ((dict(self.LEAD, verdict="BLOCKED"), "BLOCKED"), (dict(self.LEAD, commit=""), "FAILED")):
+            with self.subTest(status=status):
+                out = self.review({"lead-050": lead, "converge-050-r1": self.CLEAN})
+                self.assert_contract(out)
+                self.assertEqual(self.labels(out)[-1], "lead-050", "convergence ran after the lead stopped")
+                self.assertEqual(out["result"][0]["status"], status)
+
+    def test_review_stops_a_fix_pass_that_blocked_or_committed_nothing(self):
+        for fix, status in ((dict(self.FIX, status="BLOCKED"), "BLOCKED"), (dict(self.FIX, commit=""), "FAILED")):
+            with self.subTest(status=status):
+                out = self.review({"lead-050": self.LEAD, "converge-050-r1": self.DEFECT, "fix-050-r1": fix,
+                                   "converge-050-r2": self.CLEAN})
+                self.assert_contract(out)
+                self.assertEqual(self.labels(out)[-1], "fix-050-r1")
+                self.assertEqual(out["result"][0]["status"], status)
+                self.assertIn('"C"', json.dumps(out["result"][0]["residual"]))
+
+    def test_review_schemas_let_the_lead_and_a_fix_pass_say_they_stopped(self):
+        # The runtime holds a result to its schema, so a BLOCKED the schema lacks cannot arrive.
+        out = self.review({"lead-050": self.LEAD, "converge-050-r1": self.DEFECT, "fix-050-r1": self.FIX,
+                           "converge-050-r2": self.CLEAN})
+        self.assert_contract(out)
+        schema = {c["label"]: c["schemaValue"] for c in out["calls"]}
+        self.assertIn("BLOCKED", schema["lead-050"]["properties"]["verdict"]["enum"])
+        self.assertEqual(schema["fix-050-r1"]["properties"]["status"]["enum"], ["DONE", "BLOCKED"])
+        self.assertIn("status", schema["fix-050-r1"]["required"])
+
+    def test_review_never_calls_a_lead_that_needs_fixes_clean(self):
+        out = self.review({"lead-050": dict(self.LEAD, verdict="NEEDS FIXES"), "converge-050-r1": self.CLEAN})
+        self.assert_contract(out)
+        self.assertEqual(out["result"][0]["status"], "RESIDUAL")
+        self.assertIn("NEEDS FIXES", json.dumps(out["result"][0]["residual"]))
+
+    def test_review_keeps_other_items_when_one_throws(self):
+        # A fix pass whose not_fixed is no list breaks that item only.
+        other = self.review_item(num="051", wt="/w/wt-051")
+        out = self.review({"lead-050": self.LEAD, "converge-050-r1": self.DEFECT,
+                           "fix-050-r1": dict(self.FIX, not_fixed="none"), "converge-050-r2": self.CLEAN,
+                           "lead-051": self.LEAD, "converge-051-r1": self.CLEAN}, items=[self.review_item(), other])
+        self.assertTrue(out["ok"], out.get("error"))
+        self.assertEqual([r["status"] for r in out["result"]], ["FAILED", "CLEAN"])
+
+    def test_review_bounds_the_pool_across_items(self):
+        items = [self.review_item(num=n, wt="/w/wt-" + n, lenses=["1"]) for n in ("050", "051", "052")]
+        out = self.run_script("review.js", {"args": run_args(items=items), "prefixes": self.LENSES + [
+            ["lead-", self.LEAD], ["converge-", self.CLEAN]]})
+        self.assert_contract(out)
+        self.assertEqual(out["maxInFlight"], 2)
+
+    def test_review_refuses_an_unknown_lens_and_a_repeated_item(self):
+        for lens in ("t", "constructor"):
+            self.assert_refused("review.js", run_args(items=[self.review_item(lenses=["4", lens])]),
+                                f'unknown lens "{lens}"')
+        self.assert_refused("review.js", run_args(items=[self.review_item(), self.review_item()]), "050")
+
+    def test_review_takes_a_second_review_of_the_same_num_under_its_tag(self):
+        items = [self.review_item(lenses=["4"]), self.review_item(lenses=["4"], tag="decisions")]
+        out = self.run_script("review.js", {"args": run_args(items=items), "prefixes": self.LENSES + [
+            ["lead-", self.LEAD], ["converge-", self.CLEAN]]})
+        self.assert_contract(out)
+        labels = self.labels(out)
+        self.assertEqual(len(labels), len(set(labels)), labels)
+        self.assertIn("lead-050-decisions", labels)
 
     # draft-issues.js ---------------------------------------------------------------------------
 
-    def test_draft_issues_reports_a_dead_drafter(self):
+    def test_draft_issues_reports_a_dead_drafter_and_bounds_the_pool(self):
         items = [{"num": "060", "title": "A", "template": "bug", "label": "bug"},
-                 {"num": "061", "title": "B", "template": "feature", "label": "enhancement"}]
-        out = self.run_script("draft-issues.js", {"args": run_args(items=items), "replies": {
-            "draft-060": {"title": "A", "label": "bug", "body_file": "/w/scratch/issues/060.md", "notes": ""},
-            "draft-061": None}})
+                 {"num": "061", "title": "B", "template": "feature", "label": "enhancement"},
+                 {"num": "062", "title": "C", "template": "bug", "label": "bug"}]
+        out = self.run_script("draft-issues.js", {"args": run_args(items=items), "replies": {"draft-061": None},
+                                                  "prefixes": [["draft-", {"title": "A", "label": "bug",
+                                                                           "body_file": "/w/scratch/issues/x.md",
+                                                                           "notes": ""}]]})
         self.assert_contract(out)
-        self.assertEqual([d["ok"] for d in out["result"]["drafts"]], [True, False])
+        self.assertEqual(out["maxInFlight"], 2)
+        self.assertEqual([d["ok"] for d in out["result"]["drafts"]], [True, False, True])
         self.assertEqual(len(out["result"]["failures"]), 1)
+
+    def test_draft_issues_refuses_a_repeated_num(self):
+        items = [{"num": "060", "title": "A", "template": "bug", "label": "bug"},
+                 {"num": "060", "title": "B", "template": "feature", "label": "enhancement"}]
+        self.assert_refused("draft-issues.js", run_args(items=items), "060")
 
 
 if __name__ == "__main__":
