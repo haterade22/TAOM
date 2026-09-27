@@ -2345,23 +2345,31 @@ head2 "7j. every hook registration is anchored on CLAUDE_PROJECT_DIR, so a gate 
 # Claude Code runs a hook command in the session's current directory, and a Bash `cd` into a project
 # subdirectory persists across tool calls. A registration written as `.claude/hooks/x.sh` then fails
 # to start ("No such file or directory"), which the harness treats as a non-blocking error, so every
-# gate fell silent after `cd tools` (proven live 2026-09-26, #690). Each registration names its script
-# through "$CLAUDE_PROJECT_DIR", as the /freeze and /investigate frontmatter hooks already did.
+# gate fell silent after `cd tools` (proven live 2026-09-26, #690). Each settings.json registration
+# names its script as "$CLAUDE_PROJECT_DIR"/.claude/..., and each skill or agent frontmatter one (the
+# surface section 5 says gets forgotten) names it through ${CLAUDE_PROJECT_DIR} or "$CLAUDE_PROJECT_DIR".
 J7_UNANCHORED=$("$HPY" - <<'PY' | tr -d '\r'
-import json
+import json, pathlib, re
 d = json.load(open('.claude/settings.json', encoding='utf-8'))
 for ev, gs in d.get('hooks', {}).items():
     for g in gs:
         for h in g.get('hooks', []):
             c = h.get('command', '')
             if not c.startswith('"$CLAUDE_PROJECT_DIR"/.claude/'):
-                print(ev + ' ' + c)
+                print('settings.json ' + ev + ' ' + c)
+root = pathlib.Path('.')
+for src in sorted((root / '.claude' / 'skills').glob('*/SKILL.md')) + sorted((root / '.claude' / 'agents').glob('*.md')):
+    text = src.read_text(encoding='utf-8', errors='replace').replace('\r\n', '\n')
+    fm = text[3:].split('\n---', 1)[0] if text.startswith('---') else ''
+    for m in re.finditer(r'^\s*(?:-\s*)?command:\s*(.+?)\s*$', fm, re.M):
+        if not re.search(r'"?\$\{?CLAUDE_PROJECT_DIR\}?"?/\.claude/', m.group(1)):
+            print(src.as_posix() + ' ' + m.group(1))
 PY
 )
 if [[ -z "$J7_UNANCHORED" ]]; then
-    ok 'every settings.json hook registration starts with "$CLAUDE_PROJECT_DIR"/.claude/'
+    ok 'every hook registration (settings.json and skill or agent frontmatter) is anchored on CLAUDE_PROJECT_DIR'
 else
-    bad "settings.json hook registrations not anchored on \$CLAUDE_PROJECT_DIR (they stop running after a cd into a subdirectory): $(printf '%s' "$J7_UNANCHORED" | tr '\n' ';')"
+    bad "hook registrations not anchored on \$CLAUDE_PROJECT_DIR (they stop running after a cd into a subdirectory): $(printf '%s' "$J7_UNANCHORED" | tr '\n' ';')"
 fi
 # End to end, the way the harness runs it: the registered command string through bash -c, from a
 # subdirectory, with CLAUDE_PROJECT_DIR set. The gate must still refuse a trunk force push.

@@ -80,8 +80,9 @@ def long_option(tok, names):
 
 def git_out(args):
     """`git <args> 2>/dev/null` as $( ) gives it: trailing newlines and NUL dropped, empty on any
-    failure. Asked in the hook's own directory, which is the main tree even for a push run in a
-    worktree (a known gap, hooks-catalog.md)."""
+    failure. Asked in the hook's own directory: the session's directory, the main tree unless an
+    earlier Bash cd moved it (#690), even for a push run in a worktree or under -C (a known gap,
+    hooks-catalog.md)."""
     try:
         r = subprocess.run(["git"] + args, stdout=subprocess.PIPE,
                            stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL, timeout=2)

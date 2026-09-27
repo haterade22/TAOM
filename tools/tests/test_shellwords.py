@@ -261,7 +261,7 @@ class SegmentsTests(unittest.TestCase):
                          'Set-Location "E:\\x\\"\n dotnet test')
 
 
-class PushLinesTests(unittest.TestCase):
+class PushCandidatesTests(unittest.TestCase):
     """validate-push.sh's candidate lines (plan 027 review): each shape below was refused before
     plan 027, so a line that still shows the push must come back."""
 

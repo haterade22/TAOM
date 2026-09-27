@@ -54,8 +54,8 @@ ask() {
 # note. The scan is linear, about 85 ms a MB here with dash runs included, so it needs no size cap.
 # It reads the payload from its "tool_input": key on, looked for in the first 2 KB only: the session
 # id and transcript path before that key hold a UUID that usually matches, and a scan of the whole
-# payload asked on most pushes (#680 review), which saw Claude Code 2.1.241 put the key at byte 445
-# to 449. Past 2 KB, or with the key escaped, the whole payload is read, which only asks more. A
+# payload asked on most pushes (#680 review), which saw Claude Code 2.1.241 put the key at offset
+# 444 to 449. Past 2 KB, or with the key escaped, the whole payload is read, which only asks more. A
 # search of the whole payload for the key was quadratic in its offset (17.7 s for one after 256 KB).
 FORCE_MARK='-[^[:space:]-]*f|--m|\+|\\u'
 coarse() {
