@@ -2041,7 +2041,8 @@ rm -rf "$SANDBOX/hw-proj" "$SANDBOX/hw.json"
 #     judge in time (#680). Its bash judge cost about 25 microseconds a word, so a trunk force push
 #     carrying 250 KB or more of quoted text holding `push` outran the 5 s registration, and a killed
 #     gate fails open. Shape A is that push; D adds two shorter commit lines holding `push` after it;
-#     E is D with a force-like word (self-fix) in the messages, which the reader orders first. An
+#     E is D with a force-like word (self-fix) in the messages, which the reader sorted first until
+#     the push lines lost their order (#680); the judge takes every shape in time in any order. An
 #     overrun must ask: a judge that never answers, the same under a bash with no EPOCHREALTIME (the
 #     fixed bound), and a Python probe that spends the budget before the judge can start.
 # ---------------------------------------------------------------------------

@@ -2948,3 +2948,22 @@ protected name, which can only refuse more (git refuses such a refspec), instead
   raw payload stands in for it.
 - **Source:** issue #680; `.claude/hooks/_pushjudge.py`, `.claude/hooks/_shellwords.py` (`verdict`),
   `.claude/hooks/validate-push.sh`; `tools/tests/test_pushjudge.py`; `tools/test_hooks.sh` 7e and 7i.
+
+### An order added for speed also chose which target a message names (#680, 2026-09-26)
+`_shellwords.py push_candidates` sorted validate-push's candidate lines (lines that could force first, shortest
+first within each group) so the slow bash judge reached a short force push before a long message holding `push`.
+Once the judge ran in Python under a deadline, the order had no purpose left, and it was deleted with its
+`FORCE_HINT` pattern and the four tests that pinned it; the lines now come back in the order they are produced.
+No verdict depended on the order, since every line is judged until one refuses. What it did decide was the
+message: the judge stops at the first refused line and a warning is last-write-wins, so the order picked which
+trunk the BLOCKED or WARNING line names. A sweep of 1,093 commands (4,372 runs per hook, both shell tools, a trunk
+and a feature checkout) against the ordered hook gave 0 exit-code differences and 349 message-only ones: 319
+BLOCKED and 30 WARNING lines now name a different target, chosen by where each line is produced from the
+command rather than by a force hint and line length.
+- **Why missed:** the order went in as a speed-up, and its tests pinned the mechanism (line lengths, a force
+  hint), not an outcome, so nothing recorded that it also chose the named target until the reason for it was gone.
+- **Prevent:** when the cause of a performance workaround is removed, delete the workaround and the tests that pin
+  it in the same arc, and diff the hook's whole output (rc, stdout and stderr) against the previous commit, so a
+  change in a message shows up as a counted difference rather than a surprise.
+- **Source:** issue #680; `.claude/hooks/_shellwords.py` (`push_candidates`); `tools/tests/test_shellwords.py`;
+  `tools/test_hooks.sh` 7i.
