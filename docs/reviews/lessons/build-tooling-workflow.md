@@ -2913,3 +2913,38 @@ array split, which would have pushed `validate-push.sh` past its 5 s registratio
 - **Source:** issue #681; `.claude/hooks/validate-push.sh`, `block-dangerous-git.sh`, `block-broad-git-add.sh`,
   `mark-verification-run.sh`, `check-doc-config-drift.sh`, `check-moduledata-validation.sh`,
   `check-native-dll-crt.sh`, `check-verification-evidence.sh`, `detect-docs-gaps.sh`; `.claude/rules/hook-authoring.md`.
+
+### A bash judge ported to Python reads a line differently at every natural Python choice (#680, 2026-09-26)
+`validate-push.sh` judged each candidate line in bash at about 25 microseconds a word, so a trunk force push
+carrying 250 KB or more of quoted text holding `push` outran the 5 s registration, and a killed gate fails open.
+Plan 027's review had seen the cost and answered it with an order (lines that could force first, shortest first),
+which a message holding a force-like word beats. The fix moved the judge into Python (`_pushjudge.py`, run by
+`_shellwords.py verdict` in the reader's own start) under a 3.0 s deadline that asks on an overrun: the slowest
+2 MB shape now answers in under a second. A security gate's port must give every verdict bash gave, and each
+natural Python spelling of a bash step changes some. The #680 design audit judged 37,986 lines under three
+current branches against the bash judge and counted:
+
+| Natural Python choice | What bash does | Judgements that differ |
+|---|---|---|
+| `str.split()` | splits at space, tab and newline only (IFS) | 12,320 |
+| `str.lower()`, or bash under a named UTF-8 locale | `${tok,,}` in the hook's C.UTF-8 lowers A-Z only | 99 each |
+| `str.isdigit()` for an fd number | `^[0-9]+$` takes ASCII digits only | 14 |
+| `fnmatch` for a refspec pattern | `[[ == ]]` pattern matching | 38 |
+
+The split is the dangerous one: the reader writes `\x1f` and `\x1e` inside a word to keep an argument whole, and a
+naive port let 546 refused hook runs through, the 7c row `git push --force -o "ci variable" origin` on a trunk
+among them. Two more sit outside the judge: bash's `$( )` dropped every NUL and saw a lone surrogate as `?`, so a
+line is judged as bash received it, and `str.splitlines()` on the candidate list breaks at an empty argument's
+`\x1e`. The port reads a `*`-only pattern exactly and takes one holding any other glob character as matching every
+protected name, which can only refuse more (git refuses such a refspec), instead of porting bash's bracket matcher.
+- **Why missed:** the per-word cost was measured in plan 027's review and treated with an order, which any content
+  can beat, rather than removed; and a bash judge's reading lives in bash's defaults (IFS, the locale, `$( )`),
+  which no line of the script spells out, so a port written from the script's text passes every ASCII test.
+- **Prevent:** pin each divergence with a line whose verdict was read from the bash judge's own functions
+  (`tools/tests/test_pushjudge.py`: 99 pins, and every 7c command with the target bash named), prove the pins bite
+  by mutating each choice back to the natural one, and switch only after a hook-level differential sweep against
+  the old hook shows zero refused-then-allowed rows (1,035 commands, 4,140 runs per hook). Delete the old judge
+  rather than keep it as a fallback: two readings drift. With no verdict, a coarse ask on a force marker in the
+  raw payload stands in for it.
+- **Source:** issue #680; `.claude/hooks/_pushjudge.py`, `.claude/hooks/_shellwords.py` (`verdict`),
+  `.claude/hooks/validate-push.sh`; `tools/tests/test_pushjudge.py`; `tools/test_hooks.sh` 7e and 7i.

@@ -1596,36 +1596,37 @@ head2 "7e. the git gates read a PowerShell command as they read its Bash twin"
 # `Bash|PowerShell` group now registers all nine, and each gate reads its command through _pybin.sh
 # taom_hook_command, which runs _shellwords.py: PowerShell comes back as the Bash text of the same
 # command, and a git named by a path or in capitals comes back as `git` in both shells.
+# validate-push.sh reads the same splits through _shellwords.py verdict instead (#680).
 BT='`'; NL=$'\n'; V=${CSV_VER:-v0.0.0}
 # The nine gates are named here, never read from the settings under test: a list derived from the
 # Bash registrations lost a gate that moved to a PowerShell-only group, and its parity row with it
 # (Codex review of plan 027). A tenth Bash gate fails until it is added here. `own` lists shell
-# hooks that are not git gates and read their command themselves: check-graphify-usage.sh splits
-# both shells in tools/graphify_taom.py, and 7f checks it. A git gate never goes in `own`; it reads
-# through taom_hook_command (hook-authoring.md).
+# hooks that read their command themselves: check-graphify-usage.sh is not a git gate, splits both
+# shells in tools/graphify_taom.py, and 7f checks it.
+# validate-push.sh is in `own`: it reads and judges the push in one run of _shellwords.py verdict (#680).
+# Every other git gate reads through taom_hook_command (hook-authoring.md).
 G7E_GATES=$("$HPY" - <<'PY' | tr -d '\r'
 import json
 d = json.load(open('.claude/settings.json', encoding='utf-8'))
 pre = d.get('hooks', {}).get('PreToolUse', [])
 names = ["block-broad-git-add.sh", "block-dangerous-git.sh", "block-no-verify.sh",
          "check-claude-files-tracked.sh", "check-commit-subject-version.sh",
-         "check-doc-config-drift.sh", "check-moduledata-validation.sh", "check-native-dll-crt.sh",
-         "validate-push.sh"]
-own = ["check-graphify-usage.sh"]
+         "check-doc-config-drift.sh", "check-moduledata-validation.sh", "check-native-dll-crt.sh"]
+own = ["check-graphify-usage.sh", "validate-push.sh"]
 extra = sorted({h['command'].rsplit('/', 1)[-1] for g in pre
                 if {'Bash', 'PowerShell'} & set(g.get('matcher', '').split('|'))
                 for h in g.get('hooks', [])} - set(names) - set(own))
 for n in extra:
-    print(n, "unlisted", "unlisted")
-for n in names:
+    print(n, "unlisted", "unlisted", "-")
+for n in names + ["validate-push.sh"]:
     tools = [t for g in pre if any(h['command'].endswith('/' + n) for h in g.get('hooks', []))
              for t in g.get('matcher', '').split('|')]
-    print(n, tools.count('Bash'), tools.count('PowerShell'))
+    print(n, tools.count('Bash'), tools.count('PowerShell'), "own" if n in own else "posix")
 PY
 )
 [[ -z "$G7E_GATES" ]] && bad "7e found no PreToolUse hook registered for Bash; the discovery is broken"
 G7E_NAMES=""
-while read -r name nb np; do
+while read -r name nb np reads; do
     [[ -z "$name" ]] && continue
     if [[ "$nb" == unlisted ]]; then
         bad "$name is a PreToolUse hook for a shell tool that 7e does not list; add it to the list above"
@@ -1638,10 +1639,12 @@ while read -r name nb np; do
         bad "$name is registered for Bash ${nb}x and for PowerShell ${np}x; a git gate needs one Bash|PowerShell registration"
     fi
     # hook-authoring.md: a gate reads its command through the shared reader, so both shells reach it.
-    if grep -q 'taom_hook_command posix' ".claude/hooks/$name"; then
-        ok "$name reads its command through taom_hook_command posix"
+    reader='taom_hook_command posix'
+    [[ "$reads" == own ]] && reader='_shellwords.py" verdict'
+    if grep -qF "$reader" ".claude/hooks/$name"; then
+        ok "$name reads its command through $reader"
     else
-        bad "$name does not read its command through taom_hook_command posix (hook-authoring.md)"
+        bad "$name does not read its command through $reader (hook-authoring.md)"
     fi
 done <<< "$G7E_GATES"
 
@@ -1836,11 +1839,20 @@ if [[ "$(decision_of "$out")" == ask ]] && grep -q '_shellwords.py failed' "$SAN
 else
     bad "block-dangerous-git without _shellwords.py answered '$(decision_of "$out")' (expected ask plus the stderr note)"
 fi
-( cd "$VP_TRUNK" && pre_payload Bash "git push --force origin" \
-    | timeout -k 2 30 env CLAUDE_PROJECT_DIR="$SANDBOX" bash "$NOREADER/validate-push.sh" >/dev/null 2>&1 )
-got=$?
-[[ "$got" == 2 ]] && ok "validate-push without _shellwords.py still refuses a force push of the checked-out trunk" \
-    || bad "validate-push without _shellwords.py answered rc=$got to a force push of the checked-out trunk (expected 2)"
+# validate-push.sh kept no bash judge to fall back on (#680, maintainer decision): with no verdict it
+# asks on a force marker in the raw payload, and allows anything else with a note. Until #680 this
+# row expected rc 2, from the bash judge that has since been deleted.
+for row in "git push --force origin|rc=0 ask|" "git push origin feature|rc=0 allow|NOT checked"; do
+    IFS='|' read -r cmd want note <<< "$row"
+    out=$( cd "$VP_TRUNK" && pre_payload Bash "$cmd" \
+        | timeout -k 2 30 env CLAUDE_PROJECT_DIR="$SANDBOX" bash "$NOREADER/validate-push.sh" 2>"$SANDBOX/noreader.err" )
+    got="rc=$? $(decision_of "$out")"
+    if [[ "$got" == "$want" ]] && { [[ -z "$note" ]] || grep -q "$note" "$SANDBOX/noreader.err"; }; then
+        ok "validate-push without _shellwords.py answers '$got' for: $cmd"
+    else
+        bad "validate-push without _shellwords.py answered '$got' for: $cmd (expected '$want'${note:+ and the stderr note})"
+    fi
+done
 rm -rf "$NOREADER"
 
 # Large payloads under both tools stay inside 80% of each gate's registration (the plan 011 review
@@ -2023,6 +2035,87 @@ for row in "validate-push.sh|push|Bash|65536|rc2" "validate-push.sh|push|Bash|65
     fi
 done
 rm -rf "$SANDBOX/hw-proj" "$SANDBOX/hw.json"
+
+# ---------------------------------------------------------------------------
+# 7i. validate-push refuses a long force push inside 80% of its registration, and asks when it cannot
+#     judge in time (#680). Its bash judge cost about 25 microseconds a word, so a trunk force push
+#     carrying 250 KB or more of quoted text holding `push` outran the 5 s registration, and a killed
+#     gate fails open. Shape A is that push; D adds two shorter commit lines holding `push` after it;
+#     E is D with a force-like word (self-fix) in the messages, which the reader orders first. An
+#     overrun must ask: a judge that never answers, the same under a bash with no EPOCHREALTIME (the
+#     fixed bound), and a Python probe that spends the budget before the judge can start.
+# ---------------------------------------------------------------------------
+head2 "7i. validate-push refuses a long force push in time, and asks when it cannot judge in time (#680)"
+VPI_REG=$(hw_reg PreToolUse validate-push.sh)
+vpi_payload() {  # $1 shape A, D or E, $2 tool, $3 command length: writes $SANDBOX/vpi.json
+    "$HPY" - "$1" "$2" "$3" > "$SANDBOX/vpi.json" <<'PY'
+import json, sys
+shape, tool, n = sys.argv[1], sys.argv[2], int(sys.argv[3])
+def text(word, k):
+    return (word * (k // len(word) + 1))[:k]
+push = 'git -c x="{}" push --force origin bannerlord-1.5.x'
+commit = 'git commit -m "{}"'
+if shape == "A":
+    cmd = push.format(text("push the thing ", n - len(push) + 2))
+else:
+    word = "push the self-fix " if shape == "E" else "push the thing "
+    cmd = push.format(text("push the thing ", n // 2)) + "\n" + commit.format(text(word, n // 5)) + "\n"
+    cmd += commit.format(text(word, n - len(cmd) - len(commit) + 2))
+assert len(cmd) == n
+sys.stdout.write(json.dumps({"tool_name": tool, "tool_input": {"command": cmd}, "hook_event_name": "PreToolUse"}))
+PY
+}
+for shape in A D E; do
+    for size in 256000 409600 819200 2097152; do
+        for tool in Bash PowerShell; do
+            vpi_payload "$shape" "$tool" "$size"
+            S=$(date +%s%N)
+            timeout -k 2 10 env CLAUDE_PROJECT_DIR="$SANDBOX" bash .claude/hooks/validate-push.sh < "$SANDBOX/vpi.json" >/dev/null 2>&1
+            rc=$?
+            MS=$(( ($(date +%s%N) - S) / 1000000 ))
+            label="validate-push [$tool] shape $shape, $((size / 1024)) KB"
+            if (( rc != 2 )); then
+                bad "$label answered rc=$rc, expected 2 (124: still running at the 10 s bound; the harness kills at ${VPI_REG} s and the push runs)"
+            elif (( MS * 10 >= VPI_REG * 1000 * 8 )); then
+                bad "$label took ${MS}ms against its ${VPI_REG}s registration"
+            else
+                ok "$label: rc=2 in ${MS}ms of ${VPI_REG}s"
+            fi
+        done
+    done
+done
+rm -f "$SANDBOX/vpi.json"
+# The overrun rows run sandboxed copies: a judge that sleeps, and a _pybin.sh that sleeps after it resolves.
+VPI_SLOW="$SANDBOX/vpi-slow-judge"; VPI_PROBE="$SANDBOX/vpi-slow-probe"
+mkdir -p "$VPI_SLOW" "$VPI_PROBE"
+cp .claude/hooks/*.sh "$VPI_SLOW/"
+printf 'import time\ntime.sleep(60)\n' > "$VPI_SLOW/_shellwords.py"
+cp .claude/hooks/*.sh .claude/hooks/*.py "$VPI_PROBE/"
+printf '\nsleep 2.8\n' >> "$VPI_PROBE/_pybin.sh"
+pre_payload Bash "git push --force origin bannerlord-1.5.x" > "$SANDBOX/vpi.json"
+for row in "$VPI_SLOW||the judge ran out of time" \
+           "$VPI_SLOW|unset EPOCHREALTIME; |the judge ran out of time" \
+           "$VPI_PROBE||time ran out before it could be judged"; do
+    IFS='|' read -r dir pre reason <<< "$row"
+    S=$(date +%s%N)
+    if [[ -n "$pre" ]]; then    # bash before 5.0 has no EPOCHREALTIME: the fixed 2.5 s bound
+        out=$(timeout -k 2 10 env CLAUDE_PROJECT_DIR="$SANDBOX" bash -c "$pre"'. "$0"' "$dir/validate-push.sh" \
+            < "$SANDBOX/vpi.json" 2>/dev/null)
+    else
+        out=$(timeout -k 2 10 env CLAUDE_PROJECT_DIR="$SANDBOX" bash "$dir/validate-push.sh" < "$SANDBOX/vpi.json" 2>/dev/null)
+    fi
+    rc=$?
+    MS=$(( ($(date +%s%N) - S) / 1000000 ))
+    label="validate-push [${dir##*/}${pre:+, no EPOCHREALTIME}]"
+    if [[ $rc != 0 || "$(decision_of "$out")" != ask || "$out" != *"$reason"* ]]; then
+        bad "$label answered rc=$rc '$(printf '%s' "$out" | head -c 160)' in ${MS}ms; expected an ask saying: $reason"
+    elif (( MS * 10 >= VPI_REG * 1000 * 8 )); then
+        bad "$label asked, but only after ${MS}ms against its ${VPI_REG}s registration"
+    else
+        ok "$label asks ($reason) in ${MS}ms of ${VPI_REG}s"
+    fi
+done
+rm -rf "$VPI_SLOW" "$VPI_PROBE" "$SANDBOX/vpi.json"
 
 # ---------------------------------------------------------------------------
 head2 "8. /context-budget scan.sh runs under set -u and measures the launch load"

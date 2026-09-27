@@ -5,11 +5,13 @@ to_posix() rewrites it as the POSIX-shell (Bash) text of the same command, and e
 Bash logic. In both shells a git named by a path or in capitals (GIT, git.exe, a Windows path to
 git.exe) becomes `git` where it is the command.
 
-Usage: <python> _shellwords.py posix|segments|push < the hook payload (JSON)
+Usage: <python> _shellwords.py posix|segments|push|verdict [protected...] < the hook payload (JSON)
   posix     the command as POSIX-shell text
   segments  the posix text split at ; & | and newlines outside quotes, one segment per line, with a
             # comment dropped (mark-verification-run.sh)
   push      validate-push.sh's candidate lines: every split it judges, only the lines holding `push`
+  verdict   validate-push.sh's answer for the protected branch names given as arguments (#680): one
+            line, block<TAB>target, warn<TAB>target or allow; _pushjudge.py judges the push lines
 It writes UTF-8 with LF line ends and exits 0; an unknown mode exits 2. PowerShell text it cannot
 follow (an unclosed quote, here-string, block comment or ${) comes back unchanged, which is how
 every gate read a command before plan 027.
@@ -372,7 +374,7 @@ def _words_kept(seg):
     return " ".join(re.sub(r"[\s'\"]", "\x1f", w) or "\x1e" for w in words)
 
 
-def push_lines(cmd, tool):
+def push_candidates(cmd, tool):
     """validate-push.sh's candidate lines, only those holding `push`, each once:
     1. the posix text and the raw command, cut at every ; & | and newline whatever the quotes, a #
        comment dropped only where no quote comes anywhere before it (bash -c "git push ..." stays
@@ -402,7 +404,13 @@ def push_lines(cmd, tool):
         if "push" in line and line not in seen:
             seen.add(line)
             keep.append(line)
-    return "\n".join(sorted(keep, key=lambda line: (not FORCE_HINT.search(line), len(line))))
+    return sorted(keep, key=lambda line: (not FORCE_HINT.search(line), len(line)))
+
+
+def push_lines(cmd, tool):
+    """The candidate lines as the push mode prints them, one per line. No line holds a newline, but
+    an empty argument's \\x1e (_words_kept) is a line break to str.splitlines(): judge the list."""
+    return "\n".join(push_candidates(cmd, tool))
 
 
 def read_payload(raw):
@@ -420,11 +428,16 @@ def read_payload(raw):
 
 def main(argv):
     mode = argv[1] if len(argv) > 1 else ""
-    if mode not in ("posix", "segments", "push"):
-        sys.stderr.write("usage: _shellwords.py posix|segments|push < payload.json\n")
+    if mode not in ("posix", "segments", "push", "verdict"):
+        sys.stderr.write("usage: _shellwords.py posix|segments|push|verdict [protected...] < payload.json\n")
         return 2
     tool, cmd = read_payload(sys.stdin.buffer.read().decode("utf-8", "replace"))
-    if mode == "push":
+    if mode == "verdict":
+        sys.dont_write_bytecode = True       # no __pycache__ folder inside .claude/hooks
+        import _pushjudge
+        kind, target = _pushjudge.Judge(argv[2:]).run(push_candidates(cmd, tool))
+        text = kind + "\t" + target if target else kind
+    elif mode == "push":
         text = push_lines(cmd, tool)
     else:
         text = to_posix(cmd, tool)

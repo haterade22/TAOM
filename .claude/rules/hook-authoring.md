@@ -61,7 +61,8 @@ read its command with `COMMAND=$(taom_hook_command posix <gate>)` (`_pybin.sh`),
 shells, and it names git `git` when it is called by a path or in capitals. The PowerShell forms it
 resolves are listed in `docs/reference/hooks-catalog.md` "Both shell tools" and pinned by
 `tools/tests/test_shellwords.py`; `tools/test_hooks.sh` 7e fails a listed gate that does not read
-through it.
+through it. `validate-push.sh` is the one exception: it reads and judges the push in one Python run,
+`_shellwords.py verdict` (#680), and 7e checks that call instead.
 
 ## Amend exemptions in pre-commit hooks (recursion-risk pattern)
 
@@ -136,6 +137,7 @@ Measured on 2026-08-31, after a well-intentioned pass added timeouts to all 27 r
 | **Bound external work INSIDE the script**, under the registered timeout: `timeout -k 2 45 "$PY" tools/x.py` | Keeps the overrun inside the hook, where it can still print something. The registered timeout becomes a backstop, not the budget. |
 | **Handle rc 124 explicitly, and never as a pass.** Emit an `ask` decision under `hookSpecificOutput` (`harness-facts.md` "PreToolUse output contract"), or, for an advisory hook, use its event's visible channel (`harness-facts.md` "Visibility"; exit-0 stderr reaches no one) | An overrun is an infrastructure fault. Fail open (never hard-block on your own bug) but say so, per the fail-open-not-fail-silent rule above. |
 | **Use `-k`.** Bare `timeout N` sends SIGTERM and then WAITS | Against a process that ignores SIGTERM (exactly the Store-alias case) the guard itself hangs. |
+| **Count the bound from the script's first line** when the work before it varies (#680) | `validate-push.sh` takes `EPOCHREALTIME` on line 1 and gives its judge what is left of 3.0 s: a slow `_pybin.sh` probe then asks at once instead of pushing the judge past the kill. |
 | **Check skill-frontmatter registrations too** | The 2026-08-31 pass covered all 27 in `settings.json` and missed all 5 in `freeze/SKILL.md` + `investigate/SKILL.md`, which inherit the **600 s** default. |
 
 `bash tools/test_hooks.sh` enforces this: no registration without a timeout, no external tool
@@ -165,7 +167,8 @@ stall in the transcripts.
 
 **Inside a hook:** `source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"` after any raw-payload
 prefilter and above the first `"$PYBIN"` use, then honour
-`[ -n "$PYBIN" ] || { echo '{}'; exit 0; }`. Putting the `source` below the first use is not
+`[ -n "$PYBIN" ] || { echo '{}'; exit 0; }` (`validate-push.sh` gives its coarse answer instead,
+#680). Putting the `source` below the first use is not
 a style nit: `validate-push.sh` shipped that way on 2026-08-31 and its force-push block was
 unreachable.
 
