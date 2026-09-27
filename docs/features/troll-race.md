@@ -90,7 +90,10 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
 2. **Meshes:** in that same FBX, one object per skin slot, a head as `<mesh>` / `.eye` / `.mouth`, materials
    under the Kit's exact names → `_geo.tpac`. The LOD0 head, eye and mouth each carry the 101 face morph
    channels every race head has (`tools/blender/add_face_morph_channels.py` when the art has none): without
-   them the first agent built crashes the engine's static face morph (the hill troll, 2026-09-25).
+   them the first agent built crashes the engine's static face morph (the hill troll, 2026-09-25). When the head's
+   channels move and only the eye's are zero-filled, run `tools/blender/fit_eye_morphs.py` too, or the eyeballs stay
+   still in moving sockets and show skin in game (the female dwarf, 2026-09-27;
+   [race-face-and-hand-morphs.md](../reference/race-face-and-hand-morphs.md)).
 3. **Animations:** retarget a clip set onto the skeleton's engine dump
    (`retarget_mannequin_to_human.py --engine-skeleton <json> --armature-name <skeleton>_notused`), Kit-import
    the FBX, wire the masters (`wire_anim_master_skeletons.ps1`), then `gen_troll_anim_clips.ps1` with

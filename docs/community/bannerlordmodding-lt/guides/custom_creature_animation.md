@@ -8,7 +8,8 @@ Part of the [Custom Creatures](/guides/custom_creatures/) guide. Read
 nothing on this page will save you.
 
 !!! note "Version"
-    Measured against **Bannerlord v1.4.8**.
+    Measured against **Bannerlord v1.5.x** (last checked on v1.5.3). First written on v1.4.8; TAOM's
+    creatures still fight in battle on v1.5.3, and its creature data audits still pass there.
 
 ## Locomotion clips are authored in place
 
@@ -256,12 +257,12 @@ Measured by reading Kit-compiled masters back against the FBX and the engine's r
    sideways in Blender, harmlessly. Export with `primary_bone_axis='Y'`, `secondary_bone_axis='X'`.
 2. **The root is stored as its FBX world pose turned 180 degrees about Z,** with the armature object's
    transform applied on top. Keep the object at identity and bake the 180 degree turn into the pose.
-3. **Frame 0 is the rest frame.** The root position track is stored relative to it, and every vanilla
-   master opens on rest with its clip at Source 1 = 1. Open on a posed frame and the pelvis offset is
-   lost: a hunched character stands too high and its feet skate. Key rest at frame 0, motion from
-   frame 1 (the site's [animation notes](/modding/animations/#feet-above-the-ground) agree). Vanilla
-   walks carry one root track, the pelvis bob; drop a pack's root travel and give it to the engine as
-   the `bip_mov_ik` usage's loop displacement.
+3. **Frame 0 is the rest frame,** as Artem found. The root position track is stored relative to it, and
+   every vanilla master opens on rest with its clip at Source 1 = 1. Open on a posed frame and the
+   pelvis offset is lost: a hunched character stands too high and its feet skate. Key rest at frame 0,
+   motion from frame 1 (the site's [animation notes](/modding/animations/#feet-above-the-ground)
+   agree). Vanilla walks carry one root track, the pelvis bob; drop a pack's root travel and give it to
+   the engine as the `bip_mov_ik` usage's loop displacement.
 4. **Tracks are stored in FBX node order, and the engine reads slot i as bone i of the skeleton's
    list.** Blender writes nodes depth-first. `human_skeleton`'s list is depth-first; `horse_skeleton`'s
    is not (neck last), so a horse clip from the true hierarchy plays the tail on the neck. Export from a

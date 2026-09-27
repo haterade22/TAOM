@@ -8,9 +8,9 @@ Part of the [Custom Creatures](/guides/custom_creatures/) guide. The basic `skin
 For a race on its own skeleton, read [the skeleton page](/guides/custom_creature_skeleton/) first.
 
 !!! note "Version"
-    Measured against **Bannerlord v1.5.3**. Engine-code findings come from TAOM's reverse engineering
-    of the v1.5.3 game and Modding Kit DLLs; native crash offsets move with every engine update, and
-    facts read on an older version are marked where they appear.
+    Measured against **Bannerlord v1.5.x** (last checked on v1.5.3). Engine-code findings come from
+    TAOM's reverse engineering of the v1.5.3 game and Modding Kit DLLs; native crash offsets move with
+    every engine update, and facts read on an older version are marked where they appear.
 
 ## Three ways to build a race
 
@@ -333,7 +333,7 @@ A morph channel is a shape key the engine blends at runtime. Race meshes carry t
     its pointer, and the game crashes about a second into deployment. The v1.5.3 signature is an
     access violation at `TaleWorlds.Native.dll+0x57070C` (the offset moves with every engine update),
     in the code whose string is "No morph data found for face mesh. Can not do static morph."
-    Zero-offset channels stop the crash; the face sliders then move nothing.
+    Zero-offset channels stop the crash; the face sliders then move nothing on that part.
 
     The Kit never runs a face morph, so every Kit look passes
     ([debugging a native crash](/guides/custom_creature_troubleshooting/#debugging-a-native-crash)).
@@ -344,6 +344,14 @@ three ways (`shape_01` on, frame names, `Basis_0` to `Yell_100`), so TAOM's read
 engine goes by order. **To check the result, count the channels: 101 each on the LOD0 head, eye and
 mouth parts**, the Basis not counted. Working sliders would need a working head's 101 channels in
 order; TAOM has not built one.
+
+**When the head's channels move and only the eye has none, zero-filling the eye is not enough.**
+The sliders then open the eye sockets around still eyeballs: in game the socket's skin and a dark
+gap show where the eyes should be, while the Kit, which applies no morph, looks right. Give each
+eye channel the motion of its socket: TAOM moves each eyeball by the least-squares translation and
+uniform scale of the head vertices within half an eyeball's width, channel by channel, which
+reproduces a hand-authored eye to about 1 mm. Check it on a character with non-neutral face
+sliders in game.
 
 **Export the head's parts as separate objects.** The Kit makes one sub-mesh per FBX object,
 `<mesh>`, `<mesh>.eye` and `<mesh>.mouth`; joined, the head splits by material into `.0` and `.1`,
@@ -377,6 +385,8 @@ it is not established, but the hill troll's hand morphs work in game.
 
 Optional helpers: [`blender/add_face_morph_channels.py`](https://github.com/haterade22/TAOM/blob/bannerlord-1.5.x/tools/blender/add_face_morph_channels.py)
 adds 101 zero-offset channels;
+[`blender/fit_eye_morphs.py`](https://github.com/haterade22/TAOM/blob/bannerlord-1.5.x/tools/blender/fit_eye_morphs.py)
+fits the eye channels to their sockets;
 [`blender/transfer_hand_morphs.py`](https://github.com/haterade22/TAOM/blob/bannerlord-1.5.x/tools/blender/transfer_hand_morphs.py)
 is the hand transfer above;
 [`check_race_morph_channels.py`](https://github.com/haterade22/TAOM/blob/bannerlord-1.5.x/tools/check_race_morph_channels.py)

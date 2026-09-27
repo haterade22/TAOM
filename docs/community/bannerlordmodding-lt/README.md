@@ -1,7 +1,7 @@
 # Community contribution: custom creatures guide (LIVE; 2026-09-26 update NOT SENT)
 
 A guide on adding custom creatures, mounts and humanoid races to Bannerlord, contributed to
-[docs.bannerlordmodding.lt](https://docs.bannerlordmodding.lt). Six pages are live. A v1.5.3 update,
+[docs.bannerlordmodding.lt](https://docs.bannerlordmodding.lt). Six pages are live. A v1.5.x update,
 four new pages and a refresh of the six, is prepared here and has not been sent.
 
 **Status: six pages LIVE since 2026-09-01.** Litauen, the site maintainer, published all six pages
@@ -54,7 +54,8 @@ the update pack, the change list for the six live pages.
 
 **Status: prepared, NOT SENT.**
 
-**What was prepared,** for Bannerlord v1.5.3:
+**What was prepared,** for Bannerlord v1.5.x (every page's version box reads "Measured against
+Bannerlord v1.5.x (last checked on v1.5.3)"; the three pages first written on v1.4.8 say so):
 
 * four new pages: Humanoid Race, Clip Inspector, Melee Attacks and In Battle;
 * the six live pages, refreshed: the live text fetched from the site on 2026-09-26 with every section of
@@ -62,6 +63,8 @@ the update pack, the change list for the six live pages.
 * [`custom_creature_updates.md`](custom_creature_updates.md), the pack: the change list behind the six
   refreshed pages, one section per change (target, action, reason, paste text), so a page that changes
   on the site before this lands can take its sections by hand.
+* Artem credited for the frame 0 rule (the Kit stores a clip's root position track relative to
+  frame 0), in the export mapping and in the hub's acknowledgements (Mike, 2026-09-26).
 
 **The unsent 2026-09-18 edits are folded in.** TAOM's copies of the six pages had carried corrections
 drafted on 2026-09-18 that never reached the site: the war ram's thin set, the neck parented under the

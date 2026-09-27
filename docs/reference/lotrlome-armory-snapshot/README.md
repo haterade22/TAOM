@@ -209,6 +209,42 @@ python tools/validate_mesh_refs.py --no-rgl-log
 Verified both ways on 2026-08-07: **red** on the pre-fix backup (`MISSING_MESH … skins.xml:1780`),
 **green** afterwards — 0 errors across the whole Armory ModuleData (items, crafting pieces, skins).
 
+**Correction (2026-09-26): the `+0x58232C` crash with faulting address `0x24C` was not the underwear.** #385's
+decode reads `0x24C` as 98 x 6, a row of the static face morph over a mesh with no morph buffer, and 98 is the
+vertex count of `sk_dwarf_bm_f1_head.eye`, the one LOD0 face part the artist shipped without morph channels (the head
+and `.mouth` had 101). The unresolved underwear name was a real defect and its fix stays; what stopped the crashes
+was the 2026-08-11 stopgap that moved the adult woman onto the male meshes (next section).
+
+### ⚠️ APPLIED EDIT: the adult female dwarf's own meshes restored (2026-09-26), her eyes made to follow (2026-09-27)
+
+**Two live edits an Armory reinstall WILL revert: `ModuleData/skins.xml` and
+`AssetSources/Race Test/dwarf/sk_dwarf_bm_f1.fbx` (with its compiled `Assets/Race Test/dwarf/sk_dwarf_bm_f1_geo.tpac`).**
+
+- **History.** `dccbb9a3` (2026-08-11) moved the adult `woman` dwarf skin onto the male base mesh
+  (`sm_dwarf_basemesh_a1_*`, empty eyebrows and underwear, the base face texture) as a stopgap for #385, and no doc
+  recorded it. On 2026-09-25 `tools/blender/add_face_morph_channels.py` gave the female `.eye` 101 zero-offset
+  channels, the crash's cause.
+- **The restore (2026-09-26 17:36, Mike: "JUST for the adult women dwarf").**
+  `tools/oneoff/restore_adult_woman_dwarf.py --apply` reversed that stopgap in the adult woman block only: 19
+  attribute values in 3 hunks (the five `sk_dwarf_bm_f1_*` header meshes, `sk_dwarf_underwear_female_a`, the five
+  `sk_dwarf_bm_f1_eyebrow_*`, the four `m_dwarf_bm_female_a1_head` face textures). Teen, tween, child and toddler
+  female skins and the man stay on the base mesh. Live backup `skins.xml.bak-dwarf-woman-restore-20260926-173639`;
+  `--revert --apply` undoes it. **In game: no crash** (Mike, 2026-09-26 20:20).
+- **Her eyes (2026-09-27).** In game her eye openings showed skin and a dark gap: the zero-filled `.eye` channels
+  left the eyeballs still while her head's channels moved the sockets up to 8.5 mm (channel 14); the Kit applies no
+  morph, so it looked right there. `tools/blender/fit_eye_morphs.py --apply` set every `.eye` channel from its
+  socket's motion (backup `sk_dwarf_bm_f1.fbx.bak-eyefollow`, the 2026-09-25 file); Mike re-imported the FBX in the
+  Kit on 2026-09-27 at 09:34 (package 19,484,342 bytes, RDC 67 of 67 records current, every LOD0 material equal to
+  the 2026-08-18 copy). **In game: fixed** (Mike, 2026-09-27). Full account:
+  [race-face-and-hand-morphs.md](../race-face-and-hand-morphs.md).
+- **Not yet run:** #385's own repro, a female dwarf lord in the Erebor keep hall.
+
+**Gates after any Armory update:** `python tools/oneoff/restore_adult_woman_dwarf.py` (a dry run that prints the
+block's state: "restored" or "stopgap"), `python tools/check_race_morph_channels.py` (101 channels on the head, eye
+and mouth, 26 on the arms), `python tools/check_eye_follow.py --package "<Armory>/Assets/Race Test/dwarf/sk_dwarf_bm_f1_geo.tpac"
+--metamesh sk_dwarf_bm_f1_head` (fails when an eye stays still in a moving socket), and
+`python tools/validate_mesh_refs.py --no-rgl-log`.
+
 ### Two dwarf-skin divergences from vanilla that are NOT defects
 
 Checked against `Native/ModuleData/skins.xml` on 2026-08-07 while validating the fix above. Both look
@@ -444,7 +480,11 @@ the cache free of wrong-script words, so a replay cannot bring the CNs damage ba
 
 ## Snapshot date
 
-2026-09-26, 14:13 state: `action_sets.xml` refreshed from live by a binary copy (Python `rb`/`wb`), byte-identical
+2026-09-27: `skins.xml` refreshed from live and equal to it after line-ending normalisation (5,834,843 bytes, CRLF;
+live 5,616,060, LF): the adult woman dwarf restore above (19 values) and the live change of 2026-09-26 11:28 that
+removed the four `sk_dwarf_beard_a_10` beard entries. The other files are as below.
+
+Previous: 2026-09-26, 14:13 state: `action_sets.xml` refreshed from live by a binary copy (Python `rb`/`wb`), byte-identical
 (4,436,052 bytes, CRLF, sha256 prefix `53a295013c5f`), after the binder bound the hill troll's 30 self-keyed swing
 clips (32 codes; [lotrlome-hill-troll-changes.md](../lotrlome-hill-troll-changes.md)). Against the 09:15 copy the
 only change is `as_hill_troll_warrior`'s header comment and those 32 bindings; `audit_action_set_parity.py --live`
@@ -454,8 +494,7 @@ diff against the last commit is the hill troll war hammer's two `TwoHandedMace` 
 sha256 prefix `8b9e64efa7f9`, carried the live file's lone CR and bare LF around those lines, which
 `add_hill_troll_hammer_items.py` had spliced in before the `\n` of a CRLF line, so git showed a whole-file diff.)
 `monsters.xml` equals live after line-ending normalisation (the hill troll's 1.2 body capsule, 2026-09-26 08:55).
-`skins.xml` was not refreshed and no longer equals live: the live file changed at 11:28 that day (its four
-`sk_dwarf_beard_a_10` beard entries are gone), so do not restore it from here without reading that diff.
+`skins.xml` was not refreshed that day (the 11:28 live change is in the 2026-09-27 refresh above).
 
 Previous: 2026-09-25: `action_sets.xml`, `action_types.xml`, `monsters.xml` and `skins.xml` refreshed from live and
 byte-identical to it: the hill troll's set rebound (Fab, retargeted human, reused idles) with its pose override,

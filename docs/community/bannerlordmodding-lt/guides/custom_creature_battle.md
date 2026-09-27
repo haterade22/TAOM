@@ -7,9 +7,9 @@ Part of the [Custom Creatures](/guides/custom_creatures/) guide. Read [the XML](
 first, or for a race, [the race page](/guides/custom_creature_race/).
 
 !!! note "Version"
-    Measured against **Bannerlord v1.5.3**. The engine-code findings come from TAOM's reverse
-    engineering of the v1.5.3 game and Modding Kit DLLs, and native crash offsets move with every
-    engine update. Older measurements (v1.4.5 to v1.4.7) are marked where they appear.
+    Measured against **Bannerlord v1.5.x** (last checked on v1.5.3). The engine-code findings come from
+    TAOM's reverse engineering of the v1.5.3 game and Modding Kit DLLs, and native crash offsets move
+    with every engine update. Older measurements (v1.4.5 to v1.4.7) are marked where they appear.
 
 !!! note "The last four sections need a C# module"
     Size, collision and weapons are data you author in XML, Blender and the Modding Kit. Scripted

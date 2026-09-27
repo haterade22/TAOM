@@ -22,10 +22,10 @@ RAM and TRL (the mumakil, spider, war elephant, war ram and troll race notes), S
 
 | Target page | Sections |
 |---|---|
-| `/guides/custom_creatures/` | A1 version box, A2 page list, A3 "Which one" row, A4 the war ram's thin set, A5 terms, A6 the example creatures, A7 the attack row |
+| `/guides/custom_creatures/` | A1 version box, A2 page list, A3 "Which one" row, A4 the war ram's thin set, A5 terms, A6 the example creatures, A7 the attack row, A8 Artem's credit |
 | `/guides/custom_creature_skeleton/` | B1 neck under the tail, B2 export rig, B3 materials, B4 physics, B5 hit capsules, B6 version box, B7 packages TpacTool cannot open |
-| `/guides/custom_creature_animation/` | C1 `quad_movement`, C2 recipes, C3 compiling, C4 the export mapping, C5 diagnosing, C6 `anf_displace_position`, C7 renaming a clip |
-| `/guides/custom_creature_xml/` | D1 thin set, D2 rider partial, D3 missing clip names, D4 size, D5 the reskin trap, D6 the `_map` set |
+| `/guides/custom_creature_animation/` | C1 `quad_movement`, C2 recipes, C3 compiling, C4 the export mapping, C5 diagnosing, C6 `anf_displace_position`, C7 renaming a clip, C8 version box |
+| `/guides/custom_creature_xml/` | D1 thin set, D2 rider partial, D3 missing clip names, D4 size, D5 the reskin trap, D6 the `_map` set, D7 version box |
 | `/guides/custom_creature_reference/` | E1 flag warning, E2 flag rows, E3 foot IK, E4 recipes, E5 being struck, E6 checksum, E7 fingerprints, E8 version |
 | `/guides/custom_creature_troubleshooting/` | F1 version box, F2 quick index, F3 `quad_movement` crash, F4 three new crashes, F5 native crashes, F6 the log, F7 the zero-size fix |
 
@@ -38,11 +38,11 @@ v1.5.3 (MAP header).
 
 ````markdown
 !!! note "Version"
-    Measured on **Bannerlord v1.4.5 to v1.5.3**. Engine-code findings come from TAOM's reverse
-    engineering of the v1.5.3 game and Modding Kit DLLs; native crash offsets move with every engine
-    update, and each page marks facts measured on an older version. v1.4.6 changed which data mistakes
-    are survivable: see [The 1.4.6 rule](/guides/custom_creature_xml/#the-146-rule) before porting
-    anything older.
+    Measured against **Bannerlord v1.5.x** (last checked on v1.5.3). Engine-code findings come from
+    TAOM's reverse engineering of the v1.5.3 game and Modding Kit DLLs; native crash offsets move with
+    every engine update, and each page marks facts measured on an older version. v1.4.6 changed which
+    data mistakes are survivable: see [The 1.4.6 rule](/guides/custom_creature_xml/#the-146-rule) before
+    porting anything older.
 ````
 
 ## A2. Custom Creatures: the page list
@@ -188,6 +188,21 @@ section).
 | You want it to attack with something other than a kick | **Bespoke**, or author one clip onto the existing rig, whose only attack clip is the kick. **A clip does not attack by itself:** code, such as a behaviour tree, has to play it and apply the blow. The only attack the engine fires on its own is the usage set's `kick_action`, and no test records a new creature's own kick action firing. See [scripted creature attacks](/guides/custom_creature_battle/#scripted-creature-attacks). |
 ````
 
+## A8. Custom Creatures: Artem's frame 0 finding
+
+**Target:** `/guides/custom_creatures/` > `#acknowledgements`, the bullet for Artem
+**Action:** replace the bullet
+**Why:** Artem found that the Kit stores a clip's root position track relative to frame 0 and that vanilla masters open on a rest frame (LES, the frame 0 addendum); C4 credits it where the rule is stated.
+
+````markdown
+* **Artem**, author of **ADOD_Beasts**, whose war elephant TAOM licensed. The elephant is the
+  reference for a large quadruped, and Artem is also the source of the
+  [Custom Mount](/guides/custom_mount/) notes already on this wiki. The frame 0 rule in
+  [the export mapping](/guides/custom_creature_animation/#the-export-mapping) is Artem's finding: the
+  Kit stores a clip's root position track relative to frame 0, and every vanilla master opens on
+  the rest pose.
+````
+
 ## B1. Skeleton: the neck under the tail
 
 **Target:** `/guides/custom_creature_skeleton/` > `#what-the-difference-actually-looks-like`
@@ -299,8 +314,9 @@ any hit capsule. See [big creatures in battle](/guides/custom_creature_battle/#t
 
 ````markdown
 !!! note "Version"
-    Measured against **Bannerlord v1.4.8**, except the export facts in the danger box, the humanoid
-    physics and the hit capsules, measured on **v1.5.3**.
+    Measured against **Bannerlord v1.5.x** (last checked on v1.5.3). First written on v1.4.8; TAOM's
+    creatures still fight in battle on v1.5.3, and its creature data audits still pass there. The export
+    facts in the danger box, the humanoid physics and the hit capsules were measured on v1.5.3.
 ````
 
 ## B7. Skeleton: the packages TpacTool cannot open
@@ -420,12 +436,12 @@ Measured by reading Kit-compiled masters back against the FBX and the engine's r
    sideways in Blender, harmlessly. Export with `primary_bone_axis='Y'`, `secondary_bone_axis='X'`.
 2. **The root is stored as its FBX world pose turned 180 degrees about Z,** with the armature object's
    transform applied on top. Keep the object at identity and bake the 180 degree turn into the pose.
-3. **Frame 0 is the rest frame.** The root position track is stored relative to it, and every vanilla
-   master opens on rest with its clip at Source 1 = 1. Open on a posed frame and the pelvis offset is
-   lost: a hunched character stands too high and its feet skate. Key rest at frame 0, motion from
-   frame 1 (the site's [animation notes](/modding/animations/#feet-above-the-ground) agree). Vanilla
-   walks carry one root track, the pelvis bob; drop a pack's root travel and give it to the engine as
-   the `bip_mov_ik` usage's loop displacement.
+3. **Frame 0 is the rest frame,** as Artem found. The root position track is stored relative to it, and
+   every vanilla master opens on rest with its clip at Source 1 = 1. Open on a posed frame and the
+   pelvis offset is lost: a hunched character stands too high and its feet skate. Key rest at frame 0,
+   motion from frame 1 (the site's [animation notes](/modding/animations/#feet-above-the-ground)
+   agree). Vanilla walks carry one root track, the pelvis bob; drop a pack's root travel and give it to
+   the engine as the `bip_mov_ik` usage's loop displacement.
 4. **Tracks are stored in FBX node order, and the engine reads slot i as bone i of the skeleton's
    list.** Blender writes nodes depth-first. `human_skeleton`'s list is depth-first; `horse_skeleton`'s
    is not (neck last), so a horse clip from the true hierarchy plays the tail on the neck. Export from a
@@ -499,6 +515,18 @@ docstring of `rename_anim_clip_tpac.py`).
     does it, keeping the item's GUID, and writes `<name>_anm.tpac`; a hex editor can make the same
     two-field edit ([the byte layout](/guides/custom_creature_clip_inspector/#clip-names)). Reopen
     the Kit.
+````
+
+## C8. Animation Clips: the version box
+
+**Target:** `/guides/custom_creature_animation/` > the `!!! note "Version"` box
+**Action:** replace the box
+**Why:** the page's rules still hold on v1.5.3: TAOM's creatures fight in battle there, and its creature data audits pass unchanged (TAOM's v1.5.3 migration notes).
+
+````markdown
+!!! note "Version"
+    Measured against **Bannerlord v1.5.x** (last checked on v1.5.3). First written on v1.4.8; TAOM's
+    creatures still fight in battle on v1.5.3, and its creature data audits still pass there.
 ````
 
 ## D1. XML: the thin set, in XML
@@ -604,6 +632,20 @@ Native's `as_horse_map` inherits `as_horse` and binds the map clips, so a reskin
   `as_horse_map` does. A reskin's thin set builds on its donor's `_map` instead, keeping the donor's
   map clips: `as_war_ram_map` on `as_horse_map`, which Native builds on `as_horse`. A reskin that
   keeps `as_horse` gets `as_horse_map` for free.
+````
+
+## D7. XML: the version box
+
+**Target:** `/guides/custom_creature_xml/` > the `!!! note "Version"` box
+**Action:** replace the box
+**Why:** the page's rules still hold on v1.5.3: TAOM's creatures fight in battle there, and its creature data audits pass unchanged (TAOM's v1.5.3 migration notes).
+
+````markdown
+!!! note "Version"
+    Measured against **Bannerlord v1.5.x** (last checked on v1.5.3). First written on v1.4.8; TAOM's
+    creatures still fight in battle on v1.5.3, and its creature data audits still pass there. The
+    [1.4.6 rule](#the-146-rule) below changes which mistakes in this file are survivable, so check your
+    target version before copying anything from an older mod.
 ````
 
 ## E1. Reference Tables: what code can do with flags
@@ -760,8 +802,9 @@ Healthy mounts in this sample
 
 ````markdown
 !!! note "Version"
-    Flag values and their effects are checked against **Bannerlord v1.5.3**, the effects through TAOM's
-    reverse engineering of its game and Modding Kit DLLs. The rest was measured on v1.4.8 to v1.5.3.
+    Measured against **Bannerlord v1.5.x** (last checked on v1.5.3). Flag values and their effects are
+    checked on v1.5.3, the effects through TAOM's reverse engineering of its game and Modding Kit DLLs.
+    The rest was measured on v1.4.8 to v1.5.3.
 ````
 
 ````markdown
@@ -777,9 +820,10 @@ Flag values and engine constants are read from Bannerlord v1.5.3. The container 
 
 ````markdown
 !!! note "Version"
-    Measured on **Bannerlord v1.4.6 to v1.5.3**; each crash offset names the version it was seen on,
-    because offsets move with every engine update. Several of these only became crashes in **1.4.6**:
-    see [The 1.4.6 rule](/guides/custom_creature_xml/#the-146-rule).
+    Measured against **Bannerlord v1.5.x** (last checked on v1.5.3). Crashes seen on older versions are
+    kept, and each crash offset names the version it was seen on, because offsets move with every engine
+    update. Several of these only became crashes in **1.4.6**: see
+    [The 1.4.6 rule](/guides/custom_creature_xml/#the-146-rule).
 ````
 
 ## F2. Troubleshooting: quick index rows

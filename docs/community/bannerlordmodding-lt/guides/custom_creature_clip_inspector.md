@@ -8,9 +8,9 @@ Part of the [Custom Creatures](/guides/custom_creatures/) guide. Read
 [the race page](/guides/custom_creature_race/).
 
 !!! note "Version"
-    Measured against **Bannerlord v1.5.3**. Engine-code findings come from TAOM's reverse
-    engineering of the v1.5.3 game and Modding Kit DLLs; native crash offsets move with every engine
-    update, and older measurements are marked where they appear.
+    Measured against **Bannerlord v1.5.x** (last checked on v1.5.3). Engine-code findings come from
+    TAOM's reverse engineering of the v1.5.3 game and Modding Kit DLLs; native crash offsets move with
+    every engine update, and older measurements are marked where they appear.
 
 ## A clip is a record, not keyframes
 

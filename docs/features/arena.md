@@ -25,7 +25,10 @@ different bugs that looked like one:
 - The **female dwarf** crashes were a native access violation from a single unresolved mesh name in
   `LOTRLOME_Armory/ModuleData/skins.xml` (`sk_dwarf_underwear_female` vs the shipped
   `sk_dwarf_underwear_female_a`) — no managed exception, therefore no crash bundle at all. Fixed
-  separately (#403); gate: `python tools/validate_mesh_refs.py --no-rgl-log`.
+  separately (#403); gate: `python tools/validate_mesh_refs.py --no-rgl-log`. **Corrected 2026-09-26:** the
+  crash's faulting address (`0x24C`, 98 x 6) decodes to the static face morph over `sk_dwarf_bm_f1_head.eye`, a
+  face part with no morph channels (#385); the underwear name was a second defect. The female meshes are restored
+  and she no longer crashes ([race-face-and-hand-morphs.md](../reference/race-face-and-hand-morphs.md)).
 
 The data sweep that preceded the fix is worth not repeating: every `<NPCCharacter>` in the load order
 (5,166 across TAOM, TAOM_Map, SandBoxCore, SandBox, Native, LOTRLOME_Armory) carries a `culture=`

@@ -6,9 +6,10 @@ actually loads them, and the item that makes the creature rideable.
 Part of the [Custom Creatures](/guides/custom_creatures/) guide.
 
 !!! note "Version"
-    Measured against **Bannerlord v1.4.8**. The [1.4.6 rule](#the-146-rule) below changes which
-    mistakes in this file are survivable, so check your target version before copying anything from
-    an older mod.
+    Measured against **Bannerlord v1.5.x** (last checked on v1.5.3). First written on v1.4.8; TAOM's
+    creatures still fight in battle on v1.5.3, and its creature data audits still pass there. The
+    [1.4.6 rule](#the-146-rule) below changes which mistakes in this file are survivable, so check your
+    target version before copying anything from an older mod.
 
 ## `monsters.xml`
 

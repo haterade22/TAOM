@@ -31,11 +31,11 @@ all, [Animations](/modding/animations/) for playing a clip from C#, and
 [TpacTool](/resources/tpactool/) for reading the engine's own assets.
 
 !!! note "Version"
-    Measured on **Bannerlord v1.4.5 to v1.5.3**. Engine-code findings come from TAOM's reverse
-    engineering of the v1.5.3 game and Modding Kit DLLs; native crash offsets move with every engine
-    update, and each page marks facts measured on an older version. v1.4.6 changed which data mistakes
-    are survivable: see [The 1.4.6 rule](/guides/custom_creature_xml/#the-146-rule) before porting
-    anything older.
+    Measured against **Bannerlord v1.5.x** (last checked on v1.5.3). Engine-code findings come from
+    TAOM's reverse engineering of the v1.5.3 game and Modding Kit DLLs; native crash offsets move with
+    every engine update, and each page marks facts measured on an older version. v1.4.6 changed which
+    data mistakes are survivable: see [The 1.4.6 rule](/guides/custom_creature_xml/#the-146-rule) before
+    porting anything older.
 
 ## What a creature is, to the engine
 
@@ -214,7 +214,10 @@ permission of the relationship under which we used their assets:
 
 * **Artem**, author of **ADOD_Beasts**, whose war elephant TAOM licensed. The elephant is the
   reference for a large quadruped, and Artem is also the source of the
-  [Custom Mount](/guides/custom_mount/) notes already on this wiki.
+  [Custom Mount](/guides/custom_mount/) notes already on this wiki. The frame 0 rule in
+  [the export mapping](/guides/custom_creature_animation/#the-export-mapping) is Artem's finding: the
+  Kit stores a clip's root position track relative to frame 0, and every vanilla master opens on
+  the rest pose.
 * **Byak0**, author of **Alliance** and **Alliance.Wargs**. The warg is the reference
   implementation for a rideable creature with a bespoke skeleton, and is the known-good control
   we measured almost everything against.

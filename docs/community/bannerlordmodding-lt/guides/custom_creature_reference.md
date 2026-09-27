@@ -6,8 +6,9 @@ and known-good skeleton fingerprints.
 Part of the [Custom Creatures](/guides/custom_creatures/) guide.
 
 !!! note "Version"
-    Flag values and their effects are checked against **Bannerlord v1.5.3**, the effects through TAOM's
-    reverse engineering of its game and Modding Kit DLLs. The rest was measured on v1.4.8 to v1.5.3.
+    Measured against **Bannerlord v1.5.x** (last checked on v1.5.3). Flag values and their effects are
+    checked on v1.5.3, the effects through TAOM's reverse engineering of its game and Modding Kit DLLs.
+    The rest was measured on v1.4.8 to v1.5.3.
 
 ## Animation flags
 

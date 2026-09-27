@@ -7,8 +7,9 @@ Part of the [Custom Creatures](/guides/custom_creatures/) guide. If you only nee
 mesh, [Armature/Skeleton](/3d/armature_skeleton/) already covers that and this page is not for you.
 
 !!! note "Version"
-    Measured against **Bannerlord v1.4.8**, except the export facts in the danger box, the humanoid
-    physics and the hit capsules, measured on **v1.5.3**.
+    Measured against **Bannerlord v1.5.x** (last checked on v1.5.3). First written on v1.4.8; TAOM's
+    creatures still fight in battle on v1.5.3, and its creature data audits still pass there. The export
+    facts in the danger box, the humanoid physics and the hit capsules were measured on v1.5.3.
 
 ## The one rule
 

@@ -8,9 +8,10 @@ involved, see [How to report a crash](/guides/how_to_report_a_crash/) and
 [Advanced stacktrace analytics](/guides/advanced_stacktrace_analytics_of_crash_reports/).
 
 !!! note "Version"
-    Measured on **Bannerlord v1.4.6 to v1.5.3**; each crash offset names the version it was seen on,
-    because offsets move with every engine update. Several of these only became crashes in **1.4.6**:
-    see [The 1.4.6 rule](/guides/custom_creature_xml/#the-146-rule).
+    Measured against **Bannerlord v1.5.x** (last checked on v1.5.3). Crashes seen on older versions are
+    kept, and each crash offset names the version it was seen on, because offsets move with every engine
+    update. Several of these only became crashes in **1.4.6**: see
+    [The 1.4.6 rule](/guides/custom_creature_xml/#the-146-rule).
 
 ## Quick index
 

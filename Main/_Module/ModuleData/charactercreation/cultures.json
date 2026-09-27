@@ -82,7 +82,8 @@
       "uruk_hai",
       "berserker",
       "orc",
-      "human"
+      "human",
+      "saruman"
     ],
     "starting_settlement": "town_isengard",
     "default_age": 20.0,

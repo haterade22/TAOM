@@ -1173,3 +1173,29 @@ proof of a clean wrist; the real guard was the `--preview` render and Mike's loo
   function a number.
 - **Source:** tools review 2026-09-26 (Blender tooling lens, M1); `tools/blender/transfer_hand_morphs.py`
   `seam_weights`, `seam_offsets`, `seam_gate`; `docs/features/troll-race.md` "Hand pose morphs".
+
+### Zero-filled face channels stop the crash and leave the eyes behind (2026-09-27)
+The female dwarf's `.eye` had no morph channels (#385, a crash), and `add_face_morph_channels.py` gave it 101
+zero-offset ones. She stopped crashing, and in game her eye openings showed skin and a dark gap. Her head's channels
+move the eye sockets (up to 8.5 mm on channel 14); the eye's moved nothing, so the face sliders opened the sockets
+around still eyeballs. The Kit applies no morph, so she looked right there. `tools/blender/fit_eye_morphs.py` set each
+eye channel to its socket ring's least-squares translation and scale (validated first on the male dwarf's authored
+eyes: mean error 0.97 mm); after a Kit re-import her eyeball moves 7.9 mm on channel 14 and the eyes sit right in game.
+- **Why missed:** the crash fix was judged by the crash stopping and by a channel count; zero offsets are the right
+  fill for a head whose channels also move nothing (the hill troll), and nobody asked whether this head's moved.
+- **Prevent:** after any face-channel work, `python tools/check_eye_follow.py --package <_geo.tpac> --metamesh <head>`
+  on the compiled package (fails when a socket moves and its eyeball never does), and look at a character with
+  non-neutral face sliders in game, never only in the Kit.
+- **Source:** `docs/reference/race-face-and-hand-morphs.md`; `tools/check_eye_follow.py`; #385.
+
+### A structural difference from a working asset is a lead, not a cause (2026-09-27)
+The broken female dwarf head differed from the working male head in three ways: its sub-meshes were stored eye
+first, its eye's second material slot was empty, and its eye's channels were zero. The first two looked like causes
+and were not. The decompiled face builder (0x56D5C0) picks the eye, mouth and base by tag, so order cannot matter, and
+Saruman's head is also eye-first with eyes that follow; the elf, uruk and pale uruk eyes have the same empty second
+slot and draw correctly. Only the third survived a case that separates it, and fixing it fixed the eyes.
+- **Why missed:** nothing was missed here; the first hypothesis (order) was stated before the engine code was read,
+  and it would have sent a Kit re-export of the head for nothing.
+- **Prevent:** for every difference between a broken and a working asset, find the code that consumes it or a third
+  asset that has the difference without the fault before treating it as the cause.
+- **Source:** `docs/reference/race-face-and-hand-morphs.md` "What the 2026-09-26 investigation ruled out".
