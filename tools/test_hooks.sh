@@ -593,6 +593,132 @@ for row in "check-commit-subject-version.sh|$REPO|rc=0 deny|cd /x\ngit commit -m
 done
 
 # ---------------------------------------------------------------------------
+# 4e. No here-string, and no expanding here-document, in any script a hook registration runs (#681).
+#     Git Bash 5.3 on the desktop hangs forever writing a here-string or here-document whose document
+#     is 65,537 to 65,664 bytes into its own pipe (a smaller one fits the 64 KiB pipe, a larger one
+#     goes to a temp file), and a killed gate fails open. Split text with `set -f; IFS=$'\n'; A=($X);
+#     IFS=$' \t\n'; set +f` (no fork; drops empty lines) or word-split it under set -f; never
+#     `< <(printf ...)` on a payload, which forks and reads a pipe a byte at a time (1 MB took 5.5 s).
+#     A quoted here-document (<<'PY') is static text; its body must stay at or under 65,536 bytes.
+#     Every line counts, comments included: a line that opens with # can continue a quoted string. A
+#     here-document body is skipped only when it is expanding text, or quoted and fed to Python; a
+#     quoted body that a shell runs (bash -s <<'SH') is scanned as code. The scripts are
+#     .claude/hooks/*.sh, every script a registration names (settings.json and skill or agent
+#     frontmatter, whatever its path prefix), each file those source one level down, and an inline
+#     registration's own text; a registration naming a script that is not there fails. The self-test
+#     proves the scan still sees each form.
+# ---------------------------------------------------------------------------
+head2 "4e. no here-string or expanding here-document in a hook script (#681)"
+HS_OUT=$("$HPY" - <<'PY'
+import json, pathlib, re
+PIPE_MAX = 65536
+OP = re.compile(r"(?<!<)<<(?!<)(-?)[ \t]*([^\s;&|()<>]*)")
+QUOTE = re.compile(r"['\"\\]")
+FEEDS_PY = re.compile(r'python|"\$PYBIN"|"\$PY"')
+
+def scan(name, text):
+    out, pending, body = [], [], None
+    for i, line in enumerate(text.split('\n'), 1):
+        line = line.rstrip('\r')
+        if body:
+            delim, strip, quoted, code, start, size = body
+            if (line.lstrip('\t') if strip else line) == delim:
+                if quoted and size > PIPE_MAX:
+                    out.append(f'{name}:{start}: static here-document body of {size} bytes (over {PIPE_MAX})')
+                body = pending.pop(0) if pending else None
+                continue
+            body = (delim, strip, quoted, code, start, size + len(line.encode('utf-8')) + 1)
+            if not code:
+                continue
+        if '<<<' in line:
+            out.append(f'{name}:{i}: here-string: {line.strip()[:90]}')
+        for m in OP.finditer(line):
+            word = m.group(2)
+            if word in ('', '\\'):
+                out.append(f'{name}:{i}: here-document operator with no delimiter on its line: {line.strip()[:90]}')
+                continue
+            quoted = bool(QUOTE.search(word))
+            if not quoted:
+                out.append(f'{name}:{i}: expanding here-document <<{word}: {line.strip()[:90]}')
+            if not body:      # inside a body a shell runs, it is that shell's: scanned, not tracked
+                pending.append((QUOTE.sub('', word), m.group(1) == '-', quoted,
+                                quoted and not FEEDS_PY.search(line[:m.start()]), i, 0))
+        if pending and not body:
+            body = pending.pop(0)
+    if body:
+        out.append(f'{name}:{body[4]}: here-document <<{body[0]} never closes')
+    return out
+
+SELF = ['# a comment naming <<< counts too: a line opening with # can continue a string',
+        'done <<< "$X"',
+        '"$PY" - <<\'PY\'', 'print("<<< in a quoted body fed to python is not shell")', 'PY',
+        'cat <<EOF', '$X', 'EOF',
+        'cat <<!', '!', 'cat <<1', '1', 'cat <<%%', '%%', 'cat <<.', '.',
+        'cat <<\\', 'EOF',
+        'M="first', '#x"; read -r a <<< "$X"',
+        "bash -s <<'SH'", 'read -r a <<< "$1"', 'SH',
+        ": '<< \"Z\"'", 'read -r a <<< "$X"', 'Z',
+        'cat <<']
+print('SELF ' + ' '.join(str(n) for n in sorted({int(h.split(': ', 1)[0].rsplit(':', 1)[1])
+                                                  for h in scan('self', '\n'.join(SELF))})))
+
+root = pathlib.Path('.')
+found = set((root / '.claude' / 'hooks').glob('*.sh'))
+regs = []
+d = json.load(open('.claude/settings.json', encoding='utf-8'))
+for ev, groups in d.get('hooks', {}).items():
+    for g in groups:
+        regs += [('settings.json ' + ev, h.get('command', '')) for h in g.get('hooks', [])]
+for src in sorted((root / '.claude' / 'skills').glob('*/SKILL.md')) + sorted((root / '.claude' / 'agents').glob('*.md')):
+    text = src.read_text(encoding='utf-8', errors='replace').replace('\r\n', '\n')
+    fm = text[3:].split('\n---', 1)[0] if text.startswith('---') else ''
+    regs += [(src.as_posix(), m.group(1).strip('"\''))
+             for m in re.finditer(r'^\s*(?:-\s*)?command:\s*(.+?)\s*$', fm, re.M)]
+inline = []
+for where, cmd in regs:
+    scripts = re.findall(r"[^\s\"'`;&|()<>]+\.sh(?![\w.])", re.sub(r'"?\$\{?CLAUDE_PROJECT_DIR\}?"?/', '', cmd))
+    if not scripts:
+        inline.append((where, cmd))
+    for s in scripts:
+        if (root / s).is_file():
+            found.add(root / s)
+        else:
+            print(f'REG {where}: {cmd} names {s}, which is no file 4e can scan')
+SOURCE = re.compile(r'(?:^[ \t]*|[;&|{(][ \t]*)(?:source|\.)[ \t]+"?(\$\(dirname "\$\{BASH_SOURCE\[0\]\}"\)/)?([^"\s;&|)]+)', re.M)
+for p in sorted(found):
+    for m in SOURCE.finditer(p.read_text(encoding='utf-8', errors='replace')):
+        q = (p.parent if m.group(1) else root) / m.group(2)
+        if q.is_file():
+            found.add(q)
+print(f'COUNT {len(found)} {len(regs)}')
+for p in sorted(found):
+    for h in scan(p.as_posix(), p.read_text(encoding='utf-8', errors='replace')):
+        print(h)
+for where, cmd in inline:
+    for h in scan(where + ' (inline command)', cmd):
+        print(h)
+PY
+)
+HS_SELFLINE=$(printf '%s\n' "$HS_OUT" | grep '^SELF ')
+HS_COUNT=$(printf '%s\n' "$HS_OUT" | grep '^COUNT ')
+HS_REG=$(printf '%s\n' "$HS_OUT" | grep '^REG ')
+HS_HITS=$(printf '%s\n' "$HS_OUT" | grep -v -e '^SELF ' -e '^COUNT ' -e '^REG ')
+read -r _ HS_FILES HS_REGS <<< "${HS_COUNT:-COUNT 0 0}"
+if [[ "$HS_SELFLINE" != "SELF 1 2 6 9 11 13 15 17 20 22 25 27" ]]; then
+    bad "4e's scan no longer sees every here-string and expanding here-document form (self-test found: ${HS_SELFLINE#SELF })"
+elif (( HS_REGS == 0 )); then
+    bad "4e found no hook registration at all; its discovery is broken"
+elif [[ -n "$HS_REG" ]]; then
+    bad "a hook registration names a script 4e cannot find, so the scan never reads it:"
+    printf '%s\n' "$HS_REG" | sed 's/^REG /       /'
+elif [[ -n "$HS_HITS" ]]; then
+    bad "here-string or expanding here-document in a hook script (#681: Git Bash hangs on a document of 65,537 to 65,664 bytes, and a killed gate fails open):"
+    printf '%s\n' "$HS_HITS" | sed 's/^/       /'
+else
+    ok "no hook script feeds text through a here-string or an expanding here-document ($HS_FILES scripts, $HS_REGS registrations)"
+fi
+
+# ---------------------------------------------------------------------------
 # 5. Starved environment: no jq, no python at all.
 #    Every hook must still terminate promptly and must NOT block. This is the
 #    fail-open mandate in .claude/rules/harness-facts.md, tested rather than assumed.
@@ -1345,11 +1471,14 @@ done
 # A push with no refspec pushes the checked-out branch, so a push option's value (-o ci.skip) must
 # never be taken for the remote: run on a trunk, `git push --force -o ci.skip origin` passed
 # (plan 027). The hook asks git for the branch in its own directory, so these run in scratch repos.
-VP_TRUNK="$SANDBOX/vp-trunk"; VP_FEAT="$SANDBOX/vp-feature"
-for pair in "$VP_TRUNK|bannerlord-1.5.x" "$VP_FEAT|feature"; do
-    d="${pair%%|*}"; b="${pair#*|}"
+# It also reads push.default there (#689): each repo sets it in its local config, which wins over
+# this machine's global and system settings, so a global push.default=matching changes no row.
+VP_TRUNK="$SANDBOX/vp-trunk"; VP_FEAT="$SANDBOX/vp-feature"; VP_MATCH="$SANDBOX/vp-matching"
+for row in "$VP_TRUNK|bannerlord-1.5.x|simple" "$VP_FEAT|feature|simple" "$VP_MATCH|feature|matching"; do
+    IFS='|' read -r d b pd <<< "$row"
     git init -q -b "$b" "$d" 2>/dev/null
     git -C "$d" -c user.name=t -c user.email=t@example.invalid commit -q --allow-empty -m init 2>/dev/null
+    git -C "$d" config push.default "$pd"
 done
 vp_run_in() {  # $1 directory to run in, $2 tool, $3 command; returns the hook's rc
     local payload
@@ -1383,9 +1512,36 @@ VP_BRANCH_CASES=(
   "$VP_TRUNK|2|git push --force --repo origin"
   "$VP_TRUNK|2|git push --force --receive-pack git-receive-pack origin"
   "$VP_TRUNK|2|git push --force --exec git-receive-pack origin"
+  # #680 review: git reads a value option by the prefix rule too, so --e is --exec and takes a value.
+  "$VP_TRUNK|2|git push --force --e git-receive-pack origin"
   "$VP_TRUNK|2|git push --force -o \"ci variable\" origin"
   "$VP_TRUNK|0|git push --force --push-option=ci.skip origin feature"
   "$VP_FEAT|2|git push -vfu origin bannerlord-1.5.x"
+  # #689, each let through on a feature checkout. git 2.55 on a local bare repo reads an unambiguous
+  # prefix of a long option as the option: --force-w is --force-with-lease and force-updates the
+  # trunk it names, while --mir (--mirror) and a forced --al (--all) force-update both trunks. The
+  # refspec : pushes every branch the remote also has (forced by a flag or by +:), and so does a
+  # forced push with no refspec under push.default=matching, from -c or from git's own config
+  # (vp-matching). --force-i alone is no forced push (git rejects a non-fast-forward), so counting a
+  # --force-if-includes prefix as force is a deliberate over-block.
+  "$VP_FEAT|2|git push --force-w origin bannerlord-1.5.x"
+  "$VP_FEAT|2|git push --force-with origin bannerlord-1.5.x"
+  "$VP_FEAT|2|git push --force-i origin bannerlord-1.5.x"
+  "$VP_FEAT|2|git push --mir origin"
+  "$VP_FEAT|2|git push --mi origin"
+  "$VP_FEAT|2|git push -f --al origin"
+  "$VP_FEAT|2|git push --force origin :"
+  "$VP_FEAT|2|git push origin +:"
+  "$VP_FEAT|2|git push -f origin :"
+  "$VP_FEAT|2|git -c push.default=matching push --force origin"
+  "$VP_MATCH|2|git push --force origin"
+  # Still allowed: no force, a force to a feature branch, a long option that is no force prefix.
+  "$VP_FEAT|0|git push origin :"
+  "$VP_FEAT|0|git push --follow-tags origin bannerlord-1.5.x"
+  "$VP_FEAT|0|git push --force-with-lease=feature:abc origin feature"
+  "$VP_FEAT|0|git -c push.default=matching push origin"
+  "$VP_MATCH|0|git push origin"
+  "$VP_MATCH|0|git push --force origin feature"
 )
 for tool in Bash PowerShell; do
     for entry in "${VP_BRANCH_CASES[@]}"; do
@@ -1396,8 +1552,8 @@ for tool in Bash PowerShell; do
     done
 done
 # Every segment is judged under both splits, and a push with no refspec asks git for the current
-# branch: once per segment, 100 such lines took 7.9 s against the 5 s registration, and a killed
-# gate fails open. The branch is now resolved once per run and a repeated segment judged once.
+# branch: once per segment, 100 such lines took 7.9 s against the 5 s registration it then had,
+# and a killed gate fails open. The branch is now resolved once per run and a repeated segment judged once.
 VP_LINES=""
 for i in $(seq 1 100); do VP_LINES+="git -C /x/r$i push origin"$'\n'; done
 S=$(date +%s%N); vp_run Bash "$VP_LINES"; got=$?; MS=$(( ($(date +%s%N) - S) / 1000000 ))
@@ -1526,36 +1682,37 @@ head2 "7e. the git gates read a PowerShell command as they read its Bash twin"
 # `Bash|PowerShell` group now registers all nine, and each gate reads its command through _pybin.sh
 # taom_hook_command, which runs _shellwords.py: PowerShell comes back as the Bash text of the same
 # command, and a git named by a path or in capitals comes back as `git` in both shells.
+# validate-push.sh reads the same splits through _shellwords.py verdict instead (#680).
 BT='`'; NL=$'\n'; V=${CSV_VER:-v0.0.0}
 # The nine gates are named here, never read from the settings under test: a list derived from the
 # Bash registrations lost a gate that moved to a PowerShell-only group, and its parity row with it
 # (Codex review of plan 027). A tenth Bash gate fails until it is added here. `own` lists shell
-# hooks that are not git gates and read their command themselves: check-graphify-usage.sh splits
-# both shells in tools/graphify_taom.py, and 7f checks it. A git gate never goes in `own`; it reads
-# through taom_hook_command (hook-authoring.md).
+# hooks that read their command themselves: check-graphify-usage.sh is not a git gate, splits both
+# shells in tools/graphify_taom.py, and 7f checks it.
+# validate-push.sh is in `own`: it reads and judges the push in one run of _shellwords.py verdict (#680).
+# Every other git gate reads through taom_hook_command (hook-authoring.md).
 G7E_GATES=$("$HPY" - <<'PY' | tr -d '\r'
 import json
 d = json.load(open('.claude/settings.json', encoding='utf-8'))
 pre = d.get('hooks', {}).get('PreToolUse', [])
 names = ["block-broad-git-add.sh", "block-dangerous-git.sh", "block-no-verify.sh",
          "check-claude-files-tracked.sh", "check-commit-subject-version.sh",
-         "check-doc-config-drift.sh", "check-moduledata-validation.sh", "check-native-dll-crt.sh",
-         "validate-push.sh"]
-own = ["check-graphify-usage.sh"]
+         "check-doc-config-drift.sh", "check-moduledata-validation.sh", "check-native-dll-crt.sh"]
+own = ["check-graphify-usage.sh", "validate-push.sh"]
 extra = sorted({h['command'].rsplit('/', 1)[-1] for g in pre
                 if {'Bash', 'PowerShell'} & set(g.get('matcher', '').split('|'))
                 for h in g.get('hooks', [])} - set(names) - set(own))
 for n in extra:
-    print(n, "unlisted", "unlisted")
-for n in names:
+    print(n, "unlisted", "unlisted", "-")
+for n in names + ["validate-push.sh"]:
     tools = [t for g in pre if any(h['command'].endswith('/' + n) for h in g.get('hooks', []))
              for t in g.get('matcher', '').split('|')]
-    print(n, tools.count('Bash'), tools.count('PowerShell'))
+    print(n, tools.count('Bash'), tools.count('PowerShell'), "own" if n in own else "posix")
 PY
 )
 [[ -z "$G7E_GATES" ]] && bad "7e found no PreToolUse hook registered for Bash; the discovery is broken"
 G7E_NAMES=""
-while read -r name nb np; do
+while read -r name nb np reads; do
     [[ -z "$name" ]] && continue
     if [[ "$nb" == unlisted ]]; then
         bad "$name is a PreToolUse hook for a shell tool that 7e does not list; add it to the list above"
@@ -1568,10 +1725,12 @@ while read -r name nb np; do
         bad "$name is registered for Bash ${nb}x and for PowerShell ${np}x; a git gate needs one Bash|PowerShell registration"
     fi
     # hook-authoring.md: a gate reads its command through the shared reader, so both shells reach it.
-    if grep -q 'taom_hook_command posix' ".claude/hooks/$name"; then
-        ok "$name reads its command through taom_hook_command posix"
+    reader='taom_hook_command posix'
+    [[ "$reads" == own ]] && reader='_shellwords.py" verdict'
+    if grep -qF "$reader" ".claude/hooks/$name"; then
+        ok "$name reads its command through $reader"
     else
-        bad "$name does not read its command through taom_hook_command posix (hook-authoring.md)"
+        bad "$name does not read its command through $reader (hook-authoring.md)"
     fi
 done <<< "$G7E_GATES"
 
@@ -1766,12 +1925,96 @@ if [[ "$(decision_of "$out")" == ask ]] && grep -q '_shellwords.py failed' "$SAN
 else
     bad "block-dangerous-git without _shellwords.py answered '$(decision_of "$out")' (expected ask plus the stderr note)"
 fi
-( cd "$VP_TRUNK" && pre_payload Bash "git push --force origin" \
-    | timeout -k 2 30 env CLAUDE_PROJECT_DIR="$SANDBOX" bash "$NOREADER/validate-push.sh" >/dev/null 2>&1 )
-got=$?
-[[ "$got" == 2 ]] && ok "validate-push without _shellwords.py still refuses a force push of the checked-out trunk" \
-    || bad "validate-push without _shellwords.py answered rc=$got to a force push of the checked-out trunk (expected 2)"
-rm -rf "$NOREADER"
+# validate-push.sh kept no bash judge to fall back on (#680, maintainer decision): with no verdict it
+# asks on a force marker in the raw payload, and allows anything else with a note. Until #680 this
+# row expected rc 2, from the bash judge that has since been deleted.
+for row in "git push --force origin|rc=0 ask|" "git push origin feature|rc=0 allow|NOT checked"; do
+    IFS='|' read -r cmd want note <<< "$row"
+    out=$( cd "$VP_TRUNK" && pre_payload Bash "$cmd" \
+        | timeout -k 2 30 env CLAUDE_PROJECT_DIR="$SANDBOX" bash "$NOREADER/validate-push.sh" 2>"$SANDBOX/noreader.err" )
+    got="rc=$? $(decision_of "$out")"
+    if [[ "$got" == "$want" ]] && { [[ -z "$note" ]] || grep -q "$note" "$SANDBOX/noreader.err"; }; then
+        ok "validate-push without _shellwords.py answers '$got' for: $cmd"
+    else
+        bad "validate-push without _shellwords.py answered '$got' for: $cmd (expected '$want'${note:+ and the stderr note})"
+    fi
+done
+# #680 review: the coarse scan read the whole payload, and the session_id and transcript_path the
+# harness sends before tool_input hold a UUID that usually matches the force marker (-4f6a here), so
+# a plain push asked in this state. It reads from the "tool_input" key on; a force push still asks.
+harness_payload() {  # $1 command: a PreToolUse payload shaped as Claude Code sends it
+    "$HPY" -c 'import json, sys
+sid = "5f0c9a2e-7b1d-4f6a-9c3e-2d8b1a0f4e6c"
+print(json.dumps({"session_id": sid, "transcript_path": "C:\\Users\\t\\.claude\\projects\\e--repos-TAOM\\" + sid + ".jsonl",
+                  "cwd": "E:\\repos\\TAOM", "permission_mode": "bypassPermissions", "hook_event_name": "PreToolUse",
+                  "tool_name": "Bash", "tool_input": {"command": sys.argv[1], "description": "Push the branch"},
+                  "tool_use_id": "toolu_01AbCdEfGhIjKlMnOpQrStUv"}))' "$1"
+}
+for row in "git push origin feature|rc=0 allow|NOT checked" "git push --force origin|rc=0 ask|"; do
+    IFS='|' read -r cmd want note <<< "$row"
+    payload=$(harness_payload "$cmd")
+    [[ ${payload%%'"tool_input"'*} =~ -[^[:space:]-]*f ]] \
+        || bad "the harness-shaped payload holds no force marker before tool_input, so the row below proves nothing"
+    out=$( cd "$VP_TRUNK" && printf '%s' "$payload" \
+        | timeout -k 2 30 env CLAUDE_PROJECT_DIR="$SANDBOX" bash "$NOREADER/validate-push.sh" 2>"$SANDBOX/noreader.err" )
+    got="rc=$? $(decision_of "$out")"
+    if [[ "$got" == "$want" ]] && { [[ -z "$note" ]] || grep -q "$note" "$SANDBOX/noreader.err"; }; then
+        ok "validate-push without _shellwords.py answers '$got' for a harness-shaped payload of: $cmd"
+    else
+        bad "validate-push without _shellwords.py answered '$got' for a harness-shaped payload of: $cmd (expected '$want'${note:+ and the stderr note})"
+    fi
+done
+# #680 review of the no-verdict path. It reads from a "tool_input": key found in the first 2 KB:
+# cutting at the first "tool_input" anywhere was quadratic in the key's offset (a key after 256 KB
+# took 17.7 s), and with the key escaped a command ending in "tool_input cut the scan past itself. A
+# mirror spelled by a prefix (--mir, --m) is a force marker. A payload the reader cannot parse gets
+# this answer too, never a silent allow. With no Python at all (a _pybin.sh that finds none) the
+# same answer stands; mutant H10, which exits 0 there, passed every row above. A right answer that
+# misses the 4 s bar runs once more, since load alone can cross it; rc 124 at 10 s always fails.
+vp_raw() {  # $1 hooks dir, $2 payload file, $3 expected "rc=<n> <decision>", $4 stderr note or "", $5 label
+    local out rc got ms s try
+    for try in 1 2; do
+        s=$(date +%s%N)
+        out=$( cd "$VP_TRUNK" && timeout -k 2 10 env CLAUDE_PROJECT_DIR="$SANDBOX" bash "$1/validate-push.sh" < "$2" 2>"$SANDBOX/vpraw.err" )
+        rc=$?
+        ms=$(( ($(date +%s%N) - s) / 1000000 ))
+        got="rc=$rc $(decision_of "$out")"
+        (( rc != 124 && ms >= 4000 )) && [[ "$got" == "$3" ]] && continue
+        break
+    done
+    if (( rc == 124 )); then
+        bad "validate-push [$5] was still running at the 10 s bound (a harness kill fails open)"
+    elif [[ "$got" != "$3" ]] || { [[ -n "$4" ]] && ! grep -q "$4" "$SANDBOX/vpraw.err"; }; then
+        bad "validate-push [$5] answered '$got' (expected '$3'${4:+ and the stderr note: $4})"
+    elif (( ms >= 4000 )); then
+        bad "validate-push [$5] answered '$got' only after ${ms}ms, twice over the 4 s bar"
+    else
+        ok "validate-push [$5] answers '$got' in ${ms}ms"
+    fi
+}
+VPR="$SANDBOX/vpraw"; NOPY="$SANDBOX/nopy"
+mkdir -p "$VPR" "$NOPY"
+cp .claude/hooks/*.sh .claude/hooks/*.py "$NOPY/"
+printf '\nPYBIN=""\n' >> "$NOPY/_pybin.sh"
+printf '%s' '{"tool_name":"Bash","tool'"$PF_U"'005finput":{"command":"git push --force origin bannerlord-1.5.x \"tool_input"},"hook_event_name":"PreToolUse"}' > "$VPR/esckey.json"
+"$HPY" -c 'import json, sys
+sys.stdout.write(json.dumps({"session_id": "s1", "transcript_path": "a" * 262144, "hook_event_name": "PreToolUse",
+                             "tool_name": "Bash", "tool_input": {"command": "git push origin feature"}}))' > "$VPR/latekey.json"
+pre_payload Bash "git push --mir origin" > "$VPR/mir.json"
+pre_payload Bash "git push --m origin" > "$VPR/m.json"
+pre_payload Bash "git push --force origin bannerlord-1.5.x" > "$VPR/force.json"
+pre_payload Bash "git push origin feature" > "$VPR/plain.json"
+printf '%s' '{"tool_name":"Bash","tool_input":{"command":"git push --force origin bannerlord-1.5.x"}' > "$VPR/cut-force.json"
+printf '%s' '{"tool_name":"Bash","tool_input":{"command":"git push origin feature"}' > "$VPR/cut-plain.json"
+vp_raw "$NOREADER" "$VPR/esckey.json" "rc=0 ask" "" "no reader, tool_input key escaped, a command ending in \"tool_input"
+vp_raw "$NOREADER" "$VPR/latekey.json" "rc=0 allow" "NOT checked" "no reader, tool_input key after 256 KB"
+vp_raw "$NOREADER" "$VPR/mir.json" "rc=0 ask" "" "no reader, git push --mir origin"
+vp_raw "$NOREADER" "$VPR/m.json" "rc=0 ask" "" "no reader, git push --m origin"
+vp_raw "$REPO/.claude/hooks" "$VPR/cut-force.json" "rc=0 ask" "" "a payload that does not parse, holding a force push"
+vp_raw "$REPO/.claude/hooks" "$VPR/cut-plain.json" "rc=0 allow" "NOT checked" "a payload that does not parse, holding a plain push"
+vp_raw "$NOPY" "$VPR/force.json" "rc=0 ask" "" "no Python, a force push"
+vp_raw "$NOPY" "$VPR/plain.json" "rc=0 allow" "NOT checked" "no Python, a plain push"
+rm -rf "$NOREADER" "$NOPY" "$VPR" "$SANDBOX/vpraw.err"
 
 # Large payloads under both tools stay inside 80% of each gate's registration (the plan 011 review
 # saw a 5 s registration crossed under load, and a killed gate fails open).
@@ -1883,6 +2126,263 @@ for entry in "${CP_CASES[@]}"; do
     got=$?
     [[ "$got" == "$want" ]] && ok "config-protection rc=$got for: $path" \
         || bad "config-protection expected rc=$want, got $got for: $path"
+done
+
+# ---------------------------------------------------------------------------
+# 7h. A payload in Git Bash's here-string hang window still gets its answer (#681).
+#     Git Bash 5.3 hangs forever on a here-string or here-document whose document is 65,537 to
+#     65,664 bytes (text of 65,536 to 65,663 plus the newline a here-string adds), and a killed gate
+#     fails open. 4e keeps the construct out; these rows prove the gates still answer. The
+#     block-dangerous-git, block-broad-git-add and mark-verification-run rows size the command so the
+#     segment text each split with a here-string before #681 lands in the window. validate-push has
+#     held only the raw payload since #680 (it pipes $INPUT to Python), so its rows size the whole
+#     payload into the window, where a here-string of $INPUT would hang. The three commit gates split
+#     the staged name list, so they run in a scratch repository whose staged list is 65,580 bytes.
+#     rc 124 at the 10 s bound always fails. A right answer slower than 80% of the registration runs
+#     once more, since load alone can cross it (5 of 12 rows took 3.5 to 6.6 s under load).
+# ---------------------------------------------------------------------------
+head2 "7h. hooks answer in time on a payload in the here-string hang window (#681)"
+hw_payload() {  # $1 kind, $2 tool, $3 length (of the whole payload for push, else of the command): writes $SANDBOX/hw.json
+    "$HPY" - "$1" "$2" "$3" > "$SANDBOX/hw.json" <<'PY'
+import json, sys
+kind, tool, n = sys.argv[1], sys.argv[2], int(sys.argv[3])
+head, tail = {"push": ('git -c x="', '" push --force origin bannerlord-1.5.x'),
+              "reset": ('echo "', '"; git reset --hard'),
+              "addall": ('echo "', '"; git add -A'),
+              "test": ('echo "', '"; dotnet test TAOM.Tests')}[kind]
+event = "PostToolUse" if kind == "test" else "PreToolUse"
+def build(k):  # the filler needs no JSON escape, so the payload grows one byte a character
+    cmd = head + ("abc def " * (k // 8 + 1))[:k] + tail
+    p = {"tool_name": tool, "tool_input": {"command": cmd}, "hook_event_name": event}
+    if event == "PostToolUse":
+        p["tool_response"] = {"stdout": "ok", "stderr": ""}
+    return cmd, json.dumps(p)
+if kind == "push":
+    cmd, out = build(n - len(build(0)[1]))
+    assert len(out) == n
+else:
+    cmd, out = build(n - len(head) - len(tail))
+    assert len(cmd) == n
+sys.stdout.write(out)
+PY
+}
+hw_reg() {  # $1 event, $2 hook: its registered timeout in seconds
+    "$HPY" -c 'import json, sys
+d = json.load(open(".claude/settings.json", encoding="utf-8"))
+print(next((h.get("timeout", 600) for g in d["hooks"].get(sys.argv[1], []) for h in g["hooks"]
+            if h["command"].endswith(sys.argv[2])), 0))' "$1" "$2" | tr -d '\r'
+}
+# One row: $1 hook, $2 event, $3 project dir, $4 payload file, $5 expected (rc2, ask, allow or mark),
+# $6 label. The hook runs from the repo, and a mark row reads its marker in the project dir.
+hw_row() {
+    local reg out rc ms s got answered try
+    reg=$(hw_reg "$2" "$1")
+    for try in 1 2; do
+        rm -rf "$3/.claude"
+        s=$(date +%s%N)
+        out=$(timeout -k 2 10 env CLAUDE_PROJECT_DIR="$3" bash ".claude/hooks/$1" < "$4" 2>/dev/null)
+        rc=$?
+        ms=$(( ($(date +%s%N) - s) / 1000000 ))
+        case $5 in
+            rc2)   got="rc=$rc"; [[ $rc == 2 ]] ;;
+            ask)   got=$(decision_of "$out"); [[ $got == ask ]] ;;
+            allow) got="rc=$rc $(decision_of "$out")"; [[ $got == "rc=0 allow" ]] ;;
+            mark)  got="rc=$rc, marker $([[ -f "$3/.claude/logs/.verification-ran" ]] && echo set || echo unset)"
+                   [[ $got == *"marker set" ]] ;;
+        esac
+        answered=$?
+        (( rc != 124 && answered == 0 && ms * 10 >= reg * 1000 * 8 )) || break
+    done
+    if (( rc == 124 )); then
+        bad "$6 hung until the 10 s bound (a harness kill fails open): here-string hang window, #681"
+    elif (( answered != 0 )); then
+        bad "$6 answered $got, expected $5"
+    elif (( ms * 10 >= reg * 1000 * 8 )); then
+        bad "$6 took ${ms}ms against its ${reg}s registration, on two runs"
+    else
+        ok "$6: $got in ${ms}ms of ${reg}s"
+    fi
+}
+mkdir -p "$SANDBOX/hw-proj"
+for row in "validate-push.sh|push|Bash|65536|rc2" "validate-push.sh|push|Bash|65600|rc2" \
+           "validate-push.sh|push|Bash|65663|rc2" "validate-push.sh|push|PowerShell|65536|rc2" \
+           "validate-push.sh|push|PowerShell|65600|rc2" "validate-push.sh|push|PowerShell|65663|rc2" \
+           "block-dangerous-git.sh|reset|Bash|65548|ask" "block-dangerous-git.sh|reset|PowerShell|65548|ask" \
+           "block-broad-git-add.sh|addall|Bash|65548|ask" "block-broad-git-add.sh|addall|PowerShell|65548|ask" \
+           "mark-verification-run.sh|test|Bash|65548|mark" "mark-verification-run.sh|test|PowerShell|65548|mark"; do
+    IFS='|' read -r hook kind tool len want <<< "$row"
+    event=PreToolUse; [[ $want == mark ]] && event=PostToolUse
+    hw_payload "$kind" "$tool" "$len"
+    unit="${len}-character $kind command"; [[ $kind == push ]] && unit="${len}-byte payload holding a $kind"
+    hw_row "$hook" "$event" "$SANDBOX/hw-proj" "$SANDBOX/hw.json" "$want" "$hook [$tool] on a $unit"
+done
+# The staged list: names indexed without files (git needs only the empty blob), sized so
+# `git diff --cached --name-only` gives 65,580 bytes, and none of them concerns a commit gate.
+HW_STAGED="$SANDBOX/hw-staged"
+git init -q "$HW_STAGED" 2>/dev/null
+HW_BLOB=$(git -C "$HW_STAGED" hash-object -w --stdin < /dev/null)
+"$HPY" - 65580 "$HW_BLOB" > "$SANDBOX/hw-index.txt" <<'PY'
+import sys
+n, blob = int(sys.argv[1]), sys.argv[2]
+names, total = [], 0                  # total: the names so far, each with its newline
+while total + 70 <= n - 70:
+    names.append("pad/f%05d_" % len(names) + "x" * 58)      # 69 characters
+    total += 70
+names.append("pad/z" + "y" * (n - total - 5))      # the last name has no newline after it
+# Bytes, so a Windows Python writes no CR: git refuses a path ending in one.
+sys.stdout.buffer.write("".join("100644 %s\t%s\n" % (blob, name) for name in names).encode())
+PY
+git -C "$HW_STAGED" update-index --add --index-info < "$SANDBOX/hw-index.txt"
+HW_LEN=$(git -C "$HW_STAGED" diff --cached --name-only | wc -c)
+if (( HW_LEN != 65581 )); then
+    bad "7h's staged list is $((HW_LEN - 1)) bytes, not 65,580: the commit gate rows below prove nothing"
+fi
+pre_payload Bash 'git commit -m "docs: v0.0.0 - staged list probe"' > "$SANDBOX/hw.json"
+for hook in check-doc-config-drift.sh check-moduledata-validation.sh check-native-dll-crt.sh; do
+    hw_row "$hook" PreToolUse "$HW_STAGED" "$SANDBOX/hw.json" allow "$hook [Bash] on a staged name list of 65,580 bytes"
+done
+rm -rf "$SANDBOX/hw-proj" "$SANDBOX/hw-staged" "$SANDBOX/hw.json" "$SANDBOX/hw-index.txt"
+
+# ---------------------------------------------------------------------------
+# 7i. validate-push refuses a long force push in time, and asks when it cannot judge in time (#680).
+#     Its bash judge cost about 25 microseconds a word: under load a trunk force push carrying 250 KB
+#     of quoted text holding `push` outran the 5 s registration it then had (idle, 400 KB took 4.9 s
+#     and 800 KB 6 to 9.7 s), and a killed gate fails open. The judge now gets what is left of 3.0 s
+#     from the hook's first command, and the 10 s registration is a backstop, so every row here must
+#     answer inside 4 s idle. A right answer that misses that bar runs once more, since load alone
+#     can cross it; rc 124 at the 10 s bound always fails. Shape A is that push; D adds two shorter
+#     commit lines holding `push` after it; E is D with a force-like word (self-fix) in the messages,
+#     which the reader sorted first until the push lines lost their order (#680). An overrun must
+#     ask: a judge that never answers, the same under a bash with no EPOCHREALTIME (the fixed bound)
+#     and under a clock that runs backwards (the budget is capped at 3.0 s), and a Python probe that
+#     spends the budget before the judge can start.
+# ---------------------------------------------------------------------------
+head2 "7i. validate-push refuses a long force push in time, and asks when it cannot judge in time (#680)"
+VPI_REG=$(hw_reg PreToolUse validate-push.sh)
+vpi_payload() {  # $1 shape A, D or E, $2 tool, $3 command length: writes $SANDBOX/vpi.json
+    "$HPY" - "$1" "$2" "$3" > "$SANDBOX/vpi.json" <<'PY'
+import json, sys
+shape, tool, n = sys.argv[1], sys.argv[2], int(sys.argv[3])
+def text(word, k):
+    return (word * (k // len(word) + 1))[:k]
+push = 'git -c x="{}" push --force origin bannerlord-1.5.x'
+commit = 'git commit -m "{}"'
+if shape == "A":
+    cmd = push.format(text("push the thing ", n - len(push) + 2))
+else:
+    word = "push the self-fix " if shape == "E" else "push the thing "
+    cmd = push.format(text("push the thing ", n // 2)) + "\n" + commit.format(text(word, n // 5)) + "\n"
+    cmd += commit.format(text(word, n - len(cmd) - len(commit) + 2))
+assert len(cmd) == n
+sys.stdout.write(json.dumps({"tool_name": tool, "tool_input": {"command": cmd}, "hook_event_name": "PreToolUse"}))
+PY
+}
+for shape in A D E; do
+    for size in 256000 409600 819200 2097152; do
+        for tool in Bash PowerShell; do
+            vpi_payload "$shape" "$tool" "$size"
+            for try in 1 2; do
+                S=$(date +%s%N)
+                timeout -k 2 10 env CLAUDE_PROJECT_DIR="$SANDBOX" bash .claude/hooks/validate-push.sh < "$SANDBOX/vpi.json" >/dev/null 2>&1
+                rc=$?
+                MS=$(( ($(date +%s%N) - S) / 1000000 ))
+                (( rc == 2 && MS >= 4000 )) || break
+            done
+            label="validate-push [$tool] shape $shape, $((size / 1024)) KB"
+            if (( rc != 2 )); then
+                bad "$label answered rc=$rc, expected 2 (124: still running at the 10 s bound; the harness kills at ${VPI_REG} s and the push runs)"
+            elif (( MS >= 4000 )); then
+                bad "$label took ${MS}ms, twice over the 4 s bar (the judge's budget is 3.0 s)"
+            else
+                ok "$label: rc=2 in ${MS}ms"
+            fi
+        done
+    done
+done
+rm -f "$SANDBOX/vpi.json"
+# The overrun rows run sandboxed copies: a judge that sleeps, and a _pybin.sh that sleeps after it
+# resolves. $2 is shell text run before the hook, which is then sourced: bash before 5.0 has no
+# EPOCHREALTIME (the fixed 2.5 s bound), and a DEBUG trap turns the clock back one second a command
+# (under set -T, without which the trap never fires inside the sourced hook).
+VPI_SLOW="$SANDBOX/vpi-slow-judge"; VPI_PROBE="$SANDBOX/vpi-slow-probe"
+mkdir -p "$VPI_SLOW" "$VPI_PROBE"
+cp .claude/hooks/*.sh "$VPI_SLOW/"
+printf 'import time\ntime.sleep(60)\n' > "$VPI_SLOW/_shellwords.py"
+cp .claude/hooks/*.sh .claude/hooks/*.py "$VPI_PROBE/"
+printf '\nsleep 2.8\n' >> "$VPI_PROBE/_pybin.sh"
+pre_payload Bash "git push --force origin bannerlord-1.5.x" > "$SANDBOX/vpi.json"
+vpi_overrun() {  # $1 hooks dir, $2 shell text run first (empty: run the hook directly), $3 the ask's reason, $4 label
+    local out rc ms s try
+    for try in 1 2; do
+        s=$(date +%s%N)
+        if [[ -n "$2" ]]; then
+            out=$(timeout -k 2 10 env CLAUDE_PROJECT_DIR="$SANDBOX" bash -c "$2"'. "$0"' "$1/validate-push.sh" \
+                < "$SANDBOX/vpi.json" 2>/dev/null)
+        else
+            out=$(timeout -k 2 10 env CLAUDE_PROJECT_DIR="$SANDBOX" bash "$1/validate-push.sh" < "$SANDBOX/vpi.json" 2>/dev/null)
+        fi
+        rc=$?
+        ms=$(( ($(date +%s%N) - s) / 1000000 ))
+        [[ $rc == 0 && "$(decision_of "$out")" == ask && "$out" == *"$3"* ]] && (( ms >= 4000 )) || break
+    done
+    if [[ $rc != 0 || "$(decision_of "$out")" != ask || "$out" != *"$3"* ]]; then
+        bad "validate-push [$4] answered rc=$rc '$(printf '%s' "$out" | head -c 160)' in ${ms}ms; expected an ask saying: $3"
+    elif (( ms >= 4000 )); then
+        bad "validate-push [$4] asked, but only after ${ms}ms, twice over the 4 s bar"
+    else
+        ok "validate-push [$4] asks ($3) in ${ms}ms"
+    fi
+}
+vpi_overrun "$VPI_SLOW" "" "the judge ran out of time" "a judge that never answers"
+vpi_overrun "$VPI_SLOW" "unset EPOCHREALTIME; " "the judge ran out of time" "no EPOCHREALTIME, the fixed bound"
+vpi_overrun "$VPI_SLOW" 'set -T; unset EPOCHREALTIME; _clk=9000000000000; trap '\''_clk=$((_clk - 1000000)); EPOCHREALTIME=$_clk'\'' DEBUG; ' \
+    "the judge ran out of time" "a clock that runs backwards"
+vpi_overrun "$VPI_PROBE" "" "time ran out before it could be judged" "a probe that spends the budget"
+rm -rf "$VPI_SLOW" "$VPI_PROBE" "$SANDBOX/vpi.json"
+
+# ---------------------------------------------------------------------------
+head2 "7j. every hook registration is anchored on CLAUDE_PROJECT_DIR, so a gate still runs after a cd (#690)"
+# Claude Code runs a hook command in the session's current directory, and a Bash `cd` into a project
+# subdirectory persists across tool calls. A registration written as `.claude/hooks/x.sh` then fails
+# to start ("No such file or directory"), which the harness treats as a non-blocking error, so every
+# gate fell silent after `cd tools` (proven live 2026-09-26, #690). Each settings.json registration
+# names its script as "$CLAUDE_PROJECT_DIR"/.claude/..., and each skill or agent frontmatter one (the
+# surface section 5 says gets forgotten) names it through ${CLAUDE_PROJECT_DIR} or "$CLAUDE_PROJECT_DIR".
+J7_UNANCHORED=$("$HPY" - <<'PY' | tr -d '\r'
+import json, pathlib, re
+d = json.load(open('.claude/settings.json', encoding='utf-8'))
+for ev, gs in d.get('hooks', {}).items():
+    for g in gs:
+        for h in g.get('hooks', []):
+            c = h.get('command', '')
+            if not c.startswith('"$CLAUDE_PROJECT_DIR"/.claude/'):
+                print('settings.json ' + ev + ' ' + c)
+root = pathlib.Path('.')
+for src in sorted((root / '.claude' / 'skills').glob('*/SKILL.md')) + sorted((root / '.claude' / 'agents').glob('*.md')):
+    text = src.read_text(encoding='utf-8', errors='replace').replace('\r\n', '\n')
+    fm = text[3:].split('\n---', 1)[0] if text.startswith('---') else ''
+    for m in re.finditer(r'^\s*(?:-\s*)?command:\s*(.+?)\s*$', fm, re.M):
+        if not re.search(r'"?\$\{?CLAUDE_PROJECT_DIR\}?"?/\.claude/', m.group(1)):
+            print(src.as_posix() + ' ' + m.group(1))
+PY
+)
+if [[ -z "$J7_UNANCHORED" ]]; then
+    ok 'every hook registration (settings.json and skill or agent frontmatter) is anchored on CLAUDE_PROJECT_DIR'
+else
+    bad "hook registrations not anchored on \$CLAUDE_PROJECT_DIR (they stop running after a cd into a subdirectory): $(printf '%s' "$J7_UNANCHORED" | tr '\n' ';')"
+fi
+# End to end, the way the harness runs it: the registered command string through bash -c, from a
+# subdirectory, with CLAUDE_PROJECT_DIR set. The gate must still refuse a trunk force push.
+J7_CMD=$("$HPY" -c 'import json; d = json.load(open(".claude/settings.json", encoding="utf-8")); print(next(h["command"] for g in d["hooks"]["PreToolUse"] for h in g["hooks"] if h["command"].endswith("/validate-push.sh")))' | tr -d '\r')
+J7_PAYLOAD=$("$HPY" -c 'import json; print(json.dumps({"tool_name": "Bash", "tool_input": {"command": "git push --" + "force origin HEAD:bannerlord-1.5.x"}, "hook_event_name": "PreToolUse"}))')
+for j7_dir in tools .claude/hooks; do
+    J7_RC=0
+    (cd "$REPO/$j7_dir" && printf '%s' "$J7_PAYLOAD" | timeout -k 2 15 env CLAUDE_PROJECT_DIR="$REPO" bash -c "$J7_CMD" >/dev/null 2>&1) || J7_RC=$?
+    if [[ "$J7_RC" == 2 ]]; then
+        ok "validate-push, run as registered from $j7_dir/, refuses a trunk force push (rc 2)"
+    else
+        bad "validate-push, run as registered ($J7_CMD) from $j7_dir/, answered rc=$J7_RC to a trunk force push; expected 2 (rc 127: the relative path did not resolve, #690)"
+    fi
 done
 
 # ---------------------------------------------------------------------------

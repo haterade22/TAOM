@@ -1188,12 +1188,15 @@ an update lands has no recoverable baseline afterwards. The v1.4.7 bytes for tho
 ### A fail-open guard whose failure mode is silence reads as "all clear" — make it fail LOUD (2026-08-10)
 
 `session-start.sh`'s game-version drift check printed nothing on the v1.4.7 → v1.4.8 bump, the exact
-event it exists to catch. Nothing is also what "no drift" looks like. The cause was a shell default
+event it exists to catch. Nothing is also what "no drift" looks like. The mechanism is a shell default
 substitution: `"${BANNERLORD_GAME_DIR:-<literal>}/bin/.../Version.xml"` substitutes the literal only
 when the variable is **unset or empty**, so a variable that was *set but did not resolve in the
 hook's environment* took the `-f` test straight to false and the whole block fell through without a
 word. `.claude/settings.json` defines no `BANNERLORD_GAME_DIR`; the hook inherits whatever the
-harness process happens to carry.
+harness process happens to carry. Exporting a bogus value reproduces the silence in one command. That
+it was that morning's trigger is not proven: the session began 47 minutes after the update, and the
+variable resolved from an interactive shell, so the hook's environment differed in a way nobody
+captured. The lesson does not depend on it: a guard with any silent-failure mode is the defect.
 
 - **Why missed:** the guard was written and verified in the one environment where the variable
   resolved, and its skipped path and its clean path emit the same thing — nothing. A gate whose pass
@@ -2930,3 +2933,149 @@ because their fake backend returns `\n` text.
 - **Prevent:** normalise line endings where text crosses from a foreign runtime into Python's stdout, and assert on
   the raw bytes in the integration test (`assertNotIn(b"\r\r\n", ...)`), where universal newlines cannot hide it.
 - **Source:** #688; `tools/tests/test_native_decompile.py` `GhidraIntegrationTests`.
+
+### A here-string of 65,537 to 65,664 bytes hangs Git Bash forever, and a killed gate fails open (#681, 2026-09-26)
+On the desktop's Git Bash (bash 5.3.15), a here-string or here-document whose document is 65,537 to 65,664 bytes
+never returns (for a here-string, text of 65,536 to 65,663 plus the newline it adds): up to 65,536 bytes bash feeds
+the document through a pipe, from 65,665 through a temp file, and in between it blocks writing into its own pipe
+before any reader exists. Every form built on that redirection hangs (`<<<`, `read -a <<<`,
+`mapfile <<<`, an expanding `<<EOF`, even `: <<<` with no reader). Ten hook sites fed a payload or a git name list
+through `<<<`, so a force push to a trunk, a `reset --hard` or a broad `add` padded into the window hung
+`validate-push.sh`, `block-dangerous-git.sh` and `block-broad-git-add.sh` until the harness killed them, and a killed
+gate allows. The staged-name sites are reachable too: four commits in TAOM history list over 64 KiB of paths. The
+issue proposed `done < <(printf '%s\n' "$X")`, which never hangs but forks on every call (22 ms each) and makes bash
+read a pipe one byte at a time: 2,155 ms for a 400 KB loop against 585 ms for the here-string and 22 ms for an
+array split, which would have pushed `validate-push.sh` past its 5 s registration on a large command (#680).
+- **Why missed:** a here-string reads as an in-memory string, so nobody sized it, and every test payload was either
+  small or far above the window; a hang only 128 bytes wide is invisible to a test that doesn't aim for it.
+- **Prevent:** split hook text without a redirection: `set -f; IFS=$'\n'; A=($X); IFS=$' \t\n'; set +f` and a `for`
+  loop (no fork, empty lines dropped, variables set in the loop stay visible), or `set -f; T=($X); set +f` for words;
+  keep `set -f`, `set +f` and the IFS restore on one line. `tools/test_hooks.sh` 4e refuses a here-string or an
+  expanding here-document in any script a hook registration runs, and 7h sends payloads, and a staged name list,
+  sized into the window through the gates. Measure an alternative's cost on large text before proposing it as a fix.
+- **Source:** issue #681; `.claude/hooks/validate-push.sh`, `block-dangerous-git.sh`, `block-broad-git-add.sh`,
+  `mark-verification-run.sh`, `check-doc-config-drift.sh`, `check-moduledata-validation.sh`,
+  `check-native-dll-crt.sh`, `check-verification-evidence.sh`, `detect-docs-gaps.sh`; `.claude/rules/hook-authoring.md`.
+
+### A bash judge ported to Python reads a line differently at every natural Python choice (#680, 2026-09-26)
+`validate-push.sh` judged each candidate line in bash at about 25 microseconds a word, so under load a trunk force
+push carrying 250 KB of quoted text holding `push` outran the 5 s registration (idle, 74942227 took 3.2 s at 250 KB,
+4.9 s at 400 KB and 6 to 9.7 s from 800 KB), and a killed gate fails open.
+Plan 027's review had seen the cost and answered it with an order (lines that could force first, shortest first),
+which a message holding a force-like word beats. The fix moved the judge into Python (`_pushjudge.py`, run by
+`_shellwords.py verdict` in the reader's own start) under a 3.0 s deadline that asks on an overrun: the slowest
+2 MB shape now answers in under a second. A security gate's port must give every verdict bash gave, and each
+natural Python spelling of a bash step changes some. The #680 design audit judged 37,986 lines under three
+current branches against the bash judge and counted:
+
+| Natural Python choice | What bash does | Judgements that differ |
+|---|---|---|
+| `str.split()` | splits at space, tab and newline only (IFS) | 12,320 |
+| `str.lower()` | `${tok,,}` in the hook's C.UTF-8 lowers A-Z only | 0: Python 3.14 lowers U+0130 to i plus U+0307 |
+| bash under a named UTF-8 locale | the same | 99 |
+| `str.isdigit()` for an fd number | `^[0-9]+$` takes ASCII digits only | 14 |
+| `fnmatch` for a refspec pattern | `[[ == ]]` pattern matching | 38 |
+
+The split is the dangerous one: the reader writes `\x1f` and `\x1e` inside a word to keep an argument whole, and a
+naive port let 546 refused hook runs through, the 7c row `git push --force -o "ci variable" origin` on a trunk
+among them. Two more sit outside the judge: bash's `$( )` dropped every NUL and saw a lone surrogate as `?`, so a
+line is judged as bash received it, and `str.splitlines()` on the candidate list breaks at an empty argument's
+`\x1e`. The port reads a `*`-only pattern exactly and takes one holding any other glob character as matching every
+protected name, which can only refuse more (git refuses such a refspec), instead of porting bash's bracket matcher.
+- **Why missed:** the per-word cost was measured in plan 027's review and treated with an order, which any content
+  can beat, rather than removed; and a bash judge's reading lives in bash's defaults (IFS, the locale, `$( )`),
+  which no line of the script spells out, so a port written from the script's text passes every ASCII test.
+- **Prevent:** pin each divergence with a line whose verdict was read from the bash judge's own functions
+  (`tools/tests/test_pushjudge.py`: 96 pins, and every 7c command of 143f0fa8 with
+  the target bash named), prove the pins bite
+  by mutating each choice back to the natural one, and switch only after a hook-level differential sweep against
+  the old hook shows zero refused-then-allowed rows (1,035 commands, 4,140 runs per hook). Delete the old judge
+  rather than keep it as a fallback: two readings drift. With no verdict, a coarse ask on a force marker in the
+  raw payload stands in for it.
+- **Source:** issue #680; `.claude/hooks/_pushjudge.py`, `.claude/hooks/_shellwords.py` (`verdict`),
+  `.claude/hooks/validate-push.sh`; `tools/tests/test_pushjudge.py`; `tools/test_hooks.sh` 7e and 7i.
+
+### An order added for speed also chose which target a message names (#680, 2026-09-26)
+`_shellwords.py push_candidates` sorted validate-push's candidate lines (lines that could force first, shortest
+first within each group) so the slow bash judge reached a short force push before a long message holding `push`.
+Once the judge ran in Python under a deadline, the order had no purpose left, and it was deleted with its
+`FORCE_HINT` pattern and the four tests that pinned it; the lines now come back in the order they are produced.
+No verdict depended on the order, since every line is judged until one refuses. What it did decide was the
+message: the judge stops at the first refused line and a warning is last-write-wins, so the order picked which
+trunk the BLOCKED or WARNING line names. A sweep of 1,093 commands (4,372 runs per hook, both shell tools, a trunk
+and a feature checkout) against the ordered hook gave 0 exit-code differences and 349 message-only ones: 319
+BLOCKED and 30 WARNING lines now name a different target, chosen by where each line is produced from the
+command rather than by a force hint and line length.
+- **Why missed:** the order went in as a speed-up, and its tests pinned the mechanism (line lengths, a force
+  hint), not an outcome, so nothing recorded that it also chose the named target until the reason for it was gone.
+- **Prevent:** when the cause of a performance workaround is removed, delete the workaround and the tests that pin
+  it in the same arc, and diff the hook's whole output (rc, stdout and stderr) against the previous commit, so a
+  change in a message shows up as a counted difference rather than a surprise.
+- **Source:** issue #680; `.claude/hooks/_shellwords.py` (`push_candidates`); `tools/tests/test_shellwords.py`;
+  `tools/test_hooks.sh` 7i.
+
+### A gate that matches full option spellings misses what git accepts (#689, 2026-09-26)
+`validate-push.sh` matched git's long force options by their full spelling, so every shorter spelling git accepts
+read as an ignored option. git takes an unambiguous prefix of a long option as that option: on a local bare
+repository with `--dry-run --porcelain` (a `+` line is a forced update), git 2.55 ran `--force-w` and `--force-with`
+as `--force-with-lease`, force-updating the trunk each named, and `--mir` and even `--m` as `--mirror`, and `-f --al`
+and `-f --b` as a forced `--all`, each force-updating both trunks from a feature checkout. The #680 design review
+found two more readings of the same kind: the refspec `:` (every branch the remote also has, forced by a flag or
+written `+:`) was read as an empty destination, that is the current branch, and so was a forced push with no refspec
+under `push.default=matching`, which pushes every matching branch. The judge now compares a long option's name before
+any `=` as a prefix of each option it acts on, from 3 characters; git refuses an ambiguous prefix (`--f`, `--forc`),
+so counting one as force refuses nothing git would run. A `--force-if-includes` prefix counts as force too, a
+deliberate over-block: `--force-i` alone is no forced push, since git rejects a non-fast-forward. The #680 review
+found the value options read the old way: `-f --e git-receive-pack origin` runs as `--exec` and force-pushes the
+checked-out trunk, so they take the same prefix rule, on top of the old table, which keeps the judge from refusing
+less. A forced `:` or `+:`, and a forced push with no refspec under `push.default=matching` from `-c` or from
+`git config`, are refused as every matching branch. A differential sweep against the port (1,648 commands, 555 of
+them seeded from these rules; 8,240 runs per hook, five a command: both shell tools on a trunk and on a feature
+checkout, and Bash on one set to `matching`) found 0 pushes refused before and allowed now; its 1,027 exit-code
+differences and 275 renamed targets are all these shapes.
+- **Why missed:** the option table was written from the documented spellings and every test used them; the #680
+  port then pinned the bash verdicts, this gap among them (a pin read `--force-w` as a plain push), because a port
+  must change nothing; and "no refspec" was read as "the current branch", which holds only under the default
+  `push.default`.
+- **Prevent:** read an option the way the tool's own parser reads it, not the way its manual spells it: for git, a
+  prefix match on the name before `=`, counting an ambiguous prefix as the dangerous option. Before trusting a
+  gate's table, run each shorter spelling and each empty or default argument against a scratch repository and read
+  what git did. Where a gate resolves a missing argument, find the setting that decides it (`push.default` here) and
+  read it.
+- **Source:** issue #689; `.claude/hooks/_pushjudge.py`; `tools/tests/test_pushjudge.py` (`ISSUE_689`,
+  `PushDefaultTests`); `tools/test_hooks.sh` 7c.
+
+### A gate's suite passed a mutant that switched off its no-Python answer (#680 review, 2026-09-27)
+The #680 review changed `validate-push.sh`'s degraded branch from `&& coarse "no safe python"` to `&& exit 0`, and
+the whole hook suite stayed green: the starved-environment row checks only that a gate fails open and says so, and
+the mutant still printed its note while it allowed every push. Three more tests proved less than they claimed. The
+bytecode check passed whenever an earlier run had left `_pushjudge.cpython-*.pyc` in `.claude/hooks/__pycache__`.
+With a global `push.default=matching`, four 7c rows and two unit rows failed on a correct hook, since they read
+this machine's git config. And 4e skipped every line that opens with `#`, so a here-string on a line continuing a
+quoted string went unseen, as did one after a quoted `<< "Z"` inside a string, one in a `bash -s <<'SH'` body that a
+child shell runs, and any registration naming a script outside `.claude/`.
+- **Why missed:** each test was checked by passing on a correct hook, never by failing on a broken one, and each
+  leaned on the machine it ran on: a Python on PATH, a warm cache, an unset global setting.
+- **Prevent:** give every branch of a gate a row that runs on any machine (a sandbox copy of the hooks with
+  `PYBIN=""` appended to `_pybin.sh` takes Python away portably); run each new test against a mutant of the code it
+  guards and watch it fail; build a test's inputs fresh (a temp copy of the modules, a scratch repository whose
+  local config sets what the code reads); and make a scan assert that it covered what it claims (4e now fails a
+  registration naming a script it cannot find).
+- **Source:** the #680 and #681 review, 2026-09-26 (mutant H10; the 4e probes); `tools/test_hooks.sh` 4e, 7c
+  and 7e; `tools/tests/test_pushjudge.py` (`CliTests`).
+
+### A hook registered by a relative path stops running after a cd (#690, 2026-09-26)
+All 27 `settings.json` registrations named their script as `.claude/hooks/<name>.sh`. Claude Code runs a hook
+command in the session's current directory, and a Bash `cd` into a project subdirectory persists across tool
+calls, so after `cd tools` every hook failed to start with "No such file or directory". The harness treats that
+as a non-blocking error: the call ran with no force-push guard, no commit gates and no confirm prompts. The #680
+review proved it live (a trunk force push reached git after `cd tools`; 33 such lines in the session's debug
+log) and in a sandbox where the anchored form refused from the subdirectory. The skill-frontmatter hooks of
+`/freeze` and `/investigate` had always anchored on `${CLAUDE_PROJECT_DIR}` and kept working.
+- **Why missed:** every test ran hooks from the repo root, and the catalog recorded "cwd = the MAIN tree
+  regardless", which holds for a `cd` inside the same command, not for one that persists.
+- **Prevent:** register every hook as `"$CLAUDE_PROJECT_DIR"/.claude/hooks/<name>.sh`, and test a gate the way
+  the harness runs it: the registered command string through `bash -c`, from a subdirectory
+  (`tools/test_hooks.sh` 7j).
+- **Source:** issue #690; `docs/reference/hooks-catalog.md`; the review evidence in
+  `E:\repos\taom-improve\scratch\680\review\bash\` (desktop).

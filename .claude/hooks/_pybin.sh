@@ -77,9 +77,10 @@ taom_pybin_is_safe() {
 # ran Python. (This is the same shape as the bug _pybin.sh exists to fix: LOTRAOM's
 # json-lib.sh also trusted an exit status to answer a question exit status cannot answer.)
 #
-# The bound is per candidate and the loop tries three, so the worst case must stay under
-# the smallest registered timeout, which is 5s for most registrations. `-k 0.2 0.8` means a
-# SIGTERM-ignoring candidate costs at most 1.0s, so 3 x 1.0 = 3.0s < 5s. -k is essential:
+# The bound is per candidate, and a run tries at most four (the TAOM_PYBIN pin, then python,
+# python3 and py), so the worst case must stay under the smallest registered timeout, which is
+# 5s for most registrations. `-k 0.2 0.8` means a SIGTERM-ignoring candidate costs at most
+# 1.0s, so 4 x 1.0 = 4.0s < 5s. -k is essential:
 # without it GNU timeout sends SIGTERM then WAITS forever on a process that ignores it,
 # which is precisely the hazard being guarded against. Empty stdin so the probe cannot
 # consume the hook's payload. A successful probe measures ~40-80ms here.

@@ -9,8 +9,9 @@
 # empty, the `git commit` test never matched, and BOTH halves of the hook were inert.
 #
 # Fixing the parse alone would have re-armed the build on every commit, which is wrong
-# here for two measured reasons. Hooks run with cwd set to the MAIN project directory
-# regardless of where the command executes (proven 2026-08-20: a `dotnet build` run from
+# here for two measured reasons. Hooks run in the session's directory (the MAIN project
+# directory unless an earlier Bash `cd` moved it, #690), not where the command's own `cd`
+# leads (proven 2026-08-20: a `dotnet build` run from
 # a worktree updated the main tree's .verification-ran marker), so a commit made in a
 # worktree would be gated on a different tree's build state. And the build lacked
 # `-p:DisableModuleCopy=true -p:ModuleId=`, so with Bannerlord running the module copy

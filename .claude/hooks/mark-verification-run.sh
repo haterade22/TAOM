@@ -76,7 +76,10 @@ fi
 LOGDIR="${CLAUDE_PROJECT_DIR:-$(pwd)}/.claude/logs"
 
 MARK=0
-while IFS= read -r seg; do
+# Split into an array under set -f, never a here-string: Git Bash 5.3 hangs forever on one of
+# 65,536 to 65,663 bytes of text (#681). An empty segment is dropped, which is harmless: it runs nothing.
+set -f; IFS=$'\n'; SEG_LIST=($SEGMENTS); IFS=$' \t\n'; set +f
+for seg in "${SEG_LIST[@]}"; do
   seg="${seg#"${seg%%[![:space:]]*}"}"          # left-trim
   # Drop env-var prefixes (FOO=bar cmd), and only a word that IS an assignment. The old
   # pattern took any word with an `=` and a space somewhere after it, so it read
@@ -99,7 +102,7 @@ while IFS= read -r seg; do
     pwsh | powershell | powershell.exe)
       case "$seg" in *build.ps1*) MARK=1 ;; esac ;;
   esac
-done <<< "$SEGMENTS"
+done
 
 if [[ $MARK -eq 1 ]]; then
   mkdir -p "$LOGDIR" 2>/dev/null

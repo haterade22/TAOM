@@ -5,11 +5,14 @@ to_posix() rewrites it as the POSIX-shell (Bash) text of the same command, and e
 Bash logic. In both shells a git named by a path or in capitals (GIT, git.exe, a Windows path to
 git.exe) becomes `git` where it is the command.
 
-Usage: <python> _shellwords.py posix|segments|push < the hook payload (JSON)
+Usage: <python> _shellwords.py posix|segments|verdict [protected...] < the hook payload (JSON)
   posix     the command as POSIX-shell text
   segments  the posix text split at ; & | and newlines outside quotes, one segment per line, with a
             # comment dropped (mark-verification-run.sh)
-  push      validate-push.sh's candidate lines: every split it judges, only the lines holding `push`
+  verdict   validate-push.sh's answer for the protected branch names given as arguments (#680): one
+            line, block<TAB>target, warn<TAB>target or allow; _pushjudge.py judges the candidate
+            lines (push_candidates). A payload that is no JSON object prints unread, which the hook
+            answers from the raw text, never with a silent allow
 It writes UTF-8 with LF line ends and exits 0; an unknown mode exits 2. PowerShell text it cannot
 follow (an unclosed quote, here-string, block comment or ${) comes back unchanged, which is how
 every gate read a command before plan 027.
@@ -342,19 +345,11 @@ def _blind_pieces(text):
     return out
 
 
-# validate-push.sh refuses a line only when the push can force: a short option holding f (-f,
-# -vfu), --force*, --mirror, or a +refspec. push_lines orders by this hint, so it only moves a line
-# earlier or later: every line is still judged. It over-matches prose (`trade-off`, `C++`), and
-# such a message sorts with the force lines, so it can still delay a longer refused line. The
-# class stops at a dash, which keeps the match linear (`-\S*f` backtracked from every dash of a run
-# and took 11 s on 64 KB of them); it matches exactly where `-\S*f` did.
-FORCE_HINT = re.compile(r"-[^\s-]*f|--mirror|\+")
-
-
 # Only a segment this short is re-split with argument boundaries: shlex builds each word one
 # character at a time, quadratic in its length (400 KB of quoted text holding `push` took 1.7 s of
-# validate-push's 5 s registration, and a killed gate fails open). The shapes the pass exists for,
-# -o "" and -o "ci skip", are short, and without it the positionals are still judged unskipped.
+# the 5 s registration validate-push then had, and a killed gate fails open). The shapes the pass
+# exists for, -o "" and -o "ci skip", are short, and without it the positionals are still judged
+# unskipped.
 WORDS_KEPT_MAX = 4096
 
 
@@ -372,7 +367,7 @@ def _words_kept(seg):
     return " ".join(re.sub(r"[\s'\"]", "\x1f", w) or "\x1e" for w in words)
 
 
-def push_lines(cmd, tool):
+def push_candidates(cmd, tool):
     """validate-push.sh's candidate lines, only those holding `push`, each once:
     1. the posix text and the raw command, cut at every ; & | and newline whatever the quotes, a #
        comment dropped only where no quote comes anywhere before it (bash -c "git push ..." stays
@@ -382,10 +377,9 @@ def push_lines(cmd, tool):
        kept;
     3. the raw command split outside quotes with the tool's own escape, the split validate-push ran
        before plan 027, so reading PowerShell never loses a push the raw text showed.
-    Lines that could force (FORCE_HINT) first, shortest first within each group: validate-push
-    stops at the first refused line, so a short force push is judged before a long message holding
-    `push`, whose every word it would read as a refspec, and a long force push waits only behind
-    shorter lines the hint also matches."""
+    In the order they are produced, never sorted: the judge stops at the first refused line, so the
+    order only decides which target a message names, and it answers inside its deadline in any
+    order (#680)."""
     def unfold(t):
         return t.replace("\r", "").replace("\\\n", " ").replace("`\n", " ")
     posix = to_posix(cmd, tool)
@@ -402,17 +396,18 @@ def push_lines(cmd, tool):
         if "push" in line and line not in seen:
             seen.add(line)
             keep.append(line)
-    return "\n".join(sorted(keep, key=lambda line: (not FORCE_HINT.search(line), len(line))))
+    return keep
 
 
 def read_payload(raw):
-    """(tool_name, tool_input.command) of a hook payload; empty strings when it does not parse."""
+    """(tool_name, tool_input.command) of a hook payload, empty strings where it holds none; None when
+    it is no JSON object."""
     try:
         d = json.loads(raw)
     except ValueError:
-        return "", ""
+        return None
     if not isinstance(d, dict):
-        return "", ""
+        return None
     ti = d.get("tool_input")
     cmd = ti.get("command") if isinstance(ti, dict) else None
     return str(d.get("tool_name") or ""), cmd if isinstance(cmd, str) else ""
@@ -420,12 +415,18 @@ def read_payload(raw):
 
 def main(argv):
     mode = argv[1] if len(argv) > 1 else ""
-    if mode not in ("posix", "segments", "push"):
-        sys.stderr.write("usage: _shellwords.py posix|segments|push < payload.json\n")
+    if mode not in ("posix", "segments", "verdict"):
+        sys.stderr.write("usage: _shellwords.py posix|segments|verdict [protected...] < payload.json\n")
         return 2
-    tool, cmd = read_payload(sys.stdin.buffer.read().decode("utf-8", "replace"))
-    if mode == "push":
-        text = push_lines(cmd, tool)
+    payload = read_payload(sys.stdin.buffer.read().decode("utf-8", "replace"))
+    tool, cmd = payload or ("", "")
+    if mode == "verdict" and payload is None:
+        text = "unread"
+    elif mode == "verdict":
+        sys.dont_write_bytecode = True       # no __pycache__ folder inside .claude/hooks
+        import _pushjudge
+        kind, target = _pushjudge.Judge(argv[2:]).run(push_candidates(cmd, tool))
+        text = kind + "\t" + target if target else kind
     else:
         text = to_posix(cmd, tool)
         if mode == "segments":

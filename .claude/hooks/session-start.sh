@@ -42,8 +42,9 @@ if [[ -z "${PYBIN:-}" ]]; then
     echo "    The python-only gates are failing OPEN right now: check-claude-files-tracked,"
     echo "    check-commit-subject-version, check-doc-config-drift, check-graphify-usage,"
     echo "    check-moduledata-validation, check-native-dll-crt."
+    echo "    validate-push cannot judge a push: it asks on any force marker and allows the rest."
     if ! command -v jq >/dev/null 2>&1; then
-        echo "    jq is absent too, so EVERY JSON-parsing gate is open, force-push included."
+        echo "    jq is absent too, so every other JSON-parsing gate is open."
     fi
     echo "    Check that a real python precedes the WindowsApps aliases on PATH."
     echo "    Diagnose: bash tools/test_hooks.sh"
