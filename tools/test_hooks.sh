@@ -1877,6 +1877,31 @@ for row in "git push --force origin|rc=0 ask|" "git push origin feature|rc=0 all
         bad "validate-push without _shellwords.py answered '$got' for: $cmd (expected '$want'${note:+ and the stderr note})"
     fi
 done
+# #680 review: the coarse scan read the whole payload, and the session_id and transcript_path the
+# harness sends before tool_input hold a UUID that usually matches the force marker (-4f6a here), so
+# a plain push asked in this state. It reads from the "tool_input" key on; a force push still asks.
+harness_payload() {  # $1 command: a PreToolUse payload shaped as Claude Code sends it
+    "$HPY" -c 'import json, sys
+sid = "5f0c9a2e-7b1d-4f6a-9c3e-2d8b1a0f4e6c"
+print(json.dumps({"session_id": sid, "transcript_path": "C:\\Users\\t\\.claude\\projects\\e--repos-TAOM\\" + sid + ".jsonl",
+                  "cwd": "E:\\repos\\TAOM", "permission_mode": "bypassPermissions", "hook_event_name": "PreToolUse",
+                  "tool_name": "Bash", "tool_input": {"command": sys.argv[1], "description": "Push the branch"},
+                  "tool_use_id": "toolu_01AbCdEfGhIjKlMnOpQrStUv"}))' "$1"
+}
+for row in "git push origin feature|rc=0 allow|NOT checked" "git push --force origin|rc=0 ask|"; do
+    IFS='|' read -r cmd want note <<< "$row"
+    payload=$(harness_payload "$cmd")
+    [[ ${payload%%'"tool_input"'*} =~ -[^[:space:]-]*f ]] \
+        || bad "the harness-shaped payload holds no force marker before tool_input, so the row below proves nothing"
+    out=$( cd "$VP_TRUNK" && printf '%s' "$payload" \
+        | timeout -k 2 30 env CLAUDE_PROJECT_DIR="$SANDBOX" bash "$NOREADER/validate-push.sh" 2>"$SANDBOX/noreader.err" )
+    got="rc=$? $(decision_of "$out")"
+    if [[ "$got" == "$want" ]] && { [[ -z "$note" ]] || grep -q "$note" "$SANDBOX/noreader.err"; }; then
+        ok "validate-push without _shellwords.py answers '$got' for a harness-shaped payload of: $cmd"
+    else
+        bad "validate-push without _shellwords.py answered '$got' for a harness-shaped payload of: $cmd (expected '$want'${note:+ and the stderr note})"
+    fi
+done
 rm -rf "$NOREADER"
 
 # Large payloads under both tools stay inside 80% of each gate's registration (the plan 011 review

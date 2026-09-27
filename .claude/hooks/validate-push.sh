@@ -49,11 +49,15 @@ ask() {
 # was deleted). A force marker asks: a short option holding f (-f, -vfu, and --force through its
 # second dash), --mirror, a + (a +refspec), or a JSON \u escape, which could spell any of them.
 # Anything else is allowed with a note. The scan is linear, about 85 ms a MB here with dash runs
-# included, so it needs no size cap. It reads the whole payload, and the session id and transcript
-# path hold a UUID that usually matches, so in this state most pushes ask: rare, and on the safe side.
+# included, so it needs no size cap. It reads the payload from its "tool_input" key on (all of it
+# when that key is absent, and a \u-escaped key still asks): the session id and transcript path
+# before that key hold a UUID that usually matches, and a scan of the whole payload asked on most
+# pushes (#680 review). Cutting there is one expansion, no fork, about 30 ms on a 2 MB payload.
 FORCE_MARK='-[^[:space:]-]*f|--mirror|\+|\\u'
 coarse() {
-  [[ $INPUT =~ $FORCE_MARK ]] && ask "$1, and its text holds a force marker"
+  local text=$INPUT
+  [[ $INPUT == *'"tool_input"'* ]] && text=${INPUT#*'"tool_input"'}
+  [[ $text =~ $FORCE_MARK ]] && ask "$1, and its text holds a force marker"
   [[ -n $PYBIN ]] && echo "validate-push: $1, so a push whose raw text holds no force marker is NOT checked. Gate failed OPEN." >&2
   exit 0
 }
