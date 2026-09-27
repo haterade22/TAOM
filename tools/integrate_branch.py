@@ -21,14 +21,16 @@ where missing; no such heading duplicated by the merge. It stages the paths it r
 `ready to commit: git commit -F "<message file>"`. It never commits: the orchestrator runs that
 command through Bash, so every commit gate judges the merge.
 
-Exit 0: merged and staged, not committed. Exit 1: refused, or git failed before a merge started.
-Exit 2: the merge is left in progress for a hand resolution (a conflict outside the append-only
-set, a union it could not do, a duplicated heading or a leftover marker); every problem is listed.
-Exit 3: an unexpected error; the worktree may hold a merge in progress (git status shows it). It
-runs only non-destructive git verbs: it never aborts, resets, cleans, stashes or commits. No
-recount. --dry-run reports the conflict set through `git merge-tree --write-tree`, touching
-neither the index nor the working tree (exit 2 when a path would need a hand resolution). Pure
-stdlib.
+Exit 0: merged and staged, not committed. Exit 1: refused, or git failed before a merge started,
+so no merge is in progress. Exit 2: the merge is left in progress for a hand resolution (a
+conflict outside the append-only set, a union it could not do, a duplicated heading or a leftover
+marker); every problem is listed. Exit 3: git failed after the merge started, or an unexpected
+error; a merge may be in progress, so read git status first. It runs only non-destructive git
+verbs: it never aborts, resets, cleans, stashes or commits. No recount. --dry-run reports the
+conflict set of a diff3-style `git merge-tree --write-tree` and tries the union on each
+append-only path's merged blob, touching neither the index nor the working tree (exit 2 when a
+path would need a hand resolution; the seam, duplicate and marker checks run only in a real
+merge). Pure stdlib.
 """
 from __future__ import annotations
 
@@ -187,17 +189,34 @@ def leftover_markers(wt: str) -> list[str]:
 
 
 def dry_run(wt: str, branch: str, target: str, is_append) -> int:
-    proc = git(wt, "merge-tree", "--write-tree", "--name-only", "--no-messages", "-z", "HEAD", target)
+    """The conflict set of a diff3-style `git merge-tree`, with the union tried on each
+    append-only path's merged blob, as the real merge would try it on the file."""
+    proc = git(wt, "-c", "merge.conflictStyle=diff3", "merge-tree", "--write-tree", "--name-only",
+               "--no-messages", "-z", "HEAD", target)
     if proc.returncode not in (0, 1):
         raise Stop(f"git merge-tree failed: {(proc.stderr or proc.stdout).strip()}")
-    conflicted = _paths(proc.stdout)[1:]
+    tree, *conflicted = _paths(proc.stdout)
     if not conflicted:
         print(f"dry run: {branch} merges into HEAD with no conflict")
         return 0
-    hand = [p for p in conflicted if not is_append(p)]
+    hand = 0
     for path in conflicted:
-        print(f"{'hand-resolve' if path in hand else 'union (append-only)'}: {path}")
-    print(f"dry run: {len(conflicted)} conflicted, {len(hand)} would need a hand resolution")
+        if not is_append(path):
+            hand += 1
+            print(f"hand-resolve: {path}")
+            continue
+        merged = subprocess.run(["git", "-C", wt, "cat-file", "blob", f"{tree}:{path}"],
+                                capture_output=True)
+        try:
+            if merged.returncode:
+                raise ValueError("no such file in the merged tree")
+            union(merged.stdout)
+        except ValueError as exc:
+            hand += 1
+            print(f"hand-resolve: {path} (not resolved by union: {exc})")
+            continue
+        print(f"union (append-only): {path}")
+    print(f"dry run: {len(conflicted)} conflicted, {hand} would need a hand resolution")
     return 2 if hand else 0
 
 
@@ -245,6 +264,15 @@ def integrate(args) -> int:
     if merging != target:
         raise Stop(f"git merge started no merge of {args.branch} (exit {proc.returncode}, "
                    f"MERGE_HEAD {merging or 'absent'}):\n{(proc.stdout + proc.stderr).strip()}")
+    try:
+        return resolve(wt, message, is_append)
+    except Stop as exc:  # exit 1 means no merge started; this one is in progress
+        raise Stop(f"{exc}\na merge of {args.branch} is in progress in {wt} (git status shows it)",
+                   code=3) from None
+
+
+def resolve(wt: str, message: str, is_append) -> int:
+    """Union the append-only conflicts of the merge in progress, fix seams, check it; stage."""
     problems = []
     for path in _paths(git_ok(wt, "diff", "--name-only", "--diff-filter=U", "-z")):
         if not is_append(path):

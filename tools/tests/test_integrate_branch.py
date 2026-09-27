@@ -264,6 +264,15 @@ class MergeTests(unittest.TestCase):
         self.assert_ready(self.run_tool())
         self.assertEqual(self.read(LESSONS), ("# Lessons\n\n### one\ntext\n" + entry).encode("utf-8"))
 
+    def test_a_heading_after_a_closed_code_fence_gets_its_blank_line(self):
+        entry = "\n### two\nA quoted template:\n```markdown\n### Step\n```\n### three\nt\n"
+        self.build({LESSONS: "# Lessons\n\n### one\ntext\n"}, {"other.txt": "o\n"},
+                   {LESSONS: "# Lessons\n\n### one\ntext\n" + entry})
+        self.assert_ready(self.run_tool())
+        self.assertEqual(self.read(LESSONS), ("# Lessons\n\n### one\ntext\n"
+                                              + entry.replace("```\n### three", "```\n\n### three"))
+                         .encode("utf-8"))
+
     def test_an_inserted_seam_line_takes_the_file_line_ending(self):
         self.build({LESSONS: b"# Lessons\r\n\r\n### one\r\ntext one\r\n"},
                    {"other.txt": "ours\n"},
@@ -373,6 +382,30 @@ class MergeTests(unittest.TestCase):
         self.assertIn(b"unexpected error", proc.stderr)
         self.assertNotIn(b"Traceback", proc.stderr)
 
+    def test_a_git_failure_after_the_merge_started_exits_three_with_the_merge_in_progress(self):
+        # Exit 1 promises that no merge started; once one has, any failure is exit 3 (read git status).
+        self.build_appends()
+        driver = self.tmp / "flaky_add.py"
+        driver.write_text(
+            "import sys\n"
+            f"sys.path.insert(0, {str(TOOL.parent)!r})\n"
+            "import integrate_branch as ib\n"
+            "real = ib.git_ok\n"
+            "def flaky(wt, *args):\n"
+            "    if args[:1] == ('add',):\n"
+            "        raise ib.Stop('git add failed: fatal: Unable to create index.lock: File exists.')\n"
+            "    return real(wt, *args)\n"
+            "ib.git_ok = flaky\n"
+            "sys.exit(ib.main(sys.argv[1:]))\n", encoding="utf-8")
+        proc = subprocess.run([sys.executable, "-B", str(driver), "--worktree", str(self.wt),
+                               "--message-file", str(self.message), "feat"],
+                              env=self.env, capture_output=True)
+        self.assertEqual(proc.returncode, 3, proc.stdout + proc.stderr)
+        self.assertIn(b"index.lock", proc.stderr)
+        self.assertIn(b"a merge of feat is in progress", proc.stderr)
+        self.assertTrue(self.merging())
+        self.assertEqual(self.git(self.wt, "rev-parse", "HEAD"), self.before)
+
     def test_a_dry_run_reports_the_conflict_set_and_touches_nothing(self):
         self.build({LESSONS: "# L\n\n### one\nt\n", "src.txt": "x\n"},
                    {LESSONS: "# L\n\n### one\nt\n\n### two\nt\n", "src.txt": "ours\n"},
@@ -382,6 +415,21 @@ class MergeTests(unittest.TestCase):
         out = proc.stdout.decode("utf-8")
         self.assertRegex(out, r"union.*" + LESSONS)
         self.assertRegex(out, r"hand.*src\.txt")
+        self.assertFalse(self.merging())
+        self.assertEqual(self.git(self.wt, "status", "--porcelain"), "")
+        self.assertEqual(self.git(self.wt, "rev-parse", "HEAD"), self.before)
+
+    def test_a_dry_run_applies_the_union_rule(self):
+        # The case the real merge sends to a hand (ours fixes the entry both append after), so the
+        # dry run must count it as a hand resolution too, not as a union.
+        self.build({LESSONS: "# Lessons\n\n### one\ntext one\n"},
+                   {LESSONS: "# Lessons\n\n### one\ntext one (fixed)\n\n### two\nt2\n"},
+                   {LESSONS: "# Lessons\n\n### one\ntext one\n\n### three\nt3\n"})
+        proc = self.run_tool("--dry-run")
+        self.assertEqual(proc.returncode, 2, proc.stdout + proc.stderr)
+        out = proc.stdout.decode("utf-8")
+        self.assertIn(f"hand-resolve: {LESSONS} (not resolved by union: ", out)
+        self.assertIn("1 conflicted, 1 would need a hand resolution", out)
         self.assertFalse(self.merging())
         self.assertEqual(self.git(self.wt, "status", "--porcelain"), "")
         self.assertEqual(self.git(self.wt, "rev-parse", "HEAD"), self.before)
