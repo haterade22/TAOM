@@ -7,7 +7,8 @@ paths:
 
 Loads when a `.claude/hooks/` script is being written or edited. The durable harness facts
 (hook lifecycle, fail-open mandate, JSON output contract) live in `harness-facts.md`; this rule
-holds the authoring-time conventions moved out of it (repo-reorg 2026-07-12).
+holds the authoring-time conventions. The incidents behind them are lessons in
+`docs/reviews/lessons/build-tooling-workflow.md`, named below.
 
 ## Mirror the sibling's FULL convention set (EMPIRICAL: TAOM 2026-05-29)
 
@@ -21,11 +22,11 @@ When you add a hook to an existing category (a Stop reminder, a PreToolUse gate,
 | Exit semantics (`exit 0` non-blocking vs `exit 2`/JSON `deny`) | the sibling in the same event | (got this right) |
 | **Output channel** (what Claude actually reads) | Stop: `_stop_reminder.sh`; PreToolUse: `block-dangerous-git.sh` (`hookSpecificOutput`) | the four Stop reminders wrote to stderr, which Claude never sees, until plan 011 |
 
-**Root cause** (RCA `docs/reviews/rca-superpowers-enforcement-2026-05-29.md`): treating a sibling as a *detection* template instead of a *full behavioral* template — same shape as the C++-port hot-path miss (`feedback_native_port_hot_path_audit.md`). The fix is a pre-flight pass over the sibling's whole body, not just the lines you need.
+The fix is a pre-flight pass over the sibling's whole body, not just the lines you need (lesson "Authoring a new hook: mirror the sibling's FULL convention set").
 
 ## Git invocation forms hooks must handle
 
-When writing a PreToolUse hook that filters on git subcommands, enumerate explicitly which invocation forms it must catch: substring matching `*"git commit"*` MISSES the following real-world forms (Codex review 2026-04-26 found this gap):
+When writing a PreToolUse hook that filters on git subcommands, enumerate explicitly which invocation forms it must catch: substring matching `*"git commit"*` MISSES the following real-world forms:
 
 | Form | Purpose | Handled by `*"git commit"*` substring? |
 |------|---------|----------------------------------------|
@@ -51,7 +52,7 @@ case "$COMMAND" in
 esac
 ```
 
-**MANDATORY for any new hook that detects git commits.** Codex review #29 found a bare `*"git commit"*` matcher in a hook shipped in `79350f2` (since deleted), after review #28 had codified the rule.
+**MANDATORY for any new hook that detects git commits** (review 29 in `docs/reviews/REVIEW-LOG.md` found a bare matcher after the rule was written).
 
 When you write a NEW hook (or add commit detection to an existing one), grep for `git commit` substring matches in the diff before commit. If you find one that's NOT using the two-stage pattern above, that's a regression — fix before shipping. The `/skill-stocktake` checklist now includes this check.
 
@@ -66,7 +67,7 @@ through it. `validate-push.sh` is the one exception: it reads and judges the pus
 
 ## Amend exemptions in pre-commit hooks (recursion-risk pattern)
 
-Do NOT blanket-skip `git commit --amend` in pre-commit hooks. `amend` is commonly used as a workflow ("oops, forgot a file, amend it in") — that's exactly the case the hook needs to catch. Codex review 2026-04-26 caught this as prevention theater: both `check-changelog-changed.sh` and `check-claude-files-tracked.sh` originally exempted `--amend`, defeating the very gates they were supposed to enforce.
+Do NOT blanket-skip `git commit --amend` in pre-commit hooks. `amend` is commonly used as a workflow ("oops, forgot a file, amend it in"), which is exactly the case the hook needs to catch (two gates exempted it until the 2026-04-26 Codex review, `docs/reviews/REVIEW-LOG.md`).
 
 Two correct patterns depending on what the hook checks:
 
@@ -82,23 +83,10 @@ For a hook whose job is to **detect and warn**, fail-open is only half the contr
 those, **no output is itself a claim**. A drift check that prints nothing is read as "no drift", not
 as "never ran".
 
-The v1.4.7 → v1.4.8 bump proved it. **What is observed:** on 2026-08-10 the hook fired with
-`source=startup` and printed branch, stashes and commits — but no drift banner, with the game on
-v1.4.8 and the pin on v1.4.7. Not a race; the session transcript's birth time was 47 minutes after
-the update finished.
-
-**What is proven about the mechanism:** the pre-fix code had a silent-failure mode. It built its path
-as `"${BANNERLORD_GAME_DIR:-<literal>}/bin/..."`, and the `:-` form substitutes the literal only when
-the variable is **unset or empty** — so a variable that is *set but does not resolve in the hook's
-environment* sails past it, the `-f` test goes false, and the whole block falls through without a
-word. Exporting a bogus `BANNERLORD_GAME_DIR` reproduces total silence in one command.
-`.claude/settings.json` does not define the variable, so the hook inherits whatever the harness
-process carries.
-
-**What is NOT proven:** that this was the actual trigger that morning. The same variable resolves
-fine from an interactive shell, so the hook's environment must have differed in some way that was
-not captured. Treat the mechanism as demonstrated and the specific trigger as undetermined — the
-lesson does not depend on which it was, because a guard with *any* silent-failure mode is the defect.
+The v1.4.7 to v1.4.8 bump printed no drift banner (2026-08-10): a path built as
+`"${BANNERLORD_GAME_DIR:-<literal>}/..."` covers an unset or empty variable, never a set but wrong
+one, and a guard with *any* silent-failure mode is the defect (lesson "A fail-open guard whose
+failure mode is silence").
 
 **When writing or reviewing a detect-and-warn hook:**
 
@@ -121,13 +109,8 @@ observable event. A timeout sized against the fast path does not make a hook saf
 gate **silently dead**, which is strictly worse than the hang it replaced because the hang was
 at least visible.
 
-Measured on 2026-08-31, after a well-intentioned pass added timeouts to all 27 registrations:
-
-| Hook | Registered | Actual runtime | Result |
-|---|---|---|---|
-| `check-moduledata-validation.sh` | 5 s | **27.0 s** | killed every run; broken-ref / landless-culture / duplicate-id gate dead |
-| `check-doc-config-drift.sh` | 5 s | **7.8 s** | killed every run; gate dead while real drift stood in the tree |
-| `check-polearm-shield-parity.sh` | 5 s | 2.9 s + overhead | killed intermittently |
+On 2026-08-31 a pass that added timeouts to all 27 registrations killed two gates on every run
+(lesson "A gate the harness kills is not a gate").
 
 **The rules that follow from it:**
 
@@ -137,7 +120,7 @@ Measured on 2026-08-31, after a well-intentioned pass added timeouts to all 27 r
 | **Bound external work INSIDE the script**, under the registered timeout: `timeout -k 2 45 "$PY" tools/x.py` | Keeps the overrun inside the hook, where it can still print something. The registered timeout becomes a backstop, not the budget. |
 | **Handle rc 124 explicitly, and never as a pass.** Emit an `ask` decision under `hookSpecificOutput` (`harness-facts.md` "PreToolUse output contract"), or, for an advisory hook, use its event's visible channel (`harness-facts.md` "Visibility"; exit-0 stderr reaches no one) | An overrun is an infrastructure fault. Fail open (never hard-block on your own bug) but say so, per the fail-open-not-fail-silent rule above. |
 | **Use `-k`.** Bare `timeout N` sends SIGTERM and then WAITS | Against a process that ignores SIGTERM (exactly the Store-alias case) the guard itself hangs. |
-| **Count the bound from the script's first line** when the work before it varies (#680) | `validate-push.sh` takes `EPOCHREALTIME` on line 1 and gives its judge what is left of 3.0 s: a slow `_pybin.sh` probe then asks at once instead of pushing the judge past the kill. |
+| **Count the bound from the script's first command** when the work before it varies (#680) | `validate-push.sh` reads `EPOCHREALTIME` in its first command and gives its judge what is left of 3.0 s, so an overrun asks after about 3.3 s and its 10 s registration is only a backstop; a slow `_pybin.sh` probe asks at once. |
 | **Check skill-frontmatter registrations too** | The 2026-08-31 pass covered all 27 in `settings.json` and missed all 5 in `freeze/SKILL.md` + `investigate/SKILL.md`, which inherit the **600 s** default. |
 
 `bash tools/test_hooks.sh` enforces this: no registration without a timeout, no external tool
@@ -147,13 +130,13 @@ its registration. Run it before committing anything under `.claude/hooks/`.
 ## Prove a gate live (EMPIRICAL: TAOM 2026-09-23, #647)
 
 A gate is done when a real tool call it must stop has been shown stopped: the harness refused
-it, not a test read the hook's output. Nine gates passed every test for months while Claude Code
-ignored their top-level `permissionDecision` (`harness-facts.md` "PreToolUse output contract").
+it, not a test read the hook's output: nine gates once passed every test while the harness ignored
+their decision (`docs/reviews/rca-adr011-batch1-2026-09-23.md`).
 Test the inputs that go missing too: a non-ASCII command, a multi-line one.
 
 ## Never feed hook text through a here-string (EMPIRICAL: TAOM 2026-09-26, #681)
 
-Never feed unbounded text through `<<<` or an expanding here-document (Git Bash 5.3 hangs forever on 65,537 to 65,664 bytes, and a killed gate fails open): split it under `set -f` with `set -f; IFS=$'\n'; A=($X); IFS=$' \t\n'; set +f` and a `for` loop, or `set -f; T=($X); set +f` for words, never `< <(printf ...)`, which forks per call; `tools/test_hooks.sh` 4e enforces it.
+Never feed unbounded text through `<<<` or an expanding here-document (Git Bash 5.3 hangs forever on a document of 65,537 to 65,664 bytes, text of 65,536 to 65,663 plus the newline a here-string adds, and a killed gate fails open): split it under `set -f` with `set -f; IFS=$'\n'; A=($X); IFS=$' \t\n'; set +f` and a `for` loop, or `set -f; T=($X); set +f` for words, never `< <(printf ...)`, which forks per call; `tools/test_hooks.sh` 4e enforces it in every script a registration runs, comments included, so name the construct in words there.
 
 ## Never spell it `python3` (EMPIRICAL: TAOM 2026-08-31)
 
@@ -161,16 +144,13 @@ On the dev machine `python3` resolves only to
 `C:\Users\mikew\AppData\Local\Microsoft\WindowsApps\python3`, a Microsoft Store App Execution
 Alias. Run from Git Bash it prints nothing, never exits, and **ignores SIGTERM**. Guarding with
 `command -v python3` does not help: it succeeds, because a file really does exist at that name.
-That is what wedged every JSON-parsing hook, and with no `timeout` on the registrations each
-Bash call paid a 600 s PreToolUse batch plus a 600 s PostToolUse batch, which is the 20.0-minute
-stall in the transcripts.
+It wedged every JSON-parsing hook on 2026-08-31 (the `command -v` lesson).
 
 **Inside a hook:** `source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"` after any raw-payload
 prefilter and above the first `"$PYBIN"` use, then honour
 `[ -n "$PYBIN" ] || { echo '{}'; exit 0; }` (`validate-push.sh` gives its coarse answer instead,
-#680). Putting the `source` below the first use is not
-a style nit: `validate-push.sh` shipped that way on 2026-08-31 and its force-push block was
-unreachable.
+#680). Below the first use it leaves `PYBIN` empty: `validate-push.sh`'s force-push block was
+unreachable that way on 2026-08-31.
 
 **Outside a hook:** just write `python`. It resolves to real CPython here and is the repo
 convention. A portable candidate list may still include `python3` provided the loop rejects any

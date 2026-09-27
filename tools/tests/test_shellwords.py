@@ -266,25 +266,26 @@ class PushLinesTests(unittest.TestCase):
     plan 027, so a line that still shows the push must come back."""
 
     def test_only_lines_holding_push(self):
-        self.assertEqual(sw.push_lines("git status; echo hi", "Bash"), "")
+        self.assertEqual(sw.push_candidates("git status; echo hi", "Bash"), [])
 
     def test_raw_command_split_with_its_own_escape(self):
         cmd = 'git -C "E:\\R&D" push --force origin ("bannerlord-1.5.x")'
-        self.assertIn(cmd, sw.push_lines(cmd, "PowerShell").split("\n"))
+        self.assertIn(cmd, sw.push_candidates(cmd, "PowerShell"))
 
     def test_quoted_hash_after_a_heredoc_quote_keeps_the_push(self):
         cmd = 'cat <<EOF\nsay "hi\nEOF\ngit -c "user.name=a #b" push --force origin T'
-        self.assertIn('git -c "user.name=a #b" push --force origin T', sw.push_lines(cmd, "Bash").split("\n"))
+        self.assertIn('git -c "user.name=a #b" push --force origin T', sw.push_candidates(cmd, "Bash"))
 
     def test_typographic_quote_keeps_the_push(self):
         cmd = "if (\u2018a #' -ne 'x\u2019) { git push --force origin T }"
         self.assertTrue(any("git push --force origin T" in line
-                            for line in sw.push_lines(cmd, "PowerShell").split("\n")))
+                            for line in sw.push_candidates(cmd, "PowerShell")))
 
     def test_trailing_comment_is_dropped(self):
         for tool in ("Bash", "PowerShell"):
             with self.subTest(tool=tool):
-                self.assertNotIn("T", sw.push_lines("git push --force origin feature # T later", tool))
+                lines = sw.push_candidates("git push --force origin feature # T later", tool)
+                self.assertFalse(any("T" in line for line in lines))
 
     # Convergence of plan 027: the blind split cuts inside a quoted value, so the piece holding the
     # push can start at a # whose opening quote sits in the piece before it. Each was refused at
@@ -295,22 +296,23 @@ class PushLinesTests(unittest.TestCase):
                 cmd = pre + value + " git push --force origin T"
                 with self.subTest(cmd=cmd):
                     self.assertTrue(any("git push --force origin T" in line
-                                        for line in sw.push_lines(cmd, "Bash").split("\n")))
+                                        for line in sw.push_candidates(cmd, "Bash")))
 
     def test_comment_after_any_quote_is_judged(self):
         # The safe side: a quote anywhere before the # may open the value the # sits in.
-        self.assertIn("T", sw.push_lines('git commit -m "x"; git push --force origin feature # T later', "Bash"))
+        lines = sw.push_candidates('git commit -m "x"; git push --force origin feature # T later', "Bash")
+        self.assertTrue(any("T" in line for line in lines))
 
     # A long quoted segment holding `push` is not re-split with argument boundaries: shlex is
-    # quadratic in one word's length (400 KB took 1.7 s of the 5 s registration).
+    # quadratic in one word's length (400 KB took 1.7 s of the 5 s registration it then had).
     def test_argument_boundaries_skip_a_long_segment(self):
         cmd = 'git commit -m "' + "push the thing " * 400 + '" && git push -o "ci skip" origin'
-        lines = sw.push_lines(cmd, "Bash").split("\n")
+        lines = sw.push_candidates(cmd, "Bash")
         self.assertIn("git push -o ci\x1fskip origin", lines)
         self.assertFalse(any("push\x1fthe" in line for line in lines))
 
     def test_argument_boundaries_are_kept_once(self):
-        lines = sw.push_lines('git push -o "ci variable" origin; git push -o "" x y', "Bash").split("\n")
+        lines = sw.push_candidates('git push -o "ci variable" origin; git push -o "" x y', "Bash")
         self.assertIn("git push -o ci\x1fvariable origin", lines)
         self.assertIn("git push -o \x1e x y", lines)
 
@@ -338,18 +340,19 @@ class CliTests(unittest.TestCase):
         payload = json.dumps({"tool_name": "Bash", "tool_input": {"command": "a; b"}})
         self.assertEqual(run_cli("segments", payload.encode("ascii")).stdout, b"a\n b\n")
 
-    def test_push_mode(self):
-        payload = json.dumps({"tool_name": "Bash", "tool_input": {"command": "git push origin x; ls"}})
-        self.assertEqual(run_cli("push", payload.encode("ascii")).stdout, b"git push origin x\n")
-
     def test_bad_json_prints_an_empty_line(self):
         r = run_cli("posix", b'{"tool_name":')
         self.assertEqual((r.returncode, r.stdout), (0, b"\n"))
 
     def test_payload_of_the_wrong_shape_reads_as_no_command(self):
-        for raw in ("[1]", '{"tool_input": {"command": 5}}', '{"tool_input": "git status"}'):
+        for raw in ('{"tool_input": {"command": 5}}', '{"tool_input": "git status"}', "{}"):
             with self.subTest(raw=raw):
                 self.assertEqual(sw.read_payload(raw), ("", ""))
+
+    def test_payload_that_is_no_json_object_is_unread(self):
+        for raw in ('{"tool_name":', "[1]", "", "push"):
+            with self.subTest(raw=raw):
+                self.assertIsNone(sw.read_payload(raw))
 
     def test_unknown_mode_exits_2(self):
         self.assertEqual(run_cli("bogus", b"{}").returncode, 2)

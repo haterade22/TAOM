@@ -1,15 +1,16 @@
 """validate-push.sh's judge in Python (#680): .claude/hooks/_pushjudge.py, run by _shellwords.py verdict.
 
-The bash judge the hook ran before #680 cost about 25 microseconds a word, so a trunk force push
-carrying 250 KB or more of quoted text holding `push` outran the 5 s registration and ran unjudged.
-The port must give every verdict, and name every target, the bash judge did. SEVEN_C holds every
-tools/test_hooks.sh 7c command with the verdict the bash judge gave it at 143f0fa8, on a checkout of
-bannerlord-1.5.x or of a feature branch. PINS hold one line per place where a natural Python choice
-reads a line differently from bash; each verdict was read from the bash judge's own functions at
-143f0fa8 with the current branch pinned. GLOB_OVERBLOCK is the one designed difference: a refspec
-pattern holding any bracket, ?, backslash, parenthesis or bar is taken to match every protected name.
-ISSUE_689 holds the force pushes the port still let through (#689), each now refused, and the
-neighbouring shapes that must stay allowed."""
+The bash judge the hook ran before #680 cost about 25 microseconds a word, so under load a trunk
+force push carrying 250 KB of quoted text holding `push` outran the 5 s registration it then had
+(idle, 400 KB took 4.9 s) and ran unjudged. The port must give every verdict, and name every
+target, the bash judge did. SEVEN_C holds every tools/test_hooks.sh 7c command of 143f0fa8 with the
+verdict the bash judge gave it there, on a checkout of bannerlord-1.5.x or of a feature branch. PINS
+hold one line per place where a natural Python choice reads a line differently from bash; each
+verdict was read from the bash judge's own functions at 143f0fa8 with the current branch pinned.
+GLOB_OVERBLOCK is the one designed difference of the port: a refspec pattern holding any bracket, ?,
+backslash, parenthesis or bar is taken to match every protected name. ISSUE_689 holds the force
+pushes the port still let through (#689), each now refused, and the neighbouring shapes that must
+stay allowed; VALUE_PREFIXES holds the value options its review read by the same prefix rule."""
 import json
 import os
 import subprocess
@@ -31,7 +32,7 @@ ALL = pj.BLOCK_ALL
 
 def judge(line, branch="feature"):
     """(block, warn) after judge_command on one line, the current branch pinned and push.default
-    unset, so no row reads this machine's git config."""
+    unset, so these rows read no git config (CliTests runs git itself, in scratch repositories)."""
     j = pj.Judge(PROTECTED, branch=lambda: branch, push_default=lambda: "")
     j.judge_command(line)
     return j.block, j.warn
@@ -303,7 +304,9 @@ PINS = [
     ("redirect", T1, "git push --force -o> f origin feature2", T1, ""),
     # Options: the force spellings, --all/--branches/--mirror, the value options and their
     # prefixes, every other long option ignored, and a short cluster forcing on any f. A prefix of
-    # a force, --mirror, --all or --branches option is in ISSUE_689, not here.
+    # a force, --mirror, --all or --branches option is in ISSUE_689, not here, and a value option's
+    # prefix that bash missed is in VALUE_PREFIXES. --expire is no push option (git refuses it as
+    # unknown), but it starts like --exec, so it takes a value as bash read it: that only refuses more.
     ("option", "feature", "git push --force-with-lease=bannerlord-1.5.x:abc origin feature", "", ""),
     ("option", "feature", "git push --force-if-includes origin bannerlord-1.5.x", T1, ""),
     ("option", "feature", "git push --all --force origin", ALL, ""),
@@ -379,11 +382,26 @@ GLOB_OVERBLOCK = [
     ("feature", "git push --force origin refs/heads/a|b*", T1, ""),               # bash: allowed
 ]
 
-# #689: shapes git 2.55 runs as a forced push of every trunk that the port let through, each probed
-# on a local bare repository. git reads an unambiguous prefix of a long option as that option
-# (--force-w is --force-with-lease, --mir and --m are --mirror, --al and --b are --all and
-# --branches); a prefix of a force option with 3 characters or more counts as force, and git
-# refuses the ambiguous ones (--f, --forc), so counting those only refuses what git refuses. The
+# (current branch, line, block, warn): the value options read by the prefix rule #689 uses for force
+# (#680 review), on top of the bash judge's table, which took a word starting --pu, --rep, --rece,
+# --recu or --ex as one. That table missed --e, which git 2.55 runs as --exec (`-f --e
+# git-receive-pack origin` force-pushed the checked-out trunk). git refuses --rec as ambiguous
+# (--receive-pack or --recurse-submodules); read here as a value option, it only refuses more.
+# --end-of-options takes no value, so origin stays the remote (a plain startswith("--e") would have
+# taken it). The comment gives the bash judge's answer.
+VALUE_PREFIXES = [
+    (T1, "git push --force --e x origin", T1, ""),                      # bash: allowed
+    (T1, "git push --force --rec x origin", T1, ""),                    # bash: allowed
+    (T1, "git push --force --end-of-options origin feature", "", ""),   # bash: allowed
+]
+
+# #689: shapes git 2.55 runs as a forced push of a trunk that the port let through, each probed on
+# a local bare repository. git reads an unambiguous prefix of a long option as that option
+# (--force-w is --force-with-lease and force-updates the trunk it names; --mir and --m are --mirror,
+# --al and --b are --all and --branches, which reach both trunks); a prefix of a force option with
+# 3 characters or more counts as force, and git refuses the ambiguous ones (--f, --forc), so
+# counting those only refuses what git refuses. --force-i alone is no forced push (git rejects a
+# non-fast-forward), so counting a --force-if-includes prefix is a deliberate over-block. The
 # refspec : (forced by a flag or by +:) and a forced push with no refspec under
 # push.default=matching push every branch the remote also has. Each may only refuse more: the
 # comment gives what the port answered. (current branch, command, kind, target), under both tools.
@@ -440,6 +458,11 @@ class PinTests(unittest.TestCase):
 
     def test_a_pattern_with_other_glob_characters_matches_every_protected_name(self):
         for branch, line, block, warn in GLOB_OVERBLOCK:
+            with self.subTest(line=line):
+                self.assertEqual(judge(line, branch), (block, warn))
+
+    def test_value_options_are_read_by_the_prefix_rule(self):
+        for branch, line, block, warn in VALUE_PREFIXES:
             with self.subTest(line=line):
                 self.assertEqual(judge(line, branch), (block, warn))
 
@@ -529,6 +552,19 @@ class PushDefaultTests(unittest.TestCase):
                          ("block", MATCHING))
         self.assertEqual(calls, [])
 
+    # tools/test_hooks.sh 7c runs these in vp-matching, a feature checkout whose config sets
+    # push.default=matching, under both shell tools.
+    SEVEN_C_MATCHING = [("git push --force origin", "block", MATCHING),
+                        ("git push origin", "allow", ""),
+                        ("git push --force origin feature", "allow", "")]
+
+    def test_the_7c_rows_on_a_matching_checkout(self):
+        for cmd, kind, target in self.SEVEN_C_MATCHING:
+            for tool in ("Bash", "PowerShell"):
+                with self.subTest(tool=tool, cmd=cmd):
+                    lines = sw.push_candidates(cmd, tool)
+                    self.assertEqual(self.judge_("matching", []).run(lines), (kind, target))
+
 
 def run_cli(args, command, cwd, tool="Bash"):
     payload = json.dumps({"tool_name": tool, "tool_input": {"command": command}, "hook_event_name": "PreToolUse"})
@@ -537,7 +573,9 @@ def run_cli(args, command, cwd, tool="Bash"):
 
 
 class CliTests(unittest.TestCase):
-    """_shellwords.py verdict <protected...>: one line, block<TAB>target, warn<TAB>target or allow."""
+    """_shellwords.py verdict <protected...>: one line, block<TAB>target, warn<TAB>target, allow or
+    unread. The verdict reads git's own push.default, so each scratch repository sets it in its local
+    config, which wins over this machine's global and system settings."""
 
     @classmethod
     def setUpClass(cls):
@@ -548,6 +586,7 @@ class CliTests(unittest.TestCase):
             os.makedirs(d)
             subprocess.run(["git", "init", "-q", d], check=True, capture_output=True)
             subprocess.run(["git", "-C", d, "symbolic-ref", "HEAD", "refs/heads/" + branch], check=True)
+            subprocess.run(["git", "-C", d, "config", "push.default", "simple"], check=True)
             cls.repos[branch] = d
         d = os.path.join(cls.tmp.name, "matching")      # a feature checkout with push.default=matching
         subprocess.run(["git", "init", "-q", d], check=True, capture_output=True)
@@ -595,10 +634,14 @@ class CliTests(unittest.TestCase):
         r = run_cli(["verdict"] + PROTECTED, command, self.repos["feature"])
         self.assertEqual(r.stdout, b"block\tbannerlord-1.5.x\n")
 
-    def test_bad_json_is_allowed(self):
-        r = subprocess.run([sys.executable, os.path.join(HOOKS, "_shellwords.py"), "verdict"] + PROTECTED,
-                           input=b'{"tool_name":', capture_output=True, cwd=self.repos[T1], timeout=60)
-        self.assertEqual((r.returncode, r.stdout), (0, b"allow\n"))
+    def test_a_payload_that_does_not_parse_is_unread(self):
+        # validate-push.sh sends `unread` down its no-verdict path, which asks on a force marker in
+        # the raw text: the answer is never a silent allow (#680 review).
+        for raw in (b'{"tool_name":"Bash","tool_input":{"command":"git push --force origin main"}', b"[1]"):
+            with self.subTest(raw=raw):
+                r = subprocess.run([sys.executable, os.path.join(HOOKS, "_shellwords.py"), "verdict"] + PROTECTED,
+                                   input=raw, capture_output=True, cwd=self.repos[T1], timeout=60)
+                self.assertEqual((r.returncode, r.stdout), (0, b"unread\n"))
 
     def test_usage_names_the_verdict_mode(self):
         r = subprocess.run([sys.executable, os.path.join(HOOKS, "_shellwords.py"), "bogus"],
@@ -607,19 +650,20 @@ class CliTests(unittest.TestCase):
         self.assertIn(b"verdict", r.stderr)
 
     def test_verdict_mode_writes_no_bytecode_into_the_hooks_folder(self):
-        cache = os.path.join(HOOKS, "__pycache__")
-        before = set(os.listdir(cache)) if os.path.isdir(cache) else set()
-        run_cli(["verdict"] + PROTECTED, "git push origin main", self.repos["feature"])
-        after = set(os.listdir(cache)) if os.path.isdir(cache) else set()
-        self.assertFalse({n for n in after - before if n.startswith("_pushjudge")})
-
-
-class ReaderTests(unittest.TestCase):
-    def test_push_mode_prints_the_candidate_list(self):
-        for cmd, tool in (("git push origin x; ls", "Bash"), ('git -C "E:/R&D" push -o "" x y', "Bash"),
-                          ("if ($true) {git push --force origin T}", "PowerShell"), ("ls", "Bash")):
-            with self.subTest(cmd=cmd):
-                self.assertEqual(sw.push_lines(cmd, tool), "\n".join(sw.push_candidates(cmd, tool)))
+        # Run from a fresh copy of the two modules: a cache the hooks folder already holds from an
+        # earlier run made the old form of this test pass whatever the reader did. The variables that
+        # would stop or move the cache are dropped, so only the reader's own setting can keep it out.
+        env = {k: v for k, v in os.environ.items() if k not in ("PYTHONDONTWRITEBYTECODE", "PYTHONPYCACHEPREFIX")}
+        with tempfile.TemporaryDirectory() as tmp:
+            for name in ("_shellwords.py", "_pushjudge.py"):
+                with open(os.path.join(HOOKS, name), "rb") as src, open(os.path.join(tmp, name), "wb") as dst:
+                    dst.write(src.read())
+            payload = json.dumps({"tool_name": "Bash", "tool_input": {"command": "git push origin main"}})
+            r = subprocess.run([sys.executable, os.path.join(tmp, "_shellwords.py"), "verdict"] + PROTECTED,
+                               input=payload.encode("utf-8"), capture_output=True, cwd=self.repos["feature"],
+                               env=env, timeout=60)
+            self.assertEqual(r.stdout, b"warn\tmain\n")
+            self.assertEqual(sorted(os.listdir(tmp)), ["_pushjudge.py", "_shellwords.py"])
 
 
 if __name__ == "__main__":

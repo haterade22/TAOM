@@ -2,11 +2,12 @@
 
 _shellwords.py verdict reads the payload, splits it into the candidate lines (push_candidates) and
 hands them to Judge.run in the same Python start. This is a port of the bash judge the hook ran until
-#680 (judge_command, judge_refs and its line loop), which cost about 25 microseconds a word: a trunk
-force push carrying 250 KB of quoted text holding `push` outran the 5 s registration, and a killed
-gate fails open. Every verdict and every named target must stay what bash gave, so each place where
-a natural Python choice reads a line differently is written the bash way (tools/tests/test_pushjudge.py
-pins each one, with the verdict read from the bash judge):
+#680 (judge_command, judge_refs and its line loop), which cost about 25 microseconds a word: under
+load a trunk force push carrying 250 KB of quoted text holding `push` outran the 5 s registration it
+then had (idle, 400 KB took 4.9 s), and a killed gate fails open. Every verdict and every named
+target must stay what bash gave, so each place where a natural Python choice reads a line
+differently is written the bash way (tools/tests/test_pushjudge.py pins each one, with the verdict
+read from the bash judge):
   - a line is judged as bash's $( ) received it: a lone surrogate the reader wrote as ?, every NUL
     dropped, then each distinct line once;
   - words split at space, tab and newline only, never str.split(), which also splits at \\v, \\f, NBSP
@@ -17,9 +18,13 @@ pins each one, with the verdict read from the bash judge):
     glob character (? [ ] \\ ( ) |) is taken to match every protected name: git refuses such a
     refspec, so this can only refuse more, and it spares a port of bash's bracket matcher.
 #689 then made it refuse more than the bash judge did, each shape one git 2.55 runs as a forced push
-of every trunk: a long option read as git reads it (an unambiguous prefix is that option, so
---force-w is --force-with-lease, --mir is --mirror and --al is --all), the refspec : when forced,
-and a forced push with no refspec under push.default=matching, from -c or from git's own config.
+of a trunk: a long option read as git reads it (an unambiguous prefix is that option, so --force-w
+is --force-with-lease and force-updates the trunk it names, while --mir is --mirror and --al is
+--all, which reach every trunk), the refspec : when forced, and a forced push with no refspec under
+push.default=matching, from -c or from git's own config. A --force-if-includes prefix counts as force
+too, a deliberate over-block: --force-i alone is no forced push (git rejects a non-fast-forward).
+The #680 review read the value options by the same prefix rule (--e is --exec and takes a value),
+on top of the bash judge's table, so no word takes a value that did not before.
 """
 import re
 import subprocess
@@ -33,7 +38,8 @@ _REDIR = re.compile(r"[<>]")
 _FD = re.compile(r"[0-9]+")
 _FORCE = ("--force", "--force-with-lease", "--force-if-includes")
 _EVERY = ("--all", "--branches")
-_VALUE_OPTS = ("--pu", "--rep", "--rece", "--recu", "--ex")   # --push-option, --repo, ... and prefixes
+_VALUE_OPTS = ("--push-option", "--repo", "--receive-pack", "--recurse-submodules", "--exec")
+_VALUE_LEADS = ("--pu", "--rep", "--rece", "--recu", "--ex")   # the bash judge's table of them
 _GLOB_OTHER = re.compile(r"[?\[\]\\()|]")
 
 
@@ -186,7 +192,10 @@ class Judge:
                 elif long_option(tok, _EVERY):
                     every = True
                 else:
-                    vskip = "=" not in tok[2:] and tok.startswith(_VALUE_OPTS)
+                    # A value option takes the next word: a prefix git reads as one (--e is --exec,
+                    # #680 review), or a word the bash judge's table took for one. git refuses those
+                    # that are no prefix (--expire) as unknown, so reading them so only refuses more.
+                    vskip = "=" not in tok and (long_option(tok, _VALUE_OPTS) or tok.startswith(_VALUE_LEADS))
             elif tok.startswith("-"):      # a short cluster: -fu is -f -u, and in -fo x the o takes x
                 force = force or "f" in tok
                 flags = tok[1:]

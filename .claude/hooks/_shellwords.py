@@ -5,13 +5,14 @@ to_posix() rewrites it as the POSIX-shell (Bash) text of the same command, and e
 Bash logic. In both shells a git named by a path or in capitals (GIT, git.exe, a Windows path to
 git.exe) becomes `git` where it is the command.
 
-Usage: <python> _shellwords.py posix|segments|push|verdict [protected...] < the hook payload (JSON)
+Usage: <python> _shellwords.py posix|segments|verdict [protected...] < the hook payload (JSON)
   posix     the command as POSIX-shell text
   segments  the posix text split at ; & | and newlines outside quotes, one segment per line, with a
             # comment dropped (mark-verification-run.sh)
-  push      validate-push.sh's candidate lines: every split it judges, only the lines holding `push`
   verdict   validate-push.sh's answer for the protected branch names given as arguments (#680): one
-            line, block<TAB>target, warn<TAB>target or allow; _pushjudge.py judges the push lines
+            line, block<TAB>target, warn<TAB>target or allow; _pushjudge.py judges the candidate
+            lines (push_candidates). A payload that is no JSON object prints unread, which the hook
+            answers from the raw text, never with a silent allow
 It writes UTF-8 with LF line ends and exits 0; an unknown mode exits 2. PowerShell text it cannot
 follow (an unclosed quote, here-string, block comment or ${) comes back unchanged, which is how
 every gate read a command before plan 027.
@@ -346,8 +347,9 @@ def _blind_pieces(text):
 
 # Only a segment this short is re-split with argument boundaries: shlex builds each word one
 # character at a time, quadratic in its length (400 KB of quoted text holding `push` took 1.7 s of
-# validate-push's 5 s registration, and a killed gate fails open). The shapes the pass exists for,
-# -o "" and -o "ci skip", are short, and without it the positionals are still judged unskipped.
+# the 5 s registration validate-push then had, and a killed gate fails open). The shapes the pass
+# exists for, -o "" and -o "ci skip", are short, and without it the positionals are still judged
+# unskipped.
 WORDS_KEPT_MAX = 4096
 
 
@@ -397,20 +399,15 @@ def push_candidates(cmd, tool):
     return keep
 
 
-def push_lines(cmd, tool):
-    """The candidate lines as the push mode prints them, one per line. No line holds a newline, but
-    an empty argument's \\x1e (_words_kept) is a line break to str.splitlines(): judge the list."""
-    return "\n".join(push_candidates(cmd, tool))
-
-
 def read_payload(raw):
-    """(tool_name, tool_input.command) of a hook payload; empty strings when it does not parse."""
+    """(tool_name, tool_input.command) of a hook payload, empty strings where it holds none; None when
+    it is no JSON object."""
     try:
         d = json.loads(raw)
     except ValueError:
-        return "", ""
+        return None
     if not isinstance(d, dict):
-        return "", ""
+        return None
     ti = d.get("tool_input")
     cmd = ti.get("command") if isinstance(ti, dict) else None
     return str(d.get("tool_name") or ""), cmd if isinstance(cmd, str) else ""
@@ -418,17 +415,18 @@ def read_payload(raw):
 
 def main(argv):
     mode = argv[1] if len(argv) > 1 else ""
-    if mode not in ("posix", "segments", "push", "verdict"):
-        sys.stderr.write("usage: _shellwords.py posix|segments|push|verdict [protected...] < payload.json\n")
+    if mode not in ("posix", "segments", "verdict"):
+        sys.stderr.write("usage: _shellwords.py posix|segments|verdict [protected...] < payload.json\n")
         return 2
-    tool, cmd = read_payload(sys.stdin.buffer.read().decode("utf-8", "replace"))
-    if mode == "verdict":
+    payload = read_payload(sys.stdin.buffer.read().decode("utf-8", "replace"))
+    tool, cmd = payload or ("", "")
+    if mode == "verdict" and payload is None:
+        text = "unread"
+    elif mode == "verdict":
         sys.dont_write_bytecode = True       # no __pycache__ folder inside .claude/hooks
         import _pushjudge
         kind, target = _pushjudge.Judge(argv[2:]).run(push_candidates(cmd, tool))
         text = kind + "\t" + target if target else kind
-    elif mode == "push":
-        text = push_lines(cmd, tool)
     else:
         text = to_posix(cmd, tool)
         if mode == "segments":

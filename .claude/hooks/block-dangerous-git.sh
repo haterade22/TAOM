@@ -65,7 +65,7 @@ REASON=""
 SEGMENTS=$(printf '%s' "$COMMAND" | sed -E 's/&&|\|\||;|\|/\n/g')
 
 # Split into an array under set -f, never a here-string: Git Bash 5.3 hangs forever on one of
-# 65,537 to 65,664 bytes, and a killed gate fails open (#681). An empty segment is dropped,
+# 65,536 to 65,663 bytes of text, and a killed gate fails open (#681). An empty segment is dropped,
 # which is harmless: it is no git invocation.
 set -f; IFS=$'\n'; SEG_LIST=($SEGMENTS); IFS=$' \t\n'; set +f
 for seg in "${SEG_LIST[@]}"; do

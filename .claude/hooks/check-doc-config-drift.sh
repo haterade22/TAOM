@@ -76,7 +76,7 @@ esac
 # shipped ModuleData JSON, a version marker, or a file the ADR-011 context budget measures.
 RELEVANT=0
 # Split into an array under set -f, never a here-string: Git Bash 5.3 hangs forever on one of
-# 65,537 to 65,664 bytes, and a name list that size is reachable (#681). An empty line is dropped,
+# 65,536 to 65,663 bytes of text, and a name list that size is reachable (#681). An empty line is dropped,
 # which is harmless: it matches no case arm.
 set -f; IFS=$'\n'; STAGED_LIST=($STAGED); IFS=$' \t\n'; set +f
 for f in "${STAGED_LIST[@]}"; do

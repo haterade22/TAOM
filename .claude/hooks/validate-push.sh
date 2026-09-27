@@ -3,9 +3,9 @@
 # (AGENTS.md "Git and commits"). It is the only force-push guard: GitHub protects no branch (D29).
 # Non-blocking stderr warning (which Claude does not see) for a plain push to a protected branch.
 
-# The deadline starts on the first line (#680). The harness kills this hook at its 5 s registration,
-# and a killed gate fails open, so the judge gets what is left of 3.0 s and an overrun asks. The
-# digits of EPOCHREALTIME (bash 5.0 or later) are microseconds; it is empty in an older bash.
+# The deadline starts at the first command (#680). A killed gate fails open, so the judge gets what
+# is left of 3.0 s and an overrun asks; the 10 s registration is only a backstop. The digits of
+# EPOCHREALTIME (bash 5.0 or later) are microseconds; it is empty in an older bash.
 T0=${EPOCHREALTIME//[!0-9]/}
 INPUT=$(cat)
 
@@ -32,7 +32,8 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # to it passed unchallenged until plan 011. Named, not a bannerlord-* pattern (maintainer
 # decision D30): a port branch such as bannerlord-1.5.0-port stays force-pushable. The trunks come
 # first, so a pattern refspec such as refs/heads/* is reported by the branch it would hit. This
-# array is the only list: the judge takes it as its arguments. Deleting a trunk is not refused.
+# array is the only list: the judge takes it as its arguments. An unforced delete of a trunk is not
+# refused.
 PROTECTED=(bannerlord-1.5.x bannerlord-1.4.5 main master)
 
 # An ask, under hookSpecificOutput (a top-level decision is ignored, harness-facts.md): the user
@@ -44,19 +45,25 @@ ask() {
   exit 0
 }
 
-# No verdict: no safe Python, or the judge failed or printed something else. Nothing can read the
-# command then, so the raw payload decides (maintainer decision, #680; the bash judge that ran here
-# was deleted). A force marker asks: a short option holding f (-f, -vfu, and --force through its
-# second dash), --mirror, a + (a +refspec), or a JSON \u escape, which could spell any of them.
-# Anything else is allowed with a note. The scan is linear, about 85 ms a MB here with dash runs
-# included, so it needs no size cap. It reads the payload from its "tool_input" key on (all of it
-# when that key is absent, and a \u-escaped key still asks): the session id and transcript path
-# before that key hold a UUID that usually matches, and a scan of the whole payload asked on most
-# pushes (#680 review). Cutting there is one expansion, no fork, about 30 ms on a 2 MB payload.
-FORCE_MARK='-[^[:space:]-]*f|--mirror|\+|\\u'
+# No verdict: no safe Python, a payload the reader could not parse (it prints unread), or a judge
+# that failed or printed something else. Nothing can read the command then, so the raw payload
+# decides (maintainer decision, #680; the bash judge that ran here was deleted). A force marker
+# asks: a short option holding f (-f, -vfu, and --force through its second dash), --m (--mirror and
+# each prefix of it git accepts; it also asks on --message and the like, the safe side), a + (a
+# +refspec), or a JSON \u escape, which could spell any of them. Anything else is allowed with a
+# note. The scan is linear, about 85 ms a MB here with dash runs included, so it needs no size cap.
+# It reads the payload from its "tool_input": key on, looked for in the first 2 KB only: the session
+# id and transcript path before that key hold a UUID that usually matches, and a scan of the whole
+# payload asked on most pushes (#680 review), which saw Claude Code 2.1.241 put the key at byte 445
+# to 449. Past 2 KB, or with the key escaped, the whole payload is read, which only asks more. A
+# search of the whole payload for the key was quadratic in its offset (17.7 s for one after 256 KB).
+FORCE_MARK='-[^[:space:]-]*f|--m|\+|\\u'
 coarse() {
-  local text=$INPUT
-  [[ $INPUT == *'"tool_input"'* ]] && text=${INPUT#*'"tool_input"'}
+  local lead=${INPUT:0:2048} text=$INPUT pre
+  if [[ $lead == *'"tool_input":'* ]]; then
+    pre=${lead%%'"tool_input":'*}
+    text=${INPUT:${#pre}}
+  fi
   [[ $text =~ $FORCE_MARK ]] && ask "$1, and its text holds a force marker"
   [[ -n $PYBIN ]] && echo "validate-push: $1, so a push whose raw text holds no force marker is NOT checked. Gate failed OPEN." >&2
   exit 0
@@ -69,12 +76,15 @@ taom_pybin_degraded "validate-push" "a push whose raw text holds no force marker
 
 # One Python run reads the payload and judges it (_shellwords.py verdict): push_candidates splits
 # the command every way this gate reads it, and _pushjudge.py judges each line holding `push` until
-# one refuses. The bash judge that ran here cost about 25 microseconds a word, so 250 KB of quoted
-# text holding `push` outran the registration and the push ran unjudged (#680). The payload goes in
-# through a pipe, never a here-string (#681: that hangs in bash itself, beyond any timeout).
+# one refuses. The bash judge that ran here cost about 25 microseconds a word, so under load 250 KB
+# of quoted text holding `push` outran the 5 s registration it then had, and the push ran unjudged
+# (#680). The payload goes in through a pipe, never a here-string (#681: that hangs in bash itself,
+# beyond any timeout). EPOCHREALTIME is the wall clock, which can be set back, so the budget is
+# capped at 3.0 s as well.
 LEFT=2500000
 if [[ -n $T0 ]]; then
   LEFT=$(( 3000000 - ${EPOCHREALTIME//[!0-9]/} + T0 ))
+  (( LEFT > 3000000 )) && LEFT=3000000
   (( LEFT < 300000 )) && ask "time ran out before it could be judged"
 fi
 printf -v BUDGET '%d.%06d' $(( LEFT / 1000000 )) $(( LEFT % 1000000 ))

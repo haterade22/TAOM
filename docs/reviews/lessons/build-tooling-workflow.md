@@ -1188,12 +1188,15 @@ an update lands has no recoverable baseline afterwards. The v1.4.7 bytes for tho
 ### A fail-open guard whose failure mode is silence reads as "all clear" — make it fail LOUD (2026-08-10)
 
 `session-start.sh`'s game-version drift check printed nothing on the v1.4.7 → v1.4.8 bump, the exact
-event it exists to catch. Nothing is also what "no drift" looks like. The cause was a shell default
+event it exists to catch. Nothing is also what "no drift" looks like. The mechanism is a shell default
 substitution: `"${BANNERLORD_GAME_DIR:-<literal>}/bin/.../Version.xml"` substitutes the literal only
 when the variable is **unset or empty**, so a variable that was *set but did not resolve in the
 hook's environment* took the `-f` test straight to false and the whole block fell through without a
 word. `.claude/settings.json` defines no `BANNERLORD_GAME_DIR`; the hook inherits whatever the
-harness process happens to carry.
+harness process happens to carry. Exporting a bogus value reproduces the silence in one command. That
+it was that morning's trigger is not proven: the session began 47 minutes after the update, and the
+variable resolved from an interactive shell, so the hook's environment differed in a way nobody
+captured. The lesson does not depend on it: a guard with any silent-failure mode is the defect.
 
 - **Why missed:** the guard was written and verified in the one environment where the variable
   resolved, and its skipped path and its clean path emit the same thing — nothing. A gate whose pass
@@ -2893,9 +2896,10 @@ stop. Nothing shipped wrong: the tool ran against a package with the exact names
   `tools/validate_mesh_refs.py` `scan_tpac_metameshes`.
 
 ### A here-string of 65,537 to 65,664 bytes hangs Git Bash forever, and a killed gate fails open (#681, 2026-09-26)
-On the desktop's Git Bash (bash 5.3.15), a here-string or here-document whose text is 65,537 to 65,664 bytes never
-returns: up to 65,536 bytes bash feeds it through a pipe, from 65,665 through a temp file, and in between it blocks
-writing into its own pipe before any reader exists. Every form built on that redirection hangs (`<<<`, `read -a <<<`,
+On the desktop's Git Bash (bash 5.3.15), a here-string or here-document whose document is 65,537 to 65,664 bytes
+never returns (for a here-string, text of 65,536 to 65,663 plus the newline it adds): up to 65,536 bytes bash feeds
+the document through a pipe, from 65,665 through a temp file, and in between it blocks writing into its own pipe
+before any reader exists. Every form built on that redirection hangs (`<<<`, `read -a <<<`,
 `mapfile <<<`, an expanding `<<EOF`, even `: <<<` with no reader). Ten hook sites fed a payload or a git name list
 through `<<<`, so a force push to a trunk, a `reset --hard` or a broad `add` padded into the window hung
 `validate-push.sh`, `block-dangerous-git.sh` and `block-broad-git-add.sh` until the harness killed them, and a killed
@@ -2908,15 +2912,16 @@ array split, which would have pushed `validate-push.sh` past its 5 s registratio
 - **Prevent:** split hook text without a redirection: `set -f; IFS=$'\n'; A=($X); IFS=$' \t\n'; set +f` and a `for`
   loop (no fork, empty lines dropped, variables set in the loop stay visible), or `set -f; T=($X); set +f` for words;
   keep `set -f`, `set +f` and the IFS restore on one line. `tools/test_hooks.sh` 4e refuses a here-string or an
-  expanding here-document in any script a hook registration runs, and 7h sends payloads sized into the window
-  through the gates. Measure an alternative's cost on large text before proposing it as a fix.
+  expanding here-document in any script a hook registration runs, and 7h sends payloads, and a staged name list,
+  sized into the window through the gates. Measure an alternative's cost on large text before proposing it as a fix.
 - **Source:** issue #681; `.claude/hooks/validate-push.sh`, `block-dangerous-git.sh`, `block-broad-git-add.sh`,
   `mark-verification-run.sh`, `check-doc-config-drift.sh`, `check-moduledata-validation.sh`,
   `check-native-dll-crt.sh`, `check-verification-evidence.sh`, `detect-docs-gaps.sh`; `.claude/rules/hook-authoring.md`.
 
 ### A bash judge ported to Python reads a line differently at every natural Python choice (#680, 2026-09-26)
-`validate-push.sh` judged each candidate line in bash at about 25 microseconds a word, so a trunk force push
-carrying 250 KB or more of quoted text holding `push` outran the 5 s registration, and a killed gate fails open.
+`validate-push.sh` judged each candidate line in bash at about 25 microseconds a word, so under load a trunk force
+push carrying 250 KB of quoted text holding `push` outran the 5 s registration (idle, 74942227 took 3.2 s at 250 KB,
+4.9 s at 400 KB and 6 to 9.7 s from 800 KB), and a killed gate fails open.
 Plan 027's review had seen the cost and answered it with an order (lines that could force first, shortest first),
 which a message holding a force-like word beats. The fix moved the judge into Python (`_pushjudge.py`, run by
 `_shellwords.py verdict` in the reader's own start) under a 3.0 s deadline that asks on an overrun: the slowest
@@ -2927,7 +2932,8 @@ current branches against the bash judge and counted:
 | Natural Python choice | What bash does | Judgements that differ |
 |---|---|---|
 | `str.split()` | splits at space, tab and newline only (IFS) | 12,320 |
-| `str.lower()`, or bash under a named UTF-8 locale | `${tok,,}` in the hook's C.UTF-8 lowers A-Z only | 99 each |
+| `str.lower()` | `${tok,,}` in the hook's C.UTF-8 lowers A-Z only | 0: Python 3.14 lowers U+0130 to i plus U+0307 |
+| bash under a named UTF-8 locale | the same | 99 |
 | `str.isdigit()` for an fd number | `^[0-9]+$` takes ASCII digits only | 14 |
 | `fnmatch` for a refspec pattern | `[[ == ]]` pattern matching | 38 |
 
@@ -2941,7 +2947,8 @@ protected name, which can only refuse more (git refuses such a refspec), instead
   can beat, rather than removed; and a bash judge's reading lives in bash's defaults (IFS, the locale, `$( )`),
   which no line of the script spells out, so a port written from the script's text passes every ASCII test.
 - **Prevent:** pin each divergence with a line whose verdict was read from the bash judge's own functions
-  (`tools/tests/test_pushjudge.py`: 99 pins, and every 7c command with the target bash named), prove the pins bite
+  (`tools/tests/test_pushjudge.py`: 96 pins, and every 7c command of 143f0fa8 with
+  the target bash named), prove the pins bite
   by mutating each choice back to the natural one, and switch only after a hook-level differential sweep against
   the old hook shows zero refused-then-allowed rows (1,035 commands, 4,140 runs per hook). Delete the old judge
   rather than keep it as a fallback: two readings drift. With no verdict, a coarse ask on a force marker in the
@@ -2972,17 +2979,21 @@ command rather than by a force hint and line length.
 `validate-push.sh` matched git's long force options by their full spelling, so every shorter spelling git accepts
 read as an ignored option. git takes an unambiguous prefix of a long option as that option: on a local bare
 repository with `--dry-run --porcelain` (a `+` line is a forced update), git 2.55 ran `--force-w` and `--force-with`
-as `--force-with-lease`, `--mir` and even `--m` as `--mirror`, and `-f --al` and `-f --b` as a forced `--all`, each
-force-updating both trunks from a feature checkout. The #680 design review found two more readings of the same
-kind: the refspec `:` (every branch the remote also has, forced by a flag or written `+:`) was read as an empty
-destination, that is the current branch, and so was a forced push with no refspec under `push.default=matching`,
-which pushes every matching branch. The judge now compares a long option's name before any `=` as a prefix of each
-option it acts on, from 3 characters; git refuses an ambiguous prefix (`--f`, `--forc`), so counting one as force
-refuses nothing git would run. A forced `:` or `+:`, and a forced push with no refspec under
-`push.default=matching` from `-c` or from `git config`, are refused as every matching branch. A differential sweep
-against the port (1,648 commands, 555 of them seeded from these rules; 8,240 runs per hook under both shell tools,
-on a trunk, a feature checkout and one set to `matching`) found 0 pushes refused before and allowed now; its 1,027
-exit-code differences and 275 renamed targets are all these shapes.
+as `--force-with-lease`, force-updating the trunk each named, and `--mir` and even `--m` as `--mirror`, and `-f --al`
+and `-f --b` as a forced `--all`, each force-updating both trunks from a feature checkout. The #680 design review
+found two more readings of the same kind: the refspec `:` (every branch the remote also has, forced by a flag or
+written `+:`) was read as an empty destination, that is the current branch, and so was a forced push with no refspec
+under `push.default=matching`, which pushes every matching branch. The judge now compares a long option's name before
+any `=` as a prefix of each option it acts on, from 3 characters; git refuses an ambiguous prefix (`--f`, `--forc`),
+so counting one as force refuses nothing git would run. A `--force-if-includes` prefix counts as force too, a
+deliberate over-block: `--force-i` alone is no forced push, since git rejects a non-fast-forward. The #680 review
+found the value options read the old way: `-f --e git-receive-pack origin` runs as `--exec` and force-pushes the
+checked-out trunk, so they take the same prefix rule, on top of the old table, which keeps the judge from refusing
+less. A forced `:` or `+:`, and a forced push with no refspec under `push.default=matching` from `-c` or from
+`git config`, are refused as every matching branch. A differential sweep against the port (1,648 commands, 555 of
+them seeded from these rules; 8,240 runs per hook, five a command: both shell tools on a trunk and on a feature
+checkout, and Bash on one set to `matching`) found 0 pushes refused before and allowed now; its 1,027 exit-code
+differences and 275 renamed targets are all these shapes.
 - **Why missed:** the option table was written from the documented spellings and every test used them; the #680
   port then pinned the bash verdicts, this gap among them (a pin read `--force-w` as a plain push), because a port
   must change nothing; and "no refspec" was read as "the current branch", which holds only under the default
@@ -2994,3 +3005,22 @@ exit-code differences and 275 renamed targets are all these shapes.
   read it.
 - **Source:** issue #689; `.claude/hooks/_pushjudge.py`; `tools/tests/test_pushjudge.py` (`ISSUE_689`,
   `PushDefaultTests`); `tools/test_hooks.sh` 7c.
+
+### A gate's suite passed a mutant that switched off its no-Python answer (#680 review, 2026-09-27)
+The #680 review changed `validate-push.sh`'s degraded branch from `&& coarse "no safe python"` to `&& exit 0`, and
+the whole hook suite stayed green: the starved-environment row checks only that a gate fails open and says so, and
+the mutant still printed its note while it allowed every push. Three more tests proved less than they claimed. The
+bytecode check passed whenever an earlier run had left `_pushjudge.cpython-*.pyc` in `.claude/hooks/__pycache__`.
+With a global `push.default=matching`, four 7c rows and two unit rows failed on a correct hook, since they read
+this machine's git config. And 4e skipped every line that opens with `#`, so a here-string on a line continuing a
+quoted string went unseen, as did one after a quoted `<< "Z"` inside a string, one in a `bash -s <<'SH'` body that a
+child shell runs, and any registration naming a script outside `.claude/`.
+- **Why missed:** each test was checked by passing on a correct hook, never by failing on a broken one, and each
+  leaned on the machine it ran on: a Python on PATH, a warm cache, an unset global setting.
+- **Prevent:** give every branch of a gate a row that runs on any machine (a sandbox copy of the hooks with
+  `PYBIN=""` appended to `_pybin.sh` takes Python away portably); run each new test against a mutant of the code it
+  guards and watch it fail; build a test's inputs fresh (a temp copy of the modules, a scratch repository whose
+  local config sets what the code reads); and make a scan assert that it covered what it claims (4e now fails a
+  registration naming a script it cannot find).
+- **Source:** the #680 and #681 review, 2026-09-26 (mutant H10; the 4e probes); `tools/test_hooks.sh` 4e, 7c
+  and 7e; `tools/tests/test_pushjudge.py` (`CliTests`).
