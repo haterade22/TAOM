@@ -75,6 +75,7 @@ class LocalPathTests(unittest.TestCase):
         for line in ("PowerShell drives `Env:\\TEMP` and `HKLM:\\SOFTWARE`",
                      'a C# string `"Error:\\n"` in a code span',
                      "https://example.com/a/b and http://x.org/c/d",
+                     "a one-letter scheme such as s://bucket/key",
                      "and/or, src/a/b, docs/e/f.md, a ratio 3:2"):
             self.assertEqual(rules(line + "\n"), [], line)
 

@@ -615,11 +615,15 @@ class WatchTests(unittest.TestCase):
                 {"type": "started", "key": "k3", "agentId": "a4", "label": "exec-018"},
                 # A retry with no failed row: a resumed run starts the key again.
                 {"type": "started", "key": "k5", "agentId": "a5", "label": "lead-012"},
-                {"type": "started", "key": "k5", "agentId": "a6", "label": "lead-012"}]
+                {"type": "started", "key": "k5", "agentId": "a6", "label": "lead-012"},
+                # A failure that was never retried.
+                {"type": "started", "key": "k7", "agentId": "a7", "label": "draft-060"},
+                {"type": "failed", "key": "k7", "agentId": "a7"}]
         (self.wf / "journal.jsonl").write_text(
             "".join(json.dumps(r) + "\n" for r in rows) + '{"type": "sta', encoding="utf-8")
         self.now = time.time()
-        for agent, minutes in (("a1", 45), ("a2", 300), ("a3", 300), ("a4", 1), ("a5", 300), ("a6", 2)):
+        for agent, minutes in (("a1", 45), ("a2", 300), ("a3", 300), ("a4", 1), ("a5", 300), ("a6", 2),
+                               ("a7", 300)):
             self.transcript(self.wf / f"agent-{agent}.jsonl", minutes)
         self.transcript(self.dir / "agent-plain.jsonl", 600)
 
@@ -644,7 +648,7 @@ class WatchTests(unittest.TestCase):
         self.assertIn("agent-a1.jsonl", stale[0])
         self.assertIn("review-011", stale[0])
         self.assertTrue(any("agent-plain.jsonl" in line for line in lines))
-        self.assertEqual(len([line for line in lines if ".jsonl" in line]), 7)
+        self.assertEqual(len([line for line in lines if ".jsonl" in line]), 8)
 
     def test_finished_failed_superseded_and_fresh_agents_are_not_stale(self):
         (self.wf / "agent-a1.jsonl").unlink()
