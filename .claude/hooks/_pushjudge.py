@@ -16,17 +16,23 @@ pins each one, with the verdict read from the bash judge):
   - a refspec pattern of * and plain characters matches as bash's [[ == ]] does. One holding any other
     glob character (? [ ] \\ ( ) |) is taken to match every protected name: git refuses such a
     refspec, so this can only refuse more, and it spares a port of bash's bracket matcher.
+#689 then made it refuse more than the bash judge did, each shape one git 2.55 runs as a forced push
+of every trunk: a long option read as git reads it (an unambiguous prefix is that option, so
+--force-w is --force-with-lease, --mir is --mirror and --al is --all), the refspec : when forced,
+and a forced push with no refspec under push.default=matching, from -c or from git's own config.
 """
 import re
 import subprocess
 
 BLOCK_ALL = "every branch, both trunks included (--all or --mirror)"
+BLOCK_MATCHING = "every matching branch, both trunks included (a : refspec or push.default=matching)"
 _CLEAN = str.maketrans({c: " " for c in "\"'(){}`"})
 _IFS = re.compile(r"[ \t\n]+")
 _ASCII_LOWER = str.maketrans("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz")
 _REDIR = re.compile(r"[<>]")
 _FD = re.compile(r"[0-9]+")
-_FORCE = {"--force", "--force-with-lease", "--force-if-includes", "-f"}
+_FORCE = ("--force", "--force-with-lease", "--force-if-includes")
+_EVERY = ("--all", "--branches")
 _VALUE_OPTS = ("--pu", "--rep", "--rece", "--recu", "--ex")   # --push-option, --repo, ... and prefixes
 _GLOB_OTHER = re.compile(r"[?\[\]\\()|]")
 
@@ -58,26 +64,44 @@ def star_match(pattern, name):
     return True
 
 
-def current_branch():
-    """`git branch --show-current 2>/dev/null` as $( ) gives it: trailing newlines and NUL dropped,
-    empty on any failure. Asked in the hook's own directory, which is the main tree even for a push
-    run in a worktree (a known gap, hooks-catalog.md)."""
+def long_option(tok, names):
+    """Whether git reads the long option tok as one of names (#689). git takes an unambiguous prefix
+    of a long option as that option, so the name before any = counts from 3 characters, `--f`
+    included; git refuses an ambiguous prefix, so counting one only refuses what git refuses."""
+    name = tok.partition("=")[0]
+    return len(name) >= 3 and any(n.startswith(name) for n in names)
+
+
+def git_out(args):
+    """`git <args> 2>/dev/null` as $( ) gives it: trailing newlines and NUL dropped, empty on any
+    failure. Asked in the hook's own directory, which is the main tree even for a push run in a
+    worktree (a known gap, hooks-catalog.md)."""
     try:
-        r = subprocess.run(["git", "branch", "--show-current"], stdout=subprocess.PIPE,
+        r = subprocess.run(["git"] + args, stdout=subprocess.PIPE,
                            stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL, timeout=2)
     except (OSError, subprocess.SubprocessError):
         return ""
     return r.stdout.decode("utf-8", "replace").replace("\x00", "").rstrip("\n")
 
 
+def current_branch():
+    return git_out(["branch", "--show-current"])
+
+
+def push_default():
+    return git_out(["config", "--get", "push.default"])
+
+
 class Judge:
     """One hook run. block is the first forced protected target found (the run stops there); warn is
     the last plain push to a protected name, overwritten as bash's WARN_TARGET was."""
 
-    def __init__(self, protected, branch=current_branch):
+    def __init__(self, protected, branch=current_branch, push_default=push_default):
         self.protected = list(protected)
         self._branch = branch          # asked at most once a run: 100 no-refspec lines stay cheap
         self._cur = None
+        self._push_default = push_default    # likewise, and only for a forced push with no refspec
+        self._default = None
         self.block = ""
         self.warn = ""
 
@@ -86,12 +110,25 @@ class Judge:
             self._cur = self._branch()
         return self._cur
 
-    def judge_refs(self, positionals, force):
-        """The remote, then each refspec: every refspec counts, and --force applies to all."""
+    def default_matching(self):
+        if self._default is None:
+            self._default = self._push_default()
+        return self._default.strip() == "matching"
+
+    def judge_refs(self, positionals, force, matching=False):
+        """The remote, then each refspec: every refspec counts, and --force applies to all. A forced
+        push of the refspec :, or with no refspec under push.default=matching, pushes every branch
+        the remote also has (#689)."""
+        if force and not positionals[1:] and (matching or self.default_matching()):
+            self.block = BLOCK_MATCHING
+            return
         for ref in positionals[1:] or [""]:
             f = force
             if ref.startswith("+"):
                 f, ref = True, ref[1:]
+            if f and ref == ":":
+                self.block = BLOCK_MATCHING
+                return
             ref = ref.rpartition(":")[2]
             if ref.startswith("refs/"):
                 ref = ref[5:]
@@ -112,16 +149,21 @@ class Judge:
         toks = [t for t in _IFS.split(line.translate(_CLEAN)) if t]
         # The first `push` with a git before it: a `push` word glued in front by an unclosed quote
         # ("don't push") must not hide the real push after it.
-        push_idx, git_seen = -1, False
+        push_idx, git_idx = -1, -1
         for i, tok in enumerate(toks):
             if is_git(tok):
-                git_seen = True
+                git_idx = i if git_idx < 0 else git_idx
                 continue
-            if tok == "push" and git_seen:
+            if tok == "push" and git_idx >= 0:
                 push_idx = i
                 break
         if push_idx < 0:
             return
+        # -c push.default=matching between git and push; the key is case-blind to git. git refuses
+        # the glued -cpush.default=matching as an unknown option, so it needs no rule.
+        opts = toks[git_idx + 1:push_idx]
+        matching = any(a == "-c" and b.translate(_ASCII_LOWER) == "push.default=matching"
+                       for a, b in zip(opts, opts[1:]))
         force = every = False
         keep, skip = [], []                # the positionals with and without an option's value
         rskip = vskip = False
@@ -136,14 +178,15 @@ class Judge:
                 tok = tok[:m.start()]
                 if not tok or _FD.fullmatch(tok) or tok == "*":
                     continue
-            if tok in _FORCE or tok.startswith("--force-with-lease="):
-                force = True
-            elif tok in ("--all", "--branches"):
-                every = True
-            elif tok == "--mirror":
-                every = force = True
-            elif tok.startswith("--"):
-                vskip = "=" not in tok[2:] and tok.startswith(_VALUE_OPTS)
+            if tok.startswith("--"):
+                if long_option(tok, _FORCE):
+                    force = True
+                elif long_option(tok, ("--mirror",)):
+                    every = force = True
+                elif long_option(tok, _EVERY):
+                    every = True
+                else:
+                    vskip = "=" not in tok[2:] and tok.startswith(_VALUE_OPTS)
             elif tok.startswith("-"):      # a short cluster: -fu is -f -u, and in -fo x the o takes x
                 force = force or "f" in tok
                 flags = tok[1:]
@@ -155,10 +198,10 @@ class Judge:
         if force and every:
             self.block = BLOCK_ALL
             return
-        self.judge_refs(skip, force)
+        self.judge_refs(skip, force, matching)
         if self.block or len(keep) == len(skip):
             return
-        self.judge_refs(keep, force)
+        self.judge_refs(keep, force, matching)
 
     def run(self, lines):
         """(kind, target): block, warn or allow, over the candidate lines in the reader's order."""

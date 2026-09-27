@@ -2967,3 +2967,30 @@ command rather than by a force hint and line length.
   change in a message shows up as a counted difference rather than a surprise.
 - **Source:** issue #680; `.claude/hooks/_shellwords.py` (`push_candidates`); `tools/tests/test_shellwords.py`;
   `tools/test_hooks.sh` 7i.
+
+### A gate that matches full option spellings misses what git accepts (#689, 2026-09-26)
+`validate-push.sh` matched git's long force options by their full spelling, so every shorter spelling git accepts
+read as an ignored option. git takes an unambiguous prefix of a long option as that option: on a local bare
+repository with `--dry-run --porcelain` (a `+` line is a forced update), git 2.55 ran `--force-w` and `--force-with`
+as `--force-with-lease`, `--mir` and even `--m` as `--mirror`, and `-f --al` and `-f --b` as a forced `--all`, each
+force-updating both trunks from a feature checkout. The #680 design review found two more readings of the same
+kind: the refspec `:` (every branch the remote also has, forced by a flag or written `+:`) was read as an empty
+destination, that is the current branch, and so was a forced push with no refspec under `push.default=matching`,
+which pushes every matching branch. The judge now compares a long option's name before any `=` as a prefix of each
+option it acts on, from 3 characters; git refuses an ambiguous prefix (`--f`, `--forc`), so counting one as force
+refuses nothing git would run. A forced `:` or `+:`, and a forced push with no refspec under
+`push.default=matching` from `-c` or from `git config`, are refused as every matching branch. A differential sweep
+against the port (1,648 commands, 555 of them seeded from these rules; 8,240 runs per hook under both shell tools,
+on a trunk, a feature checkout and one set to `matching`) found 0 pushes refused before and allowed now; its 1,027
+exit-code differences and 275 renamed targets are all these shapes.
+- **Why missed:** the option table was written from the documented spellings and every test used them; the #680
+  port then pinned the bash verdicts, this gap among them (a pin read `--force-w` as a plain push), because a port
+  must change nothing; and "no refspec" was read as "the current branch", which holds only under the default
+  `push.default`.
+- **Prevent:** read an option the way the tool's own parser reads it, not the way its manual spells it: for git, a
+  prefix match on the name before `=`, counting an ambiguous prefix as the dangerous option. Before trusting a
+  gate's table, run each shorter spelling and each empty or default argument against a scratch repository and read
+  what git did. Where a gate resolves a missing argument, find the setting that decides it (`push.default` here) and
+  read it.
+- **Source:** issue #689; `.claude/hooks/_pushjudge.py`; `tools/tests/test_pushjudge.py` (`ISSUE_689`,
+  `PushDefaultTests`); `tools/test_hooks.sh` 7c.

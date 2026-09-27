@@ -1415,12 +1415,13 @@ done
 # A push with no refspec pushes the checked-out branch, so a push option's value (-o ci.skip) must
 # never be taken for the remote: run on a trunk, `git push --force -o ci.skip origin` passed
 # (plan 027). The hook asks git for the branch in its own directory, so these run in scratch repos.
-VP_TRUNK="$SANDBOX/vp-trunk"; VP_FEAT="$SANDBOX/vp-feature"
-for pair in "$VP_TRUNK|bannerlord-1.5.x" "$VP_FEAT|feature"; do
+VP_TRUNK="$SANDBOX/vp-trunk"; VP_FEAT="$SANDBOX/vp-feature"; VP_MATCH="$SANDBOX/vp-matching"
+for pair in "$VP_TRUNK|bannerlord-1.5.x" "$VP_FEAT|feature" "$VP_MATCH|feature"; do
     d="${pair%%|*}"; b="${pair#*|}"
     git init -q -b "$b" "$d" 2>/dev/null
     git -C "$d" -c user.name=t -c user.email=t@example.invalid commit -q --allow-empty -m init 2>/dev/null
 done
+git -C "$VP_MATCH" config push.default matching
 vp_run_in() {  # $1 directory to run in, $2 tool, $3 command; returns the hook's rc
     local payload
     payload=$(pre_payload "$2" "$3")
@@ -1456,6 +1457,29 @@ VP_BRANCH_CASES=(
   "$VP_TRUNK|2|git push --force -o \"ci variable\" origin"
   "$VP_TRUNK|0|git push --force --push-option=ci.skip origin feature"
   "$VP_FEAT|2|git push -vfu origin bannerlord-1.5.x"
+  # #689, each run by git 2.55 on a local bare repo as a forced push of both trunks, and each let
+  # through on a feature checkout: git reads an unambiguous prefix of a long option as the option
+  # (--force-w is --force-with-lease, --mir is --mirror, --al is --all), the refspec : pushes every
+  # branch the remote also has (forced by a flag or by +:), and so does a forced push with no
+  # refspec under push.default=matching, from -c or from git's own config (vp-matching).
+  "$VP_FEAT|2|git push --force-w origin bannerlord-1.5.x"
+  "$VP_FEAT|2|git push --force-with origin bannerlord-1.5.x"
+  "$VP_FEAT|2|git push --force-i origin bannerlord-1.5.x"
+  "$VP_FEAT|2|git push --mir origin"
+  "$VP_FEAT|2|git push --mi origin"
+  "$VP_FEAT|2|git push -f --al origin"
+  "$VP_FEAT|2|git push --force origin :"
+  "$VP_FEAT|2|git push origin +:"
+  "$VP_FEAT|2|git push -f origin :"
+  "$VP_FEAT|2|git -c push.default=matching push --force origin"
+  "$VP_MATCH|2|git push --force origin"
+  # Still allowed: no force, a force to a feature branch, a long option that is no force prefix.
+  "$VP_FEAT|0|git push origin :"
+  "$VP_FEAT|0|git push --follow-tags origin bannerlord-1.5.x"
+  "$VP_FEAT|0|git push --force-with-lease=feature:abc origin feature"
+  "$VP_FEAT|0|git -c push.default=matching push origin"
+  "$VP_MATCH|0|git push origin"
+  "$VP_MATCH|0|git push --force origin feature"
 )
 for tool in Bash PowerShell; do
     for entry in "${VP_BRANCH_CASES[@]}"; do

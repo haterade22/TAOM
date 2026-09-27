@@ -7,7 +7,9 @@ tools/test_hooks.sh 7c command with the verdict the bash judge gave it at 143f0f
 bannerlord-1.5.x or of a feature branch. PINS hold one line per place where a natural Python choice
 reads a line differently from bash; each verdict was read from the bash judge's own functions at
 143f0fa8 with the current branch pinned. GLOB_OVERBLOCK is the one designed difference: a refspec
-pattern holding any bracket, ?, backslash, parenthesis or bar is taken to match every protected name."""
+pattern holding any bracket, ?, backslash, parenthesis or bar is taken to match every protected name.
+ISSUE_689 holds the force pushes the port still let through (#689), each now refused, and the
+neighbouring shapes that must stay allowed."""
 import json
 import os
 import subprocess
@@ -28,15 +30,16 @@ ALL = pj.BLOCK_ALL
 
 
 def judge(line, branch="feature"):
-    """(block, warn) after judge_command on one line, the current branch pinned."""
-    j = pj.Judge(PROTECTED, branch=lambda: branch)
+    """(block, warn) after judge_command on one line, the current branch pinned and push.default
+    unset, so no row reads this machine's git config."""
+    j = pj.Judge(PROTECTED, branch=lambda: branch, push_default=lambda: "")
     j.judge_command(line)
     return j.block, j.warn
 
 
 def verdict(cmd, tool, branch):
     """What the hook answers a command: the reader's candidate lines judged in order."""
-    return pj.Judge(PROTECTED, branch=lambda: branch).run(sw.push_candidates(cmd, tool))
+    return pj.Judge(PROTECTED, branch=lambda: branch, push_default=lambda: "").run(sw.push_candidates(cmd, tool))
 
 
 # (tool, current branch, command, kind, target)
@@ -298,12 +301,10 @@ PINS = [
     ("redirect", T1, "git push --force origin \u0663>x", "", ""),
     ("redirect", T1, "git push --force origin \uff11>x", "", ""),
     ("redirect", T1, "git push --force -o> f origin feature2", T1, ""),
-    # Options: the exact force spellings, --all/--branches/--mirror, --x=y ignored, the value options
-    # and their prefixes, every other long option ignored as today (--force-w is a known gap git
-    # reads as --force-with-lease), and a short cluster forcing on any f.
+    # Options: the force spellings, --all/--branches/--mirror, the value options and their
+    # prefixes, every other long option ignored, and a short cluster forcing on any f. A prefix of
+    # a force, --mirror, --all or --branches option is in ISSUE_689, not here.
     ("option", "feature", "git push --force-with-lease=bannerlord-1.5.x:abc origin feature", "", ""),
-    ("option", "feature", "git push --force=x origin bannerlord-1.5.x", "", T1),
-    ("option", "feature", "git push --force-w origin bannerlord-1.5.x", "", T1),
     ("option", "feature", "git push --force-if-includes origin bannerlord-1.5.x", T1, ""),
     ("option", "feature", "git push --all --force origin", ALL, ""),
     ("option", "feature", "git push --branches -f origin", ALL, ""),
@@ -342,7 +343,6 @@ PINS = [
     ("refspec", "feature", "git push --force origin refs/heads/heads/bannerlord-1.5.x", "", ""),
     ("refspec", T1, "git push --force origin HEAD", T1, ""),
     ("refspec", T1, "git push --force origin @", T1, ""),
-    ("refspec", T1, "git push --force origin :", T1, ""),
     ("refspec", T1, "git push --force origin refs/heads/", T1, ""),
     ("refspec", T1, "git push --force origin refs/HEAD", T1, ""),
     ("refspec", T1, "git push origin HEAD", "", T1),
@@ -379,6 +379,50 @@ GLOB_OVERBLOCK = [
     ("feature", "git push --force origin refs/heads/a|b*", T1, ""),               # bash: allowed
 ]
 
+# #689: shapes git 2.55 runs as a forced push of every trunk that the port let through, each probed
+# on a local bare repository. git reads an unambiguous prefix of a long option as that option
+# (--force-w is --force-with-lease, --mir and --m are --mirror, --al and --b are --all and
+# --branches); a prefix of a force option with 3 characters or more counts as force, and git
+# refuses the ambiguous ones (--f, --forc), so counting those only refuses what git refuses. The
+# refspec : (forced by a flag or by +:) and a forced push with no refspec under
+# push.default=matching push every branch the remote also has. Each may only refuse more: the
+# comment gives what the port answered. (current branch, command, kind, target), under both tools.
+MATCHING = "every matching branch, both trunks included (a : refspec or push.default=matching)"
+ISSUE_689 = [
+    ("feature", "git push --force-w origin bannerlord-1.5.x", "block", T1),              # port: warn
+    ("feature", "git push --force-with origin bannerlord-1.5.x", "block", T1),           # port: warn
+    ("feature", "git push --force-i origin bannerlord-1.5.x", "block", T1),              # port: warn
+    ("feature", "git push --force-w=bannerlord-1.5.x:abc origin bannerlord-1.5.x", "block", T1),  # warn
+    ("feature", "git push --forc origin bannerlord-1.5.x", "block", T1),                 # port: warn
+    ("feature", "git push --f origin bannerlord-1.5.x", "block", T1),                    # port: warn
+    ("feature", "git push --force=x origin bannerlord-1.5.x", "block", T1),              # port: warn
+    ("feature", "git push --mir origin", "block", ALL),                                   # port: allow
+    ("feature", "git push --mi origin", "block", ALL),                                    # port: allow
+    ("feature", "git push --m origin", "block", ALL),                                     # port: allow
+    ("feature", "git push -f --al origin", "block", ALL),                                 # port: allow
+    ("feature", "git push --force --b origin", "block", ALL),                             # port: allow
+    ("feature", "git push --force --bra origin", "block", ALL),                           # port: allow
+    ("feature", "git push --force origin :", "block", MATCHING),                          # port: allow
+    ("feature", "git push origin +:", "block", MATCHING),                                 # port: allow
+    ("feature", "git push -f origin :", "block", MATCHING),                               # port: allow
+    ("feature", "git push --force origin feature :", "block", MATCHING),                  # port: allow
+    ("bannerlord-1.5.x", "git push --force origin :", "block", MATCHING),                 # port: block, T1
+    ("feature", "git -c push.default=matching push --force origin", "block", MATCHING),   # port: allow
+    ("feature", "git -c push.default=matching push --force", "block", MATCHING),          # port: allow
+    ("feature", "git -c PUSH.DEFAULT=matching push -f origin", "block", MATCHING),        # port: allow
+    ("feature", 'git -c "push.default=matching" push --force -o ci.skip origin', "block", MATCHING),
+    # Still allowed: no force, a force to a feature branch, a push option only spelled like one.
+    ("feature", "git push origin :", "allow", ""),
+    ("feature", "git push --follow-tags origin feature", "allow", ""),
+    ("feature", "git push --follow-tags origin bannerlord-1.5.x", "warn", T1),
+    ("feature", "git push --force-with-lease=feature:abc origin feature", "allow", ""),
+    ("feature", "git -c push.default=matching push origin", "allow", ""),
+    ("feature", "git -c push.default=matching push --force origin feature", "allow", ""),
+    ("feature", "git -c push.default=simple push --force origin", "allow", ""),
+    ("feature", "git push --force --prune origin feature", "allow", ""),
+    ("feature", "git push --force --dry-run origin feature", "allow", ""),
+]
+
 
 class SevenCTests(unittest.TestCase):
     def test_every_7c_command_gets_the_bash_verdict_and_target(self):
@@ -398,6 +442,12 @@ class PinTests(unittest.TestCase):
         for branch, line, block, warn in GLOB_OVERBLOCK:
             with self.subTest(line=line):
                 self.assertEqual(judge(line, branch), (block, warn))
+
+    def test_issue_689_shapes_refuse_every_trunk(self):
+        for branch, cmd, kind, target in ISSUE_689:
+            for tool in ("Bash", "PowerShell"):
+                with self.subTest(tool=tool, branch=branch, cmd=cmd):
+                    self.assertEqual(verdict(cmd, tool, branch), (kind, target))
 
     def test_a_long_star_pattern_is_cheap(self):
         start = time.perf_counter()
@@ -442,6 +492,44 @@ class RunTests(unittest.TestCase):
         self.assertEqual(calls, [])
 
 
+class PushDefaultTests(unittest.TestCase):
+    """push.default from git's own config (#689): read in the hook's directory only for a forced push
+    with no refspec, at most once a run, and `matching` there pushes every matching branch."""
+
+    def judge_(self, value, calls):
+        return pj.Judge(PROTECTED, branch=lambda: "feature",
+                        push_default=lambda: calls.append(1) or value)
+
+    def test_matching_refuses_a_forced_push_with_no_refspec(self):
+        for line in ("git push --force origin", "git push -f", "git push --force -o ci.skip origin"):
+            with self.subTest(line=line):
+                self.assertEqual(self.judge_("matching", []).run([line]), ("block", MATCHING))
+
+    def test_any_other_value_leaves_the_current_branch(self):
+        for value in ("", "simple", "current", "upstream", "nothing"):
+            with self.subTest(value=value):
+                self.assertEqual(self.judge_(value, []).run(["git push --force origin"]), ("allow", ""))
+
+    def test_asked_only_for_a_forced_push_with_no_refspec(self):
+        calls = []
+        lines = ["git push origin", "git push --force origin feature", "git push origin :",
+                 "git -c push.default=matching push --force origin feature"]
+        self.assertEqual(self.judge_("matching", calls).run(lines), ("allow", ""))
+        self.assertEqual(calls, [])
+
+    def test_asked_at_most_once_a_run(self):
+        calls = []
+        lines = [f"git -C /x/r{i} push --force origin" for i in range(100)]
+        self.assertEqual(self.judge_("simple", calls).run(lines), ("allow", ""))
+        self.assertEqual(len(calls), 1)
+
+    def test_the_command_line_setting_needs_no_lookup(self):
+        calls = []
+        self.assertEqual(self.judge_("", calls).run(["git -c push.default=matching push --force origin"]),
+                         ("block", MATCHING))
+        self.assertEqual(calls, [])
+
+
 def run_cli(args, command, cwd, tool="Bash"):
     payload = json.dumps({"tool_name": tool, "tool_input": {"command": command}, "hook_event_name": "PreToolUse"})
     return subprocess.run([sys.executable, os.path.join(HOOKS, "_shellwords.py")] + args,
@@ -461,6 +549,11 @@ class CliTests(unittest.TestCase):
             subprocess.run(["git", "init", "-q", d], check=True, capture_output=True)
             subprocess.run(["git", "-C", d, "symbolic-ref", "HEAD", "refs/heads/" + branch], check=True)
             cls.repos[branch] = d
+        d = os.path.join(cls.tmp.name, "matching")      # a feature checkout with push.default=matching
+        subprocess.run(["git", "init", "-q", d], check=True, capture_output=True)
+        subprocess.run(["git", "-C", d, "symbolic-ref", "HEAD", "refs/heads/feature"], check=True)
+        subprocess.run(["git", "-C", d, "config", "push.default", "matching"], check=True)
+        cls.repos["matching"] = d
 
     @classmethod
     def tearDownClass(cls):
@@ -474,7 +567,12 @@ class CliTests(unittest.TestCase):
                 ("feature", "ls", b"allow\n"),
                 ("feature", "git push --force origin", b"allow\n"),
                 (T1, "git push --force origin", b"block\tbannerlord-1.5.x\n"),
-                (T1, "git push --force --all origin", ("block\t" + ALL + "\n").encode())):
+                (T1, "git push --force --all origin", ("block\t" + ALL + "\n").encode()),
+                # #689: git's own push.default, read in the hook's directory
+                ("matching", "git push --force origin", ("block\t" + MATCHING + "\n").encode()),
+                ("matching", "git push -f", ("block\t" + MATCHING + "\n").encode()),
+                ("matching", "git push origin", b"allow\n"),
+                ("matching", "git push --force origin feature", b"allow\n")):
             with self.subTest(branch=branch, command=command):
                 r = run_cli(["verdict"] + PROTECTED, command, self.repos[branch])
                 self.assertEqual((r.returncode, r.stdout), (0, out))
