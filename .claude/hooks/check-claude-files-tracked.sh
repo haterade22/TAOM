@@ -74,10 +74,12 @@ if [[ $RC1 -eq 124 || $RC2 -eq 124 ]]; then
     exit 0
 fi
 
+# The kinds of file the harness ships; js covers the /improve Workflow scripts
+# (.claude/skills/improve/workflows), which an untracked copy would silently leave behind.
 PROBLEMS=$(
     { printf '%s\n' "$IGNORED" | sed '/^$/d; s/$/ (gitignored: will not commit)/'
       printf '%s\n' "$UNTRACKED" | sed '/^$/d; s/$/ (untracked and unstaged)/'
-    } | grep -E '\.(md|sh|py|json|ya?ml) \(' | sed 's/^/  - /'
+    } | grep -E '\.(md|sh|py|js|json|ya?ml) \(' | sed 's/^/  - /'
 )
 
 if [[ -z "$PROBLEMS" ]]; then
