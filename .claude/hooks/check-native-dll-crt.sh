@@ -69,9 +69,13 @@ case "$COMMAND" in
 esac
 
 HAS_DLL=0
-while IFS= read -r f; do
+# Split into an array under set -f, never a here-string: Git Bash 5.3 hangs forever on one of
+# 65,536 to 65,663 bytes of text, and a name list that size is reachable (#681). An empty line is dropped,
+# which is harmless: it is not the DLL.
+set -f; IFS=$'\n'; STAGED_LIST=($STAGED); IFS=$' \t\n'; set +f
+for f in "${STAGED_LIST[@]}"; do
     [[ "$f" == "$DLL" ]] && { HAS_DLL=1; break; }
-done <<< "$STAGED"
+done
 [[ $HAS_DLL -eq 0 ]] && { echo '{}'; exit 0; }
 
 # Fail open if we can't run the check.

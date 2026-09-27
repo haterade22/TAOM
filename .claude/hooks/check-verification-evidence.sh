@@ -38,7 +38,11 @@ UNTRACKED=$(git ls-files --others --exclude-standard 2>/dev/null)
 ALL_FILES="$CHANGED"$'\n'"$STAGED"$'\n'"$UNTRACKED"
 
 NEEDS_REMINDER=0
-while IFS= read -r f; do
+# Split into an array under set -f, never a here-string: Git Bash 5.3 hangs forever on one of
+# 65,536 to 65,663 bytes of text (#681). An empty line (an empty list leaves one) is dropped, which is
+# harmless: it is no *.cs file.
+set -f; IFS=$'\n'; FILE_LIST=($ALL_FILES); IFS=$' \t\n'; set +f
+for f in "${FILE_LIST[@]}"; do
   case "$f" in
     *.cs)
       # Dirty C# file edited more recently than the last verification run?
@@ -50,7 +54,7 @@ while IFS= read -r f; do
       fi
       ;;
   esac
-done <<< "$ALL_FILES"
+done
 
 if [[ $NEEDS_REMINDER -eq 1 ]]; then
   if [[ ! -f "$REMINDED" ]]; then
