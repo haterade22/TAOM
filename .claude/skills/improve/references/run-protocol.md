@@ -20,8 +20,10 @@ Record each result in PROGRESS.md. A broken environment is reported, not fixed
   worktree root `<root>` (a folder outside the repo and off C:, holding the worktrees, `<root>\scratch`
   and `<root>\scratch\tmp`), written into the PROGRESS.md header so a resumed run has it. No script or
   prompt carries a typed date, version, hash or drive path: `improve_ctl.py args` derives the date and
-  version, and takes the root as `--scratch <root>\scratch --tmp <root>\scratch\tmp` (or from
-  `TAOM_IMPROVE_ROOT`; without either it exits 2).
+  version, and takes the root as `--scratch "<root>\scratch" --tmp "<root>\scratch\tmp"` (or from
+  `TAOM_IMPROVE_ROOT`; without either it exits 2). Quote every path in a command: Git Bash drops the
+  backslashes of an unquoted one, and `args` refuses a `--run-root`, `--scratch`, `--tmp` or
+  `TAOM_IMPROVE_ROOT` that is not absolute (exit 2).
 
 ## Run folder
 
@@ -38,7 +40,7 @@ plans/NNN-<slug>.md and plans/README.md
 ```
 
 Run files are committed with the plans: stage the explicit `plans/` paths, then
-`git commit -F <message file> -- <each plans/ path this run wrote>`. Naming each path leaves another
+`git commit -F "<message file>" -- <each plans/ path this run wrote>`. Naming each path leaves another
 session's staged files out of the commit; a bare `-- plans/` would sweep in its unstaged edits under
 `plans/`.
 
@@ -96,14 +98,14 @@ session's end is written here, never only in memory.
 ## Baseline (baseline.md)
 
 The orchestrator owns every baseline build. Create a detached worktree at the pinned SHA
-(`git worktree add --detach <root>\wt-baseline <sha>`), then record: build warnings; dotnet suite totals
+(`git worktree add --detach "<root>\wt-baseline" <sha>`), then record: build warnings; dotnet suite totals
 and the names of failing tests; the Python suite's failure set
 (`python -B -m unittest discover -s tools/tests -t .`); `python tools/validate_moduledata.py` error and
 warning counts; `python tools/lint_docs.py --fail-on-drift` exit; the hook suite's totals, run with
 `run_in_background` because it outlasts a foreground Bash call (the suite runs in the checkout that
 holds it), then the Summary line read from the log when it finishes:
 
-`CLAUDE_PROJECT_DIR="<root>\wt-baseline" timeout 1500 bash "<root>\wt-baseline\tools\test_hooks.sh" > <log> 2>&1`
+`CLAUDE_PROJECT_DIR="<root>\wt-baseline" timeout 1500 bash "<root>\wt-baseline\tools\test_hooks.sh" > "<log>" 2>&1`
 
 and each command's wall time. Later checks compare failure sets by name, never against zero. Remove the
 worktree when done.
@@ -133,11 +135,13 @@ After compaction, a usage limit, a session end or a restart:
 A hook "ask" stops an agent's tool call before it starts, so no TIMEOUT catches it. While any agent
 runs, and whenever you check on one:
 
-`python tools/improve_ctl.py watch --dir <transcript dir> [--stale-min N]` (N defaults to 30)
+`python tools/improve_ctl.py watch --dir "<transcript dir>" [--stale-min N]` (N defaults to 30)
 
 Point it at the running workflow's own folder, `<session>\subagents\workflows\<run id>\`, or for direct
-spawns at the session's `subagents` folder. Never point it at a folder holding a killed workflow: its
-unfinished agents stay "running" in its journal and read as stale forever. Exit 1 on either flag:
+spawns at the session's `subagents` folder. It never looks inside a folder named `workflows` below
+`--dir`: a killed workflow's unfinished agents stay "running" in its journal and would read as stale
+forever, so the session's folder shows only its direct spawns, and each workflow is watched through its
+own folder. Exit 1 on either flag:
 
 - **STALLED-ASK**: the agent's latest PreToolUse hook attachment with permissionDecision "ask" has no
   later tool result for that tool call, so it waits on the maintainer. This works in both folders
@@ -156,7 +160,7 @@ once, in order, each as its own call. Every command is a dry run. Do not retry, 
 refusal or confirmation; record it and continue. Then print a table: number, ran / denied / asked, first
 line of output or hook message verbatim." Then, from the worktree whose hooks are under test:
 
-`cd <worktree> && env -u CLAUDE_PROJECT_DIR timeout 900 claude -p --permission-mode bypassPermissions --no-session-persistence < <prompt file> > <out file> 2>&1`
+`cd "<worktree>" && env -u CLAUDE_PROJECT_DIR timeout 900 claude -p --permission-mode bypassPermissions --no-session-persistence < "<prompt file>" > "<out file>" 2>&1`
 
 Read the whole out file. An "asked" row is a real result there, not a stall.
 
@@ -185,64 +189,84 @@ merge" below).
   sections, `## Status`, `## Decisions needed`), or write a short one yourself from the plan. Never use
   the plan file as the body: it holds executor instructions and local paths. No line that asks for the
   issue itself to be filed or says none exists yet.
-- **Check** every draft in full, then `python tools/check_public_text.py <draft.md>`. Hold a
+- **Check** every draft in full, then `python tools/check_public_text.py "<draft.md>"`. Hold a
   security-sensitive draft for an explicit OK.
-- **File** with `python tools/improve_ctl.py file-issue <draft.md>`; write the number into the plan's
+- **File** with `python tools/improve_ctl.py file-issue "<draft.md>"`; write the number into the plan's
   Status block and index row in the next plans commit.
 - **Comments** (status after review, closing): text in a file, checked, then
-  `gh issue comment <n> --body-file <file>`; close with `gh issue close <n>`, adding the label
+  `gh issue comment <n> --body-file "<file>"`; close with `gh issue close <n>`, adding the label
   `triage-needs-ingame` or `triage-blocked-decision` when something is still owed.
 
 ## Merge (on the maintainer's word)
 
 1. **Ready list.** Each branch: review verdict READY FOR COMMIT, convergence clean or its residual
    accepted by the maintainer, Codex folded in if run, its decisions applied. Order by dependency.
-2. **Integration worktree** outside the repo: `git worktree add -b integrate/<date> <root>\wt-integrate
-   origin/<trunk>`. Never merge in the main checkout.
+2. **Integration worktree** outside the repo: `git worktree add -b integrate/<date>
+   "<root>\wt-integrate" origin/<trunk>`, which by git's default sets the branch to track
+   `origin/<trunk>` (step 10 relies on that). Never merge in the main checkout.
 3. **Trunk moved?** `git fetch origin`, then `git rev-list --left-right --count origin/<trunk>...HEAD`;
    a nonzero left count means merge the trunk in first (`merge(improve): <version> - trunk <sha> into
    ...`) and re-run the suites.
 4. **Baseline on the integration tip**: record its SHA, dotnet totals and failing tests, the Python
    failure set, the hook suite totals (run as in "Baseline" above, `CLAUDE_PROJECT_DIR` set to the
-   integration worktree), the lint exit.
+   integration worktree), the lint exit and the `ai_dashes:` count of the step 6 lint command.
 5. **Per branch**: write the message file first. Its subject is `merge(improve): <version> - <what>`,
    at most 72 characters; its body names the issues and what conflicted; check it with
-   `python tools/check_public_text.py <file>`. Then `python tools/integrate_branch.py --worktree
-   <wt-integrate> --message-file <file> --dry-run <branch>` shows the conflict set, and the same without
-   `--dry-run` merges. The tool never commits, and its leftover-marker check runs on every file of
-   every merge. A fix that makes the merged tree green is its own commit.
+   `python tools/check_public_text.py "<file>"`. Then `python tools/integrate_branch.py --worktree
+   "<wt-integrate>" --message-file "<file>" --dry-run <branch>` shows the conflict set and which
+   append-only paths the union would take (it applies the same rule to the merged blobs, so a path
+   the merge would send to a hand counts as one there too; the seam, duplicate and marker checks run
+   only in the real merge), and the same without `--dry-run` merges. The tool never commits, and its
+   leftover-marker check runs on every file of every merge. A fix that makes the merged tree green is
+   its own commit.
    - **Exit 0**: merged and staged, with lessons and REVIEW-LOG unioned. The union takes a conflict
      block only when both sides start with the common base lines (it keeps ours, then theirs' lines
      after the base); any other block sends its path to exit 2. It prints
      `ready to commit: git commit -F "<message file>"`: run that commit yourself through Bash, as
      `git -C "<wt-integrate>" commit -F "<message file>"`, so every PreToolUse commit gate judges it
      (a gate that judged the main checkout: execute-and-review "Commit gates in worktrees").
-   - **Exit 1**: refused, for example the main checkout, a dirty tree, a merge already in progress, or
-     a message file that fails `check_public_text.py`. Read the reason.
+   - **Exit 1**: refused before any merge started, for example the main checkout, a dirty tree, a merge
+     already in progress, or a message file that fails `check_public_text.py`. Read the reason.
    - **Exit 2**: the merge is left in progress with the listed paths for you. Resolve them by hand
      (single-owner files line by line, language files with row placement parsed, generated files
-     regenerated, never merged), stage those paths and commit the same way.
-   - **Exit 3**, or any other exit: an unexpected error. Stop, report its message, and read `git status`
-     first, since a merge may be in progress.
+     regenerated, never merged) and stage those paths. Before the commit, run
+     `git -C "<wt-integrate>" diff --cached --check`: a line naming a `leftover conflict marker` is a
+     path you have not finished (its whitespace lines are not merge problems). Then commit the same
+     way.
+   - **Exit 3**, or any other exit: git failed after the merge started, or an unexpected error. Stop,
+     report its message, and read `git status` first, since a merge may be in progress.
 6. **Verify after each merge**, each as its own call, compared with step 4: the dotnet suite; the Python
-   failure set; `python tools/lint_docs.py --fail-on-drift --dash-base <the step 4 SHA>` (the default
-   base, HEAD, sees nothing once the merge is committed); `validate_moduledata.py` when ModuleData
-   changed; the hook suite when `.claude/` or `tools/test_hooks.sh` changed; the CI replay
-   (`.ai/verification.md`, the three `csharp.yml` steps) when C# or tests changed. When a plan adds a
-   CI gate, replay it on every in-flight branch before merging any of them. Stop at the first new
-   failure.
+   failure set; the worktree's own lint copy (each copy lints the checkout it sits in),
+   `python "<wt-integrate>/tools/lint_docs.py" --fail-on-drift --summary --dash-base <step 4 SHA>`
+   (the default base, HEAD, sees nothing once the merge is committed), whose exit gates drift only
+   and ignores dashes, so also compare its `ai_dashes:` count with step 4's: a higher count is new
+   prose with an em or en dash; `validate_moduledata.py` when ModuleData changed; the hook suite when
+   `.claude/` or `tools/test_hooks.sh` changed; the CI replay (`.ai/verification.md`, the three
+   `csharp.yml` steps) when C# or tests changed. When a plan adds a CI gate, replay it on every
+   in-flight branch before merging any of them. Stop at the first new failure.
 7. **Push**: fetch and repeat step 3, then a plain fast-forward `git push origin HEAD:<trunk>`. Never a
    force push. Record the range.
 8. **CI**: `gh run list --branch <trunk> --limit 5`, then `timeout 900 gh run watch <id> --exit-status`
    until done; record run ids and totals.
 9. **Issues**: close per "Issues" above, naming the merge.
-10. **Cleanup**, in this order, from a query, never a hand list: list the merged branches with
-    `git branch --merged origin/<trunk> --list "improve/*" "integrate/*"`; `git worktree remove` each
-    worktree that has one of them checked out (`git worktree list`), the integration worktree
-    included, since `git branch -d` refuses a branch checked out in a linked worktree; then delete
-    exactly the listed branches with `git branch -d`; then `git worktree prune`. A removed worktree
-    takes its gitignored files with it, so nothing a run still needs (a Codex output above all) may
-    live in one.
+10. **Cleanup**, in this order, from a query, never a hand list. `git branch -d` refuses a branch
+    checked out in a worktree, and judges a branch with no upstream (every `improve/*`) against the
+    HEAD of the checkout it runs in; the main checkout's HEAD is the maintainer's unpulled trunk, so
+    there it refuses them all and git's hint offers the forced form, a HOOK-ASK.
+    1. List the merged branches:
+       `git branch --merged origin/<trunk> --format="%(refname:short)" --list "improve/*" "integrate/*"`.
+    2. `git worktree remove` each plan worktree that has one of them checked out
+       (`git worktree list`), keeping the integration worktree.
+    3. Delete the listed branches other than this run's `integrate/<date>` from the integration
+       worktree, whose HEAD is the pushed trunk: `git -C "<wt-integrate>" branch -d <branch> ...`.
+    4. `git worktree remove "<wt-integrate>"`.
+    5. `git branch -d integrate/<date>`: it tracks `origin/<trunk>` (step 2), which holds it once
+       pushed, so git deletes it with a warning that HEAD lacks it.
+    6. `git worktree prune`.
+
+    A branch that `-d` still refuses stays, listed for the maintainer; never force a deletion. A
+    removed worktree takes its gitignored files with it, so nothing a run still needs (a Codex output
+    above all) may live in one.
 11. **Record**: a PROGRESS row with hashes, totals and run ids; `improve_ctl.py status` per plan row.
 
 ## After a merge: the maintainer's actions

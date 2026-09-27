@@ -39,7 +39,7 @@ when the maintainer asks, drive execution, review and merge through agents. The 
 9. A claim needs a check that could have failed: the right tree, the stored form, placement not presence, the code not your memory of a decision ([evidence-over-claims](../../rules/evidence-over-claims.md)).
 10. `.claude/settings.json`, `.claude/settings.local.json`, `Directory.Build.props` and `docs/adrs/*.md` are the maintainer's: a plan's Step 0, asked once per plan set. `Main/IoC.cs` and `Main/SubModule.cs` change only by the exact edit a plan lists.
 11. A commit gate that judged the main checkout is reported and waited out; never `--no-verify`, never another session's files ([execute-and-review.md](references/execute-and-review.md) "Commit gates in worktrees").
-12. Public text passes `python tools/check_public_text.py <file>` before it is posted (run-protocol "Issues").
+12. Public text passes `python tools/check_public_text.py "<file>"` before it is posted (run-protocol "Issues").
 13. Scripts and payloads go through Write-tool files, never Bash heredocs or `python -c`; no persistent `cd` (use `git -C` and absolute paths) (CLAUDE.md "MCP and shell").
 
 ## The run folder
@@ -75,10 +75,11 @@ per candidate, the critic. Non-interactive default selection: the top six plus e
 
 Workflows run through the Workflow tool: `scriptPath` `.claude/skills/improve/workflows/<name>.js` (LF
 files inside the working directory), args from `python tools/improve_ctl.py args <name> --items
-<items.json> --run-root <run folder> --scratch <root>\scratch --tmp <root>\scratch\tmp --out
-<args.json>`, `<root>` being the worktree root in the PROGRESS.md header. Each script's header comment
-lists its args and item fields. Top-level fields ride in an items object, whose fields stand unless a
-flag overrides them: `{"items": [...], "base", "baseline", "planDir"}` for `plans.js`,
+"<items.json>" --run-root "<run folder>" --scratch "<root>\scratch" --tmp "<root>\scratch\tmp" --out
+"<args.json>"`, `<root>` being the worktree root in the PROGRESS.md header (quote every path: Git Bash
+drops an unquoted one's backslashes, and `args` refuses a root, scratch or tmp that is not absolute).
+Each script's header comment lists its args and item fields. Top-level fields ride in an items
+object, whose fields stand unless a flag overrides them: `{"items": [...], "base", "baseline", "planDir"}` for `plans.js`,
 `{"items": [...], "checker": {...}}` for a `fanout.js` checker (a plain array runs none). A run cut
 short resumes with the same `scriptPath` and `resumeFromRunId`. A null agent result is a failure you
 report.

@@ -28,25 +28,25 @@ says whether you edit or are read-only.
    script driving bash or pwsh, a hook run, a test suite, git over a large range) with timeout 900, or
    set the tool's timeout. The one exception is the hook suite (about 12 minutes, longer than a
    foreground Bash call may run):
-     CLAUDE_PROJECT_DIR="<worktree>" timeout 1500 bash tools/test_hooks.sh > <a log file> 2>&1
+     CLAUDE_PROJECT_DIR="<worktree>" timeout 1500 bash tools/test_hooks.sh > "<a log file>" 2>&1
    run with the Bash tool's run_in_background, then, when it finishes, read the "N passed, M failed"
    line under Summary in the log. CLAUDE_PROJECT_DIR makes every hook it runs without its own value
    judge your worktree. Report a timeout; never retry blindly.
 5. HOOK-ASK. Never discard or sweep with git at all. The repo's confirm hooks answer "ask" on any
    command TEXT holding git restore (anything but restore --staged alone), git checkout with --, -f,
-   --force or a . path (., ./, dir/.), reset --hard, clean -f or --force, stash drop or clear, branch -D,
-   add -A, --all, -u, --update or ., commit -a or --all (a quoted bash -c body counts too), and
+   --force or a . path (., ./, dir/.), reset --hard, clean -f or --force, stash drop or clear, branch -D
+   (or --delete --force, in either order), add -A, --all, -u, --update or ., commit -a or --all, and
    validate-push refuses command text holding a force push to a trunk. An ask stops an unattended run
-   until the maintainer answers, bypass mode or not, and no timeout ends it. Never put such text in a
-   shell command: write payloads and probe scripts to files with the Write tool and run them by path;
-   build long payloads inside Python (a 65 KB argument exceeds the Windows limit). To prove a test
-   fails first, run it against a scratch copy of the old code or git show <base>:<path>, never by
-   reverting files in a worktree with git.
+   until the maintainer answers, bypass mode or not, and no timeout ends it. This rule forbids such text
+   anywhere in a shell command, quoted or not, a bash -c body included: write payloads and probe
+   scripts to files with the Write tool and run them by path; build long payloads inside Python (a
+   65 KB argument exceeds the Windows limit). To prove a test fails first, run it against a scratch
+   copy of the old code or git show <base>:<path>, never by reverting files in a worktree with git.
 6. Shell hygiene. Write scripts and messages with the Write tool; Bash heredocs and python -c mangle
    backslashes and quotes. Never spell python3: on this machine it resolves to the Microsoft Store
    alias under WindowsApps, which hangs from Git Bash. Use python, and run it with -B so no
    __pycache__ lands beside the hooks. A scratch git repository isolates the machine's config:
-   GIT_CONFIG_GLOBAL=<an empty file> GIT_CONFIG_NOSYSTEM=1.
+   GIT_CONFIG_GLOBAL="<an empty file>" GIT_CONFIG_NOSYSTEM=1.
 12. Evidence. Quote exact totals lines (dotnet "Passed!" or "Failed!", unittest "Ran N tests" with OK or
     FAILED, the hook suite's "N passed, M failed", lint exit codes). Cite file:line for claims. A claim
     needs a check that could have failed: the right tree, the stored form, the placement and not only

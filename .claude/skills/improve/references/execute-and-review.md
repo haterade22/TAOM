@@ -28,10 +28,10 @@ the review loop with its stop rule, stopped plans, decisions, and reconciling th
 ## Worktrees and branches
 
 - The orchestrator creates them; agents never do:
-  `git worktree add -b improve/NNN-<slug> <root>\wt-NNN <base>`, where `<root>` is the run's worktree
+  `git worktree add -b improve/NNN-<slug> "<root>\wt-NNN" <base>`, where `<root>` is the run's worktree
   root outside the repo, recorded in the PROGRESS.md header.
 - A plan never names a worktree or branch: the executor works where it is put.
-- After a branch's review, `git worktree remove <root>\wt-NNN` keeps the branch and frees the disk;
+- After a branch's review, `git worktree remove "<root>\wt-NNN"` keeps the branch and frees the disk;
   re-create the worktree for a follow-up. It deletes the worktree's gitignored files without a word
   (`docs/reviews/raw/` among them), so no Codex output lives in a worktree (Stage 2 step 3).
 
@@ -40,16 +40,16 @@ the review loop with its stop rule, stopped plans, decisions, and reconciling th
 1. Items file: one entry per plan, `{num, slug, wt, branch, base, contract, decisions?, stages?, note?,
    issue?}`, with `contract` one of `plan`, `decisions` (a follow-up) or `stages` (ordered, a commit per
    stage, stopping at the first stage not DONE).
-2. `python tools/improve_ctl.py args execute --items <items.json> --run-root <run folder>
-   --scratch <root>\scratch --tmp <root>\scratch\tmp --out <args.json>`, then the Workflow tool on
+2. `python tools/improve_ctl.py args execute --items "<items.json>" --run-root "<run folder>"
+   --scratch "<root>\scratch" --tmp "<root>\scratch\tmp" --out "<args.json>"`, then the Workflow tool on
    `.claude/skills/improve/workflows/execute.js` with that args JSON. Top-level fields such as
    `knownFailures` ride in an items object, `{"items": [...], "knownFailures": [...]}` (the script's
    header comment lists them).
 3. Each result: `status` DONE, BLOCKED or PARTIAL, with the commit, tests, RED evidence, deviations, stop
    reason and what is owed. A null result is a failure: report it, then resume the run
    ([run-protocol.md](run-protocol.md) "Resume").
-4. Your checks on every DONE, before review: a clean tree (`git -C <wt> status --porcelain`); no AI
-   trailer (`git -C <wt> log --format=%B <base>..HEAD`); `Main/IoC.cs` and `Main/SubModule.cs` hunks
+4. Your checks on every DONE, before review: a clean tree (`git -C "<wt>" status --porcelain`); no AI
+   trailer (`git -C "<wt>" log --format=%B <base>..HEAD`); `Main/IoC.cs` and `Main/SubModule.cs` hunks
    exactly as the plan lists; every data file it touched parses (language rows inside `<strings>`);
    suite totals equal the base's plus the new tests.
 
@@ -60,7 +60,7 @@ section B). Before any quality review ([agent-teams.md](../../../../docs/ai-incl
 review ordering"):
 
 1. Re-run every done criterion in the worktree.
-2. Scope: `git -C <wt> diff --stat <base>..HEAD` against the plan's in-scope list; a file outside it
+2. Scope: `git -C "<wt>" diff --stat <base>..HEAD` against the plan's in-scope list; a file outside it
    fails the check.
 3. Read the whole diff as untrusted until every hunk traces to a plan step.
 4. Audit the new tests: each asserts something that fails without the change; dispatch logic has one
@@ -85,12 +85,12 @@ maintainer with both reasons. Set the index row to STOPPED with the reason while
 ## Stage 2: the review
 
 1. **Blast radius** (deep-review Step 1), with the worktree's own copy so it reads the branch's code:
-   `python <root>\wt-NNN\tools\graphify_taom.py refresh --if-stale`, then
-   `python <root>\wt-NNN\tools\graphify_taom.py affected "<Type>" --depth 2` for each C# type the branch
+   `python "<root>\wt-NNN\tools\graphify_taom.py" refresh --if-stale`, then
+   `python "<root>\wt-NNN\tools\graphify_taom.py" affected "<Type>" --depth 2` for each C# type the branch
    changes (a relative `tools/...` from the main checkout builds and reads the main checkout's graph);
    put callers outside the diff in the item's `note`.
-2. **Args**: `python tools/improve_ctl.py args review --items <items.json> --run-root <run folder>
-   --scratch <root>\scratch --tmp <root>\scratch\tmp --max-rounds 2 --out <args.json>`. Each item
+2. **Args**: `python tools/improve_ctl.py args review --items "<items.json>" --run-root "<run folder>"
+   --scratch "<root>\scratch" --tmp "<root>\scratch\tmp" --max-rounds 2 --out "<args.json>"`. Each item
    gains its changed files by kind and the lenses `.claude/skills/deep-review/SKILL.md` Step 2 routes
    by file type, from `git diff --name-only base..head` in its worktree, unioned with any `lenses` the
    item already lists. File types cannot show changed text that states engine behaviour, so list lens
@@ -98,7 +98,7 @@ maintainer with both reasons. Set the index row to STOPPED with the reason while
    revision is checked as a revision, never read as a git option. In an items object, a field such
    as `pool`, `model` or `maxRounds` stands unless you pass its flag.
 3. **Codex, only when the maintainer asked for it this run**:
-   `python tools/improve_ctl.py codex-prompt --branch improve/NNN-<slug> --base <base> [--tag <tag>] --out <prompt file>`,
+   `python tools/improve_ctl.py codex-prompt --branch improve/NNN-<slug> --base <base> [--tag <tag>] --out "<prompt file>"`,
    dispatched from the main checkout (the trusted path that loads the repo's Codex pin) per
    `/review-codex` Phase 2e, in the background. The prompt file and the output go under
    `<root>\scratch\codex\`, never into a worktree: `docs/reviews/raw/` is gitignored, and removing the
@@ -140,8 +140,13 @@ maintainer with both reasons. Set the index row to STOPPED with the reason while
 
 ## Decisions and follow-ups
 
-- Collect each branch's NEEDS MIKE items and ask them (SKILL.md "Decisions and status"), or write them to
-  FOR-MIKE.md.
+- A `needs_mike` line starting `ADVERSARIAL ESCALATION` is not a question for the maintainer: the lead
+  confirmed a CRITICAL Standards violation (deep-review Step 2b), and the workflow cannot start the
+  extra reviewer. Run one `deep-reviewer` (never with `model`) on only the files the line names, in the
+  branch's worktree, with `.claude/skills/deep-review/lenses/adversarial.md`, before the branch counts
+  as reviewed; its confirmed defects join that branch's follow-up below.
+- Collect each branch's other NEEDS MIKE items and ask them (SKILL.md "Decisions and status"), or write
+  them to FOR-MIKE.md.
 - Apply all of one branch's answers in one follow-up (`execute.js`, `contract: decisions`), then one
   tagged second review (`review.js`, the item's `tag`), so a branch gets one second review, not one per
   decision.
