@@ -124,8 +124,9 @@ On 2026-08-31 a pass that added timeouts to all 27 registrations killed two gate
 | **Check skill-frontmatter registrations too** | The 2026-08-31 pass covered all 27 in `settings.json` and missed all 5 in `freeze/SKILL.md` + `investigate/SKILL.md`, which inherit the **600 s** default. |
 
 `bash tools/test_hooks.sh` enforces this: no registration without a timeout, no external tool
-without an inner bound below it, and (4b) every PreToolUse gate answers a commit inside 80% of
-its registration. Run it before committing anything under `.claude/hooks/`.
+without an inner bound below it, (4b) every PreToolUse gate answers a commit inside 80% of its
+registration, and (7j) every registration is anchored on `"$CLAUDE_PROJECT_DIR"` (a relative one
+dies after a `cd`, #690). Run it before committing `.claude/hooks/`.
 
 ## Prove a gate live (EMPIRICAL: TAOM 2026-09-23, #647)
 

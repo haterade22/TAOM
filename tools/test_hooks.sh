@@ -2341,6 +2341,43 @@ vpi_overrun "$VPI_PROBE" "" "time ran out before it could be judged" "a probe th
 rm -rf "$VPI_SLOW" "$VPI_PROBE" "$SANDBOX/vpi.json"
 
 # ---------------------------------------------------------------------------
+head2 "7j. every hook registration is anchored on CLAUDE_PROJECT_DIR, so a gate still runs after a cd (#690)"
+# Claude Code runs a hook command in the session's current directory, and a Bash `cd` into a project
+# subdirectory persists across tool calls. A registration written as `.claude/hooks/x.sh` then fails
+# to start ("No such file or directory"), which the harness treats as a non-blocking error, so every
+# gate fell silent after `cd tools` (proven live 2026-09-26, #690). Each registration names its script
+# through "$CLAUDE_PROJECT_DIR", as the /freeze and /investigate frontmatter hooks already did.
+J7_UNANCHORED=$("$HPY" - <<'PY' | tr -d '\r'
+import json
+d = json.load(open('.claude/settings.json', encoding='utf-8'))
+for ev, gs in d.get('hooks', {}).items():
+    for g in gs:
+        for h in g.get('hooks', []):
+            c = h.get('command', '')
+            if not c.startswith('"$CLAUDE_PROJECT_DIR"/.claude/'):
+                print(ev + ' ' + c)
+PY
+)
+if [[ -z "$J7_UNANCHORED" ]]; then
+    ok 'every settings.json hook registration starts with "$CLAUDE_PROJECT_DIR"/.claude/'
+else
+    bad "settings.json hook registrations not anchored on \$CLAUDE_PROJECT_DIR (they stop running after a cd into a subdirectory): $(printf '%s' "$J7_UNANCHORED" | tr '\n' ';')"
+fi
+# End to end, the way the harness runs it: the registered command string through bash -c, from a
+# subdirectory, with CLAUDE_PROJECT_DIR set. The gate must still refuse a trunk force push.
+J7_CMD=$("$HPY" -c 'import json; d = json.load(open(".claude/settings.json", encoding="utf-8")); print(next(h["command"] for g in d["hooks"]["PreToolUse"] for h in g["hooks"] if h["command"].endswith("/validate-push.sh")))' | tr -d '\r')
+J7_PAYLOAD=$("$HPY" -c 'import json; print(json.dumps({"tool_name": "Bash", "tool_input": {"command": "git push --" + "force origin HEAD:bannerlord-1.5.x"}, "hook_event_name": "PreToolUse"}))')
+for j7_dir in tools .claude/hooks; do
+    J7_RC=0
+    (cd "$REPO/$j7_dir" && printf '%s' "$J7_PAYLOAD" | timeout -k 2 15 env CLAUDE_PROJECT_DIR="$REPO" bash -c "$J7_CMD" >/dev/null 2>&1) || J7_RC=$?
+    if [[ "$J7_RC" == 2 ]]; then
+        ok "validate-push, run as registered from $j7_dir/, refuses a trunk force push (rc 2)"
+    else
+        bad "validate-push, run as registered ($J7_CMD) from $j7_dir/, answered rc=$J7_RC to a trunk force push; expected 2 (rc 127: the relative path did not resolve, #690)"
+    fi
+done
+
+# ---------------------------------------------------------------------------
 head2 "8. /context-budget scan.sh runs under set -u and measures the launch load"
 # Nothing else runs this script, and it reads the budget from tools/lint_docs.py: an unbound
 # variable or a broken JSON handshake would otherwise surface only when someone runs the skill.

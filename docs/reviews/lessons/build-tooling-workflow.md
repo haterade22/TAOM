@@ -3024,3 +3024,19 @@ child shell runs, and any registration naming a script outside `.claude/`.
   registration naming a script it cannot find).
 - **Source:** the #680 and #681 review, 2026-09-26 (mutant H10; the 4e probes); `tools/test_hooks.sh` 4e, 7c
   and 7e; `tools/tests/test_pushjudge.py` (`CliTests`).
+
+### A hook registered by a relative path stops running after a cd (#690, 2026-09-26)
+All 27 `settings.json` registrations named their script as `.claude/hooks/<name>.sh`. Claude Code runs a hook
+command in the session's current directory, and a Bash `cd` into a project subdirectory persists across tool
+calls, so after `cd tools` every hook failed to start with "No such file or directory". The harness treats that
+as a non-blocking error: the call ran with no force-push guard, no commit gates and no confirm prompts. The #680
+review proved it live (a trunk force push reached git after `cd tools`; 33 such lines in the session's debug
+log) and in a sandbox where the anchored form refused from the subdirectory. The skill-frontmatter hooks of
+`/freeze` and `/investigate` had always anchored on `${CLAUDE_PROJECT_DIR}` and kept working.
+- **Why missed:** every test ran hooks from the repo root, and the catalog recorded "cwd = the MAIN tree
+  regardless", which holds for a `cd` inside the same command, not for one that persists.
+- **Prevent:** register every hook as `"$CLAUDE_PROJECT_DIR"/.claude/hooks/<name>.sh`, and test a gate the way
+  the harness runs it: the registered command string through `bash -c`, from a subdirectory
+  (`tools/test_hooks.sh` 7j).
+- **Source:** issue #690; `docs/reference/hooks-catalog.md`; the review evidence in
+  `E:\repos\taom-improve\scratch\680\review\bash\` (desktop).
