@@ -88,6 +88,10 @@ session committed "Review 130 follow-ups"). Plan of record:
 
 - Created run folder, BRIEF.md, this file. Detached worktree added at the scratchpad, moved to
   `b2e387db`. 13 hook processes per Bash call (10 PreToolUse Bash, 1 universal, 2 PostToolUse).
+- 2026-09-27: `machinery/` removed (git history keeps it) because its copies were stale: they check out
+  CRLF, which the Workflow tool refuses, lack the TIMEOUT and HOOK-ASK rules, and hard-code this run's
+  dates, version, baseline and paths. Its successors are `.claude/skills/improve/workflows/*.js`,
+  `tools/improve_ctl.py`, `tools/integrate_branch.py` and `tools/check_public_text.py`.
 
 ## Overnight extension (Mike, 2026-09-23 evening): "continue throughout the night; run deep reviews and codex reviews on the changes"
 
