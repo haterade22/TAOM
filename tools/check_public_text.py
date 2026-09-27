@@ -8,10 +8,12 @@ when a file cannot be read. Rules:
 
 - em-dash, en-dash: through lint_docs.scan_text_for_dashes, so code spans, fenced blocks, link
   targets and a `<!-- lint-allow-dash -->` line are exempt (AGENTS.md "Human prose").
-- local-path: a drive-letter path (`X:\\`, which covers `C:\\Users`) or a Git Bash repos path
-  (`/x/repos/`), anywhere on the line, code spans included: a local path leaks either way.
+- local-path: a drive-letter path with either slash (`X:\\`, `X:/`, so `C:\\Users` too) or a Git
+  Bash drive path (`/x/...`), anywhere on the line, code spans included: a local path leaks either
+  way. A URL (`https://host/a/b`) and a PowerShell drive (`Env:\\TEMP`) pass.
 - placeholder: a leftover token such as `MERGE_HASH` (four or more capitals, then `_ISSUE`,
-  `_HASH`, `_TOTALS`, `_RESULT` or `_DOCS`), or a line that is only `TODO`.
+  `_HASH`, `_TOTALS`, `_RESULT` or `_DOCS`), or a line that is only `TODO`; code spans are
+  exempt, so a constant quoted from the code passes.
 
 The words Claude and Codex are not flagged: issues legitimately discuss Claude Code hooks.
 Pure stdlib.
@@ -25,9 +27,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from lint_docs import scan_text_for_dashes  # noqa: E402
+from lint_docs import INLINE_CODE_RE, scan_text_for_dashes  # noqa: E402
 
-LOCAL_PATH_RE = re.compile(r"[A-Za-z]:\\|/[a-z]/repos/")
+LOCAL_PATH_RE = re.compile(r"(?<![A-Za-z0-9])[A-Za-z]:[\\/](?!/)|(?<![\w./-])/[a-z]/[A-Za-z0-9_.-]+")
 PLACEHOLDER_RE = re.compile(r"[A-Z]{4,}_(?:ISSUE|HASH|TOTALS|RESULT|DOCS)|^\s*TODO\s*$")
 
 
@@ -37,7 +39,7 @@ def check_text(text: str) -> list[tuple[int, str, str]]:
     for number, raw in enumerate(text.splitlines(), 1):
         if LOCAL_PATH_RE.search(raw):
             findings.append((number, "local-path", raw.strip()[:120]))
-        if PLACEHOLDER_RE.search(raw):
+        if PLACEHOLDER_RE.search(INLINE_CODE_RE.sub(" ", raw)):
             findings.append((number, "placeholder", raw.strip()[:120]))
     return sorted(findings, key=lambda f: f[0])
 

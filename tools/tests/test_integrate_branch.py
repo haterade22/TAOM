@@ -33,9 +33,22 @@ class UnionTests(unittest.TestCase):
         data = f"a\n{START} HEAD\nours\n{MID}\ntheirs\n{END} feat\nz\n".encode("utf-8")
         self.assertEqual(ib.union(data), (b"a\nours\ntheirs\nz\n", 1))
 
-    def test_a_diff3_base_section_is_dropped(self):
-        data = f"{START} HEAD\nours\n{BASE} base\nold\n{MID}\ntheirs\n{END} feat\n".encode("utf-8")
-        self.assertEqual(ib.union(data), (b"ours\ntheirs\n", 1))
+    def test_a_diff3_block_gives_ours_then_what_theirs_adds_to_the_base(self):
+        data = (f"{START} HEAD\nold\nours\n{BASE} base\nold\n{MID}\nold\ntheirs\n{END} feat\n"
+                .encode("utf-8"))
+        self.assertEqual(ib.union(data), (b"old\nours\ntheirs\n", 1))
+
+    def test_a_side_that_edits_a_base_line_is_not_an_append(self):
+        # Keeping both sides would duplicate the shared line, once edited and once not.
+        for ours, theirs in (("ours", "old\ntheirs"), ("old\nours", "theirs"), ("ours", "theirs")):
+            text = f"{START} HEAD\n{ours}\n{BASE} base\nold\n{MID}\n{theirs}\n{END} feat\n"
+            with self.assertRaises(ValueError, msg=text):
+                ib.union(text.encode("utf-8"))
+
+    def test_the_base_comparison_ignores_line_endings(self):
+        data = (f"{START} HEAD\r\nold\r\nours\r\n{BASE} base\r\nold\n{MID}\r\nold\r\ntheirs\r\n"
+                f"{END} feat\r\n").encode("utf-8")
+        self.assertEqual(ib.union(data), (b"old\r\nours\r\ntheirs\r\n", 1))
 
     def test_line_endings_and_bom_are_kept(self):
         data = (f"\ufefftop\r\n{START} HEAD\r\nours\r\n{MID}\r\ntheirs\r\n{END} feat\r\n"
@@ -43,12 +56,25 @@ class UnionTests(unittest.TestCase):
         self.assertEqual(ib.union(data), ("\ufefftop\r\nours\r\ntheirs\r\n".encode("utf-8"), 1))
 
     def test_malformed_conflicts_are_refused(self):
-        for text in (f"{START} a\n{START} b\n",                  # nested
+        for text in (f"{START} a\n{START} b\n",                  # nested, unterminated
+                     f"{START} a\nx\n{START} b\ny\n{MID}\nz\n{END} b\n",  # nested, well closed
+                     f"{START} a\nours\n{END} feat\n",            # end inside ours
+                     f"{BASE} base\nold\n",                        # base outside a block
+                     f"{START} a\nours\n{MID}\n{BASE} b\n{END} feat\n",  # base inside theirs
                      f"x\n{END} feat\n",                          # end without start
                      f"{START} HEAD\nours\n{MID}\ntheirs\n",      # unterminated
                      "no markers at all\n"):
             with self.assertRaises(ValueError, msg=text):
                 ib.union(text.encode("utf-8"))
+
+
+class AppendOnlyGlobTests(unittest.TestCase):
+    def test_a_star_stays_inside_one_folder(self):
+        match = ib.append_only_matcher(ib.DEFAULT_APPEND_ONLY)
+        self.assertTrue(match("docs/reviews/lessons/misc.md"))
+        self.assertTrue(match("docs/reviews/REVIEW-LOG.md"))
+        self.assertFalse(match("docs/reviews/lessons/archive/old.md"))
+        self.assertFalse(match("docs/reviews/lessons/misc.txt"))
 
 
 class MergeTests(unittest.TestCase):
@@ -112,6 +138,17 @@ class MergeTests(unittest.TestCase):
     def merging(self, root=None):
         return self.git(root or self.wt, "rev-parse", "-q", "--verify", "MERGE_HEAD", check=False) != ""
 
+    def assert_ready(self, proc, branch="feat"):
+        """Exit 0 with the merge staged, not committed, and the commit command printed for the
+        orchestrator to run through Bash; then run it as the orchestrator would."""
+        self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
+        self.assertEqual(self.git(self.wt, "rev-parse", "HEAD"), self.before)
+        self.assertEqual(self.git(self.wt, "rev-parse", "MERGE_HEAD"), self.git(self.main, "rev-parse", branch))
+        self.assertEqual(self.git(self.wt, "diff", "--name-only"), "")  # nothing left unstaged
+        wanted = str(self.message).replace("\\", "/")
+        self.assertIn(f'ready to commit: git commit -F "{wanted}"'.encode("utf-8"), proc.stdout)
+        self.git(self.wt, "commit", "-q", "-F", wanted)
+
     def build_appends(self):
         self.build(
             {LESSONS: "# Lessons\n\n### one\ntext one\n", LOG: "# Log\n\n## Review 1\nbody\n",
@@ -126,7 +163,7 @@ class MergeTests(unittest.TestCase):
         # line out of the conflict block, and a union would then leave the first entry without it.
         self.build_appends()
         proc = self.run_tool()
-        self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
+        self.assert_ready(proc)
         self.assertEqual(self.read(LESSONS),
                          b"# Lessons\n\n### one\ntext one\n\n### two\ntext two\n\n### three\ntext three\n")
         self.assertEqual(self.read(LOG),
@@ -138,21 +175,42 @@ class MergeTests(unittest.TestCase):
         self.assertEqual(self.git(self.wt, "status", "--porcelain"), "")
         self.assertIn(b"resolved by union: " + LESSONS.encode(), proc.stdout)
 
-    def test_a_conflict_on_changed_lines_keeps_no_base_lines(self):
+    def assert_hand(self, proc, *paths):
+        self.assertEqual(proc.returncode, 2, proc.stdout + proc.stderr)
+        for path in paths:
+            self.assertIn(path.encode("utf-8"), proc.stdout)
+        self.assertTrue(self.merging())
+        self.assertEqual(self.git(self.wt, "rev-parse", "HEAD"), self.before)
+
+    def test_an_edit_to_a_shared_line_goes_to_hand_resolution(self):
         self.build({LESSONS: "# Lessons\n\n### one\ntext one\n"},
                    {LESSONS: "# Lessons\n\n### one\ntext one, ours\n"},
                    {LESSONS: "# Lessons\n\n### one\ntext one, theirs\n"})
-        proc = self.run_tool()
-        self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
-        self.assertEqual(self.read(LESSONS), b"# Lessons\n\n### one\ntext one, ours\ntext one, theirs\n")
+        self.assert_hand(self.run_tool(), f"{LESSONS}: not resolved by union")
+        self.assertEqual(self.git(self.wt, "diff", "--name-only", "--diff-filter=U"), LESSONS)
+
+    def test_ours_fixing_the_last_entry_while_both_append_goes_to_hand_resolution(self):
+        # A union would keep the old line and its fix; git's diff3 block holds the fix in ours.
+        self.build({LESSONS: "# Lessons\n\n### one\ntext one\n"},
+                   {LESSONS: "# Lessons\n\n### one\ntext one (fixed)\n\n### two\nt2\n"},
+                   {LESSONS: "# Lessons\n\n### one\ntext one\n\n### three\nt3\n"})
+        self.assert_hand(self.run_tool(), f"{LESSONS}: not resolved by union")
+        self.assertIn(START.encode(), self.read(LESSONS))
+
+    def test_a_base_without_a_final_newline_still_unions_two_appends(self):
+        self.build({LESSONS: "# Lessons\n\n### one\ntext one"},
+                   {LESSONS: "# Lessons\n\n### one\ntext one\n\n### two\nt2\n"},
+                   {LESSONS: "# Lessons\n\n### one\ntext one\n\n### three\nt3\n"})
+        self.assert_ready(self.run_tool())
+        self.assertEqual(self.read(LESSONS),
+                         b"# Lessons\n\n### one\ntext one\n\n### two\nt2\n\n### three\nt3\n")
 
     def test_crlf_and_bom_are_kept_byte_for_byte(self):
         bom = b"\xef\xbb\xbf"
         self.build({LESSONS: bom + b"# Lessons\r\n\r\n### one\r\ntext one\r\n"},
                    {LESSONS: bom + b"# Lessons\r\n\r\n### one\r\ntext one\r\n\r\n### two\r\ntext two\r\n"},
                    {LESSONS: bom + b"# Lessons\r\n\r\n### one\r\ntext one\r\n\r\n### three\r\ntext three\r\n"})
-        proc = self.run_tool()
-        self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
+        self.assert_ready(self.run_tool())
         self.assertEqual(self.read(LESSONS), bom + b"# Lessons\r\n\r\n### one\r\ntext one\r\n\r\n"
                          b"### two\r\ntext two\r\n\r\n### three\r\ntext three\r\n")
 
@@ -161,55 +219,79 @@ class MergeTests(unittest.TestCase):
                    {LESSONS: "# Lessons\n\n### one\ntext\n\n### two\nt\n", "src.txt": "ours\n"},
                    {LESSONS: "# Lessons\n\n### one\ntext\n\n### three\nt\n", "src.txt": "theirs\n"})
         proc = self.run_tool()
-        self.assertEqual(proc.returncode, 2, proc.stdout + proc.stderr)
-        self.assertIn(b"src.txt", proc.stdout)
-        self.assertTrue(self.merging())
-        self.assertEqual(self.git(self.wt, "rev-parse", "HEAD"), self.before)
+        self.assert_hand(proc, "src.txt")
         self.assertEqual(self.git(self.wt, "diff", "--name-only", "--diff-filter=U"), "src.txt")
         self.assertNotIn(START.encode(), self.read(LESSONS))
+        wanted = str(self.message).replace("\\", "/")
+        self.assertIn(f'git commit -F "{wanted}"'.encode("utf-8"), proc.stdout)
+
+    def test_a_folder_below_the_append_only_glob_is_resolved_by_hand(self):
+        nested = "docs/reviews/lessons/archive/old.md"
+        self.build({nested: "# A\n"}, {nested: "# A\nours\n"}, {nested: "# A\ntheirs\n"})
+        self.assert_hand(self.run_tool(), f"{nested}: conflict outside the append-only set")
 
     def test_a_duplicated_heading_stops_with_the_merge_in_progress(self):
         self.build({LESSONS: "# Lessons\n\n### one\ntext\n"},
                    {LESSONS: "# Lessons\n\n### same\nx\n\n### one\ntext\n"},
                    {LESSONS: "# Lessons\n\n### one\ntext\n\n### same\ny\n"})
-        proc = self.run_tool()
-        self.assertEqual(proc.returncode, 2, proc.stdout + proc.stderr)
-        self.assertIn(b"### same", proc.stdout)
-        self.assertTrue(self.merging())
-        self.assertEqual(self.git(self.wt, "rev-parse", "HEAD"), self.before)
+        self.assert_hand(self.run_tool(), "### same")
+
+    def test_a_duplicate_the_base_already_had_is_tolerated(self):
+        old = "# Lessons\n\n### same\nx\n\n### same\ny\n"
+        self.build({LESSONS: old}, {"other.txt": "ours\n"}, {LESSONS: old + "\n### new\nz\n"})
+        self.assert_ready(self.run_tool())
+        self.assertEqual(self.read(LESSONS), (old + "\n### new\nz\n").encode("utf-8"))
 
     def test_a_seam_in_a_cleanly_merged_file_gets_a_blank_line_and_old_seams_stay(self):
         self.build({LESSONS: "# Lessons\nintro\n### zero\nz\n\n### one\ntext one\n"},
                    {"other.txt": "ours\n"},
                    {LESSONS: "# Lessons\nintro\n### zero\nz\n\n### one\ntext one\n### three\nt\n"})
         proc = self.run_tool()
-        self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
+        self.assert_ready(proc)
         self.assertEqual(self.read(LESSONS),
                          b"# Lessons\nintro\n### zero\nz\n\n### one\ntext one\n\n### three\nt\n")
+
+    def test_a_review_log_seam_is_a_level_two_heading(self):
+        self.build({LOG: "# Log\n\n## Review 1\nbody\n"}, {"other.txt": "ours\n"},
+                   {LOG: "# Log\n\n## Review 1\nbody\n## Review 2\nbody\n### Detail\nx\n"})
+        self.assert_ready(self.run_tool())
+        self.assertEqual(self.read(LOG), b"# Log\n\n## Review 1\nbody\n\n## Review 2\nbody\n### Detail\nx\n")
+
+    def test_a_heading_shaped_line_inside_a_code_fence_is_left_alone(self):
+        entry = "\n### two\nA quoted template:\n```markdown\n### Step\n```\n"
+        self.build({LESSONS: "# Lessons\n\n### one\ntext\n"}, {"other.txt": "o\n"},
+                   {LESSONS: "# Lessons\n\n### one\ntext\n" + entry})
+        self.assert_ready(self.run_tool())
+        self.assertEqual(self.read(LESSONS), ("# Lessons\n\n### one\ntext\n" + entry).encode("utf-8"))
 
     def test_an_inserted_seam_line_takes_the_file_line_ending(self):
         self.build({LESSONS: b"# Lessons\r\n\r\n### one\r\ntext one\r\n"},
                    {"other.txt": "ours\n"},
                    {LESSONS: b"# Lessons\r\n\r\n### one\r\ntext one\r\n### three\r\nt\r\n"})
-        proc = self.run_tool()
-        self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
+        self.assert_ready(self.run_tool())
         self.assertEqual(self.read(LESSONS),
                          b"# Lessons\r\n\r\n### one\r\ntext one\r\n\r\n### three\r\nt\r\n")
 
     def test_a_leftover_marker_carried_by_the_branch_stops_the_merge(self):
-        self.build({"a.txt": "a\n"}, {"b.txt": "b\n"},
-                   {"notes.md": f"x\n{START} HEAD\ny\n"})
-        proc = self.run_tool()
-        self.assertEqual(proc.returncode, 2, proc.stdout + proc.stderr)
-        self.assertIn(b"notes.md", proc.stdout)
-        self.assertTrue(self.merging())
+        self.build({"a.txt": "a\n"}, {"b.txt": "b\n"}, {"notes.md": f"x\n{START} HEAD\ny\n"})
+        self.assert_hand(self.run_tool(), "notes.md: leftover conflict marker")
+
+    def test_a_leftover_end_marker_stops_the_merge_too(self):
+        self.build({"a.txt": "a\n"}, {"b.txt": "b\n"}, {"notes.md": f"x\n{END} feat\ny\n"})
+        self.assert_hand(self.run_tool(), "notes.md: leftover conflict marker")
+
+    def test_a_leftover_marker_is_reported_beside_a_path_that_needs_a_hand(self):
+        self.build({"src.txt": "x\n", "notes.md": "a\n"},
+                   {"src.txt": "ours\n"},
+                   {"src.txt": "theirs\n", "notes.md": f"a\n{START} HEAD\nb\n"})
+        self.assert_hand(self.run_tool(), "src.txt: conflict outside the append-only set",
+                         "notes.md: leftover conflict marker")
 
     def test_a_custom_append_only_glob_is_unioned(self):
         self.build({"notes/log.md": "# Log\n"},
                    {"notes/log.md": "# Log\nours\n"},
                    {"notes/log.md": "# Log\ntheirs\n"})
-        proc = self.run_tool("--append-only", "notes/*.md")
-        self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
+        self.assert_ready(self.run_tool("--append-only", "notes/*.md"))
         self.assertEqual(self.read("notes/log.md"), b"# Log\nours\ntheirs\n")
 
     def test_the_main_checkout_is_refused(self):
@@ -231,6 +313,36 @@ class MergeTests(unittest.TestCase):
         self.assertFalse(self.merging())
         self.assertEqual(self.read("src.txt"), b"edited\n")
 
+    def test_a_merge_already_in_progress_is_refused(self):
+        # Both sides add the same file, so the stale merge leaves a clean tree and a MERGE_HEAD.
+        self.build({"a.txt": "a\n"}, {"f.txt": "same\n"}, {"f.txt": "same\n"})
+        stale = self.git(self.main, "rev-parse", "feat")
+        self.git(self.wt, "merge", "--no-ff", "--no-commit", "feat")
+        self.assertEqual(self.git(self.wt, "status", "--porcelain"), "")
+        self.git(self.main, "switch", "-q", "-c", "other")
+        self.commit(self.main, {"o.txt": "other\n"}, "other work")
+        self.git(self.main, "switch", "-q", "main")
+        proc = self.run_tool(branch="other")
+        self.assertEqual(proc.returncode, 1, proc.stdout + proc.stderr)
+        self.assertIn(b"already in progress", proc.stderr)
+        self.assertEqual(self.git(self.wt, "rev-parse", "MERGE_HEAD"), stale)
+        self.assertEqual(self.git(self.wt, "rev-parse", "HEAD"), self.before)
+
+    def test_a_branch_already_merged_starts_no_merge_and_is_refused(self):
+        self.build({"a.txt": "a\n"}, {"b.txt": "b\n"}, None)
+        proc = self.run_tool()
+        self.assertEqual(proc.returncode, 1, proc.stdout + proc.stderr)
+        self.assertIn(b"no merge", proc.stderr)
+        self.assertNotIn(b"ready to commit", proc.stdout)
+
+    def test_a_revision_that_looks_like_an_option_is_refused(self):
+        self.build_appends()
+        for extra in ((), ("--dry-run",)):
+            proc = self.run_tool(*extra, "--", branch="--no-ff")
+            self.assertEqual(proc.returncode, 1, proc.stdout + proc.stderr)
+            self.assertIn(b"--no-ff is not a commit", proc.stderr)
+            self.assertFalse(self.merging())
+
     def test_a_missing_or_empty_message_file_is_refused_before_any_merge(self):
         self.build_appends()
         for content in (None, "  \n"):
@@ -242,6 +354,24 @@ class MergeTests(unittest.TestCase):
             self.assertEqual(proc.returncode, 1, proc.stdout + proc.stderr)
             self.assertIn(b"message file", proc.stderr)
             self.assertFalse(self.merging())
+
+    def test_a_message_failing_the_public_text_check_is_refused_before_any_merge(self):
+        self.build_appends()
+        self.message.write_text("merge(improve): v9.9.9 - feat \u2014 into integration\n\n"
+                                "Built in E:\\repos\\x.\n", encoding="utf-8")
+        proc = self.run_tool()
+        self.assertEqual(proc.returncode, 1, proc.stdout + proc.stderr)
+        self.assertIn(b":1: em-dash", proc.stderr)
+        self.assertIn(b":3: local-path", proc.stderr)
+        self.assertFalse(self.merging())
+
+    def test_an_unexpected_error_exits_three_without_a_traceback(self):
+        # An append-only file that is not UTF-8 cannot be read for its seams.
+        self.build({LESSONS: b"# L\n\xff\n"}, {"other.txt": "o\n"}, {LESSONS: b"# L\n\xff\n\n### two\nt\n"})
+        proc = self.run_tool()
+        self.assertEqual(proc.returncode, 3, proc.stdout + proc.stderr)
+        self.assertIn(b"unexpected error", proc.stderr)
+        self.assertNotIn(b"Traceback", proc.stderr)
 
     def test_a_dry_run_reports_the_conflict_set_and_touches_nothing(self):
         self.build({LESSONS: "# L\n\n### one\nt\n", "src.txt": "x\n"},
@@ -266,10 +396,10 @@ class MergeTests(unittest.TestCase):
 
 
 class SafetyTests(unittest.TestCase):
-    def test_the_tool_names_no_destructive_git_verb(self):
+    def test_the_tool_names_no_destructive_git_verb_and_never_commits(self):
         source = TOOL.read_text(encoding="utf-8")
         for verb in ('"reset"', '"clean"', '"stash"', '"--abort"', '"checkout"', '"restore"',
-                     '"rm"', '"--force"', '"-f"'):
+                     '"rm"', '"--force"', '"-f"', '"commit"'):
             self.assertNotIn(verb, source)
 
 

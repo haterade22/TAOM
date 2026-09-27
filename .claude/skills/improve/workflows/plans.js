@@ -13,14 +13,18 @@ export const meta = {
 //   base: the commit the plans are written against; baseline: its measured totals, one line
 //   planDir: where the plan files live; reviewDir: where review files go (default runRoot)
 //   codeRoot (optional): a worktree at base to read code from; without it, code is read through git
-//   reviewRounds (default 1; 2 for a plan that changes a safety gate)
+//   reviewRounds (default 1, or 2 for a safetyGate plan; an item's own reviewRounds wins)
 //   items: [{ num, slug, title, priority, category, depends_on, brief, mode: 'write'|'extend'|'review',
 //             reviewRounds?, safetyGate? }]
 //     brief: the orchestrator's verified brief (write) or extension brief (extend); safetyGate: the
-//     plan changes a hook that refuses or asks, so its reviewers simulate the planned code.
+//     plan changes a hook that refuses or asks, so its reviewers simulate the planned code. A
+//     repeated num is refused (two agents would write one plan file).
+//   base, baseline, planDir and the other top-level fields ride in an items object:
+//   --items takes { "items": [...], "base": "<sha>", "baseline": "<totals line>", "planDir": "<dir>" }.
 // Returns one entry per item: { num, slug, mode, status: CLEAN | REVISED | NOT_PLANNED | FAILED,
-//   writer, rounds: [{ round, file, review, revise }], residual, failures }. REVISED means the last
-//   revision was not re-reviewed; residual lists what its reviser could not fix.
+//   writer, rounds: [{ round, file, review, revise }], residual, failures }. CLEAN: the last review
+//   returned its lists with no blocking item and no excerpt mismatch. REVISED: the last revision
+//   was not re-reviewed. residual lists every item a reviser could not fix, in every round.
 
 // Every value that changes between runs comes from args. The standing rules for dispatched agents
 // (references/dispatch-rules.md) arrive verbatim as args.rules, because a Workflow script cannot
@@ -44,6 +48,7 @@ ITEMS.forEach((p, i) => {
   need(p, ['num', 'slug', 'title', 'mode'], `plans.js items[${i}]`)
   if (!['write', 'extend', 'review'].includes(p.mode)) throw new Error(`plans.js items[${i}]: mode must be write, extend or review, not ${p.mode}`)
   if (p.mode !== 'review') need(p, ['brief'], `plans.js items[${i}]`)
+  if (ITEMS.findIndex(o => String(o.num) === String(p.num)) !== i) throw new Error(`plans.js items[${i}]: plan ${p.num} is listed twice`)
 })
 
 const modelFor = role => (args.model && typeof args.model[role] === 'string' && args.model[role]) || DEFAULT_MODEL
@@ -142,7 +147,7 @@ const planPath = p => join(args.planDir, `${p.num}-${p.slug}.md`)
 const reviewFile = (p, round) => join(REVIEW_DIR, `plan-review-${p.num}${p.mode === 'write' ? '' : `-${p.mode}`}${round > 1 ? `-r${round}` : ''}.md`)
 const roundsFor = p => {
   const n = Math.floor(Number(p.reviewRounds !== undefined ? p.reviewRounds : args.reviewRounds))
-  return n > 0 ? n : 1
+  return n > 0 ? n : p.safetyGate ? 2 : 1
 }
 
 const CODE = args.codeRoot
@@ -244,7 +249,11 @@ async function planOne(p) {
     const entry = { round, file, review: rv.value, revise: null }
     out.rounds.push(entry)
     earlier.push(file)
-    if (!(rv.value.blocking || []).length && !(rv.value.excerpt_mismatches || []).length) {
+    const { blocking, excerpt_mismatches: mismatches } = rv.value
+    if (!Array.isArray(blocking) || !Array.isArray(mismatches)) {
+      return fail(`review-${p.num}-r${round}: the review returned no blocking or excerpt_mismatches list, so it cannot be read as clean`)
+    }
+    if (!blocking.length && !mismatches.length) {
       out.status = 'CLEAN'
       return out
     }
@@ -253,14 +262,17 @@ async function planOne(p) {
     })
     if (!rs.ok) return fail(rs.failure)
     entry.revise = rs.value
+    out.residual.push(...(rs.value.not_fixed || []))
   }
-  // The last revision was not reviewed again: say so, and keep what its reviser could not fix.
+  // The last revision was not reviewed again: say so; residual keeps what every reviser left.
   out.status = 'REVISED'
-  out.residual = [...(out.rounds[out.rounds.length - 1].revise.not_fixed || [])]
   return out
 }
 
 phase('Write')
-const results = await Promise.all(ITEMS.map(p => planOne(p)))
+// One item's exception (a result that breaks its schema) fails that item only.
+const results = await Promise.all(ITEMS.map(p => planOne(p).catch(e => ({
+  num: p.num, slug: p.slug, mode: p.mode, status: 'FAILED', rounds: [], residual: [], failures: [`plan ${p.num} threw: ${String(e)}`],
+}))))
 for (const r of results) log(`plan ${r.num}: ${r.status}${r.failures.length ? ` (${r.failures.join('; ')})` : ''}`)
 return results

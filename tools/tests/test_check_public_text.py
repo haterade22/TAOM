@@ -58,6 +58,27 @@ class LocalPathTests(unittest.TestCase):
     def test_a_repo_relative_path_and_a_url_pass(self):
         self.assertEqual(rules("tools/check_public_text.py and https://github.com/o/r/issues/1\n"), [])
 
+    def test_forward_slash_drive_paths_are_flagged(self):
+        for line in ("git worktree list printed E:/repos/taom-improve/wt-integrate",
+                     "the log sits in C:/Users/someone/AppData/Local/Temp/x.log",
+                     "a file URL file:///E:/repos/TAOM/docs/x.md",
+                     "in a code span `E:/repos/TAOM/tools/x.py`"):
+            self.assertEqual(rules(line + "\n"), [(1, "local-path")], line)
+
+    def test_git_bash_drive_paths_are_flagged(self):
+        for line in ("Git Bash home: /c/Users/someone/.claude/projects",
+                     "the game: /e/Steam/steamapps/common/Bannerlord",
+                     "scratch at /e/Temp/claude/x"):
+            self.assertEqual(rules(line + "\n"), [(1, "local-path")], line)
+
+    def test_drive_shaped_text_that_is_no_local_path_passes(self):
+        for line in ("PowerShell drives `Env:\\TEMP` and `HKLM:\\SOFTWARE`",
+                     'a C# string `"Error:\\n"` in a code span',
+                     "https://example.com/a/b and http://x.org/c/d",
+                     "a one-letter scheme such as s://bucket/key",
+                     "and/or, src/a/b, docs/e/f.md, a ratio 3:2"):
+            self.assertEqual(rules(line + "\n"), [], line)
+
 
 class PlaceholderTests(unittest.TestCase):
     def test_a_leftover_placeholder_token_is_flagged(self):
@@ -76,6 +97,13 @@ class PlaceholderTests(unittest.TestCase):
     def test_todo_inside_a_sentence_passes(self):
         self.assertEqual(rules("The TODO list is empty.\n"), [])
 
+    def test_a_placeholder_shaped_token_in_a_code_span_passes(self):
+        self.assertEqual(rules("the constants `COMMIT_HASH` and ``TEST_RESULT`` in the diff\n"), [])
+        self.assertEqual(rules("`TODO`\n"), [])
+
+    def test_a_placeholder_beside_a_code_span_is_still_flagged(self):
+        self.assertEqual(rules("`x` then MERGE_HASH\n"), [(1, "placeholder")])
+
 
 class ScopeTests(unittest.TestCase):
     def test_the_words_claude_and_codex_pass(self):
@@ -85,6 +113,10 @@ class ScopeTests(unittest.TestCase):
         text = f"clean\nE:\\x {EM} y\n"
         self.assertEqual(cpt.check_text(text),
                          [(2, "em-dash", f"E:\\x {EM} y"), (2, "local-path", f"E:\\x {EM} y")])
+
+    def test_findings_are_in_line_order_across_rules(self):
+        self.assertEqual(rules(f"MERGE_HASH\na {EM} b\n/e/repos/x\n"),
+                         [(1, "placeholder"), (2, "em-dash"), (3, "local-path")])
 
 
 class CliTests(unittest.TestCase):

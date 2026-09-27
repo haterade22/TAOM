@@ -14,6 +14,8 @@ export const meta = {
 //     wt and branch already exist (the orchestrator made them); decisions: the maintainer's decision
 //     texts; stages: [{ key, title?, prompt, effort? }]; note: binding orchestrator text (an
 //     amendment, a resume from uncommitted work); ref: how commits name the work (default "plan <num>").
+//     A repeated num is refused (its agents would share labels and scratch folders).
+//   knownFailures rides in an items object: --items takes { "items": [...], "knownFailures": [...] }.
 // Returns one entry per item: { num, contract, status: DONE | BLOCKED | PARTIAL | FAILED, ... the
 //   executor's result }, or for stages { num, contract, status, stoppedAt?, notRun?, stages: [...] }.
 
@@ -46,6 +48,7 @@ ITEMS.forEach((it, i) => {
   } else if (it.contract !== 'plan') {
     throw new Error(`${where}: contract must be plan, decisions or stages, not ${it.contract}`)
   }
+  if (ITEMS.findIndex(o => String(o.num) === String(it.num)) !== i) throw new Error(`${where}: num ${it.num} is listed twice`)
 })
 
 const modelFor = role => (args.model && typeof args.model[role] === 'string' && args.model[role]) || DEFAULT_MODEL
@@ -199,4 +202,7 @@ async function executeOne(it) {
 }
 
 phase('Execute')
-return await Promise.all(ITEMS.map(it => executeOne(it)))
+// One item's exception fails that item only, never the whole batch's results.
+return await Promise.all(ITEMS.map(it => executeOne(it).catch(e => ({
+  num: it.num, contract: it.contract, status: 'FAILED', failure: `execute of ${it.num} threw: ${String(e)}`,
+}))))

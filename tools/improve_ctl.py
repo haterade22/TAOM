@@ -6,11 +6,13 @@ and a liveness watch for unattended runs.
   status <readme> <num> <text>                    set one plan row's Status cell, bytes kept
   codex-prompt --branch B --base R [--tag T] --out P   adversarial review prompt for a branch
   file-issue <draft.md>                           file a drafted issue with gh (maintainer's word only)
-  watch --dir P [--stale-min N]                   exit 1 when a running workflow agent went silent
+  watch --dir P [--stale-min N]                   exit 1 on an agent stalled on a hook ask or silent
 
 `python tools/improve_ctl.py <sub> --help` documents each. Pure stdlib. Reads git, never writes
 to it; writes only the file a subcommand names (file-issue also writes the body file it posts).
-Exit 0 on success, 1 when the subcommand's own check fails, 2 on bad input.
+Every revision it is given is checked with `git rev-parse --verify --end-of-options`, so one that
+starts with - is refused, never read as a git option. Exit 0 on success, 1 when the subcommand's
+own check fails, 2 on bad input, 3 on an unexpected error.
 """
 from __future__ import annotations
 
@@ -78,6 +80,14 @@ def toplevel() -> str:
     return git(os.getcwd(), "rev-parse", "--show-toplevel").strip()
 
 
+def verify_commit(cwd, rev: str, what: str) -> str:
+    """The commit a revision names; --end-of-options keeps a leading - from being an option."""
+    try:
+        return git(cwd, "rev-parse", "-q", "--verify", "--end-of-options", f"{rev}^{{commit}}").strip()
+    except Fail:
+        raise Fail(f"{what} {rev!r} is not a commit in {cwd}") from None
+
+
 def read_text(path) -> str:
     """The file's text exactly as stored: BOM and line endings kept."""
     try:
@@ -135,11 +145,25 @@ def lenses_for(paths) -> list:
 # --- args ---------------------------------------------------------------------------------------
 
 def review_item(number: int, item) -> dict:
+    """A review item with its head, its changed files by kind, and its lenses: the ones it
+    carries unioned with deep-review's routing for base..head. An empty range is refused."""
+    where = f"review item {number}"
     if not isinstance(item, dict) or not item.get("wt") or not item.get("base"):
-        raise Fail(f"review item {number} needs \"wt\" (its worktree) and \"base\"")
-    head = item.get("head") or git(item["wt"], "rev-parse", "HEAD").strip()
-    names = [n for n in git(item["wt"], "diff", "--name-only", f"{item['base']}..{head}").splitlines() if n]
-    return dict(item, head=head, files=group_files(names), lenses=lenses_for(names))
+        raise Fail(f"{where} needs \"wt\" (its worktree) and \"base\"")
+    own = item.get("lenses", [])
+    if not isinstance(own, list):
+        raise Fail(f"{where}: lenses must be a list")
+    verify_commit(item["wt"], item["base"], f"{where} base")
+    head = item.get("head") or "HEAD"
+    tip = verify_commit(item["wt"], head, f"{where} head")
+    head = item.get("head") or tip
+    rng = f"{item['base']}..{head}"
+    names = [n for n in git(item["wt"], "diff", "--name-only", "--end-of-options", rng).splitlines() if n]
+    if not names:
+        raise Fail(f"{where}: {rng} changes no file, so there is nothing to review")
+    wanted = set(lenses_for(names)) | {str(lens) for lens in own}
+    lenses = [lens for lens in LENS_ORDER if lens in wanted] + sorted(wanted - set(LENS_ORDER))
+    return dict(item, head=head, files=group_files(names), lenses=lenses)
 
 
 def cmd_args(a) -> int:
@@ -148,44 +172,49 @@ def cmd_args(a) -> int:
         doc = json.loads(read_text(a.items).lstrip("\ufeff"))
     except ValueError as exc:
         raise Fail(f"{a.items}: not JSON: {exc}") from exc
-    extras = {}
+    out = {}
     if isinstance(doc, dict) and isinstance(doc.get("items"), list):
-        extras = {k: v for k, v in doc.items() if k != "items"}
+        out = {k: v for k, v in doc.items() if k != "items"}
         doc = doc["items"]
     if not isinstance(doc, list):
         raise Fail(f"{a.items}: expected an items array, or an object with an \"items\" array")
-    # TAOM_IMPROVE_ROOT is the worktree root outside the repo, never the run folder.
-    root = os.environ.get("TAOM_IMPROVE_ROOT")
-    scratch = a.scratch or (root and os.path.join(root, "scratch"))
-    tmp = a.tmp or (root and os.path.join(root, "scratch", "tmp"))
-    if not a.run_root:
-        raise Fail("--run-root (the run folder) is required")
-    if not (scratch and tmp):
-        raise Fail("--scratch and --tmp are required unless TAOM_IMPROVE_ROOT is set")
-    model = {}
+    model = None
     for pair in a.model or []:
         role, _, model_id = pair.partition("=")
         if role not in ROLES or not model_id:
             raise Fail(f"--model {pair}: expected role=id, role one of {', '.join(ROLES)}")
+        model = model or {}
         model[role] = model_id
-    items = [review_item(n, i) for n, i in enumerate(doc, 1)] if a.workflow == "review" else doc
-    if a.version:
-        version = a.version
-    else:
+    # A flag wins; without one, a field the items object carries stands; otherwise the default.
+    flags = {"rules": a.rules and read_text(a.rules), "repo": a.repo and os.path.abspath(a.repo),
+             "runRoot": a.run_root and os.path.abspath(a.run_root),
+             "scratch": a.scratch and os.path.abspath(a.scratch),
+             "tmp": a.tmp and os.path.abspath(a.tmp), "date": a.date, "version": a.version,
+             "model": model, "pool": a.pool, "maxRounds": a.max_rounds}
+    out.update({k: v for k, v in flags.items() if v is not None})
+    # TAOM_IMPROVE_ROOT is the worktree root outside the repo, never the run folder.
+    root = os.environ.get("TAOM_IMPROVE_ROOT")
+    if root:
+        out.setdefault("scratch", os.path.abspath(os.path.join(root, "scratch")))
+        out.setdefault("tmp", os.path.abspath(os.path.join(root, "scratch", "tmp")))
+    if "runRoot" not in out:
+        raise Fail("--run-root (the run folder) is required")
+    if "scratch" not in out or "tmp" not in out:
+        raise Fail("--scratch and --tmp are required unless TAOM_IMPROVE_ROOT is set")
+    if "rules" not in out:
+        out["rules"] = read_text(os.path.join(top, RULES_PATH))
+    if "repo" not in out:
+        out["repo"] = str(Path(git(os.getcwd(), "rev-parse", "--path-format=absolute",
+                                   "--git-common-dir").strip()).parent)
+    if "version" not in out:
         match = re.search(r'<Version\s+value="([^"]+)"', read_text(os.path.join(top, SUBMODULE_XML)))
         if not match:
             raise Fail(f"no <Version value=...> in {SUBMODULE_XML}; pass --version")
-        version = match.group(1)
-    repo = a.repo or str(Path(git(os.getcwd(), "rev-parse", "--path-format=absolute",
-                                  "--git-common-dir").strip()).parent)
-    out = dict(extras)
-    out.update(rules=read_text(a.rules or os.path.join(top, RULES_PATH)),
-               repo=os.path.abspath(repo), runRoot=os.path.abspath(a.run_root),
-               scratch=os.path.abspath(scratch), tmp=os.path.abspath(tmp),
-               date=a.date or datetime.date.today().isoformat(), version=version, model=model,
-               pool=a.pool, items=items)
-    if a.max_rounds is not None:
-        out["maxRounds"] = a.max_rounds
+        out["version"] = match.group(1)
+    out.setdefault("date", datetime.date.today().isoformat())
+    out.setdefault("model", {})
+    out.setdefault("pool", 4)
+    out["items"] = [review_item(n, i) for n, i in enumerate(doc, 1)] if a.workflow == "review" else doc
     text = json.dumps(out, indent=2) + "\n"
     if a.out:
         write_out(a.out, text)
@@ -300,7 +329,7 @@ def codex_prompt(cwd, branch: str, base: str, tag: str, cheatsheet: str, lessons
     plan_path, plan = find_plan(cwd, branch)
     title = re.search(r"^# Plan \d+: (.+)$", plan, re.M) or re.search(r"^# (.+)$", plan, re.M)
     why = " ".join(_section(plan, "Why this matters").split())
-    stops = _bullets(_section(plan, "STOP conditions"))[:6]
+    stops = _bullets(_section(plan, "STOP conditions"))
 
     out = [f"# Codex adversarial review: branch {branch}", ""]
     if plan_path:
@@ -364,6 +393,8 @@ def codex_prompt(cwd, branch: str, base: str, tag: str, cheatsheet: str, lessons
 
 def cmd_codex_prompt(a) -> int:
     top = toplevel()
+    verify_commit(top, a.branch, "--branch")
+    verify_commit(top, a.base, "--base")
     source = os.path.join(top, PROMPT_FIXED_PATH)
     cheatsheet, lessons = split_fixed(read_text(source), source)
     write_out(a.out, codex_prompt(top, a.branch, a.base, a.tag or "", cheatsheet, lessons))
@@ -407,10 +438,12 @@ def cmd_file_issue(a) -> int:
 # --- watch --------------------------------------------------------------------------------------
 
 def journal_states(path: Path):
-    """agentId -> (running | done | failed, label) from a workflow journal; None without one."""
+    """agentId -> (state, label) from a workflow journal, None without one. The state is running,
+    done, failed, or superseded: its key was started again later (a retry or a resumed run), so
+    that attempt is over even with no failed row."""
     if not path.is_file():
         return None
-    states = {}
+    states, key_of, latest = {}, {}, {}
     for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
         try:
             row = json.loads(line)
@@ -421,14 +454,53 @@ def journal_states(path: Path):
                                                                                  if agent else None)
         if state:
             states[agent] = (state, row.get("label") or states.get(agent, ("", ""))[1])
+        if state == "running":
+            key_of[agent] = row.get("key") or agent
+            latest[key_of[agent]] = agent
+    for agent, (state, label) in states.items():
+        if state == "running" and latest[key_of[agent]] != agent:
+            states[agent] = ("superseded", label)
     return states
+
+
+def pending_ask(path: Path):
+    """The reason of the transcript's latest PreToolUse hook "ask" when no later tool_result
+    answers its toolUseID: the agent waits on a prompt nobody sees. None otherwise."""
+    pending = None
+    with open(path, encoding="utf-8", errors="replace") as handle:
+        for line in handle:
+            if "permissionDecision" not in line and "tool_result" not in line:
+                continue
+            try:
+                record = json.loads(line)
+            except ValueError:
+                continue
+            if not isinstance(record, dict):
+                continue
+            hook = record.get("attachment")
+            if isinstance(hook, dict) and hook.get("hookEvent") == "PreToolUse":
+                try:
+                    said = json.loads(hook.get("stdout") or "{}")
+                except ValueError:
+                    said = {}
+                decision = said.get("hookSpecificOutput") if isinstance(said, dict) else None
+                if isinstance(decision, dict) and decision.get("permissionDecision") == "ask":
+                    pending = (hook.get("toolUseID"), str(decision.get("permissionDecisionReason") or "ask"))
+            message = record.get("message")
+            content = message.get("content") if isinstance(message, dict) else None
+            if pending and isinstance(content, list) and any(
+                    isinstance(c, dict) and c.get("type") == "tool_result"
+                    and c.get("tool_use_id") == pending[0] for c in content):
+                pending = None
+    return pending[1] if pending else None
 
 
 def cmd_watch(a) -> int:
     root = Path(a.dir)
     if not root.is_dir():
         raise Fail(f"no such folder: {root}")
-    now, journals, counts = time.time(), {}, {"total": 0, "running": 0, "stale": 0}
+    now, journals = time.time(), {}
+    counts = {"total": 0, "running": 0, "stale": 0, "asking": 0}
     for transcript in sorted(root.rglob("*.jsonl")):
         if transcript.name == "journal.jsonl":
             continue
@@ -438,14 +510,18 @@ def cmd_watch(a) -> int:
         agent = transcript.stem[len("agent-"):] if transcript.stem.startswith("agent-") else transcript.stem
         state, label = ("no journal", "") if states is None else states.get(agent, ("not in journal", ""))
         age = (now - transcript.stat().st_mtime) / 60
-        stale = state == "running" and age > a.stale_min
+        # A finished, failed or superseded agent waits on nothing, whatever its transcript ends with.
+        ask = pending_ask(transcript) if state not in ("done", "failed", "superseded") else None
+        flag = "STALLED-ASK" if ask else "STALE" if state == "running" and age > a.stale_min else ""
         counts["total"] += 1
         counts["running"] += state == "running"
-        counts["stale"] += stale
-        print(f"{'STALE' if stale else '':<6}{age:8.1f} min  {state:<14}  {label or '-':<24}  {transcript}")
-    print(f"{counts['total']} transcript(s), {counts['running']} running, {counts['stale']} stale "
-          f"(running and silent for over {a.stale_min:g} min)")
-    return 1 if counts["stale"] else 0
+        counts["stale"] += flag == "STALE"
+        counts["asking"] += flag == "STALLED-ASK"
+        print(f"{flag:<12}{age:8.1f} min  {state:<14}  {label or '-':<24}  {transcript}"
+              + (f"  ask: {ask[:120]}" if ask else ""))
+    print(f"{counts['total']} transcript(s), {counts['running']} running, {counts['asking']} stalled "
+          f"on a hook ask, {counts['stale']} stale (running and silent for over {a.stale_min:g} min)")
+    return 1 if counts["stale"] or counts["asking"] else 0
 
 
 # --- CLI ----------------------------------------------------------------------------------------
@@ -458,8 +534,10 @@ def build_parser() -> argparse.ArgumentParser:
                        description="Write the args JSON for a Workflow script, embedding the "
                        "dispatch rules verbatim as `rules`. For review, each item (needs wt and base; "
                        "head defaults to the worktree's HEAD) gains files by kind and the deep-review "
-                       "lenses for git diff --name-only base..head. An items file may be an array, or "
-                       "an object whose other fields pass through as top-level args.")
+                       "lenses for git diff --name-only base..head, unioned with any lenses it "
+                       "carries; a range that changes no file is refused. An items file may be an "
+                       "array, or an object whose other fields are top-level args: each stands "
+                       "unless a flag is given for it (pool, model and maxRounds included).")
     p.add_argument("workflow", choices=WORKFLOWS)
     p.add_argument("--items", required=True, help="JSON file: the items array (or {items, ...})")
     p.add_argument("--repo", help="main checkout (default: the parent of git's common dir)")
@@ -470,7 +548,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--version", help=f"vX.Y.Z (default: <Version value> in {SUBMODULE_XML})")
     p.add_argument("--model", nargs="+", metavar="ROLE=ID",
                    help=f"model per role, roles: {', '.join(ROLES)} (the scripts default each)")
-    p.add_argument("--pool", type=int, default=4, help="agents in flight at once (default 4)")
+    p.add_argument("--pool", type=int, help="agents in flight at once (default 4)")
     p.add_argument("--max-rounds", type=int, help="convergence rounds, written as maxRounds")
     p.add_argument("--rules", help=f"rules file (default: {RULES_PATH} in this checkout)")
     p.add_argument("--out", help="output file (default: stdout)")
@@ -505,12 +583,17 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("draft")
     p.set_defaults(func=cmd_file_issue)
 
-    p = sub.add_parser("watch", help="list agent transcripts; exit 1 on a silent running agent",
-                       description="List every agent transcript (*.jsonl) under DIR with its last "
-                       "write age. Exit 1 when one is older than --stale-min minutes while its "
-                       "workflow's journal.jsonl started it and has no result or failed row for it.")
+    p = sub.add_parser("watch", help="list agent transcripts; exit 1 on a stalled or silent agent",
+                       description="List every agent transcript (*.jsonl) under DIR (the running "
+                       "workflow's transcript folder or a session's subagents folder) with its last "
+                       "write age. STALLED-ASK: the transcript's latest PreToolUse hook ask has no "
+                       "later tool_result for its tool call, so the agent waits on a prompt nobody "
+                       "sees (direct spawns included, which have no journal). STALE: a running "
+                       "agent silent for over --stale-min minutes. In a workflow folder, an agent "
+                       "whose journal key was started again later is superseded, not running. "
+                       "Exit 1 on any STALLED-ASK or STALE.")
     p.add_argument("--dir", required=True)
-    p.add_argument("--stale-min", type=float, default=20.0)
+    p.add_argument("--stale-min", type=float, default=30.0, help="minutes (default 30)")
     p.set_defaults(func=cmd_watch)
     return parser
 
@@ -524,6 +607,9 @@ def main(argv: list[str] | None = None) -> int:
     except Fail as exc:
         print(f"improve_ctl {args.command}: {exc}", file=sys.stderr)
         return exc.code
+    except Exception as exc:  # a distinct exit code and one line, never a traceback read as exit 1
+        print(f"improve_ctl {args.command}: unexpected error: {exc!r}", file=sys.stderr)
+        return 3
 
 
 if __name__ == "__main__":

@@ -20,6 +20,7 @@ import tempfile
 import time
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -247,6 +248,44 @@ class ArgsTests(FixtureRepo):
         self.assertEqual((data["reviewRounds"], data["planDir"], data["items"]),
                          (2, "plans", [{"num": "050"}]))
 
+    def test_an_items_object_keeps_its_fields_unless_a_flag_names_them(self):
+        items = self.write(self.tmp, "obj.json", json.dumps(
+            {"pool": 2, "model": {"lead": "m-obj"}, "maxRounds": 1, "date": "2031-01-01",
+             "runRoot": "R", "items": [{"num": "050"}]}))
+        data = self.args_json("plans", "--items", items, run_root=False)
+        self.assertEqual((data["pool"], data["model"], data["maxRounds"], data["date"], data["runRoot"]),
+                         (2, {"lead": "m-obj"}, 1, "2031-01-01", "R"))
+        data = self.args_json("plans", "--items", items, "--pool", "3", "--model", "lead=m-flag",
+                              "--max-rounds", "2", "--date", "2032-02-02")
+        self.assertEqual((data["pool"], data["model"], data["maxRounds"], data["date"]),
+                         (3, {"lead": "m-flag"}, 2, "2032-02-02"))
+        self.assertTrue(same_path(data["runRoot"], self.run_root))
+
+    def test_a_review_item_keeps_its_own_lenses_beside_the_computed_ones(self):
+        items = self.write(self.tmp, "lens.json", json.dumps(
+            [{"num": "042", "wt": str(self.wt), "base": self.base, "head": self.hook_only,
+              "lenses": ["2", 7]}]))
+        data = self.args_json("review", "--items", items)
+        self.assertEqual(data["items"][0]["lenses"], ["1", "2", "3", "4", "5", "6", "7", "tooling"])
+
+    def test_a_review_item_whose_range_changes_no_file_is_refused(self):
+        items = self.write(self.tmp, "empty.json", json.dumps(
+            [{"num": "042", "wt": str(self.wt), "base": self.hook_only, "head": self.hook_only}]))
+        proc = self.run_args("review", "--items", items)
+        self.assertEqual(proc.returncode, 2, proc.stderr)
+        self.assertIn(b"changes no file", proc.stderr)
+
+    def test_a_revision_that_looks_like_an_option_is_refused(self):
+        # git diff would take --output=<file> as an option and write the file.
+        trap = self.tmp / "written-by-git"
+        for item in ({"base": f"--output={trap}", "head": self.head},
+                     {"base": self.base, "head": f"--output={trap}"}):
+            items = self.write(self.tmp, "dash.json", json.dumps([dict(item, num="042", wt=str(self.wt))]))
+            proc = self.run_args("review", "--items", items)
+            self.assertEqual(proc.returncode, 2, proc.stderr)
+            self.assertIn(b"is not a commit", proc.stderr)
+            self.assertEqual(list(self.tmp.glob("written-by-git*")), [])
+
     def test_an_items_file_saved_with_a_bom_is_read(self):
         items = self.write(self.tmp, "bom.json", b"\xef\xbb\xbf" + b'[{"num": "7"}]')
         self.assertEqual(self.args_json("fanout", "--items", items)["items"], [{"num": "7"}])
@@ -309,6 +348,27 @@ class StatusTests(unittest.TestCase):
         with self.assertRaises(ctl.Fail) as caught:
             ctl.set_status(self.INDEX.encode("utf-8"), "099", "DONE")
         self.assertEqual(caught.exception.code, 1)
+
+    def test_the_status_column_is_found_wherever_it_sits(self):
+        index = "| Plan | Status | Title |\n|---|---|---|\n| [012](012-x.md) | TODO | Trace |\n"
+        self.assertEqual(ctl.set_status(index.encode("utf-8"), "012", "DONE"),
+                         index.replace("| TODO |", "| DONE |").encode("utf-8"))
+
+    def test_a_row_listed_twice_is_an_error(self):
+        index = ("| Plan | Title | Status |\n|---|---|---|\n"
+                 "| [012](012-x.md) | A | TODO |\n| [012](012-y.md) | B | TODO |\n")
+        with self.assertRaises(ctl.Fail) as caught:
+            ctl.set_status(index.encode("utf-8"), "012", "DONE")
+        self.assertEqual(caught.exception.code, 1)
+        self.assertIn("2 times", str(caught.exception))
+
+    def test_a_number_never_matches_a_longer_one(self):
+        index = ("| Plan | Title | Status |\n|---|---|---|\n"
+                 "| [120](120-x.md) | A | TODO |\n| [12](12-y.md) | B | TODO |\n| 7 | C | TODO |\n")
+        self.assertEqual(ctl.set_status(index.encode("utf-8"), "12", "DONE"),
+                         index.replace("| B | TODO |", "| B | DONE |").encode("utf-8"))
+        self.assertEqual(ctl.set_status(index.encode("utf-8"), "7", "DONE"),
+                         index.replace("| C | TODO |", "| C | DONE |").encode("utf-8"))
 
     def test_a_cell_breaking_status_is_refused(self):
         for text in ("a | b", "two\nlines"):
@@ -376,6 +436,27 @@ class CodexPromptTests(FixtureRepo):
 
     def test_a_tag_marks_a_second_review(self):
         self.assertIn("SECOND REVIEW (decisions)", self.prompt("--tag", "decisions"))
+
+    def test_every_stop_condition_becomes_a_suspect(self):
+        stops = [f"- Condition number {n} fires." for n in range(1, 9)]
+        self.git(self.main, "switch", "-q", "-c", "improve/013-many-stops")
+        self.commit(self.main, "plan", {"plans/013-many.md": "# Plan 013: Many\n\n## STOP conditions\n\n"
+                                        + "\n".join(stops) + "\n\n## Steps\n- no\n"})
+        self.git(self.main, "switch", "-q", "main")
+        text = self.prompt(branch="improve/013-many-stops")
+        for n in range(1, 9):
+            self.assertIn(f"risk? Condition number {n} fires.\n", text)
+
+    def test_a_revision_that_looks_like_an_option_is_refused(self):
+        # git diff would take --output=<file> as an option and write the file.
+        trap = self.tmp / "written-by-git"
+        for flags in (("--branch", "improve/012-trace-per-frame", f"--base=--output={trap}"),
+                      (f"--branch=--output={trap}", "--base", "main")):
+            proc = self.run_tool("codex-prompt", *flags, "--out", self.out)
+            self.assertEqual(proc.returncode, 2, proc.stderr)
+            self.assertIn(b"is not a commit", proc.stderr)
+            self.assertEqual(list(self.tmp.glob("written-by-git*")), [])
+            self.assertFalse(self.out.exists())
 
     def test_a_branch_without_a_plan_still_gets_a_prompt(self):
         self.git(self.main, "branch", "hotfix", "improve/012-trace-per-frame~0")
@@ -455,6 +536,22 @@ class FileIssueTests(unittest.TestCase):
         self.assertEqual(self.calls, [])
         self.assertIn("TITLE:", err)
 
+    def test_a_header_without_its_blank_line_or_its_title_is_refused(self):
+        for text in ("TITLE: x\nLABEL: bug\nthe body starts at once\n",
+                     "TITLE:   \nLABEL: bug\n\nbody\n",
+                     "TITLE: x\n\nbody\n"):
+            rc, _, err = self.file(self.draft(text))
+            self.assertEqual(rc, 2, text)
+            self.assertEqual(self.calls, [], text)
+
+    def test_a_dash_or_a_local_path_in_the_title_is_refused(self):
+        for title, rule in (("Make the gate loud \u2014 now", "1: em-dash"),
+                            ("Logs land in E:/repos/x", "1: local-path")):
+            rc, _, err = self.file(self.draft(f"TITLE: {title}\nLABEL: bug\n\nbody\n"))
+            self.assertEqual(rc, 1, title)
+            self.assertEqual(self.calls, [], title)
+            self.assertIn(rule, err)
+
     def test_a_gh_failure_is_reported(self):
         def failing(cmd, **kwargs):
             return subprocess.CompletedProcess(cmd, 1, "", "label not found")
@@ -464,6 +561,42 @@ class FileIssueTests(unittest.TestCase):
             rc = ctl.file_issue(path, run=failing)
         self.assertEqual(rc, 1)
         self.assertIn("label not found", err.getvalue())
+
+
+def ask_transcript(tool_id, asking_hook, reason, hooks_after=(), answered=False):
+    """A transcript in the recorded shape: a Bash tool_use, its PreToolUse hook_success
+    attachments (one of them answering "ask" in its stdout JSON), and a tool_result only when
+    the ask was answered."""
+    def hook(command, stdout):
+        return {"type": "attachment", "attachment": {
+            "type": "hook_success", "hookName": "PreToolUse:Bash", "toolUseID": tool_id,
+            "hookEvent": "PreToolUse", "content": "", "stdout": stdout, "stderr": "", "exitCode": 0,
+            "command": command}}
+    ask = json.dumps({"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "ask",
+                                             "permissionDecisionReason": reason}})
+    records = [{"type": "assistant", "message": {"role": "assistant", "content": [
+                   {"type": "tool_use", "id": tool_id, "name": "Bash", "input": {"command": "git ..."}}]}},
+               hook(".claude/hooks/check-commit-subject-version.sh", "{}\n"),
+               hook(asking_hook, ask)]
+    records += [hook(command, "{}\n") for command in hooks_after]
+    if answered:
+        records.append({"type": "user", "message": {"role": "user", "content": [
+            {"tool_use_id": tool_id, "type": "tool_result", "content": "done", "is_error": False}]}})
+    return "".join(json.dumps(r) + "\n" for r in records)
+
+
+# The three hook-ask stalls of the 2026-09-24 to 26 run (9.4 h and 4.5 h among them), in the shape
+# their transcripts recorded: the asking hook, then any hooks that ran after it for the same call.
+RECORDED_STALLS = (
+    ("toolu_013deWJsUVAvykyAHa9QVrzD", ".claude/hooks/block-broad-git-add.sh",
+     "CONFIRM broad staging: git commit -a stages every tracked file", ()),
+    ("toolu_01Bfjm7GwPDrtLRJNqLRPppb", ".claude/hooks/block-dangerous-git.sh",
+     "CONFIRM destructive git op: git checkout discards working-tree changes",
+     (".claude/hooks/block-broad-git-add.sh", ".claude/hooks/suggest-compact.sh")),
+    ("toolu_01NGhmqS9E9VcbjjyaURqWe4", ".claude/hooks/block-dangerous-git.sh",
+     "CONFIRM destructive git op: git checkout discards working-tree changes",
+     (".claude/hooks/block-broad-git-add.sh", ".claude/hooks/suggest-compact.sh")),
+)
 
 
 class WatchTests(unittest.TestCase):
@@ -479,38 +612,56 @@ class WatchTests(unittest.TestCase):
                 {"type": "result", "key": "k2", "agentId": "a2", "result": {}},
                 {"type": "started", "key": "k3", "agentId": "a3", "label": "exec-018"},
                 {"type": "failed", "key": "k3", "agentId": "a3"},
-                {"type": "started", "key": "k3", "agentId": "a4", "label": "exec-018"}]
+                {"type": "started", "key": "k3", "agentId": "a4", "label": "exec-018"},
+                # A retry with no failed row: a resumed run starts the key again.
+                {"type": "started", "key": "k5", "agentId": "a5", "label": "lead-012"},
+                {"type": "started", "key": "k5", "agentId": "a6", "label": "lead-012"},
+                # A failure that was never retried.
+                {"type": "started", "key": "k7", "agentId": "a7", "label": "draft-060"},
+                {"type": "failed", "key": "k7", "agentId": "a7"}]
         (self.wf / "journal.jsonl").write_text(
             "".join(json.dumps(r) + "\n" for r in rows) + '{"type": "sta', encoding="utf-8")
-        now = time.time()
-        for agent, minutes in (("a1", 45), ("a2", 300), ("a3", 300), ("a4", 1)):
-            self.transcript(self.wf / f"agent-{agent}.jsonl", now - minutes * 60)
-        self.transcript(self.dir / "agent-plain.jsonl", now - 600 * 60)
+        self.now = time.time()
+        for agent, minutes in (("a1", 45), ("a2", 300), ("a3", 300), ("a4", 1), ("a5", 300), ("a6", 2),
+                               ("a7", 300)):
+            self.transcript(self.wf / f"agent-{agent}.jsonl", minutes)
+        self.transcript(self.dir / "agent-plain.jsonl", 600)
 
-    def transcript(self, path, mtime):
-        path.write_text("{}\n", encoding="utf-8")
+    def transcript(self, path, minutes, text="{}\n"):
+        path.write_text(text, encoding="utf-8")
+        mtime = self.now - minutes * 60
         os.utime(path, (mtime, mtime))
 
     def watch(self, *extra, directory=None):
         return subprocess.run([sys.executable, "-B", str(TOOL), "watch", "--dir",
                                str(directory or self.dir), *extra], capture_output=True)
 
+    def flagged(self, proc, flag):
+        return [line for line in proc.stdout.decode("utf-8").splitlines() if line.startswith(flag + " ")]
+
     def test_a_running_agent_silent_past_the_limit_fails_the_watch(self):
         proc = self.watch()
         self.assertEqual(proc.returncode, 1, proc.stderr)
         lines = proc.stdout.decode("utf-8").splitlines()
-        stale = [line for line in lines if line.startswith("STALE")]
+        stale = self.flagged(proc, "STALE")
         self.assertEqual(len(stale), 1, lines)
         self.assertIn("agent-a1.jsonl", stale[0])
         self.assertIn("review-011", stale[0])
         self.assertTrue(any("agent-plain.jsonl" in line for line in lines))
-        self.assertEqual(len([line for line in lines if ".jsonl" in line]), 5)
+        self.assertEqual(len([line for line in lines if ".jsonl" in line]), 8)
 
-    def test_finished_failed_and_fresh_agents_are_not_stale(self):
+    def test_finished_failed_superseded_and_fresh_agents_are_not_stale(self):
         (self.wf / "agent-a1.jsonl").unlink()
         proc = self.watch()
         self.assertEqual(proc.returncode, 0, proc.stdout)
         self.assertNotIn(b"STALE", proc.stdout)
+        (a5,) = [line for line in proc.stdout.decode("utf-8").splitlines() if "agent-a5.jsonl" in line]
+        self.assertIn("superseded", a5)
+
+    def test_the_default_limit_is_thirty_minutes(self):
+        self.transcript(self.wf / "agent-a1.jsonl", 25)
+        self.assertEqual(self.watch().returncode, 0)
+        self.assertEqual(self.watch("--stale-min", "20").returncode, 1)
 
     def test_the_limit_is_configurable(self):
         self.assertEqual(self.watch("--stale-min", "60").returncode, 0)
@@ -518,6 +669,58 @@ class WatchTests(unittest.TestCase):
 
     def test_a_missing_folder_is_an_error(self):
         self.assertEqual(self.watch(directory=self.dir / "absent").returncode, 2)
+
+    def test_the_recorded_hook_ask_stalls_are_flagged_in_a_direct_spawn_folder(self):
+        spawns = self.dir / "spawns"
+        spawns.mkdir()
+        for n, (tool_id, hook, reason, after) in enumerate(RECORDED_STALLS):
+            self.transcript(spawns / f"agent-s{n}.jsonl", 1, ask_transcript(tool_id, hook, reason, after))
+        proc = self.watch(directory=spawns)
+        self.assertEqual(proc.returncode, 1, proc.stdout)
+        asking = self.flagged(proc, "STALLED-ASK")
+        self.assertEqual(len(asking), 3, proc.stdout)
+        self.assertIn("CONFIRM broad staging", asking[0])
+        self.assertIn("CONFIRM destructive git op", asking[1])
+
+    def test_a_running_workflow_agent_waiting_on_an_ask_is_flagged_while_fresh(self):
+        (self.wf / "agent-a1.jsonl").unlink()
+        tool_id, hook, reason, after = RECORDED_STALLS[1]
+        self.transcript(self.wf / "agent-a4.jsonl", 1, ask_transcript(tool_id, hook, reason, after))
+        proc = self.watch()
+        self.assertEqual(proc.returncode, 1, proc.stdout)
+        (line,) = self.flagged(proc, "STALLED-ASK")
+        self.assertIn("agent-a4.jsonl", line)
+        self.assertIn("exec-018", line)
+
+    def test_an_answered_ask_and_an_ask_in_a_finished_agent_are_not_stalls(self):
+        (self.wf / "agent-a1.jsonl").unlink()
+        tool_id, hook, reason, after = RECORDED_STALLS[0]
+        self.transcript(self.wf / "agent-a4.jsonl", 1, ask_transcript(tool_id, hook, reason, after, answered=True))
+        self.transcript(self.wf / "agent-a2.jsonl", 300, ask_transcript(tool_id, hook, reason, after))
+        proc = self.watch()
+        self.assertEqual(proc.returncode, 0, proc.stdout)
+        self.assertNotIn(b"STALLED-ASK", proc.stdout)
+
+    def test_only_the_latest_ask_counts(self):
+        spawns = self.dir / "spawns"
+        spawns.mkdir()
+        first = ask_transcript("toolu_A", ".claude/hooks/block-dangerous-git.sh", "first", ())
+        answered = ask_transcript("toolu_B", ".claude/hooks/block-dangerous-git.sh", "second", (), answered=True)
+        self.transcript(spawns / "agent-s.jsonl", 1, first + answered)
+        self.assertEqual(self.watch(directory=spawns).returncode, 0)
+        self.transcript(spawns / "agent-s.jsonl", 1, answered + first)
+        self.assertEqual(self.watch(directory=spawns).returncode, 1)
+
+
+class CliTests(unittest.TestCase):
+    def test_an_unexpected_error_exits_three_without_a_traceback(self):
+        err = io.StringIO()
+        with mock.patch.object(ctl, "cmd_status", side_effect=RuntimeError("boom")), \
+                contextlib.redirect_stderr(err):
+            rc = ctl.main(["status", "README.md", "1", "DONE"])
+        self.assertEqual(rc, 3)
+        self.assertIn("unexpected error", err.getvalue())
+        self.assertIn("boom", err.getvalue())
 
 
 class RealFileTests(unittest.TestCase):
