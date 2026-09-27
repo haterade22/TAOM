@@ -102,7 +102,7 @@ runs first: `<command>` gives `<expected>`. If it does not, STOP: Step 0 is not 
 | One test class | the same, plus `--filter "FullyQualifiedName~XServiceTests"` | the named tests run; a filter matching nothing proves nothing |
 | Python tools | `python -B -m unittest discover -s tools/tests -t .` | the baseline's failure set, no new names |
 | Data | `python tools/validate_moduledata.py` | 0 ERRORs |
-| Hooks (hook plans) | `timeout 1500 bash tools/test_hooks.sh > <log> 2>&1` | "N passed, 0 failed" in the log |
+| Hooks (hook plans) | `CLAUDE_PROJECT_DIR="<worktree>" timeout 1500 bash tools/test_hooks.sh > <log> 2>&1`, run with `run_in_background` (it outlasts a foreground call) | "N passed, 0 failed" under Summary in the log, once it finishes |
 | Bindings (patch plans) | the binding gate from `docs/ai-includes/agent-operating-manual.md` | all pass |
 
 Both flags go on build AND test, and prefix dotnet with the TEMP and TMP your dispatch rules give.
