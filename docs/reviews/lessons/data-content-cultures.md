@@ -1682,3 +1682,26 @@ back to 86 Blunt and speed 28, at 3.40 m reach against the mace's 3.08 m. In-gam
   surviving parts is a balance change, not just a repair", above, is the same rule for re-pointed pieces.
 - **Source:** 2026-09-26 review, lens 7 H1 and lens 4; live `LOTRLOME_crafting_pieces.xml`
   `wm_hill_troll_2h_hammer_head` (backup `.bak-hammerweight-20260926-140745`); `tools/melee_ladders.json` `exempt_troops`.
+
+### A culture-keyed armour feature needs a donor map, and a new global rule needs a check against other features' decisions
+Nine lord cultures (Lindon, Lórien, Umbar, Abanissa, Shaghana, Khand and the three orc cultures) own no Armory armour.
+Keyed by culture, their lord kit fell back to any culture's (vanilla pieces included) and their 22 towns could never
+sell heavy or elite once the NotMerchandise flag closed the workshops' any-culture fallback. The fix is one map,
+`armour_from` in `culture_marketplace_config.xml`, read by both the pools and the lord kit. In the same feature a new
+global rule (the market draw refuses every XML non-merchandise item) silently reversed Mike's recorded decision that
+the Animalia moose may be sold.
+- **Why missed:** the culture id was assumed to be a kit id; the new rule was checked against the feature's own items.
+- **Prevent:** before keying armour on a culture, count each culture's pieces and map the empty ones to a donor. When a
+  rule newly excludes a class of items, list the ids it newly catches and grep the docs for decisions about them.
+- **Source:** `docs/reviews/rca-armour-acquisition-2026-09-27.md` rows 5 and 9 (Data flow A and B, Design).
+
+### A new source of pool items must be recognised by every pass that prunes the same roster
+`armour_from` merged a donor culture's armour into a receiving culture's CultureMarketplace pool, and its tests passed
+at the pool. In game the daily `FilterForeignCultureItems` pass, which keeps a town's own culture and its routed items
+only, stripped each donated piece the day after the draw put it there: a Rivendell helm in a Lindon town is "foreign".
+- **Why missed:** the fix was tested at the seam it changed (the pool build); the second pass over the same roster,
+  with its own notion of what belongs there, was never run against a donated piece.
+- **Prevent:** when you add a way for items to reach a roster (a merge, a route, a guaranteed floor), list every pass
+  that removes from that roster (filters, sweeps, caps) and test one of each against the new item. The filter now
+  keeps anything the town culture's own pool carries.
+- **Source:** `docs/reviews/rca-armour-acquisition-2026-09-27.md` row 18 (the Step 4.6 convergence reviewer).

@@ -3127,3 +3127,13 @@ to 218 lines. Following the written strip recipe would have deleted the prisoner
   holds the engine object, never from a service. The feature doc keeps a "Stripping the diagnostics" list of every
   call site outside the folder, updated with each new call.
 - **Source:** `docs/reviews/rca-creature-bandits-2026-09-28.md`, findings 3, 4, 5 and 15.
+
+### A verification gate that checks one root while its generator reads another must report UNVERIFIED (repeat)
+`ARMOUR_CLASS_TABLE_DRIFT` checked for `<game_modules>/LOTRLOME_Armory`, while `generate_armour_classes.generate()`
+read `rebalance_armor.ARMORY_DIR`, which honours only `$BANNERLORD_GAME_DIR`. With the roots apart, or the generator
+finding nothing, the pass returned no issue and the validator printed PASS.
+- **Why missed:** a repeat of the 2026-09-18 silent-XSD-gate lesson (tooling lens rule 9): a new gate was written with
+  two roots and one check.
+- **Prevent:** every gate that delegates to another tool compares the root that tool reads with the root it was asked
+  to check, and reports "NOT verified" on a mismatch, an empty result or an exception. Test the mismatch.
+- **Source:** `docs/reviews/rca-armour-acquisition-2026-09-27.md` row 4 (Tooling).

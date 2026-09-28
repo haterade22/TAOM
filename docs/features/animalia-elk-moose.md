@@ -351,9 +351,10 @@ its generator is broken (#637), so the four rosters were edited by hand, as the 
 saddle). The Animalia elk is guaranteed stock in every Mirkwood-owned town (Mike: "The starting elk should also be
 available in the marketplace"): `culture_marketplace_config.xml` routes it to `mirkwood` with `min_stock="1"`,
 beside the great elk and the saddle, so a player who loses the starting elk buys the same animal. **The moose is
-sold too, by chance:** TAOM's culture pool takes every `Culture.mirkwood` item and does not read `is_merchandise`, so
-each day's draw can put a moose in a Mirkwood-owned town (about once in two weeks per town; Mike, 2026-09-23: let it
-appear). `is_merchandise="false"` still keeps both animals out of vanilla loot, workshop output and tournament
+guaranteed stock too** (Mike, 2026-09-23: it may be sold): it is routed the same way, `min_stock="1"`, because with
+[armour acquisition](armour-acquisition.md) on, the culture pool's daily draw refuses every item its XML marks
+`is_merchandise="false"`, which used to be the moose's only way in (Mike, 2026-09-27, the deep review round).
+`is_merchandise="false"` still keeps both animals out of vanilla loot, workshop output and tournament
 prizes; a caravan can buy one from a market, since `CaravansCampaignBehavior.BuyCategory` does not read it either.
 `AnimaliaMountWiringTests.ElkRiderStartingMount_AndItsSaddle_AreGuaranteedStockInMirkwoodMarkets` reads the
 career roster, so a new starting mount must be routed too.

@@ -473,3 +473,15 @@ Addendum, same review: the fix above keyed four new consumers on `EnlistmentStat
 - **Why missed:** "vanilla formula, then times the race factor" reads as a neutral composition. A brake that works by scaling toward zero is undone by any factor above 1 over half its range, and nobody asked what the multiplier did to it.
 - **Prevent:** when a TAOM factor multiplies a vanilla result that already contains a limiter (a cap, a population brake, a clamp), decide which one wins and encode it. Here a bonus above 1.0 applies only when an NPC clan is at or under its cap (`aliveLords <= clanCap`); past it the modifier is clamped to 1, and a penalty below 1.0 applies everywhere. Pin the property as a test ("a bonus race never out-breeds the human rate at the same fill"), not only point values.
 - **Source:** #628, `docs/reviews/rca-race-fertility-2026-09-19.md` item A.
+
+### Measure the live data before recommending a threshold, and never ship a threshold-only CareerQuest
+"Heavy armour at Barracks level 1" was recommended to Mike as a gate; every live town starts at level 1 or more
+(19 at 1, 33 at 2, 26 at 3), so it gated nothing. Separately, a CareerQuest whose objectives are all thresholds
+(skill, renown, gold) completes inside `QuestBase.StartQuest` when the hero already meets them:
+`CareerQuest.OnStartQuest` seeds the thresholds and calls `CompleteQuestWithSuccess` before the engine adds the quest
+to `QuestManager`, which then keeps the finished quest in every later save.
+- **Why missed:** the threshold was chosen from the design, not the data; the shell's ordering was invisible because
+  no earlier quest was threshold-only.
+- **Prevent:** before proposing a level, count, or chance to Mike, measure its distribution in the live install and
+  put the numbers in the question. Give every CareerQuest at least one counted objective.
+- **Source:** `docs/reviews/rca-armour-acquisition-2026-09-27.md` rows 6 and 8 (Data flow A and B, Engine).
