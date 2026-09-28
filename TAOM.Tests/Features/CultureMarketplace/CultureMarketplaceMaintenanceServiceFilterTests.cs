@@ -55,6 +55,22 @@ public class CultureMarketplaceMaintenanceServiceFilterTests
     }
 
     [TestMethod]
+    public void FilterForeignCultureItems_ArmourTheTownsCultureDrawsFromADonor_Kept()
+    {
+        // armour_from: a Lindon town's pool carries Rivendell armour (docs/features/armour-acquisition.md), so a
+        // Rivendell piece drawn there belongs there and must not be stripped the next day as foreign.
+        SetupRoster(("riv_helm", "rivendell", 1), ("gondor_helm", "gondor", 1));
+        _poolService.GetPool("lindon").Returns(new CultureItemPool("lindon", new[] { new ItemPoolEntry("riv_helm", 1f) }));
+        _townAdapter.RemoveItem(null, Arg.Any<string>(), Arg.Any<int>()).Returns(true);
+
+        var removed = NewSut().FilterForeignCultureItems(null, "lindon", removalCap: 6);
+
+        Assert.AreEqual(1, removed, "only the piece the Lindon pool does not carry is foreign");
+        _townAdapter.DidNotReceive().RemoveItem(null, "riv_helm", Arg.Any<int>());
+        _townAdapter.Received(1).RemoveItem(null, "gondor_helm", 1);
+    }
+
+    [TestMethod]
     public void FilterForeignCultureItems_VanillaUniversal_Kept()
     {
         SetupRoster(("vanilla_horse", null, 1), ("vanilla_food", "", 3));

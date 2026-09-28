@@ -74,7 +74,11 @@ public class ItemPoolAdapter : IItemPoolAdapter
 
                 var attribCulture = item.Culture?.StringId;
                 var prefixCulture = ResolveByPrefix(item.StringId);
-                items.Add(new ItemPoolItem(item.StringId, attribCulture, prefixCulture));
+                var type = item.ItemType;
+                var isArmour = type == ItemObject.ItemTypeEnum.HeadArmor || type == ItemObject.ItemTypeEnum.BodyArmor
+                    || type == ItemObject.ItemTypeEnum.LegArmor || type == ItemObject.ItemTypeEnum.HandArmor
+                    || type == ItemObject.ItemTypeEnum.Cape;
+                items.Add(new ItemPoolItem(item.StringId, attribCulture, prefixCulture, isArmour));
             }
 
             _logger.LogInfo($"[CultureMarketplace] ItemPoolAdapter cached {items.Count} ItemObjects from MBObjectManager");

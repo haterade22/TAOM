@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Armour acquisition (docs/features/armour-acquisition.md). Hand-edited; validated at load by
+  ArmourAcquisitionConfigProvider (a bad value reverts to its compiled default with a warning in
+  the TAOM log). Read once per process: changes need a full Bannerlord restart.
+
+  The class of every armour piece comes from the GENERATED armour_classes.xml beside this file.
+  This file holds the decisions around it.
+
+  enabled            default for the master switch when MCM is not loaded; with MCM, the
+                     "Enable Armour Acquisition" toggle decides, from the next game load.
+
+  <Gate>             the armoury level a town needs (its Barracks level, plus a visiting master
+                     armourer's bonus), 0 to 3, heavy <= elite <= lord. At that level the town's
+                     market may stock the class and its armoury may upgrade a piece into it (Mike,
+                     2026-09-27: heavy 1, elite and heavy 2, lord and all 3). Named pieces are
+                     never sold.
+
+  <Upgrades>         what turning a piece into its next class costs, one <Upgrade> per class the
+                     piece becomes (medium, heavy, elite, lord):
+                       gold               flat gold, 0 to 1,000,000
+                       value_share        0 to 1: this share of the value the piece gains is
+                                          added to the gold
+                       special_resource   0 to 10,000 of the player's kingdom special resource
+                                          (Castar, Gems, War Spoils ...); waived when the
+                                          kingdom has none
+                       <Material>         item id and count (1 to 999) taken from the party
+                     When this element is present it lists every recipe; a class with no recipe
+                     cannot be upgraded into.
+
+  <NamedWeapons>     hero weapon and shield ids that are never sold, looted or awarded (Mike,
+                     2026-09-27: all seventeen, until he sets each one's route).
+
+  <LordEvent>        after a battle your side wins against an enemy lord: the chance (0 to 1)
+                     of finding his household's lord harness, the cooldown in days, and the
+                     relation (0 to 100) gained with him for leaving it.
+
+  <VisitingArmourer> each day, the chance (0 to 1) that a master armourer visits one town, how
+                     many days (1 to 365) he stays, and the armoury levels (0 to 3) he adds.
+
+  <LordHarness>      days (0 to 3650) before a declined "Lord's Harness" quest is offered again.
+-->
+<ArmourAcquisition enabled="true">
+  <Gate heavy="1" elite="2" lord="3" />
+
+  <Upgrades>
+    <Upgrade target="medium" gold="150" value_share="0.25">
+      <Material item="ironIngot2" count="3" />
+      <Material item="ironIngot1" count="2" />
+    </Upgrade>
+    <Upgrade target="heavy" gold="500" value_share="0.35">
+      <Material item="ironIngot4" count="3" />
+      <Material item="ironIngot3" count="4" />
+    </Upgrade>
+    <Upgrade target="elite" gold="1500" value_share="0.5">
+      <Material item="ironIngot5" count="4" />
+      <Material item="ironIngot4" count="3" />
+    </Upgrade>
+    <Upgrade target="lord" gold="3000" value_share="0.5" special_resource="150">
+      <Material item="ironIngot6" count="6" />
+    </Upgrade>
+  </Upgrades>
+
+  <NamedWeapons>
+    <!-- LOTRLOME_Armory LOTRLOME_items/LOTRAOM_weapons.xml -->
+    <Item id="anduril" />
+    <Item id="strider_sword" />
+    <Item id="theoden_sword" />
+    <Item id="wm_sauron_mace" />
+    <Item id="glamdring_sword" />
+    <Item id="eomer_sword" />
+    <Item id="eowyn_sword" />
+    <Item id="witchking_sword" />
+    <Item id="nazgul_sword" />
+    <Item id="wm_gondor_boromir_sword" />
+    <Item id="wm_gondor_faramir_sword" />
+    <Item id="wm_legolas_sword" />
+    <Item id="wm_thranduil_sword" />
+    <Item id="sm_dwarf_dain_hammer_a" />
+    <Item id="sm_dwarf_dain_axe_a" />
+    <!-- LOTRLOME_Armory LOTRLOME_items/LOTRAOM_shields.xml -->
+    <Item id="wm_boromir_shield" />
+    <Item id="wm_theoden_shield" />
+  </NamedWeapons>
+
+  <LordEvent chance="0.08" cooldown_days="90" leave_relation="5" />
+  <VisitingArmourer chance_per_day="0.04" duration_days="7" level_bonus="1" />
+  <LordHarness offer_cooldown_days="30" />
+</ArmourAcquisition>

@@ -155,4 +155,21 @@ public class TownRosterAdapter : ITownRosterAdapter
         }
         return result;
     }
+
+    public IReadOnlyList<RosterItemSnapshot> EnumerateRosterById(string settlementId)
+    {
+        var settlement = Find(settlementId);
+        return settlement == null ? Array.Empty<RosterItemSnapshot>() : EnumerateRoster(settlement);
+    }
+
+    public bool RemoveItemById(string settlementId, string itemId, int count)
+    {
+        var settlement = Find(settlementId);
+        return settlement != null && RemoveItem(settlement, itemId, count);
+    }
+
+    // Settlement.Find reads MBObjectManager.Instance without a null check, and a null id throws from its
+    // dictionary lookup (v1.5.3 Settlement.cs:1163-1166, MBObjectManager.cs:174), so both are refused here.
+    private static Settlement Find(string settlementId) =>
+        string.IsNullOrEmpty(settlementId) || MBObjectManager.Instance == null ? null : Settlement.Find(settlementId);
 }

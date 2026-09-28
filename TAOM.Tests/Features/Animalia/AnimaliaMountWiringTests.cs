@@ -272,6 +272,21 @@ public class AnimaliaMountWiringTests
     }
 
     [TestMethod]
+    public void TheMoose_IsGuaranteedStockInMirkwoodMarkets()
+    {
+        // Mike, 2026-09-23: the moose may be sold. It is is_merchandise="false", and with armour acquisition on the
+        // daily draw refuses every such item, so its route is the guaranteed stock (Mike, 2026-09-27).
+        var routing = LoadRepo("culture_marketplace", "culture_marketplace_config.xml").Descendants("Routing").Single();
+        var entry = routing.Elements("Item").SingleOrDefault(i => (string?)i.Attribute("id") == "taom_animalia_moose_a");
+
+        Assert.IsNotNull(entry, "taom_animalia_moose_a is not routed in culture_marketplace_config.xml");
+        var cultures = ((string?)entry!.Attribute("cultures") ?? "").Split(',').Select(c => c.Trim());
+        Assert.IsTrue(cultures.Contains("mirkwood"), "the moose must be routed to mirkwood");
+        Assert.IsTrue(int.TryParse((string?)entry.Attribute("min_stock"), out int minStock) && minStock >= 1,
+            "the moose needs min_stock of at least 1");
+    }
+
+    [TestMethod]
     public void AnimaliaMonsters_DeclareTheirSize_AndTheirItemsHoldTheSchemaPlaceholder()
     {
         // One place for the size (Mike: "the monster xml should control the size of the animal"): the Monster's

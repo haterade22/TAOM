@@ -52,10 +52,13 @@ public class CultureItemPoolService : ICultureItemPoolService
         var prefixHits = 0;
         var unresolved = 0;
         var routedItems = 0;
+        var armourIds = new HashSet<string>(StringComparer.Ordinal);
 
         for (var i = 0; i < all.Count; i++)
         {
             var item = all[i];
+            if (item.IsCharacterArmour)
+                armourIds.Add(item.ItemId);
 
             // Item routing OVERRIDES attribute + prefix. The item appears ONLY in the listed
             // cultures' pools (e.g., a Warg tagged Culture.isengard but routed to Isengard +
@@ -101,6 +104,10 @@ public class CultureItemPoolService : ICultureItemPoolService
             AddToGroup(grouped, overrides, cultureId, item.ItemId);
         }
 
+        var drawnArmour = MergeArmourDonors(grouped, overrides, armourIds);
+        if (drawnArmour > 0)
+            _logger.LogInfo($"[CultureMarketplace] {drawnArmour} armour piece(s) drawn into the pools of cultures with none of their own (armour_from)");
+
         _pools = new Dictionary<string, CultureItemPool>(StringComparer.OrdinalIgnoreCase);
         _totalItems = 0;
         foreach (var kvp in grouped)
@@ -125,6 +132,45 @@ public class CultureItemPoolService : ICultureItemPoolService
 
     private static string ApplyCultureAlias(string cultureId) =>
         CultureAliases.TryGetValue(cultureId, out var canonical) ? canonical : cultureId;
+
+    /// <summary>
+    /// A culture with no armour of its own draws on another's (<c>&lt;Culture id="lindon" armour_from="rivendell" /&gt;</c>,
+    /// docs/features/armour-acquisition.md): the donor's character armour joins its pool, under its own
+    /// blacklist and boosts. The donors' own entries are taken first, so no culture passes on armour it drew
+    /// from a third. Returns how many entries were added.
+    /// </summary>
+    private static int MergeArmourDonors(
+        Dictionary<string, List<ItemPoolEntry>> grouped,
+        IReadOnlyDictionary<string, MarketplaceConfigOverride> overrides,
+        HashSet<string> armourIds)
+    {
+        var donated = new List<(string CultureId, string ItemId)>();
+        foreach (var ov in overrides.Values)
+        {
+            if (string.IsNullOrEmpty(ov.ArmourFrom) || !grouped.TryGetValue(ApplyCultureAlias(ov.ArmourFrom), out var donorItems))
+                continue;
+            foreach (var entry in donorItems)
+                if (armourIds.Contains(entry.ItemId))
+                    donated.Add((ApplyCultureAlias(ov.CultureId), entry.ItemId));
+        }
+
+        var added = 0;
+        var present = new Dictionary<string, HashSet<string>>(StringComparer.OrdinalIgnoreCase);
+        foreach (var (cultureId, itemId) in donated)
+        {
+            if (!present.TryGetValue(cultureId, out var ids))
+            {
+                ids = new HashSet<string>(StringComparer.Ordinal);
+                if (grouped.TryGetValue(cultureId, out var own))
+                    foreach (var entry in own)
+                        ids.Add(entry.ItemId);
+                present[cultureId] = ids;
+            }
+            if (ids.Add(itemId) && AddToGroup(grouped, overrides, cultureId, itemId))
+                added++;
+        }
+        return added;
+    }
 
     private static bool AddToGroup(
         Dictionary<string, List<ItemPoolEntry>> grouped,

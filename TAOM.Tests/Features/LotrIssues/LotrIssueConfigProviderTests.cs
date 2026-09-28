@@ -215,7 +215,8 @@ public class LotrIssueConfigProviderTests
         Assert.IsTrue(File.Exists(path), $"shipped config not found at {path}");
 
         var list = _sut.ParseIssues(XDocument.Load(path));
-        Assert.AreEqual(43, list.Count, "every shipped issue must pass validation (none silently dropped)");
+        // 43 LOTR issues + 18 "Armourer's Commission" rows (armour acquisition, one per culture group).
+        Assert.AreEqual(61, list.Count, "every shipped issue must pass validation (none silently dropped)");
         foreach (var d in list)
         {
             Assert.IsTrue(

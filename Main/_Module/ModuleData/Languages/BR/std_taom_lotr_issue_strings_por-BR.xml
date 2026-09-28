@@ -319,5 +319,12 @@
     <string id="taom_lotr_issue_combat_fallback_accept" text="O que precisa ser feito?" />
     <string id="taom_lotr_issue_pers_fallback_desc" text="Alguém precisa que cativos sejam entregues." />
     <string id="taom_lotr_issue_pers_fallback_brief" text="Preciso de costas fortes, viajante." />
+    <string id="taom_lotr_issue_armourer_title" text="The Armourer's Commission" />
+    <string id="taom_lotr_issue_armourer_desc" text="The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it." />
+    <string id="taom_lotr_issue_armourer_brief" text="The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with." />
+    <string id="taom_lotr_issue_armourer_accept" text="What would you need?" />
+    <string id="taom_lotr_issue_armourer_expl" text="Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade." />
+    <string id="taom_lotr_issue_armourer_soln" text="I will bring you the steel." />
+    <string id="taom_lotr_issue_armourer_task" text="Bring {ITEM} to the armourer ({COUNT})" />
   </strings>
 </base>

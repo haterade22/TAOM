@@ -2949,4 +2949,58 @@
 	<string id="taom_oob_autoassign_not_general" text="{=taom_oob_autoassign_not_general}Only the general of this battle can assign heroes." />
 	<string id="taom_oob_autoassign_none" text="{=taom_oob_autoassign_none}No hero suits an open captain slot." />
 
+	<string id="taom_lh_title" text="{=taom_lh_title}The Lord's Harness" />
+	<string id="taom_lh_desc" text="{=taom_lh_desc}The master armourer will fit a lord's harness only to a name the great houses know. Take enemy lords captive, raise your clan's renown and win battles at the head of your company, in any order; then a master armourer will fit you with your harness." />
+	<string id="taom_lh_task_lords" text="{=taom_lh_task_lords}Take enemy lords captive" />
+	<string id="taom_lh_task_renown" text="{=taom_lh_task_renown}Raise your clan's renown" />
+	<string id="taom_lh_task_battles" text="{=taom_lh_task_battles}Win battles" />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- ArmourAcquisition -->
+	<string id="taom_armoury_visit_news" text="{=taom_armoury_visit_news}A master armourer has come to {TOWN}. For the next {DAYS} days its armoury stocks and forges as a finer one would." />
+	<string id="taom_armoury_menu" text="{=taom_armoury_menu}Visit the armoury" />
+	<string id="taom_armoury_menu_tip" text="{=taom_armoury_menu_tip}This town's armoury works to level {LEVEL} of 3." />
+	<string id="taom_armoury_coop_guest" text="{=taom_armoury_coop_guest}The armourer works only for the host of this campaign." />
+	<string id="taom_armoury_claim" text="{=taom_armoury_claim}Claim your Lord's Harness" />
+	<string id="taom_armoury_claim_level" text="{=taom_armoury_claim_level}Only a master armourer, at a level {LORD} armoury, can fit a lord's harness." />
+	<string id="taom_armoury_nothing" text="{=taom_armoury_nothing}You carry nothing this armourer can improve. Bring a piece of armour and the metals its next form needs." />
+	<string id="taom_armoury_title" text="{=taom_armoury_title}The Armoury of {TOWN}" />
+	<string id="taom_armoury_desc" text="{=taom_armoury_desc}This armoury works to level {LEVEL} of 3. Heavy pieces need level {HEAVY}, elite pieces level {ELITE}, and lord kit a master armourer at level {LORD}. The piece keeps its quality." />
+	<string id="taom_armoury_choose" text="{=taom_armoury_choose}Choose" />
+	<string id="taom_armoury_leave" text="{=taom_armoury_leave}Leave" />
+	<string id="taom_armoury_confirm_title" text="{=taom_armoury_confirm_title}Improve {SOURCE}?" />
+	<string id="taom_armoury_confirm_body" text="{=taom_armoury_confirm_body}The armourer will rework it into {TARGET} for {PRICE}." />
+	<string id="taom_armoury_confirm_yes" text="{=taom_armoury_confirm_yes}Have it done" />
+	<string id="taom_armoury_cancel" text="{=taom_armoury_cancel}Cancel" />
+	<string id="taom_armoury_claim_title" text="{=taom_armoury_claim_title}The Lord's Harness" />
+	<string id="taom_armoury_claim_desc" text="{=taom_armoury_claim_desc}The master armourer will fit you with one piece of lord's kit. Choose it." />
+	<string id="taom_armoury_claimed" text="{=taom_armoury_claimed}The master armourer fits you with {ITEM}." />
+	<string id="taom_armour_class_light" text="{=taom_armour_class_light}light" />
+	<string id="taom_armour_class_medium" text="{=taom_armour_class_medium}medium" />
+	<string id="taom_armour_class_heavy" text="{=taom_armour_class_heavy}heavy" />
+	<string id="taom_armour_class_elite" text="{=taom_armour_class_elite}elite" />
+	<string id="taom_armour_class_lord" text="{=taom_armour_class_lord}lord" />
+	<string id="taom_armour_class_other" text="{=taom_armour_class_other}fine" />
+	<string id="taom_armoury_offer" text="{=taom_armoury_offer}{SOURCE} into {TARGET} ({CLASS})" />
+	<string id="taom_armoury_gold" text="{=taom_armoury_gold}{GOLD} gold" />
+	<string id="taom_armoury_amount" text="{=taom_armoury_amount}{COUNT} {ITEM}" />
+	<string id="taom_armoury_block_level" text="{=taom_armoury_block_level}This armoury cannot work {CLASS} pieces: it needs level {NEED}, and this one is level {LEVEL}." />
+	<string id="taom_armoury_block_gold" text="{=taom_armoury_block_gold}You cannot pay it: {PRICE}." />
+	<string id="taom_armoury_block_metal" text="{=taom_armoury_block_metal}You lack the metals: {PRICE}." />
+	<string id="taom_armoury_block_resource" text="{=taom_armoury_block_resource}Your people's treasure falls short: {PRICE}." />
+	<string id="taom_armoury_cost" text="{=taom_armoury_cost}Costs {PRICE}." />
+	<string id="taom_armoury_done" text="{=taom_armoury_done}The armourer hands you {TARGET}." />
+	<string id="taom_armoury_gone" text="{=taom_armoury_gone}You no longer carry {SOURCE}." />
+	<string id="taom_armoury_short_gold" text="{=taom_armoury_short_gold}You no longer have the gold for it." />
+	<string id="taom_armoury_short_metal" text="{=taom_armoury_short_metal}You no longer have the metals for it." />
+	<string id="taom_armoury_short_resource" text="{=taom_armoury_short_resource}Your people's treasure no longer covers it." />
+	<string id="taom_lh_event_title" text="{=taom_lh_event_title}A Lord's Harness Unclaimed" />
+	<string id="taom_lh_event_body" text="{=taom_lh_event_body}Among the spoils of the field lies {ITEM}, the harness of {LORD}'s household. It is yours by right of arms, though his kin would take its return as a courtesy." />
+	<string id="taom_lh_event_take" text="{=taom_lh_event_take}Take it" />
+	<string id="taom_lh_event_return" text="{=taom_lh_event_return}Send it to his kin" />
+	<string id="taom_lh_offer_title" text="{=taom_lh_offer_title}The Lord's Harness" />
+	<string id="taom_lh_offer_body" text="{=taom_lh_offer_body}The master armourer of {TOWN} eyes your elite harness. &quot;That is a soldier's armour. A lord's is forged for deeds, not coin. Show me yours, and I will fit you as a lord of our people.&quot;" />
+	<string id="taom_lh_offer_accept" text="{=taom_lh_offer_accept}Accept the test" />
+	<string id="taom_lh_offer_decline" text="{=taom_lh_offer_decline}Not now" />
+	<string id="taom_lh_ready" text="{=taom_lh_ready}Your deeds are known. Any master armourer, at a level {LORD} armoury, will now fit you with your lord's harness." />
+
 </strings>
