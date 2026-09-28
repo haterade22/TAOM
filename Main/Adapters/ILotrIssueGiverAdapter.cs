@@ -20,4 +20,7 @@ public interface ILotrIssueGiverAdapter
 
     /// <summary>Relation between this hero and the main hero (issue offers gate on a minimum).</summary>
     int RelationWithPlayer { get; }
+
+    /// <summary>Runtime culture StringId of the main hero, or empty (a row flagged for_player_culture gates on it).</summary>
+    string PlayerCultureStringId { get; }
 }

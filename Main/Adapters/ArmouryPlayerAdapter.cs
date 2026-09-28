@@ -44,25 +44,6 @@ public class ArmouryPlayerAdapter : IArmouryPlayerAdapter
         return pieces;
     }
 
-    public IReadOnlyList<string> ReadEquippedItemIds()
-    {
-        var ids = new List<string>();
-        var hero = Hero.MainHero;
-        if (hero == null)
-            return ids;
-        foreach (var equipment in new[] { hero.BattleEquipment, hero.CivilianEquipment })
-        {
-            if (equipment == null)
-                continue;
-            for (var i = 0; i < Equipment.EquipmentSlotLength; i++)
-            {
-                if (equipment[i].Item?.StringId is { Length: > 0 } id)
-                    ids.Add(id);
-            }
-        }
-        return ids;
-    }
-
     private static int CountItem(string itemId)
     {
         var roster = Roster;

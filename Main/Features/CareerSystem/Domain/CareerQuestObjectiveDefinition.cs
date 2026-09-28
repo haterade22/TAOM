@@ -3,8 +3,9 @@ namespace TAOM.Features.CareerSystem.Domain;
 /// <summary>
 /// The kind of progress an objective tracks. Each value maps to exactly one verified 1.4.5
 /// <c>CampaignEvents</c> subscription in the quest shell + an evaluation branch in
-/// <c>CareerQuestService</c>. Keep this in sync with both, and add one (input, branch) test
-/// per value (see feedback_per_branch_dispatch_test_enumeration).
+/// <c>CareerQuestService</c>, except <see cref="HeroKills"/>, which no campaign event carries: a
+/// feature feeds it through <c>CareerQuest.AddProgress</c>. Keep this in sync with both, and add one
+/// (input, branch) test per value (see feedback_per_branch_dispatch_test_enumeration).
 /// </summary>
 public enum CareerQuestObjectiveType
 {
@@ -30,7 +31,13 @@ public enum CareerQuestObjectiveType
     DefeatEnemyLords,
 
     /// <summary>Enter a settlement of the type named in <see cref="CareerQuestObjectiveDefinition.Param"/> (e.g. "Town", "Castle") N times. Counts each entry (not distinct settlements).</summary>
-    VisitSettlementType
+    VisitSettlementType,
+
+    /// <summary>
+    /// Strike down N enemies with the hero's own hand. No campaign event carries a battle's kills: the
+    /// armour acquisition kill counter hands each battle's total to <c>CareerQuest.AddProgress</c> (#693).
+    /// </summary>
+    HeroKills
 }
 
 /// <summary>

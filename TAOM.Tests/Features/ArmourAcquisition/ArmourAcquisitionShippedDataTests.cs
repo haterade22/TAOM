@@ -1,5 +1,7 @@
 using System;
+using System.Globalization;
 using System.Linq;
+using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Infrastructure;
@@ -13,8 +15,8 @@ using TAOM.Tests.Infrastructure;
 namespace TAOM.Tests.Features.ArmourAcquisition;
 
 /// <summary>
-/// The shipped data the feature reads, through the real providers: the Lord's Harness quest the quest
-/// behavior starts by id, a config that loads without a single reversion (Mike's decisions pinned: lord kit
+/// The shipped data the feature reads, through the real providers: the ladder's rung quests the armoury
+/// starts by id, a config that loads without a single reversion (Mike's decisions pinned: lord kit
 /// costs the best metal plus the special resource; all seventeen hero items are named), the culture map
 /// the markets and the lord kit share, and a generated class table whose upgrade links always climb, with
 /// lord kit reachable only from elite.
@@ -34,16 +36,123 @@ public class ArmourAcquisitionShippedDataTests
     }
 
     [TestMethod]
-    public void CareerQuests_ShipTheHarnessQuest_WhichCannotCompleteInsideItsOwnStart()
+    public void CareerQuests_ShipEveryLadderRungsQuest_WhichCannotCompleteInsideItsOwnStart()
     {
-        var quest = new CareerQuestConfigProvider(_paths, _logger).LoadQuests().SingleOrDefault(q => q.Id == LordHarnessService.QuestId);
+        var quests = new CareerQuestConfigProvider(_paths, _logger).LoadQuests();
+        var steps = new ArmourAcquisitionConfigProvider(_paths, _logger).GetConfig().Ladder.Steps;
 
-        Assert.IsNotNull(quest, $"{LordHarnessService.QuestId} is missing from taom_career_quests.xml; the quest cannot start");
-        Assert.AreEqual(LordHarnessService.QuestId, quest!.CareerId, "its career_id must name no career, so the career offer loop never offers it");
-        // CareerQuest.OnStartQuest seeds threshold objectives and completes a quest they already satisfy, inside
-        // QuestBase.StartQuest (a finalized quest then sits in QuestManager). A counted deed starts at zero.
-        var thresholds = new[] { CareerQuestObjectiveType.SkillThreshold, CareerQuestObjectiveType.RenownThreshold, CareerQuestObjectiveType.GoldAccumulated };
-        Assert.IsTrue(quest.Objectives.Any(o => !thresholds.Contains(o.Type)), "the harness quest needs at least one counted deed");
+        Assert.AreEqual(6, steps.Count, "one rung per slot: hands, legs, shoulders, head, body, weapon");
+        foreach (var step in steps)
+        {
+            var quest = quests.SingleOrDefault(q => q.Id == step.QuestId);
+            Assert.IsNotNull(quest, $"{step.QuestId} is missing from taom_career_quests.xml; the {step.Slot} rung cannot start");
+            Assert.AreEqual(step.QuestId, quest!.CareerId, "its career_id must name no career, so the career offer loop never offers it");
+            Assert.AreEqual(0, quest.Rewards.Count, "the rung's piece is claimed at an armoury; the quest itself pays nothing");
+            // CareerQuest.OnStartQuest seeds threshold objectives and completes a quest they already satisfy, inside
+            // QuestBase.StartQuest (a finalized quest then sits in QuestManager). The hero's kills start at zero.
+            Assert.IsTrue(quest.Objectives.Any(o => o.Type == CareerQuestObjectiveType.HeroKills), $"{step.QuestId} counts the hero's kills");
+        }
+        // Only the ladder's kill counter feeds HeroKills, and only to the current rung's quest: a career quest that
+        // listed it would never progress.
+        var rungQuests = steps.Select(s => s.QuestId).ToList();
+        foreach (var quest in quests.Where(q => q.Objectives.Any(o => o.Type == CareerQuestObjectiveType.HeroKills)))
+            Assert.IsTrue(rungQuests.Contains(quest.Id), $"{quest.Id} lists HeroKills but is no ladder rung");
+    }
+
+    [TestMethod]
+    public void Config_EveryCultureWithArmourHasALordsMaterialAndWeaponPicks()
+    {
+        var ladder = new ArmourAcquisitionConfigProvider(_paths, _logger).GetConfig().Ladder;
+        var cultures = new[] { "gondor", "vlandia", "erebor", "sturgia", "rivendell", "mirkwood", "mordor", "isengard",
+            "dolguldur", "gundabad", "khuzait", "aserai", "empire" };
+
+        CollectionAssert.AreEquivalent(cultures, ladder.Materials.Keys.ToArray(), "one lord's material per culture that owns armour");
+        CollectionAssert.AreEquivalent(cultures, ladder.Weapons.Keys.ToArray(), "every culture's weapon rung has a pick");
+        CollectionAssert.AreEquivalent(ArmourAcquisitionConfig.Default.Ladder.Materials.ToArray(), ladder.Materials.ToArray(),
+            "the compiled default mirrors the shipped file");
+    }
+
+    [TestMethod]
+    public void Config_TheCompiledLadderMirrorsTheShippedFile()
+    {
+        var shipped = new ArmourAcquisitionConfigProvider(_paths, _logger).GetConfig().Ladder;
+        var d = ArmourAcquisitionConfig.Default.Ladder;
+
+        CollectionAssert.AreEqual(d.Steps.Select(s => $"{s.Slot}:{s.QuestId}:{s.Materials}").ToArray(),
+            shipped.Steps.Select(s => $"{s.Slot}:{s.QuestId}:{s.Materials}").ToArray(), "the rungs");
+        Assert.AreEqual(d.CountsKnockouts, shipped.CountsKnockouts, "count_knockouts");
+        Assert.AreEqual((d.Drop.BaseChance, d.Drop.ChancePerTenKills, d.Drop.MaxChance, d.Drop.MinUnits, d.Drop.MaxUnits),
+            (shipped.Drop.BaseChance, shipped.Drop.ChancePerTenKills, shipped.Drop.MaxChance, shipped.Drop.MinUnits, shipped.Drop.MaxUnits),
+            "the drop curve");
+        CollectionAssert.AreEquivalent(d.Weapons.Keys.ToArray(), shipped.Weapons.Keys.ToArray(), "the weapon rung's cultures");
+        foreach (var culture in d.Weapons.Keys)
+            CollectionAssert.AreEqual(d.Weapons[culture].ToArray(), shipped.Weapons[culture].ToArray(), $"{culture}'s weapon picks");
+    }
+
+    [TestMethod]
+    public void LordsMaterials_TheItemsFileKeepsThemOutOfEveryEconomy()
+    {
+        // RCA 2026-09-28 rows 16 and 20: what keeps a material out of workshops, caravans, loot and the hideout pool.
+        var doc = XDocument.Load(RepoPaths.RepoPath("Main", "_Module", "ModuleData", "armour_acquisition", "taom_lords_materials.xml"));
+        var items = doc.Root!.Elements("Item").ToList();
+        var materials = new ArmourAcquisitionConfigProvider(_paths, _logger).GetConfig().Ladder.Materials;
+
+        CollectionAssert.AreEquivalent(materials.Values.ToArray(), items.Select(i => (string)i.Attribute("id")!).ToArray(),
+            "one item per configured lord's material, and no other");
+        foreach (var item in items)
+        {
+            var id = (string)item.Attribute("id")!;
+            Assert.AreEqual("Goods", (string?)item.Attribute("Type"), id);
+            Assert.AreEqual("unassigned", (string?)item.Attribute("item_category"), $"{id}: no workshop, caravan or town demand");
+            Assert.AreEqual("false", (string?)item.Attribute("is_merchandise"), $"{id}: no battle loot or plunder");
+            Assert.IsNull(item.Attribute("culture"), $"{id}: CultureMarketplace pools only items with a culture");
+            // The hideout night pool takes Goods up to a theoretical value of 4750, ten times the value.
+            Assert.IsTrue(int.Parse((string)item.Attribute("value")!, CultureInfo.InvariantCulture) >= 475, $"{id}: in the hideout pool");
+            Assert.IsNull(item.Element("ItemComponent"), $"{id}: vanilla XML non-food goods carry no component");
+            Assert.AreEqual("true", (string?)item.Element("Flags")?.Attribute("Civilian"), $"{id}: vanilla goods are civilian");
+        }
+    }
+
+    [TestMethod]
+    public void DeepSeam_EveryRowPaysTheMaterialOfEveryCultureItServes_OnlyToAPlayerOfThem()
+    {
+        // RCA 2026-09-28 row 4 and the XML lens: the rows copy the culture-to-material map a third time.
+        var ladder = new ArmourAcquisitionConfigProvider(_paths, _logger).GetConfig().Ladder;
+        var marketplace = new TAOM.Features.CultureMarketplace.CultureMarketplaceConfigProvider(_paths, _logger);
+        var rows = XDocument.Load(RepoPaths.RepoPath("Main", "_Module", "ModuleData", "lotr_issues", "taom_lotr_issues.xml"))
+            .Root!.Elements("LotrIssue").Where(r => ((string)r.Attribute("id")!).StartsWith("lotr_deep_seam_", StringComparison.Ordinal)).ToList();
+
+        Assert.AreEqual(ladder.Materials.Count, rows.Count, "one Deep Seam row per lord's material");
+        var served = new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal);
+        foreach (var row in rows)
+        {
+            var id = (string)row.Attribute("id")!;
+            Assert.AreEqual("true", (string?)row.Attribute("for_player_culture"), $"{id}: offered only to a player who can spend it");
+            foreach (var culture in ((string)row.Attribute("cultures")!).Split(','))
+            {
+                var c = culture.Trim();
+                Assert.IsTrue(served.Add(c), $"{c} is served by two Deep Seam rows");
+                var own = ladder.Materials.TryGetValue(c, out var m) ? m : null;
+                var donor = marketplace.GetArmourDonor(c);
+                var expected = own ?? (donor != null && ladder.Materials.TryGetValue(donor, out var dm) ? dm : null);
+                Assert.AreEqual(expected, (string?)row.Attribute("reward_item"), $"{id} pays {c} the wrong material");
+            }
+        }
+    }
+
+    [TestMethod]
+    public void Config_EveryCultureThatDrawsOnADonor_HasTheDonorsMaterialAndWeapons()
+    {
+        var ladder = new ArmourAcquisitionConfigProvider(_paths, _logger).GetConfig().Ladder;
+        var marketplace = new TAOM.Features.CultureMarketplace.CultureMarketplaceConfigProvider(_paths, _logger);
+
+        foreach (var culture in new[] { "lindon", "lothlorien", "abanissa", "shaghana", "battania", "goblin", "mistymountainorcs", "bluecraig", "umbar" })
+        {
+            var donor = marketplace.GetArmourDonor(culture);
+            Assert.IsNotNull(donor, culture);
+            Assert.IsTrue(ladder.Materials.ContainsKey(donor!), $"{culture}'s donor {donor} has no lord's material");
+            Assert.IsTrue(ladder.Weapons.ContainsKey(donor!), $"{culture}'s donor {donor} has no weapon picks");
+        }
     }
 
     [TestMethod]
@@ -51,7 +160,7 @@ public class ArmourAcquisitionShippedDataTests
     {
         var named = new ArmourAcquisitionConfigProvider(_paths, _logger).GetConfig().NamedWeapons;
 
-        Assert.AreEqual(17, named.Count, "Mike, 2026-09-27: all seventeen hero weapons and shields are never sold, looted or awarded");
+        Assert.AreEqual(17, named.Count, "Mike, 2026-09-27: all seventeen hero weapons and shields are never sold or looted");
         foreach (var id in new[] { "anduril", "glamdring_sword", "witchking_sword", "wm_boromir_shield", "wm_theoden_shield" })
             Assert.IsTrue(named.Contains(id), id);
         CollectionAssert.AreEquivalent(ArmourAcquisitionConfig.Default.NamedWeapons.ToList(), named.ToList(),

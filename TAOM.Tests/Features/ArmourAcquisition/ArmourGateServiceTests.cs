@@ -27,8 +27,9 @@ public class ArmourGateServiceTests
     private IModLogger _logger = null!;
     private ArmourGateService _service = null!;
 
-    private static ArmourItemRecord Armour(string id, int tier = 0, bool merch = true, string culture = "gondor") =>
-        new(id, true, tier, merch, culture, 100);
+    private static ArmourItemRecord Armour(string id, int tier = 0, bool merch = true, string culture = "gondor",
+        ArmourSlot slot = ArmourSlot.Body, int value = 100) =>
+        new(id, slot, tier, merch, culture, value);
 
     [TestInitialize]
     public void Setup()
@@ -211,6 +212,20 @@ public class ArmourGateServiceTests
     }
 
     [TestMethod]
+    public void GetPieces_WithASlot_ListsOnlyThePiecesWornThere()
+    {
+        // The lord's gear ladder (#693) awards one slot per rung.
+        Given(new[] { Armour("helm_lord", slot: ArmourSlot.Head), Armour("gauntlet_lord", slot: ArmourSlot.Hand), Armour("chest_lord") },
+            ("helm_lord", ArmourClass.Lord, null), ("gauntlet_lord", ArmourClass.Lord, null), ("chest_lord", ArmourClass.Lord, null));
+        _service.ApplyGating(isCampaign: true);
+
+        CollectionAssert.AreEqual(new[] { "helm_lord" }, _service.GetPieces(ArmourClass.Lord, "gondor", ArmourSlot.Head).ToArray());
+        Assert.AreEqual(3, _service.GetPieces(ArmourClass.Lord, "gondor", null).Count, "no slot means any slot");
+        Assert.AreEqual(0, _service.GetPieces(ArmourClass.Lord, "gondor", ArmourSlot.None).Count,
+            "None is the slot of a piece that is not character armour, never a wildcard");
+    }
+
+    [TestMethod]
     public void GetName_AsksTheCatalog()
     {
         _catalog.GetName("heavy_a").Returns("Fountain Guard Armour");
@@ -252,7 +267,7 @@ public class ArmourGateServiceTests
     public void IsEligibleForMarket_Active_ItemTheXmlMarkedNotMerchandise_NeverQualifies()
     {
         // The ranged ladders and starter kits are is_merchandise="false" to stay out of shops.
-        Given(new[] { Armour("starter_x", merch: false), new ArmourItemRecord("ladder_bow", false, 3, false, "gondor", 50) },
+        Given(new[] { Armour("starter_x", merch: false), new ArmourItemRecord("ladder_bow", ArmourSlot.None, 3, false, "gondor", 50) },
             ("starter_x", ArmourClass.Light, null));
         _service.ApplyGating(isCampaign: true);
 
@@ -263,7 +278,7 @@ public class ArmourGateServiceTests
     [TestMethod]
     public void IsEligibleForMarket_Active_LoadedMerchandiseTheGateDoesNotGovern_IsTrue()
     {
-        Given(new[] { Armour("a"), new ArmourItemRecord("grain", false, 0, true, null, 10) }, ("a", ArmourClass.Light, null));
+        Given(new[] { Armour("a"), new ArmourItemRecord("grain", ArmourSlot.None, 0, true, null, 10) }, ("a", ArmourClass.Light, null));
         _service.ApplyGating(isCampaign: true);
 
         Assert.IsTrue(_service.IsEligibleForMarket("grain", 0));

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
@@ -73,17 +74,174 @@ public sealed class ArmourAcquisitionConfigProvider : IArmourAcquisitionConfigPr
         var visitDays = ReadInt(visiting, "duration_days", d.VisitDurationDays, 1, 365);
         var visitBonus = ReadInt(visiting, "level_bonus", d.VisitLevelBonus, 0, ArmourAcquisitionConfig.MaxArmouryLevel);
 
-        var harnessCooldown = ReadInt(root.Element("LordHarness"), "offer_cooldown_days", d.HarnessOfferCooldownDays, 0, 3650);
+        var ladder = ReadLadder(root, d.Ladder);
 
         if (_reverted > 0)
             _logger.LogWarning($"{Tag} {_reverted} value(s) in {ConfigFileName} were refused and reverted to their "
                                + "compiled defaults; see the warnings above.");
 
         var config = new ArmourAcquisitionConfig(enabled, heavy, elite, lord, recipes, named,
-            chance, cooldown, leaveRelation, visitChance, visitDays, visitBonus, harnessCooldown);
+            chance, cooldown, leaveRelation, visitChance, visitDays, visitBonus, ladder);
         _logger.LogInfo($"{Tag} Config loaded: enabled={enabled}, gate heavy {heavy} / elite {elite} / lord {lord}, "
-                        + $"{recipes.Count} upgrade recipe(s), {named.Count} named weapon(s).");
+                        + $"{recipes.Count} upgrade recipe(s), {named.Count} named weapon(s), "
+                        + $"{ladder.Steps.Count} ladder rung(s), {ladder.Materials.Count} lord's material(s).");
         return config;
+    }
+
+    private LordsLadderConfig ReadLadder(XElement root, LordsLadderConfig d)
+    {
+        var ladder = root.Element("LordsLadder");
+        var steps = ReadSteps(ladder, d.Steps);
+        var knockouts = ladder == null ? d.CountsKnockouts : ReadBool(ladder, "count_knockouts", d.CountsKnockouts);
+        var materials = root.Element("LordsMaterials");
+        return new LordsLadderConfig(steps, knockouts, ReadMaterialRows(materials, d.Materials),
+            ReadDrop(materials, d.Drop), ReadWeapons(root.Element("LadderWeapons"), d.Weapons));
+    }
+
+    private IReadOnlyList<LadderStep> ReadSteps(XElement? ladder, IReadOnlyList<LadderStep> fallback)
+    {
+        var elements = ladder?.Elements("Step").ToList();
+        if (elements == null || elements.Count == 0)
+            return fallback;
+
+        var steps = new List<LadderStep>();
+        var slots = new HashSet<LadderSlot>();
+        var quests = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var el in elements)
+        {
+            var rawSlot = el.Attribute("slot")?.Value;
+            if (!LadderSlotRules.TryParse(rawSlot, out var slot))
+            {
+                Revert($"<Step slot=\"{rawSlot}\"> is not hands, legs, shoulders, head, body or weapon; skipped.");
+                continue;
+            }
+            var quest = el.Attribute("quest")?.Value?.Trim();
+            if (quest is null || quest.Length == 0)
+            {
+                Revert($"<Step slot=\"{rawSlot}\"> names no quest; skipped.");
+                continue;
+            }
+            var rawMaterials = el.Attribute("materials")?.Value;
+            if (!int.TryParse(rawMaterials, NumberStyles.Integer, CultureInfo.InvariantCulture, out var materials)
+                || materials < 1 || materials > 999)
+            {
+                Revert($"<Step slot=\"{rawSlot}\"> materials=\"{rawMaterials}\" is not 1 to 999; skipped.");
+                continue;
+            }
+            if (slots.Contains(slot))
+            {
+                Revert($"<Step slot=\"{rawSlot}\"> repeats a slot; keeping the first.");
+                continue;
+            }
+            // Two rungs on one quest id would share its progress and both complete at once.
+            if (quests.Contains(quest))
+            {
+                Revert($"<Step slot=\"{rawSlot}\"> reuses quest '{quest}'; keeping the first rung on it.");
+                continue;
+            }
+            slots.Add(slot);
+            quests.Add(quest);
+            steps.Add(new LadderStep(slot, quest, materials));
+        }
+        if (steps.Count > 0)
+            return steps;
+        Revert("<LordsLadder> has no valid <Step>; keeping the default rungs.");
+        return fallback;
+    }
+
+    private IReadOnlyDictionary<string, string> ReadMaterialRows(XElement? materials, IReadOnlyDictionary<string, string> fallback)
+    {
+        var elements = materials?.Elements("Material").ToList();
+        if (elements == null || elements.Count == 0)
+            return fallback;
+
+        var map = new Dictionary<string, string>(StringComparer.Ordinal);
+        foreach (var el in elements)
+        {
+            var culture = el.Attribute("culture")?.Value?.Trim();
+            var item = el.Attribute("item")?.Value?.Trim();
+            if (culture is null || culture.Length == 0)
+            {
+                Revert($"a <Material item=\"{item}\"> names no culture; skipped.");
+                continue;
+            }
+            if (item is null || item.Length == 0)
+            {
+                Revert($"<Material culture=\"{culture}\"> names no item; skipped.");
+                continue;
+            }
+            if (map.ContainsKey(culture))
+            {
+                Revert($"<Material culture=\"{culture}\"> is listed twice; keeping the first.");
+                continue;
+            }
+            map[culture] = item;
+        }
+        if (map.Count > 0)
+            return map;
+        Revert("<LordsMaterials> has no valid <Material>; keeping the default materials.");
+        return fallback;
+    }
+
+    private MaterialDrop ReadDrop(XElement? materials, MaterialDrop d)
+    {
+        if (materials == null)
+            return d;
+        var baseChance = ReadFloat(materials, "base_chance", d.BaseChance, 0f, 1f);
+        var perTen = ReadFloat(materials, "chance_per_ten_kills", d.ChancePerTenKills, 0f, 1f);
+        var maxChance = ReadFloat(materials, "max_chance", d.MaxChance, 0f, 1f);
+        var minUnits = ReadInt(materials, "min_units", d.MinUnits, 1, 99);
+        var maxUnits = ReadInt(materials, "max_units", d.MaxUnits, 1, 99);
+        if (minUnits > maxUnits)
+        {
+            Revert($"<LordsMaterials> min_units {minUnits} is above max_units {maxUnits}; using {d.MinUnits} to {d.MaxUnits}.");
+            (minUnits, maxUnits) = (d.MinUnits, d.MaxUnits);
+        }
+        // A base above the cap would be a flat cap whatever the kills.
+        if (baseChance > maxChance)
+        {
+            Revert($"<LordsMaterials> base_chance {baseChance} is above max_chance {maxChance}; using {d.BaseChance} to {d.MaxChance}.");
+            (baseChance, maxChance) = (d.BaseChance, d.MaxChance);
+        }
+        return new MaterialDrop(baseChance, perTen, maxChance, minUnits, maxUnits);
+    }
+
+    private IReadOnlyDictionary<string, IReadOnlyList<string>> ReadWeapons(XElement? weapons,
+        IReadOnlyDictionary<string, IReadOnlyList<string>> fallback)
+    {
+        var elements = weapons?.Elements("Weapon").ToList();
+        if (elements == null || elements.Count == 0)
+            return fallback;
+
+        var lists = new Dictionary<string, List<string>>(StringComparer.Ordinal);
+        foreach (var el in elements)
+        {
+            var culture = el.Attribute("culture")?.Value?.Trim();
+            var item = el.Attribute("item")?.Value?.Trim();
+            if (culture is null || culture.Length == 0)
+            {
+                Revert($"a <Weapon item=\"{item}\"> names no culture; skipped.");
+                continue;
+            }
+            if (item is null || item.Length == 0)
+            {
+                Revert($"<Weapon culture=\"{culture}\"> names no item; skipped.");
+                continue;
+            }
+            if (!lists.TryGetValue(culture, out var list))
+                lists[culture] = list = new List<string>();
+            if (list.Contains(item))
+            {
+                Revert($"<Weapon culture=\"{culture}\" item=\"{item}\"> is listed twice; kept once.");
+                continue;
+            }
+            list.Add(item);
+        }
+        if (lists.Count > 0)
+            return lists.ToDictionary(p => p.Key, p => (IReadOnlyList<string>)p.Value, StringComparer.Ordinal);
+        // An empty weapon list would leave every weapon rung unclaimable.
+        Revert("<LadderWeapons> has no valid <Weapon>; keeping the default picks.");
+        return fallback;
     }
 
     private (int heavy, int elite, int lord) ReadGate(XElement? gate, ArmourAcquisitionConfig d)

@@ -49,7 +49,7 @@ public class ArmourAcquisitionBehaviorSessionResetTests
 
     private void LeavePriorCampaignState()
     {
-        _state.HarnessStage["main_hero"] = ArmourAcquisitionState.HarnessReady;
+        _state.LadderClaimed["main_hero"] = 2;
         _state.VisitUntilDay["town_A"] = 99;
     }
 
@@ -60,7 +60,7 @@ public class ArmourAcquisitionBehaviorSessionResetTests
 
         NewBehavior().OnSessionLaunched(null);
 
-        Assert.AreEqual(0, _state.HarnessStage.Count);
+        Assert.AreEqual(0, _state.LadderClaimed.Count);
         Assert.AreEqual(0, _state.VisitUntilDay.Count);
     }
 
@@ -73,27 +73,29 @@ public class ArmourAcquisitionBehaviorSessionResetTests
         behavior.SyncData(new FakeDataStore { Loading = true });
         behavior.OnSessionLaunched(null);
 
-        Assert.AreEqual(0, _state.HarnessStage.Count, "a key miss must not leave the previous campaign's state");
+        Assert.AreEqual(0, _state.LadderClaimed.Count, "a key miss must not leave the previous campaign's state");
     }
 
     [TestMethod]
     public void SyncData_SaveThenLoadIntoAnotherCampaign_RestoresTheSavedState()
     {
-        _state.HarnessStage["main_hero"] = ArmourAcquisitionState.HarnessClaimed;
+        _state.LadderClaimed["main_hero"] = 3;
+        _state.LadderReady["main_hero"] = 4;
         _state.LordEventLastDay["main_hero"] = 40;
         var store = new FakeDataStore();
         NewBehavior().SyncData(store);
 
         _state.Reset();
-        _state.HarnessStage["other_hero"] = ArmourAcquisitionState.HarnessReady;
+        _state.LadderClaimed["other_hero"] = 1;
         store.Loading = true;
         var behavior = NewBehavior();
         behavior.SyncData(store);
         behavior.OnSessionLaunched(null);
 
-        Assert.AreEqual(ArmourAcquisitionState.HarnessClaimed, _state.HarnessStage["main_hero"]);
+        Assert.AreEqual(3, _state.LadderClaimed["main_hero"]);
+        Assert.AreEqual(4, _state.LadderReady["main_hero"]);
         Assert.AreEqual(40, _state.LordEventLastDay["main_hero"]);
-        Assert.IsFalse(_state.HarnessStage.ContainsKey("other_hero"));
+        Assert.IsFalse(_state.LadderClaimed.ContainsKey("other_hero"));
     }
 
     /// <summary>

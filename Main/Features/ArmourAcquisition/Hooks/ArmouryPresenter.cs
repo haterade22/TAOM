@@ -12,20 +12,19 @@ using TAOM.Features.SpecialResources;
 namespace TAOM.Features.ArmourAcquisition.Hooks;
 
 /// <summary>
-/// Boundary presentation of a town armoury (docs/features/armour-acquisition.md): the upgrade picker, its
-/// confirmation, and the Lord's Harness claim, as engine inquiries. Every decision is a service's
-/// (<see cref="ArmouryUpgradeService"/>, <see cref="LordHarnessService"/>, <see cref="ArmouryLevelService"/>).
+/// Boundary presentation of a town armoury (docs/features/armour-acquisition.md): the upgrade picker and its
+/// confirmation as engine inquiries, with the lord's gear ladder's rows above the upgrades
+/// (<see cref="LadderPresenter"/>). Every decision is a service's (<see cref="ArmouryUpgradeService"/>,
+/// <see cref="LordsLadderService"/>, <see cref="ArmouryLevelService"/>).
 /// A co-op guest is turned away before anything is charged: the host's next roster resync would erase the
 /// upgraded piece (the EliteEmissary "pay-real-get-phantom" finding).
 /// </summary>
 public sealed class ArmouryPresenter
 {
-    private static readonly object ClaimMarker = new();
-
     private readonly IArmourGateService _gate;
     private readonly ArmouryLevelService _levels;
     private readonly ArmouryUpgradeService _upgrades;
-    private readonly LordHarnessService _harness;
+    private readonly LadderPresenter _ladder;
     private readonly IArmouryTownAdapter _towns;
     private readonly IArmouryPlayerAdapter _player;
     private readonly ISpecialResourceSpender _spender;
@@ -34,13 +33,13 @@ public sealed class ArmouryPresenter
     private readonly IModLogger _logger;
 
     public ArmouryPresenter(IArmourGateService gate, ArmouryLevelService levels, ArmouryUpgradeService upgrades,
-        LordHarnessService harness, IArmouryTownAdapter towns, IArmouryPlayerAdapter player, ISpecialResourceSpender spender,
+        LadderPresenter ladder, IArmouryTownAdapter towns, IArmouryPlayerAdapter player, ISpecialResourceSpender spender,
         IArmourAcquisitionConfigProvider config, ICoopSessionProvider coop, IModLogger logger)
     {
         _gate = gate;
         _levels = levels;
         _upgrades = upgrades;
-        _harness = harness;
+        _ladder = ladder;
         _towns = towns;
         _player = player;
         _spender = spender;
@@ -60,15 +59,7 @@ public sealed class ArmouryPresenter
         var resourceName = _spender.GetBalance(_player.HeroId, _player.KingdomId, _player.CultureId)?.DisplayName;
         var config = _config.GetConfig();
 
-        var elements = new List<InquiryElement>();
-        if (_harness.IsReadyToClaim(_player.HeroId))
-        {
-            var canClaim = _harness.CanClaimAt(level);
-            elements.Add(new InquiryElement(ClaimMarker, new TextObject("{=taom_armoury_claim}Claim your Lord's Harness").ToString(), null,
-                canClaim, canClaim ? string.Empty
-                    : new TextObject("{=taom_armoury_claim_level}Only a master armourer, at a level {LORD} armoury, can fit a lord's harness.")
-                        .SetTextVariable("LORD", config.LordLevel).ToString()));
-        }
+        var elements = new List<InquiryElement>(_ladder.Rows(level));
         foreach (var offer in _upgrades.BuildOffers(level))
         {
             var price = ArmouryTexts.Price(offer, Name, resourceName);
@@ -94,12 +85,7 @@ public sealed class ArmouryPresenter
     private void OnChosen(List<InquiryElement> selected, string? resourceName)
     {
         var picked = selected.FirstOrDefault()?.Identifier;
-        if (ReferenceEquals(picked, ClaimMarker))
-        {
-            OpenClaim();
-            return;
-        }
-        if (picked is not UpgradeOffer offer)
+        if (_ladder.TryHandle(picked) || picked is not UpgradeOffer offer)
             return;
         var price = ArmouryTexts.Price(offer, Name, resourceName);
         InformationManager.ShowInquiry(new InquiryData(
@@ -116,27 +102,6 @@ public sealed class ArmouryPresenter
         _logger.LogInfo($"[ArmourAcquisition] Upgrade {offer.SourceItemId} -> {offer.TargetItemId}: {(outcome == UpgradeBlock.None ? "done" : outcome.ToString())}.");
         Notify(ArmouryTexts.Outcome(outcome, Name(offer.SourceItemId), Name(offer.TargetItemId)),
             outcome == UpgradeBlock.None ? Colors.Green : Colors.Red);
-    }
-
-    private void OpenClaim()
-    {
-        var choices = _harness.LordPieceChoices(_player.CultureId);
-        if (choices.Count == 0)
-        {
-            _logger.LogWarning($"[ArmourAcquisition] No lord or elite piece to claim for culture '{_player.CultureId}'.");
-            return;
-        }
-        MBInformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(
-            new TextObject("{=taom_armoury_claim_title}The Lord's Harness").ToString(),
-            new TextObject("{=taom_armoury_claim_desc}The master armourer will fit you with one piece of lord's kit. Choose it.").ToString(),
-            choices.Select(id => new InquiryElement(id, Name(id), null)).ToList(), isExitShown: true, 1, 1,
-            new TextObject("{=taom_armoury_choose}Choose").ToString(), new TextObject("{=taom_armoury_cancel}Cancel").ToString(),
-            selected =>
-            {
-                if (selected.FirstOrDefault()?.Identifier is not string id || !_harness.Claim(id))
-                    return;
-                Notify(new TextObject("{=taom_armoury_claimed}The master armourer fits you with {ITEM}.").SetTextVariable("ITEM", Name(id)).ToString(), Colors.Green);
-            }, _ => { }), pauseGameActiveState: true);
     }
 
     private string Name(string itemId) => _gate.GetName(itemId);

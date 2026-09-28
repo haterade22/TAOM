@@ -132,6 +132,27 @@ public class LotrIssueConfigProvider : ILotrIssueConfigProvider
         var rewardGoldBase = CoerceNonNegInt(el, "reward_gold_base", id, ref coerced);
         var rewardRenown = CoerceNonNegInt(el, "reward_renown", id, ref coerced);
 
+        // How many of reward_item completion grants (the lord's gear ladder's material quests pay several, #693).
+        var rawCount = el.Attribute("reward_count")?.Value;
+        var rewardItemCount = 1;
+        if (rawCount != null && (!int.TryParse(rawCount, NumberStyles.Integer, CultureInfo.InvariantCulture, out rewardItemCount)
+                                 || rewardItemCount < 1 || rewardItemCount > 99))
+        {
+            _logger.LogWarning($"LotrIssues: issue '{id}': reward_count '{rawCount}' is not 1 to 99, reverting to 1");
+            rewardItemCount = 1;
+            coerced++;
+        }
+
+        // Offered only to a player of one of the row's cultures: a reward only they can use (#693, "The Deep Seam").
+        var rawForPlayer = el.Attribute("for_player_culture")?.Value;
+        var forPlayerCulture = false;
+        if (rawForPlayer != null && !bool.TryParse(rawForPlayer.Trim(), out forPlayerCulture))
+        {
+            _logger.LogWarning($"LotrIssues: issue '{id}': for_player_culture '{rawForPlayer}' is not true or false, reverting to false");
+            forPlayerCulture = false;
+            coerced++;
+        }
+
         var relationMin = ParseInt(el, "relation_min", -10);
         if (relationMin < -100 || relationMin > 100)
         {
@@ -175,7 +196,7 @@ public class LotrIssueConfigProvider : ILotrIssueConfigProvider
         return new LotrIssueDefinition(
             id, template, giver, frequency, cultures, count, countPerDiff,
             itemSource, troopSource, rewardGoldBase, rewardGoldPerDiff, rewardRenown,
-            el.Attribute("reward_item")?.Value ?? "", variant, relationMin, text);
+            el.Attribute("reward_item")?.Value ?? "", variant, relationMin, text, rewardItemCount, forPlayerCulture);
     }
 
     private static bool IsValidCombatVariant(string v)

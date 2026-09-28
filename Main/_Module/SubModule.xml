@@ -1042,5 +1042,13 @@
     <XmlNode>
       <XmlName id="CustomBattleScenes" path="custom_battle_scenes" />
     </XmlNode>
+    <!-- Armour acquisition's lord's materials (#693): TAOM's only items; every other item lives in LOTRLOME_Armory -->
+    <XmlNode>
+      <XmlName id="Items" path="armour_acquisition/taom_lords_materials"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+      </IncludedGameTypes>
+    </XmlNode>
   </Xmls>
 </Module>

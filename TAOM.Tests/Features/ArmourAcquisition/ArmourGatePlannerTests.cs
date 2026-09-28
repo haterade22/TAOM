@@ -16,10 +16,10 @@ namespace TAOM.Tests.Features.ArmourAcquisition;
 public class ArmourGatePlannerTests
 {
     private static ArmourItemRecord Armour(string id, int tier = 0, bool merch = true, string? culture = "gondor") =>
-        new(id, isCharacterArmour: true, engineTier: tier, isMerchandise: merch, cultureId: culture, value: 100);
+        new(id, slot: ArmourSlot.Body, engineTier: tier, isMerchandise: merch, cultureId: culture, value: 100);
 
     private static ArmourItemRecord Weapon(string id, bool merch = true) =>
-        new(id, isCharacterArmour: false, engineTier: 0, isMerchandise: merch, cultureId: "gondor", value: 100);
+        new(id, slot: ArmourSlot.None, engineTier: 0, isMerchandise: merch, cultureId: "gondor", value: 100);
 
     private static Dictionary<string, ArmourClassEntry> Table(params (string id, ArmourClass cls)[] rows) =>
         rows.ToDictionary(r => r.id, r => new ArmourClassEntry(r.id, r.cls, null), StringComparer.Ordinal);

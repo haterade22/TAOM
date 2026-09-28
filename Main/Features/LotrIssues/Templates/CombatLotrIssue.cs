@@ -91,7 +91,15 @@ public class CombatLotrIssue : IssueBase
         }
     }
 
-    public override bool IssueStayAliveConditions() => true;
+    // for_player_culture holds while the offer waits: a new campaign creates its first issues before character
+    // creation (SandBox's placeholder hero), and a hero switch can change the player's culture. False drops an
+    // untaken offer at the next daily tick or when the player enters its settlement (IssueManager); a taken quest
+    // is not touched.
+    public override bool IssueStayAliveConditions()
+    {
+        EnsureDef();
+        return _def?.OffersTo(Hero.MainHero?.Culture?.StringId) ?? true;
+    }
 
     protected override float GetIssueEffectAmountInternal(IssueEffect issueEffect)
     {

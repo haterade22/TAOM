@@ -127,8 +127,8 @@ public class CareerQuestCampaignBehavior : CampaignBehaviorBase
     /// (Codex P2, 2026-08-01.)
     ///
     /// Filtered by career as well: the CareerQuest shell also runs quest lines that are not careers
-    /// (armour acquisition's "Lord's Harness", career_id taom_lords_harness), and one of those must
-    /// not hold the player's career quests back.
+    /// (armour acquisition's lord's gear ladder, career_id taom_lords_gear_&lt;slot&gt;), and one of those
+    /// must not hold the player's career quests back.
     /// </summary>
     private bool AnyActiveCareerQuestFor(Hero hero, string careerId)
     {

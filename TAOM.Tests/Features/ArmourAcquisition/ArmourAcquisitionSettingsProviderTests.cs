@@ -21,7 +21,7 @@ public class ArmourAcquisitionSettingsProviderTests
         var config = Substitute.For<IArmourAcquisitionConfigProvider>();
         config.GetConfig().Returns(new ArmourAcquisitionConfig(enabled, d.HeavyLevel, d.EliteLevel, d.LordLevel, d.Recipes,
             d.NamedWeapons, d.LordEventChance, d.LordEventCooldownDays, d.LordEventLeaveRelation, d.VisitChancePerDay,
-            d.VisitDurationDays, d.VisitLevelBonus, d.HarnessOfferCooldownDays));
+            d.VisitDurationDays, d.VisitLevelBonus, d.Ladder));
         return new ArmourAcquisitionSettingsProvider(config);
     }
 

@@ -42,11 +42,12 @@ public class ArmourItemCatalogAdapter : IArmourItemCatalogAdapter
                 continue;
             try
             {
-                var isArmour = IsCharacterArmour(item.ItemType);
+                var slot = SlotOf(item.ItemType);
+                var isArmour = slot != ArmourSlot.None;
                 // ItemObject.Tier asks the item value model (Tierf), and it can be -1 for a Tierf under 0.5
                 // ((ItemTiers)(Round(Tierf) - 1), ItemObject.cs:178); only armour needs it, for the fallback class.
                 var tier = isArmour ? (int)item.Tier : 0;
-                records.Add(new ArmourItemRecord(item.StringId, isArmour, tier, !item.NotMerchandise,
+                records.Add(new ArmourItemRecord(item.StringId, slot, tier, !item.NotMerchandise,
                     item.Culture?.StringId, item.Value));
             }
             catch (Exception ex)
@@ -79,10 +80,13 @@ public class ArmourItemCatalogAdapter : IArmourItemCatalogAdapter
         return MBObjectManager.Instance?.GetObject<ItemObject>(itemId)?.Name?.ToString() ?? itemId;
     }
 
-    private static bool IsCharacterArmour(ItemObject.ItemTypeEnum type) =>
-        type == ItemObject.ItemTypeEnum.HeadArmor
-        || type == ItemObject.ItemTypeEnum.BodyArmor
-        || type == ItemObject.ItemTypeEnum.LegArmor
-        || type == ItemObject.ItemTypeEnum.HandArmor
-        || type == ItemObject.ItemTypeEnum.Cape;
+    private static ArmourSlot SlotOf(ItemObject.ItemTypeEnum type) => type switch
+    {
+        ItemObject.ItemTypeEnum.HeadArmor => ArmourSlot.Head,
+        ItemObject.ItemTypeEnum.BodyArmor => ArmourSlot.Body,
+        ItemObject.ItemTypeEnum.LegArmor => ArmourSlot.Leg,
+        ItemObject.ItemTypeEnum.HandArmor => ArmourSlot.Hand,
+        ItemObject.ItemTypeEnum.Cape => ArmourSlot.Cape,
+        _ => ArmourSlot.None,
+    };
 }

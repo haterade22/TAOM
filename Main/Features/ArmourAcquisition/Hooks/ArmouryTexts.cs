@@ -37,8 +37,29 @@ internal static class ArmouryTexts
         return string.Join(", ", parts);
     }
 
+    /// <summary>The lord's piece a ladder rung awards (#693), as the player reads it.</summary>
+    public static TextObject LadderPiece(LadderSlot slot) => slot switch
+    {
+        LadderSlot.Hands => new TextObject("{=taom_lg_piece_hands}lord's gauntlets"),
+        LadderSlot.Legs => new TextObject("{=taom_lg_piece_legs}lord's greaves"),
+        LadderSlot.Shoulders => new TextObject("{=taom_lg_piece_shoulders}lord's mantle"),
+        LadderSlot.Head => new TextObject("{=taom_lg_piece_head}lord's helm"),
+        LadderSlot.Body => new TextObject("{=taom_lg_piece_body}lord's harness"),
+        _ => new TextObject("{=taom_lg_piece_weapon}lord's weapon"),
+    };
+
+    public static string LadderClaimLevel(int lordLevel, TextObject piece) =>
+        new TextObject("{=taom_lg_claim_level}Only a master armourer, at a level {LORD} armoury, can fit your {PIECE}.")
+            .SetTextVariable("LORD", lordLevel).SetTextVariable("PIECE", piece).ToString();
+
+    /// <summary>What a rung asks; <paramref name="materials"/> (its lord's materials, priced) when they may stand in for the deeds.</summary>
+    public static string LadderTakeTip(string? materials) => materials == null
+        ? new TextObject("{=taom_lg_take_tip_deeds}Do the deeds its quest asks: enemies struck down with your own hand and battles won, and on the higher rungs lords taken captive.").ToString()
+        : new TextObject("{=taom_lg_take_tip}Do the deeds its quest asks: enemies struck down with your own hand and battles won, and on the higher rungs lords taken captive; or bring the armourer {AMOUNT} instead.")
+            .SetTextVariable("AMOUNT", materials).ToString();
+
     // The count and the name in one localizable string, so a language can order them its own way.
-    private static string Amount(int count, string name) =>
+    public static string Amount(int count, string name) =>
         new TextObject("{=taom_armoury_amount}{COUNT} {ITEM}").SetTextVariable("COUNT", count).SetTextVariable("ITEM", name).ToString();
 
     public static string Hint(UpgradeOffer offer, int townLevel, string price) => offer.Block switch

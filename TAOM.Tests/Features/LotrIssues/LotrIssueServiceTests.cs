@@ -32,20 +32,23 @@ public class LotrIssueServiceTests
         float rewardGoldPerDiff = 0f,
         int rewardRenown = 0,
         string rewardItem = "",
-        int relationMin = -10)
+        int relationMin = -10,
+        bool forPlayerCulture = false)
         => new LotrIssueDefinition(id, LotrIssueTemplate.DeliverGoods, giver, IssueFrequencyTier.Common,
             cultures, count, countPerDiff, "", "", rewardGoldBase, rewardGoldPerDiff, rewardRenown,
-            rewardItem, "", relationMin, new LotrIssueText("t", "d", "", "", "", "", "", "", ""));
+            rewardItem, "", relationMin, new LotrIssueText("t", "d", "", "", "", "", "", "", ""),
+            forPlayerCulture: forPlayerCulture);
 
     private static ILotrIssueGiverAdapter Giver(
         IssueGiverOccupation? occ = IssueGiverOccupation.Headman, string culture = "gondor",
-        int relation = 0, bool valid = true)
+        int relation = 0, bool valid = true, string playerCulture = "gondor")
     {
         var g = Substitute.For<ILotrIssueGiverAdapter>();
         g.IsValid.Returns(valid);
         g.Occupation.Returns(occ);
         g.CultureStringId.Returns(culture);
         g.RelationWithPlayer.Returns(relation);
+        g.PlayerCultureStringId.Returns(playerCulture);
         return g;
     }
 
@@ -64,6 +67,37 @@ public class LotrIssueServiceTests
         Load(Def(giver: IssueGiverOccupation.Headman, cultures: new[] { "gondor" }, relationMin: 0));
         var result = _sut.GetEligibleIssues(Giver(IssueGiverOccupation.Headman, "gondor", relation: 5));
         Assert.AreEqual(1, result.Count);
+    }
+
+    [TestMethod]
+    public void GetEligibleIssues_ForPlayerCulture_OfferedOnlyWhenThePlayerIsOfARowCulture()
+    {
+        // "The Deep Seam" pays a culture's lord's material: useless to a player of another culture (RCA 2026-09-28 row 4).
+        Load(Def(cultures: new[] { "gondor" }, forPlayerCulture: true));
+
+        Assert.AreEqual(0, _sut.GetEligibleIssues(Giver(culture: "gondor", playerCulture: "vlandia")).Count);
+        Assert.AreEqual(1, _sut.GetEligibleIssues(Giver(culture: "gondor", playerCulture: "gondor")).Count);
+    }
+
+    [TestMethod]
+    public void OffersTo_ForPlayerCulture_OnlyAPlayerOfTheIssuesCultures()
+    {
+        // The rule the offer and the daily stay-alive check share: a new campaign creates its first issues before
+        // character creation, while the main hero still has SandBox's placeholder culture (convergence review D-3).
+        var seam = Def(cultures: new[] { "khuzait", "battania" }, forPlayerCulture: true);
+
+        Assert.IsTrue(seam.OffersTo("battania"));
+        Assert.IsFalse(seam.OffersTo("gondor"));
+        Assert.IsFalse(seam.OffersTo(null));
+        Assert.IsTrue(Def(cultures: new[] { "khuzait" }).OffersTo("gondor"), "without the flag the player's culture does not matter");
+    }
+
+    [TestMethod]
+    public void GetEligibleIssues_WithoutTheFlag_ThePlayersCultureDoesNotMatter()
+    {
+        Load(Def(cultures: new[] { "gondor" }));
+
+        Assert.AreEqual(1, _sut.GetEligibleIssues(Giver(culture: "gondor", playerCulture: "mordor")).Count);
     }
 
     [TestMethod]
@@ -258,6 +292,20 @@ public class LotrIssueServiceTests
         hero.Received(1).AddGold(200);
         hero.Received(1).AddRenown(3);
         hero.Received(1).AddItemToInventory("sword", 1);
+    }
+
+    [TestMethod]
+    public void ApplyRewards_ARewardCount_GrantsThatManyOfTheItem()
+    {
+        var hero = Substitute.For<ILotrIssueRewardAdapter>();
+        hero.IsValid.Returns(true);
+        var def = new LotrIssueDefinition("lotr_x", LotrIssueTemplate.DeliverGoods, IssueGiverOccupation.Artisan,
+            IssueFrequencyTier.Common, new List<string>(), 4, 0f, "item:charcoal", "", 0, 0f, 0, "m_gondor", "", 0,
+            new LotrIssueText("t", "d", "", "", "", "", "", "", ""), rewardItemCount: 5);
+
+        _sut.ApplyRewards(def, 0f, hero);
+
+        hero.Received(1).AddItemToInventory("m_gondor", 5);
     }
 
     [TestMethod]

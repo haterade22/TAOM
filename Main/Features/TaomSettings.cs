@@ -171,7 +171,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Armour Acquisition")]
     [SettingPropertyBool("Enable Armour Acquisition", Order = 0, RequireRestart = false,
-        HintText = "Markets and battle loot hand out light and medium armour freely. Heavy, elite and lord pieces are sold only where a town's armoury, its Barracks, is high enough; lord kit can also be forged there or earned, and named hero weapons never change hands. Visit a town's armoury to upgrade a piece with metals. Takes effect from the next game load.")]
+        HintText = "Markets and battle loot hand out light and medium armour freely. Heavy, elite and lord pieces are sold only where a town's armoury, its Barracks, is high enough; lord kit can also be forged there or earned piece by piece on the lord's gear ladder, whose last rung awards the named hero weapons; they are never sold or looted. Visit a town's armoury to upgrade a piece with metals. Takes effect from the next game load.")]
     public bool EnableArmourAcquisition { get; set; } = true;
 
     [SettingPropertyGroup("Armour Acquisition")]

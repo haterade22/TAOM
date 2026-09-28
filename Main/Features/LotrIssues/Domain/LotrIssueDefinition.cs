@@ -70,6 +70,15 @@ public sealed class LotrIssueDefinition
     /// <summary>Optional bonus item id granted on completion; empty if none.</summary>
     public string RewardItem { get; }
 
+    /// <summary>How many of <see cref="RewardItem"/> completion grants (1 to 99; the XML's reward_count, default 1).</summary>
+    public int RewardItemCount { get; }
+
+    /// <summary>
+    /// Offered only when the player's culture is one of <see cref="Cultures"/> too, not the giver's alone (the XML's
+    /// for_player_culture): for a reward only those cultures can use, such as a lord's material (#693).
+    /// </summary>
+    public bool ForPlayerCulture { get; }
+
     /// <summary>Template-specific mode string (e.g. Combat "DefeatRaids"/"CaptureLords"); "" if none.</summary>
     public string Variant { get; }
 
@@ -94,7 +103,9 @@ public sealed class LotrIssueDefinition
         string rewardItem,
         string variant,
         int relationMin,
-        LotrIssueText text)
+        LotrIssueText text,
+        int rewardItemCount = 1,
+        bool forPlayerCulture = false)
     {
         Id = id;
         Template = template;
@@ -109,10 +120,18 @@ public sealed class LotrIssueDefinition
         RewardGoldPerDifficulty = rewardGoldPerDifficulty;
         RewardRenown = rewardRenown;
         RewardItem = rewardItem ?? "";
+        RewardItemCount = rewardItemCount;
+        ForPlayerCulture = forPlayerCulture;
         Variant = variant ?? "";
         RelationMin = relationMin;
         Text = text ?? new LotrIssueText("", "", "", "", "", "", "", "", "");
     }
+
+    /// <summary>
+    /// Whether the issue suits a player of this culture: always, unless <see cref="ForPlayerCulture"/>. Checked when it
+    /// is offered and each day the offer waits to be taken.
+    /// </summary>
+    public bool OffersTo(string playerCultureStringId) => !ForPlayerCulture || AppliesToCulture(playerCultureStringId);
 
     /// <summary>True if this issue may spawn for the given runtime culture StringId.</summary>
     public bool AppliesToCulture(string cultureStringId)

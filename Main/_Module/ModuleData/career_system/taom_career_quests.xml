@@ -8,7 +8,8 @@
 
   Objective types : WinBattles, SkillThreshold(param=skill id), SettlementsCaptured, TournamentsWon,
                     RenownThreshold, GoldAccumulated, DefeatEnemyLords (capture an at-war lord),
-                    VisitSettlementType(param=Town/Castle/Village)
+                    VisitSettlementType(param=Town/Castle/Village), HeroKills (fed only by the lord's
+                    gear ladder's kill counter through CareerQuest.AddProgress)
   Reward types    : UnlockTier(amount=1-3), GrantRenown(amount), GrantInfluence(amount),
                     GrantItem(param=item id, amount=count), GrantAttributeFlag(param=flag)
 
@@ -34,27 +35,84 @@
   </CareerQuest>
 
   <!--
-    "The Lord's Harness" (docs/features/armour-acquisition.md): the quest route to lord kit. NOT a career:
-    career_id taom_lords_harness names no career, so CareerQuestCampaignBehavior never offers it.
-    LordHarnessQuestBehavior offers it at an armoury of the lord level in a town of the player's own culture
-    and starts it itself. One quest, its three deeds in any order (Mike, 2026-09-27); the captives and the
-    battles count from zero, so the quest can never complete inside its own start (a renown already over
-    900 simply shows as done). When it is done, a master armourer at an
-    armoury of the lord level fits the harness. Rewards here are renown only: the harness is granted there.
+    The lord's gear ladder (docs/features/armour-acquisition.md, #693; Mike, 2026-09-28): six quests, one per
+    slot, climbed in the order <LordsLadder> in armour_acquisition_config.xml lists them. NOT careers: each
+    career_id is the quest's own id and names no career, so CareerQuestCampaignBehavior never offers one; the
+    armoury (LadderPresenter) starts the current rung's quest. HeroKills is the hero's own kills, which the
+    armour acquisition kill counter hands to CareerQuest.AddProgress after each battle; the kills and the
+    battles count from zero, so no rung can complete inside its own start. A rung is done by these deeds or
+    by handing an armourer its lord's materials; either way its piece is claimed at an armoury of the lord
+    level. No rewards here: the piece is the reward. The numbers are Mike's placeholders, to tune in play.
+    The task keys are shared: the same {=KEY} and default on every rung.
   -->
-  <CareerQuest id="taom_lords_harness"
-               career_id="taom_lords_harness"
+
+  <CareerQuest id="taom_lords_gear_hands"
+               career_id="taom_lords_gear_hands"
                tier="1"
-               title_key="{=taom_lh_title}The Lord's Harness"
-               description_key="{=taom_lh_desc}The master armourer will fit a lord's harness only to a name the great houses know. Take enemy lords captive, raise your clan's renown and win battles at the head of your company, in any order; then a master armourer will fit you with your harness.">
+               title_key="{=taom_lg_hands_title}The Lord's Gauntlets"
+               description_key="{=taom_lg_hands_desc}A master armourer forges a lord's gauntlets only for hands that have proved themselves in battle. Strike down enemies with your own hand and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with them.">
     <Objectives>
-      <Objective type="DefeatEnemyLords" target="2" task_key="{=taom_lh_task_lords}Take enemy lords captive" />
-      <Objective type="RenownThreshold" target="900" task_key="{=taom_lh_task_renown}Raise your clan's renown" />
-      <Objective type="WinBattles" target="12" task_key="{=taom_lh_task_battles}Win battles" />
+      <Objective type="HeroKills" target="100" task_key="{=taom_lg_task_kills}Strike down enemies with your own hand" />
+      <Objective type="WinBattles" target="10" task_key="{=taom_lg_task_battles}Win battles" />
     </Objectives>
-    <Rewards>
-      <Reward type="GrantRenown" amount="100" />
-    </Rewards>
+  </CareerQuest>
+
+  <CareerQuest id="taom_lords_gear_legs"
+               career_id="taom_lords_gear_legs"
+               tier="1"
+               title_key="{=taom_lg_legs_title}The Lord's Greaves"
+               description_key="{=taom_lg_legs_desc}Greaves fit for a lord are earned in the press of battle, not bought. Strike down enemies with your own hand and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with them.">
+    <Objectives>
+      <Objective type="HeroKills" target="200" task_key="{=taom_lg_task_kills}Strike down enemies with your own hand" />
+      <Objective type="WinBattles" target="20" task_key="{=taom_lg_task_battles}Win battles" />
+    </Objectives>
+  </CareerQuest>
+
+  <CareerQuest id="taom_lords_gear_shoulders"
+               career_id="taom_lords_gear_shoulders"
+               tier="1"
+               title_key="{=taom_lg_shoulders_title}The Lord's Mantle"
+               description_key="{=taom_lg_shoulders_desc}A lord's mantle marks one who stands where the fighting is thickest. Strike down enemies with your own hand and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it.">
+    <Objectives>
+      <Objective type="HeroKills" target="300" task_key="{=taom_lg_task_kills}Strike down enemies with your own hand" />
+      <Objective type="WinBattles" target="35" task_key="{=taom_lg_task_battles}Win battles" />
+    </Objectives>
+  </CareerQuest>
+
+  <CareerQuest id="taom_lords_gear_head"
+               career_id="taom_lords_gear_head"
+               tier="1"
+               title_key="{=taom_lg_head_title}The Lord's Helm"
+               description_key="{=taom_lg_head_desc}A lord's helm is forged for a name that other lords fear. Strike down enemies with your own hand, take an enemy lord captive and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it.">
+    <Objectives>
+      <Objective type="HeroKills" target="400" task_key="{=taom_lg_task_kills}Strike down enemies with your own hand" />
+      <Objective type="WinBattles" target="50" task_key="{=taom_lg_task_battles}Win battles" />
+      <Objective type="DefeatEnemyLords" target="1" task_key="{=taom_lg_task_lords}Take enemy lords captive" />
+    </Objectives>
+  </CareerQuest>
+
+  <CareerQuest id="taom_lords_gear_body"
+               career_id="taom_lords_gear_body"
+               tier="1"
+               title_key="{=taom_lg_body_title}The Lord's Harness"
+               description_key="{=taom_lg_body_desc}The lord's harness is the last armour a master armourer forges, and only for a proven captain. Strike down enemies with your own hand, take enemy lords captive and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it.">
+    <Objectives>
+      <Objective type="HeroKills" target="500" task_key="{=taom_lg_task_kills}Strike down enemies with your own hand" />
+      <Objective type="WinBattles" target="75" task_key="{=taom_lg_task_battles}Win battles" />
+      <Objective type="DefeatEnemyLords" target="3" task_key="{=taom_lg_task_lords}Take enemy lords captive" />
+    </Objectives>
+  </CareerQuest>
+
+  <CareerQuest id="taom_lords_gear_weapon"
+               career_id="taom_lords_gear_weapon"
+               tier="1"
+               title_key="{=taom_lg_weapon_title}The Lord's Weapon"
+               description_key="{=taom_lg_weapon_desc}The finest weapons of your people go to those whose deeds match the names they carry. Strike down enemies with your own hand, take enemy lords captive and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it.">
+    <Objectives>
+      <Objective type="HeroKills" target="1000" task_key="{=taom_lg_task_kills}Strike down enemies with your own hand" />
+      <Objective type="WinBattles" target="100" task_key="{=taom_lg_task_battles}Win battles" />
+      <Objective type="DefeatEnemyLords" target="5" task_key="{=taom_lg_task_lords}Take enemy lords captive" />
+    </Objectives>
   </CareerQuest>
 
 </CareerQuests>

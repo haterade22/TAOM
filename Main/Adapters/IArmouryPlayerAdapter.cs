@@ -21,9 +21,6 @@ public interface IArmouryPlayerAdapter
     /// <summary>Every stack in the party inventory.</summary>
     IReadOnlyList<InventoryPiece> ReadInventory();
 
-    /// <summary>The item ids the main hero wears, battle and civilian sets.</summary>
-    IReadOnlyList<string> ReadEquippedItemIds();
-
     /// <summary>Removes <paramref name="count"/> of an item, any modifier; false when the party carries fewer.</summary>
     bool RemoveItem(string itemId, int count);
 

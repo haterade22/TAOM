@@ -29,6 +29,9 @@ public static class ArmourAcquisitionIoC
         container.Register<IArmouryPlayerAdapter, ArmouryPlayerAdapter>(Reuse.Singleton);
         container.Register<ArmouryUpgradeService>(Reuse.Singleton);
         container.Register<LordHarnessService>(Reuse.Singleton);
+        container.Register<LordsLadderService>(Reuse.Singleton);
+        container.Register<HeroKillTally>(Reuse.Singleton);
+        container.Register<Hooks.LadderPresenter>(Reuse.Singleton);
         container.Register<Hooks.ArmouryPresenter>(Reuse.Singleton);
     }
 }

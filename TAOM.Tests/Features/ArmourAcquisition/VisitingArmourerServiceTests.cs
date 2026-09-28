@@ -24,7 +24,7 @@ public class VisitingArmourerServiceTests
     {
         var d = ArmourAcquisitionConfig.Default;
         return new ArmourAcquisitionConfig(d.Enabled, d.HeavyLevel, d.EliteLevel, d.LordLevel, d.Recipes, d.NamedWeapons,
-            d.LordEventChance, d.LordEventCooldownDays, d.LordEventLeaveRelation, chance, days, bonus, d.HarnessOfferCooldownDays);
+            d.LordEventChance, d.LordEventCooldownDays, d.LordEventLeaveRelation, chance, days, bonus, d.Ladder);
     }
 
     private sealed class FixedRandom : Random

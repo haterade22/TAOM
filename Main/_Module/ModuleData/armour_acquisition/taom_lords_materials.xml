@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The lord's gear ladder's lord's materials (docs/features/armour-acquisition.md, #693): one per culture
+  that owns armour; a culture with none of its own uses its armour donor's (culture_marketplace_config.xml,
+  armour_from). They drop after battles won and pay "The Deep Seam", and a stack of them stands in for a
+  ladder rung's deeds at the armoury (armour_acquisition_config.xml, <LordsMaterials>, <LordsLadder>).
+
+  Names and art are PLACEHOLDERS until Mike or KEYforce set them: every material wears the vanilla
+  thamaskene ingot (an item's inventory icon is a render of its mesh, so new art is a mesh and texture).
+
+  Nothing in the engine or TAOM hands them out (engine v1.5.3; the feature doc's engine facts):
+    item_category="unassigned"  no trade good: no workshop makes it and no caravan buys it
+    is_merchandise="false"      battle loot, plunder, wreckage and the tournament pools skip it
+    value 500 or more           the hideout's night loot pool takes any Goods item up to a theoretical
+                                market value of 4750 (ten times its value) without checking the flag,
+                                so 475 or more is what keeps a material out of it
+    no culture                  CultureMarketplace pools only items with a culture
+  A stack the player sells leaves the usual ways: a town slowly consumes it (a zero-demand category
+  still gets 1% of the town's prosperity as daily demand), and the vanilla Trade Proposal incident may
+  offer for it. Like vanilla's XML non-food goods, the rows carry only the Civilian flag.
+-->
+<Items>
+  <Item id="taom_lords_material_gondor" name="{=taom_lm_gondor}Númenórean Steel" mesh="thamaskene_steel"
+        item_category="unassigned" value="500" weight="0.5" is_merchandise="false" Type="Goods">
+    <Flags Civilian="true" />
+  </Item>
+  <Item id="taom_lords_material_vlandia" name="{=taom_lm_vlandia}Eorling Steel" mesh="thamaskene_steel"
+        item_category="unassigned" value="500" weight="0.5" is_merchandise="false" Type="Goods">
+    <Flags Civilian="true" />
+  </Item>
+  <Item id="taom_lords_material_erebor" name="{=taom_lm_erebor}Erebor Dwarf-steel" mesh="thamaskene_steel"
+        item_category="unassigned" value="500" weight="0.5" is_merchandise="false" Type="Goods">
+    <Flags Civilian="true" />
+  </Item>
+  <Item id="taom_lords_material_sturgia" name="{=taom_lm_sturgia}Dale-forged Steel" mesh="thamaskene_steel"
+        item_category="unassigned" value="500" weight="0.5" is_merchandise="false" Type="Goods">
+    <Flags Civilian="true" />
+  </Item>
+  <Item id="taom_lords_material_rivendell" name="{=taom_lm_rivendell}Noldorin Silver-steel" mesh="thamaskene_steel"
+        item_category="unassigned" value="500" weight="0.5" is_merchandise="false" Type="Goods">
+    <Flags Civilian="true" />
+  </Item>
+  <Item id="taom_lords_material_mirkwood" name="{=taom_lm_mirkwood}Greenwood Silver" mesh="thamaskene_steel"
+        item_category="unassigned" value="500" weight="0.5" is_merchandise="false" Type="Goods">
+    <Flags Civilian="true" />
+  </Item>
+  <Item id="taom_lords_material_mordor" name="{=taom_lm_mordor}Barad-dûr Black Iron" mesh="thamaskene_steel"
+        item_category="unassigned" value="500" weight="0.5" is_merchandise="false" Type="Goods">
+    <Flags Civilian="true" />
+  </Item>
+  <Item id="taom_lords_material_isengard" name="{=taom_lm_isengard}Isengard Forge-iron" mesh="thamaskene_steel"
+        item_category="unassigned" value="500" weight="0.5" is_merchandise="false" Type="Goods">
+    <Flags Civilian="true" />
+  </Item>
+  <Item id="taom_lords_material_dolguldur" name="{=taom_lm_dolguldur}Dol Guldur Shadow-iron" mesh="thamaskene_steel"
+        item_category="unassigned" value="500" weight="0.5" is_merchandise="false" Type="Goods">
+    <Flags Civilian="true" />
+  </Item>
+  <Item id="taom_lords_material_gundabad" name="{=taom_lm_gundabad}Gundabad Orc-steel" mesh="thamaskene_steel"
+        item_category="unassigned" value="500" weight="0.5" is_merchandise="false" Type="Goods">
+    <Flags Civilian="true" />
+  </Item>
+  <Item id="taom_lords_material_khuzait" name="{=taom_lm_khuzait}Rhûnic Gilt-bronze" mesh="thamaskene_steel"
+        item_category="unassigned" value="500" weight="0.5" is_merchandise="false" Type="Goods">
+    <Flags Civilian="true" />
+  </Item>
+  <Item id="taom_lords_material_aserai" name="{=taom_lm_aserai}Haradric Bronze" mesh="thamaskene_steel"
+        item_category="unassigned" value="500" weight="0.5" is_merchandise="false" Type="Goods">
+    <Flags Civilian="true" />
+  </Item>
+  <Item id="taom_lords_material_empire" name="{=taom_lm_empire}Dunland Bog-iron" mesh="thamaskene_steel"
+        item_category="unassigned" value="500" weight="0.5" is_merchandise="false" Type="Goods">
+    <Flags Civilian="true" />
+  </Item>
+</Items>

@@ -33,7 +33,7 @@ public class ArmouryUpgradeServiceTests
         var d = ArmourAcquisitionConfig.Default;
         return new ArmourAcquisitionConfig(d.Enabled, 1, 2, 3, recipes.ToDictionary(r => r.Target), d.NamedWeapons,
             d.LordEventChance, d.LordEventCooldownDays, d.LordEventLeaveRelation, d.VisitChancePerDay, d.VisitDurationDays,
-            d.VisitLevelBonus, d.HarnessOfferCooldownDays);
+            d.VisitLevelBonus, d.Ladder);
     }
 
     [TestInitialize]
@@ -62,7 +62,7 @@ public class ArmouryUpgradeServiceTests
     {
         _gate.GetClass(id).Returns(cls);
         _gate.GetNext(id).Returns(next);
-        _gate.GetRecord(id).Returns(new ArmourItemRecord(id, true, 2, true, "gondor", value));
+        _gate.GetRecord(id).Returns(new ArmourItemRecord(id, ArmourSlot.Body, 2, true, "gondor", value));
     }
 
     /// <summary>The purse, the metals carried and the kingdom resource balance (null: the kingdom has none).</summary>

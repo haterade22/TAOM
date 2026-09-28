@@ -80,8 +80,7 @@ public class ArmourAcquisitionConfigProviderTests
             "<Material item=\"ironIngot4\" count=\"2\" /><Material item=\"ironIngot3\" count=\"5\" /></Upgrade></Upgrades>" +
             "<NamedWeapons><Item id=\"glamdring\" /></NamedWeapons>" +
             "<LordEvent chance=\"0.5\" cooldown_days=\"10\" leave_relation=\"2\" />" +
-            "<VisitingArmourer chance_per_day=\"0.1\" duration_days=\"3\" level_bonus=\"2\" />" +
-            "<LordHarness offer_cooldown_days=\"12\" />", enabled: "false"));
+            "<VisitingArmourer chance_per_day=\"0.1\" duration_days=\"3\" level_bonus=\"2\" />", enabled: "false"));
 
         Assert.IsFalse(config.Enabled);
         Assert.AreEqual((0, 1, 2), (config.HeavyLevel, config.EliteLevel, config.LordLevel));
@@ -93,7 +92,6 @@ public class ArmourAcquisitionConfigProviderTests
         CollectionAssert.AreEquivalent(new[] { "glamdring" }, config.NamedWeapons.ToArray());
         Assert.AreEqual((0.5f, 10, 2), (config.LordEventChance, config.LordEventCooldownDays, config.LordEventLeaveRelation));
         Assert.AreEqual((0.1f, 3, 2), (config.VisitChancePerDay, config.VisitDurationDays, config.VisitLevelBonus));
-        Assert.AreEqual(12, config.HarnessOfferCooldownDays);
     }
 
     [TestMethod]
@@ -295,13 +293,220 @@ public class ArmourAcquisitionConfigProviderTests
         AssertWarned("level_bonus");
     }
 
-    [TestMethod]
-    public void GetConfig_HarnessOfferCooldownNegative_Reverts()
-    {
-        var config = Load(Wrap("<LordHarness offer_cooldown_days=\"-1\" />"));
+    // ── The lord's gear ladder (#693) ─────────────────────────────────────────
 
-        Assert.AreEqual(ArmourAcquisitionConfig.Default.HarnessOfferCooldownDays, config.HarnessOfferCooldownDays);
-        AssertWarned("offer_cooldown_days");
+    [TestMethod]
+    public void GetConfig_Ladder_ReadsTheRungsInTheirOrder()
+    {
+        var config = Load(Wrap(
+            "<LordsLadder count_knockouts=\"false\">" +
+            "<Step slot=\"head\" quest=\"q_head\" materials=\"7\" />" +
+            "<Step slot=\"Hands\" quest=\"q_hands\" materials=\"3\" /></LordsLadder>"));
+
+        var steps = config.Ladder.Steps;
+        CollectionAssert.AreEqual(new[] { "Head:q_head:7", "Hands:q_hands:3" },
+            steps.Select(s => $"{s.Slot}:{s.QuestId}:{s.Materials}").ToArray());
+        Assert.IsFalse(config.Ladder.CountsKnockouts);
+    }
+
+    [TestMethod]
+    public void GetConfig_LadderRungWithAnUnknownSlot_IsSkipped()
+    {
+        var config = Load(Wrap(
+            "<LordsLadder><Step slot=\"feet\" quest=\"q_feet\" materials=\"3\" />" +
+            "<Step slot=\"head\" quest=\"q_head\" materials=\"3\" /></LordsLadder>"));
+
+        CollectionAssert.AreEqual(new[] { LadderSlot.Head }, config.Ladder.Steps.Select(s => s.Slot).ToArray());
+        AssertWarned("feet");
+    }
+
+    [TestMethod]
+    public void GetConfig_LadderRepeatsASlot_KeepsTheFirstRung()
+    {
+        var config = Load(Wrap(
+            "<LordsLadder><Step slot=\"head\" quest=\"q_a\" materials=\"3\" />" +
+            "<Step slot=\"head\" quest=\"q_b\" materials=\"3\" /></LordsLadder>"));
+
+        CollectionAssert.AreEqual(new[] { "q_a" }, config.Ladder.Steps.Select(s => s.QuestId).ToArray());
+        AssertWarned("head");
+    }
+
+    [TestMethod]
+    public void GetConfig_LadderRepeatsAQuest_KeepsTheFirstRung()
+    {
+        // Two rungs on one quest id would share its progress and both complete at once.
+        var config = Load(Wrap(
+            "<LordsLadder><Step slot=\"head\" quest=\"q_a\" materials=\"3\" />" +
+            "<Step slot=\"body\" quest=\"q_a\" materials=\"3\" /></LordsLadder>"));
+
+        CollectionAssert.AreEqual(new[] { LadderSlot.Head }, config.Ladder.Steps.Select(s => s.Slot).ToArray());
+        AssertWarned("q_a");
+    }
+
+    [TestMethod]
+    public void GetConfig_LadderRungWithoutAQuest_IsSkipped()
+    {
+        var config = Load(Wrap(
+            "<LordsLadder><Step slot=\"head\" materials=\"3\" /><Step slot=\"body\" quest=\"q_b\" materials=\"3\" /></LordsLadder>"));
+
+        CollectionAssert.AreEqual(new[] { LadderSlot.Body }, config.Ladder.Steps.Select(s => s.Slot).ToArray());
+        AssertWarned("quest");
+    }
+
+    [TestMethod]
+    [DataRow("0")]
+    [DataRow("1000")]
+    [DataRow("many")]
+    public void GetConfig_LadderRungMaterialsOutOfRange_IsSkipped(string materials)
+    {
+        var config = Load(Wrap(
+            $"<LordsLadder><Step slot=\"head\" quest=\"q_a\" materials=\"{materials}\" />" +
+            "<Step slot=\"body\" quest=\"q_b\" materials=\"3\" /></LordsLadder>"));
+
+        CollectionAssert.AreEqual(new[] { LadderSlot.Body }, config.Ladder.Steps.Select(s => s.Slot).ToArray());
+        AssertWarned("materials");
+    }
+
+    [TestMethod]
+    public void GetConfig_LadderWithNoValidRung_KeepsTheDefaultRungs()
+    {
+        var config = Load(Wrap("<LordsLadder><Step slot=\"feet\" quest=\"q\" materials=\"3\" /></LordsLadder>"));
+
+        Assert.AreSame(ArmourAcquisitionConfig.Default.Ladder.Steps, config.Ladder.Steps);
+        AssertWarned("no valid <Step>");
+    }
+
+    [TestMethod]
+    public void GetConfig_LadderCountKnockoutsNotABool_Reverts()
+    {
+        var config = Load(Wrap("<LordsLadder count_knockouts=\"sometimes\" />"));
+
+        Assert.AreEqual(ArmourAcquisitionConfig.Default.Ladder.CountsKnockouts, config.Ladder.CountsKnockouts);
+        AssertWarned("count_knockouts");
+    }
+
+    [TestMethod]
+    public void GetConfig_Materials_ReadsTheCulturesAndTheDropCurve()
+    {
+        var config = Load(Wrap(
+            "<LordsMaterials base_chance=\"0.2\" chance_per_ten_kills=\"0.05\" max_chance=\"0.9\" min_units=\"2\" max_units=\"4\">" +
+            "<Material culture=\"gondor\" item=\"m_gondor\" /><Material culture=\"mordor\" item=\"m_mordor\" /></LordsMaterials>"));
+
+        var ladder = config.Ladder;
+        CollectionAssert.AreEquivalent(new[] { "gondor=m_gondor", "mordor=m_mordor" },
+            ladder.Materials.Select(p => p.Key + "=" + p.Value).ToArray());
+        Assert.AreEqual((0.2f, 0.05f, 0.9f, 2, 4),
+            (ladder.Drop.BaseChance, ladder.Drop.ChancePerTenKills, ladder.Drop.MaxChance, ladder.Drop.MinUnits, ladder.Drop.MaxUnits));
+    }
+
+    [TestMethod]
+    [DataRow("base_chance", "NaN")]
+    [DataRow("chance_per_ten_kills", "-0.1")]
+    [DataRow("max_chance", "1.5")]
+    public void GetConfig_MaterialDropChanceOutOfRange_Reverts(string attr, string value)
+    {
+        var config = Load(Wrap($"<LordsMaterials {attr}=\"{value}\" />"));
+
+        var d = ArmourAcquisitionConfig.Default.Ladder.Drop;
+        var drop = config.Ladder.Drop;
+        Assert.AreEqual((d.BaseChance, d.ChancePerTenKills, d.MaxChance), (drop.BaseChance, drop.ChancePerTenKills, drop.MaxChance));
+        AssertWarned(attr);
+    }
+
+    [TestMethod]
+    public void GetConfig_MaterialUnitsInverted_RevertsBoth()
+    {
+        var config = Load(Wrap("<LordsMaterials min_units=\"5\" max_units=\"2\" />"));
+
+        var d = ArmourAcquisitionConfig.Default.Ladder.Drop;
+        Assert.AreEqual((d.MinUnits, d.MaxUnits), (config.Ladder.Drop.MinUnits, config.Ladder.Drop.MaxUnits));
+        AssertWarned("min_units");
+    }
+
+    [TestMethod]
+    public void GetConfig_MaterialBaseChanceAboveTheMax_RevertsBoth()
+    {
+        // base 0.5 under a max of 0.2 would be a flat 0.2 whatever the kills (RCA 2026-09-28 row 8).
+        var config = Load(Wrap("<LordsMaterials base_chance=\"0.5\" max_chance=\"0.2\" />"));
+
+        var d = ArmourAcquisitionConfig.Default.Ladder.Drop;
+        Assert.AreEqual((d.BaseChance, d.MaxChance), (config.Ladder.Drop.BaseChance, config.Ladder.Drop.MaxChance));
+        AssertWarned("base_chance");
+    }
+
+    [TestMethod]
+    public void GetConfig_LordsMaterialsWithNoValidRow_KeepsTheDefaults()
+    {
+        var config = Load(Wrap("<LordsMaterials><Material culture=\"gondor\" /></LordsMaterials>"));
+
+        Assert.AreSame(ArmourAcquisitionConfig.Default.Ladder.Materials, config.Ladder.Materials);
+        AssertWarned("no valid <Material>");
+    }
+
+    [TestMethod]
+    public void GetConfig_LadderWeaponsWithNoValidRow_KeepsTheDefaults()
+    {
+        // An empty weapon list would leave every weapon rung unclaimable (RCA 2026-09-28 row 9).
+        var empty = Load(Wrap("<LadderWeapons />"));
+        Assert.AreSame(ArmourAcquisitionConfig.Default.Ladder.Weapons, empty.Ladder.Weapons);
+
+        var invalid = Load(Wrap("<LadderWeapons><Weapon item=\"w_a\" /></LadderWeapons>"));
+        Assert.AreSame(ArmourAcquisitionConfig.Default.Ladder.Weapons, invalid.Ladder.Weapons);
+        AssertWarned("no valid <Weapon>");
+    }
+
+    [TestMethod]
+    public void GetConfig_MaterialRepeatsACulture_KeepsTheFirst()
+    {
+        var config = Load(Wrap(
+            "<LordsMaterials><Material culture=\"gondor\" item=\"m_a\" /><Material culture=\"gondor\" item=\"m_b\" /></LordsMaterials>"));
+
+        Assert.AreEqual("m_a", config.Ladder.Materials["gondor"]);
+        AssertWarned("gondor");
+    }
+
+    [TestMethod]
+    public void GetConfig_MaterialWithoutAnItem_IsSkipped()
+    {
+        var config = Load(Wrap(
+            "<LordsMaterials><Material culture=\"gondor\" /><Material culture=\"mordor\" item=\"m_mordor\" /></LordsMaterials>"));
+
+        CollectionAssert.AreEquivalent(new[] { "mordor" }, config.Ladder.Materials.Keys.ToArray());
+        AssertWarned("item");
+    }
+
+    [TestMethod]
+    public void GetConfig_Weapons_GroupByCultureInTheirOrder()
+    {
+        var config = Load(Wrap(
+            "<LadderWeapons><Weapon culture=\"gondor\" item=\"w_b\" /><Weapon culture=\"mordor\" item=\"w_m\" />" +
+            "<Weapon culture=\"gondor\" item=\"w_a\" /><Weapon culture=\"gondor\" item=\"w_b\" /></LadderWeapons>"));
+
+        CollectionAssert.AreEqual(new[] { "w_b", "w_a" }, config.Ladder.Weapons["gondor"].ToArray(), "a repeated weapon is kept once");
+        CollectionAssert.AreEqual(new[] { "w_m" }, config.Ladder.Weapons["mordor"].ToArray());
+        CollectionAssert.AreEquivalent(new[] { "gondor", "mordor" }, config.Ladder.Weapons.Keys.ToArray(),
+            "a present <LadderWeapons> lists every culture's picks");
+    }
+
+    [TestMethod]
+    public void GetConfig_WeaponWithoutACulture_IsSkipped()
+    {
+        var config = Load(Wrap("<LadderWeapons><Weapon item=\"w_a\" /><Weapon culture=\"mordor\" item=\"w_m\" /></LadderWeapons>"));
+
+        CollectionAssert.AreEquivalent(new[] { "mordor" }, config.Ladder.Weapons.Keys.ToArray());
+        AssertWarned("culture");
+    }
+
+    [TestMethod]
+    public void GetConfig_NoLadderSections_UsesTheDefaults()
+    {
+        var config = Load(Wrap(""));
+
+        var d = ArmourAcquisitionConfig.Default.Ladder;
+        Assert.AreSame(d.Steps, config.Ladder.Steps);
+        Assert.AreSame(d.Materials, config.Ladder.Materials);
+        Assert.AreSame(d.Weapons, config.Ladder.Weapons);
+        Assert.AreEqual(d.CountsKnockouts, config.Ladder.CountsKnockouts);
     }
 
     [TestMethod]
