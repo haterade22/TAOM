@@ -100,7 +100,9 @@ maintainer with both reasons. Set the index row to STOPPED with the reason while
 3. **Codex, only when the maintainer asked for it this run**:
    `python tools/improve_ctl.py codex-prompt --branch improve/NNN-<slug> --base <base> [--tag <tag>] --out "<prompt file>"`,
    dispatched from the main checkout (the trusted path that loads the repo's Codex pin) per
-   `/review-codex` Phase 2e, in the background. The prompt file and the output go under
+   `/review-codex` Phase 2e, in the background, with `-c model_reasoning_effort="<level>"` sized to the
+   item (`/review-codex` "Reasoning effort is the session's call"; its worktree bullet has the sandbox
+   trade-off of dispatching from the main checkout). The prompt file and the output go under
    `<root>\scratch\codex\`, never into a worktree: `docs/reviews/raw/` is gitignored, and removing the
    worktree would delete the output, a running Codex's included. It is done when its last line is
    `END OF CODEX REVIEW`. Pass the output file as the item's `codexOut`. Without Codex, the

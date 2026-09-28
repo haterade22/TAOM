@@ -22,11 +22,12 @@ Expect `Logged in using ChatGPT`. If not, stop and tell the user to `codex login
 
 **Dispatch command:**
 ```bash
-cd "<repo-root>" && codex exec -c project_doc_max_bytes=65536 - < "<prompt-file>" > "<output-file>" 2>&1
+cd "<repo-root>" && codex exec -c model_reasoning_effort="<level>" -c project_doc_max_bytes=65536 - < "<prompt-file>" > "<output-file>" 2>&1
 ```
 - Run with `run_in_background: true` on the Bash tool.
+- Reasoning effort: see `/review-codex` "Reasoning effort is the session's call". A verification pass over a few files is usually `high` or `xhigh`; the config's `ultra` is only the default and ceiling.
 - Output path: `docs/reviews/raw/codex-verify-{feature-or-uncommitted}-{date}.md`.
-- Codex reads project rules from `AGENTS.md`, **but truncates it at `project_doc_max_bytes` (default 32768) — AGENTS.md is larger, so the `-c project_doc_max_bytes=65536` override is REQUIRED** or Codex reviews without TAOM's Critical Rules / ADR rules / commit conventions. The project `.codex/config.toml` sets this key but Codex never loads it (`CODEX_HOME` unset → it reads `~/.codex/config.toml`), so the flag is the reliable fix. Verify with `codex debug prompt-input "hi"` — the rendered input must contain "Non-Negotiable ADR Rules".
+- Codex reads project rules from `AGENTS.md`, truncated at `project_doc_max_bytes` (default 32768). AGENTS.md is well under that; its detailed review rules live in `.ai/review-reference.md`, which AGENTS.md "Start here" sends Codex to. The project `.codex/config.toml` sets the key but loads only on a path `~/.codex/config.toml` trusts, so keep passing `-c project_doc_max_bytes=65536` as margin. Verify with `codex debug prompt-input "hi"`: the rendered input must contain AGENTS.md's "Evidence, never invention" rule.
 
 ## Step 1: Identify Files to Review
 
@@ -69,11 +70,11 @@ For `/review-codex` (the heavier adversarial flow), the prompt is much richer wi
 2. Dispatch:
    ```
    Bash tool call:
-     command: cd "<repo-root>" && mkdir -p docs/reviews/raw && codex exec -c project_doc_max_bytes=65536 - < "docs/reviews/codex-verify-{target}-{date}.prompt.md" > "docs/reviews/raw/codex-verify-{target}-{date}.md" 2>&1
+     command: cd "<repo-root>" && mkdir -p docs/reviews/raw && codex exec -c model_reasoning_effort="<level>" -c project_doc_max_bytes=65536 - < "docs/reviews/codex-verify-{target}-{date}.prompt.md" > "docs/reviews/raw/codex-verify-{target}-{date}.md" 2>&1
      run_in_background: true
      timeout: 600000
    ```
-3. Tell the user: dispatched, prompt at X, output at Y, expected window 5-20 min (this is the lighter prompt — faster than `/review-codex`).
+3. Tell the user: dispatched, prompt at X, output at Y, the reasoning level chosen and why, and the expected window for that level (the lighter prompt runs faster than `/review-codex` at the same level).
 4. **Do not poll.** The harness notifies when the background job completes. Continue with other work or wait.
 
 When the background notification arrives, proceed to Step 4 automatically.
@@ -95,7 +96,7 @@ Format the Codex output as:
 CODEX VERIFICATION REPORT
 ==========================
 Target: [feature or files]
-Model: o4-mini (reasoning: high)
+Model: <model> (reasoning: <level>)   <- from the output header's `model:` and `reasoning effort:` lines
 
 [Codex findings, grouped by severity]
 

@@ -81,13 +81,15 @@ Phase 1: BUILD & INTERNAL REVIEW
 
 Phase 2: CODEX ADVERSARIAL REVIEW (Claude dispatches directly, no user terminal step)
   4. /review-codex                  — writes prompt to docs/reviews/codex-adversarial-{feature}-{date}.prompt.md
-                                      AND dispatches via `codex exec - < prompt.md > output.md 2>&1` (run_in_background)
-                                      AND tells the user once: "dispatched, expected window 10-45 min"
+                                      AND dispatches via `codex exec -c model_reasoning_effort="<level>" -c project_doc_max_bytes=65536 - < prompt.md > output.md 2>&1`
+                                      (run_in_background; the session picks the level for the change, `ultra` is only the ceiling)
+                                      AND tells the user once: the level chosen, why, and the expected window
   5. (harness notifies on completion — Claude auto-resumes; no /review-codex re-invocation needed)
   6. Verify each Codex finding by reading TAOM source + decompiling vanilla targets — implement confirmed fixes
 
 Phase 3: SELF-REVIEW (review our OWN fixes)
-  7. /review-codex                  — second pass, same auto-dispatch flow against the post-fix diff
+  7. /review-codex                  — second pass, same auto-dispatch flow against the post-fix diff, its effort sized
+                                      to the fixes (a few focused fixes: usually `high`)
   8. (harness notifies on completion)
   9. Verify findings on our fixes, implement confirmed fixes
 

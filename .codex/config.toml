@@ -1,5 +1,7 @@
 # TAOM: Codex takes the task's role. See AGENTS.md and .codex/README.md.
 model = "gpt-6-astra"
+# The default and ceiling. Each dispatch passes its own -c model_reasoning_effort, sized to the review
+# (.claude/skills/review-codex/SKILL.md, "Reasoning effort is the session's call").
 model_reasoning_effort = "ultra"
 project_doc_max_bytes = 65536
 

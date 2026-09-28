@@ -26,12 +26,14 @@ Expect `Logged in using ChatGPT` (or equivalent). If not logged in, stop the ski
 
 **Dispatch command (Phase 2e):**
 ```bash
-cd "<repo-root>" && codex exec -c project_doc_max_bytes=65536 - < "<prompt-file-path>" > "<output-file-path>" 2>&1
+cd "<repo-root>" && codex exec -c model_reasoning_effort="<level>" -c project_doc_max_bytes=65536 - < "<prompt-file-path>" > "<output-file-path>" 2>&1
 ```
 - `codex exec -` reads the prompt from stdin (avoids argv length limits for large prompts).
 - Output (stdout + stderr) goes to `docs/reviews/raw/codex-adversarial-{feature}-{date}.md`.
-- Wrap with `run_in_background: true` on the Bash tool call — Codex with `model_reasoning_effort = "max"` typically runs 10-45 minutes. The harness notifies when the background job completes.
-- Model + reasoning effort come from the repo's `.codex/config.toml` (`model = "gpt-6-astra"`, `model_reasoning_effort = "ultra"`, set 2026-09-11; the ladder this CLI reports for the model is low, medium, high, xhigh, max, ultra, read from `~/.codex/models_cache.json`, and `ultra` is its top; the pin was `gpt-5.6-sol` at `max` from 2026-09-05), but ONLY on a machine whose `~/.codex/config.toml` trusts this checkout path (`[projects.'E:\repos\TAOM'] trust_level = "trusted"`). Until 2026-09-05 the user config trusted the old `c:\users\mikew\source\repos\taom` path only, so the repo pin was inert and `codex doctor` reported `MCP servers 0`; after trusting the path it reports 3. On a new laptop, add the trust entry first, then `codex doctor` must show `MCP servers 3`. Do NOT override the model unless the user asks.
+- Wrap with `run_in_background: true` on the Bash tool call. Run time follows the effort passed on that dispatch: `ultra` or `max` usually takes 10-45 minutes (review 95, `ultra`, about 30 minutes for a 12-file changeset), `xhigh` and `high` less (no measured window yet: say "shorter than the ultra window" until one is recorded). The harness notifies when the background job completes.
+- The model comes from the repo's `.codex/config.toml` (`model = "gpt-6-astra"`), and so does the default effort (`model_reasoning_effort = "ultra"`, set 2026-09-11, which is the ceiling: every dispatch overrides it with a level of its own, next bullet; the ladder this CLI reports for the model is low, medium, high, xhigh, max, ultra, read from `~/.codex/models_cache.json`, and `ultra` is its top; the pin was `gpt-5.6-sol` at `max` from 2026-09-05), but ONLY on a machine whose `~/.codex/config.toml` trusts this checkout path (`[projects.'E:\repos\TAOM'] trust_level = "trusted"`). Until 2026-09-05 the user config trusted the old `c:\users\mikew\source\repos\taom` path only, so the repo pin was inert and `codex doctor` reported `MCP servers 0`; after trusting the path it reports 3. On a new laptop, add the trust entry first, then `codex doctor` must show `MCP servers 3`. Do NOT override the model unless the user asks.
+- **Reasoning effort is the session's call** (Mike, 2026-09-28). The config's `ultra` is a ceiling, not a requirement: pass `-c model_reasoning_effort="<level>"` on every dispatch, sized to the review. `ultra` or `max` for a first pass over a large or risky change (engine patches, native or save-data paths, many files); `xhigh` for a mid-size change; `high` for a focused pass over a few fixes from an earlier review. Name the level and the reason in the one-line dispatch message.
+- **Reviewing a worktree: dispatch from the worktree itself.** Its project config loads there as it does in the main checkout (EMPIRICAL 2026-09-28: `codex doctor` run in `E:\repos\taom-creature-bandits` reports model `gpt-6-astra` and `MCP servers 3`, the same as the main checkout), and the `workspace-write` sandbox then covers only the worktree, not the main tree where other sessions may be editing. /improve dispatches from the main checkout on purpose: its generated prompt forbids every edit (`tools/improve_ctl.py` codex-prompt) and its output lives outside the tree. Either way the output header's `model:` and `reasoning effort:` lines confirm what ran.
 - Codex reads project rules from `AGENTS.md`, truncated at `project_doc_max_bytes` (default 32768). AGENTS.md stays under 8,192 bytes (`tools/reviewctl.py` fails it above that), so it fits; TAOM's detailed review rules (Critical Rules, "Non-Negotiable ADR Rules", commit conventions) live in `.ai/review-reference.md`, which AGENTS.md "Start here" tells Codex to read. Keep passing `-c project_doc_max_bytes=65536` as margin: the project `.codex/config.toml` also sets the key, but a project config is read only when the checkout path is trusted in `~/.codex/config.toml` (see the model bullet above). Confirm with `codex debug prompt-input "hi"` (no API call): the rendered input must contain AGENTS.md's "Evidence, never invention" rule. The project-declared `filesystem`/`git`/`ilspy` MCP servers load under the same trust rule, and the filesystem server now also reaches the live `TAOM_Map` and `LOTRLOME_Armory` ModuleData.
 
 **When the background job notifies completion:**
@@ -116,11 +118,11 @@ The prompt must include:
 3. **Dispatch via Bash** in background:
    ```
    Bash tool call:
-     command: cd "<repo-root>" && mkdir -p docs/reviews/raw && codex exec -c project_doc_max_bytes=65536 - < "docs/reviews/codex-adversarial-{feature}-{date}.prompt.md" > "docs/reviews/raw/codex-adversarial-{feature}-{date}.md" 2>&1
+     command: cd "<repo-root>" && mkdir -p docs/reviews/raw && codex exec -c model_reasoning_effort="<level>" -c project_doc_max_bytes=65536 - < "docs/reviews/codex-adversarial-{feature}-{date}.prompt.md" > "docs/reviews/raw/codex-adversarial-{feature}-{date}.md" 2>&1
      run_in_background: true
-     timeout: 600000  (10 min — Codex usually finishes inside this; harness will notify when actually done)
+     timeout: 600000  (the background job outlives this; the harness notifies when Codex actually finishes)
    ```
-4. **Tell the user once** what was dispatched: feature name, prompt path, output path, expected completion window (10-45 min at `max`; review 95 on `gpt-6-astra` at `ultra` took about 30 minutes for a 12-file changeset). Do NOT poll the background job — the harness sends a notification when the job actually completes.
+4. **Tell the user once** what was dispatched: feature name, prompt path, output path, the reasoning level chosen and the one-line reason, and the expected window for that level (dispatch contract above). Do NOT poll the background job: the harness sends a notification when the job actually completes.
 5. **Continue with other work or stop**. When the background notification arrives, automatically proceed to Phase 3 by reading the output file. Do NOT re-prompt the user to "run /review-codex again" — Claude continues the lifecycle itself.
 
 Fallback path (only if direct dispatch fails — `codex` binary missing, auth expired, sandbox refuses):
@@ -128,10 +130,10 @@ Fallback path (only if direct dispatch fails — `codex` binary missing, auth ex
 ```
 Tell the user:
   Direct Codex dispatch failed: <exact error from Bash output>.
-  Manual fallback:
+  Manual fallback (<level> is the reasoning effort chosen for this review):
     1. Open a terminal
     2. cd <repo-root>
-    3. mkdir -p docs/reviews/raw && codex exec -c project_doc_max_bytes=65536 - < "docs/reviews/codex-adversarial-{feature}-{date}.prompt.md" > "docs/reviews/raw/codex-adversarial-{feature}-{date}.md"
+    3. mkdir -p docs/reviews/raw && codex exec -c model_reasoning_effort="<level>" -c project_doc_max_bytes=65536 - < "docs/reviews/codex-adversarial-{feature}-{date}.prompt.md" > "docs/reviews/raw/codex-adversarial-{feature}-{date}.md"
     4. When done, re-invoke /review-codex with the .md file path as argument
 ```
 

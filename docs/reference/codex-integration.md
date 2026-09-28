@@ -20,8 +20,12 @@ slash commands are not available automatically in Codex or other clients. Read
 the actual skill before using it; a Markdown table does not establish runtime
 availability. Plugin commands require a separately available plugin.
 
-The Claude skills run `codex exec -c project_doc_max_bytes=65536 - < prompt > out` in the
-background. A `/codex-verify` pass typically takes 5 to 20 minutes and `/review-codex` 10 to 45.
+The Claude skills run
+`codex exec -c model_reasoning_effort="<level>" -c project_doc_max_bytes=65536 - < prompt > out`
+in the background. The session picks the level for each review, sized to the
+change (the repo config's `ultra` is the default and ceiling; see the
+review-codex skill), and run time follows it: `ultra` or `max` usually takes 10
+to 45 minutes, `xhigh` and `high` less.
 Pre-flight with the client's own status command (`codex login status`).
 
 ## Authority and isolation
