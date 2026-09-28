@@ -52,11 +52,15 @@ Do not restore a tpac beside its replacement. If the mapping is ambiguous (three
 new), pick by index, leave a comment, and hand the heraldry question to the artist. Then re-run
 with `regen`, and `git diff docs/audits/armory-ref-audit.md` is the change log.
 
-## Step 4: commit both files
+Then regenerate the armour acquisition class table, which the game reads to gate markets, loot and
+the armoury: `python tools/generate_armour_classes.py --check`, and if it is stale, `--apply`.
 
-`docs/audits/armory-ref-audit.md` and `docs/reference/armory-catalogue/catalogue.tsv` go in the
-same commit as the ref repair. The Armory XML itself is unversioned here; say in the commit body
-which files changed in the live install and the mirror.
+## Step 4: commit the audit files and the class table
+
+`docs/audits/armory-ref-audit.md`, `docs/reference/armory-catalogue/catalogue.tsv` and, when step 3
+regenerated it, `Main/_Module/ModuleData/armour_acquisition/armour_classes.xml` go in the same commit as
+the ref repair. The Armory XML itself is unversioned here; say in the commit body which files changed
+in the live install and the mirror.
 
 ## Gotchas
 
