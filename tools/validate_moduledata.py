@@ -36,7 +36,8 @@ Checks (each maps to a recurring TAOM bug class):
                              run (warning; needs the install; re-run
                              generate_armour_classes.py --apply)
   ARMOUR_ACQUISITION_REF     a LotrIssue culture / reward_item / item_source, an armour
-                             acquisition named weapon or upgrade metal, or a marketplace
+                             acquisition named weapon or upgrade metal, a ladder weapon
+                             pick, lord's material or rung quest, or a marketplace
                              <Culture> / armour_from that nothing defines (needs the install)
   MISSING_COLLISION_BODY     an item or crafting piece whose body_name / holster body /
                              collision body names a PhysicsShape no loaded tpac ships.
@@ -225,11 +226,15 @@ def armour_acquisition_ref_issues(registries, moduledata: Path) -> list:
     Each fails silently in game (docs/features/armour-acquisition.md): a LotrIssue row whose
     `cultures` token names no culture never fires, a `reward_item` that resolves to nothing hands
     out no chest (LotrIssueRewardAdapter returns quietly), a named weapon that resolves to nothing
-    stays on sale, and an `armour_from` culture that does not exist gives a culture no armour.
+    stays on sale, and an `armour_from` culture that does not exist gives a culture no armour. The
+    lord's gear ladder (#693) fails the same way: a rung whose quest is defined nowhere never starts,
+    a lord's material or a weapon pick that resolves to nothing is never handed out.
     Checked: every LotrIssue row's cultures, reward_item and item_source="item:X"; the armour
-    config's NamedWeapons and Material ids; the culture marketplace config's <Culture id> and
-    armour_from. A file that does not parse is reported, never passed. Callers skip the pass
-    without the install: the registry is TAOM-only then, and every Armory id would read as unknown."""
+    config's NamedWeapons, upgrade Material ids, <LordsLadder> rung quests (against
+    taom_career_quests.xml), <LordsMaterials> and <LadderWeapons> items and cultures; the culture
+    marketplace config's <Culture id> and armour_from. A file that does not parse is reported, never
+    passed. Callers skip the pass without the install: the registry is TAOM-only then, and every
+    Armory id would read as unknown."""
     items = set(registries.items) | ENGINE_REGISTERED_ITEMS
     cultures = set(registries.cultures)
     issues = []
@@ -249,7 +254,8 @@ def armour_acquisition_ref_issues(registries, moduledata: Path) -> list:
             return None
         try:
             return ET.parse(path).getroot()
-        except ET.ParseError as exc:
+        except (ET.ParseError, LookupError, OSError) as exc:
+            # LookupError: an unknown encoding in the declaration; a crash here would read as a failed gate with no finding.
             report(rel, "", f"does not parse ({exc}); its references were NOT checked")
             return None
 
@@ -270,8 +276,27 @@ def armour_acquisition_ref_issues(registries, moduledata: Path) -> list:
         for named in root.iter("NamedWeapons"):
             for item in named.iter("Item"):
                 check(rel, "NamedWeapons", "named weapon", (item.get("id") or "").strip(), items)
-        for material in root.iter("Material"):
-            check(rel, "Upgrades", "upgrade material", (material.get("item") or "").strip(), items)
+        for upgrades in root.iter("Upgrades"):
+            for material in upgrades.iter("Material"):
+                check(rel, "Upgrades", "upgrade material", (material.get("item") or "").strip(), items)
+        for lords in root.iter("LordsMaterials"):
+            for material in lords.iter("Material"):
+                check(rel, "LordsMaterials", "lord's material culture", (material.get("culture") or "").strip(), cultures)
+                check(rel, "LordsMaterials", "lord's material", (material.get("item") or "").strip(), items)
+        for weapons in root.iter("LadderWeapons"):
+            for weapon in weapons.iter("Weapon"):
+                check(rel, "LadderWeapons", "ladder weapon culture", (weapon.get("culture") or "").strip(), cultures)
+                check(rel, "LadderWeapons", "ladder weapon", (weapon.get("item") or "").strip(), items)
+        steps = [step for ladder in root.iter("LordsLadder") for step in ladder.iter("Step")]
+        quests_rel = "career_system/taom_career_quests.xml"
+        quests_exist = (Path(moduledata) / quests_rel).exists()
+        quest_root = load(quests_rel) if steps else None
+        # A quest file that exists but did not parse is already reported; its rungs are not checked against nothing.
+        if steps and (quest_root is not None or not quests_exist):
+            # Root-level quests only: the game reads root.Elements("CareerQuest") (CareerQuestConfigProvider).
+            quest_ids = {q.get("id", "") for q in quest_root.findall("CareerQuest")} if quest_root is not None else set()
+            for step in steps:
+                check(rel, "LordsLadder", "ladder rung quest", (step.get("quest") or "").strip(), quest_ids)
 
     rel = "culture_marketplace/culture_marketplace_config.xml"
     root = load(rel)
