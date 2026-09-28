@@ -881,3 +881,15 @@ and no reminder.
   re-arm, and a clear that happens on the guarded path. Ask what the marker holds after an upgrade
   from an older writer, too.
 - **Source:** `docs/reviews/rca-stop-reminders-and-trunk-guard-2026-09-24.md` F2, F10 (Codex P2).
+
+### Enforce an invariant a daily process can break with an idempotent periodic pass, not a one-time latch
+The armour gate's market sweep ran once per save behind a `StockSwept` flag. Gated stock then came back through
+channels the latch could not see: a visiting armourer's bonus ending, AI lords selling old loot, the player selling a
+piece. A daily per-town pass (`DailyTickSettlementEvent`) is idempotent, needs no saved flag and closes all of them.
+Likewise the Lord's Harness stored a "running" stage and matched completion to the current main hero, so a Player
+Switcher change or a throwing start stranded it for good.
+- **Why missed:** both designs assumed nothing changes after the state is set.
+- **Prevent:** when a feature keeps a world invariant ("no gated piece in a market that may not stock it"), ask what
+  else writes that world; if anything does, enforce it periodically. Derive "is it running" from the engine's own
+  list (`QuestManager.Quests`) and key completion on the quest's owner, not `Hero.MainHero`.
+- **Source:** `docs/reviews/rca-armour-acquisition-2026-09-27.md` rows 7 and 10 (Design, Data flow B).

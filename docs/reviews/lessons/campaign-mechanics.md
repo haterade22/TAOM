@@ -217,6 +217,7 @@ the v1.4.8 decompile, 2026-08-14:
 - [docs/reviews/lessons/gamemodels-services.md](./gamemodels-services.md)
 
 <!-- backlinks-end -->
+
 ### When a design rests on "these always tie", do the arithmetic for the case where they do not
 
 The fief-grant rebalance (#458) was built on the claim that every finalist in a vanilla
@@ -479,3 +480,15 @@ Creature Bandits refused spiders, then bandit trolls, as prisoners in `TaomBattl
 - **Why missed:** the contract was proved at the one seam its author knew (capture), and the no-parley patch seemed to close the encounter surface, though it only sees the party the player talks to. Bandit clans are not at war with each other, so any nearby band joins the talked-down party's side.
 - **Prevent:** before stating that a troop can never reach a party, enumerate the engine's roster transfers and check each: capture (`CaptureDefeatedPartyMembers`), freed-prisoner loot (`LootDefeatedPartyPrisoners`), the bandit join and surrender dialogues, prisoner recruitment, volunteers and party templates. A contract about a party's makeup ("trolls only") also covers who can join it after a battle.
 - **Source:** #694, `docs/reviews/rca-troll-bandits-2026-09-28.md` findings 1 and 4; lenses 2 and 5 found the join path independently.
+
+### Measure the live data before recommending a threshold, and never ship a threshold-only CareerQuest
+"Heavy armour at Barracks level 1" was recommended to Mike as a gate; every live town starts at level 1 or more
+(19 at 1, 33 at 2, 26 at 3), so it gated nothing. Separately, a CareerQuest whose objectives are all thresholds
+(skill, renown, gold) completes inside `QuestBase.StartQuest` when the hero already meets them:
+`CareerQuest.OnStartQuest` seeds the thresholds and calls `CompleteQuestWithSuccess` before the engine adds the quest
+to `QuestManager`, which then keeps the finished quest in every later save.
+- **Why missed:** the threshold was chosen from the design, not the data; the shell's ordering was invisible because
+  no earlier quest was threshold-only.
+- **Prevent:** before proposing a level, count, or chance to Mike, measure its distribution in the live install and
+  put the numbers in the question. Give every CareerQuest at least one counted objective.
+- **Source:** `docs/reviews/rca-armour-acquisition-2026-09-27.md` rows 6 and 8 (Data flow A and B, Engine).

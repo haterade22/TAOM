@@ -248,16 +248,19 @@ When assigning per-fief building levels (221 towns/castles onto lore+role tiers)
 - **Why missed:** the 2026-06-25 balance RCA verified curve consistency and refuted findings by name/role reasoning ("an archer shouldn't have Polearm") — the same name-based assumption that produced the bug also hid it. Nothing ever cross-referenced a troop's skills against its equipped items' weapon classes.
 - **Prevent:** any generator inferring identity from display names must be driven by the authoritative data instead (`taom_schema.build_item_class_registry`: item id → skill class, reading BOTH vanilla `<Item Type>` and Armory `<CraftedItem crafting_template>` — zero `Type="TwoHandedWeapon"` items exist anywhere, all two-handers are crafted). Writers hard-fail when the authoritative source is unavailable; only read-only tools may degrade, loudly. When fixing generated data, permute in place against a frozen expected id set (abort on divergence / non-permutation) rather than re-running `--apply` over hand-tuned residuals. An auditor must not derive its "ideal" from the generator's own heuristic — give it an independent signal (here: equipment).
 - **Source:** #340/#341/#344 session 2026-07-13; docs/features/troop-skill-balance.md "Equipment-driven weapon specialization".
+
 ### TAOM's six re-skinned cultures keep their VANILLA StringIds -- key configs on the id, never the display name
 `Main/_Module/ModuleData/spcultures.xslt` re-skins the six vanilla cultures by overriding `<name>`, `<text>`, colors and troop refs -- it **never** overrides `id` (grep `attribute name="id"` returns 0 matches). So the real StringIds are: **Rohirrim = `vlandia`, Dunlendings = `empire`, Haradrim = `aserai`, Easterlings/Rhun = `khuzait`, Barding/Dale = `sturgia`, Variag/Khand = `battania`.** There is no culture with id `rohan`, `dunland`, `harad`, `rhun`, `dale` or `khand` -- `taom_spcultures.xml` declares 22 cultures and none of them are these. BannerBearers (2026-07-16) keyed its culture-to-banner map on the LOTR names; all six keys were dead, and six of the mod's highest-volume factions silently flew the generic Gondor standard.
 - **Why missed:** the coverage audit regexed `taom_spcultures.xml` only, found 22 ids, *noticed Rohan was absent*, hypothesised "XSLT-transformed" -- and then wrote the config from the LOTR names without confirming what id the XSLT actually emits. A dead key in a `Dictionary<string,string>` is silent at every layer: not a type error, not a parse error, no engine warning; the lookup just misses and returns the fallback. `vanilla-data-comparison.md` documents this rename trap but is `paths:`-scoped to `settlements.xml` / `spcultures.xml` / `*.xslt`, so authoring a JSON config in a new feature folder never loaded it. The knowledge existed; the trigger did not fire.
 - **Prevent:** any config that maps culture ids must key on the StringId, and must ship a test asserting **every key** resolves against the real culture set (`taom_spcultures.xml` ids plus the six vanilla re-skinned ids). Validate the KEY side, not just the value side -- validating ids/values is the reflex, and it passes while every key is dead. Generalises to any config keyed on ModuleData entity ids.
 - **Source:** docs/reviews/rca-banner-bearers-2026-07-16.md (finding 1, CRITICAL).
+
 ### A config's default/fallback value applies to the WHOLE set -- enumerate the set before choosing it
 BannerBearers (2026-07-16) shipped `DefaultBannerItemId = "standard_of_duty_t1"` so unmapped cultures would still get a banner. 38 cultures are registered at runtime; the config mapped 28. The unmapped 10 -- `looters`, `sea_raiders`, `forest_bandits`, `desert_bandits`, `mountain_bandits`, `steppe_bandits`, `nord`, `vakken`, `darshi`, `neutral_culture` -- are vanilla leftovers still carrying ~99 live references in TAOM's own ModuleData. The "sensible default" therefore handed the **Gondorian Standard of Duty to every vanilla-culture bandit warband in the game.** Fixed by shipping `""` (fail closed): only explicitly-mapped cultures field standards.
 - **Why missed:** the default was chosen for coverage ("everything gets a banner, nothing looks empty") without ever asking *what is in the set that isn't mapped*. The coverage audit asked "are my keys right?" -- a question about the 28 -- and never "how many are there?", a question about the 38. Note the sibling culture-id bug in the same feature was ALSO in this file: fixing six wrong keys says nothing about the cultures that were never keyed at all. All 5 deep-review agents missed it; it surfaced only when the orchestrator counted the registry while writing a Codex prompt.
 - **Prevent:** for any config with a default/fallback that applies to unmatched entities, **enumerate the full entity set and read the unmatched remainder out loud** before choosing the default. Prefer fail-closed (empty/none) over fail-open (a plausible-looking value): a forgotten entity with NO value is a cosmetic absence; a forgotten entity with the WRONG value is a live bug wearing a correct-looking mask. Ship a test pinning the default AND asserting the known-leftover entities stay unmapped. TAOM-specific: the culture registry is ~38, NOT the 22 in `taom_spcultures.xml` -- vanilla's `SandBoxCore/ModuleData/spcultures.xml` contributes the rest and many are still referenced by live TAOM data.
 - **Source:** docs/reviews/rca-banner-bearers-2026-07-16.md (finding 7, HIGH).
+
 ### Swapping a mesh in `skins.xml` means swapping its MATERIALS too -- meshes are `sk_*`, materials are `m_*`
 LOTRLOME mesh ids carry an `sk_` prefix (`sk_elf_basemesh_a1_head`) while the matching materials carry `m_` (`m_elf_basemesh_a1_head`), and the two live at different depths: meshes in the `<skin>` element's own attributes (`body_meta_mesh`, `face_meta_mesh`, `legs_mesh`, `hands_mesh`, `underwear_*`), materials in child elements hundreds of lines below (`<face_textures>`, `<mouth_textures>`, `<eyebrow_meshes>`, `<tattoo_materials>`). Re-pointing `face_meta_mesh` to `head_female_a` while `<face_textures>` still names `m_elf_basemesh_a1_head` renders a **garbled face** -- the elf material's UVs don't map onto the vanilla head mesh -- on a correct-looking body, with no error, no log line, and a perfectly well-formed file.
 - **Why missed:** 2026-07-23 female-elf basemesh swap. Verification grepped the edited blocks for `sk_elf_` (the MESH prefix), got zero hits and reported "clean"; the surviving `m_elf_` material refs were never in the search space, and the broken face reached the user's screen. The search string was derived from the strings that had been EDITED rather than from the strings that could still be WRONG -- so it could only ever confirm the edit, never the result. Well-formedness checks were silent because every defect was semantically wrong and syntactically valid.
@@ -275,6 +278,7 @@ The editor (and game) enqueues every `<game_entity>` from every loaded module's 
 - **Why missed:** the culture data validated clean (`validate_moduledata` checks refs exist, not weapon-class semantics), the feature's own review checked that replacement weapons were *declared*, and the invariant is invisible per-file — it only appears when you ask "what do ALL vanilla cultures have in common here that TAOM broke?" No agent prompt asked that question.
 - **Prevent:** when authoring data an engine model consumes without validation, enumerate the vanilla corpus for the same element and treat any uniform property (all 1H, all non-crafted, all a given Type) as a load-bearing invariant until the decompiled consumer proves otherwise; pin it with a build-time test classifying against the **installed** modules (`BannerBearerReplacementWeaponDataTests` is the template — game-dir resolution via `GameAssemblies`, `Assert.Inconclusive` off-machine). Sibling rule: "broadening an engine call re-opens every precondition its vanilla callers relied on" (adapters-taleworlds-api.md) — this is its data-side form, and the precondition scope is mission-lifetime, not just deployment-time.
 - **Source:** docs/reviews/rca-banner-bearers-reinforcement-av-2026-07-25.md
+
 ### When one data layer overwrites another at runtime but tests only exercise the overwritten one, passing tests describe a configuration the game never runs
 Gondor recruitment pools exist twice: `ModuleData/recruitment_pools/gondor.json` and the hand-written `InitializeGondorSettlements` C# fallback. The JSON overwrites `SettlementMap` at runtime, so the C# layer is live only in degraded mode — **and in the unit tests**, because the auto-loader resolves a game-relative path that does not exist in the test bin. The two silently diverged: the C# side stranded the whole 7-troop Ithil Guard line, pooled three ids the JSON never offered, and assigned `castle_EW10` the wrong region's troops. The drift was not merely undetected; it was encoded into passing `[DataRow]` roll expectations. A 2026-06-24 instance of the identical inversion (the Ithilien Ranger live at 0% while fallback tests stayed green) was fixed pointwise for that one troop instead of structurally.
 - **Why missed:** the test-bin inversion is counter-intuitive — the harness exercises the *fallback* precisely because the production path needs a game install. Every per-file review sees two internally-consistent files; only a cross-layer comparison sees that they disagree. Completeness review cannot catch it either, since "tests exist and are green" is true and is the problem.
@@ -580,6 +584,7 @@ Nimlothiel, `lord_L3_3` Silivren) had the same shape from a different route: `is
 - [docs/reviews/rca-townsfolk-sex-2026-09-06.md](../rca-townsfolk-sex-2026-09-06.md)
 
 <!-- backlinks-end -->
+
 ### A mesh validator that resolves against cooked packs cannot see art deleted after the last cook
 
 `validate_mesh_refs.py` builds its present-set from `AssetPackages/pack0-9.tpac`. Those are
@@ -613,6 +618,7 @@ Anfalas ships only infantry gear, so its own top tier is heavy rather than lord.
   85 body / 50 head / 35 gloves and nothing any region ships exceeds 70 / 41 / 27, so the swap was
   a real nerf that had to be stated rather than discovered later.
 - **Source:** docs/features/armoury-mesh-cleanup.md; docs/reference/armory-guide.md.
+
 ### A many-to-few remap silently destroys variety wherever one entity referenced two of the folded ids
 
 Collapsing 5 Rohan crafted spears into 2 left `rohan_edoras_golden_hall_supreme_rider` with three
@@ -1339,6 +1345,7 @@ which unchecked files it leaves exposed.
   closing the issue. One culture behaving correctly, as Rohan did here, reads as "the others need
   art" and hides the fact that one file got an attribute the other seventeen never did.
 - **Source:** docs/reviews/rca-townsfolk-sex-2026-09-06.md
+
 ### Deleting a false positive is not the same as meeting the need it was faking
 `rebalance_troops.py` once fired its Bow/Crossbow swap on the name keyword `naffatun`. That was wrong,
 so #340 removed it, and the removal is recorded two entries above as part of a clean fix. Nothing
@@ -1693,3 +1700,26 @@ parents), and its female skins carry the male body. The line was removed once th
 - **Prevent:** a race added to `cultures.json` for authoring is reverted in the same session; a permanent entry
   needs `as_<race>_facegen` sets, correct female skins and a decision on every race-keyed system.
 - **Source:** `docs/reviews/rca-saruman-lord-and-faces-2026-09-28.md`.
+
+### A culture-keyed armour feature needs a donor map, and a new global rule needs a check against other features' decisions
+Nine lord cultures (Lindon, Lórien, Umbar, Abanissa, Shaghana, Khand and the three orc cultures) own no Armory armour.
+Keyed by culture, their lord kit fell back to any culture's (vanilla pieces included) and their 22 towns could never
+sell heavy or elite once the NotMerchandise flag closed the workshops' any-culture fallback. The fix is one map,
+`armour_from` in `culture_marketplace_config.xml`, read by both the pools and the lord kit. In the same feature a new
+global rule (the market draw refuses every XML non-merchandise item) silently reversed Mike's recorded decision that
+the Animalia moose may be sold.
+- **Why missed:** the culture id was assumed to be a kit id; the new rule was checked against the feature's own items.
+- **Prevent:** before keying armour on a culture, count each culture's pieces and map the empty ones to a donor. When a
+  rule newly excludes a class of items, list the ids it newly catches and grep the docs for decisions about them.
+- **Source:** `docs/reviews/rca-armour-acquisition-2026-09-27.md` rows 5 and 9 (Data flow A and B, Design).
+
+### A new source of pool items must be recognised by every pass that prunes the same roster
+`armour_from` merged a donor culture's armour into a receiving culture's CultureMarketplace pool, and its tests passed
+at the pool. In game the daily `FilterForeignCultureItems` pass, which keeps a town's own culture and its routed items
+only, stripped each donated piece the day after the draw put it there: a Rivendell helm in a Lindon town is "foreign".
+- **Why missed:** the fix was tested at the seam it changed (the pool build); the second pass over the same roster,
+  with its own notion of what belongs there, was never run against a donated piece.
+- **Prevent:** when you add a way for items to reach a roster (a merge, a route, a guaranteed floor), list every pass
+  that removes from that roster (filters, sweeps, caps) and test one of each against the new item. The filter now
+  keeps anything the town culture's own pool carries.
+- **Source:** `docs/reviews/rca-armour-acquisition-2026-09-27.md` row 18 (the Step 4.6 convergence reviewer).

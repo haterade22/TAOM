@@ -267,6 +267,7 @@ question, not a defect, and the daily toast now makes it visible.
 - `IPathService` (Core) — module data path resolution
 - `IModLogger` (Core) — logging (`[SpecRes]` prefix)
 - `IDedicatedServerProvider` (CoopInterop) — suppresses every earn path on a headless dedicated server
+- Consumer: [armour acquisition](armour-acquisition.md) forges lord kit for the resource through `ISpecialResourceSpender` (`GetBalance`, `TrySpend`: affordability-checked, finite positive amounts only), which `SpecialResourceService` implements beside the troop-keyed `ISpecialResourceService`
 - UIExtenderEx: map bar mixin + prefab extension, encyclopedia badge mixin (#590)
 - Harmony 2.x — Patch26_SpecialResources (3 patches)
 
@@ -279,6 +280,7 @@ question, not a defect, and the daily toast now makes it visible.
 - `SpecialResourceDumpFormatTests.cs`: 8 tests for the `taom.print_special_resources` report, including the breakdown lines
 - `SpecialResourceStorageServiceTests.cs`: 19 tests (get/set/add, clamp, multi-hero, multi-resource, restore-null, Contains, and the non-finite cases: `Set` refuses NaN and infinity, `Add` with a NaN delta leaves the balance alone, `RestoreData` repairs a poisoned entry to zero)
 - `SpecialResourceServiceGrantTests.cs` — 9 tests for `GrantAmount` (cap clamp, floor at 0, already-at-cap, unresolved kingdom/culture, NaN/Infinity rejection, grant during an open party-screen session) against a real storage instance
+- `SpecialResourceSpenderTests.cs`: 6 tests for the narrow spend armour acquisition uses: the balance resolved by kingdom, then culture, with its display name; none for a hero whose kingdom and culture have no resource; `TrySpend` debits only a balance that covers the amount, and refuses a non-finite or non-positive amount or a hero with no resource
 - `SpecialResourceEarnPolicyTests.cs` — 8 tests: the AI-led-army regression, player-led still earns, losing side, unresolved battle, player on no side, neither side resolved, and both `MayCreditMainHero` cases
 - `SpecialResourceCheatsFormatTests.cs` — 6 tests for the console echo, including a legacy balance above a lowered cap
 - `SpecialResourceTierServiceTests.cs` (14), `SpecialResourceConfigProviderTierTests.cs` (6, plus the 2 `GetById` tests for a known and an unknown or null id) and `ResourceTierTests.cs` (3): tier resolution by threshold, `<Tiers>` parsing and sort order, the domain record

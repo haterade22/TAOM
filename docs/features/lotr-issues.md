@@ -8,6 +8,10 @@
 > See **Implementation (as built)** below for the shipped design; the disposition matrix and risk analysis that
 > follow are the original research deliverable, kept for provenance. Engine mechanics are documented in
 > [issue-and-quest-system.md](../reference/engine/issue-and-quest-system.md).
+>
+> Since 2026-09-27 the shipped file holds 61 issues: the 43 plus 18 "Armourer's Commission" DeliverGoods rows
+> from [armour acquisition](armour-acquisition.md) (an artisan trades a heavy chest of the town's people for
+> steel, through the template's until-then unused `reward_item`).
 
 ## Overview
 
