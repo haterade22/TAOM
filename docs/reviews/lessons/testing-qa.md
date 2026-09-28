@@ -1332,3 +1332,22 @@ deployment phase, where the review found the creature tree teleporting spiders o
   through the battle's own spawn loop with deployment (a campaign field battle with 20 or more troops opens the
   Order of Battle screen).
 - **Source:** `docs/reviews/rca-creature-bandits-2026-09-28.md`, finding 2.
+
+### Parse enum names against Enum.GetNames, never Enum.TryParse alone
+`LadderSlotRules.TryParse` refused numerals (the first character had to be a letter) but still took comma lists:
+`Enum.TryParse` applies flags semantics to any enum, so `slot="legs,shoulders"` loaded as a Head rung.
+- **Why missed:** the numeral form was a known trap and was guarded; the comma form was not.
+- **Prevent:** match the name against `Enum.GetNames` (case as the config allows), and test a numeral and a comma
+  list. The career-quest objective parse has the same gap (follow-up).
+- **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` row 10 (Completeness).
+
+### A proof column names a test you have read: grep its name and its assertion first
+The lord's gear ladder RCA marked a missing-test row fixed and gave "the wiring test builds the counter's decl" as
+a design proposal's proof, and the feature doc said the same; no test called the mission decl's factory, which the
+runner starts fail-open, so a throw there would silently drop the kill counter.
+- **Why missed:** the proof was written from the plan for the test, not from the test file, and two documents
+  repeated it.
+- **Prevent:** before a test goes into a proof column, a doc's test list or a commit body, grep its name and read
+  the assertion that proves the claim; a test that does not exist is a fabricated fact (`evidence-over-claims.md`
+  section C).
+- **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` convergence finding C1.

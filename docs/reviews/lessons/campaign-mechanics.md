@@ -485,3 +485,23 @@ to `QuestManager`, which then keeps the finished quest in every later save.
 - **Prevent:** before proposing a level, count, or chance to Mike, measure its distribution in the live install and
   put the numbers in the question. Give every CareerQuest at least one counted objective.
 - **Source:** `docs/reviews/rca-armour-acquisition-2026-09-27.md` rows 6 and 8 (Data flow A and B, Engine).
+
+### A resource's producer stops, or says why not, when its only consumer is done
+Lord's materials kept dropping after the last ladder rung was claimed, when nothing could spend them: the roll
+checked the win and the culture, never whether the hero still climbed.
+- **Why missed:** the drop was designed and tested from the producer's side; no test asked what consumes a find.
+- **Prevent:** for every new resource, name its consumers and test the producer once each consumer is exhausted.
+- **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` row 3 (Data flow A and B).
+
+### A new campaign creates its first issues before character creation: re-check a player filter while an offer waits
+The new game's first issues are created while the campaign loads (traced with ilspycmd:
+`IssuesCampaignBehavior.OnNewGameCreatedPartialFollowUpEnd`), and character creation starts only after the load
+(`SandBoxGameManager.OnLoadFinished`, SandBox.SandBoxGameManager.cs:123-144, 186). Until then the main hero is
+SandBox's `main_hero`, `Culture.battania` (SandBox `lords.xml`:11), so a filter on the player's culture at the offer
+filters on the placeholder: "The Deep Seam" for Rhûn and Khand (cultures khuzait, battania) could open for any
+player. A Player Switcher change moves the player to another culture the same way.
+- **Why missed:** the filter was tested at the offer against a giver adapter that always held the final player
+  culture; nobody asked when the first offers are made.
+- **Prevent:** a filter on the player's state also goes in `IssueStayAliveConditions`, which the engine runs each
+  day and when the player enters the settlement, and which drops only untaken offers (IssueManager.cs:262, 516).
+- **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` convergence finding C3.

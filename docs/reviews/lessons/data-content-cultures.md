@@ -1705,3 +1705,21 @@ only, stripped each donated piece the day after the draw put it there: a Rivende
   that removes from that roster (filters, sweeps, caps) and test one of each against the new item. The filter now
   keeps anything the town culture's own pool carries.
 - **Source:** `docs/reviews/rca-armour-acquisition-2026-09-27.md` row 18 (the Step 4.6 convergence reviewer).
+
+### A reward that only one culture can use is offered on the recipient's culture, not the giver's
+"The Deep Seam" rows paid the giver's culture's lord's material, because LotrIssues offers on the giver's culture
+only; the ladder spends only the player's own. A Gondor hero at a Rohan village earned metal no rung of theirs took.
+- **Why missed:** the rows copied the Armourer's Commission, whose chest of the giver's people is useful to anyone.
+- **Prevent:** before reusing a culture filter, ask whose culture the reward must match; a culture-bound reward
+  filters on the player's culture as well (`for_player_culture`).
+- **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` row 4 (Data flow B).
+
+### Check a unique reward against every kit that already carries it
+The lord's weapon rung, a top-of-ladder reward, offered Dale's own starting sword, which six career kits, ten
+character-creation kits, three enlistment kits and five Dale troops carry, and its description called the picks
+weapons that are "never sold" though every one was merchandise.
+- **Why missed:** the picks were chosen by culture tag and weapon class; nobody searched the kits for them.
+- **Prevent:** before naming an item a reward, count its `Item.<id>` references across the repo's ModuleData and
+  both live modules (troops, lords, equipment sets, player and enlistment kits); prefer one no kit carries, and
+  say in the data which picks break that rule and why (a later comment claimed it for a pick one troop carries).
+- **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` rows 22 and 24 (XML lens; the doc correction).

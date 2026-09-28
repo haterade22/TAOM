@@ -394,3 +394,20 @@ the feature doc, and the named-weapon list protected 4 of 17 items.
 - **Prevent:** before relaying "X does not exist", grep the live files by the id pattern (`id="[^"]*glamdring`), not by
   the display name, and list what the search did find.
 - **Source:** `docs/reviews/rca-armour-acquisition-2026-09-27.md` row 3 (XML lens).
+
+### When a decision reverses an invariant, grep its old words across code comments, config headers and MCM hints
+The weapon rung began awarding the named hero weapons, but "never change hands" (the MCM master hint) and "never
+sold, looted or awarded" (a config comment and the config header) stayed, beside the feature doc's corrected table.
+- **Why missed:** only the doc's own table was rewritten; the invariant's other statements were not searched for.
+- **Prevent:** grep the old invariant's key words across `Main/`, ModuleData comments and `TaomSettings.cs` before
+  calling a reversed decision done. A repeat of RCA 2026-09-27 row 19.
+- **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` row 6 (Data flow A).
+
+### Every engine claim written into a doc or a data header cites a line read that session, or says UNVERIFIED
+The ladder's "Engine facts" and the materials header carried six wrong claims (towns never eat the materials; an
+ItemCategory cannot be declared in XML; vanilla goods carry a Trade component; is_merchandise keeps them out of the
+hideout pool; only a patch reaches the loot screen; the kill counter's mission list), each plausible, none re-read.
+- **Why missed:** the text was written from research summaries, with spot checks on the load-bearing lines only.
+- **Prevent:** treat every sentence about engine behaviour as a claim: cite its file and line from a read that
+  session, or mark it UNVERIFIED. A repeat of RCA 2026-09-27 rows 3, 6 and 8.
+- **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` row 16 (Engine, Data flow B).
