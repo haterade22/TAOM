@@ -669,6 +669,31 @@ class BuildRegistriesTests(unittest.TestCase):
         self.assertNotIn("empire_w", regs.cultures, "kingdom id from a config file must not become a valid culture")
         self.assertNotIn("empire_s", regs.cultures)
 
+    def test_item_registry_counts_only_items_documents(self):
+        # RCA 2026-09-28 row 1: a config that quotes item ids in <Item id> rows (the armour config's
+        # NamedWeapons, the generated armour_classes.xml) must not define them, or no gate can fail on them.
+        modules = Path(self._tmp.name) / "Modules"
+        _write(modules / "LOTRLOME_Armory" / "ModuleData" / "LOTRLOME_items" / "w.xml",
+               '<?xml version="1.0"?>\n<Items>\n  <CraftedItem id="real_sword" crafting_template="OneHandedSword" />\n</Items>\n')
+        _write(self.md / "taom_spcultures.xml",
+               '<?xml version="1.0"?>\n<SPCultures>\n  <Culture id="gondor" />\n</SPCultures>\n')
+        _write(self.md / "armour_acquisition" / "armour_acquisition_config.xml",
+               '<?xml version="1.0"?>\n<ArmourAcquisition>\n  <NamedWeapons><Item id="retired_sword" /></NamedWeapons>\n'
+               '  <LadderWeapons><Weapon culture="gondor" item="retired_sword" /></LadderWeapons>\n</ArmourAcquisition>\n')
+        _write(self.md / "armour_acquisition" / "armour_classes.xml",
+               '<?xml version="1.0"?>\n<ArmourClasses>\n  <Item id="retired_chest" class="heavy" />\n</ArmourClasses>\n')
+        _write(self.md / "armour_acquisition" / "taom_lords_materials.xml",
+               '<?xml version="1.0"?>\n<!-- TAOM\'s own items -->\n<Items>\n  <Item id="lm_gondor" Type="Goods" />\n</Items>\n')
+
+        regs = ts.build_registries(self.md, modules)
+
+        self.assertIn("real_sword", regs.items)
+        self.assertIn("lm_gondor", regs.items, "TAOM's own <Items> file still defines its items")
+        self.assertNotIn("retired_sword", regs.items, "a config row quoting an id is not a definition")
+        self.assertNotIn("retired_chest", regs.items, "a class-table row is not a definition")
+        issues = vm.armour_acquisition_ref_issues(regs, self.md)
+        self.assertEqual({"NamedWeapons", "LadderWeapons"}, {i.entry_id for i in issues}, [i.message for i in issues])
+
     # --- harness / mount family-type registries (Riding Caparison, 2026-07-29) ---
 
     def _write_harness_fixture(self, modules: Path) -> None:
@@ -2631,21 +2656,32 @@ class ArmourAcquisitionRefTests(unittest.TestCase):
     ISSUES = "lotr_issues/taom_lotr_issues.xml"
     CONFIG = "armour_acquisition/armour_acquisition_config.xml"
     MARKET = "culture_marketplace/culture_marketplace_config.xml"
+    QUESTS = "career_system/taom_career_quests.xml"
+
+    # The lord's gear ladder (#693): its rung quests, lord's materials and weapon picks.
+    LADDER = ('<LordsLadder><Step slot="hands" quest="q_hands" materials="10" /></LordsLadder>'
+              '<LordsMaterials><Material culture="gondor" item="lm_gondor" /></LordsMaterials>'
+              '<LadderWeapons><Weapon culture="gondor" item="anduril" /></LadderWeapons>')
 
     CLEAN = {
         ISSUES: '<LotrIssues><LotrIssue id="c1" cultures="lindon,rivendell" reward_item="riv_chest" '
                 'item_source="item:ironIngot4" /><LotrIssue id="c2" cultures="" reward_item="" '
                 'item_source="category:grain" /></LotrIssues>',
         CONFIG: '<ArmourAcquisition><Upgrades><Upgrade target="lord"><Material item="ironIngot6" count="6" />'
-                '</Upgrade></Upgrades><NamedWeapons><Item id="anduril" /></NamedWeapons></ArmourAcquisition>',
+                '</Upgrade></Upgrades><NamedWeapons><Item id="anduril" /></NamedWeapons>' + LADDER + '</ArmourAcquisition>',
         MARKET: '<CultureMarketplaceConfig><Culture id="lindon" armour_from="rivendell" />'
                 '</CultureMarketplaceConfig>',
+        # career_id differs from id so a gate reading the wrong attribute fails.
+        QUESTS: '<CareerQuests><CareerQuest id="q_hands" career_id="c_hands" tier="1" /></CareerQuests>',
     }
+
+    def _config(self, ladder):
+        return '<ArmourAcquisition>' + ladder + '</ArmourAcquisition>'
 
     def _run(self, **overrides):
         files = dict(self.CLEAN)
         files.update({getattr(self, k): v for k, v in overrides.items()})
-        registries = mock.Mock(items={"riv_chest", "anduril"}, cultures={"rivendell", "lindon", "gondor"})
+        registries = mock.Mock(items={"riv_chest", "anduril", "lm_gondor"}, cultures={"rivendell", "lindon", "gondor"})
         with tempfile.TemporaryDirectory() as tmp:
             for rel, text in files.items():
                 if text is None:
@@ -2698,3 +2734,50 @@ class ArmourAcquisitionRefTests(unittest.TestCase):
 
     def test_a_file_that_does_not_parse_is_reported_not_passed(self):
         self._one(self._run(CONFIG='<ArmourAcquisition><NamedWeapons>'), "NOT checked")
+
+    def test_a_ladder_weapon_nothing_defines_is_an_error(self):
+        issues = self._run(CONFIG=self._config('<LadderWeapons><Weapon culture="gondor" item="lost_sword" /></LadderWeapons>'))
+        self._one(issues, "'lost_sword'")
+        self.assertEqual(issues[0].entry_id, "LadderWeapons")
+
+    def test_a_ladder_weapon_culture_nothing_defines_is_an_error(self):
+        self._one(self._run(CONFIG=self._config('<LadderWeapons><Weapon culture="rohann" item="anduril" /></LadderWeapons>')),
+                  "'rohann'")
+
+    def test_a_lords_material_nothing_defines_is_an_error(self):
+        issues = self._run(CONFIG=self._config('<LordsMaterials><Material culture="gondor" item="lost_ore" /></LordsMaterials>'))
+        self._one(issues, "'lost_ore'")
+        self.assertEqual(issues[0].entry_id, "LordsMaterials", "not an upgrade metal")
+
+    def test_a_lords_material_culture_nothing_defines_is_an_error(self):
+        self._one(self._run(CONFIG=self._config('<LordsMaterials><Material culture="rohann" item="lm_gondor" /></LordsMaterials>')),
+                  "'rohann'")
+
+    def test_a_ladder_rung_quest_nothing_defines_is_an_error(self):
+        # The armoury starts a rung by its quest id: one the career quests do not define never starts.
+        self._one(self._run(CONFIG=self._config('<LordsLadder><Step slot="head" quest="q_lost" materials="3" /></LordsLadder>')),
+                  "'q_lost'")
+
+    def test_ladder_rungs_without_the_career_quest_file_are_errors(self):
+        issues = self._run(QUESTS=None)
+        self._one(issues, "'q_hands'")
+
+    def test_a_nested_rung_quest_is_not_a_definition(self):
+        # The game reads only the root's own <CareerQuest> children (CareerQuestConfigProvider, root.Elements).
+        self._one(self._run(QUESTS='<CareerQuests><Group><CareerQuest id="q_hands" career_id="c_hands" tier="1" />'
+                                   '</Group></CareerQuests>'), "'q_hands'")
+
+    def test_an_unparsable_quest_file_is_reported_once_not_per_rung(self):
+        self._one(self._run(QUESTS='<CareerQuests>'), "does not parse")
+
+    def test_a_file_with_an_unknown_encoding_is_reported_not_a_crash(self):
+        self._one(self._run(CONFIG='<?xml version="1.0" encoding="utf8x"?><ArmourAcquisition />'), "NOT checked")
+
+    def test_the_shipped_files_carry_every_element_the_gate_reads(self):
+        # A section renamed in the XML and the C# together would leave the gate checking nothing.
+        config = vm.ET.parse(vm.MODULEDATA / self.CONFIG).getroot()
+        for path in ("Upgrades/Upgrade/Material", "NamedWeapons/Item", "LordsLadder/Step",
+                     "LordsMaterials/Material", "LadderWeapons/Weapon"):
+            self.assertTrue(config.findall(path), f"the shipped armour config has no {path}")
+        quests = vm.ET.parse(vm.MODULEDATA / self.QUESTS).getroot()
+        self.assertTrue(quests.findall("CareerQuest"), "the shipped career quests have no root-level <CareerQuest>")
