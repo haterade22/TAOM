@@ -3100,3 +3100,16 @@ log) and in a sandbox where the anchored form refused from the subdirectory. The
   (`tools/test_hooks.sh` 7j).
 - **Source:** issue #690; `docs/reference/hooks-catalog.md`; the review evidence in
   `E:\repos\taom-improve\scratch\680\review\bash\` (desktop).
+
+### A "hung game" may be the Modding Kit: identify the process before the dump (#692, 2026-09-27)
+A Custom Battle's TAOM log stopped mid-fight, and the only `TaleWorlds.MountAndBlade.Launcher` process was Not
+Responding with a core busy and its memory doubling. It was dumped (20 GB, the editor frozen for 61 s) and the
+user was told to end it. The stack was the Modding Kit (`bin\Win64_Shipping_wEditor`) generating the settlement
+distance cache from a Qt button, legitimate work. The game (a separate PID) had already been closed at its
+victory screen: its `rgl_log_<pid>.txt` ended on "You have won the battle!" and a focus change, with no crash
+record.
+- **Why missed:** the process name matched and the log timing fit a hang; the image path and the game's own
+  engine log were not read until after the dump.
+- **Prevent:** `/native-crash-triage` Phase 2b step 1: read the PID's image path and match it to the session's
+  `rgl_log_<pid>.txt` before dumping, and never tell the user to end a process that has not been identified.
+- **Source:** issue #692 playtest; `rgl_log_37324.txt` (game) against PID 60988 (editor), desktop.
