@@ -31,6 +31,13 @@ Checks (each maps to a recurring TAOM bug class):
                              live install does not define (warning; needs the install;
                              the generator list and the walk live in
                              check_generator_item_refs.py)
+  ARMOUR_CLASS_TABLE_DRIFT   the armour acquisition class table no longer matches the live
+                             Armory and troop rosters, or could not be verified against it this
+                             run (warning; needs the install; re-run
+                             generate_armour_classes.py --apply)
+  ARMOUR_ACQUISITION_REF     a LotrIssue culture / reward_item / item_source, an armour
+                             acquisition named weapon or upgrade metal, or a marketplace
+                             <Culture> / armour_from that nothing defines (needs the install)
   MISSING_COLLISION_BODY     an item or crafting piece whose body_name / holster body /
                              collision body names a PhysicsShape no loaded tpac ships.
                              PreloadHelper.WaitForMeshesToBeLoaded polls that name forever:
@@ -147,6 +154,131 @@ def generator_item_ref_issues(items: set) -> list:
                         f"no item in the live install ({shown}). A re-run would leave those "
                         f"slots empty. Replace them with ids the Armory defines; "
                         f"python tools/check_generator_item_refs.py lists them all"))
+    return issues
+
+
+ARMOUR_CLASS_CODE = "ARMOUR_CLASS_TABLE_DRIFT"
+
+
+def armour_class_table_issues(game_modules: Path) -> list:
+    """WARNING when the armour acquisition class table no longer matches the live Armory, or
+    could not be verified against it this run.
+
+    The game reads Main/_Module/ModuleData/armour_acquisition/armour_classes.xml to decide which
+    pieces markets and loot may hand out and what the armoury upgrades each piece into
+    (docs/features/armour-acquisition.md). The table is generated from the unversioned Armory, so
+    an art drop that adds, renames or retires pieces leaves it stale with nothing else noticing: a
+    new piece falls back to its engine tier, and an upgrade link can name a retired id. Skipped,
+    and announced on stderr (never silently passed), when `game_modules` has no LOTRLOME_Armory at
+    all. Reported as UNVERIFIED, never passed, when the generator raises, finds no armour, or
+    reads a DIFFERENT Armory than the one under `game_modules`: generate_armour_classes.generate()
+    reads rebalance_armor.ARMORY_DIR, which honours only $BANNERLORD_GAME_DIR and ignores
+    --game-modules / $BANNERLORD_GAME_MODULES (tools/_gamedir.py), so a caller checking one
+    install while the generator reads another must not have that mismatch read as a clean pass."""
+    game_modules = Path(game_modules)
+    armory_root = game_modules / "LOTRLOME_Armory"
+    table = "Main/_Module/ModuleData/armour_acquisition/armour_classes.xml"
+    if not armory_root.exists():
+        print(f"WARNING: {ARMOUR_CLASS_CODE} SKIPPED: no LOTRLOME_Armory under {game_modules}",
+              file=sys.stderr)
+        return []
+
+    def unverified(why: str) -> list:
+        return [ts.Issue(severity=ts.Severity.WARNING, code=ARMOUR_CLASS_CODE, file=table, line=0,
+                         entry_id="", message=f"the class table was NOT verified this run: {why}")]
+
+    try:
+        import generate_armour_classes as gac
+        import rebalance_armor as ra
+        rows = gac.generate()
+        if rows is None:
+            return unverified(f"the generator found no armour under {ra.ARMORY_DIR}")
+        expected_root = os.path.normcase(os.path.abspath(
+            str(armory_root / "ModuleData" / "LOTRLOME_items")))
+        actual_root = os.path.normcase(os.path.abspath(ra.ARMORY_DIR))
+        if actual_root != expected_root:
+            return unverified(f"the generator reads {ra.ARMORY_DIR}, not the Armory under "
+                              f"{game_modules}; set $BANNERLORD_GAME_DIR to match --game-modules")
+        drift = gac.drift_summary(gac.read_committed(), rows)
+    except Exception as exc:  # noqa: BLE001 - any failure is a finding, never a pass
+        return unverified(f"{type(exc).__name__}: {exc}")
+    if drift is None:
+        return []
+    return [ts.Issue(
+        severity=ts.Severity.WARNING, code=ARMOUR_CLASS_CODE, file=table, line=0, entry_id="",
+        message=f"stale against the live Armory: {drift}. A piece missing from the table falls "
+                f"back to its engine tier in game. Re-run python tools/generate_armour_classes.py --apply")]
+
+
+ARMOUR_REF_CODE = "ARMOUR_ACQUISITION_REF"
+
+# The items the engine registers in code, not XML (v1.5.3 DefaultItems.cs:93-108), so no module's
+# XML defines them: the metals the armoury charges are among them.
+ENGINE_REGISTERED_ITEMS = frozenset({
+    "grain", "felt", "planks", "meat", "hides", "tools", "iron", "hardwood", "charcoal",
+    "ironIngot1", "ironIngot2", "ironIngot3", "ironIngot4", "ironIngot5", "ironIngot6", "trash"})
+
+
+def armour_acquisition_ref_issues(registries, moduledata: Path) -> list:
+    """ERROR per item id or culture id the armour acquisition data names that nothing defines.
+
+    Each fails silently in game (docs/features/armour-acquisition.md): a LotrIssue row whose
+    `cultures` token names no culture never fires, a `reward_item` that resolves to nothing hands
+    out no chest (LotrIssueRewardAdapter returns quietly), a named weapon that resolves to nothing
+    stays on sale, and an `armour_from` culture that does not exist gives a culture no armour.
+    Checked: every LotrIssue row's cultures, reward_item and item_source="item:X"; the armour
+    config's NamedWeapons and Material ids; the culture marketplace config's <Culture id> and
+    armour_from. A file that does not parse is reported, never passed. Callers skip the pass
+    without the install: the registry is TAOM-only then, and every Armory id would read as unknown."""
+    items = set(registries.items) | ENGINE_REGISTERED_ITEMS
+    cultures = set(registries.cultures)
+    issues = []
+
+    def report(rel, entry_id, message):
+        issues.append(ts.Issue(severity=ts.Severity.ERROR, code=ARMOUR_REF_CODE,
+                               file=f"Main/_Module/ModuleData/{rel}", line=0, entry_id=entry_id,
+                               message=message))
+
+    def check(rel, entry_id, kind, value, known):
+        if value and value not in known:
+            report(rel, entry_id, f"{kind} '{value}' is defined nowhere")
+
+    def load(rel):
+        path = Path(moduledata) / rel
+        if not path.exists():
+            return None
+        try:
+            return ET.parse(path).getroot()
+        except ET.ParseError as exc:
+            report(rel, "", f"does not parse ({exc}); its references were NOT checked")
+            return None
+
+    rel = "lotr_issues/taom_lotr_issues.xml"
+    root = load(rel)
+    for row in (root.iter("LotrIssue") if root is not None else ()):
+        rid = row.get("id", "")
+        for token in (row.get("cultures") or "").split(","):
+            check(rel, rid, "culture", token.strip(), cultures)
+        check(rel, rid, "reward_item", (row.get("reward_item") or "").strip(), items)
+        source = (row.get("item_source") or "").strip()
+        if source.startswith("item:"):
+            check(rel, rid, "item_source item", source[len("item:"):].strip(), items)
+
+    rel = "armour_acquisition/armour_acquisition_config.xml"
+    root = load(rel)
+    if root is not None:
+        for named in root.iter("NamedWeapons"):
+            for item in named.iter("Item"):
+                check(rel, "NamedWeapons", "named weapon", (item.get("id") or "").strip(), items)
+        for material in root.iter("Material"):
+            check(rel, "Upgrades", "upgrade material", (material.get("item") or "").strip(), items)
+
+    rel = "culture_marketplace/culture_marketplace_config.xml"
+    root = load(rel)
+    for culture in (root.iter("Culture") if root is not None else ()):
+        cid = (culture.get("id") or "").strip()
+        check(rel, cid, "culture", cid, cultures)
+        check(rel, cid, "armour_from culture", (culture.get("armour_from") or "").strip(), cultures)
     return issues
 
 
@@ -545,6 +677,11 @@ def main() -> int:
     issues += schema_invalid_issues(moduledata.parent, game_modules.parent / "XmlSchemas")
     if game_modules.exists():
         issues += generator_item_ref_issues(registries.items)
+        # A filtered run discards these issues right below (args.code), so a run that filters
+        # them out must not pay to generate them: about 0.86s of every commit hook invocation.
+        if not args.code or ARMOUR_CLASS_CODE in args.code:
+            issues += armour_class_table_issues(game_modules)
+        issues += armour_acquisition_ref_issues(registries, moduledata)
         # Until #622 nothing called this pass, so MISSING_COLLISION_BODY never fired and the
         # commit hook's --code line for it blocked nothing.
         issues += missing_collision_body_issues(game_modules, moduledata)
@@ -558,6 +695,10 @@ def main() -> int:
               f"         live install's tpacs.", file=sys.stderr)
         print(f"WARNING: {TEMPLATE_CODE} SKIPPED: the vanilla SkillSets a template can name live\n"
               f"         in the install.", file=sys.stderr)
+        print(f"WARNING: {ARMOUR_CLASS_CODE} SKIPPED: the armour class table can only be checked\n"
+              f"         against the live Armory.", file=sys.stderr)
+        print(f"WARNING: {ARMOUR_REF_CODE} SKIPPED: the armour acquisition ids and cultures can only\n"
+              f"         be checked against the live install's registry.", file=sys.stderr)
     issues.sort(key=lambda i: i.sort_key())
 
     if args.code:

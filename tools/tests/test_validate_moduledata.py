@@ -2329,6 +2329,137 @@ _REGISTRATION = """<?xml version="1.0" encoding="utf-8"?>
 """
 
 
+class ArmourClassTableDriftTests(unittest.TestCase):
+    """ARMOUR_CLASS_TABLE_DRIFT: the armour acquisition class table the game reads is generated
+    from the unversioned Armory, so an art drop can leave it stale with nothing else noticing
+    (docs/features/armour-acquisition.md). The pass warns on drift, reports a generator that
+    cannot run, finds no armour, or reads a DIFFERENT Armory than the one under --game-modules,
+    and skips (never silently passes) without the Armory at all."""
+
+    def _armory(self, tmp):
+        (Path(tmp) / "LOTRLOME_Armory").mkdir()
+        return Path(tmp)
+
+    def _expected_root(self, tmp):
+        """The root gac.generate() must read for `_armory(tmp)` to count as verified."""
+        return str(Path(tmp) / "LOTRLOME_Armory" / "ModuleData" / "LOTRLOME_items")
+
+    def test_skipped_without_the_armory(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            err = io.StringIO()
+            with redirect_stderr(err):
+                issues = vm.armour_class_table_issues(Path(tmp))
+        self.assertEqual(issues, [])
+        self.assertIn("ARMOUR_CLASS_TABLE_DRIFT SKIPPED", err.getvalue())
+        self.assertIn("no LOTRLOME_Armory", err.getvalue())
+
+    def test_current_table_raises_nothing(self):
+        import generate_armour_classes as gac
+        import rebalance_armor as ra
+        rows = {"a_piece": ("light", None)}
+        with tempfile.TemporaryDirectory() as tmp:
+            with mock.patch.object(ra, "ARMORY_DIR", self._expected_root(tmp)), \
+                 mock.patch.object(gac, "generate", return_value=rows), \
+                 mock.patch.object(gac, "read_committed", return_value=gac.render(rows)):
+                self.assertEqual(vm.armour_class_table_issues(self._armory(tmp)), [])
+
+    def test_stale_table_warns_and_names_the_drift(self):
+        import generate_armour_classes as gac
+        import rebalance_armor as ra
+        committed = gac.render({"a_piece": ("light", None)})
+        with tempfile.TemporaryDirectory() as tmp:
+            with mock.patch.object(ra, "ARMORY_DIR", self._expected_root(tmp)), \
+                 mock.patch.object(gac, "generate", return_value={"a_piece": ("heavy", None)}), \
+                 mock.patch.object(gac, "read_committed", return_value=committed):
+                issues = vm.armour_class_table_issues(self._armory(tmp))
+        self.assertEqual([i.code for i in issues], [vm.ARMOUR_CLASS_CODE])
+        self.assertIs(issues[0].severity, ts.Severity.WARNING)
+        self.assertIn("1 changed (a_piece)", issues[0].message)
+
+    def test_a_generator_that_cannot_run_is_reported_not_passed(self):
+        import generate_armour_classes as gac
+        with tempfile.TemporaryDirectory() as tmp:
+            with mock.patch.object(gac, "generate", side_effect=RuntimeError("boom")):
+                issues = vm.armour_class_table_issues(self._armory(tmp))
+        self.assertEqual([i.code for i in issues], [vm.ARMOUR_CLASS_CODE])
+        self.assertIs(issues[0].severity, ts.Severity.WARNING)
+        self.assertIn("NOT verified", issues[0].message)
+        self.assertIn("boom", issues[0].message)
+
+    def test_generator_finding_no_armour_is_reported_not_passed(self):
+        # gac.generate() returns None when the Armory it reads has no armour (or is not a
+        # directory at all); that must be a finding, not a silent pass.
+        import generate_armour_classes as gac
+        import rebalance_armor as ra
+        with tempfile.TemporaryDirectory() as tmp:
+            with mock.patch.object(ra, "ARMORY_DIR", self._expected_root(tmp)), \
+                 mock.patch.object(gac, "generate", return_value=None):
+                issues = vm.armour_class_table_issues(self._armory(tmp))
+        self.assertEqual([i.code for i in issues], [vm.ARMOUR_CLASS_CODE])
+        self.assertIs(issues[0].severity, ts.Severity.WARNING)
+        self.assertIn("NOT verified", issues[0].message)
+
+    def test_generator_reading_a_different_armory_is_reported_not_passed(self):
+        # gac.generate() reads ra.ARMORY_DIR, which honours only $BANNERLORD_GAME_DIR and
+        # ignores --game-modules / $BANNERLORD_GAME_MODULES (tools/_gamedir.py). A caller who
+        # pointed this pass at one install while the generator reads another must not have its
+        # (perfectly self-consistent) rows read as a clean verification of THIS install.
+        import generate_armour_classes as gac
+        import rebalance_armor as ra
+        with tempfile.TemporaryDirectory() as tmp:
+            wrong_root = str(Path(tmp) / "SomeOtherArmory" / "ModuleData" / "LOTRLOME_items")
+            with mock.patch.object(ra, "ARMORY_DIR", wrong_root), \
+                 mock.patch.object(gac, "generate", return_value={"a_piece": ("light", None)}):
+                issues = vm.armour_class_table_issues(self._armory(tmp))
+        self.assertEqual([i.code for i in issues], [vm.ARMOUR_CLASS_CODE])
+        self.assertIs(issues[0].severity, ts.Severity.WARNING)
+        self.assertIn("NOT verified", issues[0].message)
+
+    def test_malformed_committed_table_is_reported_as_drift_not_a_crash(self):
+        # A merge conflict left in the committed armour_classes.xml must not crash the pass;
+        # gac.drift_summary (fixed alongside this) reports it as a name-able kind of drift.
+        import generate_armour_classes as gac
+        import rebalance_armor as ra
+        rows = {"a_piece": ("light", None)}
+        with tempfile.TemporaryDirectory() as tmp:
+            with mock.patch.object(ra, "ARMORY_DIR", self._expected_root(tmp)), \
+                 mock.patch.object(gac, "generate", return_value=rows), \
+                 mock.patch.object(gac, "read_committed", return_value="<<<<<<< HEAD\nnot xml"):
+                issues = vm.armour_class_table_issues(self._armory(tmp))
+        self.assertEqual([i.code for i in issues], [vm.ARMOUR_CLASS_CODE])
+        self.assertIs(issues[0].severity, ts.Severity.WARNING)
+        self.assertIn("does not parse", issues[0].message)
+
+    # --- main()'s --code gate: a filtered run that excludes this code must not pay for it ---
+
+    def _run_main_with_mocked_pass(self, tmp, *extra_args):
+        """main()'s exit code, with armour_class_table_issues replaced by a spy so a test can
+        assert whether it ran at all, never mind what it would have found."""
+        root = Path(tmp)
+        (root / "ModuleData").mkdir()
+        with mock.patch.object(vm, "armour_class_table_issues", return_value=[]) as spy:
+            _run_main("--moduledata", str(root / "ModuleData"), "--game-modules", str(root),
+                     *extra_args)
+        return spy
+
+    def test_skipped_entirely_when_the_code_filter_excludes_it(self):
+        # A filtered run discards the pass's issues anyway (main() applies --code to the whole
+        # issue list); calling it just to throw the result away cost ~0.86s of every commit hook.
+        with tempfile.TemporaryDirectory() as tmp:
+            spy = self._run_main_with_mocked_pass(tmp, "--code", "SOME_OTHER_CODE")
+        spy.assert_not_called()
+
+    def test_runs_when_the_code_filter_names_it(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            spy = self._run_main_with_mocked_pass(tmp, "--code", vm.ARMOUR_CLASS_CODE)
+        spy.assert_called_once()
+
+    def test_runs_when_no_code_filter_is_given(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            spy = self._run_main_with_mocked_pass(tmp)
+        spy.assert_called_once()
+
+
 class SchemaInvalidPassTests(unittest.TestCase):
     """The engine-XSD layer (validate_xml_schemas.py) as a validator pass, so the commit hook
     gates it: a file the repo module registers that breaks its engine schema is an ERROR at
@@ -2488,3 +2619,82 @@ class CommitGateCoverageTests(unittest.TestCase):
                    | {"DUPLICATE_NPC_ID", "DUPLICATE_CULTURE_ID", "DUPLICATE_ROSTER_ID"})
         unknown = sorted(self._hook_codes() - emitted)
         self.assertEqual(unknown, [], f"hook names codes the validator never emits: {unknown}")
+
+
+class ArmourAcquisitionRefTests(unittest.TestCase):
+    """ARMOUR_ACQUISITION_REF: an id or culture the armour acquisition data names that nothing defines
+    fails silently in game: a commission that never fires, a reward that never arrives, a named weapon
+    left on sale, a culture that draws on no armour (docs/features/armour-acquisition.md). Each is an
+    ERROR; the metals the engine registers in code (DefaultItems) are known; a file that does not parse
+    is reported, never passed."""
+
+    ISSUES = "lotr_issues/taom_lotr_issues.xml"
+    CONFIG = "armour_acquisition/armour_acquisition_config.xml"
+    MARKET = "culture_marketplace/culture_marketplace_config.xml"
+
+    CLEAN = {
+        ISSUES: '<LotrIssues><LotrIssue id="c1" cultures="lindon,rivendell" reward_item="riv_chest" '
+                'item_source="item:ironIngot4" /><LotrIssue id="c2" cultures="" reward_item="" '
+                'item_source="category:grain" /></LotrIssues>',
+        CONFIG: '<ArmourAcquisition><Upgrades><Upgrade target="lord"><Material item="ironIngot6" count="6" />'
+                '</Upgrade></Upgrades><NamedWeapons><Item id="anduril" /></NamedWeapons></ArmourAcquisition>',
+        MARKET: '<CultureMarketplaceConfig><Culture id="lindon" armour_from="rivendell" />'
+                '</CultureMarketplaceConfig>',
+    }
+
+    def _run(self, **overrides):
+        files = dict(self.CLEAN)
+        files.update({getattr(self, k): v for k, v in overrides.items()})
+        registries = mock.Mock(items={"riv_chest", "anduril"}, cultures={"rivendell", "lindon", "gondor"})
+        with tempfile.TemporaryDirectory() as tmp:
+            for rel, text in files.items():
+                if text is None:
+                    continue
+                path = Path(tmp) / rel
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(text, encoding="utf-8")
+            return vm.armour_acquisition_ref_issues(registries, Path(tmp))
+
+    def _one(self, issues, needle):
+        self.assertEqual(len(issues), 1, [i.message for i in issues])
+        self.assertEqual(issues[0].code, "ARMOUR_ACQUISITION_REF")
+        self.assertEqual(issues[0].severity, vm.ts.Severity.ERROR)
+        self.assertIn(needle, issues[0].message)
+
+    def test_clean_data_raises_nothing(self):
+        self.assertEqual(self._run(), [])
+
+    def test_missing_files_raise_nothing(self):
+        self.assertEqual(self._run(ISSUES=None, CONFIG=None, MARKET=None), [])
+
+    def test_a_commission_culture_nothing_defines_is_an_error(self):
+        self._one(self._run(ISSUES='<LotrIssues><LotrIssue id="c1" cultures="lindon, rohan" /></LotrIssues>'),
+                  "'rohan'")
+
+    def test_a_reward_item_nothing_defines_is_an_error(self):
+        self._one(self._run(ISSUES='<LotrIssues><LotrIssue id="c1" reward_item="retired_chest" /></LotrIssues>'),
+                  "'retired_chest'")
+
+    def test_an_item_source_nothing_defines_is_an_error(self):
+        self._one(self._run(ISSUES='<LotrIssues><LotrIssue id="c1" item_source="item:lost_ore" /></LotrIssues>'),
+                  "'lost_ore'")
+
+    def test_a_named_weapon_nothing_defines_is_an_error(self):
+        self._one(self._run(CONFIG='<ArmourAcquisition><NamedWeapons><Item id="glamdring" />'
+                                   '</NamedWeapons></ArmourAcquisition>'), "'glamdring'")
+
+    def test_a_material_nothing_defines_is_an_error_but_the_engines_metals_are_known(self):
+        self._one(self._run(CONFIG='<ArmourAcquisition><Upgrades><Upgrade target="heavy">'
+                                   '<Material item="ironIngot4" count="3" /><Material item="mithril" count="1" />'
+                                   '</Upgrade></Upgrades></ArmourAcquisition>'), "'mithril'")
+
+    def test_an_armour_donor_nothing_defines_is_an_error(self):
+        self._one(self._run(MARKET='<CultureMarketplaceConfig><Culture id="lindon" armour_from="rivendel" />'
+                                   '</CultureMarketplaceConfig>'), "'rivendel'")
+
+    def test_a_marketplace_culture_nothing_defines_is_an_error(self):
+        self._one(self._run(MARKET='<CultureMarketplaceConfig><Culture id="lindonn" />'
+                                   '</CultureMarketplaceConfig>'), "'lindonn'")
+
+    def test_a_file_that_does_not_parse_is_reported_not_passed(self):
+        self._one(self._run(CONFIG='<ArmourAcquisition><NamedWeapons>'), "NOT checked")
