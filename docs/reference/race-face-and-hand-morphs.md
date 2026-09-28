@@ -94,16 +94,61 @@ which monsters use it is UNVERIFIED, but the hill troll's hand morphs work in ga
 
 ### Exporting a face for a lord
 
-A lord's `<face>` needs the exact `<BodyProperties version="4" ... key="..."/>` string of a face built in the
-game's face editor, and v1.5.3 has no way to get it out: the face editor has no copy or export action (no
-clipboard code in `FaceGenVM`), and vanilla ships no console command for it.
+A lord's `<face>` takes the exact `<BodyProperties version="4" ... key="..."/>` string of a face built in the
+game's face editor. The editor copies it: **Ctrl+C** in the face editor puts
+`BodyGen.CurrentBodyProperties.ToString()` on the clipboard, and Ctrl+V pastes one back [Certain]
+(`BodyGeneratorView.TickInput`, hotkeys from `FaceGenHotkeyCategory`; the clipboard code lives in the view, not in
+`FaceGenVM`). The same view hosts character creation and the barber.
 
-1. Build the face in character creation, or in the in-campaign face editor.
-2. Open the console (<kbd>Alt</kbd>+<kbd>~</kbd>) and run `taom.print_face` for the player hero, or
-   `taom.print_face <hero_id>` for any other hero already in the campaign.
-3. The console echoes the report, but the line that matters is hard to select there. Read it instead from the TAOM
-   debug log, `Logs\taom_debug_<timestamp>.log` under the Bannerlord install directory, tagged `[PrintFace]`.
-4. Copy the `<BodyProperties .../>` line verbatim into the lord's `<face>` in `heroes.xml` or `lords.xml`.
+1. Build the face in character creation or the barber, on a character of the lord's race and sex.
+2. Press Ctrl+C and paste the string into the lord's `<face>`: `characters/lords.xml` for a TAOM lord,
+   `lords.xslt` for a vanilla lord TAOM overrides (Sauron, `lord_1_17`). `heroes.xml` holds no faces.
+3. To make a face on a race no culture offers, add the race to a culture's `races` in
+   `charactercreation/cultures.json` for the session and take it out again before committing (Sauron,
+   2026-09-28): a race without `as_<race>_facegen` sets falls back to the human set in character creation, and
+   a player race takes every system keyed on that race name.
+
+## Hair, beards and eyebrows
+
+The skin's `hair_meshes`, `beard_meshes` and `eyebrow_meshes` are "upper meshes": separate metameshes the face
+builder attaches over the head. **Vanilla is the reference, and it gives them no morph channels at all**
+[Certain]: every beard and hair metamesh in `Native/EmAssetPackages/pack3/pack3.tpac` (98 metameshes: `beards_c_a`,
+`beards_c_k`, `hair_male_c_b` and the rest, 50 to 3,728 vertices at LOD0) has 0 morph frames.
+
+**How they follow the face** [Likely, from the v1.5.3 decompile]. The face builder (0x56D5C0) takes the GUID of
+the head sub-mesh tagged `face_base_mesh` and hands it, with each upper mesh, through 0x572B40 to 0x56EBA0. That
+function looks up a table by the two GUIDs and, for each of the head's channels (the count read off the head),
+adds to every upper-mesh vertex the delta of one head vertex (a uint16 index per upper vertex). A missing head
+entry logs "Mapping data could not be found between base mesh and upper mesh(beard, hair, eyebrow)."; a missing
+upper entry returns silently. The same tables are packed for the GPU as the shader constant `gpu_morph_mapping`
+(0x209360), logged once per skin at load. Nothing decompiled reads an upper mesh's own channels. Where the index
+table comes from (the rest proximity of the two meshes at load, or the Kit) is UNVERIFIED.
+
+**So an upper mesh fits when its rest shape fits** the head it is built for:
+
+- Author the hair or beard on the exact LOD0 `face_base_mesh` of the skin's `face_meta_mesh`, in its rest pose, and
+  weight it to the same `head` bone. The roots sit on the skin; each vertex follows the head vertex it maps to, so a
+  strand modelled clear of the face stays clear of it at every slider value.
+- Give it no morph channels, as vanilla does.
+- A beard shared by several heads fits only the head it was modelled on; each head needs its own fitted copy.
+
+**LOTRLOME's own upper meshes differ from vanilla.** The dwarf beards in `Race Test/Beards/SK_Dwarf_Beards_geo.tpac`
+carry 101 channels (`beard_a_03` 202, `beard_a_02` none), and `sk_dwarf_beard_a_01`'s channels copy the dwarf head's
+motion at its roots (channel 46: head 5.58 mm, beard 5.61 mm; mean error under 1.6 mm on the top ten channels).
+Saruman's hair and beard came with 101 channels, zero on the head's largest ones (46: scalp 42 mm, hair 0). Whether
+the engine reads those channels at all is unproven; vanilla does not need them (Mike, 2026-09-28: follow vanilla).
+A tool that fitted them (`fit_hair_morphs.py`, 2026-09-28) was written, applied to Saruman's FBX and removed the
+same day for that reason; the live FBX keeps the fitted channels and the original is at `.bak-hairfollow`.
+
+## Eye colour
+
+A skin's `eye_color_gradient_points` are the eye slider's stops, in document order; a character stores its eye
+colour as a 0 to 1 position along them (`FaceGenerationParams.CurrentEyeColorOffset`) [Certain]. Appending stops to
+a race therefore most likely moves every existing character's colour of that race (the sampler is not decompiled),
+so a new colour goes on a race no existing character depends on: Sauron's gold and red went on `sauron`, not `elf`
+(`tools/oneoff/add_sauron_eye_colours.py`, 2026-09-28). The engine holds at most **32** stops per skin in a fixed
+array and does not clamp the count (the skin parser 0x577410, v1.5.3), so a gradient never grows past
+32. The skins XSD wants each stop unique; the engine does not check.
 
 ## Tools
 
@@ -115,6 +160,7 @@ clipboard code in `FaceGenVM`), and vanilla ships no console command for it.
 | `tools/check_race_morph_channels.py` | Reinstall gate on the FBX sources: exact channel counts |
 | `tools/check_eye_follow.py` (export: `export_face_morphs.ps1`) | Gate on the compiled package: no eye left behind |
 | `tools/oneoff/restore_adult_woman_dwarf.py` | The female dwarf's skin restore; its dry run prints the live state |
+| `tools/oneoff/add_sauron_eye_colours.py` | Gold and red stops on the `sauron` race's eye slider; `--check` exits 1 when a skin lacks them |
 
 ## What the 2026-09-26 investigation ruled out
 
@@ -139,6 +185,8 @@ as a cause until the code that consumes it, or a third asset that has the differ
 - The male eye's eyeball-only channels (60 to 63 and 15, iris and gaze) move the eye without the socket; a socket fit
   cannot reproduce them, so a fitted eye does not respond to those sliders.
 - Whether vanilla hand meshes carry the 26 channels, and which Kit panel sets the face tags.
+- Where the upper-mesh index table comes from (rest proximity at load, or the Kit), and whether LOTRLOME's
+  channels on the dwarf beards change anything in game.
 
 ## Sources
 

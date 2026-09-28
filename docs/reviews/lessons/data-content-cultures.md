@@ -1682,3 +1682,14 @@ back to 86 Blunt and speed 28, at 3.40 m reach against the mace's 3.08 m. In-gam
   surviving parts is a balance change, not just a repair", above, is the same rule for re-pointed pieces.
 - **Source:** 2026-09-26 review, lens 7 H1 and lens 4; live `LOTRLOME_crafting_pieces.xml`
   `wm_hill_troll_2h_hammer_head` (backup `.bak-hammerweight-20260926-140745`); `tools/melee_ladders.json` `exempt_troops`.
+
+### A race added to character creation for a session must come out again (2026-09-28)
+`sauron` went into Mordor's `cultures.json` races so Mike could build Sauron's face in character creation. A player
+of that race would take every system keyed on the race name (dread aura, signature strikes, combat modifiers,
+immortality with no heirs), the race has no `_facegen` action sets (the human fallback renders contorted
+parents), and its female skins carry the male body. The line was removed once the face was captured.
+- **Why missed:** the edit was treated as a test convenience; nothing gates which races a culture may offer, and
+  the snapshot README's rule that `sauron` stays NPC-only was not read before the edit.
+- **Prevent:** a race added to `cultures.json` for authoring is reverted in the same session; a permanent entry
+  needs `as_<race>_facegen` sets, correct female skins and a decision on every race-keyed system.
+- **Source:** `docs/reviews/rca-saruman-lord-and-faces-2026-09-28.md`.

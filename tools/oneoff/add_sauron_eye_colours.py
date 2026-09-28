@@ -6,13 +6,17 @@ gold eyes, the way Saruman's gradient ends in red).
 
 Only the `sauron` race is touched, never `elf`: the eye slider is stored per character as a position along the
 gradient, so points added to the elf race would likely shift every existing elf's eye colour. Each colour is added
-twice, as Saruman's red is, so the slider's end holds a flat band of it rather than a single point.
+twice, as Saruman's red is, meant to give the slider's end a band of it (the sampler is not decompiled).
+
+The engine holds at most 32 stops per skin (a fixed array, the count unclamped: skin parser 0x577410, v1.5.3),
+so a gradient that would pass 32 is refused. `--check` is the reinstall gate: it exits 1 while any sauron skin
+lacks the bands (the Armory is unversioned; a reinstall drops them) and 0 once every skin has them.
 
 Dry run by default (prints what it would add per skin); `--apply` writes a `.bak-sauron-eyes-<stamp>` backup (never
 an .xml extension: the folder is globbed), then the file, byte-faithful (LF kept, no BOM added), after checking
 the result parses. Idempotent: a skin whose gradient already ends in these points is skipped.
 
-    python tools/oneoff/add_sauron_eye_colours.py [--skins <skins.xml>] [--apply]
+    python tools/oneoff/add_sauron_eye_colours.py [--skins <skins.xml>] [--apply | --check]
 """
 import argparse
 import datetime
@@ -28,6 +32,7 @@ GOLD = "1.00, 0.72, 0.08"
 RED = "1.00, 0.01, 0.014"
 ADDED = [("Gold", GOLD), ("Gold", GOLD), ("Red", RED), ("Red", RED)]
 CLOSE = "</eye_color_gradient_points>"
+MAX_STOPS = 32
 
 
 def race_span(text, race):
@@ -66,12 +71,19 @@ def plan(text, race=RACE):
         if already(seg):
             skipped += 1
             continue
+        stops = len(re.findall(r'point="', seg)) + len(ADDED)
+        if stops > MAX_STOPS:
+            raise SystemExit("a %s skin would hold %d eye colour stops; the engine keeps %d" % (race, stops, MAX_STOPS))
         insert_at = start + m.start(2)
         indent = m.group(2) + "\t"
         out.append(text[pos:insert_at])
         out.append(block(indent, nl))
         pos = insert_at
         changed += 1
+    skins = len(re.findall(r"<skin\b", region))
+    if skins == 0 or changed + skipped < skins:
+        raise SystemExit("race %s: %d skin(s), %d eye colour gradient(s) matched; nothing reliable to check"
+                         % (race, skins, changed + skipped))
     out.append(text[pos:])
     return "".join(out), changed, skipped
 
@@ -79,12 +91,17 @@ def plan(text, race=RACE):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--skins", default=DEFAULT)
-    ap.add_argument("--apply", action="store_true")
+    mode = ap.add_mutually_exclusive_group()
+    mode.add_argument("--apply", action="store_true")
+    mode.add_argument("--check", action="store_true", help="exit 1 while any skin lacks the bands")
     args = ap.parse_args(argv)
     raw = open(args.skins, "rb").read()
     text = raw.decode("utf-8")
     new, changed, skipped = plan(text)
     print("race %s: %d skin gradient(s) to extend, %d already extended" % (RACE, changed, skipped))
+    if args.check:
+        print("FAIL: %d skin(s) lack the gold and red bands" % changed if changed else "OK")
+        return 1 if changed else 0
     if not changed:
         return 0
     ET.fromstring(new.lstrip("\ufeff").encode("utf-8"))

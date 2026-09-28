@@ -304,7 +304,6 @@ answer is conclusive and fails open in every path.
 | `taom.print_patches [filter]` | A | cheat mode | Grepping `taom_debug` for "did this category apply?" |
 | `taom.print_memory [label] [gpu]` | A | cheat mode | Nothing: **no TAOM or vanilla surface exposed the engine's own memory accounting at all.** `[MemSample]` reports OS totals on a timer; this asks the engine what those bytes are *for*, on demand, per station. Optional `label` names the station in the log; `gpu` also asks the engine for a GPU dump (the shipping client has been observed to write none, and the probe says so rather than claiming a path). Since 2026-09-12 also reports the vertex-buffer system memory and the GPU render-target / depth / SRV / buffer split, raw engine units. Mirrored into `taom_debug` under `[MemProbe]`. See [battle-load-diagnostics.md](battle-load-diagnostics.md) |
 | `taom.print_races` | A | cheat mode | — (registry + the hero's race, validated before lookup) |
-| `taom.print_face [hero_id]` | A | campaign | Nothing — v1.5.3's face editor has no copy or export action, and vanilla ships no console command for a built face. No argument reports `Hero.MainHero`; a hero string id reports that hero. Prints name, string id, race (validated before lookup), IsFemale, Age and `Hero.BodyProperties.ToString()` verbatim — the exact `<BodyProperties .../>` a lord's `<face>` needs. Every line also lands in the TAOM debug log as `[PrintFace]`, since the console text is hard to copy. See [race-face-and-hand-morphs.md](../reference/race-face-and-hand-morphs.md) "Exporting a face for a lord" |
 | `taom.career_perks` | A | campaign | Whether a career perk is doing anything (#613). Lists every passive the player holds with its consumer, the effective Damage / Resistance magnitude per hit kind, the campaign numbers that carry a Career line (max hitpoints, party speed, seeing range, party size, morale, wages, inventory, hero healing, companion limit), and in a battle the player agent's driven properties, the mount's, the consumable slots and the live buff. Every line also lands in the TAOM debug log as `[CareerPerks]`, beside the runtime lines the service writes (stat application once per change, mount application, ammo refill, per-hit amplification and reduction at DEBUG). See [career-system.md](career-system.md) "Testing a perk" |
 | `taom.print_player_state` | A | campaign | Nothing. The engine holds "who is the player" in four places updated by different code (`Hero.MainHero`, `Clan.PlayerClan`, `MobileParty.MainParty`, `Game.Current.PlayerTroop`), and a Player Switcher takeover repoints the player at an existing lord then deletes the throwaway creation hero and clan. A link left pointing at a deleted object throws nowhere the TAOM log can see, so the only symptom is that things resolving the player quietly misbehave. Reports every disagreeing link, not just the first |
 | `taom.print_battle_scene` | A | campaign | Which battle terrain a fight here loads. **Zero candidates is the money output** — the stale-scene-ref class an engine bump introduces silently |
@@ -367,8 +366,6 @@ shadow, which the command's own output says. The three destinations reported as 
 | `Main/Features/DevConsole/HarmonyPatchInspector.cs` | Reflection walk: declared categories vs what Harmony applied |
 | `Main/Features/DevConsole/PatchReportFormatter.cs` | Pure renderer for `print_patches` |
 | `Main/Features/DevConsole/Cheats/DiagnosticCheats.cs` | `print_patches`, `print_races` |
-| `Main/Features/DevConsole/FaceReportFormatter.cs` | Pure renderer for `print_face`: player-default / named-hero / unknown-id branches, and the `<BodyProperties .../>` pass-through |
-| `Main/Features/DevConsole/Cheats/FaceReportCheats.cs` | `print_face [hero_id]` — resolves `Hero.MainHero` or a hero by string id, validates the race id before lookup, renders through `FaceReportFormatter`, and writes every line to the TAOM debug log as `[PrintFace]` |
 | `Main/Features/DevConsole/InputStateDiagnosis.cs` | Pure reading of a captured input snapshot: one verdict for the focus-gated Alt path, one for the hit-test-gated map-bar path. Engine-free, so the interpretation is unit-tested directly |
 | `Main/Features/DevConsole/PlayerStateDiagnosis.cs` | Pure consistency check across the player's identity links. Reports every mismatch, since a half-finished handover breaks several at once and the first alone misleads |
 | `Main/Features/DevConsole/Cheats/PlayerStateDumpCheats.cs` | `print_player_state`: reads the links defensively, because the whole point is surviving a player state already suspected of being malformed |
@@ -408,11 +405,6 @@ only coverage.
 
 ## Changelog
 
-- **2026-09-28** — Added `taom.print_face [hero_id]` (Tier A, campaign gate) so a lord's face can be
-  exported at all: v1.5.3's face editor has no copy or export action, and vanilla ships no console
-  command for a built face. Prints `Hero.BodyProperties.ToString()` verbatim, plus name, string id,
-  race and IsFemale/Age, and mirrors every line into the TAOM debug log as `[PrintFace]` since the
-  console text is hard to copy. See [race-face-and-hand-morphs.md](../reference/race-face-and-hand-morphs.md).
 - **2026-08-07** — Added `taom.print_memory [label] [gpu]` (Tier A, cheat gate) for the commit-attribution
   matrix in `docs/investigations/native-commit-audit-2026-08.md`. Recorded above that **`RunAnywhere`
   structurally cannot serve the main-menu station** — a fact that shapes instrument design, not just

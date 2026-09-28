@@ -1199,3 +1199,16 @@ slot and draw correctly. Only the third survived a case that separates it, and f
 - **Prevent:** for every difference between a broken and a working asset, find the code that consumes it or a third
   asset that has the difference without the fault before treating it as the cause.
 - **Source:** `docs/reference/race-face-and-hand-morphs.md` "What the 2026-09-26 investigation ruled out".
+
+### Measure the vanilla asset before building a fix by analogy (2026-09-28)
+Saruman's hair floated off his scalp in game. The eye bug of the day before (a part whose morph channels stayed
+still while the head's moved) looked like the same class, so `fit_hair_morphs.py` was written, tested and applied
+to his FBX. The review then showed vanilla's beards and hair carry no morph channels at all (every one in
+`Native/EmAssetPackages/pack3/pack3.tpac`): the engine moves them with the head's channels through its own
+per-vertex table (0x56EBA0). The tool was removed the same day, and Mike ruled that vanilla is the reference.
+- **Why missed:** the fix was modelled on the last bug rather than on how the engine's own assets do it; vanilla's
+  packages were not opened until after the tool had shipped in a commit.
+- **Prevent:** before writing a fix for a custom asset part, export the vanilla part of the same kind and compare
+  its structure (channels, tags, vertex counts, rest fit); a custom asset that differs from vanilla is the
+  suspect, and a working custom asset (the dwarf beards) is not the reference when vanilla disagrees.
+- **Source:** `docs/reviews/rca-saruman-lord-and-faces-2026-09-28.md`; `docs/reference/race-face-and-hand-morphs.md` "Hair, beards and eyebrows".
