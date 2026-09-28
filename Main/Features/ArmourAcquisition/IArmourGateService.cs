@@ -33,10 +33,10 @@ public interface IArmourGateService
     string GetName(string itemId);
 
     /// <summary>
-    /// Loaded class-table pieces of one class, optionally of one culture, sorted by id. Never a piece
-    /// classed only by its engine tier (a vanilla Calradian piece).
+    /// Loaded class-table pieces of one class, optionally of one culture and one worn slot (null: any), sorted
+    /// by id. Never a piece classed only by its engine tier (a vanilla Calradian piece).
     /// </summary>
-    IReadOnlyList<string> GetPieces(ArmourClass cls, string? cultureId);
+    IReadOnlyList<string> GetPieces(ArmourClass cls, string? cultureId, ArmourSlot? slot = null);
 
     /// <summary>
     /// Whether a market of a town at <paramref name="townLevel"/> may stock the item. With gating off,

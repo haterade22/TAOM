@@ -87,11 +87,15 @@ public class ArmourAcquisitionWiringTests
         var types = module.CampaignBehaviors.Select(d => d.BehaviorType).ToList();
         CollectionAssert.AreEquivalent(new[]
         {
-            typeof(ArmourAcquisitionCampaignBehavior), typeof(ArmouryMenuBehavior), typeof(LordHarnessQuestBehavior),
+            typeof(ArmourAcquisitionCampaignBehavior), typeof(ArmouryMenuBehavior), typeof(LordsLadderBehavior),
             typeof(LordHarnessEventBehavior),
         }, types);
+        CollectionAssert.AreEqual(new[] { typeof(HeroKillCounterMissionLogic) },
+            module.MissionBehaviors.Select(d => d.BehaviorType).ToArray(), "the ladder's kill counter joins every mission");
         foreach (var decl in module.CampaignBehaviors)
             Assert.IsInstanceOfType(decl.Create(container), decl.BehaviorType);
+        // The runner starts it with failClosed false, so a factory that throws would silently drop the counter.
+        Assert.IsInstanceOfType(module.MissionBehaviors.Single().Create(null!, container), typeof(HeroKillCounterMissionLogic));
         Assert.IsInstanceOfType(container.Resolve<IMarketplaceStockGate>(), typeof(ArmourMarketplaceGate));
         Assert.IsNotNull(container.Resolve<IArmourGateService>());
     }

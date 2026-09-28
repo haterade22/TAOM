@@ -60,7 +60,7 @@ public sealed class ArmourAcquisitionConfig
         IReadOnlyCollection<string> namedWeapons,
         float lordEventChance, int lordEventCooldownDays, int lordEventLeaveRelation,
         float visitChancePerDay, int visitDurationDays, int visitLevelBonus,
-        int harnessOfferCooldownDays)
+        LordsLadderConfig ladder)
     {
         Enabled = enabled;
         HeavyLevel = heavyLevel;
@@ -74,7 +74,7 @@ public sealed class ArmourAcquisitionConfig
         VisitChancePerDay = visitChancePerDay;
         VisitDurationDays = visitDurationDays;
         VisitLevelBonus = visitLevelBonus;
-        HarnessOfferCooldownDays = harnessOfferCooldownDays;
+        Ladder = ladder;
     }
 
     public bool Enabled { get; }
@@ -89,7 +89,10 @@ public sealed class ArmourAcquisitionConfig
 
     public IReadOnlyDictionary<ArmourClass, UpgradeRecipe> Recipes { get; }
 
-    /// <summary>Weapon ids treated as named: never sold, looted or awarded.</summary>
+    /// <summary>
+    /// Weapon and shield ids treated as named: never sold or looted. The ladder's weapon rung awards the named
+    /// weapons (Mike, 2026-09-28).
+    /// </summary>
     public IReadOnlyCollection<string> NamedWeapons { get; }
 
     public float LordEventChance { get; }
@@ -104,7 +107,8 @@ public sealed class ArmourAcquisitionConfig
 
     public int VisitLevelBonus { get; }
 
-    public int HarnessOfferCooldownDays { get; }
+    /// <summary>The lord's gear ladder (#693): its rungs, the lord's materials and the weapon rung's picks.</summary>
+    public LordsLadderConfig Ladder { get; }
 
     /// <summary>The armoury level a town needs for <paramref name="target"/>: 0 for light and medium.</summary>
     public int RequiredLevel(ArmourClass target) => target switch
@@ -139,5 +143,41 @@ public sealed class ArmourAcquisitionConfig
         },
         lordEventChance: 0.08f, lordEventCooldownDays: 90, lordEventLeaveRelation: 5,
         visitChancePerDay: 0.04f, visitDurationDays: 7, visitLevelBonus: 1,
-        harnessOfferCooldownDays: 30);
+        ladder: DefaultLadder());
+
+    // Mike's placeholder numbers (#693, 2026-09-28), as the shipped config lists them.
+    private static LordsLadderConfig DefaultLadder()
+    {
+        var steps = new[]
+        {
+            new LadderStep(LadderSlot.Hands, "taom_lords_gear_hands", 10),
+            new LadderStep(LadderSlot.Legs, "taom_lords_gear_legs", 15),
+            new LadderStep(LadderSlot.Shoulders, "taom_lords_gear_shoulders", 20),
+            new LadderStep(LadderSlot.Head, "taom_lords_gear_head", 30),
+            new LadderStep(LadderSlot.Body, "taom_lords_gear_body", 40),
+            new LadderStep(LadderSlot.Weapon, "taom_lords_gear_weapon", 60),
+        };
+        var materials = new Dictionary<string, string>(StringComparer.Ordinal);
+        foreach (var culture in new[] { "gondor", "vlandia", "erebor", "sturgia", "rivendell", "mirkwood", "mordor",
+                     "isengard", "dolguldur", "gundabad", "khuzait", "aserai", "empire" })
+            materials[culture] = "taom_lords_material_" + culture;
+        var weapons = new Dictionary<string, IReadOnlyList<string>>(StringComparer.Ordinal)
+        {
+            ["gondor"] = new[] { "anduril", "strider_sword", "glamdring_sword", "wm_gondor_boromir_sword", "wm_gondor_faramir_sword" },
+            ["vlandia"] = new[] { "theoden_sword", "eomer_sword", "eowyn_sword" },
+            ["mordor"] = new[] { "wm_sauron_mace", "witchking_sword", "nazgul_sword" },
+            ["mirkwood"] = new[] { "wm_legolas_sword", "wm_thranduil_sword" },
+            ["erebor"] = new[] { "sm_dwarf_dain_hammer_a", "sm_dwarf_dain_axe_a" },
+            ["rivendell"] = new[] { "wm_fingon_sword", "wm_turin_sword", "wm_celegorm_sword" },
+            ["sturgia"] = new[] { "dale_halberd_b", "dale_war_spear_a" },
+            ["isengard"] = new[] { "isengard_berserker_sword_2h", "isengard_2h_axe_c" },
+            ["dolguldur"] = new[] { "wm_dol_goldur_halberd_a05", "wm_dol_goldur_2h_mace_a02" },
+            ["gundabad"] = new[] { "wm_gundabad_sword_a04", "wm_gundabad_mace_a02" },
+            ["khuzait"] = new[] { "sm_rh_drag_sword_2h_a", "sm_rh_loke_sword_2h_a" },
+            ["aserai"] = new[] { "wm_harad_sword_a02", "wm_harad_spear_b02" },
+            ["empire"] = new[] { "dunland_caerdh_axe_1h_d", "dunland_caerdh_spear_o" },
+        };
+        return new LordsLadderConfig(steps, countsKnockouts: true, materials,
+            new MaterialDrop(baseChance: 0.1f, chancePerTenKills: 0.01f, maxChance: 0.6f, minUnits: 1, maxUnits: 3), weapons);
+    }
 }

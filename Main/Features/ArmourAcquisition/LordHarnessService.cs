@@ -1,95 +1,29 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using TAOM.Adapters;
 using TAOM.Features.ArmourAcquisition.Domain;
 using TAOM.Features.CultureMarketplace;
 
 namespace TAOM.Features.ArmourAcquisition;
 
 /// <summary>
-/// The quest and event routes to lord kit (docs/features/armour-acquisition.md; Mike, 2026-09-27: forge,
-/// quest and event, all three). "The Lord's Harness" is one career-quest definition in
-/// taom_career_quests.xml (<see cref="QuestId"/>, three objectives in any order), run by the CareerQuest
-/// shell; whether it is running is the quest manager's to say, so the only state here is per hero: ready
-/// to claim, then claimed. The claim happens at an armoury of the lord level. "A Lord's Harness Unclaimed"
-/// is the post-battle event. Both hand out a piece of the right culture's lord kit
-/// (<see cref="LordPieceChoices"/>).
+/// "A Lord's Harness Unclaimed", the event route to lord kit (docs/features/armour-acquisition.md): after a
+/// battle won against lords, a rare find among the spoils. The quest route is the lord's gear ladder
+/// (<see cref="LordsLadderService"/>, #693); the forge is the armoury bench.
 /// </summary>
 public sealed class LordHarnessService
 {
-    /// <summary>The career-quest definition id, and its career_id, which names no career.</summary>
-    public const string QuestId = "taom_lords_harness";
-
     private readonly ArmourAcquisitionState _state;
     private readonly IArmourAcquisitionConfigProvider _config;
     private readonly IArmourGateService _gate;
-    private readonly IArmouryPlayerAdapter _player;
     private readonly ICultureMarketplaceConfigProvider _marketplace;
 
     public LordHarnessService(ArmourAcquisitionState state, IArmourAcquisitionConfigProvider config, IArmourGateService gate,
-        IArmouryPlayerAdapter player, ICultureMarketplaceConfigProvider marketplace)
+        ICultureMarketplaceConfigProvider marketplace)
     {
         _state = state;
         _config = config;
         _gate = gate;
-        _player = player;
         _marketplace = marketplace;
-    }
-
-    public int Stage(string heroId) => _state.HarnessStage.TryGetValue(heroId, out var stage) ? stage : 0;
-
-    /// <summary>
-    /// Offer the quest to the main hero: not running, never completed, no recent refusal, an armoury of the
-    /// lord level in a town of the hero's own culture, and an elite piece carried or worn (checked last: it
-    /// reads the whole inventory).
-    /// </summary>
-    public bool ShouldOffer(string heroId, int today, int townLevel, bool townIsHeroCulture, bool questRunning)
-    {
-        if (questRunning || Stage(heroId) != 0 || !townIsHeroCulture)
-            return false;
-        var config = _config.GetConfig();
-        if (townLevel < config.LordLevel)
-            return false;
-        if (_state.HarnessDeclinedDay.TryGetValue(heroId, out var declined) && today - declined < config.HarnessOfferCooldownDays)
-            return false;
-        return _player.ReadInventory().Select(p => p.ItemId).Concat(_player.ReadEquippedItemIds())
-            .Any(id => _gate.GetClass(id) == ArmourClass.Elite);
-    }
-
-    public void Decline(string heroId, int today) => _state.HarnessDeclinedDay[heroId] = today;
-
-    public void OnAccepted(string heroId) => _state.HarnessDeclinedDay.Remove(heroId);
-
-    /// <summary>
-    /// The quest ended. Success readies the harness for the quest's owner, the hero who accepted it, even
-    /// when the player has since switched hero. Returns true when it did.
-    /// </summary>
-    public bool OnQuestEnded(string ownerHeroId, bool success)
-    {
-        if (!success || string.IsNullOrEmpty(ownerHeroId) || Stage(ownerHeroId) != 0)
-            return false;
-        _state.HarnessStage[ownerHeroId] = ArmourAcquisitionState.HarnessReady;
-        return true;
-    }
-
-    public bool IsReadyToClaim(string heroId) => Stage(heroId) == ArmourAcquisitionState.HarnessReady;
-
-    public bool CanClaimAt(int townLevel) => townLevel >= _config.GetConfig().LordLevel;
-
-    /// <summary>
-    /// Fits the main hero with one piece of their lord kit: gives the piece, then marks the harness claimed.
-    /// A piece that is not one of the hero's choices, or cannot be given, leaves the harness claimable.
-    /// </summary>
-    public bool Claim(string itemId)
-    {
-        var heroId = _player.HeroId;
-        if (!IsReadyToClaim(heroId) || !LordPieceChoices(_player.CultureId).Contains(itemId))
-            return false;
-        if (!_player.AddPiece(itemId, null, 1))
-            return false;
-        _state.HarnessStage[heroId] = ArmourAcquisitionState.HarnessClaimed;
-        return true;
     }
 
     /// <summary>
@@ -115,7 +49,7 @@ public sealed class LordHarnessService
     }
 
     /// <summary>
-    /// "A Lord's Harness Unclaimed": after a battle the player's side won against lords (their cultures in
+    /// After a battle the player's side won against lords (their cultures in
     /// <paramref name="defeatedLordCultureIds"/>), off cooldown, a rare roll finds one lord's harness among
     /// the spoils. Returns which lord and which piece, and stamps the cooldown, or null.
     /// </summary>

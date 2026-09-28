@@ -117,12 +117,13 @@ public sealed class ArmourGateService : IArmourGateService
 
     public string GetName(string itemId) => _catalog.GetName(itemId);
 
-    public IReadOnlyList<string> GetPieces(ArmourClass cls, string? cultureId) =>
+    public IReadOnlyList<string> GetPieces(ArmourClass cls, string? cultureId, ArmourSlot? slot = null) =>
         _classById
             .Where(kv => kv.Value == cls
                          && _entries.ContainsKey(kv.Key)
                          && (cultureId == null
-                             || string.Equals(GetRecord(kv.Key)?.CultureId, cultureId, StringComparison.OrdinalIgnoreCase)))
+                             || string.Equals(GetRecord(kv.Key)?.CultureId, cultureId, StringComparison.OrdinalIgnoreCase))
+                         && (slot == null || GetRecord(kv.Key)?.Slot == slot))
             .Select(kv => kv.Key)
             .OrderBy(id => id, StringComparer.Ordinal)
             .ToList();

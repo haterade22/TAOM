@@ -98,6 +98,7 @@ public class CareerQuestServiceTests
     [DataRow(CareerQuestObjectiveType.TournamentsWon, 0, 1, 1)]
     [DataRow(CareerQuestObjectiveType.DefeatEnemyLords, 7, 2, 9)]
     [DataRow(CareerQuestObjectiveType.VisitSettlementType, 3, 1, 4)]
+    [DataRow(CareerQuestObjectiveType.HeroKills, 40, 23, 63)]
     public void ComputeProgress_CountObjective_Accumulates(CareerQuestObjectiveType type, int current, int observed, int expected)
     {
         Assert.AreEqual(expected, _sut.ComputeProgress(type, current, observed));

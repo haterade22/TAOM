@@ -1,5 +1,16 @@
 namespace TAOM.Features.ArmourAcquisition.Domain;
 
+/// <summary>The armour slot a character piece is worn in; None for anything that is not character armour.</summary>
+public enum ArmourSlot
+{
+    None,
+    Head,
+    Cape,
+    Body,
+    Hand,
+    Leg,
+}
+
 /// <summary>
 /// One loaded item as the gate sees it, read once per game init by <c>IArmourItemCatalogAdapter</c>
 /// (items reload from XML with every game, so the snapshot does too). <see cref="IsMerchandise"/> is
@@ -7,11 +18,11 @@ namespace TAOM.Features.ArmourAcquisition.Domain;
 /// </summary>
 public sealed class ArmourItemRecord
 {
-    public ArmourItemRecord(string itemId, bool isCharacterArmour, int engineTier, bool isMerchandise,
+    public ArmourItemRecord(string itemId, ArmourSlot slot, int engineTier, bool isMerchandise,
         string? cultureId, int value)
     {
         ItemId = itemId;
-        IsCharacterArmour = isCharacterArmour;
+        Slot = slot;
         EngineTier = engineTier;
         IsMerchandise = isMerchandise;
         CultureId = cultureId;
@@ -20,8 +31,11 @@ public sealed class ArmourItemRecord
 
     public string ItemId { get; }
 
+    /// <summary>The slot a character wears the piece in; None for anything else (horse harness included).</summary>
+    public ArmourSlot Slot { get; }
+
     /// <summary>Head, body, leg, hand or cape armour: the slots a character wears. Horse harness is not.</summary>
-    public bool IsCharacterArmour { get; }
+    public bool IsCharacterArmour => Slot != ArmourSlot.None;
 
     /// <summary><c>(int)ItemObject.Tier</c>: Tier1 = 0 ... Tier6 = 5; -1 for a Tierf under 0.5.</summary>
     public int EngineTier { get; }

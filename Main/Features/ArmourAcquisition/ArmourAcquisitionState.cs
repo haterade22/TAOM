@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using TAOM.Features.ArmourAcquisition.Domain;
 
 namespace TAOM.Features.ArmourAcquisition;
 
@@ -15,20 +16,20 @@ public sealed class ArmourAcquisitionState
 {
     public const int Version = 1;
 
-    /// <summary>
-    /// The Lord's Harness per hero: absent while the quest has not been completed (whether it is running
-    /// is the quest manager's to say), then ready to claim, then claimed.
-    /// </summary>
-    public const int HarnessReady = 1;
-
-    public const int HarnessClaimed = 2;
-
     private const char Separator = '|';
 
-    public Dictionary<string, int> HarnessStage { get; } = new(StringComparer.Ordinal);
+    /// <summary>
+    /// The lord's gear ladder per hero: which rungs are claimed, one bit per <c>LadderSlot</c> value (absent:
+    /// none), so a config that reorders or drops a rung leaves every hero at their first unclaimed one. Whether
+    /// a rung's quest is running is the quest manager's to say.
+    /// </summary>
+    public Dictionary<string, int> LadderClaimed { get; } = new(StringComparer.Ordinal);
 
-    /// <summary>The day each hero last declined the quest offer.</summary>
-    public Dictionary<string, int> HarnessDeclinedDay { get; } = new(StringComparer.Ordinal);
+    /// <summary>
+    /// The rungs each hero has done (by deeds or by materials) and not yet claimed, one bit per <c>LadderSlot</c>
+    /// value like <see cref="LadderClaimed"/>: a rung's readiness stays with its slot whatever the config does.
+    /// </summary>
+    public Dictionary<string, int> LadderReady { get; } = new(StringComparer.Ordinal);
 
     /// <summary>The day each hero last saw the Lord's Harness event.</summary>
     public Dictionary<string, int> LordEventLastDay { get; } = new(StringComparer.Ordinal);
@@ -38,8 +39,8 @@ public sealed class ArmourAcquisitionState
 
     public void Reset()
     {
-        HarnessStage.Clear();
-        HarnessDeclinedDay.Clear();
+        LadderClaimed.Clear();
+        LadderReady.Clear();
         LordEventLastDay.Clear();
         VisitUntilDay.Clear();
     }
@@ -47,8 +48,8 @@ public sealed class ArmourAcquisitionState
     public Dictionary<string, string> Encode()
     {
         var data = new Dictionary<string, string> { ["v"] = Version.ToString(CultureInfo.InvariantCulture) };
-        Write(data, "stage", HarnessStage);
-        Write(data, "declined", HarnessDeclinedDay);
+        Write(data, "rung", LadderClaimed);
+        Write(data, "ready", LadderReady);
         Write(data, "event", LordEventLastDay);
         Write(data, "visit", VisitUntilDay);
         return data;
@@ -69,27 +70,28 @@ public sealed class ArmourAcquisitionState
                 continue;
             var kind = pair.Key.Substring(0, cut);
             var id = pair.Key.Substring(cut + 1);
-            var target = Target(kind);
-            if (target == null)
+            if (!IsKnown(kind))
                 continue;
             if (!int.TryParse(pair.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value)
-                || (kind == "stage" && value != HarnessReady && value != HarnessClaimed))
+                || (kind is "rung" or "ready" && (value < 0 || value > LadderSlotRules.AllBits)))
             {
                 skipped++;
                 continue;
             }
-            target[id] = value;
+            Target(kind)[id] = value;
         }
         return skipped;
     }
 
-    private Dictionary<string, int>? Target(string kind) => kind switch
+    private static bool IsKnown(string kind) => kind is "rung" or "ready" or "event" or "visit";
+
+    private Dictionary<string, int> Target(string kind) => kind switch
     {
-        "stage" => HarnessStage,
-        "declined" => HarnessDeclinedDay,
+        "rung" => LadderClaimed,
+        "ready" => LadderReady,
         "event" => LordEventLastDay,
         "visit" => VisitUntilDay,
-        _ => null,
+        _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, "not a saved dictionary kind"),
     };
 
     private static void Write(Dictionary<string, string> data, string kind, Dictionary<string, int> values)

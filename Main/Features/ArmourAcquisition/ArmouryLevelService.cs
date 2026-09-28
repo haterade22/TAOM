@@ -8,7 +8,7 @@ namespace TAOM.Features.ArmourAcquisition;
 /// A town's armoury level: its Barracks level (Mike's choice for KEYforce's "armoury or some building
 /// in that settlement is tier X-Y-Z"; engine state, so no save data and AI construction raises it too)
 /// plus a visiting master armourer's bonus, clamped to 0 to 3. The one place every reader (the market
-/// gate, the daily sweep, the armoury, the Lord's Harness offer) asks.
+/// gate, the daily sweep, the armoury and its ladder claim) asks.
 /// </summary>
 public sealed class ArmouryLevelService
 {

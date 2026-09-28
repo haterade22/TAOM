@@ -100,6 +100,42 @@ public class LotrIssueConfigProviderTests
         => Assert.AreEqual(0, Parse("<LotrIssues><LotrIssue id='x' template='DeliverGoods' giver_occupation='Headman' count='5' title_key='t' /></LotrIssues>").Count);
 
     [TestMethod]
+    public void ParseIssues_ForPlayerCulture_IsRead_AndDefaultsToFalse()
+    {
+        var flagged = Parse(Doc("for_player_culture='true'"));
+        var plain = Parse(Doc(""));
+        var garbled = Parse(Doc("for_player_culture='maybe'"));
+
+        Assert.IsTrue(flagged[0].ForPlayerCulture);
+        Assert.IsFalse(plain[0].ForPlayerCulture);
+        Assert.AreEqual(1, garbled.Count, "a bad flag does not cost the issue");
+        Assert.IsFalse(garbled[0].ForPlayerCulture);
+    }
+
+    [TestMethod]
+    public void ParseIssues_RewardCount_IsRead_AndDefaultsToOne()
+    {
+        // The lord's gear ladder's notable quests pay several lord's materials (#693).
+        var counted = Parse(Doc("").Replace("reward_item=''", "reward_item='m_gondor' reward_count='4'"));
+        var single = Parse(Doc("").Replace("reward_item=''", "reward_item='m_gondor'"));
+
+        Assert.AreEqual(4, counted[0].RewardItemCount);
+        Assert.AreEqual(1, single[0].RewardItemCount);
+    }
+
+    [DataTestMethod]
+    [DataRow("0")]
+    [DataRow("100")]
+    [DataRow("many")]
+    public void ParseIssues_RewardCountOutOfRange_IsOne(string raw)
+    {
+        var list = Parse(Doc("").Replace("reward_item=''", $"reward_item='m_gondor' reward_count='{raw}'"));
+
+        Assert.AreEqual(1, list.Count, "a bad count does not cost the issue");
+        Assert.AreEqual(1, list[0].RewardItemCount);
+    }
+
+    [TestMethod]
     public void ParseIssues_NegativeRewardGold_CoercedToZero()
     {
         var list = Parse(Doc("").Replace("reward_gold_base='0'", "reward_gold_base='-50'"));
@@ -215,8 +251,9 @@ public class LotrIssueConfigProviderTests
         Assert.IsTrue(File.Exists(path), $"shipped config not found at {path}");
 
         var list = _sut.ParseIssues(XDocument.Load(path));
-        // 43 LOTR issues + 18 "Armourer's Commission" rows (armour acquisition, one per culture group).
-        Assert.AreEqual(61, list.Count, "every shipped issue must pass validation (none silently dropped)");
+        // 43 LOTR issues + 18 "Armourer's Commission" rows (armour acquisition, one per culture group)
+        // + 13 "Deep Seam" rows (the lord's gear ladder's materials, one per culture that owns armour, #693).
+        Assert.AreEqual(74, list.Count, "every shipped issue must pass validation (none silently dropped)");
         foreach (var d in list)
         {
             Assert.IsTrue(

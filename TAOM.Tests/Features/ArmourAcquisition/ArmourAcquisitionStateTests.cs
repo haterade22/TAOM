@@ -17,8 +17,8 @@ public class ArmourAcquisitionStateTests
     private static ArmourAcquisitionState Populated()
     {
         var state = new ArmourAcquisitionState();
-        state.HarnessStage["main_hero"] = ArmourAcquisitionState.HarnessReady;
-        state.HarnessDeclinedDay["main_hero"] = 40;
+        state.LadderClaimed["main_hero"] = 2;
+        state.LadderReady["main_hero"] = 4;   // the shoulders rung is done
         state.LordEventLastDay["main_hero"] = 77;
         state.VisitUntilDay["town_G1"] = 120;
         return state;
@@ -30,8 +30,8 @@ public class ArmourAcquisitionStateTests
         var restored = new ArmourAcquisitionState();
         restored.Decode(Populated().Encode());
 
-        Assert.AreEqual(ArmourAcquisitionState.HarnessReady, restored.HarnessStage["main_hero"]);
-        Assert.AreEqual(40, restored.HarnessDeclinedDay["main_hero"]);
+        Assert.AreEqual(2, restored.LadderClaimed["main_hero"]);
+        Assert.AreEqual(4, restored.LadderReady["main_hero"]);
         Assert.AreEqual(77, restored.LordEventLastDay["main_hero"]);
         Assert.AreEqual(120, restored.VisitUntilDay["town_G1"]);
     }
@@ -43,7 +43,8 @@ public class ArmourAcquisitionStateTests
 
         state.Decode(new Dictionary<string, string> { ["v"] = "1" });
 
-        Assert.AreEqual(0, state.HarnessStage.Count);
+        Assert.AreEqual(0, state.LadderClaimed.Count);
+        Assert.AreEqual(0, state.LadderReady.Count);
         Assert.AreEqual(0, state.VisitUntilDay.Count);
     }
 
@@ -55,6 +56,7 @@ public class ArmourAcquisitionStateTests
         state.Decode(null);
 
         Assert.AreEqual(0, state.LordEventLastDay.Count);
+        Assert.AreEqual(0, state.LadderReady.Count);
     }
 
     [TestMethod]
@@ -64,35 +66,41 @@ public class ArmourAcquisitionStateTests
 
         var skipped = state.Decode(new Dictionary<string, string>
         {
-            ["stage|main_hero"] = "two",
+            ["rung|main_hero"] = "two",
             ["visit|town_A"] = "12",
         });
 
         Assert.AreEqual(1, skipped);
-        Assert.IsFalse(state.HarnessStage.ContainsKey("main_hero"));
+        Assert.IsFalse(state.LadderClaimed.ContainsKey("main_hero"));
         Assert.AreEqual(12, state.VisitUntilDay["town_A"]);
     }
 
     [DataTestMethod]
-    [DataRow("0")]
-    [DataRow("3")]
-    [DataRow("9")]
-    public void Decode_HarnessStageNeitherReadyNorClaimed_IsSkipped(string raw)
+    [DataRow("rung", "-1")]
+    [DataRow("rung", "64")]
+    [DataRow("ready", "-1")]
+    [DataRow("ready", "64")]
+    public void Decode_AMaskOutsideTheSixSlots_IsSkipped(string kind, string raw)
     {
+        // Claimed and done rungs alike: one bit per ladder slot, six slots, 0 to 63.
         var state = new ArmourAcquisitionState();
 
-        var skipped = state.Decode(new Dictionary<string, string> { ["stage|h"] = raw });
+        var skipped = state.Decode(new Dictionary<string, string> { [kind + "|h"] = raw });
 
         Assert.AreEqual(1, skipped);
-        Assert.IsFalse(state.HarnessStage.ContainsKey("h"));
+        Assert.IsFalse(state.LadderClaimed.ContainsKey("h") || state.LadderReady.ContainsKey("h"));
     }
 
     [TestMethod]
     public void Decode_UnknownKeys_AreIgnoredNotCounted()
     {
+        // "stage" and "declined" were the one-quest Lord's Harness, which never shipped; "swept" an older latch.
         var state = new ArmourAcquisitionState();
 
-        var skipped = state.Decode(new Dictionary<string, string> { ["future|x"] = "1", ["v"] = "2", ["swept"] = "1" });
+        var skipped = state.Decode(new Dictionary<string, string>
+        {
+            ["future|x"] = "1", ["v"] = "2", ["swept"] = "1", ["stage|h"] = "1", ["declined|h"] = "5",
+        });
 
         Assert.AreEqual(0, skipped);
     }
@@ -104,7 +112,7 @@ public class ArmourAcquisitionStateTests
 
         state.Reset();
 
-        Assert.AreEqual(0, state.HarnessStage.Count + state.HarnessDeclinedDay.Count + state.LordEventLastDay.Count + state.VisitUntilDay.Count);
+        Assert.AreEqual(0, state.LadderClaimed.Count + state.LadderReady.Count + state.LordEventLastDay.Count + state.VisitUntilDay.Count);
     }
 
     [TestMethod]

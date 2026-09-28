@@ -35,13 +35,11 @@ internal sealed class ArmourAcquisitionModule : TaomFeatureModule
             r.Resolve<IArmourGateService>(),
             r.Resolve<ArmouryLevelService>(),
             r.Resolve<IArmouryTownAdapter>())),
-        CampaignBehaviorDecl.Of(r => new LordHarnessQuestBehavior(
-            r.Resolve<LordHarnessService>(),
+        CampaignBehaviorDecl.Of(r => new LordsLadderBehavior(
+            r.Resolve<LordsLadderService>(),
+            r.Resolve<HeroKillTally>(),
             r.Resolve<IArmourGateService>(),
-            r.Resolve<ArmouryLevelService>(),
-            r.Resolve<IArmouryTownAdapter>(),
             r.Resolve<IArmouryPlayerAdapter>(),
-            r.Resolve<CareerSystem.ICareerQuestService>(),
             r.Resolve<IArmourAcquisitionConfigProvider>(),
             r.Resolve<ICoopSessionProvider>(),
             r.Resolve<IDedicatedServerProvider>(),
@@ -67,4 +65,16 @@ internal sealed class ArmourAcquisitionModule : TaomFeatureModule
         ArmourAcquisitionIoC.RegisterArmourAcquisitionFeature(registrator);
 
     public override IReadOnlyList<CampaignBehaviorDecl> CampaignBehaviors => Behaviors;
+
+    // The lord's gear ladder's kill counter (#693), in every mission; it counts only in a campaign battle of
+    // the player's encounter, and only while the gate is on.
+    private static readonly MissionBehaviorDecl[] Missions =
+    {
+        MissionBehaviorDecl.Of((_, r) => new HeroKillCounterMissionLogic(
+            r.Resolve<HeroKillTally>(),
+            r.Resolve<IArmourAcquisitionConfigProvider>().GetConfig().Ladder.CountsKnockouts,
+            r.Resolve<IArmourGateService>().IsActive && HeroKillCounterMissionLogic.IsCampaignBattle())),
+    };
+
+    public override IReadOnlyList<MissionBehaviorDecl> MissionBehaviors => Missions;
 }

@@ -57,6 +57,18 @@ public class CareerQuestConfigProviderTests
     }
 
     [TestMethod]
+    public void ParseQuests_HeroKillsObjective_Loads()
+    {
+        // The lord's gear ladder (#693): the enemies the hero strikes down with their own hand.
+        var quests = Parse("<R><CareerQuest id='q' career_id='q' tier='1'><Objectives>" +
+                           "<Objective type='HeroKills' target='100' task_key='{=k}kills' /></Objectives></CareerQuest></R>");
+
+        Assert.AreEqual(1, quests.Count);
+        Assert.AreEqual(CareerQuestObjectiveType.HeroKills, quests[0].Objectives[0].Type);
+        Assert.AreEqual(100, quests[0].Objectives[0].Target);
+    }
+
+    [TestMethod]
     public void ParseQuests_MissingId_Skipped()
         => Assert.AreEqual(0, Parse("<R><CareerQuest career_id='c' tier='1'><Objectives><Objective type='WinBattles' target='5'/></Objectives></CareerQuest></R>").Count);
 
