@@ -833,3 +833,13 @@ sweep test passed `null!`, so no test could tell two towns apart.
   adapter returns ids, not engine objects (resolve by id inside it, guarding `Settlement.Find`'s unguarded
   `MBObjectManager.Instance`). When the nearest precedent takes the sealed type, it is debt to cite, not a licence.
 - **Source:** `docs/reviews/rca-armour-acquisition-2026-09-27.md` row 1 (Standards, adversarial Step 2b).
+
+### In an agent callback, return on the managed identity check before any native agent read
+The ladder's kill counter passed `affectedAgent.IsEnemyOf(hero)` as an argument to a pure rule, so the native call
+(`MBAPI.IMBAgent.IsEnemy` on both agents' pointers) ran for every human removal in the battle, against a cached hero
+agent whose native struct may already be deleted: `Mission.OnAgentDeleted` keeps the managed object and its pointer
+until `Agent.Clear` at mission end.
+- **Why missed:** the rule was made pure for testing, which forced eager evaluation of every argument.
+- **Prevent:** gate agent callbacks on managed identity (`affector == hero`, a mount's managed `RiderAgent`) before
+  any flag or native read; pass the costly check only on the path that needs it.
+- **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` row 5 (Engine, Data flow A).

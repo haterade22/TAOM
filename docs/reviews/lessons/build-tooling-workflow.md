@@ -3137,3 +3137,14 @@ finding nothing, the pass returned no issue and the validator printed PASS.
 - **Prevent:** every gate that delegates to another tool compares the root that tool reads with the root it was asked
   to check, and reports "NOT verified" on a mismatch, an empty result or an exception. Test the mismatch.
 - **Source:** `docs/reviews/rca-armour-acquisition-2026-09-27.md` row 4 (Tooling).
+
+### A scanned registry keys a definition on the document the engine loads, never on an element's shape
+`taom_schema._scan` took every `<Item id>` row in any ModuleData XML as an item definition. Phase one of armour
+acquisition added the first TAOM files whose rows share that shape (the armour config's `<NamedWeapons>` and the
+2,860-row `armour_classes.xml`), so those ids defined themselves: the named-weapon check and 15 ladder weapon picks
+could never fail, and a troop wearing a retired piece the class table still listed passed `BROKEN_ITEM_REF`.
+- **Why missed:** the registry was correct for every file that existed when it was written; the gate's own tests
+  used a mocked registry, so nothing ran it over a config that quotes ids.
+- **Prevent:** a registry built by scanning counts only the documents the engine loads as that type (an `<Items>`
+  root for items), and a test builds the REAL registry over a fixture that quotes an id in a config.
+- **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` row 1 (Tooling).

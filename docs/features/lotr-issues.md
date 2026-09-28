@@ -9,9 +9,17 @@
 > follow are the original research deliverable, kept for provenance. Engine mechanics are documented in
 > [issue-and-quest-system.md](../reference/engine/issue-and-quest-system.md).
 >
-> Since 2026-09-27 the shipped file holds 61 issues: the 43 plus 18 "Armourer's Commission" DeliverGoods rows
+> Since 2026-09-28 the shipped file holds 74 issues: the 43, 18 "Armourer's Commission" DeliverGoods rows
 > from [armour acquisition](armour-acquisition.md) (an artisan trades a heavy chest of the town's people for
-> steel, through the template's until-then unused `reward_item`).
+> steel, through the template's until-then unused `reward_item`), and 13 "Deep Seam" rows for its lord's
+> gear ladder (a village headman pays five of the culture's lord's materials for timber: `reward_count`,
+> how many of `reward_item` completion grants, 1 to 99, default 1).
+>
+> `for_player_culture="true"` offers a row only while the player, not only the giver, is of one of its
+> `cultures`, and an untaken offer is withdrawn once that stops being true: a new campaign creates its
+> first issues before character creation, and a hero switch can change the player's culture. Every
+> template honours it (`LotrIssueDefinition.OffersTo`, checked by the offer and by
+> `IssueStayAliveConditions`, which the engine runs each day and when the player enters the settlement).
 
 ## Overview
 

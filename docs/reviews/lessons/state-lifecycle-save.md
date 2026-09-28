@@ -893,3 +893,22 @@ Switcher change or a throwing start stranded it for good.
   else writes that world; if anything does, enforce it periodically. Derive "is it running" from the engine's own
   list (`QuestManager.Quests`) and key completion on the quest's owner, not `Hero.MainHero`.
 - **Source:** `docs/reviews/rca-armour-acquisition-2026-09-27.md` rows 7 and 10 (Design, Data flow B).
+
+### Scope a running-quest check the way the state it guards is scoped
+The ladder's rungs are per hero, but taking one up checked for anyone's running quest on it, while crediting and
+the hand-in looked only at the main hero's. A CareerQuest is a special quest, which `QuestManager.OnPlayerCharacterChanged`
+never cancels, so after a Player Switcher change the old hero's rung quest blocked the new hero for good.
+- **Why missed:** the check came from the one-quest Lord's Harness ("a second would share the first's quest id"),
+  and that premise was never re-derived: the quest list is a plain list, and the engine keys only map markers by id.
+- **Prevent:** when state is per hero, every "is it running" check filters on the same owner; test the start, the
+  credit and the hand-in with two owners. A repeat of the career-quest dedup fix (Codex P2, 2026-08-01).
+- **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` row 2 (Data flow A).
+
+### Never delete a shipped CareerQuest definition
+A running `CareerQuest` whose definition is gone from `taom_career_quests.xml` at load becomes a silent zombie:
+`InitializeQuestOnGameLoad` finds no definition, `RegisterEvents` returns early, nothing logs, and the quest sits in
+the journal for good. The one-quest Lord's Harness could be removed outright only because no deployed build had carried it.
+- **Why missed:** not missed; found by the ladder's engine research before the old quest was removed.
+- **Prevent:** keep a shipped quest's definition (stop offering it instead), or cancel running instances at load
+  with a message before deleting it; check the deployed `TAOM.dll` before calling a quest unshipped.
+- **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` (engine research, Q4).

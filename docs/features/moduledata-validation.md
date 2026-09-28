@@ -573,11 +573,15 @@ Armory than the one under `--game-modules`. Fix: `python tools/generate_armour_c
 
 **`ARMOUR_ACQUISITION_REF` (ERROR).** Every reference the feature's data makes fails silently when it
 names nothing: a LotrIssue row's `cultures` token (the row never fires), `reward_item` (no chest
-arrives) or `item_source="item:X"`; a named weapon (it stays on sale) or an upgrade `Material`; a
-marketplace `<Culture id>` or `armour_from` (the culture draws on no armour). Each resolves against
-`Registries.items` and `Registries.cultures`, plus the items the engine registers in C#
-(`DefaultItems`: the metals among them), which no XML defines. A file that does not parse is reported.
-Without the install the registry is TAOM-only, so the pass is skipped and says so.
+arrives) or `item_source="item:X"`; a named weapon (it stays on sale) or an upgrade `Material`; the
+lord's gear ladder's weapon picks and lord's materials and their cultures (never handed out), and each
+rung's quest, which must be a root-level `<CareerQuest>` in `taom_career_quests.xml` as the game reads
+it (the rung never starts); a marketplace `<Culture id>` or `armour_from` (the culture draws on no
+armour). Each resolves against `Registries.items` and `Registries.cultures`, plus the items the engine
+registers in C# (`DefaultItems`: the metals among them), which no XML defines. The item registry counts
+only documents with an `<Items>` root, so a config or the generated class table quoting an id never
+defines it. A file that does not parse, or declares an unknown encoding, is reported. Without the
+install the registry is TAOM-only, so the pass is skipped and says so.
 
 ## Borrowed collision body (`COLLISION_BODY_BORROWED`)
 
