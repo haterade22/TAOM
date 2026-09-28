@@ -67,7 +67,7 @@ instructions: follow its phases in order.
 | Saving or resuming context | `/context-save`, `/context-restore` | |
 | External repo, article or skill to adopt | `/adopt-external` | security-vet first |
 | After editing hooks, settings, MCP config or CLAUDE.md | `/security-scan` | skip for routine feature edits |
-| Repo-wide audit, "what next", handoff plans | `/improve` | |
+| Repo-wide audit, "what next", handoff plans; execute, review, merge or resume a plans backlog | `/improve` | merge, push, issues and paid calls only on the maintainer's word |
 | Agent looping, drifting or burning tokens | `/agent-introspection-debugging` | |
 | Offer, don't auto-invoke | `/freeze`, `/unfreeze`, `/humanizer`, `/deslop` (deletion-first: ask), `/skill-stocktake`, `/doc-graph`, `/lint-docs`, `/knowledge-compile`, `/context-budget` | |
 | Never auto-invoke | `/codex-verify`, `/review-codex` (paid), `/issue` (public), `/migration-status` | |

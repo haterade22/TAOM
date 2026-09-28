@@ -127,17 +127,24 @@ common patterns:
 No exception means no Event Log offset and no stream `--dump` can decode, so take the stack from a
 full dump (proven on #599):
 
-1. **Spot the spin.** `Get-Process Bannerlord` kept `Responding` true through a game-loop spin
+1. **Confirm the process is the game.** The Modding Kit also runs as
+   `TaleWorlds.MountAndBlade.Launcher.exe`, from `bin\Win64_Shipping_wEditor`, and legitimate editor work (the
+   settlement distance cache) sits at "Not Responding" for minutes, so a process name proves nothing. Read the
+   image path, `(Get-CimInstance Win32_Process -Filter "ProcessId=<pid>").ExecutablePath`: the game runs from
+   `bin\Win64_Shipping_Client`. Match the PID to the session's `rgl_log_<pid>.txt` in
+   `C:\ProgramData\Mount and Blade II Bannerlord\logs`, whose last lines also show whether the game ended
+   normally. Never tell the user to end a process you have not identified.
+2. **Spot the spin.** `Get-Process Bannerlord` kept `Responding` true through a game-loop spin
    (#599), so do not wait for "Not Responding". Sample `Threads[].TotalProcessorTime` twice, 2 to 3 s apart: the game-loop thread holds
    nearly all the lifetime CPU and is still climbing. `[MemSample]` lines prove nothing (a timer).
-2. **Dump.** `procdump -accepteula -ma <pid> E:\<dir>\hang.dmp` (Sysinternals, on PATH; about 11 GB).
-3. **Stack.** `WinDbgX -z <dmp> -c '$$><E:\<dir>\stack.wds'`, where the script (written with the Write
+3. **Dump.** `procdump -accepteula -ma <pid> E:\<dir>\hang.dmp` (Sysinternals, on PATH; about 11 GB).
+4. **Stack.** `WinDbgX -z <dmp> -c '$$><E:\<dir>\stack.wds'`, where the script (written with the Write
    tool, never a heredoc) opens with `.logopen <log>`, runs `~~[0x<tid>]s; k 60; .loadby sos clr;
    !clrstack -a` and ends `.logclose; q`. Poll the log, then `Stop-Process DbgX.Shell` (the window
    outlives `q`). Never put a quoted `.printf` on the `-c` line: WinDbgX splits its own command line
    on the quotes. Set `_NT_SYMBOL_PATH=srv*E:\symcache*https://msdl.microsoft.com/download/symbols`
    for ntdll and kernel frames (caches live on E:, never C:).
-4. **Read the native frames as C.** Each `TaleWorlds_Native+0x<off>` frame's offset is an RVA:
+5. **Read the native frames as C.** Each `TaleWorlds_Native+0x<off>` frame's offset is an RVA:
    `python tools/native_decompile.py --rva 0x<off>`. Read the stuck loop's exit condition in the C,
    then find what should have set it.
 

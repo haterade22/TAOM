@@ -28,10 +28,11 @@ If triggered:
    - Write a focused prompt to `docs/reviews/codex-prereview-{feature}-{date}.prompt.md` (short version of the `/review-codex` prompt -- focus on Known Suspects + architectural risks; skip the heavy vanilla-decompile block).
    - Run via Bash:
      ```
-     command: cd "<repo-root>" && mkdir -p docs/reviews/raw && codex exec -c project_doc_max_bytes=65536 - < "docs/reviews/codex-prereview-{feature}-{date}.prompt.md" > "docs/reviews/raw/codex-prereview-{feature}-{date}.md" 2>&1
+     command: cd "<repo-root>" && mkdir -p docs/reviews/raw && codex exec -c model_reasoning_effort="<level>" -c project_doc_max_bytes=65536 - < "docs/reviews/codex-prereview-{feature}-{date}.prompt.md" > "docs/reviews/raw/codex-prereview-{feature}-{date}.md" 2>&1
      run_in_background: true
      timeout: 600000
      ```
+   - `<level>` is the session's call (`/review-codex` "Reasoning effort is the session's call"), sized to the change as for any first pass; the shorter prompt shortens the run, not the level.
    - See `.claude/skills/review-codex/SKILL.md` "Codex CLI invocation contract" for full dispatch semantics.
 3. Continue to Step 1 immediately; do NOT wait for Codex here. The Claude agents run in parallel with the Codex background job.
 4. After all Claude agents complete (Step 2), check if the Codex background job has notified. If yes, read `docs/reviews/raw/codex-prereview-{feature}-{date}.md`. If not yet (Claude agents finish faster on this kind of work), Codex result will arrive later -- proceed with Step 3 using just the Claude agent results and append Codex when it arrives.

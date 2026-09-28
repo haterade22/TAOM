@@ -21,7 +21,7 @@ Run the **mandatory** completion sequence from [completion-workflow.md](../../..
 3. Fix all confirmed findings. **HIGH must be fixed in-session** — no silent deferrals (`.claude/skills/deep-review/SKILL.md`).
 
 ### Phase 2 — Codex adversarial review (costs money — explicit go-ahead only)
-4. `/review-codex` — writes the prompt and dispatches Codex via `codex exec` in the background; tells the user the 10–45 min window once.
+4. `/review-codex`: writes the prompt and dispatches Codex via `codex exec` in the background, at a reasoning effort the session sizes to the change; tells the user the level, the reason and the expected window once.
 5. Harness notifies on completion — auto-resume, verify each finding against TAOM source + decompiled vanilla, implement confirmed fixes.
 
 ### Phase 3 — Self-review of our fixes
