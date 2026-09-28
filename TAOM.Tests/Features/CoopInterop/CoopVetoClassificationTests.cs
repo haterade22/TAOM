@@ -275,6 +275,31 @@ public class CoopVetoClassificationTests
             "copy carries the bad pair would otherwise freeze on that load, so gating the guard " +
             "under co-op would restore the hang on exactly the peer that needs it."),
 
+        // Creature Bandits (#692, Patch93/Patch94). The condition everywhere is the creature
+        // fingerprint or the troop id. For a SpawnMonster agent that is host-local, not replicated:
+        // CreateFreeMountAgent carries only the index, item, harness and frame, and the Character,
+        // the team (SetTeam sync: false) and the flags are never sent. TAOM is ModuleCategory
+        // Singleplayer (SubModule.xml), so no replicated mission runs Patch93; the skipped bodies are
+        // mission agent state or map presentation.
+        ["Patch93_CreatureBanditSpawn"] = new(CoopVeto.ReviewedSafe,
+            "Mission-scoped agent spawn, the Mission_SpawnAgent_Patch class: a creature troop on the " +
+            "enemy side of a field battle spawns as a riderless creature instead of its husk. The " +
+            "condition reads the troop id, the side and the mission type. Not campaign state."),
+        ["Patch93_CreatureBanditNoPanic"] = new(CoopVeto.ReviewedSafe,
+            "Skips CommonAIComponent.OnHit, whose only work is panicking a riderless AI mount, for a " +
+            "creature bandit. Mission-scoped agent AI state; not campaign state."),
+        ["Patch93_CreatureBanditPrimaryWieldGuard"] = new(CoopVeto.ReviewedSafe,
+            "Answers None for a creature bandit's primary wield index instead of reading a native " +
+            "weapon state that route A did not allocate. Mission-scoped read; not campaign state."),
+        ["Patch93_CreatureBanditOffhandWieldGuard"] = new(CoopVeto.ReviewedSafe,
+            "Answers None for a creature bandit's offhand wield index. Mission-scoped read; not " +
+            "campaign state."),
+        ["Patch93_CreatureBanditMissileRangeGuard"] = new(CoopVeto.ReviewedSafe,
+            "Answers 0 for a creature bandit's missile range. Mission-scoped read; not campaign state."),
+        ["Patch94_CreatureBroodMapIcon"] = new(CoopVeto.ReviewedSafe,
+            "Skips the rider visual of a spider brood's campaign-map icon. Each peer builds its own " +
+            "party visuals; presentation only."),
+
         // --- Parked --------------------------------------------------------------------------
         ["Patch57_NavalAtSeaLandRescueGuard"] = new(CoopVeto.Parked,
             "NavalTravel is PARKED (#120/#296) and the category is commented out in SubModule.cs. " +

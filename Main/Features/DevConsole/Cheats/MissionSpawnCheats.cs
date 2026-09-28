@@ -48,17 +48,18 @@ public static class MissionSpawnCheats
     {
         var outcome = new SpawnOutcome { TroopId = troopId, Requested = count };
 
-        // GetObject<CharacterObject>, not a BasicCharacterObject accessor: SimpleAgentOrigin's ctor
-        // does a hard (CharacterObject) cast, so a non-campaign character would throw inside the
-        // engine rather than give us a message we can print.
-        var character = MBObjectManager.Instance?.GetObject<CharacterObject>(troopId);
+        // BasicCharacterObject, not CharacterObject: Custom Battle registers NPCCharacter as
+        // BasicCharacterObject (v1.5.3 CustomGame.cs:135), so a CharacterObject lookup found no troop at
+        // all there. The base type is not sealed, so GetObject<T> matches by assignability and a campaign
+        // still hands back its CharacterObject (MBObjectManager.cs:586-594).
+        var character = MBObjectManager.Instance?.GetObject<BasicCharacterObject>(troopId);
         if (character == null)
         {
             outcome.FailureReason = $"Unknown troop '{troopId}'. Check ModuleData/troops for the id.";
             return outcome;
         }
 
-        var origin = new SimpleAgentOrigin(character);
+        var origin = CreateOrigin(character);
 
         // Pre-resolve the team and bail if it is null. SpawnTroop does
         // `.ClothingColor1(agentTeam.Color)` with NO null check, so a null team hard-crashes the game
@@ -115,6 +116,15 @@ public static class MissionSpawnCheats
 
         return outcome;
     }
+
+    /// <summary>
+    /// A campaign troop gets SimpleAgentOrigin, which hard-casts its troop to CharacterObject
+    /// (SimpleAgentOrigin.cs:136); anything else, a Custom Battle troop, gets BasicBattleAgentOrigin.
+    /// </summary>
+    internal static IAgentOriginBase CreateOrigin(BasicCharacterObject character) =>
+        character is CharacterObject campaignCharacter
+            ? new SimpleAgentOrigin(campaignCharacter)
+            : new BasicBattleAgentOrigin(character);
 
     private static Vec3 ResolveAnchor()
     {

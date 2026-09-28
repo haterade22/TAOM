@@ -9,11 +9,15 @@ public interface ISpiderAttackService
     bool IsSpiderMonster(string? monsterId);
 
     int CalculateSpiderBiteDamage(IAgentAdapter target, float velocity, float armorEffectivenessPercent, float critRoll);
-    void HandleSpiderTargetHit(IAgentAdapter attacker, IAgentAdapter target, sbyte boneId);
+    /// <summary>One strike's hit on a target in its arc, under the strike's rules (damage multiplier, knockdown); the
+    /// ridden spider's are <see cref="SpiderStrikeProfile.Ridden"/>.</summary>
+    bool HandleSpiderTargetHit(IAgentAdapter attacker, IAgentAdapter target, sbyte boneId, SpiderStrikeProfile strike);
 
     /// <summary>Fires the resolved directional attack (pounce or left/right swipe): plays the clip + deals radial
-    /// damage in the kind's front arc (reliable, replacing the unreliable bone-collision).</summary>
-    void SpiderAttack(IAgentAdapter spider, SpiderAttackKind kind, float bearing);
+    /// damage in the kind's front arc (reliable, replacing the unreliable bone-collision), under the strike rules for
+    /// each clip (a creature bandit's caps and damage, #692; the ridden spider's set is
+    /// <see cref="SpiderStrikeSet.Ridden"/>). Returns what the strike did, or default for an inactive spider.</summary>
+    SpiderStrikeOutcome SpiderAttack(IAgentAdapter spider, SpiderAttackKind kind, float bearing, SpiderStrikeSet strikes);
 
     // --- Pure decision helpers (no TaleWorlds types — unit-tested; elephant-parity) ---
 

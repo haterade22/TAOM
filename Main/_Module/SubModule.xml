@@ -299,6 +299,17 @@
         <GameType value = "EditorGame"/>
       </IncludedGameTypes>
     </XmlNode>
+    <!-- Creature Bandits (#692): the hidden spider brood troops. Each spawns in battle as a riderless
+         spider (Patch93); CustomGame keeps them loadable for the console spike in Custom Battle. -->
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="characters/creature_bandits"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
 
     <XmlNode>
       <XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_dolguldur"/>

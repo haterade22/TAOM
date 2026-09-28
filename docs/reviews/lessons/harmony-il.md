@@ -684,3 +684,18 @@ the three names and `PatchShield.IsExcludedTarget` checks it beside the namespac
   a renamed or added target cannot slip off the list; exclude by namespace only when the whole namespace is hot.
 - **Source:** `Dependencies/Foundation/PatchShieldPolicy.cs` `ExcludedTargetMethods`; `Dependencies/Foundation/PatchShield.cs`
   `Install`; `Patch92BindingTests.EveryPatch92Target_IsOnPatchShieldsHotMethodList`.
+
+### The PatchShield exclusion covers every per-agent target of a patch category, not only the obvious ones (2026-09-28)
+Patch93 excluded its three weapon guards (`Agent.GetPrimaryWieldedItemIndex` and its two siblings) from PatchShield,
+as the 2026-09-26 lesson above says, but not its rout postfix on `Mission.CanAgentRout`, which
+`CommonAIComponent.OnTickParallel` calls for every AI agent, horses included, every 0.5 to 0.6 s on the TWParallel
+workers. Each call paid the `__originalMethod` finalizer's reflection-cache lock, about 700 calls a second at 400
+agents.
+- **Why missed:** the guards were known hot (they sit under `WieldedWeapon`), so they were excluded; the rout
+  postfix looked like a rare event and nobody read its caller. Third instance of the per-call tax on TAOM's own
+  targets (Patch38 2026-07-10, Patch92 2026-09-26).
+- **Prevent:** for every target in a new patch category, read the engine caller (not the method name) and write its
+  call rate down; any target reached from an agent tick, a parallel tick or a per-frame path goes on
+  `ExcludedTargetMethods`, and the category's binding test walks all of them
+  (`CreatureBanditsWiringTests.HotCreatureTargets_AreOnPatchShieldsExclusionList`).
+- **Source:** `docs/reviews/rca-creature-bandits-2026-09-28.md`, finding 6.

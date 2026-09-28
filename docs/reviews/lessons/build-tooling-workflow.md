@@ -3100,3 +3100,17 @@ log) and in a sandbox where the anchored form refused from the subdirectory. The
   (`tools/test_hooks.sh` 7j).
 - **Source:** issue #690; `docs/reference/hooks-catalog.md`; the review evidence in
   `E:\repos\taom-improve\scratch\680\review\bash\` (desktop).
+
+### Temporary diagnostics stay strippable: no rule, no logger and no sealed-type unwrap lives in them (2026-09-28)
+The Creature Bandits playtest diagnostics were meant to be deleted after sign-off, but by review time the folder owned
+the "creatures are never prisoners" decision, the spawner's only error logger, a `[diag]` WARNING the spawn fallback
+depended on, and a sealed `Agent` unwrap inside `SpiderAttackService`; its lines had also pushed the brood behaviour
+to 218 lines. Following the written strip recipe would have deleted the prisoner rule or left dangling references.
+- **Why missed:** each piece was added during a live spike where the diag facade was the nearest place with the data
+  or a static logger. The "log comprehensively, then strip" lesson says what to log, not where the code may live.
+- **Prevent:** a decision the game needs lives in the feature's rules or hooks, and only its counter goes to the diag
+  folder (`CreatureBanditAgents.RefusesPrisoner` calls `CreatureBroodCampaignDiag.NotePrisonerRefused`). Error logs go
+  through a logger outside the folder (`CreatureBanditLog`). Diagnostics are called from boundary code that already
+  holds the engine object, never from a service. The feature doc keeps a "Stripping the diagnostics" list of every
+  call site outside the folder, updated with each new call.
+- **Source:** `docs/reviews/rca-creature-bandits-2026-09-28.md`, findings 3, 4, 5 and 15.

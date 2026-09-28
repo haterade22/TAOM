@@ -4,6 +4,7 @@ using BehaviorTrees;
 using BehaviorTreeWrapper.BlackBoardClasses;
 using TAOM.Adapters;
 using TAOM.Features.AdvancedCombat;
+using TAOM.Features.CreatureBandits.Diagnostics;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
@@ -42,9 +43,18 @@ public class SpiderEngageDecorator : BTReturnFalseDecorator, IBTBannerlordBase, 
         Agent spider = Agent.GetValue();
         if (spider == null || !spider.IsActive()) return false;
 
+        // Creature Bandits diagnostics (#692): only a creature bandit pays for the per-candidate reasons below.
+        bool diag = CreatureBanditDiag.SerialOf(spider) > 0;
+
         // Anti-chain: while an attack clip is playing, never engage again (elephant lesson — Index compare against
         // our own caches; zero-alloc, collision-immune).
-        if (SpiderAttackActions.IsSpiderAttack(spider.GetCurrentAction(0))) return false;
+        if (SpiderAttackActions.IsSpiderAttack(spider.GetCurrentAction(0)))
+        {
+            if (diag)
+                CreatureBanditDiag.NoteEngage(spider, CreatureEngageOutcome.MidAttack, float.NaN, float.NaN, float.NaN,
+                    Mission.Current?.CurrentTime ?? float.NaN);
+            return false;
+        }
 
         BattleSideEnum spiderSide = spider.RiderAgent?.Team?.Side ?? spider.Team?.Side ?? BattleSideEnum.None;
         SpatialGrid.Instance.GetNearAliveAgentsInRange((int)SpiderConfig.BiteTriggerScanRange, spider, _scratch);
@@ -54,14 +64,34 @@ public class SpiderEngageDecorator : BTReturnFalseDecorator, IBTBannerlordBase, 
 
         Agent best = null;
         float bestDist = float.MaxValue;
+        // Diagnostics mirror IsAttackLikelyToHit's two tests (AgentAdapter): reach from the centre distance plus
+        // forward speed, then the half-cone from Frame.rotation.f.
+        int candidates = 0, inRange = 0, passed = 0;
+        float missDist = float.MaxValue, missAngle = float.NaN;
+        Vec3 spiderPosition = spider.Position;
+        Vec3 facing = diag ? spider.Frame.rotation.f.NormalizedCopy() : default;
+        float reach = diag ? SpiderConfig.BiteAttackRange + Math.Max(spider.MovementVelocity.Y, 0f) : 0f;
         foreach (Agent agent in _scratch)
         {
             if (agent == spider || agent == spider.RiderAgent || agent.IsMount) continue;
             if (!agent.IsActive() || agent.Team?.Side == spiderSide) continue;
 
             var targetAdapter = _adapterFactory.GetAgentAdapter(agent);
-            if (!targetAdapter.IsAttackLikelyToHit(spiderAdapter, SpiderConfig.BiteConeAngleDegrees, SpiderConfig.BiteAttackRange))
-                continue;
+            bool likely = targetAdapter.IsAttackLikelyToHit(spiderAdapter, SpiderConfig.BiteConeAngleDegrees, SpiderConfig.BiteAttackRange);
+            if (diag)
+            {
+                candidates++;
+                Vec3 offset = agent.Position - spiderPosition;
+                float distance = offset.Length;
+                if (distance <= reach) inRange++;
+                if (likely) passed++;
+                else if (distance < missDist)
+                {
+                    missDist = distance;
+                    missAngle = AngleDegrees(facing, offset.NormalizedCopy());
+                }
+            }
+            if (!likely) continue;
 
             float dist = (agent.Position - spider.Position).Length;
             if (dist < bestDist)
@@ -71,6 +101,10 @@ public class SpiderEngageDecorator : BTReturnFalseDecorator, IBTBannerlordBase, 
             }
         }
 
+        if (diag)
+            CreatureBanditDiag.NoteEngage(spider, CreatureDiagLedger.ClassifyEngage(candidates, inRange, passed),
+                missDist == float.MaxValue ? float.NaN : missDist, missAngle,
+                AngleDegrees(facing, spider.LookDirection.NormalizedCopy()), Mission.Current?.CurrentTime ?? float.NaN);
         if (best == null) return false;
 
         // Signed bearing: z of cross(lookDir, toEnemy). POSITIVE = enemy on the spider's LEFT (counter-clockwise,
@@ -80,4 +114,7 @@ public class SpiderEngageDecorator : BTReturnFalseDecorator, IBTBannerlordBase, 
         TargetBearing.SetValue(lookDir.x * toEnemy.y - lookDir.y * toEnemy.x);
         return true;
     }
+
+    private static float AngleDegrees(Vec3 a, Vec3 b)
+        => (float)(Math.Acos(MathF.Clamp(Vec3.DotProduct(a, b), -1f, 1f)) * 180.0 / Math.PI);
 }

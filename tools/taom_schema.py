@@ -586,6 +586,9 @@ class Validator:
         # on Occupation.Lord — they can never reach the throwing line.
         "looters", "sea_raiders", "mountain_bandits", "forest_bandits",
         "desert_bandits", "steppe_bandits",
+        # Creature Bandits (#692): the spider brood, vanilla looters' shape. No heroes at all
+        # (its troops are hidden Occupation.Bandit creatures) and a valid initial_home_settlement.
+        "mirkwood_spiders",
         # Vanilla placeholder culture; carried by no TAOM lord or clan.
         "neutral_culture",
         # Vanilla minor-faction cultures TAOM inherits but never re-cultured
@@ -1071,6 +1074,16 @@ class Validator:
             "the Pale Spider is the same body with another skin and a HorseHarness surface "
             "was never authored for it. Delete with the base entry"
         ),
+        # Creature Bandits (#692): harnessless BY DESIGN, unlike the Spider Rider rows above. Patch93 passes this
+        # troop's HorseHarness slot to Mission.SpawnMonster, which equips it on the riderless spider (v1.5.3
+        # Mission.cs:4448-4456), so a harness would saddle every wild spider. The fallback husk (swap declined)
+        # rides bare, accepted. Keep these when a spider harness lands.
+        "taom_spider_brood_forest": "riderless creature bandit (#692): a harness here is worn by the wild spider (Patch93 hands this "
+                                "HorseHarness slot to SpawnMonster); keep this even when a spider harness exists",
+        "taom_spider_brood_brown": "riderless creature bandit (#692): a harness here is worn by the wild spider (Patch93 hands this "
+                                "HorseHarness slot to SpawnMonster); keep this even when a spider harness exists",
+        "taom_spider_brood_pale": "riderless creature bandit (#692): a harness here is worn by the wild spider (Patch93 hands this "
+                                "HorseHarness slot to SpawnMonster); keep this even when a spider harness exists",
     }
 
     _BODYLESS_BY_DESIGN = {

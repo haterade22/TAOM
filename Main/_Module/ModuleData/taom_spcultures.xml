@@ -4281,6 +4281,24 @@
   </banner_bearer_replacement_weapons>
   </Culture>
 
+  <!-- Spiders of Mirkwood (#692): the creature bandit brood, vanilla looters' shape. can_have_settlement
+       false means no hideouts, and makes the clan a looter faction (FactionHelper.IsLooterFaction), whose
+       vanilla spawn roams the whole map; TaomBanditDensityModel caps that at zero for this clan and
+       CreatureBroodSpawnBehavior spawns the broods around Mirkwood instead. No bandit_boss or chief: those
+       serve hideouts. The troops spawn as riderless spiders (characters/creature_bandits.xml). executioner
+       is required of every culture (CultureExecutionerTests) and read only for a player of this culture,
+       which no player can be. -->
+  <Culture
+    id="mirkwood_spiders"
+    name="{=taom_bandit_mirkwood_spiders_name}Spiders of Mirkwood"
+    basic_troop="NPCCharacter.taom_spider_brood_forest"
+    elite_basic_troop="NPCCharacter.taom_spider_brood_brown"
+    executioner="NPCCharacter.taom_spider_brood_forest"
+    is_bandit="true"
+    can_have_settlement="false"
+    encounter_background_mesh="encounter_forest_bandit">
+  </Culture>
+
   <!-- TAOM-NEWFACTIONS:goblin:BEGIN -->
   <Culture
     id="goblin"

@@ -62,9 +62,9 @@ and the gate.
 | Borrowed `bo_` body | A weapon's body is its own mesh's `bo_` twin; a borrow dies on the next art drop | [validation](../features/moduledata-validation.md) |
 | Unsaved tpac | A package without its `RuntimeDataCache` `.rdc` is skipped, silently: `check_rdc_entries.py` | [pipeline](../reference/ue-to-bannerlord-asset-pipeline.md) |
 | Armory asset tree | Loose `Assets/**` loads and wins; the inventory is generated, never counted by hand | [armory](../reference/armory-guide.md) |
-| Horse-skeleton reskins | Share the engine's action vocabulary; the rig's only attack is `act_horse_kick` | [war ram](../features/war-ram.md) |
-| HorseHarness | Required beside every Horse slot; exemptions only in `_HARNESSLESS_BY_DESIGN` | [war ram](../features/war-ram.md) |
+| Horse-skeleton mounts | Engine actions only (`act_horse_kick`); a HorseHarness per Horse slot unless `_HARNESSLESS_BY_DESIGN` | [war ram](../features/war-ram.md) |
 | Mount size | A Monster with `taom_body_length` overrides every item's `body_length`: resize on the Monster | [monster size](../features/monster-size.md) |
+| Riderless creatures | Soldiers ignore a riderless `Mountable` agent; unmount only one built with a weapon state | [creature bandits](../features/creature-bandits.md) |
 | Animation | Author on the engine skeleton: engine frames, rest pose at frame 0, list-order hierarchy | [skeleton](../reference/bannerlord-skeleton-authoring.md) |
 | Kit clip rename | Corrupts the clip: keep the name, close the Kit, run `rename_anim_clip_tpac.py` | [tools](../../tools/README.md) |
 | Own-skeleton humanoid | A clip stores parent-relative rotations: re-framing fixes axes only; retarget the clips too | [skeleton](../reference/bannerlord-skeleton-authoring.md) |

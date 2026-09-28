@@ -1750,6 +1750,23 @@
 		name="{=taom_bandit_mirkwood_name}Mirkwood Stalkers"
 		tier="1"></Faction>
 
+	<!-- Spiders of Mirkwood (#692): the creature bandit brood, vanilla looters' shape (no hideouts). The home
+	     settlement is a Mirkwood village only because the attribute needs one; CreatureBroodSpawnBehavior
+	     chooses where each brood spawns and patrols. A plain dark banner: spiders carry none. -->
+	<Faction
+		id="mirkwood_spiders"
+		initial_home_settlement="Settlement.village_M1_1"
+		banner_key="11.2.166.1528.1528.764.764.1.0.0"
+		color="FF26241F"
+		color2="FFD8D2C0"
+		culture="Culture.mirkwood_spiders"
+		default_party_template="PartyTemplate.mirkwood_spiders_brood_template"
+		settlement_banner_mesh="none"
+		is_bandit="true"
+		is_outlaw="true"
+		name="{=taom_bandit_mirkwood_spiders_name}Spiders of Mirkwood"
+		tier="1"></Faction>
+
   <!-- TAOM-NEWFACTIONS:goblin:BEGIN -->
   <Faction
 		id="clan_goblin_1"

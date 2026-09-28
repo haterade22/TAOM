@@ -52,6 +52,19 @@ internal static class CultureDataFixture
         "umbar_corsairs", "gondor_soldiers", "erebor_warriors", "mirkwood_stalkers"
     };
 
+    /// <summary>
+    /// Bandit cultures with <c>can_have_settlement="false"</c>, vanilla looters' shape: they own no settlement of
+    /// any kind, hideouts included, and no hero. Every reader <see cref="HideoutOnlyCultures"/> is exempt from is
+    /// reached through a settlement, a wanderer or a lord, so none reaches these either: no town revolts, no
+    /// companion carries the culture, and no patrol, villager or caravan spawns for it. Kept apart from the
+    /// hideout list because the reason differs (no settlement at all, not only hideouts); the hideout boss sweep
+    /// skips them for the same reason. Give one a settlement or a hero and the exemption is void.
+    /// </summary>
+    public static readonly HashSet<string> SettlementlessBanditCultures = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+    {
+        "mirkwood_spiders", // Creature Bandits (#692)
+    };
+
     /// <summary>Walks up from the test working directory to <c>Main/_Module/ModuleData</c>.</summary>
     public static string ModuleDataPath()
     {

@@ -106,6 +106,8 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.Core.HorseComponent", "HorseComponent", "set_BodyLength", "Method", "MonsterSizeCatalogAdapter.cs:22")]
     [DataRow("TaleWorlds.Core.ItemObject", "ItemObject", "CalculateEffectiveness", "Method", "MonsterSizeCatalogAdapter.cs:28")]
     [DataRow("TaleWorlds.Core.ItemObject", "ItemObject", "set_Effectiveness", "Method", "MonsterSizeCatalogAdapter.cs:29")]
+    // --- Creature Bandits route A (#692): the weapon-state probe. Missing: route A is skipped for every creature.
+    [DataRow("TaleWorlds.MountAndBlade.Agent", "Agent", "_primaryWieldedItemIndexPointer", "Field", "CreatureRouteAUnmount.cs:22")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
         if (!_gameLoaded)

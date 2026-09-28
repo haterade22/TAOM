@@ -781,3 +781,42 @@ siege offers, and was never placed.
   null. When a smoke list covers a mission feature, name a siege assault as well as a field battle.
 - **Source:** `docs/reviews/rca-order-of-battle-auto-assign-2026-09-24.md` row 1 (Engine, Data flow, Design lenses and
   Codex P2).
+
+### Gate a non-formation agent's scripted moves on the deployment signals: AI ticking off, and a scripted move teleports (2026-09-28)
+The deployment controller sets `Mission.AllowAiTicking = false` for the whole deployment
+(`DeploymentMissionController.cs:31`, back on at `:75`) and, for the Order of Battle screen,
+`Mission.IsTeleportingAgents = true`, under which `Agent.SetScriptedPosition` teleports the agent to the target when
+its XY differs (`Agent.cs:2462-2465`). Vanilla pauses and hides only formation members and humans
+(`:98-119`, `:187-199`), and TAOM's behaviour trees tick regardless (`BehaviorTreeMissionLogic.OnMissionTick`). A
+riderless creature bandit, in no formation, would have hunted during deployment and landed on the paused army.
+- **Why missed:** the spike spawned creatures from the console after deployment, and every engine AI component checks
+  `AllowAiTicking` itself, so nothing in the framework carries that check for a tree.
+- **Prevent:** any tree or task that moves an agent vanilla does not pause (no formation, not human) gates on
+  `AllowAiTicking && !IsTeleportingAgents` and holds the agent meanwhile (`CreatureMayFightDecorator`,
+  `CreatureHoldTask`). Formation members are paused by vanilla; everything else is yours.
+- **Source:** `docs/reviews/rca-creature-bandits-2026-09-28.md`, finding 2.
+
+### When a change clears an engine flag on an agent, grep every TAOM reader of that flag the same day (2026-09-28)
+Route A clears `Mountable` on the creature bandit after its build so native targeting sees an enemy. Code written
+earlier for "a riderless mount" went stale at once: the routed-count backstop assumed SandBox skips the creature
+(it skips only an `IsMount` agent, `BattleAgentLogic.cs:147`), and the guard comments, the registry and the feature
+doc described a `Mountable` creature. The backstop then fired for every routed creature with a misleading warning.
+- **Why missed:** graphify follows TAOM types, not engine flags, so the blast-radius step never listed `IsMount`'s
+  readers; the change was reviewed as a targeting fix.
+- **Prevent:** after a change that sets or clears an `AgentFlag` (or anything behind `IsMount`, `IsHuman`,
+  `CanWieldWeapon`), `git grep` the property and the flag across `Main/` and the docs, and re-read each hit as if
+  the agent had the new flags. List the ones that change behaviour in the commit body.
+- **Source:** `docs/reviews/rca-creature-bandits-2026-09-28.md`, findings 9 and 12.
+
+### An agent that stands in for a troop must reach every IsHuman-gated consumer the troop would (2026-09-28)
+Creature bandits make a riderless spider the troop itself (its Character and Origin are the troop's). The engine's
+battle observer, which feeds both scoreboards, reports spawns, casualties and kill credit for `IsHuman` agents only
+(`BattleObserverMissionLogic.cs:35-76`), so every brood showed no troops and no kills. Vanilla is right for a mount,
+whose rider is the troop; the stand-in broke that assumption.
+- **Why missed:** the engine lens read the gate and called it harmless because the counts stayed symmetric; it
+  checked the accounting, not what the player sees. Codex's first pass found it.
+- **Prevent:** when TAOM makes a non-human agent carry a troop, grep the installed engine for `IsHuman` in every
+  `MissionLogic` and view that the troop's battle runs (observers, scoreboards, banner bearers, deployment, cheering)
+  and list, per hit, whether the stand-in must be reported (bridge it, as `CreatureScoreboardBridge` does) or is
+  correctly skipped.
+- **Source:** `docs/reviews/rca-creature-bandits-2026-09-28.md`, Codex C1.

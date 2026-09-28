@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+
+  <!-- Creature Bandits (#692): the Mirkwood spider brood, hostile bandits only, never recruitable.
+       Each troop is a hidden "husk" whose Horse slot holds a spider; in a field battle Patch93 spawns it
+       as a riderless spider (Mission.SpawnMonster) with this troop as its Character, team and origin,
+       and CreatureBanditBehaviorTree hunts and bites. That tree plays the spider's clips; a creature on
+       another Monster needs its own tree. Every Creature Bandits seam keys on these ids
+       (CreatureBanditsConfig.CreatureTroopIds); add a new creature there too.
+
+       The rider parts only matter when the swap declines (a hideout, a siege, the player's side) and the
+       vanilla spawn seats this goblin on its spider: that is why each keeps a race and a face
+       (CharacterFaceCoverageTests) and carries no weapon. No HorseHarness, by design and for good: the
+       spawner hands this troop's HorseHarness slot to Mission.SpawnMonster, which puts it on the wild spider,
+       so a harness here would saddle every brood spider (_HARNESSLESS_BY_DESIGN). Levels and mounts follow the Spider Rider rungs (21 / 26 / 31, dark,
+       brown, pale), so auto-resolve power (tier only) matches the ridden spiders. The pale broodmother
+       leads: the highest tier, and the first stack of every brood template (map icon, conversation). -->
+
+  <NPCCharacter id="taom_spider_brood_forest"
+                race="goblin"
+                default_group="Cavalry"
+                level="21"
+                is_hero="false"
+                is_basic_troop="false"
+                is_hidden_encyclopedia="true"
+                occupation="Bandit"
+                culture="Culture.mirkwood_spiders"
+                name="{=taom_spider_brood_forest_name}Giant Spider">
+    <face><face_key_template value="BodyProperty.fighter_goblin" /></face>
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Horse" id="Item.spider_mount_a" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+
+  <NPCCharacter id="taom_spider_brood_brown"
+                race="goblin"
+                default_group="Cavalry"
+                level="26"
+                is_hero="false"
+                is_basic_troop="false"
+                is_hidden_encyclopedia="true"
+                occupation="Bandit"
+                culture="Culture.mirkwood_spiders"
+                name="{=taom_spider_brood_brown_name}Brown Spider">
+    <face><face_key_template value="BodyProperty.fighter_goblin" /></face>
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Horse" id="Item.spider_mount_brown" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+
+  <NPCCharacter id="taom_spider_brood_pale"
+                race="goblin"
+                default_group="Cavalry"
+                level="31"
+                is_hero="false"
+                is_basic_troop="false"
+                is_hidden_encyclopedia="true"
+                occupation="Bandit"
+                culture="Culture.mirkwood_spiders"
+                name="{=taom_spider_brood_pale_name}Pale Broodmother">
+    <face><face_key_template value="BodyProperty.fighter_goblin" /></face>
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Horse" id="Item.spider_mount_pale" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+
+</NPCCharacters>

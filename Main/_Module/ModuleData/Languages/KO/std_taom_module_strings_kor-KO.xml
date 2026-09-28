@@ -2676,5 +2676,9 @@
     <string id="taom_oob_autoassign_done" text="지휘관 배정 완료: {COUNT}명." />
     <string id="taom_oob_autoassign_not_general" text="이 전투의 총사령관만이 영웅을 배정할 수 있습니다." />
     <string id="taom_oob_autoassign_none" text="빈 지휘관 자리에 적합한 영웅이 없습니다." />
+    <string id="taom_bandit_mirkwood_spiders_name" text="Spiders of Mirkwood" />
+    <string id="taom_spider_brood_forest_name" text="Giant Spider" />
+    <string id="taom_spider_brood_brown_name" text="Brown Spider" />
+    <string id="taom_spider_brood_pale_name" text="Pale Broodmother" />
   </strings>
 </base>

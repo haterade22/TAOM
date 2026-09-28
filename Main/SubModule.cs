@@ -2184,6 +2184,8 @@ public class SubModule : MBSubModuleBase
         TAOM.Features.Enlistment.Hooks.Patch85_EnlistedDetachDeferral.ResetForUnload();
         TAOM.Features.StaleCharacterRepair.Hooks.Patch83_StaleCharacterRepair.ResetForUnload();
         TAOM.Features.BanditManagement.Hooks.Patch86_HideoutBossFight.ResetForUnload();
+        TAOM.Features.CreatureBandits.CreatureBanditLog.ResetForUnload();
+        TAOM.Features.CreatureBandits.Diagnostics.CreatureBanditDiag.ResetForUnload();
         TAOM.Features.UncapturableHeroes.Hooks.Hero_CanBecomePrisoner_Patch.ResetForUnload();
         TAOM.Features.UncapturableHeroes.Hooks.TakePrisonerAction_Apply_Patch.ResetForUnload();
     }

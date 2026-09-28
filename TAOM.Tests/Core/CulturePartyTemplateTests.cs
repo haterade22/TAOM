@@ -275,7 +275,8 @@ public class CulturePartyTemplateTests
         foreach (var culture in NativeCultures())
         {
             var cultureId = culture.Attribute("id")?.Value;
-            if (string.IsNullOrEmpty(cultureId) || CultureDataFixture.HideoutOnlyCultures.Contains(cultureId))
+            if (string.IsNullOrEmpty(cultureId) || CultureDataFixture.HideoutOnlyCultures.Contains(cultureId)
+                || CultureDataFixture.SettlementlessBanditCultures.Contains(cultureId))
                 continue;
 
             foreach (var attribute in RequiredPartyTemplateAttributes)

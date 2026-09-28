@@ -1,4 +1,5 @@
 using SandBox.GameComponents;
+using TAOM.Features.CreatureBandits.Hooks;
 using TAOM.Features.CultureDoctrine.Hooks;
 using TaleWorlds.MountAndBlade;
 
@@ -23,8 +24,10 @@ public class TaomBattleMoraleModel : SandboxBattleMoraleModel
         _morale = morale;
     }
 
+    // Creature Bandits (#692): a creature bandit never panics, whatever its morale.
     public override bool CanPanicDueToMorale(Agent agent)
-        => base.CanPanicDueToMorale(agent) && _morale.CanPanic(AgentAggressionApplier.CultureOf(agent));
+        => !CreatureBanditAgents.RefusesMoralePanic(agent) && base.CanPanicDueToMorale(agent)
+           && _morale.CanPanic(AgentAggressionApplier.CultureOf(agent));
 
     public override float GetEffectiveInitialMorale(Agent agent, float baseMorale)
         => _morale.InitialMorale(AgentAggressionApplier.CultureOf(agent), base.GetEffectiveInitialMorale(agent, baseMorale));

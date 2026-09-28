@@ -334,6 +334,7 @@ renamed troop rots silently.
 |---|---|
 | `harad_mumakil_rider` | A `HorseHarness` **suppresses the Horse item's `<AdditionalMeshes>`** (native mount compositing), and `taom_mumakil` keeps its war-platform there. Equipping one would delete the howdah. This is an engine constraint, not a preference |
 | `taom_spider_creature`, `taom_spider_rider_brown`, `taom_spider_rider_pale` | **An open gap, not a design choice.** No spider `HorseHarness` item has ever been authored, so there is nothing to equip and the rider sits on the spider with no saddle geometry: the same defect class as the ram, recorded as a known limitation when the troop landed and still open. Delete this entry when a `spider_saddle` harness item lands |
+| `taom_spider_brood_forest`, `taom_spider_brood_brown`, `taom_spider_brood_pale` | **Harnessless by design (#692).** `Patch93` hands the troop's `HorseHarness` slot to `Mission.SpawnMonster`, which equips it on the riderless spider, so a harness here would saddle every wild spider. Unlike the Spider Rider rows above, keep these even when a spider harness exists |
 
 Shipped twice, which is why the rule is not scoped. `ironpass_ram_herder` was authored with no
 harness on all four sets, on purpose, on the reading that a bare ram was merely unarmoured, and
@@ -361,12 +362,13 @@ skips the check entirely rather than reporting everything broken, and a **size f
 
 ### `_LANDLESS_BY_DESIGN` allowlist
 
-The ten cultures still landless after the Khand retag are allowlisted, each with its reason in-code.
+The cultures still landless after the Khand retag are allowlisted, each with its reason in-code.
 Adding an entry is a deliberate act — state why:
 
 | Cultures | Why they cannot reach the throwing line |
 |---|---|
 | `looters`, `sea_raiders`, `mountain_bandits`, `forest_bandits`, `desert_bandits`, `steppe_bandits` | Bandit heroes are `Occupation.Bandit`; `GetBestAvailableCommander` filters on `Occupation.Lord`. |
+| `mirkwood_spiders` | A bandit culture (#692) with `can_have_settlement="false"` and no heroes; its only faction is the brood clan, so the landless crash path, a lord of a culture owning no settlement, can never reach it. |
 | `neutral_culture` | Vanilla placeholder culture, carried by no TAOM lord or clan. |
 | `darshi`, `nord`, `vakken` | Vanilla minor-faction cultures (ghilman / skolderbrotva / forest_people) TAOM inherits but never re-cultured. All three clans keep a valid `initial_home_settlement`, so vanilla never reaches the `First()`; Patch65 covers them if a mod re-parents their lords. |
 

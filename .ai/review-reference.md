@@ -39,9 +39,14 @@ CRITICAL: N | HIGH: N | MEDIUM: N | LOW: N
 VERDICT: CLEAN / ISSUES FOUND
 ```
 
-### Lessons From Prior Reviews (85 reviews, 188+ bugs found), distilled
+### Lessons From Prior Reviews (86 reviews, 191+ bugs found), distilled
 
 **What Codex does especially well (2026-09-01 memory-diagnostics review: 4/4 HIGH real, 0 false positives).**
+- **Follows a stand-in agent to every consumer gated on `IsHuman`** (2026-09-28, creature bandits, 3 of 3
+  MEDIUM real): handed a riderless spider that TAOM makes the troop itself, it read the battle observer
+  behind both scoreboards, found it reports humans only, and then checked the fix against the origin types
+  that actually reach it (a Custom Battle console origin has no combatant). For a change that gives a
+  non-human agent a troop's Character and Origin, ask which engine consumers filter on `IsHuman`.
 - **Drives a hook the way the harness does, and times it** (2026-09-23, ADR-011 harness review,
   8 of 8 findings real): handed nine rewritten PreToolUse gates, it built fixtures outside the
   repo, sent 54 hostile commands and parsed every output as JSON, and timed the tracked-files gate

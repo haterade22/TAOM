@@ -120,7 +120,7 @@ public class SpiderAttackServiceTests
     {
         var attacker = Substitute.For<IAgentAdapter>();
         // Should not throw, no logger error called.
-        _sut.HandleSpiderTargetHit(attacker, target: null, boneId: 0);
+        _sut.HandleSpiderTargetHit(attacker, target: null, boneId: 0, strike: SpiderStrikeProfile.Ridden);
         _logger.DidNotReceive().LogError(Arg.Any<string>());
     }
 
@@ -131,7 +131,7 @@ public class SpiderAttackServiceTests
         var target = Substitute.For<IAgentAdapter>();
         target.IsActive().Returns(false);
 
-        _sut.HandleSpiderTargetHit(attacker, target, 0);
+        _sut.HandleSpiderTargetHit(attacker, target, 0, strike: SpiderStrikeProfile.Ridden);
 
         target.DidNotReceive().ProjectAgent(Arg.Any<Vec3>(), Arg.Any<DamageAnimation>());
         target.DidNotReceive().GetBaseArmorEffectivenessForBodyPart(Arg.Any<BoneBodyPartType>());
@@ -145,7 +145,7 @@ public class SpiderAttackServiceTests
         target.IsActive().Returns(true);
         target.IsFadingOut().Returns(true);
 
-        _sut.HandleSpiderTargetHit(attacker, target, 0);
+        _sut.HandleSpiderTargetHit(attacker, target, 0, strike: SpiderStrikeProfile.Ridden);
 
         target.DidNotReceive().GetBaseArmorEffectivenessForBodyPart(Arg.Any<BoneBodyPartType>());
     }
@@ -157,7 +157,7 @@ public class SpiderAttackServiceTests
         target.IsActive().Returns(true);
         target.IsFadingOut().Returns(false);
 
-        _sut.HandleSpiderTargetHit(attacker: null, target: target, boneId: 0);
+        _sut.HandleSpiderTargetHit(attacker: null, target: target, boneId: 0, strike: SpiderStrikeProfile.Ridden);
 
         target.DidNotReceive().GetBaseArmorEffectivenessForBodyPart(Arg.Any<BoneBodyPartType>());
     }
@@ -171,7 +171,7 @@ public class SpiderAttackServiceTests
         target.IsFadingOut().Returns(false);
         attacker.IsSameTeam(target).Returns(true);
 
-        _sut.HandleSpiderTargetHit(attacker, target, 0);
+        _sut.HandleSpiderTargetHit(attacker, target, 0, strike: SpiderStrikeProfile.Ridden);
 
         target.DidNotReceive().GetBaseArmorEffectivenessForBodyPart(Arg.Any<BoneBodyPartType>());
         target.DidNotReceive().ProjectAgent(Arg.Any<Vec3>(), Arg.Any<DamageAnimation>());
@@ -187,7 +187,7 @@ public class SpiderAttackServiceTests
         attacker.IsSameTeam(target).Returns(false);
         target.State.Returns(AgentState.Killed);
 
-        _sut.HandleSpiderTargetHit(attacker, target, 0);
+        _sut.HandleSpiderTargetHit(attacker, target, 0, strike: SpiderStrikeProfile.Ridden);
 
         target.DidNotReceive().GetBaseArmorEffectivenessForBodyPart(Arg.Any<BoneBodyPartType>());
     }
@@ -200,7 +200,7 @@ public class SpiderAttackServiceTests
     public void SpiderAttack_NullSpider_DoesNothing()
     {
         // Should not throw.
-        _sut.SpiderAttack(spider: null, SpiderAttackKind.Pounce, bearing: 0f);
+        _sut.SpiderAttack(spider: null, SpiderAttackKind.Pounce, bearing: 0f, strikes: SpiderStrikeSet.Ridden);
     }
 
     [TestMethod]
@@ -209,7 +209,7 @@ public class SpiderAttackServiceTests
         var spider = Substitute.For<IAgentAdapter>();
         spider.IsActive().Returns(false);
 
-        _sut.SpiderAttack(spider, SpiderAttackKind.Pounce, bearing: 0f);
+        _sut.SpiderAttack(spider, SpiderAttackKind.Pounce, bearing: 0f, strikes: SpiderStrikeSet.Ridden);
 
         spider.DidNotReceive().RadialStrike(
             Arg.Any<ActionIndexCache>(),
@@ -265,7 +265,7 @@ public class SpiderAttackServiceTests
         rider.IsSameTeam(target).Returns(true);     // the RIDER's team decides
         attacker.IsSameTeam(target).Returns(false); // spider's own team must NOT be consulted
 
-        _sut.HandleSpiderTargetHit(attacker, target, 0);
+        _sut.HandleSpiderTargetHit(attacker, target, 0, strike: SpiderStrikeProfile.Ridden);
 
         target.DidNotReceive().GetBaseArmorEffectivenessForBodyPart(Arg.Any<BoneBodyPartType>());
         target.DidNotReceive().ProjectAgent(Arg.Any<Vec3>(), Arg.Any<DamageAnimation>());
@@ -284,7 +284,7 @@ public class SpiderAttackServiceTests
         rider.IsSameTeam(victimRider).Returns(true);  // friendly via the victim's RIDER
         rider.IsSameTeam(target).Returns(false);
 
-        _sut.HandleSpiderTargetHit(attacker, target, 0);
+        _sut.HandleSpiderTargetHit(attacker, target, 0, strike: SpiderStrikeProfile.Ridden);
 
         target.DidNotReceive().GetBaseArmorEffectivenessForBodyPart(Arg.Any<BoneBodyPartType>());
     }
@@ -302,7 +302,7 @@ public class SpiderAttackServiceTests
         attacker.Position.Returns(new Vec3(9f, 9f, 9f));
         attacker.MovementVelocity.Returns(new Vec2(0f, 0f));
 
-        _sut.HandleSpiderTargetHit(attacker, target, 0);
+        _sut.HandleSpiderTargetHit(attacker, target, 0, strike: SpiderStrikeProfile.Ridden);
 
         // damage = 75 (MaxBaseDamage, no speed, no armor) >= DamageToFall(30) -> Fall, projected from the RIDER
         // (a crit would only raise it; still Fall).
@@ -321,7 +321,7 @@ public class SpiderAttackServiceTests
         target.Position.Returns(new Vec3(4f, 4f, 4f));
         attacker.MovementVelocity.Returns(new Vec2(0f, 15f)); // would be 50 dmg without the fallback
 
-        _sut.HandleSpiderTargetHit(attacker, target, 0);
+        _sut.HandleSpiderTargetHit(attacker, target, 0, strike: SpiderStrikeProfile.Ridden);
 
         // fallback: damager = target itself, damage = 20 -> Flinch (8 <= 20 < 30), projected from target.
         target.Received(1).ProjectAgent(new Vec3(4f, 4f, 4f), DamageAnimation.Flinch);
@@ -338,7 +338,7 @@ public class SpiderAttackServiceTests
         attacker.Position.Returns(new Vec3(7f, 7f, 7f));
         attacker.MovementVelocity.Returns(new Vec2(0f, 0f));
 
-        _sut.HandleSpiderTargetHit(attacker, target, 0);
+        _sut.HandleSpiderTargetHit(attacker, target, 0, strike: SpiderStrikeProfile.Ridden);
 
         // riderless spider (rider died): the spider itself is the damager; 75 dmg -> Fall.
         target.Received(1).ProjectAgent(new Vec3(7f, 7f, 7f), DamageAnimation.Fall);

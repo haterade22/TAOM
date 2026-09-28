@@ -1,5 +1,6 @@
 using TAOM.Features.CombatMechanics;
 using TAOM.Features.CombatMechanics.Hooks;
+using TAOM.Features.CreatureBandits.Hooks;
 using TAOM.Features.CultureDoctrine.Hooks;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
@@ -45,4 +46,10 @@ public class TaomCustomBattleAgentStatCalculateModel : CustomBattleAgentStatCalc
         base.UpdateAgentStats(agent, agentDrivenProperties);
         AgentAggressionApplier.Apply(agentDrivenProperties, _aggression.Profile(AgentAggressionApplier.CultureOf(agent)));
     }
+
+    // Creature Bandits (#692): a riderless creature is nobody's mount. AI soldiers look for loose mounts to ride and
+    // ask this first (v1.5.3 HumanAIComponent.cs:302). The campaign slot locks creatures by Monster
+    // (TaomAgentStatCalculateModel); this slot had no lock, and the creature spikes run in Custom Battle.
+    public override bool CanAgentRideMount(Agent agent, Agent targetMount)
+        => !CreatureBanditAgents.RefusesRider(targetMount) && base.CanAgentRideMount(agent, targetMount);
 }

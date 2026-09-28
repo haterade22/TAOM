@@ -4,6 +4,7 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
+using TAOM.Features.CreatureBandits.Hooks;
 
 namespace TAOM.Features.CulturalFeats.Models;
 
@@ -38,4 +39,9 @@ public class TaomBattleRewardModel : DefaultBattleRewardModel
         _careerPassives.ApplyFactor(CareerPassiveHero.ResolveId(winnerParty), ref result, PassiveEffectType.RenownGain);
         return result;
     }
+
+    // Creature Bandits (#692): a spider is not a captive. MapEvent asks this before moving a defeated troop to the
+    // winner's prisoners (v1.5.3 MapEvent.cs:1855), so a creature never reaches a roster to be ransomed or recruited.
+    public override bool CanTroopBeTakenPrisoner(CharacterObject troop)
+        => !CreatureBanditAgents.RefusesPrisoner(troop?.StringId) && base.CanTroopBeTakenPrisoner(troop);
 }

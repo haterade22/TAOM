@@ -4,6 +4,7 @@ using BehaviorTrees;
 using BehaviorTreeWrapper;
 using TAOM.Core.Logging;
 using TAOM.Features.AdvancedCombat;
+using TAOM.Features.CreatureBandits.Hooks;
 using TAOM.Features.Spider.BehaviorTreeElements;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
@@ -34,8 +35,9 @@ public class SpiderMissionBehavior : MissionLogic
     {
         _service = IoC.Resolve<ISpiderAttackService>();
         _logger = IoC.Resolve<IModLogger>();
+        // Creature bandits (#692) share the spider Monster but carry their own tree (CreatureBanditMissionBehavior).
         _tracker = new CreatureTreeTracker("SpiderTree", "[Spider]",
-            a => _service.IsSpiderMonster(a.Monster?.StringId), _logger);
+            a => _service.IsSpiderMonster(a.Monster?.StringId) && !CreatureBanditAgents.Is(a), _logger);
     }
 
     private void Initialize()

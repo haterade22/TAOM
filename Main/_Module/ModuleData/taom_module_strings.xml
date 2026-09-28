@@ -1427,6 +1427,13 @@
 	<string id="taom_bandit_mirkwood_f4" text="{=taom_bandit_mirkwood_f4}Faelivrin" />
 	<string id="taom_bandit_mirkwood_f5" text="{=taom_bandit_mirkwood_f5}Míriel" />
 
+	<!-- Creature Bandits (#692): the Mirkwood spider brood (taom_spcultures.xml, characters/clans.xml,
+	     characters/creature_bandits.xml) -->
+	<string id="taom_bandit_mirkwood_spiders_name" text="{=taom_bandit_mirkwood_spiders_name}Spiders of Mirkwood" />
+	<string id="taom_spider_brood_forest_name" text="{=taom_spider_brood_forest_name}Giant Spider" />
+	<string id="taom_spider_brood_brown_name" text="{=taom_spider_brood_brown_name}Brown Spider" />
+	<string id="taom_spider_brood_pale_name" text="{=taom_spider_brood_pale_name}Pale Broodmother" />
+
 	<!-- ============================================== -->
 	<!-- Bandit Hideout Encounter Descriptions          -->
 	<!-- (replace vanilla "(Undefined hideout type)" -    -->

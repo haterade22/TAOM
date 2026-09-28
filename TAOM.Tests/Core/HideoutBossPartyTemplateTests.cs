@@ -66,8 +66,10 @@ public class HideoutBossPartyTemplateTests
     {
         var path = Path.Combine(CultureDataFixture.ModuleDataPath(), "taom_spcultures.xml");
         Assert.IsTrue(File.Exists(path), $"taom_spcultures.xml not found at {path}");
+        // A bandit culture with can_have_settlement="false" (vanilla looters' shape, the Creature Bandits spider
+        // brood) owns no hideout, so it has no boss fight and no boss template.
         return XDocument.Load(path).Descendants("Culture")
-            .Where(c => (string)c.Attribute("is_bandit") == "true")
+            .Where(c => (string)c.Attribute("is_bandit") == "true" && (string)c.Attribute("can_have_settlement") != "false")
             .Select(c => new BanditCulture
             {
                 Id = (string)c.Attribute("id"),

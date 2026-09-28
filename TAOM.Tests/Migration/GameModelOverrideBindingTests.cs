@@ -72,15 +72,21 @@ public class GameModelOverrideBindingTests
         foreach (var parked in models.Where(m => ParkedModels.ContainsKey(m.Name)))
             Console.WriteLine($"Parked, not registered by design: {parked.FullName} ({ParkedModels[parked.Name]})");
 
+        // A feature module may declare its own model (GameModelDecl); FeatureModuleHooks adds it at game start.
+        var declared = new HashSet<Type>(TAOM.Composition.FeatureModules.All.SelectMany(m => m.GameModels).Select(d => d.ModelType));
+        foreach (var model in models.Where(declared.Contains))
+            Console.WriteLine($"Declared by a feature module: {model.FullName}");
+
         var unregistered = models
             .Where(m => !ParkedModels.ContainsKey(m.Name))
+            .Where(m => !declared.Contains(m))
             .Where(m => !subModule.Contains($"new {m.Name}("))
             .Select(m => m.FullName)
             .ToList();
 
         if (unregistered.Count > 0)
             Assert.Fail(
-                $"{unregistered.Count} GameModel(s) compile but are never AddModel'd in SubModule.cs. " +
+                $"{unregistered.Count} GameModel(s) compile but are never AddModel'd in SubModule.cs nor declared by a feature module. " +
                 "The engine will silently use the vanilla Default instead — a no-op in-game:\n  " +
                 string.Join("\n  ", unregistered));
     }

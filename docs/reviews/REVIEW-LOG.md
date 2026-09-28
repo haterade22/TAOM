@@ -4875,3 +4875,25 @@ long message holding `push` judged before the short force push) was closed by or
 a second convergence on that change and the merge (6 LOW) and a third review are recorded in the report's
 last section. Timing windows stay open for the maintainer (shipped and tracked by his choice): from roughly
 400 KB of text inside one push command, or 250 KB split so that force-like message text is judged first.
+
+## Review (number assigned at merge): Creature Bandits (#692), 8-lens deep review + convergence + Codex gpt-6-astra ultra x2 (2026-09-28)
+
+`/ship` for `feat/creature-bandits` (worktree `E:/repos/taom-creature-bandits`, base `743818cf`, uncommitted at
+review time). The eight `/deep-review` lenses and a convergence pass found 2 HIGH (the MCM group under the Combat
+Mechanics master toggle; the creature tree teleporting spiders onto the paused army during deployment), 6 MEDIUM and
+about twenty LOW, every one fixed or decided by Mike. Codex, first pass (the full feature): **2 MEDIUM, both confirmed,
+0 false positives**, all six Known Suspects disputed with quoted v1.5.3 decompiles (campaign casualty accounting,
+deployment, the route A creation scope, worker threads, the brood spawner, damage-model composition). Second pass
+(the fixes only): **1 MEDIUM, confirmed**, the other four questions disputed. Both passes ran at `ultra`; the second
+would have fitted `high`, and from this review the session sizes Codex effort per dispatch (review-codex skill). A
+Claude convergence reviewer checked the last fix. Full suite 10,979 passed, 2 skipped, 0 failed.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| C1 | Creature bandits never reached the battle scoreboard (`BattleObserverMissionLogic` reports `IsHuman` agents only) | Missing vanilla gate | The engine lens read the gate and judged it harmless by accounting symmetry, not by what the player sees | `CreatureScoreboardBridge` plus table-tested rules; lesson in `lessons/adapters-taleworlds-api.md` |
+| C2 | A nearer loose horse took a capped strike's slot from the soldier who opened the engage gate | Logic error | The engage gate skips mounts and the damage filter did not; nobody set the two side by side | A capped strike skips riderless mounts; regression test with a nearer loose horse |
+| C3 | The C1 bridge demanded a non-null combatant, which a Custom Battle console origin never has | Other: guard stricter than its consumer | The guard was written from the signature, not from what vanilla's observer and the scoreboard accept | `CreatureBanditRules.IsScoreboardRow`, tested with a real `BasicBattleAgentOrigin`; exactly-once set of added creatures |
+
+RCA `docs/reviews/rca-creature-bandits-2026-09-28.md`; raw outputs
+`docs/reviews/raw/codex-adversarial-creature-bandits-2026-09-28.md` and
+`codex-adversarial-creature-bandits-fixes-2026-09-28.md`.

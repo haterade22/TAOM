@@ -2676,5 +2676,9 @@
     <string id="taom_oob_autoassign_done" text="已指派隊長：{COUNT}。" />
     <string id="taom_oob_autoassign_not_general" text="只有此戰的主帥才能指派英雄。" />
     <string id="taom_oob_autoassign_none" text="沒有適合空缺隊長職位的英雄。" />
+    <string id="taom_bandit_mirkwood_spiders_name" text="Spiders of Mirkwood" />
+    <string id="taom_spider_brood_forest_name" text="Giant Spider" />
+    <string id="taom_spider_brood_brown_name" text="Brown Spider" />
+    <string id="taom_spider_brood_pale_name" text="Pale Broodmother" />
   </strings>
 </base>

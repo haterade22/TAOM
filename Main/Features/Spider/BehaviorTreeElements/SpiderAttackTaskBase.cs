@@ -3,6 +3,7 @@ using BehaviorTrees;
 using BehaviorTrees.Nodes;
 using BehaviorTreeWrapper.BlackBoardClasses;
 using TAOM.Adapters;
+using TAOM.Features.CreatureBandits.Diagnostics;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.Spider.BehaviorTreeElements;
@@ -18,6 +19,10 @@ public abstract class SpiderAttackTaskBase : BTTask, IBTBannerlordBase, IBTSpide
 {
     private IMissionAdapterFactory _adapterFactory;
     private ISpiderAttackService _service;
+    // The strike rules, read at each attack so a tuning change applies to the next one; null is the ridden spider's.
+    private readonly Func<SpiderStrikeSet>? _strikes;
+
+    protected SpiderAttackTaskBase(Func<SpiderStrikeSet>? strikes) => _strikes = strikes;
 
     private BTBlackboardValue<Agent> _agent;
     private BTBlackboardValue<DateTime?> _pounceLastFired;
@@ -45,7 +50,14 @@ public abstract class SpiderAttackTaskBase : BTTask, IBTBannerlordBase, IBTSpide
         _service ??= IoC.Resolve<ISpiderAttackService>();
         var spiderAdapter = _adapterFactory.GetAgentAdapter(spider);
         // bearing only steers a SideAttack; a Pounce ignores it (clip chosen by speed).
-        _service.SpiderAttack(spiderAdapter, Kind, TargetBearing.GetValue());
+        float bearing = TargetBearing.GetValue();
+        float velocityY = spider.MovementVelocity.Y;
+        var outcome = _service.SpiderAttack(spiderAdapter, Kind, bearing, _strikes?.Invoke() ?? SpiderStrikeSet.Ridden);
+        // Creature Bandits diagnostics (#692, temporary): a creature's budgeted attack line, here at the boundary that
+        // holds the agent. The ridden spider has no strike set and no diagnostics record.
+        if (_strikes != null && outcome.Clip != null)
+            CreatureBanditDiag.NoteAttack(spider, Kind.ToString(), outcome.Clip, outcome.InArc, outcome.Allies, outcome.Struck,
+                outcome.MaxTargets, velocityY, bearing, Mission.Current?.CurrentTime ?? float.NaN);
         return BTTaskStatus.FinishedWithTrue;
     }
 }
@@ -53,6 +65,7 @@ public abstract class SpiderAttackTaskBase : BTTask, IBTBannerlordBase, IBTSpide
 /// <summary>The priority lunge — front bite, or the charge variant at speed. Long cooldown.</summary>
 public class SpiderPounceTask : SpiderAttackTaskBase
 {
+    public SpiderPounceTask(Func<SpiderStrikeSet>? strikes = null) : base(strikes) { }
     protected override SpiderAttackKind Kind => SpiderAttackKind.Pounce;
     protected override void StampCooldown(DateTime now) => PounceLastFired.SetValue(now);
 }
@@ -61,6 +74,7 @@ public class SpiderPounceTask : SpiderAttackTaskBase
 /// positive = LEFT, negative = RIGHT. Short cooldown — fills the gap while the pounce recharges.</summary>
 public class SpiderSideAttackTask : SpiderAttackTaskBase
 {
+    public SpiderSideAttackTask(Func<SpiderStrikeSet>? strikes = null) : base(strikes) { }
     protected override SpiderAttackKind Kind => SpiderAttackKind.SideAttack;
     protected override void StampCooldown(DateTime now) => SideAttackLastFired.SetValue(now);
 }

@@ -1320,3 +1320,15 @@ and its test beside it.
 - **Prevent:** when correcting a factual claim, `git grep` its distinctive words and fix or annotate every hit in the
   same change; an archive entry gets an appended correction like this one, not an edit.
 - **Source:** `docs/reviews/rca-build-identity-dirty-flag-2026-09-24.md`, finding 10.
+
+### A console-spawn spike does not smoke the battle spawn path (2026-09-28)
+Route A's Custom Battle spike spawned nine spiders with `taom.spawn_troops` after the battle had started: every
+record logged `frame=initial-position` and `origin=BasicBattleAgentOrigin`. That proved targeting and nothing about
+the campaign path: the spawn loop's formation-slot frames, `PartyGroupAgentOrigin` accounting and, above all, the
+deployment phase, where the review found the creature tree teleporting spiders onto the paused army.
+- **Why missed:** the spike answered the question it was built for, and "passed its spike" read as "works in battle".
+- **Prevent:** a spike report names the spawn path it exercised (console, spawn loop, reinforcement) and the phases it
+  skipped; the feature doc's status says what has not run in game. Before calling a mission feature smoked, run it
+  through the battle's own spawn loop with deployment (a campaign field battle with 20 or more troops opens the
+  Order of Battle screen).
+- **Source:** `docs/reviews/rca-creature-bandits-2026-09-28.md`, finding 2.

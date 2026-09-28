@@ -1690,6 +1690,19 @@
 		</stacks>
 	</MBPartyTemplate>
 
+	<!-- Spiders of Mirkwood (#692): one brood, led by its pale broodmother. She is the FIRST stack so she sits
+	     at roster index 0 (the map icon's leader, PartyBaseHelper.GetVisualPartyLeader) and has the highest
+	     tier (the encounter's conversation character). Every troop spawns as a riderless spider. Small on
+	     purpose: each spider bites like the ridden ones (75-100 base, crits); Patch39 grows bandit rosters
+	     toward max_value with player progress. First-pass sizes, tune from battle feel. -->
+	<MBPartyTemplate id="mirkwood_spiders_brood_template">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.taom_spider_brood_pale" />
+			<PartyTemplateStack min_value="2" max_value="6" troop="NPCCharacter.taom_spider_brood_forest" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.taom_spider_brood_brown" />
+		</stacks>
+	</MBPartyTemplate>
+
   <!-- TAOM-NEWFACTIONS:goblin:BEGIN -->
 	<MBPartyTemplate id="villager_goblin_template">
 		<stacks>

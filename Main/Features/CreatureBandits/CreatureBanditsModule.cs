@@ -1,0 +1,63 @@
+using System.Collections.Generic;
+using DryIoc;
+using TAOM.Composition;
+using TAOM.Core.Logging;
+using TAOM.Features.CreatureBandits.Hooks;
+using TaleWorlds.MountAndBlade.ComponentInterfaces;
+
+namespace TAOM.Features.CreatureBandits;
+
+/// <summary>
+/// Creature Bandits (#692) as a feature module. No services: the decisions are the static
+/// <see cref="CreatureBanditRules"/>, read by patches that run on the engine's worker threads. Two patch categories:
+/// Patch93 at process load like the other mission patches (Patch92): the spawn swap, the weapon-state hook, the panic
+/// and rout blocks and the weapon guards; Patch94 at game init, the brood's map icon and encounter. One mission
+/// behavior: the creature's tree and the routed-count backstop. One campaign behavior, the Mirkwood brood spawner (no
+/// save data). One Custom Battle damage model. Order-free: nothing else patches <c>Mission.SpawnTroop</c>,
+/// <c>CommonAIComponent.OnHit</c> or <c>Mission.CanAgentRout</c>, and the backstop only acts on creature agents. The
+/// temporary diagnostics add one mission and one campaign behavior.
+/// </summary>
+internal sealed class CreatureBanditsModule : TaomFeatureModule
+{
+    private static readonly PatchCategoryDecl[] Categories =
+    {
+        new(CreatureBanditsConfig.PatchCategory, ApplyPhase.ProcessLoad),
+        // The map icon and encounter patches target SandBox.View and campaign menu types.
+        new(CreatureBanditsConfig.CampaignPatchCategory, ApplyPhase.GameInit),
+    };
+
+    private static readonly MissionBehaviorDecl[] Behaviors =
+    {
+        MissionBehaviorDecl.Of((mission, resolver) => new CreatureBanditMissionBehavior(resolver.Resolve<IModLogger>())),
+        // Temporary diagnostics (strip after sign-off with the Diagnostics folder).
+        MissionBehaviorDecl.Of((mission, resolver) => new Diagnostics.CreatureBanditDiagnosticsBehavior()),
+    };
+
+    // Custom Battle runs the engine's own damage model (CustomGame installs CustomAgentApplyDamageModel); the campaign's
+    // is TaomCombatMechanicsModel, which carries the same rule. The creatures' damage-taken rules need both.
+    private static readonly GameModelDecl[] CustomBattleModels =
+    {
+        GameModelDecl.Of<AgentApplyDamageModel, Models.TaomCustomBattleCreatureDamageModel>(ModelTarget.CustomBattle,
+            resolver => new Models.TaomCustomBattleCreatureDamageModel()),
+    };
+
+    private static readonly CampaignBehaviorDecl[] Campaign =
+    {
+        CampaignBehaviorDecl.Of(resolver => new CreatureBroodSpawnBehavior(resolver.Resolve<IModLogger>())),
+        // Temporary diagnostics (strip after sign-off with the Diagnostics folder).
+        CampaignBehaviorDecl.Of(resolver => new Diagnostics.CreatureBroodCampaignDiagBehavior()),
+    };
+
+    public override string Id => "CreatureBandits";
+
+    public override IReadOnlyList<CampaignBehaviorDecl> CampaignBehaviors => Campaign;
+
+    public override void InitializeStatics(IResolver resolver) =>
+        CreatureBanditLog.Logger = resolver.Resolve<IModLogger>();
+
+    public override IReadOnlyList<PatchCategoryDecl> PatchCategories => Categories;
+
+    public override IReadOnlyList<MissionBehaviorDecl> MissionBehaviors => Behaviors;
+
+    public override IReadOnlyList<GameModelDecl> GameModels => CustomBattleModels;
+}

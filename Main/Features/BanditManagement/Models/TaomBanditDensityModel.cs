@@ -1,6 +1,7 @@
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.Library;
+using TAOM.Features.CreatureBandits;
 
 namespace TAOM.Features.BanditManagement.Models;
 
@@ -57,6 +58,12 @@ public class TaomBanditDensityModel : DefaultBanditDensityModel
             : base.NumberOfMaximumTroopCountForFirstFightInHideout;
 
     public override int NumberOfMaximumTroopCountForBossFightInHideout => _bossFight.BossPhaseTroopCap;
+
+    // Creature Bandits (#692): the spider brood clan is a looter faction (no settlements), and vanilla spawns
+    // looters around any town or village on the map up to this cap (BanditSpawnCampaignBehavior.SpawnLooters).
+    // Zero for it; CreatureBroodSpawnBehavior spawns the broods around Mirkwood instead.
+    public override int GetMaxSupportedNumberOfLootersForClan(Clan clan) =>
+        CreatureBanditRules.IsCreatureBroodClan(clan?.StringId) ? 0 : base.GetMaxSupportedNumberOfLootersForClan(clan);
 
     // Helpers stay branch-free; per gamemodels.md, the property bodies above hold the ternary
     // which is allowed (it's a single conditional expression, not a multi-line block).

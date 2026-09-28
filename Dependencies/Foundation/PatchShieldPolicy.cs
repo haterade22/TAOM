@@ -136,6 +136,15 @@ public static class PatchShieldPolicy
         "TaleWorlds.MountAndBlade.Formation.get_UnitDiameter",
         "TaleWorlds.MountAndBlade.Formation.GetUnitPositionWithIndexAccordingToNewOrder",
         "TaleWorlds.MountAndBlade.Formation.GetUnitSpawnFrameWithIndex",
+        // Patch93's weapon-state guards (#692): read for every agent by AI, combat and UI, often on worker
+        // threads. CreatureBanditsWiringTests.HotCreatureTargets_AreOnPatchShieldsExclusionList walks the real
+        // targets through IsExcludedTargetMethod.
+        "TaleWorlds.MountAndBlade.Agent.GetPrimaryWieldedItemIndex",
+        "TaleWorlds.MountAndBlade.Agent.GetOffhandWieldedItemIndex",
+        "TaleWorlds.MountAndBlade.Agent.GetMissileRange",
+        // Patch93_CreatureBanditNoRout: CommonAIComponent.OnTickParallel asks it for every AI agent, horses
+        // included, every 0.5 to 0.6 s on the TWParallel workers.
+        "TaleWorlds.MountAndBlade.Mission.CanAgentRout",
     };
 
     /// <summary>Whether a patch target's declaring type + method name is on the hot-method exclusion list.</summary>

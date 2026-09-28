@@ -54,7 +54,8 @@ public class CultureLordTemplateTests
         foreach (var culture in CulturesInSpCultures())
         {
             var id = culture.Attribute("id")?.Value;
-            if (string.IsNullOrEmpty(id) || CultureDataFixture.HideoutOnlyCultures.Contains(id))
+            if (string.IsNullOrEmpty(id) || CultureDataFixture.HideoutOnlyCultures.Contains(id)
+                || CultureDataFixture.SettlementlessBanditCultures.Contains(id))
                 continue;
 
             foreach (var listName in new[] { LordTemplates, RebellionHeroTemplates })

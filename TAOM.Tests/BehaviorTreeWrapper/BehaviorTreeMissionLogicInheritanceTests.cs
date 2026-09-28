@@ -50,6 +50,7 @@ public class BehaviorTreeMissionLogicInheritanceTests
             typeof(TAOM.Features.Elk.ElkMissionBehavior),
             typeof(TAOM.Features.Animalia.AnimaliaMissionBehavior),
             typeof(TAOM.Features.TrollBruteForce.TrollBruteForceMissionBehavior),
+            typeof(TAOM.Features.CreatureBandits.CreatureBanditMissionBehavior),
         };
 
         foreach (var type in creatureBehaviors)

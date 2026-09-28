@@ -9,7 +9,8 @@ using TaleWorlds.MountAndBlade;
 namespace TAOM.Features.Spider;
 
 /// <summary>
-/// Behavior tree for the RIDDEN giant spider — the third creature in the warg → elephant BT lineage.
+/// Behavior tree for the RIDDEN giant spider — the third creature in the warg → elephant BT lineage. The riderless
+/// spider of a creature bandit brood (#692) has its own tree, CreatureBanditBehaviorTree.
 /// Built per spider-mount agent by <see cref="SpiderMissionBehavior"/> via a
 /// <c>BehaviorTreeAgentComponent</c>; the engine auto-ticks it each frame.
 ///
