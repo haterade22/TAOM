@@ -58,7 +58,7 @@ public class CareerQuestCampaignBehavior : CampaignBehaviorBase
         var careerId = _dataService.GetCareerStringId(hero.StringId);
         if (string.IsNullOrEmpty(careerId)) return;
 
-        if (AnyActiveCareerQuestFor(hero)) return;   // one career quest at a time, PER PLAYER
+        if (AnyActiveCareerQuestFor(hero, careerId)) return;   // one quest of this career at a time, PER PLAYER
 
         for (int tier = 1; tier <= 3; tier++)
         {
@@ -125,14 +125,19 @@ public class CareerQuestCampaignBehavior : CampaignBehaviorBase
     /// ungated precisely because career quests ARE per-player, so an unfiltered scan quietly broke
     /// the justification for leaving it ungated. Filtering by owner is what makes that claim true.
     /// (Codex P2, 2026-08-01.)
+    ///
+    /// Filtered by career as well: the CareerQuest shell also runs quest lines that are not careers
+    /// (armour acquisition's "Lord's Harness", career_id taom_lords_harness), and one of those must
+    /// not hold the player's career quests back.
     /// </summary>
-    private bool AnyActiveCareerQuestFor(Hero hero)
+    private bool AnyActiveCareerQuestFor(Hero hero, string careerId)
     {
         var qm = Campaign.Current?.QuestManager;
         if (qm == null || hero == null) return false;
         foreach (var q in qm.Quests)
         {
-            if (q is CareerQuest cq && cq.IsOngoing && cq.OwnerHeroStringId == hero.StringId)
+            if (q is CareerQuest cq && cq.IsOngoing && cq.OwnerHeroStringId == hero.StringId
+                && string.Equals(_questService.GetQuestById(cq.CareerQuestDefId)?.CareerId, careerId, StringComparison.OrdinalIgnoreCase))
                 return true;
         }
         return false;

@@ -167,6 +167,23 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "When on, the emissary option is hidden at settlements whose owner faction has no special resource. When off, the option still appears but is disabled with an explanatory hint.")]
     public bool HideEmissaryWhenNoResource { get; set; } = true;
 
+    // --- Armour Acquisition ---
+
+    [SettingPropertyGroup("Armour Acquisition")]
+    [SettingPropertyBool("Enable Armour Acquisition", Order = 0, RequireRestart = false,
+        HintText = "Markets and battle loot hand out light and medium armour freely. Heavy, elite and lord pieces are sold only where a town's armoury, its Barracks, is high enough; lord kit can also be forged there or earned, and named hero weapons never change hands. Visit a town's armoury to upgrade a piece with metals. Takes effect from the next game load.")]
+    public bool EnableArmourAcquisition { get; set; } = true;
+
+    [SettingPropertyGroup("Armour Acquisition")]
+    [SettingPropertyBool("Lord's Harness After Battle", Order = 1, RequireRestart = false,
+        HintText = "After a battle your side wins against an enemy lord, you may rarely find his household's lord harness among the spoils. Needs Armour Acquisition on.")]
+    public bool EnableArmourLordEvent { get; set; } = true;
+
+    [SettingPropertyGroup("Armour Acquisition")]
+    [SettingPropertyBool("Visiting Master Armourers", Order = 2, RequireRestart = false,
+        HintText = "Now and then a master armourer visits a town for a week, raising its armoury one level. Needs Armour Acquisition on.")]
+    public bool EnableVisitingArmourer { get; set; } = true;
+
     // --- Culture Conversion ---
 
     [SettingPropertyGroup("Culture Conversion")]

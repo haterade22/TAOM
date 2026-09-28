@@ -33,4 +33,28 @@
     </Rewards>
   </CareerQuest>
 
+  <!--
+    "The Lord's Harness" (docs/features/armour-acquisition.md): the quest route to lord kit. NOT a career:
+    career_id taom_lords_harness names no career, so CareerQuestCampaignBehavior never offers it.
+    LordHarnessQuestBehavior offers it at an armoury of the lord level in a town of the player's own culture
+    and starts it itself. One quest, its three deeds in any order (Mike, 2026-09-27); the captives and the
+    battles count from zero, so the quest can never complete inside its own start (a renown already over
+    900 simply shows as done). When it is done, a master armourer at an
+    armoury of the lord level fits the harness. Rewards here are renown only: the harness is granted there.
+  -->
+  <CareerQuest id="taom_lords_harness"
+               career_id="taom_lords_harness"
+               tier="1"
+               title_key="{=taom_lh_title}The Lord's Harness"
+               description_key="{=taom_lh_desc}The master armourer will fit a lord's harness only to a name the great houses know. Take enemy lords captive, raise your clan's renown and win battles at the head of your company, in any order; then a master armourer will fit you with your harness.">
+    <Objectives>
+      <Objective type="DefeatEnemyLords" target="2" task_key="{=taom_lh_task_lords}Take enemy lords captive" />
+      <Objective type="RenownThreshold" target="900" task_key="{=taom_lh_task_renown}Raise your clan's renown" />
+      <Objective type="WinBattles" target="12" task_key="{=taom_lh_task_battles}Win battles" />
+    </Objectives>
+    <Rewards>
+      <Reward type="GrantRenown" amount="100" />
+    </Rewards>
+  </CareerQuest>
+
 </CareerQuests>
