@@ -16,7 +16,8 @@
     "races": [
       "uruk",
       "orc",
-      "human"
+      "human",
+      "sauron"
     ],
     "starting_settlement": "town_ES1",
     "default_age": 20.0,

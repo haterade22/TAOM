@@ -758,7 +758,7 @@
 		initial_home_settlement="Settlement.town_isengard"
 		name="{=aom_clan_isengard_1_name}The White Hand"
 		tier="6"
-		owner="Hero.lord_I1_1"
+		owner="Hero.lord_I1_0"
 		culture="Culture.isengard"
 		super_faction="Kingdom.isengard"
 		is_noble="true"

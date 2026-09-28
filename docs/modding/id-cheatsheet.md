@@ -176,7 +176,7 @@ A race id is not an object reference. `BasicCharacterObject.Deserialize` sets `R
 | 10 | `dg_uruk` | `LOTRLOME_Armory/ModuleData/skins.xml:141470` | 238 |
 | 11 | `goblin` | `LOTRLOME_Armory/ModuleData/skins.xml:157356` | 289 |
 | 12 | `elf` | `LOTRLOME_Armory/ModuleData/skins.xml:173244` | 458 |
-| 13 | `saruman` | `LOTRLOME_Armory/ModuleData/skins.xml:190015` | 0 |
+| 13 | `saruman` | `LOTRLOME_Armory/ModuleData/skins.xml:190015` | 1 (`lord_I1_0`, Saruman the White, head of Isengard, #added 2026-09-28) |
 | 14 | `sauron` | `LOTRLOME_Armory/ModuleData/skins.xml:204237` | 0 |
 
 Human troops carry no `race=` at all; the eight `race="human"` uses are all on wanderers and named companions (`taom_wanderers.xml:490, 516, 662` and `named_companions/named_companions.xml:4, 147, 399, 557, 653`). The Armory file is 220,975 lines <!-- measured: wc -l LOTRLOME_Armory/ModuleData/skins.xml 2026-09-05 -->; `TAOM_Map/ModuleData/skins.xml` is a 7-line file declaring no race <!-- measured: same finditer over TAOM_Map/ModuleData/skins.xml 2026-09-05 -->. Because the integer is a position, inserting a race anywhere but the end renumbers every race after it; that is why the `sauron` block was appended last (worked example below) and why hero races are persisted by name, not by index ([hero-race](../features/hero-race.md)). A race also needs five `<Monster>` ids (`<race>`, `<race>_child`, `<race>_settlement`, `<race>_settlement_slow`, `<race>_settlement_fast`) and an `as_<race>_facegen` action set, or townsfolk fail to spawn and the mesh T-poses ([culture-playability-wiring](../features/culture-playability-wiring.md), row 14).

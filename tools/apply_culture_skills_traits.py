@@ -686,6 +686,12 @@ CULTURES = {
             (['battle','foreguard','war','marauder','slaver','huntmaster','enforcer','pack'], 'orc_warrior'),
         ],
         'canonical': {
+            'lord_I1_0': dict(  # Saruman the White — head of Isengard; downfall is pride/ambition, not skill
+                skills=dict(OneHanded=220,TwoHanded=160,Polearm=220,Bow=100,Crossbow=80,Throwing=140,
+                            Riding=150,Athletics=170,Crafting=280,Scouting=240,Tactics=380,Roguery=180,
+                            Charm=325,Leadership=390,Trade=240,Steward=400,Medicine=200,Engineering=300),
+                traits=dict(Honor=-2, Generosity=-1, Calculating=2, Mercy=-2, Valor=1,
+                            Egalitarian=-2, Oligarchic=2, Authoritarian=2)),
             'lord_I1_1': dict(archetype='orc_chieftain',   # Uglûk — Saruman's captain, leader of Amon Hen raid
                 skills=dict(OneHanded=275,TwoHanded=265,Polearm=240,Bow=170,Crossbow=110,Throwing=200,
                             Riding=180,Athletics=275,Crafting=150,Scouting=250,Tactics=255,Roguery=255,

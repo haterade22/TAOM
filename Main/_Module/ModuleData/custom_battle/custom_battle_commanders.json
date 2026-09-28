@@ -7,7 +7,7 @@
     "mirkwood":   ["lord_M1_1", "lord_M1_11"],
     "rivendell":  ["lord_R1_1", "lord_R2_1", "lord_R1_3", "lord_R1_4"],
     "lothlorien": ["lord_L1_1", "lord_L1_2"],
-    "isengard":   ["lord_I1_1", "lord_I4_1", "lord_I2_1", "lord_I2_3", "lord_I3_1"],
+    "isengard":   ["lord_I1_0", "lord_I1_1", "lord_I4_1", "lord_I2_1", "lord_I2_3", "lord_I3_1"],
     "erebor":     ["lord_E1_1", "lord_E1_2", "lord_E1_5"]
   }
 }

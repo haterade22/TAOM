@@ -153,6 +153,8 @@ Rebuild at the tag before anything ships.
      case-insensitively, as Windows resolves them: the tag spells `GUI/PreFabs/`, the install
      `GUI/Prefabs/`, and an exact comparison deletes every live prefab. Leave
      `RuntimeDataCache*` alone: the packager already excludes it unless `--keep-rdc` asks for it.
+     `AssetPackages/pack0.tpac` is what packaging TAOM in the editor writes and is not needed:
+     delete it. The other tpacs there are git-tracked (field camp and refuge prefabs) and stay.
    - **`<game>/Modules/TAOM.Dependencies/` outside `bin/`:** prune nothing. MCM's UI assets
      (`AssetPackages/`, `EmAssetPackages/`, `GUI/`, `ModuleData/Languages*/`) exist in the install
      only, and no build step recreates them
@@ -168,11 +170,10 @@ Rebuild at the tag before anything ships.
      compile-only or carry none). The build then mirrors `Win64_Shipping_Client` into `_Server` for
      both modules, and into `_wEditor` for TAOM only. Remove any other file; `.pdb`, `.exp` and `.lib` may stay, since the packager
      never ships them. A retired binary such as `BehaviorTreeWrapper.dll` would otherwise ship.
-3. Package: the same command without `--dry-run` (plus `--keep-rdc` or `--allow-unknown` if the dry
-   run's report calls for them).
-4. If the player package is assembled somewhere else (the editor package in
-   `E:\LOTRAOM_Releases\<channel>\Modules\`), run step 2's dry run with `--source` pointing at that
-   folder before uploading it.
+3. Package: **Mike packages through the Modding Kit editor, not Claude** (2026-09-28). Stop after the
+   prune and hand over; never write a package with the command above.
+4. Once his editor package exists (in `E:\LOTRAOM_Releases\<channel>\Modules\`), offer step 2's dry
+   run with `--source` pointing at that folder before he uploads it.
 
 ## Gotchas
 

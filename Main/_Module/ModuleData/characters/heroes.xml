@@ -440,6 +440,10 @@
 
 	<!-- White Hand Clan -->
 	<Hero
+		id="lord_I1_0"
+		faction="Faction.clan_isengard_1"
+		text="{=saruman_description}Saruman the White, once head of the Istari sent to Middle-earth, turned the wisdom of his order toward his own ambition. From Orthanc he bent Isengard's furnaces and pits to arm the Uruk-hai, and set himself against both Sauron and the Free Peoples in hope of ruling in his master's place. His counsel is unmatched, his stewardship of Isengard absolute, and his tongue capable of swaying even the wary. His fall was not a failure of skill but of pride: certain his cunning could outlast every rival, he broke faith with the White Council and staked Isengard's strength on his own ambition." />
+	<Hero
 		id="lord_I1_1"
 		faction="Faction.clan_isengard_1"
 		text="{=ugluk_description}Uglúk, the ruthless and cunning warlord of Isengard, commands Saruman's fearsome Uruk-hai with brutal efficiency. Fiercely loyal to his master, Uglúk embodies the relentless discipline and savagery that define the White Wizard's armies. Known for his harsh demeanor and unyielding resolve, he leads his troops with a mix of intimidation and tactical prowess, ensuring their dominance on the battlefield. Uglúk's disdain for weakness and his willingness to crush any opposition make him a fearsome figure among both his allies and enemies. Under his command, Isengard's forces strike terror into the hearts of the Free Peoples of Middle-earth, advancing Saruman's dark ambitions with every victory." />

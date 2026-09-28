@@ -92,6 +92,19 @@ which monsters use it is UNVERIFIED, but the hill troll's hand morphs work in ga
 7. **In game:** a character of that race with non-neutral face sliders, close up; for hands, a weapon in the grip.
    A new crash here is `/native-crash-triage`; divide the faulting address by 6 to name the mesh.
 
+### Exporting a face for a lord
+
+A lord's `<face>` needs the exact `<BodyProperties version="4" ... key="..."/>` string of a face built in the
+game's face editor, and v1.5.3 has no way to get it out: the face editor has no copy or export action (no
+clipboard code in `FaceGenVM`), and vanilla ships no console command for it.
+
+1. Build the face in character creation, or in the in-campaign face editor.
+2. Open the console (<kbd>Alt</kbd>+<kbd>~</kbd>) and run `taom.print_face` for the player hero, or
+   `taom.print_face <hero_id>` for any other hero already in the campaign.
+3. The console echoes the report, but the line that matters is hard to select there. Read it instead from the TAOM
+   debug log, `Logs\taom_debug_<timestamp>.log` under the Bannerlord install directory, tagged `[PrintFace]`.
+4. Copy the `<BodyProperties .../>` line verbatim into the lord's `<face>` in `heroes.xml` or `lords.xml`.
+
 ## Tools
 
 | Tool | Does |

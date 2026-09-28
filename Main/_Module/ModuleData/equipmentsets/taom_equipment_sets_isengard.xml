@@ -167,4 +167,19 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
+	<!-- ==================== SARUMAN THE WHITE ==================== -->
+
+	<EquipmentRoster id="saruman_bat_template" culture="Culture.isengard">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+			<Equipment slot="Body" id="Item.monk_robe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="saruman_civ_template" culture="Culture.isengard">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.monk_robe" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
 </EquipmentRosters>

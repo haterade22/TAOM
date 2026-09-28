@@ -19561,6 +19561,51 @@
         </Equipments>
     </NPCCharacter>
     <!-- Culture.isengard -->
+    <NPCCharacter id="lord_I1_0" race="saruman" name="{=aom_lord_I1_0_name}Saruman the White" age="90" voice="earnest" is_hero="true" culture="Culture.isengard" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_I1_0_skills">
+        <face>
+            <BodyProperties version="4" age="90" weight="0.3657" build="0.4274" key="000CE4000000304187778FF0F8BF007C00F8887788888888787E80FFAF00606D00D656040DFF90FF000000000000000000000000000000000000000043B40140" />
+            <hair_tags>
+                <hair_tag name="Long" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="220" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="220" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="80" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="150" />
+            <skill id="Athletics" value="170" />
+            <skill id="Crafting" value="280" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="380" />
+            <skill id="Roguery" value="180" />
+            <skill id="Charm" value="325" />
+            <skill id="Leadership" value="390" />
+            <skill id="Trade" value="240" />
+            <skill id="Steward" value="400" />
+            <skill id="Medicine" value="200" />
+            <skill id="Engineering" value="300" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-2" />
+            <Trait id="Oligarchic" value="2" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="saruman_bat_template" />
+            <EquipmentSet id="saruman_civ_template" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
     <NPCCharacter id="lord_I1_1" race="uruk_hai" name="{=aom_lord_I1_1_name}Uglúk, Chieftain of Isengard" age="30" voice="earnest" is_hero="true" culture="Culture.isengard" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_I1_1_skills">
         <face>
             <BodyProperties version="4" age="35" weight="0.6713" build="0.9606" key="0000F00E40CC3002F18111F1FAFE111F010186EE87FE5F001010F10E8550FF4A008EA60308FFE01E000000000000000000000000000000000000000043040142" />

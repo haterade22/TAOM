@@ -577,6 +577,7 @@
 	<string id="aom_lord_GB5_6_name" text="{=aom_lord_GB5_6_name}Lugbol" />
 	<string id="aom_lord_GB5_7_name" text="{=aom_lord_GB5_7_name}Brakza" />
 	<string id="aom_lord_GB5_8_name" text="{=aom_lord_GB5_8_name}Gnarla" />
+	<string id="aom_lord_I1_0_name" text="{=aom_lord_I1_0_name}Saruman the White" />
 	<string id="aom_lord_I1_10_name" text="{=aom_lord_I1_10_name}Krazdra" />
 	<string id="aom_lord_I1_11_name" text="{=aom_lord_I1_11_name}Uglúk Child" />
 	<string id="aom_lord_I1_13_name" text="{=aom_lord_I1_13_name}Ughasha" />

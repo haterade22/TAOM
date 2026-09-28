@@ -1065,7 +1065,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" age="22.23" weight="0.3009" build="0.8796" key="00005C0000140003F08FF0F7BBF0F0087F86880BF0EF000F00000E709F0777F700FD56030F00F006000000000000000000000000000000000000000045F40146"/>
+                <BodyProperties version="4" age="22.05" weight="0.0016" build="1" key="0000DC008000200287D6EA8CB67DB6A48976887788888888888888888878786800FF06040F888888000000000000000000000000000000000000000043FC0140"/>
             </face>
                                                             <skills>
                                                                 <skill id="OneHanded" value="320" />

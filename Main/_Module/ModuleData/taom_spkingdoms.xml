@@ -350,7 +350,7 @@
     <!--Isengard - Uruk-hai-->
     <Kingdom
         id="isengard"
-        owner="Hero.lord_I1_1"
+        owner="Hero.lord_I1_0"
         initial_home_settlement="Settlement.town_isengard"
         banner_key="11.149.166.1528.1528.764.764.1.0.0.23000.172.171.700.700.764.764.0.0.0"
         primary_banner_color="0xff000000"
