@@ -32,9 +32,10 @@ the #636 great elk's; these two had no attack wired then.
    re-import, open the Kit once and close it again.
 2. Launch with TAOM, cheat mode on (`engine_config.txt`), start any Custom Battle, open the console:
    ```
-   taom.spawn_troops taom_test_animalia_elk_rider 5 ally
-   taom.spawn_troops taom_test_animalia_moose_rider 5 enemy
+   taom.spawn_troops mirkwood_rochenlas 5 ally
    ```
+   Rôchenlas rides the Animalia elk. The moose has no spawnable troop (Thranduil and the Mirkwood lords ride it);
+   for a console test, re-add a test rider on a branch (the quadruped workflow's step 11) and never ship it.
    `taom.print_agent_info <name>` confirms the monster and action set (`as_animalia_elk` / `as_animalia_moose`).
 3. Watch: standing still and idling, walk / trot / canter / gallop (slower cadence than a horse is expected, sliding
    hooves are not), backing up, the elk's rear and hit reactions, kicks, deaths and the lying hold. Turns and jumps
@@ -357,12 +358,11 @@ prizes; a caravan can buy one from a market, since `CaravansCampaignBehavior.Buy
 `AnimaliaMountWiringTests.ElkRiderStartingMount_AndItsSaddle_AreGuaranteedStockInMirkwoodMarkets` reads the
 career roster, so a new starting mount must be routed too.
 
-**The two test riders stay visible** (Mike, 2026-09-23): `taom_test_animalia_elk_rider` and
-`taom_test_animalia_moose_rider` (Soldier, Cavalry, Mirkwood, registered for CustomGame) appear in every Custom
-Battle's Mirkwood cavalry picker, in English in every language. The elk rider is an exact twin of
-`mirkwood_rochenlas` now. **Delete `troops/troops_animalia_test.xml`, its SubModule.xml node, its two ladder
-exemptions (`tools/taom_schema.py`, `tools/melee_ladders.json`) and the `taom_test_` recruitment exemption before the
-next player release**; `AnimaliaMountWiringTests.TestRiders_*` goes with them.
+**The two test riders were removed for the v2.0.31 release** (Mike, 2026-09-28): `taom_test_animalia_elk_rider`
+and `taom_test_animalia_moose_rider` showed in every Custom Battle's Mirkwood cavalry picker. Their file
+`troops/troops_animalia_test.xml`, its SubModule.xml node, its two ladder exemptions (`tools/taom_schema.py`,
+`tools/melee_ladders.json`), the `taom_test_` recruitment exemption and `AnimaliaMountWiringTests.TestRiders_*`
+went with them. Re-add test riders on a branch when a test needs them; they do not ship.
 
 ## Configuration
 
@@ -432,8 +432,7 @@ UE exported them; whether Bannerlord wants the green channel flipped is settled 
 | `tools/gen_animalia_anim_clips.ps1` | The 54 `_anm.tpac` clips (52 + two `_movement` standing clips), cloned from vanilla horse clips, with the measured values |
 | `tools/apply_animalia_armory.py` | The Armory edits: Monsters file + registration, `as_animalia_*` action sets and twins, the two Horse items (dry run / `--apply`) |
 | `docs/reference/lotrlome-animalia-changes.md` | Ledger of every live Armory edit, backups, redo steps |
-| `Main/_Module/ModuleData/troops/troops_animalia_test.xml` | The two test riders (CustomGame only), registered in `Main/_Module/SubModule.xml`; exempt from the armour and melee ladders and from the recruitment-reachability test, all marked for removal with the file |
-| `TAOM.Tests/Features/Animalia/AnimaliaMountWiringTests.cs` | 12 tests: test riders pair mount and saddle; items name their Monster and mesh; Monsters are horses on their own set and registered; sets are children of `as_horse` with `_map` / `_town_and_village` twins; every bound clip exists and every bound type is an `as_horse` action (or the antler); the antler actions are `actt_kick` and bound; and the real riders ("Who rides them"): the lower cavalry, Thranduil and the lord templates, the generated lord and ruler templates, the career start; the career start's mount and saddle as guaranteed Mirkwood stock; each Monster's size and its item's placeholder |
+| `TAOM.Tests/Features/Animalia/AnimaliaMountWiringTests.cs` | 11 tests: items name their Monster and mesh; Monsters are horses on their own set and registered; sets are children of `as_horse` with `_map` / `_town_and_village` twins; every bound clip exists and every bound type is an `as_horse` action (or the antler); the antler actions are `actt_kick` and bound; and the real riders ("Who rides them"): the lower cavalry, Thranduil and the lord templates, the generated lord and ruler templates, the career start; the career start's mount and saddle as guaranteed Mirkwood stock; each Monster's size and its item's placeholder |
 | `C:\Users\mikew\Downloads\horse.fbx` | TaleWorlds' horse mesh export: the template armature (outside the repo) |
 | `LOTRLOME_Armory\AssetSources\creature\elk\` | Mike's layout: `animalia_elk_08.fbx`, `animalia_moose_big.fbx`, `animations\elk\` (64), `animations\moose\` (33), `textures\` (9); beside `elk_001.fbx` |
 | `LOTRLOME_Armory\Assets\creature\elk\` | What the Kit made of them: `animalia_elk_08_geo.tpac`, `animalia_moose_big_geo.tpac`, `textures\` (9 `_tex`, 3 `_mtl`), `animations\elk\`, `animations\moose\` |

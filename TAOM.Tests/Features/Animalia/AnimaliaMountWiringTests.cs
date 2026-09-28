@@ -26,12 +26,12 @@ public class AnimaliaMountWiringTests
 {
     private const string ElkSaddle = "Item.taom_elk_saddle_a";
 
-    private static readonly (string Animal, string Item, string Mesh, string Monster, string ActionSet, string Rider)[] Mounts =
+    private static readonly (string Animal, string Item, string Mesh, string Monster, string ActionSet)[] Mounts =
     {
         // Monster and set ids from AnimaliaConfig, so the Armory checks below also prove the C# attach key and drift
         // guard name what the Armory declares (AnimaliaConfigTests pins the constants as literals).
-        ("elk", "taom_animalia_elk_a", "animalia_elk_08", AnimaliaConfig.ElkMonsterId, AnimaliaConfig.ElkActionSetId, "taom_test_animalia_elk_rider"),
-        ("moose", "taom_animalia_moose_a", "animalia_moose_big", AnimaliaConfig.MooseMonsterId, AnimaliaConfig.MooseActionSetId, "taom_test_animalia_moose_rider"),
+        ("elk", "taom_animalia_elk_a", "animalia_elk_08", AnimaliaConfig.ElkMonsterId, AnimaliaConfig.ElkActionSetId),
+        ("moose", "taom_animalia_moose_a", "animalia_moose_big", AnimaliaConfig.MooseMonsterId, AnimaliaConfig.MooseActionSetId),
     };
 
     private static string ModuleDataPath => CultureDataFixture.ModuleDataPath();
@@ -61,22 +61,6 @@ public class AnimaliaMountWiringTests
         var set = doc.Descendants("action_set").SingleOrDefault(s => (string?)s.Attribute("id") == id);
         Assert.IsNotNull(set, $"action set {id} is missing from the Armory's action_sets.xml");
         return set!;
-    }
-
-    [TestMethod]
-    public void TestRiders_RideTheirAnimaliaMount_WithTheElkSaddle()
-    {
-        var doc = XDocument.Load(Path.Combine(ModuleDataPath, "troops", "troops_animalia_test.xml"));
-        foreach (var m in Mounts)
-        {
-            var troop = doc.Descendants("NPCCharacter").SingleOrDefault(n => (string?)n.Attribute("id") == m.Rider);
-            Assert.IsNotNull(troop, $"{m.Rider} is missing");
-            var equipments = troop!.Element("Equipments");
-            Assert.IsNotNull(equipments, $"{m.Rider} has no <Equipments>");
-            Assert.AreEqual("Item." + m.Item, Slot(equipments!, "Horse"), $"{m.Rider} must ride the {m.Animal}");
-            // Every Horse slot needs a harness beside it (MOUNT_WITHOUT_HARNESS): the Animalia meshes are bare animals.
-            Assert.AreEqual(ElkSaddle, Slot(equipments!, "HorseHarness"), $"{m.Rider} must carry the elk saddle");
-        }
     }
 
     [TestMethod]

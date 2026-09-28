@@ -865,7 +865,5 @@
     <string id="aom_gondor_loss_noble_veteran_name" text="[剛鐸] 洛薩那赫斧兵" />
     <string id="aom_gondor_loss_noble_warden_name" text="[剛鐸] 洛薩那赫斧衛長" />
     <string id="aom_harad_howdah_crew_name" text="[哈拉德] 象轎弓箭手" />
-    <string id="taom_test_animalia_elk_rider" text="[測試] 動物駝鹿騎士" />
-    <string id="taom_test_animalia_moose_rider" text="[測試] 動物麋鹿騎士" />
   </strings>
 </base>

@@ -865,7 +865,5 @@
     <string id="aom_gondor_loss_noble_veteran_name" text="[Gondor] Lossarnach Baltacısı" />
     <string id="aom_gondor_loss_noble_warden_name" text="[Gondor] Lossarnach Balta Muhafızı" />
     <string id="aom_harad_howdah_crew_name" text="[Harad] Howdah Okçusu" />
-    <string id="taom_test_animalia_elk_rider" text="[Test] Animalia Geyik Binicisi" />
-    <string id="taom_test_animalia_moose_rider" text="[Test] Animalia Musgeyiği Binicisi" />
   </strings>
 </base>

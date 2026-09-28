@@ -865,7 +865,5 @@
     <string id="aom_gondor_loss_noble_veteran_name" text="[곤도르] 로사르나크 도끼병" />
     <string id="aom_gondor_loss_noble_warden_name" text="[곤도르] 로사르나크 도끼수호대" />
     <string id="aom_harad_howdah_crew_name" text="[하라드] 하우다 궁수" />
-    <string id="taom_test_animalia_elk_rider" text="[테스트] 아니말리아 엘크 기수" />
-    <string id="taom_test_animalia_moose_rider" text="[테스트] 아니말리아 무스 기수" />
   </strings>
 </base>

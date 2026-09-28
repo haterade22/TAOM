@@ -859,8 +859,6 @@
 	<string id="taom_harad_raiders_boss_name" text="{=taom_harad_raiders_boss_name}[Harad] Haradrim Warlord" />
 	<string id="taom_mirkwood_stalkers_boss_name" text="{=taom_mirkwood_stalkers_boss_name}[Mirkwood] Stalker Captain" />
 	<string id="taom_rhun_raiders_boss_name" text="{=taom_rhun_raiders_boss_name}[Rhûn] Kharaghûl Warlord" />
-	<string id="taom_test_animalia_elk_rider" text="{=taom_test_animalia_elk_rider}[Test] Animalia Elk Rider" />
-	<string id="taom_test_animalia_moose_rider" text="{=taom_test_animalia_moose_rider}[Test] Animalia Moose Rider" />
 	<string id="taom_umbar_corsairs_boss_name" text="{=taom_umbar_corsairs_boss_name}[Umbar] Corsair Captain" />
 
 </strings>

@@ -865,7 +865,5 @@
     <string id="aom_gondor_loss_noble_veteran_name" text="[Gondor] Asciere di Lossarnach" />
     <string id="aom_gondor_loss_noble_warden_name" text="[Gondor] Custode dell'Ascia di Lossarnach" />
     <string id="aom_harad_howdah_crew_name" text="[Harad] Arciere da Howdah" />
-    <string id="taom_test_animalia_elk_rider" text="[Test] Cavalcatore di Cervo Animalia" />
-    <string id="taom_test_animalia_moose_rider" text="[Test] Cavalcatore di Alce Animalia" />
   </strings>
 </base>

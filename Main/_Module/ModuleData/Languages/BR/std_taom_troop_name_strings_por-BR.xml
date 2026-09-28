@@ -865,7 +865,5 @@
     <string id="aom_gondor_loss_noble_veteran_name" text="[Gondor] Machadeiro de Lossarnach" />
     <string id="aom_gondor_loss_noble_warden_name" text="[Gondor] Guardião do Machado de Lossarnach" />
     <string id="aom_harad_howdah_crew_name" text="[Harad] Arqueiro de Howdah" />
-    <string id="taom_test_animalia_elk_rider" text="[Teste] Cavaleiro de Alce Animalia" />
-    <string id="taom_test_animalia_moose_rider" text="[Teste] Cavaleiro de Alce-americano Animalia" />
   </strings>
 </base>

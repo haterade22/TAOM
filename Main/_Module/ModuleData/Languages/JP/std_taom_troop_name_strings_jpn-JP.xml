@@ -865,7 +865,5 @@
     <string id="aom_gondor_loss_noble_veteran_name" text="[ゴンドール] ロッサールナッハの斧兵" />
     <string id="aom_gondor_loss_noble_warden_name" text="[ゴンドール] ロッサールナッハの斧衛長" />
     <string id="aom_harad_howdah_crew_name" text="[ハラド] 象輿の射手" />
-    <string id="taom_test_animalia_elk_rider" text="[テスト] アニマリア・エルク騎手" />
-    <string id="taom_test_animalia_moose_rider" text="[テスト] アニマリア・ヘラジカ騎手" />
   </strings>
 </base>

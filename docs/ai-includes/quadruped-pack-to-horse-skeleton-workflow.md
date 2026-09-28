@@ -124,7 +124,8 @@ all five steps; nothing is written unless every step can succeed. Every edit is 
 `Main/_Module/SubModule.xml` for **CustomGame only**, ids starting `taom_test_`, every Horse slot with a harness.
 Exempt the riders from the armour and melee ladders (`tools/taom_schema.py` `_ARMOUR_LADDER_EXEMPT`,
 `tools/melee_ladders.json`), or the validator groups their file as a kingdom and skews every culture's median;
-the recruitment-reachability test already exempts the `taom_test_` prefix. The riders show in every Custom
+and add the `taom_test_` prefix to the recruitment-reachability test's exemptions (`VolunteerRecruitmentServiceTests`,
+removed with the #646 riders for v2.0.31). The riders show in every Custom
 Battle's picker for their culture, in English in every language: delete the file and its exemptions before a
 player release (or set `is_obsolete="true"` to hide them; `taom.spawn_troops` still finds them). Deploy the two repo files by copy
 (the deployed `SubModule.xml` is otherwise identical to the repo's) rather than a build that ships every
@@ -140,8 +141,8 @@ the horse usage set fires that itself. [animalia-elk-moose.md](../features/anima
 
 **13. In game, then size.** Custom Battle with cheat mode, console:
 ```
-taom.spawn_troops taom_test_animalia_elk_rider 5 ally
-taom.spawn_troops taom_test_animalia_moose_rider 5 enemy
+taom.spawn_troops taom_test_<animal>_rider 5 ally
+taom.spawn_troops taom_test_<animal>_rider 5 enemy
 ```
 Read the TAOM log (`<game>\bin\Win64_Shipping_Client\Logs\taom_debug_*.log`) for `[MonsterSize]` (the sizes
 applied), `[MissionDiag] ActionSet '...' used by ... monster=...` and the feature's own `[Animalia]` lines, and the

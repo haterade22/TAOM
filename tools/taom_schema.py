@@ -1534,10 +1534,6 @@ class Validator:
         "harad_elephant_rider": "bespoke mount rider at level 51 in light kit (rebalance_troops.SKIP_TROOP_IDS)",
         "harad_mumakil_rider": "bespoke mount rider at level 51 in light kit (rebalance_troops.SKIP_TROOP_IDS)",
         "gondor_ithilien_ranger": "tier-10 light ranger kit by design (docs/features/gondor-ithilien-ranger.md)",
-        # #646 test riders (troops/troops_animalia_test.xml, CustomGame only): without this their file is
-        # grouped as a kingdom ('animalia_test') and shifts every other culture's field median. Remove with the file.
-        "taom_test_animalia_elk_rider": "#646 Custom Battle test rider, not a kingdom's troop (troops_animalia_test.xml)",
-        "taom_test_animalia_moose_rider": "#646 Custom Battle test rider, not a kingdom's troop (troops_animalia_test.xml)",
     }
     # Gondor noble lines at engine tier 2 to 7 (level 11 to 36), from the "<Region> Noble" troop
     # trees of KEYforce's spec (lotraom-assets tools/gondor_armors_and_troops.md). Mike, 2026-09-25:

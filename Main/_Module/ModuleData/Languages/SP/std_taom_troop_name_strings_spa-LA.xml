@@ -865,7 +865,5 @@
     <string id="aom_gondor_loss_noble_veteran_name" text="[Gondor] Hachero de Lossarnach" />
     <string id="aom_gondor_loss_noble_warden_name" text="[Gondor] Guardián del Hacha de Lossarnach" />
     <string id="aom_harad_howdah_crew_name" text="[Harad] Arquero de howdah" />
-    <string id="taom_test_animalia_elk_rider" text="[Prueba] Jinete de ciervo Animalia" />
-    <string id="taom_test_animalia_moose_rider" text="[Prueba] Jinete de alce Animalia" />
   </strings>
 </base>

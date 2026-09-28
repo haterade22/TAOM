@@ -865,7 +865,5 @@
     <string id="aom_gondor_loss_noble_veteran_name" text="[Гондор] Секироносец Лоссарнаха" />
     <string id="aom_gondor_loss_noble_warden_name" text="[Гондор] Страж-секироносец Лоссарнаха" />
     <string id="aom_harad_howdah_crew_name" text="[Харад] Лучник хауды" />
-    <string id="taom_test_animalia_elk_rider" text="[Тест] Всадник на олене" />
-    <string id="taom_test_animalia_moose_rider" text="[Тест] Всадник на лосе" />
   </strings>
 </base>
