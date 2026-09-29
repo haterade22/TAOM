@@ -17,11 +17,12 @@
 # gate", which is the lesson this hook is the fix for.
 #
 # CONTRACT
-#   FAIL (exit 1)   -> print the FAIL block to stderr, once per distinct finding set
+#   FAIL (exit 1)   -> send the FAIL block to Claude as additionalContext, once per finding set
 #   PASS (exit 0)   -> silent, and clear the mute so the next regression speaks
-#   SKIP / no tool  -> print one line saying it could not run. NEVER silent: for a detection hook
+#   SKIP / no tool  -> one line saying it could not run. NEVER silent: for a detection hook
 #                      no output is read as "no findings", per hook-authoring.md (2026-08-10).
-# Always exits 0. This is advisory; PostToolUse fires after the write and gates nothing.
+# Exits 0, or 2 when no python can encode the JSON (exit 2 is PostToolUse's other visible
+# channel). Advisory either way: PostToolUse fires after the write and gates nothing.
 #
 # The WARN block (43 rosters pairing a shield with a two-handed sword/axe/mace, issue #450) is
 # deliberately not reported. It is pre-existing, it is a roster decision rather than a data one,
@@ -68,7 +69,9 @@ esac
 [[ -z "$RELEVANT" ]] && exit 0
 
 TOOL="tools/audit_polearm_shield_parity.py"
-STATE=".claude/logs/.polearm-gate-reported"
+# -v2 since 2026-09-29: a mute written before then records a report sent to stderr, which Claude
+# never saw, so it must not silence the same finding set now that reports arrive.
+STATE=".claude/logs/.polearm-gate-reported-v2"
 
 # Report only when the finding set CHANGES, so a burst of roster edits does not re-nag while a
 # known finding stands, but a NEW regression speaks immediately. Mirrors check-deep-review.sh's
@@ -80,9 +83,22 @@ report_once() {
     if [[ -n "$hash" && -f "$STATE" ]] && [[ "$(cat "$STATE" 2>/dev/null)" == "$hash" ]]; then
         exit 0
     fi
+    # PostToolUse stderr on exit 0 reaches only the debug log, so this printed to no one from
+    # 2026-08-20 to 2026-09-29. additionalContext lands next to the tool result (hooks docs, "Add
+    # context for Claude"). Both answers below reach Claude (JSON, or exit 2 with stderr when no
+    # python can encode it), so both mute: a repeat of a delivered report is noise.
+    local json=""
+    if [[ -n "${PYBIN:-}" ]]; then
+        json=$(printf '%s' "$body" | "$PYBIN" -c 'import sys, json; sys.stdout.write(json.dumps({"hookSpecificOutput": {"hookEventName": "PostToolUse", "additionalContext": sys.stdin.read()}}))' 2>/dev/null)
+    fi
     mkdir -p "$(dirname "$STATE")" 2>/dev/null
     [[ -n "$hash" ]] && printf '%s' "$hash" > "$STATE" 2>/dev/null
-    printf '%s\n' "$body" >&2
+    if [[ -z "$json" ]]; then
+        # No python to encode with: exit 2 is the one other channel that shows stderr to Claude.
+        printf '%s\n' "$body" >&2  # stderr-exit-2: shown to Claude because the hook exits 2
+        exit 2
+    fi
+    printf '%s\n' "$json"
     exit 0
 }
 

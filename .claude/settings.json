@@ -6,15 +6,6 @@
   },
   "permissions": {
     "deny": [
-      "mcp__git__git_add",
-      "mcp__git__git_commit",
-      "mcp__git__git_reset",
-      "mcp__git__git_checkout",
-      "mcp__git__git_create_branch",
-      "mcp__filesystem__write_file",
-      "mcp__filesystem__edit_file",
-      "mcp__filesystem__move_file",
-      "mcp__filesystem__create_directory",
       "mcp__serena__create_text_file",
       "mcp__serena__replace_content",
       "mcp__serena__replace_in_files",
@@ -145,11 +136,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify-csharp-edit.sh",
-            "timeout": 5
-          },
-          {
-            "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-polearm-shield-parity.sh",
             "statusMessage": "Checking no roster pairs a shield with a weapon the AI will not draw…",
             "timeout": 20
@@ -274,7 +260,7 @@
     "context7@claude-plugins-official": true,
     "code-review@claude-plugins-official": true,
     "code-simplifier@claude-plugins-official": false,
-    "github@claude-plugins-official": true,
+    "github@claude-plugins-official": false,
     "feature-dev@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,

@@ -108,6 +108,47 @@ game's face editor. The editor copies it: **Ctrl+C** in the face editor puts
    2026-09-28): a race without `as_<race>_facegen` sets falls back to the human set in character creation, and
    a player race takes every system keyed on that race name.
 
+### What the face key holds
+
+The `key` is 128 hex characters, eight 64-bit parts (`StaticBodyProperties.KeyPart1..8`); every conversion is native
+(`get_params_from_key` 0x57A0E0, `produce_numeric_key_with_params` 0x57B830, v1.5.3) [Certain for the layout, from
+the decompile]:
+
+- **Part 1:** six-bit fields for the hair, beard, face texture and tattoo indices, then the tattoo, hair, eye and
+  skin colour positions (each value / 63).
+- **Parts 2 to 5: one hex digit per slider**, low digit first, in the skin's `deform_key` document order. A slider's
+  position is digit / 15 (encoding rounds, ties down), and its channel weight is
+  `key_min + position * (key_max - key_min)`. The `weight`, `build`, `height` and `age` keys sit at the end without a
+  range; `weight` and `build` take the `<BodyProperties weight= build=>` floats directly.
+- **Parts 6 to 8:** hair, beard, tattoo and face texture filters, then voice, mouth texture, eyebrow, hair flip,
+  height multiplier and voice pitch.
+
+**A face that starts as the head was authored** puts every channel at weight 0, so each slider's digit is the one
+whose weight lands nearest 0. A range that straddles 0 evenly puts it at digit 7.5, which cannot be stored, so the
+nearest digit is half a step off (small once the ranges are tuned, below). A range that excludes 0 never reaches the
+authored head: vanilla's `face_ratio` (0.5 to 1.1) held Saruman's face 5 mm off his FBX until its near end was moved
+to 0. Computed this way from Mike's exported Saruman key (keeping its hair, beard, colours, voice and height), the
+largest remaining offset from his FBX was 0.69 mm (`kid_face`, whose range excludes 0); Mike then chose a face of
+his own for the lord (2026-09-29). A key stores slider positions, not shapes, so a face built before a range change
+looks different after it.
+
+## Slider reach
+
+A `<deform_key>` in the skin is one face slider: `key_time_point` names the morph channel it drives, and `key_min`
+and `key_max` are that channel's weight at the two ends of the slider [Certain for the attributes; the exact
+slider to weight formula is being researched]. Keys with no range (`age` on channel 63 and three others) are driven
+by the engine. **Every TAOM race copied vanilla's human ranges** (male dwarf 58 of 60 keys, Saruman 59 of 59, the
+adult female dwarf 59 of 60), but vanilla tuned those weights for its own head's channels, so a head authored with
+larger channels moves further on the same slider. Measured 2026-09-29 as channel travel times the larger weight: the
+female dwarf reached 1.5 to 3.3 times the male dwarf's travel on 27 sliders, Saruman up to 9 times on 32.
+
+A new race head gets its ranges scaled to the male dwarf's reach (the yardstick: it runs vanilla's ranges, and
+vanilla's own head packages do not open in TpacTool 0.4.0): export the heads with `tools/export_face_morphs.ps1`,
+then `tools/oneoff/tune_face_slider_reach.py` (dry run, `--apply`, `--check`). It scales both ends of a range by
+one factor, so the slider position that shows the head as authored does not move. Vanilla also fixes `eyebump`
+(channel 59) at weight 1 on every skin; on a vanilla head that channel barely moves, but a custom head can author it
+large (Saruman's moved 13 mm), and then the face in game never matches the FBX.
+
 ## Hair, beards and eyebrows
 
 The skin's `hair_meshes`, `beard_meshes` and `eyebrow_meshes` are "upper meshes": separate metameshes the face
@@ -163,6 +204,7 @@ array and does not clamp the count (the skin parser 0x577410, v1.5.3), so a grad
 | `tools/check_eye_follow.py` (export: `export_face_morphs.ps1`) | Gate on the compiled package: no eye left behind |
 | `tools/oneoff/restore_adult_woman_dwarf.py` | The female dwarf's skin restore; its dry run prints the live state |
 | `tools/blender/strip_upper_mesh_channels.py` | Removes every morph channel from named hair and beard meshes and their LODs, the vanilla shape; refuses face parts |
+| `tools/oneoff/tune_face_slider_reach.py` | Scales a race head's slider ranges to the male dwarf's reach in millimetres; `--zero` pins a key at 0; `--check` is the reinstall gate |
 | `tools/oneoff/add_sauron_eye_colours.py` | Gold and red stops on the `sauron` race's eye slider; `--check` exits 1 when a skin lacks them |
 
 ## What the 2026-09-26 investigation ruled out

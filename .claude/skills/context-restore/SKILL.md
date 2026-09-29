@@ -41,14 +41,22 @@ Adapted from [garrytan/gstack/context-restore](https://github.com/garrytan/gstac
 2. **Pick which to restore.** Default: most recent. If the user asks for a specific one (e.g., "restore the careerSystem snapshot"), match by filename slug. Use `AskUserQuestion` if more than one recent snapshot is plausible (within last 24h).
 
 3. **Read the picked snapshot** and surface its key sections to the user, in this order:
+   - Failed approaches (don't retry), in full: the dead ends a resumed session would otherwise retry
+     (from affaan-m/ECC `resume-session`, MIT)
    - In-flight task (1 line)
    - Next concrete step (1 line)
+   - Suggested skills for the next session (in order)
    - Files in flight (count + names)
    - Decisions made (full list)
    - Open questions / blockers (if any)
-   - Anything that surprised you (if present — this is the highest-value field)
+   - Anything that surprised you (if present: the highest-value field)
 
-4. **Cross-check with current git state.** Has the branch moved? Are the files-in-flight still showing as modified? If yes, surface as "still in flight." If no, ask: "the snapshot says you were editing X, but current git is clean — was that committed since?"
+4. **Cross-check with current git state.** First the age: take the snapshot's HEAD hash and run
+   `git rev-list --count <hash>..HEAD`. If the snapshot is more than 7 days old or that count is
+   above zero, say so before anything else ("saved 12 days ago; 9 commits landed since"), because its
+   decisions and files-in-flight may be stale. If git no longer knows the hash (rebased away, or
+   saved on another branch), say that instead: the age is then unknown, not zero. (The staleness
+   notice is from affaan-m/ECC `resume-session`, MIT.) Then: has the branch moved? Are the files-in-flight still showing as modified? If yes, surface as "still in flight." If no, ask: "the snapshot says you were editing X, but current git is clean; was that committed since?"
 
 5. **Optionally re-Read files-in-flight.** Per `csharp-architecture.md` "Stale-file re-read", if you're going to edit them, re-Read first.
 
@@ -66,7 +74,10 @@ Adapted from [garrytan/gstack/context-restore](https://github.com/garrytan/gstac
 After loading, summarize like:
 
 ```
-Loaded: .claude/state/context/20260426-153012-tier2-impl.md (saved 2h ago)
+Loaded: .claude/state/context/20260426-153012-tier2-impl.md (saved 2h ago, 0 commits since)
+
+Don't retry:
+- Caching the buff list per battle: stale after a mid-battle career change; recompute on read
 
 In-flight: Implementing Tier 2 + Tier 3 picks from ecosystem review (#93)
 Next step: Port refactoring-specialist subagent, run /context-budget, commit

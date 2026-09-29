@@ -20,7 +20,7 @@ When you add a hook to an existing category (a Stop reminder, a PreToolUse gate,
 | **Muting / idempotency** (early-exit when already-handled) | `check-deep-review.sh` checks the audit log before re-reminding | `check-verification-evidence.sh` shipped without muting → re-nagged on every Stop while `.cs` stayed dirty (MED) |
 | **I/O preamble** (`INPUT=$(cat)` etc.) | copy a sibling's verbatim | `mark-verification-run.sh` hand-wrote `cat 2>/dev/null` + `printf`, diverging from 13 siblings (LOW) |
 | Exit semantics (`exit 0` non-blocking vs `exit 2`/JSON `deny`) | the sibling in the same event | (got this right) |
-| **Output channel** (what Claude actually reads) | Stop: `_stop_reminder.sh`; PreToolUse: `block-dangerous-git.sh` (`hookSpecificOutput`) | the four Stop reminders wrote to stderr, which Claude never sees, until plan 011 |
+| **Output channel** (what Claude actually reads) | Stop: `_stop_reminder.sh`; PreToolUse: `block-dangerous-git.sh` (`hookSpecificOutput`); PostToolUse: `check-polearm-shield-parity.sh` (`additionalContext`) | the four Stop reminders wrote to stderr, which Claude never sees, until plan 011; the polearm gate did the same until 2026-09-29 |
 
 The fix is a pre-flight pass over the sibling's whole body, not just the lines you need (lesson "Authoring a new hook: mirror the sibling's FULL convention set").
 

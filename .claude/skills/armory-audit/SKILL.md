@@ -19,6 +19,13 @@ thing to run after an Armory sync so that class is caught on the desk, not in a 
 - After pulling or copying anything into `<game>/Modules/LOTRLOME_Armory` (KEYforce, Solus, a "TAOM Update" mirror commit, your own editor re-import).
 - Before any battle or tournament smoke that follows art changes, and before `/release`.
 
+**If the drop replaced textures, not just meshes:** this audit checks names, never layouts. A re-exported sheet
+can keep every name and move the UV layout under it. Compare each replaced texture to the file already in
+`AssetSources/` with
+`magick compare -metric RMSE "(" integrated.png -resize "WxH!" ")" "(" new.png -alpha off ")" null:`; near zero
+is the same layout on a different canvas, a large value means the mesh moved too. Canvas aspect on its own
+proves nothing, because UVs are normalized ([module-armory.md](../../../docs/modding/module-armory.md)).
+
 ## Mode selection
 
 - `$ARGUMENTS` = `check` or empty: audit and write the report, catalogue untouched.

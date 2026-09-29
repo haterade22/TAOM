@@ -28,6 +28,6 @@ HEALTH_DIR="/tmp/claude-mcp-health"
 mkdir -p "$HEALTH_DIR" 2>/dev/null
 echo "$(date +%s)" > "${HEALTH_DIR}/${SERVER_NAME}.state" 2>/dev/null
 
-echo "[MCPHealth] ${SERVER_NAME} marked unhealthy after failed ${TOOL_NAME} call. Will block calls for 60s." >&2
+echo "[MCPHealth] ${SERVER_NAME} marked unhealthy after failed ${TOOL_NAME} call. Will block calls for 60s." >&2  # stderr-debug-only: mcp-health-check.sh's deny tells Claude on the next call
 
 exit 0

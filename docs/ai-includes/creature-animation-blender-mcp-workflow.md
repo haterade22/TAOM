@@ -29,17 +29,22 @@ rider-animation system, and fixed the chariot's untagged gait clips. Companion t
   `action.layers[].strips[].channelbags[].fcurves`. Author keys via `pose_bone.keyframe_insert`
   (auto-creates the slot/layer/channelbag). FBX import/export ops need a UI context — wrap in
   `bpy.context.temp_override(window, area=VIEW_3D, region=WINDOW)` or they fail on internal `mode_set`.
-- **Harness:** `E:\LOTRAOMAssets\Elephant\_refine_tools\harness.py` — `exec()` it each MCP call.
+- **Harness:** `tools/blender/harness.py` in the repo (exec `E:\repos\TAOM\tools\blender\harness.py`
+  each MCP call). Since 2026-09-29 the repo copy is canonical: the old `E:\LOTRAOMAssets\...` copies are
+  one-line forwarders (originals kept as `*.bak-2026-09-29`), because the two had drifted (the live one
+  alone carried `add_ear_flap`). Edit the repo copy only.
   Creature-agnostic via module globals (`ARM_NAME, BODY_NAME, ROOT, FEET, ARMOR, RENDER_DIR`); the
-  spider layer `_auto_workspace\_spider_refine\spider_cfg.py` exec's the harness then overrides them
-  (+ adds a top-down view for the 8-leg gait). Functions:
+  spider layer `tools/blender/spider_cfg.py` exec's the harness then overrides them
+  (+ adds a top-down view for the 8-leg gait). Measure before judging a render: `analyze_gait` reports
+  per-foot stance contact (`float` / `penetration` against the foot's rest-pose height, 2 cm
+  tolerance, via `stance_height`), which one camera angle hides. Functions:
   | fn | purpose |
   |---|---|
   | `setup_scene / view_side/front/top/3q / render_frame` | Workbench render rig + cameras |
   | `montage(paths,out,cols)` | numpy in-Blender contact sheet (PowerShell GDI was unreliable) |
   | `set_action(name)` | bind action + slot[0] (works cross-rig if bone names match) |
   | `extract_clip(src,f0,f1,name)` | matrix_basis re-bake of a frame range → retimed 1..N clip |
-  | `analyze_gait(name)` | foot lift / swing-phase order / stance slip / body bob / in-place / loop seam |
+  | `analyze_gait(name)` | foot lift / swing-phase order / stance slip / stance contact (`contact`, `stance_rel`) / body bob / in-place / loop seam |
   | `phase_shift_bones(name,bones,shift,period)` | cyclic time-shift = re-phase a gait |
   | `damp_leg_lift(name,legbones,foot,reduce)` | height-weighted lift reduction; planted frames stay grounded |
   | `freeze_toward_rest(name,bones,factor)` | blend bones toward rest pose (walk→idle conversion) |

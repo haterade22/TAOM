@@ -453,7 +453,8 @@ natural ear-fan: raised-cosine out-and-back about each ear bone's **local X** (t
 rig fans the tip out+up / in+down on local X — the best horiz/vert tip ratio of the three axes,
 measured; driver 14°, distal segment lags 4f at +6° floppy follow-through). ~19 cm ear-tip travel
 per loop, clean cyclic seam (`loop_seam_rot_deg` 25.5 → 26.4), still in-place. The reusable
-`add_ear_flap()` was added to `_refine_tools/harness.py`. Idle re-exported to
+`add_ear_flap()` was added to `_refine_tools/harness.py` (now in the canonical repo copy,
+`tools/blender/harness.py`, since 2026-09-29; the `_refine_tools` files forward there). Idle re-exported to
 `clips_refine_20260613\an_war_elephant_idle.fbx`. Handoff +`quad_movement` reminder:
 `clips_refine_20260613\README_HANDOFF.md`.
 

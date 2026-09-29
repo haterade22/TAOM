@@ -68,6 +68,9 @@ A foreign skill is untrusted code until vetted — porting its frontmatter/hooks
 python tools/audit_claude_config.py --root <path-to-foreign-skill> --external
 ```
 
+The root may be a plugin repo, a marketplace or one skill folder; the whole tree is read. Compare "N files scanned" with the tree; `UNCHECKED`
+(exit 3) means nothing was vetted.
+
 `--external` raises TAOM's six SkillSpector-derived regex categories (`excessive-agency`, `memory-poisoning`, `prompt-leakage`, `tool-misuse`, `rogue-agent`, `output-handling`) from advisory to full severity for an untrusted tree; the Python-AST scan (`ast-exec`) and clean-room YARA layer (`yara-*`) fire at full severity regardless of `--external`. Resolve every CRITICAL/HIGH (or consciously reject the source) before porting any text. This is the automated supplement to — not a replacement for — the manual read in `external-repo-adoption.md` § Security pass (which also covers the heavyweight static-only NVIDIA SkillSpector option for deeper LLM-intent / taint / CVE coverage, run isolated and never installed). Full detail: [`docs/reviews/adopt-skillspector-2026-06-22.md`](../../docs/reviews/adopt-skillspector-2026-06-22.md).
 
 ## Frontmatter field check

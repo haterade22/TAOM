@@ -246,6 +246,30 @@ and mouth, 26 on the arms), `python tools/check_eye_follow.py --package "<Armory
 --metamesh sk_dwarf_bm_f1_head` (fails when an eye stays still in a moving socket), and
 `python tools/validate_mesh_refs.py --no-rgl-log`.
 
+### ⚠️ APPLIED EDIT: face slider reach on the adult female dwarf and Saruman (2026-09-29)
+
+**One live edit an Armory reinstall WILL revert: `ModuleData/skins.xml`, the deform_key ranges of the skins whose
+`face_meta_mesh` is `sk_dwarf_bm_f1_head` (the adult woman dwarf) or `sk_saruman_head`.**
+
+- **Why.** Every race copied vanilla's human slider ranges verbatim, and a range is a morph channel weight, so on
+  heads authored with larger channels the same slider moved the face up to 3 times (female dwarf) and 9 times
+  (Saruman) as far as on the male dwarf, which runs vanilla's ranges (Mike, 2026-09-29: "a bit too much").
+- **What.** `tools/oneoff/tune_face_slider_reach.py --apply` shrank every slider reaching more than 1.15 times the
+  same slider's reach on the male dwarf down to the male dwarf's reach, both ends by one factor so the weight-0
+  position (the head as authored) stays put: 27 female dwarf ranges, 31 Saruman ranges. Saruman's `eyebump`, which
+  vanilla fixes at weight 1 and which bent his face 13 mm from his FBX, is now 0 to 0 (Mike's call). A second run
+  (08:14, backup `skins.xml.bak-slider-reach-20260929-081426`) moved Saruman's `face_ratio` from 0.434..0.955 to
+  0..0.955: vanilla's range never reaches 0, so his authored face was out of reach by 5 mm. A third run (09:51,
+  backup `skins.xml.bak-slider-reach-20260929-095157`) pinned the female dwarf's `eye_depth` at 1..0.5 (was 1..-0.3):
+  Mike judged her eyes fine at 40% of the old slider and sticking out at its end. Side effect: the
+  female dwarf's own fixed `eyebump` went from 1 to 0.8. 116 lines, attribute values only. Live backup
+  `skins.xml.bak-slider-reach-20260929-065619`. Channel travel came from `tools/export_face_morphs.ps1` exports of
+  the compiled packages.
+- **Existing characters** keep their slider positions, so their faces move less far from the authored head.
+
+**Gate after any Armory update:** `python tools/oneoff/tune_face_slider_reach.py --ref-mesh sm_dwarf_basemesh_a1_head --ref-json <male.json> --target sk_dwarf_bm_f1_head <female.json> --target sk_saruman_head <saruman.json> --zero sk_saruman_head:eyebump --reach-zero sk_saruman_head:face_ratio --set sk_dwarf_bm_f1_head:eye_depth=1:0.5 --check` (exit 1 while a range still reaches past the male dwarf's; the three JSON
+files are `export_face_morphs.ps1` exports of the three heads).
+
 ### ⚠️ APPLIED EDIT: gold and red eye colours on the `sauron` race (2026-09-28)
 
 **One live edit an Armory reinstall WILL revert: `ModuleData/skins.xml`, the `<race id="sauron">` block.**
@@ -499,7 +523,9 @@ the cache free of wrong-script words, so a replay cannot bring the CNs damage ba
 
 ## Snapshot date
 
-2026-09-28: `skins.xml` refreshed from live and equal to it after line-ending normalisation (5,837,963 bytes, CRLF; live 5,619,270, LF): the gold and red eye stops on the `sauron` race (APPLIED EDIT above, 80 lines). The other files are as below.
+2026-09-29: `skins.xml` refreshed from live and equal to it after line-ending normalisation (5,838,147 bytes, CRLF; live 5,619,454, LF): the face slider reach tuning (APPLIED EDIT above, 116 lines, plus `face_ratio` at 08:14 and `eye_depth` at 09:51). The other files are as below.
+
+Previous: 2026-09-28: `skins.xml` refreshed from live and equal to it after line-ending normalisation (5,837,963 bytes, CRLF; live 5,619,270, LF): the gold and red eye stops on the `sauron` race (APPLIED EDIT above, 80 lines). The other files are as below.
 
 Previous: 2026-09-27: `skins.xml` refreshed from live and equal to it after line-ending normalisation (5,834,843 bytes, CRLF;
 live 5,616,060, LF): the adult woman dwarf restore above (19 values) and the live change of 2026-09-26 11:28 that

@@ -111,6 +111,22 @@ The string you type into `mesh=` is the name inside the tpac, not the file name 
 
 What exists is inventoried, not remembered. `docs/reference/armory-catalogue/catalogue.tsv` is 4,843 lines joining every packaged mesh to the XML that names it, regenerated from the live install by `python tools/generate_armory_catalogue.py`.
 
+### A texture's canvas shape proves nothing, and the copy on your disk may be a year old
+
+UV coordinates are normalized, so the canvas aspect of a texture carries no information about whether it is correct. A 2048x1024 sheet and a 1024x1024 sheet can hold the identical layout and map identically; a square sheet and a square sheet can hold entirely different ones. "This should be 1Kx1K, not 1Kx512" is therefore never a finding on its own, and neither is the shape a resize pass leaves behind, because every pass here preserves aspect.
+
+The test for whether two sheets share a layout is to force one to the other's shape and compare the pixels:
+
+```bash
+magick compare -metric RMSE "(" old.png -resize "1024x1024!" ")" "(" new.png -alpha off ")" null:
+```
+
+Near zero means the same layout on a different canvas, so either file works with the same mesh. A large value means the layout moved and the mesh that goes with it moved too.
+
+The second half of the trap is provenance. An artist kit exists in several places on this desktop at different vintages, and the folder name gives no hint which is current. On 2026-09-29 the Rohan weapon set had three of them: `AssetSources/rohan_weapons/textures` at 2048x1024, a kit under `E:\LOTRAOMAssets\Solus\wm_rohan_ws_1` dated 2025-07-28 at 2048x2048, and the artist's delivery that morning at 1024x1024. The 2025 sheet looked authoritative and was not: its layout sat in the bottom half of the canvas with the top half as padding, and restoring from it scored 0.187 against the current art where the integrated 2048x1024 file scored 0.018. Feeding the older layout to the shipped mesh would have mapped every Rohan blade wrong, and the aspect audit that found the discrepancy could not have told the difference, because it compares shapes.
+
+So: the file under `AssetSources/` is the integrated one and it is the baseline. A copy found elsewhere on disk is a candidate, never a source of truth. Before restoring from one, run the comparison above against what is already integrated, and if it disagrees, ask the artist which is current rather than picking the larger file.
+
 ## Races, monsters and animation
 
 A playable race is three files in this order, and the order is load-bearing.

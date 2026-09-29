@@ -1,5 +1,6 @@
 # Elephant animation refinement harness (Blender 5.1.2, slotted-action API)
-# Re-exec'd each MCP call:  exec(open(r'E:\LOTRAOMAssets\Elephant\_refine_tools\harness.py').read(), globals())
+# Re-exec'd each MCP call:  exec(open(r'E:\repos\TAOM\tools\blender\harness.py').read(), globals())
+# The repo copy is canonical since 2026-09-29; the E:\LOTRAOMAssets copies forward here.
 import bpy, os, math
 from mathutils import Vector, Euler, Quaternion
 
@@ -307,14 +308,40 @@ def damp_leg_lift(action_name, leg_bones, foot_key, reduce=0.5):
             fc.update()
     return {'foot': foot_key, 'anchor_frame': anchor_idx + 1, 'zmin': round(zmin, 3), 'zmax': round(zmax, 3)}
 
+def stance_height(z_values, planted_idx, rest_z, tol=0.02):
+    """Where a planted foot sits, relative to its REST-pose height (metres). Measuring against rest
+    rather than z = 0 cancels the gap between the foot bone's tail and the sole of the mesh.
+    contact: 'float' when the planted mean sits more than `tol` above rest (the foot hovers),
+    'penetration' when any planted frame dips more than `tol` below it, 'ok' otherwise, and None
+    when no frame was planted (unknown, never a pass). 1-2 cm reads as visible in game (the
+    ground-contact check in affaan-m/ECC skills/blender-motion-state-inspection)."""
+    if not planted_idx:
+        return {'rel_min': None, 'rel_mean': None, 'contact': None}
+    rel = [z_values[i] - rest_z for i in planted_idx]
+    rel_min = min(rel); rel_mean = sum(rel) / len(rel)
+    if rel_min < -tol:
+        contact = 'penetration'
+    elif rel_mean > tol:
+        contact = 'float'
+    else:
+        contact = 'ok'
+    return {'rel_min': round(rel_min, 4), 'rel_mean': round(rel_mean, 4), 'contact': contact}
+
+def _rest_heights(o, keys):
+    """Each foot bone tail's world z in the armature's rest pose, read from the edit bones' rest
+    data (bone.tail_local), so no pose toggle and no extra scene update."""
+    return {k: (o.matrix_world @ o.data.bones[FEET[k]].tail_local).z for k in keys}
+
 def analyze_gait(action_name, N=None, fps=24):
-    """Return foot lift, swing phasing, stance slip, body bob, in-place + loop-seam metrics."""
+    """Return foot lift, swing phasing, stance slip, stance contact (float / penetration against the
+    rest pose), body bob, in-place + loop-seam metrics."""
     import math
     o = arm(); set_action(action_name)
     a = bpy.data.actions[action_name]
     if N is None: N = int(round(a.frame_range[1]))
     sc = bpy.context.scene
-    keys = ['FL', 'FR', 'BL', 'BR']
+    keys = list(FEET)  # 4 feet for the elephant, 8 for the spider layer's FEET
+    rest = _rest_heights(o, keys)
     Z = {k: [] for k in keys}; Y = {k: [] for k in keys}; rootY = []; rootZ = []
     for f in range(1, N + 1):
         sc.frame_set(f); bpy.context.view_layer.update()
@@ -331,8 +358,10 @@ def analyze_gait(action_name, N=None, fps=24):
         thr = zmin + max(0.05, 0.2 * (zmax - zmin))
         planted = [i for i, v in enumerate(z) if v <= thr]
         dys = [y[i + 1] - y[i - 1] for i in planted if 0 < i < len(y) - 1]
+        sh = stance_height(z, planted, rest[k])
         ft[k] = {'lift': round(zmax - zmin, 3), 'midswing_f': z.index(zmax) + 1,
-                 'stance_n': len(planted), 'stance_dY': round(sum(dys) / len(dys), 4) if dys else None}
+                 'stance_n': len(planted), 'stance_dY': round(sum(dys) / len(dys), 4) if dys else None,
+                 'stance_rel': sh['rel_mean'], 'stance_rel_min': sh['rel_min'], 'contact': sh['contact']}
     res['feet'] = ft
     res['midswing_order'] = sorted([(k, ft[k]['midswing_f']) for k in keys], key=lambda t: t[1])
     sc.frame_set(1); bpy.context.view_layer.update()
@@ -424,6 +453,33 @@ def freeze_toward_rest(action_name, bones, factor):
         for fc in list(qf.values()) + list(lf.values()):
             fc.update()
     return len(bones)
+
+EAR_PAIRS = [('ear_L_1_023', 'ear_L_2_024'), ('ear_R_1_025', 'ear_R_2_026')]
+
+def add_ear_flap(action_name, amp_deg=14.0, cycles=1.0, lag=4, distal_extra=6.0, pairs=None):
+    """Author a natural elephant ear-fan (out-and-back) onto a clip's ear bones.
+    Rotates about each ear bone's LOCAL X -- the elephant ear rig is diagonal, so local X
+    fans the tip out+up / in+down (horiz/vert tip ratio ~1.44, the best of the 3 axes;
+    measured 2026-06-13). Raised-cosine 0->amp->0 over the loop => clean cyclic seam; the
+    distal segment (ear_*_2) lags `lag` frames with +`distal_extra` deg for floppy
+    follow-through. REPLACES the ear bones' curves (a baked idle's ears are ~0.5deg noise).
+    Brought the static-eared idle to life (~19cm tip travel at amp=14); also valid on gaits
+    for livelier ears when charging. Verify: ear_*_2 tail world-X range should grow."""
+    import mathutils, math
+    o = arm(); set_action(action_name)
+    a = bpy.data.actions[action_name]; N = int(round(a.frame_range[1]))
+    pr = pairs or EAR_PAIRS
+    def fan(f, amp, ph):
+        t = ((f - 1 - ph) % N) / N
+        return amp * (0.5 - 0.5 * math.cos(2 * math.pi * cycles * t))
+    for drv, dist in pr:
+        for f in range(1, N + 1):
+            for bn, amp, ph in ((drv, amp_deg, 0), (dist, amp_deg + distal_extra, lag)):
+                if bn not in o.pose.bones: continue
+                pb = o.pose.bones[bn]
+                pb.rotation_quaternion = mathutils.Quaternion((1, 0, 0), math.radians(fan(f, amp, ph)))
+                pb.keyframe_insert('rotation_quaternion', frame=f)
+    return {'action': action_name, 'N': N, 'amp_deg': amp_deg, 'cycles': cycles, 'pairs': len(pr)}
 
 def export_clip_fbx(action_name, out_path, export_arm_name='elephant_skeleton_notused'):
     """Export the active clip as a Kit-ready armature-only FBX (Bannerlord axes, baked, no leaf bones).

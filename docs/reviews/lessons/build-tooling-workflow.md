@@ -328,12 +328,6 @@ The `FileLogger` crash-durability rewrite added `if (_logFile == null) return;` 
 - **Prevent:** when adding a guard clause to a method a loop depends on, read the loop's exit condition and ask whether the guard can permanently prevent it from clearing. Pin the invariant with a test asserting the *side effect the loop needs* ("the queue drains"), not merely the absence of an exception. RCA: `docs/reviews/rca-battle-load-blind-window-2026-07-16.md`.
 - **Source:** deep-review 2026-07-16, dedicated concurrency agent (MED, RED-proven: "Drain() left 200 item(s) queued after Dispose").
 
-### A diagnostic that fails silently is worse than one that fails loudly — a swallowed fault still needs a channel
-`FileLogger.Drain()` swallowed all write faults in an empty catch. Both constraints behind that were real: an IO fault now lands on the game thread and must not propagate into engine code, and the catch cannot log without re-entering itself. But a disk-full/AV-lock fault then dropped the in-flight line and every subsequent one, forever, with zero signal — the crash-forensics instrument would look healthy while losing exactly the lines it exists to capture, during the incident it exists to document.
-- **Why missed:** the design question "swallow or propagate?" was asked and answered; "swallowed and therefore invisible" was never asked. No rule covered it.
-- **Prevent:** for any swallowed fault in a diagnostic/observability path, provide a signal that does not re-enter the faulting component — a counter surfaced on recovery, a one-shot sentinel, a field the crash bundle reads. "It can't log from here" is a reason to find another channel, not to stay silent. RCA: `docs/reviews/rca-battle-load-blind-window-2026-07-16.md`.
-- **Source:** deep-review 2026-07-16, dedicated concurrency agent (MED).
-
 ### Before dispatching /deep-review, name the changeset's riskiest property and check a core agent actually covers it
 Commit `c53c8436` was nominally a Harmony changeset (4 new bindings incl. a private engine method) — covered from three directions by Agents 1/2/5, all clean. Its *actual* risk was a lock/liveness rewrite of `FileLogger`, which every feature depends on. Both confirmed defects were in those 20 lines, and all five core agents read the file and missed both; they were found only because a 6th concurrency agent was hand-rolled.
 - **Why missed:** the 5 core agents are calibrated for TAOM's usual work (Harmony, GameModels, adapters, XML). Agent 3 came closest but frames locks as a *throughput* concern — it asked "how long does this block?" (and got the number wrong: it claimed a 50ms stall from a `Thread.Sleep` that sits outside the lock) instead of "can this loop fail to terminate?"
@@ -1198,6 +1192,19 @@ it was that morning's trigger is not proven: the session began 47 minutes after 
 variable resolved from an interactive shell, so the hook's environment differed in a way nobody
 captured. The lesson does not depend on it: a guard with any silent-failure mode is the defect.
 
+**Same root cause, other instances** (merged here 2026-09-29, one lesson per root cause):
+- 2026-07-16, the lesson "A diagnostic that fails silently is worse than one that fails loudly" (a
+  swallowed fault still needs a channel): `FileLogger.Drain()` swallowed every write fault in an empty
+  catch (an IO fault must not reach engine code, and the catch cannot log without re-entering itself),
+  so a disk-full or AV-lock fault dropped the in-flight line and every later one with zero signal: the
+  crash-forensics logger looked healthy while losing the lines of the incident it exists to document.
+  The question "swallow or propagate?" was answered; "swallowed and therefore invisible" was never asked.
+- 2026-09-29: `tools/audit_claude_config.py --external` collected only `.claude/**`, so a plugin repo
+  scanned 5 of 22 files and a bare skill folder 0, and still printed `[OK]` with exit 0; the 2026-06-22
+  mattpocock vet "passed" that way. The first fix read a fixed list of plugin folders, and the deep
+  review of it found the same shape one level down: a hook script in `lib/` or `bin/` scanned 0 times
+  with exit 0. The vet now reads the whole foreign tree.
+
 - **Why missed:** the guard was written and verified in the one environment where the variable
   resolved, and its skipped path and its clean path emit the same thing — nothing. A gate whose pass
   state is "no output" has no observable difference between working and dead, so no session could
@@ -1209,8 +1216,16 @@ captured. The lesson does not depend on it: a guard with any silent-failure mode
   variable, build a candidate list with an unconditional fallback rather than `${VAR:-default}`,
   which defends against unset/empty and never against wrong. Test the guard by handing it a bogus
   path and confirming it still says something.
+- **Prevent, per instance kind:** for a swallowed fault in a diagnostic path, give it a signal that does
+  not re-enter the faulting component (a counter surfaced on recovery, a one-shot sentinel, a field the
+  crash bundle reads): "it can't log from here" is a reason to find another channel, not to stay silent
+  (RCA `docs/reviews/rca-battle-load-blind-window-2026-07-16.md`). For a scanner or validator, zero
+  inputs collected is its own non-zero result (`UNCHECKED`), never `[OK]`, and a scanner of foreign
+  code reads the whole tree rather than a list of places code usually lives.
 - **Source:** `docs/migration/v1.4.8-impact.md` ("`session-start.sh` — the drift guard failed on the
-  event it exists for"); `.claude/hooks/session-start.sh`.
+  event it exists for"); `.claude/hooks/session-start.sh`. Also: deep-review 2026-07-16, dedicated concurrency agent (MED),
+  RCA `docs/reviews/rca-battle-load-blind-window-2026-07-16.md`; ECC re-review 2026-09-29,
+  `docs/reviews/adopt-ecc-2026-09-29.md` Steps 1 and 8.
 
 ### For a native-only changelog item, audit the DATA feeding the native path — not the C# calling it (2026-08-10)
 
@@ -2395,7 +2410,14 @@ backup and whatever state it held is gone. The run's own timestamped backup from
 Plan 008 taught `notify-test-results.sh` to print `PASSED WITH SKIPS` for a gate that had skipped 335 of 368 tests. The banner went to stderr from a hook that exits 0, which Claude Code sends to the debug log only, so no agent ever saw it. The hooks catalog and the CHANGELOG described it as visible.
 - **Why missed:** the plan specified stderr, and `hook-authoring.md:128` still advises "write to stderr for an advisory hook", which contradicts `harness-facts.md` "Visibility". `tools/test_hooks.sh` 7c captured stderr with `2>&1 >/dev/null` and matched the text, which proves the string and not its delivery. This repeats #647, where gates printed a decision format the harness ignores.
 - **Prevent:** before writing an advisory hook, pick its channel from `harness-facts.md` "Visibility" and name it in the catalog row. For a PostToolUse hook, stderr with exit 0 reaches no one. A test pins what the harness reads (the JSON on stdout, or the exit code), and the first live tool call that should show the output is checked in the transcript. A doc says "shown" only after that check.
-- **Source:** `docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md` F1.
+- **Again 2026-09-29:** `check-polearm-shield-parity.sh` had sent its FAIL block to stderr on exit 0
+  since 2026-08-20, and muted each report, so a real troop defect was never seen; `notify-csharp-edit.sh`
+  printed to the same place. The polearm report now travels as PostToolUse `additionalContext`
+  (proven live), the notifier is gone, and `tools/test_hooks.sh` 7k fails any PostToolUse hook that
+  writes to stderr without an exit 2. A mute written while a report went nowhere is renamed away,
+  or it keeps the old silence.
+- **Source:** `docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md` F1;
+  `docs/reviews/rca-ecc-adoption-2026-09-29.md`.
 
 ### A change to how a gate behaves updates every doc that runs or reads it (plan 008, 2026-09-24)
 Plan 008 changed the binding gate's command and added two red forms. Three consumers were left behind. `reflection-sites.md` still gave the old command, because the sweep grepped only the `TestCategory=BindingVerification"` spelling. The skill's triage line still said "a red gate is a real finding, one of three classes". The skill claimed "every gate test" goes Inconclusive without the game, while the executor's own log showed 33 of 368 passing.
@@ -3063,8 +3085,14 @@ differences and 275 renamed targets are all these shapes.
   gate's table, run each shorter spelling and each empty or default argument against a scratch repository and read
   what git did. Where a gate resolves a missing argument, find the setting that decides it (`push.default` here) and
   read it.
+- **Repeated 2026-09-29, in a sibling gate:** the new `branch`, `switch`, `worktree remove` and `restore`
+  arms of `block-dangerous-git.sh` matched `--delete`, `--force`, `--discard-changes` and `--worktree`
+  by full spelling, so `--del --forc`, `--disc` and `--work` ran ungated; and reading `-sSTABLE` as `-S`
+  (the tree name glued to `-s`) turned an ask into an allow. The gate now reads long options through
+  `long_is` (the same prefix rule) and a value-taking short option as ending its bundle. The rule
+  existed; it lived only in `_pushjudge.py` and this lesson, not where the next gate was written.
 - **Source:** issue #689; `.claude/hooks/_pushjudge.py`; `tools/tests/test_pushjudge.py` (`ISSUE_689`,
-  `PushDefaultTests`); `tools/test_hooks.sh` 7c.
+  `PushDefaultTests`); `tools/test_hooks.sh` 7c; for the repeat, `docs/reviews/rca-ecc-adoption-2026-09-29.md`.
 
 ### A gate's suite passed a mutant that switched off its no-Python answer (#680 review, 2026-09-27)
 The #680 review changed `validate-push.sh`'s degraded branch from `&& coarse "no safe python"` to `&& exit 0`, and
@@ -3148,3 +3176,26 @@ could never fail, and a troop wearing a retired piece the class table still list
 - **Prevent:** a registry built by scanning counts only the documents the engine loads as that type (an `<Items>`
   root for items), and a test builds the REAL registry over a fixture that quotes an id in a config.
 - **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` row 1 (Tooling).
+
+### A tool kept in two places drifts: keep one canonical copy and make the other forward to it (2026-09-29)
+The creature-animation toolkit lived twice: `tools/blender/harness.py` in the repo and
+`E:\LOTRAOMAssets\Elephant\_refine_tools\harness.py`, which the skill told agents to exec. On 2026-06-13
+`add_ear_flap()` was added to the live copy only, so the repo copy, the one under review and test, was
+missing a function the elephant idle depends on, and nothing noticed for three and a half months.
+- **Why missed:** both copies were "the toolkit"; the doc named the live path, the repo kept the
+  reviewed one, and no check compared them.
+- **Prevent:** one copy is canonical (the repo, where review and tests run); any other location holds
+  a one-line forwarder (`exec(open(<canonical>).read(), globals())`, or `runpy.run_path` for a CLI)
+  and the original as a backup, and the docs name only the canonical path.
+- **Source:** `docs/reviews/adopt-ecc-2026-09-29.md` Step 6; `tools/tests/test_blender_harness_gait.py`.
+
+### Removing an MCP server means every scope that declares it (2026-09-29)
+Deleting the `github` entry from `.mcp.json` left the server loaded: the `github@claude-plugins-official`
+plugin, enabled in `.claude/settings.json`, ships a `.mcp.json` declaring the same server. The other way
+round, the `blender` and `substance-painter` servers existed but never loaded: `claude mcp add --scope
+local` had stored them under the repo's old `C:` path in `~/.claude.json`, and the repo moved to `E:`.
+- **Why missed:** a server's identity was read from one file, while Claude Code assembles it from the
+  project `.mcp.json`, every enabled plugin, and the user and local scopes keyed by project path.
+- **Prevent:** to add or remove a server, grep the plugin caches for its name as well as `.mcp.json`, and
+  prove the result from inside a restarted session with `/mcp`, not from a shell in another folder.
+- **Source:** `docs/reviews/adopt-ecc-2026-09-29.md` Step 4 and Step 6; `docs/reference/mcp-servers.md`.

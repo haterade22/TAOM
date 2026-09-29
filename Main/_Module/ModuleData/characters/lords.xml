@@ -19563,7 +19563,7 @@
     <!-- Culture.isengard -->
     <NPCCharacter id="lord_I1_0" race="saruman" name="{=aom_lord_I1_0_name}Saruman the White" age="90" voice="earnest" is_hero="true" culture="Culture.isengard" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_I1_0_skills">
         <face>
-            <BodyProperties version="4" age="90" weight="0.3657" build="0.4274" key="000CE4000000304187778FF0F8BF007C00F8887788888888787E80FFAF00606D00D656040DFF90FF000000000000000000000000000000000000000043B40140" />
+            <BodyProperties version="4" age="90" weight="0.1621" build="0.1682" key="000CE40FC00030418771188F38770F8801F188778888888888888888546AF0F900D326040D888888000000000000000000000000000000000000000043B40140" />
             <hair_tags>
                 <hair_tag name="Long" />
             </hair_tags>

@@ -11,6 +11,7 @@ FILES: the list in your spawn prompt.
 5. **CHANGELOG.md untouched:** only `/release` writes it, from commit bodies. Diff against the review's base, not `HEAD`, so a committed edit shows too: `git diff --name-only <base> -- CHANGELOG.md` (the base is `HEAD` for uncommitted work, else the start of the range) must print nothing. A hand edit is a defect; a `/release` run or an archive roll into `docs/changelog-archive/` is not.
 6. **IoC Registered:** Check that new services/adapters are registered in DryIoc. Read the relevant IoC.cs file.
 7. **SubModule.xml:** If new behaviors or models were added, verify they don't need SubModule.xml registration (most don't, but check).
+8. **No gate turned green by editing the gate:** a removed `[TestMethod]`, an added `[Ignore]`, a weakened `Assert`, or a new validator allowlist entry (`_BY_DESIGN`, `_EXEMPT`, `exempt_troops` and the like) must say why in the entry or the commit body. Without a reason it is a finding: the check was silenced, not passed. The mechanical part: `git diff <base> -U0 | grep -nE '^-\s*\[TestMethod|^\+\s*\[Ignore|^\+.*(_BY_DESIGN|_EXEMPT|exempt_troops|KNOWN_FAILURES)'`; a weakened `Assert` still has to be read.
 
 OUTPUT FORMAT:
 - ✅ Tests: [X test files, Y test methods]
@@ -18,5 +19,6 @@ OUTPUT FORMAT:
 - ✅/❌ GitHub Issue: [#N title / MISSING]
 - ✅/❌ CHANGELOG.md: [untouched / HAND-EDITED]
 - ✅/❌ IoC: [registered / MISSING registrations]
+- ✅/❌ Gates: [no silenced test or allowlist entry / list each one with no stated reason]
 
 Overall: COMPLETE / INCOMPLETE — [list what's missing]

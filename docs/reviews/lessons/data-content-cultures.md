@@ -1744,3 +1744,23 @@ the seven `[Noldor]` First Age swords. One of Tuor's axes turned up for sale in 
   of a proper name, or a character's name, across every `LOTRLOME_items` file, and put the full candidate list
   to Mike; a name-based search alone misses items named without a possessive.
 - **Source:** `docs/reviews/rca-armour-acquisition-2026-09-27.md` row 20 (found in play, 2026-09-28).
+
+### A texture's canvas shape is not evidence, and the kit copy on disk may be a year stale
+Mike read `t_rohan_ws_set1_n` showing 1024x512 in the Kit as a downsizing bug. A full header audit of both
+texture passes (2,360 Armoury files, 487 TAOM_Map) found zero aspect changes, zero alpha drops and zero
+bit-depth changes, so the shape was faithful. Chasing it further found a 2025-07-28 copy of the artist kit at
+`E:\LOTRAOMAssets\Solus\wm_rohan_ws_1` whose 2048x2048 sheet contained the integrated 2048x1024 file as a
+pixel-exact bottom-half crop, which read as proof the Armoury copy had been cropped at integration. Restoring
+from it was wrong: the artist's delivery that morning scored RMSE 0.018 against the integrated file stretched
+to square and 0.187 against the 2025 sheet downscaled. The 2025 layout sat in half its canvas with the rest as
+padding, so it would have mapped every Rohan blade wrong on the shipped mesh.
+- **Why missed:** UVs are normalized, so canvas aspect carries no information either way, and an audit that
+  compares shapes cannot see a layout change. The older kit folder looked authoritative because it was larger
+  and square, and nothing on disk dates a delivery against the integrated file.
+- **Prevent:** never treat a non-square texture as a defect on its own, and never restore one from a copy found
+  on disk without first running
+  `magick compare -metric RMSE "(" integrated.png -resize "WxH!" ")" "(" candidate.png -alpha off ")" null:`
+  against what is already in `AssetSources/`. Near zero is the same layout on a different canvas and is safe;
+  a large value means the mesh moved with it, so ask the artist which delivery is current rather than taking
+  the larger file. Sweeping all 64 `wm_*` kits this way matched 151 textures and found one discrepancy.
+- **Source:** `docs/modding/module-armory.md` "A texture's canvas shape proves nothing" (Rohan set1, 2026-09-29)

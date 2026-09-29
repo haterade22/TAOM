@@ -16,15 +16,19 @@ Thin entry point. The authoritative workflow, theory, toolkit, and lessons live 
 NOT for the data/XML/C# side of a mount (that is `/new-creature-mount`), and NOT for Kit-compile or in-game testing (GUI-only, out of scope — the hand-off target).
 
 ## Precondition (report-don't-fix per environment-failures.md)
-Live Blender 5.1.2 session with Blender-MCP connected, plus the toolkit on the E: drive
-(`E:\LOTRAOMAssets\Elephant\_refine_tools\harness.py`, `tpac_clipinfo.py`, `_spider_refine\spider_cfg.py`).
+Live Blender 5.1.2 session with Blender-MCP connected (`/mcp` in the session shows `blender`; it is a
+local-scope server registered for `E:\repos\TAOM` only, so a worktree session does not get it), plus
+the toolkit in the repo: `tools/blender/harness.py`, `tools/blender/spider_cfg.py`, `tools/tpac_clipinfo.py`
+(exec `E:\repos\TAOM\tools\blender\harness.py`; the old `E:\LOTRAOMAssets\...` paths forward there).
 If Blender-MCP is down or the harness is missing, STOP and report — do not self-heal.
 
 ## Steps (locomotion — master doc §3)
 1. `tpac_clipinfo.py` on the deployed `_anm.tpac` → recover per-clip frame ranges.
 2. Import the source FBX with the UI `temp_override`; confirm bone names match the target rig 1:1.
 3. `extract_clip(src,f0,f1,name)` → retimed in-place clip; snapshot a `_SRC` copy.
-4. `analyze_gait` → quantify defects (lift asymmetry, swing-phase order, stance slip, bob, loop seam).
+4. `analyze_gait` → quantify defects (lift asymmetry, swing-phase order, stance slip, stance contact
+   per foot: `float` / `penetration` against the rest pose, bob, loop seam). Read the numbers before
+   judging a render: one camera angle hides float, sink and slip.
 5. Refine, keeping a step ONLY if render + metrics improve (simplicity criterion): `phase_shift_bones`
    (re-phase a gait), `damp_leg_lift` (tame over-lift), `timescale_action` (cadence), `reverse_action`
    (walk_backwards), `freeze_toward_rest` (walk→idle). Loop: `render_frame` → `montage` → READ the PNG + re-`analyze_gait`.

@@ -1,7 +1,8 @@
 # Spider config layer over the elephant harness. exec this instead of harness.py for spider work:
-#   exec(open(r'E:\LOTRAOMAssets\_auto_workspace\_spider_refine\spider_cfg.py').read(), globals())
+#   exec(open(r'E:\repos\TAOM\tools\blender\spider_cfg.py').read(), globals())
+# The repo copy is canonical since 2026-09-29; the E:\LOTRAOMAssets copy forwards here.
 import os
-exec(open(r'E:\LOTRAOMAssets\Elephant\_refine_tools\harness.py').read(), globals())
+exec(open(r'E:\repos\TAOM\tools\blender\harness.py').read(), globals())
 
 ARM_NAME = 'spider_skeleton'
 BODY_NAME = 'sk_spider_forest_a'

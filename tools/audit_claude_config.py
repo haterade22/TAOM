@@ -35,6 +35,11 @@ Scans (relative to --root, default = repo root):
   Config surface, all layers: .claude/{skills,agents,rules,hooks}/**,
   .claude/settings.json, .claude/settings.local.json, .mcp.json, CLAUDE.md,
   AGENTS.md
+  With --external: the WHOLE foreign tree except .git/ and node_modules/ (a plugin
+  repo, a marketplace, one skill folder), every script and JSON file there given
+  the hook rules. Binary files get only the secret rules; files over 2 MB only YARA.
+  With --user (instead of a repo): the user scope, see user_targets() and
+  scan_user_mcp(). No config collected prints UNCHECKED and exits 3.
   Whole repo, secret rules only: every git-tracked text file under 2 MB. This
   is the sweep that catches a key pasted into a .ps1, a C# const, or a doc, and
   a tracked file that IS credential material by name. It needs a git work tree
@@ -58,10 +63,12 @@ Categories:
   ast-exec           (.py) exec/eval/compile/__import__/os-exec/subprocess/dynamic-getattr
   yara-*             (optional) clean-room webshell/malware/C2/miner/hacktool IOCs
 
-Exit codes:  2 = at least one CRITICAL finding (CI gate) · 1 = usage error · 0 = clean/non-critical
+Exit codes:  2 = at least one CRITICAL finding (CI gate) · 3 = UNCHECKED, no config found
+             to scan (not a pass) · 1 = usage error · 0 = clean/non-critical
 Flags:  --json  machine output · --root PATH  scan root · --min SEV  only report >= severity
-        --external  raise SkillSpector regex categories to full severity (foreign tree)
+        --external  vet a foreign tree whole, SkillSpector categories at full severity
         --no-repo-secrets  config surface only, skip the git-tracked sweep
+        --user [--home DIR]  the machine-local user scope instead of a repo
 
 Inline suppression: put `audit-allow: <rule-id>` in a comment on the SAME line
 to suppress a known-safe match (e.g. an injection phrase quoted as an example in
@@ -72,6 +79,7 @@ from __future__ import annotations
 import argparse
 import ast
 import json
+import os
 import re
 import subprocess
 import sys
@@ -392,25 +400,52 @@ def scan_hook(rel: str, text: str, res: Result) -> None:
 # MCP rules  (.mcp.json)
 # --------------------------------------------------------------------------- #
 
+# A filesystem path (or a ;-separated list of Windows paths) in an MCP env block is configuration,
+# not a secret. A URL is not a path here: one can carry a token in its query. The list alternative is
+# written so a failing match cannot backtrack (a `(...;?)+` form took seconds at 80 characters).
+_ENV_PATH = re.compile(r"^(?:[A-Za-z]:[\\/]|\\\\|/|~[\\/])[^\s:]*(?:[\\/][^\\/]*)*$"
+                       r"|^[A-Za-z]:[\\/][^;]*(?:;[A-Za-z]:[\\/][^;]*)*;?$")
+
+
+def _looks_like_path(v: str) -> bool:
+    return "://" not in v and bool(_ENV_PATH.match(v.strip()))
+
+
+def _servers_of(data) -> dict:
+    """The server map of an MCP config: `mcpServers` or `servers`, or a plugin's flat `.mcp.json`
+    whose top level is the map itself (every value a server with a command or a url)."""
+    if not isinstance(data, dict):
+        return {}
+    for key in ("mcpServers", "servers"):
+        if isinstance(data.get(key), dict):
+            return data[key]
+    if data and all(isinstance(v, dict) and ("command" in v or "url" in v) for v in data.values()):
+        return data
+    return {}
+
+
 def scan_mcp(rel: str, text: str, res: Result) -> None:
     try:
         data = json.loads(text)
     except (ValueError, TypeError):
         return
-    servers = {}
-    if isinstance(data, dict):
-        servers = data.get("mcpServers") or data.get("servers") or {}
-    if not isinstance(servers, dict):
-        return
+    scan_servers(rel, _servers_of(data), res)
+
+
+def scan_servers(rel: str, servers: dict, res: Result) -> None:
     for name, cfg in servers.items():
         if not isinstance(cfg, dict):
             continue
-        env = cfg.get("env", {})
-        if isinstance(env, dict):
-            for k, v in env.items():
-                if isinstance(v, str) and v and not _is_placeholder(v) and len(v) >= 12:
+        # headers carry tokens the way env does (`claude mcp add --header` stores them there).
+        for field in ("env", "headers"):
+            values = cfg.get(field, {})
+            if not isinstance(values, dict):
+                continue
+            for k, v in values.items():
+                if isinstance(v, str) and v and not _is_placeholder(v) and len(v) >= 12 \
+                        and not _looks_like_path(v):
                     res.findings.append(Finding("mcp-env-secret", "HIGH", "mcp-risk", rel, 0,
-                        f"MCP server '{name}' env '{k}' looks like a hardcoded secret (use ${{VAR}} ref)",
+                        f"MCP server '{name}' {field} '{k}' looks like a hardcoded secret (use ${{VAR}} ref)",
                         _mask(v)))
         args = cfg.get("args", []) or []
         argstr = " ".join(str(a) for a in args) if isinstance(args, list) else str(args)
@@ -710,16 +745,33 @@ _MD_INJECTION_DIRS = (".claude/skills", ".claude/agents", ".claude/rules")
 _DOC_HINT = re.compile(r"(^|/)(\.claude/rules|docs)/|(^|/)harness-facts\.md$")
 
 
-def collect(root: Path) -> list[Path]:
+# A foreign tree (a plugin repo, a marketplace, one skill folder) is vetted WHOLE: plugin code sits
+# in lib/, bin/, dist/ as often as in hooks/, and a vet that reads only named folders scans nothing
+# and calls it clean (docs/reviews/adopt-ecc-2026-09-29.md: 5 of 22 ECC files, then 0 of lib/ and bin/).
+_FOREIGN_SKIP = {".git", "node_modules"}
+_SCRIPT_SUFFIXES = {".sh", ".bash", ".ps1", ".psm1", ".py", ".js", ".mjs", ".cjs", ".ts", ".cmd", ".bat", ""}
+EXIT_UNCHECKED = 3
+
+
+def _walk(d: Path, out: list[Path], skip: set[str] = _SKIP_DIRS) -> None:
+    """Every file under d, never descending into a skipped folder (os.walk prunes; rglob would
+    walk node_modules and .git file by file only to throw each one away)."""
+    for dirpath, dirs, files in os.walk(d):
+        dirs[:] = sorted(x for x in dirs if x not in skip)
+        out += [Path(dirpath, f) for f in sorted(files) if f not in skip]
+
+
+def collect(root: Path, external: bool = False) -> list[Path]:
     out: list[Path] = []
+    if external:
+        _walk(root, out, _FOREIGN_SKIP)
+        return out
     claude = root / ".claude"
     if claude.is_dir():
         for sub in ("skills", "agents", "rules", "hooks"):
             d = claude / sub
             if d.is_dir():
-                for p in d.rglob("*"):
-                    if p.is_file() and not (set(p.relative_to(root).parts) & _SKIP_DIRS):
-                        out.append(p)
+                _walk(d, out)
         for f in ("settings.json", "settings.local.json"):
             p = claude / f
             if p.is_file():
@@ -736,6 +788,97 @@ def collect(root: Path) -> list[Path]:
             seen.add(p.resolve())
             out.append(p)
     return out
+
+
+# --------------------------------------------------------------------------- #
+# User scope (--user): the machine-local config that shapes every TAOM session too
+# --------------------------------------------------------------------------- #
+
+_USER_FILES = (".claude/settings.json", ".claude/settings.local.json", ".claude/CLAUDE.md")
+_USER_DIRS = ("skills", "agents", "rules", "hooks", "commands")
+
+
+def _json_file(p: Path):
+    if not p.is_file():
+        return None
+    try:
+        return json.loads(_read(p))
+    except ValueError:
+        return None
+
+
+def _plugin_roots(home: Path, res: Result) -> list[Path]:
+    """Every installed plugin's folder, once. Any project can enable a plugin (TAOM's own tracked
+    settings enable seven), so the vet does not ask which settings file enabled it. A plugin that
+    ~/.claude/settings.json enables but whose folder is gone is a finding: it was not vetted, and
+    a plugin sync can bring it back unaudited."""
+    installed = _json_file(home / ".claude/plugins/installed_plugins.json")
+    settings = _json_file(home / ".claude/settings.json")
+    enabled = settings.get("enabledPlugins") if isinstance(settings, dict) else None
+    enabled = enabled if isinstance(enabled, dict) else {}
+    plugins = installed.get("plugins") if isinstance(installed, dict) else None
+    roots: dict[Path, Path] = {}
+    for pid, entries in (plugins if isinstance(plugins, dict) else {}).items():
+        entries = [entries] if isinstance(entries, dict) else entries if isinstance(entries, list) else []
+        live = [Path(e["installPath"]) for e in entries
+                if isinstance(e, dict) and isinstance(e.get("installPath"), str) and Path(e["installPath"]).is_dir()]
+        if not live and enabled.get(pid) is True:
+            res.findings.append(Finding(
+                "user-plugin-missing", "LOW", "plugins",
+                f"~/.claude/plugins/installed_plugins.json#{pid}", 0,
+                f"Plugin '{pid}' is enabled in ~/.claude/settings.json but its install folder is missing, "
+                "so it was not vetted. A plugin sync can restore it unaudited: remove the entry, or "
+                "reinstall and re-run --user."))
+        for p in live:
+            roots.setdefault(p.resolve(), p)
+    return list(roots.values())
+
+
+def _shown(p: Path, home: Path) -> str:
+    """How a user-scope path is reported: `~/...` inside home, the full path outside it."""
+    try:
+        return "~/" + p.relative_to(home).as_posix()
+    except ValueError:
+        return p.as_posix()
+
+
+def user_targets(home: Path, res: Result) -> list[tuple[Path, str, bool]]:
+    """(path, shown path, external) for the user scope: settings, CLAUDE.md, user skills, agents,
+    rules, hooks and commands, every MEMORY.md (it loads into each main session), and every
+    installed plugin's whole tree at --external severity."""
+    found: list[Path] = [home / f for f in _USER_FILES if (home / f).is_file()]
+    for sub in _USER_DIRS:
+        if (home / ".claude" / sub).is_dir():
+            _walk(home / ".claude" / sub, found)
+    found += sorted(home.glob(".claude/projects/*/memory/MEMORY.md"))
+    targets = [(p, _shown(p, home), False) for p in found]
+    for root in _plugin_roots(home, res):
+        targets += [(p, _shown(p, home), True) for p in collect(root, external=True)]
+    return targets
+
+
+def scan_user_mcp(home: Path, res: Result) -> bool:
+    """The MCP server maps in ~/.claude.json, top level and per project. The file also holds prompt
+    history and tokens: only the server maps are scanned, and nothing from the file is printed except
+    masked findings. Returns whether the pass ran."""
+    p = home / ".claude.json"
+    data = _json_file(p)
+    if not isinstance(data, dict):
+        res.findings.append(Finding(
+            "user-config-absent", "INFO", "mcp-risk", "~/.claude.json", 0,
+            "~/.claude.json is " + ("not valid JSON" if p.is_file() else "absent")
+            + ", so no user or local-scope MCP server was checked (unchecked, not clean)."))
+        return False
+    servers = dict(_servers_of({"mcpServers": data.get("mcpServers")}))
+    projects = data.get("projects")
+    for proj, cfg in (projects if isinstance(projects, dict) else {}).items():
+        for name, srv in _servers_of({"mcpServers": cfg.get("mcpServers")}).items() if isinstance(cfg, dict) else ():
+            servers[f"{name} (project {proj})"] = srv
+    rel = "~/.claude.json#mcpServers"
+    res.scanned_files += 1
+    scan_servers(rel, servers, res)
+    scan_secrets(p, rel, json.dumps(servers, indent=1), res)
+    return True
 
 
 def _claude_md_imports(claude_md: Path, root: Path, hops: int = 4) -> list[Path]:
@@ -760,23 +903,55 @@ def _claude_md_imports(claude_md: Path, root: Path, hops: int = 4) -> list[Path]
     return found
 
 
-def scan_file(path: Path, root: Path, res: Result, external: bool = False) -> None:
-    rel = str(path.relative_to(root)).replace("\\", "/")
-    text = _read(path)
+def _frontmatter(text: str) -> str:
+    """The YAML frontmatter of a SKILL.md: where a skill registers its own hooks."""
+    lines = text.splitlines()
+    if not lines or lines[0].strip() != "---":
+        return ""
+    for i, line in enumerate(lines[1:], 1):
+        if line.strip() == "---":
+            return "\n" + "\n".join(lines[1:i])  # the leading blank keeps file line numbers
+    return ""
+
+
+def scan_file(path: Path, rel: str, res: Result, external: bool = False) -> None:
+    """Scan one file, reported as `rel`. Under `external` every script and JSON file gets the hook
+    rules: in a foreign tree any of them can be a hook's target or registration."""
     res.scanned_files += 1
+    try:
+        size = path.stat().st_size
+        with path.open("rb") as fh:
+            head = fh.read(_BINARY_SNIFF_BYTES)
+    except OSError:
+        return
+    if size > _REPO_MAX_BYTES:
+        res.findings.append(Finding("scan-skipped-large", "INFO", "coverage", rel, 0,
+            f"{size:,} bytes, over the {_REPO_MAX_BYTES:,}-byte text limit: only YARA read it"))
+        return
+    text = _read(path)
+    if b"\0" in head:
+        scan_secrets(path, rel, text, res)  # an embedded key is still a key; prose rules do not apply
+        return
     is_doc = bool(_DOC_HINT.search(rel))
 
     scan_secrets(path, rel, text, res)
     scan_skip_flag(rel, text, res)
 
     name = path.name.lower()
+    suffix = path.suffix.lower()
     if name in ("settings.json", "settings.local.json"):
         scan_permissions(path, rel, text, res)
-    if name == ".mcp.json":
+    if name in (".mcp.json", "plugin.json"):
         scan_mcp(rel, text, res)
     # "" suffix matches extensionless hook scripts (Unix convention, e.g. check-freeze).
-    if "/hooks/" in ("/" + rel) and path.suffix in (".sh", ".bash", ".ps1", ".py", ".js", ".cmd", ""):
+    # hooks.json is where a plugin registers its hook commands, and a SKILL.md registers its own in
+    # frontmatter, so those command strings get the same hook rules as a script.
+    is_script = suffix in _SCRIPT_SUFFIXES
+    if ("/hooks/" in ("/" + rel) and is_script) or name == "hooks.json" \
+            or (external and (is_script or suffix == ".json")):
         scan_hook(rel, text, res)
+    elif name == "skill.md":
+        scan_hook(rel, _frontmatter(text), res)
     if path.suffix == ".md" or name in ("claude.md", "agents.md"):
         scan_injection(rel, text, res, is_doc)
 
@@ -794,13 +969,15 @@ def scan_file(path: Path, root: Path, res: Result, external: bool = False) -> No
 # Reporting
 # --------------------------------------------------------------------------- #
 
-def report_text(res: Result, min_rank: int) -> None:
+def report_text(res: Result, min_rank: int, unchecked: str = "") -> None:
     shown = [f for f in res.findings if SEV_RANK[f.severity] >= min_rank]
     counts = {s: sum(1 for f in res.findings if f.severity == s) for s in SEVERITIES}
     print(f"\nClaude config security audit - {res.scanned_files} files scanned")
     summary = "  ".join(f"{s}:{counts[s]}" for s in reversed(SEVERITIES) if counts[s])
     print("  " + (summary or "no findings"))
-    if not shown:
+    if unchecked:
+        print(f"\n  {unchecked}")
+    elif not shown:
         print("\n  No findings at or above the requested severity. [OK]")
     for f in sorted(shown, key=lambda x: (-SEV_RANK[x.severity], x.category, x.path)):
         loc = f"{f.path}:{f.line}" if f.line else f.path
@@ -812,10 +989,12 @@ def report_text(res: Result, min_rank: int) -> None:
     print()
 
 
-def report_json(res: Result, min_rank: int) -> None:
+def report_json(res: Result, min_rank: int, unchecked: str = "") -> None:
     shown = [f for f in res.findings if SEV_RANK[f.severity] >= min_rank]
     print(json.dumps({
         "scanned_files": res.scanned_files,
+        "unchecked": bool(unchecked),
+        "message": unchecked,
         "counts": {s: sum(1 for f in res.findings if f.severity == s) for s in SEVERITIES},
         "suppressed": res.suppressed,
         "findings": [vars(f) for f in shown],
@@ -833,23 +1012,40 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--external", action="store_true",
                     help="scanning an external/untrusted tree (not TAOM's own): raise the "
                          "SkillSpector regex categories from advisory INFO to full severity")
+    ap.add_argument("--user", action="store_true",
+                    help="scan the machine-local user scope instead of a repo: ~/.claude/settings*.json, "
+                         "user skills/agents/rules/hooks/commands, MEMORY.md, the MCP servers in "
+                         "~/.claude.json and every installed plugin (vetted at --external severity). "
+                         "Results are not committed")
+    ap.add_argument("--home", default=None, help="with --user: the home folder to scan (default: ~)")
     args = ap.parse_args(argv)
 
-    root = Path(args.root).resolve()
-    if not root.is_dir():
-        print(f"error: --root {root} is not a directory", file=sys.stderr)
-        return 1
-
     res = Result()
-    collected = collect(root)
-    for p in collected:
-        scan_file(p, root, res, external=args.external)
-    scan_yara([(p, str(p.relative_to(root)).replace("\\", "/")) for p in collected], res)
+    mcp_ran = False
+    if args.user:
+        home = Path(args.home).resolve() if args.home else Path.home()
+        where = f"{home} (user scope)"
+        targets = user_targets(home, res)
+    else:
+        root = Path(args.root).resolve()
+        if not root.is_dir():
+            print(f"error: --root {root} is not a directory", file=sys.stderr)
+            return 1
+        where = str(root)
+        targets = [(p, p.relative_to(root).as_posix(), args.external)
+                   for p in collect(root, external=args.external)]
 
-    # The config surface is where a malicious skill hides; the rest of the repo
-    # is where a credential gets pasted by accident. Both are in scope, but only
-    # the secret rules run over the second one.
-    if not args.no_repo_secrets:
+    for p, rel, external in targets:
+        scan_file(p, rel, res, external=external)
+    scan_yara([(p, rel) for p, rel, _ in targets], res)
+
+    if args.user:
+        mcp_ran = scan_user_mcp(home, res)
+    elif not args.no_repo_secrets:
+        # The config surface is where a malicious skill hides; the rest of the repo
+        # is where a credential gets pasted by accident. Both are in scope, but only
+        # the secret rules run over the second one. It runs even when the config
+        # surface is empty: a committed token is a finding either way.
         tracked = collect_tracked(root)
         if tracked is None:
             res.findings.append(Finding(
@@ -857,13 +1053,15 @@ def main(argv: list[str]) -> int:
                 "Repo-wide secret sweep skipped: --root is not a git work tree, or git "
                 "is unavailable. The .claude config surface was still scanned."))
         else:
-            already = {str(q.relative_to(root)).replace("\\", "/") for q in collected}
-            scan_repo_secrets(root, tracked, res, already)
+            scan_repo_secrets(root, tracked, res, {rel for _, rel, _ in targets})
 
-    min_rank = SEV_RANK[args.min]
-    (report_json if args.json else report_text)(res, min_rank)
-
-    return 2 if any(f.severity == "CRITICAL" for f in res.findings) else 0
+    # Fail open, never fail silent: a vet that read no config has not passed.
+    unchecked = "" if targets or mcp_ran else \
+        f"UNCHECKED: no Claude config found to scan under {where}. That is not a pass."
+    (report_json if args.json else report_text)(res, SEV_RANK[args.min], unchecked)
+    if any(f.severity == "CRITICAL" for f in res.findings):
+        return 2
+    return EXIT_UNCHECKED if unchecked else 0
 
 
 if __name__ == "__main__":

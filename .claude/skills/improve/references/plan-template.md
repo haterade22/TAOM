@@ -117,6 +117,9 @@ Never `./build.ps1`: it deploys into the game install.
 **Out of scope** (do NOT touch, even though they look related):
 - `Main/IoC.cs`: single-owner; if a registration is needed, STOP and report the exact line.
 - Any save-format change (a new SyncData field) not listed above.
+- The gates themselves. Never turn a gate green by editing it: deleting or `[Ignore]`-ing a test,
+  loosening an assertion, or adding an entry to a validator allowlist (`_BY_DESIGN`, `_EXEMPT`,
+  `exempt_troops` and the like) without the reason that allowlist requires. STOP and report instead.
 
 ## Git workflow
 

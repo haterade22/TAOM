@@ -425,10 +425,7 @@ except Exception as e:
     # When adding/removing servers, update these AND document the source.
     #
     #   serena:      HEURISTIC ~25 symbol/edit tools — https://github.com/oraios/serena
-    #   github:      HEURISTIC ~30 issue/PR/repo tools — GitHub Copilot MCP
-    #   filesystem:  EXACT 13 — counted from upstream README:
-    #                https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem
-    #   git:         HEURISTIC ~14 git-operation tools — mcp-server-git
+    #   (github, filesystem and git left .mcp.json on 2026-09-29; their rows went with them)
     #   ilspy:       EXACT 4 — counted from server.py (decompile_assembly,
     #                list_types, generate_diagrammer, get_assembly_info)
     #   taom-moduledata: EXACT 9 — counted 2026-08-05 from tools/taom_mcp_server.py
@@ -437,9 +434,6 @@ except Exception as e:
     #                sessions load no tools, so this is a when-authed estimate
     declare -A SERVER_TOOLS=(
         [serena]=25
-        [github]=30
-        [filesystem]=13
-        [git]=14
         [ilspy]=4
         [sequential-thinking]=1
         [context7]=2

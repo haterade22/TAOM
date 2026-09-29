@@ -98,9 +98,9 @@ yours).
 ## MCP and shell
 
 - Symbols: Serena. Item, troop and culture refs: the `taom-moduledata` MCP, or
-  `python tools/validate_moduledata.py`. Files across modules: filesystem. Issues: GitHub.
-- The git and filesystem MCP write tools bypass every PreToolUse gate: stage and commit through
-  Bash ([MCP servers](docs/reference/mcp-servers.md)).
+  `python tools/validate_moduledata.py`. Files across modules: Read and Grep. Issues: the `gh` CLI.
+- MCP write tools bypass every PreToolUse gate (Serena's are denied): git goes through Bash, files
+  through Edit and Write ([MCP servers](docs/reference/mcp-servers.md)).
 - Bash heredocs mangle backslashes and quotes: write scripts with the Write tool. Never spell
   `python3` (a Store alias that hangs); use `python`. The PowerShell tool:
   [powershell-tool.md](docs/reference/powershell-tool.md).
