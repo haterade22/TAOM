@@ -480,6 +480,38 @@ Creature Bandits refused spiders, then bandit trolls, as prisoners in `TaomBattl
 - **Prevent:** before stating that a troop can never reach a party, enumerate the engine's roster transfers and check each: capture (`CaptureDefeatedPartyMembers`), freed-prisoner loot (`LootDefeatedPartyPrisoners`), the bandit join and surrender dialogues, prisoner recruitment, volunteers and party templates. A contract about a party's makeup ("trolls only") also covers who can join it after a battle.
 - **Source:** #694, `docs/reviews/rca-troll-bandits-2026-09-28.md` findings 1 and 4; lenses 2 and 5 found the join path independently.
 
+### Measure the live data before recommending a threshold, and never ship a threshold-only CareerQuest
+"Heavy armour at Barracks level 1" was recommended to Mike as a gate; every live town starts at level 1 or more
+(19 at 1, 33 at 2, 26 at 3), so it gated nothing. Separately, a CareerQuest whose objectives are all thresholds
+(skill, renown, gold) completes inside `QuestBase.StartQuest` when the hero already meets them:
+`CareerQuest.OnStartQuest` seeds the thresholds and calls `CompleteQuestWithSuccess` before the engine adds the quest
+to `QuestManager`, which then keeps the finished quest in every later save.
+- **Why missed:** the threshold was chosen from the design, not the data; the shell's ordering was invisible because
+  no earlier quest was threshold-only.
+- **Prevent:** before proposing a level, count, or chance to Mike, measure its distribution in the live install and
+  put the numbers in the question. Give every CareerQuest at least one counted objective.
+- **Source:** `docs/reviews/rca-armour-acquisition-2026-09-27.md` rows 6 and 8 (Data flow A and B, Engine).
+
+### A resource's producer stops, or says why not, when its only consumer is done
+Lord's materials kept dropping after the last ladder rung was claimed, when nothing could spend them: the roll
+checked the win and the culture, never whether the hero still climbed.
+- **Why missed:** the drop was designed and tested from the producer's side; no test asked what consumes a find.
+- **Prevent:** for every new resource, name its consumers and test the producer once each consumer is exhausted.
+- **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` row 3 (Data flow A and B).
+
+### A new campaign creates its first issues before character creation: re-check a player filter while an offer waits
+The new game's first issues are created while the campaign loads (traced with ilspycmd:
+`IssuesCampaignBehavior.OnNewGameCreatedPartialFollowUpEnd`), and character creation starts only after the load
+(`SandBoxGameManager.OnLoadFinished`, SandBox.SandBoxGameManager.cs:123-144, 186). Until then the main hero is
+SandBox's `main_hero`, `Culture.battania` (SandBox `lords.xml`:11), so a filter on the player's culture at the offer
+filters on the placeholder: "The Deep Seam" for Rhûn and Khand (cultures khuzait, battania) could open for any
+player. A Player Switcher change moves the player to another culture the same way.
+- **Why missed:** the filter was tested at the offer against a giver adapter that always held the final player
+  culture; nobody asked when the first offers are made.
+- **Prevent:** a filter on the player's state also goes in `IssueStayAliveConditions`, which the engine runs each
+  day and when the player enters the settlement, and which drops only untaken offers (IssueManager.cs:262, 516).
+- **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` convergence finding C3.
+
 ### "Is the player in a siege" is `PlayerSiege.PlayerSiegeEvent`, not `MobileParty.SiegeEvent`
 `MobileParty.SiegeEvent` is `BesiegerCamp?.SiegeEvent` (v1.5.3 `MobileParty.cs:1164`): it sees only a besieging party. A player defending inside a besieged town or castle, between assaults, has no `BesiegerCamp` and no `MapEvent`, so a guard on those two lets him through. Vanilla's own question is `PlayerSiege.PlayerSiegeEvent`, which falls back to `MainParty.CurrentSettlement.SiegeEvent` (`PlayerSiege.cs:16-31`).
 - **Why missed:** the member's name promised "the party's siege"; its one-line body was not read.

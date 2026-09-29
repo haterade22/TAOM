@@ -560,6 +560,29 @@ check as a live-install gate. **Add a script to `GENERATORS` when it writes item
 ModuleData.** A one-off swap map names retired ids on its FROM side by design and does not belong
 there.
 
+## Armour acquisition (`ARMOUR_CLASS_TABLE_DRIFT`, `ARMOUR_ACQUISITION_REF`)
+
+**`ARMOUR_CLASS_TABLE_DRIFT` (WARNING).** The game reads
+`Main/_Module/ModuleData/armour_acquisition/armour_classes.xml` to decide which pieces markets and loot
+may hand out and what the armoury upgrades each into ([armour-acquisition.md](armour-acquisition.md)).
+The table is generated from the unversioned Armory, so an art drop that adds, renames or retires pieces
+leaves it stale with nothing else noticing. The pass reruns `tools/generate_armour_classes.py` in memory
+and compares. It says so on stderr and adds nothing when `LOTRLOME_Armory` is absent, and reports the
+table as NOT verified, never passed, when the generator raises, finds no armour, or reads a different
+Armory than the one under `--game-modules`. Fix: `python tools/generate_armour_classes.py --apply`.
+
+**`ARMOUR_ACQUISITION_REF` (ERROR).** Every reference the feature's data makes fails silently when it
+names nothing: a LotrIssue row's `cultures` token (the row never fires), `reward_item` (no chest
+arrives) or `item_source="item:X"`; a named weapon (it stays on sale) or an upgrade `Material`; the
+lord's gear ladder's weapon picks and lord's materials and their cultures (never handed out), and each
+rung's quest, which must be a root-level `<CareerQuest>` in `taom_career_quests.xml` as the game reads
+it (the rung never starts); a marketplace `<Culture id>` or `armour_from` (the culture draws on no
+armour). Each resolves against `Registries.items` and `Registries.cultures`, plus the items the engine
+registers in C# (`DefaultItems`: the metals among them), which no XML defines. The item registry counts
+only documents with an `<Items>` root, so a config or the generated class table quoting an id never
+defines it. A file that does not parse, or declares an unknown encoding, is reported. Without the
+install the registry is TAOM-only, so the pass is skipped and says so.
+
 ## Borrowed collision body (`COLLISION_BODY_BORROWED`)
 
 **ERROR.** The question `MISSING_COLLISION_BODY` cannot ask. That check asks whether a `body_name`
@@ -843,6 +866,9 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
 
 ## Changelog
 
+- 2026-09-27: `ARMOUR_CLASS_TABLE_DRIFT` (warning) and `ARMOUR_ACQUISITION_REF` (error, in the commit
+  hook) added with [armour acquisition](armour-acquisition.md): the generated class table is checked
+  against the live Armory, and the feature's ids and cultures against the registry.
 - 2026-09-26: `MISSING_COLLISION_BODY`, `MISSING_VISUAL_MESH` and `COLLISION_BODY_BORROWED` read
   the loose `Assets/` tree first, through `validate_mesh_refs.tpac_paths_for_modules`, instead of
   preferring a cooked `AssetPackages/` tree. A cook that morning left stale Armory packs beside the

@@ -26,6 +26,39 @@ public class CultureMarketplaceInjectionServiceTests
     private CultureMarketplaceInjectionService NewSut(MarketplaceTuning tuning = null)
         => new(_poolService, tuning ?? _tuning, _logger);
 
+    // --- Per-town eligibility (the armour acquisition stock gate, docs/features/armour-acquisition.md) ---
+
+    [TestMethod]
+    public void SelectItems_FilterRefusesAnItem_ItIsNeverDrawn()
+    {
+        _poolService.GetPool("gondor").Returns(MakePool("gondor", ("light_a", 1f), ("elite_a", 50f)));
+
+        var result = NewSut().SelectItems("gondor", 0, new Random(1), id => id != "elite_a");
+
+        Assert.AreEqual(6, result.Count);
+        CollectionAssert.DoesNotContain(new List<string>(result), "elite_a");
+    }
+
+    [TestMethod]
+    public void SelectItems_FilterRefusesEveryItem_ReturnsEmpty()
+    {
+        _poolService.GetPool("gondor").Returns(MakePool("gondor", ("lord_a", 1f)));
+
+        Assert.AreEqual(0, NewSut().SelectItems("gondor", 0, new Random(1), _ => false).Count);
+    }
+
+    [TestMethod]
+    public void SelectItems_PermissiveFilter_DrawsExactlyAsWithoutOne()
+    {
+        // A town whose gate allows everything (the feature off) must see the draw it saw before the gate.
+        _poolService.GetPool("gondor").Returns(MakePool("gondor", ("a", 1f), ("b", 3f), ("c", 0.5f), ("d", 7f)));
+
+        var without = NewSut().SelectItems("gondor", 0, new Random(7));
+        var with = NewSut().SelectItems("gondor", 0, new Random(7), _ => true);
+
+        CollectionAssert.AreEqual(new List<string>(without), new List<string>(with));
+    }
+
     private static CultureItemPool MakePool(string cultureId, params (string id, float weight)[] entries)
     {
         var list = new List<ItemPoolEntry>();

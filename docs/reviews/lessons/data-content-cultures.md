@@ -1693,3 +1693,54 @@ parents), and its female skins carry the male body. The line was removed once th
 - **Prevent:** a race added to `cultures.json` for authoring is reverted in the same session; a permanent entry
   needs `as_<race>_facegen` sets, correct female skins and a decision on every race-keyed system.
 - **Source:** `docs/reviews/rca-saruman-lord-and-faces-2026-09-28.md`.
+
+### A culture-keyed armour feature needs a donor map, and a new global rule needs a check against other features' decisions
+Nine lord cultures (Lindon, Lórien, Umbar, Abanissa, Shaghana, Khand and the three orc cultures) own no Armory armour.
+Keyed by culture, their lord kit fell back to any culture's (vanilla pieces included) and their 22 towns could never
+sell heavy or elite once the NotMerchandise flag closed the workshops' any-culture fallback. The fix is one map,
+`armour_from` in `culture_marketplace_config.xml`, read by both the pools and the lord kit. In the same feature a new
+global rule (the market draw refuses every XML non-merchandise item) silently reversed Mike's recorded decision that
+the Animalia moose may be sold.
+- **Why missed:** the culture id was assumed to be a kit id; the new rule was checked against the feature's own items.
+- **Prevent:** before keying armour on a culture, count each culture's pieces and map the empty ones to a donor. When a
+  rule newly excludes a class of items, list the ids it newly catches and grep the docs for decisions about them.
+- **Source:** `docs/reviews/rca-armour-acquisition-2026-09-27.md` rows 5 and 9 (Data flow A and B, Design).
+
+### A new source of pool items must be recognised by every pass that prunes the same roster
+`armour_from` merged a donor culture's armour into a receiving culture's CultureMarketplace pool, and its tests passed
+at the pool. In game the daily `FilterForeignCultureItems` pass, which keeps a town's own culture and its routed items
+only, stripped each donated piece the day after the draw put it there: a Rivendell helm in a Lindon town is "foreign".
+- **Why missed:** the fix was tested at the seam it changed (the pool build); the second pass over the same roster,
+  with its own notion of what belongs there, was never run against a donated piece.
+- **Prevent:** when you add a way for items to reach a roster (a merge, a route, a guaranteed floor), list every pass
+  that removes from that roster (filters, sweeps, caps) and test one of each against the new item. The filter now
+  keeps anything the town culture's own pool carries.
+- **Source:** `docs/reviews/rca-armour-acquisition-2026-09-27.md` row 18 (the Step 4.6 convergence reviewer).
+
+### A reward that only one culture can use is offered on the recipient's culture, not the giver's
+"The Deep Seam" rows paid the giver's culture's lord's material, because LotrIssues offers on the giver's culture
+only; the ladder spends only the player's own. A Gondor hero at a Rohan village earned metal no rung of theirs took.
+- **Why missed:** the rows copied the Armourer's Commission, whose chest of the giver's people is useful to anyone.
+- **Prevent:** before reusing a culture filter, ask whose culture the reward must match; a culture-bound reward
+  filters on the player's culture as well (`for_player_culture`).
+- **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` row 4 (Data flow B).
+
+### Check a unique reward against every kit that already carries it
+The lord's weapon rung, a top-of-ladder reward, offered Dale's own starting sword, which six career kits, ten
+character-creation kits, three enlistment kits and five Dale troops carry, and its description called the picks
+weapons that are "never sold" though every one was merchandise.
+- **Why missed:** the picks were chosen by culture tag and weapon class; nobody searched the kits for them.
+- **Prevent:** before naming an item a reward, count its `Item.<id>` references across the repo's ModuleData and
+  both live modules (troops, lords, equipment sets, player and enlistment kits); prefer one no kit carries, and
+  say in the data which picks break that rule and why (a later comment claimed it for a pick one troop carries).
+- **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` rows 22 and 24 (XML lens; the doc correction).
+
+### Enumerate hero items from the data's own markers, then have Mike rule on the whole list
+The armour acquisition named-weapon list was completed once from the heroes people knew to search for, and
+still missed ten: Tuor's two `[Heirloom]` axes, Galadriel's sword (named "Galadriel Sword", no possessive) and
+the seven `[Noldor]` First Age swords. One of Tuor's axes turned up for sale in play.
+- **Why missed:** the search started from names in mind, not from how the Armory marks a hero item.
+- **Prevent:** list every crafted weapon and shield whose name carries a tag like `[Heirloom]`, a possessive
+  of a proper name, or a character's name, across every `LOTRLOME_items` file, and put the full candidate list
+  to Mike; a name-based search alone misses items named without a possessive.
+- **Source:** `docs/reviews/rca-armour-acquisition-2026-09-27.md` row 20 (found in play, 2026-09-28).

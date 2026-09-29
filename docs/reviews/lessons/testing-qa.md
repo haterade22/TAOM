@@ -1338,3 +1338,22 @@ The spider brood anchors claimed "every Mirkwood and Dol Guldur settlement" and 
 - **Why missed:** the test restated the answer instead of deriving it, so it could only ever agree; the id pattern was a guess at the naming scheme, not a read of the data.
 - **Prevent:** when a list claims "every X", derive X in the test from its source (here the live `settlements.xml` by authored culture, `CreatureBanditLiveDataTests`, `LiveInstall`), and select by an attribute the data carries (culture, component) rather than an id pattern.
 - **Source:** #694, `docs/reviews/rca-troll-bandits-2026-09-28.md` finding 2; lens 7 found it by parsing the live map.
+
+### Parse enum names against Enum.GetNames, never Enum.TryParse alone
+`LadderSlotRules.TryParse` refused numerals (the first character had to be a letter) but still took comma lists:
+`Enum.TryParse` applies flags semantics to any enum, so `slot="legs,shoulders"` loaded as a Head rung.
+- **Why missed:** the numeral form was a known trap and was guarded; the comma form was not.
+- **Prevent:** match the name against `Enum.GetNames` (case as the config allows), and test a numeral and a comma
+  list. The career-quest objective parse has the same gap (follow-up).
+- **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` row 10 (Completeness).
+
+### A proof column names a test you have read: grep its name and its assertion first
+The lord's gear ladder RCA marked a missing-test row fixed and gave "the wiring test builds the counter's decl" as
+a design proposal's proof, and the feature doc said the same; no test called the mission decl's factory, which the
+runner starts fail-open, so a throw there would silently drop the kill counter.
+- **Why missed:** the proof was written from the plan for the test, not from the test file, and two documents
+  repeated it.
+- **Prevent:** before a test goes into a proof column, a doc's test list or a commit body, grep its name and read
+  the assertion that proves the claim; a test that does not exist is a fabricated fact (`evidence-over-claims.md`
+  section C).
+- **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` convergence finding C1.

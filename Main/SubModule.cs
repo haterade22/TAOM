@@ -1362,7 +1362,9 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.CultureMarketplace.ICultureMarketplaceMaintenanceService>(),
             IoC.Resolve<ITownRosterAdapter>(),
             IoC.Resolve<Features.CultureMarketplace.Domain.MarketplaceTuning>(),
-            IoC.Resolve<IModLogger>()));
+            IoC.Resolve<IModLogger>(),
+            // Armour acquisition narrows each town's draw to what its armoury allows.
+            IoC.Resolve<Features.CultureMarketplace.IMarketplaceStockGate>()));
 
         // CaravanTrade — per-caravan visit memory feeding the GetTradeScoreForTown recency penalty
         // (fixes caravans shuttling between the nearest two towns). Registered unconditionally so a
@@ -1497,6 +1499,11 @@ public class SubModule : MBSubModuleBase
         // Mount sizes live on the Monster (taom_body_length, docs/features/monster-size.md). Every game init, before
         // the once-per-process guard: each game reloads its items from XML, and no mission has built a mount yet.
         IoC.Resolve<Features.MonsterSize.IMonsterSizeService>().ApplyMonsterSizes();
+
+        // Armour acquisition (docs/features/armour-acquisition.md): every game init too, for the same reason, and
+        // before a new game's workshops cache their items (OnNewGameCreatedPartialFollowUp runs after this hook).
+        // Only a campaign has the markets, workshops and loot the gate reaches.
+        IoC.Resolve<Features.ArmourAcquisition.IArmourGateService>().ApplyGating(game?.GameType is Campaign);
 
         // Harmony patches are process-global (applied to methods, persist across games). Apply this
         // whole per-game-init patch block ONCE per process — re-applying on a 2nd game init duplicates

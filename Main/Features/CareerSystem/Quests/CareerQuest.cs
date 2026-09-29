@@ -212,7 +212,20 @@ public class CareerQuest : QuestBase
 
     // ── Progress plumbing ────────────────────────────────────────────────────
 
-    private void Bump(CareerQuestObjectiveType type, string matchParam)
+    /// <summary>
+    /// Feeds <paramref name="amount"/> to every objective of <paramref name="type"/> through
+    /// <c>ICareerQuestService.ComputeProgress</c> (a count objective adds it, a threshold objective keeps the
+    /// highest seen), for progress no campaign event carries (<see cref="CareerQuestObjectiveType.HeroKills"/>: a
+    /// battle's kills, #693). Campaign thread only: it may complete the quest.
+    /// </summary>
+    public void AddProgress(CareerQuestObjectiveType type, int amount)
+    {
+        EnsureDef();
+        if (amount > 0)
+            Bump(type, null, amount);
+    }
+
+    private void Bump(CareerQuestObjectiveType type, string matchParam, int amount = 1)
     {
         if (_def == null || !IsOngoing) return;
         var svc = Service;
@@ -221,7 +234,7 @@ public class CareerQuest : QuestBase
             var obj = _def.Objectives[i];
             if (obj.Type != type) continue;
             if (matchParam != null && !string.Equals(obj.Param, matchParam, System.StringComparison.OrdinalIgnoreCase)) continue;
-            _progress[i] = svc.ComputeProgress(type, _progress[i], 1);
+            _progress[i] = svc.ComputeProgress(type, _progress[i], amount);
         }
         RefreshAndMaybeComplete();
     }

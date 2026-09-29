@@ -8,7 +8,7 @@ using TAOM.Features.SpecialResources.Domain;
 
 namespace TAOM.Features.SpecialResources;
 
-public class SpecialResourceService : ISpecialResourceService
+public class SpecialResourceService : ISpecialResourceService, ISpecialResourceSpender
 {
     private readonly ISpecialResourceConfigProvider _config;
     private readonly ISpecialResourceStorageService _storage;
@@ -508,6 +508,28 @@ public class SpecialResourceService : ISpecialResourceService
 
         _logger.LogInfo($"[SpecRes] CHEAT GRANT: {amount:+0.##;-0.##;0} {resource.DisplayName} | {before:F0}→{after:F0} (cap {resource.Cap:F0})");
         return new ResourceGrantResult(true, resource.Id, resource.DisplayName, before, after, resource.Cap);
+    }
+
+    public SpecialResourceBalance? GetBalance(string heroId, string? kingdomId, string? cultureId)
+    {
+        var resource = ResolveResource(kingdomId, cultureId);
+        return resource == null ? null : new SpecialResourceBalance(resource.DisplayName, _storage.Get(heroId, resource.Id));
+    }
+
+    public bool TrySpend(string heroId, string? kingdomId, string? cultureId, float amount)
+    {
+        // Positive requirement, so NaN fails the gate (csharp-architecture.md, "Engine-Float Decision Gates").
+        if (!(amount > 0f) || !FiniteFloatValidator.IsFinite(amount))
+            return false;
+        var resource = ResolveResource(kingdomId, cultureId);
+        if (resource == null)
+            return false;
+        var available = _storage.Get(heroId, resource.Id);
+        if (!(available >= amount))
+            return false;
+        _storage.Add(heroId, resource.Id, -amount);
+        _logger.LogInfo($"[SpecRes] SPEND: -{amount:0.##} {resource.DisplayName} for the armoury | {available:F0}→{_storage.Get(heroId, resource.Id):F0}");
+        return true;
     }
 
     private void AddCapped(string heroId, SpecialResource resource, float amount)

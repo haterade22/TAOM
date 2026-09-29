@@ -24,6 +24,7 @@ public class CultureMarketplaceBehavior : CampaignBehaviorBase
     private readonly ITownRosterAdapter _townAdapter;
     private readonly MarketplaceTuning _tuning;
     private readonly IModLogger _logger;
+    private readonly IMarketplaceStockGate _stockGate;
     private readonly Random _rng = new();
 
     // Codex review 2026-05-20 (C4): if BuildPools throws, the prior code retried on every
@@ -52,7 +53,8 @@ public class CultureMarketplaceBehavior : CampaignBehaviorBase
         ICultureMarketplaceMaintenanceService maintenance,
         ITownRosterAdapter townAdapter,
         MarketplaceTuning tuning,
-        IModLogger logger)
+        IModLogger logger,
+        IMarketplaceStockGate stockGate)
     {
         _poolService = poolService;
         _injection = injection;
@@ -60,6 +62,7 @@ public class CultureMarketplaceBehavior : CampaignBehaviorBase
         _townAdapter = townAdapter;
         _tuning = tuning;
         _logger = logger;
+        _stockGate = stockGate;
     }
 
     public override void RegisterEvents()
@@ -160,7 +163,7 @@ public class CultureMarketplaceBehavior : CampaignBehaviorBase
         var removed = _maintenance.FilterForeignCultureItems(settlement, cultureId, _tuning.MaxFilterRemovalsPerTick);
 
         var rosterCount = _townAdapter.GetRosterDistinctItemCount(settlement);
-        var picks = _injection.SelectItems(cultureId, rosterCount, _rng);
+        var picks = _injection.SelectItems(cultureId, rosterCount, _rng, _stockGate.ForTown(_townAdapter.GetSettlementId(settlement)));
         var added = 0;
         for (var i = 0; i < picks.Count; i++)
         {

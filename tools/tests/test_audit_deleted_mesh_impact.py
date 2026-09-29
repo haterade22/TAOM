@@ -233,6 +233,35 @@ class TestBareRefs(unittest.TestCase):
         refs = am.extract_bare_refs(xml, "lotr_issues/taom_lotr_issues.xml")
         self.assertEqual([r.item_id for r in refs], ["grain", "iron"])
 
+    def test_lotr_issue_reward_item_is_matched(self):
+        # An issue's completion reward names an item with no Item. prefix, a shape the
+        # item_source="item:X" pattern alone never sees.
+        xml = ('reward_gold_base="0" reward_renown="2" '
+               'reward_item="sk_gd_los_inf_chest_heavy_a" relation_min="0"')
+        refs = am.extract_bare_refs(xml, "lotr_issues/taom_lotr_issues.xml")
+        self.assertEqual([r.item_id for r in refs], ["sk_gd_los_inf_chest_heavy_a"])
+
+    def test_lotr_issue_blank_reward_item_is_not_a_reference(self):
+        # The template row ships reward_item="" (no reward yet); an empty value is not an id.
+        xml = 'reward_item=""'
+        self.assertEqual(am.extract_bare_refs(xml, "lotr_issues/taom_lotr_issues.xml"), [])
+
+    def test_armour_acquisition_named_weapon_is_matched(self):
+        xml = ('<NamedWeapons>\n'
+               '  <Item id="anduril" />\n'
+               '  <Item id="wm_sauron_mace" />\n'
+               '</NamedWeapons>\n')
+        refs = am.extract_bare_refs(xml, "armour_acquisition/armour_acquisition_config.xml")
+        self.assertEqual([r.item_id for r in refs], ["anduril", "wm_sauron_mace"])
+
+    def test_armour_acquisition_upgrade_material_is_matched(self):
+        xml = ('<Upgrade target="medium" gold="150">\n'
+               '  <Material item="ironIngot2" count="3" />\n'
+               '  <Material item="ironIngot1" count="2" />\n'
+               '</Upgrade>\n')
+        refs = am.extract_bare_refs(xml, "armour_acquisition/armour_acquisition_config.xml")
+        self.assertEqual([r.item_id for r in refs], ["ironIngot2", "ironIngot1"])
+
     def test_banner_bearer_json_values(self):
         blob = json.dumps({
             "CultureBanners": {"gondor": "standard_of_duty_t1", "vlandia": "banner_t1"},

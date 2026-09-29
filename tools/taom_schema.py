@@ -1943,7 +1943,15 @@ def _read_stripped(xml: Path) -> str:
     return _COMMENT_RE.sub("", text)
 
 
-def _scan(roots, pattern, want_files=False):
+# The first element of a document (after the declaration and comments): the kind of file it is.
+_DOC_ROOT_RE = re.compile(r"<(?![?!])([A-Za-z_][\w.\-]*)")
+# Item definitions come only from documents the engine loads as items. A feature config or a generated
+# table that quotes ids in <Item id="..."> rows (the armour config's NamedWeapons, armour_classes.xml)
+# would otherwise define its own ids, and no gate could ever fail on them (RCA 2026-09-28 row 1).
+_ITEM_DOC_ROOTS = frozenset({"Items"})
+
+
+def _scan(roots, pattern, want_files=False, doc_roots=None):
     found = set()
     files = defaultdict(list)
     for root in roots:
@@ -1952,6 +1960,10 @@ def _scan(roots, pattern, want_files=False):
             continue
         for xml in root.rglob("*.xml"):
             text = _read_stripped(xml)
+            if doc_roots is not None:
+                first = _DOC_ROOT_RE.search(text)
+                if first is None or first.group(1) not in doc_roots:
+                    continue
             for m in pattern.finditer(text):
                 found.add(m.group(1))
                 if want_files:
@@ -2438,7 +2450,7 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
                             ("NavalDLC", "naval_bodyproperties.xml")):
             bodyprop_files.append(game_modules / name / "ModuleData" / fname)
 
-    items, item_def_files = _scan(item_roots, _ITEM_DEF_RE, want_files=True)
+    items, item_def_files = _scan(item_roots, _ITEM_DEF_RE, want_files=True, doc_roots=_ITEM_DOC_ROOTS)
     npccharacters = _scan(npc_roots, _NPC_DEF_RE)
     cultures = _scan_files(culture_files, _CULTURE_DEF_RE) | VANILLA_CULTURES
     party_templates = _scan(pt_roots, _PARTYTEMPLATE_DEF_RE)

@@ -35,6 +35,7 @@ public class LotrIssueService : ILotrIssueService
         {
             if (def.GiverOccupation != giver.Occupation.Value) continue;
             if (!def.AppliesToCulture(giver.CultureStringId)) continue;
+            if (!def.OffersTo(giver.PlayerCultureStringId)) continue;
             if (giver.RelationWithPlayer < def.RelationMin) continue;
             result.Add(def);
         }
@@ -102,8 +103,8 @@ public class LotrIssueService : ILotrIssueService
         var gold = ComputeRewardGold(def, difficulty);
         if (gold > 0) hero.AddGold(gold);
         if (def.RewardRenown > 0) hero.AddRenown(def.RewardRenown);
-        if (!string.IsNullOrEmpty(def.RewardItem)) hero.AddItemToInventory(def.RewardItem, 1);
-        _logger.LogInfo($"LotrIssues '{def.Id}': applied reward (gold {gold}, renown {def.RewardRenown}, item '{def.RewardItem}')");
+        if (!string.IsNullOrEmpty(def.RewardItem)) hero.AddItemToInventory(def.RewardItem, def.RewardItemCount);
+        _logger.LogInfo($"LotrIssues '{def.Id}': applied reward (gold {gold}, renown {def.RewardRenown}, item '{def.RewardItem}' x{def.RewardItemCount})");
     }
 
     private void EnsureLoaded()

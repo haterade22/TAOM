@@ -45,8 +45,10 @@ public sealed class CultureMarketplaceMaintenanceService : ICultureMarketplaceMa
     /// <summary>
     /// Remove items whose effective culture (attribute → prefix → alias) does not match
     /// the town's current owner culture. Routed items targeted at this culture are kept
-    /// (e.g., wargs in a mordor town). Items with no culture signal (vanilla universals,
-    /// trade goods, base armour) are left alone. Capped at removalCap.
+    /// (e.g., wargs in a mordor town), and so is anything this culture's own pool carries:
+    /// the armour a culture with none of its own draws from its armour_from donor belongs
+    /// there too. Items with no culture signal (vanilla universals, trade goods, base armour)
+    /// are left alone. Capped at removalCap. Callers build the pools first.
     /// </summary>
     public int FilterForeignCultureItems(Settlement settlement, string cultureId, int removalCap)
     {
@@ -65,11 +67,21 @@ public sealed class CultureMarketplaceMaintenanceService : ICultureMarketplaceMa
                 routedIdsHere.Add(routedHere[i].ItemId);
         }
 
+        HashSet<string> pooledHere = null;
+        var pool = _poolService.GetPool(cultureId);
+        if (pool != null && pool.Items.Count > 0)
+        {
+            pooledHere = new HashSet<string>(StringComparer.Ordinal);
+            for (var i = 0; i < pool.Items.Count; i++)
+                pooledHere.Add(pool.Items[i].ItemId);
+        }
+
         var removed = 0;
         for (var i = 0; i < snapshot.Count && removed < removalCap; i++)
         {
             var row = snapshot[i];
             if (routedIdsHere != null && routedIdsHere.Contains(row.ItemId)) continue;
+            if (pooledHere != null && pooledHere.Contains(row.ItemId)) continue;
 
             // Effective culture = attribute alias (prefix-only items lack a Culture
             // attribute in the roster snapshot; treat them as universals → keep).

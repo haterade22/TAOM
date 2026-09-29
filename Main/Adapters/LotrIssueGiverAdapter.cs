@@ -45,4 +45,6 @@ public class LotrIssueGiverAdapter : ILotrIssueGiverAdapter
     public string CultureStringId => _hero?.Culture?.StringId ?? "";
 
     public int RelationWithPlayer => _hero == null ? 0 : (int)_hero.GetRelationWithPlayer();
+
+    public string PlayerCultureStringId => Hero.MainHero?.Culture?.StringId ?? "";
 }

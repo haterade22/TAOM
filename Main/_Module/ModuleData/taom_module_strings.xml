@@ -2952,4 +2952,98 @@
 	<string id="taom_oob_autoassign_not_general" text="{=taom_oob_autoassign_not_general}Only the general of this battle can assign heroes." />
 	<string id="taom_oob_autoassign_none" text="{=taom_oob_autoassign_none}No hero suits an open captain slot." />
 
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- ArmourAcquisition -->
+	<string id="taom_armoury_visit_news" text="{=taom_armoury_visit_news}A master armourer has come to {TOWN}. For the next {DAYS} days its armoury stocks and forges as a finer one would." />
+	<string id="taom_armoury_menu" text="{=taom_armoury_menu}Visit the armoury" />
+	<string id="taom_armoury_menu_tip" text="{=taom_armoury_menu_tip}This town's armoury works to level {LEVEL} of 3." />
+	<string id="taom_armoury_coop_guest" text="{=taom_armoury_coop_guest}The armourer works only for the host of this campaign." />
+	<string id="taom_armoury_nothing" text="{=taom_armoury_nothing}You carry nothing this armourer can improve. Bring a piece of armour and the metals its next form needs." />
+	<string id="taom_armoury_title" text="{=taom_armoury_title}The Armoury of {TOWN}" />
+	<string id="taom_armoury_desc" text="{=taom_armoury_desc}This armoury works to level {LEVEL} of 3. Heavy pieces need level {HEAVY}, elite pieces level {ELITE}, and lord kit a master armourer at level {LORD}. The piece keeps its quality." />
+	<string id="taom_armoury_choose" text="{=taom_armoury_choose}Choose" />
+	<string id="taom_armoury_leave" text="{=taom_armoury_leave}Leave" />
+	<string id="taom_armoury_confirm_title" text="{=taom_armoury_confirm_title}Improve {SOURCE}?" />
+	<string id="taom_armoury_confirm_body" text="{=taom_armoury_confirm_body}The armourer will rework it into {TARGET} for {PRICE}." />
+	<string id="taom_armoury_confirm_yes" text="{=taom_armoury_confirm_yes}Have it done" />
+	<string id="taom_armoury_cancel" text="{=taom_armoury_cancel}Cancel" />
+	<string id="taom_armour_class_light" text="{=taom_armour_class_light}light" />
+	<string id="taom_armour_class_medium" text="{=taom_armour_class_medium}medium" />
+	<string id="taom_armour_class_heavy" text="{=taom_armour_class_heavy}heavy" />
+	<string id="taom_armour_class_elite" text="{=taom_armour_class_elite}elite" />
+	<string id="taom_armour_class_lord" text="{=taom_armour_class_lord}lord" />
+	<string id="taom_armour_class_other" text="{=taom_armour_class_other}fine" />
+	<string id="taom_armoury_offer" text="{=taom_armoury_offer}{SOURCE} into {TARGET} ({CLASS})" />
+	<string id="taom_armoury_gold" text="{=taom_armoury_gold}{GOLD} gold" />
+	<string id="taom_armoury_amount" text="{=taom_armoury_amount}{COUNT} {ITEM}" />
+	<string id="taom_armoury_block_level" text="{=taom_armoury_block_level}This armoury cannot work {CLASS} pieces: it needs level {NEED}, and this one is level {LEVEL}." />
+	<string id="taom_armoury_block_gold" text="{=taom_armoury_block_gold}You cannot pay it: {PRICE}." />
+	<string id="taom_armoury_block_metal" text="{=taom_armoury_block_metal}You lack the metals: {PRICE}." />
+	<string id="taom_armoury_block_resource" text="{=taom_armoury_block_resource}Your people's treasure falls short: {PRICE}." />
+	<string id="taom_armoury_cost" text="{=taom_armoury_cost}Costs {PRICE}." />
+	<string id="taom_armoury_done" text="{=taom_armoury_done}The armourer hands you {TARGET}." />
+	<string id="taom_armoury_gone" text="{=taom_armoury_gone}You no longer carry {SOURCE}." />
+	<string id="taom_armoury_short_gold" text="{=taom_armoury_short_gold}You no longer have the gold for it." />
+	<string id="taom_armoury_short_metal" text="{=taom_armoury_short_metal}You no longer have the metals for it." />
+	<string id="taom_armoury_short_resource" text="{=taom_armoury_short_resource}Your people's treasure no longer covers it." />
+	<string id="taom_lh_event_title" text="{=taom_lh_event_title}A Lord's Harness Unclaimed" />
+	<string id="taom_lh_event_body" text="{=taom_lh_event_body}Among the spoils of the field lies {ITEM}, the harness of {LORD}'s household. It is yours by right of arms, though his kin would take its return as a courtesy." />
+	<string id="taom_lh_event_take" text="{=taom_lh_event_take}Take it" />
+	<string id="taom_lh_event_return" text="{=taom_lh_event_return}Send it to his kin" />
+
+	<string id="taom_lg_hands_title" text="{=taom_lg_hands_title}The Lord's Gauntlets" />
+	<string id="taom_lg_hands_desc" text="{=taom_lg_hands_desc}A master armourer forges a lord's gauntlets only for hands that have proved themselves in battle. Strike down enemies with your own hand and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with them." />
+	<string id="taom_lg_task_kills" text="{=taom_lg_task_kills}Strike down enemies with your own hand" />
+	<string id="taom_lg_task_battles" text="{=taom_lg_task_battles}Win battles" />
+	<string id="taom_lg_legs_title" text="{=taom_lg_legs_title}The Lord's Greaves" />
+	<string id="taom_lg_legs_desc" text="{=taom_lg_legs_desc}Greaves fit for a lord are earned in the press of battle, not bought. Strike down enemies with your own hand and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with them." />
+	<string id="taom_lg_shoulders_title" text="{=taom_lg_shoulders_title}The Lord's Mantle" />
+	<string id="taom_lg_shoulders_desc" text="{=taom_lg_shoulders_desc}A lord's mantle marks one who stands where the fighting is thickest. Strike down enemies with your own hand and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it." />
+	<string id="taom_lg_head_title" text="{=taom_lg_head_title}The Lord's Helm" />
+	<string id="taom_lg_head_desc" text="{=taom_lg_head_desc}A lord's helm is forged for a name that other lords fear. Strike down enemies with your own hand, take an enemy lord captive and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it." />
+	<string id="taom_lg_task_lords" text="{=taom_lg_task_lords}Take enemy lords captive" />
+	<string id="taom_lg_body_title" text="{=taom_lg_body_title}The Lord's Harness" />
+	<string id="taom_lg_body_desc" text="{=taom_lg_body_desc}The lord's harness is the last armour a master armourer forges, and only for a proven captain. Strike down enemies with your own hand, take enemy lords captive and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it." />
+	<string id="taom_lg_weapon_title" text="{=taom_lg_weapon_title}The Lord's Weapon" />
+	<string id="taom_lg_weapon_desc" text="{=taom_lg_weapon_desc}The finest weapons of your people go to those whose deeds match the names they carry. Strike down enemies with your own hand, take enemy lords captive and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it." />
+	<string id="taom_lm_gondor" text="{=taom_lm_gondor}Númenórean Steel" />
+	<string id="taom_lm_vlandia" text="{=taom_lm_vlandia}Eorling Steel" />
+	<string id="taom_lm_erebor" text="{=taom_lm_erebor}Erebor Dwarf-steel" />
+	<string id="taom_lm_sturgia" text="{=taom_lm_sturgia}Dale-forged Steel" />
+	<string id="taom_lm_rivendell" text="{=taom_lm_rivendell}Noldorin Silver-steel" />
+	<string id="taom_lm_mirkwood" text="{=taom_lm_mirkwood}Greenwood Silver" />
+	<string id="taom_lm_mordor" text="{=taom_lm_mordor}Barad-dûr Black Iron" />
+	<string id="taom_lm_isengard" text="{=taom_lm_isengard}Isengard Forge-iron" />
+	<string id="taom_lm_dolguldur" text="{=taom_lm_dolguldur}Dol Guldur Shadow-iron" />
+	<string id="taom_lm_gundabad" text="{=taom_lm_gundabad}Gundabad Orc-steel" />
+	<string id="taom_lm_khuzait" text="{=taom_lm_khuzait}Rhûnic Gilt-bronze" />
+	<string id="taom_lm_aserai" text="{=taom_lm_aserai}Haradric Bronze" />
+	<string id="taom_lm_empire" text="{=taom_lm_empire}Dunland Bog-iron" />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- ArmourAcquisition -->
+	<string id="taom_lg_piece_hands" text="{=taom_lg_piece_hands}lord's gauntlets" />
+	<string id="taom_lg_piece_legs" text="{=taom_lg_piece_legs}lord's greaves" />
+	<string id="taom_lg_piece_shoulders" text="{=taom_lg_piece_shoulders}lord's mantle" />
+	<string id="taom_lg_piece_head" text="{=taom_lg_piece_head}lord's helm" />
+	<string id="taom_lg_piece_body" text="{=taom_lg_piece_body}lord's harness" />
+	<string id="taom_lg_piece_weapon" text="{=taom_lg_piece_weapon}lord's weapon" />
+	<string id="taom_lg_claim_level" text="{=taom_lg_claim_level}Only a master armourer, at a level {LORD} armoury, can fit your {PIECE}." />
+	<string id="taom_lg_take_tip_deeds" text="{=taom_lg_take_tip_deeds}Do the deeds its quest asks: enemies struck down with your own hand and battles won, and on the higher rungs lords taken captive." />
+	<string id="taom_lg_take_tip" text="{=taom_lg_take_tip}Do the deeds its quest asks: enemies struck down with your own hand and battles won, and on the higher rungs lords taken captive; or bring the armourer {AMOUNT} instead." />
+	<string id="taom_lg_claim" text="{=taom_lg_claim}Claim your {PIECE}" />
+	<string id="taom_lg_take" text="{=taom_lg_take}Take up the commission for your {PIECE}" />
+	<string id="taom_lg_handin" text="{=taom_lg_handin}Hand over {AMOUNT} for your {PIECE}" />
+	<string id="taom_lg_handin_tip" text="{=taom_lg_handin_tip}You carry {CARRIED} of the {NEEDED} needed." />
+	<string id="taom_lg_start_failed" text="{=taom_lg_start_failed}The armourer cannot take up your commission today." />
+	<string id="taom_lg_handin_title" text="{=taom_lg_handin_title}Hand over the materials?" />
+	<string id="taom_lg_handin_body" text="{=taom_lg_handin_body}The armourer takes them, and a master armourer at a level {LORD} armoury will fit you with your {PIECE}." />
+	<string id="taom_lg_handin_short" text="{=taom_lg_handin_short}You no longer carry the materials." />
+	<string id="taom_lg_handin_done" text="{=taom_lg_handin_done}The armourer takes the materials. Your {PIECE} waits at any level {LORD} armoury." />
+	<string id="taom_lg_claim_none" text="{=taom_lg_claim_none}The armourer has no {PIECE} for your people yet." />
+	<string id="taom_lg_claim_title" text="{=taom_lg_claim_title}Your {PIECE}" />
+	<string id="taom_lg_claim_desc" text="{=taom_lg_claim_desc}The master armourer will fit you with one of these. Choose it." />
+	<string id="taom_lg_claimed" text="{=taom_lg_claimed}The master armourer fits you with {ITEM}." />
+	<string id="taom_lg_drop" text="{=taom_lg_drop}Among the spoils you find {AMOUNT}." />
+	<string id="taom_lg_ready" text="{=taom_lg_ready}Your deeds are known. A master armourer, at a level {LORD} armoury, will now fit you with your {PIECE}." />
+
 </strings>

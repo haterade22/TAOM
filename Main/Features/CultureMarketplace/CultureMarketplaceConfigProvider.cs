@@ -40,6 +40,12 @@ public class CultureMarketplaceConfigProvider : ICultureMarketplaceConfigProvide
         return _routing;
     }
 
+    public string GetArmourDonor(string cultureId)
+    {
+        EnsureLoaded();
+        return !string.IsNullOrEmpty(cultureId) && _byCulture.TryGetValue(cultureId, out var ov) ? ov.ArmourFrom : null;
+    }
+
     private void EnsureLoaded()
     {
         if (_byCulture != null) return;
@@ -140,7 +146,29 @@ public class CultureMarketplaceConfigProvider : ICultureMarketplaceConfigProvide
                 }
             }
 
-            _byCulture[cultureId] = new MarketplaceConfigOverride(cultureId, blacklist, boosts);
+            // armour_from: a culture with no armour of its own draws its markets' armour, and its lord
+            // kit (docs/features/armour-acquisition.md), from another culture.
+            var armourFrom = cultureEl.Attribute("armour_from")?.Value?.Trim();
+            if (string.IsNullOrEmpty(armourFrom))
+                armourFrom = null;
+            else if (string.Equals(armourFrom, cultureId, StringComparison.OrdinalIgnoreCase))
+            {
+                _logger.LogWarning($"[CultureMarketplace] <Culture id='{cultureId}'> armour_from names itself: ignored");
+                armourFrom = null;
+                revertedFields++;
+            }
+
+            _byCulture[cultureId] = new MarketplaceConfigOverride(cultureId, blacklist, boosts, armourFrom);
+        }
+
+        // A donor that itself draws from another culture would hand on nothing of its own: refuse the chain.
+        foreach (var ov in new List<MarketplaceConfigOverride>(_byCulture.Values))
+        {
+            if (ov.ArmourFrom == null || !_byCulture.TryGetValue(ov.ArmourFrom, out var donor) || donor.ArmourFrom == null)
+                continue;
+            _logger.LogWarning($"[CultureMarketplace] <Culture id='{ov.CultureId}'> armour_from='{ov.ArmourFrom}' draws on a culture that draws from '{donor.ArmourFrom}': ignored");
+            _byCulture[ov.CultureId] = new MarketplaceConfigOverride(ov.CultureId, ov.Blacklist, ov.WeightBoosts);
+            revertedFields++;
         }
 
         // Parse <Routing> — top-level cross-culture item routing (e.g., wargs into 4 cultures).

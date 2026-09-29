@@ -108,6 +108,9 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.Core.ItemObject", "ItemObject", "set_Effectiveness", "Method", "MonsterSizeCatalogAdapter.cs:29")]
     // --- Creature Bandits route A (#692): the weapon-state probe. Missing: route A is skipped for every creature.
     [DataRow("TaleWorlds.MountAndBlade.Agent", "Agent", "_primaryWieldedItemIndexPointer", "Field", "CreatureRouteAUnmount.cs:22")]
+    // --- ArmourAcquisition: the gate marks heavy, elite, lord and named pieces NotMerchandise at every game init
+    // through the private setter. A missing setter turns gating off for the game (logged as an error).
+    [DataRow("TaleWorlds.Core.ItemObject", "ItemObject", "set_NotMerchandise", "Method", "ArmourItemCatalogAdapter.cs:20")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
         if (!_gameLoaded)
