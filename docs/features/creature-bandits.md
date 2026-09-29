@@ -372,4 +372,5 @@ After sign-off, delete `Main/Features/CreatureBandits/Diagnostics/` and every ca
 - **Issue:** #692: [Creature Bandits: riderless giant spider broods in Mirkwood](https://github.com/haterade22/TAOM/issues/692)
 - **Status:** Closed, `triage-needs-ingame`
 - **Issue:** #694: [twenty spider broods and wild troll bands, one per kingdom](https://github.com/haterade22/TAOM/issues/694)
-- **Status:** Open
+- **Status:** Closed, `triage-needs-ingame` (the owed checks are in its closing comment)
+- **Translations:** #695: [the seven Creature Bandits names into the 12 languages](https://github.com/haterade22/TAOM/issues/695), open

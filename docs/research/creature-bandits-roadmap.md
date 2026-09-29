@@ -479,7 +479,7 @@ tuning; `spawn-wired` repeats the tuning; the `attack` line shows each strike's 
   `act_horse_riderless_idle_1` to `_4`. Live-Armory edit, owed with an in-repo gate.
 - **#594** (finding 7), a separate issue.
 - **Translations:** the four spider names and the three troll names (#694) are registered and seeded in all 12
-  languages with their English text; the paid translation run waits for Mike's approval.
+  languages with their English text; the paid translation run waits for Mike's approval (#695).
 - **Hideouts:** none in this cut.
 
 **New campaign only:** the clan is defined in XML, so an older save has no brood clan and spawns nothing (the
