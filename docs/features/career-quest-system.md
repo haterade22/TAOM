@@ -19,6 +19,9 @@ The [Career System](career-system.md) was purely mechanical: tiers unlocked by h
 - **Logic** — `CareerQuestService` (pure, 100% unit-tested): quest lookup, hybrid gate, per-type progress math, completion, reward application.
 - **Engine shell** — `CareerQuest : QuestBase` (thin): saveable progress + journal logs, forwards verified 1.4.5 campaign events / ticks to the service. Count objectives are event-driven; threshold objectives (skill/renown/gold) are polled in `DailyTick`. Registered for save via the auto-discovered `CareerQuestSaveableTypeDefiner` (base id 726900701).
 - **Entry trigger** — `CareerQuestCampaignBehavior` (thin): on session-launch + daily, offers the lowest not-yet-done tier's quest via inquiry; accept → `StartQuest`. A declined quest is remembered (flat-dict SyncData) so it isn't re-offered.
+- **Non-career quests** reuse the shell: [armour acquisition](armour-acquisition.md)'s lord's gear ladder (#693) is six definitions, `taom_lords_gear_<slot>`, each with a `career_id` naming no career, so the entry trigger never offers one; the armoury starts the current rung's quest itself. Only a running quest of the player's current career blocks the entry trigger's next offer, so a rung never holds career quests back. **A quest whose objectives are all thresholds** (skill, renown, gold) completes inside `QuestBase.StartQuest` when the hero already meets them: `OnStartQuest` seeds the thresholds and completes, before the engine adds the quest to `QuestManager`, which then keeps the finished quest in every later save. Give such a quest at least one counted objective; every rung has two.
+- **Progress no event carries**: `CareerQuest.AddProgress(type, amount)` adds to every objective of a type, campaign thread only (it may complete the quest). The `HeroKills` objective is fed only this way, by the ladder's kill counter after each battle.
+- **Never delete a shipped definition**: a running quest whose definition is gone at load becomes a silent zombie (`InitializeQuestOnGameLoad` finds nothing, `RegisterEvents` returns early, nothing logs, and it sits in the journal for good).
 - **Adapter (ADR-007)** — `IQuestHeroAdapter` (reads skill/renown/gold; sinks renown/influence/item); the service never touches `Hero`.
 
 **1.4.5 verification.** Every engine API was decompiled against the installed DLLs before use (4-cluster verification pass). Key drift caught: **`InquiryData` + `InformationManager` moved `TaleWorlds.Core` → `TaleWorlds.Library`**; `TournamentFinished` winner is a `CharacterObject`; `SettlementEntered` (not `OnSettlementEntered`); `SetDialogs`/`InitializeQuestOnGameLoad` are `protected abstract`; `QuestBase` has its own `HourlyTick`/`DailyTick` (poll there, not via `CampaignEvents`); hero lookup via `Campaign.Current.CampaignObjectManager.Find<Hero>`. `QuestDueTime` is absolute → use `CampaignTime.DaysFromNow`, not `CampaignTime.Years`.
@@ -33,6 +36,7 @@ The [Career System](career-system.md) was purely mechanical: tiers unlocked by h
 | `VisitSettlementType` | event count | `Town`/`Castle`/`Village` |
 | `SkillThreshold` | daily poll | skill id (e.g. `OneHanded`) |
 | `RenownThreshold`, `GoldAccumulated` | daily poll | — |
+| `HeroKills` | `CareerQuest.AddProgress` (no campaign event carries it; the lord's gear ladder's kill counter) | none |
 
 | Reward `type` | Effect |
 |---|---|

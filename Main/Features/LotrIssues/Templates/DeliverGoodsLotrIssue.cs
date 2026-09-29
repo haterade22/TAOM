@@ -109,9 +109,14 @@ public class DeliverGoodsLotrIssue : IssueBase
         }
     }
 
-    // Keep the issue alive only while its sourced item actually resolves — an unresolvable item_source
-    // would otherwise spawn a permanently uncompletable quest. A null here removes the offer cleanly.
-    public override bool IssueStayAliveConditions() => ResolveItem(DeliverItemId) != null;
+    // Keep the issue alive only while its sourced item actually resolves (an unresolvable item_source would
+    // otherwise spawn a permanently uncompletable quest; a null here removes the offer cleanly).
+    // for_player_culture holds while the offer waits: a new campaign creates its first issues before character
+    // creation (SandBox's placeholder hero), and a hero switch can change the player's culture. False drops an
+    // untaken offer at the next daily tick or when the player enters its settlement (IssueManager); a taken quest
+    // is not touched.
+    public override bool IssueStayAliveConditions() =>
+        ResolveItem(DeliverItemId) != null && (_def?.OffersTo(Hero.MainHero?.Culture?.StringId) ?? true);
 
     protected override float GetIssueEffectAmountInternal(IssueEffect issueEffect)
     {

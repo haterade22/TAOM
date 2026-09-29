@@ -16,4 +16,10 @@ public interface ICultureMarketplaceConfigProvider
     // Isengard, Mordor, Gundabad, and Dol Guldur (the four "evil" cultures), and the
     // user wants ≥1 of each variant always available in those markets.
     IReadOnlyDictionary<string, RoutedItem> GetItemRouting();
+
+    /// <summary>
+    /// The culture whose character armour a culture with none of its own draws on, in its markets and for
+    /// its lord kit (<c>&lt;Culture id="lindon" armour_from="rivendell" /&gt;</c>), or null.
+    /// </summary>
+    string GetArmourDonor(string cultureId);
 }

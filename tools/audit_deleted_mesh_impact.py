@@ -314,15 +314,21 @@ def extract_roster_refs_from_text(text: str, rel: str) -> list:
 
 # Bare-id shapes are FILE-SCOPED on purpose: `<Item id="x">` in an Armory item
 # file is a definition, not a reference. Keyed by a path suffix so the table
-# reads as the four real files it describes.
+# reads as the five real files it describes.
 _BARE_ATTR_RE = re.compile(r'\bitem="([A-Za-z0-9_.\-]+)"')
 _BARE_ELEM_RE = re.compile(r'<Item\b[^>]*?\bid="([A-Za-z0-9_.\-]+)"')
 _BARE_COLON_RE = re.compile(r'\bitem_source="item:([A-Za-z0-9_.\-]+)"')
+# An issue's completion reward, a second bare id shape lotr_issues carries besides item_source.
+_BARE_REWARD_RE = re.compile(r'\breward_item="([A-Za-z0-9_.\-]+)"')
 
+# Each file maps to every bare shape IT carries; a file with more than one shape (armour
+# acquisition's named weapons AND its upgrade-material costs, lotr_issues' consumed resources AND
+# its completion rewards) is matched by all of them.
 _BARE_SOURCES = {
-    "settlement_guards/settlement_guards_config.xml": _BARE_ATTR_RE,
-    "culture_marketplace/culture_marketplace_config.xml": _BARE_ELEM_RE,
-    "lotr_issues/taom_lotr_issues.xml": _BARE_COLON_RE,
+    "settlement_guards/settlement_guards_config.xml": (_BARE_ATTR_RE,),
+    "culture_marketplace/culture_marketplace_config.xml": (_BARE_ELEM_RE,),
+    "lotr_issues/taom_lotr_issues.xml": (_BARE_COLON_RE, _BARE_REWARD_RE),
+    "armour_acquisition/armour_acquisition_config.xml": (_BARE_ELEM_RE, _BARE_ATTR_RE),
     "banner_bearers/banner_bearers_config.json": None,   # JSON, handled below
 }
 
@@ -345,16 +351,15 @@ def _bare_refs_from_banner_json(text: str, rel: str) -> list:
 
 
 def extract_bare_refs(text: str, rel: str) -> list:
-    """Item ids in the four configs TAOM parses itself, which carry no prefix."""
+    """Item ids in the configs TAOM parses itself, which carry no prefix."""
     key = next((k for k in _BARE_SOURCES if rel.replace("\\", "/").endswith(k)), None)
     if key is None:
         return []
     if key.endswith(".json"):
         return _bare_refs_from_banner_json(text, rel)
     stripped = _strip_comments(text)
-    pattern = _BARE_SOURCES[key]
     return [ItemRef(m.group(1), rel, _lineno(stripped, m.start()), "bare", "")
-            for m in pattern.finditer(stripped)]
+            for pattern in _BARE_SOURCES[key] for m in pattern.finditer(stripped)]
 
 
 def sweep_consumers(root: Path) -> tuple:

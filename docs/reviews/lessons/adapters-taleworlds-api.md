@@ -820,3 +820,26 @@ whose rider is the troop; the stand-in broke that assumption.
   and list, per hit, whether the stand-in must be reported (bridge it, as `CreatureScoreboardBridge` does) or is
   correctly skipped.
 - **Source:** `docs/reviews/rca-creature-bandits-2026-09-28.md`, Codex C1.
+
+### A precedent is not an exemption: key services by id, never by an "opaque" sealed token
+`ArmourStockSweepService.SweepTown(Settlement)`, `IMarketplaceStockGate.GetTownLevel(Settlement)` and an
+`IArmouryTownAdapter` that returned `Settlement` all carried the comment "an opaque token, as in
+CultureMarketplaceMaintenanceService". That precedent was itself ruled ADR-007 erosion by the 2026-06-12 audit
+(triage-B DEBT-01), and the one exception the ADR allows is a protected-virtual seam. The cost was concrete: every
+sweep test passed `null!`, so no test could tell two towns apart.
+- **Why missed:** the builder read an existing pattern as permission, and the comment naming the precedent made it
+  look deliberate.
+- **Prevent:** a service method or a port a service depends on takes ids or adapters, never a TaleWorlds type; an
+  adapter returns ids, not engine objects (resolve by id inside it, guarding `Settlement.Find`'s unguarded
+  `MBObjectManager.Instance`). When the nearest precedent takes the sealed type, it is debt to cite, not a licence.
+- **Source:** `docs/reviews/rca-armour-acquisition-2026-09-27.md` row 1 (Standards, adversarial Step 2b).
+
+### In an agent callback, return on the managed identity check before any native agent read
+The ladder's kill counter passed `affectedAgent.IsEnemyOf(hero)` as an argument to a pure rule, so the native call
+(`MBAPI.IMBAgent.IsEnemy` on both agents' pointers) ran for every human removal in the battle, against a cached hero
+agent whose native struct may already be deleted: `Mission.OnAgentDeleted` keeps the managed object and its pointer
+until `Agent.Clear` at mission end.
+- **Why missed:** the rule was made pure for testing, which forced eager evaluation of every argument.
+- **Prevent:** gate agent callbacks on managed identity (`affector == hero`, a mount's managed `RiderAgent`) before
+  any flag or native read; pass the costly check only on the path that needs it.
+- **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` row 5 (Engine, Data flow A).

@@ -8,13 +8,18 @@ public sealed class MarketplaceConfigOverride
     public IReadOnlyCollection<string> Blacklist { get; }
     public IReadOnlyDictionary<string, float> WeightBoosts { get; }
 
+    /// <summary>The culture whose character armour this culture's pool also carries, or null.</summary>
+    public string ArmourFrom { get; }
+
     public MarketplaceConfigOverride(
         string cultureId,
         IReadOnlyCollection<string> blacklist,
-        IReadOnlyDictionary<string, float> weightBoosts)
+        IReadOnlyDictionary<string, float> weightBoosts,
+        string armourFrom = null)
     {
         CultureId = cultureId;
         Blacklist = blacklist;
         WeightBoosts = weightBoosts;
+        ArmourFrom = armourFrom;
     }
 }

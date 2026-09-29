@@ -25,7 +25,7 @@ public class CultureMarketplaceInjectionService : ICultureMarketplaceInjectionSe
         _logger = logger;
     }
 
-    public IReadOnlyList<string> SelectItems(string cultureId, int currentRosterCount, Random rng)
+    public IReadOnlyList<string> SelectItems(string cultureId, int currentRosterCount, Random rng, Func<string, bool> isEligible = null)
     {
         if (string.IsNullOrEmpty(cultureId))
             return Array.Empty<string>();
@@ -52,10 +52,31 @@ public class CultureMarketplaceInjectionService : ICultureMarketplaceInjectionSe
         if (drawCount <= 0)
             return Array.Empty<string>();
 
+        // The town's filter narrows the pool (armour acquisition): filter once, then draw. Weights are summed
+        // in pool order, as CultureItemPool.TotalWeight is, so a filter that keeps everything draws exactly
+        // as no filter does.
+        IReadOnlyList<ItemPoolEntry> eligible = pool.Items;
+        var totalWeight = pool.TotalWeight;
+        if (isEligible != null)
+        {
+            var kept = new List<ItemPoolEntry>(pool.Items.Count);
+            totalWeight = 0f;
+            for (var i = 0; i < pool.Items.Count; i++)
+            {
+                var entry = pool.Items[i];
+                if (!isEligible(entry.ItemId)) continue;
+                kept.Add(entry);
+                totalWeight += entry.Weight;
+            }
+            eligible = kept;
+        }
+        if (eligible.Count == 0 || !(totalWeight > 0f))
+            return Array.Empty<string>();
+
         var picks = new List<string>(drawCount);
         for (var i = 0; i < drawCount; i++)
         {
-            var pick = WeightedDraw(pool, rng);
+            var pick = WeightedDraw(eligible, totalWeight, rng);
             if (pick != null)
                 picks.Add(pick);
         }
@@ -63,17 +84,17 @@ public class CultureMarketplaceInjectionService : ICultureMarketplaceInjectionSe
         return picks;
     }
 
-    private static string WeightedDraw(CultureItemPool pool, Random rng)
+    private static string WeightedDraw(IReadOnlyList<ItemPoolEntry> items, float totalWeight, Random rng)
     {
-        var roll = (float)(rng.NextDouble() * pool.TotalWeight);
+        var roll = (float)(rng.NextDouble() * totalWeight);
         var cumulative = 0f;
-        for (var i = 0; i < pool.Items.Count; i++)
+        for (var i = 0; i < items.Count; i++)
         {
-            cumulative += pool.Items[i].Weight;
+            cumulative += items[i].Weight;
             if (roll <= cumulative)
-                return pool.Items[i].ItemId;
+                return items[i].ItemId;
         }
         // Floating-point edge case — fall back to last item.
-        return pool.Items.Count > 0 ? pool.Items[pool.Items.Count - 1].ItemId : null;
+        return items.Count > 0 ? items[items.Count - 1].ItemId : null;
     }
 }

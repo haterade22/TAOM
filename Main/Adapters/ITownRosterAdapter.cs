@@ -23,4 +23,12 @@ public interface ITownRosterAdapter
     /// carries item-id + culture-string-id + count, keeping TaleWorlds types out of the
     /// caller (ADR-007). Returns empty list for null/empty settlements.</summary>
     IReadOnlyList<RosterItemSnapshot> EnumerateRoster(Settlement settlement);
+
+    /// <summary><see cref="EnumerateRoster(Settlement)"/> for the settlement with this id, so a service
+    /// never holds a Settlement (ADR-007). Empty when the id resolves to nothing.</summary>
+    IReadOnlyList<RosterItemSnapshot> EnumerateRosterById(string settlementId);
+
+    /// <summary><see cref="RemoveItem(Settlement, string, int)"/> for the settlement with this id. False
+    /// when the id resolves to nothing.</summary>
+    bool RemoveItemById(string settlementId, string itemId, int count);
 }

@@ -316,4 +316,18 @@
   <string id="taom_lotr_issue_combat_task_tourney" text="{=taom_lotr_issue_combat_task_tourney}Win tournaments ({COUNT})" />
   <string id="taom_lotr_issue_combat_task_defeat" text="{=taom_lotr_issue_combat_task_defeat}Defeat the raiders ({COUNT})" />
   <string id="taom_lotr_issue_combat_timeout" text="{=taom_lotr_issue_combat_timeout}You failed to deal with the threat in time." />
+  <string id="taom_lotr_issue_armourer_title" text="{=taom_lotr_issue_armourer_title}The Armourer's Commission" />
+  <string id="taom_lotr_issue_armourer_desc" text="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it." />
+  <string id="taom_lotr_issue_armourer_brief" text="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with." />
+  <string id="taom_lotr_issue_armourer_accept" text="{=taom_lotr_issue_armourer_accept}What would you need?" />
+  <string id="taom_lotr_issue_armourer_expl" text="{=taom_lotr_issue_armourer_expl}Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade." />
+  <string id="taom_lotr_issue_armourer_soln" text="{=taom_lotr_issue_armourer_soln}I will bring you the steel." />
+  <string id="taom_lotr_issue_armourer_task" text="{=taom_lotr_issue_armourer_task}Bring {ITEM} to the armourer ({COUNT})" />
+  <string id="taom_lotr_issue_seam_title" text="{=taom_lotr_issue_seam_title}The Deep Seam" />
+  <string id="taom_lotr_issue_seam_desc" text="{=taom_lotr_issue_seam_desc}The miners of {ISSUE_SETTLEMENT} have struck a seam of the rare metal a lord's armour is forged from, and the shaft needs timber before it falls in." />
+  <string id="taom_lotr_issue_seam_brief" text="{=taom_lotr_issue_seam_brief}My miners found it by luck: a seam of the metal the great armourers pay anything for. But the shaft is old, and without good timber to shore it up it will bury them and the seam together." />
+  <string id="taom_lotr_issue_seam_accept" text="{=taom_lotr_issue_seam_accept}What would you need?" />
+  <string id="taom_lotr_issue_seam_expl" text="{=taom_lotr_issue_seam_expl}Bring me {COUNT} loads of {ITEM} for the shaft, and you shall have the first of what they dig out. It is worth more to you than to me." />
+  <string id="taom_lotr_issue_seam_soln" text="{=taom_lotr_issue_seam_soln}I will bring you the timber." />
+  <string id="taom_lotr_issue_seam_task" text="{=taom_lotr_issue_seam_task}Bring {ITEM} to the headman ({COUNT})" />
 </strings>

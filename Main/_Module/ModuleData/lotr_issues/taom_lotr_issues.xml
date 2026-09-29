@@ -489,4 +489,356 @@
              explanation_key="{=taom_lotr_issue_special_expl}Bring me {COUNT} bars of good iron for the forge and there's coin in it -- the blades are my business."
              solution_accept_key="{=taom_lotr_issue_special_soln}I'll bring you iron."
              task_key="{=taom_lotr_issue_special_task}Deliver iron ({COUNT})" />
+
+  <!-- Armour acquisition (docs/features/armour-acquisition.md): "The Armourer's Commission". An artisan
+       trades a heavy harness of the town's people for steel, one row per culture group; the issue giver's
+       culture picks the row. The text keys are shared: the same {=KEY} and default on every row. -->
+  <LotrIssue id="lotr_armourer_commission_gondor" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
+             cultures="gondor" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
+             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="sk_gd_los_inf_chest_heavy_a" relation_min="0"
+             title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
+             description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
+             brief_key="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with."
+             accept_key="{=taom_lotr_issue_armourer_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_armourer_expl}Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade."
+             solution_accept_key="{=taom_lotr_issue_armourer_soln}I will bring you the steel."
+             task_key="{=taom_lotr_issue_armourer_task}Bring {ITEM} to the armourer ({COUNT})" />
+
+  <LotrIssue id="lotr_armourer_commission_rohan" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
+             cultures="vlandia" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
+             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="cts_rohan_armor1" relation_min="0"
+             title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
+             description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
+             brief_key="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with."
+             accept_key="{=taom_lotr_issue_armourer_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_armourer_expl}Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade."
+             solution_accept_key="{=taom_lotr_issue_armourer_soln}I will bring you the steel."
+             task_key="{=taom_lotr_issue_armourer_task}Bring {ITEM} to the armourer ({COUNT})" />
+
+  <LotrIssue id="lotr_armourer_commission_dale" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
+             cultures="sturgia" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
+             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="sk_dale_chest_chivalry_a02" relation_min="0"
+             title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
+             description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
+             brief_key="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with."
+             accept_key="{=taom_lotr_issue_armourer_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_armourer_expl}Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade."
+             solution_accept_key="{=taom_lotr_issue_armourer_soln}I will bring you the steel."
+             task_key="{=taom_lotr_issue_armourer_task}Bring {ITEM} to the armourer ({COUNT})" />
+
+  <LotrIssue id="lotr_armourer_commission_erebor" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
+             cultures="erebor" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
+             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="sk_dwarf_erebor_chest_plate_heavy_a" relation_min="0"
+             title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
+             description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
+             brief_key="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with."
+             accept_key="{=taom_lotr_issue_armourer_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_armourer_expl}Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade."
+             solution_accept_key="{=taom_lotr_issue_armourer_soln}I will bring you the steel."
+             task_key="{=taom_lotr_issue_armourer_task}Bring {ITEM} to the armourer ({COUNT})" />
+
+  <LotrIssue id="lotr_armourer_commission_rivendell" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
+             cultures="rivendell" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
+             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="rivendell_body_gold_a" relation_min="0"
+             title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
+             description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
+             brief_key="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with."
+             accept_key="{=taom_lotr_issue_armourer_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_armourer_expl}Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade."
+             solution_accept_key="{=taom_lotr_issue_armourer_soln}I will bring you the steel."
+             task_key="{=taom_lotr_issue_armourer_task}Bring {ITEM} to the armourer ({COUNT})" />
+
+  <LotrIssue id="lotr_armourer_commission_lindon" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
+             cultures="lindon,lothlorien" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
+             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="rivendell_body_gold_d" relation_min="0"
+             title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
+             description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
+             brief_key="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with."
+             accept_key="{=taom_lotr_issue_armourer_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_armourer_expl}Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade."
+             solution_accept_key="{=taom_lotr_issue_armourer_soln}I will bring you the steel."
+             task_key="{=taom_lotr_issue_armourer_task}Bring {ITEM} to the armourer ({COUNT})" />
+
+  <LotrIssue id="lotr_armourer_commission_mirkwood" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
+             cultures="mirkwood" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
+             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="mkwd_inf3_chest_silver" relation_min="0"
+             title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
+             description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
+             brief_key="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with."
+             accept_key="{=taom_lotr_issue_armourer_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_armourer_expl}Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade."
+             solution_accept_key="{=taom_lotr_issue_armourer_soln}I will bring you the steel."
+             task_key="{=taom_lotr_issue_armourer_task}Bring {ITEM} to the armourer ({COUNT})" />
+
+  <LotrIssue id="lotr_armourer_commission_dunland" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
+             cultures="empire" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
+             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="dunland_caerdh_chainmail_heavy_a" relation_min="0"
+             title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
+             description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
+             brief_key="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with."
+             accept_key="{=taom_lotr_issue_armourer_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_armourer_expl}Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade."
+             solution_accept_key="{=taom_lotr_issue_armourer_soln}I will bring you the steel."
+             task_key="{=taom_lotr_issue_armourer_task}Bring {ITEM} to the armourer ({COUNT})" />
+
+  <LotrIssue id="lotr_armourer_commission_rhun" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
+             cultures="khuzait" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
+             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="sk_rh_loke_scalemail_heavy_a" relation_min="0"
+             title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
+             description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
+             brief_key="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with."
+             accept_key="{=taom_lotr_issue_armourer_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_armourer_expl}Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade."
+             solution_accept_key="{=taom_lotr_issue_armourer_soln}I will bring you the steel."
+             task_key="{=taom_lotr_issue_armourer_task}Bring {ITEM} to the armourer ({COUNT})" />
+
+  <LotrIssue id="lotr_armourer_commission_khand" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
+             cultures="battania" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
+             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="sk_rh_loke_scalemail_heavy_b" relation_min="0"
+             title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
+             description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
+             brief_key="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with."
+             accept_key="{=taom_lotr_issue_armourer_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_armourer_expl}Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade."
+             solution_accept_key="{=taom_lotr_issue_armourer_soln}I will bring you the steel."
+             task_key="{=taom_lotr_issue_armourer_task}Bring {ITEM} to the armourer ({COUNT})" />
+
+  <LotrIssue id="lotr_armourer_commission_harad" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
+             cultures="aserai,abanissa" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
+             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="harad05_v1_torso" relation_min="0"
+             title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
+             description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
+             brief_key="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with."
+             accept_key="{=taom_lotr_issue_armourer_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_armourer_expl}Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade."
+             solution_accept_key="{=taom_lotr_issue_armourer_soln}I will bring you the steel."
+             task_key="{=taom_lotr_issue_armourer_task}Bring {ITEM} to the armourer ({COUNT})" />
+
+  <LotrIssue id="lotr_armourer_commission_shaghana" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
+             cultures="shaghana" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
+             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="harad05_v2_torso" relation_min="0"
+             title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
+             description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
+             brief_key="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with."
+             accept_key="{=taom_lotr_issue_armourer_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_armourer_expl}Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade."
+             solution_accept_key="{=taom_lotr_issue_armourer_soln}I will bring you the steel."
+             task_key="{=taom_lotr_issue_armourer_task}Bring {ITEM} to the armourer ({COUNT})" />
+
+  <LotrIssue id="lotr_armourer_commission_umbar" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
+             cultures="umbar" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
+             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="ar_ardunian_elite_armour" relation_min="0"
+             title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
+             description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
+             brief_key="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with."
+             accept_key="{=taom_lotr_issue_armourer_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_armourer_expl}Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade."
+             solution_accept_key="{=taom_lotr_issue_armourer_soln}I will bring you the steel."
+             task_key="{=taom_lotr_issue_armourer_task}Bring {ITEM} to the armourer ({COUNT})" />
+
+  <LotrIssue id="lotr_armourer_commission_mordor" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
+             cultures="mordor" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
+             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="sk_md_orc_inf_chest_heavy_a" relation_min="0"
+             title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
+             description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
+             brief_key="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with."
+             accept_key="{=taom_lotr_issue_armourer_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_armourer_expl}Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade."
+             solution_accept_key="{=taom_lotr_issue_armourer_soln}I will bring you the steel."
+             task_key="{=taom_lotr_issue_armourer_task}Bring {ITEM} to the armourer ({COUNT})" />
+
+  <LotrIssue id="lotr_armourer_commission_dolguldur" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
+             cultures="dolguldur" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
+             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="sk_dg_uruk_chest_heavy_a" relation_min="0"
+             title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
+             description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
+             brief_key="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with."
+             accept_key="{=taom_lotr_issue_armourer_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_armourer_expl}Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade."
+             solution_accept_key="{=taom_lotr_issue_armourer_soln}I will bring you the steel."
+             task_key="{=taom_lotr_issue_armourer_task}Bring {ITEM} to the armourer ({COUNT})" />
+
+  <LotrIssue id="lotr_armourer_commission_gundabad" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
+             cultures="gundabad" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
+             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="sk_gb_uruk_chest_heavy_b" relation_min="0"
+             title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
+             description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
+             brief_key="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with."
+             accept_key="{=taom_lotr_issue_armourer_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_armourer_expl}Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade."
+             solution_accept_key="{=taom_lotr_issue_armourer_soln}I will bring you the steel."
+             task_key="{=taom_lotr_issue_armourer_task}Bring {ITEM} to the armourer ({COUNT})" />
+
+  <LotrIssue id="lotr_armourer_commission_isengard" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
+             cultures="isengard" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
+             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="sk_uruk_hai_plate_heavy_a1" relation_min="0"
+             title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
+             description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
+             brief_key="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with."
+             accept_key="{=taom_lotr_issue_armourer_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_armourer_expl}Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade."
+             solution_accept_key="{=taom_lotr_issue_armourer_soln}I will bring you the steel."
+             task_key="{=taom_lotr_issue_armourer_task}Bring {ITEM} to the armourer ({COUNT})" />
+
+  <LotrIssue id="lotr_armourer_commission_orcs" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
+             cultures="goblin,mistymountainorcs,bluecraig" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
+             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="sk_md_orc_inf_chest_heavy_b" relation_min="0"
+             title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
+             description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
+             brief_key="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with."
+             accept_key="{=taom_lotr_issue_armourer_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_armourer_expl}Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade."
+             solution_accept_key="{=taom_lotr_issue_armourer_soln}I will bring you the steel."
+             task_key="{=taom_lotr_issue_armourer_task}Bring {ITEM} to the armourer ({COUNT})" />
+
+  <!-- The lord's gear ladder (docs/features/armour-acquisition.md, #693): "The Deep Seam". A village headman
+       pays the culture's lord's materials (taom_lords_materials.xml) for timber, one row per culture that owns
+       armour; a culture that draws its armour from another (culture_marketplace_config.xml, armour_from) shares
+       its donor's row. for_player_culture: offered only while the player is of one of the row's cultures, the only
+       heroes whose ladder spends that material; an untaken offer is withdrawn once that stops being true (a new
+       campaign creates its first issues before character creation). The text keys are shared: the same {=KEY}
+       and default on every row. Placeholder numbers. -->
+
+  <LotrIssue id="lotr_deep_seam_gondor" template="DeliverGoods" giver_occupation="Headman" frequency="Common" for_player_culture="true"
+             cultures="gondor" count="6" count_per_difficulty="18" item_source="item:hardwood"
+             reward_gold_base="0" reward_gold_per_difficulty="300" reward_renown="1" reward_item="taom_lords_material_gondor" reward_count="5" relation_min="0"
+             title_key="{=taom_lotr_issue_seam_title}The Deep Seam"
+             description_key="{=taom_lotr_issue_seam_desc}The miners of {ISSUE_SETTLEMENT} have struck a seam of the rare metal a lord's armour is forged from, and the shaft needs timber before it falls in."
+             brief_key="{=taom_lotr_issue_seam_brief}My miners found it by luck: a seam of the metal the great armourers pay anything for. But the shaft is old, and without good timber to shore it up it will bury them and the seam together."
+             accept_key="{=taom_lotr_issue_seam_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_seam_expl}Bring me {COUNT} loads of {ITEM} for the shaft, and you shall have the first of what they dig out. It is worth more to you than to me."
+             solution_accept_key="{=taom_lotr_issue_seam_soln}I will bring you the timber."
+             task_key="{=taom_lotr_issue_seam_task}Bring {ITEM} to the headman ({COUNT})" />
+
+  <LotrIssue id="lotr_deep_seam_vlandia" template="DeliverGoods" giver_occupation="Headman" frequency="Common" for_player_culture="true"
+             cultures="vlandia" count="6" count_per_difficulty="18" item_source="item:hardwood"
+             reward_gold_base="0" reward_gold_per_difficulty="300" reward_renown="1" reward_item="taom_lords_material_vlandia" reward_count="5" relation_min="0"
+             title_key="{=taom_lotr_issue_seam_title}The Deep Seam"
+             description_key="{=taom_lotr_issue_seam_desc}The miners of {ISSUE_SETTLEMENT} have struck a seam of the rare metal a lord's armour is forged from, and the shaft needs timber before it falls in."
+             brief_key="{=taom_lotr_issue_seam_brief}My miners found it by luck: a seam of the metal the great armourers pay anything for. But the shaft is old, and without good timber to shore it up it will bury them and the seam together."
+             accept_key="{=taom_lotr_issue_seam_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_seam_expl}Bring me {COUNT} loads of {ITEM} for the shaft, and you shall have the first of what they dig out. It is worth more to you than to me."
+             solution_accept_key="{=taom_lotr_issue_seam_soln}I will bring you the timber."
+             task_key="{=taom_lotr_issue_seam_task}Bring {ITEM} to the headman ({COUNT})" />
+
+  <LotrIssue id="lotr_deep_seam_erebor" template="DeliverGoods" giver_occupation="Headman" frequency="Common" for_player_culture="true"
+             cultures="erebor" count="6" count_per_difficulty="18" item_source="item:hardwood"
+             reward_gold_base="0" reward_gold_per_difficulty="300" reward_renown="1" reward_item="taom_lords_material_erebor" reward_count="5" relation_min="0"
+             title_key="{=taom_lotr_issue_seam_title}The Deep Seam"
+             description_key="{=taom_lotr_issue_seam_desc}The miners of {ISSUE_SETTLEMENT} have struck a seam of the rare metal a lord's armour is forged from, and the shaft needs timber before it falls in."
+             brief_key="{=taom_lotr_issue_seam_brief}My miners found it by luck: a seam of the metal the great armourers pay anything for. But the shaft is old, and without good timber to shore it up it will bury them and the seam together."
+             accept_key="{=taom_lotr_issue_seam_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_seam_expl}Bring me {COUNT} loads of {ITEM} for the shaft, and you shall have the first of what they dig out. It is worth more to you than to me."
+             solution_accept_key="{=taom_lotr_issue_seam_soln}I will bring you the timber."
+             task_key="{=taom_lotr_issue_seam_task}Bring {ITEM} to the headman ({COUNT})" />
+
+  <LotrIssue id="lotr_deep_seam_sturgia" template="DeliverGoods" giver_occupation="Headman" frequency="Common" for_player_culture="true"
+             cultures="sturgia" count="6" count_per_difficulty="18" item_source="item:hardwood"
+             reward_gold_base="0" reward_gold_per_difficulty="300" reward_renown="1" reward_item="taom_lords_material_sturgia" reward_count="5" relation_min="0"
+             title_key="{=taom_lotr_issue_seam_title}The Deep Seam"
+             description_key="{=taom_lotr_issue_seam_desc}The miners of {ISSUE_SETTLEMENT} have struck a seam of the rare metal a lord's armour is forged from, and the shaft needs timber before it falls in."
+             brief_key="{=taom_lotr_issue_seam_brief}My miners found it by luck: a seam of the metal the great armourers pay anything for. But the shaft is old, and without good timber to shore it up it will bury them and the seam together."
+             accept_key="{=taom_lotr_issue_seam_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_seam_expl}Bring me {COUNT} loads of {ITEM} for the shaft, and you shall have the first of what they dig out. It is worth more to you than to me."
+             solution_accept_key="{=taom_lotr_issue_seam_soln}I will bring you the timber."
+             task_key="{=taom_lotr_issue_seam_task}Bring {ITEM} to the headman ({COUNT})" />
+
+  <LotrIssue id="lotr_deep_seam_rivendell" template="DeliverGoods" giver_occupation="Headman" frequency="Common" for_player_culture="true"
+             cultures="rivendell,lindon,lothlorien" count="6" count_per_difficulty="18" item_source="item:hardwood"
+             reward_gold_base="0" reward_gold_per_difficulty="300" reward_renown="1" reward_item="taom_lords_material_rivendell" reward_count="5" relation_min="0"
+             title_key="{=taom_lotr_issue_seam_title}The Deep Seam"
+             description_key="{=taom_lotr_issue_seam_desc}The miners of {ISSUE_SETTLEMENT} have struck a seam of the rare metal a lord's armour is forged from, and the shaft needs timber before it falls in."
+             brief_key="{=taom_lotr_issue_seam_brief}My miners found it by luck: a seam of the metal the great armourers pay anything for. But the shaft is old, and without good timber to shore it up it will bury them and the seam together."
+             accept_key="{=taom_lotr_issue_seam_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_seam_expl}Bring me {COUNT} loads of {ITEM} for the shaft, and you shall have the first of what they dig out. It is worth more to you than to me."
+             solution_accept_key="{=taom_lotr_issue_seam_soln}I will bring you the timber."
+             task_key="{=taom_lotr_issue_seam_task}Bring {ITEM} to the headman ({COUNT})" />
+
+  <LotrIssue id="lotr_deep_seam_mirkwood" template="DeliverGoods" giver_occupation="Headman" frequency="Common" for_player_culture="true"
+             cultures="mirkwood" count="6" count_per_difficulty="18" item_source="item:hardwood"
+             reward_gold_base="0" reward_gold_per_difficulty="300" reward_renown="1" reward_item="taom_lords_material_mirkwood" reward_count="5" relation_min="0"
+             title_key="{=taom_lotr_issue_seam_title}The Deep Seam"
+             description_key="{=taom_lotr_issue_seam_desc}The miners of {ISSUE_SETTLEMENT} have struck a seam of the rare metal a lord's armour is forged from, and the shaft needs timber before it falls in."
+             brief_key="{=taom_lotr_issue_seam_brief}My miners found it by luck: a seam of the metal the great armourers pay anything for. But the shaft is old, and without good timber to shore it up it will bury them and the seam together."
+             accept_key="{=taom_lotr_issue_seam_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_seam_expl}Bring me {COUNT} loads of {ITEM} for the shaft, and you shall have the first of what they dig out. It is worth more to you than to me."
+             solution_accept_key="{=taom_lotr_issue_seam_soln}I will bring you the timber."
+             task_key="{=taom_lotr_issue_seam_task}Bring {ITEM} to the headman ({COUNT})" />
+
+  <LotrIssue id="lotr_deep_seam_mordor" template="DeliverGoods" giver_occupation="Headman" frequency="Common" for_player_culture="true"
+             cultures="mordor,goblin,mistymountainorcs,bluecraig,umbar" count="6" count_per_difficulty="18" item_source="item:hardwood"
+             reward_gold_base="0" reward_gold_per_difficulty="300" reward_renown="1" reward_item="taom_lords_material_mordor" reward_count="5" relation_min="0"
+             title_key="{=taom_lotr_issue_seam_title}The Deep Seam"
+             description_key="{=taom_lotr_issue_seam_desc}The miners of {ISSUE_SETTLEMENT} have struck a seam of the rare metal a lord's armour is forged from, and the shaft needs timber before it falls in."
+             brief_key="{=taom_lotr_issue_seam_brief}My miners found it by luck: a seam of the metal the great armourers pay anything for. But the shaft is old, and without good timber to shore it up it will bury them and the seam together."
+             accept_key="{=taom_lotr_issue_seam_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_seam_expl}Bring me {COUNT} loads of {ITEM} for the shaft, and you shall have the first of what they dig out. It is worth more to you than to me."
+             solution_accept_key="{=taom_lotr_issue_seam_soln}I will bring you the timber."
+             task_key="{=taom_lotr_issue_seam_task}Bring {ITEM} to the headman ({COUNT})" />
+
+  <LotrIssue id="lotr_deep_seam_isengard" template="DeliverGoods" giver_occupation="Headman" frequency="Common" for_player_culture="true"
+             cultures="isengard" count="6" count_per_difficulty="18" item_source="item:hardwood"
+             reward_gold_base="0" reward_gold_per_difficulty="300" reward_renown="1" reward_item="taom_lords_material_isengard" reward_count="5" relation_min="0"
+             title_key="{=taom_lotr_issue_seam_title}The Deep Seam"
+             description_key="{=taom_lotr_issue_seam_desc}The miners of {ISSUE_SETTLEMENT} have struck a seam of the rare metal a lord's armour is forged from, and the shaft needs timber before it falls in."
+             brief_key="{=taom_lotr_issue_seam_brief}My miners found it by luck: a seam of the metal the great armourers pay anything for. But the shaft is old, and without good timber to shore it up it will bury them and the seam together."
+             accept_key="{=taom_lotr_issue_seam_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_seam_expl}Bring me {COUNT} loads of {ITEM} for the shaft, and you shall have the first of what they dig out. It is worth more to you than to me."
+             solution_accept_key="{=taom_lotr_issue_seam_soln}I will bring you the timber."
+             task_key="{=taom_lotr_issue_seam_task}Bring {ITEM} to the headman ({COUNT})" />
+
+  <LotrIssue id="lotr_deep_seam_dolguldur" template="DeliverGoods" giver_occupation="Headman" frequency="Common" for_player_culture="true"
+             cultures="dolguldur" count="6" count_per_difficulty="18" item_source="item:hardwood"
+             reward_gold_base="0" reward_gold_per_difficulty="300" reward_renown="1" reward_item="taom_lords_material_dolguldur" reward_count="5" relation_min="0"
+             title_key="{=taom_lotr_issue_seam_title}The Deep Seam"
+             description_key="{=taom_lotr_issue_seam_desc}The miners of {ISSUE_SETTLEMENT} have struck a seam of the rare metal a lord's armour is forged from, and the shaft needs timber before it falls in."
+             brief_key="{=taom_lotr_issue_seam_brief}My miners found it by luck: a seam of the metal the great armourers pay anything for. But the shaft is old, and without good timber to shore it up it will bury them and the seam together."
+             accept_key="{=taom_lotr_issue_seam_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_seam_expl}Bring me {COUNT} loads of {ITEM} for the shaft, and you shall have the first of what they dig out. It is worth more to you than to me."
+             solution_accept_key="{=taom_lotr_issue_seam_soln}I will bring you the timber."
+             task_key="{=taom_lotr_issue_seam_task}Bring {ITEM} to the headman ({COUNT})" />
+
+  <LotrIssue id="lotr_deep_seam_gundabad" template="DeliverGoods" giver_occupation="Headman" frequency="Common" for_player_culture="true"
+             cultures="gundabad" count="6" count_per_difficulty="18" item_source="item:hardwood"
+             reward_gold_base="0" reward_gold_per_difficulty="300" reward_renown="1" reward_item="taom_lords_material_gundabad" reward_count="5" relation_min="0"
+             title_key="{=taom_lotr_issue_seam_title}The Deep Seam"
+             description_key="{=taom_lotr_issue_seam_desc}The miners of {ISSUE_SETTLEMENT} have struck a seam of the rare metal a lord's armour is forged from, and the shaft needs timber before it falls in."
+             brief_key="{=taom_lotr_issue_seam_brief}My miners found it by luck: a seam of the metal the great armourers pay anything for. But the shaft is old, and without good timber to shore it up it will bury them and the seam together."
+             accept_key="{=taom_lotr_issue_seam_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_seam_expl}Bring me {COUNT} loads of {ITEM} for the shaft, and you shall have the first of what they dig out. It is worth more to you than to me."
+             solution_accept_key="{=taom_lotr_issue_seam_soln}I will bring you the timber."
+             task_key="{=taom_lotr_issue_seam_task}Bring {ITEM} to the headman ({COUNT})" />
+
+  <LotrIssue id="lotr_deep_seam_khuzait" template="DeliverGoods" giver_occupation="Headman" frequency="Common" for_player_culture="true"
+             cultures="khuzait,battania" count="6" count_per_difficulty="18" item_source="item:hardwood"
+             reward_gold_base="0" reward_gold_per_difficulty="300" reward_renown="1" reward_item="taom_lords_material_khuzait" reward_count="5" relation_min="0"
+             title_key="{=taom_lotr_issue_seam_title}The Deep Seam"
+             description_key="{=taom_lotr_issue_seam_desc}The miners of {ISSUE_SETTLEMENT} have struck a seam of the rare metal a lord's armour is forged from, and the shaft needs timber before it falls in."
+             brief_key="{=taom_lotr_issue_seam_brief}My miners found it by luck: a seam of the metal the great armourers pay anything for. But the shaft is old, and without good timber to shore it up it will bury them and the seam together."
+             accept_key="{=taom_lotr_issue_seam_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_seam_expl}Bring me {COUNT} loads of {ITEM} for the shaft, and you shall have the first of what they dig out. It is worth more to you than to me."
+             solution_accept_key="{=taom_lotr_issue_seam_soln}I will bring you the timber."
+             task_key="{=taom_lotr_issue_seam_task}Bring {ITEM} to the headman ({COUNT})" />
+
+  <LotrIssue id="lotr_deep_seam_aserai" template="DeliverGoods" giver_occupation="Headman" frequency="Common" for_player_culture="true"
+             cultures="aserai,abanissa,shaghana" count="6" count_per_difficulty="18" item_source="item:hardwood"
+             reward_gold_base="0" reward_gold_per_difficulty="300" reward_renown="1" reward_item="taom_lords_material_aserai" reward_count="5" relation_min="0"
+             title_key="{=taom_lotr_issue_seam_title}The Deep Seam"
+             description_key="{=taom_lotr_issue_seam_desc}The miners of {ISSUE_SETTLEMENT} have struck a seam of the rare metal a lord's armour is forged from, and the shaft needs timber before it falls in."
+             brief_key="{=taom_lotr_issue_seam_brief}My miners found it by luck: a seam of the metal the great armourers pay anything for. But the shaft is old, and without good timber to shore it up it will bury them and the seam together."
+             accept_key="{=taom_lotr_issue_seam_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_seam_expl}Bring me {COUNT} loads of {ITEM} for the shaft, and you shall have the first of what they dig out. It is worth more to you than to me."
+             solution_accept_key="{=taom_lotr_issue_seam_soln}I will bring you the timber."
+             task_key="{=taom_lotr_issue_seam_task}Bring {ITEM} to the headman ({COUNT})" />
+
+  <LotrIssue id="lotr_deep_seam_empire" template="DeliverGoods" giver_occupation="Headman" frequency="Common" for_player_culture="true"
+             cultures="empire" count="6" count_per_difficulty="18" item_source="item:hardwood"
+             reward_gold_base="0" reward_gold_per_difficulty="300" reward_renown="1" reward_item="taom_lords_material_empire" reward_count="5" relation_min="0"
+             title_key="{=taom_lotr_issue_seam_title}The Deep Seam"
+             description_key="{=taom_lotr_issue_seam_desc}The miners of {ISSUE_SETTLEMENT} have struck a seam of the rare metal a lord's armour is forged from, and the shaft needs timber before it falls in."
+             brief_key="{=taom_lotr_issue_seam_brief}My miners found it by luck: a seam of the metal the great armourers pay anything for. But the shaft is old, and without good timber to shore it up it will bury them and the seam together."
+             accept_key="{=taom_lotr_issue_seam_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_seam_expl}Bring me {COUNT} loads of {ITEM} for the shaft, and you shall have the first of what they dig out. It is worth more to you than to me."
+             solution_accept_key="{=taom_lotr_issue_seam_soln}I will bring you the timber."
+             task_key="{=taom_lotr_issue_seam_task}Bring {ITEM} to the headman ({COUNT})" />
 </LotrIssues>

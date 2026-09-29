@@ -10,6 +10,10 @@
   1. <Culture id="..."> — per-culture blacklist / weight boost.
        <Blacklist><Item id="anduril" /></Blacklist>     keep specific items quest-only
        <Boost>   <Item id="..." weight="3.0" /></Boost> bias weighted-draw toward an item
+       armour_from="rivendell"                          a culture with no armour of its own
+                                                        draws the named culture's character
+                                                        armour into its pool, and its lord kit
+                                                        (docs/features/armour-acquisition.md)
 
   2. <Routing> — cross-culture item routing (top-level).
        <Item id="warg_brown" cultures="isengard,mordor,gundabad,dolguldur" min_stock="1" />
@@ -28,6 +32,20 @@
   Reuse.Singleton; changes require a full Bannerlord restart, not a save reload.
 -->
 <CultureMarketplaceConfig>
+
+  <!-- Cultures that own no Armory armour draw on a related culture's, the mapping the Armourer's
+       Commission rows use (Mike, 2026-09-27: "Lord kit and markets"). Their towns' markets then carry
+       that culture's armour, which the armour acquisition gate sells by armoury level, and their lord
+       harness is that culture's lord kit. -->
+  <Culture id="lindon" armour_from="rivendell" />
+  <Culture id="lothlorien" armour_from="rivendell" />
+  <Culture id="abanissa" armour_from="aserai" />
+  <Culture id="shaghana" armour_from="aserai" />
+  <Culture id="battania" armour_from="khuzait" />
+  <Culture id="goblin" armour_from="mordor" />
+  <Culture id="mistymountainorcs" armour_from="mordor" />
+  <Culture id="bluecraig" armour_from="mordor" />
+  <Culture id="umbar" armour_from="mordor" />
 
   <Routing>
     <!-- Warg mounts from LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_horses.xml are tagged
@@ -66,12 +84,13 @@
     <!-- The Animalia elk (#646), the elk_rider career's starting mount (Mike, 2026-09-23: "The starting
          elk should also be available in the marketplace"), so a player who loses it can buy the same
          one. Routing puts it in the Mirkwood pool, like any routed item, and min_stock guarantees a
-         Mirkwood town always has one (the guaranteed-stock pass adds it by id). is_merchandise="false"
-         does not enter into it: the pool builder does not read that flag. The Animalia moose is not
-         routed; as a Culture.mirkwood item it sits in the Mirkwood pool anyway and can be drawn into a
-         Mirkwood market (Mike, 2026-09-23: it may be sold). AnimaliaMountWiringTests pins the career
-         start's mount and saddle here. -->
+         Mirkwood town always has one (the guaranteed-stock pass adds it by id, whatever its
+         is_merchandise="false"). The Animalia moose (Mike, 2026-09-23: it may be sold) is routed the
+         same way: with armour acquisition on, the daily draw refuses every item its XML marks
+         non-merchandise, so the guaranteed stock is its route into the market (Mike, 2026-09-27).
+         AnimaliaMountWiringTests pins the career start's mount and saddle here. -->
     <Item id="taom_animalia_elk_a" cultures="mirkwood" min_stock="1" />
+    <Item id="taom_animalia_moose_a" cultures="mirkwood" min_stock="1" />
   </Routing>
 
 </CultureMarketplaceConfig>

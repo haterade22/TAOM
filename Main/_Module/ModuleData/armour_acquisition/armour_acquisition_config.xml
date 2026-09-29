@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Armour acquisition (docs/features/armour-acquisition.md). Hand-edited; validated at load by
+  ArmourAcquisitionConfigProvider (a bad value reverts to its compiled default with a warning in
+  the TAOM log). Read once per process: changes need a full Bannerlord restart.
+
+  The class of every armour piece comes from the GENERATED armour_classes.xml beside this file.
+  This file holds the decisions around it.
+
+  enabled            default for the master switch when MCM is not loaded; with MCM, the
+                     "Enable Armour Acquisition" toggle decides, from the next game load.
+
+  <Gate>             the armoury level a town needs (its Barracks level, plus a visiting master
+                     armourer's bonus), 0 to 3, heavy <= elite <= lord. At that level the town's
+                     market may stock the class and its armoury may upgrade a piece into it (Mike,
+                     2026-09-27: heavy 1, elite and heavy 2, lord and all 3). Named pieces are
+                     never sold.
+
+  <Upgrades>         what turning a piece into its next class costs, one <Upgrade> per class the
+                     piece becomes (medium, heavy, elite, lord):
+                       gold               flat gold, 0 to 1,000,000
+                       value_share        0 to 1: this share of the value the piece gains is
+                                          added to the gold
+                       special_resource   0 to 10,000 of the player's kingdom special resource
+                                          (Castar, Gems, War Spoils ...); waived when the
+                                          kingdom has none
+                       <Material>         item id and count (1 to 999) taken from the party
+                     When this element is present it lists every recipe; a class with no recipe
+                     cannot be upgraded into.
+
+  <NamedWeapons>     hero weapon and shield ids that are never sold or looted (Mike: seventeen on
+                     2026-09-27; Tuor's heirloom axes, Galadriel's sword and the seven Noldor
+                     swords on 2026-09-28). The ladder's weapon rung awards the named weapons
+                     (Mike, 2026-09-28); the two shields have no route yet.
+
+  <LordEvent>        after a battle your side wins against an enemy lord: the chance (0 to 1)
+                     of finding his household's lord harness, the cooldown in days, and the
+                     relation (0 to 100) gained with him for leaving it.
+
+  <VisitingArmourer> each day, the chance (0 to 1) that a master armourer visits one town, how
+                     many days (1 to 365) he stays, and the armoury levels (0 to 3) he adds.
+
+  <LordsLadder>      the lord's gear ladder (#693): one <Step> per rung, climbed in the order listed.
+                     slot is hands, legs, shoulders, head, body or weapon (each once); quest names
+                     its career-quest definition in taom_career_quests.xml, whose objectives are the
+                     rung's deeds; materials (1 to 999) is how many lord's materials complete the
+                     rung instead. count_knockouts: whether an enemy the hero knocks out counts as
+                     struck down, as well as one killed. A rung's piece is claimed at an armoury of
+                     the lord level: the culture's lord pieces for the slot, else its best elite
+                     piece there, else its best heavy piece, else any culture's lord pieces for the
+                     slot. A save keeps which slots each hero has claimed and which are done, so after
+                     a reorder or a removed <Step> every hero resumes at their first unclaimed rung, and
+                     a done rung stays done in its own slot.
+
+  <LordsMaterials>   the chance (0 to 1) that a battle won yields lord's materials: base_chance,
+                     plus chance_per_ten_kills for every ten enemies the hero struck down in it, up
+                     to max_chance; and how many units (1 to 99, min_units to max_units) a find
+                     holds. One <Material> per culture: the item it finds and hands in
+                     (taom_lords_materials.xml). A culture with none uses its armour donor's
+                     (culture_marketplace_config.xml, armour_from). When present it lists them all;
+                     a section that yields no valid row keeps the compiled defaults.
+
+  <LadderWeapons>    the weapons the weapon rung offers, one <Weapon> per choice, by culture: a
+                     culture's named weapons where it has them, else a pick (Mike, 2026-09-28). A
+                     culture with none uses its armour donor's. When present it lists them all;
+                     a section that yields no valid row keeps the compiled defaults.
+-->
+<ArmourAcquisition enabled="true">
+  <Gate heavy="1" elite="2" lord="3" />
+
+  <Upgrades>
+    <Upgrade target="medium" gold="150" value_share="0.25">
+      <Material item="ironIngot2" count="3" />
+      <Material item="ironIngot1" count="2" />
+    </Upgrade>
+    <Upgrade target="heavy" gold="500" value_share="0.35">
+      <Material item="ironIngot4" count="3" />
+      <Material item="ironIngot3" count="4" />
+    </Upgrade>
+    <Upgrade target="elite" gold="1500" value_share="0.5">
+      <Material item="ironIngot5" count="4" />
+      <Material item="ironIngot4" count="3" />
+    </Upgrade>
+    <Upgrade target="lord" gold="3000" value_share="0.5" special_resource="150">
+      <Material item="ironIngot6" count="6" />
+    </Upgrade>
+  </Upgrades>
+
+  <NamedWeapons>
+    <!-- LOTRLOME_Armory LOTRLOME_items/LOTRAOM_weapons.xml -->
+    <Item id="anduril" />
+    <Item id="strider_sword" />
+    <Item id="theoden_sword" />
+    <Item id="wm_sauron_mace" />
+    <Item id="glamdring_sword" />
+    <Item id="eomer_sword" />
+    <Item id="eowyn_sword" />
+    <Item id="witchking_sword" />
+    <Item id="nazgul_sword" />
+    <Item id="wm_gondor_boromir_sword" />
+    <Item id="wm_gondor_faramir_sword" />
+    <Item id="wm_legolas_sword" />
+    <Item id="wm_thranduil_sword" />
+    <Item id="sm_dwarf_dain_hammer_a" />
+    <Item id="sm_dwarf_dain_axe_a" />
+    <!-- Named 2026-09-28 (Mike): Tuor's heirloom axes, Galadriel's sword and the seven Noldor swords -->
+    <Item id="wm_tuors_axe_1h" />
+    <Item id="wm_tuors_axe" />
+    <Item id="wm_galadriel_sword" />
+    <Item id="wm_fingon_sword" />
+    <Item id="wm_turin_sword" />
+    <Item id="wm_celegorm_sword" />
+    <Item id="wm_finwe_sword" />
+    <Item id="wm_ingwe_sword" />
+    <Item id="wm_finarin_sword" />
+    <Item id="wm_voronwe_sword" />
+    <!-- LOTRLOME_Armory LOTRLOME_items/LOTRAOM_shields.xml -->
+    <Item id="wm_boromir_shield" />
+    <Item id="wm_theoden_shield" />
+  </NamedWeapons>
+
+  <LordEvent chance="0.08" cooldown_days="90" leave_relation="5" />
+  <VisitingArmourer chance_per_day="0.04" duration_days="7" level_bonus="1" />
+
+  <!-- Mike's placeholder numbers (#693, 2026-09-28), to tune in play. -->
+  <LordsLadder count_knockouts="true">
+    <Step slot="hands" quest="taom_lords_gear_hands" materials="10" />
+    <Step slot="legs" quest="taom_lords_gear_legs" materials="15" />
+    <Step slot="shoulders" quest="taom_lords_gear_shoulders" materials="20" />
+    <Step slot="head" quest="taom_lords_gear_head" materials="30" />
+    <Step slot="body" quest="taom_lords_gear_body" materials="40" />
+    <Step slot="weapon" quest="taom_lords_gear_weapon" materials="60" />
+  </LordsLadder>
+
+  <LordsMaterials base_chance="0.1" chance_per_ten_kills="0.01" max_chance="0.6" min_units="1" max_units="3">
+    <Material culture="gondor" item="taom_lords_material_gondor" />
+    <Material culture="vlandia" item="taom_lords_material_vlandia" />
+    <Material culture="erebor" item="taom_lords_material_erebor" />
+    <Material culture="sturgia" item="taom_lords_material_sturgia" />
+    <Material culture="rivendell" item="taom_lords_material_rivendell" />
+    <Material culture="mirkwood" item="taom_lords_material_mirkwood" />
+    <Material culture="mordor" item="taom_lords_material_mordor" />
+    <Material culture="isengard" item="taom_lords_material_isengard" />
+    <Material culture="dolguldur" item="taom_lords_material_dolguldur" />
+    <Material culture="gundabad" item="taom_lords_material_gundabad" />
+    <Material culture="khuzait" item="taom_lords_material_khuzait" />
+    <Material culture="aserai" item="taom_lords_material_aserai" />
+    <Material culture="empire" item="taom_lords_material_empire" />
+  </LordsMaterials>
+
+  <LadderWeapons>
+    <!-- The culture's named weapons (LOTRLOME_items/LOTRAOM_weapons.xml) -->
+    <Weapon culture="gondor" item="anduril" />
+    <Weapon culture="gondor" item="strider_sword" />
+    <Weapon culture="gondor" item="glamdring_sword" />
+    <Weapon culture="gondor" item="wm_gondor_boromir_sword" />
+    <Weapon culture="gondor" item="wm_gondor_faramir_sword" />
+    <Weapon culture="vlandia" item="theoden_sword" />
+    <Weapon culture="vlandia" item="eomer_sword" />
+    <Weapon culture="vlandia" item="eowyn_sword" />
+    <Weapon culture="mordor" item="wm_sauron_mace" />
+    <Weapon culture="mordor" item="witchking_sword" />
+    <Weapon culture="mordor" item="nazgul_sword" />
+    <Weapon culture="mirkwood" item="wm_legolas_sword" />
+    <Weapon culture="mirkwood" item="wm_thranduil_sword" />
+    <Weapon culture="erebor" item="sm_dwarf_dain_hammer_a" />
+    <Weapon culture="erebor" item="sm_dwarf_dain_axe_a" />
+    <Weapon culture="rivendell" item="wm_fingon_sword" />
+    <Weapon culture="rivendell" item="wm_turin_sword" />
+    <Weapon culture="rivendell" item="wm_celegorm_sword" />
+    <Weapon culture="rivendell" item="wm_finwe_sword" />
+    <Weapon culture="rivendell" item="wm_ingwe_sword" />
+    <Weapon culture="rivendell" item="wm_finarin_sword" />
+    <Weapon culture="rivendell" item="wm_voronwe_sword" />
+    <!-- Tuor's heirloom axes carry no culture: Rivendell's rung offers them (Mike, 2026-09-28) -->
+    <Weapon culture="rivendell" item="wm_tuors_axe_1h" />
+    <Weapon culture="rivendell" item="wm_tuors_axe" />
+    <Weapon culture="lothlorien" item="wm_galadriel_sword" />
+    <!-- No named weapon: a pick from the culture's own Armory weapons, ones no troop, lord or player kit
+         carries where the culture has any (Gundabad and Isengard have none; Dol Guldur has only its halberd,
+         and its mace is carried by one troop); placeholders for Mike or KEYforce -->
+    <Weapon culture="sturgia" item="dale_halberd_b" />
+    <Weapon culture="sturgia" item="dale_war_spear_a" />
+    <Weapon culture="isengard" item="isengard_berserker_sword_2h" />
+    <Weapon culture="isengard" item="isengard_2h_axe_c" />
+    <Weapon culture="dolguldur" item="wm_dol_goldur_halberd_a05" />
+    <Weapon culture="dolguldur" item="wm_dol_goldur_2h_mace_a02" />
+    <Weapon culture="gundabad" item="wm_gundabad_sword_a04" />
+    <Weapon culture="gundabad" item="wm_gundabad_mace_a02" />
+    <Weapon culture="khuzait" item="sm_rh_drag_sword_2h_a" />
+    <Weapon culture="khuzait" item="sm_rh_loke_sword_2h_a" />
+    <Weapon culture="aserai" item="wm_harad_sword_a02" />
+    <Weapon culture="aserai" item="wm_harad_spear_b02" />
+    <Weapon culture="empire" item="dunland_caerdh_axe_1h_d" />
+    <Weapon culture="empire" item="dunland_caerdh_spear_o" />
+  </LadderWeapons>
+</ArmourAcquisition>
