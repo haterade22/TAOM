@@ -130,19 +130,16 @@ For any feature driven by bulk-authored config (many entities authored by hand o
 - **Why missed:** Career party-size RCA 2026-05-29. Two defects shipped and survived the original feature review: (1) 310 career choices were authored in a `<PassiveEffects>` (plural) wrapper with a `value=` attribute, but the parser read only a direct `<PassiveEffect>` child and only `magnitude=` (whole careers across 16 cultures had completely dead passives, yet every unit test passed because they all fed the direct schema; (2) 5 `PassiveEffectType` values (`Ammo`, `HorseChargeDamage`, etc.) were authored in XML with no GameModel/service consumer) the magnitude parsed and cached to a float nothing read. Both are upstream of or invisible to standard deep-review checks: the data-flow enum-coverage trace starts from the *parsed* passive, but the wrapped entries never parsed, so they weren't in the cache to trace.
 - **Prevent:** A single real-file integration test would have caught defect #1 immediately (310 null passives) and surfaced #2. Sibling rules: data-flow tracing, enumerate-from-source-of-truth.
 - **Source:** memory/feedback_parse_real_config_in_tests.md
-
 ### A doc-vs-config consistency check cannot catch a defect present in both
 The BannerBearers Completeness agent (2026-07-16) verified all 11 shipped config fields matched the feature doc's Configuration table **field-for-field and value-for-value, and passed** -- while six of the config's culture keys were dead and matched nothing in the game. The doc and the config were consistently wrong together, so cross-checking them proved only that they agreed. The same review's `ShippedBannerBearerConfigTests` validated every banner item **id** against vanilla's `banners.xml` and passed for the same reason: the values were all real; nobody validated the keys.
 - **Why missed:** "does the doc match the shipped config?" and "does the shipped config match reality?" feel like the same question and are not. Only the second has teeth. Validating the value side of a map is the reflex; the key side is where the silent failure lives.
 - **Prevent:** pin config against the **engine/ModuleData reality**, never against the documentation. For any map keyed on entity ids, ship a test asserting every key resolves against the real entity set at the same time you ship the config. Treat a doc-vs-config test as a drift detector only -- never as correctness evidence.
 - **Source:** docs/reviews/rca-banner-bearers-2026-07-16.md (finding 1; "why each agent missed these").
-
 ### Never defer a preventive action on "if recurrence happens" for a bug class that fails silently
 The 2026-05-23 Rhûn/Gondor RCA correctly diagnosed pool entries referencing nonexistent troop ids, then wrote its own preventive action as *"a script-level check could catch this at PR time (open as follow-up **if recurrence happens**."* It was never built. Two months later the hole was not only still open but wider: the Gondor recruitment JSON added in the interim had no id validation at all. The conditional is the defect) a null `CharacterObject` silently drops a volunteer slot, so nobody ever files the bug report that would trigger the follow-up. The recurrence signal does not exist, so the deferral is permanent.
 - **Why missed:** the deferral reads as prudent triage ("don't build tooling for a one-off"), and nothing re-reads closed RCAs looking for unexecuted follow-ups. The trigger condition sounds observable and is not.
 - **Prevent:** when a bug's failure mode is *a plausible, working, wrong result* rather than an error, its preventive action must be built in the same session or filed as a real tracked issue with an owner, never gated on recurrence. Apply the test: "what observable event would tell me this happened again?" If the answer is "none, by construction", conditional deferral is equivalent to no prevention. Same shape covered the over-100 percentage group and the C#/JSON drift in the same 2026-07-27 review.
 - **Source:** docs/reviews/rca-gondor-recruitment-2026-07-27.md (F2 + "Root cause pattern").
-
 ### Verify a new guard RED before accepting it GREEN, a guard never seen failing is not a guard
 Three test gates shipped in the 2026-07-27 Gondor review (unfiltered JSON id check, per-group 100% total, C#↔JSON drift). Two of them were authored *after* the defect they guard was already fixed, so they passed on first run and proved nothing. Each was therefore verified by deliberately injecting its failure (a typo'd id into the production JSON, a perturbed weight into the C# pools) confirming the gate named the exact defect, then reverting. The drift guard in particular was self-certifying by construction: it validated a sync written by the same author in the same session.
 - **Why missed:** a green new test feels like evidence. It is only evidence that the code is currently in the state the test encodes; it says nothing about whether the test can detect leaving that state. Guards written after the fix never pass through a natural RED phase, which is exactly when TDD would have proven them.
@@ -307,7 +304,6 @@ window open in the very writer whose fix was meant to close it.
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 
 <!-- backlinks-end -->
-
 ### A diagnostic that cries wolf is worse than no diagnostic, prove the rule it asserts
 
 Before shipping a check that tells players something is broken, prove its rule holds on a KNOWN-GOOD
@@ -986,7 +982,6 @@ The ranged-troops page computed `WeaponInaccuracy` as `(100 - accuracy) x (1 - 0
 - **Why missed:** one formula shape was tested, not one value per branch; a verified neighbour felt like a verified number.
 - **Prevent:** when a formula takes a class, weapon type or culture as input, the constant for EACH branch is read from the decompile and pinned by its own test (`ACCURACY_FACTOR = {"Bow": 0.0009, "Crossbow": 0.0005}` and a test per key). A review prompt that names the branch it wants checked gets it checked; one that says "verify the formula" gets the branch the author already knew.
 - **Source:** `docs/reviews/rca-ranged-troops-report-2026-09-13.md` finding 1
-
 ### Assert in the frame the consumer reads, on values a real input produces
 `SubtractResultFramePenalty` promised an exact integer-slot cost and its tests checked `ResultNumber` within 0.01 in float. The engine reads `(int)ResultNumber` (`PartyBase.PartySizeLimit`), and `(B - p/s) * s` is not `B*s - p` in float, so Gondor's real 0.025 party-size feat turned an intended 70 into 69.99999 (read 69) and the promised floor of 1 into 0.99999 (read 0). Every tolerance assertion passed; the defect lived on the far side of a truncation the tests never performed. Shipped 2026-07-17, reviewed twice, found by Codex review 105 executing the installed struct with the shipped feat value.
 - **Why missed:** the tests were written against the algebra (divide the factor back out) with a tolerance that forgives exactly the error that matters, and with a round 0.25 factor that happens not to cancel badly; nobody ran the feat values the game actually ships.
@@ -1085,7 +1080,6 @@ never attached a tree, and the first-tick log reads "0 elk(s)" in a normal Custo
 - **Prevent:** pin such a constant against a literal once, and build the rows of the test that reads the live data
   from the constant, so the data check also proves the code names what the data declares.
 - **Source:** `docs/reviews/rca-animalia-2026-09-23.md` row 4.
-
 ### A Harmony state pair needs one test through the real Prefix, and a trace test must reject the fallback text
 Plan 012's Prefix/Postfix pair was pinned by a reflection test of the Prefix's signature and by
 Postfix tests fed a hand-made `__state`. A Prefix hard-coded to `true` (the per-frame flood back)
@@ -1100,7 +1094,6 @@ two frames), `callers: <none>` or `callers: <unavailable>` all passed.
   patch class itself. Prove both with a mutant run (`__state = true`; a helper hop), per "If you
   didn't watch the test fail, mutate the code until it does".
 - **Source:** `docs/reviews/rca-loading-window-trace-per-frame-2026-09-24.md` findings 3 and 4 (lens 4, lens 5, Codex P3-1 and P3-2).
-
 ### Every existence guard in a resolver gets a test that fails it (plan 008, 2026-09-24)
 `GameAssemblies.ResolveGameDir` checks three inputs: the override must hold `Bannerlord.exe`, the game dir must exist, and so must the build folder. Six tests covered each input's happy path. Deleting the override's `File.Exists` check, or the game dir's `Directory.Exists` check, left all six green. The change had also turned a set-but-missing `BANNERLORD_GAME_DIR` from a skip into a fallback, and no test pinned that.
 - **Why missed:** `tests.md` "Skip-Guard Exhaustion" asks for one test per guard in each direction, but it was read as a rule for skip guards, not for a resolver's guards. The plan's test table said "every cell" and counted inputs, not guards.
@@ -1112,7 +1105,6 @@ two frames), `callers: <none>` or `callers: <unavailable>` all passed.
 - **Why missed:** a new test is modelled on its folder's neighbours, and most of them still carry the old walker, so copying looks like following convention.
 - **Prevent:** before writing a helper in a test, grep `TAOM.Tests/Infrastructure/` for one. A repo-file test imports `using static TAOM.Tests.Infrastructure.RepoPaths;` and calls `RepoPath("dir", "file")`. Because this is a repeat, the locator consolidation (TEST-L5-03) should end with a ratchet test that fails when the count of private `TAOM.sln` walkers grows.
 - **Source:** `docs/reviews/rca-binding-gate-no-silent-skips-decisions-2026-09-24.md` R8; earlier `rca-field-commission-races-2026-09-17.md` F3 and `rca-race-fertility-2026-09-19.md` F2.
-
 ### A pin or guard test proves the identity its name claims, and is tested against the spellings it must reject (plan 010, 2026-09-24)
 `BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild` asserted only that the BUTR version starts with `1.5.3.`, while its name, the workflow header and the CHANGELOG said it pinned the Steam build. BUTR publishes several builds of one game version, so a same-label hotfix would have left CI on the old build with nothing red. Its sibling guard read only a `Reference`'s `Include` and `Exclude`, so the usual `<HintPath>$(GameFolder)\...</HintPath>` spelling passed.
 - **Why missed:** both tests were written from the current data (a one-part pin file, `%(Identity)` HintPaths) and the plan's prescribed assertions, not from the failure each was named after.
@@ -1130,20 +1122,17 @@ D45 let one test class carry `RequiresGame` on a single method. The sentence add
 - **Why missed:** the sentence was written from its one example; nobody counted how many existing files it would mark as wrong.
 - **Prevent:** when a rule gains an exception, keep the decision's verb (allows, may) and run a quick count of the files the new sentence governs; if the count of files it would call wrong is not zero, the sentence is an order and needs a decision of its own.
 - **Source:** `docs/reviews/rca-ci-on-hosted-windows-decisions-2026-09-24.md` C2.
-
 ### A guard test needs an input that makes it fire
 Three checks in plan 018 could not fail: the kernel test pinned both runner calls but not `Modules = modules;`, the one hand-off between them, so deleting it kept the suite green while every hook returned early; the `OwnsSaveData` IL check ran only over a behavior with an empty `SyncData`; and the reader's LF test read a repo file that is already LF on this working copy, so removing the CRLF normalisation changed nothing.
 - **Why missed:** each test was written from the code it guards, not from the mutation it must catch; a null guard, an empty input set and an already-normal input all turn a missing behaviour into a pass.
 - **Prevent:** for every new guard test, name the one-line mutation it must catch (delete the hand-off, give the set a persisting member, feed CRLF), and run that mutation once before committing. When the real input set has no member that trips the check, add a positive control from elsewhere in the codebase (`FieldCampCampaignBehavior` for the IL check).
 - **Source:** `docs/reviews/rca-composition-root-first-steps-2026-09-24.md` findings 3, 15 and 16; lens 4 and Codex P3 (plan 018).
-
 ### An engine fact a hardcoded name depends on gets a `BindingVerification` test against the installed DLLs, not a one-time STOP check (plan 007, 2026-09-24)
 
 PatchShield's `"ManagedCallbacks"` exclusion saves about 46 s of loading screen only while the engine's callback shims live in that namespace. The plan checked it once, by hand, as a STOP condition, and its one test asserted the literal string. An engine bump that moved the shims would have brought the cost back with every test green. A `ReflectionSiteBindingTests` row would not have caught it either: its `ResolveType` falls back to a simple-name search that tolerates a namespace move.
 - **Why missed:** the plan called the runtime namespace "structurally untestable", which is true only of the Harmony half (`GetAllPatchedMethods` needs a running game). The type half is reflection over DLLs the test bin already holds (`TAOM.Tests.csproj` copies `TaleWorlds.*.dll`).
 - **Prevent:** when a change hardcodes a namespace, type or member name that must match the engine, add a `[TestCategory("BindingVerification")]` test that loads the installed assembly, selects the targets the way the production code does, and asserts the hardcoded name still matches them; prove it RED by misspelling the name. `/verify-bindings` then re-runs it at every engine bump.
 - **Source:** `docs/reviews/rca-patchshield-skip-callback-shims-2026-09-24.md` finding 7; `PatchShieldPolicyTests.IsExcludedTargetNamespace_InstalledCallbackShimTypes_ReturnsTrue`.
-
 ### A test that a finalizer preserves the throw site uses an exception that was actually thrown
 Plan 006's `Native2ManagedBridgeTests` checked the native-capture-off path with `new InvalidOperationException(...)` and asserted only `AreSame`. `RethrowStackPreserver.PreserveForRethrow` returns at once for an exception with no stack trace, so the test passed unchanged when the preserve call was mutated to a bare `return exception;`, the exact violation `harmony-patches.md` forbids. The fixed test throws and catches first and asserts `Data` holds `TAOM.ThrowSite`; the same mutation now fails it.
 - **Why missed:** the fixture was built to reach the branch, not to exercise the callee's precondition; `RethrowStackPreserverTests` already documents the unthrown no-op, and nobody read it against the new test.
@@ -1173,7 +1162,6 @@ Plan 006's bridge and `CrashReportPatchHelper` tests all ran with `IoC` unconfig
 - **Why missed:** the review record called the swallow path "not reachable from a test", which was true only of the MCM read; the fallback tests were green, and green read as covered.
 - **Prevent:** for any static hook that resolves its service lazily (`IoC.Resolve` cached in a static), add a fake the test can install and clear (`[TestCleanup]`), and assert what the service received (arguments, and the state it observed at call time), not only what the hook returned. Run the mutation list from the review against the new tests before calling the gap closed.
 - **Source:** `docs/reviews/rca-crash-capture-boot-cost-decisions-2026-09-24.md` F2 (lens 4 M1, lens 1 LOW-4).
-
 ### A hook that cannot finish outside a campaign is testable up to its first engine read: throw a sentinel from the argument before it (plan 014, 2026-09-24)
 
 `EnlistmentBehavior.OnGameLoaded` calls `_normalizer.Normalize(_playerParty.GetMainHeroId(),
@@ -1190,7 +1178,6 @@ their order with `Received.InOrder`.
   everything that ran first. Prefer this to reflection or to moving an engine read.
 - **Source:** Codex review of plan 014 (gpt-6-astra, ultra), observation 1;
   `docs/reviews/rca-enlistment-session-scope-2026-09-24.md` finding 4.
-
 ### A gate moved into new code is new code: re-check its NaN polarity where it lands (plan 015, 2026-09-24)
 Plan 015 moved `BoneCheck`'s range gate from `FindBoneInRange` into `CheckTargets` so it runs before the native `GetSkeleton` fetch. The line came across as it was, `if (LengthSquared > _maxRangeForCheck) continue;`, an inverted early exit that a NaN visuals frame passes, so a corrupt frame paid the very wrapper the move was meant to save. This is the fourth shipping of the NaN-gate category (see "Write engine-float decision gates as positive requirements" above).
 - **Why missed:** a relocated line reads as already reviewed, and the NaN sweep is framed around gates a change writes.
@@ -1215,7 +1202,6 @@ Plan 015's decision 5 moved `BoneCheckDuringAnimation.Tick`'s skeleton fetch ins
 - **Why missed:** the untestable claim was inherited and never tried, which left the IL scan as the only tool; the test was then named for the goal (the branch) instead of what it checks (the order), and its predicate was written from the call the old code made.
 - **Prevent:** before settling for an IL rule, write the substitute-driven test and run it; only a real failure (the exception text) justifies the IL route. An IL rule's name and summary say only what a call list can show (present, absent, count, order), never "inside the branch"; if the property is a branch, the test must execute it. Match the whole lookup surface a rule forbids (`Resolve` and `ResolveAll`), with a control for each.
 - **Source:** `docs/reviews/rca-warg-tick-costs-decisions-2026-09-24.md` F1 and F4 (Codex P3-1, all six lenses).
-
 ### "Structurally untestable" is a claim to try before writing: most engine prefixes run on uninitialized objects
 Plan 019 called Patch8's settlement path untestable, so the patch's main purpose (the ring around the gate) and the proceeds side of its new guard had no test, and the camp-2 test asserted array lengths, which a copy that dropped the frames' transforms would also pass (Codex). `FormatterServices.GetUninitializedObject` plus the private setters of `Settlement.GatePosition`, `Settlement.Party`, `BesiegerCamp.SiegeEvent` and the readonly field `SiegeEvent.BesiegedSettlement` reached all five paths in five tests.
 - **Why missed:** the claim came from the old feature doc ("not feasible without the game runtime") and was never tried; the oracle checked the shape of the result, not what was handed over.
@@ -1310,7 +1296,6 @@ locally, while pytest showed 13 green. Five older modules had the same shape.
   for `capsys`), and run the unittest command before calling them done. `tools/tests/test_ci_runner_compat.py`
   fails on any new module that imports pytest; its baseline only shrinks.
 - **Source:** `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 19.
-
 ### A pure rule's tests go in an untagged class, even when the rule lives in an engine-bound file (plan 026, 2026-09-24)
 Plan 026 extracted `FortificationSearch.NearestDistance`, a pure function behind the camp, refuge
 and stronghold keep-outs, and put its eight tests in `CampServiceTests` because the rule is declared
