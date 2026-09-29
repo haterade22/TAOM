@@ -35,6 +35,8 @@ public class TaomCharacterStatsModel : DefaultCharacterStatsModel
         var result = base.MaxHitpoints(character, includeDescriptions);
         // ExplainedNumber.Add returns at once on 0, so every race without a baseHitPoints row is untouched.
         result.Add(_raceModifiers.BaseHitPointsBonus(character?.Race));
+        // Creature Bandits (#694): a bandit troll wears no armour and gets more hit points instead.
+        result.Add(CreatureBandits.CreatureBanditRules.TrollBanditHitPointsBonus(character?.StringId));
         _careerPassives.ApplyFlat(character?.HeroObject?.StringId, ref result, PassiveEffectType.Health);
         return result;
     }

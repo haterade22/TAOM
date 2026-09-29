@@ -4302,14 +4302,15 @@
   <!-- Wild Trolls (#694): the troll bands, the brood culture's looter shape (can_have_settlement false: no
        hideouts, and vanilla's map-wide looter spawn, which TaomBanditDensityModel caps at zero while
        TrollBandSpawnBehavior keeps about one band per kingdom). The troops are hidden twins of Mordor's trolls
-       (characters/troll_bandits.xml). executioner is required of every culture and read only for a player of
+       (characters/troll_bandits.xml); the bands are hill trolls only for now, so every troop slot names the hill
+       troll. executioner is required of every culture and read only for a player of
        this culture, which no player can be. -->
   <Culture
     id="wild_trolls"
     name="{=taom_bandit_wild_trolls_name}Wild Trolls"
-    basic_troop="NPCCharacter.taom_troll_bandit_cave"
+    basic_troop="NPCCharacter.taom_troll_bandit_hill"
     elite_basic_troop="NPCCharacter.taom_troll_bandit_hill"
-    executioner="NPCCharacter.taom_troll_bandit_cave"
+    executioner="NPCCharacter.taom_troll_bandit_hill"
     is_bandit="true"
     can_have_settlement="false"
     encounter_background_mesh="encounter_mountain_bandit">

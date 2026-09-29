@@ -166,6 +166,18 @@ public class CreatureBanditsWiringTests
     }
 
     [TestMethod]
+    public void TrollBanditToughness_ReachesHitPointsAndEveryHit()
+    {
+        // Hit points: a troop's campaign battle health and its auto-resolve casualty roll read CharacterObject.MaxHitPoints(),
+        // which is TaomCharacterStatsModel. Damage: both damage models' ApplyDamageReductions end in
+        // CreatureBanditDamage.Reduce (campaign and Custom Battle).
+        StringAssert.Contains(RepoPaths.ReadSource("Main/Features/TroopProgression/Models/TaomCharacterStatsModel.cs", stripComments: true),
+            "CreatureBanditRules.TrollBanditHitPointsBonus(character?.StringId)");
+        StringAssert.Contains(RepoPaths.ReadSource("Main/Features/CreatureBandits/Hooks/CreatureBanditDamage.cs", stripComments: true),
+            "CreatureBanditRules.TrollBanditDamageTakenFactor(attackInformation.VictimAgent?.Character?.StringId)");
+    }
+
+    [TestMethod]
     public void NoParleyAndLooterCap_CoverBothClans()
     {
         // Trolls, like spiders, go straight to attack or leave, and vanilla must never spawn either clan map-wide.

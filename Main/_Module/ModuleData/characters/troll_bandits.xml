@@ -2,12 +2,13 @@
 <NPCCharacters>
 
   <!-- Troll bands (#694): wild trolls as bandits, about one band of two to four per kingdom, hostile only and never
-       recruitable. Each is a hidden twin of a Mordor troll (troops/troops_mordor.xml): the same race, level, skills,
-       face and gear, the combination already proven to render and fight, so every race-keyed troll trait applies
-       (hit points, knockdown resistance, brute force). Only the identity differs: bandit occupation, the wild_trolls
-       culture, hidden from the encyclopedia, and their own ids, which the prisoner rule refuses
-       (CreatureBanditsConfig.TrollBanditTroopIds) while Mordor's trolls stay capturable. They appear only in
-       wild_trolls_band_template; TrollBanditDataTests keeps the twins equal to their Mordor originals. -->
+       recruitable. Each is a hidden twin of a Mordor troll (troops/troops_mordor.xml): the same race, level,
+       skills, face and weapons, so every race-keyed troll trait applies (hit points, knockdown resistance, brute
+       force), but no armour (Mike, 2026-09-29). Beyond the armour only the identity differs: bandit occupation, the
+       wild_trolls culture, hidden from the encyclopedia, and their own ids, which the prisoner rule refuses
+       (CreatureBanditsConfig.TrollBanditTroopIds) while Mordor's trolls stay capturable. The bands are hill trolls
+       only for now (wild_trolls_band_template): a bare cave troll's body has no cloth, its trousers belong to the
+       armour mesh. TrollBanditDataTests keeps each twin equal to its Mordor original, less the armour. -->
 
     <NPCCharacter
         id="taom_troll_bandit_cave"
@@ -56,86 +57,32 @@
                 <equipment
                     slot="Item0"
                     id="Item.wm_cave_troll_1h_mace_a" />
-                <equipment
-                    slot="Head"
-                    id="Item.lotr_troll_helmet" />
-                <equipment
-                    slot="Body"
-                    id="Item.lotr_troll_armor" />
-                <equipment
-                    slot="Gloves"
-                    id="Item.lotr_troll_bracers" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
                     id="Item.wm_cave_troll_1h_mace_b" />
-                <equipment
-                    slot="Head"
-                    id="Item.lotr_troll_helmet" />
-                <equipment
-                    slot="Body"
-                    id="Item.lotr_troll_armor" />
-                <equipment
-                    slot="Gloves"
-                    id="Item.lotr_troll_bracers" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
                     id="Item.wm_cave_troll_1h_mace_c" />
-                <equipment
-                    slot="Head"
-                    id="Item.lotr_troll_helmet" />
-                <equipment
-                    slot="Body"
-                    id="Item.lotr_troll_armor" />
-                <equipment
-                    slot="Gloves"
-                    id="Item.lotr_troll_bracers" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
                     id="Item.wm_cave_troll_2h_mace_a" />
-                <equipment
-                    slot="Head"
-                    id="Item.lotr_troll_helmet" />
-                <equipment
-                    slot="Body"
-                    id="Item.lotr_troll_armor" />
-                <equipment
-                    slot="Gloves"
-                    id="Item.lotr_troll_bracers" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
                     id="Item.wm_cave_troll_spear_a" />
-                <equipment
-                    slot="Head"
-                    id="Item.lotr_troll_helmet" />
-                <equipment
-                    slot="Body"
-                    id="Item.lotr_troll_armor" />
-                <equipment
-                    slot="Gloves"
-                    id="Item.lotr_troll_bracers" />
             </EquipmentRoster>
             <EquipmentRoster
                 civilian="true">
                 <equipment
                     slot="Item0"
                     id="Item.wm_cave_troll_spear_a" />
-                <equipment
-                    slot="Head"
-                    id="Item.lotr_troll_helmet" />
-                <equipment
-                    slot="Body"
-                    id="Item.lotr_troll_armor" />
-                <equipment
-                    slot="Gloves"
-                    id="Item.lotr_troll_bracers" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>

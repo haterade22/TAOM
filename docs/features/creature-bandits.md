@@ -8,19 +8,21 @@ spider is a riderless creature that hunts the nearest enemy and bites; on the ma
 and meeting it goes straight to attack or leave. Creatures are bandits only: never recruited, never taken
 prisoner, never fielded by lords.
 
-The second is the Wild Trolls (#694): bands of two to four cave and hill trolls, about one per kingdom, roaming
-near that kingdom's towns, castles and villages. A troll is humanoid, so it fights as an ordinary troll troop with
-every troll trait; like a spider it is never taken prisoner or recruited, a band never takes in freed prisoners,
-and meeting a band goes straight to attack or leave.
+The second is the Wild Trolls (#694): bands of two to four hill trolls (for now), about one per kingdom, roaming
+near that kingdom's towns, castles and villages. A troll is humanoid, so it fights as a troll troop with every troll
+trait, wearing no armour but with 300 hit points and taking 70% of every hit; like a spider it is never taken
+prisoner or recruited, a band never takes in freed prisoners, and meeting a band goes straight to attack or leave.
 
 **Status (2026-09-28):** route A (soldiers target the riderless spider) passed its Custom Battle spike: nine
 console-spawned spiders were targeted, hit and killed by infantry and archers, with no crash. The creature's own
 tree, its tuning and its damage-taken rules, the deployment hold and the whole campaign path (broods on the map,
 a brood battle with its deployment screen, the map icon, no parley, no prisoners) have **not yet run in game**.
 Research, engine evidence and the design review: [creature-bandits-roadmap.md](../research/creature-bandits-roadmap.md).
-The troll bands, the twenty-brood cap over 47 anchors and the #694 review fixes (no joining the player, no freed
-prisoners, spawns out of sight) have not run in game either; the troll map icon is drawn from the race's
-`as_cave_troll_map` action set (`as_hill_troll_map` once the cave trolls fall). See "In-game checklist".
+Troll bands in game (2026-09-29): Mike spawned one with the console command (then led by an armoured cave troll),
+met it on the map (no parley), fought it, and saw a lord's army destroy it with its trolls refused as prisoners.
+After that test the armour came off, the bands became hill trolls only and gained their hit points and damage rule;
+none of that, nor the no-join and freed-prisoner rules or the twenty-brood cap, has run in game yet. The map icon is
+drawn from the race's `as_hill_troll_map` action set. See "In-game checklist".
 
 **New campaigns only.** The brood and troll clans are `Faction`s in XML, which the engine reads only when a campaign
 starts (`SandBoxManager.cs:380-384`). A save from before them keeps playing without them; each spawner logs that
@@ -97,9 +99,11 @@ troop needs, in order, without a formation, and then makes it an enemy the engin
 - **Troll bands (#694).** `TrollBandSpawnBehavior` keeps about one band per living kingdom (not eliminated, owning a
   town, castle or village): each day, while there are fewer bands than living kingdoms, one band spawns near a random
   settlement of a kingdom with none and patrols there. A band counts for its home settlement's current kingdom. The
-  troops are hidden twins of Mordor's `cave_troll` and `hill_troll` (same race, level, skills, face and gear; own ids,
-  bandit occupation, the `wild_trolls` culture), so Mordor's recruitable trolls are untouched and only the twins are
-  refused as prisoners. No battle code: the race brings every troll trait. A band spawns with its template's two to
+  troops are hidden twins of Mordor's `cave_troll` and `hill_troll` (same race, level, skills, face and weapons;
+  own ids, bandit occupation, the `wild_trolls` culture), so Mordor's recruitable trolls are untouched and only the
+  twins are refused as prisoners. The race brings every other troll trait. The twins wear no armour and are made tougher
+  instead: 100 more hit points, so 300 (`CreatureBanditRules.TrollBanditHitPointsBonus` in
+  `TaomCharacterStatsModel`), and 70% of every hit (`TrollBanditDamageTakenFactor` in `CreatureBanditDamage.Reduce`). A band spawns with its template's two to
   four trolls: vanilla's bandit roll stays inside each stack's range (`DefaultPartySizeLimitModel.cs:346-399`) and
   Patch39 caps its growth at each `max_value`. It stays two to four trolls and nothing else: no troll is ever a
   prisoner to free back, and the reward model gives it no freed prisoner. Which kingdoms are owed a band is the
@@ -148,7 +152,7 @@ inert, and none of these reads fold it. To change a default later, rename the pr
 | Missile Damage Taken % | 50 | 0 to 200 | at each hit |
 | Cut / Pierce / Blunt Damage Taken % | 100 / 100 / 100 | 0 to 200 | at each hit |
 
-Every option in the table after the two switches tunes the spiders only; a troll fights with its race's own numbers.
+Every option in the table after the two switches tunes the spiders only; a bandit troll's numbers are its race's plus 100 hit points and 70% of every hit.
 
 ### Compile-time: `Main/Features/CreatureBandits/CreatureBanditsConfig.cs`
 
@@ -158,8 +162,9 @@ Every option in the table after the two switches tunes the spiders only; a troll
 | `BroodClanId` | `mirkwood_spiders` | the brood's bandit clan |
 | `BroodAnchorSettlementIds` | the 47 towns, castles and villages of Mirkwood and Dol Guldur (`CreatureBanditLiveDataTests` keeps it equal to the live map) | where broods spawn and patrol |
 | `MaxBroods` | 20 | broods alive at once; one new brood a day below it |
-| `TrollBanditTroopIds` | the two troll twins | the troll band troops (prisoner rule only) |
+| `TrollBanditTroopIds` | the two troll twins | the troll band troops (the prisoner rule, their hit points and damage) |
 | `TrollClanId` | `wild_trolls` | the troll bands' bandit clan |
+| `TrollBanditExtraHitPoints`, `TrollBanditDamageTaken` | 100, 0.7 | a bandit troll's toughness in place of armour (Mike, 2026-09-29) |
 | `SpawnRadiusDays` | 0.25 | spawn distance from the anchor, broods and bands |
 | `DefaultSpawnBroods`, `DefaultSpawnTrollBands` | true | the MCM switches' defaults |
 
@@ -167,8 +172,9 @@ Data: `characters/creature_bandits.xml` (the spiders), the `mirkwood_spiders` cu
 clan (`characters/clans.xml`), and `mirkwood_spiders_brood_template` (`taom_partyTemplates.xml`), whose first stack
 is the broodmother (the map icon's party leader). `CreatureBanditDataTests` pins the XML to the C# ids. The trolls:
 `characters/troll_bandits.xml`, the `wild_trolls` culture and clan (home `village_R1_1`, nominal), and
-`wild_trolls_band_template` (cave troll 1 to 2, first, then hill troll 1 to 2); `TrollBanditDataTests` pins them,
-keeps each twin equal to its Mordor troll, and keeps the twins out of every other template and culture.
+`wild_trolls_band_template` (hill trolls 2 to 4, for now: a bare cave troll has no cloth); `TrollBanditDataTests`
+pins them, keeps each twin equal to its Mordor troll less the armour, and keeps the twins out of every other
+template and culture.
 
 ## Key Files
 
@@ -207,7 +213,7 @@ keeps each twin equal to its Mordor troll, and keeps the twins out of every othe
   synthetic blow and the agent slot check.
 - **Data**: the live `TAOM_Map` settlements (the 47 anchors and the clans' homes, `village_M1_1` and
   `village_R1_1`), the Armory spider mount items, and for the trolls the Armory's troll races, their `_map` action
-  sets and the Mordor trolls' gear.
+  sets and the Mordor trolls' weapons.
 
 ## Tests
 
@@ -219,9 +225,9 @@ keeps each twin equal to its Mordor troll, and keeps the twins out of every othe
 - `TAOM.Tests/Features/CreatureBandits/CreatureBanditLiveDataTests.cs` (LiveInstall): the brood anchors equal every
   Mirkwood and Dol Guldur town, castle and village on the live map, and both troll `_map` action sets exist.
 - `TAOM.Tests/Features/CreatureBandits/TrollBanditDataTests.cs`: the troll XML matches the catalogue and loads in the
-  campaign; each twin is a hidden `wild_trolls` bandit equal to its Mordor troll; the clan and culture are a bandit
-  looter shape; the band template holds two to four trolls led by a cave troll; no other template or culture names
-  a twin.
+  campaign; each twin is a hidden `wild_trolls` bandit equal to its Mordor troll less the armour; the clan and
+  culture are a bandit looter shape; the band template holds two to four hill trolls; no other template or culture
+  names a twin.
 - `TAOM.Tests/Features/CreatureBandits/CreatureBanditDataTests.cs`: the troop XML matches the catalogue; hidden,
   bandit, a spider in every Horse slot, no weapon; the pale broodmother leads; the clan and its template match
   the C# clan id.
@@ -276,10 +282,11 @@ spawns beside your commander's column.
 1. `campaign-start` shows `missingAnchors=-`, and the `daily` line's `broods=` climbs by one a day to 20.
 2. Over the first weeks the `troll-daily` line's `kingdomsOwed=` falls to 0, `looterCap=0`, and its `list` shows
    each band with its kingdom and 2 to 4 troops.
-3. A band's map icon is a cave troll; a band left with only hill trolls shows a hill troll, in and out of a map
+3. A band's map icon is a hill troll in its own hide, in and out of a map
    battle, with no crash on approach or zoom.
 4. Meeting a band skips the conversation (a `no-parley` line with a `wild_trolls` party id).
-5. In battle the trolls fight like Mordor's (brute force, 200 hit points). After a win no troll is taken prisoner
+5. In battle the trolls fight like Mordor's hill troll (brute force, no armour) but tougher: 300 hit points and 70%
+   of every hit. Does a band of two to four feel hard to beat? After a win no troll is taken prisoner
    (`prisoner-refused troop=taom_troll_bandit_*`).
 6. With Partners in Crime, talk down a looter party next to a troll band and pick "serve under my command": the
    looters join, the trolls do not and stay on the map.
@@ -288,14 +295,14 @@ spawns beside your commander's column.
    distance, so a line just under it can still be right; `origin=console` lines are placed beside you on purpose).
 9. MCM "Spawn Troll Bands" off: no new bands; live ones stay.
 10. An older save: one "No 'wild_trolls' clan" line; its broods grow to 20 over the new anchors.
-11. Custom Battle: `taom.spawn_troops taom_troll_bandit_cave 2 enemy` spawns trolls that fight normally.
+11. Custom Battle: `taom.spawn_troops taom_troll_bandit_hill 2 enemy` spawns trolls that fight normally.
 
 ## Known Limitations
 
 - **Scripted blows skip the damage-taken rules.** TAOM's own blows (`CustomAttacksUtils.TakeDamage`: troll brute
   force, signature strikes, warg and ridden-spider bites) do not pass the engine's damage model, so the Damage
   Taken options do not apply to them. No difference at the shipped 100% melee defaults; arrows are unaffected
-  (Mike, 2026-09-28).
+  (Mike, 2026-09-28). A bandit troll takes those blows whole, not at 70%; armour never reduced them either.
 - **Deployment.** The creatures hold still until the battle starts, but vanilla hides only human defenders when the
   player attacks, so the spiders stay visible on the deployment screen.
 - **A spawn that throws after the native creation call** (the render preload, the June crash site) leaves an orphan
@@ -309,6 +316,8 @@ spawns beside your commander's column.
 - **A band may leave a kingdom bare.** A band counts for its home settlement's current kingdom, so one whose home
   was captured, or is held by a clan outside any kingdom, still counts toward the cap: its old kingdom gets a band
   only once one dies. A player's own kingdom counts as living and gets a band too.
+- **A console troll in Custom Battle has 200 hit points.** Custom Battle reads health from the race Monster, not
+  `TaomCharacterStatsModel`, so only the 70% damage rule reaches it there; the campaign's bands get the full 300.
 - **Broods thin vanilla's looters.** Vanilla spawns fewer looters around a settlement with several looter-faction
   parties homed there (`BanditSpawnCampaignBehavior.GetSpawnChanceInSettlement`), so Mirkwood villages with two
   or more broods see fewer vanilla looters.
@@ -353,6 +362,10 @@ After sign-off, delete `Main/Features/CreatureBandits/Diagnostics/` and every ca
 - 2026-09-29: `taom.spawn_creature_band trolls|broods [confirm]` (Tier C) spawns one band or brood beside the player
   for testing; `CreatureBandParties.Spawn` takes an optional point, and the `brood-spawn` line carries
   `origin=console|spawner` (#694).
+- 2026-09-29: the Wild Trolls wear no armour (Mike, after the first in-game test), and the bands are hill trolls
+  only for now: a bare cave troll's body has no cloth, its trousers belong to the armour mesh. The cave twin stays
+  defined, armourless and in no band. In place of armour a bandit troll has 300 hit points (the race's 200 plus
+  100) and takes 70% of every hit (Mike's choice).
 
 ## GitHub Issue
 

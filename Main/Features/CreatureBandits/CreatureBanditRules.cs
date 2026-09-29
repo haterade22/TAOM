@@ -19,8 +19,16 @@ public static class CreatureBanditRules
 
     public static bool IsCreatureTroop(string? troopId) => troopId != null && Troops.Contains(troopId);
 
-    /// <summary>A troll band's troop (#694): a humanoid, so no creature seam takes it, only the prisoner rule.</summary>
+    /// <summary>A troll band's troop (#694): a humanoid, so no creature seam takes it; the prisoner rule and its toughness do.</summary>
     public static bool IsTrollBanditTroop(string? troopId) => troopId != null && Trolls.Contains(troopId);
+
+    /// <summary>A bandit troll's extra hit points (#694); 0 for any other troop, Mordor's trolls included.</summary>
+    public static int TrollBanditHitPointsBonus(string? troopId)
+        => IsTrollBanditTroop(troopId) ? CreatureBanditsConfig.TrollBanditExtraHitPoints : 0;
+
+    /// <summary>The share of a hit a bandit troll takes (#694); 1 for any other victim.</summary>
+    public static float TrollBanditDamageTakenFactor(string? troopId)
+        => IsTrollBanditTroop(troopId) ? CreatureBanditsConfig.TrollBanditDamageTaken : 1f;
 
     /// <summary>Spiders and bandit trolls are never taken prisoner, so they can never be recruited from prisoners.</summary>
     public static bool IsNeverPrisoner(string? troopId) => IsCreatureTroop(troopId) || IsTrollBanditTroop(troopId);

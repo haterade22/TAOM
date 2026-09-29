@@ -81,3 +81,19 @@ LOWs; all fixed except the enlisted state, decided as allowed (the band spawns b
 | F3 | LOW | "Beside the player" was false: the point was drawn up to 20.5 units around the nearest settlement's gate, visible about a third of the time by day. | The flag removed the push out of sight but nothing pulled the band in. | The band spawns within a quarter of the player's sight, homed on the nearest settlement. |
 | F4 | LOW | The dry run named the owner clan for a fief outside any kingdom, where the band covers no kingdom. | `MapFaction` read as "kingdom". | It prints the kingdom, or "no kingdom (a cap slot only)". |
 | F5 | LOW | Undocumented `spiders` alias, test names off the convention, missing pins (battle refusal, `broods confirm`, the spawners' out-of-sight path), doc gaps (checklist rules the command skips, Tests, Changelog). | First draft. | All fixed. |
+
+## Follow-up: no armour, hill trolls only, toughness (2026-09-29)
+
+After Mike's first in-game test: the wild trolls wear no armour, the bands are hill trolls only for now (a bare cave
+troll's body has no cloth), and a bandit troll has 300 hit points and takes 70% of every hit (Mike chose these over an
+invisible hide item or accepting them weaker). Four review passes (XML, data flow, completeness with design, and a
+combined standards/engine/efficiency/data-flow pass on the C#): no runtime defect.
+
+| # | Sev | Finding | Why missed | Fix |
+|---|-----|---------|------------|-----|
+| A1 | MED | Removing the armour removed most of a cave troll's toughness (95 armour to 0; a cut did 29x more), against "don't want them too easy". | The request was read as a look change; its combat effect was not costed before the edit. | Asked Mike: 300 hit points and 70% damage for the twins only, in `TaomCharacterStatsModel` and `CreatureBanditDamage.Reduce`. |
+| A2 | LOW | Stale text: the XML and test headers still said "same gear, only the identity differs"; an XML comment quoted Mike with words he did not say; comments said the twin ids fed "only the prisoner rule"; docs said trolls "fight with the race's own numbers"; a test comment called MaxHitPoints the auto-resolve strength (it is the casualty roll; strength is tier-based). | Edits changed behaviour faster than their prose; the invented quote was mine. | All corrected. Quote only what the maintainer wrote. |
+| A3 | LOW | Doc and registry status contradicted Mike's test. | The status lines predate the test. | Reconciled: what the 2026-09-29 test covered, and what is still owed. |
+
+Known limitations recorded: a console troll in Custom Battle has 200 hit points (Custom Battle reads the race
+Monster); scripted blows hit a bandit troll whole, as armour never reduced them.

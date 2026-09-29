@@ -72,7 +72,8 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
         // auto-resolve site applies the identical contract. NaN/out-of-range applies nothing.
         result = RefugeDamageReduction.Apply(result, reduction);
 
-        // Creature Bandits (#692): the riderless creatures' damage-taken rules; inert for every other victim.
+        // Creature Bandits (#692, #694): the riderless creatures' damage-taken rules and the bandit trolls' 70%;
+        // inert for every other victim.
         return CreatureBandits.Hooks.CreatureBanditDamage.Reduce(in attackInformation, in collisionData, result);
     }
 

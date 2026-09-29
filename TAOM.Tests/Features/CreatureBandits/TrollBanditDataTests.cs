@@ -7,8 +7,9 @@ using TAOM.Features.CreatureBandits;
 using TAOM.Tests.Infrastructure;
 
 // Troll bands (#694): hidden bandit twins of Mordor's two trolls, in bands of two to four. The twins keep the Mordor
-// trolls' race, level, skills and gear, the combination already proven to render and fight; only their identity
-// differs, so Mordor's recruitable trolls stay untouched and the prisoner rule can refuse the twins alone.
+// trolls' race, level, skills, face and weapons but wear no armour (Mike, 2026-09-29); their ids differ too, so
+// Mordor's recruitable trolls stay untouched and the prisoner rule can refuse the twins alone. Bands are hill trolls
+// only for now (Mike, 2026-09-29): a bare cave troll's body has no cloth, its trousers belong to the armour mesh.
 
 namespace TAOM.Tests.Features.CreatureBandits;
 
@@ -29,10 +30,15 @@ public class TrollBanditDataTests
     private static string[] Skills(XElement troop) =>
         troop.Element("skills")!.Elements("skill").Select(s => $"{s.Attribute("id")}={s.Attribute("value")}").OrderBy(s => s).ToArray();
 
-    private static string[] Rosters(XElement troop) =>
+    // Wild trolls wear no armour (Mike, 2026-09-29): a twin carries its Mordor troll's weapons only.
+    private static readonly string[] ArmourSlots = { "Head", "Body", "Leg", "Gloves", "Cape" };
+
+    private static string[] Rosters(XElement troop, bool withoutArmour = false) =>
         troop.Element("Equipments")!.Elements("EquipmentRoster")
             .Select(r => $"civilian={(string?)r.Attribute("civilian") ?? "false"}:"
-                         + string.Join(";", r.Elements("equipment").Select(q => $"{q.Attribute("slot")}={q.Attribute("id")}")))
+                         + string.Join(";", r.Elements("equipment")
+                             .Where(q => !withoutArmour || !ArmourSlots.Contains((string?)q.Attribute("slot")))
+                             .Select(q => $"{q.Attribute("slot")}={q.Attribute("id")}")))
             .ToArray();
 
     private static XElement BandTemplate()
@@ -87,7 +93,7 @@ public class TrollBanditDataTests
             Assert.AreEqual((string?)mordor.Attribute("level"), (string?)twin.Attribute("level"), $"{Id(twin)}: level");
             Assert.AreEqual((string?)mordor.Attribute("default_group"), (string?)twin.Attribute("default_group"), $"{Id(twin)}: group");
             CollectionAssert.AreEqual(Skills(mordor), Skills(twin), $"{Id(twin)}: skills");
-            CollectionAssert.AreEqual(Rosters(mordor), Rosters(twin), $"{Id(twin)}: gear");
+            CollectionAssert.AreEqual(Rosters(mordor, withoutArmour: true), Rosters(twin), $"{Id(twin)}: the Mordor troll's weapons, no armour");
             Assert.AreEqual((string?)mordor.Element("face")!.Element("face_key_template")!.Attribute("value"),
                 (string?)twin.Element("face")!.Element("face_key_template")!.Attribute("value"), $"{Id(twin)}: face");
         }
@@ -111,15 +117,15 @@ public class TrollBanditDataTests
     }
 
     [TestMethod]
-    public void BandTemplate_HoldsTwoToFourTrolls_LedByACaveTroll()
+    public void BandTemplate_HoldsTwoToFourHillTrolls()
     {
         // Vanilla's bandit roll is min + (max - min) x ratio with the ratio below 1 (v1.5.3
         // DefaultPartySizeLimitModel.cs:346-399), and Patch39 caps its growth at each stack's max_value, so the stack
         // sums are the band's bounds.
         var stacks = BandTemplate().Descendants("PartyTemplateStack").ToList();
         var troops = stacks.Select(s => ((string)s.Attribute("troop")!).Replace("NPCCharacter.", "")).ToList();
-        Assert.AreEqual("taom_troll_bandit_cave", troops[0], "the first stack is roster index 0, the map icon's leader");
-        CollectionAssert.IsSubsetOf(troops, CreatureBanditsConfig.TrollBanditTroopIds.ToList(), "a band carries trolls only");
+        // Roster index 0 leads the map icon, drawn with the race's as_hill_troll_map (CreatureBanditLiveDataTests).
+        Assert.IsTrue(troops.All(t => t == "taom_troll_bandit_hill"), "a band is hill trolls only for now");
         Assert.AreEqual(2, stacks.Sum(s => (int)s.Attribute("min_value")!), "at least two trolls");
         Assert.AreEqual(4, stacks.Sum(s => (int)s.Attribute("max_value")!), "at most four trolls");
     }

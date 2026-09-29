@@ -324,6 +324,23 @@ public class CreatureBanditRulesTests
     }
 
     [TestMethod]
+    public void TrollBanditToughness_TheTwinsOnly_300HitPointsAnd70PercentDamage()
+    {
+        // Mike, 2026-09-29: the wild trolls wear no armour, so they are made tougher another way, milder than either
+        // alone: +100 hit points on the race's 200, and 70% of every hit. Mordor's own trolls keep the race values.
+        foreach (var twin in new[] { "taom_troll_bandit_cave", "taom_troll_bandit_hill" })
+        {
+            Assert.AreEqual(100, CreatureBanditRules.TrollBanditHitPointsBonus(twin), twin);
+            Assert.AreEqual(0.7f, CreatureBanditRules.TrollBanditDamageTakenFactor(twin), 1e-6f, twin);
+        }
+        foreach (var other in new[] { "cave_troll", "hill_troll", Brood, "looter", null })
+        {
+            Assert.AreEqual(0, CreatureBanditRules.TrollBanditHitPointsBonus(other), other ?? "null");
+            Assert.AreEqual(1f, CreatureBanditRules.TrollBanditDamageTakenFactor(other), other ?? "null");
+        }
+    }
+
+    [TestMethod]
     public void IsTrollBandClan_TheTrollClanOnly()
     {
         Assert.IsTrue(CreatureBanditRules.IsTrollBandClan("wild_trolls"));

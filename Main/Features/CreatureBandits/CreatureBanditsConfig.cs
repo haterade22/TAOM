@@ -59,8 +59,8 @@ public static class CreatureBanditsConfig
 
     /// <summary>
     /// Troll bands (#694): hidden bandit twins of Mordor's <c>cave_troll</c> and <c>hill_troll</c>
-    /// (characters/troll_bandits.xml). They are humanoid and fight as ordinary troops, so no creature seam takes them;
-    /// only the prisoner rule does. They appear only in the troll band template, never in a volunteer pool or a lord's
+    /// (characters/troll_bandits.xml). They are humanoid, so no creature seam takes them; the prisoner rule and their
+    /// toughness in place of armour do. They appear only in the troll band template, never in a volunteer pool or a lord's
     /// template, and Mordor's own trolls stay untouched.
     /// </summary>
     public static readonly IReadOnlyList<string> TrollBanditTroopIds = new[]
@@ -74,6 +74,14 @@ public static class CreatureBanditsConfig
     /// caps vanilla's map-wide spawn at zero and <c>TrollBandSpawnBehavior</c> keeps one band per kingdom.
     /// </summary>
     public const string TrollClanId = "wild_trolls";
+
+    /// <summary>
+    /// A bandit troll's toughness in place of armour (Mike, 2026-09-29: the wild trolls wear none): hit points on top of
+    /// the race's (troll races 200, so 300), and the share of every hit it takes. Mordor's trolls keep the race values.
+    /// </summary>
+    public const int TrollBanditExtraHitPoints = 100;
+
+    public const float TrollBanditDamageTaken = 0.7f;
 
     /// <summary>The MCM "Spawn Troll Bands" default; the same rename rule as <see cref="DefaultSpawnBroods"/>.</summary>
     public const bool DefaultSpawnTrollBands = true;

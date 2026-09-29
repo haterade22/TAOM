@@ -1705,13 +1705,13 @@
 
 	<!-- Wild Trolls (#694): one band, two to four trolls (Mike, 2026-09-28: "Max trolls should be 4, min should
 	     be 2"). Vanilla's bandit roll is min + (max - min) x ratio with the ratio below 1 (v1.5.3
-	     DefaultPartySizeLimitModel.cs:346-399) and Patch39 caps its growth at each max_value, so the stack sums
-	     bound the band. The cave troll is the FIRST stack: roster index 0 leads the map icon, drawn with the
-	     race's as_cave_troll_map action set. -->
+	     DefaultPartySizeLimitModel.cs:346-399) and Patch39 caps its growth at max_value, so the stack bounds the
+	     band. Hill trolls only for now (Mike, 2026-09-29): the wild trolls wear no armour, and a bare cave troll's
+	     body has no cloth (its trousers belong to the armour mesh), where the hill troll has its own. The leader
+	     draws the map icon with the race's as_hill_troll_map action set. -->
 	<MBPartyTemplate id="wild_trolls_band_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.taom_troll_bandit_cave" />
-			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.taom_troll_bandit_hill" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.taom_troll_bandit_hill" />
 		</stacks>
 	</MBPartyTemplate>
 
