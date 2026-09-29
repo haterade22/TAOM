@@ -4897,3 +4897,10 @@ Claude convergence reviewer checked the last fix. Full suite 10,979 passed, 2 sk
 RCA `docs/reviews/rca-creature-bandits-2026-09-28.md`; raw outputs
 `docs/reviews/raw/codex-adversarial-creature-bandits-2026-09-28.md` and
 `codex-adversarial-creature-bandits-fixes-2026-09-28.md`.
+
+## Review (number assigned at merge): Wild Troll bands and the twenty-brood cap (#694), 8-lens deep review + convergence + Codex gpt-6-astra xhigh (2026-09-28)
+
+- **Scope:** `feat/troll-bandits`, 56 files on `6df36909` (commit `b9fdaaf7`): 20 broods over 47 Mirkwood and Dol Guldur settlements, Wild Troll bandit bands one per kingdom, the Patch94 join-list prefix, the freed-prisoner override, out-of-sight spawns.
+- **Claude:** 0 CRITICAL, 0 HIGH, 5 MED, 8 LOW, all fixed; RCA `docs/reviews/rca-troll-bandits-2026-09-28.md`. Lenses 2 and 5 found the bandit join path independently; lens 7 found the 24 missing castle villages by parsing the live map.
+- **Codex:** 0 defects, 6 of 6 suspects disputed with engine code, 1 LOW observation (the out-of-sight retry was not vanilla's algorithm), fixed. Codex did especially well pasting the StoryMode and NavalDLC wrappers from the installed DLLs.
+- **Final suite:** 11,010 passed, 2 skipped, 0 failed (on the trunk merge).

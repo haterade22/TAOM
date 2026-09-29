@@ -154,10 +154,10 @@ public class CreatureBanditsWiringTests
         var brood = RepoPaths.ReadSource("Main/Features/CreatureBandits/CreatureBroodSpawnBehavior.cs", stripComments: true);
         StringAssert.Contains(brood, "CreatureBandParties.Spawn(");
         StringAssert.Contains(brood, "CreatureBandParties.ReturnStraysToPatrol(");
-        // #694 (Mike): like vanilla's bandits, a band tries for a spawn point outside the player's sight. The in-game
+        // #694 (Mike): vanilla's own out-of-sight rule (Codex O1: retries around the first point, path distance). The in-game
         // proof is the spawn line's fromPlayer above playerSight.
         StringAssert.Contains(RepoPaths.ReadSource("Main/Features/CreatureBandits/CreatureBandParties.cs", stripComments: true),
-            "i < OutOfSightRetries && position.DistanceSquared(player.Position) < sight * sight");
+            "DistanceHelper.FindClosestDistanceFromMobilePartyToPoint(player, retry, MobileParty.NavigationType.Default, out _)");
     }
 
     [TestMethod]

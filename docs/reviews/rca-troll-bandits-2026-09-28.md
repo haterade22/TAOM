@@ -24,6 +24,16 @@ below are fixed in this change; the not-applied proposals and follow-ups close t
 | 12 | LOW | The campaign diagnostics' battle and destruction lines keyed on the brood clan only, and troll prisoner refusals could be crowded out of the 10-line cap. | Diagnostics | Written for #692. | Both clans; the first refusal of each troop always logs. |
 | 13 | LOW | Documentation duty: the model registry rows, the landless-culture allowlist mirrors, INDEX, troll-race, bandit-management, the roadmap's translation line and the in-game checklist lacked the troll bands. | Completeness | The feature doc was updated; its satellites were not swept. | All updated; checklist added to the feature doc. |
 
+## Codex pass (2026-09-28)
+
+Codex (xhigh, on `b9fdaaf7`; raw output `docs/reviews/raw/codex-adversarial-troll-bandits-2026-09-28.md`) confirmed no
+defect and disputed all six suspects with engine code (the join-list prefix, hero prisoners and the StoryMode and
+NavalDLC wrappers, the kingdom count, the bandit-occupation twins, the 47 anchors). One LOW observation, O1: the
+out-of-sight retry resampled around the anchor and compared straight-line distance, where vanilla retries around
+its first point with reachable points and the path distance, and keeps the first point when every retry fails. Fixed:
+`CreatureBandParties.OutOfPlayerSight` is vanilla's `GetSpawnPositionAroundSettlement` step for step. Why missed:
+finding 6's fix copied the rule's intent from the lens's summary rather than from the vanilla method itself.
+
 ## Root-cause pattern
 
 Findings 1 and 4 share one shape: a contract ("never recruited", "trolls only") was proved at the gate the author
