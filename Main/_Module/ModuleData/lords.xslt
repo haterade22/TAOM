@@ -877,8 +877,8 @@
                 <Trait id="Authoritarian" value="2" />
             </Traits>
             <Equipments>
-            	<EquipmentSet id="mordor_num_bat_template_lord_inf" />
-            	<EquipmentSet id="mordor_num_civ_template_lord_inf" equipmentType="Civilian" />
+            	<EquipmentSet id="mordor_num_bat_template_mouth_of_sauron" />
+            	<EquipmentSet id="mordor_num_civ_template_mouth_of_sauron" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>

@@ -138,7 +138,9 @@ motion at its roots (channel 46: head 5.58 mm, beard 5.61 mm; mean error under 1
 Saruman's hair and beard came with 101 channels, zero on the head's largest ones (46: scalp 42 mm, hair 0). Whether
 the engine reads those channels at all is unproven; vanilla does not need them (Mike, 2026-09-28: follow vanilla).
 A tool that fitted them (`fit_hair_morphs.py`, 2026-09-28) was written, applied to Saruman's FBX and removed the
-same day for that reason; the live FBX keeps the fitted channels and the original is at `.bak-hairfollow`.
+same day for that reason. Saruman's hair and beard were then stripped to vanilla's shape (no channels) with
+`tools/blender/strip_upper_mesh_channels.py` (2026-09-28 20:05; backups `.bak-stripupper`, the fitted file, and
+`.bak-hairfollow`, the original); a Kit re-import and an in-game look are owed.
 
 ## Eye colour
 
@@ -160,6 +162,7 @@ array and does not clamp the count (the skin parser 0x577410, v1.5.3), so a grad
 | `tools/check_race_morph_channels.py` | Reinstall gate on the FBX sources: exact channel counts |
 | `tools/check_eye_follow.py` (export: `export_face_morphs.ps1`) | Gate on the compiled package: no eye left behind |
 | `tools/oneoff/restore_adult_woman_dwarf.py` | The female dwarf's skin restore; its dry run prints the live state |
+| `tools/blender/strip_upper_mesh_channels.py` | Removes every morph channel from named hair and beard meshes and their LODs, the vanilla shape; refuses face parts |
 | `tools/oneoff/add_sauron_eye_colours.py` | Gold and red stops on the `sauron` race's eye slider; `--check` exits 1 when a skin lacks them |
 
 ## What the 2026-09-26 investigation ruled out
