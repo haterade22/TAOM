@@ -68,3 +68,16 @@ completeness claim was proved against a copy, not the source. The prevention is 
 ## Feedback memories to codify
 
 None beyond the two lessons: both are review-time rules, not session preferences.
+
+## Follow-up: `taom.spawn_creature_band` (2026-09-29)
+
+A Tier C console command so Mike can meet a band on the map. Six-lens review plus convergence: no HIGH, one MEDIUM,
+LOWs; all fixed except the enlisted state, decided as allowed (the band spawns beside the commander's column).
+
+| # | Sev | Bug | Why missed | Fix |
+|---|-----|-----|------------|-----|
+| F1 | MED | The `brood-spawn` line did not say a band came from the console, so a console spawn beside the player read as a failure of checklist step 8 (spawns land out of sight). | The flag changed placement only; nobody followed it to the line the checklist reads. | `origin=console|spawner`; step 8 reads only spawner lines. |
+| F2 | LOW | "Refused in a siege" missed a player defending inside a besieged town: `MobileParty.SiegeEvent` is `BesiegerCamp?.SiegeEvent` (v1.5.3 `MobileParty.cs:1164`). | The member's name promised more than its body. | `PlayerSiege.PlayerSiegeEvent`, which also reads the settlement's siege; the Tier C state list is in the class summary. Lesson in `campaign-mechanics.md`. |
+| F3 | LOW | "Beside the player" was false: the point was drawn up to 20.5 units around the nearest settlement's gate, visible about a third of the time by day. | The flag removed the push out of sight but nothing pulled the band in. | The band spawns within a quarter of the player's sight, homed on the nearest settlement. |
+| F4 | LOW | The dry run named the owner clan for a fief outside any kingdom, where the band covers no kingdom. | `MapFaction` read as "kingdom". | It prints the kingdom, or "no kingdom (a cap slot only)". |
+| F5 | LOW | Undocumented `spiders` alias, test names off the convention, missing pins (battle refusal, `broods confirm`, the spawners' out-of-sight path), doc gaps (checklist rules the command skips, Tests, Changelog). | First draft. | All fixed. |

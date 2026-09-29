@@ -479,3 +479,9 @@ Creature Bandits refused spiders, then bandit trolls, as prisoners in `TaomBattl
 - **Why missed:** the contract was proved at the one seam its author knew (capture), and the no-parley patch seemed to close the encounter surface, though it only sees the party the player talks to. Bandit clans are not at war with each other, so any nearby band joins the talked-down party's side.
 - **Prevent:** before stating that a troop can never reach a party, enumerate the engine's roster transfers and check each: capture (`CaptureDefeatedPartyMembers`), freed-prisoner loot (`LootDefeatedPartyPrisoners`), the bandit join and surrender dialogues, prisoner recruitment, volunteers and party templates. A contract about a party's makeup ("trolls only") also covers who can join it after a battle.
 - **Source:** #694, `docs/reviews/rca-troll-bandits-2026-09-28.md` findings 1 and 4; lenses 2 and 5 found the join path independently.
+
+### "Is the player in a siege" is `PlayerSiege.PlayerSiegeEvent`, not `MobileParty.SiegeEvent`
+`MobileParty.SiegeEvent` is `BesiegerCamp?.SiegeEvent` (v1.5.3 `MobileParty.cs:1164`): it sees only a besieging party. A player defending inside a besieged town or castle, between assaults, has no `BesiegerCamp` and no `MapEvent`, so a guard on those two lets him through. Vanilla's own question is `PlayerSiege.PlayerSiegeEvent`, which falls back to `MainParty.CurrentSettlement.SiegeEvent` (`PlayerSiege.cs:16-31`).
+- **Why missed:** the member's name promised "the party's siege"; its one-line body was not read.
+- **Prevent:** for the player, ask `PlayerSiege.PlayerSiegeEvent`; for another party, check both its `BesiegerCamp` and its `CurrentSettlement?.SiegeEvent`. Read the body of any engine member whose name is the whole of a guard.
+- **Source:** `taom.spawn_creature_band`, `docs/reviews/rca-troll-bandits-2026-09-28.md` follow-up F2; lenses 1, 2, 5 and 6 found it independently.

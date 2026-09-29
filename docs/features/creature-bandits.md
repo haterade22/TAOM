@@ -184,7 +184,8 @@ keeps each twin equal to its Mordor troll, and keeps the twins out of every othe
 | `Main/Features/CreatureBandits/BehaviorTreeElements/` | Creature gate, deployment gate, hold and hunt |
 | `Main/Features/CreatureBandits/CreatureBroodSpawnBehavior.cs` | Mirkwood brood spawner |
 | `Main/Features/CreatureBandits/TrollBandSpawnBehavior.cs` | Troll band spawner, one band per kingdom |
-| `Main/Features/CreatureBandits/CreatureBandParties.cs` | The spawn and re-patrol steps both spawners share |
+| `Main/Features/CreatureBandits/CreatureBandParties.cs` | The spawn and re-patrol steps both spawners and the console command share |
+| `Main/Features/CreatureBandits/Cheats/CreatureBandCheats.cs` | `taom.spawn_creature_band`: one band or brood beside the player, for testing |
 | `Main/Features/CreatureBandits/CreatureBanditTuning.cs`, `Main/Features/TaomSettings.cs` (group "Creature Bandits") | The creature's numbers and their MCM options |
 | `Main/Features/Spider/SpiderStrikes.cs` | Strike rules as data: per-attack target cap, damage multiplier, crit-only knockdown |
 | `Main/Features/CreatureBandits/Hooks/CreatureBanditDamage.cs`, `Models/TaomCustomBattleCreatureDamageModel.cs` | Damage taken, campaign and Custom Battle |
@@ -213,6 +214,8 @@ keeps each twin equal to its Mordor troll, and keeps the twins out of every othe
 - `TAOM.Tests/Features/CreatureBandits/CreatureBanditRulesTests.cs`: every rule, including the deployment gate,
   the routed backstop's mount condition, the patrol rule, the MCM switch, the cap of 20, and the troll rules (the
   twins, both clans, the prisoner rule, the kingdoms owed a band, the freed-prisoner renormalisation).
+- `TAOM.Tests/Features/CreatureBandits/CreatureBandCheatsTests.cs`: `taom.spawn_creature_band`'s parser (a typo is an
+  error, `confirm` is literal) and pins for its quarter-sight point and every refusal.
 - `TAOM.Tests/Features/CreatureBandits/CreatureBanditLiveDataTests.cs` (LiveInstall): the brood anchors equal every
   Mirkwood and Dol Guldur town, castle and village on the live map, and both troll `_map` action sets exist.
 - `TAOM.Tests/Features/CreatureBandits/TrollBanditDataTests.cs`: the troll XML matches the catalogue and loads in the
@@ -264,6 +267,11 @@ keeps each twin equal to its Mordor troll, and keeps the twins out of every othe
 ## In-game checklist (#694)
 
 Restart the game, then start a **new campaign**. The `[CreatureBandits][diag]` lines are in `taom_debug_*.log`.
+To meet one at once, with cheat mode on: `taom.spawn_creature_band trolls confirm` (or `broods`) spawns one beside
+your party; without `confirm` it is a dry run. It shares the spawners' party step but none of their daily rules: it
+ignores the MCM switches and the cap, still takes a cap slot, and is homed on your nearest town, castle or village.
+Use it for steps 3 to 7; run steps 1, 2, 8 and 9 on spawner bands, first or on another save. While enlisted, the band
+spawns beside your commander's column.
 
 1. `campaign-start` shows `missingAnchors=-`, and the `daily` line's `broods=` climbs by one a day to 20.
 2. Over the first weeks the `troll-daily` line's `kingdomsOwed=` falls to 0, `looterCap=0`, and its `list` shows
@@ -276,7 +284,8 @@ Restart the game, then start a **new campaign**. The `[CreatureBandits][diag]` l
 6. With Partners in Crime, talk down a looter party next to a troll band and pick "serve under my command": the
    looters join, the trolls do not and stay on the map.
 7. Lose to a troll band while holding looter prisoners: the band's `list` entry keeps its troll count only.
-8. New `brood-spawn` lines show `fromPlayer` above `playerSight`.
+8. New `brood-spawn` lines with `origin=spawner` show `fromPlayer` above `playerSight` (a retry is accepted on path
+   distance, so a line just under it can still be right; `origin=console` lines are placed beside you on purpose).
 9. MCM "Spawn Troll Bands" off: no new bands; live ones stay.
 10. An older save: one "No 'wild_trolls' clan" line; its broods grow to 20 over the new anchors.
 11. Custom Battle: `taom.spawn_troops taom_troll_bandit_cave 2 enemy` spawns trolls that fight normally.
@@ -341,6 +350,9 @@ After sign-off, delete `Main/Features/CreatureBandits/Diagnostics/` and every ca
   to four bandit trolls, about one per kingdom, never prisoners, no parley, with their own MCM switch (#694). Deep
   review: the 24 castle-bound villages added (47 anchors, pinned to the live map), no brood or band joins the player
   through the bandit join path, bands stay trolls only, spawns avoid the player's sight, one census line a day.
+- 2026-09-29: `taom.spawn_creature_band trolls|broods [confirm]` (Tier C) spawns one band or brood beside the player
+  for testing; `CreatureBandParties.Spawn` takes an optional point, and the `brood-spawn` line carries
+  `origin=console|spawner` (#694).
 
 ## GitHub Issue
 

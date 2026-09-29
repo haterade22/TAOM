@@ -158,6 +158,11 @@ public class CreatureBanditsWiringTests
         // proof is the spawn line's fromPlayer above playerSight.
         StringAssert.Contains(RepoPaths.ReadSource("Main/Features/CreatureBandits/CreatureBandParties.cs", stripComments: true),
             "DistanceHelper.FindClosestDistanceFromMobilePartyToPoint(player, retry, MobileParty.NavigationType.Default, out _)");
+        // Only the console command places a band itself; the daily spawners keep the out-of-sight draw.
+        StringAssert.Contains(RepoPaths.ReadSource("Main/Features/CreatureBandits/CreatureBandParties.cs", stripComments: true),
+            "CampaignVec2 point = at ?? OutOfPlayerSight(");
+        StringAssert.Contains(src, "CreatureBandParties.Spawn(clan, settlements[MBRandom.RandomInt(settlements.Count)]);");
+        StringAssert.Contains(brood, "CreatureBandParties.Spawn(clan, anchors[MBRandom.RandomInt(anchors.Length)]);");
     }
 
     [TestMethod]

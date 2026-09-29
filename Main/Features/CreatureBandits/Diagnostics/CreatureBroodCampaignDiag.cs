@@ -79,12 +79,15 @@ internal static class CreatureBroodCampaignDiag
         return list.Length == 0 ? "-" : list.ToString();
     }
 
-    /// <summary>A new brood: where, what it carries, and how far from the player.</summary>
-    internal static void Spawned(MobileParty brood, Settlement anchor, float radius) => Guard("spawn", () =>
+    /// <summary>
+    /// A new brood or troll band: where, what it carries, and how far from the player. <c>origin=console</c> marks one
+    /// <c>taom.spawn_creature_band</c> placed beside the player, which the out-of-sight check does not apply to.
+    /// </summary>
+    internal static void Spawned(MobileParty brood, Settlement anchor, float radius, string origin) => Guard("spawn", () =>
     {
         var main = MobileParty.MainParty;
         string roster = string.Join(",", brood.MemberRoster.GetTroopRoster().Select(e => e.Character.StringId + ":" + I(e.Number)));
-        CreatureBanditDiag.Logger?.LogInfo(CampaignLine("brood-spawn", Day, "party", brood.StringId, "anchor", anchor.StringId,
+        CreatureBanditDiag.Logger?.LogInfo(CampaignLine("brood-spawn", Day, "party", brood.StringId, "origin", origin, "anchor", anchor.StringId,
             "anchorName", Name(anchor.Name?.ToString()), "radius", F(radius),
             "pos", F(brood.Position.ToVec2().x) + "," + F(brood.Position.ToVec2().y), "roster", roster,
             "troops", I(brood.MemberRoster.TotalManCount), "aggressiveness", F(brood.Aggressiveness),

@@ -23,20 +23,23 @@ internal static class CreatureBandParties
 {
     private const int OutOfSightRetries = 15;
 
-    internal static void Spawn(Clan clan, Settlement anchor)
+    /// <param name="at">Where the band appears. Null (the daily spawners) draws a point around the anchor, out of the
+    /// player's sight; <c>taom.spawn_creature_band</c> passes one beside the player. The anchor stays its home either way.</param>
+    internal static MobileParty Spawn(Clan clan, Settlement anchor, CampaignVec2? at = null)
     {
         float radius = CreatureBanditsConfig.SpawnRadiusDays * Campaign.Current.EstimatedAverageBanditPartySpeed * CampaignTime.HoursInDay;
-        CampaignVec2 position = OutOfPlayerSight(
+        CampaignVec2 point = at ?? OutOfPlayerSight(
             NavigationHelper.FindPointAroundPosition(anchor.GatePosition, MobileParty.NavigationType.Default, radius), radius);
         MobileParty band = BanditPartyComponent.CreateLooterParty(clan.StringId + "_1", clan, anchor, isBossParty: false,
-            clan.DefaultPartyTemplate, position);
+            clan.DefaultPartyTemplate, point);
 
         band.Party.SetVisualAsDirty();
         band.ActualClan = clan;
         band.Aggressiveness = 1f - 0.2f * MBRandom.RandomFloat;
         band.InitializePartyTrade(0);
         band.SetMovePatrolAroundSettlement(anchor, MobileParty.NavigationType.Default, isTargetingPort: false);
-        CreatureBroodCampaignDiag.Spawned(band, anchor, radius);
+        CreatureBroodCampaignDiag.Spawned(band, anchor, radius, at.HasValue ? "console" : "spawner");
+        return band;
     }
 
     // Vanilla's rule, step for step (v1.5.3 BanditSpawnCampaignBehavior.GetSpawnPositionAroundSettlement, 543-564): a
