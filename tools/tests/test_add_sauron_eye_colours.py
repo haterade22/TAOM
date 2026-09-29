@@ -47,6 +47,45 @@ class PlanTests(unittest.TestCase):
         with self.assertRaises(SystemExit):
             asc.plan("<base><race id=\"elf\"></race></base>")
 
+    @staticmethod
+    def _with_stops(n):
+        many = "".join('<eye_color_gradient_point point="0.%02d, 0.1, 0.1" />' % i for i in range(n))
+        return ('<base><race id="sauron"><skin><eye_color_gradient_points>' + many
+                + '</eye_color_gradient_points></skin></race></base>')
+
+    def test_a_gradient_past_the_engine_cap_is_refused(self):
+        with self.assertRaisesRegex(SystemExit, "33 eye colour stops"):
+            asc.plan(self._with_stops(29))
+
+    def test_a_gradient_reaching_exactly_the_engine_cap_is_accepted(self):
+        _, changed, _ = asc.plan(self._with_stops(28))
+        self.assertEqual(changed, 1)
+
+    def test_a_race_whose_skins_hold_no_gradient_is_refused(self):
+        with self.assertRaises(SystemExit):
+            asc.plan('<base><race id="sauron"><skin></skin><skin></skin></race></base>')
+
+    def test_a_race_with_no_skins_is_refused(self):
+        with self.assertRaises(SystemExit):
+            asc.plan('<base><race id="sauron"></race></base>')
+
+
+class CheckTests(unittest.TestCase):
+    def _write(self, text):
+        import tempfile
+        fd, path = tempfile.mkstemp(suffix=".xml")
+        os.close(fd)
+        open(path, "wb").write(text.encode("utf-8"))
+        self.addCleanup(os.remove, path)
+        return path
+
+    def test_check_fails_while_a_skin_lacks_the_bands(self):
+        self.assertEqual(asc.main(["--skins", self._write(DOC), "--check"]), 1)
+
+    def test_check_passes_once_every_skin_has_them(self):
+        done, _, _ = asc.plan(DOC)
+        self.assertEqual(asc.main(["--skins", self._write(done), "--check"]), 0)
+
 
 if __name__ == "__main__":
     unittest.main()

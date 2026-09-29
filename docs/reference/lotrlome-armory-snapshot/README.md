@@ -63,10 +63,11 @@ After restoring from this snapshot — or after any LOTRLOME update — `action_
 | `goblin` | `as_goblin_facegen`, `as_goblin_female_facegen` | LOTRLOME pre-2026-05-04 + 1.3 aliases |
 | `orc` | `as_orc_facegen`, `as_orc_female_facegen` | LOTRLOME pre-2026-05-04 + 1.3 aliases |
 | `pale_uruk` | `as_pale_uruk_facegen`, `as_pale_uruk_female_facegen` | LOTRLOME pre-2026-05-04 + 1.3 aliases |
+| `saruman` | `as_saruman_facegen`, `as_saruman_female_facegen` | LOTRLOME; offered by Isengard since `0934f65d` |
 | `uruk` | `as_uruk_facegen`, `as_uruk_female_facegen` | LOTRLOME pre-2026-05-04 + 1.3 aliases |
 | `uruk_hai` | `as_uruk_hai_facegen`, `as_uruk_hai_female_facegen` | LOTRLOME pre-2026-05-04 + 1.3 aliases |
 
-The races `hill_troll`, `nazghul`, and `saruman` also have `_facegen` entries in LOTRLOME but are not consumed by any TAOM culture (`nazghul` is on the Nine themselves since #644, but no culture offers it); they're listed here only so a future re-snapshot doesn't accidentally drop them.
+The races `hill_troll` and `nazghul` also have `_facegen` entries in LOTRLOME but are not consumed by any TAOM culture (`nazghul` is on the Nine themselves since #644, but no culture offers it); they're listed here only so a future re-snapshot doesn't accidentally drop them. `saruman` has them too and IS consumed: Isengard offers it in character creation (`cultures.json`, since `0934f65d`), and the lord `lord_I1_0` (Saruman the White, 2026-09-28) is of that race, which `CultureRaceConsistencyTests` requires the culture to offer.
 
 The `sauron` race (issue #321 — elf clone for lord_1_17, adult `min_scale` 1.40, appended at the END of `skins.xml`/`monsters.xml`) is NPC-only and **intentionally has NO `_facegen` entries**: (**No longer a *verbatim* clone as of 2026-07-23** — the elf race's female skins moved to the vanilla human female basemesh while sauron's deliberately did not, since no female sauron ever spawns. A future "re-sync sauron with elf" audit must NOT undo that divergence.) facegen action_sets are required only for CC-playable races, and no culture's `cultures.json` `races[]` lists `sauron`. Do not "fix" sauron's **facegen** in a future facegen audit — it stays intentionally absent (NPC-only, not CC-playable; battles/conversations use `Monster.ActionSetCode` = `as_human_warrior` directly). Its settlement/map **civilian** sets, which the engine GENERATES from the base monster id (`as_sauron_lord`, `as_sauron_villager`, `as_sauron_map`, … via `ActionSetCode.GenerateActionSetNameWithSuffix` / `MBGlobals.GetActionSetWithSuffix`), formerly didn't exist and resolved through the engine's **native silent fallback** on missing ids — the same path elf rode. As of **2026-07-11** those civilian sets are authored for sauron — and elf, plus the 3 prop-carry sets every non-human race was missing — as `as_human_*` aliases; see "Civilian action-set family coverage" below.
 
@@ -244,6 +245,24 @@ block's state: "restored" or "stopgap"), `python tools/check_race_morph_channels
 and mouth, 26 on the arms), `python tools/check_eye_follow.py --package "<Armory>/Assets/Race Test/dwarf/sk_dwarf_bm_f1_geo.tpac"
 --metamesh sk_dwarf_bm_f1_head` (fails when an eye stays still in a moving socket), and
 `python tools/validate_mesh_refs.py --no-rgl-log`.
+
+### ⚠️ APPLIED EDIT: gold and red eye colours on the `sauron` race (2026-09-28)
+
+**One live edit an Armory reinstall WILL revert: `ModuleData/skins.xml`, the `<race id="sauron">` block.**
+
+- **What.** Each of the race's 10 skins gained four stops at the end of `eye_color_gradient_points`: gold
+  `1.00, 0.72, 0.08` twice, then red `1.00, 0.01, 0.014` twice (Saruman's gradient ends in the same red twice). 80
+  lines added, none removed; LF and no BOM kept. Written by `tools/oneoff/add_sauron_eye_colours.py --apply`; live
+  backup `skins.xml.bak-sauron-eyes-20260928-145427`. This snapshot was refreshed from the live file the same day.
+- **Why the `sauron` race and not `elf`.** A character stores its eye colour as a position along the gradient, so new
+  stops on `elf` would most likely move every existing elf's eyes; `sauron` is used by `lord_1_17` only. His face
+  key (`lords.xslt`, 2026-09-28) was built with these stops present, so a reinstall that drops them changes his
+  eyes silently.
+- **Limits.** The engine keeps at most 32 stops per skin and does not clamp the count; `sauron` now has 24. The
+  skins XSD wants each stop unique and the engine does not check; the repeated stops load, as Saruman's do.
+
+**Gate after any Armory update:** `python tools/oneoff/add_sauron_eye_colours.py --check` (exit 1 while a sauron
+skin lacks the stops; `--apply` restores them).
 
 ### Two dwarf-skin divergences from vanilla that are NOT defects
 
@@ -480,7 +499,9 @@ the cache free of wrong-script words, so a replay cannot bring the CNs damage ba
 
 ## Snapshot date
 
-2026-09-27: `skins.xml` refreshed from live and equal to it after line-ending normalisation (5,834,843 bytes, CRLF;
+2026-09-28: `skins.xml` refreshed from live and equal to it after line-ending normalisation (5,837,963 bytes, CRLF; live 5,619,270, LF): the gold and red eye stops on the `sauron` race (APPLIED EDIT above, 80 lines). The other files are as below.
+
+Previous: 2026-09-27: `skins.xml` refreshed from live and equal to it after line-ending normalisation (5,834,843 bytes, CRLF;
 live 5,616,060, LF): the adult woman dwarf restore above (19 values) and the live change of 2026-09-26 11:28 that
 removed the four `sk_dwarf_beard_a_10` beard entries. The other files are as below.
 

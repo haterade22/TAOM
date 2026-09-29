@@ -801,3 +801,14 @@ its values back. Damage fixed in the rows but left in the cache returns on the n
   (`NoCachedTranslation_MixesWritingSystems`); a word rule judges each hyphen-separated part of a name, so
   "Bahr al-Yeshm" and "Cigfran-lûth" stay clean.
 - **Source:** `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 36.
+
+### Read the View and its hotkeys before claiming a UI has no action (2026-09-28)
+`taom.print_face` was built because "the face editor has no copy or export action": `FaceGenVM` has no clipboard
+code. The copy lives in the view that hosts it: `BodyGeneratorView.TickInput` puts
+`CurrentBodyProperties.ToString()` on the clipboard on Ctrl+C (hotkeys from `FaceGenHotkeyCategory`), in character
+creation and the barber. The command, its tests and its doc rows were removed.
+- **Why missed:** the search stopped at the view model; Gauntlet screens put input handling in the view and the
+  hotkey category, which were never opened.
+- **Prevent:** before stating that a vanilla screen lacks an action, read its VM, its View (`TickInput`, `OnTick`)
+  and the hotkey categories it registers.
+- **Source:** `docs/reviews/rca-saruman-lord-and-faces-2026-09-28.md`.
