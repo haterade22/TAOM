@@ -72,8 +72,8 @@ An offline net8.0 command-line tool, separate from any mod; mods consume only it
    field camp and a refuge. Filing or labelling is on the maintainer's word.
 2. **The fork:** ask yotthani for read access to `TpacTool-bannerlord`, or for the diff of its patches (`4c8dfa8`,
    `5304748`). Once read: MithrilForge as a standalone tool in `E:\Tools\MithrilForge\` (the Ghidra precedent), its
-   own suite in Debug and Release against 1.5.3, a TAOM name check across all three modules' `Assets/` trees, a
-   `/new-map-prop` skill and a cube pilot in a module with no loose tree. First real prop: a per-culture field camp or
+   own suite in Debug and Release against 1.5.3, and a cube pilot in a module with no loose tree. The TAOM name
+   check (`validate_mesh_refs.py --check-name`) and the `/new-map-prop` skill exist since 2026-09-29. First real prop: a per-culture field camp or
    a Refuge variant, art chosen by the maintainer. Needs an issue.
 3. **The pose probe** from the 09-18 pass, still unbuilt: a dev-console command sampling an agent's bones every tick
    while an action plays, MithrilForge's "hand-height probe". Read bone frames, not weapon entity frames: MithrilForge

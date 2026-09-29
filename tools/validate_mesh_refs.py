@@ -60,6 +60,12 @@ Usage:
   python tools/validate_mesh_refs.py --items <dir> --tpac-modules LOTRLOME_Armory Native SandBoxCore
   python tools/validate_mesh_refs.py --json report.json --code MISSING_BODY
   python tools/validate_mesh_refs.py --unreferenced --prefix sk_gd_   (per-culture reverse audit)
+  python tools/validate_mesh_refs.py --check-name taom_camp_orc_a     (is a NEW mesh name free?)
+
+--check-name skips the audit and scans every module's loose Assets/ and AssetPackages/ alike
+(case ignored; the engine lowercases a requested name): exit 0 free, 1 taken (the holding
+packages are listed), 2 when a package could not be read and "free" cannot be claimed. The
+/new-map-prop skill runs it before a prop is built.
 
 Exit code (mirrors validate_moduledata.py): 1 if any ERROR (or any WARNING with
 --warnings-as-errors), 2 if an input path is bad, else 0.
@@ -468,6 +474,61 @@ def tpac_paths_for_modules(game_dir: Path, modules: list) -> list:
     for m in modules:
         out.extend(module_tpacs(game_dir / "Modules" / m, m))
     return out
+
+
+def find_mesh_name_owners(game_dir: Path, names: list) -> tuple:
+    """For a NEW mesh name: which packages already hold it, in BOTH trees of EVERY module.
+
+    Unlike tpac_paths_for_modules this reads a module's loose `Assets/**` and its `AssetPackages/`
+    alike: a clash in either can shadow or be shadowed, whichever tree the engine picks, and a
+    prop may be delivered through either (docs/reference/tpac-static-prop-authoring.md). The
+    engine lowercases a requested name, so the match ignores case.
+
+    Returns ({name: [package paths]}, [(path, error) for packages that could not be read]).
+    """
+    modules = Path(game_dir) / "Modules"
+    paths = []
+    for mod in sorted(p for p in modules.iterdir() if p.is_dir()) if modules.is_dir() else []:
+        paths.extend(sorted((mod / "Assets").rglob("*.tpac")))
+        paths.extend(sorted((mod / "AssetPackages").glob("*.tpac")))
+    wanted = {n.lower(): n for n in names}
+    owners = {n: [] for n in names}
+    unparsed = []
+    for p in paths:
+        res = scan_tpac_metameshes(p)
+        if not res.parsed_ok:
+            unparsed.append((res.path, res.error))
+        for held in res.metamesh_names:
+            if held.lower() in wanted:
+                owners[wanted[held.lower()]].append(res.path)
+    return owners, unparsed
+
+
+def check_names(game_dir: Path, names: list) -> int:
+    """--check-name: 0 when every name is free, 1 when any is taken, 2 when a free answer
+    cannot be trusted because a package could not be read."""
+    if not (Path(game_dir) / "Modules").is_dir():
+        print(f"ERROR: no Modules folder under {game_dir}; nothing was checked", file=sys.stderr)
+        return 2
+    owners, unparsed = find_mesh_name_owners(game_dir, names)
+    taken = False
+    for name in names:
+        if owners[name]:
+            taken = True
+            print(f"TAKEN {name}: {len(owners[name])} package(s)")
+            for path in owners[name]:
+                print(f"  {path}")
+        else:
+            print(f"FREE  {name}")
+    if taken:
+        return 1
+    if unparsed:
+        print(f"UNVERIFIED: {len(unparsed)} package(s) could not be read, so a name reported free "
+              f"may still be held there:")
+        for path, err in unparsed:
+            print(f"  {path}: {err}")
+        return 2
+    return 0
 
 
 def build_present_set(tpac_paths: list) -> PresentSet:
@@ -1102,10 +1163,17 @@ def main() -> int:
                          "set is never filtered.")
     ap.add_argument("--warnings-as-errors", action="store_true",
                     help="Exit non-zero if any WARNING is found, not just ERROR")
+    ap.add_argument("--check-name", action="append", default=None, metavar="NAME",
+                    help="Instead of the audit: is this new mesh name free in every package of "
+                         "every module, loose Assets/ and AssetPackages/ alike (repeatable; case "
+                         "is ignored). Exit 0 free, 1 taken, 2 unverified")
     args = ap.parse_args()
 
     items_root = Path(args.items)
     game_dir = Path(args.game)
+
+    if args.check_name:
+        return check_names(game_dir, args.check_name)
 
     if not items_root.exists():
         print(f"ERROR: item XML root not found: {items_root}", file=sys.stderr)

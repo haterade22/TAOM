@@ -920,5 +920,59 @@ class CliTests(unittest.TestCase):
         self.assertEqual(r1.returncode, 1, r1.stdout + r1.stderr)
 
 
+# --------------------------------------------------------------------------- #
+# --check-name: is a new mesh name free in every package of every module?      #
+# --------------------------------------------------------------------------- #
+class CheckNameTests(unittest.TestCase):
+    """A new prop's name must be free in BOTH trees of every module: a name that clashes in a
+    module's loose Assets/ or in its AssetPackages/ can shadow or be shadowed, whichever tree the
+    engine picks. The engine lowercases a requested name, so the match ignores case."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.game = Path(self._tmp.name)
+        self.loose = self.game / "Modules" / "ModA" / "Assets" / "props" / "a_geo.tpac"
+        self.cooked = self.game / "Modules" / "ModB" / "AssetPackages" / "pack0.tpac"
+        for path in (self.loose, self.cooked):
+            path.parent.mkdir(parents=True)
+            path.write_bytes(TpacBinaryParseTests._build_one_metamesh_tpac("taom_prop_a"))
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def test_reports_every_package_in_both_trees_that_holds_the_name(self):
+        owners, unparsed = vm.find_mesh_name_owners(self.game, ["taom_prop_a", "taom_free"])
+        self.assertEqual(sorted(owners["taom_prop_a"]), sorted([str(self.loose), str(self.cooked)]))
+        self.assertEqual(owners["taom_free"], [])
+        self.assertEqual(unparsed, [])
+
+    def test_the_match_ignores_case(self):
+        owners, _ = vm.find_mesh_name_owners(self.game, ["TAOM_Prop_A"])
+        self.assertEqual(len(owners["TAOM_Prop_A"]), 2)
+
+    def _run(self, *names):
+        cmd = [sys.executable, str(TOOL), "--game", str(self.game)]
+        for n in names:
+            cmd += ["--check-name", n]
+        return subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8")
+
+    def test_cli_exits_0_for_a_free_name_and_1_for_a_clash(self):
+        free = self._run("taom_free")
+        self.assertEqual(free.returncode, 0, free.stdout + free.stderr)
+        self.assertIn("taom_free", free.stdout)
+        clash = self._run("taom_free", "taom_prop_a")
+        self.assertEqual(clash.returncode, 1, clash.stdout + clash.stderr)
+        self.assertIn(str(self.cooked), clash.stdout)
+
+    def test_an_unreadable_package_makes_a_free_answer_unverified(self):
+        # A package the scanner cannot read might hold the name, so "free" cannot be claimed.
+        bad = self.game / "Modules" / "ModC" / "AssetPackages" / "broken.tpac"
+        bad.parent.mkdir(parents=True)
+        bad.write_bytes(b"not a tpac at all")
+        result = self._run("taom_free")
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertIn("broken.tpac", result.stdout + result.stderr)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

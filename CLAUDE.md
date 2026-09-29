@@ -59,6 +59,7 @@ instructions: follow its phases in order.
 | Game updated, or the GAME VERSION DRIFT banner | `/engine-bump` | before any build or test |
 | Armory sync or art drop, or the ARMORY ART DRIFT banner | `/armory-audit` | before any battle or tournament smoke |
 | New creature or mount; creature animation looks wrong | `/new-creature-mount`; `/refine-creature-anim` | once told "do it", not while sketching |
+| Custom static prop (camp, landmark) without the Kit | `/new-map-prop` | once told "do it" |
 | New feature | `/new-feature`, then offer `/freeze` | once told "do it" |
 | Culture, armor, lord skills | `/new-culture`, `/author-armor`, `/lord-skills` | |
 | New player-facing text; any `.xslt` edit | `/localize`; `/xslt-check` | always |

@@ -107,7 +107,8 @@ fallback.
   `meshes_shared_*` package, not in `map_icon_parts`, and the shard number changes between game versions
   (`_7` on 1.4.6 per MithrilForge; `_9` on 1.5.3, read by TAOM). Check a new name against every tpac of every loaded
   module, not one package. MithrilForge's own check covers `Native/AssetPackages` only; TAOM also loads the `Assets/`
-  trees of `TAOM_Map`, `LOTRLOME_Armory` and TAOM.
+  trees of `TAOM_Map`, `LOTRLOME_Armory` and TAOM. **TAOM:** `python tools/validate_mesh_refs.py --check-name <name>`
+  checks both trees of every module (exit 0 free, 1 taken, 2 unverified). The procedure is `/new-map-prop`.
 - Names go into XML attributes: lowercase ASCII letters, digits and underscore. Prefix TAOM props `taom_`.
 
 ## Budget
