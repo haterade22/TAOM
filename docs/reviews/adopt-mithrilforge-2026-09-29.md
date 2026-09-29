@@ -78,8 +78,8 @@ An offline net8.0 command-line tool, separate from any mod; mods consume only it
 3. **The pose probe** from the 09-18 pass, still unbuilt: a dev-console command sampling an agent's bones every tick
    while an action plays, MithrilForge's "hand-height probe". Read bone frames, not weapon entity frames: MithrilForge
    found the latter always identity, because a wielded weapon hangs natively on its bone. Needs an issue.
-4. **Nothing runs `tools/tests` on `bannerlord-1.5.x`:** the `python-tests` CI job triggers on `bannerlord-1.4.5`
-   only. A CI change, the maintainer's call.
+4. ~~Nothing runs `tools/tests` on `bannerlord-1.5.x`~~ **Done 2026-09-29:** `.github/workflows/python-tests.yml`
+   runs them on 1.5.x pushes and pull requests (Python 3.14 plus the test dependencies; the maintainer's call).
 
 **Tier 2, when a task needs it:** `meshmats` and `texdds` as TAOM tools on TAOM's own TpacTool.Lib; the `impact_sim`
 idea (weapon contact against the `combat_parameters.xml` window) for creature strikes.
