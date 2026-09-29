@@ -589,6 +589,8 @@ class Validator:
         # Creature Bandits (#692): the spider brood, vanilla looters' shape. No heroes at all
         # (its troops are hidden Occupation.Bandit creatures) and a valid initial_home_settlement.
         "mirkwood_spiders",
+        # Creature Bandits troll bands (#694): the same shape, hidden Occupation.Bandit trolls.
+        "wild_trolls",
         # Vanilla placeholder culture; carried by no TAOM lord or clan.
         "neutral_culture",
         # Vanilla minor-faction cultures TAOM inherits but never re-cultured

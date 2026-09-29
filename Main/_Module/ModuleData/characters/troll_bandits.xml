@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+
+  <!-- Troll bands (#694): wild trolls as bandits, about one band of two to four per kingdom, hostile only and never
+       recruitable. Each is a hidden twin of a Mordor troll (troops/troops_mordor.xml): the same race, level, skills,
+       face and gear, the combination already proven to render and fight, so every race-keyed troll trait applies
+       (hit points, knockdown resistance, brute force). Only the identity differs: bandit occupation, the wild_trolls
+       culture, hidden from the encyclopedia, and their own ids, which the prisoner rule refuses
+       (CreatureBanditsConfig.TrollBanditTroopIds) while Mordor's trolls stay capturable. They appear only in
+       wild_trolls_band_template; TrollBanditDataTests keeps the twins equal to their Mordor originals. -->
+
+    <NPCCharacter
+        id="taom_troll_bandit_cave"
+        race="cave_troll"
+        default_group="Infantry"
+        level="51"
+        is_basic_troop="false"
+        is_hero="false"
+        is_hidden_encyclopedia="true"
+        name="{=taom_troll_bandit_cave_name}Cave Troll"
+        occupation="Bandit"
+        culture="Culture.wild_trolls">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_cave_troll" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="185" />
+            <skill
+                id="Riding"
+                value="35" />
+            <skill
+                id="OneHanded"
+                value="350" />
+            <skill
+                id="TwoHanded"
+                value="335" />
+            <skill
+                id="Polearm"
+                value="345" />
+            <skill
+                id="Bow"
+                value="35" />
+            <skill
+                id="Crossbow"
+                value="25" />
+            <skill
+                id="Throwing"
+                value="105" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_cave_troll_1h_mace_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.lotr_troll_helmet" />
+                <equipment
+                    slot="Body"
+                    id="Item.lotr_troll_armor" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.lotr_troll_bracers" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_cave_troll_1h_mace_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.lotr_troll_helmet" />
+                <equipment
+                    slot="Body"
+                    id="Item.lotr_troll_armor" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.lotr_troll_bracers" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_cave_troll_1h_mace_c" />
+                <equipment
+                    slot="Head"
+                    id="Item.lotr_troll_helmet" />
+                <equipment
+                    slot="Body"
+                    id="Item.lotr_troll_armor" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.lotr_troll_bracers" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_cave_troll_2h_mace_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.lotr_troll_helmet" />
+                <equipment
+                    slot="Body"
+                    id="Item.lotr_troll_armor" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.lotr_troll_bracers" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_cave_troll_spear_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.lotr_troll_helmet" />
+                <equipment
+                    slot="Body"
+                    id="Item.lotr_troll_armor" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.lotr_troll_bracers" />
+            </EquipmentRoster>
+            <EquipmentRoster
+                civilian="true">
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_cave_troll_spear_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.lotr_troll_helmet" />
+                <equipment
+                    slot="Body"
+                    id="Item.lotr_troll_armor" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.lotr_troll_bracers" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="taom_troll_bandit_hill"
+        race="hill_troll"
+        default_group="Infantry"
+        level="51"
+        is_basic_troop="false"
+        is_hero="false"
+        is_hidden_encyclopedia="true"
+        name="{=taom_troll_bandit_hill_name}Hill Troll"
+        occupation="Bandit"
+        culture="Culture.wild_trolls">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_cave_troll" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="185" />
+            <skill
+                id="Riding"
+                value="35" />
+            <skill
+                id="OneHanded"
+                value="350" />
+            <skill
+                id="TwoHanded"
+                value="335" />
+            <skill
+                id="Polearm"
+                value="345" />
+            <skill
+                id="Bow"
+                value="35" />
+            <skill
+                id="Crossbow"
+                value="25" />
+            <skill
+                id="Throwing"
+                value="105" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_hill_troll_2h_hammer_a" />
+            </EquipmentRoster>
+            <EquipmentRoster
+                civilian="true">
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_hill_troll_2h_hammer_a" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+</NPCCharacters>

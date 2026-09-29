@@ -478,8 +478,8 @@ tuning; `spawn-wired` repeats the tuning; the `attack` line shows each strike's 
 - **Riderless idle animations** (finding 5): the live Armory's `as_spider` still lacks
   `act_horse_riderless_idle_1` to `_4`. Live-Armory edit, owed with an in-repo gate.
 - **#594** (finding 7), a separate issue.
-- **Translations:** the four new names are registered and seeded in all 12 languages with their English text;
-  the paid translation run (about $0.09) waits for Mike's approval.
+- **Translations:** the four spider names and the three troll names (#694) are registered and seeded in all 12
+  languages with their English text; the paid translation run waits for Mike's approval.
 - **Hideouts:** none in this cut.
 
 **New campaign only:** the clan is defined in XML, so an older save has no brood clan and spawns nothing (the

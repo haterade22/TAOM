@@ -63,6 +63,7 @@ internal static class CultureDataFixture
     public static readonly HashSet<string> SettlementlessBanditCultures = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
     {
         "mirkwood_spiders", // Creature Bandits (#692)
+        "wild_trolls", // Creature Bandits troll bands (#694)
     };
 
     /// <summary>Walks up from the test working directory to <c>Main/_Module/ModuleData</c>.</summary>

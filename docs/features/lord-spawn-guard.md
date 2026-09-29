@@ -179,8 +179,8 @@ that it would count vanilla's 494 deleted settlements and report every culture a
 check would pass while the game crashed.
 
 `_LANDLESS_BY_DESIGN` currently holds the six bandit cultures (unreachable through the
-`Occupation.Lord` filter), `mirkwood_spiders` (a bandit culture with no heroes and no settlement,
-#692), `neutral_culture`, and `darshi` / `nord` / `vakken`.
+`Occupation.Lord` filter), `mirkwood_spiders` and `wild_trolls` (bandit cultures with no heroes and no settlement,
+#692 and #694), `neutral_culture`, and `darshi` / `nord` / `vakken`.
 
 Scope is TAOM's own ModuleData, matching the validator's stated contract. Vanilla-inherited
 factions are Patch65's problem, not a TAOM data defect.

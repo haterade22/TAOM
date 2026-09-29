@@ -1767,6 +1767,24 @@
 		name="{=taom_bandit_mirkwood_spiders_name}Spiders of Mirkwood"
 		tier="1"></Faction>
 
+	<!-- Wild Trolls (#694): troll bands of two to four, the brood's looter shape (no hideouts). The home settlement
+	     is a Rivendell village by the Trollshaws only because the attribute needs one; TrollBandSpawnBehavior keeps
+	     about one band per kingdom and chooses where each spawns and patrols. The brood's plain banner: a kingdomless clan
+	     keeps its banner key's own colours (v1.5.3 Clan.cs:1424-1428), so this is not the grey of color. -->
+	<Faction
+		id="wild_trolls"
+		initial_home_settlement="Settlement.village_R1_1"
+		banner_key="11.2.166.1528.1528.764.764.1.0.0"
+		color="FF4A4A40"
+		color2="FFB8B4A0"
+		culture="Culture.wild_trolls"
+		default_party_template="PartyTemplate.wild_trolls_band_template"
+		settlement_banner_mesh="none"
+		is_bandit="true"
+		is_outlaw="true"
+		name="{=taom_bandit_wild_trolls_name}Wild Trolls"
+		tier="1"></Faction>
+
   <!-- TAOM-NEWFACTIONS:goblin:BEGIN -->
   <Faction
 		id="clan_goblin_1"

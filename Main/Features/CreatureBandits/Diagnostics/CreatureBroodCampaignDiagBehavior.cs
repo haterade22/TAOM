@@ -8,7 +8,8 @@ using static TAOM.Features.CreatureBandits.Diagnostics.CreatureDiagFormat;
 namespace TAOM.Features.CreatureBandits.Diagnostics;
 
 /// <summary>
-/// The broods' battle and destruction lines (#692): who fought a brood, what each side lost, and who destroyed one.
+/// The broods' and troll bands' battle and destruction lines (#692, #694; the party ids tell them apart): who fought
+/// one, what each side lost, and who destroyed one.
 /// Listeners only, no save data; main-thread campaign events. Temporary, strip after sign-off with the folder and its
 /// line in <see cref="CreatureBanditsModule"/>.
 /// </summary>
@@ -26,7 +27,7 @@ internal sealed class CreatureBroodCampaignDiagBehavior : CampaignBehaviorBase
     private static double Day => CreatureBroodCampaignDiag.Day;
 
     private static bool InvolvesBrood(MapEvent mapEvent) =>
-        mapEvent.InvolvedParties.Any(p => CreatureBanditRules.IsCreatureBroodClan(p.MobileParty?.ActualClan?.StringId));
+        mapEvent.InvolvedParties.Any(p => CreatureBanditRules.IsCreatureBandClan(p.MobileParty?.ActualClan?.StringId));
 
     private static string Side(MapEvent mapEvent, BattleSideEnum side) =>
         string.Join("+", mapEvent.PartiesOnSide(side).Select(p =>
@@ -56,7 +57,7 @@ internal sealed class CreatureBroodCampaignDiagBehavior : CampaignBehaviorBase
     private void OnMobilePartyDestroyed(MobileParty party, PartyBase destroyer) =>
         CreatureBroodCampaignDiag.Guard("destroyed", () =>
         {
-            if (!CreatureBanditRules.IsCreatureBroodClan(party?.ActualClan?.StringId)) return;
+            if (!CreatureBanditRules.IsCreatureBandClan(party?.ActualClan?.StringId)) return;
             CreatureBanditDiag.Logger?.LogInfo(CampaignLine("brood-destroyed", Day, "party", party!.StringId,
                 "by", destroyer?.MobileParty?.StringId ?? destroyer?.Name?.ToString() ?? "-"));
         });

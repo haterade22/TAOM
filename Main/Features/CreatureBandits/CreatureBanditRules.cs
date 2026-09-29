@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using TaleWorlds.Core;
 
 namespace TAOM.Features.CreatureBandits;
@@ -14,10 +15,25 @@ namespace TAOM.Features.CreatureBandits;
 public static class CreatureBanditRules
 {
     private static readonly HashSet<string> Troops = new(CreatureBanditsConfig.CreatureTroopIds, System.StringComparer.Ordinal);
+    private static readonly HashSet<string> Trolls = new(CreatureBanditsConfig.TrollBanditTroopIds, System.StringComparer.Ordinal);
 
     public static bool IsCreatureTroop(string? troopId) => troopId != null && Troops.Contains(troopId);
 
+    /// <summary>A troll band's troop (#694): a humanoid, so no creature seam takes it, only the prisoner rule.</summary>
+    public static bool IsTrollBanditTroop(string? troopId) => troopId != null && Trolls.Contains(troopId);
+
+    /// <summary>Spiders and bandit trolls are never taken prisoner, so they can never be recruited from prisoners.</summary>
+    public static bool IsNeverPrisoner(string? troopId) => IsCreatureTroop(troopId) || IsTrollBanditTroop(troopId);
+
     public static bool IsCreatureBroodClan(string? clanId) => clanId == CreatureBanditsConfig.BroodClanId;
+
+    public static bool IsTrollBandClan(string? clanId) => clanId == CreatureBanditsConfig.TrollClanId;
+
+    /// <summary>
+    /// The looter-faction clans TAOM spawns itself, the spider brood's and the troll bands': vanilla's map-wide looter
+    /// spawn is capped at zero for both, and a meeting with either goes straight to attack or leave.
+    /// </summary>
+    public static bool IsCreatureBandClan(string? clanId) => IsCreatureBroodClan(clanId) || IsTrollBandClan(clanId);
 
     /// <summary>
     /// Whether a troop spawn becomes a riderless creature: a creature troop, on the enemy side, in a
@@ -85,7 +101,39 @@ public static class CreatureBanditRules
     public static int BroodsToSpawnToday(int existingBroods, int maxBroods, bool enabled)
         => enabled && existingBroods < maxBroods ? 1 : 0;
 
-    /// <summary>A brood that chased or fought its way off its patrol gets the order back, unless it is still in a battle.</summary>
+    /// <summary>
+    /// The living kingdoms owed a troll band today (#694): those no band counts for, while there are fewer bands than
+    /// living kingdoms; none while the MCM switch is off. <paramref name="bandKingdomIds"/> holds one entry per band, the
+    /// kingdom its home settlement belongs to now, or null for a home outside any kingdom: such a band, or one a capture
+    /// moved to another kingdom, still counts toward the cap, so its old kingdom waits until a band dies. The spawner
+    /// adds one band a day, near a kingdom drawn from this list.
+    /// </summary>
+    public static IReadOnlyList<string> KingdomsOwedATrollBand(IReadOnlyList<string> livingKingdomIds,
+        IReadOnlyList<string?> bandKingdomIds, bool enabled)
+    {
+        if (!enabled || bandKingdomIds.Count >= livingKingdomIds.Count) return System.Array.Empty<string>();
+        var covered = new HashSet<string?>(bandKingdomIds, System.StringComparer.Ordinal);
+        return livingKingdomIds.Where(id => !covered.Contains(id)).ToList();
+    }
+
+    /// <summary>
+    /// A freed prisoner's winner chances without the refused winners (#694: a brood or troll band takes no freed
+    /// prisoner, so it stays spiders or trolls only). The engine draws one winner per prisoner from chances summing to 1
+    /// and frees the prisoner when the draw falls past the list, so the kept winners share the refused ones' chance;
+    /// with none kept, the prisoner goes free. Null when nothing is refused, so the engine's own list stands.
+    /// </summary>
+    public static List<KeyValuePair<T, float>>? WithoutRefusedWinners<T>(IReadOnlyList<KeyValuePair<T, float>> chances,
+        System.Func<T, bool> refused)
+    {
+        if (!chances.Any(c => refused(c.Key))) return null;
+        var kept = chances.Where(c => !refused(c.Key)).ToList();
+        float total = kept.Sum(c => c.Value);
+        return total > 0f
+            ? kept.Select(c => new KeyValuePair<T, float>(c.Key, c.Value / total)).ToList()
+            : new List<KeyValuePair<T, float>>();
+    }
+
+    /// <summary>A brood or troll band that chased or fought its way off its patrol gets the order back, unless it is still in a battle.</summary>
     public static bool NeedsPatrolOrder(bool hasHome, bool inBattle, bool isPatrolling) => hasHome && !inBattle && !isPatrolling;
 
     /// <summary>

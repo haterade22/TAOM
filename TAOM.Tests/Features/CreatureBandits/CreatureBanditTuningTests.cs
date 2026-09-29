@@ -115,7 +115,7 @@ public class CreatureBanditTuningTests
                 .Single()))
             .ToList();
 
-        Assert.AreEqual(15, groups.Count, "the brood switch and one option per tuned value");
+        Assert.AreEqual(16, groups.Count, "the brood and troll band switches and one option per tuned value");
         foreach (var (name, group) in groups)
             Assert.AreEqual("Creature Bandits", group, $"{name} sits under '{group}'");
 

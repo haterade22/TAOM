@@ -69,6 +69,7 @@ Models: 51. Regenerate after any engine bump: `pwsh tools/snapshot_api_surface.p
 
 - `ExplainedNumber CalculateRenownGain(PartyBase winnerParty, Single renownValueOfBattleForWinnerSide, Single contributionShareOfWinnerParty, Single renownMultiplierForWinnerSide, Boolean includeDescriptions)`
 - `Boolean CanTroopBeTakenPrisoner(CharacterObject troop)`
+- `MBReadOnlyList`1 GetLootPrisonerChances(MBReadOnlyList`1 winnerParties, TroopRosterElement prisonerElement)`
 
 ## TaomBuildingConstructionModel : DefaultBuildingConstructionModel
 `Base: TaleWorlds.CampaignSystem.GameComponents.DefaultBuildingConstructionModel`

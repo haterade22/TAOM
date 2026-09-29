@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.CreatureBandits;
@@ -292,13 +293,114 @@ public class CreatureBanditRulesTests
     }
 
     [TestMethod]
-    public void BroodAnchors_AreMirkwoodSettlementsAndDolGuldur()
+    public void MaxBroods_IsTwenty()
+        => Assert.AreEqual(20, CreatureBanditsConfig.MaxBroods, "#694: up to twenty broods around Mirkwood and Dol Guldur");
+
+    [TestMethod]
+    public void TrollBanditTroopIds_AreTheCaveAndHillTwins()
+        => CollectionAssert.AreEquivalent(new[] { "taom_troll_bandit_cave", "taom_troll_bandit_hill" },
+            CreatureBanditsConfig.TrollBanditTroopIds.ToList());
+
+    [TestMethod]
+    public void IsTrollBanditTroop_TheTwinsOnly()
     {
-        // Every id must exist in the live TAOM_Map settlements.xml (checked 2026-09-27); the spawner skips a
-        // missing one and logs it.
-        foreach (var id in CreatureBanditsConfig.BroodAnchorSettlementIds)
-            StringAssert.Matches(id, new System.Text.RegularExpressions.Regex("^(town_M[12]|village_M[12]_[1-4]|castle_M[1-5]|town_DG1)$"));
-        Assert.IsTrue(CreatureBanditsConfig.BroodAnchorSettlementIds.Count >= 5);
+        Assert.IsTrue(CreatureBanditRules.IsTrollBanditTroop("taom_troll_bandit_cave"));
+        Assert.IsTrue(CreatureBanditRules.IsTrollBanditTroop("taom_troll_bandit_hill"));
+        // Mordor's own trolls are a lord's troops: capture and recruitment stay vanilla for them.
+        Assert.IsFalse(CreatureBanditRules.IsTrollBanditTroop("cave_troll"));
+        Assert.IsFalse(CreatureBanditRules.IsTrollBanditTroop("hill_troll"));
+        Assert.IsFalse(CreatureBanditRules.IsTrollBanditTroop(Brood));
+        Assert.IsFalse(CreatureBanditRules.IsTrollBanditTroop("TAOM_TROLL_BANDIT_CAVE"));
+        Assert.IsFalse(CreatureBanditRules.IsTrollBanditTroop(null));
+    }
+
+    [TestMethod]
+    public void TrollTwins_AreNotCreatures()
+    {
+        // A troll is humanoid and fights as an ordinary troop: the battle swap, the creature tree and the map icon's
+        // rider skip all key on IsCreatureTroop and must never take one.
+        Assert.IsFalse(CreatureBanditRules.IsCreatureTroop("taom_troll_bandit_cave"));
+        Assert.IsFalse(CreatureBanditRules.IsCreatureTroop("taom_troll_bandit_hill"));
+    }
+
+    [TestMethod]
+    public void IsTrollBandClan_TheTrollClanOnly()
+    {
+        Assert.IsTrue(CreatureBanditRules.IsTrollBandClan("wild_trolls"));
+        Assert.IsFalse(CreatureBanditRules.IsTrollBandClan("mirkwood_spiders"));
+        Assert.IsFalse(CreatureBanditRules.IsTrollBandClan("looters"));
+        Assert.IsFalse(CreatureBanditRules.IsTrollBandClan(null));
+    }
+
+    [TestMethod]
+    public void IsCreatureBandClan_TheBroodAndTheTrollClans()
+    {
+        // The looter cap of 0 and the no-parley patch ask this: both clans are looter factions spawned by TAOM alone.
+        Assert.IsTrue(CreatureBanditRules.IsCreatureBandClan("mirkwood_spiders"));
+        Assert.IsTrue(CreatureBanditRules.IsCreatureBandClan("wild_trolls"));
+        Assert.IsFalse(CreatureBanditRules.IsCreatureBandClan("looters"));
+        Assert.IsFalse(CreatureBanditRules.IsCreatureBandClan("mirkwood_stalkers"));
+        Assert.IsFalse(CreatureBanditRules.IsCreatureBandClan(null));
+    }
+
+    [TestMethod]
+    public void IsNeverPrisoner_SpidersAndTrollTwins_NotMordorTrolls()
+    {
+        Assert.IsTrue(CreatureBanditRules.IsNeverPrisoner(Brood));
+        Assert.IsTrue(CreatureBanditRules.IsNeverPrisoner("taom_troll_bandit_cave"));
+        Assert.IsTrue(CreatureBanditRules.IsNeverPrisoner("taom_troll_bandit_hill"));
+        Assert.IsFalse(CreatureBanditRules.IsNeverPrisoner("cave_troll"));
+        Assert.IsFalse(CreatureBanditRules.IsNeverPrisoner("looter"));
+        Assert.IsFalse(CreatureBanditRules.IsNeverPrisoner(null));
+    }
+
+    // KingdomsOwedATrollBand: one id list per case. Bands are listed by the kingdom their home settlement belongs to
+    // now, null for a home outside any kingdom (a kingdomless clan's fief).
+    [TestMethod]
+    [DataRow("a,b,c", "", true, "a,b,c", DisplayName = "new campaign: every kingdom is owed one")]
+    [DataRow("a,b,c", "a,b", true, "c", DisplayName = "one kingdom still without a band")]
+    [DataRow("a,b,c", "a,b,c", true, "", DisplayName = "every kingdom has one")]
+    [DataRow("a,b", "a,a", true, "", DisplayName = "a capture moved a band: the total is at the cap")]
+    [DataRow("a,b", "a,~", true, "", DisplayName = "a band homed outside any kingdom still counts toward the cap")]
+    [DataRow("a,b,c", "a,~", true, "b,c", DisplayName = "a kingdomless band covers no kingdom")]
+    [DataRow("a", "a,b,c", true, "", DisplayName = "kingdoms eliminated after their bands spawned")]
+    [DataRow("a,b,c", "", false, "", DisplayName = "switched off")]
+    [DataRow("", "", true, "", DisplayName = "no living kingdom")]
+    public void KingdomsOwedATrollBand_OneBandPerLivingKingdom(string living, string bands, bool enabled, string expected)
+    {
+        static string[] Ids(string csv) => csv.Length == 0 ? new string[0] : csv.Split(',');
+        var bandKingdoms = Ids(bands).Select(id => id == "~" ? null : id).ToList();
+        CollectionAssert.AreEquivalent(Ids(expected),
+            CreatureBanditRules.KingdomsOwedATrollBand(Ids(living), bandKingdoms, enabled).ToList());
+    }
+
+    [TestMethod]
+    public void WithoutRefusedWinners_NoneRefused_ReturnsNullSoTheEngineListStands()
+    {
+        var chances = new[] { new KeyValuePair<string, float>("lord", 0.75f), new KeyValuePair<string, float>("ally", 0.25f) };
+        Assert.IsNull(CreatureBanditRules.WithoutRefusedWinners(chances, w => w == "trolls"));
+    }
+
+    [TestMethod]
+    public void WithoutRefusedWinners_DropsTheBand_AndTheOthersShareItsChance()
+    {
+        // A freed prisoner goes to a winner drawn from these chances (MapEvent.FindWinnerPartyToGetCurrentLootObjectBasedOnChances):
+        // left un-renormalised, the band's share would free the prisoner instead of handing it to the lord.
+        var chances = new[] { new KeyValuePair<string, float>("trolls", 0.5f), new KeyValuePair<string, float>("lord", 0.25f),
+            new KeyValuePair<string, float>("ally", 0.25f) };
+        var kept = CreatureBanditRules.WithoutRefusedWinners(chances, w => w == "trolls")!;
+        CollectionAssert.AreEqual(new[] { "lord", "ally" }, kept.Select(c => c.Key).ToList());
+        Assert.AreEqual(0.5f, kept[0].Value, 1e-6f);
+        Assert.AreEqual(0.5f, kept[1].Value, 1e-6f);
+    }
+
+    [TestMethod]
+    public void WithoutRefusedWinners_OnlyBandsWon_NoOneTakesThePrisoner()
+    {
+        // #694 (Mike): bands stay trolls only. With no other winner the prisoner goes free, as vanilla does for any
+        // prisoner no winner may take.
+        var chances = new[] { new KeyValuePair<string, float>("trolls", 1f) };
+        Assert.AreEqual(0, CreatureBanditRules.WithoutRefusedWinners(chances, w => w == "trolls")!.Count);
     }
 
     [TestMethod]

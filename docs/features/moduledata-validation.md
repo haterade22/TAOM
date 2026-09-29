@@ -369,6 +369,7 @@ Adding an entry is a deliberate act — state why:
 |---|---|
 | `looters`, `sea_raiders`, `mountain_bandits`, `forest_bandits`, `desert_bandits`, `steppe_bandits` | Bandit heroes are `Occupation.Bandit`; `GetBestAvailableCommander` filters on `Occupation.Lord`. |
 | `mirkwood_spiders` | A bandit culture (#692) with `can_have_settlement="false"` and no heroes; its only faction is the brood clan, so the landless crash path, a lord of a culture owning no settlement, can never reach it. |
+| `wild_trolls` | The troll bands' bandit culture (#694), the same shape: `can_have_settlement="false"`, no heroes, and its only faction is the troll clan. |
 | `neutral_culture` | Vanilla placeholder culture, carried by no TAOM lord or clan. |
 | `darshi`, `nord`, `vakken` | Vanilla minor-faction cultures (ghilman / skolderbrotva / forest_people) TAOM inherits but never re-cultured. All three clans keep a valid `initial_home_settlement`, so vanilla never reaches the `First()`; Patch65 covers them if a mod re-parents their lords. |
 

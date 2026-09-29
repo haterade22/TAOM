@@ -11,11 +11,12 @@ namespace TAOM.Features.CreatureBandits;
 /// Creature Bandits (#692) as a feature module. No services: the decisions are the static
 /// <see cref="CreatureBanditRules"/>, read by patches that run on the engine's worker threads. Two patch categories:
 /// Patch93 at process load like the other mission patches (Patch92): the spawn swap, the weapon-state hook, the panic
-/// and rout blocks and the weapon guards; Patch94 at game init, the brood's map icon and encounter. One mission
-/// behavior: the creature's tree and the routed-count backstop. One campaign behavior, the Mirkwood brood spawner (no
-/// save data). One Custom Battle damage model. Order-free: nothing else patches <c>Mission.SpawnTroop</c>,
-/// <c>CommonAIComponent.OnHit</c> or <c>Mission.CanAgentRout</c>, and the backstop only acts on creature agents. The
-/// temporary diagnostics add one mission and one campaign behavior.
+/// and rout blocks and the weapon guards; Patch94 at game init, the brood's map icon and, for broods and troll bands
+/// (#694), the encounter and the bandit join path. One mission behavior: the creature's tree and the routed-count
+/// backstop. Two campaign behaviors, the Mirkwood brood spawner and the troll band spawner (no save data). One Custom
+/// Battle damage model. Order-free: nothing else patches <c>Mission.SpawnTroop</c>, <c>CommonAIComponent.OnHit</c>,
+/// <c>Mission.CanAgentRout</c> or the bandit join roster, and the backstop only acts on creature agents. The temporary
+/// diagnostics add one mission and one campaign behavior.
 /// </summary>
 internal sealed class CreatureBanditsModule : TaomFeatureModule
 {
@@ -44,6 +45,7 @@ internal sealed class CreatureBanditsModule : TaomFeatureModule
     private static readonly CampaignBehaviorDecl[] Campaign =
     {
         CampaignBehaviorDecl.Of(resolver => new CreatureBroodSpawnBehavior(resolver.Resolve<IModLogger>())),
+        CampaignBehaviorDecl.Of(resolver => new TrollBandSpawnBehavior(resolver.Resolve<IModLogger>())),
         // Temporary diagnostics (strip after sign-off with the Diagnostics folder).
         CampaignBehaviorDecl.Of(resolver => new Diagnostics.CreatureBroodCampaignDiagBehavior()),
     };

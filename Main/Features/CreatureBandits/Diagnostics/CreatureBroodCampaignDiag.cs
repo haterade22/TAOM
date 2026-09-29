@@ -10,9 +10,9 @@ using static TAOM.Features.CreatureBandits.Diagnostics.CreatureDiagFormat;
 namespace TAOM.Features.CreatureBandits.Diagnostics;
 
 /// <summary>
-/// Campaign-map diagnostics for the spider broods (#692): the brood spawner's session, census, spawn and stray lines,
-/// and the map icon, the no-parley encounter and prisoner refusals, each counted for the whole session and logged
-/// first-N. Every caller is main-thread campaign code (the map view, the encounter menu init, MapEvent's loot pass;
+/// Campaign-map diagnostics for the spider broods (#692) and troll bands (#694): the spawners' session, census, spawn
+/// and stray lines, and the map icon, the no-parley encounter and prisoner refusals, each counted for the whole session
+/// and logged first-N. Every caller is main-thread campaign code (the map view, the encounter menu init, MapEvent's loot pass;
 /// campaign ticks are sequential). Session-scoped: the brood spawner resets it at session launch. A line never breaks
 /// the campaign tick it reports on (<see cref="Guard"/>). Temporary, strip after sign-off.
 /// </summary>
@@ -22,6 +22,7 @@ internal static class CreatureBroodCampaignDiag
     private const int PrisonerLineCap = 10;
 
     private static readonly HashSet<string> MapIconParties = new();
+    private static readonly HashSet<string> PrisonerTroopsLogged = new(StringComparer.Ordinal);
     internal static long MapIconRiderSkips, NoParleyFired, PrisonersRefused;
 
     internal static double Day => Campaign.Current == null ? double.NaN : CampaignTime.Now.ToDays;
@@ -40,28 +41,43 @@ internal static class CreatureBroodCampaignDiag
             "broods", I(clan?.WarPartyComponents.Count ?? 0), "maxBroods", I(CreatureBanditsConfig.MaxBroods)));
     });
 
-    /// <summary>The daily census: the counts, then one line per live brood.</summary>
+    /// <summary>
+    /// The daily census, one line: the counts, then every live brood as <c>id@home:troops:behavior[:battle]</c>. One
+    /// line, not one per brood: every line is a flushed write, and there can be twenty broods (#694 review).
+    /// </summary>
     internal static void Census(Clan clan, int existing, int strays, bool willSpawn) => Guard("daily", () =>
-    {
-        var logger = CreatureBanditDiag.Logger;
-        logger?.LogInfo(CampaignLine("daily", Day, "broods", I(existing), "maxBroods", I(CreatureBanditsConfig.MaxBroods),
+        CreatureBanditDiag.Logger?.LogInfo(CampaignLine("daily", Day, "broods", I(existing), "maxBroods", I(CreatureBanditsConfig.MaxBroods),
             "willSpawn", B(willSpawn), "strays", I(strays), "mapIconSkips", I(MapIconRiderSkips),
-            "noParley", I(NoParleyFired), "prisonersRefused", I(PrisonersRefused)));
-        var main = MobileParty.MainParty;
+            "noParley", I(NoParleyFired), "prisonersRefused", I(PrisonersRefused), "list", BandList(clan, _ => null))));
+
+    /// <summary>
+    /// The troll bands' daily census (#694), one line: the counts, the clan's looter cap (0 proves the density model
+    /// took it), then every band as <c>id@home/kingdom:troops:behavior[:battle]</c>. The spawn and stray lines are the
+    /// shared ones above, told apart by the party id.
+    /// </summary>
+    internal static void TrollCensus(Clan clan, int livingKingdoms, int kingdomsOwed, int strays) => Guard("troll-daily", () =>
+        CreatureBanditDiag.Logger?.LogInfo(CampaignLine("troll-daily", Day, "bands", I(clan.WarPartyComponents.Count),
+            "livingKingdoms", I(livingKingdoms), "kingdomsOwed", I(kingdomsOwed), "strays", I(strays),
+            "looterCap", I(Campaign.Current.Models.BanditDensityModel.GetMaxSupportedNumberOfLootersForClan(clan)),
+            "list", BandList(clan, home => (home?.MapFaction as Kingdom)?.StringId ?? "-"))));
+
+    private static string BandList(Clan clan, Func<Settlement?, string?> kingdom)
+    {
+        var list = new System.Text.StringBuilder();
         foreach (WarPartyComponent component in clan.WarPartyComponents)
         {
             var party = component.MobileParty;
             if (party == null) continue;
             var home = party.HomeSettlement;
-            logger?.LogInfo(CampaignLine("brood", Day, "party", party.StringId, "home", home?.StringId ?? "-",
-                "homeIsAnchor", B(home != null && CreatureBanditsConfig.BroodAnchorSettlementIds.Contains(home.StringId)),
-                "fromHome", home == null ? "-" : F(party.Position.ToVec2().Distance(home.GatePosition.ToVec2())),
-                "fromPlayer", main == null ? "-" : F(party.Position.ToVec2().Distance(main.Position.ToVec2())),
-                "behavior", party.DefaultBehavior.ToString(), "shortTerm", party.ShortTermBehavior.ToString(),
-                "troops", I(party.MemberRoster.TotalManCount), "gold", I(party.PartyTradeGold),
-                "inBattle", B(party.MapEvent != null), "visible", B(party.IsVisible)));
+            if (list.Length > 0) list.Append(';');
+            list.Append(party.StringId).Append('@').Append(home?.StringId ?? "-");
+            string? k = kingdom(home);
+            if (k != null) list.Append('/').Append(k);
+            list.Append(':').Append(I(party.MemberRoster.TotalManCount)).Append(':').Append(party.DefaultBehavior.ToString());
+            if (party.MapEvent != null) list.Append(":battle");
         }
-    });
+        return list.Length == 0 ? "-" : list.ToString();
+    }
 
     /// <summary>A new brood: where, what it carries, and how far from the player.</summary>
     internal static void Spawned(MobileParty brood, Settlement anchor, float radius) => Guard("spawn", () =>
@@ -91,6 +107,7 @@ internal static class CreatureBroodCampaignDiag
     internal static void ResetForSession()
     {
         MapIconParties.Clear();
+        PrisonerTroopsLogged.Clear();
         MapIconRiderSkips = NoParleyFired = PrisonersRefused = 0;
     }
 
@@ -112,11 +129,15 @@ internal static class CreatureBroodCampaignDiag
             "troops", I(party?.MemberRoster?.TotalManCount ?? -1), "count", I(NoParleyFired)));
     }
 
-    /// <summary>CreatureBanditAgents.RefusesPrisoner: a creature troop was refused as a prisoner (logged first-N, counted).</summary>
+    /// <summary>
+    /// CreatureBanditAgents.RefusesPrisoner: a spider or bandit troll was refused as a prisoner. Counted; logged first-N,
+    /// and always the first refusal of each troop, so a troll's shows however many spiders came first.
+    /// </summary>
     internal static void NotePrisonerRefused(string troopId)
     {
         PrisonersRefused++;
-        if (PrisonersRefused <= PrisonerLineCap)
+        bool firstOfTroop = PrisonerTroopsLogged.Add(troopId);
+        if (PrisonersRefused <= PrisonerLineCap || firstOfTroop)
             CreatureBanditDiag.Logger?.LogInfo(CampaignLine("prisoner-refused", Day, "troop", troopId,
                 "count", I(PrisonersRefused)));
     }

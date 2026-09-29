@@ -1,11 +1,8 @@
 using System;
 using System.Linq;
-using Helpers;
 using TAOM.Core.Logging;
 using TAOM.Features.CreatureBandits.Diagnostics;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Party;
-using TaleWorlds.CampaignSystem.Party.PartyComponents;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 
@@ -15,10 +12,8 @@ namespace TAOM.Features.CreatureBandits;
 /// Keeps the spider broods (#692) around Mirkwood. The brood clan is a looter faction (its culture has no
 /// settlements), and vanilla spawns looters around any town or village on the map; <c>TaomBanditDensityModel</c>
 /// caps that at zero for this clan and this behavior spawns instead: one brood a day while fewer than
-/// <see cref="CreatureBanditsConfig.MaxBroods"/> live, around a random Mirkwood anchor, told to patrol it. The steps
-/// after creation are vanilla's own for a looter party (v1.5.3 <c>BanditSpawnCampaignBehavior.SpawnLooterParty</c>
-/// and <c>InitializeBanditParty</c>, lines 465-476 and 575-582): visual dirty, clan, aggressiveness, trade. No food:
-/// a bandit party never eats (<c>DefaultMobilePartyFoodConsumptionModel.cs:87-94</c>).
+/// <see cref="CreatureBanditsConfig.MaxBroods"/> live, around a random Mirkwood or Dol Guldur anchor, told to patrol
+/// it. The party steps are <see cref="CreatureBandParties"/>, shared with the troll bands.
 ///
 /// A brood that finished a chase or a fight without its patrol order gets it back on the next daily tick. No save
 /// data: the count is read from the clan each day, so there is nothing to reset between campaigns. The clan is
@@ -67,7 +62,7 @@ internal sealed class CreatureBroodSpawnBehavior : CampaignBehaviorBase
                 return;
             }
 
-            int strays = ReturnStraysToPatrol(clan);
+            int strays = CreatureBandParties.ReturnStraysToPatrol(clan);
             int existing = clan.WarPartyComponents.Count;
             bool spawn = CreatureBanditRules.BroodsToSpawnToday(existing, CreatureBanditsConfig.MaxBroods, SpawnEnabled) > 0;
             CreatureBroodCampaignDiag.Census(clan, existing, strays, spawn);
@@ -84,43 +79,19 @@ internal sealed class CreatureBroodSpawnBehavior : CampaignBehaviorBase
     {
         Settlement[] anchors = CreatureBanditsConfig.BroodAnchorSettlementIds
             .Select(Settlement.Find).Where(s => s != null).ToArray();
-        if (anchors.Length == 0)
+        if (anchors.Length < CreatureBanditsConfig.BroodAnchorSettlementIds.Count && !_missingAnchorsLogged)
         {
-            if (!_missingAnchorsLogged)
-                _logger.LogError("[CreatureBandits] None of the Mirkwood anchor settlements exist on this map; no broods spawn.");
+            // A TAOM_Map rename leaves a hole in the anchors and nothing else reports it; the rest still serve.
             _missingAnchorsLogged = true;
+            if (anchors.Length == 0)
+                _logger.LogError("[CreatureBandits] None of the Mirkwood anchor settlements exist on this map; no broods spawn.");
+            else
+                _logger.LogWarning("[CreatureBandits] Brood anchor settlements missing from this map: "
+                                   + string.Join(", ", CreatureBanditsConfig.BroodAnchorSettlementIds.Where(id => Settlement.Find(id) == null)) + ".");
+        }
+        if (anchors.Length == 0)
             return;
-        }
 
-        Settlement anchor = anchors[MBRandom.RandomInt(anchors.Length)];
-        float radius = CreatureBanditsConfig.SpawnRadiusDays * Campaign.Current.EstimatedAverageBanditPartySpeed * CampaignTime.HoursInDay;
-        CampaignVec2 position = NavigationHelper.FindPointAroundPosition(anchor.GatePosition, MobileParty.NavigationType.Default, radius);
-        MobileParty brood = BanditPartyComponent.CreateLooterParty(clan.StringId + "_1", clan, anchor, isBossParty: false,
-            clan.DefaultPartyTemplate, position);
-
-        brood.Party.SetVisualAsDirty();
-        brood.ActualClan = clan;
-        brood.Aggressiveness = 1f - 0.2f * MBRandom.RandomFloat;
-        brood.InitializePartyTrade(0);
-        brood.SetMovePatrolAroundSettlement(anchor, MobileParty.NavigationType.Default, isTargetingPort: false);
-        CreatureBroodCampaignDiag.Spawned(brood, anchor, radius);
-    }
-
-    private static int ReturnStraysToPatrol(Clan clan)
-    {
-        int count = 0;
-        foreach (WarPartyComponent component in clan.WarPartyComponents)
-        {
-            MobileParty party = component.MobileParty;
-            Settlement? home = party?.HomeSettlement;
-            if (party == null || !CreatureBanditRules.NeedsPatrolOrder(home != null, party.MapEvent != null,
-                    party.DefaultBehavior == AiBehavior.PatrolAroundPoint))
-                continue;
-            string was = party.DefaultBehavior.ToString();
-            party.SetMovePatrolAroundSettlement(home!, MobileParty.NavigationType.Default, isTargetingPort: false);
-            count++;
-            CreatureBroodCampaignDiag.Stray(party, was, home!);
-        }
-        return count;
+        CreatureBandParties.Spawn(clan, anchors[MBRandom.RandomInt(anchors.Length)]);
     }
 }

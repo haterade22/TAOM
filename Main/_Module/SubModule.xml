@@ -303,6 +303,18 @@
         <GameType value = "EditorGame"/>
       </IncludedGameTypes>
     </XmlNode>
+    <!-- Troll bands (#694): the hidden bandit twins of Mordor's two trolls, in bands of two to four. They fight as
+         ordinary troll troops. Loaded in every game type that loads taom_spcultures and taom_partyTemplates,
+         whose wild_trolls culture and band template name them (TrollBanditDataTests). -->
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="characters/troll_bandits"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
 
     <XmlNode>
       <XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_dolguldur"/>

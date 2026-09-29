@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using TaleWorlds.CampaignSystem.MapEvents;
+using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.CreatureBandits.Hooks;
@@ -41,12 +44,28 @@ internal static class CreatureBanditAgents
 
     /// <summary>
     /// The battle reward model's question (<c>CanTroopBeTakenPrisoner</c>, asked before a defeated troop joins the
-    /// winner's prisoners, v1.5.3 <c>MapEvent.cs:1855</c>): a creature troop is never a prisoner. Main thread.
+    /// winner's prisoners, v1.5.3 <c>MapEvent.cs:1855</c>): a creature troop or a bandit troll (#694) is never a
+    /// prisoner. Main thread.
     /// </summary>
     internal static bool RefusesPrisoner(string? troopId)
     {
-        if (!CreatureBanditRules.IsCreatureTroop(troopId)) return false;
+        if (!CreatureBanditRules.IsNeverPrisoner(troopId)) return false;
         Diagnostics.CreatureBroodCampaignDiag.NotePrisonerRefused(troopId!);
         return true;
+    }
+
+    /// <summary>
+    /// The battle reward model's freed-prisoner chances without a brood or troll band among the winners (#694: each
+    /// stays spiders or trolls only). Vanilla gives a winning bandit party any freed bandit prisoner
+    /// (<c>DefaultBattleRewardModel.GetLootPrisonerChances</c>, v1.5.3 lines 253-275); the other winners share its
+    /// chance, and with none left the prisoner goes free (<see cref="CreatureBanditRules.WithoutRefusedWinners{T}"/>).
+    /// The engine's list comes back untouched when no band won. Main thread (MapEvent's loot pass).
+    /// </summary>
+    internal static MBReadOnlyList<KeyValuePair<MapEventParty, float>> WithoutCreatureBandWinners(
+        MBReadOnlyList<KeyValuePair<MapEventParty, float>> chances)
+    {
+        var kept = CreatureBanditRules.WithoutRefusedWinners(chances,
+            winner => CreatureBanditRules.IsCreatureBandClan(winner.Party.MobileParty?.ActualClan?.StringId));
+        return kept == null ? chances : new MBList<KeyValuePair<MapEventParty, float>>(kept);
     }
 }

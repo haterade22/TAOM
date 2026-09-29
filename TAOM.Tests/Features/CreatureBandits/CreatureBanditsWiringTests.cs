@@ -68,10 +68,47 @@ public class CreatureBanditsWiringTests
     }
 
     [TestMethod]
-    public void Patch94_HasTheMapIconAndTheNoParleyPatches()
+    public void Patch94_HasTheMapIconNoParleyAndNoJoinPatches()
     {
-        CollectionAssert.AreEquivalent(new[] { nameof(Patch94_CreatureBroodMapIcon), nameof(Patch94_CreatureBroodNoParley) },
+        CollectionAssert.AreEquivalent(
+            new[] { nameof(Patch94_CreatureBroodMapIcon), nameof(Patch94_CreatureBroodNoParley), nameof(Patch94_CreatureBandNoJoin) },
             PatchClasses(CreatureBanditsConfig.CampaignPatchCategory).Select(t => t.Name).ToList());
+    }
+
+    [TestMethod]
+    public void NoJoin_TargetsTheBanditJoinRoster_AndDropsBothClans()
+    {
+        // #694 review: with Partners in Crime, "serve under my command" recruits every bandit party that joins the
+        // encounter (BanditInteractionsCampaignBehavior.OpenRosterScreenAfterBanditEncounter, v1.5.3 :420-460), and
+        // CanTroopBeTakenPrisoner is never asked. The list the prefix trims is the one the caller then destroys.
+        if (!_gameLoaded) Assert.Inconclusive("game assemblies not loaded");
+        var target = TargetOf(typeof(Patch94_CreatureBandNoJoin));
+        Assert.IsNotNull(target, "BanditInteractionsCampaignBehavior.GetMemberAndPrisonerRostersFromParties did not resolve");
+        Assert.AreEqual("parties", target!.GetParameters()[0].Name);
+        StringAssert.Contains(RepoPaths.ReadSource("Main/Features/CreatureBandits/Hooks/Patch94_CreatureBroodCampaign.cs", stripComments: true),
+            "parties.RemoveAll(p => CreatureBanditRules.IsCreatureBandClan(p?.ActualClan?.StringId))");
+    }
+
+    [TestMethod]
+    public void BattleRewardModel_KeepsFreedPrisonersOutOfCreatureBands()
+    {
+        // #694 (Mike): a band stays trolls only, a brood spiders only. Vanilla hands a winning bandit party any freed
+        // bandit prisoner (DefaultBattleRewardModel.GetLootPrisonerChances, v1.5.3 :253-275).
+        var method = typeof(TaomBattleRewardModel).GetMethod(nameof(TaomBattleRewardModel.GetLootPrisonerChances));
+        Assert.AreEqual(typeof(TaomBattleRewardModel), method?.DeclaringType,
+            "TaomBattleRewardModel must override GetLootPrisonerChances, or freed looters join a troll band.");
+        StringAssert.Contains(RepoPaths.ReadSource("Main/Features/CulturalFeats/Models/TaomBattleRewardModel.cs", stripComments: true),
+            "CreatureBanditAgents.WithoutCreatureBandWinners(base.GetLootPrisonerChances(winnerParties, prisonerElement))");
+    }
+
+    [TestMethod]
+    public void SpawnSwitches_DefaultOn_AndTheSettingsStartFromThem()
+    {
+        Assert.IsTrue(CreatureBanditsConfig.DefaultSpawnBroods);
+        Assert.IsTrue(CreatureBanditsConfig.DefaultSpawnTrollBands, "#694: troll bands are on by default");
+        var src = RepoPaths.ReadSource("Main/Features/TaomSettings.cs", stripComments: true);
+        StringAssert.Contains(src, "CreatureBanditSpawnBroods { get; set; } = TAOM.Features.CreatureBandits.CreatureBanditsConfig.DefaultSpawnBroods;");
+        StringAssert.Contains(src, "CreatureBanditSpawnTrollBands { get; set; } = TAOM.Features.CreatureBandits.CreatureBanditsConfig.DefaultSpawnTrollBands;");
     }
 
     [TestMethod]
@@ -91,11 +128,46 @@ public class CreatureBanditsWiringTests
     }
 
     [TestMethod]
-    public void Module_AddsTheBroodSpawnerAndTheCampaignDiagnostics()
+    public void Module_AddsBothSpawnersAndTheCampaignDiagnostics()
     {
         CollectionAssert.AreEquivalent(
-            new[] { typeof(CreatureBroodSpawnBehavior), typeof(TAOM.Features.CreatureBandits.Diagnostics.CreatureBroodCampaignDiagBehavior) },
+            new[]
+            {
+                typeof(CreatureBroodSpawnBehavior), typeof(TrollBandSpawnBehavior),
+                typeof(TAOM.Features.CreatureBandits.Diagnostics.CreatureBroodCampaignDiagBehavior),
+            },
             new CreatureBanditsModule().CampaignBehaviors.Select(d => d.BehaviorType).ToList());
+    }
+
+    [TestMethod]
+    public void TrollSpawner_ReadsTheMcmSwitchEachDay_AndCountsKingdoms()
+    {
+        // #694: the switch gates new bands only; the pure rule is tested in CreatureBanditRulesTests, this pins its wiring.
+        var src = RepoPaths.ReadSource("Main/Features/CreatureBandits/TrollBandSpawnBehavior.cs", stripComments: true);
+        StringAssert.Contains(src, "TaomSettings.Instance?.CreatureBanditSpawnTrollBands ?? CreatureBanditsConfig.DefaultSpawnTrollBands");
+        StringAssert.Contains(src, "CreatureBanditRules.KingdomsOwedATrollBand(");
+        // A band counts for a kingdom id only: Clan.MapFaction is the clan itself when it has no kingdom.
+        StringAssert.Contains(src, "as Kingdom)?.StringId");
+        // Both spawners create and re-patrol their bands through the one helper, so the vanilla looter steps live once.
+        StringAssert.Contains(src, "CreatureBandParties.Spawn(");
+        StringAssert.Contains(src, "CreatureBandParties.ReturnStraysToPatrol(");
+        var brood = RepoPaths.ReadSource("Main/Features/CreatureBandits/CreatureBroodSpawnBehavior.cs", stripComments: true);
+        StringAssert.Contains(brood, "CreatureBandParties.Spawn(");
+        StringAssert.Contains(brood, "CreatureBandParties.ReturnStraysToPatrol(");
+        // #694 (Mike): like vanilla's bandits, a band tries for a spawn point outside the player's sight. The in-game
+        // proof is the spawn line's fromPlayer above playerSight.
+        StringAssert.Contains(RepoPaths.ReadSource("Main/Features/CreatureBandits/CreatureBandParties.cs", stripComments: true),
+            "i < OutOfSightRetries && position.DistanceSquared(player.Position) < sight * sight");
+    }
+
+    [TestMethod]
+    public void NoParleyAndLooterCap_CoverBothClans()
+    {
+        // Trolls, like spiders, go straight to attack or leave, and vanilla must never spawn either clan map-wide.
+        StringAssert.Contains(RepoPaths.ReadSource("Main/Features/CreatureBandits/Hooks/Patch94_CreatureBroodCampaign.cs", stripComments: true),
+            "CreatureBanditRules.IsCreatureBandClan(PlayerEncounter.EncounteredMobileParty?.ActualClan?.StringId)");
+        StringAssert.Contains(RepoPaths.ReadSource("Main/Features/BanditManagement/Models/TaomBanditDensityModel.cs", stripComments: true),
+            "CreatureBanditRules.IsCreatureBandClan(clan?.StringId) ? 0");
     }
 
     [TestMethod]
@@ -262,11 +334,15 @@ public class CreatureBanditsWiringTests
     }
 
     [TestMethod]
-    public void RefusesPrisoner_CreatureTroopsOnly()
+    public void RefusesPrisoner_CreatureAndTrollBanditTroopsOnly()
     {
         // The rule lives in Hooks, outside the temporary Diagnostics folder, so stripping the diagnostics keeps it.
         Assert.IsTrue(CreatureBanditAgents.RefusesPrisoner("taom_spider_brood_forest"));
         Assert.IsTrue(CreatureBanditAgents.RefusesPrisoner("taom_spider_brood_pale"));
+        // #694: a bandit troll is never led off, so it can never be recruited from prisoners.
+        Assert.IsTrue(CreatureBanditAgents.RefusesPrisoner("taom_troll_bandit_cave"));
+        Assert.IsTrue(CreatureBanditAgents.RefusesPrisoner("taom_troll_bandit_hill"));
+        Assert.IsFalse(CreatureBanditAgents.RefusesPrisoner("cave_troll"));
         Assert.IsFalse(CreatureBanditAgents.RefusesPrisoner("looter"));
         Assert.IsFalse(CreatureBanditAgents.RefusesPrisoner(null));
     }
@@ -274,7 +350,7 @@ public class CreatureBanditsWiringTests
     [TestMethod]
     public void BanditDensityModel_OverridesTheLooterCap()
     {
-        // The brood clan is a looter faction (can_have_settlement false), and vanilla spawns looters around
+        // The brood and troll clans are looter factions (can_have_settlement false), and vanilla spawns looters around
         // any town or village on the map (BanditSpawnCampaignBehavior.cs:514-525) up to this cap.
         var method = typeof(TaomBanditDensityModel).GetMethod(nameof(TaomBanditDensityModel.GetMaxSupportedNumberOfLootersForClan));
         Assert.AreEqual(typeof(TaomBanditDensityModel), method?.DeclaringType);

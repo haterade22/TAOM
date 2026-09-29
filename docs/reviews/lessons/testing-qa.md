@@ -1332,3 +1332,9 @@ deployment phase, where the review found the creature tree teleporting spiders o
   through the battle's own spawn loop with deployment (a campaign field battle with 20 or more troops opens the
   Order of Battle screen).
 - **Source:** `docs/reviews/rca-creature-bandits-2026-09-28.md`, finding 2.
+
+### A completeness claim is tested against the source of truth, never against a copy of itself
+The spider brood anchors claimed "every Mirkwood and Dol Guldur settlement" and a test named for that compared the config with a hand-written copy of the same 23 ids; the live map has 47 (the 24 `castle_village_*` ids were missing). The check that built the list grepped `[a-z]*_(M|DG)`, which cannot match a two-word prefix.
+- **Why missed:** the test restated the answer instead of deriving it, so it could only ever agree; the id pattern was a guess at the naming scheme, not a read of the data.
+- **Prevent:** when a list claims "every X", derive X in the test from its source (here the live `settlements.xml` by authored culture, `CreatureBanditLiveDataTests`, `LiveInstall`), and select by an attribute the data carries (culture, component) rather than an id pattern.
+- **Source:** #694, `docs/reviews/rca-troll-bandits-2026-09-28.md` finding 2; lens 7 found it by parsing the live map.

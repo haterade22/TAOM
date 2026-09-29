@@ -1524,76 +1524,81 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Creature Bandits", GroupOrder = 53)]
     [SettingPropertyBool("Spawn Spider Broods", Order = 0, RequireRestart = false,
-        HintText = "Whether spider broods keep spawning around Mirkwood on the campaign map (one a day, up to four). Off stops new broods; broods already on the map stay. Broods exist only in a campaign started with this version.")]
+        HintText = "Whether spider broods keep spawning around Mirkwood and Dol Guldur on the campaign map (one a day, up to twenty). Off stops new broods; broods already on the map stay. Broods exist only in a campaign started with v2.0.32 or later.")]
     public bool CreatureBanditSpawnBroods { get; set; } = TAOM.Features.CreatureBandits.CreatureBanditsConfig.DefaultSpawnBroods;
 
     [SettingPropertyGroup("Creature Bandits")]
-    [SettingPropertyFloatingInteger("Creature Hit Points", 50f, 1000f, "0", Order = 1, RequireRestart = false,
+    [SettingPropertyBool("Spawn Troll Bands", Order = 1, RequireRestart = false,
+        HintText = "Whether wild troll bands keep spawning on the campaign map, about one per kingdom near its towns, castles and villages (one new band a day, two to four trolls each). Trolls are never taken prisoner or recruited. Off stops new bands; bands already on the map stay. Troll bands need a new campaign. The options below tune the spiders only.")]
+    public bool CreatureBanditSpawnTrollBands { get; set; } = TAOM.Features.CreatureBandits.CreatureBanditsConfig.DefaultSpawnTrollBands;
+
+    [SettingPropertyGroup("Creature Bandits")]
+    [SettingPropertyFloatingInteger("Creature Hit Points", 50f, 1000f, "0", Order = 2, RequireRestart = false,
         HintText = "Hit points of a riderless creature bandit (the giant spiders of the Mirkwood broods). The ridden spider mount keeps its own. Applies to creatures spawned after the change.")]
     public float CreatureBanditHitPoints { get; set; } = TAOM.Features.CreatureBandits.CreatureBanditTuning.DefaultHitPoints;
 
     [SettingPropertyGroup("Creature Bandits")]
-    [SettingPropertyInteger("Bite: Max Soldiers Hit", 1, 10, Order = 2, RequireRestart = false,
+    [SettingPropertyInteger("Bite: Max Soldiers Hit", 1, 10, Order = 3, RequireRestart = false,
         HintText = "How many soldiers the standing front bite can strike at once (the nearest ones in its arc).")]
     public int CreatureBanditBiteTargets { get; set; } = TAOM.Features.CreatureBandits.CreatureBanditTuning.DefaultBiteTargets;
 
     [SettingPropertyGroup("Creature Bandits")]
-    [SettingPropertyInteger("Pounce: Max Soldiers Hit", 1, 10, Order = 3, RequireRestart = false,
+    [SettingPropertyInteger("Pounce: Max Soldiers Hit", 1, 10, Order = 4, RequireRestart = false,
         HintText = "How many soldiers the running pounce can strike at once.")]
     public int CreatureBanditPounceTargets { get; set; } = TAOM.Features.CreatureBandits.CreatureBanditTuning.DefaultPounceTargets;
 
     [SettingPropertyGroup("Creature Bandits")]
-    [SettingPropertyInteger("Swipe: Max Soldiers Hit", 1, 10, Order = 4, RequireRestart = false,
+    [SettingPropertyInteger("Swipe: Max Soldiers Hit", 1, 10, Order = 5, RequireRestart = false,
         HintText = "How many soldiers a left or right swipe can strike at once.")]
     public int CreatureBanditSwipeTargets { get; set; } = TAOM.Features.CreatureBandits.CreatureBanditTuning.DefaultSwipeTargets;
 
     [SettingPropertyGroup("Creature Bandits")]
-    [SettingPropertyInteger("Bite Damage %", 0, 300, Order = 5, RequireRestart = false,
+    [SettingPropertyInteger("Bite Damage %", 0, 300, Order = 6, RequireRestart = false,
         HintText = "Bite damage as a percentage of the spider's base bite (100 = the ridden spider's damage).")]
     public int CreatureBanditBiteDamagePercent { get; set; } = TAOM.Features.CreatureBandits.CreatureBanditTuning.DefaultBiteDamagePercent;
 
     [SettingPropertyGroup("Creature Bandits")]
-    [SettingPropertyInteger("Pounce Damage %", 0, 300, Order = 6, RequireRestart = false,
+    [SettingPropertyInteger("Pounce Damage %", 0, 300, Order = 7, RequireRestart = false,
         HintText = "Pounce damage as a percentage of the spider's base bite.")]
     public int CreatureBanditPounceDamagePercent { get; set; } = TAOM.Features.CreatureBandits.CreatureBanditTuning.DefaultPounceDamagePercent;
 
     [SettingPropertyGroup("Creature Bandits")]
-    [SettingPropertyInteger("Swipe Damage %", 0, 300, Order = 7, RequireRestart = false,
+    [SettingPropertyInteger("Swipe Damage %", 0, 300, Order = 8, RequireRestart = false,
         HintText = "Swipe damage as a percentage of the spider's base bite. Low by default: the swipe reaches several soldiers.")]
     public int CreatureBanditSwipeDamagePercent { get; set; } = TAOM.Features.CreatureBandits.CreatureBanditTuning.DefaultSwipeDamagePercent;
 
     [SettingPropertyGroup("Creature Bandits")]
-    [SettingPropertyBool("Only Crits Knock Down", Order = 8, RequireRestart = false,
+    [SettingPropertyBool("Only Crits Knock Down", Order = 9, RequireRestart = false,
         HintText = "When on, a creature's normal hit only staggers a soldier and only a critical hit knocks him down. When off, any hit of 30 or more knocks down, as the ridden spider's do.")]
     public bool CreatureBanditKnockdownOnCritOnly { get; set; } = TAOM.Features.CreatureBandits.CreatureBanditTuning.DefaultKnockdownOnCritOnly;
 
     [SettingPropertyGroup("Creature Bandits")]
-    [SettingPropertyFloatingInteger("Pounce Cooldown (s)", 0.5f, 30f, "0.0", Order = 9, RequireRestart = false,
+    [SettingPropertyFloatingInteger("Pounce Cooldown (s)", 0.5f, 30f, "0.0", Order = 10, RequireRestart = false,
         HintText = "Seconds between a creature's pounces or bites. Applies to creatures spawned after the change.")]
     public float CreatureBanditPounceCooldownSeconds { get; set; } = (float)TAOM.Features.Spider.SpiderConfig.PounceCooldownSeconds;
 
     [SettingPropertyGroup("Creature Bandits")]
-    [SettingPropertyFloatingInteger("Swipe Cooldown (s)", 0.5f, 30f, "0.0", Order = 10, RequireRestart = false,
+    [SettingPropertyFloatingInteger("Swipe Cooldown (s)", 0.5f, 30f, "0.0", Order = 11, RequireRestart = false,
         HintText = "Seconds between a creature's swipes. Applies to creatures spawned after the change.")]
     public float CreatureBanditSwipeCooldownSeconds { get; set; } = (float)TAOM.Features.Spider.SpiderConfig.SideAttackCooldownSeconds;
 
     [SettingPropertyGroup("Creature Bandits")]
-    [SettingPropertyInteger("Missile Damage Taken %", 0, 200, Order = 11, RequireRestart = false,
+    [SettingPropertyInteger("Missile Damage Taken %", 0, 200, Order = 12, RequireRestart = false,
         HintText = "Share of damage a creature takes from arrows, bolts, javelins and thrown weapons (100 = normal). Applies at once.")]
     public int CreatureBanditMissileTakenPercent { get; set; } = TAOM.Features.CreatureBandits.CreatureBanditTuning.DefaultMissileTakenPercent;
 
     [SettingPropertyGroup("Creature Bandits")]
-    [SettingPropertyInteger("Cut Damage Taken %", 0, 200, Order = 12, RequireRestart = false,
+    [SettingPropertyInteger("Cut Damage Taken %", 0, 200, Order = 13, RequireRestart = false,
         HintText = "Share of damage a creature takes from cutting melee blows: swords, axes (100 = normal).")]
     public int CreatureBanditCutTakenPercent { get; set; } = TAOM.Features.CreatureBandits.CreatureBanditTuning.DefaultMeleeTakenPercent;
 
     [SettingPropertyGroup("Creature Bandits")]
-    [SettingPropertyInteger("Pierce Damage Taken %", 0, 200, Order = 13, RequireRestart = false,
+    [SettingPropertyInteger("Pierce Damage Taken %", 0, 200, Order = 14, RequireRestart = false,
         HintText = "Share of damage a creature takes from piercing melee blows: spears, thrusts (100 = normal).")]
     public int CreatureBanditPierceTakenPercent { get; set; } = TAOM.Features.CreatureBandits.CreatureBanditTuning.DefaultMeleeTakenPercent;
 
     [SettingPropertyGroup("Creature Bandits")]
-    [SettingPropertyInteger("Blunt Damage Taken %", 0, 200, Order = 14, RequireRestart = false,
+    [SettingPropertyInteger("Blunt Damage Taken %", 0, 200, Order = 15, RequireRestart = false,
         HintText = "Share of damage a creature takes from blunt melee blows: maces, hammers, charges (100 = normal).")]
     public int CreatureBanditBluntTakenPercent { get; set; } = TAOM.Features.CreatureBandits.CreatureBanditTuning.DefaultMeleeTakenPercent;
 }

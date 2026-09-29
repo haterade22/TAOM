@@ -362,6 +362,7 @@ A save from before this feature loads cleanly; the player sees renamed hideouts 
 - The `Cap`/`Scale` helpers are `internal static` and unit-tested **directly via `InternalsVisibleTo("TAOM.Tests")`**; `Cap` floors at vanilla even when an MCM cap is set below the vanilla base. "Vanilla is the floor" holds for the five scaled properties; the boss-phase cap sits below vanilla's 6..11 by design.
 - The 8 LOTR bandit cultures each have a **matching bandit clan row in `characters/clans.xml`** (8 rows, one `<Faction is_bandit="true">` per culture; verified 2026-09-11).
 - The vanilla `looters` clan is **kept** because its `StringId == "looters"` is hardcoded in `DefaultBanditDensityModel`, and looter spawning runs on a separate code path from hideout bandits.
+- `TaomBanditDensityModel.GetMaxSupportedNumberOfLootersForClan` returns 0 for the Creature Bandits clans (`mirkwood_spiders`, `wild_trolls`, #692 and #694). Both are looter factions, so vanilla would spawn them anywhere on the map; their own spawners place them instead ([creature-bandits](creature-bandits.md)).
 - `TAOM_Map/SubModule.xml` declares `<DependedModule Id="TAOM"/>` (the external map module now depends on TAOM, so the LOTR bandit cultures its hideouts reference are guaranteed loaded).
 
 ---

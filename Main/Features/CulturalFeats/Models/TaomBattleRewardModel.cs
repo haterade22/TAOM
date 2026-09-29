@@ -1,7 +1,11 @@
+using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
+using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Core;
+using TaleWorlds.Library;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
 using TAOM.Features.CreatureBandits.Hooks;
@@ -40,8 +44,14 @@ public class TaomBattleRewardModel : DefaultBattleRewardModel
         return result;
     }
 
-    // Creature Bandits (#692): a spider is not a captive. MapEvent asks this before moving a defeated troop to the
-    // winner's prisoners (v1.5.3 MapEvent.cs:1855), so a creature never reaches a roster to be ransomed or recruited.
+    // Creature Bandits (#692, #694): a spider or a bandit troll is not a captive. MapEvent asks this before moving a
+    // defeated troop to the winner's prisoners (v1.5.3 MapEvent.cs:1855), so neither reaches a roster to be ransomed
+    // or recruited.
     public override bool CanTroopBeTakenPrisoner(CharacterObject troop)
         => !CreatureBanditAgents.RefusesPrisoner(troop?.StringId) && base.CanTroopBeTakenPrisoner(troop);
+
+    // Creature Bandits (#694): a brood or troll band never takes in freed prisoners, so it stays spiders or trolls only.
+    public override MBReadOnlyList<KeyValuePair<MapEventParty, float>> GetLootPrisonerChances(
+        MBReadOnlyList<MapEventParty> winnerParties, TroopRosterElement prisonerElement)
+        => CreatureBanditAgents.WithoutCreatureBandWinners(base.GetLootPrisonerChances(winnerParties, prisonerElement));
 }

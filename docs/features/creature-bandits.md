@@ -8,14 +8,22 @@ spider is a riderless creature that hunts the nearest enemy and bites; on the ma
 and meeting it goes straight to attack or leave. Creatures are bandits only: never recruited, never taken
 prisoner, never fielded by lords.
 
+The second is the Wild Trolls (#694): bands of two to four cave and hill trolls, about one per kingdom, roaming
+near that kingdom's towns, castles and villages. A troll is humanoid, so it fights as an ordinary troll troop with
+every troll trait; like a spider it is never taken prisoner or recruited, a band never takes in freed prisoners,
+and meeting a band goes straight to attack or leave.
+
 **Status (2026-09-28):** route A (soldiers target the riderless spider) passed its Custom Battle spike: nine
 console-spawned spiders were targeted, hit and killed by infantry and archers, with no crash. The creature's own
 tree, its tuning and its damage-taken rules, the deployment hold and the whole campaign path (broods on the map,
 a brood battle with its deployment screen, the map icon, no parley, no prisoners) have **not yet run in game**.
 Research, engine evidence and the design review: [creature-bandits-roadmap.md](../research/creature-bandits-roadmap.md).
+The troll bands, the twenty-brood cap over 47 anchors and the #694 review fixes (no joining the player, no freed
+prisoners, spawns out of sight) have not run in game either; the troll map icon is drawn from the race's
+`as_cave_troll_map` action set (`as_hill_troll_map` once the cave trolls fall). See "In-game checklist".
 
-**New campaigns only.** The brood clan is a `Faction` in XML, which the engine reads only when a campaign starts
-(`SandBoxManager.cs:380-384`). A save from before this version keeps playing with no broods; the spawner logs that
+**New campaigns only.** The brood and troll clans are `Faction`s in XML, which the engine reads only when a campaign
+starts (`SandBoxManager.cs:380-384`). A save from before them keeps playing without them; each spawner logs that
 once.
 
 ## Why This Exists
@@ -25,6 +33,8 @@ once.
 - **TAOM requirement:** a player asked for creature bandits that fight on their own. Middle-earth's Mirkwood
   spiders are the obvious first case.
 - **Without this feature:** the only spider in TAOM is a goblin's mount.
+- **Troll bands (#694):** Mike wanted trolls as a real threat across the map, one band per kingdom and hard to
+  beat (two to four trolls), where before a troll appeared only in Mordor's lord parties.
 
 ## Architecture
 
@@ -73,10 +83,27 @@ troop needs, in order, without a formation, and then makes it an enemy the engin
   `ApplyDamageReductions`: in the campaign's `TaomCombatMechanicsModel`, and in Custom Battle through
   `TaomCustomBattleCreatureDamageModel`, which extends the engine's own Custom Battle model and is declared by the
   feature module. A charge, kick, bash or hilt hit counts as Blunt, as vanilla computes it.
-- **Campaign.** `CreatureBroodSpawnBehavior` keeps up to four broods around Mirkwood while the MCM switch is on;
-  `TaomBanditDensityModel` caps vanilla's map-wide looter spawn for the clan at zero, switch or not. `Patch94` draws
-  the map icon as the spider alone and skips the encounter conversation. `TaomBattleRewardModel` refuses creatures
-  as prisoners (`CreatureBanditAgents.RefusesPrisoner`).
+- **Campaign.** `CreatureBroodSpawnBehavior` keeps up to twenty broods around the 47 Mirkwood and Dol Guldur
+  settlements (every town, castle and village of both cultures on the live map), one new brood a day, while the
+  MCM switch is on; `TaomBanditDensityModel` caps vanilla's map-wide
+  looter spawn for both creature clans at zero, switch or not. `Patch94` draws the brood's map icon as the spider
+  alone and skips the encounter conversation for a brood or a troll band. `TaomBattleRewardModel` refuses spiders
+  and bandit trolls as prisoners (`CreatureBanditAgents.RefusesPrisoner`) and, in `GetLootPrisonerChances`, keeps
+  freed prisoners out of both (the other winners share the band's chance; with none left the prisoner goes free).
+  `Patch94_CreatureBandNoJoin` keeps both out of the one path that bypasses the prisoner rule: with Partners in
+  Crime, "serve under my command" recruits every bandit party joining the encounter, a nearby band included.
+  Both spawners create and re-patrol their parties through `CreatureBandParties`, vanilla's own looter steps,
+  including its up to 15 tries for a spawn point outside the player's sight.
+- **Troll bands (#694).** `TrollBandSpawnBehavior` keeps about one band per living kingdom (not eliminated, owning a
+  town, castle or village): each day, while there are fewer bands than living kingdoms, one band spawns near a random
+  settlement of a kingdom with none and patrols there. A band counts for its home settlement's current kingdom. The
+  troops are hidden twins of Mordor's `cave_troll` and `hill_troll` (same race, level, skills, face and gear; own ids,
+  bandit occupation, the `wild_trolls` culture), so Mordor's recruitable trolls are untouched and only the twins are
+  refused as prisoners. No battle code: the race brings every troll trait. A band spawns with its template's two to
+  four trolls: vanilla's bandit roll stays inside each stack's range (`DefaultPartySizeLimitModel.cs:346-399`) and
+  Patch39 caps its growth at each `max_value`. It stays two to four trolls and nothing else: no troll is ever a
+  prisoner to free back, and the reward model gives it no freed prisoner. Which kingdoms are owed a band is the
+  pure `CreatureBanditRules.KingdomsOwedATrollBand`, keyed on kingdom ids.
 - **Recognising a creature.** Every check is `CreatureBanditAgents.Is`: a riderless, non-humanoid agent whose
   `Character` is a creature troop. No vanilla agent matches, because the engine never sets `Character` on a
   Monster-built agent. It reads `IsHuman`, never `IsMount`, because route A clears `Mountable`.
@@ -89,13 +116,13 @@ troop needs, in order, without a formation, and then makes it an enemy the engin
 ### Component Diagram
 
 ```
-CreatureBanditsConfig (troop ids, brood clan, anchors)   CreatureBanditTuning (MCM "Creature Bandits")
+CreatureBanditsConfig (troop ids, clans, anchors)        CreatureBanditTuning (MCM "Creature Bandits")
             |                                                       |
      CreatureBanditRules (pure decisions)                           |
       /        |          \                \                        |
 Patch93      Patch94   CreatureBroodSpawn  TaomBattleRewardModel /  |
-(battle)    (map UI)   Behavior (campaign) TaomBanditDensityModel / |
-   |                                       morale models            |
+(battle)    (map UI)   TrollBandSpawn      TaomBanditDensityModel / |
+   |                   -> CreatureBandParties  morale models        |
 CreatureBanditSpawner -> CreatureBanditBehaviorTree (hold, hunt, spider strikes) <-+
             \-> CreatureBanditDamage (TaomCombatMechanicsModel, TaomCustomBattleCreatureDamageModel)
 ```
@@ -111,6 +138,7 @@ inert, and none of these reads fold it. To change a default later, rename the pr
 | Option | Default | Range | Read |
 |---|---|---|---|
 | Spawn Spider Broods | on | on or off | each day; off stops new broods, live ones stay |
+| Spawn Troll Bands | on | on or off | each day; off stops new bands, live ones stay |
 | Creature Hit Points | 200 | 50 to 1000 | at the creature's spawn |
 | Bite / Pounce / Swipe: Max Soldiers Hit | 1 / 2 / 3 | 1 to 10 | at each attack |
 | Bite / Pounce / Swipe Damage % | 100 / 100 / 50 | 0 to 300 | at each attack |
@@ -120,20 +148,27 @@ inert, and none of these reads fold it. To change a default later, rename the pr
 | Missile Damage Taken % | 50 | 0 to 200 | at each hit |
 | Cut / Pierce / Blunt Damage Taken % | 100 / 100 / 100 | 0 to 200 | at each hit |
 
+Every option in the table after the two switches tunes the spiders only; a troll fights with its race's own numbers.
+
 ### Compile-time: `Main/Features/CreatureBandits/CreatureBanditsConfig.cs`
 
 | Field | Value | Meaning |
 |---|---|---|
 | `CreatureTroopIds` | the three spider troops | every troop that spawns as a creature |
 | `BroodClanId` | `mirkwood_spiders` | the brood's bandit clan |
-| `BroodAnchorSettlementIds` | Mirkwood villages and castles, Dol Guldur | where broods spawn and patrol |
-| `MaxBroods` | 4 | broods alive at once; one new brood a day below it |
-| `SpawnRadiusDays` | 0.25 | spawn distance from the anchor |
-| `DefaultSpawnBroods` | true | the MCM switch's default |
+| `BroodAnchorSettlementIds` | the 47 towns, castles and villages of Mirkwood and Dol Guldur (`CreatureBanditLiveDataTests` keeps it equal to the live map) | where broods spawn and patrol |
+| `MaxBroods` | 20 | broods alive at once; one new brood a day below it |
+| `TrollBanditTroopIds` | the two troll twins | the troll band troops (prisoner rule only) |
+| `TrollClanId` | `wild_trolls` | the troll bands' bandit clan |
+| `SpawnRadiusDays` | 0.25 | spawn distance from the anchor, broods and bands |
+| `DefaultSpawnBroods`, `DefaultSpawnTrollBands` | true | the MCM switches' defaults |
 
-Data: `characters/creature_bandits.xml` (the troops), the `mirkwood_spiders` culture (`taom_spcultures.xml`) and
+Data: `characters/creature_bandits.xml` (the spiders), the `mirkwood_spiders` culture (`taom_spcultures.xml`) and
 clan (`characters/clans.xml`), and `mirkwood_spiders_brood_template` (`taom_partyTemplates.xml`), whose first stack
-is the broodmother (the map icon's party leader). `CreatureBanditDataTests` pins the XML to the C# ids.
+is the broodmother (the map icon's party leader). `CreatureBanditDataTests` pins the XML to the C# ids. The trolls:
+`characters/troll_bandits.xml`, the `wild_trolls` culture and clan (home `village_R1_1`, nominal), and
+`wild_trolls_band_template` (cave troll 1 to 2, first, then hill troll 1 to 2); `TrollBanditDataTests` pins them,
+keeps each twin equal to its Mordor troll, and keeps the twins out of every other template and culture.
 
 ## Key Files
 
@@ -142,12 +177,14 @@ is the broodmother (the map icon's party leader). `CreatureBanditDataTests` pins
 | `Main/Features/CreatureBandits/CreatureBanditRules.cs` | Pure decisions |
 | `Main/Features/CreatureBandits/Hooks/CreatureBanditSpawner.cs` | Riderless spawn and wiring |
 | `Main/Features/CreatureBandits/Hooks/Patch93_CreatureBandits.cs` | Spawn swap, no panic, no rout, weapon guards |
-| `Main/Features/CreatureBandits/Hooks/Patch94_CreatureBroodCampaign.cs` | Map icon, no parley |
+| `Main/Features/CreatureBandits/Hooks/Patch94_CreatureBroodCampaign.cs` | Map icon, no parley, no joining the player |
 | `Main/Features/CreatureBandits/Hooks/CreatureBanditAgents.cs` | The fingerprint, and the rider, morale-panic and prisoner refusals |
 | `Main/Features/CreatureBandits/CreatureWeaponStateScope.cs`, `Hooks/Patch93_CreatureBanditWeaponState.cs`, `Hooks/CreatureRouteAUnmount.cs` | Route A: weapon state at creation, then unmount |
 | `Main/Features/CreatureBandits/CreatureBanditBehaviorTree.cs`, `CreatureBanditMissionBehavior.cs` | The creature's own tree, its attach, and the routed-count backstop |
 | `Main/Features/CreatureBandits/BehaviorTreeElements/` | Creature gate, deployment gate, hold and hunt |
 | `Main/Features/CreatureBandits/CreatureBroodSpawnBehavior.cs` | Mirkwood brood spawner |
+| `Main/Features/CreatureBandits/TrollBandSpawnBehavior.cs` | Troll band spawner, one band per kingdom |
+| `Main/Features/CreatureBandits/CreatureBandParties.cs` | The spawn and re-patrol steps both spawners share |
 | `Main/Features/CreatureBandits/CreatureBanditTuning.cs`, `Main/Features/TaomSettings.cs` (group "Creature Bandits") | The creature's numbers and their MCM options |
 | `Main/Features/Spider/SpiderStrikes.cs` | Strike rules as data: per-attack target cap, damage multiplier, crit-only knockdown |
 | `Main/Features/CreatureBandits/Hooks/CreatureBanditDamage.cs`, `Models/TaomCustomBattleCreatureDamageModel.cs` | Damage taken, campaign and Custom Battle |
@@ -167,20 +204,29 @@ is the broodmother (the map icon's party leader). `CreatureBanditDataTests` pins
   looter cap).
 - **Behaviour tree framework** (`Main/BehaviorTrees`, `CreatureTreeTracker`), and `AdvancedCombat` for the
   synthetic blow and the agent slot check.
-- **Data**: the live `TAOM_Map` settlements (the 13 anchors and the clan's home, `village_M1_1`) and the Armory
-  spider mount items.
+- **Data**: the live `TAOM_Map` settlements (the 47 anchors and the clans' homes, `village_M1_1` and
+  `village_R1_1`), the Armory spider mount items, and for the trolls the Armory's troll races, their `_map` action
+  sets and the Mordor trolls' gear.
 
 ## Tests
 
 - `TAOM.Tests/Features/CreatureBandits/CreatureBanditRulesTests.cs`: every rule, including the deployment gate,
-  the routed backstop's mount condition, the patrol rule and the MCM switch.
+  the routed backstop's mount condition, the patrol rule, the MCM switch, the cap of 20, and the troll rules (the
+  twins, both clans, the prisoner rule, the kingdoms owed a band, the freed-prisoner renormalisation).
+- `TAOM.Tests/Features/CreatureBandits/CreatureBanditLiveDataTests.cs` (LiveInstall): the brood anchors equal every
+  Mirkwood and Dol Guldur town, castle and village on the live map, and both troll `_map` action sets exist.
+- `TAOM.Tests/Features/CreatureBandits/TrollBanditDataTests.cs`: the troll XML matches the catalogue and loads in the
+  campaign; each twin is a hidden `wild_trolls` bandit equal to its Mordor troll; the clan and culture are a bandit
+  looter shape; the band template holds two to four trolls led by a cave troll; no other template or culture names
+  a twin.
 - `TAOM.Tests/Features/CreatureBandits/CreatureBanditDataTests.cs`: the troop XML matches the catalogue; hidden,
   bandit, a spider in every Horse slot, no weapon; the pale broodmother leads; the clan and its template match
   the C# clan id.
 - `TAOM.Tests/Features/CreatureBandits/CreatureBanditsWiringTests.cs`: the module, both patch categories and
   their phases, every patch parameter bound against the installed engine, the hot-method exclusions, the model
   overrides and what they call (prisoners, morale, damage in both game types), the tree split and its deployment
-  gate, and the prisoner rule itself.
+  gate, the prisoner rule itself, the troll spawner and both-clan seams (no parley, looter cap, no join, freed
+  prisoners), the out-of-sight spawn and the switch defaults.
 - `TAOM.Tests/Features/CreatureBandits/CreatureDiagFormatTests.cs` and `CreatureDiagLedgerTests.cs`: the log line
   format, the line budget and its exemptions, and the stuck, contact-stall, whiff, engage and side-stall checks.
 - `TAOM.Tests/Features/DevConsole/MissionSpawnOriginTests.cs`: console spawns get the right origin in Custom Battle
@@ -215,6 +261,26 @@ is the broodmother (the map icon's party leader). `CreatureBanditDataTests` pins
   read.
 - The diagnostics are budgeted (see above) and write nothing per frame.
 
+## In-game checklist (#694)
+
+Restart the game, then start a **new campaign**. The `[CreatureBandits][diag]` lines are in `taom_debug_*.log`.
+
+1. `campaign-start` shows `missingAnchors=-`, and the `daily` line's `broods=` climbs by one a day to 20.
+2. Over the first weeks the `troll-daily` line's `kingdomsOwed=` falls to 0, `looterCap=0`, and its `list` shows
+   each band with its kingdom and 2 to 4 troops.
+3. A band's map icon is a cave troll; a band left with only hill trolls shows a hill troll, in and out of a map
+   battle, with no crash on approach or zoom.
+4. Meeting a band skips the conversation (a `no-parley` line with a `wild_trolls` party id).
+5. In battle the trolls fight like Mordor's (brute force, 200 hit points). After a win no troll is taken prisoner
+   (`prisoner-refused troop=taom_troll_bandit_*`).
+6. With Partners in Crime, talk down a looter party next to a troll band and pick "serve under my command": the
+   looters join, the trolls do not and stay on the map.
+7. Lose to a troll band while holding looter prisoners: the band's `list` entry keeps its troll count only.
+8. New `brood-spawn` lines show `fromPlayer` above `playerSight`.
+9. MCM "Spawn Troll Bands" off: no new bands; live ones stay.
+10. An older save: one "No 'wild_trolls' clan" line; its broods grow to 20 over the new anchors.
+11. Custom Battle: `taom.spawn_troops taom_troll_bandit_cave 2 enemy` spawns trolls that fight normally.
+
 ## Known Limitations
 
 - **Scripted blows skip the damage-taken rules.** TAOM's own blows (`CustomAttacksUtils.TakeDamage`: troll brute
@@ -226,12 +292,17 @@ is the broodmother (the map icon's party leader). `CreatureBanditDataTests` pins
 - **A spawn that throws after the native creation call** (the render preload, the June crash site) leaves an orphan
   native agent: the fallback still spawns the troop's husk so the side can deplete, and the WARNING says the agent
   had been created. Never seen in play.
-- **Broods can spawn in the player's sight**; vanilla looters retry up to 15 spawn points to avoid it.
+- **Broods and bands can still spawn in the player's sight** when 15 tries find no point outside it, as vanilla's
+  looters can.
 - **Loot:** a defeated brood drops no items (the spider mounts are not merchandise).
 - **Map speed:** every stack is `default_group="Cavalry"`, so a brood earns the cavalry map-speed bonus that looters
   do not.
-- **Rescued looters join a brood.** A brood that beats a party holding bandit prisoners frees them into its roster, as
-  vanilla does for any bandit winner (`DefaultBattleRewardModel.cs:253-275`); they fight as ordinary looters.
+- **A band may leave a kingdom bare.** A band counts for its home settlement's current kingdom, so one whose home
+  was captured, or is held by a clan outside any kingdom, still counts toward the cap: its old kingdom gets a band
+  only once one dies. A player's own kingdom counts as living and gets a band too.
+- **Broods thin vanilla's looters.** Vanilla spawns fewer looters around a settlement with several looter-faction
+  parties homed there (`BanditSpawnCampaignBehavior.GetSpawnChanceInSettlement`), so Mirkwood villages with two
+  or more broods see fewer vanilla looters.
 - **The creation scope is not reentrancy-safe.** If a creation listener ever spawned an agent on the same thread
   inside `Mission.CreateAgent`, the nested postfix would take the outer creature's strip. No engine or TAOM listener
   does today (Codex review 2026-09-28, O1).
@@ -248,7 +319,8 @@ After sign-off, delete `Main/Features/CreatureBandits/Diagnostics/` and every ca
   `CreationHookSites`. `Hooks/Patch94_CreatureBroodCampaign.cs`: the map icon and no-parley notes.
 - `Hooks/CreatureBanditAgents.cs`: the three `Note*` calls; the refusals themselves stay.
 - `CreatureBanditMissionBehavior.cs`: the backstop's counter and event (the backstop stays).
-- `CreatureBroodSpawnBehavior.cs`: the `CreatureBroodCampaignDiag` calls (session, census, spawn, stray).
+- `CreatureBroodSpawnBehavior.cs`: the `CreatureBroodCampaignDiag` calls (session, census; keep the missing-anchor
+  warning). `CreatureBandParties.cs`: the spawn and stray calls. `TrollBandSpawnBehavior.cs`: the troll census call.
 - `BehaviorTreeElements/CreatureHuntTask.cs`: `NoteHunt` and `NoteStaleHandle`.
 - `Main/Features/Spider/BehaviorTreeElements/SpiderEngageDecorator.cs` (the engage census) and
   `SpiderAttackTaskBase.cs` (`NoteAttack`).
@@ -265,8 +337,14 @@ After sign-off, delete `Main/Features/CreatureBandits/Diagnostics/` and every ca
   MCM group moved out of Combat Mechanics, the creature holds during deployment, the brood switch (default on),
   the blunt rule, the morale rule moved from a patch to the morale models, the diagnostics made strippable. Codex
   review: creatures now show on the battle scoreboard, and a loose horse no longer takes a capped strike's slot.
+- 2026-09-28: up to twenty broods over all 23 Mirkwood and Dol Guldur settlements, and the Wild Trolls: bands of two
+  to four bandit trolls, about one per kingdom, never prisoners, no parley, with their own MCM switch (#694). Deep
+  review: the 24 castle-bound villages added (47 anchors, pinned to the live map), no brood or band joins the player
+  through the bandit join path, bands stay trolls only, spawns avoid the player's sight, one census line a day.
 
 ## GitHub Issue
 
 - **Issue:** #692: [Creature Bandits: riderless giant spider broods in Mirkwood](https://github.com/haterade22/TAOM/issues/692)
+- **Status:** Closed, `triage-needs-ingame`
+- **Issue:** #694: [twenty spider broods and wild troll bands, one per kingdom](https://github.com/haterade22/TAOM/issues/694)
 - **Status:** Open
