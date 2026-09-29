@@ -7,7 +7,7 @@ only by a town whose armoury allows them (its Barracks level: heavy at 1, elite 
 kit can also be forged at a level 3 armoury, found after a battle won against lords, or earned piece by
 piece on **the lord's gear ladder**: six quests, one per slot (hands, legs, shoulders, head, body,
 weapon), each done by the hero's own deeds or by handing an armourer the culture's lord's materials. The
-seventeen named hero weapons and shields are never sold or looted; the named weapons are the weapon
+twenty-seven named hero weapons and shields are never sold or looted; the named weapons are the weapon
 rung's reward for their cultures. At any town's armoury the player can upgrade a carried piece into the
 next class of its line for gold, two metals and, for lord kit, the kingdom's special resource. An
 artisan's "Armourer's Commission" trades a heavy chest of the town's people for steel, and a village
@@ -39,7 +39,7 @@ round the same day, and designed the ladder on 2026-09-28 (#693, below). Target 
 | KEYforce's "armoury or some building is tier X-Y-Z" | The Barracks level. Every live town starts at 1 or more (19 at 1, 33 at 2, 26 at 3), so heavy is on sale in every town, elite in 59 of 78, lord kit in 26 |
 | Loot of a heavy, elite, lord or named piece | Never drops; the loot roll runs over the troop's other gear |
 | Lord kit | Sold at a level 3 armoury, forged there for the best metal (thamaskene) plus the special resource, the lord's gear ladder (below), and the "Lord's Harness Unclaimed" event |
-| Named items | All seventeen hero weapons and shields are never sold or looted; the ladder's weapon rung awards the named weapons (table below) |
+| Named items | All seventeen hero weapons and shields are never sold or looted, and ten more since 2026-09-28 (Tuor's heirloom axes, Galadriel's sword, the seven Noldor swords); the ladder's weapon rung awards the named weapons (table below) |
 | Cultures with no armour of their own | Draw on a related culture's armour for their markets and their lord kit: the Armourer's Commission mapping |
 | Market sweep | Daily, per town, not once per save |
 | The Animalia moose | Guaranteed Mirkwood stock, like the elk; the rule that keeps XML non-merchandise items out of markets stays |
@@ -190,8 +190,12 @@ engine's own ItemCategory is an absolute tier that ignores TAOM's per-kingdom ca
   and velvet in SandBoxCore's `items/horses_and_others.xml`), so the material rows carry that flag and no
   component.
 - **Icons.** An item's inventory icon is a render of its mesh (`ItemImageIdentifierVM`), never a 2D
-  sprite: new material art is a mesh and texture through a Modding Kit import. Until then every material
-  wears the vanilla thamaskene ingot.
+  sprite, so each material has its own bar. Vanilla's smithing materials share one material
+  (`crafting_materials`: `pbr_metallic`, a 512 `crafting_mat_d/_n/_s` atlas in `core_game.tpac`), each
+  mesh sampling its own patch. The thirteen bars (`lord_material_01` to `13`, LOTRLOME_Armory
+  `Assets/smithing/lord_materials_geo.tpac`) are vanilla's `thamaskene_steel` cloned with
+  `tools/tpac_clone_metamesh.py` onto materials `lord_material_m_01` to `13`, whose 1K `_d` recolours the
+  atlas's thamaskene patches per culture over one shared `_n` and `_s` (Mike, 2026-09-28).
 - **Retiring a quest.** A `CareerQuest` whose definition is gone from the XML at load becomes a silent
   zombie (`InitializeQuestOnGameLoad` finds no definition, `RegisterEvents` returns early, nothing logs):
   a shipped quest definition is never deleted. The one-quest Lord's Harness shipped in no build (no
@@ -233,12 +237,12 @@ pieces with no lord sibling).
 | `<Upgrade target="heavy">` | | 500, 0.35, 3 steel + 4 iron | |
 | `<Upgrade target="elite">` | | 1,500, 0.5, 4 fine steel + 3 steel | |
 | `<Upgrade target="lord">` | + special_resource | 3,000, 0.5, 6 thamaskene, 150 resource | |
-| `<NamedWeapons>` | `<Item id>` | the seventeen in "Named items" below | Never sold or looted; the weapon rung awards the fifteen weapons |
+| `<NamedWeapons>` | `<Item id>` | the twenty-seven in "Named items" below | Never sold or looted; the weapon rung awards the twenty-five weapons |
 | `<LordEvent>` | chance, cooldown_days, leave_relation | 0.08, 90, 5 | |
 | `<VisitingArmourer>` | chance_per_day, duration_days, level_bonus | 0.04, 7, 1 | A visit goes only to a town whose Barracks is below 3 |
 | `<LordsLadder>` | count_knockouts; `<Step slot quest materials>` | true; hands 10, legs 15, shoulders 20, head 30, body 40, weapon 60 | The rungs in climbing order, each slot once, each on its own career quest; materials 1 to 999 |
 | `<LordsMaterials>` | base_chance, chance_per_ten_kills, max_chance, min_units, max_units; `<Material culture item>` | 0.1, 0.01, 0.6, 1, 3; 13 cultures | The find after a battle won: 10%, plus 1 point per ten enemies the hero struck down in it, at most 60%, for 1 to 3 units |
-| `<LadderWeapons>` | `<Weapon culture item>` | 32 rows, 13 cultures | The weapon rung's choices per culture, in order |
+| `<LadderWeapons>` | `<Weapon culture item>` | 39 rows, 14 cultures | The weapon rung's choices per culture, in order |
 
 The rung quests' deeds live in `taom_career_quests.xml` (Mike's placeholders, 2026-09-28):
 
@@ -251,11 +255,12 @@ The rung quests' deeds live in `taom_career_quests.xml` (Mike's placeholders, 20
 | Body (the Lord's Harness) | 500 | 75 | 3 | 40 |
 | Weapon (the Lord's Weapon) | 1,000 | 100 | 5 | 60 |
 
-Weapon picks: Gondor, the Rohirrim, Mordor, Mirkwood and Erebor offer their named weapons (Glamdring is
-tagged Gondor's in the Armory); the other eight cultures a pick from their own Armory weapons,
-placeholders for Mike or KEYforce, taken where the culture has any from the weapons no troop, lord or
-player kit carries: Rivendell the First Age swords of Fingon, Túrin and Celegorm; Dale a halberd and a
-war spear; the Easterlings two two-handed swords; the Haradrim a sword and a spear; Dunland an axe and a
+Weapon picks: Gondor, the Rohirrim, Mordor, Mirkwood, Erebor and Rivendell offer their named weapons
+(Glamdring is tagged Gondor's in the Armory; Rivendell's are the seven Noldor swords and Tuor's two
+heirloom axes, which carry no culture), and Lórien its own, Galadriel's sword, while Lindon still draws
+on Rivendell's. The other seven cultures offer a pick from their own Armory weapons, placeholders for
+Mike or KEYforce, taken where the culture has any from the weapons no troop, lord or player kit
+carries: Dale a halberd and a war spear; the Easterlings two two-handed swords; the Haradrim a sword and a spear; Dunland an axe and a
 spear; Dol Guldur its one such weapon, a halberd, and a two-handed mace one of its troops carries;
 Isengard (a two-handed sword and axe) and Gundabad (a sword and a mace) have no such weapon, so theirs
 are troop weapons.
@@ -295,9 +300,10 @@ game's gate is on. The ladder has no toggle of its own: it runs while the gate i
 ## Named items
 
 All live in the Armory (`LOTRLOME_items/LOTRAOM_weapons.xml`; the two shields in `LOTRAOM_shields.xml`)
-and are never sold or looted. The ladder's weapon rung is the named weapons' route (Mike, 2026-09-28:
-"named weapons, then a pick"): a hero of the weapon's culture, or of a culture that draws on it, chooses
-one at the top of the ladder. The two shields have no route yet.
+and are never sold or looted. Mike named the first seventeen on 2026-09-27 and ten more on 2026-09-28,
+after Tuor's heirloom axe turned up for sale in play. The ladder's weapon rung is the named weapons'
+route (Mike, 2026-09-28: "named weapons, then a pick"): a hero of the weapon's culture, or of a culture
+that draws on it, chooses one at the top of the ladder. The two shields have no route yet.
 
 | Item | Id | Culture | Route |
 |---|---|---|---|
@@ -316,6 +322,16 @@ one at the top of the ladder. The two shields have no route yet.
 | Thranduil's sword | `wm_thranduil_sword` | Mirkwood | Weapon rung |
 | Dáin's hammer | `sm_dwarf_dain_hammer_a` | Erebor | Weapon rung |
 | Dáin's axe | `sm_dwarf_dain_axe_a` | Erebor | Weapon rung |
+| Fingon's sword | `wm_fingon_sword` | Rivendell | Weapon rung (also Lindon, through its donor) |
+| Túrin's sword | `wm_turin_sword` | Rivendell | Weapon rung (likewise) |
+| Celegorm's sword | `wm_celegorm_sword` | Rivendell | Weapon rung (likewise) |
+| Finwë's sword | `wm_finwe_sword` | Rivendell | Weapon rung (likewise) |
+| Ingwë's sword | `wm_ingwe_sword` | Rivendell | Weapon rung (likewise) |
+| Finarfin's sword | `wm_finarin_sword` | Rivendell | Weapon rung (likewise) |
+| Voronwë's sword | `wm_voronwe_sword` | Rivendell | Weapon rung (likewise) |
+| Tuor's one-handed axe, an heirloom | `wm_tuors_axe_1h` | None | Rivendell's weapon rung (Mike, 2026-09-28) |
+| Tuor's two-handed axe, an heirloom | `wm_tuors_axe` | None | Rivendell's weapon rung |
+| Galadriel's sword | `wm_galadriel_sword` | Lórien | Lórien's own weapon rung row |
 | Boromir's shield | `wm_boromir_shield` | Gondor | None yet |
 | Théoden's shield | `wm_theoden_shield` | Rohirrim | None yet |
 
@@ -432,6 +448,8 @@ Run it after any troop roster change that moves a piece's lowest wearer across a
   first unclaimed rung, and a done rung keeps its readiness in its own slot, so no other rung inherits it;
   a rung quest already running for a rung that is no longer current gets no more credit (only the current
   rung's quest is fed).
+- **Tuor's two axes** carry no localization key in the Armory (`name="[Heirloom] Tuor's ..."`), so their
+  names read in English in every language until the Armory gives them one.
 - **The ladder's pieces** come with no quality modifier. The weapon rung of Umbar and the orc cultures
   offers Mordor's named weapons (their `armour_from` donor), Sauron's mace among them, until a culture
   row of its own is added.
@@ -440,22 +458,22 @@ Run it after any troop roster change that moves a piece's lowest wearer across a
   demand consumes it; the vanilla "Trade Proposal" incident can pick a stack of them and pay two or three
   times the value (the player's choice, IncidentsCampaignBehaviour.cs:1168-1224, 3352-3355); trade
   rumours list them; QuickActions' "Sell Low Value" sells them when its threshold is set at or above
-  their price (the default is 100). The art is a placeholder (the vanilla ingot).
+  their price (the default is 100).
 
 ## Owed
 
 - **Translation:** 102 new keys (88 module, 14 issue) are registered and seeded with English in all 12
   languages. The paid translator run is Mike's call (`translate_with_claude.py --module TAOM --sync-ids
   --apply`); until then `NoTranslatedString_MixesWritingSystems` flags the English rows in CN, JP, KO and RU.
-- **Names and art:** the thirteen material names and the weapon picks of the eight cultures without named
-  weapons are placeholders for Mike or KEYforce; the material icons need a mesh and texture per culture
-  (a Modding Kit import). Thirteen Imagine drafts, one per material (1024 px with transparency, named by
-  item id), wait outside the repo for that import.
+- **Names and art:** the thirteen material names and the weapon picks of the seven cultures without named
+  weapons are placeholders for Mike or KEYforce. The bars, their materials and textures live only in the
+  live Armory (unversioned): the Kit must save the Armory once so the game loads the new package, and an
+  in-game look is owed.
 - **GitHub issue:** the base feature has none; filing it is Mike's call (the repo is public).
 - **Mike's rulings:** the builder's defaults in "The lord's gear ladder" above, plus a rung with no piece
   offering no hand-in, drops stopping after the last rung, a material's value of 500 (it keeps them out
   of the hideout's night loot), and the Deep Seam's price and player-culture filter; the rung numbers and
-  the drop curve after play; a route for the two shields; and whether the eight cultures' weapon picks
+  the drop curve after play; a route for the two shields; and whether the seven cultures' weapon picks
   join `<NamedWeapons>` (never sold or looted, as the named weapons are) or stay merchandise that troops
   of Isengard, Gundabad and Dol Guldur already carry.
 - **In-game checklist:** a new campaign's markets hold heavy pieces everywhere, elite pieces only in
@@ -500,3 +518,5 @@ The lord's gear ladder: #693. The base feature: none yet (see Owed).
   captives, or lord's materials; thirteen material items, their battle finds and "The Deep Seam" issue
   rows (`reward_count`); the weapon rung's picks; the ladder's rows at the armoury; the gate extended to
   the ladder's references.
+- 2026-09-28: ten more named weapons (Mike): Tuor's two heirloom axes, Galadriel's sword and the seven
+  Noldor swords; Rivendell's weapon rung offers the swords and Tuor's axes, Lórien's Galadriel's sword.

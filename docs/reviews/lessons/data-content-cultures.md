@@ -1741,3 +1741,13 @@ weapons that are "never sold" though every one was merchandise.
   both live modules (troops, lords, equipment sets, player and enlistment kits); prefer one no kit carries, and
   say in the data which picks break that rule and why (a later comment claimed it for a pick one troop carries).
 - **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` rows 22 and 24 (XML lens; the doc correction).
+
+### Enumerate hero items from the data's own markers, then have Mike rule on the whole list
+The armour acquisition named-weapon list was completed once from the heroes people knew to search for, and
+still missed ten: Tuor's two `[Heirloom]` axes, Galadriel's sword (named "Galadriel Sword", no possessive) and
+the seven `[Noldor]` First Age swords. One of Tuor's axes turned up for sale in play.
+- **Why missed:** the search started from names in mind, not from how the Armory marks a hero item.
+- **Prevent:** list every crafted weapon and shield whose name carries a tag like `[Heirloom]`, a possessive
+  of a proper name, or a character's name, across every `LOTRLOME_items` file, and put the full candidate list
+  to Mike; a name-based search alone misses items named without a possessive.
+- **Source:** `docs/reviews/rca-armour-acquisition-2026-09-27.md` row 20 (found in play, 2026-09-28).

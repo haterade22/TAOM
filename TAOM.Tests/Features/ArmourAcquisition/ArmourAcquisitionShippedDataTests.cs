@@ -67,7 +67,9 @@ public class ArmourAcquisitionShippedDataTests
             "dolguldur", "gundabad", "khuzait", "aserai", "empire" };
 
         CollectionAssert.AreEquivalent(cultures, ladder.Materials.Keys.ToArray(), "one lord's material per culture that owns armour");
-        CollectionAssert.AreEquivalent(cultures, ladder.Weapons.Keys.ToArray(), "every culture's weapon rung has a pick");
+        // Lórien owns no armour but has a named weapon of its own, Galadriel's sword (Mike, 2026-09-28).
+        CollectionAssert.AreEquivalent(cultures.Append("lothlorien").ToArray(), ladder.Weapons.Keys.ToArray(),
+            "every culture's weapon rung has a pick");
         CollectionAssert.AreEquivalent(ArmourAcquisitionConfig.Default.Ladder.Materials.ToArray(), ladder.Materials.ToArray(),
             "the compiled default mirrors the shipped file");
     }
@@ -156,15 +158,35 @@ public class ArmourAcquisitionShippedDataTests
     }
 
     [TestMethod]
-    public void Config_NamesAllSeventeenHeroItems()
+    public void Config_NamesEveryHeroWeaponAndShield()
     {
         var named = new ArmourAcquisitionConfigProvider(_paths, _logger).GetConfig().NamedWeapons;
 
-        Assert.AreEqual(17, named.Count, "Mike, 2026-09-27: all seventeen hero weapons and shields are never sold or looted");
-        foreach (var id in new[] { "anduril", "glamdring_sword", "witchking_sword", "wm_boromir_shield", "wm_theoden_shield" })
+        // Mike: the seventeen (2026-09-27), then Tuor's two heirloom axes, Galadriel's sword and the seven Noldor
+        // swords (2026-09-28). Never sold, never looted.
+        Assert.AreEqual(27, named.Count);
+        foreach (var id in new[]
+                 {
+                     "anduril", "glamdring_sword", "witchking_sword", "wm_boromir_shield", "wm_theoden_shield",
+                     "wm_tuors_axe_1h", "wm_tuors_axe", "wm_galadriel_sword", "wm_fingon_sword", "wm_finarin_sword",
+                     "wm_finwe_sword", "wm_ingwe_sword", "wm_turin_sword", "wm_voronwe_sword", "wm_celegorm_sword",
+                 })
             Assert.IsTrue(named.Contains(id), id);
         CollectionAssert.AreEquivalent(ArmourAcquisitionConfig.Default.NamedWeapons.ToList(), named.ToList(),
             "the compiled default must match the shipped list");
+    }
+
+    [TestMethod]
+    public void Ladder_EveryNamedWeaponIsAWeaponRungChoice()
+    {
+        // Mike, 2026-09-28: the weapon rung is the named weapons' route. Only the two shields have none yet, and
+        // Tuor's axes, which carry no culture, sit on Rivendell's rung.
+        var config = new ArmourAcquisitionConfigProvider(_paths, _logger).GetConfig();
+        var offered = config.Ladder.Weapons.Values.SelectMany(w => w).ToHashSet();
+
+        CollectionAssert.AreEquivalent(new[] { "wm_boromir_shield", "wm_theoden_shield" },
+            config.NamedWeapons.Where(id => !offered.Contains(id)).ToArray(), "named weapons no rung offers");
+        CollectionAssert.IsSubsetOf(new[] { "wm_tuors_axe_1h", "wm_tuors_axe" }, config.Ladder.Weapons["rivendell"].ToList());
     }
 
     [TestMethod]

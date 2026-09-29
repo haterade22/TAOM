@@ -28,9 +28,10 @@
                      When this element is present it lists every recipe; a class with no recipe
                      cannot be upgraded into.
 
-  <NamedWeapons>     hero weapon and shield ids that are never sold or looted (Mike, 2026-09-27:
-                     all seventeen). The ladder's weapon rung awards the named weapons (Mike,
-                     2026-09-28); the two shields have no route yet.
+  <NamedWeapons>     hero weapon and shield ids that are never sold or looted (Mike: seventeen on
+                     2026-09-27; Tuor's heirloom axes, Galadriel's sword and the seven Noldor
+                     swords on 2026-09-28). The ladder's weapon rung awards the named weapons
+                     (Mike, 2026-09-28); the two shields have no route yet.
 
   <LordEvent>        after a battle your side wins against an enemy lord: the chance (0 to 1)
                      of finding his household's lord harness, the cooldown in days, and the
@@ -102,6 +103,17 @@
     <Item id="wm_thranduil_sword" />
     <Item id="sm_dwarf_dain_hammer_a" />
     <Item id="sm_dwarf_dain_axe_a" />
+    <!-- Named 2026-09-28 (Mike): Tuor's heirloom axes, Galadriel's sword and the seven Noldor swords -->
+    <Item id="wm_tuors_axe_1h" />
+    <Item id="wm_tuors_axe" />
+    <Item id="wm_galadriel_sword" />
+    <Item id="wm_fingon_sword" />
+    <Item id="wm_turin_sword" />
+    <Item id="wm_celegorm_sword" />
+    <Item id="wm_finwe_sword" />
+    <Item id="wm_ingwe_sword" />
+    <Item id="wm_finarin_sword" />
+    <Item id="wm_voronwe_sword" />
     <!-- LOTRLOME_Armory LOTRLOME_items/LOTRAOM_shields.xml -->
     <Item id="wm_boromir_shield" />
     <Item id="wm_theoden_shield" />
@@ -153,12 +165,20 @@
     <Weapon culture="mirkwood" item="wm_thranduil_sword" />
     <Weapon culture="erebor" item="sm_dwarf_dain_hammer_a" />
     <Weapon culture="erebor" item="sm_dwarf_dain_axe_a" />
-    <!-- No named weapon: a pick from the culture's own Armory weapons, ones no troop, lord or player kit
-         carries where the culture has any (Gundabad and Isengard have none; Dol Guldur has only its halberd,
-         and its mace is carried by one troop); placeholders for Mike or KEYforce -->
     <Weapon culture="rivendell" item="wm_fingon_sword" />
     <Weapon culture="rivendell" item="wm_turin_sword" />
     <Weapon culture="rivendell" item="wm_celegorm_sword" />
+    <Weapon culture="rivendell" item="wm_finwe_sword" />
+    <Weapon culture="rivendell" item="wm_ingwe_sword" />
+    <Weapon culture="rivendell" item="wm_finarin_sword" />
+    <Weapon culture="rivendell" item="wm_voronwe_sword" />
+    <!-- Tuor's heirloom axes carry no culture: Rivendell's rung offers them (Mike, 2026-09-28) -->
+    <Weapon culture="rivendell" item="wm_tuors_axe_1h" />
+    <Weapon culture="rivendell" item="wm_tuors_axe" />
+    <Weapon culture="lothlorien" item="wm_galadriel_sword" />
+    <!-- No named weapon: a pick from the culture's own Armory weapons, ones no troop, lord or player kit
+         carries where the culture has any (Gundabad and Isengard have none; Dol Guldur has only its halberd,
+         and its mace is carried by one troop); placeholders for Mike or KEYforce -->
     <Weapon culture="sturgia" item="dale_halberd_b" />
     <Weapon culture="sturgia" item="dale_war_spear_a" />
     <Weapon culture="isengard" item="isengard_berserker_sword_2h" />

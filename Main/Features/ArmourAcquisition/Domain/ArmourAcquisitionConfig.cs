@@ -133,12 +133,15 @@ public sealed class ArmourAcquisitionConfig
             [ArmourClass.Lord] = new(ArmourClass.Lord, 3000, 0.5f, 150f,
                 new[] { new UpgradeMaterial("ironIngot6", 6) }),
         },
-        // The seventeen hero weapons and shields of the Armory (Mike, 2026-09-27), as the shipped config lists them.
+        // The Armory's hero weapons and shields, as the shipped config lists them: seventeen (Mike, 2026-09-27), then
+        // Tuor's two heirloom axes, Galadriel's sword and the seven Noldor swords (Mike, 2026-09-28).
         namedWeapons: new HashSet<string>(StringComparer.Ordinal)
         {
             "anduril", "strider_sword", "theoden_sword", "wm_sauron_mace", "glamdring_sword", "eomer_sword",
             "eowyn_sword", "witchking_sword", "nazgul_sword", "wm_gondor_boromir_sword", "wm_gondor_faramir_sword",
             "wm_legolas_sword", "wm_thranduil_sword", "sm_dwarf_dain_hammer_a", "sm_dwarf_dain_axe_a",
+            "wm_tuors_axe_1h", "wm_tuors_axe", "wm_galadriel_sword", "wm_fingon_sword", "wm_turin_sword",
+            "wm_celegorm_sword", "wm_finwe_sword", "wm_ingwe_sword", "wm_finarin_sword", "wm_voronwe_sword",
             "wm_boromir_shield", "wm_theoden_shield",
         },
         lordEventChance: 0.08f, lordEventCooldownDays: 90, lordEventLeaveRelation: 5,
@@ -168,7 +171,12 @@ public sealed class ArmourAcquisitionConfig
             ["mordor"] = new[] { "wm_sauron_mace", "witchking_sword", "nazgul_sword" },
             ["mirkwood"] = new[] { "wm_legolas_sword", "wm_thranduil_sword" },
             ["erebor"] = new[] { "sm_dwarf_dain_hammer_a", "sm_dwarf_dain_axe_a" },
-            ["rivendell"] = new[] { "wm_fingon_sword", "wm_turin_sword", "wm_celegorm_sword" },
+            ["rivendell"] = new[]
+            {
+                "wm_fingon_sword", "wm_turin_sword", "wm_celegorm_sword", "wm_finwe_sword", "wm_ingwe_sword",
+                "wm_finarin_sword", "wm_voronwe_sword", "wm_tuors_axe_1h", "wm_tuors_axe",
+            },
+            ["lothlorien"] = new[] { "wm_galadriel_sword" },
             ["sturgia"] = new[] { "dale_halberd_b", "dale_war_spear_a" },
             ["isengard"] = new[] { "isengard_berserker_sword_2h", "isengard_2h_axe_c" },
             ["dolguldur"] = new[] { "wm_dol_goldur_halberd_a05", "wm_dol_goldur_2h_mace_a02" },
