@@ -106,6 +106,14 @@ procedural vanilla-mesh layouts (siege-camp tents, barricade rings) when a mesh 
 stripped install degrades instead of breaking; the fallback is exercised by renaming the tpac away
 (smoke checklist).
 
+**Known limitation (2026-09-29): the prefabs render nowhere, so every camp shows the fallback.** The four packages
+(these two and Refuge's `refuge_camp_a` and `refuge_palisade_ring`) were built outside the Modding Kit with yotthani's
+MithrilForge. The editor-built releases ship only `pack0.tpac`, which holds none of them, and the dev install loads
+TAOM's loose `Assets/` tree instead of `AssetPackages/`. Where they should live is an open decision
+([tpac-static-prop-authoring.md](../reference/tpac-static-prop-authoring.md)). The in-game check is the debug log:
+`[FieldCamp] placed 1 Field camp entities` means the prefab stood; a larger count means the fallback.
+`python -m unittest tools.tests.test_prefab_asset_packages` keeps the packages and the code's prefab names in step.
+
 ## Key files
 
 | File | Purpose |

@@ -307,6 +307,13 @@ their private fork patches all three. TAOM writes meshes with `tpac_clone_metame
 only on clip and master packages (`wire_anim_master_clip.ps1`), which none of the three touch. Not re-measured
 by TAOM.
 
+**`tpac_clone_metamesh.serialize` writes packed, like the Kit and every vanilla package; MithrilForge prop
+packages are 8-byte aligned** (2026-09-29). The parser reads the four `Main/_Module/AssetPackages/*.tpac`
+correctly, but re-serialising one is not byte-identical (16 to 25 bytes short). `parse` and `serialize` need
+neither `lz4` nor `xxhash`. Gate: `tools/tests/test_prefab_asset_packages.py` (the prefab meshes the code passes
+to `PlaceCenteredPrefab` are packaged there, and each package is structurally sound; it cannot see that the game
+never loads that folder today). Recipe and the delivery gap: `docs/reference/tpac-static-prop-authoring.md`.
+
 ## Docs & knowledge base
 
 | Script | Purpose | CLI Flags |

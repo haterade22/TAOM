@@ -493,6 +493,22 @@ clips [Certain] (R-Life). Any metadata edit outside the Kit must recompute it (`
 TpacTool.Lib writes a zero checksum and those packages still load when they have an RDC entry (lessons, "A hand-built
 tpac package is invisible").
 
+**Kit and vanilla packages are packed** [Certain] (2026-09-29): the TOC size equals the TOC's length and the segments
+follow each other with no gap (`map_icon_parts.tpac`: 6,266 segments). It equals file size minus 36 only in a
+package with no segment, such as TAOM's Kit-made creature clips; every one of the 6,177 vanilla clips in
+`animation_clips.tpac` carries a `6c1e136f` segment (stored little-endian as `6f131e6c`), and 1,944 a second one.
+Only MithrilForge's prop writer pads the field and aligns each segment to 8 bytes (TAOM's four camp props,
+[tpac-static-prop-authoring.md](tpac-static-prop-authoring.md) "Package layout facts"). Its author reports that
+aligned clip packages were rejected on 1.4.6 while aligned props loaded, and that a cloned clip written outside the
+Kit needs its metadata checksum kept, so its clip writer switches alignment off and keeps checksums [Unverified by
+TAOM].
+
+**A clip's segment is read by length.** Per MithrilForge (segment `6c1e136f`, version 2, decoded and re-encoded by
+its `tools/anim`), identical block contents with different padding crash the reader (`rglBuffer::read_void
+overrun`): values in a clip's own segment can change, sizes and key frames cannot. TAOM's creature clips carry no
+segment (the 243-clip census in [bannerlord-animation-clip-flags.md](bannerlord-animation-clip-flags.md) "A clip can
+carry its own motion"), so this binds only an edit of a vanilla clip's payload.
+
 **What Save does** [Certain unless tagged] (R-Kit):
 1. For each item, the Save branch (Kit 0xB9704E) opens a package patch (Kit 0x4276D0, "There can exist only one patch
    at a time"), clones the edited metadata, updates the patch's dependency records when the Animation source GUID
@@ -618,6 +634,23 @@ not find animation", 0 "undefined action" and 0 "default action set" lines [Cert
 **Skeleton against clip.** `as_hill_troll_warrior` declares `skeleton="troll_skeleton_a"`, binds 3,909 human clips
 beside 792 troll clips (3,941 and 760 before the 14:13 rebind on 2026-09-26), and plays in game (troll-race.md). So binding by clip index does not enforce skeleton identity
 [Likely]. Whether bone-count parity (28) is required is UNVERIFIED.
+
+**Movement sets and module order** (MithrilForge `docs/anim-findings.md` section 7, Bannerlord 1.4.6, 2026-09-24;
+not measured by TAOM; review [adopt-mithrilforge-2026-09-29.md](../reviews/adopt-mithrilforge-2026-09-29.md)):
+- **A movement set that names a module's OWN action is dropped by native, with no log line**, even when the action
+  type exists, is bound in the action set and reaches native intact (probed by hooking
+  `CreateProcessedModuleDataXMLForNative`). A module's own FULL movement set, holding vanilla movement sets, is
+  accepted. The cause is unknown.
+- **What works is vanilla's own mechanism:** an action set derived from the agent's (`base_set`) that overrides
+  VANILLA movement actions, as `as_human_female_warrior` does for the female walk, switched on after spawn with
+  `ActionSetCode.GenerateActionSetNameWithSuffix` and `MBActionSet.GetActionSet` (an unknown id returns an invalid
+  set, where `MBGlobals.GetActionSet` throws), then `Agent.SetActionSet(ref AnimationSystemData)`, whose argument
+  `Mission` builds with `FillAnimationSystemData` (`Mission.cs:4540-4541`).
+- **A module's XSLT sees only the modules loaded before it**: `CreateMergedXmlFile` applies module i's stylesheet,
+  then merges its XML, which fits the merge order above. MithrilForge orders loading with an optional
+  `DependedModule`; TAOM never adds `DependedModule` rows, so check the load order instead.
+- Select action sets by feature (skeleton, movement system), never by id: a race module's root set (LOTRLOME's
+  dwarves) need not derive from `as_human_warrior`.
 
 ## 8. Runtime playback
 

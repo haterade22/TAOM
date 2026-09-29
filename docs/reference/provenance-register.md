@@ -86,7 +86,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Khuzdul vocabulary (J.R.R. Tolkien) | `Khuzdul` `Khazad` `Baruk` `khuzdul-lexicon` | UNKNOWN | verbatim-port | `docs/audio/khuzdul-lexicon.html` `docs/audio/vo-script-dwarves.html` | uncleared |
 | Cave Troll Lightweight (Fab) | `Cave Troll Lightweight` `cave_troll_lightweight` | purchased-asset, code terms informal | data-port | `tools/oneoff/ue_export_cave_troll.py` `tools/blender/retarget_mannequin_to_human.py`; the retargeted `anim_troll_*` clips in `LOTRLOME_Armory` (live, outside the repo) | cleared |
 | Animalia - Elk (male), Animalia - Moose (male) (Fab) | `Animalia` `Elk_M` `Moose_M` `animalia_elk` `animalia_moose` | purchased-asset, code terms informal | data-port | `tools/blender/reskin_animalia_to_horse.py` `tools/blender/retarget_animalia_to_horse.py` `tools/blender/animalia_to_horse_map.json` `tools/blender/measure_animalia_clips.py` `tools/blender/animalia_elk_clip_measure.json` `tools/blender/animalia_moose_clip_measure.json` `tools/gen_animalia_anim_clips.ps1` `docs/features/animalia-elk-moose.md`; meshes, clips and textures in `LOTRLOME_Armory/AssetSources/creature/elk/` and their Kit packages in `LOTRLOME_Armory/Assets/creature/elk/` (live, outside the repo) | cleared |
-| Yotthani DualWield handoff, MithrilForge | `MithrilForge` `DualWield` `Bannerlord_Animation_Handoff` `TpacTool-bannerlord` | MIT (MithrilForge); the handoff document was shared with the maintainer by its author, no licence stated | comparison-only | (none) | cleared |
+| Yotthani DualWield handoff, MithrilForge | `MithrilForge` `DualWield` `Bannerlord_Animation_Handoff` `TpacTool-bannerlord` | MIT (MithrilForge); the handoff document was shared with the maintainer by its author, no licence stated | comparison-only | (none; restated facts in `docs/reference/tpac-static-prop-authoring.md` and the animation reference docs) | cleared |
 | Ghidra | `Ghidra` `NationalSecurityAgency/ghidra` `pyghidra` | Apache-2.0 | interop-only | `tools/native_decompile.py` runs the installed tool (see detail) | cleared |
 | Hindsight | `Hindsight` `vectorize-io/hindsight` | MIT | comparison-only | (none) | cleared |
 
@@ -261,6 +261,15 @@ private `TpacTool-bannerlord` fork and was empty). Nothing in TAOM derives from 
 taken. Engine and file-format facts the handoff reports were checked against TAOM's own evidence where possible and
 restated in TAOM's words, each attributed to the review,
 [`docs/reviews/adopt-yotthani-animation-handoff-2026-09-18.md`](../reviews/adopt-yotthani-animation-handoff-2026-09-18.md).
+
+Second pass on 2026-09-29: the private repository at commit `91149e11` was read in full (the anim library and its
+Python tools, `docs/anim-findings.md`, the `meshmats` and `texdds` verbs); the fork stayed unreadable. Its facts are
+restated, attributed, in [`tpac-static-prop-authoring.md`](tpac-static-prop-authoring.md) and the animation reference
+docs; `tools/tests/test_prefab_asset_packages.py` is TAOM's own and ports no MithrilForge code. The four camp and
+refuge `AssetPackages/*.tpac` in the section above are MithrilForge's output (its item layout, read 2026-09-29); the
+tool is irrelevant to their terms, which remain the commissioned-art clearance above. They have reached no player:
+the editor-built releases ship only `pack0.tpac`, which does not contain them. Review:
+[`docs/reviews/adopt-mithrilforge-2026-09-29.md`](../reviews/adopt-mithrilforge-2026-09-29.md).
 
 ### ADOD_Beasts, BehaviorTrees
 

@@ -252,6 +252,31 @@ Source: the Yotthani handoff (`docs/reviews/adopt-yotthani-animation-handoff-202
   1.0 and 0.0). A clip retimed or re-posed without its window keeps the old window. TAOM's scripted creature
   attacks apply damage in code and are not bound by these windows.
 
+**Second pass, 2026-09-29** (MithrilForge `docs/anim-findings.md` at `91149e11`, Bannerlord 1.4.6; review
+[`adopt-mithrilforge-2026-09-29.md`](../reviews/adopt-mithrilforge-2026-09-29.md)). Unmeasured by TAOM unless marked:
+
+- **A possible reconciliation of the two readings of `UnknownUInt2` [Unverified].** The system map reads byte 0 of
+  the field as the Kit's Loading Type (0 Always keep, 1 Load when needed, 2 Never load) and still records the two
+  readings as disagreeing (section 3). A clip that never loads its master would have only its own segment to play,
+  which is the handoff's "2 plays the segment". Two facts stop that short of an answer: every vanilla clip carries a
+  segment whatever its Loading Type, and if it holds, TAOM's self-keyed troll swing clips and the eight elephant
+  attack clips at Loading Type 2 with no segment would have nothing to play unless their RDC entry stands in
+  ([troll-race.md](../features/troll-race.md), [elephant.md](../features/elephant.md) Open items).
+- **Only a release collides.** A `ready_*` wind-up holds until the button is released and a `blocked_*` plays
+  after the blow; the engine runs no collision check in either, although vanilla still names a combat parameter
+  there. The flail `*_continue` clips carry `zero_collision` (0.0 to 0.0); other continues name another parameter
+  or none.
+- **Read the combat parameter from the clip's `CombatParameterId`, never from its name.** A flail swing is named
+  "overswing" yet uses `1h_up_flail` (0.60 to 0.88), not the sword's `1h_up` (0.38 to 0.50).
+- **`blend_main_item_bone_entitially`** steers the main-hand weapon along a float track inside the clip's own
+  segment (a thrust carries 48 keys of position and rotation). A clip re-posed for another grip must drop it.
+- **A cloned clip keeps `ContinueWithAction`**, which names the follow-up the engine plays by itself. Copied as is,
+  it points at the vanilla action; point it at your own clip when you ship one, and never clear it (an attack then
+  ends on its last pose).
+- **A clip cloned outside the Kit without its data segment played nothing** in MithrilForge's tests (duration 0);
+  its clips play their own segment. A metadata-only clone saved in the Kit and bound to its own master plays that
+  master, as TAOM's generated creature clips do (`tools/gen_troll_anim_clips.ps1`).
+
 ## TODO — a tpac clip-flag tool (not yet built)
 
 The existing `tpac_skeleton_*` tools read/patch **Skeleton** UserData, not **Animation** clip metadata. A

@@ -1212,3 +1212,35 @@ per-vertex table (0x56EBA0). The tool was removed the same day, and Mike ruled t
   its structure (channels, tags, vertex counts, rest fit); a custom asset that differs from vanilla is the
   suspect, and a working custom asset (the dwarf beards) is not the reference when vanilla disagrees.
 - **Source:** `docs/reviews/rca-saruman-lord-and-faces-2026-09-28.md`; `docs/reference/race-face-and-hand-morphs.md` "Hair, beards and eyebrows".
+
+### Trace the load path before calling an asset shipped: the camp props rendered nowhere for five weeks (2026-09-29)
+The four field camp and refuge props in `Main/_Module/AssetPackages/` are fetched by name with
+`MetaMesh.GetCopy(..., mayReturnNull: true)`, and a miss draws the vanilla siege-camp layout with only an entity count
+in the debug log. From their commit on 2026-08-22 until this review the docs called them shipped, cooked packs read by
+players. Neither held: TAOM has a loose `Assets/` tree, so the dev install never reads `AssetPackages/`
+(`rgl_log_73032.txt:203`), and the editor-built releases carry only `pack0.tpac`, which holds none of them. The first
+draft of this adoption repeated the mistake: it gated the mesh names and wrote that the #506 smoke would settle the
+RDC question, when the folder is not read at all.
+- **Why missed:** the fallback hid every failure, the feature doc recorded where the files sit rather than what loads
+  them, and nobody read a client log or a release folder; the smoke that would have shown it stayed owed after #506
+  closed without `triage-needs-ingame`.
+- **Prevent:** before writing that an asset ships or loads, read the evidence at both ends: the client log's
+  `Loading packages` line for its module (which tree loads) and the release folder or launcher manifest (what
+  players get). A name gate (`tools/tests/test_prefab_asset_packages.py`) keeps code and packages in step but cannot
+  see delivery; for a silent fallback, give the smoke an objective signal (`[FieldCamp] placed N`).
+- **Source:** `docs/reviews/rca-mithrilforge-adoption-2026-09-29.md`; `docs/reference/tpac-static-prop-authoring.md`.
+
+### Measure a clip only over the frames it plays, and decode what was written, not what was asked (2026-09-29)
+From MithrilForge's DualWield work (Bannerlord 1.4.6, `docs/anim-findings.md` sections 3.4, 3.5 and 3.1), three
+measurement faults that each cost its author days: a per-clip error taken over frames 50 to 120 read 0.95 m on a
+21-frame flail clip whose real error was 0.04 m, because outside the clip's key window the pose holds its end key
+while the target keeps moving; an encoder handed a correct target wrote a key up to 147 degrees off on a block with
+one real key, which only decoding the written bytes showed; and a blade "correction" that made every offline number
+perfect turned the weapon twice in game, because the engine attaches an off-hand weapon to another bone and the
+constant offset was its own compensation.
+- **Why missed:** each metric was right about what it measured and wrong about what plays.
+- **Prevent:** bound every animation measurement by the clip's play window (first to last key of any bone), audit
+  the written package by decoding it, and when a correction makes numbers perfect against a mirrored or derived
+  reference, look in game before shipping it.
+- **Source:** `docs/reviews/adopt-mithrilforge-2026-09-29.md`; MithrilForge `docs/anim-findings.md` (private repo,
+  read at `91149e11`).

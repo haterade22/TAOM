@@ -339,6 +339,11 @@ pose-blend, is refuted).
   the Yotthani handoff (`docs/reviews/adopt-yotthani-animation-handoff-2026-09-18.md`)). The rule below is about the loose `Assets/` tree. If `AssetPackages/`
   loads a hand-built package on 1.5.3 too, a new clone could skip the Kit save; it cannot replace a package that
   also exists under `Assets/`, because loose wins. Test with one new, uniquely named package before relying on it.
+  **2026-09-29:** TAOM's four MithrilForge camp props in `Main/_Module/AssetPackages/` cannot settle it: TAOM has a
+  loose `Assets/` tree, so the dev install never reads that folder, and the releases do not carry them. A test needs
+  a module with no loose tree, and the props differ from Kit packages in three more ways (alignment, no binding
+  segment, zero checksums) that a failure would not separate. The lead stands.
+  [tpac-static-prop-authoring.md](tpac-static-prop-authoring.md).
 - **A package written outside the Kit does not exist to the client until the Kit has saved the module**
   and `RuntimeDataCache/<package GUID>.rdc` exists for it (the #616 lesson, same day). Every working clip
   package in the Armory has one (24 spider, 73 warg, 24 chariot, 6 ram, 33 elephant); the 52 generated clips

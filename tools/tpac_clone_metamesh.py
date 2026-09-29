@@ -67,8 +67,8 @@ import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 
-import lz4.block
-import xxhash
+# lz4 and xxhash are imported where they are used, so parse() and serialize() run with neither
+# installed (tools/tests/test_prefab_asset_packages.py needs only the parser).
 
 MAGIC = b"TPAC"
 HEADER_SIZE = 36
@@ -180,8 +180,10 @@ def _reparse(toc: bytes | bytearray, blobs: list[bytes], version: int = 2) -> It
 
 
 def serialize(package_guid: bytes, items: list[Item], version: int = 2) -> bytes:
-    """Header + TOC + data, offsets recomputed, data in TOC order. Round-trips a parsed file byte
-    for byte (the writer contract in docs/ai-includes/creature-mount-authoring.md)."""
+    """Header + TOC + data, offsets recomputed, data in TOC order. Round-trips a PACKED file byte
+    for byte (the writer contract in docs/ai-includes/creature-mount-authoring.md): the Kit's and
+    every vanilla package. A MithrilForge prop package pads its TOC-size field and aligns each
+    segment to 8 bytes, so it comes back shorter (docs/reference/tpac-static-prop-authoring.md)."""
     tocs = [bytearray(it.toc) for it in items]
     toc_size = sum(len(t) for t in tocs)
     cur = HEADER_SIZE + toc_size
@@ -207,6 +209,7 @@ def segment_payload(item: Item, seg: Segment) -> bytes:
     blob = segment_bytes(item, seg)
     if not seg.is_compressed:
         return blob
+    import lz4.block
     return lz4.block.decompress(blob, uncompressed_size=seg.actual)
 
 
@@ -227,6 +230,7 @@ def _metadata_span(item: Item) -> tuple[int, int]:
 
 def expected_checksum(item: Item) -> bytes:
     """xxHash64 (seed 0) over the metadata length prefix plus the metadata, as the Kit writes it."""
+    import xxhash
     start, end = _metadata_span(item)
     return struct.pack("<Q", xxhash.xxh64(bytes(item.toc[start:end]), seed=0).intdigest())
 
@@ -257,6 +261,8 @@ def _replace_names(buf: bytes, old: str, new: str) -> tuple[bytes, int]:
 
 def clone_metamesh(pkg: Package, src_name: str, new_name: str,
                    old_material: tuple[str, bytes], new_material: tuple[str, bytes]) -> Item:
+    import lz4.block
+    import xxhash
     src = next((it for it in pkg.items if it.name == src_name), None)
     if src is None:
         raise CloneError(f"no item named {src_name!r} in the package")
