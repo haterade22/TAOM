@@ -2120,60 +2120,6 @@
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter
-        id="hill_troll"
-        race="hill_troll"
-        default_group="Infantry"
-        level="51"
-        is_basic_troop="false"
-        name="{=aom_hill_troll_name}[AMordor] Hill Troll"
-        occupation="Soldier"
-        culture="Culture.mordor">
-        <face>
-            <face_key_template
-                value="BodyProperty.fighter_cave_troll" />
-        </face>
-        <skills>
-            <skill
-                id="Athletics"
-                value="185" />
-            <skill
-                id="Riding"
-                value="35" />
-            <skill
-                id="OneHanded"
-                value="350" />
-            <skill
-                id="TwoHanded"
-                value="335" />
-            <skill
-                id="Polearm"
-                value="345" />
-            <skill
-                id="Bow"
-                value="35" />
-            <skill
-                id="Crossbow"
-                value="25" />
-            <skill
-                id="Throwing"
-                value="105" />
-        </skills>
-        <upgrade_targets />
-        <Equipments>
-            <EquipmentRoster>
-                <equipment
-                    slot="Item0"
-                    id="Item.wm_hill_troll_2h_hammer_a" />
-            </EquipmentRoster>
-            <EquipmentRoster
-                civilian="true">
-                <equipment
-                    slot="Item0"
-                    id="Item.wm_hill_troll_2h_hammer_a" />
-            </EquipmentRoster>
-        </Equipments>
-    </NPCCharacter>
     <!-- ==================== MORDOR MILITIA TROOPS ==================== -->
 
     <NPCCharacter

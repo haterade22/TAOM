@@ -2947,7 +2947,8 @@ public class VolunteerRecruitmentServiceTests
            || troopId.EndsWith("_merc")           // tavern mercenaries — hired for gold, not volunteered
            || troopId == "cave_troll"             // non-humanoid monster; deferred pending spider-style spawn support
            || BorrowedCultureCapstones.Contains(troopId)
-           || BlackNumenoreanLine.Contains(troopId);
+           || BlackNumenoreanLine.Contains(troopId)
+           || RetiredSaveCompatTroops.Contains(troopId);
 
     // Blue Craig and the Misty Mountain Orcs field the shared goblin tree. Each kept exactly one
     // bespoke top-tier troop so its elite slot stays its own, the same shape Umbar keeps umbar_elite
@@ -3016,6 +3017,36 @@ public class VolunteerRecruitmentServiceTests
             System.Linq.Enumerable.ToList(BlackNumenoreanLine),
             System.Linq.Enumerable.ToList(defined),
             "BlackNumenoreanLine must list exactly the mordor_num_* troops defined in troops_mordor.xml");
+    }
+
+    // Troops no pool offers any more but that shipped in a release, so existing saves still hold
+    // them in garrisons, parties and notables' volunteer slots. Their rows stay in the troop files
+    // (hidden from the encyclopedia) because deleting an NPCCharacter leaves a hollow CharacterObject
+    // in those saves that Patch83 cannot repair (#670). gondor_ring_peasant sat in the Glanhir pools
+    // from v2.0.25 until the 1.5.x troop tree dropped it.
+    private static readonly System.Collections.Generic.HashSet<string> RetiredSaveCompatTroops =
+        new System.Collections.Generic.HashSet<string>
+        {
+            "gondor_ring_peasant",
+        };
+
+    [TestMethod]
+    public void RetiredSaveCompatTroops_StillDefined_SoOldSavesResolveThem()
+    {
+        var troopsDir = ResolveTroopsDir();
+        if (troopsDir == null)
+        {
+            Assert.Inconclusive("Could not locate Main/_Module/ModuleData/troops relative to test bin");
+            return;
+        }
+        var (nodes, _) = ParseTroopGraph(troopsDir);
+
+        var missing = System.Linq.Enumerable.ToList(
+            System.Linq.Enumerable.Where(RetiredSaveCompatTroops, id => !nodes.Contains(id)));
+
+        Assert.AreEqual(0, missing.Count,
+            "Retired troops that old saves still reference must keep their NPCCharacter row (#670):\n  "
+            + string.Join("\n  ", missing));
     }
 
     private static string ResolveTroopsDir()

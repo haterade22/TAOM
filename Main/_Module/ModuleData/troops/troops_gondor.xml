@@ -1905,6 +1905,43 @@
   <!-- ============================================================ -->
 
   <NPCCharacter
+      id="gondor_ring_peasant"
+      is_hidden_encyclopedia="true"
+      default_group="Infantry"
+      level="6"
+      name="{=aom_gondor_ring_peasant_name}[Gondor] Ringlo Vale Peasant"
+      occupation="Soldier"
+      is_basic_troop="true"
+      culture="Culture.gondor">
+    <face>
+      <face_key_template value="BodyProperty.fighter_gondor" />
+    </face>
+    <skills>
+      <skill id="Athletics" value="38" />
+      <skill id="Riding" value="10" />
+      <skill id="OneHanded" value="38" />
+      <skill id="TwoHanded" value="23" />
+      <skill id="Polearm" value="33" />
+      <skill id="Bow" value="5" />
+      <skill id="Crossbow" value="0" />
+      <skill id="Throwing" value="0" />
+    </skills>
+    <upgrade_targets>
+      <upgrade_target id="NPCCharacter.gondor_ring_militia" />
+    </upgrade_targets>
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_gondor_spear_b" />
+        <equipment slot="Item1" id="Item.sm_gd_shield_a2" />
+        <equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
+        <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+      </EquipmentRoster>
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+    </Equipments>
+  </NPCCharacter>
+
+  <NPCCharacter
       id="gondor_ring_militia"
       default_group="Infantry"
       level="11"
