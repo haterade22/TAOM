@@ -66,7 +66,8 @@ public sealed class RealmBorderService
     private int _generation;
     private bool _dirty = true;
     private bool _checkTerritory = true;
-    private (bool Heraldic, bool Gild, float Width, bool Names) _look;
+    private (bool Heraldic, bool Gild, float Width, bool Names, bool Fill, float FillStrength, int ColourVersion) _look;
+    private (string? Material, string? Blend) _render;
     private bool? _drawThroughTerrain;
     private float _lastAlpha = -1f;
     private double _slowestUploadMs;
@@ -169,7 +170,7 @@ public sealed class RealmBorderService
             for (int column = 0; column < map.Columns; column++)
             {
                 string? realm = RealmAt(column, row);
-                uint colour = realm != null ? palette.ColourOf(realm)
+                uint colour = realm != null ? (_settings.ColourOverride(realm) ?? palette.ColourOf(realm))
                     : map[column, row] >= 0 ? 0xFFC8C8BEu                                   // a fief without an owner
                     : result.Terrain[column, row] == TerrainClass.Water ? 0xFF6E8CA0u : 0xFF8C8C82u; // water, wild land
                 bool edge = realm != null && (RealmAt(column + 1, row) != realm || RealmAt(column - 1, row) != realm
@@ -186,6 +187,15 @@ public sealed class RealmBorderService
     public bool UseMaterial(string name)
     {
         if (!_renderer.UseMaterial(name))
+            return false;
+        ForgetDrawn();
+        return true;
+    }
+
+    /// <summary>Redraws every tile with another engine blend mode (the look session's console command).</summary>
+    public bool UseBlendMode(string name)
+    {
+        if (!_renderer.UseBlendMode(name))
             return false;
         ForgetDrawn();
         return true;
@@ -209,6 +219,18 @@ public sealed class RealmBorderService
         if (!_renderer.IsAvailable)
             return;
 
+        // MCM's material and blend choices apply when they change; a console command in between stands until then.
+        var render = (_settings.MaterialName, _settings.BlendMode);
+        if (!render.Equals(_render))
+        {
+            _render = render;
+            if (!_renderer.UseMaterial(render.MaterialName))
+                _logger.LogWarning($"[RealmBorders] MCM Border Material '{render.MaterialName}' does not exist; keeping the current one");
+            if (!_renderer.UseBlendMode(render.BlendMode))
+                _logger.LogWarning($"[RealmBorders] MCM Border Blend Mode '{render.BlendMode}' is not an engine blend mode; keeping the current one");
+            ForgetDrawn();
+        }
+
         if (_checkTerritory || _territory.State == TerritoryState.Idle)
         {
             // Begin keeps a finished partition when the fief layout is unchanged, so a reload or a
@@ -227,7 +249,8 @@ public sealed class RealmBorderService
             _drawThroughTerrain = drawThrough;
             ForgetDrawn();
         }
-        var look = (_settings.HeraldicBands, _settings.GildPlayerRealm, _settings.WidthScale, _settings.RealmNames);
+        var look = (_settings.HeraldicBands, _settings.GildPlayerRealm, _settings.WidthScale, _settings.RealmNames,
+            _settings.FillLands, _settings.FillStrength, _settings.ColourVersion);
         if (!look.Equals(_look))
         {
             _look = look;
@@ -266,7 +289,8 @@ public sealed class RealmBorderService
             + (r == null ? string.Empty : $"partition={r.PartitionTime.TotalMilliseconds:F0}ms grid={r.Map.Columns}x{r.Map.Rows} chains={r.Boundaries.Count} ")
             + (_painted == null ? string.Empty : $"repaint={_painted.Milliseconds:F0}ms lines={_painted.Lines} quads={_painted.Quads} ")
             + $"painting={_painting != null} tiles={_uploaded.Count} pending={_pending.Count} slowestUpload={_slowestUploadMs:F1}ms "
-            + $"alpha={Alpha:F2} labels={Labels.Count} material={_renderer.ActiveMaterial ?? "(none yet)"}";
+            + $"alpha={Alpha:F2} labels={Labels.Count} material={_renderer.ActiveMaterial ?? "(none yet)"} "
+            + $"blend={_renderer.ActiveBlendMode ?? "(none yet)"}";
     }
 
     /// <summary>Snapshots the campaign on this thread and, unless nothing on screen would change, paints on the worker.</summary>
@@ -330,6 +354,9 @@ public sealed class RealmBorderService
         var look = new BorderLook { WidthScale = scene.Width };
         float cell = territory.Map.CellSize;
         quads.Clear();
+        // The tint goes in first: within a tile's mesh, later triangles draw over earlier ones.
+        if (scene.FillStrength > 0f)
+            RealmFill.Paint(territory.Map, scene.Groups, scene.FillColours, scene.FillStrength, quads);
         foreach (var line in lines)
         {
             var world = line.Points.Select(p => new MapPoint(territory.Map.MinX + p.Column * cell, territory.Map.MinY + p.Row * cell)).ToList();
@@ -368,7 +395,12 @@ public sealed class RealmBorderService
                 colours[group] = ColourOf(group);
         }
         string? player = Mode == MapMode.Political ? _map.PlayerRealm : null;
-        return new PaintScene(result, realms, groups, colours, player, Mode, _look.Heraldic, _look.Gild, _look.Width, _look.Names);
+        // The allies and enemies mode leaves neutral land untinted: a white wash over half the map says nothing.
+        var fillColours = Mode == MapMode.War
+            ? colours.Where(pair => pair.Key != RelationGroups.Neutral).ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal)
+            : colours;
+        float fill = _look.Fill ? _look.FillStrength : 0f;
+        return new PaintScene(result, realms, groups, colours, fillColours, fill, player, Mode, _look.Heraldic, _look.Gild, _look.Width, _look.Names);
     }
 
     private string? GroupOf(string realm) => Mode switch
@@ -382,8 +414,11 @@ public sealed class RealmBorderService
     {
         MapMode.Alignment => group == FreeSide ? FreePeoplesColour : ShadowColour,
         MapMode.War => RelationColours.TryGetValue(group, out uint colour) ? colour : RelationColours[RelationGroups.Neutral],
-        _ => Palette.ColourOf(group),
+        _ => RealmColour(group),
     };
+
+    /// <summary>A realm's colour: the player's MCM choice, else the palette's.</summary>
+    private uint RealmColour(string realm) => _settings.ColourOverride(realm) ?? Palette.ColourOf(realm);
 
     private string? SideOf(string realm) =>
         _alignment.ResolveSide(realm, _map.CultureOfRealm(realm) ?? string.Empty) switch
@@ -459,12 +494,14 @@ public sealed class RealmBorderService
     private sealed class PaintScene
     {
         public PaintScene(TerritoryResult territory, string?[] realms, string?[] groups, Dictionary<string, uint> colours,
-            string? player, MapMode mode, bool heraldic, bool gild, float width, bool names)
+            Dictionary<string, uint> fillColours, float fillStrength, string? player, MapMode mode, bool heraldic, bool gild, float width, bool names)
         {
             Territory = territory;
             Realms = realms;
             Groups = groups;
             Colours = colours;
+            FillColours = fillColours;
+            FillStrength = fillStrength;
             Player = player;
             Mode = mode;
             Heraldic = heraldic;
@@ -480,6 +517,12 @@ public sealed class RealmBorderService
         public string?[] Groups { get; }
 
         public Dictionary<string, uint> Colours { get; }
+
+        /// <summary>The groups whose land is tinted, with their colours.</summary>
+        public Dictionary<string, uint> FillColours { get; }
+
+        /// <summary>The tint's strength; 0 when the land is not tinted.</summary>
+        public float FillStrength { get; }
 
         public string? Player { get; }
 
@@ -499,7 +542,7 @@ public sealed class RealmBorderService
 
         public bool SameAs(PaintScene other) =>
             SameRealmsAs(other) && Groups.SequenceEqual(other.Groups) && Player == other.Player && Mode == other.Mode
-            && Heraldic == other.Heraldic && Gild == other.Gild && Width.Equals(other.Width)
+            && Heraldic == other.Heraldic && Gild == other.Gild && Width.Equals(other.Width) && FillStrength.Equals(other.FillStrength)
             && Colours.Count == other.Colours.Count
             && Colours.All(pair => other.Colours.TryGetValue(pair.Key, out uint colour) && colour == pair.Value);
     }

@@ -318,6 +318,7 @@ answer is conclusive and fails open in every path.
 | `taom.print_realm_province_map` | A | campaign | Guessing where a border should run. Writes `Logs/taom_realm_provinces.bmp`, the province map as a picture: realms in their colours with dark edges, a fief without an owner pale, wild land grey, water blue, north up |
 | `taom.realm_borders_rebuild` | B | campaign | A restart. Samples the terrain again, recomputes the provinces and redraws; nothing saved changes. Also retries a build that failed |
 | `taom.realm_borders_material <name>` | B | campaign | A rebuild per guess. Redraws the borders from another engine material, refused when none has that name; for the in-game look session |
+| `taom.realm_borders_blend <mode>` | B | campaign | A rebuild per guess. Redraws the borders with another engine blend mode (the MCM Border Blend Mode does the same); the first look showed an additive glow |
 | `taom.damage_agent <amount> [name]` | B | mission | HP attrition and death thresholds. **Cannot test shrug-off / unstoppable** — a synthetic blow bypasses the hit path those models run on |
 | `taom.requeue_settlement <settlement>` | B | campaign | A siege plus a day's wait to re-check #333. Refuses settlements with no existing record, so it verifies a timer rather than arming one |
 | `taom.print_race_offsets [avatar\|image]` | A | anywhere | Every configured per-race framing offset, plus which race the on-screen tableau is showing |

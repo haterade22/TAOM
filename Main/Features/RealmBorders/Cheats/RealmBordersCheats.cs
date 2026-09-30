@@ -35,6 +35,13 @@ public static class RealmBordersCheats
         "Format is \"taom.realm_borders_material <name>\".\n"
         + "Redraws the borders from another engine material. Refused when no material has that name.";
 
+    private const string BlendUsage =
+        "Format is \"taom.realm_borders_blend <mode>\".\n"
+        + "Redraws the borders with another engine blend mode, until the MCM Border Blend Mode is changed:\n"
+        + "NoAlphaBlend, Modulate, AddAlpha, Multiply, Add, Max, Factor, AddModulateCombined, NoAlphaBlendNoWrite,\n"
+        + "ModulateNoWrite, GbufferAlphaBlend, GbufferAlphaBlendWithVtResolve, NoAlphaBlendNoAlphaWrite.\n"
+        + "taom.print_realm_borders shows the one in use.";
+
     [CommandLineFunctionality.CommandLineArgumentFunction("print_realm_borders", "taom")]
     public static string PrintRealmBorders(List<string> strings) =>
         TaomConsole.RunInCampaign(strings, StatusUsage, _ => IoC.Resolve<RealmBorderService>().Status());
@@ -62,6 +69,17 @@ public static class RealmBordersCheats
             IoC.Resolve<RealmBorderService>().Rebuild();
             return "Rebuilding the provinces; the borders redraw over the next few seconds on the map. "
                  + "taom.print_realm_borders reports the timings.";
+        });
+
+    [CommandLineFunctionality.CommandLineArgumentFunction("realm_borders_blend", "taom")]
+    public static string RealmBordersBlend(List<string> strings) =>
+        TaomConsole.RunInCampaign(strings, BlendUsage, args =>
+        {
+            if (args.Count != 1)
+                return BlendUsage;
+            return IoC.Resolve<RealmBorderService>().UseBlendMode(args[0])
+                ? $"Redrawing the borders with blend mode '{args[0]}'."
+                : $"No blend mode named '{args[0]}'.\n" + BlendUsage;
         });
 
     [CommandLineFunctionality.CommandLineArgumentFunction("realm_borders_material", "taom")]

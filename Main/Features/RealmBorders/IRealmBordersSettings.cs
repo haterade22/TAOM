@@ -26,4 +26,22 @@ public interface IRealmBordersSettings
     bool RealmNames { get; }
 
     bool CrossingNotices { get; }
+
+    /// <summary>Tint each realm's land in its colour between the borders.</summary>
+    bool FillLands { get; }
+
+    /// <summary>How strongly the land is tinted, 0.05 to 0.8.</summary>
+    float FillStrength { get; }
+
+    /// <summary>The engine blend mode to draw with, by name; null keeps the material's own.</summary>
+    string? BlendMode { get; }
+
+    /// <summary>The engine material to draw from; null picks the first that exists.</summary>
+    string? MaterialName { get; }
+
+    /// <summary>Changes whenever a realm's colour field changes, so a repaint can follow.</summary>
+    int ColourVersion { get; }
+
+    /// <summary>The player's colour for a realm, or null to keep the palette's.</summary>
+    uint? ColourOverride(string realm);
 }

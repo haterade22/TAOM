@@ -1667,4 +1667,139 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("Border-Crossing Notices", Order = 8, RequireRestart = false,
         HintText = "Tells you when your party rides into another kingdom's lands.")]
     public bool RealmBordersCrossingNotices { get; set; } = true;
+
+    [SettingPropertyGroup("Realm Borders")]
+    [SettingPropertyBool("Colour Realm Lands", Order = 9, RequireRestart = false,
+        HintText = "Tints each kingdom's land in its colour between the borders, like a map in an atlas.")]
+    public bool RealmBordersFillLands { get; set; } = true;
+
+    [SettingPropertyGroup("Realm Borders")]
+    [SettingPropertyFloatingInteger("Realm Colour Strength", 0.05f, 0.8f, "0.00", Order = 10, RequireRestart = false,
+        HintText = "How strongly the land is tinted: 0.05 is a faint wash, 0.8 nearly paints over the map. Default: 0.3.")]
+    public float RealmBordersFillStrength { get; set; } = TAOM.Features.RealmBorders.RealmBordersSettingsProvider.DefaultFillStrength;
+
+    // Dropdowns persist by index: never reorder either list (RealmBordersProviderTests pins both).
+    [SettingPropertyGroup("Realm Borders")]
+    [SettingPropertyDropdown("Border Blend Mode", Order = 11, RequireRestart = false,
+        HintText = "Advanced: how the borders mix with the map beneath. 'Material default' keeps the engine material's own. If the borders glow and their dark ink line is missing, try Modulate or Factor.")]
+    public Dropdown<string> RealmBordersBlendMode { get; set; } = new Dropdown<string>(
+        TAOM.Features.RealmBorders.RealmBordersSettingsProvider.BlendModeChoices, 0);
+
+    [SettingPropertyGroup("Realm Borders")]
+    [SettingPropertyDropdown("Border Material", Order = 12, RequireRestart = false,
+        HintText = "Advanced: the engine material the borders are drawn from. 'Automatic' uses the first of them that exists.")]
+    public Dropdown<string> RealmBordersMaterial { get; set; } = new Dropdown<string>(
+        TAOM.Features.RealmBorders.RealmBordersSettingsProvider.MaterialChoices, 0);
+
+    // --- Realm Borders: one colour per realm; blank keeps the palette's (ModuleData/realm_borders/palette.json) ---
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Gondor", Order = 0, RequireRestart = false,
+        HintText = "Gondor's colour on the map, written #RRGGBB. Blank uses the default, #3F76B8.")]
+    public string RealmColourGondor { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Rohan", Order = 1, RequireRestart = false,
+        HintText = "Rohan's colour on the map, written #RRGGBB. Blank uses the default, #5FB040.")]
+    public string RealmColourRohan { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Dunland", Order = 2, RequireRestart = false,
+        HintText = "Dunland's colour on the map, written #RRGGBB. Blank uses the default, #7A4A28.")]
+    public string RealmColourDunland { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Isengard", Order = 3, RequireRestart = false,
+        HintText = "Isengard's colour on the map, written #RRGGBB. Blank uses the default, #3D3D40.")]
+    public string RealmColourIsengard { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Mordor", Order = 4, RequireRestart = false,
+        HintText = "Mordor's colour on the map, written #RRGGBB. Blank uses the default, #9E1A12.")]
+    public string RealmColourMordor { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Harad", Order = 5, RequireRestart = false,
+        HintText = "Harad's colour on the map, written #RRGGBB. Blank uses the default, #E8402A.")]
+    public string RealmColourHarad { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Umbar", Order = 6, RequireRestart = false,
+        HintText = "Umbar's colour on the map, written #RRGGBB. Blank uses the default, #D04A80.")]
+    public string RealmColourUmbar { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Shaghâna", Order = 7, RequireRestart = false,
+        HintText = "Shaghâna's colour on the map, written #RRGGBB. Blank uses the default, #DC7FA8.")]
+    public string RealmColourShaghana { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Âbanissa", Order = 8, RequireRestart = false,
+        HintText = "Âbanissa's colour on the map, written #RRGGBB. Blank uses the default, #2A8C8C.")]
+    public string RealmColourAbanissa { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Khand", Order = 9, RequireRestart = false,
+        HintText = "Khand's colour on the map, written #RRGGBB. Blank uses the default, #E8841E.")]
+    public string RealmColourKhand { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Rhûn", Order = 10, RequireRestart = false,
+        HintText = "Rhûn's colour on the map, written #RRGGBB. Blank uses the default, #8A1236.")]
+    public string RealmColourRhun { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Dale", Order = 11, RequireRestart = false,
+        HintText = "Dale's colour on the map, written #RRGGBB. Blank uses the default, #43B4DC.")]
+    public string RealmColourDale { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Erebor", Order = 12, RequireRestart = false,
+        HintText = "Erebor's colour on the map, written #RRGGBB. Blank uses the default, #2A4DA8.")]
+    public string RealmColourErebor { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Rivendell", Order = 13, RequireRestart = false,
+        HintText = "Rivendell's colour on the map, written #RRGGBB. Blank uses the default, #8850D0.")]
+    public string RealmColourRivendell { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Lothlórien", Order = 14, RequireRestart = false,
+        HintText = "Lothlórien's colour on the map, written #RRGGBB. Blank uses the default, #E6E27A.")]
+    public string RealmColourLothlorien { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Mirkwood", Order = 15, RequireRestart = false,
+        HintText = "Mirkwood's colour on the map, written #RRGGBB. Blank uses the default, #2C6A3C.")]
+    public string RealmColourMirkwood { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Lindon", Order = 16, RequireRestart = false,
+        HintText = "Lindon's colour on the map, written #RRGGBB. Blank uses the default, #4FC4A0.")]
+    public string RealmColourLindon { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Dol Guldur", Order = 17, RequireRestart = false,
+        HintText = "Dol Guldur's colour on the map, written #RRGGBB. Blank uses the default, #4E2E6E.")]
+    public string RealmColourDolGuldur { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Gundabad", Order = 18, RequireRestart = false,
+        HintText = "Gundabad's colour on the map, written #RRGGBB. Blank uses the default, #8C8C82.")]
+    public string RealmColourGundabad { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Misty Mountain Orcs", Order = 19, RequireRestart = false,
+        HintText = "Misty Mountain Orcs's colour on the map, written #RRGGBB. Blank uses the default, #7E7A50.")]
+    public string RealmColourMistyMountainOrcs { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Goblins", Order = 20, RequireRestart = false,
+        HintText = "Goblins's colour on the map, written #RRGGBB. Blank uses the default, #AFC93A.")]
+    public string RealmColourGoblins { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Goblins of Blue Craig", Order = 21, RequireRestart = false,
+        HintText = "Goblins of Blue Craig's colour on the map, written #RRGGBB. Blank uses the default, #6A8AA8.")]
+    public string RealmColourBlueCraig { get; set; } = string.Empty;
 }

@@ -120,6 +120,8 @@ public static class CoopSettingsRelevance
         "EnableRealmBorders", "RealmBordersHeraldicBands", "RealmBordersGildPlayerRealm",
         "RealmBordersWidthScale", "RealmBordersFadeStartDistance", "RealmBordersFullOpacityDistance",
         "RealmBordersDrawThroughTerrain", "RealmBordersNames", "RealmBordersCrossingNotices",
+        "RealmBordersFillLands", "RealmBordersFillStrength", "RealmBordersBlendMode", "RealmBordersMaterial",
+        "RealmColourGondor", "RealmColourRohan", "RealmColourDunland", "RealmColourIsengard", "RealmColourMordor", "RealmColourHarad", "RealmColourUmbar", "RealmColourShaghana", "RealmColourAbanissa", "RealmColourKhand", "RealmColourRhun", "RealmColourDale", "RealmColourErebor", "RealmColourRivendell", "RealmColourLothlorien", "RealmColourMirkwood", "RealmColourLindon", "RealmColourDolGuldur", "RealmColourGundabad", "RealmColourMistyMountainOrcs", "RealmColourGoblins", "RealmColourBlueCraig",
     };
 
     /// <summary>True when a difference in this property can make two peers simulate differently.</summary>

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Logging;
@@ -139,5 +141,87 @@ public class RealmBordersProviderTests
         var palette = RealmPaletteProvider.Build(null, Substitute.For<IModLogger>());
 
         Assert.AreEqual(0xFF000000u, palette.ColourOf("empire_w") & 0xFF000000u);
+    }
+
+    // --- MCM: colours, blend, material ---
+
+    private static string?[] Texts(params (string Realm, string Text)[] set)
+    {
+        var texts = new string?[RealmBordersSettingsProvider.ColourFields.Length];
+        foreach (var (realm, text) in set)
+            texts[Array.FindIndex(RealmBordersSettingsProvider.ColourFields, f => f.Realm == realm)] = text;
+        return texts;
+    }
+
+    [TestMethod]
+    public void RefreshColours_ValidColour_OverridesThePalette()
+    {
+        var provider = new RealmBordersSettingsProvider(Substitute.For<IModLogger>());
+
+        provider.RefreshColours(Texts(("aserai", " #E8402A ")));
+
+        Assert.AreEqual(0xFFE8402Au, provider.ColourOverride("aserai"));
+        Assert.IsNull(provider.ColourOverride("empire_w"), "a blank field keeps the palette's colour");
+    }
+
+    [TestMethod]
+    public void RefreshColours_MalformedColour_KeepsThePaletteAndWarnsOnce()
+    {
+        var logger = Substitute.For<IModLogger>();
+        var provider = new RealmBordersSettingsProvider(logger);
+
+        provider.RefreshColours(Texts(("aserai", "red")));
+        provider.RefreshColours(Texts(("aserai", "red")));
+
+        Assert.IsNull(provider.ColourOverride("aserai"));
+        logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("Harad") && m.Contains("red")));
+    }
+
+    [TestMethod]
+    public void RefreshColours_OnlyAChange_BumpsTheVersion()
+    {
+        var provider = new RealmBordersSettingsProvider(Substitute.For<IModLogger>());
+        int first = provider.RefreshColours(Texts(("aserai", "#E8402A")));
+
+        int same = provider.RefreshColours(Texts(("aserai", "#E8402A")));
+        int changed = provider.RefreshColours(Texts(("aserai", "#E8402B")));
+
+        Assert.AreEqual(first, same);
+        Assert.AreNotEqual(same, changed);
+    }
+
+    [TestMethod]
+    public void Choice_FirstEntryOrOutOfRange_IsTheDefault()
+    {
+        Assert.IsNull(RealmBordersSettingsProvider.Choice(0, RealmBordersSettingsProvider.BlendModeChoices));
+        Assert.IsNull(RealmBordersSettingsProvider.Choice(null, RealmBordersSettingsProvider.BlendModeChoices));
+        Assert.IsNull(RealmBordersSettingsProvider.Choice(99, RealmBordersSettingsProvider.BlendModeChoices));
+        Assert.AreEqual("Modulate", RealmBordersSettingsProvider.Choice(2, RealmBordersSettingsProvider.BlendModeChoices));
+    }
+
+    [TestMethod]
+    public void BlendModeChoices_AreTheEngineModesInTheirOrder()
+    {
+        // MCM stores a dropdown's index, so this list must follow the engine enum and never be reordered.
+        var engine = Enum.GetNames(typeof(TaleWorlds.Engine.Material.MBAlphaBlendMode)).Where(n => n != "Total").ToArray();
+
+        CollectionAssert.AreEqual(engine, RealmBordersSettingsProvider.BlendModeChoices.Skip(1).ToArray());
+        foreach (var name in engine)
+            Assert.IsTrue(TAOM.Adapters.BorderRenderAdapter.TryParseBlendMode(name.ToLowerInvariant(), out _), name);
+    }
+
+    [TestMethod]
+    public void TryParseBlendMode_OnlyAnExactName()
+    {
+        Assert.IsFalse(TAOM.Adapters.BorderRenderAdapter.TryParseBlendMode("2", out _), "a number is not a name");
+        Assert.IsFalse(TAOM.Adapters.BorderRenderAdapter.TryParseBlendMode("Modulate,Add", out _));
+        Assert.IsFalse(TAOM.Adapters.BorderRenderAdapter.TryParseBlendMode("Total", out _));
+        Assert.IsFalse(TAOM.Adapters.BorderRenderAdapter.TryParseBlendMode(" ", out _));
+    }
+
+    [TestMethod]
+    public void MaterialChoices_AreTheRenderersCandidates()
+    {
+        CollectionAssert.AreEqual(TAOM.Adapters.BorderRenderAdapter.CandidateMaterials, RealmBordersSettingsProvider.MaterialChoices.Skip(1).ToArray());
     }
 }

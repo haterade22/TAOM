@@ -6,9 +6,10 @@ Draws every kingdom's border on the campaign map and keeps it in step with the c
 castle, a clan changing sides, a rebellion, a new or a destroyed kingdom redraws the line within a
 frame or two. Each town and castle owns a province grown over the map's own terrain, so a border
 follows rivers, coasts and mountain ranges instead of cutting straight between two settlements, and
-the wild land between realms stays unclaimed. A map-mode key switches between the realms, the Free
-Peoples against the Shadow, and the player's allies and enemies; each realm's name is lettered across
-its land; and the player is told when the party rides into another realm (#698).
+the wild land between realms stays unclaimed. Each realm's land is tinted in its colour between the
+lines. A map-mode key switches between the realms, the Free Peoples against the Shadow, and the
+player's allies and enemies; each realm's name is lettered across its land; and the player is told when
+the party rides into another realm (#698). Every look control, each realm's colour included, is in MCM.
 
 ## Why This Exists
 
@@ -124,6 +125,7 @@ it ran) is dropped and painted again.
 | Gold cord | political mode, the player's own frontier, "Gold Cord on Your Realm" on | the gold cord replaces the ink |
 | Heraldic | "Heraldic Bands Instead of Atlas Look" on | two solid bands in each realm's colour, a gap on the line, thin dark keylines |
 | War front | allies and enemies mode, where the player's side (own or allied land) meets an enemy | an ember glow with a bright core, 1.6 times wider and hotter where the player's own land stands on it |
+| Land tint | "Colour Realm Lands" on (the default) | each realm's land between its borders in its colour at "Realm Colour Strength" (0.3), on a grid two cells apart, fading out beside another realm, wild land or water so the border's wash carries the edge; drawn before the lines in each tile, so the lines sit on top. The allies and enemies mode leaves neutral land clear |
 
 The ImagineArt paintings in [`tools/realm_border_art/`](../../tools/realm_border_art/) set the look; the
 game draws it in vertex colours with no texture. A painted, textured wash is still an open spike.
@@ -135,8 +137,12 @@ current opacity. That drawing recipe was learned from Kingdom Borders
 ([provenance](../reference/provenance-register.md)). The material is the first of `vertex_color_mat`
 and `vertex_color_lighting` that exists (both are in Native's core material packages); the log line
 `[RealmBorders] drawing with material '<name>'` says which, and `taom.realm_borders_material` tries
-another. Vertex heights are one terrain query per distinct vertex, kept across repaints on the same
-map scene (up to 300,000) and let go when the map screen closes.
+another. Vertex heights come from the terrain directly (`Scene.GetTerrainHeight`, as the map screen places
+things), one query per distinct vertex, kept across repaints on the same map scene (up to 300,000) and
+let go when the map screen closes. The first build used `MapScene.GetHeightAtPoint`, a physics query,
+and one tile took 286 ms to build in the first look session. The engine blend mode is the material's own
+unless MCM's "Border Blend Mode" or `taom.realm_borders_blend` picks another; the first look showed
+glowing lines with no dark ink, which reads as an additive blend.
 
 ### Map modes
 
@@ -204,11 +210,19 @@ Recorded so they can be re-weighed; each is the build's choice, not an oversight
 | Draw Borders Through Hills | on | off lets ridges hide the lines |
 | Realm Names | on | the names layer |
 | Border-Crossing Notices | on | the hourly crossing message |
+| Colour Realm Lands | on | the land tint between the borders |
+| Realm Colour Strength | 0.3 | the tint's strength, 0.05 to 0.8 |
+| Border Blend Mode | Material default | the engine blend mode the borders are drawn with (advanced; for the look) |
+| Border Material | Automatic | the engine material the borders are drawn from (advanced) |
+| Realm Colours (sub-group) | blank | one `#RRGGBB` field per realm; blank keeps the palette colour its tooltip names |
 
 `RealmBordersSettingsProvider` re-validates what it reads: a width that is not a number or outside
 0.5 to 3 becomes 1, and a fade pair with either value not a number, outside 0 to 5000, or a start not
 below the full distance reverts both to 45 and 110. Each reversion logs one warning naming the
-setting, repeated only when the value changes. Every setting applies on the next map frame. The
+setting, repeated only when the value changes; a tint strength outside 0.05 to 0.8 becomes 0.3, and a
+realm colour that is not `#RRGGBB` keeps the palette's. Every setting applies on the next map frame. The
+two dropdowns persist by index, so their lists are pinned by tests and never reordered; a console
+command stands until its dropdown is changed. The
 defaults live once, in the provider, and `TaomSettings` reads them from there; changing a shipped
 default means renaming the setting, since MCM keeps a player's saved value.
 
@@ -246,6 +260,7 @@ builds its own palette, so the reserve is handed out from its best colour again 
 | `taom.print_realm_province_map` | A | Writes `Logs/taom_realm_provinces.bmp`: each realm in its colour with its edges dark, a fief without an owner pale, wild land grey, water blue, north up |
 | `taom.realm_borders_rebuild` | B | Samples the terrain again, recomputes every province and redraws; nothing saved changes |
 | `taom.realm_borders_material <name>` | B | Redraws the borders from another engine material; refused when no material has that name |
+| `taom.realm_borders_blend <mode>` | B | Redraws the borders with another engine blend mode (NoAlphaBlend, Modulate, AddAlpha, Multiply, Add, Max, Factor and the rest of the engine's list); the status line shows the mode in use |
 
 ## Key Files
 

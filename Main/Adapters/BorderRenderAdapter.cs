@@ -49,6 +49,7 @@ public sealed class BorderRenderAdapter : IBorderRenderAdapter
     private bool _materialMissingLogged;
     private bool _removeFailureLogged;
     private string? _materialOverride;
+    private Material.MBAlphaBlendMode? _blendOverride;
     private float _alpha = 1f;
 
     public BorderRenderAdapter(IMapTerrainAdapter terrain, IModLogger logger)
@@ -62,9 +63,54 @@ public sealed class BorderRenderAdapter : IBorderRenderAdapter
     /// <summary>The material the meshes were built from, or null before the first tile.</summary>
     public string? ActiveMaterial { get; private set; }
 
-    /// <summary>Builds every later tile from this material; the caller redraws. False when it does not exist.</summary>
-    public bool UseMaterial(string name)
+    /// <summary>The blend mode the meshes are drawn with, or null before the first tile.</summary>
+    public string? ActiveBlendMode { get; private set; }
+
+    /// <summary>Builds every later tile with this blend mode; the caller redraws. False for an unknown name.</summary>
+    public bool UseBlendMode(string? name)
     {
+        if (name == null)
+        {
+            _blendOverride = null;
+            _overlay = _grounded = null;
+            return true;
+        }
+        if (!TryParseBlendMode(name, out var mode))
+            return false;
+        _blendOverride = mode;
+        _overlay = _grounded = null;
+        return true;
+    }
+
+    /// <summary>
+    /// A blend mode by its exact enum name, any case. Matched against the names, never Enum.TryParse
+    /// alone, which would also take a number or a comma list (lessons/testing-qa.md).
+    /// </summary>
+    internal static bool TryParseBlendMode(string? name, out Material.MBAlphaBlendMode mode)
+    {
+        mode = default;
+        if (string.IsNullOrWhiteSpace(name))
+            return false;
+        foreach (string known in Enum.GetNames(typeof(Material.MBAlphaBlendMode)))
+        {
+            if (known == nameof(Material.MBAlphaBlendMode.Total) || !string.Equals(known, name!.Trim(), StringComparison.OrdinalIgnoreCase))
+                continue;
+            mode = (Material.MBAlphaBlendMode)Enum.Parse(typeof(Material.MBAlphaBlendMode), known);
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>Builds every later tile from this material; the caller redraws. False when it does not exist.</summary>
+    public bool UseMaterial(string? name)
+    {
+        if (name == null)
+        {
+            _materialOverride = null;
+            _overlay = _grounded = null;
+            _materialMissingLogged = false;
+            return true;
+        }
         if (string.IsNullOrWhiteSpace(name) || Material.GetFromResource(name) == null)
             return false;
         _materialOverride = name;
@@ -187,11 +233,15 @@ public sealed class BorderRenderAdapter : IBorderRenderAdapter
             var source = Material.GetFromResource(name);
             if (source == null)
                 continue;
-            if (ActiveMaterial != name)
-                _logger.LogInfo($"[RealmBorders] drawing with material '{name}' (flags +{extra})");
-            ActiveMaterial = name;
             var copy = source.CreateCopy();
             copy.Flags |= extra;
+            if (_blendOverride.HasValue)
+                copy.SetAlphaBlendMode(_blendOverride.Value);
+            string blend = copy.GetAlphaBlendMode().ToString();
+            if (ActiveMaterial != name || ActiveBlendMode != blend)
+                _logger.LogInfo($"[RealmBorders] drawing with material '{name}' (its own blend {source.GetAlphaBlendMode()}, drawn {blend}, flags +{extra})");
+            ActiveMaterial = name;
+            ActiveBlendMode = blend;
             return copy;
         }
         if (!_materialMissingLogged)

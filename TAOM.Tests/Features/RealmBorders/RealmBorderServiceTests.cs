@@ -768,4 +768,95 @@ public class RealmBorderServiceTests
 
         Assert.AreEqual(2, worker.Runs, "the next change tries again");
     }
+
+    // --- the fill, the player's colours, MCM's blend and material ---
+
+    [TestMethod]
+    public void FillLands_On_TintsEachRealmBetweenTheLines()
+    {
+        var rig = new Rig(("west", 100, "empire_w"), ("east", 300, "empire_s"));
+        rig.Settings.FillLands.Returns(true);
+        rig.Settings.FillStrength.Returns(0.3f);
+
+        rig.Settle();
+
+        uint gondor = rig.Palettes.NewPalette().ColourOf("empire_w");
+        Assert.IsTrue(rig.Quads.Any(q => q.NearStart.Colour == BorderPainter.WithAlpha(gondor, 0.3f)), "Gondor's land is tinted");
+    }
+
+    [TestMethod]
+    public void FillLands_Off_LeavesTheLandClear()
+    {
+        var rig = new Rig(("west", 100, "empire_w"), ("east", 300, "empire_s"));
+        rig.Settings.FillLands.Returns(false);
+        rig.Settings.FillStrength.Returns(0.3f);
+
+        rig.Settle();
+
+        uint gondor = rig.Palettes.NewPalette().ColourOf("empire_w");
+        Assert.IsFalse(rig.Quads.Any(q => q.NearStart.Colour == BorderPainter.WithAlpha(gondor, 0.3f)));
+    }
+
+    [TestMethod]
+    public void WarMode_NeutralLand_IsNotTinted()
+    {
+        var rig = new Rig(("west", 100, "empire_w"), ("east", 300, "vlandia"));
+        rig.Settings.FillLands.Returns(true);
+        rig.Settings.FillStrength.Returns(0.3f);
+        rig.Map.RelationToPlayer("empire_w").Returns(RealmRelation.Own);
+        rig.Map.RelationToPlayer("vlandia").Returns(RealmRelation.Neutral);
+
+        rig.Service.CycleMode();
+        rig.Service.CycleMode();
+        rig.Settle();
+
+        uint neutral = RealmBorderService.RelationColours[RelationGroups.Neutral];
+        uint own = RealmBorderService.RelationColours[RelationGroups.Own];
+        Assert.IsTrue(rig.Quads.Any(q => q.NearStart.Colour == BorderPainter.WithAlpha(own, 0.3f)));
+        Assert.IsFalse(rig.Quads.Any(q => q.NearStart.Colour == BorderPainter.WithAlpha(neutral, 0.3f)));
+    }
+
+    [TestMethod]
+    public void ColourOverride_Changed_RepaintsInThePlayersColour()
+    {
+        var rig = new Rig(("west", 100, "empire_w"), ("east", 300, "empire_s"));
+        rig.Settle();
+        const uint Chosen = 0xFF12AB34;
+
+        rig.Settings.ColourOverride("empire_w").Returns(Chosen);
+        rig.Settings.ColourVersion.Returns(1);
+        rig.Settle();
+
+        Assert.IsTrue(rig.Quads.Any(q => (q.NearStart.Colour & 0xFFFFFF) == (Chosen & 0xFFFFFF)));
+        Assert.AreEqual(Chosen, PixelAt(rig, 50, 100), "the province picture follows the choice too");
+    }
+
+    [TestMethod]
+    public void McmBlendMode_Changed_RedrawsEveryTileWithIt()
+    {
+        var rig = new Rig(("west", 100, "empire_w"), ("east", 300, "empire_s"));
+        rig.Settle();
+        int uploads = rig.Uploads;
+        rig.Renderer.UseMaterial(null).Returns(true);
+        rig.Renderer.UseBlendMode("Modulate").Returns(true);
+
+        rig.Settings.BlendMode.Returns("Modulate");
+        rig.Settle();
+
+        rig.Renderer.Received(1).UseBlendMode("Modulate");
+        Assert.IsTrue(rig.Uploads >= 2 * uploads && uploads > 0, "every tile was built again");
+    }
+
+    [TestMethod]
+    public void McmMaterial_Unknown_WarnsAndStillDraws()
+    {
+        var rig = new Rig(("west", 100, "empire_w"), ("east", 300, "empire_s"));
+        rig.Renderer.UseBlendMode(null).Returns(true);
+        rig.Settings.MaterialName.Returns("no_such_material");
+
+        rig.Settle();
+
+        rig.Logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("no_such_material")));
+        Assert.IsTrue(rig.Drawn.Count > 0);
+    }
 }

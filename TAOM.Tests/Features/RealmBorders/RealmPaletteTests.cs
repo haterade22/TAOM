@@ -230,4 +230,22 @@ public class RealmPaletteTests
 
         logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("empire_w")));
     }
+
+    [TestMethod]
+    public void McmColourFields_CoverEveryRealm_AndNameItsDefault()
+    {
+        var config = ShippedConfig();
+        var fields = RealmBordersSettingsProvider.ColourFields;
+
+        CollectionAssert.AreEquivalent(config.Realms.Keys.ToList(), fields.Select(f => f.Realm).ToList(),
+            "every realm needs exactly one MCM colour field");
+        foreach (var property in typeof(TAOM.Features.TaomSettings).GetProperties().Where(p => p.Name.StartsWith("RealmColour", StringComparison.Ordinal)))
+        {
+            var text = property.GetCustomAttributes(false).Single(a => a.GetType().Name == "SettingPropertyTextAttribute");
+            string hint = (string)text.GetType().GetProperty("HintText")!.GetValue(text, null)!;
+            string label = (string)text.GetType().GetProperty("DisplayName")!.GetValue(text, null)!;
+            var field = fields.Single(f => f.Label == label);
+            StringAssert.Contains(hint, config.Realms[field.Realm], $"{label}'s tooltip names another default than palette.json");
+        }
+    }
 }

@@ -96,8 +96,11 @@ public static class RealmLabelPlacer
         return labels;
     }
 
-    /// <summary>Two-pass chamfer distance to the nearest cell outside the realm (or the map edge).</summary>
-    private static float[] Depths(int[] realm, int columns, int rows)
+    /// <summary>
+    /// Two-pass chamfer distance, in cells, to the nearest cell outside the realm (or the map edge): 0 on a
+    /// realm's edge cells. Shared with <see cref="RealmFill"/>, which fades its tint by it.
+    /// </summary>
+    internal static float[] Depths(int[] realm, int columns, int rows)
     {
         var depth = new float[realm.Length];
         for (int r = 0; r < rows; r++)

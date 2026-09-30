@@ -5,23 +5,31 @@ using TAOM.Features.SiegeDismount.Models;
 namespace TAOM.Adapters;
 
 /// <summary>
-/// Concrete <see cref="IPlayerMountAdapter"/> backed by <c>Hero.MainHero.BattleEquipment</c>.
+/// Concrete <see cref="IPlayerMountAdapter"/> backed by the main hero's <c>BattleEquipment</c>; with no
+/// campaign hero (a Custom Battle) every member reports no mount and changes nothing.
 /// All TaleWorlds types stay inside this class — services see only <see cref="IMountSnapshot"/>.
 /// Captures and restores the full <see cref="EquipmentElement"/> (including <c>ItemModifier</c>)
 /// so durability and quality bonuses survive the dismount/remount round-trip.
 /// </summary>
 public class PlayerMountAdapter : IPlayerMountAdapter
 {
+    // Hero.MainHero is CharacterObject.PlayerCharacter.HeroObject, and PlayerCharacter is
+    // Game.Current.PlayerTroop as CharacterObject: null in a Custom Battle, whose troops are
+    // BasicCharacterObject, so the getter throws before a ?. after it can help (adapters.md). The same
+    // chain guarded at each step is the main hero in a campaign and null anywhere else.
+    private static Equipment? MainHeroBattleEquipment() =>
+        (Game.Current?.PlayerTroop as CharacterObject)?.HeroObject?.BattleEquipment;
+
     public bool HasMount()
     {
-        var equipment = Hero.MainHero?.BattleEquipment;
+        var equipment = MainHeroBattleEquipment();
         if (equipment == null) return false;
         return !equipment[EquipmentIndex.Horse].IsEmpty;
     }
 
     public IMountSnapshot Capture()
     {
-        var equipment = Hero.MainHero?.BattleEquipment;
+        var equipment = MainHeroBattleEquipment();
         if (equipment == null) return MountSnapshot.Empty;
 
         // Pass the full EquipmentElement (NOT just StringId) so ItemModifier survives the round trip.
@@ -30,7 +38,7 @@ public class PlayerMountAdapter : IPlayerMountAdapter
 
     public void Clear()
     {
-        var equipment = Hero.MainHero?.BattleEquipment;
+        var equipment = MainHeroBattleEquipment();
         if (equipment == null) return;
 
         equipment[EquipmentIndex.Horse] = EquipmentElement.Invalid;
@@ -39,7 +47,7 @@ public class PlayerMountAdapter : IPlayerMountAdapter
 
     public void Restore(IMountSnapshot snapshot)
     {
-        var equipment = Hero.MainHero?.BattleEquipment;
+        var equipment = MainHeroBattleEquipment();
         if (equipment == null || snapshot == null) return;
 
         // The production code path: snapshot is a MountSnapshot with full EquipmentElement

@@ -91,7 +91,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Yotthani `bannerlord` repository (DualWield, FaceLearner) | `yotthani/bannerlord` `HoN/DualWield` `FaceLearner` `FaceLearner.HeadExtract` | UNKNOWN (no licence file; shared with the maintainer by its author) | comparison-only | (none; restated facts in `docs/reference/scripted-melee-strikes.md` and `docs/reference/head-mesh-and-groom-authoring.md`) | uncleared |
 | Ghidra | `Ghidra` `NationalSecurityAgency/ghidra` `pyghidra` | Apache-2.0 | interop-only | `tools/native_decompile.py` runs the installed tool (see detail) | cleared |
 | Hindsight | `Hindsight` `vectorize-io/hindsight` | MIT | comparison-only | (none) | cleared |
-| Kingdom Borders (Nexus mod 10699) | `Kingdom Borders` `KingdomBorders` | UNKNOWN | behavioural-port | `Main/Adapters/BorderRenderAdapter.cs`; the Heraldic look in `Main/Features/RealmBorders/Domain/BorderLook.cs` and `BorderPainter.cs`; the module-id check in `Main/Features/RealmBorders/Hooks/RealmBordersCampaignBehavior.cs` (interop); see detail | uncleared |
+| Kingdom Borders (Nexus mod 10699) | `Kingdom Borders` `KingdomBorders` | UNKNOWN | behavioural-port | `Main/Adapters/BorderRenderAdapter.cs`; the Heraldic layout in `Main/Features/RealmBorders/Domain/BorderPainter.cs`; the module-id check in `Main/Features/RealmBorders/Hooks/RealmBordersCampaignBehavior.cs` (interop); see detail | uncleared |
 
 <!-- provenance-register-end -->
 
@@ -573,12 +573,11 @@ and TAOM's Realm Borders (#698) was then written without copying code. Three thi
 - **The drawing recipe**, in `BorderRenderAdapter`: a copy of the engine's `vertex_color_mat` with
   `NoModifyDepthBuffer` (plus `NoDepthTest` to draw through hills), each triangle added in both
   windings, and the fade set with `GameEntity.SetAlpha`. Engine names and flags, learned from its source.
-- **The Heraldic look**, kept on purpose by the approved design: two bands in each realm's colour either
-  side of a gap on the line (`BorderPainter`), at the mod's own MCM defaults for the gap and the band
-  width, 0.3 and 1.05 units (`BorderLook`). The provenance rule counts reproduced constants as
-  `verbatim-port`, which would make the licence question blocking; whether two settings defaults are
-  constants in that sense is the maintainer's call. Retuning both widths in the in-game look session,
-  which the widths need anyway, would settle it either way.
+- **The Heraldic layout**, kept on purpose by the approved design: two bands in each realm's colour
+  either side of a gap on the line (`BorderPainter`). Its widths are TAOM's own, derived from the Atlas
+  look in `BorderLook` (the gap is the ink line's width, 0.56, and each band half the wash, 1.3). The
+  first build used the mod's MCM defaults (0.3 and 1.05); on Mike's word (2026-09-30) they were replaced,
+  so no constant of the mod's is reproduced.
 - **Interop:** the campaign behavior stands aside when a module with the id `KingdomBorders` (read from
   the mod's `SubModule.xml`) is active, so the map never carries two sets of lines.
 

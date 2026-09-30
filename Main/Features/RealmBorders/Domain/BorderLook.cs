@@ -18,9 +18,9 @@ public readonly record struct LinePaint(LineStyle Style, uint LeftColour, uint R
 
 /// <summary>
 /// Widths (world units) and colours (ARGB) of every look, the values to tune in the in-game look
-/// session; <see cref="WidthScale"/> is the player's setting. The Heraldic band gap and width (0.3 and
-/// 1.05) are the Kingdom Borders mod's own MCM defaults (docs/reference/provenance-register.md); the
-/// Atlas values come from the approved mock-up.
+/// session; <see cref="WidthScale"/> is the player's setting. The Atlas values come from the approved
+/// mock-up. The Heraldic values are derived from them, so switching looks keeps a border's footprint:
+/// the gap is the Atlas ink line's width and each band is half the Atlas wash.
 /// </summary>
 public sealed class BorderLook
 {
@@ -38,9 +38,11 @@ public sealed class BorderLook
 
     public float PatternGap { get; init; } = 0.55f;
 
-    public float BandGap { get; init; } = 0.3f;
+    /// <summary>The Atlas ink line's width, twice <see cref="InkHalfWidth"/>.</summary>
+    public float BandGap { get; init; } = 0.56f;
 
-    public float BandWidth { get; init; } = 1.05f;
+    /// <summary>Half the Atlas <see cref="WashWidth"/>.</summary>
+    public float BandWidth { get; init; } = 1.3f;
 
     public float BandAlpha { get; init; } = 0.9f;
 

@@ -15,8 +15,14 @@ public interface IBorderRenderAdapter
     /// <summary>The material the meshes are built from, or null before the first tile.</summary>
     string? ActiveMaterial { get; }
 
-    /// <summary>Builds later tiles from this material; false when it does not exist. The caller redraws.</summary>
-    bool UseMaterial(string name);
+    /// <summary>Builds later tiles from this material, or the first candidate that exists for null; false when it does not exist. The caller redraws.</summary>
+    bool UseMaterial(string? name);
+
+    /// <summary>The blend mode the meshes are drawn with, or null before the first tile.</summary>
+    string? ActiveBlendMode { get; }
+
+    /// <summary>Builds later tiles with this engine blend mode, by name, or the material's own for null; false for an unknown name. The caller redraws.</summary>
+    bool UseBlendMode(string? name);
 
     /// <summary>
     /// Replaces the tile's mesh with these quads, lifted onto the terrain by <paramref name="lift"/>.
