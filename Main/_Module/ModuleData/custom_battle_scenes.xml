@@ -22,6 +22,11 @@
     terrain="Plain"
     is_siege_map="true" />
   <Scene
+    id="taom_rohan_edoras_town_forceatmo"
+    name="{=aom_taom_rohan_edoras_town_forceatmo_name}[Rohan] Edoras"
+    terrain="Plain"
+    is_siege_map="true" />
+  <Scene
     id="taom_gondor_castle_001_forceatmo"
     name="{=aom_taom_gondor_castle_001_forceatmo_name}[Gondor] Barad Faen Castle"
     terrain="Plain"
