@@ -1764,3 +1764,18 @@ padding, so it would have mapped every Rohan blade wrong on the shipped mesh.
   a large value means the mesh moved with it, so ask the artist which delivery is current rather than taking
   the larger file. Sweeping all 64 `wm_*` kits this way matched 151 textures and found one discrepancy.
 - **Source:** `docs/modding/module-armory.md` "A texture's canvas shape proves nothing" (Rohan set1, 2026-09-29)
+
+### A troop joining a tree is read by every consumer that selects troops by role, not only by its recruiters (2026-09-29)
+The goblin tree's two mountain spider riders were planned through their recruitment and their upgrade from the Lurker.
+They were also the first Cavalry troops in the tree Goblin-town, the Misty Mountain Orcs and Blue Craig share, and
+five consumers picked them up with no code change: the AI upgrade weighting (a lord commits each branch at 9999:1),
+notable slot growth, the garrison culture swap (captured cavalry started mapping onto spiders), the enlistment roster
+generator (goblin "cavalry" kits from spider-rider gear, on foot) and the skill rebaseliner (+94 and +244 points).
+- **Why missed:** the plan traced the new ids inward (who recruits them) and never outward (who selects troops by
+  `default_group`, formation or upgrade graph).
+- **Prevent:** when a troop joins a tree, grep `DefaultFormationClass`, `default_group`, `UpgradeTargets`,
+  `GetCulturePoolTroopIds` and every `troops_*.xml` reader under `tools/`, and decide for each consumer whether the new
+  troop belongs. A creature-mount rider is now kept out of the garrison swap's replacement cells
+  (`CreatureMountRiders`) and the enlistment generator's donors (`drop_creature_riders`), both keyed on the mount's
+  Monster: a new spider rider needs no registration, a fourth creature Monster needs adding in both places.
+- **Source:** `docs/reviews/rca-keyforce-art-wiring-2026-09-29.md` F1 to F4.

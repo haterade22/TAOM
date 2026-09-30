@@ -1244,3 +1244,14 @@ constant offset was its own compensation.
   reference, look in game before shipping it.
 - **Source:** `docs/reviews/adopt-mithrilforge-2026-09-29.md`; MithrilForge `docs/anim-findings.md` (private repo,
   read at `91149e11`).
+
+### A crash tied to one mesh is not a rule for the next: KEYforce's whole spider meshes rendered first time (2026-09-29)
+In June one un-split 58-bone spider mesh AV'd in `PreloadForRendering`, so the spider shipped on L/R split halves.
+The per-mesh bone cap offered as the cause was refuted on 2026-06-13 and the real cause was never found, yet the #616
+issue, `spider.md` and the Armory ledger went on saying the un-split mesh "must not ship", as though that were a
+rule. KEYforce's whole re-export on the same `spider_skeleton` loaded, rendered and fought in battle on the first try:
+one item swapped first, then all five.
+- **Why missed:** an unexplained crash hardened into a standing prohibition by repetition, each doc citing the last.
+- **Prevent:** record an unexplained crash against the exact asset that produced it (package, mesh name, date), and
+  test a new asset with a one-item swap and a battle before rebuilding the old workaround for it.
+- **Source:** `docs/features/spider.md` (2026-09-29); `docs/reference/lotrlome-spider-mount-changes.md` "2026-09-29".

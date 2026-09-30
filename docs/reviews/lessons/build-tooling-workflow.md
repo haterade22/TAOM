@@ -3199,3 +3199,51 @@ local` had stored them under the repo's old `C:` path in `~/.claude.json`, and t
 - **Prevent:** to add or remove a server, grep the plugin caches for its name as well as `.mcp.json`, and
   prove the result from inside a restarted session with `/mcp`, not from a shell in another folder.
 - **Source:** `docs/reviews/adopt-ecc-2026-09-29.md` Step 4 and Step 6; `docs/reference/mcp-servers.md`.
+
+### A Visual Studio launch deploys the whole working tree, refs to held-back Armory items included (2026-09-29)
+To keep a load test to two Armory mesh swaps, four new items were held out of the live Armory while the repo already
+named them. The launch came from Visual Studio, which builds and deploys the working tree (MSBuild 19:22:05,
+`TAOM.dll` 19:22:11, the game 19:22:23), so the deployed `harad_elephant_rider` rolled two rosters whose HorseHarness
+named nothing: 14 of 29 elephants spawned bare, with no platform and no crew (`wears harness 'none'`). An earlier
+session under that debugger ended with no crash log and no Windows error event; whether the debugger caught a native
+crash is unestablished (the repo's default Visual Studio profile, `Main/Properties/launchSettings.json`, debugs managed
+code only).
+- **Why missed:** "nothing deploys until a build" was reasoned about the session's own build commands, while the
+  maintainer's launch path is itself a build.
+- **Prevent:** land Armory items before any repo data that names them (a `BROKEN_ITEM_REF` means the tree is not
+  launchable), and when a session ends with no crash record, ask whether a debugger was attached, and what it showed,
+  before reading the silence as a clean exit.
+- **Source:** TAOM logs `taom_debug_2026-09-29_19-22-43.log` and `_19-29-26.log`; `docs/features/elephant.md`
+  "Package the Armory".
+
+### A subagent's issue number is a claim: check it against the tracker (2026-09-29)
+A builder subagent tagged the elephant change "#694" in five comments across code and tests. #694 is the troll
+bandits, and no issue existed for the work; every other `#694` in the tree was the trolls'.
+- **Why missed:** the brief named no issue, and the agent filled the gap with the most recent number in its context.
+- **Prevent:** brief a subagent with the issue number or say there is none, and grep its diff for `#[0-9]+` before
+  accepting it.
+- **Source:** the KEYforce art session, 2026-09-29 (`Main/Features/Elephant/`).
+
+### A backup written beside a live module file ships with it: write it to the quarantine (2026-09-29)
+The 14 backups for the KEYforce wiring went in as `*.bak-keyforce-2026-09-29` beside the live Armory files, and
+`.bak` breaks the Cloudflare distribution ([module-backup-sweep.md](../../reference/module-backup-sweep.md)). They were
+moved to `E:\Bannerlord_Backups\module_bak_sweep_2026-09-29\` with their hashes checked, before any package.
+- **Why missed:** the XML I/O convention says to back up before a destructive write and never with an `.xml`
+  extension, but not where; the sweep doc says where, and nothing links the two.
+- **Prevent:** write a live-module backup straight to `E:\Bannerlord_Backups\module_bak_sweep_<date>\<Module>\<same
+  relative path>`, or run `pwsh tools/sweep_module_backups.ps1 -Apply` before a package.
+- **Source:** `docs/reference/lotrlome-spider-mount-changes.md` "2026-09-29".
+
+### Before hand-editing a data file, check who writes it; an owned file goes through its owner (2026-09-29)
+A one-off translation script inserted rows by cloning an anchor line. Two of its targets are generated:
+`taom_troop_name_strings.xml` (its header says "Do not hand-edit; re-run the generator") and the 12
+`tools/translation_cache/*.json` (sorted on every save by `translate_with_claude.py`). The content was right and the
+order was not, so the next save by either owner would have landed a reorder hunk in an unrelated commit. The same
+session rewrote one sentence of the `/armory-audit` skill to forbid editing the mirror and left the file's second
+mention of the mirror in place.
+- **Why missed:** the script checked bytes and parse, not ownership; the skill fix edited the sentence that misled,
+  not the rule.
+- **Prevent:** read a file's header and `tools/README.md` for a generator before editing it, and run the owner
+  (`generate_name_localization_strings.py --apply --category troop`, `translate_with_claude.save_cache`). When changing
+  a policy sentence, grep the same file for its other mentions.
+- **Source:** `docs/reviews/rca-keyforce-art-wiring-2026-09-29.md` F7 and F8.
