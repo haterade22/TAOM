@@ -200,13 +200,19 @@ public class RealmBordersProviderTests
     }
 
     [TestMethod]
-    public void BlendModeChoices_AreTheEngineModesInTheirOrder()
+    public void BlendModeChoices_KeepTheirSavedOrder_AndNameEveryEngineMode()
     {
-        // MCM stores a dropdown's index, so this list must follow the engine enum and never be reordered.
-        var engine = Enum.GetNames(typeof(TaleWorlds.Engine.Material.MBAlphaBlendMode)).Where(n => n != "Total").ToArray();
+        // MCM stores a dropdown's index: this order is what players' saved settings point into. A mode an
+        // engine bump adds goes at the END, never between.
+        CollectionAssert.AreEqual(new[]
+        {
+            "Material default", "NoAlphaBlend", "Modulate", "AddAlpha", "Multiply", "Add", "Max", "Factor", "AddModulateCombined",
+            "NoAlphaBlendNoWrite", "ModulateNoWrite", "GbufferAlphaBlend", "GbufferAlphaBlendWithVtResolve", "NoAlphaBlendNoAlphaWrite",
+        }, RealmBordersSettingsProvider.BlendModeChoices);
 
-        CollectionAssert.AreEqual(engine, RealmBordersSettingsProvider.BlendModeChoices.Skip(1).ToArray());
-        foreach (var name in engine)
+        var engine = Enum.GetNames(typeof(TaleWorlds.Engine.Material.MBAlphaBlendMode)).Where(n => n != "Total").ToArray();
+        CollectionAssert.IsSubsetOf(engine, RealmBordersSettingsProvider.BlendModeChoices, "every engine blend mode has a dropdown entry");
+        foreach (var name in RealmBordersSettingsProvider.BlendModeChoices.Skip(1))
             Assert.IsTrue(TAOM.Adapters.BorderRenderAdapter.TryParseBlendMode(name.ToLowerInvariant(), out _), name);
     }
 

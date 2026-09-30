@@ -1681,7 +1681,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     // Dropdowns persist by index: never reorder either list (RealmBordersProviderTests pins both).
     [SettingPropertyGroup("Realm Borders")]
     [SettingPropertyDropdown("Border Blend Mode", Order = 11, RequireRestart = false,
-        HintText = "Advanced: how the borders mix with the map beneath. 'Material default' keeps the engine material's own. If the borders glow and their dark ink line is missing, try Modulate or Factor.")]
+        HintText = "Advanced: how the borders mix with the map beneath. 'Material default' keeps the engine material's own. If the borders glow and their dark ink line is missing, try Modulate (Factor turns blending off).")]
     public Dropdown<string> RealmBordersBlendMode { get; set; } = new Dropdown<string>(
         TAOM.Features.RealmBorders.RealmBordersSettingsProvider.BlendModeChoices, 0);
 
@@ -1725,7 +1725,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Realm Borders/Realm Colours")]
     [SettingPropertyText("Umbar", Order = 6, RequireRestart = false,
-        HintText = "Umbar's colour on the map, written #RRGGBB. Blank uses the default, #D04A80.")]
+        HintText = "Umbar's colour on the map, written #RRGGBB. Blank uses the default, #2F3C58.")]
     public string RealmColourUmbar { get; set; } = string.Empty;
 
     [SettingPropertyGroup("Realm Borders/Realm Colours")]

@@ -125,7 +125,7 @@ it ran) is dropped and painted again.
 | Gold cord | political mode, the player's own frontier, "Gold Cord on Your Realm" on | the gold cord replaces the ink |
 | Heraldic | "Heraldic Bands Instead of Atlas Look" on | two solid bands in each realm's colour, a gap on the line, thin dark keylines |
 | War front | allies and enemies mode, where the player's side (own or allied land) meets an enemy | an ember glow with a bright core, 1.6 times wider and hotter where the player's own land stands on it |
-| Land tint | "Colour Realm Lands" on (the default) | each realm's land between its borders in its colour at "Realm Colour Strength" (0.3), on a grid two cells apart, fading out beside another realm, wild land or water so the border's wash carries the edge; drawn before the lines in each tile, so the lines sit on top. The allies and enemies mode leaves neutral land clear |
+| Land tint | "Colour Realm Lands" on (the default) | each realm's land between its borders in its colour at "Realm Colour Strength" (0.3), on a grid two cells apart, fading out beside another realm (where the border's wash carries the edge) and beside wild land and water (where the fade is the edge); drawn before the lines in each tile, so the lines sit on top. The allies and enemies mode leaves neutral land clear |
 
 The ImagineArt paintings in [`tools/realm_border_art/`](../../tools/realm_border_art/) set the look; the
 game draws it in vertex colours with no texture. A painted, textured wash is still an open spike.
@@ -137,12 +137,14 @@ current opacity. That drawing recipe was learned from Kingdom Borders
 ([provenance](../reference/provenance-register.md)). The material is the first of `vertex_color_mat`
 and `vertex_color_lighting` that exists (both are in Native's core material packages); the log line
 `[RealmBorders] drawing with material '<name>'` says which, and `taom.realm_borders_material` tries
-another. Vertex heights come from the terrain directly (`Scene.GetTerrainHeight`, as the map screen places
-things), one query per distinct vertex, kept across repaints on the same map scene (up to 300,000) and
+another. Vertex heights come from the terrain directly (`Scene.GetTerrainHeight`, the heightfield vanilla drapes its hover
+outline on; over water it is the bed), one query per distinct vertex, kept across repaints on the same map scene (up to 300,000) and
 let go when the map screen closes. The first build used `MapScene.GetHeightAtPoint`, a physics query,
 and one tile took 286 ms to build in the first look session. The engine blend mode is the material's own
 unless MCM's "Border Blend Mode" or `taom.realm_borders_blend` picks another; the first look showed
-glowing lines with no dark ink, which reads as an additive blend.
+glowing lines with no dark ink: `vertex_color_mat` blends with `AddAlpha`, which adds its colour onto
+the map (logged as "its own blend AddAlpha"). `Modulate` is normal alpha blending; `Factor` turns
+blending off.
 
 ### Map modes
 
@@ -256,8 +258,8 @@ builds its own palette, so the reserve is handed out from its best colour again 
 
 | Command | Tier | What it does |
 |---|---|---|
-| `taom.print_realm_borders` | A | The state line: enabled, visible, mode, the province build state with its sampling and partition times, grid size and chains, the last repaint's worker time, lines and quads, whether one is running, tiles drawn and queued, the slowest single tile upload, fade, labels, material |
-| `taom.print_realm_province_map` | A | Writes `Logs/taom_realm_provinces.bmp`: each realm in its colour with its edges dark, a fief without an owner pale, wild land grey, water blue, north up |
+| `taom.print_realm_borders` | A | The state line: enabled, visible, mode, the province build state with its sampling and partition times, grid size and chains, the last repaint's worker time, lines and quads, whether one is running, tiles drawn and queued, the slowest single tile upload, fade, labels, material and blend mode |
+| `taom.print_realm_province_map` | A | Writes `Logs/taom_realm_provinces.bmp`: each realm in its colour with its edges dark, a fief without an owner white, wild land parchment, water slate blue, north up |
 | `taom.realm_borders_rebuild` | B | Samples the terrain again, recomputes every province and redraws; nothing saved changes |
 | `taom.realm_borders_material <name>` | B | Redraws the borders from another engine material; refused when no material has that name |
 | `taom.realm_borders_blend <mode>` | B | Redraws the borders with another engine blend mode (NoAlphaBlend, Modulate, AddAlpha, Multiply, Add, Max, Factor and the rest of the engine's list); the status line shows the mode in use |
@@ -275,7 +277,7 @@ builds its own palette, so the reserve is handed out from its best colour again 
 | `Main/Features/RealmBorders/RealmBordersModule.cs`, `RealmBordersIoC.cs` | Module wiring and registrations |
 | `Main/Features/RealmBorders/Hooks/RealmBordersCampaignBehavior.cs` | Events, the dedicated-server and Kingdom Borders gates, the map view |
 | `Main/Features/RealmBorders/UI/` | The map view, the names view models, the key category |
-| `Main/Features/RealmBorders/Cheats/RealmBordersCheats.cs` | The four console commands |
+| `Main/Features/RealmBorders/Cheats/RealmBordersCheats.cs` | The five console commands |
 | `Main/Adapters/BorderRenderAdapter.cs` | Tile meshes on the map scene |
 | `Main/Adapters/MapTerrainAdapter.cs`, `RealmMapAdapter.cs`, `RealmNoticeAdapter.cs` | Terrain, campaign state, messages |
 | `Main/_Module/GUI/PreFabs/RealmBorders/TaomRealmNames.xml`, `GUI/Brushes/TaomRealmBorders.xml` | The names layer and its two fonts |
@@ -375,7 +377,7 @@ map yet.
 - 2026-09-30: first release (#698). Terrain-aware provinces, live borders in the Atlas and Heraldic
   looks with the player's gold cord, three map modes (the third by relation to the player, in the
   nameplate colours), rebel clans as realms of their own, realm names, crossing notices, the repaint on
-  a worker thread, four console commands. The eight new strings are drafted in all twelve languages.
+  a worker thread, console commands. The eight new strings are drafted in all twelve languages.
 
 ## GitHub Issue
 

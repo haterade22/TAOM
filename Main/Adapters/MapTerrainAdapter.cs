@@ -10,8 +10,8 @@ namespace TAOM.Adapters;
 /// type is read straight off the face (<c>PathFaceRecord.FaceGroupIndex</c>, which is exactly what
 /// <c>MapScene.GetFaceTerrainType</c> returns) after an <c>IsValid</c> check, because
 /// <c>GetFaceTerrainType</c> raises <c>Debug.FailedAssert</c> on an invalid face and the territory
-/// sampling asks about the open sea thousands of times. Heights come straight from the terrain
-/// (<c>Scene.GetTerrainHeight</c>, what the map screen itself places things with), not from
+/// sampling asks about the open sea thousands of times. Heights come straight from the heightfield
+/// (<c>Scene.GetTerrainHeight</c>, as vanilla drapes its hover outline; over water it is the bed), not from
 /// <c>MapScene.GetHeightAtPoint</c>: that is a physics query against collision bodies, and one border
 /// tile's worth of them froze the game for 286 ms in the first look session.
 /// </summary>

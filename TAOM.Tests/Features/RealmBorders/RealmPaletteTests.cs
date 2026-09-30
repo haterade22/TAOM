@@ -127,6 +127,40 @@ public class RealmPaletteTests
     }
 
     [TestMethod]
+    public void ShippedPalette_NoColour_LooksLikeTheProvincePicturesOwn()
+    {
+        var config = ShippedConfig();
+        var picture = new (string Name, uint Colour)[]
+        {
+            ("unowned fief", RealmBorderService.PictureUnownedFief), ("wild land", RealmBorderService.PictureWildLand),
+            ("water", RealmBorderService.PictureWater), ("edge", RealmBorderService.PictureEdge),
+        };
+
+        foreach (var (name, colour) in ShippedColours(config))
+            foreach (var (pictureName, pictureColour) in picture)
+            {
+                double d = RealmPalette.DeltaE(colour, pictureColour);
+                Assert.IsTrue(d >= config.MinimumDeltaE, $"{name} is only {d:F1} from the picture's {pictureName}");
+            }
+        for (int i = 0; i < picture.Length; i++)
+            for (int j = i + 1; j < picture.Length; j++)
+                Assert.IsTrue(RealmPalette.DeltaE(picture[i].Colour, picture[j].Colour) >= config.MinimumDeltaE, $"{picture[i].Name} / {picture[j].Name}");
+    }
+
+    [TestMethod]
+    public void Override_ThenRestore_AndTheReserveKeepsClearOfIt()
+    {
+        var palette = new RealmPalette(new Dictionary<string, uint> { ["empire_s"] = Red }, new[] { DarkRed, Blue });
+
+        palette.Override("empire_s", Blue);
+        Assert.AreEqual(Blue, palette.ColourOf("empire_s"));
+        Assert.AreEqual(DarkRed, palette.ColourOf("rebels"), "the reserve colour farthest from Blue, the colour now in use");
+
+        palette.Override("empire_s", null);
+        Assert.AreEqual(Red, palette.ColourOf("empire_s"), "a cleared field restores the file's colour");
+    }
+
+    [TestMethod]
     public void ShippedPalette_EveryPairOfColoursReserveIncluded_CanBeToldApart()
     {
         var config = ShippedConfig();

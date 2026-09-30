@@ -34,6 +34,9 @@ public sealed class RealmBorderService
     public const uint FreePeoplesColour = 0xFFDCE6F2;
     public const uint ShadowColour = 0xFFB0231B;
 
+    /// <summary>The province picture's own colours; RealmPaletteTests keeps every realm colour clear of them.</summary>
+    internal const uint PictureUnownedFief = 0xFFFFFFFF, PictureWildLand = 0xFFE6DCC0, PictureWater = 0xFF2A6078, PictureEdge = 0xFF20180F;
+
     private const string FreeSide = "free";
     private const string ShadowSide = "shadow";
 
@@ -67,7 +70,9 @@ public sealed class RealmBorderService
     private bool _dirty = true;
     private bool _checkTerritory = true;
     private (bool Heraldic, bool Gild, float Width, bool Names, bool Fill, float FillStrength, int ColourVersion) _look;
-    private (string? Material, string? Blend) _render;
+    private string? _renderMaterial;
+    private string? _renderBlend;
+    private int _appliedColourVersion = -1;
     private bool? _drawThroughTerrain;
     private float _lastAlpha = -1f;
     private double _slowestUploadMs;
@@ -106,8 +111,29 @@ public sealed class RealmBorderService
 
     public int DrawnTiles => _uploaded.Count;
 
-    /// <summary>This campaign's colours: built fresh at every session start, so the reserve is whole again.</summary>
-    private RealmPalette Palette => _palette ??= _palettes.NewPalette();
+    /// <summary>
+    /// This campaign's colours: built fresh at every session start, so the reserve is whole again, with the
+    /// player's MCM colours applied whenever they change, so a realm created in play avoids them too.
+    /// </summary>
+    private RealmPalette Palette
+    {
+        get
+        {
+            if (_palette == null)
+            {
+                _palette = _palettes.NewPalette();
+                _appliedColourVersion = -1;
+            }
+            int version = _settings.ColourVersion;
+            if (version != _appliedColourVersion)
+            {
+                _appliedColourVersion = version;
+                foreach (string realm in _palette.CuratedRealms)
+                    _palette.Override(realm, _settings.ColourOverride(realm));
+            }
+            return _palette;
+        }
+    }
 
     /// <summary>A new or loaded campaign: every per-campaign state goes, the per-map provinces stay.</summary>
     public void OnSessionStart()
@@ -148,7 +174,7 @@ public sealed class RealmBorderService
     /// <summary>
     /// The province map as ARGB pixels, row 0 along the map's southern (lowest Y) edge, the row order
     /// a bottom-up bitmap stores: each realm in its colour with its edges dark, a fief without an owner
-    /// pale, wild land grey, water blue. Null until the provinces are ready. For the console.
+    /// white, wild land parchment, water slate blue. Null until the provinces are ready. For the console.
     /// </summary>
     public (int Columns, int Rows, uint[] Pixels)? ProvinceImage()
     {
@@ -170,13 +196,13 @@ public sealed class RealmBorderService
             for (int column = 0; column < map.Columns; column++)
             {
                 string? realm = RealmAt(column, row);
-                uint colour = realm != null ? (_settings.ColourOverride(realm) ?? palette.ColourOf(realm))
-                    : map[column, row] >= 0 ? 0xFFC8C8BEu                                   // a fief without an owner
-                    : result.Terrain[column, row] == TerrainClass.Water ? 0xFF6E8CA0u : 0xFF8C8C82u; // water, wild land
+                uint colour = realm != null ? palette.ColourOf(realm)
+                    : map[column, row] >= 0 ? PictureUnownedFief
+                    : result.Terrain[column, row] == TerrainClass.Water ? PictureWater : PictureWildLand;
                 bool edge = realm != null && (RealmAt(column + 1, row) != realm || RealmAt(column - 1, row) != realm
                     || RealmAt(column, row + 1) != realm || RealmAt(column, row - 1) != realm);
                 if (edge)
-                    colour = 0xFF20180F;
+                    colour = PictureEdge;
                 pixels[row * map.Columns + column] = colour;
             }
         }
@@ -219,15 +245,21 @@ public sealed class RealmBorderService
         if (!_renderer.IsAvailable)
             return;
 
-        // MCM's material and blend choices apply when they change; a console command in between stands until then.
-        var render = (_settings.MaterialName, _settings.BlendMode);
-        if (!render.Equals(_render))
+        // Each MCM render choice applies when it changes; a console command in between stands until its own
+        // dropdown changes.
+        string? material = _settings.MaterialName, blend = _settings.BlendMode;
+        if (material != _renderMaterial)
         {
-            _render = render;
-            if (!_renderer.UseMaterial(render.MaterialName))
-                _logger.LogWarning($"[RealmBorders] MCM Border Material '{render.MaterialName}' does not exist; keeping the current one");
-            if (!_renderer.UseBlendMode(render.BlendMode))
-                _logger.LogWarning($"[RealmBorders] MCM Border Blend Mode '{render.BlendMode}' is not an engine blend mode; keeping the current one");
+            _renderMaterial = material;
+            if (!_renderer.UseMaterial(material))
+                _logger.LogWarning($"[RealmBorders] MCM Border Material '{material}' does not exist; keeping the current one");
+            ForgetDrawn();
+        }
+        if (blend != _renderBlend)
+        {
+            _renderBlend = blend;
+            if (!_renderer.UseBlendMode(blend))
+                _logger.LogWarning($"[RealmBorders] MCM Border Blend Mode '{blend}' is not an engine blend mode; keeping the current one");
             ForgetDrawn();
         }
 
@@ -414,11 +446,8 @@ public sealed class RealmBorderService
     {
         MapMode.Alignment => group == FreeSide ? FreePeoplesColour : ShadowColour,
         MapMode.War => RelationColours.TryGetValue(group, out uint colour) ? colour : RelationColours[RelationGroups.Neutral],
-        _ => RealmColour(group),
+        _ => Palette.ColourOf(group),
     };
-
-    /// <summary>A realm's colour: the player's MCM choice, else the palette's.</summary>
-    private uint RealmColour(string realm) => _settings.ColourOverride(realm) ?? Palette.ColourOf(realm);
 
     private string? SideOf(string realm) =>
         _alignment.ResolveSide(realm, _map.CultureOfRealm(realm) ?? string.Empty) switch

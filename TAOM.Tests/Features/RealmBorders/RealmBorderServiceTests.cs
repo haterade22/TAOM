@@ -72,6 +72,8 @@ public class RealmBorderServiceTests
             Settings.DrawThroughTerrain.Returns(true);
             Settings.RealmNames.Returns(true);
             Settings.CrossingNotices.Returns(true);
+            Settings.MaterialName.Returns((string?)null); // the provider's "Automatic"; a substitute would say ""
+            Settings.BlendMode.Returns((string?)null);
 
             var paths = Substitute.For<IPathService>();
             paths.ModuleDataPath.Returns(ModuleData);
@@ -444,9 +446,9 @@ public class RealmBorderServiceTests
         float cell = 400f / 512;
         uint At(float x, float y) => pixels[(int)(y / cell) * columns + (int)(x / cell)];
         Assert.AreEqual(rig.Palettes.NewPalette().ColourOf("empire_w"), At(50, 100), "the realm");
-        Assert.AreEqual(0xFFC8C8BEu, At(350, 100), "a fief without an owner");
-        Assert.AreEqual(0xFF6E8CA0u, At(200, 195), "the sea, row 0 being the south");
-        Assert.AreEqual(0xFF20180Fu, At(199.8f, 100), "the realm's edge against the landless fief");
+        Assert.AreEqual(RealmBorderService.PictureUnownedFief, At(350, 100), "a fief without an owner");
+        Assert.AreEqual(RealmBorderService.PictureWater, At(200, 195), "the sea, row 0 being the south");
+        Assert.AreEqual(RealmBorderService.PictureEdge, At(199.8f, 100), "the realm's edge against the landless fief");
     }
 
     // --- review fixes (2026-09-30) ---
@@ -858,5 +860,32 @@ public class RealmBorderServiceTests
 
         rig.Logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("no_such_material")));
         Assert.IsTrue(rig.Drawn.Count > 0);
+    }
+
+    [TestMethod]
+    public void ChangingOneMcmRenderChoice_KeepsTheOther()
+    {
+        var rig = new Rig(("west", 100, "empire_w"), ("east", 300, "empire_s"));
+        rig.Settle();
+        rig.Renderer.UseBlendMode("Modulate").Returns(true);
+
+        rig.Settings.BlendMode.Returns("Modulate");
+        rig.Settle();
+
+        rig.Renderer.DidNotReceive().UseMaterial(Arg.Any<string?>());
+    }
+
+    [TestMethod]
+    public void RealmCreatedInPlay_AvoidsThePlayersColours()
+    {
+        var rig = new Rig(("west", 100, "empire_w"), ("east", 300, "clan:rebels"));
+        uint firstReserve = rig.Palettes.NewPalette().ColourOf("clan:someone");
+        rig.Settings.ColourOverride("empire_w").Returns(firstReserve);
+        rig.Settings.ColourVersion.Returns(1);
+
+        rig.Settle();
+
+        Assert.AreNotEqual(firstReserve, PixelAt(rig, 350, 100), "the rebels do not take the colour the player gave Gondor");
+        Assert.AreEqual(firstReserve, PixelAt(rig, 50, 100));
     }
 }

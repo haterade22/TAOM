@@ -239,7 +239,7 @@ public sealed class BorderRenderAdapter : IBorderRenderAdapter
                 copy.SetAlphaBlendMode(_blendOverride.Value);
             string blend = copy.GetAlphaBlendMode().ToString();
             if (ActiveMaterial != name || ActiveBlendMode != blend)
-                _logger.LogInfo($"[RealmBorders] drawing with material '{name}' (its own blend {source.GetAlphaBlendMode()}, drawn {blend}, flags +{extra})");
+                _logger.LogInfo($"[RealmBorders] drawing with material '{name}' (its own blend {source.GetAlphaBlendMode()}, drawn {blend}, flags {copy.Flags})");
             ActiveMaterial = name;
             ActiveBlendMode = blend;
             return copy;

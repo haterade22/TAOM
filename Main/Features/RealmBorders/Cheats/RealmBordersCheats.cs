@@ -19,13 +19,13 @@ public static class RealmBordersCheats
     private const string StatusUsage =
         "Format is \"taom.print_realm_borders\".\n"
         + "Prints whether the realm borders are on, the map mode, how far the province build has got and\n"
-        + "how long it and the last repaint took, the tiles drawn, the slowest tile upload, the fade and\n"
-        + "the material they are drawn from.";
+        + "how long it and the last repaint took, the tiles drawn, the slowest tile upload, the fade, and\n"
+        + "the material and blend mode they are drawn with.";
 
     private const string MapUsage =
         "Format is \"taom.print_realm_province_map\".\n"
         + "Writes the province map to Logs/" + MapFileName + ": each realm in its colour with its edges dark,\n"
-        + "a fief without an owner pale, wild land grey, water blue. North is up.";
+        + "a fief without an owner white, wild land parchment, water slate blue. North is up.";
 
     private const string RebuildUsage =
         "Format is \"taom.realm_borders_rebuild\".\n"

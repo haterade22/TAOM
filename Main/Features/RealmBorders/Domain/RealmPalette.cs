@@ -13,6 +13,7 @@ namespace TAOM.Features.RealmBorders.Domain;
 /// </summary>
 public sealed class RealmPalette
 {
+    private readonly Dictionary<string, uint> _curated;
     private readonly Dictionary<string, uint> _colours;
     private readonly List<uint> _reserve;
 
@@ -22,10 +23,28 @@ public sealed class RealmPalette
             throw new ArgumentNullException(nameof(curated));
         if (reserve == null)
             throw new ArgumentNullException(nameof(reserve));
-        _colours = new Dictionary<string, uint>(StringComparer.Ordinal);
+        _curated = new Dictionary<string, uint>(StringComparer.Ordinal);
         foreach (var pair in curated)
-            _colours[pair.Key] = pair.Value;
+            _curated[pair.Key] = pair.Value;
+        _colours = new Dictionary<string, uint>(_curated, StringComparer.Ordinal);
         _reserve = new List<uint>(reserve);
+    }
+
+    /// <summary>The realms the palette file names.</summary>
+    public IReadOnlyCollection<string> CuratedRealms => _curated.Keys;
+
+    /// <summary>
+    /// The player's colour for a curated realm, or null to restore the file's. Colours in use include it, so
+    /// a reserve colour handed out afterwards keeps clear of it.
+    /// </summary>
+    public void Override(string realmId, uint? colour)
+    {
+        if (realmId == null)
+            throw new ArgumentNullException(nameof(realmId));
+        if (colour.HasValue)
+            _colours[realmId] = colour.Value;
+        else if (_curated.TryGetValue(realmId, out uint original))
+            _colours[realmId] = original;
     }
 
     public uint ColourOf(string realmId)

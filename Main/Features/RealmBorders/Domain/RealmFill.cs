@@ -6,8 +6,9 @@ namespace TAOM.Features.RealmBorders.Domain;
 /// <summary>
 /// Colours each realm's land between its borders: a flat, translucent tint in the realm's colour on a
 /// grid of quads <see cref="Stride"/> cells apart, draped like the borders. The tint fades out over the
-/// cells next to another realm, wild land or water, so its cell-stepped edge stays under the border's own
-/// wash and the smooth line carries the edge. A quad takes one colour: a corner of another realm, or of
+/// cells next to another realm, wild land or water: beside another realm its cell-stepped edge stays under
+/// the border's own wash and the smooth line carries the edge; beside wild land and water, where no line is
+/// drawn, the fade itself is the edge. A quad takes one colour: a corner of another realm, or of
 /// none, fades to nothing in that colour, so two realms' tints never blend and no dark fringe appears.
 /// </summary>
 public static class RealmFill
