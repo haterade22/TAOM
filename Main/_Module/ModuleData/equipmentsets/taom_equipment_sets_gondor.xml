@@ -300,9 +300,9 @@
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
 			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
 			<Equipment slot="Head" id="Item.sk_gd_lam_nob_helmet_lord_a" />
-			<Equipment slot="Body" id="Item.sk_gd_lam_inf_chest_lord_a" />
-			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_noble_elite_a" />
-			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_elite_a" />
+			<Equipment slot="Body" id="Item.sk_gd_lam_nob_chest_lord_a" />
+			<Equipment slot="Cape" id="Item.sk_gd_lam_pauld_cape_noble_lord_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_lam_nob_bracer_heavy_a" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_elite_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
@@ -312,9 +312,9 @@
 	<EquipmentRoster id="gondor_lord_lamedon_1_civ" culture="Culture.gondor">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Head" id="Item.sk_gd_lam_nob_helmet_lord_a" />
-			<Equipment slot="Body" id="Item.sk_gd_lam_inf_chest_lord_a" />
-			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_noble_elite_a" />
-			<Equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_elite_a" />
+			<Equipment slot="Body" id="Item.sk_gd_lam_nob_chest_lord_a" />
+			<Equipment slot="Cape" id="Item.sk_gd_lam_pauld_cape_noble_lord_a" />
+			<Equipment slot="Gloves" id="Item.sk_gd_lam_nob_bracer_heavy_a" />
 			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_elite_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
@@ -420,7 +420,7 @@
 
 	<EquipmentRoster id="imrahil_bat_equipment" culture="Culture.gondor">
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.wm_gondor_swanknight_speara" />
+			<Equipment slot="Item0" id="Item.wm_gondor_spear_b_swan" />
 			<Equipment slot="Item1" id="Item.wm_swan_knight_sworda" />
 			<Equipment slot="Item2" id="Item.gond_shield_two_swan" />
 			<Equipment slot="Head" id="Item.sk_gd_dol_cav_helmet_elite_a" />
@@ -472,7 +472,7 @@
 
 	<EquipmentRoster id="hirluin_bat_equipment" culture="Culture.gondor">
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.wm_gondor_pg_speara" />
+			<Equipment slot="Item0" id="Item.wm_gondor_spear_b_pg" />
 			<Equipment slot="Item1" id="Item.wm_gondor_boromir_sword" />
 			<Equipment slot="Item2" id="Item.gond_shield_three_green" />
 			<Equipment slot="Head" id="Item.sk_gd_pin_noble_cav_helmet_elite_a" />

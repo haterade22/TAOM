@@ -52,7 +52,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_axe_a01" />
+                    id="Item.wm_mordor_set1_axe_a01" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gn_orc_helmet_light_a" />
@@ -66,7 +66,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_axe_a01" />
+                    id="Item.wm_mordor_set1_axe_a01" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gn_orc_helmet_light_b" />
@@ -81,7 +81,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_axe_a01" />
+                    id="Item.wm_mordor_set1_axe_a01" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gn_orc_helmet_light_b" />
@@ -96,13 +96,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_axe_a01" />
+                    id="Item.wm_mordor_set1_axe_a01" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gn_orc_helmet_light_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_a" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_a" />
@@ -110,13 +110,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_axe_a01" />
+                    id="Item.wm_mordor_set1_axe_a01" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gn_orc_helmet_light_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                    id="Item.sk_md_orc_inf_chest_med_d" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_a" />
@@ -124,13 +124,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_axe_a01" />
+                    id="Item.wm_mordor_set1_axe_a01" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gn_orc_helmet_light_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_a" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_a" />
@@ -138,13 +138,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_axe_a01" />
+                    id="Item.wm_mordor_set1_axe_a01" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gn_orc_helmet_light_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                    id="Item.sk_md_orc_inf_chest_med_d" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_a" />
@@ -152,13 +152,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_axe_a01" />
+                    id="Item.wm_mordor_set1_axe_a01" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gn_orc_helmet_light_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_a" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_a" />
@@ -166,13 +166,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_axe_a01" />
+                    id="Item.wm_mordor_set1_axe_a01" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gn_orc_helmet_light_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                    id="Item.sk_md_orc_inf_chest_med_d" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_a" />
@@ -213,7 +213,7 @@
                 value="22" />
             <skill
                 id="Bow"
-                value="70" />
+                value="35" />
             <skill
                 id="Crossbow"
                 value="0" />
@@ -229,7 +229,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_e" />
+                    id="Item.ladder_goblin_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -252,7 +252,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_e" />
+                    id="Item.ladder_goblin_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -275,7 +275,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_e" />
+                    id="Item.ladder_goblin_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -299,7 +299,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_e" />
+                    id="Item.ladder_goblin_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -323,7 +323,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_e" />
+                    id="Item.ladder_goblin_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -338,7 +338,7 @@
                     id="Item.sk_gn_orc_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_a" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_b" />
@@ -346,7 +346,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_e" />
+                    id="Item.ladder_goblin_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -361,7 +361,7 @@
                     id="Item.sk_gn_orc_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                    id="Item.sk_md_orc_inf_chest_med_d" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_b" />
@@ -369,7 +369,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_e" />
+                    id="Item.ladder_goblin_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -384,7 +384,7 @@
                     id="Item.sk_gn_orc_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_a" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_b" />
@@ -392,7 +392,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_e" />
+                    id="Item.ladder_goblin_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -407,7 +407,7 @@
                     id="Item.sk_gn_orc_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                    id="Item.sk_md_orc_inf_chest_med_d" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_b" />
@@ -415,7 +415,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_e" />
+                    id="Item.ladder_goblin_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -430,7 +430,7 @@
                     id="Item.sk_gn_orc_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_a" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_b" />
@@ -438,7 +438,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_e" />
+                    id="Item.ladder_goblin_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -453,7 +453,7 @@
                     id="Item.sk_gn_orc_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                    id="Item.sk_md_orc_inf_chest_med_d" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_b" />
@@ -508,7 +508,7 @@
     </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
+              <equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
               <equipment slot="Head" id="Item.sk_gn_orc_helmet_light_a" />
               <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
               <equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_a" />
@@ -576,7 +576,7 @@
                     id="Item.sk_md_orc_rdr_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_b" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_md_orc_bracer_med_a" />
@@ -593,7 +593,7 @@
                     id="Item.sk_md_orc_rdr_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                    id="Item.sk_md_orc_inf_chest_med_c" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_md_orc_bracer_med_a" />
@@ -610,7 +610,7 @@
                     id="Item.sk_md_orc_rdr_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_b" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_md_orc_bracer_med_a" />
@@ -627,7 +627,7 @@
                     id="Item.sk_md_orc_rdr_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                    id="Item.sk_md_orc_inf_chest_med_c" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_md_orc_bracer_med_a" />
@@ -644,7 +644,7 @@
                     id="Item.sk_md_orc_rdr_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                    id="Item.sk_md_orc_inf_chest_med_b" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_md_orc_bracer_med_a" />
@@ -661,7 +661,7 @@
                     id="Item.sk_md_orc_rdr_helmet_light_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                    id="Item.sk_md_orc_inf_chest_med_c" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_md_orc_bracer_med_a" />
@@ -705,7 +705,7 @@
                 value="37" />
             <skill
                 id="Bow"
-                value="100" />
+                value="65" />
             <skill
                 id="Crossbow"
                 value="10" />
@@ -721,7 +721,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_r" />
+                    id="Item.ladder_goblin_bow_t3" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -730,7 +730,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_gundabad_axe_a01" />
+                    id="Item.wm_mordor_set1_axe_a01" />
                 <equipment
                     slot="Head"
                     id="Item.sk_md_orc_rdr_helmet_med_a" />
@@ -750,7 +750,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_r" />
+                    id="Item.ladder_goblin_bow_t3" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -759,7 +759,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_gundabad_axe_a01" />
+                    id="Item.wm_mordor_set1_axe_a01" />
                 <equipment
                     slot="Head"
                     id="Item.sk_md_orc_rdr_helmet_med_a" />
@@ -779,7 +779,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_r" />
+                    id="Item.ladder_goblin_bow_t3" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -788,7 +788,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_gundabad_axe_a01" />
+                    id="Item.wm_mordor_set1_axe_a01" />
                 <equipment
                     slot="Head"
                     id="Item.sk_md_orc_rdr_helmet_med_a" />
@@ -841,7 +841,7 @@
                 value="62" />
             <skill
                 id="Bow"
-                value="145" />
+                value="110" />
             <skill
                 id="Crossbow"
                 value="15" />
@@ -857,7 +857,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_r" />
+                    id="Item.ladder_goblin_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_c" />
@@ -919,7 +919,7 @@
                 value="82" />
             <skill
                 id="Bow"
-                value="185" />
+                value="150" />
             <skill
                 id="Crossbow"
                 value="20" />
@@ -932,7 +932,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_v" />
+                    id="Item.ladder_goblin_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.piercing_arrows" />
@@ -941,7 +941,7 @@
                     id="Item.piercing_arrows" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_1h_sword_a02" />
+                    id="Item.wm_gundabad_sword_a04" />
                 <equipment
                     slot="Head"
                     id="Item.sk_md_orc_vgd_helmet_heavy_a" />
@@ -961,7 +961,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_v" />
+                    id="Item.ladder_goblin_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.piercing_arrows" />
@@ -970,7 +970,7 @@
                     id="Item.piercing_arrows" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_1h_sword_a02" />
+                    id="Item.wm_gundabad_sword_a04" />
                 <equipment
                     slot="Head"
                     id="Item.sk_md_orc_inf_helmet_heavy_a" />
@@ -990,7 +990,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_v" />
+                    id="Item.ladder_goblin_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.piercing_arrows" />
@@ -999,7 +999,7 @@
                     id="Item.piercing_arrows" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_1h_sword_a02" />
+                    id="Item.wm_gundabad_sword_a04" />
                 <equipment
                     slot="Head"
                     id="Item.sk_md_orc_vgd_helmet_heavy_a" />
@@ -1019,7 +1019,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_v" />
+                    id="Item.ladder_goblin_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.piercing_arrows" />
@@ -1028,7 +1028,7 @@
                     id="Item.piercing_arrows" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_1h_sword_a02" />
+                    id="Item.wm_gundabad_sword_a04" />
                 <equipment
                     slot="Head"
                     id="Item.sk_md_orc_brt_helmet_heavy_a" />
@@ -1152,7 +1152,7 @@
     </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a01" />
               <equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_light_a" />
               <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
               <equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_b" />
@@ -1265,7 +1265,7 @@
     </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_mace_a02" />
+              <equipment slot="Item0" id="Item.wm_mordor_set1_mace_a02" />
               <equipment slot="Item1" id="Item.wm_gundabad_javelin_a01" />
               <equipment slot="Head" id="Item.sk_md_orc_arc_helmet_heavy_a" />
               <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
@@ -1320,7 +1320,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_mace_a02" />
+              <equipment slot="Item0" id="Item.wm_mordor_set1_mace_a02" />
               <equipment slot="Item1" id="Item.wm_gundabad_javelin_a02" />
               <equipment slot="Item2" id="Item.wm_gundabad_javelin_a02" />
               <equipment slot="Head" id="Item.sk_md_orc_brt_helmet_heavy_a" />
@@ -1332,7 +1332,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_mace_a02" />
+                    id="Item.wm_mordor_set1_mace_a02" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_javelin_a02" />
@@ -1355,7 +1355,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_mace_a02" />
+                    id="Item.wm_mordor_set1_mace_a02" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_javelin_a02" />
@@ -1378,7 +1378,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_mace_a02" />
+                    id="Item.wm_mordor_set1_mace_a02" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_javelin_a02" />
@@ -1401,7 +1401,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_mace_a02" />
+                    id="Item.wm_mordor_set1_mace_a02" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_javelin_a02" />
@@ -1424,7 +1424,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_mace_a02" />
+                    id="Item.wm_mordor_set1_mace_a02" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_javelin_a02" />
@@ -1493,7 +1493,7 @@
     </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_mace_a02" />
+              <equipment slot="Item0" id="Item.wm_mordor_set1_mace_a02" />
               <equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_med_a" />
               <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
               <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
@@ -1549,7 +1549,7 @@
     </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_mordor_set1_sword_a02" />
+              <equipment slot="Item0" id="Item.wm_gundabad_sword_a04" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
               <equipment slot="Head" id="Item.sk_md_orc_arc_helmet_heavy_a" />
               <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
@@ -1560,7 +1560,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_mordor_set1_sword_a02" />
+                    id="Item.wm_gundabad_sword_a04" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a03" />
@@ -1583,7 +1583,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_mordor_set1_sword_a02" />
+                    id="Item.wm_gundabad_sword_a04" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a03" />
@@ -1652,7 +1652,7 @@
     </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_dol_goldur_1h_mace_a02" />
+              <equipment slot="Item0" id="Item.wm_mordor_set1_mace_a02" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Head" id="Item.sk_md_orc_inf_helmet_heavy_a" />
               <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
@@ -1709,7 +1709,7 @@
     </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+              <equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a01" />
               <equipment slot="Head" id="Item.sk_gn_orc_arc_helmet_med_a" />
               <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
               <equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_a" />
@@ -1775,10 +1775,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.wm_mordor_set1_polearm_a01" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_dol_goldur_1h_sword_a01" />
+                    id="Item.wm_gundabad_sword_a04" />
                 <equipment
                     slot="Head"
                     id="Item.sk_md_orc_arc_helmet_heavy_a" />
@@ -1798,10 +1798,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.wm_mordor_set1_polearm_a01" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_dol_goldur_1h_sword_a01" />
+                    id="Item.wm_gundabad_sword_a04" />
                 <equipment
                     slot="Head"
                     id="Item.sk_md_orc_arc_helmet_heavy_a" />
@@ -1940,7 +1940,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.wm_gundabad_spear_a01" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a02" />
@@ -1957,7 +1957,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.wm_gundabad_spear_a01" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a03" />
@@ -2013,7 +2013,7 @@
                 value="62" />
             <skill
                 id="Bow"
-                value="145" />
+                value="35" />
             <skill
                 id="Crossbow"
                 value="15" />
@@ -2026,13 +2026,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_e" />
+                    id="Item.ladder_goblin_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.default_arrows" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_gundabad_axe_a02" />
+                    id="Item.wm_mordor_set1_axe_a01" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gn_orc_helmet_light_a" />
@@ -2046,13 +2046,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_e" />
+                    id="Item.ladder_goblin_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.default_arrows" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_gundabad_axe_a01" />
+                    id="Item.wm_mordor_set1_axe_a01" />
                 <equipment
                     slot="Body"
                     id="Item.sk_md_orc_arc_chest_light_a" />
@@ -2063,7 +2063,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_e" />
+                    id="Item.ladder_goblin_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.default_arrows" />
@@ -2141,13 +2141,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.wm_gundabad_spear_a01" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a02" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gundabad_axe_a02" />
+                    id="Item.wm_mordor_set1_axe_a01" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gn_orc_inf_helmet_med_a" />
@@ -2164,7 +2164,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.wm_gundabad_spear_a01" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a03" />
@@ -2193,7 +2193,7 @@
                     id="Item.wm_gundabad_shield_a01" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_dol_goldur_1h_sword_a01" />
+                    id="Item.wm_dol_goldur_1h_sword_a02" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gn_orc_arc_helmet_med_a" />
@@ -2252,7 +2252,7 @@
                 value="77" />
             <skill
                 id="Bow"
-                value="160" />
+                value="65" />
             <skill
                 id="Crossbow"
                 value="30" />
@@ -2265,13 +2265,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_r" />
+                    id="Item.ladder_goblin_bow_t3" />
                 <equipment
                     slot="Item1"
                     id="Item.default_arrows" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_dol_goldur_1h_sword_a01" />
+                    id="Item.wm_dol_goldur_1h_sword_a02" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gn_orc_inf_helmet_med_a" />
@@ -2288,13 +2288,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_r" />
+                    id="Item.ladder_goblin_bow_t3" />
                 <equipment
                     slot="Item1"
                     id="Item.default_arrows" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_gundabad_axe_a01" />
+                    id="Item.wm_mordor_set1_axe_a01" />
                 <equipment
                     slot="Head"
                     id="Item.sk_md_orc_inf_helmet_med_a" />
@@ -2311,13 +2311,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_goblin_bow_r" />
+                    id="Item.ladder_goblin_bow_t3" />
                 <equipment
                     slot="Item1"
                     id="Item.default_arrows" />
                 <equipment
                     slot="Item3"
-                    id="Item.wm_gundabad_mace_a02" />
+                    id="Item.wm_dol_goldur_1h_mace_a03" />
                 <equipment
                     slot="Body"
                     id="Item.sk_md_orc_inf_chainmail_med_a" />
@@ -2371,7 +2371,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_dol_goldur_1h_mace_a02" />
+        <equipment slot="Item0" id="Item.wm_mordor_set1_mace_a02" />
         <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
         <equipment slot="Head" id="Item.sk_md_orc_vgd_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />

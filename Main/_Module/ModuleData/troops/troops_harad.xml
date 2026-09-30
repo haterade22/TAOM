@@ -202,6 +202,9 @@
                 <equipment
                     slot="Horse"
                     id="Item.taom_war_elephant" />
+                <!-- 1.4.8 line: plain armour, no howdah crew or arrows (those came with 1.5.3). This id
+                     keeps 1.4.5's mahout-to-Cavalry charge (ElephantConfig.HarnessStringId); 1.5.x
+                     rides sk_elephant_armor_howdah_elite instead. -->
                 <equipment
                     slot="HorseHarness"
                     id="Item.sk_elephant_armor_a" />
@@ -266,8 +269,12 @@
                 <equipment
                     slot="Leg"
                     id="Item.haradrim_boots" />
-                <!-- Mûmakil mount. No HorseHarness — the war-platform is baked into the mount mesh
-                     (Item.taom_mumakil AdditionalMeshes); Phase 1 has no platform crew/howdah. -->
+                <!-- Mumakil mount. The HorseHarness slot is deliberately EMPTY and must stay empty. The war
+                     tower is an AdditionalMesh on Item.taom_mumakil, and MountVisualCreator routes that mesh
+                     down the ManeCoverType branch as soon as a harness is equipped: at affected_by_cover="true"
+                     a covered mount drops the mesh, which would leave the eight tower archers (#627 phase 2)
+                     standing on nothing. tools/taom_schema.py exempts this troop in _HARNESSLESS_BY_DESIGN
+                     for the same reason. -->
                 <equipment
                     slot="Horse"
                     id="Item.taom_mumakil" />
@@ -320,7 +327,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_harad_bow_e" />
+                    id="Item.ladder_harad_bow_t2" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_b" />
@@ -556,7 +563,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_harad_bow_r" />
+                    id="Item.ladder_harad_bow_t3" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_b" />
@@ -585,6 +592,73 @@
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
                 equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter
+        id="harad_howdah_crew"
+        is_hidden_encyclopedia="true"
+        default_group="Ranged"
+        level="16"
+        name="{=aom_harad_howdah_crew_name}[Harad] Howdah Archer"
+        occupation="Soldier"
+        culture="Culture.aserai">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="85" />
+            <skill
+                id="Riding"
+                value="30" />
+            <skill
+                id="OneHanded"
+                value="40" />
+            <skill
+                id="TwoHanded"
+                value="20" />
+            <skill
+                id="Polearm"
+                value="20" />
+            <skill
+                id="Bow"
+                value="95" />
+            <skill
+                id="Crossbow"
+                value="25" />
+            <skill
+                id="Throwing"
+                value="30" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_harad_bow_t3" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_b" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.haradrim02a_head" />
+                <equipment
+                    slot="Body"
+                    id="Item.haradrim02a_toso" />
+                <equipment
+                    slot="Cape"
+                    id="Item.haradrim02_pauldrons" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.haradrim02a_gloves" />
+                <equipment
+                    slot="Leg"
+                    id="Item.haradrim02_boots" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -855,7 +929,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_harad_bow_r" />
+                    id="Item.ladder_harad_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.bodkin_arrows_b" />
@@ -1196,7 +1270,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_harad_bow_v" />
+                    id="Item.ladder_harad_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.piercing_arrows" />
@@ -1487,7 +1561,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_harad_bow_v" />
+                    id="Item.ladder_harad_bow_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.piercing_arrows" />
@@ -1789,7 +1863,7 @@
                 value="75" />
             <skill
                 id="Bow"
-                value="155" />
+                value="140" />
             <skill
                 id="Crossbow"
                 value="20" />
@@ -1805,7 +1879,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_harad_bow_r" />
+                    id="Item.ladder_harad_bow_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -1952,7 +2026,7 @@
                 value="105" />
             <skill
                 id="Bow"
-                value="205" />
+                value="180" />
             <skill
                 id="Crossbow"
                 value="25" />
@@ -1965,7 +2039,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.ladder_harad_bow_v" />
+                    id="Item.ladder_harad_bow_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.steppe_arrows" />
@@ -2177,7 +2251,7 @@
                 value="65" />
             <skill
                 id="Bow"
-                value="140" />
+                value="65" />
             <skill
                 id="Crossbow"
                 value="30" />
@@ -2187,14 +2261,14 @@
         </skills>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_harad_bow_e" />
+                <equipment slot="Item0" id="Item.ladder_harad_bow_t2" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.aserai_sword_3_t3" />
                 <equipment slot="Body" id="Item.haradrim_torso" />
                 <equipment slot="Leg" id="Item.haradrim_boots" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_harad_bow_e" />
+                <equipment slot="Item0" id="Item.ladder_harad_bow_t2" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.aserai_sword_3_t3" />
                 <equipment slot="Head" id="Item.haradrim_head" />
@@ -2202,7 +2276,7 @@
                 <equipment slot="Leg" id="Item.haradrim_boots" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_harad_bow_e" />
+                <equipment slot="Item0" id="Item.ladder_harad_bow_t2" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.aserai_sword_3_t3" />
                 <equipment slot="Body" id="Item.haradrim_torso" />
@@ -2304,7 +2378,7 @@
                 value="80" />
             <skill
                 id="Bow"
-                value="155" />
+                value="95" />
             <skill
                 id="Crossbow"
                 value="45" />
@@ -2314,7 +2388,7 @@
         </skills>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_harad_bow_r" />
+                <equipment slot="Item0" id="Item.ladder_harad_bow_t3" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.aserai_sword_3_t3" />
                 <equipment slot="Head" id="Item.haradrim_head" />
@@ -2323,7 +2397,7 @@
                 <equipment slot="Leg" id="Item.haradrim_boots" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.ladder_harad_bow_r" />
+                <equipment slot="Item0" id="Item.ladder_harad_bow_t3" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.aserai_sword_3_t3" />
                 <equipment slot="Head" id="Item.haradrim_head" />
