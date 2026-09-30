@@ -317,7 +317,7 @@ public class GarrisonCultureSwapAdapter : IGarrisonCultureSwapAdapter
             if (!troop.IsHero && troop.IsRegular && troop.Occupation == Occupation.Soldier
                 && !militiaTroopIds.Contains(troop.StringId))
             {
-                candidates.Add(new CultureTroopCandidate(troop.StringId, SafeTier(troop), MapRole(troop)));
+                candidates.Add(new CultureTroopCandidate(troop.StringId, SafeTier(troop), MapRole(troop), RidesLockedCreature(troop)));
             }
 
             var upgrades = troop.UpgradeTargets;
@@ -331,6 +331,23 @@ public class GarrisonCultureSwapAdapter : IGarrisonCultureSwapAdapter
         }
 
         return candidates;
+    }
+
+    /// <summary>
+    /// Whether any battle set mounts a mount-locked creature (<see cref="CreatureMountRiders"/>). The engine draws each
+    /// slot from an independently chosen set, so one spider set is enough for the troop to ride a spider. Every getter on
+    /// the path is a plain read (v1.5.3); anything that did throw reaches the index build's catch, which marks the build
+    /// failed and retries, rather than quietly re-admitting a creature rider as a replacement.
+    /// </summary>
+    private static bool RidesLockedCreature(CharacterObject troop)
+    {
+        foreach (var equipment in troop.BattleEquipments)
+        {
+            var monsterId = equipment?[EquipmentIndex.Horse].Item?.HorseComponent?.Monster?.StringId;
+            if (CreatureMountRiders.IsLockedCreatureMonster(monsterId))
+                return true;
+        }
+        return false;
     }
 
     private static CharacterObject? ResolveCharacter(string troopId)

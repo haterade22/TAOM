@@ -32,7 +32,8 @@ public sealed class TroopSwap
 ///
 /// <see cref="UnmappedTroopIds"/> is not an error path — it is the fail-safe. TAOM's culture rosters
 /// are deliberately uneven (measured 2026-09-20: Mirkwood has no troop at tiers 4, 5 or 6; Goblin
-/// has no cavalry at any tier), so a cell with no reachable candidate is expected. Those stacks stay
+/// has no cavalry the swap may use at any tier, its spider riders being creature-mount riders), so a
+/// cell with no reachable candidate is expected. Those stacks stay
 /// exactly as they are and the service logs them. A gap in a culture's roster must never delete a
 /// garrison, which is the same stance <c>ReplaceForeignNotables</c> takes when a culture has no
 /// template for an occupation.

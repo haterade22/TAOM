@@ -90,7 +90,8 @@ public class EnlistmentRosterResolverTests
     [TestMethod]
     public void Resolve_NoAssignmentRosterAnywhere_FallsToInfantryInTheSameCulture()
     {
-        // goblin has no Cavalry-grouped troop, so enlist_goblin_cavalry_* is never authored.
+        // goblin's only Cavalry-grouped troops ride spiders, which generate_enlistment_rosters.py drops as donors
+        // (drop_creature_riders, 2026-09-29), so enlist_goblin_cavalry_* is never authored.
         var result = EnlistmentRosterResolver.Resolve(
             "goblin", ServiceAssignment.Cavalry, EnlistmentRank.Soldier,
             Exists("enlist_goblin_infantry_soldier", "enlist_default_cavalry_soldier"));

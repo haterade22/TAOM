@@ -4,18 +4,23 @@ using System.Linq;
 
 namespace TAOM.Features.CultureConversion.GarrisonSwap.Domain;
 
-/// <summary>One candidate troop of a culture, reduced to the two axes the mapper matches on.</summary>
+/// <summary>
+/// One candidate troop of a culture, reduced to the two axes the mapper matches on, plus whether it rides a
+/// mount-locked creature (<see cref="CreatureMountRiders"/>), which keeps it out of the replacement cells.
+/// </summary>
 public readonly struct CultureTroopCandidate
 {
     public readonly string TroopId;
     public readonly int Tier;
     public readonly TroopRole Role;
+    public readonly bool RidesCreatureMount;
 
-    public CultureTroopCandidate(string troopId, int tier, TroopRole role)
+    public CultureTroopCandidate(string troopId, int tier, TroopRole role, bool ridesCreatureMount = false)
     {
         TroopId = troopId;
         Tier = tier;
         Role = role;
+        RidesCreatureMount = ridesCreatureMount;
     }
 }
 
@@ -42,7 +47,7 @@ public sealed class CultureTroopIndex
 
     public string CultureId { get; }
 
-    /// <summary>Every tier this culture has any troop at, ascending.</summary>
+    /// <summary>Every tier this culture has a replacement troop at, ascending (creature-mount riders count for none).</summary>
     public IReadOnlyList<int> AllTiers { get; }
 
     public bool IsEmpty => AllTiers.Count == 0;
@@ -62,6 +67,11 @@ public sealed class CultureTroopIndex
         foreach (var candidate in candidates ?? Enumerable.Empty<CultureTroopCandidate>())
         {
             if (string.IsNullOrEmpty(candidate.TroopId) || !seen.Add(candidate.TroopId))
+                continue;
+            // A creature-mount rider never REPLACES a stack (CreatureMountRiders), so it enters no cell and no rung can
+            // reach it. It stays in the id set above: a garrison that already holds the culture's own spider riders
+            // keeps them through Contains, rather than churning them into infantry on a goblin-to-goblin conversion.
+            if (candidate.RidesCreatureMount)
                 continue;
             var key = (candidate.Role, candidate.Tier);
             if (!cells.TryGetValue(key, out var list))

@@ -24,7 +24,8 @@ namespace TAOM.Tests.Features.CultureConversion;
 ///
 /// TAOM's rosters really are uneven. Measured 2026-09-20 across the 16 <c>troops_*.xml</c> files:
 /// Mirkwood fields nothing at all at tiers 4, 5 or 6; Goblin, Blue Craig and the Misty Mountain
-/// orcs field no cavalry at any tier; Dunland, Dale and Umbar stop at tier 6. The mapper's fallback
+/// orcs field no cavalry the swap may use at any tier (their mountain spider riders, 2026-09-29, ride
+/// a mount-locked creature and never replace a stack); Dunland, Dale and Umbar stop at tier 6. The mapper's fallback
 /// ladder is what covers those, and <see cref="EveryConversionTargetCanReplaceEveryTierAndRole"/> is the
 /// test that proves it actually does, against the shipped data rather than a fixture.
 ///
@@ -55,7 +56,19 @@ public class GarrisonCultureCoverageTests
         public TroopRole Role;
         public string Occupation = "";
         public List<string> UpgradeTargets = new List<string>();
+        public bool RidesCreatureMount;
     }
+
+    /// <summary>
+    /// The Horse items of the mount-locked creatures. The adapter reads each mount's Monster
+    /// (<c>CreatureMountRiders</c>); this data-only mirror has no Armory to resolve a Monster from, so it
+    /// knows the same mounts by item id. A new spider, elephant or Mumakil item belongs here too.
+    /// </summary>
+    private static readonly HashSet<string> CreatureMountItemIds = new HashSet<string>(StringComparer.Ordinal)
+    {
+        "spider_mount_a", "spider_mount_brown", "spider_mount_pale", "spider_mount_mountain_a1",
+        "spider_mount_mountain_a2", "taom_war_elephant", "taom_mumakil",
+    };
 
     private static string FindRepoRoot()
     {
@@ -121,6 +134,9 @@ public class GarrisonCultureCoverageTests
                         .Select(u => ((string?)u.Attribute("id") ?? "").Replace("NPCCharacter.", ""))
                         .Where(u => !string.IsNullOrEmpty(u))
                         .ToList(),
+                    RidesCreatureMount = node.Descendants("equipment").Any(e =>
+                        (string?)e.Attribute("slot") == "Horse"
+                        && CreatureMountItemIds.Contains(((string?)e.Attribute("id") ?? "").Replace("Item.", ""))),
                 };
             }
         }
@@ -275,7 +291,7 @@ public class GarrisonCultureCoverageTests
                 continue;
             }
             if (troop.Occupation == "Soldier" && !militiaIds.Contains(id))
-                candidates.Add(new CultureTroopCandidate(id, troop.Tier, troop.Role));
+                candidates.Add(new CultureTroopCandidate(id, troop.Tier, troop.Role, troop.RidesCreatureMount));
             foreach (var up in troop.UpgradeTargets)
                 pending.Enqueue(up);
         }
@@ -284,6 +300,45 @@ public class GarrisonCultureCoverageTests
     }
 
     // --- The gate that matters ---
+
+    [TestMethod]
+    public void NoConversionTarget_OffersACreatureMountRiderAsAReplacement()
+    {
+        // Mike 2026-09-29: a spider, war elephant or Mumakil rider never replaces a garrison or militia stack, in any
+        // culture (Dol Guldur's spider line and the goblin tree's mountain spider riders alike).
+        var troops = LoadTroops();
+        var militiaIds = LoadMilitiaTroopIds();
+        var recruitment = Recruitment();
+        var creatureRiders = new HashSet<string>(troops.Values.Where(t => t.RidesCreatureMount).Select(t => t.Id),
+            StringComparer.Ordinal);
+        Assert.IsTrue(creatureRiders.Contains("goblin_spider_rider") && creatureRiders.Contains("taom_spider_rider_pale"),
+            "the mirror no longer recognises the spider riders; CreatureMountItemIds or the troop layout moved");
+
+        var offered = new List<string>();
+        foreach (var culture in ConversionTargets())
+        {
+            var index = BuildIndex(culture, troops, militiaIds, recruitment);
+            for (var tier = 0; tier <= MaxTier; tier++)
+                foreach (var role in AllRoles)
+                    offered.AddRange(index.Candidates(role, tier).Where(creatureRiders.Contains)
+                        .Select(id => $"{culture}: {id} at tier {tier} {role}"));
+        }
+
+        Assert.AreEqual(0, offered.Count, string.Join("\n", offered));
+    }
+
+    [DataTestMethod]
+    [DataRow("goblin")]
+    [DataRow("mistymountainorcs")]
+    [DataRow("bluecraig")]
+    public void TheGoblinTreeCultures_StillRecogniseTheirOwnSpiderRiders(string culture)
+    {
+        // Out of the replacement cells, still the line's own troops: a garrison holding them keeps them through a
+        // goblin-to-goblin conversion instead of churning them into infantry.
+        var index = BuildIndex(culture, LoadTroops(), LoadMilitiaTroopIds(), Recruitment());
+
+        Assert.IsTrue(index.Contains("goblin_spider_rider") && index.Contains("goblin_spider_lord"));
+    }
 
     [TestMethod]
     public void EveryConversionTargetCanReplaceEveryTierAndRole()

@@ -30,7 +30,9 @@ Two things follow from adding weapons, and both are load-bearing:
 
 NO MOUNTS, deliberately. Horse/HorseHarness are not emitted for any assignment,
 cavalry included. Three reasons, any one sufficient: the cavalry donor pools
-mount taom_mumakil, taom_war_elephant and taom_chariot_a; the roster is keyed on
+mount taom_chariot_a (and mounted taom_mumakil and taom_war_elephant until
+drop_creature_riders took the mount-locked creatures' riders out of every pool,
+2026-09-29, with the goblin tree's spider riders); the roster is keyed on
 the COMMANDER's culture rather than the player's race, so a dwarf serving a
 horse culture would be handed a horse he spawns inside the mesh of; and
 MOUNTED_DWARF (.claude/rules/moduledata-validation.md) cannot see these rosters
@@ -358,15 +360,18 @@ def parse_troops():
             except ValueError:
                 continue
             slots = {}
+            mount = ''
             for roster in npc.findall('.//EquipmentRoster'):
                 if roster.get('civilian') == 'true':
                     continue
                 for eq in roster.findall('equipment'):
                     slot = eq.get('slot', '')
-                    if slot not in PARSE_SLOTS:
-                        continue
                     raw = eq.get('id', '')
                     item_id = raw.split('.', 1)[1] if raw.startswith('Item.') else raw
+                    if slot == 'Horse' and not mount:
+                        mount = item_id  # read for drop_creature_riders only; never emitted
+                    if slot not in PARSE_SLOTS:
+                        continue
                     if item_id and slot not in slots:
                         slots[slot] = item_id
                 break  # first non-civilian roster only
@@ -375,6 +380,7 @@ def parse_troops():
                 'level': level,
                 'group': npc.get('default_group', ''),
                 'slots': slots,
+                'mount': mount,
             })
 
     # A default_group nobody maps is a donor pool that silently does not exist. HorseArcher was in
@@ -391,6 +397,46 @@ def parse_troops():
 # =============================================================================
 # Donor selection
 # =============================================================================
+
+# The mount-locked creatures (TaomAgentStatCalculateModel.CanAgentRideMount refuses them): a rider of one is never a
+# donor (Mike 2026-09-29). The generator emits no mounts, so a spider rider's kit would put a goblin "cavalry"
+# enlistee on foot in a spider rider's gear, and before 2026-09-29 the goblin tree had no Cavalry troop at all.
+# War rams and elk ride the horse skeleton as ordinary cavalry and stay donors.
+LOCKED_CREATURE_MONSTERS = frozenset({'Monster.spider', 'Monster.taom_war_elephant', 'Monster.taom_mumakil'})
+
+
+def creature_mount_item_ids(items_dir):
+    """Ids of the Horse items under `items_dir` (recursive) whose Monster is a mount-locked creature."""
+    if not os.path.isdir(items_dir):
+        raise SystemExit(f'ERROR: Armory items folder not found: {items_dir} (set ${ENV_VAR}). '
+                         'Creature mounts cannot be told apart without it.')
+    ids = set()
+    for dirpath, _, files in os.walk(items_dir):
+        for fn in files:
+            if not fn.endswith('.xml'):
+                continue
+            try:
+                root = ET.parse(os.path.join(dirpath, fn)).getroot()
+            except ET.ParseError as e:
+                print(f'  WARN: parse error in {fn}: {e}', file=sys.stderr)
+                continue
+            for item in root.iter('Item'):
+                horse = item.find('.//Horse')
+                if item.get('Type') == 'Horse' and horse is not None \
+                        and horse.get('monster') in LOCKED_CREATURE_MONSTERS:
+                    ids.add(item.get('id', ''))
+    ids.discard('')
+    return ids
+
+
+def drop_creature_riders(by_culture, creature_items):
+    """({culture: troops without the creature riders}, [dropped troop ids]). See LOCKED_CREATURE_MONSTERS."""
+    kept, dropped = {}, []
+    for culture, troops in by_culture.items():
+        kept[culture] = [t for t in troops if t.get('mount', '') not in creature_items]
+        dropped.extend(t['id'] for t in troops if t.get('mount', '') in creature_items)
+    return kept, dropped
+
 
 def apply_tree_aliases(by_culture):
     """Point each tree-borrowing culture at the donor pool of the tree it binds to.
@@ -817,6 +863,9 @@ def main():
     armory, universe, classes, zones = build_indexes()
 
     by_culture = parse_troops()
+    items_dir = os.path.join(game_modules(DEFAULT_GAME_ROOT), 'LOTRLOME_Armory', 'ModuleData', 'LOTRLOME_items')
+    by_culture, dropped = drop_creature_riders(by_culture, creature_mount_item_ids(items_dir))
+    print(f'Creature riders dropped as donors: {len(dropped)} ({", ".join(sorted(dropped)) or "none"})')
     apply_tree_aliases(by_culture)
     cultures = sorted(by_culture)
     if args.culture:

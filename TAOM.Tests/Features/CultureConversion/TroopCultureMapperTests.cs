@@ -8,8 +8,8 @@ namespace TAOM.Tests.Features.CultureConversion;
 
 /// <summary>
 /// The matching ladder, rung by rung. Every scenario below is modelled on a real hole measured in
-/// TAOM's troop data on 2026-09-20, not invented: Mirkwood's empty tiers 4-6, Goblin's total
-/// absence of cavalry, Dunland and Dale stopping at tier 6.
+/// TAOM's troop data on 2026-09-20, not invented: Mirkwood's empty tiers 4-6, Goblin's absence of
+/// any cavalry the swap may use (its spider riders are creature-mount riders), Dunland and Dale stopping at tier 6.
 /// </summary>
 [TestClass]
 public class TroopCultureMapperTests
@@ -97,8 +97,8 @@ public class TroopCultureMapperTests
     [TestMethod]
     public void MapGarrison_RoleAbsentEntirely_KeepsTheTierAndChangesRole()
     {
-        // Goblin fields no cavalry at any tier. Keeping tier 5 and becoming infantry preserves far
-        // more of the garrison's strength than dropping to a tier-1 rider would.
+        // Goblin fields no cavalry the swap may use at any tier. Keeping tier 5 and becoming infantry
+        // preserves far more of the garrison's strength than dropping to a tier-1 rider would.
         var index = Index(Target,
             ("goblin_inf_t5", 5, TroopRole.Infantry),
             ("goblin_bow_t5", 5, TroopRole.Ranged));
@@ -107,6 +107,41 @@ public class TroopCultureMapperTests
 
         Assert.AreEqual("goblin_inf_t5", plan.Swaps.Single().NewTroopId,
             "Cavalry's fallback chain puts Infantry ahead of Ranged.");
+    }
+
+    [TestMethod]
+    public void MapGarrison_TheOnlyCavalryRidesACreatureMount_KeepsTheTierAsInfantry()
+    {
+        // The goblin tree's only cavalry are its mountain spider riders (2026-09-29), and a creature-mount rider is
+        // never a garrison replacement (Mike): a captured tier-4 knight becomes tier-4 infantry, as before they existed.
+        var index = new CultureTroopIndex(Target, new[]
+        {
+            new CultureTroopCandidate("goblin_spider_rider", 4, TroopRole.Cavalry, ridesCreatureMount: true),
+            new CultureTroopCandidate("goblin_inf_t4", 4, TroopRole.Infantry),
+        });
+
+        var plan = Map(index, Row("gondor_knight", 4, TroopRole.Cavalry));
+
+        Assert.AreEqual("goblin_inf_t4", plan.Swaps.Single().NewTroopId);
+        Assert.AreEqual(0, index.Candidates(TroopRole.Cavalry, 4).Count,
+            "a creature-mount rider must enter no cell, so no rung can reach it");
+    }
+
+    [TestMethod]
+    public void MapGarrison_AStackOfTheTargetLinesOwnCreatureRiders_IsKept()
+    {
+        // Goblin-town and the Misty Mountain orcs share one tree: converting between them must not churn the spider
+        // riders a garrison already holds into infantry. They are the line's own troops, so Contains keeps them.
+        var index = new CultureTroopIndex(Target, new[]
+        {
+            new CultureTroopCandidate("goblin_spider_rider", 4, TroopRole.Cavalry, ridesCreatureMount: true),
+            new CultureTroopCandidate("goblin_inf_t4", 4, TroopRole.Infantry),
+        });
+
+        var plan = Map(index, Row("goblin_spider_rider", 4, TroopRole.Cavalry, culture: "goblin"));
+
+        Assert.AreEqual(0, plan.Swaps.Count);
+        Assert.AreEqual(0, plan.UnmappedTroopIds.Count);
     }
 
     [TestMethod]

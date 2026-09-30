@@ -11,7 +11,8 @@ namespace TAOM.Features.CultureConversion.GarrisonSwap;
 /// exact (tier, role) cell is often empty. Measured 2026-09-20 across the 16 <c>troops_*.xml</c>
 /// files, tiering with the engine's own <c>clamp(ceil((level-5)/5), 0, 10)</c> — Mirkwood has no
 /// troop at all at tiers 4, 5 or 6; Goblin, Blue Craig and the Misty Mountain orcs have no cavalry
-/// at any tier; Dunland, Dale and Umbar stop at tier 6, so a captured tier-8 Gondor stack has no
+/// the swap may use at any tier (their spider riders ride a mount-locked creature, which never
+/// replaces a stack: CreatureMountRiders); Dunland, Dale and Umbar stop at tier 6, so a captured tier-8 Gondor stack has no
 /// same-tier target anywhere. Every rung below exists because a real cell needs it.
 /// </summary>
 public sealed class TroopCultureMapper : ITroopCultureMapper
