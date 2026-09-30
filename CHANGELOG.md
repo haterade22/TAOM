@@ -2,6 +2,48 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-09-30
+
+### fix(data): the 1.4.8 public release takes the 1.5.x troop tree for the new Armory (#697)
+
+The public 1.4.8 release ships the 2026-09-29 LOTRLOME_Armory publish (KEYforce's Mirkwood helmet and
+Rohan sword texture fixes). That Armory retired 159 item, piece and monster ids the 1.4.5 troop data
+still named, 589 broken refs in all, so archers would have spawned without bows. 92a30ba4 copies the
+16 `troops_*.xml`, `recruitment_pools/gondor.json`, the Gondor and enlistment equipment sets and
+`named_companions.xml` verbatim from `bannerlord-1.5.x`, with 998f054c's Gondor volunteer fallback
+(castle_EW2 now offers `gondor_ring_militia` and `gondor_ring_footman`). The Harad war elephant keeps
+`sk_elephant_armor_a`, because 1.4.8 has no howdah crew.
+
+A deep review on the laptop's 1.4.8 install found three places where the 1.5.x data leans on 1.5.x
+code this branch does not have. 10a52fb3 settles them:
+
+- `harad_howdah_crew` is removed. Only 1.5.x's `HowdahCrewSpawner` ever placed it, and nothing on
+  this branch references it.
+- The `hill_troll` troop row is removed. Its troll support (HP model, party templates, costs) is
+  1.5.x only. The `hill_troll` race and monster stay, and so do the configs that name them.
+- `mirkwood_rochenlas` and `mirkwood_beleglas` ride `noble_horse_southern` with `saddle_of_aeneas`
+  again. The 1.5.x data puts them on elk, which needs the Elk, Animalia and MonsterSize features.
+
+KEYforce's drop deleted `gondor_ring_peasant`, which had been in the Glanhir pools at 50 percent since
+v2.0.25, so public saves hold it. 1.5.x accepted that save break. This branch cannot: it is where
+those saves load, and #670 reads Patch83 as unable to repair a troop whose row is gone, leaving a
+hollow `CharacterObject` for the daily upgrade and volunteer ticks. The row is back exactly as it
+shipped, hidden from the encyclopedia and in no pool, still upgrading into the militia. Its five
+items are all still used by the ported troops. `RetiredSaveCompatTroops_StillDefined_SoOldSavesResolveThem`
+pins it, and the same named set exempts it from the pool-reachability test.
+
+The ported files use no element, attribute or enumerated value the 1.4.5 files did not, and they
+validate with 0 errors against the installed 1.4.8 XSDs. Every culture, party template, pool,
+enlistment and upgrade reference resolves. Tests: 9122 passed, 0 failed, 3 skipped.
+
+Known limitations on this branch: Black Numenorean cavalry wear the new `sm_md_num_barding_*` while
+Mordor lords keep the old harness (their sets were not ported); 29 renamed and 21 new troop-name
+keys have no Languages entries here, so non-English players read the English name;
+`tools/generate_gondor_troops.py` and its tier table are still the 1.4.x versions and would
+regenerate the old Gondor tree. Still owed: `validate_moduledata` against the release modules on the
+laptop, and the in-game smoke with an old save that has passed a day near Glanhir. Review record:
+`docs/reviews/rca-public-armory-ids-2026-09-30.md`.
+
 ## 2026-09-15
 
 ### balance(special-resources): Gondor elites cost Castar from level 41; Black Numenorean upkeep halved again (#600)
