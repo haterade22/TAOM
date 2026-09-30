@@ -20,10 +20,11 @@ namespace TAOM.Features.Elephant;
 /// </summary>
 internal sealed class HowdahCrewSpawner
 {
-    // Re-enabled 2026-09-19 (#627, Mike) for the howdah harness only (HowdahHarness.CarriesCrew). Parked 2026-06-10 as
-    // a confirmed slide source: the crew overlapped the elephant's capsule. The rebuilt floor's underside now sits
-    // 0.33 m above that capsule, and the [Howdah#n] status line's carriedV measures any slide. static readonly, not
-    // const, like TaomHowdahMachine.BoneTrackingEnabled: flip it false to park the crew again.
+    // Re-enabled 2026-09-19 (#627, Mike) for every harness that gets the platform (HowdahHarness.GetsPlatform, the three
+    // howdahs since 2026-09-29). Parked 2026-06-10 as a confirmed slide source: the crew overlapped the elephant's
+    // capsule. The rebuilt floor's underside now sits 0.33 m above that capsule, and the [Howdah#n] status line's
+    // carriedV measures any slide. static readonly, not const, like TaomHowdahMachine.BoneTrackingEnabled: flip it
+    // false to park the crew again.
     internal static readonly bool CrewSpawnEnabled = true;
 
     private readonly IModLogger _logger;

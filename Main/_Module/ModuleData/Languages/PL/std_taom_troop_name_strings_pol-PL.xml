@@ -253,6 +253,8 @@
     <string id="aom_goblin_guardian_of_the_tower_name" text="[Goblin] Goblin z piką bojową" />
     <string id="aom_goblin_hunter_name" text="[Goblin] Łowca" />
     <string id="aom_goblin_lurker_name" text="[Goblin] Czyhacz" />
+    <string id="aom_goblin_spider_rider_name" text="[Goblin] Jeździec pająka" />
+    <string id="aom_goblin_spider_lord_name" text="[Goblin] Pan pająków" />
     <string id="aom_goblin_sentry_name" text="[Goblin] Wartownik" />
     <string id="aom_goblin_snaga_name" text="[Goblin] Goblin wojownik" />
     <string id="aom_goblin_spear_warrior_name" text="[Goblin] Goblin włócznik" />

@@ -24,8 +24,9 @@ public class TroopWeightLevelBandTests
 
     /// <summary>
     /// Mount packages price the creature plus its crew, not the rider's tier, so they sit outside
-    /// the level rule. <c>taom_spider_creature</c> is not a troop and resolves to no level anyway;
-    /// it is listed so the exemption reads complete.
+    /// the level rule. The Dol Guldur spider riders live in <c>characters/</c>, not a troops file, and
+    /// resolve to no level anyway; they are listed so the exemption reads complete. The goblin tree's
+    /// mountain spider riders (2026-09-29) are troops in <c>troops_goblin.xml</c> and do resolve.
     /// </summary>
     private static readonly HashSet<string> MountPackages = new(StringComparer.Ordinal)
     {
@@ -33,6 +34,8 @@ public class TroopWeightLevelBandTests
         "taom_spider_creature",
         "taom_spider_rider_brown",
         "taom_spider_rider_pale",
+        "goblin_spider_rider",
+        "goblin_spider_lord",
     };
 
     private static Dictionary<string, float> _weights = null!;

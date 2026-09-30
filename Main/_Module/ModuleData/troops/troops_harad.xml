@@ -206,6 +206,58 @@
                     slot="HorseHarness"
                     id="Item.sk_elephant_armor_howdah_elite" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.eastern_spear_4_t4" />
+                <equipment
+                    slot="Item1"
+                    id="Item.aserai_sword_3_t3" />
+                <equipment
+                    slot="Head"
+                    id="Item.haradrim_head" />
+                <equipment
+                    slot="Body"
+                    id="Item.haradrim_torso" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.haradrim_gloves" />
+                <equipment
+                    slot="Leg"
+                    id="Item.haradrim_boots" />
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_war_elephant" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.sk_elephant_armor_howdah_heavy" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.eastern_spear_4_t4" />
+                <equipment
+                    slot="Item1"
+                    id="Item.aserai_sword_3_t3" />
+                <equipment
+                    slot="Head"
+                    id="Item.haradrim_head" />
+                <equipment
+                    slot="Body"
+                    id="Item.haradrim_torso" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.haradrim_gloves" />
+                <equipment
+                    slot="Leg"
+                    id="Item.haradrim_boots" />
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_war_elephant" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.sk_elephant_armor_howdah_med" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 

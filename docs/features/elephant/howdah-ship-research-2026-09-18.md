@@ -109,6 +109,12 @@ moveable bodies, immediate release, formation kept. That already answers the two
 
 ## Which howdah mesh: the elite one (measured 2026-09-18)
 
+> **Superseded 2026-09-29.** KEYforce re-delivered `SK_Elephant_Armor_Variations` that day, and all three howdahs are
+> now bound to items (`sk_elephant_armor_howdah_med`, `_heavy`, `_elite`). Mike: the three share one deck placement and
+> differ only in side armour and tusks, so the one platform prefab and its two crew archers serve all three. In game on
+> 2026-09-29 every howdah type carried its crew. The measurements below, the medium howdah's narrow basket included,
+> describe the earlier mesh and have not been retaken on the new one.
+
 The Armory ships three howdah meshes, none bound to an item yet (the only elephant harness item is
 `sk_elephant_armor_a`): `sk_hd_elep_armor_howdah_med_a`, `_heavy_a` and `_elite_a` in
 `Assets/creature/elephant/mesh/SK_Elephant_Armor_Variations_geo.tpac`. Measured from

@@ -253,6 +253,8 @@
     <string id="aom_goblin_guardian_of_the_tower_name" text="[Gobelin] Pique-de-guerre gobelin" />
     <string id="aom_goblin_hunter_name" text="[Gobelin] Chasseur" />
     <string id="aom_goblin_lurker_name" text="[Gobelin] Rôdeur tapi" />
+    <string id="aom_goblin_spider_rider_name" text="[Gobelin] Chevaucheur d'araignée" />
+    <string id="aom_goblin_spider_lord_name" text="[Gobelin] Seigneur des araignées" />
     <string id="aom_goblin_sentry_name" text="[Gobelin] Sentinelle" />
     <string id="aom_goblin_snaga_name" text="[Gobelin] Guerrier gobelin" />
     <string id="aom_goblin_spear_warrior_name" text="[Gobelin] Lancier gobelin" />

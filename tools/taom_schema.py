@@ -1068,13 +1068,22 @@ class Validator:
         ),
         "taom_spider_rider_brown": (
             "the Spider Rider's second rung (#616), same open gap as taom_spider_creature: "
-            "the Brown Spider is the same body with another skin and a HorseHarness surface "
+            "the Great Spider is the same body at 1.10x and a HorseHarness surface "
             "was never authored for it. Delete with the base entry"
         ),
         "taom_spider_rider_pale": (
             "the Spider Rider's third rung (#616), same open gap as taom_spider_creature: "
             "the Pale Spider is the same body with another skin and a HorseHarness surface "
             "was never authored for it. Delete with the base entry"
+        ),
+        "goblin_spider_rider": (
+            "the goblin tree's mountain spider rider (Mike 2026-09-29), same open gap as "
+            "taom_spider_creature: the mountain spider rides the same Monster.spider body and "
+            "no spider HorseHarness exists. Delete with the base entry"
+        ),
+        "goblin_spider_lord": (
+            "the goblin mountain spider rider's second rung, same open gap as "
+            "taom_spider_creature. Delete with the base entry"
         ),
         # Creature Bandits (#692): harnessless BY DESIGN, unlike the Spider Rider rows above. Patch93 passes this
         # troop's HorseHarness slot to Mission.SpawnMonster, which equips it on the riderless spider (v1.5.3

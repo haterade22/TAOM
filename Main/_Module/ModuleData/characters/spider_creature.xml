@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <NPCCharacters>
 
-  <!-- Spider Rider line: three goblin cavalry rungs, one skin each (#616, 2026-09-17), the warg
-       line's shape (dg_warg_scout -> raider -> skirmisher). Spider Rider (L21) rides the Giant
-       Spider (spider_mount_a, dark, scale 1.0); Brown Spider Rider (L26) the Brown Spider
-       (spider_mount_brown, scale 1.10); Pale Spider Rider (L31) the Pale Spider (spider_mount_pale,
-       scale 1.25). Size lives on the ITEM (body_length), the three items share Monster.spider and
+  <!-- Spider Rider line: three goblin cavalry rungs (#616, 2026-09-17), the warg line's shape
+       (dg_warg_scout -> raider -> skirmisher), on KEYforce's whole forest meshes since 2026-09-29.
+       Spider Rider (L21) rides the Giant Spider (spider_mount_a, forest_a1, scale 1.0); Great Spider
+       Rider (L26, id taom_spider_rider_brown kept for saves) the Great Spider (spider_mount_brown,
+       forest_a1, scale 1.10); Pale Spider Rider (L31) the Pale Spider (spider_mount_pale, forest_a2,
+       scale 1.25). The goblin tree's mountain spider riders live in troops/troops_goblin.xml.
+       Size lives on the ITEM (body_length), the three items share Monster.spider and
        every speed stat, and every C# spider seam keys on the Monster, so the rungs differ in
        rider kit, skills and mount size only. Five levels per rung keeps the engine tier rising
        (UPGRADE_TIER_COLLAPSE); the levels and the kit steps (light, medium, heavy) are the warg
@@ -76,7 +78,7 @@
                 is_basic_troop="false"
                 occupation="Soldier"
                 culture="Culture.dolguldur"
-                name="{=taom_spider_rider_brown_name}Brown Spider Rider">
+                name="{=taom_spider_rider_brown_name}Great Spider Rider">
     <face><face_key_template value="BodyProperty.fighter_goblin" /></face>
     <skills>
       <skill id="Athletics" value="100" />

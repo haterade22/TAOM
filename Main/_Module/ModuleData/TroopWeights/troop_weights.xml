@@ -3,8 +3,8 @@
     <!-- Default weight is 1.0 for all unlisted troops.
 
          Level rule (#585, 2026-09-13): a listed troop at level 41 or above pays 3.0, a listed
-         troop below that pays 2.0, and the two mount packages (spider 4.0, elephant 10.0) price
-         the creature plus its crew rather than the rider's tier. The file is a flat per-id
+         troop below that pays 2.0, and the mount packages (the spider riders 4.0, the elephant 12.0,
+         the Mumakil 20.0) price the creature plus its crew rather than the rider's tier. The file is a flat per-id
          lookup and nothing in the code reads a troop's level, so the rule is only as true as
          these rows: TroopWeightLevelBandTests pins it from both sides of the boundary. -->
 
@@ -111,10 +111,16 @@
     <TroopWeight id="mordor_warg_beastmaster" weight="2.0" />
 
     <!-- ===== DOL GULDUR ===== -->
-    <!-- Spider Rider package (Weight 3.0): 2 (giant spider mount) + 1 (goblin rider) — elephant precedent (7.0 = 2+1+4) -->
+    <!-- Spider Rider package: 4.0 per rider since c9fae4dc (2026-07-24), which also set the Harad elephant rider to 10.0 (12.0 since 43dada47).
+         Before that 3.0 = 2 (giant spider mount) + 1 (goblin rider), elephant precedent 7.0 = 2+1+4. -->
     <TroopWeight id="taom_spider_creature" weight="4.0" />
     <TroopWeight id="taom_spider_rider_brown" weight="4.0" />
     <TroopWeight id="taom_spider_rider_pale" weight="4.0" />
+
+    <!-- ===== GOBLINS (Goblin-town, Misty Mountain Orcs, Blue Craig share the tree) ===== -->
+    <!-- Mountain spider riders: the Dol Guldur spider rider package weight -->
+    <TroopWeight id="goblin_spider_rider" weight="4.0" />
+    <TroopWeight id="goblin_spider_lord" weight="4.0" />
 
     <!-- Khamul's Shadow Line: level 41 and 46, all 3.0 -->
     <TroopWeight id="dg_khamul_shadow_knight" weight="3.0" />

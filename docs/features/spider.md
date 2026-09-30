@@ -1,24 +1,33 @@
 # Spider (Giant Spider — Ridden Mount)
 
-> **Status (2026-06-11): WORKING — mount lane proven in battle.** Full formations of 8-legged
-> giant spiders with goblin riders load and fight in Custom Battle (verified in-game 2026-06-11
-> 08:36, screenshot in session log; `[SpiderDiag]` probe battery all-green, `[MountSpawn] success`
-> for `spider_mount_a`). The detached-combatant architecture documented in earlier revisions of
-> this file was **deleted 2026-06-10** (git history preserves it) — the spider is now a plain
-> **Mountable Horse-slot mount** ridden by the `taom_spider_creature` goblin (the warg/elephant
-> pattern). Remaining items are cosmetic polish + the rest of the in-game ladder (see "Current
-> state" below).
+> **Status (2026-09-29): WORKING on KEYforce's new meshes, confirmed in game.** Five spider mounts
+> ride one body and one skeleton: the forest skins `sk_spider_forest_a1` / `_a2` for Dol Guldur and
+> the Mirkwood broods, and the mountain skins `sk_spider_mountain_a1` / `_a2` for the goblin tree
+> (Goblin-town, the Misty Mountain Orcs and Blue Craig). Each is one whole mesh from
+> `sk_spiders_a_geo.tpac`; the L/R split halves are retired. In Custom Battle on 2026-09-29 all five
+> loaded without a crash, rendered whole, seated their riders, walked, ran and struck
+> (`[MountSpawn]` for every item on `spider_skeleton` / `as_spider`). The spider is a plain
+> **Mountable Horse-slot mount** ridden by a goblin, the warg and elephant pattern; the
+> detached-combatant architecture of earlier revisions was deleted 2026-06-10 (git history keeps it).
+> Open items are in "Current state" below.
 
 ## Overview
 
-The Giant Spider is a **rideable mount**: `taom_spider_creature` (goblin, Cavalry, Dol Guldur)
-carries `Item.spider_mount_a` in its Horse equipment slot; the vanilla cavalry spawn builds two
-agents — the goblin rider (`FromCharacterObj`) and the spider mount (`FromHorseObj`,
-`Monster.spider`). No spawn interception, no Harmony patch on the spawn path. The spider
-auto-attacks enemies via a per-agent behavior tree (`SpiderBehaviorTree`, attached by
-`SpiderMissionBehavior` keyed on `Monster.StringId == "spider"`), mirroring the elephant — a
-directional repertoire (priority pounce + left/right swipes by bearing) as of 2026-06-15
-(see "Directional attack model" below).
+The Giant Spider is a **rideable mount**: a goblin rider carries a spider item in its Horse equipment
+slot, and the vanilla cavalry spawn builds two agents, the goblin rider (`FromCharacterObj`) and the
+spider mount (`FromHorseObj`, `Monster.spider`). No spawn interception, no Harmony patch on the spawn
+path. Two rider lines use it:
+
+| Line | Troops (level) | Mounts |
+|---|---|---|
+| Dol Guldur Spider Riders (`characters/spider_creature.xml`) | `taom_spider_creature` Spider Rider (21) → `taom_spider_rider_brown` Great Spider Rider (26) → `taom_spider_rider_pale` Pale Spider Rider (31) | Giant Spider (forest_a1, 1.0x) → Great Spider (forest_a1, 1.10x) → Pale Spider (forest_a2, 1.25x) |
+| Goblin mountain spider riders (`troops/troops_goblin.xml`, shared by Goblin-town, the Misty Mountain Orcs and Blue Craig) | `goblin_lurker` (16) → `goblin_spider_rider` [Goblin] Spider Rider (21) → `goblin_spider_lord` [Goblin] Spider Lord (31) | Mountain Spider (mountain_a1, 1.0x) → Great Mountain Spider (mountain_a2, 1.25x) |
+
+The Mirkwood spider broods ([creature-bandits.md](creature-bandits.md)) ride the three forest mounts
+riderless. The spider auto-attacks enemies via a per-agent behavior tree (`SpiderBehaviorTree`,
+attached by `SpiderMissionBehavior` keyed on `Monster.StringId == "spider"`, so every spider item gets
+it), mirroring the elephant: a directional repertoire (priority pounce plus left and right swipes by
+bearing) dealing damage radially in a front arc (see "Directional attack model" below).
 
 ## Why this exists (and the three architectures that led here)
 
@@ -42,6 +51,10 @@ non-humanoid roster troop, so three shapes were tried:
    bone-palette premise — the split was unnecessary for bone count, a single mesh skins the whole
    ≤63-bone skeleton), mount surface authored, and the tableau/mission AVs root-caused to a **missing
    `quad_movement` clip tag** (the actual fix). This file documents that architecture.
+4. **Whole meshes (2026-09-29).** KEYforce re-exported the spiders as whole meshes on the same
+   `spider_skeleton` (`sk_spiders_a_geo.tpac`: two forest and two mountain skins). They loaded and
+   rendered in battle on the first try, so the split is retired. Nothing here establishes why the
+   June single mesh crashed `PreloadForRendering`; the new meshes simply do not.
 
 ## THE ROOT CAUSE (2026-06-10/11 investigation)
 
@@ -104,13 +117,15 @@ the detached spawn paths that earlier testing exercised.
 | Action set | `ModuleData/action_sets.xml` → `as_spider` | `skeleton="spider_skeleton"`, `movement_system="quadrupedal"`, 36 bindings. Movement actions bind ONLY tagged clips (walk_2/left/right, run). Idles/turns/jump/taunt currently bind tagged walk clips (pose-correct idles need a tagged Kit recompile). `act_horse_forward_canter` is bound explicitly (the tableau pose; warg precedent — `as_warg` binds it too) |
 | Child sets | same file: `as_spider_town_and_village`, `as_spider_map` | `base_set="as_spider"`. **Only `_map` is load-bearing**: its absence is the map-icon/thumbnail AV class (elephant Crash #4), because `MBGlobals.GetActionSet(monster.ActionSetCode + "_map")` is called unguarded in `SandBox.View`. **CORRECTED 2026-08-28:** `_town_and_village` was listed here as equally required and is not. No managed code appends `_town_and_village` (0 hits, v1.4.8), and the rideable vanilla `as_camel` and `as_horse_2` ship without one. Keeping the spider's is harmless |
 | Usage set | `ModuleData/monster_usage_sets.xml` → `id="spider"` | Full mount surface: 10 verb attrs (rear/dash/kick/quick-stops/jump/hit-object…), upper-body movements, movements (paces 0–5, gallop both foot variants), rider movement-adders (`act_horse_rider_*` — global codes animating the RIDER), jumps (`act_horse_jump_*`, bound in as_spider), falls, strikes. Every pace 0–5 keeps a `direction="none"` reference row (missing one = native ÷0, the 2026-06-04 crash) |
-| Mount items | `ModuleData/LOTRLOME_items/LOTRAOM_horses.xml` → `spider_mount_a`, `spider_mount_brown`, `spider_mount_pale` | Three skins of one body (#616, 2026-09-17), each `is_mountable`, `<Horse monster="Monster.spider" maneuver=85 speed=65 charge_damage=15>` (speed 40 / maneuver 80 / charge 20 until the #615 retune) with `body_length` as the tier: 100 / 110 / 125 becomes `SetInitialAgentScale` 1.0 / 1.10 / 1.25 at build (`Mission.cs:4056`, the mumakil precedent), base mesh + `<AdditionalMeshes>` right half: `sk_spider_forest_c` + `_c_2` (material `m_mordor_spider_a3`, dark, "Giant Spider"), `sk_spider_forest_a` + `_a_2` (`m_mordor_spider_a1`, brown), `sk_spider_forest_b` + `_b_2` (`m_mordor_spider_a2`, pale grey). **No `<Materials>` block, on purpose:** `MountVisualCreator.SetMaterialProperties` applies it with `SetMaterialToSubMeshesWithTag(mat, "horse_body")` on the base mesh only and hands additional meshes a colour factor, and the spider meshes carry no `horse_body` tag (Byak0's `warg_low` does), so the vanilla-horse recolour is a silent no-op here. Every C# seam keys on `Monster.spider`, never the item id |
-| Skin variants | `Assets/creature/spider/animations/spider_variants_geo.tpac` (5.56MB, generated 2026-09-17) | Four metamesh items, `sk_spider_forest_a`/`_a_2` (a1) and `sk_spider_forest_b`/`_b_2` (a2): byte-identical clones of the proven split c halves with the name, the material item GUID and the LZ4 binding segment rewritten, fresh item/segment/package GUIDs, and the two xxHash64 fields recomputed (segment hash over the decompressed payload, item checksum over the sized metadata), built by `python tools/tpac_clone_metamesh.py` (dry run by default), then **cooked by opening the Armoury in the Modding Kit and saving**: the client renders meshes from `RuntimeDataCache/<package GUID>.rdc`, only the editor writes it, and until `E83E3AF3-3E6A-674F-BDA4-4FC973EA5FD4.rdc` existed the package was skipped whole with nothing in the log. The Kit's resave also rewrote both spider tpacs (geometry byte-identical, skeleton physics payload byte-identical, a spurious second material slot per LOD zeroed on the `_2` halves). The artist's own un-split a/b/c meshes survive only in the May backup (`module_bak_sweep_2026-09-01/.../sk_spider_forest_c_geo.tpac.backup`, same LOD segment sizes as c, so the same body); they never shipped and must not (the un-split mesh AV'd `PreloadForRendering`, and that tpac carries a second `spider_skeleton`). Mesh items never reference the skeleton, so the clones live beside the bundle, which stays byte-identical. Rebuild: the command in [lotrlome-spider-mount-changes.md](../reference/lotrlome-spider-mount-changes.md), 2026-09-17 section |
-| Skeleton + Meshes (bundled) | `Assets/creature/spider/animations/spider_correct_geo.tpac` (2.78MB) | **LIVE = the PROVEN 6/11 working bundle, RESTORED 2026-06-14 from `E:\LOTRAOMAssets\_tpac_backup_20260613\spider\`** (skeleton `owner_guid a9ec7d87…`, `Usage='horse'`; the 6/10 pre-rework mesh). `sk_spider_forest_c` / `_c_2` L/R-split meshes (≤38 bones/half; the unsplit 58-bone mesh AVs `PreloadForRendering`) + the 62-bone **`spider_skeleton`** resource. The action_set's `skeleton="spider_skeleton"` resolves here. **The 2026-06-13 Kit-rebuild bundle (different mesh) caused a FATAL battle-spawn AV** in the native `sound_and_collision_info` agent-build (`Agent.BuildAux`→native `Build`, RVA 0x490E02) — preserved as `.bak-kitbroken-20260614`; my physics-transplant attempts (`.transplanted-20260614`, `.bak-bundled-crashing-20260614`) likewise didn't fix it. **Restoring the backup did, in one copy.** Lesson: `feedback_creature_rework_restore_from_backup_first.md`. *(In-game battle verification owed.)* |
+| Mount items | `ModuleData/LOTRLOME_items/LOTRAOM_horses.xml` → `spider_mount_a`, `spider_mount_brown`, `spider_mount_pale`, `spider_mount_mountain_a1`, `spider_mount_mountain_a2` | Five items on one body (2026-09-29), each `is_mountable`, `<Horse monster="Monster.spider" maneuver=85 speed=65 charge_damage=15>` (the #615 retune) with `body_length` as the tier: 100 / 110 / 125 becomes `SetInitialAgentScale` 1.0 / 1.10 / 1.25 at build (`Mission.cs:4056`, the mumakil precedent). Forest: `spider_mount_a` "Giant Spider" on `sk_spider_forest_a1` (100), `spider_mount_brown` "Great Spider" on `sk_spider_forest_a1` (110; the id stays for saves, the brown skin is gone), `spider_mount_pale` "Pale Spider" on `sk_spider_forest_a2` (125). Mountain: `spider_mount_mountain_a1` "Mountain Spider" on `sk_spider_mountain_a1` (100), `spider_mount_mountain_a2` "Great Mountain Spider" on `sk_spider_mountain_a2` (125). Every mesh is whole, so no item has `<AdditionalMeshes>`. **No `<Materials>` block, on purpose:** `MountVisualCreator.SetMaterialProperties` applies it with `SetMaterialToSubMeshesWithTag(mat, "horse_body")` on the base mesh only, and the spider meshes carry no `horse_body` tag (Byak0's `warg_low` does), so the vanilla-horse recolour is a silent no-op here; each skin is its own mesh instead. Every C# seam keys on `Monster.spider`, never the item id, so a new spider item needs no code |
+| Meshes (live) | `Assets/creature/spider/meshes/sk_spiders_a_geo.tpac` (8.9 MB, KEYforce, 2026-09-29) | Four whole metameshes: `sk_spider_forest_a1`, `sk_spider_forest_a2`, `sk_spider_mountain_a1`, `sk_spider_mountain_a2`, LOD0 to LOD5, skinned to `spider_skeleton`. The package bundles no skeleton of its own (`tpac_skeleton_scan.py` finds none), so it cannot collide with the one in `spider_correct_geo.tpac`, and it has its `RuntimeDataCache` entry (`check_rdc_entries.py`) |
+| Skin variants (retired) | `Assets/creature/spider/animations/spider_variants_geo.tpac` (5.56MB, generated 2026-09-17) | Four metamesh items, `sk_spider_forest_a`/`_a_2` (a1) and `sk_spider_forest_b`/`_b_2` (a2): the #616 clones of the split c halves, built by `python tools/tpac_clone_metamesh.py` and cooked by one Kit save (the client renders meshes from `RuntimeDataCache/<package GUID>.rdc`, which only the editor writes). **No item references them since 2026-09-29.** The package stays on disk until the new meshes have shipped a release, as the rollback: restoring the three forest items' old `mesh` and `<AdditionalMeshes>` lines brings them back. Rebuild: the command in [lotrlome-spider-mount-changes.md](../reference/lotrlome-spider-mount-changes.md), 2026-09-17 section |
+| Skeleton + old meshes (bundled) | `Assets/creature/spider/animations/spider_correct_geo.tpac` (2.78MB) | **Load-bearing: it carries the 62-bone `spider_skeleton` resource** that `as_spider`'s `skeleton="spider_skeleton"` resolves and every spider mesh rides; never delete or re-export it. LIVE = the proven 6/11 bundle, restored 2026-06-14 from `E:\LOTRAOMAssets\_tpac_backup_20260613\spider\` (skeleton `owner_guid a9ec7d87…`, `Usage='horse'`). It also holds the old `sk_spider_forest_c` / `_c_2` L/R-split meshes, unreferenced since 2026-09-29. (The split was made for the June 58-bone single mesh that AV'd `PreloadForRendering`; KEYforce's whole meshes on this skeleton do not, and that crash's cause is still unestablished.) **The 2026-06-13 Kit-rebuild bundle (different mesh) caused a FATAL battle-spawn AV** in the native `sound_and_collision_info` agent-build (`Agent.BuildAux`→native `Build`, RVA 0x490E02), preserved as `.bak-kitbroken-20260614`; my physics-transplant attempts (`.transplanted-20260614`, `.bak-bundled-crashing-20260614`) likewise didn't fix it. **Restoring the backup did, in one copy.** Lesson: `feedback_creature_rework_restore_from_backup_first.md`. Every battle since June ran on this skeleton, the 2026-09-29 ones included. |
 | Skeleton history (DO NOT repeat) | — | The 06-13 Blender-loop mesh re-export shipped `spider_correct_geo.tpac` **mesh-only**, dropping the skeleton → `CreateAgentSkeleton` null → riderless spiders. First fix attempt (2026-06-13) extracted the skeleton into a **STANDALONE** `meshes/spider_skeleton_geo.tpac` via `tpac_skeleton_extract.py` — this **CRASHED** the engine (recursive worker-thread native AV reading null; the standalone reused the skeleton's item_guid as its package_guid + no creature ships a standalone skeleton tpac). Deleted 2026-06-14. Correct fix = re-bundle into the mesh tpac via `tools/tpac_skeleton_inject.py`. Skeleton source of truth: `meshes/sk_spider_forest_c_geo.tpac.backup` (item [2], the un-split a/b/c original). Mesh-only backup of the dropped state: `animations/spider_correct_geo.tpac.bak-meshonly-20260614`. Lesson: `feedback_mesh_reexport_drops_skeleton_resource.md`. |
 | Clips | `Assets/creature/spider/animations/an_spi_*_{anm,geo}.tpac` | Loose-pair format (same as ADOD_Beasts elephant). Movement clips tagged (see ROOT CAUSE). The 13 `new_animation_clip*_anm.tpac` files are NOT garbage — Kit default filenames whose internal resource names are real (`an_spi_hit_front`, `an_spi_death_1`, …; quirk: `an_spi_idle2` has no second underscore) |
-| Rider line | TAOM `Main/_Module/ModuleData/characters/spider_creature.xml` | Three rungs, the warg line's shape: `taom_spider_creature` Spider Rider (L21, Giant Spider, light uruk kit) upgrades to `taom_spider_rider_brown` Brown Spider Rider (L26, Brown Spider at 1.10, medium kit + shield) upgrades to `taom_spider_rider_pale` Pale Spider Rider (L31, Pale Spider at 1.25, heavy kit), the warg line's levels (16/21/26/31) from its second rung up. Every roster of a rung carries that rung's mount. Only the base is pooled (Dol Guldur fiefs, weight 1); the rungs cost 2 / 3 War Spoils on the party screen (`troop_resource_costs.xml`, player only) at the creature upkeep of 1; all three weigh 4.0 (`troop_weights.xml`) and sit in `_HARNESSLESS_BY_DESIGN` with the base |
-| Troop weight | `TroopWeights/troop_weights.xml` | 3.0 (2 mount + 1 rider; elephant precedent 7.0) |
+| Rider line | TAOM `Main/_Module/ModuleData/characters/spider_creature.xml` | Three rungs, the warg line's shape: `taom_spider_creature` Spider Rider (L21, Giant Spider, light uruk kit) upgrades to `taom_spider_rider_brown` Great Spider Rider (L26, Great Spider at 1.10, medium kit + shield; "Brown" until 2026-09-29, id kept for saves) upgrades to `taom_spider_rider_pale` Pale Spider Rider (L31, Pale Spider at 1.25, heavy kit), the warg line's levels (16/21/26/31) from its second rung up. Every roster of a rung carries that rung's mount. Only the base is pooled (Dol Guldur fiefs, weight 1); the rungs cost 2 / 3 War Spoils on the party screen (`troop_resource_costs.xml`, player only) at the creature upkeep of 1; all three sit in `_HARNESSLESS_BY_DESIGN` with the base |
+| Goblin rider line | TAOM `Main/_Module/ModuleData/troops/troops_goblin.xml` | Added 2026-09-29 for the mountain skins. `goblin_lurker` (L16) gains a second upgrade, `goblin_spider_rider` [Goblin] Spider Rider (L21, Mountain Spider), which upgrades to `goblin_spider_lord` [Goblin] Spider Lord (L31, Great Mountain Spider). One tree serves Goblin-town, the Misty Mountain Orcs and Blue Craig, so all three field them. Skills mirror the Dol Guldur rungs at 21 and 31, clamped up to the Lurker's so the upgrade costs no stat (`UPGRADE_SKILL_REGRESSION`); kit is the goblin tree's own L21 and L31 gear, every set with a one-handed weapon, a shield and the spider. No resource cost or Elite Emissary row (the goblin cultures have no special resource); both sit in `_HARNESSLESS_BY_DESIGN` |
+| Troop weight | `TroopWeights/troop_weights.xml` | 4.0 for all five riders: the three Dol Guldur rungs and the two goblin ones. It was 3.0 (2 mount + 1 rider) until `c9fae4dc` (2026-07-24), which also set the Harad elephant rider to 10.0 (12.0 since `43dada47`) |
 | Recruitment | `VolunteerRecruitmentService` DG settlement pools | weight 1, all Dol Guldur fiefs (intentionally absent from clan pools) |
 
 > **The backup files named in this table moved on 2026-09-01.** Every `.bak*` and `.backup` sidecar
@@ -163,15 +178,15 @@ problem + the bespoke re-pose path are covered in
 | `SpiderBehaviorTree` | Elephant-mirrored DIRECTIONAL tree (2026-06-15): `main → has rider → ai controlled → engage → [pounce-off-cooldown → SpiderPounceTask] / [side-off-cooldown → SpiderSideAttackTask] → idle`; player-ridden + riderless branches sleep. Blackboard: `PounceLastFired`/`SideAttackLastFired`/`TargetBearing` |
 | `BehaviorTreeElements/SpiderEngageDecorator` | engage gate (replaces `SpiderCanBiteDecorator`): anti-chain (`IsSpiderAttack`) + zero-alloc `SpatialGrid` scan (reusable `_scratch` buffer) + cone hit check, then writes the NEAREST enemy's signed bearing (+=LEFT) to `TargetBearing` |
 | `BehaviorTreeElements/SpiderAttackOffCooldownDecorator` | per-kind cooldown gate (`SpiderAttackKind.Pounce` ~5s priority / `SideAttack` ~2s gap-filler) via `IsOffCooldown` |
-| `BehaviorTreeElements/SpiderAttackTaskBase` + `SpiderPounceTask`/`SpiderSideAttackTask` | stamp the kind's cooldown, then fire `SpiderAttack(kind, bearing)` (bone-collision per clip) |
+| `BehaviorTreeElements/SpiderAttackTaskBase` + `SpiderPounceTask`/`SpiderSideAttackTask` | stamp the kind's cooldown, then fire `SpiderAttack(kind, bearing)` (the clip plays; damage lands radially in that attack's arc) |
 | `BehaviorTreeElements/SpiderAttackActions` | eager `ActionIndexCache` for the 4 clips (front/charge/left/right) + `ForName` resolve + `IsSpiderAttack` anti-chain + `AnyUnresolved()` drift guard |
-| `SpiderAttackService` | pure (TaleWorlds-free): `SelectActionName`/`SelectBones` (pounce=front/charge by speed; side=left/right by bearing), `IsOffCooldown`, warg-pattern rider damage attribution, `IsSpiderMonster()`. The attacks now take strike rules: a `SpiderStrikeProfile` per attack (max targets, damage multiplier, crit-only knockdown) grouped into a `SpiderStrikeSet` (bite, pounce, swipe); the ridden spider uses `SpiderStrikeSet.Ridden`, exactly the old behaviour (every enemy in the arc, full damage, knockdown at the damage threshold). `SpiderAttack` fires the bone-collision `CustomAttack`, logs `[Spider][diag] ATTACK fire`, and returns a `SpiderStrikeOutcome`; the capped path is testable through the internal `StrikeArc` seam |
+| `SpiderAttackService` | pure (TaleWorlds-free): `SelectActionName` (pounce=front/charge by speed; side=left/right by bearing), `IsOffCooldown`, warg-pattern rider damage attribution, `IsSpiderMonster()`. The attacks take strike rules: a `SpiderStrikeProfile` per attack (max targets, damage multiplier, crit-only knockdown) grouped into a `SpiderStrikeSet` (bite, pounce, swipe); the ridden spider uses `SpiderStrikeSet.Ridden` (every enemy in the arc, full damage, knockdown at the damage threshold). `SpiderAttack` plays the clip and strikes radially through the adapter's `RadialStrike` (`SpiderConfig.StrikeRadius` 3.5 m; pounce arc ±70° about straight ahead, swipes centred ±45° with a 50° half-angle), logs `[Spider][diag] ATTACK fire`, and returns a `SpiderStrikeOutcome`; the capped path is testable through the internal `StrikeArc` seam |
 | `SpiderStrikes.cs` | `SpiderStrikeProfile` (a per-attack rule: max targets, damage multiplier, crit-only knockdown), `SpiderStrikeSet` (the bite/pounce/swipe profiles, plus `SpiderStrikeSet.Ridden` for the mounted spider), `SpiderStrikes` (the pure selection and capping logic `SpiderAttackService` calls), `SpiderStrikeOutcome` (the result `SpiderAttack` returns), `SpiderStrikeCandidate` and `SpiderStrikeTargets` (the scanned-and-capped target set) |
 | `AdvancedCombat/CustomAttacksUtils` (shared warg+spider+elephant) | synthetic-blow damage application. 2026-06-15 hardening: live-state revalidation + `IsBlowGeometrySafe` finiteness gate before the reflected `Mission.RegisterBlow` (defensive; NOT the fix for the dismount crash below) |
 | `TaomAgentStatCalculateModel` (CareerSystem) | mount-lock: `CanAgentRideMount=false` + `MountDifficulty=999` for spider mounts (and elephant) — players can't steal the mount; the Horse-slot cavalry spawn ignores the lock for the assigned rider |
-| `CharacterSpawnerService.SpawnMountLogged` (HeroRace) | instrumented replica of the engine's private `SpawnMount` with per-step logging + graceful mount-less degradation on failure. **Keep** (strictly better than the old blind reflective call); demote logging to `LogDebug` at ship. The one-shot `RunSpiderMountDiagnostics` probe battery + `TickProbe` are TEMP-DIAG — retire after the ladder |
+| `CharacterSpawnerService.SpawnMountLogged` (HeroRace) | instrumented replica of the engine's private `SpawnMount` with per-step logging + graceful mount-less degradation on failure. **Keep** (strictly better than the old blind reflective call); demote logging to `LogDebug` at ship. The one-shot `RunSpiderMountDiagnostics` probe battery and `TickProbe` were retired on 2026-06-13 and are gone from the source |
 | `Hooks/Agent_Die_SpiderDismount_Patch` (Patch47) | **rider-death AV mitigation — REQUIRED, exonerated and re-enabled 2026-06-12.** A rider dying while seated AVs inside the native `Agent.Die` path (1.4.5: use-after-free 3× on 06-11; 1.4.6: melee-thrust repro 06-12 — Die-path lookup returned **float bits as a table index** from a corrupted action record, mixed-mode-debugger-proven: faulting `RAX+RCX*4` matched bit-for-bit with RCX = float −0.094). The patch routes around it: Prefix on `Agent.Die` hard-dismounts via the engine's own private `SetMountAgent(null)` (cached `AccessTools` at `Initialize`) so riders die the proven on-foot death (verified: `act_death_by_arrow_head2`, clean sever, 0 dead-linked riders); a dying spider frees its rider first. **The 06-12-morning indictment ("post-sever tick AV") was overturned** — that crash was the `CanAttack`/`set_attack_entity` charge CTD, Event-Log-proven to fire with AND without Patch47. Vanilla mounts untouched; body try/catch'd. Registered after Patch46 |
-| `Hooks/Agent_HandleBlowAux_SpiderDismountGuard_Patch` (Patch48) | **non-lethal sibling of Patch47 — APPLIED 2026-06-15, in-game confirmation pending.** A finite real-melee `CanDismount` hit on a *surviving* mounted Spider Rider AVs inside native `Agent.HandleBlowAux` reading `0x3` (debugger-proven 2026-06-15; stack `MeleeHitCallback → Mission.RegisterBlow → Agent.RegisterBlow → HandleBlow → HandleBlowAux`). Same broken non-vanilla mounted-DISMOUNT native path Patch47 routes around on death — but Patch47 only covers death (it hard-dismounts before `Die`), so a non-lethal dismount hit still reaches the crash. Prefix on `Agent.HandleBlowAux` strips `BlowFlags.CanDismount` when the victim's mount is the spider Monster → native dismount never fires, rider stays on the locked mount, damage still applies. Spider-only (matches Patch47); elephant mahout shares the latent fault but hasn't surfaced. Registered after Patch47 |
+| `Hooks/Agent_HandleBlowAux_SpiderDismountGuard_Patch` (Patch48) | **non-lethal sibling of Patch47, applied and confirmed in game 2026-06-15** (see "The dismount-on-hit crash"). A finite real-melee `CanDismount` hit on a *surviving* mounted Spider Rider AVs inside native `Agent.HandleBlowAux` reading `0x3` (debugger-proven 2026-06-15; stack `MeleeHitCallback → Mission.RegisterBlow → Agent.RegisterBlow → HandleBlow → HandleBlowAux`). Same broken non-vanilla mounted-DISMOUNT native path Patch47 routes around on death, but Patch47 only covers death (it hard-dismounts before `Die`), so a non-lethal dismount hit still reaches the crash. Prefix on `Agent.HandleBlowAux` strips `BlowFlags.CanDismount` when the victim's mount is the spider Monster → native dismount never fires, rider stays on the locked mount, damage still applies. Spider-only (matches Patch47); elephant mahout shares the latent fault but hasn't surfaced. Registered after Patch47 |
 
 ## The v1.4.6 engine-bump campaign (2026-06-12) — three crashes, three root causes, GREEN
 
@@ -271,23 +286,37 @@ legs**, so the bite now uses the real front-leg bones, **verified from the engin
 Collision uses the outer leg (thigh→tip): **pounce** = both front legs `[15,16,17,18,20,21,22,23]`,
 **left/right swipe** = the matching side's leg. **Radius 0.3-0.4 → 1.8 (pounce) / 1.5 (side)** (the warg
 used 1.0m with a 10-bone cone; the giant spider is ~2× and strikes with long legs), and detection range
-4 → 5. In-game confirmation owed — watch the HIT-vs-ATTACK ratio + `bones=[…]` in the diag log; the radius
-consts (`SpiderConfig.PounceCollisionRadius`/`SideCollisionRadius`) are the dials. The real fang bones
-(`joint5_r/l` = 26/32, mouth `joint12_m` = 25) are available if a bite-at-the-mouth model is wanted later.
+4 → 5. The real fang bones (`joint5_r/l` = 26/32, mouth `joint12_m` = 25) are available if a
+bite-at-the-mouth model is wanted later.
+
+**Superseded the same day by a radial strike.** Even on the right bones with a 1.8 m sphere, bone
+collision connected only about 6% of the time on this big, fast mount, so damage is now dealt radially in
+a front arc when the spider attacks, the elephant's model (`SpiderConfig`: `StrikeRadius` 3.5 m, pounce
+arc ±70°, swipe arcs centred ±45° with a 50° half-angle). The front-leg clip still plays and the arc keeps
+it a directed strike; the bone indices stay in `SpiderConfig` as a verified reference, wired to nothing.
+The dials are those arc constants.
 
 ## Hit capsules fitted to the mesh (2026-09-18)
 
 The spider's per-bone hit capsules (what weapons and missiles strike) were the Modding Kit's defaults, thin rods
 along each bone: 40 of 62 bodies, and 49.9% of the skin sat inside any hit capsule. `tools/skeleton_hit_capsules.py` fitted them to the skinned mesh (both halves of the split body, `sk_spider_forest_c` and `sk_spider_forest_c_2`), a little bigger
 than the skin and never more than 20 cm proud of it, and patched `Assets/creature/spider/animations/spider_correct_geo.tpac` in the live Armory (backup
-`spider_correct_geo.tpac.bak-hitcapsules-20260918-201114`): 38 capsules refit, 97.2% of the skin now inside one. Legs, head, chest and fangs are covered fully, the abdomen bulb 87%. The Brown and Pale Spider meshes are clones of this geometry on the same skeleton, so all three skins get the fit. Read back through TpacTool.Lib with zero mismatches and every segment hash intact.
+`spider_correct_geo.tpac.bak-hitcapsules-20260918-201114`): 38 capsules refit, 97.2% of the skin now inside one. Legs, head, chest and fangs are covered fully, the abdomen bulb 87%. Read back through TpacTool.Lib with zero mismatches and every segment hash intact.
 Method and format: [bannerlord-skeleton-authoring.md](../reference/bannerlord-skeleton-authoring.md) "Hit capsules".
-**Owed:** load LOTRLOME_Armory in the Kit once (re-cooks the package's `.rdc`), then a Custom Battle hit test.
 
-## Current state & known issues (2026-06-12, post-1.4.6 campaign)
+**Since 2026-09-29** the capsules are unchanged but the skins are new: they live on `spider_skeleton`, so all five
+spider items (KEYforce's whole forest and mountain meshes) get them, yet they were fitted to the old
+`sk_spider_forest_c` body. Nobody has measured how well they hug the new meshes; re-run the fit against a new
+mesh if hits feel wrong.
+**Owed:** a Custom Battle hit test (strike and shoot legs, head and abdomen) on the new meshes. The
+2026-09-29 battles showed spiders taking and dealing damage, but no one aimed at body parts.
+
+## Current state & known issues (updated 2026-09-29)
 
 | Item | Status |
 |---|---|
+| **KEYforce's whole meshes (2026-09-29, v1.5.3)** | ✅ Custom Battle, one change at a time: `spider_mount_a` on `sk_spider_forest_a1` first, then all five items. No crash at load, the troop picker or deployment; every spider renders whole (both sides, eight legs); riders sit on the back; walk, run and the strikes work. The TAOM log shows `[MountSpawn]` for all five items on `spider_skeleton` / `as_spider` and no exception |
+| **Goblin mountain spider riders (2026-09-29)** | ✅ [Goblin] Spider Rider and [Goblin] Spider Lord ride the mountain skins in Custom Battle; the Dol Guldur rungs ride the forest skins, the higher tiers visibly bigger. Owed: the campaign upgrade from `goblin_lurker` on the party screen |
 | Thumbnail / picker | ✅ mounted spider renders, no crash |
 | Custom battle deployment | ✅ full formations spawn (riders seated, 8 legs) |
 | Spider idle | ✅ pose-correct: `an_spi_idle` (3.5s) tagged + bound (idle_2 → `an_spi_idle2`, the no-underscore resource quirk) |
@@ -300,7 +329,7 @@ Method and format: [bannerlord-skeleton-authoring.md](../reference/bannerlord-sk
 | Rider death while mounted | ✅ Patch47 dismount-before-death re-enabled (exonerated 2026-06-12); riders die clean on-foot deaths; required on 1.4.6 (melee-death Die-path AV proven without it) |
 | Rider non-lethal `CanDismount` hit | ✅ **Patch48 (2026-06-15) — confirmed in-game.** A surviving mounted rider taking a dismountable melee hit AV'd in native `HandleBlowAux` (`0x3`); the prefix strips `CanDismount` for spider riders. Sibling of Patch47 (death) on the same broken native dismount path. See "Damage + bite-collision tuning" / RCA |
 | `lotrtaom_iron_hills_01_forceatmo` | ❌ **SEPARATE BUG — not spider. The scene has NEVER loaded: 8/8 CTDs** (2026-06-10 20:53→2026-06-12 06:27), all dying at `scene.xscene` load, pre-agent-spawn — incl. runs with all-green spider probes. `taom_gondor_village_001_forceatmo` loads fine, so the forceatmo/Patch16 mechanism is exonerated — it's this scene's assets. Several 6/10 "spider mission CTDs" were this scene, conflated into the spider evidence. **Removed from `custom_battle_scenes.xml` 2026-06-12** so it stops eating test runs; restore once repaired. Own issue/investigation |
-| **Rein attributes on v1.4.8 (2026-08-10)** | ⚠️ **UNVERIFIED — ridden-death test owed.** `lotr_monster_spider.xml` declares **5 of the 12** rein attributes the engine reads (`rein_handle_bone`, both `rein_handle_*_local_pos`, `rein_collision_1/2_bone`); every vanilla `Mountable` monster carries all twelve. Warg parity holds — it declares the same five. v1.4.8 fixed a "horse rein visual bug when a mounted agent died", native with no managed diff, in a path that runs on **mounted-agent death** ([v1.4.8-impact.md](../migration/v1.4.8-impact.md) N7). No crash is predicted; the 1.4.6 river battle below covered rider and spider deaths but predates this change. `audit_mount_parity.py` has no rein check (zero occurrences of "rein"; it always exits 0). Kill a ridden spider and a mounted rider and watch. Contract: [creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md) "The rein-attribute invariant" |
+| **Rein attributes on v1.4.8 (2026-08-10)** | ✅ **crash-free on v1.5.3 (2026-09-29), rein visual not inspected.** Ridden spiders died in numbers in the 2026-09-29 Custom Battles (one ended with 36 of 84 alive) and every battle ran to the end. Original note: `lotr_monster_spider.xml` declares **5 of the 12** rein attributes the engine reads (`rein_handle_bone`, both `rein_handle_*_local_pos`, `rein_collision_1/2_bone`); every vanilla `Mountable` monster carries all twelve. Warg parity holds: it declares the same five. v1.4.8 fixed a "horse rein visual bug when a mounted agent died", native with no managed diff, in a path that runs on **mounted-agent death** ([v1.4.8-impact.md](../migration/v1.4.8-impact.md) N7). No crash is predicted; the 1.4.6 river battle below covered rider and spider deaths but predates this change. `audit_mount_parity.py` has no rein check (zero occurrences of "rein"; it always exits 0). Kill a ridden spider and a mounted rider and watch. Contract: [creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md) "The rein-attribute invariant" |
 | Walk gait skew | ⚠️ known from the retarget work (pre-existing; polish) |
 | Charge visual | 💡 unused 112KB `an_spi_charge` clip exists — possible upgrade over `an_spi_attack_charge` for the pounce; evaluate later |
 | Inventory equip | ❓ retest (was the second AV repro; same root cause, expected fixed) |
@@ -309,9 +338,9 @@ Method and format: [bannerlord-skeleton-authoring.md](../reference/bannerlord-sk
 | Bite BT in battle | ✅ confirmed — `SpiderTree` fires for AI riders (2026-06-15 campaign log) |
 | Directional attacks (pounce + L/R) | ✅ confirmed working in-game (2026-06-15) — clip matches enemy bearing; see "Directional attack model" |
 | Bite damage / lethality | ✅ tuned + deployed (2026-06-15) — 75 base + speed, armor curve, 20% crit; 71-75/bite on Looters (one-shot light, ~2 medium, ~3 heavy). Tunable via `SpiderConfig` |
-| Bite hit-rate (front-leg collision) | ⚠️ **fixed 2026-06-15, in-game confirm owed** — was ~3% connect (warg-placeholder bones + tight radius); now real front-leg bones (`joint40-44_r/l` = 14-18/19-23) + 1.8/1.5m radius. Watch HIT-vs-ATTACK in the diag log |
-| Diagnostics | battery kept as a regression canary until the ladder completes (one-shot, 6 probes, ms-cheap); `docs/_scratch_characterspawner.cs` deleted; retire battery at ship |
-| `.bak` inventory | `action_sets.xml.bak-spider-mount`, `monster_usage_sets.xml.bak-spider-mount`, `.bak-usage-enriched`, `lotr_monster_spider.xml.bak-*`, 9× `*_anm.tpac.bak-untagged`, `spider_correct_geo.tpac.backup` — clean up at ship |
+| Bite hit-rate | ✅ moot: bone collision connected about 3% (placeholder bones), then about 6% (front-leg bones, 1.8 m sphere), so on 2026-06-15 damage moved to the radial front-arc strike (see "Damage + bite-collision tuning") |
+| Diagnostics | the SpiderDiag probe battery was retired 2026-06-13 (`0e08df4c`) and is gone from the source; `docs/_scratch_characterspawner.cs` deleted |
+| `.bak` inventory | every spider backup sidecar moved to `E:\Bannerlord_Backups\module_bak_sweep_2026-09-01\` in the 2026-09-01 sweep (see the note under the data-plane table) |
 
 ## How-to: tag a movement clip
 
@@ -325,6 +354,15 @@ points. Full editor field map + per-category ADOD_Beasts flag recipes:
 list + `quad_movement` usage list, movement params), substitute the target clip's file GUID (@8),
 resource GUID (@52), name (+length @72), duration trio (pos+12 where pos=76+namelen), curve GUID
 (both occurrences), blend float, trailer hash; fix the content-size u32 @28 (= filesize − 36).
+
+## Release pairing (2026-09-29)
+
+Package the Armory in the same release as the TAOM build that names its new spider items. The goblin tree's
+`goblin_spider_rider` and `goblin_spider_lord` (`troops/troops_goblin.xml`) ride `spider_mount_mountain_a1` and
+`_a2`, which exist only in the Armory, and players get the Armory only from Mike's editor package. What the engine does
+with a missing Horse item is unverified (a missing HorseHarness leaves the slot empty, `elephant.md`), so treat a TAOM
+build without the matching Armory as broken for those two troops. `SpiderMountItemTests` pins the five items in the
+live Armory on the desktop.
 
 ## External-module change ledger
 
@@ -345,6 +383,7 @@ the module is outside this repo, so that ledger is the only durable record of it
 
 ## Changelog
 
+- 2026-09-29: KEYforce's whole spider meshes (`sk_spiders_a_geo.tpac`) replace the split halves: the Giant, Great (was Brown, now forest_a1 at 1.10x) and Pale Spiders on forest_a1/_a2, and two new mountain mounts on mountain_a1/_a2 for a goblin-tree rider line (`goblin_spider_rider` L21, `goblin_spider_lord` L31, off `goblin_lurker`). Confirmed in game; the split was never needed for these meshes.
 - 2026-09-28: strike rules added for the creature bandits (#692), via `SpiderStrikeProfile` and `SpiderStrikeSet`; the ridden spider keeps `SpiderStrikeSet.Ridden` and is unchanged.
 - 2026-09-17: Brown and Pale Spider mounts (#616): the a1/a2 skins ship as clones of the split c halves in `spider_variants_geo.tpac`, cooked by one Kit save; the Spider Rider becomes a three-rung line (L21 / L26 / L31) with the mount growing 1.0 / 1.10 / 1.25 per rung. The engine's `<Materials>` recolour needs a `horse_body` sub-mesh tag the spider lacks.
 - 2026-06-15 — Lethal-bite tuning: 75 base + speed bonus, armor curve, 20% per-hit crit; front-leg bone-collision (joint40-44) with 1.8/1.5m radius replacing the warg-placeholder bones.
@@ -362,6 +401,7 @@ the module is outside this repo, so that ledger is the only durable record of it
 
 - The L/R mesh split was done **2026-06-05** (on the later-refuted "~40 per-mesh palette" premise — see "Why this exists" #2/#3 above).
 - The refuted premise, stated precisely: the only bone cap in the engine is the **64-bone `Skeleton.MaxBoneCount`**, NOT any per-mesh limit — one mesh skins the whole ≤63-bone skeleton, so a body is never split for bone count (memory: `feedback_no_40_bone_per_mesh_limit`).
+- 2026-09-29: the split is retired. KEYforce's whole meshes on the same skeleton load and render in battle.
 
 ---
 

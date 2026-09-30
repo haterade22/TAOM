@@ -253,6 +253,8 @@
     <string id="aom_goblin_guardian_of_the_tower_name" text="[ゴブリン] ゴブリン戦槍兵" />
     <string id="aom_goblin_hunter_name" text="[ゴブリン] 狩人" />
     <string id="aom_goblin_lurker_name" text="[ゴブリン] 潜み者" />
+    <string id="aom_goblin_spider_rider_name" text="[ゴブリン] 蜘蛛乗り" />
+    <string id="aom_goblin_spider_lord_name" text="[ゴブリン] 蜘蛛の王" />
     <string id="aom_goblin_sentry_name" text="[ゴブリン] 歩哨" />
     <string id="aom_goblin_snaga_name" text="[ゴブリン] ゴブリン戦士" />
     <string id="aom_goblin_spear_warrior_name" text="[ゴブリン] ゴブリン槍兵" />

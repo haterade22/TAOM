@@ -493,6 +493,29 @@ each file. Hand-written, not from the paid translator (which fills only untransl
 | SP | [Harad] Howdah de elefante |
 | TR | [Harad] Fil Mahfesi |
 
+### ⚠️ APPLIED EDIT: KEYforce's elephant and spider art wired in (2026-09-29)
+
+**Live edits to `LOTRLOME_items/LOTRAOM_horses.xml` and all 13 `Languages/**/loc_LOTRAOM_horses.xml` (English and the 12
+translations) that an Armory reinstall from a package older than this date WILL revert.** KEYforce shipped the meshes (`SK_Elephant_Basemesh_A_geo`,
+`SK_Elephant_Armor_Variations_geo`, `sk_spiders_a_geo`); these edits point the items at them. Originals (the files as
+they were before): `E:\Bannerlord_Backups\module_bak_sweep_2026-09-29\LOTRLOME_Armory\ModuleData\` (same relative
+paths). The full item list with meshes and stats: [elephant.md](../../features/elephant.md) "Current state" and
+[lotrlome-spider-mount-changes.md](../lotrlome-spider-mount-changes.md) "2026-09-29".
+
+| Item | Edit |
+|---|---|
+| `taom_war_elephant` | `mesh="sk_elephant_basemesh_a"` (was `elephant_mesh`) |
+| `sk_elephant_armor_a` | `mesh="sk_hd_elep_armor_med_a"`, `body_armor="60"` |
+| `sk_elephant_armor_heavy`, `sk_elephant_armor_elite`, `sk_elephant_armor_howdah_med`, `sk_elephant_armor_howdah_heavy` | NEW, clones of the `sk_elephant_armor_a` block on their `sk_hd_elep_armor_*_a` meshes (armour 70, 80, 60, 70) |
+| `spider_mount_a`, `spider_mount_brown` ("Great Spider"), `spider_mount_pale` | meshes `sk_spider_forest_a1`, `sk_spider_forest_a1`, `sk_spider_forest_a2`; `<AdditionalMeshes>` removed |
+| `spider_mount_mountain_a1`, `spider_mount_mountain_a2` | NEW, the `spider_mount_a` Horse block on `sk_spider_mountain_a1` / `_a2`, `body_length` 100 / 125 |
+| Loc, all 13 files | `spider_mount_brown` text "Great Spider" (translated in each language); new rows for the four new harnesses and two mountain spiders, hand-translated and mirrored into `tools/translation_cache/<lang>.json` |
+
+Gates: `HowdahHarnessItemTests` (the six harnesses, their meshes and name rows, the elephant's body mesh),
+`SpiderMountItemTests` (the five spider items: whole meshes, sizes, `Monster.spider`, name rows) and
+`validate_moduledata.py` (`BROKEN_ITEM_REF` if the new items vanish: `harad_elephant_rider` and the goblin spider riders
+name them).
+
 ### ⚠️ APPLIED EDIT: live language files, the stale-translation sweep (2026-09-25)
 
 **Live edits to the Armory's and TAOM_Map's language files that a reinstall WILL revert.** This snapshot carries no

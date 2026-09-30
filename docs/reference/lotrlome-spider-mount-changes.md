@@ -1,4 +1,4 @@
-# LOTRLOME_Armory changes for the Spider Mount (2026-06-10 → 06-14)
+# LOTRLOME_Armory changes for the Spider Mount (2026-06-10 onward)
 
 The giant-spider mount's **data plane lives entirely in the external `LOTRLOME_Armory` module**
 (`E:\Steam\...\Modules\LOTRLOME_Armory\`), which is NOT in this repo. This ledger records every
@@ -162,6 +162,32 @@ Mirror: the tpac and the horses edit were copied to `E:\repos\lotraom-assets\v1.
 **The first cut rendered INVISIBLE (same day).** The engine logged nothing: the items resolved, no `Unable to find`, no dependency error, the inventory tableau simply drew no spider. Cause: the tool had rewritten the binding segment's names but kept c's 8-byte segment hash, and had kept c's item checksum. Both fields turned out to be **xxHash64 (seed 0)**: the segment field over the DECOMPRESSED payload (entry offset 56, verified on 16 of 17 live segments; the skeleton's user-data segment stores differently) and the item checksum over the int64 metadata length plus the metadata (verified on all four live items). `tpac_clone_metamesh.py` now recomputes both and its tests pin the formulas against the live bundle; `spider_variants_geo.tpac` was rebuilt (sha256 `65fc1560...`). **That was not the cause.** The rebuilt tpac was still invisible, and a probe package redefining the live `sk_spider_forest_c` itself produced no `Overriding item` line: the client had registered nothing from either hand-built package. The reason is the one `native-commit-audit-2026-08.md` settled in August: the shipping client renders from `RuntimeDataCache/<package GUID>.rdc` and only the editor writes it. Of the 526 mesh-bearing packages in the Armoury, the only two without an entry were mine. Opening the Armoury in the Modding Kit and saving cooked `E83E3AF3-3E6A-674F-BDA4-4FC973EA5FD4.rdc` (5.45 MB) and all three spiders appeared. The Kit also re-serialised both spider tpacs on that save (live bundle sha256 `99591753...`, variants `a7825c0c...`): every geometry blob and the skeleton's physics payload byte-identical, the `_2` halves' spurious second material slot per LOD zeroed (the live `c_2` had carried it since June), item checksums rewritten to the same xxHash64 formula, which is the strongest confirmation of it. The hash formulas remain true facts of the format, and they retire the belief, recorded in [lotrlome-warg-changes.md](lotrlome-warg-changes.md) section 12, that the checksum algorithm is unknown and a metadata insert therefore impossible from files.
 
 Verification: `python -m unittest tools.tests.test_tpac_clone_metamesh` (16, including the live bundle re-serialising byte-identical and both hash formulas holding on it), `generate_armory_catalogue.py` (4 NEW rows, all `parsed`, referenced), `audit_armory_refs.py` CLEAN, `validate_moduledata.py` 0 errors, `dotnet test TAOM.Tests` 9,775 passed. In-game check of the rebuilt tpac owed at the time of writing.
+
+## 2026-09-29: KEYforce's whole meshes replace the split, and the mountain spiders
+
+KEYforce re-exported the spiders: `Assets/creature/spider/meshes/sk_spiders_a_geo.tpac` (8.9 MB, his file,
+saved 10:14) holds four whole metameshes on `spider_skeleton`, `sk_spider_forest_a1`, `sk_spider_forest_a2`,
+`sk_spider_mountain_a1` and `sk_spider_mountain_a2`, LOD0 to LOD5. It has its `RuntimeDataCache` entry
+(`check_rdc_entries.py`) and bundles no skeleton (`tpac_skeleton_scan.py`), so it cannot collide with the one
+in `spider_correct_geo.tpac`. The brown skin is gone. Nothing else of the June data changed.
+
+| Change | Why | Rollback |
+|---|---|---|
+| `ModuleData/LOTRLOME_items/LOTRAOM_horses.xml`: `spider_mount_a` mesh `sk_spider_forest_c` to `sk_spider_forest_a1`, `spider_mount_brown` `sk_spider_forest_a` to `sk_spider_forest_a1` (renamed "Great Spider", `body_length` 110 kept), `spider_mount_pale` `sk_spider_forest_b` to `sk_spider_forest_a2`; the `<AdditionalMeshes>` right half removed from all three | the new meshes are whole, so there is no second half to add | restore the old `mesh` and `<AdditionalMeshes>` lines from the backup below; `spider_variants_geo.tpac` and the `_c` halves in `spider_correct_geo.tpac` are still on disk and unreferenced |
+| Same file: NEW `spider_mount_mountain_a1` "Mountain Spider" (`sk_spider_mountain_a1`, `body_length` 100) and `spider_mount_mountain_a2` "Great Mountain Spider" (`sk_spider_mountain_a2`, 125), the `spider_mount_a` Horse block otherwise (Monster.spider, 85/65/15) | ridden by the goblin tree's new `goblin_spider_rider` and `goblin_spider_lord` (TAOM `troops/troops_goblin.xml`) | remove the two `<Item>` blocks, and the two troops with them |
+| `ModuleData/Languages/loc_LOTRAOM_horses.xml`: `spider_mount_brown` text "Brown Spider" to "Great Spider"; two English rows for the mountain items | the item names | revert the rows |
+| The 12 per-language `loc_LOTRAOM_horses.xml` | hand-translated the same day (no paid translator run): `spider_mount_brown` re-translated as the Great Spider, rows added for the two mountain spiders (and for the four new elephant harnesses); the same texts went into `tools/translation_cache/<lang>.json`, so a cache rebuild keeps them | restore each file's `.bak-keyforce-2026-09-29` (below) and revert those cache keys |
+
+The first in-game check changed only `spider_mount_a` (one un-split mesh against the June crash); everything
+else followed once it passed. **Confirmed in game 2026-09-29** (Custom Battle, v1.5.3): all five items spawn
+(`[MountSpawn]` on `spider_skeleton` / `as_spider`), render whole, seat their riders, move and strike, no
+exception. Gates: `SpiderMountItemTests` (the five items and their name rows), `audit_armory_refs.py` CLEAN, `validate_xml_schemas.py` PASS on the horses file,
+`validate_moduledata.py` 0 errors.
+
+Backups (moved out of the module, since `.bak` must not ship):
+`E:\Bannerlord_Backups\module_bak_sweep_2026-09-29\LOTRLOME_Armory\ModuleData\LOTRLOME_items\LOTRAOM_horses.xml.bak-keyforce-2026-09-29`
+and the 13 `Languages\**\loc_LOTRAOM_horses.xml.bak-keyforce-2026-09-29` beside it (same relative paths; copy
+back to restore). The `lotraom-assets` mirror was not touched.
 
 ## Verification trail (what each change fixed, in order)
 

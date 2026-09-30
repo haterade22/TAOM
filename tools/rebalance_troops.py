@@ -60,6 +60,8 @@ SKIP_TROOP_IDS = {
     'hill_troll',   # the cave troll's bespoke skills, copied (2026-09-25)
     'harad_elephant_rider',
     'harad_mumakil_rider',
+    'goblin_spider_rider',   # the Dol Guldur Spider Rider skills, copied (2026-09-29)
+    'goblin_spider_lord',
 }
 
 # Troops whose ONLY ranged option is a thrown weapon, so Throwing rather than Bow is their

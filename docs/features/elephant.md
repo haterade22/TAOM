@@ -1,5 +1,33 @@
 # War Elephant (Harad rideable mount)
 
+> **Current state (2026-09-29): KEYforce's art, confirmed in game.** The elephant's body is KEYforce's
+> `sk_elephant_basemesh_a` (`Assets/creature/elephant/mesh/SK_Elephant_Basemesh_A_geo.tpac`), replacing ADOD_Beasts's
+> `elephant_mesh`. Its harnesses are KEYforce's six (`SK_Elephant_Armor_Variations_geo.tpac`), all `family_type="10"`:
+>
+> | Item | Mesh | Name | Body armour | Howdah |
+> |---|---|---|---|---|
+> | `sk_elephant_armor_a` (id kept; the ADOD armour mesh is gone) | `sk_hd_elep_armor_med_a` | [Harad] Elephant Armor I | 60 | no |
+> | `sk_elephant_armor_heavy` | `sk_hd_elep_armor_heavy_a` | [Harad] Elephant Armor II | 70 | no |
+> | `sk_elephant_armor_elite` | `sk_hd_elep_armor_elite_a` | [Harad] Elephant Armor III | 80 | no |
+> | `sk_elephant_armor_howdah_med` | `sk_hd_elep_armor_howdah_med_a` | [Harad] Light Elephant Howdah | 60 | platform + crew |
+> | `sk_elephant_armor_howdah_heavy` | `sk_hd_elep_armor_howdah_heavy_a` | [Harad] Heavy Elephant Howdah | 70 | platform + crew |
+> | `sk_elephant_armor_howdah_elite` | `sk_hd_elep_armor_howdah_elite_a` | [Harad] Elephant Howdah | 80 | platform + crew |
+>
+> The three howdahs share one deck placement (they differ in side armour and tusks), so the one `taom_howdah_platform`
+> prefab and its two crew archers serve all three: `ElephantConfig.HowdahHarnessStringIds` is the trigger list and
+> `HowdahHarness.GetsPlatform` the rule. The plain armours carry no howdah, so they get no platform (the old plain
+> armour's crewless platform is gone). `harad_elephant_rider` has three rosters, one per howdah; nothing wears the plain
+> armours yet. `adod_elephant_geo.tpac` stays: it carries the `elephant_skeleton` (and its fitted hit capsules) that the
+> new body, the armours, the Mumakil and every clip ride.
+>
+> **Verified 2026-09-29 (Custom Battle, v1.5.3):** the new body renders with the howdah on its back; one battle spawned
+> 91 howdahs (33 light, 26 heavy, 32 elite), every one with its crew force-spawned (`crew force-spawned: 2 archer(s)`),
+> `seated=2/2` in 970 status lines, zero drift, no exception. **Still owed:** the #624 hit test on the new body (the
+> capsules were fitted to ADOD's skin), an uncrowded walk-and-turn slide measurement (the 91-elephant battle's
+> `carriedV`, median 0.36 m/s and p90 about 0.9 m/s while fighting, cannot separate pushing from sliding), a ridden
+> elephant death (none died in the 2026-09-29 battles), and the campaign crew checks under "Open items". The dated
+> history below is kept as written.
+>
 > **Status: C# BUILT + WIRED (2026-06-05); ACTION-SETS SELF-CONTAINED IN LOTRLOME (2026-06-08); IN-GAME BATTLE CONFIRMED (2026-06-08).**
 > The mount-lock + the structural trample/tusk mechanic are a behavioral port of ADOD_Beasts's elephant, adapted to
 > **v1.4.5**, fully wired (IoC + SubModule) and green. The attack **cadence** (deterministic cooldowns, 2026-06-10) and
@@ -180,7 +208,7 @@ come back to it later). The two disabled code paths are marked `DEFERRED` in sou
 
 | Source | Disabled where | Re-enable when |
 |--------|----------------|----------------|
-| Crew spawn | `ElephantMissionBehavior.TryInstantiateHowdah`: `TrySpawnHowdahCrew(...)` call commented. **Re-enabled 2026-09-19 (#627)** for the howdah harness, queued to `OnMissionTick`; `CrewSpawnEnabled` parks it | The crew stop overlapping the elephant's capsule (see the 2026-09-18 correction below). The rebuilt floor's underside clears it by 0.33 m; the first crew run measures the rest. |
+| Crew spawn | `ElephantMissionBehavior.TryInstantiateHowdah`: `TrySpawnHowdahCrew(...)` call commented. **Re-enabled 2026-09-19 (#627)** for the howdah harness (all three howdahs since 2026-09-29), queued to `OnMissionTick`; `CrewSpawnEnabled` parks it | The crew stop overlapping the elephant's capsule (see the 2026-09-18 correction below). The rebuilt floor's underside clears it by 0.33 m; the first crew run measures the rest. |
 | Bone-tracking | `TaomHowdahMachine.RepositionToElephant` — `TryRepositionToBone()` branch commented (fixed-offset only) | The floor-physics fix lands (drop the `bo_` floor's collision, or raise the bone frame so the floor clears the capsule). `TryRepositionToBone`/`ResolveBoneIndex` retained. |
 
 **Planned fix (when resumed):** both sources are one mechanism — a physics body inside the elephant's collision
@@ -192,8 +220,8 @@ from navmesh faces, not from another agent's capsule (the callers read on the in
 not visible). No managed API excludes one agent's capsule from another's. The crew
 must instead stand clear of the elephant's capsule (whose top is now 2.7 m, under the 3.2 m howdah floor), plus
 dropping or clearing the `bo_` floor's collision for the howdah.
-Cavalry-reassignment + trample stay enabled (confirmed innocent). The TEMP `harad_militia` Horse-slot test entry in
-`troops_harad.xml` remains for testing and must NOT be committed.
+Cavalry-reassignment + trample stay enabled (confirmed innocent). (The TEMP `harad_militia` Horse-slot test entry
+this paragraph once warned about is gone: `harad_elephant_rider` replaced it on 2026-06-10.)
 
 ## Implementation — C# built + wired (2026-06-05)
 
@@ -212,7 +240,7 @@ per-tick random roll / fixed ~20 damage.
 | [`…/CareerSystem/Models/TaomAgentStatCalculateModel.cs`](../../Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs) | EDITED — the shared `AgentStatCalculateModel` slot now also carries the **mount-lock**: `CanAgentRideMount`→false for the elephant + `MountDifficulty=999` (both via the injected `IElephantAttackService`, applied with ternaries per gamemodels.md rule 4). |
 | `ElephantIoC.cs`, `IoC.cs`, `SubModule.cs` | Service registered (Singleton); `ElephantMissionBehavior` added to the mission list; the stat-model ctor takes the elephant service. (No new registration for the BT — it attaches inside the mission behavior; nodes lazy-resolve the service via `ElephantCombat.Profile.ResolveService`.) |
 | [`Main/Features/Elephant/TaomHowdahMachine.cs`](../../Main/Features/Elephant/TaomHowdahMachine.cs) + [`TaomHowdahStandingPoint.cs`](../../Main/Features/Elephant/TaomHowdahStandingPoint.cs) | The howdah platform's machine (re-frames the prefab onto the elephant every tick, fixed offset or spine bone) and its seats. Both carry a `[Howdah#n]` log tag. |
-| [`Main/Features/Elephant/HowdahCrewSpawner.cs`](../../Main/Features/Elephant/HowdahCrewSpawner.cs) + [`HowdahCrewAgentOrigin.cs`](../../Main/Features/Elephant/HowdahCrewAgentOrigin.cs) + [`HowdahHarness.cs`](../../Main/Features/Elephant/HowdahHarness.cs) | The howdah crew (#627): the spawner queues a crew from `OnAgentBuild` and spawns it from `OnMissionTick` onto the crew frames (the mahout's banner and colours, no horses, weapons wielded); each archer's origin books no casualty or XP against the mahout and reports the mahout's scoreboard party; `HowdahHarness` decides which harness gets the platform and which also gets a crew. `CrewSpawnEnabled` parks the crew. |
+| [`Main/Features/Elephant/HowdahCrewSpawner.cs`](../../Main/Features/Elephant/HowdahCrewSpawner.cs) + [`HowdahCrewAgentOrigin.cs`](../../Main/Features/Elephant/HowdahCrewAgentOrigin.cs) + [`HowdahHarness.cs`](../../Main/Features/Elephant/HowdahHarness.cs) | The howdah crew (#627): the spawner queues a crew from `OnAgentBuild` and spawns it from `OnMissionTick` onto the crew frames (the mahout's banner and colours, no horses, weapons wielded); each archer's origin books no casualty or XP against the mahout and reports the mahout's scoreboard party; `HowdahHarness` decides which harness gets the platform, and with it the crew (the three howdahs in `ElephantConfig.HowdahHarnessStringIds` since 2026-09-29). `CrewSpawnEnabled` parks the crew. |
 | [`Main/Features/Elephant/HowdahDiagnosticsReporter.cs`](../../Main/Features/Elephant/HowdahDiagnosticsReporter.cs) + `HowdahDiagnostics.cs`, `HowdahSampleClock.cs`, `HowdahRunStats.cs`, `HowdahDiagnosticsSettingsProvider.cs` | The howdah diagnostics log (#627): the reporter reads the engine on sample frames; the rest is pure and unit-tested. Gated by MCM `EnableHowdahDiagnostics`. See "Reading the howdah log". |
 | `LOTRLOME_Armory/Prefabs/taom_howdah_platform.xml` (snapshot: [`docs/reference/lotrlome-armory-snapshot/Prefabs/taom_howdah_platform.xml`](../../docs/reference/lotrlome-armory-snapshot/Prefabs/taom_howdah_platform.xml)) | The howdah platform prefab: one floor body (moveable and barrier), no rails, two crew frames. |
 | [`TAOM.Tests/Features/Elephant/HowdahPrefabTests.cs`](../../TAOM.Tests/Features/Elephant/HowdahPrefabTests.cs) + `HowdahDiagnosticsTests.cs`, `HowdahSampleClockTests.cs`, `HowdahRunStatsTests.cs`, `HowdahDiagnosticsSettingsProviderTests.cs`, `HowdahCrewAgentOriginTests.cs`, `HowdahHarnessTests.cs`, `HowdahHarnessItemTests.cs` | The prefab's structure, name and location, live-copy parity; the diagnostics arithmetic; the toggle default. |
@@ -723,12 +751,13 @@ files are data/assets:
 
 | Component | Path | Status |
 |-----------|------|--------|
-| Mesh + skeleton tpac | `LOTRLOME_Armory/Assets/creature/elephant/mesh/elephant_harad_armor_01_geo.tpac` (+ textures) | **imported** (2026-06-05) |
+| Skeleton tpac | `LOTRLOME_Armory/Assets/creature/elephant/mesh/adod_elephant_geo.tpac`: `elephant_skeleton` with its fitted hit capsules, plus ADOD's `elephant_mesh` and armour parts, unreferenced since 2026-09-29. (`elephant_harad_armor_01_geo.tpac`, the June import, is now a 416-byte stub) | **load-bearing, keep** |
+| Body + harness meshes | `…/mesh/SK_Elephant_Basemesh_A_geo.tpac` (`sk_elephant_basemesh_a`) and `…/mesh/SK_Elephant_Armor_Variations_geo.tpac` (the six `sk_hd_elep_armor_*` meshes), KEYforce, LOD0 to LOD5, both with `RuntimeDataCache` entries | **live** (2026-09-29) |
 | Monster XML | `…/LOTRLOME_Armory/ModuleData/Monsters/LOTR/lotr_monster_elephant.xml` (id `taom_war_elephant`) | **deployed** (2026-06-06) |
-| Item XML | `…/LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_horses.xml` (Horse item `taom_war_elephant`, mesh `elephant_mesh`) | **deployed** (2026-06-06) |
+| Item XML | `…/LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_horses.xml`: Horse item `taom_war_elephant` (mesh `sk_elephant_basemesh_a` since 2026-09-29, `elephant_mesh` before) and the six HorseHarness items in the table at the top | **deployed** (2026-06-06; art swapped 2026-09-29) |
 | Action set | `…/LOTRLOME_Armory/ModuleData/action_sets.xml` (`as_elephant` block appended; uses ADOD_Beasts ids + clip names — pending rename to `as_war_elephant`) | **deployed** (2026-06-08); confirmed in-game |
 | Animation clips | `LOTRLOME_Armory/Assets/creature/elephant/animations/` (35 ADOD_Beasts tpacs — working; TAOM-authored clips pending) | **copied** (2026-06-06); animates in-game |
-| Recruitment | `Main/Features/TroopProgression/VolunteerRecruitmentService.cs` (Harad pools) | TODO — using TEMP harad_militia entry |
+| Recruitment | `Main/Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.Harad.cs` (Ayerikkä's clan pool, `harad_elephant_rider` at weight 1 of 11) and the Elite Emissary (`elite_emissary_config.xml`, 70 War Drums in `troop_resource_costs.xml`) | **done** (clan pool 2026-06-10) |
 
 ## Reference: ADOD_Beasts
 
@@ -834,6 +863,11 @@ body and armour and Mike re-imported the FBX, which regenerates the package's sk
 against the pre-import backup, both skeleton segments (bones, then capsules, bodies and ragdoll) are byte-identical.
 Check again after any future re-import ([armory-guide.md](../reference/armory-guide.md) "LODs in the FBX sources").
 
+**New body, same capsules (2026-09-29).** KEYforce's `sk_elephant_basemesh_a` replaced ADOD's `elephant_mesh` as the
+visible body. The capsules live on `elephant_skeleton` in `adod_elephant_geo.tpac`, which did not change, so the new
+body inherits them, but they were fitted to ADOD's skin. How well they hug the new mesh is unmeasured: the #624 strike
+and walk-into test is owed on the new body, and a refit would re-run `tools/skeleton_hit_capsules.py` against it.
+
 ## Open items
 
 - [ ] **Do the eight attack clips animate?** (2026-09-18) `elephant_attack_1..4` and `elephant_rider_attack_1..4`
@@ -863,13 +897,14 @@ Check again after any future re-import ([armory-guide.md](../reference/armory-gu
 - [x] **Monster + Horse Item** (`taom_war_elephant`) deployed into LOTRLOME_Armory — DONE (2026-06-06). `lotr_monster_elephant.xml` + `taom_war_elephant` Item in `LOTRAOM_horses.xml` + SubModule.xml registrations.
 - [x] **Action-set deployed self-contained** in LOTRLOME_Armory — DONE (2026-06-08). ADOD_Beasts's `as_elephant` / `as_elephant_town_and_village` / `as_elephant_map` merged into `LOTRLOME_Armory/ModuleData/action_sets.xml` (single `soln_action_sets` entry in `project.mbproj`). Two deployment crashes fixed (see "Action-sets deployment crash history" above).
 - [x] **In-game battle smoke test** — CONFIRMED (2026-06-08). Multiple war elephants with Harad riders spawned, rendered, and fought correctly in battle. ADOD_Beasts NOT in load order.
-- [ ] **Battle-test a ridden elephant death + a mounted mahout death on the current engine (v1.5.2 since 2026-09-14; the v1.4.8 test never ran)**: the Monster declares zero rein attributes while being `Mountable`, and v1.4.8 changed the native rein path that runs on mounted-agent death. UNVERIFIED; no tool gates it. See "v1.4.8 exposure" above.
-- [ ] Revert **TEMP** `Horse`-slot entry in `Main/_Module/ModuleData/troops/troops_harad.xml` — marked `TEMP-ELEPHANT-TEST`, MUST revert before any commit.
+- [ ] **Battle-test a ridden elephant death + a mounted mahout death on the current engine (v1.5.3; the v1.4.8 test never ran)**: the Monster declares zero rein attributes while being `Mountable`, and v1.4.8 changed the native rein path that runs on mounted-agent death. UNVERIFIED; no tool gates it; no elephant died in the 2026-09-29 battles. See "v1.4.8 exposure" above.
+- [x] Revert the **TEMP** `Horse`-slot entry in `Main/_Module/ModuleData/troops/troops_harad.xml`: gone (the dedicated `harad_elephant_rider` replaced it on 2026-06-10; no `TEMP-ELEPHANT-TEST` marker remains, checked 2026-09-29).
 - [ ] Author a **TAOM-owned action-set** `as_war_elephant` (rename from `as_elephant`, bind TAOM-authored clip names) to make the action-set fully TAOM-authored (currently uses ADOD_Beasts ids / clip names verbatim).
 - [ ] **Build the elephant animations on our FBX** (Blender → Modding-Kit compile) — TAOM-owned, NOT ADOD_Beasts's 1.2.12 clips. Gating seam for the rename to `as_war_elephant`.
 - [x] Author the Harad rider troop + recruitment — DONE (2026-06-10). `harad_elephant_rider` (level 51, `Culture.aserai`, `HorseArcher`) recruitable ONLY by `clan_aserai_1` (Ayerikkä) via `VolunteerRecruitmentService.InitializeHaradClans` (clan pool copies the levy/noble fallback + adds the rider at weight 1). The TEMP `harad_militia` Horse-slot test entry was replaced by this dedicated troop. Remaining rider polish: not yet in any party template (AI Ayerikkä lords field it only when recruited); rider skills left at pre-level-51 values; recruitment weight is a rarity knob. Update `factions.json` if the war elephant becomes a Harad identity element.
 - [x] Tune damage after in-game testing — DONE (2026-06-15): replaced ADOD_Beasts's fixed ~20 with TAOM per-kind randomized bands (trample 50-100, tusk 50-75, ×0.25 on shield block); gates unchanged. Also swapped the rider's primary spear (`eastern_spear_4_t4`) for a 2nd `bodkin_arrows_b` quiver so the mounted archer fires at ground targets instead of melee-swinging into air.
-- [x] **Re-enable howdah crew (slide source #1): ON since 2026-09-19 (#627, Mike)**, for the howdah harness only,
+- [x] **Re-enable howdah crew (slide source #1): ON since 2026-09-19 (#627, Mike)**, for the howdah harness only
+      (since 2026-09-29, all three howdahs: `ElephantConfig.HowdahHarnessStringIds`),
       queued from `OnAgentBuild` to the next `OnMissionTick` (#595), one `HowdahCrewAgentOrigin` per archer. The first
       crew run with the elephants moving settles whether the slide is gone. History: crew spawn was disabled (`TrySpawnHowdahCrew` call
       commented in `ElephantMissionBehavior.TryInstantiateHowdah`). Re-enable once the crew stand clear of the
@@ -900,7 +935,7 @@ Check again after any future re-import ([armory-guide.md](../reference/armory-gu
       1. `rgl_log` shows `Loading xml file: $BASE/Modules/LOTRLOME_Armory/Prefabs/taom_howdah_platform.xml.` and no
          `Modules/TAOM/Prefabs` line.
       2. The TAOM log (`Logs/taom_debug_<timestamp>.log`) shows `[Howdah] config: ... loaded=True` at mission start.
-      3. Custom Battle with a harad elephant rider (`sk_elephant_armor_howdah_elite` since 2026-09-19): `[Elephant] Howdah instantiated for rider=`
+      3. Custom Battle with a harad elephant rider (one of the three howdahs since 2026-09-29; the elite one from 2026-09-19): `[Elephant] Howdah instantiated for rider=`
          naming `[Howdah#1]`, then a `layout summary` with `seats=2`, `moveable=1` and a positive `floorClearance`
          (about 0.35 at the floor origin), then a `status` line every 5 s. No `not found`, no `layout:` WARN.
       4. Research doc step 1: turn on one slide source and watch `carriedV` in the status lines while the elephant
@@ -919,27 +954,28 @@ Check again after any future re-import ([armory-guide.md](../reference/armory-gu
       player's own party fields a howdah elephant (`FieldCommissionMissionLogic` accepts the mahout's party; decide
       if wanted), and refuge damage reduction (#507) does not reach the crew (`TaomCombatMechanicsModel.VictimPartyId`
       switches on the vanilla origin types; read `BattleCombatant as PartyBase` instead). The Armory mirror
-      (`E:\repos\lotraom-assets`) lacks the harness item, its 13 name rows AND `Prefabs/taom_howdah_platform.xml`;
-      copy the hunks, not whole files (its `LOTRAOM_horses.xml` carries other sessions' edits).
+      (`E:\repos\lotraom-assets`) is Mike's to sync (2026-09-22): a session edits the live Armory only.
 - [ ] **Package the Armory in the same release** as the TAOM build that asks for `taom_howdah_platform` and the rider's
-      `sk_elephant_armor_howdah_elite` (#627): players
-      get the Armory only from Mike's editor package, and a TAOM build without it logs `not found` and spawns no
-      platform.
+      three howdahs (`sk_elephant_armor_howdah_med`, `_heavy`, `_elite`; #627, 2026-09-29): players get the Armory only
+      from Mike's editor package. A TAOM build without it warns at mission start (`[Howdah] prefab '...' is not loaded`, the `PrefabExists` check in `ElephantMissionBehavior`) and spawns no platform, and a rider whose
+      howdah item is missing spawns on a bare elephant with no platform or crew (seen 2026-09-29 while the two new
+      items were not yet in the Armory).
 - [ ] **Mike's editor fit (offered 2026-09-19).** Fit the platform on the elephant in the Kit, then copy the live file
       over the snapshot and re-derive `HowdahPrefabTests`' constants from it. Open the Kit with TAOM loaded so the
       two script classes resolve, and expect the Kit to rewrite the file (the header comment included).
-- [ ] **Crew count** (Mike, 2026-09-19): four 0.37 m capsules do not fit the 1.4 m deck clear (side by side 0.70 m
-      apart, 0.74 m needed); three do. Four stay until the first crew test settles it.
+- [x] **Crew count** (Mike, 2026-09-19): four 0.37 m capsules do not fit the 1.4 m deck clear (side by side 0.70 m
+      apart, 0.74 m needed); three do. Settled at two: the prefab has two crew frames in a line, and every howdah
+      force-spawns two archers (the crew smoke of 2026-09-20 and the 91 howdahs of 2026-09-29).
 - [ ] **Review follow-ups (#627, pre-existing code, no separate issue):** split the platform half of
-      the howdah spawn out of `ElephantMissionBehavior` (238 lines since the crew half moved to `HowdahCrewSpawner` on
-      2026-09-19) and the bone path out of `TaomHowdahMachine` (302), both over ADR-002's 150; fold the seat's 120-tick line into the machine status line when crew return; delete the unread
+      the howdah spawn out of `ElephantMissionBehavior` (246 lines on 2026-09-29; 238 when the crew half moved to `HowdahCrewSpawner` on
+      2026-09-19) and the bone path out of `TaomHowdahMachine` (376 on 2026-09-29), both over ADR-002's 150; fold the seat's 120-tick line into the machine status line when crew return; delete the unread
       `ElephantConfig.HowdahHeightAboveRider`; promote the scratch physics-shape dumper into `tools/`. Detail:
       `docs/reviews/rca-howdah-prefab-review-2026-09-19.md`.
 - [x] **Bind the elite howdah mesh to an item** (2026-09-19, #627): the Armory HorseHarness `sk_elephant_armor_howdah_elite`
       (a clone of `sk_elephant_armor_a` on `sk_hd_elep_armor_howdah_elite_a`, which carries the elite armour and the
       howdah), named in English and 12 languages; the Harad elephant rider wears it. An APPLIED EDIT in the snapshot
-      README records it; `HowdahHarnessItemTests` gates it. The plain `sk_elephant_armor_a` now has no wearer and stays:
-      a save may hold one as loot, and it still gets the crewless platform (`HowdahHarness`).
+      README records it; `HowdahHarnessItemTests` gates it. (Superseded 2026-09-29: the six KEYforce harnesses in the
+      table at the top; `sk_elephant_armor_a` is the medium plain armour, and no plain armour gets a platform.)
 - [x] **Crew smoke** DONE 2026-09-20: two archers on the visible howdah, `crew force-spawned: 2 archer(s)` and
       `seated=2/2`, and they shoot, standing and moving. Still owed below: the three runs nobody has made.
 - [ ] **Crew smoke, the runs still owed.** A SIEGE or deployment-enabled field battle (not plain Custom Battle),
@@ -949,7 +985,7 @@ Check again after any future re-import ([armory-guide.md](../reference/armory-gu
       cost the party an Elephant Rider). And a crewed elephant KILLED mid-battle, watching the released archers
       advance and defend themselves, which is what the behaviour-curve restore exists for. Original notes: order the elephants to move and turn and read `carriedV`; kill one archer and
       confirm the battle goes on and the party's Elephant Rider count is unchanged (the F1 fix); let the battle end so
-      `summary` prints. Owed besides: the Armory mirror commit for the item and the 13 name rows.
+      `summary` prints.
 
 ## Migrated notes (from CLAUDE.md, 2026-07-12)
 
@@ -975,8 +1011,8 @@ tested) gates the lines marked (toggle); the rest always log.
 | Grep | When | What it tells you |
 |---|---|---|
 | `[Howdah] prefab '...' is not loaded` | mission start, WARN, always | no module ships `taom_howdah_platform`: the Armory package is old or missing |
-| `[Howdah] config:` | mission start (toggle) | prefab loaded or not, trigger harness, height, bone tracking and crew spawn state |
-| `[Howdah] rider ... no howdah` | each elephant rider that builds (toggle) | the harness it wore, against the trigger |
+| `[Howdah] config:` | mission start (toggle) | prefab loaded or not, the trigger harnesses (`triggers=` lists the three howdahs), height, bone tracking and crew spawn state |
+| `[Howdah] rider ... no howdah` | each elephant rider that builds (toggle) | the harness it wore, against the triggers; `'none'` means the slot was empty, which is also what a roster naming an item the Armory lacks produces, or one naming an item that does not fit the harness slot (that case also asserts "does not fit to slot", `Equipment.DeserializeNode`) |
 | `[Elephant] Howdah instantiated for rider=... as [Howdah#n]` | each howdah, always | the serial every later line carries, the elephant's name and index, the harness, the side |
 | `[Howdah#n] layout child[i]` / `layout summary` | first live tick (toggle) | what the engine actually loaded: children, tags, body flags (`Moveable`), positions, seats, the elephant capsule and the floor's clearance over it |
 | `[Howdah#n] layout:` WARN | first live tick | no seats loaded, no floor child (an old prefab under the new name?), or the floor inside the capsule |
@@ -984,14 +1020,14 @@ tested) gates the lines marked (toggle); the rest always log.
 | a seat block in `status` | every 5 s (toggle) | `seatN=<body action>/<upper-body action>@<gap to its frame>` then `mr=` (`Agent.MissileRangeAdjusted`: 0 means the engine thinks this archer can reach nothing), `fire=` (0 FireAtWill, 1 HoldYourFire), `prog=` (highest upper-body action progress seen) and `restarts=` (times that progress went backwards, so a draw being reset every frame shows as a count climbing with the frame rate), `shots=` (arrows this archer actually loosed, counted from the engine's missile-fired callback, since 2026-09-22: `prog` latches at 1.00 after the first completed draw and cannot tell a shot from a re-nock, so read `shots` against `restarts`: both climbing is an archer shooting, restarts climbing with shots flat is the re-nock loop), `ammo=` (ranged weapon WITH ammunition), `tgt=` (the engine gave this archer a target) and `nav=` (the navmesh face under its feet) |
 | `[Howdah#n] Bone tracking:` | once, when bone tracking falls back | no skeleton yet, or the anchor bone index out of range |
 | `[Howdah#n] summary` | mission end (toggle) | live ticks (0 = never ticked with a live elephant), samples, minimum clearance, maximum drift and carried speed |
-| `[Howdah#n] crew queued` / `no crew:` | each howdah (toggle) | whether this harness carries crew (only `sk_elephant_armor_howdah_elite` does) |
+| `[Howdah#n] crew queued` / `no crew:` | each howdah (toggle) | every howdah queues its crew; `no crew:` now means only that crew spawn is disabled (`CrewSpawnEnabled`) |
 | `[Howdah#n] crew spawn:` / `Spawning crew` / `crew force-spawned: N archer(s)` | next mission tick, always | the crew spawn, one line per archer with its position |
 | `[Howdah#n] crew not spawned:` | next mission tick, always | the elephant or mahout was gone by the tick, or the mahout had no origin |
 | `[Howdah#n] crew spawn failed:` / `crew character '...' not found` / `no available seats` | next mission tick, always | an exception in the spawn, `harad_archer` missing from the data, or every seat already taken |
 
 **What the crew do and do not count for** (verified on the 1.5.3 engine, #627 delta review). The crew are the
-elephant's crew, not roster troops. The scoreboard lists them under the mahout's party as Harad Archers (4 built,
-then a dead tick each), which is display only: a crew death removes nobody from the party roster, gives no XP, and
+elephant's crew, not roster troops. The scoreboard lists them under the mahout's party as Harad Archers (one built per
+crew frame, two today, then a dead tick each), which is display only: a crew death removes nobody from the party roster, gives no XP, and
 does not count toward the side's losses. A side whose last roster troop falls is beaten even with live crew on an
 elephant, and its crew are released at mission end. An enemy that kills a crew archer still earns its XP. When the
 player's own party fields a howdah elephant, crew kills also count as Field Commission merit for `harad_archer`
@@ -1098,6 +1134,10 @@ terrain reads 0 as well, and face id 0 is walkable.
 
 ## Changelog
 
+- 2026-09-29: KEYforce's art. The body is `sk_elephant_basemesh_a`; the harnesses are his six (three plain armours,
+  three howdahs on one deck placement), `sk_elephant_armor_a` kept as the medium plain armour. All three howdahs get
+  the platform and crew (`ElephantConfig.HowdahHarnessStringIds`, one `HowdahHarness.GetsPlatform` rule); the plain
+  armours get none. `harad_elephant_rider` rides one of the three howdahs per roster. Confirmed in game.
 - 2026-09-19 (#627): crew spawn back on for the new howdah harness `sk_elephant_armor_howdah_elite` (elite howdah
   mesh, worn by the Harad elephant rider), in `HowdahCrewSpawner`, one `HowdahCrewAgentOrigin` per archer so a crew
   casualty never books the rider; the platform renamed `taom_howdah_platform` and moved to the Armory; the

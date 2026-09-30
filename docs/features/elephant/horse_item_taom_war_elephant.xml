@@ -1,41 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  TAOM war-elephant Horse Item — READY-TO-DROP reference (authored 2026-06-05).
+  TAOM war-elephant Horse Item: a copy of the LIVE item, refreshed 2026-09-29.
 
-  Integration: paste the <Item> block below INSIDE the existing <Items> root of
-    <game>/Modules/LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_horses.xml
-  (right before its closing </Items>, next to the spider_mount_a item). Do NOT add a second <Items> wrapper.
+  Source of truth: <game>/Modules/LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_horses.xml (unversioned).
+  First authored 2026-06-05 as a 1-for-1 of ADOD_Beasts's elephant Item (id elephant -> taom_war_elephant,
+  monster -> Monster.taom_war_elephant, body elephant_mesh); since then the stats were retuned (#615) and the size
+  moved onto body_length (1.3x, ElephantConfig.AuthoredScale; HowdahPrefabTests pins it).
 
-  1-for-1 of ADOD_Beasts's elephant Item with id elephant -> taom_war_elephant and monster -> Monster.taom_war_elephant.
-  mesh="elephant_mesh" is the body mesh inside the imported elephant_harad_armor_01_geo.tpac (verified export name).
-  Armor/howdah meshes (SK_Elephant_Armor_A.*) can be added later as a HorseHarness item or <AdditionalMeshes>
-  once their in-tpac names are confirmed in the Modding Kit; the body alone is a working mount.
+  Body: KEYforce's sk_elephant_basemesh_a (SK_Elephant_Basemesh_A_geo.tpac) since 2026-09-29. The elephant_skeleton it
+  rides ships in adod_elephant_geo.tpac, which must stay. Armour is a separate HorseHarness item: the six
+  sk_elephant_armor_* items (family_type 10) in the same file, listed in docs/features/elephant.md.
 -->
 <Items>
-	<Item
-		id="taom_war_elephant"
-		name="{=taom_war_elephant}War Elephant"
-		mesh="elephant_mesh"
-		subtype="horse"
-		item_category="war_horse"
-		weight="999"
-		is_merchandise="false"
-		Type="Horse">
-		<ItemComponent>
-			<Horse
-				monster="Monster.taom_war_elephant"
-				maneuver="20"
-				speed="20"
-				charge_damage="350"
-				body_length="100"
-				is_mountable="true"
-				extra_health="0">
-				<AdditionalMeshes>
-				</AdditionalMeshes>
-				<Materials>
-				</Materials>
-			</Horse>
-		</ItemComponent>
-		<Flags Civilian="true" />
-	</Item>
+    <Item
+        id="taom_war_elephant"
+        name="{=taom_war_elephant}War Elephant"
+        mesh="sk_elephant_basemesh_a"
+        subtype="horse"
+        item_category="war_horse"
+        weight="999"
+        is_merchandise="false"
+		difficulty="170"
+        Type="Horse">
+        <ItemComponent>
+            <Horse
+                monster="Monster.taom_war_elephant"
+                maneuver="10"
+                speed="30"
+                charge_damage="125"
+                body_length="130"
+                is_mountable="true"
+                extra_health="0" />
+        </ItemComponent>
+        <Flags Civilian="true" />
+    </Item>
 </Items>

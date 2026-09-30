@@ -138,7 +138,8 @@ GetPower patch, and the mount-AI — they're all properties of the ridden-mount 
   FSM-in-a-component.**
 - **The one reference that matters:** the wolf spawns via the **public `Mission.SpawnMonster(mountItem, …)`** with a
   single un-split mesh — exactly the spider's recommended render fix (the spider's *reflected `FromHorseObj`* chain
-  is what AccessViolates). See §6.
+  is what AccessViolates). See §6. (Resolved another way: the spider became a ridden mount on 2026-06-11, and its
+  whole meshes render since 2026-09-29; [spider.md](../features/spider.md).)
 - **Extractable polish (optional, §6):** the distance→speed ladder, the `Mission.Mode==Battle/Deployment` attack
   gate, the vision-cone gate, the 0.1s tick throttle.
 
@@ -191,6 +192,8 @@ TAOM's elephant is a non-rideable creature-troop, not ADOD's ridden mount + howd
 1. **Spider render fix (high value):** the wolf proves the **public `Mission.SpawnMonster`** + single **un-split**
    mesh path renders a riderless creature. The spider's **reflected `FromHorseObj`** chain is what AccessViolates in
    `PreloadForRendering`. Switching the spider to the wolf's public path is the RCA's recommended cheapest fix.
+   **Superseded:** the spider shipped as a ridden mount instead (2026-06-11, the real AV being a missing
+   `quad_movement` clip tag), and since 2026-09-29 rides KEYforce's whole (un-split) meshes with no render AV.
 2. **Elephant SubModule gate (low-risk refinement):** TAOM adds `ElephantMissionBehavior` to *every* mission; ADOD
    gated it to `campaign && !arena && !indoor`. Inert without elephant agents, but consider the gate to skip the
    once-/mission `AllAgents` scan where no elephant can spawn (note: Warg+Spider are also unconditional — a

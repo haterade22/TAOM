@@ -253,6 +253,8 @@
     <string id="aom_goblin_guardian_of_the_tower_name" text="[Goblin] Picca da guerra goblin" />
     <string id="aom_goblin_hunter_name" text="[Goblin] Cacciatore" />
     <string id="aom_goblin_lurker_name" text="[Goblin] Agguatatore" />
+    <string id="aom_goblin_spider_rider_name" text="[Goblin] Cavalcatore di ragni" />
+    <string id="aom_goblin_spider_lord_name" text="[Goblin] Signore dei ragni" />
     <string id="aom_goblin_sentry_name" text="[Goblin] Sentinella" />
     <string id="aom_goblin_snaga_name" text="[Goblin] Guerriero goblin" />
     <string id="aom_goblin_spear_warrior_name" text="[Goblin] Lanciere goblin" />

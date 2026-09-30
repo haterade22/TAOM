@@ -1431,7 +1431,7 @@
 	     characters/creature_bandits.xml) -->
 	<string id="taom_bandit_mirkwood_spiders_name" text="{=taom_bandit_mirkwood_spiders_name}Spiders of Mirkwood" />
 	<string id="taom_spider_brood_forest_name" text="{=taom_spider_brood_forest_name}Giant Spider" />
-	<string id="taom_spider_brood_brown_name" text="{=taom_spider_brood_brown_name}Brown Spider" />
+	<string id="taom_spider_brood_brown_name" text="{=taom_spider_brood_brown_name}Great Spider" />
 	<string id="taom_spider_brood_pale_name" text="{=taom_spider_brood_pale_name}Pale Broodmother" />
 	<string id="taom_bandit_wild_trolls_name" text="{=taom_bandit_wild_trolls_name}Wild Trolls" />
 	<string id="taom_troll_bandit_cave_name" text="{=taom_troll_bandit_cave_name}Cave Troll" />

@@ -333,7 +333,7 @@ renamed troop rots silently.
 | Owner | Why |
 |---|---|
 | `harad_mumakil_rider` | A `HorseHarness` **suppresses the Horse item's `<AdditionalMeshes>`** (native mount compositing), and `taom_mumakil` keeps its war-platform there. Equipping one would delete the howdah. This is an engine constraint, not a preference |
-| `taom_spider_creature`, `taom_spider_rider_brown`, `taom_spider_rider_pale` | **An open gap, not a design choice.** No spider `HorseHarness` item has ever been authored, so there is nothing to equip and the rider sits on the spider with no saddle geometry: the same defect class as the ram, recorded as a known limitation when the troop landed and still open. Delete this entry when a `spider_saddle` harness item lands |
+| `taom_spider_creature`, `taom_spider_rider_brown`, `taom_spider_rider_pale`, `goblin_spider_rider`, `goblin_spider_lord` (the goblin tree's mountain spider riders, 2026-09-29) | **An open gap, not a design choice.** No spider `HorseHarness` item has ever been authored, so there is nothing to equip and the rider sits on the spider with no saddle geometry: the same defect class as the ram, recorded as a known limitation when the troop landed and still open. Delete this entry when a `spider_saddle` harness item lands |
 | `taom_spider_brood_forest`, `taom_spider_brood_brown`, `taom_spider_brood_pale` | **Harnessless by design (#692).** `Patch93` hands the troop's `HorseHarness` slot to `Mission.SpawnMonster`, which equips it on the riderless spider, so a harness here would saddle every wild spider. Unlike the Spider Rider rows above, keep these even when a spider harness exists |
 
 Shipped twice, which is why the rule is not scoped. `ironpass_ram_herder` was authored with no

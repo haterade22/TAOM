@@ -253,6 +253,8 @@
     <string id="aom_goblin_guardian_of_the_tower_name" text="[Trasgo] Pica de guerra trasgo" />
     <string id="aom_goblin_hunter_name" text="[Trasgo] Cazador" />
     <string id="aom_goblin_lurker_name" text="[Trasgo] Acechador" />
+    <string id="aom_goblin_spider_rider_name" text="[Trasgo] Jinete de araña" />
+    <string id="aom_goblin_spider_lord_name" text="[Trasgo] Señor de las arañas" />
     <string id="aom_goblin_sentry_name" text="[Trasgo] Centinela" />
     <string id="aom_goblin_snaga_name" text="[Trasgo] Guerrero trasgo" />
     <string id="aom_goblin_spear_warrior_name" text="[Trasgo] Lancero trasgo" />

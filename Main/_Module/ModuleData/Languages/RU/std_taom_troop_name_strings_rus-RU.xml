@@ -253,6 +253,8 @@
     <string id="aom_goblin_guardian_of_the_tower_name" text="[Гоблины] Гоблин с боевой пикой" />
     <string id="aom_goblin_hunter_name" text="[Гоблины] Охотник" />
     <string id="aom_goblin_lurker_name" text="[Гоблины] Скрытень" />
+    <string id="aom_goblin_spider_rider_name" text="[Гоблины] Наездник на пауке" />
+    <string id="aom_goblin_spider_lord_name" text="[Гоблины] Повелитель пауков" />
     <string id="aom_goblin_sentry_name" text="[Гоблины] Дозорный" />
     <string id="aom_goblin_snaga_name" text="[Гоблины] Гоблин-воин" />
     <string id="aom_goblin_spear_warrior_name" text="[Гоблины] Гоблин-копейщик" />

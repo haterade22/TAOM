@@ -91,8 +91,8 @@ public class ElephantMissionBehavior : MissionLogic
                 if (diagnostics)
                     _logger.LogInfo(
                         $"[Howdah] rider {agent.Name} on elephant index {agent.MountAgent.Index} wears harness " +
-                        $"'{harnessId ?? "none"}': no howdah (the triggers are {ElephantConfig.HowdahHarnessStringId} " +
-                        $"and {ElephantConfig.HarnessStringId})");
+                        $"'{harnessId ?? "none"}': no howdah (the triggers are " +
+                        $"{string.Join(", ", ElephantConfig.HowdahHarnessStringIds)})");
                 return;
             }
 
@@ -135,9 +135,9 @@ public class ElephantMissionBehavior : MissionLogic
             _logger.LogInfo(
                 $"[Elephant] Howdah instantiated for rider={agent.Name} as {machine.LogTag}: prefab={ElephantConfig.HowdahPrefabName} " +
                 $"elephant={agent.MountAgent.Name} (index {agent.MountAgent.Index}) harness={harnessId} side={agent.Team?.Side}");
-            // Crew (#627): howdah harness only, and never spawned from here; this runs inside Mission.SpawnAgent's
+            // Crew (#627): every howdah gets one, and never spawned from here; this runs inside Mission.SpawnAgent's
             // loop over behaviors (#595). HowdahCrewSpawner queues it for the next OnMissionTick.
-            if (HowdahCrewSpawner.CrewSpawnEnabled && HowdahHarness.CarriesCrew(harnessId))
+            if (HowdahCrewSpawner.CrewSpawnEnabled)
             {
                 _crew.Queue(machine, agent);
                 if (diagnostics)
@@ -145,9 +145,7 @@ public class ElephantMissionBehavior : MissionLogic
             }
             else if (diagnostics)
             {
-                _logger.LogInfo(HowdahCrewSpawner.CrewSpawnEnabled
-                    ? $"{machine.LogTag} no crew: harness {harnessId} carries none (only {ElephantConfig.HowdahHarnessStringId} does)"
-                    : $"{machine.LogTag} no crew: crew spawn is disabled");
+                _logger.LogInfo($"{machine.LogTag} no crew: crew spawn is disabled");
             }
         }
         catch (Exception ex)
@@ -190,7 +188,7 @@ public class ElephantMissionBehavior : MissionLogic
         if (_howdahDiagnostics?.IsEnabled != true) return;
         _logger.LogInfo(
             $"[Howdah] config: prefab={ElephantConfig.HowdahPrefabName} loaded={prefabLoaded} " +
-            $"triggers={ElephantConfig.HowdahHarnessStringId}(crew),{ElephantConfig.HarnessStringId}(no crew) " +
+            $"triggers={string.Join(",", ElephantConfig.HowdahHarnessStringIds)} " +
             $"heightAboveGround={HowdahDiagnostics.Format(ElephantConfig.HowdahHeightAboveGround, 2)} " +
             $"boneTracking={TaomHowdahMachine.BoneTrackingEnabled} crewSpawn={(HowdahCrewSpawner.CrewSpawnEnabled ? "on" : "off")} " +
             $"statusEvery={HowdahDiagnostics.Format(ElephantConfig.HowdahStatusPeriodSeconds, 0)}s");

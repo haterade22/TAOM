@@ -25,7 +25,7 @@ every reference to it below should be read as the root file.
 
 | Rig | Bones | Names | Mesh | Where | Verdict |
 |---|---|---|---|---|---|
-| **`spider_skeleton`** | **62** | lowercase (`root_m`, `joint5_r`, `chest_m`) | `sk_spider_forest_c` (a/b/c + 6 LODs each, skinned) | `E:\LOTRAOMAssets\_auto_workspace\haterade_teach_that_btch.blend` | ✅ **THE correct rig** — symmetric (tail_err≈0), proper spider posture. Matches the names `action_sets_spider.xml`/`monsters.xml` already target. |
+| **`spider_skeleton`** | **62** | lowercase (`root_m`, `joint5_r`, `chest_m`) | `sk_spider_forest_c` (a/b/c + 6 LODs each, skinned) in this .blend; in game since 2026-09-29 KEYforce's whole `sk_spider_forest_a1`/`_a2` and `sk_spider_mountain_a1`/`_a2` (`sk_spiders_a_geo.tpac`) | `E:\LOTRAOMAssets\_auto_workspace\haterade_teach_that_btch.blend` | ✅ **THE correct rig**: symmetric (tail_err≈0), proper spider posture. Matches the names `action_sets_spider.xml`/`monsters.xml` already target. |
 | `sp_skeleton` | 59 | mixed-case (`Root_M`, `joint5_R`) | `sk_spider_forest_bm_a1` | `E:\LOTRAOMAssets\ErkamSpider (1).blend` + `E:\LOTRAOMAssets\SpiderFBXs\*.fbx` | ❌ **broken** — heads symmetric but tails/orientations asymmetric (`max_tail_err`=2.73). The animator's 34 clips live on THIS rig. |
 | `erkamspider_skeleton` | 58 | mixed-case | `erkamspider` | `LOTRLOME_Armory/.../erkamspider_geo.tpac` | same family as `sp_skeleton`; has a full IK setup (58 bodies/57 d6) — used as a reference for the transplant. |
 
@@ -209,6 +209,8 @@ The combat bite-collision uses the **front legs' outer bones** (`SpiderConfig` f
 >   single-mesh AV's true cause is **unestablished** — do not cite ~40, do not invent a replacement.
 >   (That `PreloadForRendering` render AV is distinct from the spider's separate `TickAnimations` AV,
 >   which was the missing `quad_movement` tag — different call site, different fix.)
+> - **2026-09-29:** KEYforce's whole meshes on this skeleton load and render in battle, so the split is
+>   retired ([spider.md](spider.md)).
 
 **Historical record (the 2026-06-05 belief, now corrected).** `sk_spider_forest_c` weights to 58 bones
 in one mesh; this was *believed* to overflow a "~40 per-draw palette" and cause the

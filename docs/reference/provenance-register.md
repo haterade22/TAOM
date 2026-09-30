@@ -297,6 +297,12 @@ purchase, so the meshes and animations are on firm ground, while the behavioural
 (trample, mount-lock, howdah) rests on the same relationship rather than on a separate written grant.
 Worth getting one line in writing from Artem covering the code as well as the art.
 
+Since 2026-09-29 the elephant's visible body (`sk_elephant_basemesh_a`) and its six harnesses
+(`SK_Elephant_Armor_Variations`) are meshes KEYforce delivered, replacing ADOD_Beasts's `elephant_mesh` and armour;
+the `elephant_skeleton`, its hit capsules and the animation clips still come from the purchased ADOD_Beasts asset.
+Where KEYforce's elephant meshes come from (his own work, or re-exported from the same purchase) is not recorded;
+ask him and write the answer here.
+
 Architecture dossier:
 [`docs/reference/adod-beasts-architecture-and-taom-port.md`](adod-beasts-architecture-and-taom-port.md).
 `BehaviorTrees.dll` was decompiled with `ilspycmd` on 2026-05-24 and inlined into `Main/BehaviorTrees/`

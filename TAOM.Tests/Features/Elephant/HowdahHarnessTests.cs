@@ -1,58 +1,42 @@
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.Elephant;
 
 namespace TAOM.Tests.Features.Elephant;
 
 /// <summary>
-/// Which elephant harness gets the howdah platform, and which also gets a crew (#627, Mike 2026-09-19). The howdah
-/// harness (the elite howdah mesh) gets both. The plain armour keeps the crewless platform it always had: crew on it
-/// would stand on an invisible deck over a back with no howdah.
+/// Which elephant harness gets the howdah platform and its crew (#627): the three howdahs, which share one deck
+/// placement (Mike 2026-09-29). The plain armours carry no howdah, so crew on them would stand on an invisible deck.
 /// </summary>
 [TestClass]
 public class HowdahHarnessTests
 {
-    [TestMethod]
-    public void GetsPlatform_HowdahHarness_IsTrue()
+    [DataTestMethod]
+    [DataRow("sk_elephant_armor_howdah_med")]
+    [DataRow("sk_elephant_armor_howdah_heavy")]
+    [DataRow("sk_elephant_armor_howdah_elite")]
+    public void GetsPlatform_Howdah_IsTrue(string harnessId)
     {
-        Assert.IsTrue(HowdahHarness.GetsPlatform(ElephantConfig.HowdahHarnessStringId));
+        Assert.IsTrue(HowdahHarness.GetsPlatform(harnessId));
+    }
+
+    [DataTestMethod]
+    [DataRow("sk_elephant_armor_a")]
+    [DataRow("sk_elephant_armor_heavy")]
+    [DataRow("sk_elephant_armor_elite")]
+    [DataRow("sk_spider_armor_a")]
+    [DataRow("")]
+    [DataRow(null)]
+    public void GetsPlatform_PlainArmourOtherHarnessOrNone_IsFalse(string? harnessId)
+    {
+        Assert.IsFalse(HowdahHarness.GetsPlatform(harnessId));
     }
 
     [TestMethod]
-    public void GetsPlatform_PlainArmour_StaysTrue()
+    public void HowdahHarnessStringIds_AreExactlyTheThreeHowdahs()
     {
-        Assert.IsTrue(HowdahHarness.GetsPlatform(ElephantConfig.HarnessStringId));
-    }
-
-    [TestMethod]
-    public void GetsPlatform_OtherHarnessOrNone_IsFalse()
-    {
-        Assert.IsFalse(HowdahHarness.GetsPlatform("sk_spider_armor_a"));
-        Assert.IsFalse(HowdahHarness.GetsPlatform(""));
-        Assert.IsFalse(HowdahHarness.GetsPlatform(null));
-    }
-
-    [TestMethod]
-    public void CarriesCrew_HowdahHarness_IsTrue()
-    {
-        Assert.IsTrue(HowdahHarness.CarriesCrew(ElephantConfig.HowdahHarnessStringId));
-    }
-
-    [TestMethod]
-    public void CarriesCrew_PlainArmour_IsFalse()
-    {
-        Assert.IsFalse(HowdahHarness.CarriesCrew(ElephantConfig.HarnessStringId));
-    }
-
-    [TestMethod]
-    public void CarriesCrew_OtherHarnessOrNone_IsFalse()
-    {
-        Assert.IsFalse(HowdahHarness.CarriesCrew("sk_spider_armor_a"));
-        Assert.IsFalse(HowdahHarness.CarriesCrew(null));
-    }
-
-    [TestMethod]
-    public void TheTwoHarnessIds_AreDistinct()
-    {
-        Assert.AreNotEqual(ElephantConfig.HarnessStringId, ElephantConfig.HowdahHarnessStringId);
+        CollectionAssert.AreEquivalent(
+            new[] { "sk_elephant_armor_howdah_med", "sk_elephant_armor_howdah_heavy", "sk_elephant_armor_howdah_elite" },
+            ElephantConfig.HowdahHarnessStringIds.ToArray());
     }
 }

@@ -1,5 +1,9 @@
 # Spider revival — wolf-parity reference + ready-to-apply render tests
 
+> **Superseded, kept as history.** The spider shipped as a ridden mount on 2026-06-11 (its tableau and mission
+> AVs were a missing `quad_movement` clip tag), and since 2026-09-29 it rides KEYforce's whole meshes with no
+> render AV. The current state is [spider.md](../spider.md); nothing below needs doing.
+>
 > **Status (2026-06-06):** spider feature PAUSED (`SpiderConfig.Enabled=false`) on a native render
 > AccessViolation in `Agent.PreloadForRendering`. This doc holds two **separate, ready-to-apply**
 > workstreams so the bisection stays clean:

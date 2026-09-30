@@ -253,6 +253,8 @@
     <string id="aom_goblin_guardian_of_the_tower_name" text="[Goblin] Goblin Savaş Kargısı" />
     <string id="aom_goblin_hunter_name" text="[Goblin] Avcı" />
     <string id="aom_goblin_lurker_name" text="[Goblin] Sinsi" />
+    <string id="aom_goblin_spider_rider_name" text="[Goblin] Örümcek Binicisi" />
+    <string id="aom_goblin_spider_lord_name" text="[Goblin] Örümcek Efendisi" />
     <string id="aom_goblin_sentry_name" text="[Goblin] Nöbetçi" />
     <string id="aom_goblin_snaga_name" text="[Goblin] Goblin Savaşçı" />
     <string id="aom_goblin_spear_warrior_name" text="[Goblin] Goblin Mızrakçı" />

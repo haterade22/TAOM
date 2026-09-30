@@ -251,6 +251,8 @@
 	<string id="aom_goblin_sentry_name" text="{=aom_goblin_sentry_name}[Goblin] Sentry" />
 	<string id="aom_goblin_snaga_name" text="{=aom_goblin_snaga_name}[Goblin] Goblin Warrior" />
 	<string id="aom_goblin_spear_warrior_name" text="{=aom_goblin_spear_warrior_name}[Goblin] Goblin Spearman" />
+	<string id="aom_goblin_spider_lord_name" text="{=aom_goblin_spider_lord_name}[Goblin] Spider Lord" />
+	<string id="aom_goblin_spider_rider_name" text="{=aom_goblin_spider_rider_name}[Goblin] Spider Rider" />
 	<string id="aom_goblin_sword_warrior_name" text="{=aom_goblin_sword_warrior_name}[Goblin] Goblin Mauler" />
 	<string id="aom_goblin_veteran_berserker_name" text="{=aom_goblin_veteran_berserker_name}[Goblin] Goblin Skull Crusher" />
 	<string id="aom_goblin_veteran_spear_warrior_name" text="{=aom_goblin_veteran_spear_warrior_name}[Goblin] Goblin Pike-Reaver" />

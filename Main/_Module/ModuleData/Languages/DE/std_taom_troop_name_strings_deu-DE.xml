@@ -253,6 +253,8 @@
     <string id="aom_goblin_guardian_of_the_tower_name" text="[Goblin] Goblin-Kriegspike" />
     <string id="aom_goblin_hunter_name" text="[Goblin] Jäger" />
     <string id="aom_goblin_lurker_name" text="[Goblin] Schleicher" />
+    <string id="aom_goblin_spider_rider_name" text="[Goblin] Spinnenreiter" />
+    <string id="aom_goblin_spider_lord_name" text="[Goblin] Spinnenfürst" />
     <string id="aom_goblin_sentry_name" text="[Goblin] Wachposten" />
     <string id="aom_goblin_snaga_name" text="[Goblin] Goblin-Krieger" />
     <string id="aom_goblin_spear_warrior_name" text="[Goblin] Goblin-Speerträger" />

@@ -15,7 +15,7 @@ namespace TAOM.Features.Elephant;
 /// types (docs/reference/provenance-register.md). Not clean-room: the source was read while writing this.
 ///
 /// Instantiated at runtime by ElephantMissionBehavior.OnAgentBuild when the mahout's HorseHarness is one
-/// HowdahHarness.GetsPlatform accepts (the howdah harness, which also gets a crew, or the plain armour). Field refs are set
+/// HowdahHarness.GetsPlatform accepts (one of the three howdahs, each of which also gets a crew). Field refs are set
 /// immediately after GameEntity.Instantiate returns — OnInit fires with nulls and OnTick propagates
 /// them to child TaomHowdahStandingPoint instances once set.
 ///

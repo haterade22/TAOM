@@ -253,6 +253,8 @@
     <string id="aom_goblin_guardian_of_the_tower_name" text="[고블린] 고블린 전투 장창병" />
     <string id="aom_goblin_hunter_name" text="[고블린] 사냥꾼" />
     <string id="aom_goblin_lurker_name" text="[고블린] 잠복꾼" />
+    <string id="aom_goblin_spider_rider_name" text="[고블린] 거미 기수" />
+    <string id="aom_goblin_spider_lord_name" text="[고블린] 거미 군주" />
     <string id="aom_goblin_sentry_name" text="[고블린] 파수꾼" />
     <string id="aom_goblin_snaga_name" text="[고블린] 고블린 전사" />
     <string id="aom_goblin_spear_warrior_name" text="[고블린] 고블린 창병" />

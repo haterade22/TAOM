@@ -100,7 +100,8 @@ creature is the engine-supported way to render a non-humanoid body with no human
 ## WHY the spider AccessViolates here (the payoff)
 
 1. The spider spawns `FromHorseObj` (correctly — to skip `AddSkinMeshes` / the humanoid skin). Confirmed: that path
-   adds no skin; the spider's visual is its **mount mesh** (the `spider_mount_a` item's `sk_spider_forest_c` mesh).
+   adds no skin; the spider's visual is its **mount mesh** (the `spider_mount_a` item's mesh: the June single mesh at
+   the time of this trace, KEYforce's whole `sk_spider_forest_a1` since 2026-09-29).
 2. The AV is in **native `preload_for_rendering`** (Agent.cs:4923→5189→IMBAgent.cs:533) — the GPU upload of that
    mesh's skinned vertices. **CORRECTION (2026-06-13): the original "per-mesh bone palette, ~40 bones/draw" cause is
    FALSE.** No such per-mesh cap exists — the elephant renders as ONE mesh skinned to 59 active bones (chariot 54).
@@ -112,6 +113,10 @@ creature is the engine-supported way to render a non-humanoid body with no human
    the mesh asset, not the spawn code — but NOT "re-author to ≤40 bones" (refuted above); keep the body in one mesh ≤63
    bones. The RCA's recommended cheapest experiment (the wolf's public `SpawnMonster` + single un-split
    mesh) follows directly from this trace.
+4. **How it ended.** The spider became a ridden mount on 2026-06-11 (its tableau and mission AVs were a missing
+   `quad_movement` clip tag, [spider.md](../../features/spider.md)), shipped on L/R split halves, and on 2026-09-29
+   KEYforce's whole meshes on the same skeleton loaded and rendered in battle with no `preload` AV. So the June AV
+   belonged to that mesh or its package; its cause stays unestablished.
 
 ## TAOM relevance map
 

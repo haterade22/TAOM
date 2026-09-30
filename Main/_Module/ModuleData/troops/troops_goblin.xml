@@ -716,6 +716,8 @@
         <upgrade_targets>
             <upgrade_target
                 id="NPCCharacter.goblin_sentry" />
+            <upgrade_target
+                id="NPCCharacter.goblin_spider_rider" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
@@ -804,6 +806,166 @@
                 <equipment
                     slot="Leg"
                     id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- Mountain spider riders (Mike 2026-09-29): KEYforce's sk_spider_mountain_a1/_a2 skins, ridden by the goblin tree
+         that Goblin-town, the Misty Mountain Orcs and Blue Craig share, as a second branch off the Lurker. The Dol
+         Guldur Spider Rider line (characters/spider_creature.xml) is the pattern: same Monster.spider, skills, levels
+         21 and 31, and size on the item (spider_mount_mountain_a1 at 1.0x, _a2 at 1.25x). Kit is the tree's own L21 and
+         L31 gear, every set carrying a one-handed weapon in Item0, a shield in Item1 and the spider in Horse. No
+         HorseHarness: no spider saddle item exists yet (MOUNT_WITHOUT_HARNESS exemption in tools/taom_schema.py). -->
+    <NPCCharacter
+        id="goblin_spider_rider"
+        race="goblin"
+        default_group="Cavalry"
+        level="21"
+        name="{=aom_goblin_spider_rider_name}[Goblin] Spider Rider"
+        occupation="Soldier"
+        culture="Culture.goblin">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="80" />
+            <skill
+                id="Riding"
+                value="100" />
+            <skill
+                id="OneHanded"
+                value="100" />
+            <skill
+                id="TwoHanded"
+                value="40" />
+            <skill
+                id="Polearm"
+                value="80" />
+            <skill
+                id="Bow"
+                value="65" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="25" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.goblin_spider_lord" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
+              <equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_med_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+              <equipment slot="Horse" id="Item.spider_mount_mountain_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_sword_a02" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
+              <equipment slot="Head" id="Item.sk_gn_orc_inf_helmet_med_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+              <equipment slot="Horse" id="Item.spider_mount_mountain_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
+              <equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_med_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_arc_chest_med_a" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+              <equipment slot="Horse" id="Item.spider_mount_mountain_a1" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="goblin_spider_lord"
+        race="goblin"
+        default_group="Cavalry"
+        level="31"
+        name="{=aom_goblin_spider_lord_name}[Goblin] Spider Lord"
+        occupation="Soldier"
+        culture="Culture.goblin">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="120" />
+            <skill
+                id="Riding"
+                value="160" />
+            <skill
+                id="OneHanded"
+                value="180" />
+            <skill
+                id="TwoHanded"
+                value="40" />
+            <skill
+                id="Polearm"
+                value="140" />
+            <skill
+                id="Bow"
+                value="65" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="25" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_sword_a04" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
+              <equipment slot="Head" id="Item.sk_md_orc_arc_helmet_heavy_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_b" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+              <equipment slot="Horse" id="Item.spider_mount_mountain_a2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_sword_a04" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+              <equipment slot="Head" id="Item.sk_md_orc_brt_helmet_heavy_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_b" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+              <equipment slot="Horse" id="Item.spider_mount_mountain_a2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_sword_a04" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+              <equipment slot="Head" id="Item.sk_md_orc_arc_helmet_heavy_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+              <equipment slot="Horse" id="Item.spider_mount_mountain_a2" />
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"

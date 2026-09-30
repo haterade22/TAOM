@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace TAOM.Features.Elephant;
 
 /// <summary>
@@ -12,13 +14,18 @@ public static class ElephantConfig
     /// <summary>The elephant Monster's StringId — matches Monster id="taom_war_elephant" in LOTRLOME_Armory.</summary>
     public const string ElephantMonsterId = "taom_war_elephant";
 
-    /// <summary>HorseHarness item StringId that triggers howdah instantiation (sk_elephant_armor_a in LOTRLOME_Armory).</summary>
-    public const string HarnessStringId = "sk_elephant_armor_a";
-
-    /// <summary>HorseHarness item that shows the elite howdah (mesh sk_hd_elep_armor_howdah_elite_a, the deck the platform
-    /// prefab is fitted to) in LOTRLOME_Armory's LOTRAOM_horses.xml. It triggers the platform AND its crew; the plain
-    /// <see cref="HarnessStringId"/> keeps a crewless platform (#627, Mike 2026-09-19). See <see cref="HowdahHarness"/>.</summary>
-    public const string HowdahHarnessStringId = "sk_elephant_armor_howdah_elite";
+    /// <summary>
+    /// The HorseHarness items in LOTRLOME_Armory's LOTRAOM_horses.xml that get the howdah platform and its crew (#627):
+    /// KEYforce's three howdahs (meshes sk_hd_elep_armor_howdah_med_a, _heavy_a and _elite_a; the prefab was measured on
+    /// the elite deck), which share one deck placement (Mike 2026-09-29). The three plain armours beside them
+    /// (sk_elephant_armor_a, _heavy, _elite) carry no howdah and get neither. HowdahHarnessTests pins it.
+    /// </summary>
+    public static readonly IReadOnlyList<string> HowdahHarnessStringIds = new[]
+    {
+        "sk_elephant_armor_howdah_med",
+        "sk_elephant_armor_howdah_heavy",
+        "sk_elephant_armor_howdah_elite",
+    };
 
     /// <summary>Root game_entity name of the howdah platform prefab in LOTRLOME_Armory/Prefabs (#627). Renamed from
     /// taom_howdah_agent 2026-09-19: TAOM installs from v2.0.22 to v2.0.30 keep a copy under that name in
