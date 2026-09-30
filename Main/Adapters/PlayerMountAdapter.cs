@@ -13,12 +13,15 @@ namespace TAOM.Adapters;
 /// </summary>
 public class PlayerMountAdapter : IPlayerMountAdapter
 {
+    private static Equipment? MainHeroBattleEquipment() => HeroBattleEquipmentOf(Game.Current?.PlayerTroop);
+
     // Hero.MainHero is CharacterObject.PlayerCharacter.HeroObject, and PlayerCharacter is
     // Game.Current.PlayerTroop as CharacterObject: null in a Custom Battle, whose troops are
     // BasicCharacterObject, so the getter throws before a ?. after it can help (adapters.md). The same
     // chain guarded at each step is the main hero in a campaign and null anywhere else.
-    private static Equipment? MainHeroBattleEquipment() =>
-        (Game.Current?.PlayerTroop as CharacterObject)?.HeroObject?.BattleEquipment;
+    // Internal for TAOM.Tests (InternalsVisibleTo): the Custom Battle cast is tested with a real troop.
+    internal static Equipment? HeroBattleEquipmentOf(BasicCharacterObject? troop) =>
+        (troop as CharacterObject)?.HeroObject?.BattleEquipment;
 
     public bool HasMount()
     {

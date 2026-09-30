@@ -122,6 +122,11 @@ IS in the list at `:3827` and does get the callback. The general rule, second oc
 (`lessons/state-lifecycle-save.md`, "An engine lifecycle virtual's firing set is read from its caller"):
 open the caller of any lifecycle virtual before wiring it, and quote the line in the override's comment.
 
+`AddTaomBehavior` adds a behavior to every mission, Custom Battle included, where there is no campaign: its
+`EarlyStart`/`AfterStart` reads no campaign static unguarded (adapters.md), keeps every adapter call inside a
+`try` (an exception leaving `AfterStart` restarts the mission load every frame, #699), and a change that makes
+such code run for the first time gets one Custom Battle run.
+
 ## Which thread runs your target (MANDATORY before the first line of a patch)
 
 Decompile the caller chain up to the thread that invokes the target. `[MBCallback]` methods are entered

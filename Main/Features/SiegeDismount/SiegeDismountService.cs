@@ -44,15 +44,17 @@ public class SiegeDismountService : ISiegeDismountService
 
         _logger.LogInfo($"[SiegeDismount] siege detected — scene='{sceneName}' behavior={behavior}");
 
-        if (!_mount.HasMount())
-        {
-            if (_settings.IsDebugMode)
-                _logger.LogDebug("[SiegeDismount] player has no mount equipped — no action");
-            return;
-        }
-
+        // Every adapter call sits inside the try: an exception escaping here leaves AfterStart, and the engine
+        // re-runs the mission load every frame (Custom Battle siege, 2026-09-30).
         try
         {
+            if (!_mount.HasMount())
+            {
+                if (_settings.IsDebugMode)
+                    _logger.LogDebug("[SiegeDismount] player has no mount equipped — no action");
+                return;
+            }
+
             var snapshot = _mount.Capture();
             if (!snapshot.HasMount)
             {

@@ -39,8 +39,8 @@ SiegeDismountSettingsProvider (reads MCM)
        │ delegates to
    SiegeDismountService (core state machine)
        │
-       ├── IPlayerMountAdapter ── Hero.MainHero.BattleEquipment
-       └── IPartyMountInventoryAdapter ── MobileParty.MainParty.ItemRoster
+       ├── IPlayerMountAdapter ── the main hero's BattleEquipment (via Game.Current?.PlayerTroop)
+       └── IPartyMountInventoryAdapter ── Campaign.Current?.MainParty?.ItemRoster
 ```
 
 `IMountSnapshot` is an opaque token the service stores between mission start and mission end. The service never sees `EquipmentElement` or `ItemObject` (ADR-007).
@@ -75,9 +75,9 @@ SiegeDismountSettingsProvider (reads MCM)
 | [Main/Features/SiegeDismount/Models/IMountSnapshot.cs](../../Main/Features/SiegeDismount/Models/IMountSnapshot.cs) | Opaque token across the service/adapter boundary |
 | [Main/Features/SiegeDismount/Hooks/SiegeDismountMissionBehavior.cs](../../Main/Features/SiegeDismount/Hooks/SiegeDismountMissionBehavior.cs) | Thin MissionBehavior; reads `Mission.Current` and delegates |
 | [Main/Features/SiegeDismount/SiegeDismountIoC.cs](../../Main/Features/SiegeDismount/SiegeDismountIoC.cs) | DryIoc registrations |
-| [Main/Adapters/IPlayerMountAdapter.cs](../../Main/Adapters/IPlayerMountAdapter.cs) | Reads/writes `Hero.MainHero.BattleEquipment[Horse|HorseHarness]` |
+| [Main/Adapters/IPlayerMountAdapter.cs](../../Main/Adapters/IPlayerMountAdapter.cs) | Reads/writes the main hero's `BattleEquipment[Horse \| HorseHarness]` |
 | [Main/Adapters/PlayerMountAdapter.cs](../../Main/Adapters/PlayerMountAdapter.cs) | TaleWorlds-side implementation |
-| [Main/Adapters/IPartyMountInventoryAdapter.cs](../../Main/Adapters/IPartyMountInventoryAdapter.cs) | Adds/removes items from `MobileParty.MainParty.ItemRoster` |
+| [Main/Adapters/IPartyMountInventoryAdapter.cs](../../Main/Adapters/IPartyMountInventoryAdapter.cs) | Adds/removes items from the main party's `ItemRoster` |
 | [Main/Adapters/PartyMountInventoryAdapter.cs](../../Main/Adapters/PartyMountInventoryAdapter.cs) | TaleWorlds-side implementation |
 
 ## Dependencies
@@ -90,16 +90,17 @@ SiegeDismountSettingsProvider (reads MCM)
 
 ## Tests
 
-- [TAOM.Tests/Features/SiegeDismount/SiegeDismountServiceTests.cs](../../TAOM.Tests/Features/SiegeDismount/SiegeDismountServiceTests.cs) — 24 tests covering:
+- [TAOM.Tests/Features/SiegeDismount/SiegeDismountServiceTests.cs](../../TAOM.Tests/Features/SiegeDismount/SiegeDismountServiceTests.cs): 26 methods, 34 cases (one data-driven method has 9 rows), among them:
   - Disable / inert paths (4): MCM disabled, not-a-siege, Vanilla mode, player-on-foot
-  - Siege detection scene-name fallback (5 data rows + null/empty)
+  - Siege detection trusts `Mission.IsSiegeBattle` only (9 scene-name rows that must not trigger)
   - `KeepOnMap` mode (2): captures but doesn't move; doesn't auto-remount
   - `DismountToInventory` mode (2): clears + deposits; doesn't auto-remount
   - `AutoRemountAfter` mode (3): clears + deposits + later restores; idempotent end
   - Lifecycle edges (2): no-prior-start; after non-auto mode no remount
-  - Logging contracts (4): disabled-message, siege-detected-message, error-on-clear, error-on-restore
+  - Logging contracts (5): disabled-message, siege-detected-message, error-on-clear, error-on-restore, error-on-HasMount (#699: an adapter exception must never leave `AfterStart`)
+- [TAOM.Tests/Features/SiegeDismount/SiegeDismountWiringTests.cs](../../TAOM.Tests/Features/SiegeDismount/SiegeDismountWiringTests.cs): 3 tests, the behavior's registration in `OnMissionBehaviorInitialize` and the IoC feature registration
 
-- [TAOM.Tests/Adapters/SiegeDismountAdaptersNoCampaignTests.cs](../../TAOM.Tests/Adapters/SiegeDismountAdaptersNoCampaignTests.cs): 4 tests (`RequiresGame`): with no game and no campaign, every method of both real adapters answers "no mount" or does nothing instead of throwing (the Custom Battle state).
+- [TAOM.Tests/Adapters/SiegeDismountAdaptersNoCampaignTests.cs](../../TAOM.Tests/Adapters/SiegeDismountAdaptersNoCampaignTests.cs): 7 tests (`RequiresGame`). `HeroBattleEquipmentOf_CustomBattleTroop_ReturnsNull` runs the hero read against a real `BasicCharacterObject`, the troop type a Custom Battle puts in `Game.PlayerTroop` (a hard cast fails it). The other six run the real adapters in the test process, which has no game and no campaign at all, and prove only that no member throws there.
 
 The adapters' campaign paths are tested in game only; see [Verification](#verification) for the golden path.
 
@@ -124,7 +125,7 @@ State is mission-local and minimal (one snapshot, one bool). No per-tick overhea
 
 **Why `AfterStart` (#606, 2026-09-16).** The behavior originally ran its start in `OnBehaviorInitialize`, which the engine dispatches BEFORE `SubModule.OnMissionBehaviorInitialize` adds TAOM's behaviors (`Mission.AfterStart`, v1.5.3 `Mission.cs:3827` then `:3831`), so it never ran at all. It would not have helped if it had: `Mission.IsSiegeBattle` reads `MissionTeamAIType`, which `MissionCombatantsLogic.EarlyStart` sets after every `OnBehaviorInitialize`. The feature was therefore inert from the port until this fix. `AfterStart` runs after every `EarlyStart` and before the spawn logic's first tick (`DefaultBattleMissionAgentSpawnLogic` spawns from `OnMissionTick`), so the mount is stripped before the player agent is built. An in-game siege as a mounted player is owed to confirm the dismount and the remount.
 
-**Campaign only (2026-09-30).** The behavior is added to every mission, but the feature acts only on a campaign's main hero and main party, so a Custom Battle siege stands aside: the log still prints `siege detected`, the adapters report no mount, and the player keeps whatever the Custom Battle troop rides. `Hero.MainHero` (`CharacterObject.PlayerCharacter.HeroObject`) and `MobileParty.MainParty` (`Campaign.Current.MainParty`) throw inside their own getters with no campaign, since a Custom Battle's player troop is a `BasicCharacterObject`, so a `?.` after them cannot guard; the adapters read each step guarded instead. Until this fix every Custom Battle siege threw `NullReferenceException` out of `Mission.AfterStart` (from v2.0.29, when #606 made the code live) and the mission load looped without starting.
+**Campaign only (2026-09-30).** The behavior is added to every mission, but the feature acts only on a campaign's main hero and main party, so a Custom Battle siege stands aside: the log still prints `siege detected` for an assault (a sally-out is not an `IsSiegeBattle` mission and logs nothing), the adapters report no mount, and the player keeps whatever the Custom Battle troop rides. `Hero.MainHero` (`CharacterObject.PlayerCharacter.HeroObject`) and `MobileParty.MainParty` (`Campaign.Current.MainParty`) throw inside their own getters with no campaign, since a Custom Battle's player troop is a `BasicCharacterObject`, so a `?.` after them cannot guard; the adapters read each step guarded instead. Until #699, every Custom Battle siege assault with Siege Dismount on in its default mode threw `NullReferenceException` out of `Mission.AfterStart`, from v2.0.30 (the first release with #606, which made the code live). Something swallowed it without writing a crash report (`Patch37_CrashReport`'s tick finalizers are the suspect), and because `MissionState.FinishMissionLoading` had already cleared `_missionInitializing`, the engine ran `LoadMission` again every frame, so the battle never started. `HasMount()` now sits inside the service's `try`, like every other adapter call, so an adapter exception logs an error instead.
 
 **No known limitations on modifier preservation.** Earlier Phase 1 docs flagged `ItemModifier` loss as a known limitation; Codex review #1 (2026-05-06) caught that the modifier-aware [`ItemRoster.AddToCounts(EquipmentElement, int)`](../../Main/Adapters/PartyMountInventoryAdapter.cs) overload exists in the current engine API, and the snapshot was switched to carry the full `EquipmentElement`. A "Sharp" or "Damaged" horse round-trips correctly.
 
@@ -139,7 +140,7 @@ In-game golden path:
 5. Win the siege, return to map.
 6. Open inventory — confirm mount + harness are back in slots 10 + 11. Confirm a `[SiegeDismount] mount restored after siege` log line.
 
-Custom Battle siege (no campaign): pick any siege scene in the Custom Battle picker and start it. The battle loads and starts, and the log shows `siege detected` with no exception after it. Confirmed on Edoras, 2026-09-30.
+Custom Battle siege (no campaign): pick any siege scene in the Custom Battle picker and start an assault (a sally-out logs no `siege detected`). Pass: after `[SiegeDismount] siege detected`, the log reaches `[BattleLoad] ... phase=MissionAfterStartDone` and then `BattlePlayable`, once. Fail: `MissionAfterStartBegin` and `LoadMissionBegin` repeating with no `MissionAfterStartDone` (the #699 loop, which logs no exception). Confirmed on Edoras, 2026-09-30 (`taom_debug_2026-09-30_13-13-05.log`).
 
 Disable round-trip:
 
@@ -149,11 +150,14 @@ Disable round-trip:
 
 ## Changelog
 
-- 2026-09-30: Custom Battle sieges no longer throw. Both adapters guarded with `Hero.MainHero?.` and
-  `MobileParty.MainParty?.`, whose getters throw with no campaign, so every Custom Battle siege since v2.0.29
-  threw out of `AfterStart` and never finished loading. The adapters now read each step guarded; the feature
-  stands aside outside a campaign. Regression tests `SiegeDismountAdaptersNoCampaignTests`; lesson in
-  `docs/reviews/lessons/adapters-taleworlds-api.md`. Verified in game on the Edoras Custom Battle siege.
+- 2026-09-30 (#699): Custom Battle sieges load again. Both adapters had guarded with `Hero.MainHero?.` and
+  `MobileParty.MainParty?.`, whose getters throw with no campaign, so from v2.0.30 every Custom Battle siege
+  assault (Siege Dismount on, default mode) threw out of `AfterStart` and never finished loading. The adapters
+  now read each step guarded, the feature stands aside outside a campaign, and `HasMount()` moved inside the
+  service's `try`. Regression tests `SiegeDismountAdaptersNoCampaignTests` and
+  `OnMissionStart_HasMountThrows_LogsErrorAndDoesNotPropagate`; RCA
+  `docs/reviews/rca-siege-dismount-custom-battle-2026-09-30.md`. Verified in game on the Edoras Custom Battle siege with the adapter guards (`cfca3c5f`); the `try` move and the
+  test seam are covered by unit tests.
 - 2026-09-16 (#606): `OnMissionStart` moved from `OnBehaviorInitialize` to `AfterStart`. The old callback never
   fired for a TAOM-added behavior, and `IsSiegeBattle` was not yet set when it would have, so the feature
   had been inert since the port. An in-game siege as a mounted player is owed.
@@ -162,8 +166,8 @@ Disable round-trip:
 
 ## GitHub Issue
 
-- **Issue:** TBD (create with `/issue feature SiegeDismount integration` before commit)
-- **Status:** In progress — Phase 1 (port to Main/Features/) complete; awaiting in-game verification.
+- **Issues:** #116 (the port, closed), #606 (the start moved to `AfterStart`, closed), #699 (Custom Battle sieges never finished loading, closed 2026-09-30).
+- **Status:** Shipped. Owed in game: a campaign siege as a mounted player, to see the dismount and the remount.
 
 ---
 
