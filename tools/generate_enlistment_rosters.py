@@ -79,6 +79,7 @@ from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import derive_armor_tiers as dat  # noqa: E402  (armour index + level_to_tier bands)
+import ranged_ladder as rl  # noqa: E402  (is_civilian: civilian="true" or equipmentType="Civilian")
 import taom_schema as ts  # noqa: E402  (item universe + weapon classification)
 from _gamedir import ENV_VAR, game_modules  # noqa: E402
 
@@ -328,12 +329,21 @@ TREE_ALIASES = {
 # Parsing
 # =============================================================================
 
+def _slot_items(equipment):
+    """{slot: item id} over <equipment> elements, a later one overwriting an earlier (Equipment.DeserializeNode)."""
+    return {eq.get('slot', ''): eq.get('id', '').removeprefix('Item.') for eq in equipment}
+
+
 def parse_troops():
     """Return {runtime_culture_id: [troop dicts]} from troops_*.xml.
 
-    Troop dict: {id, level, group, slots: {slot: item_id}} using the FIRST non-civilian inline
-    EquipmentRoster, covering weapon AND armour slots. Heroes / non-Soldier occupations are
-    skipped (troop trees are all occupation="Soldier" today; the guard is cheap).
+    Troop dict: {id, level, group, slots: {slot: item_id}, mounts: [item_id]}, read from each battle
+    set as the engine builds it: a non-civilian inline EquipmentRoster, with every <equipment>
+    written directly under <Equipments> laid over it, since the engine writes those into every
+    set. The slots, weapon AND armour, come from the FIRST battle set; the mounts from EVERY one,
+    because the engine draws each slot from any battle set (read for drop_creature_riders only,
+    never emitted). Heroes / non-Soldier occupations are skipped (troop trees are all
+    occupation="Soldier" today; the guard is cheap).
     """
     by_culture = {}
     if not os.path.isdir(TROOPS_DIR):
@@ -359,28 +369,18 @@ def parse_troops():
                 level = int(npc.get('level', '0'))
             except ValueError:
                 continue
-            slots = {}
-            mount = ''
-            for roster in npc.findall('.//EquipmentRoster'):
-                if roster.get('civilian') == 'true':
-                    continue
-                for eq in roster.findall('equipment'):
-                    slot = eq.get('slot', '')
-                    raw = eq.get('id', '')
-                    item_id = raw.split('.', 1)[1] if raw.startswith('Item.') else raw
-                    if slot == 'Horse' and not mount:
-                        mount = item_id  # read for drop_creature_riders only; never emitted
-                    if slot not in PARSE_SLOTS:
-                        continue
-                    if item_id and slot not in slots:
-                        slots[slot] = item_id
-                break  # first non-civilian roster only
+            # Each battle set as the engine builds it: the roster's own slots, then every <equipment>
+            # directly under <Equipments> written over them (MBEquipmentRoster.AddOverriddenEquipments).
+            overrides = _slot_items(npc.findall('Equipments/equipment'))
+            battle_sets = [{**_slot_items(roster.findall('equipment')), **overrides}
+                           for roster in npc.findall('.//EquipmentRoster') if not rl.is_civilian(roster)]
+            first = battle_sets[0] if battle_sets else {}
             by_culture.setdefault(culture, []).append({
                 'id': npc.get('id', ''),
                 'level': level,
                 'group': npc.get('default_group', ''),
-                'slots': slots,
-                'mount': mount,
+                'slots': {slot: item for slot, item in first.items() if slot in PARSE_SLOTS and item},
+                'mounts': [kit['Horse'] for kit in battle_sets if kit.get('Horse')],
             })
 
     # A default_group nobody maps is a donor pool that silently does not exist. HorseArcher was in
@@ -430,11 +430,18 @@ def creature_mount_item_ids(items_dir):
 
 
 def drop_creature_riders(by_culture, creature_items):
-    """({culture: troops without the creature riders}, [dropped troop ids]). See LOCKED_CREATURE_MONSTERS."""
+    """({culture: troops without the creature riders}, [dropped troop ids]). See LOCKED_CREATURE_MONSTERS.
+
+    A troop is a rider when ANY of its battle sets (parse_troops) mounts a creature: the engine can spawn it on that set.
+    """
     kept, dropped = {}, []
     for culture, troops in by_culture.items():
-        kept[culture] = [t for t in troops if t.get('mount', '') not in creature_items]
-        dropped.extend(t['id'] for t in troops if t.get('mount', '') in creature_items)
+        kept[culture] = []
+        for troop in troops:
+            if any(mount in creature_items for mount in troop['mounts']):
+                dropped.append(troop['id'])
+            else:
+                kept[culture].append(troop)
     return kept, dropped
 
 
@@ -750,7 +757,8 @@ def file_header():
         '\n'
         '  Slots: weapons Item0..Item3, then armour Head/Body/Leg/Gloves/Cape. NO Horse and no\n'
         '  HorseHarness at any assignment, cavalry included: the cavalry donor pools mount\n'
-        '  mumakil, war elephants and chariots, the roster is keyed on the COMMANDER culture so a\n'
+        '  chariots (spider, war elephant and Mumakil riders are dropped as donors, see\n'
+        '  drop_creature_riders), the roster is keyed on the COMMANDER culture so a\n'
         '  dwarf could be handed a horse he spawns inside, and MOUNTED_DWARF cannot see a roster\n'
         '  that no NPCCharacter names. No Item4 either, which the engine calls ExtraWeaponSlot,\n'
         '  because GetBattleSetItemIds reads slots 0 to 11 so anything there would be issued.\n'

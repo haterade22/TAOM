@@ -39,9 +39,12 @@ CRITICAL: N | HIGH: N | MEDIUM: N | LOW: N
 VERDICT: CLEAN / ISSUES FOUND
 ```
 
-### Lessons From Prior Reviews (86 reviews, 191+ bugs found), distilled
+### Lessons From Prior Reviews (87 reviews, 193+ bugs found), distilled
 
 **What Codex does especially well (2026-09-01 memory-diagnostics review: 4/4 HIGH real, 0 false positives).**
+- **Feeds a new filter or gate the input that should fail it** (2026-09-30, KEYforce art, 2 of 2 LOW
+  real): a troop whose spider sat only in its second battle set (the filter kept it), and three XML
+  fragments the new siege-scene gate misjudged. For a new filter or gate, ask for that input.
 - **Follows a stand-in agent to every consumer gated on `IsHuman`** (2026-09-28, creature bandits, 3 of 3
   MEDIUM real): handed a riderless spider that TAOM makes the troop itself, it read the battle observer
   behind both scoreboards, found it reports humans only, and then checked the fix against the origin types
@@ -173,6 +176,7 @@ archive the 6th-oldest, harvest durable patterns into `docs/reviews/lessons/<cat
 - **A test that derives its own expected set from the artefact under test** (2026-09-01, #525). A coverage test parsed its culture list out of the roster file it was auditing, so deleting a culture's rows removed it from the test's own input and stayed green, as did renaming them to an invalid StringId. Ask of any coverage test: what happens if I DELETE a row?
 - **A gate made only of prohibitions.** #525 shipped 15 rosters with no weapon in them past four green gates, because every rule said what a kit must NOT contain and none said what it MUST. When a gate exists for a defect, look for the defect's negation stated positively; if it is absent, the gate cannot fail on the thing it was written for.
 - **A ratchet or suppression list with no multiplicity.** Keyed on `(owner, item)` alone, 10 entries were suppressing 13 occurrences, so an already-listed roster gaining a SECOND copy of the same bad item filed as old debt.
+- **What the deserializer assembles, not the XML's shape** (2026-09-30, KEYforce art: a Codex miss that three scoped Claude lenses caught in the fix review). Codex's fix for a first-roster-only mount read named every battle roster and battle `EquipmentSet` references, but not the `<equipment>` written directly under `<Equipments>`, which `MBEquipmentRoster.AddOverriddenEquipments` writes over its slot in every set; 88 troops mount that way. When a finding models what a troop carries, list every path `BasicCharacterObject.Deserialize` takes.
 
 **False positives to NOT repeat + the Evidence Calibration Rule above** (downgrade a claim you cannot back with quoted decompiled vanilla): full list in the track record. When two agents disagree on a TaleWorlds API, re-run `ilspycmd` rather than siding with confidence.
 

@@ -1357,3 +1357,14 @@ runner starts fail-open, so a throw there would silently drop the kill counter.
   the assertion that proves the claim; a test that does not exist is a fabricated fact (`evidence-over-claims.md`
   section C).
 - **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` convergence finding C1.
+
+### A data gate checks what the engine asks for, read from its caller, and parses the file
+`CustomBattleSceneLiveDataTests` matched the text `<level name="siege"` because that was the line the new Edoras
+scene showed. A commented-out declaration passed it, a single-quoted or reordered one failed it, and the wall level a
+Custom Battle siege loads with `siege` (`level_N siege`, N from 1 to 3) went unchecked.
+- **Why missed:** the gate was written from the example in hand, not from the decompiled method that consumes the
+  file.
+- **Prevent:** before writing a gate over engine data, decompile the consumer and list every value it can ask for;
+  parse the file by element and attribute rather than matching markup text, and test a commented-out and a reordered
+  declaration.
+- **Source:** `docs/reviews/rca-keyforce-art-wiring-2026-09-29.md` Codex pass C2.

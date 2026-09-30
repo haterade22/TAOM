@@ -147,6 +147,7 @@ One external configuration file: `custom_battle/custom_battle_commanders.json` (
 | `TAOM.Tests/Features/CustomBattles/CustomBattleFactionsHookTests.cs` | 3 | Resolution, null filtering, empty case |
 | `TAOM.Tests/Features/CustomBattles/CustomBattleTroopHookTests.cs` | 5 | Vanilla passthrough, TAOM resolution, null service/adapter results |
 | `TAOM.Tests/Features/CustomBattles/SideCommanderFilterTests.cs` | 6 | Null/empty culture, cap=3 propagation, ID resolution, null-resolution filtering, empty result |
+| `TAOM.Tests/Features/CustomBattles/CustomBattleSceneLiveDataTests.cs` | 3 | `custom_battle_scenes.xml` against the install (`LiveInstall`): every row's scene exists in an installed module's `SceneObj`, and every siege row's scene declares `siege` plus `level_1` to `level_3`, the levels a Custom Battle siege loads. Two fragment tests (run on CI) pin the declaration parse: a commented-out, single-quoted or reordered declaration, and an entity's own level list, which is not a declaration |
 
 Patches and `CustomBattleTeamFixBehavior` are thin entry points — tested indirectly via in-game smoke tests per ADR-002.
 

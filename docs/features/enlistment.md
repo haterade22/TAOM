@@ -997,8 +997,10 @@ otherwise descend to. The first cut of #525 shipped 15 such rosters, all Support
 the reported bug inside its own fix. Support now takes any melee sidearm (one weapon, still no
 shield) and a cell with no usable weapon is suppressed instead of emitted.
 
-**No mounts, at any assignment including cavalry.** The cavalry donor pools mount `taom_mumakil`,
-`taom_war_elephant` and `taom_chariot_a`; the roster is keyed on the *commander's* culture, so it
+**No mounts, at any assignment including cavalry.** The cavalry donor pools mount `taom_chariot_a`
+(the generator's `drop_creature_riders` keeps the spider, war elephant and Mumakil riders out of
+every pool, judging each troop by every battle set the engine builds for it, `<Equipments>`-level
+overrides included); the roster is keyed on the *commander's* culture, so it
 cannot know the player is a dwarf who would spawn inside a horse; and `MOUNTED_DWARF` cannot see
 these rosters at all, because it walks data an `NPCCharacter` names and these are applied at
 runtime by id. The reassign line was reworded off "Give me a horse" in the same change so the
