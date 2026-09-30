@@ -643,9 +643,19 @@ not measured by TAOM; review [adopt-mithrilforge-2026-09-29.md](../reviews/adopt
   accepted. The cause is unknown.
 - **What works is vanilla's own mechanism:** an action set derived from the agent's (`base_set`) that overrides
   VANILLA movement actions, as `as_human_female_warrior` does for the female walk, switched on after spawn with
-  `ActionSetCode.GenerateActionSetNameWithSuffix` and `MBActionSet.GetActionSet` (an unknown id returns an invalid
-  set, where `MBGlobals.GetActionSet` throws), then `Agent.SetActionSet(ref AnimationSystemData)`, whose argument
-  `Mission` builds with `FillAnimationSystemData` (`Mission.cs:4540-4541`).
+  `ActionSetCode.GenerateActionSetNameWithSuffix` and `MBActionSet.GetActionSet`, then
+  `Agent.SetActionSet(ref AnimationSystemData)`, whose argument `Mission` builds with `FillAnimationSystemData`
+  (`Mission.cs:4540-4541`).
+- **An unknown action set id returns a VALID set, set 0** [Certain, 2026-09-30; this corrects MithrilForge's "invalid
+  set"]. `MBActionSet.GetActionSet(id)` goes to native `get_index_with_id` (0x6DF010), which runs the same linear
+  search as `base_set` (0x58FAC0); on a miss that logs `Action set "%s" could not be found, using default action
+  set!` and returns 0. Index 0 passes `IsValid` (`Index >= 0`), so `MBGlobals.GetActionSet` does not throw on a
+  missing id either. Set 0 is `as_human_warrior`, the first set Native declares [Likely]. yotthani's DualWield hit it
+  in game: `as_elf_warrior_dw` did not exist, the lookup answered with `as_human_warrior`, and elves ran vanilla's
+  clips while the log said "found". **Compare `GetName()` with the id you asked for.** Build the name from the set the
+  Monster plays (`Monster.ActionSetCode`, the monster XML's `action_set`), not the monster id: LOTRLOME's `elf`
+  monster plays `as_human_warrior` (`LOTRLOME_Armory/ModuleData/monsters.xml`). More DualWield engine facts:
+  [scripted-melee-strikes.md](scripted-melee-strikes.md).
 - **A module's XSLT sees only the modules loaded before it**: `CreateMergedXmlFile` applies module i's stylesheet,
   then merges its XML, which fits the merge order above. MithrilForge orders loading with an optional
   `DependedModule`; TAOM never adds `DependedModule` rows, so check the load order instead.

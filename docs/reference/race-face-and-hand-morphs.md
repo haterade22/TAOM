@@ -41,8 +41,12 @@ troll's head. The Kit never runs this morph, so every Kit look passes.
 
 **Channels** [Certain]. A working race head's LOD0 face base, eye and mouth each carry 101 channels; LODs carry
 none (the cave troll's head has 100 and works). Names differ by author (`shape_01` to `shape_101`, `..._frame_150`
-to `_250`, `Basis_0` to `Yell_100`), so the engine takes them by order. How the 63 `deform_key` sliders in
-`skins.xml` map onto the 101 channels is UNVERIFIED.
+to `_250`, `Basis_0` to `Yell_100`), so the engine takes them by order. Each of the 63 `deform_key`s in a Native
+human skin names one channel by its `key_time_point`, 1 to 63 [Certain, Native `skins.xml` 2026-09-30]: 1 to 58 are
+sliders, 59 is `eyebump`, 60 to 63 are weight, build, height and age. No key names 64 to 100; yotthani's FaceLearner
+found those carry the facial animation, and zeroing them froze the eyelids (unmeasured by TAOM;
+[head-mesh-and-groom-authoring.md](head-mesh-and-groom-authoring.md) section 1). A tool that zeroes face channels
+keeps 59 and up.
 
 **The eye must move with its socket** [Certain]. The morph moves each part by its own channels. On a working head
 the eye's channels carry the eyeball with the socket around it: the male dwarf's socket ring moves 6.2 mm on channel
@@ -225,10 +229,12 @@ as a cause until the code that consumes it, or a third asset that has the differ
 
 ## Open questions
 
-- How the `skins.xml` `deform_key` sliders map onto the 101 channels.
+- Whether channels 64 to 100 carry the facial animation on 1.5.3 (yotthani's finding on the 1.4 line; the key to
+  channel map above is settled).
 - Whether the Kit or the engine applies `DeformPercent`.
 - The male eye's eyeball-only channels (60 to 63 and 15, iris and gaze) move the eye without the socket; a socket fit
-  cannot reproduce them, so a fitted eye does not respond to those sliders.
+  cannot reproduce them, so a fitted eye does not respond to those sliders. Native's `skins.xml` names 15
+  `eye_shape` and 60 to 63 weight, build, height and age, so "iris and gaze" is an inference to recheck.
 - Whether vanilla hand meshes carry the 26 channels, and which Kit panel sets the face tags.
 - Where the upper-mesh index table comes from (rest proximity at load, or the Kit), and whether LOTRLOME's
   channels on the dwarf beards change anything in game.
@@ -239,4 +245,6 @@ as a cause until the code that consumes it, or a third asset that has the differ
 [#684](https://github.com/haterade22/TAOM/issues/684) (the hill troll face crash);
 [troll-race.md](../features/troll-race.md) "Hand pose morphs" and the face-morph entries;
 [animation-skeleton.md](../reviews/lessons/animation-skeleton.md) (the lessons); the community guide's
-[race page](../community/bannerlordmodding-lt/guides/custom_creature_race.md) "Face and hand morph channels".
+[race page](../community/bannerlordmodding-lt/guides/custom_creature_race.md) "Face and hand morph channels";
+[head-mesh-and-groom-authoring.md](head-mesh-and-groom-authoring.md) (yotthani's FaceLearner: head packages without
+the Kit, the neck seam, the head material, groom on a baked head).

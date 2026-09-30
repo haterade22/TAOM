@@ -28,6 +28,10 @@ param(
   # sub-range on the retargeted master. Without it the names are master names (anim_run_forward_unarmed), and a
   # master named like a clip can be an EMPTY shell (jump_loop: 0 frames, 2026-09-24).
   [switch]$ByClip,
+  # -MasterDir: read each named master from its own `<name>_geo.tpac` in this folder (a Kit-imported master, such as
+  # the hill troll's under the Armory's Assets/Race Test/Mordor/Trolls/animations) instead of Native's animations.tpac.
+  # Pair it with -NativeDir <that module>, -SkeletonPackage and -Skeleton for the creature's own skeleton. Not with -ByClip.
+  [string]$MasterDir,
   [string]$ClipsPackage = "AssetPackages\animation_clips.tpac",
   [string]$OutDir      = "E:\LOTRAOMAssets\_troll_extract\json",
   [string]$Skeleton    = "human_skeleton",
@@ -62,7 +66,10 @@ function Frames($sl, [bool]$isQuat){
 }
 
 # --- load skeleton (bone order + rest) ONCE ---
-$skPkg=[Activator]::CreateInstance($APt,[object[]]@([string](Join-Path $NativeDir $SkeletonPackage),$true,$true))
+# A creature's skeleton shares its package with the race's meshes, and TpacTool 0.4.0 cannot read every item there
+# ("Unable to read beyond the end of the stream" on hill_troll_a_geo.tpac, 2026-09-30): -MasterDir opens it lazily,
+# which decodes only the skeleton read below.
+$skPkg=[Activator]::CreateInstance($APt,[object[]]@([string](Join-Path $NativeDir $SkeletonPackage),$true,(-not $MasterDir)))
 $skel=$skPkg.Items|Where-Object{$_.GetType().Name -eq "Skeleton" -and $_.Name -eq $Skeleton}|Select-Object -First 1
 if(-not $skel){ throw "skeleton '$Skeleton' not found" }
 $sd=$skel.Definition.Data
@@ -73,9 +80,12 @@ foreach($b in $sd.Bones){
     rest=@($m.M11,$m.M12,$m.M13,$m.M14,$m.M21,$m.M22,$m.M23,$m.M24,$m.M31,$m.M32,$m.M33,$m.M34,$m.M41,$m.M42,$m.M43,$m.M44) }
 }
 
-# --- load animations.tpac ONCE (header + lazy resolver) ---
-$anPkg=[Activator]::CreateInstance($APt,[object[]]@([string](Join-Path $NativeDir "AssetPackages\animations.tpac"),$true,$false))
-$am=[Activator]::CreateInstance($AMt); $am.AddPackage($anPkg); $am.SetAsDefaultGlobalResolver()
+if($MasterDir -and $ByClip){ throw "-MasterDir reads masters by name; -ByClip resolves Native clips. Use one." }
+# --- load animations.tpac ONCE (header + lazy resolver); -MasterDir opens one package per master below instead ---
+if(-not $MasterDir){
+  $anPkg=[Activator]::CreateInstance($APt,[object[]]@([string](Join-Path $NativeDir "AssetPackages\animations.tpac"),$true,$false))
+  $am=[Activator]::CreateInstance($AMt); $am.AddPackage($anPkg); $am.SetAsDefaultGlobalResolver()
+}
 
 $ok=0; $miss=0
 $targets=@()
@@ -97,7 +107,14 @@ if($ByClip){
   Write-Host ("resolved {0} clips -> {1} masters (clips_index.json)" -f $index.Count, $targets.Count)
 } else { $targets=$Clips }
 foreach($ClipName in $targets){
-  $clipObj=@($anPkg.Items|Where-Object{$_.GetType().Name -eq "SkeletalAnimation" -and $_.Name -eq $ClipName})[0]
+  if($MasterDir){
+    $mp=Join-Path $MasterDir ($ClipName + "_geo.tpac")
+    if(-not (Test-Path -LiteralPath $mp)){ Write-Host ("  MISS {0} (no {1})" -f $ClipName, $mp); $miss++; continue }
+    $mpkg=[Activator]::CreateInstance($APt,[object[]]@([string]$mp,$true,$false))
+    $clipObj=@($mpkg.Items|Where-Object{$_.GetType().Name -eq "SkeletalAnimation"})[0]
+  } else {
+    $clipObj=@($anPkg.Items|Where-Object{$_.GetType().Name -eq "SkeletalAnimation" -and $_.Name -eq $ClipName})[0]
+  }
   if(-not $clipObj){ Write-Host ("  MISS {0}" -f $ClipName); $miss++; continue }
   $ad=$clipObj.Definition.Data
   $boneAnims=@()

@@ -1,0 +1,37 @@
+{
+  "_comment": "Fit spec for tools/creature_fit.py and tools/blender/creature_fit_blender.py (2026-09-30). Paths under 'armory' are relative to the live LOTRLOME_Armory module. The hammer layout is the crafting system's: tools/oneoff/add_hill_troll_hammer_items.py writes handle length 350.96 cm with piece_offset 95 (the grip 80.5 cm above the butt) and a 69.63 cm head seated flush on the handle's top; each piece mesh is centred on its origin with its length along Z (tools/oneoff/export_hill_troll_hammer.py). The held weapon's frame is the grip bone's frame, pieces along +Z (measured on vanilla two-handed clips, docs/features/troll-race.md 'Fine tuning').",
+  "creature": "hill_troll",
+  "armory": {
+    "creature_fbx": "AssetSources/Race Test/Mordor/Trolls/hill_troll_a/hill_troll_a.fbx",
+    "anim_dir": "Assets/Race Test/Mordor/Trolls/animations",
+    "anim_fbx_dir": "AssetSources/Race Test/Mordor/Trolls/animations",
+    "weapon_fbx": "AssetSources/weapons/Mordor/troll/wm_hill_troll_ws_1.fbx"
+  },
+  "engine_skeleton": "tools/blender/troll_skeleton_a_engine.json",
+  "clip_prefix": "anim_hill_troll_",
+  "meshes": ["hill_troll_a_body", "hill_troll_a_legs", "hill_troll_a_hands", "hill_troll_a_shoulder",
+             "hill_troll_a_head", "hill_troll_a_head.eye", "hill_troll_a_head.mouth"],
+  "hand_mesh": "hill_troll_a_hands",
+  "body_meshes": ["hill_troll_a_body", "hill_troll_a_legs", "hill_troll_a_shoulder", "hill_troll_a_head"],
+  "_offhand": "The off grip rides 0.60 m below the main grip: the troll's closed fists span 0.54 (right, -0.225..+0.313 on the shaft) and 0.56 m (left, -0.209..+0.355), so 0.58 m keeps the fists apart and 0.02 m more is a gap; the left fist's lower edge then sits at the butt (-0.805). Vanilla's 0.14 m is one human fist plus a gap. The arm chain is the human skeleton's.",
+  "offhand": {
+    "along_m": -0.60,
+    "arm": {"upper": "l_upperarm_twist", "upper_twist": "l_upperarm_twist1", "fore": "l_foretwist",
+            "fore_twist": "l_foretwist1", "hand": "l_hand", "grip": "l_finger0"},
+    "main_arm": {"upper": "r_upperarm_twist", "upper_twist": "r_upperarm_twist1", "fore": "r_foretwist",
+                 "fore_twist": "r_foretwist1", "hand": "r_hand", "grip": "r_finger0"},
+    "vanilla_json_dir": "E:/LOTRAOMAssets/_hill_troll_a_export/human_json_batch1",
+    "vanilla_frame_offset": 1,
+    "hold_perp_m": 0.05,
+    "hold_along_m": [-0.35, 0.05],
+    "ramp_frames": 3
+  },
+  "weapon": {
+    "grip_bone": "r_finger0",
+    "offhand_bone": "l_finger0",
+    "pieces": [
+      {"mesh": "wm_hill_troll_2h_hammer_handle", "role": "handle", "length": 3.5096, "piece_offset": 0.95},
+      {"mesh": "wm_hill_troll_2h_hammer_head", "role": "head", "length": 0.6963}
+    ]
+  }
+}

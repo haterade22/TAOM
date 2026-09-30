@@ -66,11 +66,29 @@ in the brow asset. No LOTRLOME upper mesh with 0 channels is known to follow the
 101 channels and 28), so no third asset separates it yet. Note too that the dwarf skin uses `dwarf_skeleton_a`,
 not `human_skeleton`.
 
-**Next separating test, ready:** the swap test. `brow_swap.py` (session scratchpad `41fb92d2-...`) points all
+**Second session, debugger results (`E:\dbg\names.cdb`, log `E:\dbg\names_trace.log`).** The builder takes
+`param_1` = head metamesh (it picks the sub-mesh with the most vertices, `+0x1F8`), `param_3` = upper mesh,
+`param_2` = owner; tables are cached by the GUID pair (`+0xB8`, `FUN_1802087c0`) and attached per owner by upper
+GUID (`FUN_1802232c0`). At load, `sk_dwarf_bm_f1_eyebrow_02..05` each got a sane 104-entry table against the face
+base `sk_dwarf_bm_f1_head` (indices 0x14D to 0xD0C, head bone 13, flag bits agreeing). Yet in the face editor
+**all five brow styles stay still** (Mike, 2026-09-29), so the table is not the fault: the consumer is.
+Side finding: the male dwarf's beards pair with `sm_dwarf_basemesh_a1_head.mouth`, because his mouth (1,615
+vertices) outnumbers his face base (1,404).
+
+**The one head-side difference.** The dword at `mesh+0x1B8 → +0x390` is the material's vertex layout: vanilla
+`eyebrow_mat` (bumpmap, skinning) is `03000000`, vanilla `head_female_a` (bumpmap, skinning, doubleuv) is
+`0B000000`. Every LOTRLOME head reads `03000000` or `83000000`: bit 27, **doubleuv**, is missing, and no custom
+head (female dwarf, male dwarf, Saruman) carries a second UV set. Hypothesis to test: the upper-mesh GPU morph
+needs a doubleuv head. No native code was found testing that bit directly, so this is UNVERIFIED.
+
+**The swap test (done, inconclusive).** `brow_swap.py` (session scratchpad `41fb92d2-...`) points all
 five `eyebrow_meshes` slots of the adult female dwarf skin in the live `skins.xml` at vanilla `female_eyebrow_2`
 (`--apply` backs up to `skins.xml.bak-browswap-<time>`, `--restore` puts it back). If the vanilla brow follows
 the dwarf head's sliders, the fault is in the dwarf brow asset (then `UnknownInt2`); if it stays still too, the
-fault is on the head or skeleton side (then name the builds with the debugger, step 3 below).
+fault is on the head or skeleton side (then name the builds with the debugger, step 3 below). Result: the
+vanilla brow floated about half a metre above the dwarf's face (it keeps a human rest height), so its nearest
+head vertices were on the crown, which the brow sliders do not move; the test could not separate. The live
+`skins.xml` is restored.
 
 ## Next steps
 

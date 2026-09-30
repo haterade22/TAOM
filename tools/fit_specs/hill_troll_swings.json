@@ -1,0 +1,21 @@
+{
+  "_comment": "Authored two-handed swings for tools/creature_fit.py author (2026-09-30). The body (legs, pelvis, spine, neck, head) and the timing come from a Fab troll attack; the hammer's path is keyed here and both arms are solved onto it. fist = the main grip: x right and y forward from the midpoint of the two shoulder joints, in the body's yaw frame (from the pelvis), z = height above the ground in metres. dir = the shaft, fist toward the hammer head, in the same frame. The striking face turns each frame to lead the hammer head's own motion (vanilla swings lead with -X), so at a downward impact the 1.2 m head block stands on end: its centre must sit ~0.6 m up for the face to meet the ground. Design rules from the troll's geometry: the skull (radius ~0.45 m) sits ~0.4 m in front of the shoulder line in the stance, so arms raised straight up pass behind it; head_hold keeps the stance's neck and head through the raise (the Fab raise throws the head back into the off arm's path).",
+  "overswing": {
+    "body": "anim_hill_troll_attack1",
+    "played": [1, 71],
+    "poles": {"main": [0.9, -0.2, -0.5], "off": [-0.9, -0.2, -0.5]},
+    "head_hold": {"frames": [8, 52], "from": 1, "ramp": 6},
+    "keys": [
+      {"f": 1,  "fist": [0.20, 0.60, 2.30], "dir": [0.35, 0.10, 0.93], "_": "stance: hammer up over the right side"},
+      {"f": 12, "fist": [0.50, 0.25, 3.25], "dir": [0.30, -0.30, 0.90], "_": "lift begins"},
+      {"f": 22, "fist": [0.45, -0.25, 4.60], "dir": [0.15, -0.60, 0.78], "_": "hands above the right shoulder"},
+      {"f": 26, "fist": [0.35, -0.30, 4.70], "dir": [0.10, -0.80, 0.55], "_": "tipping back"},
+      {"f": 32, "fist": [0.20, -0.35, 4.75], "dir": [0.05, -0.97, -0.15], "_": "top: hammer behind the back"},
+      {"f": 41, "fist": [0.10, 1.20, 3.00], "dir": [0.05, 0.80, 0.60], "_": "coming over: head high in front"},
+      {"f": 48, "fist": [0.20, 1.35, 1.35], "dir": [0.10, 0.95, -0.24], "_": "impact: the face meets the ground ~4 m out"},
+      {"f": 55, "fist": [0.30, 1.20, 1.45], "dir": [0.12, 0.95, -0.24], "_": "hold, slight rebound"},
+      {"f": 64, "fist": [0.30, 0.90, 1.95], "dir": [0.30, 0.45, 0.84], "_": "recover: hammer rising"},
+      {"f": 71, "fist": [0.20, 0.60, 2.30], "dir": [0.35, 0.10, 0.93], "_": "back to the stance"}
+    ]
+  }
+}

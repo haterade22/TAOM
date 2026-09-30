@@ -1255,3 +1255,40 @@ one item swapped first, then all five.
 - **Prevent:** record an unexplained crash against the exact asset that produced it (package, mesh name, date), and
   test a new asset with a one-item swap and a battle before rebuilding the old workaround for it.
 - **Source:** `docs/features/spider.md` (2026-09-29); `docs/reference/lotrlome-spider-mount-changes.md` "2026-09-29".
+
+### A managed validity check is only as good as the native value behind it: `GetActionSet` never returns an invalid set (2026-09-30)
+Since 2026-08-01 TAOM's docs have said that `MBGlobals.GetActionSet` throws on a missing id and that
+`MBActionSet.GetActionSet` returns an invalid set, and four mission behaviours (Animalia, elk, war ram, troll brute
+force) report a missing set through `!set.IsValid`. Both readings came from the managed code alone: `MBGlobals`
+throws when `!IsValid`. The native lookup behind both (`get_index_with_id`, 0x6DF010, then the `base_set` search
+0x58FAC0) returns set 0 on a miss after logging `could not be found, using default action set!`, and index 0 is
+valid. yotthani's DualWield saw it in game: a missing `as_elf_warrior_dw` answered with `as_human_warrior`.
+- **Why missed:** the managed guard read like the contract, and no one decompiled what the native side returns.
+- **Prevent:** before relying on a managed validity check around an engine lookup, read the native miss path
+  (`python tools/native_decompile.py --engine-method <Interface.Method>`), and check a looked-up object by its name.
+- **Source:** `docs/reference/bannerlord-animation-system-map.md` section 7;
+  `docs/reviews/adopt-yotthani-bannerlord-2026-09-30.md`.
+
+### Measure the value the engine consumes, in the state the game shows (FaceLearner, 2026-07 to 2026-08)
+Three of yotthani's FaceLearner hunts measured the wrong quantity accurately: groom offsets derived from the head
+package's rest pose, while vanilla's sliders move the brow zone up to 48 mm in game; neck normals computed from the
+geometry, while the engine shades from the stored normals; and weeks of diffuse-texture checks (vanilla on all 12
+mip levels) while the even darkening came from an unfilled `Uv2` sampled through the material's `AreamapAmount`.
+A fourth metric never moved at all (its maximum sat at 4.06 mm on every eyebrow) because most of each mesh was carrier
+skin, not hair.
+- **Why missed:** each number was right about what it measured, and nothing it measured was what renders.
+- **Prevent:** name the value the engine consumes (the stored normal, the live pose, every input of the sampler)
+  before measuring, measure the working asset and the broken one the same way, and distrust a metric that does not
+  change when the thing you changed does.
+- **Source:** `docs/reference/head-mesh-and-groom-authoring.md` sections 3 and 6; FaceLearner.HeadExtract and
+  `GroomRuntimeBuild.cs` notes (private repo `yotthani/bannerlord`, read at `8e040ab`).
+
+### A listing cut short, or an empty lookup, is not evidence of absence (2026-09-30)
+yotthani concluded that the engine offered no vertex setter after reading `ManagedMeshEditOperations`' method list
+through `head -30`; the file runs to 299 lines and `SetPositionOfVertex` was in it, so a rigid-offset workaround was
+built for nothing (FaceLearner, 2026-07-31). The same day's TAOM check hit the mirror case: `taom-src` returns
+nothing for `ManagedMeshEditOperations`, whose names are in `TaleWorlds.Engine.dll`.
+- **Why missed:** a partial view was read as a complete one.
+- **Prevent:** say "does not exist" only after a full listing or a search of the DLL itself; when `taom-src` finds
+  nothing, search the assembly's strings before concluding.
+- **Source:** `docs/reference/head-mesh-and-groom-authoring.md` section 6.
