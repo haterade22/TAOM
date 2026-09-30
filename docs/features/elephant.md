@@ -951,8 +951,8 @@ and walk-into test is owed on the new body, and a refit would re-run `tools/skel
       are the enum's zero-valued names, cosmetic. Channel-0 `action=act_none` shows between idle clips and once while
       walking; worth watching against the June act_none locomotion bug, not a finding from one line.
 - [ ] **Crew follow-ups (#627 delta review):** crew kills count as Field Commission merit for `harad_archer` when the
-      player's own party fields a howdah elephant (`FieldCommissionMissionLogic` accepts the mahout's party; decide
-      if wanted), and refuge damage reduction (#507) does not reach the crew (`TaomCombatMechanicsModel.VictimPartyId`
+      player's own party fields a howdah elephant (`FieldCommissionMissionLogic` accepts the mahout's party); Mike
+      decided on 2026-09-30 to keep that. Still open: refuge damage reduction (#507) does not reach the crew (`TaomCombatMechanicsModel.VictimPartyId`
       switches on the vanilla origin types; read `BattleCombatant as PartyBase` instead). The Armory mirror
       (`E:\repos\lotraom-assets`) is Mike's to sync (2026-09-22): a session edits the live Armory only.
 - [ ] **Package the Armory in the same release** as the TAOM build that asks for `taom_howdah_platform` and the rider's
