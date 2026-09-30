@@ -86,3 +86,59 @@ colours), the build drifted silently.
 
 No new feedback memory: each pattern has a standing rule or now a lesson; the NaN finding is a named category
 of the existing rule, applied to a place it already covers.
+
+## Your Realm colour review (2026-09-30)
+
+### Top line
+
+A six-lens `/deep-review` of the MCM "Your Realm" colour (uncommitted over `9cb6d49e`) found no CRITICAL or HIGH
+defect, one MEDIUM and a tail of LOW findings, all fixed in the same session. The MEDIUM repeats this feature's
+finding 5 in a new shape: per-campaign state kept beside the per-campaign palette and reset by one untested
+line. Deleting that line left all 57 service tests green; the new test fails without it. The design lens's
+proposal moved the state into the palette, so no reset line remains to forget.
+
+### Findings
+
+| # | Sev | Finding | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| Y1 | MEDIUM | `_yourRealm = default` in the service's Palette getter was all that re-applied Your Realm to a fresh palette after `OnSessionStart`. Every kingdomless player's key is `clan:player_faction`, so without it a second campaign or a load in one process would match the stale tuple and show a reserve colour | Singleton holding per-campaign state (repeat of finding 5) | The tuple read as a memo of the last call, not as campaign state, and every test ran one session | The state moved into `RealmPalette.ApplyYourRealm`, built per campaign; `OnSessionStart_NextCampaign_YourRealmAppliesAgain`, proven RED against the old code with the line deleted; lesson in `state-lifecycle-save.md` |
+| Y2 | LOW | Releasing the previous realm when the player's realm changes was unpinned: in the founding test the old realm kept no land, so a stale colour could never show | Test gap | The test followed the common path, where founding moves every fief | `YourRealm_LeaveAKingdomThatKeepsLand_ItTakesAFreeColourAndYourLandKeepsYours`; a mutation that releases only on a cleared field fails it |
+| Y3 | LOW | The null guard on the player's realm had no test; without it the curated lookup throws inside the snapshot on the game thread | Test gap (guard) | The rig's string default is an empty string, never null | `ApplyYourRealm_NoPlayer_LeavesEveryColourAlone`; a mutation without the guard fails it |
+| Y4 | LOW | The provider test did not assert the version bump for the Your Realm slot, the only way an edit reaches the map | Test gap | The service tests stub the version by hand | Asserted in `RefreshColours_YourRealm_IsReadLikeTheOthers` |
+| Y5 | LOW | A null-forgiving `player!`, and `ColourFields.Length` as an unnamed slot index with a comment explaining it | Standards | Written quickly beside the existing slots | The `!` went with the move; `YourRealmSlot` |
+| Y6 | LOW | An always-true `Assert.IsNotNull(GetProperty(nameof(...)))`, and a palette test named "GetsItBackWhenCleared" that asserted only "not the override colour" | Test quality | The assert stood in for a reason; the name stated an intent the setup could not show | A one-line reason comment; the test renamed and asserting the exact colour |
+| Y7 | LOW | The feature doc's changelog still had only the first-release bullet | Documentation | TEMPLATE.md's "a bullet whenever the feature changes" was not re-read for the look round | Bullet added |
+| I1 | INFO | With `palette.json` missing or an entry malformed, "the kingdoms above" (the MCM list) and the palette's named realms differ, so Your Realm can colour a named kingdom the player serves | Consistency, broken install only | Two definitions, pinned equal by tests for the shipped file | Documented in the feature doc; no code change, since that kingdom's own MCM field is already inert in that state |
+
+Not applied: renaming three tests to lead with a method name (this file's own convention, and completeness
+agreed); matching the malformed-colour log text to the tooltip (the palette does hand out the free colour, so
+the log is accurate). The console route's thread stays UNVERIFIED and predates this change.
+
+### Convergence pass
+
+One reviewer on the applied fixes returned PASS. The move into the palette keeps every path of the old service
+method: a null or named realm, the no-op repeat, release before apply, the call after the curated sync, and a
+lifetime now tied to the palette itself. Each new test pins what its name says. Its one LOW finding, a test
+name that overstated (`ApplyYourRealm_NoPlayer_...` holds only for a palette that never had a player realm),
+was renamed `ApplyYourRealm_NoPlayerYet_LeavesEveryColourAlone`, and two unwrapped doc lines were wrapped.
+
+### Root-cause pattern
+
+**A reset that only half resets, second time in this feature (finding 5, Y1).** Both times the state that
+changes with the campaign lived beside the object that is rebuilt per campaign, and both fixes moved it into
+that object, where the rebuild resets it by construction.
+
+### Why each lens caught or missed what it did
+
+- **Standards** caught Y1 under the singleton session-reset rule, plus Y5, Y6 and Y7.
+- **Engine compatibility** verified 18 claims (the `new_kingdom` default id, the events, `MapFaction`, MCM's
+  default for a key missing from an existing `TAOM.json`) and found nothing incompatible; its confirmation that
+  the player clan is always `player_faction` is what made Y1 certain.
+- **Efficiency** found nothing to change and passed Y1 on as outside its lens.
+- **Data flow** traced 17 flows with no gap and found I1; it rated Y1 LOW.
+- **Completeness** found Y2, Y3 and Y4 and raised Y1 to MEDIUM.
+- **Design** proposed the structural fix for Y1 and weighed and kept the reserve hand-back.
+
+### Lessons appended
+
+- `lessons/state-lifecycle-save.md`: state that describes a per-campaign object lives in that object.

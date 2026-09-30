@@ -44,4 +44,10 @@ public interface IRealmBordersSettings
 
     /// <summary>The player's colour for a realm, or null to keep the palette's.</summary>
     uint? ColourOverride(string realm);
+
+    /// <summary>
+    /// The player's colour for their own realm when the palette names none for it (their clan's land while it
+    /// serves no kingdom, then a kingdom they found), or null for a free colour.
+    /// </summary>
+    uint? YourRealmColour { get; }
 }

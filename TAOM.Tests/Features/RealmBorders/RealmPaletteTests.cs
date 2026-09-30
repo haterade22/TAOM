@@ -273,7 +273,9 @@ public class RealmPaletteTests
 
         CollectionAssert.AreEquivalent(config.Realms.Keys.ToList(), fields.Select(f => f.Realm).ToList(),
             "every realm needs exactly one MCM colour field");
-        foreach (var property in typeof(TAOM.Features.TaomSettings).GetProperties().Where(p => p.Name.StartsWith("RealmColour", StringComparison.Ordinal)))
+        // Your Realm is no palette realm, so its tooltip has no default to quote.
+        foreach (var property in typeof(TAOM.Features.TaomSettings).GetProperties()
+                     .Where(p => p.Name.StartsWith("RealmColour", StringComparison.Ordinal) && p.Name != nameof(TAOM.Features.TaomSettings.RealmColourYourRealm)))
         {
             var text = property.GetCustomAttributes(false).Single(a => a.GetType().Name == "SettingPropertyTextAttribute");
             string hint = (string)text.GetType().GetProperty("HintText")!.GetValue(text, null)!;
@@ -281,5 +283,31 @@ public class RealmPaletteTests
             var field = fields.Single(f => f.Label == label);
             StringAssert.Contains(hint, config.Realms[field.Realm], $"{label}'s tooltip names another default than palette.json");
         }
+    }
+
+    [TestMethod]
+    public void Override_RealmCreatedInPlay_HandsItsFreeColourBackAndTakesAnotherWhenCleared()
+    {
+        var palette = new RealmPalette(new Dictionary<string, uint> { ["empire_s"] = Red }, new[] { DarkRed, Blue });
+        uint free = palette.ColourOf("new_kingdom");
+
+        palette.Override("new_kingdom", 0xFF12AB34);
+        Assert.AreEqual(0xFF12AB34u, palette.ColourOf("new_kingdom"));
+        Assert.AreEqual(free, palette.ColourOf("rebels"), "the free colour went back to the reserve");
+
+        palette.Override("new_kingdom", null);
+        Assert.AreEqual(DarkRed, palette.ColourOf("new_kingdom"), "cleared, it takes the free colour left");
+    }
+
+    [TestMethod]
+    public void ApplyYourRealm_NoPlayerYet_LeavesEveryColourAlone()
+    {
+        var palette = new RealmPalette(new Dictionary<string, uint> { ["empire_s"] = Red }, new[] { DarkRed, Blue });
+        uint free = palette.ColourOf("clan:player_faction");
+
+        palette.ApplyYourRealm(null, 0xFF12AB34);
+
+        Assert.AreEqual(free, palette.ColourOf("clan:player_faction"));
+        Assert.AreEqual(Red, palette.ColourOf("empire_s"));
     }
 }

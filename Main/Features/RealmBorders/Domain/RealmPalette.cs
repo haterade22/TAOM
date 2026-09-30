@@ -6,16 +6,20 @@ namespace TAOM.Features.RealmBorders.Domain;
 /// <summary>
 /// Border colours by realm id, as opaque ARGB. Curated colours come from
 /// <c>ModuleData/realm_borders/palette.json</c>; a realm created in play (rebels, the player's own)
-/// takes the unused reserve colour farthest, by CIE76 colour distance, from every colour in use, and
-/// keeps it for as long as this palette lives: one campaign, since the border service builds a fresh
-/// palette at every session start. Banner colours are never used: in TAOM they leave 9 of 22 realms
-/// near black and make some pairs indistinguishable.
+/// takes the unused reserve colour farthest, by CIE76 colour distance, from every colour in use. It
+/// keeps that colour for as long as this palette lives (one campaign, since the border service builds a
+/// fresh palette at every session start) unless the player gives the realm a colour of their own, which
+/// hands it back to the reserve. Banner colours are never used: in TAOM they leave 9 of 22 realms near
+/// black and make some pairs indistinguishable.
 /// </summary>
 public sealed class RealmPalette
 {
     private readonly Dictionary<string, uint> _curated;
     private readonly Dictionary<string, uint> _colours;
     private readonly List<uint> _reserve;
+    private readonly Dictionary<string, uint> _fromReserve = new Dictionary<string, uint>(StringComparer.Ordinal);
+    private string? _yourRealm;
+    private uint? _yourColour;
 
     public RealmPalette(IReadOnlyDictionary<string, uint> curated, IReadOnlyList<uint> reserve)
     {
@@ -34,17 +38,44 @@ public sealed class RealmPalette
     public IReadOnlyCollection<string> CuratedRealms => _curated.Keys;
 
     /// <summary>
-    /// The player's colour for a curated realm, or null to restore the file's. Colours in use include it, so
-    /// a reserve colour handed out afterwards keeps clear of it.
+    /// The player's colour for a realm, or null to restore the palette's own: the file's for a curated realm,
+    /// a free reserve colour for one created in play. Colours in use include it, so a reserve colour handed
+    /// out afterwards keeps clear of it; a reserve colour the realm held goes back to the reserve.
     /// </summary>
     public void Override(string realmId, uint? colour)
     {
         if (realmId == null)
             throw new ArgumentNullException(nameof(realmId));
+        if (_fromReserve.TryGetValue(realmId, out uint held))
+        {
+            _fromReserve.Remove(realmId);
+            _reserve.Add(held);
+        }
         if (colour.HasValue)
             _colours[realmId] = colour.Value;
         else if (_curated.TryGetValue(realmId, out uint original))
             _colours[realmId] = original;
+        else
+            _colours.Remove(realmId);
+    }
+
+    /// <summary>
+    /// Gives the player's realm MCM's Your Realm colour, or a free colour when that is null. A realm the file
+    /// names keeps its own. The colour follows the player: when their realm or the colour changes, the realm
+    /// it went to last takes a free colour again. The same realm and colour a second time change nothing, so
+    /// a free colour never moves.
+    /// </summary>
+    public void ApplyYourRealm(string? playerRealm, uint? colour)
+    {
+        if (playerRealm == null || _curated.ContainsKey(playerRealm))
+            colour = null;
+        if (playerRealm == _yourRealm && colour == _yourColour)
+            return;
+        if (_yourRealm != null && _yourColour.HasValue)
+            Override(_yourRealm, null);
+        if (playerRealm != null && colour.HasValue)
+            Override(playerRealm, colour);
+        (_yourRealm, _yourColour) = (playerRealm, colour);
     }
 
     public uint ColourOf(string realmId)
@@ -54,7 +85,10 @@ public sealed class RealmPalette
         if (_colours.TryGetValue(realmId, out uint colour))
             return colour;
 
-        colour = _reserve.Count > 0 ? TakeFarthestReserve() : HashedColour(realmId);
+        if (_reserve.Count > 0)
+            _fromReserve[realmId] = colour = TakeFarthestReserve();
+        else
+            colour = HashedColour(realmId);
         _colours[realmId] = colour;
         return colour;
     }

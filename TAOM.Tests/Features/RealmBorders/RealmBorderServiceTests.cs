@@ -888,4 +888,122 @@ public class RealmBorderServiceTests
         Assert.AreNotEqual(firstReserve, PixelAt(rig, 350, 100), "the rebels do not take the colour the player gave Gondor");
         Assert.AreEqual(firstReserve, PixelAt(rig, 50, 100));
     }
+
+    // --- Your Realm: the player's own realm when the palette does not name it ---
+
+    private const uint YourColour = 0xFF12AB34;
+
+    private static Rig PlayerWithTheirOwnClan()
+    {
+        var rig = new Rig(("west", 100, "empire_w"), ("east", 300, "clan:player_faction"));
+        rig.Map.PlayerRealm.Returns("clan:player_faction");
+        return rig;
+    }
+
+    [TestMethod]
+    public void YourRealm_ColoursTheLandYouHoldOutsideAnyKingdom()
+    {
+        var rig = PlayerWithTheirOwnClan();
+        rig.Settings.YourRealmColour.Returns(YourColour);
+        rig.Settings.ColourVersion.Returns(1);
+
+        rig.Settle();
+
+        Assert.AreEqual(YourColour, PixelAt(rig, 350, 100));
+        Assert.IsTrue(rig.Quads.Any(q => (q.NearStart.Colour & 0xFFFFFF) == (YourColour & 0xFFFFFF)), "the border's wash too");
+    }
+
+    [TestMethod]
+    public void YourRealm_KeepsItsColourWhenYouFoundAKingdom()
+    {
+        var rig = PlayerWithTheirOwnClan();
+        rig.Settings.YourRealmColour.Returns(YourColour);
+        rig.Settings.ColourVersion.Returns(1);
+        rig.Settle();
+
+        rig.Owner["east"] = "new_kingdom";
+        rig.Map.PlayerRealm.Returns("new_kingdom");
+        rig.Service.MarkDirty(); // KingdomCreatedEvent
+        rig.Settle();
+
+        Assert.AreEqual(YourColour, PixelAt(rig, 350, 100));
+    }
+
+    [TestMethod]
+    public void YourRealm_LeaveAKingdomThatKeepsLand_ItTakesAFreeColourAndYourLandKeepsYours()
+    {
+        var rig = new Rig(("west", 100, "empire_w"), ("middle", 200, "new_kingdom"), ("east", 300, "new_kingdom"));
+        rig.Map.PlayerRealm.Returns("new_kingdom");
+        rig.Settings.YourRealmColour.Returns(YourColour);
+        rig.Settings.ColourVersion.Returns(1);
+        rig.Settle();
+        Assert.AreEqual(YourColour, PixelAt(rig, 200, 100));
+
+        rig.Owner["east"] = "clan:player_faction"; // abdicate, then leave the kingdom with a fief
+        rig.Map.PlayerRealm.Returns("clan:player_faction");
+        rig.Service.MarkDirty(); // OnClanChangedKingdomEvent
+        rig.Settle();
+
+        Assert.AreNotEqual(YourColour, PixelAt(rig, 200, 100), "the kingdom left behind takes a free colour");
+        Assert.AreEqual(YourColour, PixelAt(rig, 350, 100), "your colour follows you");
+    }
+
+    [TestMethod]
+    public void YourRealm_DoesNotRecolourAKingdomThePaletteNames()
+    {
+        var rig = new Rig(("west", 100, "empire_w"), ("east", 300, "empire_s"));
+        rig.Map.PlayerRealm.Returns("empire_w");
+        rig.Settings.YourRealmColour.Returns(YourColour);
+        rig.Settings.ColourVersion.Returns(1);
+
+        rig.Settle();
+
+        Assert.AreEqual(rig.Palettes.NewPalette().ColourOf("empire_w"), PixelAt(rig, 50, 100), "Gondor's own field applies, not Your Realm");
+    }
+
+    [TestMethod]
+    public void YourRealm_Cleared_TakesAFreeColourAgain()
+    {
+        var rig = PlayerWithTheirOwnClan();
+        rig.Settle();
+        uint free = PixelAt(rig, 350, 100);
+        rig.Settings.YourRealmColour.Returns(YourColour);
+        rig.Settings.ColourVersion.Returns(1);
+        rig.Settle();
+        Assert.AreEqual(YourColour, PixelAt(rig, 350, 100));
+
+        rig.Settings.YourRealmColour.Returns((uint?)null);
+        rig.Settings.ColourVersion.Returns(2);
+        rig.Settle();
+
+        Assert.AreEqual(free, PixelAt(rig, 350, 100), "the free colour it had comes back");
+    }
+
+    [TestMethod]
+    public void OnSessionStart_NextCampaign_YourRealmAppliesAgain()
+    {
+        var rig = PlayerWithTheirOwnClan();
+        rig.Settings.YourRealmColour.Returns(YourColour);
+        rig.Settings.ColourVersion.Returns(1);
+        rig.Settle();
+
+        rig.Service.OnSessionStart(); // every kingdomless player's realm is clan:player_faction again
+        rig.Settle();
+
+        Assert.AreEqual(YourColour, PixelAt(rig, 350, 100), "a second campaign or a loaded save keeps the player's colour");
+    }
+
+    [TestMethod]
+    public void YourRealm_Blank_OtherColourChangesLeaveYourFreeColourAlone()
+    {
+        var rig = PlayerWithTheirOwnClan();
+        rig.Settle();
+        uint free = PixelAt(rig, 350, 100);
+
+        rig.Settings.ColourOverride("empire_s").Returns(free); // a fresh pick would now keep clear of it
+        rig.Settings.ColourVersion.Returns(1);
+        rig.Settle();
+
+        Assert.AreEqual(free, PixelAt(rig, 350, 100), "the realm keeps its colour; nothing re-picks it");
+    }
 }

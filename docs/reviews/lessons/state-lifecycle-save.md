@@ -930,3 +930,15 @@ drained the reserve. Handing out is state.
 - **Prevent:** keep the file read per process, and build the handing-out object per campaign (reset in the
   session-start path the singleton rule already requires); test a second campaign in one process.
 - **Source:** `docs/reviews/rca-realm-borders-2026-09-30.md` finding 5.
+
+### State that describes a per-campaign object lives in that object (2026-09-30)
+Realm Borders kept the player's applied Your Realm colour in a service tuple beside the per-campaign palette and
+cleared it by hand when a fresh palette was built. Every kingdomless player's realm key is `clan:player_faction`,
+so without that one line a second campaign or a load in the same process matched the stale tuple and never
+coloured the player's land, and no test pinned the line. The same feature had fixed the mirror case that morning.
+- **Why missed:** the tuple read as a memo of the last call, not as campaign state, and every test ran one
+  session.
+- **Prevent:** put state that shares an object's lifetime inside that object, so its rebuild resets it by
+  construction. A field that must stay outside names what resets it and the test that proves it, with a second
+  campaign whose ids repeat the first's.
+- **Source:** `docs/reviews/rca-realm-borders-2026-09-30.md` "Your Realm colour review", finding Y1.

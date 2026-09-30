@@ -113,7 +113,8 @@ public sealed class RealmBorderService
 
     /// <summary>
     /// This campaign's colours: built fresh at every session start, so the reserve is whole again, with the
-    /// player's MCM colours applied whenever they change, so a realm created in play avoids them too.
+    /// player's MCM colours applied whenever they change (Your Realm follows the player's own realm), so a
+    /// realm created in play avoids them too.
     /// </summary>
     private RealmPalette Palette
     {
@@ -131,6 +132,7 @@ public sealed class RealmBorderService
                 foreach (string realm in _palette.CuratedRealms)
                     _palette.Override(realm, _settings.ColourOverride(realm));
             }
+            _palette.ApplyYourRealm(_map.PlayerRealm, _settings.YourRealmColour);
             return _palette;
         }
     }

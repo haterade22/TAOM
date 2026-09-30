@@ -74,6 +74,10 @@ A fief's realm is its owner's map faction, as the engine reads it: the kingdom, 
 itself when that clan serves no kingdom. v1.5.3 raises a rebellion by creating a clan, not a kingdom,
 so a rebel town shows as a realm of its own (keyed "clan:" and the clan id inside the adapter only)
 and takes a reserve colour; so does an independent player's castle, which also takes the gold cord.
+MCM's Your Realm colour goes to the player's own realm when the palette names none for it: their clan's
+land while it serves no kingdom, then a kingdom they found. It follows the player from the one to the
+other. Setting it hands the realm's reserve colour back for a rebel to take; clearing it gives the
+realm a free reserve colour again. In a kingdom the palette names, that kingdom's own field applies.
 
 ### The province map
 
@@ -217,6 +221,7 @@ Recorded so they can be re-weighed; each is the build's choice, not an oversight
 | Border Blend Mode | Material default | the engine blend mode the borders are drawn with (advanced; for the look) |
 | Border Material | Automatic | the engine material the borders are drawn from (advanced) |
 | Realm Colours (sub-group) | blank | one `#RRGGBB` field per realm; blank keeps the palette colour its tooltip names |
+| Your Realm (in Realm Colours) | blank | the player's realm when the palette names none for it: their clan's land while it serves no kingdom, then a kingdom they found; blank takes a free colour |
 
 `RealmBordersSettingsProvider` re-validates what it reads: a width that is not a number or outside
 0.5 to 3 becomes 1, and a fade pair with either value not a number, outside 0 to 5000, or a start not
@@ -251,8 +256,9 @@ The palette is separate from banner colours on purpose: banner colours leave 9 o
 black and make Gundabad and the Misty Mountain Orcs look alike. `RealmPaletteTests` fails when a
 kingdom is missing, two colours (reserve included) sit closer than `minimumDeltaE`, or one is darker
 than `minimumLightness`. A malformed colour is skipped with a warning and that realm takes a reserve
-colour. The file is read once per process, so an edit needs a full game restart; each campaign then
-builds its own palette, so the reserve is handed out from its best colour again in every campaign.
+colour, or the Your Realm colour when it is the player's. The file is read once per process, so an edit
+needs a full game restart; each campaign then builds its own palette, so the reserve is handed out from
+its best colour again in every campaign.
 
 ## Console
 
@@ -296,7 +302,7 @@ builds its own palette, so the reserve is handed out from its best colour again 
 
 ## Tests
 
-185 test methods in `TAOM.Tests/Features/RealmBorders/`:
+220 test methods in `TAOM.Tests/Features/RealmBorders/`:
 
 - `ProvincePartitionerTests` (16), `BoundaryTracerTests` (7), `RealmBorderSelectorTests` (7): the flood,
   walls, rivers, diagonal ridges, pockets, water, NaN seeds and positions, chain tracing (saddles and
@@ -304,14 +310,18 @@ builds its own palette, so the reserve is handed out from its best colour again 
 - `PolylineMathTests` (7), `StripBuilderTests` (7), `BorderPainterTests` (9), `BorderSupportTests` (22):
   smoothing, strips, every look, resampling, terrain classes keyed by the engine's own enum, tiling,
   modes, relation groups, labels, the crossing tracker.
-- `RealmPaletteTests` (15): the shipped palette's gates, reserve included, colour assignment, the strict
-  `#RRGGBB` parse, and the provider's missing-file, malformed-file and per-campaign paths.
-- `RealmTerritoryServiceTests` (12), `RealmBorderServiceTests` (44): the real pipeline over fake
+- `RealmPaletteTests` (20): the shipped palette's gates, reserve included, colour assignment, the
+  player's colours (Your Realm included) and the reserve colour they hand back, the strict `#RRGGBB`
+  parse, and the provider's missing-file, malformed-file and per-campaign paths.
+- `RealmTerritoryServiceTests` (12), `RealmBorderServiceTests` (59): the real pipeline over fake
   adapters, including a capture moving the line, skipped repaints, a repaint overtaken on the worker or
   failing there,
   the fade, the toggle off and on, the keys while off, every mode, the gold cord, notices and their
-  guards, session reset, the map screen closing, the material switch and the province picture.
-- `RealmBordersProviderTests` (13), `RealmNameLetteringTests` (7), `RealmNamesVMTests` (4),
+  guards, session reset, the map screen closing, the material and blend choices, the land tint, the
+  MCM colours with Your Realm, and the province picture.
+- `RealmFillTests` (7): each realm in its own colour, the fade beside another realm, wild land, water
+  and uncoloured groups left bare, zero strength, full strength deep inside, one colour per quad.
+- `RealmBordersProviderTests` (21), `RealmNameLetteringTests` (7), `RealmNamesVMTests` (4),
   `RealmNamesPrefabTests` (4), `ProvinceBitmapTests` (3).
 - `RealmBordersWiringTests` (8): the module listed once, no hand registration, the behavior's gates and
   events, the key category and its Options names.
@@ -363,6 +373,8 @@ map yet.
 - [ ] Each map mode's look; the allies and enemies mode's colours match the settlement nameplates.
 - [ ] A rebellion's town gets a border of its own in a reserve colour; a kingdomless player's castle
       takes the gold cord.
+- [ ] With Your Realm set, a kingdomless player's castle takes that colour and keeps it when the
+      player founds a kingdom; clearing the field gives the realm a free colour.
 - [ ] M and G work; Options > Keybindings > Campaign Map shows both names, in English and one
       translated language.
 - [ ] Realm names at a far zoom fade in with the borders; a Chinese game shows them in the plain font;
@@ -378,6 +390,10 @@ map yet.
   looks with the player's gold cord, three map modes (the third by relation to the player, in the
   nameplate colours), rebel clans as realms of their own, realm names, crossing notices, the repaint on
   a worker thread, console commands. The eight new strings are drafted in all twelve languages.
+- 2026-09-30: each realm's land tinted between its borders; new colours for Harad, Rhûn, Khand,
+  Rivendell, Rohan, Dunland, Isengard and Umbar; every look control in MCM, with a colour field per
+  realm and a Your Realm colour for the player's realm when the palette names none; heights read from
+  the terrain directly.
 
 ## GitHub Issue
 

@@ -230,4 +230,23 @@ public class RealmBordersProviderTests
     {
         CollectionAssert.AreEqual(TAOM.Adapters.BorderRenderAdapter.CandidateMaterials, RealmBordersSettingsProvider.MaterialChoices.Skip(1).ToArray());
     }
+
+    [TestMethod]
+    public void RefreshColours_YourRealm_IsReadLikeTheOthers()
+    {
+        var logger = Substitute.For<IModLogger>();
+        var provider = new RealmBordersSettingsProvider(logger);
+        var texts = new string?[RealmBordersSettingsProvider.YourRealmSlot + 1];
+        int blank = provider.RefreshColours(texts);
+
+        texts[RealmBordersSettingsProvider.YourRealmSlot] = "#12AB34";
+        int set = provider.RefreshColours(texts);
+        Assert.AreEqual(0xFF12AB34u, provider.YourRealmColour);
+        Assert.AreNotEqual(blank, set, "an edit bumps the version, which repaints the map");
+
+        texts[RealmBordersSettingsProvider.YourRealmSlot] = "green";
+        provider.RefreshColours(texts);
+        Assert.IsNull(provider.YourRealmColour);
+        logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("Your Realm")));
+    }
 }

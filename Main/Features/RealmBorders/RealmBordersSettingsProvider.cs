@@ -59,6 +59,9 @@ public sealed class RealmBordersSettingsProvider : IRealmBordersSettings
         ("bluecraig", "Goblins of Blue Craig", s => s.RealmColourBlueCraig),
     };
 
+    /// <summary>The Your Realm field's slot in the colour arrays, after one slot per realm field.</summary>
+    internal static int YourRealmSlot => ColourFields.Length;
+
     private const float MinimumWidthScale = 0.5f;
     private const float MaximumWidthScale = 3f;
     private const float MaximumFadeDistance = 5000f;
@@ -66,6 +69,7 @@ public sealed class RealmBordersSettingsProvider : IRealmBordersSettings
     private const string WidthSetting = "Border Width";
     private const string FadeSetting = "Fade In From Camera Distance / Full Opacity Distance";
     private const string FillStrengthSetting = "Realm Colour Strength";
+    private const string YourRealmLabel = "Your Realm";
 
     private static readonly string DefaultWidthText = Text(DefaultWidthScale);
     private static readonly string DefaultFillStrengthText = Text(DefaultFillStrength);
@@ -73,9 +77,9 @@ public sealed class RealmBordersSettingsProvider : IRealmBordersSettings
 
     private readonly IModLogger _logger;
     private readonly Dictionary<string, string> _warned = new Dictionary<string, string>();
-    private readonly string?[] _colourTexts = new string?[ColourFields.Length];
-    private readonly uint?[] _colours = new uint?[ColourFields.Length];
-    private readonly string?[] _currentTexts = new string?[ColourFields.Length];
+    private readonly string?[] _colourTexts = new string?[YourRealmSlot + 1];
+    private readonly uint?[] _colours = new uint?[YourRealmSlot + 1];
+    private readonly string?[] _currentTexts = new string?[YourRealmSlot + 1];
     private int _colourVersion;
 
     public RealmBordersSettingsProvider(IModLogger logger)
@@ -116,9 +120,12 @@ public sealed class RealmBordersSettingsProvider : IRealmBordersSettings
             var settings = TaomSettings.Instance;
             for (int i = 0; i < ColourFields.Length; i++)
                 _currentTexts[i] = settings == null ? null : ColourFields[i].Read(settings);
+            _currentTexts[YourRealmSlot] = settings?.RealmColourYourRealm;
             return RefreshColours(_currentTexts);
         }
     }
+
+    public uint? YourRealmColour => _colours[YourRealmSlot];
 
     public uint? ColourOverride(string realm)
     {
@@ -131,19 +138,19 @@ public sealed class RealmBordersSettingsProvider : IRealmBordersSettings
     }
 
     /// <summary>
-    /// Takes the colour fields' current texts (in <see cref="ColourFields"/> order) and re-parses only the
-    /// ones that changed; returns the version, bumped on any change. A malformed colour keeps the palette's
-    /// and warns once.
+    /// Takes the colour fields' current texts (in <see cref="ColourFields"/> order, then Your Realm) and
+    /// re-parses only the ones that changed; returns the version, bumped on any change. A malformed colour
+    /// keeps the palette's and warns once.
     /// </summary>
     internal int RefreshColours(IReadOnlyList<string?> texts)
     {
-        for (int i = 0; i < ColourFields.Length; i++)
+        for (int i = 0; i < _colourTexts.Length; i++)
         {
             string? text = i < texts.Count ? texts[i] : null;
             if (string.Equals(text, _colourTexts[i], StringComparison.Ordinal))
                 continue;
             _colourTexts[i] = text;
-            _colours[i] = CheckedColour(ColourFields[i].Label, text);
+            _colours[i] = CheckedColour(i == YourRealmSlot ? YourRealmLabel : ColourFields[i].Label, text);
             _colourVersion++;
         }
         return _colourVersion;
