@@ -287,8 +287,8 @@ art source (.fbx, textures)
   reverse-engineered — a `tpac_clip_flags.py` tool is a TODO there).
 - **Animation clip flags** are baked here (set in the Animation Clip Inspector) — see the dedicated
   [clip-flags reference](bannerlord-animation-clip-flags.md). They are NOT in `action_types.xml`.
-- The **skeleton** lives inside a `*_geo.tpac` (e.g. LOTRLOME's `elephant_harad_armor_01_geo.tpac` carries
-  `elephant_skeleton`); animation **clips** are skeleton-relative (bind by skeleton name).
+- The **skeleton** lives inside a `*_geo.tpac` (e.g. LOTRLOME's `adod_elephant_geo.tpac` carries `elephant_skeleton`;
+  `elephant_harad_armor_01_geo.tpac`, named here until 2026-09-29, is a 416-byte stub); animation **clips** are skeleton-relative (bind by skeleton name).
 
 ### 6.1 The four asset folders, and who each one is for
 

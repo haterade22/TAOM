@@ -413,9 +413,9 @@ every file before writing any.
    derive, run `python tools/translate_with_claude.py --lang <L> --module Armory --sync-ids --apply`
    per language (needs `ANTHROPIC_API_KEY`), then the sync tool again to drop the retired rows. Then
    `python tools/check_external_loc_coverage.py`.
-7. Commit the mirror (`E:\repos\lotraom-assets`, the changed `ranged_ladder.xml`, `LOTRAOM_weapons.xml`
-   and `Languages` files only) and the repo (spec, troop files, `tools/translation_cache`, the tracked
-   HTML); the live Armory is unversioned and the mirror is its only history.
+7. Commit the repo (spec, troop files, `tools/translation_cache`, the tracked HTML). Leave the
+   `E:\repos\lotraom-assets` mirror alone: Mike syncs it himself in one pass (2026-09-22), so say in the
+   commit body which live Armory files changed (`ranged_ladder.xml`, `LOTRAOM_weapons.xml`, `Languages`).
 8. Restart Bannerlord fully (item XML loads at process launch) and check a troop from each end of the
    ladder in a Custom Battle. Custom Battle rolls no item modifier and gives bows and crossbows one
    spread formula, so the crossbow's accuracy edge over its kingdom's bows shows only in a campaign

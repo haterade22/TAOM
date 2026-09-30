@@ -53,8 +53,9 @@ lines shown.
 
 ## Step 3: repair the REF side, never the asset side
 
-Repoint `mesh` / `body_name` / holster refs to the art that ships (byte-exact edits, both the live
-Armory and the `E:\repos\lotraom-assets` mirror; the #599 shape is `E:\taom-hang-2026-09-15\repoint_refs.py`).
+Repoint `mesh` / `body_name` / holster refs to the art that ships, with byte-exact edits in the live
+Armory only. The `E:\repos\lotraom-assets` mirror is Mike's to sync, never a session's (2026-09-22).
+The #599 shape is `E:\taom-hang-2026-09-15\repoint_refs.py`.
 Do not restore a tpac beside its replacement. If the mapping is ambiguous (three old flags, four
 new), pick by index, leave a comment, and hand the heraldry question to the artist. Then re-run
 with `regen`, and `git diff docs/audits/armory-ref-audit.md` is the change log.
@@ -67,7 +68,7 @@ the armoury: `python tools/generate_armour_classes.py --check`, and if it is sta
 `docs/audits/armory-ref-audit.md`, `docs/reference/armory-catalogue/catalogue.tsv` and, when step 3
 regenerated it, `Main/_Module/ModuleData/armour_acquisition/armour_classes.xml` go in the same commit as
 the ref repair. The Armory XML itself is unversioned here; say in the commit body which files changed
-in the live install and the mirror.
+in the live install.
 
 ## Gotchas
 

@@ -145,8 +145,9 @@ git diff docs/audits/armory-ref-audit.md            # what changed since the las
 
 Repair the ref side (never restore a tpac beside its replacement), re-run, commit the report and
 the catalogue with the repair. The #599 repair script (`E:\taom-hang-2026-09-15\repoint_refs.py`)
-is the shape: byte-exact substring swaps, dry run by default, applied to both the live Armory and
-the `lotraom-assets` mirror.
+is the shape: byte-exact substring swaps, dry run by default, applied to the live Armory. (That run
+also patched the `lotraom-assets` mirror; since 2026-09-22 Mike syncs the mirror himself and a session
+leaves it alone.)
 
 ## Performance
 
