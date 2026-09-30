@@ -1,0 +1,21 @@
+{
+  "_about": "Source art for the realm-border looks (docs/reviews/adopt-kingdom-borders-2026-09-30.md). Generated with ImagineArt on Mike's own account at his request, 2026-09-30. tile_*.png are derived by `python tools/realm_borders_preview.py tiles`.",
+  "service": "ImagineArt",
+  "model": "nano-banana-pro",
+  "resolution": "1K (1584 x 672), aspect 21:9",
+  "credits_each": 45,
+  "files": {
+    "imagineart_ink.png": {
+      "imagineart_asset": "973413ef-56c2-49fa-b707-1ef4d9458b16",
+      "prompt": "A single hand-drawn cartographic border line on plain off-white paper, in the style of a vintage hand-inked fantasy map: a dash-dot-dash boundary line (short dashes alternating with small round dots) drawn with a dip pen in dark sepia iron-gall ink, slightly uneven pen pressure and tiny ink blots, perfectly straight and horizontal, running edge to edge across the entire width of the image exactly through the vertical center. Flat top-down scan, even lighting, no perspective, no other marks, no text, no frame, plain empty paper above and below the line."
+    },
+    "imagineart_gold.png": {
+      "imagineart_asset": "d53aa999-e5f1-4814-bcb3-b9c8f8cc883b",
+      "prompt": "A single twisted gold cord, like the braided gilt rope trim on a royal heraldic banner, lying perfectly straight and horizontal, running edge to edge across the entire width of the image exactly through the vertical center. Polished antique gold with fine twisted strands, soft highlights and deep shadows between the twists, subtle patina. Pure solid black background, flat top-down orthographic view, even studio lighting, no perspective, no tassels, no knots, nothing else in the image, no text."
+    },
+    "imagineart_wash.png": {
+      "imagineart_asset": "da6ca983-2a01-418b-bc87-92173f51f825",
+      "prompt": "One long horizontal watercolor band painted along a straight line with a flat brush on white cold-press watercolor paper, like the hand-tinted outline coloring along a border on an antique 18th century map: the pigment pools darkest in a crisp slightly ragged edge along the top of the band, then fades softly downward into transparent wash and bare paper, with natural pigment granulation, blooms and tide lines. Neutral grey-brown pigment only. The band runs edge to edge across the entire width of the image, its dark top edge exactly on the horizontal center line. Flat top-down scan, even lighting, no text, nothing else."
+    }
+  }
+}

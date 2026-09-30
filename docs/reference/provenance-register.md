@@ -90,6 +90,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Yotthani DualWield handoff, MithrilForge | `MithrilForge` `DualWield` `Bannerlord_Animation_Handoff` `TpacTool-bannerlord` | MIT (MithrilForge); the handoff document was shared with the maintainer by its author, no licence stated | comparison-only | (none; restated facts in `docs/reference/tpac-static-prop-authoring.md` and the animation reference docs) | cleared |
 | Ghidra | `Ghidra` `NationalSecurityAgency/ghidra` `pyghidra` | Apache-2.0 | interop-only | `tools/native_decompile.py` runs the installed tool (see detail) | cleared |
 | Hindsight | `Hindsight` `vectorize-io/hindsight` | MIT | comparison-only | (none) | cleared |
+| Kingdom Borders (Nexus mod 10699) | `Kingdom Borders` `KingdomBorders` | UNKNOWN | comparison-only | (none; decompiled for the review in `docs/reviews/adopt-kingdom-borders-2026-09-30.md`, whose approved design differs; re-classify when the feature lands) | uncleared |
 
 <!-- provenance-register-end -->
 

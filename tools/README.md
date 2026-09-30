@@ -357,6 +357,12 @@ never loads that folder today). Recipe and the delivery gap: `docs/reference/tpa
 | `border_match.py` | Position regions by matching alpha outlines to map border lines (dependency of assemble_faction_map) | same two env vars, same exit-2 contract |
 | `process_faction_map.py` | Process full-canvas region PNGs into deploy-ready FactionMap assets | `--input`, `--output`, `--checklist`, `--dry-run` |
 
+## Realm borders
+
+| Script | Purpose | CLI Flags |
+|--------|---------|-----------|
+| `realm_borders_preview.py` | **Offline preview of the realm-borders design** (read-only toward game data; writes only the image you name). Rebuilds the approved territory model from the LIVE `TAOM_Map` settlements and heightmap plus the repo's `spclans.xslt`. The model is one province per fief, grown by a cost-distance flood: sea and lakes never claimed, coherent steep ranges as walls, towns ahead of castles ahead of villages, far land left wild. `compare` draws Kingdom Borders' nearest-settlement model beside it, `capture` shows a border moving when fiefs change hands, `looks` renders the six candidate looks on a crop, `tiles` rebuilds the seamless strip textures in `tools/realm_border_art/` from the ImagineArt originals (prompts and asset ids in its `provenance.json`). The heightmap stands in for the navmesh terrain types the game will use, so rivers are not modelled here. Needs numpy, scipy, Pillow and lxml; exit 2 without them or the install. Design: [`docs/reviews/adopt-kingdom-borders-2026-09-30.md`](../docs/reviews/adopt-kingdom-borders-2026-09-30.md). Tests: `tools/tests/test_realm_borders_preview.py`. | `compare OUT`, `capture OUT --capture FIEF=KINGDOM ... [--crop X0 Y0 X1 Y1] [--ppu]`, `looks OUT [--crop] [--ppu]`, `tiles`; all but `tiles` take `--grid`, `--max-claim` |
+
 ## Settlements
 
 | Script | Purpose | CLI Flags |
