@@ -2771,5 +2771,9 @@
     <string id="taom_lg_claimed" text="The master armourer fits you with {ITEM}." />
     <string id="taom_lg_drop" text="Among the spoils you find {AMOUNT}." />
     <string id="taom_lg_ready" text="Your deeds are known. A master armourer, at a level {LORD} armoury, will now fit you with your {PIECE}." />
+    <string id="taom_realm_borders_entering" text="{REALM}의 영토에 들어섰습니다." />
+    <string id="taom_realm_borders_mode_alignment" text="지도에 자유 민족과 어둠의 세력을 표시합니다." />
+    <string id="taom_realm_borders_mode_war" text="지도에 당신의 동맹과 적을 표시합니다." />
+    <string id="taom_realm_borders_mode_political" text="지도에 왕국들을 표시합니다." />
   </strings>
 </base>

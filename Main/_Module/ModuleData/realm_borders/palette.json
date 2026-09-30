@@ -1,0 +1,39 @@
+{
+  "_about": "Border colours per kingdom id for the realm borders (#698). Separate from banner colours on purpose: banner colours leave 9 of 22 realms near black and make Gundabad and the Misty Mountain Orcs indistinguishable. RealmPaletteTests keeps every kingdom present, every pair of colours, reserve included, at least minimumDeltaE apart (CIE76) and no colour darker than minimumLightness (L*). Reserve colours go to kingdoms created in play, farthest from the colours in use first.",
+  "minimumDeltaE": 15,
+  "minimumLightness": 25,
+  "realms": {
+    "empire_w": "#3F76B8",
+    "empire_s": "#B0231B",
+    "vlandia": "#D8A12B",
+    "empire": "#A0527A",
+    "isengard": "#ECE9E1",
+    "sturgia": "#43B4DC",
+    "aserai": "#EE9540",
+    "battania": "#7E9B3A",
+    "khuzait": "#9A5520",
+    "erebor": "#2A4DA8",
+    "rivendell": "#BBA9E3",
+    "mirkwood": "#3E9E4A",
+    "lothlorien": "#E6E27A",
+    "dolguldur": "#5B3A8C",
+    "gundabad": "#6E2A26",
+    "mistymountainorcs": "#8A6A3F",
+    "goblin": "#AFC93A",
+    "bluecraig": "#6A8AA8",
+    "umbar": "#B8305A",
+    "shaghana": "#DC7FA8",
+    "abanissa": "#2A8C8C",
+    "lindon": "#4FC4A0"
+  },
+  "reserve": [
+    "#E8B89A",
+    "#8FD3F0",
+    "#A5D98A",
+    "#C878D8",
+    "#F5DC5A",
+    "#9A9A9A",
+    "#E0735A",
+    "#5E7F4A"
+  ]
+}

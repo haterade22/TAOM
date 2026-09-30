@@ -912,3 +912,21 @@ the journal for good. The one-quest Lord's Harness could be removed outright onl
 - **Prevent:** keep a shipped quest's definition (stop offering it instead), or cancel running instances at load
   with a message before deleting it; check the deployed `TAOM.dll` before calling a quest unshipped.
 - **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` (engine research, Q4).
+
+### The method that forgets drawn state also asks for a new drawing (2026-09-30)
+Realm Borders cleared its tiles in `ForgetDrawn`, and five of its six callers set the repaint flag on the next
+line. The sixth, switching the feature off, did not, so switching it back on left the map blank until an
+unrelated capture.
+- **Why missed:** the re-arm lived beside each call instead of inside the method, and the toggle was tested in
+  one direction only.
+- **Prevent:** put the re-arm inside the forgetting method, and test every toggle off and back on.
+- **Source:** `docs/reviews/rca-realm-borders-2026-09-30.md` finding 2.
+
+### A config object that hands out values in play is per-campaign state (2026-09-30)
+The realm palette was loaded once per process like any config, but it removed each reserve colour as it gave
+one to a realm created in play, so a second campaign in the same process inherited the first's colours and
+drained the reserve. Handing out is state.
+- **Why missed:** the palette was classed as config because it is read from a file.
+- **Prevent:** keep the file read per process, and build the handing-out object per campaign (reset in the
+  session-start path the singleton rule already requires); test a second campaign in one process.
+- **Source:** `docs/reviews/rca-realm-borders-2026-09-30.md` finding 5.

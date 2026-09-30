@@ -17,5 +17,9 @@
     <string id="taom_aso_desc_invasion" text="Фракция, правящая большей частью Средиземья." />
     <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} господствует над подавляющей частью Средиземья." />
     <string id="taom_aso_item_desc_randomized" text="Случайным образом задаёт начальное состояние Средиземья в выбранной вами степени, в разумных пределах." />
+    <string id="taom_key_realm_borders" text="Показать границы королевств (TAOM)" />
+    <string id="taom_key_realm_borders_desc" text="Показывает или скрывает границы и названия королевств на карте кампании. По умолчанию: M." />
+    <string id="taom_key_realm_borders_mode" text="Режим карты границ (TAOM)" />
+    <string id="taom_key_realm_borders_mode_desc" text="Переключает границы между королевствами, Свободными Народами против Тени и вашими союзниками и врагами. По умолчанию: G." />
   </strings>
 </base>

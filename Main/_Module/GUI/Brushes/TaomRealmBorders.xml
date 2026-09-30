@@ -1,0 +1,25 @@
+<Brushes>
+
+	<!-- Realm names over the campaign map (#698). Dark ink with a parchment outline, so a name reads
+	     over grass, snow and sea alike. aniron has 267 glyphs (Latin, Latin-1, Cyrillic); names it
+	     cannot draw use the Plain brush in the game's own font (RealmNameLettering decides). The colour
+	     is on each Style: the brush loader reads no FontColor on the Brush element itself. -->
+	<Brush Name="TaomRealmBorders.Name" Font="aniron" FontSize="34"
+	       TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+		<Layers>
+		</Layers>
+		<Styles>
+			<Style Name="Default" FontColor="#2A1A0EFF" TextOutlineAmount="0.2" TextOutlineColor="#F2E6C8FF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" />
+		</Styles>
+	</Brush>
+
+	<Brush Name="TaomRealmBorders.Name.Plain" FontSize="30"
+	       TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+		<Layers>
+		</Layers>
+		<Styles>
+			<Style Name="Default" FontColor="#2A1A0EFF" TextOutlineAmount="0.2" TextOutlineColor="#F2E6C8FF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" />
+		</Styles>
+	</Brush>
+
+</Brushes>

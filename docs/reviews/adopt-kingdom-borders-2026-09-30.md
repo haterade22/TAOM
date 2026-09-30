@@ -1,10 +1,10 @@
 # Adoption Review: Kingdom Borders
 
-**Date:** 2026-09-30 · **Procedure:** [`docs/ai-includes/external-repo-adoption.md`](../ai-includes/external-repo-adoption.md) · **Issue:** none yet (opened on approval)
+**Date:** 2026-09-30 · **Procedure:** [`docs/ai-includes/external-repo-adoption.md`](../ai-includes/external-repo-adoption.md) · **Issue:** [#698](https://github.com/haterade22/TAOM/issues/698)
 
 | Source | License | Outcome |
 |---|---|---|
-| Kingdom Borders v1.2.2 (Nexus mod 10699, built for Bannerlord 1.4.7): one C# DLL plus MCM settings | Not readable: the Nexus page returned HTTP 403. Treated as all rights reserved, so ideas only and no code copied | **Approved:** all six proposals below, 2026-09-30. Not yet built; the issue and implementation wait on Mike's word |
+| Kingdom Borders v1.2.2 (Nexus mod 10699, built for Bannerlord 1.4.7): one C# DLL plus MCM settings | Not readable: the Nexus page returned HTTP 403. Treated as all rights reserved, so ideas only and no code copied | **Approved:** all six proposals below, 2026-09-30. Built as Realm Borders ([#698](https://github.com/haterade22/TAOM/issues/698), [feature doc](../features/realm-borders.md)); the painted wash stays a spike |
 
 Mike asked for a review of the mod and for better ideas for bringing it into TAOM. He likes what it does to
 the map. The concept is worth having; the way it decides territory, and its colours, do not survive TAOM's

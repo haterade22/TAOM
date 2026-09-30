@@ -17,5 +17,9 @@
     <string id="taom_aso_desc_invasion" text="가운데땅의 대부분을 지배하는 세력입니다." />
     <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId}이(가) 가운데땅의 대부분을 지배합니다." />
     <string id="taom_aso_item_desc_randomized" text="합리적인 범위 내에서, 원하는 정도만큼 가운데땅의 시작 상태를 무작위로 설정합니다." />
+    <string id="taom_key_realm_borders" text="왕국 국경 표시 (TAOM)" />
+    <string id="taom_key_realm_borders_desc" text="캠페인 지도에서 왕국의 국경과 이름을 표시하거나 숨깁니다. 기본 키는 M입니다." />
+    <string id="taom_key_realm_borders_mode" text="왕국 국경 지도 모드 (TAOM)" />
+    <string id="taom_key_realm_borders_mode_desc" text="왕국 국경 표시를 왕국, 자유 민족 대 어둠의 세력, 동맹과 적 순으로 전환합니다. 기본 키는 G입니다." />
   </strings>
 </base>

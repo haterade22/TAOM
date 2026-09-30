@@ -1368,3 +1368,12 @@ Custom Battle siege loads with `siege` (`level_N siege`, N from 1 to 3) went unc
   parse the file by element and attribute rather than matching markup text, and test a commented-out and a reordered
   declaration.
 - **Source:** `docs/reviews/rca-keyforce-art-wiring-2026-09-29.md` Codex pass C2.
+
+### A data gate covers everything the file can put on screen (2026-09-30)
+The realm palette's colour-distance test looped over the curated realms only, so a reserve colour 9.2 dE from
+Rivendell's shipped although the file's own floor is 15. A realm created in play would have drawn it.
+- **Why missed:** the gate was written for the table a reader thinks of first, not for every value the file
+  hands to the game.
+- **Prevent:** list what the consumer can read from the file and gate all of it; here, curated and reserve
+  colours together.
+- **Source:** `docs/reviews/rca-realm-borders-2026-09-30.md` finding 7.

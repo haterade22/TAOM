@@ -17,5 +17,9 @@
     <string id="taom_aso_desc_invasion" text="La faction qui domine la majeure partie de la Terre du Milieu." />
     <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} domine la très grande majorité de la Terre du Milieu." />
     <string id="taom_aso_item_desc_randomized" text="Rend aléatoire l'état initial de la Terre du Milieu selon le degré de votre choix, dans la limite du raisonnable." />
+    <string id="taom_key_realm_borders" text="Afficher les frontières des royaumes (TAOM)" />
+    <string id="taom_key_realm_borders_desc" text="Affiche ou masque les frontières et les noms des royaumes sur la carte de campagne. Touche par défaut : M." />
+    <string id="taom_key_realm_borders_mode" text="Mode de carte des frontières (TAOM)" />
+    <string id="taom_key_realm_borders_mode_desc" text="Fait alterner les frontières entre les royaumes, les Peuples Libres contre l'Ombre, et vos alliés et ennemis. Touche par défaut : G." />
   </strings>
 </base>

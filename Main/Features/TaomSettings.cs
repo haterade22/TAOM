@@ -1618,4 +1618,53 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyInteger("Blunt Damage Taken %", 0, 200, Order = 15, RequireRestart = false,
         HintText = "Share of damage a creature takes from blunt melee blows: maces, hammers, charges (100 = normal).")]
     public int CreatureBanditBluntTakenPercent { get; set; } = TAOM.Features.CreatureBandits.CreatureBanditTuning.DefaultMeleeTakenPercent;
+
+    // --- Realm Borders (#698) ---
+    // Client-side presentation only: listed under Presentation in CoopSettingsRelevance. The keys (toggle
+    // and map mode) are native rebindable game keys under Options > Keybindings > Campaign Map, not MCM.
+
+    [SettingPropertyGroup("Realm Borders", GroupOrder = 54)]
+    [SettingPropertyBool("Show Realm Borders", Order = 0, RequireRestart = false,
+        HintText = "Draws each kingdom's border on the campaign map, following rivers, coasts and mountain ranges, and redraws it when a fief changes hands. While this is on, the Show Realm Borders key (M by default) hides and shows them, and the map mode key (G) switches what they show.")]
+    public bool EnableRealmBorders { get; set; } = true;
+
+    [SettingPropertyGroup("Realm Borders")]
+    [SettingPropertyBool("Heraldic Bands Instead of Atlas Look", Order = 1, RequireRestart = false,
+        HintText = "Off: the Atlas look, a watercolour wash inside each border with a dash-dot ink line. On: two solid bands in each realm's colour with a gap on the line.")]
+    public bool RealmBordersHeraldicBands { get; set; } = false;
+
+    [SettingPropertyGroup("Realm Borders")]
+    [SettingPropertyBool("Gold Cord on Your Realm", Order = 2, RequireRestart = false,
+        HintText = "Draws your own kingdom's frontier as a gold cord, so you can find it at a glance.")]
+    public bool RealmBordersGildPlayerRealm { get; set; } = true;
+
+    [SettingPropertyGroup("Realm Borders")]
+    [SettingPropertyFloatingInteger("Border Width", 0.5f, 3f, "0.00", Order = 3, RequireRestart = false,
+        HintText = "Multiplies the width of every border. Default: 1.")]
+    public float RealmBordersWidthScale { get; set; } = TAOM.Features.RealmBorders.RealmBordersSettingsProvider.DefaultWidthScale;
+
+    [SettingPropertyGroup("Realm Borders")]
+    [SettingPropertyFloatingInteger("Fade In From Camera Distance", 0f, 500f, "0", Order = 4, RequireRestart = false,
+        HintText = "Camera distance at which the borders start to appear; closer than this they are hidden. Must be below Full Opacity Distance, or both revert to their defaults. Default: 45.")]
+    public float RealmBordersFadeStartDistance { get; set; } = TAOM.Features.RealmBorders.RealmBordersSettingsProvider.DefaultFadeStartDistance;
+
+    [SettingPropertyGroup("Realm Borders")]
+    [SettingPropertyFloatingInteger("Full Opacity Distance", 0f, 500f, "0", Order = 5, RequireRestart = false,
+        HintText = "Camera distance at which the borders are fully drawn. Default: 110.")]
+    public float RealmBordersFullOpacityDistance { get; set; } = TAOM.Features.RealmBorders.RealmBordersSettingsProvider.DefaultFullOpacityDistance;
+
+    [SettingPropertyGroup("Realm Borders")]
+    [SettingPropertyBool("Draw Borders Through Hills", Order = 6, RequireRestart = false,
+        HintText = "On: borders always show, drawn over hills and map figures. Off: borders lie on the ground and hide behind ridges.")]
+    public bool RealmBordersDrawThroughTerrain { get; set; } = true;
+
+    [SettingPropertyGroup("Realm Borders")]
+    [SettingPropertyBool("Realm Names", Order = 7, RequireRestart = false,
+        HintText = "Letters each kingdom's name across its land when the camera is zoomed out.")]
+    public bool RealmBordersNames { get; set; } = true;
+
+    [SettingPropertyGroup("Realm Borders")]
+    [SettingPropertyBool("Border-Crossing Notices", Order = 8, RequireRestart = false,
+        HintText = "Tells you when your party rides into another kingdom's lands.")]
+    public bool RealmBordersCrossingNotices { get; set; } = true;
 }

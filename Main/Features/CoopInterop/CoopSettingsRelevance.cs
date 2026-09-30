@@ -116,6 +116,10 @@ public static class CoopSettingsRelevance
         // Already suppressed under co-op — TimeAcceleration's UI carries
         // [CoopSuppressedUi("BannerlordTogether owns campaign time under co-op")].
         "FastForwardMultiplier", "ExtraFastForwardMultiplier", "CtrlSpaceMultiplier",
+        // Realm Borders (#698): meshes, labels and notices drawn on this client only.
+        "EnableRealmBorders", "RealmBordersHeraldicBands", "RealmBordersGildPlayerRealm",
+        "RealmBordersWidthScale", "RealmBordersFadeStartDistance", "RealmBordersFullOpacityDistance",
+        "RealmBordersDrawThroughTerrain", "RealmBordersNames", "RealmBordersCrossingNotices",
     };
 
     /// <summary>True when a difference in this property can make two peers simulate differently.</summary>

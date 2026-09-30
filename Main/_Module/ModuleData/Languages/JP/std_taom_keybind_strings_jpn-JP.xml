@@ -17,5 +17,9 @@
     <string id="taom_aso_desc_invasion" text="中つ国の大部分を支配する勢力。" />
     <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId}が中つ国の圧倒的大部分を支配している。" />
     <string id="taom_aso_item_desc_randomized" text="中つ国の初期状態を、常識の範囲内であなたの選んだ度合いでランダム化します。" />
+    <string id="taom_key_realm_borders" text="王国の国境を表示（TAOM）" />
+    <string id="taom_key_realm_borders_desc" text="キャンペーンマップ上の王国の国境と名前を表示または非表示にします。既定キーはMです。" />
+    <string id="taom_key_realm_borders_mode" text="国境マップモード（TAOM）" />
+    <string id="taom_key_realm_borders_mode_desc" text="国境の表示を、王国、自由の民対影の勢力、味方と敵の順に切り替えます。既定キーはGです。" />
   </strings>
 </base>

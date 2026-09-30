@@ -17,5 +17,9 @@
     <string id="taom_aso_desc_invasion" text="统治中洲大部分地区的阵营。" />
     <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId}统治着中洲的绝大部分地区。" />
     <string id="taom_aso_item_desc_randomized" text="在合理范围内，按你选择的程度随机化中洲的初始局势。" />
+    <string id="taom_key_realm_borders" text="显示国界（TAOM）" />
+    <string id="taom_key_realm_borders_desc" text="在战役地图上显示或隐藏国界与国度名称。默认按键为 M。" />
+    <string id="taom_key_realm_borders_mode" text="国界地图模式（TAOM）" />
+    <string id="taom_key_realm_borders_mode_desc" text="在各国度、自由民族对抗黑暗势力以及你的盟友与敌人之间切换国界显示。默认按键为 G。" />
   </strings>
 </base>

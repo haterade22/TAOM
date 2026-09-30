@@ -17,5 +17,9 @@
     <string id="taom_aso_desc_invasion" text="Frakcja, która włada większością Śródziemia." />
     <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} panuje nad przeważającą częścią Śródziemia." />
     <string id="taom_aso_item_desc_randomized" text="Losuje stan początkowy Śródziemia w wybranym przez ciebie stopniu, w granicach rozsądku." />
+    <string id="taom_key_realm_borders" text="Pokaż granice królestw (TAOM)" />
+    <string id="taom_key_realm_borders_desc" text="Pokazuje lub ukrywa granice i nazwy królestw na mapie kampanii. Domyślnie M." />
+    <string id="taom_key_realm_borders_mode" text="Tryb mapy granic (TAOM)" />
+    <string id="taom_key_realm_borders_mode_desc" text="Przełącza granice między królestwami, Wolnymi Ludami przeciw Cieniowi oraz twoimi sojusznikami i wrogami. Domyślnie G." />
   </strings>
 </base>

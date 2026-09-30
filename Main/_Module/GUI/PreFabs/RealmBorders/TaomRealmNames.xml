@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Prefab>
+  <Window>
+    <!-- Realm names lettered over the campaign map (#698). The root and every label ignore events,
+         so the map underneath keeps every click. Each label is a full-screen widget with its text
+         centred; the view model shifts that centre onto the realm's projected point in real pixels
+         through ScaledPositionXOffset/YOffset, so the UI scale never enters the maths (the problem
+         an absolutely placed field-camp widget once had). Two text widgets per label: aniron for the
+         names it has every glyph for, the language's own default font for the rest. The fade binds
+         Brush.GlobalAlphaFactor, as vanilla fades text: AlphaFactor on a TextWidget never reaches the text. -->
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+      <Children>
+        <!-- A plain Widget, not a ListPanel: a ListPanel stacks its children, and these must overlap. -->
+        <Widget DataSource="{Items}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                DoNotAcceptEvents="true">
+          <ItemTemplate>
+            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true"
+                    ScaledPositionXOffset="@OffsetX" ScaledPositionYOffset="@OffsetY">
+              <Children>
+                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true"
+                            Brush="TaomRealmBorders.Name" Brush.GlobalAlphaFactor="@Alpha" Text="@Name" IsVisible="@ShowTolkien" />
+                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true"
+                            Brush="TaomRealmBorders.Name.Plain" Brush.GlobalAlphaFactor="@Alpha" Text="@Name" IsVisible="@ShowPlain" />
+              </Children>
+            </Widget>
+          </ItemTemplate>
+        </Widget>
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

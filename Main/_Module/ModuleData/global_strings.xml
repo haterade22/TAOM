@@ -24,6 +24,14 @@
 	<string id="str_key_name.TaomCareerHotKeyCategory_510" text="{=taom_key_career_ability}Career Ability (TAOM)" />
 	<string id="str_key_description.TaomCareerHotKeyCategory_510" text="{=taom_key_career_ability_desc}Activates your career ability during a battle once its energy bar is full. Defaults to V." />
 
+	<!-- Realm Borders (#698), under Options > Keybindings > Campaign Map. Same numbering rule as
+	     above: the trailing number is the game key id, kept in step with
+	     TaomRealmBordersHotKeyCategory. -->
+	<string id="str_key_name.TaomRealmBordersHotKeyCategory_520" text="{=taom_key_realm_borders}Show Realm Borders (TAOM)" />
+	<string id="str_key_description.TaomRealmBordersHotKeyCategory_520" text="{=taom_key_realm_borders_desc}Shows or hides the realm borders and the realm names on the campaign map. Defaults to M." />
+	<string id="str_key_name.TaomRealmBordersHotKeyCategory_521" text="{=taom_key_realm_borders_mode}Realm Borders Map Mode (TAOM)" />
+	<string id="str_key_description.TaomRealmBordersHotKeyCategory_521" text="{=taom_key_realm_borders_mode_desc}Switches the realm borders between the realms, the Free Peoples against the Shadow, and your allies and enemies. Defaults to G." />
+
 	<!-- Advanced Starting Options (v1.5.x main-menu screen), the MENU half (#604).
 	     Same contract as the keybinding rows above: the ASO screen runs before any campaign
 	     exists and every lookup it makes (option names, list items, the {LastStandKingdomId}

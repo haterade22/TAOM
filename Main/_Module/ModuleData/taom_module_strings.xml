@@ -3045,5 +3045,12 @@
 	<string id="taom_lg_claimed" text="{=taom_lg_claimed}The master armourer fits you with {ITEM}." />
 	<string id="taom_lg_drop" text="{=taom_lg_drop}Among the spoils you find {AMOUNT}." />
 	<string id="taom_lg_ready" text="{=taom_lg_ready}Your deeds are known. A master armourer, at a level {LORD} armoury, will now fit you with your {PIECE}." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- RealmNoticeAdapter -->
+	<string id="taom_realm_borders_entering" text="{=taom_realm_borders_entering}You enter the lands of {REALM}." />
+	<string id="taom_realm_borders_mode_alignment" text="{=taom_realm_borders_mode_alignment}The map shows the Free Peoples and the Shadow." />
+	<string id="taom_realm_borders_mode_war" text="{=taom_realm_borders_mode_war}The map shows your allies and your enemies." />
+	<string id="taom_realm_borders_mode_political" text="{=taom_realm_borders_mode_political}The map shows the realms." />
+
 
 </strings>

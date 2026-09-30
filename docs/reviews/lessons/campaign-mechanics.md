@@ -517,3 +517,14 @@ player. A Player Switcher change moves the player to another culture the same wa
 - **Why missed:** the member's name promised "the party's siege"; its one-line body was not read.
 - **Prevent:** for the player, ask `PlayerSiege.PlayerSiegeEvent`; for another party, check both its `BesiegerCamp` and its `CurrentSettlement?.SiegeEvent`. Read the body of any engine member whose name is the whole of a guard.
 - **Source:** `taom.spawn_creature_band`, `docs/reviews/rca-troll-bandits-2026-09-28.md` follow-up F2; lenses 1, 2, 5 and 6 found it independently.
+
+### A fief's political owner is `Settlement.MapFaction`, not `OwnerClan.Kingdom` (2026-09-30)
+v1.5.3 raises a town rebellion by creating a clan, not a kingdom (`RebellionsCampaignBehavior`), a clan leaving
+its kingdom with rebellion keeps its fiefs, and an independent player can hold a castle with no kingdom. For all
+three `OwnerClan.Kingdom` is null. `Settlement.MapFaction` (the owner clan's kingdom, or the clan itself) is the
+engine's own answer, and it is what the settlement nameplates colour by.
+- **Why missed:** Realm Borders' approved design assumed rebels found a kingdom, and the adapter keyed realms by
+  `OwnerClan.Kingdom`, so rebel land drew as wild land.
+- **Prevent:** key "who holds this" by `MapFaction`; when a design names "a kingdom created in play", check which
+  engine path creates it.
+- **Source:** `docs/reviews/rca-realm-borders-2026-09-30.md` finding 4.

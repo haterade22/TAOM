@@ -17,5 +17,9 @@
     <string id="taom_aso_desc_invasion" text="La fazione che domina la maggior parte della Terra di Mezzo." />
     <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} domina la gran parte della Terra di Mezzo." />
     <string id="taom_aso_item_desc_randomized" text="Rende casuale lo stato iniziale della Terra di Mezzo nella misura che preferisci, entro limiti ragionevoli." />
+    <string id="taom_key_realm_borders" text="Mostra i Confini dei Regni (TAOM)" />
+    <string id="taom_key_realm_borders_desc" text="Mostra o nasconde i confini e i nomi dei regni sulla mappa della campagna. Predefinito: M." />
+    <string id="taom_key_realm_borders_mode" text="Modalità Mappa dei Confini (TAOM)" />
+    <string id="taom_key_realm_borders_mode_desc" text="Alterna i confini tra i regni, i Popoli Liberi contro l'Ombra e i tuoi alleati e nemici. Predefinito: G." />
   </strings>
 </base>

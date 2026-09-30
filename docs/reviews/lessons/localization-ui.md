@@ -812,3 +812,14 @@ creation and the barber. The command, its tests and its doc rows were removed.
 - **Prevent:** before stating that a vanilla screen lacks an action, read its VM, its View (`TickInput`, `OnTick`)
   and the hotkey categories it registers.
 - **Source:** `docs/reviews/rca-saruman-lord-and-faces-2026-09-28.md`.
+
+### Fade a TextWidget through `Brush.GlobalAlphaFactor`, never `AlphaFactor` (2026-09-30)
+In v1.5.3 `Widget.AlphaFactor` is read only on a widget's own sprite path (`Widget.cs:2306`); a `TextWidget`
+renders through `BrushWidget.OnRender`, and its text alpha comes from the brush (`BrushRenderer.CreateTextMaterial`:
+style `TextAlphaFactor` times `Brush.GlobalAlphaFactor`). Bound on a text widget, `AlphaFactor` binds cleanly and
+does nothing. Vanilla fades text with `Brush.GlobalAlphaFactor="@Alpha"` (`SPChatLog.xml:84`).
+- **Why missed:** the realm names bound `AlphaFactor` by analogy with plain widgets; the view-model tests were
+  green because the view model was right, and nothing read the prefab against what the renderer applies.
+- **Prevent:** fade text through its brush; a prefab test can forbid `AlphaFactor` on any `TextWidget`
+  (`RealmNamesPrefabTests`).
+- **Source:** `docs/reviews/rca-realm-borders-2026-09-30.md` finding 1.

@@ -17,5 +17,9 @@
     <string id="taom_aso_desc_invasion" text="統治中土世界大部分地區的派系。" />
     <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} 支配著中土世界的絕大部分地區。" />
     <string id="taom_aso_item_desc_randomized" text="在合理範圍內，依你選擇的程度隨機化中土世界的初始狀態。" />
+    <string id="taom_key_realm_borders" text="顯示王國邊界（TAOM）" />
+    <string id="taom_key_realm_borders_desc" text="在戰役地圖上顯示或隱藏王國邊界與王國名稱。預設按鍵為 M。" />
+    <string id="taom_key_realm_borders_mode" text="王國邊界地圖模式（TAOM）" />
+    <string id="taom_key_realm_borders_mode_desc" text="在各王國、自由民族對抗黑暗勢力以及你的盟友與敵人之間切換邊界顯示。預設按鍵為 G。" />
   </strings>
 </base>

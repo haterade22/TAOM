@@ -942,3 +942,13 @@ HP, strike caps and 50% missile damage.
   level. Pin the choice with a test that reads the `SettingPropertyGroupAttribute` by name
   (`CreatureBanditTuningTests.McmGroup_IsTopLevel_OutsideTheCombatMechanicsMasterToggle`).
 - **Source:** `docs/reviews/rca-creature-bandits-2026-09-28.md`, finding 1.
+
+### An index bounds check on an engine float is a NaN gate: write it positive (2026-09-30)
+`ProvinceMap.ProvinceAt` checked `column < 0 || row < 0 || column >= Columns || row >= Rows`, the conventional
+shape, and every comparison is false for NaN, so a NaN party position reached `(int)NaN` (`int.MinValue`) and an
+out-of-range array index. The NaN rule in `csharp-architecture.md` already covers it; it was not recognised
+because a bounds check does not look like a decision.
+- **Why missed:** the rule was applied to decision gates, and the bounds check read as plumbing.
+- **Prevent:** before indexing with a value derived from an engine float, write the check as a positive
+  requirement (`if (!(c >= 0 && c < n)) return`), and add a NaN test per lookup.
+- **Source:** `docs/reviews/rca-realm-borders-2026-09-30.md` finding 3.

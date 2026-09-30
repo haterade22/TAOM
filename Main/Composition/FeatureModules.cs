@@ -18,5 +18,6 @@ internal static class FeatureModules
         new Features.WandererAllegiance.WandererAllegianceModule(),
         new Features.CreatureBandits.CreatureBanditsModule(),
         new Features.ArmourAcquisition.ArmourAcquisitionModule(),
+        new Features.RealmBorders.RealmBordersModule(),
     };
 }

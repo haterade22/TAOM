@@ -3249,3 +3249,19 @@ mention of the mirror in place.
   (`generate_name_localization_strings.py --apply --category troop`, `translate_with_claude.save_cache`). When changing
   a policy sentence, grep the same file for its other mentions.
 - **Source:** `docs/reviews/rca-keyforce-art-wiring-2026-09-29.md` F7 and F8.
+
+### Re-read an approved design's text before building it, and record every departure (2026-09-30)
+Realm Borders built its war map from memory of the approved proposal and drew every war alike; the text said
+"relative to the player, coloured with `NameplateRelationPalette`". Four other points had drifted the same way,
+unrecorded, until the review compared build to text.
+- **Why missed:** the design had been discussed at length, so building from memory felt safe.
+- **Prevent:** re-read each approved proposal before its part is built; keep a departures table in the feature
+  doc with the reason for each.
+- **Source:** `docs/reviews/rca-realm-borders-2026-09-30.md` finding 9.
+
+### Grep the feature for a source's name before writing its provenance row (2026-09-30)
+The Kingdom Borders row named only the renderer, while `BorderLook` carried the mod's own Heraldic defaults and
+said so in its comment, and the campaign behavior checked the mod's module id.
+- **Why missed:** the row was written from memory of the most visible derivation.
+- **Prevent:** grep the changed files for the source's name and ids, and name every hit in the row or its detail.
+- **Source:** `docs/reviews/rca-realm-borders-2026-09-30.md` finding 8.

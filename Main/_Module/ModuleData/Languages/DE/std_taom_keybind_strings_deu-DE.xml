@@ -17,5 +17,9 @@
     <string id="taom_aso_desc_invasion" text="Die Fraktion, die den größten Teil Mittelerdes beherrscht." />
     <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} beherrscht den überwiegenden Teil Mittelerdes." />
     <string id="taom_aso_item_desc_randomized" text="Randomisiert den Ausgangszustand Mittelerdes in dem von dir gewählten Maße, im Rahmen des Sinnvollen." />
+    <string id="taom_key_realm_borders" text="Reichsgrenzen anzeigen (TAOM)" />
+    <string id="taom_key_realm_borders_desc" text="Blendet die Reichsgrenzen und die Namen der Reiche auf der Kampagnenkarte ein oder aus. Standard: M." />
+    <string id="taom_key_realm_borders_mode" text="Kartenmodus der Reichsgrenzen (TAOM)" />
+    <string id="taom_key_realm_borders_mode_desc" text="Schaltet die Reichsgrenzen zwischen den Reichen, den Freien Völkern gegen den Schatten und deinen Verbündeten und Feinden um. Standard: G." />
   </strings>
 </base>

@@ -90,7 +90,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Yotthani DualWield handoff, MithrilForge | `MithrilForge` `DualWield` `Bannerlord_Animation_Handoff` `TpacTool-bannerlord` | MIT (MithrilForge); the handoff document was shared with the maintainer by its author, no licence stated | comparison-only | (none; restated facts in `docs/reference/tpac-static-prop-authoring.md` and the animation reference docs) | cleared |
 | Ghidra | `Ghidra` `NationalSecurityAgency/ghidra` `pyghidra` | Apache-2.0 | interop-only | `tools/native_decompile.py` runs the installed tool (see detail) | cleared |
 | Hindsight | `Hindsight` `vectorize-io/hindsight` | MIT | comparison-only | (none) | cleared |
-| Kingdom Borders (Nexus mod 10699) | `Kingdom Borders` `KingdomBorders` | UNKNOWN | comparison-only | (none; decompiled for the review in `docs/reviews/adopt-kingdom-borders-2026-09-30.md`, whose approved design differs; re-classify when the feature lands) | uncleared |
+| Kingdom Borders (Nexus mod 10699) | `Kingdom Borders` `KingdomBorders` | UNKNOWN | behavioural-port | `Main/Adapters/BorderRenderAdapter.cs`; the Heraldic look in `Main/Features/RealmBorders/Domain/BorderLook.cs` and `BorderPainter.cs`; the module-id check in `Main/Features/RealmBorders/Hooks/RealmBordersCampaignBehavior.cs` (interop); see detail | uncleared |
 
 <!-- provenance-register-end -->
 
@@ -548,6 +548,30 @@ conflicts with ADR-011's rule that durable knowledge lives in the repository, an
 plugin injects recalled text into every prompt and spends an auto-detected LLM key. Its hook scripts
 were read for the security pass; nothing was installed or ported. Record:
 [`docs/reviews/adopt-ghidra-hindsight-2026-09-26.md`](../reviews/adopt-ghidra-hindsight-2026-09-26.md).
+
+### Kingdom Borders (UNCLEARED)
+
+Kingdom Borders v1.2.2 (Nexus mod 10699, for Bannerlord 1.4.7). The Nexus page returned HTTP 403, so
+its terms are unknown and it is treated as all rights reserved. Its DLL was decompiled once for the
+adoption review, [`docs/reviews/adopt-kingdom-borders-2026-09-30.md`](../reviews/adopt-kingdom-borders-2026-09-30.md),
+and TAOM's Realm Borders (#698) was then written without copying code. Three things come from it:
+
+- **The drawing recipe**, in `BorderRenderAdapter`: a copy of the engine's `vertex_color_mat` with
+  `NoModifyDepthBuffer` (plus `NoDepthTest` to draw through hills), each triangle added in both
+  windings, and the fade set with `GameEntity.SetAlpha`. Engine names and flags, learned from its source.
+- **The Heraldic look**, kept on purpose by the approved design: two bands in each realm's colour either
+  side of a gap on the line (`BorderPainter`), at the mod's own MCM defaults for the gap and the band
+  width, 0.3 and 1.05 units (`BorderLook`). The provenance rule counts reproduced constants as
+  `verbatim-port`, which would make the licence question blocking; whether two settings defaults are
+  constants in that sense is the maintainer's call. Retuning both widths in the in-game look session,
+  which the widths need anyway, would settle it either way.
+- **Interop:** the campaign behavior stands aside when a module with the id `KingdomBorders` (read from
+  the mod's `SubModule.xml`) is active, so the map never carries two sets of lines.
+
+Everything else differs by design: terrain-aware provinces grown from every fief instead of a Voronoi
+split of settlement points, borders chosen from province ownership, tiled meshes instead of one entity
+per strip, and the Atlas look, palette, map modes, names and notices are TAOM's. Nothing of it ships.
+Clearing the row needs its author's terms.
 
 ---
 

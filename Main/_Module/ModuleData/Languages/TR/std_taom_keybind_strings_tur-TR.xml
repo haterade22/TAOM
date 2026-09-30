@@ -17,5 +17,9 @@
     <string id="taom_aso_desc_invasion" text="Orta Dünya'nın büyük bölümünü yöneten hizip." />
     <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} Orta Dünya'nın çok büyük bir kısmına hükmediyor." />
     <string id="taom_aso_item_desc_randomized" text="Orta Dünya'nın başlangıç durumunu, makul sınırlar içinde, istediğiniz ölçüde rastgeleleştirir." />
+    <string id="taom_key_realm_borders" text="Diyar Sınırlarını Göster (TAOM)" />
+    <string id="taom_key_realm_borders_desc" text="Sefer haritasında diyar sınırlarını ve diyar adlarını gösterir ya da gizler. Varsayılan tuş: M." />
+    <string id="taom_key_realm_borders_mode" text="Diyar Sınırları Harita Kipi (TAOM)" />
+    <string id="taom_key_realm_borders_mode_desc" text="Diyar sınırlarını diyarlar, Gölge'ye karşı Hür Halklar ve müttefiklerin ile düşmanların arasında değiştirir. Varsayılan tuş: G." />
   </strings>
 </base>

@@ -17,5 +17,9 @@
     <string id="taom_aso_desc_invasion" text="A facção que domina a maior parte da Terra-média." />
     <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} domina a imensa maioria da Terra-média." />
     <string id="taom_aso_item_desc_randomized" text="Torna aleatório o estado inicial da Terra-média no grau que você escolher, dentro do razoável." />
+    <string id="taom_key_realm_borders" text="Mostrar Fronteiras dos Reinos (TAOM)" />
+    <string id="taom_key_realm_borders_desc" text="Mostra ou oculta as fronteiras e os nomes dos reinos no mapa de campanha. Padrão: M." />
+    <string id="taom_key_realm_borders_mode" text="Modo de Mapa das Fronteiras (TAOM)" />
+    <string id="taom_key_realm_borders_mode_desc" text="Alterna as fronteiras entre os reinos, os Povos Livres contra a Sombra e seus aliados e inimigos. Padrão: G." />
   </strings>
 </base>
