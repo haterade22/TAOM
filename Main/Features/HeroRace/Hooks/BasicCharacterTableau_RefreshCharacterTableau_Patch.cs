@@ -34,6 +34,10 @@ namespace TAOM.Features.HeroRace.Hooks;
 /// pushed — attaches the prefix before the save list can render. Process-static one-shot guard in
 /// SubModule. Guard injected once via <see cref="Initialize"/> from HeroRaceIoC (mirrors
 /// FaceGen_GetBaseMonsterFromRace_Patch) — no per-call IoC resolve.
+///
+/// Second job (#700): the prefix runs the ActionIndexCache repair before the race guard, because this
+/// preview is the one reader of those statics that renders before game init. Retiring the race guard
+/// must keep that call.
 /// </summary>
 [HarmonyPatch(typeof(BasicCharacterTableau), "RefreshCharacterTableau")]
 [HarmonyPatchCategory("Patch55_BasicTableauRaceGuard")]
@@ -49,6 +53,14 @@ public static class BasicCharacterTableau_RefreshCharacterTableau_Patch
     [HarmonyPrefix]
     public static void Prefix(ref int ____race)
     {
+        // Repair FIRST, unconditionally. Vanilla's body poses the rider with the static
+        // ActionIndexCache.act_inventory_idle, and this preview renders on the cold main menu, before
+        // the OnGameInitializationFinished repair and the CharacterTableau patches exist. A poisoned
+        // static (-1) makes SetAgentActionChannel a no-op, so the rider stays in bind pose (lying flat)
+        // while the mount, posed by animation name, looks right. As a prefix, the same refresh reads
+        // the repaired value.
+        ActionIndexCacheRepair.TryEnsureRepaired("basic-tableau-refresh");
+
         var guard = _guard;
         if (guard == null)
             return;

@@ -118,6 +118,11 @@ A standalone race action set — one with its own `skeleton=` and NO `base_set`,
 - **Why missed:** the symptom is identical to the documented missing-facegen data bug, so the investigation spent a day on action-set coverage (both audits pass, release data matches dev). Nothing in a decompiled type's *appearance* distinguishes an explicit cctor from `beforefieldinit`; you have to look for the `static Type()` block and reason about what its dependencies are.
 - **Prevent:** before reading any engine static in early lifecycle code, check whether its declaring type has an explicit cctor and what that cctor depends on. Gate the first touch behind a probe on a **different** type (here `MBAnimation`, a struct with no cctor) — never on the type you are protecting. Repair is possible but must never guess: resolve the value live and **round-trip verify** it (`Create(name).GetName() == name`) before writing, because a wrong index written into a vanilla static is a silent corruption strictly worse than the `-1` it replaces. Do not assume field name == lookup key: v1.4.7 has exactly one divergence (`act_raid_jump = Create("act_raid_jump_1")`), found only by diffing all 214 `Create()` call sites against their target fields.
 - **Source:** `docs/reviews/rca-prone-character-tableau-2026-07-31.md` (addendum), `Main/Features/HeroRace/ActionIndexCacheRepair.cs`
+- **Corrected 2026-10-01 (#700):** `ActionIndexCache` is `beforefieldinit` (reflection on the installed v1.5.3
+  DLL), so the "explicit cctor" premise above is wrong: ILSpy's C# view prints a `static Type()` block for a
+  `beforefieldinit` type too. Read the flag from IL (`ilspycmd -il`) or `Type.Attributes`, never from the C#
+  view. A `beforefieldinit` initialiser may run at or before the first static field access, so a gate on
+  another type only reports readiness; it cannot keep the type uninitialised.
 
 ### A repair must be wired to the code that READS the corrupted value, not to the code you happen to own
 
@@ -125,6 +130,13 @@ The first cut of the `ActionIndexCache` repair retried from `CharacterSpawnerSer
 - **Why missed:** "call it from our own service" is the reflex, and that service was already instrumented so it felt like the natural host. The reviewer question that catches it is not *"does the repair run?"* but *"which code reads the broken value, and is the repair upstream of that read on every path?"*
 - **Prevent:** for any repair/patch of shared engine state, enumerate the READERS first (decompile them), then place the fix upstream of each. Prefer a **prefix on the reading method** — it runs before the body, so the same invocation consumes the corrected value and already-constructed state self-corrects on its next refresh. Check explicitly whether your own patch gates out any case (here `race <= 0`) that the readers do not.
 - **Source:** `docs/reviews/rca-prone-character-tableau-2026-07-31.md` addendum F2
+- **Recurred:** 2026-10-01 (#700). `BasicCharacterTableau`, named above as a reader with no
+  backstop, was never wired: F2 covered only the `CharacterTableau` patches, and no issue tracked
+  the rest. The Load Game preview renders on the cold main menu, before the game-init repair, so
+  once v1.5.3 poisoned the statics on most launches every save preview showed the rider in bind
+  pose beside a standing mount. A reader that a review or lesson names but the fix leaves
+  uncovered gets wired, or gets an issue, in the same change. Fixed by the repair call in the
+  Patch55 prefix, pinned by `HeroRaceWiringTests`.
 
 ### A VALID action set is not a posed character — check the clip, not the handle
 

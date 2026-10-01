@@ -230,6 +230,42 @@ The per-race action-set probe, the environment dump and the action-index health 
 repair's own verdict line plus the error paths that fire only when a preview actually resolves badly,
 which is what a user log needs to confirm the fix. The rest comes out once #371 closes in the wild.
 
+## Addendum 2026-10-01: the Load Game preview, a reader the repair never covered (#700)
+
+A player reported the bind pose again, on the main-menu **Load Game** screen only: the warg mount
+stood normally and the rider lay flat beside it. Every in-game tableau was fine.
+
+- **Mechanism:** the save preview is `BasicCharacterTableau`, not `CharacterTableau`. Its
+  `RefreshCharacterTableau` poses the rider with the static `ActionIndexCache.act_inventory_idle`
+  (`BasicCharacterTableau.cs:591`, v1.5.3) and the mount by animation name (`:656`, a name baked
+  into the save after the game-init repair), which is why only the rider broke. The screen renders
+  on the cold main menu, before `OnGameInitializationFinished`, so neither the game-init repair nor
+  the `CharacterTableau` patches (applied in that same callback) had run.
+- **Poisoned on most launches now:** 28 of the 29 retained v1.5.3 sessions that reached game init
+  (2026-09-27 to 2026-10-01) log `REPAIRED 217 of 220 poisoned`; one (2026-09-27 18:08) logged
+  `statics healthy`. A reader that renders before the repair therefore breaks almost every time.
+- **Fix:** `ActionIndexCacheRepair.TryEnsureRepaired("basic-tableau-refresh")` as the first statement
+  of the Patch55 prefix on `BasicCharacterTableau.RefreshCharacterTableau`, which is already applied
+  from `OnBeforeInitialModuleScreenSetAsRoot`. A gate deferral does not spend the attempt budget, and
+  once latched the call costs a lock and a bool. Pinned by
+  `HeroRaceWiringTests.Patch55Prefix_RunsActionIndexCacheRepairAsFirstStatement`. In-game check owed.
+- **Why missed:** the reader was not unknown. The 2026-08-01 lesson
+  (`lessons/animation-skeleton.md`, "A repair must be wired to the code that READS the corrupted
+  value") named `BasicCharacterTableau` as a reader with no backstop, but F2 above wired only the
+  `CharacterTableau` patches and no issue tracked the rest.
+- **Correction to the 2026-08-01 mechanism:** `ActionIndexCache` is `beforefieldinit` (reflection on
+  the installed v1.5.3 `TaleWorlds.MountAndBlade.dll`: `Public, SequentialLayout, Sealed,
+  BeforeFieldInit`, 220 static fields). ILSpy's C# view prints an explicit static constructor anyway,
+  which is how the "explicit cctor, so not beforefieldinit" reading above was made. The runtime may run
+  the initialiser at or before the first static field access (the deep review's scratch test on the
+  game's CLR saw it run when a referencing method was compiled), so the `MBAnimation` gate only reports
+  whether action types are loaded; every call site is safe because it runs after `action_types.xml`
+  loads, not because the gate cannot initialise the type.
+- **Open:** what initialises `ActionIndexCache` before action types load on most v1.5.3 launches;
+  finding it would remove the need for the repair. Separately, `KnownNameOverrides` misses the v1.5.3
+  renames `act_wreckage_death_01/02` (assigned from `act_cutscene_main_hero_battle_death_01/02`), the
+  "2 unknown" in every repair line.
+
 ## Related
 
 - `docs/reviews/lessons/build-tooling-workflow.md` — version-identity lesson
