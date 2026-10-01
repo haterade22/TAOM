@@ -21,6 +21,9 @@ namespace TAOM.Tests.Features.HeroRace;
 /// never asked to apply the postfix at all. <c>Patch72TableauRacePositionBindingTests</c> proves the
 /// patch COULD bind; it cannot prove anything asks it to. Same reasoning and same shape as
 /// <c>BannerTripletOrderingTests</c> and <c>SiegeDismountWiringTests</c>.</para>
+///
+/// <para>Also pins Patch55's ActionIndexCache repair as the first statement of its prefix (#700), the
+/// only repair that reaches the Load Game save preview.</para>
 /// </summary>
 [TestClass]
 public class HeroRaceWiringTests
@@ -118,5 +121,33 @@ public class HeroRaceWiringTests
             + categoryIndex + ", array spans " + batchStart + ".." + batchEnd + "). Applied outside "
             + "that loop, a binding failure would not be isolated the way the other tableau "
             + "categories are.");
+    }
+
+    // #700: the Load Game save preview (BasicCharacterTableau) reads ActionIndexCache.act_inventory_idle
+    // on the cold main menu, before the game-init repair. Patch55's prefix is the only repair that
+    // reaches it, and only when it runs before the prefix's early return. Dropped or moved below the
+    // return, the rider renders in bind pose on a screen no smoke test opens.
+    [TestMethod]
+    public void Patch55Prefix_RunsActionIndexCacheRepairAsFirstStatement()
+    {
+        var src = ReadSource("Main", "Features", "HeroRace", "Hooks",
+            "BasicCharacterTableau_RefreshCharacterTableau_Patch.cs");
+
+        var signatureAt = src.IndexOf("public static void Prefix(", StringComparison.Ordinal);
+        Assert.IsTrue(signatureAt >= 0, "The Patch55 prefix could not be located; this test needs updating.");
+
+        var bodyAt = src.IndexOf('{', signatureAt);
+        Assert.IsTrue(bodyAt > signatureAt, "The Patch55 prefix body could not be located; this test needs updating.");
+
+        // This branch has no comment-stripping source reader, so skip the comment lines by hand.
+        var firstStatement = src.Substring(bodyAt + 1)
+            .Split('\n')
+            .Select(line => line.Trim())
+            .First(line => line.Length > 0 && !line.StartsWith("//", StringComparison.Ordinal));
+        StringAssert.StartsWith(firstStatement,
+            "ActionIndexCacheRepair.TryEnsureRepaired(\"basic-tableau-refresh\");",
+            "The ActionIndexCache repair is no longer the first statement of the Patch55 prefix. A "
+            + "return or condition ahead of it lets vanilla read the poisoned static, and the Load "
+            + "Game preview renders its rider in bind pose.");
     }
 }
