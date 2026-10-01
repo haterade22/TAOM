@@ -49,4 +49,9 @@ public sealed class CrashReportSettings : AttributeGlobalSettings<CrashReportSet
     [SettingPropertyBool("Throw On Next Application Tick", Order = 1, RequireRestart = false,
         HintText = "QA only. Throws a tagged TaomDevTriggerException on the next Module.OnApplicationTick to exercise the capture pipeline without entering a mission. Auto-resets to OFF after firing.")]
     public bool ThrowOnNextApplicationTick { get; set; }
+
+    [SettingPropertyGroup("QA — Dev Triggers")]
+    [SettingPropertyBool("Throw On Next Mission AfterStart", Order = 2, RequireRestart = false,
+        HintText = "QA only. Throws a tagged TaomDevTriggerException from a TAOM mission behavior's AfterStart on the next mission start, the #699 shape. Expect the mission load to misbehave. Auto-resets to OFF after firing.")]
+    public bool ThrowOnNextMissionAfterStart { get; set; }
 }

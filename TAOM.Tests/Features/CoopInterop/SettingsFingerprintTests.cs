@@ -210,7 +210,7 @@ public class SettingsFingerprintTests
         AssertSplit(typeof(TaomSettings), reflected: 299, covered: 211);
         AssertSplit(typeof(BattleLoadDiagnosticsSettings), reflected: 9, covered: 0);
         AssertSplit(typeof(BlowDiagnosticsSettings), reflected: 1, covered: 0);
-        AssertSplit(typeof(CrashReportSettings), reflected: 6, covered: 0);
+        AssertSplit(typeof(CrashReportSettings), reflected: 7, covered: 0);
     }
 
     [TestMethod]

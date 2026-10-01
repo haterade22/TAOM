@@ -61,7 +61,7 @@ public static class CoopSettingsRelevance
         "EnableMemorySampler", "MemorySampleIntervalSeconds",
         "EnableStallWatchdog", "EnableStallWatchdogBundle", "StallWatchdogSeconds",
         "EnableExitStallSampler", "EnableMissionTickStallSampler",
-        "ThrowOnNextApplicationTick", "ThrowOnNextMissionTick",
+        "ThrowOnNextApplicationTick", "ThrowOnNextMissionTick", "ThrowOnNextMissionAfterStart",
         // Each is read by exactly one *DiagnosticsSettingsProvider whose only job is gating a
         // trace — [EnlistDiag] and [FieldCommission] respectively. Their feature switches
         // (EnableEnlistment, EnableFieldCommission) are gameplay and stay relevant; these two

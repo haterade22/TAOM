@@ -36,6 +36,7 @@ internal static class CrashReportPatchHelper
     public static Exception? HandleAndSwallow(Exception? exception, string originatingPatchTarget, bool offMainThread = false)
     {
         if (exception == null) return null;
+        Diag699Entry(exception, originatingPatchTarget);
         if (_onPatchStack) return HandBack(exception);
 
         // MCM master toggle. Default true so a missing/uninitialised settings instance
@@ -57,6 +58,27 @@ internal static class CrashReportPatchHelper
         }
         catch { return HandBack(exception); }
         finally { _onPatchStack = false; }
+    }
+
+    // TEMPORARY #699 follow-up diagnostic (silent reload loop investigation). Names every
+    // exception that reaches a capture finalizer BEFORE any guard can drop it, so a repro tells
+    // "never reached TAOM" from "reached TAOM and was dropped silently". Logged at occurrences
+    // 1, 2, 10, 100, ... Remove or promote when the investigation's fix lands.
+    private static int _diag699Count;
+
+    private static void Diag699Entry(Exception exception, string originatingPatchTarget)
+    {
+        try
+        {
+            int n = System.Threading.Interlocked.Increment(ref _diag699Count);
+            if (!CrashBundleThrottle.IsLoggedOccurrence(n)) return;
+            TAOM.IoC.Resolve<TAOM.Core.Logging.IModLogger>()?.LogWarning(
+                $"[CrashReport][diag699] finalizer entry #{n} origin={originatingPatchTarget} " +
+                $"type={exception.GetType().Name} onPatchStack={_onPatchStack} " +
+                $"serviceHandling={_service?.IsHandling} thread={System.Threading.Thread.CurrentThread.ManagedThreadId} " +
+                $"msg={exception.Message}");
+        }
+        catch { /* diagnostic only */ }
     }
 
     // The Finalizer's original method is not passed down, so the marker line names none.

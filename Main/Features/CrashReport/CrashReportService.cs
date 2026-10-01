@@ -77,7 +77,11 @@ public sealed class CrashReportService : ICrashReportService
 
     public string? HandleException(Exception exception, string originatingPatchTarget, bool offMainThread = false)
     {
-        if (_handling) return null;  // re-entry guard — never recurse
+        if (_handling)
+        {
+            Diag699Reentry(exception, originatingPatchTarget);
+            return null;  // re-entry guard — never recurse
+        }
         _handling = true;
         try
         {
@@ -160,8 +164,40 @@ public sealed class CrashReportService : ICrashReportService
         }
     }
 
+    // TEMPORARY #699 follow-up diagnostic. The re-entry guard above used to return without a
+    // trace; this names each dropped capture (occurrences 1, 2, 10, 100, ...) and, on the first,
+    // writes the full stack, which shows whether an outer HandleException frame sits below this one
+    // and which collector it was in. Remove or promote when the investigation's fix lands.
+    [ThreadStatic] private static int _diag699ReentryCount;
+
+    private void Diag699Reentry(Exception exception, string originatingPatchTarget)
+    {
+        try
+        {
+            int n = ++_diag699ReentryCount;
+            if (!CrashBundleThrottle.IsLoggedOccurrence(n)) return;
+            _logger.LogWarning(
+                $"[CrashReport][diag699] re-entry guard dropped capture #{n} " +
+                $"({exception?.GetType().Name ?? "(unknown)"} @ {originatingPatchTarget}): {exception?.Message}");
+            if (n == 1)
+            {
+                _logger.LogWarning($"[CrashReport][diag699] dropped exception trace: {exception}");
+                _logger.LogWarning($"[CrashReport][diag699] re-entry stack: {Environment.StackTrace}");
+            }
+        }
+        catch { /* diagnostic only */ }
+    }
+
+    // TEMPORARY #699 follow-up diagnostic: the last checkpoint written names a collector that never returned.
+    private void Diag699Checkpoint(string where)
+    {
+        try { _logger.LogWarning($"[CrashReport][diag699] compose checkpoint: {where}"); }
+        catch { /* diagnostic only */ }
+    }
+
     private ExceptionContext ComposeContext(Exception exception, string originatingPatchTarget, List<CollectorFailure> failures, bool offMainThread)
     {
+        Diag699Checkpoint("begin");
         var stack = StackFrameSnapshotBuilder.FromException(exception);
         var ex = ExceptionFrameBuilder.Build(exception);
         string signature = CrashSignatureCalculator.Compute(
@@ -193,18 +229,22 @@ public sealed class CrashReportService : ICrashReportService
         }
         var taom = Safe(() => _taomState.Collect(), failures, "TaomState") ?? new TaomStateSnapshot(null, Array.Empty<SpecialResourceEntry>(), null, null, null);
         var mcm = Safe(() => _mcm.Collect(), failures, "Mcm") ?? new McmSettingsSnapshot(Array.Empty<McmProviderSnapshot>());
+        Diag699Checkpoint("identity..mcm done");
         var process = Safe(() => _process.CollectProcess(), failures, "Process") ?? new ProcessSnapshot(0, 0, 0, 0, 0, 0, 0, 0, 0, new ThrowingThreadSnapshot(0, null, false, "Unknown"));
         // No ?? fallback: null is the honest value for a failed memory read, and the renderer
         // prints "(unavailable)" for it. #385 was diagnosed by the commit figure the bundle
         // never carried.
         var systemMemory = Safe(() => _process.CollectSystemMemory(), failures, "SystemMemory");
+        Diag699Checkpoint("process + memory done, gpu (WMI) next");
         var gpu = Safe(() => _gpu.CollectGpu(), failures, "Gpu") ?? new GpuSnapshot(Array.Empty<GpuAdapterEntry>());
         var display = Safe(() => _gpu.CollectDisplay(), failures, "Display") ?? new DisplaySnapshot(0, 0, 0, false, 0);
+        Diag699Checkpoint("gpu + display (WMI) done");
         var os = Safe(() => _process.CollectOs(), failures, "Os") ?? new OsSnapshot("?", "?", false, 0, "?", "?", "?", "?");
         var appdomain = Safe(() => _process.CollectAppDomain(), failures, "AppDomain") ?? new AppDomainSnapshot("?", "?", null, false);
         var envvars = Safe(() => _process.CollectEnvVars(), failures, "EnvVars") ?? Array.Empty<EnvVarEntry>();
         var perf = Safe(() => _frameTiming.Snapshot(), failures, "Performance") ?? new FrameTimingSnapshot(Array.Empty<float>(), 0d, 0d, 0);
         var logs = Safe(() => _logTail.Collect(), failures, "Logs") ?? new LogTailSnapshot(_logger.LogFilePath, Array.Empty<string>(), null, Array.Empty<string>(), null, Array.Empty<string>());
+        Diag699Checkpoint("all collectors done");
 
         return new ExceptionContext(
             CapturedAtUtc: DateTime.UtcNow,

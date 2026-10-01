@@ -18,6 +18,20 @@ public sealed class CrashReportDevTriggerMissionBehavior : MissionLogic
 {
     private CrashReportSettings? _cachedSettings;
 
+    // #699 follow-up repro: a throw out of a TAOM behavior's AfterStart, which runs inside
+    // Mission.AfterStart's behavior loop (v1.5.3 Mission.cs:3839-3842) before the mission is
+    // Continuing (:3851). Reset before the throw so one toggle fires once, even if the load reruns.
+    public override void AfterStart()
+    {
+        CrashReportSettings? settings;
+        try { settings = CrashReportSettings.Instance; }
+        catch { return; /* MCM read errors must not break mission start */ }
+        if (settings == null || !settings.EnableCrashCapture || !settings.ThrowOnNextMissionAfterStart) return;
+
+        settings.ThrowOnNextMissionAfterStart = false;
+        throw new TaomDevTriggerException("TAOM CrashReport dev trigger: mission AfterStart throw fired by MCM toggle.");
+    }
+
     public override void OnMissionTick(float dt)
     {
         try
