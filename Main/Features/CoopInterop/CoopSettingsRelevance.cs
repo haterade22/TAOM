@@ -121,6 +121,7 @@ public static class CoopSettingsRelevance
         "RealmBordersWidthScale", "RealmBordersFadeStartDistance", "RealmBordersFullOpacityDistance",
         "RealmBordersDrawThroughTerrain", "RealmBordersNames", "RealmBordersCrossingNotices",
         "RealmBordersFillLands", "RealmBordersFillStrength", "RealmBordersBlendMode", "RealmBordersMaterial",
+        "RealmBordersParchmentMap",
         "RealmColourGondor", "RealmColourRohan", "RealmColourDunland", "RealmColourIsengard", "RealmColourMordor", "RealmColourHarad", "RealmColourUmbar", "RealmColourShaghana", "RealmColourAbanissa", "RealmColourKhand", "RealmColourRhun", "RealmColourDale", "RealmColourErebor", "RealmColourRivendell", "RealmColourLothlorien", "RealmColourMirkwood", "RealmColourLindon", "RealmColourDolGuldur", "RealmColourGundabad", "RealmColourMistyMountainOrcs", "RealmColourGoblins", "RealmColourBlueCraig", "RealmColourYourRealm",
     };
 

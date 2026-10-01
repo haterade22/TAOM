@@ -1675,19 +1675,24 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Realm Borders")]
     [SettingPropertyFloatingInteger("Realm Colour Strength", 0.05f, 0.8f, "0.00", Order = 10, RequireRestart = false,
-        HintText = "How strongly the land is tinted: 0.05 is a faint wash, 0.8 nearly paints over the map. Default: 0.3.")]
+        HintText = "How strongly the land is tinted: 0.05 is a faint wash, 0.8 nearly paints over the map. Default: 0.5.")]
     public float RealmBordersFillStrength { get; set; } = TAOM.Features.RealmBorders.RealmBordersSettingsProvider.DefaultFillStrength;
+
+    [SettingPropertyGroup("Realm Borders")]
+    [SettingPropertyBool("Parchment Map at Full Zoom-Out", Order = 11, RequireRestart = false,
+        HintText = "As you zoom all the way out, a parchment map of Middle-earth fades in over the campaign map, with the borders, realm colours and names drawn on it. It shows only while the borders do.")]
+    public bool RealmBordersParchmentMap { get; set; } = true;
 
     // Dropdowns persist by index: never reorder either list (RealmBordersProviderTests pins both).
     [SettingPropertyGroup("Realm Borders")]
-    [SettingPropertyDropdown("Border Blend Mode", Order = 11, RequireRestart = false,
+    [SettingPropertyDropdown("Border Blend Mode", Order = 12, RequireRestart = false,
         HintText = "Advanced: how the borders mix with the map beneath. 'Material default' keeps the engine material's own. If the borders glow and their dark ink line is missing, try Modulate (Factor turns blending off).")]
     public Dropdown<string> RealmBordersBlendMode { get; set; } = new Dropdown<string>(
         TAOM.Features.RealmBorders.RealmBordersSettingsProvider.BlendModeChoices, 0);
 
     [SettingPropertyGroup("Realm Borders")]
-    [SettingPropertyDropdown("Border Material", Order = 12, RequireRestart = false,
-        HintText = "Advanced: the engine material the borders are drawn from. 'Automatic' uses the first of them that exists.")]
+    [SettingPropertyDropdown("Border Material", Order = 13, RequireRestart = false,
+        HintText = "Advanced: the engine material the borders are drawn from. 'Automatic' tries vertex_color_blend_after_postfx_mat first, which blends normally so the dark ink line shows, then the others in list order. Every choice draws over the parchment map.")]
     public Dropdown<string> RealmBordersMaterial { get; set; } = new Dropdown<string>(
         TAOM.Features.RealmBorders.RealmBordersSettingsProvider.MaterialChoices, 0);
 
@@ -1700,7 +1705,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Realm Borders/Realm Colours")]
     [SettingPropertyText("Rohan", Order = 1, RequireRestart = false,
-        HintText = "Rohan's colour on the map, written #RRGGBB. Blank uses the default, #5FB040.")]
+        HintText = "Rohan's colour on the map, written #RRGGBB. Blank uses the default, #206803.")]
     public string RealmColourRohan { get; set; } = string.Empty;
 
     [SettingPropertyGroup("Realm Borders/Realm Colours")]
@@ -1720,7 +1725,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Realm Borders/Realm Colours")]
     [SettingPropertyText("Harad", Order = 5, RequireRestart = false,
-        HintText = "Harad's colour on the map, written #RRGGBB. Blank uses the default, #E8402A.")]
+        HintText = "Harad's colour on the map, written #RRGGBB. Blank uses the default, #DF2100.")]
     public string RealmColourHarad { get; set; } = string.Empty;
 
     [SettingPropertyGroup("Realm Borders/Realm Colours")]
@@ -1760,7 +1765,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Realm Borders/Realm Colours")]
     [SettingPropertyText("Rivendell", Order = 13, RequireRestart = false,
-        HintText = "Rivendell's colour on the map, written #RRGGBB. Blank uses the default, #8850D0.")]
+        HintText = "Rivendell's colour on the map, written #RRGGBB. Blank uses the default, #530CAA.")]
     public string RealmColourRivendell { get; set; } = string.Empty;
 
     [SettingPropertyGroup("Realm Borders/Realm Colours")]
@@ -1770,7 +1775,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Realm Borders/Realm Colours")]
     [SettingPropertyText("Mirkwood", Order = 15, RequireRestart = false,
-        HintText = "Mirkwood's colour on the map, written #RRGGBB. Blank uses the default, #2C6A3C.")]
+        HintText = "Mirkwood's colour on the map, written #RRGGBB. Blank uses the default, #185C2A.")]
     public string RealmColourMirkwood { get; set; } = string.Empty;
 
     [SettingPropertyGroup("Realm Borders/Realm Colours")]
@@ -1785,7 +1790,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Realm Borders/Realm Colours")]
     [SettingPropertyText("Gundabad", Order = 18, RequireRestart = false,
-        HintText = "Gundabad's colour on the map, written #RRGGBB. Blank uses the default, #8C8C82.")]
+        HintText = "Gundabad's colour on the map, written #RRGGBB. Blank uses the default, #5A6367.")]
     public string RealmColourGundabad { get; set; } = string.Empty;
 
     [SettingPropertyGroup("Realm Borders/Realm Colours")]

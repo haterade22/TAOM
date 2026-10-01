@@ -9,7 +9,8 @@ follows rivers, coasts and mountain ranges instead of cutting straight between t
 the wild land between realms stays unclaimed. Each realm's land is tinted in its colour between the
 lines. A map-mode key switches between the realms, the Free Peoples against the Shadow, and the
 player's allies and enemies; each realm's name is lettered across its land; and the player is told when
-the party rides into another realm (#698). Every look control, each realm's colour included, is in MCM.
+the party rides into another realm (#698). At full zoom-out a parchment map of Middle-earth fades in
+under the borders. The player's settings, each realm's colour included, are in MCM.
 
 ## Why This Exists
 
@@ -35,16 +36,17 @@ the party rides into another realm (#698). Every look control, each realm's colo
   realm borders, that repaint runs on a worker thread, and only the map tiles whose content changed
   are rebuilt.
 - **Drawing on the map scene.** There is no engine border primitive. The borders are runtime meshes
-  of vertex-coloured quads draped on the terrain, one mesh per map tile.
+  of vertex-coloured quads draped on the terrain, one mesh per map tile. The parchment map is the same
+  kind of mesh, carrying a picture of the map.
 
 ### Solution Approach
 
 | Layer | Types |
 |---|---|
-| Domain (engine-free, `Domain/`) | `ProvincePartitioner`, `BoundaryTracer`, `RealmBorderSelector`, `PolylineMath`, `StripBuilder`, `BorderPainter`, `BorderStyleSelector`, `TileBinner`, `RealmPalette`, `RealmLabelPlacer`, `RealmNameLettering`, `BorderCrossingTracker`, `ProvinceBitmap`, `MapMode`, `RealmRelation` |
-| Services | `RealmTerritoryService` (the per-map province map), `RealmBorderService` (snapshot, repaint on the worker, uploads, fade, notices), `RealmBordersSettingsProvider`, `RealmPaletteProvider` |
-| Adapters (`Main/Adapters/`) | `MapTerrainAdapter` (bounds, navmesh terrain type, height), `RealmMapAdapter` (fiefs, their realms, each realm's relation to the player, the player's realm and position, the clock), `BorderRenderAdapter` (the meshes), `RealmNoticeAdapter` (the messages) |
-| Entry points | `RealmBordersCampaignBehavior` (events; attaches the map view), `RealmBordersMapView` (keys, the per-frame call, the names layer), `RealmBordersCheats` (console) |
+| Domain (engine-free, `Domain/`) | `ProvincePartitioner`, `BoundaryTracer`, `RealmBorderSelector`, `PolylineMath`, `StripBuilder`, `BorderPainter`, `BorderStyleSelector`, `RealmFill`, `TileBinner`, `RealmPalette`, `RealmLabelPlacer`, `RealmNameLettering`, `BorderCrossingTracker`, `ProvinceBitmap`, `MapMode`, `RealmRelation`, `AtlasSheet` |
+| Services | `RealmTerritoryService` (the per-map province map), `RealmBorderService` (snapshot, repaint on the worker, uploads, fade, notices), `RealmAtlasService` (the parchment map), `RealmBordersSettingsProvider`, `RealmPaletteProvider` |
+| Adapters (`Main/Adapters/`) | `MapTerrainAdapter` (bounds, navmesh terrain type, height), `RealmMapAdapter` (fiefs, their realms, each realm's relation to the player, the player's realm and position, the clock), `BorderRenderAdapter` (the border meshes and the parchment map), `RealmNoticeAdapter` (the messages) |
+| Entry points | `RealmBordersCampaignBehavior` (events; attaches the map view), `RealmBordersMapView` (keys, the per-frame calls, the names layer), `RealmBordersCheats` and `RealmAtlasCheats` (console) |
 | Wiring | `RealmBordersModule` in `FeatureModules.All`. No Harmony patch, no GameModel, no save data |
 
 The domain uses its own `MapPoint` rather than the engine's `Vec2`, so every geometry test runs on
@@ -66,6 +68,8 @@ BorderRenderAdapter   Labels -> RealmNamesVM   RealmNoticeAdapter
 (one mesh per tile)   (the names layer)        (mode and crossing messages)
         \                 |
          RealmBordersMapView  <- attached on the first map tick by RealmBordersCampaignBehavior
+                          |
+     RealmAtlasService (the parchment map at full zoom-out, drawn through BorderRenderAdapter)
 ```
 
 ### Realms
@@ -129,19 +133,24 @@ it ran) is dropped and painted again.
 | Gold cord | political mode, the player's own frontier, "Gold Cord on Your Realm" on | the gold cord replaces the ink |
 | Heraldic | "Heraldic Bands Instead of Atlas Look" on | two solid bands in each realm's colour, a gap on the line, thin dark keylines |
 | War front | allies and enemies mode, where the player's side (own or allied land) meets an enemy | an ember glow with a bright core, 1.6 times wider and hotter where the player's own land stands on it |
-| Land tint | "Colour Realm Lands" on (the default) | each realm's land between its borders in its colour at "Realm Colour Strength" (0.3), on a grid two cells apart, fading out beside another realm (where the border's wash carries the edge) and beside wild land and water (where the fade is the edge); drawn before the lines in each tile, so the lines sit on top. The allies and enemies mode leaves neutral land clear |
+| Land tint | "Colour Realm Lands" on (the default) | each realm's land between its borders in its colour at "Realm Colour Strength" (0.5), on a grid two cells apart, fading out beside another realm (where the border's wash carries the edge) and beside wild land and water (where the fade is the edge); drawn before the lines in each tile, so the lines sit on top. The allies and enemies mode leaves neutral land clear |
 
 The ImagineArt paintings in [`tools/realm_border_art/`](../../tools/realm_border_art/) set the look; the
-game draws it in vertex colours with no texture. A painted, textured wash is still an open spike.
+game draws the borders in vertex colours with no texture (the parchment map is the one textured layer).
+A painted, textured wash is still an open spike.
 
 `BorderRenderAdapter` builds each tile's mesh from a copy of an engine vertex-colour material with
-`NoModifyDepthBuffer`, plus `NoDepthTest` while "Draw Borders Through Hills" is on, adds every
-triangle in both windings, and fades the tiles with `GameEntity.SetAlpha`; a new tile takes the
-current opacity. That drawing recipe was learned from Kingdom Borders
-([provenance](../reference/provenance-register.md)). The material is the first of `vertex_color_mat`
-and `vertex_color_lighting` that exists (both are in Native's core material packages); the log line
-`[RealmBorders] drawing with material '<name>'` says which, and `taom.realm_borders_material` tries
-another. Vertex heights come from the terrain directly (`Scene.GetTerrainHeight`, the heightfield vanilla drapes its hover
+`NoModifyDepthBuffer`, plus `NoDepthTest` while "Draw Borders Through Hills" is on, and in the late pass
+after post effects: bit 0x20000000, which v1.5.3 names `AlwaysDepthTest` in C# and `render_after_postfx`
+natively. Every border material draws there, so the parchment map never covers the borders, whichever
+material MCM picks. A material that culls back faces gets every triangle in both windings; a two-sided
+one (`vertex_color_blend_after_postfx_mat` is) gets one, since a second winding blends each pixel twice.
+The tiles fade with `GameEntity.SetAlpha`; a new tile takes the current opacity. That drawing recipe was
+learned from Kingdom Borders ([provenance](../reference/provenance-register.md)). "Automatic" tries
+`vertex_color_blend_after_postfx_mat` first, which blends normally so the dark ink shows, then
+`vertex_color_mat` and `vertex_color_lighting` (both in Native's core material packages); the log line
+`[RealmBorders] drawing with material '<name>'` says which, with its blend and flags, and
+`taom.realm_borders_material` tries another. Vertex heights come from the terrain directly (`Scene.GetTerrainHeight`, the heightfield vanilla drapes its hover
 outline on; over water it is the bed), one query per distinct vertex, kept across repaints on the same map scene (up to 300,000) and
 let go when the map screen closes. The first build used `MapScene.GetHeightAtPoint`, a physics query,
 and one tile took 286 ms to build in the first look session. The engine blend mode is the material's own
@@ -149,6 +158,63 @@ unless MCM's "Border Blend Mode" or `taom.realm_borders_blend` picks another; th
 glowing lines with no dark ink: `vertex_color_mat` blends with `AddAlpha`, which adds its colour onto
 the map (logged as "its own blend AddAlpha"). `Modulate` is normal alpha blending; `Factor` turns
 blending off.
+
+No release ever drew the borders on the two-sided material: `vertex_color_mat` and
+`vertex_color_lighting` were the only choices until the 2026-10-01 look session made the late-pass
+material Automatic's first. Those session builds carried both windings on it, so everything in a tile
+blended twice: the 0.3 land tint judged there drew at about 0.51 (1 - 0.7²), and the lines a little
+darker than they now draw. The tint's default moved to 0.5 with the fix, to keep what was judged.
+
+### Parchment map
+
+As the camera nears its furthest zoom, a parchment map of Middle-earth fades in over the campaign map,
+and the realm tint, borders and names draw on it. It starts to show at 0.8 of the furthest zoom
+(`Campaign.MapMaximumHeight`, the height `MapCameraView` zooms out to) and is fully drawn from 0.95,
+only while MCM's "Parchment Map at Full Zoom-Out" is on and the borders are showing, so the M key and
+"Show Realm Borders" hide it too.
+
+The picture, `ModuleData/realm_borders/atlas_parchment.png` (2048 by 2048), was generated with
+ImagineArt from a guide made of TAOM_Map's own vista, heightmap and water mask, so the borders run along
+its drawn coasts and rivers: from the real shore to the nearest ink, the median is 0 and 97% are within
+2.3 of the terrain's 1600 units. Its generation record is the `atlas_parchment` entry in
+[`tools/realm_border_art/provenance.json`](../../tools/realm_border_art/provenance.json).
+
+`RealmAtlasService` builds the sheet once per map scene, on the first frame that needs it: an 8 by 8
+grid of tile meshes over the 1600-unit terrain square, each 16 by 16 quads of 12.5 units, draped on the
+terrain like the borders. Each tile has two layers:
+
+| Layer | Material | Render order | Draws |
+|---|---|---|---|
+| Ink underlay | `vertex_color_blend_after_postfx_mat` | 126 | its corners' colour, the ink (`#3D281B`) |
+| Picture | a copy of Native's banner-icon material `custom_banner_icons_09`, the picture as its diffuse map, blended with `Modulate` | 127 | the picture's brightness as opacity in the mesh's factor colour (`Mesh.Color`), the paper (`#FFF0D8`): paper where the picture is bright, see-through where it is dark, so the ink shows through the strokes |
+
+Both layers draw with no depth test in the late pass, over land, water, smoke and map figures, under the
+borders at the engine's default render order, 128 (v1.5.3's native mesh constructor sets it). The
+picture's material also turns texture streaming off: a picture loaded from a file is not in the texture
+streamer, and with streaming on the material drew it plain white. The paper's colour is set before the
+entity's `SetAlpha`, which writes the alpha of the same native colour. The ink layer is a copy of the
+picture's mesh, so the terrain is draped once per tile. The two layers and the paper colour have not
+been seen in game yet; the look session saw the picture as one layer, in a neutral white with the 3D
+map showing through its strokes.
+
+The picture is loaded once per process, the way vanilla's 2D resource context loads a texture (always
+valid, then preloaded); the log line gives its load time, size and memory. A build that fails (no map
+scene is only a wait; no picture, no material, or an engine exception) logs once and is not tried again
+until `taom.realm_atlas_rebuild` or the next map screen. The one-layer build the look session saw
+cost 203 to 599 ms on the game thread; the two-layer build has not been timed (copying the picture's mesh
+for the ink keeps it from doubling). The log line and `taom.print_realm_atlas` give its time.
+
+**What the look session found (2026-10-01)**, so nobody tries these again:
+
+| Tried | Result |
+|---|---|
+| `show_texture_2d`, `editmode_icons`, `editor_map_border` on the sheet | drew nothing on the map |
+| `vertex_color_blend_mat`, `default_alpha` on the sheet | a plain sheet, ignoring the picture |
+| `custom_banner_icons_09` | the picture, the only one of six that reads a texture set on a copy |
+| texture row 0 at the map's south edge, first try | the picture upside down: the engine counts a texture's rows from the bottom |
+| the sheet in the normal pass | the map's water, rivers and Mordor's smoke drew over it |
+| the borders in the normal pass | the late-pass sheet covered them |
+| a cream vertex colour on the picture's corners | ignored: the banner material colours through the factor colour, hence the ink underlay |
 
 ### Map modes
 
@@ -217,21 +283,24 @@ Recorded so they can be re-weighed; each is the build's choice, not an oversight
 | Realm Names | on | the names layer |
 | Border-Crossing Notices | on | the hourly crossing message |
 | Colour Realm Lands | on | the land tint between the borders |
-| Realm Colour Strength | 0.3 | the tint's strength, 0.05 to 0.8 |
+| Realm Colour Strength | 0.5 | the tint's strength, 0.05 to 0.8 |
+| Parchment Map at Full Zoom-Out | on | the parchment map under the borders at the furthest zoom |
 | Border Blend Mode | Material default | the engine blend mode the borders are drawn with (advanced; for the look) |
-| Border Material | Automatic | the engine material the borders are drawn from (advanced) |
+| Border Material | Automatic | the engine material the borders are drawn from (advanced): Automatic, `vertex_color_mat`, `vertex_color_lighting` or `vertex_color_blend_after_postfx_mat`; Automatic tries the last first |
 | Realm Colours (sub-group) | blank | one `#RRGGBB` field per realm; blank keeps the palette colour its tooltip names |
 | Your Realm (in Realm Colours) | blank | the player's realm when the palette names none for it: their clan's land while it serves no kingdom, then a kingdom they found; blank takes a free colour |
 
 `RealmBordersSettingsProvider` re-validates what it reads: a width that is not a number or outside
 0.5 to 3 becomes 1, and a fade pair with either value not a number, outside 0 to 5000, or a start not
 below the full distance reverts both to 45 and 110. Each reversion logs one warning naming the
-setting, repeated only when the value changes; a tint strength outside 0.05 to 0.8 becomes 0.3, and a
+setting, repeated only when the value changes; a tint strength outside 0.05 to 0.8 becomes 0.5, and a
 realm colour that is not `#RRGGBB` keeps the palette's. Every setting applies on the next map frame. The
 two dropdowns persist by index, so their lists are pinned by tests and never reordered; a console
 command stands until its dropdown is changed. The
 defaults live once, in the provider, and `TaomSettings` reads them from there; changing a shipped
-default means renaming the setting, since MCM keeps a player's saved value.
+default means renaming the setting, since MCM keeps a player's saved value. Realm Colour Strength moved
+from 0.3 to 0.5 before any release carried Realm Borders, so no player holds the old value; a `TAOM.json`
+from a development build keeps 0.3 until the group is reset.
 
 ### Keys: Options > Keybindings > Campaign Map
 
@@ -269,6 +338,10 @@ its best colour again in every campaign.
 | `taom.realm_borders_rebuild` | B | Samples the terrain again, recomputes every province and redraws; nothing saved changes |
 | `taom.realm_borders_material <name>` | B | Redraws the borders from another engine material; refused when no material has that name |
 | `taom.realm_borders_blend <mode>` | B | Redraws the borders with another engine blend mode (NoAlphaBlend, Modulate, AddAlpha, Multiply, Add, Max, Factor and the rest of the engine's list); the status line shows the mode in use |
+| `taom.print_realm_atlas` | A | The parchment map's state: MCM's switch, built or not and how long it took, its material and picture, opacity, the camera's zoom against its furthest, the fade band and colours |
+| `taom.realm_atlas_rebuild` | B | Draws the parchment map again the next time the camera is zoomed out to it, after a failed build too |
+| `taom.realm_atlas_tint <paper> [ink]` | B | Redraws the parchment map in another paper colour and, if given, ink colour (`#RRGGBB`), until the game restarts |
+| `taom.realm_atlas_fade <start> <full>` | B | Moves the fade band, as fractions of the furthest zoom (0 to 1, start below full), until the game restarts |
 
 ## Key Files
 
@@ -283,11 +356,14 @@ its best colour again in every campaign.
 | `Main/Features/RealmBorders/RealmBordersModule.cs`, `RealmBordersIoC.cs` | Module wiring and registrations |
 | `Main/Features/RealmBorders/Hooks/RealmBordersCampaignBehavior.cs` | Events, the dedicated-server and Kingdom Borders gates, the map view |
 | `Main/Features/RealmBorders/UI/` | The map view, the names view models, the key category |
-| `Main/Features/RealmBorders/Cheats/RealmBordersCheats.cs` | The five console commands |
-| `Main/Adapters/BorderRenderAdapter.cs` | Tile meshes on the map scene |
+| `Main/Features/RealmBorders/RealmAtlasService.cs`, `Domain/AtlasSheet.cs` | The parchment map: when to build and show it, its quads and its fade |
+| `Main/Features/RealmBorders/Cheats/RealmBordersCheats.cs` | The borders' five console commands |
+| `Main/Features/RealmBorders/Cheats/RealmAtlasCheats.cs` | The parchment map's four console commands |
+| `Main/Adapters/BorderRenderAdapter.cs` | Tile meshes and the parchment map on the map scene |
 | `Main/Adapters/MapTerrainAdapter.cs`, `RealmMapAdapter.cs`, `RealmNoticeAdapter.cs` | Terrain, campaign state, messages |
 | `Main/_Module/GUI/PreFabs/RealmBorders/TaomRealmNames.xml`, `GUI/Brushes/TaomRealmBorders.xml` | The names layer and its two fonts |
 | `Main/_Module/ModuleData/realm_borders/palette.json` | The realm palette |
+| `Main/_Module/ModuleData/realm_borders/atlas_parchment.png` | The parchment map's picture; its record is in `tools/realm_border_art/provenance.json` |
 | `tools/realm_borders_preview.py` | The offline prototype and tuning tool (`compare`, `capture`, `looks`, `tiles`) |
 
 ## Dependencies
@@ -297,12 +373,12 @@ its best colour again in every campaign.
 - `NameplateRelationPalette` (SettlementNameplateRelation): the allies and enemies mode's colours,
   read from its constants.
 - `HexColorParser` (SceneScripts): palette and relation colours.
-- `IPathService` (Core): where the palette file lives.
+- `IPathService` (Core): where the palette file and the parchment picture live.
 - `IModLogger` (Core): state, timings and warnings under `[RealmBorders]`.
 
 ## Tests
 
-220 test methods in `TAOM.Tests/Features/RealmBorders/`:
+258 test methods in `TAOM.Tests/Features/RealmBorders/`:
 
 - `ProvincePartitionerTests` (16), `BoundaryTracerTests` (7), `RealmBorderSelectorTests` (7): the flood,
   walls, rivers, diagonal ridges, pockets, water, NaN seeds and positions, chain tracing (saddles and
@@ -313,18 +389,26 @@ its best colour again in every campaign.
 - `RealmPaletteTests` (20): the shipped palette's gates, reserve included, colour assignment, the
   player's colours (Your Realm included) and the reserve colour they hand back, the strict `#RRGGBB`
   parse, and the provider's missing-file, malformed-file and per-campaign paths.
-- `RealmTerritoryServiceTests` (12), `RealmBorderServiceTests` (59): the real pipeline over fake
+- `RealmTerritoryServiceTests` (12), `RealmBorderServiceTests` (60): the real pipeline over fake
   adapters, including a capture moving the line, skipped repaints, a repaint overtaken on the worker or
   failing there,
   the fade, the toggle off and on, the keys while off, every mode, the gold cord, notices and their
   guards, session reset, the map screen closing, the material and blend choices, the land tint, the
-  MCM colours with Your Realm, and the province picture.
+  MCM colours with Your Realm, the province picture, and no opacity while MCM switches the feature off.
 - `RealmFillTests` (7): each realm in its own colour, the fade beside another realm, wild land, water
   and uncoloured groups left bare, zero strength, full strength deep inside, one colour per quad.
-- `RealmBordersProviderTests` (21), `RealmNameLetteringTests` (7), `RealmNamesVMTests` (4),
-  `RealmNamesPrefabTests` (4), `ProvinceBitmapTests` (3).
-- `RealmBordersWiringTests` (8): the module listed once, no hand registration, the behavior's gates and
-  events, the key category and its Options names.
+- `RealmAtlasServiceTests` (23), `AtlasSheetTests` (6): the parchment map built once from the module's
+  picture, only while MCM's switch is on and the borders show, faded with the zoom; a build with no map
+  scene waits, one that fails or throws (partway included) leaves nothing drawn and is not retried every frame, and the next map screen or a rebuild
+  tries again; the fade band refuses NaN, infinity and an inverted pair; the tiles cover the square with
+  the picture north up.
+- `RealmBordersProviderTests` (27): the settings' fallbacks and colour fields, the dropdown lists pinned in order, every
+  border material in the late pass, the second winding only for a material that culls back faces, the
+  parchment map's flags and render orders, and its switch on with no settings. `RealmNameLetteringTests`
+  (7), `RealmNamesVMTests` (4), `RealmNamesPrefabTests` (4), `ProvinceBitmapTests` (3).
+- `RealmBordersWiringTests` (10): the module listed once, no hand registration, the behavior's gates and
+  events, the key category and its Options names, the map view driving the parchment map every
+  frame and on close, and the renderer's call sites for the winding, the late pass and the render orders.
 
 `python -m pytest tools/tests/test_realm_borders_preview.py` covers the prototype.
 
@@ -345,7 +429,11 @@ its best colour again in every campaign.
   uploads a frame.
 - **Per frame otherwise:** a settings comparison, the fade value quantized to 1/50 and pushed to the
   meshes only when it changes, the names projected onto the screen, and the behavior's check that its
-  map view is attached.
+  map view is attached. The parchment map adds its own quantized fade, pushed only when it changes.
+- **The parchment map, once per map scene:** 64 entities, each a mesh of 256 quads and its copy for the
+  ink, built on the game thread in one frame the first time the camera reaches 0.8 of its furthest zoom,
+  plus the picture's load the first time in a process. The look session measured 203 to 599 ms for the
+  one-layer build; the two-layer build is untimed, and the log line gives the time.
 - **Measured offline** by the review's harness (2026-09-30), running this C# on TAOM_Map's heightmap
   standing in for the navmesh: a repaint takes about 37 ms (63 ms the first time in a process) with the
   Debug build TAOM ships, now off the game thread; the partition and trace take about 50 ms on the
@@ -354,17 +442,29 @@ its best colour again in every campaign.
 
 ## Not yet run in game
 
-Unit tests cover the geometry and the service over fake adapters; nothing below has been seen on the
-map yet.
+Unit tests cover the geometry and the service over fake adapters. The look sessions of 2026-09-30 and
+2026-10-01 saw the borders, the land tint, the realm names and the one-layer parchment map drawn; the
+boxes below are still owed.
 
 - [ ] A new campaign: borders appear within seconds of the map opening; `taom.print_realm_borders`
       reports `territory=Ready` with its sampling, partition and repaint times.
 - [ ] The log names the material drawn with; if none exists, find one with `taom.realm_borders_material`.
 - [ ] The wash fades (the material honours vertex alpha; Kingdom Borders drew one colour per
       triangle, so it never proved this) rather than showing as solid bands.
-- [ ] "Draw Borders Through Hills" on and off, at the near and far camera range. For the grounded
-      mode, Kingdom Borders also set a render-after-post-effects flag (0x20000000) worth trying, and
-      `MaterialFlags.TwoSided` might replace the second winding.
+- [ ] "Draw Borders Through Hills" on and off, at the near and far camera range: off must still hide
+      the lines behind ridges now that every border material draws in the late pass.
+- [ ] With one winding on the two-sided material, the tint at 0.5 looks as the 0.3 did, and the ink
+      line is still dark enough; a development `TAOM.json` holds 0.3 until reset.
+- [ ] The parchment map's two layers: cream paper, sepia ink through the strokes, no 3D terrain or
+      water showing through, and the borders, tint and names on top of it.
+- [ ] The parchment map fades in from 0.8 to 0.95 of the zoom rather than popping in, and the build's
+      log time with the copied ink mesh.
+- [ ] MCM's "Parchment Map at Full Zoom-Out" off hides it at once; on shows it again without a rebuild.
+- [ ] Every MCM Border Material keeps the borders over the parchment map.
+- [ ] MCM Border Material `vertex_color_mat` and `vertex_color_lighting` at mid zoom, against v2.0.32:
+      both now draw in the late pass at every zoom, without the map's fog and colour grading.
+- [ ] "Draw Borders Through Hills" off: the `drawing with material` log line must not list
+      `NoDepthTest`; if the material carries it itself, the setting cannot take it away.
 - [ ] The fade distances 45 and 110 against the camera's full range (a changed default needs a
       renamed setting).
 - [ ] Line legibility at the farthest zoom, a three-realm junction up close, Isengard's pale wash over
@@ -394,6 +494,11 @@ map yet.
   Rivendell, Rohan, Dunland, Isengard and Umbar; every look control in MCM, with a colour field per
   realm and a Your Realm colour for the player's realm when the palette names none; heights read from
   the terrain directly.
+- 2026-10-01: the parchment map at full zoom-out, under the borders, with its MCM switch and four
+  console commands; every border material in the late pass, so the parchment never covers the borders;
+  one winding on a two-sided material, which had blended every tile twice in the look session's
+  builds, with the tint's default moved from 0.3 to 0.5 to keep the judged look; new colours for Rohan, Harad, Gundabad, Rivendell
+  and Mirkwood.
 
 ## GitHub Issue
 

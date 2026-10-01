@@ -21,6 +21,8 @@ public static class RealmBordersIoC
         // drawn tiles, reset per session by the behavior (Singleton Services Session-Reset rule).
         registrator.Register<RealmTerritoryService>(Reuse.Singleton);
         registrator.Register<RealmBorderService>(Reuse.Singleton);
+        // The atlas view's parchment sheet: built per map scene through the renderer, which drops it with the scene.
+        registrator.Register<RealmAtlasService>(Reuse.Singleton);
         registrator.Register<RealmBordersCampaignBehavior>(Reuse.Singleton);
     }
 }

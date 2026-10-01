@@ -1,0 +1,43 @@
+You are the adversarial reviewer for TAOM (a Lord of the Rings total conversion for Bannerlord v1.5.3, .NET Framework 4.7.2). Read AGENTS.md and .ai/review-reference.md first and use the reviewer role: report defects with evidence, make NO edits, run no git commands that change state, and do not write any file under docs/reviews/raw/. Return the full report as your FINAL MESSAGE; the dispatcher captures stdout.
+
+FEATURE: Realm Borders (#698) parchment map at full zoom-out. As the campaign camera nears its furthest zoom, a parchment picture of TAOM_Map fades in over the map as runtime meshes (8 x 8 tiles, two layers each: an ink underlay in vertex colour, and the picture on a copy of Native's banner-icon material custom_banner_icons_09 drawn in the mesh factor colour), with the realm borders, tint and names drawn on top. Uncommitted on branch bannerlord-1.5.x over HEAD bb85e928. A six-lens Claude deep review already ran and its fixes are applied; you are the independent second opinion. Do not re-report what the RCA lists as fixed unless the fix is wrong.
+
+TAOM ID CHEATSHEET:
+Kingdom IDs: empire_w=Gondor, empire_s=Mordor, empire=Dunland, vlandia=Rohan, battania=Khand, aserai=Harad, khuzait=Easterlings, sturgia=Dale/North, erebor=Erebor, rivendell=Rivendell, lothlorien=Lothlorien, mirkwood=Mirkwood, isengard=Isengard, gundabad=Gundabad, dolguldur=DolGuldur, umbar=Umbar, shaghana=Shaghana, abanissa=Abanissa
+Culture IDs (custom): gondor, mordor, erebor, rivendell, lothlorien, mirkwood, isengard, gundabad, dolguldur, umbar
+Culture IDs (XSLT/vanilla): vlandia=Rohan, empire=Dunland, empire_w=Gondor, empire_s=Mordor, battania=Khand, aserai=Harad, khuzait=Easterlings, sturgia=Dale
+NOTE: "rohan" is NOT a valid ID. Rohan uses "vlandia". "dol_guldur" is NOT valid -- use "dolguldur".
+
+READ FIRST:
+- docs/reviews/rca-realm-borders-parchment-2026-10-01.md (the deep review's findings, what was fixed, what was deliberately not applied and why)
+- docs/features/realm-borders.md, sections "Choosing and drawing the borders", "Parchment map", "Configuration", "Console", "Not yet run in game"
+- Main/_Module/ModuleData/realm_borders/palette.json
+
+FILES IN SCOPE:
+Code: Main/Adapters/BorderRenderAdapter.cs, Main/Adapters/IBorderRenderAdapter.cs, Main/Features/RealmBorders/RealmAtlasService.cs, Main/Features/RealmBorders/Domain/AtlasSheet.cs, Main/Features/RealmBorders/Cheats/RealmAtlasCheats.cs, Main/Features/RealmBorders/RealmBorderService.cs (the Alpha property and its readers), Main/Features/RealmBorders/RealmBordersSettingsProvider.cs, Main/Features/RealmBorders/IRealmBordersSettings.cs, Main/Features/RealmBorders/RealmBordersIoC.cs, Main/Features/RealmBorders/UI/RealmBordersMapView.cs, Main/Features/TaomSettings.cs (Realm Borders group only), Main/Features/CoopInterop/CoopSettingsRelevance.cs (the RealmBordersParchmentMap line only).
+Tests: TAOM.Tests/Features/RealmBorders/RealmAtlasServiceTests.cs, AtlasSheetTests.cs, RealmBordersProviderTests.cs, RealmBorderServiceTests.cs, RealmBordersWiringTests.cs.
+Data: Main/_Module/ModuleData/realm_borders/palette.json, atlas_parchment.png (2048 x 2048 RGBA), tools/realm_border_art/provenance.json (atlas_parchment entry).
+OUT OF SCOPE (other sessions' uncommitted work): Main/Features/CrashReport/**, Main/Features/HeroRace/**, docs/features/hero-race.md, docs/reference/harmony-patch-registry.md.
+Use `git diff HEAD -- <path>` for modified files; RealmAtlasService.cs, AtlasSheet.cs, RealmAtlasCheats.cs and the two new test files are untracked (read them whole).
+
+KNOWN SUSPECTS (CONFIRM or DISPUTE each with code evidence):
+S1. Mesh.CreateCopy for the ink layer: BorderRenderAdapter.SetSheet builds the paper mesh, then ink = paper.CreateCopy(), ink.SetMaterial(underlay), render order 126, CullingMode None, then paper.Color = paper colour. Hypothesis: the copy shares or references the paper's geometry (native IMesh.CreateMeshCopy -> FUN_18005ff20 hands the copy a reference to the source mesh when bit 0x20 of +0xfd is set by CreateMesh), so the ink draws the same drape, and setting paper.Color afterwards does not change the ink. Could SetMaterial on the copy, or a later change to the paper, alter what the copy draws? Could the copy's bounding box be wrong so it is culled?
+S2. One winding on TwoSided materials: SetTile passes NeedsSecondWinding(material.Flags) = (flags & TwoSided) == 0. Hypothesis: for vertex_color_mat and vertex_color_lighting (not TwoSided) behaviour is unchanged from HEAD; for vertex_color_blend_after_postfx_mat (TwoSided) one winding is visible from both sides. Is material.Flags on the CreateCopy the source's flags plus the added ones? Could any border quad be wound so that it is culled under a non-TwoSided material now that the late-pass bit is added?
+S3. Late pass for every border material: BorderFlags ORs 0x20000000 (managed AlwaysDepthTest, native render_after_postfx) into every border material copy. With "Draw Borders Through Hills" off (no NoDepthTest), is there evidence the late pass still depth-tests against the terrain, or does the flag disable depth testing so the setting stops working? Mark UNVERIFIED if native evidence is out of reach.
+S4. RealmAtlasService latch and reset: _buildFailed is set when SetSheet returns false or throws, cleared by Rebuild and OnMapScreenClosed; TryBuild returns false without latching when the renderer has no scene. Look for a sequence (save load mid-zoom, map screen closed and reopened, MCM switch flipped, console rebuild while zoomed out) that leaves the sheet built but hidden, shown with stale alpha, built twice, or never retried.
+S5. RealmBorderService.Alpha now returns 0 while the MCM master switch is off. Check every reader (names layer placement, the parchment gate) and the fade's _lastAlpha bookkeeping: can the switch going off then on leave names or the parchment at a wrong opacity for a frame or permanently?
+S6. MCM: RealmBordersParchmentMap added at Order 11, the two dropdowns moved to Order 12 and 13, Realm Colour Strength default 0.3 -> 0.5 without renaming the setting (TAOM's persisted-default trap; justified in the doc because no release tag contains Realm Borders). Confirm or refute that MCM persists by property name, not Order, and that the dropdown indices and their pinned lists are unaffected.
+
+REQUIRED SECTIONS:
+1. VANILLA CODE: paste the relevant decompiled members you relied on (Mesh.CreateCopy, Mesh.SetMaterial, Mesh.CullingMode, Mesh.Color, GameEntity.SetAlpha, Material.CreateCopy and Flags, MaterialFlags, Texture.LoadTextureFromPath / SetTextureAsAlwaysValid / PreloadTexture, MapCameraView.CameraDistance, Campaign.MapMaximumHeight). Signatures come from the installed v1.5.3 DLLs (the ilspy MCP or the decompile cache); say which.
+2. DEEP ANALYSIS: walk these scenarios step by step through the code: (a) first zoom-out in a fresh campaign; (b) save load while fully zoomed out; (c) MCM parchment switch off, then on, while zoomed out; (d) MCM master switch off while zoomed out, then on; (e) taom.realm_atlas_tint with a malformed colour and with a valid pair; (f) taom.realm_atlas_fade NaN 0.9 and 0.9 0.8; (g) the parchment picture file missing; (h) a second campaign started in the same process.
+3. CONFIG CROSS-REFERENCE: palette.json keys against the kingdom IDs above and against RealmBordersSettingsProvider.ColourFields; each MCM colour hint against palette.json; palette gates (minimumDeltaE 15 CIE76 pairwise including reserve, minimumLightness 25) for the five changed colours (vlandia, aserai, gundabad, rivendell, mirkwood).
+4. FINDINGS OR OBSERVATIONS: each with severity (CRITICAL/HIGH/MEDIUM/LOW), file:line, the failing scenario, and proving code. Anything you cannot prove is UNVERIFIED, not a finding. Also check produced prose (the doc section, the RCA, MCM hints, console help) for statements the code contradicts, and for em or en dashes (banned in TAOM prose).
+
+QUALITY GATES: cite file:line for every claim; quote code; distinguish VERIFIED from UNVERIFIED; do not flag vanilla-matching behaviour as a bug; do not re-report a fixed RCA finding unless the fix is wrong; finish every section, including the hard ones.
+
+Prior review lessons:
+SUCCESSES: Config ID cross-ref caught rohan/dol_guldur mismatches. Vanilla decompilation caught missing gates. Lifecycle tracing caught stale caches.
+FAILURES: Codex assumed empire=Rohan (it is Dunland). Codex flagged vanilla-matching code as bugs. Codex skipped hard sections.
+
+OUTPUT: your final message is the whole report: a summary line with counts by severity, the Known Suspects verdicts, the four required sections, and a verdict.

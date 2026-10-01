@@ -39,6 +39,9 @@ public interface IRealmBordersSettings
     /// <summary>The engine material to draw from; null picks the first that exists.</summary>
     string? MaterialName { get; }
 
+    /// <summary>Lay the parchment map over the campaign map at full zoom-out, under the borders.</summary>
+    bool ParchmentMap { get; }
+
     /// <summary>Changes whenever a realm's colour field changes, so a repaint can follow.</summary>
     int ColourVersion { get; }
 

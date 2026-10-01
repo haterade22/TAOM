@@ -1377,3 +1377,12 @@ Rivendell's shipped although the file's own floor is 15. A realm created in play
 - **Prevent:** list what the consumer can read from the file and gate all of it; here, curated and reserve
   colours together.
 - **Source:** `docs/reviews/rca-realm-borders-2026-09-30.md` finding 7.
+
+### A substitute models the side effect its test relies on (2026-10-01)
+Two parchment map tests set the fake renderer's "sheet built" flag back to false by hand, standing in for the
+`RemoveSheet` the code under test was meant to call. Deleting the call from the code left both green.
+- **Why missed:** the substitute's `RemoveSheet` did nothing, so the test filled the gap itself.
+- **Prevent:** give the substitute the side effect (`When(r => r.RemoveSheet()).Do(...)`) and assert the call;
+  a test that writes state the code should write proves nothing about the code. Restore each fixed defect once and
+  watch its test fail.
+- **Source:** `docs/reviews/rca-realm-borders-parchment-2026-10-01.md` finding 12.

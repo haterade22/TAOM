@@ -570,9 +570,12 @@ its terms are unknown and it is treated as all rights reserved. Its DLL was deco
 adoption review, [`docs/reviews/adopt-kingdom-borders-2026-09-30.md`](../reviews/adopt-kingdom-borders-2026-09-30.md),
 and TAOM's Realm Borders (#698) was then written without copying code. Three things come from it:
 
-- **The drawing recipe**, in `BorderRenderAdapter`: a copy of the engine's `vertex_color_mat` with
-  `NoModifyDepthBuffer` (plus `NoDepthTest` to draw through hills), each triangle added in both
-  windings, and the fade set with `GameEntity.SetAlpha`. Engine names and flags, learned from its source.
+- **The drawing recipe**, in `BorderRenderAdapter`: a copy of an engine vertex-colour material (the
+  mod's is `vertex_color_mat`) with `NoModifyDepthBuffer` (plus `NoDepthTest` to draw through hills),
+  each triangle in both windings, and the fade set with `GameEntity.SetAlpha`. Engine names and flags,
+  learned from its source. TAOM since puts every border material in the late pass (bit 0x20000000,
+  which the mod set in one of its modes) and adds the second winding only for a material that culls
+  back faces.
 - **The Heraldic layout**, kept on purpose by the approved design: two bands in each realm's colour
   either side of a gap on the line (`BorderPainter`). Its widths are TAOM's own, derived from the Atlas
   look in `BorderLook` (the gap is the ink line's width, 0.56, and each band half the wash, 1.3). The

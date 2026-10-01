@@ -226,9 +226,60 @@ public class RealmBordersProviderTests
     }
 
     [TestMethod]
-    public void MaterialChoices_AreTheRenderersCandidates()
+    public void MaterialChoices_KeepTheirOrder_BecauseMcmStoresTheIndex()
     {
-        CollectionAssert.AreEqual(TAOM.Adapters.BorderRenderAdapter.CandidateMaterials, RealmBordersSettingsProvider.MaterialChoices.Skip(1).ToArray());
+        CollectionAssert.AreEqual(
+            new[] { "Automatic", "vertex_color_mat", "vertex_color_lighting", "vertex_color_blend_after_postfx_mat" },
+            RealmBordersSettingsProvider.MaterialChoices, "append only: MCM keeps the selected index");
+    }
+
+    [TestMethod]
+    public void AutomaticMaterials_PreferTheNormallyBlendedLatePass_FromTheSameChoices()
+    {
+        var automatic = TAOM.Adapters.BorderRenderAdapter.AutomaticMaterials;
+
+        Assert.AreEqual("vertex_color_blend_after_postfx_mat", automatic[0], "it blends normally, so the dark ink shows");
+        CollectionAssert.AreEquivalent(RealmBordersSettingsProvider.MaterialChoices.Skip(1).ToArray(), automatic);
+    }
+
+    [DataTestMethod]
+    [DataRow(true)]
+    [DataRow(false)]
+    public void BorderFlags_EveryBorderMaterialDrawsInTheLatePass_SoTheParchmentNeverCoversIt(bool drawThroughTerrain)
+    {
+        var flags = TAOM.Adapters.BorderRenderAdapter.BorderFlags(drawThroughTerrain);
+
+        Assert.AreEqual(0x20000000u, (uint)flags & 0x20000000u, "render_after_postfx");
+        Assert.IsTrue(flags.HasFlag(TaleWorlds.Engine.MaterialFlags.NoModifyDepthBuffer));
+        Assert.AreEqual(drawThroughTerrain, flags.HasFlag(TaleWorlds.Engine.MaterialFlags.NoDepthTest));
+    }
+
+    [TestMethod]
+    public void NeedsSecondWinding_OnlyWhenTheMaterialCullsBackFaces()
+    {
+        Assert.IsFalse(TAOM.Adapters.BorderRenderAdapter.NeedsSecondWinding(
+                TaleWorlds.Engine.MaterialFlags.TwoSided | TaleWorlds.Engine.MaterialFlags.NoDepthTest),
+            "a two-sided material shows one winding from both sides; a second blends every pixel twice");
+        Assert.IsTrue(TAOM.Adapters.BorderRenderAdapter.NeedsSecondWinding(TaleWorlds.Engine.MaterialFlags.NoDepthTest));
+    }
+
+    [TestMethod]
+    public void SheetFlags_TurnStreamingOffAndDrawInTheLatePass()
+    {
+        Assert.AreEqual(0x20000200u, (uint)TAOM.Adapters.BorderRenderAdapter.SheetFlags);
+    }
+
+    [TestMethod]
+    public void SheetRenderOrders_InkUnderPaperUnderTheBordersEngineDefault()
+    {
+        Assert.IsTrue(TAOM.Adapters.BorderRenderAdapter.SheetInkRenderOrder < TAOM.Adapters.BorderRenderAdapter.SheetPaperRenderOrder);
+        Assert.IsTrue(TAOM.Adapters.BorderRenderAdapter.SheetPaperRenderOrder < TAOM.Adapters.BorderRenderAdapter.EngineDefaultRenderOrder);
+    }
+
+    [TestMethod]
+    public void ParchmentMap_NoSettings_IsOn()
+    {
+        Assert.IsTrue(new RealmBordersSettingsProvider(Substitute.For<IModLogger>()).ParchmentMap);
     }
 
     [TestMethod]

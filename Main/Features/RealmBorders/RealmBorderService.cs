@@ -106,8 +106,8 @@ public sealed class RealmBorderService
     /// <summary>Where each realm's name goes, refreshed with the borders.</summary>
     public IReadOnlyList<RealmLabel> Labels { get; private set; } = Array.Empty<RealmLabel>();
 
-    /// <summary>The borders' current opacity, 0 when hidden or zoomed in.</summary>
-    public float Alpha => Math.Max(0f, _lastAlpha);
+    /// <summary>The borders' current opacity, 0 when hidden, zoomed in or switched off in MCM (the parchment map follows it).</summary>
+    public float Alpha => _settings.Enabled ? Math.Max(0f, _lastAlpha) : 0f;
 
     public int DrawnTiles => _uploaded.Count;
 

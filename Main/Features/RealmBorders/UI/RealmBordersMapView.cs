@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using SandBox.View.Map;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.Engine;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.Library;
@@ -24,6 +25,7 @@ public class RealmBordersMapView : MapView
 
     private readonly Dictionary<string, float> _labelHeights = new Dictionary<string, float>();
     private RealmBorderService? _borders;
+    private RealmAtlasService? _atlas;
     private IRealmMapAdapter? _map;
     private IMapTerrainAdapter? _terrain;
     private RealmBordersKeys? _keys;
@@ -40,6 +42,7 @@ public class RealmBordersMapView : MapView
     {
         base.CreateLayout();
         _borders = IoC.Resolve<RealmBorderService>();
+        _atlas = IoC.Resolve<RealmAtlasService>();
         _map = IoC.Resolve<IRealmMapAdapter>();
         _terrain = IoC.Resolve<IMapTerrainAdapter>();
         _keys = new RealmBordersKeys();
@@ -64,7 +67,10 @@ public class RealmBordersMapView : MapView
             _borders.CycleMode();
 
         var cameraView = MapScreen?.MapCameraView;
-        _borders.OnMapFrame(cameraView?.CameraDistance ?? float.NaN);
+        float distance = cameraView?.CameraDistance ?? float.NaN;
+        _borders.OnMapFrame(distance);
+        // The camera zooms out to Campaign.MapMaximumHeight (MapCameraView.MaximumCameraHeight).
+        _atlas?.OnMapFrame(distance, Campaign.MapMaximumHeight, _borders.Alpha > 0f);
         PlaceNames(cameraView?.Camera);
     }
 
@@ -83,6 +89,7 @@ public class RealmBordersMapView : MapView
         _names?.OnFinalize();
         _names = null;
         _borders?.OnMapScreenClosed();
+        _atlas?.OnMapScreenClosed();
         base.OnFinalize();
     }
 

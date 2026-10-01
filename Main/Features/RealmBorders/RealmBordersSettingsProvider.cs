@@ -18,7 +18,7 @@ public sealed class RealmBordersSettingsProvider : IRealmBordersSettings
     public const float DefaultWidthScale = 1f;
     public const float DefaultFadeStartDistance = 45f;
     public const float DefaultFullOpacityDistance = 110f;
-    public const float DefaultFillStrength = 0.3f;
+    public const float DefaultFillStrength = 0.5f;
     public const float MinimumFillStrength = 0.05f;
     public const float MaximumFillStrength = 0.8f;
 
@@ -30,7 +30,7 @@ public sealed class RealmBordersSettingsProvider : IRealmBordersSettings
     };
 
     /// <summary>The material dropdown: "Automatic", then the renderer's candidates. Never reorder: MCM keeps the index.</summary>
-    public static readonly string[] MaterialChoices = { "Automatic", "vertex_color_mat", "vertex_color_lighting" };
+    public static readonly string[] MaterialChoices = { "Automatic", "vertex_color_mat", "vertex_color_lighting", "vertex_color_blend_after_postfx_mat" };
 
     /// <summary>Each realm's MCM colour field (Realm Borders/Realm Colours): its kingdom id, its label, its value.</summary>
     internal static readonly (string Realm, string Label, Func<TaomSettings, string?> Read)[] ColourFields =
@@ -112,6 +112,8 @@ public sealed class RealmBordersSettingsProvider : IRealmBordersSettings
     public string? BlendMode => Choice(TaomSettings.Instance?.RealmBordersBlendMode?.SelectedIndex, BlendModeChoices);
 
     public string? MaterialName => Choice(TaomSettings.Instance?.RealmBordersMaterial?.SelectedIndex, MaterialChoices);
+
+    public bool ParchmentMap => TaomSettings.Instance?.RealmBordersParchmentMap ?? true;
 
     public int ColourVersion
     {

@@ -17,5 +17,18 @@
       "imagineart_asset": "da6ca983-2a01-418b-bc87-92173f51f825",
       "prompt": "One long horizontal watercolor band painted along a straight line with a flat brush on white cold-press watercolor paper, like the hand-tinted outline coloring along a border on an antique 18th century map: the pigment pools darkest in a crisp slightly ragged edge along the top of the band, then fades softly downward into transparent wash and bare paper, with natural pigment granulation, blooms and tide lines. Neutral grey-brown pigment only. The band runs edge to edge across the entire width of the image, its dark top edge exactly on the horizontal center line. Flat top-down scan, even lighting, no text, nothing else."
     }
+  },
+  "atlas_parchment": {
+    "shipped_as": "Main/_Module/ModuleData/realm_borders/atlas_parchment.png: 2048 x 2048, RGBA with every alpha 255, sha256 dd5c77e5749119177eb9bedf3ca4b410ee510603fb43cc3099434f90e730b3c9",
+    "used_by": "the parchment map at full zoom-out (RealmAtlasService, docs/features/realm-borders.md, \"Parchment map\")",
+    "generated": "2026-09-30, ImagineArt on Mike's own account at his request",
+    "model": "nano-banana-pro",
+    "resolution": "4K, 4096 x 4096",
+    "imagineart_asset": "db2e8daf-bd55-4512-88f6-1271b547871d",
+    "reference": "one image only: a guide of the whole 1600 x 1600 TAOM_Map terrain square, north up, made from TAOM_Map/AssetSources/Vista_16K/16K_Vista_02.png (the painted middle band), with the terrain heightmap, the water mask and the shore strokes in TAOM_Map/AssetSources/Support filling the strips the vista leaves empty. A second reference for the style let that picture's own geography leak in, so the style is in the prompt.",
+    "prompt": "Turn this painted map into an antique hand-inked parchment map by tracing it exactly, as if on a light table: keep every coastline, island, bay, lake, river, mountain range and forest in exactly the same position, shape and size as in this image, and change only the rendering style. Do not crop, zoom, shift, mirror or rotate, and do not add or remove any land, sea, island, bay or lake. Blue areas are sea and lakes: draw the sea as plain parchment with short horizontal wave hatching along the coasts, and outline the lakes with light hatching inside. Rendering: warm aged cream parchment with faint stains; dark sepia iron-gall ink; coastlines as confident slightly wobbly ink lines; the white and grey ridges as rows of small inked mountain peaks with hatched shading on one side; the darkest green patches as dense clusters of tiny inked trees; the green grassland as plain parchment with a few small hill arcs; the thin blue lines as thin ink rivers; the ice in the north and the tan deserts in the south as sparse dots and stippling; the black region as a ring of dark crosshatched volcanic peaks. Only sepia ink on parchment, no colour. Flat top-down view, north at the top, the map fills the whole image edge to edge. No text, no letters, no labels, no names, no compass rose, no frame, no border, no corner ornaments, no legend.",
+    "derived": "the cool slate rivers moved onto the sepia ink ramp at their own brightness (colour only), scaled to 2048 with Lanczos, stored as RGBA",
+    "alignment": "real shore to nearest ink: median 0.0, 90% within 1.1, 97% within 2.3 terrain units of 1600 (E:/LOTRAOMAssets/atlas_parchment/scripts/atlas_measure.py, contrast threshold)",
+    "working_files": "E:/LOTRAOMAssets/atlas_parchment/ on the desktop: the guide, the 4K takes (the runner-up included), the session scripts and their own provenance.json"
   }
 }

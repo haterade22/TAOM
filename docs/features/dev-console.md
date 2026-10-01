@@ -319,6 +319,10 @@ answer is conclusive and fails open in every path.
 | `taom.realm_borders_rebuild` | B | campaign | A restart. Samples the terrain again, recomputes the provinces and redraws; nothing saved changes. Also retries a build that failed |
 | `taom.realm_borders_material <name>` | B | campaign | A rebuild per guess. Redraws the borders from another engine material, refused when none has that name; for the in-game look session |
 | `taom.realm_borders_blend <mode>` | B | campaign | A rebuild per guess. Redraws the borders with another engine blend mode (the MCM Border Blend Mode does the same); the first look showed an additive glow |
+| `taom.print_realm_atlas` | A | campaign | Nothing: whether the [Realm Borders](realm-borders.md) parchment map is switched on in MCM, built (and how long that took) or failed, its material, picture and opacity, the camera's zoom against its furthest, the fade band and colours |
+| `taom.realm_atlas_rebuild` | B | campaign | A restart. Draws the parchment map again on the next frame that needs it; also retries a build that failed |
+| `taom.realm_atlas_tint <paper> [ink]` | B | campaign | A rebuild per guess. Redraws the parchment map in another paper colour and, if given, ink colour, until the game restarts |
+| `taom.realm_atlas_fade <start> <full>` | B | campaign | A rebuild per guess. Moves where the parchment map fades in, as fractions of the furthest zoom, until the game restarts |
 | `taom.damage_agent <amount> [name]` | B | mission | HP attrition and death thresholds. **Cannot test shrug-off / unstoppable** — a synthetic blow bypasses the hit path those models run on |
 | `taom.requeue_settlement <settlement>` | B | campaign | A siege plus a day's wait to re-check #333. Refuses settlements with no existing record, so it verifies a timer rather than arming one |
 | `taom.print_race_offsets [avatar\|image]` | A | anywhere | Every configured per-race framing offset, plus which race the on-screen tableau is showing |

@@ -43,6 +43,30 @@ public class RealmBordersWiringTests
     }
 
     [TestMethod]
+    public void MapView_DrivesTheParchmentMapEveryFrameAndOnClose()
+    {
+        var src = RepoPaths.ReadSource("Main/Features/RealmBorders/UI/RealmBordersMapView.cs", stripComments: true);
+
+        StringAssert.Matches(src, new Regex(@"_atlas\?\.OnMapFrame\(distance, Campaign\.MapMaximumHeight, _borders\.Alpha > 0f\);"),
+            "the parchment map no longer follows the camera, its furthest zoom or the borders' visibility");
+        StringAssert.Matches(src, new Regex(@"_atlas\?\.OnMapScreenClosed\(\);"),
+            "a failed parchment build no longer gets another try on the next map");
+    }
+
+    [TestMethod]
+    public void BorderRenderer_UsesTheWindingAndLatePassHelpers_AndOrdersOnlyTheSheet()
+    {
+        var src = RepoPaths.ReadSource("Main/Adapters/BorderRenderAdapter.cs", stripComments: true);
+
+        StringAssert.Matches(src, new Regex(@"BuildMesh\(quads, lift, material, NeedsSecondWinding\(material\.Flags\)\)"),
+            "border tiles no longer decide their second winding from the material's TwoSided flag");
+        StringAssert.Matches(src, new Regex(@"BuildMaterial\(BorderFlags\(true\)\)"), "the through-hills material skips the late pass");
+        StringAssert.Matches(src, new Regex(@"BuildMaterial\(BorderFlags\(false\)\)"), "the grounded material skips the late pass");
+        Assert.AreEqual(2, Regex.Matches(src, @"SetMeshRenderOrder\(").Count,
+            "only the parchment map's two layers set a render order; the borders keep the engine default");
+    }
+
+    [TestMethod]
     public void IoC_DoesNotRegisterTheFeatureByHand()
     {
         var src = RepoPaths.ReadSource("Main/IoC.cs", stripComments: true);
@@ -119,6 +143,8 @@ public class RealmBordersWiringTests
         Assert.IsInstanceOfType(behavior, typeof(RealmBordersCampaignBehavior));
         Assert.AreSame(behavior, decl.Create(container), "one behavior per process, like every module behavior");
         Assert.AreSame(container.Resolve<RealmBorderService>(), container.Resolve<RealmBorderService>());
+        Assert.AreSame(container.Resolve<RealmAtlasService>(), container.Resolve<RealmAtlasService>(),
+            "the map view resolves the parchment map's service; a missing registration throws in CreateLayout");
     }
 
     [TestCategory("RequiresGame")]

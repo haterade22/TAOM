@@ -520,6 +520,18 @@ public class RealmBorderServiceTests
         Assert.AreEqual(first, PixelAt(rig, 350, 100), "a new campaign starts the reserve from its best colour again");
     }
 
+    [TestMethod]
+    public void Alpha_FeatureSwitchedOff_IsNothingWhateverWasDrawnLast()
+    {
+        var rig = new Rig(("west", 100, "empire_w"), ("east", 300, "empire_s"));
+        rig.Settle();
+        Assert.IsTrue(rig.Service.Alpha > 0f);
+
+        rig.Settings.Enabled.Returns(false);
+
+        Assert.AreEqual(0f, rig.Service.Alpha, "the parchment map reads this to know the borders are showing");
+    }
+
     private static uint PixelAt(Rig rig, float x, float y)
     {
         var (columns, _, pixels) = rig.Service.ProvinceImage()!.Value;

@@ -844,3 +844,13 @@ until `Agent.Clear` at mission end.
 - **Prevent:** gate agent callbacks on managed identity (`affector == hero`, a mount's managed `RiderAgent`) before
   any flag or native read; pass the costly check only on the path that needs it.
 - **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` row 5 (Engine, Data flow A).
+
+### Key a runtime mesh's second winding on the material's `TwoSided` flag (2026-10-01)
+Realm Borders added every triangle in both windings, the Kingdom Borders recipe for `vertex_color_mat`, which
+culls back faces. A look session then made `vertex_color_blend_after_postfx_mat` the first Automatic material; it
+carries `TwoSided`, `IMesh.SetMaterial` turns that into no culling, and both windings drew, so every border and
+tint pixel blended twice (a 0.3 tint drew at about 0.51). The material's flags were in the log all along.
+- **Why missed:** the winding was chosen for one material and never re-checked when the default material changed.
+- **Prevent:** decide the second winding from `material.Flags` (`BorderRenderAdapter.NeedsSecondWinding`), and when
+  a default material changes, re-check every choice made for the old one: winding, render order, pass.
+- **Source:** `docs/reviews/rca-realm-borders-parchment-2026-10-01.md` finding 1.

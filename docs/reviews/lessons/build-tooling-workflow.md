@@ -3265,3 +3265,14 @@ said so in its comment, and the campaign behavior checked the mod's module id.
 - **Why missed:** the row was written from memory of the most visible derivation.
 - **Prevent:** grep the changed files for the source's name and ids, and name every hit in the row or its detail.
 - **Source:** `docs/reviews/rca-realm-borders-2026-09-30.md` finding 8.
+
+### A look session's console knobs get a ship pass before the review (2026-10-01)
+The parchment map was found by trying materials, slots, flags, render orders and orientations live from the
+console. When the session settled, the knobs, the comments written at guess time, the doc and the player's way to
+turn it off still reflected the open questions: seven commands in a 261-line entry point, comments contradicting
+what the game had shown, and no MCM switch for a full-screen overlay on by default.
+- **Why missed:** each knob was small and added mid-session; nobody re-read the whole once the answers were in.
+- **Prevent:** when a look session settles, turn each knob into a constant or a setting, re-read every comment
+  written before the answer, give players a switch for anything on by default, and write the doc section, then
+  review.
+- **Source:** `docs/reviews/rca-realm-borders-parchment-2026-10-01.md` findings 3, 5, 6, 10 and 11.
