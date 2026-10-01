@@ -19,5 +19,6 @@ internal static class FeatureModules
         new Features.CreatureBandits.CreatureBanditsModule(),
         new Features.ArmourAcquisition.ArmourAcquisitionModule(),
         new Features.RealmBorders.RealmBordersModule(),
+        new Features.BattleCorpses.BattleCorpsesModule(),
     };
 }

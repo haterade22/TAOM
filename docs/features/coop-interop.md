@@ -307,14 +307,14 @@ to characterise. The existing try/catch around acceptance is containment, not co
 
 ## What is NOT done
 
-- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **316** settings across
+- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **321** settings across
   four MCM classes (the 284 here counted `[SettingPropertyGroup]` lines alongside the properties;
-  the split is 299 in `TaomSettings`, 9 in `BattleLoadDiagnosticsSettings`, 7 in
+  the split is 304 in `TaomSettings`, 9 in `BattleLoadDiagnosticsSettings`, 7 in
   `CrashReportSettings` and 1 in `BlowDiagnosticsSettings`).
-  **211 are simulation-relevant**, traced to the feature that consumes each one and kept when that feature
-  ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 211 are in
-  `TaomSettings`. The 105 excluded (67 counted 2026-09-22, the 37 Realm Borders settings added from 2026-09-30, and the Crash Report AfterStart dev trigger added 2026-10-01) are instrumentation, player-local inventory convenience,
-  presentation, one action button, and the three time-acceleration knobs whose UI co-op already
+  **214 are simulation-relevant**, traced to the feature that consumes each one and kept when that feature
+  ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 214 are in
+  `TaomSettings`. The 107 excluded (67 counted 2026-09-22, the 37 Realm Borders settings added from 2026-09-30, the Crash Report AfterStart dev trigger added 2026-10-01, and the Battle Corpses advice toggle and button added 2026-10-01) are instrumentation, player-local convenience,
+  presentation, two action buttons, and the three time-acceleration knobs whose UI co-op already
   suppresses; the list with its reasons is
   `Main/Features/CoopInterop/CoopSettingsRelevance.cs`.
 
@@ -325,13 +325,13 @@ to characterise. The existing try/catch around acceptance is containment, not co
   excluded name may stop matching a real property, and no two settings classes may share a
   property name.
 
-  `SettingsFingerprint` hashes those 175: one code per MCM group plus a global, culture-invariant
+  `SettingsFingerprint` hashes those 214: one code per MCM group plus a global, culture-invariant
   so a comma decimal separator cannot fake a mismatch — and `SettingsFingerprintLog` writes them
   to each peer's log under the co-op gate. It reads all four classes, not just `TaomSettings`:
   every diagnostics property is excluded so this moves no hash today (a test asserts exactly
   that), and it means a simulation-affecting setting added to a diagnostics page later is covered
   the day it lands. That makes the "compare settings manually" workaround a comparison of a few
-  short strings instead of 183 values read off two screens.
+  short strings instead of 214 values read off two screens.
 
   **All four classes are `AttributeGlobalSettings<T>`, and the reasoning above depends on it.**
   MCM has three scopes, and only one of them travels with a save. Verified against MCM 5.12.1:

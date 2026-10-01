@@ -3051,6 +3051,14 @@
 	<string id="taom_realm_borders_mode_alignment" text="{=taom_realm_borders_mode_alignment}The map shows the Free Peoples and the Shadow." />
 	<string id="taom_realm_borders_mode_war" text="{=taom_realm_borders_mode_war}The map shows your allies and your enemies." />
 	<string id="taom_realm_borders_mode_political" text="{=taom_realm_borders_mode_political}The map shows the realms." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- BattleCorpses -->
+	<string id="taom_bc_advice_title" text="{=taom_bc_advice_title}TAOM: battle performance settings" />
+	<string id="taom_bc_advice_body" text="{=taom_bc_advice_body}Your {RAGDOLLS} or {CORPSES} option is set higher than TAOM recommends. Players have reported freezes in large battles at high values, and lowering these two options stopped them. Recommended: {RAGDOLLS} 5, {CORPSES} {LOW}. A setting already lower is kept. Apply now? You can change them back at any time in Options, {PERFORMANCE}. This notice can be turned off in Mod Options, TAOM, Performance." />
+	<string id="taom_bc_advice_apply" text="{=taom_bc_advice_apply}Apply" />
+	<string id="taom_bc_advice_keep" text="{=taom_bc_advice_keep}Keep mine" />
+	<string id="taom_bc_advice_done" text="{=taom_bc_advice_done}Battle settings saved." />
+	<string id="taom_bc_advice_failed" text="{=taom_bc_advice_failed}Battle settings could not be saved. Set them by hand in Options, {PERFORMANCE}." />
 
 
 </strings>

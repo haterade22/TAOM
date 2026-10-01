@@ -823,3 +823,23 @@ does nothing. Vanilla fades text with `Brush.GlobalAlphaFactor="@Alpha"` (`SPCha
 - **Prevent:** fade text through its brush; a prefab test can forbid `AlphaFactor` on any `TextWidget`
   (`RealmNamesPrefabTests`).
 - **Source:** `docs/reviews/rca-realm-borders-2026-09-30.md` finding 1.
+
+### A result message states what the action did on every branch, not what was recommended (2026-10-01)
+The #701 advisor told every player "saved: Number of Ragdolls 5, Number of Corpses Low", but Apply only lowers each
+option (`Math.Min`), so a player already below the recommendation was told a value that was never written.
+- **Why missed:** the never-raise rule was added to the code after the text was written from the recommendation;
+  nothing compared the message with each branch of the action it reports.
+- **Prevent:** before registering a result or confirmation string, list the action's branches and check the text
+  is true on each; when it can only be true on some, make it value-neutral or format in the values written. Name
+  vanilla's options through vanilla's own keys (`{=1awQTVqN}Number Of Ragdolls`), so a translation matches the
+  Options screen.
+- **Source:** `docs/reviews/rca-battle-corpses-2026-10-01.md` finding 1.
+
+### Never put `\n` in a `{=KEY}` default; use `{newline}` (2026-10-01)
+`harvest_literal_loc_keys.py` writes a C# `\n` into the XML `text` attribute as a raw line break, which XML parses
+back as a space, so the registered English silently differs from the inline default and
+`LocalizationKeyConsistencyTests` fails far from the cause (#702).
+- **Why missed:** a two-paragraph inquiry body was written with `\n\n`, the C# habit; the house idiom
+  (`taom_precompile_inquiry_body`) was not looked up.
+- **Prevent:** one paragraph, or `{newline}`. Until #702 lands, read the harvested row back before translating.
+- **Source:** `docs/reviews/rca-battle-corpses-2026-10-01.md` finding 3.

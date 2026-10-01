@@ -835,6 +835,49 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Seconds between a mount's death and its fade. Default 5. Below 3 the corpse pops while the death animation is still playing, so values outside 3-30 fall back to 5.")]
     public float DeadMountDespawnDelaySeconds { get; set; } = 5f;
 
+    // --- Performance / Battle Corpses (#701) ---
+    // GroupOrder 55: 10, 15, 19-54 and 100 were taken as of 2026-10-01.
+
+    [SettingPropertyGroup("Performance/Battle Corpses", GroupOrder = 55)]
+    [SettingPropertyBool("Clean Up Battle Corpses", Order = 0, RequireRestart = false,
+        HintText = "Fade fallen soldiers after a set time and cap how many bodies a battle keeps, whatever your Number of Corpses option says. The engine walks its whole corpse list every frame, and players reported mid-battle freezes at high corpse settings. Field battles, sieges and sally-outs only; towns, arenas and hideouts keep their bodies. Never raises your own Number of Corpses option.")]
+    public bool EnableBattleCorpseCleanup { get; set; } = true;
+
+    [SettingPropertyGroup("Performance/Battle Corpses")]
+    [SettingPropertyFloatingInteger("Corpse Fade Time (seconds)", 10f, 300f, "#0", Order = 1, RequireRestart = false,
+        HintText = "Seconds a body stays on the field, counted from when it settles, before it fades. Default 60. The engine's own default is an hour, so without this a body only goes when the corpse cap pushes it out. Values outside 10-300 fall back to 60.")]
+    public float BattleCorpseFadeSeconds { get; set; } = 60f;
+
+    [SettingPropertyGroup("Performance/Battle Corpses")]
+    [SettingPropertyInteger("Maximum Corpses", 0, 250, Order = 2, RequireRestart = false,
+        HintText = "Most bodies a battle keeps at once; the oldest fade first. Default 25, the vanilla Low setting. If your own Number of Corpses option is lower, yours is used.")]
+    public int BattleCorpseCap { get; set; } = 25;
+
+    [SettingPropertyGroup("Performance/Battle Corpses")]
+    [SettingPropertyBool("Recommend Battle Settings", Order = 3, RequireRestart = false,
+        HintText = "On the first main menu after the game starts, offer to lower Number of Ragdolls to 5 and Number of Corpses to Low when yours are higher. Nothing changes unless you click Apply.")]
+    public bool ShowBattleSettingsAdvice { get; set; } = true;
+
+    [SettingPropertyGroup("Performance/Battle Corpses")]
+    [SettingPropertyButton("Apply Recommended Battle Settings", Order = 4, RequireRestart = false,
+        Content = "Apply",
+        HintText = "Lower Number of Ragdolls to 5 and Number of Corpses to Low (25) in your game options now. A setting already lower is kept. Change them back at any time in Options, Performance.")]
+    public System.Action ApplyRecommendedBattleSettingsAction { get; set; } = static () =>
+    {
+        // MCM calls this with no handler around it; a throw would vanish into the UI frame.
+        try
+        {
+            TAOM.Features.BattleCorpses.BattleSettingsAdviceNotifier.Apply(
+                TAOM.IoC.Resolve<TAOM.Features.BattleCorpses.BattleSettingsAdvisor>(),
+                TAOM.IoC.Resolve<TAOM.Core.Logging.IModLogger>());
+        }
+        catch (System.Exception ex)
+        {
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"[TAOM] Battle settings could not be applied: {ex.GetType().Name}: {ex.Message}", Colors.Red));
+        }
+    };
+
     // --- Battle Tactics / Companion Roles ---
     // GroupOrder 22 was originally planned but SmartCavalryAI parallel port consumed it.
     // CompanionTactics settings live at GroupOrder 27/28/29.

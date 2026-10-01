@@ -3276,3 +3276,14 @@ what the game had shown, and no MCM switch for a full-screen overlay on by defau
   written before the answer, give players a switch for anything on by default, and write the doc section, then
   review.
 - **Source:** `docs/reviews/rca-realm-borders-parchment-2026-10-01.md` findings 3, 5, 6, 10 and 11.
+
+### A plan item dropped mid-build is struck from the issue that promised it, in the same step (2026-10-01)
+#701 was filed before implementation and promised a `[MissionPerf] corpses=` field and a campaign-map advisor. The
+field was dropped (it duplicates `agents` minus `active`) and the advisor moved to the main menu, both for good
+reasons recorded only in chat; the issue kept promising them, and whoever closed it would have looked for a field
+that does not exist.
+- **Why missed:** the departure was a simplicity call made mid-build, and the issue, written first, was not on the
+  list of things to update.
+- **Prevent:** when a planned item is dropped or moved, edit the issue body (and the feature doc's departures)
+  in the same step, not at close.
+- **Source:** `docs/reviews/rca-battle-corpses-2026-10-01.md` finding 2.

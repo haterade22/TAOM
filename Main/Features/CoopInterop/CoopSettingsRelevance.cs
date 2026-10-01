@@ -85,7 +85,7 @@ public static class CoopSettingsRelevance
     /// </summary>
     private static readonly HashSet<string> ActionButtons = new HashSet<string>(StringComparer.Ordinal)
     {
-        "RebuildDistanceCacheAction",
+        "RebuildDistanceCacheAction", "ApplyRecommendedBattleSettingsAction",
     };
 
     /// <summary>Player-local convenience: the player acts, the co-op layer replicates the result.</summary>
@@ -101,6 +101,10 @@ public static class CoopSettingsRelevance
         // offers is host-gated in EnlistmentWaitMenuPresenter.OfferTownLeave, so two peers
         // disagreeing about the prompt cannot make them simulate differently (#512).
         "OfferLeaveOnArrival",
+        // Whether YOUR main menu offers to lower YOUR game options (#701). The options are the
+        // player's own engine config, which co-op never compares; the corpse cleanup settings
+        // beside it change battles and stay relevant.
+        "ShowBattleSettingsAdvice",
     };
 
     /// <summary>Presentation, and the clock BT already owns.</summary>
