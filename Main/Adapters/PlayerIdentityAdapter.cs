@@ -137,6 +137,17 @@ public class PlayerIdentityAdapter : IPlayerIdentityAdapter
         GiveGoldAction.ApplyBetweenCharacters(from, to, from.Gold, disableNotification: true);
     }
 
+    public int GetGold(string heroId) => FindHero(heroId)?.Gold ?? -1;
+
+    public bool SetPlayerGold(string heroId, int gold)
+    {
+        var hero = FindHero(heroId);
+        if (hero == null || hero != Hero.MainHero)
+            return false;
+        hero.Gold = gold;
+        return true;
+    }
+
     public void AbsorbOriginalParty(string partyId)
     {
         if (string.IsNullOrEmpty(partyId))

@@ -534,3 +534,15 @@ Skipping the character-creation options stage for a takeover (#704) was document
 - **Why missed:** the claim was derived from the one provider in the core assemblies; providers from official optional modules live in their own DLLs, outside the decompile dump.
 - **Prevent:** before stating what can be changed after creation, list every `ICampaignOptionProvider` in the load order (ilspycmd on each module DLL) and read each option's `CampaignOptionEnableState` in both its creation and gameplay lists.
 - **Source:** `docs/reviews/rca-faction-ui-takeover-2026-10-01.md` T4.
+
+### A fix keyed on an outcome enumerates the paths that produce it (2026-10-02)
+Giving a taken-over lord their treasury back (Player Switcher) read "the handover took effect" from the session record, which is true on both handover paths. On the takeover path the record holds the lord's own treasury; on the adoption path it held the wanderer's purse plus the created character's, which `KillCharacterAction` hands to the new clan leader. Applied to both, the fix gave an adopted wanderer those two purses in place of the 1,000 plus culture gold every new character gets, while every test exercised the takeover path only.
+- **Why missed:** the design was written from Mike's sentence about lords, and the record it read did not say which path it came from.
+- **Prevent:** before a fix acts on an outcome, list every path that yields it (here `SwitchPlanner`: AssumeIdentity and AdoptIntoPlayerClan) and trace the value through each; key the fix on the path it is meant for (`IPlayerSwitchSession.LordTakenOver`), with one test per path.
+- **Source:** `docs/reviews/rca-takeover-treasury-2026-10-02.md` G1.
+
+### A value replaced at one event has one owner (2026-10-02)
+The taken-over lord's treasury restore first ran as its own phase-9 `OnCharacterCreationIsOver` listener beside StartupResources' grant. Both replaced the engine's 1,000 gold at the same event, so the grant needed a skip whose only job was to keep the two apart, and the new listener copied StartupResources' start-type read. The design lens folded the restore into StartupResources, which deleted a behavior, its registration, its test file and a flag parameter.
+- **Why missed:** the fix was built as a Player Switcher change, so it got a Player Switcher listener, though the decision it changed already had an owner in another feature.
+- **Prevent:** before adding a listener that overrides a value another listener sets at the same event, extend that listener and have it call your feature's service. A skip that exists only to keep two listeners from colliding is the sign.
+- **Source:** `docs/reviews/rca-takeover-treasury-2026-10-02.md` G9.

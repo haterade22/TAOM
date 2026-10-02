@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
+using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Tests.Migration;
 
@@ -129,6 +132,45 @@ public class PlayerSwitcherBindingTests
         Assert.IsNotNull(hero?.GetProperty("IsKnownToPlayer", BindingFlags.Instance | BindingFlags.Public)?.GetSetMethod(),
             "Hero.IsKnownToPlayer must stay settable, or the clan and kingdom screens open full of unknowns");
     }
+
+    [TestMethod]
+    [TestCategory("RequiresGameIL")]
+    [TestCategory("BindingVerification")]
+    public void FinalizeCharacterCreationState_AssignsThePlayerGoldAfterTheHandlersAndBeforeThePhaseEvents()
+    {
+        // A taken-over lord keeps their treasury only while the engine runs the 1100 handler, which
+        // records it, then assigns the player 1,000 gold, then raises OnCharacterCreationIsOver, whose
+        // phase 9 puts the treasury back (v1.5.3 CharacterCreationManager.cs:108-109,
+        // CharacterCreationState.cs:59-62). Reordered, the record would read the 1,000, or the 1,000
+        // would land on the restored treasury.
+        RequireGame();
+
+        var manager = Find("TaleWorlds.CampaignSystem.CharacterCreationContent.CharacterCreationManager");
+        var applyFinalEffects = manager?.GetMethod("ApplyFinalEffects", Type.EmptyTypes);
+        Assert.IsNotNull(applyFinalEffects, "CharacterCreationManager.ApplyFinalEffects() did not resolve");
+        Assert.IsTrue(FirstCall(PatchProcessor.GetOriginalInstructions(applyFinalEffects).ToList(), "OnCharacterCreationFinalize") >= 0,
+            "ApplyFinalEffects no longer runs the handlers' OnCharacterCreationFinalize, where the 1100 handler records the treasury");
+
+        var nextStage = manager!.GetMethod("NextStage", Type.EmptyTypes);
+        Assert.IsNotNull(nextStage, "CharacterCreationManager.NextStage() did not resolve");
+        var nextIl = PatchProcessor.GetOriginalInstructions(nextStage).ToList();
+        var handlers = FirstCall(nextIl, "ApplyFinalEffects");
+        var finalize = FirstCall(nextIl, "FinalizeCharacterCreationState");
+        Assert.IsTrue(handlers >= 0 && finalize >= 0 && handlers < finalize,
+            $"NextStage no longer runs ApplyFinalEffects ({handlers}), where the handlers run, before FinalizeCharacterCreationState ({finalize})");
+
+        var finalizeState = Find("TaleWorlds.CampaignSystem.CharacterCreationContent.CharacterCreationState")?
+            .GetMethod("FinalizeCharacterCreationState", Type.EmptyTypes);
+        Assert.IsNotNull(finalizeState, "CharacterCreationState.FinalizeCharacterCreationState() did not resolve");
+        var stateIl = PatchProcessor.GetOriginalInstructions(finalizeState).ToList();
+        var gold = FirstCall(stateIl, "set_Gold");
+        var phases = FirstCall(stateIl, "OnCharacterCreationIsOver");
+        Assert.IsTrue(gold >= 0 && phases >= 0 && gold < phases,
+            $"FinalizeCharacterCreationState no longer assigns the player's gold ({gold}) before it raises the phase events ({phases})");
+    }
+
+    private static int FirstCall(List<CodeInstruction> il, string name) => il.FindIndex(i =>
+        (i.opcode == OpCodes.Call || i.opcode == OpCodes.Callvirt) && i.operand is MethodInfo method && method.Name == name);
 
     [TestMethod]
     [TestCategory("BindingVerification")]

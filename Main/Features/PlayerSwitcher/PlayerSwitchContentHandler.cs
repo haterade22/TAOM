@@ -34,6 +34,7 @@ public class PlayerSwitchContentHandler : ICharacterCreationContentHandler
     private readonly IPlayerSwitchPolicyProvider _policy;
     private readonly ICareerMenuService _careerMenu;
     private readonly IInquiryAdapter _inquiry;
+    private readonly IPlayerIdentityAdapter _identity;
     private readonly IModLogger _logger;
 
     public PlayerSwitchContentHandler(
@@ -44,6 +45,7 @@ public class PlayerSwitchContentHandler : ICharacterCreationContentHandler
         IPlayerSwitchPolicyProvider policy,
         ICareerMenuService careerMenu,
         IInquiryAdapter inquiry,
+        IPlayerIdentityAdapter identity,
         IModLogger logger)
     {
         _switchService = switchService;
@@ -53,15 +55,15 @@ public class PlayerSwitchContentHandler : ICharacterCreationContentHandler
         _policy = policy;
         _careerMenu = careerMenu;
         _inquiry = inquiry;
+        _identity = identity;
         _logger = logger;
     }
 
-    /// <summary>
-    /// A new character creation starts clean. Resets the recorded outcome too, so a second
-    /// campaign started in the same process cannot inherit the first one's result.
-    /// </summary>
+    // The session is reset by PlayerSwitchRegistrationBehavior before it registers this handler, in the
+    // same engine call that runs this method, so a failed registration resets it too.
     public void InitializeContent(CharacterCreationManager characterCreationManager)
-        => _sessionWriter.ResetForNewCreation();
+    {
+    }
 
     public void AfterInitializeContent(CharacterCreationManager characterCreationManager)
     {
@@ -91,9 +93,14 @@ public class PlayerSwitchContentHandler : ICharacterCreationContentHandler
         // they picked was not applied.
         Announce(outcome, heroName);
 
+        // Read now, while it is still theirs: right after the last handler the engine assigns the player
+        // 1,000 gold (FinalizeCharacterCreationState), and TakeoverTreasuryService gives a taken-over
+        // lord this back after character creation.
+        var heroGold = outcome.TookEffect() ? _identity.GetGold(plan.HeroId) : -1;
+
         // Recorded before the clear, because OnCharacterCreationIsOverEvent fires after this and
         // the kingdom-join offer needs to know whether a handover actually happened.
-        _sessionWriter.RecordOutcome(outcome, plan.Path, plan.HeroId);
+        _sessionWriter.RecordOutcome(outcome, plan.Path, plan.HeroId, heroGold);
 
         // The selection itself has been consumed either way.
         _sessionWriter.Clear();

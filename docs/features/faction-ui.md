@@ -88,7 +88,8 @@ themed movie that throws while building falls back to vanilla's and is not tried
   and shows the hero's look. `NextStage` runs the handlers before it opens the stage at its new index
   (pinned from the engine's IL), so the narrative stage opens next; Player Switcher's Patch78 walks the
   backstory to the career choice, and after the career its handover at 1100 makes the player that hero,
-  with his clan, fiefs, kingdom, gear and skills. Unlike Player Switcher's own list, any clan member can
+  with their clan, fiefs, kingdom, gear, skills and own treasury (not vanilla's 1,000 gold: Player
+  Switcher's `TakeoverTreasuryService`). Unlike Player Switcher's own list, any clan member can
   be taken over (the handover makes them the clan's leader, and the ruler when that clan rules, as for a
   ruler's child there). The FACTION button, or Previous back through the six auto-answered backstory
   menus, returns to the faction screen, which drops the takeover; the next confirm that is not one puts
@@ -99,8 +100,8 @@ themed movie that throws while building falls back to vanilla's and is not tried
   screen leaves them); Iron Man and, with the Birth and Aging Options module, the life and death cycle
   can no longer be set, the rest can in the campaign's options. On the named cards, Haldir (a Mirkwood
   lord on the Lothlorien screen) and Bolg (Misty Mountains culture on the Gundabad screen) are copied,
-  since Player Switcher takes over only heroes of the confirmed faction's culture, and so are Aragorn
-  and Gimli, who have no clan.
+  since Player Switcher takes over only heroes of the confirmed faction's culture (Mike, 2026-10-02:
+  "That is fine"), and so are Aragorn and Gimli, who have no clan.
 - **Copied picks.** `FactionPresetService` keeps Kysaro's outcome (Mike, 2026-10-01) for every pick
   that is not taken over: a lord ends up on the player with name, body, race, gear and skills; a named
   card, a legend or a wanderer without the name. Mike's Option A sets when: the look and gear are
@@ -328,9 +329,6 @@ career page and into the game. Owed:
 
 - **In game (Mike):** the checklist below, on the fixed build; of steps 6 to 8, only Boromir's takeover
   reaching the career page and the game has been seen.
-- **Mike:** whether the Haldir and Bolg cards should take over (they are copied today: Haldir is a
-  Mirkwood lord on the Lothlorien screen, Bolg of the Misty Mountains culture on the Gundabad screen).
-  Point each card at a lord of its faction, allow a takeover across kingdoms, or keep the copy.
 - **Issue #704 (on Mike's word):** its body still records the first decision ("the pick copies name,
   body, race, gear and skills; the picker replaces Player Switcher"); a comment recording the takeover
   is drafted for posting.
@@ -361,9 +359,6 @@ career page and into the game. Owed:
   the pick) leaves the created character with the hero's look, the name set on the faction screen, the
   culture's generated clan name and the default banner, since those stages were skipped; Player
   Switcher says so on screen ("You could not take the place of ...").
-- **A taken-over hero starts with 1,000 gold plus the culture's starting gold**, not his own treasury:
-  vanilla sets the player's gold to 1,000 after the handover (`FinalizeCharacterCreationState`) and
-  StartupResources then grants the player's culture gold. Player Switcher's own takeovers behave the same.
 - **The last loading painting** stays in memory until the next loading screen (see Performance).
 
 ### In-game checklist
@@ -383,8 +378,9 @@ career page and into the game. Owed:
 6. Takeover: pick Thranduil's card on Lasgalen and confirm. The career menu opens next, showing his face
    (no face generator, no backstory menus); pick a career and press its button (it still reads "Next"):
    the campaign starts with "You now play as Thranduil", in his clan and kingdom, with his gear, skills
-   and fiefs, and only one Thranduil in the encyclopedia. The log has `[FactionUI] taking over Thranduil`
-   and `Player Switcher: player is now`.
+   and fiefs, and only one Thranduil in the encyclopedia. His gold is his own treasury, not 1,000: the
+   log has `Player Switcher: 'lord_M1_1' keeps their treasury of N gold`, with
+   `[FactionUI] taking over Thranduil` and `Player Switcher: player is now` before it.
    Repeat with a lord from the Lords list and with Legolas (he leads the clan, so Lasgalen, afterwards).
 7. Back from the career menu (Previous through the backstory, or the FACTION button) to the faction
    screen and choose Custom Character: the face generator, backstory, banner, clan name, review and
@@ -422,6 +418,8 @@ career page and into the game. Owed:
   config's summary counts ignored entries, a declined screen clears any pick, memory claims corrected.
 - 2026-10-01: picking a living hero with a clan takes him over through Player Switcher, straight to the
   career choice and into the game (Mike); the faction screen now hides only Player Switcher's panel.
+- 2026-10-02: a taken-over lord keeps their own treasury instead of vanilla's 1,000 gold (Mike), for
+  faction-screen and Player Switcher takeovers alike; Haldir and Bolg stay copies (Mike: fine).
 
 ## GitHub Issue
 

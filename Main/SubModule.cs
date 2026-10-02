@@ -1056,6 +1056,7 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<TAOM.Features.PlayerSwitcher.IPlayerSwitchPolicyProvider>(),
             IoC.Resolve<ICareerMenuService>(),
             IoC.Resolve<TAOM.Adapters.IInquiryAdapter>(),
+            IoC.Resolve<TAOM.Adapters.IPlayerIdentityAdapter>(),
             ccLogger));
 
         // #704: applies a hero picked on Kysaro's faction screen at character-creation handler priority
@@ -1366,7 +1367,11 @@ public class SubModule : MBSubModuleBase
         var influenceService = IoC.Resolve<IStartupInfluenceService>();
         var startupLogger = IoC.Resolve<IModLogger>();
         var playerGoldService = IoC.Resolve<IPlayerStartupGoldService>();
-        campaignStarter.AddBehavior(new StartupResourcesBehavior(goldService, influenceService, playerGoldService, startupLogger));
+        // The player's gold at the end of character creation, a taken-over lord's own treasury included
+        // (Mike, 2026-10-02): the engine assigns 1,000 once every handler has run.
+        campaignStarter.AddBehavior(new StartupResourcesBehavior(
+            goldService, influenceService, playerGoldService,
+            IoC.Resolve<TAOM.Features.PlayerSwitcher.ITakeoverTreasuryService>(), startupLogger));
         campaignStarter.AddBehavior(new Features.MapLoadDiagnostics.MapLoadDiagnosticsBehavior(
             IoC.Resolve<Features.MapLoadDiagnostics.IMapLoadHeartbeatService>()));
 

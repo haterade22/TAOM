@@ -67,6 +67,22 @@ public class KingdomJoinOfferServiceTests
     }
 
     [TestMethod]
+    public void AnAdoptionThatFinishedWithErrors_IsStillOffered()
+    {
+        // The player is the adopted hero either way (SwitchOutcomeExtensions.TookEffect).
+        _session.LastOutcome.Returns(SwitchOutcome.SwitchedWithErrors);
+
+        _sut.OfferIfEarned();
+
+        _inquiry.Received(1).ShowTwoOptionInquiry(
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<Action>(), Arg.Any<Action>(),
+            "KINGDOM", "Erebor",
+            Arg.Any<System.Collections.Generic.IReadOnlyDictionary<string, string>>(), Arg.Any<bool>());
+    }
+
+    [TestMethod]
     public void APlayerWhoNeverSwitched_IsNotAsked()
     {
         _session.LastOutcome.Returns(SwitchOutcome.NotAttempted);

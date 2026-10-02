@@ -954,3 +954,15 @@ The faction-screen takeover (#704) writes Player Switcher's session selection an
 - **Why missed:** "clear only what I set" reads as careful ownership, but the record and the state it describes can disagree, and only the other feature acts on the state.
 - **Prevent:** write your record before the other feature's state, and on every exit clear the other feature's state unconditionally when nothing else can have set it in that flow (here: while the faction screen is the picker, Player Switcher's panel is hidden). When you add a writer to a split read/write interface, update the comments that list its writers.
 - **Source:** `docs/reviews/rca-faction-ui-takeover-2026-10-01.md` T7, T10.
+
+### Per-creation state is reset where every creation passes, not in a callback that may not exist (2026-10-02)
+Player Switcher's handover record was reset in its character-creation handler's `InitializeContent`. That handler exists only when its registration succeeds; the registration is wrapped because a duplicate priority throws. New readers of the record after character creation (StartupResources and the treasury restore) do not check whether Player Switcher is enabled, so a failed registration would have left them an earlier campaign's lord id and gold, and the gold write accepted any hero.
+- **Why missed:** the reset was inherited from the selection, whose every reader sat behind the same registration.
+- **Prevent:** reset per-creation state in the event every creation raises (here `OnCharacterCreationInitialized`, before the registration that can throw), and make a write that targets "the player" check that it is the player. A new reader of old state re-audits where that state is reset.
+- **Source:** `docs/reviews/rca-takeover-treasury-2026-10-02.md` G2.
+
+### An engine bump that adds a write re-audits every claim about that field (2026-10-02)
+v1.5.0 added `Hero.MainHero.Gold = 1000` to `CharacterCreationState.FinalizeCharacterCreationState`, after every character-creation handler. StartupResources' player gold was repaired for it, but Player Switcher kept two claims the assignment broke: "Carry Over Starting Gold" moved the created character's gold onto the lord, and an adopted wanderer received that purse through `KillCharacterAction`. Both values were overwritten moments later, so the knob changed nothing and the doc described a purse nobody kept.
+- **Why missed:** the migration repaired the consumer whose symptom was reported, and nothing listed the other features that set the main hero's gold during character creation.
+- **Prevent:** when an engine bump adds or moves a write to a field, grep TAOM for every writer of that field in the affected window and every doc or hint that states its value, before the migration is called done.
+- **Source:** `docs/reviews/rca-takeover-treasury-2026-10-02.md` G10.

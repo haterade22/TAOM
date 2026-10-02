@@ -61,6 +61,16 @@ public interface IPlayerIdentityAdapter
     /// <summary>Moves the created character's gold to the hero, when the policy asks for it.</summary>
     void TransferGold(string fromHeroId, string toHeroId);
 
+    /// <summary>The hero's gold, or -1 when the id resolves to no hero.</summary>
+    int GetGold(string heroId);
+
+    /// <summary>
+    /// Sets the player's gold outright, the way the engine itself assigns the player 1,000 at the end of
+    /// character creation; used to give a taken-over lord their treasury back after that assignment.
+    /// Writes only when <paramref name="heroId"/> is the player, and says whether it wrote.
+    /// </summary>
+    bool SetPlayerGold(string heroId, int gold);
+
     /// <summary>
     /// Absorbs the character-creation party's rosters into the player's current party and
     /// disposes of it. Adoption path only, and always by the explicit captured id.

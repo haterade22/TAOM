@@ -41,11 +41,16 @@ public class PlayerSwitchSessionStore : IPlayerSwitchSession, IPlayerSwitchSessi
 
     public string LastSwitchedHeroId { get; private set; } = string.Empty;
 
-    public void RecordOutcome(SwitchOutcome outcome, SwitchPath path, string heroId)
+    public int LastHeroGold { get; private set; } = -1;
+
+    public bool LordTakenOver => LastOutcome.TookEffect() && LastPath == SwitchPath.AssumeIdentity;
+
+    public void RecordOutcome(SwitchOutcome outcome, SwitchPath path, string heroId, int heroGold)
     {
         LastOutcome = outcome;
         LastPath = path;
         LastSwitchedHeroId = heroId ?? string.Empty;
+        LastHeroGold = heroGold;
     }
 
     public void ResetForNewCreation()
@@ -54,5 +59,6 @@ public class PlayerSwitchSessionStore : IPlayerSwitchSession, IPlayerSwitchSessi
         LastOutcome = SwitchOutcome.NotAttempted;
         LastPath = SwitchPath.AssumeIdentity;
         LastSwitchedHeroId = string.Empty;
+        LastHeroGold = -1;
     }
 }

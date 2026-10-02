@@ -1548,7 +1548,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Player Switcher")]
     [SettingPropertyBool("Carry Over Starting Gold", Order = 3, RequireRestart = false,
-        HintText = "Adds the gold your created character would have started with on top of the lord's own treasury. Off by default: an established lord is already funded, so stacking a startup package on them is a balance change rather than a fix.")]
+        HintText = "When you take over a lord, adds the starting gold your created character was given on top of the lord's own treasury. An adopted wanderer starts with a new character's gold either way, and an Advanced Start type other than the default sets its own gold. Off by default: an established lord is already funded, so stacking a startup package on them is a balance change rather than a fix.")]
     public bool PlayerSwitcherTransferStartingGold { get; set; } = false;
 
     // --- Menus & Loading Screens (#704, Kysaro's themed front end) ---

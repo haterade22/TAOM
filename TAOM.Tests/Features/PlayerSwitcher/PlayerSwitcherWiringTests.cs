@@ -1,5 +1,6 @@
 using DryIoc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
 using TAOM.Features.PlayerSwitcher;
 
 namespace TAOM.Tests.Features.PlayerSwitcher;
@@ -79,6 +80,26 @@ public class PlayerSwitcherWiringTests
 
         Assert.IsInstanceOfType(service, typeof(PlayerClanLeadershipService));
         Assert.AreSame(service, container.Resolve<IPlayerClanLeadershipService>(), "the repair is stateless and a singleton");
+    }
+
+    [TestMethod]
+    public void TheTreasuryRestore_ReadsWhatTheHandoverRecordedThroughTheWriter()
+    {
+        // The 1100 handler records through the writer and the restore reads through the reader: two
+        // stores would leave every taken-over lord on the engine's 1,000 gold.
+        var container = NewContainer();
+        container.RegisterInstance(NSubstitute.Substitute.For<TAOM.Core.Logging.IModLogger>());
+        // The real adapter probes Campaign.PlayerDefaultFaction by reflection in its constructor.
+        var identity = NSubstitute.Substitute.For<TAOM.Adapters.IPlayerIdentityAdapter>();
+        container.RegisterInstance(identity, IfAlreadyRegistered.Replace);
+
+        container.Resolve<IPlayerSwitchSessionWriter>().RecordOutcome(
+            TAOM.Features.PlayerSwitcher.Domain.SwitchOutcome.Switched,
+            TAOM.Features.PlayerSwitcher.Domain.SwitchPath.AssumeIdentity, "dain", 12000);
+
+        Assert.IsTrue(container.Resolve<ITakeoverTreasuryService>().RestoreIfTakenOver(),
+            "the restore did not see the takeover the writer recorded");
+        identity.Received(1).SetPlayerGold("dain", 12000);
     }
 
     [TestMethod]

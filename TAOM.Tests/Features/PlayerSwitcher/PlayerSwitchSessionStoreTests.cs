@@ -94,6 +94,51 @@ public class PlayerSwitchSessionStoreTests
     }
 
     [TestMethod]
+    public void AFreshStore_HoldsNoHerosGold()
+    {
+        Assert.AreEqual(-1, _sut.LastHeroGold);
+    }
+
+    [TestMethod]
+    public void RecordingAnOutcome_KeepsTheGoldTheHeroHeldWhenTheHandoverFinished()
+    {
+        _sut.RecordOutcome(SwitchOutcome.Switched, SwitchPath.AssumeIdentity, "dain", 12000);
+
+        Assert.AreEqual(12000, _sut.LastHeroGold, "restored after the engine assigns the player 1,000 gold");
+        Assert.AreEqual("dain", _sut.LastSwitchedHeroId);
+    }
+
+    [DataTestMethod]
+    [DataRow(SwitchOutcome.Switched, SwitchPath.AssumeIdentity, true)]
+    [DataRow(SwitchOutcome.SwitchedWithErrors, SwitchPath.AssumeIdentity, true)]
+    [DataRow(SwitchOutcome.Switched, SwitchPath.AdoptIntoPlayerClan, false)]
+    [DataRow(SwitchOutcome.Blocked, SwitchPath.AssumeIdentity, false)]
+    [DataRow(SwitchOutcome.Failed, SwitchPath.AssumeIdentity, false)]
+    public void LordTakenOver_OnlyWhenAHeroWithAClanWasTakenOver(SwitchOutcome outcome, SwitchPath path, bool expected)
+    {
+        // An adopted wanderer joins the clan the player made, whose starting gold is theirs as before.
+        _sut.RecordOutcome(outcome, path, "dain", 12000);
+
+        Assert.AreEqual(expected, _sut.LordTakenOver);
+    }
+
+    [TestMethod]
+    public void LordTakenOver_IsFalseOnAFreshStore()
+    {
+        Assert.IsFalse(_sut.LordTakenOver);
+    }
+
+    [TestMethod]
+    public void ResetForNewCreation_ForgetsTheHerosGold()
+    {
+        _sut.RecordOutcome(SwitchOutcome.Switched, SwitchPath.AssumeIdentity, "dain", 12000);
+
+        _sut.ResetForNewCreation();
+
+        Assert.AreEqual(-1, _sut.LastHeroGold);
+    }
+
+    [TestMethod]
     public void TheReadAndWriteFacesObserveTheSameState()
     {
         IPlayerSwitchSessionWriter writer = _sut;

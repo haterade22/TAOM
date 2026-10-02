@@ -39,6 +39,7 @@ public class PlayerSwitchRegistrationBehavior : CampaignBehaviorBase
     private readonly IPlayerSwitchPolicyProvider _policy;
     private readonly ICareerMenuService _careerMenu;
     private readonly IInquiryAdapter _inquiry;
+    private readonly IPlayerIdentityAdapter _identity;
     private readonly IModLogger _logger;
 
     public PlayerSwitchRegistrationBehavior(
@@ -49,6 +50,7 @@ public class PlayerSwitchRegistrationBehavior : CampaignBehaviorBase
         IPlayerSwitchPolicyProvider policy,
         ICareerMenuService careerMenu,
         IInquiryAdapter inquiry,
+        IPlayerIdentityAdapter identity,
         IModLogger logger)
     {
         _switchService = switchService;
@@ -58,6 +60,7 @@ public class PlayerSwitchRegistrationBehavior : CampaignBehaviorBase
         _policy = policy;
         _careerMenu = careerMenu;
         _inquiry = inquiry;
+        _identity = identity;
         _logger = logger;
     }
 
@@ -73,12 +76,18 @@ public class PlayerSwitchRegistrationBehavior : CampaignBehaviorBase
         // Nothing persists. The feature runs only during the character creation of a new campaign.
     }
 
-    private void OnCharacterCreationInitialized(CharacterCreationManager manager)
+    internal void OnCharacterCreationInitialized(CharacterCreationManager manager)
     {
+        // A new character creation starts clean, and the reset comes before the registration that can
+        // throw: StartupResources and the treasury restore read this record after creation whether or
+        // not the handler exists, and an earlier campaign's would name a lord who is not the player in
+        // this one.
+        _sessionWriter.ResetForNewCreation();
+
         try
         {
             var handler = new PlayerSwitchContentHandler(
-                _switchService, _planner, _session, _sessionWriter, _policy, _careerMenu, _inquiry, _logger);
+                _switchService, _planner, _session, _sessionWriter, _policy, _careerMenu, _inquiry, _identity, _logger);
 
             manager.RegisterCharacterCreationContentHandler(handler, HandlerPriority);
             _logger.LogInfo($"Registered TAOM player switcher handler at priority {HandlerPriority}");

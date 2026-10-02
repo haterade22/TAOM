@@ -52,7 +52,7 @@ Each `<Culture>` element maps a culture ID to gold (per Lord hero) and influence
 | `id` | string | Culture string ID (case-insensitive match) |
 | `gold` | int | Gold given to each alive Lord hero in this culture (0 = skip). Player clan is excluded — see `playerGold`. |
 | `influence` | float | Influence added to each eligible clan in this culture (0 = skip) |
-| `playerGold` | int | Gold given to the **player hero** at CC finalize. Range `[0, 10_000_000]`; out-of-range or non-numeric values revert to 0 with a logged warning. Missing attribute defaults to 0 (no warning). |
+| `playerGold` | int | Gold given to the **player hero** at CC finalize. v1.5.0's finalize then assigns a flat 1,000, so `StartupResourcesBehavior` grants it again at the last `OnCharacterCreationIsOverEvent` phase (9), for 1,000 plus this. That re-grant runs on the default start only (an Advanced Starting Options start type sets its own gold), and not for a lord taken over through Player Switcher, who gets their own treasury back instead ([player-switcher.md](player-switcher.md)). Range `[0, 10_000_000]`; out-of-range or non-numeric values revert to 0 with a logged warning. Missing attribute defaults to 0 (no warning). |
 
 ### Current Values
 
@@ -205,7 +205,7 @@ saved state, so like the gold grant these reach new campaigns only.
 
 | File | Purpose |
 |------|---------|
-| `Main/Features/StartupResources/StartupResourcesBehavior.cs` | CampaignBehavior — fires at index 1, delegates to both services |
+| `Main/Features/StartupResources/StartupResourcesBehavior.cs` | CampaignBehavior: NPC-lord gold and clan influence at `OnNewGameCreatedPartialFollowUpEvent` index 1, through both services; the player's gold at `OnCharacterCreationIsOverEvent` phase 9 (`playerGold` again on the default start, or a taken-over lord's own treasury through Player Switcher's `ITakeoverTreasuryService`) |
 | `Main/Features/StartupResources/StartupGoldService.cs` | Iterates Lord heroes, gives culture-based gold |
 | `Main/Features/StartupResources/IStartupGoldService.cs` | Service interface |
 | `Main/Features/StartupResources/StartupInfluenceService.cs` | Iterates eligible clans, adds culture-based influence |
@@ -244,7 +244,7 @@ saved state, so like the gold grant these reach new campaigns only.
 - `TAOM.Tests/Features/StartupResources/StartupGoldServiceTests.cs` — 8 tests: culture match, player skip, missing culture, multiple lords, zero gold, case-insensitive, no heroes, logging
 - `TAOM.Tests/Features/StartupResources/PlayerStartupGoldServiceTests.cs` — 8 tests: configured culture grant, case-insensitive culture match, unknown culture warns, zero `playerGold` skip, null/empty culture no-op, null hero ID no-op, info-log includes amount + culture
 - `TAOM.Tests/Features/StartupResources/StartupInfluenceServiceTests.cs` — 6 tests: culture match, missing culture, multiple clans, zero influence, no clans, logging
-- `TAOM.Tests/Features/StartupResources/StartupResourcesBehaviorTests.cs` — 4 tests: index 1 triggers, index 0/2 skip, idempotency guard
+- `TAOM.Tests/Features/StartupResources/StartupResourcesBehaviorTests.cs`: index 1 triggers, index 0/2 skip, idempotency guard; the player's gold only at phase 9, where a taken-over lord's treasury is restored instead of the grant and a failed restore is logged
 - `TAOM.Tests/Features/CharacterCreation/PlayerEquipmentServiceTests.cs` — 9 tests: male/female roster-ID format, null/empty input no-ops, RosterNotFound / NoSuitableEquipment / HeroNotFound result handling, success info-log
 
 ## How to Add or Adjust a Culture's Starting Resources
@@ -300,6 +300,7 @@ The NPC-lord gold and clan-influence half is unaffected: `StartupResourcesBehavi
 
 ## Changelog
 
+- 2026-10-02: A lord taken over at character creation through Player Switcher (its panel, or the #704 faction screen) no longer starts on the engine's 1,000 plus `playerGold`: at phase 9 `StartupResourcesBehavior` has Player Switcher's `ITakeoverTreasuryService` give them their own treasury back instead (Mike: "If they wanted to start with 1K they would've made a character from scratch"). Created characters and adopted wanderers are unchanged. No config or data change.
 - 2026-08-14 (later, supersedes the flattening below): Retuned NPC-lord `gold` and clan `influence` against **measured** per-culture burn rates. Flat denars are not flat in effect: a culture's troops cost between 5.31 and 19.03 denars a day per head, so an identical 250,000 funded 1.89x more campaign for Mordor than for Gundabad, and an identical 500,000 bought Rivendell less than Lothlorien. Gold is now `K x runwayDays x avgTroopWage` with four lore tiers (270 / 150 / 100 / 70 days) and `K = 52.5437`, putting about 100M denars in AI hands. Influence moved to three tiers (600 / 400 / 200) keyed on how centrally a realm acts. Derivation and the measurement method are in the config file's own header. `playerGold` unchanged. Companion data change in the same pass: eight fief-starved cultures' settlements raised to a committed floor in the LIVE `TAOM_Map` module (see "The structural gap" below), gated by the new `SETTLEMENT_ECONOMY_FLOOR` validator check.
 - 2026-08-14: Flattened NPC-lord `gold` and clan `influence` so no faction opens the campaign with a structural economic head start. Every culture is now 250,000 gold / 1,000 influence, except the four elven realms (rivendell, lothlorien, mirkwood, lindon) at 500,000 gold. Notable movers: erebor is the one large move DOWN, from 800k, where it had been the richest culture on the map by a factor of four, and the elves came down from 600k to the 500k exception. Everything else moved up: bluecraig from 40k, vlandia (Rohan) and sturgia (Dale) from 50k gold and 50 influence (a twentyfold influence jump), umbar from 200k. `playerGold` was deliberately not flattened and still varies by culture (elves 4,000, erebor 3,500, everyone else 2,000). Data-only edit to `startup_resources_config.xml`.
 - 2026-08-03 — The player gold grant is re-invoked after a multiplayer join hand-off, against the hero the join actually hands the player and with the character-creation culture (see [player-possession.md](player-possession.md)). Wiring only — no config, tuning or data change; the youth-option equipment is not re-applied.

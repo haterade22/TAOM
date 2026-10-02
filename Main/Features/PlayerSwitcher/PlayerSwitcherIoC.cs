@@ -14,6 +14,7 @@ public static class PlayerSwitcherIoC
         container.Register<IHeroSwitchService, HeroSwitchService>(Reuse.Singleton);
         container.Register<IKingdomJoinAdapter, KingdomJoinAdapter>(Reuse.Singleton);
         container.Register<IKingdomJoinOfferService, KingdomJoinOfferService>(Reuse.Singleton);
+        container.Register<ITakeoverTreasuryService, TakeoverTreasuryService>(Reuse.Singleton);
         container.Register<IPlayerSwitchPolicyProvider, PlayerSwitchPolicyProvider>(Reuse.Singleton);
         container.Register<INarrativeCareerFastPathService, NarrativeCareerFastPathService>(Reuse.Singleton);
         // #550. Stateless: the repaired state lives in the engine's clan leader field, so there is no

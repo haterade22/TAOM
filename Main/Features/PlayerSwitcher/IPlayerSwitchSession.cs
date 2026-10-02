@@ -37,9 +37,23 @@ public interface IPlayerSwitchSession
     /// </summary>
     SwitchOutcome LastOutcome { get; }
 
-    /// <summary>Which path the handover took. Only meaningful when <see cref="LastOutcome"/> is Switched.</summary>
+    /// <summary>Which path the handover took. Only meaningful when <see cref="LastOutcome"/> took effect
+    /// (<see cref="SwitchOutcomeExtensions.TookEffect"/>).</summary>
     SwitchPath LastPath { get; }
 
     /// <summary>The hero the player became, or empty.</summary>
     string LastSwitchedHeroId { get; }
+
+    /// <summary>
+    /// The gold that hero held when the handover finished, or -1 when no handover took effect. Read
+    /// back after character creation, because the engine assigns the player 1,000 gold once every
+    /// handler has run (FinalizeCharacterCreationState) and a taken-over lord keeps their own treasury.
+    /// </summary>
+    int LastHeroGold { get; }
+
+    /// <summary>
+    /// The last handover took effect on the takeover path: the player is now an existing lord with their
+    /// own clan and treasury. False for an adopted wanderer, who joins the clan the player made.
+    /// </summary>
+    bool LordTakenOver { get; }
 }

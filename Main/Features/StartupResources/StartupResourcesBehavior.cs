@@ -1,5 +1,6 @@
 using System;
 using TAOM.Core.Logging;
+using TAOM.Features.PlayerSwitcher;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Extensions;
 
@@ -14,6 +15,7 @@ public class StartupResourcesBehavior : CampaignBehaviorBase
     private readonly IStartupGoldService _goldService;
     private readonly IStartupInfluenceService _influenceService;
     private readonly IPlayerStartupGoldService _playerGoldService;
+    private readonly ITakeoverTreasuryService _takeoverTreasury;
     private readonly IModLogger _logger;
     private bool _goldDistributed;
     private bool _influenceDistributed;
@@ -22,11 +24,13 @@ public class StartupResourcesBehavior : CampaignBehaviorBase
         IStartupGoldService goldService,
         IStartupInfluenceService influenceService,
         IPlayerStartupGoldService playerGoldService,
+        ITakeoverTreasuryService takeoverTreasury,
         IModLogger logger)
     {
         _goldService = goldService;
         _influenceService = influenceService;
         _playerGoldService = playerGoldService;
+        _takeoverTreasury = takeoverTreasury;
         _logger = logger;
     }
 
@@ -58,11 +62,16 @@ public class StartupResourcesBehavior : CampaignBehaviorBase
             return;
         }
 
-        var hero = Hero.MainHero;
-        if (hero == null) return;
-
         try
         {
+            // A lord taken over at character creation (Player Switcher) keeps their own treasury, put
+            // back here in place of the culture's starting gold, which is a new character's (Mike,
+            // 2026-10-02). An adopted wanderer leads the clan the player made, which still gets it.
+            if (_takeoverTreasury.RestoreIfTakenOver()) return;
+
+            var hero = Hero.MainHero;
+            if (hero == null) return;
+
             _playerGoldService.GrantPlayerStartupGold(hero.Culture?.StringId, hero.StringId);
         }
         catch (Exception ex)

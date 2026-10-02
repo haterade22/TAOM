@@ -17,8 +17,9 @@ public interface IPlayerSwitchSessionWriter
 
     void SetPreviewActive(bool active);
 
-    /// <summary>Records what the handover did, for listeners that run after character creation ends.</summary>
-    void RecordOutcome(SwitchOutcome outcome, SwitchPath path, string heroId);
+    /// <summary>Records what the handover did, for listeners that run after character creation ends:
+    /// <paramref name="heroGold"/> is the hero's gold when it finished, or -1 when none took effect.</summary>
+    void RecordOutcome(SwitchOutcome outcome, SwitchPath path, string heroId, int heroGold);
 
     /// <summary>
     /// Wipes everything including the recorded outcome. Called when a NEW character creation

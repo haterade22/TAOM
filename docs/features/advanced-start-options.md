@@ -139,12 +139,21 @@ XML, so the ASO family was the only misplacement (2026-09-15).
 ## Interactions with the rest of TAOM
 
 - **Player start applies at character-creation phase 8.** TAOM's phase-9 handlers
-  (`SpecialResourcesBehavior`, `PlayerPossessionBehavior`, `StartupResourcesBehavior`) deliberately run
-  after it. Verified: across CampaignSystem, SandBox and StoryMode the only indices any subscriber
-  uses are 1 and 8, so 9 is both reachable and last.
+  (`SpecialResourcesBehavior`, `PlayerPossessionBehavior`, `StartupResourcesBehavior`,
+  `KingdomJoinOfferBehavior`) deliberately run after it. Across CampaignSystem and StoryMode the
+  gameplay subscribers use indices 1 and 8; SandBox.GauntletUI's map views also listen at 9, only to
+  reset their own view models. A start type other than "default" sets the player's gold at phase 8, so
+  StartupResources leaves it alone: neither its culture grant nor Player Switcher's treasury restore,
+  which it calls, overrides it.
 - **King / Vassal / Trader / Beggar starts overwrite equipment and gold.** TAOM's career starting
   equipment survives only on Default, Mercenary and Outlaw. The startup-gold re-apply is explicitly
   gated on the default start so ASO's own values are not clobbered.
+- **A lord taken over in character creation is not a created character.** After a Player Switcher
+  takeover (its panel, or the faction screen in [faction-ui.md](faction-ui.md)) the main hero at phase 8
+  is the lord, so a start type other than "default" applies to an established hero: their gold, gear,
+  item roster and position, and for King, Vassal and Mercenary their clan's kingdom. Nothing checks the
+  combination yet; the detail and the open decision are in [player-switcher.md](player-switcher.md),
+  "Owed".
 - **Civil Unrest** (the engine calls it High Rebellion) works by swinging vanilla's loyalty thresholds,
   which `TaomSettlementLoyaltyModel` overrides. The high-rebellion pair lives in
   `revolt_tuning_config.json` (see [`configs-balance.md`](../modding/configs-balance.md)) so the modifier

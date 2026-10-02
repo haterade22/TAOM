@@ -88,7 +88,8 @@ corrupt a save if reversed.
 3. `ReassignPlayerClan` writes `Campaign.PlayerDefaultFaction`. **This must precede step 7.**
 4. `PromoteToClanLeader` (#550): when the lord is not already their clan's leader, vanilla
    `ChangeClanLeaderAction.ApplyWithSelectedNewLeader` makes them so. **This must follow step 2.**
-5. Optional gold transfer.
+5. Optional gold transfer ("Carry Over Starting Gold"): the created character's starting gold moves
+   onto the lord.
 6. Career re-key, then `MarkClanAndKingdomKnown`.
 7. `RemoveOriginalHero`. **This must follow step 2.**
 8. `ClearPendingNotifications`.
@@ -131,10 +132,34 @@ captured party id.
 > precedence made its second clause match every OTHER lord's party in the clan. Applied to a royal
 > clan that would have merged and deleted all of them. Never sweep by predicate here.
 
-**One asymmetry worth knowing.** On the adoption path the created character's gold reaches the
-player anyway, regardless of the MCM knob, because `KillCharacterAction` line 98 gives a non-leader
-clan member's gold to their clan leader on removal, and after adoption the player IS that leader.
-This is left as it is: it is your own clan's money, not a windfall on top of a stranger's treasury.
+**The created character's purse on the adoption path.** `KillCharacterAction` gives a removed
+non-leader's gold to their clan leader (line 97 in the v1.5.3 decompile), and after adoption the player
+IS that leader, so the purse reaches the adopted wanderer whatever the MCM knob says. It does not
+survive: `FinalizeCharacterCreationState` then assigns the main hero 1,000 gold, overwriting it along
+with the wanderer's own, and StartupResources adds the starting gold of the wanderer's culture at phase
+9. An adopted wanderer therefore starts with what a new character starts with, and that is left as it
+is: the clan is the one the player made.
+
+**The lord keeps their own treasury (Mike, 2026-10-02).** "If they wanted to start with 1K they would've
+made a character from scratch." `CharacterCreationState.FinalizeCharacterCreationState` assigns
+`Hero.MainHero.Gold = 1000` once every handler has run, by which time the main hero is the lord, and
+StartupResources then added the culture's starting gold at the last `OnCharacterCreationIsOver` phase.
+So every lord taken over used to start with 1,000 plus that, whatever their treasury, and "Carry Over
+Starting Gold" changed nothing. Now the 1100 handler records the lord's gold when a handover took effect
+(`IPlayerSwitchSession.LastHeroGold`, after any carried-over gold, and after a promoted lord received
+the old leader's purse through `ChangeClanLeaderAction`). At phase 9 `StartupResourcesBehavior`, the one
+listener that decides what replaces the engine's 1,000, asks `TakeoverTreasuryService` first: a lord
+taken over gets the recorded treasury back and no culture gold, anyone else the culture gold as before.
+The restore acts only when `IPlayerSwitchSession.LordTakenOver` (the takeover path): an adopted wanderer
+leads the clan the player made, which starts like any new character, as above. An Advanced Starting
+Options start type other than "default" keeps the gold it set itself at phase 8, for a taken-over lord
+too (see Owed for what else such a start does to a lord). The record is forgotten when each character
+creation starts, in `PlayerSwitchRegistrationBehavior` before it registers the handler, so a failed
+registration cannot hand an earlier campaign's lord id to the restore. `PlayerSwitcherBindingTests`
+pins the engine order all of this rests on: the handlers, then the 1,000, then the phase events. Tests:
+`TakeoverTreasuryServiceTests`, `StartupResourcesBehaviorTests`, `SwitchOutcomeTests`,
+`PlayerSwitchContentHandlerTests`, `PlayerSwitchSessionStoreTests`, `PlayerSwitchRegistrationBehaviorTests`,
+`PlayerSwitcherWiringTests`.
 
 ## Skipping the backstory questions
 
@@ -452,7 +477,7 @@ takeover of an attached lord plays, so it is left as it is until someone wants i
 | `EnablePlayerSwitcher` | `true` | Off means the movie never loads and the handler no-ops; a lord picked on Kysaro's faction screen (#704) is then copied, not taken over |
 | `PlayerSwitcherIncludeWanderers` | `true` | Only 20 of 39 cultures have any |
 | `PlayerSwitcherAllowLoreLockedHeroes` | `false` | Hint text states the capture caveat |
-| `PlayerSwitcherTransferStartingGold` | `false` | An established lord is already funded |
+| `PlayerSwitcherTransferStartingGold` | `false` | An established lord is already funded; a taken-over lord keeps their own treasury either way (on the default start) |
 
 All four are simulation-relevant for co-op under the include-by-default rule, and are counted in
 `SettingsFingerprintTests`.
@@ -510,7 +535,9 @@ Each step on a fresh campaign unless stated.
    mod documented); the clan screen shows his family, not "unknown"; the kingdom screen shows
    Erebor with you as ruler; his fiefs are yours; **his clan's renown and tier are non-zero**; your
    party sits where his was, with his troops; your career is the one you picked; the old
-   `player_faction` clan is gone from the clan list.
+   `player_faction` clan is gone from the clan list. Your gold is Dain's own treasury, not 1,000 plus
+   Erebor's starting gold: `taom_debug_*.log` has `Player Switcher: '<Dain's id>' keeps their treasury
+   of N gold`, and the gold on the map reads N.
 5. **A non-ruling clan leader.** Same flow. Correct: you lead that clan as a vassal of Erebor, and
    both screens are coherent.
 6. **Race survives a save cycle.** Save, quit to the main menu, reload. Correct: still Dain, still
@@ -521,7 +548,9 @@ Each step on a fresh campaign unless stated.
 8. **Co-op non-regression.** With a co-op mod loaded, repeat step 4 and let several in-game hours
    pass. Correct: no `[Possession] Controlled hero changed` line and no re-grant.
 9. **Wanderer adoption.** Pick a wanderer. Correct: your clan is the one you named, with your
-   banner, you lead it, and your party holds the starting troops.
+   banner, you lead it, and your party holds the starting troops. Your gold is 1,000 plus the starting
+   gold of the wanderer's culture (`playerGold` in `startup_resources_config.xml`), as for a new
+   character, and the log has no `keeps their treasury` line.
 10. **Kingdom join.** Accept the prompt that follows step 9. Correct: your clan joins and the
     kingdom screen agrees. The prompt must NOT appear after step 4, nor after an ordinary character
     creation with no lord selected.
@@ -592,6 +621,23 @@ the **lore-locked gate** (Sauron and the Nazgul, MCM off then on), the **barber 
   The Codex review raised this as SUSPECTED and could not establish reachability against shipped
   TAOM startup data; neither could I. **Probe it first in the smoke**: if a prisoner or a
   `NotSpawned` hero can appear in the list, add the state filter before shipping.
+- **An Advanced Starting Options start other than "default" acts on the lord.** ASO applies the start
+  at phase 8 to `Hero.MainHero`, who after a takeover is the lord, and Player Switcher never checks the
+  start type (`CampaignAdvancedStartingPlayerOptionsCampaignBehavior`, `StartGameAsRuler` through
+  `StartGameAsBeggar`, read in the v1.5.3 decompile). Every such start replaces the lord's gold with its
+  own amount (the treasury restore stands aside, as the culture grant does), clears the party's item
+  roster and moves the party. King, Vassal and Mercenary move the lord's clan into the kingdom picked on
+  the ASO screen, King making it that kingdom's ruling clan and giving it fiefs; King, Vassal and Trader
+  replace the lord's battle and civilian gear; Beggar sets the gold to 0 and strips every slot down to
+  a robe. A decision for Mike: refuse the combination when a lord is picked, run the start only for a
+  created character, or leave it to the player.
+- **A `Failed` outcome can hide a completed swap.** `ChangePlayerCharacterAction.Apply` sets
+  `Game.Current.PlayerTroop` to the lord before it raises `OnBeforePlayerCharacterChanged` and
+  `OnPlayerCharacterChanged`, whose listeners can throw, and `HeroSwitchService` marks the handover
+  committed only once `Apply` returns. Such a throw reads as `Failed` ("continuing as your own
+  character") although the player is the lord, and since `LordTakenOver` is then false, that lord starts
+  on 1,000 plus the culture's starting gold. It predates the treasury work; an issue is owed on Mike's
+  word.
 - The machine translation. The 15 keys are seeded with English in all twelve languages, so the game
   renders real text rather than a raw id, but no API key was available in the authoring session.
   The translator's own filter treats a row equal to English as untranslated, so a later
