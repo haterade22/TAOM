@@ -309,6 +309,7 @@ public class LocalizationKeyConsistencyTests
         // {=key}Default, outside the English sources and the language files.
         var registered = RegisteredEnglish();
         var checkedSites = 0;
+        var xsltSites = 0;
         var problems = new List<string>();
         var files = Directory.EnumerateFiles(ModuleDataPath, "*.*", SearchOption.AllDirectories)
             .Where(f => (f.EndsWith(".xml", StringComparison.OrdinalIgnoreCase) || f.EndsWith(".xslt", StringComparison.OrdinalIgnoreCase))
@@ -338,6 +339,10 @@ public class LocalizationKeyConsistencyTests
                     continue;
                 }
                 checkedSites++;
+                if (isXslt)
+                {
+                    xsltSites++;
+                }
                 if (!string.Equals(m.Groups[2].Value, english, StringComparison.Ordinal))
                 {
                     problems.Add($"{Path.GetFileName(file)} {m.Groups[1].Value}: data \"{m.Groups[2].Value}\" vs registered \"{english}\"");
@@ -345,9 +350,10 @@ public class LocalizationKeyConsistencyTests
             }
         }
 
-        // 6,621 on 2026-09-25, 509 of them the stylesheets' escaped sites (6,112 without them); a floor above the
-        // unescaped count pins the XSLT half of the scan
-        Assert.IsTrue(checkedSites > 6300, $"Only {checkedSites} data sites checked; the scan broke.");
+        // 11,555 on 2026-10-02, 1,440 of them in the stylesheets (the 2026-10-01 data-text registration grew the
+        // XML half from 6,112); each half has its own floor, so neither can stop being scanned unnoticed
+        Assert.IsTrue(checkedSites - xsltSites > 9500, $"Only {checkedSites - xsltSites} XML data sites checked; the scan broke.");
+        Assert.IsTrue(xsltSites > 1300, $"Only {xsltSites} XSLT data sites checked; the escaped-brace scan broke.");
         Assert.AreEqual(0, problems.Count,
             $"{problems.Count} data default(s) differ from the registered English. English players read the data, " +
             "the other twelve languages translate the registration. Align them (and re-run the generator that " +
@@ -417,24 +423,29 @@ public class LocalizationKeyConsistencyTests
     [TestMethod]
     public void EveryNameKey_InTheNameGeneratorsSources_HasOneEnglishDefault()
     {
+        var fixedSources = new[]
+        {
+            Path.Combine(ModuleDataPath, "taom_spkingdoms.xml"),
+            Path.Combine(ModuleDataPath, "taom_spcultures.xml"),
+            Path.Combine(ModuleDataPath, "taom_wanderers.xml"),
+            Path.Combine(ModuleDataPath, "named_companions", "named_companions.xml"),
+            Path.Combine(ModuleDataPath, "custom_battle_scenes.xml"),
+        };
+        foreach (var path in fixedSources)
+        {
+            Assert.IsTrue(File.Exists(path), $"{path} is gone; update this list and the generator's CATEGORIES together.");
+        }
         var sources = Directory.GetFiles(Path.Combine(ModuleDataPath, "troops"), "*.xml")
             .Concat(Directory.GetFiles(Path.Combine(ModuleDataPath, "characters"), "*.xml"))
             .Concat(Directory.GetFiles(Path.Combine(ModuleDataPath, "career_system"), "*.xml"))
-            .Concat(new[]
-            {
-                Path.Combine(ModuleDataPath, "taom_spkingdoms.xml"),
-                Path.Combine(ModuleDataPath, "taom_spcultures.xml"),
-                Path.Combine(ModuleDataPath, "taom_wanderers.xml"),
-                Path.Combine(ModuleDataPath, "named_companions", "named_companions.xml"),
-                Path.Combine(ModuleDataPath, "custom_battle_scenes.xml"),
-            })
-            .Where(File.Exists)
+            .Concat(fixedSources)
             .ToList();
-        Assert.IsTrue(sources.Count > 10, $"Only {sources.Count} name sources found; the path broke.");
+        // 55 sources and 9,521 keys on 2026-10-02
+        Assert.IsTrue(sources.Count > 50, $"Only {sources.Count} generator sources found; the path broke.");
 
         var (keys, shared) = KeysWithTwoDefaults(sources.Select(file =>
             (Path.GetFileName(file), XDocument.Load(file).Descendants().Attributes().Select(a => a.Value))));
-        Assert.IsTrue(keys > 1000, $"Only {keys} name keys found; the scan broke.");
+        Assert.IsTrue(keys > 9000, $"Only {keys} keys found in the generator's sources; the scan broke.");
         Assert.AreEqual(0, shared.Count,
             $"{shared.Count} name key(s) carry two different English names; every other language shows one " +
             "translation for both characters. Give the copy its own key (aom_<id>_name) and re-run " +

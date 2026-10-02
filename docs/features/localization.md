@@ -97,8 +97,9 @@ Each language dir follows the same 3-file pattern.
 
 ## Tests
 
-`TAOM.Tests/Infrastructure/Localization/LanguageDataXmlTests.cs`: structural contract tests (includes per-file existence checks for `taom_troop_name_strings`, `taom_lord_name_strings`, `taom_clan_name_strings`, and `taom_kingdom_name_strings`, added 2026-09-17, and the data-row
-`AllLanguageDirs_HaveDataTextStringsFile` for the five data-text files of 2026-10-01, alongside the others below):
+`TAOM.Tests/Infrastructure/Localization/LanguageDataXmlTests.cs`: structural contract tests (includes per-file existence checks for `taom_troop_name_strings`, `taom_lord_name_strings`, `taom_clan_name_strings`, and `taom_kingdom_name_strings`, added 2026-09-17, and
+`LanguageManifests_EveryEnglishSource_HasExactlyOneLanguageFile`, which derives the expected files from the English
+sources (2026-10-02), alongside the others below):
 
 | Test | What it guards |
 |------|----------------|
@@ -174,14 +175,16 @@ Bannerlord must already support the language natively (it must have an entry in 
 | Content | Reason | Workaround |
 |---------|--------|------------|
 | CharacterCreation JSON narratives | Custom C# loader, not TextObject-based | Requires code changes to inject translated content |
-| XSLT-modified action/comment strings | Where the stylesheet keeps a vanilla id, vanilla's language packs translate it. The 36 overrides that write a new key with TAOM's own English are registered in `taom_xslt_strings.xml` (2026-10-01) and translated like any other row | None needed |
+| XSLT-modified action/comment strings | `comment_strings.xslt` and `action_strings.xslt` write 48 keys: 12 are TAOM's own (`TAOM_liege_*`, registered and translated); the other 36 keep SandBox's key and only drop "the", so SandBox's curated translations apply. They are deliberately not registered: a TAOM row would load after SandBox's and replace it (`VanillaKeyOverrideTests`) | None needed; vanilla translations still apply |
 | Tolkien proper nouns (Gondor, Aragorn) | Convention — not translated in official LOTR | None — leave as English |
 | Equipment/item names | Owned by LOTRLOME_Armory module | Translate in that module |
-| `custom_settlements.xml` and the repo `settlements.xml` | Never loaded: the first is registered nowhere in `SubModule.xml`, the second is a stale copy of TAOM_Map's (whose own `loc_settlements.xml` files are translated) | None; translating them would change nothing in game |
+| `custom_settlements.xml` and the repo `settlements.xml` | Never loaded: TAOM's `SubModule.xml` has no `Settlements` node, so neither file reaches the engine (TAOM_Map's own settlements and `loc_settlements.xml` files are what ship) | None; translating them would change nothing in game |
 
 Hero biographies and NPC names used to sit in this table; since 2026-10-01 they are generated into
 `taom_hero_text_strings.xml` and `taom_character_name_strings.xml` (with culture text, career data and
 Custom Battle scene names) and translated like the rest.
+
+**Patch25 exception (open issue):** `MBTextManager_GetLocalizedText_Patch` returns TAOM's English override for the 313 `taom_module_strings.xml` keys not prefixed `taom_` without checking the active language, so those keys show English in every language although their rows are translated. 56 of them are data text: the Abanissa and Shaghana culture names and descriptions (4) and 52 of their notables.
 
 ## Performance
 

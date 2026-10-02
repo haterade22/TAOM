@@ -1478,41 +1478,5 @@
     <string id="TAOM_hero_SE9_s_bn" text="法拉金是黑努曼諾爾女巫，每當她的丈夫出征，奇立斯納吉爾的實權便在她手中。她的名字令人想起努曼諾爾的末代君王。" />
     <string id="TAOM_hero_SE9_c1_bn" text="齊古爾貝爾是奇立斯納吉爾的繼承人，受過黑暗技藝的訓練。他的名字意為「巫師的愛慕者」——努曼諾爾在認清索倫的真面目之前，正是如此稱呼他。" />
     <string id="TAOM_hero_SE9_c2_bn" text="齊姆拉金是劍主的次子女，也是兩人中更危險的那一個。她承襲了母親的天賦，卻毫無母親的耐性。" />
-    <string id="3UucAOBW" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。" />
-    <string id="62vceTar" text="我是{CONVERSATION_CHARACTER.LINK}，來自{CLAN_NAME}。" />
-    <string id="99gE1ZoY" text="我是{CONVERSATION_CHARACTER.LINK}，來自{FACTION}。" />
-    <string id="AxMrFoea" text="{TOWN_NAME}正遭到{FACTION_NAME}的{LORD.LINK}所率領的部隊圍攻！" />
-    <string id="EHFibjkM" text="{TOWN_NAME}正遭到{FACTION_NAME}的{LORD.LINK}所率領的大軍圍攻！" />
-    <string id="ExbVzTZA" text="{CLAN}已簽約與{KINGDOM}並肩作戰。" />
-    <string id="FFXqPFwl" text="我是{CONVERSATION_CHARACTER.LINK}，出身{CLAN_NAME}，瓦蘭迪亞王國史冊上最顯赫的家族之一。" />
-    <string id="JJAWbuNT" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。據說我們的祖先就在那些英雄紀元自西方駛來此地的金色船隊之中。當然啦，若你真信所有自稱搭過那些船的人都在船上，那些船早該因超載而翻覆了。" />
-    <string id="L2GbDVja" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}，我的{?PLAYER.GENDER}夫人{?}大人{\?}，能為您效勞是我的榮幸。" />
-    <string id="Nq2dyiO1" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}，這個名字你在斯圖吉亞人的傳奇裡一定聽過許多次。" />
-    <string id="PBgLvyOa" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。我們的祖先來自遙遠的北方，領取諸侯的銀幣，立誓守護這片土地，而我們始終信守那誓言。" />
-    <string id="S0oFKYfB" text="{CLAN}不再效忠於{KINGDOM}。" />
-    <string id="S1vGzr8z" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}，阿塞萊的一個家族。" />
-    <string id="SLAkSrb5" text="{FACTION1_NAME}向{FACTION2_NAME}宣戰。" />
-    <string id="TsYCa2fZ" text="{FACTION1}與{FACTION2}已締結和約。" />
-    <string id="U4p70l9B" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。" />
-    <string id="U770Bvy8" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。在巴旦尼亞人的歌謠中，我們家族的威名無人能及。" />
-    <string id="Ua0T0A7t" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}，巴旦尼亞人最古老的血脈之一。" />
-    <string id="WH8P3Y5F" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。" />
-    <string id="a8584KD0" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。我相信你在草原的史詩中聽過我們家族的名字。我們承繼著庫塞特人之母——偉大母狼十二子之一的名號。" />
-    <string id="cMO9JXvk" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。我們的土地受封於{LIEGE_TITLE}，我們恪守效忠的誓言。" />
-    <string id="dC8acIya" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。" />
-    <string id="dfAE3liA" text="{CLAN_NAME}家族已加入{FACTION}。" />
-    <string id="dlkg2jQf" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}，斯圖吉亞人最古老的血脈之一。" />
-    <string id="eyxfHmCU" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。我們家族世代效忠瓦蘭迪亞的諸王。" />
-    <string id="hJFCi1zu" text="{FACTION1}與{FACTION2}已締結和約。" />
-    <string id="hP57Caab" text="{VICTOR_FACTION}的{VICTOR_PARTY}擊敗了{DEFEATED_FACTION}的{DEFEATED_PARTY}。" />
-    <string id="hbWhfoWH" text="{SETTLEMENT}遭到{FACTION_NAME}的{LORD.LINK}劫掠" />
-    <string id="hopvV6Ch" text="{FACTION1_NAME}的{RULER_NAME}向{FACTION2_NAME}宣戰。" />
-    <string id="kqwNCCbZ" text="{TOWN_NAME}遭到{FACTION_NAME}的{LORD.LINK}所率大軍圍攻！" />
-    <string id="l2nEIZV5" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。" />
-    <string id="nbVW2cJ8" text="{SETTLEMENT}遭到{FACTION_NAME}的{LORD.LINK}所率大軍劫掠" />
-    <string id="pn79h0aj" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。我們的頭銜是沃提歐斯皇帝親自授予的。當然，當時他被囚在我們的劫掠船上，也沒什麼選擇餘地，不過我相信他確實認可了我們血脈的高貴。" />
-    <string id="rhTUDKhJ" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。巴旦尼亞沒有哪個家族不曾貢獻出一位勇士的頭骨，加入我們的酒杯收藏。" />
-    <string id="z2yr4mc6" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。我們家族世代忠誠地侍奉庫塞特汗國。" />
-    <string id="zZ9FQJRI" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}，阿塞萊血脈中最古老、最高貴的一支。" />
   </strings>
 </base>

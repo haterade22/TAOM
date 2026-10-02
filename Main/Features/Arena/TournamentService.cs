@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TAOM.Core.Domain;
 using TAOM.Features.ArmourAcquisition;
+using TAOM.Features.TournamentRewards;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.Core;
@@ -24,11 +25,13 @@ public class TournamentService : ITournamentService
 
     private readonly IRaceManager _raceManager;
     private readonly IArmourGateService _armourGate;
+    private readonly TournamentRewardsService _rewards;
 
-    public TournamentService(IRaceManager raceManager, IArmourGateService armourGate)
+    public TournamentService(IRaceManager raceManager, IArmourGateService armourGate, TournamentRewardsService rewards)
     {
         _raceManager = raceManager;
         _armourGate = armourGate;
+        _rewards = rewards;
     }
 
     public float CalculateStartChance(int lordCount)
@@ -66,6 +69,27 @@ public class TournamentService : ITournamentService
             pool.Add(item);
         return pool;
     }
+
+    public IReadOnlyList<string> PrizeChoices(string? cultureId, string advertisedItemId, string seedKey)
+    {
+        // The alternatives come from the advertised prize's own band: a heavy prize is a big tournament's.
+        var advertised = Game.Current?.ObjectManager?.GetObject<ItemObject>(advertisedItemId);
+        var band = advertised != null
+                   && TournamentPrizeRules.PrizeClass(_armourGate.GetClass(advertisedItemId), (int)advertised.Tier) == ArmourAcquisition.Domain.ArmourClass.Heavy
+            ? PrizeBand.Elite
+            : PrizeBand.Regular;
+        var ids = new List<string>();
+        foreach (var item in BuildPrizePool(cultureId, band))
+            ids.Add(item.StringId);
+        return TournamentPrizeRules.PickChoices(ids, advertisedItemId, seedKey);
+    }
+
+    public int RenownReward(int vanillaRenown, string? townId, string? winnerCultureId) =>
+        _rewards.RenownReward(vanillaRenown, townId, winnerCultureId);
+
+    public int InfluenceReward(int vanillaInfluence, string? townId, string? winnerCultureId,
+        string? winnerKingdomId, string? townKingdomId) =>
+        _rewards.InfluenceReward(vanillaInfluence, townId, winnerCultureId, winnerKingdomId, townKingdomId);
 
     public string ResolveDummyId(string participantCultureId, string settlementCultureId)
     {

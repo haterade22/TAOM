@@ -205,13 +205,40 @@ What a future tournament feature can hook, read from the decompile on 2026-10-02
 
 | Want | Where | How |
 |---|---|---|
-| A higher max bet | `TournamentBehavior.GetMaximumBet()` (SandBox): `150`, doubled by Roguery's Deep Pockets. The bet UI, the bet button and its text all read it (`TournamentVM.cs:207`, `:922`, `:1066`) | Harmony postfix on `GetMaximumBet`; `MaximumBet` is a `const`, so nothing else moves it. The cap is per round |
-| Renown and influence for the win | `TournamentModel.GetRenownReward` (vanilla 3, Duelist doubles, Self Promoter +3) and `GetInfluenceReward` (vanilla 0) | Override on `TaomTournamentModel`; the winner panel's text reads `TournamentGame.TournamentWinRenown` separately |
-| The skill the win trains | `GetSkillXpGainFromTournament` (vanilla 500 XP to a random skill) | Override on `TaomTournamentModel` |
-| How often each culture holds one | `GetTournamentStartChance` | `TournamentService.CalculateStartChance` |
-| A refund when knocked out | `TournamentBehavior` pays the stake to the town (`:280-283`) | Harmony patch there |
-| Choosing the prize | `TournamentManager.GivePrizeToWinner`, `GetTournamentPrize` (protected, not virtual) | Harmony patch plus UI |
+| A higher max bet | `TournamentBehavior.GetMaximumBet()` (SandBox): `150`, doubled by Roguery's Deep Pockets. The bet UI, the bet button and its text all read it (`TournamentVM.cs:207`, `:922`, `:1066`) | **Done** (Patch96, [tournament-rewards.md](tournament-rewards.md)) |
+| Renown and influence for the win | `TournamentModel.GetRenownReward` (vanilla 3, Duelist doubles, Self Promoter +3) and `GetInfluenceReward` (vanilla 0, an `int`) | **Done** on `TaomTournamentModel` ([tournament-rewards.md](tournament-rewards.md)) |
+| The skill a tournament trains | `GetSkillXpGainFromTournament` (vanilla 500 XP to a random skill) is called only for off-screen tournaments (`TournamentManager.SimulateTournament`), never for one the player plays | **Done** as a choice at Join, paid on `TournamentFinished` and `PlayerEliminatedFromTournament` ([tournament-rewards.md](tournament-rewards.md)) |
+| How often each culture holds one | `GetTournamentStartChance` | `TournamentService.CalculateStartChance`. Declined (Mike, 2026-10-02): tournaments matter to player development everywhere |
+| A refund when knocked out | `TournamentBehavior` pays the stake to the town (`:280-283`) | Declined (Mike, 2026-10-02) |
+| Choosing the prize | `GetTournamentPrize` is abstract on `TournamentGame` and overridden by `FightTournamentGame`, but only the automatic roll; `TournamentGame.Prize` has a private setter | **Done** as a choice of three at Join, written through the private setter ([tournament-rewards.md](tournament-rewards.md)) |
 | 16 entrants, teams of 4, 15-day life and cooldown | `FightTournamentGame.cs:37-43`, `TournamentCampaignBehavior.cs:17` | Harmony patches |
+
+## Parked: archery contests and jousting
+
+Parked by Mike on 2026-10-02: both need arena scenes built for them first. What the research found, so the work
+can restart from here:
+
+- **The engine already ships both mission types.** `SandBoxMissionManager` exposes `OpenTournamentArcheryMission`
+  and `OpenTournamentJoustingMission` beside the fight one (v1.5.3 `SandBox.SandBoxMissionManager.cs:22-29`), and
+  `TournamentMissionStarter` builds each mission's behaviors. Nothing on the campaign side calls them:
+  `FightTournamentGame.OpenMission` calls only the fight mission (`FightTournamentGame.cs:102`). A third type,
+  the horse race, is a stub whose match methods throw `NotImplementedException`.
+- **The bracket, betting, rewards and UI are generic.** `TournamentBehavior` drives any game behavior through the
+  four-method `ITournamentGameBehavior`, and `TournamentVM` reads only `TournamentBehavior`, so Patch69's guards
+  and this feature's rewards would apply unchanged.
+- **Archery** (`TournamentArcheryMissionController`): scores by destroying `DestructableComponent` entities tagged
+  `archery_target` (the stock `archery_target_pot` prefab, `MaxHitPoint` 0.1). It accepts the fight game's team
+  shape, so the lightest version is a redirect of `FightTournamentGame.OpenMission` for flagged towns, with no new
+  saved type. Its gear is hardcoded vanilla Calradian items (bow, blunt arrows, armour) and would need a patch to
+  look Middle-earth. Its `OnAgentHit` ends the whole mission on any agent hit: check that before shipping.
+  Vanilla's Khuzait and Vlandian arenas carry working targets; TAOM's `taom_gondor_arena_001/002` scenes carry a
+  full archery layout but no settlement uses them (ask Mike whether that is intended).
+- **Jousting** (`TournamentJoustingMissionController`): one-on-one lance passes, first to three, a sword duel if
+  both are unhorsed, AI lanes driven by scripted positions. It needs a game with team size 1 and two teams per
+  match (a dedicated `TournamentGame` subclass, a new saved type with its own `SaveableTypeDefiner` base), and a
+  participant filter that excludes races that cannot ride (dwarves, Patch46). **No vanilla or TAOM scene carries
+  the jousting entities** (`sp_jousting_*`, `region_box_*`, `region_end_box_*`, `jousting_barrier`), so every arena
+  that should host it needs a tilt lane built in the editor.
 
 ## An arena character with no `<face>` fights as a toddler
 

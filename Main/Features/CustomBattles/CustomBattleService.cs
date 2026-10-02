@@ -33,8 +33,11 @@ public class CustomBattleService : ICustomBattleService
     {
         try
         {
+            // HasFactionBanner: vanilla CustomBattleHelper.GetCustomBattleParties recolours layer 0 of the
+            // faction banner unguarded, so a culture without faction_banner_key (vanilla nord, vakken,
+            // darshi) throws ArgumentOutOfRangeException on Start (crash f9a7181d).
             return GetCultureCache().Values
-                .Where(c => c.CanHaveSettlement && !c.IsBandit)
+                .Where(c => c.CanHaveSettlement && !c.IsBandit && c.HasFactionBanner)
                 .Select(c => c.Id)
                 .ToList();
         }

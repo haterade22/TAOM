@@ -64,23 +64,23 @@ sibling-independent, and none of those nine files shares a single id with a TAOM
 `LordFamilyTransformTests` feeding `lords.xml` in isolation gives the same per-id answer. Re-check
 that if a future vanilla patch adds ids in those files.
 
-## Localization tiers: names now interoperate, biographies still don't (updated 2026-09-17)
+## Localization tiers: names and biographies both interoperate (updated 2026-10-02)
 
 | File | Keys | Registered | Translated ×12 |
 |---|---|---|---|
 | `lords.xslt` names | 396 | all, in `taom_xslt_strings.xml` | yes |
 | `heroes.xslt` biographies | 399 | all, in `taom_xslt_strings.xml` | yes |
 | `characters/lords.xml` names | 1181 | 176 in `taom_xslt_strings.xml` + 988 in `taom_lord_name_strings.xml` (added 2026-09-17 by `tools/generate_name_localization_strings.py`, excludes the 176 overlap) | yes, ~1164/1181 |
-| `characters/heroes.xml` biographies | 456 | **none** | **no, English-only** |
+| `characters/heroes.xml` biographies | 460 | all, in `taom_hero_text_strings.xml` (2026-10-01) | yes |
 
 Through 2026-09-16 an edit confined to `characters/lords.xml` had zero locale ripple. As of
 2026-09-17 that is no longer true for NAMES: `taom_lord_name_strings.xml` is a third tier,
 generated (not hand-authored) by walking `characters/lords.xml` for `{=KEY}default` name
 attributes and excluding whatever `taom_xslt_strings.xml` already carries, so a name edit there
 still needs the generator re-run (or a manual row) before it reaches the new tier; it is not
-automatic. `characters/heroes.xml` BIOGRAPHIES remain the real "zero locale ripple" case: that
-file carries no `name=` attribute at all (hero names come from procedural generation elsewhere),
-only `text=` biography keys, none of them registered anywhere. There is no English `Languages/`
+automatic. Since 2026-10-01 the same holds for `characters/heroes.xml` BIOGRAPHIES (the file carries no `name=`
+attribute; hero names come from procedural generation): `taom_hero_text_strings.xml` registers every
+`text=` key, so an edit needs the generator re-run, and `--check` fails until it is. There is no English `Languages/`
 folder for any of this, so an unregistered key's inline literal **is** the English text shown in
 every locale.
 

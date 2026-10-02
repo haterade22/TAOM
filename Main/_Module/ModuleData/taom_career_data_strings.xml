@@ -1,798 +1,798 @@
-<?xml version="1.0" encoding="utf-8"?>
-<strings>
-
-	<!-- Generated career data strings (careers, choices, ability templates, quests): extracted from career_system/*.xml by tools/generate_name_localization_strings.py. Do not hand-edit; re-run the generator instead. -->
-	<string id="taom_abanissa_house_guard_root_desc" text="{=taom_abanissa_house_guard_root_desc}Ivory-Ward Blades grants +5% melee damage and applies attrition effects." />
-	<string id="taom_abanissa_ivory_rider_root_desc" text="{=taom_abanissa_ivory_rider_root_desc}Tusk-Thunder of Mûmakan grants +10% horse charge damage and spreads fear." />
-	<string id="taom_abanissa_jiret_javelineer_root_desc" text="{=taom_abanissa_jiret_javelineer_root_desc}Jîret Volley grants +5% ranged damage and quickens javelin throws." />
-	<string id="taom_ability_abanissa_house_guard" text="{=taom_ability_abanissa_house_guard}Ivory-Ward Blades" />
-	<string id="taom_ability_abanissa_house_guard_tt" text="{=taom_ability_abanissa_house_guard_tt}Coat your weapons in desert toxins — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
-	<string id="taom_ability_abanissa_ivory_rider" text="{=taom_ability_abanissa_ivory_rider}Tusk-Thunder of Mûmakan" />
-	<string id="taom_ability_abanissa_ivory_rider_tt" text="{=taom_ability_abanissa_ivory_rider_tt}Channel the ancient fear of Mûmakan — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
-	<string id="taom_ability_abanissa_jiret_javelineer" text="{=taom_ability_abanissa_jiret_javelineer}Jîret Volley" />
-	<string id="taom_ability_abanissa_jiret_javelineer_tt" text="{=taom_ability_abanissa_jiret_javelineer_tt}Unleash a blazing javelin barrage — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
-	<string id="taom_ability_craig_crag_stalker" text="{=taom_ability_craig_crag_stalker}Poison Dart" />
-	<string id="taom_ability_craig_crag_stalker_tt" text="{=taom_ability_craig_crag_stalker_tt}Coat your bolts in cave fungus toxin — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
-	<string id="taom_ability_craig_pit_driver" text="{=taom_ability_craig_pit_driver}Blue Craig Frenzy" />
-	<string id="taom_ability_craig_pit_driver_tt" text="{=taom_ability_craig_pit_driver_tt}Whip your trolls into a frenzy — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
-	<string id="taom_ability_craig_warg_master" text="{=taom_ability_craig_warg_master}Alpha Howl" />
-	<string id="taom_ability_craig_warg_master_tt" text="{=taom_ability_craig_warg_master_tt}Assert dominance with a thundering pack-howl — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
-	<string id="taom_ability_falathrim_blade_dancer" text="{=taom_ability_falathrim_blade_dancer}Starlight Weave" />
-	<string id="taom_ability_falathrim_blade_dancer_tt" text="{=taom_ability_falathrim_blade_dancer_tt}Enter a graceful Noldor combat trance — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
-	<string id="taom_ability_falathrim_mariner" text="{=taom_ability_falathrim_mariner}Last Alliance" />
-	<string id="taom_ability_falathrim_mariner_tt" text="{=taom_ability_falathrim_mariner_tt}Ride with the valor of the Last Alliance — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
-	<string id="taom_ability_falathrim_sentinel" text="{=taom_ability_falathrim_sentinel}Elven Sight" />
-	<string id="taom_ability_falathrim_sentinel_tt" text="{=taom_ability_falathrim_sentinel_tt}Focus ancient elven perception — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
-	<string id="taom_ability_goblin_troll_driver" text="{=taom_ability_goblin_troll_driver}Goblin-town Frenzy" />
-	<string id="taom_ability_goblin_troll_driver_tt" text="{=taom_ability_goblin_troll_driver_tt}Whip your trolls into a frenzy — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
-	<string id="taom_ability_goblin_tunnel_stalker" text="{=taom_ability_goblin_tunnel_stalker}Poison Dart" />
-	<string id="taom_ability_goblin_tunnel_stalker_tt" text="{=taom_ability_goblin_tunnel_stalker_tt}Coat your bolts in cave fungus toxin — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
-	<string id="taom_ability_goblin_warg_master" text="{=taom_ability_goblin_warg_master}Alpha Howl" />
-	<string id="taom_ability_goblin_warg_master_tt" text="{=taom_ability_goblin_warg_master_tt}Assert dominance with a thundering pack-howl — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
-	<string id="taom_ability_misty_deep_marksman" text="{=taom_ability_misty_deep_marksman}Poison Dart" />
-	<string id="taom_ability_misty_deep_marksman_tt" text="{=taom_ability_misty_deep_marksman_tt}Coat your bolts in cave fungus toxin — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
-	<string id="taom_ability_misty_troll_goad" text="{=taom_ability_misty_troll_goad}Moria Frenzy" />
-	<string id="taom_ability_misty_troll_goad_tt" text="{=taom_ability_misty_troll_goad_tt}Whip your trolls into a frenzy — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
-	<string id="taom_ability_misty_warg_chieftain" text="{=taom_ability_misty_warg_chieftain}Alpha Howl" />
-	<string id="taom_ability_misty_warg_chieftain_tt" text="{=taom_ability_misty_warg_chieftain_tt}Assert dominance with a thundering pack-howl — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
-	<string id="taom_ability_shaghana_beast_rider" text="{=taom_ability_shaghana_beast_rider}Horns of Mûmakan" />
-	<string id="taom_ability_shaghana_beast_rider_tt" text="{=taom_ability_shaghana_beast_rider_tt}Channel the ancient fear of Mûmakan — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
-	<string id="taom_ability_shaghana_chatak_javelineer" text="{=taom_ability_shaghana_chatak_javelineer}Chatâk Volley" />
-	<string id="taom_ability_shaghana_chatak_javelineer_tt" text="{=taom_ability_shaghana_chatak_javelineer_tt}Unleash a blazing javelin barrage — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
-	<string id="taom_ability_shaghana_zajana_tribesman" text="{=taom_ability_shaghana_zajana_tribesman}Serpent-Venom Blades" />
-	<string id="taom_ability_shaghana_zajana_tribesman_tt" text="{=taom_ability_shaghana_zajana_tribesman_tt}Coat your weapons in desert toxins — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
-	<string id="taom_ahg_t1a_key" text="{=taom_ahg_t1a_key}Ivory-Ward Blades radius increased, the toxin spreads wider." />
-	<string id="taom_ahg_t1a_p1" text="{=taom_ahg_t1a_p1}+8% melee damage." />
-	<string id="taom_ahg_t1a_p2" text="{=taom_ahg_t1a_p2}+3% troop damage." />
-	<string id="taom_ahg_t1a_p3" text="{=taom_ahg_t1a_p3}+7% swing speed." />
-	<string id="taom_ahg_t1a_p4" text="{=taom_ahg_t1a_p4}+5% battle renown gain." />
-	<string id="taom_ahg_t1b_key" text="{=taom_ahg_t1b_key}Ivory-Ward Blades duration extended, the toxin lingers." />
-	<string id="taom_ahg_t1b_p1" text="{=taom_ahg_t1b_p1}+6% resistance." />
-	<string id="taom_ahg_t1b_p2" text="{=taom_ahg_t1b_p2}+6 max health." />
-	<string id="taom_ahg_t1b_p3" text="{=taom_ahg_t1b_p3}+5% movement speed." />
-	<string id="taom_ahg_t1b_p4" text="{=taom_ahg_t1b_p4}+5% troop morale." />
-	<string id="taom_ahg_t2a_key" text="{=taom_ahg_t2a_key}Ivory-Ward Blades charge reduced, strike more frequently." />
-	<string id="taom_ahg_t2a_p1" text="{=taom_ahg_t2a_p1}+5% troop damage." />
-	<string id="taom_ahg_t2a_p2" text="{=taom_ahg_t2a_p2}+10% melee damage." />
-	<string id="taom_ahg_t2a_p3" text="{=taom_ahg_t2a_p3}+10% battle renown gain." />
-	<string id="taom_ahg_t2a_p4" text="{=taom_ahg_t2a_p4}+3 party size." />
-	<string id="taom_ahg_t2b_key" text="{=taom_ahg_t2b_key}Ivory-Ward Blades boosts attrition, sapping enemy will to fight." />
-	<string id="taom_ahg_t2b_p1" text="{=taom_ahg_t2b_p1}+10% swing speed." />
-	<string id="taom_ahg_t2b_p2" text="{=taom_ahg_t2b_p2}+8 max health." />
-	<string id="taom_ahg_t2b_p3" text="{=taom_ahg_t2b_p3}+10% resistance." />
-	<string id="taom_ahg_t2b_p4" text="{=taom_ahg_t2b_p4}+10% troop morale." />
-	<string id="taom_ahg_t3a_key" text="{=taom_ahg_t3a_key}Ivory-Ward Blades radius greatly expanded, a cloud of toxin." />
-	<string id="taom_ahg_t3a_p1" text="{=taom_ahg_t3a_p1}+15% melee damage." />
-	<string id="taom_ahg_t3a_p2" text="{=taom_ahg_t3a_p2}+9 max health." />
-	<string id="taom_ahg_t3a_p3" text="{=taom_ahg_t3a_p3}+7% troop damage." />
-	<string id="taom_ahg_t3a_p4" text="{=taom_ahg_t3a_p4}+15% battle renown gain." />
-	<string id="taom_ahg_t3b_key" text="{=taom_ahg_t3b_key}Ivory-Ward Blades charge greatly reduced, constant attrition." />
-	<string id="taom_ahg_t3b_p1" text="{=taom_ahg_t3b_p1}+15% resistance." />
-	<string id="taom_ahg_t3b_p2" text="{=taom_ahg_t3b_p2}+20% troop morale." />
-	<string id="taom_ahg_t3b_p3" text="{=taom_ahg_t3b_p3}+8% troop damage." />
-	<string id="taom_ahg_t3b_p4" text="{=taom_ahg_t3b_p4}+5 party size." />
-	<string id="taom_air_t1a_key" text="{=taom_air_t1a_key}Tusk-Thunder of Mûmakan radius expanded, fear spreads further." />
-	<string id="taom_air_t1a_p1" text="{=taom_air_t1a_p1}+10% horse charge damage." />
-	<string id="taom_air_t1a_p2" text="{=taom_air_t1a_p2}+8% melee damage." />
-	<string id="taom_air_t1a_p3" text="{=taom_air_t1a_p3}+5% troop morale." />
-	<string id="taom_air_t1a_p4" text="{=taom_air_t1a_p4}+5% party movement speed." />
-	<string id="taom_air_t1b_key" text="{=taom_air_t1b_key}Tusk-Thunder of Mûmakan duration extended, fear lingers." />
-	<string id="taom_air_t1b_p1" text="{=taom_air_t1b_p1}+10% horse health." />
-	<string id="taom_air_t1b_p2" text="{=taom_air_t1b_p2}+3% troop damage." />
-	<string id="taom_air_t1b_p3" text="{=taom_air_t1b_p3}+5% battle renown gain." />
-	<string id="taom_air_t1b_p4" text="{=taom_air_t1b_p4}+5% resistance." />
-	<string id="taom_air_t2a_key" text="{=taom_air_t2a_key}Tusk-Thunder of Mûmakan charge reduced, terror always imminent." />
-	<string id="taom_air_t2a_p1" text="{=taom_air_t2a_p1}+13% horse charge damage." />
-	<string id="taom_air_t2a_p2" text="{=taom_air_t2a_p2}+10% troop morale." />
-	<string id="taom_air_t2a_p3" text="{=taom_air_t2a_p3}+5% troop damage." />
-	<string id="taom_air_t2a_p4" text="{=taom_air_t2a_p4}+10% battle renown gain." />
-	<string id="taom_air_t2b_key" text="{=taom_air_t2b_key}Tusk-Thunder of Mûmakan boosts beast resilience during the charge." />
-	<string id="taom_air_t2b_p1" text="{=taom_air_t2b_p1}+12% melee damage." />
-	<string id="taom_air_t2b_p2" text="{=taom_air_t2b_p2}+13% horse health." />
-	<string id="taom_air_t2b_p3" text="{=taom_air_t2b_p3}+10% party movement speed." />
-	<string id="taom_air_t2b_p4" text="{=taom_air_t2b_p4}+3 party size." />
-	<string id="taom_air_t3a_key" text="{=taom_air_t3a_key}Tusk-Thunder of Mûmakan radius greatly expanded, the very earth shakes." />
-	<string id="taom_air_t3a_p1" text="{=taom_air_t3a_p1}+15% horse charge damage." />
-	<string id="taom_air_t3a_p2" text="{=taom_air_t3a_p2}+15% melee damage." />
-	<string id="taom_air_t3a_p3" text="{=taom_air_t3a_p3}+20% troop morale." />
-	<string id="taom_air_t3a_p4" text="{=taom_air_t3a_p4}+15% battle renown gain." />
-	<string id="taom_air_t3b_key" text="{=taom_air_t3b_key}Tusk-Thunder of Mûmakan charge greatly reduced, unending dread." />
-	<string id="taom_air_t3b_p1" text="{=taom_air_t3b_p1}+15% horse health." />
-	<string id="taom_air_t3b_p2" text="{=taom_air_t3b_p2}+15% party movement speed." />
-	<string id="taom_air_t3b_p3" text="{=taom_air_t3b_p3}+7% troop damage." />
-	<string id="taom_air_t3b_p4" text="{=taom_air_t3b_p4}+9 max health." />
-	<string id="taom_ajj_t1a_key" text="{=taom_ajj_t1a_key}Jîret Volley radius increased, javelins cover wider ground." />
-	<string id="taom_ajj_t1a_p1" text="{=taom_ajj_t1a_p1}+8% ranged damage." />
-	<string id="taom_ajj_t1a_p2" text="{=taom_ajj_t1a_p2}+10% ammo." />
-	<string id="taom_ajj_t1a_p3" text="{=taom_ajj_t1a_p3}+7% movement speed." />
-	<string id="taom_ajj_t1a_p4" text="{=taom_ajj_t1a_p4}+5% battle renown gain." />
-	<string id="taom_ajj_t1b_key" text="{=taom_ajj_t1b_key}Jîret Volley duration extended, sustained harassing fire." />
-	<string id="taom_ajj_t1b_p1" text="{=taom_ajj_t1b_p1}+5% resistance." />
-	<string id="taom_ajj_t1b_p2" text="{=taom_ajj_t1b_p2}+5 max health." />
-	<string id="taom_ajj_t1b_p3" text="{=taom_ajj_t1b_p3}+3% troop damage." />
-	<string id="taom_ajj_t1b_p4" text="{=taom_ajj_t1b_p4}+5% party spotting range." />
-	<string id="taom_ajj_t2a_key" text="{=taom_ajj_t2a_key}Jîret Volley charge reduced, never out of javelins." />
-	<string id="taom_ajj_t2a_p1" text="{=taom_ajj_t2a_p1}+13% ammo." />
-	<string id="taom_ajj_t2a_p2" text="{=taom_ajj_t2a_p2}+10% ranged damage." />
-	<string id="taom_ajj_t2a_p3" text="{=taom_ajj_t2a_p3}+10% movement speed." />
-	<string id="taom_ajj_t2a_p4" text="{=taom_ajj_t2a_p4}+10% battle renown gain." />
-	<string id="taom_ajj_t2b_key" text="{=taom_ajj_t2b_key}Jîret Volley boosts screening effectiveness while active." />
-	<string id="taom_ajj_t2b_p1" text="{=taom_ajj_t2b_p1}+12% ranged damage." />
-	<string id="taom_ajj_t2b_p2" text="{=taom_ajj_t2b_p2}+8 max health." />
-	<string id="taom_ajj_t2b_p3" text="{=taom_ajj_t2b_p3}+5% troop damage." />
-	<string id="taom_ajj_t2b_p4" text="{=taom_ajj_t2b_p4}+10% party spotting range." />
-	<string id="taom_ajj_t3a_key" text="{=taom_ajj_t3a_key}Jîret Volley radius greatly expanded, an inescapable barrage." />
-	<string id="taom_ajj_t3a_p1" text="{=taom_ajj_t3a_p1}+15% ranged damage." />
-	<string id="taom_ajj_t3a_p2" text="{=taom_ajj_t3a_p2}+15% ammo." />
-	<string id="taom_ajj_t3a_p3" text="{=taom_ajj_t3a_p3}+15% battle renown gain." />
-	<string id="taom_ajj_t3a_p4" text="{=taom_ajj_t3a_p4}+15% movement speed." />
-	<string id="taom_ajj_t3b_key" text="{=taom_ajj_t3b_key}Jîret Volley charge greatly reduced, unrelenting harassment." />
-	<string id="taom_ajj_t3b_p1" text="{=taom_ajj_t3b_p1}+15% ranged damage." />
-	<string id="taom_ajj_t3b_p2" text="{=taom_ajj_t3b_p2}+9 max health." />
-	<string id="taom_ajj_t3b_p3" text="{=taom_ajj_t3b_p3}+7% troop damage." />
-	<string id="taom_ajj_t3b_p4" text="{=taom_ajj_t3b_p4}+15% party spotting range." />
-	<string id="taom_career_abanissa_house_guard" text="{=taom_career_abanissa_house_guard}House-Guard of Damudûr" />
-	<string id="taom_career_abanissa_house_guard_desc" text="{=taom_career_abanissa_house_guard_desc}A warrior of the Damudûr desert tribes whose attrition-warfare tactics grind enemies down with relentless pressure and poisoned blades." />
-	<string id="taom_career_abanissa_ivory_rider" text="{=taom_career_abanissa_ivory_rider}Ivory-Road Beast Rider" />
-	<string id="taom_career_abanissa_ivory_rider_desc" text="{=taom_career_abanissa_ivory_rider_desc}A fearsome rider of the Far Harad who drives great beasts into the enemy, breaking lines with shock and primal terror." />
-	<string id="taom_career_abanissa_jiret_javelineer" text="{=taom_career_abanissa_jiret_javelineer}Jîret Javelineer" />
-	<string id="taom_career_abanissa_jiret_javelineer_desc" text="{=taom_career_abanissa_jiret_javelineer_desc}A fast-moving skirmisher of Jîret who screens cavalry with a hail of javelins before withdrawing beyond reach of retaliation." />
-	<string id="taom_career_craig_crag_stalker" text="{=taom_career_craig_crag_stalker}Blue Craig Crag Stalker" />
-	<string id="taom_career_craig_crag_stalker_desc" text="{=taom_career_craig_crag_stalker_desc}A spiteful goblin marksman who lurks in the mountain crags, picking off targets with poisoned darts and crude bows." />
-	<string id="taom_career_craig_pit_driver" text="{=taom_career_craig_pit_driver}Blue Craig Pit-Driver" />
-	<string id="taom_career_craig_pit_driver_desc" text="{=taom_career_craig_pit_driver_desc}A brutal orc chieftain of Blue Craig who commands cave trolls in battle, driving them forward with whip and cunning." />
-	<string id="taom_career_craig_warg_master" text="{=taom_career_craig_warg_master}Blue Craig Warg Master" />
-	<string id="taom_career_craig_warg_master_desc" text="{=taom_career_craig_warg_master_desc}A feared orc alpha who rides the largest warg of the pack, leading savage hunts through the Ered Luin." />
-	<string id="taom_career_falathrim_blade_dancer" text="{=taom_career_falathrim_blade_dancer}Falathrim Blade-Dancer" />
-	<string id="taom_career_falathrim_blade_dancer_desc" text="{=taom_career_falathrim_blade_dancer_desc}A graceful elven warrior who weaves through battle like flowing water, striking with ancient blades forged in the First Age." />
-	<string id="taom_career_falathrim_mariner" text="{=taom_career_falathrim_mariner}Falathrim Mariner" />
-	<string id="taom_career_falathrim_mariner_desc" text="{=taom_career_falathrim_mariner_desc}A mounted warrior of Cirdan's household who rides to war on swift elven steeds, a beacon of hope against the shadow." />
-	<string id="taom_career_falathrim_sentinel" text="{=taom_career_falathrim_sentinel}Falathrim Sentinel" />
-	<string id="taom_career_falathrim_sentinel_desc" text="{=taom_career_falathrim_sentinel_desc}A peerless marksman of Mithlond whose arrows fly true across vast distances, guided by centuries of practice." />
-	<string id="taom_career_goblin_troll_driver" text="{=taom_career_goblin_troll_driver}Goblin-town Troll-Driver" />
-	<string id="taom_career_goblin_troll_driver_desc" text="{=taom_career_goblin_troll_driver_desc}A brutal orc chieftain of Goblin-town who commands cave trolls in battle, driving them forward with whip and cunning." />
-	<string id="taom_career_goblin_tunnel_stalker" text="{=taom_career_goblin_tunnel_stalker}Goblin-town Tunnel Stalker" />
-	<string id="taom_career_goblin_tunnel_stalker_desc" text="{=taom_career_goblin_tunnel_stalker_desc}A spiteful goblin marksman who lurks in the mountain crags, picking off targets with poisoned darts and crude bows." />
-	<string id="taom_career_goblin_warg_master" text="{=taom_career_goblin_warg_master}Goblin-town Warg Master" />
-	<string id="taom_career_goblin_warg_master_desc" text="{=taom_career_goblin_warg_master_desc}A feared orc alpha who rides the largest warg of the pack, leading savage hunts through the Misty Mountains." />
-	<string id="taom_career_grp_abanissa_house_guard_t1_a" text="{=taom_career_grp_abanissa_house_guard_t1_a}Dune Raider" />
-	<string id="taom_career_grp_abanissa_house_guard_t1_b" text="{=taom_career_grp_abanissa_house_guard_t1_b}Desert Survivor" />
-	<string id="taom_career_grp_abanissa_house_guard_t2_a" text="{=taom_career_grp_abanissa_house_guard_t2_a}Serpent-Fang Striker" />
-	<string id="taom_career_grp_abanissa_house_guard_t2_b" text="{=taom_career_grp_abanissa_house_guard_t2_b}Wearer of the Sands" />
-	<string id="taom_career_grp_abanissa_house_guard_t3_a" text="{=taom_career_grp_abanissa_house_guard_t3_a}Venom of Haradwaith" />
-	<string id="taom_career_grp_abanissa_house_guard_t3_b" text="{=taom_career_grp_abanissa_house_guard_t3_b}Scourge of the Southrons" />
-	<string id="taom_career_grp_abanissa_ivory_rider_t1_a" text="{=taom_career_grp_abanissa_ivory_rider_t1_a}Tusk Vanguard" />
-	<string id="taom_career_grp_abanissa_ivory_rider_t1_b" text="{=taom_career_grp_abanissa_ivory_rider_t1_b}Beast-Warden" />
-	<string id="taom_career_grp_abanissa_ivory_rider_t2_a" text="{=taom_career_grp_abanissa_ivory_rider_t2_a}Trampling Charge" />
-	<string id="taom_career_grp_abanissa_ivory_rider_t2_b" text="{=taom_career_grp_abanissa_ivory_rider_t2_b}Howdah Guardian" />
-	<string id="taom_career_grp_abanissa_ivory_rider_t3_a" text="{=taom_career_grp_abanissa_ivory_rider_t3_a}Wrath of Mûmakan" />
-	<string id="taom_career_grp_abanissa_ivory_rider_t3_b" text="{=taom_career_grp_abanissa_ivory_rider_t3_b}Lord of the Oliphaunts" />
-	<string id="taom_career_grp_abanissa_jiret_javelineer_t1_a" text="{=taom_career_grp_abanissa_jiret_javelineer_t1_a}Sun-Spear Skirmisher" />
-	<string id="taom_career_grp_abanissa_jiret_javelineer_t1_b" text="{=taom_career_grp_abanissa_jiret_javelineer_t1_b}Roving Outrider" />
-	<string id="taom_career_grp_abanissa_jiret_javelineer_t2_a" text="{=taom_career_grp_abanissa_jiret_javelineer_t2_a}Sunfire Slinger" />
-	<string id="taom_career_grp_abanissa_jiret_javelineer_t2_b" text="{=taom_career_grp_abanissa_jiret_javelineer_t2_b}Scarlet Screen" />
-	<string id="taom_career_grp_abanissa_jiret_javelineer_t3_a" text="{=taom_career_grp_abanissa_jiret_javelineer_t3_a}Rain of Far Harad" />
-	<string id="taom_career_grp_abanissa_jiret_javelineer_t3_b" text="{=taom_career_grp_abanissa_jiret_javelineer_t3_b}Shadow of the Dunes" />
-	<string id="taom_career_grp_craig_crag_stalker_t1_a" text="{=taom_career_grp_craig_crag_stalker_t1_a}Crag-Stalker" />
-	<string id="taom_career_grp_craig_crag_stalker_t1_b" text="{=taom_career_grp_craig_crag_stalker_t1_b}Tunnel Skulker" />
-	<string id="taom_career_grp_craig_crag_stalker_t2_a" text="{=taom_career_grp_craig_crag_stalker_t2_a}High Pass Ambusher" />
-	<string id="taom_career_grp_craig_crag_stalker_t2_b" text="{=taom_career_grp_craig_crag_stalker_t2_b}Poison-Fletcher" />
-	<string id="taom_career_grp_craig_crag_stalker_t3_a" text="{=taom_career_grp_craig_crag_stalker_t3_a}Front Porch Reaver" />
-	<string id="taom_career_grp_craig_crag_stalker_t3_b" text="{=taom_career_grp_craig_crag_stalker_t3_b}Shadow of the High Pass" />
-	<string id="taom_career_grp_craig_pit_driver_t1_a" text="{=taom_career_grp_craig_pit_driver_t1_a}Pit-Whip Driver" />
-	<string id="taom_career_grp_craig_pit_driver_t1_b" text="{=taom_career_grp_craig_pit_driver_t1_b}Cave-Mouth Warden" />
-	<string id="taom_career_grp_craig_pit_driver_t2_a" text="{=taom_career_grp_craig_pit_driver_t2_a}Blue Craig Tyrant" />
-	<string id="taom_career_grp_craig_pit_driver_t2_b" text="{=taom_career_grp_craig_pit_driver_t2_b}Deep-Hold Breaker" />
-	<string id="taom_career_grp_craig_pit_driver_t3_a" text="{=taom_career_grp_craig_pit_driver_t3_a}Scourge of Blue Craig" />
-	<string id="taom_career_grp_craig_pit_driver_t3_b" text="{=taom_career_grp_craig_pit_driver_t3_b}Dread of the Northern Halls" />
-	<string id="taom_career_grp_craig_warg_master_t1_a" text="{=taom_career_grp_craig_warg_master_t1_a}Warg-Rider" />
-	<string id="taom_career_grp_craig_warg_master_t1_b" text="{=taom_career_grp_craig_warg_master_t1_b}Pack-Keeper" />
-	<string id="taom_career_grp_craig_warg_master_t2_a" text="{=taom_career_grp_craig_warg_master_t2_a}Grey Pack Outrider" />
-	<string id="taom_career_grp_craig_warg_master_t2_b" text="{=taom_career_grp_craig_warg_master_t2_b}Fell Wolf-Master" />
-	<string id="taom_career_grp_craig_warg_master_t3_a" text="{=taom_career_grp_craig_warg_master_t3_a}Alpha of Blue Craig" />
-	<string id="taom_career_grp_craig_warg_master_t3_b" text="{=taom_career_grp_craig_warg_master_t3_b}Bolg's Wolf-Captain" />
-	<string id="taom_career_grp_falathrim_blade_dancer_t1_a" text="{=taom_career_grp_falathrim_blade_dancer_t1_a}Starlit Steel" />
-	<string id="taom_career_grp_falathrim_blade_dancer_t1_b" text="{=taom_career_grp_falathrim_blade_dancer_t1_b}Guard of Mithlond" />
-	<string id="taom_career_grp_falathrim_blade_dancer_t2_a" text="{=taom_career_grp_falathrim_blade_dancer_t2_a}Dance of Gondolin" />
-	<string id="taom_career_grp_falathrim_blade_dancer_t2_b" text="{=taom_career_grp_falathrim_blade_dancer_t2_b}Ward of the Hidden Valley" />
-	<string id="taom_career_grp_falathrim_blade_dancer_t3_a" text="{=taom_career_grp_falathrim_blade_dancer_t3_a}Sword of the First Age" />
-	<string id="taom_career_grp_falathrim_blade_dancer_t3_b" text="{=taom_career_grp_falathrim_blade_dancer_t3_b}Light of Eärendil" />
-	<string id="taom_career_grp_falathrim_mariner_t1_a" text="{=taom_career_grp_falathrim_mariner_t1_a}Charge of Mithlond" />
-	<string id="taom_career_grp_falathrim_mariner_t1_b" text="{=taom_career_grp_falathrim_mariner_t1_b}Rider of the Ford" />
-	<string id="taom_career_grp_falathrim_mariner_t2_a" text="{=taom_career_grp_falathrim_mariner_t2_a}Gallop of Asfaloth" />
-	<string id="taom_career_grp_falathrim_mariner_t2_b" text="{=taom_career_grp_falathrim_mariner_t2_b}Aegis of the Valar" />
-	<string id="taom_career_grp_falathrim_mariner_t3_a" text="{=taom_career_grp_falathrim_mariner_t3_a}Wrath of Glorfindel" />
-	<string id="taom_career_grp_falathrim_mariner_t3_b" text="{=taom_career_grp_falathrim_mariner_t3_b}Host of the Last Alliance" />
-	<string id="taom_career_grp_falathrim_sentinel_t1_a" text="{=taom_career_grp_falathrim_sentinel_t1_a}Keen-Eyed Watcher" />
-	<string id="taom_career_grp_falathrim_sentinel_t1_b" text="{=taom_career_grp_falathrim_sentinel_t1_b}Watch of Lindon" />
-	<string id="taom_career_grp_falathrim_sentinel_t2_a" text="{=taom_career_grp_falathrim_sentinel_t2_a}Unceasing Volley" />
-	<string id="taom_career_grp_falathrim_sentinel_t2_b" text="{=taom_career_grp_falathrim_sentinel_t2_b}Bow of Eregion" />
-	<string id="taom_career_grp_falathrim_sentinel_t3_a" text="{=taom_career_grp_falathrim_sentinel_t3_a}Storm of Gil-galad" />
-	<string id="taom_career_grp_falathrim_sentinel_t3_b" text="{=taom_career_grp_falathrim_sentinel_t3_b}Vigil of Vilya" />
-	<string id="taom_career_grp_goblin_troll_driver_t1_a" text="{=taom_career_grp_goblin_troll_driver_t1_a}Pit-Whip Driver" />
-	<string id="taom_career_grp_goblin_troll_driver_t1_b" text="{=taom_career_grp_goblin_troll_driver_t1_b}Cave-Mouth Warden" />
-	<string id="taom_career_grp_goblin_troll_driver_t2_a" text="{=taom_career_grp_goblin_troll_driver_t2_a}Goblin-town Tyrant" />
-	<string id="taom_career_grp_goblin_troll_driver_t2_b" text="{=taom_career_grp_goblin_troll_driver_t2_b}Deep-Hold Breaker" />
-	<string id="taom_career_grp_goblin_troll_driver_t3_a" text="{=taom_career_grp_goblin_troll_driver_t3_a}Scourge of Goblin-town" />
-	<string id="taom_career_grp_goblin_troll_driver_t3_b" text="{=taom_career_grp_goblin_troll_driver_t3_b}Dread of the Northern Halls" />
-	<string id="taom_career_grp_goblin_tunnel_stalker_t1_a" text="{=taom_career_grp_goblin_tunnel_stalker_t1_a}Crag-Stalker" />
-	<string id="taom_career_grp_goblin_tunnel_stalker_t1_b" text="{=taom_career_grp_goblin_tunnel_stalker_t1_b}Tunnel Skulker" />
-	<string id="taom_career_grp_goblin_tunnel_stalker_t2_a" text="{=taom_career_grp_goblin_tunnel_stalker_t2_a}High Pass Ambusher" />
-	<string id="taom_career_grp_goblin_tunnel_stalker_t2_b" text="{=taom_career_grp_goblin_tunnel_stalker_t2_b}Poison-Fletcher" />
-	<string id="taom_career_grp_goblin_tunnel_stalker_t3_a" text="{=taom_career_grp_goblin_tunnel_stalker_t3_a}Front Porch Reaver" />
-	<string id="taom_career_grp_goblin_tunnel_stalker_t3_b" text="{=taom_career_grp_goblin_tunnel_stalker_t3_b}Shadow of the High Pass" />
-	<string id="taom_career_grp_goblin_warg_master_t1_a" text="{=taom_career_grp_goblin_warg_master_t1_a}Warg-Rider" />
-	<string id="taom_career_grp_goblin_warg_master_t1_b" text="{=taom_career_grp_goblin_warg_master_t1_b}Pack-Keeper" />
-	<string id="taom_career_grp_goblin_warg_master_t2_a" text="{=taom_career_grp_goblin_warg_master_t2_a}Grey Pack Outrider" />
-	<string id="taom_career_grp_goblin_warg_master_t2_b" text="{=taom_career_grp_goblin_warg_master_t2_b}Fell Wolf-Master" />
-	<string id="taom_career_grp_goblin_warg_master_t3_a" text="{=taom_career_grp_goblin_warg_master_t3_a}Alpha of Goblin-town" />
-	<string id="taom_career_grp_goblin_warg_master_t3_b" text="{=taom_career_grp_goblin_warg_master_t3_b}Bolg's Wolf-Captain" />
-	<string id="taom_career_grp_misty_deep_marksman_t1_a" text="{=taom_career_grp_misty_deep_marksman_t1_a}Crag-Stalker" />
-	<string id="taom_career_grp_misty_deep_marksman_t1_b" text="{=taom_career_grp_misty_deep_marksman_t1_b}Tunnel Skulker" />
-	<string id="taom_career_grp_misty_deep_marksman_t2_a" text="{=taom_career_grp_misty_deep_marksman_t2_a}High Pass Ambusher" />
-	<string id="taom_career_grp_misty_deep_marksman_t2_b" text="{=taom_career_grp_misty_deep_marksman_t2_b}Poison-Fletcher" />
-	<string id="taom_career_grp_misty_deep_marksman_t3_a" text="{=taom_career_grp_misty_deep_marksman_t3_a}Front Porch Reaver" />
-	<string id="taom_career_grp_misty_deep_marksman_t3_b" text="{=taom_career_grp_misty_deep_marksman_t3_b}Shadow of the High Pass" />
-	<string id="taom_career_grp_misty_troll_goad_t1_a" text="{=taom_career_grp_misty_troll_goad_t1_a}Pit-Whip Driver" />
-	<string id="taom_career_grp_misty_troll_goad_t1_b" text="{=taom_career_grp_misty_troll_goad_t1_b}Cave-Mouth Warden" />
-	<string id="taom_career_grp_misty_troll_goad_t2_a" text="{=taom_career_grp_misty_troll_goad_t2_a}Goblin-town Tyrant" />
-	<string id="taom_career_grp_misty_troll_goad_t2_b" text="{=taom_career_grp_misty_troll_goad_t2_b}Deep-Hold Breaker" />
-	<string id="taom_career_grp_misty_troll_goad_t3_a" text="{=taom_career_grp_misty_troll_goad_t3_a}Scourge of Moria" />
-	<string id="taom_career_grp_misty_troll_goad_t3_b" text="{=taom_career_grp_misty_troll_goad_t3_b}Dread of the Northern Halls" />
-	<string id="taom_career_grp_misty_warg_chieftain_t1_a" text="{=taom_career_grp_misty_warg_chieftain_t1_a}Warg-Rider" />
-	<string id="taom_career_grp_misty_warg_chieftain_t1_b" text="{=taom_career_grp_misty_warg_chieftain_t1_b}Pack-Keeper" />
-	<string id="taom_career_grp_misty_warg_chieftain_t2_a" text="{=taom_career_grp_misty_warg_chieftain_t2_a}Grey Pack Outrider" />
-	<string id="taom_career_grp_misty_warg_chieftain_t2_b" text="{=taom_career_grp_misty_warg_chieftain_t2_b}Fell Wolf-Master" />
-	<string id="taom_career_grp_misty_warg_chieftain_t3_a" text="{=taom_career_grp_misty_warg_chieftain_t3_a}Alpha of Moria" />
-	<string id="taom_career_grp_misty_warg_chieftain_t3_b" text="{=taom_career_grp_misty_warg_chieftain_t3_b}Bolg's Wolf-Captain" />
-	<string id="taom_career_grp_shaghana_beast_rider_t1_a" text="{=taom_career_grp_shaghana_beast_rider_t1_a}Tusk Vanguard" />
-	<string id="taom_career_grp_shaghana_beast_rider_t1_b" text="{=taom_career_grp_shaghana_beast_rider_t1_b}Beast-Warden" />
-	<string id="taom_career_grp_shaghana_beast_rider_t2_a" text="{=taom_career_grp_shaghana_beast_rider_t2_a}Trampling Charge" />
-	<string id="taom_career_grp_shaghana_beast_rider_t2_b" text="{=taom_career_grp_shaghana_beast_rider_t2_b}Howdah Guardian" />
-	<string id="taom_career_grp_shaghana_beast_rider_t3_a" text="{=taom_career_grp_shaghana_beast_rider_t3_a}Wrath of Mûmakan" />
-	<string id="taom_career_grp_shaghana_beast_rider_t3_b" text="{=taom_career_grp_shaghana_beast_rider_t3_b}Lord of the Oliphaunts" />
-	<string id="taom_career_grp_shaghana_chatak_javelineer_t1_a" text="{=taom_career_grp_shaghana_chatak_javelineer_t1_a}Sun-Spear Skirmisher" />
-	<string id="taom_career_grp_shaghana_chatak_javelineer_t1_b" text="{=taom_career_grp_shaghana_chatak_javelineer_t1_b}Roving Outrider" />
-	<string id="taom_career_grp_shaghana_chatak_javelineer_t2_a" text="{=taom_career_grp_shaghana_chatak_javelineer_t2_a}Sunfire Slinger" />
-	<string id="taom_career_grp_shaghana_chatak_javelineer_t2_b" text="{=taom_career_grp_shaghana_chatak_javelineer_t2_b}Scarlet Screen" />
-	<string id="taom_career_grp_shaghana_chatak_javelineer_t3_a" text="{=taom_career_grp_shaghana_chatak_javelineer_t3_a}Rain of Far Harad" />
-	<string id="taom_career_grp_shaghana_chatak_javelineer_t3_b" text="{=taom_career_grp_shaghana_chatak_javelineer_t3_b}Shadow of the Dunes" />
-	<string id="taom_career_grp_shaghana_zajana_tribesman_t1_a" text="{=taom_career_grp_shaghana_zajana_tribesman_t1_a}Dune Raider" />
-	<string id="taom_career_grp_shaghana_zajana_tribesman_t1_b" text="{=taom_career_grp_shaghana_zajana_tribesman_t1_b}Desert Survivor" />
-	<string id="taom_career_grp_shaghana_zajana_tribesman_t2_a" text="{=taom_career_grp_shaghana_zajana_tribesman_t2_a}Serpent-Fang Striker" />
-	<string id="taom_career_grp_shaghana_zajana_tribesman_t2_b" text="{=taom_career_grp_shaghana_zajana_tribesman_t2_b}Wearer of the Sands" />
-	<string id="taom_career_grp_shaghana_zajana_tribesman_t3_a" text="{=taom_career_grp_shaghana_zajana_tribesman_t3_a}Venom of Haradwaith" />
-	<string id="taom_career_grp_shaghana_zajana_tribesman_t3_b" text="{=taom_career_grp_shaghana_zajana_tribesman_t3_b}Scourge of the Southrons" />
-	<string id="taom_career_misty_deep_marksman" text="{=taom_career_misty_deep_marksman}Moria Deep-Marksman" />
-	<string id="taom_career_misty_deep_marksman_desc" text="{=taom_career_misty_deep_marksman_desc}A spiteful goblin marksman who lurks in the mountain crags, picking off targets with poisoned darts and crude bows." />
-	<string id="taom_career_misty_troll_goad" text="{=taom_career_misty_troll_goad}Moria Troll-Goad" />
-	<string id="taom_career_misty_troll_goad_desc" text="{=taom_career_misty_troll_goad_desc}A brutal orc chieftain of Moria who commands cave trolls in battle, driving them forward with whip and cunning." />
-	<string id="taom_career_misty_warg_chieftain" text="{=taom_career_misty_warg_chieftain}Misty Mountain Warg Chieftain" />
-	<string id="taom_career_misty_warg_chieftain_desc" text="{=taom_career_misty_warg_chieftain_desc}A feared orc alpha who rides the largest warg of the pack, leading savage hunts through the Misty Mountains." />
-	<string id="taom_career_rank1_abanissa_house_guard" text="{=taom_career_rank1_abanissa_house_guard}Damudûr House-Guard" />
-	<string id="taom_career_rank1_abanissa_ivory_rider" text="{=taom_career_rank1_abanissa_ivory_rider}Ivory-Road Beast-Tamer" />
-	<string id="taom_career_rank1_abanissa_jiret_javelineer" text="{=taom_career_rank1_abanissa_jiret_javelineer}Jîret Javelineer" />
-	<string id="taom_career_rank1_craig_crag_stalker" text="{=taom_career_rank1_craig_crag_stalker}Crag-Lurker" />
-	<string id="taom_career_rank1_craig_pit_driver" text="{=taom_career_rank1_craig_pit_driver}Pit-Driver" />
-	<string id="taom_career_rank1_craig_warg_master" text="{=taom_career_rank1_craig_warg_master}Warg-Rider of the Pack" />
-	<string id="taom_career_rank1_falathrim_blade_dancer" text="{=taom_career_rank1_falathrim_blade_dancer}Falathrim Bladesman" />
-	<string id="taom_career_rank1_falathrim_mariner" text="{=taom_career_rank1_falathrim_mariner}Ohtar of Mithlond" />
-	<string id="taom_career_rank1_falathrim_sentinel" text="{=taom_career_rank1_falathrim_sentinel}Falathrim Bowman" />
-	<string id="taom_career_rank1_goblin_troll_driver" text="{=taom_career_rank1_goblin_troll_driver}Pit-Driver" />
-	<string id="taom_career_rank1_goblin_tunnel_stalker" text="{=taom_career_rank1_goblin_tunnel_stalker}Crag-Lurker" />
-	<string id="taom_career_rank1_goblin_warg_master" text="{=taom_career_rank1_goblin_warg_master}Warg-Rider of the Pack" />
-	<string id="taom_career_rank1_misty_deep_marksman" text="{=taom_career_rank1_misty_deep_marksman}Crag-Lurker" />
-	<string id="taom_career_rank1_misty_troll_goad" text="{=taom_career_rank1_misty_troll_goad}Pit-Driver" />
-	<string id="taom_career_rank1_misty_warg_chieftain" text="{=taom_career_rank1_misty_warg_chieftain}Warg-Rider of the Pack" />
-	<string id="taom_career_rank1_shaghana_beast_rider" text="{=taom_career_rank1_shaghana_beast_rider}Sormedân Beast-Tamer" />
-	<string id="taom_career_rank1_shaghana_chatak_javelineer" text="{=taom_career_rank1_shaghana_chatak_javelineer}Chatâk Javelineer" />
-	<string id="taom_career_rank1_shaghana_zajana_tribesman" text="{=taom_career_rank1_shaghana_zajana_tribesman}Zajâna Tribesman" />
-	<string id="taom_career_rank2_abanissa_house_guard" text="{=taom_career_rank2_abanissa_house_guard}Caravan Outrider" />
-	<string id="taom_career_rank2_abanissa_ivory_rider" text="{=taom_career_rank2_abanissa_ivory_rider}Mûmak Driver" />
-	<string id="taom_career_rank2_abanissa_jiret_javelineer" text="{=taom_career_rank2_abanissa_jiret_javelineer}Throwing-Spear Skirmisher" />
-	<string id="taom_career_rank2_craig_crag_stalker" text="{=taom_career_rank2_craig_crag_stalker}Ered Luin Stalker" />
-	<string id="taom_career_rank2_craig_pit_driver" text="{=taom_career_rank2_craig_pit_driver}Troll-Goad of Blue Craig" />
-	<string id="taom_career_rank2_craig_warg_master" text="{=taom_career_rank2_craig_warg_master}Fell Wolf-Captain" />
-	<string id="taom_career_rank2_falathrim_blade_dancer" text="{=taom_career_rank2_falathrim_blade_dancer}Blade of the Golden Flower" />
-	<string id="taom_career_rank2_falathrim_mariner" text="{=taom_career_rank2_falathrim_mariner}Roquen of Mithlond" />
-	<string id="taom_career_rank2_falathrim_sentinel" text="{=taom_career_rank2_falathrim_sentinel}Sentinel of the Heavenly Arch" />
-	<string id="taom_career_rank2_goblin_troll_driver" text="{=taom_career_rank2_goblin_troll_driver}Troll-Goad of Goblin-town" />
-	<string id="taom_career_rank2_goblin_tunnel_stalker" text="{=taom_career_rank2_goblin_tunnel_stalker}High Pass Stalker" />
-	<string id="taom_career_rank2_goblin_warg_master" text="{=taom_career_rank2_goblin_warg_master}Fell Wolf-Captain" />
-	<string id="taom_career_rank2_misty_deep_marksman" text="{=taom_career_rank2_misty_deep_marksman}High Pass Stalker" />
-	<string id="taom_career_rank2_misty_troll_goad" text="{=taom_career_rank2_misty_troll_goad}Troll-Goad of Moria" />
-	<string id="taom_career_rank2_misty_warg_chieftain" text="{=taom_career_rank2_misty_warg_chieftain}Fell Wolf-Captain" />
-	<string id="taom_career_rank2_shaghana_beast_rider" text="{=taom_career_rank2_shaghana_beast_rider}Mûmak Driver" />
-	<string id="taom_career_rank2_shaghana_chatak_javelineer" text="{=taom_career_rank2_shaghana_chatak_javelineer}Throwing-Spear Skirmisher" />
-	<string id="taom_career_rank2_shaghana_zajana_tribesman" text="{=taom_career_rank2_shaghana_zajana_tribesman}Sandstorm Raider" />
-	<string id="taom_career_rank3_abanissa_house_guard" text="{=taom_career_rank3_abanissa_house_guard}Ivory-Throne Chieftain" />
-	<string id="taom_career_rank3_abanissa_ivory_rider" text="{=taom_career_rank3_abanissa_ivory_rider}Mûmak War-Leader" />
-	<string id="taom_career_rank3_abanissa_jiret_javelineer" text="{=taom_career_rank3_abanissa_jiret_javelineer}Gilded Spear-Master" />
-	<string id="taom_career_rank3_craig_crag_stalker" text="{=taom_career_rank3_craig_crag_stalker}Eye of Blue Craig" />
-	<string id="taom_career_rank3_craig_pit_driver" text="{=taom_career_rank3_craig_pit_driver}Maker of Broken Trolls" />
-	<string id="taom_career_rank3_craig_warg_master" text="{=taom_career_rank3_craig_warg_master}Wolf-Lord of the Wild Hunt" />
-	<string id="taom_career_rank3_falathrim_blade_dancer" text="{=taom_career_rank3_falathrim_blade_dancer}Blademaster of Mithlond" />
-	<string id="taom_career_rank3_falathrim_mariner" text="{=taom_career_rank3_falathrim_mariner}Knight of the Golden Flower" />
-	<string id="taom_career_rank3_falathrim_sentinel" text="{=taom_career_rank3_falathrim_sentinel}Warden of Mithlond" />
-	<string id="taom_career_rank3_goblin_troll_driver" text="{=taom_career_rank3_goblin_troll_driver}Maker of Broken Trolls" />
-	<string id="taom_career_rank3_goblin_tunnel_stalker" text="{=taom_career_rank3_goblin_tunnel_stalker}Eye of Goblin-town" />
-	<string id="taom_career_rank3_goblin_warg_master" text="{=taom_career_rank3_goblin_warg_master}Wolf-Lord of the Wild Hunt" />
-	<string id="taom_career_rank3_misty_deep_marksman" text="{=taom_career_rank3_misty_deep_marksman}Eye of Moria" />
-	<string id="taom_career_rank3_misty_troll_goad" text="{=taom_career_rank3_misty_troll_goad}Maker of Broken Trolls" />
-	<string id="taom_career_rank3_misty_warg_chieftain" text="{=taom_career_rank3_misty_warg_chieftain}Wolf-Lord of the Wild Hunt" />
-	<string id="taom_career_rank3_shaghana_beast_rider" text="{=taom_career_rank3_shaghana_beast_rider}Mûmak War-Leader" />
-	<string id="taom_career_rank3_shaghana_chatak_javelineer" text="{=taom_career_rank3_shaghana_chatak_javelineer}Scarlet Spear-Master" />
-	<string id="taom_career_rank3_shaghana_zajana_tribesman" text="{=taom_career_rank3_shaghana_zajana_tribesman}Serpent-Banner Chieftain" />
-	<string id="taom_career_shaghana_beast_rider" text="{=taom_career_shaghana_beast_rider}Sormedân Beast Rider" />
-	<string id="taom_career_shaghana_beast_rider_desc" text="{=taom_career_shaghana_beast_rider_desc}A fearsome rider of the Far Harad who drives great beasts into the enemy, breaking lines with shock and primal terror." />
-	<string id="taom_career_shaghana_chatak_javelineer" text="{=taom_career_shaghana_chatak_javelineer}Chatâk Javelineer" />
-	<string id="taom_career_shaghana_chatak_javelineer_desc" text="{=taom_career_shaghana_chatak_javelineer_desc}A fast-moving skirmisher of Chatâk who screens cavalry with a hail of javelins before withdrawing beyond reach of retaliation." />
-	<string id="taom_career_shaghana_zajana_tribesman" text="{=taom_career_shaghana_zajana_tribesman}Tribesman of Zajâna" />
-	<string id="taom_career_shaghana_zajana_tribesman_desc" text="{=taom_career_shaghana_zajana_tribesman_desc}A warrior of the Zajâna desert tribes whose attrition-warfare tactics grind enemies down with relentless pressure and poisoned blades." />
-	<string id="taom_ccs_t1_a_key" text="{=taom_ccs_t1_a_key}Poison Dart radius increased, covering wider kill zones." />
-	<string id="taom_ccs_t1_a_p1" text="{=taom_ccs_t1_a_p1}+8% ranged damage." />
-	<string id="taom_ccs_t1_a_p2" text="{=taom_ccs_t1_a_p2}+5% armor penetration." />
-	<string id="taom_ccs_t1_a_p3" text="{=taom_ccs_t1_a_p3}+7% movement speed." />
-	<string id="taom_ccs_t1_a_p4" text="{=taom_ccs_t1_a_p4}+5% battle renown gain." />
-	<string id="taom_ccs_t1_b_key" text="{=taom_ccs_t1_b_key}Poison Dart duration extended, sustained barrage." />
-	<string id="taom_ccs_t1_b_p1" text="{=taom_ccs_t1_b_p1}+5% resistance." />
-	<string id="taom_ccs_t1_b_p2" text="{=taom_ccs_t1_b_p2}+5 max health." />
-	<string id="taom_ccs_t1_b_p3" text="{=taom_ccs_t1_b_p3}+5% party spotting range." />
-	<string id="taom_ccs_t1_b_p4" text="{=taom_ccs_t1_b_p4}+10% stealth bonus." />
-	<string id="taom_ccs_t2_a_key" text="{=taom_ccs_t2_a_key}Poison Dart charge reduced, maintaining constant pressure." />
-	<string id="taom_ccs_t2_a_p1" text="{=taom_ccs_t2_a_p1}+10% party spotting range." />
-	<string id="taom_ccs_t2_a_p2" text="{=taom_ccs_t2_a_p2}+10% movement speed." />
-	<string id="taom_ccs_t2_a_p3" text="{=taom_ccs_t2_a_p3}+13% stealth bonus." />
-	<string id="taom_ccs_t2_a_p4" text="{=taom_ccs_t2_a_p4}+10% battle renown gain." />
-	<string id="taom_ccs_t2_b_key" text="{=taom_ccs_t2_b_key}Poison Dart gains additional penetration while active." />
-	<string id="taom_ccs_t2_b_p1" text="{=taom_ccs_t2_b_p1}+12% ranged damage." />
-	<string id="taom_ccs_t2_b_p2" text="{=taom_ccs_t2_b_p2}+10% armor penetration." />
-	<string id="taom_ccs_t2_b_p3" text="{=taom_ccs_t2_b_p3}+8 max health." />
-	<string id="taom_ccs_t2_b_p4" text="{=taom_ccs_t2_b_p4}+3% troop damage." />
-	<string id="taom_ccs_t3_a_key" text="{=taom_ccs_t3_a_key}Poison Dart radius greatly expanded, inescapable volleys." />
-	<string id="taom_ccs_t3_a_p1" text="{=taom_ccs_t3_a_p1}+18% ranged damage." />
-	<string id="taom_ccs_t3_a_p2" text="{=taom_ccs_t3_a_p2}+15% armor penetration." />
-	<string id="taom_ccs_t3_a_p3" text="{=taom_ccs_t3_a_p3}+15% battle renown gain." />
-	<string id="taom_ccs_t3_a_p4" text="{=taom_ccs_t3_a_p4}+5% troop damage." />
-	<string id="taom_ccs_t3_b_key" text="{=taom_ccs_t3_b_key}Poison Dart charge greatly reduced, relentless fire." />
-	<string id="taom_ccs_t3_b_p1" text="{=taom_ccs_t3_b_p1}+15% stealth bonus." />
-	<string id="taom_ccs_t3_b_p2" text="{=taom_ccs_t3_b_p2}+15% movement speed." />
-	<string id="taom_ccs_t3_b_p3" text="{=taom_ccs_t3_b_p3}+9 max health." />
-	<string id="taom_ccs_t3_b_p4" text="{=taom_ccs_t3_b_p4}+15% party spotting range." />
-	<string id="taom_cpd_t1_a_key" text="{=taom_cpd_t1_a_key}Blue Craig Frenzy radius increased, empowering more warriors." />
-	<string id="taom_cpd_t1_a_p1" text="{=taom_cpd_t1_a_p1}+8% melee damage." />
-	<string id="taom_cpd_t1_a_p2" text="{=taom_cpd_t1_a_p2}+3% troop damage." />
-	<string id="taom_cpd_t1_a_p3" text="{=taom_cpd_t1_a_p3}+6 max health." />
-	<string id="taom_cpd_t1_a_p4" text="{=taom_cpd_t1_a_p4}+7% swing speed." />
-	<string id="taom_cpd_t1_b_key" text="{=taom_cpd_t1_b_key}Blue Craig Frenzy duration extended, fortifying the defense." />
-	<string id="taom_cpd_t1_b_p1" text="{=taom_cpd_t1_b_p1}+8% resistance." />
-	<string id="taom_cpd_t1_b_p2" text="{=taom_cpd_t1_b_p2}+5% troop morale." />
-	<string id="taom_cpd_t1_b_p3" text="{=taom_cpd_t1_b_p3}+10% troop resistance." />
-	<string id="taom_cpd_t1_b_p4" text="{=taom_cpd_t1_b_p4}+5% troop survival." />
-	<string id="taom_cpd_t2_a_key" text="{=taom_cpd_t2_a_key}Blue Craig Frenzy charge reduced, activating more frequently." />
-	<string id="taom_cpd_t2_a_p1" text="{=taom_cpd_t2_a_p1}+10% troop morale." />
-	<string id="taom_cpd_t2_a_p2" text="{=taom_cpd_t2_a_p2}+2 party size." />
-	<string id="taom_cpd_t2_a_p3" text="{=taom_cpd_t2_a_p3}+10% battle renown gain." />
-	<string id="taom_cpd_t2_a_p4" text="{=taom_cpd_t2_a_p4}-10% troop wages." />
-	<string id="taom_cpd_t2_b_key" text="{=taom_cpd_t2_b_key}Blue Craig Frenzy grants additional defensive buffs while active." />
-	<string id="taom_cpd_t2_b_p1" text="{=taom_cpd_t2_b_p1}+12% resistance." />
-	<string id="taom_cpd_t2_b_p2" text="{=taom_cpd_t2_b_p2}+8 max health." />
-	<string id="taom_cpd_t2_b_p3" text="{=taom_cpd_t2_b_p3}+13% troop resistance." />
-	<string id="taom_cpd_t2_b_p4" text="{=taom_cpd_t2_b_p4}+5% troop damage." />
-	<string id="taom_cpd_t3_a_key" text="{=taom_cpd_t3_a_key}Blue Craig Frenzy radius greatly expanded, devastating power." />
-	<string id="taom_cpd_t3_a_p1" text="{=taom_cpd_t3_a_p1}+15% melee damage." />
-	<string id="taom_cpd_t3_a_p2" text="{=taom_cpd_t3_a_p2}+10 max health." />
-	<string id="taom_cpd_t3_a_p3" text="{=taom_cpd_t3_a_p3}+7% troop damage." />
-	<string id="taom_cpd_t3_a_p4" text="{=taom_cpd_t3_a_p4}+4 party size." />
-	<string id="taom_cpd_t3_b_key" text="{=taom_cpd_t3_b_key}Blue Craig Frenzy charge greatly reduced, nearly always available." />
-	<string id="taom_cpd_t3_b_p1" text="{=taom_cpd_t3_b_p1}+18% resistance." />
-	<string id="taom_cpd_t3_b_p2" text="{=taom_cpd_t3_b_p2}+15% hero health regeneration." />
-	<string id="taom_cpd_t3_b_p3" text="{=taom_cpd_t3_b_p3}+20% troop morale." />
-	<string id="taom_cpd_t3_b_p4" text="{=taom_cpd_t3_b_p4}+15% troop survival." />
-	<string id="taom_craig_crag_stalker_root_desc" text="{=taom_craig_crag_stalker_root_desc}Poison Dart grants +5% ranged damage with cave fungus toxin." />
-	<string id="taom_craig_pit_driver_root_desc" text="{=taom_craig_pit_driver_root_desc}Blue Craig Frenzy grants +5 health and drives your trolls berserk." />
-	<string id="taom_craig_warg_master_root_desc" text="{=taom_craig_warg_master_root_desc}Alpha Howl grants +5% melee damage and the pack hunts." />
-	<string id="taom_cwm_t1_a_key" text="{=taom_cwm_t1_a_key}Alpha Howl radius expanded, sweeping wider formations." />
-	<string id="taom_cwm_t1_a_p1" text="{=taom_cwm_t1_a_p1}+8% melee damage." />
-	<string id="taom_cwm_t1_a_p2" text="{=taom_cwm_t1_a_p2}+10% horse charge damage." />
-	<string id="taom_cwm_t1_a_p3" text="{=taom_cwm_t1_a_p3}+7% swing speed." />
-	<string id="taom_cwm_t1_a_p4" text="{=taom_cwm_t1_a_p4}+5% party movement speed." />
-	<string id="taom_cwm_t1_b_key" text="{=taom_cwm_t1_b_key}Alpha Howl duration extended, maintaining momentum." />
-	<string id="taom_cwm_t1_b_p1" text="{=taom_cwm_t1_b_p1}+10% horse health." />
-	<string id="taom_cwm_t1_b_p2" text="{=taom_cwm_t1_b_p2}+5 max health." />
-	<string id="taom_cwm_t1_b_p3" text="{=taom_cwm_t1_b_p3}-5% troop wages." />
-	<string id="taom_cwm_t1_b_p4" text="{=taom_cwm_t1_b_p4}+5% resistance." />
-	<string id="taom_cwm_t2_a_key" text="{=taom_cwm_t2_a_key}Alpha Howl charge reduced, swifter activation." />
-	<string id="taom_cwm_t2_a_p1" text="{=taom_cwm_t2_a_p1}+10% party movement speed." />
-	<string id="taom_cwm_t2_a_p2" text="{=taom_cwm_t2_a_p2}-10% troop wages." />
-	<string id="taom_cwm_t2_a_p3" text="{=taom_cwm_t2_a_p3}+10% troop morale." />
-	<string id="taom_cwm_t2_a_p4" text="{=taom_cwm_t2_a_p4}+10% battle renown gain." />
-	<string id="taom_cwm_t2_b_key" text="{=taom_cwm_t2_b_key}Alpha Howl boosts mount resilience while active." />
-	<string id="taom_cwm_t2_b_p1" text="{=taom_cwm_t2_b_p1}+12% melee damage." />
-	<string id="taom_cwm_t2_b_p2" text="{=taom_cwm_t2_b_p2}+13% horse charge damage." />
-	<string id="taom_cwm_t2_b_p3" text="{=taom_cwm_t2_b_p3}+13% horse health." />
-	<string id="taom_cwm_t2_b_p4" text="{=taom_cwm_t2_b_p4}+10% swing speed." />
-	<string id="taom_cwm_t3_a_key" text="{=taom_cwm_t3_a_key}Alpha Howl radius greatly expanded, unstoppable impact." />
-	<string id="taom_cwm_t3_a_p1" text="{=taom_cwm_t3_a_p1}+18% melee damage." />
-	<string id="taom_cwm_t3_a_p2" text="{=taom_cwm_t3_a_p2}+15% horse charge damage." />
-	<string id="taom_cwm_t3_a_p3" text="{=taom_cwm_t3_a_p3}+15% swing speed." />
-	<string id="taom_cwm_t3_a_p4" text="{=taom_cwm_t3_a_p4}+7% troop damage." />
-	<string id="taom_cwm_t3_b_key" text="{=taom_cwm_t3_b_key}Alpha Howl charge greatly reduced, ride without ceasing." />
-	<string id="taom_cwm_t3_b_p1" text="{=taom_cwm_t3_b_p1}+15% horse health." />
-	<string id="taom_cwm_t3_b_p2" text="{=taom_cwm_t3_b_p2}-15% troop wages." />
-	<string id="taom_cwm_t3_b_p3" text="{=taom_cwm_t3_b_p3}+15% party movement speed." />
-	<string id="taom_cwm_t3_b_p4" text="{=taom_cwm_t3_b_p4}+9 max health." />
-	<string id="taom_falathrim_blade_dancer_root_desc" text="{=taom_falathrim_blade_dancer_root_desc}Starlight Weave grants +5% resistance and elven agility." />
-	<string id="taom_falathrim_mariner_root_desc" text="{=taom_falathrim_mariner_root_desc}Last Alliance grants +5% melee damage and inspires your allies." />
-	<string id="taom_falathrim_sentinel_root_desc" text="{=taom_falathrim_sentinel_root_desc}Elven Sight grants +5% ranged damage with centuries of practice." />
-	<string id="taom_fbd_t1_a_key" text="{=taom_fbd_t1_a_key}Starlight Weave radius increased, empowering more warriors." />
-	<string id="taom_fbd_t1_a_p1" text="{=taom_fbd_t1_a_p1}+8% melee damage." />
-	<string id="taom_fbd_t1_a_p2" text="{=taom_fbd_t1_a_p2}+3% troop damage." />
-	<string id="taom_fbd_t1_a_p3" text="{=taom_fbd_t1_a_p3}+6 max health." />
-	<string id="taom_fbd_t1_a_p4" text="{=taom_fbd_t1_a_p4}+7% swing speed." />
-	<string id="taom_fbd_t1_b_key" text="{=taom_fbd_t1_b_key}Starlight Weave duration extended, fortifying the defense." />
-	<string id="taom_fbd_t1_b_p1" text="{=taom_fbd_t1_b_p1}+8% resistance." />
-	<string id="taom_fbd_t1_b_p2" text="{=taom_fbd_t1_b_p2}+5% troop morale." />
-	<string id="taom_fbd_t1_b_p3" text="{=taom_fbd_t1_b_p3}+10% troop resistance." />
-	<string id="taom_fbd_t1_b_p4" text="{=taom_fbd_t1_b_p4}+5% troop survival." />
-	<string id="taom_fbd_t2_a_key" text="{=taom_fbd_t2_a_key}Starlight Weave charge reduced, activating more frequently." />
-	<string id="taom_fbd_t2_a_p1" text="{=taom_fbd_t2_a_p1}+10% troop morale." />
-	<string id="taom_fbd_t2_a_p2" text="{=taom_fbd_t2_a_p2}+2 party size." />
-	<string id="taom_fbd_t2_a_p3" text="{=taom_fbd_t2_a_p3}+10% battle renown gain." />
-	<string id="taom_fbd_t2_a_p4" text="{=taom_fbd_t2_a_p4}-10% troop wages." />
-	<string id="taom_fbd_t2_b_key" text="{=taom_fbd_t2_b_key}Starlight Weave grants additional defensive buffs while active." />
-	<string id="taom_fbd_t2_b_p1" text="{=taom_fbd_t2_b_p1}+12% resistance." />
-	<string id="taom_fbd_t2_b_p2" text="{=taom_fbd_t2_b_p2}+8 max health." />
-	<string id="taom_fbd_t2_b_p3" text="{=taom_fbd_t2_b_p3}+13% troop resistance." />
-	<string id="taom_fbd_t2_b_p4" text="{=taom_fbd_t2_b_p4}+5% troop damage." />
-	<string id="taom_fbd_t3_a_key" text="{=taom_fbd_t3_a_key}Starlight Weave radius greatly expanded, devastating power." />
-	<string id="taom_fbd_t3_a_p1" text="{=taom_fbd_t3_a_p1}+15% melee damage." />
-	<string id="taom_fbd_t3_a_p2" text="{=taom_fbd_t3_a_p2}+10 max health." />
-	<string id="taom_fbd_t3_a_p3" text="{=taom_fbd_t3_a_p3}+7% troop damage." />
-	<string id="taom_fbd_t3_a_p4" text="{=taom_fbd_t3_a_p4}+4 party size." />
-	<string id="taom_fbd_t3_b_key" text="{=taom_fbd_t3_b_key}Starlight Weave charge greatly reduced, nearly always available." />
-	<string id="taom_fbd_t3_b_p1" text="{=taom_fbd_t3_b_p1}+18% resistance." />
-	<string id="taom_fbd_t3_b_p2" text="{=taom_fbd_t3_b_p2}+15% hero health regeneration." />
-	<string id="taom_fbd_t3_b_p3" text="{=taom_fbd_t3_b_p3}+20% troop morale." />
-	<string id="taom_fbd_t3_b_p4" text="{=taom_fbd_t3_b_p4}+15% troop survival." />
-	<string id="taom_fmr_t1_a_key" text="{=taom_fmr_t1_a_key}Last Alliance radius expanded, sweeping wider formations." />
-	<string id="taom_fmr_t1_a_p1" text="{=taom_fmr_t1_a_p1}+8% melee damage." />
-	<string id="taom_fmr_t1_a_p2" text="{=taom_fmr_t1_a_p2}+10% horse charge damage." />
-	<string id="taom_fmr_t1_a_p3" text="{=taom_fmr_t1_a_p3}+7% swing speed." />
-	<string id="taom_fmr_t1_a_p4" text="{=taom_fmr_t1_a_p4}+5% party movement speed." />
-	<string id="taom_fmr_t1_b_key" text="{=taom_fmr_t1_b_key}Last Alliance duration extended, maintaining momentum." />
-	<string id="taom_fmr_t1_b_p1" text="{=taom_fmr_t1_b_p1}+10% horse health." />
-	<string id="taom_fmr_t1_b_p2" text="{=taom_fmr_t1_b_p2}+5 max health." />
-	<string id="taom_fmr_t1_b_p3" text="{=taom_fmr_t1_b_p3}-5% troop wages." />
-	<string id="taom_fmr_t1_b_p4" text="{=taom_fmr_t1_b_p4}+5% resistance." />
-	<string id="taom_fmr_t2_a_key" text="{=taom_fmr_t2_a_key}Last Alliance charge reduced, swifter activation." />
-	<string id="taom_fmr_t2_a_p1" text="{=taom_fmr_t2_a_p1}+10% party movement speed." />
-	<string id="taom_fmr_t2_a_p2" text="{=taom_fmr_t2_a_p2}-10% troop wages." />
-	<string id="taom_fmr_t2_a_p3" text="{=taom_fmr_t2_a_p3}+10% troop morale." />
-	<string id="taom_fmr_t2_a_p4" text="{=taom_fmr_t2_a_p4}+10% battle renown gain." />
-	<string id="taom_fmr_t2_b_key" text="{=taom_fmr_t2_b_key}Last Alliance boosts mount resilience while active." />
-	<string id="taom_fmr_t2_b_p1" text="{=taom_fmr_t2_b_p1}+12% melee damage." />
-	<string id="taom_fmr_t2_b_p2" text="{=taom_fmr_t2_b_p2}+13% horse charge damage." />
-	<string id="taom_fmr_t2_b_p3" text="{=taom_fmr_t2_b_p3}+13% horse health." />
-	<string id="taom_fmr_t2_b_p4" text="{=taom_fmr_t2_b_p4}+10% swing speed." />
-	<string id="taom_fmr_t3_a_key" text="{=taom_fmr_t3_a_key}Last Alliance radius greatly expanded, unstoppable impact." />
-	<string id="taom_fmr_t3_a_p1" text="{=taom_fmr_t3_a_p1}+18% melee damage." />
-	<string id="taom_fmr_t3_a_p2" text="{=taom_fmr_t3_a_p2}+15% horse charge damage." />
-	<string id="taom_fmr_t3_a_p3" text="{=taom_fmr_t3_a_p3}+15% swing speed." />
-	<string id="taom_fmr_t3_a_p4" text="{=taom_fmr_t3_a_p4}+7% troop damage." />
-	<string id="taom_fmr_t3_b_key" text="{=taom_fmr_t3_b_key}Last Alliance charge greatly reduced, ride without ceasing." />
-	<string id="taom_fmr_t3_b_p1" text="{=taom_fmr_t3_b_p1}+15% horse health." />
-	<string id="taom_fmr_t3_b_p2" text="{=taom_fmr_t3_b_p2}-15% troop wages." />
-	<string id="taom_fmr_t3_b_p3" text="{=taom_fmr_t3_b_p3}+15% party movement speed." />
-	<string id="taom_fmr_t3_b_p4" text="{=taom_fmr_t3_b_p4}+9 max health." />
-	<string id="taom_fsn_t1_a_key" text="{=taom_fsn_t1_a_key}Elven Sight radius increased, covering wider kill zones." />
-	<string id="taom_fsn_t1_a_p1" text="{=taom_fsn_t1_a_p1}+8% ranged damage." />
-	<string id="taom_fsn_t1_a_p2" text="{=taom_fsn_t1_a_p2}+5% armor penetration." />
-	<string id="taom_fsn_t1_a_p3" text="{=taom_fsn_t1_a_p3}+7% movement speed." />
-	<string id="taom_fsn_t1_a_p4" text="{=taom_fsn_t1_a_p4}+5% battle renown gain." />
-	<string id="taom_fsn_t1_b_key" text="{=taom_fsn_t1_b_key}Elven Sight duration extended, sustained barrage." />
-	<string id="taom_fsn_t1_b_p1" text="{=taom_fsn_t1_b_p1}+5% resistance." />
-	<string id="taom_fsn_t1_b_p2" text="{=taom_fsn_t1_b_p2}+5 max health." />
-	<string id="taom_fsn_t1_b_p3" text="{=taom_fsn_t1_b_p3}+5% party spotting range." />
-	<string id="taom_fsn_t1_b_p4" text="{=taom_fsn_t1_b_p4}+10% stealth bonus." />
-	<string id="taom_fsn_t2_a_key" text="{=taom_fsn_t2_a_key}Elven Sight charge reduced, maintaining constant pressure." />
-	<string id="taom_fsn_t2_a_p1" text="{=taom_fsn_t2_a_p1}+10% party spotting range." />
-	<string id="taom_fsn_t2_a_p2" text="{=taom_fsn_t2_a_p2}+10% movement speed." />
-	<string id="taom_fsn_t2_a_p3" text="{=taom_fsn_t2_a_p3}+13% stealth bonus." />
-	<string id="taom_fsn_t2_a_p4" text="{=taom_fsn_t2_a_p4}+10% battle renown gain." />
-	<string id="taom_fsn_t2_b_key" text="{=taom_fsn_t2_b_key}Elven Sight gains additional penetration while active." />
-	<string id="taom_fsn_t2_b_p1" text="{=taom_fsn_t2_b_p1}+12% ranged damage." />
-	<string id="taom_fsn_t2_b_p2" text="{=taom_fsn_t2_b_p2}+10% armor penetration." />
-	<string id="taom_fsn_t2_b_p3" text="{=taom_fsn_t2_b_p3}+8 max health." />
-	<string id="taom_fsn_t2_b_p4" text="{=taom_fsn_t2_b_p4}+3% troop damage." />
-	<string id="taom_fsn_t3_a_key" text="{=taom_fsn_t3_a_key}Elven Sight radius greatly expanded, inescapable volleys." />
-	<string id="taom_fsn_t3_a_p1" text="{=taom_fsn_t3_a_p1}+18% ranged damage." />
-	<string id="taom_fsn_t3_a_p2" text="{=taom_fsn_t3_a_p2}+15% armor penetration." />
-	<string id="taom_fsn_t3_a_p3" text="{=taom_fsn_t3_a_p3}+15% battle renown gain." />
-	<string id="taom_fsn_t3_a_p4" text="{=taom_fsn_t3_a_p4}+5% troop damage." />
-	<string id="taom_fsn_t3_b_key" text="{=taom_fsn_t3_b_key}Elven Sight charge greatly reduced, relentless fire." />
-	<string id="taom_fsn_t3_b_p1" text="{=taom_fsn_t3_b_p1}+15% stealth bonus." />
-	<string id="taom_fsn_t3_b_p2" text="{=taom_fsn_t3_b_p2}+15% movement speed." />
-	<string id="taom_fsn_t3_b_p3" text="{=taom_fsn_t3_b_p3}+9 max health." />
-	<string id="taom_fsn_t3_b_p4" text="{=taom_fsn_t3_b_p4}+15% party spotting range." />
-	<string id="taom_goblin_troll_driver_root_desc" text="{=taom_goblin_troll_driver_root_desc}Goblin-town Frenzy grants +5 health and drives your trolls berserk." />
-	<string id="taom_goblin_tunnel_stalker_root_desc" text="{=taom_goblin_tunnel_stalker_root_desc}Poison Dart grants +5% ranged damage with cave fungus toxin." />
-	<string id="taom_goblin_warg_master_root_desc" text="{=taom_goblin_warg_master_root_desc}Alpha Howl grants +5% melee damage and the pack hunts." />
-	<string id="taom_gtd_t1_a_key" text="{=taom_gtd_t1_a_key}Goblin-town Frenzy radius increased, empowering more warriors." />
-	<string id="taom_gtd_t1_a_p1" text="{=taom_gtd_t1_a_p1}+8% melee damage." />
-	<string id="taom_gtd_t1_a_p2" text="{=taom_gtd_t1_a_p2}+3% troop damage." />
-	<string id="taom_gtd_t1_a_p3" text="{=taom_gtd_t1_a_p3}+6 max health." />
-	<string id="taom_gtd_t1_a_p4" text="{=taom_gtd_t1_a_p4}+7% swing speed." />
-	<string id="taom_gtd_t1_b_key" text="{=taom_gtd_t1_b_key}Goblin-town Frenzy duration extended, fortifying the defense." />
-	<string id="taom_gtd_t1_b_p1" text="{=taom_gtd_t1_b_p1}+8% resistance." />
-	<string id="taom_gtd_t1_b_p2" text="{=taom_gtd_t1_b_p2}+5% troop morale." />
-	<string id="taom_gtd_t1_b_p3" text="{=taom_gtd_t1_b_p3}+10% troop resistance." />
-	<string id="taom_gtd_t1_b_p4" text="{=taom_gtd_t1_b_p4}+5% troop survival." />
-	<string id="taom_gtd_t2_a_key" text="{=taom_gtd_t2_a_key}Goblin-town Frenzy charge reduced, activating more frequently." />
-	<string id="taom_gtd_t2_a_p1" text="{=taom_gtd_t2_a_p1}+10% troop morale." />
-	<string id="taom_gtd_t2_a_p2" text="{=taom_gtd_t2_a_p2}+2 party size." />
-	<string id="taom_gtd_t2_a_p3" text="{=taom_gtd_t2_a_p3}+10% battle renown gain." />
-	<string id="taom_gtd_t2_a_p4" text="{=taom_gtd_t2_a_p4}-10% troop wages." />
-	<string id="taom_gtd_t2_b_key" text="{=taom_gtd_t2_b_key}Goblin-town Frenzy grants additional defensive buffs while active." />
-	<string id="taom_gtd_t2_b_p1" text="{=taom_gtd_t2_b_p1}+12% resistance." />
-	<string id="taom_gtd_t2_b_p2" text="{=taom_gtd_t2_b_p2}+8 max health." />
-	<string id="taom_gtd_t2_b_p3" text="{=taom_gtd_t2_b_p3}+13% troop resistance." />
-	<string id="taom_gtd_t2_b_p4" text="{=taom_gtd_t2_b_p4}+5% troop damage." />
-	<string id="taom_gtd_t3_a_key" text="{=taom_gtd_t3_a_key}Goblin-town Frenzy radius greatly expanded, devastating power." />
-	<string id="taom_gtd_t3_a_p1" text="{=taom_gtd_t3_a_p1}+15% melee damage." />
-	<string id="taom_gtd_t3_a_p2" text="{=taom_gtd_t3_a_p2}+10 max health." />
-	<string id="taom_gtd_t3_a_p3" text="{=taom_gtd_t3_a_p3}+7% troop damage." />
-	<string id="taom_gtd_t3_a_p4" text="{=taom_gtd_t3_a_p4}+4 party size." />
-	<string id="taom_gtd_t3_b_key" text="{=taom_gtd_t3_b_key}Goblin-town Frenzy charge greatly reduced, nearly always available." />
-	<string id="taom_gtd_t3_b_p1" text="{=taom_gtd_t3_b_p1}+18% resistance." />
-	<string id="taom_gtd_t3_b_p2" text="{=taom_gtd_t3_b_p2}+15% hero health regeneration." />
-	<string id="taom_gtd_t3_b_p3" text="{=taom_gtd_t3_b_p3}+20% troop morale." />
-	<string id="taom_gtd_t3_b_p4" text="{=taom_gtd_t3_b_p4}+15% troop survival." />
-	<string id="taom_gts_t1_a_key" text="{=taom_gts_t1_a_key}Poison Dart radius increased, covering wider kill zones." />
-	<string id="taom_gts_t1_a_p1" text="{=taom_gts_t1_a_p1}+8% ranged damage." />
-	<string id="taom_gts_t1_a_p2" text="{=taom_gts_t1_a_p2}+5% armor penetration." />
-	<string id="taom_gts_t1_a_p3" text="{=taom_gts_t1_a_p3}+7% movement speed." />
-	<string id="taom_gts_t1_a_p4" text="{=taom_gts_t1_a_p4}+5% battle renown gain." />
-	<string id="taom_gts_t1_b_key" text="{=taom_gts_t1_b_key}Poison Dart duration extended, sustained barrage." />
-	<string id="taom_gts_t1_b_p1" text="{=taom_gts_t1_b_p1}+5% resistance." />
-	<string id="taom_gts_t1_b_p2" text="{=taom_gts_t1_b_p2}+5 max health." />
-	<string id="taom_gts_t1_b_p3" text="{=taom_gts_t1_b_p3}+5% party spotting range." />
-	<string id="taom_gts_t1_b_p4" text="{=taom_gts_t1_b_p4}+10% stealth bonus." />
-	<string id="taom_gts_t2_a_key" text="{=taom_gts_t2_a_key}Poison Dart charge reduced, maintaining constant pressure." />
-	<string id="taom_gts_t2_a_p1" text="{=taom_gts_t2_a_p1}+10% party spotting range." />
-	<string id="taom_gts_t2_a_p2" text="{=taom_gts_t2_a_p2}+10% movement speed." />
-	<string id="taom_gts_t2_a_p3" text="{=taom_gts_t2_a_p3}+13% stealth bonus." />
-	<string id="taom_gts_t2_a_p4" text="{=taom_gts_t2_a_p4}+10% battle renown gain." />
-	<string id="taom_gts_t2_b_key" text="{=taom_gts_t2_b_key}Poison Dart gains additional penetration while active." />
-	<string id="taom_gts_t2_b_p1" text="{=taom_gts_t2_b_p1}+12% ranged damage." />
-	<string id="taom_gts_t2_b_p2" text="{=taom_gts_t2_b_p2}+10% armor penetration." />
-	<string id="taom_gts_t2_b_p3" text="{=taom_gts_t2_b_p3}+8 max health." />
-	<string id="taom_gts_t2_b_p4" text="{=taom_gts_t2_b_p4}+3% troop damage." />
-	<string id="taom_gts_t3_a_key" text="{=taom_gts_t3_a_key}Poison Dart radius greatly expanded, inescapable volleys." />
-	<string id="taom_gts_t3_a_p1" text="{=taom_gts_t3_a_p1}+18% ranged damage." />
-	<string id="taom_gts_t3_a_p2" text="{=taom_gts_t3_a_p2}+15% armor penetration." />
-	<string id="taom_gts_t3_a_p3" text="{=taom_gts_t3_a_p3}+15% battle renown gain." />
-	<string id="taom_gts_t3_a_p4" text="{=taom_gts_t3_a_p4}+5% troop damage." />
-	<string id="taom_gts_t3_b_key" text="{=taom_gts_t3_b_key}Poison Dart charge greatly reduced, relentless fire." />
-	<string id="taom_gts_t3_b_p1" text="{=taom_gts_t3_b_p1}+15% stealth bonus." />
-	<string id="taom_gts_t3_b_p2" text="{=taom_gts_t3_b_p2}+15% movement speed." />
-	<string id="taom_gts_t3_b_p3" text="{=taom_gts_t3_b_p3}+9 max health." />
-	<string id="taom_gts_t3_b_p4" text="{=taom_gts_t3_b_p4}+15% party spotting range." />
-	<string id="taom_gwm_t1_a_key" text="{=taom_gwm_t1_a_key}Alpha Howl radius expanded, sweeping wider formations." />
-	<string id="taom_gwm_t1_a_p1" text="{=taom_gwm_t1_a_p1}+8% melee damage." />
-	<string id="taom_gwm_t1_a_p2" text="{=taom_gwm_t1_a_p2}+10% horse charge damage." />
-	<string id="taom_gwm_t1_a_p3" text="{=taom_gwm_t1_a_p3}+7% swing speed." />
-	<string id="taom_gwm_t1_a_p4" text="{=taom_gwm_t1_a_p4}+5% party movement speed." />
-	<string id="taom_gwm_t1_b_key" text="{=taom_gwm_t1_b_key}Alpha Howl duration extended, maintaining momentum." />
-	<string id="taom_gwm_t1_b_p1" text="{=taom_gwm_t1_b_p1}+10% horse health." />
-	<string id="taom_gwm_t1_b_p2" text="{=taom_gwm_t1_b_p2}+5 max health." />
-	<string id="taom_gwm_t1_b_p3" text="{=taom_gwm_t1_b_p3}-5% troop wages." />
-	<string id="taom_gwm_t1_b_p4" text="{=taom_gwm_t1_b_p4}+5% resistance." />
-	<string id="taom_gwm_t2_a_key" text="{=taom_gwm_t2_a_key}Alpha Howl charge reduced, swifter activation." />
-	<string id="taom_gwm_t2_a_p1" text="{=taom_gwm_t2_a_p1}+10% party movement speed." />
-	<string id="taom_gwm_t2_a_p2" text="{=taom_gwm_t2_a_p2}-10% troop wages." />
-	<string id="taom_gwm_t2_a_p3" text="{=taom_gwm_t2_a_p3}+10% troop morale." />
-	<string id="taom_gwm_t2_a_p4" text="{=taom_gwm_t2_a_p4}+10% battle renown gain." />
-	<string id="taom_gwm_t2_b_key" text="{=taom_gwm_t2_b_key}Alpha Howl boosts mount resilience while active." />
-	<string id="taom_gwm_t2_b_p1" text="{=taom_gwm_t2_b_p1}+12% melee damage." />
-	<string id="taom_gwm_t2_b_p2" text="{=taom_gwm_t2_b_p2}+13% horse charge damage." />
-	<string id="taom_gwm_t2_b_p3" text="{=taom_gwm_t2_b_p3}+13% horse health." />
-	<string id="taom_gwm_t2_b_p4" text="{=taom_gwm_t2_b_p4}+10% swing speed." />
-	<string id="taom_gwm_t3_a_key" text="{=taom_gwm_t3_a_key}Alpha Howl radius greatly expanded, unstoppable impact." />
-	<string id="taom_gwm_t3_a_p1" text="{=taom_gwm_t3_a_p1}+18% melee damage." />
-	<string id="taom_gwm_t3_a_p2" text="{=taom_gwm_t3_a_p2}+15% horse charge damage." />
-	<string id="taom_gwm_t3_a_p3" text="{=taom_gwm_t3_a_p3}+15% swing speed." />
-	<string id="taom_gwm_t3_a_p4" text="{=taom_gwm_t3_a_p4}+7% troop damage." />
-	<string id="taom_gwm_t3_b_key" text="{=taom_gwm_t3_b_key}Alpha Howl charge greatly reduced, ride without ceasing." />
-	<string id="taom_gwm_t3_b_p1" text="{=taom_gwm_t3_b_p1}+15% horse health." />
-	<string id="taom_gwm_t3_b_p2" text="{=taom_gwm_t3_b_p2}-15% troop wages." />
-	<string id="taom_gwm_t3_b_p3" text="{=taom_gwm_t3_b_p3}+15% party movement speed." />
-	<string id="taom_gwm_t3_b_p4" text="{=taom_gwm_t3_b_p4}+9 max health." />
-	<string id="taom_mdm_t1_a_key" text="{=taom_mdm_t1_a_key}Poison Dart radius increased, covering wider kill zones." />
-	<string id="taom_mdm_t1_a_p1" text="{=taom_mdm_t1_a_p1}+8% ranged damage." />
-	<string id="taom_mdm_t1_a_p2" text="{=taom_mdm_t1_a_p2}+5% armor penetration." />
-	<string id="taom_mdm_t1_a_p3" text="{=taom_mdm_t1_a_p3}+7% movement speed." />
-	<string id="taom_mdm_t1_a_p4" text="{=taom_mdm_t1_a_p4}+5% battle renown gain." />
-	<string id="taom_mdm_t1_b_key" text="{=taom_mdm_t1_b_key}Poison Dart duration extended, sustained barrage." />
-	<string id="taom_mdm_t1_b_p1" text="{=taom_mdm_t1_b_p1}+5% resistance." />
-	<string id="taom_mdm_t1_b_p2" text="{=taom_mdm_t1_b_p2}+5 max health." />
-	<string id="taom_mdm_t1_b_p3" text="{=taom_mdm_t1_b_p3}+5% party spotting range." />
-	<string id="taom_mdm_t1_b_p4" text="{=taom_mdm_t1_b_p4}+10% stealth bonus." />
-	<string id="taom_mdm_t2_a_key" text="{=taom_mdm_t2_a_key}Poison Dart charge reduced, maintaining constant pressure." />
-	<string id="taom_mdm_t2_a_p1" text="{=taom_mdm_t2_a_p1}+10% party spotting range." />
-	<string id="taom_mdm_t2_a_p2" text="{=taom_mdm_t2_a_p2}+10% movement speed." />
-	<string id="taom_mdm_t2_a_p3" text="{=taom_mdm_t2_a_p3}+13% stealth bonus." />
-	<string id="taom_mdm_t2_a_p4" text="{=taom_mdm_t2_a_p4}+10% battle renown gain." />
-	<string id="taom_mdm_t2_b_key" text="{=taom_mdm_t2_b_key}Poison Dart gains additional penetration while active." />
-	<string id="taom_mdm_t2_b_p1" text="{=taom_mdm_t2_b_p1}+12% ranged damage." />
-	<string id="taom_mdm_t2_b_p2" text="{=taom_mdm_t2_b_p2}+10% armor penetration." />
-	<string id="taom_mdm_t2_b_p3" text="{=taom_mdm_t2_b_p3}+8 max health." />
-	<string id="taom_mdm_t2_b_p4" text="{=taom_mdm_t2_b_p4}+3% troop damage." />
-	<string id="taom_mdm_t3_a_key" text="{=taom_mdm_t3_a_key}Poison Dart radius greatly expanded, inescapable volleys." />
-	<string id="taom_mdm_t3_a_p1" text="{=taom_mdm_t3_a_p1}+18% ranged damage." />
-	<string id="taom_mdm_t3_a_p2" text="{=taom_mdm_t3_a_p2}+15% armor penetration." />
-	<string id="taom_mdm_t3_a_p3" text="{=taom_mdm_t3_a_p3}+15% battle renown gain." />
-	<string id="taom_mdm_t3_a_p4" text="{=taom_mdm_t3_a_p4}+5% troop damage." />
-	<string id="taom_mdm_t3_b_key" text="{=taom_mdm_t3_b_key}Poison Dart charge greatly reduced, relentless fire." />
-	<string id="taom_mdm_t3_b_p1" text="{=taom_mdm_t3_b_p1}+15% stealth bonus." />
-	<string id="taom_mdm_t3_b_p2" text="{=taom_mdm_t3_b_p2}+15% movement speed." />
-	<string id="taom_mdm_t3_b_p3" text="{=taom_mdm_t3_b_p3}+9 max health." />
-	<string id="taom_mdm_t3_b_p4" text="{=taom_mdm_t3_b_p4}+15% party spotting range." />
-	<string id="taom_misty_deep_marksman_root_desc" text="{=taom_misty_deep_marksman_root_desc}Poison Dart grants +5% ranged damage with cave fungus toxin." />
-	<string id="taom_misty_troll_goad_root_desc" text="{=taom_misty_troll_goad_root_desc}Moria Frenzy grants +5 health and drives your trolls berserk." />
-	<string id="taom_misty_warg_chieftain_root_desc" text="{=taom_misty_warg_chieftain_root_desc}Alpha Howl grants +5% melee damage and the pack hunts." />
-	<string id="taom_mtg_t1_a_key" text="{=taom_mtg_t1_a_key}Moria Frenzy radius increased, empowering more warriors." />
-	<string id="taom_mtg_t1_a_p1" text="{=taom_mtg_t1_a_p1}+8% melee damage." />
-	<string id="taom_mtg_t1_a_p2" text="{=taom_mtg_t1_a_p2}+3% troop damage." />
-	<string id="taom_mtg_t1_a_p3" text="{=taom_mtg_t1_a_p3}+6 max health." />
-	<string id="taom_mtg_t1_a_p4" text="{=taom_mtg_t1_a_p4}+7% swing speed." />
-	<string id="taom_mtg_t1_b_key" text="{=taom_mtg_t1_b_key}Moria Frenzy duration extended, fortifying the defense." />
-	<string id="taom_mtg_t1_b_p1" text="{=taom_mtg_t1_b_p1}+8% resistance." />
-	<string id="taom_mtg_t1_b_p2" text="{=taom_mtg_t1_b_p2}+5% troop morale." />
-	<string id="taom_mtg_t1_b_p3" text="{=taom_mtg_t1_b_p3}+10% troop resistance." />
-	<string id="taom_mtg_t1_b_p4" text="{=taom_mtg_t1_b_p4}+5% troop survival." />
-	<string id="taom_mtg_t2_a_key" text="{=taom_mtg_t2_a_key}Moria Frenzy charge reduced, activating more frequently." />
-	<string id="taom_mtg_t2_a_p1" text="{=taom_mtg_t2_a_p1}+10% troop morale." />
-	<string id="taom_mtg_t2_a_p2" text="{=taom_mtg_t2_a_p2}+2 party size." />
-	<string id="taom_mtg_t2_a_p3" text="{=taom_mtg_t2_a_p3}+10% battle renown gain." />
-	<string id="taom_mtg_t2_a_p4" text="{=taom_mtg_t2_a_p4}-10% troop wages." />
-	<string id="taom_mtg_t2_b_key" text="{=taom_mtg_t2_b_key}Moria Frenzy grants additional defensive buffs while active." />
-	<string id="taom_mtg_t2_b_p1" text="{=taom_mtg_t2_b_p1}+12% resistance." />
-	<string id="taom_mtg_t2_b_p2" text="{=taom_mtg_t2_b_p2}+8 max health." />
-	<string id="taom_mtg_t2_b_p3" text="{=taom_mtg_t2_b_p3}+13% troop resistance." />
-	<string id="taom_mtg_t2_b_p4" text="{=taom_mtg_t2_b_p4}+5% troop damage." />
-	<string id="taom_mtg_t3_a_key" text="{=taom_mtg_t3_a_key}Moria Frenzy radius greatly expanded, devastating power." />
-	<string id="taom_mtg_t3_a_p1" text="{=taom_mtg_t3_a_p1}+15% melee damage." />
-	<string id="taom_mtg_t3_a_p2" text="{=taom_mtg_t3_a_p2}+10 max health." />
-	<string id="taom_mtg_t3_a_p3" text="{=taom_mtg_t3_a_p3}+7% troop damage." />
-	<string id="taom_mtg_t3_a_p4" text="{=taom_mtg_t3_a_p4}+4 party size." />
-	<string id="taom_mtg_t3_b_key" text="{=taom_mtg_t3_b_key}Moria Frenzy charge greatly reduced, nearly always available." />
-	<string id="taom_mtg_t3_b_p1" text="{=taom_mtg_t3_b_p1}+18% resistance." />
-	<string id="taom_mtg_t3_b_p2" text="{=taom_mtg_t3_b_p2}+15% hero health regeneration." />
-	<string id="taom_mtg_t3_b_p3" text="{=taom_mtg_t3_b_p3}+20% troop morale." />
-	<string id="taom_mtg_t3_b_p4" text="{=taom_mtg_t3_b_p4}+15% troop survival." />
-	<string id="taom_mwc_t1_a_key" text="{=taom_mwc_t1_a_key}Alpha Howl radius expanded, sweeping wider formations." />
-	<string id="taom_mwc_t1_a_p1" text="{=taom_mwc_t1_a_p1}+8% melee damage." />
-	<string id="taom_mwc_t1_a_p2" text="{=taom_mwc_t1_a_p2}+10% horse charge damage." />
-	<string id="taom_mwc_t1_a_p3" text="{=taom_mwc_t1_a_p3}+7% swing speed." />
-	<string id="taom_mwc_t1_a_p4" text="{=taom_mwc_t1_a_p4}+5% party movement speed." />
-	<string id="taom_mwc_t1_b_key" text="{=taom_mwc_t1_b_key}Alpha Howl duration extended, maintaining momentum." />
-	<string id="taom_mwc_t1_b_p1" text="{=taom_mwc_t1_b_p1}+10% horse health." />
-	<string id="taom_mwc_t1_b_p2" text="{=taom_mwc_t1_b_p2}+5 max health." />
-	<string id="taom_mwc_t1_b_p3" text="{=taom_mwc_t1_b_p3}-5% troop wages." />
-	<string id="taom_mwc_t1_b_p4" text="{=taom_mwc_t1_b_p4}+5% resistance." />
-	<string id="taom_mwc_t2_a_key" text="{=taom_mwc_t2_a_key}Alpha Howl charge reduced, swifter activation." />
-	<string id="taom_mwc_t2_a_p1" text="{=taom_mwc_t2_a_p1}+10% party movement speed." />
-	<string id="taom_mwc_t2_a_p2" text="{=taom_mwc_t2_a_p2}-10% troop wages." />
-	<string id="taom_mwc_t2_a_p3" text="{=taom_mwc_t2_a_p3}+10% troop morale." />
-	<string id="taom_mwc_t2_a_p4" text="{=taom_mwc_t2_a_p4}+10% battle renown gain." />
-	<string id="taom_mwc_t2_b_key" text="{=taom_mwc_t2_b_key}Alpha Howl boosts mount resilience while active." />
-	<string id="taom_mwc_t2_b_p1" text="{=taom_mwc_t2_b_p1}+12% melee damage." />
-	<string id="taom_mwc_t2_b_p2" text="{=taom_mwc_t2_b_p2}+13% horse charge damage." />
-	<string id="taom_mwc_t2_b_p3" text="{=taom_mwc_t2_b_p3}+13% horse health." />
-	<string id="taom_mwc_t2_b_p4" text="{=taom_mwc_t2_b_p4}+10% swing speed." />
-	<string id="taom_mwc_t3_a_key" text="{=taom_mwc_t3_a_key}Alpha Howl radius greatly expanded, unstoppable impact." />
-	<string id="taom_mwc_t3_a_p1" text="{=taom_mwc_t3_a_p1}+18% melee damage." />
-	<string id="taom_mwc_t3_a_p2" text="{=taom_mwc_t3_a_p2}+15% horse charge damage." />
-	<string id="taom_mwc_t3_a_p3" text="{=taom_mwc_t3_a_p3}+15% swing speed." />
-	<string id="taom_mwc_t3_a_p4" text="{=taom_mwc_t3_a_p4}+7% troop damage." />
-	<string id="taom_mwc_t3_b_key" text="{=taom_mwc_t3_b_key}Alpha Howl charge greatly reduced, ride without ceasing." />
-	<string id="taom_mwc_t3_b_p1" text="{=taom_mwc_t3_b_p1}+15% horse health." />
-	<string id="taom_mwc_t3_b_p2" text="{=taom_mwc_t3_b_p2}-15% troop wages." />
-	<string id="taom_mwc_t3_b_p3" text="{=taom_mwc_t3_b_p3}+15% party movement speed." />
-	<string id="taom_mwc_t3_b_p4" text="{=taom_mwc_t3_b_p4}+9 max health." />
-	<string id="taom_sbr_t1a_key" text="{=taom_sbr_t1a_key}Horns of Mûmakan radius expanded, fear spreads further." />
-	<string id="taom_sbr_t1a_p1" text="{=taom_sbr_t1a_p1}+10% horse charge damage." />
-	<string id="taom_sbr_t1a_p2" text="{=taom_sbr_t1a_p2}+8% melee damage." />
-	<string id="taom_sbr_t1a_p3" text="{=taom_sbr_t1a_p3}+5% troop morale." />
-	<string id="taom_sbr_t1a_p4" text="{=taom_sbr_t1a_p4}+5% party movement speed." />
-	<string id="taom_sbr_t1b_key" text="{=taom_sbr_t1b_key}Horns of Mûmakan duration extended, fear lingers." />
-	<string id="taom_sbr_t1b_p1" text="{=taom_sbr_t1b_p1}+10% horse health." />
-	<string id="taom_sbr_t1b_p2" text="{=taom_sbr_t1b_p2}+3% troop damage." />
-	<string id="taom_sbr_t1b_p3" text="{=taom_sbr_t1b_p3}+5% battle renown gain." />
-	<string id="taom_sbr_t1b_p4" text="{=taom_sbr_t1b_p4}+5% resistance." />
-	<string id="taom_sbr_t2a_key" text="{=taom_sbr_t2a_key}Horns of Mûmakan charge reduced, terror always imminent." />
-	<string id="taom_sbr_t2a_p1" text="{=taom_sbr_t2a_p1}+13% horse charge damage." />
-	<string id="taom_sbr_t2a_p2" text="{=taom_sbr_t2a_p2}+10% troop morale." />
-	<string id="taom_sbr_t2a_p3" text="{=taom_sbr_t2a_p3}+5% troop damage." />
-	<string id="taom_sbr_t2a_p4" text="{=taom_sbr_t2a_p4}+10% battle renown gain." />
-	<string id="taom_sbr_t2b_key" text="{=taom_sbr_t2b_key}Horns of Mûmakan boosts beast resilience during the charge." />
-	<string id="taom_sbr_t2b_p1" text="{=taom_sbr_t2b_p1}+12% melee damage." />
-	<string id="taom_sbr_t2b_p2" text="{=taom_sbr_t2b_p2}+13% horse health." />
-	<string id="taom_sbr_t2b_p3" text="{=taom_sbr_t2b_p3}+10% party movement speed." />
-	<string id="taom_sbr_t2b_p4" text="{=taom_sbr_t2b_p4}+3 party size." />
-	<string id="taom_sbr_t3a_key" text="{=taom_sbr_t3a_key}Horns of Mûmakan radius greatly expanded, the very earth shakes." />
-	<string id="taom_sbr_t3a_p1" text="{=taom_sbr_t3a_p1}+15% horse charge damage." />
-	<string id="taom_sbr_t3a_p2" text="{=taom_sbr_t3a_p2}+15% melee damage." />
-	<string id="taom_sbr_t3a_p3" text="{=taom_sbr_t3a_p3}+20% troop morale." />
-	<string id="taom_sbr_t3a_p4" text="{=taom_sbr_t3a_p4}+15% battle renown gain." />
-	<string id="taom_sbr_t3b_key" text="{=taom_sbr_t3b_key}Horns of Mûmakan charge greatly reduced, unending dread." />
-	<string id="taom_sbr_t3b_p1" text="{=taom_sbr_t3b_p1}+15% horse health." />
-	<string id="taom_sbr_t3b_p2" text="{=taom_sbr_t3b_p2}+15% party movement speed." />
-	<string id="taom_sbr_t3b_p3" text="{=taom_sbr_t3b_p3}+7% troop damage." />
-	<string id="taom_sbr_t3b_p4" text="{=taom_sbr_t3b_p4}+9 max health." />
-	<string id="taom_scj_t1a_key" text="{=taom_scj_t1a_key}Chatâk Volley radius increased, javelins cover wider ground." />
-	<string id="taom_scj_t1a_p1" text="{=taom_scj_t1a_p1}+8% ranged damage." />
-	<string id="taom_scj_t1a_p2" text="{=taom_scj_t1a_p2}+10% ammo." />
-	<string id="taom_scj_t1a_p3" text="{=taom_scj_t1a_p3}+7% movement speed." />
-	<string id="taom_scj_t1a_p4" text="{=taom_scj_t1a_p4}+5% battle renown gain." />
-	<string id="taom_scj_t1b_key" text="{=taom_scj_t1b_key}Chatâk Volley duration extended, sustained harassing fire." />
-	<string id="taom_scj_t1b_p1" text="{=taom_scj_t1b_p1}+5% resistance." />
-	<string id="taom_scj_t1b_p2" text="{=taom_scj_t1b_p2}+5 max health." />
-	<string id="taom_scj_t1b_p3" text="{=taom_scj_t1b_p3}+3% troop damage." />
-	<string id="taom_scj_t1b_p4" text="{=taom_scj_t1b_p4}+5% party spotting range." />
-	<string id="taom_scj_t2a_key" text="{=taom_scj_t2a_key}Chatâk Volley charge reduced, never out of javelins." />
-	<string id="taom_scj_t2a_p1" text="{=taom_scj_t2a_p1}+13% ammo." />
-	<string id="taom_scj_t2a_p2" text="{=taom_scj_t2a_p2}+10% ranged damage." />
-	<string id="taom_scj_t2a_p3" text="{=taom_scj_t2a_p3}+10% movement speed." />
-	<string id="taom_scj_t2a_p4" text="{=taom_scj_t2a_p4}+10% battle renown gain." />
-	<string id="taom_scj_t2b_key" text="{=taom_scj_t2b_key}Chatâk Volley boosts screening effectiveness while active." />
-	<string id="taom_scj_t2b_p1" text="{=taom_scj_t2b_p1}+12% ranged damage." />
-	<string id="taom_scj_t2b_p2" text="{=taom_scj_t2b_p2}+8 max health." />
-	<string id="taom_scj_t2b_p3" text="{=taom_scj_t2b_p3}+5% troop damage." />
-	<string id="taom_scj_t2b_p4" text="{=taom_scj_t2b_p4}+10% party spotting range." />
-	<string id="taom_scj_t3a_key" text="{=taom_scj_t3a_key}Chatâk Volley radius greatly expanded, an inescapable barrage." />
-	<string id="taom_scj_t3a_p1" text="{=taom_scj_t3a_p1}+15% ranged damage." />
-	<string id="taom_scj_t3a_p2" text="{=taom_scj_t3a_p2}+15% ammo." />
-	<string id="taom_scj_t3a_p3" text="{=taom_scj_t3a_p3}+15% battle renown gain." />
-	<string id="taom_scj_t3a_p4" text="{=taom_scj_t3a_p4}+15% movement speed." />
-	<string id="taom_scj_t3b_key" text="{=taom_scj_t3b_key}Chatâk Volley charge greatly reduced, unrelenting harassment." />
-	<string id="taom_scj_t3b_p1" text="{=taom_scj_t3b_p1}+15% ranged damage." />
-	<string id="taom_scj_t3b_p2" text="{=taom_scj_t3b_p2}+9 max health." />
-	<string id="taom_scj_t3b_p3" text="{=taom_scj_t3b_p3}+7% troop damage." />
-	<string id="taom_scj_t3b_p4" text="{=taom_scj_t3b_p4}+15% party spotting range." />
-	<string id="taom_shaghana_beast_rider_root_desc" text="{=taom_shaghana_beast_rider_root_desc}Horns of Mûmakan grants +10% horse charge damage and spreads fear." />
-	<string id="taom_shaghana_chatak_javelineer_root_desc" text="{=taom_shaghana_chatak_javelineer_root_desc}Chatâk Volley grants +5% ranged damage and quickens javelin throws." />
-	<string id="taom_shaghana_zajana_tribesman_root_desc" text="{=taom_shaghana_zajana_tribesman_root_desc}Serpent-Venom Blades grants +5% melee damage and applies attrition effects." />
-	<string id="taom_szt_t1a_key" text="{=taom_szt_t1a_key}Serpent-Venom Blades radius increased, the toxin spreads wider." />
-	<string id="taom_szt_t1a_p1" text="{=taom_szt_t1a_p1}+8% melee damage." />
-	<string id="taom_szt_t1a_p2" text="{=taom_szt_t1a_p2}+3% troop damage." />
-	<string id="taom_szt_t1a_p3" text="{=taom_szt_t1a_p3}+7% swing speed." />
-	<string id="taom_szt_t1a_p4" text="{=taom_szt_t1a_p4}+5% battle renown gain." />
-	<string id="taom_szt_t1b_key" text="{=taom_szt_t1b_key}Serpent-Venom Blades duration extended, the toxin lingers." />
-	<string id="taom_szt_t1b_p1" text="{=taom_szt_t1b_p1}+6% resistance." />
-	<string id="taom_szt_t1b_p2" text="{=taom_szt_t1b_p2}+6 max health." />
-	<string id="taom_szt_t1b_p3" text="{=taom_szt_t1b_p3}+5% movement speed." />
-	<string id="taom_szt_t1b_p4" text="{=taom_szt_t1b_p4}+5% troop morale." />
-	<string id="taom_szt_t2a_key" text="{=taom_szt_t2a_key}Serpent-Venom Blades charge reduced, strike more frequently." />
-	<string id="taom_szt_t2a_p1" text="{=taom_szt_t2a_p1}+5% troop damage." />
-	<string id="taom_szt_t2a_p2" text="{=taom_szt_t2a_p2}+10% melee damage." />
-	<string id="taom_szt_t2a_p3" text="{=taom_szt_t2a_p3}+10% battle renown gain." />
-	<string id="taom_szt_t2a_p4" text="{=taom_szt_t2a_p4}+3 party size." />
-	<string id="taom_szt_t2b_key" text="{=taom_szt_t2b_key}Serpent-Venom Blades boosts attrition, sapping enemy will to fight." />
-	<string id="taom_szt_t2b_p1" text="{=taom_szt_t2b_p1}+10% swing speed." />
-	<string id="taom_szt_t2b_p2" text="{=taom_szt_t2b_p2}+8 max health." />
-	<string id="taom_szt_t2b_p3" text="{=taom_szt_t2b_p3}+10% resistance." />
-	<string id="taom_szt_t2b_p4" text="{=taom_szt_t2b_p4}+10% troop morale." />
-	<string id="taom_szt_t3a_key" text="{=taom_szt_t3a_key}Serpent-Venom Blades radius greatly expanded, a cloud of toxin." />
-	<string id="taom_szt_t3a_p1" text="{=taom_szt_t3a_p1}+15% melee damage." />
-	<string id="taom_szt_t3a_p2" text="{=taom_szt_t3a_p2}+9 max health." />
-	<string id="taom_szt_t3a_p3" text="{=taom_szt_t3a_p3}+7% troop damage." />
-	<string id="taom_szt_t3a_p4" text="{=taom_szt_t3a_p4}+15% battle renown gain." />
-	<string id="taom_szt_t3b_key" text="{=taom_szt_t3b_key}Serpent-Venom Blades charge greatly reduced, constant attrition." />
-	<string id="taom_szt_t3b_p1" text="{=taom_szt_t3b_p1}+15% resistance." />
-	<string id="taom_szt_t3b_p2" text="{=taom_szt_t3b_p2}+20% troop morale." />
-	<string id="taom_szt_t3b_p3" text="{=taom_szt_t3b_p3}+8% troop damage." />
-	<string id="taom_szt_t3b_p4" text="{=taom_szt_t3b_p4}+5 party size." />
-
-</strings>
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+
+	<!-- Generated career data strings (careers, choices, ability templates, quests): extracted from career_system/*.xml by tools/generate_name_localization_strings.py. Do not hand-edit; re-run the generator instead. -->
+	<string id="taom_abanissa_house_guard_root_desc" text="{=taom_abanissa_house_guard_root_desc}Ivory-Ward Blades grants +5% melee damage and applies attrition effects." />
+	<string id="taom_abanissa_ivory_rider_root_desc" text="{=taom_abanissa_ivory_rider_root_desc}Tusk-Thunder of Mûmakan grants +10% horse charge damage and spreads fear." />
+	<string id="taom_abanissa_jiret_javelineer_root_desc" text="{=taom_abanissa_jiret_javelineer_root_desc}Jîret Volley grants +5% ranged damage and quickens javelin throws." />
+	<string id="taom_ability_abanissa_house_guard" text="{=taom_ability_abanissa_house_guard}Ivory-Ward Blades" />
+	<string id="taom_ability_abanissa_house_guard_tt" text="{=taom_ability_abanissa_house_guard_tt}Coat your weapons in desert toxins — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
+	<string id="taom_ability_abanissa_ivory_rider" text="{=taom_ability_abanissa_ivory_rider}Tusk-Thunder of Mûmakan" />
+	<string id="taom_ability_abanissa_ivory_rider_tt" text="{=taom_ability_abanissa_ivory_rider_tt}Channel the ancient fear of Mûmakan — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
+	<string id="taom_ability_abanissa_jiret_javelineer" text="{=taom_ability_abanissa_jiret_javelineer}Jîret Volley" />
+	<string id="taom_ability_abanissa_jiret_javelineer_tt" text="{=taom_ability_abanissa_jiret_javelineer_tt}Unleash a blazing javelin barrage — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
+	<string id="taom_ability_craig_crag_stalker" text="{=taom_ability_craig_crag_stalker}Poison Dart" />
+	<string id="taom_ability_craig_crag_stalker_tt" text="{=taom_ability_craig_crag_stalker_tt}Coat your bolts in cave fungus toxin — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
+	<string id="taom_ability_craig_pit_driver" text="{=taom_ability_craig_pit_driver}Blue Craig Frenzy" />
+	<string id="taom_ability_craig_pit_driver_tt" text="{=taom_ability_craig_pit_driver_tt}Whip your trolls into a frenzy — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
+	<string id="taom_ability_craig_warg_master" text="{=taom_ability_craig_warg_master}Alpha Howl" />
+	<string id="taom_ability_craig_warg_master_tt" text="{=taom_ability_craig_warg_master_tt}Assert dominance with a thundering pack-howl — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
+	<string id="taom_ability_falathrim_blade_dancer" text="{=taom_ability_falathrim_blade_dancer}Starlight Weave" />
+	<string id="taom_ability_falathrim_blade_dancer_tt" text="{=taom_ability_falathrim_blade_dancer_tt}Enter a graceful Noldor combat trance — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
+	<string id="taom_ability_falathrim_mariner" text="{=taom_ability_falathrim_mariner}Last Alliance" />
+	<string id="taom_ability_falathrim_mariner_tt" text="{=taom_ability_falathrim_mariner_tt}Ride with the valor of the Last Alliance — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
+	<string id="taom_ability_falathrim_sentinel" text="{=taom_ability_falathrim_sentinel}Elven Sight" />
+	<string id="taom_ability_falathrim_sentinel_tt" text="{=taom_ability_falathrim_sentinel_tt}Focus ancient elven perception — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
+	<string id="taom_ability_goblin_troll_driver" text="{=taom_ability_goblin_troll_driver}Goblin-town Frenzy" />
+	<string id="taom_ability_goblin_troll_driver_tt" text="{=taom_ability_goblin_troll_driver_tt}Whip your trolls into a frenzy — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
+	<string id="taom_ability_goblin_tunnel_stalker" text="{=taom_ability_goblin_tunnel_stalker}Poison Dart" />
+	<string id="taom_ability_goblin_tunnel_stalker_tt" text="{=taom_ability_goblin_tunnel_stalker_tt}Coat your bolts in cave fungus toxin — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
+	<string id="taom_ability_goblin_warg_master" text="{=taom_ability_goblin_warg_master}Alpha Howl" />
+	<string id="taom_ability_goblin_warg_master_tt" text="{=taom_ability_goblin_warg_master_tt}Assert dominance with a thundering pack-howl — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
+	<string id="taom_ability_misty_deep_marksman" text="{=taom_ability_misty_deep_marksman}Poison Dart" />
+	<string id="taom_ability_misty_deep_marksman_tt" text="{=taom_ability_misty_deep_marksman_tt}Coat your bolts in cave fungus toxin — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
+	<string id="taom_ability_misty_troll_goad" text="{=taom_ability_misty_troll_goad}Moria Frenzy" />
+	<string id="taom_ability_misty_troll_goad_tt" text="{=taom_ability_misty_troll_goad_tt}Whip your trolls into a frenzy — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
+	<string id="taom_ability_misty_warg_chieftain" text="{=taom_ability_misty_warg_chieftain}Alpha Howl" />
+	<string id="taom_ability_misty_warg_chieftain_tt" text="{=taom_ability_misty_warg_chieftain_tt}Assert dominance with a thundering pack-howl — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
+	<string id="taom_ability_shaghana_beast_rider" text="{=taom_ability_shaghana_beast_rider}Horns of Mûmakan" />
+	<string id="taom_ability_shaghana_beast_rider_tt" text="{=taom_ability_shaghana_beast_rider_tt}Channel the ancient fear of Mûmakan — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
+	<string id="taom_ability_shaghana_chatak_javelineer" text="{=taom_ability_shaghana_chatak_javelineer}Chatâk Volley" />
+	<string id="taom_ability_shaghana_chatak_javelineer_tt" text="{=taom_ability_shaghana_chatak_javelineer_tt}Unleash a blazing javelin barrage — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
+	<string id="taom_ability_shaghana_zajana_tribesman" text="{=taom_ability_shaghana_zajana_tribesman}Serpent-Venom Blades" />
+	<string id="taom_ability_shaghana_zajana_tribesman_tt" text="{=taom_ability_shaghana_zajana_tribesman_tt}Coat your weapons in desert toxins — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
+	<string id="taom_ahg_t1a_key" text="{=taom_ahg_t1a_key}Ivory-Ward Blades radius increased, the toxin spreads wider." />
+	<string id="taom_ahg_t1a_p1" text="{=taom_ahg_t1a_p1}+8% melee damage." />
+	<string id="taom_ahg_t1a_p2" text="{=taom_ahg_t1a_p2}+3% troop damage." />
+	<string id="taom_ahg_t1a_p3" text="{=taom_ahg_t1a_p3}+7% swing speed." />
+	<string id="taom_ahg_t1a_p4" text="{=taom_ahg_t1a_p4}+5% battle renown gain." />
+	<string id="taom_ahg_t1b_key" text="{=taom_ahg_t1b_key}Ivory-Ward Blades duration extended, the toxin lingers." />
+	<string id="taom_ahg_t1b_p1" text="{=taom_ahg_t1b_p1}+6% resistance." />
+	<string id="taom_ahg_t1b_p2" text="{=taom_ahg_t1b_p2}+6 max health." />
+	<string id="taom_ahg_t1b_p3" text="{=taom_ahg_t1b_p3}+5% movement speed." />
+	<string id="taom_ahg_t1b_p4" text="{=taom_ahg_t1b_p4}+5% troop morale." />
+	<string id="taom_ahg_t2a_key" text="{=taom_ahg_t2a_key}Ivory-Ward Blades charge reduced, strike more frequently." />
+	<string id="taom_ahg_t2a_p1" text="{=taom_ahg_t2a_p1}+5% troop damage." />
+	<string id="taom_ahg_t2a_p2" text="{=taom_ahg_t2a_p2}+10% melee damage." />
+	<string id="taom_ahg_t2a_p3" text="{=taom_ahg_t2a_p3}+10% battle renown gain." />
+	<string id="taom_ahg_t2a_p4" text="{=taom_ahg_t2a_p4}+3 party size." />
+	<string id="taom_ahg_t2b_key" text="{=taom_ahg_t2b_key}Ivory-Ward Blades boosts attrition, sapping enemy will to fight." />
+	<string id="taom_ahg_t2b_p1" text="{=taom_ahg_t2b_p1}+10% swing speed." />
+	<string id="taom_ahg_t2b_p2" text="{=taom_ahg_t2b_p2}+8 max health." />
+	<string id="taom_ahg_t2b_p3" text="{=taom_ahg_t2b_p3}+10% resistance." />
+	<string id="taom_ahg_t2b_p4" text="{=taom_ahg_t2b_p4}+10% troop morale." />
+	<string id="taom_ahg_t3a_key" text="{=taom_ahg_t3a_key}Ivory-Ward Blades radius greatly expanded, a cloud of toxin." />
+	<string id="taom_ahg_t3a_p1" text="{=taom_ahg_t3a_p1}+15% melee damage." />
+	<string id="taom_ahg_t3a_p2" text="{=taom_ahg_t3a_p2}+9 max health." />
+	<string id="taom_ahg_t3a_p3" text="{=taom_ahg_t3a_p3}+7% troop damage." />
+	<string id="taom_ahg_t3a_p4" text="{=taom_ahg_t3a_p4}+15% battle renown gain." />
+	<string id="taom_ahg_t3b_key" text="{=taom_ahg_t3b_key}Ivory-Ward Blades charge greatly reduced, constant attrition." />
+	<string id="taom_ahg_t3b_p1" text="{=taom_ahg_t3b_p1}+15% resistance." />
+	<string id="taom_ahg_t3b_p2" text="{=taom_ahg_t3b_p2}+20% troop morale." />
+	<string id="taom_ahg_t3b_p3" text="{=taom_ahg_t3b_p3}+8% troop damage." />
+	<string id="taom_ahg_t3b_p4" text="{=taom_ahg_t3b_p4}+5 party size." />
+	<string id="taom_air_t1a_key" text="{=taom_air_t1a_key}Tusk-Thunder of Mûmakan radius expanded, fear spreads further." />
+	<string id="taom_air_t1a_p1" text="{=taom_air_t1a_p1}+10% horse charge damage." />
+	<string id="taom_air_t1a_p2" text="{=taom_air_t1a_p2}+8% melee damage." />
+	<string id="taom_air_t1a_p3" text="{=taom_air_t1a_p3}+5% troop morale." />
+	<string id="taom_air_t1a_p4" text="{=taom_air_t1a_p4}+5% party movement speed." />
+	<string id="taom_air_t1b_key" text="{=taom_air_t1b_key}Tusk-Thunder of Mûmakan duration extended, fear lingers." />
+	<string id="taom_air_t1b_p1" text="{=taom_air_t1b_p1}+10% horse health." />
+	<string id="taom_air_t1b_p2" text="{=taom_air_t1b_p2}+3% troop damage." />
+	<string id="taom_air_t1b_p3" text="{=taom_air_t1b_p3}+5% battle renown gain." />
+	<string id="taom_air_t1b_p4" text="{=taom_air_t1b_p4}+5% resistance." />
+	<string id="taom_air_t2a_key" text="{=taom_air_t2a_key}Tusk-Thunder of Mûmakan charge reduced, terror always imminent." />
+	<string id="taom_air_t2a_p1" text="{=taom_air_t2a_p1}+13% horse charge damage." />
+	<string id="taom_air_t2a_p2" text="{=taom_air_t2a_p2}+10% troop morale." />
+	<string id="taom_air_t2a_p3" text="{=taom_air_t2a_p3}+5% troop damage." />
+	<string id="taom_air_t2a_p4" text="{=taom_air_t2a_p4}+10% battle renown gain." />
+	<string id="taom_air_t2b_key" text="{=taom_air_t2b_key}Tusk-Thunder of Mûmakan boosts beast resilience during the charge." />
+	<string id="taom_air_t2b_p1" text="{=taom_air_t2b_p1}+12% melee damage." />
+	<string id="taom_air_t2b_p2" text="{=taom_air_t2b_p2}+13% horse health." />
+	<string id="taom_air_t2b_p3" text="{=taom_air_t2b_p3}+10% party movement speed." />
+	<string id="taom_air_t2b_p4" text="{=taom_air_t2b_p4}+3 party size." />
+	<string id="taom_air_t3a_key" text="{=taom_air_t3a_key}Tusk-Thunder of Mûmakan radius greatly expanded, the very earth shakes." />
+	<string id="taom_air_t3a_p1" text="{=taom_air_t3a_p1}+15% horse charge damage." />
+	<string id="taom_air_t3a_p2" text="{=taom_air_t3a_p2}+15% melee damage." />
+	<string id="taom_air_t3a_p3" text="{=taom_air_t3a_p3}+20% troop morale." />
+	<string id="taom_air_t3a_p4" text="{=taom_air_t3a_p4}+15% battle renown gain." />
+	<string id="taom_air_t3b_key" text="{=taom_air_t3b_key}Tusk-Thunder of Mûmakan charge greatly reduced, unending dread." />
+	<string id="taom_air_t3b_p1" text="{=taom_air_t3b_p1}+15% horse health." />
+	<string id="taom_air_t3b_p2" text="{=taom_air_t3b_p2}+15% party movement speed." />
+	<string id="taom_air_t3b_p3" text="{=taom_air_t3b_p3}+7% troop damage." />
+	<string id="taom_air_t3b_p4" text="{=taom_air_t3b_p4}+9 max health." />
+	<string id="taom_ajj_t1a_key" text="{=taom_ajj_t1a_key}Jîret Volley radius increased, javelins cover wider ground." />
+	<string id="taom_ajj_t1a_p1" text="{=taom_ajj_t1a_p1}+8% ranged damage." />
+	<string id="taom_ajj_t1a_p2" text="{=taom_ajj_t1a_p2}+10% ammo." />
+	<string id="taom_ajj_t1a_p3" text="{=taom_ajj_t1a_p3}+7% movement speed." />
+	<string id="taom_ajj_t1a_p4" text="{=taom_ajj_t1a_p4}+5% battle renown gain." />
+	<string id="taom_ajj_t1b_key" text="{=taom_ajj_t1b_key}Jîret Volley duration extended, sustained harassing fire." />
+	<string id="taom_ajj_t1b_p1" text="{=taom_ajj_t1b_p1}+5% resistance." />
+	<string id="taom_ajj_t1b_p2" text="{=taom_ajj_t1b_p2}+5 max health." />
+	<string id="taom_ajj_t1b_p3" text="{=taom_ajj_t1b_p3}+3% troop damage." />
+	<string id="taom_ajj_t1b_p4" text="{=taom_ajj_t1b_p4}+5% party spotting range." />
+	<string id="taom_ajj_t2a_key" text="{=taom_ajj_t2a_key}Jîret Volley charge reduced, never out of javelins." />
+	<string id="taom_ajj_t2a_p1" text="{=taom_ajj_t2a_p1}+13% ammo." />
+	<string id="taom_ajj_t2a_p2" text="{=taom_ajj_t2a_p2}+10% ranged damage." />
+	<string id="taom_ajj_t2a_p3" text="{=taom_ajj_t2a_p3}+10% movement speed." />
+	<string id="taom_ajj_t2a_p4" text="{=taom_ajj_t2a_p4}+10% battle renown gain." />
+	<string id="taom_ajj_t2b_key" text="{=taom_ajj_t2b_key}Jîret Volley boosts screening effectiveness while active." />
+	<string id="taom_ajj_t2b_p1" text="{=taom_ajj_t2b_p1}+12% ranged damage." />
+	<string id="taom_ajj_t2b_p2" text="{=taom_ajj_t2b_p2}+8 max health." />
+	<string id="taom_ajj_t2b_p3" text="{=taom_ajj_t2b_p3}+5% troop damage." />
+	<string id="taom_ajj_t2b_p4" text="{=taom_ajj_t2b_p4}+10% party spotting range." />
+	<string id="taom_ajj_t3a_key" text="{=taom_ajj_t3a_key}Jîret Volley radius greatly expanded, an inescapable barrage." />
+	<string id="taom_ajj_t3a_p1" text="{=taom_ajj_t3a_p1}+15% ranged damage." />
+	<string id="taom_ajj_t3a_p2" text="{=taom_ajj_t3a_p2}+15% ammo." />
+	<string id="taom_ajj_t3a_p3" text="{=taom_ajj_t3a_p3}+15% battle renown gain." />
+	<string id="taom_ajj_t3a_p4" text="{=taom_ajj_t3a_p4}+15% movement speed." />
+	<string id="taom_ajj_t3b_key" text="{=taom_ajj_t3b_key}Jîret Volley charge greatly reduced, unrelenting harassment." />
+	<string id="taom_ajj_t3b_p1" text="{=taom_ajj_t3b_p1}+15% ranged damage." />
+	<string id="taom_ajj_t3b_p2" text="{=taom_ajj_t3b_p2}+9 max health." />
+	<string id="taom_ajj_t3b_p3" text="{=taom_ajj_t3b_p3}+7% troop damage." />
+	<string id="taom_ajj_t3b_p4" text="{=taom_ajj_t3b_p4}+15% party spotting range." />
+	<string id="taom_career_abanissa_house_guard" text="{=taom_career_abanissa_house_guard}House-Guard of Damudûr" />
+	<string id="taom_career_abanissa_house_guard_desc" text="{=taom_career_abanissa_house_guard_desc}A warrior of the Damudûr desert tribes whose attrition-warfare tactics grind enemies down with relentless pressure and poisoned blades." />
+	<string id="taom_career_abanissa_ivory_rider" text="{=taom_career_abanissa_ivory_rider}Ivory-Road Beast Rider" />
+	<string id="taom_career_abanissa_ivory_rider_desc" text="{=taom_career_abanissa_ivory_rider_desc}A fearsome rider of the Far Harad who drives great beasts into the enemy, breaking lines with shock and primal terror." />
+	<string id="taom_career_abanissa_jiret_javelineer" text="{=taom_career_abanissa_jiret_javelineer}Jîret Javelineer" />
+	<string id="taom_career_abanissa_jiret_javelineer_desc" text="{=taom_career_abanissa_jiret_javelineer_desc}A fast-moving skirmisher of Jîret who screens cavalry with a hail of javelins before withdrawing beyond reach of retaliation." />
+	<string id="taom_career_craig_crag_stalker" text="{=taom_career_craig_crag_stalker}Blue Craig Crag Stalker" />
+	<string id="taom_career_craig_crag_stalker_desc" text="{=taom_career_craig_crag_stalker_desc}A spiteful goblin marksman who lurks in the mountain crags, picking off targets with poisoned darts and crude bows." />
+	<string id="taom_career_craig_pit_driver" text="{=taom_career_craig_pit_driver}Blue Craig Pit-Driver" />
+	<string id="taom_career_craig_pit_driver_desc" text="{=taom_career_craig_pit_driver_desc}A brutal orc chieftain of Blue Craig who commands cave trolls in battle, driving them forward with whip and cunning." />
+	<string id="taom_career_craig_warg_master" text="{=taom_career_craig_warg_master}Blue Craig Warg Master" />
+	<string id="taom_career_craig_warg_master_desc" text="{=taom_career_craig_warg_master_desc}A feared orc alpha who rides the largest warg of the pack, leading savage hunts through the Ered Luin." />
+	<string id="taom_career_falathrim_blade_dancer" text="{=taom_career_falathrim_blade_dancer}Falathrim Blade-Dancer" />
+	<string id="taom_career_falathrim_blade_dancer_desc" text="{=taom_career_falathrim_blade_dancer_desc}A graceful elven warrior who weaves through battle like flowing water, striking with ancient blades forged in the First Age." />
+	<string id="taom_career_falathrim_mariner" text="{=taom_career_falathrim_mariner}Falathrim Mariner" />
+	<string id="taom_career_falathrim_mariner_desc" text="{=taom_career_falathrim_mariner_desc}A mounted warrior of Cirdan's household who rides to war on swift elven steeds, a beacon of hope against the shadow." />
+	<string id="taom_career_falathrim_sentinel" text="{=taom_career_falathrim_sentinel}Falathrim Sentinel" />
+	<string id="taom_career_falathrim_sentinel_desc" text="{=taom_career_falathrim_sentinel_desc}A peerless marksman of Mithlond whose arrows fly true across vast distances, guided by centuries of practice." />
+	<string id="taom_career_goblin_troll_driver" text="{=taom_career_goblin_troll_driver}Goblin-town Troll-Driver" />
+	<string id="taom_career_goblin_troll_driver_desc" text="{=taom_career_goblin_troll_driver_desc}A brutal orc chieftain of Goblin-town who commands cave trolls in battle, driving them forward with whip and cunning." />
+	<string id="taom_career_goblin_tunnel_stalker" text="{=taom_career_goblin_tunnel_stalker}Goblin-town Tunnel Stalker" />
+	<string id="taom_career_goblin_tunnel_stalker_desc" text="{=taom_career_goblin_tunnel_stalker_desc}A spiteful goblin marksman who lurks in the mountain crags, picking off targets with poisoned darts and crude bows." />
+	<string id="taom_career_goblin_warg_master" text="{=taom_career_goblin_warg_master}Goblin-town Warg Master" />
+	<string id="taom_career_goblin_warg_master_desc" text="{=taom_career_goblin_warg_master_desc}A feared orc alpha who rides the largest warg of the pack, leading savage hunts through the Misty Mountains." />
+	<string id="taom_career_grp_abanissa_house_guard_t1_a" text="{=taom_career_grp_abanissa_house_guard_t1_a}Dune Raider" />
+	<string id="taom_career_grp_abanissa_house_guard_t1_b" text="{=taom_career_grp_abanissa_house_guard_t1_b}Desert Survivor" />
+	<string id="taom_career_grp_abanissa_house_guard_t2_a" text="{=taom_career_grp_abanissa_house_guard_t2_a}Serpent-Fang Striker" />
+	<string id="taom_career_grp_abanissa_house_guard_t2_b" text="{=taom_career_grp_abanissa_house_guard_t2_b}Wearer of the Sands" />
+	<string id="taom_career_grp_abanissa_house_guard_t3_a" text="{=taom_career_grp_abanissa_house_guard_t3_a}Venom of Haradwaith" />
+	<string id="taom_career_grp_abanissa_house_guard_t3_b" text="{=taom_career_grp_abanissa_house_guard_t3_b}Scourge of the Southrons" />
+	<string id="taom_career_grp_abanissa_ivory_rider_t1_a" text="{=taom_career_grp_abanissa_ivory_rider_t1_a}Tusk Vanguard" />
+	<string id="taom_career_grp_abanissa_ivory_rider_t1_b" text="{=taom_career_grp_abanissa_ivory_rider_t1_b}Beast-Warden" />
+	<string id="taom_career_grp_abanissa_ivory_rider_t2_a" text="{=taom_career_grp_abanissa_ivory_rider_t2_a}Trampling Charge" />
+	<string id="taom_career_grp_abanissa_ivory_rider_t2_b" text="{=taom_career_grp_abanissa_ivory_rider_t2_b}Howdah Guardian" />
+	<string id="taom_career_grp_abanissa_ivory_rider_t3_a" text="{=taom_career_grp_abanissa_ivory_rider_t3_a}Wrath of Mûmakan" />
+	<string id="taom_career_grp_abanissa_ivory_rider_t3_b" text="{=taom_career_grp_abanissa_ivory_rider_t3_b}Lord of the Oliphaunts" />
+	<string id="taom_career_grp_abanissa_jiret_javelineer_t1_a" text="{=taom_career_grp_abanissa_jiret_javelineer_t1_a}Sun-Spear Skirmisher" />
+	<string id="taom_career_grp_abanissa_jiret_javelineer_t1_b" text="{=taom_career_grp_abanissa_jiret_javelineer_t1_b}Roving Outrider" />
+	<string id="taom_career_grp_abanissa_jiret_javelineer_t2_a" text="{=taom_career_grp_abanissa_jiret_javelineer_t2_a}Sunfire Slinger" />
+	<string id="taom_career_grp_abanissa_jiret_javelineer_t2_b" text="{=taom_career_grp_abanissa_jiret_javelineer_t2_b}Scarlet Screen" />
+	<string id="taom_career_grp_abanissa_jiret_javelineer_t3_a" text="{=taom_career_grp_abanissa_jiret_javelineer_t3_a}Rain of Far Harad" />
+	<string id="taom_career_grp_abanissa_jiret_javelineer_t3_b" text="{=taom_career_grp_abanissa_jiret_javelineer_t3_b}Shadow of the Dunes" />
+	<string id="taom_career_grp_craig_crag_stalker_t1_a" text="{=taom_career_grp_craig_crag_stalker_t1_a}Crag-Stalker" />
+	<string id="taom_career_grp_craig_crag_stalker_t1_b" text="{=taom_career_grp_craig_crag_stalker_t1_b}Tunnel Skulker" />
+	<string id="taom_career_grp_craig_crag_stalker_t2_a" text="{=taom_career_grp_craig_crag_stalker_t2_a}High Pass Ambusher" />
+	<string id="taom_career_grp_craig_crag_stalker_t2_b" text="{=taom_career_grp_craig_crag_stalker_t2_b}Poison-Fletcher" />
+	<string id="taom_career_grp_craig_crag_stalker_t3_a" text="{=taom_career_grp_craig_crag_stalker_t3_a}Front Porch Reaver" />
+	<string id="taom_career_grp_craig_crag_stalker_t3_b" text="{=taom_career_grp_craig_crag_stalker_t3_b}Shadow of the High Pass" />
+	<string id="taom_career_grp_craig_pit_driver_t1_a" text="{=taom_career_grp_craig_pit_driver_t1_a}Pit-Whip Driver" />
+	<string id="taom_career_grp_craig_pit_driver_t1_b" text="{=taom_career_grp_craig_pit_driver_t1_b}Cave-Mouth Warden" />
+	<string id="taom_career_grp_craig_pit_driver_t2_a" text="{=taom_career_grp_craig_pit_driver_t2_a}Blue Craig Tyrant" />
+	<string id="taom_career_grp_craig_pit_driver_t2_b" text="{=taom_career_grp_craig_pit_driver_t2_b}Deep-Hold Breaker" />
+	<string id="taom_career_grp_craig_pit_driver_t3_a" text="{=taom_career_grp_craig_pit_driver_t3_a}Scourge of Blue Craig" />
+	<string id="taom_career_grp_craig_pit_driver_t3_b" text="{=taom_career_grp_craig_pit_driver_t3_b}Dread of the Northern Halls" />
+	<string id="taom_career_grp_craig_warg_master_t1_a" text="{=taom_career_grp_craig_warg_master_t1_a}Warg-Rider" />
+	<string id="taom_career_grp_craig_warg_master_t1_b" text="{=taom_career_grp_craig_warg_master_t1_b}Pack-Keeper" />
+	<string id="taom_career_grp_craig_warg_master_t2_a" text="{=taom_career_grp_craig_warg_master_t2_a}Grey Pack Outrider" />
+	<string id="taom_career_grp_craig_warg_master_t2_b" text="{=taom_career_grp_craig_warg_master_t2_b}Fell Wolf-Master" />
+	<string id="taom_career_grp_craig_warg_master_t3_a" text="{=taom_career_grp_craig_warg_master_t3_a}Alpha of Blue Craig" />
+	<string id="taom_career_grp_craig_warg_master_t3_b" text="{=taom_career_grp_craig_warg_master_t3_b}Bolg's Wolf-Captain" />
+	<string id="taom_career_grp_falathrim_blade_dancer_t1_a" text="{=taom_career_grp_falathrim_blade_dancer_t1_a}Starlit Steel" />
+	<string id="taom_career_grp_falathrim_blade_dancer_t1_b" text="{=taom_career_grp_falathrim_blade_dancer_t1_b}Guard of Mithlond" />
+	<string id="taom_career_grp_falathrim_blade_dancer_t2_a" text="{=taom_career_grp_falathrim_blade_dancer_t2_a}Dance of Gondolin" />
+	<string id="taom_career_grp_falathrim_blade_dancer_t2_b" text="{=taom_career_grp_falathrim_blade_dancer_t2_b}Ward of the Hidden Valley" />
+	<string id="taom_career_grp_falathrim_blade_dancer_t3_a" text="{=taom_career_grp_falathrim_blade_dancer_t3_a}Sword of the First Age" />
+	<string id="taom_career_grp_falathrim_blade_dancer_t3_b" text="{=taom_career_grp_falathrim_blade_dancer_t3_b}Light of Eärendil" />
+	<string id="taom_career_grp_falathrim_mariner_t1_a" text="{=taom_career_grp_falathrim_mariner_t1_a}Charge of Mithlond" />
+	<string id="taom_career_grp_falathrim_mariner_t1_b" text="{=taom_career_grp_falathrim_mariner_t1_b}Rider of the Ford" />
+	<string id="taom_career_grp_falathrim_mariner_t2_a" text="{=taom_career_grp_falathrim_mariner_t2_a}Gallop of Asfaloth" />
+	<string id="taom_career_grp_falathrim_mariner_t2_b" text="{=taom_career_grp_falathrim_mariner_t2_b}Aegis of the Valar" />
+	<string id="taom_career_grp_falathrim_mariner_t3_a" text="{=taom_career_grp_falathrim_mariner_t3_a}Wrath of Glorfindel" />
+	<string id="taom_career_grp_falathrim_mariner_t3_b" text="{=taom_career_grp_falathrim_mariner_t3_b}Host of the Last Alliance" />
+	<string id="taom_career_grp_falathrim_sentinel_t1_a" text="{=taom_career_grp_falathrim_sentinel_t1_a}Keen-Eyed Watcher" />
+	<string id="taom_career_grp_falathrim_sentinel_t1_b" text="{=taom_career_grp_falathrim_sentinel_t1_b}Watch of Lindon" />
+	<string id="taom_career_grp_falathrim_sentinel_t2_a" text="{=taom_career_grp_falathrim_sentinel_t2_a}Unceasing Volley" />
+	<string id="taom_career_grp_falathrim_sentinel_t2_b" text="{=taom_career_grp_falathrim_sentinel_t2_b}Bow of Eregion" />
+	<string id="taom_career_grp_falathrim_sentinel_t3_a" text="{=taom_career_grp_falathrim_sentinel_t3_a}Storm of Gil-galad" />
+	<string id="taom_career_grp_falathrim_sentinel_t3_b" text="{=taom_career_grp_falathrim_sentinel_t3_b}Vigil of Vilya" />
+	<string id="taom_career_grp_goblin_troll_driver_t1_a" text="{=taom_career_grp_goblin_troll_driver_t1_a}Pit-Whip Driver" />
+	<string id="taom_career_grp_goblin_troll_driver_t1_b" text="{=taom_career_grp_goblin_troll_driver_t1_b}Cave-Mouth Warden" />
+	<string id="taom_career_grp_goblin_troll_driver_t2_a" text="{=taom_career_grp_goblin_troll_driver_t2_a}Goblin-town Tyrant" />
+	<string id="taom_career_grp_goblin_troll_driver_t2_b" text="{=taom_career_grp_goblin_troll_driver_t2_b}Deep-Hold Breaker" />
+	<string id="taom_career_grp_goblin_troll_driver_t3_a" text="{=taom_career_grp_goblin_troll_driver_t3_a}Scourge of Goblin-town" />
+	<string id="taom_career_grp_goblin_troll_driver_t3_b" text="{=taom_career_grp_goblin_troll_driver_t3_b}Dread of the Northern Halls" />
+	<string id="taom_career_grp_goblin_tunnel_stalker_t1_a" text="{=taom_career_grp_goblin_tunnel_stalker_t1_a}Crag-Stalker" />
+	<string id="taom_career_grp_goblin_tunnel_stalker_t1_b" text="{=taom_career_grp_goblin_tunnel_stalker_t1_b}Tunnel Skulker" />
+	<string id="taom_career_grp_goblin_tunnel_stalker_t2_a" text="{=taom_career_grp_goblin_tunnel_stalker_t2_a}High Pass Ambusher" />
+	<string id="taom_career_grp_goblin_tunnel_stalker_t2_b" text="{=taom_career_grp_goblin_tunnel_stalker_t2_b}Poison-Fletcher" />
+	<string id="taom_career_grp_goblin_tunnel_stalker_t3_a" text="{=taom_career_grp_goblin_tunnel_stalker_t3_a}Front Porch Reaver" />
+	<string id="taom_career_grp_goblin_tunnel_stalker_t3_b" text="{=taom_career_grp_goblin_tunnel_stalker_t3_b}Shadow of the High Pass" />
+	<string id="taom_career_grp_goblin_warg_master_t1_a" text="{=taom_career_grp_goblin_warg_master_t1_a}Warg-Rider" />
+	<string id="taom_career_grp_goblin_warg_master_t1_b" text="{=taom_career_grp_goblin_warg_master_t1_b}Pack-Keeper" />
+	<string id="taom_career_grp_goblin_warg_master_t2_a" text="{=taom_career_grp_goblin_warg_master_t2_a}Grey Pack Outrider" />
+	<string id="taom_career_grp_goblin_warg_master_t2_b" text="{=taom_career_grp_goblin_warg_master_t2_b}Fell Wolf-Master" />
+	<string id="taom_career_grp_goblin_warg_master_t3_a" text="{=taom_career_grp_goblin_warg_master_t3_a}Alpha of Goblin-town" />
+	<string id="taom_career_grp_goblin_warg_master_t3_b" text="{=taom_career_grp_goblin_warg_master_t3_b}Bolg's Wolf-Captain" />
+	<string id="taom_career_grp_misty_deep_marksman_t1_a" text="{=taom_career_grp_misty_deep_marksman_t1_a}Crag-Stalker" />
+	<string id="taom_career_grp_misty_deep_marksman_t1_b" text="{=taom_career_grp_misty_deep_marksman_t1_b}Tunnel Skulker" />
+	<string id="taom_career_grp_misty_deep_marksman_t2_a" text="{=taom_career_grp_misty_deep_marksman_t2_a}High Pass Ambusher" />
+	<string id="taom_career_grp_misty_deep_marksman_t2_b" text="{=taom_career_grp_misty_deep_marksman_t2_b}Poison-Fletcher" />
+	<string id="taom_career_grp_misty_deep_marksman_t3_a" text="{=taom_career_grp_misty_deep_marksman_t3_a}Front Porch Reaver" />
+	<string id="taom_career_grp_misty_deep_marksman_t3_b" text="{=taom_career_grp_misty_deep_marksman_t3_b}Shadow of the High Pass" />
+	<string id="taom_career_grp_misty_troll_goad_t1_a" text="{=taom_career_grp_misty_troll_goad_t1_a}Pit-Whip Driver" />
+	<string id="taom_career_grp_misty_troll_goad_t1_b" text="{=taom_career_grp_misty_troll_goad_t1_b}Cave-Mouth Warden" />
+	<string id="taom_career_grp_misty_troll_goad_t2_a" text="{=taom_career_grp_misty_troll_goad_t2_a}Goblin-town Tyrant" />
+	<string id="taom_career_grp_misty_troll_goad_t2_b" text="{=taom_career_grp_misty_troll_goad_t2_b}Deep-Hold Breaker" />
+	<string id="taom_career_grp_misty_troll_goad_t3_a" text="{=taom_career_grp_misty_troll_goad_t3_a}Scourge of Moria" />
+	<string id="taom_career_grp_misty_troll_goad_t3_b" text="{=taom_career_grp_misty_troll_goad_t3_b}Dread of the Northern Halls" />
+	<string id="taom_career_grp_misty_warg_chieftain_t1_a" text="{=taom_career_grp_misty_warg_chieftain_t1_a}Warg-Rider" />
+	<string id="taom_career_grp_misty_warg_chieftain_t1_b" text="{=taom_career_grp_misty_warg_chieftain_t1_b}Pack-Keeper" />
+	<string id="taom_career_grp_misty_warg_chieftain_t2_a" text="{=taom_career_grp_misty_warg_chieftain_t2_a}Grey Pack Outrider" />
+	<string id="taom_career_grp_misty_warg_chieftain_t2_b" text="{=taom_career_grp_misty_warg_chieftain_t2_b}Fell Wolf-Master" />
+	<string id="taom_career_grp_misty_warg_chieftain_t3_a" text="{=taom_career_grp_misty_warg_chieftain_t3_a}Alpha of Moria" />
+	<string id="taom_career_grp_misty_warg_chieftain_t3_b" text="{=taom_career_grp_misty_warg_chieftain_t3_b}Bolg's Wolf-Captain" />
+	<string id="taom_career_grp_shaghana_beast_rider_t1_a" text="{=taom_career_grp_shaghana_beast_rider_t1_a}Tusk Vanguard" />
+	<string id="taom_career_grp_shaghana_beast_rider_t1_b" text="{=taom_career_grp_shaghana_beast_rider_t1_b}Beast-Warden" />
+	<string id="taom_career_grp_shaghana_beast_rider_t2_a" text="{=taom_career_grp_shaghana_beast_rider_t2_a}Trampling Charge" />
+	<string id="taom_career_grp_shaghana_beast_rider_t2_b" text="{=taom_career_grp_shaghana_beast_rider_t2_b}Howdah Guardian" />
+	<string id="taom_career_grp_shaghana_beast_rider_t3_a" text="{=taom_career_grp_shaghana_beast_rider_t3_a}Wrath of Mûmakan" />
+	<string id="taom_career_grp_shaghana_beast_rider_t3_b" text="{=taom_career_grp_shaghana_beast_rider_t3_b}Lord of the Oliphaunts" />
+	<string id="taom_career_grp_shaghana_chatak_javelineer_t1_a" text="{=taom_career_grp_shaghana_chatak_javelineer_t1_a}Sun-Spear Skirmisher" />
+	<string id="taom_career_grp_shaghana_chatak_javelineer_t1_b" text="{=taom_career_grp_shaghana_chatak_javelineer_t1_b}Roving Outrider" />
+	<string id="taom_career_grp_shaghana_chatak_javelineer_t2_a" text="{=taom_career_grp_shaghana_chatak_javelineer_t2_a}Sunfire Slinger" />
+	<string id="taom_career_grp_shaghana_chatak_javelineer_t2_b" text="{=taom_career_grp_shaghana_chatak_javelineer_t2_b}Scarlet Screen" />
+	<string id="taom_career_grp_shaghana_chatak_javelineer_t3_a" text="{=taom_career_grp_shaghana_chatak_javelineer_t3_a}Rain of Far Harad" />
+	<string id="taom_career_grp_shaghana_chatak_javelineer_t3_b" text="{=taom_career_grp_shaghana_chatak_javelineer_t3_b}Shadow of the Dunes" />
+	<string id="taom_career_grp_shaghana_zajana_tribesman_t1_a" text="{=taom_career_grp_shaghana_zajana_tribesman_t1_a}Dune Raider" />
+	<string id="taom_career_grp_shaghana_zajana_tribesman_t1_b" text="{=taom_career_grp_shaghana_zajana_tribesman_t1_b}Desert Survivor" />
+	<string id="taom_career_grp_shaghana_zajana_tribesman_t2_a" text="{=taom_career_grp_shaghana_zajana_tribesman_t2_a}Serpent-Fang Striker" />
+	<string id="taom_career_grp_shaghana_zajana_tribesman_t2_b" text="{=taom_career_grp_shaghana_zajana_tribesman_t2_b}Wearer of the Sands" />
+	<string id="taom_career_grp_shaghana_zajana_tribesman_t3_a" text="{=taom_career_grp_shaghana_zajana_tribesman_t3_a}Venom of Haradwaith" />
+	<string id="taom_career_grp_shaghana_zajana_tribesman_t3_b" text="{=taom_career_grp_shaghana_zajana_tribesman_t3_b}Scourge of the Southrons" />
+	<string id="taom_career_misty_deep_marksman" text="{=taom_career_misty_deep_marksman}Moria Deep-Marksman" />
+	<string id="taom_career_misty_deep_marksman_desc" text="{=taom_career_misty_deep_marksman_desc}A spiteful goblin marksman who lurks in the mountain crags, picking off targets with poisoned darts and crude bows." />
+	<string id="taom_career_misty_troll_goad" text="{=taom_career_misty_troll_goad}Moria Troll-Goad" />
+	<string id="taom_career_misty_troll_goad_desc" text="{=taom_career_misty_troll_goad_desc}A brutal orc chieftain of Moria who commands cave trolls in battle, driving them forward with whip and cunning." />
+	<string id="taom_career_misty_warg_chieftain" text="{=taom_career_misty_warg_chieftain}Misty Mountain Warg Chieftain" />
+	<string id="taom_career_misty_warg_chieftain_desc" text="{=taom_career_misty_warg_chieftain_desc}A feared orc alpha who rides the largest warg of the pack, leading savage hunts through the Misty Mountains." />
+	<string id="taom_career_rank1_abanissa_house_guard" text="{=taom_career_rank1_abanissa_house_guard}Damudûr House-Guard" />
+	<string id="taom_career_rank1_abanissa_ivory_rider" text="{=taom_career_rank1_abanissa_ivory_rider}Ivory-Road Beast-Tamer" />
+	<string id="taom_career_rank1_abanissa_jiret_javelineer" text="{=taom_career_rank1_abanissa_jiret_javelineer}Jîret Javelineer" />
+	<string id="taom_career_rank1_craig_crag_stalker" text="{=taom_career_rank1_craig_crag_stalker}Crag-Lurker" />
+	<string id="taom_career_rank1_craig_pit_driver" text="{=taom_career_rank1_craig_pit_driver}Pit-Driver" />
+	<string id="taom_career_rank1_craig_warg_master" text="{=taom_career_rank1_craig_warg_master}Warg-Rider of the Pack" />
+	<string id="taom_career_rank1_falathrim_blade_dancer" text="{=taom_career_rank1_falathrim_blade_dancer}Falathrim Bladesman" />
+	<string id="taom_career_rank1_falathrim_mariner" text="{=taom_career_rank1_falathrim_mariner}Ohtar of Mithlond" />
+	<string id="taom_career_rank1_falathrim_sentinel" text="{=taom_career_rank1_falathrim_sentinel}Falathrim Bowman" />
+	<string id="taom_career_rank1_goblin_troll_driver" text="{=taom_career_rank1_goblin_troll_driver}Pit-Driver" />
+	<string id="taom_career_rank1_goblin_tunnel_stalker" text="{=taom_career_rank1_goblin_tunnel_stalker}Crag-Lurker" />
+	<string id="taom_career_rank1_goblin_warg_master" text="{=taom_career_rank1_goblin_warg_master}Warg-Rider of the Pack" />
+	<string id="taom_career_rank1_misty_deep_marksman" text="{=taom_career_rank1_misty_deep_marksman}Crag-Lurker" />
+	<string id="taom_career_rank1_misty_troll_goad" text="{=taom_career_rank1_misty_troll_goad}Pit-Driver" />
+	<string id="taom_career_rank1_misty_warg_chieftain" text="{=taom_career_rank1_misty_warg_chieftain}Warg-Rider of the Pack" />
+	<string id="taom_career_rank1_shaghana_beast_rider" text="{=taom_career_rank1_shaghana_beast_rider}Sormedân Beast-Tamer" />
+	<string id="taom_career_rank1_shaghana_chatak_javelineer" text="{=taom_career_rank1_shaghana_chatak_javelineer}Chatâk Javelineer" />
+	<string id="taom_career_rank1_shaghana_zajana_tribesman" text="{=taom_career_rank1_shaghana_zajana_tribesman}Zajâna Tribesman" />
+	<string id="taom_career_rank2_abanissa_house_guard" text="{=taom_career_rank2_abanissa_house_guard}Caravan Outrider" />
+	<string id="taom_career_rank2_abanissa_ivory_rider" text="{=taom_career_rank2_abanissa_ivory_rider}Mûmak Driver" />
+	<string id="taom_career_rank2_abanissa_jiret_javelineer" text="{=taom_career_rank2_abanissa_jiret_javelineer}Throwing-Spear Skirmisher" />
+	<string id="taom_career_rank2_craig_crag_stalker" text="{=taom_career_rank2_craig_crag_stalker}Ered Luin Stalker" />
+	<string id="taom_career_rank2_craig_pit_driver" text="{=taom_career_rank2_craig_pit_driver}Troll-Goad of Blue Craig" />
+	<string id="taom_career_rank2_craig_warg_master" text="{=taom_career_rank2_craig_warg_master}Fell Wolf-Captain" />
+	<string id="taom_career_rank2_falathrim_blade_dancer" text="{=taom_career_rank2_falathrim_blade_dancer}Blade of the Golden Flower" />
+	<string id="taom_career_rank2_falathrim_mariner" text="{=taom_career_rank2_falathrim_mariner}Roquen of Mithlond" />
+	<string id="taom_career_rank2_falathrim_sentinel" text="{=taom_career_rank2_falathrim_sentinel}Sentinel of the Heavenly Arch" />
+	<string id="taom_career_rank2_goblin_troll_driver" text="{=taom_career_rank2_goblin_troll_driver}Troll-Goad of Goblin-town" />
+	<string id="taom_career_rank2_goblin_tunnel_stalker" text="{=taom_career_rank2_goblin_tunnel_stalker}High Pass Stalker" />
+	<string id="taom_career_rank2_goblin_warg_master" text="{=taom_career_rank2_goblin_warg_master}Fell Wolf-Captain" />
+	<string id="taom_career_rank2_misty_deep_marksman" text="{=taom_career_rank2_misty_deep_marksman}High Pass Stalker" />
+	<string id="taom_career_rank2_misty_troll_goad" text="{=taom_career_rank2_misty_troll_goad}Troll-Goad of Moria" />
+	<string id="taom_career_rank2_misty_warg_chieftain" text="{=taom_career_rank2_misty_warg_chieftain}Fell Wolf-Captain" />
+	<string id="taom_career_rank2_shaghana_beast_rider" text="{=taom_career_rank2_shaghana_beast_rider}Mûmak Driver" />
+	<string id="taom_career_rank2_shaghana_chatak_javelineer" text="{=taom_career_rank2_shaghana_chatak_javelineer}Throwing-Spear Skirmisher" />
+	<string id="taom_career_rank2_shaghana_zajana_tribesman" text="{=taom_career_rank2_shaghana_zajana_tribesman}Sandstorm Raider" />
+	<string id="taom_career_rank3_abanissa_house_guard" text="{=taom_career_rank3_abanissa_house_guard}Ivory-Throne Chieftain" />
+	<string id="taom_career_rank3_abanissa_ivory_rider" text="{=taom_career_rank3_abanissa_ivory_rider}Mûmak War-Leader" />
+	<string id="taom_career_rank3_abanissa_jiret_javelineer" text="{=taom_career_rank3_abanissa_jiret_javelineer}Gilded Spear-Master" />
+	<string id="taom_career_rank3_craig_crag_stalker" text="{=taom_career_rank3_craig_crag_stalker}Eye of Blue Craig" />
+	<string id="taom_career_rank3_craig_pit_driver" text="{=taom_career_rank3_craig_pit_driver}Maker of Broken Trolls" />
+	<string id="taom_career_rank3_craig_warg_master" text="{=taom_career_rank3_craig_warg_master}Wolf-Lord of the Wild Hunt" />
+	<string id="taom_career_rank3_falathrim_blade_dancer" text="{=taom_career_rank3_falathrim_blade_dancer}Blademaster of Mithlond" />
+	<string id="taom_career_rank3_falathrim_mariner" text="{=taom_career_rank3_falathrim_mariner}Knight of the Golden Flower" />
+	<string id="taom_career_rank3_falathrim_sentinel" text="{=taom_career_rank3_falathrim_sentinel}Warden of Mithlond" />
+	<string id="taom_career_rank3_goblin_troll_driver" text="{=taom_career_rank3_goblin_troll_driver}Maker of Broken Trolls" />
+	<string id="taom_career_rank3_goblin_tunnel_stalker" text="{=taom_career_rank3_goblin_tunnel_stalker}Eye of Goblin-town" />
+	<string id="taom_career_rank3_goblin_warg_master" text="{=taom_career_rank3_goblin_warg_master}Wolf-Lord of the Wild Hunt" />
+	<string id="taom_career_rank3_misty_deep_marksman" text="{=taom_career_rank3_misty_deep_marksman}Eye of Moria" />
+	<string id="taom_career_rank3_misty_troll_goad" text="{=taom_career_rank3_misty_troll_goad}Maker of Broken Trolls" />
+	<string id="taom_career_rank3_misty_warg_chieftain" text="{=taom_career_rank3_misty_warg_chieftain}Wolf-Lord of the Wild Hunt" />
+	<string id="taom_career_rank3_shaghana_beast_rider" text="{=taom_career_rank3_shaghana_beast_rider}Mûmak War-Leader" />
+	<string id="taom_career_rank3_shaghana_chatak_javelineer" text="{=taom_career_rank3_shaghana_chatak_javelineer}Scarlet Spear-Master" />
+	<string id="taom_career_rank3_shaghana_zajana_tribesman" text="{=taom_career_rank3_shaghana_zajana_tribesman}Serpent-Banner Chieftain" />
+	<string id="taom_career_shaghana_beast_rider" text="{=taom_career_shaghana_beast_rider}Sormedân Beast Rider" />
+	<string id="taom_career_shaghana_beast_rider_desc" text="{=taom_career_shaghana_beast_rider_desc}A fearsome rider of the Far Harad who drives great beasts into the enemy, breaking lines with shock and primal terror." />
+	<string id="taom_career_shaghana_chatak_javelineer" text="{=taom_career_shaghana_chatak_javelineer}Chatâk Javelineer" />
+	<string id="taom_career_shaghana_chatak_javelineer_desc" text="{=taom_career_shaghana_chatak_javelineer_desc}A fast-moving skirmisher of Chatâk who screens cavalry with a hail of javelins before withdrawing beyond reach of retaliation." />
+	<string id="taom_career_shaghana_zajana_tribesman" text="{=taom_career_shaghana_zajana_tribesman}Tribesman of Zajâna" />
+	<string id="taom_career_shaghana_zajana_tribesman_desc" text="{=taom_career_shaghana_zajana_tribesman_desc}A warrior of the Zajâna desert tribes whose attrition-warfare tactics grind enemies down with relentless pressure and poisoned blades." />
+	<string id="taom_ccs_t1_a_key" text="{=taom_ccs_t1_a_key}Poison Dart radius increased, covering wider kill zones." />
+	<string id="taom_ccs_t1_a_p1" text="{=taom_ccs_t1_a_p1}+8% ranged damage." />
+	<string id="taom_ccs_t1_a_p2" text="{=taom_ccs_t1_a_p2}+5% armor penetration." />
+	<string id="taom_ccs_t1_a_p3" text="{=taom_ccs_t1_a_p3}+7% movement speed." />
+	<string id="taom_ccs_t1_a_p4" text="{=taom_ccs_t1_a_p4}+5% battle renown gain." />
+	<string id="taom_ccs_t1_b_key" text="{=taom_ccs_t1_b_key}Poison Dart duration extended, sustained barrage." />
+	<string id="taom_ccs_t1_b_p1" text="{=taom_ccs_t1_b_p1}+5% resistance." />
+	<string id="taom_ccs_t1_b_p2" text="{=taom_ccs_t1_b_p2}+5 max health." />
+	<string id="taom_ccs_t1_b_p3" text="{=taom_ccs_t1_b_p3}+5% party spotting range." />
+	<string id="taom_ccs_t1_b_p4" text="{=taom_ccs_t1_b_p4}+10% stealth bonus." />
+	<string id="taom_ccs_t2_a_key" text="{=taom_ccs_t2_a_key}Poison Dart charge reduced, maintaining constant pressure." />
+	<string id="taom_ccs_t2_a_p1" text="{=taom_ccs_t2_a_p1}+10% party spotting range." />
+	<string id="taom_ccs_t2_a_p2" text="{=taom_ccs_t2_a_p2}+10% movement speed." />
+	<string id="taom_ccs_t2_a_p3" text="{=taom_ccs_t2_a_p3}+13% stealth bonus." />
+	<string id="taom_ccs_t2_a_p4" text="{=taom_ccs_t2_a_p4}+10% battle renown gain." />
+	<string id="taom_ccs_t2_b_key" text="{=taom_ccs_t2_b_key}Poison Dart gains additional penetration while active." />
+	<string id="taom_ccs_t2_b_p1" text="{=taom_ccs_t2_b_p1}+12% ranged damage." />
+	<string id="taom_ccs_t2_b_p2" text="{=taom_ccs_t2_b_p2}+10% armor penetration." />
+	<string id="taom_ccs_t2_b_p3" text="{=taom_ccs_t2_b_p3}+8 max health." />
+	<string id="taom_ccs_t2_b_p4" text="{=taom_ccs_t2_b_p4}+3% troop damage." />
+	<string id="taom_ccs_t3_a_key" text="{=taom_ccs_t3_a_key}Poison Dart radius greatly expanded, inescapable volleys." />
+	<string id="taom_ccs_t3_a_p1" text="{=taom_ccs_t3_a_p1}+18% ranged damage." />
+	<string id="taom_ccs_t3_a_p2" text="{=taom_ccs_t3_a_p2}+15% armor penetration." />
+	<string id="taom_ccs_t3_a_p3" text="{=taom_ccs_t3_a_p3}+15% battle renown gain." />
+	<string id="taom_ccs_t3_a_p4" text="{=taom_ccs_t3_a_p4}+5% troop damage." />
+	<string id="taom_ccs_t3_b_key" text="{=taom_ccs_t3_b_key}Poison Dart charge greatly reduced, relentless fire." />
+	<string id="taom_ccs_t3_b_p1" text="{=taom_ccs_t3_b_p1}+15% stealth bonus." />
+	<string id="taom_ccs_t3_b_p2" text="{=taom_ccs_t3_b_p2}+15% movement speed." />
+	<string id="taom_ccs_t3_b_p3" text="{=taom_ccs_t3_b_p3}+9 max health." />
+	<string id="taom_ccs_t3_b_p4" text="{=taom_ccs_t3_b_p4}+15% party spotting range." />
+	<string id="taom_cpd_t1_a_key" text="{=taom_cpd_t1_a_key}Blue Craig Frenzy radius increased, empowering more warriors." />
+	<string id="taom_cpd_t1_a_p1" text="{=taom_cpd_t1_a_p1}+8% melee damage." />
+	<string id="taom_cpd_t1_a_p2" text="{=taom_cpd_t1_a_p2}+3% troop damage." />
+	<string id="taom_cpd_t1_a_p3" text="{=taom_cpd_t1_a_p3}+6 max health." />
+	<string id="taom_cpd_t1_a_p4" text="{=taom_cpd_t1_a_p4}+7% swing speed." />
+	<string id="taom_cpd_t1_b_key" text="{=taom_cpd_t1_b_key}Blue Craig Frenzy duration extended, fortifying the defense." />
+	<string id="taom_cpd_t1_b_p1" text="{=taom_cpd_t1_b_p1}+8% resistance." />
+	<string id="taom_cpd_t1_b_p2" text="{=taom_cpd_t1_b_p2}+5% troop morale." />
+	<string id="taom_cpd_t1_b_p3" text="{=taom_cpd_t1_b_p3}+10% troop resistance." />
+	<string id="taom_cpd_t1_b_p4" text="{=taom_cpd_t1_b_p4}+5% troop survival." />
+	<string id="taom_cpd_t2_a_key" text="{=taom_cpd_t2_a_key}Blue Craig Frenzy charge reduced, activating more frequently." />
+	<string id="taom_cpd_t2_a_p1" text="{=taom_cpd_t2_a_p1}+10% troop morale." />
+	<string id="taom_cpd_t2_a_p2" text="{=taom_cpd_t2_a_p2}+2 party size." />
+	<string id="taom_cpd_t2_a_p3" text="{=taom_cpd_t2_a_p3}+10% battle renown gain." />
+	<string id="taom_cpd_t2_a_p4" text="{=taom_cpd_t2_a_p4}-10% troop wages." />
+	<string id="taom_cpd_t2_b_key" text="{=taom_cpd_t2_b_key}Blue Craig Frenzy grants additional defensive buffs while active." />
+	<string id="taom_cpd_t2_b_p1" text="{=taom_cpd_t2_b_p1}+12% resistance." />
+	<string id="taom_cpd_t2_b_p2" text="{=taom_cpd_t2_b_p2}+8 max health." />
+	<string id="taom_cpd_t2_b_p3" text="{=taom_cpd_t2_b_p3}+13% troop resistance." />
+	<string id="taom_cpd_t2_b_p4" text="{=taom_cpd_t2_b_p4}+5% troop damage." />
+	<string id="taom_cpd_t3_a_key" text="{=taom_cpd_t3_a_key}Blue Craig Frenzy radius greatly expanded, devastating power." />
+	<string id="taom_cpd_t3_a_p1" text="{=taom_cpd_t3_a_p1}+15% melee damage." />
+	<string id="taom_cpd_t3_a_p2" text="{=taom_cpd_t3_a_p2}+10 max health." />
+	<string id="taom_cpd_t3_a_p3" text="{=taom_cpd_t3_a_p3}+7% troop damage." />
+	<string id="taom_cpd_t3_a_p4" text="{=taom_cpd_t3_a_p4}+4 party size." />
+	<string id="taom_cpd_t3_b_key" text="{=taom_cpd_t3_b_key}Blue Craig Frenzy charge greatly reduced, nearly always available." />
+	<string id="taom_cpd_t3_b_p1" text="{=taom_cpd_t3_b_p1}+18% resistance." />
+	<string id="taom_cpd_t3_b_p2" text="{=taom_cpd_t3_b_p2}+15% hero health regeneration." />
+	<string id="taom_cpd_t3_b_p3" text="{=taom_cpd_t3_b_p3}+20% troop morale." />
+	<string id="taom_cpd_t3_b_p4" text="{=taom_cpd_t3_b_p4}+15% troop survival." />
+	<string id="taom_craig_crag_stalker_root_desc" text="{=taom_craig_crag_stalker_root_desc}Poison Dart grants +5% ranged damage with cave fungus toxin." />
+	<string id="taom_craig_pit_driver_root_desc" text="{=taom_craig_pit_driver_root_desc}Blue Craig Frenzy grants +5 health and drives your trolls berserk." />
+	<string id="taom_craig_warg_master_root_desc" text="{=taom_craig_warg_master_root_desc}Alpha Howl grants +5% melee damage and the pack hunts." />
+	<string id="taom_cwm_t1_a_key" text="{=taom_cwm_t1_a_key}Alpha Howl radius expanded, sweeping wider formations." />
+	<string id="taom_cwm_t1_a_p1" text="{=taom_cwm_t1_a_p1}+8% melee damage." />
+	<string id="taom_cwm_t1_a_p2" text="{=taom_cwm_t1_a_p2}+10% horse charge damage." />
+	<string id="taom_cwm_t1_a_p3" text="{=taom_cwm_t1_a_p3}+7% swing speed." />
+	<string id="taom_cwm_t1_a_p4" text="{=taom_cwm_t1_a_p4}+5% party movement speed." />
+	<string id="taom_cwm_t1_b_key" text="{=taom_cwm_t1_b_key}Alpha Howl duration extended, maintaining momentum." />
+	<string id="taom_cwm_t1_b_p1" text="{=taom_cwm_t1_b_p1}+10% horse health." />
+	<string id="taom_cwm_t1_b_p2" text="{=taom_cwm_t1_b_p2}+5 max health." />
+	<string id="taom_cwm_t1_b_p3" text="{=taom_cwm_t1_b_p3}-5% troop wages." />
+	<string id="taom_cwm_t1_b_p4" text="{=taom_cwm_t1_b_p4}+5% resistance." />
+	<string id="taom_cwm_t2_a_key" text="{=taom_cwm_t2_a_key}Alpha Howl charge reduced, swifter activation." />
+	<string id="taom_cwm_t2_a_p1" text="{=taom_cwm_t2_a_p1}+10% party movement speed." />
+	<string id="taom_cwm_t2_a_p2" text="{=taom_cwm_t2_a_p2}-10% troop wages." />
+	<string id="taom_cwm_t2_a_p3" text="{=taom_cwm_t2_a_p3}+10% troop morale." />
+	<string id="taom_cwm_t2_a_p4" text="{=taom_cwm_t2_a_p4}+10% battle renown gain." />
+	<string id="taom_cwm_t2_b_key" text="{=taom_cwm_t2_b_key}Alpha Howl boosts mount resilience while active." />
+	<string id="taom_cwm_t2_b_p1" text="{=taom_cwm_t2_b_p1}+12% melee damage." />
+	<string id="taom_cwm_t2_b_p2" text="{=taom_cwm_t2_b_p2}+13% horse charge damage." />
+	<string id="taom_cwm_t2_b_p3" text="{=taom_cwm_t2_b_p3}+13% horse health." />
+	<string id="taom_cwm_t2_b_p4" text="{=taom_cwm_t2_b_p4}+10% swing speed." />
+	<string id="taom_cwm_t3_a_key" text="{=taom_cwm_t3_a_key}Alpha Howl radius greatly expanded, unstoppable impact." />
+	<string id="taom_cwm_t3_a_p1" text="{=taom_cwm_t3_a_p1}+18% melee damage." />
+	<string id="taom_cwm_t3_a_p2" text="{=taom_cwm_t3_a_p2}+15% horse charge damage." />
+	<string id="taom_cwm_t3_a_p3" text="{=taom_cwm_t3_a_p3}+15% swing speed." />
+	<string id="taom_cwm_t3_a_p4" text="{=taom_cwm_t3_a_p4}+7% troop damage." />
+	<string id="taom_cwm_t3_b_key" text="{=taom_cwm_t3_b_key}Alpha Howl charge greatly reduced, ride without ceasing." />
+	<string id="taom_cwm_t3_b_p1" text="{=taom_cwm_t3_b_p1}+15% horse health." />
+	<string id="taom_cwm_t3_b_p2" text="{=taom_cwm_t3_b_p2}-15% troop wages." />
+	<string id="taom_cwm_t3_b_p3" text="{=taom_cwm_t3_b_p3}+15% party movement speed." />
+	<string id="taom_cwm_t3_b_p4" text="{=taom_cwm_t3_b_p4}+9 max health." />
+	<string id="taom_falathrim_blade_dancer_root_desc" text="{=taom_falathrim_blade_dancer_root_desc}Starlight Weave grants +5% resistance and elven agility." />
+	<string id="taom_falathrim_mariner_root_desc" text="{=taom_falathrim_mariner_root_desc}Last Alliance grants +5% melee damage and inspires your allies." />
+	<string id="taom_falathrim_sentinel_root_desc" text="{=taom_falathrim_sentinel_root_desc}Elven Sight grants +5% ranged damage with centuries of practice." />
+	<string id="taom_fbd_t1_a_key" text="{=taom_fbd_t1_a_key}Starlight Weave radius increased, empowering more warriors." />
+	<string id="taom_fbd_t1_a_p1" text="{=taom_fbd_t1_a_p1}+8% melee damage." />
+	<string id="taom_fbd_t1_a_p2" text="{=taom_fbd_t1_a_p2}+3% troop damage." />
+	<string id="taom_fbd_t1_a_p3" text="{=taom_fbd_t1_a_p3}+6 max health." />
+	<string id="taom_fbd_t1_a_p4" text="{=taom_fbd_t1_a_p4}+7% swing speed." />
+	<string id="taom_fbd_t1_b_key" text="{=taom_fbd_t1_b_key}Starlight Weave duration extended, fortifying the defense." />
+	<string id="taom_fbd_t1_b_p1" text="{=taom_fbd_t1_b_p1}+8% resistance." />
+	<string id="taom_fbd_t1_b_p2" text="{=taom_fbd_t1_b_p2}+5% troop morale." />
+	<string id="taom_fbd_t1_b_p3" text="{=taom_fbd_t1_b_p3}+10% troop resistance." />
+	<string id="taom_fbd_t1_b_p4" text="{=taom_fbd_t1_b_p4}+5% troop survival." />
+	<string id="taom_fbd_t2_a_key" text="{=taom_fbd_t2_a_key}Starlight Weave charge reduced, activating more frequently." />
+	<string id="taom_fbd_t2_a_p1" text="{=taom_fbd_t2_a_p1}+10% troop morale." />
+	<string id="taom_fbd_t2_a_p2" text="{=taom_fbd_t2_a_p2}+2 party size." />
+	<string id="taom_fbd_t2_a_p3" text="{=taom_fbd_t2_a_p3}+10% battle renown gain." />
+	<string id="taom_fbd_t2_a_p4" text="{=taom_fbd_t2_a_p4}-10% troop wages." />
+	<string id="taom_fbd_t2_b_key" text="{=taom_fbd_t2_b_key}Starlight Weave grants additional defensive buffs while active." />
+	<string id="taom_fbd_t2_b_p1" text="{=taom_fbd_t2_b_p1}+12% resistance." />
+	<string id="taom_fbd_t2_b_p2" text="{=taom_fbd_t2_b_p2}+8 max health." />
+	<string id="taom_fbd_t2_b_p3" text="{=taom_fbd_t2_b_p3}+13% troop resistance." />
+	<string id="taom_fbd_t2_b_p4" text="{=taom_fbd_t2_b_p4}+5% troop damage." />
+	<string id="taom_fbd_t3_a_key" text="{=taom_fbd_t3_a_key}Starlight Weave radius greatly expanded, devastating power." />
+	<string id="taom_fbd_t3_a_p1" text="{=taom_fbd_t3_a_p1}+15% melee damage." />
+	<string id="taom_fbd_t3_a_p2" text="{=taom_fbd_t3_a_p2}+10 max health." />
+	<string id="taom_fbd_t3_a_p3" text="{=taom_fbd_t3_a_p3}+7% troop damage." />
+	<string id="taom_fbd_t3_a_p4" text="{=taom_fbd_t3_a_p4}+4 party size." />
+	<string id="taom_fbd_t3_b_key" text="{=taom_fbd_t3_b_key}Starlight Weave charge greatly reduced, nearly always available." />
+	<string id="taom_fbd_t3_b_p1" text="{=taom_fbd_t3_b_p1}+18% resistance." />
+	<string id="taom_fbd_t3_b_p2" text="{=taom_fbd_t3_b_p2}+15% hero health regeneration." />
+	<string id="taom_fbd_t3_b_p3" text="{=taom_fbd_t3_b_p3}+20% troop morale." />
+	<string id="taom_fbd_t3_b_p4" text="{=taom_fbd_t3_b_p4}+15% troop survival." />
+	<string id="taom_fmr_t1_a_key" text="{=taom_fmr_t1_a_key}Last Alliance radius expanded, sweeping wider formations." />
+	<string id="taom_fmr_t1_a_p1" text="{=taom_fmr_t1_a_p1}+8% melee damage." />
+	<string id="taom_fmr_t1_a_p2" text="{=taom_fmr_t1_a_p2}+10% horse charge damage." />
+	<string id="taom_fmr_t1_a_p3" text="{=taom_fmr_t1_a_p3}+7% swing speed." />
+	<string id="taom_fmr_t1_a_p4" text="{=taom_fmr_t1_a_p4}+5% party movement speed." />
+	<string id="taom_fmr_t1_b_key" text="{=taom_fmr_t1_b_key}Last Alliance duration extended, maintaining momentum." />
+	<string id="taom_fmr_t1_b_p1" text="{=taom_fmr_t1_b_p1}+10% horse health." />
+	<string id="taom_fmr_t1_b_p2" text="{=taom_fmr_t1_b_p2}+5 max health." />
+	<string id="taom_fmr_t1_b_p3" text="{=taom_fmr_t1_b_p3}-5% troop wages." />
+	<string id="taom_fmr_t1_b_p4" text="{=taom_fmr_t1_b_p4}+5% resistance." />
+	<string id="taom_fmr_t2_a_key" text="{=taom_fmr_t2_a_key}Last Alliance charge reduced, swifter activation." />
+	<string id="taom_fmr_t2_a_p1" text="{=taom_fmr_t2_a_p1}+10% party movement speed." />
+	<string id="taom_fmr_t2_a_p2" text="{=taom_fmr_t2_a_p2}-10% troop wages." />
+	<string id="taom_fmr_t2_a_p3" text="{=taom_fmr_t2_a_p3}+10% troop morale." />
+	<string id="taom_fmr_t2_a_p4" text="{=taom_fmr_t2_a_p4}+10% battle renown gain." />
+	<string id="taom_fmr_t2_b_key" text="{=taom_fmr_t2_b_key}Last Alliance boosts mount resilience while active." />
+	<string id="taom_fmr_t2_b_p1" text="{=taom_fmr_t2_b_p1}+12% melee damage." />
+	<string id="taom_fmr_t2_b_p2" text="{=taom_fmr_t2_b_p2}+13% horse charge damage." />
+	<string id="taom_fmr_t2_b_p3" text="{=taom_fmr_t2_b_p3}+13% horse health." />
+	<string id="taom_fmr_t2_b_p4" text="{=taom_fmr_t2_b_p4}+10% swing speed." />
+	<string id="taom_fmr_t3_a_key" text="{=taom_fmr_t3_a_key}Last Alliance radius greatly expanded, unstoppable impact." />
+	<string id="taom_fmr_t3_a_p1" text="{=taom_fmr_t3_a_p1}+18% melee damage." />
+	<string id="taom_fmr_t3_a_p2" text="{=taom_fmr_t3_a_p2}+15% horse charge damage." />
+	<string id="taom_fmr_t3_a_p3" text="{=taom_fmr_t3_a_p3}+15% swing speed." />
+	<string id="taom_fmr_t3_a_p4" text="{=taom_fmr_t3_a_p4}+7% troop damage." />
+	<string id="taom_fmr_t3_b_key" text="{=taom_fmr_t3_b_key}Last Alliance charge greatly reduced, ride without ceasing." />
+	<string id="taom_fmr_t3_b_p1" text="{=taom_fmr_t3_b_p1}+15% horse health." />
+	<string id="taom_fmr_t3_b_p2" text="{=taom_fmr_t3_b_p2}-15% troop wages." />
+	<string id="taom_fmr_t3_b_p3" text="{=taom_fmr_t3_b_p3}+15% party movement speed." />
+	<string id="taom_fmr_t3_b_p4" text="{=taom_fmr_t3_b_p4}+9 max health." />
+	<string id="taom_fsn_t1_a_key" text="{=taom_fsn_t1_a_key}Elven Sight radius increased, covering wider kill zones." />
+	<string id="taom_fsn_t1_a_p1" text="{=taom_fsn_t1_a_p1}+8% ranged damage." />
+	<string id="taom_fsn_t1_a_p2" text="{=taom_fsn_t1_a_p2}+5% armor penetration." />
+	<string id="taom_fsn_t1_a_p3" text="{=taom_fsn_t1_a_p3}+7% movement speed." />
+	<string id="taom_fsn_t1_a_p4" text="{=taom_fsn_t1_a_p4}+5% battle renown gain." />
+	<string id="taom_fsn_t1_b_key" text="{=taom_fsn_t1_b_key}Elven Sight duration extended, sustained barrage." />
+	<string id="taom_fsn_t1_b_p1" text="{=taom_fsn_t1_b_p1}+5% resistance." />
+	<string id="taom_fsn_t1_b_p2" text="{=taom_fsn_t1_b_p2}+5 max health." />
+	<string id="taom_fsn_t1_b_p3" text="{=taom_fsn_t1_b_p3}+5% party spotting range." />
+	<string id="taom_fsn_t1_b_p4" text="{=taom_fsn_t1_b_p4}+10% stealth bonus." />
+	<string id="taom_fsn_t2_a_key" text="{=taom_fsn_t2_a_key}Elven Sight charge reduced, maintaining constant pressure." />
+	<string id="taom_fsn_t2_a_p1" text="{=taom_fsn_t2_a_p1}+10% party spotting range." />
+	<string id="taom_fsn_t2_a_p2" text="{=taom_fsn_t2_a_p2}+10% movement speed." />
+	<string id="taom_fsn_t2_a_p3" text="{=taom_fsn_t2_a_p3}+13% stealth bonus." />
+	<string id="taom_fsn_t2_a_p4" text="{=taom_fsn_t2_a_p4}+10% battle renown gain." />
+	<string id="taom_fsn_t2_b_key" text="{=taom_fsn_t2_b_key}Elven Sight gains additional penetration while active." />
+	<string id="taom_fsn_t2_b_p1" text="{=taom_fsn_t2_b_p1}+12% ranged damage." />
+	<string id="taom_fsn_t2_b_p2" text="{=taom_fsn_t2_b_p2}+10% armor penetration." />
+	<string id="taom_fsn_t2_b_p3" text="{=taom_fsn_t2_b_p3}+8 max health." />
+	<string id="taom_fsn_t2_b_p4" text="{=taom_fsn_t2_b_p4}+3% troop damage." />
+	<string id="taom_fsn_t3_a_key" text="{=taom_fsn_t3_a_key}Elven Sight radius greatly expanded, inescapable volleys." />
+	<string id="taom_fsn_t3_a_p1" text="{=taom_fsn_t3_a_p1}+18% ranged damage." />
+	<string id="taom_fsn_t3_a_p2" text="{=taom_fsn_t3_a_p2}+15% armor penetration." />
+	<string id="taom_fsn_t3_a_p3" text="{=taom_fsn_t3_a_p3}+15% battle renown gain." />
+	<string id="taom_fsn_t3_a_p4" text="{=taom_fsn_t3_a_p4}+5% troop damage." />
+	<string id="taom_fsn_t3_b_key" text="{=taom_fsn_t3_b_key}Elven Sight charge greatly reduced, relentless fire." />
+	<string id="taom_fsn_t3_b_p1" text="{=taom_fsn_t3_b_p1}+15% stealth bonus." />
+	<string id="taom_fsn_t3_b_p2" text="{=taom_fsn_t3_b_p2}+15% movement speed." />
+	<string id="taom_fsn_t3_b_p3" text="{=taom_fsn_t3_b_p3}+9 max health." />
+	<string id="taom_fsn_t3_b_p4" text="{=taom_fsn_t3_b_p4}+15% party spotting range." />
+	<string id="taom_goblin_troll_driver_root_desc" text="{=taom_goblin_troll_driver_root_desc}Goblin-town Frenzy grants +5 health and drives your trolls berserk." />
+	<string id="taom_goblin_tunnel_stalker_root_desc" text="{=taom_goblin_tunnel_stalker_root_desc}Poison Dart grants +5% ranged damage with cave fungus toxin." />
+	<string id="taom_goblin_warg_master_root_desc" text="{=taom_goblin_warg_master_root_desc}Alpha Howl grants +5% melee damage and the pack hunts." />
+	<string id="taom_gtd_t1_a_key" text="{=taom_gtd_t1_a_key}Goblin-town Frenzy radius increased, empowering more warriors." />
+	<string id="taom_gtd_t1_a_p1" text="{=taom_gtd_t1_a_p1}+8% melee damage." />
+	<string id="taom_gtd_t1_a_p2" text="{=taom_gtd_t1_a_p2}+3% troop damage." />
+	<string id="taom_gtd_t1_a_p3" text="{=taom_gtd_t1_a_p3}+6 max health." />
+	<string id="taom_gtd_t1_a_p4" text="{=taom_gtd_t1_a_p4}+7% swing speed." />
+	<string id="taom_gtd_t1_b_key" text="{=taom_gtd_t1_b_key}Goblin-town Frenzy duration extended, fortifying the defense." />
+	<string id="taom_gtd_t1_b_p1" text="{=taom_gtd_t1_b_p1}+8% resistance." />
+	<string id="taom_gtd_t1_b_p2" text="{=taom_gtd_t1_b_p2}+5% troop morale." />
+	<string id="taom_gtd_t1_b_p3" text="{=taom_gtd_t1_b_p3}+10% troop resistance." />
+	<string id="taom_gtd_t1_b_p4" text="{=taom_gtd_t1_b_p4}+5% troop survival." />
+	<string id="taom_gtd_t2_a_key" text="{=taom_gtd_t2_a_key}Goblin-town Frenzy charge reduced, activating more frequently." />
+	<string id="taom_gtd_t2_a_p1" text="{=taom_gtd_t2_a_p1}+10% troop morale." />
+	<string id="taom_gtd_t2_a_p2" text="{=taom_gtd_t2_a_p2}+2 party size." />
+	<string id="taom_gtd_t2_a_p3" text="{=taom_gtd_t2_a_p3}+10% battle renown gain." />
+	<string id="taom_gtd_t2_a_p4" text="{=taom_gtd_t2_a_p4}-10% troop wages." />
+	<string id="taom_gtd_t2_b_key" text="{=taom_gtd_t2_b_key}Goblin-town Frenzy grants additional defensive buffs while active." />
+	<string id="taom_gtd_t2_b_p1" text="{=taom_gtd_t2_b_p1}+12% resistance." />
+	<string id="taom_gtd_t2_b_p2" text="{=taom_gtd_t2_b_p2}+8 max health." />
+	<string id="taom_gtd_t2_b_p3" text="{=taom_gtd_t2_b_p3}+13% troop resistance." />
+	<string id="taom_gtd_t2_b_p4" text="{=taom_gtd_t2_b_p4}+5% troop damage." />
+	<string id="taom_gtd_t3_a_key" text="{=taom_gtd_t3_a_key}Goblin-town Frenzy radius greatly expanded, devastating power." />
+	<string id="taom_gtd_t3_a_p1" text="{=taom_gtd_t3_a_p1}+15% melee damage." />
+	<string id="taom_gtd_t3_a_p2" text="{=taom_gtd_t3_a_p2}+10 max health." />
+	<string id="taom_gtd_t3_a_p3" text="{=taom_gtd_t3_a_p3}+7% troop damage." />
+	<string id="taom_gtd_t3_a_p4" text="{=taom_gtd_t3_a_p4}+4 party size." />
+	<string id="taom_gtd_t3_b_key" text="{=taom_gtd_t3_b_key}Goblin-town Frenzy charge greatly reduced, nearly always available." />
+	<string id="taom_gtd_t3_b_p1" text="{=taom_gtd_t3_b_p1}+18% resistance." />
+	<string id="taom_gtd_t3_b_p2" text="{=taom_gtd_t3_b_p2}+15% hero health regeneration." />
+	<string id="taom_gtd_t3_b_p3" text="{=taom_gtd_t3_b_p3}+20% troop morale." />
+	<string id="taom_gtd_t3_b_p4" text="{=taom_gtd_t3_b_p4}+15% troop survival." />
+	<string id="taom_gts_t1_a_key" text="{=taom_gts_t1_a_key}Poison Dart radius increased, covering wider kill zones." />
+	<string id="taom_gts_t1_a_p1" text="{=taom_gts_t1_a_p1}+8% ranged damage." />
+	<string id="taom_gts_t1_a_p2" text="{=taom_gts_t1_a_p2}+5% armor penetration." />
+	<string id="taom_gts_t1_a_p3" text="{=taom_gts_t1_a_p3}+7% movement speed." />
+	<string id="taom_gts_t1_a_p4" text="{=taom_gts_t1_a_p4}+5% battle renown gain." />
+	<string id="taom_gts_t1_b_key" text="{=taom_gts_t1_b_key}Poison Dart duration extended, sustained barrage." />
+	<string id="taom_gts_t1_b_p1" text="{=taom_gts_t1_b_p1}+5% resistance." />
+	<string id="taom_gts_t1_b_p2" text="{=taom_gts_t1_b_p2}+5 max health." />
+	<string id="taom_gts_t1_b_p3" text="{=taom_gts_t1_b_p3}+5% party spotting range." />
+	<string id="taom_gts_t1_b_p4" text="{=taom_gts_t1_b_p4}+10% stealth bonus." />
+	<string id="taom_gts_t2_a_key" text="{=taom_gts_t2_a_key}Poison Dart charge reduced, maintaining constant pressure." />
+	<string id="taom_gts_t2_a_p1" text="{=taom_gts_t2_a_p1}+10% party spotting range." />
+	<string id="taom_gts_t2_a_p2" text="{=taom_gts_t2_a_p2}+10% movement speed." />
+	<string id="taom_gts_t2_a_p3" text="{=taom_gts_t2_a_p3}+13% stealth bonus." />
+	<string id="taom_gts_t2_a_p4" text="{=taom_gts_t2_a_p4}+10% battle renown gain." />
+	<string id="taom_gts_t2_b_key" text="{=taom_gts_t2_b_key}Poison Dart gains additional penetration while active." />
+	<string id="taom_gts_t2_b_p1" text="{=taom_gts_t2_b_p1}+12% ranged damage." />
+	<string id="taom_gts_t2_b_p2" text="{=taom_gts_t2_b_p2}+10% armor penetration." />
+	<string id="taom_gts_t2_b_p3" text="{=taom_gts_t2_b_p3}+8 max health." />
+	<string id="taom_gts_t2_b_p4" text="{=taom_gts_t2_b_p4}+3% troop damage." />
+	<string id="taom_gts_t3_a_key" text="{=taom_gts_t3_a_key}Poison Dart radius greatly expanded, inescapable volleys." />
+	<string id="taom_gts_t3_a_p1" text="{=taom_gts_t3_a_p1}+18% ranged damage." />
+	<string id="taom_gts_t3_a_p2" text="{=taom_gts_t3_a_p2}+15% armor penetration." />
+	<string id="taom_gts_t3_a_p3" text="{=taom_gts_t3_a_p3}+15% battle renown gain." />
+	<string id="taom_gts_t3_a_p4" text="{=taom_gts_t3_a_p4}+5% troop damage." />
+	<string id="taom_gts_t3_b_key" text="{=taom_gts_t3_b_key}Poison Dart charge greatly reduced, relentless fire." />
+	<string id="taom_gts_t3_b_p1" text="{=taom_gts_t3_b_p1}+15% stealth bonus." />
+	<string id="taom_gts_t3_b_p2" text="{=taom_gts_t3_b_p2}+15% movement speed." />
+	<string id="taom_gts_t3_b_p3" text="{=taom_gts_t3_b_p3}+9 max health." />
+	<string id="taom_gts_t3_b_p4" text="{=taom_gts_t3_b_p4}+15% party spotting range." />
+	<string id="taom_gwm_t1_a_key" text="{=taom_gwm_t1_a_key}Alpha Howl radius expanded, sweeping wider formations." />
+	<string id="taom_gwm_t1_a_p1" text="{=taom_gwm_t1_a_p1}+8% melee damage." />
+	<string id="taom_gwm_t1_a_p2" text="{=taom_gwm_t1_a_p2}+10% horse charge damage." />
+	<string id="taom_gwm_t1_a_p3" text="{=taom_gwm_t1_a_p3}+7% swing speed." />
+	<string id="taom_gwm_t1_a_p4" text="{=taom_gwm_t1_a_p4}+5% party movement speed." />
+	<string id="taom_gwm_t1_b_key" text="{=taom_gwm_t1_b_key}Alpha Howl duration extended, maintaining momentum." />
+	<string id="taom_gwm_t1_b_p1" text="{=taom_gwm_t1_b_p1}+10% horse health." />
+	<string id="taom_gwm_t1_b_p2" text="{=taom_gwm_t1_b_p2}+5 max health." />
+	<string id="taom_gwm_t1_b_p3" text="{=taom_gwm_t1_b_p3}-5% troop wages." />
+	<string id="taom_gwm_t1_b_p4" text="{=taom_gwm_t1_b_p4}+5% resistance." />
+	<string id="taom_gwm_t2_a_key" text="{=taom_gwm_t2_a_key}Alpha Howl charge reduced, swifter activation." />
+	<string id="taom_gwm_t2_a_p1" text="{=taom_gwm_t2_a_p1}+10% party movement speed." />
+	<string id="taom_gwm_t2_a_p2" text="{=taom_gwm_t2_a_p2}-10% troop wages." />
+	<string id="taom_gwm_t2_a_p3" text="{=taom_gwm_t2_a_p3}+10% troop morale." />
+	<string id="taom_gwm_t2_a_p4" text="{=taom_gwm_t2_a_p4}+10% battle renown gain." />
+	<string id="taom_gwm_t2_b_key" text="{=taom_gwm_t2_b_key}Alpha Howl boosts mount resilience while active." />
+	<string id="taom_gwm_t2_b_p1" text="{=taom_gwm_t2_b_p1}+12% melee damage." />
+	<string id="taom_gwm_t2_b_p2" text="{=taom_gwm_t2_b_p2}+13% horse charge damage." />
+	<string id="taom_gwm_t2_b_p3" text="{=taom_gwm_t2_b_p3}+13% horse health." />
+	<string id="taom_gwm_t2_b_p4" text="{=taom_gwm_t2_b_p4}+10% swing speed." />
+	<string id="taom_gwm_t3_a_key" text="{=taom_gwm_t3_a_key}Alpha Howl radius greatly expanded, unstoppable impact." />
+	<string id="taom_gwm_t3_a_p1" text="{=taom_gwm_t3_a_p1}+18% melee damage." />
+	<string id="taom_gwm_t3_a_p2" text="{=taom_gwm_t3_a_p2}+15% horse charge damage." />
+	<string id="taom_gwm_t3_a_p3" text="{=taom_gwm_t3_a_p3}+15% swing speed." />
+	<string id="taom_gwm_t3_a_p4" text="{=taom_gwm_t3_a_p4}+7% troop damage." />
+	<string id="taom_gwm_t3_b_key" text="{=taom_gwm_t3_b_key}Alpha Howl charge greatly reduced, ride without ceasing." />
+	<string id="taom_gwm_t3_b_p1" text="{=taom_gwm_t3_b_p1}+15% horse health." />
+	<string id="taom_gwm_t3_b_p2" text="{=taom_gwm_t3_b_p2}-15% troop wages." />
+	<string id="taom_gwm_t3_b_p3" text="{=taom_gwm_t3_b_p3}+15% party movement speed." />
+	<string id="taom_gwm_t3_b_p4" text="{=taom_gwm_t3_b_p4}+9 max health." />
+	<string id="taom_mdm_t1_a_key" text="{=taom_mdm_t1_a_key}Poison Dart radius increased, covering wider kill zones." />
+	<string id="taom_mdm_t1_a_p1" text="{=taom_mdm_t1_a_p1}+8% ranged damage." />
+	<string id="taom_mdm_t1_a_p2" text="{=taom_mdm_t1_a_p2}+5% armor penetration." />
+	<string id="taom_mdm_t1_a_p3" text="{=taom_mdm_t1_a_p3}+7% movement speed." />
+	<string id="taom_mdm_t1_a_p4" text="{=taom_mdm_t1_a_p4}+5% battle renown gain." />
+	<string id="taom_mdm_t1_b_key" text="{=taom_mdm_t1_b_key}Poison Dart duration extended, sustained barrage." />
+	<string id="taom_mdm_t1_b_p1" text="{=taom_mdm_t1_b_p1}+5% resistance." />
+	<string id="taom_mdm_t1_b_p2" text="{=taom_mdm_t1_b_p2}+5 max health." />
+	<string id="taom_mdm_t1_b_p3" text="{=taom_mdm_t1_b_p3}+5% party spotting range." />
+	<string id="taom_mdm_t1_b_p4" text="{=taom_mdm_t1_b_p4}+10% stealth bonus." />
+	<string id="taom_mdm_t2_a_key" text="{=taom_mdm_t2_a_key}Poison Dart charge reduced, maintaining constant pressure." />
+	<string id="taom_mdm_t2_a_p1" text="{=taom_mdm_t2_a_p1}+10% party spotting range." />
+	<string id="taom_mdm_t2_a_p2" text="{=taom_mdm_t2_a_p2}+10% movement speed." />
+	<string id="taom_mdm_t2_a_p3" text="{=taom_mdm_t2_a_p3}+13% stealth bonus." />
+	<string id="taom_mdm_t2_a_p4" text="{=taom_mdm_t2_a_p4}+10% battle renown gain." />
+	<string id="taom_mdm_t2_b_key" text="{=taom_mdm_t2_b_key}Poison Dart gains additional penetration while active." />
+	<string id="taom_mdm_t2_b_p1" text="{=taom_mdm_t2_b_p1}+12% ranged damage." />
+	<string id="taom_mdm_t2_b_p2" text="{=taom_mdm_t2_b_p2}+10% armor penetration." />
+	<string id="taom_mdm_t2_b_p3" text="{=taom_mdm_t2_b_p3}+8 max health." />
+	<string id="taom_mdm_t2_b_p4" text="{=taom_mdm_t2_b_p4}+3% troop damage." />
+	<string id="taom_mdm_t3_a_key" text="{=taom_mdm_t3_a_key}Poison Dart radius greatly expanded, inescapable volleys." />
+	<string id="taom_mdm_t3_a_p1" text="{=taom_mdm_t3_a_p1}+18% ranged damage." />
+	<string id="taom_mdm_t3_a_p2" text="{=taom_mdm_t3_a_p2}+15% armor penetration." />
+	<string id="taom_mdm_t3_a_p3" text="{=taom_mdm_t3_a_p3}+15% battle renown gain." />
+	<string id="taom_mdm_t3_a_p4" text="{=taom_mdm_t3_a_p4}+5% troop damage." />
+	<string id="taom_mdm_t3_b_key" text="{=taom_mdm_t3_b_key}Poison Dart charge greatly reduced, relentless fire." />
+	<string id="taom_mdm_t3_b_p1" text="{=taom_mdm_t3_b_p1}+15% stealth bonus." />
+	<string id="taom_mdm_t3_b_p2" text="{=taom_mdm_t3_b_p2}+15% movement speed." />
+	<string id="taom_mdm_t3_b_p3" text="{=taom_mdm_t3_b_p3}+9 max health." />
+	<string id="taom_mdm_t3_b_p4" text="{=taom_mdm_t3_b_p4}+15% party spotting range." />
+	<string id="taom_misty_deep_marksman_root_desc" text="{=taom_misty_deep_marksman_root_desc}Poison Dart grants +5% ranged damage with cave fungus toxin." />
+	<string id="taom_misty_troll_goad_root_desc" text="{=taom_misty_troll_goad_root_desc}Moria Frenzy grants +5 health and drives your trolls berserk." />
+	<string id="taom_misty_warg_chieftain_root_desc" text="{=taom_misty_warg_chieftain_root_desc}Alpha Howl grants +5% melee damage and the pack hunts." />
+	<string id="taom_mtg_t1_a_key" text="{=taom_mtg_t1_a_key}Moria Frenzy radius increased, empowering more warriors." />
+	<string id="taom_mtg_t1_a_p1" text="{=taom_mtg_t1_a_p1}+8% melee damage." />
+	<string id="taom_mtg_t1_a_p2" text="{=taom_mtg_t1_a_p2}+3% troop damage." />
+	<string id="taom_mtg_t1_a_p3" text="{=taom_mtg_t1_a_p3}+6 max health." />
+	<string id="taom_mtg_t1_a_p4" text="{=taom_mtg_t1_a_p4}+7% swing speed." />
+	<string id="taom_mtg_t1_b_key" text="{=taom_mtg_t1_b_key}Moria Frenzy duration extended, fortifying the defense." />
+	<string id="taom_mtg_t1_b_p1" text="{=taom_mtg_t1_b_p1}+8% resistance." />
+	<string id="taom_mtg_t1_b_p2" text="{=taom_mtg_t1_b_p2}+5% troop morale." />
+	<string id="taom_mtg_t1_b_p3" text="{=taom_mtg_t1_b_p3}+10% troop resistance." />
+	<string id="taom_mtg_t1_b_p4" text="{=taom_mtg_t1_b_p4}+5% troop survival." />
+	<string id="taom_mtg_t2_a_key" text="{=taom_mtg_t2_a_key}Moria Frenzy charge reduced, activating more frequently." />
+	<string id="taom_mtg_t2_a_p1" text="{=taom_mtg_t2_a_p1}+10% troop morale." />
+	<string id="taom_mtg_t2_a_p2" text="{=taom_mtg_t2_a_p2}+2 party size." />
+	<string id="taom_mtg_t2_a_p3" text="{=taom_mtg_t2_a_p3}+10% battle renown gain." />
+	<string id="taom_mtg_t2_a_p4" text="{=taom_mtg_t2_a_p4}-10% troop wages." />
+	<string id="taom_mtg_t2_b_key" text="{=taom_mtg_t2_b_key}Moria Frenzy grants additional defensive buffs while active." />
+	<string id="taom_mtg_t2_b_p1" text="{=taom_mtg_t2_b_p1}+12% resistance." />
+	<string id="taom_mtg_t2_b_p2" text="{=taom_mtg_t2_b_p2}+8 max health." />
+	<string id="taom_mtg_t2_b_p3" text="{=taom_mtg_t2_b_p3}+13% troop resistance." />
+	<string id="taom_mtg_t2_b_p4" text="{=taom_mtg_t2_b_p4}+5% troop damage." />
+	<string id="taom_mtg_t3_a_key" text="{=taom_mtg_t3_a_key}Moria Frenzy radius greatly expanded, devastating power." />
+	<string id="taom_mtg_t3_a_p1" text="{=taom_mtg_t3_a_p1}+15% melee damage." />
+	<string id="taom_mtg_t3_a_p2" text="{=taom_mtg_t3_a_p2}+10 max health." />
+	<string id="taom_mtg_t3_a_p3" text="{=taom_mtg_t3_a_p3}+7% troop damage." />
+	<string id="taom_mtg_t3_a_p4" text="{=taom_mtg_t3_a_p4}+4 party size." />
+	<string id="taom_mtg_t3_b_key" text="{=taom_mtg_t3_b_key}Moria Frenzy charge greatly reduced, nearly always available." />
+	<string id="taom_mtg_t3_b_p1" text="{=taom_mtg_t3_b_p1}+18% resistance." />
+	<string id="taom_mtg_t3_b_p2" text="{=taom_mtg_t3_b_p2}+15% hero health regeneration." />
+	<string id="taom_mtg_t3_b_p3" text="{=taom_mtg_t3_b_p3}+20% troop morale." />
+	<string id="taom_mtg_t3_b_p4" text="{=taom_mtg_t3_b_p4}+15% troop survival." />
+	<string id="taom_mwc_t1_a_key" text="{=taom_mwc_t1_a_key}Alpha Howl radius expanded, sweeping wider formations." />
+	<string id="taom_mwc_t1_a_p1" text="{=taom_mwc_t1_a_p1}+8% melee damage." />
+	<string id="taom_mwc_t1_a_p2" text="{=taom_mwc_t1_a_p2}+10% horse charge damage." />
+	<string id="taom_mwc_t1_a_p3" text="{=taom_mwc_t1_a_p3}+7% swing speed." />
+	<string id="taom_mwc_t1_a_p4" text="{=taom_mwc_t1_a_p4}+5% party movement speed." />
+	<string id="taom_mwc_t1_b_key" text="{=taom_mwc_t1_b_key}Alpha Howl duration extended, maintaining momentum." />
+	<string id="taom_mwc_t1_b_p1" text="{=taom_mwc_t1_b_p1}+10% horse health." />
+	<string id="taom_mwc_t1_b_p2" text="{=taom_mwc_t1_b_p2}+5 max health." />
+	<string id="taom_mwc_t1_b_p3" text="{=taom_mwc_t1_b_p3}-5% troop wages." />
+	<string id="taom_mwc_t1_b_p4" text="{=taom_mwc_t1_b_p4}+5% resistance." />
+	<string id="taom_mwc_t2_a_key" text="{=taom_mwc_t2_a_key}Alpha Howl charge reduced, swifter activation." />
+	<string id="taom_mwc_t2_a_p1" text="{=taom_mwc_t2_a_p1}+10% party movement speed." />
+	<string id="taom_mwc_t2_a_p2" text="{=taom_mwc_t2_a_p2}-10% troop wages." />
+	<string id="taom_mwc_t2_a_p3" text="{=taom_mwc_t2_a_p3}+10% troop morale." />
+	<string id="taom_mwc_t2_a_p4" text="{=taom_mwc_t2_a_p4}+10% battle renown gain." />
+	<string id="taom_mwc_t2_b_key" text="{=taom_mwc_t2_b_key}Alpha Howl boosts mount resilience while active." />
+	<string id="taom_mwc_t2_b_p1" text="{=taom_mwc_t2_b_p1}+12% melee damage." />
+	<string id="taom_mwc_t2_b_p2" text="{=taom_mwc_t2_b_p2}+13% horse charge damage." />
+	<string id="taom_mwc_t2_b_p3" text="{=taom_mwc_t2_b_p3}+13% horse health." />
+	<string id="taom_mwc_t2_b_p4" text="{=taom_mwc_t2_b_p4}+10% swing speed." />
+	<string id="taom_mwc_t3_a_key" text="{=taom_mwc_t3_a_key}Alpha Howl radius greatly expanded, unstoppable impact." />
+	<string id="taom_mwc_t3_a_p1" text="{=taom_mwc_t3_a_p1}+18% melee damage." />
+	<string id="taom_mwc_t3_a_p2" text="{=taom_mwc_t3_a_p2}+15% horse charge damage." />
+	<string id="taom_mwc_t3_a_p3" text="{=taom_mwc_t3_a_p3}+15% swing speed." />
+	<string id="taom_mwc_t3_a_p4" text="{=taom_mwc_t3_a_p4}+7% troop damage." />
+	<string id="taom_mwc_t3_b_key" text="{=taom_mwc_t3_b_key}Alpha Howl charge greatly reduced, ride without ceasing." />
+	<string id="taom_mwc_t3_b_p1" text="{=taom_mwc_t3_b_p1}+15% horse health." />
+	<string id="taom_mwc_t3_b_p2" text="{=taom_mwc_t3_b_p2}-15% troop wages." />
+	<string id="taom_mwc_t3_b_p3" text="{=taom_mwc_t3_b_p3}+15% party movement speed." />
+	<string id="taom_mwc_t3_b_p4" text="{=taom_mwc_t3_b_p4}+9 max health." />
+	<string id="taom_sbr_t1a_key" text="{=taom_sbr_t1a_key}Horns of Mûmakan radius expanded, fear spreads further." />
+	<string id="taom_sbr_t1a_p1" text="{=taom_sbr_t1a_p1}+10% horse charge damage." />
+	<string id="taom_sbr_t1a_p2" text="{=taom_sbr_t1a_p2}+8% melee damage." />
+	<string id="taom_sbr_t1a_p3" text="{=taom_sbr_t1a_p3}+5% troop morale." />
+	<string id="taom_sbr_t1a_p4" text="{=taom_sbr_t1a_p4}+5% party movement speed." />
+	<string id="taom_sbr_t1b_key" text="{=taom_sbr_t1b_key}Horns of Mûmakan duration extended, fear lingers." />
+	<string id="taom_sbr_t1b_p1" text="{=taom_sbr_t1b_p1}+10% horse health." />
+	<string id="taom_sbr_t1b_p2" text="{=taom_sbr_t1b_p2}+3% troop damage." />
+	<string id="taom_sbr_t1b_p3" text="{=taom_sbr_t1b_p3}+5% battle renown gain." />
+	<string id="taom_sbr_t1b_p4" text="{=taom_sbr_t1b_p4}+5% resistance." />
+	<string id="taom_sbr_t2a_key" text="{=taom_sbr_t2a_key}Horns of Mûmakan charge reduced, terror always imminent." />
+	<string id="taom_sbr_t2a_p1" text="{=taom_sbr_t2a_p1}+13% horse charge damage." />
+	<string id="taom_sbr_t2a_p2" text="{=taom_sbr_t2a_p2}+10% troop morale." />
+	<string id="taom_sbr_t2a_p3" text="{=taom_sbr_t2a_p3}+5% troop damage." />
+	<string id="taom_sbr_t2a_p4" text="{=taom_sbr_t2a_p4}+10% battle renown gain." />
+	<string id="taom_sbr_t2b_key" text="{=taom_sbr_t2b_key}Horns of Mûmakan boosts beast resilience during the charge." />
+	<string id="taom_sbr_t2b_p1" text="{=taom_sbr_t2b_p1}+12% melee damage." />
+	<string id="taom_sbr_t2b_p2" text="{=taom_sbr_t2b_p2}+13% horse health." />
+	<string id="taom_sbr_t2b_p3" text="{=taom_sbr_t2b_p3}+10% party movement speed." />
+	<string id="taom_sbr_t2b_p4" text="{=taom_sbr_t2b_p4}+3 party size." />
+	<string id="taom_sbr_t3a_key" text="{=taom_sbr_t3a_key}Horns of Mûmakan radius greatly expanded, the very earth shakes." />
+	<string id="taom_sbr_t3a_p1" text="{=taom_sbr_t3a_p1}+15% horse charge damage." />
+	<string id="taom_sbr_t3a_p2" text="{=taom_sbr_t3a_p2}+15% melee damage." />
+	<string id="taom_sbr_t3a_p3" text="{=taom_sbr_t3a_p3}+20% troop morale." />
+	<string id="taom_sbr_t3a_p4" text="{=taom_sbr_t3a_p4}+15% battle renown gain." />
+	<string id="taom_sbr_t3b_key" text="{=taom_sbr_t3b_key}Horns of Mûmakan charge greatly reduced, unending dread." />
+	<string id="taom_sbr_t3b_p1" text="{=taom_sbr_t3b_p1}+15% horse health." />
+	<string id="taom_sbr_t3b_p2" text="{=taom_sbr_t3b_p2}+15% party movement speed." />
+	<string id="taom_sbr_t3b_p3" text="{=taom_sbr_t3b_p3}+7% troop damage." />
+	<string id="taom_sbr_t3b_p4" text="{=taom_sbr_t3b_p4}+9 max health." />
+	<string id="taom_scj_t1a_key" text="{=taom_scj_t1a_key}Chatâk Volley radius increased, javelins cover wider ground." />
+	<string id="taom_scj_t1a_p1" text="{=taom_scj_t1a_p1}+8% ranged damage." />
+	<string id="taom_scj_t1a_p2" text="{=taom_scj_t1a_p2}+10% ammo." />
+	<string id="taom_scj_t1a_p3" text="{=taom_scj_t1a_p3}+7% movement speed." />
+	<string id="taom_scj_t1a_p4" text="{=taom_scj_t1a_p4}+5% battle renown gain." />
+	<string id="taom_scj_t1b_key" text="{=taom_scj_t1b_key}Chatâk Volley duration extended, sustained harassing fire." />
+	<string id="taom_scj_t1b_p1" text="{=taom_scj_t1b_p1}+5% resistance." />
+	<string id="taom_scj_t1b_p2" text="{=taom_scj_t1b_p2}+5 max health." />
+	<string id="taom_scj_t1b_p3" text="{=taom_scj_t1b_p3}+3% troop damage." />
+	<string id="taom_scj_t1b_p4" text="{=taom_scj_t1b_p4}+5% party spotting range." />
+	<string id="taom_scj_t2a_key" text="{=taom_scj_t2a_key}Chatâk Volley charge reduced, never out of javelins." />
+	<string id="taom_scj_t2a_p1" text="{=taom_scj_t2a_p1}+13% ammo." />
+	<string id="taom_scj_t2a_p2" text="{=taom_scj_t2a_p2}+10% ranged damage." />
+	<string id="taom_scj_t2a_p3" text="{=taom_scj_t2a_p3}+10% movement speed." />
+	<string id="taom_scj_t2a_p4" text="{=taom_scj_t2a_p4}+10% battle renown gain." />
+	<string id="taom_scj_t2b_key" text="{=taom_scj_t2b_key}Chatâk Volley boosts screening effectiveness while active." />
+	<string id="taom_scj_t2b_p1" text="{=taom_scj_t2b_p1}+12% ranged damage." />
+	<string id="taom_scj_t2b_p2" text="{=taom_scj_t2b_p2}+8 max health." />
+	<string id="taom_scj_t2b_p3" text="{=taom_scj_t2b_p3}+5% troop damage." />
+	<string id="taom_scj_t2b_p4" text="{=taom_scj_t2b_p4}+10% party spotting range." />
+	<string id="taom_scj_t3a_key" text="{=taom_scj_t3a_key}Chatâk Volley radius greatly expanded, an inescapable barrage." />
+	<string id="taom_scj_t3a_p1" text="{=taom_scj_t3a_p1}+15% ranged damage." />
+	<string id="taom_scj_t3a_p2" text="{=taom_scj_t3a_p2}+15% ammo." />
+	<string id="taom_scj_t3a_p3" text="{=taom_scj_t3a_p3}+15% battle renown gain." />
+	<string id="taom_scj_t3a_p4" text="{=taom_scj_t3a_p4}+15% movement speed." />
+	<string id="taom_scj_t3b_key" text="{=taom_scj_t3b_key}Chatâk Volley charge greatly reduced, unrelenting harassment." />
+	<string id="taom_scj_t3b_p1" text="{=taom_scj_t3b_p1}+15% ranged damage." />
+	<string id="taom_scj_t3b_p2" text="{=taom_scj_t3b_p2}+9 max health." />
+	<string id="taom_scj_t3b_p3" text="{=taom_scj_t3b_p3}+7% troop damage." />
+	<string id="taom_scj_t3b_p4" text="{=taom_scj_t3b_p4}+15% party spotting range." />
+	<string id="taom_shaghana_beast_rider_root_desc" text="{=taom_shaghana_beast_rider_root_desc}Horns of Mûmakan grants +10% horse charge damage and spreads fear." />
+	<string id="taom_shaghana_chatak_javelineer_root_desc" text="{=taom_shaghana_chatak_javelineer_root_desc}Chatâk Volley grants +5% ranged damage and quickens javelin throws." />
+	<string id="taom_shaghana_zajana_tribesman_root_desc" text="{=taom_shaghana_zajana_tribesman_root_desc}Serpent-Venom Blades grants +5% melee damage and applies attrition effects." />
+	<string id="taom_szt_t1a_key" text="{=taom_szt_t1a_key}Serpent-Venom Blades radius increased, the toxin spreads wider." />
+	<string id="taom_szt_t1a_p1" text="{=taom_szt_t1a_p1}+8% melee damage." />
+	<string id="taom_szt_t1a_p2" text="{=taom_szt_t1a_p2}+3% troop damage." />
+	<string id="taom_szt_t1a_p3" text="{=taom_szt_t1a_p3}+7% swing speed." />
+	<string id="taom_szt_t1a_p4" text="{=taom_szt_t1a_p4}+5% battle renown gain." />
+	<string id="taom_szt_t1b_key" text="{=taom_szt_t1b_key}Serpent-Venom Blades duration extended, the toxin lingers." />
+	<string id="taom_szt_t1b_p1" text="{=taom_szt_t1b_p1}+6% resistance." />
+	<string id="taom_szt_t1b_p2" text="{=taom_szt_t1b_p2}+6 max health." />
+	<string id="taom_szt_t1b_p3" text="{=taom_szt_t1b_p3}+5% movement speed." />
+	<string id="taom_szt_t1b_p4" text="{=taom_szt_t1b_p4}+5% troop morale." />
+	<string id="taom_szt_t2a_key" text="{=taom_szt_t2a_key}Serpent-Venom Blades charge reduced, strike more frequently." />
+	<string id="taom_szt_t2a_p1" text="{=taom_szt_t2a_p1}+5% troop damage." />
+	<string id="taom_szt_t2a_p2" text="{=taom_szt_t2a_p2}+10% melee damage." />
+	<string id="taom_szt_t2a_p3" text="{=taom_szt_t2a_p3}+10% battle renown gain." />
+	<string id="taom_szt_t2a_p4" text="{=taom_szt_t2a_p4}+3 party size." />
+	<string id="taom_szt_t2b_key" text="{=taom_szt_t2b_key}Serpent-Venom Blades boosts attrition, sapping enemy will to fight." />
+	<string id="taom_szt_t2b_p1" text="{=taom_szt_t2b_p1}+10% swing speed." />
+	<string id="taom_szt_t2b_p2" text="{=taom_szt_t2b_p2}+8 max health." />
+	<string id="taom_szt_t2b_p3" text="{=taom_szt_t2b_p3}+10% resistance." />
+	<string id="taom_szt_t2b_p4" text="{=taom_szt_t2b_p4}+10% troop morale." />
+	<string id="taom_szt_t3a_key" text="{=taom_szt_t3a_key}Serpent-Venom Blades radius greatly expanded, a cloud of toxin." />
+	<string id="taom_szt_t3a_p1" text="{=taom_szt_t3a_p1}+15% melee damage." />
+	<string id="taom_szt_t3a_p2" text="{=taom_szt_t3a_p2}+9 max health." />
+	<string id="taom_szt_t3a_p3" text="{=taom_szt_t3a_p3}+7% troop damage." />
+	<string id="taom_szt_t3a_p4" text="{=taom_szt_t3a_p4}+15% battle renown gain." />
+	<string id="taom_szt_t3b_key" text="{=taom_szt_t3b_key}Serpent-Venom Blades charge greatly reduced, constant attrition." />
+	<string id="taom_szt_t3b_p1" text="{=taom_szt_t3b_p1}+15% resistance." />
+	<string id="taom_szt_t3b_p2" text="{=taom_szt_t3b_p2}+20% troop morale." />
+	<string id="taom_szt_t3b_p3" text="{=taom_szt_t3b_p3}+8% troop damage." />
+	<string id="taom_szt_t3b_p4" text="{=taom_szt_t3b_p4}+5 party size." />
+
+</strings>

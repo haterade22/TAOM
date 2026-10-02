@@ -3,6 +3,7 @@ using NSubstitute;
 using TAOM.Core.Domain;
 using TAOM.Features.Arena;
 using TAOM.Features.ArmourAcquisition;
+using TAOM.Features.TournamentRewards;
 
 namespace TAOM.Tests.Features.Arena;
 
@@ -38,7 +39,9 @@ public class TournamentServiceTests
         _raceManager.GetRaceNameFromId(ElfRaceId).Returns("elf");
         _raceManager.GetRaceNameFromId(OrcRaceId).Returns("orc");
 
-        _sut = new TournamentService(_raceManager, Substitute.For<IArmourGateService>());
+        var rewards = new TournamentRewardsService(Substitute.For<ITournamentRewardsSettingsProvider>(),
+            Substitute.For<ITournamentRewardsConfigProvider>(), Substitute.For<TAOM.Adapters.IHeroSkillXpAdapter>());
+        _sut = new TournamentService(_raceManager, Substitute.For<IArmourGateService>(), rewards);
     }
 
     // --- CalculateStartChance ---

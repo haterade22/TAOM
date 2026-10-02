@@ -138,6 +138,22 @@ The first cut of the `ActionIndexCache` repair retried from `CharacterSpawnerSer
   uncovered gets wired, or gets an issue, in the same change. Fixed by the repair call in the
   Patch55 prefix, pinned by `HeroRaceWiringTests`.
 
+### A clip reused on an action vanilla loops must loop too, or the screen falls to bind pose (2026-10-02)
+
+The hill troll's action set reused its Fab idles (5.4 s and 4.57 s one-shots) for the inventory, conversation and
+cheer codes. Vanilla's clips behind those codes are `cyclic` or continue into one that is, and the party screen,
+encyclopedia, map conversation and victory logic set the action once. When the troll clip ended nothing followed,
+and about five seconds in the troll lay flat in bind pose. Battles hid it, because the mission re-issues stand idles
+and vanilla's own `troop_stand_*` clips are one-shots.
+- **Why missed:** the bind checked that each code resolves to a clip that exists, not that the clip keeps playing
+  the way the replaced clip did. A clip's loop and continue-to live in its `AnimationClip` definition (the `_anm.tpac`
+  or `animation_clips.tpac`), which no action-set audit reads. The gap was even written down as an OPEN item and
+  waited a week for a player report.
+- **Prevent:** when a clip replaces a vanilla clip for an action code, copy the vanilla clip's `cyclic` flag and
+  `ContinueWithAction` too (read both with `TpacTool`'s `AnimationClip`), and look at every screen, conversation or
+  cheer code for at least one clip length in game before calling the bind done.
+- **Source:** `docs/features/troll-race.md` Track 1, "The party-screen bind pose, the reused idles made cyclic".
+
 ### A VALID action set is not a posed character — check the clip, not the handle
 
 - **Symptom:** every diagnostic written for the prone-tableau bug stopped at `MBActionSet.IsValid`,
@@ -1304,3 +1320,17 @@ nothing for `ManagedMeshEditOperations`, whose names are in `TaleWorlds.Engine.d
 - **Prevent:** say "does not exist" only after a full listing or a search of the DLL itself; when `taom-src` finds
   nothing, search the assembly's strings before concluding.
 - **Source:** `docs/reference/head-mesh-and-groom-authoring.md` section 6.
+
+### An upper mesh with no skin weights ships silently; dump the weights before blaming morphs (2026-10-02)
+`SK_Dwarf_Beard_A_12` reached four dwarf skins with all 15,344 vertices unweighted in every LOD, while beards 01 to
+11 in the same FBX are weighted to `head` and `neck`. Nothing failed: the Kit compiled it, the engine loaded it, and
+it only showed in game as a beard that did not move with the head. A first pass copied the head mesh's weights; it
+was replaced with the sibling beards' weights, because nothing of the head lies near a braid, so the braid's
+head-to-chest fade would have followed distance from the neck skin rather than the artist's painting.
+- **Why missed:** every check on the dwarf upper meshes measured morph channels (`check_race_morph_channels.py`, the
+  09-29 brow investigation); none read weights.
+- **Prevent:** when a hair or beard misbehaves, dump its weights next to a working sibling's first (the Blender
+  inspect in `tools/blender/transfer_upper_mesh_weights.py`'s report, or TpacTool on the package). Fill missing weights
+  from finished siblings in the same FBX when they exist, and from the head only when they do not.
+- **Source:** `docs/reference/race-face-and-hand-morphs.md` "Hair, beards and eyebrows";
+  `docs/reference/lotrlome-armory-snapshot/README.md` "skin weights on the dwarf beard".

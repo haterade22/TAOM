@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.TournamentGames;
@@ -31,6 +32,19 @@ public interface ITournamentService
     /// culture's when it has none, so the list is empty only if no loaded item fits the band at all.
     /// </summary>
     MBList<ItemObject> BuildPrizePool(string? cultureId, PrizeBand band);
+
+    /// <summary>
+    /// The prizes offered at Join (TournamentPrizeRules.PickChoices): the advertised prize first, then up to
+    /// two alternatives from its band's pool, the same three for one tournament.
+    /// </summary>
+    IReadOnlyList<string> PrizeChoices(string? cultureId, string advertisedItemId, string seedKey);
+
+    /// <summary>A tournament winner's renown (docs/features/tournament-rewards.md), from vanilla's answer.</summary>
+    int RenownReward(int vanillaRenown, string? townId, string? winnerCultureId);
+
+    /// <summary>A tournament winner's influence: the bonus only in a town of the winner's own kingdom.</summary>
+    int InfluenceReward(int vanillaInfluence, string? townId, string? winnerCultureId,
+        string? winnerKingdomId, string? townKingdomId);
 
     /// <summary>Resolve the dummy-character ID for participant armor selection.</summary>
     string ResolveDummyId(string participantCultureId, string settlementCultureId);

@@ -79,6 +79,7 @@ One external configuration file: `custom_battle/custom_battle_commanders.json` (
 ### Faction Selection Criteria
 - `CanHaveSettlement = true`
 - `IsBandit = false`
+- Has a faction banner: `faction_banner_key` is present and parses to at least one layer. Vanilla `CustomBattleHelper.GetCustomBattleParties` recolours layer 0 of each side's culture banner on Start without a length check, so a culture with no key throws `ArgumentOutOfRangeException` (crash f9a7181d). This keeps out vanilla's minor cultures `nord`, `vakken` and `darshi`, leaving the 22 TAOM factions.
 - Non-empty culture ID
 
 ### Commander Selection Criteria
@@ -139,7 +140,7 @@ One external configuration file: `custom_battle/custom_battle_commanders.json` (
 
 | Test File | Methods | Coverage |
 |-----------|---------|----------|
-| `TAOM.Tests/Features/CustomBattles/CustomBattleServiceTests.cs` | 30 | Faction filtering, commander filtering, formation mapping, takeMax cap, null/empty edge cases + **8 curated-branch tests** (curated order preserved, regex+cap bypass, culture-filter bypass, all-unresolvable → fallback-to-default, partially-resolvable → only-existing-in-order, non-curated default path, null guard precedes provider, master list unchanged) |
+| `TAOM.Tests/Features/CustomBattles/CustomBattleServiceTests.cs` | 32 | Faction filtering (one isolating test per clause: settlement, bandit, faction banner), commander filtering, formation mapping, takeMax cap, null/empty edge cases + **8 curated-branch tests** (curated order preserved, regex+cap bypass, culture-filter bypass, all-unresolvable → fallback-to-default, partially-resolvable → only-existing-in-order, non-curated default path, null guard precedes provider, master list unchanged) |
 | `TAOM.Tests/Features/CustomBattles/CustomBattleCommandersProviderTests.cs` | 16 | Config load + validation: order preserved (incl. 3-segment/>3-length), case-insensitive keys, missing/malformed file, no-factions-map, empty/whitespace id, dedupe, empty/unknown faction key, all-invalid faction not registered, info-not-warning, lazy caching |
 | `TAOM.Tests/Features/CustomBattles/CustomBattleCommandersShippedDataTests.cs` | 2 | Shipped-data regression: every curated faction key is a known culture + curated, and every shipped lord id exists as a real NPCCharacter in `lords.xml`/`lords.xslt` |
 | `TAOM.Tests/Features/CustomBattles/CuratedDropdownIndependenceTests.cs` | 1 | Pins the master-list/dropdown decoupling (curated id absent from `GetCommanderIds()` still resolves) |
@@ -157,7 +158,7 @@ Patches and `CustomBattleTeamFixBehavior` are thin entry points — tested indir
 
 1. Create the troop tree XML in `Main/_Module/ModuleData/troops/troops_{culture}.xml`
 2. Register it in `SubModule.xml` with `<GameType value="CustomGame"/>` and `<GameType value="EditorGame"/>`
-3. Ensure the culture has `CanHaveSettlement="true"` in its `SPCultures` definition
+3. Ensure the culture has `can_have_settlement="true"` and a `faction_banner_key` in its `SPCultures` definition. A culture without the key is left out of the picker, and the only trace is the faction count that `CustomBattleFactionsHook` logs ("Loaded 22 TAOM factions" today).
 4. The CustomBattleService will automatically pick it up — no code changes needed
 
 ### How to add a new commander
@@ -183,6 +184,7 @@ The formation mapping uses culture militia properties from `BasicCultureObject`/
 
 ## Changelog
 
+- 2026-10-02: the faction picker now lists only cultures with a faction banner. Vanilla v1.5.3's minor cultures `nord`, `vakken` and `darshi` can own settlements but have no `faction_banner_key`, so they passed the old filter, and picking one crashed Start inside vanilla `Banner.ChangePrimaryColor` (crash f9a7181d). New `CultureInfo.HasFactionBanner` in `ObjectManagerAdapter`; the picker goes from 25 to 22 factions. The two older clauses also got isolating tests. RCA: `docs/reviews/rca-custom-battle-bannerless-factions-2026-10-02.md`.
 - 2026-06-27 — Codex review fix: a curated faction whose ids ALL fail to resolve (typo / removed lord) now falls back to the default per-culture selection instead of leaving the dropdown on the vanilla global list. The service filters curated ids by character existence; if none survive it logs a warning and uses the default path. Added 2 fallback tests + a shipped-data regression test (`CustomBattleCommandersShippedDataTests`) that cross-checks every shipped id against `lords.xml`/`lords.xslt`. Also fixed a "No external configuration files" doc-drift line. RCA: `docs/reviews/rca-custom-battle-lords-2026-06-27.md`.
 - 2026-06-27 — Added curated per-faction commander lists (`custom_battle/custom_battle_commanders.json` + validating `CustomBattleCommandersProvider`). A configured faction shows an exact ordered list of named lords, bypassing the alphabetical cap, the 2-segment-id regex, and the culture filter; unconfigured factions keep the default. Ships lists for Mordor, Gondor, Rohan, Mirkwood, Rivendell, Lothlórien, Isengard, Erebor. Also reassigned the 3 lesser Nazgûl (`lord_1_48_1/2/3`) from `dolguldur` to `mordor` culture (Khamûl stays Dol Guldur).
 - 2026-05-13 — Verified the `CustomBattleSideVM.OnCultureSelection(BasicCultureObject)` private signature against the installed CustomBattle DLL and documented the assembly path inline so the Patch19 hook target won't silently break (#162).

@@ -1478,41 +1478,5 @@
     <string id="TAOM_hero_SE9_s_bn" text="Pharazîn to czarnonúmenorejska czarodziejka i prawdziwa władza w Cirith Nargil, ilekroć jej mąż wyrusza w pole. Jej imię przywodzi na myśl ostatniego Króla Númenoru." />
     <string id="TAOM_hero_SE9_c1_bn" text="Zigûrbêl jest dziedzicem Cirith Nargil, wyszkolonym w mrocznych sztukach. Jego imię znaczy Miłujący Czarnoksiężnika — tak Númenor nazywał Saurona, zanim poznał jego prawdziwą naturę." />
     <string id="TAOM_hero_SE9_c2_bn" text="Zimrazîn jest drugim dzieckiem Pana Miecza i groźniejszym z tej dwójki. Odziedziczyła talenty matki, lecz nic z jej cierpliwości." />
-    <string id="3UucAOBW" text="Jestem {CONVERSATION_CHARACTER.LINK} z rodu {CLAN_NAME}." />
-    <string id="62vceTar" text="Jestem {CONVERSATION_CHARACTER.LINK}, z rodu {CLAN_NAME}." />
-    <string id="99gE1ZoY" text="Jestem {CONVERSATION_CHARACTER.LINK}, z {FACTION}." />
-    <string id="AxMrFoea" text="{TOWN_NAME} zostało oblężone przez siły dowodzone przez {LORD.LINK} z {FACTION_NAME}!" />
-    <string id="EHFibjkM" text="{TOWN_NAME} zostało oblężone przez armię dowodzoną przez {LORD.LINK} z {FACTION_NAME}!" />
-    <string id="ExbVzTZA" text="{CLAN} zawarł umowę, by walczyć u boku {KINGDOM}." />
-    <string id="FFXqPFwl" text="Jestem {CONVERSATION_CHARACTER.LINK}, z rodu {CLAN_NAME}, jednego z najznamienitszych rodów w kronikach królestwa Vlandii." />
-    <string id="JJAWbuNT" text="Jestem {CONVERSATION_CHARACTER.LINK}, z rodu {CLAN_NAME}. Powiadają, że nasz przodek był wśród tych, którzy przybyli na złotych okrętach z Zachodu w Czasach Bohaterów. Rzecz jasna, gdyby wszyscy, o których mówi się, że byli na tych statkach, naprawdę tam byli, łodzie zatonęłyby pod ciężarem." />
-    <string id="L2GbDVja" text="Jestem {CONVERSATION_CHARACTER.LINK} z rodu {CLAN_NAME}, {?PLAYER.GENDER}pani{?}panie{\?}, i jestem zaszczycony, mogąc ci służyć." />
-    <string id="Nq2dyiO1" text="Jestem {CONVERSATION_CHARACTER.LINK}, z rodu {CLAN_NAME}, którego imię nieraz słyszałeś w sagach Sturgian." />
-    <string id="PBgLvyOa" text="Jestem {CONVERSATION_CHARACTER.LINK}, z rodu {CLAN_NAME}. Nasi przodkowie byli wśród tych, którzy przybyli z dalekiej północy, by wziąć denary książąt i przysiąc obronę tych ziem — i dochowaliśmy tej przysięgi." />
-    <string id="S0oFKYfB" text="{CLAN} nie służy już {KINGDOM}." />
-    <string id="S1vGzr8z" text="Jestem {CONVERSATION_CHARACTER.LINK}, z rodu {CLAN_NAME}, klanu Aserajów." />
-    <string id="SLAkSrb5" text="{FACTION1_NAME} wypowiada wojnę {FACTION2_NAME}." />
-    <string id="TsYCa2fZ" text="{FACTION1} i {FACTION2} zawarły pokój." />
-    <string id="U4p70l9B" text="Jestem {CONVERSATION_CHARACTER.LINK} z rodu {CLAN_NAME}." />
-    <string id="U770Bvy8" text="Jestem {CONVERSATION_CHARACTER.LINK}, z rodu {CLAN_NAME}. Sława naszej rodziny nie ma sobie równych w pieśniach Battanów." />
-    <string id="Ua0T0A7t" text="Jestem {CONVERSATION_CHARACTER.LINK}, z rodu {CLAN_NAME}, jednego z pradawnych rodów Battanów." />
-    <string id="WH8P3Y5F" text="Jestem {CONVERSATION_CHARACTER.LINK} z rodu {CLAN_NAME}." />
-    <string id="a8584KD0" text="Jestem {CONVERSATION_CHARACTER.LINK}, z rodu {CLAN_NAME}. Z pewnością słyszałeś imię naszego klanu w eposach stepu. Nosimy imię jednego z 12 synów wielkiej wilczycy, matki Chuzaitów." />
-    <string id="cMO9JXvk" text="Jestem {CONVERSATION_CHARACTER.LINK}, z rodu {CLAN_NAME}. Dzierżymy nasze ziemie w lenno od {LIEGE_TITLE} i dochowujemy przysiąg wierności." />
-    <string id="dC8acIya" text="Jestem {CONVERSATION_CHARACTER.LINK} z rodu {CLAN_NAME}." />
-    <string id="dfAE3liA" text="Ród {CLAN_NAME} przyłączył się do {FACTION}." />
-    <string id="dlkg2jQf" text="Jestem {CONVERSATION_CHARACTER.LINK}, z rodu {CLAN_NAME}, jednego z pradawnych rodów Sturgian." />
-    <string id="eyxfHmCU" text="Jestem {CONVERSATION_CHARACTER.LINK} z rodu {CLAN_NAME}. Nasza rodzina od pokoleń służy królom Vlandii." />
-    <string id="hJFCi1zu" text="{FACTION1} i {FACTION2} zawarły pokój." />
-    <string id="hP57Caab" text="{VICTOR_PARTY} z {VICTOR_FACTION} pokonuje {DEFEATED_PARTY} z {DEFEATED_FACTION}." />
-    <string id="hbWhfoWH" text="{SETTLEMENT} zostaje splądrowane przez {LORD.LINK} z {FACTION_NAME}" />
-    <string id="hopvV6Ch" text="{RULER_NAME} z {FACTION1_NAME} wypowiada wojnę {FACTION2_NAME}." />
-    <string id="kqwNCCbZ" text="{TOWN_NAME} zostało oblężone przez armię dowodzoną przez {LORD.LINK} z {FACTION_NAME}!" />
-    <string id="l2nEIZV5" text="Jestem {CONVERSATION_CHARACTER.LINK} z rodu {CLAN_NAME}." />
-    <string id="nbVW2cJ8" text="{SETTLEMENT} zostaje splądrowane przez armię dowodzoną przez {LORD.LINK} z {FACTION_NAME}" />
-    <string id="pn79h0aj" text="Jestem {CONVERSATION_CHARACTER.LINK} z rodu {CLAN_NAME}. Nasz tytuł otrzymaliśmy od samego cesarza Vortiosa. Nie żeby miał wielki wybór, jako że przebywał wówczas jako jeniec na jednym z naszych okrętów łupieżczych, lecz jestem pewien, że dostrzegł szlachetność naszej krwi." />
-    <string id="rhTUDKhJ" text="Jestem {CONVERSATION_CHARACTER.LINK} z rodu {CLAN_NAME}. Nie ma takiego klanu Battanów, który nie oddałby czaszki jednego ze swych mistrzów do naszej kolekcji pucharów." />
-    <string id="z2yr4mc6" text="Jestem {CONVERSATION_CHARACTER.LINK} z rodu {CLAN_NAME}. Nasz klan od pokoleń wiernie służy Chanatowi Chuzaitów." />
-    <string id="zZ9FQJRI" text="Jestem {CONVERSATION_CHARACTER.LINK} z rodu {CLAN_NAME}, najstarszego i najszlachetniejszego z rodów Aserai." />
   </strings>
 </base>

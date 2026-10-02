@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+
+  <!-- Custom Battle only (SubModule.xml registers this file for CustomGame, before the lords node).
+       Each entry is a bare stub for a curated Custom Battle commander that TAOM builds from a vanilla
+       SandBox lord in lords.xslt. SandBox registers its lords.xml for Campaign and CampaignStoryMode
+       only, so in a Custom Battle those lords do not exist and the lords.xslt template has nothing to
+       rebuild. The engine applies each node's XSLT to everything merged before it
+       (MBObjectManager.CreateMergedXmlFile, v1.5.3), so lords.xslt turns each stub into the full
+       character: name, race, face, skills and equipment all come from the template, none from here.
+       The culture is repeated only because NPCCharacters.xsd requires the attribute.
+       Add an id here only when custom_battle/custom_battle_commanders.json lists it and
+       characters/lords.xml does not define it; CustomBattleLordStubsTests checks both. -->
+
+  <!-- Mordor -->
+  <NPCCharacter id="lord_1_17" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_15" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_63" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_54" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_155" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_16" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_28" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_38" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_48" culture="Culture.dolguldur" />
+  <NPCCharacter id="lord_1_48_1" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_48_2" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_48_3" culture="Culture.mordor" />
+
+  <!-- Gondor -->
+  <NPCCharacter id="lord_1_75" culture="Culture.gondor" />
+  <NPCCharacter id="lord_1_34" culture="Culture.gondor" />
+  <NPCCharacter id="lord_1_9" culture="Culture.gondor" />
+  <NPCCharacter id="lord_1_45" culture="Culture.gondor" />
+  <NPCCharacter id="lord_1_71" culture="Culture.gondor" />
+  <NPCCharacter id="lord_1_52" culture="Culture.gondor" />
+  <NPCCharacter id="lord_1_53" culture="Culture.gondor" />
+
+  <!-- Rohan (culture id vlandia) -->
+  <NPCCharacter id="lord_4_1" culture="Culture.vlandia" />
+  <NPCCharacter id="lord_4_7" culture="Culture.vlandia" />
+  <NPCCharacter id="lord_4_16" culture="Culture.vlandia" />
+  <NPCCharacter id="lord_4_6" culture="Culture.vlandia" />
+  <NPCCharacter id="lord_4_28" culture="Culture.vlandia" />
+
+</NPCCharacters>

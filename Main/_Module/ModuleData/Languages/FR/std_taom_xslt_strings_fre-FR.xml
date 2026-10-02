@@ -1478,41 +1478,5 @@
     <string id="TAOM_hero_SE9_s_bn" text="Pharazîn est une sorcière númenórienne noire, et la véritable autorité à Cirith Nargil dès que son époux part en campagne. Son nom rappelle le dernier Roi de Númenor." />
     <string id="TAOM_hero_SE9_c1_bn" text="Zigûrbêl est l'héritier de Cirith Nargil et il est instruit dans les arts sombres. Son nom signifie Amant du Magicien, ainsi que Númenor appelait Sauron avant d'apprendre ce qu'il était." />
     <string id="TAOM_hero_SE9_c2_bn" text="Zimrazîn est le second enfant du Seigneur-Épée, et la plus dangereuse des deux. Elle a les talents de sa mère et rien de sa patience." />
-    <string id="3UucAOBW" text="Je suis {CONVERSATION_CHARACTER.LINK} de {CLAN_NAME}." />
-    <string id="62vceTar" text="Je suis {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}." />
-    <string id="99gE1ZoY" text="Je suis {CONVERSATION_CHARACTER.LINK}, de {FACTION}." />
-    <string id="AxMrFoea" text="{TOWN_NAME} est assiégée par des forces menées par {LORD.LINK} de {FACTION_NAME} !" />
-    <string id="EHFibjkM" text="{TOWN_NAME} est assiégée par l'armée menée par {LORD.LINK} de {FACTION_NAME} !" />
-    <string id="ExbVzTZA" text="{CLAN} s'est engagé à combattre aux côtés de {KINGDOM}." />
-    <string id="FFXqPFwl" text="Je suis {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}, l'une des familles les plus illustres des annales du royaume vlandien." />
-    <string id="JJAWbuNT" text="Je suis {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}. On dit que notre ancêtre était parmi ceux qui vinrent sur les navires d'or arrivés en ces terres depuis l'Ouest, au Temps des Héros. Bien sûr, si l'on croyait que tous ceux dont on dit qu'ils étaient à bord y étaient vraiment, ces bateaux auraient chaviré sous le poids." />
-    <string id="L2GbDVja" text="Je suis {CONVERSATION_CHARACTER.LINK} de {CLAN_NAME}, ma {?PLAYER.GENDER}dame{?}mon seigneur{\?}, et je suis honoré de vous servir." />
-    <string id="Nq2dyiO1" text="Je suis {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}, un nom que vous aurez entendu maintes fois dans les sagas des Sturgiens." />
-    <string id="PBgLvyOa" text="Je suis {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}. Nos ancêtres furent parmi ceux qui vinrent du grand nord pour prendre le denier des princes et jurer de défendre ces terres, et nous sommes restés fidèles à ce serment." />
-    <string id="S0oFKYfB" text="{CLAN} ne sert plus {KINGDOM}." />
-    <string id="S1vGzr8z" text="Je suis {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}, un clan des Aserai." />
-    <string id="SLAkSrb5" text="{FACTION1_NAME} déclare la guerre à {FACTION2_NAME}." />
-    <string id="TsYCa2fZ" text="{FACTION1} et {FACTION2} ont fait la paix." />
-    <string id="U4p70l9B" text="Je suis {CONVERSATION_CHARACTER.LINK} de {CLAN_NAME}." />
-    <string id="U770Bvy8" text="Je suis {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}. La renommée de notre famille n'a pas d'égale dans les chants des Battaniens." />
-    <string id="Ua0T0A7t" text="Je suis {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}, l'une des anciennes lignées des Battaniens." />
-    <string id="WH8P3Y5F" text="Je suis {CONVERSATION_CHARACTER.LINK} de {CLAN_NAME}." />
-    <string id="a8584KD0" text="Je suis {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}. Je suis sûr que vous avez entendu le nom de notre clan dans les épopées de la steppe. Nous portons le nom de l'un des 12 fils de la grande louve, mère des Khuzaïts." />
-    <string id="cMO9JXvk" text="Je suis {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}. Nous tenons nos terres en fief de {LIEGE_TITLE}, et nous honorons nos serments de fidélité." />
-    <string id="dC8acIya" text="Je suis {CONVERSATION_CHARACTER.LINK} de {CLAN_NAME}." />
-    <string id="dfAE3liA" text="Le clan {CLAN_NAME} a rejoint {FACTION}." />
-    <string id="dlkg2jQf" text="Je suis {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}, l'une des anciennes lignées des Sturgiens." />
-    <string id="eyxfHmCU" text="Je suis {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}. Notre famille sert les rois vlandiens depuis des générations." />
-    <string id="hJFCi1zu" text="{FACTION1} et {FACTION2} ont fait la paix." />
-    <string id="hP57Caab" text="{VICTOR_PARTY} de {VICTOR_FACTION} défait {DEFEATED_PARTY} de {DEFEATED_FACTION}." />
-    <string id="hbWhfoWH" text="{SETTLEMENT} est pillé par {LORD.LINK} de {FACTION_NAME}" />
-    <string id="hopvV6Ch" text="{RULER_NAME} de {FACTION1_NAME} déclare la guerre à {FACTION2_NAME}." />
-    <string id="kqwNCCbZ" text="{TOWN_NAME} est assiégée par l'armée menée par {LORD.LINK} de {FACTION_NAME} !" />
-    <string id="l2nEIZV5" text="Je suis {CONVERSATION_CHARACTER.LINK} de {CLAN_NAME}." />
-    <string id="nbVW2cJ8" text="{SETTLEMENT} est pillé par l'armée menée par {LORD.LINK} de {FACTION_NAME}" />
-    <string id="pn79h0aj" text="Je suis {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}. Nous tenons notre titre de l'empereur Vortios lui-même. Non qu'il eût vraiment le choix, étant alors retenu captif dans l'un de nos navires de raid, mais je suis certain qu'il a reconnu la noblesse de notre sang." />
-    <string id="rhTUDKhJ" text="Je suis {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}. Il n'est pas un clan battanien qui n'ait offert le crâne d'un de ses champions à notre collection de coupes à boire." />
-    <string id="z2yr4mc6" text="Je suis {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}. Notre clan sert loyalement le Khanat khuzaït depuis des générations." />
-    <string id="zZ9FQJRI" text="Je suis {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}, la plus ancienne et la plus noble des lignées aserai." />
   </strings>
 </base>

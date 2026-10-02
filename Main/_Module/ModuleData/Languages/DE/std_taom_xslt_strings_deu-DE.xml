@@ -1478,41 +1478,5 @@
     <string id="TAOM_hero_SE9_s_bn" text="Pharazîn ist eine schwarznúmenórische Zauberin und die wahre Herrin von Cirith Nargil, sooft ihr Gemahl zu Felde zieht. Ihr Name erinnert an den letzten König von Númenor." />
     <string id="TAOM_hero_SE9_c1_bn" text="Zigûrbêl ist der Erbe von Cirith Nargil und in den dunklen Künsten geschult. Sein Name bedeutet Liebhaber des Zauberers – so nannte Númenor Sauron, ehe es erkannte, was er war." />
     <string id="TAOM_hero_SE9_c2_bn" text="Zimrazîn ist das zweite Kind des Schwertherrn und die gefährlichere der beiden. Sie hat die Gaben ihrer Mutter und nichts von deren Geduld." />
-    <string id="3UucAOBW" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}." />
-    <string id="62vceTar" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}." />
-    <string id="99gE1ZoY" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {FACTION}." />
-    <string id="AxMrFoea" text="{TOWN_NAME} wird von Truppen belagert, die {LORD.LINK} von {FACTION_NAME} anführt!" />
-    <string id="EHFibjkM" text="{TOWN_NAME} wird von dem Heer belagert, das {LORD.LINK} von {FACTION_NAME} anführt!" />
-    <string id="ExbVzTZA" text="{CLAN} hat sich verpflichtet, an der Seite von {KINGDOM} zu kämpfen." />
-    <string id="FFXqPFwl" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}, einer der ruhmreichsten Familien in den Annalen des vlandischen Königreichs." />
-    <string id="JJAWbuNT" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}. Man sagt, unser Ahn sei unter jenen gewesen, die in den goldenen Schiffen aus dem Westen in dieses Land kamen, zur Zeit der Helden. Freilich, wenn man glaubt, dass jeder, von dem es heißt, er sei auf jenen Schiffen gewesen, auch wirklich dort war, wären sie unter der Last gekentert." />
-    <string id="L2GbDVja" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}, meine {?PLAYER.GENDER}Herrin{?}mein Herr{\?}, und es ist mir eine Ehre, Euch zu dienen." />
-    <string id="Nq2dyiO1" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}, ein Name, den Ihr in den Sagen der Sturgier oft gehört haben werdet." />
-    <string id="PBgLvyOa" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}. Unsere Ahnen waren unter jenen, die aus dem hohen Norden kamen, um den Denar der Fürsten zu nehmen und einen Eid zu schwören, diese Lande zu verteidigen, und wir haben diesen Eid gehalten." />
-    <string id="S0oFKYfB" text="{CLAN} dient {KINGDOM} nicht mehr." />
-    <string id="S1vGzr8z" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}, einem Clan der Aserai." />
-    <string id="SLAkSrb5" text="{FACTION1_NAME} erklärt {FACTION2_NAME} den Krieg." />
-    <string id="TsYCa2fZ" text="{FACTION1} und {FACTION2} haben Frieden geschlossen." />
-    <string id="U4p70l9B" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}." />
-    <string id="U770Bvy8" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}. Der Ruhm unserer Familie ist in den Liedern der Battanier unübertroffen." />
-    <string id="Ua0T0A7t" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}, einem der alten Geschlechter der Battanier." />
-    <string id="WH8P3Y5F" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}." />
-    <string id="a8584KD0" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}. Sicher habt Ihr den Namen unseres Clans in den Epen der Steppe gehört. Wir tragen den Namen eines der 12 Söhne der großen Wölfin, der Mutter der Khuzait." />
-    <string id="cMO9JXvk" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}. Wir halten unsere Lande zu Lehen von {LIEGE_TITLE}, und wir ehren unsere Treueeide." />
-    <string id="dC8acIya" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}." />
-    <string id="dfAE3liA" text="Der Clan {CLAN_NAME} hat sich {FACTION} angeschlossen." />
-    <string id="dlkg2jQf" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}, einem der alten Geschlechter der Sturgier." />
-    <string id="eyxfHmCU" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}. Unsere Familie dient den Königen der Vlandier seit Generationen." />
-    <string id="hJFCi1zu" text="{FACTION1} und {FACTION2} haben Frieden geschlossen." />
-    <string id="hP57Caab" text="{VICTOR_PARTY} von {VICTOR_FACTION} besiegt {DEFEATED_PARTY} von {DEFEATED_FACTION}." />
-    <string id="hbWhfoWH" text="{SETTLEMENT} wird von {LORD.LINK} von {FACTION_NAME} überfallen" />
-    <string id="hopvV6Ch" text="{RULER_NAME} von {FACTION1_NAME} erklärt {FACTION2_NAME} den Krieg." />
-    <string id="kqwNCCbZ" text="{TOWN_NAME} wird von einem Heer unter {LORD.LINK} von {FACTION_NAME} belagert!" />
-    <string id="l2nEIZV5" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}." />
-    <string id="nbVW2cJ8" text="{SETTLEMENT} wird von dem Heer unter {LORD.LINK} von {FACTION_NAME} überfallen" />
-    <string id="pn79h0aj" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}. Wir erhielten unseren Titel von Kaiser Vortios höchstpersönlich. Nicht dass er viel Wahl gehabt hätte, denn er war zu jener Zeit auf einem unserer Raubschiffe gefangen, doch ich bin sicher, er erkannte den Adel unseres Blutes." />
-    <string id="rhTUDKhJ" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}. Es gibt keinen Clan der Battanier, der nicht den Schädel eines seiner Vorkämpfer zu unserer Sammlung von Trinkbechern beigesteuert hätte." />
-    <string id="z2yr4mc6" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}. Unser Clan dient dem Khuzait-Khanat seit Generationen treu." />
-    <string id="zZ9FQJRI" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}, der ältesten und edelsten der Aserai-Linien." />
   </strings>
 </base>

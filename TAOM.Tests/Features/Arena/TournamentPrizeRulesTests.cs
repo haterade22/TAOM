@@ -223,6 +223,72 @@ public class TournamentPrizeRulesTests
         Assert.AreEqual(Fitting.Length, TournamentPrizeRules.PreferCulture(Fitting, cultureId, i => i.Culture).Count);
     }
 
+    // --- PickChoices: the three prizes offered at Join ---
+
+    private static readonly string[] Pool = { "a", "b", "c", "d", "e", "f", "g" };
+
+    [TestMethod]
+    public void PickChoices_ReturnsThreeDistinctItemsIncludingTheAdvertisedPrize()
+    {
+        var picks = TournamentPrizeRules.PickChoices(Pool, "d", "town_G1:1234");
+
+        Assert.AreEqual(3, picks.Count);
+        Assert.AreEqual(3, picks.Distinct().Count());
+        Assert.AreEqual("d", picks[0], "the advertised prize is listed first");
+        Assert.IsTrue(picks.All(Pool.Contains));
+    }
+
+    [TestMethod]
+    public void PickChoices_SameSeed_SameThree()
+    {
+        // Reopening the join menu must not re-roll the alternatives.
+        CollectionAssert.AreEqual(
+            TournamentPrizeRules.PickChoices(Pool, "d", "town_G1:1234").ToList(),
+            TournamentPrizeRules.PickChoices(Pool.Reverse().ToArray(), "d", "town_G1:1234").ToList());
+    }
+
+    [TestMethod]
+    public void PickChoices_DifferentTournament_UsuallyDifferentAlternatives()
+    {
+        var seen = new System.Collections.Generic.HashSet<string>();
+        for (var i = 0; i < 20; i++)
+            seen.Add(string.Join(",", TournamentPrizeRules.PickChoices(Pool, "d", "town_G1:" + i).Skip(1)));
+
+        Assert.IsTrue(seen.Count > 1, "the seed must vary the alternatives between tournaments");
+    }
+
+    [TestMethod]
+    public void PickChoices_AdvertisedPrizeOutsideThePool_StillOfferedFirst()
+    {
+        // A banner prize, or vanilla's fallback list, is not in TAOM's band pool.
+        var picks = TournamentPrizeRules.PickChoices(Pool, "banner_x", "s");
+
+        Assert.AreEqual("banner_x", picks[0]);
+        Assert.AreEqual(3, picks.Count);
+    }
+
+    [TestMethod]
+    public void PickChoices_PoolSmallerThanThree_OffersWhatThereIs()
+    {
+        var picks = TournamentPrizeRules.PickChoices(new[] { "d", "e" }, "d", "s");
+
+        CollectionAssert.AreEqual(new[] { "d", "e" }, picks.ToList());
+    }
+
+    [TestMethod]
+    public void PickChoices_EmptyPool_OffersOnlyTheAdvertisedPrize()
+    {
+        CollectionAssert.AreEqual(new[] { "d" }, TournamentPrizeRules.PickChoices(new string[0], "d", "s").ToList());
+    }
+
+    [TestMethod]
+    public void PickChoices_PoolWithDuplicates_NeverRepeatsAnItem()
+    {
+        var picks = TournamentPrizeRules.PickChoices(new[] { "e", "e", "e", "f" }, "d", "s");
+
+        Assert.AreEqual(picks.Count, picks.Distinct().Count());
+    }
+
     [TestMethod]
     public void PreferCulture_NothingFits_ReturnsEmpty()
     {

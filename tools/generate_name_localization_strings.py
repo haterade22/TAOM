@@ -1,63 +1,49 @@
 #!/usr/bin/env python3
-"""Generate English master localization strings files for troop/lord/clan/kingdom names.
+"""Generate the English master strings files for text the TAOM data XML carries inline.
 
 WHY THIS EXISTS
 ---------------
-Troop, lord, clan, and kingdom identity text already carries {=KEY}default syntax inline in its
-own source XML (troops/troops_*.xml, characters/lords.xml, characters/clans.xml,
-taom_spkingdoms.xml), but the translator's discoverable source-file list
-(tools/translate_with_claude.py: english_source_files) never reads those files, so most of those
-keys have no registered English row anywhere in the pipeline and every language shows the raw
-English default forever, with no error anywhere. Found 2026-09-13 for troops alone (#572); this
-generator closes the same gap for troops, lords, clans, and kingdoms
-(docs/features/localization.md "Case B").
+Troop, lord, clan and kingdom names, culture text and name lists, hero biographies, career data, NPC
+names and Custom Battle scene names carry {=KEY}default inline in their own data XML. The translator
+reads only registered English sources (tools/_loc_sources.py), so an unregistered key shows its English
+default in every language, with no error anywhere. #572 (2026-09-17) registered the four name families;
+the 2026-10-01 run added the five data-text families (docs/features/localization.md "Case B").
 
 WHAT IT DOES
 ------------
-For each category, extracts every {=KEY}default occurrence from its source XML(s), excludes any
-key that is ALREADY registered in one of the 13 existing TAOM strings sources (idempotent: a lord
-key already translated via taom_xslt_strings.xml, or a clan key already in taom_module_strings.xml,
-keeps that single registration rather than gaining a duplicate row in a second file), and writes
-the remainder into one new generated strings file per category at ModuleData root, in the SAME
-bare <strings> root format taom_module_strings.xml and its siblings use (NOT the <base type="string">
-wrapper the per-language translation files use).
+One pass over CATEGORIES in name order. Each category takes every {=KEY}default attribute from its
+sources, skips a key a hand-kept English source already registers or an earlier category already
+took, and writes the rest, sorted, into its own file at ModuleData root (bare <strings> root, CRLF,
+no BOM). The output is a function of the sources alone.
 
-Run with --apply to write; --dry-run (default) to preview counts only. Re-running after new troops/
-lords/clans/kingdoms are authored picks up their keys and leaves existing rows untouched, because
-the exclusion set is recomputed from the shipped English source files, not from a snapshot.
+    --dry-run   print each category's size
+    --apply     write every category file (or one, with --category)
+    --check     exit 1 naming each category file that differs from what the sources produce;
+                tools/tests runs the same comparison, so an unregenerated source fails CI
+
+A missing source file or an empty source glob stops the run with exit 2 and writes nothing: it would
+otherwise write an empty file over a registered one. The repo settlements.xml (a stale copy of
+TAOM_Map's) and custom_settlements.xml (registered nowhere in SubModule.xml) are never sources.
 """
 
 from __future__ import annotations
 
 import argparse
 import re
+import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
+
+from _loc_sources import TAOM_SOURCES
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 MODULE_DATA = REPO_ROOT / "Main" / "_Module" / "ModuleData"
 
-# Mirrors tools/translate_with_claude.py english_source_files("TAOM") — the files the translator
-# already discovers keys from. Kept as a literal list rather than importing that module, because
-# importing it pulls in the UTF-8 stdout reconfiguration side effect (see that file's header).
-EXISTING_TAOM_SOURCES = [
-    MODULE_DATA / "taom_module_strings.xml",
-    MODULE_DATA / "global_strings.xml",
-    MODULE_DATA / "taom_wanderer_strings.xml",
-    MODULE_DATA / "named_companions" / "named_companion_strings.xml",
-    MODULE_DATA / "taom_cc_strings.xml",
-    MODULE_DATA / "taom_career_strings.xml",
-    MODULE_DATA / "taom_messenger_strings.xml",
-    MODULE_DATA / "taom_xslt_strings.xml",
-    MODULE_DATA / "taom_wotr_strings.xml",
-    MODULE_DATA / "taom_lotr_issue_strings.xml",
-    MODULE_DATA / "taom_emissary_strings.xml",
-    MODULE_DATA / "taom_enlistment_strings.xml",
-    MODULE_DATA / "taom_player_switcher_strings.xml",
-]
-
-# Any attribute of the shape attr="{=KEY}default text" — the same shape
+# Any attribute of the shape attr="{=KEY}default text", the same shape
 # translate_with_claude.py's _diff_against_settlement_source uses for TAOM_Map's settlements.xml.
+# The engine sentinels {=!} and {=*} are not translatable rows and are skipped.
 ATTR_KEY_PATTERN = re.compile(r'\w+="\{=([^}]+)\}([^"]*)"')
+SENTINEL_KEYS = {"!", "*"}
 ID_PATTERN = re.compile(r'<string\s+id="([^"]+)"')
 
 CATEGORIES: dict[str, dict] = {
@@ -145,17 +131,21 @@ CATEGORIES: dict[str, dict] = {
 }
 
 
-def excluded_ids(cat: str, existing_sources: list[Path] = EXISTING_TAOM_SOURCES) -> set[str]:
-    """Keys category `cat` must not register: those the hand-kept sources carry, and those any
-    OTHER generated file already carries (a language loading two rows for one id keeps the later)."""
-    others = [spec["output"] for name, spec in CATEGORIES.items() if name != cat]
-    return registered_ids(list(existing_sources) + others)
+class SourceMissing(Exception):
+    """A category's source file is gone or its glob matched nothing."""
 
 
-def registered_ids(existing_sources: list[Path] = EXISTING_TAOM_SOURCES) -> set[str]:
-    """Every {=KEY} already registered across the pipeline's existing English source files."""
+def hand_kept_sources() -> list[Path]:
+    """The English sources this tool does not write: the table minus every CATEGORIES output."""
+    outputs = {spec["output"].resolve() for spec in CATEGORIES.values()}
+    rows = [MODULE_DATA / src for src, _ in TAOM_SOURCES]
+    return [p for p in rows if p.resolve() not in outputs]
+
+
+def registered_ids(existing_sources: list[Path] | None = None) -> set[str]:
+    """Every id the hand-kept English sources register (the keys no category may take)."""
     ids: set[str] = set()
-    for path in existing_sources:
+    for path in hand_kept_sources() if existing_sources is None else existing_sources:
         if not path.exists():
             continue
         text = path.read_text(encoding="utf-8")
@@ -168,23 +158,57 @@ def extract_from_file(path: Path) -> list[tuple[str, str]]:
     text = path.read_text(encoding="utf-8")
     seen: dict[str, str] = {}
     for key, default in ATTR_KEY_PATTERN.findall(text):
-        if key not in seen:
+        if key not in seen and key not in SENTINEL_KEYS:
             seen[key] = default
     return list(seen.items())
 
 
+def category_sources(cat: str) -> list[Path]:
+    """The category's sources; raises SourceMissing when one is gone or the glob is empty."""
+    sources = list(CATEGORIES[cat]["sources"]())
+    missing = [p for p in sources if not p.exists()]
+    if not sources or missing:
+        raise SourceMissing(f"[{cat}] source missing or glob empty: {missing or 'no files'}")
+    return sources
+
+
 def build_category_entries(cat: str, already_registered: set[str]) -> list[tuple[str, str]]:
-    """New (unregistered) entries for one category, sorted by key for a stable diff."""
-    spec = CATEGORIES[cat]
+    """Unregistered entries for one category, sorted by key for a stable diff."""
     seen: dict[str, str] = {}
-    for src in spec["sources"]():
-        if not src.exists():
-            continue
+    for src in category_sources(cat):
         for key, default in extract_from_file(src):
             if key in already_registered or key in seen:
                 continue
             seen[key] = default
     return sorted(seen.items())
+
+
+def build_all(already_registered: set[str]) -> dict[str, list[tuple[str, str]]]:
+    """Every category's entries in one pass over CATEGORIES in name order: a key two categories'
+    sources declare goes to the first only (a language loading two rows for one id keeps the later)."""
+    owned, built = set(already_registered), {}
+    for cat in sorted(CATEGORIES):
+        built[cat] = build_category_entries(cat, owned)
+        owned.update(key for key, _ in built[cat])
+    return built
+
+
+def stale_categories(built: dict[str, list[tuple[str, str]]]) -> list[str]:
+    """Categories whose file on disk is not byte for byte what the sources produce."""
+    stale = []
+    for cat, entries in sorted(built.items()):
+        out = CATEGORIES[cat]["output"]
+        expected = build_xml(entries, CATEGORIES[cat]["header"]).encode("utf-8")
+        if not out.exists() or out.read_bytes() != expected:
+            stale.append(cat)
+    return stale
+
+
+def write_output(cat: str, entries: list[tuple[str, str]]) -> None:
+    """Write a category file as bytes (no newline translation), after proving it parses."""
+    content = build_xml(entries, CATEGORIES[cat]["header"])
+    ET.fromstring(content.encode("utf-8"))
+    CATEGORIES[cat]["output"].write_bytes(content.encode("utf-8"))
 
 
 def build_xml(entries: list[tuple[str, str]], header: str) -> str:
@@ -204,38 +228,40 @@ def build_xml(entries: list[tuple[str, str]], header: str) -> str:
     return "\r\n".join(lines)
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     g = ap.add_mutually_exclusive_group(required=True)
     g.add_argument("--dry-run", action="store_true")
     g.add_argument("--apply", action="store_true")
+    g.add_argument("--check", action="store_true")
     ap.add_argument("--category", choices=sorted(CATEGORIES), default=None,
-                     help="Limit to one category. Omit to process all of them.")
-    args = ap.parse_args()
+                    help="Limit --apply or --check to one category (ownership is still computed over all).")
+    args = ap.parse_args(argv)
 
-    print(f"  Already-registered keys across {len(EXISTING_TAOM_SOURCES)} existing sources: "
-          f"{len(registered_ids())}")
+    try:
+        built = build_all(registered_ids())
+    except SourceMissing as exc:
+        print(f"ERROR: {exc}; nothing written.", file=sys.stderr)
+        return 2
+    cats = [args.category] if args.category else sorted(built)
 
-    cats = [args.category] if args.category else sorted(CATEGORIES)
-    grand_total = 0
+    if args.check:
+        stale = [c for c in stale_categories({c: built[c] for c in cats})]
+        for cat in stale:
+            print(f"STALE: {CATEGORIES[cat]['output'].name} differs from its sources ([{cat}])")
+        if stale:
+            print("Run: python tools/generate_name_localization_strings.py --apply")
+            return 1
+        print(f"OK: {len(cats)} generated file(s) match their sources")
+        return 0
+
+    stale = set(stale_categories({c: built[c] for c in cats}))
     for cat in cats:
-        spec = CATEGORIES[cat]
-        entries = build_category_entries(cat, excluded_ids(cat))
-        grand_total += len(entries)
-        out = spec["output"]
-        print(f"\n  [{cat}] -> {out.relative_to(REPO_ROOT)}: {len(entries)} new key(s)")
-        if entries[:3]:
-            for key, default in entries[:3]:
-                preview = default if len(default) <= 50 else default[:47] + "..."
-                print(f"      {key} = {preview}")
-            if len(entries) > 3:
-                print(f"      ... and {len(entries) - 3} more")
-
-        if args.apply:
-            content = build_xml(entries, spec["header"])
-            out.write_text(content, encoding="utf-8")
-
-    print(f"\n  Total new keys: {grand_total}")
+        out = CATEGORIES[cat]["output"]
+        state = "changes" if cat in stale else "unchanged"
+        print(f"  [{cat}] -> {out.name}: {len(built[cat])} key(s), {state}")
+        if args.apply and cat in stale:
+            write_output(cat, built[cat])
     if args.dry_run:
         print("  (dry run - no files written)")
     return 0

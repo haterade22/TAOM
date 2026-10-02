@@ -1478,41 +1478,5 @@
     <string id="TAOM_hero_SE9_s_bn" text="Pharazîn bir Kara Númenorlu büyücüdür ve kocası sefere çıktığında Cirith Nargil'deki gerçek otoritedir. Adı, Númenor'un son Kralını anımsatır." />
     <string id="TAOM_hero_SE9_c1_bn" text="Zigûrbêl, Cirith Nargil'in varisidir ve kara sanatlarda eğitilmiştir. Adı Büyücü-Sever anlamına gelir; Númenor, onun ne olduğunu öğrenmeden önce Sauron'a böyle derdi." />
     <string id="TAOM_hero_SE9_c2_bn" text="Zimrazîn, Kılıç-Efendi'nin ikinci çocuğudur ve ikisinin daha tehlikeli olanıdır. Annesinin yeteneklerine sahiptir, sabrına ise hiç." />
-    <string id="3UucAOBW" text="Ben {CLAN_NAME}'den {CONVERSATION_CHARACTER.LINK}." />
-    <string id="62vceTar" text="Ben {CONVERSATION_CHARACTER.LINK}, {CLAN_NAME}'den." />
-    <string id="99gE1ZoY" text="Ben {CONVERSATION_CHARACTER.LINK}, {FACTION}'den." />
-    <string id="AxMrFoea" text="{TOWN_NAME}, {FACTION_NAME}'den {LORD.LINK} önderliğindeki kuvvetler tarafından kuşatıldı!" />
-    <string id="EHFibjkM" text="{TOWN_NAME}, {FACTION_NAME}'den {LORD.LINK} önderliğindeki ordu tarafından kuşatıldı!" />
-    <string id="ExbVzTZA" text="{CLAN}, {KINGDOM} saflarında savaşmak üzere anlaşma yaptı." />
-    <string id="FFXqPFwl" text="Ben {CONVERSATION_CHARACTER.LINK}, Vlandiya krallığının tarihindeki en şanlı ailelerden biri olan {CLAN_NAME}'den." />
-    <string id="JJAWbuNT" text="Ben {CONVERSATION_CHARACTER.LINK}, {CLAN_NAME}'den. Derler ki atamız, Kahramanlar Çağı'nda Batı'dan bu topraklara gelen altın gemilerdekiler arasındaymış. Elbette, o gemilerde olduğu söylenen herkes gerçekten o gemilerde olsaydı, ağırlıktan batarlardı." />
-    <string id="L2GbDVja" text="Ben {CLAN_NAME}'den {CONVERSATION_CHARACTER.LINK}, {?PLAYER.GENDER}leydim{?}lordum{\?}, size hizmet etmekten onur duyarım." />
-    <string id="Nq2dyiO1" text="Ben {CONVERSATION_CHARACTER.LINK}, {CLAN_NAME}'den; Sturgia destanlarında adını defalarca duymuş olmalısınız." />
-    <string id="PBgLvyOa" text="Ben {CONVERSATION_CHARACTER.LINK}, {CLAN_NAME}'den. Atalarımız, prenslerin dinarını almak ve bu toprakları savunmaya yemin etmek için uzak kuzeyden gelenler arasındaydı ve biz o yemine sadık kaldık." />
-    <string id="S0oFKYfB" text="{CLAN} artık {KINGDOM}'e hizmet etmiyor." />
-    <string id="S1vGzr8z" text="Ben {CONVERSATION_CHARACTER.LINK}, bir Aserai boyu olan {CLAN_NAME}'den." />
-    <string id="SLAkSrb5" text="{FACTION1_NAME}, {FACTION2_NAME}'e savaş ilan etti." />
-    <string id="TsYCa2fZ" text="{FACTION1} ile {FACTION2} barış yaptı." />
-    <string id="U4p70l9B" text="Ben {CLAN_NAME}'den {CONVERSATION_CHARACTER.LINK}." />
-    <string id="U770Bvy8" text="Ben {CONVERSATION_CHARACTER.LINK}, {CLAN_NAME}'den. Ailemizin şöhreti Battania şarkılarında eşsizdir." />
-    <string id="Ua0T0A7t" text="Ben {CONVERSATION_CHARACTER.LINK}, Battanialıların kadim soylarından biri olan {CLAN_NAME}'den." />
-    <string id="WH8P3Y5F" text="Ben {CLAN_NAME}'den {CONVERSATION_CHARACTER.LINK}." />
-    <string id="a8584KD0" text="Ben {CONVERSATION_CHARACTER.LINK}, {CLAN_NAME}'den. Eminim boyumuzun adını bozkır destanlarında duymuşsunuzdur. Khuzaitlerin anası büyük dişi kurdun 12 oğlundan birinin adını taşıyoruz." />
-    <string id="cMO9JXvk" text="Ben {CONVERSATION_CHARACTER.LINK}, {CLAN_NAME}'den. Topraklarımızı {LIEGE_TITLE}'den tımar olarak tutuyoruz ve bağlılık yeminlerimize sadığız." />
-    <string id="dC8acIya" text="Ben {CLAN_NAME}'den {CONVERSATION_CHARACTER.LINK}." />
-    <string id="dfAE3liA" text="{CLAN_NAME} boyu {FACTION}'e katıldı." />
-    <string id="dlkg2jQf" text="Ben {CONVERSATION_CHARACTER.LINK}, Sturgialıların kadim soylarından biri olan {CLAN_NAME}'den." />
-    <string id="eyxfHmCU" text="Ben {CONVERSATION_CHARACTER.LINK}, {CLAN_NAME}'den. Ailemiz nesiller boyu Vlandiya krallarına hizmet etti." />
-    <string id="hJFCi1zu" text="{FACTION1} ile {FACTION2} barış yaptı." />
-    <string id="hP57Caab" text="{VICTOR_FACTION}'den {VICTOR_PARTY}, {DEFEATED_FACTION}'den {DEFEATED_PARTY}'yi yendi." />
-    <string id="hbWhfoWH" text="{SETTLEMENT}, {FACTION_NAME}'den {LORD.LINK} tarafından yağmalanıyor" />
-    <string id="hopvV6Ch" text="{FACTION1_NAME} hükümdarı {RULER_NAME}, {FACTION2_NAME} ulusuna savaş ilan etti." />
-    <string id="kqwNCCbZ" text="{TOWN_NAME}, {FACTION_NAME} mensubu {LORD.LINK} önderliğindeki ordu tarafından kuşatıldı!" />
-    <string id="l2nEIZV5" text="Ben {CLAN_NAME} mensubu {CONVERSATION_CHARACTER.LINK}." />
-    <string id="nbVW2cJ8" text="{SETTLEMENT}, {FACTION_NAME} mensubu {LORD.LINK} önderliğindeki ordu tarafından yağmalanıyor" />
-    <string id="pn79h0aj" text="Ben {CLAN_NAME} mensubu {CONVERSATION_CHARACTER.LINK}. Unvanımızı bizzat İmparator Vortios'tan aldık. Pek de seçeneği yoktu ya, o sırada akın gemilerimizden birinde esir tutuluyordu, ama eminim kanımızın asaletini fark etmiştir." />
-    <string id="rhTUDKhJ" text="Ben {CLAN_NAME} mensubu {CONVERSATION_CHARACTER.LINK}. Battanialıların, şampiyonlarından birinin kafatasını içki kupası koleksiyonumuza katmamış tek bir klanı yoktur." />
-    <string id="z2yr4mc6" text="Ben {CLAN_NAME} mensubu {CONVERSATION_CHARACTER.LINK}. Klanımız nesillerdir Khuzait Hanlığı'na sadakatle hizmet eder." />
-    <string id="zZ9FQJRI" text="Ben Aserai soylarının en kadim ve en asili olan {CLAN_NAME} mensubu {CONVERSATION_CHARACTER.LINK}." />
   </strings>
 </base>

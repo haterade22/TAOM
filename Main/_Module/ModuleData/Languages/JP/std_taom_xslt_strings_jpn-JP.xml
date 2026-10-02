@@ -1478,41 +1478,5 @@
     <string id="TAOM_hero_SE9_s_bn" text="ファラズィーンは黒きヌーメノール人の女魔術師であり、夫が出陣している間はキリス・ナルギルの真の支配者である。その名は最後のヌーメノール王を思わせる。" />
     <string id="TAOM_hero_SE9_c1_bn" text="ジグールベールはキリス・ナルギルの継嗣であり、闇の術を学んでいる。その名は「魔術師を愛する者」を意味する――ヌーメノールがサウロンの本性を知る前に彼をそう呼んでいたのである。" />
     <string id="TAOM_hero_SE9_c2_bn" text="ジムラズィーンは剣の主の二番目の子であり、二人のうちより危険な方である。母の才を受け継ぎながら、その忍耐は少しも受け継いでいない。" />
-    <string id="3UucAOBW" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}だ。" />
-    <string id="62vceTar" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}だ。" />
-    <string id="99gE1ZoY" text="私は{FACTION}の{CONVERSATION_CHARACTER.LINK}だ。" />
-    <string id="AxMrFoea" text="{TOWN_NAME}が{FACTION_NAME}の{LORD.LINK}率いる軍勢に包囲された！" />
-    <string id="EHFibjkM" text="{TOWN_NAME}が{FACTION_NAME}の{LORD.LINK}率いる軍に包囲された！" />
-    <string id="ExbVzTZA" text="{CLAN}は{KINGDOM}と共に戦う契約を結んだ。" />
-    <string id="FFXqPFwl" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}だ。我が家はヴランディア王国の年代記に名を連ねる最も輝かしい一族の一つだ。" />
-    <string id="JJAWbuNT" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}だ。我らの祖先は、英雄の時代に西方からこの地へ来た黄金の船に乗っていた者の一人だという。もっとも、あの船に乗っていたと言われる者が皆本当に乗っていたなら、重みで転覆していただろうがな。" />
-    <string id="L2GbDVja" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}でございます、{?PLAYER.GENDER}奥方様{?}閣下{\?}。お仕えできて光栄です。" />
-    <string id="Nq2dyiO1" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}。スターシアの叙事詩で幾度となく耳にしたであろう名だ。" />
-    <string id="PBgLvyOa" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}。我らの先祖は遥か北方より来たり、諸侯のデナールを受けてこの地を守る誓いを立てた者たちの一人だった。我らはその誓いを今も守り続けている。" />
-    <string id="S0oFKYfB" text="{CLAN}はもはや{KINGDOM}に仕えていない。" />
-    <string id="S1vGzr8z" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}、アセライの氏族の者だ。" />
-    <string id="SLAkSrb5" text="{FACTION1_NAME}が{FACTION2_NAME}に宣戦布告した。" />
-    <string id="TsYCa2fZ" text="{FACTION1}と{FACTION2}は和平を結んだ。" />
-    <string id="U4p70l9B" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}だ。" />
-    <string id="U770Bvy8" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}。我が一族の名声はバタニアの歌において並ぶ者がない。" />
-    <string id="Ua0T0A7t" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}、バタニアの古き血統のひとつだ。" />
-    <string id="WH8P3Y5F" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}だ。" />
-    <string id="a8584KD0" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}。草原の叙事詩で我が氏族の名を聞いたことがあるだろう。我らはクーザイトの母たる偉大な牝狼の十二の息子の一人の名を継いでいる。" />
-    <string id="cMO9JXvk" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}。我らは{LIEGE_TITLE}より封土を受け、忠誠の誓いを重んじている。" />
-    <string id="dC8acIya" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}だ。" />
-    <string id="dfAE3liA" text="{CLAN_NAME}氏族が{FACTION}に加わった。" />
-    <string id="dlkg2jQf" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}、スターシアの古き血統のひとつだ。" />
-    <string id="eyxfHmCU" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}。我が一族は幾世代にもわたりヴランディアの王に仕えてきた。" />
-    <string id="hJFCi1zu" text="{FACTION1}と{FACTION2}は和平を結んだ。" />
-    <string id="hP57Caab" text="{VICTOR_FACTION}の{VICTOR_PARTY}が{DEFEATED_FACTION}の{DEFEATED_PARTY}を破った。" />
-    <string id="hbWhfoWH" text="{SETTLEMENT}が{FACTION_NAME}の{LORD.LINK}に略奪された" />
-    <string id="hopvV6Ch" text="{FACTION1_NAME}の{RULER_NAME}が{FACTION2_NAME}に宣戦布告した。" />
-    <string id="kqwNCCbZ" text="{TOWN_NAME}が{FACTION_NAME}の{LORD.LINK}率いる軍に包囲された！" />
-    <string id="l2nEIZV5" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}だ。" />
-    <string id="nbVW2cJ8" text="{SETTLEMENT}が{FACTION_NAME}の{LORD.LINK}率いる軍に略奪された" />
-    <string id="pn79h0aj" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}。我らは皇帝ヴォルティオス自らより称号を賜った。もっとも、その時彼は我らの襲撃船の一隻に囚われていたので選択の余地はなかったがな。それでも我らの血の高貴さを認めたに違いない。" />
-    <string id="rhTUDKhJ" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}。バタニアの氏族で、我らの杯の収集に闘士の頭蓋骨を捧げていない者はいない。" />
-    <string id="z2yr4mc6" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}。我が氏族は幾世代にもわたりクーザイト・ハン国に忠実に仕えてきた。" />
-    <string id="zZ9FQJRI" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}、アセライの血統の中で最も古く高貴なる家の者だ。" />
   </strings>
 </base>

@@ -238,6 +238,13 @@ was the 2026-08-11 stopgap that moved the adult woman onto the male meshes (next
   Kit on 2026-09-27 at 09:34 (package 19,484,342 bytes, RDC 67 of 67 records current, every LOD0 material equal to
   the 2026-08-18 copy). **In game: fixed** (Mike, 2026-09-27). Full account:
   [race-face-and-hand-morphs.md](../race-face-and-hand-morphs.md).
+- **Regression and repair (2026-09-29 to 2026-10-02).** A separating test of the brow investigation
+  (`head_swap.py`, 2026-09-29 14:36) pointed her `face_meta_mesh` at vanilla `head_female_a` and her five brows at
+  `female_eyebrow_2` and was never undone, so she rendered a blank human head floating above her body, in the live
+  Armory and all three `E:\LOTRAOM_Releases` channel copies. On 2026-10-02 the six lines were edited back by hand in
+  all four files (now one sha256, prefix `1a797ef524ac`, equal to `skins.xml.bak-headswap-20260929-143603`). This
+  snapshot never carried the swap. **In game: fixed** (Mike, 2026-10-02). Account:
+  [upper-mesh-mapping-2026-09-29.md](../../investigations/upper-mesh-mapping-2026-09-29.md) "The head swap test".
 - **Not yet run:** #385's own repro, a female dwarf lord in the Erebor keep hall.
 
 **Gates after any Armory update:** `python tools/oneoff/restore_adult_woman_dwarf.py` (a dry run that prints the
@@ -269,6 +276,25 @@ and mouth, 26 on the arms), `python tools/check_eye_follow.py --package "<Armory
 
 **Gate after any Armory update:** `python tools/oneoff/tune_face_slider_reach.py --ref-mesh sm_dwarf_basemesh_a1_head --ref-json <male.json> --target sk_dwarf_bm_f1_head <female.json> --target sk_saruman_head <saruman.json> --zero sk_saruman_head:eyebump --reach-zero sk_saruman_head:face_ratio --set sk_dwarf_bm_f1_head:eye_depth=1:0.5 --check` (exit 1 while a range still reaches past the male dwarf's; the three JSON
 files are `export_face_morphs.ps1` exports of the three heads).
+
+### ⚠️ APPLIED EDIT: skin weights on the dwarf beard `sk_dwarf_beard_a_12` (2026-10-02)
+
+**One live edit an Armory reinstall WILL revert: `AssetSources/Race Test/Beards/SK_Dwarf_Beards.fbx`, with its
+compiled `Assets/Race Test/Beards/SK_Dwarf_Beards_geo.tpac`.**
+
+- **Why.** Beard 12 (in the `beard_meshes` of the adult and teenage dwarf skins, both genders) shipped with no
+  vertex weights at all, 15,344 vertices and every LOD, while beards 01 to 11 are weighted to `head` and `neck` (the
+  long ones `spine1` and `spine2` too), so it did not move with the head.
+- **What.** `tools/blender/transfer_upper_mesh_weights.py --apply` copied weights to it and its five LODs from
+  beards 01 to 11 pooled (nearest sibling triangle, top 4 influences), keeping the artist's head-to-chest fade.
+  Shape keys, materials and geometry unchanged; every other mesh's weights came back unchanged. Backup
+  `SK_Dwarf_Beards.fbx.bak-upperweights` (the June original, 151,692,428 bytes; Blender writes the new FBX at
+  298,978,220). Mike re-imported and saved it in the Kit on 2026-10-02 (package 12:27, RDC entry present); TpacTool
+  on the package: every vertex of every LOD weighted, dominant bone 13 (`head`), as beard 11.
+- **Not yet run:** an in-game look at a male dwarf wearing it.
+
+**Gate after any Armory update:** none automated yet. The skin dump in the account below shows whether beard 12 still
+carries weights: [race-face-and-hand-morphs.md](../race-face-and-hand-morphs.md) "Hair, beards and eyebrows".
 
 ### ⚠️ APPLIED EDIT: troll gear locked away from players (2026-10-02)
 

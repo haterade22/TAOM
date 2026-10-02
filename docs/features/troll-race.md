@@ -438,12 +438,27 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
   bodyguard pose on the troll's own Fab idles (Mike: "reuse animations that we already have"). Detail and the
   tests: CHANGELOG "trolls at 200 health, costed, and in three Mordor warbands". OWED: the Custom Battle smoke
   reads the `[TrollBruteForce]` body size and the ring for both trolls. Brute Force has its own doc,
-  [troll-brute-force.md](troll-brute-force.md). OPEN for Mike (review of these changes): the reused Fab idles are
-  not `cyclic` while the vanilla clips behind those codes are, and the party screen, map conversation and victory
-  logic set the action once (per-code clone clips and a Kit save would fix it); the Mordor culture template's 0 to 7
+  [troll-brute-force.md](troll-brute-force.md). The reused Fab idles not being `cyclic` is FIXED (2026-10-02, entry
+  below). OPEN for Mike (review of these changes): the Mordor culture template's 0 to 7
   trolls reach companion clans; the cave troll's `TroopWeight` row is still commented out (1.0 against the hill
   troll's 4.0); a Free-culture player pays the recruit cost in their own resource and loses the troll to alignment
   desertion the next day.
+- **The party-screen bind pose, the reused idles made cyclic (2026-10-02):** a hill troll on the party screen stood
+  in its idle, then about five seconds later lay flat in bind pose holding its hammer, with no input. The reuse rule
+  above binds `anim_hill_troll_idle1` (5.4 s) to `act_inventory_idle_start` and `act_inventory_idle`, and
+  `anim_hill_troll_combat_idle1`/`_2` (4.57 s) to the cheer codes, and all three were one-shots: no `cyclic` flag
+  and no `ContinueWithAction`. Vanilla's `inventory_idle_start` continues into `act_inventory_idle`, and
+  `inventory_idle`, `convo_stand_*` and `cheer_*` are `cyclic`. The party screen, encyclopedia, map conversation and
+  victory logic set the action once, so when the troll clip ended nothing followed and the skeleton fell to its
+  bind pose. Battles never showed it: the mission keeps re-issuing stand idles, and vanilla's `troop_stand_*` clips
+  are one-shots too. Mike ticked `cyclic` on the three clips in the Modding Kit (blend in 0.5 and blend out 0
+  unchanged) and saved; read back from the `_anm.tpac` packages they carry `cyclic,allow_head_movement`, the
+  2026-09-30 repoint check reads 24/24 OK after the same save, and `check_rdc_entries.py` lists none of the three
+  packages. The cave troll is not affected: its Fab idles serve battle stand codes only, and its screen and
+  conversation codes keep human clips. Not gated: the clips live in the unversioned Armory, so a reinstall or a
+  re-import of these masters drops the flag; re-check with a clip dump (`TpacTool` `AnimationClip.Flags`). OWED:
+  party screen held for 10 s or more, a map conversation with a hill troll, and a Custom Battle (the battle stand
+  idles now loop).
 - **Face morph channels, the first Custom Battle CTD (2026-09-25):** a hill troll crashed the game about a
   second into deployment: an access violation in `TaleWorlds.Native.dll` at +0x57070C, the engine's static
   face morph (its string: "No morph data found for face mesh. Can not do static morph."). The dump read address
@@ -682,6 +697,10 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
 
 ## Changelog
 
+- 2026-10-02: the hill troll no longer falls into bind pose on the party screen after a few seconds. The three
+  Fab idles its screen, conversation and cheer codes reuse (`anim_hill_troll_idle1`, `anim_hill_troll_combat_idle1`,
+  `anim_hill_troll_combat_idle2`) are now `cyclic` in the live Armory (Kit edit and save); detail in the Track 1
+  entry "The party-screen bind pose".
 - 2026-10-02: troll gear locked away from players in the dev install's Armory: Troll Mace I, the troll shield
   and the bracers set `is_merchandise="false"` and the 12 troll crafting pieces `is_hidden="true"` (backups
   `*.bak-20261002`), with `CREATURE_GEAR_OBTAINABLE` as the in-repo gate. It reaches players with the next

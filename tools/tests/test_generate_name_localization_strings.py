@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Unit tests for tools/generate_name_localization_strings.py, on synthetic XML, no game install.
+"""Tests for tools/generate_name_localization_strings.py. Most run on synthetic XML; DataTextCategoriesTests and
+ShippedTreeTests read the repo's ModuleData (no game install needed).
 
 Every test pins a way the generator could ship wrong content and still look right in a dry run:
 a key already registered elsewhere getting a second, duplicate row; two troops sharing a key
@@ -43,6 +44,12 @@ class ExtractFromFileTests(unittest.TestCase):
                       '</NPCCharacters>')
             entries = gen.extract_from_file(f)
             self.assertEqual(entries, [("aom_dup_name", "First Text")])
+
+    def test_ExtractFromFile_SentinelKeys_Skipped(self):
+        # {=!} and {=*} are engine sentinels, not translatable rows (LanguageFileCoverageTests skips them).
+        with tempfile.TemporaryDirectory() as td:
+            f = write(Path(td) / "x.xml", '<X><Y name="{=!}Raw" /><Y name="{=*}Raw" /><Y name="{=k}Kept" /></X>')
+            self.assertEqual(gen.extract_from_file(f), [("k", "Kept")])
 
     def test_ExtractFromFile_NoKeyedAttributes_ReturnsEmpty(self):
         with tempfile.TemporaryDirectory() as td:
@@ -119,38 +126,99 @@ class BuildCategoryEntriesTests(unittest.TestCase):
                 del gen.CATEGORIES["_test_cat"]
 
 
-class ExcludedIdsTests(unittest.TestCase):
-    def test_ExcludedIds_KeyInAnotherCategoryOutput_Excluded(self):
-        # A key one generated file already carries must not get a second row from another category:
-        # the language that loads both keeps only the later row.
+class TempCategories:
+    """Swap gen.CATEGORIES for a set of temp categories for one test, then restore it."""
+
+    def __init__(self, cats):
+        self.cats = cats
+
+    def __enter__(self):
+        self.saved = dict(gen.CATEGORIES)
+        gen.CATEGORIES.clear()
+        gen.CATEGORIES.update(self.cats)
+
+    def __exit__(self, *exc):
+        gen.CATEGORIES.clear()
+        gen.CATEGORIES.update(self.saved)
+
+
+class BuildAllTests(unittest.TestCase):
+    def test_BuildAll_KeyInTwoCategoriesSources_OwnedByTheFirstOnly(self):
+        # One pass over the categories in order: a key two sources declare gets one row, in the first
+        # category's file, whatever the output files on disk say (none exist here).
         with tempfile.TemporaryDirectory() as td:
-            tdir = Path(td)
-            other_out = write(tdir / "other.xml", '<strings><string id="k_other" text="{=k_other}X" /></strings>')
-            own_out = write(tdir / "own.xml", '<strings><string id="k_own" text="{=k_own}Y" /></strings>')
-            gen.CATEGORIES["_test_other"] = {"sources": lambda: [], "output": other_out, "header": "t"}
-            gen.CATEGORIES["_test_own"] = {"sources": lambda: [], "output": own_out, "header": "t"}
-            try:
-                ids = gen.excluded_ids("_test_own", existing_sources=[])
-                self.assertIn("k_other", ids)
-                self.assertNotIn("k_own", ids)
-            finally:
-                del gen.CATEGORIES["_test_other"], gen.CATEGORIES["_test_own"]
+            t = Path(td)
+            a = write(t / "a.xml", '<X><Y name="{=k_shared}Shared" /><Y name="{=k_a}A" /></X>')
+            b = write(t / "b.xml", '<X><Y name="{=k_shared}Shared" /><Y name="{=k_b}B" /></X>')
+            cats = {"a_cat": {"sources": lambda: [a], "output": t / "a_out.xml", "header": "t"},
+                    "b_cat": {"sources": lambda: [b], "output": t / "b_out.xml", "header": "t"}}
+            with TempCategories(cats):
+                built = gen.build_all(set())
+            self.assertEqual(built["a_cat"], [("k_a", "A"), ("k_shared", "Shared")])
+            self.assertEqual(built["b_cat"], [("k_b", "B")])
+
+    def test_BuildAll_MissingSource_Raises(self):
+        with tempfile.TemporaryDirectory() as td:
+            t = Path(td)
+            cats = {"c": {"sources": lambda: [t / "renamed.xml"], "output": t / "o.xml", "header": "t"}}
+            with TempCategories(cats), self.assertRaises(gen.SourceMissing):
+                gen.build_all(set())
+
+    def test_BuildAll_EmptyGlob_Raises(self):
+        with tempfile.TemporaryDirectory() as td:
+            t = Path(td)
+            cats = {"c": {"sources": lambda: [], "output": t / "o.xml", "header": "t"}}
+            with TempCategories(cats), self.assertRaises(gen.SourceMissing):
+                gen.build_all(set())
+
+
+class MainTests(unittest.TestCase):
+    def test_Main_MissingCategorySource_ExitsNonZero_LeavesOutputUntouched(self):
+        with tempfile.TemporaryDirectory() as td:
+            t = Path(td)
+            out = write(t / "o.xml", '<strings><string id="k" text="{=k}K" /></strings>')
+            before = out.read_bytes()
+            cats = {"c": {"sources": lambda: [t / "renamed.xml"], "output": out, "header": "t"}}
+            with TempCategories(cats):
+                rc = gen.main(["--apply"])
+            self.assertEqual(rc, 2)
+            self.assertEqual(out.read_bytes(), before)
+
+    def test_Main_Apply_WritesCrLfOnly(self):
+        # write_text() on Windows turned every "\r\n" of the joined text into "\r\r\n".
+        with tempfile.TemporaryDirectory() as td:
+            t = Path(td)
+            src = write(t / "s.xml", '<X><Y name="{=k1}One" /></X>')
+            out = t / "o.xml"
+            cats = {"c": {"sources": lambda: [src], "output": out, "header": "t"}}
+            with TempCategories(cats):
+                self.assertEqual(gen.main(["--apply"]), 0)
+            data = out.read_bytes()
+            self.assertNotIn(b"\r\r\n", data)
+            self.assertIn(b"\r\n", data)
+
+    def test_Check_DriftedOutput_ExitsOne(self):
+        with tempfile.TemporaryDirectory() as td:
+            t = Path(td)
+            src = write(t / "s.xml", '<X><Y name="{=k1}One" /><Y name="{=k2}Two" /></X>')
+            out = t / "o.xml"
+            cats = {"c": {"sources": lambda: [src], "output": out, "header": "t"}}
+            with TempCategories(cats):
+                self.assertEqual(gen.main(["--apply"]), 0)
+                self.assertEqual(gen.main(["--check"]), 0)
+                write(src, '<X><Y name="{=k1}One" /><Y name="{=k2}Two" /><Y name="{=k3}Three" /></X>')
+                self.assertEqual(gen.main(["--check"]), 1)
+
+
+class ShippedTreeTests(unittest.TestCase):
+    def test_ShippedTree_GeneratedFilesMatchTheirSources(self):
+        # The ratchet: a keyed name or text added to any generator source without re-running the
+        # generator ships as English in twelve languages. Fix: python tools/generate_name_localization_strings.py --apply
+        self.assertEqual(gen.stale_categories(gen.build_all(gen.registered_ids())), [])
 
 
 class DataTextCategoriesTests(unittest.TestCase):
     """The five data-text families registered in the full translation run of 2026-10-01."""
-
-    def test_Categories_DataTextFamilies_HaveTheirOwnOutputFiles(self):
-        expected = {
-            "culture_text": "taom_culture_text_strings.xml",
-            "hero_text": "taom_hero_text_strings.xml",
-            "career_data": "taom_career_data_strings.xml",
-            "character_name": "taom_character_name_strings.xml",
-            "battle_scene": "taom_battle_scene_strings.xml",
-        }
-        for cat, out in expected.items():
-            self.assertIn(cat, gen.CATEGORIES)
-            self.assertEqual(gen.CATEGORIES[cat]["output"].name, out)
 
     def test_CharacterNameSources_ExcludeFilesOtherCategoriesOwn(self):
         names = {p.name for p in gen.CATEGORIES["character_name"]["sources"]()}

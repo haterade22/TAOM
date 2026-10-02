@@ -126,11 +126,11 @@ public class LanguageTextIntegrityTests
 
     private static readonly Dictionary<string, string[]> ForeignScripts = new Dictionary<string, string[]>
     {
-        ["RU"] = new[] { "Han", "Kana", "Hangul" },
-        ["KO"] = new[] { "Kana", "Cyrillic" },
-        ["JP"] = new[] { "Hangul", "Cyrillic" },
-        ["CNs"] = new[] { "Hangul", "Kana", "Cyrillic" },
-        ["CNt"] = new[] { "Hangul", "Kana", "Cyrillic" },
+        ["RU"] = new[] { "Han", "Kana", "Hangul", "Other" },
+        ["KO"] = new[] { "Kana", "Cyrillic", "Other" },
+        ["JP"] = new[] { "Hangul", "Cyrillic", "Other" },
+        ["CNs"] = new[] { "Hangul", "Kana", "Cyrillic", "Other" },
+        ["CNt"] = new[] { "Hangul", "Kana", "Cyrillic", "Other" },
     };
 
     /// <summary>Product and key names that legitimately stay in Latin letters inside any language.</summary>
@@ -157,6 +157,11 @@ public class LanguageTextIntegrityTests
         if ((c >= 0x3040 && c <= 0x30FF) || (c >= 0x31F0 && c <= 0x31FF)) return "Kana";
         if ((c >= 0x4E00 && c <= 0x9FFF) || (c >= 0x3400 && c <= 0x4DBF) || (c >= 0xF900 && c <= 0xFAFF)) return "Han";
         if (char.IsLetter(c) && (c < 0x0250 || (c >= 0x1E00 && c <= 0x1EFF))) return "Latin";
+        // Any other letter (Devanagari, Arabic, IPA, ...) belongs to none of the twelve languages: the model
+        // has emitted "Воргराш" and "Korساrenrouten". Fullwidth forms and modifier letters stay unclassified.
+        if (char.IsLetter(c) && !(c >= 0xFF00 && c <= 0xFFEF)
+            && char.GetUnicodeCategory(c) != System.Globalization.UnicodeCategory.ModifierLetter)
+            return "Other";
         return null;
     }
 
@@ -235,6 +240,10 @@ public class LanguageTextIntegrityTests
     [DataRow("CNs", "[魔多] 黑numenor轻型马铠 I")]
     [DataRow("KO", "이ム라드리스의 수호자")]
     [DataRow("JP", "その背から槍と穂先で discharge——突き伏せる")]
+    [DataRow("RU", "Воргराш")]
+    [DataRow("DE", "Korساrenrouten")]
+    [DataRow("TR", "Gemين")]
+    [DataRow("TR", "demirhanə")]
     public void WritingSystemProblems_DamagedRow_IsReported(string language, string text)
     {
         Assert.AreNotEqual(0, WritingSystemProblems(language, text).Count, text);

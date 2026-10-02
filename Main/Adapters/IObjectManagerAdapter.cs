@@ -16,6 +16,7 @@ public class CultureInfo
     public string Id { get; set; }
     public bool CanHaveSettlement { get; set; }
     public bool IsBandit { get; set; }
+    public bool HasFactionBanner { get; set; }
     public string MeleeMilitiaTroopId { get; set; }
     public string RangedMilitiaTroopId { get; set; }
     public string EliteBasicTroopId { get; set; }

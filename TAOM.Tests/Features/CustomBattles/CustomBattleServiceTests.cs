@@ -35,8 +35,8 @@ public class CustomBattleServiceTests
         // Arrange
         _objectManager.GetAllCultureInfos().Returns(new List<CultureInfo>
         {
-            new() { Id = "gondor", CanHaveSettlement = true, IsBandit = false },
-            new() { Id = "mordor", CanHaveSettlement = true, IsBandit = false },
+            new() { Id = "gondor", CanHaveSettlement = true, IsBandit = false, HasFactionBanner = true },
+            new() { Id = "mordor", CanHaveSettlement = true, IsBandit = false, HasFactionBanner = true },
             new() { Id = "looters", CanHaveSettlement = false, IsBandit = true }
         });
 
@@ -50,12 +50,14 @@ public class CustomBattleServiceTests
     }
 
     [TestMethod]
-    public void GetFactionIds_ExcludesBanditCultures()
+    public void GetFactionIds_CultureWithoutFactionBanner_IsExcluded()
     {
-        // Arrange
+        // Arrange: vanilla v1.5.3 nord/vakken/darshi, settlement-capable but no faction_banner_key.
+        // Vanilla CustomBattleHelper.GetCustomBattleParties writes layer 0 of the faction banner and
+        // throws ArgumentOutOfRangeException on an empty one (crash f9a7181d).
         _objectManager.GetAllCultureInfos().Returns(new List<CultureInfo>
         {
-            new() { Id = "sea_raiders", CanHaveSettlement = false, IsBandit = true }
+            new() { Id = "vakken", CanHaveSettlement = true, IsBandit = false, HasFactionBanner = false }
         });
 
         // Act
@@ -63,6 +65,58 @@ public class CustomBattleServiceTests
 
         // Assert
         Assert.AreEqual(0, result.Count);
+    }
+
+    [TestMethod]
+    public void GetFactionIds_CultureWithFactionBanner_IsIncluded()
+    {
+        // Arrange
+        _objectManager.GetAllCultureInfos().Returns(new List<CultureInfo>
+        {
+            new() { Id = "rohan", CanHaveSettlement = true, IsBandit = false, HasFactionBanner = true },
+            new() { Id = "nord", CanHaveSettlement = true, IsBandit = false, HasFactionBanner = false }
+        });
+
+        // Act
+        var result = _sut.GetFactionIds();
+
+        // Assert
+        CollectionAssert.AreEqual(new[] { "rohan" }, (System.Collections.ICollection)result);
+    }
+
+    [TestMethod]
+    public void GetFactionIds_BanditCulture_IsExcluded()
+    {
+        // Arrange: the shipped raider shape (taom_spcultures.xml dunland_raiders), settlement-capable and
+        // banner-bearing, so only the bandit clause keeps it out. gondor is the control that must survive.
+        _objectManager.GetAllCultureInfos().Returns(new List<CultureInfo>
+        {
+            new() { Id = "dunland_raiders", CanHaveSettlement = true, IsBandit = true, HasFactionBanner = true },
+            new() { Id = "gondor", CanHaveSettlement = true, IsBandit = false, HasFactionBanner = true }
+        });
+
+        // Act
+        var result = _sut.GetFactionIds();
+
+        // Assert
+        CollectionAssert.AreEqual(new[] { "gondor" }, (System.Collections.ICollection)result);
+    }
+
+    [TestMethod]
+    public void GetFactionIds_CultureWithoutSettlement_IsExcluded()
+    {
+        // Arrange: not a bandit and has a banner, so only the settlement clause keeps it out.
+        _objectManager.GetAllCultureInfos().Returns(new List<CultureInfo>
+        {
+            new() { Id = "landless", CanHaveSettlement = false, IsBandit = false, HasFactionBanner = true },
+            new() { Id = "gondor", CanHaveSettlement = true, IsBandit = false, HasFactionBanner = true }
+        });
+
+        // Act
+        var result = _sut.GetFactionIds();
+
+        // Assert
+        CollectionAssert.AreEqual(new[] { "gondor" }, (System.Collections.ICollection)result);
     }
 
     [TestMethod]

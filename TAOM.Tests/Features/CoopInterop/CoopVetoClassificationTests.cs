@@ -304,6 +304,10 @@ public class CoopVetoClassificationTests
         ["Patch94_CreatureBroodMapIcon"] = new(CoopVeto.ReviewedSafe,
             "Skips the rider visual of a spider brood's campaign-map icon. Each peer builds its own " +
             "party visuals; presentation only."),
+        ["Patch96_TournamentJoinChoices"] = new(CoopVeto.ReviewedSafe,
+            "Delays the local player's own tournament Join until they pick a prize and a skill, then " +
+            "re-enters vanilla's whole Join consequence unchanged; closing a dialog is the same as not " +
+            "clicking Join. Reads no other peer's state and skips no mutation for good."),
 
         // --- Parked --------------------------------------------------------------------------
         ["Patch57_NavalAtSeaLandRescueGuard"] = new(CoopVeto.Parked,

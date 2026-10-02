@@ -57,6 +57,15 @@ public class TaomTournamentModel : DefaultTournamentModel
             : base.GetEliteRewardItems(town, regularRewardMinValue, regularRewardMaxValue);
     }
 
+    // Renown and influence for every winner (docs/features/tournament-rewards.md). The engine asks at the award
+    // and again for the winner panel; both read the same tournament's hero count, noted by Patch96.
+    public override int GetRenownReward(Hero winner, Town town) =>
+        _service.RenownReward(base.GetRenownReward(winner, town), town?.Settlement?.StringId, winner?.Culture?.StringId);
+
+    public override int GetInfluenceReward(Hero winner, Town town) =>
+        _service.InfluenceReward(base.GetInfluenceReward(winner, town), town?.Settlement?.StringId,
+            winner?.Culture?.StringId, winner?.Clan?.Kingdom?.StringId, town?.OwnerClan?.Kingdom?.StringId);
+
     public override Equipment GetParticipantArmor(CharacterObject participant)
     {
         var dummyId = _service.ResolveDummyId(participant?.Culture?.StringId, null);

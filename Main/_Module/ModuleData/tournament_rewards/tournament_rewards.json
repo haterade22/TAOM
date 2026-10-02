@@ -1,0 +1,15 @@
+{
+  "_comment": "Tournament reward factors by culture (docs/features/tournament-rewards.md). 1.0 is vanilla. renown and influence scale a tournament winner's rewards by the WINNER's culture; skill_xp scales the player's tournament skill XP by the PLAYER's culture. Keys are culture StringIds: Rohan is vlandia, Dale sturgia, Dunland empire, Harad aserai, Rhun khuzait, Khand battania. A row's missing field inherits the default row. Each factor must be in [0, 10]. Read once per process: restart the game after editing.",
+  "cultures": {
+    "default": { "renown": 1.0, "influence": 1.0, "skill_xp": 1.0 },
+    "vlandia": { "renown": 1.5, "influence": 1.25 },
+    "gondor": { "renown": 1.25, "influence": 1.5, "skill_xp": 1.10 },
+    "sturgia": { "renown": 1.25 },
+    "mordor": { "renown": 1.5, "skill_xp": 1.40 },
+    "isengard": { "renown": 1.5, "skill_xp": 1.40 },
+    "gundabad": { "renown": 1.5, "skill_xp": 1.40 },
+    "goblin": { "renown": 1.5, "skill_xp": 1.40 },
+    "mistymountainorcs": { "renown": 1.5, "skill_xp": 1.40 },
+    "dolguldur": { "renown": 1.5, "skill_xp": 1.40 }
+  }
+}

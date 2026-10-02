@@ -167,6 +167,23 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "When on, the emissary option is hidden at settlements whose owner faction has no special resource. When off, the option still appears but is disabled with an explanatory hint.")]
     public bool HideEmissaryWhenNoResource { get; set; } = true;
 
+    // --- Tournaments ---
+
+    [SettingPropertyGroup("Tournaments")]
+    [SettingPropertyInteger("Max Bet Per Round", 0, 1000000, Order = 0, RequireRestart = false,
+        HintText = "The most you may bet in each tournament round. 0 = unlimited (up to your purse). Roguery's Deep Pockets doubles any other value. Vanilla is 150. Default: 0.")]
+    public int TournamentMaxBetPerRound { get; set; } = 0;
+
+    [SettingPropertyGroup("Tournaments")]
+    [SettingPropertyFloatingInteger("Renown Multiplier", 0.0f, 5.0f, "#0.00", Order = 1, RequireRestart = false,
+        HintText = "Scales the renown a tournament winner earns (base: vanilla's 3 plus 1 per lord or hero in the field, times the winner's culture factor). 1.00 = as designed. Applies to every winner. Default: 1.00.")]
+    public float TournamentRenownMultiplier { get; set; } = 1.0f;
+
+    [SettingPropertyGroup("Tournaments")]
+    [SettingPropertyFloatingInteger("Influence Multiplier", 0.0f, 5.0f, "#0.00", Order = 2, RequireRestart = false,
+        HintText = "Scales the influence a tournament winner earns in a town of their own kingdom (base: 2 plus 1 per 4 lords or heroes in the field, times the winner's culture factor). 1.00 = as designed. Default: 1.00.")]
+    public float TournamentInfluenceMultiplier { get; set; } = 1.0f;
+
     // --- Armour Acquisition ---
 
     [SettingPropertyGroup("Armour Acquisition")]

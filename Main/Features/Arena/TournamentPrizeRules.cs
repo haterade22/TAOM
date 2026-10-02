@@ -55,6 +55,44 @@ public static class TournamentPrizeRules
     /// empty or the town has no culture: the engine's prize roll indexes the list unguarded
     /// (FightTournamentGame.GetTournamentPrize), so it must never be empty while anything fits.
     /// </summary>
+    /// <summary>How many prizes the player chooses between at Join (Mike, 2026-10-02).</summary>
+    public const int ChoiceCount = 3;
+
+    /// <summary>
+    /// The prizes offered at Join: the advertised prize first, then alternatives from <paramref name="pool"/>,
+    /// at most <see cref="ChoiceCount"/> in all, distinct. The draw is seeded by <paramref name="seedKey"/> (the
+    /// town and the tournament's creation time) over the pool in id order, so reopening the menu, in this
+    /// session or after a reload, offers the same three.
+    /// </summary>
+    public static IReadOnlyList<string> PickChoices(IEnumerable<string> pool, string advertised, string seedKey)
+    {
+        var picks = new List<string> { advertised };
+        var candidates = pool.Where(id => !string.IsNullOrEmpty(id) && id != advertised)
+            .Distinct(StringComparer.Ordinal)
+            .OrderBy(id => id, StringComparer.Ordinal)
+            .ToList();
+        var random = new Random(StableSeed(seedKey));
+        for (var i = candidates.Count - 1; i > 0; i--)
+        {
+            var j = random.Next(i + 1);
+            (candidates[i], candidates[j]) = (candidates[j], candidates[i]);
+        }
+        picks.AddRange(candidates.Take(ChoiceCount - 1));
+        return picks;
+    }
+
+    /// <summary>FNV-1a over the key's characters: string.GetHashCode differs between processes.</summary>
+    private static int StableSeed(string key)
+    {
+        unchecked
+        {
+            var hash = 2166136261u;
+            foreach (var c in key ?? string.Empty)
+                hash = (hash ^ c) * 16777619u;
+            return (int)hash;
+        }
+    }
+
     public static List<T> PreferCulture<T>(IReadOnlyList<T> fitting, string? cultureId, Func<T, string?> cultureOf)
     {
         if (!string.IsNullOrEmpty(cultureId))

@@ -1478,41 +1478,5 @@
     <string id="TAOM_hero_SE9_s_bn" text="파라진은 검은 누메노르인 여마법사이며, 남편이 출정할 때마다 키리스 나르길의 실질적인 권력자다. 그 이름은 누메노르의 마지막 왕을 떠올리게 한다." />
     <string id="TAOM_hero_SE9_c1_bn" text="지구르벨은 키리스 나르길의 후계자이며 암흑의 기술을 익혔다. 그 이름은 '마법사를 사랑하는 자'를 뜻하는데, 누메노르는 사우론의 정체를 알기 전에 그를 그렇게 불렀다." />
     <string id="TAOM_hero_SE9_c2_bn" text="짐라진은 검의 군주의 둘째 아이이며, 두 남매 중 더 위험한 쪽이다. 그녀는 어머니의 재능은 물려받았으나 인내심은 전혀 물려받지 못했다." />
-    <string id="3UucAOBW" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이다." />
-    <string id="62vceTar" text="나는 {CLAN_NAME} 가문의 {CONVERSATION_CHARACTER.LINK}이다." />
-    <string id="99gE1ZoY" text="나는 {FACTION} 소속의 {CONVERSATION_CHARACTER.LINK}이다." />
-    <string id="AxMrFoea" text="{TOWN_NAME}이(가) {FACTION_NAME}의 {LORD.LINK}이(가) 이끄는 군세에 포위되었습니다!" />
-    <string id="EHFibjkM" text="{TOWN_NAME}이(가) {FACTION_NAME}의 {LORD.LINK}이(가) 이끄는 군대에 포위되었습니다!" />
-    <string id="ExbVzTZA" text="{CLAN}이(가) {KINGDOM}와(과) 함께 싸우기로 계약했습니다." />
-    <string id="FFXqPFwl" text="나는 블란디아 왕국의 연대기에서 가장 빛나는 가문 중 하나인 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이다." />
-    <string id="JJAWbuNT" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이다. 사람들은 우리 조상이 영웅들의 시대에 서쪽에서 이 땅으로 온 황금 배에 탔던 이들 중 하나라고 말하지. 물론 그 배에 탔다고 하는 사람들이 전부 진짜 탔다면, 무게 때문에 배가 뒤집혔을 거야." />
-    <string id="L2GbDVja" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}입니다, {?PLAYER.GENDER}부인{?}주군{\?}이시여. 모실 수 있어 영광입니다." />
-    <string id="Nq2dyiO1" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이다. 스터지아의 영웅담에서 여러 번 들어보았을 이름이지." />
-    <string id="PBgLvyOa" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이다. 우리 조상들은 먼 북쪽에서 내려와 제후들의 데나르를 받고 이 땅을 지키겠다는 맹세를 한 이들 중 하나였고, 우리는 그 맹세를 지켜왔다." />
-    <string id="S0oFKYfB" text="{CLAN}은(는) 더 이상 {KINGDOM}을(를) 섬기지 않습니다." />
-    <string id="S1vGzr8z" text="나는 아세라이의 가문인 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오." />
-    <string id="SLAkSrb5" text="{FACTION1_NAME}이(가) {FACTION2_NAME}에 선전포고했습니다." />
-    <string id="TsYCa2fZ" text="{FACTION1}과(와) {FACTION2}이(가) 화평을 맺었습니다." />
-    <string id="U4p70l9B" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오." />
-    <string id="U770Bvy8" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오. 우리 가문의 명성은 바타니아의 노래 속에서 그 누구에게도 뒤지지 않소." />
-    <string id="Ua0T0A7t" text="나는 바타니아의 유서 깊은 혈통 중 하나인 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오." />
-    <string id="WH8P3Y5F" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오." />
-    <string id="a8584KD0" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오. 초원의 서사시에서 우리 씨족의 이름을 들어보았을 것이오. 우리는 쿠자이트의 어머니인 위대한 암늑대의 열두 아들 중 하나의 이름을 잇고 있소." />
-    <string id="cMO9JXvk" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오. 우리는 {LIEGE_TITLE}께 봉토를 받아 영지를 지키며, 충성의 맹세를 지키고 있소." />
-    <string id="dC8acIya" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오." />
-    <string id="dfAE3liA" text="{CLAN_NAME} 가문이 {FACTION}에 합류했습니다." />
-    <string id="dlkg2jQf" text="나는 스터지아의 유서 깊은 혈통 중 하나인 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오." />
-    <string id="eyxfHmCU" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오. 우리 가문은 여러 세대에 걸쳐 블란디아의 왕들을 섬겨왔소." />
-    <string id="hJFCi1zu" text="{FACTION1}과(와) {FACTION2}이(가) 화평을 맺었습니다." />
-    <string id="hP57Caab" text="{VICTOR_FACTION}의 {VICTOR_PARTY}이(가) {DEFEATED_FACTION}의 {DEFEATED_PARTY}을(를) 물리쳤습니다." />
-    <string id="hbWhfoWH" text="{SETTLEMENT}이(가) {FACTION_NAME}의 {LORD.LINK}에게 약탈당했습니다" />
-    <string id="hopvV6Ch" text="{FACTION1_NAME}의 {RULER_NAME}이(가) {FACTION2_NAME}에 선전포고했습니다." />
-    <string id="kqwNCCbZ" text="{TOWN_NAME}이(가) {FACTION_NAME}의 {LORD.LINK}이(가) 이끄는 군대에 포위되었습니다!" />
-    <string id="l2nEIZV5" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오." />
-    <string id="nbVW2cJ8" text="{SETTLEMENT}이(가) {FACTION_NAME}의 {LORD.LINK}이(가) 이끄는 군대에 약탈당했습니다" />
-    <string id="pn79h0aj" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오. 우리는 보르티오스 황제에게서 직접 작위를 받았소. 하기야 그때 그는 우리 약탈선에 갇혀 있었으니 선택의 여지가 별로 없었지만, 분명 우리 핏줄의 고귀함을 알아본 것이오." />
-    <string id="rhTUDKhJ" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오. 바타니아의 씨족 중 우리 술잔 수집품에 제 용사의 두개골을 바치지 않은 곳은 없소." />
-    <string id="z2yr4mc6" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오. 우리 씨족은 여러 세대에 걸쳐 쿠자이트 칸국을 충성스럽게 섬겨왔소." />
-    <string id="zZ9FQJRI" text="나는 아세라이 혈통 중 가장 오래되고 고귀한 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오." />
   </strings>
 </base>

@@ -90,6 +90,15 @@ vanilla brow floated about half a metre above the dwarf's face (it keeps a human
 head vertices were on the crown, which the brow sliders do not move; the test could not separate. The live
 `skins.xml` is restored.
 
+**The head swap test (applied 14:36, left in place until 2026-10-02).** `head_swap.py` (same scratchpad) went
+further: it pointed the adult female dwarf's `face_meta_mesh` at vanilla `head_female_a` and all five brow slots at
+`female_eyebrow_2`, a known-good vanilla pair, backing up to `skins.xml.bak-headswap-20260929-143603`. Its in-game
+result was never recorded, and it was never restored. Her `<face_textures>` still named `m_dwarf_bm_female_a1_head`,
+so from then on every adult female dwarf rendered a blank human head (dwarf UVs on a human mesh) floating above her
+body at human rest height, and the edit reached all three `E:\LOTRAOM_Releases\*` Armory copies. On 2026-10-02 the
+six lines were edited back by hand in the live file and the three release copies; all four now match the
+backup byte for byte.
+
 ## Next steps
 
 1. Decode `UnknownInt2` (TpacTool source: `...\scratchpad\builder_research\tpaclib\TpacTool.Lib.decompiled.cs`) and

@@ -857,18 +857,24 @@ names that reused Rivendell's `aom_rv_*` keys. English hid it, because each site
 one registered row per key would have shown one hero's bio on the other in every other language.
 - **Why missed:** the one-default-per-key test covered only the name generator's first four sources.
 - **Prevent:** `EveryNameKey_InTheNameGeneratorsSources_HasOneEnglishDefault` now scans every generator source;
-  split a shared key (the second user gets `aom_<id>_...`) before registering, never after translating.
-- **Source:** the full translation run of 2026-10-01 (`taom_hero_text_strings.xml`, `taom_character_name_strings.xml`).
+  split a shared key before registering, never after translating. **For text the engine saves with the object**
+  (`Hero.EncyclopediaText`, hero names: `[SaveableProperty]`, and heroes.xml is read only for a new campaign), give
+  BOTH sites new keys and retire the old one: renaming only the second site left the old key registered with the
+  first hero's English, so old saves show that bio on the second hero in twelve languages (accepted as a known
+  limitation this time; `0bd6abf3`).
+- **Source:** `0bd6abf3`; `docs/reviews/rca-full-translation-run-2026-10-02.md` finding 6.
 
 ### The translator model keeps Latin circumflex vowels inside Russian orc names (2026-10-01)
-Out of about 58,000 new rows, 95 failed the writing-system gates; re-translating fixed most, but 33 Russian rows came
-back with the same `Гробûрз`, `Скарнâк`, `Маугâш` on every attempt, the source's circumflex vowels copied into
-Cyrillic. A paid retry cannot fix a habit.
+Out of about 55,500 new rows (4,627 keys in 12 languages), 95 failed the writing-system gates; re-translating fixed
+most, but 33 Russian rows came back with the same `Гробûрз`, `Скарнâк`, `Маугâш` on every attempt, the source's
+circumflex vowels copied into Cyrillic, so a further paid retry would not have helped. The gate itself could not see
+a Devanagari or Arabic letter (`Воргराш`, `Korساrenrouten`): `Script()` classified only five scripts, so five such
+rows shipped (one new, four older); any other letter now counts as foreign in every language.
 - **Why missed:** the placeholder check passes these rows; only `LanguageTextIntegrityTests` sees them.
 - **Prevent:** after a large run, run `FullyQualifiedName~MixesWritingSystems`, reset and re-translate the listed rows
   once (the test lists at most 60 at a time), then fix what remains deterministically: inside a Cyrillic word,
   `â û ô î ê` become `а у о и е`, in the row and its cache value together.
-- **Source:** the full translation run of 2026-10-01.
+- **Source:** `0bd6abf3`; `docs/reviews/rca-full-translation-run-2026-10-02.md` findings 3 and 4.
 
 ### A Batches API job can sit unprocessed for hours; the translator writes nothing until it ends (2026-10-01)
 Twelve batches went in together: two finished, ten showed `processing=122 succeeded=0` more than two hours later.
@@ -878,7 +884,7 @@ nothing on disk changed. Cancelling a batch with nothing processed costs nothing
 - **Prevent:** record each batch id as it is submitted (the log prints it), and for a run that must finish in one
   sitting, prefer the live path or set a deadline after which unprocessed batches are cancelled. A recovery reads
   results by string id, never by chunk position, because English edits made meanwhile shift the chunks.
-- **Source:** the full translation run of 2026-10-01.
+- **Source:** the 2026-10-01 run behind `0bd6abf3`; `docs/reviews/rca-full-translation-run-2026-10-02.md`.
 
 ### A UI resource refresh rebuilds every open movie under its old identifier, and only while the main menu is active (2026-10-01)
 `GauntletUISubModule.RefreshResources(false)` releases every open movie, rebuilds the sprite, font and brush tables (`UIResourceManager.Refresh`), then reloads each movie into a new `UIContext` through `GauntletLayer`'s private `LoadMovie(GauntletMovieIdentifier)`, so a patch on the public `LoadMovie` never sees it and the identifier's `Movie` is a new object. Anything that cached widgets from the old tree (FactionUI's effects classes) keeps animating detached widgets. The refresh runs only when `_areResourcesDirty` is set, only `OnNewModuleLoad` sets it (option and language changes do not), and the engine allows a runtime module load only while the main menu screen is active (`MBInitialScreenBase` calls `SetCanLoadModules(true)` on activate, `false` on deactivate).
@@ -891,3 +897,26 @@ A card click on the faction screen (`FactionScreenVM.SelectHero`, #704) ran the 
 - **Why missed:** TAOM's "entry points delegate and never throw" habit is attached to Harmony patches and behaviours; a view model's `Execute`/`Select` method reached from a prefab command did not register as one.
 - **Prevent:** any method a prefab command reaches, which does more than set a view-model property, wraps the work so a failure degrades the screen's action (here: copy instead of take over) and logs `{ex}`, with a test that makes the dependency throw.
 - **Source:** `docs/reviews/rca-faction-ui-takeover-2026-10-01.md` T6.
+
+### Never register a vanilla key a stylesheet keeps; vanilla's translation is the better one (2026-10-02)
+The 2026-10-01 run registered 36 keys `comment_strings.xslt` and `action_strings.xslt` write, believing them TAOM's own.
+They were SandBox's: the stylesheets keep each key and only drop "the". TAOM's language files load after SandBox's and
+`LocalizedTextManager.DeserializeStrings` keeps the last row for an id, so 432 machine rows replaced TaleWorlds' curated
+ones, which carry the engine's grammar tokens: Turkish lost `'{.e}`/`'{.den}` (players would read "Gondor'e"), and in
+DE, FR, BR and IT a male player read "meine mein Herr". Reverted on 2026-10-02.
+- **Why missed:** the registration script filtered on "no TAOM English row", never on "vanilla defines it", and the
+  research agent that judged the keys TAOM-authored had searched `SandBoxCore`, while the strings live in `SandBox`.
+- **Prevent:** `VanillaKeyOverrideTests` (LiveInstall) fails on any TAOM language row whose id vanilla's English data
+  declares, outside an allowlist with reasons. A stylesheet that keeps a vanilla key and its meaning registers nothing;
+  a change of meaning takes a TAOM key (`TAOM_liege_*`).
+- **Source:** `docs/reviews/rca-full-translation-run-2026-10-02.md` finding 1.
+
+### A delegated search's "not found" is checked against the module list before it is relayed (2026-10-02)
+The same run's planning relayed an agent's claim that the 36 XSLT keys were "absent from vanilla" after checking two
+other claims by hand. The agent had grepped one of the three vanilla modules that ship ModuleData. Two lenses of the
+deep review found the error in minutes by searching all of them.
+- **Why missed:** the spot-check covered the claims that looked load-bearing for scope (a dead file, a shared key),
+  not the one that decided whether to register 36 keys.
+- **Prevent:** a negative finding ("X does not exist in vanilla") is relayed only with the paths it searched; check
+  them against Native, SandBoxCore, SandBox, StoryMode and CustomBattle (and the DLC modules) before acting on it.
+- **Source:** `docs/reviews/rca-full-translation-run-2026-10-02.md` finding 1.

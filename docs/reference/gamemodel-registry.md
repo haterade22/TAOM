@@ -38,7 +38,7 @@
 | `TaomMilitaryPowerModel` | `DefaultMilitaryPowerModel` | Configurable T7-T10 troop power (MCM + JSON) |
 | `TaomCombatSimulationModel` | `DefaultCombatSimulationModel` | Configurable blunt/cut damage ratio per battle type (MCM); `SimulateHit` also applies the refuge defender bonus via `IRefugeDefenseService` + `RefugeDamageReduction` (the (1-r)-on-final contract shared with the real-time path) |
 | `TaomPartyHealingModel` | `DefaultPartyHealingModel` | Cultural survival bonuses (JSON per-faction death chance multiplier) |
-| `TaomTournamentModel` | `DefaultTournamentModel` | Per-participant culture armor + culture-specific prize pools (Tierf-based) for regular and elite rewards |
+| `TaomTournamentModel` | `DefaultTournamentModel` | Per-participant culture armor + culture-specific prize pools capped at heavy (armour-class bands) + winner renown and influence scaled by heroes and culture ([tournament-rewards.md](../features/tournament-rewards.md)) |
 | `TaomAgeModel` | `DefaultAgeModel` | Race-appropriate lifespans (elven immortality, dwarf/hobbit aging) |
 | `TaomPregnancyModel` | `DefaultPregnancyModel` | Race-appropriate pregnancy durations |
 | `TaomHeroCreationModel` | `DefaultHeroCreationModel` | Race-aware hero creation defaults |

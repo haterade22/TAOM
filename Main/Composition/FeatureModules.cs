@@ -20,5 +20,6 @@ internal static class FeatureModules
         new Features.ArmourAcquisition.ArmourAcquisitionModule(),
         new Features.RealmBorders.RealmBordersModule(),
         new Features.BattleCorpses.BattleCorpsesModule(),
+        new Features.TournamentRewards.TournamentRewardsModule(),
     };
 }

@@ -187,6 +187,19 @@ same day for that reason. Saruman's hair and beard were then stripped to vanilla
 `tools/blender/strip_upper_mesh_channels.py` (2026-09-28 20:05; backups `.bak-stripupper`, the fitted file, and
 `.bak-hairfollow`, the original); a Kit re-import and an in-game look are owed.
 
+**An upper mesh with no weights does not move with the head.** `SK_Dwarf_Beard_A_12` shipped with all 15,344
+vertices unweighted, while beards 01 to 11 are weighted to `head` and `neck` (the long ones `spine1` and `spine2`
+too). Its rest shape fitted the male head like its siblings, so only the weights were missing.
+`tools/blender/transfer_upper_mesh_weights.py` copied weights to it and its five LODs from beards 01 to 11 pooled
+(2026-10-02), so it keeps the artist's head-to-chest fade; a copy from the head mesh alone was tried first and
+replaced, because nothing of the head lies near a braid and the fade then follows distance from the neck skin.
+Beard 12 sits a median 0.07 mm from sibling strands. Per height band it now reads head 97% above z 1.25, head 83%
+from 1.15, head 66% from 1.05 and spine 61% below, between beards 07 and 09. Backup
+`SK_Dwarf_Beards.fbx.bak-upperweights`. Mike re-imported and saved it in the Kit the same day; TpacTool on
+`SK_Dwarf_Beards_geo.tpac` then showed every vertex of every LOD weighted, dominant bone 13 (`head`), the same as
+beard 11. An in-game look is owed. A beard that "floats" or stays put while the head turns: check its weights before
+its morphs.
+
 ## Eye colour
 
 A skin's `eye_color_gradient_points` are the eye slider's stops, in document order; a character stores its eye
@@ -208,6 +221,7 @@ array and does not clamp the count (the skin parser 0x577410, v1.5.3), so a grad
 | `tools/check_eye_follow.py` (export: `export_face_morphs.ps1`) | Gate on the compiled package: no eye left behind |
 | `tools/oneoff/restore_adult_woman_dwarf.py` | The female dwarf's skin restore; its dry run prints the live state |
 | `tools/blender/strip_upper_mesh_channels.py` | Removes every morph channel from named hair and beard meshes and their LODs, the vanilla shape; refuses face parts |
+| `tools/blender/transfer_upper_mesh_weights.py` | Weights an unweighted hair or beard mesh and its LODs from its finished siblings or a head; refuses one that already has weights |
 | `tools/oneoff/tune_face_slider_reach.py` | Scales a race head's slider ranges to the male dwarf's reach in millimetres; `--zero` pins a key at 0; `--check` is the reinstall gate |
 | `tools/oneoff/add_sauron_eye_colours.py` | Gold and red stops on the `sauron` race's eye slider; `--check` exits 1 when a skin lacks them |
 
