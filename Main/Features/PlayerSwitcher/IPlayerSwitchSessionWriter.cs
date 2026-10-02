@@ -4,13 +4,15 @@ namespace TAOM.Features.PlayerSwitcher;
 
 /// <summary>
 /// Write side of the selection. Split from the read side so that the only components able to
-/// change the selection are the picker UI and the patch that clears it.
+/// change the selection are the picker UI, the patch that clears it, and Kysaro's faction screen
+/// (#704: <c>FactionPickService</c>), which selects a hero picked there for the handover.
 /// </summary>
 public interface IPlayerSwitchSessionWriter
 {
     void Select(HeroPickRow row);
 
-    /// <summary>Clears the selection. Called on every BodyGeneratorView construction.</summary>
+    /// <summary>Clears the selection. Called on every BodyGeneratorView construction while the panel
+    /// is shown, and by the faction screen whenever its pick is dropped.</summary>
     void Clear();
 
     void SetPreviewActive(bool active);

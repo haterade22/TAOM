@@ -9,19 +9,19 @@ public sealed class FactionScreenServices
 {
     public FactionScreenServices(
         FrontEndSpriteService sprites,
-        FactionPresetService presets,
+        FactionPickService picks,
         FactionRoster roster,
         FactionScreenWidgets widgets)
     {
         Sprites = sprites;
-        Presets = presets;
+        Picks = picks;
         Roster = roster;
         Widgets = widgets;
     }
 
     public FrontEndSpriteService Sprites { get; }
 
-    public FactionPresetService Presets { get; }
+    public FactionPickService Picks { get; }
 
     public FactionRoster Roster { get; }
 

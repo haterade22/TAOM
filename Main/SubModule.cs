@@ -1059,10 +1059,10 @@ public class SubModule : MBSubModuleBase
             ccLogger));
 
         // #704: applies a hero picked on Kysaro's faction screen at character-creation handler priority
-        // 1060, after TAOM's own 1050 finalize, as his postfix on that finalize did; clears the pick
-        // when a new character creation starts.
+        // 1060, after TAOM's own 1050 finalize, as his postfix on that finalize did; skips a taken-over
+        // hero's creation to the career choice; clears the pick when a new character creation starts.
         campaignStarter.AddBehavior(new Features.FactionUI.Presets.FactionPresetRegistrationBehavior(
-            IoC.Resolve<Features.FactionUI.Presets.FactionPresetService>(),
+            IoC.Resolve<Features.FactionUI.Presets.FactionPickService>(),
             ccLogger));
 
         // #514 — offers an adopted player a place in their culture's kingdom, once, after

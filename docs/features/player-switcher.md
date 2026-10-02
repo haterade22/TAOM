@@ -449,7 +449,7 @@ takeover of an attached lord plays, so it is left as it is until someone wants i
 
 | Setting | Default | Note |
 |---|---|---|
-| `EnablePlayerSwitcher` | `true` | Off means the movie never loads and the handler no-ops |
+| `EnablePlayerSwitcher` | `true` | Off means the movie never loads and the handler no-ops; a lord picked on Kysaro's faction screen (#704) is then copied, not taken over |
 | `PlayerSwitcherIncludeWanderers` | `true` | Only 20 of 39 cultures have any |
 | `PlayerSwitcherAllowLoreLockedHeroes` | `false` | Hint text states the capture caveat |
 | `PlayerSwitcherTransferStartingGold` | `false` | An established lord is already funded |
@@ -468,14 +468,21 @@ All four are simulation-relevant for co-op under the include-by-default rule, an
   settlement.
 - **Enlistment.** Cannot collide: no enlistment record can exist during character creation.
 - **Kysaro's faction screen (#704).** When FactionUI's faction and hero picker is shown on the culture
-  stage, it takes this feature's place for that character creation (Mike, 2026-10-01: Kysaro's design):
-  `FactionScreenLauncher` calls `IPlayerSwitchPolicyProvider.SetSuppressedForCharacterCreation(true)`,
-  and `Current` then reads `Disabled`, so the panel never attaches and the 1100 handover does nothing.
+  stage, it takes this feature's panel's place for that character creation (Mike, 2026-10-01: Kysaro's
+  design): `FactionScreenLauncher` calls `IPlayerSwitchPolicyProvider.SetPickerHidden(true)`, and
+  Patch77 then attaches no panel (and clears no selection). `Current` is untouched, because the faction
+  screen drives this feature's handover: a hero picked there who is a living clan member of the
+  faction's culture becomes the selection (`IHeroPickerService.FindTakeover`, the list's eligibility
+  without its leaders-only limit, since the handover promotes any member), Patch78 skips the backstory
+  to the career choice, and the 1100 handover runs as for a panel pick. FactionUI also takes the face
+  generator and the four stages after the career out of that character creation (`docs/features/faction-ui.md`,
+  "Taking over a hero"), and asks `CanReassignPlayerClan`, `StartupClanIsDisposable` and `IsSwitchable`
+  at pick time, since the stages it skipped cannot be shown again if the handover refuses at the end.
   The flag is cleared when the screen declines (toggle off, nothing playable, a failure) and on
-  `SubModule.OnGameEnd`, so the next character creation offers the switcher again when the screen is
-  off. It is separate from the `DisableForSession` latch, which nothing in FactionUI touches. The
-  picker's own hero copy runs from a finalize handler at priority 1060, between TAOM's 1050 and this
-  feature's 1100; `FactionPresetHandlerPriorityTests` pins the order.
+  `SubModule.OnGameEnd`, so the next character creation offers the panel again when the screen is off.
+  It is separate from the `DisableForSession` latch, which nothing in FactionUI touches. A copied pick
+  runs from a finalize handler at priority 1060, between TAOM's 1050 and this feature's 1100;
+  `FactionPresetHandlerPriorityTests` pins the order.
 
 ## Verification
 

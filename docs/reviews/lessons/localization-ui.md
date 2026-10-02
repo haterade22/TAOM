@@ -885,3 +885,9 @@ nothing on disk changed. Cancelling a batch with nothing processed costs nothing
 - **Why missed:** the refresh postfix restored the resource tables, and nobody asked what else referenced the rebuilt trees, or when a refresh can happen at all.
 - **Prevent:** code that caches widget references across frames states which screens it serves; for a main-menu screen, either re-find widgets when the layer's `UIContext` changes or accept and document the gap. Settle reachability from `SetCanLoadModules` before writing re-attachment code for any other screen.
 - **Source:** `docs/reviews/rca-faction-ui-2026-10-01.md`, Codex F1.
+
+### A Gauntlet command handler is an entry point: guard it like a patch (2026-10-01)
+A card click on the faction screen (`FactionScreenVM.SelectHero`, #704) ran the takeover check, a pass over every living hero, the kingdoms and the uncapturable registry, with nothing to catch a throw, and Gauntlet's command dispatch rethrows. Player Switcher runs the same check inside Patch77's try. The click now falls back to a copy and logs the exception.
+- **Why missed:** TAOM's "entry points delegate and never throw" habit is attached to Harmony patches and behaviours; a view model's `Execute`/`Select` method reached from a prefab command did not register as one.
+- **Prevent:** any method a prefab command reaches, which does more than set a view-model property, wraps the work so a failure degrades the screen's action (here: copy instead of take over) and logs `{ex}`, with a test that makes the dependency throw.
+- **Source:** `docs/reviews/rca-faction-ui-takeover-2026-10-01.md` T6.

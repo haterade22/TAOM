@@ -69,14 +69,42 @@ themed movie that throws while building falls back to vanilla's and is not tried
   `ICultureStageMovieOverride` and loads `TAOMFactionScreen` on TAOM's own `FactionSelectionVM` (Kysaro's
   module set a private static and called TAOM's methods by reflection). Confirming a faction selects its
   region and confirms its culture through the faction map's own path. Any failure returns null and the
-  faction map shows instead. In a character creation where the screen is shown it takes Player
-  Switcher's place (Mike, 2026-10-01: Kysaro's design): `SetSuppressedForCharacterCreation(true)` turns
-  the switcher off until the screen declines or the game ends. Quitting to the main menu from the
-  screen pops the character-creation state without closing the culture stage, so `SubModule.OnGameEnd`
-  calls `ResetForGameEnd`, which lets go of the screen and the pick and gives the switcher back.
-- **Hero picks.** `FactionPresetService` keeps Kysaro's outcome (Mike, 2026-10-01): a lord or leader
-  ends up on the player with name, body, race, gear and skills; a named card or a wanderer without the
-  name. Mike's Option A sets when: the look and gear are copied when the face generator is built (its
+  faction map shows instead. In a character creation where the screen is shown it takes the place of
+  Player Switcher's panel (Mike, 2026-10-01: Kysaro's design): `SetPickerHidden(true)` keeps the panel
+  off the face generator until the screen declines or the game ends, while Player Switcher's handover
+  still runs for a hero taken over on the screen. Quitting to the main menu from the screen pops the
+  character-creation state without closing the culture stage, so `SubModule.OnGameEnd` calls
+  `ResetForGameEnd`, which lets go of the screen and the pick and shows the panel again.
+- **Taking over a hero.** Mike, 2026-10-01: "When I pick an existing character like Thranduil from the
+  UI, it should skip the character creation all of the way until the career picker, user picks the
+  career and it starts the game." `FactionPickService` decides each pick. A card or list entry whose
+  character is a living hero with a clan, whom Player Switcher's rules would hand over
+  (`IHeroPickerService.FindTakeover`: the faction's culture, no child or notable, Sauron and the Nine only
+  with "Allow Sauron and the Nazgul", Player Switcher on) and whose handover would not refuse (the player
+  clan can be moved, the creation clan holds no other lord, the hero is switchable), becomes Player
+  Switcher's selection. When the culture stage completes, the 1060 handler's `OnStageCompleted` hands
+  the stage list to `FactionPickService`, which takes the face generator, banner, clan name, review and
+  options stages out (through `CharacterCreationStagesAdapter`, the engine's public stage calls only)
+  and shows the hero's look. `NextStage` runs the handlers before it opens the stage at its new index
+  (pinned from the engine's IL), so the narrative stage opens next; Player Switcher's Patch78 walks the
+  backstory to the career choice, and after the career its handover at 1100 makes the player that hero,
+  with his clan, fiefs, kingdom, gear and skills. Unlike Player Switcher's own list, any clan member can
+  be taken over (the handover makes them the clan's leader, and the ruler when that clan rules, as for a
+  ruler's child there). The FACTION button, or Previous back through the six auto-answered backstory
+  menus, returns to the faction screen, which drops the takeover; the next confirm that is not one puts
+  every stage back in vanilla's order (the engine only appends, so the narrative stage is re-appended
+  with the rest). Only vanilla's seven stages, with the culture stage first, are changed: on any other
+  list the hero is taken over through every stage. Campaign options keep a new campaign's defaults
+  (every difficulty at its easiest, Iron Man off, the life and death cycle on, as an untouched options
+  screen leaves them); Iron Man and, with the Birth and Aging Options module, the life and death cycle
+  can no longer be set, the rest can in the campaign's options. On the named cards, Haldir (a Mirkwood
+  lord on the Lothlorien screen) and Bolg (Misty Mountains culture on the Gundabad screen) are copied,
+  since Player Switcher takes over only heroes of the confirmed faction's culture, and so are Aragorn
+  and Gimli, who have no clan.
+- **Copied picks.** `FactionPresetService` keeps Kysaro's outcome (Mike, 2026-10-01) for every pick
+  that is not taken over: a lord ends up on the player with name, body, race, gear and skills; a named
+  card, a legend or a wanderer without the name. Mike's Option A sets when: the look and gear are
+  copied when the face generator is built (its
   constructor prefix also dresses the model in the pick's gear), and the name and skills only from the
   finalize handler at priority 1060, after TAOM's 1050, where the look is copied again over the stages
   since. Backing out to "Custom Character" or another faction puts back the look the character had
@@ -195,13 +223,14 @@ character id in these files against the shipped data.
 | `Main/Features/FactionUI/FactionUITicker.cs` | Once-per-frame work, from `SubModule.OnApplicationTick` |
 | `Main/Features/FactionUI/FactionUISettingsProvider.cs` | The thirteen MCM toggles, mapped by name |
 | `Main/Features/FactionUI/FactionScreen/` | Launcher, catalog, roster, art table, the four tuning files |
-| `Main/Features/FactionUI/Presets/` | The pick and when it is applied; the priority 1060 finalize handler |
+| `Main/Features/FactionUI/Presets/` | What a pick does (take over or copy) and when; the priority 1060 handler |
 | `Main/Features/FactionUI/CharacterCreation/` | Camera offsets, backstory skill icons |
 | `Main/Features/FactionUI/UI/` | Live effects, the faction screen's view models, custom widgets |
 | `Main/Features/FactionUI/Hooks/` | Patch95_FactionUI entry points |
 | `Main/Features/FactionMap/Hooks/ICultureStageMovieOverride.cs` | The culture stage seam the faction screen plugs into |
 | `Main/Adapters/FrontEndResourceAdapter.cs`, `FrontEndStateAdapter.cs`, `MenuMusicAdapter.cs` | Sprite table, textures, fonts, prefab lookup; game state and movie release; music mode |
 | `Main/Adapters/PresetAppearanceAdapter.cs`, `FactionRosterAdapter.cs`, `TextLocalizerAdapter.cs` | Copying a pick onto the player; heroes, troops and wanderers; the active language |
+| `Main/Adapters/CharacterCreationStagesAdapter.cs` | The stage list by kind: count, index, take a stage out, append it back |
 | `Main/_Module/GUI/Prefabs/FactionUI/` | Kysaro's 23 prefabs |
 | `Main/_Module/GUI/Brushes/TAOM{MainMenu,Loading,CharCreation,FactionScreen}.xml` | Kysaro's brushes |
 | `Main/_Module/ModuleData/characters/faction_ui_picker_characters.xml` | The eight picker-only legends |
@@ -211,8 +240,11 @@ character id in these files against the shipped data.
 - `IPathService` (Core): the module root and ModuleData paths.
 - `TaomSettings` (MCM), read through `FactionUISettingsProvider`.
 - FactionMap: the culture stage, `FactionSelectionVM`, `IFactionSelectionService`.
-- Player Switcher: `IPlayerSwitchPolicyProvider.SetSuppressedForCharacterCreation` while the faction
-  screen is shown.
+- Player Switcher: `IPlayerSwitchPolicyProvider.SetPickerHidden` while the faction screen is shown; for
+  a takeover, `IHeroPickerService.FindTakeover`, its session writer, `IPlayerIdentityAdapter`'s refusals,
+  Patch78's career fast path and the 1100 handover. `FactionPickService` takes the hero picker lazily:
+  FactionMap builds the launcher while it registers, before `IoC.cs` registers the registry the hero
+  picker's adapter needs.
 - CharacterCreation: the picks are applied after its finalize (1050); its race filter (Patch9) skips a
   face generator showing a pick.
 
@@ -240,9 +272,16 @@ Kysaro's data asks (`TAOM_special_character_requests.md`), as decided on 2026-10
   `FrontEndSpriteCatalogTests.cs`, `MenuMediaServiceTests.cs`, `LoadingImageServiceTests.cs`,
   `ShimmerSweepTests.cs`, `FrameTimeTests.cs` (a NaN frame time never moves an effect).
 - `FactionPresetServiceTests.cs`: Option A (look at the face generator, identity at finalize), the
-  restore on un-pick, the second campaign, Custom Character; `FactionPresetHandlerPriorityTests.cs`:
-  1050 < 1060 < 1100.
-- `FactionScreenLauncherTests.cs` (Player Switcher suppression, a missing prefab, the game-end reset), `FactionRosterTests.cs`,
+  restore on un-pick, the second campaign, Custom Character, a look shown without the face generator;
+  `FactionPresetHandlerPriorityTests.cs`: 1050 < 1060 < 1100.
+- `FactionPickServiceTests.cs`: which picks are taken over, each refusal (and a throw) falling back to a
+  copy, dropping Player Switcher's selection but leaving it for the 1100 handover at finalize, a takeover
+  copying nothing at the end, and the stage plan on a fake list that removes and appends as the engine
+  does: the skip, the restore in vanilla's order, a second confirm, StoryMode's five stages, another
+  mod's stage (added or in place of one), the culture stage not first, a stage the engine does not take
+  back, and a new creation after a short one.
+- `FactionScreenLauncherTests.cs` (Player Switcher's panel, a missing prefab, the game-end reset, a
+  dropped takeover), `FactionRosterTests.cs`,
   `FactionScreenCatalogTests.cs`, `FactionScreenConfigProviderTests.cs` and `FaceGenCameraServiceTests.cs`
   (one test per validation rule), `NarrativeThemeIconMapTests.cs`, `FactionUIConfigIdsTests.cs`.
 - `FactionScreenPrefabBindingTests.cs`: every binding in `TAOMFactionScreen.xml` resolves on the view
@@ -252,12 +291,15 @@ Kysaro's data asks (`TAOM_special_character_requests.md`), as decided on 2026-10
 - `FactionUISettingsProviderTests.cs`: each MCM toggle reaches its own setting and no other.
 - `FactionUIWiringTests.cs`: the feature registers every adapter its services take, every service
   SubModule resolves builds from it, the culture-stage seam and the game-end reset share one launcher,
-  and `IoC.cs` registers Player Switcher and the faction UI before FactionMap.
+  `IoC.cs` registers Player Switcher and the faction UI before FactionMap, and the launcher resolves
+  before the uncapturable registry exists.
 - `FactionUIBindingTests.cs`: every Patch95 target and its parameter names against the installed engine,
-  the reflected members, the `MusicMode` values, the category on all eight classes, and SubModule's
-  registration. `ReflectionSiteBindingTests` carries the four reflected members as gate rows.
-- Outside the folder: `CultureStageViewFinalizeHookTests.cs` (FactionMap), the suppression tests in
-  `PlayerSwitchPolicyProviderTests.cs`.
+  the reflected members, the `MusicMode` values, the category on all eight classes, SubModule's
+  registration, vanilla's stage order as the takeover restores it and `NextStage` running the handlers
+  before it opens the next stage (both read from the engine's IL), and Patch77 checking the hidden panel
+  before it clears the selection. `ReflectionSiteBindingTests` carries the four reflected members as gate rows.
+- Outside the folder: `CultureStageViewFinalizeHookTests.cs` (FactionMap), the hidden-panel tests in
+  `PlayerSwitchPolicyProviderTests.cs`, the `FindTakeover` tests in `HeroPickerServiceTests.cs`.
 
 ## How to add a loading screen
 
@@ -279,9 +321,19 @@ Every stage is ported. Mike deployed the first build on 2026-10-01 ("it looks fa
 `/deep-review` plus a deploy audit followed, then a convergence pass (PASS, nine LOW fixed) and a Codex
 pass (PASS, two P2: one bounded, one documented below); all their fixes are built and unit-tested but
 **not yet deployed**. The new strings were translated into all twelve languages by the same day's
-translation run (AI first drafts, like every TAOM language). Owed:
+translation run (AI first drafts, like every TAOM language). The port went out in `0bd6abf3`. The
+takeover follow-up (Mike, 2026-10-01) was reviewed by a six-lens `/deep-review` with its fixes
+applied, and Mike's first takeover in game (Boromir, 2026-10-02) went from the faction screen to the
+career page and into the game. Owed:
 
-- **In game (Mike):** the checklist below, on the fixed build.
+- **In game (Mike):** the checklist below, on the fixed build; of steps 6 to 8, only Boromir's takeover
+  reaching the career page and the game has been seen.
+- **Mike:** whether the Haldir and Bolg cards should take over (they are copied today: Haldir is a
+  Mirkwood lord on the Lothlorien screen, Bolg of the Misty Mountains culture on the Gundabad screen).
+  Point each card at a lord of its faction, allow a takeover across kingdoms, or keep the copy.
+- **Issue #704 (on Mike's word):** its body still records the first decision ("the pick copies name,
+  body, race, gear and skills; the picker replaces Player Switcher"); a comment recording the takeover
+  is drafted for posting.
 - **Kysaro:** whether the finalize copy should overwrite the name typed on the review screen and the
   player's face edits; what `TAOM.CharacterDisplay` is; the source code; the Ringbearer font licence;
   the mesh `kys_mordor_castle_prop_01` and material `t_mordor_tileable_black_iron` for his replacement
@@ -298,7 +350,20 @@ translation run (AI first drafts, like every TAOM language). Owed:
   screen is not tried again until the game restarts: the engine keeps a movie that failed to build
   referenced by its resource factories, with no way for TAOM to release it, so at most one is retained
   per broken prefab.
-- **After a Custom Battle round trip** the vanilla theme may play under the menu video (step 12).
+- **After a Custom Battle round trip** the vanilla theme may play under the menu video (step 13).
+- **During a takeover the career menu's button still reads "Next"**, though it now starts the game
+  (only the options stage relabels it), and **the CHARACTER button on the backstory ribbon does
+  nothing**: it jumps to stage 1, which is the backstory stage itself once the face generator is out.
+- **Previous from the career menu walks back through six backstory menus that show the character from
+  before the pick**, not the hero: vanilla refreshes those menus' figures only when the face generator
+  stage completes (`FaceGenUpdated`), which a takeover skips. The career menu itself shows the hero.
+- **A takeover the handover still refuses at the end** (it throws; the checks it can predict are made at
+  the pick) leaves the created character with the hero's look, the name set on the faction screen, the
+  culture's generated clan name and the default banner, since those stages were skipped; Player
+  Switcher says so on screen ("You could not take the place of ...").
+- **A taken-over hero starts with 1,000 gold plus the culture's starting gold**, not his own treasury:
+  vanilla sets the player's gold to 1,000 after the handover (`FinalizeCharacterCreationState`) and
+  StartupResources then grants the player's culture gold. Player Switcher's own takeovers behave the same.
 - **The last loading painting** stays in memory until the next loading screen (see Performance).
 
 ### In-game checklist
@@ -315,24 +380,32 @@ translation run (AI first drafts, like every TAOM language). Owed:
 4. Loading screens: a painting each time, never the same twice in a row; off shows vanilla's.
 5. New campaign: the faction screen replaces the faction map; each faction shows its portrait, pin and
    emblem tile; the minimap opens and its pins select factions.
-6. Pick a lord from the Lords list, confirm: the face generator shows him in his gear; finish creation;
-   the player has his name, face, race, gear and skills. Repeat with a legend card (Gandalf: his kit and
-   skill sheet) and with Custom Character. Check Aragorn (Faramir's kit, no helm, his own sword) and
-   the new kits of Elrond, Arwen, Haldir, Celeborn and Lurtz.
-7. Back out of the face generator to the faction screen and choose Custom Character: the earlier look
-   comes back, and the lord's name and skills never land on the player.
-8. Walk every stage with each Character Creation setting on and off: the camera framing on the face
+6. Takeover: pick Thranduil's card on Lasgalen and confirm. The career menu opens next, showing his face
+   (no face generator, no backstory menus); pick a career and press its button (it still reads "Next"):
+   the campaign starts with "You now play as Thranduil", in his clan and kingdom, with his gear, skills
+   and fiefs, and only one Thranduil in the encyclopedia. The log has `[FactionUI] taking over Thranduil`
+   and `Player Switcher: player is now`.
+   Repeat with a lord from the Lords list and with Legolas (he leads the clan, so Lasgalen, afterwards).
+7. Back from the career menu (Previous through the backstory, or the FACTION button) to the faction
+   screen and choose Custom Character: the face generator, backstory, banner, clan name, review and
+   options stages are all there again, in that order, and the hero's face is gone.
+8. Copies: a legend card (Gandalf: his kit and skill sheet), Sauron with "Allow Sauron and the Nazgul"
+   off, and any lord with Enable Player Switcher off go through the face generator showing the pick, and
+   end with its look, gear and skills; backing out to Custom Character puts the earlier look back and the
+   name and skills never land. Check Aragorn (a clanless companion, so copied: Faramir's kit, no helm, his
+   own sword) and the new kits of Elrond, Arwen, Haldir, Celeborn and Lurtz.
+9. Walk every stage with each Character Creation setting on and off: the camera framing on the face
    generator, backstory, review and options screens; on the DETAILS tab, the face, eye, nose and mouth
    sections lock when vanilla locks them and the eyebrow and mouth arrows step through their options;
    the Random button picks an option and moves on one screen per click.
-9. In a non-English language: the labels, the Voice Pitch row and the backstory icons all work. Kysaro's
-   three bitmap fonts carry Latin-1 only (199 glyphs each), so Polish, Turkish, Cyrillic and CJK text
-   falls back per character to the language's default font: mixed typefaces are expected, blanks are not.
-10. In the campaign: the barber and the clan banner editor are vanilla; `[FactionUI] front-end images
-    released` lines appear; Player Switcher is offered only when the faction screen setting is off.
-11. Quit to the main menu from the faction screen, then start again with the faction screen off: Player
-    Switcher is offered. Start a second campaign without restarting: no pick carries over.
-12. Known limitation to note, not fix: open Custom Battle from the main menu and come back; the vanilla
+10. In a non-English language: the labels, the Voice Pitch row and the backstory icons all work. Kysaro's
+    three bitmap fonts carry Latin-1 only (199 glyphs each), so Polish, Turkish, Cyrillic and CJK text
+    falls back per character to the language's default font: mixed typefaces are expected, blanks are not.
+11. In the campaign: the barber and the clan banner editor are vanilla; `[FactionUI] front-end images
+    released` lines appear; Player Switcher's panel is offered only when the faction screen setting is off.
+12. Quit to the main menu from the faction screen, then start again with the faction screen off: Player
+    Switcher's panel is offered. Start a second campaign without restarting: no pick or takeover carries over.
+13. Known limitation to note, not fix: open Custom Battle from the main menu and come back; the vanilla
     theme may now play under the menu video (Kysaro's module behaved the same).
 
 ## Changelog
@@ -347,6 +420,8 @@ translation run (AI first drafts, like every TAOM language). Owed:
 - 2026-10-01: convergence and Codex fixes: gates that could not fail replaced, the faction screen declines
   when its prefab is missing or after any failure, a themed build that threw is not retried, the camera
   config's summary counts ignored entries, a declined screen clears any pick, memory claims corrected.
+- 2026-10-01: picking a living hero with a clan takes him over through Player Switcher, straight to the
+  career choice and into the game (Mike); the faction screen now hides only Player Switcher's panel.
 
 ## GitHub Issue
 

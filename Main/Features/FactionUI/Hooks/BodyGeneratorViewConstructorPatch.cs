@@ -15,7 +15,8 @@ namespace TAOM.Features.FactionUI.Hooks;
 /// constructor, bound by being the only one, as Player Switcher's Patch77 binds it (a hand-written type
 /// array broke when 1.4.8 added a thirteenth parameter); the prefix takes <c>dressedEquipment</c> by
 /// name, which <c>FactionUIBindingTests</c> pins. Patch77 postfixes the same constructor and attaches
-/// nothing once the faction screen has turned Player Switcher off.
+/// nothing while the faction screen hides Player Switcher's panel. A hero taken over on the faction
+/// screen skips this generator, unless the stage list was not vanilla's.
 /// </summary>
 [HarmonyPatch]
 [HarmonyPatchCategory(FactionUIPatchContext.Category)]

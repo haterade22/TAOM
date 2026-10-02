@@ -4944,3 +4944,10 @@ RCA `docs/reviews/rca-creature-bandits-2026-09-28.md`; raw outputs
 - **Hardening from Codex's UNVERIFIED notes:** a declined faction screen clears any pick (`TryLoad_Declining_PutsBackTheLookAnEarlierPickCopied`); the minimap click's size check is a positive requirement, with a NaN pin on `NearestFaction`; the picker file's `lord_2_1` comment corrected.
 - **Final suite:** 12,084 passed, 0 failed, 2 skipped. The two writing-system localization tests went green once the same day's translation run had translated this change's strings.
 - Raw output `docs/reviews/raw/codex-adversarial-faction-ui-2026-10-01.md`, prompt `docs/reviews/codex-adversarial-faction-ui-2026-10-01.prompt.md`.
+
+## Review (number assigned at merge): FactionUI takeover (#704 follow-up), 6-lens deep review + convergence (2026-10-01)
+
+- **Scope:** uncommitted on `bannerlord-1.5.x` over `0bd6abf3`: a faction-screen pick of a living clan hero is taken over through Player Switcher (its session store, Patch78 career fast path and 1100 handover); `FactionPickService` decides takeover or copy and removes the face generator, banner, clan naming, review and options stages in the 1060 handler's `OnStageCompleted` for the culture stage; `CharacterCreationStagesAdapter` exposes the stage list by kind; `IHeroPickerService.FindTakeover`; `SetPickerHidden` replaced the suppression that disabled the handover.
+- **Claude:** no CRITICAL or HIGH; 3 MEDIUM (the stage plan in an untested adapter, two limitations called documented that were not, #704 and the Haldir/Bolg decision unrecorded) and a LOW tail, all fixed or accounted for; design P1 and P2 applied, P3 not applied with a reason; the convergence pass found 1 LOW (a restore that throws re-thrown from `Pick`'s catch), fixed red-first. A startup-breaking IoC order hazard was caught by a test before the review. RCA `docs/reviews/rca-faction-ui-takeover-2026-10-01.md`, five lessons.
+- **Codex:** not run (no paid dispatch asked for this follow-up).
+- **Final suite:** 12,140 passed, 0 failed, 2 skipped; both new `RequiresGameIL` binding tests passed against the installed v1.5.3.

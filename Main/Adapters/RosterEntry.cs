@@ -7,7 +7,7 @@ namespace TAOM.Adapters;
 public sealed class RosterEntry
 {
     public RosterEntry(object source, string id, string name, bool isHero, bool isAlive = true,
-        int tier = 0, int level = 0, bool isInfantry = false, bool isRanged = false)
+        int tier = 0, int level = 0, bool isInfantry = false, bool isRanged = false, string? heroId = null)
     {
         Source = source;
         Id = id;
@@ -18,6 +18,7 @@ public sealed class RosterEntry
         Level = level;
         IsInfantry = isInfantry;
         IsRanged = isRanged;
+        HeroId = heroId;
     }
 
     /// <summary>The engine's <c>Hero</c> when <see cref="IsHero"/>, else its <c>CharacterObject</c>.</summary>
@@ -41,4 +42,9 @@ public sealed class RosterEntry
     public bool IsInfantry { get; }
 
     public bool IsRanged { get; }
+
+    /// <summary>The campaign hero this entry stands for: the hero itself, or the hero a named card's
+    /// character belongs to (Thranduil's card is his own character). Null for troops, wanderer templates
+    /// and picker-only legends. A pick with one may be taken over rather than copied.</summary>
+    public string? HeroId { get; }
 }

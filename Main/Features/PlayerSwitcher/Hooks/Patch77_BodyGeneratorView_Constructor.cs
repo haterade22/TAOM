@@ -67,7 +67,9 @@ public static class Patch77_BodyGeneratorView_Constructor
     private static void Attach(BodyGeneratorView view)
     {
         var policy = IoC.Resolve<IPlayerSwitchPolicyProvider>();
-        if (!policy.Current.Enabled)
+        // Hidden while the faction screen (#704) is the picker. Returning before the Clear below also
+        // keeps a hero taken over there selected for the handover if this face generator opens anyway.
+        if (!policy.Current.Enabled || policy.IsPickerHidden)
             return;
 
         // Both the barber and the multiplayer face generator build this same view.

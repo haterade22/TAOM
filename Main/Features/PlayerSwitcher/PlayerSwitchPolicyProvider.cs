@@ -13,18 +13,19 @@ public class PlayerSwitchPolicyProvider : IPlayerSwitchPolicyProvider
 {
     private readonly IModLogger _logger;
     private bool _disabledForSession;
-    private bool _suppressedForCharacterCreation;
 
     public PlayerSwitchPolicyProvider(IModLogger logger)
     {
         _logger = logger;
     }
 
-    public PlayerSwitchPolicy Current => _disabledForSession || _suppressedForCharacterCreation
+    public PlayerSwitchPolicy Current => _disabledForSession
         ? PlayerSwitchPolicy.Disabled
         : ReadSettings();
 
-    public void SetSuppressedForCharacterCreation(bool suppressed) => _suppressedForCharacterCreation = suppressed;
+    public bool IsPickerHidden { get; private set; }
+
+    public void SetPickerHidden(bool hidden) => IsPickerHidden = hidden;
 
     public void DisableForSession(string reason)
     {

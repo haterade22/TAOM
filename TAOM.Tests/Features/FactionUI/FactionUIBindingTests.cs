@@ -170,6 +170,60 @@ public class FactionUIBindingTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
+    [TestCategory("BindingVerification")]
+    public void VanillaStages_AreBuiltInTheOrderATakeoverPutsBack()
+    {
+        // A faction-screen takeover takes stages out of the engine's list, and putting them back can only
+        // append (the engine has no insert), so FactionPickService rebuilds vanilla's order from its own
+        // table. Reordered by an engine update, the restore would show the stages in the wrong order.
+        RequireGame();
+        var behavior = AccessTools.TypeByName("TaleWorlds.CampaignSystem.CampaignBehaviors.CharacterCreationCampaignBehavior");
+        var initialize = AccessTools.Method(behavior, "InitializeCharacterCreationStages");
+        Assert.IsNotNull(initialize, "CharacterCreationCampaignBehavior.InitializeCharacterCreationStages did not resolve");
+
+        var stageBase = AccessTools.TypeByName("TaleWorlds.CampaignSystem.CharacterCreationContent.CharacterCreationStageBase");
+        var built = PatchProcessor.GetOriginalInstructions(initialize)
+            .Where(i => i.opcode == System.Reflection.Emit.OpCodes.Newobj && i.operand is ConstructorInfo c && stageBase.IsAssignableFrom(c.DeclaringType))
+            .Select(i => ((ConstructorInfo)i.operand).DeclaringType.FullName)
+            .ToArray();
+
+        CollectionAssert.AreEqual(
+            TAOM.Features.FactionUI.Presets.FactionPickService.EngineOrder
+                .Select(kind => TAOM.Adapters.CharacterCreationStagesAdapter.TypeOf(kind).FullName).ToArray(),
+            built,
+            "vanilla's character-creation stages changed: update FactionPickService's order and what a takeover skips");
+    }
+
+    [TestMethod]
+    [TestCategory("RequiresGameIL")]
+    [TestCategory("BindingVerification")]
+    public void NextStage_RunsTheHandlersBeforeItReadsTheListAndOpensTheNextStage()
+    {
+        // The takeover changes the stage list from a handler's OnStageCompleted. That decides what opens
+        // next only while NextStage calls the handlers before it compares the index with the list's size
+        // and activates the stage at the index (v1.5.3 CharacterCreationManager.cs:94-116). Reordered, the
+        // face generator would open, and the career choice could end character creation unasked.
+        RequireGame();
+        var manager = AccessTools.TypeByName("TaleWorlds.CampaignSystem.CharacterCreationContent.CharacterCreationManager");
+        var nextStage = AccessTools.Method(manager, "NextStage", Type.EmptyTypes);
+        Assert.IsNotNull(nextStage, "CharacterCreationManager.NextStage() did not resolve");
+
+        var il = PatchProcessor.GetOriginalInstructions(nextStage).ToList();
+        int FirstCall(string name) => il.FindIndex(i =>
+            (i.opcode == System.Reflection.Emit.OpCodes.Call || i.opcode == System.Reflection.Emit.OpCodes.Callvirt)
+            && i.operand is MethodInfo method && method.Name == name);
+
+        var handlers = FirstCall("OnStageCompleted");
+        var count = FirstCall("get_Count");
+        var activate = FirstCall("ActivateStage");
+        Assert.IsTrue(handlers >= 0 && count >= 0 && activate >= 0,
+            $"NextStage no longer calls OnStageCompleted ({handlers}), reads Count ({count}) and calls ActivateStage ({activate})");
+        Assert.IsTrue(handlers < count && handlers < activate,
+            "NextStage reads the stage list or opens the next stage before the handlers run: a takeover's skip comes too late");
+    }
+
+    [TestMethod]
     [TestCategory("RequiresGame")]
     public void EveryPatch95Class_CarriesTheAppliedCategory()
     {
@@ -271,7 +325,26 @@ public class FactionUIBindingTests
         StringAssert.Contains(source, "FactionUIWidgetContext.Initialize(", "SubModule no longer initializes the widget context.");
         StringAssert.Contains(source, "_factionUiTicker?.Tick(dt)", "SubModule no longer ticks the front end.");
         StringAssert.Contains(source, "FactionScreenLauncher>()?.ResetForGameEnd()", "SubModule no longer resets the faction screen on game end.");
-        // Without the 1060 handler a pick's name and skills never land, and the pick stays "active".
+        // Without the 1060 handler a pick's name and skills never land, and the pick stays "active"; and a
+        // takeover never skips a stage.
         StringAssert.Contains(source, "FactionPresetRegistrationBehavior(", "SubModule no longer adds the hero-preset finalize behavior.");
+        StringAssert.Contains(source, "FactionPickService>()", "SubModule no longer hands the faction screen's picks to the 1060 handler.");
+    }
+
+    [TestMethod]
+    public void PlayerSwitchersPanel_StaysOffTheFaceGeneratorWhileTheFactionScreenPicks()
+    {
+        // The faction screen hides Player Switcher's panel without turning the feature off, since its
+        // handover takes over a hero picked there. A panel that ignored the flag would sit on the face
+        // generator of every faction-screen creation, offering a second, competing pick.
+        var source = RepoPaths.ReadSource("Main/Features/PlayerSwitcher/Hooks/Patch77_BodyGeneratorView_Constructor.cs", stripComments: true);
+
+        var hidden = source.IndexOf("policy.IsPickerHidden", StringComparison.Ordinal);
+        var clear = source.IndexOf("session.Clear()", StringComparison.Ordinal);
+        Assert.IsTrue(hidden >= 0, "Patch77 no longer checks whether the faction screen hid the panel.");
+        Assert.IsTrue(clear >= 0, "Patch77 no longer clears the selection on construction: re-check this pin.");
+        Assert.IsTrue(hidden < clear,
+            "Patch77 clears the selection before it checks the hidden panel: a face generator opened during a " +
+            "faction-screen takeover would cancel the handover.");
     }
 }

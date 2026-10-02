@@ -854,3 +854,15 @@ tint pixel blended twice (a 0.3 tint drew at about 0.51). The material's flags w
 - **Prevent:** decide the second winding from `material.Flags` (`BorderRenderAdapter.NeedsSecondWinding`), and when
   a default material changes, re-check every choice made for the old one: winding, render order, pass.
 - **Source:** `docs/reviews/rca-realm-borders-parchment-2026-10-01.md` finding 1.
+
+### An adapter over an engine collection exposes primitives; the plan that edits it is a service (2026-10-01)
+The faction-screen takeover (#704) first put its whole stage plan in `CharacterCreationStagesAdapter`: which five stages to drop, the vanilla-list guard, and the restore order. Because the plan called `RemoveStage<T>` and `AddStage`, it read as adapter work, so the service tests faked the plan as one call and nothing ran it; the binding test pinned a type table the restore never read. As a service over primitives (count, index, has, remove, append by `CharacterCreationStageKind`), the plan runs against a fake list that removes and appends as the engine does, and the restore order is asserted, not assumed.
+- **Why missed:** "it calls the engine, so it is the adapter" is true of each call and false of the sequence; ADR-007 asks where decisions live, not which object makes the calls.
+- **Prevent:** an adapter method answers one engine question or performs one engine operation. When a method's name describes a feature outcome (`TrySkipToNarrative`), split it: the outcome goes to the service, the operations stay. A table the binding test pins must be the table the code reads.
+- **Source:** `docs/reviews/rca-faction-ui-takeover-2026-10-01.md` T1.
+
+### When a design leans on an engine method's internal order, pin that order from its IL (2026-10-01)
+The takeover changes the stage list from a handler's `OnStageCompleted`, which decides the next stage only because `CharacterCreationManager.NextStage` runs the handlers before it compares its index with the list's size and activates the stage there (v1.5.3 `:94-116`). Nothing in a signature carries that order, so a binding test of the members would stay green while an engine update that reordered the method broke the feature: the face generator would open, or the career choice would end character creation unasked.
+- **Why missed:** binding tests check that members exist with their shapes; the dependency here was on the sequence inside one method body.
+- **Prevent:** name the ordering in the code comment with its line range, and add a `RequiresGameIL` test that reads the method with `PatchProcessor.GetOriginalInstructions` and asserts the call order (`FactionUIBindingTests.NextStage_RunsTheHandlersBeforeItReadsTheListAndOpensTheNextStage`). Guard what the order alone does not make safe at runtime (here, the culture stage being first: `CurrentIndex == 1`).
+- **Source:** `docs/reviews/rca-faction-ui-takeover-2026-10-01.md` T5.

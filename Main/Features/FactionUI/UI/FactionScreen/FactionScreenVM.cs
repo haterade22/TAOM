@@ -19,7 +19,8 @@ namespace TAOM.Features.FactionUI.UI.FactionScreen;
 /// methods by reflection): confirming selects the faction's region and confirms its culture through the
 /// faction map's own path. Every image a property binds is registered first
 /// (<see cref="FrontEndSpriteService.EnsureArt"/>), since Gauntlet resolves a sprite name when the bound
-/// value is set; a picked hero goes to <see cref="FactionPresetService"/>. The choices about characters
+/// value is set; a picked hero goes to <see cref="FactionPickService"/>, which takes over a living hero
+/// and copies any other pick. The choices about characters
 /// (which troop the viewport shows, which lords are listed, when the Leader tab shows, which pin a
 /// click lands on) are <see cref="FactionRoster"/>'s; this class only binds them to the screen.
 /// </summary>
@@ -294,7 +295,7 @@ public sealed class FactionScreenVM : ViewModel
         SelectedHeroPortraitSpriteB = "";
         _activeHeroPortraitIsB = false;
         _services.Widgets.ResetHeroPortraits();
-        _services.Presets.Clear();
+        _services.Picks.Clear();
 
         ShowLeaderCategory = _services.Roster.ShowLeaderCategory(info);
         if (!ShowLeaderCategory && _browseCategory == LeaderCategory)
@@ -381,7 +382,7 @@ public sealed class FactionScreenVM : ViewModel
 
         if (hero.IsCustom)
         {
-            _services.Presets.Clear();
+            _services.Picks.Clear();
             SelectedHeroPortraitSprite = "";
             SelectedHeroPortraitSpriteB = "";
             ExecuteConfirm();
@@ -390,10 +391,7 @@ public sealed class FactionScreenVM : ViewModel
 
         if (hero.Pick is not { } pick)
             return;
-        if (pick.IsHero)
-            _services.Presets.SelectHero(pick.Source);
-        else
-            _services.Presets.SelectTemplate(pick.Source);
+        _services.Picks.Pick(pick, _selected?.CultureId);
 
         var portrait = !string.IsNullOrEmpty(hero.RevealSprite) ? hero.RevealSprite : hero.PortraitSprite;
         if (!string.IsNullOrEmpty(portrait))

@@ -21,9 +21,9 @@ public static class PlayerSwitcherIoC
         container.Register<IPlayerClanLeadershipService, PlayerClanLeadershipService>(Reuse.Singleton);
 
         // One store, two faces. The reader goes to consumers that must observe the selection but
-        // never change it (Patch9_RaceFilter); the writer goes to the picker and the patch that
-        // clears it. Mapping rather than two registrations, because two instances would mean the
-        // race filter reading a selection the picker never made.
+        // never change it (Patch9_RaceFilter); the writer goes to the picker, the patch that clears
+        // it, and FactionUI's FactionPickService (#704). Mapping rather than two registrations,
+        // because two instances would mean the race filter reading a selection the picker never made.
         container.Register<IPlayerSwitchSession, PlayerSwitchSessionStore>(Reuse.Singleton);
         container.RegisterMapping<IPlayerSwitchSessionWriter, IPlayerSwitchSession>();
     }

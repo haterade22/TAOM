@@ -84,48 +84,50 @@ public class PlayerSwitchPolicyProviderTests
         Assert.IsFalse(sut.Current.Enabled);
     }
 
-    // #704: the themed faction screen owns the picking in a character creation where it is shown, and
-    // only in that one. A creation where it is switched off gets Player Switcher back.
+    // #704: the themed faction screen is the picker in a character creation where it is shown, and only
+    // in that one, so Player Switcher's own panel stays off the face generator. A hero picked on the
+    // faction screen is still handed over by Player Switcher at the end, so the feature itself stays on.
 
     [TestMethod]
-    public void SetSuppressedForCharacterCreation_TurnsTheFeatureOffWhileSet()
+    public void SetPickerHidden_HidesThePanelButLeavesTheHandoverOn()
     {
         var sut = new StubProvider(_logger, PlayerSwitchPolicy.Default);
 
-        sut.SetSuppressedForCharacterCreation(true);
+        sut.SetPickerHidden(true);
 
-        Assert.IsFalse(sut.Current.Enabled);
+        Assert.IsTrue(sut.IsPickerHidden);
+        Assert.IsTrue(sut.Current.Enabled, "the handover of a hero picked on the faction screen reads this");
     }
 
     [TestMethod]
-    public void SetSuppressedForCharacterCreation_Lifted_BringsTheFeatureBack()
+    public void SetPickerHidden_Lifted_ShowsThePanelAgain()
     {
         var sut = new StubProvider(_logger, PlayerSwitchPolicy.Default);
-        sut.SetSuppressedForCharacterCreation(true);
+        sut.SetPickerHidden(true);
 
-        sut.SetSuppressedForCharacterCreation(false);
+        sut.SetPickerHidden(false);
 
-        Assert.IsTrue(sut.Current.Enabled);
+        Assert.IsFalse(sut.IsPickerHidden);
     }
 
     [TestMethod]
-    public void SetSuppressedForCharacterCreation_IsNoFailureAndLogsNoWarning()
+    public void SetPickerHidden_IsNoFailureAndLogsNoWarning()
     {
         var sut = new StubProvider(_logger, PlayerSwitchPolicy.Default);
 
-        sut.SetSuppressedForCharacterCreation(true);
+        sut.SetPickerHidden(true);
 
         _logger.DidNotReceive().LogWarning(Arg.Any<string>());
     }
 
     [TestMethod]
-    public void SetSuppressedForCharacterCreation_LiftedAfterAFailedProbe_KeepsTheLatch()
+    public void SetPickerHidden_LiftedAfterAFailedProbe_KeepsTheLatch()
     {
         var sut = new StubProvider(_logger, PlayerSwitchPolicy.Default);
         sut.DisableForSession("probe failed");
 
-        sut.SetSuppressedForCharacterCreation(false);
+        sut.SetPickerHidden(false);
 
-        Assert.IsFalse(sut.Current.Enabled, "lifting a suppression must not undo a failed probe");
+        Assert.IsFalse(sut.Current.Enabled, "showing the panel again must not undo a failed probe");
     }
 }

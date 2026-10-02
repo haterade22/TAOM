@@ -4,7 +4,8 @@ namespace TAOM.Features.PlayerSwitcher;
 
 /// <summary>
 /// Character-creation-scoped selection state, held for the lifetime of the process and cleared
-/// every time the face generator is constructed. Implements both faces of the split so a single
+/// every time the face generator is constructed with the panel shown (the faction screen, #704,
+/// hides the panel and clears its own picks). Implements both faces of the split so a single
 /// registered singleton serves readers and writers, while consumers only ever see the half they
 /// are entitled to.
 /// </summary>

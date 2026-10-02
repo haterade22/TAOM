@@ -1,28 +1,30 @@
 using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterCreationContent;
+using TAOM.Adapters;
 using TAOM.Core.Logging;
 
 namespace TAOM.Features.FactionUI.Presets;
 
 /// <summary>
-/// Registers the hero-preset finalize at character-creation handler priority 1060 (#704), after TAOM's
-/// own 1050, so the pick is applied over TAOM's starting kit and race as Kysaro's postfix on TAOM's
-/// finalize did, and before Player Switcher's 1100 (which the faction screen turns off while it is in
-/// use). Vanilla's core handler is 800, StoryMode 900, NavalDLC 1000; 1060 is free. The engine's handler
-/// list is a sorted list that throws on a duplicate priority, so the registration is wrapped: a clash
-/// costs the preset, never character creation. Also clears the last campaign's pick.
+/// Registers the faction screen's character-creation handler at priority 1060 (#704), after TAOM's own
+/// 1050, so a copied pick is applied over TAOM's starting kit and race as Kysaro's postfix on TAOM's
+/// finalize did, and before Player Switcher's 1100, whose handover makes the player a hero taken over on
+/// the faction screen. Vanilla's core handler is 800, StoryMode 900, NavalDLC 1000; 1060 is free. The
+/// engine's handler list is a sorted list that throws on a duplicate priority, so the registration is
+/// wrapped: a clash costs the faction screen's picks, never character creation. Also clears the last
+/// campaign's pick, and when the culture stage completes, lets a takeover skip to the career choice.
 /// </summary>
 public class FactionPresetRegistrationBehavior : CampaignBehaviorBase
 {
     public const int HandlerPriority = 1060;
 
-    private readonly FactionPresetService _presets;
+    private readonly FactionPickService _picks;
     private readonly IModLogger _logger;
 
-    public FactionPresetRegistrationBehavior(FactionPresetService presets, IModLogger logger)
+    public FactionPresetRegistrationBehavior(FactionPickService picks, IModLogger logger)
     {
-        _presets = presets;
+        _picks = picks;
         _logger = logger;
     }
 
@@ -38,10 +40,12 @@ public class FactionPresetRegistrationBehavior : CampaignBehaviorBase
 
     private void OnCharacterCreationInitialized(CharacterCreationManager manager)
     {
-        _presets.ResetForNewCharacterCreation();
+        _picks.ResetForNewCharacterCreation();
         try
         {
-            manager.RegisterCharacterCreationContentHandler(new FactionPresetContentHandler(_presets, _logger), HandlerPriority);
+            manager.RegisterCharacterCreationContentHandler(
+                new FactionPresetContentHandler(_picks, new CharacterCreationStagesAdapter(manager), _logger),
+                HandlerPriority);
         }
         catch (Exception ex)
         {
@@ -51,12 +55,14 @@ public class FactionPresetRegistrationBehavior : CampaignBehaviorBase
 
     private sealed class FactionPresetContentHandler : ICharacterCreationContentHandler
     {
-        private readonly FactionPresetService _presets;
+        private readonly FactionPickService _picks;
+        private readonly ICharacterCreationStagesAdapter _stages;
         private readonly IModLogger _logger;
 
-        public FactionPresetContentHandler(FactionPresetService presets, IModLogger logger)
+        public FactionPresetContentHandler(FactionPickService picks, ICharacterCreationStagesAdapter stages, IModLogger logger)
         {
-            _presets = presets;
+            _picks = picks;
+            _stages = stages;
             _logger = logger;
         }
 
@@ -68,19 +74,31 @@ public class FactionPresetRegistrationBehavior : CampaignBehaviorBase
         {
         }
 
+        // NextStage has already moved its index past the culture stage and activates the stage there
+        // only after every handler has run, so the list changed here decides what opens next.
         public void OnStageCompleted(CharacterCreationStageBase stage)
         {
+            if (stage is not CharacterCreationCultureStage)
+                return;
+            try
+            {
+                _picks.OnCultureStageCompleted(_stages);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"[FactionUI] the faction screen's pick could not be carried past the culture stage: {ex}");
+            }
         }
 
         public void OnCharacterCreationFinalize(CharacterCreationManager characterCreationManager)
         {
             try
             {
-                _presets.OnCharacterCreationFinalize();
+                _picks.OnCharacterCreationFinalize();
             }
             catch (Exception ex)
             {
-                _logger.LogError($"[FactionUI] hero preset not applied at finalize: {ex.Message}");
+                _logger.LogError($"[FactionUI] hero preset not applied at finalize: {ex}");
             }
         }
     }

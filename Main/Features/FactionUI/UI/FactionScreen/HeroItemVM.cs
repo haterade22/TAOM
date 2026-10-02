@@ -6,7 +6,8 @@ namespace TAOM.Features.FactionUI.UI.FactionScreen;
 
 /// <summary>
 /// One hero card: the "Custom Character" card, a named-hero card or a wanderer template (copied without
-/// a name), or a lord or leader from the browse lists (copied with his name) (#704, Kysaro's).
+/// a name), or a lord or leader from the browse lists (copied with his name) (#704, Kysaro's). A card or
+/// lord that is a living hero with a clan is taken over instead (<c>FactionPickService</c>).
 /// </summary>
 public sealed class HeroItemVM : ViewModel
 {
@@ -37,7 +38,7 @@ public sealed class HeroItemVM : ViewModel
 
     public bool IsPreset { get; }
 
-    /// <summary>What picking this card copies onto the player; null for "Custom Character".</summary>
+    /// <summary>The character or hero this card picks; null for "Custom Character".</summary>
     public RosterEntry? Pick { get; }
 
     public string RevealSprite { get; set; } = "";

@@ -48,6 +48,8 @@ public static class FactionUIIoC
         container.Register<FaceGenCameraService>(Reuse.Singleton);
         container.Register<NarrativeThemeIconMap>(Reuse.Singleton);
         container.Register<FactionPresetService>(Reuse.Singleton);
+        // Takes over a living hero through Player Switcher's own registrations, which IoC.cs makes first.
+        container.Register<FactionPickService>(Reuse.Singleton);
         container.Register<FactionScreenConfigProvider>(Reuse.Singleton);
         container.Register<FactionScreenCatalog>(Reuse.Singleton);
         container.Register<FactionRoster>(Reuse.Singleton);

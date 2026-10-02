@@ -238,4 +238,42 @@ public class FactionPresetServiceTests
         Assert.IsFalse(_sut.HasPick);
         Assert.IsNull(_sut.OnFaceGeneratorOpening());
     }
+
+    // A hero taken over (#704) skips the face generator: FactionPickService shows his look when the
+    // culture stage completes, so the career menu shows him.
+
+    [TestMethod]
+    public void ApplyPendingLook_ShowsThePicksLookWithoutTheGenerator()
+    {
+        _sut.SelectHero(_hero);
+
+        _sut.ApplyPendingLook();
+
+        Received.InOrder(() =>
+        {
+            _appearance.CaptureLook();
+            _appearance.ApplyLook(_resolvedHero);
+        });
+        _appearance.DidNotReceiveWithAnyArgs().ApplyIdentity(default!);
+    }
+
+    [TestMethod]
+    public void Clear_AfterALookShownWithoutTheGenerator_RestoresTheLookFromBefore()
+    {
+        _sut.SelectHero(_hero);
+        _sut.ApplyPendingLook();
+
+        _sut.Clear();
+
+        _appearance.Received(1).RestoreLook(_lookBefore);
+    }
+
+    [TestMethod]
+    public void ApplyPendingLook_WithNoPick_TouchesNothing()
+    {
+        _sut.ApplyPendingLook();
+
+        _appearance.DidNotReceive().CaptureLook();
+        _appearance.DidNotReceiveWithAnyArgs().ApplyLook(default!);
+    }
 }

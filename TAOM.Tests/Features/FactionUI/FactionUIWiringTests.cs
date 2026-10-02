@@ -39,6 +39,9 @@ public class FactionUIWiringTests
         container.RegisterInstance(Substitute.For<IPathService>());
         container.RegisterInstance(Substitute.For<IFactionSelectionService>());
         container.RegisterInstance(Substitute.For<IPlayerSwitchPolicyProvider>());
+        container.RegisterInstance(Substitute.For<IHeroPickerService>());
+        container.RegisterInstance(Substitute.For<IPlayerSwitchSessionWriter>());
+        container.RegisterInstance(Substitute.For<IPlayerIdentityAdapter>());
         container.RegisterInstance(Substitute.For<INarrativeDataProvider>());
 
         container.RegisterInstance(Substitute.For<IFrontEndResourceAdapter>(), IfAlreadyRegistered.Replace);
@@ -97,6 +100,7 @@ public class FactionUIWiringTests
         Assert.IsNotNull(container.Resolve<FrontEndScreenEffects>());
         Assert.IsNotNull(container.Resolve<FaceGenCameraService>());
         Assert.IsNotNull(container.Resolve<FactionPresetService>());
+        Assert.IsNotNull(container.Resolve<FactionPickService>());
         Assert.IsNotNull(container.Resolve<NarrativeThemeIconMap>());
         Assert.IsNotNull(container.Resolve<FactionUITicker>());
         Assert.IsNotNull(container.Resolve<FactionScreenLauncher>());
@@ -122,5 +126,47 @@ public class FactionUIWiringTests
         Assert.AreSame(container.Resolve<FrontEndSpriteService>(), container.Resolve<FrontEndSpriteService>());
         Assert.AreSame(container.Resolve<FactionPresetService>(), container.Resolve<FactionPresetService>(),
             "the faction screen records the pick and the face generator applies it: one service");
+        Assert.AreSame(container.Resolve<FactionPickService>(), container.Resolve<FactionPickService>(),
+            "the faction screen records a takeover and the culture stage's completion acts on it: one service");
+    }
+
+    [TestMethod]
+    public void TheLauncher_ResolvesWhileFactionMapRegisters_BeforeTheUncapturableRegistryExists()
+    {
+        // FactionMapIoC resolves its culture-stage hook while registering, which builds the launcher and
+        // its pick service. IoC.cs registers UncapturableHeroes (whose registry Player Switcher's hero
+        // adapter takes) much later, so anything the launcher builds eagerly may not reach it: DryIoc would
+        // throw at startup and take every feature registered after FactionMap with it.
+        var container = new Container();
+        PlayerSwitcherIoC.RegisterPlayerSwitcherFeature(container);
+        FactionUIIoC.RegisterFactionUIFeature(container);
+        container.RegisterInstance(Substitute.For<IModLogger>());
+        container.RegisterInstance(Substitute.For<IPathService>());
+        container.RegisterInstance(Substitute.For<IFactionSelectionService>());
+        container.RegisterInstance(Substitute.For<INarrativeDataProvider>());
+        container.RegisterInstance(Substitute.For<IPlayerIdentityAdapter>(), IfAlreadyRegistered.Replace);
+
+        Assert.IsNotNull(container.Resolve<FactionScreenLauncher>());
+    }
+
+    [TestMethod]
+    public void ThePickService_IsBuiltFromPlayerSwitchersOwnRegistrations()
+    {
+        // A takeover reaches Player Switcher's 1100 handover only through Player Switcher's own session
+        // store, eligibility rules and identity adapter, so they must come from its registration (whose
+        // reader and writer are one store: PlayerSwitcherWiringTests), not from anything FactionUI adds.
+        var container = new Container();
+        PlayerSwitcherIoC.RegisterPlayerSwitcherFeature(container);
+        FactionUIIoC.RegisterFactionUIFeature(container);
+        container.RegisterInstance(Substitute.For<IModLogger>());
+        container.RegisterInstance(Substitute.For<IPathService>());
+        container.RegisterInstance(Substitute.For<IFactionSelectionService>());
+        container.RegisterInstance(Substitute.For<INarrativeDataProvider>());
+        container.RegisterInstance(Substitute.For<TAOM.Features.UncapturableHeroes.IUncapturableRegistry>());
+        // The real identity adapter probes Campaign.PlayerDefaultFaction by reflection in its constructor,
+        // which needs the engine assemblies; this test is about the container, not the engine.
+        container.RegisterInstance(Substitute.For<IPlayerIdentityAdapter>(), IfAlreadyRegistered.Replace);
+
+        Assert.IsNotNull(container.Resolve<FactionPickService>());
     }
 }

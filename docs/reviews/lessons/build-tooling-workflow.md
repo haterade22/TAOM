@@ -3287,3 +3287,9 @@ that does not exist.
 - **Prevent:** when a planned item is dropped or moved, edit the issue body (and the feature doc's departures)
   in the same step, not at close.
 - **Source:** `docs/reviews/rca-battle-corpses-2026-10-01.md` finding 2.
+
+### A container that resolves while it registers fixes the order of its whole graph (2026-10-01)
+`FactionMapIoC` resolves its culture-stage hook inside its own registration (`IoC.cs:111`), which builds FactionUI's faction-screen launcher and everything its constructor takes. The #704 takeover gave the launcher's pick service Player Switcher's hero picker, whose adapter takes UncapturableHeroes' registry, registered 102 lines later (`IoC.cs:213`): DryIoc would have thrown inside `IoC.Configure`, before the main menu. The feature's wiring test passed, because it registered substitutes for every cross-feature dependency before resolving anything.
+- **Why missed:** "a real container resolves it" was satisfied by a container in which everything already existed; the order in which `IoC.cs` registers is the thing that can fail, and substitutes registered up front erase it.
+- **Prevent:** when a feature's types are resolved during another feature's registration, its wiring test registers only what `IoC.cs` has registered by that point, in that order, and resolves the type there (`FactionUIWiringTests.TheLauncher_ResolvesWhileFactionMapRegisters_BeforeTheUncapturableRegistryExists`). A new constructor dependency on such a type is checked against that point; reach a later registration through `Lazy<T>` (the `CampService` precedent), never by moving registrations in `IoC.cs`.
+- **Source:** `docs/reviews/rca-faction-ui-takeover-2026-10-01.md` T0.

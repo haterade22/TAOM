@@ -466,9 +466,10 @@ It was merged into TAOM's Main module the same day (#704, the maintainer's decis
 - **Code (`behavioural-port`).** The DLL was decompiled with ilspycmd, and its behaviour was rebuilt in
   TAOM's architecture (patch, service, adapter) while reading the decompile, which rules out
   `clean-room`. Several behaviours were changed on purpose: images load on demand, a hero pick's name
-  and skills are copied only at the end of character creation, Player Switcher is suppressed per
-  character creation instead of disabled for the session, and English string matches became
-  localized ones.
+  and skills are copied only at the end of character creation, Player Switcher's panel is hidden per
+  character creation instead of the feature disabled for the session, a living hero picked on the
+  faction screen is taken over through Player Switcher instead of copied (Mike, 2026-10-01), and
+  English string matches became localized ones.
 - **Layout and tuning data (`data-port`).** His prefabs (23 ship; five unused ones were removed), the
   four brush files and the six JSON files under `ModuleData/FactionUI/`, edited in place for
   localization, binding fixes and validation.

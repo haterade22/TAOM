@@ -11,6 +11,11 @@ namespace TAOM.Features.FactionUI.Presets;
 /// over the stages since. Nothing invisible is written early, so un-picking leaves nothing behind;
 /// the look the character had before the first pick is put back (<see cref="Clear"/>).
 /// <para>
+/// A hero the player takes over instead is only shown (<see cref="ApplyPendingLook"/>):
+/// <see cref="FactionPickService"/> decides takeovers, and forgets their pick at the end rather than
+/// copying it.
+/// </para>
+/// <para>
 /// The selection is per character creation: it is dropped when a new one starts
 /// (<see cref="ResetForNewCharacterCreation"/>) and once it has been applied at the end, so a second
 /// campaign in the same process never inherits the first one's pick.
@@ -45,14 +50,17 @@ public sealed class FactionPresetService
     {
         _pending = null;
         _applied = null;
-        if (_lookBeforePick == null)
+        var lookBefore = _lookBeforePick;
+        if (lookBefore == null)
             return;
-        _appearance.RestoreLook(_lookBeforePick);
+        // Forgotten first, so a restore that throws is not attempted again by the next Clear.
         _lookBeforePick = null;
+        _appearance.RestoreLook(lookBefore);
     }
 
-    /// <summary>A new character creation starts, or the game ended: forgets everything, putting nothing
-    /// back (the character it belonged to is gone).</summary>
+    /// <summary>A new character creation starts, the game ended, or a taken-over hero's pick is dropped
+    /// at the end of character creation: forgets everything, putting nothing back (the character it
+    /// belonged to is gone or replaced).</summary>
     public void ResetForNewCharacterCreation()
     {
         _pending = null;
@@ -64,15 +72,20 @@ public sealed class FactionPresetService
     /// gear to dress its model in (an engine <c>Equipment</c>), or null to keep the face generator's own.</summary>
     public object? OnFaceGeneratorOpening()
     {
-        if (_pending != null)
-        {
-            _lookBeforePick ??= _appearance.CaptureLook();
-            _appearance.ApplyLook(_pending);
-            _applied = _pending;
-            _pending = null;
-        }
-
+        ApplyPendingLook();
         return _applied == null ? null : _appearance.DisplayEquipment(_applied);
+    }
+
+    /// <summary>Copies a pending pick's look and gear onto the player now: when the face generator opens,
+    /// or, for a takeover, which skips it, when the culture stage completes, so the career menu shows him.</summary>
+    public void ApplyPendingLook()
+    {
+        if (_pending == null)
+            return;
+        _lookBeforePick ??= _appearance.CaptureLook();
+        _appearance.ApplyLook(_pending);
+        _applied = _pending;
+        _pending = null;
     }
 
     /// <summary>Character creation is finishing: copies the pick's look over what the stages since have

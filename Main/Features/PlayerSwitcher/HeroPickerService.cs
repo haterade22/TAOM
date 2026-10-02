@@ -76,6 +76,31 @@ public class HeroPickerService : IHeroPickerService
         return new HeroPickList(rulingHouse, clanLeaders, wanderers);
     }
 
+    public HeroPickRow FindTakeover(string heroId, string cultureId, PlayerSwitchPolicy policy)
+    {
+        if (!policy.Enabled || string.IsNullOrEmpty(heroId) || string.IsNullOrEmpty(cultureId))
+            return default;
+
+        var candidates = _adapter.GetCandidates(cultureId);
+        if (candidates == null)
+            return default;
+
+        foreach (var hero in candidates)
+        {
+            if (!string.Equals(hero.HeroId, heroId, StringComparison.Ordinal))
+                continue;
+
+            // A clanless hero would be adopted into the player's own clan, whose name and banner the
+            // faction screen's takeover never asks for.
+            if (!IsEligible(hero, cultureId, policy) || string.IsNullOrEmpty(hero.ClanId))
+                return default;
+
+            return ToRow(hero, HeroPickerGroup.ClanLeaders);
+        }
+
+        return default;
+    }
+
     private static bool IsEligible(PickableHeroInfo hero, string cultureId, PlayerSwitchPolicy policy)
     {
         if (string.IsNullOrEmpty(hero.HeroId))

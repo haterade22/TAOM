@@ -1533,7 +1533,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Player Switcher")]
     [SettingPropertyBool("Enable Player Switcher", Order = 0, RequireRestart = false,
-        HintText = "Adds a panel to the character creation face generator listing the existing lords of your chosen culture. Pick one and you play the campaign as that lord, with their face, gear, skills, clan, fiefs and kingdom. The character you build is set aside. Off means the panel never loads and character creation is untouched. When the Themed Faction & Hero Picker (Menus & Loading Screens) is shown, it takes this panel's place for that character creation.")]
+        HintText = "Adds a panel to the character creation face generator listing the existing lords of your chosen culture. Pick one and you play the campaign as that lord, with their face, gear, skills, clan, fiefs and kingdom. The character you build is set aside. Off means the panel never loads and character creation is untouched. When the Themed Faction & Hero Picker (Menus & Loading Screens) is shown, it takes this panel's place for that character creation, and a lord picked there is taken over through this feature, so with this off that picker copies the lord's look, gear and skills onto your own character instead.")]
     public bool EnablePlayerSwitcher { get; set; } = true;
 
     [SettingPropertyGroup("Player Switcher")]
@@ -1543,7 +1543,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Player Switcher")]
     [SettingPropertyBool("Allow Sauron and the Nazgul", Order = 2, RequireRestart = false,
-        HintText = "Offers the lore-locked dark lords as playable. Off by default for a reason: TAOM's capture immunity defers to vanilla for the player character, so a player-controlled Sauron or Witch-king CAN be captured and ransomed like any other lord. Turning this on knowingly trades that lore promise for the option.")]
+        HintText = "Offers the lore-locked dark lords as playable, here and on the Themed Faction & Hero Picker. Off by default for a reason: TAOM's capture immunity defers to vanilla for the player character, so a player-controlled Sauron or Witch-king CAN be captured and ransomed like any other lord. Turning this on knowingly trades that lore promise for the option.")]
     public bool PlayerSwitcherAllowLoreLockedHeroes { get; set; } = false;
 
     [SettingPropertyGroup("Player Switcher")]
@@ -1585,7 +1585,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Menus & Loading Screens/Character Creation")]
     [SettingPropertyBool("Themed Faction & Hero Picker", Order = 0, RequireRestart = false,
-        HintText = "Kysaro's faction screen with painted portraits, a map and a hero picker, in place of TAOM's faction map. Picking a named hero starts you with that hero's look, gear and skills. When it is shown it takes the place of Player Switcher's panel for that character creation. Takes effect the next time character creation reaches the culture screen.")]
+        HintText = "Kysaro's faction screen with painted portraits, a map and a hero picker, in place of TAOM's faction map. Picking one of that faction's lords or ladies makes you that character, with their clan, fiefs and kingdom: character creation goes straight to the career choice and then into the game (Player Switcher's settings apply). Picking a legend or any other character starts you with its look, gear and skills. When it is shown it takes the place of Player Switcher's panel for that character creation. Takes effect the next time character creation reaches the culture screen.")]
     public bool FrontEndFactionScreen { get; set; } = true;
 
     [SettingPropertyGroup("Menus & Loading Screens/Character Creation")]

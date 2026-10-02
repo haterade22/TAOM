@@ -16,9 +16,15 @@ public interface IPlayerSwitchPolicyProvider
     void DisableForSession(string reason);
 
     /// <summary>
-    /// Another picker owns the current character creation (#704: the themed faction and hero
-    /// picker), so the feature is off until this is set back to false. Not a failure: no warning is
-    /// logged, and it never overrides <see cref="DisableForSession"/>.
+    /// True while another picker owns the current character creation (#704: the themed faction and
+    /// hero picker), so the face generator gets no picker panel. The feature itself stays on: a hero
+    /// picked on the faction screen is taken over by this feature's own handover.
     /// </summary>
-    void SetSuppressedForCharacterCreation(bool suppressed);
+    bool IsPickerHidden { get; }
+
+    /// <summary>
+    /// Hides the picker panel until this is set back to false (see <see cref="IsPickerHidden"/>). Not a
+    /// failure: no warning is logged, and it never overrides <see cref="DisableForSession"/>.
+    /// </summary>
+    void SetPickerHidden(bool hidden);
 }

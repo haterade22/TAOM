@@ -528,3 +528,9 @@ engine's own answer, and it is what the settlement nameplates colour by.
 - **Prevent:** key "who holds this" by `MapFaction`; when a design names "a kingdom created in play", check which
   engine path creates it.
 - **Source:** `docs/reviews/rca-realm-borders-2026-09-30.md` finding 4.
+
+### A claim about campaign options enumerates every loaded options provider (2026-10-01)
+Skipping the character-creation options stage for a takeover (#704) was documented as "all but Iron Man can be changed in the campaign", read from vanilla's `DefaultCampaignOptionsProvider`. The official optional module Birth and Aging Options registers its own provider, whose life and death cycle is `DisabledLater` during creation and `Disabled` in the campaign, so it locks too whenever that module is loaded.
+- **Why missed:** the claim was derived from the one provider in the core assemblies; providers from official optional modules live in their own DLLs, outside the decompile dump.
+- **Prevent:** before stating what can be changed after creation, list every `ICampaignOptionProvider` in the load order (ilspycmd on each module DLL) and read each option's `CampaignOptionEnableState` in both its creation and gameplay lists.
+- **Source:** `docs/reviews/rca-faction-ui-takeover-2026-10-01.md` T4.

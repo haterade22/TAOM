@@ -92,10 +92,14 @@ public sealed class FactionRosterAdapter : IFactionRosterAdapter
         character == null
             ? null
             : new RosterEntry(character, character.StringId, character.Name?.ToString() ?? character.StringId, isHero: false,
-                tier: character.Tier, level: character.Level, isInfantry: character.IsInfantry, isRanged: character.IsRanged);
+                tier: character.Tier, level: character.Level, isInfantry: character.IsInfantry, isRanged: character.IsRanged,
+                heroId: character.HeroObject?.StringId);
 
     private static RosterEntry? Entry(Hero? hero) =>
-        hero == null ? null : new RosterEntry(hero, hero.StringId, hero.Name?.ToString() ?? hero.StringId, isHero: true, isAlive: hero.IsAlive);
+        hero == null
+            ? null
+            : new RosterEntry(hero, hero.StringId, hero.Name?.ToString() ?? hero.StringId, isHero: true, isAlive: hero.IsAlive,
+                heroId: hero.StringId);
 
     // A wanderer template's name carries the {FIRSTNAME} the campaign fills at spawn; the list shows the
     // rest of it ("the Ranger"), or a plain "Wanderer".

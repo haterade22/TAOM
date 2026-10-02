@@ -275,4 +275,126 @@ public class HeroPickerServiceTests
         Assert.IsTrue(row.IsLeader);
         Assert.IsTrue(row.HasClan);
     }
+
+    // ---------- One hero picked on the faction screen (#704) ----------
+
+    private HeroPickRow Find(string heroId, PlayerSwitchPolicy? policy = null)
+        => _sut.FindTakeover(heroId, Culture, policy ?? PlayerSwitchPolicy.Default);
+
+    [TestMethod]
+    public void FindTakeover_AClanLeaderOfTheCulture_ReturnsTheRowTheHandoverPlansFrom()
+    {
+        Given(Hero("dain", name: "Dain", race: 3, isClanLeader: true));
+
+        var row = Find("dain");
+
+        Assert.AreEqual("dain", row.HeroId);
+        Assert.AreEqual("Dain", row.Name, "the handover's toast names the hero");
+        Assert.IsTrue(row.HasClan, "the planner takes over a hero with a clan");
+        Assert.AreEqual(3, row.Race);
+    }
+
+    [TestMethod]
+    public void FindTakeover_AClanMemberWhoLeadsNothing_IsTakenOverToo()
+    {
+        // The face-generator list offers only rulers, their family, clan leaders and wanderers; the
+        // faction screen's named cards include members such as a lord's sister, and the handover
+        // makes any taken-over member the clan's leader (#550).
+        Given(Hero("eowyn", clanId: "clan_eomund", isFemale: true));
+
+        Assert.AreEqual("eowyn", Find("eowyn").HeroId);
+    }
+
+    [TestMethod]
+    public void FindTakeover_AClanlessHero_IsNotTakenOver()
+    {
+        // Adoption keeps the player's own clan, whose name and banner the faction screen's skip never asks for.
+        Given(Hero("aragorn", clanId: "", isWanderer: true));
+
+        Assert.IsTrue(Find("aragorn").IsEmpty);
+    }
+
+    [TestMethod]
+    public void FindTakeover_AnIdNoLivingHeroOfTheCultureHas_IsNotTakenOver()
+    {
+        // A legend, a troop, a wanderer template, or a hero of another culture the adapter left out.
+        Given(Hero("dain", isClanLeader: true));
+
+        Assert.IsTrue(Find("taom_fui_thorin").IsEmpty);
+    }
+
+    [TestMethod]
+    public void FindTakeover_AHeroOfAnotherCulture_IsNotTakenOver()
+    {
+        Given(Hero("foreigner", culture: "gondor", isClanLeader: true));
+
+        Assert.IsTrue(Find("foreigner").IsEmpty, "the adapter may over-return; the service filters");
+    }
+
+    [TestMethod]
+    public void FindTakeover_AChild_IsNotTakenOver()
+    {
+        Given(Hero("infant", isChild: true, isChildOfKingdomLeader: true));
+
+        Assert.IsTrue(Find("infant").IsEmpty);
+    }
+
+    [TestMethod]
+    public void FindTakeover_ANotable_IsNotTakenOver()
+    {
+        Given(Hero("merchant", isNotable: true, isClanLeader: true));
+
+        Assert.IsTrue(Find("merchant").IsEmpty);
+    }
+
+    [TestMethod]
+    public void FindTakeover_TheCurrentPlayerCharacter_IsNotTakenOver()
+    {
+        Given(Hero("me", isMainHero: true, isClanLeader: true));
+
+        Assert.IsTrue(Find("me").IsEmpty);
+    }
+
+    [TestMethod]
+    public void FindTakeover_APlaceholderHero_IsNotTakenOver()
+    {
+        Given(Hero("p1", name: "Place Holder Lord", isClanLeader: true));
+
+        Assert.IsTrue(Find("p1").IsEmpty);
+    }
+
+    [TestMethod]
+    public void FindTakeover_ALoreLockedHero_IsTakenOverOnlyWithTheOptIn()
+    {
+        Given(Hero("sauron", isKingdomLeader: true, isClanLeader: true, isLoreLocked: true));
+
+        Assert.IsTrue(Find("sauron").IsEmpty, "Sauron and the Nine stay opt-in, as on the face-generator list");
+        Assert.AreEqual("sauron", Find("sauron", new PlayerSwitchPolicy(true, true, allowLoreLockedHeroes: true, false)).HeroId);
+    }
+
+    [TestMethod]
+    public void FindTakeover_WithPlayerSwitcherSwitchedOff_IsNotTakenOverAndTheAdapterIsNotAsked()
+    {
+        Given(Hero("dain", isClanLeader: true));
+
+        Assert.IsTrue(Find("dain", PlayerSwitchPolicy.Disabled).IsEmpty);
+        _adapter.DidNotReceive().GetCandidates(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void FindTakeover_AnEmptyHeroOrCulture_IsNotTakenOverAndTheAdapterIsNotAsked()
+    {
+        Assert.IsTrue(_sut.FindTakeover("", Culture, PlayerSwitchPolicy.Default).IsEmpty);
+        Assert.IsTrue(_sut.FindTakeover(null!, Culture, PlayerSwitchPolicy.Default).IsEmpty);
+        Assert.IsTrue(_sut.FindTakeover("dain", "", PlayerSwitchPolicy.Default).IsEmpty);
+        _adapter.DidNotReceive().GetCandidates(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void FindTakeover_TheAdapterReturningNothing_IsNotTakenOver()
+    {
+        _adapter.GetCandidates(Culture).Returns((IReadOnlyList<PickableHeroInfo>)null!);
+
+        Assert.IsTrue(Find("dain").IsEmpty);
+    }
 }
