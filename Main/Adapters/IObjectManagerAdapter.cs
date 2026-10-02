@@ -29,4 +29,7 @@ public class CharacterInfo
     public string Id { get; set; }
     public bool IsHero { get; set; }
     public string CultureId { get; set; }
+    public bool IsSoldier { get; set; }
+    public bool IsObsolete { get; set; }
+    public FormationClass DefaultFormationClass { get; set; }
 }

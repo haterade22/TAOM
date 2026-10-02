@@ -67,7 +67,7 @@ public class CultureTroopIdReaderTests
     }
 
     [TestMethod]
-    public void Read_LookupIsCaseInsensitive()
+    public void Read_MixedCaseId_IsFoundByLowercaseLookup()
     {
         // Arrange: CustomBattleService lowercases culture ids before it looks them up.
         var doc = Doc("<SPCultures><Culture id=\"Gondor\" basic_troop=\"NPCCharacter.gondor_recruit\" /></SPCultures>");

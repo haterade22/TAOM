@@ -52,6 +52,10 @@ public class CustomBattleLordStubsTests
         Assert.AreEqual("NPCCharacters", (string)nodes[stubIndex].Element("XmlName")?.Attribute("id"));
         // Campaign loads the real vanilla lords from SandBox; a stub there would duplicate them.
         CollectionAssert.AreEqual(new[] { "CustomGame" }, GameTypes(nodes[stubIndex]));
+        // The lords node has no lords.xml, only lords.xslt, so it can look like dead config; without CustomGame
+        // the stubs would load bare (no name, no face: toddlers) and still fill the curated lists.
+        CollectionAssert.Contains(GameTypes(nodes[lordsIndex]), "CustomGame",
+            "The lords node must load for CustomGame, or lords.xslt never rebuilds the stubs.");
     }
 
     [TestMethod]

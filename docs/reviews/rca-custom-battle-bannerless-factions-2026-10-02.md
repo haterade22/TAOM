@@ -91,21 +91,70 @@ Mike so a future TAOM culture without a key fails CI instead of silently vanishi
 
 Finding #3 was reported independently by three lenses (Standards, Completeness, Data flow), which is the expected shape for a mechanical test gap.
 
-## Follow-ups outside this change (not fixed here)
+## Two older Custom Battle defects found by the review, fixed in the same change
 
-- **Curated Mordor commanders never resolve.** `CustomBattleService: curated faction 'mordor' resolved to no existing
-  commanders` fires before and after the fix. Its first id, `lord_1_17`, exists only in vanilla SandBox data. Cause
-  UNVERIFIED; worth `/investigate` and its own issue.
-- **TAOM's default-troop override is likely dead in Custom Battle.** `ObjectManagerAdapter.GetAllCultureInfos` fills
-  troop ids only when `c is CultureObject`, but `CustomGame` registers plain `BasicCultureObject` (`CustomGame.cs:136`),
-  so `GetDefaultTroopIdForFormation` returns null and vanilla falls back to the first troop per slot. The post-fix
-  session logs zero `CustomBattleTroopHook: Resolved` lines. Worth its own issue.
+The review surfaced two pre-existing defects; Mike asked for both to be fixed with the crash.
+
+**A. 24 curated commanders never existed in Custom Battle.** `custom_battle_commanders.json` lists 24 lords (all 12
+Mordor ids, 7 of Gondor's, 5 of Rohan's: Sauron, the Witch-king, Boromir, Théoden...) that TAOM builds from vanilla
+SandBox lords in `lords.xslt`. SandBox registers its `lords.xml` for `Campaign` and `CampaignStoryMode` only (the same
+in the v1.3.0 copy at `E:\LOTRAOMAssets\1.3.0\SandBox\SubModule.xml`), so in a Custom Battle the templates have
+nothing to rebuild. Mordor resolved to no one and fell back to its default lords (the warning in both logs). Gondor
+showed only Duinhir and Rohan only Éomer and Éowyn, so the failure looked like a short list rather than a broken one.
+Fix: `characters/custom_battle_lords.xml`, CustomGame only and registered before the `lords` node, holds a bare stub
+per id. `MBObjectManager.CreateMergedXmlFile` (`:962-976`) applies each node's XSLT to everything merged before it,
+so `lords.xslt` rebuilds every stub into the full character. A probe confirmed all 24 come out with a name, face and
+equipment and skill sets that Custom Battle loads. **Why missed (2026-06-27):** the shipped-data test and the Codex
+cross-check counted an id as real when a `lords.xslt` template named it, which proves the id exists in the campaign
+only. The test now requires `characters/lords.xml` or a stub.
+
+**B. TAOM's formation default troops never applied in Custom Battle.** `ObjectManagerAdapter.GetAllCultureInfos`
+filled troop ids only under `c is CultureObject`, and `CustomGame.OnRegisterTypes` registers cultures as plain
+`BasicCultureObject` (`CustomGame.cs:136`), so the branch never ran there and every TAOM default came back empty.
+Vanilla's troop picker then marked the first matching troop in load order as the default. For the six re-skinned
+cultures it was worse: vanilla's switch picks a Calradian troop (Rohan infantry: the Vlandian Swordsman, 21 of its 23
+ids still load for Custom Battle), and TAOM's hook deliberately left a vanilla pick alone. Fix: the adapter reads the
+five troop attributes back from the merged `SPCultures` XML for the current game type (`CultureTroopIdReader`, the
+pattern `MonsterSizeCatalogAdapter` already uses), and the hook now prefers TAOM's troop over vanilla's (Mike's call,
+2026-10-02). All 110 troop references the 22 playable cultures make (76 distinct troops) exist in Custom Battle. **Why missed:** the adapter branch
+was written against the campaign's type, and the service tests mock the adapter, so nothing ran the branch under the
+game type that uses it; the only runtime trace was an absent DEBUG line.
+
+The fix's second review (2026-10-02) found that replacing vanilla's pick unconditionally regressed five slots. Vanilla
+`ArmyCompositionItemVM.IsValidUnitItem` lists a troop in a slot only when it is the slot's culture and its formation
+class fits, and ignores any other default. The culture data names a foot archer for every horse-archer slot, mostly
+infantry nobles for cavalry, and another culture's troops in seven cultures, so TAOM's troop fits only 33 of the 88
+culture-and-slot pairs. Where it did not fit, the hook had thrown away vanilla's valid elite pick and the slot fell to a
+lower-tier troop (Dunland and Dale cavalry, Variag infantry and ranged, Easterling horse archers). The service now
+offers a troop only when that check passes (`IsEligibleForSlot`, mirroring vanilla's filter, including the
+soldier-and-not-obsolete prefilter `ArmyCompositionGroupVM` applies), so vanilla's pick stands everywhere else.
+The convergence pass then caught that this filter returned null where it mattered most. The default has a second
+consumer: at Start `CustomBattleHelper.PopulateListsWithDefaults` spawns it unchecked for a slot left empty, and a
+slot is empty only when nothing passes the very check the filter copies. Abanissa and Shaghana have no soldiers of
+their own culture, so every slot was empty, every default null, and Start would throw (`CustomBattleTroopSupplier`
+reads `DefaultFormationClass` on the null troop). The service still prefers a fitting troop, but when vanilla has no pick
+and nothing fits it returns the first TAOM candidate that loads (their Harad troops), as `9e2a39f4` did. Defaulting the other 55 pairs to TAOM troops needs slot-correct ids in the culture data.
 
 ## Status
 
-- #1, #3, #4: fixed in this change.
+- #1, #3, #4: fixed in this change. A and B above: fixed in this change, in-game check owed: Mordor's commander
+  list shows Sauron first with a real face and gear; Gondor and Rohan show their full lists; Rohan infantry and ranged
+  default to the Rohirrim militia; Dunland cavalry still defaults to vanilla's pick; Start one Custom Battle with
+  Abanissa (or Shaghana) on a side, the crash path the null fallback guards; one Custom Battle with Sauron as
+  commander, since his race-keyed features never ran there (his signature strikes run; TAOM's race combat rules do not,
+  they live in campaign-only models).
 - #5: not applied, reason above.
-- #2 (issue), #6 (1.4.5 port): owed on Mike's word.
-- Verification: `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`: 12,321 passed, 1 failed, 2 skipped.
-  The one failure is `EveryLanguage_DeclaresARowForEveryEnglishKey` (the `taom_tr_*` tournament-rewards keys awaiting
-  their translation run), unrelated to this change. In game: Custom Battle starts with 22 factions (Mike, 2026-10-02).
+- #2 (issue): [#709](https://github.com/haterade22/TAOM/issues/709) covers the crash and A and B, filed on Mike's word
+  (2026-10-02), to be closed with `triage-needs-ingame` for the in-game checks above.
+- #6 (1.4.5 port): a separate commit on `bannerlord-1.4.5`, recorded on the issue. That branch already defines
+  `lord_1_48_1/2/3` in its own `characters/lords.xml`, so it carries 21 stubs, not 24.
+- Follow-ups not fixed here, each worth its own issue: slot-correct troop ids for the 55 culture/slot pairs that do not
+  fit; cultures with no army of their own in Custom Battle (Abanissa and Shaghana have no own-culture soldiers,
+  Lothlórien only a practice dummy); TAOM practice dummies listed as Custom Battle troops (`occupation="Soldier"`);
+  177 Calradian soldiers still listed under the six re-skinned cultures; Sauron's race combat rules absent in Custom
+  Battle; the banner-key data gate offered above.
+- Verification: `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`, quoted in the commit that carries
+  the B fix. The one standing failure is `EveryLanguage_DeclaresARowForEveryEnglishKey` (the `taom_tr_*`
+  tournament-rewards keys awaiting their translation run), unrelated to this change. In game: Custom Battle starts with
+  22 factions (Mike, 2026-10-02). Note: `9e2a39f4` carried the stubs without the face-gate exemption, so CI run
+  37056303520 failed `EveryNpcCharacterDeclaresAFace` on it; the follow-up commit restores it.

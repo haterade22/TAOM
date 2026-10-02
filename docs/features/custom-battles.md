@@ -2,7 +2,7 @@
 
 ## Overview
 
-TAOM Custom Battle support replaces vanilla factions, commanders, and troops in the Custom Battle screen with TAOM-specific content. All TAOM cultures (Gondor, Mordor, Rohan, etc.) appear as selectable factions, their lords appear as commanders, and each culture's militia/elite troops are assigned to the correct formation slots. A team-fix MissionBehavior prevents friendly fire bugs in both field and siege custom battles.
+TAOM Custom Battle support replaces vanilla factions, commanders, and troops in the Custom Battle screen with TAOM-specific content. All TAOM cultures (Gondor, Mordor, Rohan, etc.) appear as selectable factions, their lords appear as commanders, and each formation slot defaults to the culture's own troop wherever that troop fits the slot (see "Formation-to-Troop Mapping"). A team-fix MissionBehavior prevents friendly fire bugs in both field and siege custom battles.
 
 ## Why This Exists
 
@@ -22,7 +22,7 @@ TAOM Custom Battle support replaces vanilla factions, commanders, and troops in 
 
 1. **Prefix** on `CustomBattleData.Characters` getter — replaces vanilla commanders with TAOM lords
 2. **Prefix** on `CustomBattleData.Factions` getter — replaces vanilla cultures with TAOM cultures
-3. **Postfix** on `CustomBattleHelper.GetDefaultTroopOfFormationForFaction` — fills TAOM troops when vanilla returns null
+3. **Postfix** on `CustomBattleHelper.GetDefaultTroopOfFormationForFaction`: sets the culture's TAOM troop for the formation, replacing vanilla's pick, but only a troop vanilla's slot list can show (the slot's culture and formation class; see "Formation-to-Troop Mapping"). With no vanilla pick it returns a loaded candidate even if it does not fit, because Start spawns the default for an empty slot. For the six re-skinned cultures vanilla's switch returns a Calradian troop (`vlandia` gives `vlandian_swordsman`), which SandBoxCore still loads for Custom Battle; that pick stays wherever TAOM has no eligible troop
 4. **Postfix** on `BannerlordMissions.OpenCustomBattleMission` — injects team-fix behavior
 5. **Postfix** on `BannerlordMissions.OpenSiegeMissionWithDeployment` — injects team-fix for siege (only for non-campaign missions)
 6. **Postfix** on `CustomBattleSideVM` constructor — replaces `FactionSelectionGroup` with `TaomFactionSelectionVM` and explicitly fires the `OnCultureSelection` callback so the initial commander dropdown aligns with the visible faction (vanilla `SelectFaction(0)` doesn't fire the callback)
@@ -49,7 +49,11 @@ A data-driven config (`custom_battle/custom_battle_commanders.json`) maps each f
 
 Because curated resolution bypasses the culture filter, a lord may be listed under a faction whose `StringId` differs from the lord's own culture — e.g. Khamûl (`lord_1_48`, `Culture.dolguldur`) and Duinhir (`lord_WE9_l`, `Culture.empire`) both appear under their requested faction. This is intentional: the config is the source of truth for what shows under each faction.
 
+**Curated lords built from vanilla lords need a Custom Battle stub.** Sauron, the Witch-king, Boromir, Théoden and the other lords `lords.xslt` rebuilds from vanilla SandBox lords do not exist in a Custom Battle on their own: SandBox registers its `lords.xml` for `Campaign` and `CampaignStoryMode` only (the same in v1.3.0 and v1.5.3), so the XSLT has nothing to match. `characters/custom_battle_lords.xml`, registered for `CustomGame` only and placed before the `lords` node in `SubModule.xml`, holds a bare `id` + `culture` stub per such curated commander. `MBObjectManager.CreateMergedXmlFile` applies each node's XSLT to everything merged before it, so `lords.xslt` rebuilds each stub into the full character. Before this file (2026-10-02) all twelve Mordor ids failed to resolve, so Mordor fell back to its default lords. Gondor showed only Duinhir and Rohan only Éomer and Éowyn, because each list's other ids were missing. `CustomBattleLordStubsTests` pins the load order, the transform output (name, hero, face, equipment) and that every stub is a curated commander.
+
 The master `CustomBattleData.Characters` list (`GetCommanderIds()`) is deliberately **unchanged** — it stays regex-filtered. The per-faction dropdown is rebuilt directly from `GetBasicCharacter`-resolved objects (`CommanderSelectorRebuilder.Apply`), independent of the master list, so curated 3-segment ids surface in the dropdown without polluting the global pool. `CuratedDropdownIndependenceTests` pins this decoupling.
+
+Two side effects of the stubs, kept on purpose (Mike, 2026-10-02): 21 of the 24 stub ids match the master list's `^lord_X_Y$` pattern, so in Sergeant mode vanilla's random player-side general (`CustomBattleData.Characters.GetRandomElement()`) can now be Sauron, the Witch-king or a Nazgûl. And Khamûl (`lord_1_48`, `Culture.dolguldur`) now heads Dol Guldur's default (uncurated) list, which reads Khamûl, Vrâkmug, Shâgthul instead of Vrâkmug, Shâgthul, Gûrnak. A Custom Battle Sauron fights without TAOM's race combat rules (his CTB, knockdown resistance and crush): those live in the campaign-only `TaomCombatMechanicsModel`, and Custom Battle's damage model is `TaomCustomBattleCreatureDamageModel` (a `CustomAgentApplyDamageModel` subclass for creature bandits) without them. His signature strikes do run there.
 
 The provider validates per the **Config Providers MUST Validate** rule (missing/malformed file → all factions default; empty/whitespace ids skipped; duplicates deduped first-occurrence-order; unknown faction keys kept-but-warned; a faction with no valid ids falls back to default). `Reuse.Singleton` → **edits require a full game restart**, not a save-load. Unresolvable ids cannot be checked at load (no live `MBObjectManager`); they are warned + skipped at resolve time in `SideCommanderFilter`.
 
@@ -87,12 +91,16 @@ One external configuration file: `custom_battle/custom_battle_commanders.json` (
 - ID does not contain: `companion`, `child`, `tutorial`, `commander_`, `wanderer`, `notable`
 
 ### Formation-to-Troop Mapping
-| Formation | Troop Source | Fallback |
+| Formation | Troop Source (culture attribute) | Fallback |
 |-----------|-------------|----------|
-| Infantry (0) | `CultureObject.MeleeMilitiaTroop` | `BasicTroop` |
-| Ranged (1) | `CultureObject.RangedMilitiaTroop` | none |
-| Cavalry (2) | `CultureObject.EliteBasicTroop` | none |
-| Horse Archer (3) | `CultureObject.RangedEliteMilitiaTroop` | none |
+| Infantry (0) | `melee_militia_troop` | `basic_troop` |
+| Ranged (1) | `ranged_militia_troop` | none |
+| Cavalry (2) | `elite_basic_troop` | none |
+| Horse Archer (3) | `ranged_elite_militia_troop` | none |
+
+A Custom Battle registers cultures as plain `BasicCultureObject` (`CustomGame.OnRegisterTypes`), whose deserializer reads none of these attributes, so `ObjectManagerAdapter` reads them back from the merged `SPCultures` XML for the current game type (`CultureTroopIdReader`, the same re-read `MonsterSizeCatalogAdapter` does for Monsters). In a campaign the values come from `CultureObject` directly. Until 2026-10-02 the adapter read only `CultureObject`, so in Custom Battle every TAOM default came back empty, and vanilla's troop picker marked the first matching troop in load order as the default. The log line `ObjectManagerAdapter: read troop ids for N cultures from the merged SPCultures XML (CustomGame)` confirms the re-read ran.
+
+**A troop is offered only when the slot can show it.** Vanilla's slot list holds only soldiers that are not obsolete (`ArmyCompositionGroupVM`), and `ArmyCompositionItemVM.IsValidUnitItem` then keeps a troop only when it is the slot's culture and its `DefaultFormationClass` fits (infantry 0 or 5, ranged 1, cavalry 2, 6 or 7, horse archer 3); a default outside that list is ignored and the slot's first troop becomes the default. `CustomBattleService.GetDefaultTroopIdForFormation` applies the same check (`IsEligibleForSlot`). When vanilla already picked a troop, it returns null for a TAOM troop that fails the check, so vanilla's pick stands. When vanilla has no pick, a fitting troop is still preferred, and failing that it returns the first TAOM candidate that loads, because the default has a second consumer: at Start, `CustomBattleHelper.PopulateListsWithDefaults` spawns it unchecked for any slot left empty, and a null default for slots 0-2 throws once that slot has troops to spawn (a null horse-archer default is redistributed instead). That keeps Abanissa and Shaghana, which have no soldiers of their own culture, from crashing: every slot is empty for them, and as at `9e2a39f4` their whole army spawns as the one Harad foot archer their horse-archer slot names, because that slot keeps 100% when all four are invalid. The shipped culture data fits that check in 33 of the 88 culture-and-slot pairs (all 22 playable cultures times 4 slots): every `ranged_elite_militia_troop` is a foot archer, most `elite_basic_troop` entries are infantry nobles, and seven cultures (abanissa, shaghana, umbar, battania, bluecraig, mistymountainorcs, lothlorien) name another culture's troops. Defaulting those slots to a TAOM troop needs slot-correct ids in the culture data, a separate change.
 
 ## Key Files
 
@@ -110,7 +118,7 @@ One external configuration file: `custom_battle/custom_battle_commanders.json` (
 | `Main/Features/CustomBattles/Hooks/CustomBattleTroopHook.cs` | Hook impl — resolves troop IDs to objects |
 | `Main/Features/CustomBattles/Hooks/CustomBattleData_Characters_Patch.cs` | Harmony prefix — replaces Characters getter |
 | `Main/Features/CustomBattles/Hooks/CustomBattleData_Factions_Patch.cs` | Harmony prefix — replaces Factions getter |
-| `Main/Features/CustomBattles/Hooks/CustomBattleHelper_Troop_Patch.cs` | Harmony postfix — fills TAOM troops |
+| `Main/Features/CustomBattles/Hooks/CustomBattleHelper_Troop_Patch.cs` | Harmony postfix: replaces vanilla's formation default with the culture's eligible TAOM troop; with no vanilla pick, any loaded candidate (Start spawns it for an empty slot) |
 | `Main/Features/CustomBattles/Hooks/BannerlordMissions_CustomBattle_Patch.cs` | Harmony postfix — injects team fix |
 | `Main/Features/CustomBattles/Hooks/BannerlordMissions_Siege_Patch.cs` | Harmony postfix — injects team fix for siege |
 | `Main/Features/CustomBattles/TaomFactionSelectionVM.cs` | Custom faction-selection VM with prev/next navigation |
@@ -126,7 +134,9 @@ One external configuration file: `custom_battle/custom_battle_commanders.json` (
 | `Main/Features/CustomBattles/Hooks/CommanderSelectorRebuilder.cs` | Static helper — calls vanilla `SelectorVM<T>.Refresh(items, 0, onChange)` to safely rebuild the selector. Reads existing `_onChange` via cached `FieldInfo` so Refresh's overwrite preserves the wiring. (Issue #105 — replaced manual `Clear() + AddItem(*N) + reflection-on-_selectedIndex` approach to match the canonical safe rebuild pattern.) |
 | `Main/Features/CustomBattles/Hooks/CustomBattleSideVM_OnCharacterSelection_Patch.cs` | Defensive Prefix on the private `OnCharacterSelection(SelectorVM<CharacterItemVM>)` — returns `false` when `selector?.SelectedItem == null`. Stops vanilla NRE that surfaced when `SelectedIndex` setter fires `_onChange.Invoke` with an empty `ItemList` (Issue #105 Bug 1). |
 | `Main/Adapters/IObjectManagerAdapter.cs` | Adapter interface + CultureInfo/CharacterInfo DTOs |
-| `Main/Adapters/ObjectManagerAdapter.cs` | ObjectManager bridge implementation |
+| `Main/Adapters/ObjectManagerAdapter.cs` | ObjectManager bridge implementation; in a Custom Battle it reads culture troops from the merged SPCultures XML |
+| `Main/Adapters/CultureTroopIdReader.cs` | Pure parser: culture id to troop ids from a merged SPCultures document |
+| `Main/_Module/ModuleData/characters/custom_battle_lords.xml` | CustomGame-only stubs that `lords.xslt` rebuilds into the curated vanilla-derived commanders |
 | `Main/_Module/GUI/Prefabs/CustomBattle/` | 5 Gauntlet UI prefab XMLs (pre-existing) |
 
 ## Dependencies
@@ -140,13 +150,15 @@ One external configuration file: `custom_battle/custom_battle_commanders.json` (
 
 | Test File | Methods | Coverage |
 |-----------|---------|----------|
-| `TAOM.Tests/Features/CustomBattles/CustomBattleServiceTests.cs` | 32 | Faction filtering (one isolating test per clause: settlement, bandit, faction banner), commander filtering, formation mapping, takeMax cap, null/empty edge cases + **8 curated-branch tests** (curated order preserved, regex+cap bypass, culture-filter bypass, all-unresolvable → fallback-to-default, partially-resolvable → only-existing-in-order, non-curated default path, null guard precedes provider, master list unchanged) |
+| `TAOM.Tests/Features/CustomBattles/CustomBattleServiceTests.cs` | 46 | Faction filtering (one isolating test per clause: settlement, bandit, faction banner), default-troop slot eligibility (not a soldier, obsolete, wrong formation class, another culture's troop, troop not loaded, slot outside 0-3, vanilla's sibling classes, basic-troop fallback, and with no vanilla pick the first loaded candidate, the Abanissa shape), commander filtering, formation mapping, takeMax cap, null/empty edge cases + **8 curated-branch tests** (curated order preserved, regex+cap bypass, culture-filter bypass, all-unresolvable → fallback-to-default, partially-resolvable → only-existing-in-order, non-curated default path, null guard precedes provider, master list unchanged) |
 | `TAOM.Tests/Features/CustomBattles/CustomBattleCommandersProviderTests.cs` | 16 | Config load + validation: order preserved (incl. 3-segment/>3-length), case-insensitive keys, missing/malformed file, no-factions-map, empty/whitespace id, dedupe, empty/unknown faction key, all-invalid faction not registered, info-not-warning, lazy caching |
-| `TAOM.Tests/Features/CustomBattles/CustomBattleCommandersShippedDataTests.cs` | 2 | Shipped-data regression: every curated faction key is a known culture + curated, and every shipped lord id exists as a real NPCCharacter in `lords.xml`/`lords.xslt` |
+| `TAOM.Tests/Features/CustomBattles/CustomBattleCommandersShippedDataTests.cs` | 2 | Shipped-data regression: every curated faction key is a known culture + curated, and every shipped lord id exists in a Custom Battle (`characters/lords.xml` or a `custom_battle_lords.xml` stub; a `lords.xslt` template alone does not count) |
+| `TAOM.Tests/Features/CustomBattles/CustomBattleLordStubsTests.cs` | 3 | Stub node registered for CustomGame only and before the `lords` node, which must itself keep CustomGame; `lords.xslt` rebuilds every stub with name, hero flag, face and equipment; every stub is a curated commander not already in `characters/lords.xml` |
+| `TAOM.Tests/Adapters/CultureTroopIdReaderTests.cs` | 5 | All five troop attributes read with the `NPCCharacter.` prefix stripped, missing/empty attribute is null, id-less culture skipped, case-insensitive lookup, null document |
 | `TAOM.Tests/Features/CustomBattles/CuratedDropdownIndependenceTests.cs` | 1 | Pins the master-list/dropdown decoupling (curated id absent from `GetCommanderIds()` still resolves) |
 | `TAOM.Tests/Features/CustomBattles/CustomBattleCommandersHookTests.cs` | 3 | Resolution, null filtering, empty case |
 | `TAOM.Tests/Features/CustomBattles/CustomBattleFactionsHookTests.cs` | 3 | Resolution, null filtering, empty case |
-| `TAOM.Tests/Features/CustomBattles/CustomBattleTroopHookTests.cs` | 5 | Vanilla passthrough, TAOM resolution, null service/adapter results |
+| `TAOM.Tests/Features/CustomBattles/CustomBattleTroopHookTests.cs` | 7 | TAOM troop replaces vanilla's Calradian pick, vanilla kept when TAOM has none or its troop does not resolve, TAOM resolution, null service/adapter results |
 | `TAOM.Tests/Features/CustomBattles/SideCommanderFilterTests.cs` | 6 | Null/empty culture, cap=3 propagation, ID resolution, null-resolution filtering, empty result |
 | `TAOM.Tests/Features/CustomBattles/CustomBattleSceneLiveDataTests.cs` | 3 | `custom_battle_scenes.xml` against the install (`LiveInstall`): every row's scene exists in an installed module's `SceneObj`, and every siege row's scene declares `siege` plus `level_1` to `level_3`, the levels a Custom Battle siege loads. Two fragment tests (run on CI) pin the declaration parse: a commented-out, single-quoted or reordered declaration, and an entity's own level list, which is not a declaration |
 
@@ -173,17 +185,24 @@ Patches and `CustomBattleTeamFixBehavior` are thin entry points — tested indir
 1. Edit `Main/_Module/ModuleData/custom_battle/custom_battle_commanders.json`.
 2. Add or edit a `"factions"` entry keyed by the faction's **culture `StringId`** (note: Rohan = `vlandia`) with an ordered array of lord ids. Any id that resolves via `MBObjectManager` is allowed, including 3-segment ids and lords whose own culture differs from the faction key.
 3. To revert a faction to the default top-3-alphabetical behavior, remove its entry.
-4. **Restart the game** — the provider is `Reuse.Singleton` (cached for the whole process), so edits do not take effect on a save-load.
+4. A lord that `lords.xslt` builds from a vanilla SandBox lord (a `lord_1_*` or `lord_4_*` id not in `characters/lords.xml`) also needs a stub in `characters/custom_battle_lords.xml`, or it does not exist in Custom Battle. `CustomBattleCommandersShippedDataTests` fails until it has one.
+5. **Restart the game**: the provider is `Reuse.Singleton` (cached for the whole process), so edits do not take effect on a save-load.
 
 ### How to change formation troop assignments
 
-The formation mapping uses culture militia properties from `BasicCultureObject`/`CultureObject`. To change which troop appears for a formation:
+The formation mapping reads the culture's troop attributes (in Custom Battle from the merged `SPCultures` XML). A troop becomes the default only if it is a soldier of that culture whose `default_group` fits the slot; otherwise vanilla's pick stays. To change which troop appears for a formation:
 - Modify the culture's `melee_militia_troop`, `ranged_militia_troop`, `elite_basic_troop`, or `ranged_elite_militia_troop` attributes in the culture XML definition.
 
 ---
 
+## GitHub Issue
+
+- [#709](https://github.com/haterade22/TAOM/issues/709): the 2026-10-02 Start crash, missing named commanders and ignored default troops.
+
 ## Changelog
 
+- 2026-10-02: TAOM's formation default troops now apply in Custom Battle where the slot can show them (33 of 88 culture-and-slot pairs). The adapter read troop ids only from `CultureObject`, but a Custom Battle loads cultures as `BasicCultureObject`, so TAOM's default never applied; it now reads them from the merged `SPCultures` XML. For the re-skinned cultures an eligible TAOM troop also replaces vanilla's Calradian pick (Rohan infantry no longer defaults to the Vlandian Swordsman); where TAOM's troop does not fit the slot, vanilla's pick stays.
+- 2026-10-02: the curated Mordor, Gondor and Rohan commanders now exist in Custom Battle. 24 of them are vanilla SandBox lords rebuilt by `lords.xslt`, and SandBox loads `lords.xml` for campaigns only; `characters/custom_battle_lords.xml` now supplies a stub for each, which `lords.xslt` rebuilds at load. Before, Mordor's whole list failed to resolve.
 - 2026-10-02: the faction picker now lists only cultures with a faction banner. Vanilla v1.5.3's minor cultures `nord`, `vakken` and `darshi` can own settlements but have no `faction_banner_key`, so they passed the old filter, and picking one crashed Start inside vanilla `Banner.ChangePrimaryColor` (crash f9a7181d). New `CultureInfo.HasFactionBanner` in `ObjectManagerAdapter`; the picker goes from 25 to 22 factions. The two older clauses also got isolating tests. RCA: `docs/reviews/rca-custom-battle-bannerless-factions-2026-10-02.md`.
 - 2026-06-27 — Codex review fix: a curated faction whose ids ALL fail to resolve (typo / removed lord) now falls back to the default per-culture selection instead of leaving the dropdown on the vanilla global list. The service filters curated ids by character existence; if none survive it logs a warning and uses the default path. Added 2 fallback tests + a shipped-data regression test (`CustomBattleCommandersShippedDataTests`) that cross-checks every shipped id against `lords.xml`/`lords.xslt`. Also fixed a "No external configuration files" doc-drift line. RCA: `docs/reviews/rca-custom-battle-lords-2026-06-27.md`.
 - 2026-06-27 — Added curated per-faction commander lists (`custom_battle/custom_battle_commanders.json` + validating `CustomBattleCommandersProvider`). A configured faction shows an exact ordered list of named lords, bypassing the alphabetical cap, the 2-segment-id regex, and the culture filter; unconfigured factions keep the default. Ships lists for Mordor, Gondor, Rohan, Mirkwood, Rivendell, Lothlórien, Isengard, Erebor. Also reassigned the 3 lesser Nazgûl (`lord_1_48_1/2/3`) from `dolguldur` to `mordor` culture (Khamûl stays Dol Guldur).

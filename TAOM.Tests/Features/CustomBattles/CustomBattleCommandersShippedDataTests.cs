@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
+using System.Linq;
+using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Infrastructure;
@@ -12,7 +13,8 @@ namespace TAOM.Tests.Features.CustomBattles;
 
 /// <summary>
 /// Shipped-data regression: loads the REAL custom_battle_commanders.json through the real provider and
-/// cross-checks every curated faction key + lord id against the real culture set and lords.xml/lords.xslt.
+/// cross-checks every curated faction key against the real culture set, and every lord id against the lords a
+/// Custom Battle actually loads (characters/lords.xml plus the custom_battle_lords.xml stubs).
 /// Catches a typo'd / renamed / removed id in the shipped config that the synthetic provider tests can't
 /// (Codex review 2026-06-27 "things the implementer may have missed").
 /// </summary>
@@ -50,13 +52,13 @@ public class CustomBattleCommandersShippedDataTests
     // has nothing to match unless characters/custom_battle_lords.xml supplies a stub for it.
     private static HashSet<string> CustomGameLordIds(string moduleData)
     {
+        // Parsed, not regexed: a commented-out stub must not count as present.
         var ids = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         foreach (var file in new[] { "lords.xml", "custom_battle_lords.xml" })
-        {
-            var xml = File.ReadAllText(Path.Combine(moduleData, "characters", file));
-            foreach (Match m in Regex.Matches(xml, "<NPCCharacter\\b[^>]*\\bid=\"(lord_[A-Za-z0-9_]+)\""))
-                ids.Add(m.Groups[1].Value);
-        }
+            ids.UnionWith(XDocument.Load(Path.Combine(moduleData, "characters", file))
+                .Descendants("NPCCharacter")
+                .Select(c => (string)c.Attribute("id"))
+                .Where(id => !string.IsNullOrEmpty(id)));
 
         return ids;
     }

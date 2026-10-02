@@ -129,7 +129,10 @@ public class ObjectManagerAdapter : IObjectManagerAdapter
             {
                 Id = c.StringId,
                 IsHero = c.IsHero,
-                CultureId = c.Culture?.StringId
+                CultureId = c.Culture?.StringId,
+                IsSoldier = c.IsSoldier,
+                IsObsolete = c.IsObsolete,
+                DefaultFormationClass = c.DefaultFormationClass
             }).ToList();
         }
         catch (Exception ex)

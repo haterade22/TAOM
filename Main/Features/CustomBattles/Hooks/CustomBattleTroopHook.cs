@@ -20,15 +20,17 @@ public class CustomBattleTroopHook : IOnGetDefaultTroopOfFormation
         _logger = logger;
     }
 
+    // TAOM's culture troop replaces vanilla's pick: for the six re-skinned cultures vanilla's switch returns a
+    // Calradian troop (vlandia -> vlandian_swordsman), which SandBoxCore still loads for Custom Battle. The service
+    // replaces a vanilla pick only with a troop vanilla's slot list can show (a soldier of the slot's culture and
+    // class), so that pick stays wherever TAOM has no such troop, or the one it names does not resolve. With no vanilla
+    // pick it may return a troop that does not fit, which Start spawns for a slot left empty.
     public void OnGetDefaultTroopOfFormation(string cultureId, int formationIndex, ref BasicCharacterObject result)
     {
-        if (result != null)
-            return;
-
         if (string.IsNullOrEmpty(cultureId))
             return;
 
-        var troopId = _service.GetDefaultTroopIdForFormation(cultureId, formationIndex);
+        var troopId = _service.GetDefaultTroopIdForFormation(cultureId, formationIndex, vanillaHasPick: result != null);
         if (string.IsNullOrEmpty(troopId))
             return;
 

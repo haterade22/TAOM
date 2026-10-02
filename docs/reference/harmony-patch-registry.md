@@ -143,6 +143,10 @@ Custom culture feat registration
 
 Custom battle TAOM factions/commanders/troops
 
+- The `CustomBattleData.Factions` prefix lists only cultures with a faction banner: vanilla `GetCustomBattleParties` recolours layer 0 of each side's banner unguarded, so a banner-less culture (`nord`, `vakken`, `darshi`) crashed Start (`ArgumentOutOfRangeException` in `Banner.ChangePrimaryColor`, crash f9a7181d).
+- The `GetDefaultTroopOfFormationForFaction` postfix replaces vanilla's non-null pick with the culture's TAOM troop, but only one vanilla's slot list can show (a soldier of the slot's culture and formation class). Crash guard: with no vanilla pick it returns any loaded candidate even if it does not fit, because `PopulateListsWithDefaults` spawns the default unchecked for an empty slot and a null default for slots 0-2 throws at Start (Abanissa and Shaghana have no own-culture soldiers).
+- RCA: [rca-custom-battle-bannerless-factions-2026-10-02.md](../reviews/rca-custom-battle-bannerless-factions-2026-10-02.md); feature doc: [custom-battles.md](../features/custom-battles.md).
+
 ## Patch20_NarrativeHorseGuard
 
 **Target:** `CharacterCreationCampaignBehavior`, `CharacterCreationNarrativeStageView`
