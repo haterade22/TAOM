@@ -5,7 +5,7 @@
 Replaces vanilla's tournament model with a culture-aware, race-aware variant. Six concerns:
 
 1. **Per-participant culture armor** — participants wear armor matching their *own* culture (a dwarf gets dwarf gear, not the host town's human kit), preventing skeleton-clipping. Data-driven via `gear_practice_dummy_<culture>` NPCs — see [tournament-armor-assignment.md](tournament-armor-assignment.md).
-2. **Culture-filtered prize pools** — rewards are drawn from the host town's culture across two tiers (Tierf 2–4 regular, Tierf 4+ elite).
+2. **Class-capped, culture-filtered prize pools:** every prize is light, medium or heavy on the armour ladder and below; a small tournament awards light and medium, a big one heavy, drawn from the host town's culture. Troll gear and elite, lord and named kit are never prizes. See [Prize pools](#prize-pools).
 3. **Dwarf dismount (Patch46, 2026-06-09)** — dwarves never fight mounted in tournaments. Their custom (shorter) skeleton clips them *inside* the horse mesh. A Harmony postfix strips the horse from dwarf participants.
 4. **Tournament-exit hang fix (Patch60 + PatchShield exclusion, 2026-07-06→10, #331)** — exiting any tournament froze the exit 30s–2min (measured 104–109s, three times). **Round 1 (Patch60):** engine defect — `MissionGauntletTournamentView.OnMissionScreenFinalize` nulls its `_gauntletMovie`/`_gauntletLayer` **without releasing them** (the practice view releases correctly). [Patch60_TournamentExitMovieRelease](../../Main/Features/Arena/Hooks/Patch60_TournamentExitMovieRelease.cs) captures the layer/movie in a Prefix (the original body nulls the fields) and, in a Postfix — after the body has dropped focus + finalized the VM, so `TryLoseFocus` can't NRE — replicates the practice view's `ReleaseMovie` → `RemoveLayer` sequence at `OnEndMission` time. Fail-safe → vanilla leak; drift-guard tests pin the bindings; its per-exit `ReleaseMovie=Nms` log line is the permanent regression canary. **Necessary but not sufficient:** the ~107s moved WITH the relocated release, proving the release itself was the sink. **Round 2 (the real fix):** the `ExitStallSampler` stack-sampled the frozen main thread and named a three-factor interaction — the tournament UI's per-round template re-instantiation accumulates `WidgetTemplate._customTypeChildren` into a ~10^6-call release recursion; UIExtenderEx legitimately patches `WidgetFactory.IsCustomType`/`WidgetTemplate.OnRelease`; and TAOM.Dependencies' **PatchShield** stacked a `__originalMethod`-binding finalizer on every patched method, adding ~50µs of reflection per call. Fix: `PatchShield.ExcludedTargetNamespacePrefixes` (now `PatchShieldPolicy.ExcludedTargetNamespacePrefixes`, plan 007) never shields `TaleWorlds.GauntletUI`/`TaleWorlds.TwoDimension`. **Measured: 105–109s → 9.5s** (residual = UIExtenderEx's legitimate wrapper at ~10^6 calls; accepted). Full chain: [rca-tournament-exit-hang-2026-07-06.md](../reviews/rca-tournament-exit-hang-2026-07-06.md) round-2 section.
 5. **Exit AV containment (Patch62, 2026-07-13, #339)** — a v2.0.12 player CTD'd exiting a won tournament: heap-corruption `AccessViolationException` inside `WidgetFactory.IsCustomType` → `Dictionary.FindEntry` during the Tournament movie's `WidgetTemplate.OnRelease` walk (corrupt template-tree string; prize tableau render in flight at exit). Patch60's fail-safe caught the first AV, but "fall back to the vanilla leak" meant `GauntletLayer.ClearContext` re-walked the same corrupt tree at `ScreenManager.PopScreen`, uncaught. [GauntletMovie_Release_AvGuard_Patch](../../Main/Features/Arena/Hooks/GauntletMovie_Release_AvGuard_Patch.cs) is an AV-only Finalizer on `GauntletMovie.Release` — the shared chokepoint both attempts flow through — converting the crash into one logged leaked movie; suppression on the first attempt also removes the movie from the layer so the re-walk never happens. Root cause is engine/native territory; this is containment. Registry: [harmony-patch-registry.md](../reference/harmony-patch-registry.md) § Patch62.
@@ -86,8 +86,8 @@ Two extension points, both delegating to `ITournamentService`:
 | Override | Delegates to | Behavior |
 |---|---|---|
 | `GetParticipantArmor(CharacterObject)` | `ResolveDummyId` | Resolves a `gear_practice_dummy_<culture>` NPC by the participant's culture, returns its `RandomBattleEquipment`; falls through to base if not found. |
-| `GetRegularRewardItems(Town, …)` | `BuildPrizePool` | Prize pool from `Items.All` filtered to town culture, Tierf ∈ [2, 4), excluding non-merchandise / non-weapon-armor / horses. Falls through to base if empty. |
-| `GetEliteRewardItems(Town, …)` | `BuildPrizePool` | Same builder, Tierf ∈ [4, ∞). |
+| `GetRegularRewardItems(Town, …)` | `BuildPrizePool(culture, PrizeBand.Regular)` | Light, medium and civilian class (Tierf 2 and up) from `Items.All`, weapons and armour only, no horses: the town's culture, else every culture's. Base only if both are empty. See [Prize pools](#prize-pools). |
+| `GetEliteRewardItems(Town, …)` | `BuildPrizePool(culture, PrizeBand.Elite)` | Same builder, heavy class only. |
 | `GetTournamentStartChance(Town)` | `CalculateStartChance` | Boundary computes lord count; service maps it: 0→0%, 1→45%, 2→75%, 3→90%, 4+→100%. Returns 0% if the town is under siege or outside a campaign. |
 | `GetTournamentEndChance(TournamentGame)` | `CalculateEndChance` | After a 20-day grace period, ramps end-chance by 3.3%/day elapsed. |
 
@@ -107,9 +107,9 @@ TaomTournamentModel : DefaultTournamentModel        ← thin: converts sealed→
    GetParticipantArmor / GetRegularRewardItems / GetEliteRewardItems
    GetTournamentStartChance / GetTournamentEndChance
         |
-   ITournamentService (TournamentService, Reuse.Singleton, injects IRaceManager)
+   ITournamentService (TournamentService, Reuse.Singleton, injects IRaceManager + IArmourGateService)
         ├─ ResolveDummyId(cultureId)        → "gear_practice_dummy_<culture>"
-        ├─ BuildPrizePool(culture, lo, hi)  → filter Items.All
+        ├─ BuildPrizePool(culture, band)    → filter Items.All by TournamentPrizeRules
         ├─ CalculateStartChance / CalculateEndChance
         └─ ShouldDismountInTournament(raceId) → IRaceManager validate + "dwarf" check
 
@@ -130,8 +130,7 @@ None. All knobs are constants on `TournamentService` / `TaomTournamentModel`. Th
 
 | Constant | Location | Value | Meaning |
 |---|---|---|---|
-| `RegularMinTier` / `RegularMaxTier` | `TaomTournamentModel` | `2f` / `4f` | Regular prize pool tier range |
-| `EliteMinTier` | `TaomTournamentModel` | `4f` | Elite prize pool floor (no upper bound) |
+| `RegularMinTierf` | `TournamentPrizeRules` | `2f` | Junk floor of the regular prize band; the bands themselves are armour classes |
 | `TournamentStartChance1Lord` / `2Lords` / `3Lords` | `TournamentService` | `0.45f` / `0.75f` / `0.90f` | Start probability by lord count |
 | `TournamentEndChanceGraceDays` | `TournamentService` | `20f` | Grace before end-chance ramps |
 | `TournamentEndChanceRamp` | `TournamentService` | `0.033f` | Per-day end-chance increment after grace |
@@ -145,7 +144,8 @@ To change armor or rewards, **edit XML, not code** — add/edit `gear_practice_d
 |---|---|
 | [Main/Features/Arena/Models/TaomTournamentModel.cs](../../Main/Features/Arena/Models/TaomTournamentModel.cs) | GameModel override (thin) — 5 overrides, each delegates to `ITournamentService` |
 | [Main/Features/Arena/ITournamentService.cs](../../Main/Features/Arena/ITournamentService.cs) | Service interface — `CalculateStartChance` / `CalculateEndChance` / `BuildPrizePool` / `ResolveDummyId` / `ShouldDismountInTournament` |
-| [Main/Features/Arena/TournamentService.cs](../../Main/Features/Arena/TournamentService.cs) | Service impl (`Reuse.Singleton`); injects `IRaceManager` for the dwarf check |
+| [Main/Features/Arena/TournamentService.cs](../../Main/Features/Arena/TournamentService.cs) | Service impl (`Reuse.Singleton`); injects `IRaceManager` for the dwarf check and `IArmourGateService` for prize classes |
+| [Main/Features/Arena/TournamentPrizeRules.cs](../../Main/Features/Arena/TournamentPrizeRules.cs) | Pure prize rules: `PrizeBand`, `PrizeClass`, `Fits` |
 | [Main/Features/Arena/Hooks/Patch46_TournamentDwarfDismount.cs](../../Main/Features/Arena/Hooks/Patch46_TournamentDwarfDismount.cs) | Harmony postfix — clears Horse/HorseHarness for dwarf participants |
 | [Main/Features/Arena/ArenaIoC.cs](../../Main/Features/Arena/ArenaIoC.cs) | `container.Register<ITournamentService, TournamentService>(Reuse.Singleton)` |
 | [Main/SubModule.cs:385](../../Main/SubModule.cs) | `AddModel(new TaomTournamentModel(IoC.Resolve<ITournamentService>()))` |
@@ -164,9 +164,54 @@ To change armor or rewards, **edit XML, not code** — add/edit `gear_practice_d
 ## Tests
 
 - [TAOM.Tests/Features/Arena/TournamentServiceTests.cs](../../TAOM.Tests/Features/Arena/TournamentServiceTests.cs) — **21 tests**: start-chance step function, end-chance ramp, `ResolveDummyId` fallback chain, and **6 for `ShouldDismountInTournament`** (dwarf→true, mixed-case "Dwarf"→true, human/elf/orc→false, invalid race id→false with `DidNotReceive().GetRaceNameFromId` asserting validate-before-lookup). `IRaceManager` is mocked via NSubstitute.
-- [TAOM.Tests/Features/Arena/TaomTournamentModelTests.cs](../../TAOM.Tests/Features/Arena/TaomTournamentModelTests.cs) — **7 tests**: tier-constant invariants on the model.
+- [TAOM.Tests/Features/Arena/TaomTournamentModelTests.cs](../../TAOM.Tests/Features/Arena/TaomTournamentModelTests.cs): the tuning constants' invariants.
+- [TAOM.Tests/Features/Arena/TournamentPrizeRulesTests.cs](../../TAOM.Tests/Features/Arena/TournamentPrizeRulesTests.cs): which class, tier and merchandise flag each band accepts, weapons by engine tier included.
 
-The `Patch46` postfix and the model methods that touch `Game.Current.ObjectManager` / `Items.All` are game-only (not unit-tested per ADR-008). The testable decision logic lives in `TournamentService`.
+The `Patch46` postfix and the model methods that touch `Game.Current.ObjectManager` / `Items.All` are game-only (not unit-tested per ADR-008). The testable decision logic lives in `TournamentService` and `TournamentPrizeRules`; `BuildPrizePool`'s loop over `Items.All` is game-only.
+
+## Prize pools
+
+The engine picks a prize in `FightTournamentGame.GetTournamentPrize` (v1.5.3, not virtual): fewer than
+4 hero entrants draw from `GetRegularRewardItems` by value quartile (the quartile is the hero count),
+4 or more from `GetEliteRewardItems` (the cheaper half below 10 heroes, the dearer half from 10). TAOM
+supplies both lists through [TournamentPrizeRules](../../Main/Features/Arena/TournamentPrizeRules.cs)
+(Mike, 2026-10-02: every prize is heavy or below):
+
+| Band | Accepts | Never |
+|---|---|---|
+| Regular | light, medium or civilian class, Tierf 2 and up | heavy and above |
+| Elite | heavy class | light, medium, and anything above heavy |
+| Both | weapons and armour of the band, from the town's culture, else every culture's | horses, elite, lord, named kit, anything `is_merchandise="false"` in its XML |
+
+- **Class** is the armour table's class ([armour-acquisition.md](armour-acquisition.md)) through
+  `IArmourGateService.GetClass`. A weapon, shield or harness has none, so it takes the class its engine
+  tier implies (`ArmourClassRules.FromEngineTier`): Tier3 is medium, Tier4 heavy, Tier5 and Tier6
+  elite and never a prize.
+- **Merchandise** is the XML value from before the armour gate flips heavy and above to
+  `NotMerchandise`: the gate's record keeps it (`GetRecord(id).IsMerchandise`). That is how a gated
+  heavy piece can still be a prize while the troll gear, which is `is_merchandise="false"` in the
+  Armory (`CREATURE_GEAR_OBTAINABLE` gates it), never is. Without a record (a failed gate init) the
+  live flag decides.
+- **The list must never be empty.** The engine indexes it unguarded
+  (`cache[MBRandom.RandomInt(min, max)]`, `FightTournamentGame.cs:365` and `:392`), so an empty list
+  crashes the roll. The service falls back from the town's culture to every culture's items; the
+  model's `base` call after that is a last resort no real item set reaches.
+- **Old saves** pick the rules up without help: the candidate lists are not saved, and the join menu
+  re-rolls the prize (`UpdateTournamentPrize(includePlayer: true)` changes the hero count).
+
+## Extension points (engine facts, v1.5.3)
+
+What a future tournament feature can hook, read from the decompile on 2026-10-02:
+
+| Want | Where | How |
+|---|---|---|
+| A higher max bet | `TournamentBehavior.GetMaximumBet()` (SandBox): `150`, doubled by Roguery's Deep Pockets. The bet UI, the bet button and its text all read it (`TournamentVM.cs:207`, `:922`, `:1066`) | Harmony postfix on `GetMaximumBet`; `MaximumBet` is a `const`, so nothing else moves it. The cap is per round |
+| Renown and influence for the win | `TournamentModel.GetRenownReward` (vanilla 3, Duelist doubles, Self Promoter +3) and `GetInfluenceReward` (vanilla 0) | Override on `TaomTournamentModel`; the winner panel's text reads `TournamentGame.TournamentWinRenown` separately |
+| The skill the win trains | `GetSkillXpGainFromTournament` (vanilla 500 XP to a random skill) | Override on `TaomTournamentModel` |
+| How often each culture holds one | `GetTournamentStartChance` | `TournamentService.CalculateStartChance` |
+| A refund when knocked out | `TournamentBehavior` pays the stake to the town (`:280-283`) | Harmony patch there |
+| Choosing the prize | `TournamentManager.GivePrizeToWinner`, `GetTournamentPrize` (protected, not virtual) | Harmony patch plus UI |
+| 16 entrants, teams of 4, 15-day life and cooldown | `FightTournamentGame.cs:37-43`, `TournamentCampaignBehavior.cs:17` | Harmony patches |
 
 ## An arena character with no `<face>` fights as a toddler
 
@@ -222,6 +267,7 @@ If another custom-skeleton race is ever a tournament participant and clips insid
 
 ## Changelog
 
+- 2026-10-02: Prize pools capped at heavy. The bands are armour classes now (regular light and medium, elite heavy), weapons judged by engine tier, so a big tournament no longer awards Tier5 or Tier6 weapons and does award heavy armour (the armour gate's `NotMerchandise` flip had kept heavy out of every pool). Troll gear and elite, lord and named kit are never prizes, and an empty culture pool falls back to every culture's instead of to vanilla's fixed Calradian list.
 - 2026-09-06: Arena practice characters rendered as toddlers. 46 `NPCCharacter` entries across ten cultures had no `<face>`, so the engine gave them body properties with age 0 and picked the toddler skin. Added the missing `face_key_template` to each and `CharacterFaceCoverageTests` as the gate. Data only, no code change.
 - 2026-06-09 — Patch46 dwarf dismount added (`fix(arena)`, #277): postfix on `PrepareForMatch` clears Horse/HorseHarness for dwarf participants so they never spawn inside the mount; same-day hotfix corrected the injected `_match` field from three underscores to four (`____match`) after it crashed every campaign load.
 - 2026-05-14 — Phase 9b: decision logic extracted from `TaomTournamentModel` into `ITournamentService` (`CalculateStartChance`/`CalculateEndChance`/`BuildPrizePool`/`ResolveDummyId`), registered via new `ArenaIoC`; model is now a thin boundary (#137).

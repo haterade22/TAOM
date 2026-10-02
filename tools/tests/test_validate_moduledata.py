@@ -957,6 +957,175 @@ class SettledCultureRegistryTests(unittest.TestCase):
         self.assertTrue(any("settled_cultures" in s for s in regs.suspect_registries))
 
 
+class CreatureGearObtainableTests(unittest.TestCase):
+    """CREATURE_GEAR_OBTAINABLE. Troll weapons and armour must never reach a player: the engine keeps
+    an item out of shops, workshops, loot and TAOM's tournament pool only through
+    is_merchandise="false", and out of the smithy only through is_hidden="true" on its crafting
+    pieces. Both live in the unversioned Armory (Troll Mace I and the troll shield shipped as
+    merchandise, every troll piece researchable), so the repo needs this gate."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.md = Path(self._tmp.name) / "ModuleData"
+        self.md.mkdir(parents=True)
+        self.trade = {
+            "troll_club": ts.ItemTrade(False, ("troll_head", "troll_handle"), "w.xml", 10),
+            "troll_plate": ts.ItemTrade(False, (), "a.xml", 20),
+            "wm_cave_troll_shield_a01": ts.ItemTrade(False, (), "s.xml", 30),
+            "human_sword": ts.ItemTrade(True, ("human_blade",), "w.xml", 40),
+        }
+        self.hidden = {"troll_head": True, "troll_handle": True, "human_blade": False}
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _found(self):
+        regs = ts.Registries(
+            items=set(self.trade) | {"None"}, item_def_files={}, npccharacters=set(),
+            cultures={"mordor"}, party_templates=set(),
+            item_trade=self.trade, hidden_pieces=self.hidden)
+        issues = ts.Validator(self.md, self.schemas, regs).run()
+        return [i for i in issues if i.code == "CREATURE_GEAR_OBTAINABLE"]
+
+    def _write_troop(self, race="cave_troll", body=None, troop_id="cave_troll"):
+        body = body if body is not None else (
+            '    <Equipments>\n'
+            '      <EquipmentRoster>\n'
+            '        <equipment slot="Item0" id="Item.troll_club" />\n'
+            '        <equipment slot="Body" id="Item.troll_plate" />\n'
+            '      </EquipmentRoster>\n'
+            '    </Equipments>\n')
+        _write(self.md / "troops" / "troops_mordor.xml",
+               '<?xml version="1.0"?>\n<NPCCharacters>\n'
+               f'  <NPCCharacter id="{troop_id}" race="{race}" level="51" culture="Culture.mordor">\n'
+               f'{body}  </NPCCharacter>\n</NPCCharacters>\n')
+
+    def test_locked_troll_gear_is_clean(self):
+        self._write_troop()
+        self.assertEqual(self._found(), [])
+
+    def test_troll_item_left_as_merchandise_is_reported(self):
+        self.trade["troll_plate"] = ts.ItemTrade(True, (), "a.xml", 20)
+        self._write_troop()
+        found = self._found()
+        self.assertEqual([f.entry_id for f in found], ["troll_plate"])
+        self.assertEqual(found[0].severity, ts.Severity.ERROR)
+        self.assertIn('is_merchandise="false"', found[0].message)
+
+    def test_unhidden_piece_of_a_troll_weapon_is_reported(self):
+        self.hidden["troll_handle"] = False
+        self._write_troop()
+        found = self._found()
+        self.assertEqual([f.entry_id for f in found], ["troll_handle"])
+        self.assertIn('is_hidden="true"', found[0].message)
+
+    def test_piece_with_no_definition_is_reported_not_passed(self):
+        # A piece no crafting_pieces file defines cannot be shown hidden; reading it as hidden is a silent pass.
+        self.trade["troll_club"] = ts.ItemTrade(False, ("troll_head", "troll_ghost"), "w.xml", 10)
+        self._write_troop()
+        found = self._found()
+        self.assertEqual([f.entry_id for f in found], ["troll_ghost"])
+        self.assertIn("not defined", found[0].message)
+
+    def test_piece_shared_by_two_troll_weapons_is_reported_once(self):
+        self.hidden["troll_head"] = False
+        self.trade["troll_club_b"] = ts.ItemTrade(False, ("troll_head",), "w.xml", 50)
+        self._write_troop(body=(
+            '    <Equipments>\n      <EquipmentRoster>\n'
+            '        <equipment slot="Item0" id="Item.troll_club" />\n'
+            '        <equipment slot="Item1" id="Item.troll_club_b" />\n'
+            '      </EquipmentRoster>\n    </Equipments>\n'))
+        self.assertEqual([f.entry_id for f in self._found()], ["troll_head"])
+
+    def test_gear_reached_through_a_named_standalone_roster_is_checked(self):
+        self.trade["troll_plate"] = ts.ItemTrade(True, (), "a.xml", 20)
+        _write(self.md / "equipmentsets" / "troll_sets.xml",
+               '<?xml version="1.0"?>\n<EquipmentRosters>\n'
+               '  <EquipmentRoster id="troll_kit">\n    <EquipmentSet>\n'
+               '      <Equipment slot="Body" id="Item.troll_plate" />\n'
+               '    </EquipmentSet>\n  </EquipmentRoster>\n</EquipmentRosters>\n')
+        self._write_troop(body='    <Equipments>\n      <EquipmentSet id="troll_kit" />\n    </Equipments>\n')
+        self.assertEqual([f.entry_id for f in self._found()], ["troll_plate"])
+
+    def test_hill_troll_race_is_covered(self):
+        self.trade["troll_plate"] = ts.ItemTrade(True, (), "a.xml", 20)
+        self._write_troop(race="hill_troll", troop_id="hill_troll")
+        self.assertEqual([f.entry_id for f in self._found()], ["troll_plate"])
+
+    def test_unworn_troll_shield_is_checked_by_name(self):
+        self.trade["wm_cave_troll_shield_a01"] = ts.ItemTrade(True, (), "s.xml", 30)
+        self._write_troop()
+        found = self._found()
+        self.assertEqual([f.entry_id for f in found], ["wm_cave_troll_shield_a01"])
+        self.assertIn("no troop carries", found[0].message)
+
+    def test_non_troll_character_wearing_merchandise_is_not_this_gates_business(self):
+        self._write_troop()
+        _write(self.md / "troops" / "troops_gondor.xml",
+               '<?xml version="1.0"?>\n<NPCCharacters>\n'
+               '  <NPCCharacter id="gondor_soldier" culture="Culture.mordor" level="11">\n'
+               '    <Equipments>\n      <EquipmentRoster>\n'
+               '        <equipment slot="Item0" id="Item.human_sword" />\n'
+               '      </EquipmentRoster>\n    </Equipments>\n'
+               '  </NPCCharacter>\n</NPCCharacters>\n')
+        self.assertEqual(self._found(), [])
+
+    def test_no_troll_character_at_all_is_a_finding_not_a_clean_run(self):
+        self._write_troop(race="orc", troop_id="uruk")
+        found = self._found()
+        self.assertEqual([f.entry_id for f in found], ["(index)"])
+        self.assertIn("checked", found[0].message)
+
+    def test_without_the_install_the_gate_is_skipped(self):
+        self.trade, self.hidden = {}, {}
+        self._write_troop()
+        self.assertEqual(self._found(), [])
+
+
+class BuildItemTradeTests(unittest.TestCase):
+    """build_item_trade reads the merchandise flag the way ItemObject.Deserialize does (absent or
+    "true" is merchandise, anything else is not) and only from <Items> documents."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self._tmp.name) / "ModuleData"
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def test_flags_pieces_and_document_kinds(self):
+        _write(self.root / "items" / "weapons.xml",
+               '<?xml version="1.0"?>\n<Items>\n'
+               '  <!-- <Item id="commented_out" is_merchandise="true" /> -->\n'
+               '  <Item id="no_flag" Type="Shield" />\n'
+               '  <Item id="sold" is_merchandise="true" Type="Shield" />\n'
+               '  <Item id="kept" is_merchandise="false" Type="Shield" />\n'
+               '  <CraftedItem id="club" crafting_template="Mace" is_merchandise="false">\n'
+               '    <Pieces>\n      <Piece id="club_head" Type="Blade" />\n'
+               '      <Piece id="club_handle" Type="Handle" />\n    </Pieces>\n'
+               '  </CraftedItem>\n</Items>\n')
+        # A feature table quoting <Item id> rows defines no item (armour_classes.xml's shape).
+        _write(self.root / "armour_acquisition" / "armour_classes.xml",
+               '<?xml version="1.0"?>\n<ArmourClasses>\n  <Item id="table_row" class="heavy" />\n</ArmourClasses>\n')
+        _write(self.root / "crafting_pieces.xml",
+               '<?xml version="1.0"?>\n<CraftingPieces>\n'
+               '  <CraftingPiece id="club_head" tier="3" is_hidden="true" piece_type="Blade" />\n'
+               '  <CraftingPiece id="club_handle" tier="3" piece_type="Handle">\n  </CraftingPiece>\n'
+               '</CraftingPieces>\n')
+
+        trade, hidden = ts.build_item_trade([self.root])
+
+        self.assertTrue(trade["no_flag"].merchandise)
+        self.assertTrue(trade["sold"].merchandise)
+        self.assertFalse(trade["kept"].merchandise)
+        self.assertEqual(trade["club"].pieces, ("club_head", "club_handle"))
+        self.assertNotIn("commented_out", trade)
+        self.assertNotIn("table_row", trade)
+        self.assertEqual(trade["sold"].line, 5)
+        self.assertEqual(hidden, {"club_head": True, "club_handle": False})
+
+
 class MountedDwarfTests(unittest.TestCase):
     """MOUNTED_DWARF. Dwarves use a custom, shorter skeleton whose rider bone is misaligned,
     so a mounted dwarf spawns INSIDE the horse mesh. TAOM already strips the mount for dwarf

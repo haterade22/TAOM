@@ -2,14 +2,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Domain;
 using TAOM.Features.Arena;
+using TAOM.Features.ArmourAcquisition;
 
 namespace TAOM.Tests.Features.Arena;
 
 /// <summary>
 /// Phase 9b #137 — TournamentService extracted from TaomTournamentModel. Pure decision functions
 /// (CalculateStartChance, CalculateEndChance, ResolveDummyId) are unit-testable here without
-/// Campaign.Current. BuildPrizePool requires Items.All (sealed engine cache) — tested via the
-/// boundary in-game; not unit-testable.
+/// Campaign.Current. BuildPrizePool's loop over Items.All (sealed engine cache) is game-only; every
+/// decision it makes is a TournamentPrizeRules call, tested in TournamentPrizeRulesTests.
 /// ShouldDismountInTournament (dwarf tournament-cavalry fix, Patch46) is pure over IRaceManager.
 /// </summary>
 [TestClass]
@@ -37,7 +38,7 @@ public class TournamentServiceTests
         _raceManager.GetRaceNameFromId(ElfRaceId).Returns("elf");
         _raceManager.GetRaceNameFromId(OrcRaceId).Returns("orc");
 
-        _sut = new TournamentService(_raceManager);
+        _sut = new TournamentService(_raceManager, Substitute.For<IArmourGateService>());
     }
 
     // --- CalculateStartChance ---

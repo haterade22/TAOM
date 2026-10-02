@@ -10,11 +10,6 @@ namespace TAOM.Features.Arena.Models;
 
 public class TaomTournamentModel : DefaultTournamentModel
 {
-    // Phase 9b #137 — tier band constants stay on the model so config XML/MCM can reference them.
-    internal const float RegularMinTier = 2f;
-    internal const float RegularMaxTier = 4f;
-    internal const float EliteMinTier = 4f;
-
     private readonly ITournamentService _service;
 
     public TaomTournamentModel(ITournamentService service)
@@ -46,7 +41,8 @@ public class TaomTournamentModel : DefaultTournamentModel
     public override MBList<ItemObject> GetRegularRewardItems(
         Town town, int regularRewardMinValue, int regularRewardMaxValue)
     {
-        var items = _service.BuildPrizePool(town?.Culture?.StringId, RegularMinTier, RegularMaxTier);
+        // base is a last resort only: the service already falls back to every culture's items.
+        var items = _service.BuildPrizePool(town?.Culture?.StringId, PrizeBand.Regular);
         return items.Count > 0
             ? items
             : base.GetRegularRewardItems(town, regularRewardMinValue, regularRewardMaxValue);
@@ -55,7 +51,7 @@ public class TaomTournamentModel : DefaultTournamentModel
     public override MBList<ItemObject> GetEliteRewardItems(
         Town town, int regularRewardMinValue, int regularRewardMaxValue)
     {
-        var items = _service.BuildPrizePool(town?.Culture?.StringId, EliteMinTier, float.MaxValue);
+        var items = _service.BuildPrizePool(town?.Culture?.StringId, PrizeBand.Elite);
         return items.Count > 0
             ? items
             : base.GetEliteRewardItems(town, regularRewardMinValue, regularRewardMaxValue);

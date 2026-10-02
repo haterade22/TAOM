@@ -1785,3 +1785,15 @@ Kysaro's faction screen copies a picked character onto the player with `HeroDeve
 - **Why missed:** the asks were applied as written, without reading the consumer: what the copy does with an omitted skill, what the replaced kit carried, which code reads hair tags for a hero.
 - **Prevent:** before authoring data for a runtime copier, read the copier and author for it (here a full 18-skill sheet per character); diff a replacement kit against the one it replaces, slot by slot; and confirm an attribute has a reader for that character type before trialling it.
 - **Source:** `docs/reviews/rca-faction-ui-2026-10-01.md` class E.
+
+### A gate that flips an item's flag hides it from every reader of that flag, the ones you wanted included (2026-10-02)
+Mike asked for tournament prizes of light, medium or heavy armour and below. Reading the code showed heavy had never been a prize since the armour gate shipped: `ApplyGating` sets `NotMerchandise` on heavy and above to keep them out of markets and loot, and TAOM's prize pool skipped every `NotMerchandise` item. That one flag also hid the real leaks. Troll Mace I and the troll shield were `is_merchandise="true"` in the Armory, the bracers had no flag at all (absent reads as merchandise), and all 12 troll crafting pieces could be researched, because nothing checked creature gear at all.
+- **Why missed:** the gate reused the engine's flag as its switch, so every consumer of the flag inherited the gate's policy whether or not it shared it, and the prize pool's doc still described a tier band.
+- **Prevent:** a consumer that needs the item's own merchandise status reads the gate's pre-flip record (`IArmourGateService.GetRecord(id).IsMerchandise`), never the live flag, and decides class from `GetClass`. For data that must never reach a player, gate the XML flags themselves (`CREATURE_GEAR_OBTAINABLE`), not the runtime paths one by one.
+- **Source:** `docs/features/arena.md` "Prize pools", `docs/features/troll-race.md` (2026-10-02).
+
+### A live Armory edit is not shipped until a release channel carries it (2026-10-02)
+The troll-gear lockout edited the dev install's Armory and called it done; the XML lens ran the new gate against `E:\LOTRAOM_Releases\testing\Modules` and got the same 15 findings as before the edit. Players get the Armory from the releases folder after Mike's next editor package, and the gate and commit hook read only `BANNERLORD_GAME_DIR`.
+- **Why missed:** "live" was read as "what players run"; the three-part guard for a live edit (a replay script in `tools/`, a gate, a snapshot README "APPLIED EDIT" block) was applied one part in three, with the script left in the scratchpad.
+- **Prevent:** every live Armory or TAOM_Map edit ships with a `tools/` replay script that takes a `--modules` root, its "APPLIED EDIT" block, and a gate run with `--game-modules` against each release channel; the doc says which channels carry it.
+- **Source:** `docs/reviews/rca-troll-gear-tournament-prizes-2026-10-02.md` finding 1.

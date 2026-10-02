@@ -33,6 +33,10 @@ TAOM repeatedly ships the same data-integrity bug classes, each previously caugh
 - **A dwarf authored as cavalry, or handed a mount other than the Dwarven war ram.** The dwarf
   skeleton's rider bone is misaligned, so a mounted dwarf spawns inside the horse mesh.
   (`MOUNTED_DWARF`)
+- **Troll gear a player can obtain.** Any item a `cave_troll` or `hill_troll` character carries (plus
+  the unworn troll shield) left as merchandise reaches shops, workshops, loot and tournament prizes, and
+  any of its crafting pieces without `is_hidden="true"` can be researched and forged. Both flags live in
+  the unversioned Armory. (`CREATURE_GEAR_OBTAINABLE`, [troll-race.md](troll-race.md))
 
 "Schemas are the source of truth": field/enum/ref knowledge lives in `tools/schemas/*.json`, not hardcoded in Python.
 
@@ -866,6 +870,12 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
 
 ## Changelog
 
+- 2026-10-02: `CREATURE_GEAR_OBTAINABLE` (error, in the commit hook) added: every item a troll-race
+  character carries, and the troll shield by name, must be `is_merchandise="false"`, and every crafting
+  piece of such a crafted weapon `is_hidden="true"`. New registries `item_trade` and `hidden_pieces`
+  (`build_item_trade`, about 0.6 s over the install's 6,213 items and 2,108 pieces). Before the live
+  Armory edit it reported 15 findings (Troll Mace I, the troll shield, the bracers, all 12 pieces);
+  after it, none. A run that finds no troll character is itself a finding.
 - 2026-09-27: `ARMOUR_CLASS_TABLE_DRIFT` (warning) and `ARMOUR_ACQUISITION_REF` (error, in the commit
   hook) added with [armour acquisition](armour-acquisition.md): the generated class table is checked
   against the live Armory, and the feature's ids and cultures against the registry.

@@ -94,8 +94,10 @@ engine's own ItemCategory is an absolute tier that ignores TAOM's per-kingdom ca
    elite. Armour the table does not list (vanilla pieces, pieces added since the last run) is classed by
    engine tier at runtime.
 2. **The engine's own switch.** `ItemObject.NotMerchandise` keeps an item out of workshop production
-   (`WorkshopsCampaignBehavior.IsProducable`), battle loot (`DefaultBattleRewardModel`), the regular
-   tournament pool and TAOM's `BuildPrizePool`, map-event plunder and hideout loot. It is
+   (`WorkshopsCampaignBehavior.IsProducable`), battle loot (`DefaultBattleRewardModel`), vanilla's
+   regular tournament pool, map-event plunder and hideout loot. TAOM's prize pool reads the class
+   instead (`GetClass`, and the record's pre-flip merchandise value), so heavy pieces are big
+   tournaments' prizes while elite, lord and named never are ([arena.md](arena.md#prize-pools)). It is
    `{ get; private set; }`, set only from XML, so `ArmourGateService.ApplyGating` flips it through the
    private setter for every heavy, elite, lord and named piece, from `SubModule.OnGameInitializationFinished`
    on every campaign init (items reload from XML with each game; a custom battle or the editor is left
@@ -418,9 +420,9 @@ Run it after any troop roster change that moves a piece's lowest wearer across a
 
 ## Known limitations
 
-- **The vanilla elite prize fallback:** TAOM's prize pool falls back to vanilla's 31 fixed elite ids when
-  a culture's pool of engine tier 4 and up is empty, and that list does not check the flag. How often it
-  fires is unmeasured.
+- **The vanilla elite prize fallback:** TAOM's prize pool falls back to every culture's items when the
+  town's culture has none in the band, and only then to vanilla's 31 fixed elite ids, which do not check
+  the flag. No real item set reaches that last step (2026-10-02).
 - **The player's own pieces:** the flag also keeps the player's gated pieces from being plundered when
   the player's party is defeated, and from the 15% given up on "try to get away".
 - **Saved prizes:** a tournament running when the gate first applies keeps its saved prize.
@@ -430,7 +432,9 @@ Run it after any troop roster change that moves a piece's lowest wearer across a
 - **With the master switch off:** the Armourer's Commission quests still appear (their chests are then
   ordinary merchandise), "The Deep Seam" still pays lord's materials that nothing spends until the switch
   is on again, the career-quest blocking change above still applies, and the `armour_from` pool merge
-  still runs, so the nine receiving cultures' markets carry their donor's armour of every class. The kill
+  still runs, so the nine receiving cultures' markets carry their donor's armour of every class. An item
+  its XML marks non-merchandise (the troll gear, start kits, ladders) still never reaches a stall: the
+  stock gate reads the gate's record even while gating is off (2026-10-02). The kill
   counter counts nothing, and a rung quest that still completes readies its rung without the message.
 - **Mount barding** is not gated (only character armour is). AI caravans never buy armour (their buy
   value is 0 for any category that is neither a trade good nor an animal), so they carry none between

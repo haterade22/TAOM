@@ -26,8 +26,11 @@ public interface ITournamentService
     /// <summary>Compute tournament-end chance from elapsed days.</summary>
     float CalculateEndChance(float elapsedDays);
 
-    /// <summary>Build a prize pool of items matching culture + tier band. Pure filter over Items.All.</summary>
-    MBList<ItemObject> BuildPrizePool(string cultureId, float minTier, float maxTier);
+    /// <summary>
+    /// The prize list for one band (<see cref="TournamentPrizeRules"/>): the culture's own items, or every
+    /// culture's when it has none, so the list is empty only if no loaded item fits the band at all.
+    /// </summary>
+    MBList<ItemObject> BuildPrizePool(string? cultureId, PrizeBand band);
 
     /// <summary>Resolve the dummy-character ID for participant armor selection.</summary>
     string ResolveDummyId(string participantCultureId, string settlementCultureId);

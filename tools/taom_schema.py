@@ -81,6 +81,8 @@ class Registries:
     item_folder: dict = field(default_factory=dict)           # armour item id -> LOTRLOME_items folder (None = vanilla/repo)
     launchers: dict = field(default_factory=dict)             # bow/crossbow id -> ranged_ladder.Launcher (empty = unavailable)
     mount_barred_usages: set = None                           # item_usage ids flagged requires_no_mount (None = unavailable)
+    item_trade: dict = field(default_factory=dict)            # item id -> ItemTrade (empty = unavailable)
+    hidden_pieces: dict = field(default_factory=dict)         # crafting piece id -> is_hidden (empty = unavailable)
 
 
 # --------------------------------------------------------------------------- #
@@ -229,6 +231,7 @@ class Validator:
         issues += self._fortifications_without_villages()
         issues += self._harness_family_types()
         issues += self._mounted_dwarves()
+        issues += self._creature_gear_obtainable()
         issues += self._armour_slot_coverage()
         issues += self._upgrade_skill_regressions()
         issues += self._upgrade_armour_regressions()
@@ -1781,6 +1784,103 @@ class Validator:
                     ))
         return issues
 
+    # -- CREATURE_GEAR_OBTAINABLE ------------------------------------------- #
+    # Troll weapons and armour are for trolls: a player must never buy, smith or win them
+    # (Mike, 2026-10-02). The engine keeps an item out of shops, workshops, loot and TAOM's
+    # tournament pool only through is_merchandise="false", and out of the smithy only through
+    # is_hidden="true" on its crafting pieces (the designer and the unlock roll read it). Both live
+    # in the unversioned Armory, where Troll Mace I and the troll shield shipped as merchandise and
+    # all 12 pieces were researchable, so a reinstall can bring them back with nothing in the repo
+    # changing: this pass is the in-repo half of that fix. The gear set is every item a troll-race
+    # character can reach (inline rosters and the standalone rosters it names) plus the named
+    # extras no troop carries. Skipped, never faked, without the install.
+    _CREATURE_GEAR_RACES = frozenset({"cave_troll", "hill_troll"})
+    _CREATURE_GEAR_EXTRA = {
+        "wm_cave_troll_shield_a01": "the Armory's troll shield, which no troop carries",
+    }
+    _CREATURE_GEAR_REPAIR = ("repair: python tools/lock_creature_gear.py --apply, after adding a new item "
+                             "or piece to its lists")
+
+    def _roster_items(self) -> dict:
+        """Standalone EquipmentRoster id -> every item id it names, any slot, any set."""
+        rosters = {}
+        for path in self._xml_files():
+            text = _COMMENT_RE.sub(lambda m: "\n" * m.group(0).count("\n"), self._read(path))
+            for m in self._ROSTER_RE.finditer(text):
+                rosters.setdefault(m.group(1), set()).update(self._ITEM_REF_ATTR_RE.findall(m.group(2)))
+        return rosters
+
+    def _creature_gear(self) -> dict:
+        """Creature-only item id -> why it is creature-only."""
+        gear = {}
+        rosters = None
+        for path in self._xml_files():
+            text = _COMMENT_RE.sub(lambda m: "\n" * m.group(0).count("\n"), self._read(path))
+            for m in self._NPC_BLOCK_RE.finditer(text):
+                attrs, body = m.group(1), m.group(2) or ""
+                race = self._RACE_ATTR_RE.search(attrs)
+                if not race or race.group(1) not in self._CREATURE_GEAR_RACES:
+                    continue
+                idm = re.search(r'\bid="([A-Za-z0-9_.\-]+)"', attrs)
+                why = f'worn by the {race.group(1)} "{idm.group(1) if idm else "(unnamed)"}"'
+                ids = set(self._ITEM_REF_ATTR_RE.findall(body))
+                refs = self._EQSET_REF_RE.findall(body)
+                if refs:
+                    rosters = self._roster_items() if rosters is None else rosters
+                    for ref in refs:
+                        ids |= rosters.get(ref, set())
+                for iid in ids:
+                    gear.setdefault(iid, why)
+        for iid, why in self._CREATURE_GEAR_EXTRA.items():
+            gear.setdefault(iid, why)
+        return gear
+
+    def _creature_gear_obtainable(self) -> list:
+        trade, hidden = self.reg.item_trade, self.reg.hidden_pieces
+        if not trade or not hidden:
+            return []   # no install: skipped, and the caller already reports install-gated passes
+        issues = []
+        gear = self._creature_gear()
+        if len(gear) <= len(self._CREATURE_GEAR_EXTRA):
+            # A gate that silently checks nothing reads exactly like a clean run.
+            return [Issue(
+                severity=Severity.ERROR, code=CREATURE_GEAR_CODE, file=self._rel(self.moduledata), line=0,
+                entry_id="(index)",
+                message=(f"no {'/'.join(sorted(self._CREATURE_GEAR_RACES))} character was found, so no "
+                         "troll gear was checked. A renamed race or a moved troop file empties this "
+                         "gate; restore it or update _CREATURE_GEAR_RACES"),
+            )]
+        seen_pieces = set()
+        for iid in sorted(gear):
+            rec = trade.get(iid)
+            if rec is None:
+                continue   # an undefined id is BROKEN_ITEM_REF's finding
+            where = self._rel(Path(rec.file))
+            if rec.merchandise:
+                issues.append(Issue(
+                    severity=Severity.ERROR, code=CREATURE_GEAR_CODE, file=where, line=rec.line, entry_id=iid,
+                    message=(f'{iid} ({gear[iid]}) is merchandise in its XML, so shops, workshops, '
+                             f"loot and tournament prizes can hand it to a player. Set "
+                             f'is_merchandise="false" on the item ({self._CREATURE_GEAR_REPAIR})'),
+                ))
+            for pid in rec.pieces:
+                if pid in seen_pieces or hidden.get(pid) is True:
+                    continue
+                seen_pieces.add(pid)
+                if pid not in hidden:
+                    message = (f"crafting piece {pid} of {iid} is not defined by any CraftingPieces file, so "
+                               f"nothing shows it hidden from the smithy. Define it with is_hidden=\"true\", "
+                               f"or fix the weapon's <Piece> id")
+                else:
+                    message = (f'crafting piece {pid} of {iid} is not hidden, so smithing research can '
+                               f'unlock it and a player can forge the troll weapon. Add is_hidden="true" '
+                               f"to the CraftingPiece ({self._CREATURE_GEAR_REPAIR})")
+                issues.append(Issue(
+                    severity=Severity.ERROR, code=CREATURE_GEAR_CODE, file=where, line=rec.line, entry_id=pid,
+                    message=message,
+                ))
+        return issues
+
     # -- RANGED_LADDER_INVERSION / RANGED_DAMAGE_CEILING ------------------- #
     # An archer's reach is its launcher's missile_speed, its hit almost all the launcher's
     # thrust_damage, its spread mostly the launcher's accuracy, and its skill drives the AI's aim
@@ -2420,6 +2520,67 @@ def build_launchers(item_roots) -> dict:
     return rl.index_launchers(item_roots)
 
 
+CREATURE_GEAR_CODE = "CREATURE_GEAR_OBTAINABLE"
+
+
+@dataclass(frozen=True)
+class ItemTrade:
+    """What decides whether an item can reach a player outside a troop: its merchandise flag and,
+    for a crafted weapon, the pieces a smithy would need."""
+    merchandise: bool
+    pieces: tuple
+    file: str
+    line: int
+
+
+_TRADE_ITEM_RE = re.compile(r"<(Item|CraftedItem)\b([^>]*?)(?:/>|>(.*?)</\1>)", re.S)
+_MERCHANDISE_ATTR_RE = re.compile(r"""\bis_merchandise\s*=\s*["']([^"']*)["']""")
+_PIECE_REF_RE = re.compile(r"""<Piece\b[^>]*?\bid\s*=\s*["']([^"']+)["']""")
+_CRAFTING_PIECE_RE = re.compile(r"<CraftingPiece\b([^>]*?)/?>", re.S)
+_HIDDEN_ATTR_RE = re.compile(r"""\bis_hidden\s*=\s*["']([^"']*)["']""")
+_ID_ATTR_RE = re.compile(r"""\bid\s*=\s*["']([^"']+)["']""")
+
+
+def build_item_trade(item_roots) -> tuple:
+    """(item id -> ItemTrade, crafting piece id -> is_hidden) over the item roots, for
+    CREATURE_GEAR_OBTAINABLE. The engine reads an item as merchandise unless is_merchandise is
+    present and not exactly "true" (ItemObject.Deserialize, v1.5.3 ItemObject.cs:428-431), so a
+    missing attribute is merchandise; is_hidden is CraftingPiece.IsHiddenOnDesigner
+    (CraftingPiece.cs:201). Items come only from <Items> documents, so a feature table quoting
+    <Item id> rows (armour_classes.xml) defines nothing. A later root overrides an earlier one."""
+    trade, hidden = {}, {}
+    for root in item_roots:
+        root = Path(root)
+        if not root.exists():
+            continue
+        for xml in root.rglob("*.xml"):
+            try:
+                raw = xml.read_text(encoding="utf-8-sig", errors="ignore")
+            except OSError:
+                continue
+            # Mask comments but keep their newlines, so the line each finding names is right.
+            text = _COMMENT_RE.sub(lambda m: "\n" * m.group(0).count("\n"), raw)
+            first = _DOC_ROOT_RE.search(text)
+            kind = first.group(1) if first else None
+            if kind == "Items":
+                for m in _TRADE_ITEM_RE.finditer(text):
+                    idm = _ID_ATTR_RE.search(m.group(2))
+                    if not idm:
+                        continue
+                    merch = _MERCHANDISE_ATTR_RE.search(m.group(2))
+                    trade[idm.group(1)] = ItemTrade(
+                        merchandise=not merch or not merch.group(1) or merch.group(1) == "true",
+                        pieces=tuple(_PIECE_REF_RE.findall(m.group(3) or "")),
+                        file=xml.as_posix(), line=_lineno(text, m.start()))
+            elif kind == "CraftingPieces":
+                for m in _CRAFTING_PIECE_RE.finditer(text):
+                    idm = _ID_ATTR_RE.search(m.group(1))
+                    if idm:
+                        hm = _HIDDEN_ATTR_RE.search(m.group(1))
+                        hidden[idm.group(1)] = bool(hm) and hm.group(1).lower() == "true"
+    return trade, hidden
+
+
 def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
     """Build cross-reference registries from the real game install + TAOM repo.
 
@@ -2481,6 +2642,7 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
     item_folder = build_item_folders(item_roots)
     launchers = build_launchers(item_roots)
     mount_barred = build_mount_barred_usages(game_modules)
+    item_trade, hidden_pieces = build_item_trade(item_roots)
 
     if game_modules is None:
         # Without the game install the item / troop / party-template registries
@@ -2500,6 +2662,9 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
         item_folder = {}
         launchers = {}
         mount_barred = None
+        # The troll gear and its crafting pieces live in the Armory: a repo-only table would read
+        # every one of them as undefined and check nothing. Unavailable, not partial.
+        item_trade, hidden_pieces = {}, {}
         # TAOM's 30 body properties are only a quarter of the 121 defined; the
         # rest are vanilla, and TAOM characters reference them freely.
         body_properties = set()
@@ -2537,6 +2702,8 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
         item_folder=item_folder,
         launchers=launchers,
         mount_barred_usages=mount_barred,
+        item_trade=item_trade,
+        hidden_pieces=hidden_pieces,
     )
 
 

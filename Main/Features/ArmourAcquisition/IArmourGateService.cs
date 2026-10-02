@@ -40,7 +40,8 @@ public interface IArmourGateService
 
     /// <summary>
     /// Whether a market of a town at <paramref name="townLevel"/> may stock the item. With gating off,
-    /// always true (the markets behave as before). With it on: a heavy, elite or lord piece needs its
+    /// always true (ArmourMarketplaceGate then asks only the XML flag, through GetRecord). With it on: a heavy,
+    /// elite or lord piece needs its
     /// class's armoury level, a named piece never qualifies, and an item the XML marked non-merchandise
     /// never does.
     /// </summary>

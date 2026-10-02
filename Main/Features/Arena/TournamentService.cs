@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using TAOM.Core.Domain;
+using TAOM.Features.ArmourAcquisition;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.Core;
@@ -21,10 +23,12 @@ public class TournamentService : ITournamentService
     private const string DwarfRaceName = "dwarf";
 
     private readonly IRaceManager _raceManager;
+    private readonly IArmourGateService _armourGate;
 
-    public TournamentService(IRaceManager raceManager)
+    public TournamentService(IRaceManager raceManager, IArmourGateService armourGate)
     {
         _raceManager = raceManager;
+        _armourGate = armourGate;
     }
 
     public float CalculateStartChance(int lordCount)
@@ -44,21 +48,23 @@ public class TournamentService : ITournamentService
         return MathF.Max(0f, (elapsedDays - TournamentEndChanceGraceDays) * TournamentEndChanceRamp);
     }
 
-    public MBList<ItemObject> BuildPrizePool(string cultureId, float minTier, float maxTier)
+    public MBList<ItemObject> BuildPrizePool(string? cultureId, PrizeBand band)
     {
-        if (string.IsNullOrEmpty(cultureId))
-            return new MBList<ItemObject>();
-        var result = new MBList<ItemObject>();
+        var fitting = new List<ItemObject>();
         foreach (var item in Items.All)
         {
-            if (item.Culture?.StringId != cultureId) continue;
-            if (item.NotMerchandise) continue;
-            if (item.Tierf < minTier || item.Tierf >= maxTier) continue;
             if (!item.HasWeaponComponent && !item.HasArmorComponent) continue;
             if (item.ItemType == ItemObject.ItemTypeEnum.Horse) continue;
-            result.Add(item);
+            var id = item.StringId;
+            var xmlMerchandise = TournamentPrizeRules.XmlMerchandise(_armourGate.GetRecord(id)?.IsMerchandise, item.NotMerchandise);
+            var cls = TournamentPrizeRules.PrizeClass(_armourGate.GetClass(id), (int)item.Tier);
+            if (TournamentPrizeRules.Fits(band, cls, item.Tierf, xmlMerchandise))
+                fitting.Add(item);
         }
-        return result;
+        var pool = new MBList<ItemObject>();
+        foreach (var item in TournamentPrizeRules.PreferCulture(fitting, cultureId, i => i.Culture?.StringId))
+            pool.Add(item);
+        return pool;
     }
 
     public string ResolveDummyId(string participantCultureId, string settlementCultureId)

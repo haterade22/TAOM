@@ -84,14 +84,14 @@ cultures fight in, so it is a deliberate content decision rather than a typo rep
 
 ## Prize Item Selection
 
-`GetRegularRewardItems` and `GetEliteRewardItems` both scan `Items.All` filtered by settlement culture and `item.Tierf` (TaleWorlds' computed quality float derived from damage/armor stats):
+`GetRegularRewardItems` and `GetEliteRewardItems` both scan `Items.All` filtered by settlement culture and the armour class (2026-10-02; weapons by the class their engine tier implies):
 
-| Method | Tierf range | Approximate item quality |
-|--------|-------------|--------------------------|
-| `GetRegularRewardItems` | `>= 2f && < 4f` | Leather/chainmail, basic weapons |
-| `GetEliteRewardItems` | `>= 4f` | Plate, named lore weapons |
+| Method | Accepts | Approximate item quality |
+|--------|---------|--------------------------|
+| `GetRegularRewardItems` | light, medium or civilian class, Tierf 2 and up | Leather and mail, basic weapons |
+| `GetEliteRewardItems` | heavy class (Tier4 weapons) | Plate, good weapons; nothing elite, lord or named |
 
-Falls back to `base` (vanilla) when no culture-specific items are found (e.g., lothlorien, dale, khand have no dedicated armory entries). Called once per tournament win — not a performance concern.
+A culture with no item in the band draws from every culture's items; `base` (vanilla) is the last resort. The full rules, and why the list may never be empty: [arena.md](arena.md#prize-pools). Called once per tournament, not a performance concern.
 
 ## Key Files
 
@@ -100,18 +100,20 @@ Falls back to `base` (vanilla) when no culture-specific items are found (e.g., l
 | `Main/Features/Arena/Models/TaomTournamentModel.cs` | 5 overrides (thin; delegates to `ITournamentService`): participant armor, regular/elite prizes, start/end chance |
 | `Main/Features/Arena/TournamentService.cs` | Decision logic: `ResolveDummyId`, `BuildPrizePool`, start/end-chance, `ShouldDismountInTournament` |
 | `TAOM.Tests/Features/Arena/TournamentServiceTests.cs` | 21 unit tests (`ResolveDummyId` fallback chain, start/end chance, `ShouldDismountInTournament`) |
-| `TAOM.Tests/Features/Arena/TaomTournamentModelTests.cs` | 7 unit tests (tier-constant invariants on the model) |
+| `TAOM.Tests/Features/Arena/TaomTournamentModelTests.cs` | Tuning-constant invariants |
+| `TAOM.Tests/Features/Arena/TournamentPrizeRulesTests.cs` | Prize bands: class, tier and merchandise rules |
 | `Main/SubModule.cs:385` | Registration: `campaignStarter.AddModel(new TaomTournamentModel(IoC.Resolve<ITournamentService>()))` |
 | `Main/_Module/ModuleData/characters/npcs_{culture}.xml` | `gear_practice_dummy_*` entries per culture |
 
 ## Dependencies
 
-`TaomTournamentModel` takes `ITournamentService` via constructor injection (registered `Reuse.Singleton` in [ArenaIoC.cs](../../Main/Features/Arena/ArenaIoC.cs)). `TournamentService` in turn injects [`IRaceManager`](../../Main/Core/Domain/IRaceManager.cs) (for the dwarf-dismount check). It is no longer instantiated with a no-arg `new`.
+`TaomTournamentModel` takes `ITournamentService` via constructor injection (registered `Reuse.Singleton` in [ArenaIoC.cs](../../Main/Features/Arena/ArenaIoC.cs)). `TournamentService` in turn injects [`IRaceManager`](../../Main/Core/Domain/IRaceManager.cs) (for the dwarf-dismount check) and `IArmourGateService` (each prize candidate's armour class and XML merchandise flag). It is no longer instantiated with a no-arg `new`.
 
 ## Tests
 
 - `TAOM.Tests/Features/Arena/TournamentServiceTests.cs` — **21 tests**. `ResolveDummyId` fallback chain (participant culture → settlement culture → empire), start/end-chance functions, and `ShouldDismountInTournament` (dwarf/case/non-dwarf/invalid). These moved here from the model test when the logic was extracted to the service (#137).
-- `TAOM.Tests/Features/Arena/TaomTournamentModelTests.cs` — **7 tests** (tier-constant invariants on the model).
+- `TAOM.Tests/Features/Arena/TaomTournamentModelTests.cs`: tuning-constant invariants.
+- `TAOM.Tests/Features/Arena/TournamentPrizeRulesTests.cs`: the prize bands.
 - `GetParticipantArmor` and the `Patch46` postfix are not unit-testable (require a live `ObjectManager` / game state) — covered by the service unit tests + in-game verification.
 
 ## How to Add a New Culture
@@ -122,6 +124,7 @@ Falls back to `base` (vanilla) when no culture-specific items are found (e.g., l
 
 ## Changelog
 
+- 2026-10-02: Prize bands became armour classes: regular is light and medium, elite is heavy, weapons by engine tier, troll gear and elite, lord and named kit never. An empty culture band falls back to every culture's items before vanilla's.
 - 2026-09-06: Gave all 46 faceless arena practice characters a `<face>` block across ten cultures (dale, dunland, gondor, harad, isengard, khand, lothlorien, mordor, rhun, rohan). Without one the engine builds their `MBBodyProperty` from `default(BodyProperties)`, whose age is 0, and renders them on the toddler skin: players reported "Practice Fighter" and "Gear Dummy" fighting in the arena as children. Added `CharacterFaceCoverageTests` as the gate.
 - 2026-06-09 — Fixed the Patch46 dwarf-dismount postfix crashing every campaign load (`____match` underscore-count fix for the private `_match` field); corrected the stale Phase-9b-#137 architecture notes in this doc + `arena.md`.
 - 2026-06-09 — Added `Patch46_TournamentDwarfDismount` postfix on `PrepareForMatch` to clear the Horse/HorseHarness slots for dwarf participants (mount comes from the culture weapon template, not `GetParticipantArmor`) so dwarves no longer spawn inside the horse mesh (#277).

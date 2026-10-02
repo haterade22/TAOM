@@ -270,6 +270,29 @@ and mouth, 26 on the arms), `python tools/check_eye_follow.py --package "<Armory
 **Gate after any Armory update:** `python tools/oneoff/tune_face_slider_reach.py --ref-mesh sm_dwarf_basemesh_a1_head --ref-json <male.json> --target sk_dwarf_bm_f1_head <female.json> --target sk_saruman_head <saruman.json> --zero sk_saruman_head:eyebump --reach-zero sk_saruman_head:face_ratio --set sk_dwarf_bm_f1_head:eye_depth=1:0.5 --check` (exit 1 while a range still reaches past the male dwarf's; the three JSON
 files are `export_face_morphs.ps1` exports of the three heads).
 
+### ⚠️ APPLIED EDIT: troll gear locked away from players (2026-10-02)
+
+**Four live edits an Armory reinstall WILL revert:**
+
+| File (`ModuleData/`) | Edit |
+|---|---|
+| `LOTRLOME_items/LOTRAOM_weapons.xml` | `wm_cave_troll_1h_mace_a` (Troll Mace I): `is_merchandise="true"` to `"false"` |
+| `LOTRLOME_items/LOTRAOM_shields.xml` | `wm_cave_troll_shield_a01`: `is_merchandise="true"` to `"false"` |
+| `LOTRLOME_items/troll/arm_armors.xml` | `lotr_troll_bracers`: `is_merchandise="false"` added (absent reads as merchandise) |
+| `LOTRLOME_crafting_pieces.xml` | `is_hidden="true"` added to the 12 troll heads, blades and handles |
+
+- **Why.** Troll weapons and armour must never be bought, smithed or won (Mike, 2026-10-02). `is_merchandise="false"`
+  keeps an item out of shops, workshops, loot and tournament prizes; `is_hidden` keeps a piece out of the smithy's
+  designer and research unlocks. The troll troops still build their weapons: nothing that assembles a crafted item
+  reads the hidden flag.
+- **Written by** `tools/lock_creature_gear.py --apply` (its first run was a scratchpad copy of the same edits). Live
+  backups `*.bak-20261002`. CRLF and no BOM kept; 15 lines in all.
+- **Not yet in any release channel.** Each `E:\LOTRAOM_Releases\<channel>` Armory still has the old values until the
+  next editor package, or `python tools/lock_creature_gear.py --modules "E:/LOTRAOM_Releases/<channel>/Modules" --apply`.
+
+**Gate after any Armory update:** `python tools/validate_moduledata.py --code CREATURE_GEAR_OBTAINABLE` (in the
+commit hook; add `--game-modules <channel>/Modules` for a staged copy). Repair: `python tools/lock_creature_gear.py --apply`.
+
 ### ⚠️ APPLIED EDIT: gold and red eye colours on the `sauron` race (2026-09-28)
 
 **One live edit an Armory reinstall WILL revert: `ModuleData/skins.xml`, the `<race id="sauron">` block.**
@@ -559,6 +582,12 @@ backups on 2026-10-01: rows added only, none changed or removed. TAOM_Map's lang
 **Replay:** all four ids are new rows and their translations are in `tools/translation_cache/<lang>.json`, so after a
 reinstall `python tools/translate_with_claude.py --lang <L> --module Armory --sync-ids --apply` seeds and rewrites them
 from the cache at no API cost.
+
+**2026-10-02 (deep review):** RU `loc_gondor.xml` `aom_sk_gd_vale_helmet_heavy_b_name` read "Черно" + a Devanagari
+syllable + "орной"; the row and the RU cache now read "Чернокорной" (Blackroot Vale). Original:
+`E:\LOTRAOMAssets\_loc_backup_20261002\armory\Languages\RU\loc_gondor.xml`. A replay does not visit it (the row is not
+English), so after a reinstall reset it to its English first, then replay; `LanguageTextIntegrityTests` keeps the
+damage out of the cache, so a replay cannot bring it back.
 
 ## Snapshot date
 

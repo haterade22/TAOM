@@ -1,35 +1,14 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.Arena;
-using TAOM.Features.Arena.Models;
 
 namespace TAOM.Tests.Features.Arena;
 
 [TestClass]
 public class TaomTournamentModelTests
 {
-    // Phase 9b #137 — ResolveDummyId + tunable constants moved into TournamentService.
-    // Tests for ResolveDummyId now live in TournamentServiceTests. Tunable-constant
-    // semantic tests remain here (testing the constants themselves, accessed via
-    // TournamentService.cs `internal const` — exposed via [InternalsVisibleTo] in csproj
-    // OR via the constants on TournamentService class).
-
-    [TestMethod]
-    public void TierConstants_RegularAndElite_NoGapOrOverlap()
-    {
-        Assert.AreEqual(TaomTournamentModel.RegularMaxTier, TaomTournamentModel.EliteMinTier);
-    }
-
-    [TestMethod]
-    public void TierConstants_RegularMin_ExcludesJunkTier()
-    {
-        Assert.IsTrue(TaomTournamentModel.RegularMinTier > 0f);
-    }
-
-    [TestMethod]
-    public void TierConstants_EliteMin_IsAboveRegularMin()
-    {
-        Assert.IsTrue(TaomTournamentModel.EliteMinTier > TaomTournamentModel.RegularMinTier);
-    }
+    // The start and end tuning constants live on TournamentService (internal const, visible here through
+    // InternalsVisibleTo); ResolveDummyId is tested in TournamentServiceTests and the prize bands in
+    // TournamentPrizeRulesTests.
 
     [TestMethod]
     public void TournamentStartChance_DiminishingReturns_EachStepLowerThanPrevious()

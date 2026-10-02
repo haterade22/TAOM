@@ -48,6 +48,18 @@ LOTRLOME_Armory already ships two troll races — **the ready-made data template
 > ⚠ Verify these entries against the live files before editing — paths/keys must be confirmed, not
 > assumed. They are the copy-from template, not a spec.
 
+**Troll gear is never the player's (Mike, 2026-10-02).** The six troll weapons, the troll shield and the
+three `lotr_troll_*` armour pieces are `is_merchandise="false"` in the Armory, which keeps them out of
+shops, workshops, loot and tournament prizes, and the 12 troll crafting pieces are `is_hidden="true"`, which
+keeps them out of the smithy's designer and its research unlocks. Troll Mace I and the shield shipped as
+merchandise, the bracers had no flag, and every piece was researchable. The Armory is unversioned, so
+`CREATURE_GEAR_OBTAINABLE` in `python tools/validate_moduledata.py` (and the commit hook) fails if a reinstall
+brings any of it back. It derives the set from what every `cave_troll` or `hill_troll` character carries, so a
+new troll weapon is covered when a troll troop wears it; an unworn one goes in `_CREATURE_GEAR_EXTRA`. The
+gate reads the dev install only: a staged release Armory is checked by passing its `Modules` folder to
+`--game-modules`. `python tools/lock_creature_gear.py` (dry run; `--apply` writes, `--modules` targets a release
+channel) puts the attributes back after a reinstall; a new troll item or piece goes in its lists too.
+
 ## Skeleton + animation approach (this project)
 
 **Current direction (updated 2026-06-14): the SHIPPING troll is `cave_troll` on `human_skeleton`** with
@@ -670,6 +682,12 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
 
 ## Changelog
 
+- 2026-10-02: troll gear locked away from players in the dev install's Armory: Troll Mace I, the troll shield
+  and the bracers set `is_merchandise="false"` and the 12 troll crafting pieces `is_hidden="true"` (backups
+  `*.bak-20261002`), with `CREATURE_GEAR_OBTAINABLE` as the in-repo gate. It reaches players with the next
+  Armory package in `E:\LOTRAOM_Releases\<channel>`, or sooner with
+  `python tools/lock_creature_gear.py --modules "E:/LOTRAOM_Releases/<channel>/Modules" --apply`; check a staged
+  copy with `python tools/validate_moduledata.py --game-modules "E:/LOTRAOM_Releases/<channel>/Modules" --code CREATURE_GEAR_OBTAINABLE`.
 - 2026-09-26: the hill troll's swing CTD traced to the engine's melee attack table (a release or blocked clip needs
   its own name in "Blends with animation"); the 30 two-handed release and blocked troll clips self-keyed and bound on
   32 codes, the rest of the four families on vanilla clips (`bind_hill_troll_action_set.py` rule 0,
